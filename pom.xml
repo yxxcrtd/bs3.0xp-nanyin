@@ -42,7 +42,7 @@
         <module>tams-valuation-basicdata</module>
         <module>tams-valuation-parent</module>
 <!--        <module>tams-valuation-report</module>-->
-        <module>tams-exchange-parent</module>
+        <module>tams-exchange-trade-parent</module>
 
         <!-- 批处理  -->
         <module>tams-batch-common</module>
@@ -114,6 +114,6 @@
         <module>microservice/tams-service-container-touguan</module>
         <module>microservice/tams-service-system</module>
         <module>tams-exchange-touguan-parent</module>
-        <module>tams-exchange-touguan-parent/tams-exchange-entrust</module>
+<!--        <module>tams-exchange-touguan-parent/tams-exchange-entrust</module>-->
     </modules>
 </project>

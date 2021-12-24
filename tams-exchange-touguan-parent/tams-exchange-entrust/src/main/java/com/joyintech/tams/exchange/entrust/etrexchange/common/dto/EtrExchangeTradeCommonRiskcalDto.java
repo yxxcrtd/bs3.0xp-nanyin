@@ -102,6 +102,8 @@ public class EtrExchangeTradeCommonRiskcalDto {
     @ApiModelProperty(name="tradeDirection",value="交易方向",example="02")
     private String tradeDirection;
 
+    @ApiModelProperty(name="fromEtrExchange",value="是否场内指令",example="02")
+    private String fromEtrExchange;
 
     public String getFinprodId() {
         return finprodId;
@@ -342,5 +344,13 @@ public class EtrExchangeTradeCommonRiskcalDto {
 
     public void setTradeDirection(String tradeDirection) {
         this.tradeDirection = tradeDirection;
+    }
+
+    public String getFromEtrExchange() {
+        return fromEtrExchange;
+    }
+
+    public void setFromEtrExchange(String fromEtrExchange) {
+        this.fromEtrExchange = fromEtrExchange;
     }
 }

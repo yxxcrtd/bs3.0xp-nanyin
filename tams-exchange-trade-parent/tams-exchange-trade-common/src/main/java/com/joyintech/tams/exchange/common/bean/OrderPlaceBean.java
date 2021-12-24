@@ -11,39 +11,52 @@ import java.math.BigDecimal;
 public class OrderPlaceBean implements Serializable {
     private static final long serialVersionUID = 5892155368791512437L;
 
-    @ApiModelProperty(required = true, name = "instructionId", value = "指令编号")
+    @ApiModelProperty(required = true, name = "instructionId", value = "指令编号", example = "W000111")
     private String instructionId;
-    @ApiModelProperty(required = true, name = "portfolioId", value = "组合代码")
+
+    @ApiModelProperty(required = true, name = "portfolioId", value = "组合代码", example = "Z000111")
     private String portfolioId;
-    @ApiModelProperty(required = true, name = "userId", value = "操作人ID")
+
+    @ApiModelProperty(required = true, name = "userId", value = "操作人ID", example = "U001")
     private String userId;
-    @ApiModelProperty(required = true, name = "username", value = "操作人名称")
+
+    @ApiModelProperty(required = true, name = "username", value = "操作人名称", example = "张三")
     private String username;
-    @ApiModelProperty(required = true, name = "accountId", value = "网点账号")
+
+    @ApiModelProperty(required = true, name = "accountId", value = "网点账号", example = "A0001:12345")
     private String accountId;
-    @ApiModelProperty(required = false, name = "algorithmId", value = "算法单ID")
+
+    @ApiModelProperty(required = false, name = "algorithmId", value = "算法单ID", example = "S2222222")
     private String algorithmId;
-    @ApiModelProperty(required = false, name = "bsFlag", value = "买卖类别")
+
+    @ApiModelProperty(required = false, name = "bsFlag", value = "买卖类别", example = "0")
     private String bsFlag;
-    @ApiModelProperty(required = true, name = "stockCode", value = "证券代码")
+
+    @ApiModelProperty(required = true, name = "stockCode", value = "证券代码", example = "000001.SZ")
     private String stockCode;
-    @ApiModelProperty(required = false, name = "entrustProp", value = "委托属性")
+
+    @ApiModelProperty(required = false, name = "entrustProp", value = "委托属性", example = "0")
     private String entrustProp;
-    @ApiModelProperty(required = true, name = "entrustBs", value = "交易方向")
+
+    @ApiModelProperty(required = true, name = "entrustBs", value = "交易方向", example = "1")
     private String entrustBs;
-    @ApiModelProperty(required = false, name = "entrustVolume", value = "委托数量")
+
+    @ApiModelProperty(required = false, name = "entrustVolume", value = "委托数量", example = "1000")
     private long entrustVolume;
-    @ApiModelProperty(required = false, name = "entrustPrice", value = "净价价格")
+
+    @ApiModelProperty(required = false, name = "entrustPrice", value = "净价价格", example = "2.34")
     private BigDecimal entrustPrice;
-    @ApiModelProperty(required = false, name = "fullPrice", value = "全价价格")
+
+    @ApiModelProperty(required = false, name = "fullPrice", value = "全价价格", example = "2.34")
     private BigDecimal fullPrice;
+
     @ApiModelProperty(required = false, name = "batchInfo", value = "批量下单信息")
     private BatchInfo batchInfo;
 
-    @ApiModelProperty(required = false, name = "offsetFlag", value = "冲正标识")
+    @ApiModelProperty(required = false, name = "offsetFlag", value = "冲正标识", example = "0")
     private String offsetFlag;
 
-    @ApiModelProperty(required = false, name = "hedgeFlag", value = "套期保值标志")
+    @ApiModelProperty(required = false, name = "hedgeFlag", value = "套期保值标志", example = "1")
     private String hedgeFlag;
 
     public String getInstructionId() {

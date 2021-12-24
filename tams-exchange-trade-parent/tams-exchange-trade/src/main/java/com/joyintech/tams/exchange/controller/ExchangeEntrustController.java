@@ -2,13 +2,19 @@ package com.joyintech.tams.exchange.controller;
 
 import com.google.common.base.Strings;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
+import com.joyintech.tams.exchange.common.db.domain.EntrustInterface;
+import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.service.ExchangeEntrustService;
+import com.joyintech.tams.exchange.service.trade.management.service.EntrustManagement;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -17,6 +23,9 @@ public class ExchangeEntrustController {
 
     @Autowired
     private ExchangeEntrustService entrustService;
+    
+    @Autowired
+    private EntrustManagement entrustManagement;
 
 ///////////////////////////////////////迁移到新UI接口
 //    /**
@@ -256,7 +265,12 @@ public class ExchangeEntrustController {
     public ResultBean queryExceptionEntrust(@RequestParam(value = "user_id") String userId,
                                             @RequestParam(value = "entrust_status", required = false, defaultValue = "1,3,4") String entrustStatus) {
         String param = "?user_id=" + userId + "&entrust_status=" + entrustStatus;
-        return entrustService.queryExceptionEntrust(param);
+//        return entrustService.queryExceptionEntrust(param);
+//////////////////////////兼容新UI后端
+        if (StringUtils.isEmpty(entrustStatus)) {
+            entrustStatus = "1,3,4";
+        }
+        return entrustManagement.queryEntrustByStatus(userId, entrustStatus);
     }
 
     /**
@@ -271,6 +285,8 @@ public class ExchangeEntrustController {
                                              @RequestParam(value = "user_name") String userName,
                                              @RequestParam(value = "entrust_id") String entrustId) {
         String param = "?user_id=" + userId + "&user_name=" + userName + "&entrust_id=" + entrustId;
-        return entrustService.cancelExceptionEntrust(param);
+//        return entrustService.cancelExceptionEntrust(param);
+//////////////////////////兼容新UI后端
+        return entrustManagement.cancelExceptionEntrust(userId, userName, entrustId);
     }
 }

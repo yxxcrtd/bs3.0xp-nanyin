@@ -123,6 +123,122 @@ public class FieldEtrDispatcherDealListInfoResponse extends FieldEtrDispatcherBa
     @ApiModelProperty(name="secTotalPrin",value="券面总额（万元）",example="100")
     private BigDecimal secTotalPrin;
 
+    @ApiModelProperty(name="entrustId",value="委托编号",example="A1")
+    private String entrustId;
+
+    @ApiModelProperty(name="trdAcctId",value="资金账户",example="XXX资金账户户")
+    private String trdAcctId;
+    
+    @ApiModelProperty(name="finprodType2",value="资产类型",example="A1")
+    private String finprodType2;
+
+    @ApiModelProperty(name="tradeMarket",value="交易场所",example="A1")
+    private String tradeMarket;
+
+    @ApiModelProperty(name="shareAmt",value="成交数量",example="10000")
+    private BigDecimal shareAmt;
+
+    @ApiModelProperty(name="unitFprice",value="成交价格",example="10000")
+    private BigDecimal unitFprice;
+
+    @ApiModelProperty(name="entrustDate",value="委托日期",example="2021-01-01")
+    private String entrustDate;
+
+    @ApiModelProperty(name="transmitTime",value="委托时间",example="HH:MM:SS")
+    private String transmitTime;
+
+    @ApiModelProperty(name="tradeTime",value="成交时间",example="2021-01-01")
+    private String tradeTime;
+    
+    @ApiModelProperty(name="trader",value="交易员",example="A1")
+    private String trader;
+
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
+    }
+
+    public String getTrdAcctId() {
+        return trdAcctId;
+    }
+
+    public void setTrdAcctId(String trdAcctId) {
+        this.trdAcctId = trdAcctId;
+    }
+
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
+    }
+
+    @Override
+    public String getTradeMarket() {
+        return SysDataUtil.getNameFromDataDict(DictCode.交易场所, this.tradeMarket);
+    }
+
+    @Override
+    public void setTradeMarket(String tradeMarket) {
+        this.tradeMarket = tradeMarket;
+    }
+
+    public BigDecimal getShareAmt() {
+        return shareAmt;
+    }
+
+    public void setShareAmt(BigDecimal shareAmt) {
+        this.shareAmt = shareAmt;
+    }
+
+    public BigDecimal getUnitFprice() {
+        return unitFprice;
+    }
+
+    public void setUnitFprice(BigDecimal unitFprice) {
+        this.unitFprice = unitFprice;
+    }
+
+    @Override
+    public String getEntrustDate() {
+        return entrustDate;
+    }
+
+    @Override
+    public void setEntrustDate(String entrustDate) {
+        this.entrustDate = entrustDate;
+    }
+
+    public String getTransmitTime() {
+        return transmitTime;
+    }
+
+    public void setTransmitTime(String transmitTime) {
+        this.transmitTime = transmitTime;
+    }
+
+    public String getTradeTime() {
+        return tradeTime;
+    }
+
+    public void setTradeTime(String tradeTime) {
+        this.tradeTime = tradeTime;
+    }
+
+    @Override
+    public String getTrader() {
+        return trader;
+    }
+
+    @Override
+    public void setTrader(String trader) {
+        this.trader = trader;
+    }
+
     public String getEffectFlag() {
         return effectFlag;
     }

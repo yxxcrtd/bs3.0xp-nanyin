@@ -62,6 +62,9 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
     @ApiModelProperty(name="finprodName",value="资产名称",example="", required = true)
     private String finprodName;
 
+    @ApiModelProperty(required = true,name="tradeMarket",value="交易场所",example="A1")
+    private String tradeMarket;
+
     @ApiModelProperty(name="targetType",value="目标类型",example="")
     private String targetType;
 
@@ -602,6 +605,16 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
 
     public void setPageId(String pageId) {
         this.pageId = pageId;
+    }
+
+    @Override
+    public String getTradeMarket() {
+        return tradeMarket;
+    }
+
+    @Override
+    public void setTradeMarket(String tradeMarket) {
+        this.tradeMarket = tradeMarket;
     }
 
     public String getSecAcctId() {

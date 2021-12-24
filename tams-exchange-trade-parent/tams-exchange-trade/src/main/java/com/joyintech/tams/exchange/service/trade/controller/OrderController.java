@@ -45,7 +45,7 @@ public class OrderController {
      */
     @ApiOperation(value = "普通下单（竞价下单）", notes = "普通下单（竞价下单）")
     @RequestMapping(value = "/order", method = RequestMethod.POST)
-    public Message<OrderPlaceBean> sendOrder(@RequestBody String userId, @RequestBody OrderPlaceBean order) {
+    public Message<OrderPlaceBean> sendOrder(@RequestParam String userId, @RequestBody OrderPlaceBean order) {
         return new Message<OrderPlaceBean>(orderManagement.sendOrder(userId, order));
     }
 
@@ -58,7 +58,7 @@ public class OrderController {
      */
     @ApiOperation(value = "综合业务下单", notes = "综合业务下单")
     @RequestMapping(value = "/order/integratedEntrust", method = RequestMethod.POST)
-    public Message<IntegratedEntrust> sendIntegratedEntrust(@RequestBody String userId, @RequestBody IntegratedEntrust integratedEntrust) {
+    public Message<IntegratedEntrust> sendIntegratedEntrust(@RequestParam String userId, @RequestBody IntegratedEntrust integratedEntrust) {
         return new Message<IntegratedEntrust>(orderManagement.sendIntegratedEntrust(userId, integratedEntrust));
     }
 
@@ -71,19 +71,19 @@ public class OrderController {
      */
     @ApiOperation(value = "委托撤单", notes = "委托撤单")
     @RequestMapping(value = "/order/cancel", method = RequestMethod.POST)
-    public Message<Boolean> cancelOrder(@RequestBody String userId, @RequestBody String orderId) {
+    public Message<Boolean> cancelOrder(@RequestParam String userId, @RequestParam String orderId) {
         return new Message<Boolean>(orderManagement.cancelOrder(userId, orderId));
     }
 
     @ApiOperation(value = "普通委托复核", notes = "普通委托复核", hidden = true)
     @RequestMapping(value = "/order/review", method = RequestMethod.POST)
-    public Message<ReviewDto> sendOrderWithReview(@RequestBody String userId, @RequestBody ReviewDto dto) {
+    public Message<ReviewDto> sendOrderWithReview(@RequestParam String userId, @RequestBody ReviewDto dto) {
         return new Message<ReviewDto>(orderManagement.sendOrderWithReview(userId, dto));
     }
 
     @ApiOperation(value = "综合业务委托复核", notes = "综合业务委托复核", hidden = true)
     @RequestMapping(value = "/order/integratedEntrust/review", method = RequestMethod.POST)
-    public Message<TrdExchangeDto> sendOrderWithReview(@RequestBody String userId, @RequestBody TrdExchangeDto dto) {
+    public Message<TrdExchangeDto> sendOrderWithReview(@RequestParam String userId, @RequestBody TrdExchangeDto dto) {
         return new Message<TrdExchangeDto>(orderManagement.sendIntegratedEntrustWithReview(userId, dto));
     }
 
@@ -96,7 +96,7 @@ public class OrderController {
      */
     @ApiOperation(value = "算法单创建", notes = "算法单创建", hidden = true)
     @RequestMapping(value = "/order/algorithm", method = RequestMethod.POST)
-    public Message<Algorithm> createAlgorithm(@RequestBody String userId, @RequestBody AlgorithmPlaceBean algorithm) {
+    public Message<Algorithm> createAlgorithm(@RequestParam String userId, @RequestBody AlgorithmPlaceBean algorithm) {
         return new Message<Algorithm>(orderManagement.createAlgorithm(userId, algorithm));
     }
 
@@ -109,7 +109,7 @@ public class OrderController {
      */
     @ApiOperation(value = "算法单取消", notes = "算法单取消", hidden = true)
     @RequestMapping(value = "/order/algorithm/cancel", method = RequestMethod.POST)
-    public Message<Algorithm> cancelAlgorithm(@RequestBody String algorithmId) {
+    public Message<Algorithm> cancelAlgorithm(@RequestParam String algorithmId) {
         return new Message<Algorithm>(orderManagement.cancelAlgorithm(algorithmId));
     }
 

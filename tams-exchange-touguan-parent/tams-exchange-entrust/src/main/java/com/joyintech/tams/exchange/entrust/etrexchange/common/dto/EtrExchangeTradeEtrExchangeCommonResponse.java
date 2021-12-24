@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.exchange.entrust.etrexchange.common.dto;
 
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -30,6 +31,16 @@ import java.util.List;
  */
 @ApiModel(value="指令列表查询返回参数",description="指令列表查询返回参数")
 public class EtrExchangeTradeEtrExchangeCommonResponse {
+
+
+    @ApiModelProperty(name="entrustId",value="指令编号",example="A1")
+    private String entrustId;
+
+    @ApiModelProperty(name="entrustStatus",value="指令状态Code",example="A1")
+    private String entrustStatus;
+
+    @ApiModelProperty(name="entrustStatusString",value="指令状态名称",example="A1")
+    private String entrustStatusString;
 
 
     /**
@@ -194,17 +205,14 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
     @ApiModelProperty(name="tradePlatString",value="委托状态",example="A1")
     private String tradePlatString;
 
-    /**
-     * 委托状态
-     */
-    @ApiModelProperty(name="entrustStatus",value="委托状态",example="A1")
-    private String entrustStatus;
 
-    /**
-     * 委托状态
-     */
-    @ApiModelProperty(name="entrustStatusString",value="委托状态",example="A1")
-    private String entrustStatusString;
+
+
+    @ApiModelProperty(name="entrustAmt",value="指令金额",example="12")
+    private BigDecimal entrustAmt;
+
+    @ApiModelProperty(name="entrustNum",value="指令数量",example="12")
+    private BigDecimal entrustNum;
 
     /**
      * 获取 implementPercent
@@ -563,8 +571,34 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
         return dealCurAcctName;
     }
 
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
+    }
+
+    public BigDecimal getEntrustAmt() {
+        return entrustAmt;
+    }
+
+    public void setEntrustAmt(BigDecimal entrustAmt) {
+        this.entrustAmt = entrustAmt;
+    }
+
+    public BigDecimal getEntrustNum() {
+        return entrustNum;
+    }
+
+    public void setEntrustNum(BigDecimal entrustNum) {
+        this.entrustNum = entrustNum;
+    }
+
     public void setDealCurAcctName(String dealCurAcctName) {
         this.dealCurAcctName = dealCurAcctName;
     }
     //add by chenjiaxing 20210824 end
+
+
 }

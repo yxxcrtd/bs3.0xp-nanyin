@@ -6,6 +6,9 @@ import com.joyintech.tams.exchange.common.db.domain.ServiceNode;
 import com.joyintech.tams.exchange.common.db.domain.Terminal;
 import com.joyintech.tams.exchange.common.db.domain.TerminalMapping;
 import com.joyintech.tams.exchange.service.ExchangeSystemParamService;
+import com.joyintech.tams.exchange.service.trade.management.service.TerminalManagement;
+import com.joyintech.tams.exchange.service.trade.management.service.TerminalMappingManagement;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +21,12 @@ public class ExchangeSystemParamController {
 
     @Autowired
     private ExchangeSystemParamService exchangeSystemParamService;
+    
+    @Autowired
+    private TerminalMappingManagement terminalMappingManagement;
+    
+    @Autowired
+    private TerminalManagement terminalManagement;
 
     /**
      * 自定义节点查询
@@ -88,7 +97,9 @@ public class ExchangeSystemParamController {
                                     @RequestParam(value = "terminal_name", required = false) String terminalName) {
         String param = "?user_id=" + userId;
         if (!Strings.isNullOrEmpty(terminalName)) param += "&terminal_name=" + terminalName;
-        return exchangeSystemParamService.queryTerminal(param);
+//        return exchangeSystemParamService.queryTerminal(param);
+//////////////////////////兼容新UI后端
+        return terminalManagement.queryTerminalInfo(terminalName);
     }
 
     /**
@@ -101,7 +112,9 @@ public class ExchangeSystemParamController {
                                   @RequestBody Terminal terminal) {
         String param = "?user_id=" + userId;
         HttpEntity<Terminal> request = new HttpEntity<>(terminal);
-        return exchangeSystemParamService.addTerminal(param, request);
+//        return exchangeSystemParamService.addTerminal(param, request);
+//////////////////////////兼容新UI后端
+        return terminalManagement.addTerminalInfo(terminal);
     }
 
     /**
@@ -143,7 +156,9 @@ public class ExchangeSystemParamController {
         String param = "?user_id=" + userId;
         if (!Strings.isNullOrEmpty(accountId)) param += "&account_id=" + accountId;
         if (!Strings.isNullOrEmpty(terminalName)) param += "&terminal_name=" + terminalName;
-        return exchangeSystemParamService.queryTerminalMapping(param);
+//        return exchangeSystemParamService.queryTerminalMapping(param);
+//////////////////////////兼容新UI后端
+        return terminalMappingManagement.queryTerminalMappingInfo(accountId, terminalName);
     }
 
     /**
@@ -156,7 +171,9 @@ public class ExchangeSystemParamController {
                                          @RequestBody List<TerminalMapping> terminalMappings) {
         String param = "?user_id=" + userId;
         HttpEntity<List<TerminalMapping>> request = new HttpEntity<>(terminalMappings);
-        return exchangeSystemParamService.addTerminalMapping(param, request);
+//        return exchangeSystemParamService.addTerminalMapping(param, request);
+//////////////////////////兼容新UI后端
+        return terminalMappingManagement.addTerminalMappingInfo(terminalMappings);
     }
 
     /**
@@ -182,6 +199,8 @@ public class ExchangeSystemParamController {
     public ResultBean deleteTerminalMapping(@RequestParam(value = "user_id") String userId,
                                             @RequestParam(value = "id") String id) {
         String param = "?user_id=" + userId + "&id=" + id;
-        return exchangeSystemParamService.deleteTerminalMapping(param);
+//        return exchangeSystemParamService.deleteTerminalMapping(param);
+//////////////////////////兼容新UI后端
+        return terminalMappingManagement.deleteTerminalMappingInfo(id);
     }
 }

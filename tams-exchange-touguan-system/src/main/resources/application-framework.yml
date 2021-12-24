@@ -331,16 +331,17 @@ spring:
   profiles: allinone
   thymeleaf:
     cache: false
-#   redis:   ##单节点配置
-#     database: 0
-#     host: 192.168.70.246
-#     port: 6379
-#     timeout: 20000
   redis:
-    cluster:
-      nodes: 192.168.70.246:6379,192.168.70.246:6380,192.168.70.246:6381,192.168.70.246:6382,192.168.70.246:6383,192.168.70.246:6384
-  redislock:
-    redissonEnabled: false
+    database: 1
+    password: joyin!234
+    host: 192.168.90.165
+    port: 6379
+    timeout: 20000
+#  redis:
+#    cluster:
+#      nodes: 192.168.70.246:6379,192.168.70.246:6380,192.168.70.246:6381,192.168.70.246:6382,192.168.70.246:6383,192.168.70.246:6384
+#  redislock:
+#    redissonEnabled: false
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
@@ -373,8 +374,8 @@ shiro:
     /CfetsRepoDealQuotedPrice001/selectEtrReByQuoteId,/core/getAssetFiveType,/common/trdcommonbase/insertFinProductCashData,/common/entrustcommonbase/finishEntrust,/TrdRepoTrade/selectPreTradeId,/joyin/**,
     /interf/refreshCache,/interf/execute,/interf/ziguanSysUserInfo,/interf/xp,/interf/xp/**,/interf/zg,/interf/zg/**,/FinProjectTargetAsset/insert,/FinAssetRateAdj/getFinAssetRateAdjByCashId,
     /cfets/**,/common/workflow/**,/common/config/**,/component/**,/FinProductRating/**,/common/joyinbusinessCommon/**,/cfets/bankuplink/bond/IbuQuoteBond/**,/cfets/bond/IbuQuoteBond004/**,/BussSettleOrderComm/**,
-    /etrexchange/hqjj/jjetrExchangeTrade001/**,/MstSecuritiesAccountInfo/**,/etrexchange/common/etrExchangeTrade001/**,/etrexchange/common/EtrExchangeTradeCommon002/**,/etrexchange/common/EtrExchangeTradeCommon003/**,
-    /TrdBondInvestTrade/**
+    /etrexchange/hqjj/jjetrExchangeTrade001/**,/MstSecuritiesAccountInfo/**,/etrexchange/common/**,/TrdBondInvestTrade/**
+
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl

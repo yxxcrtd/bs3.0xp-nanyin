@@ -262,11 +262,8 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
     @ApiModelProperty(name="oldFinprodMarketId",value="原质押券",example="字符串1")
     private String oldFinprodMarketId;
 
-    
-    
-    
     public String getSecType() {
-        return secType;
+        return SysDataUtil.getNameFromDataDict(DictCode.行内资产四级分类, this.secType);
     }
 
     public void setSecType(String secType) {

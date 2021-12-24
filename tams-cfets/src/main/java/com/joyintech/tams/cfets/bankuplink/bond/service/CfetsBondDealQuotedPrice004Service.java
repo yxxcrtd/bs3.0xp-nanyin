@@ -800,12 +800,14 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             }
             result.put("busiAct","02");
             result.put("ps",ps);
-            if (entity.getRegFinProductDealTotal().getSettleSpeed() == 0L) {
-                settleSpreed =  BussinessDictCodeList.清算速度_T加0.getValue();
-            } else if (entity.getRegFinProductDealTotal().getSettleSpeed() == 1L) {
-                settleSpreed = BussinessDictCodeList.清算速度_T加1.getValue();
-            } else if (entity.getRegFinProductDealTotal().getSettleSpeed() == 2L) {
-                settleSpreed = BussinessDictCodeList.清算速度_T加2.getValue();
+            if(null!=entity.getRegFinProductDealTotal().getSettleSpeed()){
+                if (entity.getRegFinProductDealTotal().getSettleSpeed() == 0L) {
+                    settleSpreed =  BussinessDictCodeList.清算速度_T加0.getValue();
+                } else if (entity.getRegFinProductDealTotal().getSettleSpeed() == 1L) {
+                    settleSpreed = BussinessDictCodeList.清算速度_T加1.getValue();
+                } else if (entity.getRegFinProductDealTotal().getSettleSpeed() == 2L) {
+                    settleSpreed = BussinessDictCodeList.清算速度_T加2.getValue();
+                }
             }
             result.put("settleSpeed",settleSpreed);
             result.put("tradePlace",BussinessDictCodeList.交易场所_银行间.getValue());

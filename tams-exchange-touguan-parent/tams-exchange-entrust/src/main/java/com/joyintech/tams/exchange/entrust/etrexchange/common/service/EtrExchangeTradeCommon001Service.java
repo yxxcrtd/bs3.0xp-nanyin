@@ -5411,6 +5411,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		d.setAssetType(dto.getFinprodType2());
 		d.setVdate(dto.getEntrustDate());
 		d.setMdate(dto.getEntrustDate());
+		d.setFromEtrExchange("Y");
 		d.setCcy(dto.getCcy());
 		d.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
 		Map<String, Object> dataMap=BeanUtil.object2Map(d);

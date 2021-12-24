@@ -94,6 +94,7 @@
         calculateField,
         FIN_PRODUCT.IS_RIGHT isRight,
         FIN_PRODUCT_TYPE.TYPE_4 assetTypeOne,
+        FIN_PRODUCT_TYPE.TYPE_11 type11,
         ETR_ENTRUST.REMARK remark,
         ETR_ENTRUST.CCY settleCcy,
         ETR_ENTRUST.CCY ccy,
@@ -1447,14 +1448,23 @@
             ,T3.FINPROD_MARKET_ID
             ,T3.FINPROD_ABBR
             ,T4.FEE_AMT dealFeeAmt
-            ,T5.FEE_AMT settFeeAmt
+            ,T5.FEE_AMT settFeeAmt,
+            T3.FINPROD_ABBR  finprodAbbr,
+            CASE WHEN T6.REAL_NAME IS NULL THEN T1.OU_TRADER_ID
+            ELSE T6.REAL_NAME END ouTraderName,
+            T2.CAL_MODE calculateField,
+            case when T1.PS = 'T03' THEN T1.SETTLE_DATE
+            ELSE NULL END theoreticalExerciseDate,
+            case when T1.PS = 'T03' THEN T2.ACT_SETTE_DATE
+            ELSE NULL END actSetteDate
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN REG_FIN_PRODUCT_DEAL_TOTAL_ADD T2 ON
             T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
         LEFT JOIN FIN_PRODUCT T3 ON T3.FINPROD_ID = T1.FINPROD_ID
         LEFT JOIN REG_TRADE_FEE_TOTAL T4 ON T4.TRADE_ID  = T1.TOTLE_TRADE_ID AND T4.FEE_TYPE  = 'B06'
-        LEFT JOIN REG_TRADE_FEE_TOTAL T5 ON T5.TRADE_ID  = T1.TOTLE_TRADE_ID AND T4.FEE_TYPE  = 'B08'
+        LEFT JOIN REG_TRADE_FEE_TOTAL T5 ON T5.TRADE_ID  = T1.TOTLE_TRADE_ID AND T5.FEE_TYPE  = 'B08'
+        LEFT JOIN SYS_USER T6 ON T6.USER_NAME = T1.OU_TRADER_ID
         WHERE T1.TOTLE_TRADE_ID = #{quoteId}
     </select>
 
@@ -1497,13 +1507,22 @@
             ,T3.FINPROD_ABBR
             ,T4.FEE_AMT dealFeeAmt
             ,T5.FEE_AMT settFeeAmt
+            ,T3.FINPROD_ABBR  finprodAbbr,
+            CASE WHEN T6.REAL_NAME IS NULL THEN T1.OU_TRADER_ID
+            ELSE T6.REAL_NAME END ouTraderName,
+            T2.CAL_MODE calculateField,
+            case when T1.PS = 'T03' THEN T1.SETTLE_DATE
+            ELSE NULL END theoreticalExerciseDate,
+            case when T1.PS = 'T03' THEN T2.ACT_SETTE_DATE
+            ELSE NULL END actSetteDate
         FROM
             WFL_REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN WFL_REG_FIN_PRO_DEAL_TOTAL_ADD T2 ON
             T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
         LEFT JOIN FIN_PRODUCT T3 ON T3.FINPROD_ID = T1.FINPROD_ID
         LEFT JOIN WFL_REG_TRADE_FEE_TOTAL T4 ON T4.TRADE_ID  = T1.TOTLE_TRADE_ID AND T4.FEE_TYPE  = 'B06'
-        LEFT JOIN WFL_REG_TRADE_FEE_TOTAL T5 ON T5.TRADE_ID  = T1.TOTLE_TRADE_ID AND T4.FEE_TYPE  = 'B08'
+        LEFT JOIN WFL_REG_TRADE_FEE_TOTAL T5 ON T5.TRADE_ID  = T1.TOTLE_TRADE_ID AND T5.FEE_TYPE  = 'B08'
+        LEFT JOIN SYS_USER T6 ON T6.USER_NAME = T1.OU_TRADER_ID
         WHERE T1.TOTLE_TRADE_ID = #{quoteId}
     </select>
 
@@ -1513,7 +1532,7 @@
                 T1.ENTRUST_ID ,
                 T1.PORTFOLIO_ID,
                 T5.PORTFOLIO_ID,
-                T1.SHARE_AMT*100,
+                T1.SHARE_AMT*100 SHARE_AMT,
                 T1.INV_AIM businessModel,
                 T2.OUR_SHARE_AMT * 100 OUR_SHARE_AMT,
                 T2.OUR_CPRICE_AMT ,
@@ -1529,7 +1548,14 @@
                 T1.SEC_MANAGE_ACCT_ID secManageAcctId,
                 T6.PRICE ,
                 T7.MATURE_YIELD ,
-                T7.EXER_YIELD
+                T7.EXER_YIELD,
+                (select sec_acct_name from stl_sec_acct_info where stl_sec_acct_info.sec_acct_id = T1.SEC_MANAGE_ACCT_ID)
+                as secAcctName,
+                T8.PORTFOLIO_NAME,
+                NVL(T6.ENTRUST_NUM, 0)/100 - NVL(T9.FINISH_AMT,0)/10000 - NVL(T10.ENT_FINISH_AMT,0)/100 avaNum,
+                T1.CPRICE_AMT ,
+                T1.FPRICE_AMT ,
+                T1.INT_AMT
             FROM
                 REG_FIN_PRODUCT_DEAL T1
             LEFT JOIN REG_FIN_PRODUCT_DEAL_ADD T2 ON
@@ -1544,6 +1570,27 @@
                 T5.PORTFOLIO_ID = T1.PORTFOLIO_ID
             LEFT JOIN ETR_ENTRUST T6 ON T6.ENTRUST_ID = T1.ENTRUST_ID
             LEFT JOIN ETR_ENTRUST_ADD T7 ON T7.ENTRUST_ID = T1.ENTRUST_ID
+            LEFT JOIN PTL_PORTFOLIO T8 ON T8.PORTFOLIO_ID = T6.PORTFOLIO_ID
+            LEFT JOIN (SELECT
+            ENTRUST_ID,
+            SUM(FINISH_AMT) AS FINISH_AMT
+            FROM
+            ETR_QUOTE_FINISH_STATUS
+            GROUP BY
+            ENTRUST_ID) T9
+            ON
+            T1.ENTRUST_ID = T9.ENTRUST_ID
+            LEFT JOIN(
+            SELECT
+            ENTRUST_ID,
+            SUM(FINISH_AMT) AS FINISH_AMT,
+            SUM(ENT_FINISH_AMT) AS ENT_FINISH_AMT
+            FROM
+            ETR_FINISH_STATUS
+            GROUP BY
+            ENTRUST_ID) T10
+            ON
+            T1.ENTRUST_ID = T10.ENTRUST_ID
             where T1.TOTLE_TRADE_ID   = #{quoteId}
     </select>
 
@@ -1553,7 +1600,7 @@ SELECT
                 T1.ENTRUST_ID,
                 T1.PORTFOLIO_ID,
                 T5.PORTFOLIO_ID,
-                T1.SHARE_AMT*100,
+                T1.SHARE_AMT*100 SHARE_AMT,
                 T1.INV_AIM businessModel,
                 T2.OUR_SHARE_AMT * 100 OUR_SHARE_AMT,
                 T2.OUR_CPRICE_AMT ,
@@ -1569,7 +1616,14 @@ SELECT
                 T1.SEC_MANAGE_ACCT_ID secManageAcctId,
                 T6.PRICE ,
                 T7.MATURE_YIELD ,
-                T7.EXER_YIELD
+                T7.EXER_YIELD,
+                (select sec_acct_name from stl_sec_acct_info where stl_sec_acct_info.sec_acct_id = T1.SEC_MANAGE_ACCT_ID)
+                as secAcctName,
+                T8.PORTFOLIO_NAME,
+                NVL(T6.ENTRUST_NUM, 0)/100 - NVL(T9.FINISH_AMT,0)/10000 - NVL(T10.ENT_FINISH_AMT,0)/100 avaNum,
+                T1.CPRICE_AMT ,
+                T1.FPRICE_AMT ,
+                T1.INT_AMT
             FROM
                 WFL_REG_FIN_PRODUCT_DEAL T1
             LEFT JOIN WFL_REG_FIN_PRODUCT_DEAL_ADD T2 ON
@@ -1584,6 +1638,27 @@ SELECT
                 T5.PORTFOLIO_ID = T1.PORTFOLIO_ID
             LEFT JOIN ETR_ENTRUST T6 ON T6.ENTRUST_ID = T1.ENTRUST_ID
             LEFT JOIN ETR_ENTRUST_ADD T7 ON T7.ENTRUST_ID = T1.ENTRUST_ID
+            LEFT JOIN PTL_PORTFOLIO T8 ON T8.PORTFOLIO_ID = T6.PORTFOLIO_ID
+            LEFT JOIN (SELECT
+            ENTRUST_ID,
+            SUM(FINISH_AMT) AS FINISH_AMT
+            FROM
+            ETR_QUOTE_FINISH_STATUS
+            GROUP BY
+            ENTRUST_ID) T9
+            ON
+            T1.ENTRUST_ID = T9.ENTRUST_ID
+            LEFT JOIN(
+            SELECT
+            ENTRUST_ID,
+            SUM(FINISH_AMT) AS FINISH_AMT,
+            SUM(ENT_FINISH_AMT) AS ENT_FINISH_AMT
+            FROM
+            ETR_FINISH_STATUS
+            GROUP BY
+            ENTRUST_ID) T10
+            ON
+            T1.ENTRUST_ID = T10.ENTRUST_ID
             where T1.TOTLE_TRADE_ID   = #{quoteId}
     </select>
 

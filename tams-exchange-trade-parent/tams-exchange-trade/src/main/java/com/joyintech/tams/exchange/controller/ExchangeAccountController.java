@@ -1,13 +1,20 @@
 package com.joyintech.tams.exchange.controller;
 
+import java.util.Objects;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.db.domain.AccountRiskParameter;
 import com.joyintech.tams.exchange.service.ExchangeAccountService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Objects;
+import com.joyintech.tams.exchange.service.trade.management.service.AccountManagement;
+import com.joyintech.tams.exchange.service.trade.management.service.AccountRiskParameterManagement;
 
 @RestController
 @RequestMapping("/joyin")
@@ -15,6 +22,12 @@ public class ExchangeAccountController {
 
     @Autowired
     private ExchangeAccountService accountService;
+    
+    @Autowired
+    private AccountManagement accountManagement;
+    
+    @Autowired
+    private AccountRiskParameterManagement accountRiskParameterManagement;
 
     /**
      * 账号查询
@@ -28,7 +41,9 @@ public class ExchangeAccountController {
                                    @RequestParam(value = "account_id", required = false) String accountId) {
         String param = "?user_id="+userId;
         if (Objects.nonNull(accountId))param += "&account_id="+accountId;
-        return accountService.queryAccount(param);
+//        return accountService.queryAccount(param);
+//////////////////////////兼容新UI后端
+        return accountManagement.queryAccount(accountId);
     }
 
     /**
@@ -108,7 +123,9 @@ public class ExchangeAccountController {
     public ResultBean queryAccountRiskParam(@RequestParam(value = "account_id", required = false) String accountId) {
         String param = null;
         if (Objects.nonNull(accountId)) param = "?account_id=" + accountId;
-        return accountService.queryAccountRiskParam(param);
+//        return accountService.queryAccountRiskParam(param);
+//////////////////////////兼容新UI后端
+        return accountRiskParameterManagement.queryAccountRiskParam(accountId);
     }
 
     /**
@@ -123,7 +140,9 @@ public class ExchangeAccountController {
                                           @RequestBody AccountRiskParameter accountRiskParameter) {
         String param = "?user_id=" + userId;
         HttpEntity<AccountRiskParameter> request = new HttpEntity<>(accountRiskParameter);
-        return accountService.addAccountRiskParam(param, request);
+//        return accountService.addAccountRiskParam(param, request);
+//////////////////////////兼容新UI后端
+        return accountRiskParameterManagement.addAccountRiskParam(accountRiskParameter);
     }
 
     /**
@@ -138,7 +157,9 @@ public class ExchangeAccountController {
                                              @RequestBody AccountRiskParameter accountRiskParameter) {
         String param = "?user_id=" + userId;
         HttpEntity<AccountRiskParameter> request = new HttpEntity<>(accountRiskParameter);
-        return accountService.updateAccountRiskParam(param, request);
+//        return accountService.updateAccountRiskParam(param, request);
+//////////////////////////兼容新UI后端
+        return accountRiskParameterManagement.updateAccountRiskParam(accountRiskParameter);
     }
 
     /**
@@ -151,6 +172,8 @@ public class ExchangeAccountController {
     public ResultBean deleteAccountRiskParam(@RequestParam(value = "account_id") String accountId) {
         String param = null;
         if (Objects.nonNull(accountId)) param = "?account_id=" + accountId;
-        return accountService.deleteAccountRiskParam(param);
+//        return accountService.deleteAccountRiskParam(param);
+//////////////////////////兼容新UI后端
+        return accountRiskParameterManagement.deleteAccountRiskParam(accountId);
     }
 }
