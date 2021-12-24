@@ -157,6 +157,8 @@ public class CfetsTrdConfirmService extends BaseService{
     private CfetsEtrIbBondinfoMapper cfetsEtrIbBondinfoMapper;
     @Autowired
     private CfetsTrdQueryMapper cfetsTrdQueryMapper;
+    @Autowired
+    private RegFinProductDealTotalMapper regFinProductDealTotalMapper;
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
     @Autowired
@@ -1488,6 +1490,13 @@ public class CfetsTrdConfirmService extends BaseService{
                             mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)){
                         return "存在流程中的交易数据，请重新选择！";
                     }
+                    //判断该数据是否已经被撤销
+                    Map<String, Object> pageParam = new HashMap<>();
+                    pageParam.put("totleTradeId",dto.getTotleTradeId());
+                    List<CfetsTrdConfirmRegInfoListResponse> flagList=cfetsTrdConfirmMapper.isExistDealInfo(pageParam);
+                    if(StringUtil.isEmptyList(flagList)) {
+                        return "请选择有效状态的数据！";
+                    }
                 }
             }
         }
@@ -1882,11 +1891,15 @@ public class CfetsTrdConfirmService extends BaseService{
         pageParam.put("direction",dto.getPageMode().getDirection());
         String userId = SecurityUtil.getLoginUser().getUserName();
         if (StringUtils.isNotEmpty(userId)) {
-            pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
-            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsTrdConfirmMapper.findAllTrdCstpInfoList(pageParam));
-        }else{
-            return null;
+            //判断角色配置
+            List<String> roleList=cfetsTrdQueryMapper.selectSysRoleById(userId);
+            if(roleList.contains(DictCodeList.角色岗位_交易员.getValue())){
+                //交易员
+                pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+            }
         }
+        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsTrdConfirmMapper.findAllTrdCstpInfoList(pageParam));
+
     }
     /**
      * 交易匹配确认列表-交易执行债券分页查询

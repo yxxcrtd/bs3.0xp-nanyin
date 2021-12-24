@@ -14,6 +14,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.PositionUtil;
@@ -182,6 +183,7 @@ public class CfetsTrdRedeem001Controller extends BaseController {
         else {
             cfetsTrdRedeemDealRegisterQuoteDto.setTotleTradeId(IDGenerator.generate());
         }
+        cfetsTrdRedeemDealRegisterQuoteDto.setMySideTrader(SecurityUtil.getLoginUser().getUserName());
 		ProcessParameter<CfetsTrdRedeemDealRegisterQuoteDto> processParameter = new ProcessParameter<CfetsTrdRedeemDealRegisterQuoteDto>();
 		WorkFlowParameter<CfetsTrdRedeemDealRegisterQuoteDto> params = new WorkFlowParameter<CfetsTrdRedeemDealRegisterQuoteDto>();
 		params.setPageId("CfetsTrdRedeem001");

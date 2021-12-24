@@ -1872,7 +1872,6 @@
         select * from (SELECT aaa.* FROM(
             SELECT
             decode(T1.is_cancel,'N',#{STATUS_VALID_01},'Y',#{STATUS_VALID_03}) as  effectiveStatus,
-            <!--case when T1.is_cancel='N' then  #{STATUS_VALID_01} else  #{STATUS_VALID_03} end as  effectiveStatus,-->
             case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
                  when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
                  when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
@@ -1896,7 +1895,7 @@
             'T+'||T1.settle_speed as settleSpeedStr,
             T1.SEC_MANAGE_ACCT_ID as secManageAcctId,
             T7.SEC_ACCT_NAME secManageAcctIdStr,
-            nvl(T1.share_amt,0)/100 as faceValue,
+            deal.share_amt/100 as faceValue,
             nvl(T1.yield,T1.rate) as tradeYield,
             T1.repo_term as termDays,
             T1.trade_amt tradeAmt,
@@ -1910,14 +1909,27 @@
             T1.remark,
             T1.TRADE_DATE as tradeDate
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
+            inner join (
+                select td.totle_trade_id,sum(td.share_amt) share_amt
+                from trd_product_deal td
+                left join  trd_product_deal_add tda
+                on td.trade_id=tda.trade_id
+                <if test="userId != null and userId != ''">
+                    inner JOIN PTL_PORTFOLIO_AUTHORITY PPA
+                    ON tda.portfolio_id = PPA.PORTFOLIO_ID
+                    AND PPA.USER_ID = #{userId}
+                </if>
+                where td.trade_status='01'
+                group by td.totle_trade_id
+            )deal
+            on T1.totle_trade_id=deal.totle_trade_id
             LEFT JOIN FIN_PRODUCT  T2 ON T1.FINPROD_ID = T2.FINPROD_ID
             left join fin_trade_product T3 on T1.FINPROD_ID=T3.finprod_id
             LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.counter_id
             LEFT JOIN STL_SEC_ACCT_INFO T7 ON T1.SEC_MANAGE_ACCT_ID = T7.SEC_ACCT_ID
             LEFT JOIN TRD_BANK_MANUAL_SETTLE_INFO T8 ON T1.TOTLE_TRADE_ID = T8.TRADE_ID
             LEFT JOIN STL_PAY_ORDERS T9 ON T1.TOTLE_TRADE_ID = T9.TRADE_ID
-            left join trdquto_match_info match
-            on T1.totle_trade_id=match.trd_id
+            left join trdquto_match_info match on T1.totle_trade_id=match.trd_id
             LEFT JOIN BUSI_TYPE_MAPPING btm ON T1.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
             LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='FINPROD_TYPE_TG' and sdl1.item_code = T1.FINPROD_TYPE2
             LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.dict_code ='BUSI_TYPE_POSITION' and sdl2.item_code = btm.BUSI_TYPE
@@ -1925,13 +1937,12 @@
             LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
             LEFT JOIN SYS_DATADICT_LIST sdl6 on sdl6.dict_code ='SHARES_TRADE_MARKET' and sdl6.item_code = T1.TRADE_MARKET_MODE
             LEFT JOIN SYS_DATADICT_LIST sdl7 on sdl7.dict_code ='CCY' and sdl7.item_code = T1.ccy
-
-            WHERE   T1.trade_status='01' and
-             T1.FINPROD_TYPE2 in ('F01','F02','F03') and T1.ps in ('T01','T02','T03','03','04')
-            <!--T1.TG_BUSI_TYPE IN (#{PINAN_BUSINESS_TYPE_09},#{PINAN_BUSINESS_TYPE_10},#{PINAN_BUSINESS_TYPE_11},
-            #{PINAN_BUSINESS_TYPE_20}, #{PINAN_BUSINESS_TYPE_74},#{PINAN_BUSINESS_TYPE_75})-->
+            WHERE   T1.trade_status='01' and T1.FINPROD_TYPE2 in ('F01','F02','F03') and T1.ps in ('T01','T02','T03','03','04')
             <![CDATA[ AND T1.trade_date >= #{startDate}]]>
             <![CDATA[ AND T1.trade_date <= #{endDate}]]>
+            <if test="submitUserId != null and submitUserId != ''">
+                and (T1.create_user= #{submitUserId} or T1.update_user= #{submitUserId})
+            </if>
             <if test="finprodIdList != null and finprodIdList.size() > 0">
                 AND nvl(T3.TERM_TYPE,T1.FINPROD_ID) in
                 <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
@@ -2065,6 +2076,11 @@
         from trd_product_deal t1
         left join trd_product_deal_add t2 on t1.trade_id=t2.trade_id
         left  join ptl_portfolio pp on t2.portfolio_id=pp.portfolio_id
+        <if test="userId != null and userId != ''">
+            inner JOIN  PTL_PORTFOLIO_AUTHORITY PPA
+            ON t2.portfolio_id = PPA.PORTFOLIO_ID
+            AND PPA.USER_ID = #{userId}
+        </if>
         left join fin_product fp on t1.finprod_id=fp.finprod_id
         left join fin_trade_product T3 on T1.FINPROD_ID=T3.finprod_id
         LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.counter_id
@@ -2079,11 +2095,12 @@
         LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
         LEFT JOIN SYS_DATADICT_LIST sdl6 on sdl6.dict_code ='SHARES_TRADE_MARKET' and sdl6.item_code = T1.TRADE_MARKET_MODE
         LEFT JOIN SYS_DATADICT_LIST sdl7 on sdl7.dict_code ='CCY' and sdl7.item_code = T1.ccy
-        WHERE   <!--T1.TG_BUSI_TYPE IN (#{PINAN_BUSINESS_TYPE_09},#{PINAN_BUSINESS_TYPE_10},#{PINAN_BUSINESS_TYPE_11},
-        #{PINAN_BUSINESS_TYPE_20}, #{PINAN_BUSINESS_TYPE_74},#{PINAN_BUSINESS_TYPE_75})-->
-        T1.trade_status='01' and T1.FINPROD_TYPE2 in ('F01','F02','F03') and T1.ps in ('T01','T02','T03','03','04')
+        WHERE   T1.trade_status='01' and T1.FINPROD_TYPE2 in ('F01','F02','F03') and T1.ps in ('T01','T02','T03','03','04')
         <![CDATA[ AND T1.trade_date >= #{startDate}]]>
         <![CDATA[ AND T1.trade_date <= #{endDate}]]>
+        <if test="submitUserId != null and submitUserId != ''">
+            and (t1.create_user= #{submitUserId} or t1.update_user= #{submitUserId})
+        </if>
         <if test="portfolioIdList != null and portfolioIdList.size() > 0">
             AND t2.portfolio_id in
             <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
@@ -2259,7 +2276,7 @@
         LEFT JOIN sys_datadict_list sdl ON sdl.dict_code='DISTRIBUTION' and sdl.item_code = T8.DIP_TYPE
         WHERE T4.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01}
         AND T1.TOTLE_TRADE_ID = #{totleTradeId} and T.trade_id=#{busiCode}
-        AND T1.TRADE_STATUS = #{TRADE_STATUS01} AND T1.IS_CANCEL = #{YESNO_N}
+        AND T1.TRADE_STATUS = #{TRADE_STATUS01}
 
     </select>
     <select id="findPortIntFenPeiInfoList"
@@ -2286,6 +2303,11 @@
         TPD.UNIT_CPRICE unitPrice
         FROM TRD_PRODUCT_DEAL TPD
         INNER JOIN TRD_PRODUCT_DEAL_ADD TPDA on TPD.TRADE_ID = TPDA.TRADE_ID
+        <if test="userName != null and userName != ''">
+            inner JOIN PTL_PORTFOLIO_AUTHORITY PPA
+            ON TPDA.portfolio_id = PPA.PORTFOLIO_ID
+            AND PPA.USER_ID = #{userName}
+        </if>
         LEFT JOIN PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = TPDA.PORTFOLIO_ID
         LEFT JOIN TRD_TRADE_FEE_DETAIL ttft ON tpd.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
         LEFT JOIN TRD_TRADE_FEE_DETAIL ttft1 ON tpd.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
@@ -2295,12 +2317,6 @@
         where TPD.TOTLE_TRADE_ID = #{totleTradeId}
         <if test="busiCode != null and busiCode != ''">
             and TPD.TRADE_ID=#{busiCode}
-        </if>
-        <if test="userName != null and userName != ''">
-            and TPDA.PORTFOLIO_ID
-            IN (SELECT PORTFOLIO_ID
-            FROM PTL_PORTFOLIO_AUTHORITY
-            WHERE USER_ID = #{userName})
         </if>
     </select>
     <resultMap id="trdBondInvestTradeFullResultMap" type="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto"

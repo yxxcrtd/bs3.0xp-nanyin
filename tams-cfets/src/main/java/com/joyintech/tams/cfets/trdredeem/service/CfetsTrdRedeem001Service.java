@@ -330,10 +330,10 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
             entity.setTradeDate(iPlatformDate.getSysDate());
             //理论行权日
             entity.setSettleDate(entity.getTheoreticalExerciseDate());
-
+            entity.setOuTraderId(entity.getMySideTrader());
 
             //entity.setOuPartyId(entity.getMySide());
-          //  entity.setOuTraderId(entity.getMySideTrader());
+
           //  entity.setDeliveryType(entity.getSettleMethod());
            // entity.setClearType(entity.getSettleType());
         //    entity.setUnitCprice(entity.getPrice());
@@ -698,6 +698,10 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
                 RegFinProductDealTotal regFinProductDealTotal = regFinProductDealTotalMapper.selectByPrimaryKey(item.getBusiCode());
                 if(iPlatformDate.getSysDate().compareTo(item.getExerciseDate())>=0){
                     errorList.add(new ValidMessage("理论行权日之后(包含理论行权日)赎回登记不支持手动撤销!业务编号:"+item.getBusiCode()));
+                }
+                //赎回登记数据只能是本人进行撤销
+                if(!StringUtil.equals(regFinProductDealTotal.getOuTraderId(),SecurityUtil.getLoginUser().getUserName())){
+                    errorList.add(new ValidMessage("赎回登记数据只能是本人进行撤销!业务编号:"+item.getBusiCode()));
                 }
             }
             if(CollectionUtils.isNotEmpty(errorList)){

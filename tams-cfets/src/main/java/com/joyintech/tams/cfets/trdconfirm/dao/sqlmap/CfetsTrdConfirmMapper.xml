@@ -1006,7 +1006,10 @@
         on nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON reg.counter_id= mccic.party_id
 
-        where 1=1
+        where 1=1  and reg.ps in ('T01','T02','03','04')
+        <if test="userId != null and userId != ''">
+            and (m.create_user= #{userId} or m.update_user= #{userId})
+        </if>
         <if test="ps != null  and ps!=''">
             AND reg.ps = #{ps}
         </if>
@@ -1139,6 +1142,9 @@
         on nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON nvl(ib.cp_party_id,ic.cp_party_id)= mccic.party_id
         where ct.BUSINESSTYPE in ('BOND','REPO')  and (ic.quote_id is not null or ib.quote_id is not null)
+        <if test="userId != null and userId != ''">
+            and (m.create_user= #{userId} or m.update_user= #{userId})
+        </if>
         <if test="ps != null  and ps!=''">
             AND nvl(ib.ps,ic.repo_ps) = #{ps}
         </if>
@@ -1582,6 +1588,31 @@
         delete from TRDQUTO_MATCH_INFO
         where trd_id = #{trdId,jdbcType=VARCHAR}
     </delete>
+    <select id="isExistDealInfo" parameterType="Map"
+            resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegInfoListResponse">
+        SELECT  reg.totle_trade_id as totleTradeId
+        from reg_fin_product_deal_total reg
+        where reg.trade_status='01' and reg.is_cancel='N'
+        <if test="totleTradeId != null and totleTradeId != ''">
+            AND reg.totle_trade_id =#{totleTradeId,jdbcType=VARCHAR}
+        </if>
+        union all
+        select
+        ib.quote_id  as totleTradeId
+        from ibu_quote_bond ib
+        where  ib.trade_status='07'
+        <if test="totleTradeId != null and totleTradeId != ''">
+            AND ib.quote_id= #{totleTradeId,jdbcType=VARCHAR}
+        </if>
+        union all
+        select
+        ic.quote_id  as totleTradeId
+        from ibu_quote_crep ic
+        where ic.TRADE_STATUS='07'
+        <if test="totleTradeId != null and totleTradeId != ''">
+            AND ic.quote_id =#{totleTradeId,jdbcType=VARCHAR}
+        </if>
+    </select>
 </mapper>
 
 

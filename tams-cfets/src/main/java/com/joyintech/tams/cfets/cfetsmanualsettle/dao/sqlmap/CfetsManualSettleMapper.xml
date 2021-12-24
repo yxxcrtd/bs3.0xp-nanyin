@@ -808,7 +808,7 @@
         LEFT JOIN sys_datadict_list sdl ON sdl.dict_code='DISTRIBUTION' and sdl.item_code = T8.DIP_TYPE
         WHERE T4.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01}
         AND T1.TOTLE_TRADE_ID = #{tradeId}
-        AND T1.TRADE_STATUS = #{TRADE_STATUS01} AND T1.IS_CANCEL = #{YESNO_N}
+        AND T1.TRADE_STATUS = #{TRADE_STATUS01}
     </select>
 
     <!-- 根据用户名得到真实姓名 -->

@@ -729,6 +729,23 @@ public class CfetsTrdQueryService extends BaseService{
 
         pageParam.put("sort",dto.getPageMode().getSort());
         pageParam.put("direction",dto.getPageMode().getDirection());
+        String userId = SecurityUtil.getLoginUser().getUserName();
+        if (StringUtils.isNotEmpty(userId)) {
+            //判断角色配置
+            List<String> roleList=cfetsTrdQueryMapper.selectSysRoleById(userId);
+            if(roleList.contains(DictCodeList.角色岗位_领导.getValue())
+                    || roleList.contains(DictCodeList.角色岗位_投资处长.getValue())
+                    || roleList.contains(DictCodeList.角色岗位_交易处长.getValue())
+            ){
+                //角色配置为领导、交易处长、投资处长可查看所有数据
+            }else if(roleList.contains(DictCodeList.角色岗位_交易员.getValue())){
+                //交易员
+                pageParam.put("submitUserId", SecurityUtil.getLoginUser().getUserName());
+            }else if(roleList.contains(DictCodeList.角色岗位_投资经理.getValue())){
+                //投资经理
+                pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+            }
+        }
 
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
                 () -> cfetsTrdQueryMapper.queryAllTradeInfoList(pageParam));
@@ -822,7 +839,23 @@ public class CfetsTrdQueryService extends BaseService{
 
         pageParam.put("sort",dto.getPageMode().getSort());
         pageParam.put("direction",dto.getPageMode().getDirection());
-
+        String userId = SecurityUtil.getLoginUser().getUserName();
+        if (StringUtils.isNotEmpty(userId)) {
+            //判断角色配置
+            List<String> roleList=cfetsTrdQueryMapper.selectSysRoleById(userId);
+            if(roleList.contains(DictCodeList.角色岗位_领导.getValue())
+                    || roleList.contains(DictCodeList.角色岗位_投资处长.getValue())
+                    || roleList.contains(DictCodeList.角色岗位_交易处长.getValue())
+            ){
+                //角色配置为领导、交易处长、投资处长可查看所有数据
+            }else if(roleList.contains(DictCodeList.角色岗位_交易员.getValue())){
+                //交易员
+                pageParam.put("submitUserId", SecurityUtil.getLoginUser().getUserName());
+            }else if(roleList.contains(DictCodeList.角色岗位_投资经理.getValue())){
+                //投资经理
+                pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+            }
+        }
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
                 () -> cfetsTrdQueryMapper.queryAllTradeDetailInfoList(pageParam));
     }
@@ -899,7 +932,14 @@ public class CfetsTrdQueryService extends BaseService{
         }
 
         //组合分配信息
-        pageParam.put("userName", LoginUserUtil.getUserName());
+        if (StringUtils.isNotEmpty(userId)) {
+            //判断角色配置
+            List<String> roleList=cfetsTrdQueryMapper.selectSysRoleById(userId);
+            if(roleList.contains(DictCodeList.角色岗位_投资经理.getValue())){
+                //投资经理
+                pageParam.put("userName", SecurityUtil.getLoginUser().getUserName());
+            }
+        }
         pageParam.put("CASH_TYPE_1_02", DictCodeListExt1.现金流一级类型_利息.getValue());
         pageParam.put("CASH_TYPE_2_C02", DictCodeListExt1.现金流二级类型_利息.getValue());
         List<PortIntFenPeiInfoDto> portIntFenPeiInfoDtoList =  cfetsTrdQueryMapper.findPortIntFenPeiInfoList(pageParam);
