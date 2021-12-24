@@ -1492,7 +1492,7 @@ public class CfetsTrdConfirmService extends BaseService{
                     }
                     //判断该数据是否已经被撤销
                     Map<String, Object> pageParam = new HashMap<>();
-                    pageParam.put("totleTradeId",dto.getTotleTradeId());
+                    pageParam.put("totleTradeId",item.getTotleTradeId());
                     List<CfetsTrdConfirmRegInfoListResponse> flagList=cfetsTrdConfirmMapper.isExistDealInfo(pageParam);
                     if(StringUtil.isEmptyList(flagList)) {
                         return "请选择有效状态的数据！";
