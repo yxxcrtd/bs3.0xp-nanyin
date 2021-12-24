@@ -509,8 +509,8 @@
             eted.DEAL_CUR_ACCT dealCurAcct,
             eted.REQUEST_ID requestId,
             eted.CAP_DAYS capDays, 
-            eted.VPAY_DATE vpayDate,
-            eted.MPAY_DATE mpayDate,
+            to_char(eted.VPAY_DATE,'yyyy-MM-dd') vpayDate,
+            to_char(eted.MPAY_DATE,'yyyy-MM-dd') mpayDate,
             eted.M_INT_AMT mIntAmt,
             eted.M_TRADE_AMT mTradeAmt,
             ee.Pledge_Ratio * 100 pledgeRatio, /** 折算率 **/
@@ -521,6 +521,7 @@
             oee.PLEDGE_NUMBER oldPledgeNumber,
             oee.PLEDGE_NUMBER * oee.Pledge_Face_Value oldPledStrdPrinAmt,
             T6.finprod_market_id oldFinprodMarketId,
+            eted.DEAL_MODE dealMode,  /** 申报类型 **/
             fp.Is_Right isRight
         FROM ETR_ENTRUST ete
         INNER JOIN ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
@@ -592,8 +593,8 @@
         eted.DEAL_CUR_ACCT dealCurAcct,
         eted.REQUEST_ID requestId,
         eted.CAP_DAYS capDays, 
-        eted.VPAY_DATE vpayDate,
-        eted.MPAY_DATE mpayDate,
+        to_char(eted.VPAY_DATE,'yyyy-MM-dd') vpayDate,
+        to_char(eted.MPAY_DATE,'yyyy-MM-dd') mpayDate,
         eted.M_INT_AMT mIntAmt,
         eted.M_TRADE_AMT mTradeAmt,
         ee.Pledge_Ratio * 100 pledgeRatio, /** 折算率 **/
@@ -604,6 +605,7 @@
         oee.PLEDGE_NUMBER oldPledgeNumber,
         oee.PLEDGE_NUMBER * oee.Pledge_Face_Value oldPledStrdPrinAmt,
         T6.finprod_market_id oldFinprodMarketId,
+        eted.DEAL_MODE dealMode,  /** 申报类型 **/
         fp.Is_Right isRight
         FROM WFL_ETR_ENTRUST ete
         INNER JOIN WFL_ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
@@ -706,8 +708,8 @@
         <include refid="etrDispatcherDealListInfo"/>
         FROM wfl_trd_product_deal tpd
         LEFT JOIN wfl_trd_product_deal_add tpda ON tpd.trade_id = tpda.trade_id
-        LEFT JOIN WFL_ETR_ENTRUST EE ON EE.ENTRUST_ID = tpda.ENTRUST_ID
-        LEFT JOIN WFL_ETR_ENTRUST_ADD EEA ON EE.ENTRUST_ID  = EEA.ENTRUST_ID
+        LEFT JOIN ETR_ENTRUST EE ON EE.ENTRUST_ID = tpda.ENTRUST_ID
+        LEFT JOIN ETR_ENTRUST_ADD EEA ON EE.ENTRUST_ID  = EEA.ENTRUST_ID
         LEFT JOIN PTL_PORTFOLIO pp ON tpda.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT fp ON tpd.finprod_id = fp.finprod_id
         LEFT JOIN MST_COUNTER_PARTY mcp ON tpd.counter_id = mcp.counter_id
@@ -927,8 +929,8 @@
         #{TRADE_FLOW_STATUS01} effectFlag,
         <include refid="etrDispatcherExeListInfo"/>
         FROM WFL_REG_FIN_PRODUCT_DEAL tpdp
-        LEFT JOIN WFL_ETR_ENTRUST EE ON EE.entrust_id = tpdp.entrust_id
-        LEFT JOIN WFL_ETR_ENTRUST_ADD EEA ON EE.entrust_id = EEA.entrust_id
+        LEFT JOIN ETR_ENTRUST EE ON EE.entrust_id = tpdp.entrust_id
+        LEFT JOIN ETR_ENTRUST_ADD EEA ON EE.entrust_id = EEA.entrust_id
         LEFT JOIN PTL_PORTFOLIO pp ON tpdp.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpdp.sec_manage_acct_id = ssai.SEC_ACCT_ID

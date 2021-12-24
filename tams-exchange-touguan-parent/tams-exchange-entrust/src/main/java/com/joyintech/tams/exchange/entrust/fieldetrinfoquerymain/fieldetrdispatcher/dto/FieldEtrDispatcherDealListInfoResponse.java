@@ -179,7 +179,7 @@ public class FieldEtrDispatcherDealListInfoResponse extends FieldEtrDispatcherBa
 
     @Override
     public String getTradeMarket() {
-        return tradeMarket;
+        return SysDataUtil.getNameFromDataDict(DictCode.交易场所, this.tradeMarket);
     }
 
     @Override
