@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/trade/joyin")
 @ResponseResultBody
-@Api(tags = "场内交易测试接口")
+@Api(tags = "场内交易-测试接口", hidden = true)
 public class TestController {
 	
 	@GetMapping("testList")
