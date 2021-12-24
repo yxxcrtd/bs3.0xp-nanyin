@@ -41,6 +41,7 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationHqResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeJjSaveRequest;
@@ -1087,6 +1088,19 @@ public class EtrExchangeTradeJj001Service extends CommonExportService<EtrExchang
         }
         return null;
     }
+
+	/** 查询竞价交易行情信息 **/
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public EtrExchangeTradeQuotationHqResponse findQuotations(String secId) {
+		String param = "?stock_code=" + secId;
+		Map<String, Object> quoteList;
+		Map quoteMap = restTemplate.getForObject(ServiceApplication.QUOTE_SERVICE_NAME + queryIntegratedTick + param, Map.class);
+		if (quoteMap != null && quoteMap.get("data") != null) {
+			quoteList = (Map<String, Object>) quoteMap.get("data");
+			return BeanUtil.mapToObject(quoteList,EtrExchangeTradeQuotationHqResponse.class);
+		}
+		return null;
+	}
 	/**
 	 * 修改/双击查看详情查询信息 <功能详细描述>
 	 *
