@@ -101,9 +101,9 @@
 <!--            AND T1.ENTRUST_STATUS = #{entrustStatus}-->
 <!--        </if>-->
         <if test="entrustStatus != null and entrustStatus.size()>0">
-<!--            <foreach collection="entrustStatus" open="AND T1.ENTRUST_STATUS in(" close=")" separator="," item="item">-->
-<!--                #{item}-->
-<!--            </foreach>-->
+            <foreach collection="entrustStatus" open="AND T1.ENTRUST_STATUS in(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
         </if>
         <if test="startDate != null and !startDate.equals('')">
             AND T1.ENTRUST_DATE &gt;=to_date(#{startDate},'yyyy-MM-dd')
