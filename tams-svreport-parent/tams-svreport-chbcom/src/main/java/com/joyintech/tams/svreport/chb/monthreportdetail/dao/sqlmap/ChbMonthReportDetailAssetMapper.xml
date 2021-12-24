@@ -135,12 +135,14 @@
             B.PROD_NAME prodName,
             B.IS_FHXGCP isFhxgcp,
             P.ASSET_CODE assetCode,
-            CASE WHEN B.SUBJECT_NAME IS NULL THEN NVL(I.ASSET_NAME,I.ASSET_CODE) ELSE B.SUBJECT_NAME END assetName,
+            CASE WHEN B.SUBJECT_NAME IS NULL THEN NVL(I.ASSET_NAME,I.ASSET_CODE)
+                 WHEN P.ASSETTYPE2 = '1001' THEN '现金'
+                 ELSE B.SUBJECT_NAME END assetName,
             P.OLD_ASSET_CODE oldAssetCode,
             IA.ASSET_NAME oldAssetName,
             NVL(I.VDATE,I.PLAN_SDATE) VDATE,
             NVL(I.MDATE,I.PLAN_EDATE) MDATE,
-            I.exercise_date exerciseDate,
+            CASE WHEN AP.MDATE!=I.MDATE and I.option_flag ='01' THEN AP.MDATE END exerciseDate,
             NVL(MC.CUSTOMER_NAME,P.SUBJECT_NAME) subjectName,
             I.asset_yield RATE,
             P.CCY,

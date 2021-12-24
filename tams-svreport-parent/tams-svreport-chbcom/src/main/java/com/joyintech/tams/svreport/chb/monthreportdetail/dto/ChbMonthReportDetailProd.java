@@ -284,7 +284,7 @@ public class ChbMonthReportDetailProd extends ChbMonthPrdPositiondetail implemen
 
     public String getTermtypeStr() {
         String  code = SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_期限类型, this.getTermtype());
-        return null!=code?code:SysDataUtil.getNameFromDataDict(DictCode.产品期限, this.getTermtype());
+        return null!=code?code:SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_产品期限, this.getTermtype());
     }
 
     public String getIsTransferStr() {

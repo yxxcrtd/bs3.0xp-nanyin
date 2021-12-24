@@ -114,7 +114,7 @@
             CASE WHEN B.SUBJECT_NAME IS NULL THEN NVL(I.ASSET_NAME,I.ASSET_CODE) ELSE B.SUBJECT_NAME END assetName,
             I.VDATE,
             I.MDATE,
-            P.OPENPLAN,
+            CASE WHEN AP.MDATE!=I.MDATE and I.option_flag ='01' THEN AP.MDATE END OPENPLAN,
             /**企业债,取资产基本信息(2-5逻辑)其余取贷款的信息(2-2~2-4逻辑)**/
             DECODE(P.ASSET_TYPE3,'S05',I.INSTIT_SIZE,P.enterprise_scale) partyType1 ,
             NVL(MC.CUSTOMER_NAME,P.SUBJECT_NAME) subjectName,

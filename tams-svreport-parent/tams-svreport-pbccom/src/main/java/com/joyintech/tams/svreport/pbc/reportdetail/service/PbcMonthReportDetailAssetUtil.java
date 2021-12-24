@@ -177,7 +177,7 @@ public class PbcMonthReportDetailAssetUtil {
     public static Boolean isAssetDate(String code){
         boolean flag = false;
         if(null!=code){
-            //特殊资产类型判断
+            //特殊资产类型判断svrPbcReportTaskService
             if(existsCode.contains(code)){
                 flag = true;
             //如果6-7位编号不是0.则认为是一二级类型.屏蔽
