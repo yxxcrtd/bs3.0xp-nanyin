@@ -1,20 +1,19 @@
 package com.joyintech.tams.report.submitmanagement.agentinstitutionregist.service;
 
+import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.system.common.listener.UploadListener;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.report.submitmanagement.agentinstitutionregist.dao.ChbAgentInstitutionSubMapper;
 import com.joyintech.tams.report.submitmanagement.agentinstitutionregist.dto.AgentInstitutionRegistDto;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.poi.ss.usermodel.Cell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 
 /**
@@ -42,6 +46,8 @@ public class AgentInstitutionRegist001Service extends CommonExportService<AgentI
 
     @Autowired
     private ChbAgentInstitutionSubMapper chbAgentInstitutionSubMapper;
+    @Autowired
+    private UploadListener uploadListener;
     /**
      * 短sql最大一次最大插入条数
      */
@@ -271,5 +277,39 @@ public class AgentInstitutionRegist001Service extends CommonExportService<AgentI
      */
     public List<SuggestDto> getAgentInstitutionCode(Map<String, Object> map) {
         return chbAgentInstitutionSubMapper.getAgentInstitutionCode(map);
+    }
+
+    /**
+     * 附件查看
+     * @param map
+     * @return
+     * @throws IOException
+     */
+    public String getFileList(Map<String, Object> map) throws IOException {
+        StringBuffer res=new StringBuffer();
+        if(map.get("enclosureAddress")==null){
+            return URLEncoder.encode("附件不存在", "UTF-8").replace("+","%20");
+        }
+        String enclosureAddress=(String) map.get("enclosureAddress");
+
+        UploadFile file=uploadListener.fetch(enclosureAddress);
+        if(file==null||file.getTargetFile()==null){
+            return URLEncoder.encode("附件丢失", "UTF-8").replace("+","%20");
+        }
+        res.append(file.getFileName()+":   "+file.getSize()/1000+"K<br><br>");
+        try(ZipFile zipFile=new ZipFile(file.getTargetFile(), Charset.forName("GBK"))){
+            for (Enumeration<? extends ZipEntry> e = zipFile.entries(); e.hasMoreElements();){
+                ZipEntry entry=e.nextElement();
+                if(entry.getName().substring(entry.getName().lastIndexOf("/")+1).length()>0){
+                    res.append(entry.getName().substring(entry.getName().lastIndexOf("/")+1)+"<br>");
+                }
+            }
+        }
+        catch (FileNotFoundException e) {
+            logger.error(e.getMessage(),e);
+            return URLEncoder.encode("文件未找到", "UTF-8").replace("+","%20");
+        }
+        String msg = URLEncoder.encode(res.toString(), "UTF-8").replace("+","%20");
+        return msg;
     }
 }
