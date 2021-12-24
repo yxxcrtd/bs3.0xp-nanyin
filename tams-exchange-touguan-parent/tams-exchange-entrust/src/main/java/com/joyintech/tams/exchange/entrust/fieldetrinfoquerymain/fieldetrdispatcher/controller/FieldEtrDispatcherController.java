@@ -156,8 +156,7 @@ public class FieldEtrDispatcherController extends BaseController {
     @ApiOperation(value = "指令成交查询", notes = "指令成交查询")
     @PostMapping("/getEtrDispatcherDealListInfo")
     @ResponseBody
-    public Message<Page<FieldEtrDispatcherDealListInfoResponse>> getEtrDispatcherDealListInfo(@RequestBody FieldEtrDispatcherInfoRequest dto)
-            throws Exception {
+    public Message<Page<FieldEtrDispatcherDealListInfoResponse>> getEtrDispatcherDealListInfo(@RequestBody FieldEtrDispatcherInfoRequest dto){
         try {
             Page<FieldEtrDispatcherDealListInfoResponse> returnDto = fieldEtrDispatcherService.getEtrDispatcherDealListInfo(dto);
             return new Message<Page<FieldEtrDispatcherDealListInfoResponse>>().success().setData(returnDto);
