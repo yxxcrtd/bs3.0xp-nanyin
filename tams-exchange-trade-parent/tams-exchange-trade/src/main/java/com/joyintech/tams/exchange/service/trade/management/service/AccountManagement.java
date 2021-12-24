@@ -47,11 +47,11 @@ public class AccountManagement {
     private InvestmentManagement investmentManagement;
 
     // 账户现存于投管，查询时调用投管服务
-    public List<CapitalAccountBean> queryAccount(String id) {
+    public ResultBean queryAccount(String id) {
         if (!Strings.isNullOrEmpty(id)) {
-            return investmentManagement.queryCapitalAccountByIdOrAgentType(id, null);
+            return new ResultBean(ErrorCode.SUCCESS, investmentManagement.queryCapitalAccountByIdOrAgentType(id, null));
         } else {
-            return investmentManagement.queryCapitalAccountAll();
+            return new ResultBean(ErrorCode.SUCCESS, investmentManagement.queryCapitalAccountAll());
         }
     }
 

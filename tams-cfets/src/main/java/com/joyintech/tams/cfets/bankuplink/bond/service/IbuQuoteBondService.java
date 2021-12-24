@@ -45,6 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -278,7 +279,7 @@ public class IbuQuoteBondService extends BaseService {
             cfetsBondDealQuoteCommonDto.setTradeDate(iPlatformDate.getSysDate());
             cfetsBondDealQuoteCommonDto.setSettleDate(ibuQuoteBondCalService.getNextWorkDay(cfetsBondDealQuoteCommonDto.getTradeDate(),null==cfetsBondDealEntrustOrderDto.getSettleSpreed()?0:Integer.parseInt(cfetsBondDealEntrustOrderDto.getSettleSpreed())));
             //处理锚定值
-            Map<String,Object> anchoringValueMap = handcalAnchoringValue(entrustDtos);
+            Map<String,Object> anchoringValueMap = handcalAnchoringValue(entrustDtos,"01");
             Set<String> set = anchoringValueMap.keySet();
             cfetsBondDealQuoteCommonDto.setPrice(null);
             cfetsBondDealQuoteCommonDto.setMatureYield(null);
@@ -375,6 +376,7 @@ public class IbuQuoteBondService extends BaseService {
      * @return
      */
     public List<EntrustDto> ptlAllocationAdd(PtlAllocationAddRequest ptlAllocationAddRequest){
+        List<EntrustDto> result = new ArrayList<>();
         Map<String, Object> param = BeanUtil.object2Map(ptlAllocationAddRequest);
         param.put("notentrustIdList",ptlAllocationAddRequest.getEntrustIdList());
         param.put("platDate", iPlatformDate.getSysDateStr());
@@ -382,11 +384,65 @@ public class IbuQuoteBondService extends BaseService {
         param.remove("entrustIdList");
         setParam(param);
         List<CfetsBondDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
-        if (!StringUtil.isEmptyList(entrustDtos)) {
-            return initPtlAllocation(entrustDtos);
+        //过滤，查询显示的数据需要是全部符合条件的数据
+        if(CollectionUtils.isNotEmpty(entrustDtos)){
+            filterptlAllocationAdd(entrustDtos,result);
         }
-        return new ArrayList<>();
+        return result;
     }
+
+
+    /**
+     * 过滤多余数据
+     * @param entrustDtos
+     * @param result
+     */
+    public void filterptlAllocationAdd(List<CfetsBondDealEntrustOrderDto> entrustDtos,List<EntrustDto> result){
+        Map<String,Object> anchoringValueMap = handcalAnchoringValue(entrustDtos,"02");
+        Set<String> set = anchoringValueMap.keySet();
+        String calculateField = StringUtil.EMPTY;BigDecimal comparValue = null;
+        for (String key : set) {
+            calculateField = key;
+            comparValue = (BigDecimal)anchoringValueMap.get(key);
+            break;
+        }
+        for (CfetsBondDealEntrustOrderDto item : entrustDtos) {
+            comparValue = ArithmeticUtil.round(comparValue,4, RoundingMode.HALF_UP);
+            if((StringUtil.equals(calculateField,"01")&&isqualified(item,item.getPrice(),comparValue,"01"))
+            ||(StringUtil.equals(calculateField,"02")&&isqualified(item,item.getPrice(),comparValue,"02"))
+            ||(StringUtil.equals(calculateField,"03")&&isqualified(item,item.getPrice(),comparValue,"02"))){
+                EntrustDto entrustDto = new EntrustDto();
+                BeanUtil.copyPropertiesIgnoreNull(entrustDto,item);
+                result.add(entrustDto);
+                continue;
+            }
+        }
+    }
+
+    /**
+     * 是否合规
+     * @param dto
+     * @param inputvalue
+     * @param comparValue
+     * @param direction  比较方向  01正向  02反向
+     * @return
+     */
+    public boolean isqualified(CfetsBondDealEntrustOrderDto dto,BigDecimal inputvalue,BigDecimal comparValue,String direction){
+            String ps = dto.getPs();
+            inputvalue = ArithmeticUtil.round(inputvalue,4, RoundingMode.HALF_UP);
+        if(StringUtil.equals(dto.getPriceModel(),DictCodeList.价格模式_指定价格.getValue())&&inputvalue.compareTo(comparValue)==0){return true;}
+        if(StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_买入.getValue())){
+            if(StringUtil.equals(dto.getPriceModel(),DictCodeList.价格模式_限价指令.getValue())&&StringUtil.equals(direction,"01")&&inputvalue.compareTo(comparValue)<=0){return true;}
+            if(StringUtil.equals(dto.getPriceModel(),DictCodeList.价格模式_限价指令.getValue())&&StringUtil.equals(direction,"02")&&inputvalue.compareTo(comparValue)>=0){return true;}
+        }
+        if(StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_卖出.getValue())||StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_行权_回售.getValue())){
+            if(StringUtil.equals(dto.getPriceModel(),DictCodeList.价格模式_限价指令.getValue())&&StringUtil.equals(direction,"01")&&inputvalue.compareTo(comparValue)<=0){return true;}
+            if(StringUtil.equals(dto.getPriceModel(),DictCodeList.价格模式_限价指令.getValue())&&StringUtil.equals(direction,"02")&&inputvalue.compareTo(comparValue)>=0){return true;}
+        }
+        return false;
+    }
+
+
 
     /**
      *  初始化组合分配列表(委托列表触发)
@@ -725,7 +781,13 @@ public class IbuQuoteBondService extends BaseService {
         return regTradeFee;
     }
 
-    public Map<String,Object> handcalAnchoringValue(List<CfetsBondDealEntrustOrderDto> entrustDtos){
+    /**
+     * 获取锚定值
+     * @param entrustDtos
+     * @param getsource  01表示指令列表初始化界面   02表示组合列表添加指令初始化
+     * @return
+     */
+    public Map<String,Object> handcalAnchoringValue(List<CfetsBondDealEntrustOrderDto> entrustDtos,String getsource){
         Map<String,Object> result = new HashMap<>();
         //按价格模式分组
         Map<String, List<CfetsBondDealEntrustOrderDto>> groupByPriceModel = entrustDtos.stream().collect(Collectors.groupingBy(CfetsBondDealEntrustOrderDto::getPriceModel));
@@ -757,6 +819,9 @@ public class IbuQuoteBondService extends BaseService {
                 translateKey = "02";
             }
             initValueFlag = false;
+        }
+        if(StringUtil.equals(getsource,"02")){
+            initValueFlag = true;
         }
         CfetsBondDealEntrustOrderDto  resultDto = null;
         if(groupByCalculateField.containsKey(translateKey)){

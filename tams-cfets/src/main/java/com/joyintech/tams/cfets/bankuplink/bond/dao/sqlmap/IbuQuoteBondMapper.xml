@@ -883,8 +883,7 @@
     select TT.*,D.ITEM_VALUE validStatusStr,E.ITEM_VALUE psStr,F.ITEM_VALUE quoteTypeStr,G.ITEM_VALUE assetTypeStr,H.ITEM_VALUE settleSpeedStr,I.ITEM_VALUE tradeMarketStr from (
         <!--买卖登记数据-->
         SELECT
-            CASE WHEN T1.IS_CANCEL = 'Y' THEN '03'
-            ELSE '01' END validStatus,
+            T1.TRADE_STATUS validStatus,
             T1.PS,
             T1.QUOTE_TYPE,
             T1.FINPROD_ID,
@@ -1005,8 +1004,7 @@
         UNION ALL
         <!--回售登记数据-->
         SELECT
-             CASE WHEN T1.IS_CANCEL = 'Y' THEN '03'
-            ELSE '01' END validStatus,
+            T1.TRADE_STATUS validStatus,
             T1.PS,
             T1.QUOTE_TYPE,
             T1.FINPROD_ID,

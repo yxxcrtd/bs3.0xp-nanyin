@@ -45,8 +45,8 @@ import java.util.Map;
 
 @Controller
 @PageId("FieldEtrInfoQuery")  
-@RequestMapping("/exchange/entrust/etrexchange/fieldetrinfoquery/fieldetrinfoquery")
-@Api(tags = "场内间指令查询")
+@RequestMapping("/exchange/entrust/fieldetrinfoquerymain/fieldetrinfoquery")
+@Api(tags = "场内指令查询")
 public class FieldEtrInfoQueryController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(FieldEtrInfoQueryController.class);
 

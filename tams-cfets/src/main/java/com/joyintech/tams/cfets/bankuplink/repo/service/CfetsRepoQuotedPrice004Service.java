@@ -1152,7 +1152,13 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             }
         }
     }
-
+    /**
+     * 头寸处理
+     * @author jiangpeng
+     * @date 2021/12/24 10:12
+     * @param cfetsRepoDealRegisterQuoteDto
+     * @param cfetsRepoDealDbDto
+     */
     private void sendPositionMethod(CfetsRepoDealRegisterQuoteDto cfetsRepoDealRegisterQuoteDto, CfetsRepoDealDbDto cfetsRepoDealDbDto) {
         List<CfetsEtrIbRepoPosPortfolioCashRequest> ptlCashList = new ArrayList<>();
         List<CfetsEtrIbRepoPosPortfolioSecRequest> ptlSecList = new ArrayList<>();
@@ -1203,7 +1209,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         req.setUserId(SecurityUtil.getLoginUser().getUserName());
         req.setTotalTradeId(cfetsRepoDealDbDto.getRegFinProductDealTotal().getTotleTradeId());
         req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
-        req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
+        req.setModelType(DictCodeListExt1.子系统代码_交易.getValue());
         String balanceCheck = "Y";
 //        if(StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(),"Y")){
 //            balanceCheck="N";
@@ -1213,7 +1219,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         req.setBusiType(DictCodeListExt3.头寸业务类型_质押式回购首期.getValue());
         req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
         req.setSettleSpeed(cfetsRepoDealRegisterQuoteDto.getSettleSpreedCode());
-        req.setBusiAct(DictCodeListExt3.业务动作_投资指令.getValue());
+        req.setBusiAct(DictCodeListExt3.业务动作_交易登记.getValue());
         req.setPs(dealTotal.getPs());
         req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
         req.setCdate(dealTotal.getTradeDate());

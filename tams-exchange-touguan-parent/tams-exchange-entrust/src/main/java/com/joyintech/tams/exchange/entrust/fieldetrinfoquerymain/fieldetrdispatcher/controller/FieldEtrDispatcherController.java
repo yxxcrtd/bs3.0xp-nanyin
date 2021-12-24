@@ -42,13 +42,13 @@ import java.util.*;
 
 @Controller
 @PageId("FieldEtrDispatcher")
-@RequestMapping("/field/etrdispatcher/FieldEtrDispatcher")
+@RequestMapping("/exchange/entrust/fieldetrinfoquerymain/fieldetrdispatcher")
 @Api(tags = "场内指令分发")
 public class FieldEtrDispatcherController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(FieldEtrDispatcherController.class);
 
     @Autowired
-    private FieldEtrDispatcherService cfetsEtrDispatcherService;
+    private FieldEtrDispatcherService fieldEtrDispatcherService;
 
     @ApiOperation(value = "查询页面初始化参数", notes = "查询页面初始化参数")
     @PostMapping("/getPageParams")
@@ -113,7 +113,7 @@ public class FieldEtrDispatcherController extends BaseController {
     public Message<Page<FieldEtrDispatcherTradeListResponse>> findAllEtrDispatcherCommon(@RequestBody FieldEtrDispatcherTradeListRequest dto)
             throws Exception {
         try {
-            Page<FieldEtrDispatcherTradeListResponse> page = cfetsEtrDispatcherService.findAllEtrDispatcherCommon(dto);
+            Page<FieldEtrDispatcherTradeListResponse> page = fieldEtrDispatcherService.findAllEtrDispatcherCommon(dto);
             return new Message<Page<FieldEtrDispatcherTradeListResponse>>().success().setData(page);
         } catch (Exception e) {
             logger.error("查询指令管理分页数据异常", e);
@@ -136,7 +136,7 @@ public class FieldEtrDispatcherController extends BaseController {
     public Message<Page<FieldEtrDispatcherExeListInfoResponse>> getEtrDispatcherExeListInfo(@RequestBody FieldEtrDispatcherInfoRequest dto)
             throws Exception {
         try {
-            Page<FieldEtrDispatcherExeListInfoResponse> returnDto = cfetsEtrDispatcherService.getEtrDispatcherExeListInfo(dto);
+            Page<FieldEtrDispatcherExeListInfoResponse> returnDto = fieldEtrDispatcherService.getEtrDispatcherExeListInfo(dto);
             return new Message<Page<FieldEtrDispatcherExeListInfoResponse>>().success().setData(returnDto);
         } catch (Exception e) {
             logger.error("查询指令管理分页数据异常", e);
@@ -159,7 +159,7 @@ public class FieldEtrDispatcherController extends BaseController {
     public Message<Page<FieldEtrDispatcherDealListInfoResponse>> getEtrDispatcherDealListInfo(@RequestBody FieldEtrDispatcherInfoRequest dto)
             throws Exception {
         try {
-            Page<FieldEtrDispatcherDealListInfoResponse> returnDto = cfetsEtrDispatcherService.getEtrDispatcherDealListInfo(dto);
+            Page<FieldEtrDispatcherDealListInfoResponse> returnDto = fieldEtrDispatcherService.getEtrDispatcherDealListInfo(dto);
             return new Message<Page<FieldEtrDispatcherDealListInfoResponse>>().success().setData(returnDto);
         } catch (Exception e) {
             logger.error("查询指令成交异常", e);
@@ -181,7 +181,7 @@ public class FieldEtrDispatcherController extends BaseController {
     @ResponseBody
     public Message<Page<FieldEtrDispatcherRskInfoResponse>> getEtrDispatcherRskInfo(@RequestBody FieldEtrDispatcherInfoRequest dto){
         try {
-            Page<FieldEtrDispatcherRskInfoResponse> page = cfetsEtrDispatcherService.getEtrDispatcherRskInfo(dto);
+            Page<FieldEtrDispatcherRskInfoResponse> page = fieldEtrDispatcherService.getEtrDispatcherRskInfo(dto);
             return new Message<Page<FieldEtrDispatcherRskInfoResponse>>().success().setData(page);
         } catch (Exception e) {
             logger.error("查询风险试算分页数据异常", e);
@@ -196,7 +196,7 @@ public class FieldEtrDispatcherController extends BaseController {
     public void exportEtrDispatcherList(@RequestBody FieldExportRequestDto req, HttpServletResponse response) {
         // 导出
         ExcelUitl.doExport(req, response, "指令分发", () -> {
-            List dataList = cfetsEtrDispatcherService.findAllEtrDispatcherCommon(req.getDto(FieldEtrDispatcherTradeListRequest.class)).getRoot();
+            List dataList = fieldEtrDispatcherService.findAllEtrDispatcherCommon(req.getDto(FieldEtrDispatcherTradeListRequest.class)).getRoot();
             return dataList;
         });
     }
@@ -204,26 +204,26 @@ public class FieldEtrDispatcherController extends BaseController {
     /**
      * 自动分发
      *
-     * @param cfetsDto br
+     * @param fieldDto br
      * @return Message<AjaxResult>
      * @author sjj
      */
     @ResponseBody
     @ApiOperation(value = "自动分发提交", notes = "自动分发提交")
     @PostMapping("submit")
-    public Message<AjaxResult> submit(@RequestBody FieldEtrDispatcherAutoRequest cfetsDto, BindingResult br){
+    public Message<AjaxResult> submit(@RequestBody FieldEtrDispatcherAutoRequest fieldDto, BindingResult br){
         //提交check
-        String returnMsg= cfetsEtrDispatcherService.checkSave(cfetsDto, br);
+        String returnMsg= fieldEtrDispatcherService.checkSave(fieldDto, br);
         if (StringUtil.isNotBlank(returnMsg)) {
             return new Message<AjaxResult>().fail().setMessage(returnMsg);
         }
 
         //设置提交
-        cfetsEtrDispatcherService.deleteEtrAutoTime();
-        if (cfetsDto.getVdate().equals("1900-01-01") && cfetsDto.getMdate().equals("2099-12-31")) {
+        fieldEtrDispatcherService.deleteEtrAutoTime();
+        if (fieldDto.getVdate().equals("1900-01-01") && fieldDto.getMdate().equals("2099-12-31")) {
 
         } else {
-            int count = cfetsEtrDispatcherService.insertEtrAutoTime(cfetsDto);
+            int count = fieldEtrDispatcherService.insertEtrAutoTime(fieldDto);
             if (count == 0) {
                 return new Message<AjaxResult>().fail().setMessage("自动分发设置失败，请联系管理员！");
             }
@@ -242,8 +242,8 @@ public class FieldEtrDispatcherController extends BaseController {
     @PostMapping("findAutoDetail")
     public Message<FieldEtrDispatcherAutoRequest> findAutoDetail(){
         try {
-            FieldEtrDispatcherAutoRequest cfetsEtrDispatcherAutoRequest = cfetsEtrDispatcherService.findAutoDetail();
-            return new Message<FieldEtrDispatcherAutoRequest>().success().setData(cfetsEtrDispatcherAutoRequest);
+            FieldEtrDispatcherAutoRequest fieldEtrDispatcherAutoRequest = fieldEtrDispatcherService.findAutoDetail();
+            return new Message<FieldEtrDispatcherAutoRequest>().success().setData(fieldEtrDispatcherAutoRequest);
         } catch (Exception e) {
             logger.error("自动分发查询异常", e);
             return new Message<FieldEtrDispatcherAutoRequest>().fail().setMessage("自动分发查询异常");
@@ -254,23 +254,23 @@ public class FieldEtrDispatcherController extends BaseController {
     /**
      * 点击分发按钮check
      *
-     * @param cfetsDto br
+     * @param fieldDto br
      * @return Message<AjaxResult>
      * @author sjj
      */
     @ResponseBody
     @ApiOperation(value = "分发check", notes = "分发check")
     @PostMapping("doDispatcherCheck")
-    public Message<AjaxResult> doDispatcherCheck(@RequestBody FieldEtrDispatcherInfoRequest cfetsDto, BindingResult br)
+    public Message<AjaxResult> doDispatcherCheck(@RequestBody FieldEtrDispatcherInfoRequest fieldDto, BindingResult br)
             throws Exception {
         //提交check
-        Map<String, Object> pageParam = BeanUtil.object2Map(cfetsDto);
-        AjaxResult ajaxResult = cfetsEtrDispatcherService.doDispatcherCheck(pageParam, br);
+        Map<String, Object> pageParam = BeanUtil.object2Map(fieldDto);
+        AjaxResult ajaxResult = fieldEtrDispatcherService.doDispatcherCheck(pageParam, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return new Message<AjaxResult>().fail().setMessage(ajaxResult.getMessage());
         } else {
             //选择交易员
-            List<SelectOptionDto> userList = cfetsEtrDispatcherService.getUsers(pageParam);
+            List<SelectOptionDto> userList = fieldEtrDispatcherService.getUsers(pageParam);
             ajaxResult.setData(userList);
             return new Message<AjaxResult>().success().setData(ajaxResult);
         }
@@ -279,24 +279,24 @@ public class FieldEtrDispatcherController extends BaseController {
     /**
      * 点击分发确认
      *
-     * @param cfetsDto br
+     * @param fieldDto br
      * @return Message<AjaxResult>
      * @author sjj
      */
     @ResponseBody
     @ApiOperation(value = "分发", notes = "分发")
     @PostMapping("doDispatcher")
-    public Message<AjaxResult> doDispatcher(@RequestBody FieldEtrDispatcherDealRequest cfetsDto, BindingResult br)
+    public Message<AjaxResult> doDispatcher(@RequestBody FieldEtrDispatcherDealRequest fieldDto, BindingResult br)
             throws Exception {
         //提交check
         try {
-            Map<String, Object> pageParam = BeanUtil.object2Map(cfetsDto);
-            AjaxResult ajaxResult = cfetsEtrDispatcherService.doDispatcherDealCheck(pageParam, br);
+            Map<String, Object> pageParam = BeanUtil.object2Map(fieldDto);
+            AjaxResult ajaxResult = fieldEtrDispatcherService.doDispatcherDealCheck(pageParam, br);
             if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
                 return new Message<AjaxResult>().fail().setMessage(ajaxResult.getMessage());
             } else {
                 //选择交易员
-                cfetsEtrDispatcherService.doDispatcherDeal(pageParam);
+                fieldEtrDispatcherService.doDispatcherDeal(pageParam);
                 return new Message<AjaxResult>().success().setMessage("分发成功");
             }
         } catch (Exception e) {
@@ -308,25 +308,25 @@ public class FieldEtrDispatcherController extends BaseController {
     /**
      * 点击退回
      *
-     * @param cfetsDto br
+     * @param fieldDto br
      * @return Message<AjaxResult>
      * @author sjj
      */
     @ResponseBody
     @ApiOperation(value = "退回", notes = "退回")
     @PostMapping("doRefuseEntrust")
-    public Message<AjaxResult> doRefuseEntrust(@RequestBody FieldEtrDispatcherDealRequest cfetsDto, BindingResult br)
+    public Message<AjaxResult> doRefuseEntrust(@RequestBody FieldEtrDispatcherDealRequest fieldDto, BindingResult br)
             throws Exception {
         //退回check
         try {
-            Map<String, Object> pageParam = BeanUtil.object2Map(cfetsDto);
-            AjaxResult ajaxResult = cfetsEtrDispatcherService.doRefuseEntrustCheck(pageParam, br);
+            Map<String, Object> pageParam = BeanUtil.object2Map(fieldDto);
+            AjaxResult ajaxResult = fieldEtrDispatcherService.doRefuseEntrustCheck(pageParam, br);
             if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
                 return new Message<AjaxResult>().fail().setMessage(ajaxResult.getMessage());
             }
             else{
                 //退回指令
-                ajaxResult = cfetsEtrDispatcherService.refuseEntrust(pageParam);
+                ajaxResult = fieldEtrDispatcherService.refuseEntrust(pageParam);
 
                 return new Message<AjaxResult>().success().setMessage("退回成功");
             }
@@ -350,7 +350,7 @@ public class FieldEtrDispatcherController extends BaseController {
     public Message<List<FieldEtrDispatcherTraderAuthListResponse>> getTraderAuthList()
             throws Exception {
         try {
-            List<FieldEtrDispatcherTraderAuthListResponse> list = cfetsEtrDispatcherService.getTraderAuthList();
+            List<FieldEtrDispatcherTraderAuthListResponse> list = fieldEtrDispatcherService.getTraderAuthList();
             return new Message<List<FieldEtrDispatcherTraderAuthListResponse>>().success().setData(list);
         }catch (Exception e) {
             logger.error("查询分发权限配置交易员数据异常",e);
@@ -377,14 +377,14 @@ public class FieldEtrDispatcherController extends BaseController {
         List<FieldEtrDispatcherTraderAuthListResponse> dtoList = dto.getDtoList();
         //提交check，软控
         if(StringUtil.equals(dto.getIsConfirmFlag(), DictCodeList.是否_否.getValue())){
-            ajaxResult = cfetsEtrDispatcherService.checkSaveTraderAuthList(dtoList);
+            ajaxResult = fieldEtrDispatcherService.checkSaveTraderAuthList(dtoList);
             if(StringUtil.isNotBlank(ajaxResult.getMessage())){
                 return new Message<AjaxResult>().success().setData(ajaxResult);
             }
         }
 
         //保存
-        ajaxResult = cfetsEtrDispatcherService.doSaveTraderAuthList(dtoList);
+        ajaxResult = fieldEtrDispatcherService.doSaveTraderAuthList(dtoList);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return new Message<AjaxResult>().fail().setMessage("分发权限设置失败");
         }else{
@@ -397,7 +397,7 @@ public class FieldEtrDispatcherController extends BaseController {
     @ApiOperation(value = "交易员列表模糊查询", notes = "交易员列表模糊查询")
     public Message<List<FieldEtrDispatcherTraderListRequest>> getEtrTraderList() {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
-        List<FieldEtrDispatcherTraderListRequest> list = cfetsEtrDispatcherService.getEtrTraderList(param);
+        List<FieldEtrDispatcherTraderListRequest> list = fieldEtrDispatcherService.getEtrTraderList(param);
         return new Message<List<FieldEtrDispatcherTraderListRequest>>().success().setData(list);
     }
 
@@ -406,7 +406,7 @@ public class FieldEtrDispatcherController extends BaseController {
     @ApiOperation(value = "交易员与工作量列表查询", notes = "交易员与工作量列表查询")
     public Message<List<FieldEtrDispatcherTraderListRequest>> getEtrTraderAndWorkloadList() {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
-        List<FieldEtrDispatcherTraderListRequest> list = cfetsEtrDispatcherService.getEtrTraderAndWorkloadList(param);
+        List<FieldEtrDispatcherTraderListRequest> list = fieldEtrDispatcherService.getEtrTraderAndWorkloadList(param);
         return new Message<List<FieldEtrDispatcherTraderListRequest>>().success().setData(list);
     }
 
@@ -418,7 +418,7 @@ public class FieldEtrDispatcherController extends BaseController {
                                                        @PathVariable("spcdCode") String spcdCode,
                                                        @RequestBody FieldEtrDispatcherInfoRequest dto) {
         try{
-            Map<String,Object> resultData = cfetsEtrDispatcherService.getReadonlyFormEtrInfo(pageCode,dtCode,spcdCode,dto);
+            Map<String,Object> resultData = fieldEtrDispatcherService.getReadonlyFormEtrInfo(pageCode,dtCode,spcdCode,dto);
             return new Message<Map<String,Object>>().success().setData(resultData);
         } catch (Exception e) {
             logger.error("查询指令信息明细分页数据异常", e);

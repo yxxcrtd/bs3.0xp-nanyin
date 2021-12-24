@@ -697,7 +697,7 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
             if(StringUtil.equals(item.getPs(), com.joyintech.tams.constant.DictCodeList.交易方向_行权_赎回.getValue())){
                 RegFinProductDealTotal regFinProductDealTotal = regFinProductDealTotalMapper.selectByPrimaryKey(item.getBusiCode());
                 if(iPlatformDate.getSysDate().compareTo(item.getExerciseDate())>=0){
-                    errorList.add(new ValidMessage("理论行权日之后(包含理论行权日)回售登记不支持手动撤销!业务编号:"+item.getBusiCode()));
+                    errorList.add(new ValidMessage("理论行权日之后(包含理论行权日)赎回登记不支持手动撤销!业务编号:"+item.getBusiCode()));
                 }
             }
             if(CollectionUtils.isNotEmpty(errorList)){
