@@ -109,7 +109,7 @@
                 </foreach>
             </if>
             <if test="keyList != null and keyList.size()&gt;0">
-                <foreach close=")" collection="keyList" item="item" open="and REGIST_SEQNO in(" separator=",">
+                <foreach close=")" collection="keyList" item="item" open="and trim(REGIST_SEQNO) in(" separator=",">
                     #{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
@@ -197,7 +197,7 @@
         </set>
         <where>
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
-                sub.REGIST_SEQNO = #{regist.registSeqno,jdbcType=CHAR}
+                sub.trim(REGIST_SEQNO) = #{regist.registSeqno,jdbcType=CHAR}
             </foreach>
         </where>
     </update>
@@ -211,7 +211,7 @@
         </set>
         <where>
             <foreach collection="list" item="dto" open="(" close=")" separator=") or (">
-                REGIST_SEQNO = #{dto.registSeqno}
+                trim(REGIST_SEQNO) = #{dto.registSeqno}
             </foreach>
         </where>
     </update>
