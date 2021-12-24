@@ -58,6 +58,105 @@ public class FieldEtrDispatcherBaseInfo {
     @ApiModelProperty(name="counterTrader",value="对方交易员",example="字符串1")
     private String counterTrader;
 
+    @ApiModelProperty(name="conId",value="股票代码",example="字符串1")
+    private String conId;
+    
+    @ApiModelProperty(name="conName",value="股票名称",example="字符串1")
+    private String conName;
+
+    @ApiModelProperty(name="expConValue",value="转股价值",example="10000")
+    private String expConValue;
+
+    @ApiModelProperty(name="expConNum",value="可转股数量",example="10000")
+    private String expConNum;
+
+    @ApiModelProperty(name="preb",value="转股溢价率",example="10000")
+    private String preb;
+
+    @ApiModelProperty(name="prec",value="纯债溢价率",example="10000")
+    private String prec;
+
+    @ApiModelProperty(name="dealCurAcct",value="资金账号",example="字符串1")
+    private String dealCurAcct;
+
+    @ApiModelProperty(name="requestId",value="请求编号",example="字符串1")
+    private String requestId;
+
+    @ApiModelProperty(name="capDays",value="占款天数",example="A1")
+    private String capDays;
+
+    public String getCapDays() {
+        return capDays;
+    }
+
+    public void setCapDays(String capDays) {
+        this.capDays = capDays;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
+
+    public String getDealCurAcct() {
+        return dealCurAcct;
+    }
+
+    public void setDealCurAcct(String dealCurAcct) {
+        this.dealCurAcct = dealCurAcct;
+    }
+
+    public String getPreb() {
+        return preb;
+    }
+
+    public void setPreb(String preb) {
+        this.preb = preb;
+    }
+
+    public String getPrec() {
+        return prec;
+    }
+
+    public void setPrec(String prec) {
+        this.prec = prec;
+    }
+
+    public String getConId() {
+        return conId;
+    }
+
+    public void setConId(String conId) {
+        this.conId = conId;
+    }
+
+    public String getConName() {
+        return conName;
+    }
+
+    public void setConName(String conName) {
+        this.conName = conName;
+    }
+
+    public String getExpConValue() {
+        return expConValue;
+    }
+
+    public void setExpConValue(String expConValue) {
+        this.expConValue = expConValue;
+    }
+
+    public String getExpConNum() {
+        return expConNum;
+    }
+
+    public void setExpConNum(String expConNum) {
+        this.expConNum = expConNum;
+    }
+
     public String getCounterTrader() {
         return counterTrader;
     }
