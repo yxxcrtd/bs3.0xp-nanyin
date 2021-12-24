@@ -3,7 +3,7 @@ package com.joyintech.tams.exchange.controller;
 import com.google.common.base.Strings;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
-import com.joyintech.tams.exchange.service.ExchangeCounterService;
+import com.joyintech.tams.exchange.service.trade.management.service.CounterManagement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +14,11 @@ import java.util.Map;
 @RequestMapping("/joyin")
 public class ExchangeCounterController {
 
+/*    @Autowired
+    private ExchangeCounterService exchangeCounterService;*/
+
     @Autowired
-    private ExchangeCounterService exchangeCounterService;
+    private CounterManagement counterManagement;
 
     /*** 
      * @Description: 查询交易对手信息
@@ -31,7 +34,9 @@ public class ExchangeCounterController {
         if (!Strings.isNullOrEmpty(counterId)) {
             pageParam.put("counterId", counterId);
         }
-        return exchangeCounterService.queryCounterPartyInfo(pageParam);
+//        return exchangeCounterService.queryCounterPartyInfo(pageParam);
+//////////////////////////兼容新UI后端
+        return counterManagement.queryCounterPartyInfo(pageParam);
     }
 
     /*** 
@@ -52,7 +57,9 @@ public class ExchangeCounterController {
         if (!Strings.isNullOrEmpty(counterSeatId)) {
             pageParam.put("counterSeatId", counterSeatId);
         }
-        return exchangeCounterService.queryCounterSeatInfo(pageParam);
+//        return exchangeCounterService.queryCounterSeatInfo(pageParam);
+        //////////////////////////兼容新UI后端
+        return counterManagement.queryCounterSeatInfo(pageParam);
     }
 
     /*** 
@@ -73,7 +80,9 @@ public class ExchangeCounterController {
         if (!Strings.isNullOrEmpty(counterTraderId)) {
             pageParam.put("counterTraderId", counterTraderId);
         }
-        return exchangeCounterService.queryCounterTraderInfo(pageParam);
+//        return exchangeCounterService.queryCounterTraderInfo(pageParam);
+        //////////////////////////兼容新UI后端
+        return counterManagement.queryCounterTraderInfo(pageParam);
     }
 
     /**
@@ -91,7 +100,9 @@ public class ExchangeCounterController {
         if (!Strings.isNullOrEmpty(counterTraderId)) {
             pageParam.put("counterTraderId", counterTraderId);
         }
-        return exchangeCounterService.queryCounterTraderInfo(pageParam);
+//        return exchangeCounterService.queryCounterTraderInfo(pageParam);
+        //////////////////////////兼容新UI后端
+        return counterManagement.queryCounterTraderInfo(pageParam);
     }
 
     /*** 
@@ -114,7 +125,9 @@ public class ExchangeCounterController {
         }
         pageParam.put("counterId", counterId);
         pageParam.put("counterSeatId", counterSeatId);
-        return exchangeCounterService.addCounterSeat(pageParam);
+//        return exchangeCounterService.addCounterSeat(pageParam);
+        //////////////////////////兼容新UI后端
+        return counterManagement.addCounterSeat(pageParam);
     }
 
     /*** 
@@ -137,7 +150,9 @@ public class ExchangeCounterController {
         }
         pageParam.put("counterId", counterId);
         pageParam.put("counterTraderId", counterTraderId);
-        return exchangeCounterService.addCounterTrader(pageParam);
+//        return exchangeCounterService.addCounterTrader(pageParam);
+        //////////////////////////兼容新UI后端
+        return counterManagement.addCounterTrader(pageParam);
     }
 
     /**
@@ -156,6 +171,8 @@ public class ExchangeCounterController {
         // 该处接口调用和新增对手交易员一致， 但此处字段为固定入参，标识为新增本方交易员
         pageParam.put("counterId", "homeTrader");
         pageParam.put("counterTraderId", counterTraderId);
-        return exchangeCounterService.addCounterTrader(pageParam);
+//        return exchangeCounterService.addCounterTrader(pageParam);
+        //////////////////////////兼容新UI后端
+        return counterManagement.addCounterTrader(pageParam);
     }
 }
