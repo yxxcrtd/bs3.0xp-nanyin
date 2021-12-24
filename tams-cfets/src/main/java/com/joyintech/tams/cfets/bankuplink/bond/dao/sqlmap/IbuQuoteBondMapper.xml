@@ -94,6 +94,7 @@
         calculateField,
         FIN_PRODUCT.IS_RIGHT isRight,
         FIN_PRODUCT_TYPE.TYPE_4 assetTypeOne,
+        FIN_PRODUCT_TYPE.TYPE_11 type11,
         ETR_ENTRUST.REMARK remark,
         ETR_ENTRUST.CCY settleCcy,
         ETR_ENTRUST.CCY ccy,
@@ -1451,7 +1452,11 @@
             T3.FINPROD_ABBR  finprodAbbr,
             CASE WHEN T6.REAL_NAME IS NULL THEN T1.OU_TRADER_ID
             ELSE T6.REAL_NAME END ouTraderName,
-            T2.CAL_MODE calculateField
+            T2.CAL_MODE calculateField,
+            case when T1.PS = 'T03' THEN T1.SETTLE_DATE
+            ELSE NULL END theoreticalExerciseDate,
+            case when T1.PS = 'T03' THEN T2.ACT_SETTE_DATE
+            ELSE NULL END actSetteDate
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN REG_FIN_PRODUCT_DEAL_TOTAL_ADD T2 ON
@@ -1505,7 +1510,11 @@
             ,T3.FINPROD_ABBR  finprodAbbr,
             CASE WHEN T6.REAL_NAME IS NULL THEN T1.OU_TRADER_ID
             ELSE T6.REAL_NAME END ouTraderName,
-            T2.CAL_MODE calculateField
+            T2.CAL_MODE calculateField,
+            case when T1.PS = 'T03' THEN T1.SETTLE_DATE
+            ELSE NULL END theoreticalExerciseDate,
+            case when T1.PS = 'T03' THEN T2.ACT_SETTE_DATE
+            ELSE NULL END actSetteDate
         FROM
             WFL_REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN WFL_REG_FIN_PRO_DEAL_TOTAL_ADD T2 ON

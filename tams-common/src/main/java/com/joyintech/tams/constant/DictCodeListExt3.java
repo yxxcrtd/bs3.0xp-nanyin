@@ -1737,7 +1737,8 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     共通业务类型_本币业务交易_质押式回购_对话(DictCode.共通业务类型,"TRD89","本币业务交易-债券-对话"),
     共通业务类型_交收管理(DictCode.共通业务类型,"TRD90","交收管理"),
     共通业务类型_指令强制完成(DictCode.共通业务类型,"ETR_FINISH","指令强制完成"),
-
+    行内资产四级分类_交易商协会ABN(DictCode.行内资产四级分类,"127","交易商协会ABN"),
+    行内资产四级分类_银保监会主管ABS(DictCode.行内资产四级分类,"128","银保监会主管ABS"),
 
     ;
     /**
