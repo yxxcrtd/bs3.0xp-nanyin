@@ -72,6 +72,11 @@ public class ChbAgentInstitutionSub extends BaseEntity {
     private String enclosureAddress;
 
     /**
+     * 附件修改标志
+     */
+    private String enclosureChangeFlag;
+
+    /**
      * 数据日期 
      */
     private Date dataDate;
@@ -290,6 +295,22 @@ public class ChbAgentInstitutionSub extends BaseEntity {
      */
     public void setEnclosureAddress(String enclosureAddress) {
         this.enclosureAddress = enclosureAddress == null ? null : enclosureAddress.trim();
+    }
+
+    /**
+     * 取得 附件修改标志
+     * @return 附件修改标志
+     */
+    public String getEnclosureChangeFlag() {
+        return enclosureChangeFlag;
+    }
+
+    /**
+     * 设置 附件修改标志
+     * @param enclosureChangeFlag 附件修改标志
+     */
+    public void setEnclosureChangeFlag(String enclosureChangeFlag) {
+        this.enclosureChangeFlag = enclosureChangeFlag == null ? null : enclosureChangeFlag.trim();
     }
 
     /**

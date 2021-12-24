@@ -8,6 +8,7 @@
         <result column="STATUS" property="status" jdbcType="VARCHAR" />
         <result column="ENCLOSURE_NUM" property="enclosureNum" jdbcType="VARCHAR" />
         <result column="ENCLOSURE_ADDRESS" property="enclosureAddress" jdbcType="VARCHAR" />
+        <result column="ENCLOSURE_CHANGE_FLAG" property="enclosureChangeFlag" jdbcType="VARCHAR" />
         <result column="DATA_DATE" property="dataDate" jdbcType="DATE" />
         <result column="REMARK" property="remark" jdbcType="VARCHAR" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
@@ -17,7 +18,7 @@
     </resultMap>
     <sql id="Base_Column_List" >
         AGENT_INSTITUTION_CODE AGENT_INSTITUTION_CODE, AGENT_INSTITUTION_NAME AGENT_INSTITUTION_NAME, 
-        ISSUE_PARTY_ID ISSUE_PARTY_ID, STATUS STATUS, ENCLOSURE_NUM ENCLOSURE_NUM, ENCLOSURE_ADDRESS ENCLOSURE_ADDRESS, 
+        ISSUE_PARTY_ID ISSUE_PARTY_ID, STATUS STATUS, ENCLOSURE_NUM ENCLOSURE_NUM, ENCLOSURE_ADDRESS ENCLOSURE_ADDRESS,ENCLOSURE_CHANGE_FLAG ENCLOSURE_CHANGE_FLAG,
         DATA_DATE DATA_DATE, REMARK REMARK, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, 
         UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
     </sql>
@@ -67,10 +68,10 @@
     <insert id="insert" parameterType="com.joyintech.tams.report.submitmaintenance.agentinstitution.dto.AgentInstitutionDto" >
         insert into CHB_AGENT_INSTITUTION_INFO (AGENT_INSTITUTION_CODE, AGENT_INSTITUTION_NAME, 
             ISSUE_PARTY_ID, STATUS, ENCLOSURE_NUM, 
-            ENCLOSURE_ADDRESS, DATA_DATE, REMARK)
+            ENCLOSURE_ADDRESS,ENCLOSURE_CHANGE_FLAG ,DATA_DATE, REMARK)
         values (#{agentInstitutionCode,jdbcType=VARCHAR}, #{agentInstitutionName,jdbcType=VARCHAR}, 
             #{issuePartyId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{enclosureNum,jdbcType=VARCHAR}, 
-            #{enclosureAddress,jdbcType=VARCHAR}, SYSDATE, #{remark,jdbcType=VARCHAR})
+            #{enclosureAddress,jdbcType=VARCHAR},#{enclosureChangeFlag,jdbcType=VARCHAR}, SYSDATE, #{remark,jdbcType=VARCHAR})
     </insert>
 
 <!--  修改更新-->
@@ -191,6 +192,7 @@
         update CHB_AGENT_INSTITUTION_INFO
         set ENCLOSURE_ADDRESS = #{enclosureAddress},
         ENCLOSURE_NUM = #{enclosureNum},
+        ENCLOSURE_CHANGE_FLAG = #{enclosureChangeFlag}
         <where>
             <if test="agentInstitutionCode != null and agentInstitutionCode != ''">
                 REGIST_SEQNO=#{agentInstitutionCode}
