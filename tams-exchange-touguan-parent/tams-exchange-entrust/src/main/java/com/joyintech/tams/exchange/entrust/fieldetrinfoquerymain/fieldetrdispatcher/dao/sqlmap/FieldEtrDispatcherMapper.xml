@@ -628,11 +628,22 @@
         tpd.totle_trade_id totleTradeId,
         tpd.trade_id tradeId,
         tpda.portfolio_id portfolioId,
+        tpda.ENTRUST_ID entrustId,
         pp.portfolio_name portfolioName,
         fp.finprod_market_id finprodMarketId,
         fp.finprod_abbr finprodAbbr,
         tpd.ps ps,
+        tpd.TRADE_MARKET tradeMarket,  
         ssai.sec_acct_name secAcctId,
+        ssai.TRD_ACCT_ID trdAcctId,
+        tpd.FINPROD_TYPE2 finprodType2,
+        tpd.SHARE_AMT shareAmt,  <!-- 成交数量 -->
+        tpd.UNIT_FPRICE unitFprice,  <!-- 成交价格 -->
+        tpd.FPRICE_AMT fpriceAmt,  <!-- 成交金额 -->
+        to_char(tpd.CREATE_TIME,'hh24:mi:ss') tradeTime, <!-- 成交时间 -->
+        to_char(EE.ENTRUST_DATE,'yyyy-MM-dd')  entrustDate,<!-- 委托日期 -->
+        to_char(EEA.TRANSMIT_TIME,'hh24:mi:ss') transmitTime, <!--委托时间-->
+        EEA.TRADER trader,
         to_char(tpd.trade_date,'yyyy-MM-dd') tradeDate,
         DECODE(tpd.settle_speed,0,'01',1,'02','2','03') settleSpeed,
         to_char(tpd.settle_date,'yyyy-MM-dd') settleDate,
@@ -672,6 +683,8 @@
         <include refid="etrDispatcherDealListInfo"/>
         FROM trd_product_deal tpd
         LEFT JOIN trd_product_deal_add tpda ON tpd.trade_id = tpda.trade_id
+        LEFT JOIN ETR_ENTRUST EE ON EE.ENTRUST_ID = tpda.ENTRUST_ID
+        LEFT JOIN ETR_ENTRUST_ADD EEA ON EE.ENTRUST_ID  = EEA.ENTRUST_ID
         LEFT JOIN PTL_PORTFOLIO pp ON tpda.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT fp ON tpd.finprod_id = fp.finprod_id
         LEFT JOIN MST_COUNTER_PARTY mcp ON tpd.counter_id = mcp.counter_id
@@ -693,6 +706,8 @@
         <include refid="etrDispatcherDealListInfo"/>
         FROM wfl_trd_product_deal tpd
         LEFT JOIN wfl_trd_product_deal_add tpda ON tpd.trade_id = tpda.trade_id
+        LEFT JOIN WFL_ETR_ENTRUST EE ON EE.ENTRUST_ID = tpda.ENTRUST_ID
+        LEFT JOIN WFL_ETR_ENTRUST_ADD EEA ON EE.ENTRUST_ID  = EEA.ENTRUST_ID
         LEFT JOIN PTL_PORTFOLIO pp ON tpda.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT fp ON tpd.finprod_id = fp.finprod_id
         LEFT JOIN MST_COUNTER_PARTY mcp ON tpd.counter_id = mcp.counter_id
@@ -870,52 +885,31 @@
         TO_CHAR(T6.EXERCISE_DATE,'yyyy-MM-dd') exerciseDate,
         TO_CHAR(T6.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate,
         tpdp.TOTLE_TRADE_ID totalTradeId,
+        EE.ENTRUST_NUM entrustNum,
+        EE.PRICE price,
+        EE.ENTRUST_AMT entrustAmt,
+        EE.ENTRUST_STATUS entrustStatus,
+        EFS.FINISH_AMT finishAmt, 
+        to_char(EE.ENTRUST_DATE,'yyyy-MM-dd')  entrustDate,
+        to_char(EEA.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
+        DECODE(EE.ENTRUST_NUM,null,null,ROUND(EE.ENTRUST_AMT/EE.ENTRUST_NUM,4)) clinchPrice,
+        CASE
+          WHEN EEA.TARGET_TYPE = '01'
+          THEN ROUND(EFS.ENT_FINISH_AMT/EE.ENTRUST_NUM,4)
+          ELSE ROUND(EFS.ENT_FINISH_AMT/EE.ENTRUST_AMT,4)
+        END dealPercent,
+        EEA.TRADER trader, 
         tpdp.FINPROD_TYPE2
     </sql>
-    <sql id="etrDispatcherExeListInfo1">
-        '' effectFlag,
-        #{busiTypePosition} busiTypePosition,
-        tpdp.quote_id tradeId,
-        to_char(tpdp.quote_date, 'yyyy-MM-dd') exeDate,
-        to_char(tpdp.quote_date, 'yyyy-MM-dd') tradeDate,
-        tpdp.quote_type busiType,
-        tpdp.portfolio_id portfolioId,
-        pp.portfolio_name portfolioName,
-        fp.finprod_market_id finprodMarketId,
-        fp.finprod_abbr finprodAbbr,
-        tpdp.ps ps,
-        tpdp.sec_manage_acct_id secAcctId,
-        DECODE(tpdp.settle_speed,0,'01',1,'02','2','03') settleSpeed,
-        to_char(tpdp.settle_date, 'yyyy-MM-dd') settleDate,
-        tpdpa.unit_cprice unitPrice,
-        tpdpa.yield*100 matureYield,
-        tpdpa.exer_yield*100 exerYield,
-        tpdpa.share_amt/100 shareNum,
-        tpdpa.unit_int unitInt,
-        tpdpa.unit_fprice allPrice,
-        tpdpa.cprice_amt cpriceAmt,
-        tpdpa.int_amt intAmt,
-        tpdpa.fprice_amt fpriceAmt,
-        tpdp.DEAL_FEE_AMT jyFeeAmt,
-        tpdp.SETT_FEE_AMT jsFeeAmt,
-        tpdp.sett_ccy ccy,
-        tpdp.sett_type  settleType,
-        tpdpa.cp_party_id counterId,
-        nvl(mcp.party_name,tpdpa.cp_party_id) counterName,
-        nvl(mcct.trader_name,tpdpa.CP_TRADER) counterTrader,
-        tpdp.remark remark,
-        tpdp.Delivery_Type deliveryType,
-        TO_CHAR(T6.EXERCISE_DATE,'yyyy-MM-dd') exerciseDate,
-        TO_CHAR(T6.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate,
-        tpdp.quote_id totalTradeId,
-        tpdp.FINPROD_TYPE2
-    </sql>
+    
     <select id="getEtrDispatcherExeListInfo"
             resultType="com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrdispatcher.dto.FieldEtrDispatcherExeListInfoResponse">
         SELECT
         decode(tpdp.is_cancel,'Y',#{TRADE_FLOW_STATUS03},#{TRADE_FLOW_STATUS02}) effectFlag,
         <include refid="etrDispatcherExeListInfo"/>
         FROM REG_FIN_PRODUCT_DEAL tpdp
+        LEFT JOIN ETR_ENTRUST EE ON EE.entrust_id = tpdp.entrust_id
+        LEFT JOIN ETR_ENTRUST_ADD EEA ON EE.entrust_id = EEA.entrust_id
         LEFT JOIN PTL_PORTFOLIO pp ON tpdp.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpdp.sec_manage_acct_id = ssai.SEC_ACCT_ID
@@ -924,6 +918,7 @@
         LEFT JOIN REG_TRADE_FEE ttft ON tpdp.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
         LEFT JOIN REG_TRADE_FEE ttft1 ON tpdp.trade_id  = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
         LEFT JOIN FIN_EXERCISE_PLAN T6 ON tpdp.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02'
+        LEFT JOIN ETR_FINISH_STATUS EFS ON EFS.ENTRUST_ID  = tpdp.ENTRUST_ID
         WHERE tpdp.entrust_id = #{entrustId}
 
         union all
@@ -932,6 +927,8 @@
         #{TRADE_FLOW_STATUS01} effectFlag,
         <include refid="etrDispatcherExeListInfo"/>
         FROM WFL_REG_FIN_PRODUCT_DEAL tpdp
+        LEFT JOIN WFL_ETR_ENTRUST EE ON EE.entrust_id = tpdp.entrust_id
+        LEFT JOIN WFL_ETR_ENTRUST_ADD EEA ON EE.entrust_id = EEA.entrust_id
         LEFT JOIN PTL_PORTFOLIO pp ON tpdp.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpdp.sec_manage_acct_id = ssai.SEC_ACCT_ID
@@ -940,32 +937,7 @@
         LEFT JOIN WFL_REG_TRADE_FEE ttft ON tpdp.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
         LEFT JOIN WFL_REG_TRADE_FEE ttft1 ON tpdp.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
         LEFT JOIN FIN_EXERCISE_PLAN T6 ON tpdp.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02'
-        WHERE tpdp.entrust_id = #{entrustId}
-
-        union all
-
-        SELECT
-        <include refid="etrDispatcherExeListInfo1"/>
-        FROM IBU_QUOTE_BOND tpdp
-        LEFT JOIN IBU_QUOTE_BOND_DET tpdpa ON tpdp.QUOTE_ID = tpdpa.QUOTE_ID
-        LEFT JOIN PTL_PORTFOLIO pp ON tpdp.portfolio_id = pp.portfolio_id
-        LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcp ON tpdpa.cp_party_id = mcp.party_id
-        LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON tpdpa.CP_TRADER= mcct.trader_id
-        LEFT JOIN FIN_EXERCISE_PLAN T6 ON tpdp.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02'
-        WHERE tpdp.entrust_id = #{entrustId}
-
-        union all
-
-        SELECT
-        <include refid="etrDispatcherExeListInfo1"/>
-        FROM WFL_IBU_QUOTE_BOND2 tpdp
-        LEFT JOIN WFL_IBU_QUOTE_BOND_DET tpdpa ON tpdp.QUOTE_ID = tpdpa.QUOTE_ID
-        LEFT JOIN PTL_PORTFOLIO pp ON tpdp.portfolio_id = pp.portfolio_id
-        LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcp ON tpdpa.cp_party_id = mcp.party_id
-        LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON tpdpa.CP_TRADER= mcct.trader_id
-        LEFT JOIN FIN_EXERCISE_PLAN T6 ON tpdp.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02'
+        LEFT JOIN ETR_FINISH_STATUS EFS ON EFS.ENTRUST_ID  = tpdp.ENTRUST_ID
         WHERE tpdp.entrust_id = #{entrustId}
     </select>
 
