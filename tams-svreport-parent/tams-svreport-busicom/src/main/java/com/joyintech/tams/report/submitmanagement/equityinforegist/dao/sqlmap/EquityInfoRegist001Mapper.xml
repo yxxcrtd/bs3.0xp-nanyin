@@ -400,8 +400,9 @@
 		<foreach collection="list" item="item" index="index" separator=";" > 
 			update CHB_EQU_HOLD  info
 				set 
-					info.HOLDER_CLASSIFY = #{item.holderClassify},
-            		info.FUND_ACC_PLACE = #{item.fundAccPlace}
+					info.HOLDER_CLASSIFY = #{item.holderClassify,jdbcType=VARCHAR},
+					info.THE_BANK_CODE = #{item.theBankCode,jdbcType=VARCHAR},
+            		info.FUND_ACC_PLACE = #{item.fundAccPlace,jdbcType=VARCHAR}
             	where 
 					info.REGIST_BANK_CODE = #{item.bankCode} 
 		 	 		and info.INDENTIFY_MARK = #{item.indentifyMark}
@@ -416,8 +417,9 @@
 		<foreach collection="list" item="item" index="index" separator=";" > 
 			update CHB_EQU_SUB  sub
 				set 
-					sub.HOLDER_CLASSIFY = #{item.holderClassify},
-            		sub.FUND_ACC_PLACE = #{item.fundAccPlace}
+					sub.HOLDER_CLASSIFY = #{item.holderClassify,jdbcType=VARCHAR},
+					sub.THE_BANK_CODE = #{item.theBankCode,jdbcType=VARCHAR},
+            		sub.FUND_ACC_PLACE = #{item.fundAccPlace,jdbcType=VARCHAR}
             	where 
 					sub.REGIST_BANK_CODE = #{item.bankCode} 
 		 	 		and sub.INDENTIFY_MARK = #{item.indentifyMark}
@@ -1041,6 +1043,8 @@
        		CHB_SUBMIT_DEADLINE       as chbSubmitDeadline,
        		SUBMIT_DEADLINE           as submitDeadline,
       	 	STATUS                    as status,
+      	 	FUND_ACC_PLACE            as fundAccPlace,
+      	 	HOLDER_CLASSIFY           as holderClassify,
        		t1.UPDATE_TIME           as updateTime,
        		t2.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
        		row_number() OVER(partition by t1.INDENTIFY_MARK order by t1.update_time desc) rank

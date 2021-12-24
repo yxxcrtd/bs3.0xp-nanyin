@@ -665,6 +665,8 @@ public class EquityInfoValid {
     private void getDiffDto(EquityInfo001Dto equityInfo001Dto,
                             EquityInfoRegist001Dto equityInfoRegist001Dto,
                             Map<String, String> map ,boolean flag) {
+    	String updateFlg = SvrDataUtil.getSysParam("SVR_EQU_REPAIR_BATCH_FLAG");
+		    	
         // 投资者是否属于本行比较
         String type = "03";
         if (StringUtil.isNotEmpty(equityInfo001Dto.getIsBelongBank())
@@ -679,10 +681,10 @@ public class EquityInfoValid {
             map.put("THE_BANK_NAME", equityInfo001Dto.getTheBankName());
         }
         // 投资者所属银行代码
-        else if (StringUtil.isNotEmpty(equityInfo001Dto.getTheBankCode())
+        else if (!"01".equals(updateFlg) && StringUtil.isNotEmpty(equityInfo001Dto.getTheBankCode())
                 && !equityInfo001Dto.getTheBankCode().equals(
-                equityInfoRegist001Dto.getTheBankCode())) {
-            map.put("THE_BANK_CODE", equityInfo001Dto.getTheBankCode());
+                equityInfoRegist001Dto.getTheBankCode())) {        	
+    		map.put("THE_BANK_CODE", equityInfo001Dto.getTheBankCode());
         }
         // 投资者境内外标识
         else if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderMark())
@@ -1143,6 +1145,8 @@ public class EquityInfoValid {
      */
     private void getDiffMap(List<String> list, EquityInfoRegist001Dto equityInfoRegist001Dto,
                             Map<String, String> map) {
+    	
+    	String updateFlg = SvrDataUtil.getSysParam("SVR_EQU_REPAIR_BATCH_FLAG");
         //需要做变更类型的分析，然后返回变更类型
         //03 重要信息变更   04 其他信息变更
         // 投资者是否属于本行比较
@@ -1156,9 +1160,9 @@ public class EquityInfoValid {
             map.put("THE_BANK_NAME", list.get(4));
         }
         // 投资者所属银行代码
-        else if (!CommonUtil.equalsIgnoreNull(list.get(5),
+        else if (!"01".equals(updateFlg) && !CommonUtil.equalsIgnoreNull(list.get(5),
                 equityInfoRegist001Dto.getTheBankCode())) {
-            map.put("THE_BANK_CODE", list.get(5));
+        	map.put("THE_BANK_CODE", list.get(5));
         }
         // 投资者境内外标识
         else if (!CommonUtil.equalsIgnoreNull(list.get(6),
@@ -1245,22 +1249,46 @@ public class EquityInfoValid {
                 type = "04";
             }
             // 手机号码
-            if (!CommonUtil.equalsIgnoreNull(list.get(18),
+            else if (!CommonUtil.equalsIgnoreNull(list.get(18),
                     equityInfoRegist001Dto.getHolderCellphone())) {
                 map.put("HOLDER_CELLPHONE", list.get(18));
                 type = "04";
             }
             // 固定电话
-            if (!CommonUtil.equalsIgnoreNull(list.get(19),
+            else if (!CommonUtil.equalsIgnoreNull(list.get(19),
                     equityInfoRegist001Dto.getHolderTelephone())) {
                 map.put("HOLDER_TELEPHONE", list.get(19));
                 type = "04";
             }
             // 电子邮箱
-            if (!CommonUtil.equalsIgnoreNull(list.get(20),
+            else if (!CommonUtil.equalsIgnoreNull(list.get(20),
                     equityInfoRegist001Dto.getHolderEmail())) {
                 map.put("HOLDER_EMAIL", list.get(20));
                 type = "04";
+            }else {
+            	if("01".equals(updateFlg)) {
+            		// 所属银行代码                    
+                    if (StringUtil.isNotEmpty(list.get(5))
+                            && !list.get(5).equals(
+                            equityInfoRegist001Dto.getTheBankCode())) {
+                    	map.put("THE_BANK_CODE", list.get(5));
+                        type = "05";
+                    }
+            	}
+        		// 投资者分类 - 仅供四期使用字段
+            	if (StringUtil.isNotEmpty(list.get(22))
+                        && !list.get(22).equals(
+                        equityInfoRegist001Dto.getHolderClassify())) {
+                    map.put("HOLDER_CLASSIFY", list.get(22));
+                    type = "05";
+                }
+                // 开户行所在地- 仅供四期使用字段
+                if (StringUtil.isNotEmpty(list.get(26))
+                        && !list.get(26).equals(
+                        equityInfoRegist001Dto.getFundAccPlace())) {
+                    map.put("FUND_ACC_PLACE", list.get(26));
+                    type = "05";
+                }            	            	
             }
 //            if (!StringUtil.equals(type, "04")) {
 //                // 备注

@@ -9,6 +9,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.report.submitmaintenance.agentinstitution.dto.AgentInstitutionDto;
 import com.joyintech.tams.report.submitmaintenance.agentprdinfo.dao.ChbAgentPrdInfoMapper;
 import com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -114,11 +115,19 @@ public class AgentPrdInfo001Service extends CommonExportService<AgentPrdInfoDto>
             if (null != dataList) {
                 List<AgentPrdInfoDto> entities = new ArrayList<>(dataList.size());
                 List<ExcelValidDto> checkResult= checkExcelSales(dataList, entities,userName,deptCode);
+                //校验是否已存在逻辑删除的数据
+                List<AgentPrdInfoDto> AgentInstitutionCodeDImportList =  chbAgentPrdInfoMapper.checkAgentInstitutionCodeDImport();
+                Map<String,AgentPrdInfoDto> AgentInstitutionCodeDImportMap = new HashMap<String,AgentPrdInfoDto>();
+                for(AgentPrdInfoDto info :AgentInstitutionCodeDImportList){
+                    String key = info.getAgentInstitutionCode() + info.getProdRegistCode();
+                    AgentInstitutionCodeDImportMap.put(key,info);
+                }
                 if (checkResult.isEmpty()) {
                     entities = convertToEntity(dataList, orgCode);
                     for(AgentPrdInfoDto dto : entities){
                         //check表中是否存在相同的逻辑删除数据 如果存在就先删除再插入
-                        if(chbAgentPrdInfoMapper.checkAgentInstitutionCodeD(dto.getAgentInstitutionCode(),dto.getProdRegistCode()) != 0){
+                        String key = dto.getAgentInstitutionCode() + dto.getProdRegistCode();
+                        if(AgentInstitutionCodeDImportMap.get(key) != null){
                             chbAgentPrdInfoMapper.delete(dto.getAgentInstitutionCode(),dto.getProdRegistCode());
                         }
                         chbAgentPrdInfoMapper.insert(dto);
@@ -154,12 +163,22 @@ public class AgentPrdInfo001Service extends CommonExportService<AgentPrdInfoDto>
         for(int i = 0;i < agentInstitutionCodeList.size();i++){
             agentInstitutionCodeMap.put(agentInstitutionCodeList.get(i).getAgentInstitutionCode(),agentInstitutionCodeList.get(i).getAgentInstitutionCode());
         }
+
         //产品登记编码
         List<AgentPrdInfoDto> prodRegistCodeList = chbAgentPrdInfoMapper.selectProdRegistCodeList();
         Map<String,String> prodRegistCodeMap = new HashMap<String,String>();
         for(int i = 0;i < prodRegistCodeList.size();i++){
             prodRegistCodeMap.put(prodRegistCodeList.get(i).getProdRegistCode(),prodRegistCodeList.get(i).getProdRegistCode());
         }
+
+        //check代销代码相同时产品登记编码不能相同
+        List<AgentPrdInfoDto> ProdRegistCodeImportList = chbAgentPrdInfoMapper.checkProdRegistCodeImport();
+        Map<String,String> ProdRegistCodeImportMap = new HashMap<String,String>();
+        for(AgentPrdInfoDto info:ProdRegistCodeImportList){
+            String key = info.getAgentInstitutionCode() + info.getProdRegistCode();
+            ProdRegistCodeImportMap.put(key,key);
+        }
+
         List<ExcelValidDto> checkResult = new ArrayList<>();
         for (int i = 0; i < dataList.size(); i++ ) {
             //是否正常标志
@@ -200,7 +219,8 @@ public class AgentPrdInfo001Service extends CommonExportService<AgentPrdInfoDto>
             }
             //代理销售机构代码相同时，产品登记编码不可重复
             if((list.get(1) == null || list.get(1).trim().equals("")) && (list.get(2) == null || list.get(2).trim().equals(""))){
-                if(chbAgentPrdInfoMapper.checkProdRegistCode(list.get(1),list.get(2)) != 0){
+                String key = list.get(1) + list.get(2);
+                if(ProdRegistCodeImportMap.get(key) != null){
                     flag = false;
                     message.add("代理销售机构代码相同时，产品登记编码不可重复");
                 }

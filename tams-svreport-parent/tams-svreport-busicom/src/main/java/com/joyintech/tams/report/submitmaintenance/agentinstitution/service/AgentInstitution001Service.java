@@ -2,6 +2,7 @@ package com.joyintech.tams.report.submitmaintenance.agentinstitution.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.export.CommonExportService;
@@ -15,15 +16,20 @@ import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.submitmaintenance.agentinstitution.dao.ChbAgentInstitutionInfoMapper;
 import com.joyintech.tams.report.submitmaintenance.agentinstitution.dto.AgentInstitutionDto;
+import com.joyintech.tams.report.submitmanagement.agentinstitutionregist.dto.AgentInstitutionRegistDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.zip.ZipEntry;
@@ -41,6 +47,11 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
      * 当在做导入前的check就是判断业务数据是否需要覆盖的时候在webresult的data中塞入这个值可以不会弹框两次
      */
     private static final String NO_INFO_SHOWOUT = "noInfoShowOut";
+
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 分页查询
@@ -126,9 +137,15 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
                 List<ExcelValidDto> checkResult= checkExcelSales(dataList, entities,userName,deptCode);
                 if (checkResult.isEmpty()) {
                     entities = convertToEntity(dataList, orgCode);
+                    //校验是否已存在逻辑删除的数据
+                    List<AgentInstitutionDto> AgentInstitutionCodeDImportList =  chbAgentInstitutionInfoMapper.checkAgentInstitutionCodeDImport();
+                    Map<String,AgentInstitutionDto> AgentInstitutionCodeDImportMap = new HashMap<String,AgentInstitutionDto>();
+                    for(AgentInstitutionDto info :AgentInstitutionCodeDImportList){
+                        AgentInstitutionCodeDImportMap.put(info.getAgentInstitutionCode(),info);
+                    }
                     for(AgentInstitutionDto dto : entities){
                         //check表中是否存在已逻辑删除的数据
-                        if(chbAgentInstitutionInfoMapper.checkAgentInstitutionCodeD(dto.getAgentInstitutionCode()) != 0){
+                        if(AgentInstitutionCodeDImportMap.get(dto.getAgentInstitutionCode()) != null){
                             //如果存在就先 删除表中删除状态数据再 新增插入
                             chbAgentInstitutionInfoMapper.delete(dto.getAgentInstitutionCode());
                         }
@@ -159,6 +176,12 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
     private List<ExcelValidDto> checkExcelSales(List<List<String>> dataList, List<AgentInstitutionDto> entities, String userName, String deptCode) {
         String orgCode = CommonUtil.getOrgCode();
         String issuePartyId = chbAgentInstitutionInfoMapper.selectIssuePartyId(orgCode);
+        //导入代理销售机构代码重复校验
+        List<AgentInstitutionDto> AgentInstitutionCodeList = chbAgentInstitutionInfoMapper.checkAgentInstitutionCodeImport();
+        Map<String,AgentInstitutionDto> AgentInstitutionCodeMap = new HashMap<String,AgentInstitutionDto>();
+        for(AgentInstitutionDto info :AgentInstitutionCodeList){
+            AgentInstitutionCodeMap.put(info.getAgentInstitutionCode(),info);
+        }
         List<ExcelValidDto> checkResult = new ArrayList<>();
         for (int i = 0; i < dataList.size(); i++ ) {
             //是否正常标志
@@ -186,7 +209,7 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
                 if(!list.get(1).matches(regex)){
                     flag = false;
                     message.add("代理销售机构代码格式不对");
-                }else if(chbAgentInstitutionInfoMapper.checkAgentInstitutionCode(list.get(1)) > 0){
+                }else if(AgentInstitutionCodeMap.get(list.get(1)) != null){
                     flag = false;
                     message.add("代理销售机构代码已存在");
                 }
@@ -246,6 +269,56 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
      */
     public List<SuggestDto> getAgentInstitutionCode(Map<String, Object> map) {
         return chbAgentInstitutionInfoMapper.getAgentInstitutionCode(map);
+    }
+
+    //删除附件
+    public void deltFile(Map<String, Object> map) {
+        String agentInstitutionCode=(String) map.get("agentInstitutionCode");
+        String enclosureAddress=(String) map.get("enclosureAddress");
+        UploadFile file=uploadListener.fetch(enclosureAddress);
+        uploadListener.remove(enclosureAddress);
+        if(file!=null && file.getTargetFile().exists()){
+            file.getTargetFile().delete();
+        }
+        AgentInstitutionDto agentInstitutionDto=new AgentInstitutionDto();
+        agentInstitutionDto.setAgentInstitutionCode(agentInstitutionCode);
+        agentInstitutionDto.setEnclosureAddress("");
+        agentInstitutionDto.setEnclosureNum("");
+        chbAgentInstitutionInfoMapper.updateEnclosureNum(agentInstitutionDto);
+    }
+
+    /**
+     * 附件查看
+     * @param map
+     * @return
+     * @throws IOException
+     */
+    public String getFileList(Map<String, Object> map) throws IOException {
+        StringBuffer res=new StringBuffer();
+        if(map.get("enclosureAddress")==null){
+            return URLEncoder.encode("附件不存在", "UTF-8").replace("+","%20");
+        }
+        String enclosureAddress=(String) map.get("enclosureAddress");
+
+        UploadFile file=uploadListener.fetch(enclosureAddress);
+        if(file==null||file.getTargetFile()==null){
+            return URLEncoder.encode("附件丢失", "UTF-8").replace("+","%20");
+        }
+        res.append(file.getFileName()+":   "+file.getSize()/1000+"K<br><br>");
+        try(ZipFile zipFile=new ZipFile(file.getTargetFile(), Charset.forName("GBK"))){
+            for (Enumeration<? extends ZipEntry> e = zipFile.entries(); e.hasMoreElements();){
+                ZipEntry entry=e.nextElement();
+                if(entry.getName().substring(entry.getName().lastIndexOf("/")+1).length()>0){
+                    res.append(entry.getName().substring(entry.getName().lastIndexOf("/")+1)+"<br>");
+                }
+            }
+        }
+        catch (FileNotFoundException e) {
+            logger.error(e.getMessage(),e);
+            return URLEncoder.encode("文件未找到", "UTF-8").replace("+","%20");
+        }
+        String msg = URLEncoder.encode(res.toString(), "UTF-8").replace("+","%20");
+        return msg;
     }
 
 

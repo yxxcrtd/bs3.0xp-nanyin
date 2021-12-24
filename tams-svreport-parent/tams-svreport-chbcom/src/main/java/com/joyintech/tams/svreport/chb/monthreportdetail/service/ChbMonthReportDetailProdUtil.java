@@ -91,10 +91,10 @@ public class ChbMonthReportDetailProdUtil {
                 termType = DictCodeListExt3.中债月度明细_期限类型_3年以上.getValue();
             }
         }else{
-            if(StringUtil.isNotEmpty(info.getOpenCircle())){
+
                 if(DictCodeListExt2.开放模式_中债_无规律开放.getValue().equals(info.getOpenMode())){
                     days =  BigDecimal.ONE;
-                }else{
+                }else if(StringUtil.isNotEmpty(info.getOpenCircle())){
                     switch (info.getOpenCircle()){
                         case  "01": //DictCodeListExt2.规律开放周期_每天开放.getValue()
                             days = BigDecimal.ONE; break;
@@ -114,7 +114,6 @@ public class ChbMonthReportDetailProdUtil {
                             days = info.getOpenCircleDays(); break;
                     }
                 }
-            }
             termType = info.getTermtype();
         }
 

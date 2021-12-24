@@ -7,6 +7,8 @@ import com.joyintech.tams.common.base.entity.ChbMonthAssetPositiondetail;
 import com.joyintech.tams.common.base.entity.ChbMonthPrdPositiondetail;
 import com.joyintech.tams.common.base.entity.PbcMonthAssetPositiondetail;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.interf.common.util.BigDecimalConverterUtil;
+import com.joyintech.tams.svreport.pbc.reportdetail.service.PbcMonthReportDetailProdUtil;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -145,10 +147,39 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
     }
 
     public String getOrgAssetType3Str() {
-        return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产三级分类, this.getOrgAssetType3());
+//        return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产三级分类, this.getOrgAssetType3());
+        return SysDataUtil.getNameFromDataDict(DictCode.资产_负债二级类别, this.getOrgAssetType3());
     }
 
     public String getCounterListCode(){
         return this.getProdid()+"_"+this.getAssetCode();
+    }
+
+
+    public String getCostAmtStr(){
+        return null!=this.getCostAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmt()):null;
+    }
+
+    public String getFloatIngplStr(){
+        return null!=this.getFloatIngpl()? BigDecimalConverterUtil.getMonthDetailString(this.getFloatIngpl()):null;
+    }
+
+    public String getIntincexpStr(){
+        return null!=this.getIntincexp()? BigDecimalConverterUtil.getMonthDetailString(this.getIntincexp()):null;
+    }
+
+    public String getIntadjexpAddStr(){
+        return null!=this.getIntadjexpAdd()? BigDecimalConverterUtil.getMonthDetailString(this.getIntadjexpAdd()):null;
+    }
+
+    public String getLossAmtStr(){
+        return null!=this.getLossAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getLossAmt()):null;
+    }
+    public String getAmtStr(){
+        return null!=this.getAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getAmt()):null;
+    }
+
+    public String getEndDaysType(){
+        return SysDataUtil.getNameFromDataDict(DictCode.人行月度明细_期限类型, PbcMonthReportDetailProdUtil.getTermType(this.getEndDays()));
     }
 }

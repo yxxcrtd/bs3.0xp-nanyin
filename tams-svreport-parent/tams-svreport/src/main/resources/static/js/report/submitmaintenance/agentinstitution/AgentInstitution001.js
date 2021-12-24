@@ -43,6 +43,7 @@
             ,{field:'agentInstitutionCode', title: '代理销售机构代码', width:'150',sortField:'agentInstitutionCode'}
             ,{field:'agentInstitutionName', title: '代理销售机构名称', width:'150',sortField:'agentInstitutionName'}
             ,{field:'remark', title: '备注', width:'150',sortField:'remark'}
+            ,{field: 'enclosureAddress',visible : false}
             ,{field:'enclosureNum', title: '附件个数', width:'150',sortField:'enclosureNum'}
             ,{title : '操作附件',field : 'operation',type : 'action',width : 150
                ,buttons : [  {text : '&#xe67c;',clas : 'upload',title : '上传'}
@@ -53,6 +54,56 @@
             ,{field:'action', title: '操作' , type:'action',buttons: ['edit', 'delt'] , width:'150'}
         ],
     });
+
+    	table.bind('click', '.deltAy', function(data, index) {
+    	    var object = {selectedItem: [data], operateType:"deleteFile"};
+    		if (!data.enclosureAddress || data.enclosureAddress == null) {
+    			Joyin.error("未上传附件，不能删除！");
+    			return;
+    		} else {
+               Joyin.ajaxJson(basePath + 'report/submitmaintenance/agentinstitution/AgentInstitution001/deleteFileCheck', object, function(result1) {
+    			Joyin.confirm("请确认是否要删除已存在的附件？", function() {
+    				Joyin.ajax('deltFile', {
+    					agentInstitutionCode : data.agentInstitutionCode,
+    					enclosureAddress:data.enclosureAddress
+    				}, function() {
+    					table.reload();
+    				})
+    			});
+    		   });
+    		}
+    	});
+
+            //附件查看
+        	table.bind('click', '.fileView', function(data, index) {
+        		$.post('getFileList', {enclosureAddress:data.enclosureAddress}, function(str){
+        			  layer.open({
+        			    type: 0,
+        			    content:decodeURIComponent(str), //注意，如果str是object，那么需要字符拼接。
+        			    area: ['300px', '300px'],
+        			    skin: 'layui-layer-lan',
+        			    offset: 'rb'
+        			  });
+        			});
+        	});
+
+            //附件下载
+        	table.bind('click', '.download', function(data, index) {
+        		if (!data.enclosureAddress || data.enclosureAddress == null) {
+        			Joyin.error("未上传附件，不能下载！");
+        			return;
+        		}
+        		parm = {};
+        		var url = JoyinUtil.getRealPath('/framework/download/' + data.enclosureAddress);
+        		Joyin.ajax(url, parm, function downloadFileByForm() {
+        			Joyin.exportExcel('/framework/download/' + data.enclosureAddress, parm);
+        		},
+        		function errorDownload(){
+        			Joyin.error("文件未找到！");
+        		}
+        		);
+        	});
+
 /**
  * 导出表格
  */
@@ -174,7 +225,7 @@
         		/**
         		 * 九大附件批量上传-批量上传（徽商合并）
         		 */
-        		$('#SvrPerProDeclareReg001_btn_batchFileUpload').click(function() {
+        		$('#AgentInstitution001_btn_batchFileUpload').click(function() {
         			var uploadArr = table.getAllCheckedRows();
         			var uploadArrStr=JSON.stringify(uploadArr);
         			var dataArr=[];
@@ -190,8 +241,7 @@
         					}
         					var data={
         							fileNo:uploadArr[i].fileNo,
-        							prodId:uploadArr[i].prodId,
-        							registSeqno:uploadArr[i].registSeqno
+        							agentInstitutionCode:uploadArr[i].agentInstitutionCode
         					}
         					dataArr[i]=data;
 

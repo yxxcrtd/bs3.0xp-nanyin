@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -94,15 +95,19 @@ public class ChbMonthReportDetailAssetB001Controller extends BaseController{
 	@ResponseBody
 	@RequestMapping("export")
 	public ResponseEntity<byte[]> export(){
+		Map<String, Object> searchParm = new HashMap<>();
 		Map<String, Object> pageParam = RequestUtil.getPageParam();
-
-
-		List<ChbMonthReportDetailAsset> dtoList = chbMonthReportDetailAsset001Service.selectForExport(RequestUtil.getParameters(getRequest()));
+		if(pageParam.containsKey("keyList")){
+			searchParm.put("keyList",pageParam.get("keyList"));
+		}else{
+			searchParm.putAll(pageParam);
+		}
+		List<ChbMonthReportDetailAsset> dtoList = chbMonthReportDetailAsset001Service.selectForExport(searchParm);
 		File outFile = chbMonthReportDetailAsset001Service.makeFile(
 				"/com/joyintech/tams/svreport/chb/monthreportdetail/controller/conf/assetBExport_conf.xml", dtoList);
 		return ExportUtil.export(
-				"G06资产端明细穿透台账" + GlobalConstant.OPEN_PARENTHESIS
-						+ DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
+				" G06资产端明细台账（穿透后）" + GlobalConstant.OPEN_PARENTHESIS
+						+ pageParam.get("enddate") + GlobalConstant.CLOSE_PARENTHESIS
 						+ GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
 				outFile, true);
 	}

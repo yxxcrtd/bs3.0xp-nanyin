@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -80,20 +81,21 @@ public class PbcMonthReportDetailProd001Controller extends BaseController{
 	@ResponseBody
 	@RequestMapping("export")
 	public ResponseEntity<byte[]> export(){
+		Map<String, Object> searchParm = new HashMap<>();
 		Map<String, Object> pageParam = RequestUtil.getPageParam();
 		if(pageParam.containsKey("keyList")){
-			List<PbcMonthReportDetailProd> dtoList = pbcMonthReportDetailProd001Service.selectForExport(RequestUtil.getParameters(getRequest()));
-			File outFile = pbcMonthReportDetailProd001Service.makeFile(
-					"/com/joyintech/tams/svreport/pbc/classic/monthreportdetail/controller/conf/prodExport_conf.xml", dtoList);
-			return ExportUtil.export(
-					"人行产品端明细台账"+ GlobalConstant.OPEN_PARENTHESIS
-							+ DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
-							+ GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
-					outFile, true);
+			searchParm.put("keyList",pageParam.get("keyList"));
+		}else{
+			searchParm.putAll(pageParam);
 		}
-		else{
-			return pbcMonthReportDetailProd001Service.export(this.getPageId(), RequestUtil.getPageParam());
-		}
+		List<PbcMonthReportDetailProd> dtoList = pbcMonthReportDetailProd001Service.selectForExport(searchParm);
+		File outFile = pbcMonthReportDetailProd001Service.makeFile(
+				"/com/joyintech/tams/svreport/pbc/classic/monthreportdetail/controller/conf/prodExport_conf.xml", dtoList);
+		return ExportUtil.export(
+				"人行产品端明细台账"+ GlobalConstant.OPEN_PARENTHESIS
+						+ pageParam.get("enddate") + GlobalConstant.CLOSE_PARENTHESIS
+						+ GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
+				outFile, true);
 	}
 
 }

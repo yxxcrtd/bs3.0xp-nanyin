@@ -103,35 +103,37 @@
     </resultMap>
 
 
-    <select id="selectDetailList" resultMap="BaseResultMap">
+    <select id="selectDetailList" resultType="com.joyintech.tams.svreport.pbc.reportdetail.dto.PbcMonthReportDetailAsset">
         SELECT
             DECODE(T1.PROPERNAME,NULL,NULL,substr(T1.PROPERTYCODE,5,6)||' '||T1.PROPERNAME) reportType5,
             substr(T.PROPERTYCODE,5,6)||' '||T.PROPERNAME reportType6,
             P.PRODID,
-            PB.PROD_NAME,
-            PB.IS_FHXGCP,
-            P.ASSET_CODE,
-            nvl(NVL(I.ASSET_NAME,B.SUBJECT_NAME),P.ASSET_CODE) ASSET_NAME,
+            PB.PROD_NAME prodName,
+            PB.IS_FHXGCP isFhxgcp,
+            P.ASSET_CODE assetCode,
+            CASE WHEN B.SUBJECT_NAME IS NULL THEN NVL(I.ASSET_NAME,I.ASSET_CODE) ELSE B.SUBJECT_NAME END assetName,
             I.VDATE,
             I.MDATE,
             P.OPENPLAN,
             /**企业债,取资产基本信息(2-5逻辑)其余取贷款的信息(2-2~2-4逻辑)**/
-            DECODE(P.ASSET_TYPE3,'S05',I.INSTIT_SIZE,P.enterprise_scale) PARTY_TYPE1,
-            NVL(MC.CUSTOMER_NAME,P.SUBJECT_NAME) SUBJECT_NAME,
+            DECODE(P.ASSET_TYPE3,'S05',I.INSTIT_SIZE,P.enterprise_scale) partyType1 ,
+            NVL(MC.CUSTOMER_NAME,P.SUBJECT_NAME) subjectName,
             DECODE(P.ASSET_TYPE3,'S05',I.INDUSTRY,P.borrower_type) INDUSTRY,
-            P.borrower_city BUY_PLACE,
+            P.borrower_city buyPlace,
             I.ASSET_YIELD RATE,
             P.CCY,
-            AP.TDY_COST_AMT COST_AMT,
-            AP.TDY_FLOAT_INGPL FLOAT_INGPL,
+            AP.POS_AMT  delayPayAmt,
+            AP.TDY_COST_AMT  costAmt,
+            AP.TDY_FLOAT_INGPL  floatIngpl,
             AP.TDY_INTINCEXP INTINCEXP,
-            0 TDY_LOSS_AMT,
+            AP.TDY_INTADJEXP_ADD intadjexpAdd,
+            AP.TDY_LOSS_AMT lossAmt,
             P.AMT,
-            P.RIVAL_PARTY,
-            I.ORG_ASSET_TYPE1,
-            I.ORG_ASSET_TYPE2,
-            I.ORG_ASSET_TYPE3,
-            P.END_DAYS
+            nvl(mp.COUNTER_NAME,p.RIVAL_PARTY) rivalParty,
+            I.ORG_ASSET_TYPE1 orgAssetType1,
+            I.ORG_ASSET_TYPE2 orgAssetType2,
+            I.ORG_ASSET_TYPE3 orgAssetType3,
+            P.END_DAYS endDays
             FROM PBC_MONTH_ASSET_POSITIONDETAIL P
             LEFT JOIN PBC_REPORT_TEMPLATE T ON T.PROPERTYCODE = P.DETAILNO
             LEFT JOIN PBC_REPORT_TEMPLATE T1 ON T1.PROPERTYCODE = P.DETAILNO2
@@ -139,6 +141,7 @@
             LEFT JOIN CHB_ASSET_INFO I ON I.ASSET_CODE = P.ASSET_CODE
             LEFT JOIN BOK_SUBJECT B ON B.BOOKSET_ID = '00000000000000000002' AND B.SUBJECT_NO = P.ASSET_CODE
             LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = P.SUBJECT_NAME
+            LEFT JOIN MST_COUNTER_PARTY MP ON MP.COUNTER_ID = P.RIVAL_PARTY
             LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PRODID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)
             WHERE P.PRODID IS NOT NULL
 

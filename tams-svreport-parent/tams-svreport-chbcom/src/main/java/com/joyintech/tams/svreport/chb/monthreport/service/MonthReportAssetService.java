@@ -1137,7 +1137,7 @@ public class MonthReportAssetService {
         sumDetail(assetMonthReportDetailMap);
         //汇总数据入库
         insertDetail(assetMonthReportDetailMap, report.getTermid(),null);
-		chbMonthReportDetailAssetUtil.insertBatch(assetDetailList,report.getTermid());
+		chbMonthReportDetailAssetUtil.insertBatch(assetDetailList,report.getTermid(),report.getEnddate());
 
 		//机构数据合计以及入库
         for (Entry<String, Map<String, ChbMonthReportDetail>> details : deptMap.entrySet()) {

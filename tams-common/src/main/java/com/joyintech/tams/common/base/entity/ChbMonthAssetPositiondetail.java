@@ -264,6 +264,11 @@ public class ChbMonthAssetPositiondetail extends BaseEntity {
     private String isYhbcgj;
 
     /**
+     * 非标债权行业归属
+     */
+    private String isFbhy;
+
+    /**
      * 取得 头寸编号
      * @return 头寸编号
      */
@@ -1049,6 +1054,23 @@ public class ChbMonthAssetPositiondetail extends BaseEntity {
     public void setIsYhbcgj(String isYhbcgj) {
         this.isYhbcgj = isYhbcgj == null ? null : isYhbcgj.trim();
     }
+
+    /**
+     * 取得 非标债权行业归属
+     * @return 非标债权行业归属
+     */
+    public String getIsFbhy() {
+        return isFbhy;
+    }
+
+    /**
+     * 设置 非标债权行业归属
+     * @param isFbhy 非标债权行业归属
+     */
+    public void setIsFbhy(String isFbhy) {
+        this.isFbhy = isFbhy == null ? null : isFbhy.trim();
+    }
+
 
     public String getCounterListCode(){
         return this.getProdId()+"_"+this.getAssetCode();

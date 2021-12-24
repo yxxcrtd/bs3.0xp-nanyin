@@ -57,9 +57,21 @@ public interface ChbAgentInstitutionInfoMapper {
     //该机构是否已维护过委托销售产品编码信息
     int deleteCheck(String agentInstitutionCode);
 
+    //该机构是否已报送
+    List<AgentInstitutionDto> deleteFileCheck(String agentInstitutionCode);
+
     //代理销售机构代码重复校验
     int checkAgentInstitutionCode(String agentInstitutionCode);
 
+    //导入代理销售机构代码重复校验
+    List<AgentInstitutionDto> checkAgentInstitutionCodeImport();
+
     //代理销售机构代码D删除状态check
     int checkAgentInstitutionCodeD(String agentInstitutionCode);
+
+    //代理销售机构代码D删除状态check导入
+    List<AgentInstitutionDto> checkAgentInstitutionCodeDImport();
+
+    //删除附件
+    public void updateEnclosureNum(AgentInstitutionDto agentInstitutionDto);
 }

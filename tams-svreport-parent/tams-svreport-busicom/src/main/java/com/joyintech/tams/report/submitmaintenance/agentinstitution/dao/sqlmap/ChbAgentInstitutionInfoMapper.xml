@@ -141,6 +141,14 @@
         where AGENT_INSTITUTION_CODE = #{agentInstitutionCode,jdbcType=VARCHAR}
     </select>
 
+    <select id="deleteFileCheck" resultType="com.joyintech.tams.report.submitmaintenance.agentinstitution.dto.AgentInstitutionDto" parameterType="java.lang.String" >
+        select
+        AGENT_INSTITUTION_CODE agentInstitutionCode,
+        SEND_STATUS sendStatus
+        from CHB_AGENT_INSTITUTION_SUB
+        where AGENT_INSTITUTION_CODE = #{agentInstitutionCode,jdbcType=VARCHAR}
+    </select>
+
     <select id="checkAgentInstitutionCode" resultType="integer" parameterType="java.lang.String" >
         select
           count(*)
@@ -149,6 +157,15 @@
         where
           STATUS = 'E'
           and AGENT_INSTITUTION_CODE = #{agentInstitutionCode,jdbcType=VARCHAR}
+    </select>
+
+    <select id="checkAgentInstitutionCodeImport" resultType="com.joyintech.tams.report.submitmaintenance.agentinstitution.dto.AgentInstitutionDto">
+        select
+        AGENT_INSTITUTION_CODE agentInstitutionCode
+        from
+        CHB_AGENT_INSTITUTION_INFO
+        where
+        STATUS = 'E'
     </select>
 
     <select id="checkAgentInstitutionCodeD" resultType="integer" parameterType="java.lang.String" >
@@ -160,4 +177,24 @@
           STATUS = 'D'
           and AGENT_INSTITUTION_CODE = #{agentInstitutionCode,jdbcType=VARCHAR}
     </select>
+
+    <select id="checkAgentInstitutionCodeDImport" resultType="com.joyintech.tams.report.submitmaintenance.agentinstitution.dto.AgentInstitutionDto">
+        select
+        AGENT_INSTITUTION_CODE agentInstitutionCode
+        from
+        CHB_AGENT_INSTITUTION_INFO
+        where
+        STATUS = 'D'
+    </select>
+
+    <update id="updateEnclosureNum" parameterType="com.joyintech.tams.report.submitmaintenance.agentinstitution.dto.AgentInstitutionDto">
+        update CHB_AGENT_INSTITUTION_INFO
+        set ENCLOSURE_ADDRESS = #{enclosureAddress},
+        ENCLOSURE_NUM = #{enclosureNum},
+        <where>
+            <if test="agentInstitutionCode != null and agentInstitutionCode != ''">
+                REGIST_SEQNO=#{agentInstitutionCode}
+            </if>
+        </where>
+    </update>
 </mapper>

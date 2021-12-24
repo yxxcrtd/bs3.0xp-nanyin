@@ -166,6 +166,8 @@ public class PbcMonthReportDetailProdUtil {
                     case "99" :
                         days = openCircleDays; break;
                 }
+            }else{
+                days = BigDecimal.ONE;
             }
         }
 

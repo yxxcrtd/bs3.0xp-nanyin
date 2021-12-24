@@ -48,7 +48,7 @@ public class PbcMonthReportDetailAssetUtil {
 
 
     /**
-     *
+     * 2-1入库处理
      * @param position
      * @return
      */
