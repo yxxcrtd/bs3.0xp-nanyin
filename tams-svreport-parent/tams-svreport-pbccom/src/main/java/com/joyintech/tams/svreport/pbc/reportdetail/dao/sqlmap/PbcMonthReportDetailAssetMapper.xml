@@ -144,7 +144,8 @@
             LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = P.RIVAL_PARTY
             LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PRODID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)
             WHERE P.PRODID IS NOT NULL
-
+            AND T.REPORTTYPE != 'ONEPRD_ASSET_DEBT'
+            AND T1.REPORTTYPE != 'ONEPRD_ASSET_DEBT'
         <if test="enddate != null and enddate != ''">
                 and P.TERM =  #{enddate,jdbcType=VARCHAR}
             </if>
