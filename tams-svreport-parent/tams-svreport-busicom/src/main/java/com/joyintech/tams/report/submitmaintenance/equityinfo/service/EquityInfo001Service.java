@@ -718,6 +718,10 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             map = listType.get(i);
             List<EquityInfoRegist001Dto> listRegistDto = mapRegist.get(equityInfo001Dto.getBankCode() + GlobalConstant.VERTICAL_LINE
                     + GlobalConstant.VERTICAL_LINE + equityInfo001Dto.getIndentifyMark());
+            if(null == listRegistDto || listRegistDto.size() == 0 ) {
+            	listRegistDto = mapRegist.get(equityInfo001Dto.getBankCode() + GlobalConstant.VERTICAL_LINE
+                        + GlobalConstant.VERTICAL_LINE + equityInfo001Dto.getOrgIndentifyMark());
+            }
             String statusType = map.get("type");
             // 数据未发生改变，不进行数据更新
 //            if ("01".equals(statusType) && "01".equals(map.get("flag"))) {
