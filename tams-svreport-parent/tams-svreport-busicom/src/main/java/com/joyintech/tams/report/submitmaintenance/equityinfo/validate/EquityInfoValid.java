@@ -1432,6 +1432,10 @@ public class EquityInfoValid {
                                           Map<String,List<ChbTransformRuleObjDto>> objFiledsMap,
                                           EquityInfo001Dto equityInfo001Dto) {
 //        String isBelongBankKey = EquityInfoCheckUtil.subDictcode(isBelongBank, StringUtil.SPACE);
+    	String isBelongBankStr = null;
+    	if(StringUtil.isNotEmpty(isBelongBank) && isBelongBank.length() > 2) {
+    		isBelongBankStr = isBelongBank.substring(0,2);
+        }
         if ("01".equals(type) || "03".equals(type)) {
             //当“数据类型”选择“新增”和“重要信息变更”时，该要素登记要求由必填变更为选填。
             if(StringUtil.isNotEmpty(theBankCode)){
@@ -1451,40 +1455,11 @@ public class EquityInfoValid {
                     message.add(this.getMessage("CHB_EQUITYINFO_E_035", "投资者所属银行代码"));
                 }
                 // add by etliu 20180912 end
+            }else {                
+            	if(DictCodeList.是否_中债_否.getValue().equals(isBelongBankStr)) {
+            		message.add(this.getMessage("CHB_EQUITYINFO_E_036", "投资者所属银行代码"));
+            	}
             }
-/*            if (!EquityInfoCheckUtil.isEmpty(isBelongBankKey)) {
-                if ("02".equals(isBelongBankKey)) {
-                    if (EquityInfoCheckUtil.isEmpty(theBankCode)) {
-                        message.add(this.getMessage("CHB_EQUITYINFO_E_005", "新增或重要信息变更，并且不属于本行",
-                            "投资者所属银行代码"));
-                    }
-                    else if (bankCode.equals(theBankCode)) {
-                        message.add(this.getMessage("CHB_EQUITYINFO_E_011",
-                            "新增或重要信息变更，并且该投资者是否属于本行为否时", "投资者所属银行代码", "登记银行代码"));
-                    }
-                    else if (theBankCode.length() != 6) {
-                        message.add(this.getMessage("CHB_EQUITYINFO_E_002", "投资者所属银行代码", "6"));
-                    }
-                    else if (EquityInfoCheckUtil.findPatern(PATTERN_REGIST_BANK_CODE,
-                        theBankCode)) {
-                        message.add(this.getMessage("CHB_EQUITYINFO_E_003", "投资者所属银行代码"));
-                    }
-                }
-                else {
-                    // 投资者所属银行代码
-                    if (!EquityInfoCheckUtil.isEmpty(theBankCode)) {
-                        message.add(this.getMessage("CHB_EQUITYINFO_E_006", "新增或重要信息变更，并且属于本行",
-                            "投资者所属银行代码"));
-                    }
-                }
-            }
-            else {
-                // 投资者所属银行代码
-                if (!EquityInfoCheckUtil.isEmpty(theBankCode)) {
-                    message.add(this.getMessage("CHB_EQUITYINFO_E_006", "新增或重要信息变更，投资者所属银行为空",
-                        "投资者所属银行代码"));
-                }
-            }*/
         }
 
         return message;
@@ -1507,6 +1482,10 @@ public class EquityInfoValid {
                                           Map<String,List<ChbTransformRuleObjDto>> objFiledsMap,
                                           EquityInfo001Dto equityInfo001Dto) {
 //        String isBelongBankKey = EquityInfoCheckUtil.subDictcode(isBelongBank, StringUtil.SPACE);
+    	String isBelongBankStr = null;
+    	if(StringUtil.isNotEmpty(isBelongBank) && isBelongBank.length() > 2) {
+    		isBelongBankStr = isBelongBank.substring(0,2);
+        }
         if ("01".equals(type) || "03".equals(type)) {
 //            当“数据类型”选择“新增”和“重要信息变更”时，该要素登记要求由必填变更为选填。
 //            if (StringUtil.isNotEmpty(theBankName) && theBankName.getBytes().length>90) {
@@ -1522,6 +1501,10 @@ public class EquityInfoValid {
 
             else if(StringUtil.isNotEmpty(theBankName) &&EquityInfoCheckUtil.whiteListCheck( theBankName,objFileds,spzMap,equityInfo001Dto) ){
                 message.add(this.getMessage("CHB_EQUITYINFO_E_035", "投资者所属银行名称"));
+            }else if(StringUtil.isEmpty(theBankName)) {
+            	if(DictCodeList.是否_中债_否.getValue().equals(isBelongBankStr)) {
+            		message.add(this.getMessage("CHB_EQUITYINFO_E_036", "投资者所属银行名称"));
+            	}
             }
             /*if (!EquityInfoCheckUtil.isEmpty(isBelongBankKey)) {
                 if ("02".equals(isBelongBankKey)) {
