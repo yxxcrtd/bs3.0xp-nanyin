@@ -33,7 +33,6 @@ $(function() {
             }
         },
         cols:[
-            { title: "主键", field: 'posuuid',sortable:false,visible:false},
             { title: "产品代码", width : 130, field: 'prodid',sortField:'prodid'},
             { title: "产品名称", width : 130, field: 'prodName',sortField:'prodName'},
             { title: "起息日", width : 200, field: 'vdateStr', sortField:'vdate'},
@@ -90,9 +89,9 @@ $(function() {
             }
             var keyList = [];
             $.each(expArr, function(i, row) {
-                keyList.push(row.posuuid);
+                keyList.push(row.prodId);
             });
-            param.keyList = keyList;
+            param.prodId = keyList;
             Joyin.exportExcel('export', param);
         }
         
