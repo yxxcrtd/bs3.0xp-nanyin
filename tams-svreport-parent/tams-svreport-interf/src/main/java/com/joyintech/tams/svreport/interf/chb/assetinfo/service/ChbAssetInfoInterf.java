@@ -138,6 +138,8 @@ public class ChbAssetInfoInterf  extends BaseInterfService {
 //        String gradeDateEnd = formatter.format(batchDate);
         productRatingOrderSqlMap.put("oType","01");
         String getProductRatingOrderSqlByZt = commonProductRatingService.getProductRatingOrderSql(productRatingOrderSqlMap);
+        // 调用原中债资产报送状态更新
+        chbAssetInfoInterfMapper.updateRepAssetStatus(new RepAssetDept());
         // 查询当日新增/更改资产要素信息
         List<ChbAssetInfo> listChbAssetInfo = chbAssetInfoInterf.queryAssetByInterfdateBatch(lastUpdatetime,prodIdlist,"",getProductRatingOrderSqlByZt);
         // 不穿透报送通道资产信息

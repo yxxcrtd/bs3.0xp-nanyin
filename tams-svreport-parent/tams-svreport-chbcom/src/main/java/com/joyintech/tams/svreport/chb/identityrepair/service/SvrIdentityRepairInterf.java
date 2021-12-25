@@ -48,13 +48,6 @@ public class SvrIdentityRepairInterf extends BaseService{
 		logger.info("身份信息修复批处理信息检索开始------->>>>>>");
 		List<ChbIdentityRepair> list = svrIdentityRepairInterfMapper.selectBatchData(DateUtil.format(batchDate));
 
-		//2、对于已修复的数据，因为身份变更导致丢失、有没有交易明细的情况。通过修改前的身份信息进行数据修复
-		//2.1、身份发生修改、没有发生过识别标识变更的对象处理
-		List<ChbIdentityRepair> listChang = svrIdentityRepairInterfMapper.selectBatchDataForChg(DateUtil.format(batchDate));
-		if(listChang != null && listChang.size() > 0) {
-			list.addAll(list);
-		}
-
 		//2.2、身份发生修改、识别标识发生过变更的对象处理
 		List<ChbIdentityRepair> listChangForIde = svrIdentityRepairInterfMapper.selectBatchDataForChgByIde(DateUtil.format(batchDate));
 		if(listChangForIde != null && listChangForIde.size() > 0) {
