@@ -74,4 +74,6 @@ public interface ChbAgentInstitutionInfoMapper {
 
     //删除附件
     public void updateEnclosureNum(AgentInstitutionDto agentInstitutionDto);
+
+    String selectFileInfo(AgentInstitutionDto agentInstitutionDto);
 }
