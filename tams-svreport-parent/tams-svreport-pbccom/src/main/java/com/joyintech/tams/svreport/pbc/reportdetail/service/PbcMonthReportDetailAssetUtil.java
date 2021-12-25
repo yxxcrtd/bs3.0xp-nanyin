@@ -136,8 +136,6 @@ public class PbcMonthReportDetailAssetUtil {
 
         BeanUtil.copyPropertiesIgnoreNull(pbcMonthReportDetailAsset,dto);
 
-
-
         //资产端绑定编号
         pbcMonthReportDetailAsset.setDetailno(code);
 
@@ -191,7 +189,7 @@ public class PbcMonthReportDetailAssetUtil {
 
 
 
-    public void  insertBefore(List<PbcMonthReportDetailAsset> prdPositionList){
+    public List<PbcMonthReportDetailAsset>  insertBefore(List<PbcMonthReportDetailAsset> prdPositionList){
 
         //首先根据产品代码/资产代码/科目号进行去重(现金及其他相关科目数据可能重复)
         prdPositionList = prdPositionList.stream().collect(
@@ -211,6 +209,8 @@ public class PbcMonthReportDetailAssetUtil {
             //再赋值交易对手名称  展示产品购买资产首次买入交易的交易对手名称
             dto.setRivalParty(CounterMap.get(dto.getProdid()+"_"+dto.getAssetCode()));
         }
+
+        return prdPositionList;
     }
 
     /**
@@ -224,10 +224,7 @@ public class PbcMonthReportDetailAssetUtil {
         //同批次的详情数据删除
         pbcMonthReportDetailAssetMapper.deleteDetail(term);
         //部分数据的统一处理
-        this.insertBefore(prdPositionList);
-
-
-
+        prdPositionList = this.insertBefore(prdPositionList);
 
 
         //插入list大小
