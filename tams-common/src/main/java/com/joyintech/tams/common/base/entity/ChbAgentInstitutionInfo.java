@@ -27,6 +27,11 @@ public class ChbAgentInstitutionInfo extends BaseEntity {
     private String enclosureNum;
 
     /**
+     * 附件代码
+     */
+    private String fileNo;
+
+    /**
      * 附件存放目录（包括文件名称）
      */
     private String enclosureAddress;
@@ -108,6 +113,22 @@ public class ChbAgentInstitutionInfo extends BaseEntity {
      */
     public void setEnclosureNum(String enclosureNum) {
         this.enclosureNum = enclosureNum == null ? null : enclosureNum.trim();
+    }
+
+    /**
+     * 取得 附件个数
+     * @return 附件个数
+     */
+    public String getFileNo() {
+        return fileNo;
+    }
+
+    /**
+     * 设置 附件代码
+     * @param fileNo 附件代码
+     */
+    public void setFileNo(String fileNo) {
+        this.fileNo = fileNo == null ? null : fileNo.trim();
     }
 
     /**

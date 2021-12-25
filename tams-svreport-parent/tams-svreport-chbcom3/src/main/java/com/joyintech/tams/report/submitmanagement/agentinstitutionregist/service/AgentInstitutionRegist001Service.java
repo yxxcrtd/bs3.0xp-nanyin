@@ -287,12 +287,12 @@ public class AgentInstitutionRegist001Service extends CommonExportService<AgentI
      */
     public String getFileList(Map<String, Object> map) throws IOException {
         StringBuffer res=new StringBuffer();
-        if(map.get("enclosureAddress")==null){
+        if(map.get("fileNo")==null){
             return URLEncoder.encode("附件不存在", "UTF-8").replace("+","%20");
         }
-        String enclosureAddress=(String) map.get("enclosureAddress");
+        String fileNo=(String) map.get("fileNo");
 
-        UploadFile file=uploadListener.fetch(enclosureAddress);
+        UploadFile file=uploadListener.fetch(fileNo);
         if(file==null||file.getTargetFile()==null){
             return URLEncoder.encode("附件丢失", "UTF-8").replace("+","%20");
         }

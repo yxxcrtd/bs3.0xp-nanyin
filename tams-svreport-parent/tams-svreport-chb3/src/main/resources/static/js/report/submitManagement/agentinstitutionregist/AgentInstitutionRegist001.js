@@ -45,7 +45,7 @@ $(function(){
         },
         cols: [
              {title: "登记序列",field:'registSeqno',visible:false}
-            ,{field: 'enclosureAddress',visible : false}
+            ,{field: 'fileNo',visible : false}
             ,{field: 'status', title: "数据状态",visible:false,sortField:'status'}
             ,{field: 'statusStr', title: "数据状态",width:100,sortField:'status'}
             ,{field: 'sendStatus', title: "报送状态", visible:false ,sortField:'sendStatus'}
@@ -69,7 +69,7 @@ $(function(){
         //附件查看
     	table.bind('click', '.fileView', function(data, index) {
 
-    		$.post('getFileList', {enclosureAddress:data.enclosureAddress}, function(str){
+    		$.post('getFileList', {fileNo:data.fileNo}, function(str){
     			  layer.open({
     			    type: 0,
     			    content:decodeURIComponent(str), //注意，如果str是object，那么需要字符拼接。
@@ -82,14 +82,14 @@ $(function(){
 
         //附件下载
     	table.bind('click', '.download', function(data, index) {
-    		if (!data.enclosureAddress || data.enclosureAddress == null) {
+    		if (!data.fileNo || data.fileNo == null) {
     			Joyin.error("未上传附件，不能下载！");
     			return;
     		}
     		parm = {};
-    		var url = JoyinUtil.getRealPath('/framework/download/' + data.enclosureAddress);
+    		var url = JoyinUtil.getRealPath('/framework/download/' + data.fileNo);
     		Joyin.ajax(url, parm, function downloadFileByForm() {
-    			Joyin.exportExcel('/framework/download/' + data.enclosureAddress, parm);
+    			Joyin.exportExcel('/framework/download/' + data.fileNo, parm);
     		},
     		function errorDownload(){
     			Joyin.error("文件未找到！");
