@@ -16,7 +16,6 @@ import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.submitmaintenance.agentinstitution.dao.ChbAgentInstitutionInfoMapper;
 import com.joyintech.tams.report.submitmaintenance.agentinstitution.dto.AgentInstitutionDto;
-import com.joyintech.tams.report.submitmanagement.agentinstitutionregist.dto.AgentInstitutionRegistDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -274,16 +273,17 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
     //删除附件
     public void deltFile(Map<String, Object> map) {
         String agentInstitutionCode=(String) map.get("agentInstitutionCode");
-        String enclosureAddress=(String) map.get("enclosureAddress");
-        UploadFile file=uploadListener.fetch(enclosureAddress);
-        uploadListener.remove(enclosureAddress);
+        String fileNo=(String) map.get("fileNo");
+        UploadFile file=uploadListener.fetch(fileNo);
+        uploadListener.remove(fileNo);
         if(file!=null && file.getTargetFile().exists()){
             file.getTargetFile().delete();
         }
         AgentInstitutionDto agentInstitutionDto=new AgentInstitutionDto();
         agentInstitutionDto.setAgentInstitutionCode(agentInstitutionCode);
+        agentInstitutionDto.setFileNo("");
         agentInstitutionDto.setEnclosureAddress("");
-        agentInstitutionDto.setEnclosureNum("");
+        agentInstitutionDto.setEnclosureNum("0");
         chbAgentInstitutionInfoMapper.updateEnclosureNum(agentInstitutionDto);
     }
 
@@ -295,12 +295,12 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
      */
     public String getFileList(Map<String, Object> map) throws IOException {
         StringBuffer res=new StringBuffer();
-        if(map.get("enclosureAddress")==null){
+        if(map.get("fileNo")==null){
             return URLEncoder.encode("附件不存在", "UTF-8").replace("+","%20");
         }
-        String enclosureAddress=(String) map.get("enclosureAddress");
+        String fileNo=(String) map.get("fileNo");
 
-        UploadFile file=uploadListener.fetch(enclosureAddress);
+        UploadFile file=uploadListener.fetch(fileNo);
         if(file==null||file.getTargetFile()==null){
             return URLEncoder.encode("附件丢失", "UTF-8").replace("+","%20");
         }
@@ -322,133 +322,99 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
     }
 
 
-//    /**
-//     * 附件批量上传-产品版本（徽商合并过来）
-//     * @param
-//     */
-//    public AjaxResult FileUploadBatch(List<Map<String, Object>> fileList) throws ZipException, IOException {
-//        StringBuffer fileCheckMsg = new StringBuffer();
-//        for(Map<String, Object> map:fileList){
-//            String srcName=(String) map.get("srcName");
-//            String fileNo=(String) map.get("fileNo");
-//            String fileAgentInstitutionCode=srcName.substring(0, srcName.lastIndexOf("."));
-//            String targetFileSTR=(String) map.get("targetFileSTR");
-//            List<String> agentInstitutionCodeList=(List<String>) map.get("agentInstitutionCodeList");
-//            File file=new File(targetFileSTR);
-//            StringBuffer fileCheckMsg1 = new StringBuffer();
-//            //校验文件名与所选产品代码是否匹配
-//            Boolean flag=false;
-//            for(String agentInstitutionCode :agentInstitutionCodeList){
-//                if(fileAgentInstitutionCode.equals(agentInstitutionCode)){
-//                    flag=true;
-//                }
-//            }
-//            if(!flag){
-//                fileCheckMsg1.append("文件名"+srcName+"与所选代理销售机构代码不匹配！");
-//                fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
-//            }
-//            int fileNum=0;
-//            try (
-//                    ZipFile zipFile=new ZipFile(new File(targetFileSTR), Charset.forName("GBK"));
-//            ){
-//                for (Enumeration<? extends ZipEntry> e = zipFile.entries(); e.hasMoreElements();){
-//                    ZipEntry entry=e.nextElement();
-//
-//                    // 统计文件个数
-//                    if(entry.getName().substring(entry.getName().lastIndexOf("/")+1).length()>0){
-//                        fileNum++;
-//                    }
-//                }
-//
-//            } catch (Exception e) {
-//                throw new BusinessException(e);
-//            }
-//            if(fileCheckMsg1.length() > 0){
-//                if(file.exists()){
-//                    file.delete();
-//                }
-//                uploadListener.remove(fileNo);
-//                fileCheckMsg.append(fileCheckMsg1);
-//            }
-//        }
-//        if(fileCheckMsg.length()>0){
-//            fileCheckMsg.append("上传失败！");
-//            return new AjaxResult(fileCheckMsg.toString(), MessageType.错误消息);
-//        }
-//        //校验通过，保存文件
-//        for(Map<String, Object> filemap:fileList){
-//            String srcName=(String) filemap.get("srcName");
-//
-//            String fileNo=(String) filemap.get("fileNo");
-//            String fileAgentInstitutionCode=srcName.substring(0, srcName.lastIndexOf("."));
-//            String targetFileSTR=(String) filemap.get("targetFileSTR");
-//            int fileNum=0;
-//            // 记录文件信息
-//            Map<String, List<String>> fileExistsMap1 = new HashMap<>();
-//            try (
-//                    ZipFile zipFile=new ZipFile(new File(targetFileSTR),Charset.forName("GBK"));
-//            ){
-//                List<String> folderNoList1 = ChbPrdDeclareRegFileCode.genFolderNoList();
-//                for (Enumeration<? extends ZipEntry> e = zipFile.entries(); e.hasMoreElements();){
-//                    ZipEntry entry=e.nextElement();
-//                    //    09/:表示文件夹
-//                    String folderName = entry.getName().substring(0, entry.getName().indexOf("/"));
-//                    //    09/aaa.doc:表示文件夹下文件
-//                    if (entry.getName().indexOf("/") == entry.getName().lastIndexOf("/")){
-//                        ChbPrdDeclareRegFileCode chbPrdDeclareRegFileCode = ChbPrdDeclareRegFileCode.genInfoByFolderNo(folderName);
-//                        if (fileExistsMap1.containsKey(folderName)){
-//                            List<String> folderNameList = new ArrayList<>(fileExistsMap1.get(folderName));
-//                            folderNameList.add(entry.getName().substring(folderName.length() + 1));
-//                            fileExistsMap1.put(folderName, folderNameList);
-//                        }
-//                        else{
-//                            fileExistsMap1.put(folderName, Arrays.asList(entry.getName().substring(folderName.length() + 1)));
-//                        }
-//                    }
-//                    // 统计文件个数
-//                    if(entry.getName().substring(entry.getName().lastIndexOf("/")+1).length()>0){
-//                        fileNum++;
-//                    }
-//                }
-//            } catch (Exception e) {
-//                throw new BusinessException(e);
-//            }
-//            StringBuffer fileSb = new StringBuffer();
-//            for (String key : fileExistsMap1.keySet()){
-//                fileSb.append(key);
-//                fileSb.append(GlobalConstant.COMMA);
-//                List<String> fileInfoList = fileExistsMap1.get(key);
-//                for (String fileInfo : fileInfoList){
-//                    if(StringUtil.isNotEmpty(fileInfo)){
-//                        fileSb.append(fileInfo);
-//                        fileSb.append(GlobalConstant.COMMA);
-//                    }
-//                }
-//                fileSb = new StringBuffer(fileSb.substring(0, fileSb.length() - GlobalConstant.COMMA.length()));
-//                fileSb.append(GlobalConstant.SEMICOLON);
-//            }
-//            fileSb = new StringBuffer(fileSb.substring(0, fileSb.length() - GlobalConstant.SEMICOLON.length()));
-//            AgentInstitutionDto agentInstitutionDto=new AgentInstitutionDto();
-//            agentInstitutionDto.setAgentInstitutionCode(fileAgentInstitutionCode);
-//            agentInstitutionDto.setFileNo(fileNo);
-//            agentInstitutionDto.setEnclosureNum(Integer.toString(fileNum));
-//            agentInstitutionDto.setNineFile(fileSb.toString());
-//
-//            // 先查历史数据文件  将 历史文件删除
-//            String path = "";
-//            if(StringUtils.isNotEmpty(fileProdId)) {
-//                path = perProDeclareReg001Mapper.selectFileInfo(perProDeclareRegDto);
-//            }
-//            perProDeclareReg001Mapper.updateFileNo(perProDeclareRegDto);
-//
-//            // 如果存在历史文件  将文件删除
-//            if(StringUtils.isNotEmpty(fileProdId) && StringUtil.isNotEmpty(path)){
-//                File file = new SafelyFile(path);
-//                if(file.exists()){
-//                    file.delete();
-//                }
-//            }
-//        }
-//        return new AjaxResult("附件上传成功！");
-//    }
+    /**
+     * 附件批量上传
+     * @param fileList 文件列表
+     */
+    public AjaxResult FileUploadBatch(List<Map<String, Object>> fileList) throws ZipException, IOException{
+        StringBuffer fileCheckMsg = new StringBuffer();
+        for(Map<String, Object> map:fileList){
+            String srcName=(String) map.get("srcName");
+            String fileNo=(String) map.get("fileNo");
+            String fileAgentInstitutionCode=srcName.substring(0, srcName.lastIndexOf("."));
+            String targetFileSTR=(String) map.get("targetFileSTR");
+            List<String> agentInstitutionCodeList=(List<String>) map.get("agentInstitutionCodeList");
+            File file=new File(targetFileSTR);
+            StringBuffer fileCheckMsg1 = new StringBuffer();
+            //校验文件名与所选产品代码是否匹配
+            Boolean flag=false;
+            for(String agentInstitutionCode :agentInstitutionCodeList){
+                if(fileAgentInstitutionCode.equals(agentInstitutionCode)){
+                    flag=true;
+                }
+            }
+            if(!flag){
+                fileCheckMsg1.append("文件名"+srcName+"与所选产品代码不匹配！");
+                fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
+            }
+            int fileNum=0;
+            try (
+                    ZipFile zipFile=new ZipFile(new File(targetFileSTR),Charset.forName("GBK"));
+            ){
+                for (Enumeration<? extends ZipEntry> e = zipFile.entries(); e.hasMoreElements();){
+                    ZipEntry entry=e.nextElement();
+                    // 统计文件个数
+                    if(entry.getName().substring(entry.getName().lastIndexOf("/")+1).length()>0){
+                        fileNum++;
+                    }
+                }
+
+            } catch (Exception e) {
+                throw new BusinessException(e);
+            }
+            if(fileCheckMsg1.length() > 0){
+                if(file.exists()){
+                    file.delete();
+                }
+                uploadListener.remove(fileNo);
+                fileCheckMsg.append(fileCheckMsg1);
+            }
+        }
+        if(fileCheckMsg.length()>0){
+            fileCheckMsg.append("上传失败！");
+            return new AjaxResult(fileCheckMsg.toString(), MessageType.错误消息);
+        }
+        //校验通过，保存文件
+        for(Map<String, Object> filemap:fileList){
+            String srcName=(String) filemap.get("srcName");
+            String fileNo=(String) filemap.get("fileNo");
+            String fileProdId=srcName.substring(0, srcName.lastIndexOf("."));
+            String targetFileSTR=(String) filemap.get("targetFileSTR");
+            int fileNum=0;
+            try (
+                    ZipFile zipFile=new ZipFile(new File(targetFileSTR),Charset.forName("GBK"));
+            ){
+                for (Enumeration<? extends ZipEntry> e = zipFile.entries(); e.hasMoreElements();){
+                    ZipEntry entry=e.nextElement();
+                    // 统计文件个数
+                    if(entry.getName().substring(entry.getName().lastIndexOf("/")+1).length()>0){
+                        fileNum++;
+                    }
+                }
+            } catch (Exception e) {
+                throw new BusinessException(e);
+            }
+            AgentInstitutionDto  agentInstitutionDto=new AgentInstitutionDto();
+            agentInstitutionDto.setAgentInstitutionCode(fileProdId);
+            agentInstitutionDto.setFileNo(fileNo);
+            agentInstitutionDto.setEnclosureAddress(targetFileSTR);
+            agentInstitutionDto.setEnclosureNum(Integer.toString(fileNum));
+            agentInstitutionDto.setEnclosureChangeFlag("");
+            // 先查历史数据文件  将 历史文件删除
+            String path = "";
+            if(StringUtils.isNotEmpty(fileProdId)) {
+                path = chbAgentInstitutionInfoMapper.selectFileInfo(agentInstitutionDto);
+            }
+            chbAgentInstitutionInfoMapper.updateEnclosureNum(agentInstitutionDto);
+
+            // 如果存在历史文件  将文件删除
+            if(StringUtils.isNotEmpty(fileProdId) && StringUtil.isNotEmpty(path)){
+                File file = new SafelyFile(path);
+                if(file.exists()){
+                    file.delete();
+                }
+            }
+        }
+        return new AjaxResult("附件上传成功！");
+    }
 }

@@ -43,7 +43,8 @@
             ,{field:'agentInstitutionCode', title: '代理销售机构代码', width:'150',sortField:'agentInstitutionCode'}
             ,{field:'agentInstitutionName', title: '代理销售机构名称', width:'150',sortField:'agentInstitutionName'}
             ,{field:'remark', title: '备注', width:'150',sortField:'remark'}
-            ,{field: 'enclosureAddress',visible : false}
+            ,{field:'enclosureChangeFlag', title: '附件修改标志',visible : false}
+            ,{field:'fileNo', title: '附件代码',visible : false}
             ,{field:'enclosureNum', title: '附件个数', width:'150',sortField:'enclosureNum'}
             ,{title : '操作附件',field : 'operation',type : 'action',width : 150
                ,buttons : [  {text : '&#xe67c;',clas : 'upload',title : '上传'}
@@ -55,9 +56,57 @@
         ],
     });
 
+        //附件上传
+      	table.bind('click', '.upload', function(data, index) {
+      		var dataArr=[];
+      		var dataArrStr;
+      			for(var i = 0; i < 1; i++){
+      				var dataSrc={
+      						fileNo:data.fileNo,
+      						agentInstitutionCode:data.agentInstitutionCode,
+      						enclosureChangeFlag :data.enclosureChangeFlag
+      				}
+      				dataArr[i]=dataSrc;
+      			}
+
+      		dataArrStr=JSON.stringify(dataArr);
+      		Joyin.confirm("请确认是否要导入数据？", function() {
+
+      			var flag=false;
+      			if(data.fileNo && data.fileNo != null){
+      				flag=true;
+      			}
+      			if(flag){
+      				Joyin.confirm('所选数据已存在附件，是否覆盖？',
+      						function(){
+      					Joyin.dialog(JoyinUtil.getLabel("代理销售机构信息附件上传_修改"), basePath
+      		                    + "report/submitmaintenance/agentinstitution/AgentInstitution003/init", "70%",
+      		                    "60%", {
+      		                        pageModel : PAGE_MODEL_NEW,
+      		                        businessId : data.agentInstitutionCode,
+      		                        dataArrStr : dataArrStr
+      		                    },function(){
+      		                    	table.reload();
+      		                    });
+      				})
+      			}else{
+      				Joyin.dialog(JoyinUtil.getLabel("代理销售机构信息附件上传"), basePath
+      	                    + "report/submitmaintenance/agentinstitution/AgentInstitution003/init", "70%",
+      	                    "60%", {
+      	                        pageModel : PAGE_MODEL_NEW,
+      	                        businessId : data.agentInstitutionCode,
+      	                        dataArrStr : dataArrStr
+      	                    },function(){
+      	                    	table.reload();
+      	                    });
+      			}
+              });
+      	});
+
+       //附件删除
     	table.bind('click', '.deltAy', function(data, index) {
     	    var object = {selectedItem: [data], operateType:"deleteFile"};
-    		if (!data.enclosureAddress || data.enclosureAddress == null) {
+    		if (!data.fileNo || data.fileNo == null) {
     			Joyin.error("未上传附件，不能删除！");
     			return;
     		} else {
@@ -65,7 +114,8 @@
     			Joyin.confirm("请确认是否要删除已存在的附件？", function() {
     				Joyin.ajax('deltFile', {
     					agentInstitutionCode : data.agentInstitutionCode,
-    					enclosureAddress:data.enclosureAddress
+    					fileNo:data.fileNo,
+    					enclosureChangeFlag : data.enclosureChangeFlag
     				}, function() {
     					table.reload();
     				})
@@ -76,7 +126,7 @@
 
             //附件查看
         	table.bind('click', '.fileView', function(data, index) {
-        		$.post('getFileList', {enclosureAddress:data.enclosureAddress}, function(str){
+        		$.post('getFileList', {fileNo:data.fileNo}, function(str){
         			  layer.open({
         			    type: 0,
         			    content:decodeURIComponent(str), //注意，如果str是object，那么需要字符拼接。
@@ -89,20 +139,79 @@
 
             //附件下载
         	table.bind('click', '.download', function(data, index) {
-        		if (!data.enclosureAddress || data.enclosureAddress == null) {
+        		if (!data.fileNo || data.fileNo == null) {
         			Joyin.error("未上传附件，不能下载！");
         			return;
         		}
         		parm = {};
-        		var url = JoyinUtil.getRealPath('/framework/download/' + data.enclosureAddress);
+        		var url = JoyinUtil.getRealPath('/framework/download/' + data.fileNo);
         		Joyin.ajax(url, parm, function downloadFileByForm() {
-        			Joyin.exportExcel('/framework/download/' + data.enclosureAddress, parm);
+        			Joyin.exportExcel('/framework/download/' + data.fileNo, parm);
         		},
         		function errorDownload(){
         			Joyin.error("文件未找到！");
         		}
         		);
         	});
+
+        	                /**
+                    		 * 附件批量上传
+                    		 */
+                    		$('#AgentInstitution001_btn_importFile').click(function() {
+                    			var uploadArr = table.getAllCheckedRows();
+                    			var uploadArrStr=JSON.stringify(uploadArr);
+                    			var dataArr=[];
+                    			var dataArrStr;
+                    			if(!uploadArr || uploadArr.length == 0){
+                    				Joyin.error("请选择要上传的数据！");
+                    				return;
+                    			}else{
+                    				for(var i = 0; i < uploadArr.length; i++){
+                    					var data={
+                    							fileNo:uploadArr[i].fileNo,
+                    							agentInstitutionCode:uploadArr[i].agentInstitutionCode
+                    					}
+                    					dataArr[i]=data;
+                    				}
+                    				dataArrStr=JSON.stringify(dataArr);
+                    				Joyin.confirm("请确认是否要导入数据？", function() {
+                    					var flag=false;
+                    					for(var i = 0; i < uploadArr.length; i++){
+                    						if(uploadArr[i].fileNo && uploadArr[i].fileNo != null){
+                    							flag=true;
+                    						}
+                    					}
+                    					if(flag){
+                    						Joyin.confirm('所选产品已存在附件，是否覆盖？',
+                    								function(){
+                    							Joyin.dialog(JoyinUtil.getLabel("代理销售机构信息附件上传_修改"), basePath
+                    				                    + "report/submitmaintenance/agentinstitution/AgentInstitution003/init", "70%",
+                    				                    "60%", {
+                    				                        pageModel : PAGE_MODEL_NEW,
+                    				                        businessId : uploadArr.agentInstitutionCode,
+                    				                        dataArrStr : dataArrStr
+                    				                    },function(){
+                    				                    	table.reload();
+                    				                    });
+                    						})
+                    					}else{
+                    						Joyin.dialog(JoyinUtil.getLabel("代理销售机构信息附件上传_修改"), basePath
+                    			                    + "report/submitmaintenance/agentinstitution/AgentInstitution003/init", "70%",
+                    			                    "60%", {
+                    			                        pageModel : PAGE_MODEL_NEW,
+                    			                        businessId : uploadArr.agentInstitutionCode,
+                    			                        dataArrStr : dataArrStr
+                    			                    },function(){
+                    			                    	table.reload();
+                    			                    });
+                    					}
+                    		        });
+                    			}
+                    		});
+
+
+
+
 
 /**
  * 导出表格
@@ -121,7 +230,7 @@
             });
         }
     };
-  
+
     /**
      * 绑定编辑事件
      */
@@ -221,65 +330,5 @@
               });
             });
         });
-
-        		/**
-        		 * 九大附件批量上传-批量上传（徽商合并）
-        		 */
-        		$('#AgentInstitution001_btn_batchFileUpload').click(function() {
-        			var uploadArr = table.getAllCheckedRows();
-        			var uploadArrStr=JSON.stringify(uploadArr);
-        			var dataArr=[];
-        			var dataArrStr;
-        			if(!uploadArr || uploadArr.length == 0){
-        				Joyin.error("请选择要上传的数据！");
-        				return;
-        			}else{
-        				for(var i = 0; i < uploadArr.length; i++){
-        					if(uploadArr[i].sendStatus != '01'){
-        						Joyin.error("只有未报送的数据才能进行上传！");
-        						return;
-        					}
-        					var data={
-        							fileNo:uploadArr[i].fileNo,
-        							agentInstitutionCode:uploadArr[i].agentInstitutionCode
-        					}
-        					dataArr[i]=data;
-
-        				}
-        				dataArrStr=JSON.stringify(dataArr);
-        				Joyin.confirm("请确认是否要导入数据？", function() {
-        					var flag=false;
-        					for(var i = 0; i < uploadArr.length; i++){
-        						if(uploadArr[i].fileNo && uploadArr[i].fileNo != null){
-        							flag=true;
-        						}
-        					}
-        					if(flag){
-        						Joyin.confirm('所选产品已存在附件，是否覆盖？',
-        								function(){
-        							Joyin.dialog(JoyinUtil.getLabel("附件上传-修改"), basePath
-        				                    + "report/chb/perprodeclarereg/PerProDeclareReg002/init", "70%",
-        				                    "60%", {
-        				                        pageModel : PAGE_MODEL_NEW,
-        				                        businessId : uploadArr.prodId,
-        				                        dataArrStr : dataArrStr
-        				                    },function(){
-        				                    	table.reload();
-        				                    });
-        						})
-        					}else{
-        						Joyin.dialog(JoyinUtil.getLabel("附件上传"), basePath
-        			                    + "report/chb/perprodeclarereg/PerProDeclareReg002/init", "70%",
-        			                    "60%", {
-        			                        pageModel : PAGE_MODEL_NEW,
-        			                        businessId : uploadArr.prodId,
-        			                        dataArrStr : dataArrStr
-        			                    },function(){
-        			                    	table.reload();
-        			                    });
-        					}
-        		        });
-        			}
-        		});
     });
 }());

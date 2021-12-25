@@ -6,8 +6,9 @@ create table CHB_AGENT_INSTITUTION_INFO(
   ,ISSUE_PARTY_ID	VARCHAR2(6) NOT NULL
   ,STATUS	VARCHAR2(2)
   ,ENCLOSURE_NUM	VARCHAR2(2)
-  ,ENCLOSURE_ADDRESS	VARCHAR2(50)
+  ,ENCLOSURE_ADDRESS	VARCHAR2(200)
   ,ENCLOSURE_CHANGE_FLAG VARCHAR2(2)
+  ,FILE_NO VARCHAR2(600)
   ,DATA_DATE	DATE
   ,REMARK	VARCHAR2(200)
   ,CREATE_USER	VARCHAR2(20)
@@ -23,6 +24,7 @@ comment on column CHB_AGENT_INSTITUTION_INFO.STATUS is '数据状态 ';
 comment on column CHB_AGENT_INSTITUTION_INFO.ENCLOSURE_NUM is '附件个数 ';
 comment on column CHB_AGENT_INSTITUTION_INFO.ENCLOSURE_ADDRESS is '附件存放目录（包括文件名称）';
 comment on column CHB_AGENT_INSTITUTION_INFO.ENCLOSURE_CHANGE_FLAG is '附件修改标志';
+comment on column CHB_AGENT_INSTITUTION_INFO.FILE_NO is '附件代码';
 comment on column CHB_AGENT_INSTITUTION_INFO.DATA_DATE is '数据日期 ';
 comment on column CHB_AGENT_INSTITUTION_INFO.REMARK is '备注 ';
 comment on column CHB_AGENT_INSTITUTION_INFO.CREATE_USER is '创建人 ';
@@ -65,23 +67,27 @@ alter table CHB_AGENT_PRD_INFO
   add primary key (AGENT_INSTITUTION_CODE,PROD_REGIST_CODE);
   
   --菜单配置
-DELETE FROM SYS_PAGE WHERE PAGE_ID in ('AgentTabManage001','AgentInstitution001','AgentInstitution002','AgentPrdInfo001','AgentPrdInfo002');
+DELETE FROM SYS_PAGE WHERE PAGE_ID in ('AgentTabManage001','AgentInstitution001','AgentInstitution002','AgentInstitution003','AgentPrdInfo001','AgentPrdInfo002');
 delete from SYS_MENU where MENU_ID = 'REPORT_001_001_026';
 INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_026', 'REP', null, 'REPORT_001_001', 'AgentTabManage001', 15, '02', '代理销售机构信息维护', 'system', null, TIMESTAMP '2021-06-30 20:43:03', 'system', TIMESTAMP '2021-06-30 20:43:03');
 INSERT INTO SYS_PAGE VALUES ('AgentTabManage001','REP','/report/submitmaintenance/agenttabmanage/AgentTabManage001','report/submitmaintenance/agenttabmanage/AgentTabManage001','REPORT_001_001_026',null,null,'02','01','代理销售机构信息维护','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('AgentInstitution001','REP','/report/submitmaintenance/agentinstitution/AgentInstitution001','report/submitmaintenance/agentinstitution/AgentInstitution001',null,null,null,'02','01','代理销售机构信息','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('AgentInstitution002','REP','/report/submitmaintenance/agentinstitution/AgentInstitution002','report/submitmaintenance/agentinstitution/AgentInstitution002',null,null,null,'02','01','代理销售机构信息新建','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_PAGE VALUES ('AgentInstitution003','REP','/report/submitmaintenance/agentinstitution/AgentInstitution003','report/submitmaintenance/agentinstitution/AgentInstitution003',null,null,null,'02','01','附件上传','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('AgentPrdInfo001','REP','/report/submitmaintenance/agentprdinfo/AgentPrdInfo001','report/submitmaintenance/agentprdinfo/AgentPrdInfo001',null,null,null,'02','01','委托销售产品编码信息','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('AgentPrdInfo002','REP','/report/submitmaintenance/agentprdinfo/AgentPrdInfo002','report/submitmaintenance/agentprdinfo/AgentPrdInfo002',null,null,null,'02','01','委托销售产品编码信息新建','system',null,sysdate,'system',sysdate);
 
 --按钮工作流配置
-DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'AgentInstitution002';
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'AgentPrdInfo001';
 DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'AgentPrdInfo002';
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'AgentInstitution001';
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'AgentInstitution002';
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'AgentInstitution003';
+INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentInstitution003','AgentInstitution003_btn_submit','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentInstitution002','AgentInstitution002_btn_submit','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
-INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentPrdInfo002','AgentPrdInfo002_btn_submit','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentInstitution001','AgentInstitution001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
-INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentPrdInfo001','AgentPrdInfo001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
-DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID = 'AgentInstitution001';
+INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentPrdInfo002','AgentPrdInfo002_btn_submit','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentPrdInfo001','AgentPrdInfo001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID = 'AgentInstitution001';
 INSERT INTO SYS_PAGE_ELEMENT VALUES('AgentInstitution001','AgentInstitution001_btn_add','01','01',null,'新建','system',null,sysdate,'system',sysdate,'C',null);
 INSERT INTO SYS_PAGE_ELEMENT VALUES('AgentInstitution001','AgentInstitution001_btn_delete','01','01',null,'删除','system',null,sysdate,'system',sysdate,'C',null);
 INSERT INTO SYS_PAGE_ELEMENT VALUES('AgentInstitution001','AgentInstitution001_btn_import','01','01',null,'导入','system',null,sysdate,'system',sysdate,'C',null);

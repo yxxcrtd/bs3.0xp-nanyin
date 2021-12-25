@@ -62,6 +62,11 @@ public class ChbAgentInstitutionSub extends BaseEntity {
     private String submitFeedbackMsg;
 
     /**
+     * 附件代码
+     */
+    private String fileNo;
+
+    /**
      * 附件个数 
      */
     private String enclosureNum;
@@ -263,6 +268,22 @@ public class ChbAgentInstitutionSub extends BaseEntity {
      */
     public void setSubmitFeedbackMsg(String submitFeedbackMsg) {
         this.submitFeedbackMsg = submitFeedbackMsg == null ? null : submitFeedbackMsg.trim();
+    }
+
+    /**
+     * 取得 附件代码
+     * @return 附件代码
+     */
+    public String getFileNo() {
+        return fileNo;
+    }
+
+    /**
+     * 设置 附件代码
+     * @param fileNo 附件代码
+     */
+    public void setFileNo(String fileNo) {
+        this.fileNo = fileNo == null ? null : fileNo.trim();
     }
 
     /**
