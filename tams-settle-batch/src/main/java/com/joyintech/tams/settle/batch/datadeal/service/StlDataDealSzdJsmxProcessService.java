@@ -100,7 +100,11 @@ public class StlDataDealSzdJsmxProcessService {
             		String tradeId = stlDownDataDealWriteDto.getStlDownDataDealWriteBaseDtoList().get(index).getSettleTransData().getTradeId();
             		for (SzdJsmx szdJsmx : stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getJsmxList()) {
             			if (StringUtil.equals(szdJsmx.getCjbh(), tradeId)) {
-            				stlDownDataDealWriteDto.getStlDownDataDealWriteBaseDtoList().get(index).getSettleTransData().setTradeAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue())));
+            				// modify by etliu 20211225 start
+							// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//            				stlDownDataDealWriteDto.getStlDownDataDealWriteBaseDtoList().get(index).getSettleTransData().setTradeAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue())));
+							stlDownDataDealWriteDto.getStlDownDataDealWriteBaseDtoList().get(index).getSettleTransData().setTradeAmtRaw(new BigDecimal(szdJsmx.getSjsf()).abs());
+							// modify by etliu 20211225 end
             			}
             		}
             	}
@@ -194,10 +198,17 @@ public class StlDataDealSzdJsmxProcessService {
 				settleTransData.setFinprodType(DictCodeListExt1.金融产品类型_债券.getValue());
 				// 单位全价
 				settleTransData.setUnitFprice(new BigDecimal(szdJsmx.getJg1()));
+
+				// modify by etliu 20211225 start
+				// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
 				// 交易份额
-				settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).divide(new BigDecimal(100)).doubleValue())));
+//				settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).divide(new BigDecimal(100)).doubleValue())));
+				settleTransData.setShareAmt(new BigDecimal(szdJsmx.getCjsl()).abs().divide(new BigDecimal(100)));
 				// 全价总额
-				settleTransData.setFpriceAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+//				settleTransData.setFpriceAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+				settleTransData.setFpriceAmt(new BigDecimal(szdJsmx.getQsje()).abs());
+				// modify by etliu 20211225 end
+
 				// 单位净价
 				if (StringUtil.isNotEmpty(szdJsmx.getJg2())) {
 					settleTransData.setUnitCprice(new BigDecimal(szdJsmx.getJg2()));// 配债此字段未空，需要判断
@@ -218,7 +229,11 @@ public class StlDataDealSzdJsmxProcessService {
 				// 交易份额
 				if (StringUtil.equals(settleTransData.getPs(), DictCodeList.交易方向_行权_回售.getValue())
 						|| StringUtil.equals(settleTransData.getPs(), DictCodeListExt1.交易方向_债转股.getValue())){
-					settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).divide(new BigDecimal(100)).doubleValue())));
+					// modify by etliu 20211225 start
+					// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//					settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).divide(new BigDecimal(100)).doubleValue())));
+					settleTransData.setShareAmt(new BigDecimal(szdJsmx.getSl()).abs().divide(new BigDecimal(100)));
+					// modify by etliu 20211225 end
 				}
 				// 金融产品代码
 				if (StringUtil.equals(settleTransData.getPs(), DictCodeListExt3.交易方向_配债.getValue())){
@@ -283,7 +298,11 @@ public class StlDataDealSzdJsmxProcessService {
 						settleTransDataAdd.setTradeId(generate);
 						settleTransDataAdd.setrFinprodId(szdJsmx.getZqdm2());
 						//变量份额
-						settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
+						// modify by etliu 20211225 start
+						// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//						settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
+						settleTransData.setShareAmt(new BigDecimal(szdJsmx.getSl()).abs());
+						// modify by etliu 20211225 end
 					}
 					else if (StringUtil.equals(StlDataDealProcessConstant.ZQLB_GZ, szdJsmx.getZqlb())) {
 						//settleTransDataAdd.setTradeId(szdJsmx.getCjbh());
@@ -308,7 +327,11 @@ public class StlDataDealSzdJsmxProcessService {
 						//交易份额
 						settleTransData.setShareAmt(new BigDecimal(0));
 						//全价总额
-						settleTransData.setFpriceAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+						// modify by etliu 20211225 start
+						// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//						settleTransData.setFpriceAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+						settleTransData.setFpriceAmt(new BigDecimal(szdJsmx.getQsje()).abs());
+						// modify by etliu 20211225 end
 						//settleTransDataAdd.setTradeId(szdJsmx.getCjbh());
 						settleTransDataAdd.setTradeId(generate);
 						settleTransDataAdd.setrFinprodId(szdJsmx.getZqdm1());
@@ -322,40 +345,56 @@ public class StlDataDealSzdJsmxProcessService {
 					settleTransData.setTradeId(IDGenerator.generate());
 				}*/
 
+				// modify by etliu 20211225 start
+				// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
 				// 印花税
 				if (StringUtil.isNotEmpty(szdJsmx.getYhs())){
-					settleTransData.setStampFee(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
+//					settleTransData.setStampFee(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
+					settleTransData.setStampFee(new BigDecimal(szdJsmx.getYhs()).abs());
 					// 印花税_原始
-					settleTransData.setStampFeeRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
+//					settleTransData.setStampFeeRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
+					settleTransData.setStampFeeRaw(new BigDecimal(szdJsmx.getYhs()).abs());
 				}
 				// 经手费
 				if (StringUtil.isNotEmpty(szdJsmx.getJsf())){
-					settleTransData.setJsfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getJsf()).doubleValue())));
+//					settleTransData.setJsfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getJsf()).doubleValue())));
+					settleTransData.setJsfAmt(new BigDecimal(szdJsmx.getJsf()).abs());
 					// 经手费_原始
-					settleTransData.setJsfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getJsf()).doubleValue())));
+//					settleTransData.setJsfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getJsf()).doubleValue())));
+					settleTransData.setJsfAmtRaw(new BigDecimal(szdJsmx.getJsf()).abs());
 				}
 				// 过户费
 				if (StringUtil.isNotEmpty(szdJsmx.getGhf())){
-					settleTransData.setGhfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getGhf()).doubleValue())));
+//					settleTransData.setGhfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getGhf()).doubleValue())));
+					settleTransData.setGhfAmt(new BigDecimal(szdJsmx.getGhf()).abs());
 					// 过户费_原始
-					settleTransData.setGhfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getGhf()).doubleValue())));
+//					settleTransData.setGhfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getGhf()).doubleValue())));
+					settleTransData.setGhfAmtRaw(new BigDecimal(szdJsmx.getGhf()).abs());
 				}
 				// 证管费
 				if (StringUtil.isNotEmpty(szdJsmx.getZgf())){
-					settleTransData.setZgfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getZgf()).doubleValue())));
+//					settleTransData.setZgfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getZgf()).doubleValue())));
+					settleTransData.setZgfAmt(new BigDecimal(szdJsmx.getZgf()).abs());
 					// 证管费_原始
-					settleTransData.setZgfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getZgf()).doubleValue())));
+//					settleTransData.setZgfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getZgf()).doubleValue())));
+					settleTransData.setZgfAmtRaw(new BigDecimal(szdJsmx.getZgf()).abs());
 				}
 				// 手续费
 				if (StringUtil.isNotEmpty(szdJsmx.getSxf())){
-					settleTransData.setSxfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSxf()).doubleValue())));
+//					settleTransData.setSxfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSxf()).doubleValue())));
+					settleTransData.setSxfAmt(new BigDecimal(szdJsmx.getSxf()).abs());
 					// 手续费_原始
-					settleTransData.setSxfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSxf()).doubleValue())));
+//					settleTransData.setSxfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSxf()).doubleValue())));
+					settleTransData.setSxfAmtRaw(new BigDecimal(szdJsmx.getSxf()).abs());
 				}
 				// 交易金额
-				settleTransData.setTradeAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+//				settleTransData.setTradeAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+				settleTransData.setTradeAmt(new BigDecimal(szdJsmx.getQsje()).abs());
 				// 交易金额_原始
-				settleTransData.setTradeAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue())));
+//				settleTransData.setTradeAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue())));
+				settleTransData.setTradeAmtRaw(new BigDecimal(szdJsmx.getSjsf()).abs());
+				// modify by etliu 20211225 end
+
 				// 交易场所
 				settleTransData.setTradeMarket(DictCodeList.交易流通场所_上海证券交易所.getValue());
 				// 交易市场
@@ -497,7 +536,11 @@ public class StlDataDealSzdJsmxProcessService {
 						// 金融产品代码
 						settleTransData.setFinprodId(szdJsmx.getZqdm1());
 						// 交易份额
-						settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+						// modify by etliu 20211225 start
+						// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//						settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+						settleTransData.setShareAmt(new BigDecimal(szdJsmx.getCjsl()).abs());
+						// modify by etliu 20211225 end
 						// 期限品种
 						settleTransData.setTermType(getTermType(szdJsmx.getZqdm1()));
 						// 起息日
@@ -514,7 +557,11 @@ public class StlDataDealSzdJsmxProcessService {
 						// 本金金额
 						// BigDecimal bjje = new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue()));
 						// 本金金额 = 成交数量 fuyongsheng 20211101 edit start
-						BigDecimal bjje = new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue()));
+						// modify by etliu 20211225 start
+						// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//						BigDecimal bjje = new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue()));
+						BigDecimal bjje = new BigDecimal(szdJsmx.getCjsl()).abs();
+						// modify by etliu 20211225 end
 						// 本金金额 = 成交数量 fuyongsheng 20211101 edit end
 						// 回购利息
 						BigDecimal hglx = ArithmeticUtil.multiply(ArithmeticUtil.multiply(bjje, settleTransData.getIntRate()),
@@ -536,13 +583,21 @@ public class StlDataDealSzdJsmxProcessService {
 							settleTransDataPledge.setBranch(0L);
 							settleTransDataPledge.setPledgeFinprodId(szdJsmx.getZqdm2());
 							// settleTransDataPledge.setPledgeNumber(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
-							settleTransDataPledge.setPledgeNumber(szdJsmx.getSl() == null ? BigDecimal.ZERO : new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
+							// modify by etliu 20211225 start
+							// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//							settleTransDataPledge.setPledgeNumber(szdJsmx.getSl() == null ? BigDecimal.ZERO : new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
+							settleTransDataPledge.setPledgeNumber(szdJsmx.getSl() == null ? BigDecimal.ZERO : new BigDecimal(szdJsmx.getSl()).abs());
+							// modify by etliu 20211225 end
 						}
 						// 单位净价
 						// settleTransData.setUnitCprice(new BigDecimal(szdJsmx.getJg1()));
 						settleTransData.setUnitCprice(ArithmeticUtil.divide(new BigDecimal(szdJsmx.getJg2()), new BigDecimal(100), 8));
 						//全价金额
-						settleTransData.setFpriceAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+						// modify by etliu 20211225 start
+						// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//						settleTransData.setFpriceAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+						settleTransData.setFpriceAmt(new BigDecimal(szdJsmx.getQsje()).abs());
+						// modify by etliu 20211225 end
 
 					}
 				}
@@ -608,7 +663,11 @@ public class StlDataDealSzdJsmxProcessService {
 						// 金融产品代码
 						settleTransData.setFinprodId(szdJsmx.getZqdm1());
 						// 交易份额
-						settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+						// modify by etliu 20211225 start
+						// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//						settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+						settleTransData.setShareAmt(new BigDecimal(szdJsmx.getCjsl()).abs());
+						// modify by etliu 20211225 end
 						// 期限品种
 						settleTransData.setTermType(getTermType(szdJsmx.getZqdm1()));
 						// 起息日
@@ -625,7 +684,12 @@ public class StlDataDealSzdJsmxProcessService {
 						// 到期交收日
 						settleTransData.setMpayDate(DateUtil.parse(szdJsmx.getJsrq()));
 						// 本金金额
-						BigDecimal bjje = new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue()));
+						// modify by etliu 20211225 start
+						// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//						BigDecimal bjje = new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue()));
+						BigDecimal bjje = new BigDecimal(szdJsmx.getCjsl()).abs();
+						// modify by etliu 20211225 end
+
 						// 计算回购利息 fuyongsheng 20211215 add start
 						// 回购利息
 						BigDecimal hglx = ArithmeticUtil.multiply(ArithmeticUtil.multiply(bjje, settleTransData.getIntRate()),
@@ -638,7 +702,11 @@ public class StlDataDealSzdJsmxProcessService {
 						// 到期金额
 						settleTransData.setmTradeAmt(bjje);
 						// 到期本金
-						settleTransData.setmPrinAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+						// modify by etliu 20211225 start
+						// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//						settleTransData.setmPrinAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+						settleTransData.setmPrinAmt(new BigDecimal(szdJsmx.getCjsl()).abs());
+						// modify by etliu 20211225 end
 						// 单位净价
 						settleTransData.setUnitCprice(ArithmeticUtil.divide(new BigDecimal(szdJsmx.getJg2()), new BigDecimal(100), 8));
 					}
@@ -706,7 +774,11 @@ public class StlDataDealSzdJsmxProcessService {
 					    	settleTransData.setTermType(getTermType(szdJsmx.getZqdm1()));
 							// 交易份额
 //							settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
-						    settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+						// modify by etliu 20211225 start
+						// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//						    settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+						settleTransData.setShareAmt(new BigDecimal(szdJsmx.getQsje()).abs());
+						// modify by etliu 20211225 end
 					    	// 起息日
 							settleTransData.setVdate(DateUtil.parse(szdJsmx.getJyrq()));
 							// 到期日
@@ -728,7 +800,11 @@ public class StlDataDealSzdJsmxProcessService {
 //							settleTransData.setFpriceAmt(bjje);
 						    settleTransData.setmPrinAmt(BigDecimal.ZERO);
 							//全价金额
-							settleTransData.setFpriceAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+						// modify by etliu 20211225 start
+						// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//							settleTransData.setFpriceAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+						settleTransData.setFpriceAmt(new BigDecimal(szdJsmx.getQsje()).abs());
+						// modify by etliu 20211225 end
 							// 到期金额
 //							settleTransData.setmTradeAmt(ArithmeticUtil.doAdd(bjje, settleTransData.getmIntAmt()));
 						    settleTransData.setmTradeAmt(BigDecimal.ZERO);
@@ -743,10 +819,16 @@ public class StlDataDealSzdJsmxProcessService {
 							settleTransDataPledge.setBranch(0L);
 							settleTransDataPledge.setPledgeFinprodId("F01_" + szdJsmx.getZqdm2() + ".SH");
 //							settleTransDataPledge.setPledgeNumber(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
+
+						// modify by etliu 20211225 start
+						// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
 						    //质押数量
-						    settleTransDataPledge.setPledgeNumber(ArithmeticUtil.divide(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())),BigDecimal.valueOf(100),2));
+//						    settleTransDataPledge.setPledgeNumber(ArithmeticUtil.divide(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())),BigDecimal.valueOf(100),2));
+						settleTransDataPledge.setPledgeNumber(ArithmeticUtil.divide(new BigDecimal(szdJsmx.getCjsl()).abs(), BigDecimal.valueOf(100),2));
 							//质押率
-						    settleTransDataPledge.setPledgeRatio(ArithmeticUtil.divide(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())),new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())),2));
+//						    settleTransDataPledge.setPledgeRatio(ArithmeticUtil.divide(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())),new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())),2));
+						settleTransDataPledge.setPledgeRatio(ArithmeticUtil.divide(new BigDecimal(szdJsmx.getQsje()).abs(), new BigDecimal(szdJsmx.getCjsl()).abs(),2));
+						// modify by etliu 20211225 end
 //						}
 					}
 				}
@@ -812,7 +894,11 @@ public class StlDataDealSzdJsmxProcessService {
 							// 金融产品代码
 							settleTransData.setFinprodId(szdJsmx.getZqdm1());
 							// 交易份额
-							settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+						// modify by etliu 20211225 start
+						// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//							settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+						settleTransData.setShareAmt(new BigDecimal(szdJsmx.getCjsl()).abs());
+						// modify by etliu 20211225 end
 							// 期限品种
 							settleTransData.setTermType(getTermType(szdJsmx.getZqdm1()));
 							// 回购利率
@@ -830,14 +916,22 @@ public class StlDataDealSzdJsmxProcessService {
 							settleTransData.setMpayDate(DateUtil.parse(szdJsmx.getJsrq()));
 					        // 回购利息
 					    	// settleTransData.setUnitInt(ArithmeticUtil.subtract(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())),new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue()))));
+
+						// modify by etliu 20211225 start
+						// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
 							//到期本金
-					        settleTransData.setmPrinAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+//					        settleTransData.setmPrinAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+						settleTransData.setmPrinAmt(new BigDecimal(szdJsmx.getCjsl()).abs());
                             // 到期金额
-							settleTransData.setmTradeAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+//							settleTransData.setmTradeAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+						settleTransData.setmTradeAmt(new BigDecimal(szdJsmx.getQsje()).abs());
 							// 交易日期
 							settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getQsrq()));
 							//全价总额
-						    settleTransData.setFpriceAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+//						    settleTransData.setFpriceAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+						settleTransData.setFpriceAmt(new BigDecimal(szdJsmx.getQsje()).abs());
+						// modify by etliu 20211225 end
+
 							//首期_成交编号
 							settleTransData.setfCjbh(szdJsmx.getSqbh());
 						    //申请编号 = 成交编号
@@ -923,7 +1017,11 @@ public class StlDataDealSzdJsmxProcessService {
 						settleTransData.setFinprodId(szdJsmx.getZqdm1());
 						// 交易份额
 //						settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
-					    settleTransData.setShareAmt(ArithmeticUtil.divide(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())),BigDecimal.valueOf(100),2));
+					// modify by etliu 20211225 start
+					// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//					    settleTransData.setShareAmt(ArithmeticUtil.divide(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())),BigDecimal.valueOf(100),2));
+					settleTransData.setShareAmt(ArithmeticUtil.divide(new BigDecimal(szdJsmx.getCjsl()).abs(), BigDecimal.valueOf(100),2));
+					// modify by etliu 20211225 end
 					    // 期限品种
 						settleTransData.setTermType(getTermType(szdJsmx.getZqdm1()));
 						// 回购利率
@@ -994,7 +1092,11 @@ public class StlDataDealSzdJsmxProcessService {
 						   // 金融产品代码
 						   settleTransData.setFinprodId(szdJsmx.getZqdm2());
 						   // 交易份额
- 						   settleTransData.setShareAmt(ArithmeticUtil.divide(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())), BigDecimal.valueOf(100), 2));
+						   // modify by etliu 20211225 start
+						   // 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+// 						   settleTransData.setShareAmt(ArithmeticUtil.divide(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())), BigDecimal.valueOf(100), 2));
+						   settleTransData.setShareAmt(ArithmeticUtil.divide(new BigDecimal(szdJsmx.getCjsl()).abs(), BigDecimal.valueOf(100), 2));
+						   // modify by etliu 20211225 end
 						   //清算数据Entity.交易日期 = 清算数据Entity.清算日期
 						   szdJsmx.setJyrq(szdJsmx.getQsrq());
 						   //清算数据Entity.清算日期 = 清算数据Entity.交收日期
@@ -1033,40 +1135,57 @@ public class StlDataDealSzdJsmxProcessService {
 			settleTransData.setApplyTradeId(szdJsmx.getSqbh());
 			// 分支序号
 			settleTransData.setBranch(0L);
+
+			// modify by etliu 20211225 start
+			// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
 			// 印花税
 			if (StringUtil.isNotEmpty(szdJsmx.getYhs())){
-				settleTransData.setStampFee(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
+//				settleTransData.setStampFee(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
+				settleTransData.setStampFee(new BigDecimal(szdJsmx.getYhs()).abs());
 				// 印花税_原始
-				settleTransData.setStampFeeRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
+//				settleTransData.setStampFeeRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
+				settleTransData.setStampFeeRaw(new BigDecimal(szdJsmx.getYhs()).abs());
 			}
 			// 经手费
 			if (StringUtil.isNotEmpty(szdJsmx.getJsf())){
-				settleTransData.setJsfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getJsf()).doubleValue())));
+//				settleTransData.setJsfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getJsf()).doubleValue())));
+				settleTransData.setJsfAmt(new BigDecimal(szdJsmx.getJsf()).abs());
 				// 经手费_原始
-				settleTransData.setJsfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getJsf()).doubleValue())));
+//				settleTransData.setJsfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getJsf()).doubleValue())));
+				settleTransData.setJsfAmtRaw(new BigDecimal(szdJsmx.getJsf()).abs());
 			}
 			// 过户费
 			if (StringUtil.isNotEmpty(szdJsmx.getGhf())){
-				settleTransData.setGhfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getGhf()).doubleValue())));
+//				settleTransData.setGhfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getGhf()).doubleValue())));
+				settleTransData.setGhfAmt(new BigDecimal(szdJsmx.getGhf()).abs());
 				// 过户费_原始
-				settleTransData.setGhfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getGhf()).doubleValue())));
+//				settleTransData.setGhfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getGhf()).doubleValue())));
+				settleTransData.setGhfAmtRaw(new BigDecimal(szdJsmx.getGhf()).abs());
 			}
 			// 证管费
 			if (StringUtil.isNotEmpty(szdJsmx.getZgf())){
-				settleTransData.setZgfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getZgf()).doubleValue())));
+//				settleTransData.setZgfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getZgf()).doubleValue())));
+				settleTransData.setZgfAmt(new BigDecimal(szdJsmx.getZgf()).abs());
 				// 证管费_原始
-				settleTransData.setZgfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getZgf()).doubleValue())));
+//				settleTransData.setZgfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getZgf()).doubleValue())));
+				settleTransData.setZgfAmtRaw(new BigDecimal(szdJsmx.getZgf()).abs());
 			}
 			// 手续费
 			if (StringUtil.isNotEmpty(szdJsmx.getSxf())){
-				settleTransData.setSxfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSxf()).doubleValue())));
+//				settleTransData.setSxfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSxf()).doubleValue())));
+				settleTransData.setSxfAmt(new BigDecimal(szdJsmx.getSxf()).abs());
 				// 手续费_原始
-				settleTransData.setSxfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSxf()).doubleValue())));
+//				settleTransData.setSxfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSxf()).doubleValue())));
+				settleTransData.setSxfAmtRaw(new BigDecimal(szdJsmx.getSxf()).abs());
 			}
 			// 交易金额
-			settleTransData.setTradeAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+//			settleTransData.setTradeAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+			settleTransData.setTradeAmt(new BigDecimal(szdJsmx.getQsje()).abs());
 			// 交易金额_原始
-			settleTransData.setTradeAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+//			settleTransData.setTradeAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+			settleTransData.setTradeAmtRaw(new BigDecimal(szdJsmx.getQsje()).abs());
+			// modify by etliu 20211225 end
+
 			// 交易场所
 			settleTransData.setTradeMarket(DictCodeList.交易流通场所_上海证券交易所.getValue());
 			// 交易市场
@@ -1253,12 +1372,18 @@ public class StlDataDealSzdJsmxProcessService {
 					}
 					// 单位全价
 					settleTransData.setUnitFprice(null);
+
+					// modify by etliu 20211225 start
+					// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
 					//交易本金
-					settleTransData.setPrinAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+//					settleTransData.setPrinAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+					settleTransData.setPrinAmt(new BigDecimal(szdJsmx.getCjsl()).abs());
 				    //交易份额
 					settleTransData.setShareAmt(null);
 					//利息总额
-					settleTransData.setIntAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+//					settleTransData.setIntAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+					settleTransData.setIntAmt(new BigDecimal(szdJsmx.getQsje()).abs());
+					// modify by etliu 20211225 end
 				}else{
 					// 单位净价
 					if (StringUtil.isNotEmpty(szdJsmx.getJg2())){
@@ -1269,48 +1394,70 @@ public class StlDataDealSzdJsmxProcessService {
 					//交易本金
 					settleTransData.setPrinAmt(null);
 					// 交易份额
-					settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+					// modify by etliu 20211225 start
+					// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//					settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+					settleTransData.setShareAmt(new BigDecimal(szdJsmx.getCjsl()).abs());
+					// modify by etliu 20211225 end
 					//利息总额
 					settleTransData.setIntAmt(null);
 				}
 				// 单位面值
 				settleTransData.setParValue(fundInfoDto.getFaceValue());
+
+				// modify by etliu 20211225 start
+				// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
 				// 全价总额
-				settleTransData.setFpriceAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+//				settleTransData.setFpriceAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+				settleTransData.setFpriceAmt(new BigDecimal(szdJsmx.getQsje()).abs());
 				// 印花税
 				if (StringUtil.isNotEmpty(szdJsmx.getYhs())){
-				    settleTransData.setStampFee(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
+//				    settleTransData.setStampFee(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
+					settleTransData.setStampFee(new BigDecimal(szdJsmx.getYhs()).abs());
 				    // 印花税_原始
-	                settleTransData.setStampFeeRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
+//	                settleTransData.setStampFeeRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
+					settleTransData.setStampFeeRaw(new BigDecimal(szdJsmx.getYhs()).abs());
 				}
 				// 经手费
 				if (StringUtil.isNotEmpty(szdJsmx.getJsf())){
-				    settleTransData.setJsfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getJsf()).doubleValue())));
+//				    settleTransData.setJsfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getJsf()).doubleValue())));
+					settleTransData.setJsfAmt(new BigDecimal(szdJsmx.getJsf()).abs());
 				    // 经手费_原始
-	                settleTransData.setJsfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getJsf()).doubleValue())));
+//	                settleTransData.setJsfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getJsf()).doubleValue())));
+					settleTransData.setJsfAmtRaw(new BigDecimal(szdJsmx.getJsf()).abs());
 				}
 				// 过户费
 				if (StringUtil.isNotEmpty(szdJsmx.getGhf())){
-				    settleTransData.setGhfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getGhf()).doubleValue())));
+//				    settleTransData.setGhfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getGhf()).doubleValue())));
+					settleTransData.setGhfAmt(new BigDecimal(szdJsmx.getGhf()).abs());
 				    // 过户费_原始
-	                settleTransData.setGhfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getGhf()).doubleValue())));
+//	                settleTransData.setGhfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getGhf()).doubleValue())));
+					settleTransData.setGhfAmtRaw(new BigDecimal(szdJsmx.getGhf()).abs());
 				}
 				// 证管费
 				if (StringUtil.isNotEmpty(szdJsmx.getZgf())){
-				    settleTransData.setZgfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getZgf()).doubleValue())));
+//				    settleTransData.setZgfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getZgf()).doubleValue())));
+					settleTransData.setZgfAmt(new BigDecimal(szdJsmx.getZgf()).abs());
 				    // 证管费_原始
-	                settleTransData.setZgfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getZgf()).doubleValue())));
+//	                settleTransData.setZgfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getZgf()).doubleValue())));
+					settleTransData.setZgfAmtRaw(new BigDecimal(szdJsmx.getZgf()).abs());
 				}
 				// 手续费
 				if (StringUtil.isNotEmpty(szdJsmx.getSxf())){
-				    settleTransData.setSxfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSxf()).doubleValue())));
+//				    settleTransData.setSxfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSxf()).doubleValue())));
+					settleTransData.setSxfAmt(new BigDecimal(szdJsmx.getSxf()).abs());
 				    // 手续费_原始
-	                settleTransData.setSxfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSxf()).doubleValue())));
+//	                settleTransData.setSxfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSxf()).doubleValue())));
+					settleTransData.setSxfAmtRaw(new BigDecimal(szdJsmx.getSxf()).abs());
 				}
 				// 交易金额
-				settleTransData.setTradeAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+//				settleTransData.setTradeAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+				settleTransData.setTradeAmt(new BigDecimal(szdJsmx.getQsje()).abs());
 				// 交易金额_原始
-				settleTransData.setTradeAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue())));
+//				settleTransData.setTradeAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue())));
+				settleTransData.setTradeAmtRaw(new BigDecimal(szdJsmx.getSjsf()).abs());
+				// modify by etliu 20211225 end
+
 				// 交易场所
 				settleTransData.setTradeMarket(DictCodeList.交易流通场所_上海证券交易所.getValue());
 				// 交易市场
@@ -1396,10 +1543,17 @@ public class StlDataDealSzdJsmxProcessService {
 			settleTransData.setSettleMode(stlDataDealProcessCommonService.getSettleMode(szdJsmx.getJsfs()));
 			// 单位净价
 			settleTransData.setUnitCprice(new BigDecimal(szdJsmx.getJg1()));
+
+			// modify by etliu 20211225 start
+			// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
 			// 交易份额
-			settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+//			settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+			settleTransData.setShareAmt(new BigDecimal(szdJsmx.getCjsl()).abs());
 			// 全价总额
-			settleTransData.setFpriceAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+//			settleTransData.setFpriceAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+			settleTransData.setFpriceAmt(new BigDecimal(szdJsmx.getQsje()).abs());
+			// modify by etliu 20211225 end
+
 			// 交易日期
 			settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getJyrq()));
 			// 交割日期
@@ -1422,7 +1576,11 @@ public class StlDataDealSzdJsmxProcessService {
 				//交易方向
 				settleTransData.setPs(DictCodeList.交易方向_申购.getValue());
                 //交易份额
-				settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
+				// modify by etliu 20211225 start
+				// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//				settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
+				settleTransData.setShareAmt(new BigDecimal(szdJsmx.getSl()).abs());
+				// modify by etliu 20211225 end
 				// 成交编号 = 交收编号
 				szdJsmx.setCjbh(szdJsmx.getJsbh());
 				//业务场景明细分类
@@ -1441,7 +1599,11 @@ public class StlDataDealSzdJsmxProcessService {
 				//交易方向
 				settleTransData.setPs(DictCodeList.交易方向_申购确认.getValue());
 				//交易份额
-				settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
+				// modify by etliu 20211225 start
+				// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//				settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
+				settleTransData.setShareAmt(new BigDecimal(szdJsmx.getSl()).abs());
+				// modify by etliu 20211225 end
 				//交易日期
 				settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getQsrq()));
 				//交割日期
@@ -1484,11 +1646,19 @@ public class StlDataDealSzdJsmxProcessService {
 				settleTransData.setMdate(DateUtil.parse(szdJsmx.getQtrq()));
 				if (StringUtil.equals(StlDataDealProcessConstant.MMBS_B, szdJsmx.getMmbz())) {
 					settleTransData.setPs(DictCodeListStl.交易方向_收购方过入.getValue());
-					settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
+					// modify by etliu 20211225 start
+					// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//					settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
+					settleTransData.setShareAmt(new BigDecimal(szdJsmx.getSl()).abs());
+					// modify by etliu 20211225 end
 				}
 				else {
 					settleTransData.setPs(DictCodeListStl.交易方向_预受方过出.getValue());
-					settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+					// modify by etliu 20211225 start
+					// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//					settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+					settleTransData.setShareAmt(new BigDecimal(szdJsmx.getCjsl()).abs());
+					// modify by etliu 20211225 end
 				}
 			}
 			// 股票大宗交易系统专场
@@ -1553,40 +1723,57 @@ public class StlDataDealSzdJsmxProcessService {
 			settleTransData.setBranch(0L);
 			// 业务类型
 			settleTransData.setBusiType(DictCodeList.业务类型_股票交易.getValue());
+
+			// modify by etliu 20211225 start
+			// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
 			// 印花税
 			if (StringUtil.isNotEmpty(szdJsmx.getYhs())){
-			    settleTransData.setStampFee(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
+//			    settleTransData.setStampFee(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
+				settleTransData.setStampFee(new BigDecimal(szdJsmx.getYhs()).abs());
 			    // 印花税_原始
-	            settleTransData.setStampFeeRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
+//	            settleTransData.setStampFeeRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
+				settleTransData.setStampFeeRaw(new BigDecimal(szdJsmx.getYhs()).abs());
 			}
 			// 经手费
 			if (StringUtil.isNotEmpty(szdJsmx.getJsf())){
-			    settleTransData.setJsfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getJsf()).doubleValue())));
+//			    settleTransData.setJsfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getJsf()).doubleValue())));
+				settleTransData.setJsfAmt(new BigDecimal(szdJsmx.getJsf()).abs());
 			    // 经手费_原始
-	            settleTransData.setJsfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getJsf()).doubleValue())));
+//	            settleTransData.setJsfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getJsf()).doubleValue())));
+				settleTransData.setJsfAmtRaw(new BigDecimal(szdJsmx.getJsf()).abs());
 			}
 			// 过户费
 			if (StringUtil.isNotEmpty(szdJsmx.getGhf())){
-			    settleTransData.setGhfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getGhf()).doubleValue())));
+//			    settleTransData.setGhfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getGhf()).doubleValue())));
+				settleTransData.setGhfAmt(new BigDecimal(szdJsmx.getGhf()).abs());
 			    // 过户费_原始
-	            settleTransData.setGhfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getGhf()).doubleValue())));
+//	            settleTransData.setGhfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getGhf()).doubleValue())));
+				settleTransData.setGhfAmtRaw(new BigDecimal(szdJsmx.getGhf()).abs());
 			}
 			// 证管费
 			if (StringUtil.isNotEmpty(szdJsmx.getZgf())){
-			    settleTransData.setZgfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getZgf()).doubleValue())));
+//			    settleTransData.setZgfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getZgf()).doubleValue())));
+				settleTransData.setZgfAmt(new BigDecimal(szdJsmx.getZgf()).abs());
 			    // 证管费_原始
-	            settleTransData.setZgfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getZgf()).doubleValue())));
+//	            settleTransData.setZgfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getZgf()).doubleValue())));
+				settleTransData.setZgfAmtRaw(new BigDecimal(szdJsmx.getZgf()).abs());
 			}
 			// 手续费
 			if (StringUtil.isNotEmpty(szdJsmx.getSxf())){
-			    settleTransData.setSxfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSxf()).doubleValue())));
+//			    settleTransData.setSxfAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSxf()).doubleValue())));
+				settleTransData.setSxfAmt(new BigDecimal(szdJsmx.getSxf()).abs());
 			    // 手续费_原始
-	            settleTransData.setSxfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSxf()).doubleValue())));
+//	            settleTransData.setSxfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSxf()).doubleValue())));
+				settleTransData.setSxfAmtRaw(new BigDecimal(szdJsmx.getSxf()).abs());
 			}
 			// 交易金额
-			settleTransData.setTradeAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+//			settleTransData.setTradeAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+			settleTransData.setTradeAmt(new BigDecimal(szdJsmx.getQsje()).abs());
 			// 交易金额_原始
-			settleTransData.setTradeAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue())));
+//			settleTransData.setTradeAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue())));
+			settleTransData.setTradeAmtRaw(new BigDecimal(szdJsmx.getSjsf()).abs());
+			// modify by etliu 20211225 end
+
 			// 交易场所
 			settleTransData.setTradeMarket(DictCodeList.交易流通场所_上海证券交易所.getValue());
 			// 交易市场
@@ -1877,13 +2064,20 @@ public class StlDataDealSzdJsmxProcessService {
 		settleTransData.setSeqNo(szdJsmx.getSeqno());
 		// 资金交收日
 		settleTransData.setVpayDate(DateUtil.parse(szdJsmx.getQsrq()));
+
+		// modify by etliu 20211225 start
+		// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
 		// 交易份额  清算数据Entity.成交数量/100
-		settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).divide(new BigDecimal(100)).doubleValue())));
+//		settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).divide(new BigDecimal(100)).doubleValue())));
+		settleTransData.setShareAmt(new BigDecimal(szdJsmx.getCjsl()).abs().divide(new BigDecimal(100)));
 		// 单位面值 调用【当前面值】
 		settleTransData.setParValue(stlDataDealProcessCommonService.getUnitPrice(settleTransData.getFinprodId(),
 				settleTransData.getTradeDate()));
 		// 交易金额 ABS(清算数据Entity.实际收付)
-		settleTransData.setTradeAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue())));
+//		settleTransData.setTradeAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue())));
+		settleTransData.setTradeAmt(new BigDecimal(szdJsmx.getSjsf()).abs());
+		// modify by etliu 20211225 end
+
 		if(StringUtil.equals(szdJsmx.getYwlx(), StlDataDealProcessConstant.YWLX_352)){ // 债券兑付
 			FinProduct finProduct = settleCommonService.selectFinProduct(settleTransData.getFinprodId());
 			// 清算数据的交易日期 == 标的信息的到期日
@@ -1902,11 +2096,18 @@ public class StlDataDealSzdJsmxProcessService {
 				settleTransData.setPrinAmt(new BigDecimal(szdJsmx.getJg2()).multiply(settleTransData.getShareAmt()));
 				// 净价总额
 				settleTransData.setCpriceAmt(new BigDecimal(0));
+
+				// modify by etliu 20211225 start
+				// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
 				// 利息总额 abs(清算数据Entity.实付金额)-变量.交易本金
-				settleTransData.setIntAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue()))
+//				settleTransData.setIntAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue()))
+//						.subtract(settleTransData.getPrinAmt()));
+				settleTransData.setIntAmt(new BigDecimal(szdJsmx.getSjsf()).abs()
 						.subtract(settleTransData.getPrinAmt()));
 				// 全价总额 abs(清算数据Entity.清算金额)
-				settleTransData.setFpriceAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+//				settleTransData.setFpriceAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+				settleTransData.setFpriceAmt(new BigDecimal(szdJsmx.getQsje()).abs());
+				// modify by etliu 20211225 end
 			}else{
 				settleTransData.setPs(DictCodeList.交易方向_行权_赎回.getValue());
 				settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券_赎回.getValue());
@@ -1920,11 +2121,18 @@ public class StlDataDealSzdJsmxProcessService {
 				settleTransData.setPrinAmt(settleTransData.getParValue().multiply(settleTransData.getShareAmt()));
 				// 净价总额(变量.单位净价* 变量.交易份额)
 				settleTransData.setCpriceAmt(settleTransData.getUnitCprice().multiply(settleTransData.getShareAmt()));
+
+				// modify by etliu 20211225 start
+				// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
 				// 利息总额 abs(清算数据Entity.清算金额)-变量.净价总额
-				settleTransData.setIntAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue()))
+//				settleTransData.setIntAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue()))
+//						.subtract(settleTransData.getCpriceAmt()));
+				settleTransData.setIntAmt(new BigDecimal(szdJsmx.getQsje()).abs()
 						.subtract(settleTransData.getCpriceAmt()));
 				// 全价总额 abs(清算数据Entity.清算金额)
-				settleTransData.setFpriceAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+//				settleTransData.setFpriceAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+				settleTransData.setFpriceAmt(new BigDecimal(szdJsmx.getQsje()).abs());
+				// modify by etliu 20211225 end
 			}
 		}else if(StringUtil.equals(szdJsmx.getYwlx(), StlDataDealProcessConstant.YWLX_353)){ // 债券兑息
 			// 清算数据价格2不为空且不等于0
@@ -1941,11 +2149,18 @@ public class StlDataDealSzdJsmxProcessService {
 				settleTransData.setPrinAmt(new BigDecimal(szdJsmx.getJg2()).multiply(settleTransData.getShareAmt()));
 				// 净价总额
 				settleTransData.setCpriceAmt(new BigDecimal(0));
+
+				// modify by etliu 20211225 start
+				// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
 				// 利息总额 abs(清算数据Entity.实际收付)-变量.交易本金
-				settleTransData.setIntAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue()))
+//				settleTransData.setIntAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue()))
+//						.subtract(settleTransData.getPrinAmt()));
+				settleTransData.setIntAmt(new BigDecimal(szdJsmx.getSjsf()).abs()
 						.subtract(settleTransData.getPrinAmt()));
 				// 全价总额 abs(清算数据Entity.清算金额)
-				settleTransData.setFpriceAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+//				settleTransData.setFpriceAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+				settleTransData.setFpriceAmt(new BigDecimal(szdJsmx.getQsje()).abs());
+				// modify by etliu 20211225 end
 			}else{
 				settleTransData.setPs(DictCodeList.交易方向_收息.getValue());
 				settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券_收息.getValue());
@@ -1959,10 +2174,16 @@ public class StlDataDealSzdJsmxProcessService {
 				settleTransData.setPrinAmt(settleTransData.getParValue().multiply(settleTransData.getShareAmt()));
 				// 净价总额
 				settleTransData.setCpriceAmt(new BigDecimal(0));
+
+				// modify by etliu 20211225 start
+				// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
 				// 利息总额 abs(清算数据.实付金额)
-				settleTransData.setIntAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue())));
+//				settleTransData.setIntAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue())));
+				settleTransData.setIntAmt(new BigDecimal(szdJsmx.getSjsf()).abs());
 				// 全价总额 abs(清算数据.实付金额)
-				settleTransData.setFpriceAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue())));
+//				settleTransData.setFpriceAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue())));
+				settleTransData.setFpriceAmt(new BigDecimal(szdJsmx.getSjsf()).abs());
+				// modify by etliu 20211225 end
 			}
 		}
 		// 印花税
