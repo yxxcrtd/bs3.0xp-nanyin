@@ -1447,6 +1447,11 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     dd.setTransmitTime(transmitTimeDto.getTransmitTime());
                     dto.setTransmitTime(transmitTimeDto.getTransmitTime());
                 }
+                dd.setSubmitFlag(false);
+                dto.setSubmitFlag(false);
+            }else{
+                dd.setSubmitFlag(true);
+                dto.setSubmitFlag(true);
             }
             etrInvestBondInfoDtosList.add(dd);
         }

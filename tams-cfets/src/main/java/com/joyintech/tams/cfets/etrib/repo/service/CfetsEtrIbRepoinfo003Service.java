@@ -23,10 +23,8 @@ import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
 import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtribBondInfo003Service;
 import com.joyintech.tams.cfets.etrib.repo.dto.*;
-import com.joyintech.tams.common.base.entity.EtrDistribute;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
-import com.joyintech.tams.common.base.entity.EtrPledge;
+import com.joyintech.tams.common.base.dao.WflEtrEntrustMapper;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
@@ -113,6 +111,10 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
 
     @Autowired(required = false)
     private CfetsEtrIbBondinfoMapper cfetsEtrIbBondinfoMapper;
+
+   @Autowired(required = false)
+    private WflEtrEntrustMapper wflEtrEntrustMapper;
+
 
 
 
@@ -389,14 +391,27 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                     doInsertFlow(dto);
                 }
                 //发送头寸
-                sendPositionMethod(entity);
+                sendPositionMethod(entity,entity.getSubmitFlag());
             }
         }
     }
 
     @Override
     public void doUpdate(CfetsEtribRepoInfo003Dto entity) {
+        if("save".equals(entity.getOperateType())){
+            return;
+        }
         if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
+            boolean isSubmit = true;
+            for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
+                WflEtrEntrustKey wflEtrEntrustKey = new WflEtrEntrustKey();
+                wflEtrEntrustKey.setEntrustId(dto.getEntrustId());
+                wflEtrEntrustKey.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                WflEtrEntrust wflEtrEntrust = wflEtrEntrustMapper.selectByPrimaryKey(wflEtrEntrustKey);
+                if(wflEtrEntrust != null) {
+                    isSubmit = false;
+                }
+            }
             WFlowCommonService.deleteFlow(entity.getWorkflowId());
             for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
                 dto.setWorkflowId(entity.getWorkflowId());
@@ -404,11 +419,11 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             }
             //发送头寸
             entity.setSoftSkipMode("Y");
-            sendPositionMethod(entity);
+            sendPositionMethod(entity,isSubmit);
         }
     }
      
-    private  void sendPositionMethod(CfetsEtribRepoInfo003Dto entity){
+    private  void sendPositionMethod(CfetsEtribRepoInfo003Dto entity,boolean isSubmit){
         List<CfetsEtrIbRepoPosPortfolioCashRequest> ptlCashList=new ArrayList<>();
         List<CfetsEtrIbRepoPosPortfolioSecRequest> ptlSecList=new ArrayList<>();
         for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
@@ -465,7 +480,12 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         req.setSettleSpeed(entity.getSettleSpreed());
         req.setBusiAct(DictCodeListExt3.业务动作_投资指令.getValue());
         req.setPs(entity.getPs());
-        req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+        if(isSubmit){
+            req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+        }else{
+            req.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+            req.setbTotalTradeId(entity.getTotalEtrustId());
+        }
         req.setCdate(entity.getEntrustDate());
         req.setCcy(DictCodeList.币种_人民币_CNY.getValue());
         req.setPtlCashList(ptlCashList);
@@ -605,6 +625,11 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                     RepoInfoDto.setTransmitTime(transmitTimeDto.getTransmitTime());
                     dto.setTransmitTime(transmitTimeDto.getTransmitTime());
                 }
+                RepoInfoDto.setSubmitFlag(false);
+                dto.setSubmitFlag(false);
+            }else{
+                RepoInfoDto.setSubmitFlag(true);
+                dto.setSubmitFlag(true);
             }
             if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL), "02")
                     ||StringUtil.equals(RepoInfoDto.getPs(), DictCodeListExt1.回购方向_正回购.getValue())){
