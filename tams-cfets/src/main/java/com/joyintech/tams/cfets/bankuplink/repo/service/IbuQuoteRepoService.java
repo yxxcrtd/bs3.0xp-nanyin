@@ -2029,8 +2029,8 @@ public class IbuQuoteRepoService extends BaseService {
     }
 
 
-    public List<CfetsRepoDayPriceDto> listDayPrice(Map<String, Object> param) {
-        List<CfetsRepoDayPriceDto> result = new ArrayList<>();
+//    public List<CfetsRepoDayPriceDto> listDayPrice(Map<String, Object> param) {
+//        List<CfetsRepoDayPriceDto> result = new ArrayList<>();
 //        List<BondQuoteInfoDto> dayOfferTableList = getDayOfferTableList(param);
 //        if(CollectionUtils.isNotEmpty(dayOfferTableList)){
 //            dayOfferTableList.forEach(item ->{
@@ -2045,7 +2045,7 @@ public class IbuQuoteRepoService extends BaseService {
 //                result.add(cfetsBondDayPriceDto);
 //            });
 //        }
-        return result;
-    }
+//        return result;
+//    }
 }
 
