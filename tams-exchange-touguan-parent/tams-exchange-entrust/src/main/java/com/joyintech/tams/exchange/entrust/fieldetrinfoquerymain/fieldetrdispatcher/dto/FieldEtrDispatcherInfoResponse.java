@@ -101,6 +101,9 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
 
     @ApiModelProperty(name="totalPrinAmt",value="汇总券面总额",example="10000")
     private BigDecimal totalPrinAmt;
+
+    @ApiModelProperty(name="pledgeStandardNumber",value="标准券数量",example="10000")
+    private BigDecimal pledgeStandardNumber;
     
     @ApiModelProperty(name="pledgeRatio",value="折算率",example="10000")
     private BigDecimal pledgeRatio;

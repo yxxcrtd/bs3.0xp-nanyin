@@ -23,9 +23,7 @@
     CASE WHEN ETR_ENTRUST_ADD.ASSET_TYPE ='F07' AND ETR_ENTRUST.PS IN('03','04') AND ETR_ENTRUST.ENTRUST_TYPE NOT IN ('17',  '18', '19', '20', '21') THEN ETR_ENTRUST.FINPROD_ID else (case when FIN_PRODUCT.FINPROD_MARKET_ID is not null then FIN_PRODUCT.FINPROD_ABBR else OPT_TARGET_INFO.TARGET_NAME end) end finprodAbbr,
     ETR_ENTRUST.PS Ps,
     CASE
-    WHEN ETR_ENTRUST_ADD.ASSET_TYPE IN (#{ASSET_TYPE_16})
-    THEN (SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = #{IRS_TYPE} AND ITEM_CODE = ETR_ENTRUST_ADD.BUSI_PS)
-    WHEN ETR_ENTRUST_ADD.ASSET_TYPE IN (#{ASSET_TYPE_07}, #{ASSET_TYPE_10}, #{ASSET_TYPE_12},#{ASSET_TYPE_16})
+    WHEN ETR_ENTRUST_ADD.ASSET_TYPE IN (#{ASSET_TYPE_07}, #{ASSET_TYPE_10}, #{ASSET_TYPE_12})
     THEN (SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = #{BACK_LEND_DIRECTION} AND ITEM_CODE = ETR_ENTRUST_ADD.BUSI_PS)
     ELSE (SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = #{PS} AND ITEM_CODE = ETR_ENTRUST.PS)
     END AS otherPs,
@@ -55,6 +53,8 @@
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
+    ETR_ENTRUST.PRICE_MODEL priceModel,
+    ssai.TRD_ACCT_ID trdAcctId,
     ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField
     FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
     LEFT JOIN
@@ -122,17 +122,7 @@
             )
         </if>
         <if test="ps != null and ps!='' ">
-            AND (case
-            <if test="IRSType_01.equals(IRSps) or IRSType_02.equals(IRSps) or PS_T01.equals(ps)">
-                when  ETR_ENTRUST_ADD.ASSET_TYPE IN (#{ASSET_TYPE_16})
-                then  ETR_ENTRUST_ADD.BUSI_PS
-            </if>
-            <if test="!IRSType_01.equals(IRSps) and !IRSType_02.equals(IRSps)">
-                when  ETR_ENTRUST_ADD.ASSET_TYPE IN (#{ASSET_TYPE_07}, #{ASSET_TYPE_08}, #{ASSET_TYPE_10}, #{ASSET_TYPE_12})
-                then  ETR_ENTRUST_ADD.BUSI_PS
-            </if>
-            else  ETR_ENTRUST.PS
-            end) =#{ps}
+            AND ETR_ENTRUST.PS = #{ps}
         </if>
         <if test="finprodType2 != null and finprodType2!='' ">
             AND ETR_ENTRUST_ADD.ASSET_TYPE  = #{finprodType2}
@@ -201,9 +191,7 @@
         CASE WHEN WFL_ETR_ENTRUST_ADD.ASSET_TYPE ='F07' AND WFL_ETR_ENTRUST.PS IN('03','04') AND WFL_ETR_ENTRUST.ENTRUST_TYPE NOT IN ('17',  '18', '19', '20', '21') THEN WFL_ETR_ENTRUST.FINPROD_ID else (case when FIN_PRODUCT.FINPROD_MARKET_ID is not null then FIN_PRODUCT.FINPROD_ABBR else OPT_TARGET_INFO.TARGET_NAME end) end finprodAbbr,
         WFL_ETR_ENTRUST.PS Ps,
         CASE
-        WHEN WFL_ETR_ENTRUST_ADD.ASSET_TYPE IN (#{ASSET_TYPE_16})
-        THEN (SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = #{IRS_TYPE} AND ITEM_CODE = WFL_ETR_ENTRUST_ADD.BUSI_PS)
-        WHEN WFL_ETR_ENTRUST_ADD.ASSET_TYPE IN (#{ASSET_TYPE_07}, #{ASSET_TYPE_10}, #{ASSET_TYPE_12},#{ASSET_TYPE_16})
+        WHEN WFL_ETR_ENTRUST_ADD.ASSET_TYPE IN (#{ASSET_TYPE_07}, #{ASSET_TYPE_10}, #{ASSET_TYPE_12})
         THEN (SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = #{BACK_LEND_DIRECTION} AND ITEM_CODE = WFL_ETR_ENTRUST_ADD.BUSI_PS)
         ELSE (SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = #{PS} AND ITEM_CODE = WFL_ETR_ENTRUST.PS)
         END AS otherPs,
@@ -233,6 +221,8 @@
         (NVL(WFL_ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
         NULL transmitTime,
         NULL transmitTimeSer,
+        WFL_ETR_ENTRUST.PRICE_MODEL priceModel,
+        ssai.TRD_ACCT_ID trdAcctId,
         WFL_ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField
         FROM (SELECT * FROM WFL_ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) WFL_ETR_ENTRUST
         LEFT JOIN
@@ -300,17 +290,7 @@
                 )
             </if>
             <if test="ps != null and ps!='' ">
-                AND (case
-                <if test="IRSType_01.equals(IRSps) or IRSType_02.equals(IRSps) or PS_T01.equals(ps)">
-                    when  WFL_ETR_ENTRUST_ADD.ASSET_TYPE IN (#{ASSET_TYPE_16})
-                    then  WFL_ETR_ENTRUST_ADD.BUSI_PS
-                </if>
-                <if test="!IRSType_01.equals(IRSps) and !IRSType_02.equals(IRSps)">
-                    when  WFL_ETR_ENTRUST_ADD.ASSET_TYPE IN (#{ASSET_TYPE_07}, #{ASSET_TYPE_08}, #{ASSET_TYPE_10}, #{ASSET_TYPE_12})
-                    then  WFL_ETR_ENTRUST_ADD.BUSI_PS
-                </if>
-                else  WFL_ETR_ENTRUST.PS
-                end) =#{ps}
+                AND WFL_ETR_ENTRUST.PS =#{ps}
             </if>
             <if test="finprodType2 != null and finprodType2!='' ">
                 AND WFL_ETR_ENTRUST_ADD.ASSET_TYPE  = #{finprodType2}
