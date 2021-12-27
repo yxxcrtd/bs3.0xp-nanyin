@@ -849,6 +849,7 @@
                 <result column="ENTRUST_AMT" property="entrustAmt" jdbcType="VARCHAR"/>
             </association>
             <collection property="etrInvestRepoInfoDtos" ofType="com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtribRepoInfo003Dto">
+                <id column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR"/>
                 <result column="ENTRUST_AMT" property="entrustAmt" jdbcType="VARCHAR"/>
                 <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR"/>
                 <result column="PORTFOLIO_NAME" property="portfolioName" jdbcType="VARCHAR"/>

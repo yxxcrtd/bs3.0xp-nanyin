@@ -188,10 +188,14 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
                 (dto, list) -> dto.setRiskTrialRetDto(list));
 
         // 临时主键
-        BussinessCodeParameter param = new BussinessCodeParameter();
-        param.setCommonBusinessType(DictCodeList.共通业务类型_回购投资委托);
-        String generatedId = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator.generate();
-        RepoInfoDto.setTotalEtrustId(generatedId);
+        if(!StringUtil.isNotEmpty(RepoInfoDto.getEntrustId())) {
+            BussinessCodeParameter param = new BussinessCodeParameter();
+            param.setCommonBusinessType(DictCodeList.共通业务类型_回购投资委托);
+            String generatedId = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
+            RepoInfoDto.setTotalEtrustId(generatedId);
+        }else{
+            RepoInfoDto.setTotalEtrustId(RepoInfoDto.getEntrustId());
+        }
 //        for (int i = 0; i < RepoInfoDto.getBussCombDistribtList().size(); i++) {
 //            RepoInfoDto.getBussCombDistribtList().get(i).setEntrustId(RepoInfoDto.getEtrInvestRepoInfoDtos().get(i).getEntrustId());
 //        }
