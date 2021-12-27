@@ -1026,7 +1026,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
      * @return
      */
     public Map<String,Object> preparePosition(CfetsBondDealRequestQuoteDto dto,String flowStatus,String systemAct){
-        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto entity = JsonUtils.json2Object(JsonUtils.object2Json(dto),com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto.class);
+        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto entity = JsonUtils.json2Object(JsonUtils.object2Json(dto),com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto.class);
         Date platDate = iPlatformDate.getSysDate();
         final Date settleDate = dto.getSettleDate() == null ? platDate : dto.getSettleDate();
         Map<String,Object> result = new HashMap<>();
@@ -1051,9 +1051,9 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
         result.put("ccy",entity.getCcy());
         result.put("finprodId",entity.getFinprodId());
         result.put("bTotalTradeId",entity.getQuoteId());
-        if(CollectionUtils.isNotEmpty(entity.getCfetsBondDealDialogueQuoteDtoList())){
+        if(CollectionUtils.isNotEmpty(entity.getCfetsBondDealRequestQuoteDtoList())){
             List<Map<String,Object>> ptlList = new ArrayList<>();
-            for (com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto : entity.getCfetsBondDealDialogueQuoteDtoList()) {
+            for (com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto cfetsBondDealDialogueQuoteDto : entity.getCfetsBondDealRequestQuoteDtoList()) {
                 Map<String,Object> pltMap = new HashMap<>();
                 String portfolioId = cfetsBondDealDialogueQuoteDto.getPortfolioId();
                 pltMap.put("portfolioId", portfolioId);
@@ -1061,10 +1061,10 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
                 pltMap.put("etrId",cfetsBondDealDialogueQuoteDto.getEntrustId());
                 pltMap.put("cashAcctId",cfetsIbuQuoteBondMapper.getACCTNO(portfolioId,BussinessDictCodeList.资金账户类型_托管账户.getValue()));
                 pltMap.put("secAcctId",cfetsIbuQuoteBondMapper.getSecAcctId(portfolioId,entity.getFinprodId(),entity.getTradeMarket()));
-                pltMap.put("secAmount",cfetsBondDealDialogueQuoteDto.getAvaNum()); //券面总额
-                pltMap.put("cashAmount",cfetsBondDealDialogueQuoteDto.getFpriceAmt());
-                pltMap.put("integrateSecAmount",cfetsBondDealDialogueQuoteDto.getAvaNum());
-                pltMap.put("ownSecAmount",cfetsBondDealDialogueQuoteDto.getAvaNum());
+                pltMap.put("secAmount",ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(),new BigDecimal(10000))); //券面总额
+                pltMap.put("cashAmount",ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(),dto.getUnitFprice(),new BigDecimal(100)));
+                //pltMap.put("integrateSecAmount",cfetsBondDealDialogueQuoteDto.getAvaNum());
+                //pltMap.put("ownSecAmount",cfetsBondDealDialogueQuoteDto.getAvaNum());
                 pltMap.put("etrSecAmount",ArithmeticUtil.multiply(etrEntrustMapper.selectByPrimaryKey(cfetsBondDealDialogueQuoteDto.getEntrustId()).getEntrustNum(),new BigDecimal(100)));
                 ptlList.add(pltMap);
             }

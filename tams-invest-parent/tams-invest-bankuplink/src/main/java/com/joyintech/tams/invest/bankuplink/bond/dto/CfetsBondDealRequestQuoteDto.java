@@ -159,6 +159,15 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
      */
     private String distribution;
 
+    private BigDecimal unitFprice;
+
+    public BigDecimal getUnitFprice() {
+        return unitFprice;
+    }
+
+    public void setUnitFprice(BigDecimal unitFprice) {
+        this.unitFprice = unitFprice;
+    }
 
     public String getBusinessId() {
         return businessId;
