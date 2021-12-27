@@ -416,8 +416,9 @@ public class CfetsTrdConfirmService extends BaseService{
                         cfetsTrdConfirmMapper.updateTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
                     }else{
                         //不存在对应的成交匹配数据，插入下行成交匹配表
+                        String userName = null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"system";
                         entity.getCfetsTrdConfirmMatchDto().setSeqno(IDGenerator.generate());
-                        entity.getCfetsTrdConfirmMatchDto().setCreateUser(SecurityUtil.getLoginUser().getUserName());
+                        entity.getCfetsTrdConfirmMatchDto().setCreateUser(userName);
                         entity.getCfetsTrdConfirmMatchDto().setCreateDept(CommonUtil.getDeptCode());
                         cfetsTrdConfirmMapper.insertTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
                     }
@@ -726,7 +727,9 @@ public class CfetsTrdConfirmService extends BaseService{
         entity.setExerYield(dtoReg.getExerYield());
         entity.setInvAim(dtoReg.getInvAim());
         entity.setpTradeId();*/
-        entity.setSettleSpeed(new Long(dtoReg.getSettleSpeed()));
+       if(StringUtil.isNotEmpty(dtoReg.getSettleSpeed())){
+            entity.setSettleSpeed(new Long(dtoReg.getSettleSpeed()));
+       }
         // 单位面值
         entity.setParValue(this.getUnitPrice(entity.getFinprodId(), dtoReg.getSettleDate()));
         // 交易本金 = 画面.净价总额
@@ -2021,12 +2024,14 @@ public class CfetsTrdConfirmService extends BaseService{
             req.setBusiType(DictCodeListExt3.头寸业务类型_债券行权交易.getValue()); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
         }
         req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
-        if(entity.getSettleSpeed().compareTo(new Long(0))==0){
-            req.setSettleSpeed("01");
-        }else if(entity.getSettleSpeed().compareTo(new Long(1))==0){
-            req.setSettleSpeed("02");
-        }else if(entity.getSettleSpeed().compareTo(new Long(2))==0){
-            req.setSettleSpeed("03");
+        if(null!=entity.getSettleSpeed()){
+            if(entity.getSettleSpeed().compareTo(new Long(0))==0){
+                req.setSettleSpeed("01");
+            }else if(entity.getSettleSpeed().compareTo(new Long(1))==0){
+                req.setSettleSpeed("02");
+            }else if(entity.getSettleSpeed().compareTo(new Long(2))==0){
+                req.setSettleSpeed("03");
+            }
         }
         req.setBalanceCheck("N");
         req.setBusiAct(DictCodeListExt3.业务动作_成交确认.getValue());
