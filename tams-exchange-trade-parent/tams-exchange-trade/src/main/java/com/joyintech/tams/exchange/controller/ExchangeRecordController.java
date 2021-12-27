@@ -5,6 +5,9 @@ import com.joyintech.tams.exchange.service.trade.management.service.TradeManagem
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 兼容新UI后端
+ */
 @RestController
 @RequestMapping("/joyin")
 public class ExchangeRecordController {
@@ -12,25 +15,24 @@ public class ExchangeRecordController {
     @Autowired
     private TradeManagement tradeManagement;
 
-///////////////////////////////////////迁移到新UI接口    
-//    /**
-//     * 查询交易信息
-//     *
-//     * @param userId        用户Id
-//     * @param entrustId     委托Id
-//     * @param instructionId 指令Id
-//     * @param accountId     账户Id
-//     * @param orderId       订单Id
-//     * @return ResultBean
-//     */
-//    @GetMapping(value = "/trade")
-//    public ResultBean queryTradeAll(@RequestParam(value = "user_id") String userId,
-//                                    @RequestParam(value = "entrust_id", required = false) String entrustId,
-//                                    @RequestParam(value = "instruction_id", required = false) String instructionId,
-//                                    @RequestParam(value = "account_id", required = false) String accountId,
-//                                    @RequestParam(value = "order_id", required = false) String orderId) {
-//        return tradeManagement.queryTrade(userId, entrustId, instructionId, accountId, orderId);
-//    }
+    /**
+     * 查询交易信息
+     *
+     * @param userId        用户Id
+     * @param entrustId     委托Id
+     * @param instructionId 指令Id
+     * @param accountId     账户Id
+     * @param orderId       订单Id
+     * @return ResultBean
+     */
+    @GetMapping(value = "/trade")
+    public ResultBean queryTradeAll(@RequestParam(value = "user_id") String userId,
+                                    @RequestParam(value = "entrust_id", required = false) String entrustId,
+                                    @RequestParam(value = "instruction_id", required = false) String instructionId,
+                                    @RequestParam(value = "account_id", required = false) String accountId,
+                                    @RequestParam(value = "order_id", required = false) String orderId) {
+        return tradeManagement.queryTrade(userId, entrustId, instructionId, accountId, orderId);
+    }
 
     /**
      * @param userId    用户Id
@@ -51,32 +53,31 @@ public class ExchangeRecordController {
         return tradeManagement.queryHistoryTrade(String.valueOf(startDay), String.valueOf(endDay), accountId, postStr, pageSize, userId);
     }
 
-///////////////////////////////////////迁移到新UI接口
-//    /**
-//     * @param pageNum   分页页数
-//     * @param pageSize  分页大小
-//     * @param historyType   查询类型
-//     * @param userId    交易员
-//     * @param startDay  起始日期
-//     * @param endDay    截止日期
-//     * @param accountId 资金账户编号
-//     * @param market    交易场所
-//     * @param stockCode 证券编号
-//     * @param entrustProp   委托属性
-//     * @return  分页成交信息
-//     */
-//    @GetMapping(value = "/trade/page")
-//    public ResultBean queryAllForPage(@RequestParam(value = "page_num", required = false, defaultValue = "0") int pageNum,
-//                                      @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize,
-//                                      @RequestParam(value = "history_type") int historyType,
-//                                      @RequestParam(value = "user_id") String userId,
-//                                      @RequestParam(value = "start_day", required = false) String startDay,
-//                                      @RequestParam(value = "end_day", required = false) String endDay,
-//                                      @RequestParam(value = "account_id", required = false) String accountId,
-//                                      @RequestParam(value = "market", required = false) String market,
-//                                      @RequestParam(value = "stock_code", required = false) String stockCode,
-//                                      @RequestParam(value = "entrust_prop", required = false) String entrustProp,
-//                                      @RequestParam(value = "entrust_id", required = false) String entrustId) {
-//        return tradeManagement.queryAllForPage(pageNum, pageSize, historyType, userId, startDay, endDay, accountId, market, stockCode, entrustProp, entrustId);
-//    }
+    /**
+     * @param pageNum     分页页数
+     * @param pageSize    分页大小
+     * @param historyType 查询类型
+     * @param userId      交易员
+     * @param startDay    起始日期
+     * @param endDay      截止日期
+     * @param accountId   资金账户编号
+     * @param market      交易场所
+     * @param stockCode   证券编号
+     * @param entrustProp 委托属性
+     * @return 分页成交信息
+     */
+    @GetMapping(value = "/trade/page")
+    public ResultBean queryAllForPage(@RequestParam(value = "page_num", required = false, defaultValue = "0") int pageNum,
+                                      @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize,
+                                      @RequestParam(value = "history_type") int historyType,
+                                      @RequestParam(value = "user_id") String userId,
+                                      @RequestParam(value = "start_day", required = false) String startDay,
+                                      @RequestParam(value = "end_day", required = false) String endDay,
+                                      @RequestParam(value = "account_id", required = false) String accountId,
+                                      @RequestParam(value = "market", required = false) String market,
+                                      @RequestParam(value = "stock_code", required = false) String stockCode,
+                                      @RequestParam(value = "entrust_prop", required = false) String entrustProp,
+                                      @RequestParam(value = "entrust_id", required = false) String entrustId) {
+        return tradeManagement.queryAllForPage(pageNum, pageSize, historyType, userId, startDay, endDay, accountId, market, stockCode, entrustProp, entrustId);
+    }
 }
