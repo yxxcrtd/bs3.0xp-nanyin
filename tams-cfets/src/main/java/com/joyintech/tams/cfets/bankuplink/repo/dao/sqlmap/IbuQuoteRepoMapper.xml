@@ -106,6 +106,7 @@
         <id property="pledgeStockName" column="pledgeStockName"/>
         <id property="settleSpreed" column="settleSpreed"/>
         <id property="ps" column="ps"/>
+        <id property="priceModel" column="priceModel"/>
         <id property="repoTerm" column="repoTerm"/>
         <id property="tradeYield" column="tradeYield"/>
         <id property="invManagerId" column="invManagerId"/>
@@ -140,22 +141,22 @@
         </collection>
     </resultMap>
 
-    <select id="listEntrust" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealEntrustOrderDto" resultMap="resultMap">
+    <select id="listEntrust" resultMap="resultMap">
         SELECT *
         FROM (
             SELECT ETR_ENTRUST.ENTRUST_STATUS                                                                 entrustStatus/*指令状态*/
-                , ROUND((NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT, 0))) / 10000                          finishAmt/*已完成额度(万元)*/
-                , ROUND((ETR_ENTRUST.ENTRUST_AMT) - NVL(T5.FINISH_AMT, 0)
-                    - NVL(T6.ENT_FINISH_AMT, 0) / 10000)                                                      avaNum/*剩余指令额度(万元)*/
-                , ROUND(NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT, 0)) /
+                , (NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT, 0)) / 10000                                 finishAmt/*已完成额度(万元)*/
+                , (NVL(ETR_ENTRUST.ENTRUST_AMT,0) - NVL(T5.FINISH_AMT, 0)
+                    - NVL(T6.ENT_FINISH_AMT, 0)) / 10000                                                       avaNum/*剩余指令额度(万元)*/
+                , (NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT, 0)) /
                 10000                                                                                         finishDealAmt/*已成交额度(万元)*/
-                , ROUND(ETR_ENTRUST.ENTRUST_AMT - NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0))
-                    - NVL(T6.FINISH_AMT, 0) / 10000)                                                          avaDealAmt/*剩余成交额度(万元)*/
+                , (ETR_ENTRUST.ENTRUST_AMT - NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0))
+                    - NVL(T6.FINISH_AMT, 0)) / 10000                                                          avaDealAmt/*剩余成交额度(万元)*/
                 , trunc(NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT, 0) / (ETR_ENTRUST.ENTRUST_AMT ), 4) *
                 100                                                                                           transactioncom/*执行进度(%)*/
                 , trunc((NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT , 0)) /
                 (ETR_ENTRUST.ENTRUST_AMT), 4) * 100                                                           tradeFinishPercent/* 成交进度(%)*/
-                , ETR_ENTRUST.ENTRUST_AMT / 100                                                               entrustNum/*指令额度(万元)*/
+                , ETR_ENTRUST.ENTRUST_AMT / 10000                                                             entrustNum/*指令额度(万元)*/
                 , ETR_ENTRUST.PORTFOLIO_ID                                                                    portfolioId/*组合代码*/
                 , PTL_PORTFOLIO.PORTFOLIO_NAME                                                                portfolioName/*组合名称*/
             <if test="repo_pledge_model != null and repo_pledge_model == '02'">
@@ -189,8 +190,8 @@
                 , ETR_ENTRUST.VDATE                                                                           vdate/*委托开始日*/
                 , ETR_ENTRUST.MDATE                                                                           mdate/*委托结束日*/
                 , ETR_ENTRUST_ADD.QUOTE_TYPE                                                                  quoteType/*报价方式*/
-                , MST_CFETS_CUSTOMER_INFO.PARTY_ID                                                            mySide/* 本方 */
-                , MST_CFETS_CUSTOMER_INFO.PARTY_ABBR                                                          mySideAbbr/* 本方名称 */
+                , MCCI.PARTY_ID                                                                               mySide/* 本方 */
+                , MCCI.PARTY_ABBR                                                                             mySideAbbr/* 本方名称 */
                 , (
                     SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_ID
                     FROM MST_CFETS_CUSTOMER_TRADER
@@ -198,11 +199,11 @@
                     ON SYS_USER_ADD.ibu_trader = MST_CFETS_CUSTOMER_TRADER.TRADER_ID
                     INNER JOIN SYS_USER
                     ON sys_user.user_name = #{loginUserId} AND sys_user.USER_ID = SYS_USER_ADD.USER_ID
-                    WHERE MST_CFETS_CUSTOMER_TRADER.MPARTY_ID = MST_CFETS_CUSTOMER_INFO.PARTY_ID
+                    WHERE MST_CFETS_CUSTOMER_TRADER.MPARTY_ID = MCCI.PARTY_ID
                     OR MST_CFETS_CUSTOMER_TRADER.MPARTY_ID = (
                     SELECT MST_CFETS_CUSTOMER_RELA.MPARTY_ID
                     FROM MST_CFETS_CUSTOMER_RELA
-                    WHERE MST_CFETS_CUSTOMER_RELA.SPARTY_ID = MST_CFETS_CUSTOMER_INFO.PARTY_ID))               mySideTrader /* 本方交易员 */
+                    WHERE MST_CFETS_CUSTOMER_RELA.SPARTY_ID = MCCI.PARTY_ID))               mySideTrader /* 本方交易员 */
                 , (
                     SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_NAME
                     FROM MST_CFETS_CUSTOMER_TRADER
@@ -210,17 +211,17 @@
                     ON SYS_USER_ADD.ibu_trader = MST_CFETS_CUSTOMER_TRADER.TRADER_ID
                     INNER JOIN SYS_USER
                     ON sys_user.user_name = #{loginUserId} AND sys_user.USER_ID = SYS_USER_ADD.USER_ID
-                    WHERE MST_CFETS_CUSTOMER_TRADER.MPARTY_ID = MST_CFETS_CUSTOMER_INFO.PARTY_ID
+                    WHERE MST_CFETS_CUSTOMER_TRADER.MPARTY_ID = MCCI.PARTY_ID
                     OR MST_CFETS_CUSTOMER_TRADER.MPARTY_ID = (
                     SELECT MST_CFETS_CUSTOMER_RELA.MPARTY_ID
                     FROM MST_CFETS_CUSTOMER_RELA
-                    WHERE MST_CFETS_CUSTOMER_RELA.SPARTY_ID = MST_CFETS_CUSTOMER_INFO.PARTY_ID))                mySideTraderName/* 本方交易员名称 */
+                    WHERE MST_CFETS_CUSTOMER_RELA.SPARTY_ID = MCCI.PARTY_ID))                mySideTraderName/* 本方交易员名称 */
                 , ETR_ENTRUST.COUNTER_TRADER                                                                    counterTrader/* 对手方交易员*/
                 , MST_CFETS_CT.TRADER_NAME                                                                      counterTraderName/* 对手方交易员名称*/
                 , ETR_ENTRUST.CCY                                                                               settleCcy/* 币种*/
                 , ETR_ENTRUST.CCY                                                                               ccy/* 币种*/
-                , IBU_PORTFOLIO_ACCT_RELA.CFETS_ACCT_TYPE                                                       secAcctSource/* 银行间账户类型，自营/理财*/
-                , IBU_PORTFOLIO_ACCT_RELA.PARTY_ID                                                              partyId/* 交易成员ID，21位编号*/
+                , IPAR.CFETS_ACCT_TYPE                                                                          secAcctSource/* 银行间账户类型，自营/理财*/
+                , IPAR.PARTY_ID                                                                                 partyId/* 交易成员ID，21位编号*/
                 , ETR_ENTRUST_ADD.SEC_ACCT_ID                                                                   secManageAcctId/* 证券账户代码*/
                 , PA_PTL_PORTFOLIO.PORTFOLIO_SERIES                                                             portfolioSeries/* 组合系列*/
                 , ETR_ENTRUST_ADD.TERM_TYPE                                                                     termType /*期限品种*/
@@ -251,10 +252,10 @@
                 GROUP BY ENTRUST_ID
             ) T6
                 ON ETR_ENTRUST.ENTRUST_ID = T6.ENTRUST_ID
-            LEFT JOIN IBU_PORTFOLIO_ACCT_RELA
-                ON ETR_ENTRUST.PORTFOLIO_ID = IBU_PORTFOLIO_ACCT_RELA.PORTFOLIO_ID AND IBU_PORTFOLIO_ACCT_RELA.CFETS_ACCT_TYPE = '01'
-            LEFT JOIN MST_CFETS_CUSTOMER_INFO
-                ON IBU_PORTFOLIO_ACCT_RELA.PARTY_ID = MST_CFETS_CUSTOMER_INFO.PARTY_ID
+            LEFT JOIN IBU_PORTFOLIO_ACCT_RELA IPAR
+                ON ETR_ENTRUST.PORTFOLIO_ID = IPAR.PORTFOLIO_ID AND IPAR.CFETS_ACCT_TYPE = '01'
+            LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI
+                ON IPAR.PARTY_ID = MCCI.PARTY_ID
             LEFT JOIN SYS_USER
                 ON ETR_ENTRUST.CREATE_USER = SYS_USER.USER_NAME
             LEFT JOIN SYS_USER_ADD
@@ -401,7 +402,7 @@
                     </foreach>
                 </if>
                 <if test="mySide!= null and mySide != ''">
-                    AND IBU_PORTFOLIO_ACCT_RELA.PARTY_ID = #{mySide}
+                    AND IPAR.PARTY_ID = #{mySide}
                 </if>
                 <if test="loginUserId != null and loginUserId != ''">
                     /* 查询条件 交易员*/

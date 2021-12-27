@@ -186,4 +186,26 @@ public class OrderPlaceBean implements Serializable {
     public void setHedgeFlag(String hedgeFlag) {
         this.hedgeFlag = hedgeFlag;
     }
+
+    @Override
+    public String toString() {
+        return "OrderPlaceBean{" +
+                "instructionId='" + instructionId + '\'' +
+                ", portfolioId='" + portfolioId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", username='" + username + '\'' +
+                ", accountId='" + accountId + '\'' +
+                ", algorithmId='" + algorithmId + '\'' +
+                ", bsFlag='" + bsFlag + '\'' +
+                ", stockCode='" + stockCode + '\'' +
+                ", entrustProp='" + entrustProp + '\'' +
+                ", entrustBs='" + entrustBs + '\'' +
+                ", entrustVolume=" + entrustVolume +
+                ", entrustPrice=" + entrustPrice +
+                ", fullPrice=" + fullPrice +
+                ", batchInfo=" + batchInfo +
+                ", offsetFlag='" + offsetFlag + '\'' +
+                ", hedgeFlag='" + hedgeFlag + '\'' +
+                '}';
+    }
 }

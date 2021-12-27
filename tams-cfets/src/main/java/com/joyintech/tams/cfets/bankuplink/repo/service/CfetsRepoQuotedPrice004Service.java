@@ -212,7 +212,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 List<ValidMessage> validMessageList = checkPtlEmpty(ptlAllocatio, ps);
                 if (validMessageList != null && !validMessageList.isEmpty()) {
                     errorList.addAll(validMessageList);
-                    break;
+//                    break;
                 }
                 // 所有限价指令的回购利率中的最小值 初始化
                 if (minOrMaxYield == null && StringUtil.equals(ptlAllocatio.getPriceModel(), DictCodeListExt2.价格模式_限价指令.getValue())) {
@@ -1267,7 +1267,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         param.put("POSITION_TYPE_04", DictCodeList.持仓类型_质押.getValue());
         param.put("POSITION_TYPE_05", DictCodeList.持仓类型_融入.getValue());
         param.put("loginUserId", LoginUserUtil.getUserName());
-//        param.put("loginUserId", "jp"/*LoginUserUtil.getUserName()*/);//TODO 测试写死登录用户 提交代码时修改
+//        param.put("loginUserId", "li02"/*LoginUserUtil.getUserName()*/);//TODO 测试写死登录用户 提交代码时修改
         param.put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue());
         param.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
         //银行间质押式回购质押券模式：01无质押券库，02单个质押库，03多个质押券库
