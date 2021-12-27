@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.cfets.trdredeem.dto;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
 import com.joyintech.tams.common.base.entity.RegFinProductDealTotal;
@@ -432,6 +433,9 @@ public class CfetsTrdRedeemDealRegisterQuoteDto extends RegFinProductDealTotal i
 
     @PrimaryKey(PrimaryKey.Field.PK_3)
     public String getTheoreticalExerciseDateStr() {
-        return DateUtil.format(this.getTheoreticalExerciseDate());
+        if(StringUtil.isNotEmpty(this.getTheoreticalExerciseDate())){
+            return DateUtil.format(this.getTheoreticalExerciseDate());
+        }
+        return null;
     }
 }

@@ -97,7 +97,7 @@
             AND reg.settle_date<![CDATA[<=]]>#{endExerDate,jdbcType=DATE}
         </if>
         <if test="submitUserId != null and submitUserId != ''">
-            and (reg.create_user= #{submitUserId} or reg.update_user= #{submitUserId})
+            and reg.ou_trader_id= #{submitUserId}
         </if>
         <if test="finprodIdList != null and finprodIdList.size() > 0">
             AND reg.finprod_id in
@@ -191,7 +191,7 @@
             AND reg.settle_date<![CDATA[<=]]>#{endExerDate,jdbcType=DATE}
         </if>
         <if test="submitUserId != null and submitUserId != ''">
-            and (reg.create_user= #{submitUserId} or reg.update_user= #{submitUserId})
+            and reg.ou_trader_id=#{submitUserId}
         </if>
         <if test="finprodIdList != null and finprodIdList.size() > 0">
             AND reg.finprod_id in

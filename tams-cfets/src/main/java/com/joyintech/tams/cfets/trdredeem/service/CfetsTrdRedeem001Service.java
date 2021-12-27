@@ -171,6 +171,11 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
                 }
             }
         }
+        //判断赎回比例是否大于0小于100
+        if(StringUtil.isNotEmpty(entity.getRedeemRate())
+                && (entity.getRedeemRate().compareTo(BigDecimal.ZERO)<=0 || entity.getRedeemRate().compareTo(BigDecimal.ONE)>0)){
+            errorList.add(new ValidMessage("赎回比例必须大于0小于等于100。"));
+        }
         ajaxResult.setErrorList(errorList);
         return ajaxResult;
     }
@@ -330,6 +335,9 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
             result.setWorkflowId(entity.getWorkflowId());
             result.setOperationType(entity.getOperatorType());
             result.setRegFinProductDealTotal(regFinProductDealTotalMapper.selectByPrimaryKey(entity.getTotleTradeId()));
+            if(StringUtil.isNotEmpty(result.getRegFinProductDealTotal())){
+                result.getRegFinProductDealTotal().setRemark(result.getRegFinProductDealTotal().getRemark()+"赎回登记撤销："+entity.getRemark());
+            }
             result.setRegFinProductDealTotalAdd(regFinProductDealTotalAddMapper.selectByPrimaryKey(entity.getTotleTradeId()));
           //  result.setRegTradeFeeTotals(cfetsIbuQuoteBondMapper.listRegTradeFeeTotal(entity.getTotleTradeId()));
             result.setRegFinProductDeals(cfetsIbuQuoteBondMapper.listRegFinProductDeal(entity.getTotleTradeId()));
