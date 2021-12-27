@@ -43,6 +43,7 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.service.EtrInvestBondInfoService;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -100,7 +101,11 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
      */
     @Autowired
     private EtrCommonService etrCommonService;
-
+    /**
+     * 平台日期
+     */
+    @Autowired(required = false)
+    private IPlatformDate iPlatformDate;
     /**
      * 指令分发service注入
      */
@@ -285,7 +290,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @ApiOperation(value = "持仓列表导出", notes = "持仓列表导出")
     public void exportPosition(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response) {
         // 导出
-        ExcelUitl.doExport(requestDto, response, "持仓列表", () -> {
+        ExcelUitl.doExport(requestDto, response, "持仓列表"+iPlatformDate.getSysDateStr(), () -> {
             CfetsEtrIbBondPosiPage001RequestDto dto = requestDto.getDto(CfetsEtrIbBondPosiPage001RequestDto.class);
             List dataList = cfetsEtrIbBondinfoService.queryPositionsPage(dto).getRoot();
             return dataList;
@@ -297,7 +302,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @ApiOperation(value = "指令管理导出", notes = "指令管理导出")
     public void exportEtrInfo(@RequestBody CfetsExportRequestDto req, HttpServletResponse response) {
         // 导出
-        ExcelUitl.doExport(req, response, "指令管理", () -> {
+        ExcelUitl.doExport(req, response, "指令管理"+iPlatformDate.getSysDateStr(), () -> {
             List dataList = cfetsEtrIbBondinfoService.findEtrinfoPage(req.getDto(CfetsEtrIbfindEtrinfoRequest.class)).getRoot();
             return dataList;
         });
