@@ -70,7 +70,7 @@ public class ChbPrdOpenschInterf extends BaseInterfService{
 		if(!StringUtil.isEmptyList(openSchlist)){
 			insertData2(openSchlist);
 		}
-		return null;
+		return new ArrayList<String>();
 	}
 	@Override
 	public List<ChbPrdOpensch> getBusEntity(List<String> prodIdlist, Date date, String institutionCode, String source) {

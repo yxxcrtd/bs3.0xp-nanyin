@@ -1,11 +1,12 @@
 package com.joyintech.tams.svreport.interf.chb.investmentsinfo.service;
 
-import com.github.pagehelper.util.StringUtil;
-import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.BaseInterfService;
+import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.common.base.entity.ChbPrdPeriodYield;
 import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
@@ -14,9 +15,7 @@ import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
 import com.joyintech.tams.svreport.interf.chb.investmentsinfo.dao.ChbAssetInfoRateInterfMapper;
-import com.joyintech.tams.svreport.interf.chb.investmentsinfo.dao.ChbProdInfoRateInterfMapper;
 import com.joyintech.tams.svreport.interf.chb.investmentsinfo.dto.ChbAssetInfoRate;
-import com.joyintech.tams.svreport.interf.chb.investmentsinfo.dto.ChbProdInfoRate;
 import com.joyintech.tams.svreport.interf.chb.prodinfo.dao.ChbPrdPeriodYieldInterfMapper;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
@@ -40,7 +39,7 @@ import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ChbAssetInfoRateInterf extends BaseService {
+public class ChbAssetInfoRateInterf extends BaseInterfService {
     /**
      * 日志
      */
@@ -60,6 +59,21 @@ public class ChbAssetInfoRateInterf extends BaseService {
      * @param batchDate
      */
     public List<String> generateAssetInfoRateData(Date batchDate, List<String> prodidList, boolean isSynchronizeTask){
+        // 查询数据
+        List<ChbAssetInfoRate> assetInfoRatelist = getBusEntity(prodidList,batchDate, null, "D");
+        // 入库
+        if(!StringUtil.isEmptyList(assetInfoRatelist)){
+                //先删后插
+    //		deleteBatch(periodyieldlist);
+    //		insertBatch(periodyieldlist);
+                mergeIntoData(assetInfoRatelist);
+                //批量插入(先删再插)
+        }
+        return new ArrayList<String>();
+    }
+
+    @Override
+    public List<ChbAssetInfoRate> getBusEntity(List<String> prodIdlist, Date date, String institutionCode, String source) {
         //获取数据进入CHB_ASSET_RATE
         //产品代码集合
         List<String> prodList = new ArrayList<String>();
@@ -68,9 +82,9 @@ public class ChbAssetInfoRateInterf extends BaseService {
         Date lastUpdatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.资产利率基本信息接口.getInterId());
         List<ChbAssetInfoRate> assetInfoRatelist = new ArrayList<ChbAssetInfoRate>();
 
-            //资产利率取自估值核算系统
+        //资产利率取自估值核算系统
         ChbAssetInfoRateInterf chbAssetInfoRateInterf2 =  SpringContextUtil.getBean(ChbAssetInfoRateInterf.class);
-        assetInfoRatelist = chbAssetInfoRateInterf2.selectAssetInfoRateData(lastUpdatetime,prodidList);
+        assetInfoRatelist = chbAssetInfoRateInterf2.selectAssetInfoRateData(lastUpdatetime,prodIdlist);
 
         logger.debug("读取上游报价信息----结束-----:" +  df.format(new Date()));
         if(CollectionUtils.isNotEmpty(assetInfoRatelist)){
@@ -91,7 +105,9 @@ public class ChbAssetInfoRateInterf extends BaseService {
                     dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
                 }
                 //数据来源
-                dto.setDataSource("DB");
+                if("D".equals(source)){
+                    dto.setDataSource("16");
+                }
                 if(dto.getUpdateTime().compareTo(lastUpdatetime) > 0){
                     lastUpdatetime = dto.getUpdateTime();
                 }
@@ -99,16 +115,21 @@ public class ChbAssetInfoRateInterf extends BaseService {
 
             }
         }
-        //先删后插
-//		deleteBatch(periodyieldlist);
-//		insertBatch(periodyieldlist);
-        mergeIntoData(assetInfoRatelist);
-        //批量插入(先删再插)
         //新的最后更新时间
         if(lastUpdatetime!=null){
             ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.资产利率基本信息接口.getInterId(), lastUpdatetime);;
         }
-        return prodList;
+        return assetInfoRatelist;
+    }
+
+    @Override
+    public Class getEntityClass() {
+        return ChbAssetInfoRate.class;
+    }
+
+    @Override
+    public String getFileName() {
+        return InterfDefine.资产利率基本信息接口数据.getCode();
     }
 
     /**
