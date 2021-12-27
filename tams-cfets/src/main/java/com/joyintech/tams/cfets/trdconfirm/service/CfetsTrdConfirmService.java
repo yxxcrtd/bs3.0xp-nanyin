@@ -1491,12 +1491,12 @@ public class CfetsTrdConfirmService extends BaseService{
                         return "存在流程中的交易数据，请重新选择！";
                     }
                     //判断该数据是否已经被撤销
-                    /*Map<String, Object> pageParam = new HashMap<>();
+                    Map<String, Object> pageParam = new HashMap<>();
                     pageParam.put("totleTradeId",item.getTotleTradeId());
                     List<CfetsTrdConfirmRegInfoListResponse> flagList=cfetsTrdConfirmMapper.isExistDealInfo(pageParam);
                     if(StringUtil.isEmptyList(flagList)) {
                         return "请选择有效状态的数据！";
-                    }*/
+                    }
                 }
             }
         }

@@ -159,6 +159,16 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
             List<CfetsTrdRedeemRegInfoListResponse> regList=cfetsTrdRedeemMapper.isExistRegInfo(map);
             if(!StringUtil.isEmptyList(regList) && regList.size()>0){
                 errorList.add(new ValidMessage("该资产在该行权区间内存在流程中或有效数据，不允许重复提交！"));
+            }else{
+                //保存时，流程中数据
+                WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
+                wflValidInputParameter.setPageId("CfetsTrdRedeem001");
+                wflValidInputParameter.setBusinessDataPk2(entity.getFinprodId());
+                wflValidInputParameter.setBusinessDataPk3(DateUtil.format(entity.getTheoreticalExerciseDate()));
+                if(null != mstWorkflowCommonService &&
+                        mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)){
+                    errorList.add(new ValidMessage("该资产在该行权区间内存在流程中数据，不允许重复提交！"));
+                }
             }
         }
         ajaxResult.setErrorList(errorList);
