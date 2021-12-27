@@ -58,7 +58,7 @@ public class PortfolioController extends BaseController {
     @PostMapping("/position")
     @ApiOperation(value = "查询组合持仓信息", notes = "查询组合持仓信息")
     public ResultBean queryPortfolioPosition(@RequestBody @Validated PortfolioPositionRequest request) {
-        return portfolioManager.queryPortfolioPosition(BeanUtil.beanToMap(request));
+        return portfolioManager.queryPortfolioPosition(request.getPortfolioId(), request.getFinprodId(), request.getSecAcctId(), request.getTradeMarket());
     }
 
     @PostMapping(value = "/calculate")
