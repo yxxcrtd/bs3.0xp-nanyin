@@ -1169,6 +1169,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             CfetsEtrIbRepoPosPortfolioCashRequest posport = new CfetsEtrIbRepoPosPortfolioCashRequest();
             posport.setPortfolioId(dto.getPortfolioId());
             posport.setEtrId(dto.getEntrustId());
+            posport.setTradeId(dto.getTradeId());
             if (StringUtil.isNotEmpty(dto.getPortfolioId())) {
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("portfolioId", dto.getPortfolioId());
@@ -1188,6 +1189,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     CfetsEtrIbRepoPosPortfolioSecRequest secport = new CfetsEtrIbRepoPosPortfolioSecRequest();
                     secport.setPortfolioId(regFinPledge.getPortfolioId());
                     secport.setEtrId(regFinPledge.getEntrustId());
+                    posport.setTradeId(dto.getTradeId());
                     secport.setFinprodId(regFinPledge.getPledgeFinprodId());
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("portfolioId", regFinPledge.getPortfolioId());
@@ -1266,6 +1268,8 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         param.put("POSITION_TYPE_03", DictCodeList.持仓类型_实际.getValue());
         param.put("POSITION_TYPE_04", DictCodeList.持仓类型_质押.getValue());
         param.put("POSITION_TYPE_05", DictCodeList.持仓类型_融入.getValue());
+        param.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        param.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
         param.put("loginUserId", LoginUserUtil.getUserName());
 //        param.put("loginUserId", "li02"/*LoginUserUtil.getUserName()*/);//TODO 测试写死登录用户 提交代码时修改
         param.put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue());
