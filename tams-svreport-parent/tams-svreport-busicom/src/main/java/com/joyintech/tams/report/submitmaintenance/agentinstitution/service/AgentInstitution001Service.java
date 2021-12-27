@@ -282,7 +282,6 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
         AgentInstitutionDto agentInstitutionDto=new AgentInstitutionDto();
         agentInstitutionDto.setAgentInstitutionCode(agentInstitutionCode);
         agentInstitutionDto.setFileNo("");
-        agentInstitutionDto.setEnclosureAddress("");
         agentInstitutionDto.setEnclosureNum("0");
         chbAgentInstitutionInfoMapper.updateEnclosureNum(agentInstitutionDto);
     }

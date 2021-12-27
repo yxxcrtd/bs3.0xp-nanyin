@@ -84,6 +84,7 @@ DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'AgentInstitution001';
 DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'AgentInstitution002';
 DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'AgentInstitution003';
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentInstitution003','AgentInstitution003_btn_submit','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentInstitution002','AgentInstitution001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentInstitution002','AgentInstitution002_btn_submit','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentInstitution001','AgentInstitution001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentPrdInfo002','AgentPrdInfo002_btn_submit','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
@@ -128,3 +129,22 @@ values ('CHB_AGENT_PRD_INFO-2021-1119-004','AgentPrdInfo002','isNotEmpty','prodR
 Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
 values ('CHB_AGENT_PRD_INFO-2021-1119-005','AgentPrdInfo002','lessThanCharLength','remark',null,'61','Y','备注不能超过200字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 
+--批处理配置
+DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3061';
+insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
+values ('3061', 'VAL', '代理销售信息登记报送', null, 'SvrAgentManageTaskService', 3040, 'system', null, sysdate, 'system', sysdate, null);
+
+--代理销售信息登记获取报送截止日配置
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_REPORT_CODE' and ITEM_CODE = '40';
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_CHECK_INTERF_TYPE' and ITEM_CODE = 'CHB_AGENT_INSTITUTION_SUB';
+insert into SYS_DATADICT_LIST VALUES ('SVR_REPORT_CODE','40','代理销售机构信息登记','40','0','system',null,sysdate,'system',sysdate,null);
+insert into SYS_DATADICT_LIST VALUES ('SVR_CHECK_INTERF_TYPE','CHB_AGENT_INSTITUTION_SUB','代理销售机构信息登记','20','0','system',null,sysdate,'system',sysdate,null);
+DELETE FROM CHB_REG_TIME_POINTS WHERE CHB_REG_TIME_POINTS.SEQNO = '40';
+INSERT INTO CHB_REG_TIME_POINTS VALUES('40',null,'40',null,'03','03','02','业务发生后N个工作日','1','1','12','4','E',null,null,'qq2',sysdate,'system',sysdate,null);
+
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_REPORT_CODE' and ITEM_CODE = '41';
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_CHECK_INTERF_TYPE' and ITEM_CODE = 'CHB_AGENT_PRD_SUB';
+insert into SYS_DATADICT_LIST VALUES ('SVR_REPORT_CODE','41','委托销售产品编码信息登记','41','0','system',null,sysdate,'system',sysdate,null);
+insert into SYS_DATADICT_LIST VALUES ('SVR_CHECK_INTERF_TYPE','CHB_AGENT_PRD_SUB','委托销售产品编码信息登记','20','0','system',null,sysdate,'system',sysdate,null);
+DELETE FROM CHB_REG_TIME_POINTS WHERE CHB_REG_TIME_POINTS.SEQNO = '41';
+INSERT INTO CHB_REG_TIME_POINTS VALUES('41',null,'41',null,'03','03','02','业务发生后N个工作日','1','1','12','4','E',null,null,'qq2',sysdate,'system',sysdate,null);
