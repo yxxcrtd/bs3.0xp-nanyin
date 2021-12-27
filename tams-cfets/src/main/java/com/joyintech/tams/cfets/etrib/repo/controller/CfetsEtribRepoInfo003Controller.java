@@ -204,7 +204,7 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
                 entity ->  "(" + "指令日期" + ":" + DateUtil.format(entity.getEntrustDate()) + ")-"
-                        +"("+ "回购期限" +entity.getRepoTerm()+ ")-"
+                        +"("+ "回购期限" +entity.getRepoTerm()+ "天"+")-"
                         + this.getMessage("EtrRepo002.entrustAmt") + ":" + entity.getEntrustAmt()+"元");
         processParameter.setWorkFlowParameter(params);
 

@@ -133,8 +133,7 @@ public class FieldEtrDispatcherController extends BaseController {
     @ApiOperation(value = "指令执行查询", notes = "指令执行查询")
     @PostMapping("/getEtrDispatcherExeListInfo")
     @ResponseBody
-    public Message<Page<FieldEtrDispatcherExeListInfoResponse>> getEtrDispatcherExeListInfo(@RequestBody FieldEtrDispatcherInfoRequest dto)
-            throws Exception {
+    public Message<Page<FieldEtrDispatcherExeListInfoResponse>> getEtrDispatcherExeListInfo(@RequestBody FieldEtrDispatcherInfoRequest dto){
         try {
             Page<FieldEtrDispatcherExeListInfoResponse> returnDto = fieldEtrDispatcherService.getEtrDispatcherExeListInfo(dto);
             return new Message<Page<FieldEtrDispatcherExeListInfoResponse>>().success().setData(returnDto);
@@ -285,8 +284,7 @@ public class FieldEtrDispatcherController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "分发", notes = "分发")
     @PostMapping("doDispatcher")
-    public Message<AjaxResult> doDispatcher(@RequestBody FieldEtrDispatcherDealRequest fieldDto, BindingResult br)
-            throws Exception {
+    public Message<AjaxResult> doDispatcher(@RequestBody FieldEtrDispatcherDealRequest fieldDto, BindingResult br){
         //提交check
         try {
             Map<String, Object> pageParam = BeanUtil.object2Map(fieldDto);
@@ -314,8 +312,7 @@ public class FieldEtrDispatcherController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "退回", notes = "退回")
     @PostMapping("doRefuseEntrust")
-    public Message<AjaxResult> doRefuseEntrust(@RequestBody FieldEtrDispatcherDealRequest fieldDto, BindingResult br)
-            throws Exception {
+    public Message<AjaxResult> doRefuseEntrust(@RequestBody FieldEtrDispatcherDealRequest fieldDto, BindingResult br){
         //退回check
         try {
             Map<String, Object> pageParam = BeanUtil.object2Map(fieldDto);
@@ -339,15 +336,13 @@ public class FieldEtrDispatcherController extends BaseController {
      * 分发权限配置交易员查询
      *
      * @return Page<FieldEtrDispatcherTraderAuthListResponse>
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
     @ApiOperation(value = "分发权限配置交易员查询", notes = "分发权限配置交易员查询")
     @PostMapping("/getTraderAuthList")
     @ResponseBody
-    public Message<List<FieldEtrDispatcherTraderAuthListResponse>> getTraderAuthList()
-            throws Exception {
+    public Message<List<FieldEtrDispatcherTraderAuthListResponse>> getTraderAuthList(){
         try {
             List<FieldEtrDispatcherTraderAuthListResponse> list = fieldEtrDispatcherService.getTraderAuthList();
             return new Message<List<FieldEtrDispatcherTraderAuthListResponse>>().success().setData(list);
@@ -411,7 +406,7 @@ public class FieldEtrDispatcherController extends BaseController {
 
     @ResponseBody
     @PostMapping("/getReadonlyFormEtrInfo/{pageCode}/{dtCode}/{spcdCode}")
-    @ApiOperation(value = "只读表单设置及数据查询_指令详情", notes = "只读表单设置及数据查询_指令详情")
+    @ApiOperation(value = "只读表单设置及数据查询_指令信息", notes = "只读表单设置及数据查询_指令信息")
     public Message<Map<String,Object>> getReadonlyFormEtrInfo(@PathVariable("pageCode") String pageCode,
                                                        @PathVariable("dtCode") String dtCode,
                                                        @PathVariable("spcdCode") String spcdCode,

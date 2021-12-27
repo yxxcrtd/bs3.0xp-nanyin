@@ -362,6 +362,16 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
     @ApiModelProperty(required = false, name = "deliveryMethod", value = "申赎方式，交割方式")
     @Size(max = 50)
     private String deliveryMethod;
+    
+    /**
+     * 委托指令类别
+     *        
+     * @author yflv
+     * @date 2021/12/27
+     */
+    @ApiModelProperty(required = false, name = "entrustClass", value = "委托指令类别")
+    @Size(max = 50)
+    private String entrustClass;
 
     @Id
     public String getEntrustId() {
@@ -1020,7 +1030,15 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
         this.deliveryMethod = deliveryMethod;
     }
 
-    @Override
+    public String getEntrustClass() {
+		return entrustClass;
+	}
+
+	public void setEntrustClass(String entrustClass) {
+		this.entrustClass = entrustClass;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o)
             return true;

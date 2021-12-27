@@ -185,4 +185,59 @@
             </foreach>
         </if>
     </select>
+
+    <!--统计指令的可用本方券和融入券-->
+    <select id="listAvaShareAmt" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.EntrustAvaShareAmtDto">
+        SELECT
+            T5.ENTRUST_ID,
+            nvl(T4.OUR_SHARE_AMT,0) usedOurShareAmt,
+            nvl(T4.LENDIN_SHARE_AMT,0) usedLendinShareAmt,
+            nvl(T5.OUR_ENT_NUM,0) ourEntNum,
+            nvl(T5.LENDIN_ENT_NUM,0) lendinEntNum
+        FROM
+        ETR_ENTRUST_ADD T5
+        LEFT JOIN (
+            SELECT
+                T3.ENTRUST_ID,
+                SUM(T3.OUR_SHARE_AMT) OUR_SHARE_AMT,
+                SUM(T3.LENDIN_SHARE_AMT) LENDIN_SHARE_AMT
+            FROM
+                (
+                SELECT
+                    T1.ENTRUST_ID,
+                    T2.OUR_SHARE_AMT,
+                    T2.LENDIN_SHARE_AMT
+                FROM
+                    REG_FIN_PRODUCT_DEAL T1
+                LEFT JOIN REG_FIN_PRODUCT_DEAL_ADD T2 ON
+                    T2.TRADE_ID = T1.TRADE_ID
+                WHERE exists(
+                    SELECT 1 FROM REG_FIN_PRODUCT_DEAL_TOTAL T3 WHERE T3.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID  AND T3.TRADE_STATUS = '01' AND (T3.IS_CANCEL = 'N' OR T3.IS_CANCEL IS NULL)
+                )
+            UNION ALL
+                SELECT
+                    T1.ENTRUST_ID,
+                    T2.OUR_SHARE_AMT,
+                    T2.LENDIN_SHARE_AMT
+                FROM
+                    WFL_REG_FIN_PRODUCT_DEAL T1
+                LEFT JOIN WFL_REG_FIN_PRODUCT_DEAL_ADD T2 ON
+                    T2.TRADE_ID = T1.TRADE_ID
+                 <where>
+                     <if test="workflowId != null and !workflowId.equals('')">
+                         T1.WORKFLOW_ID != #{workflowId}
+                     </if>
+                 </where>
+                    ) T3
+            GROUP BY
+                ENTRUST_ID) T4  ON T5.ENTRUST_ID = T4.ENTRUST_ID
+            <where>
+                <if test="entrustIds != null and entrustIds.size() > 0">
+                    and T5.ENTRUST_ID in
+                    <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+    </select>
 </mapper>

@@ -1,8 +1,24 @@
 package com.joyintech.tams.exchange.service.trade.management.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.google.common.base.Strings;
-import com.joyintech.tams.exchange.common.bean.*;
-import com.joyintech.tams.exchange.common.bean.investment.CapitalAccountBean;
+import com.joyintech.tams.exchange.common.bean.AccountFinance;
+import com.joyintech.tams.exchange.common.bean.FuturesPositionBean;
+import com.joyintech.tams.exchange.common.bean.FuturesPositionDetailBean;
+import com.joyintech.tams.exchange.common.bean.FuturesPositionDetailQryBean;
+import com.joyintech.tams.exchange.common.bean.FuturesPositionQryBean;
+import com.joyintech.tams.exchange.common.bean.PositionQueryBean;
+import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.constant.CompareType;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
@@ -17,16 +33,6 @@ import com.joyintech.tams.exchange.service.trade.processor.others.TerminalHelper
 import com.joyintech.tams.exchange.service.trade.server.agent.AccountManager;
 import com.joyintech.tams.exchange.service.trade.server.agent.TradeAgent;
 import com.joyintech.tams.exchange.service.trade.server.agent.TradeAgentManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Component
 public class AccountManagement {

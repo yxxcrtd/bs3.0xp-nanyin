@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.cfets.trdredeem.dto;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
 import com.joyintech.tams.common.base.entity.RegFinProductDealTotal;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
@@ -139,7 +140,11 @@ public class CfetsTrdRedeemDealRegisterQuoteDto extends RegFinProductDealTotal i
      * 软控是否继续？Y：继续
      */
     private String softSkipMode;
-
+    /**
+     * 金融产品代码
+     */
+    @PrimaryKey(PrimaryKey.Field.PK_2)
+    private String finprodId;
 
     public String getOperatorType() {
         return operatorType;
@@ -413,5 +418,20 @@ public class CfetsTrdRedeemDealRegisterQuoteDto extends RegFinProductDealTotal i
 
     public void setSoftSkipMode(String softSkipMode) {
         this.softSkipMode = softSkipMode;
+    }
+
+    @Override
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    @Override
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
+    }
+
+    @PrimaryKey(PrimaryKey.Field.PK_3)
+    public String getTheoreticalExerciseDateStr() {
+        return DateUtil.format(this.getTheoreticalExerciseDate());
     }
 }

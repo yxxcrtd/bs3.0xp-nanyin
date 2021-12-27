@@ -1,5 +1,20 @@
 package com.joyintech.tams.exchange.service.trade.processor;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
@@ -11,19 +26,14 @@ import com.joyintech.tams.exchange.common.constant.InstructionFlag;
 import com.joyintech.tams.exchange.common.constant.InstructionStatus;
 import com.joyintech.tams.exchange.common.constant.joyin.AutoReceiveFlag;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
+import com.joyintech.tams.exchange.common.db.domain.InstructionDetail;
 import com.joyintech.tams.exchange.common.db.domain.InstructionPledge;
 import com.joyintech.tams.exchange.common.utils.JsonUtils;
+import com.joyintech.tams.exchange.datacommon.db.service.InstructionDetailService;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionPledgeService;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
 import com.joyintech.tams.exchange.service.trade.management.service.CommonManagement;
 import com.joyintech.tams.exchange.service.trade.management.service.InvestmentManagement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.*;
 
 @Component
 public class MessageConsumerService {
@@ -34,6 +44,9 @@ public class MessageConsumerService {
 
     @Autowired
     private InstructionPledgeService instructionPledgeService;
+    
+    @Autowired
+    private InstructionDetailService instructionDetailService;
 
     @Autowired
     private PipeReadService investRedisReadService;
@@ -189,6 +202,17 @@ public class MessageConsumerService {
             pledgeList.forEach(instructionPledge -> {
                 if (instructionIdSet.contains(instructionPledge.getEntrustId()))
                     instructionPledgeService.asyncUpdate(instructionPledge);
+            });
+        }
+    }
+    
+    public void processInstructionDetail(List<InstructionDetail> detailList, Set<String> instructionIdSet) {
+        if (Objects.nonNull(detailList)) {
+            instructionDetailService.deleteInstructionDetailsByInstructionsIds(instructionIdSet);
+            // 重新存储多组合委托明细信息
+            detailList.forEach(instructionDetail -> {
+                if (instructionIdSet.contains(instructionDetail.getEntrustId()))
+                    instructionDetailService.asyncUpdate(instructionDetail);
             });
         }
     }
