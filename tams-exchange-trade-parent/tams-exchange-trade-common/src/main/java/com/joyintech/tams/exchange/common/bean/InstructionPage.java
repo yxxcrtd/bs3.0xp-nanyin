@@ -8,21 +8,23 @@ import java.util.List;
  * @create 2020-03-20 11:45
  */
 
-public class InstructionPage<T, V> implements Serializable {
+public class InstructionPage<T, V,X> implements Serializable {
     private static final long serialVersionUID = 3325317592745725894L;
     private int AMOUNT;
     private int pageCount;
     private List<T> etr_entrust_list;
     private List<V> etr_pledge_list;
+    private List<X> etr_entrust_detail_list;
 
     public InstructionPage() {
         this.AMOUNT = 0;
         this.pageCount = 1;
     }
 
-    public InstructionPage(List<T> etr_entrust_list, List<V> etr_pledge_list) {
+    public InstructionPage(List<T> etr_entrust_list, List<V> etr_pledge_list,List<X> etr_entrust_detail_list) {
         this.etr_entrust_list = etr_entrust_list;
         this.etr_pledge_list = etr_pledge_list;
+        this.etr_entrust_detail_list = etr_entrust_detail_list;
     }
 
     public int getAMOUNT() {
@@ -56,4 +58,13 @@ public class InstructionPage<T, V> implements Serializable {
     public void setEtr_pledge_list(List<V> etr_pledge_list) {
         this.etr_pledge_list = etr_pledge_list;
     }
+
+	public List<X> getEtr_entrust_detail_list() {
+		return etr_entrust_detail_list;
+	}
+
+	public void setEtr_entrust_detail_list(List<X> etr_entrust_detail_list) {
+		this.etr_entrust_detail_list = etr_entrust_detail_list;
+	}
+
 }
