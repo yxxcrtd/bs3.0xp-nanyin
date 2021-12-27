@@ -48,7 +48,7 @@
       </el-form>
       </el-header>
       <el-main class="p0">
-      <el-card class="box-card">
+      <el-card :style="contentStyleObj">
         <div slot="header" class="clearfix">
           <!-- <span></span> -->
           <el-button type="primary" size="mini" class="el-button-init" @click="grantAuthorization">授权</el-button>
@@ -62,7 +62,6 @@
             border
             stripe
             style="width: 100%"
-            :height="Height"
             size="mini"
             fit
             highlight-current-row
@@ -106,9 +105,13 @@ export default {
 
   data() {
     return {
+      contentStyleObj: {
+        height: '',
+        'overflow-y':'scroll',
+        padding: '0 0 100px 0',
+      },
       filterText: '',
       listLoading: false,
-      Height:300,
       dataSource: [],
       form: {
         platformname: '',
@@ -122,7 +125,7 @@ export default {
       treeData: [],
       defaultProps: {
         children: 'children',
-        label: 'name'
+        label: 'realname'
       },
       dataId: '',
       platformids: []
@@ -132,29 +135,38 @@ export default {
     
   }, 
   mounted () {
-    const that = this
-    window.onresize = () => {
-      return (() => {
-        let heightStyle = window.screen.height
-        that.Height = heightStyle - 310
-      })()
-    }
+    // const that = this
+    // window.onresize = () => {
+    //   return (() => {
+    //     let heightStyle = window.screen.height
+    //     that.Height = heightStyle - 310
+    //   })()
+    // }
   },
   created() {
-    let that = this
-    let heightStyle = window.screen.height
-    that.Height = heightStyle - 310
+    // let that = this
+    // let heightStyle = window.screen.height
+    // that.Height = heightStyle - 310
+    this.getHight()
+    window.addEventListener('resize', this.getHight);
     this.listDeptAndUser()
     // this.pageSsoPlatform()
   },
 
+  destroyed() {
+    window.removeEventListener('resize', this.getHight)
+  },
+
   methods: {
+    getHight(){
+      this.contentStyleObj.height = window.innerHeight  + 'px'
+    },
     filterTextChange(val){
       this.filterText = val
     },
     listDeptAndUser(){
       axios.post('sso/ssouserplatform/listDeptAndUser',{
-        name: this.filterText
+        realname: this.filterText
       }).then((res) =>{
         if(res.data.code == 'success'){
           this.treeData = res.data.data

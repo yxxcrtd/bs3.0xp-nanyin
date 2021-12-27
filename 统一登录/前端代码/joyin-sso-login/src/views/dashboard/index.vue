@@ -9,7 +9,7 @@
           <el-dropdown class="avatar-container" trigger="click">
             <div class="avatar-wrapper">
               <img src="../../assets/public/images/avatar-lady.png" class="user-avatar layui-nav-img">
-              <span style="color: #fff">{{userName}}</span>
+              <span style="color: #fff">{{realname}}</span>
               <i style="color: #fff" class="el-icon-caret-bottom" />
             </div>
             <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -54,7 +54,7 @@
                 <p>立即进入</p>
               </div>
             </a>
-            <a v-else="!item.id" class="item-empty">敬请期待...</a>
+            <a v-else="!item.id" class="item-empty"></a>
           </li>
         </ul>
 
@@ -131,7 +131,8 @@ export default {
       loading: false,
       isShowUpdateModal: false,
       platList: [],
-      userName: ""
+      userName: "",
+      realname: ""
     };
   },
   computed: {
@@ -153,15 +154,19 @@ export default {
 
     getPlatformList(){
       this.userName = Cookies.get('username')
+      this.realname = Cookies.get('realname')
       getPlatformList({userName:this.userName}).then((res) =>{
         let sortList = res.data.sort((a,b) => Number(a.weight) - Number(b.weight))
-        let remain = sortList.length % 6;
+        let remain = 6 - sortList.length ;
         if(sortList.length === 0){
           return
         }
-        if(remain !== 0){
-          let emptyObj = {};
+        let emptyObj = {};
+        if(remain > 0){
           this.platList = [...sortList,...new Array(remain).fill(emptyObj)]
+        }else{
+          let v = 4 - parseInt(Math.abs(remain) % 4)
+          this.platList = [...sortList,...new Array(v).fill(emptyObj)]
         }
         console.log(this.platList)
       })
@@ -189,7 +194,7 @@ export default {
                   }
                 });
               }else{
-                window.open(res.data.data)
+                window.location.href=res.data.data
               }
 
               // this.platList = res.data.data

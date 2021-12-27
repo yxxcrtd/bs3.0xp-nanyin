@@ -34,7 +34,6 @@ public class SsoUserPlatformService extends BaseService {
      * @return
      */
     public List<SsoUserPlatForm> listSsoUserPlatForm(Map<String,Object> where) {
-;
         return ssoUserPlatFormMapper.listSsoUserPlatForm(where);
     }
 
@@ -148,7 +147,7 @@ public class SsoUserPlatformService extends BaseService {
         if(treeNodeList == null) {
             return returnList;
         }
-        if((StringUtil.isNotEmpty(where.get("name")))) {
+        if((StringUtil.isNotEmpty(where.get("realname")))) {
             //完整的树结构
             List<TreeNode> allTreeNodeList = ssoUserPlatFormMapper.selectTreeNodeList(new HashMap<String,String>());
             //机构

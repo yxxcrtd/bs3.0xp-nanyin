@@ -74,7 +74,7 @@ div:focus {
   // }
   padding: 6px;
   border-bottom: 1px solid #ccc;
-  
+
 }
 .el-button-init{
   width: 72.75px !important;
@@ -82,25 +82,72 @@ div:focus {
   background-color: #4893e6 !important;
 }
 
+.dialogClass {
+  .el-dialog__body{
+    padding-top: 0;
+  }
+}
+
 .FormClass{
-  
+
   .el-form-item__label{
     font-size: 10px !important;
     width: 70px !important;
   }
-  .el-input__inner{
-    height: 30px;
-    line-height: 30px;
-    width: 200px !important;
-    // width: auto;
-  }
+
   .el-form-item__content{
     margin-left: 70px !important;
   }
   .el-col-6{
     width: auto !important;
   }
-  
+
+}
+.input-half{
+  .el-input__inner{
+    height: 30px;
+    line-height: 30px;
+    width: 200px !important;
+    // width: auto;
+  };
+  .el-col{
+    height: 50px;
+  }
+}
+.input-switchLabel{
+  .el-col{
+    display:inline;
+
+  }
+  .el-form-item__label{
+    white-space: nowrap
+  };
+  .el-switch__label{
+    margin-left: 20px;
+  }
+  .el-switch__core{
+    margin-left: 10px;
+  }
+}
+.el-card-define {
+  min-height: 100%;
+  height: 100%;
+}
+.el-card-define >>> .el-card__body {
+  height: 100%;
+}
+.item-label-extra {
+  display: block;
+  text-indent:2em;
+  font-size  : 70%;
+  color      : rgba(0, 0, 0, 0.45);
+  margin-top: -20px;
+}
+.input-large{
+  .el-input__inner{
+    height: 30px;
+    line-height: 30px;
+  }
 }
 .addFormRow{
   .el-row{
