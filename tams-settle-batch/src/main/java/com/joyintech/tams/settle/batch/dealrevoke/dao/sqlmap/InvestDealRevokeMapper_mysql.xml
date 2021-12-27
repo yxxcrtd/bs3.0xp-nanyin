@@ -44,7 +44,7 @@
             AND (A.IS_CANCEL IS NULL OR A.IS_CANCEL = 'N')
             AND (D.CHECK_RESULT is null or D.CHECK_RESULT = '0')
             <if test="dealDateStr != null">
-                AND DATE_FORMAT(B.DEAL_DATE, 'yyyy-MM-dd') = #{dealDateStr,jdbcType=VARCHAR}
+                AND DATE_FORMAT(B.DEAL_DATE, '%Y-%m-%d') = #{dealDateStr,jdbcType=VARCHAR}
             </if>
             <if test="busiType != null">
                 AND C.BUSI_TYPE = #{busiType,jdbcType=DATE}
@@ -95,7 +95,7 @@
                     AND (A.IS_CANCEL IS NULL OR A.IS_CANCEL = 'N')
                     AND B.TRADE_ID is null
                     <if test="dealDateStr != null">
-                        AND DATE_FORMAT(A.TRADE_DATE, 'yyyy-MM-dd') = #{dealDateStr,jdbcType=VARCHAR}
+                        AND DATE_FORMAT(A.TRADE_DATE, '%Y-%m-%d') = #{dealDateStr,jdbcType=VARCHAR}
                     </if>
                     <if test="busiType != null">
                         AND C.BUSI_TYPE = #{busiType,jdbcType=DATE}
@@ -195,7 +195,7 @@
             AND (tpd.IS_CANCEL IS NULL OR tpd.IS_CANCEL = 'N')
             AND (D.CHECK_RESULT is null or D.CHECK_RESULT = '0')
             <if test="dealDateStr != null">
-                AND DATE_FORMAT(sttm.DEAL_DATE, 'yyyy-MM-dd') = #{dealDateStr,jdbcType=VARCHAR}
+                AND DATE_FORMAT(sttm.DEAL_DATE, '%Y-%m-%d') = #{dealDateStr,jdbcType=VARCHAR}
             </if>
             <if test="finprodType2List != null and finprodType2List.size() > 0">
                 <foreach collection="finprodType2List" item="type" open="AND tpd.FINPROD_TYPE2 IN (" close=")" separator=",">
@@ -231,7 +231,7 @@
             AND sttm.TRADE_ID is null
             AND tpd.TOTLE_TRADE_ID is null
             <if test="dealDateStr != null">
-                AND DATE_FORMAT(tpd.TRADE_DATE, 'yyyy-MM-dd') = #{dealDateStr,jdbcType=VARCHAR}
+                AND DATE_FORMAT(tpd.TRADE_DATE, '%Y-%m-%d') = #{dealDateStr,jdbcType=VARCHAR}
             </if>
             <if test="finprodType2List != null and finprodType2List.size() > 0">
                 <foreach collection="finprodType2List" item="type" open="AND tpd.FINPROD_TYPE2 IN (" close=")" separator=",">

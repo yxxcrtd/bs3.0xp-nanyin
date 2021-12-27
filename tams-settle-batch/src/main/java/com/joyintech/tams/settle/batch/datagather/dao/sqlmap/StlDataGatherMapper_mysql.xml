@@ -148,6 +148,7 @@
 			stdta.REPO_TYPE,
 			<!--<include refid="settleTransDataSql"></include>-->
 			<include refid="settleTransDataTotalSql"></include>
+		    LEFT JOIN SETTLE_TRANS_DATA_TOTAL_STATUS stdts ON std.SEQ_ID = stdts.SEQ_NO
 		    LEFT JOIN SETTLE_TRANS_DATA_TOTAL_ADD stdta ON std.SEQ_ID = stdta.TRADE_ID
 			LEFT JOIN T_ENTRUSTHISTORY teh
 				ON (
@@ -181,8 +182,9 @@
 			LEFT JOIN PTL_PORTFOLIO ptl ON (ptl.PORTFOLIO_ID = std.PORTFOLIO_ID)
 		<where>
 			<!--(te.BROKER_ENTRUST_ID IS NOT NULL OR teh.BROKER_ENTRUST_ID IS NOT NULL OR tie.BROKER_ENTRUST_ID IS NOT NULL OR tieh.BROKER_ENTRUST_ID IS NOT NULL)-->
+			(stdts.MATCH_STATUS != '2' OR stdts.MATCH_STATUS IS NULL)
 			<if test="dealDate != null">
-				std.DEAL_DATE = #{dealDate,jdbcType=DATE}
+				AND std.DEAL_DATE = #{dealDate,jdbcType=DATE}
 			</if>
 			<if test="finprodIdList != null and finprodIdList.size() > 0">
 				<foreach collection="finprodIdList" item="finprodId" open="AND std.FINPROD_ID IN (" close=")" separator=",">

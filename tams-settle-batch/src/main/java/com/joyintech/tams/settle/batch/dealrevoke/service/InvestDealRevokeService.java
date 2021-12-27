@@ -388,9 +388,9 @@ public class InvestDealRevokeService {
                       String totalkey = null;
                       String psvalue = null;
                       for (Map.Entry<String,String> i:item.entrySet()) {
-                         if ("TOTALKEY".equals(i.getKey())) {
+                         if ("TOTALKEY".equalsIgnoreCase(i.getKey())) {
                             totalkey = i.getValue();
-                         }else if ("PSVALUE".equals(i.getKey())) {
+                         }else if ("PSVALUE".equalsIgnoreCase(i.getKey())) {
                             psvalue = i.getValue();
                          }
                          if (totalkey != null) {
@@ -401,9 +401,9 @@ public class InvestDealRevokeService {
                        String tradekey = null;
                        String psvalue = null;
                        for (Map.Entry<String,String> i:item.entrySet()) {
-                         if ("TRADEKEY".equals(i.getKey())) {
+                         if ("TRADEKEY".equalsIgnoreCase(i.getKey())) {
                              tradekey = i.getValue();
-                         }else if ("PSVALUE".equals(i.getKey())) {
+                         }else if ("PSVALUE".equalsIgnoreCase(i.getKey())) {
                               psvalue = i.getValue();
                           }
                            if (tradekey != null) {

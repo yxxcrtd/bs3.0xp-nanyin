@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.common.controller;
 
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalMatch;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonParamDto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.ExchangeTransMatchCommonService;
@@ -30,5 +31,18 @@ public class ExchangeTransMatchCommonController {
             return;
         }
         exchangeTransMatchCommonService.transactionMacthBatch(paramDto.getParamDataList());
+    }
+
+    /**
+     * 批量处理
+     * @param paramDto
+     */
+    @ResponseBody
+    @PostMapping("transactionRevokeAutoBatch")
+    public void transactionRevokeAutoBatch(@RequestBody ExchangeTransMatchCommonParamDto paramDto){
+        if (paramDto == null || StringUtil.isEmptyList(paramDto.getRevokeDataList())) {
+            return;
+        }
+        exchangeTransMatchCommonService.revokeTransactionAutoMacthBatch(paramDto.getRevokeDataList());
     }
 }

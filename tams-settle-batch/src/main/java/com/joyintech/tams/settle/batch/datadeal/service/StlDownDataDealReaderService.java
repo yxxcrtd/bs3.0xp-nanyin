@@ -7,9 +7,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
+import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonParamDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -34,7 +39,23 @@ import com.joyintech.tams.settle.batch.datadeal.dto.step2.StlDownDataDealOperato
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class StlDownDataDealReaderService {
-	
+
+	/**
+	 * 是否单体服务
+	 */
+	@Value("${application.micorservice.contextPath.single:false}")
+	private boolean isSingle;
+
+	@Autowired(required = false)
+	private JoyinRestTemplate restTemplate;
+
+	@Autowired(required = false)
+	@Qualifier("simpleRestTemplate")
+	protected JoyinRestTemplate simpleRestTemplate;
+
+	@Value("${application.micorservice.contextPath.tamsServer:http://tams-server}")
+	private String tamsSerever;
+
     @Autowired
     protected StlDownDataDealMapper stlDownDataDealMapper;
     
@@ -42,7 +63,26 @@ public class StlDownDataDealReaderService {
     public List<SettleBatchPara> selectAllParam(Date dealDate) {
         return stlDownDataDealMapper.selectAllParam(dealDate);
     }
-    
+
+	// 查询需要撤销的清算明细数据数据TradeIds
+	public List<SettleTransDataTotalMatch> selectNeedRevokeSettleTransDataTotals(Date dealDate, List<String> portfolioIdList, List<String> secTypeList){
+		return stlDownDataDealMapper.selectNeedRevokeSettleTransDataTotals(dealDate, portfolioIdList, secTypeList);
+	}
+
+	public void transactionMacthRevokeBatch(List<SettleTransDataTotalMatch> dtoList) {
+		ExchangeTransMatchCommonParamDto paramDto = new ExchangeTransMatchCommonParamDto();
+		paramDto.setRevokeDataList(dtoList);
+
+		// 调用批量撤销逻辑
+		if(isSingle) {
+			simpleRestTemplate.postForObject(tamsSerever + "/invest/trade/exchangetransmatch/ExchangeTransMatchCommon/transactionRevokeAutoBatch", paramDto, Map.class);
+		}
+		else {
+			restTemplate.postForObject(tamsSerever + "/invest/trade/exchangetransmatch/ExchangeTransMatchCommon/transactionRevokeAutoBatch", paramDto, Map.class);
+		}
+
+	}
+
     // 删除【成交数据与投管交易关系】
     public int deleteSettleTransTgMapping(Date dealDate, List<String> portfolioIdList, List<String> secTypeList) {
     	return stlDownDataDealMapper.deleteSettleTransTgMapping(dealDate, portfolioIdList, secTypeList);

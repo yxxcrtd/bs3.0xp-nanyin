@@ -23,6 +23,7 @@ import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo.*;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.shares.ExchangeTransMatchShares1Service;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -826,22 +827,79 @@ public class ExchangeTransMatchCommonService extends BaseService {
     }
 
     /**
+     * 批量自动取消成交匹配
+     * @param dtoList
+     */
+    public void revokeTransactionAutoMacthBatch(List<SettleTransDataTotalMatch> dtoList) {
+        logger.error("批量取消自动成交匹配数据---开始，批量成交数据:"+ JsonUtils.objectArray2Json(dtoList));
+        if(!StringUtil.isEmptyList(dtoList)) {
+            for (SettleTransDataTotalMatch dto : dtoList) {
+                this.revokeTransactionAutoMacth(dto);
+            }
+        }
+        logger.error("批量取消自动成交匹配数据---结束");
+    }
+
+    /**
      * 取消成交匹配
      * @param dto
      */
     public void revokeTransactionMacth(SettleTransDataTotalMatch dto) {
         logger.error("取消成交匹配---开始，成交数据:"+ JsonUtils.object2Json(dto));
+        List<ExchangeTransMatchCommonRevokeDto> exchangeTransMatchCommonRevokeDtoList = queryExchangeTransMatchCommonRevokeDto(dto);
+        logger.error("查询取消匹配的成交数据与投管交易关系:"+ JsonUtils.objectArray2Json(exchangeTransMatchCommonRevokeDtoList));
+        if(!StringUtil.isEmptyList(exchangeTransMatchCommonRevokeDtoList)) {
+            // 撤销匹配交易
+            revokeMatchTrade(exchangeTransMatchCommonRevokeDtoList, dto);
+            // 撤销质押券
+            revokeFinPledge(exchangeTransMatchCommonRevokeDtoList, dto);
+            // 撤销清算匹配数据
+            revokeSettleMatchData(exchangeTransMatchCommonRevokeDtoList, dto);
+        }
+        logger.error("取消成交匹配---结束");
+    }
+
+    /**
+     * 取消成交匹配
+     * @param dto
+     */
+    public void revokeTransactionAutoMacth(SettleTransDataTotalMatch dto) {
+        logger.error("取消自动成交匹配---开始，成交数据:"+ JsonUtils.object2Json(dto));
+        List<ExchangeTransMatchCommonRevokeDto> exchangeTransMatchCommonRevokeDtoList = queryExchangeTransMatchCommonRevokeDto(dto);
+        logger.error("查询取消自动匹配的成交数据与投管交易关系:"+ JsonUtils.objectArray2Json(exchangeTransMatchCommonRevokeDtoList));
+        if(!StringUtil.isEmptyList(exchangeTransMatchCommonRevokeDtoList)) {
+            // 撤销质押券
+            revokeFinPledge(exchangeTransMatchCommonRevokeDtoList, dto);
+            // 撤销清算匹配数据
+            revokeSettleMatchData(exchangeTransMatchCommonRevokeDtoList, dto);
+        }
+        logger.error("取消自动成交匹配---结束");
+    }
+
+    /**
+     * 查询取消匹配的成交数据与投管交易关系
+     * @param dto
+     * @return
+     */
+    private List<ExchangeTransMatchCommonRevokeDto> queryExchangeTransMatchCommonRevokeDto(SettleTransDataTotalMatch dto){
         Map<String,Object> paraMap = new HashMap<>();
         paraMap.put("tgDataStatus",DictCodeListStl.投管交易数据状态_处理结束.getValue());
         paraMap.put("seqNo",dto.getSeqNo());
         paraMap.put("entrunstId",dto.getEntrunstTradeId());
         paraMap.put("matchClass",dto.getMatchClass());
-        List<ExchangeTransMatchCommonRevokeDto> exchangeTransMatchCommonRevokeDtoList = exchangeTransMatchCommonMapper.getSettleTransTgMapping(paraMap);
-        logger.error("查询取消匹配的成交数据与投管交易关系:"+ JsonUtils.objectArray2Json(exchangeTransMatchCommonRevokeDtoList));
-        if(!StringUtil.isEmptyList(exchangeTransMatchCommonRevokeDtoList)) {
+        return exchangeTransMatchCommonMapper.getSettleTransTgMapping(paraMap);
+    };
+
+    /**
+     * 撤销匹配交易
+     * @param dtoList
+     * @param dto
+     */
+    private void revokeMatchTrade(List<ExchangeTransMatchCommonRevokeDto> dtoList, SettleTransDataTotalMatch dto){
+        if(CollectionUtils.isNotEmpty(dtoList)){
             List<String> tradeIdList = new ArrayList<>();
             List<String> totalTradeIdList = new ArrayList<>();
-            for(ExchangeTransMatchCommonRevokeDto revokeDto:exchangeTransMatchCommonRevokeDtoList) {
+            for(ExchangeTransMatchCommonRevokeDto revokeDto:dtoList) {
                 if (StringUtil.equals(revokeDto.getIsTotalDeal(), DictCodeList.是否_是.getValue())) {
                     if(!totalTradeIdList.contains(revokeDto.getTradeIdTg())) {
                         totalTradeIdList.add(revokeDto.getTradeIdTg());
@@ -885,12 +943,21 @@ public class ExchangeTransMatchCommonService extends BaseService {
                 restTemplate.postForObject(tamsSerever + "/invest/trade/api/revoke", param, String.class);
             }
             logger.error("取消成交匹配---撤销交易寸结束");
+        }
+    }
 
+    /**
+     * 撤销质押券
+     * @param dtoList
+     * @param dto
+     */
+    private void revokeFinPledge(List<ExchangeTransMatchCommonRevokeDto> dtoList, SettleTransDataTotalMatch dto){
+        if(CollectionUtils.isNotEmpty(dtoList)){
             //质押式协议回购处理质押券置换，质押券置换明细，质押券置换结果，回购质押品 表数据
-            List<ExchangeTransMatchCommonRevokeDto> repoRevokeDtoList = exchangeTransMatchCommonRevokeDtoList.stream()
-                            .filter(item -> (StringUtil.equals(item.getIsTotalDeal(),DictCodeList.是否_是.getValue())
-                                    && StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),item.getFinprodType2()) || StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue(),item.getFinprodType2()))
-                                    && (StringUtil.equals(item.getPs(), DictCodeListExt3.交易方向_中途换券.getValue()) || StringUtil.equals(item.getPs(), DictCodeListExt3.交易方向_解除质押.getValue()))).collect(Collectors.toList());
+            List<ExchangeTransMatchCommonRevokeDto> repoRevokeDtoList = dtoList.stream()
+                    .filter(item -> (StringUtil.equals(item.getIsTotalDeal(),DictCodeList.是否_是.getValue())
+                            && StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),item.getFinprodType2()) || StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue(),item.getFinprodType2()))
+                            && (StringUtil.equals(item.getPs(), DictCodeListExt3.交易方向_中途换券.getValue()) || StringUtil.equals(item.getPs(), DictCodeListExt3.交易方向_解除质押.getValue()))).collect(Collectors.toList());
             if(!StringUtil.isEmptyList(repoRevokeDtoList)) {
                 //以汇总交易编号分组处理 质押券置换，质押券置换明细
                 Map<String,List<ExchangeTransMatchCommonRevokeDto>> repoRevokeDtoListMap = repoRevokeDtoList.stream().collect(Collectors.groupingBy(ExchangeTransMatchCommonRevokeDto::getTradeIdTg));
@@ -948,9 +1015,19 @@ public class ExchangeTransMatchCommonService extends BaseService {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * 撤销清算交易匹配数据
+     * @param dtoList
+     * @param dto
+     */
+    private void revokeSettleMatchData(List<ExchangeTransMatchCommonRevokeDto> dtoList, SettleTransDataTotalMatch dto){
+        if(CollectionUtils.isNotEmpty(dtoList)){
             //处理成交匹配相关表
-            for(ExchangeTransMatchCommonRevokeDto revokeDto:exchangeTransMatchCommonRevokeDtoList) {
-               // 成交数据与投管交易关系（SETTLE_TRANS_TG_MAPPING）：删除
+            for(ExchangeTransMatchCommonRevokeDto revokeDto:dtoList) {
+                // 成交数据与投管交易关系（SETTLE_TRANS_TG_MAPPING）：删除
                 SettleTransTgMappingKey key = new SettleTransTgMappingKey();
                 key.setTradeId(revokeDto.getTradeId());
                 key.setTradeIdTg(revokeDto.getTradeIdTg());
@@ -985,9 +1062,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
                 settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
                 settleTransDataTotalStatusMapper.insert(settleTransDataTotalStatus);
             }
-
         }
-        logger.error("取消成交匹配---结束");
     }
 
     /**

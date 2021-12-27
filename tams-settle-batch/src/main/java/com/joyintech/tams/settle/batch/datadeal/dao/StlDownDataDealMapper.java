@@ -25,7 +25,11 @@ public interface StlDownDataDealMapper {
      * @return List<SettleBatchPara>
      */
     List<SettleBatchPara> selectAllParam(@Param("dealDate") Date dealDate);
-    
+
+    // 查询需要撤销的清算明细数据数据
+    List<SettleTransDataTotalMatch> selectNeedRevokeSettleTransDataTotals(@Param("dealDate") Date dealDate, @Param("portfolioIdList") List<String> portfolioIdList,
+                   @Param("secTypeList") List<String> secTypeList);
+
     // 删除【成交数据与投管交易关系】
     int deleteSettleTransTgMapping(@Param("dealDate") Date dealDate, @Param("portfolioIdList") List<String> portfolioIdList, 
     		@Param("secTypeList") List<String> secTypeList);

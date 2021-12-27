@@ -146,14 +146,14 @@
     </delete>
 
     <!-- 存量数据删除，为支持重复跑批，先将上次批处理生出的数据删除-->
-    <delete id="insetSettleTransDataTotalStatus">
+    <insert id="insetSettleTransDataTotalStatus">
         insert into SETTLE_TRANS_DATA_TOTAL_STATUS (SEQ_NO, MATCH_STATUS, CREATE_USER,
                                                     CREATE_DEPT, CREATE_TIME, UPDATE_USER,
                                                     UPDATE_TIME)
         values (#{seqNo,jdbcType=VARCHAR}, #{matchStatus,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
                 #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
                 #{updateTime,jdbcType=TIMESTAMP})
-    </delete>
+    </insert>
 
     <insert id="insetSettleTransDataTotalPledge"  >
         insert into SETTLE_TRANS_DATA_TOTAL_PLEDGE

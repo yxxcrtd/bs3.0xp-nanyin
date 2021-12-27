@@ -34,6 +34,41 @@
 			</if>
 	</sql>
 
+	<select id="selectNeedRevokeSettleTransDataTotals" resultType="com.joyintech.tams.common.base.entity.SettleTransDataTotalMatch">
+		SELECT
+			stdt.SEQ_ID SEQ_NO,
+			IFNULL(tpda.ENTRUST_ID,tdta.ENTRUST_ID) ENTRUNST_TRADE_ID,
+			'0' MATCH_CLASS
+		FROM
+			SETTLE_TRANS_DATA T1
+		LEFT JOIN
+		    SETTLE_TRANS_DATA_STATUS T2 ON T2.TRADE_ID = T1.TRADE_ID
+		LEFT JOIN
+			SETTLE_TRANS_DATA_TOTAL stdt ON T1.DEAL_DATE = stdt.DEAL_DATE
+				AND T1.APPLY_TRADE_ID = stdt.APPLY_TRADE_ID AND T1.SEAT_NUMBER = stdt.SEAT_NUMBER
+		LEFT JOIN
+			SETTLE_TRANS_TG_MAPPING sttm ON T1.TRADE_ID = sttm.TRADE_ID
+		LEFT JOIN
+			TRD_PRODUCT_DEAL_ADD tpda ON sttm.TRADE_ID_TG = tpda.TRADE_ID
+		LEFT JOIN
+			TRD_DEAL_TOTAL_ADD tdta ON sttm.TRADE_ID_TG = tdta.TOTLE_TRADE_ID
+		WHERE
+			(tpda.ENTRUST_ID IS NOT NULL OR tdta.ENTRUST_ID IS NOT NULL)
+			AND T1.DEAL_DATE = #{dealDate,jdbcType=DATE} and (T2.CHECK_RESULT IS NULL OR T2.CHECK_RESULT in ('0', '2'))
+			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				AND
+				<foreach collection="portfolioIdList" item="portfolioId" open="T1.PORTFOLIO_ID IN (" close=")" separator=",">
+					#{portfolioId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="secTypeList != null and secTypeList.size() > 0">
+				AND
+				<foreach collection="secTypeList" item="secType" open="T1.SEC_TYPE IN (" close=")" separator=",">
+					#{secType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+	</select>
+
     <delete id="deleteSettleTransTgMapping">
         DELETE FROM SETTLE_TRANS_TG_MAPPING
         <where>
