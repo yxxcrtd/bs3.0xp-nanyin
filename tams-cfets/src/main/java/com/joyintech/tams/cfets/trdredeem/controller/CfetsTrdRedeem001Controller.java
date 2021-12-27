@@ -140,7 +140,7 @@ public class CfetsTrdRedeem001Controller extends BaseController {
         for (CfetsTrdRedeemRegInfoListResponse cfetsBondRegCheckDetaileRequst : cfetsBondRegCheckRequst.getCfetsBondRegCheckDetaileRequsts()) {
             CfetsTrdRedeemDealRegisterQuoteDto cfetsTrdRedeemDealRegisterQuoteDto = new CfetsTrdRedeemDealRegisterQuoteDto();
             cfetsTrdRedeemDealRegisterQuoteDto.setTotleTradeId(cfetsBondRegCheckDetaileRequst.getBusiCode());
-            cfetsTrdRedeemDealRegisterQuoteDto.setRemark(cfetsBondRegCheckRequst.getRemark());
+            cfetsTrdRedeemDealRegisterQuoteDto.setRevokeReason(cfetsBondRegCheckRequst.getRemark());
             cfetsTrdRedeemDealRegisterQuoteDto.setOperatorType("revoke");
             CfetsBondDealRegisterQuoteDtos.add(cfetsTrdRedeemDealRegisterQuoteDto);
         }

@@ -17,6 +17,9 @@ public class SsoPlatformDto {
     @ApiModelProperty(required = true, name="platformcode",value="平台编码",example="")
     private String platformcode;
 
+    @ApiModelProperty(hidden = true, name="syncFlag",value="是否同步机构、部门、用户信息",example="")
+    public Integer syncFlag;
+
     public String getPlatformname() {
         return platformname;
     }
@@ -47,5 +50,13 @@ public class SsoPlatformDto {
 
     public void setPlatformcode(String platformcode) {
         this.platformcode = platformcode;
+    }
+
+    public Integer getSyncFlag() {
+        return syncFlag;
+    }
+
+    public void setSyncFlag(Integer syncFlag) {
+        this.syncFlag = syncFlag;
     }
 }
