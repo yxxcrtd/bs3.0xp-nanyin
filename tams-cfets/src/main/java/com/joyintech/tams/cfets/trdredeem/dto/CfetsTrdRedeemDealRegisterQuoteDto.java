@@ -146,6 +146,10 @@ public class CfetsTrdRedeemDealRegisterQuoteDto extends RegFinProductDealTotal i
      */
     @PrimaryKey(PrimaryKey.Field.PK_2)
     private String finprodId;
+    /**
+     * 撤销原因
+     */
+    private String revokeReason;
 
     public String getOperatorType() {
         return operatorType;
@@ -437,5 +441,13 @@ public class CfetsTrdRedeemDealRegisterQuoteDto extends RegFinProductDealTotal i
             return DateUtil.format(this.getTheoreticalExerciseDate());
         }
         return null;
+    }
+
+    public String getRevokeReason() {
+        return revokeReason;
+    }
+
+    public void setRevokeReason(String revokeReason) {
+        this.revokeReason = revokeReason;
     }
 }
