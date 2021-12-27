@@ -181,7 +181,7 @@ public class PortfolioManager extends BaseService {
         try {
             for (int i = 0; i < portfolioIdArray.length; i++) {
                 paramMap.put("portfolioId", portfolioIdArray[i]);
-                PortfolioInfoResponse portfolioInfoResponse = ((PortfolioInfoResponse) queryPortfolioCash(paramMap).getData());
+                PortfolioInfoResponse portfolioInfoResponse = ((PortfolioInfoResponse) queryPortfolioPosition(paramMap).getData());
                 result.put(portfolioIdArray[i], portfolioInfoResponse);
             }
         } catch (Exception e) {
@@ -294,7 +294,16 @@ public class PortfolioManager extends BaseService {
         List<InstructionDetail> instructionDetails = instructionDetailService.queryInstructionDetailsByInstructionId(instructionId);
 
         if (Objects.isNull(instructionDetails) || ArrayUtil.isEmpty(instructionDetails)) {
-            return ResultBean.success();
+            // 单组合时处理
+            InstructionDetail instructionDetail = new InstructionDetail();
+            instructionDetail.setEntrustId(instruction.getEntrustId());
+            instructionDetail.setPortfolioId(instruction.getPortfolioId());
+            instructionDetail.setPortfolioName(instruction.getPortfolioName());
+            instructionDetail.setDisRate("1");
+            instructionDetail.setEntrustAmt(instruction.getEntrustAmt().toString());
+            instructionDetail.setEntrustNum(String.valueOf(instruction.getEntrustNum()));
+            instructionDetail.setTargetType(instruction.getEntrustNum() == 0 ? "02" : "01");
+            instructionDetails.add(instructionDetail);
         }
 
         // - 查询组合信息
@@ -310,7 +319,10 @@ public class PortfolioManager extends BaseService {
         ResultBean portfolioInfoResult = this.queryPortfolioInfo(portfolioInfoRequest);
         Map<String, PortfolioInfoResponse> portfolioInfoResponseMap = (Map<String, PortfolioInfoResponse>) portfolioInfoResult.getData();
 
+
+        // 计算结果列表
         List<PortfolioCalculateResponse> list = new ArrayList<>(8);
+        // 计算结果
         PortfolioCalculateResponse calculateResponse = null;
 
         Instrument instrument = instrumentService.queryByInnerCode(bean.getStockCode());
@@ -372,17 +384,15 @@ public class PortfolioManager extends BaseService {
 
             // - 计算组合委托额度
             // 数量
-            if ("01".equals(detail.getTargetType())) {
-                BigDecimal volume = ArithmeticUtil.multiply(BigDecimal.valueOf(bean.getEntrustVolume()), new BigDecimal(detail.getDisRate()));
-                // 数量小于最小交易数量
-                if (volume.compareTo(BigDecimal.valueOf(minNum)) == 0) {
-                    entrustVolume = minNum;
-                } else if (volume.compareTo(BigDecimal.valueOf(minNum)) == 1) {
-                    entrustVolume = Integer.valueOf(ArithmeticUtil.divide(volume, BigDecimal.valueOf(minStep), 0, RoundingMode.DOWN).multiply(BigDecimal.valueOf(minStep)).toString());
-                }
-            } else {
-                BigDecimal volume = ArithmeticUtil.multiply(BigDecimal.valueOf(bean.getEntrustVolume()), new BigDecimal(detail.getDisRate()));
-                entrustAmt = ArithmeticUtil.multiply(volume, price);
+            BigDecimal volume = ArithmeticUtil.multiply(BigDecimal.valueOf(bean.getEntrustVolume()), new BigDecimal(detail.getDisRate()));
+            if (volume.compareTo(BigDecimal.valueOf(minNum)) == 0) {
+                entrustVolume = minNum;
+            } else if (volume.compareTo(BigDecimal.valueOf(minNum)) > 0) {
+                entrustVolume = Integer.valueOf(ArithmeticUtil.divide(volume, BigDecimal.valueOf(minStep), 0, RoundingMode.DOWN).multiply(BigDecimal.valueOf(minStep)).toString());
+            }
+            if ("02".equals(detail.getTargetType())) {
+                entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), price);
+                entrustVolume = 0;
             }
             calculateResponse.setEntrustAmt(entrustAmt);
             calculateResponse.setEntrustNum(Long.valueOf(entrustVolume));
@@ -390,11 +400,11 @@ public class PortfolioManager extends BaseService {
             list.add(calculateResponse);
         }
 
-        // 尾插处理
+        // 尾差处理
         PortfolioCalculateResponse maxPortfolioCalculateResponse = list.stream().max(Comparator.comparing(PortfolioCalculateResponse::getDisRate)).get();
         if ("01".equals(instructionDetails.get(0).getDisRate())) {
             long sum = list.stream().filter(response -> !StrUtil.equals(response.getPortfolioId(), maxPortfolioCalculateResponse.getPortfolioId()))
-                    .mapToLong(response -> response.getEntrustNum())
+                    .mapToLong(PortfolioCalculateResponse::getEntrustNum)
                     .sum();
             maxPortfolioCalculateResponse.setEntrustNum(bean.getEntrustVolume() - sum);
         }
