@@ -5444,4 +5444,17 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	public String qryPortfolioSecAcctId(Map<String,Object> map){
 		return etrExchangeTradeCommonMapper.qryPortfolioSecAcctId(map);
 	}
+
+	/**
+	 *  查找组合对应的证券账户
+	 * @author zhangnian
+	 * @date 2021/1/13 0013
+	 * @return
+	 */
+	public List<EtrExchangeTradePortfolioResponse> selectEtrPortfolioList(String entrustId){
+		return etrExchangeTradeCommonMapper.selectEtrPortfolioList(entrustId);
+	}
+
+
+
 }
