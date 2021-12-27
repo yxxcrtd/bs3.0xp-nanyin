@@ -136,8 +136,6 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         initPageParams.put("ibuQuoteBond_etrTable_refresh_period", CacheUtil.getSysParam("ibuQuoteBond_etrTable_refresh_period"));
         //银行间质押式回购质押券模式：01无质押券库，02单个质押库，03多个质押券库
         initPageParams.put("repo_pledge_model", CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL));
-        //系统是否支持报价业务（Y：支持 N：不支持）
-        initPageParams.put("is_sys_support_quote", CacheUtil.getSysParam("is_sys_support_quote"));
         //CMDS地址
         initPageParams.put("cmdsWebSocketUrl", cmdsWebSocketUrl);
         //本币导出按钮配置
