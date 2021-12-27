@@ -31,7 +31,7 @@
         </if>
     </select>
     <sql id="onlyRegInfo">
-        select
+        select distinct
         decode(reg.is_cancel,'Y','撤销','N','有效') as effectiveStatusStr,
         decode(reg.is_cancel,'N',#{VALID_STATUS_01},'Y',#{VALID_STATUS_03}) as  effectiveStatus,
         reg.totle_trade_id as busiCode,
@@ -124,7 +124,7 @@
         </if>
     </sql>
     <sql id="onlyWflRegInfo">
-        select
+        select distinct
         '流程中' as effectiveStatusStr,
         #{VALID_STATUS_04} effectiveStatus,
         reg.totle_trade_id as busiCode,
