@@ -426,7 +426,10 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
     @ApiOperation(value = "计算期限品种", notes = "计算期限品种")
     @PostMapping("getTermType")
     public Message<AjaxResult> getTermType(@RequestBody Map<String,Object> map) throws Exception {
-        String msg = cfetsEtrIbRepoinfoService.getTermType((Integer) map.get("repoTerm"));
+        String msg = null;
+        if(StringUtil.isNotEmpty(map.get("repoTerm"))){
+            msg = cfetsEtrIbRepoinfoService.getTermType((Integer) map.get("repoTerm"));
+        }
         AjaxResult m =new AjaxResult();
         m.setData(msg);
         return new Message<AjaxResult>().success().setData(m);

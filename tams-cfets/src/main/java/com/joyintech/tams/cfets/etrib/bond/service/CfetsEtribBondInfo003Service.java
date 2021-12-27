@@ -41,6 +41,7 @@ import com.joyintech.tams.cfets.etrib.bond.dto.*;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
+import com.joyintech.tams.common.base.dao.WflEtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
@@ -157,6 +158,11 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
     private CfetsEtrIbBondinfo002Mapper cfetsEtrIbBondinfo002Mapper;
     @Autowired
     private JoyinbusinessCommonService joyinbusinessCommonService;
+
+
+    @Autowired(required = false)
+    private WflEtrEntrustMapper wflEtrEntrustMapper;
+
 
     /**
      * 判断是否含权债
@@ -283,10 +289,9 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
                     dto.setWorkflowId(entity.getWorkflowId());
                     doInsertFlowMethod(entity.getOperateType(), initBaseEtrInvestInfoDto(dto));
-
                 }
                 //发送头寸
-                sendPositionMethod(entity);
+                sendPositionMethod(entity,entity.getSubmitFlag());
             }
         }
         //无附件上传，删除
@@ -296,6 +301,16 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
     @Override
     public void doUpdate(CfetsEtribBondInfo003Dto entity) {
         if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
+            boolean isSubmit = true;
+            for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
+                WflEtrEntrustKey wflEtrEntrustKey = new WflEtrEntrustKey();
+                wflEtrEntrustKey.setEntrustId(dto.getEntrustId());
+                wflEtrEntrustKey.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                WflEtrEntrust wflEtrEntrust = wflEtrEntrustMapper.selectByPrimaryKey(wflEtrEntrustKey);
+                if(wflEtrEntrust != null) {
+                    isSubmit = false;
+                }
+            }
             for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
                 dto.setWorkflowId(entity.getWorkflowId());
                 WFlowCommonService.deleteFlow(initBaseEtrInvestInfoDto(dto).getWorkFlowId());
@@ -303,7 +318,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             }
             //发送头寸
             entity.setSoftSkipMode("Y");
-            sendPositionMethod(entity);
+            sendPositionMethod(entity,isSubmit);
         }
     }
 
@@ -1553,7 +1568,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         }
         return result;
     }
-    private  void sendPositionMethod(CfetsEtribBondInfo003Dto entity){
+    private  void sendPositionMethod(CfetsEtribBondInfo003Dto entity,boolean isSubmit){
         List<CfetsEtrIbPosPortfolioRequest> ptlList=new ArrayList<>();
         for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
             //调用头寸
@@ -1609,7 +1624,12 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         req.setSettleSpeed(entity.getSettleSpeed());
         req.setBusiAct(DictCodeListExt3.业务动作_投资指令.getValue());
         req.setPs(entity.getPs());
-        req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+        if(isSubmit){
+            req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+        }else{
+            req.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+            req.setbTotalTradeId(entity.getTotalEtrustId());
+        }
         req.setCdate(entity.getEtrDate());
         req.setCcy(entity.getCcy());
         req.setFinprodId(entity.getFinprodId());
