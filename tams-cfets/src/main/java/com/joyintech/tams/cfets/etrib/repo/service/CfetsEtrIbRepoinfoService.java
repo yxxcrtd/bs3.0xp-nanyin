@@ -169,7 +169,7 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         if(!StringUtil.isNotEmpty(dto.getPrice()))
             messages.add(new ValidMessage("price", "请输入回购利率。"));
         if(StringUtil.isNotEmpty(dto.getPrice()) && dto.getPrice().compareTo(BigDecimal.ZERO)<=0)
-            messages.add(new ValidMessage("回购利率不允许小于等于0。"));
+            messages.add(new ValidMessage("回购利率不能小于等于0。"));
         //指令日期若是节假日，不可以保存、提交
         if(StringUtil.isNotEmpty(dto.getEntrustDate())){
             String isHoliday = cfetsetrIbBondinfoMapper.getIsHoliday(dto.getEntrustDate(), "03");
@@ -185,7 +185,7 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
             if(!StringUtil.isNotEmpty(dtoList.get(i).getEntrustAmt()))
                 messages.add(new ValidMessage("组合信息(第"+(i+1)+"行)，请输入指令金额。"));
             if(StringUtil.isNotEmpty(dtoList.get(i).getEntrustAmt()) && dtoList.get(i).getEntrustAmt().compareTo(BigDecimal.ZERO)<=0)
-                messages.add(new ValidMessage("组合信息(第"+(i+1)+"行)，指令金额不允许小于等于0。"));
+                messages.add(new ValidMessage("组合信息(第"+(i+1)+"行)，指令金额不能小于等于0。"));
 
             if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL),"03")
                     &&StringUtil.isNotEmpty(dto.getPs())
