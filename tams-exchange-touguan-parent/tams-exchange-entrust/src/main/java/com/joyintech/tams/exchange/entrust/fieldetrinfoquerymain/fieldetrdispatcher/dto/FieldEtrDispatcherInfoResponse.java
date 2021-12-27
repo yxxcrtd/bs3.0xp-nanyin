@@ -104,7 +104,7 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
 
     @ApiModelProperty(name="pledgeStandardNumber",value="标准券数量",example="10000")
     private BigDecimal pledgeStandardNumber;
-    
+
     @ApiModelProperty(name="pledgeRatio",value="折算率",example="10000")
     private BigDecimal pledgeRatio;
 
@@ -129,7 +129,6 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
     @ApiModelProperty(name="tradeId",value="初始交易编号",example="字符串1")
     private String tradeId;
 
-
     @ApiModelProperty(name="oldPledgeRatio",value="原折算率",example="10000")
     private BigDecimal oldPledgeRatio;
 
@@ -139,6 +138,14 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
     @ApiModelProperty(name="oldPledStrdPrinAmt",value="原券面金额",example="10000")
     private BigDecimal oldPledStrdPrinAmt;
 
+    public BigDecimal getPledgeStandardNumber() {
+        return pledgeStandardNumber;
+    }
+
+    public void setPledgeStandardNumber(BigDecimal pledgeStandardNumber) {
+        this.pledgeStandardNumber = pledgeStandardNumber;
+    }
+    
     public BigDecimal getOldPledgeRatio() {
         return oldPledgeRatio;
     }
