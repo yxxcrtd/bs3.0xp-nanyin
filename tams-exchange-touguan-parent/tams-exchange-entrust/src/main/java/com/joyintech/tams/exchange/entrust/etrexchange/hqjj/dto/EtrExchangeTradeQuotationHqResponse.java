@@ -10,21 +10,16 @@
  
 package com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto;
 
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  *  行情信息(左上)
  * 〈功能详细描述〉
- * @author meifaxin
- * @version 1.0 2021年12月21日
+ * @author wanyang1
+ * @version 1.0 2021年12月25日
  * @see EtrExchangeTradeQuotationHqResponse
  * @since 1.0
  */
@@ -77,7 +72,7 @@ public class EtrExchangeTradeQuotationHqResponse {
     @ApiModelProperty(name="askPrice",value="卖出报价",example="12")
     private List<BigDecimal> askPrice;
 
-    @ApiModelProperty(name="yield",value="卖出数量",example="12")
+    @ApiModelProperty(name="askVolume",value="卖出数量",example="12")
     private List<Integer> askVolume;
 
     @ApiModelProperty(name="bidPrice",value="买入报价",example="12")
