@@ -594,6 +594,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
                 if(StringUtil.isNotEmpty(item.getSettleSpeedStr())){
                     item.setSettleSpeedStr(item.getSettleSpeedStr().substring(item.getSettleSpeedStr().indexOf("+"),item.getSettleSpeedStr().length()));
                 }
+                item.setSettCcyStr(item.getSettCcy());
 				if(StringUtil.equals(item.getCalMode(),"01")){item.setMatureYield(null);item.setExerYield(null);}
 				if(StringUtil.equals(item.getCalMode(),"02")){item.setMatureYield(ArithmeticUtil.multiply(item.getMatureYield(),new BigDecimal(100)));item.setPrice(null);item.setExerYield(null);}
 				if(StringUtil.equals(item.getCalMode(),"03")){item.setExerYield(ArithmeticUtil.multiply(item.getExerYield(),new BigDecimal(100)));item.setPrice(null);item.setMatureYield(null);}
@@ -609,14 +610,14 @@ public class CfetsIbuQuoteBondController extends BaseController {
 				List<CfetsBondDayRegDto> cfetsBondDayRegDtos = collect.get(i);
 				String appendString = collect.size()>=1?String.format("%04d", sequenceIndexData):StringUtil.EMPTY;
 				String excelAndSheetName = StringUtil.join(prefix,"_",appendString);
-				ExcelUitl.doExport(requestDto, response, excelAndSheetName,() -> {
+				ExcelUitl.doExport2(requestDto, response, excelAndSheetName,() -> {
 							return cfetsBondDayRegDtos;
 					});
 			}
 		}
 		else{
 			String excelAndSheetName = StringUtil.join(prefix,"_",sequenceIndexData);
-			ExcelUitl.doExport(requestDto, response, excelAndSheetName,() -> {
+			ExcelUitl.doExport2(requestDto, response, excelAndSheetName,() -> {
 				return dataList;
 			});
 		}

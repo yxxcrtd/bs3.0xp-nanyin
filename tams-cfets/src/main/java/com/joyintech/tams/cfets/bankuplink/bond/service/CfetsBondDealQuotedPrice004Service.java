@@ -590,6 +590,10 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             List<RegFinProductDealAdd> regFinProductDealAdds = new ArrayList<>();
             List<RegTradeFee> regTradeFees = new ArrayList<>();
             if(CollectionUtils.isNotEmpty(entity.getPtlAllocatios())){
+                Map<String, Object> entrustReclas = new HashMap<>();
+                if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
+                   entrustReclas = cfetsQuotedCommonService.isEntrustReclas(entity.getFinprodId(), entity.getPrice(), entity.getTradeDate());
+                }
                 //处理本方券、融入券
                 Map<String,Object> param = new HashMap<>();
                 List<String> entrustIds = new ArrayList<>();
@@ -616,7 +620,12 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                     regFinProductDeal.setIntAmt(ptlAllocatio.getIntAmt());
                     regFinProductDeal.setTgBusiType(tgBusiType);
                     regFinProductDeal.setSettleSpeed(settleSpreed);
-                    regFinProductDeal.setInvAim(ptlAllocatio.getBusinessModel());
+                    if(StringUtil.equals(ptlAllocatio.getBusinessModel(), DictCodeListExt3.业务模式_收取合同约定的现金流.getValue())&&entrustReclas.containsKey("isEntrustReclas")&&(boolean)entrustReclas.get("isEntrustReclas")){
+                        regFinProductDeal.setInvAim(DictCodeListExt3.业务模式_出售.getValue());
+                    }
+                    else{
+                        regFinProductDeal.setInvAim(ptlAllocatio.getBusinessModel());
+                    }
                     //附属
                     RegFinProductDealAdd regFinProductDealAdd = new RegFinProductDealAdd();
                     regFinProductDealAdd.setTradeId(regFinProductDeal.getTradeId());

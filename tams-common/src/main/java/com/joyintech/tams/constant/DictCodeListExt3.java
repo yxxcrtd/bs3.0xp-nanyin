@@ -1739,7 +1739,8 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     共通业务类型_指令强制完成(DictCode.共通业务类型,"ETR_FINISH","指令强制完成"),
     行内资产四级分类_交易商协会ABN(DictCode.行内资产四级分类,"127","交易商协会ABN"),
     行内资产四级分类_银保监会主管ABS(DictCode.行内资产四级分类,"128","银保监会主管ABS"),
-
+    业务模式_收取合同约定的现金流(DictCode.业务模式,"AC","收取合同约定的现金流"),
+    业务模式_出售(DictCode.业务模式,"FVTPL","出售"),
     ;
     /**
      * 对应于数据字典code

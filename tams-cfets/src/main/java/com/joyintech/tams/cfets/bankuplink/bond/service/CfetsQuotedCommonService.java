@@ -22,10 +22,13 @@ import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
 import com.joyintech.tams.cfets.position.service.PositionInfoService;
+import com.joyintech.tams.common.base.dao.SppiImportDataMapper;
 import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
+import com.joyintech.tams.common.base.entity.SppiImportData;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealEntrustOrderDto;
@@ -98,6 +101,9 @@ public class CfetsQuotedCommonService extends BaseService {
 
     @Autowired
     private StlSecAcctInfoMapper stlSecAcctInfoMapper;
+
+    @Autowired
+    private SppiImportDataMapper sppiImportDataMapper;
     /**
      * 委托放弃处理
      * 
@@ -821,4 +827,57 @@ public class CfetsQuotedCommonService extends BaseService {
         return cfetsIbuQuoteBondMapper.getWflShareAmtByEntrustId(entrustId);
     }
 
+    public  AjaxResult reclasCheck(CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto){
+        AjaxResult ajaxResult = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        if(StringUtil.equals(cfetsBondDealQuoteCommonDto.getPs(), DictCodeList.交易方向_买入.getValue())&&CollectionUtils.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())){
+            //资产是否有赎回或者行权计划
+            //是否不满足使权不重大购入价条件
+            Map<String, Object> entrustReclasMap = isEntrustReclas(cfetsBondDealQuoteCommonDto.getFinprodId(), cfetsBondDealQuoteCommonDto.getPrice(), cfetsBondDealQuoteCommonDto.getTradeDate());
+            if((boolean)entrustReclasMap.get("isEntrustReclas")){
+                cfetsBondDealQuoteCommonDto.getPtlAllocatios().forEach(item ->{
+                    if(StringUtil.equals(item.getBusinessModel(), DictCodeListExt3.业务模式_收取合同约定的现金流.getValue())){
+                        BaseMap baseMap = positionInfoService.queryTrdPosition(Arrays.asList(item.getPortfolioId()), DateUtil.format(cfetsBondDealQuoteCommonDto.getTradeDate()), cfetsBondDealQuoteCommonDto.getFinprodId());
+                        //
+                        if(null!=baseMap&&baseMap.containsKey("ZCTRKYCC")&&((BigDecimal)baseMap.get("ZCTRKYCC")).compareTo(BigDecimal.ZERO)>0){
+                            errorList.add(new ValidMessage(StringUtil.join("交易净价不满足使权不重大的购入条件:",entrustReclasMap.get("price"),"业务模式由收取合同现金流调整为出售,请资产重分类!")));
+                        }else{
+                            errorList.add(new ValidMessage(StringUtil.join("交易净价不满足使权不重大的购入条件:",entrustReclasMap.get("price"),"业务模式由收取合同现金流调整为出售!")));
+                        }
+                    }
+                });
+            }
+        }
+        ajaxResult.setErrorList(errorList);
+        ajaxResult.setStatuCode(220);
+        return ajaxResult;
+    }
+    /**
+     * 是否重分类
+     * @param finprodId
+     * @param price
+     * @return
+     */
+    public Map<String,Object> isEntrustReclas(String finprodId,BigDecimal price,Date sysDate){
+        Map<String,Object> result = new HashMap<>();
+        result.put("isEntrustReclas",false);
+        SppiImportData sppiImportData = sppiImportDataMapper.selectByPrimaryKey(finprodId);
+        try{
+            if(null!=sppiImportData&&StringUtil.isNotEmpty(sppiImportData.getBidPriceCon())){
+                String[] split = sppiImportData.getBidPriceCon().split(",");
+                Map<String,Object> param = new HashMap<>();
+                param.put("finprodId",finprodId);
+                param.put("sysDate",sysDate);
+                //if(price.compareTo(new BigDecimal(split[1]))<=0&&cfetsIbuQuoteBondMapper.countBondHasEexrPlan(param)>0){
+                    result.put("price",new BigDecimal(split[1]));
+                    result.put("isEntrustReclas",true);
+                    //需要资产重分类
+                    return result;
+                //}
+            }
+        }catch (Exception e){
+            logger.error("资产重分类判断异常:"+e.getMessage());
+        }
+        return  result;
+    }
 }

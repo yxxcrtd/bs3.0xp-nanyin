@@ -272,7 +272,10 @@ public class CfetsBondDayRegDto {
     }
 
     public String getSettCcyStr() {
-        return SysDataUtil.getNameFromDataDict(BussinessDictCode.币种, this.getSettCcy());
+        if(StringUtil.isEmpty(this.settCcyStr)){
+            return SysDataUtil.getNameFromDataDict(BussinessDictCode.币种, this.getSettCcy());
+        }
+        return this.settCcyStr;
     }
 
     public void setSettCcyStr(String settCcyStr) {
