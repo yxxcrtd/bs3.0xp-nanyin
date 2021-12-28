@@ -141,6 +141,9 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name = "priceModelClass", value = "价格模式种类,只有指定价格01,只有限价指令02,两种都有03")
     private String priceModelClass;
 
+    @ApiModelProperty(name = "softSkipMode", value = "软控是否跳过校验" ,example = "Y")
+    private String softSkipMode;
+
     public String getQuoteId() {
         return quoteId;
     }
@@ -467,6 +470,14 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setElementId(String elementId) {
         this.elementId = elementId;
+    }
+
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
     }
 }
 
