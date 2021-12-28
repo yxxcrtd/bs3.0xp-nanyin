@@ -36,6 +36,11 @@ public class IbuQuoteBondDto extends IbuQuoteBond {
      */
     private String portfolioName;
 
+    private String finprodAbbr;
+
+    private String type11;
+
+
     public String getFinprodMarketId() {
         return finprodMarketId;
     }
@@ -60,6 +65,22 @@ public class IbuQuoteBondDto extends IbuQuoteBond {
      */
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
+    }
+
+    public String getFinprodAbbr() {
+        return finprodAbbr;
+    }
+
+    public void setFinprodAbbr(String finprodAbbr) {
+        this.finprodAbbr = finprodAbbr;
+    }
+
+    public String getType11() {
+        return type11;
+    }
+
+    public void setType11(String type11) {
+        this.type11 = type11;
     }
 
     /**

@@ -32,4 +32,6 @@ public interface CfetsIbuQuoteBondEtrMapper {
     int countFailEtr(Map<String, Object> param);
 
     List<EntrustAvaShareAmtDto> listAvaShareAmt(Map<String, Object> param);
+
+    String getAccNo(Map<String,String> param);
 }

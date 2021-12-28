@@ -18,7 +18,10 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -27,6 +30,7 @@ import java.util.List;
 
 /**
  * sso统一认证(simple)
+ *
  * @auther zhangnian
  * @date 2021/5/11
  */
@@ -42,20 +46,21 @@ public class SsoLoginController {
 
     /**
      * sso登录
+     *
      * @param loginParam
      * @return
      */
     @ApiOperation(value = "登录", notes = "登录")
     @RequestMapping(value = "/ssoLogin", method = RequestMethod.POST)
     @ResponseBody
-    public Message<String> ssoLogin(@RequestBody LoginParam loginParam){
+    public Message<String> ssoLogin(@RequestBody LoginParam loginParam) {
         String username = loginParam.getUsername();
         String password = loginParam.getPassword();
         try {
-            if(StringUtils.isEmpty(username)){
+            if (StringUtils.isEmpty(username)) {
                 return new Message<String>(MessageCode.FAIL_USERNAME_NULL);
             }
-            if(StringUtils.isEmpty(password)){
+            if (StringUtils.isEmpty(password)) {
                 return new Message<String>(MessageCode.FAIL_PASSWORD_NULL);
             }
             password = AesEncryptUtil.desEncrypt(password).trim();
@@ -63,20 +68,20 @@ public class SsoLoginController {
             SsoUser user = ssoLoginService.selectUserInfoBySSOName(username);
             if (null != user) {
                 String newPassword = (new SimpleHash("md5", password, user.getSalt(), 2)).toHex();
-                if(!user.getPassword().equals(newPassword)){
+                if (!user.getPassword().equals(newPassword)) {
                     return new Message<String>(MessageCode.FAIL_PASSWORD_ERROR);
                 }
-            }
-            else {
+            } else {
                 return new Message<String>(MessageCode.FAIL_USERNAME_NOT_EXISTS);
             }
             //username放到cookie
             HttpServletResponse response = ServletUtil.getResponse();
-            Cookie cookie = new Cookie(CookieUtil.USER_NAME_KEY,username );
+            Cookie cookie = new Cookie(CookieUtil.USER_NAME_KEY, username);
+            Cookie cookie1 = new Cookie(CookieUtil.REAL_NAME_KEY, user.getRealName());
             response.addCookie(CookieUtil.setCookie(cookie));
-        }
-        catch (Exception e) {
-            logger.error("sso登录异常:"+e.getMessage());
+            response.addCookie(CookieUtil.setCookie(cookie1));
+        } catch (Exception e) {
+            logger.error("sso登录异常:" + e.getMessage());
             return new Message<String>(MessageCode.FAIL);
         }
         return new Message<String>().success();
@@ -85,15 +90,16 @@ public class SsoLoginController {
     @ApiOperation(value = "退出登录", notes = "退出登录")
     @RequestMapping(value = "/ssoLoginOut", method = RequestMethod.POST)
     @ResponseBody
-    public Message<String> ssoLoginOut(){
+    public Message<String> ssoLoginOut() {
         try {
             //username放到cookie
             HttpServletResponse response = ServletUtil.getResponse();
-            Cookie cookie = new Cookie(CookieUtil.USER_NAME_KEY,"");
+            Cookie cookie = new Cookie(CookieUtil.USER_NAME_KEY, "");
+            Cookie cookie1 = new Cookie(CookieUtil.REAL_NAME_KEY, "");
             response.addCookie(CookieUtil.rmCookie(cookie));
-        }
-        catch (Exception e) {
-            logger.error("退出登录异常:"+e.getMessage());
+            response.addCookie(CookieUtil.rmCookie(cookie1));
+        } catch (Exception e) {
+            logger.error("退出登录异常:" + e.getMessage());
             return new Message<String>(MessageCode.FAIL);
         }
         return new Message<String>().success();
@@ -103,13 +109,13 @@ public class SsoLoginController {
     @ApiOperation(value = "获取用户应用平台", notes = "获取用户应用")
     @RequestMapping(value = "/getPlatformList", method = RequestMethod.POST)
     @ResponseBody
-    public Message<List<Platform>> getPlatformList(@RequestBody UserPlatFormParm userPlatFormParm){
+    public Message<List<Platform>> getPlatformList(@RequestBody UserPlatFormParm userPlatFormParm) {
         String username = CookieUtil.getValueByKey();
-        if(StringUtils.isEmpty(username)){
+        if (StringUtils.isEmpty(username)) {
             return new Message<List<Platform>>(MessageCode.LOGIN_TIMEOUT);
         }
         List<Platform> result = ssoLoginService.selectPlatformByUserName(username);
-        if(StringUtils.isEmpty(result)){
+        if (StringUtils.isEmpty(result)) {
             return new Message<List<Platform>>(MessageCode.PLATFORM_NULL);
         }
         return new Message<List<Platform>>().setData(result).success();
@@ -117,21 +123,21 @@ public class SsoLoginController {
 
 
     @ApiOperation(value = "应用平台重定向", notes = "应用平台重定向")
-    @RequestMapping(value="/redirect",method=RequestMethod.POST)
+    @RequestMapping(value = "/redirect", method = RequestMethod.POST)
     @ResponseBody
-    public Message<String> redirect(String id){
+    public Message<String> redirect(String id) {
         try {
             String username = CookieUtil.getValueByKey();
-            if(StringUtils.isEmpty(username)){
+            if (StringUtils.isEmpty(username)) {
                 return new Message<String>(MessageCode.LOGIN_TIMEOUT);
             }
-            if(StringUtils.isEmpty(id)){
+            if (StringUtils.isEmpty(id)) {
                 return new Message<String>(MessageCode.FAIL_PLATFORMID_NULL);
             }
             //查看资源信息
             SsoPlatform sysPlatform = ssoLoginService.selectPlatformById(id);
-            if(null!=sysPlatform){
-                String cookiekey = StringUtils.defaultString(sysPlatform.getCookiekey(),CookieUtil.USER_NAME_KEY);
+            if (null != sysPlatform) {
+                String cookiekey = StringUtils.defaultString(sysPlatform.getCookiekey(), CookieUtil.USER_NAME_KEY);
                 //重新设置cookie
                 /*HttpServletResponse response = ServletUtil.getResponse();
                 String cookiekey = StringUtils.defaultString(sysPlatform.getCookiekey(),CookieUtil.USER_NAME_KEY);
@@ -146,14 +152,13 @@ public class SsoLoginController {
                 // 重定向
                 /*response.sendRedirect(sysPlatform.getPlatformurl()+"?"+cookiekey+"="+username);*/
                 //return new Message<String>().setData(sysPlatform.getPlatformurl()).success();
-                return new Message<String>().setData(sysPlatform.getPlatformurl()+"?"+cookiekey+"="+username).success();
-            }
-            else{
+                return new Message<String>().setData(sysPlatform.getPlatformurl() + "?" + cookiekey + "=" + username).success();
+            } else {
                 logger.warn("应用平台已禁用,请重新登录");
                 return new Message<String>(MessageCode.PLATFORM_DIABLED);
             }
-        }catch (Exception e){
-            logger.error("应用平台重定向异常:"+e.getMessage());
+        } catch (Exception e) {
+            logger.error("应用平台重定向异常:" + e.getMessage());
             return new Message<String>(e.getMessage()).fail();
         }
     }

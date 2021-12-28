@@ -35,6 +35,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade001Dto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.MinPirceDto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdOthCodeInfoDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -816,16 +817,16 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	public Message<String> selectAvailableNum(@RequestBody AvailableEtrSecPositionRequest dto){
 		try{
 			Map<String, Object> param = BeanUtil.object2Map(dto);
-		BigDecimal availableNum = etrExchangeTrade001CommonService.selectAvailableNum(param);
-		if(availableNum == null) {
-			availableNum= BigDecimal.ZERO;
+			BigDecimal availableNum = etrExchangeTrade001CommonService.selectAvailableNum(param);
+			if(availableNum == null) {
+				availableNum= BigDecimal.ZERO;
+			}
+			String availableNumStr=availableNum.setScale(2,RoundingMode.HALF_UP).toString();
+			return new Message<>(availableNumStr);
+		} catch (Exception e) {
+			logger.error("查询功能异常", e);
+			return new Message<String>().fail().setMessage("查询异常");
 		}
-		String availableNumStr=availableNum.setScale(2,RoundingMode.HALF_UP).toString();
-		return new Message<>(availableNumStr);
-	} catch (Exception e) {
-		logger.error("查询功能异常", e);
-		return new Message<String>().fail().setMessage("查询异常");
-	}
 	}
 
 	/**
@@ -884,17 +885,47 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@ResponseBody
 	public Message<AjaxResult> checkSaveError(@RequestBody EtrExchangeTradeSaveRequest dto, BindingResult br)
 			throws Exception {
+		AjaxResult ajax=null;
 		try {
-			AjaxResult ajax= etrExchangeTrade001CommonService.checkSaveErrorMethod(dto, br);
-			if(null!=ajax){
+			List<EtrExchangeTradeSaveRequest> portfolioList=dto.getPortfolioList();
+			for(int i = 0;i<portfolioList.size();i++) {
+				EtrExchangeTradeSaveRequest item=portfolioList.get(i);
+				dto.setVdate(dto.getEntrustDate());
+				dto.setMdate(dto.getEntrustDate());
+				dto.setPortfolioId(item.getPortfolioId());
+				dto.setAcctNo(item.getAcctNo());
+				dto.setEntrustNum(item.getEntrustNum());
+				dto.setEntrustAmt(item.getEntrustAmt());
+				ajax = check(dto, br);
+					if(null != ajax){
+						break;
+					}
+			}
+			if (null != ajax) {
 				return new Message<AjaxResult>().success().setData(ajax);
-			}else{
+			} else {
 				return new Message<AjaxResult>().success().setMessage("校验通过");
 			}
 		}catch (Exception e) {
+			e.printStackTrace();
 			logger.error("多组合指令新建保存/提交校验异常",e);
 			return new Message<AjaxResult>().fail().setMessage("校验失败");
 		}
+	}
+
+	/**
+	 * 单组合保存按钮点击时的check
+	 *
+	 * @param  dto
+	 * @param  br
+	 * @return check结果
+	 * @see
+	 * @since 1.0
+	 */
+	public AjaxResult check(@RequestBody EtrExchangeTradeSaveRequest dto, BindingResult br)
+			throws Exception {
+		AjaxResult ajax= etrExchangeTrade001CommonService.check(dto, br);
+		return ajax;
 	}
 	/**
 	 * 保存/提交
@@ -914,20 +945,6 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		try {
 			if (br.hasErrors()) {
 				return new Message<AjaxResult>().fail().setData(new AjaxResult(br));
-			}
-			//暂时支持一个组合
-			EtrExchangeTradePortfolioRequest portfolioRequest=dto.getPortfolioList().get(0);
-			dto.setPortfolioId(portfolioRequest.getPortfolioId());
-			dto.setAcctNo(portfolioRequest.getAcctNo());
-			//默认证券账户
-			if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("portfolioId", dto.getPortfolioId());
-				//map.put("finprodId", dto.getFinprodId());
-				String secAcctId = etrExchangeTradeCommonMapper.qryPortfolioSecAcctId(map);
-				if (StringUtil.isNotEmpty(secAcctId)) {
-					dto.setSecAcctId(secAcctId); // 证券账户
-				}
 			}
 			//暂时支持一个组合
 			//业务类型
@@ -1065,39 +1082,75 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 					param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_上交所固定收益平台现券交易指令));
 				}
 				//add end
-				String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
-				dto.setEntrustId(code);
 			}
+			dto.setEntrustBussType(businessType);
 
+			Map<EtrExchangeTradeSaveRequest,List<EtrExchangeTradeSaveRequest>> groupMap=etrExchangeTrade001CommonService.genEtrExchangeTradeSaveRequest(dto);
+			List<EtrExchangeTradeSaveRequest> wflList=new ArrayList<>();
 
-			// ----------add by zhangrui1 20200703 预占功能 start----------
-			if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
-				String finprodType2 = "";
-				if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
-					finprodType2 = DictCodeList.平安资产类型_债券.getValue();
-				} else if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
-					finprodType2 = DictCodeList.平安资产类型_基金.getValue();
-				} else if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
-					finprodType2 = DictCodeListExt2.平安资产类型_股票.getValue();
-				} else if ((dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue()) || dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue()))) {
-					finprodType2 = DictCodeList.平安资产类型_质押式回购.getValue();
+			//安装资金账户维度拆分流程
+			for (Map.Entry entry : groupMap.entrySet()) {
+				List<EtrExchangeTradeSaveRequest> list=(List<EtrExchangeTradeSaveRequest>)entry.getValue();
+				wflList.add((EtrExchangeTradeSaveRequest)entry.getKey());
+				EtrExchangeTradeSaveRequest item=list.get(0);
+				//单组合
+				if(list.size()==1){
+					// ----------add by zhangrui1 20200703 预占功能 start----------
+					if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+						String finprodType2 = "";
+						if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+							finprodType2 = DictCodeList.平安资产类型_债券.getValue();
+						} else if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
+							finprodType2 = DictCodeList.平安资产类型_基金.getValue();
+						} else if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
+							finprodType2 = DictCodeListExt2.平安资产类型_股票.getValue();
+						} else if ((dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue()) || dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue()))) {
+							finprodType2 = DictCodeList.平安资产类型_质押式回购.getValue();
+						}
+						//债转股需要走批量接口
+						String infCode;
+						if (StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())) {
+							infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+						} else {
+							infCode = BussinessDictCodeListRds.接口系统ID_预占接口.getValue();
+						}
+						AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(item,
+								infCode, finprodType2);
+						if (StringUtil.isNotEmpty(ar)) {
+							return new Message<AjaxResult>().success().setData(ar);
+						}
+					}
+
+					// ----------add by zhangrui1 20200703 预占功能 end----------
+				}else { //系列户
+					// ----------add by zhangrui1 20200703 预占功能 start----------
+					if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+						String finprodType2 = "";
+						if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+							finprodType2 = DictCodeList.平安资产类型_债券.getValue();
+						} else if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
+							finprodType2 = DictCodeList.平安资产类型_基金.getValue();
+						} else if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
+							finprodType2 = DictCodeListExt2.平安资产类型_股票.getValue();
+						} else if ((dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue()) || dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue()))) {
+							finprodType2 = DictCodeList.平安资产类型_质押式回购.getValue();
+						}
+						//债转股需要走批量接口
+						String infCode;
+						if (StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())) {
+							infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+						} else {
+							infCode = BussinessDictCodeListRds.接口系统ID_预占接口.getValue();
+						}
+						AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(item,
+								infCode, finprodType2);
+						if (StringUtil.isNotEmpty(ar)) {
+							return new Message<AjaxResult>().success().setData(ar);
+						}
+					}
+					// ----------add by zhangrui1 20200703 预占功能 end----------
 				}
-				//债转股需要走批量接口
-				String infCode;
-				if (StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())) {
-					infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
-				} else {
-					infCode = BussinessDictCodeListRds.接口系统ID_预占接口.getValue();
-				}
-//				AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
-//						infCode, finprodType2);
-//				if (StringUtil.isNotEmpty(ar)) {
-//					return new Message<AjaxResult>().success().setData(ar);
-//				}
 			}
-			// ----------add by zhangrui1 20200703 预占功能 end----------
-
-
 			/*
 			 * if 画面.金融产品类型（投管）.股票 and 画面.交易平台 = 数据字典.交易平台.竞价交易平台 指令业务类型 =
 			 * 数据字典.共通业务类型.股票竞价指令
@@ -1126,13 +1179,13 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			WorkFlowParameter<EtrExchangeTradeSaveRequest> params = etrExchangeTrade001CommonService.getWorkFlowParameter(dto);
 			params.setPageId(dto.getPageId());
 			params.setElementId(dto.getElementId());
-			params.setBusinessType(businessType);
-			params.setBusinessCode(dto.getEntrustId());
+			params.setBusinessType(item->item.getBusinessTypeName());
+			params.setBusinessCode(item->item.getEntrustId());
 			params.setComment(entity -> getMessage("EtrExchangeTradeCommon001.entrustId") + "(" + entity.getEntrustId() + ")"
 					+ "-" + "业务类型" + "(" + entity.getBusinessTypeName() + ")-"
 					+ "平台日" + "(" + DateUtil.format(iPlatformDate.getSysDate()) + ")");
 			processParameter.setWorkFlowParameter(params);
-			String msg = etrExchangeTrade001CommonService.start(processParameter, dto);
+			String msg = etrExchangeTrade001CommonService.start(processParameter, wflList.toArray(new EtrExchangeTradeSaveRequest[wflList.size()]));
 			return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
 		}catch (Exception e){
 			e.printStackTrace();
@@ -1147,7 +1200,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	 * 如果以全价为基准，则计算净价和到期收益率<br/>
 	 * 如果以到期收益率为基准，则计算净价和全价
 	 *
-	 * @param param
+	 * @param dto
 	 * @return 计算结果
 	 * @author dubaojun
 	 */
@@ -1400,6 +1453,28 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 //        ajaxResult.setData("2");
 		return ajaxResult;
 	}
+
+	/**
+	 * 查询交易行情信息
+	 * <一句话功能简述>
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@ApiOperation(value="查询竞价交易行情信息",notes = "查询竞价交易行情信息")
+	@ResponseBody
+	@PostMapping("findQuotations")
+	public Message<EtrExchangeTradeQuotationHqResponse> findQuotations(@RequestBody String secId) {
+		try {
+			secId = secId.replaceAll("\"","");
+			EtrExchangeTradeQuotationHqResponse quotations = etrExchangeTrade001CommonService.findQuotations(secId);
+			return new Message<EtrExchangeTradeQuotationHqResponse>().success().setData(quotations);
+		}catch (Exception e) {
+			logger.error("查询竞价易行情数据异常",e);
+			return new Message<EtrExchangeTradeQuotationHqResponse>().fail().setMessage("查询竞价交易行情信息数据异常");
+		}
+	}
+
 
 	/**
 	 * 查询指令组合列表

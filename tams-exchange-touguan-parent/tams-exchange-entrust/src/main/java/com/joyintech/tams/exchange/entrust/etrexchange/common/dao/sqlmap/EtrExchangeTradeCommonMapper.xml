@@ -3,7 +3,7 @@
 <mapper namespace="com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper">
 
     <!--场内交易委托列表查询-->
-    <select id="selectEtrExchange" resultType="com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeEtrExchangeCommonResponse">
+    <select id="selectEtrExchange" resultType="com.joyintech.tams.exchange.entrusselectEtrExchangeselectEtrExchanget.etrexchange.common.dto.EtrExchangeTradeEtrExchangeCommonResponse">
         select * from (SELECT
         T1.ENTRUST_ID
         ,T1.ENTRUST_STATUS

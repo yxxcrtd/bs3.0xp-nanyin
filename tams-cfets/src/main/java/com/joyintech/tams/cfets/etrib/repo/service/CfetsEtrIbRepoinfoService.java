@@ -213,9 +213,9 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
                 if(!StringUtil.isNotEmpty(list.get(i).getScale())){
                     messages.add(new ValidMessage("质押券信息(第"+(i+1)+"行)，折算比例必填。"));
                 }
-                if(StringUtil.isNotEmpty(list.get(i).getPledgePrin())&&list.get(i).getPledgePrin().compareTo(list.get(i).getPledStrdPrinAmt())>0){
-                    messages.add(new ValidMessage("质押券信息(第"+(i+1)+"行)，质押券面总额不可超过可质押券面总额。"));
-                }
+//                if(StringUtil.isNotEmpty(list.get(i).getPledgePrin())&&list.get(i).getPledgePrin().compareTo(list.get(i).getPledStrdPrinAmt())>0){
+//                    messages.add(new ValidMessage("质押券信息(第"+(i+1)+"行)，质押券面总额不可超过可质押券面总额。"));
+//                }
             }
         }
         if(messages.size()>0) {

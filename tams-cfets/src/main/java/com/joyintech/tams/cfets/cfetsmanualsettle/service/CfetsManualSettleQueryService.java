@@ -97,6 +97,10 @@ public class CfetsManualSettleQueryService extends BaseService{
             pageParam.put("settleDateStart", DateUtil.parse(dto.getSettleDate()[0]));
             pageParam.put("settleDateEnd", DateUtil.parse(dto.getSettleDate()[1]));
         }
+        if(dto.getTradeDate() != null){
+            pageParam.put("tradeDateStart", DateUtil.parse(dto.getTradeDate()[0]));
+            pageParam.put("tradeDateEnd", DateUtil.parse(dto.getTradeDate()[1]));
+        }
 
         String portfolioId = (String)pageParam.get("portfolioId");
         if(StringUtil.isNotEmpty(pageParam.get("portfolioId"))){

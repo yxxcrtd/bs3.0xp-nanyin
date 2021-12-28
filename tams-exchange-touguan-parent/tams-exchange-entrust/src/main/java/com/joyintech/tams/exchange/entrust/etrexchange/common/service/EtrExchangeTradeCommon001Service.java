@@ -1807,6 +1807,19 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 
 	/** 查询竞价交易行情信息 **/
 	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public EtrExchangeTradeQuotationHqResponse findQuotations(String secId) {
+		String param = "?stock_code=" + secId;
+		Map<String, Object> quoteList;
+		Map quoteMap = restTemplate.getForObject(ServiceApplication.QUOTE_SERVICE_NAME + queryIntegratedTick + param, Map.class);
+		if (quoteMap != null && quoteMap.get("data") != null) {
+			quoteList = (Map<String, Object>) quoteMap.get("data");
+			return BeanUtil.mapToObject(quoteList,EtrExchangeTradeQuotationHqResponse.class);
+		}
+		return new EtrExchangeTradeQuotationHqResponse();
+	}
+
+	/** 查询竞价交易行情信息 **/
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public EtrExchangeTradeSaveRequest findBidQuotationsPage(Map<String, Object> map) {
 		String secId = (String) map.get("secId");
 		String param = "?stock_code=" + secId;
@@ -2733,11 +2746,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @param br
 	 * @return
 	 */
-	public AjaxResult  checkSaveErrorMethod(EtrExchangeTradeSaveRequest dto, BindingResult br) {
-		//暂时支持一个组合
-		EtrExchangeTradePortfolioRequest portfolioRequest=dto.getPortfolioList().get(0);
-		dto.setPortfolioId(portfolioRequest.getPortfolioId());
-		//暂时支持一个组合
+	public AjaxResult  check(EtrExchangeTradeSaveRequest dto, BindingResult br) {
 		if (br.hasErrors()) {
 			return new AjaxResult(br);
 		}
@@ -5371,7 +5380,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		}
 		List<String> messages = new ArrayList<>();
 		if(StringUtil.isNotEmpty(dto.getPortfolioList())){
-			for(EtrExchangeTradePortfolioRequest item:dto.getPortfolioList()){
+			for(EtrExchangeTradeSaveRequest item:dto.getPortfolioList()){
 				if(!StringUtil.isNotEmpty(item.getPortfolioId())){
 					messages.add("请输入组合名称。");
 				}
@@ -5398,7 +5407,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		EtrExchangeTradeCommonRiskcalDto d=new EtrExchangeTradeCommonRiskcalDto();
 		BeanUtil.copyPropertiesIgnoreNull(d,dto);
 		List<Map> bussTrdTransfenpeiDto=new ArrayList<>();
-		for(EtrExchangeTradePortfolioRequest pt:dto.getPortfolioList()){
+		for(EtrExchangeTradeSaveRequest pt:dto.getPortfolioList()){
 			bussTrdTransfenpeiDto.add(BeanUtil.object2Map(pt));
 		}
 		d.setBussTrdTransfenpeiDto(bussTrdTransfenpeiDto);
@@ -5447,12 +5456,57 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 
 	/**
 	 *  查找组合对应的证券账户
-	 * @author zhangnian
-	 * @date 2021/1/13 0013
+	 * @author meifaxin
+	 * @date 2021/12/25 0013
 	 * @return
 	 */
 	public List<EtrExchangeTradePortfolioResponse> selectEtrPortfolioList(String entrustId){
 		return etrExchangeTradeCommonMapper.selectEtrPortfolioList(entrustId);
+	}
+	/**
+	 *  组合分配实体转换成
+	 * @param dto
+	 * @param multiPtl001Dto
+	 * @return
+	 */
+	public Map<EtrExchangeTradeSaveRequest,List<EtrExchangeTradeSaveRequest>> genEtrExchangeTradeSaveRequest(EtrExchangeTradeSaveRequest dto){
+		dto.setVdate(dto.getEntrustDate());
+		dto.setMdate(dto.getEntrustDate());
+		Map<EtrExchangeTradeSaveRequest,List<EtrExchangeTradeSaveRequest>> newGroupMap=new HashMap<>();
+		Map<String,List<EtrExchangeTradeSaveRequest>> groupMap= dto.getPortfolioList().stream().collect(
+				Collectors.groupingBy(item->item.getAcctNo()));
+		groupMap.forEach((key, value) -> {
+			List<EtrExchangeTradeSaveRequest> list=(List<EtrExchangeTradeSaveRequest>)value;
+			List<EtrExchangeTradeSaveRequest> newList=(List<EtrExchangeTradeSaveRequest>)value;
+			EtrExchangeTradeSaveRequest newDto=new EtrExchangeTradeSaveRequest();
+			BeanUtil.copyPropertiesIgnoreNull(newDto,dto);
+			BigDecimal totalEntrustAmt = list.stream().map(EtrExchangeTradeSaveRequest::getEntrustAmt).reduce(BigDecimal::add).get();
+			BigDecimal totalEntrustNum = list.stream().map(EtrExchangeTradeSaveRequest::getEntrustNum).reduce(BigDecimal::add).get();
+			newDto.setEntrustAmt(totalEntrustAmt);
+			newDto.setEntrustNum(totalEntrustNum);
+			list.forEach(item->{
+				EtrExchangeTradeSaveRequest newItem = new EtrExchangeTradeSaveRequest();
+				BeanUtil.copyPropertiesIgnoreNull(newItem,dto);
+				newItem.setPortfolioId(item.getPortfolioId());
+				newItem.setAcctNo(item.getAcctNo());
+				//默认证券账户
+				if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("portfolioId", dto.getPortfolioId());
+					//map.put("finprodId", dto.getFinprodId());
+					String secAcctId = etrExchangeTradeCommonMapper.qryPortfolioSecAcctId(map);
+					if (StringUtil.isNotEmpty(secAcctId)) {
+						newItem.setSecAcctId(secAcctId); // 证券账户
+					}
+				}
+				newItem.setEntrustNum(item.getEntrustNum());
+				newItem.setEntrustAmt(item.getEntrustAmt());
+				newList.add(newItem);
+			});
+			newDto.setPortfolioList(newList);
+			newGroupMap.put(newDto,newList);
+		});
+		return newGroupMap;
 	}
 
 

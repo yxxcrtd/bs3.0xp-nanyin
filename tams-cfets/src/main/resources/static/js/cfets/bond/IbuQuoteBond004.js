@@ -250,6 +250,9 @@
                 obj.shareAmt =  JoyinMath.doMul(obj.shareAmt,10000);
             });
         }
+        debugger;
+        object.quoteStyle = $("input:radio[name=quoteStyle]:checked").val();
+        debugger;
         Joyin.confirm("是否确认提交?",
             function() {
                 //保存 走流程

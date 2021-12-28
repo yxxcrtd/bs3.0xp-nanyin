@@ -74,7 +74,7 @@
             /* 质押券库代码 */
             field: 'zyqk', width: 200, title: 'EtrIbRepo001.zyqk',
             /* 光大质押券暂时隐藏 */
-            visible: repo_pledge_model=='03'?true:false,
+            visible: repo_pledge_model=='03'&&$("#ps").val()=='03'?true:false,
             edit: true,
             sortable: false,
             editOption: {

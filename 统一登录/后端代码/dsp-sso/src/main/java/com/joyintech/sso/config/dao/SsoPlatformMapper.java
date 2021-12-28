@@ -3,11 +3,9 @@ package com.joyintech.sso.config.dao;
 import com.joyintech.sso.config.dto.SsoPlatformDto;
 import com.joyintech.sso.config.pojo.SsoPlatform;
 import org.apache.ibatis.annotations.*;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
 public interface SsoPlatformMapper {
 
     /**
@@ -15,7 +13,6 @@ public interface SsoPlatformMapper {
      * @param id
      * @return
      */
-    @Select("SELECT * FROM SSO_PLATFORM WHERE ID= #{id} ")
     public SsoPlatform selectSsoPlatfromById(@Param("id") String id);
 
     /**
@@ -29,8 +26,8 @@ public interface SsoPlatformMapper {
      * @param ssoPlatform
      * @return
      */
-    @Insert("INSERT INTO SSO_PLATFORM (ID ,PLATFORM_NAME,PLATFORM_CODE, PLATFORM_URL, WEIGHT, MDTIME, MDUSER, ICON, COOKIE_KEY, REMARK1, REMARK2) "
-            + "VALUES (#{id},#{platformname},#{platformcode},#{platformurl},#{weight},#{mdtime},#{mduser},#{icon},#{cookiekey},#{remark1},#{remark2})")
+    @Insert("INSERT INTO SSO_PLATFORM (ID ,PLATFORM_NAME,PLATFORM_CODE, PLATFORM_URL, WEIGHT, MDTIME, MDUSER, ICON, COOKIE_KEY, REMARK1, REMARK2,SYNC_FLAG,PLATFORM_HOST,DESCRIBE) "
+            + "VALUES (#{id},#{platformname},#{platformcode},#{platformIndex},#{weight},#{mdtime},#{mduser},#{icon},#{cookiekey},#{remark1},#{remark2},#{syncFlag},#{platformHost},#{describe})")
     public int insertSsoPlatform(SsoPlatform ssoPlatform);
 
     /**

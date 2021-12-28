@@ -88,6 +88,10 @@ export default {
         username: '',
         password: ''
       },
+      changeLoginForm: {
+        username: '',
+        password: ''
+      },
       loginRules: {
         username: [{ required: true, trigger: 'blur', message: '请输入用户名或手机号' }],
         password: [{ required: true, trigger: 'blur', message: '请输入密码'}]
@@ -122,10 +126,12 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          let { userName, password} = this.loginForm;
+          let { username, password} = this.loginForm;
           // this.loginForm.username = Encrypt(userName);
-          this.loginForm.password = Encrypt(password);
-          this.$store.dispatch('user/login', this.loginForm).then((res) => {
+          this.changeLoginForm.password = Encrypt(password);
+          this.changeLoginForm.username = username;
+          console.log(this.changeLoginForm)
+          this.$store.dispatch('user/login', this.changeLoginForm).then((res) => {
             this.loading = false
             if (res.code !== 'success') {
               this.loginErrorMsg = res.message || 'Error'

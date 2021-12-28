@@ -5,19 +5,38 @@ server:
   servlet:
     context-path: /joyinsso #兼容SpringBoot2.x
   context-path: /joyinsso   #兼容SpringBoot1.x
-  
+
   tomcat:
-#     最小备用线程数
+    #     最小备用线程数
     min-spare-threads: 10
-#     建议这个配置数可以在服务器CUP核心数的200~250倍之间
+    #     建议这个配置数可以在服务器CUP核心数的200~250倍之间
     max-threads: 50
-#     能够接受的最大等待数
+    #     能够接受的最大等待数
     accept-count: 10
-#     等于max-threads + accept-count
+    #     等于max-threads + accept-count
     max-connections: 3000
 spring:
   application:
     name: data-service-provider
   profiles:
     include:
-    - framework
+      - framework
+sso-sync:
+  pool-size: 10
+  url:
+    department:
+      create: "/api/department/new"
+      modify: "/api/department/update"
+      delete: "/api/department/{code}/delete"
+    institution:
+      create: "/api/institution/new"
+      modify: "/api/institution/update"
+      delete: "/api/institution/{code}/delete"
+    user:
+      create: "/api/user/new"
+      modify: "/api/user/update"
+      delete: "/api/user/{userId}/delete"
+      lock: "/api/user/{userId}/lock"
+      unlock: "/api/user/{userId}/unlock"
+      reset: "/api/user/{userId}/reset"
+      updatePassword: "/api/user/{userId}/updatePassword"

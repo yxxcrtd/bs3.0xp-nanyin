@@ -4,46 +4,55 @@ import com.joyintech.sso.constant.StringConstant;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value="平台管理信息",description="平台管理信息")
+@ApiModel(value = "平台管理信息", description = "平台管理信息")
 public class SsoPlatform {
-    @ApiModelProperty(required = false, name="id",value="平台代码",example="")
+    @ApiModelProperty(required = false, name = "id", value = "平台代码", example = "")
     private String id;
 
-    @ApiModelProperty(required = true, name="platformname",value="平台名称",example="")
+    @ApiModelProperty(required = true, name = "platformname", value = "平台名称", example = "")
     private String platformname;
 
-    @ApiModelProperty(required = true, name="platformurl",value="平台地址",example="")
+    @ApiModelProperty(required = false, name = "platformurl", value = "平台地址", example = "")
     private String platformurl;
 
-    @ApiModelProperty(required = true, name="weight",value="权重",example="1")
+    @ApiModelProperty(required = true, name = "weight", value = "权重", example = "1")
     private Integer weight;
 
-    @ApiModelProperty(required = true, name="status",value="可用状态(0:不可用,1:可用)",example="0")
+    @ApiModelProperty(required = true, name = "status", value = "可用状态(0:不可用,1:可用)", example = "0")
     private Integer status;
 
-    @ApiModelProperty(required = false, name="mdtime",value="创建时间(yyyy-MM-dd HH:mm:ss)",example="")
+    @ApiModelProperty(required = false, name = "mdtime", value = "创建时间(yyyy-MM-dd HH:mm:ss)", example = "")
     private String mdtime;
 
-    @ApiModelProperty(required = false, name="mduser",value="更新人",example="")
+    @ApiModelProperty(required = false, name = "mduser", value = "更新人", example = "")
     private String mduser;
 
-    @ApiModelProperty(required = false, name="icon",value="图标名",example="")
+    @ApiModelProperty(required = false, name = "icon", value = "图标名", example = "")
     private String icon;
 
-    @ApiModelProperty(required = true, name="cookiekey",value="身份标识",example="")
+    @ApiModelProperty(required = true, name = "cookiekey", value = "身份标识", example = "")
     private String cookiekey;
 
-    @ApiModelProperty(required = false, name="remark1",value="备注1",example="")
+    @ApiModelProperty(required = false, name = "remark1", value = "备注1", example = "")
     private String remark1;
 
-    @ApiModelProperty(required = false, name="remark2",value="备注2",example="")
+    @ApiModelProperty(required = false, name = "remark2", value = "备注2", example = "")
     private String remark2;
 
-    @ApiModelProperty(required = true, name="platformcode",value="平台编码",example="")
+    @ApiModelProperty(required = true, name = "platformcode", value = "平台编码", example = "")
     private String platformcode;
 
-    @ApiModelProperty(required = false, name="describe",value="描述",example="")
+    @ApiModelProperty(required = false, name = "describe", value = "描述", example = "")
     private String describe;
+
+    @ApiModelProperty(required = false, name = "syncFlag", value = "是否同步机构、部门、用户信息", example = "")
+    public Integer syncFlag;
+
+    @ApiModelProperty(required = true, name = "platformHost", value = "平台主机", example = "")
+    private String platformHost;
+
+    @ApiModelProperty(required = false, name = "platformIndex", value = "平台主页", example = "")
+    private String platformIndex;
 
     public String getId() {
         return id;
@@ -62,7 +71,7 @@ public class SsoPlatform {
     }
 
     public String getPlatformurl() {
-        return platformurl;
+        return platformHost + platformIndex;
     }
 
     public void setPlatformurl(String platformurl) {
@@ -147,5 +156,29 @@ public class SsoPlatform {
 
     public void setDescribe(String describe) {
         this.describe = describe;
+    }
+
+    public Integer getSyncFlag() {
+        return syncFlag;
+    }
+
+    public void setSyncFlag(Integer syncFlag) {
+        this.syncFlag = syncFlag;
+    }
+
+    public String getPlatformHost() {
+        return platformHost;
+    }
+
+    public void setPlatformHost(String platformHost) {
+        this.platformHost = platformHost;
+    }
+
+    public String getPlatformIndex() {
+        return platformIndex;
+    }
+
+    public void setPlatformIndex(String platformIndex) {
+        this.platformIndex = platformIndex;
     }
 }

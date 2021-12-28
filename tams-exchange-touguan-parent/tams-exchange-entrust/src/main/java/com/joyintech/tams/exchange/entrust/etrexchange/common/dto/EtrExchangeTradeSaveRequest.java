@@ -96,7 +96,7 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
     /**
      * 可用持仓
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
+    @ApiModelProperty(name="accAvailablePos",value="可用持仓",example="")
     private BigDecimal accAvailablePos;
 
     @ApiModelProperty(name="businessTypeName",value="业务类型名称",example="")
@@ -220,7 +220,7 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
     private List<RiskTrialRetDto> riskTrialRetDto;
 
     @ApiModelProperty(required = true,name="portfolioList",value="组合列表",example="[{'portfolioId':'qwqw'}]]")
-    List<EtrExchangeTradePortfolioRequest> portfolioList;
+    List<EtrExchangeTradeSaveRequest> portfolioList;
     
 
 
@@ -260,11 +260,11 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
         this.fprice = fprice;
     }
 
-    public List<EtrExchangeTradePortfolioRequest> getPortfolioList() {
+    public List<EtrExchangeTradeSaveRequest> getPortfolioList() {
         return portfolioList;
     }
 
-    public void setPortfolioList(List<EtrExchangeTradePortfolioRequest> portfolioList) {
+    public void setPortfolioList(List<EtrExchangeTradeSaveRequest> portfolioList) {
         this.portfolioList = portfolioList;
     }
 

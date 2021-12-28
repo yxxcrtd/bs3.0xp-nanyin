@@ -660,10 +660,15 @@ public class IbuQuoteRepoService extends BaseService {
      */
     public List<DealTransactionDetailsDto> listDealTransactionDetails(String entrustId) {
         Map<String, Object> param = new HashMap<>();
+        String loginUserId = LoginUserUtil.getUserName();
         param.put("entrustId", entrustId);
         param.put("rolePos03", DictCodeListExt2.角色岗位_交易处长.getValue());
         param.put("loginUserId", LoginUserUtil.getUserName());
-//        param.put("loginUserId", "li02"/*LoginUserUtil.getUserName()*/);//TODO 测试写死登录用户 提交代码时修改
+        param.put("loginUserId", loginUserId);
+//        if("admin".equals(loginUserId)){
+//            loginUserId = "li02";//TODO 测试写死登录用户 提交代码时修改
+//        }
+        param.put("loginUserId", loginUserId);
         return cfetsIbuQuoteRepoMapper.listDealTransactionDetails(param);
     }
 
@@ -1298,6 +1303,10 @@ public class IbuQuoteRepoService extends BaseService {
      * @date 2021/12/4 16:17
      */
     private void setParam(Map<String, Object> param, int type) {
+        String loginUserId = LoginUserUtil.getUserName();
+//        if("admin".equals(loginUserId)){
+//            loginUserId = "li02";//TODO 测试写死登录用户 提交代码时修改
+//        }
         if (type == 1) {
             param.put("finprodType2_F02", BussinessDictCodeList.金融产品类型_债券质押式正回购.getValue());
             param.put("finprodType2_F03", BussinessDictCodeList.金融产品类型_债券质押式逆回购.getValue());
@@ -1310,16 +1319,16 @@ public class IbuQuoteRepoService extends BaseService {
             param.put("secAcctSource", BussinessDictCodeList.账户来源_自营.getValue());
             param.put("ps_03", DictCodeListExt3.交易方向_正回购.getValue());
             param.put("ps_04", DictCodeListExt3.交易方向_逆回购.getValue());
-            param.put("loginUserId", LoginUserUtil.getUserName());
-//            param.put("loginUserId", "li02"/*LoginUserUtil.getUserName()*/);//TODO 测试写死登录用户 提交代码时修改
+            param.put("loginUserId", loginUserId);
         } else if (type == 2) {
             param.put("platDate", iPlatformDate.getSysDateStr());
             param.put("POSITION_TYPE_01", DictCodeList.持仓类型_可用.getValue());
             param.put("POSITION_TYPE_03", DictCodeList.持仓类型_实际.getValue());
             param.put("POSITION_TYPE_04", DictCodeList.持仓类型_质押.getValue());
             param.put("POSITION_TYPE_05", DictCodeList.持仓类型_融入.getValue());
-            param.put("loginUserId", LoginUserUtil.getUserName());
-//            param.put("loginUserId", "jp"/*LoginUserUtil.getUserName()*/);//TODO 测试写死登录用户 提交代码时修改
+            param.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+            param.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+            param.put("loginUserId", loginUserId);
             param.put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue());
             param.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
             //银行间质押式回购质押券模式：01无质押券库，02单个质押库，03多个质押券库
@@ -1332,8 +1341,7 @@ public class IbuQuoteRepoService extends BaseService {
             param.put("TRADEPLACE01", DictCodeListExt1.交易场所_银行间.getValue());
             param.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
             param.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
-            param.put("loginUserId", LoginUserUtil.getUserName());
-//            param.put("loginUserId", "li02"/*LoginUserUtil.getUserName()*/);//TODO 测试写死登录用户 提交代码时修改
+            param.put("loginUserId", loginUserId);
             param.put("plateDate", iPlatformDate.getSysDateStr());
         }
     }
@@ -1459,24 +1467,24 @@ public class IbuQuoteRepoService extends BaseService {
         }
         // 交易方向+清算速度+回购期限+交易对手+证券账户+交易账户 不一致时提示
         if (StringUtil.isNotEmpty(message)) {
-            ajaxResult.setMessage(this.getMessage("IBU_QUOTE_REPO_1", message));
+            ajaxResult.setMessage("所选指令不满足汇总条件：" + message + "不同");
             return ajaxResult;
         }
         // 指定价格的回购利率必须一致
         if (!yieldFlag) {
-            ajaxResult.setMessage(this.getMessage("IBU_QUOTE_REPO_2"));
+            ajaxResult.setMessage("存在多条指定价格指令，回购利率需一致");
             return ajaxResult;
         }
         // 交易方式为正回购时,指定价格的回购利率需小于等于所有限价指令的回购利率中的最小值
         if (yieldPRM01 != null && minOrMaxYield != null && yieldPRM01.compareTo(minOrMaxYield) > 0
                 && StringUtil.equals(ps, DictCodeListExt3.交易方向_正回购.getValue())) {
-            ajaxResult.setMessage(this.getMessage("IBU_QUOTE_REPO_3"));
+            ajaxResult.setMessage("同时存在指定价格指令和限价指令，指定价格指令不能大于限价指令中回购利率的最小值");
             return ajaxResult;
         }
         // 交易方式为逆回购时，指定价格的回购利率需大于等于所有限价指令的回购利率中的最大值
         if (yieldPRM01 != null && minOrMaxYield != null && yieldPRM01.compareTo(minOrMaxYield) < 0
                 && StringUtil.equals(ps, DictCodeListExt3.交易方向_逆回购.getValue())) {
-            ajaxResult.setMessage(this.getMessage("IBU_QUOTE_REPO_4"));
+            ajaxResult.setMessage("同时存在指定价格和限价指令，指定价格指令不能小于限价指令中回购利率的最大值");
             return ajaxResult;
         }
         // 勾选指令的价格模式只存在指定价格或同时存在指定价格和限价指令时,返回指定价格指令中的回购利率
@@ -2027,25 +2035,5 @@ public class IbuQuoteRepoService extends BaseService {
         req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
         PositionHttpRequest.batchClose(req);
     }
-
-
-//    public List<CfetsRepoDayPriceDto> listDayPrice(Map<String, Object> param) {
-//        List<CfetsRepoDayPriceDto> result = new ArrayList<>();
-//        List<BondQuoteInfoDto> dayOfferTableList = getDayOfferTableList(param);
-//        if(CollectionUtils.isNotEmpty(dayOfferTableList)){
-//            dayOfferTableList.forEach(item ->{
-//                CfetsRepoDayPriceDto cfetsBondDayPriceDto = new CfetsRepoDayPriceDto();
-//                BeanUtil.copyPropertiesIgnoreNull(cfetsBondDayPriceDto,item);
-//                cfetsBondDayPriceDto.setOuPartyName(item.getPartyAbbr());
-//                cfetsBondDayPriceDto.setCpPartyName(item.getCpPartyName());
-//                cfetsBondDayPriceDto.setPrice(item.getUnitCprice());
-//                cfetsBondDayPriceDto.setMatureYield(item.getYield());
-//                cfetsBondDayPriceDto.setShareAmt(item.getPrinAmtHun());
-//                cfetsBondDayPriceDto.setExecid(item.getfTradeId());
-//                result.add(cfetsBondDayPriceDto);
-//            });
-//        }
-//        return result;
-//    }
 }
 

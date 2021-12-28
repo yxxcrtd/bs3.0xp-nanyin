@@ -532,10 +532,8 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             if (StringUtil.isNotEmpty(cfetsRepoDealDbDto.getFinTradeProduct())) {
                 finTradeProductMapper.insertSelective(cfetsRepoDealDbDto.getFinTradeProduct());
             }
-            if (StringUtil.equals("submit", entity.getOperatorType())) {
-                //头寸
-                sendPositionMethod(entity, cfetsRepoDealDbDto);
-            }
+            //头寸
+            sendPositionMethod(entity, cfetsRepoDealDbDto);
         }
 //        if(StringUtil.isNotEmpty(type)){
 //            throw new RuntimeException("cs by jp");
@@ -1152,14 +1150,16 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             }
         }
     }
+
     /**
      * 头寸处理
-     * @author jiangpeng
-     * @date 2021/12/24 10:12
+     *
      * @param cfetsRepoDealRegisterQuoteDto
      * @param cfetsRepoDealDbDto
+     * @author jiangpeng
+     * @date 2021/12/24 10:12
      */
-    private void sendPositionMethod(CfetsRepoDealRegisterQuoteDto cfetsRepoDealRegisterQuoteDto, CfetsRepoDealDbDto cfetsRepoDealDbDto) {
+    private void sendPositionMethod(CfetsRepoDealRegisterQuoteDto entity, CfetsRepoDealDbDto cfetsRepoDealDbDto) {
         List<CfetsEtrIbRepoPosPortfolioCashRequest> ptlCashList = new ArrayList<>();
         List<CfetsEtrIbRepoPosPortfolioSecRequest> ptlSecList = new ArrayList<>();
         RegFinProductDealTotal dealTotal = cfetsRepoDealDbDto.getRegFinProductDealTotal();
@@ -1169,6 +1169,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             CfetsEtrIbRepoPosPortfolioCashRequest posport = new CfetsEtrIbRepoPosPortfolioCashRequest();
             posport.setPortfolioId(dto.getPortfolioId());
             posport.setEtrId(dto.getEntrustId());
+            posport.setTradeId(dto.getTradeId());
             if (StringUtil.isNotEmpty(dto.getPortfolioId())) {
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("portfolioId", dto.getPortfolioId());
@@ -1188,6 +1189,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     CfetsEtrIbRepoPosPortfolioSecRequest secport = new CfetsEtrIbRepoPosPortfolioSecRequest();
                     secport.setPortfolioId(regFinPledge.getPortfolioId());
                     secport.setEtrId(regFinPledge.getEntrustId());
+                    secport.setTradeId(dto.getTradeId());
                     secport.setFinprodId(regFinPledge.getPledgeFinprodId());
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("portfolioId", regFinPledge.getPortfolioId());
@@ -1211,14 +1213,14 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
         req.setModelType(DictCodeListExt1.子系统代码_交易.getValue());
         String balanceCheck = "Y";
-//        if(StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(),"Y")){
-//            balanceCheck="N";
-//        }
+        if (StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(), "Y")) {
+            balanceCheck = "N";
+        }
         req.setRepoPledgeModel(CacheUtil.getSysParam("repo_pledge_model"));
         req.setBalanceCheck(balanceCheck);
         req.setBusiType(DictCodeListExt3.头寸业务类型_质押式回购首期.getValue());
         req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
-        req.setSettleSpeed(cfetsRepoDealRegisterQuoteDto.getSettleSpreedCode());
+        req.setSettleSpeed(entity.getSettleSpreedCode());
         req.setBusiAct(DictCodeListExt3.业务动作_交易登记.getValue());
         req.setPs(dealTotal.getPs());
         req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
@@ -1261,13 +1263,18 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      * @date 2021/12/11 16:17
      */
     private void setParam(Map<String, Object> param) {
+        String loginUserId = LoginUserUtil.getUserName();
         param.put("platDate", iPlatformDate.getSysDateStr());
         param.put("POSITION_TYPE_01", DictCodeList.持仓类型_可用.getValue());
         param.put("POSITION_TYPE_03", DictCodeList.持仓类型_实际.getValue());
         param.put("POSITION_TYPE_04", DictCodeList.持仓类型_质押.getValue());
         param.put("POSITION_TYPE_05", DictCodeList.持仓类型_融入.getValue());
-        param.put("loginUserId", LoginUserUtil.getUserName());
-//        param.put("loginUserId", "li02"/*LoginUserUtil.getUserName()*/);//TODO 测试写死登录用户 提交代码时修改
+        param.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        param.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+//        if ("admin".equals(loginUserId)) {
+//            loginUserId = "li02";//TODO 测试写死登录用户 提交代码时修改
+//        }
+        param.put("loginUserId", loginUserId);
         param.put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue());
         param.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
         //银行间质押式回购质押券模式：01无质押券库，02单个质押库，03多个质押券库

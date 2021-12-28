@@ -180,8 +180,8 @@
                     SELECT real_name
                     FROM SYS_USER
                     WHERE user_name = ETR_ENTRUST.INV_MANAGER_ID)                                             invManagerName/*投资经理名称*/
-                , MST_CFETS_CI.PARTY_ID                                                                       counterId/* 交易对手*/
-                , MST_CFETS_CI.PARTY_ABBR                                                                     counterName/* 交易对手名称*/
+                , MCP.COUNTER_ID                                                                              counterId/* 交易对手*/
+                , MCP.COUNTER_NAME                                                                            counterName/* 交易对手名称*/
                 , ETR_ENTRUST.ENTRUST_DATE                                                                    ENTRUST_DATE/* 指令日期*/
                 , to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME, 'hh24:mi:ss')                                        TRANSMIT_TIME/* 指令下达时间*/
                 , ETR_ENTRUST.ENTRUST_ID                                                                      entrustId/*指令代码*/
@@ -266,8 +266,6 @@
                 ON MST_CFETS_CT.TRADER_ID = ETR_ENTRUST.COUNTER_TRADER
             LEFT JOIN MST_COUNTER_PARTY MCP
                 ON MCP.COUNTER_ID = ETR_ENTRUST.COUNTER_ID
-            LEFT JOIN MST_CFETS_CUSTOMER_INFO MST_CFETS_CI
-                ON MST_CFETS_CI.PARTY_NAME = MCP.COUNTER_NAME
         <if test="repo_pledge_model != null and repo_pledge_model == '02'">
             LEFT JOIN
             (
@@ -418,7 +416,7 @@
                 </if>
                 <if test="partyId != null and partyId !='' ">
                     /* 查询条件 交易对手*/
-                    AND ( MST_CFETS_CI.PARTY_ID = #{partyId} OR MST_CFETS_CI.PARTY_ID IS NULL)
+                    AND ( MCP.PARTY_ID = #{partyId} OR MCP.PARTY_ID IS NULL OR MCP.COUNTER_ID = #{partyId} )
                 </if>
                 <if test="tradeYield != null and tradeYield !='' ">
                     /* 查询条件 回购利率*/
@@ -453,8 +451,8 @@
                         OR to_char(ETR_ENTRUST_ADD.TERM_DAYS) = #{search} /*回购期限*/
                         OR to_char(ETR_ENTRUST.PRICE) = #{search} /*回购利率*/
                         OR ETR_ENTRUST.INV_MANAGER_ID LIKE '%' || #{search} || '%' /*投资经理*/
-                        OR MST_CFETS_CI.PARTY_ID LIKE '%' || #{search} || '%'  /*交易对手*/
-                        OR MST_CFETS_CI.PARTY_ABBR LIKE '%' || #{search} || '%' /*交易对手*/
+                        OR MCP.COUNTER_ID LIKE '%' || #{search} || '%'  /*交易对手*/
+                        OR MCP.COUNTER_NAME LIKE '%' || #{search} || '%' /*交易对手*/
                         OR to_char(ETR_ENTRUST.ENTRUST_DATE,'yyyy-MM-dd') = #{search} /*指令日期*/
                         OR to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME, 'hh24:mi:ss') = #{search} /*下达时间*/
                         OR ETR_ENTRUST.ENTRUST_ID LIKE '%' || #{search} || '%' /*指令代码*/
@@ -598,8 +596,33 @@
             AND GRADE_ORG_ID !='22'
         ) MBCR
             ON MBCR.O_CODE = fp.FINPROD_MARKET_ID AND MBCR.NUM = 1
-        LEFT JOIN MST_BOND_VALUATION_INFO mbvi
-            ON mbvi.SEC_ID = fp.FINPROD_MARKET_ID AND mbvi.VALUE_DATE <![CDATA[<=]]> TO_DATE(#{platDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
+		LEFT JOIN (
+            SELECT
+                T2.SEC_ID,
+                T2.PRICE,
+                T2.NETPRICE
+            FROM (
+                SELECT
+                    tmp1.SEC_ID,
+                    tmp1.value_source,
+                    MAX(tmp1.value_date) AS value_date
+                FROM MST_BOND_VALUATION_INFO tmp1
+                LEFT JOIN FIN_PRODUCT tmp2
+                    ON tmp1.sec_id = tmp2.finprod_market_id
+                WHERE 1 = 1
+                    AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+                    AND tmp1.value_source = (
+                                                CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN 'CSD'
+                                                ELSE 'CBC'
+                                            END)
+                GROUP BY tmp1.sec_id, tmp1.value_source
+            ) T1
+            LEFT JOIN MST_BOND_VALUATION_INFO T2
+                ON T1.SEC_ID = T2.SEC_ID
+                AND T1.value_source = T2.value_source
+                AND T1.VALUE_DATE = T2.VALUE_DATE
+		) mbvi/*以上获取债券小于等于平台日的最新估值行情*/
+		    ON fp.FINPROD_MARKET_ID = mbvi.SEC_ID
         <where>
             <if test="finprodId !=null and finprodId !=''">
                 and fp.FINPROD_ID =#{finprodId, jdbcType=VARCHAR}
@@ -841,19 +864,33 @@
             FROM FIN_PRODUCT fp
            INNER JOIN  FIN_PRODUCT_TYPE FPT
                ON  FPT.FINPROD_ID = fp.FINPROD_ID
-           LEFT JOIN MST_BOND_VALUATION_INFO mbvi
-                ON mbvi.SEC_ID = fp.FINPROD_MARKET_ID
-                AND mbvi.VALUE_DATE <![CDATA[<=]]> TO_DATE(#{platDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
-                AND NOT EXISTS (
-                                   SELECT
-                                      1
-                                   FROM
-                                      MST_BOND_VALUATION_INFO mbviInner
-                                   WHERE
-                                       mbviInner.SEC_ID = fp.FINPROD_MARKET_ID
-                                       AND mbviInner.VALUE_DATE <![CDATA[<=]]> TO_DATE(#{platDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
-                                       AND mbviInner.VALUE_DATE > mbvi.VALUE_DATE
-                                   )
+            LEFT JOIN (
+                SELECT
+                    T2.SEC_ID,
+                    T2.PRICE,
+                    T2.NETPRICE
+                FROM (
+                    SELECT
+                        tmp1.SEC_ID,
+                        tmp1.value_source,
+                        MAX(tmp1.value_date) AS value_date
+                    FROM MST_BOND_VALUATION_INFO tmp1
+                    LEFT JOIN FIN_PRODUCT tmp2
+                        ON tmp1.sec_id = tmp2.finprod_market_id
+                    WHERE 1 = 1
+                        AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+                        AND tmp1.value_source = (
+                                                    CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN 'CSD'
+                                                    ELSE 'CBC'
+                                                END)
+                    GROUP BY tmp1.sec_id, tmp1.value_source
+                ) T1
+                LEFT JOIN MST_BOND_VALUATION_INFO T2
+                    ON T1.SEC_ID = T2.SEC_ID
+                    AND T1.value_source = T2.value_source
+                    AND T1.VALUE_DATE = T2.VALUE_DATE
+            ) mbvi/*以上获取债券小于等于平台日的最新估值行情*/
+                ON fp.FINPROD_MARKET_ID = mbvi.SEC_ID
             <where>
                 fp.VDATE <![CDATA[<=]]>TO_DATE(#{platDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
                 AND fp.MDATE <![CDATA[>=]]>TO_DATE(#{platDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
@@ -1006,19 +1043,33 @@
             ) MBCR
                 ON MBCR.O_CODE = fp.FINPROD_MARKET_ID
                 AND MBCR.NUM = 1
-           LEFT JOIN MST_BOND_VALUATION_INFO mbvi
-                ON mbvi.SEC_ID = fp.FINPROD_MARKET_ID
-                AND mbvi.VALUE_DATE <![CDATA[<=]]> TO_DATE(#{platDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
-                AND NOT EXISTS (
-                                   SELECT
-                                      1
-                                   FROM
-                                      MST_BOND_VALUATION_INFO mbviInner
-                                   WHERE
-                                       mbviInner.SEC_ID = fp.FINPROD_MARKET_ID
-                                       AND mbviInner.VALUE_DATE <![CDATA[<=]]> TO_DATE(#{platDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
-                                       AND mbviInner.VALUE_DATE > mbvi.VALUE_DATE
-                                   )
+            LEFT JOIN (
+                SELECT
+                    T2.SEC_ID,
+                    T2.PRICE,
+                    T2.NETPRICE
+                FROM (
+                    SELECT
+                        tmp1.SEC_ID,
+                        tmp1.value_source,
+                        MAX(tmp1.value_date) AS value_date
+                    FROM MST_BOND_VALUATION_INFO tmp1
+                    LEFT JOIN FIN_PRODUCT tmp2
+                        ON tmp1.sec_id = tmp2.finprod_market_id
+                    WHERE 1 = 1
+                        AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+                        AND tmp1.value_source = (
+                                                    CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN 'CSD'
+                                                    ELSE 'CBC'
+                                                END)
+                    GROUP BY tmp1.sec_id, tmp1.value_source
+                ) T1
+                LEFT JOIN MST_BOND_VALUATION_INFO T2
+                    ON T1.SEC_ID = T2.SEC_ID
+                    AND T1.value_source = T2.value_source
+                    AND T1.VALUE_DATE = T2.VALUE_DATE
+            ) mbvi/*以上获取债券小于等于平台日的最新估值行情*/
+                ON fp.FINPROD_MARKET_ID = mbvi.SEC_ID
             <where>
                 <if test="finprodIdList != null and finprodIdList.size() > 0">
                     AND fp.FINPROD_ID in
@@ -2075,19 +2126,33 @@
             and GRADE_ORG_ID !='22'
         ) MBCR
             ON MBCR.O_CODE = fp.FINPROD_MARKET_ID AND MBCR.NUM = 1
-       LEFT JOIN MST_BOND_VALUATION_INFO mbvi
-            ON mbvi.SEC_ID = fp.FINPROD_MARKET_ID
-            AND mbvi.VALUE_DATE <![CDATA[<=]]> TO_DATE(#{platDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
-            AND NOT EXISTS (
-                               SELECT
-                                  1
-                               FROM
-                                  MST_BOND_VALUATION_INFO mbviInner
-                               WHERE
-                                   mbviInner.SEC_ID = fp.FINPROD_MARKET_ID
-                                   AND mbviInner.VALUE_DATE <![CDATA[<=]]> TO_DATE(#{platDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
-                                   AND mbviInner.VALUE_DATE > mbvi.VALUE_DATE
-                               )
+		LEFT JOIN (
+            SELECT
+                T2.SEC_ID,
+                T2.PRICE,
+                T2.NETPRICE
+            FROM (
+                SELECT
+                    tmp1.SEC_ID,
+                    tmp1.value_source,
+                    MAX(tmp1.value_date) AS value_date
+                FROM MST_BOND_VALUATION_INFO tmp1
+                LEFT JOIN FIN_PRODUCT tmp2
+                    ON tmp1.sec_id = tmp2.finprod_market_id
+                WHERE 1 = 1
+                    AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+                    AND tmp1.value_source = (
+                                                CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN 'CSD'
+                                                ELSE 'CBC'
+                                            END)
+                GROUP BY tmp1.sec_id, tmp1.value_source
+            ) T1
+            LEFT JOIN MST_BOND_VALUATION_INFO T2
+                ON T1.SEC_ID = T2.SEC_ID
+                AND T1.value_source = T2.value_source
+                AND T1.VALUE_DATE = T2.VALUE_DATE
+		) mbvi/*以上获取债券小于等于平台日的最新估值行情*/
+		    ON fp.FINPROD_MARKET_ID = mbvi.SEC_ID
         LEFT JOIN FIN_PRODUCT pfp ON pledge.portfolioId = pfp.FINPROD_MARKET_ID
 
     </select>

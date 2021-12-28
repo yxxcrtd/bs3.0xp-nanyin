@@ -64,15 +64,20 @@ i,cite,em,var,address,dfn { font-style:normal;}
 .plat-list-item > a{
   padding-top:40px;
 }
-.plat-list-item:nth-child(6n + 1){
-  width:320px; height: 560px;
+.plat-list-item:nth-child(4n + 7){
+  width:260px; height: 200px;
   margin-left: 0;
 }
-.plat-list-item:nth-child(6n + 1) > a { padding-top:150px;}
-.plat-list-item:nth-child(6n + 3){
+.plat-list-item:nth-child(4n + 7) > a { padding-top:30px;}
+.plat-list-item:nth-child(3){
   width:600px; height: 260px;
 }
-.plat-list-item:nth-child(6n + 4),.plat-list-item:nth-child(6n + 5),.plat-list-item:nth-child(6n + 6){
+.plat-list-item:nth-child(1){
+  margin-left: 0;
+  width:260px; height:560px;
+}
+.plat-list-item:nth-child(1) a { padding-top:150px;}
+.plat-list-item:nth-child(4),.plat-list-item:nth-child(5),.plat-list-item:nth-child(6){
   margin-top: 40px;
 }
 .plat-list-item span { display:block;}
@@ -304,29 +309,32 @@ plat-list-item .joyin-unify-hd { padding:30px 20px;}
   .plat-list-item > a{
     padding-top: 30px;
   }
-  .plat-list-item:nth-child(6n + 4),.plat-list-item:nth-child(6n + 5),.plat-list-item:nth-child(6n + 6){
+  .plat-list-item:nth-child(4),.plat-list-item:nth-child(5),.plat-list-item:nth-child(6){
     margin-top: 20px;
   }
-  .plat-list-item:nth-child(6n + 3){
+  .plat-list-item:nth-child(3){
     width:500px; height:200px;
   }
-  .plat-list-item:nth-child(6n + 1){
+  .plat-list-item:nth-child(1){
     margin-left: 0;
     width:260px; height:420px;
   }
-  .plat-list-item:nth-child(6n + 1) > a{
+  .plat-list-item:nth-child(1) > a{
     padding-top:120px;
   }
-  .plat-list-item:nth-child(6n + 7){
+  .plat-list-item:nth-child(4n + 7){
     margin-top: 20px;
   }
-  .plat-list-item:nth-child(6n + 8){
+  .plat-list-item:nth-child(4n + 8){
     margin-top: 20px;
   }
-  .plat-list-item:nth-child(6n + 9){
+  .plat-list-item:nth-child(4n + 9){
+    margin-top: 20px;
+  }
+  .plat-list-item:nth-child(4n + 10){
     margin-top: 20px;
   }
   .joyin-unify-hd { margin:0 auto 20px auto; width:100px; line-height:100px; height:100px;}
   .plat-list-item a span { font-size:20px;}
-  .joyin-sltsys img { width:240px; }
+  .joyin-sltsys img { width:240px; margin-right: 120px; margin-top: 20px;}
 }

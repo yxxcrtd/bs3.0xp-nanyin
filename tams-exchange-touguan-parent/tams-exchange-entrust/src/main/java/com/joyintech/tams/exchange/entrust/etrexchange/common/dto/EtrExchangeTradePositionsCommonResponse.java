@@ -79,9 +79,12 @@ public class EtrExchangeTradePositionsCommonResponse {
     @ApiModelProperty(name="price",value="最新价",example="12")
     private BigDecimal price;
     
-    @ApiModelProperty(name="floatingPL",value="浮动盈亏",example="12")
+    @ApiModelProperty(name="floating",value="浮动盈亏",example="12")
+    private BigDecimal floating;
+
+    @ApiModelProperty(name="floatingPL",value="盈亏比例",example="12")
     private BigDecimal floatingPL;
-    
+
     @ApiModelProperty(name="repoNum",value="质押数量",example="12")
     private BigDecimal repoNum;
 
@@ -268,5 +271,13 @@ public class EtrExchangeTradePositionsCommonResponse {
 
     public void setCanUseSecNum(BigDecimal canUseSecNum) {
         this.canUseSecNum = canUseSecNum;
+    }
+
+    public BigDecimal getFloating() {
+        return floating;
+    }
+
+    public void setFloating(BigDecimal floating) {
+        this.floating = floating;
     }
 }
