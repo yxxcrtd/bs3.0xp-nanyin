@@ -115,10 +115,10 @@ export default {
           src: require('@/assets/public/images/fp-logo.png'),
         },
         {
-          src: require('@/assets/public/images/dsp-logo.png'),
+          src: require('@/assets/public/images/Ip-logo.png'),
         },
         {
-          src: require('@/assets/public/images/Ip-logo.png'),
+          src: require('@/assets/public/images/dsp-logo.png'),
         },
         {
           src: require('@/assets/public/images/fp-logo.png'),
