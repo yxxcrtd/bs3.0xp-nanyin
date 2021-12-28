@@ -21,6 +21,11 @@ public class StlSettleTransDataGatherDto extends BaseEntity {
     private String cjbh;
 
     /**
+     * 首期成交编号
+     */
+    private String fCjbh;
+
+    /**
      * 执行日期
      */
     private Date dealDate;
@@ -1725,5 +1730,13 @@ public class StlSettleTransDataGatherDto extends BaseEntity {
 
     public void setCheckResult(String checkResult) {
         this.checkResult = checkResult;
+    }
+
+    public String getfCjbh() {
+        return fCjbh;
+    }
+
+    public void setfCjbh(String fCjbh) {
+        this.fCjbh = fCjbh;
     }
 }

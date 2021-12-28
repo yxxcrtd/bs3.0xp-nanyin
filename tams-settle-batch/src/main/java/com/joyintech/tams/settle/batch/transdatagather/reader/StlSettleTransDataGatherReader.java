@@ -510,25 +510,27 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                             if(StringUtil.equals(item.getBusiSceneCalss(), DictCodeListStl.业务场景分类明细_债券协议正回购_到期.getValue())
                                     ||StringUtil.equals(item.getBusiSceneCalss(), DictCodeListStl.业务场景分类明细_债券协议逆回购_到期.getValue())){
                                 //到期交付日
-                                dealTotal.setMpayDate(item.getMpayDate());
+                                dealTotal.setMpayDate(item.getVdate());
                                 //到期本金
                                 dealTotal.setmPrinAmt(item.getPrinAmt());
                                 //到期利息
                                 dealTotal.setmIntAmt(item.getIntAmt());
                                 //到期金额
                                 dealTotal.setmTradeAmt(item.getmTradeAmt());
+                                //首期成交编号
+                                dealTotal.setfCjbh(item.getfCjbh());
                             }
                             //当笔成交数据明细.质押品信息流水号 非空
                             if(StringUtil.isNotEmpty(item.getPledgeTradeId())){
                                 SettleTransDataTotalPledge settleTransDataTotalPledge = new SettleTransDataTotalPledge();
                                 settleTransDataTotalPledge.setTradeId(dealTotal.getSeqId());
-                                settleTransDataTotalPledge.setBranch(dealTotal.getBranch());
-                                settleTransDataTotalPledge.setPledgeFinprodId(settleTransDataDto.getPledgeFinprodId());
-                                settleTransDataTotalPledge.setPledgeFaceValue(settleTransDataDto.getPledgeFaceValue());
-                                settleTransDataTotalPledge.setPledgeNumber(settleTransDataDto.getPledgeNumber());
-                                settleTransDataTotalPledge.setPledgeRatio(settleTransDataDto.getPledgeRatio());
-                                settleTransDataTotalPledge.setPledgeAmt(settleTransDataDto.getPledgeAmt());
-                                settleTransDataTotalPledge.setDisplaceDirection(settleTransDataDto.getDisplaceDirection());
+                                settleTransDataTotalPledge.setBranch(item.getBranch());
+                                settleTransDataTotalPledge.setPledgeFinprodId(item.getPledgeFinprodId());
+                                settleTransDataTotalPledge.setPledgeFaceValue(item.getPledgeFaceValue());
+                                settleTransDataTotalPledge.setPledgeNumber(item.getPledgeNumber());
+                                settleTransDataTotalPledge.setPledgeRatio(item.getPledgeRatio());
+                                settleTransDataTotalPledge.setPledgeAmt(item.getPledgeAmt());
+                                settleTransDataTotalPledge.setDisplaceDirection(item.getDisplaceDirection());
                                 settleTransDataPledgeList.add(settleTransDataTotalPledge);
                             }
                         }

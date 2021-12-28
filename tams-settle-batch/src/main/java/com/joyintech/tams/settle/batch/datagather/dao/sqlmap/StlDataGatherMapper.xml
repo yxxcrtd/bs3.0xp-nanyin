@@ -4,6 +4,7 @@
 	<sql id="settleTransDataTotalSql">
 		std.SEQ_ID TRADE_ID,
 			/*std.CJBH CJBH,*/
+			std.F_CJBH,
 			std.DEAL_DATE DEAL_DATE,
 			std.SEC_TYPE SEC_TYPE,
 			std.APPLY_TRADE_ID APPLY_TRADE_ID,

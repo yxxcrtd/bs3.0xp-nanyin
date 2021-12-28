@@ -90,7 +90,7 @@ public class ExchangeTransMatchRepo3Service extends ExchangeTransMatchRepoCommon
         // 业务类型
         dealTotal.setBusiType(null);
         // 金融产品代码
-        TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getVdate(),entrustDto.getPortfolioId());
+        TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getMpayDate(),entrustDto.getPortfolioId());
         if(StringUtil.isNotEmpty(firstRepoTrade)) {
             //金融产品代码
             dealTotal.setFinprodId(firstRepoTrade.getFinprodId());

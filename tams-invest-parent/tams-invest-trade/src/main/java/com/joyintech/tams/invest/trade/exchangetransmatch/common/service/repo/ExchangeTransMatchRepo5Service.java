@@ -101,7 +101,7 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
         // 业务类型
         dealTotal.setBusiType(DictCodeList.共通业务类型_质押式回购存续期.getValue());
         // 金融产品代码
-        TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getVdate(),entrustDto.getPortfolioId());
+        TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getMpayDate(),entrustDto.getPortfolioId());
         if(StringUtil.isNotEmpty(firstRepoTrade)) {
             //金融产品代码
             dealTotal.setFinprodId(firstRepoTrade.getFinprodId());
@@ -224,7 +224,7 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
                 trdProductDeal.setFinprodId(trdProductDeal.getTradeId());
             }
             else {
-                trdProductDeal.setFinprodId(settleTransData.getFinprodId());
+                trdProductDeal.setFinprodId(trdFinProductDealTotal.getFinprodId());
             }
             // 金融产品类型
             trdProductDeal.setFinprodType(settleTransData.getFinprodType());

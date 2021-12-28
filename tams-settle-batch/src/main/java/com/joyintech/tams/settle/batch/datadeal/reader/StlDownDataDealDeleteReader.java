@@ -79,6 +79,7 @@ public class StlDownDataDealDeleteReader extends BaseReader<StlDownDataDealDelet
 			otherBusinessTypeList = Arrays.asList(DictCodeListExt3.金融产品其他代码类型_配债代码.getValue());
 			xgsgBusinessTypeList = Arrays.asList(DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
 
+			// 删除清算相关表
 			List<SettleTransDataTotalMatch> settleTransDataTotalMatches = stlDownDataDealService.selectNeedRevokeSettleTransDataTotals(
 					execInfo.getExecuteDate(), portfolioIdList, secTypeList);
 			stlDownDataDealService.transactionMacthRevokeBatch(settleTransDataTotalMatches);
