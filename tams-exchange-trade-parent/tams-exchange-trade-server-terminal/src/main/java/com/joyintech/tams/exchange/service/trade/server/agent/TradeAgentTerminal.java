@@ -30,7 +30,7 @@ import java.util.*;
 
 @Component
 @Scope("prototype")
-public class TradeAgent extends Agent implements IAgentCommand, IAgentMsgHandler {
+public class TradeAgentTerminal extends Agent implements TradeAgent, IAgentMsgHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(TradeAgent.class);
 
