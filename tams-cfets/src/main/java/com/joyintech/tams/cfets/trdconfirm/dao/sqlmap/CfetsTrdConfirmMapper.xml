@@ -37,7 +37,7 @@
         reg.repo_term as termDays,
         reg.trade_amt as tradeAmt,
         reg.totle_trade_id as busiCode,
-        nvl(t4.TRADER_NAME,reg.ou_trader_id) as trader,
+        nvl(t3.real_name,reg.ou_trader_id) as trader,
         reg.trade_date as tradeDate,
         reg.counter_id as counterId,
         nvl(t1.counter_name,reg.counter_id) as counterIdName,
@@ -80,12 +80,12 @@
         on reg.totle_trade_id=match.pre_trade_id
         left join stl_sec_acct_info stlinfo  on reg.sec_manage_acct_id=stlinfo.sec_acct_id
         left join MST_COUNTER_PARTY t1 on t1.counter_id=reg.counter_id
-        left join MST_CFETS_CUSTOMER_TRADER t4 on t4.TRADER_ID=reg.ou_trader_id
+        left join sys_user t3 on t3.user_name=reg.ou_trader_id
         where reg.trade_date= #{sysDate,jdbcType=DATE} and reg.trade_status='01' and reg.is_cancel='N'
         and (match.trd_conf_status is null or match.trd_conf_status ='0')
         and reg.ps in ('T01','T02','03','04')
         <if test="userId != null and userId != ''">
-            and (reg.create_user= #{userId} or reg.update_user= #{userId})
+            and reg.create_user= #{userId}
         </if>
         <if test="ps != null and !ps.equals('')">
             AND reg.ps=#{ps}
@@ -288,7 +288,7 @@
         and ib.trade_status='07'
         and (match.trd_conf_status is null or match.trd_conf_status ='0')
         <if test="userId != null and userId != ''">
-            and (ib.create_user= #{userId} or ib.update_user= #{userId})
+            and ib.create_user= #{userId}
         </if>
         <if test="ps != null and !ps.equals('')">
             AND ib.ps=#{ps}
@@ -393,7 +393,7 @@
         where ic.quote_date= #{sysDate,jdbcType=DATE} and ic.TRADE_STATUS='07'
         and (match.trd_conf_status is null or match.trd_conf_status ='0')
         <if test="userId != null and userId != ''">
-            and (ic.create_user= #{userId} or ic.update_user= #{userId})
+            and ic.create_user= #{userId}
         </if>
         <if test="ps != null and !ps.equals('')">
             AND ic.repo_ps=#{ps}
@@ -1008,7 +1008,7 @@
 
         where 1=1  and reg.ps in ('T01','T02','03','04')
         <if test="userId != null and userId != ''">
-            and (m.create_user= #{userId} or m.update_user= #{userId})
+            and m.create_user= #{userId}
         </if>
         <if test="ps != null  and ps!=''">
             AND reg.ps = #{ps}
@@ -1143,7 +1143,7 @@
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON nvl(ib.cp_party_id,ic.cp_party_id)= mccic.party_id
         where ct.BUSINESSTYPE in ('BOND','REPO')  and (ic.quote_id is not null or ib.quote_id is not null)
         <if test="userId != null and userId != ''">
-            and (m.create_user= #{userId} or m.update_user= #{userId})
+            and m.create_user= #{userId}
         </if>
         <if test="ps != null  and ps!=''">
             AND nvl(ib.ps,ic.repo_ps) = #{ps}

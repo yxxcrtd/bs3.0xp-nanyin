@@ -1402,6 +1402,28 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	}
 
 	/**
+	 * 查询交易行情信息
+	 * <一句话功能简述>
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@ApiOperation(value="查询竞价交易行情信息",notes = "查询竞价交易行情信息")
+	@ResponseBody
+	@PostMapping("findQuotations")
+	public Message<EtrExchangeTradeQuotationHqResponse> findQuotations(@RequestBody String secId) {
+		try {
+			secId = secId.replaceAll("\"","");
+			EtrExchangeTradeQuotationHqResponse quotations = etrExchangeTrade001CommonService.findQuotations(secId);
+			return new Message<EtrExchangeTradeQuotationHqResponse>().success().setData(quotations);
+		}catch (Exception e) {
+			logger.error("查询竞价易行情数据异常",e);
+			return new Message<EtrExchangeTradeQuotationHqResponse>().fail().setMessage("查询竞价交易行情信息数据异常");
+		}
+	}
+
+
+	/**
 	 * 查询指令组合列表
 	 *
 	 * @param entrustId entrustId
