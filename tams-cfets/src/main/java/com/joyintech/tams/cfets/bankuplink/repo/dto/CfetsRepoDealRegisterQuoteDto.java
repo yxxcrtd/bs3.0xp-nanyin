@@ -111,6 +111,11 @@ public class CfetsRepoDealRegisterQuoteDto extends RegFinProductDealTotal implem
     private String distribution;
 
     /**
+     * 是否软控 跳过校验
+     */
+    private String softSkipMode;
+
+    /**
      * 组合分配信息
      */
     private List<RepoPtlAllocationDto> ptlAllocations;
@@ -361,4 +366,11 @@ public class CfetsRepoDealRegisterQuoteDto extends RegFinProductDealTotal implem
         this.actCapDays = actCapDays;
     }
 
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
+    }
 }
