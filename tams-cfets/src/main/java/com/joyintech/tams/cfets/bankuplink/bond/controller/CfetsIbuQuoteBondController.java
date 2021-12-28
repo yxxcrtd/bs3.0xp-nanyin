@@ -385,6 +385,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		for(CfetsBondCheckRequst cfetsBondCheckRequst:cfetsBondCheckRequsts){
 			BondQuoteInfoDto bondQuoteInfoDto = new BondQuoteInfoDto();
 			BeanUtil.copyPropertiesIgnoreNull(bondQuoteInfoDto,cfetsBondCheckRequst);
+			bondQuoteInfoDto.setOperationType("recall");
 			aj =cfetsQuotedCommonService.checkOperationAllow(bondQuoteInfoDto);
 			if(!com.joyintech.framework.util.StringUtil.isEmptyList(aj.getErrorList())){
 				return new Message<AjaxResult>().success().setData(aj);
