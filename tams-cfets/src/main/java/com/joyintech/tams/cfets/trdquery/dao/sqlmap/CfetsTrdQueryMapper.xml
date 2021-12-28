@@ -58,8 +58,8 @@
         reg.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
         decode(reg.finprod_type2,'F01',deal.faceValue,null) as faceValue,
-        case when reg.finprod_type2='F01'  then nvl(reg.yield,0)*100
-        when reg.finprod_id in ('F02','F03') then nvl(reg.rate,0)*100 else null end as tradeYield,
+        case when reg.finprod_type2='F01'  then reg.yield*100
+        when reg.finprod_id in ('F02','F03') then reg.rate*100 else null end as tradeYield,
         reg.repo_term as termDays,
         deal.tradeAmt as tradeAmt,
         reg.totle_trade_id as busiCode,
@@ -83,7 +83,7 @@
         inner join
         (
             select regdeal.totle_trade_id,wm_concat(regdeal.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
-            sum(nvl(regdeal.face_value,0))/10000 as faceValue, sum(nvl(regdeal.trade_amt,0)) as tradeAmt
+            sum(regdeal.face_value)/10000 as faceValue, sum(regdeal.trade_amt) as tradeAmt
             from reg_fin_product_deal regdeal
             inner join ptl_portfolio pp
             on regdeal.portfolio_id=pp.portfolio_id
@@ -195,8 +195,8 @@
         reg.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
         decode(reg.finprod_type2,'F01',deal.faceValue,null) as faceValue,
-        case when reg.finprod_type2='F01' then nvl(reg.yield,0)*100
-        when reg.finprod_id in ('F02','F03') then nvl(reg.rate,0)*100 else null end as tradeYield,
+        case when reg.finprod_type2='F01' then reg.yield*100
+        when reg.finprod_id in ('F02','F03') then reg.rate*100 else null end as tradeYield,
         reg.repo_term as termDays,
         deal.tradeAmt as tradeAmt,
         reg.totle_trade_id as busiCode,
@@ -218,7 +218,7 @@
         inner join
         (
         select regdeal.totle_trade_id,wm_concat(regdeal.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
-        sum(nvl(regdeal.face_value,0))/10000 as faceValue, sum(nvl(regdeal.trade_amt,0)) as tradeAmt
+        sum(regdeal.face_value)/10000 as faceValue, sum(regdeal.trade_amt) as tradeAmt
         from wfl_reg_fin_product_deal regdeal
         inner join ptl_portfolio pp
         on regdeal.portfolio_id=pp.portfolio_id
@@ -365,8 +365,8 @@
         to_char(reg.settle_date,'yyyy-MM-dd') as settleDate,
         reg.ccy as ccy,
         reg.unit_cprice as unitCprice,
-        nvl(reg.yield,0)*100 as yield,
-        nvl(reg.exer_yield,0)*100 as exerYield,
+        reg.yield*100 as yield,
+        reg.exer_yield*100 as exerYield,
         deal.faceValue as faceValue,
         reg.delivery_type deliveryType,
         reg.clear_type as clearType,
@@ -402,7 +402,7 @@
         inner join
         (
             select regdeal.totle_trade_id,
-            sum(nvl(regdeal.face_value,0))/10000 as faceValue,
+            sum(regdeal.face_value)/10000 as faceValue,
             sum(regdeal.int_amt) as intAmt,
             sum(regdeal.cprice_amt) as cpriceAmt,
             sum(regdeal.fprice_amt) as fpriceAmt,
@@ -456,7 +456,9 @@
         reg.trade_amt as tradeAmt,
         reg.m_trade_amt as mtradeAmt,
         reg.dis_face_value as disFaceValue,
-        reg.rate tradeYield
+        reg.rate tradeYield,
+        reg.yield*100 as yield,
+        reg.exer_yield*100 as exerYield
         from reg_fin_product_deal reg
         inner join ptl_portfolio pp
         on reg.portfolio_id=pp.portfolio_id
@@ -520,7 +522,7 @@
             </otherwise>
         </choose>
         ) aaa
-        left join SYS_DATADICT_LIST sdlStatus on aaa.finprodType2=sdlStatus.ITEM_CODE and sdlStatus.DICT_CODE='STATUS_VALID'
+        left join SYS_DATADICT_LIST sdlStatus on aaa.effectiveStatus=sdlStatus.ITEM_CODE and sdlStatus.DICT_CODE='STATUS_VALID'
         left join SYS_DATADICT_LIST sdlbjStatus on aaa.quotationState=sdlbjStatus.ITEM_CODE and sdlbjStatus.DICT_CODE='DEAL_TYPE_IBU'
         left join SYS_DATADICT_LIST sdlfsStatus on aaa.sendStatus=sdlfsStatus.ITEM_CODE and sdlfsStatus.DICT_CODE='SEND_TYPE_IBU'
         left join SYS_DATADICT_LIST sdlrole on aaa.quoteRoleType=sdlrole.ITEM_CODE and sdlrole.DICT_CODE='QUOTE_ROLE_TYPE'
@@ -560,7 +562,7 @@
         decode(ib.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
         ib.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
-        nvl(ib.share_amt,0)/100 as faceValue,
+        ib.share_amt/100 as faceValue,
         ibd.yield*100 as tradeYield,
         null as termDays,
         ib.fprice_amt as tradeAmt,
@@ -568,7 +570,7 @@
         ibd.execid as execid,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
-        ib.entrust_id as entrustId,
+        deal.entrustId as entrustId,
         to_char(ib.quote_date,'yyyy-MM-dd') as quoteDate,
         to_char(total.trade_date,'yyyy-MM-dd') as tradeDate,
         ib.remark
@@ -610,7 +612,8 @@
         )ibd
         on ib.quote_id=ibd.quote_id
         inner  join(
-        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
+        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+        wm_concat(distinct ir.entrust_id) as entrustId
         from ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
@@ -626,6 +629,9 @@
             <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
+        </if>
+        <if test="entrustId != null and entrustId != ''">
+            AND ir.entrust_id like '%' || #{entrustId,jdbcType=VARCHAR} || '%'
         </if>
         group by ir.quote_id)deal
         on ib.quote_id=deal.quote_id
@@ -648,17 +654,11 @@
             AND  ib.quote_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
         </if>
         <if test="submitUserId != null and submitUserId != ''">
-            and (ib.create_user= #{submitUserId} or ib.update_user= #{submitUserId})
+            and ib.create_user= #{submitUserId}
         </if>
         <if test="ps != null and !ps.equals('')">
             AND ib.ps=#{ps}
         </if>
-      <!--  <if test="finprodType2List != null and finprodType2List.size() > 0">
-            AND ib.finprod_type2 in
-            <foreach collection="finprodType2List" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>-->
         <if test="regAssetType != null and !regAssetType.equals('')">
             AND #{REG_ASSET_TYPE_01}=#{regAssetType}
         </if>
@@ -678,10 +678,7 @@
             </foreach>
         </if>
         <if test="quoteId != null and quoteId != ''">
-            AND ib.quoteId like '%' || #{quoteId,jdbcType=VARCHAR} || '%'
-        </if>
-        <if test="entrustId != null and entrustId != ''">
-            AND ib.entrust_id like '%' || #{entrustId,jdbcType=VARCHAR} || '%'
+            AND ib.quoteId like CONCAT('%',CONCAT(#{quoteId,jdbcType=VARCHAR},'%'))
         </if>
         <if test="effectiveStatus != null and effectiveStatus != ''">
             AND decode(ib.trade_status,'15',#{STATUS_VALID_03},#{STATUS_VALID_01})=#{effectiveStatus,jdbcType=VARCHAR}
@@ -692,13 +689,6 @@
         <if test="counterId != null and counterId != ''">
             AND ibd.cp_party_id like '%' || #{counterId,jdbcType=VARCHAR} || '%'
         </if>
-       <!-- <if test="quotationStateList != null and quotationStateList.size() > 0">
-            AND (case when ib.trade_status in ('07','06','08','15','13') then #{DEAL_TYPE_IBU_02}
-            else  #{DEAL_TYPE_IBU_01} end) in
-            <foreach collection="quotationStateList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>-->
 
         union all
 
@@ -723,7 +713,7 @@
         decode(ic.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
         ic.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
-        nvl(ic.share_amt,0)/100 as faceValue,
+        ic.share_amt/100 as faceValue,
         ic.rate*100 as tradeYield,
         ic.term as termDays,
         ic.fprice_amt as tradeAmt,
@@ -731,13 +721,14 @@
         ic.execid as execid,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
-        ic.entrust_id as entrustId,
+        deal.entrustId as entrustId,
         to_char(ic.quote_date,'yyyy-MM-dd')  as quoteDate,
         to_char(total.trade_date,'yyyy-MM-dd') as tradeDate,
         ic.remark
         from ibu_quote_crep ic
         inner  join(
-        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
+        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+        wm_concat(distinct ir.entrust_id) as entrustId
         from ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
@@ -753,6 +744,9 @@
             <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
+        </if>
+        <if test="entrustId != null and entrustId != ''">
+            AND ir.entrust_id like '%' || #{entrustId,jdbcType=VARCHAR} || '%'
         </if>
         group by ir.quote_id)deal
         on ic.quote_id=deal.quote_id
@@ -801,10 +795,7 @@
             </foreach>
         </if>
         <if test="quoteId != null and quoteId != ''">
-            AND ic.quoteId like '%' || #{quoteId,jdbcType=VARCHAR} || '%'
-        </if>
-        <if test="entrustId != null and entrustId != ''">
-            AND ic.entrust_id like '%' || #{entrustId,jdbcType=VARCHAR} || '%'
+            AND ic.quoteId like CONCAT('%',CONCAT(#{quoteId,jdbcType=VARCHAR},'%'))
         </if>
         <if test="effectiveStatus != null and effectiveStatus != ''">
             AND decode(ic.trade_status,'15',#{STATUS_VALID_03},#{STATUS_VALID_01})=#{effectiveStatus,jdbcType=VARCHAR}
@@ -815,14 +806,6 @@
         <if test="counterId != null and counterId != ''">
             AND ic.cp_party_id like '%' || #{counterId,jdbcType=VARCHAR} || '%'
         </if>
-       <!-- <if test="quotationStateList != null and quotationStateList.size() > 0">
-            AND (case when ic.trade_status in ('07','06','08','15','13') then #{DEAL_TYPE_IBU_02}
-            else  #{DEAL_TYPE_IBU_01} end) in
-            <foreach collection="quotationStateList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
--->
     </sql>
     <sql id="onlyWflIbuInfo">
         select #{STATUS_VALID_04} as effectiveStatus,
@@ -845,7 +828,7 @@
         decode(ib.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
         ib.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
-        nvl(ib.share_amt,0)/100 as faceValue,
+        ib.share_amt/100 as faceValue,
         ibd.yield*100 as tradeYield,
         null as termDays,
         ib.fprice_amt as tradeAmt,
@@ -853,7 +836,7 @@
         ibd.execid as execid,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
-        ib.entrust_id as entrustId,
+        deal.entrustId as entrustId,
         to_char(ib.quote_date,'yyyy-MM-dd') as quoteDate,
         null as tradeDate,
         ib.remark
@@ -894,7 +877,8 @@
         )ibd
         on ib.quote_id=ibd.quote_id
         inner  join(
-        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
+        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+        wm_concat(distinct ir.entrust_id) as entrustId
         from wfl_ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
@@ -910,6 +894,9 @@
             <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
+        </if>
+        <if test="entrustId != null and entrustId != ''">
+            AND ir.entrust_id like '%' || #{entrustId,jdbcType=VARCHAR} || '%'
         </if>
         group by ir.quote_id)deal
         on ib.quote_id=deal.quote_id
@@ -957,10 +944,7 @@
             </foreach>
         </if>
         <if test="quoteId != null and quoteId != ''">
-            AND ib.quoteId like '%' || #{quoteId,jdbcType=VARCHAR} || '%'
-        </if>
-        <if test="entrustId != null and entrustId != ''">
-            AND ib.entrust_id like '%' || #{entrustId,jdbcType=VARCHAR} || '%'
+            AND ib.quoteId like CONCAT('%',CONCAT(#{quoteId,jdbcType=VARCHAR},'%'))
         </if>
         <if test="effectiveStatus != null and effectiveStatus != ''">
             AND #{STATUS_VALID_04}=#{effectiveStatus,jdbcType=VARCHAR}
@@ -1003,21 +987,22 @@
         ic.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
 
-        nvl(ic.share_amt,0)/100 as faceValue,
-        ic.rate*100 as tradeYield,
+        ic.share_amt/100 as faceValue,
+        ic.rate*100*100 as tradeYield,
         ic.term as termDays,
         ic.fprice_amt as tradeAmt,
         ic.quote_id as quoteId,
         ic.execid as execid,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
-        ic.entrust_id as entrustId,
+        deal.entrustId as entrustId,
         to_char(ic.quote_date,'yyyy-MM-dd') as quoteDate,
         null as tradeDate,
         ic.remark
         from wfl_ibu_quote_crep ic
         inner  join(
-        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
+        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+        wm_concat(distinct ir.entrust_id) as entrustId
         from wfl_ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
@@ -1033,6 +1018,9 @@
             <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
+        </if>
+        <if test="entrustId != null and entrustId != ''">
+            AND ir.entrust_id like '%' || #{entrustId,jdbcType=VARCHAR} || '%'
         </if>
         group by ir.quote_id)deal
         on ic.quote_id=deal.quote_id
@@ -1076,10 +1064,7 @@
             </foreach>
         </if>
         <if test="quoteId != null and quoteId != ''">
-            AND ic.quoteId like '%' || #{quoteId,jdbcType=VARCHAR} || '%'
-        </if>
-        <if test="entrustId != null and entrustId != ''">
-            AND ic.entrust_id like '%' || #{entrustId,jdbcType=VARCHAR} || '%'
+            AND ic.quoteId like CONCAT('%',CONCAT(#{quoteId,jdbcType=VARCHAR},'%'))
         </if>
         <if test="effectiveStatus != null and effectiveStatus != ''">
             AND #{STATUS_VALID_04}=#{effectiveStatus,jdbcType=VARCHAR}
@@ -1109,7 +1094,7 @@
             </if>
             <if test="search != null and search != '' and search !='有效' ">
                 AND ((sdlStatus.ITEM_VALUE || '|' || sdlbjStatus.ITEM_VALUE    || '|' || sdlfsStatus.ITEM_VALUE
-                    || '|' || aaa.quoteRoleType || '|' || dictps.ITEM_VALUE || '|' || sdl.ITEM_VALUE
+                    || '|' || sdlrole.ITEM_VALUE || '|' || dictps.ITEM_VALUE || '|' || sdl.ITEM_VALUE
                     || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr   || '|' || dictquote.ITEM_VALUE
                     || '|' ||  aaa.traderidStr || '|' ||  aaa.trader  || '|' ||  aaa.counterIdStr || '|' ||  aaa.counterTrader
                     || '|' || dictsp.ITEM_VALUE || '|' || aaa.secManageAcctIdStr || '|' || aaa.quoteId
@@ -1132,16 +1117,6 @@
             </if>
         </where>
     </sql>
-    <!--<sql id="vagueQueryIbuCommWhere">
-        <where>
-            <if test="quotationStateList != null and quotationStateList.size() > 0">
-                AND aaa.quotationState in
-                <foreach collection="quotationStateList" item="item" open="(" close=")" separator=",">
-                    #{item}
-                </foreach>
-            </if>
-        </where>
-    </sql>-->
     <select id="selectIbuBondFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryIbuInfoListResponse">
         select null as  dialogueRecord,
         ib.ou_party_id as traderid,
@@ -1235,7 +1210,7 @@
         on ib.quote_id=ibd.quote_id
         inner join(
         select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
-        sum(nvl(ir.share_amt,0))/100 as faceValue
+        sum(ir.share_amt)/100 as faceValue
         from ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
@@ -1341,7 +1316,7 @@
         on ib.quote_id=ibd.quote_id
         inner join(
         select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
-        sum(nvl(ir.share_amt,0))/100 as faceValue
+        sum(ir.share_amt)/100 as faceValue
         from wfl_ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
@@ -1389,7 +1364,7 @@
         from ibu_quote_crep ic
         inner join(
         select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
-        sum(nvl(ir.share_amt,0))/100 as faceValue
+        sum(ir.share_amt)/100 as faceValue
         from ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
@@ -1428,7 +1403,7 @@
         from wfl_ibu_quote_crep ic
         inner join(
         select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
-        sum(nvl(ir.share_amt,0))/100 as faceValue
+        sum(ir.share_amt)/100 as faceValue
         from wfl_ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
@@ -1442,7 +1417,7 @@
         ir.portfolio_id as portfolioId,
         pp.portfolio_name as portfolioName,
         (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
-        nvl(ir.share_amt,0)/100 as faceValue,
+        ir.share_amt/100 as faceValue,
         null as trdFeeAmt,
         null as settleFeeAmt,
         null as cpriceAmt,
@@ -1481,7 +1456,7 @@
         ir.portfolio_id as portfolioId,
         pp.portfolio_name as portfolioName,
         (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
-        nvl(ir.share_amt,0)/100 as faceValue,
+        ir.share_amt/100 as faceValue,
         null as trdFeeAmt,
         null as settleFeeAmt,
         null as cpriceAmt,
@@ -1610,7 +1585,7 @@
         decode(decode(I.BUSINESSTYPE,'BOND',ts.SETTLE_SPEED,'REPO',tr.SETTLE_SPEED),'1','01','2','02','3','03') settleSpeed,
         nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER) as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
-        nvl(ts.prinamt,0)/10000 as faceValue,
+        ts.prinamt/10000 as faceValue,
         decode(I.BUSINESSTYPE, 'BOND', I.yield2*100, 'REPO', I.PRICE*100) tradeYield,
         I.TRADELIMITDAYS as termDays,
         I.TRADECASHAMT as tradeAmt,
@@ -2061,7 +2036,7 @@
         'T+'||t1.settle_speed as settleSpeedStr,
         t1.sec_manage_acct_id as secManageAcctId,
         T7.SEC_ACCT_NAME  as secManageAcctIdStr,
-        nvl(t1.share_amt,0)/100 as faceValue,
+        t1.share_amt/100 as faceValue,
         t1.yield*100 as tradeYield,
         (t1.mdate-t1.vdate) as termDays,
         t1.trade_amt as tradeAmt,
@@ -2385,18 +2360,18 @@
         tpd.F_TRADE_ID,
         tpd.SEC_MANAGE_ACCT_ID, nvl(tpd.CCY,trd_product_deal.CCY) CCY,
         tpd.SHARE_AMT * 100 as TRADE_AMT,
-        nvl(tpda.LENDIN_SHARE_AMT, 0) * 100 integrateTradeAmt,
+        tpda.LENDIN_SHARE_AMT * 100 integrateTradeAmt,
         nvl(tpda.OUR_SHARE_AMT, tpd.SHARE_AMT) * 100 ownTradeAmt,
         tpd.UNIT_CPRICE,
         tpd.UNIT_INT, tpd.UNIT_FPRICE,
         tpd.CPRICE_AMT,
-        nvl(tpda.LENDIN_CPRICE_AMT, 0) integrateCpriceAmt,
+        tpda.LENDIN_CPRICE_AMT integrateCpriceAmt,
         nvl(tpda.OUR_CPRICE_AMT, tpd.CPRICE_AMT) ownCpriceAmt,
         tpd.INT_AMT,
-        nvl(tpda.LENDIN_FPRICE_AMT2, 0) integrateIntAmt,
+        tpda.LENDIN_FPRICE_AMT2 integrateIntAmt,
         nvl(tpda.OUR_FPRICE_AMT2, tpd.INT_AMT) ownIntAmt,
         tpd.FPRICE_AMT,
-        nvl(tpda.LENDIN_FPRICE_AMT, 0) integrateFpriceAmt,
+        tpda.LENDIN_FPRICE_AMT integrateFpriceAmt,
         nvl(tpda.OUR_FPRICE_AMT, tpd.FPRICE_AMT) ownFpriceAmt,
         tpd.YIELD, tpd.EXER_YIELD, tpd.REMARK,
         tpd.TRADER, tpd.COUNTER_ID, tpd.COUNTER_TRADER, tpd.COUNTER_CONTACT,tpd.CHL_ID
@@ -2412,7 +2387,7 @@
         ,fp.Finprod_Market_Id as finprodMarketId
         ,decode(tpd.settle_speed,'0','01','1','02','2','03') as settleSpeedStr
         ,tpd.delivery_type as deliveryType
-        ,nvl(tpd.SHARE_AMT,0)/100 as qty
+        ,tpd.SHARE_AMT/100 as qty
         ,ttft.fee_amt as procedureAmt
         ,ttft1.fee_amt as settleServiceAmt
         ,tpd.clear_type as clearType
