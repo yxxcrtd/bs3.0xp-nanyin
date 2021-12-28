@@ -1461,24 +1461,24 @@ public class IbuQuoteRepoService extends BaseService {
         }
         // 交易方向+清算速度+回购期限+交易对手+证券账户+交易账户 不一致时提示
         if (StringUtil.isNotEmpty(message)) {
-            ajaxResult.setMessage(this.getMessage("IBU_QUOTE_REPO_1", message));
+            ajaxResult.setMessage("所选指令不满足汇总条件：" + message + "不同");
             return ajaxResult;
         }
         // 指定价格的回购利率必须一致
         if (!yieldFlag) {
-            ajaxResult.setMessage(this.getMessage("IBU_QUOTE_REPO_2"));
+            ajaxResult.setMessage("存在多条指定价格指令，回购利率需一致");
             return ajaxResult;
         }
         // 交易方式为正回购时,指定价格的回购利率需小于等于所有限价指令的回购利率中的最小值
         if (yieldPRM01 != null && minOrMaxYield != null && yieldPRM01.compareTo(minOrMaxYield) > 0
                 && StringUtil.equals(ps, DictCodeListExt3.交易方向_正回购.getValue())) {
-            ajaxResult.setMessage(this.getMessage("IBU_QUOTE_REPO_3"));
+            ajaxResult.setMessage("同时存在指定价格指令和限价指令，指定价格指令不能大于限价指令中回购利率的最小值");
             return ajaxResult;
         }
         // 交易方式为逆回购时，指定价格的回购利率需大于等于所有限价指令的回购利率中的最大值
         if (yieldPRM01 != null && minOrMaxYield != null && yieldPRM01.compareTo(minOrMaxYield) < 0
                 && StringUtil.equals(ps, DictCodeListExt3.交易方向_逆回购.getValue())) {
-            ajaxResult.setMessage(this.getMessage("IBU_QUOTE_REPO_4"));
+            ajaxResult.setMessage("同时存在指定价格和限价指令，指定价格指令不能小于限价指令中回购利率的最大值");
             return ajaxResult;
         }
         // 勾选指令的价格模式只存在指定价格或同时存在指定价格和限价指令时,返回指定价格指令中的回购利率
