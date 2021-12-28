@@ -45,10 +45,12 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
             List<SettleTransDataDto> settleTransDataDtos = stlDataGatherMapper.selectSettleTransData(searchParam);
             // GZYHTZJY-717:回购无法自动匹配:交易方向需特殊处理 fuyongsheng 20211206 add start
             settleTransDataDtos.forEach(settleTransDataDto -> {
-                if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(settleTransDataDto.getFinprodType2())){
-                    settleTransDataDto.setPs(DictCodeListExt3.交易方向_正回购.getValue());
-                }else if(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(settleTransDataDto.getFinprodType2())){
-                    settleTransDataDto.setPs( DictCodeListExt3.交易方向_逆回购.getValue());
+                if(!DictCodeList.回购类型_质押式协议回购.getValue().equals(settleTransDataDto.getRepoType())){
+                    if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(settleTransDataDto.getFinprodType2())){
+                        settleTransDataDto.setPs(DictCodeListExt3.交易方向_正回购.getValue());
+                    }else if(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(settleTransDataDto.getFinprodType2())){
+                        settleTransDataDto.setPs( DictCodeListExt3.交易方向_逆回购.getValue());
+                    }
                 }
             });
             // GZYHTZJY-717:回购无法自动匹配:交易方向需特殊处理 fuyongsheng 20211206 add end

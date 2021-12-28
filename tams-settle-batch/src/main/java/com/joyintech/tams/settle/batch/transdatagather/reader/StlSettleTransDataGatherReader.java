@@ -520,7 +520,7 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                             }
                         }
                         //交易方向
-                        dealTotal.setPs(settleTransDataDto.getTradeMarket());
+                        dealTotal.setPs(settleTransDataDto.getPs());
                         // 交易场所
                         dealTotal.setTradeMarket(settleTransDataDto.getTradeMarket());
                         //交易市场

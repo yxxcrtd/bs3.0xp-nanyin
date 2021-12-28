@@ -747,7 +747,7 @@
                     WHEN FSJE &lt; 0 THEN abs(CJJE)*-1
                     ELSE abs(CJJE)
                 END TRADE_AMT,
-                CJJE HAPPEN_AMT,
+                FSJE HAPPEN_AMT,
                 NULL TOTAL_TEEAMT,
                 NULL HGDQR,
                 NULL HGDQJE,
