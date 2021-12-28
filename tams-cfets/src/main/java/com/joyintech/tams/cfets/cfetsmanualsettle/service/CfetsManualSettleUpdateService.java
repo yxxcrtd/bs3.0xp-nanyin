@@ -2,10 +2,7 @@ package com.joyintech.tams.cfets.cfetsmanualsettle.service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.controller.JoyinbusinessCommonController;
 import com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper;
@@ -98,6 +95,10 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
         if(!(StringUtil.equals(cfetsRequest.getTgBusiType(),DictCodeListExt3.头寸业务类型_债券存续期交易.getValue())
                 ||StringUtil.equals(cfetsRequest.getPs(),BussinessDictCodeList.交易方向_行权赎回.getValue()))){
             returnMsg = "只允许存续期交易、债券行权赎回进行交收数据修改！";
+        }
+        //平台日期和交收日期进行比较
+        if(!StringUtil.equals(cfetsRequest.getSettleDate(), DateUtil.format(platformDateImpl.getSysDate()))){
+            returnMsg = "只允许平台日等于交收日期进行交收数据修改！";
         }
 
         WflValidInputParameter wflValidInputParameter  = new WflValidInputParameter();

@@ -174,7 +174,9 @@ public class IbuQuoteBond003Controller extends BaseController {
                 }
             }
         }
-
+        if(CollectionUtils.isEmpty(ar.getErrorList())){
+            ar= cfetsQuotedCommonServiceVue.reclasCheck(cfetsBondDealQuoteCommonDto);
+        }
         /*if (sb.length() > 0) {
             sb.append("请确认是否继续？");
             ar.setData(sb);

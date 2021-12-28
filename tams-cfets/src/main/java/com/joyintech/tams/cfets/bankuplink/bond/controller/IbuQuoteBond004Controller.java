@@ -194,6 +194,9 @@ public class IbuQuoteBond004Controller extends BaseController {
         if(CollectionUtils.isEmpty(ajaxResult.getErrorList())){
             ajaxResult = cfetsQuotedCommonService.positionCheck(cfetsBondDealQuoteCommonDto);
         }
+        if(CollectionUtils.isEmpty(ajaxResult.getErrorList())){
+            ajaxResult= cfetsQuotedCommonService.reclasCheck(cfetsBondDealQuoteCommonDto);
+        }
         return new Message<AjaxResult>().success().setData(ajaxResult);
     }
 

@@ -1,10 +1,17 @@
 package com.joyintech.tams.exchange.service.trade.server;
 
+import java.net.InetSocketAddress;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 import com.joyintech.tams.exchange.common.net.handler.CXHeartbeatHandler;
 import com.joyintech.tams.exchange.common.net.handler.CXServerDecoder;
 import com.joyintech.tams.exchange.common.net.handler.CXServerEncoder;
 import com.joyintech.tams.exchange.common.net.handler.CXServerHandler;
-import com.joyintech.tams.exchange.service.trade.server.agent.TradeAgent;
+import com.joyintech.tams.exchange.service.trade.server.agent.TradeAgentTerminal;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
@@ -14,11 +21,6 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import java.net.InetSocketAddress;
 
 @Configuration
 public class ServerConfig {
@@ -74,7 +76,7 @@ public class ServerConfig {
                                 .addLast("heartbeat", new CXHeartbeatHandler())
                                 .addLast("encode", new CXServerEncoder())
                                 .addLast("decode", new CXServerDecoder())
-                                .addLast("handler", new CXServerHandler(TradeAgent.class));
+                                .addLast("handler", new CXServerHandler(TradeAgentTerminal.class));
                         }
                 });
     }

@@ -204,7 +204,9 @@ public class IbuQuoteBond002Controller extends BaseController {
                 cfetsBondDealQuotedPrice002Service.checkCalcFieldEntrust(cfetsBondDealDialogueQuoteDto, null, sb, false);
             }
         }
-
+        if(CollectionUtils.isEmpty(ar.getErrorList())){
+            ar= cfetsQuotedCommonServiceVue.reclasCheck(cfetsBondDealQuoteCommonDto);
+        }
         /*if (sb.length() > 0){
             sb.append("请确认是否继续？");
             ar.setData(sb);

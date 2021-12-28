@@ -875,6 +875,7 @@ public class IbuComponentCommonService extends BaseService {
                 ibuQuoteEtrReDto.setCpriceAmt(item.getCpriceAmt());
                 ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
                 ibuQuoteEtrReDto.setIntAmt(item.getIntAmt());
+                ibuQuoteEtrReDto.setInvAim(item.getInvAim());
 	           	ibuQuoteEtrReDtoList.add(ibuQuoteEtrReDto);
             });
             inputBean.setIbuQuoteEtrReDtoList(ibuQuoteEtrReDtoList);
@@ -1070,6 +1071,7 @@ public class IbuComponentCommonService extends BaseService {
                 ibuQuoteEtrReDto.setCpriceAmt(item.getCpriceAmt());
                 ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
                 ibuQuoteEtrReDto.setIntAmt(item.getIntAmt());
+                ibuQuoteEtrReDto.setInvAim(item.getInvAim());
 	           	ibuQuoteEtrReDtoList.add(ibuQuoteEtrReDto);
             });
             inputBean.setIbuQuoteEtrReDtoList(ibuQuoteEtrReDtoList);

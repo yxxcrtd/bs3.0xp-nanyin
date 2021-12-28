@@ -1601,6 +1601,19 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
      */
     public com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto preparEntity(CfetsBondDealDialogueQuoteDto entity){
         com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = JsonUtils.json2Object(JsonUtils.object2Json(entity),com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto.class);
+        //处理下业务模式
+        if(CollectionUtils.isNotEmpty(cfetsBondDealDialogueQuoteDto.getCfetsBondDealDialogueQuoteDtoList())) {
+            Map<String, Object> entrustReclas = new HashMap<>();
+            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_买入.getValue())) {
+                entrustReclas = cfetsQuotedCommonServicevue.isEntrustReclas(entity.getFinprodId(), entity.getPrice(), entity.getSettleDate());
+            }
+            for (com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto item : cfetsBondDealDialogueQuoteDto.getCfetsBondDealDialogueQuoteDtoList()) {
+
+                if (StringUtil.equals(item.getBusinessModel(), DictCodeListExt3.业务模式_收取合同约定的现金流.getValue()) && entrustReclas.containsKey("isEntrustReclas") && (boolean) entrustReclas.get("isEntrustReclas")) {
+                    item.setInvAim(DictCodeListExt3.业务模式_出售.getValue());
+                }
+            }
+        }
         return cfetsBondDealDialogueQuoteDto;
     }
 

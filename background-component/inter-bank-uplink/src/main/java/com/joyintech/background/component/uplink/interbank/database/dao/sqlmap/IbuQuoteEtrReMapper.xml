@@ -20,13 +20,14 @@
         <result column="SETT_FEE_AMT" property="settFeeAmt" jdbcType="DECIMAL" />
         <result column="CPRICE_AMT" property="cpriceAmt" jdbcType="DECIMAL" />
         <result column="INT_AMT" property="intAmt" jdbcType="DECIMAL" />
+        <result column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         QUOTE_ID QUOTE_ID, VERSION VERSION, ENTRUST_ID ENTRUST_ID, PORTFOLIO_ID PORTFOLIO_ID, 
         SHARE_AMT SHARE_AMT, FPRICE_AMT FPRICE_AMT, REMARK REMARK, CREATE_USER CREATE_USER, 
         CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
         CB_FPRICE_AMT CB_FPRICE_AMT, SC_FPRICE_AMT SC_FPRICE_AMT, DEAL_FEE_AMT DEAL_FEE_AMT, 
-        SETT_FEE_AMT SETT_FEE_AMT, CPRICE_AMT CPRICE_AMT, INT_AMT INT_AMT
+        SETT_FEE_AMT SETT_FEE_AMT, CPRICE_AMT CPRICE_AMT, INT_AMT INT_AMT, INV_AIM INV_AIM
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -58,15 +59,15 @@
             REMARK, CREATE_USER, CREATE_TIME, 
             CREATE_DEPT, UPDATE_USER, UPDATE_TIME, 
             CB_FPRICE_AMT, SC_FPRICE_AMT, DEAL_FEE_AMT, 
-            SETT_FEE_AMT, CPRICE_AMT, INT_AMT
-            )
+            SETT_FEE_AMT, CPRICE_AMT, INT_AMT, 
+            INV_AIM)
         values (#{quoteId,jdbcType=VARCHAR}, #{version,jdbcType=DECIMAL}, #{entrustId,jdbcType=VARCHAR}, 
             #{portfolioId,jdbcType=VARCHAR}, #{shareAmt,jdbcType=DECIMAL}, #{fpriceAmt,jdbcType=DECIMAL}, 
             #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
             #{createDept,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
             #{cbFpriceAmt,jdbcType=DECIMAL}, #{scFpriceAmt,jdbcType=DECIMAL}, #{dealFeeAmt,jdbcType=DECIMAL}, 
-            #{settFeeAmt,jdbcType=DECIMAL}, #{cpriceAmt,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL}
-            )
+            #{settFeeAmt,jdbcType=DECIMAL}, #{cpriceAmt,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL}, 
+            #{invAim,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteEtrRe" >
         insert into IBU_QUOTE_ETR_RE
@@ -125,6 +126,9 @@
             <if test="intAmt != null" >
                 INT_AMT,
             </if>
+            <if test="invAim != null" >
+                INV_AIM,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="quoteId != null" >
@@ -181,15 +185,20 @@
             <if test="intAmt != null" >
                 #{intAmt,jdbcType=DECIMAL},
             </if>
+            <if test="invAim != null" >
+                #{invAim,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteEtrRe" >
         insert into IBU_QUOTE_ETR_RE(QUOTE_ID, VERSION, ENTRUST_ID, PORTFOLIO_ID, SHARE_AMT, 
         FPRICE_AMT, REMARK, CREATE_USER, CREATE_TIME, CREATE_DEPT, UPDATE_USER, UPDATE_TIME, 
-        CB_FPRICE_AMT, SC_FPRICE_AMT, DEAL_FEE_AMT, SETT_FEE_AMT, CPRICE_AMT, INT_AMT)
+        CB_FPRICE_AMT, SC_FPRICE_AMT, DEAL_FEE_AMT, SETT_FEE_AMT, CPRICE_AMT, INT_AMT, INV_AIM
+        )
         select QUOTE_ID, VERSION, ENTRUST_ID, PORTFOLIO_ID, SHARE_AMT, 
             FPRICE_AMT, REMARK, CREATE_USER, CREATE_TIME, CREATE_DEPT, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
-            CB_FPRICE_AMT, SC_FPRICE_AMT, DEAL_FEE_AMT, SETT_FEE_AMT, CPRICE_AMT, INT_AMT
+            CB_FPRICE_AMT, SC_FPRICE_AMT, DEAL_FEE_AMT, SETT_FEE_AMT, CPRICE_AMT, INT_AMT, INV_AIM
+            
              from IBU_QUOTE_ETR_RE
              where 1 = 1 and QUOTE_ID = #{quoteId,jdbcType=VARCHAR} and VERSION = #{version,jdbcType=DECIMAL} and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
     </insert>
@@ -232,6 +241,9 @@
             <if test="intAmt != null" >
                 INT_AMT = #{intAmt,jdbcType=DECIMAL},
             </if>
+            <if test="invAim != null" >
+                INV_AIM = #{invAim,jdbcType=VARCHAR},
+            </if>
         </set>
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
           and VERSION = #{version,jdbcType=DECIMAL}
@@ -250,7 +262,8 @@
             DEAL_FEE_AMT = #{dealFeeAmt,jdbcType=DECIMAL},
             SETT_FEE_AMT = #{settFeeAmt,jdbcType=DECIMAL},
             CPRICE_AMT = #{cpriceAmt,jdbcType=DECIMAL},
-            INT_AMT = #{intAmt,jdbcType=DECIMAL}
+            INT_AMT = #{intAmt,jdbcType=DECIMAL},
+            INV_AIM = #{invAim,jdbcType=VARCHAR}
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
           and VERSION = #{version,jdbcType=DECIMAL}
           and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}

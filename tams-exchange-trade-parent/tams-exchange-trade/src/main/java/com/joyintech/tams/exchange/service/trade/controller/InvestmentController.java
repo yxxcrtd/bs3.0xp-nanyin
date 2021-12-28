@@ -19,7 +19,7 @@ import com.joyintech.tams.exchange.common.db.domain.InstructionPledge;
 import com.joyintech.tams.exchange.service.trade.management.service.InvestmentManagement;
 
 @RestController
-@RequestMapping("/trade/joyin")
+@RequestMapping("/service/joyin")
 //@Api(tags = "场内交易-投资系统接口")
 public class InvestmentController {
 

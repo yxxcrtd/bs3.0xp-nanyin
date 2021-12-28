@@ -184,7 +184,6 @@
     <!--指令持仓-->
     <select id="queryEtrPosition" parameterType="Map" resultType="map">
         select
-        a.PORTFOLIO_ID,
         sum(
             CASE WHEN b.S_HOLDINGTYPE=#{S_003} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE NULL END
         ) AS RRQMKDGH, /*融入券卖空待购回持仓*/
@@ -210,13 +209,11 @@
                 #{item}
             </foreach>
         </if>
-        GROUP BY a.PORTFOLIO_ID
     </select>
 
     <!--交易持仓-->
     <select id="queryTrdPosition" parameterType="Map" resultType="map">
         select
-        a.PORTFOLIO_ID,
         sum(
         CASE WHEN b1.S_HOLDINGTYPE=#{S_003} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b1.CAL_FLAG,1) ELSE NULL END
         ) AS RRQMKDGHCC, /*融入券卖空待购回持仓*/
@@ -243,6 +240,5 @@
                 #{item}
             </foreach>
         </if>
-        GROUP BY a.PORTFOLIO_ID
     </select>
 </mapper>

@@ -68,10 +68,15 @@ public class WflIbuQuoteEtrRe extends WflIbuQuoteEtrReKey {
     private BigDecimal cpriceAmt;
 
     /**
-     * 应计利息
+     * 业务模式
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal intAmt;
+
+    /**
+     * null
+     */
+    private String invAim;
 
     /**
      * 取得 组合代码
@@ -250,18 +255,34 @@ public class WflIbuQuoteEtrRe extends WflIbuQuoteEtrReKey {
     }
 
     /**
-     * 取得 应计利息
-     * @return 应计利息
+     * 取得 业务模式
+     * @return 业务模式
      */
     public BigDecimal getIntAmt() {
         return intAmt;
     }
 
     /**
-     * 设置 应计利息
-     * @param intAmt 应计利息
+     * 设置 业务模式
+     * @param intAmt 业务模式
      */
     public void setIntAmt(BigDecimal intAmt) {
         this.intAmt = intAmt;
+    }
+
+    /**
+     * 取得 null
+     * @return null
+     */
+    public String getInvAim() {
+        return invAim;
+    }
+
+    /**
+     * 设置 null
+     * @param invAim null
+     */
+    public void setInvAim(String invAim) {
+        this.invAim = invAim == null ? null : invAim.trim();
     }
 }

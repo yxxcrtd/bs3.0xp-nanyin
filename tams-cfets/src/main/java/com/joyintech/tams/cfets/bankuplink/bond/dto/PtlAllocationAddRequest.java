@@ -15,6 +15,12 @@ public class PtlAllocationAddRequest {
     @ApiModelProperty(required = true,name="finprodId",value="资产代码")
     private String finprodId;
 
+    @ApiModelProperty(name="mySide",value="本方")
+    private String mySide;
+
+    @ApiModelProperty(required = true,name="secManageAcctId",value="证券账户")
+    private String secManageAcctId;
+
     @ApiModelProperty(required = true,name="ps",value="交易方向")
     private String ps;
 
@@ -45,6 +51,22 @@ public class PtlAllocationAddRequest {
 
     public void setFinprodId(String finprodId) {
         this.finprodId = finprodId;
+    }
+
+    public String getMySide() {
+        return mySide;
+    }
+
+    public void setMySide(String mySide) {
+        this.mySide = mySide;
+    }
+
+    public String getSecManageAcctId() {
+        return secManageAcctId;
+    }
+
+    public void setSecManageAcctId(String secManageAcctId) {
+        this.secManageAcctId = secManageAcctId;
     }
 
     public String getPs() {
