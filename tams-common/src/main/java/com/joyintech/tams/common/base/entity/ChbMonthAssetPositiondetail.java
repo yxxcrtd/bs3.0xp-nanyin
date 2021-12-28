@@ -1075,4 +1075,9 @@ public class ChbMonthAssetPositiondetail extends BaseEntity {
     public String getCounterListCode(){
         return this.getProdId()+"_"+this.getAssetCode();
     }
+
+    public String getDetailCode(){
+        return this.getProdId()+"_"+this.getAssetCode()+"_"+this.getDetailno();
+    }
+
 }

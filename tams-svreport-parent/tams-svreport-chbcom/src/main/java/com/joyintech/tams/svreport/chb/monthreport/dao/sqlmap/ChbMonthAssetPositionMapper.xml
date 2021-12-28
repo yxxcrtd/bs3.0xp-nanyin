@@ -39,6 +39,9 @@
       <result column="TERMS" property="terms" jdbcType="DECIMAL" />
       <result column="SUNASSETTYPE" property="sunassettype" jdbcType="VARCHAR" />
       <result column="SUNASSETTYPE2" property="sunassettype2" jdbcType="VARCHAR" />
+      <result column="OLD_ASSET_CODE" property="oldAssetCode" jdbcType="VARCHAR" />
+
+
   </resultMap>
   
    <resultMap id="PlanResultMap" type="com.joyintech.tams.common.base.entity.ChbBotAstPosition" >
@@ -55,7 +58,7 @@
     POSUUID, BOOKDATE, STARTDATE, ENDDATE, INVEST_VARIETY, ASSET_CODE, ASSETTYPE, PROD_ID, 
     ASSETVALUE_A, ASSETVALUE_B, INDUSTRY1, IN_ASSET_TYPE, PPPFLAG, MONIT_TYPE, MANAGE_TYPE, 
     IS_GOVERN_FUND1, PRIVATEFUND_FLAG, PRIVATEPRD_FLAG, BONDTOSTOCK_FLAG, RATING,ASSETTYPE2
-    ,TERMS, SUNASSETTYPE ,SUNASSETTYPE2
+    ,TERMS, SUNASSETTYPE ,SUNASSETTYPE2 , OLD_ASSET_CODE
   </sql>
   <sql id="Sec_Rating_List" >
   with a as	(
@@ -673,7 +676,8 @@
     ASSETINFO.ISUNLISTED,
     ASSETINFO.IS_FBZB,
     ASSETINFO.BANK_SEC_KZZQ,
-    POSITION.IS_FHXGCP
+    POSITION.IS_FHXGCP,
+    POSITION.OLD_ASSET_CODE
     /*G06改造新加字段*/
     from CHB_MONTH_ASSET_POSITION POSITION
     LEFT JOIN CHB_ASSET_INFO ASSETINFO
@@ -753,7 +757,8 @@
         ASSETINFO.ISUNLISTED,
         ASSETINFO.IS_FBZB,
         ASSETINFO.BANK_SEC_KZZQ,
-        POSITION.IS_FHXGCP
+        POSITION.IS_FHXGCP,
+        POSITION.OLD_ASSET_CODE
         /*G06改造新加字段*/
         from CHB_MONTH_ASSET_POSITION POSITION
         LEFT JOIN CHB_ASSET_INFO ASSETINFO

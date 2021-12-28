@@ -35,6 +35,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -76,9 +78,11 @@ public class ChbMonthReportDetailAssetUtil {
     public static ChbMonthAssetPositiondetail buildAssetDetail(ChbMonthAssetPosition position, ChbPrdBaseinfo prodInfo, ChbAssetInfo chbAssetInfo, ChbMonthReportDetail reportDetail){
         ChbMonthAssetPositiondetail chbMonthAssetPositiondetail = new ChbMonthAssetPositiondetail();
 
-        //3附件的数据全部不要
+        //需要屏蔽的数据类型
         if(reportDetail.getPropertycode().startsWith("AMT3")||
-                reportDetail.getPropertycode().startsWith("AMT1_4")){
+                reportDetail.getPropertycode().equals("AMT1_4_a")||reportDetail.getPropertycode().equals("AMT1_4_b")||reportDetail.getPropertycode().equals("AMT1_4_c")||
+                reportDetail.getPropertycode().equals("AMT1_13_1")||reportDetail.getPropertycode().equals("AMT1_13_2")||reportDetail.getPropertycode().equals("AMT1_13_3")||
+                        reportDetail.getPropertycode().equals("AMT1_13_4")||reportDetail.getPropertycode().equals("AMT1_13_5")||reportDetail.getPropertycode().equals("AMT1_13_6")){
             return null;
         }
 
@@ -114,9 +118,32 @@ public class ChbMonthReportDetailAssetUtil {
 
         }
 
-//        BeanUtil.copyPropertiesIgnoreNull(chbMonthAssetPositiondetail,reportDetail);
+
+        //非标转标字段塞值
+        String isFbhy = null;
+
+        if(ruleFlag(ChbMonthAssetRule.农林牧渔业,position)){
+            isFbhy =DictCodeListExt3.中债月度明细_非标行业_农林牧渔业.getValue();
+        }else if (ruleFlag(ChbMonthAssetRule.制造业,position)){
+            isFbhy =DictCodeListExt3.中债月度明细_非标行业_制造业.getValue();
+        }else if (ruleFlag(ChbMonthAssetRule.采矿业,position)){
+            isFbhy =DictCodeListExt3.中债月度明细_非标行业_采矿业.getValue();
+        }else if (ruleFlag(ChbMonthAssetRule.建筑业,position)){
+            isFbhy =DictCodeListExt3.中债月度明细_非标行业_建筑业.getValue();
+        }else if (ruleFlag(ChbMonthAssetRule.基础设施建设,position)){
+            isFbhy =DictCodeListExt3.中债月度明细_非标行业_基础设施建设.getValue();
+        }else if (ruleFlag(ChbMonthAssetRule.房地产业,position)){
+            isFbhy =DictCodeListExt3.中债月度明细_非标行业_房地产业.getValue();
+        }else if (ruleFlag(ChbMonthAssetRule.金融业,position)){
+            isFbhy =DictCodeListExt3.中债月度明细_非标行业_金融业.getValue();
+        }else if (ruleFlag(ChbMonthAssetRule.其他服务业,position)){
+            isFbhy =DictCodeListExt3.中债月度明细_非标行业_其他服务业.getValue();
+        }
+
+        chbMonthAssetPositiondetail.setIsFbhy(isFbhy);
         chbMonthAssetPositiondetail.setDetailno(reportDetail.getPropertycode());
         chbMonthAssetPositiondetail.setTerm(reportDetail.getTermid());
+        chbMonthAssetPositiondetail.setOldAssetCode(position.getOldAssetCode());
         //生成主键
         chbMonthAssetPositiondetail.setPosuuid(IDGenerator.generate(36));
 
@@ -167,10 +194,22 @@ public class ChbMonthReportDetailAssetUtil {
     }
 
     public void  insertBefore(List<ChbMonthAssetPositiondetail> prdPositionList,Date batchDate){
+
+
+
+        Map<String, List<ChbMonthAssetPositiondetail>> AssetDetail = new HashMap<>();
+        /****需要特殊处理的科目*/
+        Map<String, ChbMonthAssetPositiondetail>  detail1001 = prdPositionList.stream().filter(detail ->
+               (detail.getDetailno().equals("AMT1_4_2")||detail.getDetailno().equals("AMT1_4_2_a")
+                       ||detail.getDetailno().equals("AMT1_5_1")||detail.getDetailno().equals("AMT1_5_1_a")
+                       ||detail.getDetailno().equals("AMT1_5_16")||detail.getDetailno().equals("AMT1_5_16_a")||detail.getDetailno().equals("AMT1_5_16_b")
+               )).collect(Collectors.toMap(ChbMonthAssetPositiondetail::getDetailCode,Positiondetail -> Positiondetail));
+
         /**展示产品购买资产首次买入交易的交易对手名称***/
         Map<String,Object> paraMap = new HashMap<>();
         Set<String> codeList = prdPositionList.stream().map(ChbMonthAssetPositiondetail::getCounterListCode).collect(Collectors.toSet());
         paraMap.put("keysList",codeList);
+
         //展示产品购买资产首次买入交易的交易对手名称
         List<SelectOptionDto> oDto = chbMonthReportDetailAssetMapper.getCounterList(paraMap);
         Map<String,String> CounterMap = oDto.stream().collect(JoyinCollectors.toMap(x -> x.getId(), x -> x.getText()));
@@ -179,76 +218,124 @@ public class ChbMonthReportDetailAssetUtil {
         Map<String,MstCustomerInfoAdd> customerMap = customerList.stream().collect(Collectors.toMap(MstCustomerInfoDetail::getCustomerId,a -> a, (k1, k2) -> k1));
         Map<String,MstCustomerInfoAdd> customerNameMap = customerList.stream().collect(Collectors.toMap(MstCustomerInfoDetail::getCustomerName,a -> a, (k1, k2) -> k1));
 
-        for(ChbMonthAssetPositiondetail dto : prdPositionList){
+        for(ChbMonthAssetPositiondetail dto : prdPositionList) {
             //先赋值行业  先用编码.再用code最后用交易对手
-            MstCustomerInfoAdd info = null!=customerMap.get(dto.getSubjectName())?customerMap.get(dto.getSubjectName()):
-                    null!=customerNameMap.get(dto.getSubjectName())?customerNameMap.get(dto.getSubjectName()):customerMap.get(dto.getRivalParty());
+            MstCustomerInfoAdd info = null != customerMap.get(dto.getSubjectName()) ? customerMap.get(dto.getSubjectName()) :
+                    null != customerNameMap.get(dto.getSubjectName()) ? customerNameMap.get(dto.getSubjectName()) : customerMap.get(dto.getRivalParty());
             //展示资产对应主体（没有主体的找交易对手）在市场机构中的行业一级分类
-            if(null!=info){
+            if (null != info) {
                 dto.setIndustry1(info.getIndustry());
                 dto.setIndustry2(info.getIndustry2());
                 dto.setIndustry3(info.getIndustry3());
                 dto.setIndustry4(info.getIndustry4());
-
             }
-            //非标转标字段塞值
-            String isFbhy = null;
-            switch (dto.getDetailno()){
-                case "AMT3_3_1" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_农林牧渔业.getValue(); break;
-                case "AMT3_3_2" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_制造业.getValue(); break;
-                case "AMT3_3_3" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_采矿业.getValue(); break;
-                case "AMT3_3_4" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_建筑业.getValue(); break;
-                case "AMT3_3_5" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_基础设施建设.getValue(); break;
-                case "AMT3_3_6" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_房地产业.getValue(); break;
-                case "AMT3_3_7" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_金融业.getValue(); break;
-                default:  isFbhy =DictCodeListExt3.中债月度明细_非标行业_其他服务业.getValue(); break;
-            }
-
-            dto.setIsFbhy(isFbhy);
-
 
             //再赋值交易对手名称  展示产品购买资产首次买入交易的交易对手名称
-            dto.setRivalParty(CounterMap.get(dto.getProdId()+"_"+dto.getAssetCode()));
-        }
-        //现金特殊处理产品代码
-//        List<ChbMonthAssetPositiondetail> detail1001 = prdPositionList.stream().filter(s-> "1001".equals(s.getAssettype2())&&s.getAssetvalueA()!=null).collect(Collectors.toList());
-//        Map<String, ChbMonthAssetPositiondetail>  detail1001 = prdPositionList.stream().filter(detail ->
-//                ("1001".equals(detail.getAssettype2())&&"REMAININGCASH".equals(detail.getAssetCode())&&detail.getAssetvalueA()!=null)).collect(Collectors.toMap(ChbMonthAssetPositiondetail::getProdId,Positiondetail -> Positiondetail));
-//
-//        if(null!=detail1001&&!detail1001.isEmpty()){
-//            Map<String, Object> param = new HashMap<String, Object>();
-//            param.put("cdate", batchDate);
-//            param.put("prodids", detail1001.keySet());
-//            List<ChbMonthAssetPositiondetail> prdPosition1001List = new ArrayList<>();
-//            List<ChbMonthAssetPositiondetail> subjectAddList = new ArrayList<>();
-//
-//            //获取产品科目信息
-//            this.buildPrdProstion(prdPosition1001List,param);
-//            //科目类数据合计
-//            if(!StringUtil.isEmptyList(prdPosition1001List)){
-//                for(ChbMonthAssetPositiondetail dto : prdPosition1001List){
-//                    //如果金额未0则不进行记录
-//                    if(dto.getAssetvalueA().compareTo(BigDecimal.ZERO)==0&&
-//                            dto.getAssetvalueB().compareTo(BigDecimal.ZERO)==0){
-//                        continue;
-//                    }
-//                    dto.setPosuuid(IDGenerator.generate(36));
-//                    dto.setDetailno(detail1001.get(dto.getProdId()).getDetailno());
-//                    dto.setTerm(detail1001.get(dto.getProdId()).getTerm());
-//                    dto.setAssettype(detail1001.get(dto.getProdId()).getAssettype());
-//                    dto.setAssettype2(detail1001.get(dto.getProdId()).getAssettype2());
-//                    dto.setManageType(detail1001.get(dto.getProdId()).getManageType());
-//                    dto.setVdate(detail1001.get(dto.getProdId()).getVdate());
-//                    dto.setMdate(detail1001.get(dto.getProdId()).getMdate());
-//                    subjectAddList.add(dto);
-//                }
-//                //将所有现金删除
-//                prdPositionList.removeAll(detail1001.values());
-//                //替换为对应的科目信息
-//                prdPositionList.addAll(subjectAddList);
-//            }
-//        }
+            dto.setRivalParty(CounterMap.get(dto.getProdId() + "_" + dto.getAssetCode()));
 
+            /***1.4.2 地方政府债券特殊处理**/
+            if (dto.getDetailno().equals("AMT1_4_2")) {
+                //转换为AMT1_4_2_b
+                dto.setDetailno("AMT1_4_2_b");
+                //如果包含专项债券
+                if (null != detail1001.get(dto.getCounterListCode() + "_AMT1_4_2_a")) {
+                    if (null != dto.getAssetvalueA()) {
+                        dto.setAssetvalueA(dto.getAssetvalueA().subtract(
+                                null != detail1001.get(dto.getCounterListCode() + "_AMT1_4_2_a") ? detail1001.get(dto.getCounterListCode() + "_AMT1_4_2_a").getAssetvalueA() : BigDecimal.ZERO));
+                    }
+                    if (null != dto.getAssetvalueB()) {
+                        dto.setAssetvalueB(dto.getAssetvalueB().subtract(null != detail1001.get(dto.getCounterListCode() + "_AMT1_4_2_a") ?
+                                detail1001.get(dto.getCounterListCode() + "_AMT1_4_2_a").getAssetvalueB() : BigDecimal.ZERO));
+                    }
+
+                }
+            } else if (dto.getDetailno().equals("AMT1_5_1")) {
+                //转换为AMT1_4_2_b
+                dto.setDetailno("AMT1_5_1_b");
+                //如果包含专项债券
+                if (null != detail1001.get(dto.getCounterListCode() + "_AMT1_5_1_a")) {
+                    if (null != dto.getAssetvalueA()) {
+                        dto.setAssetvalueA(dto.getAssetvalueA().subtract(
+                                null != detail1001.get(dto.getCounterListCode() + "_AMT1_5_1_a") ? detail1001.get(dto.getCounterListCode() + "_AMT1_5_1_a").getAssetvalueA() : BigDecimal.ZERO));
+                    }
+                    if (null != dto.getAssetvalueB()) {
+                        dto.setAssetvalueB(dto.getAssetvalueB().subtract(null != detail1001.get(dto.getCounterListCode() + "_AMT1_5_1_a") ?
+                                detail1001.get(dto.getCounterListCode() + "_AMT1_5_1_a").getAssetvalueB() : BigDecimal.ZERO));
+                    }
+
+                }
+            }else if (dto.getDetailno().equals("AMT1_5_16")) {
+                    //转换为AMT1_5_16_b
+                    dto.setDetailno("AMT1_5_16_c");
+                    BigDecimal assetValueA = dto.getAssetvalueA();
+                    BigDecimal assetValueB = dto.getAssetvalueA();
+
+                    //如果包含专项债券
+                    if (null != detail1001.get(dto.getCounterListCode() + "_AMT1_5_16_a")) {
+                        ChbMonthAssetPositiondetail adto = detail1001.get(dto.getCounterListCode() + "_AMT1_5_16_a");
+                        assetValueA.subtract(null != adto.getAssetvalueA() ? adto.getAssetvalueA() : BigDecimal.ZERO);
+                        assetValueB.subtract(null != adto.getAssetvalueB() ? adto.getAssetvalueB() : BigDecimal.ZERO);
+                    }
+                    if (null != detail1001.get(dto.getCounterListCode() + "_AMT1_5_16_b")) {
+                        ChbMonthAssetPositiondetail adto = detail1001.get(dto.getCounterListCode() + "_AMT1_5_16_b");
+                        assetValueA.subtract(null != adto.getAssetvalueA() ? adto.getAssetvalueA() : BigDecimal.ZERO);
+                        assetValueB.subtract(null != adto.getAssetvalueB() ? adto.getAssetvalueB() : BigDecimal.ZERO);
+                    }
+
+                    dto.setAssetvalueA(assetValueA);
+                    dto.setAssetvalueB(assetValueB);
+                }
+            }
+    }
+
+
+
+
+    public static boolean ruleFlag (ChbMonthAssetRule singleRule, ChbMonthAssetPosition position){
+        boolean flag = true;
+        for (int i = 0; i < singleRule.getRuleCodeList().size(); i++) {
+            if (singleRule.getRuleValueList().get(i).startsWith("!")){
+                // 只要有一条满足则该条头寸不计入
+                if (singleRule.getRuleValueList().get(i).substring(1,
+                        singleRule.getRuleValueList().get(i).length())
+                        .contains((String)getGetMethod(position,
+                                singleRule.getRuleCodeList().get(i)))){
+                    flag = false;
+                    break;
+                }
+            } else {
+                // 只要有一条不满足则该条头寸不计入
+                if (!singleRule.getRuleValueList().get(i)
+                        .contains((String)getGetMethod(position,singleRule.getRuleCodeList()
+                                .get(i)))){
+                    flag = false;
+                    break;
+                }
+            }
+        }
+
+        return flag;
+    }
+
+
+    /**
+     * 根据属性，获取get方法(不区分大小写)
+     * @param ob 对象
+     * @param name 属性名
+     * @return
+     */
+    private static Object getGetMethod(Object ob , String name){
+        Method[] m = ob.getClass().getMethods();
+        for(int i = 0;i < m.length;i++){
+            if(("get"+name).toLowerCase().equals(m[i].getName().toLowerCase())){
+                try {
+                    return m[i].invoke(ob);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    return null;
+                }
+            }
+        }
+        return null;
     }
 
 
