@@ -64,7 +64,6 @@ public class IntegratedQuoteManagement {
         else {
             integratedRepurchaseQuoteBeans = terminalHelper.queryIntegratedRepurchaseQuote(actionIn, entrustProp, accountId, pageSize);
         }
-
         // modify by etliu 20211228 end
         return new ResultBean(ErrorCode.SUCCESS, integratedRepurchaseQuoteBeans);
     }
