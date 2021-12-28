@@ -46,11 +46,17 @@ public class InstructionQueryRequest implements Serializable {
     @ApiModelProperty(required = false, name = "dataType", value = "数据类型")
     private String dataType;
 
+    @ApiModelProperty(hidden = true)
     private String fairCode;
+    @ApiModelProperty(hidden = true)
     private String platDate;
+    @ApiModelProperty(hidden = true)
     private String approveCode;
+    @ApiModelProperty(hidden = true)
     private String tradeTimeSwitch;
+    @ApiModelProperty(hidden = true)
     private String fairModeEntrustPriceBestThanInstruction;
+    @ApiModelProperty(hidden = true)
     private String fairModeWithUnacceptInstruction;
 
     public List<String> getTraderList() {
