@@ -104,8 +104,10 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 					// 计算浮动盈亏
 					for(EtrExchangeTradePositionsCommonResponse entity : result.getRoot()){
 						// 最新净价*组合持仓.数量 - 持仓成本 as 浮动盈亏
-						BigDecimal floatPL = ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum());
-						floatPL = ArithmeticUtil.subtract(floatPL,entity.getPositionsAmt());
+						BigDecimal floatFd = ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum());
+						floatFd = ArithmeticUtil.subtract(floatFd,entity.getPositionsAmt());
+						entity.setFloating(floatFd);
+						BigDecimal floatPL =ArithmeticUtil.divide(floatFd,ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum()),2);
 						entity.setFloatingPL(floatPL);
 					}
 				}

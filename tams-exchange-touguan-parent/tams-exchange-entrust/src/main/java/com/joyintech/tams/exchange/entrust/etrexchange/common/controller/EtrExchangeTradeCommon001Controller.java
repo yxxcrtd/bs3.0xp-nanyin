@@ -817,16 +817,16 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	public Message<String> selectAvailableNum(@RequestBody AvailableEtrSecPositionRequest dto){
 		try{
 			Map<String, Object> param = BeanUtil.object2Map(dto);
-		BigDecimal availableNum = etrExchangeTrade001CommonService.selectAvailableNum(param);
-		if(availableNum == null) {
-			availableNum= BigDecimal.ZERO;
+			BigDecimal availableNum = etrExchangeTrade001CommonService.selectAvailableNum(param);
+			if(availableNum == null) {
+				availableNum= BigDecimal.ZERO;
+			}
+			String availableNumStr=availableNum.setScale(2,RoundingMode.HALF_UP).toString();
+			return new Message<>(availableNumStr);
+		} catch (Exception e) {
+			logger.error("查询功能异常", e);
+			return new Message<String>().fail().setMessage("查询异常");
 		}
-		String availableNumStr=availableNum.setScale(2,RoundingMode.HALF_UP).toString();
-		return new Message<>(availableNumStr);
-	} catch (Exception e) {
-		logger.error("查询功能异常", e);
-		return new Message<String>().fail().setMessage("查询异常");
-	}
 	}
 
 	/**
@@ -1200,7 +1200,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	 * 如果以全价为基准，则计算净价和到期收益率<br/>
 	 * 如果以到期收益率为基准，则计算净价和全价
 	 *
-	 * @param param
+	 * @param dto
 	 * @return 计算结果
 	 * @author dubaojun
 	 */

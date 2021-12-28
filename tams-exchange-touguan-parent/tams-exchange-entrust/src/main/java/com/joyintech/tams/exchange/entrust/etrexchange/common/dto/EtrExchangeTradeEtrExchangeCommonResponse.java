@@ -64,6 +64,11 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
     /**
      * 资产名称
      */
+    @ApiModelProperty(name="finprodId",value="资产代码",example="A1")
+    private String finprodId;
+    /**
+     * 资产名称
+     */
     @ApiModelProperty(name="finprodAbbr",value="资产名称",example="A1")
     private String finprodAbbr;
 
@@ -213,6 +218,14 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
 
     @ApiModelProperty(name="entrustNum",value="指令数量",example="12")
     private BigDecimal entrustNum;
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
+    }
 
     /**
      * 获取 implementPercent
