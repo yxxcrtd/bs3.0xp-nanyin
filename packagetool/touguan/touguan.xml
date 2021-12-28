@@ -86,6 +86,9 @@
         <module>../../tams-svreport-parent/tams-svreport-interf</module>
         <module>../../tams-exchange-trade-parent/tams-exchange-trade-common</module>
         <module>../../tams-exchange-trade-parent/tams-exchange-trade-data-common</module>
+        <module>../../tams-exchange-trade-parent/tams-exchange-trade-quote</module>
+        <module>../../tams-exchange-trade-parent/tams-exchange-trade-server-dsp</module>
+        <module>../../tams-exchange-trade-parent/tams-exchange-trade-server-terminal</module>
         <module>../../tams-exchange-trade-parent/tams-exchange-trade</module>
 
     </modules>
