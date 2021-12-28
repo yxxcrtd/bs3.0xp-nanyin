@@ -801,6 +801,7 @@
         t.pledge_stock_id id,
         t.pledge_stock_name text
         from ETR_SEC_STOCK t
+        ORDER BY CREATE_TIME DESC
     </select>
     <!-- 查询登录用户是否满足指定的角色岗位 -->
     <select id="selectUserRolePosList" resultType="java.lang.Long">    
@@ -864,6 +865,7 @@
                 <result column="PLEDGE_RATIO" property="pledgeRatio" jdbcType="VARCHAR" />
                 <result column="PLEDGE_RATIO" property="scale" jdbcType="VARCHAR" />
                 <result column="PLEDGE_AMT" property="pledgePrin" jdbcType="VARCHAR" />
+                <result column="PLEDGE_AMT" property="pledgeAmount" jdbcType="VARCHAR" />
                 <result column="firstNetPrice" property="firstNetPrice" jdbcType="VARCHAR" />
                 <result column="pledStrdPrinAmt" property="pledStrdPrinAmt" jdbcType="VARCHAR" />
                 <result column="regist_Org" property="registOrg" jdbcType="VARCHAR" />

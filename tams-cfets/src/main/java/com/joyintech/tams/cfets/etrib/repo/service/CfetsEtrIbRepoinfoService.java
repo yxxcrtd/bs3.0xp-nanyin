@@ -262,9 +262,36 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         return result;
     }
     
-    public List<EtrSecStockConfig> getAssetDetailBySeqno(CfetsEtrRepoPledgeAssetDetailRequest cfetsEtrRepoPledgeAssetDetailRequest) {
+    public Collection<CfetsEtrSecStockConfig> getAssetDetailBySeqno(CfetsEtrRepoPledgeAssetDetailRequest cfetsEtrRepoPledgeAssetDetailRequest) {
     	Map<String, Object> pageParam = BeanUtil.object2Map(cfetsEtrRepoPledgeAssetDetailRequest);
-    	return cfetsEtrIbRepoinfoMapper.getAssetDetailBySeqno(pageParam);
+        List<EtrSecStockConfig> etrSecStockConfigList = cfetsEtrIbRepoinfoMapper.getAssetDetailBySeqno(pageParam);
+    	Map<String,CfetsEtrSecStockConfig> map = new HashMap<>();
+    	for(EtrSecStockConfig etrSecStockConfig:etrSecStockConfigList){
+            String key =etrSecStockConfig.getIsPpb()+etrSecStockConfig.getIsRight()+etrSecStockConfig.getIsSecBond();
+            CfetsEtrSecStockConfig cfetsEtrSecStockConfig = null;
+            if(map.containsKey(key)){
+                 cfetsEtrSecStockConfig = map.get(key);
+//                cfetsEtrSecStockConfig.
+//                List<>
+
+            }else{
+                 cfetsEtrSecStockConfig = new CfetsEtrSecStockConfig();
+                BeanUtil.copyPropertiesIgnoreNull(cfetsEtrSecStockConfig,etrSecStockConfig);
+            }
+            List<String> windtype = new ArrayList<>();
+            windtype.add(etrSecStockConfig.getWindtypeone());
+            windtype.add(etrSecStockConfig.getWindtypetwo());
+            if(cfetsEtrSecStockConfig.getWindtype()==null){
+                List<List<String>> windtypeList = new ArrayList<>();
+                windtypeList.add(windtype);
+                cfetsEtrSecStockConfig.setWindtype(windtypeList);
+            }else{
+                cfetsEtrSecStockConfig.getWindtype().add(windtype);
+            }
+            map.put(key,cfetsEtrSecStockConfig);
+        }
+        Collection<CfetsEtrSecStockConfig> collection =map.values();
+        return collection;
     }
 
     /**
