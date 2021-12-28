@@ -11,7 +11,7 @@ $(function() {
             assetCode: $('#assetCode').val()==null?null:$('#assetCode').val().join(","),
             //结束日（统计日期）
             enddate : $('#enddate').val(),
-            flag:'02'
+            dataFlag:'02'
         }
     };
 

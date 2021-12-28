@@ -57,7 +57,7 @@ $(function() {
             { title: "企业规模分类", width : 120, field: 'partyType1Str',sortField:'partyType1'},
             { title: "除回购和拆借外贷款所属地区", width : 120, field: 'buyPlaceStr',sortField:'buyPlace'},
             { title: "成本", width : 120, field: 'costAmtStr', width : 120,sortField:'costAmt'},
-            { title: "应计利息", width : 120, field: 'intincexpStr', width : 120,sortField:'intincexp'},
+            // { title: "应计利息", width : 120, field: 'intincexpStr', width : 120,sortField:'intincexp'},
             { title: "利息调整", width : 120, field: 'intadjexpAddStr', width : 120,sortField:'intadjexpAdd'},
             { title: "公允价值变动", width : 120, field: 'floatIngplStr', width : 120,sortField:'floatIngpl'},
             { title: "减值", width : 120, field: 'lossAmtStr', width : 120,sortField:'lossAmt'},

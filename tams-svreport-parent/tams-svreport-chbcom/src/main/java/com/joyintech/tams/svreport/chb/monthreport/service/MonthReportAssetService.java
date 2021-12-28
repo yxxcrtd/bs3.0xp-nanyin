@@ -949,7 +949,10 @@ public class MonthReportAssetService {
 									detail.setXgbottombalance(detail.getXgbottombalance().add(BigDecimal.ZERO));
 								}
 								//每次合計數據均需要計入
-								assetDetailList.add(ChbMonthReportDetailAssetUtil.buildAssetDetail(position,prodMap.get(position.getProdId()),assetMap.get(position.getAssetCode()),detail));
+								ChbMonthAssetPositiondetail assetDetail = ChbMonthReportDetailAssetUtil.buildAssetDetail(position,prodMap.get(position.getProdId()),assetMap.get(position.getAssetCode()),detail);
+								if(null!=assetDetail){
+									assetDetailList.add(assetDetail);
+								}
 
 								/**G06资产端改造  add by  dongxiangyang  end*/
 
@@ -1029,9 +1032,11 @@ public class MonthReportAssetService {
 //	    							detail.setBottombalance(detail.getBottombalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
 //	    						}
 //	    					}
-
-							assetDetailList.add(ChbMonthReportDetailAssetUtil.buildAssetDetail(position,prodMap.get(position.getProdId()),assetMap.get(position.getAssetCode()),
-									buildDetail(position,true,reportStartDate, singleRule.getPropertyCode(), balance, bottombalance,xgbalance,xgbottombalance)));
+							ChbMonthAssetPositiondetail assetDetail = ChbMonthReportDetailAssetUtil.buildAssetDetail(position,prodMap.get(position.getProdId()),assetMap.get(position.getAssetCode()),
+									buildDetail(position,true,reportStartDate, singleRule.getPropertyCode(), balance, bottombalance,xgbalance,xgbottombalance));
+							if(null!=assetDetail){
+								assetDetailList.add(assetDetail);
+							}
 						}
             			
             			//如果汇总项无此合计项则填入
