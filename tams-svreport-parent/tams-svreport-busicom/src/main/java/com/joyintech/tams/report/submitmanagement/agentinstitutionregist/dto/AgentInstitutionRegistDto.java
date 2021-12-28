@@ -6,6 +6,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.ChbAgentInstitutionSub;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.common.base.annotate.BusinessKey;
 import com.joyintech.tams.report.common.base.annotate.TableName;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
@@ -19,6 +20,9 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  */
 @TableName("CHB_AGENT_INSTITUTION_SUB")
 public class AgentInstitutionRegistDto extends ChbAgentInstitutionSub implements ProcessEntity {
+
+    @BusinessKey("AGENT_INSTITUTION_CODE")
+    public String agentInstitutionCode;//代销机构代码业务主键
     //报送状态字符串化
     public String getStatusStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.报送数据状态, this.getStatus());
@@ -42,5 +46,15 @@ public class AgentInstitutionRegistDto extends ChbAgentInstitutionSub implements
             return DateUtil.formatDateTime(this.getSubmitDeadline());
         }
         return null;
+    }
+
+    @Override
+    public String getAgentInstitutionCode() {
+        return agentInstitutionCode;
+    }
+
+    @Override
+    public void setAgentInstitutionCode(String agentInstitutionCode) {
+        this.agentInstitutionCode = agentInstitutionCode;
     }
 }
