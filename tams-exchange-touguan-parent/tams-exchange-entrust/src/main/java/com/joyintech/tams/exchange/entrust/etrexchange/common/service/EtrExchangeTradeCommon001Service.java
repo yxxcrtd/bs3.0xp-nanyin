@@ -88,7 +88,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -1840,6 +1839,20 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         }
         return null;
     }
+
+	/** 查询竞价交易行情信息 **/
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public EtrExchangeTradeQuotationHqResponse findQuotations(String secId) {
+		String param = "?stock_code=" + secId;
+		Map<String, Object> quoteList;
+		Map quoteMap = restTemplate.getForObject(ServiceApplication.QUOTE_SERVICE_NAME + queryIntegratedTick + param, Map.class);
+		if (quoteMap != null && quoteMap.get("data") != null) {
+			quoteList = (Map<String, Object>) quoteMap.get("data");
+			return BeanUtil.mapToObject(quoteList,EtrExchangeTradeQuotationHqResponse.class);
+		}
+		return new EtrExchangeTradeQuotationHqResponse();
+	}
+
 	/**
 	 * 修改/双击查看详情查询信息 <功能详细描述>
 	 *
