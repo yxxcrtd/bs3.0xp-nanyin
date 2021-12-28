@@ -145,6 +145,10 @@
              #{key,jdbcType=VARCHAR}
             </foreach>
 		 	</if>
+			<!-- 输入框值模糊查询 -->
+			<if test="prodname != null and prodname != ''">
+				OR b.PROD_NAME like concat(concat('%', #{prodname}),'%')
+			</if>
 		 </where>
 		 ORDER BY A .UPDATE_TIME DESC,A .PRODID ASC
 	</select>

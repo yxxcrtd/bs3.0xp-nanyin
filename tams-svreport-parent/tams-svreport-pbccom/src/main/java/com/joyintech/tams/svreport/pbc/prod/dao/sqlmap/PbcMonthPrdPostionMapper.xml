@@ -638,7 +638,7 @@
 		            WHERE
 		                1 = 1
 		                AND dl.settdate_date BETWEEN #{reportStartDate,jdbcType=DATE} AND #{reportEndDate,jdbcType=DATE}
-		                ---AND dl.trade_type != '04'
+		                /***AND dl.trade_type != '04'**/
 		                AND dl.status in ('E','M')
 		            GROUP BY
 		                nvl(dl.fprod_id, dl.prod_id),
@@ -862,7 +862,8 @@
 	    #{reportStartDate,jdbcType=DATE} startdate,/*报表开始日期*/
 	    #{reportEndDate,jdbcType=DATE}enddate,/*报表结束日期*/
 	    #{batchDate,jdbcType=DATE} bookdate,/*统计日期*/
-	    DECODE(info.is_constracte, 'Y', '01', '02') isconstracte,/*是否分级产品*/
+        /*DECODE(info.is_constracte, 'Y', '01', '02') isconstracte,是否分级产品  枚举值目前是01,02没有Y  20211223*/
+        info.is_constracte isconstracte,/*是否分级产品*/
 	    /*--info.prodtype          prodtype,产品标识*/
 	    info.transfer_type     transfertype,/*转让类型*/
 	    deal.buy_place         buyplace,/*销售区域*/

@@ -22,14 +22,18 @@ $(function(){
         },
         showDetail: true,//双击详情对比画面
         done :function(){
-            if(indentifyMark){
+            if(institutionCode){
+            if(prdRegistCode){
+            if(accountNo){
+            if(tradeNo){
                 table.resize($(document).height() - $('.container').height() + table.getHeight());
                 var addTableData = table.getAllRows();
                 //标志是否在当前页选中数据
                 var isChecked = false;
                 if(addTableData){
                     $(addTableData).each(function(i,v){
-                        if(indentifyMark===v.indentifyMark && v.sendStatusName==='未报送'){
+                        if(institutionCode===v.institutionCode && prdRegistCode===v.prdRegistCode && tradeNo===v.tradeNo &&
+                        accountNo===v.accountNo && v.sendStatusName==='未报送'){
                             table.checkRow(v.LAY_TABLE_INDEX);
                             dateCheckMethod();
                             isChecked = true;
@@ -41,11 +45,16 @@ $(function(){
                     pageCount++;
                     table.reload({page:{curr:pageCount}});
                 }
+                }
+                }
+                }
             }
         },
         cols: [
              { title: "主键uuid",field:'registSeqno',visible:false}
+            ,{field: 'status', title: "数据状态",visible:false,sortField:'dataStatus'}
             ,{field: 'dataStatusName', title: "数据状态",width:100,sortField:'dataStatus'}
+            ,{field: 'sendStatus', title: "报送状态",visible:false,sortField:'sendStatus'}
             ,{field: 'sendStatusName', title: "报送状态", width:100 ,sortField:'sendStatus'}
             ,{field: 'submitTimeStr', title: "报送日期", width:150,sortField:'submitTime'}
             ,{field: 'submitDeadlineStr', title: "报送截止日", width:150,sortField:'submitDeadline'}

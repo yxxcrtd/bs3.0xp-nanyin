@@ -50,7 +50,9 @@
         <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
         <result column="OLD_ASSET_CODE" property="oldAssetCode" jdbcType="VARCHAR" />
 
-
+        <result column="SUNASSETTYPE" property="sunassettype" jdbcType="VARCHAR" />
+        <result column="SUNASSETTYPE2" property="sunassettype2" jdbcType="VARCHAR" />
+        <result column="IS_YHBCGJ" property="isYhbcgj" jdbcType="VARCHAR" />
 
         <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
 
@@ -67,7 +69,59 @@
     </resultMap>
 
 
-    <select id="selectDetailList" resultMap="BaseResultMap">
+    <resultMap id="MstBaseResultMap" type="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd" >
+        <id column="CUSTOMER_ID" property="customerId" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE3" property="partyType3" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE2" property="partyType2" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE1" property="partyType1" jdbcType="VARCHAR" />
+        <result column="INDUSTRY" property="industry" jdbcType="VARCHAR" />
+        <result column="INDUSTRY2" property="industry2" jdbcType="VARCHAR" />
+        <result column="INSITITUTE_CODE" property="insitituteCode" jdbcType="VARCHAR" />
+        <result column="IS_GOV" property="isGov" jdbcType="VARCHAR" />
+        <result column="MAIN_CAPITAL" property="mainCapital" jdbcType="DECIMAL" />
+        <result column="REGISTER_CAPITAL" property="registerCapital" jdbcType="DECIMAL" />
+        <result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+        <result column="CITY" property="city" jdbcType="VARCHAR" />
+        <result column="COUNTY" property="county" jdbcType="VARCHAR" />
+        <result column="HOLDING_TYPE" property="holdingType" jdbcType="VARCHAR" />
+        <result column="CUSTOMER_OBJ_TYPE" property="customerObjType" jdbcType="VARCHAR" />
+        <result column="IS_LISTED_COMPANY" property="isListedCompany" jdbcType="VARCHAR" />
+        <result column="IS_GROUP_CUSTOMER" property="isGroupCustomer" jdbcType="VARCHAR" />
+        <result column="PARENT_CUSTOMER_ID" property="parentCustomerId" jdbcType="VARCHAR" />
+        <result column="PARENT_CUSTOMER_NAME" property="parentCustomerName" jdbcType="VARCHAR" />
+        <result column="IS_PRIVATE" property="isPrivate" jdbcType="VARCHAR" />
+        <result column="IS_ESCAPE_DEPT" property="isEscapeDept" jdbcType="VARCHAR" />
+        <result column="CREDIT_TYPE" property="creditType" jdbcType="VARCHAR" />
+        <result column="IS_CREDIT_RELATED_TRD" property="isCreditRelatedTrd" jdbcType="VARCHAR" />
+        <result column="STRUCT_ADJUST_TYPE" property="structAdjustType" jdbcType="VARCHAR" />
+        <result column="INDUS_UPGRATE_TYPE" property="indusUpgrateType" jdbcType="VARCHAR" />
+        <result column="SEX" property="sex" jdbcType="VARCHAR" />
+        <result column="PERSON_ID" property="personId" jdbcType="VARCHAR" />
+        <result column="M_PHONE" property="mPhone" jdbcType="VARCHAR" />
+        <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+        <result column="POSITION" property="position" jdbcType="VARCHAR" />
+        <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+        <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+        <result column="MAIL" property="mail" jdbcType="VARCHAR" />
+        <result column="PROPERTY" property="property" jdbcType="VARCHAR" />
+        <result column="COMPANY_NATURE" property="companyNature" jdbcType="VARCHAR" />
+        <result column="LINK_ID1" property="linkId1" jdbcType="VARCHAR" />
+        <result column="LINK_ID2" property="linkId2" jdbcType="VARCHAR" />
+        <result column="LINK_ID3" property="linkId3" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="HS_TYPE" property="hsType" jdbcType="VARCHAR" />
+        <result column="IS_FIN_LICENCE" property="isFinLicence" jdbcType="VARCHAR" />
+        <result column="INDUSTRY3" property="industry3" jdbcType="VARCHAR" />
+        <result column="INDUSTRY4" property="industry4" jdbcType="VARCHAR" />
+
+    </resultMap>
+
+    <select id="selectDetailList" resultType="com.joyintech.tams.svreport.chb.monthreportdetail.dto.ChbMonthReportDetailAsset">
         SELECT
             P.POSUUID,
             CASE
@@ -77,42 +131,54 @@
             L.ITEM_VALUE reportType2,
             T.PROPERNAME reportType3,
             T.PROPERNAME reportType4,
-            P.PROD_ID,
-            B.PROD_NAME,
-            B.IS_FHXGCP ,
-            P.ASSET_CODE,
-            DECODE(P.ASSET_CODE,'REMAININGCASH','剩余现金',NVL(I.ASSET_NAME,B.SUBJECT_NAME)) ASSET_NAME,
-            P.OLD_ASSET_CODE,
-            IA.ASSET_NAME OLD_ASSET_NAME,
+            P.PROD_ID prodId,
+            B.PROD_NAME prodName,
+            B.IS_FHXGCP isFhxgcp,
+            P.ASSET_CODE assetCode,
+            CASE WHEN P.DETAILNO = 'AMT1_1_1' THEN '现金'
+                WHEN B.SUBJECT_NAME IS NULL THEN NVL(I.ASSET_NAME,I.ASSET_CODE)
+                ELSE B.SUBJECT_NAME END assetName,
+            P.OLD_ASSET_CODE oldAssetCode,
+            IA.ASSET_NAME oldAssetName,
             NVL(I.VDATE,I.PLAN_SDATE) VDATE,
             NVL(I.MDATE,I.PLAN_EDATE) MDATE,
-            I.exercise_date,
-            NVL(MC.CUSTOMER_NAME,nvl(NVL(I.chb_issuer_id,I.chb_financier_id),I.chb_manager_id)) SUBJECT_NAME,
-            I.rival_party,
+            CASE WHEN AP.MDATE!=I.MDATE and I.option_flag ='01' THEN AP.MDATE END exerciseDate,
+            NVL(MC.CUSTOMER_NAME,P.SUBJECT_NAME) subjectName,
             I.asset_yield RATE,
             P.CCY,
-            AP.TDY_COST_AMT COST_AMT,
-            AP.TDY_FLOAT_INGPL FLOAT_INGPL,
+            AP.POS_AMT  delayPayAmt,
+            AP.TDY_COST_AMT  costAmt,
+            AP.TDY_FLOAT_INGPL  floatIngpl,
             AP.TDY_INTINCEXP INTINCEXP,
-            P.ASSETVALUE_A,
-            P.ASSETVALUE_B,
-            P.PRIVATEPRD_FLAG,
-            P.PRIVATEFUND_FLAG,
-            P.MAIN_GRADE,
-            P.CREDIT_GRADE,
+            AP.TDY_INTADJEXP_ADD intadjexpAdd,
+            AP.TDY_LOSS_AMT lossAmt,
+            P.ASSETVALUE_A assetvalueA,
+            P.ASSETVALUE_B assetvalueB,
+            P.INDUSTRY1,
+            P.INDUSTRY2,
+            P.INDUSTRY3,
+            P.INDUSTRY4,
+            nvl(mp.COUNTER_NAME,p.RIVAL_PARTY) rivalParty,
+            P.PRIVATEPRD_FLAG privateprdFlag,
+            P.PRIVATEFUND_FLAG privatefundFlag,
+            P.MAIN_GRADE mainGrade,
+            P.CREDIT_GRADE creditGrade,
             P.RATING,
-            P.BONDTOSTOCK_FLAG,
-            P.IS_GOVERN_FUND1,
-            I.ORG_ASSET_TYPE1,
-            I.ORG_ASSET_TYPE2,
-            I.ORG_ASSET_TYPE3
-            FROM CHB_MONTH_REPORT_TEMPLATE T
-            LEFT JOIN CHB_MONTH_ASSET_POSITIONDETAIL P ON T.PROPERTYCODE = P.DETAILNO
+            P.BONDTOSTOCK_FLAG bondtostockFlag,
+            P.IS_GOVERN_FUND1 isGovernFund1,
+            I.ORG_ASSET_TYPE1 orgAssetType1,
+            I.ORG_ASSET_TYPE2 orgAssetType2,
+            I.ORG_ASSET_TYPE3 orgAssetType3,
+            P.IS_YHBCGJ isYhbcgj,
+            P.TYPE_FINAL typeFinal
+            FROM CHB_MONTH_ASSET_POSITIONDETAIL P
+            LEFT JOIN CHB_MONTH_REPORT_TEMPLATE T ON T.PROPERTYCODE = P.DETAILNO
             LEFT JOIN CHB_ASSET_INFO I ON P.ASSET_CODE = I.ASSET_CODE
             LEFT JOIN CHB_ASSET_INFO IA ON IA.ASSET_CODE = P.OLD_ASSET_CODE
             LEFT JOIN BOK_SUBJECT B ON B.BOOKSET_ID = '00000000000000000002' AND B.SUBJECT_NO = P.ASSET_CODE
             LEFT JOIN CHB_PRD_BASEINFO B ON P.PROD_ID = B.PROD_ID
-            LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = nvl(NVL(I.chb_issuer_id,I.chb_financier_id),I.chb_manager_id)
+            LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = P.SUBJECT_NAME
+            LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = P.RIVAL_PARTY
             LEFT JOIN SYS_DATADICT_LIST L ON L.ITEM_CODE = REPLACE(SUBSTR(T.PROPERTYCODE,0,7),'_','')  AND L.DICT_CODE = 'SVR_MONTH_REPORT_DETAIL'
             LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PROD_ID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)
 
@@ -145,7 +211,7 @@
                 </foreach>
 
             </if>
-            ORDER BY ORDERNO
+            ORDER BY T.ORDERNO
     </select>
 
     <select id="getAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -157,11 +223,10 @@
              where E.MAPPINGCODE IN ('CASH_SUBJECTNO_AVG','CASH_SUBJECTNO_MKT')
              GROUP BY SRCFIELD1,S.SUBJECT_NAME)A
         <where>
-            A.id like concat(concat('%',#{prodId,
+            A.id like concat(concat('%',#{search,
 			jdbcType=VARCHAR}),'%')
-			or  A.text like concat(concat('%',#{prodId,
+			or  A.text like concat(concat('%',#{search,
 			jdbcType=VARCHAR}),'%')
-            <!-- and A.FINPROD_TYPE2 = 'F16' -->
         </where>
         order by A.id
 
@@ -169,25 +234,26 @@
 
     <insert id="insertBatch" parameterType="com.joyintech.tams.common.base.entity.ChbMonthAssetPositiondetail" >
         insert into CHB_MONTH_ASSET_POSITIONDETAIL (POSUUID, TERM, DETAILNO,
-                INVEST_VARIETY, ASSET_CODE, ASSETTYPE,
-                PROD_ID, IS_FHXGCP, ASSETVALUE_A,
-                ASSETVALUE_B, VDATE, MDATE,
-                OPENPLAN, SUBJECT_NAME, RIVAL_PARTY,
-                RATE, CCY, INDUSTRY1,
-                INDUSTRY2, INDUSTRY3, INDUSTRY4,
-                DELAY_PAY_AMT, COST_AMT, FLOAT_INGPL,
-                INTINCEXP, INTADJEXP_ADD, LOSS_AMT,
-                IN_ASSET_TYPE, PPPFLAG, MONIT_TYPE,
-                MANAGE_TYPE, IS_GOVERN_FUND1, PRIVATEFUND_FLAG,
-                PRIVATEPRD_FLAG, BONDTOSTOCK_FLAG, CREDIT_GRADE,
-                MAIN_GRADE, TYPE_FINAL, ORG_ASSET_TYPE1,
-                ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, RATING,
-                ASSETTYPE2, ORG_CODE, DEPT_CODE,
-                OLD_ASSET_CODE)
+                    INVEST_VARIETY, ASSET_CODE, ASSETTYPE,
+                    PROD_ID, IS_FHXGCP, ASSETVALUE_A,
+                    ASSETVALUE_B, VDATE, MDATE,
+                    OPENPLAN, SUBJECT_NAME, RIVAL_PARTY,
+                    RATE, CCY, INDUSTRY1,
+                    INDUSTRY2, INDUSTRY3, INDUSTRY4,
+                    DELAY_PAY_AMT, COST_AMT, FLOAT_INGPL,
+                    INTINCEXP, INTADJEXP_ADD, LOSS_AMT,
+                    IN_ASSET_TYPE, PPPFLAG, MONIT_TYPE,
+                    MANAGE_TYPE, IS_GOVERN_FUND1, PRIVATEFUND_FLAG,
+                    PRIVATEPRD_FLAG, BONDTOSTOCK_FLAG, CREDIT_GRADE,
+                    MAIN_GRADE, TYPE_FINAL, ORG_ASSET_TYPE1,
+                    ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, RATING,
+                    ASSETTYPE2, ORG_CODE, DEPT_CODE,
+                    OLD_ASSET_CODE, SUNASSETTYPE, SUNASSETTYPE2,
+                    IS_YHBCGJ)
 
         <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
                  close="from dual)">
-            sys_guid(),#{item.term,jdbcType=VARCHAR}, #{item.detailno,jdbcType=VARCHAR},
+            sys_guid(), #{item.term,jdbcType=VARCHAR}, #{item.detailno,jdbcType=VARCHAR},
             #{item.investVariety,jdbcType=VARCHAR}, #{item.assetCode,jdbcType=VARCHAR}, #{item.assettype,jdbcType=VARCHAR},
             #{item.prodId,jdbcType=VARCHAR}, #{item.isFhxgcp,jdbcType=VARCHAR}, #{item.assetvalueA,jdbcType=DECIMAL},
             #{item.assetvalueB,jdbcType=DECIMAL}, #{item.vdate,jdbcType=DATE}, #{item.mdate,jdbcType=DATE},
@@ -202,7 +268,8 @@
             #{item.mainGrade,jdbcType=VARCHAR}, #{item.typeFinal,jdbcType=VARCHAR}, #{item.orgAssetType1,jdbcType=VARCHAR},
             #{item.orgAssetType2,jdbcType=VARCHAR}, #{item.orgAssetType3,jdbcType=VARCHAR}, #{item.rating,jdbcType=VARCHAR},
             #{item.assettype2,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR},
-            #{item.oldAssetCode,jdbcType=VARCHAR}
+            #{item.oldAssetCode,jdbcType=VARCHAR}, #{item.sunassettype,jdbcType=VARCHAR}, #{item.sunassettype2,jdbcType=VARCHAR},
+            #{item.isYhbcgj,jdbcType=VARCHAR}
         </foreach>
 
     </insert>
@@ -212,5 +279,163 @@
         delete from CHB_MONTH_ASSET_POSITIONDETAIL
         where TERM = #{term,jdbcType=CHAR}
   </delete>
+
+    <select id="getCounterList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT  A.CODE id,A.TRADE_COUNTER text from(
+            SELECT T.PROD_ID||'_'||T.ASSET_CODE CODE,
+            DECODE(MP.COUNTER_NAME,NULL,DECODE(MC.CUSTOMER_NAME,NULL,T.TRADE_COUNTER,MC.CUSTOMER_NAME),MP.COUNTER_NAME) TRADE_COUNTER,
+            row_number() over(partition by T.PROD_ID,T.ASSET_CODE,T.TRADE_COUNTER order by DEALDATE) row_number
+            FROM CHB_INVEST_TRADE T
+            LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = T.TRADE_COUNTER
+            LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = T.TRADE_COUNTER
+            WHERE 1=1
+            <if test="keysList != null and keysList.size()>0 ">
+                <foreach item="item" index="index" collection="keysList" separator="," open=" AND T.PROD_ID||'_'||T.ASSET_CODE IN (" close=")">
+                    <if test="(index % 999) == 998">
+                        null) OR T.PROD_ID||'_'||T.ASSET_CODE IN (
+                    </if>
+                    #{item}
+                </foreach>
+            </if>
+        ) a
+        WHERE A.row_number = 1
+    </select>
+
+
+    <select id="getCustomerList" resultMap="MstBaseResultMap">
+        SELECT  *
+        FROM MST_CUSTOMER_INFO_ADD T
+        WHERE 1=1
+        <if test="keysList != null and keysList.size()>0 ">
+            <foreach item="item" index="index" collection="keysList" separator="," open=" AND T.CUSTOMER_ID (" close=")">
+                <if test="(index % 999) == 998">
+                    null) OR T.CUSTOMER_ID IN (
+                </if>
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectBalanceData" resultType="com.joyintech.tams.common.base.entity.ChbMonthAssetPositiondetail"  fetchSize="1000">
+        SELECT
+        PRODID prodId,/*产品代码*/
+        ASSET_CODE assetCode,/*资产代码*/
+        ACCUAMT assetvalueA,/*剩余金额*/
+        ACCUAMT assetvalueB,/*剩余金额*/
+        CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
+        FROM(
+        SELECT
+        PROD.FINPROD_MARKET_ID PRODID,/*产品代码*/
+        'REMAININGCASH' ASSET_CODE,/*资产代码*/
+        BALANCE.O_AMT ACCUAMT,/*剩余金额*/
+        BALANCE.O_AMT ACCUQTY,/*剩余本金*/
+        BALANCE.BALANCE_DATE CDATE,/*生成日*/
+        BALANCE.O_CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
+        FROM BOK_BALANCE BALANCE
+        LEFT JOIN BOK_BOOKSET BOOKSET /*投资组合关联账套查询相关信息*/
+        ON BOOKSET.BOOKSET_ID = BALANCE.BOOKSET_ID
+        LEFT JOIN FIN_PRODUCT PROD/*标的类金融产品表*/
+        ON PROD.FINPROD_MARKET_ID = BALANCE.BOOKSET_ID
+        WHERE 1 =1
+        AND BALANCE.BALANCE_DATE = #{cdate,jdbcType=DATE}
+        /*标的类金融产品.投管分类=理财产品*/
+        AND PROD.FINPROD_TYPE2 = 'F16'
+        and BOOKSET.ACCT_SUBJECT_TYPE = 'F18'/*取账套表的主体核算类型为F18投资组合*/
+        and exists (select 1 from FIN_PRODUCT_ADD PRODADD where BALANCE.BOOKSET_ID = PRODADD.PORTFOLIO_ID and prodadd.PROFIT_FLAG = '03')/*只取非保本理财产品 */
+        <if test='subjectNoList!=null and subjectNoList.size()>0'>
+            <foreach collection="subjectNoList" item="subjectNo" index="index" open="and balance.SUBJECT_NO in (" close=")" separator=",">
+                #{subjectNo,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="prodids !=null and prodids.size()!=0">
+            <foreach collection="prodids" item="prodid" open="and PROD.FINPROD_MARKET_ID in (" separator=","
+                     close=")">
+                #{prodid,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        UNION ALL
+        SELECT
+        PROD.FINPROD_MARKET_ID PRODID,/*产品代码*/
+        'REMAININGCASH' ASSET_CODE,/*资产代码*/
+        BALANCE.O_AMT ACCUAMT,/*剩余金额*/
+        BALANCE.O_AMT ACCUQTY,/*剩余本金*/
+        BALANCE.BALANCE_DATE CDATE,/*生成日*/
+        BALANCE.O_CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
+        FROM BOK_BALANCE BALANCE
+        LEFT JOIN BOK_BOOKSET BOOKSET /*投资组合关联账套查询相关信息*/
+        ON BOOKSET.BOOKSET_ID = BALANCE.BOOKSET_ID
+        LEFT JOIN FIN_PRODUCT PROD/*标的类金融产品表*/
+        ON PROD.FINPROD_ID = BALANCE.BOOKSET_ID
+        WHERE 1 =1
+        AND BALANCE.BALANCE_DATE = #{cdate,jdbcType=DATE}
+        /*标的类金融产品.投管分类=理财产品*/
+        AND PROD.FINPROD_TYPE2 = 'F16'
+        AND BOOKSET.ACCT_SUBJECT_TYPE = 'F16'/*取账套表的主体核算类型为F16净值型产品货币性产品*/
+        and exists (select 1 from FIN_PRODUCT_ADD PRODADD where BALANCE.BOOKSET_ID = PRODADD.FINPROD_ID and prodadd.PROFIT_FLAG = '03')/*只取非保本理财产品 */
+        <if test='subjectNoList!=null and subjectNoList.size()>0'>
+            <foreach collection="subjectNoList" item="subjectNo" index="index" open="and balance.SUBJECT_NO in (" close=")" separator=",">
+                #{subjectNo,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="prodids !=null and prodids.size()!=0">
+            <foreach collection="prodids" item="prodid" open="and PROD.FINPROD_MARKET_ID in (" separator=","
+                     close=")">
+                #{prodid,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <!-- 穿透报送时接入通道剩余现金 -->
+        <if test="isBtm !=null and isBtm == '01'">
+            UNION ALL
+            SELECT
+            VAL.PORTFOLIO_ID PRODID,/*产品代码*/
+            'REMAININGCASH' ASSET_CODE,/*资产代码*/
+            val.amount ACCUAMT,/*剩余金额*/
+            val.amount ACCUQTY,/*剩余本金*/
+            VAL.CDATE CDATE,/*生成日*/
+            VAL.CCY CCY /*币种*/
+            from ptl_cash_position VAL
+            WHERE 1 =1
+            AND VAL.CDATE = #{cdate,jdbcType=DATE}
+            and exists (select 1 from fin_product_add d where d.portfolio_id = val.portfolio_id and d.profit_flag = '03')/*只取非保本理财产品*/
+            and val.HODING_TYPE = '03' /*只取实际*/
+            and VAL.CHL_FINPROD_ID is not null ---只取通道id不为空的数据
+            <if test="prodids !=null and prodids.size()!=0">
+                <foreach collection="prodids" item="prodid" open="and VAL.PORTFOLIO_ID in (" separator=","
+                         close=")">
+                    #{prodid,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </if>
+        )
+    </select>
+
+    <select id="selectBalanceDataSubSystem" resultType="com.joyintech.tams.common.base.entity.ChbMonthAssetPositiondetail"  fetchSize="1000">
+
+        SELECT
+        NULL POSUUID,/*头寸ID:自动生成*/
+        PRODINFO.PROD_ID  prodId,/*产品代码*/
+        balance.SUBJECT_NO assetCode,/*资产代码*/
+        BALANCE.O_AMT assetvalueA,/*剩余金额*/
+        BALANCE.O_AMT assetvalueB,/*剩余本金*/
+        BALANCE.O_CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
+        FROM BOK_BALANCE BALANCE
+        LEFT JOIN CHB_PRD_BASEINFO PRODINFO /*产品要素信息*/
+        on prodinfo.PROD_ID = balance.BOOKSET_ID
+        WHERE 1 =1
+        AND to_char(BALANCE.BALANCE_DATE,'yyyy-MM-dd') = to_char(#{cdate,jdbcType=DATE},'yyyy-MM-dd')
+        and prodinfo.PROFIT_TYPE = '03'/*只取非保本理财产品 */
+        <if test='subjectNoList!=null and subjectNoList.size()>0'>
+            <foreach collection="subjectNoList" item="subjectNo" index="index" open="and balance.SUBJECT_NO in (" close=")" separator=",">
+                #{subjectNo,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="prodids !=null and prodids.size()!=0">
+            <foreach collection="prodids" item="prodid" open="and PRODINFO.prod_id in (" separator=","
+                     close=")">
+                #{prodid,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+
 
 </mapper>

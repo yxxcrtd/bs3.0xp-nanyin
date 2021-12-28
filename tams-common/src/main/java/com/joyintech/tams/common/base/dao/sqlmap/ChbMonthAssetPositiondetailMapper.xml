@@ -48,6 +48,10 @@
         <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
         <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
         <result column="OLD_ASSET_CODE" property="oldAssetCode" jdbcType="VARCHAR" />
+        <result column="SUNASSETTYPE" property="sunassettype" jdbcType="VARCHAR" />
+        <result column="SUNASSETTYPE2" property="sunassettype2" jdbcType="VARCHAR" />
+        <result column="IS_YHBCGJ" property="isYhbcgj" jdbcType="VARCHAR" />
+        <result column="IS_FBHY" property="isFbhy" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         POSUUID POSUUID, TERM TERM, DETAILNO DETAILNO, INVEST_VARIETY INVEST_VARIETY, ASSET_CODE ASSET_CODE, 
@@ -61,7 +65,8 @@
         BONDTOSTOCK_FLAG BONDTOSTOCK_FLAG, CREDIT_GRADE CREDIT_GRADE, MAIN_GRADE MAIN_GRADE, 
         TYPE_FINAL TYPE_FINAL, ORG_ASSET_TYPE1 ORG_ASSET_TYPE1, ORG_ASSET_TYPE2 ORG_ASSET_TYPE2, 
         ORG_ASSET_TYPE3 ORG_ASSET_TYPE3, RATING RATING, ASSETTYPE2 ASSETTYPE2, ORG_CODE ORG_CODE, 
-        DEPT_CODE DEPT_CODE, OLD_ASSET_CODE OLD_ASSET_CODE
+        DEPT_CODE DEPT_CODE, OLD_ASSET_CODE OLD_ASSET_CODE, SUNASSETTYPE SUNASSETTYPE, SUNASSETTYPE2 SUNASSETTYPE2, 
+        IS_YHBCGJ IS_YHBCGJ, IS_FBHY IS_FBHY
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -99,7 +104,8 @@
             MAIN_GRADE, TYPE_FINAL, ORG_ASSET_TYPE1, 
             ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, RATING, 
             ASSETTYPE2, ORG_CODE, DEPT_CODE, 
-            OLD_ASSET_CODE)
+            OLD_ASSET_CODE, SUNASSETTYPE, SUNASSETTYPE2, 
+            IS_YHBCGJ, IS_FBHY)
         values (#{posuuid,jdbcType=VARCHAR}, #{term,jdbcType=VARCHAR}, #{detailno,jdbcType=VARCHAR}, 
             #{investVariety,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, #{assettype,jdbcType=VARCHAR}, 
             #{prodId,jdbcType=VARCHAR}, #{isFhxgcp,jdbcType=VARCHAR}, #{assetvalueA,jdbcType=DECIMAL}, 
@@ -115,7 +121,8 @@
             #{mainGrade,jdbcType=VARCHAR}, #{typeFinal,jdbcType=VARCHAR}, #{orgAssetType1,jdbcType=VARCHAR}, 
             #{orgAssetType2,jdbcType=VARCHAR}, #{orgAssetType3,jdbcType=VARCHAR}, #{rating,jdbcType=VARCHAR}, 
             #{assettype2,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, 
-            #{oldAssetCode,jdbcType=VARCHAR})
+            #{oldAssetCode,jdbcType=VARCHAR}, #{sunassettype,jdbcType=VARCHAR}, #{sunassettype2,jdbcType=VARCHAR}, 
+            #{isYhbcgj,jdbcType=VARCHAR}, #{isFbhy,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbMonthAssetPositiondetail" >
         insert into CHB_MONTH_ASSET_POSITIONDETAIL
@@ -258,6 +265,18 @@
             <if test="oldAssetCode != null" >
                 OLD_ASSET_CODE,
             </if>
+            <if test="sunassettype != null" >
+                SUNASSETTYPE,
+            </if>
+            <if test="sunassettype2 != null" >
+                SUNASSETTYPE2,
+            </if>
+            <if test="isYhbcgj != null" >
+                IS_YHBCGJ,
+            </if>
+            <if test="isFbhy != null" >
+                IS_FBHY,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="posuuid != null" >
@@ -398,6 +417,18 @@
             <if test="oldAssetCode != null" >
                 #{oldAssetCode,jdbcType=VARCHAR},
             </if>
+            <if test="sunassettype != null" >
+                #{sunassettype,jdbcType=VARCHAR},
+            </if>
+            <if test="sunassettype2 != null" >
+                #{sunassettype2,jdbcType=VARCHAR},
+            </if>
+            <if test="isYhbcgj != null" >
+                #{isYhbcgj,jdbcType=VARCHAR},
+            </if>
+            <if test="isFbhy != null" >
+                #{isFbhy,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbMonthAssetPositiondetail" >
@@ -407,16 +438,16 @@
         INDUSTRY4, DELAY_PAY_AMT, COST_AMT, FLOAT_INGPL, INTINCEXP, INTADJEXP_ADD, LOSS_AMT, 
         IN_ASSET_TYPE, PPPFLAG, MONIT_TYPE, MANAGE_TYPE, IS_GOVERN_FUND1, PRIVATEFUND_FLAG, 
         PRIVATEPRD_FLAG, BONDTOSTOCK_FLAG, CREDIT_GRADE, MAIN_GRADE, TYPE_FINAL, ORG_ASSET_TYPE1, 
-        ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, RATING, ASSETTYPE2, ORG_CODE, DEPT_CODE, OLD_ASSET_CODE
-        )
+        ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, RATING, ASSETTYPE2, ORG_CODE, DEPT_CODE, OLD_ASSET_CODE, 
+        SUNASSETTYPE, SUNASSETTYPE2, IS_YHBCGJ, IS_FBHY)
         select POSUUID, TERM, DETAILNO, INVEST_VARIETY, 
             ASSET_CODE, ASSETTYPE, PROD_ID, IS_FHXGCP, ASSETVALUE_A, ASSETVALUE_B, VDATE, MDATE, 
             OPENPLAN, SUBJECT_NAME, RIVAL_PARTY, RATE, CCY, INDUSTRY1, INDUSTRY2, INDUSTRY3, 
             INDUSTRY4, DELAY_PAY_AMT, COST_AMT, FLOAT_INGPL, INTINCEXP, INTADJEXP_ADD, LOSS_AMT, 
             IN_ASSET_TYPE, PPPFLAG, MONIT_TYPE, MANAGE_TYPE, IS_GOVERN_FUND1, PRIVATEFUND_FLAG, 
             PRIVATEPRD_FLAG, BONDTOSTOCK_FLAG, CREDIT_GRADE, MAIN_GRADE, TYPE_FINAL, ORG_ASSET_TYPE1, 
-            ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, RATING, ASSETTYPE2, ORG_CODE, DEPT_CODE, OLD_ASSET_CODE
-            
+            ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, RATING, ASSETTYPE2, ORG_CODE, DEPT_CODE, OLD_ASSET_CODE, 
+            SUNASSETTYPE, SUNASSETTYPE2, IS_YHBCGJ, IS_FBHY
              from CHB_MONTH_ASSET_POSITIONDETAIL
              where 1 = 1 and POSUUID = #{posuuid,jdbcType=VARCHAR}
     </insert>
@@ -558,6 +589,18 @@
             <if test="oldAssetCode != null" >
                 OLD_ASSET_CODE = #{oldAssetCode,jdbcType=VARCHAR},
             </if>
+            <if test="sunassettype != null" >
+                SUNASSETTYPE = #{sunassettype,jdbcType=VARCHAR},
+            </if>
+            <if test="sunassettype2 != null" >
+                SUNASSETTYPE2 = #{sunassettype2,jdbcType=VARCHAR},
+            </if>
+            <if test="isYhbcgj != null" >
+                IS_YHBCGJ = #{isYhbcgj,jdbcType=VARCHAR},
+            </if>
+            <if test="isFbhy != null" >
+                IS_FBHY = #{isFbhy,jdbcType=VARCHAR},
+            </if>
         </set>
         where POSUUID = #{posuuid,jdbcType=VARCHAR}
     </update>
@@ -607,7 +650,11 @@
             ASSETTYPE2 = #{assettype2,jdbcType=VARCHAR},
             ORG_CODE = #{orgCode,jdbcType=VARCHAR},
             DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
-            OLD_ASSET_CODE = #{oldAssetCode,jdbcType=VARCHAR}
+            OLD_ASSET_CODE = #{oldAssetCode,jdbcType=VARCHAR},
+            SUNASSETTYPE = #{sunassettype,jdbcType=VARCHAR},
+            SUNASSETTYPE2 = #{sunassettype2,jdbcType=VARCHAR},
+            IS_YHBCGJ = #{isYhbcgj,jdbcType=VARCHAR},
+            IS_FBHY = #{isFbhy,jdbcType=VARCHAR}
         where POSUUID = #{posuuid,jdbcType=VARCHAR}
     </update>
 </mapper>

@@ -9,7 +9,13 @@ import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
 import com.joyintech.tams.common.base.entity.ChbMonthPrdPositiondetail;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto;
 import com.joyintech.tams.svreport.pbc.common.constants.PbcReportProperycode;
 import com.joyintech.tams.svreport.pbc.prod.dto.PbcMonthPrdPostionDto;
@@ -71,7 +77,7 @@ public class PbcMonthReportDetailProdUtil {
         }else if(DictCodeListExt2.客户二级类型_广义政府.getValue().equals(prdPosition.getCustomerType2())){
             ordIdentified = DictCodeListExt2.客户一级类型_广义政府.getValue();
         }else if(DictCodeListExt2.客户二级类型_非金融企业.getValue().equals(prdPosition.getCustomerType2())){
-            ordIdentified = ordIdentified = DictCodeListExt2.客户一级类型_非金融企业.getValue();
+            ordIdentified  = DictCodeListExt2.客户一级类型_非金融企业.getValue();
         }else if(DictCodeListExt2.客户二级类型_银行业存款类金融机构.getValue().equals(prdPosition.getCustomerType2())
                 ||DictCodeListExt2.客户二级类型_银行业非存款类金融机构.getValue().equals(prdPosition.getCustomerType2())
                 /*****G06升级改造 leipeng 20210128   start**/
@@ -100,7 +106,9 @@ public class PbcMonthReportDetailProdUtil {
 
         pbcMonthPrdPositiondetail.setOrdIdentified(ordIdentified);
 
-        pbcMonthPrdPositiondetail.setTermdays(prdPosition.getTerm());
+        pbcMonthPrdPositiondetail.setTermdays(getTermDays(info.getOperateMode(),info.getOpenCircle(),info.getOpenCircleDays(),new BigDecimal(DateUtil.getBetweenDayNumber(info.getVdate(),info.getMdate()))));
+
+        pbcMonthPrdPositiondetail.setTermtype(getTermTypeNew(pbcMonthPrdPositiondetail.getTermdays(),info.getOperateMode()));
 
         pbcMonthPrdPositiondetail.setTerm(termid);
 
@@ -123,12 +131,30 @@ public class PbcMonthReportDetailProdUtil {
         List<ChbPrdBaseinfo> prdBaseinfoList = chbPrdBaseinfoMapper.selectAllProd(null);
         prodMap = null!=prdBaseinfoList?prdBaseinfoList.stream().collect(Collectors.toMap(p->p.getProdId(), p-> p,(key1, key2)->key1)):new HashMap<>();
 
+        String source = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE_PBC);
+        Map<String, BigDecimal> rateMap = new HashMap<String, BigDecimal>();
         for(PbcMonthPrdPostionDto dto: posList){
+            if(!DictCodeListExt1.币种_中债_人民币.getValue().equals(dto.getCcy())){
+                if(null!=dto.getEndamtsumOth()){
+                    dto.setEndamtsumOth(ChbCcyConvertUtil.exchangeMoney(
+                            dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),dto.getEnddate(),dto.getEndamtsumOth(),rateMap,source));
+                }
+                if(null!=dto.getDirtyamtsum()){
+                    dto.setDirtyamtsum(ChbCcyConvertUtil.exchangeMoney(
+                            dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),dto.getEnddate(),dto.getDirtyamtsum(),rateMap,source));
+                }
+                if(null!=dto.getRedamt()){
+                    dto.setRedamt(ChbCcyConvertUtil.exchangeMoney(
+                            dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),dto.getEnddate(),dto.getRedamt(),rateMap,source));
+                }
+            }
             prodDetailList.add(buildProdDetail(dto,prodMap.get(dto.getProdid()),termid));
         }
 
+
         insertBatch(prodDetailList,termid);
     }
+
 
     /**
      * 开放式净值型、开放式非净值型时取产品的开放天数，开放天数与产品基本信息中的【规律开放周期】的对应关系如下
@@ -139,7 +165,7 @@ public class PbcMonthReportDetailProdUtil {
     public static BigDecimal getTermDays(String operateMode,String openCircle,BigDecimal openCircleDays,BigDecimal closetermday){
         BigDecimal days = null;
         if(DictCodeListExt2.产品运作模式_封闭式净值型.getValue().equals(operateMode)
-            ||DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(operateMode)){
+                ||DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(operateMode)){
             days = closetermday;
         }else{
             if(StringUtil.isNotEmpty(openCircle)){
@@ -161,11 +187,68 @@ public class PbcMonthReportDetailProdUtil {
                     case "99" :
                         days = openCircleDays; break;
                 }
+            }else{
+                days = BigDecimal.ONE;
             }
         }
 
         return days;
     }
+
+    /**
+     * 开放式都统计到无固定期限，封闭式的根据到期日-起息日
+     * @param termDays
+     * @param operateMode
+     * @return
+     */
+    public static String getTermTypeNew(BigDecimal termDays,String operateMode){
+
+        String code = DictCodeListExt3.人行月度明细_期限类型_无固定期限.getValue();
+
+        if(DictCodeListExt2.产品运作模式_封闭式净值型.getValue().equals(operateMode)
+                ||DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(operateMode)){
+            if(termDays.compareTo(BigDecimal.ZERO)>0&&termDays.compareTo(new BigDecimal(30))<=0){
+                code = DictCodeListExt3.人行月度明细_期限类型_1个月.getValue();
+            }else if(termDays.compareTo(new BigDecimal(30))>0&&termDays.compareTo(new BigDecimal(90))<=0){
+                code = DictCodeListExt3.人行月度明细_期限类型_1到3个月.getValue();
+            }else if(termDays.compareTo(new BigDecimal(90))>0&&termDays.compareTo(new BigDecimal(180))<=0){
+                code = DictCodeListExt3.人行月度明细_期限类型_3到6个月.getValue();
+            }else if(termDays.compareTo(new BigDecimal(180))>0&&termDays.compareTo(new BigDecimal(360))<=0){
+                code = DictCodeListExt3.人行月度明细_期限类型_6到12个月.getValue();
+            }else if(termDays.compareTo(new BigDecimal(360))>0&&termDays.compareTo(new BigDecimal(720))<=0){
+                code = DictCodeListExt3.人行月度明细_期限类型_1到2年.getValue();
+            }else if(termDays.compareTo(new BigDecimal(720))>0&&termDays.compareTo(new BigDecimal(1080))<=0){
+                code = DictCodeListExt3.人行月度明细_期限类型_2到3年.getValue();
+            }else if(termDays.compareTo(new BigDecimal(1080))>0){
+                code = DictCodeListExt3.人行月度明细_期限类型_3年以上.getValue();
+            }
+        }
+
+        return code;
+    }
+
+    public static String getTermType(BigDecimal termDays){
+        String code = DictCodeListExt3.人行月度明细_期限类型_无固定期限.getValue();
+        if(termDays.compareTo(BigDecimal.ZERO)>0&&termDays.compareTo(new BigDecimal(30))<=0){
+            code = DictCodeListExt3.人行月度明细_期限类型_1个月.getValue();
+        }else if(termDays.compareTo(new BigDecimal(30))>0&&termDays.compareTo(new BigDecimal(90))<=0){
+            code = DictCodeListExt3.人行月度明细_期限类型_1到3个月.getValue();
+        }else if(termDays.compareTo(new BigDecimal(90))>0&&termDays.compareTo(new BigDecimal(180))<=0){
+            code = DictCodeListExt3.人行月度明细_期限类型_3到6个月.getValue();
+        }else if(termDays.compareTo(new BigDecimal(180))>0&&termDays.compareTo(new BigDecimal(360))<=0){
+            code = DictCodeListExt3.人行月度明细_期限类型_6到12个月.getValue();
+        }else if(termDays.compareTo(new BigDecimal(360))>0&&termDays.compareTo(new BigDecimal(720))<=0){
+            code = DictCodeListExt3.人行月度明细_期限类型_1到2年.getValue();
+        }else if(termDays.compareTo(new BigDecimal(720))>0&&termDays.compareTo(new BigDecimal(1080))<=0){
+            code = DictCodeListExt3.人行月度明细_期限类型_2到3年.getValue();
+        }else if(termDays.compareTo(new BigDecimal(1080))>0){
+            code = DictCodeListExt3.人行月度明细_期限类型_3年以上.getValue();
+        }
+        return code;
+    }
+
+
+
 
 //    /**
 //     * 为详情赋值费用数据

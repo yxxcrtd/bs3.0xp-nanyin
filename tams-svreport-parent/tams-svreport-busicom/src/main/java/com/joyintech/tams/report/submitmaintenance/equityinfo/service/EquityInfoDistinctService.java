@@ -88,6 +88,19 @@ public class EquityInfoDistinctService {
 			return;
 		}
 		
+		//取得check表源数据
+		Map<String,List<ChbEquHoldCheckDto>> checkMap = new HashMap<String,List<ChbEquHoldCheckDto>>();
+		String updateFlg = SvrDataUtil.getSysParam("SVR_EQU_REPAIR_BATCH_FLAG");
+		//只有当系统参数为01：使用修复批的情况下，才取以前保存在库中的check表数据
+		if("01".equals(updateFlg)) {
+			//取得本次导入txt记录，对应的CHECK表记录
+			List<ChbEquHoldCheckDto> allList = chbEquHoldCheckDtoMapper.selectChekForRepair(keys);
+
+			checkMap = allList.stream().collect(JoyinCollectors.groupingBy(
+					x -> getKey(x)));	
+		}
+		
+		
 //		String key = "";
 //        String key1 = "";	
 //        Object tmpMap = null;
@@ -148,6 +161,22 @@ public class EquityInfoDistinctService {
 						 }
 						 if("01".equals(intype)){//是否进check表
 							 ChbEquHoldCheckDto checkModel = transformModelToCheck(model);
+							 //修复批启用的情况下，如果接入的txt对应的信息为空，则用之前check表的内容替换
+							 if("01".equals(updateFlg)) {
+								for(ChbEquHoldCheckDto hdlDto : checkMap.get(yibaosongkey)) {
+									if(indentifyMark.equals(hdlDto.getIndentifyMark())) {
+										//设置 账号开户所在地
+										if(StringUtil.isEmpty(checkModel.getFundAccPlace())) {
+											checkModel.setFundAccPlace(hdlDto.getFundAccPlace());
+										}
+										//设置 权益人所属银行代码
+										if(StringUtil.isEmpty(checkModel.getTheBankCode())) {
+											checkModel.setTheBankCode(hdlDto.getTheBankCode());
+										}
+										
+									}
+								} 
+							 }
 							 checkModel.setMergerindentifymark(yibaosongModel.getIndentifyMark());
 							 checkModel.setOperatestatus(DictCodeListExt2.处理状态_中债_已合并.getValue());
 							 chbEquHoldCheckDtoMapper.deleteCheckDataByPrimarykey(checkModel);
@@ -158,6 +187,22 @@ public class EquityInfoDistinctService {
 									 ChbEquHoldCheckDto regDto = transformRegModelToCheck(yibaosongModel);
 									 regDto.setMergerindentifymark(yibaosongModel.getIndentifyMark());
 									 regDto.setOperatestatus(DictCodeListExt2.处理状态_中债_已合并.getValue());
+//									//修复批启用的情况下，如果接入的txt对应的信息为空，则用之前check表的内容替换
+//									 if("01".equals(updateFlg)) {
+//										for(ChbEquHoldCheckDto hdlDto : checkMap.get(yibaosongkey)) {
+//											if(yibaosongModel.getIndentifyMark().equals(hdlDto.getIndentifyMark())) {
+//												//设置 账号开户所在地
+//												if(StringUtil.isEmpty(checkModel.getFundAccPlace())) {
+//													checkModel.setFundAccPlace(hdlDto.getFundAccPlace());
+//												}
+//												//设置 权益人所属银行代码
+//												if(StringUtil.isEmpty(checkModel.getTheBankCode())) {
+//													checkModel.setTheBankCode(hdlDto.getTheBankCode());
+//												}
+//												
+//											}
+//										} 
+//									 }
 									 chbEquHoldCheckDtoMapper.insert(regDto);
 								 }
 							 }
@@ -169,6 +214,35 @@ public class EquityInfoDistinctService {
 						 //continue;
 					 }
 				 }
+			 }else if(yibaosongModel!=null && indentifyMark.equals(yibaosongModel.getIndentifyMark())){
+				//修复批启用的情况下，如果接入的txt对应的信息为空，则用之前check表的内容替换
+				 if("01".equals(updateFlg)) {
+					 ChbEquHoldCheckDto checkModel = chbEquHoldCheckDtoMapper.selectByPrimarykey(yibaosongModel.getIndentifyMark());
+					 if(StringUtil.isNotEmpty(checkModel)){
+						 boolean updFlg = false;
+						 //更新CHECK表
+						 EquityInfo001Dto model = new EquityInfo001Dto();
+						 if(tmpMap  instanceof Map){
+							 EquityInfoMaintenanceService.maptoDto((Map<String,String>)tmpMap, model);
+						 }else if(tmpMap  instanceof EquityInfo001Dto){
+							 model = (EquityInfo001Dto)tmpMap;
+						 }
+						 ChbEquHoldCheckDto regDto = transformModelToCheck(model);
+						 regDto.setMergerindentifymark(yibaosongModel.getIndentifyMark());
+						 regDto.setOperatestatus(DictCodeListExt2.处理状态_中债_已合并.getValue());
+						 //设置 账号开户所在地
+						 if(StringUtil.isEmpty(regDto.getFundAccPlace())) {
+							 regDto.setFundAccPlace(checkModel.getFundAccPlace());
+						 }
+						 //设置 权益人所属银行代码
+						 if(StringUtil.isEmpty(regDto.getTheBankCode())) {
+							 regDto.setTheBankCode(checkModel.getTheBankCode());
+						 }
+						 chbEquHoldCheckDtoMapper.updateForRepair(regDto);
+						
+					 }
+				 }
+				 
 			 }
 		}
 		keys.removeAll(keyList);
@@ -840,7 +914,25 @@ public class EquityInfoDistinctService {
 				}
 			}
 			key = getKey(tmp) + GlobalConstant.UNDER_LINE + tmp.getIndentifyMark();
-			//三要素+识别标识一致 则认为是同一条数据，覆盖原有数据,以文件中最新为准
+			String updateFlg = SvrDataUtil.getSysParam("SVR_EQU_REPAIR_BATCH_FLAG");
+			//只有当系统参数为01：使用修复批的情况下，才取以前保存在库中的check表数据
+			if("01".equals(updateFlg)) {
+				//取得导入前已经在check表存在的数据
+				EquityInfo001Dto handleDto = dictictMap.get(key);
+				
+				//已经在check表中存在的情况下，进行修复字段的处理
+				if(StringUtil.isNotEmpty(handleDto)) {
+					//设置 账号开户所在地
+					if(StringUtil.isEmpty(tmp.getFundAccPlace())) {
+						tmp.setFundAccPlace(handleDto.getFundAccPlace());
+					}
+					//设置 权益人所属银行代码
+					if(StringUtil.isEmpty(tmp.getTheBankCode())) {
+						tmp.setTheBankCode(handleDto.getTheBankCode());
+					}
+				}	
+			}
+			
 			dictictMap.put(key, tmp);
 		}
 

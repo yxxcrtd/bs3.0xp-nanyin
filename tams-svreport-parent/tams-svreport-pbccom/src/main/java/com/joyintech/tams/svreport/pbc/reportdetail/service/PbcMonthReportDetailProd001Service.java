@@ -67,8 +67,7 @@ public class PbcMonthReportDetailProd001Service extends CommonExportService<PbcM
 
 	public List<PbcMonthReportDetailProd> selectForExport(Map<String, Object> pageParam) {
 		//将发送状态改为空
-		int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
-		int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
+
 		if(StringUtil.isNotEmpty(pageParam.get("prodId"))){
 			pageParam.put("prodIds",pageParam.get("prodId").toString().split(","));
 		}

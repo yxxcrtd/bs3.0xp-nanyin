@@ -51,21 +51,21 @@ $(function() {
             { title: "最近开放计划结束日/行权日", width : 200, field: 'openplanStr',sortField:'openplan'},
             { title: "主体名称", width : 120, field: 'subjectName',sortField:'subjectName'},
             { title: "交易对手名称", width : 120, field: 'rivalParty',sortField:'rivalParty'},
-            { title: "利率", width : 120, field: 'rate', type:'money',sortField:'rate'},
-            { title: "币种", width : 120, field: 'ccy',sortField:'ccy'},
+            { title: "利率", width : 120, field: 'rateStr', type:'money',sortField:'rate'},
+            { title: "币种", width : 120, field: 'ccyStr',sortField:'ccy'},
             { title: "行业分类", width : 120, field: 'industryStr',sortField:'industry'},
             { title: "企业规模分类", width : 120, field: 'partyType1Str',sortField:'partyType1'},
             { title: "除回购和拆借外贷款所属地区", width : 120, field: 'buyPlaceStr',sortField:'buyPlace'},
-            { title: "成本", width : 120, field: 'costAmt', type:'money',sortField:'costAmt'},
-            { title: "应计利息", width : 120, field: 'floatIngpl', type:'money',sortField:'floatIngpl'},
-            { title: "利息调整", width : 120, field: 'intincexp', type:'money',sortField:'intincexp'},
-            { title: "公允价值变动", width : 120, field: 'intadjexpAdd', type:'money',sortField:'intadjexpAdd'},
-            { title: "减值", width : 120, field: 'lossAmt', type:'money',sortField:'lossAmt'},
-            { title: "期末余额", width : 120, field: 'amt', type:'money',sortField:'amt'},
+            { title: "成本", width : 120, field: 'costAmtStr', width : 120,sortField:'costAmt'},
+            { title: "应计利息", width : 120, field: 'intincexpStr', width : 120,sortField:'intincexp'},
+            { title: "利息调整", width : 120, field: 'intadjexpAddStr', width : 120,sortField:'intadjexpAdd'},
+            { title: "公允价值变动", width : 120, field: 'floatIngplStr', width : 120,sortField:'floatIngpl'},
+            { title: "减值", width : 120, field: 'lossAmtStr', width : 120,sortField:'lossAmt'},
+            { title: "期末余额", width : 120, field: 'amtStr', width : 120,sortField:'amt'},
             { title: "投管一级分类", width : 120, field: 'orgAssetType1Str',sortField:'orgAssetType1'},
             { title: "投管二级分类", width : 120, field: 'orgAssetType2Str',sortField:'orgAssetType2'},
             { title: "投管三级分类", width : 120, field: 'orgAssetType3Str',sortField:'orgAssetType3'},
-            { title: "资产负债剩余期限", width : 120, field: 'endDays',type:'number',sortField:'endDays'},
+            { title: "资产负债剩余期限", width : 120, field: 'endDaysType',sortField:'endDays'},
 
         ]
     });
@@ -76,17 +76,18 @@ $(function() {
      */
     var exportExcel = function(flag) {
         var expArr=table.getAllCheckedRows();
-        var param={};
-        if(!expArr || expArr.length ==0){
-
-            param = getSearchParams();
-            if(!param.enddate){
-                Joyin.error("请选择统计日期进行导出！");
-                return;
-            }
+        var param=getSearchParams();
+        if(!param.enddate){
+            Joyin.error("请选择统计日期进行导出！");
+            return;
+        }
+        if(flag == '0'){
             Joyin.exportExcel("export",param);
         }else{
-
+            if((!expArr || expArr.length ==0)){
+                Joyin.error("请选择导出数据！");
+                return;
+            }
             var keyList = [];
             $.each(expArr, function(i, row) {
                 keyList.push(row.posuuid);
@@ -99,22 +100,6 @@ $(function() {
 
 
     function init(){
-        // if(isMain=='01'){
-        //     setTimeout(function() {
-        //         if($('#sendStatus').val()=='02'||$('#sendStatus').val()=='03'){
-        //             $('#submitDate').val(searchDataStart+' - '+searchDataEnd);
-        //         }else{
-        //             $('#submitDeadLine').val(searchDataStart + ' - ' + searchDataEnd);
-        //         }
-        //         table.load();
-        //     }, 500);
-        // }
-        // //报送前检查调用数据检查
-        // if(validKey){
-        //     setTimeout(function() {
-        //         table.load();
-        //     },500)
-        // }
     };
     init();
 

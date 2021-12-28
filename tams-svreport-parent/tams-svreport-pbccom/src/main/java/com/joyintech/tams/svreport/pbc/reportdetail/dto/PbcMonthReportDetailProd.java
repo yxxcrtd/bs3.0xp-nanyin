@@ -6,6 +6,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.PbcMonthPrdPositiondetail;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.interf.common.util.BigDecimalConverterUtil;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -32,11 +33,11 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
 
 
     /**
-     * 是否本期发行
+     * 是否本期终止
      */
     private String isEndTrem;
     /**
-     *
+     *是否存续
      */
     private String isEndSubsist;
 
@@ -783,11 +784,14 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
         return SysDataUtil.getNameFromDataDict(DictCode.产品运作模式, this.getOperateMode());
     }
 
-
-    public String getTermtypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.期限类型, this.getTermtype());
+    public String getCcyStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.币种_中债, this.getCcy());
     }
 
+
+    public String getTermtypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.人行月度明细_期限类型, this.getTermtype());
+    }
     public String getIsTransferStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsTransfer());
     }
@@ -823,15 +827,12 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsMarketFund());
     }
 
-
-
-
     public String getIsEndSubsistStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsEndSubsist());
     }
 
     public String getManageTypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.管理方式, this.getManageType());
+        return SysDataUtil.getNameFromDataDict(DictCode.管理方式_发行登记, this.getManageType());
     }
 
     public String getFiduciaryDutyStr() {
@@ -842,5 +843,54 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
         return SysDataUtil.getNameFromDataDict(DictCode.人行月报详情数据类型, this.getDataType());
 
     }
+
+
+
+    public String getOrdIdentified01Str(){ return null!=ordIdentified01? BigDecimalConverterUtil.getMonthDetailString(ordIdentified01):null; }
+    public String getOrdIdentified02Str(){ return null!=ordIdentified02? BigDecimalConverterUtil.getMonthDetailString(ordIdentified02):null; }
+    public String getOrdIdentified03Str(){ return null!=ordIdentified03? BigDecimalConverterUtil.getMonthDetailString(ordIdentified03):null; }
+    public String getOrdIdentified04Str(){ return null!=ordIdentified04? BigDecimalConverterUtil.getMonthDetailString(ordIdentified04):null; }
+    public String getOrdIdentified05Str(){ return null!=ordIdentified05? BigDecimalConverterUtil.getMonthDetailString(ordIdentified05):null; }
+    public String getOrdIdentified06Str(){ return null!=ordIdentified06? BigDecimalConverterUtil.getMonthDetailString(ordIdentified06):null; }
+    public String getOrdIdentifiedAllStr(){ return null!=ordIdentifiedAll? BigDecimalConverterUtil.getMonthDetailString(ordIdentifiedAll):null; }
+
+    public String getBuyPlace01Str(){ return null!=buyPlace01? BigDecimalConverterUtil.getMonthDetailString(buyPlace01):null; }
+    public String getBuyPlace02Str(){ return null!=buyPlace02? BigDecimalConverterUtil.getMonthDetailString(buyPlace02):null; }
+    public String getBuyPlace03Str(){ return null!=buyPlace03? BigDecimalConverterUtil.getMonthDetailString(buyPlace03):null; }
+    public String getBuyPlace04Str(){ return null!=buyPlace04? BigDecimalConverterUtil.getMonthDetailString(buyPlace04):null; }
+    public String getBuyPlace05Str(){ return null!=buyPlace05? BigDecimalConverterUtil.getMonthDetailString(buyPlace05):null; }
+    public String getBuyPlace06Str(){ return null!=buyPlace06? BigDecimalConverterUtil.getMonthDetailString(buyPlace06):null; }
+    public String getBuyPlace07Str(){ return null!=buyPlace07? BigDecimalConverterUtil.getMonthDetailString(buyPlace07):null; }
+    public String getBuyPlace08Str(){ return null!=buyPlace08? BigDecimalConverterUtil.getMonthDetailString(buyPlace08):null; }
+    public String getBuyPlace09Str(){ return null!=buyPlace09? BigDecimalConverterUtil.getMonthDetailString(buyPlace09):null; }
+    public String getBuyPlace10Str(){ return null!=buyPlace10? BigDecimalConverterUtil.getMonthDetailString(buyPlace10):null; }
+    public String getBuyPlace11Str(){ return null!=buyPlace11? BigDecimalConverterUtil.getMonthDetailString(buyPlace11):null; }
+    public String getBuyPlace12Str(){ return null!=buyPlace12? BigDecimalConverterUtil.getMonthDetailString(buyPlace12):null; }
+    public String getBuyPlace13Str(){ return null!=buyPlace13? BigDecimalConverterUtil.getMonthDetailString(buyPlace13):null; }
+    public String getBuyPlace14Str(){ return null!=buyPlace14? BigDecimalConverterUtil.getMonthDetailString(buyPlace14):null; }
+    public String getBuyPlace15Str(){ return null!=buyPlace15? BigDecimalConverterUtil.getMonthDetailString(buyPlace15):null; }
+    public String getBuyPlace16Str(){ return null!=buyPlace16? BigDecimalConverterUtil.getMonthDetailString(buyPlace16):null; }
+    public String getBuyPlace17Str(){ return null!=buyPlace17? BigDecimalConverterUtil.getMonthDetailString(buyPlace17):null; }
+    public String getBuyPlace18Str(){ return null!=buyPlace18? BigDecimalConverterUtil.getMonthDetailString(buyPlace18):null; }
+    public String getBuyPlace19Str(){ return null!=buyPlace19? BigDecimalConverterUtil.getMonthDetailString(buyPlace19):null; }
+    public String getBuyPlace20Str(){ return null!=buyPlace20? BigDecimalConverterUtil.getMonthDetailString(buyPlace20):null; }
+    public String getBuyPlace21Str(){ return null!=buyPlace21? BigDecimalConverterUtil.getMonthDetailString(buyPlace21):null; }
+    public String getBuyPlace22Str(){ return null!=buyPlace22? BigDecimalConverterUtil.getMonthDetailString(buyPlace22):null; }
+    public String getBuyPlace23Str(){ return null!=buyPlace23? BigDecimalConverterUtil.getMonthDetailString(buyPlace23):null; }
+    public String getBuyPlace24Str(){ return null!=buyPlace24? BigDecimalConverterUtil.getMonthDetailString(buyPlace24):null; }
+    public String getBuyPlace25Str(){ return null!=buyPlace25? BigDecimalConverterUtil.getMonthDetailString(buyPlace25):null; }
+    public String getBuyPlace26Str(){ return null!=buyPlace26? BigDecimalConverterUtil.getMonthDetailString(buyPlace26):null; }
+    public String getBuyPlace27Str(){ return null!=buyPlace27? BigDecimalConverterUtil.getMonthDetailString(buyPlace27):null; }
+    public String getBuyPlace28Str(){ return null!=buyPlace28? BigDecimalConverterUtil.getMonthDetailString(buyPlace28):null; }
+    public String getBuyPlace29Str(){ return null!=buyPlace29? BigDecimalConverterUtil.getMonthDetailString(buyPlace29):null; }
+    public String getBuyPlace30Str(){ return null!=buyPlace30? BigDecimalConverterUtil.getMonthDetailString(buyPlace30):null; }
+    public String getBuyPlace31Str(){ return null!=buyPlace31? BigDecimalConverterUtil.getMonthDetailString(buyPlace31):null; }
+    public String getBuyPlace32Str(){ return null!=buyPlace32? BigDecimalConverterUtil.getMonthDetailString(buyPlace32):null; }
+    public String getBuyPlace33Str(){ return null!=buyPlace33? BigDecimalConverterUtil.getMonthDetailString(buyPlace33):null; }
+    public String getBuyPlace34Str(){ return null!=buyPlace34? BigDecimalConverterUtil.getMonthDetailString(buyPlace34):null; }
+    public String getBuyPlace35Str(){ return null!=buyPlace35? BigDecimalConverterUtil.getMonthDetailString(buyPlace35):null; }
+    public String getBuyPlace36Str(){ return null!=buyPlace36? BigDecimalConverterUtil.getMonthDetailString(buyPlace36):null; }
+    public String getBuyPlaceAllStr(){ return null!=buyPlaceAll? BigDecimalConverterUtil.getMonthDetailString(buyPlaceAll):null; }
+
 
 }

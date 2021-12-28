@@ -9,6 +9,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.ChbMonthPrdPositiondetail;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.interf.common.util.BigDecimalConverterUtil;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -103,6 +104,9 @@ public class ChbMonthReportDetailProd extends ChbMonthPrdPositiondetail implemen
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal ordIdentified09;
+
+
+    private String isFbhy;
 
 
     public String getProdName() {
@@ -245,6 +249,11 @@ public class ChbMonthReportDetailProd extends ChbMonthPrdPositiondetail implemen
         return SysDataUtil.getNameFromDataDict(DictCode.产品运作模式, this.getOperateMode());
     }
 
+
+    public String getCcyStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.币种_中债, this.getCcy());
+    }
+
     public String getExcFinSector() {
         return excFinSector;
     }
@@ -270,11 +279,12 @@ public class ChbMonthReportDetailProd extends ChbMonthPrdPositiondetail implemen
     }
 
     public String getOpentypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.开放类型, this.getOpentype());
+        return SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_开放类型, this.getOpentype());
     }
 
     public String getTermtypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.期限类型, this.getTermtype());
+        String  code = SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_期限类型, this.getTermtype());
+        return null!=code?code:SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_产品期限, this.getTermtype());
     }
 
     public String getIsTransferStr() {
@@ -292,9 +302,6 @@ public class ChbMonthReportDetailProd extends ChbMonthPrdPositiondetail implemen
     public String getExcFinSectorStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getExcFinSector());
     }
-
-
-
     public String getIsFhxgcpStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsFhxgcp());
     }
@@ -306,4 +313,24 @@ public class ChbMonthReportDetailProd extends ChbMonthPrdPositiondetail implemen
     public String getIsEndTremStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsEndTrem());
     }
+
+
+
+    public String getDirtyamtsumStr(){ return null!=this.getDirtyamtsum()? BigDecimalConverterUtil.getMonthDetailString(this.getDirtyamtsum()):null; }
+    public String getCleanamtsumStr(){ return null!=this.getCleanamtsum()? BigDecimalConverterUtil.getMonthDetailString(this.getCleanamtsum()):null; }
+    public String getEndamtsumOthStr(){ return null!=this.getEndamtsumOth()? BigDecimalConverterUtil.getMonthDetailString(this.getEndamtsumOth()):null; }
+    public String getPayamtsumStr(){ return null!=this.getPayamtsum()? BigDecimalConverterUtil.getMonthDetailString(this.getPayamtsum()):null; }
+    public String getCustomeramtStr(){ return null!=this.getCustomeramt()? BigDecimalConverterUtil.getMonthDetailString(this.getCustomeramt()):null; }
+    public String getBankamtStr(){ return null!=this.getBankamt()? BigDecimalConverterUtil.getMonthDetailString(this.getBankamt()):null; }
+    public String getOrdIdentified01Str(){ return null!=this.getOrdIdentified01()? BigDecimalConverterUtil.getMonthDetailString(this.getOrdIdentified01()):null; }
+    public String getOrdIdentified02Str(){ return null!=this.getOrdIdentified02()? BigDecimalConverterUtil.getMonthDetailString(this.getOrdIdentified02()):null; }
+    public String getOrdIdentified03Str(){ return null!=this.getOrdIdentified03()? BigDecimalConverterUtil.getMonthDetailString(this.getOrdIdentified03()):null; }
+    public String getOrdIdentified04Str(){ return null!=this.getOrdIdentified04()? BigDecimalConverterUtil.getMonthDetailString(this.getOrdIdentified04()):null; }
+    public String getOrdIdentified05Str(){ return null!=this.getOrdIdentified05()? BigDecimalConverterUtil.getMonthDetailString(this.getOrdIdentified05()):null; }
+    public String getOrdIdentified06Str(){ return null!=this.getOrdIdentified06()? BigDecimalConverterUtil.getMonthDetailString(this.getOrdIdentified06()):null; }
+    public String getOrdIdentified07Str(){ return null!=this.getOrdIdentified07()? BigDecimalConverterUtil.getMonthDetailString(this.getOrdIdentified07()):null; }
+    public String getOrdIdentified08Str(){ return null!=this.getOrdIdentified08()? BigDecimalConverterUtil.getMonthDetailString(this.getOrdIdentified08()):null; }
+    public String getOrdIdentified09Str(){ return null!=this.getOrdIdentified09()? BigDecimalConverterUtil.getMonthDetailString(this.getOrdIdentified09()):null; }
+
+
 }
