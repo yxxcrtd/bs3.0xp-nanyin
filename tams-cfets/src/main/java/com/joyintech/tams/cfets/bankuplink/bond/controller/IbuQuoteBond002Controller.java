@@ -132,6 +132,10 @@ public class IbuQuoteBond002Controller extends BaseController {
         if(CollectionUtils.isNotEmpty(cfetsBondDealDialogueQuoteDto.getCfetsBondDealDialogueQuoteDtoList())){
             cfetsBondDealQuoteCommonDto.setPtlAllocatios(cfetsQuotedCommonServiceVue.createPtlAllocationList(cfetsBondDealDialogueQuoteDto.getCfetsBondDealDialogueQuoteDtoList()));
         }
+        //信贷资产支持证券、资产支持票据锚定值应默认净价且不可修改
+        if(StringUtil.equals(cfetsBondDealQuoteCommonDto.getType11(),DictCodeListExt3.行内资产四级分类_交易商协会ABN.getValue())||StringUtil.equals(cfetsBondDealQuoteCommonDto.getType11(),DictCodeListExt3.行内资产四级分类_银保监会主管ABS.getValue())){
+            cfetsBondDealQuoteCommonDto.setCalculateField("01");
+        }
         return new Message<CfetsBondDealQuoteCommonDto>().success().setData(cfetsBondDealQuoteCommonDto);
     }
 

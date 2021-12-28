@@ -442,6 +442,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
             FinProductType finProductType = finProductTypeMapper.selectByPrimaryKey(finProductTypeKey);
             if (finProductType != null){
                 cfetsBondDealDialogueQuoteDto.setAssetTypeOne(finProductType.getType4());
+                cfetsBondDealDialogueQuoteDto.setType11(finProductType.getType11());
             }
         }
         
