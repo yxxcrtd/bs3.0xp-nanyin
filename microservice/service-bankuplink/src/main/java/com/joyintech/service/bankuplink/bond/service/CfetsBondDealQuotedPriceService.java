@@ -484,6 +484,8 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
             FinProduct finProduct = finProductMapper.selectByPrimaryKey(cfetsBondDealRequestQuoteDto.getFinprodId());
             if (finProduct != null){
                 cfetsBondDealRequestQuoteDto.setFinprodMarketId(finProduct.getFinprodMarketId());
+                cfetsBondDealRequestQuoteDto.setFinprodAbbr(finProduct.getFinprodAbbr());
+                cfetsBondDealRequestQuoteDto.setTradeMarket(finProduct.getTradeMarket());
             }
         }
         if(!StringUtil.isEmptyList(cfetsBondDealRequestQuoteDto.getCounterInfoList())){

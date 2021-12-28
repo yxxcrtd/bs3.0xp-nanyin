@@ -623,8 +623,7 @@ public class CfetsQuotedCommonService extends BaseService {
      * @return
      */
     public CfetsBondDealQuoteCommonDto createDialogue2(CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto){
-        CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto = new CfetsBondDealQuoteCommonDto();
-        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto,cfetsBondDealDialogueQuoteDto);
+        CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto = JsonUtils.json2Object(JsonUtils.object2Json(cfetsBondDealDialogueQuoteDto),CfetsBondDealQuoteCommonDto.class);
         cfetsBondDealQuoteCommonDto.setShareAmt(ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(),new BigDecimal(10000)));
         cfetsBondDealQuoteCommonDto.setSettleSpreedCode(cfetsBondDealDialogueQuoteDto.getSettleSpreed());
         cfetsBondDealQuoteCommonDto.setCcy(cfetsBondDealDialogueQuoteDto.getSettleCcy());
@@ -661,8 +660,7 @@ public class CfetsQuotedCommonService extends BaseService {
      * @return
      */
     public CfetsBondDealQuoteCommonDto createReueust2(CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto){
-        CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto = new CfetsBondDealQuoteCommonDto();
-        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto,cfetsBondDealRequestQuoteDto);
+        CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto = JsonUtils.json2Object(JsonUtils.object2Json(cfetsBondDealRequestQuoteDto),CfetsBondDealQuoteCommonDto.class);
         cfetsBondDealQuoteCommonDto.setShareAmt(ArithmeticUtil.multiply(cfetsBondDealRequestQuoteDto.getAvaNum(),new BigDecimal(10000)));
         cfetsBondDealQuoteCommonDto.setSettleSpreedCode(cfetsBondDealRequestQuoteDto.getSettleSpreed());
         cfetsBondDealQuoteCommonDto.setCcy(cfetsBondDealRequestQuoteDto.getSettleCcy());
@@ -868,12 +866,12 @@ public class CfetsQuotedCommonService extends BaseService {
                 Map<String,Object> param = new HashMap<>();
                 param.put("finprodId",finprodId);
                 param.put("sysDate",sysDate);
-                //if(price.compareTo(new BigDecimal(split[1]))<=0&&cfetsIbuQuoteBondMapper.countBondHasEexrPlan(param)>0){
+                if(price.compareTo(new BigDecimal(split[1]))<=0&&cfetsIbuQuoteBondMapper.countBondHasEexrPlan(param)>0){
                     result.put("price",new BigDecimal(split[1]));
                     result.put("isEntrustReclas",true);
                     //需要资产重分类
                     return result;
-                //}
+                }
             }
         }catch (Exception e){
             logger.error("资产重分类判断异常:"+e.getMessage());

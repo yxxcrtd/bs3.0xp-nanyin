@@ -1064,6 +1064,13 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
         result.put("finprodId",entity.getFinprodId());
         result.put("bTotalTradeId",entity.getQuoteId());
         if(CollectionUtils.isNotEmpty(entity.getCfetsBondDealRequestQuoteDtoList())){
+            //成交按回复方的价格计算现金
+            if(CollectionUtils.isNotEmpty(entity.getCounterInfoList())){
+                com.joyintech.service.bankuplink.bond.dto.CounterInfoDto counterInfoDto = entity.getCounterInfoList().get(0);
+                if(null!=counterInfoDto.getUnitFprice()&&counterInfoDto.getUnitFprice().compareTo(BigDecimal.ZERO)!=0){
+                    dto.setUnitFprice(counterInfoDto.getUnitFprice());
+                }
+            }
             List<Map<String,Object>> ptlList = new ArrayList<>();
             for (com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto cfetsBondDealDialogueQuoteDto : entity.getCfetsBondDealRequestQuoteDtoList()) {
                 Map<String,Object> pltMap = new HashMap<>();
