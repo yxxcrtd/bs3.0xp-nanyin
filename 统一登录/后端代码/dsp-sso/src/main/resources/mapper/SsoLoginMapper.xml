@@ -25,19 +25,22 @@
     <select id="selectPlatformByUserName" resultType="com.joyintech.sso.login.dto.Platform">
             SELECT T2.ID,
                 T2.PLATFORM_NAME,
-                T2.PLATFORM_URL,
+                T2.PLATFORM_HOST,
+                T2.PLATFORM_URL as platformIndex,
                 T2.WEIGHT,
                 T2.ICON,
-                T2.COOKIE_KEY
+                T2.COOKIE_KEY,
+                T2.DESCRIBE
                 FROM SSO_USER_PLATFORM T1  LEFT JOIN SSO_PLATFORM T2  ON T1.PLATFORM_ID  = T2.ID
-            WHERE T1.USER_ID   = #{username}
+            WHERE T2.STATUS=1 and T1.USER_ID = #{username}
     </select>
 
     <select id="selectPlatformById" resultType="com.joyintech.sso.config.pojo.SsoPlatform">
         SELECT
             ID,
             PLATFORM_NAME,
-            PLATFORM_URL,
+            PLATFORM_URL as platformIndex,
+            PLATFORM_HOST,
             WEIGHT,
             ICON,
             COOKIE_KEY

@@ -57,8 +57,6 @@ public class FieldEtrInfoQueryService extends BaseService{
         pageParam.put("entrustRecall", DictCodeList.委托状态_已撤回.getValue());
         pageParam.put("entrustInwfl", DictCodeListExt3.委托状态_流程中.getValue());
 
-
-        pageParam.put("busiTypePosition01", DictCodeListExt3.头寸业务类型_债券一级投标.getValue());
         pageParam.put("busiTypePosition02", DictCodeListExt3.头寸业务类型_现券交易.getValue());
         pageParam.put("busiTypePosition03", DictCodeListExt3.头寸业务类型_债券行权交易.getValue());
 
@@ -95,26 +93,15 @@ public class FieldEtrInfoQueryService extends BaseService{
             List<String> finprodType2ListOld = StringUtil.splitToList(GlobalConstant.COMMA, finprodType2Old);
             //交易方向为利率互换 转换
             if(StringUtil.isNotEmpty((String)pageParam.get("ps"))){
-                if( StringUtil.equals((String)pageParam.get("ps") , DictCode.互换方式.getValue()+DictCodeListExt2.互换方式_收取固定.getValue()) ){
-                    pageParam.put("ps", DictCodeListExt2.互换方式_收取固定.getValue());
-                    pageParam.put("IRSps", DictCodeListExt2.互换方式_收取固定.getValue());
-                }
-                if( StringUtil.equals((String)pageParam.get("ps") , DictCode.互换方式.getValue()+DictCodeListExt2.互换方式_收取浮动.getValue()) ){
-                    pageParam.put("ps", DictCodeListExt2.互换方式_收取浮动.getValue());
-                    pageParam.put("IRSps", DictCodeListExt2.互换方式_收取浮动.getValue());
-                }
                 pageParam.put("PS_T01", DictCodeList.交易方向_买入.getValue());
             }
         }
-        pageParam.put("IRSType_01", DictCodeListExt2.互换方式_收取固定.getValue());
-        pageParam.put("IRSType_02", DictCodeListExt2.互换方式_收取浮动.getValue());
         pageParam.put("ASSET_TYPE_07", DictCodeList.平安资产类型_拆借.getValue());
         pageParam.put("ASSET_TYPE_08", DictCodeList.平安资产类型_质押式回购.getValue());
         pageParam.put("ASSET_TYPE_10", DictCodeList.平安资产类型_买断式回购.getValue());
         pageParam.put("ASSET_TYPE_12", DictCodeListExt2.平安资产类型_债券借贷.getValue());
         pageParam.put("ASSET_TYPE_16", DictCodeListExt2.平安资产类型_利率互换.getValue());
         pageParam.put("BACK_LEND_DIRECTION", DictCode.回购拆借方向.getValue());
-        pageParam.put("IRS_TYPE", DictCode.互换方式.getValue());
         pageParam.put("PS", DictCode.交易方向.getValue());
         pageParam.put("effectFlag",DictCodeListExt1.有效状态_有效.getValue());
         pageParam.put("effectFlag04",DictCodeListExt1.有效状态_流程中.getValue());

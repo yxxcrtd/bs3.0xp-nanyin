@@ -13,6 +13,7 @@ package com.joyintech.tams.cfets.trdconfirm.service;
 import com.google.common.collect.Lists;
 import com.joyintech.background.component.common.pack.common.validation.annotation.Length;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.dto.UploadFile;
@@ -25,6 +26,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.common.dto.TrdBondInvestTradeDto;
 import com.joyintech.service.bankuplink.common.util.BusinessTypeUtil;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfoMapper;
@@ -276,8 +278,9 @@ public class CfetsTrdConfirmService extends BaseService{
     /**
      * 交易执行-成交确认
      */
-    public void trdConfirmSaveMethod(CfetsTrdConfirmRegInfoListResponse dto){
+    public AjaxResult trdConfirmSaveMethod(CfetsTrdConfirmRegInfoListResponse dto){
         List<CfetsTrdConfirmRegInfoListResponse> selectedItem = dto.getSelectedItem();
+        List<ValidMessage> messages = new ArrayList<>();
         if(StringUtil.isNotEmpty(selectedItem)){
             for(CfetsTrdConfirmRegInfoListResponse item:selectedItem){
                     try{
@@ -288,11 +291,19 @@ public class CfetsTrdConfirmService extends BaseService{
                        cfetsTrdConfirm001Service.doCompleteMethod(entity,OperationType.NEW);
                     }catch (Exception e) {
                         //若插入数据异常，提示错误信息
-                        logger.info(item.getTotleTradeId()+"111111111");
+                        messages.add(new ValidMessage("业务编号："+item.getTotleTradeId()+"成交确认失败"));
+                        e.printStackTrace();
+                        //PositionUtil.ajaxErrorReturn(e);
 
                     }
             }
         }
+        if(!StringUtil.isEmptyList(messages) && messages.size()>0){
+            AjaxResult res=new AjaxResult();
+            res.setErrorList(messages);
+            return res;
+        }
+        return null;
     }
     @Transactional(rollbackFor = Exception.class)
     @DTXTransaction
@@ -405,8 +416,9 @@ public class CfetsTrdConfirmService extends BaseService{
                         cfetsTrdConfirmMapper.updateTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
                     }else{
                         //不存在对应的成交匹配数据，插入下行成交匹配表
+                        String userName = null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"system";
                         entity.getCfetsTrdConfirmMatchDto().setSeqno(IDGenerator.generate());
-                        entity.getCfetsTrdConfirmMatchDto().setCreateUser(SecurityUtil.getLoginUser().getUserName());
+                        entity.getCfetsTrdConfirmMatchDto().setCreateUser(userName);
                         entity.getCfetsTrdConfirmMatchDto().setCreateDept(CommonUtil.getDeptCode());
                         cfetsTrdConfirmMapper.insertTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
                     }
@@ -715,7 +727,9 @@ public class CfetsTrdConfirmService extends BaseService{
         entity.setExerYield(dtoReg.getExerYield());
         entity.setInvAim(dtoReg.getInvAim());
         entity.setpTradeId();*/
-        entity.setSettleSpeed(new Long(dtoReg.getSettleSpeed()));
+       if(StringUtil.isNotEmpty(dtoReg.getSettleSpeed())){
+            entity.setSettleSpeed(new Long(dtoReg.getSettleSpeed()));
+       }
         // 单位面值
         entity.setParValue(this.getUnitPrice(entity.getFinprodId(), dtoReg.getSettleDate()));
         // 交易本金 = 画面.净价总额
@@ -1458,11 +1472,13 @@ public class CfetsTrdConfirmService extends BaseService{
      * @param br
      * @return
      */
-    public String trdConfirmSaveCheckMethod(CfetsTrdConfirmRegInfoListResponse dto) {
-        String returnMsg ="";
+    public AjaxResult trdConfirmSaveCheckMethod(CfetsTrdConfirmRegInfoListResponse dto) {
+        List<ValidMessage> messages = new ArrayList<>();
         List<CfetsTrdConfirmRegInfoListResponse> selectedItem = dto.getSelectedItem();
+        AjaxResult errorRs = new AjaxResult();
         if (StringUtil.isEmptyList(selectedItem)) {
-            return "未选择交易数据,请重新选择！";
+            errorRs.setErrorList(Arrays.asList(new ValidMessage("未选择交易数据,请重新选择！")));
+            return errorRs;
         }
         if(StringUtil.isNotEmpty(dto.getIsDirectTrd()) && StringUtil.equals(dto.getIsDirectTrd(),DictCodeList.是否_是.getValue())){
             String cfets_manualconfirm_bond=CacheUtil.getSysParam("IS_CFETSSECTRD_MANUALCONFIRM_FLAG");
@@ -1472,35 +1488,40 @@ public class CfetsTrdConfirmService extends BaseService{
                     if(StringUtil.equals(cfets_manualconfirm_bond,DictCodeList.是否_否.getValue())
                             && StringUtil.equals(item.getFinprodType2(),"01")
                     ){
-                        return "根据参数配置，银行间债券不可手工确认！";
+                        errorRs.setErrorList(Arrays.asList(new ValidMessage("根据参数配置，银行间债券不可手工确认！")));
+                        return errorRs;
                     }
                     if(StringUtil.equals(cfets_manualconfirm_repo,DictCodeList.是否_否.getValue())
                             && StringUtil.equals(item.getFinprodType2(),"02")
                     ){
-                        return "根据参数配置，银行间回购不可手工确认！";
+                        errorRs.setErrorList(Arrays.asList(new ValidMessage("根据参数配置，银行间回购不可手工确认！")));
+                        return errorRs;
                     }
                     WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
                     wflValidInputParameter.setBusinessDataPk1(item.getTotleTradeId());
                     if(null != mstWorkflowCommonService &&
                             mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)){
-                        return "存在流程中的交易数据，请重新选择！";
+                        errorRs.setErrorList(Arrays.asList(new ValidMessage("存在流程中的交易数据，请重新选择！")));
+                        return errorRs;
                     }
                     wflValidInputParameter.setBusinessDataPk1(item.getTotleTradeId() + "R");
                     if(null != mstWorkflowCommonService &&
                             mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)){
-                        return "存在流程中的交易数据，请重新选择！";
+                        errorRs.setErrorList(Arrays.asList(new ValidMessage("存在流程中的交易数据，请重新选择！")));
+                        return errorRs;
                     }
                     //判断该数据是否已经被撤销
-                    /*Map<String, Object> pageParam = new HashMap<>();
+                    Map<String, Object> pageParam = new HashMap<>();
                     pageParam.put("totleTradeId",item.getTotleTradeId());
                     List<CfetsTrdConfirmRegInfoListResponse> flagList=cfetsTrdConfirmMapper.isExistDealInfo(pageParam);
                     if(StringUtil.isEmptyList(flagList)) {
-                        return "请选择有效状态的数据！";
-                    }*/
+                        errorRs.setErrorList(Arrays.asList(new ValidMessage("请选择有效状态的数据！")));
+                        return errorRs;
+                    }
                 }
             }
         }
-        return returnMsg;
+        return null;
     }
     /**
      * CSTP成交回报列表分页查询
@@ -1615,26 +1636,18 @@ public class CfetsTrdConfirmService extends BaseService{
      */
     public AjaxResult  checkCstpManualMatch(CfetsTrdConfirmManualMatchInfoRequest manualMatchDto) {
         AjaxResult mes = new AjaxResult();
-        List<String> messages = new ArrayList<>();
         if (null == manualMatchDto) {
-            messages.add("未选择交易执行数据/CSTP成交回报数据！");
-            mes.setStatuCode(220);
-            mes.setMessage(StringUtil.joinString(messages, GlobalConstant.VERTICAL_LINE));
+            mes.setErrorList(Arrays.asList(new ValidMessage("未选择交易执行数据/CSTP成交回报数据！")));
             return mes;
-
         }
         if (StringUtil.isEmptyList(manualMatchDto.getSelectedCfetsTrdConfirmCstpInfoList())
                 || StringUtil.isEmptyList(manualMatchDto.getSelectedCfetsTrdConfirmRegInfoList())) {
-            messages.add("未选择交易执行数据/CSTP成交回报数据！");
-            mes.setStatuCode(220);
-            mes.setMessage(StringUtil.joinString(messages, GlobalConstant.VERTICAL_LINE));
+            mes.setErrorList(Arrays.asList(new ValidMessage("未选择交易执行数据/CSTP成交回报数据！")));
             return mes;
         }
         if (manualMatchDto.getSelectedCfetsTrdConfirmCstpInfoList().size() > 1
                 || manualMatchDto.getSelectedCfetsTrdConfirmRegInfoList().size() > 1) {
-            messages.add("不支持多条交易执行数据/CSTP成交回报数据进行匹配，请重新选择！");
-            mes.setStatuCode(220);
-            mes.setMessage(StringUtil.joinString(messages, GlobalConstant.VERTICAL_LINE));
+            mes.setErrorList(Arrays.asList(new ValidMessage("不支持多条交易执行数据/CSTP成交回报数据进行匹配，请重新选择！")));
             return mes;
         }
         if (manualMatchDto.getSelectedCfetsTrdConfirmCstpInfoList().size() == 1
@@ -1648,9 +1661,7 @@ public class CfetsTrdConfirmService extends BaseService{
                     || StringUtil.equals(regInfo.getDealType(),BussinessDictCodeList.报价方式_对话报价.getValue()))
             ){
                 if(!StringUtil.equals(regInfo.getExecid(),cstpInfo.getExecid())){
-                    messages.add("CSTP下行成交回报数据中的成交编号与交易执行数据中交易类型为对话/请求的报价数据的成交编号不一致，请重新选择！");
-                    mes.setStatuCode(220);
-                    mes.setMessage(StringUtil.joinString(messages, GlobalConstant.VERTICAL_LINE));
+                    mes.setErrorList(Arrays.asList(new ValidMessage("CSTP下行成交回报数据中的成交编号与交易执行数据中交易类型为对话/请求的报价数据的成交编号不一致，请重新选择！")));
                     return mes;
                 }
             }
@@ -1693,11 +1704,8 @@ public class CfetsTrdConfirmService extends BaseService{
                 }
                 if (StringUtil.isNotEmpty(str) && str.length() > 0) {
                     str.append("要素不一致，无法匹配，请重新选择数据！");
-                    messages.add(str.toString().substring(1));
-                    AjaxResult m = new AjaxResult();
-                    m.setStatuCode(220);
-                    m.setMessage(StringUtil.joinString(messages, GlobalConstant.VERTICAL_LINE));
-                    return m;
+                    mes.setErrorList(Arrays.asList(new ValidMessage(str.toString().substring(1))));
+                    return mes;
 
                 }
                 //判断可选要素是否一致
@@ -1714,8 +1722,7 @@ public class CfetsTrdConfirmService extends BaseService{
                 if (StringUtil.isNotEmpty(validateStr) && validateStr.length() > 0) {
                     validateStr.append("是否确认匹配？");
                     AjaxResult m = new AjaxResult();
-                    m.setStatuCode(230);
-                    m.setMessage(validateStr.toString());
+                    m.setMessage(validateStr.toString(), MessageType.确认消息);
                     return m;
                 }
 
@@ -1771,11 +1778,8 @@ public class CfetsTrdConfirmService extends BaseService{
                     }
                     if (StringUtil.isNotEmpty(str) && str.length() > 0) {
                         str.append("要素不一致，无法匹配，请重新选择数据！");
-                        messages.add(str.toString().substring(1));
-                        AjaxResult m = new AjaxResult();
-                        m.setStatuCode(220);
-                        m.setMessage(StringUtil.joinString(messages, GlobalConstant.VERTICAL_LINE));
-                        return m;
+                        mes.setErrorList(Arrays.asList(new ValidMessage(str.toString().substring(1))));
+                        return mes;
 
                     }
                     //判断可选要素是否一致
@@ -1792,8 +1796,7 @@ public class CfetsTrdConfirmService extends BaseService{
                     if (StringUtil.isNotEmpty(validateStr) && validateStr.length() > 0) {
                         validateStr.append("是否确认匹配？");
                         AjaxResult m = new AjaxResult();
-                        m.setStatuCode(230);
-                        m.setMessage(validateStr.toString());
+                        m.setMessage(validateStr.toString(), MessageType.确认消息);
                         return m;
                     }
                 }
@@ -2021,12 +2024,14 @@ public class CfetsTrdConfirmService extends BaseService{
             req.setBusiType(DictCodeListExt3.头寸业务类型_债券行权交易.getValue()); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
         }
         req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
-        if(entity.getSettleSpeed().compareTo(new Long(0))==0){
-            req.setSettleSpeed("01");
-        }else if(entity.getSettleSpeed().compareTo(new Long(1))==0){
-            req.setSettleSpeed("02");
-        }else if(entity.getSettleSpeed().compareTo(new Long(2))==0){
-            req.setSettleSpeed("03");
+        if(null!=entity.getSettleSpeed()){
+            if(entity.getSettleSpeed().compareTo(new Long(0))==0){
+                req.setSettleSpeed("01");
+            }else if(entity.getSettleSpeed().compareTo(new Long(1))==0){
+                req.setSettleSpeed("02");
+            }else if(entity.getSettleSpeed().compareTo(new Long(2))==0){
+                req.setSettleSpeed("03");
+            }
         }
         req.setBalanceCheck("N");
         req.setBusiAct(DictCodeListExt3.业务动作_成交确认.getValue());

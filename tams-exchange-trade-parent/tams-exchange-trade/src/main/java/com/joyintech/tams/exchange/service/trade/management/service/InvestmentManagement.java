@@ -48,6 +48,8 @@ public class InvestmentManagement extends BaseService {
     @Autowired
     private InstructionPledgeService instructionPledgeService;
     @Autowired
+    private InstructionDetailService instructionDetailService;
+    @Autowired
     private MsgReceiverManager msgReceiverManager;
     @Autowired
     private MessageConsumerService messageConsumerService;
@@ -166,7 +168,7 @@ public class InvestmentManagement extends BaseService {
      */
     public List<Instruction> queryExportPage(InstructionQueryRequest request) {
         Map<String, Object> pageParam = JsonUtils.getObjectFromJson(JsonUtils.getJsonFromObject(request), Map.class);
-        InstructionPage<Instruction, InstructionPledge> page = queryInstructionsFromCache(pageParam);
+        InstructionPage<Instruction, InstructionPledge,InstructionDetail> page = queryInstructionsFromCache(pageParam);
         List<Instruction> instructionList = page.getEtr_entrust_list();
         return instructionList;
     }
@@ -176,11 +178,12 @@ public class InvestmentManagement extends BaseService {
      *
      * @return
      */
-    public InstructionPage<Instruction, InstructionPledge> queryInstructionsFromCache(Map<String, Object> pageParam) {
+    public InstructionPage<Instruction, InstructionPledge,InstructionDetail> queryInstructionsFromCache(Map<String, Object> pageParam) {
         // 更新系统参数
         updateSysParam(pageParam);
-        InstructionPage<Instruction, InstructionPledge> bean = new InstructionPage<>();
+        InstructionPage<Instruction, InstructionPledge,InstructionDetail> bean = new InstructionPage<>();
         List<InstructionPledge> pledgeList = new ArrayList<>();
+        List<InstructionDetail> detailList = new ArrayList<>();
         List<Instruction> instructionUserList = new ArrayList<>();
         if (Strings.isNullOrEmpty((String) pageParam.get("dataType"))) {
             List<String> traderList = (List<String>) pageParam.get("traderList");
@@ -217,6 +220,10 @@ public class InvestmentManagement extends BaseService {
                             if (Objects.nonNull(instructionPledges) && instructionPledges.size() > 0) {
                                 pledgeList.addAll(instructionPledges);
                             }
+                            List<InstructionDetail> instructionDetails = instructionDetailService.queryInstructionDetailsByInstructionId(instruction.getEntrustId());
+                            if (Objects.nonNull(instructionDetails) && instructionDetails.size() > 0) {
+                                detailList.addAll(instructionDetails);
+                            }
                         });
                     }
                     instructionUserList.addAll(instructionCloneList);
@@ -242,12 +249,12 @@ public class InvestmentManagement extends BaseService {
      *
      * @return
      */
-    public InstructionPage<Instruction, InstructionPledge> queryInstructionsAll() {
+    public InstructionPage<Instruction, InstructionPledge,InstructionDetail> queryInstructionsAll() {
         if (!Strings.isNullOrEmpty(ServiceApplication.INSTRUCTION_SERVICE)) {
             Map<String, Object> pageParam = new HashMap<>();
             pageParam.put("AMOUNT", 0);
             pageParam.put("positionStr", "");
-            InstructionPage<Instruction, InstructionPledge> bean = null;
+            InstructionPage<Instruction, InstructionPledge,InstructionDetail> bean = null;
             if (isSingle) {
                 bean = simpleRestTemplate.postForObject(ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.queryInstructions, pageParam, InstructionPage.class);
             } else {
@@ -631,7 +638,7 @@ public class InvestmentManagement extends BaseService {
 
     public ResultBean flushInstructionFromInvest() {
         try {
-            InstructionPage<Instruction, InstructionPledge> instructionPages = queryInstructionsAll();
+            InstructionPage<Instruction, InstructionPledge,InstructionDetail> instructionPages = queryInstructionsAll();
             return appointInstruction(instructionPages);
         } catch (Exception e) {
             return new ResultBean(ErrorCode.FLUSH_INSTRUCTION_FAILED);
@@ -783,15 +790,17 @@ public class InvestmentManagement extends BaseService {
         }
     }
 
-    public ResultBean appointInstruction(InstructionPage<Instruction, InstructionPledge> instructionPage) throws Exception {
+    public ResultBean appointInstruction(InstructionPage<Instruction, InstructionPledge,InstructionDetail> instructionPage) throws Exception {
         try {
             List<Instruction> instructionEtrEntrustList = instructionPage.getEtr_entrust_list();
             List<InstructionPledge> pledgeList = instructionPage.getEtr_pledge_list();
+            List<InstructionDetail> detailList = instructionPage.getEtr_entrust_detail_list();
             Set<String> instructionIdSet = new HashSet<>();
             if (Objects.nonNull(pledgeList))
                 pledgeList.forEach(instructionPledge -> instructionIdSet.add(instructionPledge.getEntrustId()));
             messageConsumerService.processInstructions(instructionEtrEntrustList, instructionIdSet);
             messageConsumerService.processInstructionPledges(pledgeList, instructionIdSet);
+            messageConsumerService.processInstructionDetail(detailList, instructionIdSet);
             logger.info("appointInstruction {}", JsonUtils.getJsonFromObject(instructionPage));
             return new ResultBean(ErrorCode.SUCCESS);
         } catch (Exception e) {

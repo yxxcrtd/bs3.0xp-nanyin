@@ -1345,4 +1345,20 @@
           AND V.TRADE_PLACE in ('03','04')
           AND PSA.PORTFOLIO_ID = #{portfolioId}
     </select>
+
+    <select id="selectEntrustDetail" resultType="com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioResponse">
+        select
+             T4.ENTRUST_ID
+             ,T4.PORTFOLIO_ID
+             ,T4.PORTFOLIO_NAME
+              ,T4.ENTRUST_AMT
+             ,T4.ENTRUST_NUM
+        FROM
+            ETR_ENTRUST			T1
+                INNER JOIN	  ETR_ENTRUST_ADD	T2 ON T2.ENTRUST_ID = T1.ENTRUST_ID
+                INNER JOIN    ETR_ENTRUST_DETAIL T3 ON T3.ENTRUST_ID = T1.ENTRUST_ID
+                LEFT JOIN PTL_PORTFOLIO T4 ON T5.PORTFOLIO_ID = T2.PORTFOLIO_ID
+        where
+            T1.ENTRUST_ID=#{entrustId}
+    </select>
 </mapper>

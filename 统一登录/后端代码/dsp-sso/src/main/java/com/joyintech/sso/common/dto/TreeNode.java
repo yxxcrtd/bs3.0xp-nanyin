@@ -21,8 +21,11 @@ public class TreeNode implements Serializable {
 	@ApiModelProperty(required = true, name="pid",value="父节点id",example="")
     private String pid;
 
-	@ApiModelProperty(required = true, name="pid",value="节点名称",example="")
+	@ApiModelProperty(required = true, name="name",value="节点名称",example="")
     private String name;
+
+	@ApiModelProperty(required = true, name="realname",value="节点名称",example="")
+	private String realname;
     
 	@ApiModelProperty(required = true, name="pid",value="节点类型（1：分类菜单，2：路由）",example="")
     private String type;
@@ -55,6 +58,14 @@ public class TreeNode implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getRealname() {
+		return realname;
+	}
+
+	public void setRealname(String realname) {
+		this.realname = realname;
 	}
 
 	public String getType() {

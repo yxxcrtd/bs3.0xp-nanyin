@@ -231,6 +231,7 @@ public class IbuQuoteBond004Controller extends BaseController {
         try{
             msg = cfetsBondDealQuotedPrice004Service.start(processParameter, cfetsBondDealRegisterQuoteDto);
         }catch (Exception e){
+            e.printStackTrace();
             return PositionUtil.ajaxErrorReturn(e);
         }
         return new Message<AjaxResult>().success().setData(new AjaxResult(msg));

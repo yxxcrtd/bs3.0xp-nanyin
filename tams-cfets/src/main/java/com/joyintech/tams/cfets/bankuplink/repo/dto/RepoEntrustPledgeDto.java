@@ -261,8 +261,9 @@ public class RepoEntrustPledgeDto {
     }
 
     public BigDecimal getConvertAmt() {
-        if (StringUtil.isNotEmpty(this.getPledgePrin()) && StringUtil.isNotEmpty(this.getPledgeRatio())) {
-            return ArithmeticUtil.multiply(this.getPledgePrin(), this.getPledgeRatio());
+        if (!StringUtil.isNotEmpty(this.convertAmt)
+                && StringUtil.isNotEmpty(this.getPledgePrin()) && StringUtil.isNotEmpty(this.getPledgeRatio())) {
+            return ArithmeticUtil.multiply(this.getPledgePrin(), ArithmeticUtil.divide(this.getPledgeRatio(), new BigDecimal(100), 6));
         }
         return convertAmt;
     }

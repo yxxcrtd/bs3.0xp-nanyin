@@ -35,6 +35,8 @@ public class EtrExchangeTradePortfolioRequest {
 
     @ApiModelProperty(name="acctNo",value="资金账户",example="submit/save", required = true)
     private String acctNo;
+    @ApiModelProperty(name="secAcctId",value="证券账户",example="A1")
+    private String secAcctId;
 
     @ApiModelProperty(name="entrustAmt",value="指令金额",example="")
     private BigDecimal entrustAmt;
@@ -117,6 +119,14 @@ public class EtrExchangeTradePortfolioRequest {
 
     public void setAvailableStandardBondVolume(Integer availableStandardBondVolume) {
         this.availableStandardBondVolume = availableStandardBondVolume;
+    }
+
+    public String getSecAcctId() {
+        return secAcctId;
+    }
+
+    public void setSecAcctId(String secAcctId) {
+        this.secAcctId = secAcctId;
     }
 
     public BigDecimal getAccAvailablePos() {

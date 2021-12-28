@@ -31,7 +31,7 @@
         </if>
     </select>
     <sql id="onlyRegInfo">
-        select
+        select distinct
         decode(reg.is_cancel,'Y','撤销','N','有效') as effectiveStatusStr,
         decode(reg.is_cancel,'N',#{VALID_STATUS_01},'Y',#{VALID_STATUS_03}) as  effectiveStatus,
         reg.totle_trade_id as busiCode,
@@ -50,7 +50,7 @@
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         reg.ccy as ccy,
-        reg.remark as remark
+        decode(reg.is_cancel,'Y',  rr.remark,'N',reg.remark)  as remark
         from reg_fin_product_deal_total reg
         left join fin_product fp
         on fp.finprod_id=reg.finprod_id
@@ -83,6 +83,9 @@
         on reg.totle_trade_id=deal.totle_trade_id
         left join trdquto_match_info match on reg.totle_trade_id=match.pre_trade_id
         LEFT JOIN TRD_BANK_MANUAL_SETTLE_INFO T8 ON match.trd_id = T8.TRADE_ID
+        left join reg_fin_product_deal_total rr
+        on rr.totle_trade_id=CONCAT(reg.totle_trade_id, 'R')
+        and rr.trade_status='03' and rr.ps='T39' and rr.is_cancel='N'
         where 1=1 and reg.trade_status='01'  and reg.ps='T39'
         <if test="startRegDate != null and !startRegDate.equals('')">
             AND  reg.trade_date>= #{startRegDate,jdbcType=DATE}
@@ -97,7 +100,7 @@
             AND reg.settle_date<![CDATA[<=]]>#{endExerDate,jdbcType=DATE}
         </if>
         <if test="submitUserId != null and submitUserId != ''">
-            and (reg.create_user= #{submitUserId} or reg.update_user= #{submitUserId})
+            and reg.ou_trader_id= #{submitUserId}
         </if>
         <if test="finprodIdList != null and finprodIdList.size() > 0">
             AND reg.finprod_id in
@@ -124,7 +127,7 @@
         </if>
     </sql>
     <sql id="onlyWflRegInfo">
-        select
+        select distinct
         '流程中' as effectiveStatusStr,
         #{VALID_STATUS_04} effectiveStatus,
         reg.totle_trade_id as busiCode,
@@ -191,7 +194,7 @@
             AND reg.settle_date<![CDATA[<=]]>#{endExerDate,jdbcType=DATE}
         </if>
         <if test="submitUserId != null and submitUserId != ''">
-            and (reg.create_user= #{submitUserId} or reg.update_user= #{submitUserId})
+            and reg.ou_trader_id=#{submitUserId}
         </if>
         <if test="finprodIdList != null and finprodIdList.size() > 0">
             AND reg.finprod_id in

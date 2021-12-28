@@ -4405,24 +4405,12 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
             //parameter.setBusinessDataPk2("F01");
             if (mstWorkflowCommonService.isInWflProcess(parameter)) {
                 AjaxResult m = new AjaxResult();
-                m.setStatuCode(220);
-                m.setMessage(this.getMessage("BUSS_COM_E_0023"));
+                m.setErrorList(Arrays.asList(new ValidMessage(this.getMessage("BUSS_COM_E_0023"))));
                 return m;
             }
-         /*   if(StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_买入.getValue())
-                    || StringUtil.equals(inputDto.getPs(),DictCodeList.回购拆借方向_逆回购.getValue())
-            ){
-                if(!StringUtil.equals(inputDto.getSettleStatus(),DictCodeListExt3.交收状态_未交收.getValue())){
-                    AjaxResult m = new AjaxResult();
-                    m.setStatuCode(220);
-                    m.setMessage("已完成交收,不可撤销");
-                    return m;
-                }
-            }*/
             if(inputDto.getTradeDate().compareTo(iPlatformDate.getSysDate())!=0){
                 AjaxResult m = new AjaxResult();
-                m.setStatuCode(220);
-                m.setMessage("只可在交易生效日进行撤销操作");
+                m.setErrorList(Arrays.asList(new ValidMessage("只可在交易生效日进行撤销操作")));
                 return m;
             }
            if(StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_卖出.getValue())
@@ -4431,16 +4419,14 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
            ){
                 if(!StringUtil.equals(inputDto.getSettleStatus(),DictCodeListExt3.交收状态_未交收.getValue())){
                     AjaxResult m = new AjaxResult();
-                    m.setStatuCode(220);
-                    m.setMessage("已完成交收,不可撤销");
+                    m.setErrorList(Arrays.asList(new ValidMessage("已完成交收,不可撤销")));
                     return m;
                 }
             }
             CfetsTrdBondInvestTradeDto dto = this.getTrdBondInvestTradeDto(inputDto.getTotleTradeId() + "R");
             if(StringUtil.isNotEmpty(dto)){
                 AjaxResult m = new AjaxResult();
-                m.setStatuCode(220);
-                m.setMessage("已撤销的交易不允许撤销");
+                m.setErrorList(Arrays.asList(new ValidMessage("已撤销的交易不允许撤销")));
                 return m;
             }
         }

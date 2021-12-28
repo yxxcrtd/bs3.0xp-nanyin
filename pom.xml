@@ -41,6 +41,8 @@
         <module>tams-valuation-common</module>
         <module>tams-valuation-basicdata</module>
         <module>tams-valuation-parent</module>
+        <module>tams-business-common</module>
+        <module>tams-cfets</module>
 <!--        <module>tams-valuation-report</module>-->
         <module>tams-exchange-trade-parent</module>
 
@@ -83,8 +85,8 @@
         <module>microservice/service-interf</module>
         <module>microservice/service-risk-redis</module>
         <module>microservice/service-risk-redis-inf</module>
-        <module>microservice/service-exchange</module>
-        <module>microservice/service-quote-new</module>
+<!--        <module>microservice/service-exchange</module>-->
+<!--        <module>microservice/service-quote-new</module>-->
 <!--         几许中心包 -->
         <module>JixuCenter</module>
 

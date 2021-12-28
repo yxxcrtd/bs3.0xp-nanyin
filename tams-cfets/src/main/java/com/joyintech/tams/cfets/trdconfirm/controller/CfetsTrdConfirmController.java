@@ -95,13 +95,17 @@ public class CfetsTrdConfirmController extends BaseController {
     @PostMapping("trdConfirmSave")
     public Message<AjaxResult> trdConfirmSave(@RequestBody CfetsTrdConfirmRegInfoListResponse dto) throws Exception {
         //对选择的数据进行check
-        String returnMsg= cfetsTrdConfirmService.trdConfirmSaveCheckMethod(dto);
-        if (StringUtil.isNotBlank(returnMsg)) {
-            return new Message<AjaxResult>().fail().setMessage(returnMsg);
+        AjaxResult ajax= cfetsTrdConfirmService.trdConfirmSaveCheckMethod(dto);
+        if(null!=ajax && !StringUtil.isEmptyList(ajax.getErrorList())){
+            return new Message<AjaxResult>().success().setData(ajax);
         }
         try {
-            cfetsTrdConfirmService.trdConfirmSaveMethod(dto);
-            return new Message<AjaxResult>().success().setData(new AjaxResult("成交确认成功"));
+            AjaxResult ajaxResult = cfetsTrdConfirmService.trdConfirmSaveMethod(dto);
+            if (null!=ajaxResult && !StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+                return new Message<AjaxResult>().success().setData(ajaxResult);
+            }else{
+                return new Message<AjaxResult>().success().setData(new AjaxResult("成交确认成功"));
+            }
         } catch (Exception e) {
             logger.error("交易执行-成交确认数据异常", e);
             return new Message<AjaxResult>().fail().setMessage("成交确认数据异常");

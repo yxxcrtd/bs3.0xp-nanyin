@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 public class CookieUtil {
 
     public static String USER_NAME_KEY = "username";
+    public static String REAL_NAME_KEY = "realname";
 
     public static Cookie  setCookie(Cookie cookie){
         cookie.setPath("/");

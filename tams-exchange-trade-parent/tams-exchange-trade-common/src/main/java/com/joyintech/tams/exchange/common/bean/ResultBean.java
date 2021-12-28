@@ -69,6 +69,15 @@ public class ResultBean {
     }
 
     /**
+     * 返回成功消息
+     *
+     * @return 成功消息
+     */
+    public static ResultBean success(Object data) {
+        return new ResultBean(ErrorCode.SUCCESS, data);
+    }
+
+    /**
      * 返回警告消息
      *
      * @return 警告消息

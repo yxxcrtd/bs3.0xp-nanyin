@@ -151,4 +151,8 @@ public class TradeServiceURL {
     public static String getMinTrdUnitLimit = "/InterfSysTrdConfig/getMinTrdUnitLimit";//最小交易单位、交易上下限数据查询
 
     public static String getPtlAuthInfo = "/ptlmanagementinfo/getPtlAuthInfo";//组合权限查询
+
+    public static String getPortfolioCash = "/invest/entrust/EtrCommonController/getProAvailableCash";//组合可用现金查询
+    public static String getPortfolioPosition = "/invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/getAssetAvailablePosition";//组合可用持仓查询
+
 }

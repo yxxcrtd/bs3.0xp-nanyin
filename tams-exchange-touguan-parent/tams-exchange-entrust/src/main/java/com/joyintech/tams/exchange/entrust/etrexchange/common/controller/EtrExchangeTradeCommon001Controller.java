@@ -1421,5 +1421,27 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			return new Message<EtrExchangeTradeQuotationHqResponse>().fail().setMessage("查询竞价交易行情信息数据异常");
 		}
 	}
+
+
+	/**
+	 * 查询指令组合列表
+	 *
+	 * @param entrustId entrustId
+	 * @return 处理结果
+	 * @throws Exception
+	 *             异常
+	 */
+	@ApiOperation(value = "查询指令组合列表", notes = "查询指令组合列表")
+	@PostMapping("/selectEtrPortfolioList")
+	@ResponseBody
+	public Message<List<EtrExchangeTradePortfolioResponse>>  selectEtrPortfolioList(String entrustId)  {
+		try{
+			List<EtrExchangeTradePortfolioResponse> list=etrExchangeTrade001CommonService.selectEtrPortfolioList(entrustId);
+			return new Message<List<EtrExchangeTradePortfolioResponse>>().success().setData(list);
+		}catch (Exception e){
+			return new Message<List<EtrExchangeTradePortfolioResponse>>().fail().setData(null);
+		}
+	}
+
 }
 	

@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -187,10 +188,14 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
                 (dto, list) -> dto.setRiskTrialRetDto(list));
 
         // 临时主键
-        BussinessCodeParameter param = new BussinessCodeParameter();
-        param.setCommonBusinessType(DictCodeList.共通业务类型_回购投资委托);
-        String generatedId = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator.generate();
-        RepoInfoDto.setTotalEtrustId(generatedId);
+        if(!StringUtil.isNotEmpty(RepoInfoDto.getEntrustId())) {
+            BussinessCodeParameter param = new BussinessCodeParameter();
+            param.setCommonBusinessType(DictCodeList.共通业务类型_回购投资委托);
+            String generatedId = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
+            RepoInfoDto.setTotalEtrustId(generatedId);
+        }else{
+            RepoInfoDto.setTotalEtrustId(RepoInfoDto.getEntrustId());
+        }
 //        for (int i = 0; i < RepoInfoDto.getBussCombDistribtList().size(); i++) {
 //            RepoInfoDto.getBussCombDistribtList().get(i).setEntrustId(RepoInfoDto.getEtrInvestRepoInfoDtos().get(i).getEntrustId());
 //        }
@@ -200,12 +205,12 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
         params.setElementId(RepoInfoDto.getEtrInvestRepoInfoDtos().get(0).getElementId());
         params.setBusinessCode(CfetsEtribRepoInfo003Dto::getTotalEtrustId);
         params.setBusinessType(DictCodeListExt3.共通业务类型_本币业务指令_质押式回购.getValue());
-
+        DecimalFormat df4 = new DecimalFormat("#,##0.00");
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
                 entity ->  "(" + "指令日期" + ":" + DateUtil.format(entity.getEntrustDate()) + ")-"
-                        +"("+ "回购期限" +entity.getRepoTerm()+ ")-"
-                        + this.getMessage("EtrRepo002.entrustAmt") + ":" + entity.getEntrustAmt()+"元");
+                        +"("+ "回购期限" +entity.getRepoTerm()+ "天"+")-"
+                        + this.getMessage("EtrRepo002.entrustAmt") + ":" + df4.format(entity.getEntrustAmt())+"元");
         processParameter.setWorkFlowParameter(params);
 
 //        String msg = cfetsEtrIbRepoinfo003Service.start(processParameter, RepoInfoDto);

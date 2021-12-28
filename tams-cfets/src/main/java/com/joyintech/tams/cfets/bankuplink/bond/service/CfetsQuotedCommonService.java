@@ -17,10 +17,12 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
 import com.joyintech.tams.business.common.pojo.BaseMap;
+import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
 import com.joyintech.tams.cfets.position.service.PositionInfoService;
+import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -52,7 +54,6 @@ import java.util.stream.Collectors;
 public class CfetsQuotedCommonService extends BaseService {
 
     private static final Logger logger = LoggerFactory.getLogger(CfetsQuotedCommonService.class);
-
 
     @Autowired
     private CfetsIbuQuoteBondMapper cfetsIbuQuoteBondMapper;
@@ -91,6 +92,12 @@ public class CfetsQuotedCommonService extends BaseService {
 
     @Autowired
     private PositionInfoService positionInfoService;
+
+    @Autowired
+    private CfetsIbuQuoteBondEtrMapper cfetsIbuQuoteBondEtrMapper;
+
+    @Autowired
+    private StlSecAcctInfoMapper stlSecAcctInfoMapper;
     /**
      * 委托放弃处理
      * 
@@ -767,7 +774,16 @@ public class CfetsQuotedCommonService extends BaseService {
                                                         Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
                 for(String key : map.keySet()){
                     BigDecimal fpriceAmt = map.get(key);
-                    BaseMap baseMap = positionInfoService.queryTrdAvailableCash(Arrays.asList(key), DateUtil.format(cfetsBondDealQuoteCommonDto.getTradeDate()), cfetsBondDealQuoteCommonDto.getSecManageAcctId(), cfetsBondDealQuoteCommonDto.getCcy(), "03", Arrays.asList(DictCodeListExt1.资金账户类型_产品托管户.getValue()), null);
+
+                    Map<String,String> accnoParm = new HashMap<>();
+                    accnoParm.put("ccy",cfetsBondDealQuoteCommonDto.getCcy());
+                    accnoParm.put("portfolioId",key);
+                    accnoParm.put("acctType",DictCodeListExt1.资金账户类型_产品托管户.getValue());
+                    String accNo = cfetsIbuQuoteBondEtrMapper.getAccNo(accnoParm);
+                    if(StringUtil.isEmpty(accNo)){
+                        accNo = stlSecAcctInfoMapper.selectByPrimaryKey(cfetsBondDealQuoteCommonDto.getSecManageAcctId()).getTrdAcctId();
+                    }
+                    BaseMap baseMap = positionInfoService.queryTrdAvailableCash(Arrays.asList(key), DateUtil.format(cfetsBondDealQuoteCommonDto.getTradeDate()), accNo, cfetsBondDealQuoteCommonDto.getCcy(), "03", Arrays.asList(DictCodeListExt1.资金账户类型_产品托管户.getValue()), null);
                     if(null!=baseMap&&fpriceAmt.compareTo((BigDecimal) baseMap.get("cashT"))>0){
                         errorList.add(new ValidMessage(StringUtil.join("组合可用现金不足,组合代码:[",key,"]")));
                         ajaxResult.setErrorList(errorList);

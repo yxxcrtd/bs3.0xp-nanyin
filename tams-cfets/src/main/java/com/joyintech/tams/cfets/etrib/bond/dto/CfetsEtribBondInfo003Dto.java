@@ -201,6 +201,11 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
      */
     private String finprodAbbr;
 
+    /**
+     * 资产简称
+     */
+    private Boolean submitFlag;
+
     public String getBusinessId() {
         return businessId;
     }
@@ -664,5 +669,13 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
 
     public void setFinprodAbbr(String finprodAbbr) {
         this.finprodAbbr = finprodAbbr;
+    }
+
+    public Boolean getSubmitFlag() {
+        return submitFlag;
+    }
+
+    public void setSubmitFlag(Boolean submitFlag) {
+        this.submitFlag = submitFlag;
     }
 }

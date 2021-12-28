@@ -1740,6 +1740,9 @@ public class IbuComponentCommonService extends BaseService {
                 cfetsBondDealDialogueQuoteDto.setDealFeeAmt(bondDialogueQuoteDto.getIbuQuoteBondDto().getDealFeeAmt());
                 cfetsBondDealDialogueQuoteDto.setSettFeeAmt(bondDialogueQuoteDto.getIbuQuoteBondDto().getSettFeeAmt());
                 cfetsBondDealDialogueQuoteDto.setDistribution(bondDialogueQuoteDto.getIbuQuoteBondDto().getDipType());
+                cfetsBondDealDialogueQuoteDto.setSecManageAcctId(bondDialogueQuoteDto.getIbuQuoteBondDto().getSecManageAcctId());
+                cfetsBondDealDialogueQuoteDto.setFinprodAbbr(bondDialogueQuoteDto.getIbuQuoteBondDto().getFinprodAbbr());
+                cfetsBondDealDialogueQuoteDto.setType11(bondDialogueQuoteDto.getIbuQuoteBondDto().getType11());
             }
         }
 

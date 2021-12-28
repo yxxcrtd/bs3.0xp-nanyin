@@ -19,44 +19,51 @@ public class SsoPlatformService {
 
     /**
      * 查询平台管理信息list
+     *
      * @param ssoPlatformDto
      * @return
      */
     public List<SsoPlatform> listSsoPlatform(SsoPlatformDto ssoPlatformDto) {
-        return  ssoPlatformMapper.listSsoPlatform(ssoPlatformDto);
+        return ssoPlatformMapper.listSsoPlatform(ssoPlatformDto);
     }
 
     /**
      * 查询平台管理信息
+     *
      * @param id
      * @return
      */
-    public SsoPlatform selectSsoPlatfromById(String id){
+    public SsoPlatform selectSsoPlatfromById(String id) {
         return ssoPlatformMapper.selectSsoPlatfromById(id);
     }
 
     /**
      * 新增平台管理信息
+     *
      * @param ssoPlatform
      * @return
      */
     public Message<String> insertSsoPlatform(SsoPlatform ssoPlatform) {
         Message<String> message = this.validateSsoPlatform(ssoPlatform);
-        if(message != null) {
+        if (message != null) {
             return message;
         }
 
-        if(ssoPlatformMapper.selectSsoPlatfromById(ssoPlatform.getPlatformcode()) != null) {
+        if (ssoPlatformMapper.selectSsoPlatfromById(ssoPlatform.getPlatformcode()) != null) {
             return new Message<String>(MessageCode.FAIL_PLATFORM_CODE_EXISTS);
         }
         ssoPlatform.setId(UUIDUtil.generate());
         ssoPlatform.setStatus(0);
+        if (null == ssoPlatform.getSyncFlag()) {
+            ssoPlatform.setSyncFlag(0);
+        }
         ssoPlatformMapper.insertSsoPlatform(ssoPlatform);
         return new Message<String>().success();
     }
 
     /**
      * 删除平台管理信息
+     *
      * @param id
      * @return
      */
@@ -66,12 +73,13 @@ public class SsoPlatformService {
 
     /**
      * 更新平台管理信息
+     *
      * @param ssoPlatform
      * @return
      */
     public Message<String> updateSsoPlatform(SsoPlatform ssoPlatform) {
         Message<String> message = this.validateSsoPlatform(ssoPlatform);
-        if(message != null) {
+        if (message != null) {
             return message;
         }
         ssoPlatformMapper.updateSsoPlatform(ssoPlatform);
@@ -81,31 +89,35 @@ public class SsoPlatformService {
 
     /**
      * 校验平台管理信息
+     *
      * @param ssoPlatform
      * @return
      */
-    public Message<String> validateSsoPlatform(SsoPlatform ssoPlatform){
+    public Message<String> validateSsoPlatform(SsoPlatform ssoPlatform) {
        /* if(StringUtils.isEmpty(ssoPlatform.getId())) {
             return new Message<String>(MessageCode.FAIL_PLATFORM_ID_ERROR);
         }*/
 
-        if(ssoPlatform.getPlatformcode() == null) {
+        if (ssoPlatform.getPlatformcode() == null) {
             return new Message<String>(MessageCode.FAIL_PLATFORM_CODE_NULL);
         }
 
-        if(StringUtils.isEmpty(ssoPlatform.getPlatformname())) {
+        if (StringUtils.isEmpty(ssoPlatform.getPlatformname())) {
             return new Message<String>(MessageCode.FAIL_PLATFORM_NAME_ERROR);
         }
 
-        if(StringUtils.isEmpty(ssoPlatform.getPlatformurl())) {
-            return new Message<String>(MessageCode.FAIL_PLATFORM_URL_ERROR);
+        if (StringUtils.isEmpty(ssoPlatform.getPlatformHost())) {
+            return new Message<String>(MessageCode.FAIL_PLATFORM_HOST_ERROR);
+        }
+        if (StringUtils.isEmpty(ssoPlatform.getPlatformIndex())) {
+            return new Message<String>(MessageCode.FAIL_PLATFORM_INDEX_ERROR);
         }
 
-        if(ssoPlatform.getWeight() == null) {
+        if (ssoPlatform.getWeight() == null) {
             return new Message<String>(MessageCode.FAIL_PLATFORM_WEIGHT_ERROR);
         }
 
-        if(ssoPlatform.getCookiekey() == null) {
+        if (ssoPlatform.getCookiekey() == null) {
             return new Message<String>(MessageCode.FAIL_COOKIEKEY_NULL);
         }
         /*if(ssoPlatform.getStatus() == null) {
@@ -115,15 +127,15 @@ public class SsoPlatformService {
         return null;
     }
 
-    public Message<String>  updatestatus(SsoPlatform ssoPlatform){
-        if(ssoPlatform.getId()== null) {
+    public Message<String> updatestatus(SsoPlatform ssoPlatform) {
+        if (ssoPlatform.getId() == null) {
             return new Message<String>(MessageCode.FAIL_PLATFORM_ID_ERROR);
         }
 
-        if(null == ssoPlatform.getStatus()) {
+        if (null == ssoPlatform.getStatus()) {
             return new Message<String>(MessageCode.FAIL_PLATFORM_STATUS_ERROR);
         }
-        ssoPlatformMapper.updateSsoPlatformById(ssoPlatform.getId(),ssoPlatform.getStatus());
+        ssoPlatformMapper.updateSsoPlatformById(ssoPlatform.getId(), ssoPlatform.getStatus());
         return new Message<String>().success();
     }
 }

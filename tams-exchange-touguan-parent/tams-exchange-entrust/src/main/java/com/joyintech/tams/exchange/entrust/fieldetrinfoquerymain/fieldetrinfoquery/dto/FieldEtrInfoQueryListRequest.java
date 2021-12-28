@@ -66,6 +66,28 @@ public class FieldEtrInfoQueryListRequest {
     @ApiModelProperty(name="search",value="关键字",example="12")
     private String search;
 
+    @ApiModelProperty(name="priceModel",value="价格模式",example="A1")
+    private String priceModel;
+
+    @ApiModelProperty(name="trdAcctId",value="资金账户",example="字符串1,字符串2,...")
+    private String trdAcctId;
+
+    public String getTrdAcctId() {
+        return trdAcctId;
+    }
+
+    public void setTrdAcctId(String trdAcctId) {
+        this.trdAcctId = trdAcctId;
+    }
+
+    public String getPriceModel() {
+        return priceModel;
+    }
+
+    public void setPriceModel(String priceModel) {
+        this.priceModel = priceModel;
+    }
+
     public String[] getEntrustStatus() {
         return entrustStatus;
     }

@@ -1,10 +1,9 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dao;
 
-import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealEntrustOrderDto;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.EntrustAvaShareAmtDto;
 import com.joyintech.tams.common.base.entity.EtrDistributeInterfTmp;
 import com.joyintech.tams.common.base.entity.EtrQuoteFinishStatus;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,4 +30,8 @@ public interface CfetsIbuQuoteBondEtrMapper {
     FinExercisePlan getFinExercisePlan(Map<String, Object> param);
 
     int countFailEtr(Map<String, Object> param);
+
+    List<EntrustAvaShareAmtDto> listAvaShareAmt(Map<String, Object> param);
+
+    String getAccNo(Map<String,String> param);
 }
