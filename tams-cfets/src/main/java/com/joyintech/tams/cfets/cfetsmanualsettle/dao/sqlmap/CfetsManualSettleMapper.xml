@@ -97,9 +97,14 @@
         <if test="ps != null and ps!='' ">
             AND T1.PS= #{ps}
         </if>
-        <if test="tradeDate != null and tradeDate!='' ">
-            AND T1.TRADE_DATE= #{tradeDate}
+        <if test="tradeDateStart != null ">
+            <![CDATA[ AND T1.TRADE_DATE >= #{tradeDateStart}]]>
         </if>
+        <if test="tradeDateEnd != null  ">
+            <![CDATA[ AND T1.TRADE_DATE <= #{tradeDateEnd}]]>
+        </if>
+
+
         GROUP BY T8.SETTLE_STATUS,
             T1.TOTLE_TRADE_ID,
             T1.TRADE_DATE,
@@ -223,8 +228,11 @@
         <if test="ps != null and ps!='' ">
             AND T1.PS= #{ps}
         </if>
-        <if test="tradeDate != null and tradeDate!='' ">
-            AND T1.TRADE_DATE= #{tradeDate}
+        <if test="tradeDateStart != null">
+            <![CDATA[ AND T1.TRADE_DATE >= #{tradeDateStart}]]>
+        </if>
+        <if test="tradeDateEnd != null">
+            <![CDATA[ AND T1.TRADE_DATE <= #{tradeDateEnd}]]>
         </if>
         GROUP BY T0.SETTLE_STATUS,
             T1.TOTLE_TRADE_ID,
