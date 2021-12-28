@@ -33,7 +33,7 @@
 			<Cell order="29" name="期末余额">assetvalueBStr</Cell>
 			<Cell order="30" name="1.12.9.a投向金融资产投资公司或其附属机构发行的私募股权投资基金">privatefundFlagStr</Cell>
 			<Cell order="31" name="1.13.7.a投向金融资产投资公司发行的私募资产管理产品">privateprdFlagStr</Cell>
-			<Cell order="32" name="信用债使用评级">typeFinal</Cell>
+			<Cell order="32" name="信用债使用评级">rating</Cell>
 			<Cell order="33" name="1.15.b 投向市场化债转股相关产品的部分">bondtostockFlagStr</Cell>
 			<Cell order="34" name="1.15.c 逾期资产">typeFinal</Cell>
 			<Cell order="35" name="3.1.1 创业投资基金">typeFinal</Cell>

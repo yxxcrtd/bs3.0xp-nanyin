@@ -69,8 +69,9 @@
     </resultMap>
 
 
-    <resultMap id="MstBaseResultMap" type="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd" >
+    <resultMap id="MstBaseResultMap" type="com.joyintech.tams.svreport.chb.monthreportdetail.dto.MstCustomerInfoDetail" >
         <id column="CUSTOMER_ID" property="customerId" jdbcType="VARCHAR" />
+        <result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
         <result column="PARTY_TYPE3" property="partyType3" jdbcType="VARCHAR" />
         <result column="PARTY_TYPE2" property="partyType2" jdbcType="VARCHAR" />
         <result column="PARTY_TYPE1" property="partyType1" jdbcType="VARCHAR" />
@@ -170,7 +171,8 @@
             I.ORG_ASSET_TYPE2 orgAssetType2,
             I.ORG_ASSET_TYPE3 orgAssetType3,
             P.IS_YHBCGJ isYhbcgj,
-            P.TYPE_FINAL typeFinal
+            P.TYPE_FINAL typeFinal,
+            p.is_Fbhy isFbhy
             FROM CHB_MONTH_ASSET_POSITIONDETAIL P
             LEFT JOIN CHB_MONTH_REPORT_TEMPLATE T ON T.PROPERTYCODE = P.DETAILNO
             LEFT JOIN CHB_ASSET_INFO I ON P.ASSET_CODE = I.ASSET_CODE
@@ -186,6 +188,12 @@
             AND P.PROD_ID IS NOT NULL
             <if test="enddate != null and enddate != ''">
                 and P.TERM =  #{enddate,jdbcType=VARCHAR}
+            </if>
+            <if test="dataFlag != null and dataFlag.equals('01')">
+                and P.ASSETVALUE_A is not null and P.ASSETVALUE_A !=0
+            </if>
+            <if test="dataFlag != null and dataFlag.equals('02')">
+                and P.ASSETVALUE_B is not null and P.ASSETVALUE_B !=0
             </if>
 
             <if test="prodIds != null and prodIds != '' ">
@@ -249,7 +257,7 @@
                     ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, RATING,
                     ASSETTYPE2, ORG_CODE, DEPT_CODE,
                     OLD_ASSET_CODE, SUNASSETTYPE, SUNASSETTYPE2,
-                    IS_YHBCGJ)
+                    IS_YHBCGJ,is_Fbhy )
 
         <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
                  close="from dual)">
@@ -269,7 +277,7 @@
             #{item.orgAssetType2,jdbcType=VARCHAR}, #{item.orgAssetType3,jdbcType=VARCHAR}, #{item.rating,jdbcType=VARCHAR},
             #{item.assettype2,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR},
             #{item.oldAssetCode,jdbcType=VARCHAR}, #{item.sunassettype,jdbcType=VARCHAR}, #{item.sunassettype2,jdbcType=VARCHAR},
-            #{item.isYhbcgj,jdbcType=VARCHAR}
+            #{item.isYhbcgj,jdbcType=VARCHAR} ,#{item.isFbhy,jdbcType=VARCHAR}
         </foreach>
 
     </insert>
@@ -305,6 +313,7 @@
     <select id="getCustomerList" resultMap="MstBaseResultMap">
         SELECT  *
         FROM MST_CUSTOMER_INFO_ADD T
+        LEFT JOIN MST_CUSTOMER_INFO T1 ON T.CUSTOMER_ID = T1.CUSTOMER_ID
         WHERE 1=1
         <if test="keysList != null and keysList.size()>0 ">
             <foreach item="item" index="index" collection="keysList" separator="," open=" AND T.CUSTOMER_ID (" close=")">

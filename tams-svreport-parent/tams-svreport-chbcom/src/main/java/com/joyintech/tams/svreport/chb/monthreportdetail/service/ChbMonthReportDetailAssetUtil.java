@@ -12,11 +12,13 @@ import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.DictCodeListStl;
 import com.joyintech.tams.report.interf.common.constant.InterfMappingConstants;
 import com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportDetail;
 import com.joyintech.tams.svreport.chb.monthreportdetail.dao.ChbMonthReportDetailAssetMapper;
+import com.joyintech.tams.svreport.chb.monthreportdetail.dto.MstCustomerInfoDetail;
 import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
 import com.joyintech.tams.svreport.position.dto.ChbAssetPosition;
 import com.joyintech.tams.svreport.position.service.AssetPositionService;
@@ -63,21 +65,32 @@ public class ChbMonthReportDetailAssetUtil {
     private static List<String> fbCode = Arrays.asList("1201","1210","1202","1203","1204","1205","1206","1207","1208","1209","1299","2201","2202","2101","2299");
 
 
-
     /**
      * 数据赋值
-     * @param prdPosition
-     * @param info
-     * @param flagCode
+     * @param position
+     * @param prodInfo
+     * @param chbAssetInfo
+     * @param reportDetail
      * @return
      */
     public static ChbMonthAssetPositiondetail buildAssetDetail(ChbMonthAssetPosition position, ChbPrdBaseinfo prodInfo, ChbAssetInfo chbAssetInfo, ChbMonthReportDetail reportDetail){
         ChbMonthAssetPositiondetail chbMonthAssetPositiondetail = new ChbMonthAssetPositiondetail();
+
+        //3附件的数据全部不要
+        if(reportDetail.getPropertycode().startsWith("AMT3")||
+                reportDetail.getPropertycode().startsWith("AMT1_4")){
+            return null;
+        }
+
         //相同内容字段直接赋值
         BeanUtil.copyPropertiesIgnoreNull(chbMonthAssetPositiondetail,prodInfo);
 
         if(null!=chbAssetInfo){
-            BeanUtil.copyPropertiesIgnoreNull(chbMonthAssetPositiondetail,chbAssetInfo);
+//            BeanUtil.copyPropertiesIgnoreNull(chbMonthAssetPositiondetail,chbAssetInfo);
+            chbMonthAssetPositiondetail.setOrgAssetType1(chbAssetInfo.getOrgAssetType1());
+            chbMonthAssetPositiondetail.setOrgAssetType2(chbAssetInfo.getOrgAssetType2());
+            chbMonthAssetPositiondetail.setOrgAssetType3(chbAssetInfo.getOrgAssetType3());
+
         }
         //先基本信息,再头寸信息,避免错误覆盖
         BeanUtil.copyPropertiesIgnoreNull(chbMonthAssetPositiondetail,position);
@@ -87,8 +100,7 @@ public class ChbMonthReportDetailAssetUtil {
             if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getOptionFlag())){
                 chbMonthAssetPositiondetail.setOpenplan(chbAssetInfo.getExerciseDate());
             }
-            chbMonthAssetPositiondetail.setSubjectName(null!=chbAssetInfo.getChbIssuerId()?chbAssetInfo.getChbIssuerId():
-                    null!=chbAssetInfo.getChbFinancierId()?chbAssetInfo.getChbFinancierId():chbAssetInfo.getChbManagerId());
+            chbMonthAssetPositiondetail.setSubjectName(SubjectName(chbAssetInfo,chbMonthAssetPositiondetail.getOrgAssetType2(),chbMonthAssetPositiondetail.getOrgAssetType1()));
 
             if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecPrefer())){
                 chbMonthAssetPositiondetail.setIsYhbcgj(DictCodeListExt3.中债月度明细_银行资本补充工具_优先股.getValue());
@@ -111,6 +123,49 @@ public class ChbMonthReportDetailAssetUtil {
         return chbMonthAssetPositiondetail;
     }
 
+    /**
+     * 	债券：发行人
+     * 	存款类资产：存/借款机构，接口表中叫资金存入银行
+     * 	资产支持证券：发行人
+     * 	基金：管理人，接口表中叫基金公司
+     * 	项目类：融资人
+     * 	计划类：管理人
+     * 	股票：公司名称
+     * 	质押式回购、买断式回购、金融衍生品：交易对手
+     * 	用科目展示的资产项，没有具体主体，展示为空
+     * @param assetInfo
+     * @param assetType2
+     * @param assetType
+     * @return
+     */
+    public static String SubjectName(ChbAssetInfo assetInfo,String assetType2,String assetType){
+        String  SubjectName = null;
+        if(DictCodeListStl.资产二级分类_资产支持证券.getValue().equals(assetType2)){
+            SubjectName = assetInfo.getChbIssuerId();
+        }else if(DictCodeListExt3.中债_上游资产一级分类_债券.getValue().equals(assetType)){
+            SubjectName = assetInfo.getChbIssuerId();
+        }else if(DictCodeListExt3.中债_上游资产一级分类_存款类资产.getValue().equals(assetType)){
+            SubjectName = assetInfo.getBankName();
+        }else if(DictCodeListExt3.中债_上游资产一级分类_基金类资产.getValue().equals(assetType)){
+            SubjectName = assetInfo.getFundEnpeName();
+        }else if(DictCodeListExt3.中债_上游资产一级分类_项目类资产.getValue().equals(assetType)){
+            SubjectName = assetInfo.getChbFinancierId();
+        }else if(DictCodeListExt3.中债_上游资产一级分类_计划类利率型.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_计划类净值型.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_计划类货币型.getValue().equals(assetType)){
+            SubjectName = assetInfo.getChbManagerId();
+        }else if(DictCodeListExt3.中债_上游资产一级分类_股票.getValue().equals(assetType)){
+            SubjectName = assetInfo.getAssetName();
+        }else if(DictCodeListExt3.中债_上游资产一级分类_质押式回购.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_买断式回购.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_金融衍生品.getValue().equals(assetType)){
+            SubjectName = assetInfo.getRivalParty();
+        }
+
+
+        return SubjectName;
+    }
+
     public void  insertBefore(List<ChbMonthAssetPositiondetail> prdPositionList,Date batchDate){
         /**展示产品购买资产首次买入交易的交易对手名称***/
         Map<String,Object> paraMap = new HashMap<>();
@@ -120,11 +175,14 @@ public class ChbMonthReportDetailAssetUtil {
         List<SelectOptionDto> oDto = chbMonthReportDetailAssetMapper.getCounterList(paraMap);
         Map<String,String> CounterMap = oDto.stream().collect(JoyinCollectors.toMap(x -> x.getId(), x -> x.getText()));
         //展示资产对应主体（没有主体的找交易对手）在市场机构中的行业一级分类
-        List<MstCustomerInfoAdd> customerList = chbMonthReportDetailAssetMapper.getCustomerList(null);
-        Map<String,MstCustomerInfoAdd> customerMap = customerList.stream().collect(Collectors.toMap(MstCustomerInfoAdd::getCustomerId,x->x));
+        List<MstCustomerInfoDetail> customerList = chbMonthReportDetailAssetMapper.getCustomerList(null);
+        Map<String,MstCustomerInfoAdd> customerMap = customerList.stream().collect(Collectors.toMap(MstCustomerInfoDetail::getCustomerId,a -> a, (k1, k2) -> k1));
+        Map<String,MstCustomerInfoAdd> customerNameMap = customerList.stream().collect(Collectors.toMap(MstCustomerInfoDetail::getCustomerName,a -> a, (k1, k2) -> k1));
+
         for(ChbMonthAssetPositiondetail dto : prdPositionList){
-            //先赋值行业
-            MstCustomerInfoAdd info = null!=customerMap.get(dto.getSubjectName())?customerMap.get(dto.getSubjectName()):customerMap.get(dto.getRivalParty());
+            //先赋值行业  先用编码.再用code最后用交易对手
+            MstCustomerInfoAdd info = null!=customerMap.get(dto.getSubjectName())?customerMap.get(dto.getSubjectName()):
+                    null!=customerNameMap.get(dto.getSubjectName())?customerNameMap.get(dto.getSubjectName()):customerMap.get(dto.getRivalParty());
             //展示资产对应主体（没有主体的找交易对手）在市场机构中的行业一级分类
             if(null!=info){
                 dto.setIndustry1(info.getIndustry());

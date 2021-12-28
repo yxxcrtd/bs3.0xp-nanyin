@@ -7914,7 +7914,7 @@ public class PbcMonthAssetReportService  extends BaseService{
     		//汇总数据计算
     		setAssetDebtDetailValue((PbcReportAssetDebtDetailDto)dto.get(code), pos.getCcy(), amt, rateMap, (Date) assetMap.get("endDate"),source);
             if(!StringUtil.isNotEmpty(hxl)&&
-                    PbcMonthReportDetailAssetUtil.isAssetDate(code)){
+                    PbcMonthReportDetailAssetUtil.isAssetDate(code)&&PbcReportType.PBC_REPORT_2_1.equals(rep_code)){
                 assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail(pos,dto.get(code),code));
             }
     		if(null!=deptDto&&null!=deptDto.get(pos.getInstitutionCode())){
@@ -7985,6 +7985,11 @@ public class PbcMonthAssetReportService  extends BaseService{
     	
             setAssetDebtDetailValue((PbcReportAssetDebtDetailDto)dto.get(code), pos.getCcy(), 
             		amt, rateMap, (Date)assetMap.get("endDate"),source);
+
+            if(!StringUtil.isNotEmpty(hxl)&&PbcReportType.PBC_REPORT_2_1.equals(rep_code)){
+                assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetailPrd(pos,dto.get(code),code));
+            }
+
     		if(null!=deptDto&&null!=deptDto.get(code)){
                 setAssetDebtDetailValue((PbcReportAssetDebtDetailDto)deptDto.get(code), pos.getCcy(), 
                 		amt, rateMap, (Date)assetMap.get("endDate"),source);
