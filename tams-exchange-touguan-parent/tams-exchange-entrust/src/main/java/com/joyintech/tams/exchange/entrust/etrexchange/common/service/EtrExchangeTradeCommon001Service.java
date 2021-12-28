@@ -88,6 +88,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -192,6 +193,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	@Override
 	public void doComplete(EtrExchangeTradeSaveRequest dto, OperationType arg1) {
 		// TODO Auto-generated method stub
+//		restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/doComplete", entity,
+//				Integer.class);
 		BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
 		EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
 		EtrEntrust etrEntrust = new EtrEntrust();
@@ -782,6 +785,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
     }
 
     private void doInsertFlow(EtrExchangeTradeSaveRequest dto) {
+//        BaseEtrInvestInfoDto entity = restTemplate.postForObject(
+//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/buildEtrFlow", dto,
+//            BaseEtrInvestInfoDto.class);
 		BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
 		EtrBaseDto baseDto = getEtrBaseDto(dto);
 		EtrSinglePortfolioDto etrSinglePortfolioDto = getEtrSinglePortfolio(dto);
@@ -1101,19 +1107,19 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	}
 	
 	
-//	public Page<EtrExchangeTradeOperateRequest> selectEtrExchange(Map<String, Object> param) {
-//        param.put("userId", LoginUserUtil.getUserName());
-//        param.put("sysDate",iPlatformDate.getSysDateStr());
-//		return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectEtrExchange",
-//				param, EtrExchangeTradeOperateRequest.class);
-//	}
+	public Page<EtrExchangeTradeOperateRequest> selectEtrExchange(Map<String, Object> param) {
+        param.put("userId", LoginUserUtil.getUserName());
+        param.put("sysDate",iPlatformDate.getSysDateStr());
+		return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectEtrExchange",
+				param, EtrExchangeTradeOperateRequest.class);
+	}
 	//add by chenjiaxing 导出全部数据 202100902 start
-//	public List<EtrExchangeTradeOperateRequest> selectEtrExchange2(Map<String, Object> param) {
-//		param.put("userId", LoginUserUtil.getUserName());
-//		param.put("sysDate",iPlatformDate.getSysDateStr());
-//		return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectEtrExchange2",
-//				param, EtrExchangeTradeOperateRequest.class);
-//	}
+	public List<EtrExchangeTradeOperateRequest> selectEtrExchange2(Map<String, Object> param) {
+		param.put("userId", LoginUserUtil.getUserName());
+		param.put("sysDate",iPlatformDate.getSysDateStr());
+		return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectEtrExchange2",
+				param, EtrExchangeTradeOperateRequest.class);
+	}
 	//add by chenjiaxing 导出全部数据 202100902 end
 
     /**
@@ -1123,10 +1129,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @return 联想文本框
      */
     public List<SuggestDto> selectCounterDealer(Map<String, Object> map) {
-		// 交易场所
-		map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
-		List<SuggestDto> suggestDtos = etrExchangeTradeCommonMapper.selectCounterDealer(map);
-		return suggestDtos;
+        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectCounterDealer",
+                map, SuggestDto.class);
     }
 
     /**
@@ -1162,6 +1166,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
 		List<SuggestDto> suggestDtos = etrExchangeTradeCommonMapper.selectTrader(map);
 		return suggestDtos;
+//        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectTrader",
+//                map, SuggestDto.class);
     }
 
 	/**
@@ -1315,12 +1321,19 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 //		param.put("finprodId", finprodId);
 		param.put("finprodType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
 		List<FinCashCalcRule> finCashCalcRuleList = etrExchangeTradeCommonMapper.selectBondsIntResetList(param);
+//		List<FinCashCalcRule> finCashCalcRuleList = restTemplate.postForList(
+//                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectBondsIntResetList", tempParamMap,
+//                FinCashCalcRule.class);
+
         // c.获取债券的付息计划信息
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("finprodId", finprodId);
 		map.put("cashType1", DictCodeListExt1.现金流一级类型_利息.getValue());
 		map.put("finprodType", DictCodeListExt1.现金流业务类型_金融产品.getValue());
 		List<FinCashPlanDto> finCashPlanList = etrExchangeTradeCommonMapper.getFinCashPlan(map);
+//        List<FinCashPlanDto> finCashPlanList = restTemplate.postForList(
+//                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getFinCashPlan", tempParamMap,
+//                FinCashPlanDto.class);
         List<SecIntSchedule> invScheduleList = new ArrayList<>();
         List<FinCashPlanDto> intSchList = new ArrayList<FinCashPlanDto>();
         for (FinCashPlanDto item : finCashPlanList) {
@@ -1350,6 +1363,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		tempParamMap.put("psT03", DictCodeList.交易方向_行权_回售.getValue());
 		tempParamMap.put("psT39", DictCodeList.交易方向_行权_赎回.getValue());
 		SecInfoModelDto secInfoModelDto = etrExchangeTradeCommonMapper.getSecInfoModel(tempParamMap);
+//        SecInfoModelDto secInfoModelDto = restTemplate.postForObject(
+//                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getSecInfoModel", tempParamMap,
+//                SecInfoModelDto.class);
         SecInfoModel secInfoModel = toSecInfoModel(secInfoModelDto);
         if (secInfoModelDto != null && secInfoModelDto.getStartDate() != null
                 && DateUtil.compareTo(secInfoModelDto.getStartDate(), settleDate) > 0) {
@@ -1455,6 +1471,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         Map<String, Object> paraMap = new HashMap<>();
         paraMap.put("finprodId", finprodId);
         paraMap.put("settleDate", DateUtil.format(tempSettleDate));
+//        BigDecimal curSecAmt = restTemplate.postForObject(
+//                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getCurSecAmt", paraMap, BigDecimal.class);
 		param.put("cashType1", DictCodeListExt1.现金流一级类型_本金.getValue());
 		param.put("finprodType", DictCodeListExt1.现金流业务类型_金融产品.getValue());
 //		String settleDate = (String) param.get("settleDate");
@@ -1789,6 +1807,19 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 
 	/** 查询竞价交易行情信息 **/
 	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public EtrExchangeTradeQuotationHqResponse findQuotations(String secId) {
+		String param = "?stock_code=" + secId;
+		Map<String, Object> quoteList;
+		Map quoteMap = restTemplate.getForObject(ServiceApplication.QUOTE_SERVICE_NAME + queryIntegratedTick + param, Map.class);
+		if (quoteMap != null && quoteMap.get("data") != null) {
+			quoteList = (Map<String, Object>) quoteMap.get("data");
+			return BeanUtil.mapToObject(quoteList,EtrExchangeTradeQuotationHqResponse.class);
+		}
+		return new EtrExchangeTradeQuotationHqResponse();
+	}
+
+	/** 查询竞价交易行情信息 **/
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public EtrExchangeTradeSaveRequest findBidQuotationsPage(Map<String, Object> map) {
 		String secId = (String) map.get("secId");
 		String param = "?stock_code=" + secId;
@@ -1822,20 +1853,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         }
         return null;
     }
-
-	/** 查询竞价交易行情信息 **/
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public EtrExchangeTradeQuotationHqResponse findQuotations(String secId) {
-		String param = "?stock_code=" + secId;
-		Map<String, Object> quoteList;
-		Map quoteMap = restTemplate.getForObject(ServiceApplication.QUOTE_SERVICE_NAME + queryIntegratedTick + param, Map.class);
-		if (quoteMap != null && quoteMap.get("data") != null) {
-			quoteList = (Map<String, Object>) quoteMap.get("data");
-			return BeanUtil.mapToObject(quoteList,EtrExchangeTradeQuotationHqResponse.class);
-		}
-		return new EtrExchangeTradeQuotationHqResponse();
-	}
-
 	/**
 	 * 修改/双击查看详情查询信息 <功能详细描述>
 	 *
@@ -1845,6 +1862,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @since 1.0
 	 */
 	public EtrExchangeTradeSaveRequest getEtrExchangeTradeInfo(String entrustId) {
+//        return restTemplate.postForObject(
+//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getEtrExchangeTradeInfo",entrustId,
+//            EtrExchangeTradeSaveRequest.class);
 		try {
 			EtrExchangeTradeSaveRequest etrExchangeTrade001Dto = new EtrExchangeTradeSaveRequest();
 			//通过指令ID获取委托指令表的DTO,获取委托类型
@@ -2032,6 +2052,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @param entity
      */
 	public void closeDelegate(EtrExchangeTradeOperateRequest entity){
+//        restTemplate.postForObject(
+//                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/entrustClose",entity,
+//                Integer.class);
 		EtrBaseDto etrBaseDto = new EtrBaseDto();
 		etrBaseDto.setEntrustId(entity.getEntrustId());
 		EtrParameterDto paraDto = new EtrParameterDto();
@@ -2062,6 +2085,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				||DictCodeListExt3.委托状态_待分发.getValue().equals(entity.getEntrustStatus()))) {
 			baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId());
 		}
+//        restTemplate.postForObject(
+//                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/entrustRevoke",entity,
+//                Integer.class);
     }
     
     /**
@@ -2069,6 +2095,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @param entity
      */
     public AjaxResult checkSave(EtrExchangeTradeSaveRequest entity, BindingResult result){
+//        return restTemplate.postForObject(
+//                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/checkSave",entity,
+//                AjaxResult.class);
 		try {
 			EtrParameterDto paraDto = new EtrParameterDto();
 			setUser(paraDto);
@@ -2340,6 +2369,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      */
     public String getInvAim() {
 		return etrExchangeTradeCommonMapper.getInvAim();
+//        String invAim = restTemplate.postForObject(
+//                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getInvAim", null, String.class);
+//        return invAim;
     }
     
     /**
@@ -2348,6 +2380,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @return
      */
 	public int selectBondExecPlan(Map<String, Object> map) {
+//		return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectBondExecPlan",
+//				map, Integer.class);
 		// 交易场所。上海证券交易所
 		map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
 		// 行权方式.回售
@@ -2364,6 +2398,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      */
 	public String getCustomerTypeTwo(Map<String, Object> map) {
 		return etrExchangeTradeCommonMapper.getCustomerTypeTwo(map);
+//		return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getCustomerTypeTwo",
+//				map, String.class);
 	}
 
 	/**
@@ -2710,11 +2746,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @param br
 	 * @return
 	 */
-	public AjaxResult  checkSaveErrorMethod(EtrExchangeTradeSaveRequest dto, BindingResult br) {
-		//暂时支持一个组合
-		EtrExchangeTradePortfolioRequest portfolioRequest=dto.getPortfolioList().get(0);
-		dto.setPortfolioId(portfolioRequest.getPortfolioId());
-		//暂时支持一个组合
+	public AjaxResult  check(EtrExchangeTradeSaveRequest dto, BindingResult br) {
 		if (br.hasErrors()) {
 			return new AjaxResult(br);
 		}
@@ -3013,6 +3045,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		Map<String, Object> map = new HashMap<>();
 		map.put("entrustId", entrustId);
 		return etrExchangeTradeCommonMapper.getDistributeByEntrustId(map);
+//		return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getDistributeByEntrustId", map,
+//				EtrDistribute.class);
 	}
 
 	private <T> void checkElement(T t, StringBuilder errorMsg, Consumer<T> callback, Function<T, String>... chkFunc){
@@ -4433,6 +4467,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @return
 	 */
 	public String selectStdsecConverseRatio(Map<String, Object> param) {
+//		return restTemplate.postForObject(
+//				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectStdsecConverseRatio", param,
+//				String.class);
 		param.put("date", iPlatformDate.getSysDate());
 		return etrExchangeTradeCommonMapper.selectStdsecConverseRatio(param);
 	}
@@ -4828,6 +4865,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @return
 	 */
 	public BigDecimal queryStandandTicketCanUse(Map<String, Object> pageParam) {
+//		return restTemplate.postForObject(
+//				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/queryStandandTicketCanUse", pageParam,
+//				BigDecimal.class);
 		pageParam.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
 		pageParam.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
 		pageParam.put("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
@@ -4843,6 +4883,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @return
 	 */
 	public String qryMstBondMarketPrice(Map<String, Object> pageParam) {
+//		return restTemplate.postForObject(
+//				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/qryMstBondMarketPrice", pageParam,
+//				String.class);
 		String mstBondMarketPrice = etrExchangeTradeCommonMapper.qryMstBondMarketInfo(pageParam);
 		if (StringUtils.isEmpty(mstBondMarketPrice)) {
 			mstBondMarketPrice = etrExchangeTradeCommonMapper.qryInterfBondMarketInfo(pageParam);
@@ -4857,6 +4900,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @return
 	 */
 	public String qryMstFundMarketPrice(Map<String, Object> pageParam) {
+//		return restTemplate.postForObject(
+//				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/qryMstFundMarketPrice", pageParam,
+//				String.class);
 		String mstBondMarketPrice = etrExchangeTradeCommonMapper.qryMstFundMarketInfo(pageParam);
 		if (StringUtils.isEmpty(mstBondMarketPrice)) {
 			mstBondMarketPrice = etrExchangeTradeCommonMapper.qryInterfFundMarketInfo(pageParam);
@@ -4872,6 +4918,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @return
 	 */
 	public String qryMstStockMarketPrice(Map<String, Object> pageParam) {
+//		return restTemplate.postForObject(
+//				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/qryMstStockMarketPrice", pageParam,
+//				String.class);
 		String mstBondMarketPrice = etrExchangeTradeCommonMapper.qryMstShareMarketInfo(pageParam);
 		if (StringUtils.isEmpty(mstBondMarketPrice)) {
 			mstBondMarketPrice = etrExchangeTradeCommonMapper.qryInterfShareMarketInfo(pageParam);
@@ -4885,6 +4934,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @param dto
 	 */
 	public void doInsetOrUpdateForEtrPositionHold(EtrExchangeTradeSaveRequest dto) {
+//		restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/doInsetOrUpdateForEtrPositionHold", dto,
+//				Integer.class);
 		// 构造单组合单资产DTO
 		EtrSinglePortfolioDto etrSinglePortfolioDto = getEtrSinglePortfolio(dto);
 		// 指令持仓流水 、现金流水处理
@@ -4977,6 +5028,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @see
 	**/
     public List<FinProductOthCodeDto> getFinprodOthCodeInfo(Map<String,Object> map){
+//        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getFinprodOthCodeInfo", map,
+//                FinProductOthCodeDto.class);
 		return etrExchangeTradeCommonMapper.getFinprodOthCodeInfo(map);
     }
 
@@ -4989,6 +5042,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @see
     **/
     public List<FinProductQuto> getFinProductQutoInfo(Map<String,Object> map){
+//        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getFinProductQutoInfo", map,
+//                FinProductQuto.class);
 		return etrExchangeTradeCommonMapper.getFinProductQutoInfo(map);
     }
 
@@ -5003,6 +5058,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @see
     **/
     public List<SubEqutityDto> getsubEqutity(Map<String,Object> map){
+//        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getsubEqutity", map,
+//                SubEqutityDto.class);
 		map.put("entrustStatusClose",DictCodeList.委托状态_已关闭.getValue());
 		return etrExchangeTradeCommonMapper.getsubEqutity(map);
     }
@@ -5107,6 +5164,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @see
     **/
     public List<WflEtrEntrust> selectWflEntrust(Map<String,Object> map){
+//        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectWflEntrust", map,
+//                WflEtrEntrust.class);
 		map.put("ps_T04",DictCodeList.交易方向_申购.getValue());
 		return etrExchangeTradeCommonMapper.selectWflEntrust(map);
     }
@@ -5120,6 +5179,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 **/
 	public List<String> selectWflEntrustAddAndEtrEntrustAdd(Map<String,Object> map){
 		return etrExchangeTradeCommonMapper.selectWflEntrustAddAndEtrEntrustAdd(map);
+//		return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectWflEntrustAddAndEtrEntrustAdd", map,
+//				List.class);
 	}
 
 	//add by chenjiaxing 债券竞价交易计算偏离度 20210907 start
@@ -5181,6 +5242,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		catch (Exception e) {
 		}
 		return null;
+//		return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/EtrExchangeTrade/calcDeviationDegree",
+//				parameters, String.class);
 	}
     //add by chenjiaxing 债券竞价交易计算偏离度 20210907 end
 
@@ -5317,7 +5380,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		}
 		List<String> messages = new ArrayList<>();
 		if(StringUtil.isNotEmpty(dto.getPortfolioList())){
-			for(EtrExchangeTradePortfolioRequest item:dto.getPortfolioList()){
+			for(EtrExchangeTradeSaveRequest item:dto.getPortfolioList()){
 				if(!StringUtil.isNotEmpty(item.getPortfolioId())){
 					messages.add("请输入组合名称。");
 				}
@@ -5344,7 +5407,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		EtrExchangeTradeCommonRiskcalDto d=new EtrExchangeTradeCommonRiskcalDto();
 		BeanUtil.copyPropertiesIgnoreNull(d,dto);
 		List<Map> bussTrdTransfenpeiDto=new ArrayList<>();
-		for(EtrExchangeTradePortfolioRequest pt:dto.getPortfolioList()){
+		for(EtrExchangeTradeSaveRequest pt:dto.getPortfolioList()){
 			bussTrdTransfenpeiDto.add(BeanUtil.object2Map(pt));
 		}
 		d.setBussTrdTransfenpeiDto(bussTrdTransfenpeiDto);
@@ -5393,12 +5456,57 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 
 	/**
 	 *  查找组合对应的证券账户
-	 * @author zhangnian
-	 * @date 2021/1/13 0013
+	 * @author meifaxin
+	 * @date 2021/12/25 0013
 	 * @return
 	 */
 	public List<EtrExchangeTradePortfolioResponse> selectEtrPortfolioList(String entrustId){
 		return etrExchangeTradeCommonMapper.selectEtrPortfolioList(entrustId);
+	}
+	/**
+	 *  组合分配实体转换成
+	 * @param dto
+	 * @param multiPtl001Dto
+	 * @return
+	 */
+	public Map<EtrExchangeTradeSaveRequest,List<EtrExchangeTradeSaveRequest>> genEtrExchangeTradeSaveRequest(EtrExchangeTradeSaveRequest dto){
+		dto.setVdate(dto.getEntrustDate());
+		dto.setMdate(dto.getEntrustDate());
+		Map<EtrExchangeTradeSaveRequest,List<EtrExchangeTradeSaveRequest>> newGroupMap=new HashMap<>();
+		Map<String,List<EtrExchangeTradeSaveRequest>> groupMap= dto.getPortfolioList().stream().collect(
+				Collectors.groupingBy(item->item.getAcctNo()));
+		groupMap.forEach((key, value) -> {
+			List<EtrExchangeTradeSaveRequest> list=(List<EtrExchangeTradeSaveRequest>)value;
+			List<EtrExchangeTradeSaveRequest> newList=(List<EtrExchangeTradeSaveRequest>)value;
+			EtrExchangeTradeSaveRequest newDto=new EtrExchangeTradeSaveRequest();
+			BeanUtil.copyPropertiesIgnoreNull(newDto,dto);
+			BigDecimal totalEntrustAmt = list.stream().map(EtrExchangeTradeSaveRequest::getEntrustAmt).reduce(BigDecimal::add).get();
+			BigDecimal totalEntrustNum = list.stream().map(EtrExchangeTradeSaveRequest::getEntrustNum).reduce(BigDecimal::add).get();
+			newDto.setEntrustAmt(totalEntrustAmt);
+			newDto.setEntrustNum(totalEntrustNum);
+			list.forEach(item->{
+				EtrExchangeTradeSaveRequest newItem = new EtrExchangeTradeSaveRequest();
+				BeanUtil.copyPropertiesIgnoreNull(newItem,dto);
+				newItem.setPortfolioId(item.getPortfolioId());
+				newItem.setAcctNo(item.getAcctNo());
+				//默认证券账户
+				if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("portfolioId", dto.getPortfolioId());
+					//map.put("finprodId", dto.getFinprodId());
+					String secAcctId = etrExchangeTradeCommonMapper.qryPortfolioSecAcctId(map);
+					if (StringUtil.isNotEmpty(secAcctId)) {
+						newItem.setSecAcctId(secAcctId); // 证券账户
+					}
+				}
+				newItem.setEntrustNum(item.getEntrustNum());
+				newItem.setEntrustAmt(item.getEntrustAmt());
+				newList.add(newItem);
+			});
+			newDto.setPortfolioList(newList);
+			newGroupMap.put(newDto,newList);
+		});
+		return newGroupMap;
 	}
 
 
