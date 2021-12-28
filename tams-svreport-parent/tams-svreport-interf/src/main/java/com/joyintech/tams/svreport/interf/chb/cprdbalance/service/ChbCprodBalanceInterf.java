@@ -165,6 +165,8 @@ public class ChbCprodBalanceInterf extends BaseInterfService {
 				}
 				logger.debug("插入"+dateStr+"日的周期型产品余额，结束");
 			}
+			session.commit();
+			session.clearCache();
 		}finally {
 			session.close();
 		}
