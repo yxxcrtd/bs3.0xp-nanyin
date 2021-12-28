@@ -56,14 +56,14 @@ public class BulkQuoteController {
         return new Message<Object>(integratedQuoteManagement.addIntegratedRepurchaseQuote(repurchaseQuoteBean));
     }
     
-    /**
-     * 查询行情tick信息
-     *
-     * @param stockCode 合约代码
-     */
-    @ApiOperation(value = "查询合约行情", notes = "查询合约行情（针对普通交易）")
-    @RequestMapping(value = {"/quote/tick"}, method = RequestMethod.GET)
-    public Message<Object> queryTick(@RequestParam(value = "stock_code") String stockCode) {
-        return new Message<Object>(integratedQuoteManagement.getTick(stockCode));
-    }
+//    /**
+//     * 查询行情tick信息
+//     *
+//     * @param stockCode 合约代码
+//     */
+//    @ApiOperation(value = "查询合约行情", notes = "查询合约行情（针对普通交易）")
+//    @RequestMapping(value = {"/quote/tick"}, method = RequestMethod.GET)
+//    public Message<Object> queryTick(@RequestParam(value = "stock_code") String stockCode) {
+//        return new Message<Object>(integratedQuoteManagement.getTick(stockCode));
+//    }
 }

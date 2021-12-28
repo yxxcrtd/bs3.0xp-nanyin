@@ -17,6 +17,7 @@
         <module>tams-exchange-trade-quoteterminal</module>
 		<module>tams-exchange-trade-server-dsp</module>
 		<module>tams-exchange-trade-server-terminal</module>
+		<module>tams-exchange-trade-quote</module>
     </modules>
 
 
