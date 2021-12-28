@@ -650,6 +650,10 @@ public class CfetsQuotedCommonService extends BaseService {
             });
             cfetsBondDealRequestQuoteDto.setCounterIdList(counterIdList);
             cfetsBondDealRequestQuoteDto.setDetIdList(detIdList);
+            //非成交的时候 cfetsBondDealRequestQuoteDto.getCounterInfoList()清空
+            if(!StringUtil.equals(cfetsBondDealQuoteCommonDto.getOperatorType(),"done")){
+                cfetsBondDealRequestQuoteDto.setCounterInfoList(new ArrayList<>());
+            }
         }
         return cfetsBondDealRequestQuoteDto;
     }

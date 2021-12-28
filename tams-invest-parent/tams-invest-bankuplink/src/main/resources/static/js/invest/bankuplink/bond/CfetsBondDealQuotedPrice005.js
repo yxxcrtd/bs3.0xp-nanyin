@@ -99,6 +99,7 @@
      * 提交
      */
     var submitAction = function(){
+        debugger;
         var object = $.serializeToObject('#submitForm', true);
         if(!object.finprodId){
         	object.finprodId = $("#CfetsBondDealQuotedPrice005_hidden_finprodId").val();
