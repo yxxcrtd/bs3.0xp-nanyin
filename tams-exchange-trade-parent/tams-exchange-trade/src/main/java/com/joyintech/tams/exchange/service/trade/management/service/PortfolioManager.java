@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.service.trade.management.service;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -206,6 +207,9 @@ public class PortfolioManager extends BaseService {
 
         // 查询结果
         Map<String, Object> resultMap = postForMap(url, paramMap);
+        if (Objects.isNull(resultMap) || resultMap.size() == 0) {
+            log.warn("调用投管接口失败: url = [{}], param = [{}]", url, JSONUtil.toJsonStr(paramMap));
+        }
 
         // 封装结果
         PortfolioInfoResponse portfolioInfoResponse = new PortfolioInfoResponse();
@@ -232,6 +236,9 @@ public class PortfolioManager extends BaseService {
 
         // 查询结果
         Map<String, Object> resultMap = postForMap(url, paramMap);
+        if (Objects.isNull(resultMap) || resultMap.size() == 0) {
+            log.warn("调用投管接口失败: url = [{}], param = [{}]", url, JSONUtil.toJsonStr(paramMap));
+        }
 
         // 封装结果
         PortfolioInfoResponse portfolioInfoResponse = new PortfolioInfoResponse();
@@ -243,6 +250,9 @@ public class PortfolioManager extends BaseService {
     }
 
     private BigDecimal getValueFromMap(Map<String, Object> resultMap, String code) {
+        if (resultMap == null) {
+            return BigDecimal.ZERO;
+        }
         return Objects.isNull(resultMap.get(code)) ? BigDecimal.ZERO : new BigDecimal((String) resultMap.get(code));
     }
 
@@ -293,7 +303,7 @@ public class PortfolioManager extends BaseService {
         // 获取多组合
         List<InstructionDetail> instructionDetails = instructionDetailService.queryInstructionDetailsByInstructionId(instructionId);
 
-        if (Objects.isNull(instructionDetails) || ArrayUtil.isEmpty(instructionDetails)) {
+        if (Objects.isNull(instructionDetails) || instructionDetails.size() == 0) {
             // 单组合时处理
             InstructionDetail instructionDetail = new InstructionDetail();
             instructionDetail.setEntrustId(instruction.getEntrustId());
@@ -309,7 +319,7 @@ public class PortfolioManager extends BaseService {
         // - 查询组合信息
         PortfolioInfoRequest portfolioInfoRequest = new PortfolioInfoRequest();
         List<String> portfolios = instructionDetails.stream().map(InstructionDetail::getPortfolioId).collect(Collectors.toList());
-        portfolioInfoRequest.setPortfolioId(ArrayUtil.join(portfolios, StrUtil.COMMA));
+        portfolioInfoRequest.setPortfolioId(ArrayUtil.join(portfolios.toArray(), StrUtil.COMMA));
         portfolioInfoRequest.setFinprodId(instruction.getFinprodId());
         portfolioInfoRequest.setSecAcctId(instruction.getSecAcctId());
         portfolioInfoRequest.setAcctNo(instruction.getAcctNo());

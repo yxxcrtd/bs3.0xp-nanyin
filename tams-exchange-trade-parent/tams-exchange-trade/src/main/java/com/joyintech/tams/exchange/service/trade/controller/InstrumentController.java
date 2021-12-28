@@ -21,7 +21,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/trade/joyin")
+@RequestMapping("/service/joyin")
 //@Api(tags = "场内交易-合约数据查询接口")
 public class InstrumentController {
     @Autowired
