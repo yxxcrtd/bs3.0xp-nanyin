@@ -518,6 +518,19 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                                 //到期金额
                                 dealTotal.setmTradeAmt(item.getmTradeAmt());
                             }
+                            //当笔成交数据明细.质押品信息流水号 非空
+                            if(StringUtil.isNotEmpty(item.getPledgeTradeId())){
+                                SettleTransDataTotalPledge settleTransDataTotalPledge = new SettleTransDataTotalPledge();
+                                settleTransDataTotalPledge.setTradeId(dealTotal.getSeqId());
+                                settleTransDataTotalPledge.setBranch(dealTotal.getBranch());
+                                settleTransDataTotalPledge.setPledgeFinprodId(settleTransDataDto.getPledgeFinprodId());
+                                settleTransDataTotalPledge.setPledgeFaceValue(settleTransDataDto.getPledgeFaceValue());
+                                settleTransDataTotalPledge.setPledgeNumber(settleTransDataDto.getPledgeNumber());
+                                settleTransDataTotalPledge.setPledgeRatio(settleTransDataDto.getPledgeRatio());
+                                settleTransDataTotalPledge.setPledgeAmt(settleTransDataDto.getPledgeAmt());
+                                settleTransDataTotalPledge.setDisplaceDirection(settleTransDataDto.getDisplaceDirection());
+                                settleTransDataPledgeList.add(settleTransDataTotalPledge);
+                            }
                         }
                         //交易方向
                         dealTotal.setPs(settleTransDataDto.getPs());
@@ -569,19 +582,6 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                             settleTransDataTotalAdd.setRepoType(settleTransDataDto.getRepoType());
                             settleTransDataTotalAdd.setSeRepDayType(settleTransDataDto.getSeRepDayType());
                             settleTransDataAddList.add(settleTransDataTotalAdd);
-                        }
-                        //当笔成交数据明细.质押品信息流水号 非空
-                        if(StringUtil.isNotEmpty(settleTransDataDto.getPledgeTradeId())){
-                            SettleTransDataTotalPledge settleTransDataTotalPledge = new SettleTransDataTotalPledge();
-                            settleTransDataTotalPledge.setTradeId(dealTotal.getSeqId());
-                            settleTransDataTotalPledge.setBranch(dealTotal.getBranch());
-                            settleTransDataTotalPledge.setPledgeFinprodId(settleTransDataDto.getPledgeFinprodId());
-                            settleTransDataTotalPledge.setPledgeFaceValue(settleTransDataDto.getPledgeFaceValue());
-                            settleTransDataTotalPledge.setPledgeNumber(settleTransDataDto.getPledgeNumber());
-                            settleTransDataTotalPledge.setPledgeRatio(settleTransDataDto.getPledgeRatio());
-                            settleTransDataTotalPledge.setPledgeAmt(settleTransDataDto.getPledgeAmt());
-                            settleTransDataTotalPledge.setDisplaceDirection(settleTransDataDto.getDisplaceDirection());
-                            settleTransDataPledgeList.add(settleTransDataTotalPledge);
                         }
                     }else{
                         flag=true;

@@ -3,7 +3,6 @@ package com.joyintech.tams.settle.batch.datadeal.service;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.FinProduct;
@@ -27,6 +26,7 @@ import com.joyintech.tams.settle.batch.datadeal.dto.step2.StlDownDataDealWriteBa
 import com.joyintech.tams.settle.common.dto.FundInfoDto;
 import com.joyintech.tams.settle.common.dto.StlDownDataDealAccountInfoDto;
 import com.joyintech.tams.settle.common.service.SettleCommonService;
+import com.joyintech.tams.settle.common.util.DateUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -787,7 +787,13 @@ public class StlDataDealSzdJsmxProcessService {
 							settleTransData.setVpayDate(DateUtil.parse(szdJsmx.getJsrq()));
 							// 到期交收日
 							String calendarId = CacheUtil.getSysParam(StlDataDealProcessConstant.STL_DOWNDATA_DEAL_SHJYS_CALID);
-							settleTransData.setMpayDate(stlDataDealProcessCommonService.getNextWorkDay(DateUtil.parse(szdJsmx.getQtrq()), calendarId));
+							// settleTransData.setMpayDate(stlDataDealProcessCommonService.getNextWorkDay(com.joyintech.framework.util.DateUtil.parse(szdJsmx.getQtrq()), calendarId));
+							boolean isBusinessday = DateUtil.isBusinessDay(DateUtil.parse(szdJsmx.getQtrq()));
+							if(isBusinessday){
+								settleTransData.setMpayDate(DateUtil.parse(szdJsmx.getQtrq()));
+							}else{
+								settleTransData.setMpayDate(stlDataDealProcessCommonService.getNextWorkDay(DateUtil.parse(szdJsmx.getQtrq()), calendarId));
+							}
 							// 本金金额
 //							BigDecimal bjje = new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue()));
 							// 回购利息
@@ -911,10 +917,17 @@ public class StlDataDealSzdJsmxProcessService {
 							settleTransData.setMdate(DateUtil.parse(szdJsmx.getJyrq()));
 							// 首期交收日
 							String calendarId = CacheUtil.getSysParam(StlDataDealProcessConstant.STL_DOWNDATA_DEAL_SHJYS_CALID);
-							settleTransData.setVpayDate(stlDataDealProcessCommonService.getNextWorkDay(DateUtil.parse(szdJsmx.getQtrq()), calendarId));
+							// settleTransData.setVpayDate(stlDataDealProcessCommonService.getNextWorkDay(DateUtil.parse(szdJsmx.getQtrq()), calendarId));
+							boolean isBusinessday = DateUtil.isBusinessDay(DateUtil.parse(szdJsmx.getQtrq()));
+							if(isBusinessday){
+								settleTransData.setVpayDate(DateUtil.parse(szdJsmx.getQtrq()));
+							}else{
+								settleTransData.setVpayDate(stlDataDealProcessCommonService.getNextWorkDay(DateUtil.parse(szdJsmx.getQtrq()), calendarId));
+							}
 							// 到期交收日
 							settleTransData.setMpayDate(DateUtil.parse(szdJsmx.getJsrq()));
 					        // 回购利息
+							settleTransData.setmIntAmt(new BigDecimal(szdJsmx.getQsje()).abs().subtract(new BigDecimal(szdJsmx.getCjsl()).abs()));
 					    	// settleTransData.setUnitInt(ArithmeticUtil.subtract(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())),new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue()))));
 
 						// modify by etliu 20211225 start

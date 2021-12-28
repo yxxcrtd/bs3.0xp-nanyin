@@ -13,6 +13,8 @@ import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -57,6 +59,16 @@ public class StlDataDealProcessCommonService {
 
 	@Autowired(required = false)
 	private JoyinRestTemplate restTemplate;
+
+	@Autowired(required = false)
+	@Qualifier("simpleRestTemplate")
+	protected JoyinRestTemplate simpleRestTemplate;
+
+	/**
+	 * 是否单体服务
+	 */
+	@Value("${application.micorservice.contextPath.single:false}")
+	private boolean isSingle;
 
 	// 无需计算佣金场景
 	public static final List<String> NO_NEED_CALCULATE_COMMISSION_LIST = Arrays.asList(
@@ -443,7 +455,13 @@ public class StlDataDealProcessCommonService {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("finprodId", finprodId);
 		parameters.put("settleDate", DateUtil.format(settleDate));
-		return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getUnitPrice", parameters,
-				BigDecimal.class);
+//		return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getUnitPrice", parameters,
+//				BigDecimal.class);
+		if(isSingle) {
+			return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME  + "/TrdBondInvestTrade/getUnitPrice", parameters, BigDecimal.class);
+		}
+		else {
+			return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME  + "/TrdBondInvestTrade/getUnitPrice", parameters, BigDecimal.class);
+		}
 	}
 }
