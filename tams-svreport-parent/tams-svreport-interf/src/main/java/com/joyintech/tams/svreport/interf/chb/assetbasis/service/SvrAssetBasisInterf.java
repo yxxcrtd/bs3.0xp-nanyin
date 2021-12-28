@@ -438,6 +438,8 @@ public class SvrAssetBasisInterf extends BaseInterfService {
 				}
 				logger.info("插入" + dateStr + "日的资产基础指标数据，结束");
 			}
+			session.commit();
+			session.clearCache();
 		}finally {
 			session.close();
 		}
