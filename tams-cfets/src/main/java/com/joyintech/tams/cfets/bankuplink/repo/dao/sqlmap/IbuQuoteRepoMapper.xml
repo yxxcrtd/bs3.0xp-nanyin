@@ -1909,7 +1909,7 @@
                 and (
                 D.ITEM_VALUE || F.ITEM_VALUE || H.ITEM_VALUE || TT.ouPartyName || TT.ouTraderName || TT.cpPartyName || TT.cpTraderName
                     || TT.settleSpeed || TT.quoteId || TT.trdId like '%' || #{search} || '%'
-                or to_char(TT.tradeAmt,'FM99990.9990')=#{search} or  TT.tradeAmt||'' =# {search}
+                or to_char(TT.tradeAmt,'FM99990.9990')=#{search} or  TT.tradeAmt||'' =#{search}
                 or to_char(TT.rate,'FM99990.9990')=#{search} or  TT.rate||'' =#{search}
                 or TT.repoTerm||'' =#{search}
                 or to_char(TT.vSettleDate,'yyyy-MM-dd')=#{search}
@@ -2238,4 +2238,32 @@
         ) where num = 1
     </select>
 
+    <!-- 资产五级分类联动检索-->
+    <select id="getAssetFiveType" resultType="com.joyintech.tams.common.base.entity.FinProductTypeConfig">
+        SELECT
+        OUTPUT_VALUE_1 outputValue1,
+        OUTPUT_VALUE_2 outputValue2,
+        OUTPUT_VALUE_3 outputValue3,
+        OUTPUT_VALUE_4 outputValue4,
+        OUTPUT_VALUE_5 outputValue5
+        FROM
+        FIN_PRODUCT_TYPE_CONFIG
+        WHERE CONFIG_TYPE = #{configType}
+        <if test="inputValue1 != null and inputValue1 != ''">
+            AND (INPUT_VALUE_1 = #{inputValue1} OR INPUT_VALUE_1 IS NULL)
+        </if>
+        <if test="inputValue2 != null and inputValue2 != ''">
+            AND (INPUT_VALUE_2 = #{inputValue2} OR INPUT_VALUE_2 IS NULL)
+        </if>
+        <if test="inputValue3 != null and inputValue3 != ''">
+            AND (INPUT_VALUE_3 = #{inputValue3} OR INPUT_VALUE_3 IS NULL)
+        </if>
+        <if test="inputValue4 != null and inputValue4 != ''">
+            AND (INPUT_VALUE_4 = #{inputValue4} OR INPUT_VALUE_4 IS NULL)
+        </if>
+        <if test="inputValue5 != null and inputValue5 != ''">
+            AND (INPUT_VALUE_5 = #{inputValue5} OR INPUT_VALUE_5 IS NULL)
+        </if>
+    </select>
+    <!-- 资产五级分类联动检索-->
 </mapper>

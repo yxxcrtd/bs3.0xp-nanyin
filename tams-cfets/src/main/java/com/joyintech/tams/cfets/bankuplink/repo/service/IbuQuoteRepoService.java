@@ -9,7 +9,6 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.service.bankuplink.ibu.dto.BondQuoteInfoDto;
 import com.joyintech.service.trade.common.service.TrdAvailableCashQueryService;
 import com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
@@ -17,7 +16,6 @@ import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDayPriceDto;
 import com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepoMapper;
 import com.joyintech.tams.cfets.bankuplink.repo.dto.*;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbClosePosEtrRequest;
@@ -796,17 +794,19 @@ public class IbuQuoteRepoService extends BaseService {
     public void handExportTimes(List<CfetsRepoDayRegDto> dataList) {
         List<CfetsOprHisInfoRequest> result = new ArrayList<>();
         dataList.forEach(item -> {
-            CfetsOprHisInfoRequest cfetsOprHisInfoRequest = new CfetsOprHisInfoRequest();
-            cfetsOprHisInfoRequest.setEntrustId(item.getQuoteId());
-            cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_导出.getValue());
-            cfetsOprHisInfoRequest.setSeqNo(IDGenerator.generate(32));
-            cfetsOprHisInfoRequest.setOperDate(DateUtil.platDateFromCache());
-            cfetsOprHisInfoRequest.setOperTime(DateUtil.platDateFromCache());
-            cfetsOprHisInfoRequest.setUserId(SecurityUtil.getLoginUser().getUserName());
-            cfetsOprHisInfoRequest.setCreateUser(SecurityUtil.getLoginUser().getUserName());
-            cfetsOprHisInfoRequest.setCreateDept(CommonUtil.getDeptCode());
-            cfetsOprHisInfoRequest.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
-            result.add(cfetsOprHisInfoRequest);
+            if (StringUtil.isNotEmpty(item.getQuoteId())) {
+                CfetsOprHisInfoRequest cfetsOprHisInfoRequest = new CfetsOprHisInfoRequest();
+                cfetsOprHisInfoRequest.setEntrustId(item.getQuoteId());
+                cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_导出.getValue());
+                cfetsOprHisInfoRequest.setSeqNo(IDGenerator.generate(32));
+                cfetsOprHisInfoRequest.setOperDate(DateUtil.platDateFromCache());
+                cfetsOprHisInfoRequest.setOperTime(DateUtil.platDateFromCache());
+                cfetsOprHisInfoRequest.setUserId(SecurityUtil.getLoginUser().getUserName());
+                cfetsOprHisInfoRequest.setCreateUser(SecurityUtil.getLoginUser().getUserName());
+                cfetsOprHisInfoRequest.setCreateDept(CommonUtil.getDeptCode());
+                cfetsOprHisInfoRequest.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
+                result.add(cfetsOprHisInfoRequest);
+            }
         });
         joyinbusinessCommonMapper.mergeCfetsOprHis(result);
     }
@@ -1131,9 +1131,14 @@ public class IbuQuoteRepoService extends BaseService {
             return result;
         }
         List<String> finProdIds = new ArrayList<>();
-        request.getRepoEntrustPledgeDtos().forEach(item ->
-                finProdIds.add(item.getFinprodId())
-        );
+        String repRegistOrg = request.getRepoEntrustPledgeDtos().get(0).getRepRegistOrg();
+        for (RepoEntrustPledgeDto item : request.getRepoEntrustPledgeDtos()) {
+            finProdIds.add(item.getFinprodId());
+            if (!StringUtil.equals(item.getRepRegistOrg(), repRegistOrg)) {
+                result.setMessage("托管机构不一致，不能添加！", MessageType.错误消息);
+                return result;
+            }
+        }
         Map<String, Object> param = new HashMap<>();
         param.put("finProdIds", finProdIds);
         if (StringUtil.equals(request.getPs(), DictCodeListExt3.交易方向_正回购.getValue())) {
@@ -1401,23 +1406,23 @@ public class IbuQuoteRepoService extends BaseService {
             }
             if (repoTermFlag && one.getRepoTerm() != item.getRepoTerm()) {
                 repoTermFlag = false;
-                msgSplicing(message, "OR");
+                message = msgSplicing(message, "OR");
                 message = message + "回购期限";
             }
             if (psFlag && !StringUtil.equals(one.getPs(), item.getPs())) {
                 psFlag = false;
-                msgSplicing(message, "OR");
+                message = msgSplicing(message, "OR");
                 message = message + "交易方向";
             }
             if (settleSpreedFlag && !StringUtil.equals(one.getSettleSpreed(), item.getSettleSpreed())) {
                 settleSpreedFlag = false;
-                msgSplicing(message, "OR");
+                message = msgSplicing(message, "OR");
                 message = message + "清算速度";
             }
             if (counterIdFlag && StringUtil.isNotEmpty(counterId) && StringUtil.isNotEmpty(item.getCounterId())
                     && !StringUtil.equals(one.getCounterId(), item.getCounterId())) {
                 counterIdFlag = false;
-                msgSplicing(message, "OR");
+                message = msgSplicing(message, "OR");
                 message = message + "交易对手";
             }
             if (StringUtil.isEmpty(counterId)) {
@@ -1425,7 +1430,7 @@ public class IbuQuoteRepoService extends BaseService {
             }
             if (secManageAcctIdFlag && !StringUtil.equals(one.getSecManageAcctId(), item.getSecManageAcctId())) {
                 secManageAcctIdFlag = false;
-                msgSplicing(message, "OR");
+                message = msgSplicing(message, "OR");
                 message = message + "证券账户";
             }
             // EXPORT_SHOW ==01 本币交易导出按钮配置为显示
@@ -1433,7 +1438,7 @@ public class IbuQuoteRepoService extends BaseService {
                 // 交易场所+交易方向+清算速度+交易对手+证券账户+交易账户必须一致
                 if (partyIdFlag && !StringUtil.equals(one.getPartyId(), item.getPartyId())) {
                     partyIdFlag = false;
-                    msgSplicing(message, "OR");
+                    message = msgSplicing(message, "OR");
                     message = message + "交易账户";
                 }
             }
@@ -1508,10 +1513,11 @@ public class IbuQuoteRepoService extends BaseService {
      * @author jiangpeng
      * @date 2021/12/7 9:19
      */
-    private void msgSplicing(String message, String joiner) {
+    private String msgSplicing(String message, String joiner) {
         if (StringUtil.isNotEmpty(message) && StringUtil.isNotEmpty(joiner)) {
-            message += joiner;
+            message = message + joiner;
         }
+        return message;
     }
 
     /**
@@ -1567,7 +1573,7 @@ public class IbuQuoteRepoService extends BaseService {
             ptlAllocationDto.setPrice(item.getTradeYield());
             ptlAllocations.add(ptlAllocationDto);
             // 基本信息中【交易金额】默认为组合分配中剩余指令额度的汇总
-            tradeAmt = ArithmeticUtil.doAdd(tradeAmt, item.getAvaNum());
+            tradeAmt = ArithmeticUtil.doAdd(tradeAmt, ptlAllocationDto.getTradeAmt());
         }
         //【回购利率】可根据指令自动带出，带出逻辑
         // 勾选指令的价格模式只存在指定价格或同时存在指定价格和限价指令时,返回指定价格指令中的回购利率
@@ -1610,17 +1616,30 @@ public class IbuQuoteRepoService extends BaseService {
         // 格式化数据
         formatCfetsRepoDealQuote(cfetsRepoDealQuoteCommonDto, cfetsRepoDealEntrustOrderDto);
         // 基本信息中【交易手续费】、【结算服务费】，系统根据银行间交易费用规则，自动计算每笔交易的结算服务费和交易手续费，用户可手工修改
-        //计算费用
-        RepoCalRequest calRequest = new RepoCalRequest();
-        calRequest.setTradeAmt(tradeAmt);//交易金额
-        calRequest.setPs(cfetsRepoDealQuoteCommonDto.getPs());//交易方向
-        calRequest.setSecManageAcctId(cfetsRepoDealQuoteCommonDto.getSecManageAcctId());//证券账户
-        calRequest.setTermType(cfetsRepoDealEntrustOrderDto.getTermType());//期限品种
-        calRequest.setPledgeNum(repoEntrustPledgeDtos == null ? 0 : repoEntrustPledgeDtos.size());//质押券数量
-        calRequest.setTradeDate(cfetsRepoDealQuoteCommonDto.getTradeDate());//交易日期
-        CfetsRepoDealQuoteCommonDto temp = this.calFee(calRequest);//计算费用
-        cfetsRepoDealQuoteCommonDto.setDealFeeAmt(temp.getDealFeeAmt());//交易手续费
-        cfetsRepoDealQuoteCommonDto.setSettFeeAmt(temp.getSettFeeAmt());//结算手续费
+        if (StringUtil.equals(cfetsRepoDealQuoteCommonDto.getPs(), DictCodeListExt3.交易方向_逆回购.getValue())) {
+            //计算费用
+            RepoCalRequest calRequest = new RepoCalRequest();
+            calRequest.setTradeAmt(tradeAmt);//交易金额
+            calRequest.setPs(cfetsRepoDealQuoteCommonDto.getPs());//交易方向
+            calRequest.setSecManageAcctId(cfetsRepoDealQuoteCommonDto.getSecManageAcctId());//证券账户
+            calRequest.setTermType(cfetsRepoDealEntrustOrderDto.getTermType());//期限品种
+            calRequest.setPledgeNum(repoEntrustPledgeDtos == null ? 0 : repoEntrustPledgeDtos.size());//质押券数量
+            calRequest.setTradeDate(cfetsRepoDealQuoteCommonDto.getTradeDate());//交易日期
+            CfetsRepoDealQuoteCommonDto temp = this.calFee(calRequest);//计算费用
+            cfetsRepoDealQuoteCommonDto.setDealFeeAmt(temp.getDealFeeAmt());//交易手续费
+            cfetsRepoDealQuoteCommonDto.setSettFeeAmt(temp.getSettFeeAmt());//结算手续费
+            // 计算金额信息
+            calRequest.setPrice(cfetsRepoDealQuoteCommonDto.getPrice());//回购利率
+            calRequest.setSettleSpreedCode(cfetsRepoDealQuoteCommonDto.getSettleSpreedCode());//清算速度
+            calRequest.setRepoTerm(cfetsRepoDealQuoteCommonDto.getRepoTerm());//回购期限
+            temp = this.calAmtInfo(calRequest);
+            cfetsRepoDealQuoteCommonDto.setmIntAmt(temp.getmIntAmt());//回购利息
+            cfetsRepoDealQuoteCommonDto.setMtradeAmt(temp.getMtradeAmt());//到期结算金额
+            cfetsRepoDealQuoteCommonDto.setSettlementStartDate(temp.getSettlementStartDate());//首次结算日
+            cfetsRepoDealQuoteCommonDto.setSettlementEndDate(temp.getSettlementEndDate());//到期结算日
+            cfetsRepoDealQuoteCommonDto.setActCapDays(temp.getActCapDays());//实际占款天数
+            cfetsRepoDealQuoteCommonDto.setTermType(temp.getTermType());//回购期限
+        }
 
         return cfetsRepoDealQuoteCommonDto;
     }
@@ -1902,7 +1921,8 @@ public class IbuQuoteRepoService extends BaseService {
     private CfetsRepoDayRegDto formatExportData(CfetsRepoDayRegDto org, CfetsRepoDayRegDto lastDto) {
         CfetsRepoDayRegDto dest = new CfetsRepoDayRegDto();
         // list已经经过排序,所以与前一个dto的业务编号比较以判断是否是同一笔交易
-        if (!StringUtil.equals(org.getQuoteId(), lastDto.getQuoteId())) {
+        if (!StringUtil.isNotEmpty(lastDto)
+                || !StringUtil.equals(org.getQuoteId(), lastDto.getQuoteId())) {
             BeanUtil.copyPropertiesIgnoreNull(dest, org);
             // 默认为空值
             dest.setExcRate(null);
@@ -1910,7 +1930,6 @@ public class IbuQuoteRepoService extends BaseService {
             dest.setmIntAmt(null);
             dest.setMtradeAmt(null);
             dest.setQuoteType(null);
-            dest.setQuoteId(null);
             dest.setUpdateTime(null);
         } else {
             dest.setFinprodMarketId(org.getFinprodMarketId());

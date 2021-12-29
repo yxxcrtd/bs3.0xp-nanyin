@@ -436,8 +436,9 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             ).collect(Collectors.toList());
             for (int i = 0; i < collect.size(); i++) {
                 List<CfetsRepoDayRegDto> sfetsRepoDayRegDtos = collect.get(i);
+                String quoteTypeStr = CollectionUtils.isEmpty(sfetsRepoDayRegDtos) ? "" : sfetsRepoDayRegDtos.get(0).getQuoteTypeStr();
                 String appendString = collect.size() > 1 ? String.format("%04d", i) : StringUtil.EMPTY;
-                String excelAndSheetName = sfetsRepoDayRegDtos.get(0).getQuoteTypeStr() + "本币交易导出_" + iPlatformDate.getSysDateStr() + appendString;
+                String excelAndSheetName = quoteTypeStr + "本币交易导出_" + iPlatformDate.getSysDateStr() + appendString;
                 ExcelUitl.doExport(requestDto, response, excelAndSheetName, () -> {
                     List<BaseMap> baseMapList = new ArrayList<>();
                     for (CfetsRepoDayRegDto dto : sfetsRepoDayRegDtos) {
@@ -447,7 +448,8 @@ public class CfetsIbuQuoteRepoController extends BaseController {
                 });
             }
         } else {
-            String excelAndSheetName = dataList.get(0).getQuoteTypeStr() + "本币交易导出_" + iPlatformDate.getSysDateStr();
+            String quoteTypeStr = CollectionUtils.isEmpty(dataList) ? "" : dataList.get(0).getQuoteTypeStr();
+            String excelAndSheetName = quoteTypeStr + "本币交易导出_" + iPlatformDate.getSysDateStr();
             ExcelUitl.doExport(requestDto, response, excelAndSheetName, () -> {
                 List<BaseMap> baseMapList = new ArrayList<>();
                 for (CfetsRepoDayRegDto dto : dataList) {

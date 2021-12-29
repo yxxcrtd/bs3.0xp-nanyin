@@ -194,4 +194,15 @@ public interface CfetsIbuQuoteRepoMapper {
      * @return 指令列表
      */
     List<FinExercisePlan> findFinExercisePlan(Map<String, Object> param);
+
+    /**
+     * 资产五级分类联动检索
+     * <功能详细描述>
+     *
+     * @param param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<FinProductTypeConfig> getAssetFiveType(FinProductTypeConfig param);
 }
