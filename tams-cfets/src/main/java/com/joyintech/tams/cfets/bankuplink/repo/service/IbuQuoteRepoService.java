@@ -280,8 +280,8 @@ public class IbuQuoteRepoService extends BaseService {
         for (RepoEntrustPledgeDto dto : request.getPledgeDtos() == null ? new ArrayList<RepoEntrustPledgeDto>() : request.getPledgeDtos()) {
             finprodIds.add(dto.getFinprodId());
         }
-        pageParam.put("finprodIdList", finprodIds);
-        pageParam.put("platDate", iPlatformDate.getSysDateStr());
+        setParam(pageParam,2);
+        pageParam.put("nofinprodIdList", finprodIds);
         int pageNo = 1;
         int pageSize = 10;
         if (StringUtil.isNotEmpty(request.getPageMode())) {
