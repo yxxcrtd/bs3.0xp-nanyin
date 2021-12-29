@@ -493,8 +493,12 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         finTradeProduct.setMdate(trdProductDeal.getMdate());
         finTradeProduct.setVpayDate(settleTransData.getVpayDate());
         finTradeProduct.setMpayDate(settleTransData.getMpayDate());
+        finTradeProduct.setTermType(settleTransData.getTermType());
         if(null != trdProductDeal.getVdate() && null != trdProductDeal.getMdate()){
             finTradeProduct.setTerm(DateUtil.getBetweenDayNumber(trdProductDeal.getVdate(),trdProductDeal.getMdate()));
+        }
+        if(null != trdProductDeal.getVdate() && null != trdProductDeal.getMdate()){
+            finTradeProduct.setActCapDays(DateUtil.getBetweenDayNumber(settleTransData.getVpayDate(),settleTransData.getMpayDate()));
         }
         finTradeProduct.setIntType(DictCodeList.利率类型_固定利率.getValue());
         finTradeProduct.setIntRate(settleTransData.getUnitCprice());
