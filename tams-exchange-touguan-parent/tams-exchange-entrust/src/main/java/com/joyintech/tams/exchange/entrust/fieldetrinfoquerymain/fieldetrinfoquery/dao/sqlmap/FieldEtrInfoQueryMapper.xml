@@ -55,6 +55,7 @@
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
     ETR_ENTRUST.PRICE_MODEL priceModel,
     ssai.TRD_ACCT_ID trdAcctId,
+    ETR_ENTRUST.ENTRUST_NUM entrustNum,
     ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField
     FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
     LEFT JOIN
@@ -223,6 +224,7 @@
         NULL transmitTimeSer,
         WFL_ETR_ENTRUST.PRICE_MODEL priceModel,
         ssai.TRD_ACCT_ID trdAcctId,
+        WFL_ETR_ENTRUST.ENTRUST_NUM entrustNum,
         WFL_ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField
         FROM (SELECT * FROM WFL_ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) WFL_ETR_ENTRUST
         LEFT JOIN
@@ -394,21 +396,6 @@
             </where>
         </if>
     </sql>
-
-    <select id="getEtrInfoQueryOperate"
-            resultType="com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoOperateListResponse">
-        SELECT rownum SEQ_NO,t.* from (select
-        ENTRUST_ID,
-        OPER_TYPE,
-        to_char(OPER_DATE,'yyyy-MM-dd')  OPER_DATE,
-        to_char(OPER_TIME,'hh24:mi:ss') OPER_TIME,
-        BUSI_DES,
-        real_name userId
-        from ETR_ENTRUST_OPER_HIS
-        LEFT JOIN SYS_USER SU on ETR_ENTRUST_OPER_HIS.user_id = SU.user_name
-        WHERE entrust_id = #{entrustId}
-        order by OPER_TIME desc) t
-    </select>
 
     <select id="queryRolePosByLoginUser" resultType="java.lang.Integer">
         select count(1) from SYS_USER_ROLE sur

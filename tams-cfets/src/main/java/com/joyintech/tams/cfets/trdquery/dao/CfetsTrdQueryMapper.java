@@ -135,12 +135,6 @@ public interface CfetsTrdQueryMapper {
      */
     CfetsManualSettleInfoOtherListRespond findManualSettleInfoOther(Map<String, Object> pageParam);
     /**
-     * 审批记录分页查询
-     * @param pageParam 参数
-     * @return List<CfetsManualSettleTraderListRespond>
-     */
-    List<CfetsTrdQueryWorkflowResponse> queryAllWorkFlowInfoList(Map<String, Object> pageParam);
-    /**
      * 组合分配信息List,针对交易明细
      *
      * @param pageParam 参数

@@ -949,17 +949,4 @@ public class CfetsTrdQueryService extends BaseService{
 
         return resultData;
     }
-    /**
-     * 审批记录分页查询
-     * @param dto 入数
-     * @return Page<CfetsTrdQueryTradeInfoListResponse>
-     */
-    public Page<CfetsTrdQueryWorkflowResponse> queryAllWorkFlowInfoList(CfetsTrdQueryWorkflowRequest dto) {
-        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
-        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
-                () -> cfetsTrdQueryMapper.queryAllWorkFlowInfoList(pageParam));
-    }
-
-
-
 }

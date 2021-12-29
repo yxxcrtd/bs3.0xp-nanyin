@@ -16,8 +16,6 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.cfets.cfetsetrinfoquery.dao.CfetsEtrInfoQueryMapper;
-import com.joyintech.tams.cfets.cfetsetrinfoquery.dto.CfetsEtrInfoOperateListRequest;
-import com.joyintech.tams.cfets.cfetsetrinfoquery.dto.CfetsEtrInfoOperateListResponse;
 import com.joyintech.tams.cfets.cfetsetrinfoquery.dto.CfetsEtrInfoQueryListRequest;
 import com.joyintech.tams.cfets.cfetsetrinfoquery.dto.CfetsEtrInfoQueryListResponse;
 import com.joyintech.tams.constant.*;
@@ -203,25 +201,4 @@ public class CfetsEtrInfoQueryService extends BaseService{
         return pageLimit;
     }
 
-    /**
-     * 操作记录查询
-     *
-     * @param dto
-     * @return Page<CfetsEtrInfoOperateListResponse>
-     * @throws Exception Exception
-     * @see
-     * @since 1.0
-     */
-    public Page<CfetsEtrInfoOperateListResponse> getEtrInfoQueryOperate(CfetsEtrInfoOperateListRequest dto) {
-
-        //dto转成map
-        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
-        List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
-        if(StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1){
-            return new Page<CfetsEtrInfoOperateListResponse>();
-        }else{
-            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
-                    () -> cfetsEtrInfoQueryMapper.getEtrInfoQueryOperate(pageParam));
-        }
-    }
 }

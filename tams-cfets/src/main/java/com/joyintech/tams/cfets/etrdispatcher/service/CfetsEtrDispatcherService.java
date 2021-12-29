@@ -23,6 +23,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrbondfirstlbidding.dao.EtrBondFirstLBiddingMapper;
 import com.joyintech.tams.business.common.dao.CfgReadonlyFormShowMapper;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.dto.CommonSearchInfoRequest;
 import com.joyintech.tams.business.common.entity.CfgReadonlyFormShow;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.cfets.etrdispatcher.dao.CfetsEtrDispatcherMapper;
@@ -45,7 +46,6 @@ import com.joyintech.tams.invest.common.trade.dao.BussRepoSecMapper;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
-import org.apache.poi.util.ArrayUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Consumer;
@@ -523,7 +522,7 @@ public class CfetsEtrDispatcherService extends BaseService{
      * @see
      * @since 1.0
      */
-    public CfetsEtrDispatcherInfoResponse getEtrDispatcherInfo(CfetsEtrDispatcherInfoRequest dto) {
+    public CfetsEtrDispatcherInfoResponse getEtrDispatcherInfo(CommonSearchInfoRequest dto) {
         CfetsEtrDispatcherInfoResponse cfetsResponseDto =new CfetsEtrDispatcherInfoResponse();
         //dto转成map
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
@@ -583,7 +582,7 @@ public class CfetsEtrDispatcherService extends BaseService{
      * @see
      * @since 1.0
      */
-    public Page<CfetsEtrDispatcherExeListInfoResponse> getEtrDispatcherExeListInfo(CfetsEtrDispatcherInfoRequest dto) {
+    public Page<CfetsEtrDispatcherExeListInfoResponse> getEtrDispatcherExeListInfo(CommonSearchInfoRequest dto) {
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
         pageParam.put("feeType08", BussinessDictCodeList.费用类型_结算手续费.getValue());
@@ -608,7 +607,7 @@ public class CfetsEtrDispatcherService extends BaseService{
      * @see
      * @since 1.0
      */
-    public Page<CfetsEtrDispatcherDealListInfoResponse> getEtrDispatcherDealListInfo(CfetsEtrDispatcherInfoRequest dto) {
+    public Page<CfetsEtrDispatcherDealListInfoResponse> getEtrDispatcherDealListInfo(CommonSearchInfoRequest dto) {
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
         pageParam.put("feeType08", BussinessDictCodeList.费用类型_结算手续费.getValue());
@@ -621,27 +620,6 @@ public class CfetsEtrDispatcherService extends BaseService{
         }
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
                 () -> cfetsEtrDispatcherMapper.getEtrDispatcherDealListInfo(pageParam));
-    }
-    /**
-     * 指令风险试算查询
-     *
-     * @param dto
-     * @return Page<CfetsEtrDispatcherRskInfoResponse>
-     * @throws Exception Exception
-     * @see
-     * @since 1.0
-     */
-    public Page<CfetsEtrDispatcherRskInfoResponse> getEtrDispatcherRskInfo(CfetsEtrDispatcherInfoRequest dto) {
-
-        //dto转成map
-        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
-        List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
-        if(StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1){
-            return new Page<CfetsEtrDispatcherRskInfoResponse>();
-        }else{
-            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
-                    () -> cfetsEtrDispatcherMapper.getEtrDispatcherRskInfo(pageParam));
-        }
     }
 
     /**
@@ -1054,7 +1032,7 @@ public class CfetsEtrDispatcherService extends BaseService{
      * @param spcdCode
      * @return
      */
-    public Map<String, Object> getReadonlyFormEtrInfo(String pageCode, String dtCode, String spcdCode,CfetsEtrDispatcherInfoRequest dto) {
+    public Map<String, Object> getReadonlyFormEtrInfo(String pageCode, String dtCode, String spcdCode, CommonSearchInfoRequest dto) {
         Map<String, Object> resultData = new HashMap<>();
         List<CfgReadonlyFormShow>  infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
         if(StringUtil.equals(CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"),"02")){

@@ -2177,21 +2177,6 @@
             </where>
         </if>
     </sql>
-    <select id="queryAllWorkFlowInfoList"
-            resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryWorkflowResponse">
-        select  T2.ASSIGNEE_ hiUser,
-        T2.TASK_DEF_KEY_ nodeId,
-        T2.NAME_ nodeName,
-        NVL(T2.END_TIME_, T2.CLAIM_TIME_) operTime
-        from SYS_WFL_BUSINESS_LIST T1
-        left join ACT_HI_TASKINST T2
-        on T1.workflow_id=T2.PROC_INST_ID_
-        left join ACT_HI_COMMENT T3
-        ON T3.TASK_ID_ = T2.ID_
-        AND T3.PROC_INST_ID_ = T2.PROC_INST_ID_
-        AND T3.USER_ID_ = T2.ASSIGNEE_
-        where T1.TRADE_ID= #{busiCode}
-    </select>
     <select id="findManualSettleInfoOther"
             resultType="com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleInfoOtherListRespond">
         SELECT

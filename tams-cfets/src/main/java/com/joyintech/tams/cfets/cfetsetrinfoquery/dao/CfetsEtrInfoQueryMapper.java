@@ -10,7 +10,6 @@
  
 package com.joyintech.tams.cfets.cfetsetrinfoquery.dao;
 
-import com.joyintech.tams.cfets.cfetsetrinfoquery.dto.CfetsEtrInfoOperateListResponse;
 import com.joyintech.tams.cfets.cfetsetrinfoquery.dto.CfetsEtrInfoQueryListResponse;
 import org.springframework.stereotype.Repository;
 
@@ -33,17 +32,6 @@ public interface CfetsEtrInfoQueryMapper {
      * @return List<CfetsEtrInfoQueryListResponse>
      */
     List<CfetsEtrInfoQueryListResponse> findAllData(Map<String,Object> paraMap);
-
-    /**
-     * 操作记录查询
-     *
-     * @param pageParam
-     * @return List<CfetsEtrInfoOperateListResponse>
-     * @throws Exception Exception
-     * @see
-     * @since 1.0
-     */
-    List<CfetsEtrInfoOperateListResponse> getEtrInfoQueryOperate(Map<String, Object> pageParam);
 
     //查询登录用户是否是领导、交易处长岗位
     int queryRolePosByLoginUser(Map<String, Object> map);

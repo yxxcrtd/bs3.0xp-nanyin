@@ -19,8 +19,6 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.business.common.dto.FieldExportRequestDto;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoOperateListRequest;
-import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoOperateListResponse;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListRequest;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListResponse;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.service.FieldEtrInfoQueryService;
@@ -131,27 +129,5 @@ public class FieldEtrInfoQueryController extends BaseController {
             List dataList = fieldEtrInfoQueryService.findAllData(req.getDto(FieldEtrInfoQueryListRequest.class)).getRoot();
             return dataList;
         });
-    }
-
-    /**
-     * 操作记录查询
-     *
-     * @param dto
-     * @return Page<FieldEtrInfoOperateListResponse>
-     * @throws Exception Exception
-     * @see
-     * @since 1.0
-     */
-    @ApiOperation(value = "操作记录查询", notes = "操作记录查询")
-    @PostMapping("/getEtrInfoQueryOperate")
-    @ResponseBody
-    public Message<Page<FieldEtrInfoOperateListResponse>> getEtrInfoQueryOperate(@RequestBody FieldEtrInfoOperateListRequest dto){
-        try {
-            Page<FieldEtrInfoOperateListResponse> page = fieldEtrInfoQueryService.getEtrInfoQueryOperate(dto);
-            return new Message<Page<FieldEtrInfoOperateListResponse>>().success().setData(page);
-        } catch (Exception e) {
-            logger.error("查询操作记录分页数据异常", e);
-            return new Message<Page<FieldEtrInfoOperateListResponse>>().fail().setMessage("查询操作记录分页数据异常");
-        }
     }
 }

@@ -680,28 +680,6 @@
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
     </delete>
 
-    <select id="getEtrDispatcherRskInfo"
-            resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherRskInfoResponse">
-        SELECT rit.sup_stat supStat,
-            rii.ind_name indName,
-            rii.ind_type indType,
-            pp.portfolio_name portfolioName,
-            fp.finprod_abbr finprodAbbr,
-            rit.warn_cond warnCond,
-            rit.approve_cond approveCond,
-            rit.foul_cond foulCond,
-            rit.sup_val supVal,
-            rit.old_sup_val oldSupVal,
-            rit.sup_trend supTrend
-        FROM RSK_ISUP_TRIAL rit
-        INNER JOIN RSK_ISUP_INDICATOR rii ON rit.ind_id = rii.ind_id
-        LEFT JOIN ptl_portfolio pp ON rit.portfolio_id = pp.portfolio_id
-        LEFT JOIN fin_product fp ON rit.asset_code = fp.finprod_id
-        WHERE rit.trade_id = #{entrustId}
-        AND rit.conclusion is null
-        AND fp.finprod_id is not null
-    </select>
-
     <!-- 交易员与工作量列表查询 -->
     <select id="getEtrTraderAndWorkloadList" resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTraderListRequest">
         SELECT
