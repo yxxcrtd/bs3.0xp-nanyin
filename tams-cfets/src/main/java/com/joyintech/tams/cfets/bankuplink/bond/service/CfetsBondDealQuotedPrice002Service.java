@@ -24,7 +24,10 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
 import com.joyintech.service.bankuplink.ibu.dto.BondQuoteInfoDto;
+import com.joyintech.tams.business.common.exception.PositionException;
+import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
@@ -1146,7 +1149,12 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
             
             // 重新insert
         	insertWflBondDialogueQuote(entity);
-            sendPosition(entity,DictCodeListExt3.流程节点_流程提交.getValue(),handSystemAct(entity));
+        	try{
+                sendPosition(entity,DictCodeListExt3.流程节点_流程提交.getValue(),handSystemAct(entity));
+            }catch(PositionException e){
+                e.printStackTrace(); Message message = PositionUtil.ajaxErrorReturn(e);
+                throw new BusinessException("MSG:"+message.getMessage());
+            }
             //doInsetOrUpdateForPtlPositionHold(entity);
             ProcessMark newEntity;
             try {
