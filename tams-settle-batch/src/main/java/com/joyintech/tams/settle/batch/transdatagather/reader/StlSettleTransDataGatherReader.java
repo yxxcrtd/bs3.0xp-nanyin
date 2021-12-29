@@ -7,6 +7,7 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.SettleTransData;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalAdd;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge;
@@ -16,6 +17,7 @@ import com.joyintech.tams.settle.batch.transdatagather.dto.StlSettleTransDataGat
 import com.joyintech.tams.settle.batch.transdatagather.dto.StlSettleTransDataGatherParamDto;
 import com.joyintech.tams.settle.batch.transdatagather.service.StlSettleTransDataGatherService;
 import com.joyintech.tams.settle.common.service.SettleCommonService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -382,6 +384,9 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                         BeanUtils.copyProperties(settleTransDataDto, dealTotal);
                         //  汇总交易编号
                         dealTotal.setSeqId(IDGenerator.generate());
+                        if(DictCodeList.交易方向_买入.getValue().equals(dealTotal.getPs())){
+                            dealTotal.setfCjbh(settleTransDataDto.getCjbh());
+                        }
                         settleTransDataList.add(dealTotal);
                         //当笔成交数据明细.附属表流水号 非空
                         if(StringUtil.isNotEmpty(settleTransDataDto.getTradeIdAdd())){
@@ -505,12 +510,24 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                                 dealTotal.setCommissionAmtRaw(item.getCommissionAmtRaw());
                                 //交易金额_原始
                                 dealTotal.setTradeAmtRaw(item.getTradeAmtRaw());
-
+                                // 首期成交编号
+                                dealTotal.setfCjbh(item.getCjbh());
                             }
                             if(StringUtil.equals(item.getBusiSceneCalss(), DictCodeListStl.业务场景分类明细_债券协议正回购_到期.getValue())
                                     ||StringUtil.equals(item.getBusiSceneCalss(), DictCodeListStl.业务场景分类明细_债券协议逆回购_到期.getValue())){
-                                //到期交付日
-                                dealTotal.setMpayDate(item.getVdate());
+                                // 深交所的到期续作需特殊处理,需要查询首期的起息日
+                                if(DictCodeListExt1.交易场所_深圳证券交易所.getValue().equals(item.getTradeMarket())
+                                        && DictCodeList.交易方向_到期续做.getValue().equals(item.getPs())){
+                                    // 查询首期
+                                    List<SettleTransData> sqSettleTransDatas = stlSettleTransDataGatherService.selectSqSettleTransDatas(item);
+                                    if(CollectionUtils.isNotEmpty(sqSettleTransDatas)){
+                                        //到期交付日
+                                        dealTotal.setMpayDate(sqSettleTransDatas.get(0).getVdate());
+                                    }
+                                }else{
+                                    //到期交付日
+                                    dealTotal.setMpayDate(item.getVdate());
+                                }
                                 //到期本金
                                 dealTotal.setmPrinAmt(item.getPrinAmt());
                                 //到期利息

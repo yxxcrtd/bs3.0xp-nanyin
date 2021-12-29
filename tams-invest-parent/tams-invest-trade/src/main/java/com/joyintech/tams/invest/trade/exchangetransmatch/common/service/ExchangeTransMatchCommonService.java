@@ -995,7 +995,9 @@ public class ExchangeTransMatchCommonService extends BaseService {
                         }
                         else {
                             //查询首期交易
-                            TrdProductDeal trdProductDeal = exchangeTransMatchRepo3Service.getFirstRepoTrade(settleTransDataTotal.getfCjbh(),settleTransDataTotal.getVdate(),itemList.get(0).getPortfolioId());
+                            TrdProductDeal trdProductDeal = exchangeTransMatchRepo3Service.getFirstRepoTrade(
+                                    settleTransDataTotal.getfCjbh(),settleTransDataTotal.getVdate(),settleTransDataTotal.getPs(),
+                                    itemList.get(0).getPortfolioId());
                             if(StringUtil.isNotEmpty(trdProductDeal)) {
                                 FinDealPledge finDealPledge = new FinDealPledge();
                                 finDealPledge.setFinprodId(trdProductDeal.getTradeId());

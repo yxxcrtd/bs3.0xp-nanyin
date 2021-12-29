@@ -20,6 +20,7 @@ import com.joyintech.tams.invest.trade.exchangetransmatch.common.dto.ExchangeTra
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -325,7 +326,7 @@ public class ExchangeTransMatchRepo2Service extends ExchangeTransMatchRepoCommon
                 finDealPledge.setBranch(trdProductDeal.getBranch());
                 finDealPledge.setPledgeFinprodId(transDataTotalPledge.getPledgeFinprodId());
                 finDealPledge.setPledgeFaceValue(transDataTotalPledge.getPledgeFaceValue());
-                finDealPledge.setPledgeNumber(trdProductDeal.getShareAmt());
+                finDealPledge.setPledgeNumber(trdProductDeal.getShareAmt().divide(new BigDecimal(100)));
                 finDealPledge.setPledgeRatio(transDataTotalPledge.getPledgeRatio());
                 finDealPledge.setPledgeAmt(transDataTotalPledge.getPledgeAmt());
                 finDealPledgeList.add(finDealPledge);

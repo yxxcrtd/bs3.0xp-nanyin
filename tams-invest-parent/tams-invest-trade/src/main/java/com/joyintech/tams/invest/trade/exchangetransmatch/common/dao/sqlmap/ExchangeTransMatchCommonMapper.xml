@@ -203,6 +203,7 @@
             ON A.TRADE_ID  = B.TRADE_ID
             WHERE A.F_TRADE_ID = #{fCjbh}
             AND A.VDATE = #{vdate}
+            AND A.PS = #{ps}
             AND B.PORTFOLIO_ID = #{portfolioId}
     </select>
 

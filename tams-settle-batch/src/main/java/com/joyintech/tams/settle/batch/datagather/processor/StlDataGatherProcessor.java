@@ -413,7 +413,21 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                 continue;
             }
             if(DictCodeList.交易方向_买入.getValue().equals(settlePs)){ // 首期
-                if(settlePs.equals(etrEntrustDto.getPs()) && CollectionUtils.isNotEmpty(pledges)
+                if(
+                    (
+                        (
+                            DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(settleTransDataDto.getFinprodType2())
+                            &&
+                            DictCodeListExt3.交易方向_正回购.getValue().equals(etrEntrustDto.getPs())
+                        )
+                        ||
+                        (
+                            DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(settleTransDataDto.getFinprodType2())
+                            &&
+                            DictCodeListExt3.交易方向_逆回购.getValue().equals(etrEntrustDto.getPs())
+                        )
+                    )
+                    && CollectionUtils.isNotEmpty(pledges)
                     && pledges.get(0).getPledgeFinprodId().equals(etrEntrustDto.getFinprodId())){
                     matchEtrEntrustList.add(etrEntrustDto);
                 }

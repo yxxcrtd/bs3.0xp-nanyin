@@ -2,11 +2,9 @@ package com.joyintech.tams.settle.batch.transdatagather.service;
 
 import com.joyintech.tams.common.base.dao.SettleTransDataTotalAddMapper;
 import com.joyintech.tams.common.base.dao.SettleTransDataTotalMapper;
-import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
-import com.joyintech.tams.common.base.entity.SettleTransDataTotalAdd;
-import com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge;
-import com.joyintech.tams.common.base.entity.SettleTransDataTotalStatus;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.settle.batch.datadeal.dao.StlDownDataDealMapper;
 import com.joyintech.tams.settle.batch.transdatagather.dao.StlSettleTransDataGatherMapper;
 import com.joyintech.tams.settle.batch.transdatagather.dto.StlSettleTransDataGatherDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +30,9 @@ public class StlSettleTransDataGatherService {
     private SettleTransDataTotalMapper settleTransDataTotalMapper;
     @Autowired
     private SettleTransDataTotalAddMapper settleTransDataTotalAddMapper;
+
+    @Autowired
+    private StlDownDataDealMapper stlDownDataDealMapper;
     /**
      * @param dealDate 执行日期
      * @return 为支持重复跑批，先将上次批处理生出的数据删除。
@@ -91,5 +92,9 @@ public class StlSettleTransDataGatherService {
 
     public int insetSettleTransDataTotalPledge(SettleTransDataTotalPledge settleTransDataTotalPledge) {
         return stlSettleTransDataGatherMapper.insetSettleTransDataTotalPledge(settleTransDataTotalPledge);
+    }
+
+    public List<SettleTransData> selectSqSettleTransDatas(StlSettleTransDataGatherDto item) {
+        return stlDownDataDealMapper.selectSqSettleTransDatas(item.getfCjbh(), item.getSeatNumber(), item.getSecAcctId());
     }
 }

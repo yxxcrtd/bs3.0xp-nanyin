@@ -570,8 +570,15 @@ public class StlDataDealSzdSjsjgProcessService {
                 settleTransData.setmPrinAmt(settleTransData.getPrinAmt());
                 // 首期交收日
                 settleTransData.setVpayDate(DateUtil.parseDate(szdSjsjg.getJgjsrq(), DateUtil.DEFAULT_OTHER_FORMAT));
-                // 到期交收日（其它日期+1个工作日）
-                settleTransData.setMpayDate(nextWorkDay(DateUtil.parseDate(szdSjsjg.getJgqtrq(), DateUtil.DEFAULT_OTHER_FORMAT)));
+                // 到期交收日（其它日期判断是否工作日，非工作日顺延至下一工作日）
+                boolean isBusinessday = com.joyintech.tams.settle.common.util.DateUtil.isBusinessDay(
+                        DateUtil.parseDate(szdSjsjg.getJgqtrq(), DateUtil.DEFAULT_OTHER_FORMAT));
+                if(isBusinessday){
+                    settleTransData.setMpayDate(DateUtil.parseDate(szdSjsjg.getJgqtrq(), DateUtil.DEFAULT_OTHER_FORMAT));
+                }else{
+                    settleTransData.setMpayDate(nextWorkDay(DateUtil.parseDate(szdSjsjg.getJgqtrq(), DateUtil.DEFAULT_OTHER_FORMAT)));
+                }
+                // settleTransData.setMpayDate(nextWorkDay(DateUtil.parseDate(szdSjsjg.getJgqtrq(), DateUtil.DEFAULT_OTHER_FORMAT)));
                 // 回购利息
 //                BigDecimal repayInt = ArithmeticUtil.multiply(
 //                        ArithmeticUtil.divide(ArithmeticUtil.multiply(abs(qsbj), abs(szdSjsjg.getJgcjjg())), 100, 2),
@@ -666,9 +673,16 @@ public class StlDataDealSzdSjsjgProcessService {
             // 首期交收日  修改为取值交收日期 modify by msk
 //            settleTransData.setVpayDate(DateUtil.parseDate(szdSjsjg.getJgfsrq(), DateUtil.DEFAULT_OTHER_FORMAT));
             settleTransData.setVpayDate(DateUtil.parseDate(szdSjsjg.getJgjsrq(), DateUtil.DEFAULT_OTHER_FORMAT));
-            
+            // 到期交收日（其它日期判断是否工作日，非工作日顺延至下一工作日）
+            boolean isBusinessday = com.joyintech.tams.settle.common.util.DateUtil.isBusinessDay(
+                    DateUtil.parseDate(szdSjsjg.getJgqtrq(), DateUtil.DEFAULT_OTHER_FORMAT));
+            if(isBusinessday){
+                settleTransData.setMpayDate(DateUtil.parseDate(szdSjsjg.getJgqtrq(), DateUtil.DEFAULT_OTHER_FORMAT));
+            }else{
+                settleTransData.setMpayDate(nextWorkDay(DateUtil.parseDate(szdSjsjg.getJgqtrq(), DateUtil.DEFAULT_OTHER_FORMAT)));
+            }
             // 到期交收日
-            settleTransData.setMpayDate(nextWorkDay(DateUtil.parseDate(szdSjsjg.getJgqtrq(), DateUtil.DEFAULT_OTHER_FORMAT)));
+            // settleTransData.setMpayDate(nextWorkDay(DateUtil.parseDate(szdSjsjg.getJgqtrq(), DateUtil.DEFAULT_OTHER_FORMAT)));
             // 交易本金 ABS(清算数据Entity.成交数量)
             // settleTransData.setPrinAmt(abs(qsbj));
             settleTransData.setPrinAmt(abs(szdSjsjg.getJgqssl()));

@@ -142,7 +142,8 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         // 证券管理户代码
         trdProductDeal.setSecManageAcctId(settleTransData.getSecAcctId());
         // 关联系统交易编号
-        trdProductDeal.setfTradeId(settleTransData.getApplyTradeId());
+        // trdProductDeal.setfTradeId(settleTransData.getApplyTradeId());
+        trdProductDeal.setfTradeId(settleTransData.getfCjbh());
         // 现金流代码
         trdProductDeal.setCashId(null);
         // 登记托管机构
@@ -346,13 +347,15 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
      * 获取回购首期交易
      * @param fCjbh
      * @param vdate
+     * @param ps
      * @param portfolioId
      * @return
      */
-    public TrdProductDeal getFirstRepoTrade(String fCjbh,Date vdate,String portfolioId) {
+    public TrdProductDeal getFirstRepoTrade(String fCjbh,Date vdate,String ps,String portfolioId) {
         Map<String,Object> queryMap = new HashMap<>();
         queryMap.put("fCjbh",fCjbh);
         queryMap.put("vdate",vdate);
+        queryMap.put("ps",ps);
         queryMap.put("portfolioId",portfolioId);
         return exchangeTransMatchCommonMapper.getFirstRepoTrade(queryMap);
     }
@@ -505,8 +508,12 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         finTradeProduct.setBasis(DictCodeList.计息基础_A_365.getValue());
         finTradeProduct.setmDeliveryType("DVP");
         finTradeProduct.setmPrinAmt(trdProductDeal.getShareAmt());
-        finTradeProduct.setmIntAmt(settleTransData.getmIntAmt());
-        finTradeProduct.setmPrinAmt(settleTransData.getmPrinAmt());
+        BigDecimal mIntAmt = ArithmeticUtil.multiply(ArithmeticUtil.multiply(finTradeProduct.getmPrinAmt(), finTradeProduct.getIntRate()),
+                ArithmeticUtil.divide(new BigDecimal(DateUtil.getBetweenDayNumber(finTradeProduct.getVpayDate(), finTradeProduct.getMpayDate())), 365, 14));
+        finTradeProduct.setmIntAmt(mIntAmt);
+        finTradeProduct.setmTradeAmt(finTradeProduct.getmPrinAmt().add(finTradeProduct.getmIntAmt()));
+//        finTradeProduct.setmIntAmt(settleTransData.getmIntAmt());
+//        finTradeProduct.setmPrinAmt(settleTransData.getmPrinAmt());
         finTradeProduct.setTradeMarket(trdProductDeal.getTradeMarket());
         finTradeProduct.setCalendarId(StringUtil.equals(trdProductDeal.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())?DictCodeList.交易日历_上海交易所日历.getValue():DictCodeList.交易日历_深圳交易所日历.getValue());
         finTradeProduct.setTermType(settleTransData.getTermType());

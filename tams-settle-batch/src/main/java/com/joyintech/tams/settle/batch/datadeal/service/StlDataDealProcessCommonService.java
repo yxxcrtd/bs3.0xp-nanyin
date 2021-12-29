@@ -123,7 +123,7 @@ public class StlDataDealProcessCommonService {
 		}
 		// 综合金融服务平台交易(经深交所)
 		if (StringUtil.equals(StlDataDealProcessConstant.SJSMX_JYFS_02, jsfs)) {
-			return DictCodeList.交易平台_大宗交易平台.getValue();
+			return DictCodeList.交易平台_综合协议交易平台.getValue();
 		}
 		return null;
 	}
