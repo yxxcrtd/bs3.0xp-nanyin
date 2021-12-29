@@ -59,11 +59,13 @@ import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTrade
 import com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.asset.util.AssetCommonUtil;
+import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
@@ -160,6 +162,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 */
 	@Autowired
 	private EtrCommandDispatcherService etrCommandDispatcherService;
+	@Autowired
+	private BaseGetBussinessId bussGetBussinessIdService;
 
 	/**
 	 * 委托自动分发
@@ -185,6 +189,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 */
 	@Autowired(required = false)
 	private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
+	@Autowired
+	private EtrEntrustDetailMapper etrEntrustDetailMapper;
 
 
 	/**
@@ -560,6 +566,13 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			etrCommandDispatcherService.pushCommandMsg(param);
 		}
         doDeleteFlow(dto.getWorkflowId());
+		//插入指令多组合明细表
+		List<EtrEntrustDetail> etrEntrustDetailList = this.buildMultiEtrFlow(dto);
+		if(!StringUtil.isEmptyList(etrEntrustDetailList)) {
+			for (EtrEntrustDetail etrEntrustDetail:etrEntrustDetailList) {
+				etrEntrustDetailMapper.insertSelective(etrEntrustDetail);
+			}
+		}
 	}
 
 	/**
@@ -5460,8 +5473,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @date 2021/12/25 0013
 	 * @return
 	 */
-	public List<EtrExchangeTradePortfolioResponse> selectEtrPortfolioList(String entrustId){
-		return etrExchangeTradeCommonMapper.selectEtrPortfolioList(entrustId);
+	public List<EtrExchangeTradeSaveRequest> selectEtrPortfolioList(EtrExchangeTradeSaveRequest dto){
+		return etrExchangeTradeCommonMapper.selectEntrustDetail(dto);
 	}
 	/**
 	 *  组合分配实体转换成
@@ -5469,7 +5482,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @param multiPtl001Dto
 	 * @return
 	 */
-	public Map<EtrExchangeTradeSaveRequest,List<EtrExchangeTradeSaveRequest>> genEtrExchangeTradeSaveRequest(EtrExchangeTradeSaveRequest dto){
+	public Map<EtrExchangeTradeSaveRequest,List<EtrExchangeTradeSaveRequest>> genEtrExchangeTradeSaveRequest(EtrExchangeTradeSaveRequest dto, BussinessCodeParameter param){
 		dto.setVdate(dto.getEntrustDate());
 		dto.setMdate(dto.getEntrustDate());
 		Map<EtrExchangeTradeSaveRequest,List<EtrExchangeTradeSaveRequest>> newGroupMap=new HashMap<>();
@@ -5477,26 +5490,33 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				Collectors.groupingBy(item->item.getAcctNo()));
 		groupMap.forEach((key, value) -> {
 			List<EtrExchangeTradeSaveRequest> list=(List<EtrExchangeTradeSaveRequest>)value;
-			List<EtrExchangeTradeSaveRequest> newList=(List<EtrExchangeTradeSaveRequest>)value;
+			List<EtrExchangeTradeSaveRequest> newList=new ArrayList<>();
 			EtrExchangeTradeSaveRequest newDto=new EtrExchangeTradeSaveRequest();
 			BeanUtil.copyPropertiesIgnoreNull(newDto,dto);
+			String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
+			newDto.setEntrustId(code);
 			BigDecimal totalEntrustAmt = list.stream().map(EtrExchangeTradeSaveRequest::getEntrustAmt).reduce(BigDecimal::add).get();
 			BigDecimal totalEntrustNum = list.stream().map(EtrExchangeTradeSaveRequest::getEntrustNum).reduce(BigDecimal::add).get();
 			newDto.setEntrustAmt(totalEntrustAmt);
 			newDto.setEntrustNum(totalEntrustNum);
-			list.forEach(item->{
+			list.stream().forEach(item->{
+				newDto.setPortfolioId(item.getPortfolioId());
+				newDto.setAcctNo(item.getAcctNo());
 				EtrExchangeTradeSaveRequest newItem = new EtrExchangeTradeSaveRequest();
 				BeanUtil.copyPropertiesIgnoreNull(newItem,dto);
+				newItem.setEntrustId(newDto.getEntrustId());
 				newItem.setPortfolioId(item.getPortfolioId());
 				newItem.setAcctNo(item.getAcctNo());
 				//默认证券账户
-				if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
+				if (StringUtil.isNotEmpty(item.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
 					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("portfolioId", dto.getPortfolioId());
-					//map.put("finprodId", dto.getFinprodId());
+					map.put("portfolioId", item.getPortfolioId());
+					map.put("finprodId", dto.getFinprodId());
+					map.put("tradePlat",dto.getTradeMarket());
 					String secAcctId = etrExchangeTradeCommonMapper.qryPortfolioSecAcctId(map);
 					if (StringUtil.isNotEmpty(secAcctId)) {
 						newItem.setSecAcctId(secAcctId); // 证券账户
+						newDto.setSecAcctId(secAcctId);
 					}
 				}
 				newItem.setEntrustNum(item.getEntrustNum());
@@ -5507,6 +5527,21 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			newGroupMap.put(newDto,newList);
 		});
 		return newGroupMap;
+	}
+
+	public List<EtrEntrustDetail> buildMultiEtrFlow(EtrExchangeTradeSaveRequest dto) {
+		List<EtrEntrustDetail> etrEntrustDetailList = new ArrayList<>();
+		for(EtrExchangeTradeSaveRequest item : dto.getPortfolioList()) {
+			EtrEntrustDetail etrEntrustDetail = new EtrEntrustDetail();
+			etrEntrustDetail.setPortfolioId(item.getPortfolioId());
+			etrEntrustDetail.setEntrustId(item.getEntrustId());
+			etrEntrustDetail.setEntrustAmt(item.getEntrustAmt());
+			etrEntrustDetail.setEntrustNum(item.getEntrustNum());
+//			etrEntrustDetail.setDisRate(ArithmeticUtil.divide(item.getProportion(),new BigDecimal(100),4));
+			etrEntrustDetail.setTargetType(dto.getTargetType());
+			etrEntrustDetailList.add(etrEntrustDetail);
+		}
+		return etrEntrustDetailList;
 	}
 
 
