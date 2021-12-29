@@ -107,7 +107,7 @@ public class ExchangeTransMatchRepo2Service extends ExchangeTransMatchRepoCommon
             settleTransData.setCjbh(dealDto.getApplyTradeId());
             baseTradeProductDealDto.setFinTradeProduct(this.genFinTradeProduct(settleTransData, baseTradeProductDealDto.getTrdProductDeal()));
             baseTradeProductDealDto.setFinProductType(this.genFinProductType(dealDto,baseTradeProductDealDto.getTrdProductDeal()));
-            baseTradeProductDealDto.setFinDealPledgeList(this.genFinDealPledgeList(settleTransData,settleTransData.getCjbh(),baseTradeProductDealDto.getTrdProductDeal()));
+            baseTradeProductDealDto.setFinDealPledgeList(this.genFinDealPledgeList(dealDto,baseTradeProductDealDto.getTrdProductDeal()));
 
             baseTradeProductDealDtoList.add(baseTradeProductDealDto);
         }
