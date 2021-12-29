@@ -128,6 +128,13 @@ public class IbuQuoteBond002Controller extends BaseController {
                 cfetsBondDealDialogueQuoteDto.setCfetsBondDealDialogueQuoteDtoList(tempEntrustList);
             }
         }
+        //修改
+        if(StringUtil.equals(cfetsBondDealQuoteCommonDto.getOpenModel(), "edit")){
+            for (CfetsBondDealDialogueQuoteDto item : cfetsBondDealDialogueQuoteDto.getCfetsBondDealDialogueQuoteDtoList()) {
+                //恢复指令剩余额度
+                item.setEntrustAvaNum(ArithmeticUtil.doAdd(item.getEntrustAvaNum(),item.getAvaNum()));
+            }
+        }
         //复制操作 返回前台
         cfetsBondDealQuoteCommonDto = cfetsQuotedCommonServiceVue.createDialogue2(cfetsBondDealDialogueQuoteDto);
         if(CollectionUtils.isNotEmpty(cfetsBondDealDialogueQuoteDto.getCfetsBondDealDialogueQuoteDtoList())){
