@@ -88,9 +88,9 @@ public class ExchangeTransMatchRepo3Service extends ExchangeTransMatchRepoCommon
         dealTotal.setTotleTradeId(baseGetBusinessId.buildBussinessCode(bussinessCodeParameter));
 
         // 业务类型
-        dealTotal.setBusiType(null);
+        dealTotal.setBusiType(DictCodeList.业务类型_债券质押式回购交易.getValue());
         // 金融产品代码
-        TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getMpayDate(),dealDto.getPs(),
+        TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getVdate(),DictCodeList.交易方向_买入.getValue(),
                 entrustDto.getPortfolioId());
         if(StringUtil.isNotEmpty(firstRepoTrade)) {
             //金融产品代码
@@ -175,9 +175,13 @@ public class ExchangeTransMatchRepo3Service extends ExchangeTransMatchRepoCommon
 
         // 投资组合代码
         dealTotal.setPortfolioId(entrustDto.getPortfolioId());
-
         // 投管业务类型
-        dealTotal.setTgBusiType(DictCodeListExt3.共通业务类型_质押券置换.getValue());
+        if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(dealTotal.getFinprodType2())){
+            dealTotal.setTgBusiType(DictCodeListExt3.平安业务类型_债券质押式正回购.getValue());
+        }else{
+            dealTotal.setTgBusiType(DictCodeListExt3.平安业务类型_债券质押式逆回购.getValue());
+        }
+        // dealTotal.setTgBusiType(DictCodeListExt3.共通业务类型_质押券置换.getValue());
         // 备注
         dealTotal.setRemark("数据清算自动处理");
 
@@ -198,6 +202,7 @@ public class ExchangeTransMatchRepo3Service extends ExchangeTransMatchRepoCommon
                 bussinessCodeParameter.setCommonBusinessType(DictCodeListExt3.共通业务类型_协议回购中途换券指令);
             }
             trdProductDeal.setTradeId(baseGetBusinessId.buildBussinessCode(bussinessCodeParameter));
+            trdProductDeal.setBusiType(DictCodeList.业务类型_债券质押式回购交易.getValue());
             // 金融产品类型
             trdProductDeal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
             // 分支序号

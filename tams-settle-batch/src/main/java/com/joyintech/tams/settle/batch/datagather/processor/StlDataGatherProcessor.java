@@ -437,7 +437,7 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                     (DictCodeList.交易方向_到期.getValue().equals(settlePs))
                     && DictCodeListExt3.交易方向_到期购回.getValue().equals(etrEntrustDto.getPs())){ // 清算的到期 = 指令的到期购回
                 if(etrEntrustDto.getTradeId().equals(settleTransDataDto.getfCjbh())
-                    && etrEntrustDto.getVdate().equals(settleTransDataDto.getVdate())){
+                    && etrEntrustDto.getVpayDate().equals(settleTransDataDto.getVdate())){
                     matchEtrEntrustList.add(etrEntrustDto);
                 }
             }else if(DictCodeList.交易方向_到期续做.getValue().equals(settlePs)){
@@ -455,7 +455,8 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                 }
                 if(settlePs.equals(etrEntrustDto.getPs()) && CollectionUtils.isNotEmpty(pledges)
                     && pledges.get(0).getPledgeFinprodId().equals(etrEntrustDto.getFinprodId())
-                    && etrEntrustDto.getTradeId().equals(settleTransDataDto.getfCjbh())){
+                    && etrEntrustDto.getTradeId().equals(settleTransDataDto.getfCjbh())
+                    && etrEntrustDto.getVpayDate().equals(settleTransDataDto.getVdate())){
                     matchEtrEntrustList.add(etrEntrustDto);
                 }
             }

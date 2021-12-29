@@ -22,7 +22,7 @@
     <sql id="Base_Column_List" >
         SEQ_NO SEQ_NO, ENTRUNST_TRADE_ID ENTRUNST_TRADE_ID, PLEDGE_FINPROD_ID PLEDGE_FINPROD_ID, 
         BRANCH BRANCH, MATCH_CLASS MATCH_CLASS, MATCH_TYPE MATCH_TYPE, MARCH_QTY MARCH_QTY, 
-        MARCH_AMT MARCH_AMT, MARCH_QTY_EN MARCH_QTY_EN, MARCH_AMT_EN MARCH_AMT_EN, "DISPLACE_DIRECTION" "DISPLACE_DIRECTION", 
+        MARCH_AMT MARCH_AMT, MARCH_QTY_EN MARCH_QTY_EN, MARCH_AMT_EN MARCH_AMT_EN, DISPLACE_DIRECTION DISPLACE_DIRECTION,
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
         UPDATE_TIME UPDATE_TIME
     </sql>
@@ -58,7 +58,7 @@
         insert into SETTLE_DATA_TOTAL_PLEDGE_MATCH (SEQ_NO, ENTRUNST_TRADE_ID, PLEDGE_FINPROD_ID, 
             BRANCH, MATCH_CLASS, MATCH_TYPE, 
             MARCH_QTY, MARCH_AMT, MARCH_QTY_EN, 
-            MARCH_AMT_EN, "DISPLACE_DIRECTION", CREATE_USER, 
+            MARCH_AMT_EN, DISPLACE_DIRECTION, CREATE_USER,
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
             UPDATE_TIME)
         values (#{seqNo,jdbcType=VARCHAR}, #{entrunstTradeId,jdbcType=VARCHAR}, #{pledgeFinprodId,jdbcType=VARCHAR}, 
@@ -102,7 +102,7 @@
                 MARCH_AMT_EN,
             </if>
             <if test="displaceDirection != null" >
-                "DISPLACE_DIRECTION",
+                DISPLACE_DIRECTION,
             </if>
             <if test="createUser != null" >
                 CREATE_USER,
@@ -174,11 +174,11 @@
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SettleDataTotalPledgeMatch" >
         insert into SETTLE_DATA_TOTAL_PLEDGE_MATCH(SEQ_NO, ENTRUNST_TRADE_ID, PLEDGE_FINPROD_ID, 
         BRANCH, MATCH_CLASS, MATCH_TYPE, MARCH_QTY, MARCH_AMT, MARCH_QTY_EN, MARCH_AMT_EN, 
-        "DISPLACE_DIRECTION", CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        DISPLACE_DIRECTION, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
         )
         select SEQ_NO, ENTRUNST_TRADE_ID, PLEDGE_FINPROD_ID, 
             BRANCH, MATCH_CLASS, MATCH_TYPE, MARCH_QTY, MARCH_AMT, MARCH_QTY_EN, MARCH_AMT_EN, 
-            "DISPLACE_DIRECTION", CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            DISPLACE_DIRECTION, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
             
              from SETTLE_DATA_TOTAL_PLEDGE_MATCH
              where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR} and ENTRUNST_TRADE_ID = #{entrunstTradeId,jdbcType=VARCHAR} and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR} and BRANCH = #{branch,jdbcType=DECIMAL} and MATCH_CLASS = #{matchClass,jdbcType=VARCHAR}
@@ -202,7 +202,7 @@
                 MARCH_AMT_EN = #{marchAmtEn,jdbcType=DECIMAL},
             </if>
             <if test="displaceDirection != null" >
-                "DISPLACE_DIRECTION" = #{displaceDirection,jdbcType=VARCHAR},
+                DISPLACE_DIRECTION = #{displaceDirection,jdbcType=VARCHAR},
             </if>
             <if test="updateUser != null" >
                 UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
@@ -224,7 +224,7 @@
             MARCH_AMT = #{marchAmt,jdbcType=DECIMAL},
             MARCH_QTY_EN = #{marchQtyEn,jdbcType=DECIMAL},
             MARCH_AMT_EN = #{marchAmtEn,jdbcType=DECIMAL},
-            "DISPLACE_DIRECTION" = #{displaceDirection,jdbcType=VARCHAR},
+            DISPLACE_DIRECTION = #{displaceDirection,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
         where SEQ_NO = #{seqNo,jdbcType=VARCHAR}

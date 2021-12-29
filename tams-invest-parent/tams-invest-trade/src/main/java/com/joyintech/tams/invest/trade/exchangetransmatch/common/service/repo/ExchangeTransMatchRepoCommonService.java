@@ -456,6 +456,7 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         List<FinPledgeDisplaceResult> finPledgeDisplaceResultList = new ArrayList<>();
         for(SettleTransDataTotalPledge settleTransDataTotalPledge: dealDto.getSettleTransDataTotalPledgeList()) {
             FinPledgeDisplaceResult finPledgeDisplaceResult = new FinPledgeDisplaceResult();
+            finPledgeDisplaceResult.setBranch(new BigDecimal(0));
             //金融产品代码 = 汇总成交质押品匹配结果表.质押金融产品代码
             finPledgeDisplaceResult.setTradeId(trdFinProductDealTotal.getTotleTradeId());
             //金融产品代码 = 汇总成交质押品匹配结果表.质押金融产品代码

@@ -1,10 +1,13 @@
 package com.joyintech.tams.settle.batch.datagather.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.joyintech.framework.json.CustomDateDeserialize;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * @author zznn
@@ -27,6 +30,28 @@ public class EtrEntrustDto extends EtrEntrust {
      * 指令明细表tradeId
      */
     private String tradeId;
+
+    /**
+     * 首次交收日
+     */
+    private Date vpayDate;
+
+    /**
+     * 取得 首次交收日
+     * @return 首次交收日
+     */
+    public Date getVpayDate() {
+        return vpayDate;
+    }
+
+    /**
+     * 设置 首次交收日
+     * @param vpayDate 首次交收日
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setVpayDate(Date vpayDate) {
+        this.vpayDate = vpayDate;
+    }
 
     public String getTradeId() {
         return tradeId;

@@ -20,7 +20,7 @@
         TRADE_ID TRADE_ID, BRANCH BRANCH, PLEDGE_FINPROD_ID PLEDGE_FINPROD_ID, PLEDGE_FACE_VALUE PLEDGE_FACE_VALUE, 
         PLEDGE_NUMBER PLEDGE_NUMBER, PLEDGE_RATIO PLEDGE_RATIO, PLEDGE_AMT PLEDGE_AMT, CREATE_USER CREATE_USER, 
         CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
-        "DISPLACE_DIRECTION" "DISPLACE_DIRECTION"
+        DISPLACE_DIRECTION DISPLACE_DIRECTION
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -51,7 +51,7 @@
             PLEDGE_FACE_VALUE, PLEDGE_NUMBER, PLEDGE_RATIO, 
             PLEDGE_AMT, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-            "DISPLACE_DIRECTION")
+            DISPLACE_DIRECTION)
         values (#{tradeId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{pledgeFinprodId,jdbcType=VARCHAR}, 
             #{pledgeFaceValue,jdbcType=DECIMAL}, #{pledgeNumber,jdbcType=DECIMAL}, #{pledgeRatio,jdbcType=DECIMAL}, 
             #{pledgeAmt,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
@@ -98,7 +98,7 @@
                 UPDATE_TIME,
             </if>
             <if test="displaceDirection != null" >
-                "DISPLACE_DIRECTION",
+                DISPLACE_DIRECTION,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -146,10 +146,10 @@
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge" >
         insert into SETTLE_TRANS_DATA_TOTAL_PLEDGE(TRADE_ID, BRANCH, PLEDGE_FINPROD_ID, PLEDGE_FACE_VALUE, 
         PLEDGE_NUMBER, PLEDGE_RATIO, PLEDGE_AMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-        UPDATE_TIME, "DISPLACE_DIRECTION")
+        UPDATE_TIME, DISPLACE_DIRECTION)
         select TRADE_ID, BRANCH, PLEDGE_FINPROD_ID, PLEDGE_FACE_VALUE, 
             PLEDGE_NUMBER, PLEDGE_RATIO, PLEDGE_AMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
-            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, "DISPLACE_DIRECTION"
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, DISPLACE_DIRECTION
              from SETTLE_TRANS_DATA_TOTAL_PLEDGE
              where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR} and BRANCH = #{branch,jdbcType=DECIMAL} and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
     </insert>
@@ -175,7 +175,7 @@
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
             <if test="displaceDirection != null" >
-                "DISPLACE_DIRECTION" = #{displaceDirection,jdbcType=VARCHAR},
+                DISPLACE_DIRECTION = #{displaceDirection,jdbcType=VARCHAR},
             </if>
         </set>
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
@@ -190,7 +190,7 @@
             PLEDGE_AMT = #{pledgeAmt,jdbcType=DECIMAL},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            "DISPLACE_DIRECTION" = #{displaceDirection,jdbcType=VARCHAR}
+            DISPLACE_DIRECTION = #{displaceDirection,jdbcType=VARCHAR}
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
           and BRANCH = #{branch,jdbcType=DECIMAL}
           and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}

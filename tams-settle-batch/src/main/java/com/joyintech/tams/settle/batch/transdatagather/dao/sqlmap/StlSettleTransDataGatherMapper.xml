@@ -194,6 +194,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="displaceDirection != null" >
+                DISPLACE_DIRECTION,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="tradeId != null" >
@@ -231,6 +234,9 @@
             </if>
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="displaceDirection != null" >
+                #{displaceDirection,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>

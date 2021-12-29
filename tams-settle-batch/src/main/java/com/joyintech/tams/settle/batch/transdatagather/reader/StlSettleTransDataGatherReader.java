@@ -687,6 +687,10 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                             //交易金额_原始
                             BigDecimal totaltradeAmtRaw=BigDecimal.ZERO;
                             for (StlSettleTransDataGatherDto item : list) {
+                                dealTotal.setfCjbh(item.getfCjbh());
+                                if(DictCodeListExt3.质押券置换_置换方向_换入.getValue().equals(item.getDisplaceDirection())){
+                                    dealTotal.setShareAmt(item.getShareAmt());
+                                }
                                 totalStampFee= ArithmeticUtil.doAdd(totalStampFee, item.getStampFee());
                                 totalJsfAmt= ArithmeticUtil.doAdd(totalJsfAmt, item.getJsfAmt());
                                 totalGhfAmt= ArithmeticUtil.doAdd(totalGhfAmt, item.getGhfAmt());
