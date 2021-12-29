@@ -18,16 +18,14 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     @ApiModelProperty(name = "quoteId", value = "报价编号")
     private String quoteId;
-    /**
-     * 按钮id
-     */
+
     @ApiModelProperty(name="elementId",value="按钮id")
     private String elementId;
 
     @ApiModelProperty(name = "operateType", value = "操作类型", example = "save")
     private String operateType;
 
-    @ApiModelProperty(name = "quotaPageModel", value = "报价操作类型", example = "marketResponse")
+    @ApiModelProperty(name = "quotaPageModel", value = "报价操作类型(修改,回复,撤回,回退)", example = "marketResponse")
     private String quotaPageModel;
 
     @ApiModelProperty(name = "validStatus", value = "有效状态", example = "01")
