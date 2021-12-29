@@ -440,21 +440,11 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
     }
     
    public List<CfetsEtrRepoZLCXPositionResponse> selectF01List(Map<String, Object> pageParam){
-	   pageParam.put("POSITION_TYPE_01", DictCodeList.持仓类型_可用.getValue());
-       pageParam.put("POSITION_TYPE_03", DictCodeList.持仓类型_实际.getValue());
-       pageParam.put("POSITION_TYPE_04", DictCodeList.持仓类型_质押.getValue());
-       pageParam.put("POSITION_TYPE_05", DictCodeList.持仓类型_融入.getValue());
-       pageParam.put("POSITION_TYPE_06", DictCodeList.持仓类型_融出.getValue());
-       pageParam.put("POSITION_TYPE_08", DictCodeListExt1.持仓类型_预占用.getValue());
-       pageParam.put("POSITION_TYPE_11", DictCodeListExt1.持仓类型_卖空.getValue());
-       pageParam.put("POSITION_TYPE_12", DictCodeListExt1.持仓类型_卖空可用.getValue());
-
-       pageParam.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
+       pageParam.put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue());
+       pageParam.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
        pageParam.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
        pageParam.put("sysDate", iPlatformDate.getSysDateStr());
        pageParam.put("TRADEPLACE01", DictCodeListExt1.交易场所_银行间.getValue());
-       pageParam.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
-       pageParam.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
        pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
        pageParam.put("VALUATION_SOURCE_CBC", DictCodeList.估值来源_中债登_CBC.getValue());
 	   return cfetsEtrIbRepoinfoMapper.selectF01List(pageParam);
