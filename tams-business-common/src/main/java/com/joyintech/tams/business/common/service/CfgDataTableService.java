@@ -1,7 +1,6 @@
 package com.joyintech.tams.business.common.service;
 
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.security.User;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.business.common.dao.CfgDataTableFlagMapper;
 import com.joyintech.tams.business.common.dao.CfgDataTableMapper;
@@ -55,8 +54,7 @@ public class CfgDataTableService {
     public Map<String, List<CfgDataTableShow>> getByPageCode(String pageCode) {
         Map<String, List<CfgDataTableShow>> map = new HashMap<>();
         //获取登录用户的ID
-        User loginUser = SecurityUtil.getLoginUser();
-        String userId = loginUser != null ? SecurityUtil.getLoginUser().getUserName() : "lh1";
+        String userId = SecurityUtil.getLoginUser().getUserName();
         //获取页面的区域编码
         List<String> dtCodes = cfgDataTableMapper.getDtCodeByPageCode(pageCode);
         String spcdCode = "999999";
@@ -86,8 +84,7 @@ public class CfgDataTableService {
             return;
         }
         //获取登录用户的ID
-        User loginUser = SecurityUtil.getLoginUser();
-        String userId = loginUser != null ? SecurityUtil.getLoginUser().getUserName() : "lh1";
+        String userId = SecurityUtil.getLoginUser().getUserName();
         //先判断用户是否自定义过设置
         CfgDataTableShow dataTableShow = dataTableShowList.get(0);
         String pageCode = dataTableShow.getPageCode();
@@ -135,15 +132,13 @@ public class CfgDataTableService {
     public List<CfgDataTableShow> getByPageCodeAndDtCode(String pageCode, String dtCode, String spcdCode) {
         List<CfgDataTableShow> list;
         //获取登录用户的ID
-        User loginUser = SecurityUtil.getLoginUser();
-        String userId = loginUser != null ? SecurityUtil.getLoginUser().getUserName() : "lh1";
+        String userId = SecurityUtil.getLoginUser().getUserName();
         //List<CfgDataTableShow> uDataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_IS, userId);
         CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode, spcdCode, userId);
         if (null == flag) {
             list = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode, EFFERANGE_NO, USER_ID);
         } else {
             list = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode, EFFERANGE_IS, userId);
-            ;
         }
         return list;
     }
@@ -158,14 +153,12 @@ public class CfgDataTableService {
     public List<CfgDataTableShow> getByPageCodeAndDtCodes(String pageCode, String dtCode, List<String> spcdCodes) {
         List<CfgDataTableShow> list;
         //获取登录用户的ID
-        User loginUser = SecurityUtil.getLoginUser();
-        String userId = loginUser != null ? SecurityUtil.getLoginUser().getUserName() : "lh1";
+        String userId = SecurityUtil.getLoginUser().getUserName();
         CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCodes(pageCode, dtCode, spcdCodes, userId);
         if (null == flag) {
             list = cfgDataTableMapper.getBySpcdCodes(pageCode, dtCode, spcdCodes, EFFERANGE_NO, USER_ID);
         } else {
             list = cfgDataTableMapper.getBySpcdCodes(pageCode, dtCode, spcdCodes, EFFERANGE_IS, userId);
-            ;
         }
         return list;
     }
