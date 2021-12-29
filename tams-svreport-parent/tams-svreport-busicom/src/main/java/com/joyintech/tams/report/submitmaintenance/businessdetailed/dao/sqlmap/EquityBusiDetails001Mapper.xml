@@ -310,7 +310,9 @@
 	           AND a.REGIST_BANK_CODE = b.REGIST_BANK_CODE	           
         	) 
         WHERE
-        	b.BUSI_SEQNO IS NOT NULL	   
+        	b.BUSI_SEQNO IS NOT NULL
+        	<!-- add by 删除数据后无法导入 yangxianjiu start end 2021-12-29 -->
+        	AND b.STATUS != 'D'
     </select>
 
     <!-- 批量插入投资者明细信息维护表中 -->
