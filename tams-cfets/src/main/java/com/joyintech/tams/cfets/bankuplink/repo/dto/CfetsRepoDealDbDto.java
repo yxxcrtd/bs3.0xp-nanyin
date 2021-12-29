@@ -45,17 +45,17 @@ public class CfetsRepoDealDbDto {
     /**
      * 交易类金融产品Entity
      */
-    FinTradeProductDto finTradeProduct;
+    private List<FinTradeProductDto> finTradeProducts;
     /**
      *
      * 交易类金融产品复附属表Entity
      */
-    FinTradeProductAdd finTradeProductAdd;
+    private List<FinTradeProductAdd> finTradeProductAdds;
     /**
      *
      * 业务明细科目
      */
-    FinProductType finProductType;
+    private List<FinProductType> finProductTypes;
 
     public String getWorkflowId() {
         return workflowId;
@@ -145,28 +145,28 @@ public class CfetsRepoDealDbDto {
         this.regFinPledges = regFinPledges;
     }
 
-    public FinTradeProductDto getFinTradeProduct() {
-        return finTradeProduct;
+    public List<FinTradeProductDto> getFinTradeProducts() {
+        return finTradeProducts;
     }
 
-    public void setFinTradeProduct(FinTradeProductDto finTradeProduct) {
-        this.finTradeProduct = finTradeProduct;
+    public void setFinTradeProducts(List<FinTradeProductDto> finTradeProducts) {
+        this.finTradeProducts = finTradeProducts;
     }
 
-    public FinTradeProductAdd getFinTradeProductAdd() {
-        return finTradeProductAdd;
+    public List<FinTradeProductAdd> getFinTradeProductAdds() {
+        return finTradeProductAdds;
     }
 
-    public void setFinTradeProductAdd(FinTradeProductAdd finTradeProductAdd) {
-        this.finTradeProductAdd = finTradeProductAdd;
+    public void setFinTradeProductAdds(List<FinTradeProductAdd> finTradeProductAdds) {
+        this.finTradeProductAdds = finTradeProductAdds;
     }
 
-    public FinProductType getFinProductType() {
-        return finProductType;
+    public List<FinProductType> getFinProductTypes() {
+        return finProductTypes;
     }
 
-    public void setFinProductType(FinProductType finProductType) {
-        this.finProductType = finProductType;
+    public void setFinProductTypes(List<FinProductType> finProductTypes) {
+        this.finProductTypes = finProductTypes;
     }
 }
 

@@ -315,14 +315,14 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             //勾选指令的价格模式只存在限价指令时，回购利率默认为空，
             // 填入值后需不大于限价指令中回购利率的最小值，不满足时提交弹出提示“价格模式为限价指令，交易回购利率不能大于指令指定的回购利率进行交易”
             if (!StringUtil.isNotEmpty(yieldPRM01) && StringUtil.isNotEmpty(minOrMaxYield)
-                    && minOrMaxYield.compareTo(entity.getPrice()) > 0 && StringUtil.equals(ps, DictCodeListExt3.交易方向_正回购.getValue())) {
+                    && minOrMaxYield.compareTo(entity.getPrice()) < 0 && StringUtil.equals(ps, DictCodeListExt3.交易方向_正回购.getValue())) {
                 errorList.add(new ValidMessage("价格模式为限价指令，交易回购利率不能大于指令指定的回购利率进行交易！"));
             }
             //交易方向为逆回购
             //勾选指令的价格模式只存在限价指令时，回购利率默认为空，填入值后需不小于限价指令中回购利率的最大值，
             // 不满足时提交弹出提示“价格模式为限价指令，交易回购利率不能小于指令指定的回购利率进行交易”
             if (!StringUtil.isNotEmpty(yieldPRM01) && StringUtil.isNotEmpty(minOrMaxYield)
-                    && minOrMaxYield.compareTo(entity.getPrice()) < 0 && StringUtil.equals(ps, DictCodeListExt3.交易方向_正回购.getValue())) {
+                    && minOrMaxYield.compareTo(entity.getPrice()) > 0 && StringUtil.equals(ps, DictCodeListExt3.交易方向_逆回购.getValue())) {
                 errorList.add(new ValidMessage("价格模式为限价指令，交易回购利率不能小于指令指定的回购利率进行交易！"));
             }
             //勾选指令的价格模式同时存在指定价格和限价指令时，回购利率默认为空，填入值后需判断回购利率是否等于指定价格中的回购利率，
@@ -711,6 +711,9 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             List<RegFinProductDeal> regFinProductDeals = new ArrayList<>();
             List<RegTradeFee> regTradeFees = new ArrayList<>();
             List<String> entrustIdList = new ArrayList<>();
+            List<FinTradeProductDto> finTradeProductDtos = new ArrayList<>();
+            List<FinTradeProductAdd> finTradeProductAdds = new ArrayList<>();
+            List<FinProductType> finProductTypes = new ArrayList<>();
             Map<String, String> entrustIdTradeIdMap = new HashMap<>();
             if (CollectionUtils.isNotEmpty(entity.getPtlAllocations())) {
                 for (RepoPtlAllocationDto ptlAllocatio : entity.getPtlAllocations()) {
@@ -750,20 +753,23 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     entrustIdList.add(ptlAllocatio.getEntrustId());
                     // 记录交易编号
                     entrustIdTradeIdMap.put(ptlAllocatio.getEntrustId(), regFinProductDeal.getTradeId());
+                    // 交易类金融产品
+                    FinTradeProductDto finTradeProduct = new FinTradeProductDto();
+                    // 交易类金融产品附属表
+                    FinTradeProductAdd finTradeProductAdd = new FinTradeProductAdd();
+                    this.prepareFinTradeProductAndAdd(entity, repRegistOrg, finTradeProduct, finTradeProductAdd, regFinProductDeal);
+                    finTradeProductDtos.add(finTradeProduct);
+                    finTradeProductAdds.add(finTradeProductAdd);
+                    // 金融产品分类信息
+                    FinProductType finProductType = this.prepareFinProductTypeEntity(regFinProductDeal);
+                    finProductTypes.add(finProductType);
                 }
             }
+            result.setFinTradeProducts(finTradeProductDtos);
+            result.setFinTradeProductAdds(finTradeProductAdds);
             result.setRegFinProductDeals(regFinProductDeals);
+            result.setFinProductTypes(finProductTypes);
             result.setRegTradeFees(regTradeFees);
-            // 交易类金融产品
-            FinTradeProductDto finTradeProduct = new FinTradeProductDto();
-            // 交易类金融产品附属表
-            FinTradeProductAdd finTradeProductAdd = new FinTradeProductAdd();
-            this.prepareFinTradeProductAndAdd(entity, finprodType2, tgBusiType, repRegistOrg, finTradeProduct, finTradeProductAdd, regFinProductDealTotal);
-            result.setFinTradeProduct(finTradeProduct);
-            result.setFinTradeProductAdd(finTradeProductAdd);
-            // 金融产品分类信息
-            FinProductType finProductType = this.prepareFinProductTypeEntity(entity);
-            result.setFinProductType(finProductType);
             // 质押品明细汇总
             List<RegFinTotalPledge> regFinTotalPledges = new ArrayList<>();
             // 质押品明细
@@ -849,29 +855,29 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      * @author jiangpeng
      * @date 2021/12/29 11:04
      */
-    public FinProductType prepareFinProductTypeEntity(CfetsRepoDealRegisterQuoteDto entity) {
+    public FinProductType prepareFinProductTypeEntity(RegFinProductDeal deal) {
 
 
         // 金融产品分类Entity 构造开始----------------------------------------------------------
         FinProductType finProductType = new FinProductType();
-        finProductType.setFinprodId(entity.getTotleTradeId());// 金融产品代码
+        finProductType.setFinprodId(deal.getTradeId());// 金融产品代码
         finProductType.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));// 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
-        finProductType.setType6(entity.getRepoType());// 分类6
-        finProductType.setType7(entity.getPs());// 分类7
+        finProductType.setType6(deal.getRepoType());// 分类6
+        finProductType.setType7(deal.getPs());// 分类7
         finProductType.setType8(DictCodeList.平安资产类型_质押式回购.getValue());// 分类8
         /*五级分类映射 */
         FinProductTypeConfig finProductTypeConfig = new FinProductTypeConfig();
         finProductTypeConfig.setConfigType(DictCodeListExt2.配置类型_无标的投管资产类型映射行内资产分类.getValue());
         finProductTypeConfig.setInputValue1(DictCodeList.平安资产类型_质押式回购.getValue());
-        finProductTypeConfig.setInputValue2(entity.getRepoType());
-        finProductTypeConfig.setInputValue3(entity.getPs());
+        finProductTypeConfig.setInputValue2(deal.getRepoType());
+        finProductTypeConfig.setInputValue3(deal.getPs());
         finProductTypeConfig = this.getAssetFiveType(finProductTypeConfig);
         finProductType.setType9(finProductTypeConfig.getOutputValue2());
         finProductType.setType10(finProductTypeConfig.getOutputValue3());
         finProductType.setType11(finProductTypeConfig.getOutputValue4());
         finProductType.setType12(finProductTypeConfig.getOutputValue5());
         /*五级分类映射 */
-        finProductType.setWorkflowId(entity.getWorkflowId());// 工作流代码
+        finProductType.setWorkflowId(deal.getWorkflowId());// 工作流代码
         // 金融产品分类Entity 构造结束----------------------------------------------------------
         return finProductType;
     }
@@ -889,38 +895,38 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      * @author jiangpeng
      * @date 2021/12/29 10:41
      */
-    public void prepareFinTradeProductAndAdd(CfetsRepoDealRegisterQuoteDto entity, String finprodType2, String tgBusiType, String repRegistOrg,
-                                             FinTradeProductDto finTradeProduct, FinTradeProductAdd finTradeProductAdd, RegFinProductDealTotal dealTotal) {
+    public void prepareFinTradeProductAndAdd(CfetsRepoDealRegisterQuoteDto entity, String repRegistOrg,
+                                             FinTradeProductDto finTradeProduct, FinTradeProductAdd finTradeProductAdd, RegFinProductDeal deal) {
         // 交易类金融产品Entity 构造开始----------------------------------------------------------
-        finTradeProduct.setFinprodId(entity.getTotleTradeId());// 金融产品代码 = 金融产品交易Entity.交易编号
+        finTradeProduct.setFinprodId(deal.getTradeId());// 金融产品代码 = 金融产品交易Entity.交易编号
         finTradeProduct.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));// 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
-        finTradeProduct.setFinprodType(finprodType2);//  金融产品类型 =  数据字典缓存.金融产品类型（投管用）数据字典.债券质押式正回购/逆回购
-        finTradeProduct.setFinprodType2(finprodType2);
-        finTradeProduct.setPrin(entity.getShareAmt());// 本金金额
-        finTradeProduct.setCcy(entity.getCcy());// 币种
-        finTradeProduct.setVdate(dealTotal.getvSettleDate());// 起息日
-        finTradeProduct.setMdate(dealTotal.getmSettleDate());// 到期日
-        finTradeProduct.setVpayDate(dealTotal.getvSettleDate());//
-        finTradeProduct.setMpayDate(dealTotal.getmSettleDate());//
+        finTradeProduct.setFinprodType(deal.getFinprodType2());//  金融产品类型 =  数据字典缓存.金融产品类型（投管用）数据字典.债券质押式正回购/逆回购
+        finTradeProduct.setFinprodType2(deal.getFinprodType2());
+        finTradeProduct.setPrin(deal.getTradeAmt());// 本金金额
+        finTradeProduct.setCcy(deal.getCcy());// 币种
+        finTradeProduct.setVdate(deal.getvSettleDate());// 起息日
+        finTradeProduct.setMdate(deal.getmSettleDate());// 到期日
+        finTradeProduct.setVpayDate(deal.getvSettleDate());//
+        finTradeProduct.setMpayDate(deal.getmSettleDate());//
         finTradeProduct.setActCapDays(entity.getActCapDays());//实际占款天数
-        finTradeProduct.setTerm(entity.getRepoTerm());// 期限(天)
+        finTradeProduct.setTerm(deal.getRepoTerm());// 期限(天)
         finTradeProduct.setIntType(DictCodeList.利率类型_固定利率.getValue());// 利率类型
         finTradeProduct.setIntRate(
-                ArithmeticUtil.divide(dealTotal.getRate(), BigDecimal.valueOf(100), 8));// 利率
+                ArithmeticUtil.divide(deal.getRate(), BigDecimal.valueOf(100), 8));// 利率
         finTradeProduct.setBasis(DictCodeList.计息基础_A_365.getValue());// 计息基础
-        finTradeProduct.setmPrinAmt(entity.getTradeAmt());// 到期本金
-        finTradeProduct.setmIntAmt(entity.getmIntAmt());// 到期利息
-        finTradeProduct.setmTradeAmt(entity.getmTradeAmt());// 到期金额
+        finTradeProduct.setmPrinAmt(deal.getTradeAmt());// 到期本金
+        finTradeProduct.setmIntAmt(deal.getmIntAmt());// 到期利息
+        finTradeProduct.setmTradeAmt(deal.getmTradeAmt());// 到期金额
         finTradeProduct.setTradeMarket(DictCodeListExt1.交易场所_银行间.getValue());// 交易场所
         finTradeProduct.setCalendarId("03");// 交易日历 银行间
-        finTradeProduct.setTermType(entity.getTermType());// 期限品种
+        finTradeProduct.setTermType(deal.getTermType());// 期限品种
 
         // 交易类金融产品附属Entity 构造开始----------------------------------------------------------
         BeanUtil.copyPropertiesIgnoreNull(finTradeProductAdd, finTradeProduct);
         // 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
         finTradeProductAdd.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
         //  金融产品类型 =  数据字典缓存.金融产品类型（投管用）数据字典.债券质押式正回购/逆回购
-        finTradeProductAdd.setFinprodType2(finprodType2);
+        finTradeProductAdd.setFinprodType2(deal.getFinprodType2());
         // 登记托管机构
         finTradeProductAdd.setRegistOrg(repRegistOrg);
         // 交易类金融产品附属Entity 构造结束----------------------------------------------------------
@@ -995,9 +1001,11 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 }
             }
             // 质押信息list转map
-            Map<String, BigDecimal> pledgeMap = pledgeDtos.stream().collect(
-                    Collectors.toMap(dto -> dto.getPortfolioId() + dto.getFinprodId(), dto ->
-                            ArithmeticUtil.multiply(new BigDecimal(dto.getPledgePrinStr()), new BigDecimal(10000))));
+            Map<String, BigDecimal> pledgeMap = new HashMap<>();
+            pledgeDtos.forEach(dto -> {
+                pledgeMap.put(dto.getPortfolioId() + dto.getFinprodId(),
+                        ArithmeticUtil.multiply(new BigDecimal(dto.getPledgePrinStr()), new BigDecimal(10000)));
+            });
             for (RepoEntrustPledgeDto dto : repoEntrustPledgeDtos) {
                 if (StringUtil.isNotEmpty(dto.getPledgePrinStr())) {
                     dto.setPledgePrin(ArithmeticUtil.multiply(new BigDecimal(dto.getPledgePrinStr()), new BigDecimal(10000)));
@@ -1143,22 +1151,34 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             });
         }
         // 交易类金融产品
-        if (StringUtil.isNotEmpty(entity.getFinTradeProduct())) {
+        if (StringUtil.isNotEmpty(entity.getFinTradeProducts())) {
             // 先删后插
-            finTradeProductMapper.deleteByPrimaryKey(entity.getFinTradeProduct());
-            finTradeProductMapper.insertSelective(entity.getFinTradeProduct());
+            entity.getFinTradeProducts().forEach(item -> {
+                finTradeProductMapper.deleteByPrimaryKey(item);
+                if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+                    finTradeProductMapper.insertSelective(item);
+                }
+            });
         }
         // 交易类金融产品附属表
-        if (StringUtil.isNotEmpty(entity.getFinTradeProductAdd())) {
+        if (StringUtil.isNotEmpty(entity.getFinTradeProductAdds())) {
             // 先删后插
-            finTradeProductAddMapper.deleteByPrimaryKey(entity.getFinTradeProductAdd());
-            finTradeProductAddMapper.insertSelective(entity.getFinTradeProductAdd());
+            entity.getFinTradeProductAdds().forEach(item -> {
+                finTradeProductAddMapper.deleteByPrimaryKey(item);
+                if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+                    finTradeProductAddMapper.insertSelective(item);
+                }
+            });
         }
         // 业务品种表
-        if (StringUtil.isNotEmpty(entity.getFinProductType())) {
+        if (StringUtil.isNotEmpty(entity.getFinProductTypes())) {
             // 先删后插
-            finProductTypeMapper.deleteByPrimaryKey(entity.getFinProductType());
-            finProductTypeMapper.insertSelective(entity.getFinProductType());
+            entity.getFinProductTypes().forEach(item -> {
+                finProductTypeMapper.deleteByPrimaryKey(item);
+                if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+                    finProductTypeMapper.insertSelective(item);
+                }
+            });
         }
         // TODO TrdRepoTrade003Service 7.5 7.7 数据入库?
         //更新原登记数据状态
