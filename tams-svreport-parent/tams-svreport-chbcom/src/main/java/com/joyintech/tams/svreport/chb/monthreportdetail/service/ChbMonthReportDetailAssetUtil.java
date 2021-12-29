@@ -95,6 +95,7 @@ public class ChbMonthReportDetailAssetUtil {
             chbMonthAssetPositiondetail.setOrgAssetType2(chbAssetInfo.getOrgAssetType2());
             chbMonthAssetPositiondetail.setOrgAssetType3(chbAssetInfo.getOrgAssetType3());
             chbMonthAssetPositiondetail.setRate(chbAssetInfo.getAssetYield());
+            chbMonthAssetPositiondetail.setCcy(chbAssetInfo.getCcy());
         }
         //先基本信息,再头寸信息,避免错误覆盖
         BeanUtil.copyPropertiesIgnoreNull(chbMonthAssetPositiondetail,position);
@@ -136,7 +137,6 @@ public class ChbMonthReportDetailAssetUtil {
             isFbhy =DictCodeListExt3.中债月度明细_非标行业_其他服务业.getValue();
         }
 
-        chbMonthAssetPositiondetail.setCcy(position.getCcy());
         chbMonthAssetPositiondetail.setIsFbhy(isFbhy);
         chbMonthAssetPositiondetail.setDetailno(reportDetail.getPropertycode());
         chbMonthAssetPositiondetail.setTerm(reportDetail.getTermid());

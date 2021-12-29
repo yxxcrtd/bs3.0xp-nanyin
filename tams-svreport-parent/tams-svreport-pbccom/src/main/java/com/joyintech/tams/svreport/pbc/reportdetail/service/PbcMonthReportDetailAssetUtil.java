@@ -53,7 +53,7 @@ public class PbcMonthReportDetailAssetUtil {
             ,PbcReportProperycode.AMT_7B0000_FJRZC,PbcReportProperycode.AMT_821000_SSBJ,PbcReportProperycode.AMT_822000_ZBGJ,PbcReportProperycode.AMT_823000_WFPLR);
 
 
-    private static List<String> notExistsCode = Arrays.asList(PbcReportProperycode.AMT_772300_ZQGSJQZGSZGCP,PbcReportProperycode.AMT_772000_TDMDZTFE,PbcReportProperycode.AMT_752000_HGHCJ,
+    private static List<String> notExistsCode = Arrays.asList(PbcReportProperycode.AMT_772000_TDMDZTFE,PbcReportProperycode.AMT_752000_HGHCJ,
             PbcReportProperycode.AMT_761000_DKSYQ,  PbcReportProperycode.AMT_763000_YSZKSYQ, PbcReportProperycode.AMT_764000_QTZQSYQ,PbcReportProperycode.AMT_771000_GP);
 
     private static Map<String,ChbPrdBaseinfo> prodInfoMap;
