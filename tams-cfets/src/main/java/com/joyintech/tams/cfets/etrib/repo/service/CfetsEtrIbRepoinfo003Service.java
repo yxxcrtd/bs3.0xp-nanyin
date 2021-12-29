@@ -370,7 +370,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         CfetsEtribRepoInfo003Dto entity = getBussinessEntityByWorkflowId(workflowId);
         WFlowCommonService.doCompleteFlow(entity.getWorkflowId());
         //发送头寸
-        PositionHttpRequest.deleteMethod(entity.getTotalEtrustId(),DictCodeListExt1.子系统代码_委托.getValue());
+        PositionHttpRequest.deleteMethod(entity.getTotalEtrustId(),DictCodeListExt1.子系统代码_委托.getValue(),"REPO001");
     }
 
 
