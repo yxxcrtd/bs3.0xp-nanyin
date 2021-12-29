@@ -3,6 +3,7 @@ package com.joyintech.tams.cfets.trdconfirm.dao;
 
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbBondinfoDto;
 import com.joyintech.tams.cfets.trdconfirm.dto.*;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -166,6 +167,13 @@ public interface CfetsTrdConfirmMapper {
      * @return
      */
     List<CfetsTrdConfirmRegInfoListResponse> isExistDealInfo(Map<String, Object> pageParam);
+    /**
+     * 查询所有质押明细数据
+     * @param pageParam
+     * @return
+     */
+
+    List<PledgeBondInfoDto> findAllSecPtlsList(String tradeId);
 
 
 }
