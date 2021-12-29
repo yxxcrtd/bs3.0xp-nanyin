@@ -357,8 +357,8 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303INIT_TEST1008
-    password: BS303INIT_TEST1008
+    username: BS30INIT_TEST
+    password: BS30INIT_TEST
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
   rabbitmq:
     # 需求环境使用mq配置如下
@@ -368,8 +368,8 @@ spring:
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS303INIT_TEST1008
-  sqldirpassword: BS303INIT_TEST1008
+  sqldiruserName: BS30INIT_TEST
+  sqldirpassword: BS30INIT_TEST
 shiro:
   ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
   #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
@@ -390,26 +390,26 @@ base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303INIT_TEST1008
-    password: BS303INIT_TEST1008
+    username: BS30INIT_TEST
+    password: BS30INIT_TEST
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303INIT_TEST1008
-    password: BS303INIT_TEST1008
+    username: BS30INIT_TEST
+    password: BS30INIT_TEST
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303INIT_TEST1008
-    password: BS303INIT_TEST1008
+    username: BS30INIT_TEST
+    password: BS30INIT_TEST
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303INIT_TEST1008
-    password: BS303INIT_TEST1008
+    username: BS30INIT_TEST
+    password: BS30INIT_TEST
 log:
   path: /home/tams/logs/tams/touguan
   level: debug
