@@ -33,9 +33,8 @@ public class ExchangeTransMatchService extends BaseService {
      * @return
      */
     public Page<ExchangeTransMatch002Dto> findPage(Map<String, Object> map, int page, int length) {
-        map.put("TRD_MATCH_STATUS_0", DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
-        map.put("TRD_MATCH_STATUS_1",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
-        map.put("TRD_MATCH_STATUS_2",DictCodeListExt3.下行交易匹配状态_匹配完成.getValue());
+        map.put("TRD_MATCH_STATUS_01", DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
+        map.put("TRD_MATCH_STATUS_02",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
         map.put("SEC_TYPE_09", DictCodeListExt1.证券品种_回购.getValue());
         map.put("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         map.put("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
@@ -143,8 +142,9 @@ public class ExchangeTransMatchService extends BaseService {
      * @return
      */
     public Page<SelectOptionDto> getApplyNo(Map<String, Object> map, int page, int length) {
-        map.put("TRD_MATCH_STATUS_01", DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
-        map.put("TRD_MATCH_STATUS_02",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
+        map.put("TRD_MATCH_STATUS_0", DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
+        map.put("TRD_MATCH_STATUS_1",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
+        map.put("TRD_MATCH_STATUS_2",DictCodeListExt3.下行交易匹配状态_匹配完成.getValue());
         return super.queryForPage(page, length, () -> exchangeTransMatchMapper.getApplyNo(map));
     }
 

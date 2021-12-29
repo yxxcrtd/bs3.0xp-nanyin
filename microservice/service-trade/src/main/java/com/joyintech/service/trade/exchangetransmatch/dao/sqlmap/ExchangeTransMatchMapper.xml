@@ -292,10 +292,10 @@
             ON A.SEQ_ID = B.SEQ_NO
         <where>
             1=1
-            <if test="isFromMatch != null and isFromMatch != 'Y'.toString()">
+            <if test="isFromMatch != null and isFromMatch eq 'N'.toString()">
                 AND (B.MATCH_STATUS IN (#{TRD_MATCH_STATUS_2}))
             </if>
-            <if test="isFromMatch != null and isFromMatch == 'Y'.toString()">
+            <if test="isFromMatch != null and isFromMatch eq 'Y'.toString()">
                 AND (B.MATCH_STATUS IN (#{TRD_MATCH_STATUS_0},#{TRD_MATCH_STATUS_1}) OR B.MATCH_STATUS IS NULL)
             </if>
 
