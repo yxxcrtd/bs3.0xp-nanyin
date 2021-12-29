@@ -39,9 +39,9 @@
             object.tradeDateEnd = $("#trdMatchInfo_tradeDate").endDate();
         }
 
-        if(object.dealId) {
-            object.dealId = object.dealId.join(",")
-        }
+        // if(object.dealId) {
+        //     object.dealId = object.dealId.join(",")
+        // }
 
         if(object.portfolioId) {
             object.portfolioId = object.portfolioId.join(",")
@@ -75,7 +75,7 @@
             {field:'psStr', sortField:'ps',width:200, title: 'ExchangeTransMatch001.ps'},
             {field:'remainAmount', sortField:'remainAmount',width:200, title: 'ExchangeTransMatch001.remainAmount',type: 'money'},
             {field:'remainNum', sortField:'remainNum',width:200, title: 'ExchangeTransMatch001.remainNum',type: 'number'},
-            {field:'unitFprice', sortField:'unitFprice',width:200, title: 'ExchangeTransMatch001.dealPrice',type: 'number'},
+            {field:'unitFprice', sortField:'unitFprice',width:200, title: 'ExchangeTransMatch001.dealPrice',type: 'number',digit: 4},
             {field:'dealDate', sortField:'dealDate',width:200, title: 'ExchangeTransMatch001.dealDate',type: 'date'},
             {field:'acctName', sortField:'acctNo',width:200, title: 'ExchangeTransMatch001.fundAccount'},
 
@@ -157,7 +157,7 @@
             {field:'tradeMarketStr', sortField:'tradeMarket',width:200, title: 'ExchangeTransMatch001.tradeMarket'},
             {field:'tradePlatStr', sortField:'tradePlat',width:200, title: 'ExchangeTransMatch001.tradePlat'},
             {field:'entrustAmt', sortField:'entrustAmount',width:200, title: 'ExchangeTransMatch001.entrustAmount',type: 'number'},
-            {field:'price', sortField:'entrustPrice',width:200, title: 'ExchangeTransMatch001.entrustPrice',type: 'number'},
+            {field:'price', sortField:'entrustPrice',width:200, title: 'ExchangeTransMatch001.entrustPrice',type: 'number',digit: 4},
             {field:'entrustNum', sortField:'entrustNum',width:200, title: 'ExchangeTransMatch001.entrustNum',type: 'number'},
             {field:'secAcctName', sortField:'secAcctName',width:200, title: 'ExchangeTransMatch001.secAcctNo'},
             {field:'acctName', sortField:'acctName',width:200, title: 'ExchangeTransMatch001.fundAccount'},
@@ -196,7 +196,7 @@
             {field:'psStr', sortField:'ps',width:200, title: 'ExchangeTransMatch001.ps'},
             {field:'tradeAmt', sortField:'tradeAmt',width:200, title: 'ExchangeTransMatch001.tradeAmout',type: 'number'},
             {field:'tradeNum', sortField:'tradeNum',width:200, title: 'ExchangeTransMatch001.tradeNum',type: 'number'},
-            {field:'tradePrice', sortField:'tradePrice',width:200, title: 'ExchangeTransMatch001.tradePrice',type: 'number'},
+            {field:'tradePrice', sortField:'tradePrice',width:200, title: 'ExchangeTransMatch001.tradePrice',type: 'number',digit: 4},
             {field:'tradeDate', sortField:'tradeDate',width:200, title: 'ExchangeTransMatch001.tradeDate',type: 'date'},
             {field:'ccyStr', sortField:'ccy',width:200, title: 'ExchangeTransMatch001.ccy'},
             {field:'matchType', visible:false},

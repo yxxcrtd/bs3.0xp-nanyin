@@ -181,10 +181,10 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
             map.put("portfolioIdList",StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
         }
 
-        if(StringUtil.isNotEmpty(map.get("dealId"))) {
-            String dealId = (String)map.get("dealId");
-            map.put("dealIdList",StringUtil.splitToList(GlobalConstant.COMMA, dealId));
-        }
+//        if(StringUtil.isNotEmpty(map.get("dealId"))) {
+//            String dealId = (String)map.get("dealId");
+//            map.put("dealIdList",StringUtil.splitToList(GlobalConstant.COMMA, dealId));
+//        }
         if(StringUtil.isNotEmpty(map.get("ps"))) {
             String ps = (String)map.get("ps");
             if(StringUtil.equals(ps,DictCodeListExt3.交易方向_正回购.getValue())

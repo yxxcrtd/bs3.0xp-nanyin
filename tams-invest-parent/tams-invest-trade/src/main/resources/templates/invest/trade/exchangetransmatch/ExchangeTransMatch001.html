@@ -73,7 +73,7 @@
                                             <select type="text" id="applyNo" name="applyNo"
                                                    class="layui-input form-input input-select" placeholder="请输入内容"
                                                    data-th-placeholder="#{SysCommon.placeholder}" multiple="true"
-                                                   data-th-data-url="@{/invest/trade/exchangetransmatch/ExchangeTransMatch001/getApplyNo}"
+                                                   data-th-data-url="@{/invest/trade/exchangetransmatch/ExchangeTransMatch001/getApplyNo?isFromMatch='Y'}"
                                                    allowClear="true" >
                                             </select>
                                         </div>
@@ -262,12 +262,12 @@
 
                                     <div class="layui-inline layui-col-md3 layui-col-sm3 layui-col-lg3 layui-col-xs3">
                                         <label class="layui-form-label form-lable"
-                                               data-th-text="#{ExchangeTransMatch001.dealId}">成交编号</label>
+                                               data-th-text="#{ExchangeTransMatch001.applyNo}">申请编号</label>
                                         <div class="layui-input-inline input-inline">
-                                            <select type="text" id="trdMatchInfo_dealId" name="dealId"  multiple="true"
+                                            <select type="text" id="trdMatchInfo_dealId" name="dealId"
                                                     class="layui-input form-input input-select" placeholder="请输入内容" formatoption="false"
                                                     data-th-placeholder="#{SysCommon.placeholder}" allowClear="true"
-                                                    data-th-data-url="@{/invest/trade/exchangetransmatch/ExchangeTransMatch001/getDealId}">
+                                                    data-th-data-url="@{/invest/trade/exchangetransmatch/ExchangeTransMatch001/getApplyNo?isFromMatch='N'}">
                                             </select>
                                         </div>
                                     </div>

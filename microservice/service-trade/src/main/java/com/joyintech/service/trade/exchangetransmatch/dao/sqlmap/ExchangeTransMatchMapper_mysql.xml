@@ -95,6 +95,9 @@
             <if test="ps!=null and ps!='' ">
                 AND A.PS = #{ps}
             </if>
+            <if test="finprodType2!=null and finprodType2!='' ">
+                AND A.FINPROD_TYPE2 = #{finprodType2}
+            </if>
             <if test="secAcctNo!=null and secAcctNo!='' ">
                 AND A.SEC_ACCT_ID = #{secAcctNo}
             </if>
@@ -120,7 +123,10 @@
             <if test="matchStatus == null or matchStatus == '' ">
                 AND (B.MATCH_STATUS in (#{TRD_MATCH_STATUS_01},#{TRD_MATCH_STATUS_02}) OR B.MATCH_STATUS IS NULL)
             </if>
-            <if test=" matchStatus != null and matchStatus != ''">
+            <if test=" matchStatus != null and matchStatus != '' and matchStatus == '0'.toString()">
+                AND (B.MATCH_STATUS = #{matchStatus} or B.MATCH_STATUS IS NULL)
+            </if>
+            <if test=" matchStatus != null and matchStatus != '' and matchStatus != '0'.toString()">
                 AND B.MATCH_STATUS = #{matchStatus}
             </if>
             <if test="tradeAmt1 != null and tradeAmt1 != ''">
@@ -382,7 +388,11 @@
         C.PS ps,
         A.MARCH_AMT_EN tradeAmt,
         A.MARCH_QTY_EN tradeNum,
-        C.UNIT_FPRICE tradePrice,
+        CASE
+            WHEN C.SEC_TYPE = #{SEC_TYPE_09} THEN C.UNIT_CPRICE
+        ELSE
+            C.UNIT_FPRICE
+        END tradePrice ,
         C.DEAL_DATE tradeDate,
         C.CCY ccy
         from SETTLE_TRANS_DATA_TOTAL_MATCH A
@@ -404,7 +414,7 @@
             <if test="matchType!=null and matchType!='' ">
                 AND A.MATCH_CLASS = #{matchType}
             </if>
-            <if test="dealIdList!=null and dealIdList.size()>0 ">
+            <!--<if test="dealIdList!=null and dealIdList.size()>0 ">
                 AND (A.SEQ_NO IN
                 <foreach item="item" index="index" collection="dealIdList" open="(" close=")" separator=",">
                     <if test="(index % 998) == 0">
@@ -412,6 +422,9 @@
                     </if>
                     #{item}
                 </foreach>)
+            </if>-->
+            <if test="dealId!=null and dealId!='' ">
+                AND C.APPLY_TRADE_ID = #{dealId}
             </if>
             <if test="tradeMarket!=null and tradeMarket!='' ">
                 AND C.TRADE_MARKET = #{tradeMarket}
@@ -433,6 +446,12 @@
             </if>
             <if test="ps!=null and ps!='' ">
                 AND C.PS = #{ps}
+            </if>
+            <if test="finprodType2_hg!=null and finprodType2_hg!='' ">
+                AND C.FINPROD_TYPE2 = #{finprodType2_hg}
+            </if>
+            <if test="finprodType2!=null and finprodType2!='' ">
+                AND C.FINPROD_TYPE2 = #{finprodType2}
             </if>
             <if test="tradeDateBegin != null and tradeDateBegin != ''">
                 <![CDATA[ AND C.TRADE_DATE  >= STR_TO_DATE(#{tradeDateBegin},'%Y-%m-%d') ]]>
