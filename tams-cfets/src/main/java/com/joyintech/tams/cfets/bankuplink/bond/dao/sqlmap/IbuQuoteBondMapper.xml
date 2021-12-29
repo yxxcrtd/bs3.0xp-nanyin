@@ -5,7 +5,7 @@
     <select id="listEntrust" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealEntrustOrderDto">
         select * from (SELECT
         ETR_ENTRUST.ENTRUST_STATUS entrustStatus,
-        trunc(NVL(T5.FINISH_AMT,0)+NVL(T6.ENT_FINISH_AMT*100,0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 transactioncom,
+        trunc(nvl(NVL(T5.FINISH_AMT, 0)+ NVL(T6.ENT_FINISH_AMT*100, 0),0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 transactioncom,
         ETR_ENTRUST.INV_MANAGER_ID invManagerId,
         (SELECT
         real_name
