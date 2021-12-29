@@ -555,7 +555,8 @@
         ,y.EXT_FINPROD_ABBR FINPROD_ABBR
         ,y.I_Q_B_TRADE_STATUS TRADE_STATUS
         ,y.I_Q_B_SEND_STATUS SEND_STATUS
-        ,y.I_Q_B_D_PRIN_AMT/100  SHARE_AMT
+        ,CASE WHEN y.I_Q_B_D_SHARE_AMT IS NULL THEN y.I_Q_B_SHARE_AMT / 100
+        ELSE y.I_Q_B_D_SHARE_AMT/100 END SHARE_AMT
         ,y.I_Q_B_D_UNIT_FPRICE price
         ,y.I_Q_B_D_YIELD matureYield
         ,y.I_Q_B_D_EXER_YIELD exerYield
@@ -571,7 +572,7 @@
         ,y.I_Q_B_D_CP_TRADER_NAME cpTraderName
         ,y.I_Q_B_EFF_TIME reqEffTime
         ,y.I_Q_B_D_RE_EFF_TIME  resEffTime
-        ,CASE WHEN y.I_Q_B_QUOTE_TYPE = '02' THEN y.I_Q_B_SHARE_AMT
+        ,CASE WHEN y.I_Q_B_QUOTE_TYPE = '02' THEN I_Q_B_D_PRIN_AMT/100
         ELSE NULL  END shareAmtHun
         ,y.I_Q_B_QUOTE_ID quoteId
         ,y.I_Q_B_D_EXECID TRD_ID

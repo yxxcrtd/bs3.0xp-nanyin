@@ -19,6 +19,9 @@ public class CfetsBondCheckRequst {
     @ApiModelProperty(name="tradeStatus",value="报价状态")
     private String tradeStatus;
 
+    @ApiModelProperty(name="sendStatus",value="发送状态")
+    private String sendStatus;
+
     @ApiModelProperty(name="validStatus",value="有效状态")
     private String validStatus;
 
@@ -51,6 +54,14 @@ public class CfetsBondCheckRequst {
 
     public void setTradeStatus(String tradeStatus) {
         this.tradeStatus = tradeStatus;
+    }
+
+    public String getSendStatus() {
+        return sendStatus;
+    }
+
+    public void setSendStatus(String sendStatus) {
+        this.sendStatus = sendStatus;
     }
 
     public String getValidStatus() {
