@@ -901,9 +901,21 @@
                         #{item}
                     </foreach>
                 </if>
-                <if test="finprodTypeList != null and finprodTypeList.size() > 0">
-                    AND FPT.TYPE_11 in
-                    <foreach  collection="finprodTypeList" item="item" open="(" close=")" separator=",">
+                <if test="nofinprodIdList != null and nofinprodIdList.size() > 0">
+                    AND fp.FINPROD_ID not in
+                    <foreach  collection="nofinprodIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="nofinprodIdList != null and nofinprodIdList.size() > 0">
+                    AND fp.FINPROD_ID not in
+                    <foreach  collection="nofinprodIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="repRegistOrgList != null and repRegistOrgList.size() > 0">
+                    AND fp.REGIST_ORG in
+                    <foreach  collection="repRegistOrgList" item="item" open="(" close=")" separator=",">
                         #{item}
                     </foreach>
                 </if>
