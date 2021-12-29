@@ -418,55 +418,72 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
      */
     public List<TrdTradeFeeTotal> genTrdTradeFeeTotalList(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal) {
         List<TrdTradeFeeTotal> trdTradeFeeTotalList = new ArrayList<>();
-        TrdTradeFeeTotal stampFee = new TrdTradeFeeTotal();
-        stampFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
-        stampFee.setFeeType(DictCodeListExt1.一次性费用类型_印花税.getValue());
-        stampFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
-        stampFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getSxfAmt()));
 
-        TrdTradeFeeTotal jsfFee = new TrdTradeFeeTotal();
-        jsfFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
-        jsfFee.setFeeType(DictCodeListExt1.一次性费用类型_经手费.getValue());
-        jsfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
-        jsfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getJsfAmt()));
+        if (dealDto.getSxfAmt() != null && BigDecimal.ZERO.compareTo(dealDto.getSxfAmt()) < 0) {
+            TrdTradeFeeTotal stampFee = new TrdTradeFeeTotal();
+            stampFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
+            stampFee.setFeeType(DictCodeListExt1.一次性费用类型_印花税.getValue());
+            stampFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+            stampFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getSxfAmt()));
+            trdTradeFeeTotalList.add(stampFee);
+        }
 
-        TrdTradeFeeTotal ghfFee = new TrdTradeFeeTotal();
-        ghfFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
-        ghfFee.setFeeType(DictCodeListExt1.一次性费用类型_过户费.getValue());
-        ghfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
-        ghfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getGhfAmt()));
+        if (dealDto.getJsfAmt() != null && BigDecimal.ZERO.compareTo(dealDto.getJsfAmt()) < 0) {
+            TrdTradeFeeTotal jsfFee = new TrdTradeFeeTotal();
+            jsfFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
+            jsfFee.setFeeType(DictCodeListExt1.一次性费用类型_经手费.getValue());
+            jsfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+            jsfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getJsfAmt()));
+            trdTradeFeeTotalList.add(jsfFee);
+        }
 
-        TrdTradeFeeTotal zgfFee = new TrdTradeFeeTotal();
-        zgfFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
-        zgfFee.setFeeType(DictCodeListExt1.一次性费用类型_证管费.getValue());
-        zgfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
-        zgfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getZgfAmt()));
+        if (dealDto.getGhfAmt() != null && BigDecimal.ZERO.compareTo(dealDto.getGhfAmt()) < 0) {
+            TrdTradeFeeTotal ghfFee = new TrdTradeFeeTotal();
+            ghfFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
+            ghfFee.setFeeType(DictCodeListExt1.一次性费用类型_过户费.getValue());
+            ghfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+            ghfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getGhfAmt()));
+            trdTradeFeeTotalList.add(ghfFee);
+        }
 
-        TrdTradeFeeTotal sxfFee = new TrdTradeFeeTotal();
-        sxfFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
-        sxfFee.setFeeType(DictCodeListExt1.一次性费用类型_交易手续费.getValue());
-        sxfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
-        sxfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getSxfAmt()));
+        if (dealDto.getZgfAmt() != null && BigDecimal.ZERO.compareTo(dealDto.getZgfAmt()) < 0) {
+            TrdTradeFeeTotal zgfFee = new TrdTradeFeeTotal();
+            zgfFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
+            zgfFee.setFeeType(DictCodeListExt1.一次性费用类型_证管费.getValue());
+            zgfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+            zgfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getZgfAmt()));
+            trdTradeFeeTotalList.add(zgfFee);
+        }
 
-        TrdTradeFeeTotal settleFee = new TrdTradeFeeTotal();
-        settleFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
-        settleFee.setFeeType(DictCodeListExt1.一次性费用类型_结算费.getValue());
-        settleFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
-        settleFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getSettleFee()));
+        if (dealDto.getSxfAmt() != null && BigDecimal.ZERO.compareTo(dealDto.getSxfAmt()) < 0) {
+            TrdTradeFeeTotal sxfFee = new TrdTradeFeeTotal();
+            sxfFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
+            sxfFee.setFeeType(DictCodeListExt1.一次性费用类型_交易手续费.getValue());
+            sxfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+            sxfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getSxfAmt()));
+            trdTradeFeeTotalList.add(sxfFee);
+        }
 
-        TrdTradeFeeTotal commissionAmt = new TrdTradeFeeTotal();
-        commissionAmt.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
-        commissionAmt.setFeeType(DictCodeListExt1.一次性费用类型_佣金.getValue());
-        commissionAmt.setIsPayWithTrade(dealDto.getIsPayWithTrade());
-        commissionAmt.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getCommissionAmt()));
+        if (dealDto.getSettleFee() != null && BigDecimal.ZERO.compareTo(dealDto.getSettleFee()) < 0) {
+            TrdTradeFeeTotal settleFee = new TrdTradeFeeTotal();
+            settleFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
+            settleFee.setFeeType(DictCodeListExt1.一次性费用类型_结算费.getValue());
+            settleFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+            settleFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getSettleFee()));
+            trdTradeFeeTotalList.add(settleFee);
+        }
 
-        trdTradeFeeTotalList.add(stampFee);
-        trdTradeFeeTotalList.add(jsfFee);
-        trdTradeFeeTotalList.add(ghfFee);
-        trdTradeFeeTotalList.add(zgfFee);
-        trdTradeFeeTotalList.add(sxfFee);
-        trdTradeFeeTotalList.add(settleFee);
-        trdTradeFeeTotalList.add(commissionAmt);
+        if (dealDto.getCommissionAmt() != null && BigDecimal.ZERO.compareTo(dealDto.getCommissionAmt()) < 0) {
+            TrdTradeFeeTotal commissionAmt = new TrdTradeFeeTotal();
+            commissionAmt.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
+            commissionAmt.setFeeType(DictCodeListExt1.一次性费用类型_佣金.getValue());
+            commissionAmt.setIsPayWithTrade(dealDto.getIsPayWithTrade());
+            if (StringUtil.isBlank(commissionAmt.getIsPayWithTrade())) {
+                commissionAmt.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+            }
+            commissionAmt.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getCommissionAmt()));
+            trdTradeFeeTotalList.add(commissionAmt);
+        }
         return trdTradeFeeTotalList;
     }
 

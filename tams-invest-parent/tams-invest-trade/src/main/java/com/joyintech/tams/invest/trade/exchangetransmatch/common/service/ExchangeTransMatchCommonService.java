@@ -429,7 +429,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
             }
             else if (StringUtil.equals(commonEntrustDto.getPs(), DictCodeList.交易方向_申购.getValue())) {
                 List<ExchangeTransMatchBaseTradeDto> baseTradeProductDealDtList = exchangeTransMatchBond2Service.genFinProductTradeDto(dto,commonEntrustDto);
-                baseTradeProductDealDtos.addAll(baseTradeProductDealDtList);
+                exchangeTransMatchBaseTradeDtos.addAll(baseTradeProductDealDtList);
             }
             else if (StringUtil.equals(commonEntrustDto.getPs(), DictCodeList.交易方向_申购确认.getValue())) {
                 List<ExchangeTransMatchBaseTradeDto> baseTradeProductDealDtList = exchangeTransMatchBond3Service.genFinProductTradeDto(dto,commonEntrustDto);
@@ -580,7 +580,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
             }
 
             //竞价回购
-            if(!StringUtil.equals(dto.getSettleTransDataTotalAdd().getRepoType(),DictCodeList.回购类型_质押式协议回购.getValue())) {
+            if(dto.getSettleTransDataTotalAdd() != null && !StringUtil.equals(dto.getSettleTransDataTotalAdd().getRepoType(),DictCodeList.回购类型_质押式协议回购.getValue())) {
                 if(StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
                         || StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
                     SettleTransData settleTransData = new SettleTransData();

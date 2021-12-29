@@ -383,7 +383,7 @@
 				</foreach>
 			</if>
 			<!--协议回购特殊处理 fuyongsheng add 20211228 start-->
-			<if test="readerType != null and readerType = 'Repo1Reader'">
+			<if test="readerType != null and readerType != '' and readerType == 'Repo1Reader'">
 				AND (stdta.REPO_TYPE = 'H01' OR std.PS = 'T01')
 			</if>
 			<!--协议回购特殊处理 fuyongsheng add 20211228 end-->

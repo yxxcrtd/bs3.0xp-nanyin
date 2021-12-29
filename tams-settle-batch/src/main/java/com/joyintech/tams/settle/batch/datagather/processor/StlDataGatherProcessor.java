@@ -241,15 +241,15 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                     exchangeTransMatchCommons.add(exchangeTransMatchCommonDto);
                 }
             }
-
-            // modify by etliu 20211227 start
-            // GZYHTZJY-777:回售交易当日无法得到成交的清算数据，导致无法匹配到对应的上行委托或指令
-            // 债回售、可转债申购、新股申购、配债、配股需要特殊处理
-            this.handleSpecailTrade(specailSettleTransDataList, exchangeTransMatchCommons);
-            // modify by etliu 20211227 end
-
-            stlDataGatherService.transactionMacthBatch(exchangeTransMatchCommons);
         }
+
+        // modify by etliu 20211227 start
+        // GZYHTZJY-777:回售交易当日无法得到成交的清算数据，导致无法匹配到对应的上行委托或指令
+        // 债回售、可转债申购、新股申购、配债、配股需要特殊处理
+        this.handleSpecailTrade(specailSettleTransDataList, exchangeTransMatchCommons);
+        // modify by etliu 20211227 end
+
+        stlDataGatherService.transactionMacthBatch(exchangeTransMatchCommons);
     }
 
     // modify by etliu 20211227 start
