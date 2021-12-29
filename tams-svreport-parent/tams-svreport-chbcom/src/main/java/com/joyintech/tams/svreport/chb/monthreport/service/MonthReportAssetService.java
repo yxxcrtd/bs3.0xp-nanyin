@@ -312,19 +312,20 @@ public class MonthReportAssetService {
 						// 评级结果取值改变
                         // 判断走独立子系统还是走共通
                         if(isSubSystem != null){
-                            if (StringUtils.equalsIgnoreCase(isSubSystem, DictCodeList.是否_中债_是.getValue())){
-                                m=chbMonthAssetPositionMapper.selectPlanInfo(qm);
-                            }else{
-//                            	qm.setGradeDateEnd(formatter.format(lastday));
-//								qm.setGetProductRatingOrderSqlByZx(getProductRatingOrderSqlByZx);
-//								qm.setGetProductRatingOrderSqlByZt(getProductRatingOrderSqlByZt);
-//								m = chbMonthAssetPositionMapper.selectPlanInfoByCommon(qm);
-								ChbMonthAssetPosition cmamap =cmapMap.get(p11.getAssetCode());
-								if(cmamap!=null) {
-									BeanUtil.copyPropertiesIgnoreNull(m, cmamap);
-								}
+//                            if (StringUtils.equalsIgnoreCase(isSubSystem, DictCodeList.是否_中债_是.getValue())){
+//                                m=chbMonthAssetPositionMapper.selectPlanInfo(qm);
+//                            }else{
+////                            	qm.setGradeDateEnd(formatter.format(lastday));
+////								qm.setGetProductRatingOrderSqlByZx(getProductRatingOrderSqlByZx);
+////								qm.setGetProductRatingOrderSqlByZt(getProductRatingOrderSqlByZt);
+////								m = chbMonthAssetPositionMapper.selectPlanInfoByCommon(qm);
+//
+//                            }
 
-                            }
+							ChbMonthAssetPosition cmamap =cmapMap.get(p11.getAssetCode());
+							if(cmamap!=null) {
+								BeanUtil.copyPropertiesIgnoreNull(m, cmamap);
+							}
                         }
 
 						if(m == null){

@@ -28,6 +28,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,7 +50,11 @@ public class PbcMonthReportDetailAssetUtil {
     public int reportInsertCount;
 
     private static List<String> existsCode = Arrays.asList(PbcReportProperycode.AMT_710000_XJ,PbcReportProperycode.AMT_790000_YSZK,PbcReportProperycode.AMT_7A0000_HJ
-            ,PbcReportProperycode.AMT_7B0000_FJRZC);
+            ,PbcReportProperycode.AMT_7B0000_FJRZC,PbcReportProperycode.AMT_821000_SSBJ,PbcReportProperycode.AMT_822000_ZBGJ,PbcReportProperycode.AMT_823000_WFPLR);
+
+
+    private static List<String> notExistsCode = Arrays.asList(PbcReportProperycode.AMT_772000_TDMDZTFE,PbcReportProperycode.AMT_752000_HGHCJ,
+            PbcReportProperycode.AMT_761000_DKSYQ,  PbcReportProperycode.AMT_763000_YSZKSYQ, PbcReportProperycode.AMT_764000_QTZQSYQ,PbcReportProperycode.AMT_771000_GP);
 
     private static Map<String,ChbPrdBaseinfo> prodInfoMap;
 
@@ -243,6 +249,7 @@ public class PbcMonthReportDetailAssetUtil {
     }
 
 
+
     /**
      * 赋值贷款类资产数据
      * @param position
@@ -269,12 +276,24 @@ public class PbcMonthReportDetailAssetUtil {
             //特殊资产类型判断svrPbcReportTaskService
             if(existsCode.contains(code)){
                 flag = true;
-            //如果6-7位编号不是0.则认为是一二级类型.屏蔽
-            }else if(!code.substring(6,7).equals("0")){
+            //如果6-7位编号不是0.则认为是一二级类型.屏蔽,需要屏蔽类型的直接屏蔽
+            }else if(!code.substring(6,7).equals("0")&&!notExistsCode.contains(code)){
                 flag = true;
             }
         }
 
+        return flag;
+    }
+
+    public static Boolean isAssetPrd(String code){
+        boolean flag = false;
+        if(null!=code){
+            //特殊资产类型判断svrPbcReportTaskService
+            if(existsCode.contains(code)){
+                flag = true;
+                //如果6-7位编号不是0.则认为是一二级类型.屏蔽
+            }
+        }
         return flag;
     }
 

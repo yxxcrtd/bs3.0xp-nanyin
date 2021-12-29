@@ -7986,7 +7986,8 @@ public class PbcMonthAssetReportService  extends BaseService{
             setAssetDebtDetailValue((PbcReportAssetDebtDetailDto)dto.get(code), pos.getCcy(), 
             		amt, rateMap, (Date)assetMap.get("endDate"),source);
 
-            if(!StringUtil.isNotEmpty(hxl)&&PbcReportType.PBC_REPORT_2_1.equals(rep_code)){
+            if(!StringUtil.isNotEmpty(hxl)&&
+                    PbcMonthReportDetailAssetUtil.isAssetPrd(code)&&PbcReportType.PBC_REPORT_2_1.equals(rep_code)){
                 assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetailPrd(pos,dto.get(code),code));
             }
 

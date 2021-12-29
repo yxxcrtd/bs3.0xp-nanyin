@@ -27,4 +27,39 @@
 		FROM WFL_TRD_PRODUCT_DEAL
 		WHERE FINPROD_ID = #{finprodId})
 	</select>
+
+	<select id="getAssetId"
+			resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+			FINPROD_MARKET_ID id,
+			FINPROD_ABBR text
+		from
+			FIN_PRODUCT
+		where
+			1=1
+		<if test="assetType !=null and assetType != ''">
+			and FINPROD_TYPE = #{assetType}
+		</if>
+		<if test="search !=null and search != ''">
+			AND	(FINPROD_MARKET_ID like concat('%',concat(#{search},'%'))
+			OR FINPROD_ABBR like concat('%',concat(#{search},'%')))
+		</if>
+	</select>
+
+	<select id="getProdId" resultType="com.joyintech.framework.select.SelectOptionDto" >
+		select
+			FINPROD_ID id,
+			FINPROD_ABBR text
+		from
+			FIN_PRODUCT
+		where
+			1=1
+		<if test="finprodType !=null and finprodType != ''">
+			and FINPROD_TYPE =#{finprodType}
+		</if>
+		<if test="search !=null and search != ''">
+			AND	(FINPROD_ID like concat('%',concat(#{search},'%'))
+			OR FINPROD_ABBR like concat('%',concat(#{search},'%')))
+		</if>
+	</select>
 </mapper>

@@ -125,13 +125,10 @@
     <select id="selectDetailList" resultType="com.joyintech.tams.svreport.chb.monthreportdetail.dto.ChbMonthReportDetailAsset">
         SELECT
             P.POSUUID,
-            CASE
-              WHEN INSTR(T.PROPERTYCODE,'AMT1')>0 THEN '1.期末理财资金投向情况'
-              WHEN INSTR(T.PROPERTYCODE,'AMT2')>0 THEN '2.期末理财负债情况'
-              WHEN INSTR(T.PROPERTYCODE,'AMT3')>0 THEN '3.附注'  end reportType1,
-            L.ITEM_VALUE reportType2,
-            T.PROPERNAME reportType3,
-            T.PROPERNAME reportType4,
+            D1.propername reportType1,
+            D2.propername reportType2,
+            D3.propername reportType3,
+            D4.propername reportType4,
             P.PROD_ID prodId,
             B.PROD_NAME prodName,
             B.IS_FHXGCP isFhxgcp,
@@ -174,18 +171,22 @@
             P.TYPE_FINAL typeFinal,
             p.is_Fbhy isFbhy
             FROM CHB_MONTH_ASSET_POSITIONDETAIL P
-            LEFT JOIN CHB_MONTH_REPORT_TEMPLATE T ON T.PROPERTYCODE = P.DETAILNO
             LEFT JOIN CHB_ASSET_INFO I ON P.ASSET_CODE = I.ASSET_CODE
             LEFT JOIN CHB_ASSET_INFO IA ON IA.ASSET_CODE = P.OLD_ASSET_CODE
             LEFT JOIN BOK_SUBJECT B ON B.BOOKSET_ID = '00000000000000000002' AND B.SUBJECT_NO = P.ASSET_CODE
             LEFT JOIN CHB_PRD_BASEINFO B ON P.PROD_ID = B.PROD_ID
             LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = P.SUBJECT_NAME
             LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = P.RIVAL_PARTY
-            LEFT JOIN SYS_DATADICT_LIST L ON L.ITEM_CODE = REPLACE(SUBSTR(T.PROPERTYCODE,0,7),'_','')  AND L.DICT_CODE = 'SVR_MONTH_REPORT_DETAIL'
+            LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D4 ON D4.propertycode = P.DETAILNO and D4.proplevel = '4'
+            LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D3 ON D3.propertycode = D4.codeparent and D3.proplevel = '3'
+            LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D2 ON D2.propertycode = D3.codeparent and D2.proplevel = '2'
+            LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D1 ON D1.propertycode = D2.codeparent and D1.proplevel = '1'
+            LEFT JOIN SYS_DATADICT_LIST L ON L.ITEM_CODE = REPLACE(SUBSTR(D4.propertycode,0,7),'_','')  AND L.DICT_CODE = 'SVR_MONTH_REPORT_DETAIL'
             LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PROD_ID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)
 
-            WHERE T.REPORTTYPE = 'BALANCE'
-            AND P.PROD_ID IS NOT NULL
+
+
+            WHERE P.PROD_ID IS NOT NULL
             <if test="enddate != null and enddate != ''">
                 and P.TERM =  #{enddate,jdbcType=VARCHAR}
             </if>
@@ -219,7 +220,7 @@
                 </foreach>
 
             </if>
-            ORDER BY T.ORDERNO
+            ORDER BY D4.ORDERNO
     </select>
 
     <select id="getAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">
