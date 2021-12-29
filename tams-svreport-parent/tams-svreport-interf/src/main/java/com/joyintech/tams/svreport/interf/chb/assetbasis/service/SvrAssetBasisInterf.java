@@ -120,18 +120,18 @@ public class SvrAssetBasisInterf extends BaseInterfService {
 //    		                        x -> x.getProdId() + GlobalConstant.UNDER_LINE + x.getAssetId(), x -> x));
 //
 //    			}
-				listChbAssetsBasisData = svrAssetBasisInterf2.getDataFromInterf(DateUtil.format(date));
-				List<ChbAssetsBasisData> listIntadjexpAdd = chbAssetBasisInterfMapper.selectIntadjexpAdd(DateUtil.format(date));
+//				listChbAssetsBasisData = svrAssetBasisInterf2.getDataFromInterf(DateUtil.format(date));
+//				List<ChbAssetsBasisData> listIntadjexpAdd = chbAssetBasisInterfMapper.selectIntadjexpAdd(DateUtil.format(date));
 
 				// 生成日期为空防止要素（维护）变动更新日期
 				for(ChbAssetsBasisData data : listChbAssetsBasisData){
 
-					// 增加利息调整字段
-					listIntadjexpAdd.stream().forEach(item ->{
-						if(data.getAssetId().equals(item.getAssetId()) &&  data.getProdId().equals(item.getProdId())){
-							data.setTdyIntadjexpAdd(item.getTdyIntadjexpAdd());
-						}
-					});
+//					// 增加利息调整字段
+//					listIntadjexpAdd.stream().forEach(item ->{
+//						if(data.getAssetId().equals(item.getAssetId()) &&  data.getProdId().equals(item.getProdId())){
+//							data.setTdyIntadjexpAdd(item.getTdyIntadjexpAdd());
+//						}
+//					});
 
 					data.setValId(IDGenerator.generate(36));
 					data.setCreateUser("system");
