@@ -5,7 +5,7 @@
     <select id="listEntrust" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealEntrustOrderDto">
         select * from (SELECT
         ETR_ENTRUST.ENTRUST_STATUS entrustStatus,
-        trunc(NVL(T5.FINISH_AMT,0)+NVL(T6.ENT_FINISH_AMT*100,0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 transactioncom,
+        trunc(nvl(NVL(T5.FINISH_AMT, 0)+ NVL(T6.ENT_FINISH_AMT*100, 0),0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 transactioncom,
         ETR_ENTRUST.INV_MANAGER_ID invManagerId,
         (SELECT
         real_name
@@ -543,7 +543,351 @@
             AND T9.ENTRUST_ID= #{entrustId}
         </if>
         )
-        <!--对话报价、请求报价-->
+        <!--对话报价-->
+        UNION ALL
+        select
+        y.VALID_STATUS validStatus
+        ,y.I_Q_B_QUOTE_TYPE
+        ,y.I_Q_B_SETTLE_DATE settleDate
+        ,y.I_Q_B_PS ps
+        ,y.I_Q_B_FINPROD_ID FINPROD_ID
+        ,y.I_Q_B_FINPROD_MARKET_ID FINPROD_MARKET_ID
+        ,y.EXT_FINPROD_ABBR FINPROD_ABBR
+        ,y.I_Q_B_TRADE_STATUS TRADE_STATUS
+        ,y.I_Q_B_SEND_STATUS SEND_STATUS
+        ,CASE WHEN y.I_Q_B_D_SHARE_AMT IS NULL THEN y.I_Q_B_SHARE_AMT / 100
+        ELSE y.I_Q_B_D_SHARE_AMT/100 END SHARE_AMT
+        ,y.I_Q_B_D_UNIT_FPRICE price
+        ,y.I_Q_B_D_YIELD matureYield
+        ,y.I_Q_B_D_EXER_YIELD exerYield
+        ,y.I_Q_B_SETTLE_SPEED SETTLE_SPEED
+        ,y.I_Q_B_QUOTE_ROLE_TYPE quoteRoleType
+        ,y.I_Q_B_OU_PARTY_ID OU_PARTY_ID
+        ,y.I_Q_B_OU_TRADER_ID OU_TRADER_ID
+        ,y.I_Q_B_D_CP_PARTY_ID COUNTER_ID
+        ,y.I_Q_B_D_CP_TRADER COUNTER_TRADER
+        ,y.EXT_PARTY_ABBR ouPartyName
+        ,y.EXT_OUTRADER_NAME ouTraderName
+        ,y.I_Q_B_D_CP_PARTY_NAME cpPartyName
+        ,y.I_Q_B_D_CP_TRADER_NAME cpTraderName
+        ,y.I_Q_B_EFF_TIME reqEffTime
+        ,y.I_Q_B_D_RE_EFF_TIME resEffTime
+        ,CASE WHEN y.I_Q_B_QUOTE_TYPE = '02' THEN I_Q_B_D_PRIN_AMT/100
+        ELSE NULL END shareAmtHun
+        ,y.I_Q_B_QUOTE_ID quoteId
+        ,y.I_Q_B_D_EXECID TRD_ID
+        ,y.I_Q_B_REMARK REMARK
+        from
+        (select a.QUOTE_ID AS I_Q_B_QUOTE_ID,
+        a.QUOTE_TYPE AS I_Q_B_QUOTE_TYPE,
+        a.QUOTE_ROLE_TYPE AS I_Q_B_QUOTE_ROLE_TYPE,
+        a.VERSION AS I_Q_B_VERSION,
+        a.EXE_TYPE AS I_Q_B_EXE_TYPE,
+        a.P_QUOTE_ID AS I_Q_B_P_QUOTE_ID,
+        a.CFETS_QUOTE_ID AS I_Q_B_CFETS_QUOTE_ID,
+        a.FINPROD_ID AS I_Q_B_FINPROD_ID,
+        a.FINPROD_TYPE2 AS I_Q_B_FINPROD_TYPE2,
+        a.BRANCH AS I_Q_B_BRANCH,
+        CASE WHEN z.QUOTE_ID IS NOT null THEN z.PORTFOLIO_ID
+        ELSE a.PORTFOLIO_ID
+        END I_Q_B_PORTFOLIO_ID,
+        CASE WHEN z.QUOTE_ID IS NOT null THEN z.ENTRUST_ID
+        ELSE a.ENTRUST_ID
+        END I_Q_B_ENTRUST_ID,
+        a.QUOTE_DATE AS I_Q_B_QUOTE_DATE,
+        a.SETTLE_DATE AS I_Q_B_SETTLE_DATE,
+        a.SETTLE_SPEED AS I_Q_B_SETTLE_SPEED,
+        a.DELIVERY_TYPE AS I_Q_B_DELIVERY_TYPE,
+        a.SETT_TYPE AS I_Q_B_SETT_TYPE,
+        a.SETT_CCY AS I_Q_B_SETT_CCY,
+        a.PS AS I_Q_B_PS,
+        a.SHARE_AMT AS I_Q_B_SHARE_AMT,
+        a.FPRICE_AMT AS I_Q_B_FPRICE_AMT,
+        a.TRADE_STATUS AS I_Q_B_TRADE_STATUS,
+        a.SEND_STATUS AS I_Q_B_SEND_STATUS,
+        a.EFF_TIME AS I_Q_B_EFF_TIME,
+        a.OU_PARTY_ID AS I_Q_B_OU_PARTY_ID,
+        NVL(fa.IBU_TRADER, a.OU_TRADER_ID) AS I_Q_B_OU_TRADER_ID,
+        a.B_VERSION AS I_Q_B_B_VERSION,
+        a.MY_ACCT_NO AS I_Q_B_MY_ACCT_NO,
+        a.SEC_MANAGE_ACCT_ID AS I_Q_B_SEC_MANAGE_ACCT_ID,
+        a.BRANCH_ID AS I_Q_B_BRANCH_ID,
+        a.REMARK AS I_Q_B_REMARK,
+        a.CREATE_USER AS I_Q_B_CREATE_USER,
+        a.CREATE_TIME AS I_Q_B_CREATE_TIME,
+        a.CREATE_DEPT AS I_Q_B_CREATE_DEPT,
+        a.UPDATE_USER AS I_Q_B_UPDATE_USER,
+        a.UPDATE_TIME AS I_Q_B_UPDATE_TIME,
+        e.PORTFOLIO_NAME AS I_Q_B_PORTFOLIO_NAME,
+        b.DET_ID AS I_Q_B_D_DET_ID,
+        b.REQ_ID AS I_Q_B_D_REQ_ID,
+        b.VERSION AS I_Q_B_D_VERSION,
+        b.CFETS_REQ_ID AS I_Q_B_D_CFETS_REQ_ID,
+        b.QUOTE_ID AS I_Q_B_D_QUOTE_ID,
+        b.CP_PARTY_ID AS I_Q_B_D_CP_PARTY_ID,
+        b.CP_TRADER AS I_Q_B_D_CP_TRADER,
+        b.UNIT_CPRICE AS I_Q_B_D_UNIT_CPRICE,
+        b.UNIT_INT AS I_Q_B_D_UNIT_INT,
+        b.UNIT_FPRICE AS I_Q_B_D_UNIT_FPRICE,
+        b.PAR_VALUE AS I_Q_B_D_PAR_VALUE,
+        b.SHARE_AMT AS I_Q_B_D_SHARE_AMT,
+        b.PRIN_AMT AS I_Q_B_D_PRIN_AMT,
+        b.PAR_VALUE_AMT AS I_Q_B_D_PAR_VALUE_AMT,
+        b.CPRICE_AMT AS I_Q_B_D_CPRICE_AMT,
+        b.INT_AMT AS I_Q_B_D_INT_AMT,
+        b.FPRICE_AMT AS I_Q_B_D_FPRICE_AMT,
+        b.YIELD AS I_Q_B_D_YIELD,
+        b.EXER_YIELD AS I_Q_B_D_EXER_YIELD,
+        b.CALCULATE_FIELD AS I_Q_B_D_CALCULATE_FIELD,
+        b.TRADE_STATUS AS I_Q_B_D_TRADE_STATUS,
+        b.SEND_STATUS AS I_Q_B_D_SEND_STATUS,
+        b.EXECID AS I_Q_B_D_EXECID,
+        b.RE_EFF_TIME AS I_Q_B_D_RE_EFF_TIME,
+        b.REMARK AS I_Q_B_D_REMARK,
+        b.CREATE_USER AS I_Q_B_D_CREATE_USER,
+        b.CREATE_DEPT AS I_Q_B_D_CREATE_DEPT,
+        b.UPDATE_USER AS I_Q_B_D_UPDATE_USER,
+        b.PARTY_ABBR AS I_Q_B_D_CP_PARTY_NAME,
+        b.TRADER_NAME AS I_Q_B_D_CP_TRADER_NAME,
+        row_number() over(partition by a.QUOTE_ID order by
+        decode(b.TRADE_STATUS, '07', 1, '10', 2, '12', 3,'17', 4, '05', 5,'06', 6, 7),
+        (case
+        when a.PS = 'T01' then
+        b.UNIT_CPRICE
+        else
+        -b.UNIT_CPRICE
+        end)) as rowno,
+        c.FINPROD_MARKET_ID AS I_Q_B_FINPROD_MARKET_ID,
+        c.FINPROD_ABBR AS EXT_FINPROD_ABBR,
+        c.FINPROD_NAME AS EXT_FINPROD_NAME,
+        c.TYPE_6 AS EXT_TYPE6,
+        c.TYPE_7 AS EXT_TYPE7,
+        m.TRADER_NAME AS EXT_OUTRADER_NAME,
+        n.PARTY_ABBR AS EXT_PARTY_ABBR,
+        n.PARTY_NAME AS EXT_PARTY_NAME,
+        n.PARTY_CUSTOMER_ID AS EXT_PARTY_CUSTOMER_ID,
+        n.PARTY_ABBR_EN AS EXT_PARTY_ABBR_EN,
+        n.PARTY_NAME_EN AS EXT_PARTY_NAME_EN,
+        a.WORKFLOW_STATUS as VALID_STATUS,
+        case when z.PORTFOLIO_ID IS NOT null then 'Y'
+        else 'N'
+        end ISDZH,
+        round((c.mdate-a.QUOTE_DATE)/365,2) pendingPeriod
+        from (select nvl(a.QUOTE_ID, b.QUOTE_ID) QUOTE_ID,
+        nvl(a.QUOTE_TYPE, b.QUOTE_TYPE) QUOTE_TYPE,
+        nvl(a.QUOTE_ROLE_TYPE, b.QUOTE_ROLE_TYPE) QUOTE_ROLE_TYPE,
+        nvl(a.VERSION, b.VERSION) VERSION,
+        nvl(a.EXE_TYPE, b.EXE_TYPE) EXE_TYPE,
+        nvl(a.P_QUOTE_ID, b.P_QUOTE_ID) P_QUOTE_ID,
+        nvl(a.CFETS_QUOTE_ID, b.CFETS_QUOTE_ID) CFETS_QUOTE_ID,
+        nvl(a.FINPROD_ID, b.FINPROD_ID) FINPROD_ID,
+        nvl(a.FINPROD_TYPE2, b.FINPROD_TYPE2) FINPROD_TYPE2,
+        nvl(a.BRANCH, b.BRANCH) BRANCH,
+        nvl(a.PORTFOLIO_ID, b.PORTFOLIO_ID) PORTFOLIO_ID,
+        nvl(a.ENTRUST_ID, b.ENTRUST_ID) ENTRUST_ID,
+        nvl(a.QUOTE_DATE, b.QUOTE_DATE) QUOTE_DATE,
+        nvl(a.SETTLE_DATE, b.SETTLE_DATE) SETTLE_DATE,
+        nvl(a.SETTLE_SPEED, b.SETTLE_SPEED) SETTLE_SPEED,
+        nvl(a.DELIVERY_TYPE, b.DELIVERY_TYPE) DELIVERY_TYPE,
+        nvl(a.SETT_TYPE, b.SETT_TYPE) SETT_TYPE,
+        nvl(a.SETT_CCY, b.SETT_CCY) SETT_CCY,
+        nvl(a.PS, b.PS) PS,
+        nvl(a.SHARE_AMT, b.SHARE_AMT) SHARE_AMT,
+        nvl(a.FPRICE_AMT, b.FPRICE_AMT) FPRICE_AMT,
+        nvl(a.TRADE_STATUS, b.TRADE_STATUS) TRADE_STATUS,
+        nvl(a.SEND_STATUS, b.SEND_STATUS) SEND_STATUS,
+        nvl(a.EFF_TIME, b.EFF_TIME) EFF_TIME,
+        nvl(a.OU_PARTY_ID, b.OU_PARTY_ID) OU_PARTY_ID,
+        nvl(a.OU_TRADER_ID, b.OU_TRADER_ID) OU_TRADER_ID,
+        nvl(a.B_VERSION, b.B_VERSION) B_VERSION,
+        nvl(a.MY_ACCT_NO, b.MY_ACCT_NO) MY_ACCT_NO,
+        nvl(a.SEC_MANAGE_ACCT_ID, b.SEC_MANAGE_ACCT_ID) SEC_MANAGE_ACCT_ID,
+        nvl(a.BRANCH_ID, b.BRANCH_ID) BRANCH_ID,
+        nvl(a.REMARK, b.REMARK) REMARK,
+        nvl(a.CREATE_USER, b.CREATE_USER) CREATE_USER,
+        nvl(a.CREATE_TIME, b.CREATE_TIME) CREATE_TIME,
+        nvl(a.CREATE_DEPT, b.CREATE_DEPT) CREATE_DEPT,
+        nvl(a.UPDATE_USER, b.UPDATE_USER) UPDATE_USER,
+        nvl(a.UPDATE_TIME, b.UPDATE_TIME) UPDATE_TIME,
+        nvl(a.WORKFLOW_STATUS, '01') AS WORKFLOW_STATUS
+        FROM WFL_IBU_QUOTE_BOND2 a
+        FULL JOIN IBU_QUOTE_BOND B
+        ON A.QUOTE_ID = B.QUOTE_ID) a
+        left join (
+        select LISTAGG(x.det_id, ',') WITHIN GROUP(ORDER BY x.det_id) AS det_id,
+        x.req_id,
+        x.version,
+        x.cfets_req_id,
+        x.quote_id,
+        LISTAGG(x.cp_party_id, ',') WITHIN GROUP(ORDER BY x.det_id) AS cp_party_id,
+        LISTAGG(x.cp_trader, ',') WITHIN GROUP(ORDER BY x.det_id) AS cp_trader,
+        x.unit_cprice,
+        x.unit_int,
+        x.unit_fprice,
+        x.par_value,
+        x.share_amt,
+        x.prin_amt,
+        x.par_value_amt,
+        x.cprice_amt,
+        x.int_amt,
+        x.fprice_amt,
+        x.yield,
+        x.exer_yield,
+        x.calculate_field,
+        x.trade_status,
+        x.send_status,
+        x.execid,
+        x.re_eff_time,
+        x.workflow_id,
+        x.workflow_status,
+        x.remark,
+        x.create_user,
+        x.create_time,
+        x.create_dept,
+        x.update_user,
+        x.update_time,
+        LISTAGG(m.TRADER_NAME, ',') WITHIN GROUP(ORDER BY x.det_id) AS TRADER_NAME,
+        LISTAGG(n.PARTY_ABBR, ',') WITHIN GROUP(ORDER BY x.det_id) AS PARTY_ABBR
+        from (select nvl(a.det_id, b.det_id) det_id,
+        nvl(a.req_id, b.req_id) req_id,
+        nvl(a.version, b.version) version,
+        nvl(a.cfets_req_id, b.cfets_req_id) cfets_req_id,
+        nvl(a.quote_id, b.quote_id) quote_id,
+        nvl(a.cp_party_id, b.cp_party_id) cp_party_id,
+        nvl(a.cp_trader, b.cp_trader) cp_trader,
+        nvl(a.unit_cprice, b.unit_cprice) unit_cprice,
+        nvl(a.unit_int, b.unit_int) unit_int,
+        nvl(a.unit_fprice, b.unit_fprice) unit_fprice,
+        nvl(a.par_value, b.par_value) par_value,
+        nvl(a.share_amt, b.share_amt) share_amt,
+        nvl(a.prin_amt, b.prin_amt) prin_amt,
+        nvl(a.par_value_amt, b.par_value_amt) par_value_amt,
+        nvl(a.cprice_amt, b.cprice_amt) cprice_amt,
+        nvl(a.int_amt, b.int_amt) int_amt,
+        nvl(a.fprice_amt, b.fprice_amt) fprice_amt,
+        nvl(a.yield, b.yield) yield,
+        nvl(a.exer_yield, b.exer_yield) exer_yield,
+        nvl(a.calculate_field, b.calculate_field) calculate_field,
+        nvl(a.trade_status, b.trade_status) trade_status,
+        nvl(a.send_status, b.send_status) send_status,
+        nvl(a.execid, b.execid) execid,
+        nvl(a.re_eff_time, b.re_eff_time) re_eff_time,
+        nvl(a.workflow_id, null) workflow_id,
+        nvl(a.workflow_status, '01') workflow_status,
+        nvl(a.remark, b.remark) remark,
+        nvl(a.create_user, b.create_user) create_user,
+        nvl(a.create_time, b.create_time) create_time,
+        nvl(a.create_dept, b.create_dept) create_dept,
+        nvl(a.update_user, b.update_user) update_user,
+        nvl(a.update_time, b.update_time) update_time
+        from wfl_ibu_quote_bond_det a
+        full join ibu_quote_bond_det b
+        on a.quote_id = b.quote_id) x
+        left join MST_CFETS_CUSTOMER_TRADER m
+        on m.trader_id = x.cp_trader
+        left join MST_CFETS_CUSTOMER_INFO n
+        on n.party_id = x.cp_party_id
+        group by x.req_id,
+        x.version,
+        x.cfets_req_id,
+        x.quote_id,
+        x.unit_cprice,
+        x.unit_int,
+        x.unit_fprice,
+        x.par_value,
+        x.share_amt,
+        x.prin_amt,
+        x.par_value_amt,
+        x.cprice_amt,
+        x.int_amt,
+        x.fprice_amt,
+        x.yield,
+        x.exer_yield,
+        x.calculate_field,
+        x.trade_status,
+        x.send_status,
+        x.execid,
+        x.re_eff_time,
+        x.workflow_id,
+        x.workflow_status,
+        x.remark,
+        x.create_user,
+        x.create_time,
+        x.create_dept,
+        x.update_user,
+        m.TRADER_NAME,
+        n.PARTY_ABBR,
+        x.det_id,
+        x.cp_party_id,
+        x.cp_trader,
+        x.update_time
+        ) b on a.QUOTE_ID = b.QUOTE_ID
+        left join (select f.finprod_id,
+        f.FINPROD_ABBR,
+        f.FINPROD_NAME,
+        f.FINPROD_MARKET_ID,
+        f.MDATE,
+        g.TYPE_6,
+        g.TYPE_7
+        FROM FIN_PRODUCT f
+        left join FIN_PRODUCT_TYPE g
+        on f.finprod_id = g.finprod_id
+        and g.branch = 0) c
+        on a.finprod_id = c.finprod_id
+        left join MST_CFETS_CUSTOMER_INFO n on n.party_id = a.ou_party_id
+        left join PTL_PORTFOLIO e on e.portfolio_id = a.portfolio_id
+        left join SYS_USER f on a.OU_TRADER_ID = f.USER_NAME
+        left join SYS_USER_ADD fa on fa.USER_ID = f.USER_ID
+        left join MST_CFETS_CUSTOMER_TRADER m on m.trader_id = NVL(fa.IBU_TRADER, a.OU_TRADER_ID)
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'STATUS_VALID')A1 ON
+        A.WORKFLOW_STATUS = A1.ITEM_CODE
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'QUOTE_ROLE_TYPE')B ON
+        A.QUOTE_ROLE_TYPE = B.ITEM_CODE
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'PS')C ON A.PS = C.ITEM_CODE
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'QUOTE_TYPE')D ON
+        A.QUOTE_TYPE = D.ITEM_CODE
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'QUOTE_STUTAS_IBU')E ON
+        A.TRADE_STATUS = E.ITEM_CODE
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'SEND_TYPE_IBU')F ON
+        A.SEND_STATUS = F.ITEM_CODE
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'WINDTYPEONE')H ON C.TYPE_6 =
+        H.ITEM_CODE
+        LEFT JOIN (SELECT
+        QUOTE_ID,
+        LISTAGG(PORTFOLIO_ID, ',') WITHIN GROUP(
+        ORDER BY
+        QUOTE_ID) PORTFOLIO_ID ,
+        LISTAGG(ENTRUST_ID, ',') WITHIN GROUP(
+        ORDER BY
+        QUOTE_ID) ENTRUST_ID
+        FROM
+        (
+        SELECT
+        QUOTE_ID,
+        PORTFOLIO_ID ,
+        ENTRUST_ID
+        FROM
+        WFL_IBU_QUOTE_ETR_RE
+        UNION ALL
+        SELECT
+        QUOTE_ID,
+        PORTFOLIO_ID ,
+        ENTRUST_ID
+        FROM
+        IBU_QUOTE_ETR_RE )
+        GROUP BY
+        QUOTE_ID) z ON z.QUOTE_ID = A.QUOTE_ID
+        where a.QUOTE_TYPE ='01'
+        <if test="entrustId !=null and entrustId !=''">
+            and (a.ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+            or a.QUOTE_ID IN (SELECT iqer.QUOTE_ID FROM IBU_QUOTE_ETR_RE iqer WHERE iqer.ENTRUST_ID =
+            #{entrustId,jdbcType=VARCHAR})
+            or a.QUOTE_ID IN (SELECT wiqer.QUOTE_ID FROM WFL_IBU_QUOTE_ETR_RE wiqer WHERE wiqer.ENTRUST_ID =
+            #{entrustId,jdbcType=VARCHAR})
+            )
+        </if>
+        )y
+        <!--请求报价-->
         UNION ALL
         select
         y.VALID_STATUS validStatus
@@ -713,113 +1057,112 @@
         FROM WFL_IBU_QUOTE_BOND2 a
         FULL JOIN IBU_QUOTE_BOND B
         ON A.QUOTE_ID = B.QUOTE_ID) a
-        left join (select LISTAGG(x.det_id, ',') WITHIN GROUP(ORDER BY x.det_id) AS det_id,
-        x.req_id,
-        x.version,
-        x.cfets_req_id,
+        left join (
+        SELECT
+        iqbd.det_id,
+        iqbd.req_id,
+        iqbd.version,
+        iqbd.cfets_req_id,
+        xx.quote_id,
+        CASE WHEN iqbd.cp_party_id IS NULL THEN  xx.cp_party_id ELSE iqbd.cp_party_id END cp_party_id,
+        CASE WHEN iqbd.cp_trader IS NULL THEN  xx.cp_trader ELSE iqbd.cp_trader END cp_trader,
+        CASE WHEN mm.TRADER_NAME IS NULL THEN  xx.TRADER_NAME ELSE mm.TRADER_NAME END TRADER_NAME,
+        CASE WHEN nn.PARTY_ABBR IS NULL THEN  xx.PARTY_ABBR ELSE nn.PARTY_ABBR END PARTY_ABBR,
+        iqbd.unit_cprice,
+        iqbd.unit_int,
+        iqbd.unit_fprice,
+        iqbd.par_value,
+        iqbd.share_amt,
+        iqbd.prin_amt,
+        iqbd.par_value_amt,
+        iqbd.cprice_amt,
+        iqbd.int_amt,
+        iqbd.fprice_amt,
+        iqbd.yield,
+        iqbd.exer_yield,
+        iqbd.calculate_field,
+        iqbd.trade_status,
+        iqbd.send_status,
+        iqbd.execid,
+        iqbd.re_eff_time,
+        NULL workflow_id,
+        NULL workflow_status,
+        iqbd.remark,
+        iqbd.create_user,
+        iqbd.create_time,
+        iqbd.create_dept,
+        iqbd.update_user,
+        iqbd.update_time
+        FROM
+        (
+        SELECT
         x.quote_id,
-        LISTAGG(x.cp_party_id, ',') WITHIN GROUP(ORDER BY x.det_id) AS cp_party_id,
-        LISTAGG(x.cp_trader, ',') WITHIN GROUP(ORDER BY x.det_id) AS cp_trader,
-        x.unit_cprice,
-        x.unit_int,
-        x.unit_fprice,
-        x.par_value,
-        x.share_amt,
-        x.prin_amt,
-        x.par_value_amt,
-        x.cprice_amt,
-        x.int_amt,
-        x.fprice_amt,
-        x.yield,
-        x.exer_yield,
-        x.calculate_field,
-        x.trade_status,
-        x.send_status,
-        x.execid,
-        x.re_eff_time,
-        x.workflow_id,
-        x.workflow_status,
-        x.remark,
-        x.create_user,
-        x.create_time,
-        x.create_dept,
-        x.update_user,
-        x.update_time,
-        LISTAGG(m.TRADER_NAME, ',') WITHIN GROUP(ORDER BY x.det_id) AS TRADER_NAME,
-        LISTAGG(n.PARTY_ABBR, ',') WITHIN GROUP(ORDER BY x.det_id) AS PARTY_ABBR
-        from (select nvl(a.det_id, b.det_id) det_id,
-        nvl(a.req_id, b.req_id) req_id,
-        nvl(a.version, b.version) version,
-        nvl(a.cfets_req_id, b.cfets_req_id) cfets_req_id,
-        nvl(a.quote_id, b.quote_id) quote_id,
-        nvl(a.cp_party_id, b.cp_party_id) cp_party_id,
-        nvl(a.cp_trader, b.cp_trader) cp_trader,
-        nvl(a.unit_cprice, b.unit_cprice) unit_cprice,
-        nvl(a.unit_int, b.unit_int) unit_int,
-        nvl(a.unit_fprice, b.unit_fprice) unit_fprice,
-        nvl(a.par_value, b.par_value) par_value,
-        nvl(a.share_amt, b.share_amt) share_amt,
-        nvl(a.prin_amt, b.prin_amt) prin_amt,
-        nvl(a.par_value_amt, b.par_value_amt) par_value_amt,
-        nvl(a.cprice_amt, b.cprice_amt) cprice_amt,
-        nvl(a.int_amt, b.int_amt) int_amt,
-        nvl(a.fprice_amt, b.fprice_amt) fprice_amt,
-        nvl(a.yield, b.yield) yield,
-        nvl(a.exer_yield, b.exer_yield) exer_yield,
-        nvl(a.calculate_field, b.calculate_field) calculate_field,
-        nvl(a.trade_status, b.trade_status) trade_status,
-        nvl(a.send_status, b.send_status) send_status,
-        nvl(a.execid, b.execid) execid,
-        nvl(a.re_eff_time, b.re_eff_time) re_eff_time,
-        nvl(a.workflow_id, null) workflow_id,
-        nvl(a.workflow_status, '01') workflow_status,
-        nvl(a.remark, b.remark) remark,
-        nvl(a.create_user, b.create_user) create_user,
-        nvl(a.create_time, b.create_time) create_time,
-        nvl(a.create_dept, b.create_dept) create_dept,
-        nvl(a.update_user, b.update_user) update_user,
-        nvl(a.update_time, b.update_time) update_time
-        from wfl_ibu_quote_bond_det a
-        full join ibu_quote_bond_det b
-        on a.quote_id = b.quote_id) x
-        left join MST_CFETS_CUSTOMER_TRADER m
-        on m.trader_id = x.cp_trader
-        left join MST_CFETS_CUSTOMER_INFO n
-        on n.party_id = x.cp_party_id
-        group by x.req_id,
-        x.version,
-        x.cfets_req_id,
-        x.quote_id,
-        x.unit_cprice,
-        x.unit_int,
-        x.unit_fprice,
-        x.par_value,
-        x.share_amt,
-        x.prin_amt,
-        x.par_value_amt,
-        x.cprice_amt,
-        x.int_amt,
-        x.fprice_amt,
-        x.yield,
-        x.exer_yield,
-        x.calculate_field,
-        x.trade_status,
-        x.send_status,
-        x.execid,
-        x.re_eff_time,
-        x.workflow_id,
-        x.workflow_status,
-        x.remark,
-        x.create_user,
-        x.create_time,
-        x.create_dept,
-        x.update_user,
-        m.TRADER_NAME,
-        n.PARTY_ABBR,
-        x.det_id,
-        x.cp_party_id,
-        x.cp_trader,
-        x.update_time) b on a.QUOTE_ID = b.QUOTE_ID
+        LISTAGG(x.cp_party_id, ',') WITHIN GROUP(
+        ORDER BY
+        x.quote_id) AS cp_party_id,
+        LISTAGG(x.cp_trader, ',') WITHIN GROUP(
+        ORDER BY
+        x.quote_id) AS cp_trader,
+        LISTAGG(m.TRADER_NAME, ',') WITHIN GROUP(
+        ORDER BY
+        x.quote_id) AS TRADER_NAME,
+        LISTAGG(n.PARTY_ABBR, ',') WITHIN GROUP(
+        ORDER BY
+        x.quote_id) AS PARTY_ABBR
+        FROM
+        (
+        SELECT
+        NVL(a.det_id, b.det_id) det_id,
+        NVL(a.req_id, b.req_id) req_id,
+        NVL(a.version, b.version) version,
+        NVL(a.cfets_req_id, b.cfets_req_id) cfets_req_id,
+        NVL(a.quote_id, b.quote_id) quote_id,
+        NVL(a.cp_party_id, b.cp_party_id) cp_party_id,
+        NVL(a.cp_trader, b.cp_trader) cp_trader,
+        NVL(a.unit_cprice, b.unit_cprice) unit_cprice,
+        NVL(a.unit_int, b.unit_int) unit_int,
+        NVL(a.unit_fprice, b.unit_fprice) unit_fprice,
+        NVL(a.par_value, b.par_value) par_value,
+        NVL(a.share_amt, b.share_amt) share_amt,
+        NVL(a.prin_amt, b.prin_amt) prin_amt,
+        NVL(a.par_value_amt, b.par_value_amt) par_value_amt,
+        NVL(a.cprice_amt, b.cprice_amt) cprice_amt,
+        NVL(a.int_amt, b.int_amt) int_amt,
+        NVL(a.fprice_amt, b.fprice_amt) fprice_amt,
+        NVL(a.yield, b.yield) yield,
+        NVL(a.exer_yield, b.exer_yield) exer_yield,
+        NVL(a.calculate_field, b.calculate_field) calculate_field,
+        NVL(a.trade_status, b.trade_status) trade_status,
+        NVL(a.send_status, b.send_status) send_status,
+        NVL(a.execid, b.execid) execid,
+        NVL(a.re_eff_time, b.re_eff_time) re_eff_time,
+        NVL(a.workflow_id, NULL) workflow_id,
+        NVL(a.workflow_status, '01') workflow_status,
+        NVL(a.remark, b.remark) remark,
+        NVL(a.create_user, b.create_user) create_user,
+        NVL(a.create_time, b.create_time) create_time,
+        NVL(a.create_dept, b.create_dept) create_dept,
+        NVL(a.update_user, b.update_user) update_user,
+        NVL(a.update_time, b.update_time) update_time
+        FROM
+        wfl_ibu_quote_bond_det a
+        FULL JOIN ibu_quote_bond_det b ON
+        a.quote_id = b.quote_id) x
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER m ON
+        m.trader_id = x.cp_trader
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO n ON
+        n.party_id = x.cp_party_id
+        GROUP BY
+        x.quote_id) xx
+        LEFT JOIN ibu_quote_bond_det iqbd ON
+        iqbd.quote_id = xx.quote_id
+        AND iqbd.TRADE_STATUS = '07'
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER mm ON
+        mm.trader_id = xx.cp_trader
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO nn ON
+        nn.party_id = xx.cp_party_id
+
+        ) b on a.QUOTE_ID = b.QUOTE_ID
         left join (select f.finprod_id,
         f.FINPROD_ABBR,
         f.FINPROD_NAME,
@@ -869,14 +1212,13 @@
         IBU_QUOTE_ETR_RE )
         GROUP BY
         QUOTE_ID) z ON z.QUOTE_ID = A.QUOTE_ID
-        <where>
+        where a.QUOTE_TYPE ='02'
             <if test="entrustId !=null and entrustId !=''">
                 and (a.ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
                 or a.QUOTE_ID IN (SELECT iqer.QUOTE_ID FROM IBU_QUOTE_ETR_RE iqer WHERE iqer.ENTRUST_ID = #{entrustId,jdbcType=VARCHAR})
                 or a.QUOTE_ID IN (SELECT wiqer.QUOTE_ID FROM WFL_IBU_QUOTE_ETR_RE wiqer WHERE wiqer.ENTRUST_ID = #{entrustId,jdbcType=VARCHAR})
                 )
             </if>
-        </where>
         ) y
     </select>
 

@@ -95,6 +95,9 @@ public class RepoPledgeRequest {
     }
 
     public BigDecimal getPeroid() {
+        if(StringUtil.isEmpty(this.getPeroidStr())){
+            return null;
+        }
         String peroidDateType = this.getPeroidStr().substring(this.getPeroidStr().length() - 1);
         String peroidNum = this.getPeroidStr().substring(0, this.getPeroidStr().length() - 1);
         BigDecimal peroid = new BigDecimal(peroidNum);

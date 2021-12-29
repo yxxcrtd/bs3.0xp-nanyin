@@ -582,7 +582,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             return new Message<Page<RepoEntrustPledgeDto>>().success().setData(list);
         } catch (Exception e) {
             logger.error("查询可用质押券信息分页数据异常", e);
-            return new Message<Page<RepoEntrustPledgeDto>>().fail().setMessage("查询当日登记列表分页数据异常");
+            return new Message<Page<RepoEntrustPledgeDto>>().fail().setMessage("查询可用质押券信息分页数据异常");
         }
     }
 
@@ -595,7 +595,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             return new Message<Page<RepoEntrustPledgeDto>>().success().setData(list);
         } catch (Exception e) {
             logger.error("查询可用质押券信息分页数据异常", e);
-            return new Message<Page<RepoEntrustPledgeDto>>().fail().setMessage("查询当日登记列表分页数据异常");
+            return new Message<Page<RepoEntrustPledgeDto>>().fail().setMessage("查询可用质押券信息分页数据异常");
         }
     }
 
