@@ -1,6 +1,7 @@
 package com.joyintech.tams.business.common.service;
 
 import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.security.User;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.business.common.dao.CfgDataTableFlagMapper;
 import com.joyintech.tams.business.common.dao.CfgDataTableMapper;
@@ -54,16 +55,17 @@ public class CfgDataTableService {
     public Map<String, List<CfgDataTableShow>> getByPageCode(String pageCode) {
         Map<String, List<CfgDataTableShow>> map = new HashMap<>();
         //获取登录用户的ID
-        String userId = SecurityUtil.getLoginUser().getUserName();
+        User loginUser = SecurityUtil.getLoginUser();
+        String userId = loginUser != null ? SecurityUtil.getLoginUser().getUserName() : "lh1";
         //获取页面的区域编码
         List<String> dtCodes = cfgDataTableMapper.getDtCodeByPageCode(pageCode);
         String spcdCode = "999999";
         if (null != dtCodes && dtCodes.size() > 0) {
             dtCodes.stream().forEach(dtCode -> {
                 //先查用户自定义设置，没有再查询默认设置
-                List<CfgDataTableShow> uDataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode,spcdCode, EFFERANGE_IS, userId);
+                List<CfgDataTableShow> uDataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode, EFFERANGE_IS, userId);
                 if (uDataList != null && uDataList.size() < 1) {
-                    List<CfgDataTableShow> dataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode,spcdCode, EFFERANGE_NO, null);
+                    List<CfgDataTableShow> dataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode, EFFERANGE_NO, null);
                     map.put(dtCode, dataList);
                 } else {
                     map.put(dtCode, uDataList);
@@ -80,20 +82,21 @@ public class CfgDataTableService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void setDataTable(List<CfgDataTableShow> dataTableShowList) {
-    	if (null == dataTableShowList || dataTableShowList.size() <= 0) {
-    	    return;
-    	}
+        if (null == dataTableShowList || dataTableShowList.size() <= 0) {
+            return;
+        }
         //获取登录用户的ID
-        String userId = SecurityUtil.getLoginUser().getUserName();
+        User loginUser = SecurityUtil.getLoginUser();
+        String userId = loginUser != null ? SecurityUtil.getLoginUser().getUserName() : "lh1";
         //先判断用户是否自定义过设置
         CfgDataTableShow dataTableShow = dataTableShowList.get(0);
         String pageCode = dataTableShow.getPageCode();
         String dtCode = dataTableShow.getDtCode();
         String spcdCode = dataTableShow.getSpcdCode();
-        CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode, spcdCode,userId);
+        CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode, spcdCode, userId);
         if (null != flag) {
             //删除用户原有自定义设置
-            cfgDataTableFlagMapper.deleteDataTable(pageCode, dtCode, spcdCode,userId);
+            cfgDataTableFlagMapper.deleteDataTable(pageCode, dtCode, spcdCode, userId);
             //新增用户修改后设置
             for (int i = 0; i < dataTableShowList.size(); i++) {
                 CfgDataTableShow data = dataTableShowList.get(i);
@@ -103,7 +106,7 @@ public class CfgDataTableService {
             }
             cfgDataTableMapper.insertCfgDataTableBatch(dataTableShowList);
             return;
-        } 
+        }
         //新增用户自定义设置
         for (int i = 0; i < dataTableShowList.size(); i++) {
             CfgDataTableShow data = dataTableShowList.get(i);
@@ -132,13 +135,15 @@ public class CfgDataTableService {
     public List<CfgDataTableShow> getByPageCodeAndDtCode(String pageCode, String dtCode, String spcdCode) {
         List<CfgDataTableShow> list;
         //获取登录用户的ID
-        String userId = SecurityUtil.getLoginUser().getUserName();
+        User loginUser = SecurityUtil.getLoginUser();
+        String userId = loginUser != null ? SecurityUtil.getLoginUser().getUserName() : "lh1";
         //List<CfgDataTableShow> uDataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_IS, userId);
-        CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode,spcdCode, userId);
+        CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode, spcdCode, userId);
         if (null == flag) {
-            list = cfgDataTableMapper.getByPageCode(pageCode, dtCode,spcdCode, EFFERANGE_NO, USER_ID);
+            list = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode, EFFERANGE_NO, USER_ID);
         } else {
-            list = cfgDataTableMapper.getByPageCode(pageCode, dtCode,spcdCode, EFFERANGE_IS, userId);;
+            list = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode, EFFERANGE_IS, userId);
+            ;
         }
         return list;
     }
@@ -153,12 +158,14 @@ public class CfgDataTableService {
     public List<CfgDataTableShow> getByPageCodeAndDtCodes(String pageCode, String dtCode, List<String> spcdCodes) {
         List<CfgDataTableShow> list;
         //获取登录用户的ID
-        String userId = SecurityUtil.getLoginUser().getUserName();
-        CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCodes(pageCode, dtCode,spcdCodes, userId);
+        User loginUser = SecurityUtil.getLoginUser();
+        String userId = loginUser != null ? SecurityUtil.getLoginUser().getUserName() : "lh1";
+        CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCodes(pageCode, dtCode, spcdCodes, userId);
         if (null == flag) {
-            list = cfgDataTableMapper.getBySpcdCodes(pageCode, dtCode,spcdCodes, EFFERANGE_NO, USER_ID);
+            list = cfgDataTableMapper.getBySpcdCodes(pageCode, dtCode, spcdCodes, EFFERANGE_NO, USER_ID);
         } else {
-            list = cfgDataTableMapper.getBySpcdCodes(pageCode, dtCode,spcdCodes, EFFERANGE_IS, userId);;
+            list = cfgDataTableMapper.getBySpcdCodes(pageCode, dtCode, spcdCodes, EFFERANGE_IS, userId);
+            ;
         }
         return list;
     }
