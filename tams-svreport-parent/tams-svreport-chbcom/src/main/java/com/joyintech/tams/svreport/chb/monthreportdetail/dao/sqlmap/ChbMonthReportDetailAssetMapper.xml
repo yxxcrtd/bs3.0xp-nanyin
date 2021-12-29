@@ -169,7 +169,11 @@
             I.ORG_ASSET_TYPE3 orgAssetType3,
             P.IS_YHBCGJ isYhbcgj,
             P.TYPE_FINAL typeFinal,
-            p.is_Fbhy isFbhy
+            p.is_Fbhy isFbhy,
+            P.pppflag,
+            p.MONIT_TYPE monitType,
+            CASE WHEN AP.MDATE!=I.MDATE THEN AP.MDATE END openplan
+            /*CASE WHEN         i.option_flag = '01' and AP.MDATE!=I.MDATE THEN AP.MDATE END openplan*/
             FROM CHB_MONTH_ASSET_POSITIONDETAIL P
             LEFT JOIN CHB_ASSET_INFO I ON P.ASSET_CODE = I.ASSET_CODE
             LEFT JOIN CHB_ASSET_INFO IA ON IA.ASSET_CODE = P.OLD_ASSET_CODE

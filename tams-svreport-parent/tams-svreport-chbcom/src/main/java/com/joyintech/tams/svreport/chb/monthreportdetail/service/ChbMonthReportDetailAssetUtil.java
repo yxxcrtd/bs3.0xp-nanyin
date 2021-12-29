@@ -64,7 +64,10 @@ public class ChbMonthReportDetailAssetUtil {
     public int reportInsertCount;
 
 
-    private static List<String> fbCode = Arrays.asList("1201","1210","1202","1203","1204","1205","1206","1207","1208","1209","1299","2201","2202","2101","2299");
+    private static List<String> code = Arrays.asList("1201","1210","1202","1203","1204","1205","1206","1207","1208","1209","1299","2201","2202","2101","2299");
+
+    private static List<String> notexistsList = Arrays.asList("AMT1_4_a","AMT1_4_b","AMT1_4_c","AMT1_13_1","AMT1_13_2","AMT1_13_3","AMT1_13_4","AMT1_13_5","AMT1_13_6","AMT1_12_9_a","AMT1_12_2"
+            ,"2201","2202","2101","2299");
 
 
     /**
@@ -80,9 +83,7 @@ public class ChbMonthReportDetailAssetUtil {
 
         //需要屏蔽的数据类型
         if(reportDetail.getPropertycode().startsWith("AMT3")||
-                reportDetail.getPropertycode().equals("AMT1_4_a")||reportDetail.getPropertycode().equals("AMT1_4_b")||reportDetail.getPropertycode().equals("AMT1_4_c")||
-                reportDetail.getPropertycode().equals("AMT1_13_1")||reportDetail.getPropertycode().equals("AMT1_13_2")||reportDetail.getPropertycode().equals("AMT1_13_3")||
-                        reportDetail.getPropertycode().equals("AMT1_13_4")||reportDetail.getPropertycode().equals("AMT1_13_5")||reportDetail.getPropertycode().equals("AMT1_13_6")){
+                notexistsList.contains(reportDetail.getPropertycode())){
             return null;
         }
 
@@ -118,26 +119,28 @@ public class ChbMonthReportDetailAssetUtil {
         }
 
         //非标转标字段塞值
-        String isFbhy = null;
-        if(ruleFlag(ChbMonthAssetRule.农林牧渔业,position)){
-            isFbhy =DictCodeListExt3.中债月度明细_非标行业_农林牧渔业.getValue();
-        }else if (ruleFlag(ChbMonthAssetRule.制造业,position)){
-            isFbhy =DictCodeListExt3.中债月度明细_非标行业_制造业.getValue();
-        }else if (ruleFlag(ChbMonthAssetRule.采矿业,position)){
-            isFbhy =DictCodeListExt3.中债月度明细_非标行业_采矿业.getValue();
-        }else if (ruleFlag(ChbMonthAssetRule.建筑业,position)){
-            isFbhy =DictCodeListExt3.中债月度明细_非标行业_建筑业.getValue();
-        }else if (ruleFlag(ChbMonthAssetRule.基础设施建设,position)){
-            isFbhy =DictCodeListExt3.中债月度明细_非标行业_基础设施建设.getValue();
-        }else if (ruleFlag(ChbMonthAssetRule.房地产业,position)){
-            isFbhy =DictCodeListExt3.中债月度明细_非标行业_房地产业.getValue();
-        }else if (ruleFlag(ChbMonthAssetRule.金融业,position)){
-            isFbhy =DictCodeListExt3.中债月度明细_非标行业_金融业.getValue();
-        }else if (ruleFlag(ChbMonthAssetRule.其他服务业,position)){
-            isFbhy =DictCodeListExt3.中债月度明细_非标行业_其他服务业.getValue();
-        }
+        if(reportDetail.getPropertycode().startsWith("AMT1_5")){
+            String isFbhy = null;
+            if(ruleFlag(ChbMonthAssetRule.农林牧渔业,position)){
+                isFbhy =DictCodeListExt3.中债月度明细_非标行业_农林牧渔业.getValue();
+            }else if (ruleFlag(ChbMonthAssetRule.制造业,position)){
+                isFbhy =DictCodeListExt3.中债月度明细_非标行业_制造业.getValue();
+            }else if (ruleFlag(ChbMonthAssetRule.采矿业,position)){
+                isFbhy =DictCodeListExt3.中债月度明细_非标行业_采矿业.getValue();
+            }else if (ruleFlag(ChbMonthAssetRule.建筑业,position)){
+                isFbhy =DictCodeListExt3.中债月度明细_非标行业_建筑业.getValue();
+            }else if (ruleFlag(ChbMonthAssetRule.基础设施建设,position)){
+                isFbhy =DictCodeListExt3.中债月度明细_非标行业_基础设施建设.getValue();
+            }else if (ruleFlag(ChbMonthAssetRule.房地产业,position)){
+                isFbhy =DictCodeListExt3.中债月度明细_非标行业_房地产业.getValue();
+            }else if (ruleFlag(ChbMonthAssetRule.金融业,position)){
+                isFbhy =DictCodeListExt3.中债月度明细_非标行业_金融业.getValue();
+            }else if (ruleFlag(ChbMonthAssetRule.其他服务业,position)){
+                isFbhy =DictCodeListExt3.中债月度明细_非标行业_其他服务业.getValue();
+            }
 
-        chbMonthAssetPositiondetail.setIsFbhy(isFbhy);
+            chbMonthAssetPositiondetail.setIsFbhy(isFbhy);
+        }
         chbMonthAssetPositiondetail.setDetailno(reportDetail.getPropertycode());
         chbMonthAssetPositiondetail.setTerm(reportDetail.getTermid());
         chbMonthAssetPositiondetail.setOldAssetCode(position.getOldAssetCode());
@@ -190,11 +193,10 @@ public class ChbMonthReportDetailAssetUtil {
         return SubjectName;
     }
 
-    public void  insertBefore(List<ChbMonthAssetPositiondetail> prdPositionList,Date batchDate){
+    public List<ChbMonthAssetPositiondetail>  insertBefore(List<ChbMonthAssetPositiondetail> prdPositionList,Date batchDate){
 
+        List<ChbMonthAssetPositiondetail> postionList = new ArrayList<>();
 
-
-        Map<String, List<ChbMonthAssetPositiondetail>> AssetDetail = new HashMap<>();
         /****需要特殊处理的科目*/
         Map<String, ChbMonthAssetPositiondetail>  detail1001 = prdPositionList.stream().filter(detail ->
                (detail.getDetailno().equals("AMT1_4_2")||detail.getDetailno().equals("AMT1_4_2_a")
@@ -244,7 +246,9 @@ public class ChbMonthReportDetailAssetUtil {
                         dto.setAssetvalueB(dto.getAssetvalueB().subtract(null != detail1001.get(dto.getCounterListCode() + "_AMT1_4_2_a") ?
                                 detail1001.get(dto.getCounterListCode() + "_AMT1_4_2_a").getAssetvalueB() : BigDecimal.ZERO));
                     }
-
+                }
+                if((null==dto.getAssetvalueA()||dto.getAssetvalueA().compareTo(BigDecimal.ZERO)!=0) &&(null==dto.getAssetvalueB()||dto.getAssetvalueB().compareTo(BigDecimal.ZERO)!=0)){
+                    postionList.add(dto);
                 }
             } else if (dto.getDetailno().equals("AMT1_5_1")) {
                 //转换为AMT1_4_2_b
@@ -261,6 +265,9 @@ public class ChbMonthReportDetailAssetUtil {
                     }
 
                 }
+                if((null==dto.getAssetvalueA()||dto.getAssetvalueA().compareTo(BigDecimal.ZERO)!=0) &&(null==dto.getAssetvalueB()||dto.getAssetvalueB().compareTo(BigDecimal.ZERO)!=0)){
+                    postionList.add(dto);
+                }
             }else if (dto.getDetailno().equals("AMT1_5_16")) {
                     //转换为AMT1_5_16_b
                     dto.setDetailno("AMT1_5_16_c");
@@ -270,19 +277,27 @@ public class ChbMonthReportDetailAssetUtil {
                     //如果包含专项债券
                     if (null != detail1001.get(dto.getCounterListCode() + "_AMT1_5_16_a")) {
                         ChbMonthAssetPositiondetail adto = detail1001.get(dto.getCounterListCode() + "_AMT1_5_16_a");
-                        assetValueA.subtract(null != adto.getAssetvalueA() ? adto.getAssetvalueA() : BigDecimal.ZERO);
-                        assetValueB.subtract(null != adto.getAssetvalueB() ? adto.getAssetvalueB() : BigDecimal.ZERO);
+                        assetValueA = assetValueA.subtract(null != adto.getAssetvalueA() ? adto.getAssetvalueA() : BigDecimal.ZERO);
+                        assetValueB = assetValueB.subtract(null != adto.getAssetvalueB() ? adto.getAssetvalueB() : BigDecimal.ZERO);
                     }
                     if (null != detail1001.get(dto.getCounterListCode() + "_AMT1_5_16_b")) {
                         ChbMonthAssetPositiondetail adto = detail1001.get(dto.getCounterListCode() + "_AMT1_5_16_b");
-                        assetValueA.subtract(null != adto.getAssetvalueA() ? adto.getAssetvalueA() : BigDecimal.ZERO);
-                        assetValueB.subtract(null != adto.getAssetvalueB() ? adto.getAssetvalueB() : BigDecimal.ZERO);
+                        assetValueA = assetValueA.subtract(null != adto.getAssetvalueA() ? adto.getAssetvalueA() : BigDecimal.ZERO);
+                        assetValueB = assetValueB.subtract(null != adto.getAssetvalueB() ? adto.getAssetvalueB() : BigDecimal.ZERO);
                     }
 
                     dto.setAssetvalueA(assetValueA);
                     dto.setAssetvalueB(assetValueB);
+                    if((null==dto.getAssetvalueA()||dto.getAssetvalueA().compareTo(BigDecimal.ZERO)!=0) &&(null==dto.getAssetvalueB()||dto.getAssetvalueB().compareTo(BigDecimal.ZERO)!=0)){
+                        postionList.add(dto);
+                    }
+                }else{
+                    postionList.add(dto);
                 }
             }
+
+
+        return postionList;
     }
 
 

@@ -151,6 +151,14 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getBondtostockFlag());
     }
 
+    public String getMonitTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getMonitType());
+    }
+
+    public String getPppflagStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPppflag());
+    }
+
     public String getIsGovernFund1Str() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsGovernFund1());
     }

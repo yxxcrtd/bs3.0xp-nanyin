@@ -237,3 +237,4 @@ insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT2_1_2','2.1.2 卖出回购','115','BALANCE','AMT3_2_1_2','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT2_2_1','2.2.1 同业借款','116','BALANCE','AMT3_2_2_1','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT2_2','2.2其他','117','BALANCE','AMT3_2_2_2','4','E');
+
