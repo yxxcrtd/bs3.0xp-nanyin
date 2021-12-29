@@ -102,11 +102,6 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @Autowired
     private EtrCommonService etrCommonService;
     /**
-     * 平台日期
-     */
-    @Autowired(required = false)
-    private IPlatformDate iPlatformDate;
-    /**
      * 指令分发service注入
      */
     @Autowired
@@ -290,7 +285,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @ApiOperation(value = "持仓列表导出", notes = "持仓列表导出")
     public void exportPosition(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response) {
         // 导出
-        ExcelUitl.doExport(requestDto, response, "持仓列表"+iPlatformDate.getSysDateStr(), () -> {
+        ExcelUitl.doExport(requestDto, response, "持仓列表", () -> {
             CfetsEtrIbBondPosiPage001RequestDto dto = requestDto.getDto(CfetsEtrIbBondPosiPage001RequestDto.class);
             List dataList = cfetsEtrIbBondinfoService.queryPositionsPage(dto).getRoot();
             return dataList;
@@ -302,7 +297,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @ApiOperation(value = "指令管理导出", notes = "指令管理导出")
     public void exportEtrInfo(@RequestBody CfetsExportRequestDto req, HttpServletResponse response) {
         // 导出
-        ExcelUitl.doExport(req, response, "指令管理"+iPlatformDate.getSysDateStr(), () -> {
+        ExcelUitl.doExport(req, response, "指令管理", () -> {
             List dataList = cfetsEtrIbBondinfoService.findEtrinfoPage(req.getDto(CfetsEtrIbfindEtrinfoRequest.class)).getRoot();
             return dataList;
         });
