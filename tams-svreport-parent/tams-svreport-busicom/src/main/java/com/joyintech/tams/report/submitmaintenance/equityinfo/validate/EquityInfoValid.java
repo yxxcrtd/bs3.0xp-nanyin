@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import com.joyintech.tams.report.submitmaintenance.equityinfo.util.CheckUtil;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -431,7 +432,7 @@ public class EquityInfoValid {
      * @see
      * @since 1.0
      */
-    private void getEditMap(List<String> list, Map<String, String> map) {
+    private void getEditMap(List<String> list, Map<String, String> map, List<Map<String,EquityInfoRegist001Dto>> bankCodeMarkList) {
 //        EquityInfoRegist001Mapper equityInfoRegist001Mapper1 = SpringContextUtil.getBean(
 //            EquityInfoRegist001Mapper.class);
         //根据识别标识查询登记表的数据
@@ -441,8 +442,12 @@ public class EquityInfoValid {
 
         try {
             if (StringUtil.isNotBlank(list.get(1)) && list.get(1).length() <= 30) {
-                equityRegist = equityInfoRegist001Mapper.queryBatchForEquityInfoSingle(list.get(0),
-                        list.get(1));
+//                equityRegist = equityInfoRegist001Mapper.queryBatchForEquityInfoSingle(list.get(0),
+//                        list.get(1));
+                // 优化 避免多次查询数据库
+                if (bankCodeMarkList != null && bankCodeMarkList.size() >0) {
+                    equityRegist = bankCodeMarkList.get(0).get((list.get(0) + "_" + list.get(1)));
+                }
             }
         }
         catch (Exception e) {
@@ -2624,6 +2629,20 @@ public class EquityInfoValid {
         }
         //modified 判断导入的数据是否存在重复的原始标识 by liupengfei 2018/10/19 start
 
+        // add by yangxianjiu 2021-12-24 start 优化投资者身份导入check end
+        List<EquityInfoRegist001Dto> equityInfoRegist001DtoList = getAllForEquityInfo(dataList);
+
+        // 获取所有
+        // List<EquityInfoRegist001Dto> equityInfoRegist001DtoList = equityInfoRegist001Mapper.queryAllForEquityInfo(paramMap);
+        // BankCode 拼接 IndentifyMark
+        Map<String, EquityInfoRegist001Dto> bankCodeIndentifyMarkMap = equityInfoRegist001DtoList.stream().collect(JoyinCollectors.toMap(x -> x.getBankCode() + "_" + x.getIndentifyMark(), part -> part));
+        // BankCode 拼接 OrgIndentifyMark
+//        Map<String, EquityInfoRegist001Dto> bankCodeOrgIndentifyMarkMap = equityInfoRegist001DtoList.stream().collect(JoyinCollectors.toMap(x -> x.getBankCode() + "_" + x.getOrgIndentifyMark(), part -> part));
+
+        List<Map<String,EquityInfoRegist001Dto>> bankCodeMarkList = new ArrayList<>();
+        bankCodeMarkList.add(bankCodeIndentifyMarkMap);
+//        bankCodeMarkList.add(bankCodeOrgIndentifyMarkMap);
+
         for (int i = 0; i < dataList.size(); i++ ) {
             map = new HashMap<String, String>();
             List<String> list = dataList.get(i);
@@ -2697,7 +2716,8 @@ public class EquityInfoValid {
             // equityInfoRegist001Mapper.queryForEquityInfoRegist(
             // list.get(0), list.get(1));
             try {
-                this.getEditMap(list, map);
+                this.getEditMap(list, map, bankCodeMarkList);
+//                this.getEditMap(list, map);
             }
             catch (Exception e) {
 //                System.out.println("getEditMap出异常，异常信息：" + e.getMessage());
@@ -3309,6 +3329,61 @@ public class EquityInfoValid {
                 list.add(equityInfoRegist001Dto);
             }
         }
+    }
+
+    /**
+     * 查询 导入文件中 bankCode and indentifyMark 在数据库中存在的Dto
+     *
+     * @param dataList
+     * @return
+     */
+    private List<EquityInfoRegist001Dto> getAllForEquityInfo(List<List<String>> dataList) {
+        // 银行编码 列表
+        List<String> bankCodeList = new ArrayList<>();
+        // 识别标识 列表
+        List<String> indentifyMarkList = new ArrayList<>();
+        // 查询参数
+        Map<String, Object> paramMap = new HashMap<>();
+
+        List<EquityInfoRegist001Dto> equityInfoRegist001DtoList = null;
+        List<EquityInfoRegist001Dto> equityInfoRegist001DtoListTemp = null;
+        // 所有 bankCode indentifyMark 列表
+        for (int i = 0; i < dataList.size(); i++) {
+            bankCodeList.add(dataList.get(i).get(0));
+            indentifyMarkList.add(dataList.get(i).get(1));
+        }
+
+        int dataCount = dataList.size();
+        // 是否需要分批
+        if (dataCount < 1000) {
+            paramMap.put("bankCodeList", bankCodeList);
+            paramMap.put("indentifyMarkList", indentifyMarkList);
+            equityInfoRegist001DtoList = equityInfoRegist001Mapper.queryAllForEquityInfo(paramMap);
+            paramMap = null;
+        } else {
+            // 分批处理
+            int part = dataCount / 1000;
+            // 分批数
+            for (int i = 0; i < part; i++) {
+                paramMap.put("bankCodeList", bankCodeList.subList(0, 1000));
+                paramMap.put("indentifyMarkList", indentifyMarkList.subList(0, 1000));
+                equityInfoRegist001DtoListTemp = equityInfoRegist001Mapper.queryAllForEquityInfo(paramMap);
+                bankCodeList.subList(0, 1000).clear();
+                indentifyMarkList.subList(0, 1000).clear();
+                paramMap = null;
+                // 追加临时列表的数据
+                equityInfoRegist001DtoList.addAll(equityInfoRegist001DtoListTemp);
+            }
+            // 剩下的数据
+            if (CollectionUtils.isNotEmpty(bankCodeList) && CollectionUtils.isNotEmpty(indentifyMarkList)) {
+                paramMap.put("bankCodeList", bankCodeList);
+                paramMap.put("indentifyMarkList", indentifyMarkList);
+                equityInfoRegist001DtoListTemp = equityInfoRegist001Mapper.queryAllForEquityInfo(paramMap);
+                // 追加临时列表的数据
+                equityInfoRegist001DtoList.addAll(equityInfoRegist001DtoListTemp);
+            }
+        }
+        return equityInfoRegist001DtoList;
     }
 
 }
