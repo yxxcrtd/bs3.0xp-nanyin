@@ -17,7 +17,6 @@ import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrdispatc
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrdispatcher.dto.FieldEtrDispatcherDealListInfoResponse;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrdispatcher.dto.FieldEtrDispatcherExeListInfoResponse;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrdispatcher.dto.FieldEtrDispatcherInfoResponse;
-import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrdispatcher.dto.FieldEtrDispatcherRskInfoResponse;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrdispatcher.dto.FieldEtrDispatcherTradeListResponse;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrdispatcher.dto.FieldEtrDispatcherTraderAuthListResponse;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrdispatcher.dto.FieldEtrDispatcherTraderListRequest;
@@ -85,17 +84,6 @@ public interface FieldEtrDispatcherMapper {
      * @since 1.0
      */
     FieldEtrDispatcherInfoResponse getEtrDispatcherInfo(Map<String, Object> pageParam);
-
-    /**
-     * 指令风险试算查询
-     *
-     * @param pageParam
-     * @return Page<FieldEtrDispatcherRskInfoResponse>
-     * @throws Exception Exception
-     * @see
-     * @since 1.0
-     */
-    List<FieldEtrDispatcherRskInfoResponse> getEtrDispatcherRskInfo(Map<String, Object> pageParam);
 
     /**
      * 交易员列表模糊查询

@@ -80,6 +80,10 @@ public class IbuQuoteBond004Controller extends BaseController {
     private IbuQuoteBondService ibuQuoteBondService;
     @Autowired
     private CfetsQuotedCommonService cfetsQuotedCommonService;
+
+    @Autowired
+    private com.joyintech.tams.cfets.bankuplink.bond.service.CfetsQuotedCommonService cfetsQuotedCommonServiceVue;
+
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, BussinessDictCode.交易方向, BussinessDictCode.清算速度,
@@ -189,7 +193,7 @@ public class IbuQuoteBond004Controller extends BaseController {
         //check必填项
         AjaxResult ajaxResult = cfetsBondDealQuotedPrice004Service.checkNotEmpty(cfetsBondDealQuoteCommonDto);
         if(CollectionUtils.isEmpty(ajaxResult.getErrorList())){
-            ajaxResult = cfetsBondDealQuotedPrice004Service.checkcheckAnchoring(cfetsBondDealQuoteCommonDto);
+            ajaxResult = cfetsQuotedCommonServiceVue.checkcheckAnchoring(cfetsBondDealQuoteCommonDto);
         }
         if(CollectionUtils.isEmpty(ajaxResult.getErrorList())){
             ajaxResult = cfetsQuotedCommonService.positionCheck(cfetsBondDealQuoteCommonDto);

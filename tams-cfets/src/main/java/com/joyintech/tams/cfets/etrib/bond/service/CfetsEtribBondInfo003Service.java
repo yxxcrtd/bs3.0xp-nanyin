@@ -1127,7 +1127,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             }
         }
         //发送头寸
-        PositionHttpRequest.deleteMethod(entity.getTotalEtrustId(),DictCodeListExt1.子系统代码_委托.getValue());
+        PositionHttpRequest.deleteMethod(entity.getTotalEtrustId(),DictCodeListExt1.子系统代码_委托.getValue(),"Bond001");
     }
 
     @Override

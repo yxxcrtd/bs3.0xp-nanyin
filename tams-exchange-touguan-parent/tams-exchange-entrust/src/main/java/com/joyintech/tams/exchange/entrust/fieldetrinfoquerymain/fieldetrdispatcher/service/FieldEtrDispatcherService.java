@@ -23,6 +23,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrbondfirstlbidding.dao.EtrBondFirstLBiddingMapper;
 import com.joyintech.tams.business.common.dao.CfgReadonlyFormShowMapper;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.dto.CommonSearchInfoRequest;
 import com.joyintech.tams.business.common.entity.CfgReadonlyFormShow;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.common.base.dao.*;
@@ -504,7 +505,7 @@ public class FieldEtrDispatcherService extends BaseService{
      * @see
      * @since 1.0
      */
-    public FieldEtrDispatcherInfoResponse getEtrDispatcherInfo(FieldEtrDispatcherInfoRequest dto) {
+    public FieldEtrDispatcherInfoResponse getEtrDispatcherInfo(CommonSearchInfoRequest dto) {
         FieldEtrDispatcherInfoResponse fieldResponseDto =new FieldEtrDispatcherInfoResponse();
         //dto转成map
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
@@ -563,7 +564,7 @@ public class FieldEtrDispatcherService extends BaseService{
      * @see
      * @since 1.0
      */
-    public Page<FieldEtrDispatcherExeListInfoResponse> getEtrDispatcherExeListInfo(FieldEtrDispatcherInfoRequest dto) {
+    public Page<FieldEtrDispatcherExeListInfoResponse> getEtrDispatcherExeListInfo(CommonSearchInfoRequest dto) {
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
         pageParam.put("feeType08", BussinessDictCodeList.费用类型_结算手续费.getValue());
@@ -588,7 +589,7 @@ public class FieldEtrDispatcherService extends BaseService{
      * @see
      * @since 1.0
      */
-    public Page<FieldEtrDispatcherDealListInfoResponse> getEtrDispatcherDealListInfo(FieldEtrDispatcherInfoRequest dto) {
+    public Page<FieldEtrDispatcherDealListInfoResponse> getEtrDispatcherDealListInfo(CommonSearchInfoRequest dto) {
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
         pageParam.put("feeType08", BussinessDictCodeList.费用类型_结算手续费.getValue());
@@ -602,28 +603,7 @@ public class FieldEtrDispatcherService extends BaseService{
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
                 () -> fieldEtrDispatcherMapper.getEtrDispatcherDealListInfo(pageParam));
     }
-    /**
-     * 指令风险试算查询
-     *
-     * @param dto
-     * @return Page<FieldEtrDispatcherRskInfoResponse>
-     * @throws Exception Exception
-     * @see
-     * @since 1.0
-     */
-    public Page<FieldEtrDispatcherRskInfoResponse> getEtrDispatcherRskInfo(FieldEtrDispatcherInfoRequest dto) {
-
-        //dto转成map
-        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
-        List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
-        if(StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1){
-            return new Page<FieldEtrDispatcherRskInfoResponse>();
-        }else{
-            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
-                    () -> fieldEtrDispatcherMapper.getEtrDispatcherRskInfo(pageParam));
-        }
-    }
-
+    
     /**
      * 交易员列表模糊查询
      * @param pageParam
@@ -1034,7 +1014,7 @@ public class FieldEtrDispatcherService extends BaseService{
      * @param spcdCode
      * @return
      */
-    public Map<String, Object> getReadonlyFormEtrInfo(String pageCode, String dtCode, String spcdCode, FieldEtrDispatcherInfoRequest dto) {
+    public Map<String, Object> getReadonlyFormEtrInfo(String pageCode, String dtCode, String spcdCode, CommonSearchInfoRequest dto) {
         Map<String, Object> resultData = new HashMap<>();
         List<CfgReadonlyFormShow>  infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
         if(StringUtil.equals(CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"),"02")){

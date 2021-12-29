@@ -1,6 +1,5 @@
-package com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto;
+package com.joyintech.tams.business.common.dto;
 
-import com.joyintech.tams.business.common.dto.PageMode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -9,11 +8,11 @@ import io.swagger.annotations.ApiModelProperty;
  * 指令操作记录请求参数DTO
  * @author msk
  * @version 1.0 2021年12月22日
- * @see FieldEtrInfoOperateListRequest
+ * @see CommonSearchOperateListRequest
  * @since 1.0
  */
 @ApiModel(value="指令操作记录请求参数",description="指令操作记录请求参数")
-public class FieldEtrInfoOperateListRequest {
+public class CommonSearchOperateListRequest {
 
     @ApiModelProperty(name="entrustId",value="指令代码",example="A1",required = true)
     private String entrustId;

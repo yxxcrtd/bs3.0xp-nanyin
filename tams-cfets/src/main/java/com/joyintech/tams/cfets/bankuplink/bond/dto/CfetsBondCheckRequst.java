@@ -19,8 +19,15 @@ public class CfetsBondCheckRequst {
     @ApiModelProperty(name="tradeStatus",value="报价状态")
     private String tradeStatus;
 
+    @ApiModelProperty(name="sendStatus",value="发送状态")
+    private String sendStatus;
+
     @ApiModelProperty(name="validStatus",value="有效状态")
     private String validStatus;
+
+    @ApiModelProperty(name="quoteType",value="报价类型")
+    private String quoteType;
+
 
     @ApiModelProperty(name="operationType",value="操作类型",example = "复制:operationType=copy,修改:operationType = edit,撤回:operationType=recall,回复:operationType = answer,回退:operationType = doBack")
     private String operationType;
@@ -49,12 +56,28 @@ public class CfetsBondCheckRequst {
         this.tradeStatus = tradeStatus;
     }
 
+    public String getSendStatus() {
+        return sendStatus;
+    }
+
+    public void setSendStatus(String sendStatus) {
+        this.sendStatus = sendStatus;
+    }
+
     public String getValidStatus() {
         return validStatus;
     }
 
     public void setValidStatus(String validStatus) {
         this.validStatus = validStatus;
+    }
+
+    public String getQuoteType() {
+        return quoteType;
+    }
+
+    public void setQuoteType(String quoteType) {
+        this.quoteType = quoteType;
     }
 
     public String getOperationType() {

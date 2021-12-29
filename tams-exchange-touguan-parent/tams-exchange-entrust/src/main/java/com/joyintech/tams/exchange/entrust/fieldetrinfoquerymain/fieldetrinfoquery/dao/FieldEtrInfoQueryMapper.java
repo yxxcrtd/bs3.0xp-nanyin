@@ -10,7 +10,6 @@
  
 package com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dao;
 
-import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoOperateListResponse;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListResponse;
 import org.springframework.stereotype.Repository;
 
@@ -33,17 +32,6 @@ public interface FieldEtrInfoQueryMapper {
      * @return List<FieldEtrInfoQueryListResponse>
      */
     List<FieldEtrInfoQueryListResponse> findAllData(Map<String, Object> paraMap);
-
-    /**
-     * 操作记录查询
-     *
-     * @param pageParam
-     * @return List<FieldEtrInfoOperateListResponse>
-     * @throws Exception Exception
-     * @see
-     * @since 1.0
-     */
-    List<FieldEtrInfoOperateListResponse> getEtrInfoQueryOperate(Map<String, Object> pageParam);
 
     //查询登录用户是否是领导、交易处长岗位
     int queryRolePosByLoginUser(Map<String, Object> map);

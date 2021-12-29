@@ -1,24 +1,21 @@
-package com.joyintech.tams.cfets.etrdispatcher.dto;
+package com.joyintech.tams.business.common.dto;
 
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
-import java.math.BigDecimal;
 
 /**
  * 场外指令分发
  * 风险试算返回数据
  * @author sjj
  * @version 1.0 2021年10月26日
- * @see CfetsEtrDispatcherRskInfoResponse
+ * @see CommonSearchRskInfoResponse
  * @since 1.0
  */
 @ApiModel(value="风险试算返回数据",description="风险试算返回数据")
-public class CfetsEtrDispatcherRskInfoResponse {
+public class CommonSearchRskInfoResponse {
 
     @ApiModelProperty(name="supStat",value="状态",example="违规")
     private String supStat;

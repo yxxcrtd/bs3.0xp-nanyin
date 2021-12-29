@@ -1,4 +1,4 @@
-package com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto;
+package com.joyintech.tams.business.common.dto;
 
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -10,11 +10,11 @@ import io.swagger.annotations.ApiModelProperty;
  * 指令操作记录返回参数DTO
  * @author msk
  * @version 1.0 2021年12月22日
- * @see FieldEtrInfoOperateListResponse
+ * @see CommonSearchInfoOperateListResponse
  * @since 1.0
  */
 @ApiModel(value="指令操作记录返回数据",description="指令操作记录返回数据")
-public class FieldEtrInfoOperateListResponse {
+public class CommonSearchInfoOperateListResponse {
 
     @ApiModelProperty(name="seqNo",value="序号",example="A1")
     private String seqNo;

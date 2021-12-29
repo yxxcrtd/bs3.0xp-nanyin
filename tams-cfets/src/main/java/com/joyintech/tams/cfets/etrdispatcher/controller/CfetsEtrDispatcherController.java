@@ -21,6 +21,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
+import com.joyintech.tams.business.common.dto.CommonSearchInfoRequest;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.cfets.etrdispatcher.dto.*;
 import com.joyintech.tams.cfets.etrdispatcher.service.CfetsEtrDispatcherService;
@@ -133,7 +134,7 @@ public class CfetsEtrDispatcherController extends BaseController {
     @ApiOperation(value = "指令执行查询", notes = "指令执行查询")
     @PostMapping("/getEtrDispatcherExeListInfo")
     @ResponseBody
-    public Message<Page<CfetsEtrDispatcherExeListInfoResponse>> getEtrDispatcherExeListInfo(@RequestBody CfetsEtrDispatcherInfoRequest dto)
+    public Message<Page<CfetsEtrDispatcherExeListInfoResponse>> getEtrDispatcherExeListInfo(@RequestBody CommonSearchInfoRequest dto)
             throws Exception {
         try {
             Page<CfetsEtrDispatcherExeListInfoResponse> returnDto = cfetsEtrDispatcherService.getEtrDispatcherExeListInfo(dto);
@@ -156,7 +157,7 @@ public class CfetsEtrDispatcherController extends BaseController {
     @ApiOperation(value = "指令成交查询", notes = "指令成交查询")
     @PostMapping("/getEtrDispatcherDealListInfo")
     @ResponseBody
-    public Message<Page<CfetsEtrDispatcherDealListInfoResponse>> getEtrDispatcherDealListInfo(@RequestBody CfetsEtrDispatcherInfoRequest dto)
+    public Message<Page<CfetsEtrDispatcherDealListInfoResponse>> getEtrDispatcherDealListInfo(@RequestBody CommonSearchInfoRequest dto)
             throws Exception {
         try {
             Page<CfetsEtrDispatcherDealListInfoResponse> returnDto = cfetsEtrDispatcherService.getEtrDispatcherDealListInfo(dto);
@@ -164,29 +165,6 @@ public class CfetsEtrDispatcherController extends BaseController {
         } catch (Exception e) {
             logger.error("查询指令成交异常", e);
             return new Message<Page<CfetsEtrDispatcherDealListInfoResponse>>().fail().setMessage("查询指令成交异常");
-        }
-    }
-
-    /**
-     * 指令风险试算查询
-     *
-     * @param dto
-     * @return Page<CfetsEtrDispatcherRskInfoResponse>
-     * @throws Exception Exception
-     * @see
-     * @since 1.0
-     */
-    @ApiOperation(value = "风险试算查询", notes = "风险试算查询")
-    @PostMapping("/getEtrDispatcherRskInfo")
-    @ResponseBody
-    public Message<Page<CfetsEtrDispatcherRskInfoResponse>> getEtrDispatcherRskInfo(@RequestBody CfetsEtrDispatcherInfoRequest dto)
-            throws Exception {
-        try {
-            Page<CfetsEtrDispatcherRskInfoResponse> page = cfetsEtrDispatcherService.getEtrDispatcherRskInfo(dto);
-            return new Message<Page<CfetsEtrDispatcherRskInfoResponse>>().success().setData(page);
-        } catch (Exception e) {
-            logger.error("查询风险试算分页数据异常", e);
-            return new Message<Page<CfetsEtrDispatcherRskInfoResponse>>().fail().setMessage("查询风险试算异常");
         }
     }
 
@@ -264,7 +242,7 @@ public class CfetsEtrDispatcherController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "分发check", notes = "分发check")
     @PostMapping("doDispatcherCheck")
-    public Message<AjaxResult> doDispatcherCheck(@RequestBody CfetsEtrDispatcherInfoRequest cfetsDto, BindingResult br)
+    public Message<AjaxResult> doDispatcherCheck(@RequestBody CommonSearchInfoRequest cfetsDto, BindingResult br)
             throws Exception {
         //提交check
         Map<String, Object> pageParam = BeanUtil.object2Map(cfetsDto);
@@ -419,7 +397,7 @@ public class CfetsEtrDispatcherController extends BaseController {
     public Message<Map<String,Object>> getReadonlyFormEtrInfo(@PathVariable("pageCode") String pageCode,
                                                        @PathVariable("dtCode") String dtCode,
                                                        @PathVariable("spcdCode") String spcdCode,
-                                                       @RequestBody CfetsEtrDispatcherInfoRequest dto) {
+                                                       @RequestBody CommonSearchInfoRequest dto) {
         try{
             Map<String,Object> resultData = cfetsEtrDispatcherService.getReadonlyFormEtrInfo(pageCode,dtCode,spcdCode,dto);
             return new Message<Map<String,Object>>().success().setData(resultData);

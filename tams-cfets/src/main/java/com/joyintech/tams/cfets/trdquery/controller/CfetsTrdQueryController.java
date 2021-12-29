@@ -373,19 +373,6 @@ public class CfetsTrdQueryController extends BaseController {
             return new Message<Map<String,Object>>().fail().setMessage("查询交易信息数据异常");
         }
     }
-    @ApiOperation(value = "审批记录分页查询", notes = "审批记录分页查询")
-    @PostMapping("/queryAllWorkFlowInfoList")
-    @ResponseBody
-    public Message<Page<CfetsTrdQueryWorkflowResponse>> queryAllWorkFlowInfoList(@RequestBody CfetsTrdQueryWorkflowRequest dto)
-            throws Exception {
-        try {
-            Page<CfetsTrdQueryWorkflowResponse> page = cfetsTrdQueryService.queryAllWorkFlowInfoList(dto);
-            return new Message<Page<CfetsTrdQueryWorkflowResponse>>().success().setData(page);
-        } catch (Exception e) {
-            logger.error("查询审批记录分页查询数据异常", e);
-            return new Message<Page<CfetsTrdQueryWorkflowResponse>>().fail().setMessage("查询审批记录分页查询数据异常");
-        }
-    }
 
     @ApiOperation(value = "交易撤销前check", notes = "交易撤销前check")
     @PostMapping("checkRevoke")

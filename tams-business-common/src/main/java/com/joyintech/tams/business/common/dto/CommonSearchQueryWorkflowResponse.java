@@ -1,6 +1,5 @@
-package com.joyintech.tams.cfets.trdquery.dto;
+package com.joyintech.tams.business.common.dto;
 
-import com.joyintech.tams.business.common.dto.PageMode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -11,11 +10,11 @@ import java.util.Date;
  * 指令明细请求参数DTO
  * @author sjj
  * @version 1.0 2021年10月29日
- * @see CfetsTrdQueryWorkflowResponse
+ * @see CommonSearchQueryWorkflowResponse
  * @since 1.0
  */
 @ApiModel(value="审批信息返回参数",description="审批信息返回参数")
-public class CfetsTrdQueryWorkflowResponse {
+public class CommonSearchQueryWorkflowResponse {
     @ApiModelProperty(name="seqNo",value="序号",example="A1",required = true)
     private String seqNo;
 

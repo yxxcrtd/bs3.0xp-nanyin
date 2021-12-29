@@ -975,12 +975,19 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
      * @return
      */
     public CfetsBondDealRequestQuoteDto handpositionByQuoteId(String quoteId){
-        com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto positionDto = new com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto();
-        BondRequestQuoteDto bondRequestQuoteDto = ibuMainService.getBondRequestQuote(quoteId);
-        if(null!=bondRequestQuoteDto&&null!=bondRequestQuoteDto.getIbuQuoteBondDto()){
+        com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = getBondRequestQuote(quoteId,"01");
+        cfetsBondDealRequestQuoteDto.setAvaNum(ArithmeticUtil.divide(cfetsBondDealRequestQuoteDto.getAvaNum(),new BigDecimal(10000),2));
+        //组合分配列表
+        List <CfetsBondDealRequestQuoteDto> cfetsBondDealRequestQuoteDtoList = getCfetsBondDealRequestQuoteDtoList(quoteId);
+        for(CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuote:cfetsBondDealRequestQuoteDtoList){
+            cfetsBondDealRequestQuote.setMatureYield(cfetsBondDealRequestQuoteDto.getMatureYield());
+            cfetsBondDealRequestQuote.setExerYield(cfetsBondDealRequestQuoteDto.getExerYield());
+        }
+        cfetsBondDealRequestQuoteDto.setCfetsBondDealRequestQuoteDtoList(cfetsBondDealRequestQuoteDtoList);
+       /* if(null!=bondRequestQuoteDto&&null!=bondRequestQuoteDto.getIbuQuoteBondDto()){
             IbuQuoteBondDto ibuQuoteBondDto = bondRequestQuoteDto.getIbuQuoteBondDto();
             positionDto.setQuoteId(ibuQuoteBondDto.getQuoteId());
-            positionDto.setFinprodId(ibuQuoteBondDto.getQuoteId());
+            positionDto.setFinprodId(ibuQuoteBondDto.getFinprodId());
             positionDto.setPs(ibuQuoteBondDto.getPs());
             String settleSpreed = StringUtil.EMPTY;
             if (ibuQuoteBondDto.getSettleSpeed() == 0L) {
@@ -992,8 +999,8 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
             }
             positionDto.setSettleSpreed(settleSpreed);
             positionDto.setCcy(ibuQuoteBondDto.getSettCcy());
-        }
-        return positionDto;
+        }*/
+        return cfetsBondDealRequestQuoteDto;
     }
 
     /**

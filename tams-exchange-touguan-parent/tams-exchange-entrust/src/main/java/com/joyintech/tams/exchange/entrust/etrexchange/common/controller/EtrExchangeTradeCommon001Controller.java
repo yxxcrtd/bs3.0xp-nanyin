@@ -896,6 +896,18 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 				dto.setAcctNo(item.getAcctNo());
 				dto.setEntrustNum(item.getEntrustNum());
 				dto.setEntrustAmt(item.getEntrustAmt());
+				//默认证券账户
+				if (StringUtil.isNotEmpty(item.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("portfolioId", item.getPortfolioId());
+					map.put("finprodId", dto.getFinprodId());
+					map.put("tradePlat",dto.getTradeMarket());
+					String secAcctId = etrExchangeTradeCommonMapper.qryPortfolioSecAcctId(map);
+					if (StringUtil.isNotEmpty(secAcctId)) {
+						dto.setSecAcctId(secAcctId); // 证券账户
+						dto.setStockId(secAcctId);
+					}
+				}
 				ajax = check(dto, br);
 					if(null != ajax){
 						break;
@@ -1023,8 +1035,8 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 				businessType = DictCodeListExt3.共通业务类型_上交所固定收益平台现券交易指令.getValue();
 			}
 			//add end
+			BussinessCodeParameter param = new BussinessCodeParameter();
 			if (!StringUtil.isNotEmpty(dto.getEntrustId())) {
-				BussinessCodeParameter param = new BussinessCodeParameter();
 				if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())) {
 					// add  start
 					if (StringUtils.equals(dto.getPs(), DictCodeListExt2.交易方向_配股.getValue())) {
@@ -1083,15 +1095,15 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 				}
 				//add end
 			}
-			dto.setEntrustBussType(businessType);
 
-			Map<EtrExchangeTradeSaveRequest,List<EtrExchangeTradeSaveRequest>> groupMap=etrExchangeTrade001CommonService.genEtrExchangeTradeSaveRequest(dto);
+			Map<EtrExchangeTradeSaveRequest,List<EtrExchangeTradeSaveRequest>> groupMap=etrExchangeTrade001CommonService.genEtrExchangeTradeSaveRequest(dto,param);
 			List<EtrExchangeTradeSaveRequest> wflList=new ArrayList<>();
 
 			//安装资金账户维度拆分流程
 			for (Map.Entry entry : groupMap.entrySet()) {
 				List<EtrExchangeTradeSaveRequest> list=(List<EtrExchangeTradeSaveRequest>)entry.getValue();
-				wflList.add((EtrExchangeTradeSaveRequest)entry.getKey());
+				EtrExchangeTradeSaveRequest key=(EtrExchangeTradeSaveRequest)entry.getKey();
+				wflList.add(key);
 				EtrExchangeTradeSaveRequest item=list.get(0);
 				//单组合
 				if(list.size()==1){
@@ -1135,15 +1147,8 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 						} else if ((dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue()) || dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue()))) {
 							finprodType2 = DictCodeList.平安资产类型_质押式回购.getValue();
 						}
-						//债转股需要走批量接口
-						String infCode;
-						if (StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())) {
-							infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
-						} else {
-							infCode = BussinessDictCodeListRds.接口系统ID_预占接口.getValue();
-						}
-						AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(item,
-								infCode, finprodType2);
+						AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(list, finprodType2,
+								BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(), false, null);
 						if (StringUtil.isNotEmpty(ar)) {
 							return new Message<AjaxResult>().success().setData(ar);
 						}
@@ -1170,16 +1175,18 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			 * if 画面.金融产品类型（投管）.债券and 画面.交易平台 = 数据字典.交易平台.大宗交易平台 指令业务类型 =
 			 * 数据字典.共通业务类型.大宗债券指令
 			 */
-			dto.setBusinessTypeName(SysDataUtil.getNameFromDataDict(DictCode.共通业务类型, businessType));
-			dto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
-			dto.setCreateUser(LoginUserUtil.getUserName());// 用户名
-			dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
-			dto.setCreateTime(new Date());// 创建时间
+			for(EtrExchangeTradeSaveRequest item:wflList) {
+				item.setBusinessTypeName(SysDataUtil.getNameFromDataDict(DictCode.共通业务类型, businessType));
+				item.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
+				item.setCreateUser(LoginUserUtil.getUserName());// 用户名
+				item.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
+				item.setCreateTime(new Date());// 创建时间
+			}
 			ProcessParameter<EtrExchangeTradeSaveRequest> processParameter = new ProcessParameter<EtrExchangeTradeSaveRequest>();
 			WorkFlowParameter<EtrExchangeTradeSaveRequest> params = etrExchangeTrade001CommonService.getWorkFlowParameter(dto);
 			params.setPageId(dto.getPageId());
 			params.setElementId(dto.getElementId());
-			params.setBusinessType(item->item.getBusinessTypeName());
+			params.setBusinessType(businessType);
 			params.setBusinessCode(item->item.getEntrustId());
 			params.setComment(entity -> getMessage("EtrExchangeTradeCommon001.entrustId") + "(" + entity.getEntrustId() + ")"
 					+ "-" + "业务类型" + "(" + entity.getBusinessTypeName() + ")-"
@@ -1487,14 +1494,15 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@ApiOperation(value = "查询指令组合列表", notes = "查询指令组合列表")
 	@PostMapping("/selectEtrPortfolioList")
 	@ResponseBody
-	public Message<List<EtrExchangeTradePortfolioResponse>>  selectEtrPortfolioList(String entrustId)  {
+	public Message<List<EtrExchangeTradeSaveRequest>>  selectEtrPortfolioList(@RequestBody EtrExchangeTradeSaveRequest dto )  {
 		try{
-			List<EtrExchangeTradePortfolioResponse> list=etrExchangeTrade001CommonService.selectEtrPortfolioList(entrustId);
-			return new Message<List<EtrExchangeTradePortfolioResponse>>().success().setData(list);
+			List<EtrExchangeTradeSaveRequest> list=etrExchangeTrade001CommonService.selectEtrPortfolioList(dto);
+			return new Message<List<EtrExchangeTradeSaveRequest>>().success().setData(list);
 		}catch (Exception e){
-			return new Message<List<EtrExchangeTradePortfolioResponse>>().fail().setData(null);
+			return new Message<List<EtrExchangeTradeSaveRequest>>().fail().setData(null);
 		}
 	}
+
 
 }
 	

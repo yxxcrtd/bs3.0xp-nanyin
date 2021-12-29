@@ -1,6 +1,5 @@
-package com.joyintech.tams.cfets.trdquery.dto;
+package com.joyintech.tams.business.common.dto;
 
-import com.joyintech.tams.business.common.dto.PageMode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -9,11 +8,11 @@ import io.swagger.annotations.ApiModelProperty;
  * 指令明细请求参数DTO
  * @author sjj
  * @version 1.0 2021年10月29日
- * @see CfetsTrdQueryWorkflowRequest
+ * @see CommonSearchQueryWorkflowRequest
  * @since 1.0
  */
 @ApiModel(value="审批信息请求参数",description="审批信息请求参数")
-public class CfetsTrdQueryWorkflowRequest {
+public class CommonSearchQueryWorkflowRequest {
 
     @ApiModelProperty(name="busiCode",value="业务编号",example="A1",required = true)
     private String busiCode;
