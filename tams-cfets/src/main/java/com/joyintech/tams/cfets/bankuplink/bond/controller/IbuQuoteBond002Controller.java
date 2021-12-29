@@ -7,6 +7,7 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice002Service;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -279,7 +280,13 @@ public class IbuQuoteBond002Controller extends BaseController {
         cfetsBondDealDialogueQuoteDto.setCreateUser(LoginUserUtil.getUserName());// 用户名
         cfetsBondDealDialogueQuoteDto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
         cfetsBondDealDialogueQuoteDto.setCreateTime(new Date());// 创建时间
-        String msg = cfetsBondDealQuotedPrice002Service.start(processParameter, cfetsBondDealDialogueQuoteDto);
+        String msg = null;
+        try{
+            msg = cfetsBondDealQuotedPrice002Service.start(processParameter, cfetsBondDealDialogueQuoteDto);
+        }catch (Exception e){
+            e.printStackTrace();
+            return PositionUtil.ajaxErrorReturn(e);
+        }
         return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
     }
 

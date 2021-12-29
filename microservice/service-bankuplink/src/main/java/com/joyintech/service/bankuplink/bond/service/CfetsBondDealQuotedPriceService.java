@@ -435,6 +435,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
             if (finProduct != null){
                 cfetsBondDealDialogueQuoteDto.setFinprodMarketId(finProduct.getFinprodMarketId());
                 cfetsBondDealDialogueQuoteDto.setIsRight(finProduct.getIsRight());
+                cfetsBondDealDialogueQuoteDto.setTradeMarket(finProduct.getTradeMarket());
             }
             FinProductTypeKey finProductTypeKey = new FinProductTypeKey();
             finProductTypeKey.setFinprodId(cfetsBondDealDialogueQuoteDto.getFinprodId());
