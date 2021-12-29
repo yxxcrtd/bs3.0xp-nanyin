@@ -1,6 +1,5 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
-import com.joyintech.framework.base.BaseController;
 import com.joyintech.tams.exchange.common.ResponseResultBody;
 import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
@@ -12,8 +11,6 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.hibernate.validator.constraints.NotBlank;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/trade/joyin/portfolio")
 @ResponseResultBody
 @Api(tags = "场内交易-组合查询接口")
-public class PortfolioController extends BaseController {
-
-    /**
-     * 日志对象
-     */
-    private static final Logger logger = LoggerFactory.getLogger(PortfolioController.class);
+public class PortfolioController {
 
     @Autowired
     private PortfolioManager portfolioManager;
