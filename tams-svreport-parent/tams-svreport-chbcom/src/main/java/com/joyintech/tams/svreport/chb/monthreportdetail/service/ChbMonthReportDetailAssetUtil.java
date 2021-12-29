@@ -94,7 +94,7 @@ public class ChbMonthReportDetailAssetUtil {
             chbMonthAssetPositiondetail.setOrgAssetType1(chbAssetInfo.getOrgAssetType1());
             chbMonthAssetPositiondetail.setOrgAssetType2(chbAssetInfo.getOrgAssetType2());
             chbMonthAssetPositiondetail.setOrgAssetType3(chbAssetInfo.getOrgAssetType3());
-
+            chbMonthAssetPositiondetail.setRate(chbAssetInfo.getAssetYield());
         }
         //先基本信息,再头寸信息,避免错误覆盖
         BeanUtil.copyPropertiesIgnoreNull(chbMonthAssetPositiondetail,position);
@@ -105,7 +105,6 @@ public class ChbMonthReportDetailAssetUtil {
                 chbMonthAssetPositiondetail.setOpenplan(chbAssetInfo.getExerciseDate());
             }
             chbMonthAssetPositiondetail.setSubjectName(SubjectName(chbAssetInfo,chbMonthAssetPositiondetail.getOrgAssetType2(),chbMonthAssetPositiondetail.getOrgAssetType1()));
-
             if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecPrefer())){
                 chbMonthAssetPositiondetail.setIsYhbcgj(DictCodeListExt3.中债月度明细_银行资本补充工具_优先股.getValue());
             }else if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecPerpetual())){
@@ -115,13 +114,10 @@ public class ChbMonthReportDetailAssetUtil {
             }else if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecKzzq())){
                 chbMonthAssetPositiondetail.setIsYhbcgj(DictCodeListExt3.中债月度明细_银行资本补充工具_可转债.getValue());
             }
-
         }
-
 
         //非标转标字段塞值
         String isFbhy = null;
-
         if(ruleFlag(ChbMonthAssetRule.农林牧渔业,position)){
             isFbhy =DictCodeListExt3.中债月度明细_非标行业_农林牧渔业.getValue();
         }else if (ruleFlag(ChbMonthAssetRule.制造业,position)){
@@ -140,6 +136,7 @@ public class ChbMonthReportDetailAssetUtil {
             isFbhy =DictCodeListExt3.中债月度明细_非标行业_其他服务业.getValue();
         }
 
+        chbMonthAssetPositiondetail.setCcy(position.getCcy());
         chbMonthAssetPositiondetail.setIsFbhy(isFbhy);
         chbMonthAssetPositiondetail.setDetailno(reportDetail.getPropertycode());
         chbMonthAssetPositiondetail.setTerm(reportDetail.getTermid());
@@ -294,26 +291,30 @@ public class ChbMonthReportDetailAssetUtil {
     public static boolean ruleFlag (ChbMonthAssetRule singleRule, ChbMonthAssetPosition position){
         boolean flag = true;
         for (int i = 0; i < singleRule.getRuleCodeList().size(); i++) {
-            if (singleRule.getRuleValueList().get(i).startsWith("!")){
-                // 只要有一条满足则该条头寸不计入
-                if (singleRule.getRuleValueList().get(i).substring(1,
-                        singleRule.getRuleValueList().get(i).length())
-                        .contains((String)getGetMethod(position,
-                                singleRule.getRuleCodeList().get(i)))){
-                    flag = false;
-                    break;
-                }
-            } else {
-                // 只要有一条不满足则该条头寸不计入
-                if (!singleRule.getRuleValueList().get(i)
-                        .contains((String)getGetMethod(position,singleRule.getRuleCodeList()
-                                .get(i)))){
+            Object code = getGetMethod(position,singleRule.getRuleCodeList().get(i));
+            if(null!=code){
+                if (singleRule.getRuleValueList().get(i).startsWith("!")){
+                    // 只要有一条满足则该条头寸不计入
+                    if (singleRule.getRuleValueList().get(i).substring(1,
+                            singleRule.getRuleValueList().get(i).length())
+                            .contains((String)code)){
+                        flag = false;
+                        break;
+                    }
+                } else {
+                    // 只要有一条不满足则该条头寸不计入
+
+                        if (!singleRule.getRuleValueList().get(i)
+                                .contains((String)code)){
+                            flag = false;
+                            break;
+                        }
+                    }
+                }else{
                     flag = false;
                     break;
                 }
             }
-        }
-
         return flag;
     }
 
