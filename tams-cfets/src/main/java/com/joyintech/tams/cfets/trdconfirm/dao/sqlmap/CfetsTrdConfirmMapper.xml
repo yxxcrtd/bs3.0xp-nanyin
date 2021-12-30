@@ -1545,6 +1545,7 @@
         LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID-->
         LEFT JOIN SYS_USER_ADD sua ON tr.BUYTRADER =sua.IBU_TRADER
         LEFT JOIN SYS_USER su ON sua.USER_ID =su.USER_ID
+        left join stl_sec_acct_info stlinfo
         on tr.ourdepositaccountnumber=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON I.Counterinstitutioncode= mccic.party_id
