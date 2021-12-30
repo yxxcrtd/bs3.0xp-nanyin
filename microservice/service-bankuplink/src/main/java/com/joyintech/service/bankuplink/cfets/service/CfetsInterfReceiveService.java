@@ -147,14 +147,14 @@ public class CfetsInterfReceiveService {
             this.saveIbuQuoteErrlog(ibuQuoteBondDto2.getQuoteId(), param);
 	    	return null;
 		}
-		if(MsgTypeEnum.MSGTYPE_8.getValue().equals(msgType)){
-            IbuQuoteBondDto ibuQuoteBondDto2 = ibuQuoteMapper.selectQuoteBondByKey((String)param.get("clOrdID"));
-            ibuQuoteBondDto.setSecManageAcctId(ibuQuoteBondDto2.getSecManageAcctId());
-            ibuQuoteBondDto.setCreateUser(ibuQuoteBondDto2.getCreateUser());
-        }
 		//报文类型为8客户编号取报价编号
 		if(MsgTypeEnum.MSGTYPE_8.getValue().equals(msgType) && null!=param.get("quoteID")) {// 117 对应报价编号
 			param.put("clOrdID", param.get("quoteID"));
+            IbuQuoteBondDto ibuQuoteBondDto2 = ibuQuoteMapper.selectQuoteBondByCfetQuoteId((String)param.get("quoteID"));
+            if(null!=ibuQuoteBondDto2){
+                ibuQuoteBondDto.setSecManageAcctId(ibuQuoteBondDto2.getSecManageAcctId());
+                ibuQuoteBondDto.setCreateUser(ibuQuoteBondDto2.getCreateUser());
+            }
 		}
 		
     	if(null!=param.get("securityID")) {// 48域-债券代码
@@ -796,9 +796,11 @@ public class CfetsInterfReceiveService {
             return null;
         }
         if(MsgTypeEnum.MSGTYPE_8.getValue().equals(msgType)){
-            IbuQuoteBondDto ibuQuoteBondDto2 = ibuQuoteMapper.selectQuoteBondByKey((String)param.get("clOrdID"));
-            ibuQuoteBondDto.setSecManageAcctId(ibuQuoteBondDto2.getSecManageAcctId());
-            ibuQuoteBondDto.setCreateUser(ibuQuoteBondDto2.getCreateUser());
+            IbuQuoteBondDto ibuQuoteBondDto2 = ibuQuoteMapper.selectQuoteBondByCfetQuoteId((String)param.get("quoteID"));
+            if(null!=ibuQuoteBondDto2){
+                ibuQuoteBondDto.setSecManageAcctId(ibuQuoteBondDto2.getSecManageAcctId());
+                ibuQuoteBondDto.setCreateUser(ibuQuoteBondDto2.getCreateUser());
+            }
         }
         if(MsgTypeEnum.R.getValue().equals(msgType)
                 ||MsgTypeEnum.U32.getValue().equals(msgType)
