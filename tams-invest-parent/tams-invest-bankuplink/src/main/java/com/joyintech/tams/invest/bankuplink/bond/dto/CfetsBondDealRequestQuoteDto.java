@@ -10,6 +10,8 @@
 
 package com.joyintech.tams.invest.bankuplink.bond.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -140,6 +142,11 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
 
     private BigDecimal sellAbleNum;
 
+    /**
+     * 全价总额
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal fpriceAmt;
 
     private Date theoreticalExerciseDate;
 
@@ -160,6 +167,24 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
     private String distribution;
 
     private BigDecimal unitFprice;
+
+    @Override
+    public String getQuoteId() {
+        return quoteId;
+    }
+
+    @Override
+    public void setQuoteId(String quoteId) {
+        this.quoteId = quoteId;
+    }
+
+    public BigDecimal getFpriceAmt() {
+        return fpriceAmt;
+    }
+
+    public void setFpriceAmt(BigDecimal fpriceAmt) {
+        this.fpriceAmt = fpriceAmt;
+    }
 
     public BigDecimal getUnitFprice() {
         return unitFprice;
