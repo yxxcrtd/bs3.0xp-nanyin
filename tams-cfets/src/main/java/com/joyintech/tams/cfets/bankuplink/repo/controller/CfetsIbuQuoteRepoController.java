@@ -1,9 +1,11 @@
 package com.joyintech.tams.cfets.bankuplink.repo.controller;
 
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.background.component.uplink.interbank.common.IbuDictCode;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
@@ -15,6 +17,7 @@ import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
 import com.joyintech.tams.cfets.bankuplink.repo.dto.*;
+import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoDealQuotedPrice002Service;
 import com.joyintech.tams.cfets.bankuplink.repo.service.IbuQuoteRepoService;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
 import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
@@ -39,6 +42,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -68,6 +72,9 @@ public class CfetsIbuQuoteRepoController extends BaseController {
     @Autowired
     private IbuQuoteBondService ibuQuoteBondService;
 
+    @Autowired
+    private CfetsRepoDealQuotedPrice002Service cfetsRepoDealQuotedPrice002Service;
+
     /**
      * 风险接口组件Controller
      */
@@ -89,8 +96,12 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         initPageParams.put("SETT_MODE", this.getSelectDataFromDataDic(DictCode.结算方式, null));
         // 回购方式
         initPageParams.put("REPO_METHOD", this.getSelectDataFromDataDic(DictCode.回购方式, null));
-        // 回购方式
+        // 有效状态
         initPageParams.put("STATUS_VALID", this.getSelectDataFromDataDic(DictCode.有效状态, null));
+        // 发送状态
+        initPageParams.put("SEND_STATUS", this.getSelectDataFromDataDic(DictCode.发送状态, null));
+        // 报价状态
+        initPageParams.put("QUOTE_STUTAS_IBU", this.getSelectDataFromDataDic(BussinessDictCode.银行间上行报价状态, null));
         // 分配方式
         initPageParams.put("DISTRIBUTION", this.getSelectDataFromDataDic(DictCode.分配方式, null));
         // 报价方式_登记
@@ -140,12 +151,10 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         initPageParams.put("cmdsWebSocketUrl", cmdsWebSocketUrl);
         //本币导出按钮配置
         initPageParams.put("EXPORT_SHOW", CacheUtil.getSysParam("EXPORT_SHOW"));
-        // 页面id 用于登记撤销
+        // 登记页面id 用于登记撤销
         initPageParams.put("PAGE_ID_REGIT", "IbuQuoteRepo004");
-        //?
-        initPageParams.put("PAGE_ID_DIALOG", "CfetsRepoDealQuotedPrice004");
-        //?
-        initPageParams.put("PAGE_ID_REQUEST", "CfetsRepoDealQuotedPrice005");
+        // 报价页面id 质押式回购-对话报价
+        initPageParams.put("PAGE_ID_DIALOG", "CfetsQuoteRepo003");
         // 01: 开启银行间报价 02:关闭银行间报价（事后录入）
         initPageParams.put("ibuFlag_quote_switch", CacheUtil.getSysParam(BussinessConstant.ibuFlag_quote_switch));
         return new Message<>(initPageParams).success();
@@ -613,5 +622,30 @@ public class CfetsIbuQuoteRepoController extends BaseController {
     public Message<AjaxResult> doSavePledgesCheck(@RequestBody RepoAutoAllocationRequest request) {
         AjaxResult ajaxResult = ibuQuoteRepoService.doSavePledgesCheck(request);
         return new Message<AjaxResult>().success().setData(ajaxResult);
+    }
+
+    @ApiOperation(value = "当日报价", notes = "当日报价")
+    @PostMapping("/listDayPrice")
+    @ResponseBody
+    public Message<List<CfetsRepoDayPriceDto>> pageDayPrice(@RequestBody RepoEntrustRequest dto) {
+        try {
+            List<CfetsRepoDayPriceDto> result = cfetsRepoDealQuotedPrice002Service.listDayPrice(dto);
+            return new Message<List<CfetsRepoDayPriceDto>>().success().setData(result);
+        } catch (Exception e) {
+            logger.error("查询当日报价数据异常", e);
+            return new Message<List<CfetsRepoDayPriceDto>>().fail().setMessage("查询当日报价数据异常");
+        }
+    }
+
+    @ApiOperation(value = "当日报价导出", notes = "当日报价导出")
+    @ResponseBody
+    @RequestMapping("/exportDayPrice")
+    public void exportDayPrice(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response) {
+        // 导出
+        ExcelUitl.doExport(requestDto, response, "当日报价", () -> {
+            RepoEntrustRequest dto = requestDto.getDto(RepoEntrustRequest.class);
+            List dataList = cfetsRepoDealQuotedPrice002Service.listDayPrice(dto);
+            return dataList;
+        });
     }
 }

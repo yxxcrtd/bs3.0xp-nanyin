@@ -31,6 +31,11 @@ public class RepoQuoteSearchDto {
     private String ps;
 
     /**
+     * 交易方向List
+     */
+    private List<String> psList;
+
+    /**
      * 资产代码
      */
     private String finprodId;
@@ -695,4 +700,12 @@ public class RepoQuoteSearchDto {
     }
 
     /*add by chenjiaxing 20210819 质押式回购改造查询 end*/
+
+    public List<String> getPsList() {
+        return psList;
+    }
+
+    public void setPsList(List<String> psList) {
+        this.psList = psList;
+    }
 }

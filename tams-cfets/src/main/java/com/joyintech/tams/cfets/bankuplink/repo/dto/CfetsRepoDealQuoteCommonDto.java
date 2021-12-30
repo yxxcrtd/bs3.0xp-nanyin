@@ -25,6 +25,9 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name = "operateType", value = "操作类型", example = "save")
     private String operateType;
 
+    @ApiModelProperty(name = "operatorType", value = "操作类型", example = "done")
+    private String operatorType;
+
     @ApiModelProperty(name = "quotaPageModel", value = "报价操作类型(修改,回复,撤回,回退)", example = "marketResponse")
     private String quotaPageModel;
 
@@ -141,6 +144,9 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     @ApiModelProperty(name = "softSkipMode", value = "软控是否跳过校验" ,example = "Y")
     private String softSkipMode;
+
+    @ApiModelProperty(name = "dialogueRecord", value = "交谈记录" ,example = "xx")
+    private String dialogueRecord;
 
     public String getQuoteId() {
         return quoteId;
@@ -476,6 +482,22 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setSoftSkipMode(String softSkipMode) {
         this.softSkipMode = softSkipMode;
+    }
+
+    public String getOperatorType() {
+        return operatorType;
+    }
+
+    public void setOperatorType(String operatorType) {
+        this.operatorType = operatorType;
+    }
+
+    public String getDialogueRecord() {
+        return dialogueRecord;
+    }
+
+    public void setDialogueRecord(String dialogueRecord) {
+        this.dialogueRecord = dialogueRecord;
     }
 }
 

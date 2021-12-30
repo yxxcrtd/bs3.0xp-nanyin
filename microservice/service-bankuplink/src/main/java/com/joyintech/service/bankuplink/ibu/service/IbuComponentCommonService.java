@@ -2005,6 +2005,8 @@ public class IbuComponentCommonService extends BaseService {
 
         // 交易方向
         inputBean.setPs(param.get("ps") != null ? param.get("ps").toString() : null);
+        // 交易方向List
+        inputBean.setPsList(param.get("psList") != null ? (List)param.get("psList") : null);
         // 资产代码
         inputBean.setFinprodId(
             param.get("finprodId") != null ? param.get("finprodId").toString() : null);
