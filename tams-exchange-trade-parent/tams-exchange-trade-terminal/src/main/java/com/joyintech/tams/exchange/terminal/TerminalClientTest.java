@@ -24,7 +24,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
-@SpringBootApplication
+//@SpringBootApplication
 public class TerminalClientTest {
     private static final Logger logger = LoggerFactory.getLogger(TerminalClientTest.class);
     @Value("${agent.type}")

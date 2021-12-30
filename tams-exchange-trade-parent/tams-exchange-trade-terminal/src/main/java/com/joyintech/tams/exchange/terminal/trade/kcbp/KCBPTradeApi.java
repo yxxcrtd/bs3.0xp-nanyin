@@ -185,7 +185,7 @@ public class KCBPTradeApi {
         return new ResultBean(ErrorCode.SUCCESS, data);
     }
 
-    public ResultBean sendCommand(String functionCode, Map<String, String> parameterValues) {
+    public synchronized ResultBean sendCommand(String functionCode, Map<String, String> parameterValues) {
         // 登陆成功用custcert作为后续调用的入参
         try {
             client.KCBPCLI_BeginWrite(handle);

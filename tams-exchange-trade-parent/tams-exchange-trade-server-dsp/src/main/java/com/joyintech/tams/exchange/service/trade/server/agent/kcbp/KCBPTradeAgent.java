@@ -149,7 +149,7 @@ public class KCBPTradeAgent extends TradeAgentDsp {
                 resultBean.setData(kcbpAccount);
                 //保存登录信息
                 addKCBPAccount(kcbpAccount);
-                tradeAgentManager.addAccountAgent(this, accountId);
+                tradeAgentManager.addAccounts(this, accountId);
                 tradeAgentManager.addAgentLoginStatus(accountId, true);
                 accountManager.addAccounts(account);
                 addAccount(accountId, account);

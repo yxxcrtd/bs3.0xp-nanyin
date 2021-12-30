@@ -130,7 +130,7 @@ public class UfxTradeAgent extends TradeAgentDsp {
         // 账户登录成功，记录下登录成功的账户
         if (resultBean.getErrorCode() == ErrorCode.SUCCESS.value) {
             logger.info("account {} login success", accountId);
-            tradeAgentManager.addAccountAgent(this, accountId);
+            tradeAgentManager.addAccounts(this, accountId);
             tradeAgentManager.addAgentLoginStatus(accountId, true);
             accountManager.addAccounts(account);
             addTradeRequest(accountId, this);

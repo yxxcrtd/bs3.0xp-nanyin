@@ -11,7 +11,6 @@ import com.joyintech.tams.exchange.common.bean.terminal.RTGSStatusBean;
 import com.joyintech.tams.exchange.common.cache.QuoteTickService;
 import com.joyintech.tams.exchange.common.constant.*;
 import com.joyintech.tams.exchange.common.constant.joyin.InvestmentAssetType1;
-import com.joyintech.tams.exchange.common.constant.joyin.Switches;
 import com.joyintech.tams.exchange.common.db.domain.*;
 import com.joyintech.tams.exchange.common.proto.QuoteProto;
 import com.joyintech.tams.exchange.common.utils.*;
@@ -408,6 +407,7 @@ public class TradeHelper {
             tradeMap.remove(key);
         }
     }
+
     // 处理委托主推回报  --在委托回报之前的情况
     public void handleTradeNotifyEntrustRspBeforeOnEntrustRsp(TradeMsgReceiver msgReceiver, String key, int msgType) {
         EntrustInterface entrustInterface = entrustNotifyMap.get(key);
@@ -535,6 +535,12 @@ public class TradeHelper {
                 Instrument instrument = instrumentService.findById(stockCode);
                 if (Objects.isNull(instrument) || Strings.isNullOrEmpty(instrument.getPurRedId())) {
                     logger.warn("业务：{} 合约代码：{} 获取申报代码信息失败", entrustProp, stockCode);
+
+                    // add by lifangpeng 20211230 填充委托错误码和描述 start
+                    order.setErrorCode(ErrorCode.INSTRUMENT_INFO_NOT_EXIT.value);
+                    order.setErrorMsg(ErrorCode.INSTRUMENT_INFO_NOT_EXIT.errorMsg);
+                    // add by lifangpeng 20211230 填充委托错误码和描述 end
+
                     return false;
                 } else {
                     logger.info("业务：{} 合约代码：{} 获取到申报代码信息：{}", entrustProp, stockCode, dto.getStockCode());
@@ -550,6 +556,10 @@ public class TradeHelper {
                 }
             } else {
                 logger.warn("业务：{} 合约代码：{} 获取申报代码信息失败", entrustProp, stockCode);
+                // add by lifangpeng 20211230 填充委托错误码和描述 start
+                order.setErrorCode(ErrorCode.INSTRUMENT_INFO_NOT_EXIT.value);
+                order.setErrorMsg(ErrorCode.INSTRUMENT_INFO_NOT_EXIT.errorMsg);
+                // add by lifangpeng 20211230 填充委托错误码和描述 end
                 return false;
             }
         }
@@ -649,11 +659,11 @@ public class TradeHelper {
                 && EntrustUtils.isfairModeWithUnacceptInstructionForbid(commonManagement.getFairModeWithUnacceptInstruction())) {
             //公平交易开启
             Map<String, Instruction> instructionBeanMap = instructionService.queryInstructionByUserIdAndStockCode(order.getUserId(), order.getStockCode())
-                                                                            .stream().filter(instruction -> InvestmentUtils.hasSameDir(instruction, order)
+                    .stream().filter(instruction -> InvestmentUtils.hasSameDir(instruction, order)
                             && InstructionStatus.WAIT_RECEIVE.value.equals(instruction.getEntrustStatus())
                             && InvestmentUtils.isNormalTradeFromInstruction(instruction.getTradePlat())
                             && !InvestmentUtils.isInstructionProcessComplete(instruction))
-                                                                            .collect(Collectors.toMap(Instruction::getEntrustId, instructionBean -> instructionBean));
+                    .collect(Collectors.toMap(Instruction::getEntrustId, instructionBean -> instructionBean));
             if (instructionBeanMap.size() > 0) {
                 logger.debug("未接收且影响公平交易的相关指令: {}", JsonUtils.getJsonFromObject(instructionBeanMap));
                 order.setErrorMsg("存在公平指令未接收");

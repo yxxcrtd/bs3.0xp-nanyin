@@ -116,7 +116,7 @@ public class JsdTradeAgent extends TradeAgentDsp {
                 String data = JsonUtils.getJsonFromObject(resultBean.getData());
                 logger.info("金仕达用户登录信息：{}", data);
 
-                tradeAgentManager.addAccountAgent(this, accountId);
+                tradeAgentManager.addAccounts(this, accountId);
                 tradeAgentManager.addAgentLoginStatus(accountId, true);
                 accountManager.addAccounts(account);
                 addAccount(accountId, account);

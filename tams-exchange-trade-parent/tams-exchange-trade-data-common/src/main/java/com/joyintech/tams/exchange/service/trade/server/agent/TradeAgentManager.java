@@ -16,10 +16,13 @@ public class TradeAgentManager {
 
     private Map<String, TradeAgent> accountAgents = Maps.newConcurrentMap();
 
+    private Map<String, Boolean> agentLoginStatus = Maps.newConcurrentMap();
+
     @PostConstruct
     public void init() {
         tradingAgents.clear();
         accountAgents.clear();
+        agentLoginStatus.clear();
     }
 
     public void addTradeAgent(TradeAgent tradeAgent) {
@@ -66,5 +69,17 @@ public class TradeAgentManager {
 
     public Map<String, TradeAgent> getAccountAgents() {
         return accountAgents;
+    }
+
+    public void addAgentLoginStatus(String accountId, boolean loginStatus) {
+        agentLoginStatus.put(accountId, loginStatus);
+    }
+
+    public Boolean getAgentLoginStatus(String accountId) {
+        Boolean status = agentLoginStatus.get(accountId);
+        if (null == status) {
+            return false;
+        }
+        return status;
     }
 }

@@ -1,27 +1,5 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.joyintech.framework.JoyinRestTemplate;
@@ -50,9 +28,17 @@ import com.joyintech.tams.exchange.common.request.InstructionQueryRequest;
 import com.joyintech.tams.exchange.common.utils.JsonUtils;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.service.trade.management.service.InvestmentManagement;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 @RestController
 @RequestMapping("/trade/joyin")
@@ -70,7 +56,7 @@ public class InstructionController {
     @ApiOperation(value = "查询指令列表", notes = "查询指令列表")
     @RequestMapping(value = "/instruction/users", method = RequestMethod.POST)
     @CrossOrigin
-    public Message<InstructionPage<Instruction, InstructionPledge,InstructionDetail>> queryAllInstruction(@RequestBody @Validated InstructionQueryRequest instructionQuery) {
+    public Message<InstructionPage<Instruction, InstructionPledge, InstructionDetail>> queryAllInstruction(@RequestBody InstructionQueryRequest instructionQuery) {
         String fairCode = CacheUtil.getSysParam(ExchangeConstant.FAIR_CODE_IN_PARA);
         String platDate = DateUtil.getSysDate();
         String approveCode = CacheUtil.getSysParam(ExchangeConstant.RISK_APPROVAL_IN_PARA);
@@ -86,10 +72,11 @@ public class InstructionController {
         instructionQuery.setFairModeWithUnacceptInstruction(fairModeWithUnacceptInstruction);
 
         Map<String, Object> pageParam = JsonUtils.getObjectFromJson(JsonUtils.getJsonFromObject(instructionQuery), Map.class);
-        return new Message<InstructionPage<Instruction, InstructionPledge,InstructionDetail>>(investmentManagement.queryInstructionsFromCache(pageParam));
+        pageParam.remove("entrustStatus");
+        return new Message<InstructionPage<Instruction, InstructionPledge, InstructionDetail>>(investmentManagement.queryInstructionsFromCache(pageParam));
     }
 
-    @PostMapping(value="/instruction/export")
+    @PostMapping(value = "/instruction/export")
     @ResponseBody
     @ApiOperation(value = "导出指令列表", notes = "导出指令列表")
     public void exportPosition(@RequestBody InstructionExportRequest request, HttpServletResponse response) {
