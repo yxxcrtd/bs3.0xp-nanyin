@@ -110,7 +110,7 @@
     </select>
 
     <select id="getEntrunstId" resultType="java.lang.String">
-            SELECT DISTINCT ENTRUST_ID
+            SELECT DISTINCT T.ENTRUST_ID
               from (SELECT A.ENTRUST_ID
                       FROM ETR_ENTRUST A
                      INNER JOIN TRD_PRODUCT_DEAL_ADD B
@@ -121,7 +121,7 @@
                       FROM ETR_ENTRUST A1
                      INNER JOIN TRD_DEAL_TOTAL_ADD B1
                         ON A1.ENTRUST_ID = B1.ENTRUST_ID
-                     WHERE B1.TOTLE_TRADE_ID = #{tradeId})
+                     WHERE B1.TOTLE_TRADE_ID = #{tradeId}) T
     </select>
 
     <select id="getRemainNum" resultType="java.math.BigDecimal">
