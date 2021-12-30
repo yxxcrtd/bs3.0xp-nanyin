@@ -1014,7 +1014,10 @@ public class StlDataDealSzdJsmxProcessService {
 						}
 						if (StringUtil.equals(StlDataDealProcessConstant.YWLX_618, szdJsmx.getYwlx())
 								&& StringUtil.equals(StlDataDealProcessConstant.MMBS_B, szdJsmx.getMmbz())) {
-							settleTransData.setPs(DictCodeListExt3.交易方向_中途换券.getValue());
+							// GZYHTZJY-1008:交易方向应为解除质押 fuyongsheng 20211230 modify start
+							// settleTransData.setPs(DictCodeListExt3.交易方向_中途换券.getValue());
+							settleTransData.setPs(DictCodeListExt3.交易方向_解除质押.getValue());
+							// GZYHTZJY-1008:交易方向应为解除质押 fuyongsheng 20211230 modify end
 							if (StringUtil.equals(StlDataDealProcessConstant.GHLX_00D, szdJsmx.getGhlx())){
 								settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券协议正回购_解除质押.getValue());
 								settleTransData.setTradeType(DictCodeListExt3.质押券置换_置换方向_换出.getValue());
@@ -1024,7 +1027,10 @@ public class StlDataDealSzdJsmxProcessService {
 						if (StringUtil.equals(StlDataDealProcessConstant.YWLX_618, szdJsmx.getYwlx())
 								&& StringUtil.equals(StlDataDealProcessConstant.MMBS_S, szdJsmx.getMmbz())) {
 //							settleTransData.setPs(DictCodeList.交易方向_到期.getValue());
-							settleTransData.setPs(DictCodeListExt3.交易方向_中途换券.getValue());
+							// GZYHTZJY-1008:交易方向应为解除质押 fuyongsheng 20211230 modify start
+							// settleTransData.setPs(DictCodeListExt3.交易方向_中途换券.getValue());
+							settleTransData.setPs(DictCodeListExt3.交易方向_解除质押.getValue());
+							// GZYHTZJY-1008:交易方向应为解除质押 fuyongsheng 20211230 modify end
 							if (StringUtil.equals(StlDataDealProcessConstant.GHLX_00D, szdJsmx.getGhlx())){
 								settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券协议逆回购_解除质押.getValue());
 								settleTransData.setTradeType(DictCodeListExt3.质押券置换_置换方向_换出.getValue());
@@ -1035,11 +1041,14 @@ public class StlDataDealSzdJsmxProcessService {
 						settleTransData.setFinprodId(szdJsmx.getZqdm1());
 						// 交易份额
 //						settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+						// GZYHTZJY-1008:modify by fuyongsheng 20211230 start
 					// modify by etliu 20211225 start
 					// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
 //					    settleTransData.setShareAmt(ArithmeticUtil.divide(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())),BigDecimal.valueOf(100),2));
-					settleTransData.setShareAmt(ArithmeticUtil.divide(new BigDecimal(szdJsmx.getCjsl()).abs(), BigDecimal.valueOf(100),2));
+					// settleTransData.setShareAmt(ArithmeticUtil.divide(new BigDecimal(szdJsmx.getCjsl()).abs(), BigDecimal.valueOf(100),2));
+						settleTransData.setShareAmt(new BigDecimal(szdJsmx.getCjsl()).abs());
 					// modify by etliu 20211225 end
+						// GZYHTZJY-1008:modify by fuyongsheng 20211230 end
 					    // 期限品种
 						settleTransData.setTermType(getTermType(szdJsmx.getZqdm1()));
 						// 回购利率
