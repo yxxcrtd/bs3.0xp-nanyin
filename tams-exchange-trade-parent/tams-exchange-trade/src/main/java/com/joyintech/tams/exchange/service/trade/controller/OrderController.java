@@ -39,27 +39,25 @@ public class OrderController {
     /**
      * 普通下单
      *
-     * @param userId 用户id
      * @param order  下单信息
      * @return Message
      */
     @ApiOperation(value = "普通下单（竞价下单）", notes = "普通下单（竞价下单）")
     @RequestMapping(value = "/order", method = RequestMethod.POST)
-    public Message<OrderPlaceBean> sendOrder(@RequestParam String userId, @RequestBody OrderPlaceBean order) {
-        return new Message<OrderPlaceBean>(orderManagement.sendOrder(userId, order));
+    public Message<OrderPlaceBean> sendOrder(@RequestBody OrderPlaceBean order) {
+        return new Message<OrderPlaceBean>(orderManagement.sendOrder(order.getUserId(), order));
     }
 
     /**
      * 综合业务下单
      *
-     * @param userId            用户Id
      * @param integratedEntrust 综合订单信息
      * @return Message
      */
     @ApiOperation(value = "综合业务下单", notes = "综合业务下单")
     @RequestMapping(value = "/order/integratedEntrust", method = RequestMethod.POST)
-    public Message<IntegratedEntrust> sendIntegratedEntrust(@RequestParam String userId, @RequestBody IntegratedEntrust integratedEntrust) {
-        return new Message<IntegratedEntrust>(orderManagement.sendIntegratedEntrust(userId, integratedEntrust));
+    public Message<IntegratedEntrust> sendIntegratedEntrust(@RequestBody IntegratedEntrust integratedEntrust) {
+        return new Message<IntegratedEntrust>(orderManagement.sendIntegratedEntrust(integratedEntrust.getUserId(), integratedEntrust));
     }
 
     /**
