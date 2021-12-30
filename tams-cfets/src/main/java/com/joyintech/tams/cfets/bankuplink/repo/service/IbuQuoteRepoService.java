@@ -1582,12 +1582,14 @@ public class IbuQuoteRepoService extends BaseService {
             cfetsRepoDealQuoteCommonDto.setPriceModelClass("01");
             if (minOrMaxYield != null) {
                 cfetsRepoDealQuoteCommonDto.setPriceModelClass("03");
+                cfetsRepoDealQuoteCommonDto.setPrice(null);
             }
         }
         //勾选指令的价格模式只存在限价指令时,逆回购 限价指令中回购利率的最大值 正回购 限价指令中回购利率的最小值
         else if (minOrMaxYield != null) {
             cfetsRepoDealQuoteCommonDto.setPrice(minOrMaxYield);
             cfetsRepoDealQuoteCommonDto.setPriceModelClass("02");
+            cfetsRepoDealQuoteCommonDto.setPrice(null);
         }
         // 处理组合分配
         cfetsRepoDealQuoteCommonDto.setPtlAllocations(ptlAllocations);

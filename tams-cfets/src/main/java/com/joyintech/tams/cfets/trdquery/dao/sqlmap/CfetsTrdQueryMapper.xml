@@ -1225,6 +1225,7 @@
         left join MST_CFETS_CUSTOMER_TRADER su1 on ib.ou_trader_id=su1.TRADER_ID
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON ib.ou_party_id= mccit.party_id
         where ib.quote_id= #{quoteId,jdbcType=VARCHAR}
+        and decode(ib.trade_status,'15',#{STATUS_VALID_03},#{STATUS_VALID_01})= #{effectiveStatus,jdbcType=VARCHAR}
         union all
         select null as  dialogueRecord,
         ib.ou_party_id as traderid,
@@ -1331,6 +1332,7 @@
         left join MST_CFETS_CUSTOMER_TRADER su1 on ib.ou_trader_id=su1.TRADER_ID
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON ib.ou_party_id= mccit.party_id
         where ib.quote_id= #{quoteId,jdbcType=VARCHAR}
+        and #{STATUS_VALID_04}= #{effectiveStatus,jdbcType=VARCHAR}
     </select>
     <select id="selectIbuRepoFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryIbuInfoListResponse">
         select
@@ -1371,6 +1373,7 @@
         group by ir.quote_id)deal
         on ic.quote_id=deal.quote_id
         where ic.quote_id= #{quoteId,jdbcType=VARCHAR}
+        and decode(ic.trade_status,'15',#{STATUS_VALID_03},#{STATUS_VALID_01})= #{effectiveStatus,jdbcType=VARCHAR}
         union all
         select
         ic.ou_party_id as traderid,
@@ -1409,7 +1412,7 @@
         on ir.portfolio_id=pp.portfolio_id
         group by ir.quote_id)deal
         on ic.quote_id=deal.quote_id
-        where ic.quote_id= #{quoteId,jdbcType=VARCHAR}
+        where ic.quote_id= #{quoteId,jdbcType=VARCHAR}   and #{STATUS_VALID_04}= #{effectiveStatus,jdbcType=VARCHAR}
     </select>
     <select id="selectIbuBondTableFenPeiInfoList"
             resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsPortfolioIdFenPeiInfoResponse">

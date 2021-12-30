@@ -596,13 +596,12 @@
     	SELECT
 		TABLE01.PORTFOLIO_ID 			portfolioId,/*组合代码*/
 		TABLE01.SEC_ACCT_ID 			secAcctId,/*证券账户/通道代码*/
-		-- 			NVL(FIN_PRODUCT.FINPROD_NAME,STL_SEC_ACCT_INFO.SEC_ACCT_NAME)	 			secAcctStr,/*证券账户/通道代码*/
 		TABLE01.FINPROD_ID 				finProdId,/*金融产品Id*/
 		FIN_PRODUCT.FINPROD_ABBR     	finProdAbbr,/*金融产品简称*/
 		FIN_PRODUCT.FINPROD_MARKET_ID   finprodMarketId,/*金融产品市场代码*/ 
 		TABLE01.BRANCH     				branch,/*分支序号*/
-        NVL(TABLE01.AMOUNT,0) * 100		pledStrdPrinAmt,/*可质押券面总额*/
-        NVL(TABLE02.AMOUNT,0) * 100		posStrdPrinAmt,/*持仓券面总额*/
+        NVL(TABLE01.pledStrdPrinAmt,0) * 100		pledStrdPrinAmt,/*可质押券面总额*/
+        NVL(TABLE01.pledgeAmount,0) * 100		pledgeAmount,/*持仓券面总额*/
 		FIN_PRODUCT.TRADE_MARKET 		tradePlace,/*交易场所*/
 		FIN_PRODUCT.MDATE   			mdate,/*到期日*/
 		MST_BOND_VALUATION_INFO.LAST_PERIOD lastPeriod,/*剩余期限*/
@@ -616,88 +615,47 @@
 		ELSE STL_SEC_ACCT_INFO.SEC_ACCT_NAME
 		END AS secAcctStr
 		FROM (
-		SELECT
-		TEMP.PORTFOLIO_ID,/*组合代码*/
-		TEMP.SEC_ACCT_ID,/*证券账户/通道代码*/
-		TEMP.FINPROD_ID,/*金融产品Id*/
-		TEMP.BRANCH,/*分支序号*/
-		SUM(TEMP.AMOUNT) AMOUNT /*可质押券面总额*/
-		FROM (
-		SELECT
-		PTL_SEC_POSITION.PORTFOLIO_ID,
-		PTL_SEC_POSITION.SEC_ACCT_ID,
-		PTL_SEC_POSITION.FINPROD_ID,
-		PTL_SEC_POSITION.BRANCH,
-		CASE WHEN PTL_SEC_POSITION.HODING_TYPE IN (#{POSITION_TYPE_03},#{POSITION_TYPE_05},#{POSITION_TYPE_08})then
-		PTL_SEC_POSITION.AMOUNT
-		ELSE
-		-1 * PTL_SEC_POSITION.AMOUNT
-		END as AMOUNT
-		FROM PTL_SEC_POSITION
-		WHERE 1=1
-		AND PTL_SEC_POSITION.CDATE = to_date(#{sysDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
-		/*持仓类型包含：03实际，04质押，05融入，06融出，08预占用,11卖空*/
-		AND PTL_SEC_POSITION.HODING_TYPE IN (#{POSITION_TYPE_03}, #{POSITION_TYPE_04},#{POSITION_TYPE_05},
-		#{POSITION_TYPE_06},#{POSITION_TYPE_08},#{POSITION_TYPE_11})
-
-		UNION ALL
-		SELECT
-		PTL_SEC_POSITION_FLOW.PORTFOLIO_ID,
-		PTL_SEC_POSITION_FLOW.SEC_ACCT_ID,
-		PTL_SEC_POSITION_FLOW.FINPROD_ID,
-		PTL_SEC_POSITION_FLOW.BRANCH,
-		CASE WHEN PTL_SEC_POSITION_FLOW.HODING_TYPE IN (#{POSITION_TYPE_01})then
-		PTL_SEC_POSITION_FLOW.AMOUNT
-		ELSE
-		-1 * PTL_SEC_POSITION_FLOW.AMOUNT
-		END as AMOUNT
-		FROM PTL_SEC_POSITION_FLOW
-		WHERE 1=1
-		AND PTL_SEC_POSITION_FLOW.CDATE = to_date(#{sysDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
-		/*持仓类型包含：01可用，12卖空可用*/
-		AND PTL_SEC_POSITION_FLOW.HODING_TYPE IN (#{POSITION_TYPE_01}, #{POSITION_TYPE_12})
-		) TEMP
-		LEFT JOIN PTL_PORTFOLIO_AUTHORITY on TEMP.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
-		WHERE 1=1
-		AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
-		GROUP BY
-		TEMP.PORTFOLIO_ID,
-		TEMP.SEC_ACCT_ID,
-		TEMP.FINPROD_ID,
-		TEMP.PORTFOLIO_ID,
-		TEMP.BRANCH
-		HAVING SUM(TEMP.AMOUNT) > 0/*只统计可质押券面总额>0*/
-		)TABLE01/*以上统计可用持仓*/
+        SELECT
+        TEMP.PORTFOLIO_ID,
+        /*组合代码*/
+        TEMP.PORTFOLIO_NAME,
+        TEMP.SEC_ACCT_ID,
+               0 branch,
+        /*证券账户/通道代码*/
+        TEMP.FINPROD_ID,
+        /*分支序号*/
+        SUM(TEMP.pledStrdPrinAmt) pledStrdPrinAmt, /*可质押券面总额*/
+        SUM(TEMP.pledgeAmount) pledgeAmount /*已质押质押券面总额*/
+        FROM (
+        SELECT
+        espr.PORTFOLIO_ID, pp.PORTFOLIO_NAME,
+        espr.SEC_ACCT_ID, espr.FINPROD_ID,
+        CASE WHEN ppc.S_HOLDINGTYPE = #{S_002} THEN espr.AMOUNT*nvl(ppc.CAL_FLAG,1) ELSE 0 END
+        AS pledStrdPrinAmt, /*可质押券面总额*/
+        CASE WHEN espr.HODING_TYPE=#{A_012} THEN espr.AMOUNT*nvl(ppc.CAL_FLAG,1) ELSE 0 END
+        AS pledgeAmount /*已质押质押券面总额*/
+        FROM
+        ETR_SEC_POSITION_RULE espr
+        INNER JOIN PTL_PORTFOLIO pp ON
+        espr.PORTFOLIO_ID = pp.PORTFOLIO_ID
+        left JOIN PTL_POSITION_CFG ppc ON
+        espr.HODING_TYPE =ppc.HOLDINGTYPE AND ppc.S_HOLDINGTYPE =#{S_002}
+        WHERE 1 = 1
+        AND espr.CDATE = to_date(#{sysDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
+        AND espr.DATE_TYPE =0 AND ( ppc.S_HOLDINGTYPE =#{S_002} or espr.HODING_TYPE=#{A_012})
+        ) TEMP
+        <if test="userId!=null and userId!=''">
+            LEFT JOIN PTL_PORTFOLIO_AUTHORITY ON TEMP.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+            WHERE 1 = 1
+            AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+        </if>
+        GROUP BY
+        TEMP.PORTFOLIO_ID, TEMP.PORTFOLIO_NAME,
+        TEMP.SEC_ACCT_ID, TEMP.FINPROD_ID
+        HAVING SUM(TEMP.pledStrdPrinAmt) > 0 /*只统计可质押券面总额>0*/
+        )TABLE01/*以上统计可用持仓*/
 		LEFT JOIN STL_SEC_ACCT_INFO on TABLE01.SEC_ACCT_ID = STL_SEC_ACCT_INFO.SEC_ACCT_ID
 		LEFT JOIN FIN_PRODUCT FIN_PRODUCT2  on TABLE01.SEC_ACCT_ID = FIN_PRODUCT2.FINPROD_ID
-		LEFT JOIN (
-		SELECT
-		PTL_SEC_POSITION.PORTFOLIO_ID,
-		PTL_SEC_POSITION.SEC_ACCT_ID,
-		PTL_SEC_POSITION.FINPROD_ID,
-		PTL_SEC_POSITION.BRANCH,
-		SUM(
-		CASE WHEN PTL_SEC_POSITION.HODING_TYPE IN (#{POSITION_TYPE_03},#{POSITION_TYPE_05})then
-		PTL_SEC_POSITION.AMOUNT
-		ELSE
-		-1 * PTL_SEC_POSITION.AMOUNT
-		END) as AMOUNT
-		FROM PTL_SEC_POSITION	       	WHERE 1=1
-		AND PTL_SEC_POSITION.CDATE = to_date(#{sysDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
-		/*持仓类型包含：03实际，05融入，06融出,11卖空*/
-		AND PTL_SEC_POSITION.HODING_TYPE IN (#{POSITION_TYPE_03},#{POSITION_TYPE_05},
-		#{POSITION_TYPE_06},#{POSITION_TYPE_11})
-		GROUP BY
-		PTL_SEC_POSITION.PORTFOLIO_ID,
-		PTL_SEC_POSITION.SEC_ACCT_ID,
-		PTL_SEC_POSITION.FINPROD_ID,
-		PTL_SEC_POSITION.PORTFOLIO_ID,
-		PTL_SEC_POSITION.BRANCH
-		)TABLE02 /*以上统计实际持仓*/
-		ON TABLE01.PORTFOLIO_ID = TABLE02.PORTFOLIO_ID
-		AND TABLE01.SEC_ACCT_ID = TABLE02.SEC_ACCT_ID
-		AND TABLE01.FINPROD_ID = TABLE02.FINPROD_ID
-		AND TABLE01.BRANCH = TABLE02.BRANCH
 		INNER JOIN  FIN_PRODUCT
 		ON  FIN_PRODUCT.FINPROD_ID = TABLE01.FINPROD_ID
 		LEFT JOIN (
@@ -765,10 +723,10 @@
 			)
 		</if>
 		<if test="windtypeone !=null and windtypeone !=''">
-			AND T4.TYPE_6 = #{windtypeone,jdbcType=VARCHAR}
+			AND T4.TYPE_10 = #{windtypeone,jdbcType=VARCHAR}
 		</if>
 		<if test="windtypetwo !=null and windtypetwo !=''">
-			AND T4.TYPE_7 = #{windtypetwo,jdbcType=VARCHAR}
+			AND T4.TYPE_11 = #{windtypetwo,jdbcType=VARCHAR}
 		</if>
 		<if test="isSecBond !=null and isSecBond !=''">
 			AND FPA.IS_SEC_BOND = #{isSecBond,jdbcType=VARCHAR}

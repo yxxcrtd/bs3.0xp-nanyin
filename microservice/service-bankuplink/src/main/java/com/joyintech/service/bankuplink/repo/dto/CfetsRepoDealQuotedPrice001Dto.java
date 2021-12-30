@@ -27,7 +27,7 @@ import java.util.List;
  * 
  * @author yufei
  * @version 1.0 2020年5月14日
- * @see CfetsRepoDealQuotedPriceDto
+ * @see CfetsRepoDealQuotedPrice001Dto
  * @since 1.0
  */
 public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust {

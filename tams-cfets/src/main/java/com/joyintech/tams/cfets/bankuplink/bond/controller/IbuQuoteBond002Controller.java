@@ -82,10 +82,10 @@ public class IbuQuoteBond002Controller extends BaseController {
         cfetsBondDealDialogueQuoteDto.setAvaNum(com.joyintech.calculation.util.ArithmeticUtil.divide(cfetsBondDealDialogueQuoteDto.getAvaNum(),new BigDecimal(10000),2));
         //组合分配列表
         List <CfetsBondDealDialogueQuoteDto> cfetsBondDealDialogueQuoteDtoList =cfetsBondDealQuotedPrice002Service.getCfetsBondDealDialogueQuoteDtoList(quoteId);
-        for(CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuote:cfetsBondDealDialogueQuoteDtoList){
+        /*for(CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuote:cfetsBondDealDialogueQuoteDtoList){
             cfetsBondDealDialogueQuote.setMatureYield(cfetsBondDealDialogueQuoteDto.getMatureYield());
             cfetsBondDealDialogueQuote.setExerYield(cfetsBondDealDialogueQuoteDto.getExerYield());
-        }
+        }*/
         cfetsBondDealDialogueQuoteDto.setCfetsBondDealDialogueQuoteDtoList(cfetsBondDealDialogueQuoteDtoList);
         // 补充本方交易员(做市报价回复的场景)
         if (StringUtil.equals(quotaPageModel, "marketResponse")) {
@@ -126,6 +126,13 @@ public class IbuQuoteBond002Controller extends BaseController {
                 }
                 cfetsBondDealDialogueQuoteDto.setAvaNum(tempSumAvaAmt);
                 cfetsBondDealDialogueQuoteDto.setCfetsBondDealDialogueQuoteDtoList(tempEntrustList);
+            }
+        }
+        //修改
+        if(StringUtil.equals(cfetsBondDealQuoteCommonDto.getOpenModel(), "edit")){
+            for (CfetsBondDealDialogueQuoteDto item : cfetsBondDealDialogueQuoteDto.getCfetsBondDealDialogueQuoteDtoList()) {
+                //恢复指令剩余额度
+                item.setEntrustAvaNum(ArithmeticUtil.doAdd(item.getEntrustAvaNum(),item.getAvaNum()));
             }
         }
         //复制操作 返回前台

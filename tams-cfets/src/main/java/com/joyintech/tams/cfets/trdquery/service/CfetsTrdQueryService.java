@@ -440,6 +440,11 @@ public class CfetsTrdQueryService extends BaseService{
 
         //表单data
         CfetsTrdQueryIbuInfoListResponse dataform=new CfetsTrdQueryIbuInfoListResponse();
+        pageParam.put("effectiveStatus",dto.getEffectiveStatus());
+        //有效状态
+        pageParam.put("STATUS_VALID_01", DictCodeListExt1.有效状态_有效.getValue());
+        pageParam.put("STATUS_VALID_03", DictCodeListExt1.有效状态_撤销.getValue());
+        pageParam.put("STATUS_VALID_04", DictCodeListExt1.有效状态_流程中.getValue());
         if(StringUtil.equals(dto.getFinprodType2(),"01")){
             dataform=cfetsTrdQueryMapper.selectIbuBondFormDataByKey(pageParam);
         }else{

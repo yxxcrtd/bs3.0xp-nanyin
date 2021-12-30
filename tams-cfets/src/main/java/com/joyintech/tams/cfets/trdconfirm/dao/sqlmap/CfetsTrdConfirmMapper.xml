@@ -1006,7 +1006,7 @@
         on nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON reg.counter_id= mccic.party_id
 
-        where 1=1  and reg.ps in ('T01','T02','03','04')
+        where 1=1  and reg.trade_date= #{sysDate,jdbcType=DATE} and reg.ps in ('T01','T02','03','04')
         <if test="userId != null and userId != ''">
             and m.create_user= #{userId}
         </if>
@@ -1142,6 +1142,7 @@
         on nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON nvl(ib.cp_party_id,ic.cp_party_id)= mccic.party_id
         where ct.BUSINESSTYPE in ('BOND','REPO')  and (ic.quote_id is not null or ib.quote_id is not null)
+        and nvl(ib.quote_date,ic.quote_date)=#{sysDate,jdbcType=DATE}
         <if test="userId != null and userId != ''">
             and m.create_user= #{userId}
         </if>
@@ -1434,13 +1435,12 @@
         from ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
-        left join stl_sec_acct_info stlinfo
-        on ic.sec_manage_acct_id=stlinfo.sec_acct_id
         where ir.quote_id=#{busiCode}
         group by ir.quote_id)deal
         on ic.quote_id=deal.quote_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ic.cp_party_id= mccic.party_id
-
+        left join stl_sec_acct_info stlinfo
+        on ic.sec_manage_acct_id=stlinfo.sec_acct_id
         where ic.quote_id=#{busiCode}  and ic.TRADE_STATUS='07'
         )
         <!--前端传入排序字段-->
@@ -1545,6 +1545,7 @@
         LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID-->
         LEFT JOIN SYS_USER_ADD sua ON tr.BUYTRADER =sua.IBU_TRADER
         LEFT JOIN SYS_USER su ON sua.USER_ID =su.USER_ID
+        left join stl_sec_acct_info stlinfo
         on tr.ourdepositaccountnumber=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON I.Counterinstitutioncode= mccic.party_id
@@ -1612,6 +1613,15 @@
         <if test="totleTradeId != null and totleTradeId != ''">
             AND ic.quote_id =#{totleTradeId,jdbcType=VARCHAR}
         </if>
+    </select>
+    <select id="findAllSecPtlsList" resultType="com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto" parameterType="java.lang.String" >
+        select
+        reg.PLEDGE_FINPROD_ID as finprodId,reg.PLEDGE_RATIO as pledgeRatio,
+        reg.PORTFOLIO_ID as portfolioId,reg.ENTRUST_ID as entrustId,
+        reg.PLEDGE_NUMBER as pledgePrin
+        from REG_FIN_PLEDGE reg
+        where reg.trade_id =#{tradeId,jdbcType=VARCHAR}
+
     </select>
 </mapper>
 

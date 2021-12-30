@@ -718,7 +718,7 @@ public class CfetsQuotedCommonService extends BaseService {
             PtlAllocationDto ptlAllocationDto = new PtlAllocationDto();
             BeanUtil.copyPropertiesIgnoreNull(ptlAllocationDto,cfetsBondDealRequestQuoteDto);
             ptlAllocationDto.setShareAmt(ArithmeticUtil.multiply(cfetsBondDealRequestQuoteDto.getAvaNum(),new BigDecimal(10000)));
-            ptlAllocationDto.setAvaNum(cfetsBondDealRequestQuoteDto.getEntrustAvaNum());
+            ptlAllocationDto.setAvaNum(ArithmeticUtil.multiply(cfetsBondDealRequestQuoteDto.getEntrustAvaNum(),new BigDecimal(10000)));
             result.add(ptlAllocationDto);
         }
         return result;

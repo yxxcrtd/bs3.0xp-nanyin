@@ -133,6 +133,8 @@ public class CfetsEtrIbRepoRKService extends BaseService<CfetsEtrIbRepoRkDto> {
 											tempList.addAll(finProductList);
 										}
 									}
+								}else{
+									tempList.addAll(finProductList);
 								}
 							}
 						}

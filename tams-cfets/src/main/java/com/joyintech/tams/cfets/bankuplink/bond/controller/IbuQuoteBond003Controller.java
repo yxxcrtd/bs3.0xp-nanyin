@@ -11,6 +11,7 @@ import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice003Service;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CounterInfoDto;
 import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonService;
@@ -83,10 +84,10 @@ public class IbuQuoteBond003Controller extends BaseController {
         cfetsBondDealRequestQuoteDto.setAvaNum(ArithmeticUtil.divide(cfetsBondDealRequestQuoteDto.getAvaNum(),new BigDecimal(10000),2));
         //组合分配列表
         List <CfetsBondDealRequestQuoteDto> cfetsBondDealRequestQuoteDtoList =cfetsBondDealQuotedPrice003Service.getCfetsBondDealRequestQuoteDtoList(quoteId);
-        for(CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuote:cfetsBondDealRequestQuoteDtoList){
+        /*for(CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuote:cfetsBondDealRequestQuoteDtoList){
             cfetsBondDealRequestQuote.setMatureYield(cfetsBondDealRequestQuoteDto.getMatureYield());
             cfetsBondDealRequestQuote.setExerYield(cfetsBondDealRequestQuoteDto.getExerYield());
-        }
+        }*/
         cfetsBondDealRequestQuoteDto.setCfetsBondDealRequestQuoteDtoList(cfetsBondDealRequestQuoteDtoList);
 
 
@@ -124,6 +125,14 @@ public class IbuQuoteBond003Controller extends BaseController {
                 }
                 cfetsBondDealRequestQuoteDto.setAvaNum(tempSumAvaAmt);
                 cfetsBondDealRequestQuoteDto.setCfetsBondDealRequestQuoteDtoList(tempEntrustList);
+            }
+        }
+        //回复操作
+        if(StringUtil.equals(cfetsBondDealQuoteCommonDto.getQuotaPageModel(),"response")){
+            //恢复指令额度
+            for (CfetsBondDealRequestQuoteDto item : cfetsBondDealRequestQuoteDto.getCfetsBondDealRequestQuoteDtoList()) {
+                //恢复指令剩余额度
+                item.setEntrustAvaNum(ArithmeticUtil.doAdd(item.getEntrustAvaNum(),item.getAvaNum()));
             }
         }
         //复制操作 返回前台

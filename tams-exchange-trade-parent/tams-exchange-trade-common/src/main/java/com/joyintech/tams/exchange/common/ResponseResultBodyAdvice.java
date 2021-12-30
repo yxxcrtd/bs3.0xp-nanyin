@@ -1,8 +1,7 @@
 package com.joyintech.tams.exchange.common;
 
-import cn.hutool.core.util.StrUtil;
-import com.joyintech.tams.exchange.common.constant.ErrorCode;
-import com.joyintech.tams.exchange.common.domain.Message;
+import java.lang.annotation.Annotation;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -17,7 +16,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-import java.lang.annotation.Annotation;
+import com.joyintech.tams.exchange.common.bean.ResultBean;
+import com.joyintech.tams.exchange.common.constant.ErrorCode;
+import com.joyintech.tams.exchange.common.domain.Message;
+
+import cn.hutool.core.util.StrUtil;
 
 @RestControllerAdvice(basePackages = "com.joyintech.tams.exchange")
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -36,6 +39,9 @@ public class ResponseResultBodyAdvice implements ResponseBodyAdvice<Object> {
                                   ServerHttpResponse response) {
         if (body instanceof Message) {
             return body;
+        }
+        if (body instanceof ResultBean) {
+        	return new Message<Object>((ResultBean)body);
         }
         return new Message<Object>(body);
     }

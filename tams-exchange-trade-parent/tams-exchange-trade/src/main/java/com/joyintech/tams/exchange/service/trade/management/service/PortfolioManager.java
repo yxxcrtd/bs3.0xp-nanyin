@@ -391,6 +391,9 @@ public class PortfolioManager extends BaseService {
             calculateResponse.setInstructionLeftNum(instruction.getEntrustNum() == 0L ? 0L : instruction.getEntrustLeftAmt().longValue());
             calculateResponse.setInstructionTotalAmt(instruction.getEntrustAmt());
             calculateResponse.setInstructionTotalNum(instruction.getEntrustNum());
+            calculateResponse.setFullPrice(Objects.nonNull(instruction.getFullPrice()) ? instruction.getFullPrice().toString() : BigDecimal.ZERO.toString());
+            calculateResponse.setPriceMode(instruction.getPriceMode());
+            calculateResponse.setAcctNo(instruction.getAcctNo());
 
             // - 计算组合委托额度
             // 数量
