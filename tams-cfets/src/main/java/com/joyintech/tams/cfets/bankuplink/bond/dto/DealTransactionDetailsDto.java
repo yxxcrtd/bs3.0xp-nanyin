@@ -33,6 +33,9 @@ public class DealTransactionDetailsDto {
     @ApiModelProperty(name="quoteRoleType",value="本方角色")
     private String quoteRoleType;
 
+    @ApiModelProperty(name="quoteRoleTypeStr",value="本方角色名称")
+    private String quoteRoleTypeStr;
+
     @ApiModelProperty(name="settleDate",value="成交日期")
     private Date settleDate;
 
@@ -145,6 +148,15 @@ public class DealTransactionDetailsDto {
 
     public void setQuoteRoleType(String quoteRoleType) {
         this.quoteRoleType = quoteRoleType;
+    }
+
+    public String getQuoteRoleTypeStr() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.银行间上行本方角色,
+                this.getQuoteRoleType());
+    }
+
+    public void setQuoteRoleTypeStr(String quoteRoleTypeStr) {
+        this.quoteRoleTypeStr = quoteRoleTypeStr;
     }
 
     public Date getSettleDate() {
