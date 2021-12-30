@@ -147,7 +147,11 @@ public class CfetsInterfReceiveService {
             this.saveIbuQuoteErrlog(ibuQuoteBondDto2.getQuoteId(), param);
 	    	return null;
 		}
-		
+		if(MsgTypeEnum.MSGTYPE_8.getValue().equals(msgType)){
+            IbuQuoteBondDto ibuQuoteBondDto2 = ibuQuoteMapper.selectQuoteBondByKey((String)param.get("clOrdID"));
+            ibuQuoteBondDto.setSecManageAcctId(ibuQuoteBondDto2.getSecManageAcctId());
+            ibuQuoteBondDto.setCreateUser(ibuQuoteBondDto2.getCreateUser());
+        }
 		//报文类型为8客户编号取报价编号
 		if(MsgTypeEnum.MSGTYPE_8.getValue().equals(msgType) && null!=param.get("quoteID")) {// 117 对应报价编号
 			param.put("clOrdID", param.get("quoteID"));
@@ -791,7 +795,11 @@ public class CfetsInterfReceiveService {
             this.saveIbuQuoteErrlog(ibuQuoteBondDto.getQuoteId(), param);
             return null;
         }
-        
+        if(MsgTypeEnum.MSGTYPE_8.getValue().equals(msgType)){
+            IbuQuoteBondDto ibuQuoteBondDto2 = ibuQuoteMapper.selectQuoteBondByKey((String)param.get("clOrdID"));
+            ibuQuoteBondDto.setSecManageAcctId(ibuQuoteBondDto2.getSecManageAcctId());
+            ibuQuoteBondDto.setCreateUser(ibuQuoteBondDto2.getCreateUser());
+        }
         if(MsgTypeEnum.R.getValue().equals(msgType)
                 ||MsgTypeEnum.U32.getValue().equals(msgType)
                 || MsgTypeEnum.U29.getValue().equals(msgType)
