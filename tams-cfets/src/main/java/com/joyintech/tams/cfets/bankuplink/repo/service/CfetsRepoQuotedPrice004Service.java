@@ -590,19 +590,19 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      */
     @Override
     public void doComplete(CfetsRepoDealRegisterQuoteDto entity, OperationType operationType) {
-        CfetsRepoDealDbDto cfetsRepoDealDbDto = prepareEntity(entity, operationType);
+        CfetsRepoDealDbDto cfetsRepoDealDbDto = this.prepareEntity(entity, operationType);
         //删除业务流程数据
-        deleteBussFlowData(entity.getWorkflowId());
+        this.deleteBussFlowData(entity.getWorkflowId());
         //登录db
-        insert(cfetsRepoDealDbDto, operationType);
+        this.insert(cfetsRepoDealDbDto, operationType);
         //履历表
-        updateCfetsOprHis(entity.getTotleTradeId(), operationType);
+        this.updateCfetsOprHis(entity.getTotleTradeId(), operationType);
         //头寸
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
             PositionHttpRequest.sendRevoke(cfetsRepoDealDbDto.getRegFinProductDealTotal().getTotleTradeId(), DictCodeListExt1.子系统代码_交易.getValue(), "REPO001");
         }
         //处理指令执行进度
-        insertEtrFinishStatus(cfetsRepoDealDbDto, operationType);
+        this.insertEtrFinishStatus(cfetsRepoDealDbDto, operationType);
     }
 
 
@@ -669,7 +669,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             entity.setRate(ArithmeticUtil.divide(entity.getPrice(), new BigDecimal(100), 6, RoundingMode.HALF_UP));
             //托管机构
             String repRegistOrg = StringUtil.EMPTY;
-            if (StringUtil.isNotEmpty(entity.getRepoEntrustPledgeDtos())) {
+            if (CollectionUtils.isNotEmpty(entity.getRepoEntrustPledgeDtos())) {
                 repRegistOrg = entity.getRepoEntrustPledgeDtos().get(0).getRepRegistOrg();
             }
             Long settleSpreed = 0L;
@@ -740,6 +740,10 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     regFinProductDeal.setDisFaceValue(ptlAllocatio.getConvertAmt());// 折算券面总额
                     regFinProductDeal.setTgBusiType(tgBusiType);// 业务类型
                     regFinProductDeal.setSettleSpeed(settleSpreed);// 清算速度
+                    regFinProductDeal.setSettleDate(entity.getvSettleDate());//结算日
+                    regFinProductDeal.setTradeMarket(DictCodeListExt1.交易场所_银行间.getValue());//交易场所
+                    regFinProductDeal.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());//交易市场
+                    regFinProductDeal.setSecManageAcctId(ptlAllocatio.getSecManageAcctId());//证券账户
                     if (null != ptlAllocatio.getDealFeeAmt()) {//交易手续费
                         regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(
                                 regFinProductDeal.getTradeId(), BussinessDictCodeList.费用类型_交易手续费.getValue(), ptlAllocatio.getDealFeeAmt()));
@@ -844,6 +848,14 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         total.setBranch(0L);
         total.setFinprodType2(finprodType2);
         total.setTgBusiType(tgBusiType);
+        if (StringUtil.isNotEmpty(entity.getSecManageAcctId())) {
+            total.setSecManageAcctId(entity.getSecManageAcctId());
+        } else if (CollectionUtils.isNotEmpty(entity.getPtlAllocations())) {
+            total.setSecManageAcctId(entity.getPtlAllocations().get(0).getSecManageAcctId());
+        }
+        total.setSettleDate(entity.getSettlementStartDate());
+        total.setTradeMarket(DictCodeListExt1.交易场所_银行间.getValue());
+        total.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
         return total;
     }
 
