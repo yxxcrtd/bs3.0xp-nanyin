@@ -15,6 +15,8 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
+import com.joyintech.system.base.dao.SysWflBusinessListMapper;
+import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
@@ -114,7 +116,8 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
 
    @Autowired(required = false)
     private WflEtrEntrustMapper wflEtrEntrustMapper;
-
+    @Autowired
+    private SysWflBusinessListMapper sysWflBusinessListMapper;
 
 
 
@@ -403,7 +406,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         }
         if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
             boolean isSubmit = true;
-            for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
+           /* for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
                 WflEtrEntrustKey wflEtrEntrustKey = new WflEtrEntrustKey();
                 wflEtrEntrustKey.setEntrustId(dto.getEntrustId());
                 wflEtrEntrustKey.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
@@ -411,6 +414,10 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                 if(wflEtrEntrust != null) {
                     isSubmit = false;
                 }
+            }*/
+            SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
+            if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
+                isSubmit = false;
             }
             WFlowCommonService.deleteFlow(entity.getWorkflowId());
             for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
