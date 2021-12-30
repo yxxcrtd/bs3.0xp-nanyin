@@ -66,7 +66,8 @@
         A1.CON_PRICE conPrice,
         A1.CON_AMT conAmt,
         A1.R_FINPROD_ID rFinMarketId,
-        E1.FINPROD_ID  rFinprodId
+        E1.FINPROD_ID  rFinprodId,
+        A.F_CJBH fCjbh
         from SETTLE_TRANS_DATA_TOTAL A
         LEFT JOIN SETTLE_TRANS_DATA_TOTAL_STATUS B
         ON A.SEQ_ID = B.SEQ_NO

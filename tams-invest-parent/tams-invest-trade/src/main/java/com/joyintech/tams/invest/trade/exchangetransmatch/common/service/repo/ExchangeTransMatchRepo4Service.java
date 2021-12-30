@@ -97,7 +97,11 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
 
         // 交易编号，按现有的交易编号生成规则，自动生成
         BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
-        bussinessCodeParameter.setCommonBusinessType(DictCodeListExt3.共通业务类型_协议回购到期续做指令);
+        if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(), dealDto.getFinprodType2())) {
+            bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_正回购录入);
+        }   else {
+            bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_逆回购录入);
+        }
         dealTotal.setTotleTradeId(baseGetBusinessId.buildBussinessCode(bussinessCodeParameter));
         // 业务类型
         dealTotal.setBusiType(DictCodeList.共通业务类型_质押式回购存续期.getValue());
@@ -215,7 +219,11 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
             TrdProductDealDto trdProductDeal = new TrdProductDealDto();
             // 交易编号，按现有的交易编号生成规则，自动生成
             BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
-            bussinessCodeParameter.setCommonBusinessType(DictCodeListExt3.共通业务类型_协议回购到期续做指令);
+            if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(), dealDto.getFinprodType2())) {
+                bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_正回购录入);
+            }   else {
+                bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_逆回购录入);
+            }
             trdProductDeal.setTradeId(baseGetBusinessId.buildBussinessCode(bussinessCodeParameter));
             //金融产品代码 : 交易方向 = 买入时同交易编号，否则为交易明细.金融产品代码
             if(StringUtil.equals(settleTransData.getPs(),DictCodeList.交易方向_买入.getValue())) {
