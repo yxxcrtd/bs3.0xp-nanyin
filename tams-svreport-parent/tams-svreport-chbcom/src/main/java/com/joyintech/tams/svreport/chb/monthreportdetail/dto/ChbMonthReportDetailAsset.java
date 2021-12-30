@@ -116,7 +116,7 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
         this.exerciseDate = exerciseDate;
     }
 
-    public String getOpenplanStr(){return DateUtil.format(this.getExerciseDate(),"yyyy-MM-dd");}
+    public String getOpenplanStr(){return DateUtil.format(this.getOpenplan(),"yyyy-MM-dd");}
 
     public String getVdateStr() {
         return DateUtil.format(this.getVdate(),"yyyy-MM-dd");
@@ -222,7 +222,7 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
     }
     public String getCostAmtBStr(){
         //人行月报资产端成本已经是包含了利息调整了，需求把利息调整又单独列出来，然后余额写的是成本+利息调整，这样的话利息调整会统计重复？  成本直接减去利息调整进行展示
-        return null!=this.getCostAmtB()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmtB()):null;
+        return null!=this.getCostAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmt()):null;
     }
 
 

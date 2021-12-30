@@ -120,6 +120,8 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
         return DateUtil.format(this.getMdate(),"yyyy-MM-dd");
     }
 
+    public String getOpenplanStr(){return DateUtil.format(this.getOpenplan(),"yyyy-MM-dd");}
+
     public String getRateStr(){
         return null!=this.getRate()?this.getRate()+"%":null;
     }

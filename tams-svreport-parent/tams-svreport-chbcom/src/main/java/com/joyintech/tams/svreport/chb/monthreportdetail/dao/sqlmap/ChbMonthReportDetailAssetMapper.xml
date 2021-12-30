@@ -171,7 +171,7 @@
         p.is_Fbhy isFbhy,
         P.pppflag,
         p.MONIT_TYPE monitType,
-        CASE WHEN AP.MDATE != I.MDATE THEN AP.MDATE END openplan
+        CASE WHEN AP.MDATE != I.MDATE and  I.MDATE is not null THEN AP.MDATE END openplan
         FROM CHB_MONTH_ASSET_POSITIONDETAIL P
         LEFT JOIN CHB_ASSET_INFO I ON P.ASSET_CODE = I.ASSET_CODE
         LEFT JOIN CHB_ASSET_INFO IA ON IA.ASSET_CODE = P.OLD_ASSET_CODE
