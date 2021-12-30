@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.hutool.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,13 +167,9 @@ public class InstructionController {
         if (Strings.isNullOrEmpty(expireIncomeRateBean.getInvAim())) {
             throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "投资目的不可以为空");
         }
-        if (Strings.isNullOrEmpty(expireIncomeRateBean.getTradeMarketMode())) {
-            throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "交易市场不可以为空");
-        }
-        if (!BussinessDictCodeList.交易市场_一级市场.getValue().equals(expireIncomeRateBean.getTradeMarketMode()) &&
-                !BussinessDictCodeList.交易市场_二级市场.getValue().equals(expireIncomeRateBean.getTradeMarketMode())) {
-            throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "交易市场不正确");
-        }
+//        if (Strings.isNullOrEmpty(expireIncomeRateBean.getTradeMarketMode())) {
+//            throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "交易市场不可以为空");
+//        }
         if (Objects.isNull(expireIncomeRateBean.getTradeAmt())) {
             throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "券面总额不可以为空");
         }
@@ -180,7 +177,14 @@ public class InstructionController {
             throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "券面总额不可以小于等于0");
         }*/
         if (Objects.isNull(expireIncomeRateBean.getUnitCprice())) {
-            throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "净价不可以为空");
+            expireIncomeRateBean.setUnitCprice(0d);
+//            throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "净价不可以为空");
+        }
+        if (Objects.isNull(expireIncomeRateBean.getFpriceAmt())) {
+            expireIncomeRateBean.setFpriceAmt(0d);
+        }
+        if (Objects.isNull(expireIncomeRateBean.getYield())) {
+            expireIncomeRateBean.setYield(0d);
         }
         /*if (  expireIncomeRateBean.getUnitCprice() <= 0) {
             throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "净价不可以小于等于0");
@@ -194,21 +198,22 @@ public class InstructionController {
         pageParam.put("tradeAmt", expireIncomeRateBean.getTradeAmt());
         pageParam.put("fpriceAmt", expireIncomeRateBean.getFpriceAmt());
         pageParam.put("yield", expireIncomeRateBean.getYield());
-        pageParam.put("tradeMarketMode", expireIncomeRateBean.getTradeMarketMode());
         pageParam.put("unitCprice", expireIncomeRateBean.getUnitCprice());
+        pageParam.put("tradeMarketMode", "02");
 
-
-        LOGGER.info("params:{}", pageParam);
         String url = TradeServiceURL.expireIncomeRate;
         //净价
         if (calculateType == 1) {
             url = TradeServiceURL.unitCprice;
         } else if (calculateType == 2) {
             url = TradeServiceURL.fpriceAmt;
+        } else if (calculateType == 3) {
+            url = TradeServiceURL.yield;
         }
         url = ServiceApplication.TRADE_SERVICE_NAME + url;
+        LOGGER.debug("调用投管接口：url:{}, param:{}", url, JSONUtil.toJsonStr(pageParam));
         ExpireIncomeRateRet expireIncomeRateRet = restTemplate.postForObject(url, pageParam, ExpireIncomeRateRet.class);
-        LOGGER.info("ExpireIncomeRateRet:{}", JSONObject.toJSONString(expireIncomeRateRet));
+        LOGGER.debug("ExpireIncomeRateRet:{}", JSONObject.toJSONString(expireIncomeRateRet));
         return new Message<ExpireIncomeRateRet>(expireIncomeRateRet);
     }
 }
