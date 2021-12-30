@@ -124,6 +124,10 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
     private String businessId;
 
     /**
+     * 交易手续费
+     */
+    private BigDecimal dealFeeAmt;
+    /**
      * 结算服务费
      */
     private BigDecimal  settFeeAmt;
@@ -515,6 +519,14 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
 
     public void setSecManageAvailablePosition(BigDecimal secManageAvailablePosition) {
         this.secManageAvailablePosition = secManageAvailablePosition;
+    }
+
+    public BigDecimal getDealFeeAmt() {
+        return dealFeeAmt;
+    }
+
+    public void setDealFeeAmt(BigDecimal dealFeeAmt) {
+        this.dealFeeAmt = dealFeeAmt;
     }
 
     public BigDecimal getSettFeeAmt() {
