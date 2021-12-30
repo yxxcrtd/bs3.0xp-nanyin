@@ -355,6 +355,8 @@
                 object.tradePlat = item.tradePlat;
                 object.dealDate = new Date(item.dealDate).format('yyyy-MM-dd');
                 object.secAccount = item.secAcctNo;
+                object.repoType = item.repoType;
+                object.remainNum = item.remainNum;
 
                 Joyin.ajaxJson(JoyinUtil.getRealPath('invest/trade/exchangetransmatch/ExchangeTransMatch001/matchSearch'),object,function (result) {
                     if(result) {
