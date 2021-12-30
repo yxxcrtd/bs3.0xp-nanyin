@@ -40,3 +40,69 @@ ALTER TABLE ETR_ENTRUST_DETAIL ADD CONSTRAINT SYS_C0052611 CHECK (CREATE_USER IS
 ALTER TABLE ETR_ENTRUST_DETAIL ADD CONSTRAINT SYS_C0052612 CHECK (CREATE_TIME IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE ETR_ENTRUST_DETAIL ADD CONSTRAINT SYS_C0052613 CHECK (UPDATE_USER IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE ETR_ENTRUST_DETAIL ADD CONSTRAINT SYS_C0052614 CHECK (UPDATE_TIME IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+
+/*委托指令明细流程表*/
+drop table WFL_ETR_ENTRUST_DETAIL cascade constraints;
+
+/*==============================================================*/
+/* Table: WFL_ETR_ENTRUST_DETAIL                                */
+/*==============================================================*/
+create table WFL_ETR_ENTRUST_DETAIL
+(
+    ENTRUST_ID           VARCHAR(32)          not null,
+    PORTFOLIO_ID         VARCHAR(32)          not null,
+    DIS_RATE             NUMERIC(30, 14),
+    ENTRUST_AMT          NUMERIC(30, 2),
+    ENTRUST_NUM          NUMERIC(30, 4),
+    TARGET_TYPE          VARCHAR(50),
+    WORKFLOW_STATUS      VARCHAR(50)          not null,
+    WORKFLOW_ID          VARCHAR(32),
+    CREATE_USER          VARCHAR(20)          not null,
+    CREATE_DEPT          VARCHAR(32),
+    CREATE_TIME          TIMESTAMP            not null,
+    UPDATE_USER          VARCHAR(20)          not null,
+    UPDATE_TIME          TIMESTAMP            not null,
+    constraint PK_WFL_ETR_ENTRUST_DETAIL primary key (ENTRUST_ID, PORTFOLIO_ID, WORKFLOW_STATUS)
+);
+
+comment on table WFL_ETR_ENTRUST_DETAIL is
+'委托指令明细流程表';
+
+comment on column WFL_ETR_ENTRUST_DETAIL.ENTRUST_ID is
+'委托代码';
+
+comment on column WFL_ETR_ENTRUST_DETAIL.PORTFOLIO_ID is
+'组合代码';
+
+comment on column WFL_ETR_ENTRUST_DETAIL.DIS_RATE is
+'分配比例';
+
+comment on column WFL_ETR_ENTRUST_DETAIL.ENTRUST_AMT is
+'委托金额，交易金额';
+
+comment on column WFL_ETR_ENTRUST_DETAIL.ENTRUST_NUM is
+'委托数量，数量或者券面总额/100';
+
+comment on column WFL_ETR_ENTRUST_DETAIL.TARGET_TYPE is
+'目标类型，金额，数量';
+
+comment on column WFL_ETR_ENTRUST_DETAIL.WORKFLOW_STATUS is
+'数据状态';
+
+comment on column WFL_ETR_ENTRUST_DETAIL.WORKFLOW_ID is
+'工作流代码';
+
+comment on column WFL_ETR_ENTRUST_DETAIL.CREATE_USER is
+'创建人';
+
+comment on column WFL_ETR_ENTRUST_DETAIL.CREATE_DEPT is
+'创建部门';
+
+comment on column WFL_ETR_ENTRUST_DETAIL.CREATE_TIME is
+'创建时间';
+
+comment on column WFL_ETR_ENTRUST_DETAIL.UPDATE_USER is
+'更新人';
+
+comment on column WFL_ETR_ENTRUST_DETAIL.UPDATE_TIME is
+'更新时间';
