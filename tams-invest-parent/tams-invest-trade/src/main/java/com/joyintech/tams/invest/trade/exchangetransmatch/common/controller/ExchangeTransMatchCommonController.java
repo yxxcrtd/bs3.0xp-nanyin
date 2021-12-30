@@ -27,6 +27,10 @@ public class ExchangeTransMatchCommonController {
     @ResponseBody
     @PostMapping("transactionMacthBatch")
     public void transactionMacthBatch(@RequestBody ExchangeTransMatchCommonParamDto paramDto){
+        if (paramDto != null && !StringUtil.isEmptyList(paramDto.getNeedUpdateStatusEntrustIdList())) {
+            exchangeTransMatchCommonService.updateEntrustStatus(paramDto.getNeedUpdateStatusEntrustIdList());
+        }
+
         if (paramDto == null || StringUtil.isEmptyList(paramDto.getParamDataList())) {
             return;
         }

@@ -1002,9 +1002,11 @@ public class StlDataGatherService {
         return 回购利息;
     }
 
-    public void transactionMacthBatch(List<ExchangeTransMatchCommonDto> dtoList) {
+    public void transactionMacthBatch(List<ExchangeTransMatchCommonDto> dtoList,
+                                      List<String> needUpdateStatusEntrustIdList) {
         ExchangeTransMatchCommonParamDto paramDto = new ExchangeTransMatchCommonParamDto();
         paramDto.setParamDataList(dtoList);
+        paramDto.setNeedUpdateStatusEntrustIdList(needUpdateStatusEntrustIdList);
 
         // 调用债券交易计算逻辑
         if(isSingle) {

@@ -32,4 +32,14 @@ public class ExchangeTransMatchCommonParamDto extends BaseEntity {
     public void setRevokeDataList(List<SettleTransDataTotalMatch> revokeDataList) {
         this.revokeDataList = revokeDataList;
     }
+
+    private List<String> needUpdateStatusEntrustIdList;
+
+    public List<String> getNeedUpdateStatusEntrustIdList() {
+        return needUpdateStatusEntrustIdList;
+    }
+
+    public void setNeedUpdateStatusEntrustIdList(List<String> needUpdateStatusEntrustIdList) {
+        this.needUpdateStatusEntrustIdList = needUpdateStatusEntrustIdList;
+    }
 }

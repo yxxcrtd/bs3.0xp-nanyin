@@ -160,6 +160,8 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                         || StringUtil.equals(DictCodeListExt2.交易方向_配股.getValue(), x.getPs())
                 )
             ).collect(Collectors.toList());
+
+        List<String> needUpdateStatusEntrustIdList = new ArrayList<>();
         // modify by etliu 20211227 end
 
         List<ExchangeTransMatchCommonDto>  exchangeTransMatchCommons = new ArrayList<>();
@@ -184,6 +186,8 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                     // ZGZGST-4158: 重新跑清结算的批处理后，结算数据与当天全部的场内指令进行了自动匹配
 //                    exchangeTransMatchCommonDto.setEntrustIdList(Arrays.asList(etrEntrustDtos.get(0).getEntrustId()));
                     exchangeTransMatchCommonDto.setEntrustIdList(Arrays.asList(settleTransDataDto.getEntrustId()));
+
+                    needUpdateStatusEntrustIdList.add(settleTransDataDto.getEntrustId());
                     // modify by etliu 20211210 end
                 }else{
                     if(DictCodeList.回购类型_质押式协议回购.getValue().equals(settleTransDataDto.getRepoType())){
@@ -195,11 +199,14 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                         if(currEtrEntrustList.size()==1){
                             if(null!=settleTransDataDto.getShareAmt()&&settleTransDataDto.getShareAmt().compareTo(currEtrEntrustList.get(0).getEntrustAmt())<=0){
                                 exchangeTransMatchCommonDto.setEntrustIdList(Arrays.asList(currEtrEntrustList.get(0).getEntrustId()));
+
+                                needUpdateStatusEntrustIdList.add(currEtrEntrustList.get(0).getEntrustId());
                             }
                         }
                         if(currEtrEntrustList.size()>1){
                             List<String> entrustIds = Lists.newArrayList();
                             for(EtrEntrustDto currEtrEntrust : currEtrEntrustList){
+                                needUpdateStatusEntrustIdList.add(currEtrEntrust.getEntrustId());
                                 if(null!=settleTransDataDto.getShareAmt()&&settleTransDataDto.getShareAmt().compareTo(currEtrEntrust.getEntrustAmt())<=0){
                                     entrustIds.add(currEtrEntrust.getEntrustId());
                                 }
@@ -220,9 +227,12 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                         }
                         if(currEtrEntrustList.size()==1){
                             exchangeTransMatchCommonDto.setEntrustIdList(Arrays.asList(currEtrEntrustList.get(0).getEntrustId()));
+                            needUpdateStatusEntrustIdList.add(currEtrEntrustList.get(0).getEntrustId());
                         }
                         if(currEtrEntrustList.size()>1){
                             List<String> entrustIds = currEtrEntrustList.stream().map(e -> e.getEntrustId()).collect(Collectors.toList());
+                            needUpdateStatusEntrustIdList.addAll(entrustIds);
+
                             //委托数量汇总
                             BigDecimal entrustNumTotal = currEtrEntrustList.stream().map(EtrEntrustDto::getEntrustNum).reduce(BigDecimal.ZERO, BigDecimal::add);
                             if(null!=settleTransDataDto.getShareAmt()&&settleTransDataDto.getShareAmt().compareTo(entrustNumTotal)>=0){
@@ -246,10 +256,10 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
         // modify by etliu 20211227 start
         // GZYHTZJY-777:回售交易当日无法得到成交的清算数据，导致无法匹配到对应的上行委托或指令
         // 债回售、可转债申购、新股申购、配债、配股需要特殊处理
-        this.handleSpecailTrade(specailSettleTransDataList, exchangeTransMatchCommons);
+        this.handleSpecailTrade(specailSettleTransDataList, exchangeTransMatchCommons, needUpdateStatusEntrustIdList);
         // modify by etliu 20211227 end
 
-        stlDataGatherService.transactionMacthBatch(exchangeTransMatchCommons);
+        stlDataGatherService.transactionMacthBatch(exchangeTransMatchCommons, needUpdateStatusEntrustIdList);
     }
 
     // modify by etliu 20211227 start
@@ -257,9 +267,11 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
      * 债回售、可转债申购、新股申购、配债、配股需要特殊处理
      * @param specailSettleTransDataList
      * @param exchangeTransMatchCommons
+     * @param needUpdateStatusEntrustIdList
      */
     private void handleSpecailTrade (List<SettleTransDataDto> specailSettleTransDataList,
-                                     List<ExchangeTransMatchCommonDto>  exchangeTransMatchCommons) {
+                                     List<ExchangeTransMatchCommonDto>  exchangeTransMatchCommons,
+                                     List<String> needUpdateStatusEntrustIdList) {
         if (StringUtil.isEmptyList(specailSettleTransDataList)) {
             return;
         }
@@ -299,7 +311,7 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                     List<EtrEntrustDto> resulstEntrustList = currEntrustList.stream().filter(x -> DateUtil.compareTo(x.getEntrustDate(), currFinExercisePlan.getVdate()) >= 0
                         && DateUtil.compareTo(x.getEntrustDate(), currFinExercisePlan.getMdate()) <= 0).collect(Collectors.toList());
 
-                    this.handleMatch(settleTransDataDto, resulstEntrustList, exchangeTransMatchCommons);
+                    this.handleMatch(settleTransDataDto, resulstEntrustList, exchangeTransMatchCommons, needUpdateStatusEntrustIdList);
                 }
             }
         }
@@ -319,7 +331,7 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                 String busiKey = StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(),settleTransDataDto.getTradePlat(),settleTransDataDto.getPs()),"_");
                 if (etrEntrustMap.containsKey(busiKey)) {
                     List<EtrEntrustDto> currEntrustList = etrEntrustMap.get(busiKey);
-                    this.handleMatch(settleTransDataDto, currEntrustList, exchangeTransMatchCommons);
+                    this.handleMatch(settleTransDataDto, currEntrustList, exchangeTransMatchCommons, needUpdateStatusEntrustIdList);
                 }
             }
         }
@@ -346,7 +358,7 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                     List<EtrEntrustDto> resulstEntrustList = currEntrustList.stream().filter(x -> DateUtil.compareTo(x.getEntrustDate(), currFinProductOthCode.getDeclaredStartDate()) >= 0
                             && DateUtil.compareTo(x.getEntrustDate(), currFinProductOthCode.getDeclaredEndDate()) <= 0).collect(Collectors.toList());
 
-                    this.handleMatch(settleTransDataDto, resulstEntrustList, exchangeTransMatchCommons);
+                    this.handleMatch(settleTransDataDto, resulstEntrustList, exchangeTransMatchCommons, needUpdateStatusEntrustIdList);
                 }
             }
         }
@@ -357,8 +369,12 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
      * @param settleTransDataDto 结算数据
      * @param currEtrEntrustList 指令数据
      * @param exchangeTransMatchCommons 匹配结果列表
+     * @param needUpdateStatusEntrustIdList
      */
-    private void handleMatch(SettleTransDataDto settleTransDataDto, List<EtrEntrustDto> currEtrEntrustList, List<ExchangeTransMatchCommonDto> exchangeTransMatchCommons) {
+    private void handleMatch(SettleTransDataDto settleTransDataDto,
+                             List<EtrEntrustDto> currEtrEntrustList,
+                             List<ExchangeTransMatchCommonDto> exchangeTransMatchCommons,
+                             List<String> needUpdateStatusEntrustIdList) {
         if (settleTransDataDto == null || StringUtil.isEmptyList(currEtrEntrustList)) {
             return;
         }
@@ -372,9 +388,13 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
 
         if(currEtrEntrustList.size() == 1){
             exchangeTransMatchCommonDto.setEntrustIdList(Arrays.asList(currEtrEntrustList.get(0).getEntrustId()));
+            needUpdateStatusEntrustIdList.add(currEtrEntrustList.get(0).getEntrustId());
         }
         if(currEtrEntrustList.size() > 1){
             List<String> entrustIds = currEtrEntrustList.stream().map(e -> e.getEntrustId()).collect(Collectors.toList());
+
+            needUpdateStatusEntrustIdList.addAll(entrustIds);
+
             //委托数量汇总
             BigDecimal entrustNumTotal = currEtrEntrustList.stream().map(EtrEntrustDto::getEntrustNum).reduce(BigDecimal.ZERO, BigDecimal::add);
             if(null!=settleTransDataDto.getShareAmt()&&settleTransDataDto.getShareAmt().compareTo(entrustNumTotal)>=0){

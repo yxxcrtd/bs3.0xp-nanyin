@@ -136,4 +136,11 @@ public interface ExchangeTransMatchCommonMapper {
      * @return
      */
     int deleteSettleDataTotalPledgeMatch(Map<String, Object> paraMap);
+
+    /**
+     * 批量更新指令状态
+     * @param paraMap
+     * @return
+     */
+    int updateEntrustStatus(Map<String, Object> paraMap);
 }

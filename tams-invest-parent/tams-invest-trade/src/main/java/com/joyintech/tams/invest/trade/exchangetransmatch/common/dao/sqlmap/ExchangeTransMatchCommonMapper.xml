@@ -248,4 +248,16 @@
          WHERE SEQ_NO = #{seqNo}
            AND ENTRUNST_TRADE_ID = #{entrustId}
     </delete>
+
+    <update id="updateEntrustStatus">
+        update
+            ETR_ENTRUST
+        set
+            ENTRUST_STATUS = #{entrustStatus}
+        where
+            ENTRUST_ID in
+            <foreach collection="entrustIdList" item="entrustId" open=" (" close=")" separator=",">
+                #{entrustId,jdbcType=VARCHAR}
+            </foreach>
+    </update>
 </mapper>

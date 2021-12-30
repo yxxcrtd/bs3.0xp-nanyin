@@ -1546,4 +1546,35 @@ public class ExchangeTransMatchCommonService extends BaseService {
 
         return matchStatus;
     }
+
+    /**
+     * 更新指令状态为已接收
+     * @param needUpdateStatusEntrustIdList
+     */
+    public void updateEntrustStatus(List<String> needUpdateStatusEntrustIdList) {
+        if (StringUtil.isEmptyList(needUpdateStatusEntrustIdList)) {
+            return;
+        }
+
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("entrustStatus", DictCodeList.委托状态_已接收.getValue());
+
+        int oneTimeCount = 100;
+        int grps = needUpdateStatusEntrustIdList.size() / oneTimeCount;
+        int idx = 0;
+
+        for ( int i = 0; i < grps; i++ ) {
+            List<String> list1 = needUpdateStatusEntrustIdList.subList(idx, idx + oneTimeCount);
+            if ( list1.size() > 0 ) {
+                paramMap.put("entrustIdList", list1);
+                exchangeTransMatchCommonMapper.updateEntrustStatus(paramMap);
+            }
+            idx += oneTimeCount;
+        }
+        List<String> list2 = needUpdateStatusEntrustIdList.subList(idx, needUpdateStatusEntrustIdList.size());
+        if ( list2.size() > 0 ) {
+            paramMap.put("entrustIdList", list2);
+            exchangeTransMatchCommonMapper.updateEntrustStatus(paramMap);
+        }
+    }
 }
