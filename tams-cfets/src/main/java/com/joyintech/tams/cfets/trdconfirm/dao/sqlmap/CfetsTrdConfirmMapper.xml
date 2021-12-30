@@ -1006,7 +1006,7 @@
         on nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON reg.counter_id= mccic.party_id
 
-        where 1=1  and reg.ps in ('T01','T02','03','04')
+        where 1=1  and reg.trade_date= #{sysDate,jdbcType=DATE} and reg.ps in ('T01','T02','03','04')
         <if test="userId != null and userId != ''">
             and m.create_user= #{userId}
         </if>
@@ -1142,6 +1142,7 @@
         on nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON nvl(ib.cp_party_id,ic.cp_party_id)= mccic.party_id
         where ct.BUSINESSTYPE in ('BOND','REPO')  and (ic.quote_id is not null or ib.quote_id is not null)
+        and nvl(ib.quote_date,ic.quote_date)=#{sysDate,jdbcType=DATE}
         <if test="userId != null and userId != ''">
             and m.create_user= #{userId}
         </if>
