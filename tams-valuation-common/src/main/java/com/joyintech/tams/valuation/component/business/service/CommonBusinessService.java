@@ -127,4 +127,16 @@ public class CommonBusinessService {
         return commonBusinessMapper.getProdId(param);
     }
 
+    /**
+     * 资金账户信息
+     * @param param 画面参数
+     * @return 组合代码：下拉框
+     * @see
+     * @since 1.0
+     */
+    public List<SelectOptionDto> getTrdAcctId(Map<String, Object> param) {
+        List<SelectOptionDto> resultList = commonBusinessMapper.getTrdAcctId(param);
+        return resultList;
+    }
+
 }

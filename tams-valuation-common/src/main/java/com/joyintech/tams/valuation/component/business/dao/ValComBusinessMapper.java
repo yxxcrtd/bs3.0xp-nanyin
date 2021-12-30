@@ -55,4 +55,13 @@ public interface ValComBusinessMapper {
      */
     List<SelectOptionDto> getProdId(Map<String, Object> pageParam);
 
+    /**
+     * 资金账户信息
+     * @param param 参数
+     * @return 债券交易列表
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> getTrdAcctId(Map<String, Object> param);
+
 }
