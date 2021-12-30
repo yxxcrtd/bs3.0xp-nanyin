@@ -712,8 +712,11 @@ public class ExchangeTransMatchCommonService extends BaseService {
             settleDataTotalPledgeMatch.setMarchQty(etrEntrust.getMarchQty());
             //已匹配金额
             settleDataTotalPledgeMatch.setMarchAmt(null);
-            //指令已分配份额
-            settleDataTotalPledgeMatch.setMarchQtyEn(ArithmeticUtil.divide(etrEntrust.getMarchQtyEn(),etrEntrust.getPrice(),2));
+            // GZYHTZJY-969:MarchQty = MarchQtyEn modify by fuyongsheng 20211230 start
+            //指令已分配份额(MarchQty = MarchQtyEn)
+            // settleDataTotalPledgeMatch.setMarchQtyEn(ArithmeticUtil.divide(etrEntrust.getMarchQtyEn(),etrEntrust.getPrice(),2));
+            settleDataTotalPledgeMatch.setMarchQtyEn(etrEntrust.getMarchQty());
+            // GZYHTZJY-969:MarchQty = MarchQtyEn modify by fuyongsheng 20211230 end
             //指令已分配金额
             settleDataTotalPledgeMatch.setMarchAmtEn(null);
             //置换方向
