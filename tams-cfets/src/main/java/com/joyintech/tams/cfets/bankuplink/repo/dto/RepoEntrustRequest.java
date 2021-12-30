@@ -13,7 +13,7 @@ import java.util.List;
  * @author jiangpeng
  * @date 2021/12/9 16:00
  */
-@ApiModel(value = "指令列表查询条件", description = "本币业务交易-质押式回购指令列表查询条件")
+@ApiModel(value = "查询条件", description = "本币业务交易-质押式回购指令列表、当日登记、当日报价查询条件")
 public class RepoEntrustRequest {
 
     @ApiModelProperty(name = "pageMode", value = "分页对象", example = "{pageSize: 10,pageNo: 1, sort: 'portfolioId', direction: 'asc'}")
@@ -61,10 +61,10 @@ public class RepoEntrustRequest {
     @ApiModelProperty(name = "quoteTypes", value = "报价方式List", example = "['A']")
     private List<String> quoteTypes;
 
-    @ApiModelProperty(name = "quoteId", value = "业务编号", example = "A")
+    @ApiModelProperty(name = "quoteId", value = "业务编号/报价编号", example = "A")
     private String quoteId;
 
-    @ApiModelProperty(name = "quoteIds", value = "业务编号List", example = "['A']")
+    @ApiModelProperty(name = "quoteIds", value = "业务编号/报价编号List", example = "['A']")
     private List<String> quoteIds;
 
     @ApiModelProperty(name = "search", value = "关键词", example = "xxx")
@@ -78,6 +78,9 @@ public class RepoEntrustRequest {
 
     @ApiModelProperty(name = "cpTraderNameList", value = "对手方交易员List", example = "['A']")
     private List<String> cpTraderNameList;
+
+    @ApiModelProperty(name = "dayOfferStatus", value = "成交状态 whole undo done", example = "whole")
+    private String dayOfferStatus;
 
     public PageMode getPageMode() {
         return pageMode;
@@ -248,4 +251,11 @@ public class RepoEntrustRequest {
         this.cpTraderNameList = cpTraderNameList;
     }
 
+    public String getDayOfferStatus() {
+        return dayOfferStatus;
+    }
+
+    public void setDayOfferStatus(String dayOfferStatus) {
+        this.dayOfferStatus = dayOfferStatus;
+    }
 }

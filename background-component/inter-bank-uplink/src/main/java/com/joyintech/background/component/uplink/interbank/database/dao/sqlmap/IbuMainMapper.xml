@@ -961,6 +961,12 @@ SELECT T.QUOTE_ID,
 			        and TO_CHAR(a.QUOTE_DATE,'yyyy-MM-dd') &lt; = #{endQuoteDate}
 			    </if>
 	            <if test="ps !=null and ps !=''">and a.REPO_PS = #{ps,jdbcType=VARCHAR}</if>
+				<if test="psList != null and psList.size() > 0">
+					and a.REPO_PS in
+					<foreach item="item" index="index" collection="psList" open="(" separator="," close=")">
+						#{item, jdbcType=VARCHAR}
+					</foreach>
+				</if>
 	            <if test="cpPartyId !=null and cpPartyId !=''">and a.CP_PARTY_ID = #{cpPartyId,jdbcType=VARCHAR}</if>
 				<if test="pQuoteIdList != null and pQuoteIdList.size() > 0">
 					and a.P_QUOTE_ID in 

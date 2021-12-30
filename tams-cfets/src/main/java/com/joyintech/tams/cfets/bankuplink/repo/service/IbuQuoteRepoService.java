@@ -280,7 +280,7 @@ public class IbuQuoteRepoService extends BaseService {
         for (RepoEntrustPledgeDto dto : request.getPledgeDtos() == null ? new ArrayList<RepoEntrustPledgeDto>() : request.getPledgeDtos()) {
             finprodIds.add(dto.getFinprodId());
         }
-        setParam(pageParam,2);
+        setParam(pageParam, 2);
         pageParam.put("nofinprodIdList", finprodIds);
         int pageNo = 1;
         int pageSize = 10;
@@ -1149,10 +1149,12 @@ public class IbuQuoteRepoService extends BaseService {
             for (FinExercisePlan finExercisePlan : finExercisePlans) {
                 for (RepoEntrustPledgeDto repoEntrustPledgeDto : request.getRepoEntrustPledgeDtos()) {
                     if (DateUtil.compareTo(finExercisePlan.getExerciseDate(), repoEntrustPledgeDto.getMdate()) < 0) {
-                        result.setMessage("该债券(" + repoEntrustPledgeDto.getBondAbbrName() + ")已做赎回登记，是否确认继续质押", MessageType.确认消息);
+                        result.setMessage("债券" + repoEntrustPledgeDto.getBondCode() +
+                                repoEntrustPledgeDto.getBondAbbrName() + "已做赎回登记，是否确认继续质押", MessageType.确认消息);
                         return result;
                     } else {
-                        result.setMessage("到期结算日大于(" + repoEntrustPledgeDto.getBondAbbrName() + ")赎回登记的理论行权日，不可质押", MessageType.错误消息);
+                        result.setMessage("债券" + repoEntrustPledgeDto.getBondCode() +
+                                repoEntrustPledgeDto.getBondAbbrName() + "已赎回登记，且到期结算日大于等于理论行权日，不可质押", MessageType.错误消息);
                         return result;
                     }
                 }
