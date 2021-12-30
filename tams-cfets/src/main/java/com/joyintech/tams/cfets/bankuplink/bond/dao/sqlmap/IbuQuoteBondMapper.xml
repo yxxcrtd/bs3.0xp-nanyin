@@ -595,7 +595,8 @@
         ELSE a.ENTRUST_ID
         END I_Q_B_ENTRUST_ID,
         a.QUOTE_DATE AS I_Q_B_QUOTE_DATE,
-        a.SETTLE_DATE AS I_Q_B_SETTLE_DATE,
+        /*a.SETTLE_DATE AS I_Q_B_SETTLE_DATE,*/
+        TT2.TRADE_DATE AS I_Q_B_SETTLE_DATE,
         a.SETTLE_SPEED AS I_Q_B_SETTLE_SPEED,
         a.DELIVERY_TYPE AS I_Q_B_DELIVERY_TYPE,
         a.SETT_TYPE AS I_Q_B_SETT_TYPE,
@@ -641,7 +642,8 @@
         b.CALCULATE_FIELD AS I_Q_B_D_CALCULATE_FIELD,
         b.TRADE_STATUS AS I_Q_B_D_TRADE_STATUS,
         b.SEND_STATUS AS I_Q_B_D_SEND_STATUS,
-        b.EXECID AS I_Q_B_D_EXECID,
+        /*b.EXECID AS I_Q_B_D_EXECID, */
+        TT1.TRD_ID AS I_Q_B_D_EXECID,
         b.RE_EFF_TIME AS I_Q_B_D_RE_EFF_TIME,
         b.REMARK AS I_Q_B_D_REMARK,
         b.CREATE_USER AS I_Q_B_D_CREATE_USER,
@@ -822,6 +824,10 @@
         x.cp_trader,
         x.update_time
         ) b on a.QUOTE_ID = b.QUOTE_ID
+        LEFT JOIN TRDQUTO_MATCH_INFO TT1 ON
+        TT1.PRE_TRADE_ID = a.QUOTE_ID
+        LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TT2 ON
+        TT2.TOTLE_TRADE_ID = TT1.TRD_ID
         left join (select f.finprod_id,
         f.FINPROD_ABBR,
         f.FINPROD_NAME,
@@ -939,7 +945,8 @@
         ELSE a.ENTRUST_ID
         END I_Q_B_ENTRUST_ID,
         a.QUOTE_DATE        AS I_Q_B_QUOTE_DATE,
-        a.SETTLE_DATE       AS I_Q_B_SETTLE_DATE,
+        /*a.SETTLE_DATE       AS I_Q_B_SETTLE_DATE,*/
+        TT2.TRADE_DATE       AS I_Q_B_SETTLE_DATE,
         a.SETTLE_SPEED      AS I_Q_B_SETTLE_SPEED,
         a.DELIVERY_TYPE     AS I_Q_B_DELIVERY_TYPE,
         a.SETT_TYPE         AS I_Q_B_SETT_TYPE,
@@ -985,7 +992,8 @@
         b.CALCULATE_FIELD         AS I_Q_B_D_CALCULATE_FIELD,
         b.TRADE_STATUS      AS I_Q_B_D_TRADE_STATUS,
         b.SEND_STATUS       AS I_Q_B_D_SEND_STATUS,
-        b.EXECID            AS I_Q_B_D_EXECID,
+        TT1.TRD_ID I_Q_B_D_EXECID,
+        /*b.EXECID            AS I_Q_B_D_EXECID,*/
         b.RE_EFF_TIME       AS I_Q_B_D_RE_EFF_TIME,
         b.REMARK            AS I_Q_B_D_REMARK,
         b.CREATE_USER       AS I_Q_B_D_CREATE_USER,
@@ -1163,6 +1171,10 @@
         nn.party_id = xx.cp_party_id
 
         ) b on a.QUOTE_ID = b.QUOTE_ID
+        LEFT JOIN TRDQUTO_MATCH_INFO TT1 ON
+        TT1.PRE_TRADE_ID = a.QUOTE_ID
+        LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TT2 ON
+        TT2.TOTLE_TRADE_ID = TT1.TRD_ID
         left join (select f.finprod_id,
         f.FINPROD_ABBR,
         f.FINPROD_NAME,
