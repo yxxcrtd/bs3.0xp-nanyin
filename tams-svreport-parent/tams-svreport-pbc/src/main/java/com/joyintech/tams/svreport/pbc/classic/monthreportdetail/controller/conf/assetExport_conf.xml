@@ -23,14 +23,14 @@
 			<Cell order="19" name="企业规模分类">partyType1Str</Cell>
 			<Cell order="20" name="除回购和拆借外贷款所属地区">buyPlaceStr</Cell>
 			<Cell order="21" name="成本">costAmtStr</Cell>
-			<Cell order="22" name="利息调整">intadjexpAddStr</Cell>
-			<Cell order="23" name="公允价值变动">floatIngplStr</Cell>
-			<Cell order="24" name="减值">lossAmtStr</Cell>
-			<Cell order="25" name="期末余额">amtStr</Cell>
-			<Cell order="26" name="投管一级分类">orgAssetType1Str</Cell>
-			<Cell order="27" name="投管二级分类">orgAssetType2Str</Cell>
-			<Cell order="28" name="投管三级分类">orgAssetType3Str</Cell>
-			<Cell order="29" name="资产负债剩余期限">endDaysType</Cell>
+<!--			<Cell order="22" name="利息调整">intadjexpAddStr</Cell>-->
+			<Cell order="22" name="公允价值变动">floatIngplStr</Cell>
+			<Cell order="23" name="减值">lossAmtStr</Cell>
+			<Cell order="24" name="期末余额">amtStr</Cell>
+			<Cell order="25" name="投管一级分类">orgAssetType1Str</Cell>
+			<Cell order="26" name="投管二级分类">orgAssetType2Str</Cell>
+			<Cell order="27" name="投管三级分类">orgAssetType3Str</Cell>
+			<Cell order="28" name="资产负债剩余期限">endDaysType</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

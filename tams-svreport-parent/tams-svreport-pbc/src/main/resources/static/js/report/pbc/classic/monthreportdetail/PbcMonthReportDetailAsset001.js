@@ -58,7 +58,7 @@ $(function() {
             { title: "除回购和拆借外贷款所属地区", width : 120, field: 'buyPlaceStr',sortField:'buyPlace'},
             { title: "成本", width : 120, field: 'costAmtStr', width : 120,sortField:'costAmt'},
             // { title: "应计利息", width : 120, field: 'intincexpStr', width : 120,sortField:'intincexp'},
-            { title: "利息调整", width : 120, field: 'intadjexpAddStr', width : 120,sortField:'intadjexpAdd'},
+            // { title: "利息调整", width : 120, field: 'intadjexpAddStr', width : 120,sortField:'intadjexpAdd'},
             { title: "公允价值变动", width : 120, field: 'floatIngplStr', width : 120,sortField:'floatIngpl'},
             { title: "减值", width : 120, field: 'lossAmtStr', width : 120,sortField:'lossAmt'},
             { title: "期末余额", width : 120, field: 'amtStr', width : 120,sortField:'amt'},
@@ -106,7 +106,13 @@ $(function() {
     $(function(){
         // 绑定按钮事件
         $('#PbcMonthReportDetailAsset001_btn_search').click(function() {
-            table.load();
+            var param=getSearchParams();
+            if(!param.enddate){
+                Joyin.error("请选择统计日期进行查询！");
+                return;
+            }else{
+                table.load();
+            }
         });
 
         $('#PbcMonthReportDetailAsset001_btn_export').click(function() {

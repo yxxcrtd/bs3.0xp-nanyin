@@ -13,6 +13,7 @@ import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto;
+import com.joyintech.tams.svreport.pbc.common.constants.PbcMonthReportConstants;
 import com.joyintech.tams.svreport.pbc.common.constants.PbcReportProperycode;
 import com.joyintech.tams.svreport.pbc.prod.dto.PbcMonthPrdPostionDto;
 import com.joyintech.tams.svreport.pbc.reportdetail.dao.PbcMonthReportDetailAssetMapper;
@@ -65,7 +66,7 @@ public class PbcMonthReportDetailAssetUtil {
     private static  Map<String, BigDecimal> rateMap = new HashMap<String, BigDecimal>();
 
     /**
-     * 2-1入库处理
+     * 2-1入库处理 -产品
      * @param position
      * @return
      */
@@ -123,7 +124,7 @@ public class PbcMonthReportDetailAssetUtil {
 
 
     /**
-     * 2-1入库处理
+     * 2-1入库处理-资产
      * @param position
      * @return
      */
@@ -153,6 +154,12 @@ public class PbcMonthReportDetailAssetUtil {
                 pbcMonthReportDetailAsset.setOpenplan(assetInfo.getExerciseDate());
             }
             pbcMonthReportDetailAsset.setSubjectName(SubjectName(assetInfo,pbcMonthReportDetailAsset.getOrgAssetType2(),pbcMonthReportDetailAsset.getOrgAssetType1()));
+
+            //2-5取值规则
+            pbcMonthReportDetailAsset.setPartyType1(null);
+            if(pbcMonthReportDetailAsset.getAssetType3()!=null&&PbcMonthReportConstants.PBC_ASSETTYPE3_S05.equals(pbcMonthReportDetailAsset.getAssetType3())){
+                pbcMonthReportDetailAsset.setPartyType1(assetInfo.getInstitSize());
+            }
         }
         //先基本信息,再头寸信息,避免错误覆盖
         BeanUtil.copyPropertiesIgnoreNull(pbcMonthReportDetailAsset,position);
@@ -168,6 +175,9 @@ public class PbcMonthReportDetailAssetUtil {
         pbcMonthReportDetailAsset.setAmt(amt);
 
         pbcMonthReportDetailAsset.setChlId(amtFlag);
+
+
+
 
         if(null!=assetInfoMap.get(position.getAssetCode())){
             pbcMonthReportDetailAsset.setIndustry(null!=assetInfoMap.get(position.getAssetCode()).getIndustry()?
@@ -302,6 +312,12 @@ public class PbcMonthReportDetailAssetUtil {
 
                 detailAsset.setIndustry(loanMap.get(detailAsset.getAssetCode()).getIndustryInfo());
 
+                //2-2限制规则
+                if (PbcMonthReportConstants.POSITION_TYPE_ZC.equals(detailAsset.getPositionType())
+                        &&PbcMonthReportConstants.PBC_ASSETTYPE1_P05.equals(detailAsset.getAssetType1())
+                        && PbcMonthReportConstants.PBC_ASSETTYPE2_R02.equals(detailAsset.getAssetType2())) {
+                    detailAsset.setPartyType1(loanMap.get(detailAsset.getAssetCode()).getEnterpriseScale());
+                }
             }
         }
 

@@ -115,18 +115,21 @@
         P.PRODID,
         PB.PROD_NAME prodName,
         PB.IS_FHXGCP isFhxgcp,
-        CASE WHEN P.DETAILNO IN ('AMT_721000_JNCK','AMT_722000_JWCK') THEN NULL
-            WHEN P.DETAILNO IN ('AMT_790000_YSZK') AND P.CHL_ID IS NOT NULL THEN NULL
-            else P.ASSET_CODE end assetCode,
-        CASE WHEN P.DETAILNO IN ('AMT_721000_JNCK','AMT_722000_JWCK') THEN '现金'
-             WHEN P.DETAILNO IN ('AMT_790000_YSZK') AND P.CHL_ID = '01' THEN '现金'
-             WHEN B.SUBJECT_NAME IS NULL THEN NVL(I.ASSET_NAME,I.ASSET_CODE) ELSE B.SUBJECT_NAME END assetName,
+        CASE WHEN P.DETAILNO IN ('AMT_721000_JNCK', 'AMT_722000_JWCK','AMT_790000_YSZK')
+        and B.SUBJECT_NAME IS not NULL THEN NULL
+        else P.ASSET_CODE end assetCode,
+        CASE WHEN B.SUBJECT_NAME IS NULL THEN NVL(I.ASSET_NAME, I.ASSET_CODE)
+        WHEN P.DETAILNO IN ('AMT_721000_JNCK', 'AMT_722000_JWCK','AMT_790000_YSZK')
+        and B.SUBJECT_NAME IS not NULL THEN '现金'
+        ELSE
+        B.SUBJECT_NAME
+        END assetName,
         I.VDATE,
         I.MDATE,
         /**企业债,取资产基本信息(2-5逻辑)其余取贷款的信息(2-2~2-4逻辑)**/
-        DECODE(P.ASSET_TYPE3,'S05',I.INSTIT_SIZE,P.enterprise_scale) partyType1 ,
-        NVL(MC.CUSTOMER_NAME,P.SUBJECT_NAME) subjectName,
-        DECODE(P.ASSET_TYPE3,'S05',I.INDUSTRY,P.borrower_type) INDUSTRY,
+        P.enterprise_scale partyType1,
+        NVL(MC.CUSTOMER_NAME, P.SUBJECT_NAME) subjectName,
+        P.INDUSTRY INDUSTRY,
         P.borrower_city buyPlace,
         I.ASSET_YIELD RATE,
         P.CCY,

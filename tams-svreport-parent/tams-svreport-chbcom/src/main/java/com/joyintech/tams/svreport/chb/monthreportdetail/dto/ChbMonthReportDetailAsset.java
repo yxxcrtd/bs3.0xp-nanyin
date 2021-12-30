@@ -116,7 +116,7 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
         this.exerciseDate = exerciseDate;
     }
 
-    public String getExerciseDateStr(){return DateUtil.format(this.getExerciseDate(),"yyyy-MM-dd");}
+    public String getOpenplanStr(){return DateUtil.format(this.getExerciseDate(),"yyyy-MM-dd");}
 
     public String getVdateStr() {
         return DateUtil.format(this.getVdate(),"yyyy-MM-dd");

@@ -106,7 +106,13 @@ $(function() {
        $(function(){
            // 绑定按钮事件
            $('#ChbMonthReportDetailProd001_btn_search').click(function() {
-               table.load();
+               var param=getSearchParams();
+               if(!param.enddate){
+                   Joyin.error("请选择统计日期进行查询！");
+                   return;
+               }else{
+                   table.load();
+               }
            });
 
            $('#ChbMonthReportDetailProd001_btn_export').click(function() {

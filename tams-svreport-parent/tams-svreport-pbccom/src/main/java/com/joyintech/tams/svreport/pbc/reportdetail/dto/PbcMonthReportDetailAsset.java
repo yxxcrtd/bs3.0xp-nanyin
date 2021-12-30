@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.pbc.reportdetail.dto;
 
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.ChbMonthAssetPositiondetail;
 import com.joyintech.tams.common.base.entity.ChbMonthPrdPositiondetail;
@@ -125,12 +126,11 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
 
     public String getIndustryStr(){
         String code = SysDataUtil.getNameFromDataDict(DictCode.机构所属行业一级分类, this.getIndustry());
-        return null!=code?code:SysDataUtil.getNameFromDataDict(DictCode.行业门内编码, this.getIndustry());
+        return StringUtil.isNotEmpty(code) ?code:SysDataUtil.getNameFromDataDict(DictCode.行业门内编码, this.getIndustry());
     }
 
     public String getPartyType1Str(){
-        String code = SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, this.getPartyType1());
-        return null!=code?code:SysDataUtil.getNameFromDataDict(DictCode.企业规模, this.getPartyType1());
+        return SysDataUtil.getNameFromDataDict(DictCode.人行月度明细_企业规模, this.getPartyType1());
     }
 
     public String getBuyPlaceStr(){
