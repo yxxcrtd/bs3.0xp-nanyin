@@ -299,7 +299,7 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         // 指令状态
         stlPayOrders.setOrderType(DictCodeListExt1.交易状态_初始.getValue());
         // 投资组合代码
-        stlPayOrders.setPortfolioId(dealDto.getPortfolioId());
+        stlPayOrders.setPortfolioId(entrustDto.getPortfolioId());
         // 理财产品代码
         stlPayOrders.setProdId(trdProductDeal.getFinprodId());
         // 备注
