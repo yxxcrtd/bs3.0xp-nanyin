@@ -1,9 +1,6 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond;
 
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.TrdDealTotalAdd;
 import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
@@ -29,7 +26,11 @@ public class ExchangeTransMatchBond2Service extends ExchangeTransMatchBondCommon
         BeanUtil.copyPropertiesIgnoreNull(trdDealTotalAdd, trdFinProductDealTotal);
         trdDealTotalAdd.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
         trdDealTotalAdd.setPurchModle(DictCodeListExt2.申购方式_网上申购.getValue());
+        trdDealTotalAdd.setPurchType(DictCodeListExt2.申购类型_普通申购.getValue());
         trdDealTotalAdd.setPurchDate(trdFinProductDealTotal.getTradeDate());
+        trdDealTotalAdd.setPurCfmDate(DateUtil.addDay(trdFinProductDealTotal.getTradeDate(),2));
+        trdDealTotalAdd.setPurPayDate(trdDealTotalAdd.getPurCfmDate());
+        trdDealTotalAdd.setDepositAmt(BigDecimal.ZERO);
         trdDealTotalAdd.setPurAmt(trdFinProductDealTotal.getPrinAmt());
         trdDealTotalAdd.setEntrustId(entrustDto.getEntrustId());
 
