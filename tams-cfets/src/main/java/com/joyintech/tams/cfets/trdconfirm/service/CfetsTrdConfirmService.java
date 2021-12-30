@@ -1301,7 +1301,6 @@ public class CfetsTrdConfirmService extends BaseService{
         // 对手方交易员
         entity.setCounterTrader(dtoReg.getCounterTrader());
 
-        entity.setTgBusiType(getPaBussType(dtoReg.getPs()));
         if(StringUtil.equals(dtoReg.getTradeMarket(),DictCodeListExt1.交易场所_银行间.getValue())){
             entity.setTradePlat(DictCodeList.交易平台_外汇交易中心.getValue());
         }else{

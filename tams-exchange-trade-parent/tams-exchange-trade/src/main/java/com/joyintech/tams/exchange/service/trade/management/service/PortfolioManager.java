@@ -393,19 +393,21 @@ public class PortfolioManager extends BaseService {
             calculateResponse.setInstructionTotalNum(instruction.getEntrustNum());
             calculateResponse.setFullPrice(Objects.nonNull(instruction.getFullPrice()) ? instruction.getFullPrice().toString() : BigDecimal.ZERO.toString());
             calculateResponse.setPriceMode(instruction.getPriceMode());
-            calculateResponse.setAcctNo(instruction.getAcctNo());
+            calculateResponse.setAcctNo(instruction.getAcctName());
 
             // - 计算组合委托额度
             // 数量
             BigDecimal volume = ArithmeticUtil.multiply(BigDecimal.valueOf(bean.getEntrustVolume()), new BigDecimal(detail.getDisRate()));
             if (volume.compareTo(BigDecimal.valueOf(minNum)) == 0) {
                 entrustVolume = minNum;
+                entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), bean.getEntrustPrice());
             } else if (volume.compareTo(BigDecimal.valueOf(minNum)) > 0) {
                 entrustVolume = Integer.valueOf(ArithmeticUtil.divide(volume, BigDecimal.valueOf(minStep), 0, RoundingMode.DOWN).multiply(BigDecimal.valueOf(minStep)).toString());
+                entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), bean.getEntrustPrice());
             }
             if ("02".equals(detail.getTargetType())) {
                 entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), price);
-                entrustVolume = 0;
+                entrustVolume = Integer.valueOf(ArithmeticUtil.divide(ArithmeticUtil.divide(entrustAmt, bean.getEntrustPrice(),12), BigDecimal.valueOf(minStep), 0, RoundingMode.DOWN).multiply(BigDecimal.valueOf(minStep)).toString());
             }
             calculateResponse.setEntrustAmt(entrustAmt);
             calculateResponse.setEntrustNum(Long.valueOf(entrustVolume));

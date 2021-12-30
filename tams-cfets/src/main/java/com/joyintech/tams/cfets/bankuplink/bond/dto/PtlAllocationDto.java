@@ -90,6 +90,9 @@ public class PtlAllocationDto {
     @ApiModelProperty(name="secManageAcctIdStr",value="证券账户名称")
     private String secManageAcctIdStr;
 
+    @ApiModelProperty(name="partyId",value="交易成员ID，21位编号")
+    private String partyId;
+
     public String getEntrustId() {
         return entrustId;
     }
@@ -288,6 +291,14 @@ public class PtlAllocationDto {
 
     public void setSecManageAcctIdStr(String secManageAcctIdStr) {
         this.secManageAcctIdStr = secManageAcctIdStr;
+    }
+
+    public String getPartyId() {
+        return partyId;
+    }
+
+    public void setPartyId(String partyId) {
+        this.partyId = partyId;
     }
 }
 

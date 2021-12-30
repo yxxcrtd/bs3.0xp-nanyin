@@ -239,6 +239,12 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
                 shareAmtTotal = ArithmeticUtil.doAdd(shareAmtTotal,ptlAllocatio.getShareAmt());
                 dealFeeAmtTotal = ArithmeticUtil.doAdd(dealFeeAmtTotal,ptlAllocatio.getDealFeeAmt());
                 settFeeamtTotal = ArithmeticUtil.doAdd(settFeeamtTotal,ptlAllocatio.getSettFeeAmt());
+                if(StringUtil.equals(entity.getTradeMarket(),BussinessDictCodeList.交易场所_银行间.getValue())){
+                    AjaxResult ajaxResultPartyId = cfetsQuotedCommonServicevue.checkpartyId(ptlAllocatio.getEntrustId(), ptlAllocatio.getPartyId(), DictCodeListExt3.报价系统区分类型_现券请求报价.getValue());
+                    if(StringUtil.isNotEmpty(ajaxResultPartyId.getMessage())){
+                        errorList.add(new ValidMessage(ajaxResultPartyId.getMessage()));
+                    }
+                }
             }
             //券面总额   交易手续费  结算服务费  总和需要相等
             if(CollectionUtils.isEmpty(errorList)){

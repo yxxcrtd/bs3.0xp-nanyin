@@ -947,4 +947,22 @@ public class CfetsQuotedCommonService extends BaseService {
         }
         return ajaxResult;
     }
+
+    /**
+     * 检查是否存在未关联交易账户
+     * @param entrustId
+     * @param partyId
+     * @param quoteType
+     * @return
+     */
+    public AjaxResult checkpartyId(String entrustId,String  partyId,String quoteType) {
+        AjaxResult ajaxResult = new AjaxResult();
+        String exportShow = CacheUtil.getSysParam("EXPORT_SHOW");
+        if(((StringUtil.equals(exportShow,"01")&&StringUtil.equals(quoteType,DictCodeListExt3.报价系统区分类型_现券登记报价.getValue()))
+                ||(StringUtil.equals(exportShow,"02")&&(StringUtil.equals(quoteType,DictCodeListExt3.报价系统区分类型_现券对话报价.getValue())||StringUtil.equals(quoteType,DictCodeListExt3.报价系统区分类型_现券请求报价.getValue()))))
+        &&StringUtil.isEmpty(partyId)){
+            ajaxResult.setMessage(StringUtil.join("指令",entrustId,"下组合未关联交易账户，请至[银行间业务参数管理-CFETS关联账户]中维护"));
+        }
+        return ajaxResult;
+    }
 }
