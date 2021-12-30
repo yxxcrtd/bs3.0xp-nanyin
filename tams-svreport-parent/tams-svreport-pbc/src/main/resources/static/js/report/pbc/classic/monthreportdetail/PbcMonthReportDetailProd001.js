@@ -148,7 +148,7 @@ $(function() {
            $('#PbcMonthReportDetailProd001_btn_search').click(function() {
                var param=getSearchParams();
                if(!param.enddate){
-                   Joyin.error("请选择统计日期进行查询！");
+                   Joyin.error("请选择统计年月进行查询！");
                    return;
                }else{
                    table.load();
