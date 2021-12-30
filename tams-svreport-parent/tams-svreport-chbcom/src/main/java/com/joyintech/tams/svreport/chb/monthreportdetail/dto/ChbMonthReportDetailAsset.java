@@ -224,6 +224,9 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
         //人行月报资产端成本已经是包含了利息调整了，需求把利息调整又单独列出来，然后余额写的是成本+利息调整，这样的话利息调整会统计重复？  成本直接减去利息调整进行展示
         return null!=this.getCostAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmt()):null;
     }
+    public String getIsFhxgcpStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsFhxgcp());
+    }
 
 
     public String getFloatIngplStr(){ return null!=this.getFloatIngpl()? BigDecimalConverterUtil.getMonthDetailString(this.getFloatIngpl()):null; }

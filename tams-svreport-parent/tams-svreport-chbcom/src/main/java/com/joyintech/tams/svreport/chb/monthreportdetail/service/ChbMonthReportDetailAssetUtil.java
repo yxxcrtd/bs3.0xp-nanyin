@@ -176,7 +176,11 @@ public class ChbMonthReportDetailAssetUtil {
         }else if(DictCodeListExt3.中债_上游资产一级分类_债券.getValue().equals(assetType)){
             SubjectName = assetInfo.getChbIssuerId();
         }else if(DictCodeListExt3.中债_上游资产一级分类_存款类资产.getValue().equals(assetType)){
-            SubjectName = assetInfo.getBankName();
+            if("D02".equals(assetType2)){
+                SubjectName = assetInfo.getBankName();
+            }else if("D01".equals(assetType2)){
+                SubjectName = assetInfo.getRivalParty();
+            }
         }else if(DictCodeListExt3.中债_上游资产一级分类_基金类资产.getValue().equals(assetType)){
             SubjectName = assetInfo.getFundEnpeName();
         }else if(DictCodeListExt3.中债_上游资产一级分类_项目类资产.getValue().equals(assetType)){

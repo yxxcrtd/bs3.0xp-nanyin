@@ -86,10 +86,7 @@ public class PbcMonthReportDetailAssetUtil {
 
         //先基本信息,再头寸信息,避免错误覆盖
         BeanUtil.copyPropertiesIgnoreNull(pbcMonthReportDetailAsset,position);
-//        String source = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE_PBC);
-        //产品端直接赋值金额
-//        ChbCcyConvertUtil.exchangeMoney(
-//                position.getCcy(),DictCodeListExt1.币种_中债_人民币.getValue(),position.getEnddate(),position.getEndqtysum(),rateMap,source);
+
         //金额丢给最后一起改.资产端也要
         pbcMonthReportDetailAsset.setAmt(amt);
         pbcMonthReportDetailAsset.setCcy(position.getCcy());
@@ -175,8 +172,6 @@ public class PbcMonthReportDetailAssetUtil {
         pbcMonthReportDetailAsset.setAmt(amt);
 
         pbcMonthReportDetailAsset.setChlId(amtFlag);
-
-
 
 
         if(null!=assetInfoMap.get(position.getAssetCode())){
@@ -265,7 +260,11 @@ public class PbcMonthReportDetailAssetUtil {
         }else if(DictCodeListExt3.中债_上游资产一级分类_债券.getValue().equals(assetType)){
             SubjectName = assetInfo.getChbIssuerId();
         }else if(DictCodeListExt3.中债_上游资产一级分类_存款类资产.getValue().equals(assetType)){
-            SubjectName = assetInfo.getBankName();
+            if("D02".equals(assetType2)){
+                SubjectName = assetInfo.getBankName();
+            }else if("D01".equals(assetType2)){
+                SubjectName = assetInfo.getRivalParty();
+            }
         }else if(DictCodeListExt3.中债_上游资产一级分类_基金类资产.getValue().equals(assetType)){
             SubjectName = assetInfo.getFundEnpeName();
         }else if(DictCodeListExt3.中债_上游资产一级分类_项目类资产.getValue().equals(assetType)){
@@ -295,28 +294,30 @@ public class PbcMonthReportDetailAssetUtil {
     public static void updateLoan(List<PbcMonthReportDetailAsset> position, Map<String, ChbLoanDetailInfo> loanMap){
         for(PbcMonthReportDetailAsset detailAsset: position){
             if(null!=loanMap.get(detailAsset.getAssetCode())){
-                BeanUtil.copyPropertiesIgnoreNull(detailAsset,loanMap.get(detailAsset.getAssetCode()));
-                String finArea = detailAsset.getBorrowerCity();
-                if (com.joyintech.framework.util.StringUtil.isEmpty(finArea)){
-                    continue;
-                }
-                String province = finArea;
-                // 通过融资人所属地区获取上级省
-                if (SvrDataUtil.getNameFromDataDict(DictCode.行政区划_县, province) != null){
-                    province = SvrDataUtil.getParentCodeFromDataDict(DictCode.行政区划_县, province);
-                }
-                if (SvrDataUtil.getNameFromDataDict(DictCode.行政区划_市, province) != null){
-                    province = SvrDataUtil.getParentCodeFromDataDict(DictCode.行政区划_市, province);
-                }
-                detailAsset.setBorrowerCity(province);
+                if(!PbcReportProperycode.AMT_790000_YSZK.equals(detailAsset.getDetailno())){
+                    BeanUtil.copyPropertiesIgnoreNull(detailAsset,loanMap.get(detailAsset.getAssetCode()));
+                    String finArea = detailAsset.getBorrowerCity();
+                    if (com.joyintech.framework.util.StringUtil.isEmpty(finArea)){
+                        continue;
+                    }
+                    String province = finArea;
+                    // 通过融资人所属地区获取上级省
+                    if (SvrDataUtil.getNameFromDataDict(DictCode.行政区划_县, province) != null){
+                        province = SvrDataUtil.getParentCodeFromDataDict(DictCode.行政区划_县, province);
+                    }
+                    if (SvrDataUtil.getNameFromDataDict(DictCode.行政区划_市, province) != null){
+                        province = SvrDataUtil.getParentCodeFromDataDict(DictCode.行政区划_市, province);
+                    }
+                    detailAsset.setBorrowerCity(province);
 
-                detailAsset.setIndustry(loanMap.get(detailAsset.getAssetCode()).getIndustryInfo());
+                    detailAsset.setIndustry(loanMap.get(detailAsset.getAssetCode()).getIndustryInfo());
 
-                //2-2限制规则
-                if (PbcMonthReportConstants.POSITION_TYPE_ZC.equals(detailAsset.getPositionType())
-                        &&PbcMonthReportConstants.PBC_ASSETTYPE1_P05.equals(detailAsset.getAssetType1())
-                        && PbcMonthReportConstants.PBC_ASSETTYPE2_R02.equals(detailAsset.getAssetType2())) {
-                    detailAsset.setPartyType1(loanMap.get(detailAsset.getAssetCode()).getEnterpriseScale());
+                    //2-2限制规则
+                    if (PbcMonthReportConstants.POSITION_TYPE_ZC.equals(detailAsset.getPositionType())
+                            &&PbcMonthReportConstants.PBC_ASSETTYPE1_P05.equals(detailAsset.getAssetType1())
+                            && PbcMonthReportConstants.PBC_ASSETTYPE2_R02.equals(detailAsset.getAssetType2())) {
+                        detailAsset.setPartyType1(loanMap.get(detailAsset.getAssetCode()).getEnterpriseScale());
+                    }
                 }
             }
         }
