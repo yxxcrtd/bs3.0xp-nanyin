@@ -455,13 +455,6 @@ public class EtrExchangeTradeJj001Validator implements EtrCommonValidator {
 				}
 			}
 		}
-		//双击修改check
-		if (dto.getOperateType().equals("dbclick")) {
-			if(StringUtil.equals(dto.getEntrustStatus(),DictCodeList.委托状态_已退回.getValue())  &&!StringUtil.equals(dto.getEntrustStatus(),DictCodeList.委托状态_已撤回.getValue())){
-				String entrustStatusStr = SysDataUtil.getNameFromDataDict(DictCode.委托状态, dto.getEntrustStatus());
-				errorList.add(new ValidMessage(entrustStatusStr + "的指令不允许修改!"));
-			}
-		}
 		return errorList;
 	}
 }

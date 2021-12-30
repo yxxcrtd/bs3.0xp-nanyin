@@ -374,7 +374,7 @@ shiro:
     /CfetsRepoDealQuotedPrice001/selectEtrReByQuoteId,/core/getAssetFiveType,/common/trdcommonbase/insertFinProductCashData,/common/entrustcommonbase/finishEntrust,/TrdRepoTrade/selectPreTradeId,/joyin/**,
     /interf/refreshCache,/interf/execute,/interf/ziguanSysUserInfo,/interf/xp,/interf/xp/**,/interf/zg,/interf/zg/**,/FinProjectTargetAsset/insert,/FinAssetRateAdj/getFinAssetRateAdjByCashId,
     /cfets/**,/common/workflow/**,/common/config/**,/component/**,/FinProductRating/**,/common/joyinbusinessCommon/**,/cfets/bankuplink/bond/IbuQuoteBond/**,/cfets/bond/IbuQuoteBond004/**,/BussSettleOrderComm/**,
-    /etrexchange/hqjj/jjetrExchangeTrade001/**,/MstSecuritiesAccountInfo/**,/etrexchange/common/**,/TrdBondInvestTrade/**,/etrexchange/hqjj/etrExchangeTradeJj001/*,/service/joyin/*
+    /etrexchange/hqjj/jjetrExchangeTrade001/**,/MstSecuritiesAccountInfo/**,/etrexchange/common/**,/TrdBondInvestTrade/**,/etrexchange/hqjj/etrExchangeTradeJj001/*,/service/joyin/*,/common/entrustcommonbase/*
 
 base:
   datasource:

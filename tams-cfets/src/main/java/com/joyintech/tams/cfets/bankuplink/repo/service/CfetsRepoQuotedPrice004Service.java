@@ -1420,7 +1420,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      * @author jiangpeng
      * @date 2021/12/13 16:09
      */
-    private String qryPortfolioSecAcctId(Map<String, Object> map) {
+    public String qryPortfolioSecAcctId(Map<String, Object> map) {
         return cfetsIbuQuoteRepoMapper.qryPortfolioSecAcctId(map);
     }
 

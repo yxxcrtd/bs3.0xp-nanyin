@@ -221,6 +221,11 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
 
     @ApiModelProperty(required = true,name="portfolioList",value="组合列表",example="[{'portfolioId':'qwqw'}]]")
     List<EtrExchangeTradeSaveRequest> portfolioList;
+
+    /**
+     * 是否多组合
+     */
+    private String isMulti;
     
 
 
@@ -615,6 +620,14 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
     @Override
     public void setTradeMarket(String tradeMarket) {
         this.tradeMarket = tradeMarket;
+    }
+
+    public String getIsMulti() {
+        return isMulti;
+    }
+
+    public void setIsMulti(String isMulti) {
+        this.isMulti = isMulti;
     }
 
     public String getSecAcctId() {
