@@ -150,6 +150,14 @@ public class StlDataDealSzdSjsfxProcessService {
             settleTransData.setSettleFee(BigDecimal.ZERO);
             // 交易方向、业务场景明细分类
             setBondDeal(szdSjsfx, settleTransData);
+            // 清算速度:申购是T+2
+            if(DictCodeList.交易方向_申购.getValue().equals(settleTransData.getPs())){
+                settleTransData.setSettleSpeed(2L);
+            }
+            // GZYHTZJY-986:申购和申购确认,赋值竞价平台 fuyongsheng modify 20211230 start
+            // 交易平台
+            settleTransData.setTradePlat(DictCodeList.交易平台_竞价撮合平台.getValue());
+            // GZYHTZJY-986:申购和申购确认,赋值竞价平台 fuyongsheng modify 20211230 start
             return true;
         }));
     }

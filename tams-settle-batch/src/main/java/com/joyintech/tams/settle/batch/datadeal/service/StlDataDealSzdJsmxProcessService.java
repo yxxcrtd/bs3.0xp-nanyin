@@ -411,6 +411,10 @@ public class StlDataDealSzdJsmxProcessService {
 				settleTransData.setSeqNo(szdJsmx.getSeqno());
 				// 是否优先配售
 				settleTransData.setIsPurchTypeYx(DictCodeList.是否_否.getValue());
+				// 清算速度:申购是T+2
+				if(DictCodeList.交易方向_申购.getValue().equals(settleTransData.getPs())){
+					settleTransData.setSettleSpeed(2L);
+				}
 				if (StringUtil.lowerCase(stlDownDataDealOperatorDto.getDataFile()).startsWith(StlDataDealProcessConstant.SZD_JSMX_02)) {
 					if (StringUtil.equals(szdJsmx.getYwlx(), StlDataDealProcessConstant.YWLX_012)) {
 						settleTransData.setIsPurchTypeYx(DictCodeList.是否_是.getValue());
