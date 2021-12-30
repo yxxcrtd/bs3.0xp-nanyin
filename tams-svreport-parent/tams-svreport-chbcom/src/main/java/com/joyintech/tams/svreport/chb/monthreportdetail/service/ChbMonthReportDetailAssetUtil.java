@@ -2,10 +2,11 @@ package com.joyintech.tams.svreport.chb.monthreportdetail.service;
 
 import com.joyintech.background.component.common.pack.common.util.BeanUtil;
 import com.joyintech.background.component.common.pack.common.util.IDGenerator;
-import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
@@ -67,7 +68,7 @@ public class ChbMonthReportDetailAssetUtil {
     private static List<String> code = Arrays.asList("1201","1210","1202","1203","1204","1205","1206","1207","1208","1209","1299","2201","2202","2101","2299");
 
     private static List<String> notexistsList = Arrays.asList("AMT1_4_a","AMT1_4_b","AMT1_4_c","AMT1_13_1","AMT1_13_2","AMT1_13_3","AMT1_13_4","AMT1_13_5","AMT1_13_6","AMT1_12_9_a","AMT1_12_2"
-            ,"2201","2202","2101","2299");
+            ,"AMT1_15_a","AMT1_15_b","AMT1_5_17_a","AMT1_13_7_a","AMT1_15_c","AMT1_12_1");
 
 
     /**
@@ -109,12 +110,15 @@ public class ChbMonthReportDetailAssetUtil {
             chbMonthAssetPositiondetail.setSubjectName(SubjectName(chbAssetInfo,chbMonthAssetPositiondetail.getOrgAssetType2(),chbMonthAssetPositiondetail.getOrgAssetType1()));
             if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecPrefer())){
                 chbMonthAssetPositiondetail.setIsYhbcgj(DictCodeListExt3.中债月度明细_银行资本补充工具_优先股.getValue());
-            }else if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecPerpetual())){
-                chbMonthAssetPositiondetail.setIsYhbcgj(DictCodeListExt3.中债月度明细_银行资本补充工具_永续债.getValue());
-            }else if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecCapital())){
-                chbMonthAssetPositiondetail.setIsYhbcgj(DictCodeListExt3.中债月度明细_银行资本补充工具_二级资本债.getValue());
-            }else if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecKzzq())){
-                chbMonthAssetPositiondetail.setIsYhbcgj(DictCodeListExt3.中债月度明细_银行资本补充工具_可转债.getValue());
+            }
+            if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecPerpetual())){
+                chbMonthAssetPositiondetail.setIsYhbcgj((null!=chbMonthAssetPositiondetail.getIsYhbcgj()?chbMonthAssetPositiondetail.getIsYhbcgj()+",":"")+DictCodeListExt3.中债月度明细_银行资本补充工具_永续债.getValue());
+            }
+            if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecCapital())){
+                chbMonthAssetPositiondetail.setIsYhbcgj((null!=chbMonthAssetPositiondetail.getIsYhbcgj()?chbMonthAssetPositiondetail.getIsYhbcgj()+",":"")+DictCodeListExt3.中债月度明细_银行资本补充工具_二级资本债.getValue());
+            }
+            if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecKzzq())){
+                chbMonthAssetPositiondetail.setIsYhbcgj((null!=chbMonthAssetPositiondetail.getIsYhbcgj()?chbMonthAssetPositiondetail.getIsYhbcgj()+",":"")+DictCodeListExt3.中债月度明细_银行资本补充工具_可转债.getValue());
             }
         }
 
@@ -304,35 +308,130 @@ public class ChbMonthReportDetailAssetUtil {
 
 
     public static boolean ruleFlag (ChbMonthAssetRule singleRule, ChbMonthAssetPosition position){
-        boolean flag = true;
-        for (int i = 0; i < singleRule.getRuleCodeList().size(); i++) {
-            Object code = getGetMethod(position,singleRule.getRuleCodeList().get(i));
-            if(null!=code){
-                if (singleRule.getRuleValueList().get(i).startsWith("!")){
-                    // 只要有一条满足则该条头寸不计入
-                    if (singleRule.getRuleValueList().get(i).substring(1,
-                            singleRule.getRuleValueList().get(i).length())
-                            .contains((String)code)){
-                        flag = false;
+        boolean isPattern = true;
+        String xyz="1112,1113,1114,1115,1116,1117";
+        // 判断是否多条件交集处理
+        for (int i = 0; i < singleRule.getRuleCodeList().size(); i++){
+            // 重新初始化是否匹配配置规则标记
+            isPattern = true;
+            // 债券信用评级
+            if (singleRule.getRuleCodeList().get(i).toUpperCase().equals("RATINGAA+")){
+                if (!xyz.contains(position.getAssettype2())||position.getRating() == null||compareRating(position.getRating(),singleRule.getRuleValueList().get(i)) < 0
+                ){
+                    isPattern = false;
+                    break;
+                }
+            } else if (singleRule.getRuleCodeList().get(i).toUpperCase().equals("RATINGAA-")){
+                if (!xyz.contains(position.getAssettype2())||position.getRating() == null||compareRating(position.getRating(),singleRule.getRuleValueList().get(i)) >= 0
+                ){
+                    isPattern = false;
+                    break;
+                }
+            } else if (singleRule.getRuleCodeList().get(i).toUpperCase().equals("RATINGNULL")){
+                if (!xyz.contains(position.getAssettype2())||position.getRating() != null){
+                    isPattern = false;
+                    break;
+                }
+            }  else { // 非债券信用评级
+                // 判断是否多条件任取其一，即rulecode和value一一对应以“|”隔开，格式为code1|code2,value1|value2
+                if (singleRule.getRuleCodeList().get(i).contains(GlobalConstant.VERTICAL_LINE)
+                        || singleRule.getRuleValueList().get(i).contains(GlobalConstant.VERTICAL_LINE)){
+
+                    List<String> ruleCodeList = StringUtil.splitToList(GlobalConstant.VERTICAL_LINE,
+                            singleRule.getRuleCodeList().get(i));
+                    List<String> valueList = StringUtil.splitToList(GlobalConstant.VERTICAL_LINE,
+                            singleRule.getRuleValueList().get(i));
+                    isPattern = false;
+                    String ruleCode = ruleCodeList.get(0);
+                    for (int k = 0; k < valueList.size() ; k++){
+                        // 如果ruleCode相同但是多条件，则支持只输入一个code，如：code1,value1|value2|value3
+                        // 否则需一一对应以“|”隔开，格式为code1|code2,value1|value2
+                        if (ruleCodeList.size() > 1){
+                            ruleCode = ruleCodeList.get(k);
+                        }
+                        // 支持反向判断！value1
+                        if (valueList.get(k).startsWith("!")){
+                            // 只要有一条满足则该条头寸不计入
+                            if (!valueList.get(k).substring(1,valueList.get(k).length())
+                                    .equals((String)getGetMethod(position,ruleCode))){
+                                isPattern = true;
+                                break;
+                            }
+                        } else {
+                            // 只有多个条件都不满足时该头寸才不计入
+                            if (valueList.get(k).equals((String)getGetMethod(position,ruleCode))){
+                                isPattern = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!isPattern){
                         break;
                     }
-                } else {
-                    // 只要有一条不满足则该条头寸不计入
-
+                }else {// 多条件同时满足才计入
+                    // 支持反向判断！value1
+                    if (singleRule.getRuleValueList().get(i).startsWith("!")){
+                        // 只要有一条满足则该条头寸不计入
+                        if (singleRule.getRuleValueList().get(i).substring(1,
+                                singleRule.getRuleValueList().get(i).length())
+                                .equals((String)getGetMethod(position,
+                                        singleRule.getRuleCodeList().get(i)))){
+                            isPattern = false;
+                            break;
+                        }
+                    } else {
+                        // 只要有一条不满足则该条头寸不计入
                         if (!singleRule.getRuleValueList().get(i)
-                                .contains((String)code)){
-                            flag = false;
+                                .equals((String)getGetMethod(position,singleRule.getRuleCodeList()
+                                        .get(i)))){
+                            isPattern = false;
                             break;
                         }
                     }
-                }else{
-                    flag = false;
-                    break;
                 }
             }
-        return flag;
+        }
+        return isPattern;
     }
 
+
+    /**
+     * 功能:判断评级信息大小
+     * @since 1.6.0
+     * @version 1.6.0
+     * @author：weiyuqiang 2019年2月11日
+     * @param s1 待比较评级结果
+     * @param s2 评级比较标准    S2固定只能为AA+或AA-
+     * @return >0 s1>s2 =0 s1 = s2 <0 s1<s2
+     */
+    private static int compareRating(String s1,String s2){
+        if(s1.equals(s2)){
+            return 0;
+        }
+        if(s2.equals("AA+")){
+            if(s1.length()<s2.length()){
+                return -1;
+            }else{
+                if(s1.substring(0, 3).equals(s2)||s1.substring(0, 3).equals("AAA")){
+                    return 1;
+                }else{
+                    return -1;
+                }
+
+            }
+        }else{
+            if(s1.length()<s2.length()){
+                return -1;
+            }else{
+                if(s1.substring(0, 3).equals(s2)||s1.substring(0, 3).equals("AAA")||s1.substring(0, 3).equals("AA+")){
+                    return 1;
+                }else{
+                    return -1;
+                }
+
+            }
+        }
+    }
 
     /**
      * 根据属性，获取get方法(不区分大小写)

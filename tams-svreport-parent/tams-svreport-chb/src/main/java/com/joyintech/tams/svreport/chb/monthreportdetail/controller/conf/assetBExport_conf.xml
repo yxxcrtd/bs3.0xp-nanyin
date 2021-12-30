@@ -25,7 +25,7 @@
 			<Cell order="21" name="资管计划代码">oldAssetCode</Cell>
 			<Cell order="22" name="资管计划名称">oldAssetName</Cell>
 			<Cell order="23" name="份额">delayPayAmtStr</Cell>
-			<Cell order="24" name="成本">costAmtStr</Cell>
+			<Cell order="24" name="成本">costAmtBStr</Cell>
 			<Cell order="25" name="应计利息">intincexpStr</Cell>
 			<Cell order="26" name="利息调整">intadjexpAddStr</Cell>
 			<Cell order="27" name="公允价值变动">floatIngplStr</Cell>

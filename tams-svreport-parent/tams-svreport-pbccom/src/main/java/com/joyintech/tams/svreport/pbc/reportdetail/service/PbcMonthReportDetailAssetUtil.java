@@ -52,7 +52,11 @@ public class PbcMonthReportDetailAssetUtil {
 
 
     private static List<String> notExistsCode = Arrays.asList(PbcReportProperycode.AMT_772000_TDMDZTFE,PbcReportProperycode.AMT_752000_HGHCJ,
-            PbcReportProperycode.AMT_761000_DKSYQ,  PbcReportProperycode.AMT_763000_YSZKSYQ, PbcReportProperycode.AMT_764000_QTZQSYQ,PbcReportProperycode.AMT_771000_GP);
+            PbcReportProperycode.AMT_761000_DKSYQ,  PbcReportProperycode.AMT_763000_YSZKSYQ, PbcReportProperycode.AMT_764000_QTZQSYQ,PbcReportProperycode.AMT_771000_GP,
+            PbcReportProperycode.AMT_767000_WQZCSYQ,PbcReportProperycode.AMT_766000_QTGQSYQ,PbcReportProperycode.AMT_765000_GPSYQ,PbcReportProperycode.AMT_764000_QTZQSYQ,
+            PbcReportProperycode.AMT_763000_YSZKSYQ,PbcReportProperycode.AMT_762000_ZWZQSYQ,PbcReportProperycode.AMT_761000_DKSYQ);
+
+
 
     private static Map<String,ChbPrdBaseinfo> prodInfoMap;
 
@@ -109,6 +113,7 @@ public class PbcMonthReportDetailAssetUtil {
         //资产端绑定编号
         pbcMonthReportDetailAsset.setDetailno(code);
         pbcMonthReportDetailAsset.setAmt(amt);
+        pbcMonthReportDetailAsset.setCcy(DictCodeListExt1.币种_中债_人民币.getValue());
         //期次赋值
         pbcMonthReportDetailAsset.setTerm(DateUtil.format(DateUtil.addDay(endDate,-1),"yyyyMM"));
 
@@ -266,8 +271,6 @@ public class PbcMonthReportDetailAssetUtil {
             ||DictCodeListExt3.中债_上游资产一级分类_金融衍生品.getValue().equals(assetType)){
             SubjectName = assetInfo.getRivalParty();
         }
-
-
         return SubjectName;
     }
 
@@ -337,11 +340,11 @@ public class PbcMonthReportDetailAssetUtil {
 
     public List<PbcMonthReportDetailAsset>  insertBefore(List<PbcMonthReportDetailAsset> prdPositionList,Date generateDate){
 
-        //首先根据产品代码/资产代码/科目号进行去重(现金及其他相关科目数据可能重复)
-//        prdPositionList = prdPositionList.stream().collect(
-//                Collectors. collectingAndThen(
-//                        Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(o -> o.getProdid() + ";" + o.getAssetCode()+";"+o.getDetailno()+";"+o.getDetailno2()))), ArrayList::new)
-//        );
+        /****需要特殊处理的科目*/
+        Map<String, PbcMonthReportDetailAsset>  detail1001 = prdPositionList.stream().filter(detail ->
+                (detail.getDetailno().equals(PbcReportProperycode.AMT_752600_FYXYJRJG)||detail.getDetailno().equals(PbcReportProperycode.AMT_752610_QZZYJYDSF)
+                )).collect(Collectors.toMap(PbcMonthReportDetailAsset::getDetailCode,Positiondetail -> Positiondetail));
+
 
         /**展示产品购买资产首次买入交易的交易对手名称***/
         Map<String,Object> paraMap = new HashMap<>();
@@ -360,6 +363,19 @@ public class PbcMonthReportDetailAssetUtil {
             dto.setRivalParty(CounterMap.get(dto.getProdid()+"_"+dto.getAssetCode()));
             dto.setAmt(ChbCcyConvertUtil.exchangeMoney(
                     dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),generateDate,dto.getAmt(),rateMap,source));
+
+            /***银行业金融机构特殊处理**/
+            if (dto.getDetailno().equals(PbcReportProperycode.AMT_752600_FYXYJRJG)) {
+                //转换为AMT1_4_2_b
+                dto.setDetailno("AMT_752620_FZYJYDSF");
+                //如果包含专项债券
+                if (null != detail1001.get(dto.getCounterListCode() + "_" + PbcReportProperycode.AMT_752610_QZZYJYDSF)) {
+                    if (null != dto.getAmt()) {
+                        dto.setAmt(dto.getAmt().subtract(
+                                null != detail1001.get(dto.getCounterListCode() + "_" + PbcReportProperycode.AMT_752610_QZZYJYDSF) ? detail1001.get(dto.getCounterListCode() + "_" + PbcReportProperycode.AMT_752610_QZZYJYDSF).getAmt() : BigDecimal.ZERO));
+                    }
+                }
+            }
 
         }
         return prdPositionList;

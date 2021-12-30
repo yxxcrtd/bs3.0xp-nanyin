@@ -161,8 +161,7 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
 
     public String getCostAmtStr(){
         //        //人行月报资产端成本已经是包含了利息调整了，需求把利息调整又单独列出来，然后余额写的是成本+利息调整，这样的话利息调整会统计重复？  成本直接减去利息调整进行展示
-        return null!=this.getCostAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmt().subtract(
-                null!=this.getIntadjexpAdd()?this.getIntadjexpAdd():BigDecimal.ZERO)):null;
+        return null!=this.getCostAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmt()):null;
     }
 
     public String getFloatIngplStr(){
@@ -186,5 +185,9 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
 
     public String getEndDaysType(){
         return SysDataUtil.getNameFromDataDict(DictCode.人行月度明细_期限类型, PbcMonthReportDetailProdUtil.getTermType(this.getEndDays()));
+    }
+
+    public String getDetailCode(){
+        return this.getProdid()+"_"+this.getAssetCode()+"_"+this.getDetailno();
     }
 }

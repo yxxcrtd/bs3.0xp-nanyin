@@ -59,7 +59,7 @@ $(function() {
             { title: "资管计划代码", width : 120, field: 'oldAssetCode',sortField:'oldAssetCode'},
             { title: "资管计划名称", width : 120, field: 'oldAssetName',sortField:'oldAssetName'},
             { title: "份额", width : 120, field: 'delayPayAmtStr',sortField:'delayPayAmt'},
-            { title: "成本", width : 120, field: 'costAmtStr',sortField:'costAmt'},
+            { title: "成本", width : 120, field: 'costAmtBStr',sortField:'costAmtB'},
             { title: "应计利息", width : 120, field: 'intincexpStr', width : 120,sortField:'intincexp'},
             { title: "利息调整", width : 120, field: 'intadjexpAddStr', width : 120,sortField:'intadjexpAdd'},
             { title: "公允价值变动", width : 120, field: 'floatIngplStr', width : 120,sortField:'floatIngpl'},

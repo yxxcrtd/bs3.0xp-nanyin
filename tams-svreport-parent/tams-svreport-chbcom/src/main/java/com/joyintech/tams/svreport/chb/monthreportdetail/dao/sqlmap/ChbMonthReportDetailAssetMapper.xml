@@ -140,12 +140,13 @@
             IA.ASSET_NAME oldAssetName,
             NVL(I.VDATE,I.PLAN_SDATE) VDATE,
             NVL(I.MDATE,I.PLAN_EDATE) MDATE,
-            CASE WHEN AP.MDATE!=I.MDATE and I.option_flag ='01' THEN AP.MDATE END exerciseDate,
+            CASE WHEN AP.MDATE!=I.MDATE THEN AP.MDATE END exerciseDate,
             NVL(MC.CUSTOMER_NAME,P.SUBJECT_NAME) subjectName,
             I.asset_yield RATE,
             P.CCY,
             AP.POS_AMT  delayPayAmt,
-            AP.TDY_COST_AMT  costAmt,
+            DECODE(#{costFlag,jdbcType=VARCHAR},'01',P.ASSETVALUE_A,AP.TDY_COST_AMT)  costAmt,
+            DECODE(#{costFlag,jdbcType=VARCHAR},'01',P.ASSETVALUE_B,AP.TDY_COST_AMT)  costAmtB,
             AP.TDY_FLOAT_INGPL  floatIngpl,
             AP.TDY_INTINCEXP INTINCEXP,
             AP.TDY_INTADJEXP_ADD intadjexpAdd,
@@ -185,7 +186,6 @@
             LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D3 ON D3.propertycode = D4.codeparent and D3.proplevel = '3'
             LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D2 ON D2.propertycode = D3.codeparent and D2.proplevel = '2'
             LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D1 ON D1.propertycode = D2.codeparent and D1.proplevel = '1'
-            LEFT JOIN SYS_DATADICT_LIST L ON L.ITEM_CODE = REPLACE(SUBSTR(D4.propertycode,0,7),'_','')  AND L.DICT_CODE = 'SVR_MONTH_REPORT_DETAIL'
             LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PROD_ID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)
 
 
