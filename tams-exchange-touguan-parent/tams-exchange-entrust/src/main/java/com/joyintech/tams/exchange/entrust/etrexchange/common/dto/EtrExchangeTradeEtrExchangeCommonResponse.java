@@ -10,7 +10,6 @@
 
 package com.joyintech.tams.exchange.entrust.etrexchange.common.dto;
 
-import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;

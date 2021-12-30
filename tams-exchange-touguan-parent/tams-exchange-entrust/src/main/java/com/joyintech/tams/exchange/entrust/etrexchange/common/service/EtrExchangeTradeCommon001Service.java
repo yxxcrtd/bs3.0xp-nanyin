@@ -47,7 +47,6 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.background.component.common.pack.common.security.*;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
@@ -61,7 +60,6 @@ import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.asset.util.AssetCommonUtil;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
@@ -1080,7 +1078,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * 查询标的
      * @return
      */
-	public List<SelectOptionDto> getFinprodId(Map<String, Object> map) {
+	public List<SelectOptionDto> getFinprodId(FinprodMarketInfoRequest dto) {
+		Map<String, Object> map = BeanUtil.object2Map(dto);
 		return restTemplate.postForList(
 				ServiceApplication.BASICDATA_SERVICE_NAME + "/MstSecuritiesAccountInfo/getFinprodId", map,
 				SelectOptionDto.class);
@@ -1100,7 +1099,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * 查询证券账户
      * @return
      */
-	public List<SelectOptionDto> getSecAcctInfo(Map<String, Object> map) {
+	public List<SelectOptionDto> getSecAcctInfo(SelectOptionRequestDto dto) {
+		Map<String, Object> map = BeanUtil.object2Map(dto);
 		return restTemplate.postForList(
 				ServiceApplication.BASICDATA_SERVICE_NAME + "/MstSecuritiesAccountInfo/getSecAcctInfo", map,
 				SelectOptionDto.class);
@@ -1128,9 +1128,14 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @param map 检索参数
      * @return 联想文本框
      */
-    public List<SuggestDto> selectCounterDealer(Map<String, Object> map) {
-        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectCounterDealer",
-                map, SuggestDto.class);
+    public List<SuggestDto> selectCounterDealer(SelectOptionRequestDto dto) {
+//        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectCounterDealer",
+//                map, SuggestDto.class);
+		// 交易场所
+		Map<String, Object> map = BeanUtil.object2Map(dto);
+		map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+		List<SuggestDto> suggestDtos = etrExchangeTradeCommonMapper.selectCounterDealer(map);
+		return suggestDtos;
     }
 
     /**
