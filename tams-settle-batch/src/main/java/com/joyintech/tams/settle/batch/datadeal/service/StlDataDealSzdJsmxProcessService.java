@@ -792,8 +792,9 @@ public class StlDataDealSzdJsmxProcessService {
 							// 到期交收日
 							String calendarId = CacheUtil.getSysParam(StlDataDealProcessConstant.STL_DOWNDATA_DEAL_SHJYS_CALID);
 							// settleTransData.setMpayDate(stlDataDealProcessCommonService.getNextWorkDay(com.joyintech.framework.util.DateUtil.parse(szdJsmx.getQtrq()), calendarId));
-							boolean isBusinessday = DateUtil.isBusinessDay(DateUtil.parse(szdJsmx.getQtrq()));
-							if(isBusinessday){
+							// 0：工作日
+							String isHoliday = stlDataDealProcessCommonService.getIsHoliday(DateUtil.parse(szdJsmx.getQtrq()), calendarId);
+							if("0".equals(isHoliday)){
 								settleTransData.setMpayDate(DateUtil.parse(szdJsmx.getQtrq()));
 							}else{
 								settleTransData.setMpayDate(stlDataDealProcessCommonService.getNextWorkDay(DateUtil.parse(szdJsmx.getQtrq()), calendarId));
@@ -922,8 +923,8 @@ public class StlDataDealSzdJsmxProcessService {
 							// 首期交收日
 							String calendarId = CacheUtil.getSysParam(StlDataDealProcessConstant.STL_DOWNDATA_DEAL_SHJYS_CALID);
 							// settleTransData.setVpayDate(stlDataDealProcessCommonService.getNextWorkDay(DateUtil.parse(szdJsmx.getQtrq()), calendarId));
-							boolean isBusinessday = DateUtil.isBusinessDay(DateUtil.parse(szdJsmx.getQtrq()));
-							if(isBusinessday){
+							String isHoliday = stlDataDealProcessCommonService.getIsHoliday(DateUtil.parse(szdJsmx.getQtrq()), calendarId);
+							if("0".equals(isHoliday)){
 								settleTransData.setVpayDate(DateUtil.parse(szdJsmx.getQtrq()));
 							}else{
 								settleTransData.setVpayDate(stlDataDealProcessCommonService.getNextWorkDay(DateUtil.parse(szdJsmx.getQtrq()), calendarId));
