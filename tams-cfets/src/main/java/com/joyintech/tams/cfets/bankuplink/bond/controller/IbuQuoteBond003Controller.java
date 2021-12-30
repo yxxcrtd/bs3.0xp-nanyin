@@ -6,10 +6,15 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.PositionUtil;
+import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice003Service;
+import com.joyintech.tams.cfets.position.service.PositionInfoService;
+import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
@@ -26,6 +31,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ApplicationObjectSupport;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,6 +76,15 @@ public class IbuQuoteBond003Controller extends BaseController {
 
     @Autowired
     private com.joyintech.tams.cfets.bankuplink.bond.service.CfetsQuotedCommonService cfetsQuotedCommonServiceVue;
+
+    @Autowired
+    private CfetsIbuQuoteBondEtrMapper cfetsIbuQuoteBondEtrMapper;
+
+    @Autowired
+    private StlSecAcctInfoMapper stlSecAcctInfoMapper;
+
+    @Autowired
+    private PositionInfoService positionInfoService;
 
 
     @ApiOperation(value = "请求报价初始化", notes = "请求报价初始化")
@@ -360,7 +375,32 @@ public class IbuQuoteBond003Controller extends BaseController {
         CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = cfetsQuotedCommonServiceVue.createReueust(cfetsBondDealQuoteCommonDto);
         if(CollectionUtils.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())){
             cfetsBondDealRequestQuoteDto.setCfetsBondDealRequestQuoteDtoList(cfetsQuotedCommonServiceVue.createCfetsBondDealRequestQuoteDtoList(cfetsBondDealQuoteCommonDto.getPtlAllocatios()));
+            //处理下组合的可用现金和可用持仓  带到审批画面
+            for (CfetsBondDealRequestQuoteDto item : cfetsBondDealRequestQuoteDto.getCfetsBondDealRequestQuoteDtoList()) {
+                try{
+                    Map<String,String> accnoParm = new HashMap<>();
+                    accnoParm.put("ccy",cfetsBondDealQuoteCommonDto.getCcy());
+                    accnoParm.put("portfolioId",item.getPortfolioId());
+                    accnoParm.put("acctType", DictCodeListExt1.资金账户类型_产品托管户.getValue());
+                    String accNo = cfetsIbuQuoteBondEtrMapper.getAccNo(accnoParm);
+                    if(StringUtil.isEmpty(accNo)){
+                        accNo = stlSecAcctInfoMapper.selectByPrimaryKey(cfetsBondDealQuoteCommonDto.getSecManageAcctId()).getTrdAcctId();
+                    }
+                    BaseMap baseMap = positionInfoService.queryTrdAvailableCash(Arrays.asList(item.getPortfolioId()), DateUtil.format(cfetsBondDealQuoteCommonDto.getTradeDate()), accNo, cfetsBondDealQuoteCommonDto.getCcy(), "03", Arrays.asList(DictCodeListExt1.资金账户类型_产品托管户.getValue()), null);
+                    if(null!=baseMap&&baseMap.containsKey("cashT")){
+                        item.setProAvailableCash((BigDecimal) baseMap.get("cashT"));
+                    }
+                    BaseMap baseMapSec = positionInfoService.queryTrdPosition(Arrays.asList(item.getPortfolioId()), DateUtil.format(cfetsBondDealQuoteCommonDto.getTradeDate()), cfetsBondDealQuoteCommonDto.getFinprodId());
+                    if(null!=baseMapSec&&baseMapSec.containsKey("ZCTRKYCC")){
+                        item.setSecManageAvailablePosition((BigDecimal)baseMapSec.get("ZCTRKYCC"));
+                    }
+                }catch (Exception e){
+
+                }
+            }
         }
+        
+        
         if (!StringUtil.isNotEmpty(cfetsBondDealRequestQuoteDto.getQuoteId())) {
             BussinessCodeParameter codeParameter = new BussinessCodeParameter();
             codeParameter.setSeqNo("IBU_002");

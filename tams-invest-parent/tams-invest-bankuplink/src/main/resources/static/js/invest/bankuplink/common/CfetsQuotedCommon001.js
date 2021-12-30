@@ -74,9 +74,9 @@
             , visible:SHOW_INVAIM_OR_BUSSINSSMODEL=='02'?true:false }*/
         ,{field:'entrustAvaNum', width:160, title: '剩余额度（万元）',type:'number',sortable: false}
         ,{field:'avaNum', width:150, title: '券面总额（万元）',edit:true,sortable: false,type:'number', digit:2}
-        ,{field:'price', width:120, title: '净价(元)',sortable: false,type:'number', digit:2}
-        ,{field:'matureYield', width:120, title: '到期收益率%',edit:false,sortable: false,visible: true,type:'number', digit:2}
-        ,{field:'exerYield', width:120, title: '行权收益率%',sortable: false,type:'number', digit:2}
+        ,{field:'price', width:120, title: '净价(元)',sortable: false,type:'number', digit:4}
+        ,{field:'matureYield', width:120, title: '到期收益率%',edit:false,sortable: false,visible: true,type:'number', digit:4}
+        ,{field:'exerYield', width:120, title: '行权收益率%',sortable: false,type:'number', digit:4}
         ,{field:'dealFeeAmt', width:150, title: '交易手续费（元）',edit:true,sortable: false,type:'number', digit:2}
         ,{field:'settFeeAmt', width:150, title: '结算服务费（元）',edit:true,sortable: false,type:'number', digit:2}
         // ,{field:'settleAmt', width:150, title: '结算金额',sortable: false,type:'number', digit:2}
