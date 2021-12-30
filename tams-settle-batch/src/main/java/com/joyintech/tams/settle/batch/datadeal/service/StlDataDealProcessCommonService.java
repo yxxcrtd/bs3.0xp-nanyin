@@ -143,7 +143,20 @@ public class StlDataDealProcessCommonService {
 	public Date getNextWorkDay(Date nowday, String calendarId) {
 		return stlDownDataDealMapper.getNextWorkDay(nowday, calendarId);
 	}
-	
+
+	/**
+	 *
+	 * 是否节假日
+	 * @param nowday 查询日期
+	 * @param calendarId 交易日历
+	 * @return 是否节假日（0：工作日；其他：节假日）
+	 * @see
+	 * @since 1.0
+	 */
+	public String getIsHoliday(Date nowday, String calendarId){
+		return stlDownDataDealMapper.getIsHoliday(nowday, calendarId);
+	}
+
 	// 获取上个工作日
 	public Date getBeforeWorkDay(Date nowday, String calendarId) {
 		return stlDownDataDealMapper.getBeforeWorkDay(nowday, calendarId);

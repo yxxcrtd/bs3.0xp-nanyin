@@ -390,7 +390,11 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
 
         // 申购模式
         if ((DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(trdProductDeal.getFinprodType2()))
-                && DictCodeList.交易方向_申购确认.getValue().equals(trdProductDeal.getPs())) {
+                // GZYHTZJY-1000: 未对申购方向的申购模式进行赋值,导致撤销批处理查询未查到 fuyongsheng modify 20211230 start
+//                && DictCodeList.交易方向_申购确认.getValue().equals(trdProductDeal.getPs())) {
+                && (DictCodeList.交易方向_申购确认.getValue().equals(trdProductDeal.getPs())
+                    || DictCodeList.交易方向_申购.getValue().equals(trdProductDeal.getPs()))) {
+            // GZYHTZJY-1000: 未对申购方向的申购模式进行赋值,导致撤销批处理查询未查到 fuyongsheng modify 20211230 end
             trdProductDealAdd.setPurchModle(DictCodeListExt2.申购方式_网上申购.getValue());
         }
         if(StringUtil.equals(DictCodeListExt3.下行交易匹配类型_自动匹配.getValue(),dealDto.getMatchType())) {

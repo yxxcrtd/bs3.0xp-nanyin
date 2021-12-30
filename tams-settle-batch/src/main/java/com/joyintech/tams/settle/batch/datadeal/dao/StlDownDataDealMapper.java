@@ -79,7 +79,18 @@ public interface StlDownDataDealMapper {
     
     // 获取上一工作日
     Date getBeforeWorkDay(@Param("nowday") Date nowday, @Param("calendarId") String calendarId);
-    
+
+    /**
+     *
+     * 是否节假日
+     * @param cdate 查询日期
+     * @param calendarId 交易日历
+     * @return 是否节假日（0：工作日；其他：节假日）
+     * @see
+     * @since 1.0
+     */
+    String getIsHoliday(@Param("cdate") Date cdate,@Param("calendarId") String calendarId);
+
     // 删除SETTLE_BATCH_PARA
     int deleteSettleBatchPara(@Param("dealDate") Date dealDate, @Param("portfolioIdList") List<String> portfolioIdList, 
     		@Param("secTypeList") List<String> secTypeList);

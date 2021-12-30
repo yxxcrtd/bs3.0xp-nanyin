@@ -93,7 +93,7 @@
             <where>
                 A.TRADE_STATUS = #{TRADE_STATUS_01}
                 AND (A.IS_CANCEL IS NULL OR A.IS_CANCEL = 'N')
-                AND B.TRADE_ID is null
+                <!--AND B.TRADE_ID is null-->
                 <if test="dealDateStr != null">
                     AND TO_CHAR(A.TRADE_DATE, 'yyyy-MM-dd') = #{dealDateStr,jdbcType=VARCHAR}
                 </if>
@@ -111,11 +111,11 @@
                             <foreach collection="psList" item="ps" open="AND (A.PS IN (" close=")" separator=",">
                                 #{ps,jdbcType=VARCHAR}
                             </foreach>
-                            )  OR (A.PS = #{PS_01} AND A.TRADE_MARKET_MODE != #{SHARES_TRADE_MARKET_01})
+                            OR (A.PS = #{PS_01} AND A.TRADE_MARKET_MODE != #{SHARES_TRADE_MARKET_01})
                             <foreach collection="psApplyList" item="ps" open=" OR (A.PS IN (" close=")" separator=",">
                                 #{ps,jdbcType=VARCHAR}
                             </foreach>
-                            AND D.PURCH_MODLE != #{PURCH_MODLE_02})
+                            AND D.PURCH_MODLE != #{PURCH_MODLE_02}))
                         </if>
                     </when>
                     <otherwise>
