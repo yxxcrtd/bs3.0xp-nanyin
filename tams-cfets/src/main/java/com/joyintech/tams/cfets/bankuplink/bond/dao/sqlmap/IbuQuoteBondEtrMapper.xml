@@ -190,10 +190,10 @@
     <select id="listAvaShareAmt" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.EntrustAvaShareAmtDto">
         SELECT
             T5.ENTRUST_ID,
-            nvl(T4.OUR_SHARE_AMT,0) usedOurShareAmt,
-            nvl(T4.LENDIN_SHARE_AMT,0) usedLendinShareAmt,
-            nvl(T5.OUR_ENT_NUM,0) ourEntNum,
-            nvl(T5.LENDIN_ENT_NUM,0) lendinEntNum
+            nvl(T4.OUR_SHARE_AMT,0)*100 usedOurShareAmt,
+            nvl(T4.LENDIN_SHARE_AMT,0)*100 usedLendinShareAmt,
+            nvl(T5.OUR_ENT_NUM,0)*100 ourEntNum,
+            nvl(T5.LENDIN_ENT_NUM,0)*100 lendinEntNum
         FROM
         ETR_ENTRUST_ADD T5
         LEFT JOIN (

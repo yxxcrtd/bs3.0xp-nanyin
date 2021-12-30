@@ -387,7 +387,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         updateCfetsOprHis(entity.getTotleTradeId(),operationType);
         //头寸
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
-            PositionHttpRequest.sendRevoke(cfetsBondDealDbDto.getRegFinProductDealTotal().getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+            PositionHttpRequest.sendRevoke(cfetsBondDealDbDto.getRegFinProductDealTotal().getpTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
         }/*else{
             PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,operationType));
         }*/
@@ -643,11 +643,13 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                                         regFinProductDealAdd.setLendinShareAmt(ArithmeticUtil.doAdd(regFinProductDealAdd.getLendinShareAmt(),faceDimension));
                                     }
                                 }
-                                regFinProductDealAdd.setOurShareAmt(ArithmeticUtil.multiply(regFinProductDealAdd.getOurShareAmt(),new BigDecimal(100)));
-                                regFinProductDealAdd.setLendinShareAmt(ArithmeticUtil.multiply(regFinProductDealAdd.getLendinShareAmt(),new BigDecimal(100)));
+                                regFinProductDealAdd.setOurShareAmt(ArithmeticUtil.multiply(regFinProductDealAdd.getOurShareAmt(),new BigDecimal(10000)));
+                                regFinProductDealAdd.setLendinShareAmt(ArithmeticUtil.multiply(regFinProductDealAdd.getLendinShareAmt(),new BigDecimal(10000)));
                             }
                         }
                     }
+                    regFinProductDealAdd.setOurShareAmt(ArithmeticUtil.divide(regFinProductDealAdd.getOurShareAmt(),new BigDecimal(100),2));
+                    regFinProductDealAdd.setLendinShareAmt(ArithmeticUtil.divide(regFinProductDealAdd.getLendinShareAmt(),new BigDecimal(100),2));
                     regFinProductDealAdd.setActSetteDate(entity.getActSetteDate());
                     if(null!=ptlAllocatio.getDealFeeAmt()){
                         regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(regFinProductDeal.getTradeId(),BussinessDictCodeList.费用类型_交易手续费.getValue(),ptlAllocatio.getDealFeeAmt()));
