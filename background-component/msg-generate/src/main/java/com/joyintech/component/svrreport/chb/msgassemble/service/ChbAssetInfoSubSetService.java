@@ -1748,7 +1748,9 @@ public class ChbAssetInfoSubSetService {
 				}else if(area.endsWith("200")){
 					cnBondItem32.setValue(area+" "+"县");
 				}
-			}			
+			}else{
+				cnBondItem32.setValue(item.getFinArea());
+			}
 		    cnBondItemMap1.put("RegionOfDebtor", cnBondItem32);
 		}
 		//融资人组织机构（社会信用）代码
