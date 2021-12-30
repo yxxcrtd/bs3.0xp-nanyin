@@ -2384,6 +2384,13 @@
         // 默认使用百元券面计算
         var prinAmt = new BigNumber(100);
         var finprodType2 = $("#finprodType2_" + currentTab).val();
+        // modify by etliu 20211230 start
+        // 当资产由债券改选股票等时，finprodType2_的值还没有联动过来，改成取$("#secId_jj").select2('data')[0].object
+        if ($("#secId_" + currentTab).select2('data')) {
+            finprodType2 = $("#secId_" + currentTab).select2('data')[0].object.finprodType2;
+        }
+        // modify by etliu 20211230 end
+
         // 以下条件不满足时直接返回
         if(finprodType2 != FINPROD_TYPE_TG_F01 || !finprodId || !prinAmt) {
             return;
