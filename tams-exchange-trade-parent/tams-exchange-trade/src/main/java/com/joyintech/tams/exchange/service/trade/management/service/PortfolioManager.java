@@ -387,8 +387,8 @@ public class PortfolioManager extends BaseService {
             calculateResponse.setFinprodName(instruction.getFinprodName());
             calculateResponse.setDisRate(new BigDecimal(detail.getDisRate()));
             calculateResponse.setEntrustProp(bean.getEntrustProp());
-            calculateResponse.setInstructionLeftAmt(BigDecimal.ZERO.equals(instruction.getEntrustAmt()) ? BigDecimal.ZERO : instruction.getEntrustLeftAmt());
-            calculateResponse.setInstructionLeftNum(instruction.getEntrustNum() == 0L ? 0L : instruction.getEntrustLeftAmt().longValue());
+            calculateResponse.setInstructionLeftAmt(BigDecimal.ZERO.equals(instruction.getEntrustAmt()) ? BigDecimal.ZERO : ArithmeticUtil.subtract(ArithmeticUtil.subtract(instruction.getEntrustAmt(), instruction.getEntrustLeftAmt()),instruction.getFrozenQuantity()));
+            calculateResponse.setInstructionLeftNum(instruction.getEntrustNum() == 0L ? 0L : instruction.getEntrustNum()-instruction.getEntrustLeftAmt().longValue()-instruction.getFrozenQuantity().longValue());
             calculateResponse.setInstructionTotalAmt(instruction.getEntrustAmt());
             calculateResponse.setInstructionTotalNum(instruction.getEntrustNum());
             calculateResponse.setFullPrice(Objects.nonNull(instruction.getFullPrice()) ? instruction.getFullPrice().toString() : BigDecimal.ZERO.toString());
