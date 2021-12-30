@@ -146,13 +146,13 @@
             return;
         },
         cols:[
-            {field:'tradeTypeStr', sortField:'tradeType',width:200, title: 'ExchangeTransMatch001.entrustType'},
+            // {field:'tradeTypeStr', sortField:'tradeType',width:200, title: 'ExchangeTransMatch001.entrustType'},
             {field:'portfolioId', sortField:'portfolioId',width:200, title: 'ExchangeTransMatch001.portfolioId'},
             {field:'portfolioName', sortField:'portfolioName',width:200, title: 'ExchangeTransMatch001.portfolioName'},
             {field:'finprodType2Str', sortField:'getFinprodType2Str',width:200, title: 'ExchangeTransMatch001.finprodType2'},
             {field:'finprodMarketId', sortField:'finprodMarketId',width:200, title: 'ExchangeTransMatch001.finprodId'},
             {field:'entrustDate', sortField:'entrustDate',width:200, title: 'ExchangeTransMatch001.entrustDate',type: 'date'},
-            {field:'tradeDate', sortField:'tradeDate',width:200, title: 'ExchangeTransMatch001.tradeDate',type: 'date'},
+            // {field:'tradeDate', sortField:'tradeDate',width:200, title: 'ExchangeTransMatch001.tradeDate',type: 'date'},
             {field:'psStr', sortField:'ps',width:200, title: 'ExchangeTransMatch001.ertPs'},
             {field:'tradeMarketStr', sortField:'tradeMarket',width:200, title: 'ExchangeTransMatch001.tradeMarket'},
             {field:'tradePlatStr', sortField:'tradePlat',width:200, title: 'ExchangeTransMatch001.tradePlat'},
@@ -161,6 +161,7 @@
             {field:'entrustNum', sortField:'entrustNum',width:200, title: 'ExchangeTransMatch001.entrustNum',type: 'number'},
             {field:'secAcctName', sortField:'secAcctName',width:200, title: 'ExchangeTransMatch001.secAcctNo'},
             {field:'acctName', sortField:'acctName',width:200, title: 'ExchangeTransMatch001.fundAccount'},
+            {field:'entrustId', sortField:'entrustId',width:200, title: 'ExchangeTransMatch001.bussCode'},
             {field:'tradeType', visible:false},
             {field:'finprodType2', visible:false},
             {field:'secAcctId', visible:false},
