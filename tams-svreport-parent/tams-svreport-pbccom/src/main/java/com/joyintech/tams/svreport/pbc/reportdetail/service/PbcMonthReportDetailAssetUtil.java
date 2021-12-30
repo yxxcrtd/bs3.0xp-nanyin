@@ -299,6 +299,9 @@ public class PbcMonthReportDetailAssetUtil {
                     province = SvrDataUtil.getParentCodeFromDataDict(DictCode.行政区划_市, province);
                 }
                 detailAsset.setBorrowerCity(province);
+
+                detailAsset.setIndustry(loanMap.get(detailAsset.getAssetCode()).getIndustryInfo());
+
             }
         }
 
@@ -320,7 +323,6 @@ public class PbcMonthReportDetailAssetUtil {
                 flag = true;
             }
         }
-
         return flag;
     }
 

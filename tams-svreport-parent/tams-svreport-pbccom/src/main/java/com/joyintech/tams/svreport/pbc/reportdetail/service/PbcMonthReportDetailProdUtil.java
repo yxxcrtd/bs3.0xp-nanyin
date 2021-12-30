@@ -234,22 +234,24 @@ public class PbcMonthReportDetailProdUtil {
 
     public static String getTermType(BigDecimal termDays){
         String code = null;
-        if(termDays.compareTo(BigDecimal.ZERO)>0&&termDays.compareTo(new BigDecimal(30))<=0){
-            code = DictCodeListExt3.人行月度明细_期限类型_1个月.getValue();
-        }else if(termDays.compareTo(new BigDecimal(30))>0&&termDays.compareTo(new BigDecimal(90))<=0){
-            code = DictCodeListExt3.人行月度明细_期限类型_1到3个月.getValue();
-        }else if(termDays.compareTo(new BigDecimal(90))>0&&termDays.compareTo(new BigDecimal(180))<=0){
-            code = DictCodeListExt3.人行月度明细_期限类型_3到6个月.getValue();
-        }else if(termDays.compareTo(new BigDecimal(180))>0&&termDays.compareTo(new BigDecimal(360))<=0){
-            code = DictCodeListExt3.人行月度明细_期限类型_6到12个月.getValue();
-        }else if(termDays.compareTo(new BigDecimal(360))>0&&termDays.compareTo(new BigDecimal(720))<=0){
-            code = DictCodeListExt3.人行月度明细_期限类型_1到2年.getValue();
-        }else if(termDays.compareTo(new BigDecimal(720))>0&&termDays.compareTo(new BigDecimal(1080))<=0){
-            code = DictCodeListExt3.人行月度明细_期限类型_2到3年.getValue();
-        }else if(termDays.compareTo(new BigDecimal(1080))>0){
-            code = DictCodeListExt3.人行月度明细_期限类型_3年以上.getValue();
-        }else if(termDays.compareTo(BigDecimal.ZERO)==0){
-            code = DictCodeListExt3.人行月度明细_期限类型_无固定期限.getValue();
+        if(null!=termDays){
+            if(termDays.compareTo(BigDecimal.ZERO)>0&&termDays.compareTo(new BigDecimal(30))<=0){
+                code = DictCodeListExt3.人行月度明细_期限类型_1个月.getValue();
+            }else if(termDays.compareTo(new BigDecimal(30))>0&&termDays.compareTo(new BigDecimal(90))<=0){
+                code = DictCodeListExt3.人行月度明细_期限类型_1到3个月.getValue();
+            }else if(termDays.compareTo(new BigDecimal(90))>0&&termDays.compareTo(new BigDecimal(180))<=0){
+                code = DictCodeListExt3.人行月度明细_期限类型_3到6个月.getValue();
+            }else if(termDays.compareTo(new BigDecimal(180))>0&&termDays.compareTo(new BigDecimal(360))<=0){
+                code = DictCodeListExt3.人行月度明细_期限类型_6到12个月.getValue();
+            }else if(termDays.compareTo(new BigDecimal(360))>0&&termDays.compareTo(new BigDecimal(720))<=0){
+                code = DictCodeListExt3.人行月度明细_期限类型_1到2年.getValue();
+            }else if(termDays.compareTo(new BigDecimal(720))>0&&termDays.compareTo(new BigDecimal(1080))<=0){
+                code = DictCodeListExt3.人行月度明细_期限类型_2到3年.getValue();
+            }else if(termDays.compareTo(new BigDecimal(1080))>0){
+                code = DictCodeListExt3.人行月度明细_期限类型_3年以上.getValue();
+            }else if(termDays.compareTo(BigDecimal.ZERO)==0){
+                code = DictCodeListExt3.人行月度明细_期限类型_无固定期限.getValue();
+            }
         }
         return code;
     }

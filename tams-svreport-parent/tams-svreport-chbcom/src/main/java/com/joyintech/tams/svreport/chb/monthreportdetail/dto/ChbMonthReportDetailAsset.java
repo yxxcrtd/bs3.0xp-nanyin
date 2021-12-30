@@ -1,6 +1,8 @@
 package com.joyintech.tams.svreport.chb.monthreportdetail.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
@@ -196,6 +198,7 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
         this.isFbhy = isFbhy;
     }
 
+    @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal costAmtB ;
 
     public BigDecimal getCostAmtB() {
