@@ -33,6 +33,8 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.controller.EntrustCommonBaseController;
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
+import com.joyintech.system.base.dao.SysWflBusinessListMapper;
+import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
@@ -162,7 +164,8 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
 
     @Autowired(required = false)
     private WflEtrEntrustMapper wflEtrEntrustMapper;
-
+    @Autowired
+    private SysWflBusinessListMapper sysWflBusinessListMapper;
 
     /**
      * 判断是否含权债
@@ -302,14 +305,9 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
     public void doUpdate(CfetsEtribBondInfo003Dto entity) {
         if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
             boolean isSubmit = true;
-            for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
-                WflEtrEntrustKey wflEtrEntrustKey = new WflEtrEntrustKey();
-                wflEtrEntrustKey.setEntrustId(dto.getEntrustId());
-                wflEtrEntrustKey.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
-                WflEtrEntrust wflEtrEntrust = wflEtrEntrustMapper.selectByPrimaryKey(wflEtrEntrustKey);
-                if(wflEtrEntrust != null) {
-                    isSubmit = false;
-                }
+            SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
+            if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
+                isSubmit = false;
             }
             for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
                 dto.setWorkflowId(entity.getWorkflowId());
