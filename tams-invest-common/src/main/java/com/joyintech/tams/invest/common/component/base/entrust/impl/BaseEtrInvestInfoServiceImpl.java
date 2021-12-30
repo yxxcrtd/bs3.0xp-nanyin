@@ -57,6 +57,9 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
     @Autowired
     private EtrEntrustAddMapper etrEntrustAddMapper;
 
+    @Autowired
+    private WflEtrEntrustDetailMapper wflEtrEntrustDetailMapper;
+
     /**
      * 指令废弃表
      */
@@ -1200,6 +1203,16 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
                     wflEtrEntrustBidPriceMapper.insertSelective(wflEtrEntrustBidPrice);
                 }
             }
+            //保存List<委托指令明细>
+            if(!StringUtil.isEmptyList(dto.getEtrEntrustDetailList())){
+                for(EtrEntrustDetail etrEntrustDetail : dto.getEtrEntrustDetailList()) {
+                    WflEtrEntrustDetail wflEtrEntrustDetail = new WflEtrEntrustDetail();
+                    BeanUtil.copyPropertiesIgnoreNull(wflEtrEntrustDetail,etrEntrustDetail);
+                    wflEtrEntrustDetail.setWorkflowId(dto.getWorkFlowId());
+                    wflEtrEntrustDetail.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                    wflEtrEntrustDetailMapper.insertSelective(wflEtrEntrustDetail);
+                }
+            }
             if (mstFileCommonService != null && dto.getMstFileInputParameter() != null) {
                 dto.getMstFileInputParameter().setBussinessId(dto.getWorkFlowId());
                 mstFileCommonService.updateBusinessId(dto.getMstFileInputParameter());
@@ -1285,6 +1298,8 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
             wflEtrPledgeMapper.deleteByWorkflowId(workflowId);
             // 全删委托投标标位表
             wflEtrEntrustBidPriceMapper.deleteByWorkflowId(workflowId);
+            //场内多组合系列户指令需要删除委托指令明细流程表
+            wflEtrEntrustDetailMapper.deleteByWorkflowId(workflowId);
             return true;
         }
         return false;

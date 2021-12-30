@@ -16,6 +16,8 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.system.base.dao.SysWflBusinessListMapper;
+import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
@@ -35,6 +37,7 @@ import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.constant.ProcessState;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -123,6 +126,9 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
 
     @Autowired
     private CfetsQuotedCommonService cfetsQuotedCommonService;
+
+    @Autowired
+    private SysWflBusinessListMapper sysWflBusinessListMapper;
     /**
      * 提交保存check 必填项
      * @param entity
@@ -346,7 +352,13 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             insertWfl(cfetsBondDealDbDto);
             ProcessMark newEntity;
             //头寸
-            //PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,OperationType.NEW));
+            SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
+            if(StringUtil.equals(sysWflBusinessList.getProcessState(), ProcessState.BACK.toString())){
+                PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto, OperationType.MODIFY));
+            }
+            else if(StringUtil.equals(sysWflBusinessList.getProcessState(), ProcessState.NEW.toString())){
+                PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto, OperationType.NEW));
+            }
             try {
                 newEntity = WorkFlowUtil.getBusinessObjectFromRequest(CfetsBondDealRegisterQuoteDto.class, true);
                 // 工作流ID
@@ -806,6 +818,10 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             result.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
             result.put("userId", SecurityUtil.getLoginUser().getUserName());
         }else{
+            String systemAct = DictCodeListExt3.系统动作_新建.getValue();
+            if(operationType.equals(OperationType.MODIFY)){
+                systemAct = DictCodeListExt3.系统动作_修改.getValue();
+            }
             String ps = entity.getRegFinProductDealTotal().getPs();String settleSpreed = StringUtil.EMPTY;
             result.put("interfaceType","Bond001");
             result.put("userId", SecurityUtil.getLoginUser().getUserName());
@@ -831,7 +847,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             }
             result.put("settleSpeed",settleSpreed);
             result.put("tradePlace",BussinessDictCodeList.交易场所_银行间.getValue());
-            result.put("systemAct","01");
+            result.put("systemAct",systemAct);
             result.put("cdate",DateUtil.format(entity.getRegFinProductDealTotal().getTradeDate()));
             result.put("ccy",entity.getRegFinProductDealTotal().getCcy());
             result.put("finprodId",entity.getRegFinProductDealTotal().getFinprodId());
