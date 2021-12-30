@@ -1,0 +1,1 @@
+delete from CFG_DATATABLE_SHOW where PAGECODE ='IbuQuoteRepo' and DTCODE = 'ETRINFOS' and COLCODE in ('tradeMarketStr','termType','secManageAcctId');
