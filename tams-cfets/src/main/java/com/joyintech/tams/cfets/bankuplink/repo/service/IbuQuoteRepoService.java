@@ -10,14 +10,23 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.trade.common.service.TrdAvailableCashQueryService;
+import com.joyintech.tams.business.common.dao.CfgDataTableFlagMapper;
+import com.joyintech.tams.business.common.dao.CfgDataTableMapper;
+import com.joyintech.tams.business.common.dao.CfgReadonlyFormShowMapper;
 import com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.entity.CfgDataTableShow;
+import com.joyintech.tams.business.common.entity.CfgDataTableShowFlag;
+import com.joyintech.tams.business.common.entity.CfgReadonlyFormShow;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepoMapper;
 import com.joyintech.tams.cfets.bankuplink.repo.dto.*;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleInfoOtherListRespond;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleInfoRespond;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbClosePosEtrRequest;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbClosePositionRequest;
 import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtrIbBondinfoService;
@@ -68,6 +77,22 @@ public class IbuQuoteRepoService extends BaseService {
 
     private static final Logger logger = LoggerFactory.getLogger(IbuQuoteRepoService.class);
 
+    /**
+     * 用户自定义设置
+     */
+    private static final int EFFERANGE_IS = 1;
+
+    /**
+     * 默认设置
+     */
+    private static final int EFFERANGE_NO = 0;
+
+
+    /**
+     * 默认设置用户ID
+     */
+    private static final String USER_ID = "COMM";
+
     @Autowired
     private IPlatformDate iPlatformDate;
 
@@ -100,6 +125,15 @@ public class IbuQuoteRepoService extends BaseService {
 
     @Autowired
     private BaseEtrInvestInfoMapper baseEtrInvestInfoMapper;
+
+    @Autowired
+    private CfgReadonlyFormShowMapper cfgReadonlyFormShowMapper;
+
+    @Autowired
+    private CfgDataTableFlagMapper cfgDataTableFlagMapper;
+
+    @Autowired
+    private CfgDataTableMapper cfgDataTableMapper;
 
     @Autowired
     private JoyinbusinessCommonService joyinbusinessCommonService;
@@ -663,9 +697,9 @@ public class IbuQuoteRepoService extends BaseService {
         param.put("rolePos03", DictCodeListExt2.角色岗位_交易处长.getValue());
         param.put("loginUserId", LoginUserUtil.getUserName());
         param.put("loginUserId", loginUserId);
-//        if("admin".equals(loginUserId)){
-//            loginUserId = "li02";//TODO 测试写死登录用户 提交代码时修改
-//        }
+        if ("admin".equals(loginUserId)) {
+//            loginUserId = "jp";//TODO 测试写死登录用户 提交代码时修改
+        }
         param.put("loginUserId", loginUserId);
         return cfetsIbuQuoteRepoMapper.listDealTransactionDetails(param);
     }
@@ -1311,9 +1345,9 @@ public class IbuQuoteRepoService extends BaseService {
      */
     private void setParam(Map<String, Object> param, int type) {
         String loginUserId = LoginUserUtil.getUserName();
-//        if("admin".equals(loginUserId)){
-//            loginUserId = "li02";//TODO 测试写死登录用户 提交代码时修改
-//        }
+        if ("admin".equals(loginUserId)) {
+//            loginUserId = "jp";//TODO 测试写死登录用户 提交代码时修改
+        }
         if (type == 1) {
             param.put("finprodType2_F02", BussinessDictCodeList.金融产品类型_债券质押式正回购.getValue());
             param.put("finprodType2_F03", BussinessDictCodeList.金融产品类型_债券质押式逆回购.getValue());
@@ -2057,6 +2091,60 @@ public class IbuQuoteRepoService extends BaseService {
         req.setTotalTradeId(IDGenerator.generate());
         req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
         PositionHttpRequest.batchClose(req);
+    }
+
+    /**
+     * 获取指令详情
+     *
+     * @param pageCode
+     * @param dtCode
+     * @param spcdCodes
+     * @param dto
+     * @return java.util.Map<java.lang.String, java.lang.Object>
+     * @author jiangpeng
+     * @date 2021/12/30 20:31
+     */
+    public Map<String, Object> findEntrustDet(String pageCode, String dtCode, String spcdCodes, CfetsRepoDealQuoteRequest dto) {
+        Map<String, Object> resultData = new HashMap<>();
+        if (StringUtil.isBlank(spcdCodes)) {
+            return resultData;
+        }
+        String repo_pledge_model = CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL);
+        List<String> spcdCodeList = new ArrayList<>(Arrays.asList(spcdCodes.split(",")));
+        Map<String, Object> param = new HashMap<>();
+        param.put("pageCode", pageCode);
+        param.put("dtCode", dtCode);
+        param.put("spcdCodes", spcdCodeList);
+        //基本信息
+        List<CfgReadonlyFormShow> infoForm = cfgReadonlyFormShowMapper.getReadonlyForms(param);
+        Map<String, Object> paramMap = BeanUtil.object2Map(dto);
+        setParam(paramMap, 1);
+        //银行间质押式回购质押券模式：01无质押券库，02单个质押库，03多个质押券库
+        paramMap.put("repo_pledge_model", repo_pledge_model);
+        List<CfetsRepoDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(paramMap);
+        CfetsRepoDealEntrustOrderDto entrustOrderDto = new CfetsRepoDealEntrustOrderDto();
+        if (CollectionUtils.isNotEmpty(entrustDtos)) {
+            entrustOrderDto = entrustDtos.get(0);
+        }
+        resultData.put(dtCode + "_form", infoForm);
+        resultData.put(dtCode + "_data", entrustOrderDto);
+        if (StringUtil.equals(repo_pledge_model, "02")) {
+            List<CfgDataTableShow> infoForm1;
+            //获取登录用户的ID
+            String userId = SecurityUtil.getLoginUser().getUserName();
+            CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCodes(pageCode, dtCode, spcdCodeList, userId);
+            if (null == flag) {
+                infoForm1 = cfgDataTableMapper.getBySpcdCodes(pageCode, dtCode, spcdCodeList, EFFERANGE_NO, USER_ID);
+            } else {
+                infoForm1 = cfgDataTableMapper.getBySpcdCodes(pageCode, dtCode, spcdCodeList, EFFERANGE_IS, userId);
+            }
+
+            List<RepoEntrustPledgeDto> list = this.selectRepoEntrustPledges(dto);
+            resultData.put(dtCode + "_table", infoForm1);
+            resultData.put(dtCode + "_tableData", list);
+        }
+
+        return resultData;
     }
 }
 
