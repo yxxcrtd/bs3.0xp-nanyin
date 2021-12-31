@@ -882,6 +882,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
 
         // 金融产品分类Entity 构造开始----------------------------------------------------------
         FinProductType finProductType = new FinProductType();
+        BeanUtil.copyPropertiesIgnoreNull(finProductType,deal);
         finProductType.setFinprodId(deal.getTradeId());// 金融产品代码
         finProductType.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));// 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
         finProductType.setType6(deal.getRepoType());// 分类6
@@ -919,11 +920,11 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      */
     public void prepareFinTradeProductAndAdd(CfetsRepoDealRegisterQuoteDto entity, String repRegistOrg,
                                              FinTradeProductDto finTradeProduct, FinTradeProductAdd finTradeProductAdd, RegFinProductDeal deal) {
+        BeanUtil.copyPropertiesIgnoreNull(finTradeProduct,deal);
+        BeanUtil.copyPropertiesIgnoreNull(finTradeProductAdd,deal);
         // 交易类金融产品Entity 构造开始----------------------------------------------------------
         finTradeProduct.setFinprodId(deal.getTradeId());// 金融产品代码 = 金融产品交易Entity.交易编号
         finTradeProduct.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));// 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
-        finTradeProduct.setFinprodType(deal.getFinprodType2());//  金融产品类型 =  数据字典缓存.金融产品类型（投管用）数据字典.债券质押式正回购/逆回购
-        finTradeProduct.setFinprodType2(deal.getFinprodType2());
         finTradeProduct.setPrin(deal.getTradeAmt());// 本金金额
         finTradeProduct.setCcy(deal.getCcy());// 币种
         finTradeProduct.setVdate(deal.getvSettleDate());// 起息日
