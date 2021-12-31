@@ -1,9 +1,11 @@
 package com.joyintech.tams.common.base.dao;
 
+import com.joyintech.tams.common.base.entity.EtrEntrustDetail;
 import com.joyintech.tams.common.base.entity.WflEtrEntrustDetail;
 import com.joyintech.tams.common.base.entity.WflEtrEntrustDetailKey;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -29,4 +31,6 @@ public interface WflEtrEntrustDetailMapper {
     int updateByPrimaryKeySelective(WflEtrEntrustDetail record);
 
     int updateByPrimaryKey(WflEtrEntrustDetail record);
+
+    List<WflEtrEntrustDetail> selectList(WflEtrEntrustDetailKey record);
 }

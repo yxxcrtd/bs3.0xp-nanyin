@@ -45,6 +45,8 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
@@ -160,7 +162,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 */
 	@Autowired
 	private EtrCommandDispatcherService etrCommandDispatcherService;
-
+	@Autowired
+	private JoyinbusinessCommonService joyinbusinessCommonService;
 	/**
 	 * 委托自动分发
 	 */
@@ -562,16 +565,15 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			etrCommandDispatcherService.pushCommandMsg(param);
 		}
         doDeleteFlow(dto.getWorkflowId());
-		//插入指令多组合明细表
-		if(StringUtil.equals(DictCodeList.是否_是.getValue(),dto.getIsMulti())) {
-			//插入指令多组合明细表
-			BaseEtrInvestInfoDto baseEtrInvestInfoDto = this.buildMultiEtrFlow(dto);
-			if(!StringUtil.isEmptyList(baseEtrInvestInfoDto.getEtrEntrustDetailList())) {
-				for (EtrEntrustDetail etrEntrustDetail:baseEtrInvestInfoDto.getEtrEntrustDetailList()) {
-					etrEntrustDetailMapper.insertSelective(etrEntrustDetail);
-				}
+		//插入指令明细表
+		BaseEtrInvestInfoDto baseEtrInvestInfoDto = this.buildMultiEtrFlow(dto);
+		if(!StringUtil.isEmptyList(baseEtrInvestInfoDto.getEtrEntrustDetailList())) {
+			for (EtrEntrustDetail etrEntrustDetail:baseEtrInvestInfoDto.getEtrEntrustDetailList()) {
+				etrEntrustDetailMapper.insertSelective(etrEntrustDetail);
 			}
 		}
+		//处理履历
+		updateCfetsOprHis(dto.getEntrustId(),dto.getOptType());
 	}
 
 	/**
@@ -1866,6 +1868,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				&& DictCodeList.委托状态_已接收.getValue().equals(entity.getEntrustStatus())) {
 			baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId());
 		}
+		//处理履历
+		updateCfetsOprHis(entity.getEntrustId(),"close");
     }
 
     /**
@@ -1885,6 +1889,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				||DictCodeListExt3.委托状态_待分发.getValue().equals(entity.getEntrustStatus()))) {
 			baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId());
 		}
+		//处理履历
+		updateCfetsOprHis(entity.getEntrustId(),"revoke");
 //        restTemplate.postForObject(
 //                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/entrustRevoke",entity,
 //                Integer.class);
@@ -5717,6 +5723,26 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			doInsetOrUpdateForEtrPositionHold(dto);
 		}
 
+	}
+
+	/**
+	 * 处理履历
+	 */
+	public void updateCfetsOprHis(String entrustId,String optType){
+		CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+		oprHisReq.setEntrustId(entrustId);
+		if(ENTRUST_RECORD_NEW.equals(optType)){
+			oprHisReq.setOperType(DictCodeListExt3.操作类型_新建.getValue());
+		}else if(ENTRUST_RECORD_NEW.equals(optType)){
+			oprHisReq.setOperType(DictCodeListExt3.操作类型_修改.getValue());
+		}else if("close".equals(optType)){
+			oprHisReq.setOperType(DictCodeListExt3.操作类型_关闭.getValue());
+		}else if("revoke".equals(optType)){
+			oprHisReq.setOperType(DictCodeListExt3.操作类型_撤回.getValue());
+		}else if("export".equals(optType)){
+			oprHisReq.setOperType(DictCodeListExt3.操作类型_导出.getValue());
+		}
+		joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
 	}
 
 

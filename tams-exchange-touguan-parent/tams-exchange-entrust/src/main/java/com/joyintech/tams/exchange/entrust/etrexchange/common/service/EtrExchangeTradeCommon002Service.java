@@ -16,11 +16,10 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
+import com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -29,12 +28,14 @@ import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTra
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +58,8 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 
 	@Autowired
 	private EtrExchangeTradeCommonMapper etrExchangeTradeCommonMapper;
+	@Autowired
+	private JoyinbusinessCommonMapper joyinbusinessCommonMapper;
     /**
      * 分页查询产品持仓信息
      * <功能详细描述>
@@ -244,5 +247,30 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 		return super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeTradeCommonMapper.selectEtrExchange(param));
 //		return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectEtrExchange",
 //				param, EtrExchangeTrade003Dto.class);
+	}
+	  /* 指令导出履历处理
+     *
+	 * @param dataList 数据列表
+     * @author jiangpeng
+     * @date 2021/12/20 14:33
+			*/
+	public void handExportTimes(List<EtrExchangeTradeEtrExchangeCommonRequest> dataList) {
+		List<CfetsOprHisInfoRequest> result = new ArrayList<>();
+		dataList.forEach(item -> {
+			if (StringUtil.isNotEmpty(item.getEntrustId())) {
+				CfetsOprHisInfoRequest cfetsOprHisInfoRequest = new CfetsOprHisInfoRequest();
+				cfetsOprHisInfoRequest.setEntrustId(item.getEntrustId());
+				cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_导出.getValue());
+				cfetsOprHisInfoRequest.setSeqNo(IDGenerator.generate(32));
+				cfetsOprHisInfoRequest.setOperDate(DateUtil.platDateFromCache());
+				cfetsOprHisInfoRequest.setOperTime(DateUtil.platDateFromCache());
+				cfetsOprHisInfoRequest.setUserId(SecurityUtil.getLoginUser().getUserName());
+				cfetsOprHisInfoRequest.setCreateUser(SecurityUtil.getLoginUser().getUserName());
+				cfetsOprHisInfoRequest.setCreateDept(CommonUtil.getDeptCode());
+				cfetsOprHisInfoRequest.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
+				result.add(cfetsOprHisInfoRequest);
+			}
+		});
+		joyinbusinessCommonMapper.mergeCfetsOprHis(result);
 	}
 }

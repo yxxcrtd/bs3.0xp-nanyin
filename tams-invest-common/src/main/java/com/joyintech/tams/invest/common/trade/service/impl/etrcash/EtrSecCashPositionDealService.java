@@ -1063,7 +1063,7 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
         Map<String, Object> map = new HashMap<>();
         map.put("entrustId", etrEntrust.getEntrustId());
         map.put("portfolioId", etrEntrust.getPortfolioId());
-        
+
         if (DictCodeList.交易方向_买入.getValue().equals(ps)
                 // add by dubaojun 2020-08-14 场内交易增加配债逻辑 start
                 || DictCodeListExt3.交易方向_配债.getValue().equals(ps)
@@ -1093,7 +1093,9 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
             if(StringUtil.equals(etrEntrust.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
                 ||StringUtil.equals(etrEntrust.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
                 //场内交易的日间交易没有产生指令现金流水，所以amout不包含已完成的交易的金额，需要查一次临时交易表
-                amount = ArithmeticUtil.subtract(amount, EtrCommonCashPositionDealService.getEtrExchangeFinishAmt(map));
+                map.put("entrustClass", etrEntrust.getEntrustClass());
+                amount = ArithmeticUtil.subtract(amount, EtrCommonCashPositionDealService.getEtrExchangeFinishAmtMuilt(map));
+                //amount = ArithmeticUtil.subtract(amount, EtrCommonCashPositionDealService.getEtrExchangeFinishAmt(map));
             }
 
             etrCashPositionFlowDto.setAmount(amount);
@@ -1111,7 +1113,9 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
 				// 场内交易的日间交易已完成额度不能取额度表里的数据，因为如果是按金额下指令的，额度表中存的是金额，所以从交易表和交易零时表中查询实际发生的额度汇总
                 // 冲销是否sum生效交易数据
                 map.put("sumTradeFlag","01");
-				etrFinish = EtrCommonCashPositionDealService.getEtrExchangeFinishAmt(map);
+                map.put("entrustClass", etrEntrust.getEntrustClass());
+                etrFinish = EtrCommonCashPositionDealService.getEtrExchangeFinishAmtMuilt(map);
+                //etrFinish = EtrCommonCashPositionDealService.getEtrExchangeFinishAmt(map);
 				if (StringUtil.equals(DictCodeListExt3.交易方向_质押券出库.getValue(), ps) || StringUtil.equals(DictCodeListExt3.交易方向_质押券入库.getValue(), ps)) {
 					etrFinish = etrCommonCashPositionDealService.selectSumStandardTicket(etrEntrust.getEntrustId(), ps);
 					if(null == etrFinish){//没有成交任何标准券

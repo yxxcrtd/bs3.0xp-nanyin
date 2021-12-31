@@ -251,7 +251,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     yieldPRM01 = ArithmeticUtil.round(ptlAllocatio.getPrice(), yieldScale, RoundingMode.HALF_UP);
                 }
                 if (yieldPRM01 != null && StringUtil.equals(ptlAllocatio.getPriceModel(), DictCodeListExt2.价格模式_指定价格.getValue())
-                        && yieldPRM01.compareTo(ptlAllocatio.getPrice()) != 0) {
+                        && yieldPRM01.compareTo(ArithmeticUtil.round(ptlAllocatio.getPrice(), yieldScale, RoundingMode.HALF_UP)) != 0) {
                     yieldFlag = false;
                 }
 
@@ -263,7 +263,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 //TODO 组合分配中交易金额要小于等于（剩余指令额度-已成功发出的未收到外汇交易中心成功反馈报价和流程中的报价-流程中交易登记额度）
                 // 已实现: 剩余指令额度 = 指令额度-生效的交易登记额度-流程中交易登记额度
                 BigDecimal etrLastNum = cfetsIbuQuoteRepoMapper.findEtrLastNumByEtrId(ptlAllocatio.getEntrustId());
-                if (ptlAllocatio.getTradeAmt().compareTo(etrLastNum) > 0) {
+                if (ACompareToB(ptlAllocatio.getTradeAmt(), etrLastNum, 12) > 0) {
                     errorList.add(new ValidMessage("组合分配中交易金额要小于等于[" + ptlAllocatio.getEntrustId() + "]剩余的指令额度"));
                     break;
                 }
@@ -277,7 +277,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 pldegeNowAmt = pldegeNowAmt == null ? BigDecimal.ZERO : pldegeNowAmt;
                 BigDecimal pldegeSumAmt = etrPrin.get(ptlAllocatio.getEntrustId());
                 pldegeSumAmt = pldegeSumAmt == null ? BigDecimal.ZERO : pldegeSumAmt;
-                if (ArithmeticUtil.doSub(pldegeSumAmt, pldegeNowAmt, pldegeUsedAmt).compareTo(BigDecimal.ZERO) < 0) {
+                if (ACompareToB(ArithmeticUtil.doSub(pldegeSumAmt, pldegeNowAmt, pldegeUsedAmt), (BigDecimal.ZERO), 12) < 0) {
                     errorList.add(new ValidMessage("质押券总额不能超过指令" + ptlAllocatio.getEntrustId() + "指定的质押券总额"));
                     break;
                 }
@@ -285,49 +285,49 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
 
             // 交易金额   到期结算金额  回购利息 交易手续费 结算手续费 总和需要相等
             if (StringUtil.isNotEmpty(entity.getTradeAmt())
-                    && entity.getTradeAmt().compareTo(tradeAmtTotal) != 0) {
+                    && ACompareToB(entity.getTradeAmt(), tradeAmtTotal, 12) != 0) {
                 errorList.add(new ValidMessage("组合分配交易金额总和需要等于交易金额"));
             }
             if (StringUtil.isNotEmpty(entity.getMtradeAmt())
-                    && entity.getMtradeAmt().compareTo(mtradeAmtTotal) != 0) {
+                    && ACompareToB(entity.getMtradeAmt(), mtradeAmtTotal, 12) != 0) {
                 errorList.add(new ValidMessage("组合分配到期结算金额总和需要等于到期结算金额"));
             }
             if (StringUtil.isNotEmpty(entity.getmIntAmt())
-                    && entity.getmIntAmt().compareTo(mIntAmtTotal) != 0) {
+                    && ACompareToB(entity.getmIntAmt(), mIntAmtTotal, 12) != 0) {
                 errorList.add(new ValidMessage("组合分配回购利息总和需要等于回购利息"));
             }
             if (StringUtil.isNotEmpty(entity.getDealFeeAmt())
-                    && entity.getDealFeeAmt().compareTo(dealFeeAmtTotal) != 0) {
+                    && ACompareToB(entity.getDealFeeAmt(), dealFeeAmtTotal, 12) != 0) {
                 errorList.add(new ValidMessage("组合分配交易手续费总和需要等于交易手续费"));
             }
             if (StringUtil.isNotEmpty(entity.getSettFeeAmt())
-                    && entity.getSettFeeAmt().compareTo(settFeeamtTotal) != 0) {
+                    && ACompareToB(entity.getSettFeeAmt(), settFeeamtTotal, 12) != 0) {
                 errorList.add(new ValidMessage("组合分配结算服务费总和需要等于结算服务费"));
             }
             //勾选指令的价格模式只存在指定价格时，回购利率默认等于指定价格指令中的回购利率，可修改，修
             // 改后与默认值不一致时，提交时，弹出提示“ 价格模式为指定价格，交易需要按照指令指定的回购利率进行交易！”
             if (StringUtil.isNotEmpty(yieldPRM01) && !StringUtil.isNotEmpty(minOrMaxYield)
-                    && yieldPRM01.compareTo(entity.getPrice()) != 0) {
+                    && ACompareToB(yieldPRM01, entity.getPrice(), yieldScale) != 0) {
                 errorList.add(new ValidMessage("价格模式为指定价格，交易需要按照指令指定的回购利率进行交易！"));
             }
             //交易方向为正回购
             //勾选指令的价格模式只存在限价指令时，回购利率默认为空，
             // 填入值后需不大于限价指令中回购利率的最小值，不满足时提交弹出提示“价格模式为限价指令，交易回购利率不能大于指令指定的回购利率进行交易”
             if (!StringUtil.isNotEmpty(yieldPRM01) && StringUtil.isNotEmpty(minOrMaxYield)
-                    && minOrMaxYield.compareTo(entity.getPrice()) < 0 && StringUtil.equals(ps, DictCodeListExt3.交易方向_正回购.getValue())) {
+                    && ACompareToB(minOrMaxYield, entity.getPrice(), yieldScale) < 0 && StringUtil.equals(ps, DictCodeListExt3.交易方向_正回购.getValue())) {
                 errorList.add(new ValidMessage("价格模式为限价指令，交易回购利率不能大于指令指定的回购利率进行交易！"));
             }
             //交易方向为逆回购
             //勾选指令的价格模式只存在限价指令时，回购利率默认为空，填入值后需不小于限价指令中回购利率的最大值，
             // 不满足时提交弹出提示“价格模式为限价指令，交易回购利率不能小于指令指定的回购利率进行交易”
             if (!StringUtil.isNotEmpty(yieldPRM01) && StringUtil.isNotEmpty(minOrMaxYield)
-                    && minOrMaxYield.compareTo(entity.getPrice()) > 0 && StringUtil.equals(ps, DictCodeListExt3.交易方向_逆回购.getValue())) {
+                    && ACompareToB(minOrMaxYield, entity.getPrice(), yieldScale) > 0 && StringUtil.equals(ps, DictCodeListExt3.交易方向_逆回购.getValue())) {
                 errorList.add(new ValidMessage("价格模式为限价指令，交易回购利率不能小于指令指定的回购利率进行交易！"));
             }
             //勾选指令的价格模式同时存在指定价格和限价指令时，回购利率默认为空，填入值后需判断回购利率是否等于指定价格中的回购利率，
             // 不满足提交时，弹出提示“价格模式存在指定价格，交易需要按照指令指定的回购利率进行交易！”
             if (StringUtil.isNotEmpty(yieldPRM01) && StringUtil.isNotEmpty(minOrMaxYield)
-                    && yieldPRM01.compareTo(entity.getPrice()) != 0) {
+                    && ACompareToB(yieldPRM01, entity.getPrice(), yieldScale) != 0) {
                 errorList.add(new ValidMessage("价格模式存在指定价格，交易需要按照指令指定的回购利率进行交易！"));
             }
             //检查指令是否是已接收状态
@@ -1503,6 +1503,23 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         });
         ajaxResult.setErrorList(errorList);
         return ajaxResult;
+    }
+
+    /**
+     * 数值比较 a<b 返回-1,a=b返回0,a>b返回1
+     *
+     * @param a
+     * @param b
+     * @param scale 比较精度,默认四舍五入
+     * @return int
+     * @author jiangpeng
+     * @date 2021/12/30 21:10
+     */
+    public int ACompareToB(BigDecimal a, BigDecimal b, int scale) {
+        if (scale == 0) {
+            scale = yieldScale;
+        }
+        return ArithmeticUtil.round(a, scale, RoundingMode.HALF_UP).compareTo(ArithmeticUtil.round(b, scale, RoundingMode.HALF_UP));
     }
 
 }
