@@ -249,6 +249,7 @@ public class CfetsInterfReceiveService {
             if(null!=ibuQuoteBondDtoCfetByQuoteId){
                 ibuQuoteBondDto.setSecManageAcctId(ibuQuoteBondDtoCfetByQuoteId.getSecManageAcctId());
                 ibuQuoteBondDto.setCreateUser(ibuQuoteBondDtoCfetByQuoteId.getCreateUser());
+                ibuQuoteBondDto.setDipType(ibuQuoteBondDtoCfetByQuoteId.getDipType());
             }
         }
 //    	IbuQuoteBondDto ibuQuoteBondDto2 = ibuQuoteMapper.selectQuoteBondByKey(ibuQuoteBondDto.getQuoteId());
@@ -974,6 +975,7 @@ public class CfetsInterfReceiveService {
             if(null!=ibuQuoteBondDtoCfetByQuoteId){
                 ibuQuoteBondDto.setSecManageAcctId(ibuQuoteBondDtoCfetByQuoteId.getSecManageAcctId());
                 ibuQuoteBondDto.setCreateUser(ibuQuoteBondDtoCfetByQuoteId.getCreateUser());
+                ibuQuoteBondDto.setDipType(ibuQuoteBondDtoCfetByQuoteId.getDipType());
             }
         }
         // 根据明细数据的状态，修改主表数据状态
