@@ -111,13 +111,8 @@ public class FieldEtrInfoQueryController extends BaseController {
     @PostMapping("/findAllData")
     @ResponseBody
     public Message<Page<FieldEtrInfoQueryListResponse>> findAllData(@RequestBody FieldEtrInfoQueryListRequest dto){
-        try {
             Page<FieldEtrInfoQueryListResponse> page = fieldEtrInfoQueryService.findAllData(dto);
             return new Message<Page<FieldEtrInfoQueryListResponse>>().success().setData(page);
-        } catch (Exception e) {
-            logger.error("查询场内指令列表分页数据异常", e);
-            return new Message<Page<FieldEtrInfoQueryListResponse>>().fail().setMessage("查询场内指令列表分页数据异常");
-        }
     }
 
     @PostMapping(value = "/exportEtrInfoQueryList")
