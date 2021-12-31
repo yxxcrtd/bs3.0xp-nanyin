@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.joyintech.exchange.service.quote.service.QuoteService;
@@ -20,9 +21,11 @@ import com.joyintech.tams.exchange.common.bean.IntegratedFixedIncomeQuoteBean;
 import com.joyintech.tams.exchange.common.bean.IntegratedFixedIncomeQuoteQryBean;
 import com.joyintech.tams.exchange.common.bean.IntegratedRepurchaseQuoteBean;
 import com.joyintech.tams.exchange.common.bean.IntegratedRepurchaseQuoteQryBean;
+import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.TickBean;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.request.QueryTickRequest;
+import com.joyintech.tams.exchange.service.trade.management.service.EntrustManagement;
 import com.joyintech.tams.exchange.service.trade.management.service.IntegratedQuoteManagement;
 
 import io.swagger.annotations.Api;
@@ -36,6 +39,9 @@ public class InstructionQuoteController {
 
     @Autowired
     private QuoteService quoteService;
+    
+    @Autowired
+    private EntrustManagement entrustManagement;
     
     @Autowired
     private IntegratedQuoteManagement integratedQuoteManagement;
@@ -68,6 +74,25 @@ public class InstructionQuoteController {
     @RequestMapping(value = "/entrust/integrated/fixed_income_quote", method = RequestMethod.GET)
     public Message<List<IntegratedFixedIncomeQuoteBean>> queryIntegratedFixedIncomeQuote(@RequestBody @Validated IntegratedFixedIncomeQuoteQryBean integratedFixedIncomeQuoteQryBean) {
         return new Message<List<IntegratedFixedIncomeQuoteBean>>(integratedQuoteManagement.queryIntegratedFixedIncomeQuote(integratedFixedIncomeQuoteQryBean));
+    }
+    
+    /**
+     * 大宗行情查询
+     *
+     * @param userId    用户Id
+     * @param stockCode 市场.证券代码
+     * @return ResultBean
+     */
+    @RequestMapping(value = "/entrust/integrated/quote", method = RequestMethod.GET)
+    public ResultBean queryIntegratedQuote(@RequestParam(value = "user_id", required = false) String userId,
+                                           @RequestParam(value = "quote_type") int quoteType,
+                                           @RequestParam(value = "account_id", required = false) String accountId,
+                                           @RequestParam(value = "stock_code", required = false) String stockCode,
+                                           @RequestParam(value = "opposite_liaisonTel", required = false) String oppositeLiaisonTel,
+                                           @RequestParam(value = "liaisonTel", required = false) String liaisonTel,
+                                           @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize,
+                                           @RequestParam(value = "posStr", required = false, defaultValue = "") String posStr) {
+        return entrustManagement.queryIntegratedQuote(userId, quoteType, stockCode, accountId, oppositeLiaisonTel, liaisonTel, pageSize, posStr);
     }
 
 }
