@@ -10,6 +10,7 @@ import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
+import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice003Service;
 import com.joyintech.tams.cfets.position.service.PositionInfoService;
@@ -85,6 +86,9 @@ public class IbuQuoteBond003Controller extends BaseController {
 
     @Autowired
     private PositionInfoService positionInfoService;
+
+    @Autowired
+    private CfetsIbuQuoteBondMapper cfetsIbuQuoteBondMapper;
 
 
     @ApiOperation(value = "请求报价初始化", notes = "请求报价初始化")
@@ -238,13 +242,21 @@ public class IbuQuoteBond003Controller extends BaseController {
         }else{
             if(counterInfoList.size()>1){
                 sb.append(this.getMessage("COMMON_E_0058"));
+            }else{
+                counterInfoList.forEach(item ->{
+                    //状态会否变更
+                    if(!StringUtil.equals(item.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_已回复.getValue())){
+                        sb.append(this.getMessage("CFETS_COMMON_R_028"));
+                        return;
+                    }
+                    if(StringUtil.isNotEmpty(cfetsBondDealQuoteCommonDto.getQuoteId())&&StringUtil.isNotEmpty(item.getCpPartyId())){
+                        if(!StringUtil.equals(item.getTradeStatus(),cfetsIbuQuoteBondMapper.getTradeStatus(cfetsBondDealQuoteCommonDto.getQuoteId(),item.getCpPartyId()))){
+                            sb.append("可选机构交易状态已变更，无法成交!");
+                            return;
+                        }
+                    }
+                });
             }
-            counterInfoList.forEach(item ->{
-                if(!StringUtil.equals(item.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_已回复.getValue())){
-                    sb.append(this.getMessage("CFETS_COMMON_R_028"));
-                    return;
-                }
-            });
         }
         // 银行间报价-现券买卖报价-超委托剩余额度校验开关（01 硬阻挡 02 软阻挡）
         if (StringUtil.equals(CacheUtil.getSysParam("ibuFlag_bondOverEntrustAvaAmt"), "02")
