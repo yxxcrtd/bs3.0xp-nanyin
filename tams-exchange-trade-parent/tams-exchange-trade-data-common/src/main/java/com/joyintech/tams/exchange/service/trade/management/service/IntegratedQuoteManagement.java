@@ -47,15 +47,16 @@ public class IntegratedQuoteManagement {
         return new ResultBean(ErrorCode.SUCCESS, TickConverter.convertTick(quoteTickService.findFromRedisById(stockCode)));
     }
 
-    public List<IntegratedBulkQuoteBean> queryIntegratedBulkQuote(IntegratedBulkQuoteQryBean integratedBulkQuoteQryBean) {
-        return terminalHelper.queryIntegratedBulkQuote(integratedBulkQuoteQryBean);
+    public ResultBean queryIntegratedBulkQuote(IntegratedBulkQuoteQryBean integratedBulkQuoteQryBean) {
+    	List<IntegratedBulkQuoteBean> integratedBulkQuotes = terminalHelper.queryIntegratedBulkQuote(integratedBulkQuoteQryBean);
+        return new ResultBean(ErrorCode.SUCCESS, integratedBulkQuotes);
+    }
+    
+    public ResultBean queryIntegratedBulkCloseQuote(IntegratedBulkCloseQuoteQryBean integratedBulkCloseQuoteQryBean) {
+        return new ResultBean(ErrorCode.SUCCESS, terminalHelper.queryIntegratedBulkCloseQuote(integratedBulkCloseQuoteQryBean));
     }
 
-    public List<IntegratedBulkCloseQuoteBean> queryIntegratedBulkCloseQuote(IntegratedBulkCloseQuoteQryBean integratedBulkCloseQuoteQryBean) {
-        return terminalHelper.queryIntegratedBulkCloseQuote(integratedBulkCloseQuoteQryBean);
-    }
-
-    public List<IntegratedRepurchaseQuoteBean> queryIntegratedRepurchaseQuote(IntegratedRepurchaseQuoteQryBean integratedRepurchaseQuoteQryBean) {
+    public ResultBean queryIntegratedRepurchaseQuote(IntegratedRepurchaseQuoteQryBean integratedRepurchaseQuoteQryBean) {
         String entrustProp = integratedRepurchaseQuoteQryBean.getEntrustProp();
         if (!"".equals(entrustProp) &&
                 !EntrustProp.SH_REPURCHASE_TRADE.value.equals(entrustProp) &&
@@ -67,11 +68,16 @@ public class IntegratedQuoteManagement {
                 !EntrustProp.SH_REPURCHASE_INTENTION.value.equals(entrustProp)) {
             return null;
         }
-        return terminalHelper.queryIntegratedRepurchaseQuote(integratedRepurchaseQuoteQryBean);
+        return new ResultBean(ErrorCode.SUCCESS, terminalHelper.queryIntegratedRepurchaseQuote(integratedRepurchaseQuoteQryBean));
     }
 
-    public List<IntegratedFixedIncomeQuoteBean> queryIntegratedFixedIncomeQuote(IntegratedFixedIncomeQuoteQryBean integratedFixedIncomeQuoteQryBean) {
-        return terminalHelper.queryIntegratedFixedIncomeQuote(integratedFixedIncomeQuoteQryBean);
+    public ResultBean queryIntegratedFixedIncomeQuote(IntegratedFixedIncomeQuoteQryBean integratedFixedIncomeQuoteQryBean) {
+        return new ResultBean(ErrorCode.SUCCESS, terminalHelper.queryIntegratedFixedIncomeQuote(integratedFixedIncomeQuoteQryBean));
+    }
+    
+    public ResultBean queryIntegratedQuote(String userId, int quoteType, String stockCode, String accountId, String oppositeLiaisonTel, String liaisonTel, int pageSize, String posStr) {
+        List<IntegratedQuote> integratedQuotes = terminalHelper.queryIntegratedQuote(quoteType, stockCode, accountId, oppositeLiaisonTel, liaisonTel, pageSize, posStr);
+        return new ResultBean(ErrorCode.SUCCESS, integratedQuotes);
     }
 
     public ResultBean addIntegratedRepurchaseQuote(IntegratedRepurchaseQuoteBean repurchaseQuoteBean) {

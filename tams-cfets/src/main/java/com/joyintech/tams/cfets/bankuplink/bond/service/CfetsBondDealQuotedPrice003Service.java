@@ -24,8 +24,10 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
 import com.joyintech.service.bankuplink.ibu.dto.BondQuoteInfoDto;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.exception.PositionException;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
@@ -119,6 +121,9 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
 
     @Autowired
     private com.joyintech.tams.cfets.bankuplink.bond.service.CfetsQuotedCommonService cfetsQuotedCommonServicevue;
+
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
 
     public AjaxResult checkNotEmpty(CfetsBondDealQuoteCommonDto entity) {
         AjaxResult ajaxResult = new AjaxResult();
@@ -610,9 +615,13 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
         com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = preparEntity(entity);
         BondQuoteInfoDto bondQuoteInfoDto = new BondQuoteInfoDto();
         BeanUtil.copyPropertiesIgnoreNull(bondQuoteInfoDto,entity);
+        CfetsOprHisInfoRequest cfetsOprHisInfoRequest = new CfetsOprHisInfoRequest();
+        cfetsOprHisInfoRequest.setEntrustId(cfetsBondDealRequestQuoteDto.getQuoteId());
+        cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_新建.getValue());
         if (StringUtil.equals(entity.getOptType(), "revoke")) {
 			entity.setQuoteType(BussinessDictCodeList.报价方式_请求报价.getValue());
             cfetsBondDealQuotedPriceService.doHisRevoke(bondQuoteInfoDto);
+            cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_撤销.getValue());
 			/*restTemplate.postForObject(
 					ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsBondDealQuotedPrice/doHisRevoke", entity,
 					Boolean.class);*/
@@ -623,6 +632,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
                     cfetsBondDealQuotedPriceService.sendBondRequestQuoteDeal(cfetsBondDealRequestQuoteDto);
 					/*restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
 							+ "/CfetsBondDealQuotedPrice/sendBondRequestQuoteDeal", entity, boolean.class);*/
+                    cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_成交.getValue());
 				}
 			} else if (StringUtil.equals(entity.getQuotaPageModel(), "new")) {
 				// 新增
@@ -645,6 +655,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
 						Boolean.class);*/
 			}
 		}
+        joyinbusinessCommonService.updateCfetsOprHis(cfetsOprHisInfoRequest);
 	}
 
     /**

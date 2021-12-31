@@ -9,14 +9,11 @@
 package com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrdispatcher.controller;
 
 
-import com.joyintech.background.component.common.pack.common.util.StringUtil;
-import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
@@ -24,14 +21,12 @@ import com.joyintech.tams.business.common.dto.CommonSearchInfoRequest;
 import com.joyintech.tams.business.common.dto.FieldExportRequestDto;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrdispatcher.dto.*;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrdispatcher.service.FieldEtrDispatcherService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -175,193 +170,6 @@ public class FieldEtrDispatcherController extends BaseController {
             List dataList = fieldEtrDispatcherService.findAllEtrDispatcherCommon(req.getDto(FieldEtrDispatcherTradeListRequest.class)).getRoot();
             return dataList;
         });
-    }
-
-    /**
-     * 自动分发
-     *
-     * @param fieldDto br
-     * @return Message<AjaxResult>
-     * @author sjj
-     */
-    @ResponseBody
-    @ApiOperation(value = "自动分发提交", notes = "自动分发提交")
-    @PostMapping("submit")
-    public Message<AjaxResult> submit(@RequestBody FieldEtrDispatcherAutoRequest fieldDto, BindingResult br){
-        //提交check
-        String returnMsg= fieldEtrDispatcherService.checkSave(fieldDto, br);
-        if (StringUtil.isNotBlank(returnMsg)) {
-            return new Message<AjaxResult>().fail().setMessage(returnMsg);
-        }
-
-        //设置提交
-        fieldEtrDispatcherService.deleteEtrAutoTime();
-        if (fieldDto.getVdate().equals("1900-01-01") && fieldDto.getMdate().equals("2099-12-31")) {
-
-        } else {
-            int count = fieldEtrDispatcherService.insertEtrAutoTime(fieldDto);
-            if (count == 0) {
-                return new Message<AjaxResult>().fail().setMessage("自动分发设置失败，请联系管理员！");
-            }
-        }
-        return new Message<AjaxResult>().success().setMessage("自动分发设置完成");
-    }
-
-    /**
-     * 自动分发查询
-     *
-     * @return Message<FieldEtrDispatcherAutoRequest>
-     * @author sjj
-     */
-    @ResponseBody
-    @ApiOperation(value = "自动分发查询", notes = "自动分发查询")
-    @PostMapping("findAutoDetail")
-    public Message<FieldEtrDispatcherAutoRequest> findAutoDetail(){
-        try {
-            FieldEtrDispatcherAutoRequest fieldEtrDispatcherAutoRequest = fieldEtrDispatcherService.findAutoDetail();
-            return new Message<FieldEtrDispatcherAutoRequest>().success().setData(fieldEtrDispatcherAutoRequest);
-        } catch (Exception e) {
-            logger.error("自动分发查询异常", e);
-            return new Message<FieldEtrDispatcherAutoRequest>().fail().setMessage("自动分发查询异常");
-        }
-
-    }
-
-    /**
-     * 点击分发按钮check
-     *
-     * @param fieldDto br
-     * @return Message<AjaxResult>
-     * @author sjj
-     */
-    @ResponseBody
-    @ApiOperation(value = "分发check", notes = "分发check")
-    @PostMapping("doDispatcherCheck")
-    public Message<AjaxResult> doDispatcherCheck(@RequestBody CommonSearchInfoRequest fieldDto, BindingResult br)
-            throws Exception {
-        //提交check
-        Map<String, Object> pageParam = BeanUtil.object2Map(fieldDto);
-        AjaxResult ajaxResult = fieldEtrDispatcherService.doDispatcherCheck(pageParam, br);
-        if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
-            return new Message<AjaxResult>().fail().setMessage(ajaxResult.getMessage());
-        } else {
-            //选择交易员
-            List<SelectOptionDto> userList = fieldEtrDispatcherService.getUsers(pageParam);
-            ajaxResult.setData(userList);
-            return new Message<AjaxResult>().success().setData(ajaxResult);
-        }
-    }
-
-    /**
-     * 点击分发确认
-     *
-     * @param fieldDto br
-     * @return Message<AjaxResult>
-     * @author sjj
-     */
-    @ResponseBody
-    @ApiOperation(value = "分发", notes = "分发")
-    @PostMapping("doDispatcher")
-    public Message<AjaxResult> doDispatcher(@RequestBody FieldEtrDispatcherDealRequest fieldDto, BindingResult br){
-        //提交check
-        try {
-            Map<String, Object> pageParam = BeanUtil.object2Map(fieldDto);
-            AjaxResult ajaxResult = fieldEtrDispatcherService.doDispatcherDealCheck(pageParam, br);
-            if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
-                return new Message<AjaxResult>().fail().setMessage(ajaxResult.getMessage());
-            } else {
-                //选择交易员
-                fieldEtrDispatcherService.doDispatcherDeal(pageParam);
-                return new Message<AjaxResult>().success().setMessage("分发成功");
-            }
-        } catch (Exception e) {
-            logger.error("分发异常", e);
-            return new Message<AjaxResult>().fail().setMessage("分发异常");
-        }
-    }
-
-    /**
-     * 点击退回
-     *
-     * @param fieldDto br
-     * @return Message<AjaxResult>
-     * @author sjj
-     */
-    @ResponseBody
-    @ApiOperation(value = "退回", notes = "退回")
-    @PostMapping("doRefuseEntrust")
-    public Message<AjaxResult> doRefuseEntrust(@RequestBody FieldEtrDispatcherDealRequest fieldDto, BindingResult br){
-        //退回check
-        try {
-            Map<String, Object> pageParam = BeanUtil.object2Map(fieldDto);
-            AjaxResult ajaxResult = fieldEtrDispatcherService.doRefuseEntrustCheck(pageParam, br);
-            if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
-                return new Message<AjaxResult>().fail().setMessage(ajaxResult.getMessage());
-            }
-            else{
-                //退回指令
-                ajaxResult = fieldEtrDispatcherService.refuseEntrust(pageParam);
-
-                return new Message<AjaxResult>().success().setMessage("退回成功");
-            }
-        } catch (Exception e) {
-            logger.error("退回异常", e);
-            return new Message<AjaxResult>().fail().setMessage("退回异常");
-        }
-    }
-
-    /**
-     * 分发权限配置交易员查询
-     *
-     * @return Page<FieldEtrDispatcherTraderAuthListResponse>
-     * @see
-     * @since 1.0
-     */
-    @ApiOperation(value = "分发权限配置交易员查询", notes = "分发权限配置交易员查询")
-    @PostMapping("/getTraderAuthList")
-    @ResponseBody
-    public Message<List<FieldEtrDispatcherTraderAuthListResponse>> getTraderAuthList(){
-        try {
-            List<FieldEtrDispatcherTraderAuthListResponse> list = fieldEtrDispatcherService.getTraderAuthList();
-            return new Message<List<FieldEtrDispatcherTraderAuthListResponse>>().success().setData(list);
-        }catch (Exception e) {
-            logger.error("查询分发权限配置交易员数据异常",e);
-            return new Message<List<FieldEtrDispatcherTraderAuthListResponse>>().fail().setMessage("查询指令列表分页数据异常");
-        }
-    }
-
-    /**
-     * 分发权限配置保存
-     *
-     * @return AjaxResult
-     * @param  dto
-     * @throws Exception Exception
-     * @see
-     * @since 1.0
-     */
-    @ApiOperation(value = "分发权限配置保存", notes = "分发权限配置保存")
-    @PostMapping("/saveTraderAuthList")
-    @ResponseBody
-    public Message<AjaxResult> saveTraderAuthList(@RequestBody FieldEtrDispatcherTraderAuthListRequest dto)
-            throws Exception {
-
-        AjaxResult ajaxResult = new AjaxResult();
-        List<FieldEtrDispatcherTraderAuthListResponse> dtoList = dto.getDtoList();
-        //提交check，软控
-        if(StringUtil.equals(dto.getIsConfirmFlag(), DictCodeList.是否_否.getValue())){
-            ajaxResult = fieldEtrDispatcherService.checkSaveTraderAuthList(dtoList);
-            if(StringUtil.isNotBlank(ajaxResult.getMessage())){
-                return new Message<AjaxResult>().success().setData(ajaxResult);
-            }
-        }
-
-        //保存
-        ajaxResult = fieldEtrDispatcherService.doSaveTraderAuthList(dtoList);
-        if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
-            return new Message<AjaxResult>().fail().setMessage("分发权限设置失败");
-        }else{
-            return new Message<AjaxResult>().success().setMessage("分发权限配置成功");
-        }
     }
 
     @GetMapping(value="/getEtrTraderList")

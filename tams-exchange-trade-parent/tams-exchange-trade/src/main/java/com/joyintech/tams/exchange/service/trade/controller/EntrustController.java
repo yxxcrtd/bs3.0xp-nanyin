@@ -84,25 +84,6 @@ public class EntrustController {
     }
 
     /**
-     * 大宗行情查询
-     *
-     * @param userId    用户Id
-     * @param stockCode 市场.证券代码
-     * @return ResultBean
-     */
-    @RequestMapping(value = "/entrust/integrated/quote", method = RequestMethod.GET)
-    public ResultBean queryIntegratedQuote(@RequestParam(value = "user_id", required = false) String userId,
-                                           @RequestParam(value = "quote_type") int quoteType,
-                                           @RequestParam(value = "account_id", required = false) String accountId,
-                                           @RequestParam(value = "stock_code", required = false) String stockCode,
-                                           @RequestParam(value = "opposite_liaisonTel", required = false) String oppositeLiaisonTel,
-                                           @RequestParam(value = "liaisonTel", required = false) String liaisonTel,
-                                           @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize,
-                                           @RequestParam(value = "posStr", required = false, defaultValue = "") String posStr) {
-        return entrustManagement.queryIntegratedQuote(userId, quoteType, stockCode, accountId, oppositeLiaisonTel, liaisonTel, pageSize, posStr);
-    }
-
-    /**
      * 最大交易数量查询
      *
      * @param userId       用户Id

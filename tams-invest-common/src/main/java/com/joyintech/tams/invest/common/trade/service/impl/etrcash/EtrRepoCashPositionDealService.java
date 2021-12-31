@@ -1233,7 +1233,13 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                         entrustAmt = etrEntrust.getEntrustNum();
                     }
                     //获取已完成额度
-                    BigDecimal finishAmt = EtrCommonCashPositionDealService.getEtrFinishAmt(etrEntrust.getEntrustId());
+                    Map<String,Object> map=new HashMap<>();
+                    map.put("sumTradeFlag","01");
+                    map.put("entrustClass", etrEntrust.getEntrustClass());
+                    map.put("portfolioId",etrEntrust.getPortfolioId());
+                    map.put("entrustId",etrEntrust.getEntrustId());
+                    BigDecimal finishAmt = EtrCommonCashPositionDealService.getEtrExchangeFinishAmtMuilt(map);
+                    //BigDecimal finishAmt = EtrCommonCashPositionDealService.getEtrFinishAmt(etrEntrust.getEntrustId());
                     etrSecPositionFlowDto.setAmount(ArithmeticUtil.subtract(entrustAmt, ArithmeticUtil.divide(finishAmt,债券面值,2)));
                     etrSecPositionFlowDto.setCloseFlag("01"); // 委托关闭特殊处理, 委托关闭后, 再撤销交易时, 委托状态会变成已接收, 这时应该要把这笔数据删除
                     etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
@@ -1263,7 +1269,13 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                     }
                 }
                 //获取已完成额度
-                BigDecimal finishAmt = EtrCommonCashPositionDealService.getEtrFinishAmt(etrEntrust.getEntrustId());                
+                Map<String,Object> map=new HashMap<>();
+                map.put("sumTradeFlag","01");
+                map.put("entrustClass", etrEntrust.getEntrustClass());
+                map.put("portfolioId",etrEntrust.getPortfolioId());
+                map.put("entrustId",etrEntrust.getEntrustId());
+                BigDecimal finishAmt = EtrCommonCashPositionDealService.getEtrExchangeFinishAmtMuilt(map);
+                //BigDecimal finishAmt = EtrCommonCashPositionDealService.getEtrFinishAmt(etrEntrust.getEntrustId());
                 // 减少委托本金金额
                 etrCashPositionFlowDto.setAmount(ArithmeticUtil.subtract(etrEntrust.getEntrustAmt(), finishAmt));
                 etrCashPositionFlowDto.setAcctId(acctId);

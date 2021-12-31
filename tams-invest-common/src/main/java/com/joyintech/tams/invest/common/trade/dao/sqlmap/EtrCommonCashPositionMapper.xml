@@ -1032,4 +1032,32 @@
                                                     and TRADE_ID in (select TRADE_ID from TRD_PRODUCT_DEAL_ADD where ENTRUST_ID = #{entrustId})
         ) and PLEDGE_FINPROD_ID=#{finprodId}
     </select>
+
+
+
+    <select id="getEtrExchangeFinishAmtMuilt" resultType="java.math.BigDecimal">
+        SELECT sum(AMOUNT)
+        from (SELECT sum(T.AMOUNT) AMOUNT
+              FROM PTL_CASH_POSITION_FLOW T
+              WHERE ORDER_ID IN
+                    (SELECT ORDER_ID
+                     FROM stl_pay_temp_orders
+                     WHERE stl_pay_temp_orders.TRADE_ID IN
+                           (SELECT TRADE_ID
+                            FROM ETR_FINISH_STATUS
+                            WHERE ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+                              AND TRADE_ID != #{entrustId,jdbcType=VARCHAR}) )
+        <if test="sumTradeFlag != null and sumTradeFlag != '' and sumTradeFlag == '01'">
+        union all
+        SELECT sum(T.AMOUNT) AMOUNT
+        FROM PTL_CASH_POSITION_FLOW T
+        WHERE ORDER_ID IN
+              (SELECT TRADE_ID
+               FROM ETR_FINISH_STATUS
+               WHERE ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+                 AND TRADE_ID != #{entrustId,jdbcType=VARCHAR})
+        </if>
+         )
+    </select>
+
 </mapper>

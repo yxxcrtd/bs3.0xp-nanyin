@@ -384,4 +384,10 @@ public interface EtrCommonCashPositionMapper {
     BigDecimal selectZhiLingChiCang(@Param("entrustId")String entrustId,@Param("finprodId")String finprodId);
 
     BigDecimal selectJiaoYiChiCang(@Param("entrustId")String entrustId, @Param("finprodId")String finprodId);
+    /**
+     * 系列户组合日间交易完成金额(日终和日间)
+     * @param map
+     * @return
+     */
+    BigDecimal getEtrExchangeFinishAmtMuilt(Map<String, Object> map);
 }

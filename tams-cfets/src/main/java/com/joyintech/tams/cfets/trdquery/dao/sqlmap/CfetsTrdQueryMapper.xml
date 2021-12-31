@@ -1135,13 +1135,13 @@
         to_char(ib.settle_date,'yyyy-MM-dd') as settleDate,
         ib.sett_ccy as ccy,
         ibd.unit_cprice as unitCprice,
-        ibd.yield as yield,
-        ibd.exer_yield as exerYield,
+        ibd.yield*100 as yield,
+        ibd.exer_yield*100 as exerYield,
         deal.faceValue as faceValue,
         ib.delivery_type as deliveryType,
         ib.sett_type as clearType,
-        null as trdFeeAmt,
-        null as settleFeeAmt,
+        ib.deal_fee_amt as trdFeeAmt,
+        ib.sett_fee_amt as settleFeeAmt,
         ibd.unit_int as unitInt,
         ibd.unit_fprice as unitFprice,
         ibd.cprice_amt as cpriceAmt,
@@ -1244,13 +1244,13 @@
         to_char(ib.settle_date,'yyyy-MM-dd') as settleDate,
         ib.sett_ccy as ccy,
         ibd.unit_cprice as unitCprice,
-        ibd.yield as yield,
-        ibd.exer_yield as exerYield,
+        ibd.yield*100 as yield,
+        ibd.exer_yield*100 as exerYield,
         deal.faceValue as faceValue,
         ib.delivery_type as deliveryType,
         ib.sett_type as clearType,
-        null as trdFeeAmt,
-        null as settleFeeAmt,
+        ib.deal_fee_amt as trdFeeAmt,
+        ib.sett_fee_amt as settleFeeAmt,
         ibd.unit_int as unitInt,
         ibd.unit_fprice as unitFprice,
         ibd.cprice_amt as cpriceAmt,
@@ -1421,18 +1421,18 @@
         pp.portfolio_name as portfolioName,
         (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
         ir.share_amt/100 as faceValue,
-        null as trdFeeAmt,
-        null as settleFeeAmt,
-        null as cpriceAmt,
-        null as intAmt,
+        ir.DEAL_FEE_AMT as trdFeeAmt,
+        ir.SETT_FEE_AMT as settleFeeAmt,
+        ir.cprice_amt as cpriceAmt,
+        ir.int_amt as intAmt,
         ir.fprice_amt as fpriceAmt,
         EE.PRICE_MODEL as priceModel,
         EE.BUSINESS_MODEL as businessModel,
         ib.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
-        null as unitCprice,
-        null as yield,
-        null as exerYield
+        ibd.unit_cprice as unitCprice,
+        ibd.yield*100 as yield,
+        ibd.exer_yield*100 as exerYield
         from ibu_quote_etr_re ir
         inner join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
@@ -1451,6 +1451,62 @@
         )efs ON ee.Entrust_Id = efs.entrust_id
         left join stl_sec_acct_info stlinfo
         on ib.sec_manage_acct_id=stlinfo.sec_acct_id
+        left join (
+            select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.yield as yield,
+            ibd.unit_cprice,
+            ibd.exer_yield,
+            ibd.unit_int,
+            ibd.unit_fprice,
+            ibd.cprice_amt,
+            ibd.int_amt,
+            ibd.fprice_amt
+            from ibu_quote_bond_det ibd
+            inner join ibu_quote_bond t1
+            on ibd.quote_id=t1.quote_id and t1.quote_type='01'
+            LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
+            left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
+            where   ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
+
+            union all
+
+            select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
+            wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
+            null as yield,
+            null as unit_cprice,
+            null as exer_yield,
+            null as  unit_int,
+            null as unit_fprice,
+            null as cprice_amt,
+            null as int_amt,
+            null as fprice_amt
+            from ibu_quote_bond_det ibd
+            inner join ibu_quote_bond t1
+            on ibd.quote_id=t1.quote_id and t1.quote_type='02'
+            and t1.trade_status!='07' and ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
+            LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
+            left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
+            group by ibd.quote_id
+            union all
+            select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,
+            ibd.yield as yield,
+            ibd.unit_cprice,
+            ibd.exer_yield,
+            ibd.unit_int,
+            ibd.unit_fprice,
+            ibd.cprice_amt,
+            ibd.int_amt,
+            ibd.fprice_amt
+            from ibu_quote_bond_det ibd
+            inner join ibu_quote_bond t1
+            on ibd.quote_id=t1.quote_id and t1.quote_type='02'
+            and t1.trade_status='07'
+            LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
+            left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
+            where ibd.trade_status='07' and ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
+        )ibd
+        on ir.quote_id=ibd.quote_id
         where ir.quote_id=#{quoteId,jdbcType=VARCHAR}
 
         union all
@@ -1460,18 +1516,18 @@
         pp.portfolio_name as portfolioName,
         (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
         ir.share_amt/100 as faceValue,
-        null as trdFeeAmt,
-        null as settleFeeAmt,
-        null as cpriceAmt,
-        null as intAmt,
+        ir.DEAL_FEE_AMT as trdFeeAmt,
+        ir.SETT_FEE_AMT as settleFeeAmt,
+        ir.cprice_amt as cpriceAmt,
+        ir.int_amt as intAmt,
         ir.fprice_amt as fpriceAmt,
         EE.PRICE_MODEL as priceModel,
         EE.BUSINESS_MODEL as businessModel,
         ib.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
-        null as unitCprice,
-        null as yield,
-        null as exerYield
+        ibd.unit_cprice as unitCprice,
+        ibd.yield*100 as yield,
+        ibd.exer_yield*100 as exerYield
         from wfl_ibu_quote_etr_re ir
         inner join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
@@ -1490,6 +1546,62 @@
         )efs ON ee.Entrust_Id = efs.entrust_id
         left join stl_sec_acct_info stlinfo
         on ib.sec_manage_acct_id=stlinfo.sec_acct_id
+        left join (
+            select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.yield as yield,
+            ibd.unit_cprice,
+            ibd.exer_yield,
+            ibd.unit_int,
+            ibd.unit_fprice,
+            ibd.cprice_amt,
+            ibd.int_amt,
+            ibd.fprice_amt
+            from ibu_quote_bond_det ibd
+            inner join ibu_quote_bond t1
+            on ibd.quote_id=t1.quote_id and t1.quote_type='01'
+            LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
+            left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
+            where   ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
+
+            union all
+
+            select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
+            wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
+            null as yield,
+            null as unit_cprice,
+            null as exer_yield,
+            null as  unit_int,
+            null as unit_fprice,
+            null as cprice_amt,
+            null as int_amt,
+            null as fprice_amt
+            from ibu_quote_bond_det ibd
+            inner join ibu_quote_bond t1
+            on ibd.quote_id=t1.quote_id and t1.quote_type='02'
+            and t1.trade_status!='07' and ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
+            LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
+            left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
+            group by ibd.quote_id
+            union all
+            select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,
+            ibd.yield as yield,
+            ibd.unit_cprice,
+            ibd.exer_yield,
+            ibd.unit_int,
+            ibd.unit_fprice,
+            ibd.cprice_amt,
+            ibd.int_amt,
+            ibd.fprice_amt
+            from ibu_quote_bond_det ibd
+            inner join ibu_quote_bond t1
+            on ibd.quote_id=t1.quote_id and t1.quote_type='02'
+            and t1.trade_status='07'
+            LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
+            left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
+            where ibd.trade_status='07' and ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
+        )ibd
+        on ir.quote_id=ibd.quote_id
         where ir.quote_id=#{quoteId,jdbcType=VARCHAR}
 
     </select>
