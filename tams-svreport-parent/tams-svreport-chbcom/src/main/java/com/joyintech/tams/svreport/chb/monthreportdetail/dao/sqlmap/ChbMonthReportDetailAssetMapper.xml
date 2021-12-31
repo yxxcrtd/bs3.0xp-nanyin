@@ -144,7 +144,18 @@
         I.asset_yield RATE,
         P.CCY,
         AP.POS_AMT delayPayAmt,
-        AP.TDY_COST_AMT costAmt,
+        <if test="costFlag != null and costFlag =='02'">
+            P.ASSETVALUE_A costAmt,
+        </if>
+        <if test="costFlag != null and costFlag =='01'">
+            AP.TDY_COST_AMT costAmt,
+        </if>
+        <if test="costFlag != null and costFlag =='02'">
+            P.ASSETVALUE_B costAmtB,
+        </if>
+        <if test="costFlag != null and costFlag =='01'">
+            AP.TDY_COST_AMT costAmtB,
+        </if>
         AP.TDY_FLOAT_INGPL floatIngpl,
         AP.TDY_INTINCEXP INTINCEXP,
         AP.TDY_INTADJEXP_ADD intadjexpAdd,

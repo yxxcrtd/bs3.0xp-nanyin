@@ -178,7 +178,8 @@ public class ChbMonthReportDetailAssetUtil {
         }else if(DictCodeListExt3.中债_上游资产一级分类_存款类资产.getValue().equals(assetType)){
             if("D02".equals(assetType2)){
                 SubjectName = assetInfo.getBankName();
-            }else if("D01".equals(assetType2)){
+            }
+            if("D01".equals(assetType2)){
                 SubjectName = assetInfo.getRivalParty();
             }
         }else if(DictCodeListExt3.中债_上游资产一级分类_基金类资产.getValue().equals(assetType)){
