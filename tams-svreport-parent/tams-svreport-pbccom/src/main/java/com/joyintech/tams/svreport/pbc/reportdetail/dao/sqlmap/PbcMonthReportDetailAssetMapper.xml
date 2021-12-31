@@ -196,7 +196,6 @@
             UNION ALL
             SELECT SRCFIELD1 id,S.SUBJECT_NAME text FROM CHB_TYPE_MAPPING_EX E
             LEFT JOIN BOK_SUBJECT S ON S.SUBJECT_NO=E.SRCFIELD1
-             where E.MAPPINGCODE IN ('CASH_SUBJECTNO_AVG','CASH_SUBJECTNO_MKT')
              GROUP BY SRCFIELD1,S.SUBJECT_NAME)A
         <where>
             A.id like concat(concat('%',#{prodId,
