@@ -6,6 +6,7 @@ import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbMonthPrdPositiondetailMapper;
 import com.joyintech.tams.common.base.entity.ChbMonthPrdPositiondetail;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
+import com.joyintech.tams.common.svreport.chb.constant.ProdConstants;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -148,26 +149,29 @@ public class ChbMonthReportDetailProdUtil {
         String date = DateUtil.getYesterDayDate(DateUtil.addMonthDateStrM(term+"01",1));
         String source = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE_PBC);
         Map<String, BigDecimal> rateMap = new HashMap<String, BigDecimal>();
-        for(ChbMonthPrdPositiondetail dto: prdPositionList){
-            if(!DictCodeListExt1.币种_中债_人民币.getValue().equals(dto.getCcy())){
-                if(null!=dto.getEndamtsumOth()){
-                    dto.setEndamtsumOth(ChbCcyConvertUtil.exchangeMoney(
-                            dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),DateUtil.parse(date),dto.getEndamtsumOth(),rateMap,source));
-                }
-                if(null!=dto.getPayamtsum()){
-                    dto.setPayamtsum(ChbCcyConvertUtil.exchangeMoney(
-                            dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),DateUtil.parse(date),dto.getPayamtsum(),rateMap,source));
-                }
-                if(null!=dto.getCustomeramt()){
-                    dto.setCustomeramt(ChbCcyConvertUtil.exchangeMoney(
-                            dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),DateUtil.parse(date),dto.getCustomeramt(),rateMap,source));
-                }
-                if(null!=dto.getBankamt()){
-                    dto.setBankamt(ChbCcyConvertUtil.exchangeMoney(
-                            dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),DateUtil.parse(date),dto.getBankamt(),rateMap,source));
-                }
-            }
-        }
+
+
+        //非保本不需要转换币种.prostion就转过了
+//        for(ChbMonthPrdPositiondetail dto: prdPositionList){
+//            if(!DictCodeListExt1.币种_中债_人民币.getValue().equals(dto.getCcy())&& ProdConstants.PROFITTYPE_FBBFDSY.equals(pos.getProfitType())){
+//                if(null!=dto.getEndamtsumOth()){
+//                    dto.setEndamtsumOth(ChbCcyConvertUtil.exchangeMoney(
+//                            dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),DateUtil.parse(date),dto.getEndamtsumOth(),rateMap,source));
+//                }
+//                if(null!=dto.getPayamtsum()){
+//                    dto.setPayamtsum(ChbCcyConvertUtil.exchangeMoney(
+//                            dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),DateUtil.parse(date),dto.getPayamtsum(),rateMap,source));
+//                }
+//                if(null!=dto.getCustomeramt()){
+//                    dto.setCustomeramt(ChbCcyConvertUtil.exchangeMoney(
+//                            dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),DateUtil.parse(date),dto.getCustomeramt(),rateMap,source));
+//                }
+//                if(null!=dto.getBankamt()){
+//                    dto.setBankamt(ChbCcyConvertUtil.exchangeMoney(
+//                            dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),DateUtil.parse(date),dto.getBankamt(),rateMap,source));
+//                }
+//            }
+//        }
     }
 
     /**

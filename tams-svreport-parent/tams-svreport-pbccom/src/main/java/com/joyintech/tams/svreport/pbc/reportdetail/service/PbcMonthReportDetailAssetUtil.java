@@ -178,8 +178,8 @@ public class PbcMonthReportDetailAssetUtil {
                 if (StringUtils.isEmpty(industryType1)){
                     industryType1 = assetInfo.getIndustryPbc();
                 }
-               if(null!=assetInfo.getInstitSize()){
-                   String partyType1 = PbcMonthReportConstants.SVR_INSTIT_SIZE_01;
+                String partyType1 = PbcMonthReportConstants.SVR_INSTIT_SIZE_01;
+                if(null!=assetInfo.getInstitSize()){
                    if(null!=assetInfo.getInstitSize()){
                        switch (assetInfo.getInstitSize()){
                            case PbcMonthReportConstants.SVR_INSTIT_SIZE_01:partyType1 =PbcMonthReportConstants.SVR_INSTIT_SIZE_01; break;
@@ -188,8 +188,8 @@ public class PbcMonthReportDetailAssetUtil {
                            case PbcMonthReportConstants.SVR_INSTIT_SIZE_04:partyType1 =PbcMonthReportConstants.SVR_INSTIT_SIZE_04; break;
                        }
                    }
-                   pbcMonthReportDetailAsset.setPartyType1(partyType1);
                }
+                pbcMonthReportDetailAsset.setPartyType1(partyType1);
                 pbcMonthReportDetailAsset.setIndustry(industryType1);
             }
         }
@@ -256,8 +256,8 @@ public class PbcMonthReportDetailAssetUtil {
                 if (StringUtils.isEmpty(industryType1)){
                     industryType1 = assetInfo.getIndustryPbc();
                 }
+                String partyType1 = PbcMonthReportConstants.SVR_INSTIT_SIZE_01;
                 if(null!=assetInfo.getInstitSize()){
-                    String partyType1 = PbcMonthReportConstants.SVR_INSTIT_SIZE_01;
                     if(null!=assetInfo.getInstitSize()){
                         switch (assetInfo.getInstitSize()){
                             case PbcMonthReportConstants.SVR_INSTIT_SIZE_01:partyType1 =PbcMonthReportConstants.SVR_INSTIT_SIZE_01; break;
@@ -266,11 +266,10 @@ public class PbcMonthReportDetailAssetUtil {
                             case PbcMonthReportConstants.SVR_INSTIT_SIZE_04:partyType1 =PbcMonthReportConstants.SVR_INSTIT_SIZE_04; break;
                         }
                     }
-                    pbcMonthReportDetailAsset.setPartyType1(partyType1);
                 }
+                pbcMonthReportDetailAsset.setPartyType1(partyType1);
                 pbcMonthReportDetailAsset.setIndustry(industryType1);
             }
-
         }
         //先基本信息,再头寸信息,避免错误覆盖
         BeanUtil.copyPropertiesIgnoreNull(pbcMonthReportDetailAsset,position);

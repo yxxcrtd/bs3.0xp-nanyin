@@ -124,114 +124,117 @@
 
     <select id="selectDetailList" resultType="com.joyintech.tams.svreport.chb.monthreportdetail.dto.ChbMonthReportDetailAsset">
         SELECT
-        P.POSUUID,
-        D1.propername reportType1,
-        D2.propername reportType2,
-        D3.propername reportType3,
-        D4.propername reportType4,
-        P.PROD_ID prodId,
-        B.PROD_NAME prodName,
-        B.IS_FHXGCP isFhxgcp,
-        P.ASSET_CODE assetCode,
-        CASE WHEN P.DETAILNO = 'AMT1_1_1' THEN '现金'
-        WHEN B.SUBJECT_NAME IS NULL THEN NVL(I.ASSET_NAME,I.ASSET_CODE)
-        ELSE B.SUBJECT_NAME END assetName,
-        P.OLD_ASSET_CODE oldAssetCode,
-        IA.ASSET_NAME oldAssetName,
-        NVL(I.VDATE, I.PLAN_SDATE) VDATE,
-        NVL(I.MDATE, I.PLAN_EDATE) MDATE,
-        NVL(MC.CUSTOMER_NAME, P.SUBJECT_NAME) subjectName,
-        I.asset_yield RATE,
-        P.CCY,
-        AP.POS_AMT delayPayAmt,
-        <if test="costFlag != null and costFlag =='02'">
-            P.ASSETVALUE_A costAmt,
-        </if>
-        <if test="costFlag != null and costFlag =='01'">
-            AP.TDY_COST_AMT costAmt,
-        </if>
-        <if test="costFlag != null and costFlag =='02'">
-            P.ASSETVALUE_B costAmtB,
-        </if>
-        <if test="costFlag != null and costFlag =='01'">
-            AP.TDY_COST_AMT costAmtB,
-        </if>
-        AP.TDY_FLOAT_INGPL floatIngpl,
-        AP.TDY_INTINCEXP INTINCEXP,
-        AP.TDY_INTADJEXP_ADD intadjexpAdd,
-        AP.TDY_LOSS_AMT lossAmt,
-        P.ASSETVALUE_A assetvalueA,
-        P.ASSETVALUE_B assetvalueB,
-        P.INDUSTRY1,
-        P.INDUSTRY2,
-        P.INDUSTRY3,
-        P.INDUSTRY4,
-        nvl(mp.COUNTER_NAME, p.RIVAL_PARTY) rivalParty,
-        P.PRIVATEPRD_FLAG privateprdFlag,
-        P.PRIVATEFUND_FLAG privatefundFlag,
-        P.MAIN_GRADE mainGrade,
-        P.CREDIT_GRADE creditGrade,
-        P.RATING,
-        P.BONDTOSTOCK_FLAG bondtostockFlag,
-        P.IS_GOVERN_FUND1 isGovernFund1,
-        I.ORG_ASSET_TYPE1 orgAssetType1,
-        I.ORG_ASSET_TYPE2 orgAssetType2,
-        I.ORG_ASSET_TYPE3 orgAssetType3,
-        P.IS_YHBCGJ isYhbcgj,
-        P.TYPE_FINAL typeFinal,
-        p.is_Fbhy isFbhy,
-        P.pppflag,
-        p.MONIT_TYPE monitType,
-        CASE WHEN AP.MDATE != I.MDATE and  I.MDATE is not null THEN AP.MDATE END openplan
-        FROM CHB_MONTH_ASSET_POSITIONDETAIL P
-        LEFT JOIN CHB_ASSET_INFO I ON P.ASSET_CODE = I.ASSET_CODE
-        LEFT JOIN CHB_ASSET_INFO IA ON IA.ASSET_CODE = P.OLD_ASSET_CODE
-        LEFT JOIN BOK_SUBJECT B ON B.BOOKSET_ID = '00000000000000000002' AND B.SUBJECT_NO = P.ASSET_CODE
-        LEFT JOIN CHB_PRD_BASEINFO B ON P.PROD_ID = B.PROD_ID
-        LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = P.SUBJECT_NAME
-        LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = P.RIVAL_PARTY
-        LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D4 ON D4.propertycode = P.DETAILNO and D4.proplevel = '4'
-        LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D3 ON D3.propertycode = D4.codeparent and D3.proplevel = '3'
-        LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D2 ON D2.propertycode = D3.codeparent and D2.proplevel = '2'
-        LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D1 ON D1.propertycode = D2.codeparent and D1.proplevel = '1'
-        LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PROD_ID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)
+            P.POSUUID,
+            D1.propername reportType1,
+            D2.propername reportType2,
+            D3.propername reportType3,
+            D4.propername reportType4,
+            P.PROD_ID prodId,
+            B.PROD_NAME prodName,
+            B.IS_FHXGCP isFhxgcp,
+            P.ASSET_CODE assetCode,
+            CASE WHEN P.DETAILNO = 'AMT1_1_1' THEN '现金'
+            WHEN B.SUBJECT_NAME IS NULL THEN NVL(I.ASSET_NAME,I.ASSET_CODE)
+            ELSE B.SUBJECT_NAME END assetName,
+            P.OLD_ASSET_CODE oldAssetCode,
+            IA.ASSET_NAME oldAssetName,
+            NVL(I.VDATE, I.PLAN_SDATE) VDATE,
+            NVL(I.MDATE, I.PLAN_EDATE) MDATE,
+            CASE WHEN MP1.Counter_Name is not null then MP1.Counter_Name
+            when MC.CUSTOMER_NAME  is not null then MC.CUSTOMER_NAME
+            else  P.SUBJECT_NAME end   subjectName,
+            I.asset_yield RATE,
+            NVL(P.CCY,'CNY') CCY,
+            AP.POS_AMT delayPayAmt,
+            <if test="costFlag != null and costFlag =='02'">
+                P.ASSETVALUE_A costAmt,
+            </if>
+            <if test="costFlag != null and costFlag =='01'">
+                AP.TDY_COST_AMT costAmt,
+            </if>
+            <if test="costFlag != null and costFlag =='02'">
+                P.ASSETVALUE_B costAmtB,
+            </if>
+            <if test="costFlag != null and costFlag =='01'">
+                AP.TDY_COST_AMT costAmtB,
+            </if>
+            AP.TDY_FLOAT_INGPL floatIngpl,
+            AP.TDY_INTINCEXP INTINCEXP,
+            AP.TDY_INTADJEXP_ADD intadjexpAdd,
+            AP.TDY_LOSS_AMT lossAmt,
+            P.ASSETVALUE_A assetvalueA,
+            P.ASSETVALUE_B assetvalueB,
+            P.INDUSTRY1,
+            P.INDUSTRY2,
+            P.INDUSTRY3,
+            P.INDUSTRY4,
+            nvl(mp.COUNTER_NAME, p.RIVAL_PARTY) rivalParty,
+            P.PRIVATEPRD_FLAG privateprdFlag,
+            P.PRIVATEFUND_FLAG privatefundFlag,
+            P.MAIN_GRADE mainGrade,
+            P.CREDIT_GRADE creditGrade,
+            P.RATING,
+            P.BONDTOSTOCK_FLAG bondtostockFlag,
+            P.IS_GOVERN_FUND1 isGovernFund1,
+            I.ORG_ASSET_TYPE1 orgAssetType1,
+            I.ORG_ASSET_TYPE2 orgAssetType2,
+            I.ORG_ASSET_TYPE3 orgAssetType3,
+            P.IS_YHBCGJ isYhbcgj,
+            P.TYPE_FINAL typeFinal,
+            p.is_Fbhy isFbhy,
+            P.pppflag,
+            p.MONIT_TYPE monitType,
+            CASE WHEN AP.MDATE != I.MDATE and  I.MDATE is not null THEN AP.MDATE END openplan
+            FROM CHB_MONTH_ASSET_POSITIONDETAIL P
+            LEFT JOIN CHB_ASSET_INFO I ON P.ASSET_CODE = I.ASSET_CODE
+            LEFT JOIN CHB_ASSET_INFO IA ON IA.ASSET_CODE = P.OLD_ASSET_CODE
+            LEFT JOIN BOK_SUBJECT B ON B.BOOKSET_ID = '00000000000000000002' AND B.SUBJECT_NO = P.ASSET_CODE
+            LEFT JOIN CHB_PRD_BASEINFO B ON P.PROD_ID = B.PROD_ID
+            LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = P.SUBJECT_NAME
+            LEFT JOIN CHB_MST_COUNTER_PARTY MP1 ON MP1.COUNTER_ID = P.SUBJECT_NAME
+            LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = P.RIVAL_PARTY
+            LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D4 ON D4.propertycode = P.DETAILNO and D4.proplevel = '4'
+            LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D3 ON D3.propertycode = D4.codeparent and D3.proplevel = '3'
+            LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D2 ON D2.propertycode = D3.codeparent and D2.proplevel = '2'
+            LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D1 ON D1.propertycode = D2.codeparent and D1.proplevel = '1'
+            LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PROD_ID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)
 
 
 
-        WHERE P.PROD_ID IS NOT NULL
-        <if test="enddate != null and enddate != ''">
-            and P.TERM =  #{enddate,jdbcType=VARCHAR}
-        </if>
-        <if test="dataFlag != null and dataFlag.equals('01')">
-            and P.ASSETVALUE_A is not null and P.ASSETVALUE_A !=0
-        </if>
-        <if test="dataFlag != null and dataFlag.equals('02')">
-            and P.ASSETVALUE_B is not null and P.ASSETVALUE_B !=0
-        </if>
+            WHERE P.PROD_ID IS NOT NULL
+            <if test="enddate != null and enddate != ''">
+                and P.TERM =  #{enddate,jdbcType=VARCHAR}
+            </if>
+            <if test="dataFlag != null and dataFlag.equals('01')">
+                and P.ASSETVALUE_A is not null and P.ASSETVALUE_A !=0
+            </if>
+            <if test="dataFlag != null and dataFlag.equals('02')">
+                and P.ASSETVALUE_B is not null and P.ASSETVALUE_B !=0
+            </if>
 
-        <if test="prodIds != null and prodIds != '' ">
-            <foreach item="item" index="index" collection="prodIds" separator="," open=" AND P.PROD_ID IN(" close=")">
-                #{item}
-            </foreach>
-        </if>
+            <if test="prodIds != null and prodIds != '' ">
+                <foreach item="item" index="index" collection="prodIds" separator="," open=" AND P.PROD_ID IN(" close=")">
+                    #{item}
+                </foreach>
+            </if>
 
-        <if test="assetCodes != null and assetCodes != ''  ">
+            <if test="assetCodes != null and assetCodes != ''  ">
 
-            <foreach item="item" index="index" collection="assetCodes" separator="," open="AND P.ASSET_CODE IN(" close=")">
-                #{item}
-            </foreach>
-        </if>
+                <foreach item="item" index="index" collection="assetCodes" separator="," open="AND P.ASSET_CODE IN(" close=")">
+                    #{item}
+                </foreach>
+            </if>
 
-        <if test="keysList != null and keysList.size()>0 ">
+            <if test="keysList != null and keysList.size()>0 ">
 
-            <foreach item="item" index="index" collection="keysList" separator="," open=" AND P.POSUUID IN(" close=")">
-                <if test="(index % 999) == 998">
-                    null) OR P.POSUUID in (
-                </if>
-                #{item}
-            </foreach>
+                <foreach item="item" index="index" collection="keysList" separator="," open=" AND P.POSUUID IN(" close=")">
+                    <if test="(index % 999) == 998">
+                        null) OR P.POSUUID in (
+                    </if>
+                    #{item}
+                </foreach>
 
-        </if>
+            </if>
         ORDER BY D4.ORDERNO
     </select>
 

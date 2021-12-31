@@ -226,6 +226,11 @@ public class ChbMonthReportDetailAssetUtil {
         Map<String,MstCustomerInfoAdd> customerNameMap = customerList.stream().collect(Collectors.toMap(MstCustomerInfoDetail::getCustomerName,a -> a, (k1, k2) -> k1));
 
         for(ChbMonthAssetPositiondetail dto : prdPositionList) {
+            //如果币种为空.默认塞值人民币
+            if(null!=dto.getCcy()){
+                dto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+            }
+
             //先赋值行业  先用编码.再用code最后用交易对手
             MstCustomerInfoAdd info = null != customerMap.get(dto.getSubjectName()) ? customerMap.get(dto.getSubjectName()) :
                     null != customerNameMap.get(dto.getSubjectName()) ? customerNameMap.get(dto.getSubjectName()) : customerMap.get(dto.getRivalParty());
