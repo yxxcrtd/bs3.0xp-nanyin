@@ -1988,7 +1988,7 @@
             deal.share_amt/100 as faceValue,
             nvl(T1.yield,T1.rate) as tradeYield,
             T1.repo_term as termDays,
-            T1.trade_amt tradeAmt,
+            deal.trade_Amt tradeAmt,
             T1.ccy as ccy,
             sdl7.item_value as ccyStr,
             to_char(T1.TRADE_DATE,'yyyy-MM-dd') as confirmTradeDate,
@@ -2000,7 +2000,8 @@
             T1.TRADE_DATE as tradeDate
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
             inner join (
-                select td.totle_trade_id,sum(td.share_amt) share_amt
+                select td.totle_trade_id,sum(td.share_amt) share_amt,
+                sum(td.trade_amt) as trade_Amt
                 from trd_product_deal td
                 left join  trd_product_deal_add tda
                 on td.trade_id=tda.trade_id
