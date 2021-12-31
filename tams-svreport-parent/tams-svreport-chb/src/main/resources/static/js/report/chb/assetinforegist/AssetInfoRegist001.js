@@ -72,7 +72,7 @@ $(function() {
 						}
 					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){
@@ -116,7 +116,7 @@ $(function() {
 							return value;
 						}
 					}},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){
@@ -170,7 +170,7 @@ $(function() {
 							return value;
 						}
 					}},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){
@@ -222,7 +222,7 @@ $(function() {
 							return value;
 						}
 					}},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){
@@ -279,7 +279,7 @@ $(function() {
 							return value;
 						}
 					}},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){
@@ -402,7 +402,7 @@ $(function() {
 							return value;
 						}
 					}},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){
@@ -461,7 +461,7 @@ $(function() {
 							return value;
 						}
 					}},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){
@@ -523,7 +523,7 @@ $(function() {
 							return value;
 						}
 					}},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){
@@ -573,7 +573,7 @@ $(function() {
 							return value;
 						}
 					}},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){
@@ -632,7 +632,7 @@ $(function() {
 							return value;
 						}
 					}},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){
@@ -682,7 +682,7 @@ $(function() {
 							return value;
 						}
 					}},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){
@@ -734,7 +734,7 @@ $(function() {
 							return value;
 						}
 					}},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){
@@ -795,7 +795,7 @@ $(function() {
 							return value;
 						}
 					}},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){
@@ -867,7 +867,7 @@ $(function() {
 							return value;
 						}
 					}},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){
@@ -916,7 +916,7 @@ $(function() {
 							return value;
 						}
 					}},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){
@@ -966,7 +966,7 @@ $(function() {
 							return value;
 						}
 					}},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){
@@ -1029,7 +1029,7 @@ $(function() {
 							return value;
 						}
 					}},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){
@@ -1093,7 +1093,7 @@ $(function() {
 							return value;
 						}
 					}},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){
@@ -1142,7 +1142,7 @@ $(function() {
 							return value;
 						}
 					}},
-				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
+				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'date'},
 				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
 					render:function (value,visible,row,options) {
 						if(value == "发送中" || value == "发送异常"){

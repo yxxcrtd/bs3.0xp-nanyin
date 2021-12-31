@@ -50,7 +50,7 @@ $(function() {
                       }
                   }},
               { title:'报送日期', field: 'submitTime', type: 'datetime', sortField:'SUBMIT_TIME'},
-              { title:'报送截止日', field: 'chbSubmitDeadline', type:'datetime', sortField:'CHB_SUBMIT_DEADLINE'},
+              { title:'报送截止日', field: 'chbSubmitDeadline', type:'date', sortField:'CHB_SUBMIT_DEADLINE'},
               { title:'反馈状态', field: 'submitFeedbackStatusStr',width:100, sortField:'',sortField:'SUBMIT_FEEDBACK_STATUS',
                   render:function (value,visible,row,options) {
                       if(value == "发送中" || value == "发送异常"){
