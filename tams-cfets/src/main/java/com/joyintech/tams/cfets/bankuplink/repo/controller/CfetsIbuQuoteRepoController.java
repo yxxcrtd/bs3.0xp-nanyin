@@ -12,6 +12,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
+import com.joyintech.tams.business.common.dto.CommonSearchInfoRequest;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
@@ -25,6 +26,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
+import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonService;
 import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
@@ -365,7 +367,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         }
     }
 
-    @ApiOperation(value = "查看信息界面", notes = "根据交易编号查询查看信息界面")
+    @ApiOperation(value = "查看信息界面", notes = "根据交易编号查询登记查看信息界面")
     @PostMapping("/queryViewPage/{quoteId}")
     @ResponseBody
     public Message<CfetsRepoDealQuoteCommonDto> queryViewPage(@PathVariable("quoteId") String quoteId) {
@@ -647,5 +649,21 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             List dataList = cfetsRepoDealQuotedPrice002Service.listDayPrice(dto);
             return dataList;
         });
+    }
+
+    @ResponseBody
+    @PostMapping("/getEntrustDet/{pageCode}/{dtCode}/{spcdCodes}")
+    @ApiOperation(value = "只读表单设置及数据查询_指令详情信息", notes = "只读表单设置及数据查询_指令详情信息")
+    public Message<Map<String,Object>> getEntrustDet(@PathVariable("pageCode") String pageCode,
+                                                              @PathVariable("dtCode") String dtCode,
+                                                              @PathVariable("spcdCodes") String spcdCodes,
+                                                              @RequestBody CfetsRepoDealQuoteRequest request) {
+        try{
+            Map<String,Object> resultData = ibuQuoteRepoService.findEntrustDet(pageCode,dtCode,spcdCodes,request);
+            return new Message<Map<String,Object>>().success().setData(resultData);
+        } catch (Exception e) {
+            logger.error("查询指令详情信息明细数据异常", e);
+            return new Message<Map<String,Object>>().fail().setMessage("查询指令详情信息明细异常");
+        }
     }
 }

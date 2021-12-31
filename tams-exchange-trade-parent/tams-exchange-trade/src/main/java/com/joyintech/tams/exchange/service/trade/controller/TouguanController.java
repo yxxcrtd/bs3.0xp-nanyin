@@ -1,0 +1,95 @@
+package com.joyintech.tams.exchange.service.trade.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.joyintech.tams.exchange.common.bean.InstructionPage;
+import com.joyintech.tams.exchange.common.bean.ResultBean;
+import com.joyintech.tams.exchange.common.db.domain.Instruction;
+import com.joyintech.tams.exchange.common.db.domain.InstructionDetail;
+import com.joyintech.tams.exchange.common.db.domain.InstructionPledge;
+import com.joyintech.tams.exchange.service.trade.management.service.InvestmentManagement;
+import com.joyintech.tams.exchange.service.trade.management.service.SettleManagement;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@RestController
+@RequestMapping("/service/joyin")
+@Api(tags = "场内交易-投管系统使用接口")
+public class TouguanController {
+
+    @Autowired
+    private InvestmentManagement investmentManagement;
+    
+    @Autowired
+    private SettleManagement settleManagement;
+
+    /**
+     * 处理审核指令
+     *
+     * @param orderId            订单号
+     * @param instructionsStatus 指令状态
+     * @return ResultBean
+     */
+    @ApiOperation(value = "投管用-风控 审批通过|拒绝接口", notes = "投管用-风控 审批通过|拒绝接口")
+    @RequestMapping(value = "/instruction/examine", method = RequestMethod.POST)
+    public ResultBean handleExamine(@RequestParam(value = "eventId") String orderId,
+                                    @RequestParam(value = "approveResult") String instructionsStatus,
+                                    @RequestParam(value = "approveReason", required = false) String approveReason) {
+        return investmentManagement.handleExamine(orderId, instructionsStatus, approveReason);
+    }
+
+    /**
+     * 处理指令变更
+     *
+     * @param instructionId 订单号
+     * @param status        状态
+     * @return ResultBean
+     */
+    @ApiOperation(value = "投管用-指令状态变更接口", notes = "投管用-指令状态变更接口")
+    @RequestMapping(value = "/instructionChange", method = RequestMethod.POST)
+    public ResultBean instructionChange(@RequestParam(value = "entrustId") String instructionId,
+                                        @RequestParam(value = "entrustStatus") String status) {
+        return investmentManagement.instructionChange(instructionId, status);
+    }
+
+
+    /**
+     * 指令撤销
+     *
+     * @param instructionId     指令id
+     * @param instructionStatus 指令状态
+     * @return
+     */
+    @ApiOperation(value = "投管用-指令撤销|关闭接口", notes = "投管用-指令撤销|关闭接口")
+    @RequestMapping(value = "/instruction/cancel", method = RequestMethod.POST)
+    public ResultBean cancelInstruction(@RequestParam(value = "instruction_Id") String instructionId,
+                                        @RequestParam(value = "entrustStatus", required = false) String instructionStatus) {
+        return investmentManagement.cancelInstruction(instructionId, instructionStatus);
+    }
+
+
+    /**
+     * 指令分发
+     *
+     * @param instructionPage 指令及质押券列表
+     * @return
+     */
+    @ApiOperation(value = "投管用-指令分发接收接口", notes = "投管用-指令分发接收接口")
+    @RequestMapping(value = "/instruction/distribute", method = RequestMethod.POST)
+    public ResultBean appointInstruction(@RequestBody InstructionPage<Instruction, InstructionPledge,InstructionDetail> instructionPage) throws Exception {
+        return investmentManagement.appointInstruction(instructionPage);
+    }
+    
+    @ApiOperation(value = "投管用-场内交易历史数据清算接口", notes = "投管用-场内交易历史数据清算接口")
+    @RequestMapping(value = "/settle", method = RequestMethod.POST)
+    public String settleHistory() {
+        return settleManagement.settleHistory();
+    }
+
+}

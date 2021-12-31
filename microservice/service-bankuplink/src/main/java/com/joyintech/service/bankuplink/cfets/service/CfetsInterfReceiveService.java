@@ -147,16 +147,6 @@ public class CfetsInterfReceiveService {
             this.saveIbuQuoteErrlog(ibuQuoteBondDto2.getQuoteId(), param);
 	    	return null;
 		}
-		//报文类型为8客户编号取报价编号
-		if(MsgTypeEnum.MSGTYPE_8.getValue().equals(msgType) && null!=param.get("quoteID")) {// 117 对应报价编号
-			param.put("clOrdID", param.get("quoteID"));
-            IbuQuoteBondDto ibuQuoteBondDto2 = ibuQuoteMapper.selectQuoteBondByCfetQuoteId((String)param.get("quoteID"));
-            if(null!=ibuQuoteBondDto2){
-                ibuQuoteBondDto.setSecManageAcctId(ibuQuoteBondDto2.getSecManageAcctId());
-                ibuQuoteBondDto.setCreateUser(ibuQuoteBondDto2.getCreateUser());
-            }
-		}
-		
     	if(null!=param.get("securityID")) {// 48域-债券代码
     		String securityID = (String) param.get("securityID");
     		ibuQuoteBondDto.setFinprodMarketId(securityID+".IB");//市场代码
@@ -253,9 +243,16 @@ public class CfetsInterfReceiveService {
             ibuQuoteBondDto.setQuoteDate(transactTime);// 60域-业务发生时间
             ibuQuoteBondDto.setTransactime((String)param.get("transactTime")); // 业务发生时间
         }
-    	
+        //所有报文回来 证券账户和创建人保留历史数据
+        if(StringUtil.isNotEmpty(ibuQuoteBondDto.getQuoteId())){
+            IbuQuoteBondDto ibuQuoteBondDtoCfetByQuoteId = ibuQuoteMapper.selectQuoteBondByKey(ibuQuoteBondDto.getQuoteId());
+            if(null!=ibuQuoteBondDtoCfetByQuoteId){
+                ibuQuoteBondDto.setSecManageAcctId(ibuQuoteBondDtoCfetByQuoteId.getSecManageAcctId());
+                ibuQuoteBondDto.setCreateUser(ibuQuoteBondDtoCfetByQuoteId.getCreateUser());
+            }
+        }
 //    	IbuQuoteBondDto ibuQuoteBondDto2 = ibuQuoteMapper.selectQuoteBondByKey(ibuQuoteBondDto.getQuoteId());
-    	if(ibuQuoteBondDto2!=null) {
+    	if(ibuQuoteBondDto2!=null&&null!=ibuQuoteBondDto2.getVersion()) {
     		ibuQuoteBondDto.setVersion(ibuQuoteBondDto2.getVersion()+1);
     	}
         else {
@@ -795,13 +792,6 @@ public class CfetsInterfReceiveService {
             this.saveIbuQuoteErrlog(ibuQuoteBondDto.getQuoteId(), param);
             return null;
         }
-        if(MsgTypeEnum.MSGTYPE_8.getValue().equals(msgType)){
-            IbuQuoteBondDto ibuQuoteBondDto2 = ibuQuoteMapper.selectQuoteBondByCfetQuoteId((String)param.get("quoteID"));
-            if(null!=ibuQuoteBondDto2){
-                ibuQuoteBondDto.setSecManageAcctId(ibuQuoteBondDto2.getSecManageAcctId());
-                ibuQuoteBondDto.setCreateUser(ibuQuoteBondDto2.getCreateUser());
-            }
-        }
         if(MsgTypeEnum.R.getValue().equals(msgType)
                 ||MsgTypeEnum.U32.getValue().equals(msgType)
                 || MsgTypeEnum.U29.getValue().equals(msgType)
@@ -978,12 +968,24 @@ public class CfetsInterfReceiveService {
         }
 
         BeanUtil.copyPropertiesIgnoreNull(ibuQuoteBondDto, ibuQuoteBondDto2);
-        
+        //所有报文回来 证券账户和创建人保留历史数据
+        if(StringUtil.isNotEmpty(ibuQuoteBondDto.getQuoteId())){
+            IbuQuoteBondDto ibuQuoteBondDtoCfetByQuoteId = ibuQuoteMapper.selectQuoteBondByKey(ibuQuoteBondDto.getQuoteId());
+            if(null!=ibuQuoteBondDtoCfetByQuoteId){
+                ibuQuoteBondDto.setSecManageAcctId(ibuQuoteBondDtoCfetByQuoteId.getSecManageAcctId());
+                ibuQuoteBondDto.setCreateUser(ibuQuoteBondDtoCfetByQuoteId.getCreateUser());
+            }
+        }
         // 根据明细数据的状态，修改主表数据状态
         this.handleBondReqQuoteStatus(ibuQuoteBondDto, ibuQuoteBondDetDtoList2);
         
         param.put("detList", ibuQuoteBondDetDtoList);
-        ibuQuoteBondDto.setVersion(ibuQuoteBondDto2.getVersion() + 1);
+        if(ibuQuoteBondDto2!=null&&null!=ibuQuoteBondDto2.getVersion()) {
+            ibuQuoteBondDto.setVersion(ibuQuoteBondDto2.getVersion()+1);
+        }
+        else {
+            ibuQuoteBondDto.setVersion(-1l);
+        }
         return ibuQuoteBondDto;
     }
 	

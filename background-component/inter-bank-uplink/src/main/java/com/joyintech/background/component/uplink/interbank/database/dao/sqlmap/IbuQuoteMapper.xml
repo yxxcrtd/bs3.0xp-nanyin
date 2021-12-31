@@ -170,37 +170,6 @@
         )
 	</select>
 
-	<select id="selectQuoteBondByCfetQuoteId" parameterType="java.lang.String" resultMap="QbDtoResultMap">
-        select
-			a.QUOTE_ID AS I_Q_B_QUOTE_ID, a.QUOTE_TYPE AS I_Q_B_QUOTE_TYPE, a.QUOTE_ROLE_TYPE AS I_Q_B_QUOTE_ROLE_TYPE, a.VERSION AS I_Q_B_VERSION,
-			a.EXE_TYPE AS I_Q_B_EXE_TYPE, a.P_QUOTE_ID AS I_Q_B_P_QUOTE_ID, a.CFETS_QUOTE_ID AS I_Q_B_CFETS_QUOTE_ID, a.FINPROD_ID AS I_Q_B_FINPROD_ID,
-			a.FINPROD_TYPE2 AS I_Q_B_FINPROD_TYPE2, a.BRANCH AS I_Q_B_BRANCH, a.PORTFOLIO_ID AS I_Q_B_PORTFOLIO_ID, a.ENTRUST_ID AS I_Q_B_ENTRUST_ID,
-			a.QUOTE_DATE AS I_Q_B_QUOTE_DATE, a.SETTLE_DATE AS I_Q_B_SETTLE_DATE, a.SETTLE_SPEED AS I_Q_B_SETTLE_SPEED, a.DELIVERY_TYPE AS I_Q_B_DELIVERY_TYPE,
-			a.SETT_TYPE AS I_Q_B_SETT_TYPE, a.SETT_CCY AS I_Q_B_SETT_CCY, a.PS AS I_Q_B_PS, a.SHARE_AMT AS I_Q_B_SHARE_AMT, a.FPRICE_AMT AS I_Q_B_FPRICE_AMT,
-			a.TRADE_STATUS AS I_Q_B_TRADE_STATUS, a.SEND_STATUS AS I_Q_B_SEND_STATUS, a.EFF_TIME AS I_Q_B_EFF_TIME, a.OU_PARTY_ID AS I_Q_B_OU_PARTY_ID,
-			nvl(fa.ibu_trader, a.OU_TRADER_ID) AS I_Q_B_OU_TRADER_ID, a.B_VERSION AS I_Q_B_B_VERSION, a.MY_ACCT_NO AS I_Q_B_MY_ACCT_NO, a.SEC_MANAGE_ACCT_ID AS I_Q_B_SEC_MANAGE_ACCT_ID,
-			a.BRANCH_ID AS I_Q_B_BRANCH_ID, a.REMARK AS I_Q_B_REMARK, a.CREATE_USER AS I_Q_B_CREATE_USER, a.CREATE_TIME AS I_Q_B_CREATE_TIME,
-			a.CREATE_DEPT AS I_Q_B_CREATE_DEPT, a.UPDATE_USER AS I_Q_B_UPDATE_USER, a.UPDATE_TIME AS I_Q_B_UPDATE_TIME, a.TRANSACTIME AS I_Q_B_TRANSACTIME, b.FINPROD_MARKET_ID AS I_Q_B_FINPROD_MARKET_ID
-			,a.DEAL_FEE_AMT I_Q_B_DEAL_FEE_AMT,a.SETT_FEE_AMT I_Q_B_SETT_FEE_AMT,b.FINPROD_ABBR ,d.TYPE_11
-        from IBU_QUOTE_BOND a
-        left join FIN_PRODUCT b
-        on a.FINPROD_ID = b.FINPROD_ID
-        LEFT  JOIN FIN_PRODUCT_TYPE d ON  b.FINPROD_ID = d.FINPROD_ID
-        left join sys_user c
-        on a.OU_TRADER_ID = c.user_name
-        left join sys_user_add fa
-        on c.user_id = fa.user_id
-        where CFETS_QUOTE_ID = #{cfetsQuoteId,jdbcType=VARCHAR}
-        order by (
-        	case
-        		when a.TRADE_STATUS = '07' then '-1'
-        		when a.TRADE_STATUS = '12' then '-2'
-        		when a.TRADE_STATUS = '06' then '-3'
-        		else a.TRADE_STATUS
-        	end
-        )
-	</select>
-
 
 	<!-- 根据报价编号列表查询现券银行间报价信息列表 -->
 	<select id="selectQuoteBondByKeys" parameterType="java.util.List" resultMap="QbDtoResultMap">

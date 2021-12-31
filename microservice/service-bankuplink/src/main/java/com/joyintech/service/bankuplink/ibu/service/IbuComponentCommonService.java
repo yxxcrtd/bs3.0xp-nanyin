@@ -1870,6 +1870,8 @@ public class IbuComponentCommonService extends BaseService {
         // 直接根据内部报价编号查询不需要加其他查询条件
         if (param.get("quoteId") != null && !"".equals(param.get("quoteId"))) {
             inputBean.setQuoteId(param.get("quoteId").toString());
+            // 报价日期
+            inputBean.setQuoteDate(iPlatformDate.getSysDate());
         }
         // 根据画面查询条件过滤
         else {
