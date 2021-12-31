@@ -31,6 +31,7 @@ import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealRegisterQuoteDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondRegCheckRequst;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
+import com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepo004Mapper;
 import com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepoMapper;
 import com.joyintech.tams.cfets.bankuplink.repo.dto.*;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPosPortfolioCashRequest;
@@ -78,6 +79,9 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
 
     @Autowired
     private CfetsIbuQuoteRepoMapper cfetsIbuQuoteRepoMapper;
+
+    @Autowired
+    private CfetsIbuQuoteRepo004Mapper cfetsIbuQuoteRepo004Mapper;
 
     @Autowired(required = false)
     private BaseGetBusinessId baseGetBusinessId;
@@ -437,6 +441,12 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             errorList.add(new ValidMessage("请输入结算服务费"));
         }
         /**************************************************************基本信息********************************************/
+        if (StringUtil.isNotEmpty(entity.getCounterId())) {
+            String trader = this.findTraderByCounterId(entity.getCounterId());
+            if (!StringUtil.isNotEmpty(trader)) {
+                errorList.add(new ValidMessage("选择的对手方未与系统中交易对手关联，请先去关联"));
+            }
+        }
     }
 
     /**
@@ -743,6 +753,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     regFinProductDeal.setTradeMarket(DictCodeListExt1.交易场所_银行间.getValue());//交易场所
                     regFinProductDeal.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());//交易市场
                     regFinProductDeal.setSecManageAcctId(ptlAllocatio.getSecManageAcctId());//证券账户
+                    regFinProductDeal.setFinprodId(regFinProductDeal.getTradeId());
                     if (null != ptlAllocatio.getDealFeeAmt()) {//交易手续费
                         regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(
                                 regFinProductDeal.getTradeId(), BussinessDictCodeList.费用类型_交易手续费.getValue(), ptlAllocatio.getDealFeeAmt()));
@@ -830,7 +841,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         RegFinProductDealTotal total = new RegFinProductDealTotal();
 
         BeanUtil.copyPropertiesIgnoreNull(total, entity);
-        total.setFinprodId(total.getTotleTradeId());//资产代码
+//        total.setFinprodId(total.getTotleTradeId());//资产代码
         total.setSettleSpeed(settleSpreed);//清算速度
         total.setQuoteType(entity.getQuoteStyle());// 报价方式
         total.setDeliveryType(entity.getDeliverytype());// 首次结算方式
@@ -1520,6 +1531,18 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             scale = yieldScale;
         }
         return ArithmeticUtil.round(a, scale, RoundingMode.HALF_UP).compareTo(ArithmeticUtil.round(b, scale, RoundingMode.HALF_UP));
+    }
+
+    /**
+     * 通过交易对手编号 查询是否已关联有效的银行间机构21位机构码
+     *
+     * @param counterId
+     * @return java.lang.String
+     * @author jiangpeng
+     * @date 2021/12/31 10:23
+     */
+    public String findTraderByCounterId(String counterId) {
+        return cfetsIbuQuoteRepo004Mapper.findTraderByCounterId(counterId);
     }
 
 }
