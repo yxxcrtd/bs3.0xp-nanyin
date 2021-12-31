@@ -256,4 +256,11 @@
           and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
           and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
     </update>
+
+    <select id="selectList" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustDetailKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.WflEtrEntrustDetailMapper.Base_Column_List" />
+        from WFL_ETR_ENTRUST_DETAIL
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+    </select>
 </mapper>

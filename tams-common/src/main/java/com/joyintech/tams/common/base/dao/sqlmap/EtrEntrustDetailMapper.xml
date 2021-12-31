@@ -168,4 +168,11 @@
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
           and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
     </update>
+    <select id="selectList" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.EtrEntrustDetailMapper.Base_Column_List" />
+        from ETR_ENTRUST_DETAIL
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+    </select>
+
 </mapper>

@@ -4,6 +4,8 @@ import com.joyintech.tams.common.base.entity.EtrEntrustDetail;
 import com.joyintech.tams.common.base.entity.EtrEntrustDetailKey;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface EtrEntrustDetailMapper {
     int deleteByPrimaryKey(EtrEntrustDetailKey key);
@@ -19,4 +21,6 @@ public interface EtrEntrustDetailMapper {
     int updateByPrimaryKeySelective(EtrEntrustDetail record);
 
     int updateByPrimaryKey(EtrEntrustDetail record);
+
+    List<EtrEntrustDetail> selectList(String entrustId);
 }
