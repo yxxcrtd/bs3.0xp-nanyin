@@ -69,8 +69,9 @@
     </resultMap>
 
 
-    <resultMap id="MstBaseResultMap" type="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd" >
+    <resultMap id="MstBaseResultMap" type="com.joyintech.tams.svreport.chb.monthreportdetail.dto.MstCustomerInfoDetail" >
         <id column="CUSTOMER_ID" property="customerId" jdbcType="VARCHAR" />
+        <result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
         <result column="PARTY_TYPE3" property="partyType3" jdbcType="VARCHAR" />
         <result column="PARTY_TYPE2" property="partyType2" jdbcType="VARCHAR" />
         <result column="PARTY_TYPE1" property="partyType1" jdbcType="VARCHAR" />
@@ -123,109 +124,129 @@
 
     <select id="selectDetailList" resultType="com.joyintech.tams.svreport.chb.monthreportdetail.dto.ChbMonthReportDetailAsset">
         SELECT
-            P.POSUUID,
-            CASE
-              WHEN INSTR(T.PROPERTYCODE,'AMT1')>0 THEN '1.期末理财资金投向情况'
-              WHEN INSTR(T.PROPERTYCODE,'AMT2')>0 THEN '2.期末理财负债情况'
-              WHEN INSTR(T.PROPERTYCODE,'AMT3')>0 THEN '3.附注'  end reportType1,
-            L.ITEM_VALUE reportType2,
-            T.PROPERNAME reportType3,
-            T.PROPERNAME reportType4,
-            P.PROD_ID prodId,
-            B.PROD_NAME prodName,
-            B.IS_FHXGCP isFhxgcp,
-            P.ASSET_CODE assetCode,
-            CASE WHEN P.DETAILNO = 'AMT1_1_1' THEN '现金'
-                WHEN B.SUBJECT_NAME IS NULL THEN NVL(I.ASSET_NAME,I.ASSET_CODE)
-                ELSE B.SUBJECT_NAME END assetName,
-            P.OLD_ASSET_CODE oldAssetCode,
-            IA.ASSET_NAME oldAssetName,
-            NVL(I.VDATE,I.PLAN_SDATE) VDATE,
-            NVL(I.MDATE,I.PLAN_EDATE) MDATE,
-            CASE WHEN AP.MDATE!=I.MDATE and I.option_flag ='01' THEN AP.MDATE END exerciseDate,
-            NVL(MC.CUSTOMER_NAME,P.SUBJECT_NAME) subjectName,
-            I.asset_yield RATE,
-            P.CCY,
-            AP.POS_AMT  delayPayAmt,
-            AP.TDY_COST_AMT  costAmt,
-            AP.TDY_FLOAT_INGPL  floatIngpl,
-            AP.TDY_INTINCEXP INTINCEXP,
-            AP.TDY_INTADJEXP_ADD intadjexpAdd,
-            AP.TDY_LOSS_AMT lossAmt,
-            P.ASSETVALUE_A assetvalueA,
-            P.ASSETVALUE_B assetvalueB,
-            P.INDUSTRY1,
-            P.INDUSTRY2,
-            P.INDUSTRY3,
-            P.INDUSTRY4,
-            nvl(mp.COUNTER_NAME,p.RIVAL_PARTY) rivalParty,
-            P.PRIVATEPRD_FLAG privateprdFlag,
-            P.PRIVATEFUND_FLAG privatefundFlag,
-            P.MAIN_GRADE mainGrade,
-            P.CREDIT_GRADE creditGrade,
-            P.RATING,
-            P.BONDTOSTOCK_FLAG bondtostockFlag,
-            P.IS_GOVERN_FUND1 isGovernFund1,
-            I.ORG_ASSET_TYPE1 orgAssetType1,
-            I.ORG_ASSET_TYPE2 orgAssetType2,
-            I.ORG_ASSET_TYPE3 orgAssetType3,
-            P.IS_YHBCGJ isYhbcgj,
-            P.TYPE_FINAL typeFinal
-            FROM CHB_MONTH_ASSET_POSITIONDETAIL P
-            LEFT JOIN CHB_MONTH_REPORT_TEMPLATE T ON T.PROPERTYCODE = P.DETAILNO
-            LEFT JOIN CHB_ASSET_INFO I ON P.ASSET_CODE = I.ASSET_CODE
-            LEFT JOIN CHB_ASSET_INFO IA ON IA.ASSET_CODE = P.OLD_ASSET_CODE
-            LEFT JOIN BOK_SUBJECT B ON B.BOOKSET_ID = '00000000000000000002' AND B.SUBJECT_NO = P.ASSET_CODE
-            LEFT JOIN CHB_PRD_BASEINFO B ON P.PROD_ID = B.PROD_ID
-            LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = P.SUBJECT_NAME
-            LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = P.RIVAL_PARTY
-            LEFT JOIN SYS_DATADICT_LIST L ON L.ITEM_CODE = REPLACE(SUBSTR(T.PROPERTYCODE,0,7),'_','')  AND L.DICT_CODE = 'SVR_MONTH_REPORT_DETAIL'
-            LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PROD_ID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)
+        P.POSUUID,
+        D1.propername reportType1,
+        D2.propername reportType2,
+        D3.propername reportType3,
+        D4.propername reportType4,
+        P.PROD_ID prodId,
+        B.PROD_NAME prodName,
+        B.IS_FHXGCP isFhxgcp,
+        P.ASSET_CODE assetCode,
+        CASE WHEN P.DETAILNO = 'AMT1_1_1' THEN '现金'
+        WHEN B.SUBJECT_NAME IS NULL THEN NVL(I.ASSET_NAME,I.ASSET_CODE)
+        ELSE B.SUBJECT_NAME END assetName,
+        P.OLD_ASSET_CODE oldAssetCode,
+        IA.ASSET_NAME oldAssetName,
+        NVL(I.VDATE, I.PLAN_SDATE) VDATE,
+        NVL(I.MDATE, I.PLAN_EDATE) MDATE,
+        NVL(MC.CUSTOMER_NAME, P.SUBJECT_NAME) subjectName,
+        I.asset_yield RATE,
+        P.CCY,
+        AP.POS_AMT delayPayAmt,
+        <if test="costFlag != null and costFlag =='02'">
+            P.ASSETVALUE_A costAmt,
+        </if>
+        <if test="costFlag != null and costFlag =='01'">
+            AP.TDY_COST_AMT costAmt,
+        </if>
+        <if test="costFlag != null and costFlag =='02'">
+            P.ASSETVALUE_B costAmtB,
+        </if>
+        <if test="costFlag != null and costFlag =='01'">
+            AP.TDY_COST_AMT costAmtB,
+        </if>
+        AP.TDY_FLOAT_INGPL floatIngpl,
+        AP.TDY_INTINCEXP INTINCEXP,
+        AP.TDY_INTADJEXP_ADD intadjexpAdd,
+        AP.TDY_LOSS_AMT lossAmt,
+        P.ASSETVALUE_A assetvalueA,
+        P.ASSETVALUE_B assetvalueB,
+        P.INDUSTRY1,
+        P.INDUSTRY2,
+        P.INDUSTRY3,
+        P.INDUSTRY4,
+        nvl(mp.COUNTER_NAME, p.RIVAL_PARTY) rivalParty,
+        P.PRIVATEPRD_FLAG privateprdFlag,
+        P.PRIVATEFUND_FLAG privatefundFlag,
+        P.MAIN_GRADE mainGrade,
+        P.CREDIT_GRADE creditGrade,
+        P.RATING,
+        P.BONDTOSTOCK_FLAG bondtostockFlag,
+        P.IS_GOVERN_FUND1 isGovernFund1,
+        I.ORG_ASSET_TYPE1 orgAssetType1,
+        I.ORG_ASSET_TYPE2 orgAssetType2,
+        I.ORG_ASSET_TYPE3 orgAssetType3,
+        P.IS_YHBCGJ isYhbcgj,
+        P.TYPE_FINAL typeFinal,
+        p.is_Fbhy isFbhy,
+        P.pppflag,
+        p.MONIT_TYPE monitType,
+        CASE WHEN AP.MDATE != I.MDATE and  I.MDATE is not null THEN AP.MDATE END openplan
+        FROM CHB_MONTH_ASSET_POSITIONDETAIL P
+        LEFT JOIN CHB_ASSET_INFO I ON P.ASSET_CODE = I.ASSET_CODE
+        LEFT JOIN CHB_ASSET_INFO IA ON IA.ASSET_CODE = P.OLD_ASSET_CODE
+        LEFT JOIN BOK_SUBJECT B ON B.BOOKSET_ID = '00000000000000000002' AND B.SUBJECT_NO = P.ASSET_CODE
+        LEFT JOIN CHB_PRD_BASEINFO B ON P.PROD_ID = B.PROD_ID
+        LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = P.SUBJECT_NAME
+        LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = P.RIVAL_PARTY
+        LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D4 ON D4.propertycode = P.DETAILNO and D4.proplevel = '4'
+        LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D3 ON D3.propertycode = D4.codeparent and D3.proplevel = '3'
+        LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D2 ON D2.propertycode = D3.codeparent and D2.proplevel = '2'
+        LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D1 ON D1.propertycode = D2.codeparent and D1.proplevel = '1'
+        LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PROD_ID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)
 
-            WHERE T.REPORTTYPE = 'BALANCE'
-            AND P.PROD_ID IS NOT NULL
-            <if test="enddate != null and enddate != ''">
-                and P.TERM =  #{enddate,jdbcType=VARCHAR}
-            </if>
 
-            <if test="prodIds != null and prodIds != '' ">
-                <foreach item="item" index="index" collection="prodIds" separator="," open=" AND P.PROD_ID IN(" close=")">
-                    #{item}
-                </foreach>
-            </if>
 
-            <if test="assetCodes != null and assetCodes != ''  ">
+        WHERE P.PROD_ID IS NOT NULL
+        <if test="enddate != null and enddate != ''">
+            and P.TERM =  #{enddate,jdbcType=VARCHAR}
+        </if>
+        <if test="dataFlag != null and dataFlag.equals('01')">
+            and P.ASSETVALUE_A is not null and P.ASSETVALUE_A !=0
+        </if>
+        <if test="dataFlag != null and dataFlag.equals('02')">
+            and P.ASSETVALUE_B is not null and P.ASSETVALUE_B !=0
+        </if>
 
-                <foreach item="item" index="index" collection="assetCodes" separator="," open="AND P.ASSET_CODE IN(" close=")">
-                    #{item}
-                </foreach>
-            </if>
+        <if test="prodIds != null and prodIds != '' ">
+            <foreach item="item" index="index" collection="prodIds" separator="," open=" AND P.PROD_ID IN(" close=")">
+                #{item}
+            </foreach>
+        </if>
 
-            <if test="keysList != null and keysList.size()>0 ">
+        <if test="assetCodes != null and assetCodes != ''  ">
 
-                <foreach item="item" index="index" collection="keysList" separator="," open=" AND P.POSUUID IN(" close=")">
-                    <if test="(index % 999) == 998">
-                        null) OR P.POSUUID in (
-                    </if>
-                    #{item}
-                </foreach>
+            <foreach item="item" index="index" collection="assetCodes" separator="," open="AND P.ASSET_CODE IN(" close=")">
+                #{item}
+            </foreach>
+        </if>
 
-            </if>
-            ORDER BY T.ORDERNO
+        <if test="keysList != null and keysList.size()>0 ">
+
+            <foreach item="item" index="index" collection="keysList" separator="," open=" AND P.POSUUID IN(" close=")">
+                <if test="(index % 999) == 998">
+                    null) OR P.POSUUID in (
+                </if>
+                #{item}
+            </foreach>
+
+        </if>
+        ORDER BY D4.ORDERNO
     </select>
 
     <select id="getAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT  a.id,nvl(a.text,a.id) text
-            FROM (SELECT I.ASSET_CODE id,I.ASSET_NAME text FROM CHB_ASSET_INFO I
-            UNION ALL
-            SELECT SRCFIELD1 id,S.SUBJECT_NAME text FROM CHB_TYPE_MAPPING_EX E
-            LEFT JOIN BOK_SUBJECT S ON S.SUBJECT_NO=E.SRCFIELD1
-             where E.MAPPINGCODE IN ('CASH_SUBJECTNO_AVG','CASH_SUBJECTNO_MKT')
-             GROUP BY SRCFIELD1,S.SUBJECT_NAME)A
+        FROM (SELECT I.ASSET_CODE id,I.ASSET_NAME text FROM CHB_ASSET_INFO I
+        UNION ALL
+        SELECT SRCFIELD1 id,S.SUBJECT_NAME text FROM CHB_TYPE_MAPPING_EX E
+        LEFT JOIN BOK_SUBJECT S ON S.SUBJECT_NO=E.SRCFIELD1
+        where E.MAPPINGCODE IN ('CASH_SUBJECTNO_AVG','CASH_SUBJECTNO_MKT')
+        GROUP BY SRCFIELD1,S.SUBJECT_NAME)A
         <where>
             A.id like concat(concat('%',#{search,
 			jdbcType=VARCHAR}),'%')
-			or  A.text like concat(concat('%',#{search,
+            or  A.text like concat(concat('%',#{search,
 			jdbcType=VARCHAR}),'%')
         </where>
         order by A.id
@@ -234,22 +255,22 @@
 
     <insert id="insertBatch" parameterType="com.joyintech.tams.common.base.entity.ChbMonthAssetPositiondetail" >
         insert into CHB_MONTH_ASSET_POSITIONDETAIL (POSUUID, TERM, DETAILNO,
-                    INVEST_VARIETY, ASSET_CODE, ASSETTYPE,
-                    PROD_ID, IS_FHXGCP, ASSETVALUE_A,
-                    ASSETVALUE_B, VDATE, MDATE,
-                    OPENPLAN, SUBJECT_NAME, RIVAL_PARTY,
-                    RATE, CCY, INDUSTRY1,
-                    INDUSTRY2, INDUSTRY3, INDUSTRY4,
-                    DELAY_PAY_AMT, COST_AMT, FLOAT_INGPL,
-                    INTINCEXP, INTADJEXP_ADD, LOSS_AMT,
-                    IN_ASSET_TYPE, PPPFLAG, MONIT_TYPE,
-                    MANAGE_TYPE, IS_GOVERN_FUND1, PRIVATEFUND_FLAG,
-                    PRIVATEPRD_FLAG, BONDTOSTOCK_FLAG, CREDIT_GRADE,
-                    MAIN_GRADE, TYPE_FINAL, ORG_ASSET_TYPE1,
-                    ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, RATING,
-                    ASSETTYPE2, ORG_CODE, DEPT_CODE,
-                    OLD_ASSET_CODE, SUNASSETTYPE, SUNASSETTYPE2,
-                    IS_YHBCGJ)
+        INVEST_VARIETY, ASSET_CODE, ASSETTYPE,
+        PROD_ID, IS_FHXGCP, ASSETVALUE_A,
+        ASSETVALUE_B, VDATE, MDATE,
+        OPENPLAN, SUBJECT_NAME, RIVAL_PARTY,
+        RATE, CCY, INDUSTRY1,
+        INDUSTRY2, INDUSTRY3, INDUSTRY4,
+        DELAY_PAY_AMT, COST_AMT, FLOAT_INGPL,
+        INTINCEXP, INTADJEXP_ADD, LOSS_AMT,
+        IN_ASSET_TYPE, PPPFLAG, MONIT_TYPE,
+        MANAGE_TYPE, IS_GOVERN_FUND1, PRIVATEFUND_FLAG,
+        PRIVATEPRD_FLAG, BONDTOSTOCK_FLAG, CREDIT_GRADE,
+        MAIN_GRADE, TYPE_FINAL, ORG_ASSET_TYPE1,
+        ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, RATING,
+        ASSETTYPE2, ORG_CODE, DEPT_CODE,
+        OLD_ASSET_CODE, SUNASSETTYPE, SUNASSETTYPE2,
+        IS_YHBCGJ,is_Fbhy )
 
         <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
                  close="from dual)">
@@ -269,7 +290,7 @@
             #{item.orgAssetType2,jdbcType=VARCHAR}, #{item.orgAssetType3,jdbcType=VARCHAR}, #{item.rating,jdbcType=VARCHAR},
             #{item.assettype2,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR},
             #{item.oldAssetCode,jdbcType=VARCHAR}, #{item.sunassettype,jdbcType=VARCHAR}, #{item.sunassettype2,jdbcType=VARCHAR},
-            #{item.isYhbcgj,jdbcType=VARCHAR}
+            #{item.isYhbcgj,jdbcType=VARCHAR} ,#{item.isFbhy,jdbcType=VARCHAR}
         </foreach>
 
     </insert>
@@ -282,21 +303,21 @@
 
     <select id="getCounterList" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT  A.CODE id,A.TRADE_COUNTER text from(
-            SELECT T.PROD_ID||'_'||T.ASSET_CODE CODE,
-            DECODE(MP.COUNTER_NAME,NULL,DECODE(MC.CUSTOMER_NAME,NULL,T.TRADE_COUNTER,MC.CUSTOMER_NAME),MP.COUNTER_NAME) TRADE_COUNTER,
-            row_number() over(partition by T.PROD_ID,T.ASSET_CODE,T.TRADE_COUNTER order by DEALDATE) row_number
-            FROM CHB_INVEST_TRADE T
-            LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = T.TRADE_COUNTER
-            LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = T.TRADE_COUNTER
-            WHERE 1=1
-            <if test="keysList != null and keysList.size()>0 ">
-                <foreach item="item" index="index" collection="keysList" separator="," open=" AND T.PROD_ID||'_'||T.ASSET_CODE IN (" close=")">
-                    <if test="(index % 999) == 998">
-                        null) OR T.PROD_ID||'_'||T.ASSET_CODE IN (
-                    </if>
-                    #{item}
-                </foreach>
-            </if>
+        SELECT T.PROD_ID||'_'||T.ASSET_CODE CODE,
+        DECODE(MP.COUNTER_NAME,NULL,DECODE(MC.CUSTOMER_NAME,NULL,T.TRADE_COUNTER,MC.CUSTOMER_NAME),MP.COUNTER_NAME) TRADE_COUNTER,
+        row_number() over(partition by T.PROD_ID,T.ASSET_CODE,T.TRADE_COUNTER order by DEALDATE) row_number
+        FROM CHB_INVEST_TRADE T
+        LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = T.TRADE_COUNTER
+        LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = T.TRADE_COUNTER
+        WHERE 1=1
+        <if test="keysList != null and keysList.size()>0 ">
+            <foreach item="item" index="index" collection="keysList" separator="," open=" AND T.PROD_ID||'_'||T.ASSET_CODE IN (" close=")">
+                <if test="(index % 999) == 998">
+                    null) OR T.PROD_ID||'_'||T.ASSET_CODE IN (
+                </if>
+                #{item}
+            </foreach>
+        </if>
         ) a
         WHERE A.row_number = 1
     </select>
@@ -305,6 +326,7 @@
     <select id="getCustomerList" resultMap="MstBaseResultMap">
         SELECT  *
         FROM MST_CUSTOMER_INFO_ADD T
+        LEFT JOIN MST_CUSTOMER_INFO T1 ON T.CUSTOMER_ID = T1.CUSTOMER_ID
         WHERE 1=1
         <if test="keysList != null and keysList.size()>0 ">
             <foreach item="item" index="index" collection="keysList" separator="," open=" AND T.CUSTOMER_ID (" close=")">

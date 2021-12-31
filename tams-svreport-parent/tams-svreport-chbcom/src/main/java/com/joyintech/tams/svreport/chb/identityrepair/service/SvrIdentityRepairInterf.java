@@ -1,7 +1,6 @@
 package com.joyintech.tams.svreport.chb.identityrepair.service;
 
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.service.ChbCommonCheckService;
 import com.joyintech.tams.svreport.chb.identityrepair.dao.SvrIdentityRepairInterfMapper;
@@ -39,14 +38,16 @@ public class SvrIdentityRepairInterf extends BaseService{
 	private ChbCommonCheckService chbCommonCheckService;
 
 	public void generateData(Date batchDate) {
-
-		if(svrIdentityRepairInterfMapper.idenCheck(DateUtil.format(batchDate)) == 0){
+        //获取最后一次修复时间参数
+		String lastRepairTime = svrIdentityRepairInterfMapper.getLastRepairTime();
+		if(svrIdentityRepairInterfMapper.idenCheck(lastRepairTime) == 0){
 			logger.info("当日身份信息数据不存在，或者没有接入，批处理退出。");
 			return;
 		}
 		//1、开始检索维护表数据  根据每日的明细进行数据的修复
 		logger.info("身份信息修复批处理信息检索开始------->>>>>>");
-		List<ChbIdentityRepair> list = svrIdentityRepairInterfMapper.selectBatchData(DateUtil.format(batchDate));
+
+		List<ChbIdentityRepair> list = svrIdentityRepairInterfMapper.selectBatchData(lastRepairTime);
 
 		logger.info("身份信息修复批处理信息检索结束-------<<<<<<");
 
@@ -57,7 +58,7 @@ public class SvrIdentityRepairInterf extends BaseService{
 
 		//4、入库
 		logger.info("身份信息修复批处理信息入库开始------->>>>>>");
-		dbData(list);
+		dbData(list,batchDate);
 		logger.info("身份信息修复批处理信息入库结束-------<<<<<<");
 
 	}
@@ -66,7 +67,7 @@ public class SvrIdentityRepairInterf extends BaseService{
 	 * 更新数据
 	 * @param list
 	 */
-	private void dbData(List<ChbIdentityRepair> list) {
+	private void dbData(List<ChbIdentityRepair> list,Date batchDate) {
 		if (StringUtil.isNotEmpty(list)) {
 			logger.debug("身份信息修复批处理登记插入数据：插入开始----------");
 			for(ChbIdentityRepair sub : list){
@@ -81,6 +82,8 @@ public class SvrIdentityRepairInterf extends BaseService{
 					svrIdentityRepairInterfMapper.updataCheck(agencyCode,registBankCode,fundAccPlace,orgIndentifyMark);
 				}
 			}
+			//更新最后一次修复时间为实际时间
+			svrIdentityRepairInterfMapper.updataLastRepairTime();
 			logger.debug("身份信息修复批处理登记插入数据：插入结束----------");
 		}
 	}

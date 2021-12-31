@@ -266,7 +266,7 @@ public class PbcMonthAssetReportService  extends BaseService{
         // 表2-5 企业债券分行业、企业规模统计
         generateMonthReportCompanyBond(posAssetList,generateDate,assetMap,isEdit);
 //        }
-        pbcMonthReportDetailAssetUtil.insertBatch(assetDetailList,DateUtil.getLastDayOfLayMonth(generateDate,"yyyyMM"));
+        pbcMonthReportDetailAssetUtil.insertBatch(assetDetailList,generateDate);
 
         logger.debug("资产报表生成(2_1\2_4\2_5\3_3):----开始------" +  df.format(new Date())); 
     }
@@ -3739,7 +3739,8 @@ public class PbcMonthAssetReportService  extends BaseService{
         
         
         // 插入数据，先删除明细表数据，再删除主表数据
-        
+        //WFPLR倒剪数据处理
+        assetDetailList.add(pbcMonthReportDetailAssetUtil.buildAssetDetailwfplr(PbcReportProperycode.AMT_823000_WFPLR,result.get(PbcReportProperycode.AMT_823000_WFPLR).getTotal(),generateDate));
         buildSumValAndInster(result, null, pbcReport, !CollectionUtils.isEmpty(posAssetList) ||
                 !CollectionUtils.isEmpty(posProdList) ||
                 DictCodeListExt2.报送数据状态_删除.getValue()
@@ -4872,11 +4873,11 @@ public class PbcMonthAssetReportService  extends BaseService{
 //	        param.setStartdate(pbcReport.getStartdate());
 //	        param.setEnddate(pbcReport.getEnddate());
 //	        param.setReporttype(PbcReportType.PBC_REPORT_2_2);
-//	        pbcMonthReportMapper.deleteByModel(param); 
+//	        pbcMonthReportMapper.deleteByModel(param);
 //	        // 判断是否有头寸数据有则插入
 //	        if (!CollectionUtils.isEmpty(posAssetList)){
 //	            // 插入主表数据
-//	            pbcMonthReportMapper.insert(pbcReport);  
+//	            pbcMonthReportMapper.insert(pbcReport);
 //	            // 插入资产负债表数据
 //	            for ( PbcReportCompanyDetailDto v:result.values() ) {
 //	                pbcReportCompanyDetailMapper.insert(v);
@@ -7872,6 +7873,7 @@ public class PbcMonthAssetReportService  extends BaseService{
      	String ccyAmount823000 = ccy+GlobalConstant.COMMA+line823000.getTotal().setScale(2,RoundingMode.HALF_UP)
                 +GlobalConstant.COMMA+line823000.getTotal().setScale(2,RoundingMode.HALF_UP);
      	line823000.setCcyAmount(ccyAmount823000);
+
         // 820000 权益合计
         line820000.setTotal(line821000.getTotal().add(line822000.getTotal()).add(line823000.getTotal()));
         line820000.setCny(line820000.getTotal());
@@ -7913,9 +7915,8 @@ public class PbcMonthAssetReportService  extends BaseService{
     		}
     		//汇总数据计算
     		setAssetDebtDetailValue((PbcReportAssetDebtDetailDto)dto.get(code), pos.getCcy(), amt, rateMap, (Date) assetMap.get("endDate"),source);
-            if(!StringUtil.isNotEmpty(hxl)&&
-                    PbcMonthReportDetailAssetUtil.isAssetDate(code)){
-                assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail(pos,dto.get(code),code));
+            if(PbcMonthReportDetailAssetUtil.isAssetDate(code)&&PbcReportType.PBC_REPORT_2_1.equals(rep_code)){
+                assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail(pos,dto.get(code),code,hxl));
             }
     		if(null!=deptDto&&null!=deptDto.get(pos.getInstitutionCode())){
     			setAssetDebtDetailValue(((Map<String,PbcReportAssetDebtDetailDto>)deptDto.get(pos.getInstitutionCode())).get(code), pos.getCcy(), amt, rateMap, (Date) assetMap.get("endDate"),source);
@@ -7985,6 +7986,11 @@ public class PbcMonthAssetReportService  extends BaseService{
     	
             setAssetDebtDetailValue((PbcReportAssetDebtDetailDto)dto.get(code), pos.getCcy(), 
             		amt, rateMap, (Date)assetMap.get("endDate"),source);
+
+            if(PbcMonthReportDetailAssetUtil.isAssetPrd(code)&&PbcReportType.PBC_REPORT_2_1.equals(rep_code)){
+                assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetailPrd(pos,dto.get(code),code,amt));
+            }
+
     		if(null!=deptDto&&null!=deptDto.get(code)){
                 setAssetDebtDetailValue((PbcReportAssetDebtDetailDto)deptDto.get(code), pos.getCcy(), 
                 		amt, rateMap, (Date)assetMap.get("endDate"),source);

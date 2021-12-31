@@ -6,6 +6,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.common.base.annotate.BusinessKey;
 import com.joyintech.tams.report.common.base.annotate.TableName;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
@@ -84,11 +85,13 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
     /**
      * 提供销售结算资金服务机构代码
      */
+    @BusinessKey("INSTITUTION_CODE")
     private String institutionCode;
 
     /**
      * 产品登记编码
      */
+    @BusinessKey("PRD_REGIST_CODE")
     private String prdRegistCode;
 
     /**
@@ -104,6 +107,7 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
     /**
      * 销售结算资金交易流水号
      */
+    @BusinessKey("TRADE_NO")
     private String tradeNo;
 
     /**
@@ -398,7 +402,7 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
     }
 
     public String getTradePsName() {
-        return SysDataUtil.getNameFromDataDict(DictCode.销售结算资金流动方向, this.getTradePs());
+        return this.getTradePs() + " " + SysDataUtil.getNameFromDataDict(DictCode.销售结算资金流动方向, this.getTradePs());
     }
     public String getDataStatusName() {
         return SysDataUtil.getNameFromDataDict(DictCode.报送数据状态, this.getDataStatus());

@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.pbc.assetdebt.dto;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 描述:PBC_REPORT_ASSETDEBT_DETAIL表的实体类
@@ -108,6 +109,7 @@ public class PbcReportAssetDebtDetailDto {
      * 币种金额信息，多币种存值，人民币也存值，格式：CNY,原币金额,折人民币金额;USD,原币金额,折人民币金额
      */
     private String ccyAmount;
+
 
     /**
      * 明细统计uuid

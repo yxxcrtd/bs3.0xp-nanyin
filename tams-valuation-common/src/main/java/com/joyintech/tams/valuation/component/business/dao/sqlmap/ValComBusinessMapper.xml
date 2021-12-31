@@ -27,4 +27,52 @@
 		FROM WFL_TRD_PRODUCT_DEAL
 		WHERE FINPROD_ID = #{finprodId})
 	</select>
+
+	<select id="getAssetId"
+			resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+			FINPROD_MARKET_ID id,
+			FINPROD_ABBR text
+		from
+			FIN_PRODUCT
+		where
+			1=1
+		<if test="assetType !=null and assetType != ''">
+			and FINPROD_TYPE = #{assetType}
+		</if>
+		<if test="search !=null and search != ''">
+			AND	(FINPROD_MARKET_ID like concat('%',concat(#{search},'%'))
+			OR FINPROD_ABBR like concat('%',concat(#{search},'%')))
+		</if>
+	</select>
+
+	<select id="getProdId" resultType="com.joyintech.framework.select.SelectOptionDto" >
+		select
+			FINPROD_ID id,
+			FINPROD_ABBR text
+		from
+			FIN_PRODUCT
+		where
+			1=1
+		<if test="finprodType !=null and finprodType != ''">
+			and FINPROD_TYPE =#{finprodType}
+		</if>
+		<if test="search !=null and search != ''">
+			AND	(FINPROD_ID like concat('%',concat(#{search},'%'))
+			OR FINPROD_ABBR like concat('%',concat(#{search},'%')))
+		</if>
+	</select>
+
+	<!--资金账户下拉框-->
+	<select id="getTrdAcctId" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select ssai.TRD_ACCT_ID as id,sci.ACCT_NAME as text
+		from STL_FIN_PRODUCT_ACCT psa/* 组合证券账户*/
+		inner join STL_SEC_ACCT_INFO ssai on psa.ACCT_NO=ssai.SEC_ACCT_ID
+		inner join STL_CAPACCT_INFO sci on ssai.TRD_ACCT_ID=sci.ACCT_NO
+		<where>
+			<if test="portfolioId != null and portfolioId != ''">
+				AND psa.FINPROD_ID =#{portfolioId}
+			</if>
+		</where>
+	</select>
 </mapper>

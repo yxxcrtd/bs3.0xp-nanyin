@@ -324,4 +324,11 @@ public class ChbAgentPrdSub extends BaseEntity {
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
     }
+
+    /**
+     * 取得 业务主键
+     */
+    public String getKey(){
+        return this.getAgentInstitutionCode() + "_" + this.getProdRegistCode();
+    }
 }

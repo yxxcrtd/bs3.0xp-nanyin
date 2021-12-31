@@ -41,7 +41,7 @@
 		FUND_ACC_PLACE as fundAccPlace,
 		NVL(AGENCY_CODE,REGIST_BANK_CODE)  as agencyCode
 		FROM CHB_EQUDET_SUB
-		WHERE TO_CHAR(EQUITY_CONF_DATE,'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR})  tmp2
+		WHERE NVL(TO_CHAR(UPDATE_TIME,'yyyy-mm-dd hh24:mi:ss'),TO_CHAR(CREATE_TIME,'yyyy-mm-dd hh24:mi:ss')) <![CDATA[>=]]> #{lastRepairTime,jdbcType=VARCHAR})  tmp2
 		ON tmp1.indentifyMark = tmp2.orgIndentifyMark
 	</select>
 
@@ -177,7 +177,7 @@
 		SELECT COUNT(*)
 		from
 		CHB_EQUDET_SUB
-		WHERE TO_CHAR(EQUITY_CONF_DATE,'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR}
+		WHERE NVL(TO_CHAR(UPDATE_TIME,'yyyy-mm-dd hh24:mi:ss'),TO_CHAR(CREATE_TIME,'yyyy-mm-dd hh24:mi:ss'))  <![CDATA[>=]]>  #{lastRepairTime,jdbcType=VARCHAR}
 	</select>
 
 	<update id="updataSub" parameterType="string">
@@ -195,4 +195,20 @@
 		THE_BANK_CODE = NVL(#{agencyCode,jdbcType=VARCHAR},#{registBankCode,jdbcType=VARCHAR})
 		WHERE INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR}
 	</update>
+
+	<update id="updataLastRepairTime" parameterType="string">
+		UPDATE SYS_PARA
+		SET
+		PARAM_VALUE = TO_CHAR(sysdate,'yyyy-mm-dd hh24:mi:ss')
+		WHERE PARA_CODE = 'SVR_LAST_REPAIR_TIME'
+	</update>
+
+	<select id="getLastRepairTime" resultType="string">
+		select
+		  PARAM_VALUE
+		from
+		  SYS_PARA
+		WHERE
+		  PARA_CODE = 'SVR_LAST_REPAIR_TIME'
+	</select>
 </mapper>

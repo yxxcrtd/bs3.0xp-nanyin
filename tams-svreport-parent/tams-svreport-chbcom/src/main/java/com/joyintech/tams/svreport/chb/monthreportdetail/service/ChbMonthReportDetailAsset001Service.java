@@ -83,6 +83,8 @@ public class ChbMonthReportDetailAsset001Service extends CommonExportService<Chb
 	 */
 	public Page<ChbMonthReportDetailAsset> searchPage(Map<String, Object> pageParam) {
 		//将发送状态改为空
+		String iscal= SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ASSETPOSITION_CALWAY);
+		pageParam.put("costFlag",iscal);
 		int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
 		int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
 		if(StringUtil.isNotEmpty(pageParam.get("prodId"))){
@@ -102,7 +104,7 @@ public class ChbMonthReportDetailAsset001Service extends CommonExportService<Chb
 			pageParam.put("prodIds",pageParam.get("prodId").toString().split(","));
 		}
 		if(StringUtil.isNotEmpty(pageParam.get("assetCode"))){
-			pageParam.put("assetCodes",pageParam.get("assetCodes").toString().split(","));
+			pageParam.put("assetCodes",pageParam.get("assetCode").toString().split(","));
 		}
 		if(pageParam.containsKey("keyList")){
 			pageParam.put("keysList",

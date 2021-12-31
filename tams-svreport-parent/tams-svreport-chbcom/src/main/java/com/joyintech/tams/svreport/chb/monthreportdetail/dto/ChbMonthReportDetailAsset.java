@@ -1,7 +1,10 @@
 package com.joyintech.tams.svreport.chb.monthreportdetail.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.ChbMonthAssetPositiondetail;
 import com.joyintech.tams.common.base.entity.ChbMonthPrdPositiondetail;
@@ -113,7 +116,7 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
         this.exerciseDate = exerciseDate;
     }
 
-    public String getExerciseDateStr(){return DateUtil.format(this.getExerciseDate(),"yyyy-MM-dd");}
+    public String getOpenplanStr(){return DateUtil.format(this.getOpenplan(),"yyyy-MM-dd");}
 
     public String getVdateStr() {
         return DateUtil.format(this.getVdate(),"yyyy-MM-dd");
@@ -151,6 +154,14 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getBondtostockFlag());
     }
 
+    public String getMonitTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getMonitType());
+    }
+
+    public String getPppflagStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPppflag());
+    }
+
     public String getIsGovernFund1Str() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsGovernFund1());
     }
@@ -160,7 +171,13 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
     }
 
     public String getIsYhbcgjStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_银行资本补充工具, this.getIsYhbcgj());
+        String  isYhbcgj = "";
+        if(StringUtil.isNotEmpty(this.getIsYhbcgj())){
+            for(String code : this.getIsYhbcgj().split(",")){
+                isYhbcgj = isYhbcgj + ","+SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_银行资本补充工具, code);
+            }
+        }
+        return StringUtil.isNotEmpty(isYhbcgj)&&isYhbcgj.length()>0?isYhbcgj.substring(1,isYhbcgj.length()):null;
     }
 
     public String getOrgAssetType2Str() {
@@ -181,6 +198,26 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
         this.isFbhy = isFbhy;
     }
 
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal costAmtB ;
+
+    private BigDecimal costAmtA;
+
+    public BigDecimal getCostAmtA() {
+        return costAmtA;
+    }
+
+    public void setCostAmtA(BigDecimal costAmtA) {
+        this.costAmtA = costAmtA;
+    }
+
+    public BigDecimal getCostAmtB() {
+        return costAmtB;
+    }
+    public void setCostAmtB(BigDecimal costAmtB) {
+        this.costAmtB = costAmtB;
+    }
+
     public String getIsFbhyStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_非标行业, this.getIsFbhy());
     }
@@ -188,11 +225,25 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
 
 
     public String getDelayPayAmtStr(){ return null!=this.getDelayPayAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getDelayPayAmt()):null; }
+
     public String getCostAmtStr(){
         //人行月报资产端成本已经是包含了利息调整了，需求把利息调整又单独列出来，然后余额写的是成本+利息调整，这样的话利息调整会统计重复？  成本直接减去利息调整进行展示
-        return null!=this.getCostAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmt().subtract(
-                null!=this.getIntadjexpAdd()?this.getIntadjexpAdd():BigDecimal.ZERO)):null;
+        return null!=this.getCostAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmt()):null;
     }
+    public String getCostAmtBStr(){
+        //人行月报资产端成本已经是包含了利息调整了，需求把利息调整又单独列出来，然后余额写的是成本+利息调整，这样的话利息调整会统计重复？  成本直接减去利息调整进行展示
+        return null!=this.getCostAmtB()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmtB()):null;
+    }
+
+    public String getCostAmtaStr(){
+        //人行月报资产端成本已经是包含了利息调整了，需求把利息调整又单独列出来，然后余额写的是成本+利息调整，这样的话利息调整会统计重复？  成本直接减去利息调整进行展示
+        return null!=this.getCostAmtA()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmtA()):null;
+    }
+    public String getIsFhxgcpStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsFhxgcp());
+    }
+
+
     public String getFloatIngplStr(){ return null!=this.getFloatIngpl()? BigDecimalConverterUtil.getMonthDetailString(this.getFloatIngpl()):null; }
     public String getIntincexpStr(){ return null!=this.getIntincexp()? BigDecimalConverterUtil.getMonthDetailString(this.getIntincexp()):null; }
     public String getIntadjexpAddStr(){ return null!=this.getIntadjexpAdd()? BigDecimalConverterUtil.getMonthDetailString(this.getIntadjexpAdd()):null; }

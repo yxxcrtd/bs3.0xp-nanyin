@@ -70,10 +70,10 @@
     <insert id="insert" parameterType="com.joyintech.tams.report.submitmaintenance.agentinstitution.dto.AgentInstitutionDto" >
         insert into CHB_AGENT_INSTITUTION_INFO (AGENT_INSTITUTION_CODE, AGENT_INSTITUTION_NAME, 
             ISSUE_PARTY_ID, STATUS, ENCLOSURE_NUM, 
-            ENCLOSURE_ADDRESS,ENCLOSURE_CHANGE_FLAG ,DATA_DATE, REMARK)
+            ENCLOSURE_ADDRESS,ENCLOSURE_CHANGE_FLAG ,DATA_DATE, REMARK,CREATE_TIME, UPDATE_TIME)
         values (#{agentInstitutionCode,jdbcType=VARCHAR}, #{agentInstitutionName,jdbcType=VARCHAR}, 
             #{issuePartyId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{enclosureNum,jdbcType=VARCHAR}, 
-            #{enclosureAddress,jdbcType=VARCHAR},#{enclosureChangeFlag,jdbcType=VARCHAR}, SYSDATE, #{remark,jdbcType=VARCHAR})
+            #{enclosureAddress,jdbcType=VARCHAR},#{enclosureChangeFlag,jdbcType=VARCHAR}, SYSDATE, #{remark,jdbcType=VARCHAR},sysdate, sysdate)
     </insert>
 
 <!--  修改更新-->
@@ -83,7 +83,8 @@
         set
           AGENT_INSTITUTION_NAME = #{agentInstitutionName,jdbcType=VARCHAR},
           STATUS = #{status,jdbcType=VARCHAR},
-          REMARK = #{remark,jdbcType=VARCHAR}
+          REMARK = #{remark,jdbcType=VARCHAR},
+          UPDATE_TIME = sysdate
         where
           AGENT_INSTITUTION_CODE = #{agentInstitutionCode,jdbcType=VARCHAR}
     </update>
@@ -192,10 +193,9 @@
 
     <update id="updateEnclosureNum" parameterType="com.joyintech.tams.report.submitmaintenance.agentinstitution.dto.AgentInstitutionDto">
         update CHB_AGENT_INSTITUTION_INFO
-        set ENCLOSURE_ADDRESS = #{enclosureAddress},
-        ENCLOSURE_NUM = #{enclosureNum},
-        FILE_NO = #{fileNo},
-        ENCLOSURE_CHANGE_FLAG = #{enclosureChangeFlag}
+        set ENCLOSURE_ADDRESS = #{enclosureAddress,jdbcType=VARCHAR},
+        ENCLOSURE_NUM = #{enclosureNum,jdbcType=VARCHAR},
+        FILE_NO = #{fileNo,jdbcType=VARCHAR}
         <where>
             <if test="agentInstitutionCode != null and agentInstitutionCode != ''">
                 AGENT_INSTITUTION_CODE = #{agentInstitutionCode}

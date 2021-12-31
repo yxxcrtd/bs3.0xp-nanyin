@@ -12,6 +12,7 @@ import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport;
 import com.joyintech.tams.svreport.chb.monthreportdetail.dto.ChbMonthReportDetailAsset;
 import com.joyintech.tams.svreport.chb.monthreportdetail.dto.ChbMonthReportDetailProd;
+import com.joyintech.tams.svreport.chb.monthreportdetail.dto.MstCustomerInfoDetail;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +29,7 @@ public interface ChbMonthReportDetailAssetMapper {
 
     List<SelectOptionDto> getCounterList(Map<String,Object> map);
 
-    List<MstCustomerInfoAdd> getCustomerList(Map<String,Object> map);
+    List<MstCustomerInfoDetail> getCustomerList(Map<String,Object> map);
 
     List<ChbMonthReportDetailAsset> selectBalanceData(Map<String,Object> map);
 

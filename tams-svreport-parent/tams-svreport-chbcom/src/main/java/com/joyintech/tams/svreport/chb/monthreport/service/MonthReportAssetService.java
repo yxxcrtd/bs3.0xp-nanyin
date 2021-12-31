@@ -312,19 +312,20 @@ public class MonthReportAssetService {
 						// 评级结果取值改变
                         // 判断走独立子系统还是走共通
                         if(isSubSystem != null){
-                            if (StringUtils.equalsIgnoreCase(isSubSystem, DictCodeList.是否_中债_是.getValue())){
-                                m=chbMonthAssetPositionMapper.selectPlanInfo(qm);
-                            }else{
-//                            	qm.setGradeDateEnd(formatter.format(lastday));
-//								qm.setGetProductRatingOrderSqlByZx(getProductRatingOrderSqlByZx);
-//								qm.setGetProductRatingOrderSqlByZt(getProductRatingOrderSqlByZt);
-//								m = chbMonthAssetPositionMapper.selectPlanInfoByCommon(qm);
-								ChbMonthAssetPosition cmamap =cmapMap.get(p11.getAssetCode());
-								if(cmamap!=null) {
-									BeanUtil.copyPropertiesIgnoreNull(m, cmamap);
-								}
+//                            if (StringUtils.equalsIgnoreCase(isSubSystem, DictCodeList.是否_中债_是.getValue())){
+//                                m=chbMonthAssetPositionMapper.selectPlanInfo(qm);
+//                            }else{
+////                            	qm.setGradeDateEnd(formatter.format(lastday));
+////								qm.setGetProductRatingOrderSqlByZx(getProductRatingOrderSqlByZx);
+////								qm.setGetProductRatingOrderSqlByZt(getProductRatingOrderSqlByZt);
+////								m = chbMonthAssetPositionMapper.selectPlanInfoByCommon(qm);
+//
+//                            }
 
-                            }
+							ChbMonthAssetPosition cmamap =cmapMap.get(p11.getAssetCode());
+							if(cmamap!=null) {
+								BeanUtil.copyPropertiesIgnoreNull(m, cmamap);
+							}
                         }
 
 						if(m == null){
@@ -949,7 +950,10 @@ public class MonthReportAssetService {
 									detail.setXgbottombalance(detail.getXgbottombalance().add(BigDecimal.ZERO));
 								}
 								//每次合計數據均需要計入
-								assetDetailList.add(ChbMonthReportDetailAssetUtil.buildAssetDetail(position,prodMap.get(position.getProdId()),assetMap.get(position.getAssetCode()),detail));
+								ChbMonthAssetPositiondetail assetDetail = ChbMonthReportDetailAssetUtil.buildAssetDetail(position,prodMap.get(position.getProdId()),assetMap.get(position.getAssetCode()),detail);
+								if(null!=assetDetail){
+									assetDetailList.add(assetDetail);
+								}
 
 								/**G06资产端改造  add by  dongxiangyang  end*/
 
@@ -1029,9 +1033,11 @@ public class MonthReportAssetService {
 //	    							detail.setBottombalance(detail.getBottombalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
 //	    						}
 //	    					}
-
-							assetDetailList.add(ChbMonthReportDetailAssetUtil.buildAssetDetail(position,prodMap.get(position.getProdId()),assetMap.get(position.getAssetCode()),
-									buildDetail(position,true,reportStartDate, singleRule.getPropertyCode(), balance, bottombalance,xgbalance,xgbottombalance)));
+							ChbMonthAssetPositiondetail assetDetail = ChbMonthReportDetailAssetUtil.buildAssetDetail(position,prodMap.get(position.getProdId()),assetMap.get(position.getAssetCode()),
+									buildDetail(position,true,reportStartDate, singleRule.getPropertyCode(), balance, bottombalance,xgbalance,xgbottombalance));
+							if(null!=assetDetail){
+								assetDetailList.add(assetDetail);
+							}
 						}
             			
             			//如果汇总项无此合计项则填入

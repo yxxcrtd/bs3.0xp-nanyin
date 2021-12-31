@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.pbc.reportdetail.dto;
 
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.ChbMonthAssetPositiondetail;
 import com.joyintech.tams.common.base.entity.ChbMonthPrdPositiondetail;
@@ -119,18 +120,19 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
         return DateUtil.format(this.getMdate(),"yyyy-MM-dd");
     }
 
+    public String getOpenplanStr(){return DateUtil.format(this.getOpenplan(),"yyyy-MM-dd");}
+
     public String getRateStr(){
         return null!=this.getRate()?this.getRate()+"%":null;
     }
 
     public String getIndustryStr(){
         String code = SysDataUtil.getNameFromDataDict(DictCode.机构所属行业一级分类, this.getIndustry());
-        return null!=code?code:SysDataUtil.getNameFromDataDict(DictCode.行业门内编码, this.getIndustry());
+        return StringUtil.isNotEmpty(code) ?code:SysDataUtil.getNameFromDataDict(DictCode.行业门内编码, this.getIndustry());
     }
 
     public String getPartyType1Str(){
-        String code = SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, this.getPartyType1());
-        return null!=code?code:SysDataUtil.getNameFromDataDict(DictCode.企业规模, this.getPartyType1());
+        return SysDataUtil.getNameFromDataDict(DictCode.人行月度明细_企业规模, this.getPartyType1());
     }
 
     public String getBuyPlaceStr(){
@@ -161,8 +163,7 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
 
     public String getCostAmtStr(){
         //        //人行月报资产端成本已经是包含了利息调整了，需求把利息调整又单独列出来，然后余额写的是成本+利息调整，这样的话利息调整会统计重复？  成本直接减去利息调整进行展示
-        return null!=this.getCostAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmt().subtract(
-                null!=this.getIntadjexpAdd()?this.getIntadjexpAdd():BigDecimal.ZERO)):null;
+        return null!=this.getCostAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmt()):null;
     }
 
     public String getFloatIngplStr(){
@@ -186,5 +187,9 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
 
     public String getEndDaysType(){
         return SysDataUtil.getNameFromDataDict(DictCode.人行月度明细_期限类型, PbcMonthReportDetailProdUtil.getTermType(this.getEndDays()));
+    }
+
+    public String getDetailCode(){
+        return this.getProdid()+"_"+this.getAssetCode()+"_"+this.getDetailno();
     }
 }

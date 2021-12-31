@@ -11,7 +11,7 @@ $(function() {
             assetCode: $('#assetCode').val()==null?null:$('#assetCode').val().join(","),
             //结束日（统计日期）
             enddate : $('#enddate').val(),
-            flag:'01'
+            dataFlag:'01'
         }
     };
 
@@ -59,7 +59,7 @@ $(function() {
             { title: "份额", width : 120, field: 'delayPayAmtStr',sortField:'delayPayAmt'},
             { title: "成本", width : 120, field: 'costAmtStr',sortField:'costAmt'},
             { title: "应计利息", width : 120, field: 'intincexpStr', width : 120,sortField:'intincexp'},
-            { title: "利息调整", width : 120, field: 'intadjexpAddStr', width : 120,sortField:'intadjexpAdd'},
+            // { title: "利息调整", width : 120, field: 'intadjexpAddStr', width : 120,sortField:'intadjexpAdd'},
             { title: "公允价值变动", width : 120, field: 'floatIngplStr', width : 120,sortField:'floatIngpl'},
             { title: "减值", width : 120, field: 'lossAmtStr',sortField:'lossAmt'},
             { title: "期末余额", width : 120, field: 'assetvalueAStr',sortField:'assetvalueA'},
@@ -115,7 +115,13 @@ $(function() {
     $(function(){
         // 绑定按钮事件
         $('#ChbMonthReportDetailAsset001_btn_search').click(function() {
-            table.load();
+            var param=getSearchParams();
+            if(!param.enddate){
+                Joyin.error("请选择统计年月进行查询！");
+                return;
+            }else{
+                table.load();
+            }
         });
 
         $('#ChbMonthReportDetailAsset001_btn_export').click(function() {

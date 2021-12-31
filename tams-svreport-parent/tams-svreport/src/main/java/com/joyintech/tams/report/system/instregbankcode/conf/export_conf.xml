@@ -4,8 +4,9 @@
 		<Row>
 			<Cell order="1" name="机构代码">orgCode</Cell>
 			<Cell order="2" name="机构名称">orgName</Cell>
-			<Cell order="3" name="登记银行代码">registBankCode</Cell>
-			<Cell order="4" name="总行机构代码">pbcBankCode</Cell>
+			<!--	modify 修改导出模板时属性名称 yangxianjiu start end 2021-12-30		-->
+			<Cell order="3" name="中债登记机构代码">registBankCode</Cell>
+			<Cell order="4" name="人行登记机构代码">pbcBankCode</Cell>
 			<Cell order="5" name="是否理财子公司">isFinSubCompany</Cell>
 			<Cell order="6" name="社会信用代码">insitituteCode</Cell>
 		</Row>
