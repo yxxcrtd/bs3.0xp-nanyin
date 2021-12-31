@@ -375,4 +375,7 @@ public interface IbuQuoteMapper {
     int updateBondQuoteFinalStatusForRevoke(IbuQuoteBond dto);
 
     int isOpeQuotedPrice(Map<String,Object> param);
+
+    IbuQuoteBondDto selectQuoteBondByCfetQuoteId(@Param("cfetsQuoteId")String cfetsQuoteId);
+
 }

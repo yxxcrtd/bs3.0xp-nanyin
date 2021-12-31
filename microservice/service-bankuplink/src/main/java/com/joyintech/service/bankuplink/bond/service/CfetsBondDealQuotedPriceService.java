@@ -558,6 +558,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
         bondQuoteInfoDto.setSettleSpeed(bondQuoteExtDto.getSettleSpeed());
         bondQuoteInfoDto.setUnitCprice(bondQuoteExtDto.getIbuQuoteBondDet() != null ? bondQuoteExtDto.getIbuQuoteBondDet().getUnitCprice() : null);
         bondQuoteInfoDto.setYield(bondQuoteExtDto.getIbuQuoteBondDet() != null ? ArithmeticUtil.multiply(bondQuoteExtDto.getIbuQuoteBondDet().getYield(), new BigDecimal(100)) : null);
+        bondQuoteInfoDto.setExerYield(bondQuoteExtDto.getIbuQuoteBondDet() != null ? ArithmeticUtil.multiply(bondQuoteExtDto.getIbuQuoteBondDet().getExerYield(), new BigDecimal(100)) : null);
         bondQuoteInfoDto.setAssetTypeOne(bondQuoteExtDto.getType6());
         bondQuoteInfoDto.setCfetsQuoteId(bondQuoteExtDto.getCfetsQuoteId());
         bondQuoteInfoDto.setfTradeId(bondQuoteExtDto.getIbuQuoteBondDet() != null ? bondQuoteExtDto.getIbuQuoteBondDet().getExecid() : null);

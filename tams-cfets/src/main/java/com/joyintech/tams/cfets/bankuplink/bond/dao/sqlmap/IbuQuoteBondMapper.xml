@@ -2041,4 +2041,8 @@ SELECT
             FROM
                 WFL_IBU_QUOTE_ETR_RE where ENTRUST_ID = #{entrustId})
     </select>
+
+    <select id="getTradeStatus" resultType="java.lang.String">
+        SELECT TRADE_STATUS FROM  IBU_QUOTE_BOND_DET WHERE  QUOTE_ID = #{quoteId} AND CP_PARTY_ID = #{cpPartyId}
+    </select>
 </mapper>
