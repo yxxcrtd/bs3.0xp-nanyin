@@ -35,7 +35,7 @@ public class CfetsIbuQuoteBatchCommonController {
      */
     @ResponseBody
     @PostMapping("resaleregautodeal")
-    public void resaleregautodeal(@RequestBody Map<String,Object> parm){
+    public void resaleregautodeal(@RequestBody Map<String,Object> parm) throws Exception {
         List<String> totleTradeIds = (List<String>) parm.get("totleTradeIds");
         try{
             totleTradeIds.forEach(item ->{
@@ -43,6 +43,7 @@ public class CfetsIbuQuoteBatchCommonController {
             });
         }
         catch (Exception e){
+            e.printStackTrace();
             logger.error("回售登记数据自动生成成交数据异常:"+e.getMessage());
         }
     }
