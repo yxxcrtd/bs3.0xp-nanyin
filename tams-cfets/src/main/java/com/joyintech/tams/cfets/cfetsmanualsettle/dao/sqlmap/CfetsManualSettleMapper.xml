@@ -789,7 +789,7 @@
         T1.TRADE_MARKET tradeMarket,
         T1.TRADE_MARKET_MODE tradeMarketMode,
         T1.TRADE_PLAT tradePlat,
-        T1.TOTLE_TRADE_ID tradeId,
+        T7.EXE_ID tradeId,
         NVL(T9.PARTY_NAME,T5.OU_PARTY_ID) ouPartyId ,
         NVL(T10.REAL_NAME,T1.TRADER) ouTraderId,
         NVL(T11.COUNTER_NAME,T1.COUNTER_ID) counterId,
