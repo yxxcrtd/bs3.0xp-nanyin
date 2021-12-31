@@ -36,6 +36,8 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
+import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.component.business.settle.dto.BussSettleOrderParameterDto;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.component.business.trade.BussRepoSecService;
@@ -51,6 +53,7 @@ import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInves
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.cstp.service.CstpCommonService;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
@@ -68,7 +71,9 @@ import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.PreTrdCommonBaseService;
 import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.interf.service.InterfComponentService;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.invest.trade.cstptrdmatchinfo.dto.TrdMatchInfoDto;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade002Dto;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade003Dto;
@@ -190,6 +195,8 @@ public class CfetsTrdConfirm001Service extends BaseService{
     private InterfComponentService interfComponentService;
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
+    @Autowired
+    private InterfRiskRdsService<InterfRiskRdsDto> interfRiskRdsService;
     // 交易份额小数保留位数
     private int decimalPlaces_4 = 4;
 
@@ -373,6 +380,22 @@ public class CfetsTrdConfirm001Service extends BaseService{
                 //处理指令完成情况
                 baseTradeCommExecute(finProductTradeDto);
 
+            }
+
+        }
+
+        // 选择的成交编号存在对应的报价，则不影响风险
+        if (!StringUtil.isEmptyList(entity.getDtoList()) && !StringUtil.isNotBlank(entity.getfTradeId())) {
+            try {
+                for (CfetsTrdBondInvestTradeDto item : entity.getDtoList()) {
+                    TrdBondInvestTradeDto bondDto=new  TrdBondInvestTradeDto();
+                    BeanUtil.copyPropertiesIgnoreNull(bondDto, item);
+                    interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
+                            BussinessDictCodeListRds.接口系统ID_实占接口.getValue(), DictCodeList.平安资产类型_债券.getValue(),
+                            (en) -> interfRiskRdsService.sendRiskRdsData(bondDto, en));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         }

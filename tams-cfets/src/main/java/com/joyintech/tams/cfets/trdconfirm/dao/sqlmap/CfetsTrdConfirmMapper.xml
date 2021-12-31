@@ -541,7 +541,9 @@
         ibd.int_amt as intAmt,
         ibd.exer_yield as exerYield,
         ib.deal_fee_amt as trdFeeAmt,
-        ib.sett_fee_amt as settleFeeAmt
+        ib.sett_fee_amt as settleFeeAmt,
+        ib.delivery_type as deliveryType,
+        ib.sett_type as clearType
         from ibu_quote_bond ib
         inner join ibu_quote_bond_det ibd
         on ib.quote_id=ibd.quote_id

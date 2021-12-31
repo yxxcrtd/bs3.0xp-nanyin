@@ -424,6 +424,8 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
 
     private String exchangeIsPayWithTrade;
 
+    private List<CfetsTrdBondInvestTradeDto> dtoList;
+
     public String getSettleIsPayWithTrade() {
         return settleIsPayWithTrade;
     }
@@ -2436,5 +2438,13 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
 
     public void setOuTraderId(String ouTraderId) {
         this.ouTraderId = ouTraderId;
+    }
+
+    public List<CfetsTrdBondInvestTradeDto> getDtoList() {
+        return dtoList;
+    }
+
+    public void setDtoList(List<CfetsTrdBondInvestTradeDto> dtoList) {
+        this.dtoList = dtoList;
     }
 }

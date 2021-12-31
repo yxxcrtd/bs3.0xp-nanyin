@@ -1,10 +1,10 @@
 package com.joyintech.tams.cfets.trdconfirm.aop;
 
-import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdBondInvestTradeDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListRsk;
@@ -13,7 +13,6 @@ import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
 import com.joyintech.workflow.engine.constant.OperationType;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ public class CfetsTradeCreditHandlerAop {
     @Autowired
     private TradeCommonService tradeCommonService;
 
-    @Pointcut("execution(* com.joyintech.tams.cfets.etrib..*.*.trdConfirmSaveMethod(..))")
+    @Pointcut("execution(* com.joyintech.tams.cfets.trdconfirm..*.*.doCompleteMethod(..))")
     protected void completePoint() {
 
     }
@@ -56,7 +55,9 @@ public class CfetsTradeCreditHandlerAop {
                 }
             }
             // add by etliu 20210129 end
-            
+            CfetsTrdBondInvestTradeDto pageInputDto = (CfetsTrdBondInvestTradeDto) args[0];
+            TrdBondInvestTradeDto inputDto = new TrdBondInvestTradeDto();
+            BeanUtil.copyPropertiesIgnoreNull(inputDto, pageInputDto);
             if (operationType.equals(OperationType.REVOKE)||operationType.equals(OperationType.DELETE)) {
                 tradeCommonService.executeOccupyCreditLines(args[0], DictCodeListExt1.交易状态_撤销.getValue(),DictCodeListRsk.授信占用类别_实占.getValue(),"doComplete");
             }else {
