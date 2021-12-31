@@ -142,7 +142,6 @@ public class ChbMonthReportDetailAssetUtil {
             }else if (ruleFlag(ChbMonthAssetRule.其他服务业,position)){
                 isFbhy =DictCodeListExt3.中债月度明细_非标行业_其他服务业.getValue();
             }
-
             chbMonthAssetPositiondetail.setIsFbhy(isFbhy);
         }
         chbMonthAssetPositiondetail.setDetailno(reportDetail.getPropertycode());

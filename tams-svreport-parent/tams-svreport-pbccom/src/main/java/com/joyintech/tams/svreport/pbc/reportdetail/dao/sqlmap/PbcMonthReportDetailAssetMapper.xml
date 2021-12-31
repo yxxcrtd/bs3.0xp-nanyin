@@ -124,7 +124,7 @@
         I.VDATE,
         I.MDATE,
         /**企业债,取资产基本信息(2-5逻辑)其余取贷款的信息(2-2~2-4逻辑)**/
-        P.enterprise_scale partyType1,
+        P.party_Type1 partyType1,
         NVL(MC.CUSTOMER_NAME, P.SUBJECT_NAME) subjectName,
         P.INDUSTRY INDUSTRY,
         P.borrower_city buyPlace,
@@ -194,13 +194,11 @@
         SELECT  a.id,nvl(a.text,a.id) text
             FROM (SELECT I.ASSET_CODE id,I.ASSET_NAME text FROM CHB_ASSET_INFO I
             UNION ALL
-            SELECT SRCFIELD1 id,S.SUBJECT_NAME text FROM CHB_TYPE_MAPPING_EX E
-            LEFT JOIN BOK_SUBJECT S ON S.SUBJECT_NO=E.SRCFIELD1
-             GROUP BY SRCFIELD1,S.SUBJECT_NAME)A
+            SELECT subject_no id,SUBJECT_NAME text FROM BOK_SUBJECT GROUP BY subject_no,SUBJECT_NAME)A
         <where>
-            A.id like concat(concat('%',#{prodId,
+            A.id like concat(concat('%',#{search,
 			jdbcType=VARCHAR}),'%')
-			or  A.text like concat(concat('%',#{prodId,
+			or  A.text like concat(concat('%',#{search,
 			jdbcType=VARCHAR}),'%')
             <!-- and A.FINPROD_TYPE2 = 'F16' -->
         </where>
