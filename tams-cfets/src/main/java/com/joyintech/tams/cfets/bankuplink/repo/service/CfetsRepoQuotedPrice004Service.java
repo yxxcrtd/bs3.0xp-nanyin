@@ -1323,7 +1323,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         if (operationType.equals(OperationType.NEW)) {
             oprHisReq.setOperType(DictCodeListExt3.操作类型_新建.getValue());
         } else if (operationType.equals(OperationType.REVOKE)) {
-            oprHisReq.setOperType(DictCodeListExt3.操作类型_撤销.getValue());
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_撤回.getValue());
         }
         oprHisReq.setBusiDes("报价登记");
         joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
