@@ -266,7 +266,7 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
     }
 
     public String getOtherBusiTypePosition() {
-        return SysDataUtil.getNameFromDataDict(DictCode.头寸业务类型, this.getBusiTypePosition());
+        return SysDataUtil.getNameFromDataDict(DictCode.投管业务类型, this.getBusiTypePosition());
     }
 
     public BigDecimal getEtrPrice() {

@@ -32,6 +32,28 @@ public class CommonSearchInfoRequest {
     @ApiModelProperty(name="pageMode",value="分页对象")
     private PageMode pageMode;
 
+    @ApiModelProperty(name="finprodType2",value="资产类型",example="字符串1")
+    private String finprodType2;
+
+    @ApiModelProperty(name="tradeMarket",value="交易场所",example="字符串1")
+    private String tradeMarket;
+
+    public String getTradeMarket() {
+        return tradeMarket;
+    }
+
+    public void setTradeMarket(String tradeMarket) {
+        this.tradeMarket = tradeMarket;
+    }
+
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
+    }
+
     public String getEntrustId() {
         return entrustId;
     }

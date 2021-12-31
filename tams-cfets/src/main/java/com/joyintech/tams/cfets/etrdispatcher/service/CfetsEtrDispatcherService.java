@@ -1055,11 +1055,43 @@ public class CfetsEtrDispatcherService extends BaseService{
      */
     public Map<String, Object> getReadonlyFormEtrInfo(String pageCode, String dtCode, String spcdCode, CommonSearchInfoRequest dto) {
         Map<String, Object> resultData = new HashMap<>();
-        List<CfgReadonlyFormShow>  infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
-        if(StringUtil.equals(CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"),"02")){
-            spcdCode = spcdCode+",02";
-            infoForm.addAll(cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode));
+        List<CfgReadonlyFormShow>  infoForm = new ArrayList<CfgReadonlyFormShow>();
+        
+        if(StringUtil.equals(DictCodeListExt1.交易场所_香港联合交易所.getValue(),dto.getTradeMarket()) ||
+            StringUtil.equals(DictCodeListExt1.交易场所_深圳证券交易所.getValue(),dto.getTradeMarket()) ||
+            StringUtil.equals(DictCodeListExt1.交易场所_上海证券交易所.getValue(),dto.getTradeMarket())){
+            //场内指令信息展示列字段查询
+            pageCode = "FieldEtrDispatcher";
+            String newdtCode = "FieldEtrDispatcherInfo";
+            infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,newdtCode,spcdCode);
+            if(StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),dto.getFinprodType2()) &&
+                    (StringUtil.equals(DictCodeListExt3.投管业务类型_大宗交易.getValue(),dto.getBusiTypePosition()) ||
+                            StringUtil.equals(DictCodeListExt3.投管业务类型_竞价交易.getValue(),dto.getBusiTypePosition()))){
+                String newspcdCode = DictCodeList.平安资产类型_债券.getValue() + spcdCode;
+                infoForm.addAll(cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,newdtCode,newspcdCode));
+            }else if(StringUtil.equals(DictCodeList.平安资产类型_基金.getValue(),dto.getFinprodType2()) &&
+                    (StringUtil.equals(DictCodeListExt3.投管业务类型_大宗交易.getValue(),dto.getBusiTypePosition()) ||
+                            StringUtil.equals(DictCodeListExt3.投管业务类型_竞价交易.getValue(),dto.getBusiTypePosition())   )){
+                spcdCode = DictCodeList.平安资产类型_基金.getValue() + spcdCode;
+                infoForm.addAll(cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,newdtCode,spcdCode));
+            }else if(StringUtil.equals(BussinessDictCodeList.平安资产类型_股票.getValue(),dto.getFinprodType2()) &&
+                    (StringUtil.equals(DictCodeListExt3.投管业务类型_大宗交易.getValue(),dto.getBusiTypePosition()) ||
+                            StringUtil.equals(DictCodeListExt3.投管业务类型_竞价交易.getValue(),dto.getBusiTypePosition()))){
+                spcdCode = BussinessDictCodeList.平安资产类型_股票.getValue() + spcdCode;
+                infoForm.addAll(cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,newdtCode,spcdCode));
+            }else if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),dto.getFinprodType2()) &&
+                    StringUtil.equals(DictCodeListExt3.投管业务类型_竞价交易.getValue(),dto.getBusiTypePosition())){
+                spcdCode = DictCodeList.平安资产类型_质押式回购.getValue() + spcdCode;
+                infoForm.addAll(cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,newdtCode,spcdCode));
+            }
+        }else{
+            if(StringUtil.equals(CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"),"02")){
+                infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
+                spcdCode = spcdCode+",02";
+                infoForm.addAll(cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode));
+            }    
         }
+        
         //排序
         Collections.sort(infoForm, new Comparator<CfgReadonlyFormShow>() {
             @Override

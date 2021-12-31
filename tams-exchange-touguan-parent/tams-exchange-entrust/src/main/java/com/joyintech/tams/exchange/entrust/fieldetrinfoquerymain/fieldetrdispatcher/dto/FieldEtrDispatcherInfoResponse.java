@@ -22,6 +22,9 @@ import java.util.List;
 @ApiModel(value="指令明细返回数据",description="指令明细数据")
 public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
 
+    @ApiModelProperty(name="busiTypePositionStr",value="业务类型",example="债券一级投标/现券买卖CODE",required = true)
+    private String busiTypePositionStr;
+
     //债券一级投标 start
     @ApiModelProperty(name="mainConsignee",value="主承销商",example="字符串1")
     private String mainConsignee;
@@ -546,5 +549,13 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
 
     public void setIsRight(String isRight) {
         this.isRight = isRight;
+    }
+    
+    public String getBusiTypePositionStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.投管业务类型, this.getBusiTypePosition());
+    }
+
+    public void setBusiTypePositionStr(String busiTypePositionStr) {
+        this.busiTypePositionStr = busiTypePositionStr;
     }
 }

@@ -88,8 +88,6 @@ public class FieldEtrInfoQueryService extends BaseService{
 
         String finprodType2Old = (String)pageParam.get("finprodType2");
         if (StringUtil.isNotEmpty(finprodType2Old) || StringUtil.isNotEmpty(pageParam.get("ps"))) {
-            List<String> finprodType2ListOld = StringUtil.splitToList(GlobalConstant.COMMA, finprodType2Old);
-            //交易方向为利率互换 转换
             if(StringUtil.isNotEmpty((String)pageParam.get("ps"))){
                 pageParam.put("PS_T01", DictCodeList.交易方向_买入.getValue());
             }
