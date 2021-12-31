@@ -753,6 +753,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     regFinProductDeal.setTradeMarket(DictCodeListExt1.交易场所_银行间.getValue());//交易场所
                     regFinProductDeal.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());//交易市场
                     regFinProductDeal.setSecManageAcctId(ptlAllocatio.getSecManageAcctId());//证券账户
+                    regFinProductDeal.setFinprodId(regFinProductDeal.getTradeId());
                     if (null != ptlAllocatio.getDealFeeAmt()) {//交易手续费
                         regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(
                                 regFinProductDeal.getTradeId(), BussinessDictCodeList.费用类型_交易手续费.getValue(), ptlAllocatio.getDealFeeAmt()));
@@ -840,7 +841,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         RegFinProductDealTotal total = new RegFinProductDealTotal();
 
         BeanUtil.copyPropertiesIgnoreNull(total, entity);
-        total.setFinprodId(total.getTotleTradeId());//资产代码
+//        total.setFinprodId(total.getTotleTradeId());//资产代码
         total.setSettleSpeed(settleSpreed);//清算速度
         total.setQuoteType(entity.getQuoteStyle());// 报价方式
         total.setDeliveryType(entity.getDeliverytype());// 首次结算方式
