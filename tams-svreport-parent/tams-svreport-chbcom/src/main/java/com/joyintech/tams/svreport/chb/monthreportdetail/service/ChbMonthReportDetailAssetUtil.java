@@ -11,6 +11,7 @@ import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListStl;
@@ -193,7 +194,14 @@ public class ChbMonthReportDetailAssetUtil {
             SubjectName = assetInfo.getAssetName();
         }else if(DictCodeListExt3.中债_上游资产一级分类_质押式回购.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_买断式回购.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_外汇即期.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_外汇远期.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_外汇掉期.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_利率互换.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_债券借贷.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_金融衍生品.getValue().equals(assetType)){
+
+
             SubjectName = assetInfo.getRivalParty();
         }
 

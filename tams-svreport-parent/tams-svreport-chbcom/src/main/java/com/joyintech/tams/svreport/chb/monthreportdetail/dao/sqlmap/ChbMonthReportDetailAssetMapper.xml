@@ -175,7 +175,7 @@
             P.CREDIT_GRADE creditGrade,
             P.RATING,
             P.BONDTOSTOCK_FLAG bondtostockFlag,
-            I.ISUNLISTED isGovernFund1,
+            DECODE(I.ISUNLISTED,'01',I.ISUNLISTED) isGovernFund1,
             I.ORG_ASSET_TYPE1 orgAssetType1,
             I.ORG_ASSET_TYPE2 orgAssetType2,
             I.ORG_ASSET_TYPE3 orgAssetType3,
