@@ -64,7 +64,7 @@ public class EtrAgreRepTradeValidator implements EtrCommonValidator {
 //            if (null != dto.getSecAcctId()) {
 //                param.put("secAcctId", dto.getSecAcctId());
 //            }
-            param.put("secAcctId", "999999");
+//            param.put("secAcctId", "999999");
             param.put("ccy", DictCodeList.币种_人民币_CNY.getValue());
             BigDecimal availableNum =  etrExchangeTrade001Service.selectAvailableNum(param);
             if(StringUtil.isNotEmpty(availableNum) && BigDecimal.ZERO.compareTo(availableNum)>=0) {
@@ -73,7 +73,7 @@ public class EtrAgreRepTradeValidator implements EtrCommonValidator {
         }
 
 //        if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
-//
+//d
 //        }
 
         if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
