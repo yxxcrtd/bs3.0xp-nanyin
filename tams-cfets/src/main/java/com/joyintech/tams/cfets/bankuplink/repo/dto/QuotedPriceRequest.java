@@ -17,8 +17,8 @@ public class QuotedPriceRequest {
     @ApiModelProperty( name = "entrustId", value = "指令代码", example = "WTREPO001")
     private String entrustId;
 
-    @ApiModelProperty( name = "operation", value = "操作类型", example = "restore")
-    private String operation;
+    @ApiModelProperty( name = "operatorType", value = "操作类型", example = "restore")
+    private String operatorType;
 
     @ApiModelProperty( name = "quoteId", value = "交易编号", example = "JYREPO001")
     private String quoteId;
@@ -52,12 +52,12 @@ public class QuotedPriceRequest {
         this.entrustId = entrustId;
     }
 
-    public String getOperation() {
-        return operation;
+    public String getOperatorType() {
+        return operatorType;
     }
 
-    public void setOperation(String operation) {
-        this.operation = operation;
+    public void setOperatorType(String operatorType) {
+        this.operatorType = operatorType;
     }
 
     public String getQuoteId() {

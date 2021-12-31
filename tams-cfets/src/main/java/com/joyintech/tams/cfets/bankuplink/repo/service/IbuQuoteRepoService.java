@@ -1731,6 +1731,10 @@ public class IbuQuoteRepoService extends BaseService {
     private List<RepoEntrustDto> initPtlAllocation(List<CfetsRepoDealEntrustOrderDto> list) {
         List<RepoEntrustDto> result = new ArrayList<>();
         for (CfetsRepoDealEntrustOrderDto item : list) {
+            if ((new BigDecimal(100)).compareTo(item.getTransactioncom()) <= 0) {
+                // 执行进度不到100%
+                continue;
+            }
             RepoEntrustDto entrustDto = new RepoEntrustDto();
             BeanUtil.copyPropertiesIgnoreNull(entrustDto, item);
             result.add(entrustDto);

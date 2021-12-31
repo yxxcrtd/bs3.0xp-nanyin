@@ -61,6 +61,7 @@ public class KCBPTradeApi {
     public static final String KCBP_FUNCTION_CODE_QRY_INTEGRATED_QUOTE_SH = "410996";
     //盘后大宗交易行情查询
     public static final String KCBP_FUNCTION_CODE_QRY_INTEGRATED_QUOTE_CLOSE_SH = "410556";
+    public static final String KCBP_FUNCTION_CODE_QRY_INTEGRATED_QUOTE_CLOSE_SZ = "410559";
     //最大交易数量查询
     public static final String KCBP_FUNCTION_CODE_QRY_ENABLE = "410410";
     //查询历史交易明细
@@ -1036,7 +1037,8 @@ public class KCBPTradeApi {
         Map<String, String> parameters = Maps.newHashMap(kcbpAccount.getHeadMessages());
         String market = StockCodeUtils.getMarket(integratedBulkCloseQuoteQryBean.getStockCode());
         if (Market.SHSE.value.equals(market)) {
-            parameters.put("funcid", KCBP_FUNCTION_CODE_QRY_INTEGRATED_QUOTE_CLOSE_SH);//上海盘后固定价格交易行情查询
+            //上海盘后固定价格交易行情查询
+            parameters.put("funcid", "410556");
             if (!Strings.isNullOrEmpty(integratedBulkCloseQuoteQryBean.getStockCode()))
                 parameters.put("stkcode", StockCodeUtils.getStockCode(integratedBulkCloseQuoteQryBean.getStockCode()));
             parameters.put("count", String.valueOf(integratedBulkCloseQuoteQryBean.getPageSize()));
@@ -1051,7 +1053,8 @@ public class KCBPTradeApi {
             } else
                 logger.info("queryIntegratedBulkCloseQuote SH fail {}", resultBean.getErrorMsg());
         } else if (Market.SZSE.value.equals(market)) {
-            parameters.put("funcid", KCBP_FUNCTION_CODE_QRY_INTEGRATED_QUOTE_SZ);
+            //深圳盘后固定价格交易行情查询
+            parameters.put("funcid", "410559");
             if (!Strings.isNullOrEmpty(integratedBulkCloseQuoteQryBean.getStockCode()))
                 parameters.put("stkcode", StockCodeUtils.getStockCode(integratedBulkCloseQuoteQryBean.getStockCode()));
             logger.info("parameters {}", JsonUtils.getJsonFromObject(parameters));

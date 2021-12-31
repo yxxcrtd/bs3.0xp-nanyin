@@ -1830,6 +1830,7 @@ public class IbuComponentCommonService extends BaseService {
                 		bondRequestQuoteDto.getIbuQuoteBondDto().getRemark());
                 cfetsBondDealRequestQuoteDto.setDealFeeAmt(bondRequestQuoteDto.getIbuQuoteBondDto().getDealFeeAmt());
                 cfetsBondDealRequestQuoteDto.setSettFeeAmt(bondRequestQuoteDto.getIbuQuoteBondDto().getSettFeeAmt());
+                cfetsBondDealRequestQuoteDto.setDistribution(bondRequestQuoteDto.getIbuQuoteBondDto().getDipType());
             }
             
          // add by etliu 20210309 银行间上下行多组合 start
