@@ -621,7 +621,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
         if (StringUtil.equals(entity.getOptType(), "revoke")) {
 			entity.setQuoteType(BussinessDictCodeList.报价方式_请求报价.getValue());
             cfetsBondDealQuotedPriceService.doHisRevoke(bondQuoteInfoDto);
-            cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_撤销.getValue());
+            cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_撤回.getValue());
 			/*restTemplate.postForObject(
 					ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsBondDealQuotedPrice/doHisRevoke", entity,
 					Boolean.class);*/
