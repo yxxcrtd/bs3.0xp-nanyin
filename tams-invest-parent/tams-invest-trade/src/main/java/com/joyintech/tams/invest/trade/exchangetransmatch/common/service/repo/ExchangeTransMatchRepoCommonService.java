@@ -116,8 +116,6 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         trdProductDeal.setrTradeId(null);
         // 通道代码
         trdProductDeal.setChlId(null);
-        // 交易对手
-        trdProductDeal.setCounterId(null);
         // 是否外部交易
         trdProductDeal.setIsOutTrade(DictCodeList.是否_是.getValue());
         // 交易场所
@@ -516,6 +514,7 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
 //        finTradeProduct.setmIntAmt(settleTransData.getmIntAmt());
 //        finTradeProduct.setmPrinAmt(settleTransData.getmPrinAmt());
         finTradeProduct.setTradeMarket(trdProductDeal.getTradeMarket());
+        finTradeProduct.setCounterId(trdProductDeal.getCounterId());
         finTradeProduct.setCalendarId(StringUtil.equals(trdProductDeal.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())?DictCodeList.交易日历_上海交易所日历.getValue():DictCodeList.交易日历_深圳交易所日历.getValue());
         finTradeProduct.setTermType(settleTransData.getTermType());
         if(null != finTradeProduct.getVpayDate() && null != finTradeProduct.getMpayDate()){
