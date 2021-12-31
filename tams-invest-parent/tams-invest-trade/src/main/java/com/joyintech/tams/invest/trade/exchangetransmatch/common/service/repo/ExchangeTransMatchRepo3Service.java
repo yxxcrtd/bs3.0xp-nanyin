@@ -208,6 +208,8 @@ public class ExchangeTransMatchRepo3Service extends ExchangeTransMatchRepoCommon
             }
             trdProductDeal.setTradeId(baseGetBusinessId.buildBussinessCode(bussinessCodeParameter));
             trdProductDeal.setBusiType(DictCodeList.业务类型_债券质押式回购交易.getValue());
+            //金融产品ID
+            trdProductDeal.setFinprodId(settleTransDataTotalPledge.getPledgeFinprodId());
             // 金融产品类型
             trdProductDeal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
             // 分支序号
