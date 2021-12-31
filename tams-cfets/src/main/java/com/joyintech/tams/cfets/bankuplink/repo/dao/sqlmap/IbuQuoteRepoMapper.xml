@@ -416,7 +416,7 @@
                 </if>
                 <if test="partyId != null and partyId !='' ">
                     /* 查询条件 交易对手*/
-                    AND ( MCP.PARTY_ID = #{partyId} OR MCP.PARTY_ID IS NULL OR MCP.COUNTER_ID = #{partyId} )
+                    AND ( MCP.PARTY_ID = #{partyId} OR ETR_ENTRUST.COUNTER_ID IS NULL OR MCP.COUNTER_ID = #{partyId} )
                 </if>
                 <if test="tradeYield != null and tradeYield !='' ">
                     /* 查询条件 回购利率*/
@@ -944,7 +944,7 @@
                 fp.FINPROD_MARKET_ID bondCode,
                 fp.FINPROD_ABBR bondAbbrName,
                 fp.FINPROD_ID finprodId,
-                pfp.FINPROD_ID portfolioId,
+                pfp.FINPROD_MARKET_ID portfolioId,
                 pfp.FINPROD_ABBR portfolioName,
                 fp.MDATE mdate,
                 (NVL(TABLE01.pledStrdPrinAmt, 0)) * 100 avaPledgePrin,
@@ -952,7 +952,7 @@
                 mbvi.NETPRICE firstNetPrice,
                 pledgeList.PLEDGE_RATIO*100 pledgeRatio,
                 nvl(TABLE01.pledgeAmount,0) * 100 prin,
-                MBCR.GRADE_RESULT 				gradeResult,/*债项评级*/
+                sdl.ITEM_VALUE 				gradeResult,/*债项评级*/
                 fp.REGIST_ORG repRegistOrg
             FROM
                (
@@ -1055,6 +1055,7 @@
             ) MBCR
                 ON MBCR.O_CODE = fp.FINPROD_MARKET_ID
                 AND MBCR.NUM = 1
+            left join SYS_DATADICT_LIST sdl on sdl.DICT_CODE = 'MODEL_STANDARD_GRADE_RESULT' and sdl.ITEM_CODE = MBCR.GRADE_RESULT
             LEFT JOIN (
                 SELECT
                     T2.SEC_ID,
