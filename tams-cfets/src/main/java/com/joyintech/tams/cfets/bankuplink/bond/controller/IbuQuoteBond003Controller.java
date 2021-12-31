@@ -98,7 +98,7 @@ public class IbuQuoteBond003Controller extends BaseController {
         CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = new CfetsBondDealRequestQuoteDto();
         String quoteId = cfetsBondDealQuoteCommonDto.getQuoteId();
         String quotaPageModel = cfetsBondDealQuoteCommonDto.getQuotaPageModel();
-        cfetsBondDealRequestQuoteDto = cfetsBondDealQuotedPrice003Service.getBondRequestQuote(quoteId,this.getParam("statusValid"));
+        cfetsBondDealRequestQuoteDto = cfetsBondDealQuotedPrice003Service.getBondRequestQuote(quoteId,cfetsBondDealQuoteCommonDto.getValidStatus());
 
         cfetsBondDealRequestQuoteDto.setAvaNum(ArithmeticUtil.divide(cfetsBondDealRequestQuoteDto.getAvaNum(),new BigDecimal(10000),2));
         //组合分配列表
