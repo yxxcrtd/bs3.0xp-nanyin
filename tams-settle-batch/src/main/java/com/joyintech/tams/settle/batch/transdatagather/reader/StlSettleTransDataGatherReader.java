@@ -258,7 +258,12 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                             ||StringUtil.equals(settleTransDataDto.getPs(), DictCodeListExt2.交易方向_增发.getValue())
                             ||StringUtil.equals(settleTransDataDto.getPs(), DictCodeListExt2.交易方向_配股.getValue())
                             ||StringUtil.equals(settleTransDataDto.getPs(), BussinessDictCodeList.交易方向_买入.getValue())
-                            ||StringUtil.equals(settleTransDataDto.getPs(), BussinessDictCodeList.交易方向_卖出.getValue()))){
+                            ||StringUtil.equals(settleTransDataDto.getPs(), BussinessDictCodeList.交易方向_卖出.getValue()))
+                            // GZYHTZJY-1016:成交明细汇总表未登录单位净价导致交易表金额为0 modify by fuyongsheng 20211231 start
+                            ||StringUtil.equals(settleTransDataDto.getPs(), BussinessDictCodeList.交易方向_申购.getValue())
+                            ||StringUtil.equals(settleTransDataDto.getPs(), BussinessDictCodeList.交易方向_申购确认.getValue())
+                            // GZYHTZJY-1016:成交明细汇总表未登录单位净价导致交易表金额为0 modify by fuyongsheng 20211231 end
+                    ){
                         unitCprice = ArithmeticUtil.divide(totalFpriceamt, totalShareAmt, 8);
                         dealTotal.setUnitCprice(unitCprice);
                         dealTotal.setCpriceAmt(totalFpriceamt);
