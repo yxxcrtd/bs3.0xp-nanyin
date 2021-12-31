@@ -64,6 +64,9 @@ public class AutoReconciliationService {
         param.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
         param.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
         param.put("PS_T94", DictCodeListExt3.交易方向_中途换券.getValue());
+        // GZYHTZJY-1015:解除质押不需要对账 modify by fuyongsheng 20211231 start
+        param.put("PS_T93", DictCodeListExt3.交易方向_解除质押.getValue());
+        // GZYHTZJY-1015:解除质押不需要对账 modify by fuyongsheng 20211231 end
         param.put("PS_T04", DictCodeList.交易方向_申购.getValue());
         param.put("PS_T05", DictCodeList.交易方向_申购确认.getValue());
         param.put("PS_T11", DictCodeList.交易方向_现金分红.getValue());
