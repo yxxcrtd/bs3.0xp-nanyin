@@ -1,9 +1,9 @@
 package com.joyintech.tams.exchange.common.constant;
 
 public enum TradePlat {
-    
-     NORMAL("02", "沪深竞价撮合平台"),
-     SH_FIXED_INCOME("03", "上海固定收益平台"),
+
+    NORMAL("02", "沪深竞价撮合平台"),
+    SH_FIXED_INCOME("03", "上海固定收益平台"),
     SH_SCALE("04", "上海大宗交易平台"),
     SZ_PROTOCOL("05", "深圳综合协议平台");
 

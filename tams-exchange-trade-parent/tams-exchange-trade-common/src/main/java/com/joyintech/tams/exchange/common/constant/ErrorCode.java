@@ -90,6 +90,8 @@ public enum ErrorCode {
 
     INSTRUMENT_INFO_NOT_EXIT(1019, "获取申报代码信息失败"),
 
+    ENTRUST_PROP_NOT_EXIT(1020, "委托属性不存在"),
+
     /**
      * 2001 —— 3000终端错误号
      */
