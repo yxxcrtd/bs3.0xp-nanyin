@@ -121,7 +121,6 @@ public class IbuQuoteBondService extends BaseService {
     @Autowired
     private CfetsBondDealQuotedPrice003Service cfetsBondDealQuotedPrice003Service;
 
-
     /**
      * 风险试算check
      * @param entity
@@ -1333,9 +1332,10 @@ public class IbuQuoteBondService extends BaseService {
             cfetsOprHisInfoRequest.setCreateUser(SecurityUtil.getLoginUser().getUserName());
             cfetsOprHisInfoRequest.setCreateDept(CommonUtil.getDeptCode());
             cfetsOprHisInfoRequest.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
-            result.add(cfetsOprHisInfoRequest);
+            joyinbusinessCommonService.updateCfetsOprHis(cfetsOprHisInfoRequest);
+            //result.add(cfetsOprHisInfoRequest);
         });
-        joyinbusinessCommonMapper.mergeCfetsOprHis(result);
+        //joyinbusinessCommonMapper.mergeCfetsOprHis(result);
     }
 
     private void setParam(Map<String,Object> param){
