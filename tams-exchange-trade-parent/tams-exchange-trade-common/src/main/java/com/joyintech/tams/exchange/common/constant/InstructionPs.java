@@ -1,9 +1,11 @@
 package com.joyintech.tams.exchange.common.constant;
 
+import cn.hutool.core.util.StrUtil;
+
 public enum InstructionPs {
 
-    BUY("T01", "买入", "1" ),
-    SELL("T02", "卖出", "2" ),
+    BUY("T01", "买入", "1"),
+    SELL("T02", "卖出", "2"),
     APPLY("T04", "申购", ""),
     REDEEM("T06", "赎回", ""),
     ISSUE("T47", "增发（配售）", ""),
@@ -31,5 +33,14 @@ public enum InstructionPs {
         this.name = name;
         this.value = value;
         this.entrustBs = entrustBs;
+    }
+
+    public static String getEntrustBs(String value) {
+        for (InstructionPs ps : values()) {
+            if (ps.value.equals(value) && StrUtil.isNotEmpty(ps.entrustBs)) {
+                return ps.entrustBs;
+            }
+        }
+        return value;
     }
 }
