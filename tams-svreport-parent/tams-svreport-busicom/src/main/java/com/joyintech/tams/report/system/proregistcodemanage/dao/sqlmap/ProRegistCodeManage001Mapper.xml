@@ -83,7 +83,7 @@
 			<!-- 输入框值模糊查询 -->
 			<!-- add by 模糊查询 yangxianjiu start end  2021-12-29 -->
 			<if test="prodname != null and prodname != ''">
-				AND b.PROD_NAME like concat(concat('%', #{prodname}),'%')
+				AND A.PRODID like concat(concat('%', #{prodname}),'%')
 			</if>
 		</where>
 		ORDER BY A .UPDATE_TIME DESC,A .PRODID ASC
@@ -155,7 +155,7 @@
 			<!-- 输入框值模糊查询 -->
 			<!-- add by 模糊查询 yangxianjiu start end  2021-12-29 -->
 			<if test="prodname != null and prodname != ''">
-				AND b.PROD_NAME like concat(concat('%', #{prodname}),'%')
+				AND A.PRODID like concat(concat('%', #{prodname}),'%')
 			</if>
 		 </where>
 		 ORDER BY A .UPDATE_TIME DESC,A .PRODID ASC
