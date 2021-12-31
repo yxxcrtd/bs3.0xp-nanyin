@@ -376,6 +376,4 @@ public interface IbuQuoteMapper {
 
     int isOpeQuotedPrice(Map<String,Object> param);
 
-    IbuQuoteBondDto selectQuoteBondByCfetQuoteId(@Param("cfetsQuoteId")String cfetsQuoteId);
-
 }
