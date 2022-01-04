@@ -198,7 +198,10 @@ public class StlDataDealSzdSjsfxProcessService {
             settleTransData.setTradeAmtRaw(settleTransData.getTradeAmt());
             // 交易方向、业务场景明细分类
             setSharesDeal(szdSjsfx, settleTransData);
-            
+            // GZYHTZJY-986:申购和申购确认,赋值竞价平台 fuyongsheng modify 20211230 start
+            // 交易平台
+            settleTransData.setTradePlat(DictCodeList.交易平台_竞价撮合平台.getValue());
+            // GZYHTZJY-986:申购和申购确认,赋值竞价平台 fuyongsheng modify 20211230 start
             // add by zhangliang 20200902 汇总批处理算价格会用到全价总额
             if (StringUtil.equals(settleTransData.getPs(), DictCodeListExt2.交易方向_新股中签.getValue())){
             	settleTransData.setFpriceAmt(abs(szdSjsfx.getFxzjje()));
@@ -265,6 +268,8 @@ public class StlDataDealSzdSjsfxProcessService {
             settleTransData.setTradeMarket(DictCodeList.交易流通场所_深圳证券交易所.getValue());
             // 交易市场
             settleTransData.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
+            // 交易平台
+            settleTransData.setTradePlat();
             // 席位号
             settleTransData.setSeatNumber(szdSjsfx.getFxtgdy());
             // 组合代码
