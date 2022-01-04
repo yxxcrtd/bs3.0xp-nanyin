@@ -631,7 +631,14 @@ public class ExchangeTransMatchCommonService extends BaseService {
             List<FinDealPledge> firstFinDealPledgeList = exchangeTransMatchRepo3Service.getFirstRepoFinDealPledge(dto.getfCjbh(),dto.getVdate(),commonEntrustDto.getPortfolioId());
             if(!StringUtil.isEmptyList(firstFinDealPledgeList)) {
                 if(StringUtil.equals(commonEntrustDto.getPs(), DictCodeListExt3.交易方向_中途换券.getValue())) {
-                    FinPledgeDisplaceResult finPledgeDisplaceResult = finPledgeDisplaceResultList.stream().findFirst().filter(result->StringUtil.equals(result.getResultType(),DictCodeListExt3.质押券置换_置换结果_置换后.getValue())).get();
+                    // FinPledgeDisplaceResult finPledgeDisplaceResult = finPledgeDisplaceResultList.stream().findFirst().filter(result->StringUtil.equals(result.getResultType(),DictCodeListExt3.质押券置换_置换结果_置换后.getValue())).get();
+                    // modify by fuyongsheng 先筛选再findFirst 20220104 start
+                    FinPledgeDisplaceResult finPledgeDisplaceResult = finPledgeDisplaceResultList
+                            .stream()
+                            .filter(result->StringUtil.equals(result.getResultType(),DictCodeListExt3.质押券置换_置换结果_置换后.getValue()))
+                            .findFirst()
+                            .get();
+                    // modify by fuyongsheng 先筛选再findFirst 20220104 end
                     for(FinDealPledge finDealPledge:firstFinDealPledgeList) {
                         finDealPledge.setPledgeFinprodId(finPledgeDisplaceResult.getFinprodId());
                         finDealPledge.setPledgeRatio(finPledgeDisplaceResult.getScale());
