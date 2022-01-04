@@ -7,7 +7,6 @@
             <Cell order="3" name="委托代码">entrustId</Cell>
             <Cell order="4" name="组合代码">portfolioId</Cell>
             <Cell order="5" name="组合名称">portfolioName</Cell>
-<!--            <Cell order="6" name="合作资产">chlFinprodId</Cell>-->
             <Cell order="6" name="资产代码">finprodMarketId</Cell>
             <Cell order="7" name="资产名称">finprodName</Cell>
             <Cell order="8" name="资产二级分类">type9Str</Cell>
