@@ -333,4 +333,22 @@ public class ChbMonthReportDetailProd extends ChbMonthPrdPositiondetail implemen
     public String getOrdIdentified09Str(){ return null!=this.getOrdIdentified09()? BigDecimalConverterUtil.getMonthDetailString(this.getOrdIdentified09()):null; }
 
 
+
+    public BigDecimal getDirtyamtsumDv(){return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getDirtyamtsum()); }
+    public BigDecimal getCleanamtsumDv(){return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getCleanamtsum()); }
+    public BigDecimal getEndamtsumOthDv(){return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getEndamtsumOth()); }
+    public BigDecimal getPayamtsumDv(){return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getPayamtsum()); }
+    public BigDecimal getCustomeramtDv(){return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getCustomeramt()); }
+    public BigDecimal getBankamtDv(){return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getBankamt()); }
+    public BigDecimal getOrdIdentified01Dv(){return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getOrdIdentified01()); }
+    public BigDecimal getOrdIdentified02Dv(){return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getOrdIdentified02()); }
+    public BigDecimal getOrdIdentified03Dv(){return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getOrdIdentified03()); }
+    public BigDecimal getOrdIdentified04Dv(){return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getOrdIdentified04()); }
+    public BigDecimal getOrdIdentified05Dv(){return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getOrdIdentified05()); }
+    public BigDecimal getOrdIdentified06Dv(){return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getOrdIdentified06()); }
+    public BigDecimal getOrdIdentified07Dv(){return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getOrdIdentified07()); }
+    public BigDecimal getOrdIdentified08Dv(){return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getOrdIdentified08()); }
+    public BigDecimal getOrdIdentified09Dv(){return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getOrdIdentified09()); }
+
+
 }

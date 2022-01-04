@@ -185,6 +185,32 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
         return null!=this.getAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getAmt()):null;
     }
 
+
+    public BigDecimal getCostAmtDv(){
+        return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getCostAmt());
+    }
+
+    public BigDecimal getFloatIngplDv(){
+        return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getFloatIngpl());
+    }
+
+    public BigDecimal getIntincexpDv(){
+        return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getIntincexp());
+    }
+
+    public BigDecimal getIntadjexpAddDv(){
+        return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getIntadjexpAdd());
+    }
+
+    public BigDecimal getLossAmtDv(){
+        return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getLossAmt());
+    }
+    public BigDecimal getAmtDv(){
+        return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getAmt());
+    }
+
+
+
     public String getEndDaysType(){
         return SysDataUtil.getNameFromDataDict(DictCode.人行月度明细_期限类型, PbcMonthReportDetailProdUtil.getTermType(this.getEndDays()));
     }
