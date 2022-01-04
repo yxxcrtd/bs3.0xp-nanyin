@@ -13,6 +13,7 @@ package com.joyintech.tams.cfets.bankuplink.repo.service;
 import com.alibaba.fastjson.JSON;
 import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteErrlogDto;
 import com.joyintech.background.component.uplink.interbank.business.dto.QuoteResultDto;
+import com.joyintech.background.component.uplink.interbank.business.dto.RepoDialogueQuoteDto;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -29,9 +30,9 @@ import com.joyintech.service.bankuplink.repo.service.CfetsRepoDealQuotedPrice001
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.system.base.dao.SysWflBusinessListMapper;
 import com.joyintech.system.base.entity.SysWflBusinessList;
-import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
+import com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepo003Mapper;
 import com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepoMapper;
 import com.joyintech.tams.cfets.bankuplink.repo.dto.*;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPosPortfolioCashRequest;
@@ -136,6 +137,9 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
 
     @Autowired
     private CfetsIbuQuoteBondEtrMapper cfetsIbuQuoteBondEtrMapper;
+
+    @Autowired
+    private CfetsIbuQuoteRepo003Mapper ibuQuoteRepo003Mapper;
 
     /**
      * 报价初始化校验
@@ -444,7 +448,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         List<ValidMessage> errorList = new ArrayList<>();
         //模式
         String ps = entity.getPs();
-        checkEntityEmpty(errorList, entity);
+        this.checkEntityEmpty(errorList, entity);
         // 记录指令代码
         List<String> entrustIdList = new ArrayList<>();
         entity.getPtlAllocations().forEach(item ->
@@ -491,7 +495,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             // 回购利率是否相等
             boolean yieldFlag = true;
             for (RepoPtlAllocationDto ptlAllocatio : entity.getPtlAllocations()) {
-                List<ValidMessage> validMessageList = checkPtlEmpty(ptlAllocatio, ps);
+                List<ValidMessage> validMessageList = this.checkPtlEmpty(ptlAllocatio, ps);
                 if (validMessageList != null && !validMessageList.isEmpty()) {
                     errorList.addAll(validMessageList);
 //                    break;
@@ -526,8 +530,8 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 mIntAmtTotal = com.joyintech.calculation.util.ArithmeticUtil.doAdd(mIntAmtTotal, ptlAllocatio.getmIntAmt());
                 dealFeeAmtTotal = com.joyintech.calculation.util.ArithmeticUtil.doAdd(dealFeeAmtTotal, ptlAllocatio.getDealFeeAmt());
                 settFeeamtTotal = com.joyintech.calculation.util.ArithmeticUtil.doAdd(settFeeamtTotal, ptlAllocatio.getSettFeeAmt());
-                //TODO 组合分配中交易金额要小于等于（剩余指令额度-已成功发出的未收到外汇交易中心成功反馈报价和流程中的报价-流程中交易登记额度）
-                // 已实现: 剩余指令额度 = 指令额度-生效的交易登记额度-流程中交易登记额度
+                // 组合分配中交易金额要小于等于（剩余指令额度-已成功发出的未收到外汇交易中心成功反馈报价和流程中的报价-流程中交易登记额度）
+                // 已实现: 剩余指令额度 = 指令额度-生效的交易登记额度-流程中交易登记额度-已成功发出的未收到外汇交易中心成功反馈报价和流程中的报价
                 BigDecimal etrLastNum = cfetsIbuQuoteRepoMapper.findEtrLastNumByEtrId(ptlAllocatio.getEntrustId());
                 if (ptlAllocatio.getTradeAmt().compareTo(etrLastNum) > 0) {
                     errorList.add(new ValidMessage("组合分配中交易金额要小于等于[" + ptlAllocatio.getEntrustId() + "]剩余的指令额度"));
@@ -642,9 +646,9 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
      * @date 2021/12/17 10:47
      */
     public void checkEntityEmpty(List<ValidMessage> errorList, CfetsRepoDealQuoteCommonDto entity) {
-        if (!StringUtil.isNotEmpty(entity.getQuoteStyle())) {
-            errorList.add(new ValidMessage("请选择报价方式"));
-        }
+//        if (!StringUtil.isNotEmpty(entity.getQuoteStyle())) {
+//            errorList.add(new ValidMessage("请选择报价方式"));
+//        }
         /**************************************************************基本信息********************************************/
         if (!StringUtil.isNotEmpty(entity.getPs())) {
             errorList.add(new ValidMessage("请输入交易方向"));
@@ -999,8 +1003,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
      */
     public CfetsRepoDealQuotedPrice001Dto queryRepoInfoByQuoteId(String quoteId, String operation) {
         // 根据报价id查询数据
-        CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = this.queryEntrustInfoByQuoteId(
-                quoteId);
+        CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = this.queryEntrustInfoByQuoteId(quoteId);
         if (StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue())) {
             Map<String, Object> map = new HashMap<>();
             map.put("quoteId", quoteId);
@@ -1266,13 +1269,32 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         //check流程中
         List<ValidMessage> validList = new ArrayList<ValidMessage>();
         WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
-        wflValidInputParameter.setPageId(StringUtil.isNotEmpty(pageId) ? pageId : "CfetsRepoDealQuotedPrice002");
+        wflValidInputParameter.setPageId(StringUtil.isNotEmpty(pageId) ? pageId : "CfetsQuoteRepo003");
         //设置报价编号
         wflValidInputParameter.setBusinessDataPk1(quoteId);
         if (StringUtil.isNotEmpty(mstWorkflowCommonServie) && mstWorkflowCommonServie.isInWflProcess(wflValidInputParameter)) {
             validList.add(new ValidMessage(getMessage("BUSS_COM_E_0023")));
         }
         return validList;
+    }
+
+    /**
+     * 判断报价是否流程中
+     *
+     * @param quoteId
+     * @return boolean
+     * @author jiangpeng
+     * @date 2022/1/4 11:36
+     */
+    public boolean isInWflProcess(String quoteId) {
+        WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
+        wflValidInputParameter.setPageId("CfetsQuoteRepo003");
+        //设置报价编号
+        wflValidInputParameter.setBusinessDataPk1(quoteId);
+        if (StringUtil.isNotEmpty(mstWorkflowCommonServie) && mstWorkflowCommonServie.isInWflProcess(wflValidInputParameter)) {
+            return true;
+        }
+        return false;
     }
 
 
@@ -1668,6 +1690,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             ptlAllocationList.add(ptlAllocationDto);
         }
         pageDto.setPtlAllocations(ptlAllocationList);
+        pageDto.setTradeDate(iPlatformDate.getSysDate());
         return pageDto;
     }
 
@@ -1688,6 +1711,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             CfetsEtrIbRepoPosPortfolioCashRequest posport = new CfetsEtrIbRepoPosPortfolioCashRequest();
             posport.setPortfolioId(ptlDto.getPortfolioId());
             posport.setEtrId(ptlDto.getEntrustId());
+            posport.setTradeId(ptlDto.getQuoteId());
             if (StringUtil.isNotEmpty(ptlDto.getPortfolioId())) {
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("portfolioId", ptlDto.getPortfolioId());
@@ -1700,13 +1724,14 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             posport.setCashAmount(ptlDto.getFpriceAmt());
             ptlCashList.add(posport);
         }
-        List<com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto> pledgeBondList = 质押券拆分(investDto2ServiceDto(entity));
+        List<com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto> pledgeBondList = this.质押券拆分(this.investDto2ServiceDto(entity));
         if (StringUtil.isNotEmpty(pledgeBondList)) {
             for (com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto pledgeDto : pledgeBondList) {
                 CfetsEtrIbRepoPosPortfolioSecRequest secport = new CfetsEtrIbRepoPosPortfolioSecRequest();
                 secport.setPortfolioId(pledgeDto.getPortfolioId());
                 secport.setEtrId(pledgeDto.getEntrustId());
                 secport.setFinprodId(pledgeDto.getFinprodId());
+                secport.setTradeId(pledgeDto.getQuoteId());
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("portfolioId", pledgeDto.getPortfolioId());
                 map.put("finprodId", pledgeDto.getFinprodId());
@@ -1779,6 +1804,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                     com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto cfetsRepoDealQuotedPrice003Dto
                             = new com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto();
                     BeanUtil.copyPropertiesIgnoreNull(cfetsRepoDealQuotedPrice003Dto, item);
+                    cfetsRepoDealQuotedPrice003Dto.setFinprodId(item.getPledgeFinprodId());
                     cfetsRepoDealQuotedPrice003Dtos.add(cfetsRepoDealQuotedPrice003Dto);
                 });
             }
@@ -1820,7 +1846,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
      */
     public List<CfetsRepoDayPriceDto> listDayPrice(RepoEntrustRequest dto) {
         List<CfetsRepoDayPriceDto> result = new ArrayList<>();
-        List<RepoQuoteInfoDto> dayOfferTableList = getDayOfferTableList(this.repoEntrustRequest2Map(dto));
+        List<RepoQuoteInfoDto> dayOfferTableList = this.getDayOfferTableList(this.repoEntrustRequest2Map(dto));
         if (CollectionUtils.isNotEmpty(dayOfferTableList)) {
             dayOfferTableList.forEach(item -> {
                 CfetsRepoDayPriceDto cfetsRepoDayPriceDto = new CfetsRepoDayPriceDto();
@@ -2108,7 +2134,11 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         String quoteId = (String) param.get("quoteId");
         com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto dto = null;
         if (StringUtil.isNotEmpty(quoteId)) {
-            dto = ibuComponentCommonService.queryRepoDialogueQuoteByQuoteId(quoteId);
+            if (this.isInWflProcess(quoteId)) {
+                dto = this.queryRepoDialogueQuoteByQuoteId(quoteId);
+            } else {
+                dto = ibuComponentCommonService.queryRepoDialogueQuoteByQuoteId(quoteId);
+            }
             //质押式回购报价历史
             dto.setMySideTraderName(cfetsRepoDealQuotedPrice001Mapper.getTraderName(dto.getMySideTrader()));
             dto.setCounterTraderName(cfetsRepoDealQuotedPrice001Mapper.getTraderName(dto.getCounterTrader()));
@@ -2137,6 +2167,23 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             dto.setDialogueRecord(msg);
         }
         return this.serviceDto2InvestDto(dto);
+    }
+
+    /**
+     * 根据报价编号查询对话报价信息(流程中)
+     *
+     * @param quoteId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto queryRepoDialogueQuoteByQuoteId(String quoteId) {
+        RepoDialogueQuoteDto repoDialogueQuoteDto = new RepoDialogueQuoteDto();
+        repoDialogueQuoteDto.setIbuQuoteCrepDto(ibuQuoteRepo003Mapper.selectWflQuoteCrepByKey(quoteId));
+        repoDialogueQuoteDto.setIbuQuoteCrepPledgeDtoList(ibuQuoteRepo003Mapper.selectWflQuoteCrepPledgeByKey(quoteId));
+        repoDialogueQuoteDto.setIbuQuoteEtrReDtoList(ibuQuoteRepo003Mapper.selectWflQuoteEtrReDataByQuoteId(quoteId));
+        repoDialogueQuoteDto.setIbuQuoteEntCrepPledgeDtoList(ibuQuoteRepo003Mapper.selectWflQuoteEntCrepPledgeDataByQuoteId(quoteId));
+        return repoDialogueQuoteDto == null ? null : ibuComponentCommonService.convertRepoDialogueQuoteDto(repoDialogueQuoteDto);
     }
 
     /**

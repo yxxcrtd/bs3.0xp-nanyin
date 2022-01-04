@@ -114,13 +114,27 @@ public class IbuQuoteRepo003Controller extends BaseController {
         }
     }
 
+    @ApiOperation(value = "报价成交提交检查", notes = "报价成交提交检查")
+    @PostMapping("/checkRepoDeal")
+    @ResponseBody
+    public Message<AjaxResult> checkRepoDeal(@RequestBody CfetsRepoDealQuoteCommonDto cfetsRepoDealQuoteCommonDto) {
+        try {
+            //check必填项
+            AjaxResult ajaxResult = cfetsRepoDealQuotedPrice002Service.checkSave(cfetsRepoDealQuoteCommonDto);
+            return new Message<AjaxResult>().success().setData(ajaxResult);
+        } catch (Exception e) {
+            logger.error("报价提交检查异常", e);
+            return new Message<AjaxResult>().fail().setMessage("报价提交检查异常");
+        }
+    }
+
     @ApiOperation(value = "查看信息界面", notes = "根据交易编号查询报价查看信息界面")
     @PostMapping("/queryViewPage/{quoteId}")
     @ResponseBody
     public Message<CfetsRepoDealQuoteCommonDto> queryViewPage(@PathVariable("quoteId") String quoteId) {
         try {
             CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = new CfetsRepoDealQuotedPrice001Dto();
-            if (StringUtil.isNotEmpty(quoteId)) {
+            if (StringUtil.isNotEmpty(quoteId) ) {
                 cfetsRepoDealQuotedPrice001Dto = cfetsRepoDealQuotedPrice002Service.queryRepoInfoByQuoteId(quoteId, null);
                 //多组合
                 Map<String, Object> map = new HashMap<>();
