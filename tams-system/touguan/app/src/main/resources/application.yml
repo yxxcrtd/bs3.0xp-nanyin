@@ -331,6 +331,8 @@ spring:
   profiles: allinone
   thymeleaf:
     cache: false
+  cache:
+    type: redis
   #   redis:   ##单节点配置
   #     database: 0
   #     host: 192.168.70.246
@@ -344,8 +346,8 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_TEST
-    password: GZBANK_TEST
+    username: GZBANK_DEV
+    password: GZBANK_DEV
     reportSqlldrDatabaseName: 192.168.70.88:1521/orcl
   rabbitmq:
     # 需求环境使用mq配置如下
@@ -355,8 +357,8 @@ spring:
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: GZBANK_TEST
-  sqldirpassword: GZBANK_TEST
+  sqldiruserName: GZBANK_DEV
+  sqldirpassword: GZBANK_DEV
 shiro:
   ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
   #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
@@ -376,26 +378,26 @@ base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_TEST
-    password: GZBANK_TEST
+    username: GZBANK_DEV
+    password: GZBANK_DEV
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_TEST
-    password: GZBANK_TEST
+    username: GZBANK_DEV
+    password: GZBANK_DEV
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_TEST
-    password: GZBANK_TEST
+    username: GZBANK_DEV
+    password: GZBANK_DEV
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_TEST
-    password: GZBANK_TEST
+    username: GZBANK_DEV
+    password: GZBANK_DEV
 log:
   path: /home/tams/logs/tams/touguan
   level: debug
@@ -491,8 +493,8 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_TEST
-    password: GZBANK_TEST
+    username: GZBANK_DEV
+    password: GZBANK_DEV
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
   rabbitmq:
     # 需求环境使用mq配置如下
@@ -502,8 +504,8 @@ spring:
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: GZBANK_TEST
-  sqldirpassword: GZBANK_TEST
+  sqldiruserName: GZBANK_DEV
+  sqldirpassword: GZBANK_DEV
 shiro:
   ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
   #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
@@ -523,26 +525,26 @@ base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_TEST
-    password: GZBANK_TEST
+    username: GZBANK_DEV
+    password: GZBANK_DEV
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_TEST
-    password: GZBANK_TEST
+    username: GZBANK_DEV
+    password: GZBANK_DEV
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_TEST
-    password: GZBANK_TEST
+    username: GZBANK_DEV
+    password: GZBANK_DEV
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_TEST
-    password: GZBANK_TEST
+    username: GZBANK_DEV
+    password: GZBANK_DEV
 log:
   path: /home/tams/logs/tams/touguan
   level: debug
@@ -627,8 +629,8 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_TEST
-    password: GZBANK_TEST
+    username: GZBANK_DEV
+    password: GZBANK_DEV
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
   rabbitmq:
     # 需求环境使用mq配置如下
@@ -638,8 +640,8 @@ spring:
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: GZBANK_TEST
-  sqldirpassword: GZBANK_TEST
+  sqldiruserName: GZBANK_DEV
+  sqldirpassword: GZBANK_DEV
 shiro:
   ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
   #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
@@ -659,26 +661,26 @@ base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_TEST
-    password: GZBANK_TEST
+    username: GZBANK_DEV
+    password: GZBANK_DEV
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_TEST
-    password: GZBANK_TEST
+    username: GZBANK_DEV
+    password: GZBANK_DEV
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_TEST
-    password: GZBANK_TEST
+    username: GZBANK_DEV
+    password: GZBANK_DEV
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_TEST
-    password: GZBANK_TEST
+    username: GZBANK_DEV
+    password: GZBANK_DEV
 log:
   path: /home/tams/logs/tams/touguan
   level: debug
