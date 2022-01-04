@@ -764,7 +764,7 @@
         I.LASTQTY/10000 as lastqty,
         decode(I.BUSINESSTYPE, 'BOND', I.yield2*100, 'REPO', I.PRICE*100) tradeYield,
         I.TRADELIMITDAYS termDays,
-        I.TRADECASHAMT as tradeAmt,
+        I.SETTLCURRAMT as tradeAmt,
         QUOTE.QUOTEID as quoteid,
         I.ourinstitutioncode as traderid,
         mccit.PARTY_ABBR as traderidName,
@@ -819,6 +819,9 @@
                 #{item}
             </foreach>
             )
+        </if>
+        <if test="ps != null and !''.equals(ps)">
+            and nvl(ts.ps,tr.ps) = #{ps,jdbcType=VARCHAR}
         </if>
         <if test="execid != null and !''.equals(execid)">
             and I.Execid LIKE CONCAT('%',CONCAT(#{execid},'%'))
