@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.joyintech.framework.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -87,6 +88,17 @@ public class CommonController {
     @RequestMapping(value = "/common/platdate", method = RequestMethod.POST)
     public ResultBean queryPlatDate(@RequestParam(value = "user_id") String userId) {
         return new ResultBean(ErrorCode.SUCCESS, commonManagement.queryPlatDate());
+    }
+
+    /**
+     * 获取服务器时间
+     *
+     * @return
+     */
+    @ApiOperation(value = "获取服务器时间", notes = "获取服务器时间")
+    @RequestMapping(value = "/common/localTime", method = RequestMethod.POST)
+    public ResultBean queryLocalTime(@RequestBody BaseRequest baseRequest) {
+        return new ResultBean(ErrorCode.SUCCESS, DateUtil.now());
     }
 
     /**
