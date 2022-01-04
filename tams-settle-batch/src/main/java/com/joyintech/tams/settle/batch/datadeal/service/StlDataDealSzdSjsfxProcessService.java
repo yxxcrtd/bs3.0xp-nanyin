@@ -268,8 +268,6 @@ public class StlDataDealSzdSjsfxProcessService {
             settleTransData.setTradeMarket(DictCodeList.交易流通场所_深圳证券交易所.getValue());
             // 交易市场
             settleTransData.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
-            // 交易平台
-            settleTransData.setTradePlat();
             // 席位号
             settleTransData.setSeatNumber(szdSjsfx.getFxtgdy());
             // 组合代码

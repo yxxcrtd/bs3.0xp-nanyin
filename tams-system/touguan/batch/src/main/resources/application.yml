@@ -144,8 +144,6 @@ shiro:
 ---
 spring:
   profiles: allinone
-  cache:
-    type: redis
 #  redis:    ##单节点配置
 #    database: 1
 #    password: joyin!234
@@ -153,22 +151,25 @@ spring:
 #    port: 6379
 #    timeout: 20000
   redis:
-    cluster:
-      nodes: 192.168.70.97:6379,192.168.70.97:6380,192.168.70.97:6381,192.168.70.97:6382,192.168.70.97:6383,192.168.70.97:6384
+    database: 0
+    host: 192.168.90.49
+    port: 6379
+    timeout: 20000
+    password: joyin!234
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_DEV
-    password: GZBANK_DEV
-    reportSqlldrDatabaseName: 192.168.70.88:1521/orcl
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.45.37:3306/touguan_test_cph?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    username: root
+    password: 123456
+    reportSqlldrDatabaseName: 192.168.45.37:3306/touguan_test_cph
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
-  driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: GZBANK_DEV
-  sqldirpassword: GZBANK_DEV
+  sqldirurl: jdbc:mysql://192.168.45.37:3306/touguan_test_cph?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+  driverClassName: com.mysql.jdbc.Driver
+  sqldiruserName: root
+  sqldirpassword: 123456
   #以下根据实际ip和端口进行修改
   micorservice:
     contextPath:
@@ -200,17 +201,17 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_DEV
-    password: GZBANK_DEV
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.45.37:3306/touguan_test_cph?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    username: root
+    password: 123456
 #interf数据源配置
 interf:
-   datasource:
-     url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
-     driverClassName: oracle.jdbc.driver.OracleDriver
-     username: GZBANK_DEV
-     password: GZBANK_DEV
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.45.37:3306/touguan_test_cph?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    username: root
+    password: 123456
 #日志路径配置
 log:
   path: /home/tams/logs/touguan/batch
@@ -223,7 +224,7 @@ eureka:
     enabled: false #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
 tx-lcn:
   client:
-    managerAddress: 192.168.70.246:8070
+    managerAddress: 192.168.70.97:8072
 ---
 spring:
   profiles: test

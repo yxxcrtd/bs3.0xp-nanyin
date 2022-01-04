@@ -15,7 +15,7 @@ spring:
   thymeleaf:
     cache: false
   profiles:
-    active: allinone
+    active: GZBANK_TEST_MYSQL
   application:
     name: tams-server
     dfstype: 2
@@ -172,7 +172,8 @@ shiro:
     /invest/trade/bond/TrdBondInvestTrade002/secAutoTrade,/invest/trade/trdrepotrade/TrdRepoTrade002/repoAutoTrade,/cstp/match/*,/CfetsQuotedCommon/**,
     /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
     /TrdExchangeWorkflow/**,/invest/trade/bond/TrdBondInvestTrade002/**,/invest/trade/trdrepotrade/TrdRepoTrade002/**,/invest/trade/forwex/TrdForwexInvestTrade002/**,/invest/trade/api/**,
-    /CfetsRepoDealQuotedPrice001/selectEtrReByQuoteId,/core/getAssetFiveType,/common/trdcommonbase/insertFinProductCashData,/common/entrustcommonbase/finishEntrust,/TrdRepoTrade/selectPreTradeId
+    /CfetsRepoDealQuotedPrice001/selectEtrReByQuoteId,/core/getAssetFiveType,/common/trdcommonbase/insertFinProductCashData,/common/entrustcommonbase/finishEntrust,/TrdRepoTrade/selectPreTradeId,
+    /FinNetProductDuration/**,/FinProductBuild/updatelssueStatusByFinprodld
 specialsyspara:
   parakey: AUTHORIZE_LIMIT||PRICE_CAL_TYPE||portfolio_handle_userid||settle_acct_name||settle_acct_no||prod_tru_acct_no||prod_tru_acct_name||lending_acct_no||lending_acct_name
 #页面特殊参数取值
@@ -328,37 +329,36 @@ flag: false
 
 ---
 spring:
-  profiles: allinone
+  profiles: GZBANK_TEST_MYSQL #本地启动建议使用这个配置，修改对应配置信息
   thymeleaf:
     cache: false
-  cache:
-    type: redis
-  #   redis:   ##单节点配置
-  #     database: 0
-  #     host: 192.168.70.246
-  #     port: 6379
-  #     timeout: 20000
   redis:
-    cluster:
-      nodes: 192.168.70.97:6379,192.168.70.97:6380,192.168.70.97:6381,192.168.70.97:6382,192.168.70.97:6383,192.168.70.97:6384
+    database: 0
+    host: 192.168.90.49
+    port: 6379
+    timeout: 20000
+    password: joyin!234
+  #  redis:
+  #    cluster:
+  #      nodes: 192.168.60.98:6379,192.168.60.98:6380,192.168.60.98:6381,192.168.60.98:6382,192.168.60.98:6383,192.168.60.98:6384
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_DEV
-    password: GZBANK_DEV
-    reportSqlldrDatabaseName: 192.168.70.88:1521/orcl
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.45.37:3306/touguan_test_cph?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    username: root
+    password: 123456
+    reportSqlldrDatabaseName: 192.168.45.37:3306/touguan_test_cph
   rabbitmq:
     # 需求环境使用mq配置如下
-    addresses: 192.168.70.97:5672
+    addresses: 192.168.90.49:5672
     username: rbmq
     password: rbmq
-application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
-  driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: GZBANK_DEV
-  sqldirpassword: GZBANK_DEV
+  application:
+    sqldirurl: jdbc:mysql://192.168.45.37:3306/touguan_test_cph?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    driverClassName: com.mysql.jdbc.Driver
+    sqldiruserName: root
+    sqldirpassword: 123456
 shiro:
   ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
   #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
@@ -373,31 +373,32 @@ shiro:
     /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
     /TrdExchangeWorkflow/**,/invest/trade/bond/TrdBondInvestTrade002/**,/invest/trade/trdrepotrade/TrdRepoTrade002/**,/invest/trade/forwex/TrdForwexInvestTrade002/**,/invest/trade/api/**,/commonPosition/**,
     /CfetsRepoDealQuotedPrice001/selectEtrReByQuoteId,/core/getAssetFiveType,/common/trdcommonbase/insertFinProductCashData,/common/entrustcommonbase/finishEntrust,/TrdRepoTrade/selectPreTradeId,/joyin/**,
-    /interf/refreshCache,/interf/execute,/interf/ziguanSysUserInfo,/settleDownLink/**,/reconInterf/**,/invest/trade/exchangetransmatch/ExchangeTransMatchCommon/**
+    /interf/refreshCache,/interf/execute,/interf/ziguanSysUserInfo,/settleDownLink/**,/reconInterf/**,/invest/trade/exchangetransmatch/ExchangeTransMatchCommon/**,
+    /FinNetProductDuration/**,/FinProductBuild/updatelssueStatusByFinprodld
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_DEV
-    password: GZBANK_DEV
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.45.37:3306/touguan_test_cph?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    username: root
+    password: 123456
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_DEV
-    password: GZBANK_DEV
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.45.37:3306/touguan_test_cph?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    username: root
+    password: 123456
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_DEV
-    password: GZBANK_DEV
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.45.37:3306/touguan_test_cph?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    username: root
+    password: 123456
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_DEV
-    password: GZBANK_DEV
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.45.37:3306/touguan_test_cph?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    username: root
+    password: 123456
 log:
   path: /home/tams/logs/tams/touguan
   level: debug
@@ -413,7 +414,7 @@ xinping:
     urlPort: 9191
 tx-lcn:
   client:
-    managerAddress: 192.168.70.97:8070
+    managerAddress: 192.168.70.97:8072
 
 # 场内交易使用配置
 netty:
@@ -446,9 +447,9 @@ scheduled:
   cacheData:
     fixedRate: 60000
   login:
-    fixedRate: 20000
+    fixedRate: 30000
   tradeAgent:
-    fixedRate: 3000
+    fixedRate: 30000
 terminal:
   default: default
 trade:
@@ -458,9 +459,19 @@ trade:
     risk:
       alive: 5000
       capacity: 128
+quote:
+  flag: true #是否使用接口平台行情，true 是，false 否
+  ws:
+    host: ws://192.168.90.208:16667/dsp
+    url: /exchange
+  http:
+    host: http://192.168.90.208:8090/dsp
+    url: /datarouter/http/json/callTrigger
+    gpCode: GZYH
+    triggerCode: GZ_HQ_SH
 agent:
   terminal:
-    host: http://192.168.90.208:1668/dsp
+    host: http://192.168.90.208:8090/dsp
     url: /datarouter/http/json/callTrigger
   query:
     interval: 100000
@@ -473,276 +484,3 @@ agent:
 
 position:
   flag: false #是否控制账户持仓，true控制，false不控制
-
-
----
-spring:
-  profiles: test
-  thymeleaf:
-    cache: false
-  #   redis:   ##单节点配置
-  #     database: 0
-  #     host: 192.168.70.246
-  #     port: 6379
-  #     timeout: 20000
-  redis:
-    cluster:
-      nodes: 192.168.60.98:6379,192.168.60.98:6380,192.168.60.98:6381,192.168.60.98:6382,192.168.60.98:6383,192.168.60.98:6384
-  redislock:
-    redissonEnabled: false
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_DEV
-    password: GZBANK_DEV
-    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
-  rabbitmq:
-    # 需求环境使用mq配置如下
-    addresses: 192.168.60.111:5672
-    username: rbmq
-    password: rbmq
-application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-  driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: GZBANK_DEV
-  sqldirpassword: GZBANK_DEV
-shiro:
-  ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
-  #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
-  allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
-    /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
-    /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
-    /TrdRepoDuration/findEffectiveData,/TrdProjectDuration/findEffectiveData,/TrdPlanInterestDuration/findEffectiveData,
-    /TrdDepoDuration/findEffectiveData,/TrdPlanInterestDuration/selectAllData,/TrdLendDuration/getEntityByMap,
-    /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
-    /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig,
-    /invest/trade/bond/TrdBondInvestTrade002/secAutoTrade,/invest/trade/trdrepotrade/TrdRepoTrade002/repoAutoTrade,/cstp/match/*,/CfetsQuotedCommon/**,
-    /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
-    /TrdExchangeWorkflow/**,/invest/trade/bond/TrdBondInvestTrade002/**,/invest/trade/trdrepotrade/TrdRepoTrade002/**,/invest/trade/forwex/TrdForwexInvestTrade002/**,/invest/trade/api/**,/commonPosition/**,
-    /CfetsRepoDealQuotedPrice001/selectEtrReByQuoteId,/core/getAssetFiveType,/common/trdcommonbase/insertFinProductCashData,/common/entrustcommonbase/finishEntrust,/TrdRepoTrade/selectPreTradeId,/joyin/**,
-    /interf/refreshCache,/interf/execute,/interf/ziguanSysUserInfo
-base:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_DEV
-    password: GZBANK_DEV
-interf:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_DEV
-    password: GZBANK_DEV
-stresstest:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_DEV
-    password: GZBANK_DEV
-wind:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_DEV
-    password: GZBANK_DEV
-log:
-  path: /home/tams/logs/tams/touguan
-  level: debug
-eureka:
-  client:
-    enabled: false
-jixu:
-  user:
-    type: 2
-xinping:
-  properties:
-    urlIP: 127.0.0.1
-    urlPort: 9191
-tx-lcn:
-  client:
-    managerAddress: 192.168.60.98:8070
-
-# 场内交易使用配置
-netty:
-  port: 9190
-  buffer:
-    recv: 4194304
-    send: 4194304
-    write:
-      high: 81960
-      low: 10240
-  idle:
-    read: 20
-    write: 10
-    all: 0
-  thread:
-    num:
-      boss: 1
-      worker: 10
-scheduled:
-  token:
-    enable: false
-    fixedRate: 20000
-    node: trade1
-  history:
-    cron: 0 30 20 ? * MON-FRI
-  instrument:
-    cron: 0 0 8 ? * MON-FRI
-    price: 0 15 9 ? * MON-FRI
-    flushData: 0 0 9 ? * MON-FRI
-  cacheData:
-    fixedRate: 60000
-  login:
-    fixedRate: 20000
-  tradeAgent:
-    fixedRate: 3000
-terminal:
-  default: default
-trade:
-  thread:
-    msg:
-      num: 8
-    risk:
-      alive: 5000
-      capacity: 128
-
-position:
-  flag: false #是否控制账户持仓，true控制，false不控制
-
-
-
----
-spring:
-  profiles: local  #本地启动建议使用这个配置，修改对应配置信息
-  thymeleaf:
-    cache: false
-  #   redis:   ##单节点配置
-  #     database: 0
-  #     host: 192.168.70.246
-  #     port: 6379
-  #     timeout: 20000
-  redis:
-    cluster:
-      nodes: 192.168.60.98:6379,192.168.60.98:6380,192.168.60.98:6381,192.168.60.98:6382,192.168.60.98:6383,192.168.60.98:6384
-  redislock:
-    redissonEnabled: false
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_DEV
-    password: GZBANK_DEV
-    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
-  rabbitmq:
-    # 需求环境使用mq配置如下
-    addresses: 192.168.60.111:5672
-    username: rbmq
-    password: rbmq
-application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-  driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: GZBANK_DEV
-  sqldirpassword: GZBANK_DEV
-shiro:
-  ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
-  #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
-  allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
-    /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
-    /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
-    /TrdRepoDuration/findEffectiveData,/TrdProjectDuration/findEffectiveData,/TrdPlanInterestDuration/findEffectiveData,
-    /TrdDepoDuration/findEffectiveData,/TrdPlanInterestDuration/selectAllData,/TrdLendDuration/getEntityByMap,
-    /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
-    /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig,
-    /invest/trade/bond/TrdBondInvestTrade002/secAutoTrade,/invest/trade/trdrepotrade/TrdRepoTrade002/repoAutoTrade,/cstp/match/*,/CfetsQuotedCommon/**,
-    /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
-    /TrdExchangeWorkflow/**,/invest/trade/bond/TrdBondInvestTrade002/**,/invest/trade/trdrepotrade/TrdRepoTrade002/**,/invest/trade/forwex/TrdForwexInvestTrade002/**,/invest/trade/api/**,/commonPosition/**,
-    /CfetsRepoDealQuotedPrice001/selectEtrReByQuoteId,/core/getAssetFiveType,/common/trdcommonbase/insertFinProductCashData,/common/entrustcommonbase/finishEntrust,/TrdRepoTrade/selectPreTradeId,/joyin/**,
-    /interf/refreshCache,/interf/execute,/interf/ziguanSysUserInfo
-base:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_DEV
-    password: GZBANK_DEV
-interf:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_DEV
-    password: GZBANK_DEV
-stresstest:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_DEV
-    password: GZBANK_DEV
-wind:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: GZBANK_DEV
-    password: GZBANK_DEV
-log:
-  path: /home/tams/logs/tams/touguan
-  level: debug
-eureka:
-  client:
-    enabled: false
-jixu:
-  user:
-    type: 2
-xinping:
-  properties:
-    urlIP: 127.0.0.1
-    urlPort: 9191
-tx-lcn:
-  client:
-    managerAddress: 192.168.60.98:8070
-
-# 场内交易使用配置
-netty:
-  port: 9190
-  buffer:
-    recv: 4194304
-    send: 4194304
-    write:
-      high: 81960
-      low: 10240
-  idle:
-    read: 20
-    write: 10
-    all: 0
-  thread:
-    num:
-      boss: 1
-      worker: 10
-scheduled:
-  token:
-    enable: false
-    fixedRate: 20000
-    node: trade1
-  history:
-    cron: 0 30 20 ? * MON-FRI
-  instrument:
-    cron: 0 0 8 ? * MON-FRI
-    price: 0 15 9 ? * MON-FRI
-    flushData: 0 0 9 ? * MON-FRI
-  cacheData:
-    fixedRate: 60000
-  login:
-    fixedRate: 20000
-  tradeAgent:
-    fixedRate: 3000
-terminal:
-  default: default
-trade:
-  thread:
-    msg:
-      num: 8
-    risk:
-      alive: 5000
-      capacity: 128
-
-position:
-  flag: false #是否控制账户持仓，true控制，false不控制
-
-
