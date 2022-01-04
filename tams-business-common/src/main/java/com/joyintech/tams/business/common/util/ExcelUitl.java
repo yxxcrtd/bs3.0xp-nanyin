@@ -141,10 +141,14 @@ public class ExcelUitl {
 		List<BaseMap> dataList = requestDto.getData();
 		if (dataList == null || dataList.isEmpty()){
 			List mapList = new ArrayList();
-			dataList = doQuery.query();
-			if (dataList != null && !dataList.isEmpty()){
-				dataList.forEach(e -> {
-					mapList.add(BeanUtil.object2Map(e));
+			List newDataList = doQuery.query();
+			if (newDataList != null && !newDataList.isEmpty()){
+				newDataList.forEach(e -> {
+					if (e instanceof BaseMap) {
+						mapList.add(e);
+					} else {
+						mapList.add(BeanUtil.object2Map(e));
+					}
 				});
 			}
 			doExport(excelAndSheetName, header, mapList, response);
