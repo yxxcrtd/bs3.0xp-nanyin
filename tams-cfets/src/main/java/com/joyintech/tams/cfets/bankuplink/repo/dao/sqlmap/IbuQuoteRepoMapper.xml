@@ -1150,6 +1150,15 @@
                  select -1*TRADE_AMT ENTRUST_AMT
                  from WFL_REG_FIN_PRODUCT_DEAL
                  where ENTRUST_ID = #{etrId}
+                 union
+                 select -1*IBQER.FPRICE_AMT ENTRUST_AMT
+                 from IBU_QUOTE_ETR_RE IBQER
+                 left join IBU_QUOTE_CREP IQC on IBQER.QUOTE_ID = IQC.QUOTE_ID
+                 where IBQER.ENTRUST_ID = #{etrId} AND IQC.TRADE_STATUS = '01' AND IQC.SEND_STATUS = '01' /*新增中 已发送*/
+                 union
+                 select -1*FPRICE_AMT ENTRUST_AMT
+                 from WFL_IBU_QUOTE_ETR_RE
+                 where ENTRUST_ID = #{etrId}
              )
     </select>
 
@@ -1346,6 +1355,11 @@
             <include refid="statusValid_03" />
             union all
             <include refid="statusValid_04" />
+            union all
+            <include refid="com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepo003Mapper.statusValid_01" />
+            union all
+            <include refid="com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepo003Mapper.statusValid_04" />
+
        )
        where nvl(CREATE_USER,UPDATE_USER) = #{loginUserId}
        or EXISTS (select 1

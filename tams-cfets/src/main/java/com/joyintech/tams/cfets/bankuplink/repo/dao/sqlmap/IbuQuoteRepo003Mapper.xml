@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepo003Mapper">
+
+    <!--有效-->
+    <sql id="statusValid_01">
+        select '01'                                                                                     statusValid/*有效*/,
+               '01'                                                                                     quoteType/*交易类型*/,
+               IQC.QUOTE_DATE                                                                           tradeDate/*成交日期*/,
+               IQC.REPO_PS                                                                                   ps/*本方方向*/,
+               IQC.TRADE_STATUS                                                                         tradeStatus/*报价状态*/,
+               IQC.SEND_STATUS                                                                          sendStatus/*发送状态*/,
+               IQC.FPRICE_AMT                                                                            tradeAmt/*交易金额*/,
+               IQC.RATE                                                                                 rate/*回购利率*/,
+               IQC.TERM                                                                            repoTerm/*回购期限*/,
+               IQC.QUOTE_ROLE_TYPE                                                                      quoteRoleType/*本方角色*/,
+               MCCI.PARTY_NAME                                                                          ouPartyName/*本方*/,
+               SU.REAL_NAME                                                                             ouTraderName /*本方交易员*/,
+               MCP.COUNTER_NAME                                                                         cpPartyName/*对手方*/,
+               CASE WHEN MCCT.TRADER_NAME is not null THEN MCCT.TRADER_NAME ELSE IQC.CP_TRADER_ID END cpTraderName/*对手方交易员*/,
+               DECODE(IQC.SETTLE_SPEED, 0, '01', 1, '02')                                               settleSpeed/*清算速度*/,
+               IQC.V_SETTLE_DATE                                                                        vSettleDate/*首次结算日*/,
+               IQC.M_SETTLE_DATE                                                                        mSettleDate/*到期结算日*/,
+               IQC.QUOTE_ID                                                                       quoteId/*业务编号*/,
+               TMI.TRD_ID                                                                               trdId/*成交编号*/,
+               IQC.remark                                                                               remark/*备注*/,
+               IQC.CREATE_USER,
+               IQC.UPDATE_USER
+        from IBU_QUOTE_CREP IQC
+                 LEFT JOIN TRDQUTO_MATCH_INFO TMI
+                           ON TMI.PRE_TRADE_ID = IQC.QUOTE_ID
+                 LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT
+                           ON TFPDT.TOTLE_TRADE_ID = TMI.TRD_ID
+                 LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI
+                           ON MCCI.PARTY_ID = IQC.OU_PARTY_ID
+                 LEFT JOIN MST_CFETS_CUSTOMER_TRADER MCCT
+                           ON MCCT.TRADER_ID = IQC.CP_TRADER_ID
+                 LEFT JOIN MST_COUNTER_PARTY MCP
+                           ON MCP.PARTY_ID = IQC.CP_PARTY_ID
+                 LEFT JOIN SYS_USER SU
+                           ON SU.USER_NAME = IQC.OU_TRADER_ID
+        where EXISTS (
+            SELECT 1
+            FROM IBU_QUOTE_ETR_RE T
+            WHERE T.QUOTE_ID = IQC.QUOTE_ID
+                <if test="entrustId!=null and entrustId!='' ">
+                    AND T.ENTRUST_ID= #{entrustId}
+                </if>
+            )
+    </sql>
+    <!--撤销-->
+    <sql id="statusValid_03">
+        select '03'                                                                                       statusValid/*有效*/,
+        '01'                                                                                       quoteType/*交易类型*/,
+        RFPDT.TRADE_DATE                                                                           tradeDate/*成交日期*/,
+        RFPDT.ps                                                                                   ps/*本方方向*/,
+        RFPDT.TRADE_STATUS                                                                         tradeStatus/*报价状态*/,
+        null                                                                                       sendStatus/*发送状态*/,
+        RFPDT.TRADE_AMT                                                                            tradeAmt/*交易金额*/,
+        RFPDT.RATE                                                                                 rate/*回购利率*/,
+        RFPDT.REPO_TERM                                                                            repoTerm/*回购期限*/,
+        null                                                                                       quoteRoleType/*本方角色*/,
+        MCCI.PARTY_NAME                                                                            ouPartyName/*本方*/,
+        SU.REAL_NAME                                                                               ouTraderName /*本方交易员*/,
+        MCP.COUNTER_NAME                                                                           cpPartyName/*对手方*/,
+        CASE WHEN MCCT.TRADER_NAME is not null THEN MCCT.TRADER_NAME ELSE RFPDT.COUNTER_TRADER END cpTraderName/*对手方交易员*/,
+        DECODE(RFPDT.SETTLE_SPEED, 0, '01', 1, '02')                                               settleSpeed/*清算速度*/,
+        RFPDT.V_SETTLE_DATE                                                                        vSettleDate/*首次结算日*/,
+        RFPDT.M_SETTLE_DATE                                                                        mSettleDate/*到期结算日*/,
+        RFPDT.TOTLE_TRADE_ID                                                                       quoteId/*业务编号*/,
+        TMI.TRD_ID                                                                                 trdId/*成交编号*/,
+        RFPDT.remark                                                                               remark/*备注*/,
+        RFPDT.CREATE_USER,RFPDT.UPDATE_USER
+        from REG_FIN_PRODUCT_DEAL_TOTAL RFPDT
+        LEFT JOIN TRDQUTO_MATCH_INFO TMI
+        ON TMI.PRE_TRADE_ID = RFPDT.TOTLE_TRADE_ID
+        LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT
+        ON TFPDT.TOTLE_TRADE_ID = TMI.TRD_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI
+        ON MCCI.PARTY_ID = RFPDT.OU_PARTY_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER MCCT
+        ON MCCT.TRADER_ID = RFPDT.COUNTER_TRADER
+        LEFT JOIN MST_COUNTER_PARTY MCP
+        ON MCP.COUNTER_ID = RFPDT.COUNTER_ID
+        LEFT JOIN SYS_USER SU
+        ON SU.USER_NAME = RFPDT.OU_TRADER_ID
+        where RFPDT.IS_CANCEL = 'Y'
+        and RFPDT.FINPROD_TYPE2 in ('F02', 'F03')
+        AND EXISTS (
+        SELECT  1
+        FROM REG_FIN_PRODUCT_DEAL T
+        WHERE T.TOTLE_TRADE_ID = RFPDT.TOTLE_TRADE_ID
+        <if test="entrustId!=null and entrustId!='' ">
+            AND T.ENTRUST_ID= #{entrustId}
+        </if>
+        )
+    </sql>
+    <!--流程中-->
+    <sql id="statusValid_04">
+        select WIQC.WORKFLOW_STATUS                                                                    statusValid/*有效*/,
+               '01'                                                                                    quoteType/*交易类型*/,
+               WIQC.QUOTE_DATE                                                                         tradeDate/*成交日期*/,
+               WIQC.REPO_PS                                                                            ps/*本方方向*/,
+               WIQC.TRADE_STATUS                                                                       tradeStatus/*报价状态*/,
+               WIQC.SEND_STATUS                                                                        sendStatus/*发送状态*/,
+               WIQC.FPRICE_AMT                                                                         tradeAmt/*交易金额*/,
+               WIQC.RATE                                                                               rate/*回购利率*/,
+               WIQC.TERM                                                                               repoTerm/*回购期限*/,
+               WIQC.QUOTE_ROLE_TYPE                                                                    quoteRoleType/*本方角色*/,
+               MCCI.PARTY_NAME                                                                         ouPartyName/*本方*/,
+               SU.REAL_NAME                                                                            ouTraderName /*本方交易员*/,
+               MCP.COUNTER_NAME                                                                        cpPartyName/*对手方*/,
+               CASE WHEN MCCT.TRADER_NAME is not null THEN MCCT.TRADER_NAME ELSE WIQC.CP_TRADER_ID END cpTraderName/*对手方交易员*/,
+               DECODE(WIQC.SETTLE_SPEED, 0, '01', 1, '02')                                             settleSpeed/*清算速度*/,
+               WIQC.V_SETTLE_DATE                                                                      vSettleDate/*首次结算日*/,
+               WIQC.M_SETTLE_DATE                                                                      mSettleDate/*到期结算日*/,
+               WIQC.QUOTE_ID                                                                           quoteId/*业务编号*/,
+               TMI.TRD_ID                                                                              trdId/*成交编号*/,
+               WIQC.remark                                                                             remark/*备注*/,
+               WIQC.CREATE_USER,
+               WIQC.UPDATE_USER
+        from WFL_IBU_QUOTE_CREP WIQC
+                 LEFT JOIN TRDQUTO_MATCH_INFO TMI
+                           ON TMI.PRE_TRADE_ID = WIQC.QUOTE_ID
+                 LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT
+                           ON TFPDT.TOTLE_TRADE_ID = TMI.TRD_ID
+                 LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI
+                           ON MCCI.PARTY_ID = WIQC.OU_PARTY_ID
+                 LEFT JOIN MST_CFETS_CUSTOMER_TRADER MCCT
+                           ON MCCT.TRADER_ID = WIQC.CP_TRADER_ID
+                 LEFT JOIN MST_COUNTER_PARTY MCP
+                           ON MCP.PARTY_ID = WIQC.CP_PARTY_ID
+                 LEFT JOIN SYS_USER SU
+                           ON SU.USER_NAME = WIQC.OU_TRADER_ID
+        where EXISTS(
+                      SELECT 1
+                      FROM IBU_QUOTE_ETR_RE T
+                      WHERE T.QUOTE_ID = WIQC.QUOTE_ID
+                    <if test="entrustId!=null and entrustId!='' ">
+                        AND T.ENTRUST_ID= #{entrustId}
+                    </if>
+        )
+    </sql>
+
+    <!-- 质押式回购报价Begin -->
+    <resultMap id="IqcBaseResultMap" type="com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteCrep" >
+        <id column="I_Q_C_QUOTE_ID" property="quoteId" jdbcType="VARCHAR" />
+        <result column="I_Q_C_QUOTE_TYPE" property="quoteType" jdbcType="VARCHAR" />
+        <result column="I_Q_C_P_QUOTE_ID" property="pQuoteId" jdbcType="VARCHAR" />
+        <result column="I_Q_C_VERSION" property="version" jdbcType="DECIMAL" />
+        <result column="I_Q_C_EXE_TYPE" property="exeType" jdbcType="VARCHAR" />
+        <result column="I_Q_C_CFETS_QUOTE_ID" property="cfetsQuoteId" jdbcType="VARCHAR" />
+        <result column="I_Q_C_QUOTE_ROLE_TYPE" property="quoteRoleType" jdbcType="VARCHAR" />
+        <result column="I_Q_C_PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <result column="I_Q_C_ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
+        <result column="I_Q_C_QUOTE_DATE" property="quoteDate" jdbcType="DATE" />
+        <result column="I_Q_C_V_SETTLE_DATE" property="vSettleDate" jdbcType="DATE" />
+        <result column="I_Q_C_M_SETTLE_DATE" property="mSettleDate" jdbcType="DATE" />
+        <result column="I_Q_C_SETTLE_SPEED" property="settleSpeed" jdbcType="DECIMAL" />
+        <result column="I_Q_C_V_DELIVERY_TYPE" property="vDeliveryType" jdbcType="VARCHAR" />
+        <result column="I_Q_C_M_DELIVERY_TYPE" property="mDeliveryType" jdbcType="VARCHAR" />
+        <result column="I_Q_C_SETT_TYPE" property="settType" jdbcType="VARCHAR" />
+        <result column="I_Q_C_SETT_CCY" property="settCcy" jdbcType="VARCHAR" />
+        <result column="I_Q_C_CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="I_Q_C_REPO_PS" property="repoPs" jdbcType="VARCHAR" />
+        <result column="I_Q_C_RATE" property="rate" jdbcType="DECIMAL" />
+        <result column="I_Q_C_TERM" property="term" jdbcType="DECIMAL" />
+        <result column="I_Q_C_SHARE_AMT" property="shareAmt" jdbcType="DECIMAL" />
+        <result column="I_Q_C_SHARE_CT_AMT" property="shareCtAmt" jdbcType="DECIMAL" />
+        <result column="I_Q_C_CB_SHARE_CT_AMT" property="cbShareCtAmt" jdbcType="DECIMAL" />
+        <result column="I_Q_C_SC_SHARE_CT_AMT" property="scShareCtAmt" jdbcType="DECIMAL" />
+        <result column="I_Q_C_FPRICE_AMT" property="fpriceAmt" jdbcType="DECIMAL" />
+        <result column="I_Q_C_CB_FPRICE_AMT" property="cbFpriceAmt" jdbcType="DECIMAL" />
+        <result column="I_Q_C_SC_FPRICE_AMT" property="scFpriceAmt" jdbcType="DECIMAL" />
+        <result column="I_Q_C_M_INT_AMT" property="mIntAmt" jdbcType="DECIMAL" />
+        <result column="I_Q_C_M_TRADE_AMT" property="mTradeAmt" jdbcType="DECIMAL" />
+        <result column="I_Q_C_BASIS" property="basis" jdbcType="VARCHAR" />
+        <result column="I_Q_C_TRADE_STATUS" property="tradeStatus" jdbcType="VARCHAR" />
+        <result column="I_Q_C_SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="I_Q_C_EFF_TIME" property="effTime" jdbcType="TIMESTAMP" />
+        <result column="I_Q_C_OU_PARTY_ID" property="ouPartyId" jdbcType="VARCHAR" />
+        <result column="I_Q_C_OU_TRADER_ID" property="ouTraderId" jdbcType="VARCHAR" />
+        <result column="I_Q_C_CP_PARTY_ID" property="cpPartyId" jdbcType="VARCHAR" />
+        <result column="I_Q_C_CP_TRADER_ID" property="cpTraderId" jdbcType="VARCHAR" />
+        <result column="I_Q_C_MY_ACCT_NO" property="myAcctNo" jdbcType="VARCHAR" />
+        <result column="I_Q_C_SEC_MANAGE_ACCT_ID" property="secManageAcctId" jdbcType="VARCHAR" />
+        <result column="I_Q_C_TERM_TYPE" property="termType" jdbcType="VARCHAR" />
+        <result column="I_Q_C_EXECID" property="execid" jdbcType="VARCHAR" />
+        <result column="I_Q_C_B_VERSION" property="bVersion" jdbcType="DECIMAL" />
+        <result column="I_Q_C_BRANCH_ID" property="branchId" jdbcType="VARCHAR" />
+        <result column="I_Q_C_REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="I_Q_C_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="I_Q_C_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="I_Q_C_CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="I_Q_C_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="I_Q_C_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="I_Q_C_TRANSACTIME" property="transactime" jdbcType="VARCHAR" />
+        <result column="I_Q_C_ZZ_TOTAL_AMT" property="zzTotalAmt" jdbcType="DECIMAL" />
+        <result column="I_Q_C_SQ_TOTAL_AMT" property="sqTotalAmt" jdbcType="DECIMAL" />
+    </resultMap>
+    <resultMap id="IqcpResultMap" type="com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteCrepPledge" >
+        <id column="IQCP_QUOTE_ID" property="quoteId" jdbcType="VARCHAR" />
+        <id column="I_Q_C_P_BRANCH" property="branch" jdbcType="DECIMAL" />
+        <id column="I_Q_C_P_PLEDGE_FINPROD_ID" property="pledgeFinprodId" jdbcType="VARCHAR" />
+        <result column="I_Q_C_P_VERSION" property="version" jdbcType="DECIMAL" />
+        <result column="I_Q_C_P_PLEDGE_FACE_VALUE" property="pledgeFaceValue" jdbcType="DECIMAL" />
+        <result column="I_Q_C_P_PLEDGE_NUMBER" property="pledgeNumber" jdbcType="DECIMAL" />
+        <result column="I_Q_C_P_PLEDGE_RATIO" property="pledgeRatio" jdbcType="DECIMAL" />
+        <result column="I_Q_C_P_PLEDGE_AMT" property="pledgeAmt" jdbcType="DECIMAL" />
+        <result column="I_Q_C_P_UNIT_CPRICE" property="unitCprice" jdbcType="DECIMAL" />
+        <result column="I_Q_C_P_CPRICE_DATE" property="cpriceDate" jdbcType="DATE" />
+        <result column="I_Q_C_P_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="I_Q_C_P_CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="I_Q_C_P_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="I_Q_C_P_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="I_Q_C_P_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Iqc_Column_List" >
+        a.QUOTE_ID                        I_Q_C_QUOTE_ID,
+	    a.QUOTE_TYPE                      I_Q_C_QUOTE_TYPE,
+	    a.P_QUOTE_ID                      I_Q_C_P_QUOTE_ID,
+	    a.VERSION                         I_Q_C_VERSION,
+	    a.EXE_TYPE                        I_Q_C_EXE_TYPE,
+	    a.CFETS_QUOTE_ID                  I_Q_C_CFETS_QUOTE_ID,
+	    a.QUOTE_ROLE_TYPE                 I_Q_C_QUOTE_ROLE_TYPE,
+	    a.PORTFOLIO_ID                    I_Q_C_PORTFOLIO_ID,
+	    a.ENTRUST_ID                      I_Q_C_ENTRUST_ID,
+	    a.QUOTE_DATE                      I_Q_C_QUOTE_DATE,
+	    a.V_SETTLE_DATE                   I_Q_C_V_SETTLE_DATE,
+	    a.M_SETTLE_DATE                   I_Q_C_M_SETTLE_DATE,
+	    a.SETTLE_SPEED                    I_Q_C_SETTLE_SPEED,
+	    a.V_DELIVERY_TYPE                 I_Q_C_V_DELIVERY_TYPE,
+	    a.M_DELIVERY_TYPE                 I_Q_C_M_DELIVERY_TYPE,
+	    a.SETT_TYPE                       I_Q_C_SETT_TYPE,
+	    a.SETT_CCY                        I_Q_C_SETT_CCY,
+	    a.CCY                             I_Q_C_CCY,
+	    a.REPO_PS                         I_Q_C_REPO_PS,
+	    a.RATE                            I_Q_C_RATE,
+	    a.TERM                            I_Q_C_TERM,
+	    a.SHARE_AMT                       I_Q_C_SHARE_AMT,
+	    a.SHARE_CT_AMT                    I_Q_C_SHARE_CT_AMT,
+	    a.CB_SHARE_CT_AMT                 I_Q_C_CB_SHARE_CT_AMT,
+	    a.SC_SHARE_CT_AMT                 I_Q_C_SC_SHARE_CT_AMT,
+	    a.FPRICE_AMT                      I_Q_C_FPRICE_AMT,
+	    a.CB_FPRICE_AMT                   I_Q_C_CB_FPRICE_AMT,
+	    a.SC_FPRICE_AMT                   I_Q_C_SC_FPRICE_AMT,
+	    a.M_INT_AMT                       I_Q_C_M_INT_AMT,
+	    a.M_TRADE_AMT                     I_Q_C_M_TRADE_AMT,
+	    a.BASIS                           I_Q_C_BASIS,
+	    a.TRADE_STATUS                    I_Q_C_TRADE_STATUS,
+	    a.SEND_STATUS                     I_Q_C_SEND_STATUS,
+	    a.EFF_TIME                        I_Q_C_EFF_TIME,
+	    a.OU_PARTY_ID                     I_Q_C_OU_PARTY_ID,
+	    NVL(FA.IBU_TRADER, a.OU_TRADER_ID) I_Q_C_OU_TRADER_ID,
+	    a.CP_PARTY_ID                     I_Q_C_CP_PARTY_ID,
+	    a.CP_TRADER_ID                    I_Q_C_CP_TRADER_ID,
+	    a.MY_ACCT_NO                      I_Q_C_MY_ACCT_NO,
+	    a.SEC_MANAGE_ACCT_ID              I_Q_C_SEC_MANAGE_ACCT_ID,
+	    a.EXECID                          I_Q_C_EXECID,
+	    a.B_VERSION                       I_Q_C_B_VERSION,
+	    a.BRANCH_ID                       I_Q_C_BRANCH_ID,
+	    a.REMARK                          I_Q_C_REMARK,
+	    a.CREATE_USER                     I_Q_C_CREATE_USER,
+	    a.CREATE_TIME                     I_Q_C_CREATE_TIME,
+	    a.CREATE_DEPT                     I_Q_C_CREATE_DEPT,
+	    a.UPDATE_USER                     I_Q_C_UPDATE_USER,
+	    a.UPDATE_TIME                     I_Q_C_UPDATE_TIME,
+	    a.TERM_TYPE                       I_Q_C_TERM_TYPE,
+        a.TRANSACTIME                     I_Q_C_TRANSACTIME,
+        a.ZZ_TOTAL_AMT                    I_Q_C_ZZ_TOTAL_AMT,
+        a.SQ_TOTAL_AMT                    I_Q_C_SQ_TOTAL_AMT
+    </sql>
+    <sql id="Iqcp_Column_List" >
+        QUOTE_ID I_Q_C_P_QUOTE_ID, BRANCH I_Q_C_P_BRANCH, PLEDGE_FINPROD_ID I_Q_C_P_PLEDGE_FINPROD_ID, VERSION I_Q_C_P_VERSION,
+        PLEDGE_FACE_VALUE I_Q_C_P_PLEDGE_FACE_VALUE, PLEDGE_NUMBER I_Q_C_P_PLEDGE_NUMBER, PLEDGE_RATIO I_Q_C_P_PLEDGE_RATIO,
+        PLEDGE_AMT I_Q_C_P_PLEDGE_AMT, UNIT_CPRICE I_Q_C_P_UNIT_CPRICE, CPRICE_DATE I_Q_C_P_CPRICE_DATE, CREATE_USER I_Q_C_P_CREATE_USER,
+        CREATE_DEPT I_Q_C_P_CREATE_DEPT, CREATE_TIME I_Q_C_P_CREATE_TIME, UPDATE_USER I_Q_C_P_UPDATE_USER, UPDATE_TIME I_Q_C_P_UPDATE_TIME
+    </sql>
+    <resultMap id="QcDtoResultMap" type="com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteCrepDto" extends="IqcBaseResultMap">
+        <!-- 扩展字段 -->
+        <result column="I_Q_C_FIELD1" property="field1" jdbcType="VARCHAR" />
+        <result column="I_Q_C_FIELD2" property="field2" jdbcType="VARCHAR" />
+        <result column="I_Q_C_FIELD3" property="field3" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="QcpDtoResultMap" type="com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteCrepPledgeDto" extends="IqcpResultMap">
+        <!-- 扩展字段 -->
+        <result column="I_Q_C_P_FINPROD_MARKET_ID" property="finprodMarketId" jdbcType="VARCHAR" />
+        <result column="I_Q_C_P_FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="I_Q_C_P_FINPROD_ABBR" property="finprodAbbr" jdbcType="VARCHAR" />
+        <result column="I_Q_C_P_REGIST_ORG" property="registOrg" jdbcType="VARCHAR" />
+    </resultMap>
+    <!-- 对应质押式回购报价DTO -->
+    <resultMap type="com.joyintech.background.component.uplink.interbank.business.dto.RepoDialogueQuoteDto" id="RepoDialogueQuoteResultMap">
+        <association property="ibuQuoteCrepDto" resultMap="QcDtoResultMap"></association>
+        <collection property="ibuQuoteCrepPledgeDtoList" ofType="com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteCrepPledgeDto"
+                    select="selectCrepPledgeListByQuoteId" column="{I_Q_C_QUOTE_ID=I_Q_C_QUOTE_ID,I_Q_C_VERSION=I_Q_C_VERSION}">
+        </collection>
+        <!--多组合改造 start-->
+        <collection property="ibuQuoteEtrReDtoList" ofType="com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEtrReDto"
+                    select="selectCrepReListByQuoteId" column="{I_Q_C_QUOTE_ID=I_Q_C_QUOTE_ID,I_Q_C_VERSION=I_Q_C_VERSION}">
+        </collection>
+        <collection property="ibuQuoteEntCrepPledgeDtoList" ofType="com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEntCrepPledgeDto"
+                    select="selectCrepEntPledgeListByQuoteId" column="{I_Q_C_QUOTE_ID=I_Q_C_QUOTE_ID,I_Q_C_VERSION=I_Q_C_VERSION}">
+        </collection>
+        <!--多组合改造 end-->
+    </resultMap>
+
+    <!-- 根据报价编号查询质押式回购报价信息  -->
+    <select id="selectWflQuoteCrepByKey" parameterType="java.lang.String" resultMap="QcDtoResultMap">
+        select
+        <include refid="Iqc_Column_List" />
+        from WFL_IBU_QUOTE_CREP a
+        LEFT JOIN SYS_USER C
+        ON a.OU_TRADER_ID = C.USER_NAME
+        LEFT JOIN SYS_USER_ADD FA
+        ON C.user_id = fA.user_id
+        where a.QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 根据报价编号查询质押式回购报价质押品信息  -->
+    <select id="selectWflQuoteCrepPledgeByKey" parameterType="java.lang.String" resultMap="QcpDtoResultMap">
+        select
+			a.QUOTE_ID IQCP_QUOTE_ID, a.BRANCH I_Q_C_P_BRANCH, a.PLEDGE_FINPROD_ID I_Q_C_P_PLEDGE_FINPROD_ID, a.VERSION I_Q_C_P_VERSION,
+        a.PLEDGE_FACE_VALUE I_Q_C_P_PLEDGE_FACE_VALUE, a.PLEDGE_NUMBER I_Q_C_P_PLEDGE_NUMBER, a.PLEDGE_RATIO I_Q_C_P_PLEDGE_RATIO,
+        a.PLEDGE_AMT I_Q_C_P_PLEDGE_AMT, a.UNIT_CPRICE I_Q_C_P_UNIT_CPRICE, a.CPRICE_DATE I_Q_C_P_CPRICE_DATE, a.CREATE_USER I_Q_C_P_CREATE_USER,
+        a.CREATE_DEPT I_Q_C_P_CREATE_DEPT, a.CREATE_TIME I_Q_C_P_CREATE_TIME, a.UPDATE_USER I_Q_C_P_UPDATE_USER, a.UPDATE_TIME I_Q_C_P_UPDATE_TIME,
+        b.FINPROD_MARKET_ID I_Q_C_P_FINPROD_MARKET_ID,b.FINPROD_ID I_Q_C_P_FINPROD_ID,b.FINPROD_ABBR I_Q_C_P_FINPROD_ABBR,b.REGIST_ORG I_Q_C_P_REGIST_ORG
+        ,b.MDATE
+        from WFL_IBU_QUOTE_CREP_PLEDGE a
+        left join FIN_PRODUCT b
+        on b.FINPROD_ID = a.PLEDGE_FINPROD_ID
+        where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
+	</select>
+
+    <resultMap id="QuoteEtrReDataBaseResultMap" type="com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEtrReDto" >
+        <id column="QUOTE_ID" property="quoteId" jdbcType="VARCHAR" />
+        <id column="VERSION" property="version" jdbcType="DECIMAL" />
+        <id column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
+        <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <result column="SHARE_AMT" property="shareAmt" jdbcType="DECIMAL" />
+        <result column="FPRICE_AMT" property="fpriceAmt" jdbcType="DECIMAL" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="DEAL_FEE_AMT" property="dealFeeAmt" jdbcType="DECIMAL" />
+        <result column="SETT_FEE_AMT" property="settFeeAmt" jdbcType="DECIMAL" />
+    </resultMap>
+
+    <select id="selectWflQuoteEtrReDataByQuoteId" resultMap="QuoteEtrReDataBaseResultMap">
+        select
+            QUOTE_ID QUOTE_ID, VERSION VERSION, ENTRUST_ID ENTRUST_ID, PORTFOLIO_ID PORTFOLIO_ID,
+            SHARE_AMT SHARE_AMT, FPRICE_AMT FPRICE_AMT,WORKFLOW_ID WORKFLOW_ID, REMARK REMARK, CREATE_USER CREATE_USER,
+            CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+            ,CB_FPRICE_AMT CB_FPRICE_AMT,SC_FPRICE_AMT SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT
+        from WFL_IBU_QUOTE_ETR_RE
+        where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
+            and VERSION = (select max(VERSION) from WFL_IBU_QUOTE_ETR_RE where QUOTE_ID = #{quoteId,jdbcType=VARCHAR})
+    </select>
+
+    <select id="selectWflQuoteEntCrepPledgeDataByQuoteId" resultType="com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEntCrepPledgeDto">
+		SELECT
+			T1.QUOTE_ID QUOTE_ID,
+			T1.VERSION VERSION,
+			T1.ENTRUST_ID ENTRUST_ID,
+			T1.BRANCH BRANCH,
+			T1.PLEDGE_FINPROD_ID PLEDGE_FINPROD_ID,
+			T1.PORTFOLIO_ID PORTFOLIO_ID,
+			T1.PLEDGE_FACE_VALUE PLEDGE_FACE_VALUE,
+			T1.PLEDGE_NUMBER PLEDGE_NUMBER,
+			T1.PLEDGE_RATIO PLEDGE_RATIO,
+			T1.PLEDGE_AMT PLEDGE_AMT,
+			T1.UNIT_CPRICE UNIT_CPRICE,
+			T1.CPRICE_DATE CPRICE_DATE,
+			T1.CREATE_USER CREATE_USER,
+			T1.CREATE_DEPT CREATE_DEPT,
+			T1.CREATE_TIME CREATE_TIME,
+			T1.UPDATE_USER UPDATE_USER,
+			T1.UPDATE_TIME UPDATE_TIME,
+			T2.FINPROD_MARKET_ID bondCode
+		FROM
+			WFL_IBU_QUOTE_ENT_CREP_PLEDGE T1
+		LEFT JOIN FIN_PRODUCT T2 ON
+			T2.FINPROD_ID = T1.PLEDGE_FINPROD_ID
+		 where T1.QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
+	</select>
+
+</mapper>

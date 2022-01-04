@@ -182,7 +182,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         List<ValidMessage> errorList = new ArrayList<>();
         //模式
         String ps = entity.getPs();
-        checkEntityEmpty(errorList, entity);
+        this.checkEntityEmpty(errorList, entity);
         // 记录指令代码
         List<String> entrustIdList = new ArrayList<>();
         entity.getPtlAllocations().forEach(item ->
@@ -264,8 +264,8 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 mIntAmtTotal = ArithmeticUtil.doAdd(mIntAmtTotal, ptlAllocatio.getmIntAmt());
                 dealFeeAmtTotal = ArithmeticUtil.doAdd(dealFeeAmtTotal, ptlAllocatio.getDealFeeAmt());
                 settFeeamtTotal = ArithmeticUtil.doAdd(settFeeamtTotal, ptlAllocatio.getSettFeeAmt());
-                //TODO 组合分配中交易金额要小于等于（剩余指令额度-已成功发出的未收到外汇交易中心成功反馈报价和流程中的报价-流程中交易登记额度）
-                // 已实现: 剩余指令额度 = 指令额度-生效的交易登记额度-流程中交易登记额度
+                //组合分配中交易金额要小于等于（剩余指令额度-已成功发出的未收到外汇交易中心成功反馈报价和流程中的报价-流程中交易登记额度）
+                // 已实现: 剩余指令额度 = 指令额度-生效的交易登记额度-流程中交易登记额度-已成功发出的未收到外汇交易中心成功反馈报价和流程中的报价
                 BigDecimal etrLastNum = cfetsIbuQuoteRepoMapper.findEtrLastNumByEtrId(ptlAllocatio.getEntrustId());
                 if (ACompareToB(ptlAllocatio.getTradeAmt(), etrLastNum, 12) > 0) {
                     errorList.add(new ValidMessage("组合分配中交易金额要小于等于[" + ptlAllocatio.getEntrustId() + "]剩余的指令额度"));
@@ -441,12 +441,6 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             errorList.add(new ValidMessage("请输入结算服务费"));
         }
         /**************************************************************基本信息********************************************/
-        if (StringUtil.isNotEmpty(entity.getCounterId())) {
-            String trader = this.findTraderByCounterId(entity.getCounterId());
-            if (!StringUtil.isNotEmpty(trader)) {
-                errorList.add(new ValidMessage("选择的对手方未与系统中交易对手关联，请先去关联"));
-            }
-        }
     }
 
     /**

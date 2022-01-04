@@ -20,6 +20,8 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.bankuplink.common.dto.TrdBondInvestTradeDto;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoQuotedPrice004Service;
 import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfoMapper;
@@ -197,6 +199,8 @@ public class CfetsTrdConfirm001Service extends BaseService{
     private IPlatformDate iPlatformDate;
     @Autowired
     private InterfRiskRdsService<InterfRiskRdsDto> interfRiskRdsService;
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
     // 交易份额小数保留位数
     private int decimalPlaces_4 = 4;
 
@@ -378,7 +382,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
 
                 finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
                 //处理指令完成情况
-                baseTradeCommExecute(finProductTradeDto);
+                baseTradeCommExecute(finProductTradeDto,"bond");
 
             }
 
@@ -400,10 +404,10 @@ public class CfetsTrdConfirm001Service extends BaseService{
 
         }
         //更新操作记录日志
-        /*CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
-        oprHisReq.setEntrustId(dto.getEntrustId());
+      /*  CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+        oprHisReq.setEntrustId(entity.getTotleTradeId());
         oprHisReq.setOperType(DictCodeListExt3.操作类型_撤回.getValue());
-        oprHisReq.setBusiDes(dto.getRemark());
+        oprHisReq.setBusiDes(entity.getRemark());
         joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);*/
 
         //发送头寸
@@ -417,6 +421,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
         trdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
         trdFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
         trdFinProductDealTotal.setSettleSpeed(entity.getSettleSpeed());
+        trdFinProductDealTotal.setPs(DictCodeList.交易方向_买入.getValue());
         trdFinProductDealTotalMapper.insertSelective(trdFinProductDealTotal);
 
         paTrdFinProductDealTotalMapper.insertSelective(entity.getPaTrdFinProductDealTotal());
@@ -457,6 +462,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
         for (TrdProductDeal trdProductDeal : entity.getTrdProductDeals()) {
             trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
             trdProductDeal.setIsCancel(DictCodeList.是否_否.getValue());
+            trdProductDeal.setPs(DictCodeList.交易方向_买入.getValue());
             trdProductDealMapper.insertSelective(trdProductDeal);
 
             AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
@@ -485,7 +491,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
             finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
 
             //处理指令完成情况
-            baseTradeCommExecute(finProductTradeDto);
+            baseTradeCommExecute(finProductTradeDto,"repo");
 
         }
        // 发送Murex接口处理
@@ -871,7 +877,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
         }
         return invAim;
     }
-    public void baseTradeCommExecute(FinProductTradeDto finProductTradeDto) {
+    public void baseTradeCommExecute(FinProductTradeDto finProductTradeDto,String type) {
         if (finProductTradeDto == null) {
             return ;
         }
@@ -913,6 +919,12 @@ public class CfetsTrdConfirm001Service extends BaseService{
         if (!baseEtrInvestInfoDtos.isEmpty()) {
             List<EtrFinishStatusDto> etrFinishStatusList=baseEtrInvestInfoDtos;
             String ps=finProductTradeDto.getBaseTradeProductDealDtos().get(0).getTrdProductDeal().getPs();
+            String finprodType2=finProductTradeDto.getBaseTradeProductDealDtos().get(0).getTrdProductDeal().getFinprodType2();
+            if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_债券质押式正回购.getValue())){
+               ps=DictCodeList.回购拆借方向_正回购.getValue();
+            }else if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue())){
+                ps=DictCodeList.回购拆借方向_逆回购.getValue();
+            }
             // 遍历List<委托完成状况表Entity>，保存到“委托完成状况表”
             for (EtrFinishStatusDto etrFinishStatus : etrFinishStatusList) {
                 if(StringUtil.isNotBlank(etrFinishStatus.getCstpTradeId())){
@@ -941,7 +953,13 @@ public class CfetsTrdConfirm001Service extends BaseService{
                     // 如果满足，则调用投资委托组件的更新委托状态接口，将委托状态设置为“已完成”
                     etrInvestInfoServiceImpl.updateDelegateStatus(etrFinishAmtDto.getEntrustId(), DictCodeList.委托状态_已完成.getValue());
                     //发送头寸
-                    closeDelegatePositionMethod(etrFinishAmtDto,ps);
+                    if(StringUtil.isNotEmpty(type) && StringUtil.equals("bond",type)){
+                        closeDelegatePositionMethod(etrFinishAmtDto,ps);
+                    }
+                    if(StringUtil.isNotEmpty(type) && StringUtil.equals("repo",type)){
+
+                        closeDelegateRepoPositionMethod(etrFinishAmtDto,ps);
+                    }
 
                 }
             }
@@ -970,7 +988,22 @@ public class CfetsTrdConfirm001Service extends BaseService{
         req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
         PositionHttpRequest.batchClose(req);
     }
-
+    public void closeDelegateRepoPositionMethod(BaseEtrFinishAmtDto etrFinishAmtDto,String ps){
+        CfetsEtrIbClosePositionRequest req=new CfetsEtrIbClosePositionRequest();
+        List<CfetsEtrIbClosePosEtrRequest> etrList=new ArrayList<>();
+        CfetsEtrIbClosePosEtrRequest closeItem=new CfetsEtrIbClosePosEtrRequest();
+        closeItem.setBusiType(DictCodeListExt3.头寸业务类型_质押式回购首期.getValue());
+        closeItem.setPs(ps);
+        closeItem.setCloseId(etrFinishAmtDto.getEntrustId());
+        closeItem.setSystemAct(DictCodeListExt3.系统动作_完成.getValue());
+        closeItem.setBusiAct(DictCodeListExt3.业务动作_指令自动完成.getValue());
+        etrList.add(closeItem);
+        req.setData(etrList);
+        req.setUserId(SecurityUtil.getLoginUser().getUserName());
+        req.setTotalTradeId(IDGenerator.generate());
+        req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
+        PositionHttpRequest.batchClose(req);
+    }
     /**
      * 1.8计算单位面值
      *
@@ -1067,7 +1100,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
             //调用头寸
             CfetsEtrIbRepoPosPortfolioCashRequest posport = new CfetsEtrIbRepoPosPortfolioCashRequest();
             posport.setPortfolioId(dto.getPortfolioId());
-            //posport.setEtrId(dto.getEntrustId());
+            posport.setEtrId(dto.getEntrustId());
             posport.setTradeId(dto.getTradeId());
             if (StringUtil.isNotEmpty(dto.getPortfolioId())) {
                 Map<String, Object> map = new HashMap<String, Object>();

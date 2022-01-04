@@ -164,6 +164,8 @@ public class BondQuoteSearchDto {
      */
     private String mySideTrader;
 
+    private List<String> mySideTraders;
+
     /**
      * 对手方
      */
@@ -174,6 +176,23 @@ public class BondQuoteSearchDto {
      */
     private String counterTrader;
 
+    private List<String> counterTraders;
+
+    public List<String> getMySideTraders() {
+        return mySideTraders;
+    }
+
+    public void setMySideTraders(List<String> mySideTraders) {
+        this.mySideTraders = mySideTraders;
+    }
+
+    public List<String> getCounterTraders() {
+        return counterTraders;
+    }
+
+    public void setCounterTraders(List<String> counterTraders) {
+        this.counterTraders = counterTraders;
+    }
 
     public String getQuoteType() {
         return quoteType;

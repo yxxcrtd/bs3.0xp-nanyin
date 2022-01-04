@@ -595,6 +595,7 @@ public class IbuComponentCommonService extends BaseService {
         WflIbuQuoteBond2Dto ibuQuoteBondDto = new WflIbuQuoteBond2Dto();
         
         BondDialogueQuoteDto dbQuoteDataDto = null;
+        ibuQuoteBondDto.setQuoteRoleType(BussinessDictCodeList.银行间上行本方角色_询价方.getValue());
         if (StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getQuoteId())) {
             ibuQuoteBondDto.setQuoteId(cfetsBondDealDialogueQuoteDto.getQuoteId());
             
@@ -618,7 +619,6 @@ public class IbuComponentCommonService extends BaseService {
             ibuQuoteBondDto.setVersion(-1L);
         }
         ibuQuoteBondDto.setQuoteType(DictCodeList.报价系统区分类型_现券对话报价.getValue());
-        ibuQuoteBondDto.setQuoteRoleType(BussinessDictCodeList.银行间上行本方角色_询价方.getValue());
         ibuQuoteBondDto.setFinprodId(cfetsBondDealDialogueQuoteDto.getFinprodId());
         ibuQuoteBondDto.setFinprodType2(BussinessDictCodeList.金融产品类型_投管用_债券.getValue());
         ibuQuoteBondDto.setBranch(0L);
@@ -1985,11 +1985,11 @@ public class IbuComponentCommonService extends BaseService {
         if(null!=param.get("counterIds")){
             inputBean.setCounterIds((List<String>)param.get("counterIds"));
         }
-        if (param.get("mySideTrader") != null && !"".equals(param.get("mySideTrader"))) {
-            inputBean.setMySideTrader((String)param.get("mySideTrader"));
+        if (param.get("mySideTraders") != null && !"".equals(param.get("mySideTraders"))) {
+            inputBean.setMySideTraders((List<String>)param.get("mySideTraders"));
         }
-        if (param.get("counterTrader") != null && !"".equals(param.get("counterTrader"))) {
-            inputBean.setCounterTrader((String)param.get("counterTrader"));
+        if (param.get("counterTraders") != null && !"".equals(param.get("counterTraders"))) {
+            inputBean.setCounterTraders((List<String>)param.get("counterTraders"));
         }
         return ibuMainService.getBondQuoteList(inputBean, null);
     }
@@ -2664,7 +2664,7 @@ public class IbuComponentCommonService extends BaseService {
      * @see
      * @since 1.0
      */
-    private CfetsRepoDealQuotedPrice001Dto convertRepoDialogueQuoteDto(RepoDialogueQuoteDto repoDialogueQuoteDto) {
+    public CfetsRepoDealQuotedPrice001Dto convertRepoDialogueQuoteDto(RepoDialogueQuoteDto repoDialogueQuoteDto) {
         CfetsRepoDealQuotedPrice001Dto dto = new CfetsRepoDealQuotedPrice001Dto();
         // region 银行间报价主信息
         IbuQuoteCrepDto ibuQuoteCrepDto = repoDialogueQuoteDto.getIbuQuoteCrepDto();

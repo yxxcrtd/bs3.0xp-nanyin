@@ -591,12 +591,14 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
                     WflEtrEntrustKey wflEtrEntrustKey = new WflEtrEntrustKey();
                     wflEtrEntrustKey.setEntrustId(Item.getEntrustId());
                     wflEtrEntrustKey.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
-                    wflEtrEntrustMapper.selectByPrimaryKey(wflEtrEntrustKey);
-                    AjaxResult res=new AjaxResult();
-                    ValidMessage  validMessage= new ValidMessage();
-                    validMessage.setMessage("存在流程中数据，无法修改。");
-                    res.setErrorList(Arrays.asList(validMessage));
-                    return res;
+                    WflEtrEntrust wflEtrEntrust = wflEtrEntrustMapper.selectByPrimaryKey(wflEtrEntrustKey);
+                    if(wflEtrEntrust!=null){
+                        AjaxResult res=new AjaxResult();
+                        ValidMessage  validMessage= new ValidMessage();
+                        validMessage.setMessage("存在流程中数据，无法修改。");
+                        res.setErrorList(Arrays.asList(validMessage));
+                        return res;
+                    }
                 }
             };
         }

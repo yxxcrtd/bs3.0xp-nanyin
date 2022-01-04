@@ -1508,6 +1508,7 @@ public class IbuQuoteRepoService extends BaseService {
         }
         // 交易方向+清算速度+回购期限+交易对手+证券账户+交易账户 不一致时提示
         if (StringUtil.isNotEmpty(message)) {
+            message = message + "】";
             ajaxResult.setMessage("所选指令不满足汇总条件：" + message + "不同");
             return ajaxResult;
         }
@@ -1550,7 +1551,11 @@ public class IbuQuoteRepoService extends BaseService {
      * @date 2021/12/7 9:19
      */
     private String msgSplicing(String message, String joiner) {
-        if (StringUtil.isNotEmpty(message) && StringUtil.isNotEmpty(joiner)) {
+        String messageTemp = message;
+        if (StringUtil.isEmpty(message)) {
+            message = "【" + message;
+        }
+        if (StringUtil.isNotEmpty(messageTemp) && StringUtil.isNotEmpty(joiner)) {
             message = message + joiner;
         }
         return message;

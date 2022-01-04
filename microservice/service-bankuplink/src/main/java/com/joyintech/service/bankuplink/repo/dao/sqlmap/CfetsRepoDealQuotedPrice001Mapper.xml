@@ -918,7 +918,9 @@
             FPRICE_AMT,
             SHARE_AMT,
             CB_FPRICE_AMT,
-            SC_FPRICE_AMT
+            SC_FPRICE_AMT,
+            DEAL_FEE_AMT,
+            SETT_FEE_AMT
         FROM
         <choose>
             <when test="workflowId !=null and workflowId != ''">
