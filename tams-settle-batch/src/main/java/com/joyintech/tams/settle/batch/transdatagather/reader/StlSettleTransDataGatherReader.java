@@ -13,6 +13,7 @@ import com.joyintech.tams.common.base.entity.SettleTransDataTotalAdd;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.settle.batch.datadeal.service.StlDataDealProcessCommonService;
 import com.joyintech.tams.settle.batch.transdatagather.dto.StlSettleTransDataGatherDto;
 import com.joyintech.tams.settle.batch.transdatagather.dto.StlSettleTransDataGatherParamDto;
 import com.joyintech.tams.settle.batch.transdatagather.service.StlSettleTransDataGatherService;
@@ -41,6 +42,10 @@ import java.util.stream.Collectors;
 public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDataGatherParamDto> {
     @Autowired
     private StlSettleTransDataGatherService stlSettleTransDataGatherService;
+
+    @Autowired
+    private StlDataDealProcessCommonService stlDataDealProcessCommonService;
+
     @Autowired(required = false)
     private SettleCommonService settleCommonService;
 
@@ -406,7 +411,9 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                             settleTransDataTotalPledge.setTradeId(dealTotal.getSeqId());
                             settleTransDataTotalPledge.setBranch(dealTotal.getBranch());
                             settleTransDataTotalPledge.setPledgeFinprodId(settleTransDataDto.getPledgeFinprodId());
-                            settleTransDataTotalPledge.setPledgeFaceValue(settleTransDataDto.getPledgeFaceValue());
+                            // settleTransDataTotalPledge.setPledgeFaceValue(settleTransDataDto.getPledgeFaceValue());
+                            settleTransDataTotalPledge.setPledgeFaceValue(stlDataDealProcessCommonService
+                                    .getUnitPrice(settleTransDataDto.getPledgeFinprodId(), settleTransDataDto.getTradeDate()));
                             settleTransDataTotalPledge.setPledgeNumber(settleTransDataDto.getPledgeNumber());
                             settleTransDataTotalPledge.setPledgeRatio(settleTransDataDto.getPledgeRatio());
                             settleTransDataTotalPledge.setPledgeAmt(settleTransDataDto.getPledgeAmt());
@@ -548,7 +555,9 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                                 settleTransDataTotalPledge.setTradeId(dealTotal.getSeqId());
                                 settleTransDataTotalPledge.setBranch(item.getBranch());
                                 settleTransDataTotalPledge.setPledgeFinprodId(item.getPledgeFinprodId());
-                                settleTransDataTotalPledge.setPledgeFaceValue(item.getPledgeFaceValue());
+                                // settleTransDataTotalPledge.setPledgeFaceValue(item.getPledgeFaceValue());
+                                settleTransDataTotalPledge.setPledgeFaceValue(stlDataDealProcessCommonService
+                                        .getUnitPrice(item.getPledgeFinprodId(), item.getTradeDate()));
                                 settleTransDataTotalPledge.setPledgeNumber(item.getPledgeNumber());
                                 settleTransDataTotalPledge.setPledgeRatio(item.getPledgeRatio());
                                 settleTransDataTotalPledge.setPledgeAmt(item.getPledgeAmt());
@@ -720,7 +729,9 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                                     settleTransDataTotalPledge.setTradeId(dealTotal.getSeqId());
                                     settleTransDataTotalPledge.setBranch(item.getBranch());
                                     settleTransDataTotalPledge.setPledgeFinprodId(item.getPledgeFinprodId());
-                                    settleTransDataTotalPledge.setPledgeFaceValue(item.getPledgeFaceValue());
+                                    // settleTransDataTotalPledge.setPledgeFaceValue(item.getPledgeFaceValue());
+                                    settleTransDataTotalPledge.setPledgeFaceValue(stlDataDealProcessCommonService
+                                            .getUnitPrice(item.getPledgeFinprodId(), item.getTradeDate()));
                                     settleTransDataTotalPledge.setPledgeNumber(item.getPledgeNumber());
                                     settleTransDataTotalPledge.setPledgeRatio(item.getPledgeRatio());
                                     settleTransDataTotalPledge.setPledgeAmt(item.getPledgeAmt());

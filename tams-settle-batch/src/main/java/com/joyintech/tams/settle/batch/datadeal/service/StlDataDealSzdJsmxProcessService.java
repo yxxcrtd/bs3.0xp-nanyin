@@ -1082,6 +1082,20 @@ public class StlDataDealSzdJsmxProcessService {
 //						settleTransDataPledge.setPledgeNumber(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
 					    // settleTransDataPledge.setPledgeNumber(ArithmeticUtil.divide(settleTransData.getShareAmt(),BigDecimal.valueOf(100),2));
 						settleTransDataPledge.setPledgeNumber(settleTransData.getShareAmt());
+						// 换出折算率=首期质押券折算率,换入折算率=清算文件清算金额/成交数量 modify by fuyongsheng 20220104 start
+						if(DictCodeListExt3.质押券置换_置换方向_换出.getValue().equals(settleTransData.getTradeType())){
+							// 查询首期质押券信息
+							List<SettleTransDataPledge> sqSettleTransDataPledges = stlDownDataDealMapper.selectSqSettleTransDataPledges(
+									settleTransData.getfCjbh(), settleTransData.getSeatNumber(), settleTransData.getSecAcctId());
+							if(org.apache.commons.collections.CollectionUtils.isNotEmpty(sqSettleTransDataPledges)
+							&& StringUtil.isNotEmpty(sqSettleTransDataPledges.get(0).getPledgeRatio())){
+								settleTransDataPledge.setPledgeRatio(sqSettleTransDataPledges.get(0).getPledgeRatio());
+							}
+						}else if(DictCodeListExt3.质押券置换_置换方向_换入.getValue().equals(settleTransData.getTradeType())){
+							settleTransDataPledge.setPledgeRatio(ArithmeticUtil.divide(new BigDecimal(szdJsmx.getQsje()).abs(),
+									new BigDecimal(szdJsmx.getCjsl()).abs(),2));
+						}
+						// 换出折算率=首期质押券折算率,换入折算率=清算文件清算金额/成交数量 modify by fuyongsheng 20220104 end
 						//置换方向
 					    settleTransDataPledge.setDisplaceDirection(settleTransData.getTradeType());
 //					}

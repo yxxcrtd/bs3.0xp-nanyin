@@ -666,6 +666,20 @@
 			AND SEC_ACCT_ID = #{secAcctId, jdbcType=VARCHAR}
 	</select>
 
+	<select id="selectSqSettleTransDataPledges" resultType="com.joyintech.tams.common.base.entity.SettleTransDataPledge">
+		SELECT
+			std.TRADE_ID,
+			stdp.PLEDGE_RATIO
+		FROM
+			SETTLE_TRANS_DATA std
+		LEFT JOIN
+			SETTLE_TRANS_DATA_PLEDGE stdp ON std.TRADE_ID = stdp.TRADE_ID
+		WHERE
+			std.F_CJBH = #{sqcjbh, jdbcType=VARCHAR}
+			AND std.SEAT_NUMBER = #{seatNumber, jdbcType=VARCHAR}
+			AND std.SEC_ACCT_ID = #{secAcctId, jdbcType=VARCHAR}
+	</select>
+
 	<!-- 是否节假日 0:工作日 -->
 	<select id="getIsHoliday" parameterType="java.util.Map" resultType="String">
 		SELECT
