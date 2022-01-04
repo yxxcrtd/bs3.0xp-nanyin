@@ -5,12 +5,16 @@ import com.joyintech.tams.exchange.common.ResponseResultBody;
 import com.joyintech.tams.exchange.common.bean.OrderAndEntrustQryResult;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.RevokeDto;
+import com.joyintech.tams.exchange.common.constant.EntrustBsProp;
 import com.joyintech.tams.exchange.common.db.domain.EntrustInterface;
+import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.request.EntrustQueryRequest;
 import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
+import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
 import com.joyintech.tams.exchange.service.trade.management.service.EntrustManagement;
+import com.joyintech.tams.exchange.util.EntrustPropUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +32,8 @@ public class EntrustController {
 
     @Autowired
     private EntrustManagement entrustManagement;
+    @Autowired
+    private InstructionService instructionService;
 
     @ApiOperation(value = "查询委托信息", notes = "查询委托信息")
     @RequestMapping(value = {"/entrust"}, method = RequestMethod.POST)
@@ -86,21 +92,28 @@ public class EntrustController {
     /**
      * 最大交易数量查询
      *
-     * @param userId       用户Id
-     * @param stockCode    市场.证券代码
-     * @param entrustProp  交易类型
-     * @param entrustBs    交易方向
-     * @param entrustPrice 委托价格
-     * @param accountId    账户Id
+     * @param userId        用户Id
+     * @param instructionId 指令编号
+     * @param stockCode     市场.证券代码
+     * @param entrustProp   交易类型
+     * @param entrustBs     交易方向
+     * @param entrustPrice  委托价格
+     * @param accountId     账户Id
      * @return ResultBean
      */
     @RequestMapping(value = "/entrust/enable", method = RequestMethod.GET)
     public ResultBean queryEnable(@RequestParam(value = "user_id") String userId,
-                                  @RequestParam(value = "stock_code") String stockCode,
-                                  @RequestParam(value = "entrust_prop") String entrustProp,
-                                  @RequestParam(value = "entrust_bs") String entrustBs,
+                                  @RequestParam(value = "instructionId", required = false) String instructionId,
+                                  @RequestParam(value = "stock_code", required = false) String stockCode,
+                                  @RequestParam(value = "entrust_prop", required = false) String entrustProp,
+                                  @RequestParam(value = "entrust_bs", required = false) String entrustBs,
                                   @RequestParam(value = "entrust_price") double entrustPrice,
-                                  @RequestParam(value = "account_id") String accountId) {
+                                  @RequestParam(value = "account_id", required = false) String accountId) {
+        Instruction instruction = instructionService.findById(instructionId);
+        entrustProp = EntrustPropUtils.getEntrustProp(instruction);
+        stockCode = instruction.getFinprodMarketId();
+        entrustBs = EntrustBsProp.getEntrustBs(instruction.getPs());
+        accountId = instruction.getAcctNo();
         return entrustManagement.queryEnable(userId, stockCode, entrustProp, entrustBs, entrustPrice, accountId);
     }
 

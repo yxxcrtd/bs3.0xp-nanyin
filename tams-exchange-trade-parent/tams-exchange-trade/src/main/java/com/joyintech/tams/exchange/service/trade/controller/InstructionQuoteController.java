@@ -1,26 +1,20 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
+import com.joyintech.exchange.service.quote.service.QuoteService;
+import com.joyintech.tams.exchange.common.bean.*;
+import com.joyintech.tams.exchange.common.constant.EntrustBsProp;
+import com.joyintech.tams.exchange.common.db.domain.Instruction;
+import com.joyintech.tams.exchange.common.request.QueryTickRequest;
+import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
+import com.joyintech.tams.exchange.service.trade.management.service.IntegratedQuoteManagement;
+import com.joyintech.tams.exchange.util.EntrustPropUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.joyintech.exchange.service.quote.service.QuoteService;
-import com.joyintech.tams.exchange.common.bean.IntegratedBulkCloseQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedBulkQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedFixedIncomeQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedRepurchaseQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.ResultBean;
-import com.joyintech.tams.exchange.common.request.QueryTickRequest;
-import com.joyintech.tams.exchange.service.trade.management.service.IntegratedQuoteManagement;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/service/joyin")
@@ -30,24 +24,33 @@ public class InstructionQuoteController {
 
     @Autowired
     private QuoteService quoteService;
-    
+
     @Autowired
     private IntegratedQuoteManagement integratedQuoteManagement;
-    
+
+    @Autowired
+    private InstructionService instructionService;
+
     @ApiOperation(value = "竞价行情查询接口", notes = "竞价行情查询接口")
     @RequestMapping(value = {"/quote/tick"}, method = RequestMethod.POST)
     public ResultBean queryTick(@RequestBody @Validated QueryTickRequest queryTickRequest) {
         return quoteService.getTick(queryTickRequest.getStockCode());
     }
-    
+
     @ApiOperation(value = "大宗交易行情查询接口", notes = "大宗交易行情查询接口")
     @RequestMapping(value = "/entrust/integrated/bulk_quote", method = RequestMethod.GET)
-    public ResultBean queryIntegratedBulkQuote(@RequestParam(value = "stock_code") String stockCode,
+    public ResultBean queryIntegratedBulkQuote(@RequestParam(value = "instructionId") String instructionId,
+                                               @RequestParam(value = "stock_code", required = false) String stockCode,
                                                @RequestParam(value = "entrust_prop", required = false) String entrustProp,
-                                               @RequestParam(value = "entrust_bs",required = false) String entrustBs,
-                                               @RequestParam(value = "account_id") String accountId,
+                                               @RequestParam(value = "entrust_bs", required = false) String entrustBs,
+                                               @RequestParam(value = "account_id", required = false) String accountId,
                                                @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize) {
-    	IntegratedBulkQuoteQryBean integratedBulkQuoteQryBean = new IntegratedBulkQuoteQryBean(stockCode, entrustProp, entrustBs, accountId, pageSize);
+        Instruction instruction = instructionService.findById(instructionId);
+        entrustProp = EntrustPropUtils.getEntrustProp(instruction);
+        stockCode = instruction.getFinprodMarketId();
+        entrustBs = EntrustBsProp.getEntrustBs(instruction.getPs());
+        accountId = instruction.getAcctNo();
+        IntegratedBulkQuoteQryBean integratedBulkQuoteQryBean = new IntegratedBulkQuoteQryBean(stockCode, entrustProp, entrustBs, accountId, pageSize);
         return integratedQuoteManagement.queryIntegratedBulkQuote(integratedBulkQuoteQryBean);
     }
 
@@ -56,14 +59,14 @@ public class InstructionQuoteController {
 //    public ResultBean queryIntegratedBulkQuote(@RequestBody @Validated IntegratedBulkQuoteQryBean integratedBulkQuoteQryBean) {
 //        return integratedQuoteManagement.queryIntegratedBulkQuote(integratedBulkQuoteQryBean);
 //    }
-    
+
     @ApiOperation(value = "盘后大宗行情查询", notes = "盘后大宗行情查询")
     @RequestMapping(value = "/entrust/integrated/bulk_close_quote", method = RequestMethod.GET)
     public ResultBean queryIntegratedBulkCloseQuote(@RequestParam(value = "stock_code") String stockCode,
                                                     @RequestParam(value = "exchange_type") String exchangeType,
                                                     @RequestParam(value = "account_id") String accountId,
                                                     @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize) {
-    	IntegratedBulkCloseQuoteQryBean integratedBulkCloseQuoteQryBean = new IntegratedBulkCloseQuoteQryBean(stockCode, exchangeType, accountId, pageSize);
+        IntegratedBulkCloseQuoteQryBean integratedBulkCloseQuoteQryBean = new IntegratedBulkCloseQuoteQryBean(stockCode, exchangeType, accountId, pageSize);
         return integratedQuoteManagement.queryIntegratedBulkCloseQuote(integratedBulkCloseQuoteQryBean);
     }
 
@@ -72,14 +75,14 @@ public class InstructionQuoteController {
 //    public ResultBean queryIntegratedBulkCloseQuote(@RequestBody @Validated IntegratedBulkCloseQuoteQryBean integratedBulkCloseQuoteQryBean) {
 //        return integratedQuoteManagement.queryIntegratedBulkCloseQuote(integratedBulkCloseQuoteQryBean);
 //    }
-    
+
     @ApiOperation(value = "质押式协议回购行情查询", notes = "质押式协议回购行情查询")
     @RequestMapping(value = "/entrust/integrated/repurchase_quote", method = RequestMethod.GET)
     public ResultBean queryIntegratedRepurchaseQuote(@RequestParam(value = "action_in") int actionIn,
                                                      @RequestParam(value = "entrust_prop", required = false, defaultValue = "") String entrustProp,
                                                      @RequestParam(value = "account_id", required = false) String accountId,
                                                      @RequestParam(value = "page_size", required = false, defaultValue = "1000") int pageSize) {
-    	IntegratedRepurchaseQuoteQryBean integratedRepurchaseQuoteQryBean = new IntegratedRepurchaseQuoteQryBean(actionIn, entrustProp, accountId, pageSize);
+        IntegratedRepurchaseQuoteQryBean integratedRepurchaseQuoteQryBean = new IntegratedRepurchaseQuoteQryBean(actionIn, entrustProp, accountId, pageSize);
         return integratedQuoteManagement.queryIntegratedRepurchaseQuote(integratedRepurchaseQuoteQryBean);
     }
 
@@ -88,24 +91,24 @@ public class InstructionQuoteController {
 //    public ResultBean queryIntegratedRepurchaseQuote(@RequestBody @Validated IntegratedRepurchaseQuoteQryBean integratedRepurchaseQuoteQryBean) {
 //        return integratedQuoteManagement.queryIntegratedRepurchaseQuote(integratedRepurchaseQuoteQryBean);
 //    }
-    
+
     @ApiOperation(value = "上海固收行情查询", notes = "上海固收行情查询")
     @RequestMapping(value = "/entrust/integrated/fixed_income_quote", method = RequestMethod.GET)
     public ResultBean queryIntegratedFixedIncomeQuote(@RequestParam(value = "stock_code") String stockCode,
                                                       @RequestParam(value = "exchange_type") String exchangeType,
                                                       @RequestParam(value = "account_id") String accountId,
                                                       @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize) {
-    	IntegratedFixedIncomeQuoteQryBean integratedFixedIncomeQuoteQryBean = new IntegratedFixedIncomeQuoteQryBean(stockCode, exchangeType, accountId, pageSize);
+        IntegratedFixedIncomeQuoteQryBean integratedFixedIncomeQuoteQryBean = new IntegratedFixedIncomeQuoteQryBean(stockCode, exchangeType, accountId, pageSize);
         return integratedQuoteManagement.queryIntegratedFixedIncomeQuote(integratedFixedIncomeQuoteQryBean);
     }
 
-    
+
 //    @ApiOperation(value = "上海固收行情查询", notes = "上海固收行情查询")
 //    @RequestMapping(value = "/entrust/integrated/fixed_income_quote", method = RequestMethod.GET)
 //    public Message<List<IntegratedFixedIncomeQuoteBean>> queryIntegratedFixedIncomeQuote(@RequestBody @Validated IntegratedFixedIncomeQuoteQryBean integratedFixedIncomeQuoteQryBean) {
 //        return new Message<List<IntegratedFixedIncomeQuoteBean>>(integratedQuoteManagement.queryIntegratedFixedIncomeQuote(integratedFixedIncomeQuoteQryBean));
 //    }
-    
+
     @ApiOperation(value = "综合业务行情查询接口", notes = "综合业务行情查询接口")
     @RequestMapping(value = "/entrust/integrated/quote", method = RequestMethod.GET)
     public ResultBean queryIntegratedQuote(@RequestParam(value = "user_id", required = false) String userId,

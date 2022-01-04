@@ -1,34 +1,36 @@
 package com.joyintech.tams.exchange.common.constant;
 
+import cn.hutool.core.util.StrUtil;
+
 public enum EntrustBsProp {
     /**
      * 竞价交易
      */
-    BUY("T01", "买入", EntrustProp.NORMAL),
-    SELL("T02", "卖出", EntrustProp.NORMAL),
-    APPLY("T04", "申购", EntrustProp.APPLY),
-    REDEEM("T06", "赎回", EntrustProp.REPURCHASE),
-    ISSUE("T47", "增发（配售）", EntrustProp.PS),
-    RESALE("T03", "行权（回售）", EntrustProp.HS),
-    ALLOCATE_SHARE("T46", "配股", EntrustProp.ALLOTMENT),
-    BOND_STOCK("T49", "债转股", EntrustProp.CHANGE_TO_STOCK),
-    SUBSCRIBE("T52", "认购", EntrustProp.APPLY),
-    POSITIVE_REPO("03", "正回购", EntrustProp.REPURCHASE),
-    REVERSED_REPO("04", "逆回购", EntrustProp.REPURCHASE),
-    SEAL("T68", "质押入库", EntrustProp.ZYCRK),
-    UNSEAL("T69", "质押出库", EntrustProp.ZYCRK),
-    allocate_bond("T97", "配债", EntrustProp.PS),
-    EXERCISE("T99", "行权"),
-    open_long("TF01", "开多"),
-    close_short("TF02", "平空"),
-    CLOSE_TODAY_SHORT("TF03", "平今空"),
-    OPENS_HORT("TF04", "开空"),
-    CLOSE_LONG("TF05", "平多"),
-    CLOSE_TODAY_LONG("TF06", "平今多"),
-    VOTE("T107", "网络投票"),
-    BONUS("T110", "分红设置"),
-    FINANCE_BUY("T104", "融资买入"),
-    SECURITIES_LOAN_SELL("T105", "融券卖出"),
+    BUY("T01", "买入", "1", EntrustProp.NORMAL),
+    SELL("T02", "卖出", "2", EntrustProp.NORMAL),
+    APPLY("T04", "申购", "1", EntrustProp.APPLY),
+    REDEEM("T06", "赎回", "2", EntrustProp.REPURCHASE),
+    ISSUE("T47", "增发（配售）", "1", EntrustProp.PS),
+    RESALE("T03", "行权（回售）", "2", EntrustProp.HS),
+    ALLOCATE_SHARE("T46", "配股", "1", EntrustProp.ALLOTMENT),
+    BOND_STOCK("T49", "债转股", "2", EntrustProp.CHANGE_TO_STOCK),
+    SUBSCRIBE("T52", "认购", "1", EntrustProp.APPLY),
+    POSITIVE_REPO("03", "正回购", "1", EntrustProp.REPURCHASE),
+    REVERSED_REPO("04", "逆回购", "2", EntrustProp.REPURCHASE),
+    SEAL("T68", "质押入库", "2", EntrustProp.ZYCRK),
+    UNSEAL("T69", "质押出库", "1", EntrustProp.ZYCRK),
+    allocate_bond("T97", "配债", "1", EntrustProp.PS),
+    EXERCISE("T99", "行权", "2"),
+    open_long("TF01", "开多", "1"),
+    close_short("TF02", "平空", "1"),
+    CLOSE_TODAY_SHORT("TF03", "平今空", "1"),
+    OPENS_HORT("TF04", "开空", "2"),
+    CLOSE_LONG("TF05", "平多", "2"),
+    CLOSE_TODAY_LONG("TF06", "平今多", "2"),
+    VOTE("T107", "网络投票", "T107"),
+    BONUS("T110", "分红设置", "T110"),
+    FINANCE_BUY("T104", "融资买入", "1"),
+    SECURITIES_LOAN_SELL("T105", "融券卖出", "2"),
 
     /**
      * 大宗交易申报类型
@@ -53,17 +55,26 @@ public enum EntrustBsProp {
     ;
 
     String code;
-    String mean;
+    String name;
+    String entrustBs;
     EntrustProp entrustProp;
 
-    EntrustBsProp(String code, String mean) {
+    EntrustBsProp(String code, String name, String entrustBs) {
         this.code = code;
-        this.mean = mean;
+        this.name = name;
+        this.entrustBs = entrustBs;
     }
 
-    EntrustBsProp(String code, String mean, EntrustProp entrustProp) {
+    EntrustBsProp(String code, String name, String entrustBs, EntrustProp entrustProp) {
         this.code = code;
-        this.mean = mean;
+        this.name = name;
+        this.entrustBs = entrustBs;
+        this.entrustProp = entrustProp;
+    }
+
+    EntrustBsProp(String code, String name, EntrustProp entrustProp) {
+        this.code = code;
+        this.name = name;
         this.entrustProp = entrustProp;
     }
 
@@ -74,5 +85,14 @@ public enum EntrustBsProp {
             }
         }
         return null;
+    }
+
+    public static String getEntrustBs(String code) {
+        for (EntrustBsProp entrustBsProp : values()) {
+            if (entrustBsProp.code.equals(code) && StrUtil.isNotEmpty(entrustBsProp.entrustBs)) {
+                return entrustBsProp.entrustBs;
+            }
+        }
+        return code;
     }
 }
