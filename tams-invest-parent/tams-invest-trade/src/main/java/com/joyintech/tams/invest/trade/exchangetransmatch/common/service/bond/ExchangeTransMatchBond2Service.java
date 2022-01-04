@@ -5,12 +5,15 @@ import com.joyintech.tams.common.base.entity.TrdDealTotalAdd;
 import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -78,4 +81,23 @@ public class ExchangeTransMatchBond2Service extends ExchangeTransMatchBondCommon
         // 交易本金
         trdFinProductDealTotal.setPrinAmt(entrustDto.getMarchQty().multiply(new BigDecimal(100)));
     }
+
+    // GZYHTZJY-1001:债券的申购不处理持仓,只处理现金 modify by fuyongsheng 20220104 start
+    @Override
+    public List<StlPayOrdersDto> generateStlPayOrdersList(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdProductDeal trdProductDeal) {
+        List<StlPayOrdersDto> stlPayOrdersList = new ArrayList<>();
+
+        StlPayOrdersDto stlPayOsrdersDto = createStlPayOrders(dealDto, entrustDto, trdProductDeal);
+        // 收付方向
+        if(StringUtil.equals(DictCodeList.交易方向_买入.getValue(), dealDto.getPs())) {
+            stlPayOsrdersDto.setPs(DictCodeListExt1.收付方向_支出.getValue());
+        }
+        else {
+            stlPayOsrdersDto.setPs(DictCodeList.收付方向_收入.getValue());
+        }
+        stlPayOrdersList.add(stlPayOsrdersDto);
+
+        return stlPayOrdersList;
+    }
+    // GZYHTZJY-1001:债券的申购不处理持仓,只处理现金 modify by fuyongsheng 20220104 end
 }

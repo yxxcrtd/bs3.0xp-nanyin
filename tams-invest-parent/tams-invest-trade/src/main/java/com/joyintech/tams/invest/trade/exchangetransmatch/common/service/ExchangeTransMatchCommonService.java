@@ -484,6 +484,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
         }
         else if(StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
             if (StringUtil.equals(commonEntrustDto.getPs(), DictCodeList.交易方向_申购.getValue())
+                    || StringUtil.equals(commonEntrustDto.getPs(), DictCodeList.交易方向_申购确认.getValue())
                     || StringUtil.equals(commonEntrustDto.getPs(), DictCodeListExt2.交易方向_增发.getValue())
                     || StringUtil.equals(commonEntrustDto.getPs(), DictCodeListExt2.交易方向_配股.getValue())
                     || StringUtil.equals(commonEntrustDto.getPs(), DictCodeList.交易方向_买入.getValue())
