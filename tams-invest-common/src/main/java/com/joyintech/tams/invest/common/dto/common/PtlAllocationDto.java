@@ -59,6 +59,19 @@ public class PtlAllocationDto extends EtrEntrust {
     private BigDecimal scFpriceAmt;
 
     /**
+     * 交易手续费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal dealFeeAmt;
+
+    /**
+     * 结算服务费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal settFeeAmt;
+
+
+    /**
      * 交易费用LIST
      */
     private List<TrdTradeFeeDetail> tradeFeeList;
@@ -133,6 +146,22 @@ public class PtlAllocationDto extends EtrEntrust {
 
     public void setScFpriceAmt(BigDecimal scFpriceAmt) {
         this.scFpriceAmt = scFpriceAmt;
+    }
+
+    public BigDecimal getDealFeeAmt() {
+        return dealFeeAmt;
+    }
+
+    public void setDealFeeAmt(BigDecimal dealFeeAmt) {
+        this.dealFeeAmt = dealFeeAmt;
+    }
+
+    public BigDecimal getSettFeeAmt() {
+        return settFeeAmt;
+    }
+
+    public void setSettFeeAmt(BigDecimal settFeeAmt) {
+        this.settFeeAmt = settFeeAmt;
     }
 }
 

@@ -1985,11 +1985,11 @@ public class IbuComponentCommonService extends BaseService {
         if(null!=param.get("counterIds")){
             inputBean.setCounterIds((List<String>)param.get("counterIds"));
         }
-        if (param.get("mySideTrader") != null && !"".equals(param.get("mySideTrader"))) {
-            inputBean.setMySideTrader((String)param.get("mySideTrader"));
+        if (param.get("mySideTraders") != null && !"".equals(param.get("mySideTraders"))) {
+            inputBean.setMySideTraders((List<String>)param.get("mySideTraders"));
         }
-        if (param.get("counterTrader") != null && !"".equals(param.get("counterTrader"))) {
-            inputBean.setCounterTrader((String)param.get("counterTrader"));
+        if (param.get("counterTraders") != null && !"".equals(param.get("counterTraders"))) {
+            inputBean.setCounterTraders((List<String>)param.get("counterTraders"));
         }
         return ibuMainService.getBondQuoteList(inputBean, null);
     }

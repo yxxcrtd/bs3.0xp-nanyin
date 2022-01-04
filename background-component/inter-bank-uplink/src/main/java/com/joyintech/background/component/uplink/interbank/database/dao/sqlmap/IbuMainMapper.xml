@@ -561,6 +561,18 @@
 						#{item, jdbcType=VARCHAR}
 					</foreach>
 				</if>
+				<if test="mySideTraders != null and mySideTraders.size() > 0">
+					and a.OU_TRADER_ID in
+					<foreach item="item" index="index" collection="mySideTraders" open="(" separator="," close=")">
+						#{item, jdbcType=VARCHAR}
+					</foreach>
+				</if>
+				<if test="counterTraders != null and counterTraders.size() > 0">
+					and b.CP_TRADER in
+					<foreach item="item" index="index" collection="counterTraders" open="(" separator="," close=")">
+						#{item, jdbcType=VARCHAR}
+					</foreach>
+				</if>
 				<if test="mySideTrader !=null and mySideTrader !=''">
 					and a.OU_TRADER_ID LIKE concat('%',concat(#{mySideTrader,jdbcType=VARCHAR},'%'))
 
