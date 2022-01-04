@@ -31,8 +31,8 @@ public class CfetsEtrRepoLibAvaPledgeBondRequest {
     @ApiModelProperty(name="gradeResultList",value="评级",example="['1','2']")
     private List<String> gradeResultList;
 
-//    @ApiModelProperty(name="zyqkList",value="质押券库",example="['1','2']")
-//    private List<String> zyqkList;
+    @ApiModelProperty(name="idList",value="已质押id",example="['1','2']")
+    private List<String> idList;
 
     @ApiModelProperty(name="zyqk",value="质押券库",example="'2'")
     private List<String> zyqk;
@@ -109,5 +109,13 @@ public class CfetsEtrRepoLibAvaPledgeBondRequest {
 
     public void setPledgeStockId(String pledgeStockId) {
         this.pledgeStockId = pledgeStockId;
+    }
+
+    public List<String> getIdList() {
+        return idList;
+    }
+
+    public void setIdList(List<String> idList) {
+        this.idList = idList;
     }
 }
