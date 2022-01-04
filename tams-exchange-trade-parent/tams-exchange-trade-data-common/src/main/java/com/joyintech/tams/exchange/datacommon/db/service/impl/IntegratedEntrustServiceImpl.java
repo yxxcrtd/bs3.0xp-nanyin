@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.bean.EntrustQryBean;
 import com.joyintech.tams.exchange.common.constant.EntrustStatus;
@@ -35,7 +36,7 @@ public class IntegratedEntrustServiceImpl extends AsyncServiceImpl<String, Integ
     private Map<String, Map<String, IntegratedEntrust>> userIdMap = new ConcurrentHashMap<>();
     private Map<String, Map<String, IntegratedEntrust>> instructionIdMap = new ConcurrentHashMap<>();
     private Map<String, Map<String, IntegratedEntrust>> accountIdMap = new ConcurrentHashMap<>();
-    private String tradingDay;
+//    private String tradingDay;
 
     private static int timeZoneOffset = 0;
 
@@ -70,7 +71,7 @@ public class IntegratedEntrustServiceImpl extends AsyncServiceImpl<String, Integ
         Map<String, IntegratedEntrust> accountIntegratedEntrustMap = accountIdMap.get(accountId);
         if (Objects.nonNull(accountIntegratedEntrustMap)) {
             for (IntegratedEntrust integratedEntrust : accountIntegratedEntrustMap.values()) {
-                if (brokerEntrustId.equals(integratedEntrust.getBrokerEntrustId()) && tradingDay.equals(integratedEntrust.getTradingDay()))
+                if (brokerEntrustId.equals(integratedEntrust.getBrokerEntrustId()) && DateUtil.getSysDate().replace("-","").equals(integratedEntrust.getTradingDay()))
                     return integratedEntrust;
             }
         }
@@ -260,12 +261,12 @@ public class IntegratedEntrustServiceImpl extends AsyncServiceImpl<String, Integ
     @Override
     public void clearCacheBySettle(String date) {
         integratedEntrustRAMCount.set(0);
-        fillPlatDate(date);
+//        fillPlatDate(date);
     }
 
-    @Override
-    public void fillPlatDate(String date) {
-        tradingDay = date;
-        logger.info("integratedEntrust tradingDay is {}", tradingDay);
-    }
+//    @Override
+//    public void fillPlatDate(String date) {
+//        tradingDay = date;
+//        logger.info("integratedEntrust tradingDay is {}", tradingDay);
+//    }
 }

@@ -34,7 +34,7 @@ public interface EntrustService extends AsyncService<String, Entrust> {
 
     void clearCacheBySettle(String date);
 
-    void fillPlatDate(String date);
+//    void fillPlatDate(String date);
 
     /*** 
      * @Description: 根据原委托获取撤单委托
