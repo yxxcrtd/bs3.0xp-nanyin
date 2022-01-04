@@ -2027,6 +2027,17 @@
         </if>
     </select>
 
+    <select id="selectAssetCodeByAssetTypePtl" resultType="java.lang.String">
+        select PORTFOLIO_ID
+        from PTL_PORTFOLIO
+        where  PORTFOLIO_TYPE = '02'
+        union all
+        select FINPROD_MARKET_ID
+        from FIN_PRODUCT
+        where FINPROD_TYPE = 'F26'
+        AND FINPROD_TYPE2 = 'F28'
+    </select>
+
 
     <select id="selectAssetCodeBySysdate" parameterType="java.util.Map" resultType="java.lang.String">
         select ASSET_CODE
