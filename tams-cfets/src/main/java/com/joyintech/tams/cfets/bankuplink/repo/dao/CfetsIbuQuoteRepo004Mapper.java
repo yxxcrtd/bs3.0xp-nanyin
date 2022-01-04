@@ -12,5 +12,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CfetsIbuQuoteRepo004Mapper {
     String findTraderByCounterId(@Param("counterId") String counterId);
-
 }

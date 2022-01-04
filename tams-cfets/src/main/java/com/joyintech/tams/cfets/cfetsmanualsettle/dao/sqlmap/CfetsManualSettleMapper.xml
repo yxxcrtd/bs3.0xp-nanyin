@@ -943,4 +943,12 @@
         left join trd_product_deal on TRD_PRODUCT_DEAL.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
         WHERE tpd.TOTLE_TRADE_ID = #{tradeId}
     </select>
+    <select id="getPledgeListByTradeId" parameterType="java.lang.String"
+            resultType="com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto">
+        select
+        reg.PLEDGE_FINPROD_ID as finprodId,reg.PLEDGE_RATIO as pledgeRatio,
+        reg.PLEDGE_NUMBER as pledgePrin
+        from FIN_DEAL_PLEDGE reg
+        where reg.finprod_id =#{tradeId,jdbcType=VARCHAR}
+    </select>
 </mapper>

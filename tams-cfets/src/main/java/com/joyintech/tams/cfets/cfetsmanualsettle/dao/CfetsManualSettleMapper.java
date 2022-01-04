@@ -7,6 +7,7 @@ import com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo;
 import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.common.base.entity.User;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -149,5 +150,12 @@ public interface CfetsManualSettleMapper {
      * @return
      */
     CfetsTrdBondInvestTradeDto getTrdBondInvestTradeDto(Map<String, Object> params);
+
+    /**
+     * 回购质押券信息
+     * @param tradeId
+     * @return
+     */
+    List<PledgeBondInfoDto> getPledgeListByTradeId(@Param("tradeId") String tradeId);
 
 }
