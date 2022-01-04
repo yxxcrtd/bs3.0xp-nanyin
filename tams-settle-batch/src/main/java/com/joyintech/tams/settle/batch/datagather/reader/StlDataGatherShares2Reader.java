@@ -82,7 +82,10 @@ public class StlDataGatherShares2Reader extends StlDataGatherReader {
     protected void setSearchParam(Map<String, Object> searchParam) {
         // 交易方向列表
         searchParam.put("psList",
-            Arrays.asList(DictCodeList.交易方向_现金分红.getValue(), DictCodeList.交易方向_红利再投.getValue()));
+            Arrays.asList(DictCodeList.交易方向_现金分红.getValue(), DictCodeList.交易方向_红利再投.getValue()
+            //GZYHTZJY-1017:增加申购确认方向 modify by fuyongsheng 20220104 start
+            , DictCodeList.交易方向_申购确认.getValue()));
+        //GZYHTZJY-1017:增加申购确认方向 modify by fuyongsheng 20220104 end
     }
 
     @Override
