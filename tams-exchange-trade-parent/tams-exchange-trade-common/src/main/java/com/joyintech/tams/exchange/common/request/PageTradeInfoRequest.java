@@ -2,7 +2,8 @@ package com.joyintech.tams.exchange.common.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @author swwan
@@ -12,15 +13,15 @@ import org.hibernate.validator.constraints.NotBlank;
 public class PageTradeInfoRequest extends BaseRequest {
 
     @ApiModelProperty(required = true, name = "pageNum", value = "当前页数，0 表示查出全部", example = "1")
-    @NotBlank(message = "当前页数不可为空")
+    @NotNull(message = "当前页数不可为空")
     private Integer pageNum;
 
     @ApiModelProperty(required = true, name = "pageSize", value = "每页数量，0 表示查出全部", example = "20")
-    @NotBlank(message = "每页数量不可为空")
+    @NotNull(message = "每页数量不可为空")
     private Integer pageSize;
 
     @ApiModelProperty(required = true, name = "historyType", value = "查询类型，0 历史信息；1，当前信息", example = "0")
-    @NotBlank(message = "查询类型不可为空")
+    @NotNull(message = "查询类型不可为空")
     private Integer historyType;
 
     @ApiModelProperty(required = false, name = "startDay", value = "起始日期", example = "2021-01-01")
