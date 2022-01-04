@@ -597,7 +597,7 @@ public class StlDataDealSzdSjsjgProcessService {
                 // 交易方向
                 settleTransData.setPs(DictCodeList.交易方向_到期.getValue());
                 // 交易份额
-                settleTransData.setShareAmt(abs(szdSjsjg.getJgjssl()));
+                // settleTransData.setShareAmt(abs(szdSjsjg.getJgjssl()));
                 // 交易本金
                 settleTransData.setPrinAmt(BigDecimal.ZERO);
                 // 到期日
@@ -614,7 +614,12 @@ public class StlDataDealSzdSjsjgProcessService {
                 settleTransData.setmIntAmt(abs(ArithmeticUtil.subtract(abs(szdSjsjg.getJgsfje()),
                         ArithmeticUtil.doAdd(settleTransData.getmTradeAmt(),szdSjsjg.getJgjyjsf(),szdSjsjg.getJgjsf()))));
                 // 到期本金 add by msk   回购利息=变量.本金金额*变量.回购利率/100*（变量.到期交收日-变量.首期交收日)/365
-                settleTransData.setmPrinAmt(abs(qsbj));
+                // 到期本金 = 到期金额-回购利息 modify by fuyongsheng 20220104 start
+                // settleTransData.setmPrinAmt(abs(qsbj));
+                settleTransData.setmPrinAmt(settleTransData.getmTradeAmt().subtract(settleTransData.getmIntAmt()));
+                // 交易份额
+                settleTransData.setShareAmt(settleTransData.getmPrinAmt());
+                // 到期本金 = 到期金额-回购利息 modify by fuyongsheng 20220104 end
                 // 首期成交编号
                 settleTransData.setfCjbh(szdSjsjg.getJgfjsm());
                 // 查询首期
