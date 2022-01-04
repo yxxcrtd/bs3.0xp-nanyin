@@ -2,6 +2,11 @@ package com.joyintech.tams.exchange.service.trade.controller;
 
 import java.util.List;
 
+import com.joyintech.tams.exchange.common.constant.EntrustBsProp;
+import com.joyintech.tams.exchange.common.db.domain.Instruction;
+import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
+import com.joyintech.tams.exchange.util.EntrustPropUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,16 +44,27 @@ public class TradeQuoteController {
     
     @Autowired
     private IntegratedQuoteManagement integratedQuoteManagement;
+    @Autowired
+    private InstructionService instructionService;
 
     @ApiOperation(value = "查询行情tick信息", notes = "查询行情tick信息")
     @RequestMapping(value = {"/quote/tick"}, method = RequestMethod.POST)
     public Message<TickBean> queryTick(@RequestBody @Validated QueryTickRequest queryTickRequest) {
         return new Message<TickBean>(quoteService.getTick(queryTickRequest.getStockCode()));
     }
-    
+
     @ApiOperation(value = "大宗行情查询", notes = "大宗行情查询")
     @RequestMapping(value = "/entrust/integrated/bulk_quote", method = RequestMethod.GET)
     public Message<List<IntegratedBulkQuoteBean>> queryIntegratedBulkQuote(@RequestBody @Validated IntegratedBulkQuoteQryBean integratedBulkQuoteQryBean) {
+        Instruction instruction = instructionService.findById(integratedBulkQuoteQryBean.getInstructionId());
+        integratedBulkQuoteQryBean.setEntrustProp(EntrustPropUtils.getEntrustProp(instruction));
+        integratedBulkQuoteQryBean.setEntrustBs(EntrustBsProp.getEntrustBs(instruction.getPs()));
+        if (StringUtils.isEmpty(integratedBulkQuoteQryBean.getStockCode())) {
+            integratedBulkQuoteQryBean.setStockCode(instruction.getFinprodMarketId());
+        }
+        if (StringUtils.isEmpty(integratedBulkQuoteQryBean.getAccountId())) {
+            integratedBulkQuoteQryBean.setAccountId(instruction.getAcctNo());
+        }
         return new Message<List<IntegratedBulkQuoteBean>>(integratedQuoteManagement.queryIntegratedBulkQuote(integratedBulkQuoteQryBean));
     }
 
@@ -61,6 +77,11 @@ public class TradeQuoteController {
     @ApiOperation(value = "质押式协议回购行情查询", notes = "质押式协议回购行情查询")
     @RequestMapping(value = "/entrust/integrated/repurchase_quote", method = RequestMethod.GET)
     public Message<List<IntegratedRepurchaseQuoteBean>> queryIntegratedRepurchaseQuote(@RequestBody @Validated IntegratedRepurchaseQuoteQryBean integratedRepurchaseQuoteQryBean) {
+        Instruction instruction = instructionService.findById(integratedRepurchaseQuoteQryBean.getInstructionId());
+        integratedRepurchaseQuoteQryBean.setEntrustProp(EntrustPropUtils.getEntrustProp(instruction));
+        if (StringUtils.isEmpty(integratedRepurchaseQuoteQryBean.getAccountId())) {
+            integratedRepurchaseQuoteQryBean.setAccountId(instruction.getAcctNo());
+        }
         return new Message<List<IntegratedRepurchaseQuoteBean>>(integratedQuoteManagement.queryIntegratedRepurchaseQuote(integratedRepurchaseQuoteQryBean));
     }
 
