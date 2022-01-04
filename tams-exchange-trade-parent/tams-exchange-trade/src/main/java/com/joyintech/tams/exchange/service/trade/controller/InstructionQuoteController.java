@@ -2,12 +2,8 @@ package com.joyintech.tams.exchange.service.trade.controller;
 
 import com.joyintech.exchange.service.quote.service.QuoteService;
 import com.joyintech.tams.exchange.common.bean.*;
-import com.joyintech.tams.exchange.common.constant.EntrustBsProp;
-import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.request.QueryTickRequest;
-import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
 import com.joyintech.tams.exchange.service.trade.management.service.IntegratedQuoteManagement;
-import com.joyintech.tams.exchange.util.EntrustPropUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -24,12 +20,8 @@ public class InstructionQuoteController {
 
     @Autowired
     private QuoteService quoteService;
-
     @Autowired
     private IntegratedQuoteManagement integratedQuoteManagement;
-
-    @Autowired
-    private InstructionService instructionService;
 
     @ApiOperation(value = "竞价行情查询接口", notes = "竞价行情查询接口")
     @RequestMapping(value = {"/quote/tick"}, method = RequestMethod.POST)
@@ -39,17 +31,11 @@ public class InstructionQuoteController {
 
     @ApiOperation(value = "大宗交易行情查询接口", notes = "大宗交易行情查询接口")
     @RequestMapping(value = "/entrust/integrated/bulk_quote", method = RequestMethod.GET)
-    public ResultBean queryIntegratedBulkQuote(@RequestParam(value = "instructionId") String instructionId,
-                                               @RequestParam(value = "stock_code", required = false) String stockCode,
-                                               @RequestParam(value = "entrust_prop", required = false) String entrustProp,
-                                               @RequestParam(value = "entrust_bs", required = false) String entrustBs,
-                                               @RequestParam(value = "account_id", required = false) String accountId,
+    public ResultBean queryIntegratedBulkQuote(@RequestParam(value = "stock_code") String stockCode,
+                                               @RequestParam(value = "entrust_prop") String entrustProp,
+                                               @RequestParam(value = "entrust_bs") String entrustBs,
+                                               @RequestParam(value = "account_id") String accountId,
                                                @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize) {
-        Instruction instruction = instructionService.findById(instructionId);
-        entrustProp = EntrustPropUtils.getEntrustProp(instruction);
-        stockCode = instruction.getFinprodMarketId();
-        entrustBs = EntrustBsProp.getEntrustBs(instruction.getPs());
-        accountId = instruction.getAcctNo();
         IntegratedBulkQuoteQryBean integratedBulkQuoteQryBean = new IntegratedBulkQuoteQryBean(stockCode, entrustProp, entrustBs, accountId, pageSize);
         return integratedQuoteManagement.queryIntegratedBulkQuote(integratedBulkQuoteQryBean);
     }

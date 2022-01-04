@@ -2,7 +2,6 @@ package com.joyintech.tams.exchange.service.trade.server;
 
 import com.joyintech.tams.exchange.common.utils.SpringContextUtils;
 import com.joyintech.tams.exchange.service.trade.processor.msg.MsgReceiverManager;
-import com.joyintech.tams.exchange.service.trade.util.RelayUtils;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -47,8 +46,8 @@ public class TcpServer implements ApplicationListener<ContextRefreshedEvent> {
     @Autowired
     private MsgReceiverManager msgReceiverManager;
 
-    @Autowired
-    private RelayUtils relayUtils;
+//    @Autowired
+//    private RelayUtils relayUtils;
 
     private volatile boolean startFlag = true;
 
@@ -69,7 +68,7 @@ public class TcpServer implements ApplicationListener<ContextRefreshedEvent> {
             if (startFlag) {
                 startFlag = false;
                 msgReceiverManager.init();
-                relayUtils.fillPlatDate();
+//                relayUtils.fillPlatDate();
                 serverChannelFuture = serverBootstrap.group(bossGroup, workerGroup).bind(tcpPort).sync();
             }
         } catch (Exception e) {

@@ -103,17 +103,19 @@ public class EntrustController {
      */
     @RequestMapping(value = "/entrust/enable", method = RequestMethod.GET)
     public ResultBean queryEnable(@RequestParam(value = "user_id") String userId,
-                                  @RequestParam(value = "instructionId", required = false) String instructionId,
                                   @RequestParam(value = "stock_code", required = false) String stockCode,
                                   @RequestParam(value = "entrust_prop", required = false) String entrustProp,
                                   @RequestParam(value = "entrust_bs", required = false) String entrustBs,
                                   @RequestParam(value = "entrust_price") double entrustPrice,
-                                  @RequestParam(value = "account_id", required = false) String accountId) {
-        Instruction instruction = instructionService.findById(instructionId);
-        entrustProp = EntrustPropUtils.getEntrustProp(instruction);
-        stockCode = instruction.getFinprodMarketId();
-        entrustBs = EntrustBsProp.getEntrustBs(instruction.getPs());
-        accountId = instruction.getAcctNo();
+                                  @RequestParam(value = "account_id", required = false) String accountId,
+                                  @RequestParam(value = "instructionId", required = false) String instructionId) {
+        if (StringUtils.isNotEmpty(instructionId)) {
+            Instruction instruction = instructionService.findById(instructionId);
+            entrustProp = EntrustPropUtils.getEntrustProp(instruction);
+            stockCode = instruction.getFinprodMarketId();
+            entrustBs = EntrustBsProp.getEntrustBs(instruction.getPs());
+            accountId = instruction.getAcctNo();
+        }
         return entrustManagement.queryEnable(userId, stockCode, entrustProp, entrustBs, entrustPrice, accountId);
     }
 
