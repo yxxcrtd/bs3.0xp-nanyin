@@ -1,0 +1,287 @@
+/*
+ * 文件名：TrdPlanRateInvestTrade001Controller.java
+ * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
+ * 描述：理财资管管理系统V2.0
+ * 修改人：fanshuanghu
+ * 修改时间：2018年11月22日
+ * 修改内容：新建
+ * 系统名称：理财资管管理系统V2.0
+ */
+ 
+package com.joyintech.tams.valuation.trademanage.trdplannetvaluationtrade.controller;
+
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.listener.FileAttachmentProcess;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.dao.WflTrdProductDealMapper;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.tams.valuation.basicdata.business.dto.BussinessCodeParameter;
+import com.joyintech.tams.valuation.component.business.service.CommonBusinessService;
+import com.joyintech.tams.valuation.component.common.constant.BussinessConstant;
+import com.joyintech.tams.valuation.component.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.valuation.component.common.utils.CommonUtil;
+import com.joyintech.tams.valuation.trademanage.trdplannetvaluationtrade.dto.TrdPlanNetValuationTradeDto;
+import com.joyintech.tams.valuation.trademanage.trdplannetvaluationtrade.service.TrdPlanNetValuationTrade002Service;
+import com.joyintech.tams.valuation.trademanage.trdplanratevaluationtrade.dto.TrdPlanRateValuationTradeDto;
+import com.joyintech.tams.valuation.trademanage.trdplanratevaluationtrade.service.TrdPlanRateValuationTrade002Service;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/**
+ * @Description:计划类资产(净值型)投资交易新建
+ * @auther: yuzj
+ * @date: 2021/12/30
+ * @param:
+ * @return:
+ */
+@Controller
+@PageId("TrdPlanNetValuationTrade002")
+@RequestMapping("/valuation/trademanage/trdplannetvaluationtrade/TrdPlanNetValuationTrade002")
+public class TrdPlanNetValuationTrade002Controller extends BaseController {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	/**
+     * 注入计划类（利率型）service
+     */
+    @Autowired
+    private TrdPlanNetValuationTrade002Service trdPlanNetValuationTrade002Service;
+
+    @Autowired
+    private CommonBusinessService commonBusinessService;
+
+
+    /**
+     * 初始化方法
+     */
+    @Override
+    public String init(Model model) {
+        this.setSelectOptionToModel(model, DictCode.交易方向, DictCode.交易流程状态,
+                DictCode.是否, DictCode.币种);
+
+        // 一体化对应etliu start
+        model.addAttribute("PS_T01", DictCodeList.交易方向_买入.getValue());
+        model.addAttribute("PS_T02", DictCodeList.交易方向_卖出.getValue());
+        // 一体化对应etliu end
+        
+        model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+        model.addAttribute("FINPROD_TYPE_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
+        String portfolioId = getParam("portfolioId");
+        String tradeId = getParam("tradeId");
+        String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+        if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
+            TrdPlanNetValuationTradeDto entity = trdPlanNetValuationTrade002Service.getBussinessEntityByWorkflowId(
+                workflowId);
+            model.addAttribute("entity",entity);
+            model.addAttribute("workflowId", workflowId);
+            model.addAttribute("tradeId", entity.getTradeId());
+        }
+        else if (StringUtil.isNotEmpty(tradeId)) {
+            WflTrdProductDeal wflTrdProductDeal = new WflTrdProductDeal();
+            if (wflTrdProductDeal != null) {
+                String workFlowId = wflTrdProductDeal.getWorkflowId();
+                if (workFlowId != null && !workFlowId.isEmpty()) {
+                    TrdPlanNetValuationTradeDto entity = trdPlanNetValuationTrade002Service.getBussinessEntityByWorkflowId(
+                            workFlowId);
+                    model.addAttribute("entity", entity);
+                    model.addAttribute("workflowId", workflowId);
+                    model.addAttribute("tradeId", tradeId);
+                }
+            } else {
+                TrdPlanNetValuationTradeDto entity = trdPlanNetValuationTrade002Service.getInitEntity(tradeId);
+                if (StringUtil.isNotEmpty(portfolioId)) {
+                    entity.setPortfolioId(portfolioId);
+                }
+                model.addAttribute("entity", entity);
+                model.addAttribute("tradeId", tradeId);
+            }
+        }else{
+            //初始化值
+            TrdPlanNetValuationTradeDto entity = new TrdPlanNetValuationTradeDto();
+            entity.setConfirmIntAmt(new BigDecimal("0.00"));     //利息确认金额
+            entity.setRefundAmount(new BigDecimal("0.00"));      //返款金额
+            entity.setRateRefundAmount(new BigDecimal("0.00"));  //利息返还金额
+            entity.setFeeAmt(new BigDecimal("0.00"));            //交易费用
+            entity.setAdvFeeOut(new BigDecimal("0.00"));         //投资顾问费
+            entity.setFeeAmtQT(new BigDecimal("0.00"));          //其他费用
+            entity.setTodayArriveFlag(DictCodeList.是否_否.getValue()); //初始默认否
+            entity.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+            //新建初始化交易编号
+            entity.setTradeId(trdPlanNetValuationTrade002Service.createPlanTradeId());
+            model.addAttribute("entity", entity);
+        }
+        model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+        return super.init(model);
+    }
+
+
+    /**
+     * @Description:产品代码下拉框
+     * @auther: yuzj
+     * @date: 2021/12/29
+     * @param:
+     * @return:
+     */
+    @RequestMapping("selectPortfolioId")
+    @ResponseBody
+    public List<SelectOptionDto> selectPortfolioId() {
+        Map<String, Object> param = RequestUtil.getPageParam();
+        // 查询组合添加权限限制
+        //param.put("finprodType", BussinessDictCodeList.金融产品类型_计划类资产.getValue()); //F17
+        param.put("finprodType", "F01"); //测试
+        return commonBusinessService.getProdId(param);
+    }
+
+    /**
+     * 资产代码下拉框
+     * @auther: Administrator
+     * @date: 2021/12/29 15:34
+     * @param:
+     * @return:
+     */
+    @RequestMapping("selectFinprodId")
+    @ResponseBody
+    public List<SelectOptionDto> selectFinprodId() {
+        Map<String, Object> param = RequestUtil.getPageParam();
+        // 查询组合添加权限限制
+        //param.put("assetType", BussinessDictCodeList.金融产品类型_计划类资产.getValue()); //F17
+        param.put("assetType", "F01"); //测试
+        return commonBusinessService.getAssetId(param);
+    }
+
+
+    /**
+     * 自定义产品代码下拉框
+     * @param request
+     * @return
+     */
+    @RequestMapping("/findPortfolioId")
+    @ResponseBody
+    public Page<SelectOptionDto> findPortfolioId(HttpServletRequest request) {
+        Map<String, Object> param =RequestUtil.getPageParam();
+        //param.put("finprodType", BussinessDictCodeList.金融产品类型_计划类资产.getValue()); //F17
+        param.put("finprodType", "F01"); //测试
+        return trdPlanNetValuationTrade002Service.findPortfolioId(param);
+    }
+
+    /**
+     * 自定义资产代码下拉框
+     * @param request
+     * @return
+     */
+    @RequestMapping("/findFinprodId")
+    @ResponseBody
+    public Page<SelectOptionDto> findFinprodId(HttpServletRequest request) {
+        Map<String, Object> param =RequestUtil.getPageParam();
+        //param.put("assetType", BussinessDictCodeList.金融产品类型_计划类资产.getValue()); //F17
+        param.put("assetType", "F01"); //测试
+        return trdPlanNetValuationTrade002Service.findFinprodId(param);
+    }
+
+    /**
+     * @Description:画面点击保存按钮时check
+     * @auther: yuzj
+     * @date: 2021/12/30
+     * @param:
+     * @return:
+     */
+    @ResponseBody
+    @RequestMapping("check")
+    public AjaxResult check(@RequestBody @Validated({
+            ValidateGroupEdit.class}) TrdPlanNetValuationTradeDto dto, BindingResult result) {
+        if (result != null && result.hasErrors()) {
+            return new AjaxResult(result);
+        }
+        //add by yuzj on 2021-12-02 end
+        AjaxResult ar = commonCheck(result, dto.getOperateType());
+        return ar;
+    }
+
+
+    /**
+     * @Description:资金账户信息
+     * @auther: yuzj
+     * @date: 2021/12/30
+     * @param:
+     * @return:
+     */
+    @RequestMapping("/getTrdAcctId")
+    @ResponseBody
+    public List<SelectOptionDto> getTrdAcctId(){
+        return commonBusinessService.getTrdAcctId(RequestUtil.getPageParam());
+    }
+
+
+    /**
+     * @Description:保存
+     * @auther: yuzj
+     * @date: 2021/12/30
+     * @param:
+     * @return:
+     */
+    @ResponseBody
+    @RequestMapping("save")
+    public AjaxResult save(@RequestBody @Validated({
+            ValidateGroupEdit.class}) TrdPlanNetValuationTradeDto dto, BindingResult br) throws Exception {
+        if (br.hasErrors()) {
+            return new AjaxResult(br);
+        }
+        WorkFlowParameter<TrdPlanNetValuationTradeDto> params = new WorkFlowParameter<TrdPlanNetValuationTradeDto>();
+        params.setPageId(this.getPageId());
+        params.setElementId(dto.getElementId());
+        params.setBusinessCode(dto.getTradeId());
+        params.setBusinessType(DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue());
+        // 设置流程业务说明, entity即传入的dto
+        params.setComment(
+                entity -> SpringContextUtil.getTextValue("TrdPlanNetValuationTrade001.tradeId")+"("+ entity.getTradeId() +")"+"-"+SpringContextUtil.getTextValue("TrdPlanNetValuationTrade002.tradeDate") + "(" + DateUtil.format(entity.getTradeDate()) + ")"
+        );
+        //给参数变成ProcessParameter而非WorkFlowParameter
+        ProcessParameter<TrdPlanNetValuationTradeDto> parameter = new ProcessParameter<TrdPlanNetValuationTradeDto>();
+        parameter.setWorkFlowParameter(params);
+        //系统页面表IS_NEED_WORKFLOW 是否走流程，01-是，02-否
+        String msg = trdPlanNetValuationTrade002Service.start(parameter, dto);
+        return new AjaxResult(msg);
+    }
+
+    /**
+     * 策略计划类交易代码生成
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("createPlanTradeId")
+    public String createPlanTradeId() {
+        return trdPlanNetValuationTrade002Service.createPlanTradeId();
+    }
+
+
+}
