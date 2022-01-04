@@ -595,6 +595,7 @@ public class IbuComponentCommonService extends BaseService {
         WflIbuQuoteBond2Dto ibuQuoteBondDto = new WflIbuQuoteBond2Dto();
         
         BondDialogueQuoteDto dbQuoteDataDto = null;
+        ibuQuoteBondDto.setQuoteRoleType(BussinessDictCodeList.银行间上行本方角色_询价方.getValue());
         if (StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getQuoteId())) {
             ibuQuoteBondDto.setQuoteId(cfetsBondDealDialogueQuoteDto.getQuoteId());
             
@@ -618,7 +619,6 @@ public class IbuComponentCommonService extends BaseService {
             ibuQuoteBondDto.setVersion(-1L);
         }
         ibuQuoteBondDto.setQuoteType(DictCodeList.报价系统区分类型_现券对话报价.getValue());
-        ibuQuoteBondDto.setQuoteRoleType(BussinessDictCodeList.银行间上行本方角色_询价方.getValue());
         ibuQuoteBondDto.setFinprodId(cfetsBondDealDialogueQuoteDto.getFinprodId());
         ibuQuoteBondDto.setFinprodType2(BussinessDictCodeList.金融产品类型_投管用_债券.getValue());
         ibuQuoteBondDto.setBranch(0L);

@@ -569,28 +569,31 @@
 					and b.CP_TRADER LIKE concat('%',concat(#{counterTrader,jdbcType=VARCHAR},'%'))
 				</if>
 	             <if test="keywords != null and keywords != ''">
-	      AND (a.WORKFLOW_STATUS like '%'||#{keywords}||'%'  OR A1.ITEM_VALUE LIKE '%'||#{keywords}||'%' 
-          OR A.QUOTE_ROLE_TYPE like '%'||#{keywords}||'%' OR B.ITEM_VALUE LIKE '%'||#{keywords}||'%' 
-          OR A.PS like '%'||#{keywords}||'%' OR C.ITEM_VALUE LIKE '%'||#{keywords}||'%' 
-          OR A.FINPROD_ID like '%'||#{keywords}||'%'
-          OR C.FINPROD_ABBR like '%'||#{keywords}||'%'
-          OR A.QUOTE_TYPE like '%'||#{keywords}||'%'   OR D.ITEM_VALUE LIKE '%'||#{keywords}||'%' 
-          OR A.TRADE_STATUS like '%'||#{keywords}||'%' OR E.ITEM_VALUE LIKE '%'||#{keywords}||'%' 
-          OR A.SEND_STATUS like '%'||#{keywords}||'%'  OR F.ITEM_VALUE LIKE '%'||#{keywords}||'%' 
-          OR m.TRADER_NAME like '%'||#{keywords}||'%' OR b.TRADER_NAME like '%' ||#{keywords}||'%'
-          OR n.PARTY_ABBR like '%'||#{keywords}||'%' OR b.PARTY_ABBR like '%' ||#{keywords}|| '%'
-          OR b.CP_PARTY_ID like '%'||#{keywords}||'%'
-          OR b.CP_TRADER like '%'||#{keywords}||'%'
-          OR A.EFF_TIME LIKE '%'||#{keywords}||'%'
-          OR A.SHARE_AMT LIKE  '%'||#{keywords}||'%' 
-          OR A.SETTLE_SPEED LIKE '%' || decode(#{keywords},'T+0','0','T+1','1','T+2','2',#{keywords})||'%'
-          OR B.UNIT_CPRICE LIKE  '%'||#{keywords}||'%'
-          OR B.YIELD LIKE  '%'||#{keywords}||'%'
-          OR B.PRIN_AMT LIKE  '%'||#{keywords}||'%'
-          OR C.TYPE_6 LIKE  '%'||#{keywords}||'%' OR H.ITEM_VALUE LIKE '%'||#{keywords}||'%' 
-          OR A.CFETS_QUOTE_ID like '%' || #{keywords} || '%' 
-          OR B.EXECID LIKE '%' || #{keywords} || '%'
-          OR A.QUOTE_ID LIKE  '%'||#{keywords}||'%')
+					  AND (a.WORKFLOW_STATUS like '%'||#{keywords}||'%'  OR A1.ITEM_VALUE LIKE '%'||#{keywords}||'%'
+					 OR A.TRADE_STATUS like '%'||#{keywords}||'%' OR E.ITEM_VALUE LIKE '%'||#{keywords}||'%'
+					 OR A.SEND_STATUS like '%'||#{keywords}||'%'  OR F.ITEM_VALUE LIKE '%'||#{keywords}||'%'
+					 OR A.QUOTE_ROLE_TYPE like '%'||#{keywords}||'%' OR B.ITEM_VALUE LIKE '%'||#{keywords}||'%'
+					  OR A.PS like '%'||#{keywords}||'%' OR C.ITEM_VALUE LIKE '%'||#{keywords}||'%'
+					  OR c.TYPE_6 like '%'||#{keywords}||'%' OR H.ITEM_VALUE LIKE '%'||#{keywords}||'%'
+					  OR A.FINPROD_ID like '%'||#{keywords}||'%'
+					  OR C.FINPROD_MARKET_ID like '%'||#{keywords}||'%'
+					  OR C.FINPROD_ABBR like '%'||#{keywords}||'%'
+					  OR A.QUOTE_TYPE like '%'||#{keywords}||'%'   OR D.ITEM_VALUE LIKE '%'||#{keywords}||'%'
+					  OR n.PARTY_NAME like '%'||#{keywords}||'%' OR b.TRADER_NAME like '%' ||#{keywords}||'%'
+					  OR m.TRADER_NAME like '%'||#{keywords}||'%' OR m.TRADER_NAME like '%' ||#{keywords}||'%'
+					  OR  b.PARTY_ABBR like '%'||#{keywords}||'%' OR  b.PARTY_ABBR like '%' ||#{keywords}|| '%'
+					  OR  b.TRADER_NAME like '%'||#{keywords}||'%' OR  b.TRADER_NAME like '%' ||#{keywords}|| '%'
+					  OR A.EFF_TIME LIKE '%'||#{keywords}||'%'
+					  OR b.RE_EFF_TIME LIKE '%'||#{keywords}||'%'
+					  OR to_char(A.SHARE_AMT,'FM99999.90')=#{keywords}
+					  OR to_char(B.PRIN_AMT,'FM99999.90')=#{keywords}
+					  OR A.SETTLE_SPEED LIKE '%' || decode(#{keywords},'T+0','0','T+1','1','T+2','2',#{keywords})||'%'
+					  OR to_char(B.UNIT_CPRICE,'FM99990.9999')=#{keywords} or  B.UNIT_CPRICE||'' =#{keywords}
+					  OR to_char(B.YIELD*100,'FM99990.9999')=#{keywords} or  B.YIELD||'' =#{keywords}
+					  OR to_char( b.EXER_YIELD*100,'FM99990.9999')=#{keywords} or   b.EXER_YIELD||'' =#{keywords}
+					  OR A.CFETS_QUOTE_ID like '%' || #{keywords} || '%'
+					  OR B.EXECID LIKE '%' || #{keywords} || '%'
+					  OR A.QUOTE_ID LIKE  '%'||#{keywords}||'%')
 	             </if>
 	    	</where>
     		) y
