@@ -1271,15 +1271,15 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             });
         }
         // 质押券汇总表
-        List<RegFinTotalPledge> regFinTotalPledges = entity.getRegFinTotalPledges();
-        if (CollectionUtils.isNotEmpty(regFinTotalPledges)) {
-            regFinTotalPledges.forEach(item -> {
-                WflRegFinTotalPledge wflRegFinTotalPledge = new WflRegFinTotalPledge();
-                BeanUtil.copyPropertiesIgnoreNull(wflRegFinTotalPledge, item);
-                wflRegFinTotalPledge.setWorkflowId(workflowId);
-                wflRegFinTotalPledgeMapper.insert(wflRegFinTotalPledge);
-            });
-        }
+//        List<RegFinTotalPledge> regFinTotalPledges = entity.getRegFinTotalPledges();
+//        if (CollectionUtils.isNotEmpty(regFinTotalPledges)) {
+//            regFinTotalPledges.forEach(item -> {
+//                WflRegFinTotalPledge wflRegFinTotalPledge = new WflRegFinTotalPledge();
+//                BeanUtil.copyPropertiesIgnoreNull(wflRegFinTotalPledge, item);
+//                wflRegFinTotalPledge.setWorkflowId(workflowId);
+//                wflRegFinTotalPledgeMapper.insert(wflRegFinTotalPledge);
+//            });
+//        }
         // 质押券
         List<RegFinPledge> regFinPledges = entity.getRegFinPledges();
         if (CollectionUtils.isNotEmpty(regFinPledges)) {
