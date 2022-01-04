@@ -193,6 +193,15 @@ public class StlDataDealProcessCommonService {
 				buffer.append(stlDownDataDealWriteBaseDto.getSettleTransData().getBranch() + "//");
 				buffer.append(stlDownDataDealWriteBaseDto.getSettleTransData().getFinprodType2() + "//");
 				buffer.append(DateUtil.format(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeDate(), DateUtil.DEFAULT_OTHER_FORMAT));
+                // add by etliu 20220104 start
+                // GZYHTZJY-868: 日终清算，协议回购的佣金没有计算出来
+                buffer.append("//");
+                if (stlDownDataDealWriteBaseDto.getSettleTransDataAdd() != null
+                        && StringUtil.isNotBlank(stlDownDataDealWriteBaseDto.getSettleTransDataAdd().getRepoType())) {
+                    buffer.append(stlDownDataDealWriteBaseDto.getSettleTransDataAdd().getRepoType());
+                }
+                // add by etliu 20220104 end
+
 				if (map.containsKey(buffer.toString())) {
 					map.get(buffer.toString()).add(stlDownDataDealWriteBaseDto);
 				}
@@ -232,6 +241,10 @@ public class StlDataDealProcessCommonService {
 				tradeFeatureInformation.setBranch(null!=keyStrArray[7]&&!StringUtil.equals(keyStrArray[7],"null")?new Long(keyStrArray[7]):0L);
 				tradeFeatureInformation.setFinprodType2(keyStrArray[8]);
 				tradeFeatureInformation.setDealDate(DateUtil.parse(keyStrArray[9]));
+				// add by etliu 20220104 start
+				// GZYHTZJY-868: 日终清算，协议回购的佣金没有计算出来
+				tradeFeatureInformation.setRepoType(keyStrArray[10]);
+				// add by etliu 20220104 end
 				List<TrdDetailDto> detailDtos = new ArrayList<TrdDetailDto>();
 				for (StlDownDataDealWriteBaseDto stlDownDataDealWriteBaseDto : list) {
 					// 无需计算佣金场景跳过
