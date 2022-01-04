@@ -60,7 +60,7 @@ public class EtrAgreRepTradeValidator implements EtrCommonValidator {
         if(StringUtil.isNotEmpty(psMap.get(dto.getPs())) && !StringUtil.equals(dto.getRedoType(),"1")) {
 
             Map<String, Object> param = new HashMap<String, Object>();
-            param.put("tradeId",StringUtil.isNotEmpty(dto.getIntiTradeId())?dto.getIntiTradeId():dto.getTradeId());
+            param.put("tradeId",StringUtil.isNotEmpty(dto.getTradeId())?dto.getTradeId():dto.getIntiTradeId());
             EtrAgreRepTradeDto firstEtrAgreRepTradeDto= etrAgreRepTrade001Service.getEntrustInfoByTradeId(param);
             if(!StringUtil.isNotEmpty(firstEtrAgreRepTradeDto)) {
                 errorList.add(new ValidMessage("", "未找到质押式回购首期信息！"));
