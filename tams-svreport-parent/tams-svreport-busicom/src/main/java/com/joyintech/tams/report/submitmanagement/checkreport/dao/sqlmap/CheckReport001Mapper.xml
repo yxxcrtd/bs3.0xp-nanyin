@@ -5,12 +5,29 @@
 	<!--查询产品代码和名称 -->
 	<select id="queryPrdNameList" parameterType="java.lang.String"
 		resultType="com.joyintech.framework.select.SuggestDto">
-		SELECT DISTINCT
+		<!-- modify by PRODNAME为null 时 显示PRODID start end yangxianjiu 2021-12-31 -->
+		<!--SELECT DISTINCT
 		A.PROD_INS_ID as code,
 		A.PROD_NAME as name,
 		A.PROD_NAME as
 		shortName
-		FROM chb_prd_declare_info A
+		FROM chb_prd_declare_info A-->
+		SELECT DISTINCT
+		A.PRODID AS code,
+		(
+		CASE
+		WHEN A.PRODNAME IS NULL
+		THEN A.PRODID
+		ELSE A.PRODNAME
+		END) AS name,
+		(
+		CASE
+		WHEN A.PRODNAME IS NULL
+		THEN A.PRODID
+		ELSE A.PRODNAME
+		END) AS shortName
+		FROM
+			chb_prd_declare_info A
 		<where>
 			A.PROD_INS_ID like concat(concat('%',#{prodId,
 			jdbcType=VARCHAR}),'%')
@@ -30,11 +47,28 @@
         order by A.PRODID
 	</select>
 	<select id="queryPrdNameListOld" parameterType="java.lang.String" resultType="com.joyintech.framework.select.SuggestDto">
-		SELECT DISTINCT
-        A.PRODID as code, 
+		<!-- modify by PRODNAME为null 时 显示PRODID start end yangxianjiu 2021-12-31 -->
+		<!--SELECT DISTINCT
+        A.PRODID as code,
         A.PRODNAME as name,
         A.PRODNAME as shortName
-        FROM CHB_PRDRESIST_CODE A
+        FROM CHB_PRDRESIST_CODE A-->
+		SELECT DISTINCT
+		A.PRODID AS code,
+		(
+		CASE
+		WHEN A.PRODNAME IS NULL
+		THEN A.PRODID
+		ELSE A.PRODNAME
+		END) AS name,
+		(
+		CASE
+		WHEN A.PRODNAME IS NULL
+		THEN A.PRODID
+		ELSE A.PRODNAME
+		END) AS shortName
+		FROM
+			CHB_PRDRESIST_CODE A
         <where>
 			A.PRODID like concat(concat('%',#{prodId, jdbcType=VARCHAR}),'%')
         </where>

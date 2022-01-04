@@ -201,6 +201,16 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
     @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal costAmtB ;
 
+    private BigDecimal costAmtA;
+
+    public BigDecimal getCostAmtA() {
+        return costAmtA;
+    }
+
+    public void setCostAmtA(BigDecimal costAmtA) {
+        this.costAmtA = costAmtA;
+    }
+
     public BigDecimal getCostAmtB() {
         return costAmtB;
     }
@@ -222,7 +232,12 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
     }
     public String getCostAmtBStr(){
         //人行月报资产端成本已经是包含了利息调整了，需求把利息调整又单独列出来，然后余额写的是成本+利息调整，这样的话利息调整会统计重复？  成本直接减去利息调整进行展示
-        return null!=this.getCostAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmt()):null;
+        return null!=this.getCostAmtB()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmtB()):null;
+    }
+
+    public String getCostAmtaStr(){
+        //人行月报资产端成本已经是包含了利息调整了，需求把利息调整又单独列出来，然后余额写的是成本+利息调整，这样的话利息调整会统计重复？  成本直接减去利息调整进行展示
+        return null!=this.getCostAmtA()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmtA()):null;
     }
     public String getIsFhxgcpStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsFhxgcp());
