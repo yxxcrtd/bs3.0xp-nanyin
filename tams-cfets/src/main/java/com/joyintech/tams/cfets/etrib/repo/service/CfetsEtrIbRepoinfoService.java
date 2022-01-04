@@ -27,13 +27,8 @@ import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoLib001Mapper;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoinfoMapper;
 import com.joyintech.tams.cfets.etrib.repo.dto.*;
-import com.joyintech.tams.common.base.dao.EtrEntrustPledgeMapper;
-import com.joyintech.tams.common.base.dao.EtrSecStockConfigMapper;
-import com.joyintech.tams.common.base.dao.EtrSecStockMapper;
-import com.joyintech.tams.common.base.dao.PtlSecStockMapper;
-import com.joyintech.tams.common.base.entity.EtrEntrustPledge;
-import com.joyintech.tams.common.base.entity.EtrSecStockConfig;
-import com.joyintech.tams.common.base.entity.PtlSecStock;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -82,6 +77,10 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
      */
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
+
+
+    @Autowired(required = false)
+    private WflEtrEntrustMapper wflEtrEntrustMapper;
 
     /**
      * 指令管理查询
@@ -583,6 +582,19 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
                     AjaxResult res=new AjaxResult();
                     ValidMessage  validMessage= new ValidMessage();
                     validMessage.setMessage("只有指令状态为已撤回、已退回的指令允许修改");
+                    res.setErrorList(Arrays.asList(validMessage));
+                    return res;
+                }
+
+                if(StringUtil.isNotEmpty(Item.getEntrustId()))
+                {
+                    WflEtrEntrustKey wflEtrEntrustKey = new WflEtrEntrustKey();
+                    wflEtrEntrustKey.setEntrustId(Item.getEntrustId());
+                    wflEtrEntrustKey.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                    wflEtrEntrustMapper.selectByPrimaryKey(wflEtrEntrustKey);
+                    AjaxResult res=new AjaxResult();
+                    ValidMessage  validMessage= new ValidMessage();
+                    validMessage.setMessage("存在流程中数据，无法修改。");
                     res.setErrorList(Arrays.asList(validMessage));
                     return res;
                 }

@@ -396,7 +396,7 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
         //对选择的数据进行check
         AjaxResult ajaxResult = cfetsEtrIbRepoinfoService.modifyDelegateCheckMethod(dto);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
-            return new Message<AjaxResult>().fail().setData(ajaxResult);
+            return new Message<AjaxResult>().success().setData(ajaxResult);
         }
         try {
             CfetsEtribRepoInfo003Dto item = dto.getSelectedItem().get(0);

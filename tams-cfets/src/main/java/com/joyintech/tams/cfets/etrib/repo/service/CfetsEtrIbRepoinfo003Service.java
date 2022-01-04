@@ -25,8 +25,10 @@ import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
 import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtribBondInfo003Service;
 import com.joyintech.tams.cfets.etrib.repo.dto.*;
-import com.joyintech.tams.common.base.dao.WflEtrEntrustMapper;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.base.entity.EtrDistribute;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
+import com.joyintech.tams.common.base.entity.EtrPledge;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
@@ -114,8 +116,6 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
     @Autowired(required = false)
     private CfetsEtrIbBondinfoMapper cfetsEtrIbBondinfoMapper;
 
-   @Autowired(required = false)
-    private WflEtrEntrustMapper wflEtrEntrustMapper;
     @Autowired
     private SysWflBusinessListMapper sysWflBusinessListMapper;
 
