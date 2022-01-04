@@ -1653,6 +1653,8 @@ public class StlDataDealSzdJsmxProcessService {
 				szdJsmx.setCjbh(szdJsmx.getJsbh());
 				//业务场景明细分类
 				settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_股票_新股中签_确认.getValue());
+				// 净价总额
+				settleTransData.setCpriceAmt(settleTransData.getUnitCprice().multiply(settleTransData.getShareAmt()));
 			}
 			// 存续期股票—配售
 			if (StringUtil.lowerCase(stlDownDataDealOperatorDto.getDataFile()).startsWith(StlDataDealProcessConstant.SZD_JSMX_03) &&
