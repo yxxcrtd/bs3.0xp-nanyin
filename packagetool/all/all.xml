@@ -68,7 +68,6 @@
 				<module>../../tams-cfets-system</module>
 				<module>../../tams-common-basicdata</module>
 				<module>../../tams-svreport-common</module>
-				<module>../../tams-svreport-parent/tams-svreport-interf</module>
 				<module>../../tams-disclosure-busicommon</module>
 				<module>../../tams-disclosure-common</module>
 				<module>../../tams-disclosure-interf</module>
