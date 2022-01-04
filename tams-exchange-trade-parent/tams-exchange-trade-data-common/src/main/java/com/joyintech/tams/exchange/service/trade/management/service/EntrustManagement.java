@@ -384,6 +384,12 @@ public class EntrustManagement extends BaseService {
         return new ResultBean(ErrorCode.SUCCESS, maxEntrustVolume);
     }
 
+    public ResultBean queryEnable(EnableQryBean enableQryBean) {
+        int maxEntrustVolume = terminalHelper.queryEnable(enableQryBean.getStockCode(), enableQryBean.getEntrustProp(),
+                enableQryBean.getEntrustBs(), enableQryBean.getEntrustPrice(), enableQryBean.getAccountId());
+        return new ResultBean(ErrorCode.SUCCESS, maxEntrustVolume);
+    }
+
     /***
      * @Description: 申报代码获取
      * @Param: [finprodId, othCodeType]
