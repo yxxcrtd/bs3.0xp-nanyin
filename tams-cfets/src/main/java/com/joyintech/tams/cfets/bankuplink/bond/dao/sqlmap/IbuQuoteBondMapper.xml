@@ -1166,9 +1166,9 @@
         iqbd.quote_id = xx.quote_id
         AND iqbd.TRADE_STATUS = '07'
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER mm ON
-        mm.trader_id = xx.cp_trader
+        mm.trader_id = iqbd.cp_trader
         LEFT JOIN MST_CFETS_CUSTOMER_INFO nn ON
-        nn.party_id = xx.cp_party_id
+        nn.party_id = iqbd.cp_party_id
 
         ) b on a.QUOTE_ID = b.QUOTE_ID
         LEFT JOIN TRDQUTO_MATCH_INFO TT1 ON

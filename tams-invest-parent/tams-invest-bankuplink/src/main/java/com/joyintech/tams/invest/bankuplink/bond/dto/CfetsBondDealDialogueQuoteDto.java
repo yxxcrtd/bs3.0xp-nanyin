@@ -197,6 +197,19 @@ public class CfetsBondDealDialogueQuoteDto extends CfetsBondDealEntrustOrderDto 
 
     private String type11;
 
+    /**
+     * 报价操作主要包含“发起、回复、修改、交谈”
+     */
+    private String quoteOperatorType;
+
+    public String getQuoteOperatorType() {
+        return quoteOperatorType;
+    }
+
+    public void setQuoteOperatorType(String quoteOperatorType) {
+        this.quoteOperatorType = quoteOperatorType;
+    }
+
     public String getType11() {
         return type11;
     }

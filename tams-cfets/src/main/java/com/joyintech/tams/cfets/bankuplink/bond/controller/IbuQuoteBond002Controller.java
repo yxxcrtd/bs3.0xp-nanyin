@@ -14,6 +14,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonService;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -275,12 +276,26 @@ public class IbuQuoteBond002Controller extends BaseController {
         WorkFlowParameter<CfetsBondDealDialogueQuoteDto> params = cfetsBondDealQuotedPrice002Service.getWorkFlowParameter(cfetsBondDealDialogueQuoteDto);
         params.setPageId("CfetsBondDealQuotedPrice004");
         params.setElementId(cfetsBondDealDialogueQuoteDto.getElementId());
-        params.setBusinessType(DictCodeListExt3.共通业务类型_银行间上行.getValue());
+        params.setBusinessType(DictCodeListExt3.共通业务类型_本币业务交易_对话.getValue());
         params.setBusinessCode(cfetsBondDealDialogueQuoteDto.getQuoteId());
         cfetsBondDealDialogueQuoteDto.setQuoteType(DictCodeListExt3.报价系统区分类型_现券对话报价.getValue());
-        params.setComment(entity -> getMessage("对话报价编号") + "(" + entity.getQuoteId() + ")-"
-                + "业务类型" + "(现券买卖" + entity.getQuoteTypeStr() + ")-" + "平台日" + "("
-                + DateUtil.format(iPlatformDate.getSysDate()) + ")");
+        //报价操作
+        String quoteOperatorType = "发起";
+        if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(), "marketResponse")) {
+            quoteOperatorType = "回复";
+        }
+        if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(), "dialogueResponse")&&StringUtil.equals(cfetsBondDealDialogueQuoteDto.getOperatorType(), "done")) {
+            quoteOperatorType = "成交";
+        }
+        if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(), "new")) {
+            quoteOperatorType = "发起";
+        }
+        if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(), "edit")) {
+            quoteOperatorType = "修改";
+        }
+        cfetsBondDealDialogueQuoteDto.setQuoteOperatorType(quoteOperatorType);
+        params.setComment(entity -> "报价日期"+ "(" + DateUtil.format(entity.getSettleDate()) + ")-"
+                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"报价操作("+entity.getQuoteOperatorType()+")-"+"券面总额("+ArithmeticUtil.multiply(entity.getAvaNum(),new BigDecimal(10000))+"万元)");
         processParameter.setWorkFlowParameter(params);
 
         cfetsBondDealDialogueQuoteDto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
@@ -315,8 +330,15 @@ public class IbuQuoteBond002Controller extends BaseController {
         workFlowParameter.setPageId("CfetsBondDealQuotedPrice002");
         workFlowParameter.setElementId("CfetsBondDealQuotedPrice002_btn_bondRevoke");
         workFlowParameter.setBusinessCode(cfetsBondDealDialogueQuoteDto.getQuoteId());
-        workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_银行间上行.getValue());
-        workFlowParameter.setComment(entity -> getMessage("CFETSHIS_QUOTEID") + "(" + entity.getQuoteId() + ")");
+        workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_本币业务交易_对话.getValue());
+        //调用初始化接口  供描述用
+        CfetsBondDealDialogueQuoteDto bondDialogueQuote = cfetsBondDealQuotedPrice002Service.getBondDialogueQuote(cfetsBondDealQuoteCommonDto.getQuoteId(), BussinessDictCodeList.有效状态_有效.getValue());
+        cfetsBondDealDialogueQuoteDto.setSettleDate(bondDialogueQuote.getSettleDate());
+        cfetsBondDealDialogueQuoteDto.setFinprodAbbr(bondDialogueQuote.getFinprodAbbr());
+        cfetsBondDealDialogueQuoteDto.setCounterName(bondDialogueQuote.getCounterName());
+        cfetsBondDealDialogueQuoteDto.setAvaNum(bondDialogueQuote.getAvaNum());
+        workFlowParameter.setComment(entity -> "报价日期"+ "(" + DateUtil.format(entity.getSettleDate()) + ")-"
+                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"报价操作(撤销)-"+"券面总额("+entity.getAvaNum()+")");
         processParameter.setWorkFlowParameter(workFlowParameter);
 
         String msg = cfetsBondDealQuotedPrice002Service.start(processParameter, cfetsBondDealDialogueQuoteDto);

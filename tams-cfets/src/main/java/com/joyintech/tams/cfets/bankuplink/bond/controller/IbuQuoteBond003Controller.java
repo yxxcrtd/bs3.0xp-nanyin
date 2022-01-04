@@ -17,7 +17,6 @@ import com.joyintech.tams.cfets.position.service.PositionInfoService;
 import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CounterInfoDto;
 import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonService;
@@ -32,7 +31,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ApplicationObjectSupport;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -365,9 +363,14 @@ public class IbuQuoteBond003Controller extends BaseController {
         workFlowParameter.setPageId("CfetsBondDealQuotedPrice003");
         workFlowParameter.setElementId("CfetsBondDealQuotedPrice003_btn_bondRevoke");
         workFlowParameter.setBusinessCode(cfetsBondDealRequestQuoteDto.getQuoteId());
-        workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_银行间上行.getValue());
-        workFlowParameter.setComment(
-                entity -> getMessage("CFETSHIS_QUOTEID") + "(" + entity.getQuoteId() + ")");
+        workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_本币业务交易_请求.getValue());
+        //调用初始化接口  供描述用
+        CfetsBondDealRequestQuoteDto bondRequestQuote = cfetsBondDealQuotedPrice003Service.getBondRequestQuote(cfetsBondDealQuoteCommonDto.getQuoteId(), BussinessDictCodeList.有效状态_有效.getValue());
+        cfetsBondDealRequestQuoteDto.setSettleDate(bondRequestQuote.getSettleDate());
+        cfetsBondDealRequestQuoteDto.setFinprodAbbr(bondRequestQuote.getFinprodAbbr());
+        cfetsBondDealRequestQuoteDto.setAvaNum(bondRequestQuote.getAvaNum());
+        workFlowParameter.setComment(entity -> "报价日期"+ "(" + DateUtil.format(entity.getSettleDate()) + ")-"
+                + "资产简称("+entity.getFinprodAbbr()+")-" +"报价操作("+entity.getQuoteOperatorType()+")-"+"券面总额("+ArithmeticUtil.multiply(entity.getAvaNum(),new BigDecimal(10000))+")");
         processParameter.setWorkFlowParameter(workFlowParameter);
 
         String msg = cfetsBondDealQuotedPrice003Service.start(processParameter,
@@ -424,14 +427,18 @@ public class IbuQuoteBond003Controller extends BaseController {
         WorkFlowParameter<CfetsBondDealRequestQuoteDto> params = cfetsBondDealQuotedPrice003Service.getWorkFlowParameter(cfetsBondDealRequestQuoteDto);
         params.setPageId("CfetsBondDealQuotedPrice005");
         params.setElementId(cfetsBondDealRequestQuoteDto.getElementId());
-        params.setBusinessType(DictCodeListExt3.共通业务类型_银行间上行.getValue());
+        params.setBusinessType(DictCodeListExt3.共通业务类型_本币业务交易_请求.getValue());
         params.setBusinessCode(cfetsBondDealRequestQuoteDto.getQuoteId());
         cfetsBondDealRequestQuoteDto.setQuoteType(DictCodeListExt3.报价系统区分类型_现券请求报价.getValue());
-        params.setComment(entity -> getMessage("请求报价编号") + "(" + entity.getQuoteId() + ")-"
-                + "业务类型" + "(现券买卖" + entity.getQuoteTypeStr() + ")-" + "平台日" + "("
-                + DateUtil.format(iPlatformDate.getSysDate()) + ")");
+        //报价操作
+        String quoteOperatorType = "发起";
+        if (StringUtil.equals(cfetsBondDealRequestQuoteDto.getQuotaPageModel(), "response")&&StringUtil.equals(cfetsBondDealRequestQuoteDto.getOperatorType(), "done")) {
+            quoteOperatorType = "成交";
+        }
+        cfetsBondDealRequestQuoteDto.setQuoteOperatorType(quoteOperatorType);
+        params.setComment(entity -> "报价日期"+ "(" + DateUtil.format(entity.getSettleDate()) + ")-"
+                + "资产简称("+entity.getFinprodAbbr()+")-" +"报价操作("+entity.getQuoteOperatorType()+")-"+"券面总额("+entity.getAvaNum()+"万元)");
         processParameter.setWorkFlowParameter(params);
-
         cfetsBondDealRequestQuoteDto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
         cfetsBondDealRequestQuoteDto.setCreateUser(LoginUserUtil.getUserName());// 用户名
         cfetsBondDealRequestQuoteDto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门

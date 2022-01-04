@@ -172,6 +172,11 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
 
     private BigDecimal unitFprice;
 
+    /**
+     * 报价操作主要包含“发起、回复、修改、交谈”
+     */
+    private String quoteOperatorType;
+
     @Override
     public String getQuoteId() {
         return quoteId;
@@ -644,5 +649,13 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
 
     public void setDistribution(String distribution) {
         this.distribution = distribution;
+    }
+
+    public String getQuoteOperatorType() {
+        return quoteOperatorType;
+    }
+
+    public void setQuoteOperatorType(String quoteOperatorType) {
+        this.quoteOperatorType = quoteOperatorType;
     }
 }
