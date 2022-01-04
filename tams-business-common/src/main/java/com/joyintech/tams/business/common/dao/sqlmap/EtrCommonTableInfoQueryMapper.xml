@@ -52,6 +52,6 @@
         ON T3.TASK_ID_ = T2.ID_
         AND T3.PROC_INST_ID_ = T2.PROC_INST_ID_
         AND T3.USER_ID_ = T2.ASSIGNEE_
-        where T1.TRADE_ID= #{busiCode}
+        where T1.TRADE_ID= #{busiCode,jdbcType=VARCHAR}
     </select>
 </mapper>
