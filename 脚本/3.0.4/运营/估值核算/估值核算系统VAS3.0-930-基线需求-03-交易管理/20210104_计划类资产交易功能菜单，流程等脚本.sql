@@ -1,18 +1,18 @@
-/*在交易管理下添加【计划类资产(利率型)交易】菜单*/
+/*在交易管理下添加【计划类资产交易】菜单*/
 delete from sys_menu where menu_id='DEAL_001_003_001';
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('DEAL_001_003_001', 'VAL', null, 'DEAL_001_003', 'TrdPlanValuationTrade001', 1, '2', '计划类资产(利率型)交易', 'system', null,sysdate, 'system', sysdate);
+values ('DEAL_001_003_001', 'VAL', null, 'DEAL_001_003', 'TrdPlanValuationTrade001', 1, '2', '计划类资产交易', 'system', null,sysdate, 'system', sysdate);
 
 /*计划类资产(利率型)交易-查询及新建页面*/
 delete from sys_page where page_id='TrdPlanValuationTrade001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('TrdPlanValuationTrade001', 'TRD', '/valuation/trademanage/trdplanvaluationtrade/TrdPlanValuationTrade001', 'valuation/trademanage/trdplanvaluationtrade/TrdPlanValuationTrade001', null, null, null, '02', '01', '计划类资产(利率型)交易', 'system', null, sysdate, 'system', sysdate);
+values ('TrdPlanValuationTrade001', 'TRD', '/valuation/trademanage/trdplanvaluationtrade/TrdPlanValuationTrade001', 'valuation/trademanage/trdplanvaluationtrade/TrdPlanValuationTrade001', null, null, null, '02', '01', '计划类资产交易', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_page where page_id='TrdPlanValuationTrade002';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('TrdPlanValuationTrade002', 'TRD', '/valuation/trademanage/trdplanvaluationtrade/TrdPlanValuationTrade002', 'valuation/trademanage/trdplanvaluationtrade/TrdPlanValuationTrade002', null, null, null, '02', '01', '计划类资产(利率型)交易新建', 'system', null, sysdate, 'system', sysdate);
+values ('TrdPlanValuationTrade002', 'TRD', '/valuation/trademanage/trdplanvaluationtrade/TrdPlanValuationTrade002', 'valuation/trademanage/trdplanvaluationtrade/TrdPlanValuationTrade002', null, null, null, '02', '01', '计划类资产交易新建', 'system', null, sysdate, 'system', sysdate);
 
-/*计划类资产(利率型)交易-新建页面-交易类型下拉框*/
+/*计划类资产交易-新建页面-交易类型下拉框*/
 delete from  sys_page_dictlist where page_id='TrdPlanValuationTrade002';
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('TrdPlanValuationTrade002', '999999', 'PS', 'T01', null, null, 'system', null, sysdate, 'system', sysdate, null);
@@ -31,7 +31,7 @@ values ('TrdPlanValuationTrade002', '999999', 'PS', 'T19', null, null, 'system',
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('TrdPlanValuationTrade002', '999999', 'PS', 'T24', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
-/*计划类资产(利率型)交易-查询页面-交易类型下拉框*/
+/*计划类资产交易-查询页面-交易类型下拉框*/
 delete from  sys_page_dictlist where page_id='TrdPlanValuationTrade001';
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('TrdPlanValuationTrade001', '999999', 'PS', 'T01', null, null, 'system', null, sysdate, 'system', sysdate, null);
@@ -58,7 +58,10 @@ values ('TrdPlanValuationTrade002', 'TrdPlanValuationTrade002_btn_save', 'oneApp
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
 values ('TrdPlanValuationTrade002', 'TrdPlanValuationTrade002_btn_sbumit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
-/*计划类资产(利率型)交易-4位数的交易编号，序列*/
+insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
+values ('TrdPlanValuationTrade002', 'TrdPlanValuationTrade001_btn_delete', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+
+/*计划类资产交易-4位数的交易编号，序列*/
 -- Create sequence
 create sequence PLANTRADEID_SEQUENCE
 minvalue 1
