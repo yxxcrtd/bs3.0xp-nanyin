@@ -9,16 +9,40 @@
  */
 package com.joyintech.tams.invest.basicdata.msttradeopponent.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.listener.FileAttachmentProcess;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.dao.MstCounterAcctMapper;
+import com.joyintech.tams.common.base.entity.MstCounterAcct;
+import com.joyintech.tams.common.base.entity.MstCounterAcctKey;
+import com.joyintech.tams.common.base.entity.StlCapacctInfo;
+import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
+import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.basicdata.msttradeopponent.dto.FinCashDto;
+import com.joyintech.tams.invest.basicdata.msttradeopponent.dto.MstTradeOpponentDto;
+import com.joyintech.tams.invest.basicdata.msttradeopponent.dto.StlCapacctDto;
+import com.joyintech.tams.invest.basicdata.msttradeopponent.service.MstTradeOpponent001Service;
+import com.joyintech.tams.invest.basicdata.msttradeopponent.service.MstTradeOpponent002Service;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,36 +53,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.tams.common.base.dao.MstCounterAcctMapper;
-import com.joyintech.tams.common.base.entity.MstCounterAcct;
-import com.joyintech.tams.common.base.entity.MstCounterAcctKey;
-import com.joyintech.tams.common.base.entity.StlCapacctInfo;
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.base.dto.UploadFile;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.listener.FileAttachmentProcess;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.*;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
-import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.invest.basicdata.msttradeopponent.dto.FinCashDto;
-import com.joyintech.tams.invest.basicdata.msttradeopponent.dto.MstTradeOpponentDto;
-import com.joyintech.tams.invest.basicdata.msttradeopponent.dto.StlCapacctDto;
-import com.joyintech.tams.invest.basicdata.msttradeopponent.service.MstTradeOpponent001Service;
-import com.joyintech.tams.invest.basicdata.msttradeopponent.service.MstTradeOpponent002Service;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 交易对手管理新建
@@ -185,7 +184,6 @@ public class MstTradeOpponent002Controller extends BaseController {
      * 
      * @param dto dto
      * @param result BindingResult
-     * @param  操作类型
      * @return check结果
      * @see
      * @since 1.0
@@ -273,6 +271,18 @@ public class MstTradeOpponent002Controller extends BaseController {
     @RequestMapping("getAccountType")
     public List<SelectOptionDto> getAccountType() {
         return mstTradeOpponent001Service.getAccountType();
+    }
+
+    /**
+     * 获取银行间机构21位码
+     * @return 账号下拉框集合
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("/selectPartyId")
+    @ResponseBody
+    public List<SuggestDto> selectPartyId(){
+        return mstTradeOpponent001Service.selectPartyId(RequestUtil.getPageParam());
     }
 
     /**

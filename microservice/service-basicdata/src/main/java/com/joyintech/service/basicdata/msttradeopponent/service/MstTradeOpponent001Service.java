@@ -11,7 +11,9 @@
 package com.joyintech.service.basicdata.msttradeopponent.service;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -262,5 +264,21 @@ public class MstTradeOpponent001Service extends BaseService<MstTradeOpponentDto>
     }
     public List<MstTradeOpponentDto> selectCounterIdByCustomer(Map<String,Object> map){
         return basicMstTradeOpponent001Mapper.selectCounterIdByCustomer(map);
+    }
+
+    /**
+     * 获取银行间机构21位码
+     * @param param
+     * @return
+     */
+    public List<SuggestDto> selectPartyId(Map<String, Object> param) {
+        //获取所有的已匹配的银行间机构21位码
+        List<String> partyIdList = basicMstTradeOpponent001Mapper.getAllPartyIdIsNotNull();
+        if (CollectionUtils.isNotEmpty(partyIdList)) {
+            return basicMstTradeOpponent001Mapper.selectPartyId(param).stream()
+                    .filter(s -> !partyIdList.contains(s.getCode())).collect(Collectors.toList());
+        }
+        return basicMstTradeOpponent001Mapper.selectPartyId(param);
+
     }
 }
