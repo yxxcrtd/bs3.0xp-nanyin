@@ -5,8 +5,17 @@
         select
         T2.TARGET_TYPE targetType,
         T2.TRADER trader,
-        NVL(T1.ENTRUST_NUM,0) - NVL(S.MARCH_QTY_EN,0) remainEntrustNum,
-        NVL(T1.ENTRUST_AMT,0) - NVL(S.MARCH_AMT_EN,0) remainEntrustAmt,
+        CASE
+        WHEN (T1.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}) AND T1.PS IN (#{PS_T93},#{PS_T94})) THEN
+            NVL(T3.PLEDGE_NUMBER,0) - NVL(S.MARCH_QTY_EN,0)
+        ELSE
+            NVL(T1.ENTRUST_NUM,0) - NVL(S.MARCH_QTY_EN,0) END remainEntrustNum,
+        CASE
+        WHEN (T1.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}) AND T1.PS IN (#{PS_T93},#{PS_T94})) THEN
+            NVL(T3.PLEDGE_NUMBER,0) - NVL(S.MARCH_QTY_EN,0)
+        ELSE
+            NVL(T1.ENTRUST_AMT,0) - NVL(S.MARCH_AMT_EN,0)
+        END remainEntrustAmt,
         T1.*
         from ETR_ENTRUST T1
         left join
