@@ -739,7 +739,7 @@ $(function () {
                         {title: "唯一标识", field: "code",width:'20%'},
                         {title: "报送状态", field: "submitStatus",width:'20%'},
                         {title: "报送日期", field: "submitTime",width:'20%'},
-                        {title: "报送截止日", field: "submitDeadline",width:'20%'}
+                        {title: "报送截止日", type: 'date', field: "submitDeadline",width:'20%'}
                     ]
             }),
             //searchTable : function (params) {},
