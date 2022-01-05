@@ -1363,6 +1363,9 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
 
     //add by lijie2 20201215 银行间上行
     共通业务类型_银行间上行(DictCode.共通业务类型,"TRD83","银行间上行"),
+    共通业务类型_本币业务交易_登记(DictCode.共通业务类型,"TRD92","本币业务交易-登记"),
+    共通业务类型_本币业务交易_对话(DictCode.共通业务类型,"TRD93","本币业务交易-对话"),
+    共通业务类型_本币业务交易_请求(DictCode.共通业务类型,"TRD94","本币业务交易-请求"),
     共通业务类型_CFETS账户关联(DictCode.共通业务类型,"MST33","CFETS账户关联"),
     报价系统区分类型_现券对话报价(DictCode.报价系统区分类型,"01","现券对话报价"),
     报价系统区分类型_现券请求报价(DictCode.报价系统区分类型,"02","现券请求报价"),

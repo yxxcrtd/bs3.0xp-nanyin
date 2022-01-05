@@ -166,6 +166,12 @@ public class IbuQuoteBond004Controller extends BaseController {
         }
         List<CfetsBondDealRegisterQuoteDto> CfetsBondDealRegisterQuoteDtos = new ArrayList<>();
         for (CfetsBondRegCheckDetaileRequst cfetsBondRegCheckDetaileRequst : cfetsBondRegCheckRequst.getCfetsBondRegCheckDetaileRequsts()) {
+            //获取初始化的值
+            CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto = new CfetsBondDealQuoteCommonDto();
+            cfetsBondDealQuoteCommonDto.setQuoteId(cfetsBondRegCheckDetaileRequst.getQuoteId());
+            cfetsBondDealQuoteCommonDto.setValidStatus(BussinessDictCodeList.有效状态_有效.getValue());
+            cfetsBondDealQuoteCommonDto = cfetsBondDealQuotedPrice004Service.initReg(cfetsBondDealQuoteCommonDto);
+            BeanUtil.copyPropertiesIgnoreNull(cfetsBondRegCheckDetaileRequst,cfetsBondDealQuoteCommonDto);
             CfetsBondDealRegisterQuoteDto cfetsBondDealRegisterQuoteDto = new CfetsBondDealRegisterQuoteDto();
             cfetsBondDealRegisterQuoteDto.setTotleTradeId(cfetsBondRegCheckDetaileRequst.getQuoteId());
             cfetsBondDealRegisterQuoteDto.setRemark(cfetsBondRegCheckRequst.getRemark());
@@ -177,8 +183,9 @@ public class IbuQuoteBond004Controller extends BaseController {
         workFlowParameter.setPageId("IbuQuoteBond004");
         workFlowParameter.setElementId("IbuQuoteBond004_btn_revoke");
         workFlowParameter.setBusinessCode(item -> item.getTotleTradeId());
-        workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_银行间上行.getValue());
-        workFlowParameter.setComment(entity ->  "登记报价编号(" + entity.getTotleTradeId() + ")");
+        workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_本币业务交易_登记.getValue());
+        workFlowParameter.setComment(entity -> "登记日期"+ "(" + DateUtil.format(entity.getTradeDate()) + ")-"
+                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"券面总额("+entity.getShareAmt()+")");
         processParameter.setWorkFlowParameter(workFlowParameter);
         processParameter.setOperationType(OperationType.REVOKE);
         String msg = cfetsBondDealQuotedPrice004Service.start(processParameter,
@@ -226,11 +233,10 @@ public class IbuQuoteBond004Controller extends BaseController {
 		params.setPageId("IbuQuoteBond004");
 		params.setElementId(cfetsBondDealRegisterQuoteDto.getElementId());
         params.setElementId("IbuQuoteBond004_btn_submit");
-		params.setBusinessType(DictCodeListExt3.共通业务类型_银行间上行.getValue());
+		params.setBusinessType(DictCodeListExt3.共通业务类型_本币业务交易_登记.getValue());
 		params.setBusinessCode(cfetsBondDealRegisterQuoteDto.getTotleTradeId());
-        params.setComment(entity -> getMessage("登记报价编号") + "(" + entity.getTotleTradeId() + ")-"
-                + "业务类型" + "(现券登记)-" + "平台日" + "("
-                + DateUtil.format(iPlatformDate.getSysDate()) + ")");
+        params.setComment(entity -> "登记日期"+ "(" + DateUtil.format(entity.getTradeDate()) + ")-"
+                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"券面总额("+entity.getShareAmt()+")");
         cfetsBondDealRegisterQuoteDto.setQuoteType(DictCodeListExt3.报价系统区分类型_现券登记报价.getValue());
 		processParameter.setWorkFlowParameter(params);
         processParameter.setOperationType(OperationType.NEW);
