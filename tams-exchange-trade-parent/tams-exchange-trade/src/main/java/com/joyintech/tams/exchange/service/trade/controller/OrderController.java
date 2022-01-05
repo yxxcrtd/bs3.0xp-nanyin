@@ -74,10 +74,10 @@ public class OrderController {
     @ApiOperation(value = "综合业务下单", notes = "综合业务下单")
     @RequestMapping(value = "/order/integratedEntrust", method = RequestMethod.POST)
     public Message<IntegratedEntrust> sendIntegratedEntrust(@RequestBody IntegratedEntrust integratedEntrust) {
-        logger.info("综合业务下单：integratedEntrust entrustBs is [{}]", integratedEntrust.getEntrustBs());
-        integratedEntrust.setEntrustBs(EntrustBsProp.getEntrustBs(integratedEntrust.getEntrustBs()));
-
         Instruction instruction = instructionService.findById(integratedEntrust.getInstructionId());
+        logger.info("综合业务下单：integratedEntrust entrustBs is [{}]", instruction.getPs());
+        integratedEntrust.setEntrustBs(EntrustBsProp.getEntrustBs(instruction.getPs()));
+
         String entrustProp = EntrustPropUtils.getEntrustProp(instruction);
         logger.info("综合业务下单：order entrustProp is [{}]", entrustProp);
         integratedEntrust.setEntrustProp(entrustProp);

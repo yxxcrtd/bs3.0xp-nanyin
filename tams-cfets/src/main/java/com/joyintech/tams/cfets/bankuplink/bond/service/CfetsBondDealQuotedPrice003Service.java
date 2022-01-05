@@ -10,8 +10,6 @@
  
 package com.joyintech.tams.cfets.bankuplink.bond.service;
 
-import com.joyintech.background.component.uplink.interbank.business.dto.BondRequestQuoteDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteBondDto;
 import com.joyintech.background.component.uplink.interbank.business.service.IbuMainService;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
@@ -1072,8 +1070,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
      */
     public Map<String,Object> preparePosition(CfetsBondDealRequestQuoteDto dto,String flowStatus,String systemAct){
         com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto entity = JsonUtils.json2Object(JsonUtils.object2Json(dto),com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto.class);
-        Date platDate = iPlatformDate.getSysDate();
-        final Date settleDate = dto.getSettleDate() == null ? platDate : dto.getSettleDate();
+        final Date settleDate =iPlatformDate.getSysDate();
         Map<String,Object> result = new HashMap<>();
         String ps = entity.getPs();
         result.put("interfaceType","Bond001");
@@ -1123,8 +1120,10 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
                         pltMap.put("cashAmount",ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(),new BigDecimal(10000)).setScale(4,RoundingMode.DOWN));
                     }
                 }
-                //pltMap.put("integrateSecAmount",cfetsBondDealDialogueQuoteDto.getAvaNum());
-                //pltMap.put("ownSecAmount",cfetsBondDealDialogueQuoteDto.getAvaNum());
+                if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_卖出.getValue())||StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){
+                    pltMap.put("integrateSecAmount",BigDecimal.ZERO);
+                    pltMap.put("ownSecAmount",ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(),new BigDecimal(10000)));
+                }
                 pltMap.put("etrSecAmount",ArithmeticUtil.multiply(etrEntrustMapper.selectByPrimaryKey(cfetsBondDealDialogueQuoteDto.getEntrustId()).getEntrustNum(),new BigDecimal(100)));
                 ptlList.add(pltMap);
             }
