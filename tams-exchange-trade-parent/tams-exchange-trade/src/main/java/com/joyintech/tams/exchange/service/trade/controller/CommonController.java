@@ -1,17 +1,8 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.security.User;
 import com.joyintech.framework.util.DateUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.joyintech.tams.exchange.common.ResponseResultBody;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.SysParamBean;
@@ -19,9 +10,15 @@ import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.request.BaseRequest;
 import com.joyintech.tams.exchange.service.trade.management.service.CommonManagement;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/trade/joyin")
@@ -30,7 +27,7 @@ import io.swagger.annotations.ApiOperation;
 public class CommonController {
     @Autowired
     private CommonManagement commonManagement;
-    
+
 
     /**
      * 市场合约代码查询
@@ -97,8 +94,20 @@ public class CommonController {
      */
     @ApiOperation(value = "获取服务器时间", notes = "获取服务器时间")
     @RequestMapping(value = "/common/localTime", method = RequestMethod.POST)
-    public ResultBean queryLocalTime(@RequestBody BaseRequest baseRequest) {
+    public ResultBean queryLocalTime() {
         return new ResultBean(ErrorCode.SUCCESS, DateUtil.now());
+    }
+
+    /**
+     * 获取服务器时间
+     *
+     * @return
+     */
+    @ApiOperation(value = "获取当前用户", notes = "获取当前用户")
+    @RequestMapping(value = "/common/localUser", method = RequestMethod.POST)
+    public ResultBean queryLocalUser() {
+        User user = SecurityUtil.getLoginUser();
+        return new ResultBean(ErrorCode.SUCCESS, Objects.isNull(user) ? "lh1" : user.getUserName());
     }
 
     /**
