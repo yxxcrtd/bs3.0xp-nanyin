@@ -572,7 +572,7 @@
         ,y.I_Q_B_D_CP_TRADER_NAME cpTraderName
         ,y.I_Q_B_EFF_TIME reqEffTime
         ,y.I_Q_B_D_RE_EFF_TIME resEffTime
-        ,CASE WHEN y.I_Q_B_QUOTE_TYPE = '02' THEN I_Q_B_D_PRIN_AMT/100
+        ,CASE WHEN y.I_Q_B_QUOTE_TYPE = '02' THEN I_Q_B_D_PRIN_AMT/10000
         ELSE NULL END shareAmtHun
         ,y.I_Q_B_QUOTE_ID quoteId
         ,y.I_Q_B_D_EXECID TRD_ID
@@ -922,7 +922,7 @@
         ,y.I_Q_B_D_CP_TRADER_NAME cpTraderName
         ,y.I_Q_B_EFF_TIME reqEffTime
         ,y.I_Q_B_D_RE_EFF_TIME  resEffTime
-        ,CASE WHEN y.I_Q_B_QUOTE_TYPE = '02' THEN I_Q_B_D_PRIN_AMT/100
+        ,CASE WHEN y.I_Q_B_QUOTE_TYPE = '02' THEN I_Q_B_D_PRIN_AMT/10000
         ELSE NULL  END shareAmtHun
         ,y.I_Q_B_QUOTE_ID quoteId
         ,y.I_Q_B_D_EXECID TRD_ID
