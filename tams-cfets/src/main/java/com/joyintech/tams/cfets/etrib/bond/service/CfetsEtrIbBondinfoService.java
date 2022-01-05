@@ -1314,13 +1314,23 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 }
                 if(StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_买入.getValue())){
                     BigDecimal integrateSecAmount=rrqmkdghAmt;
-                    dd.setEntrustIntegrateNum(integrateSecAmount);
-                    dd.setEntrustOwnNum(ArithmeticUtil.subtract(item.getEntrustNum(),integrateSecAmount));
+                    if(integrateSecAmount.compareTo(item.getEntrustNum())>0){
+                        dd.setEntrustIntegrateNum(item.getEntrustNum());
+                        dd.setEntrustOwnNum(BigDecimal.ZERO);
+                    }else{
+                        dd.setEntrustIntegrateNum(integrateSecAmount);
+                        dd.setEntrustOwnNum(ArithmeticUtil.subtract(item.getEntrustNum(),integrateSecAmount));
+                    }
                 }else if(StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_卖出.getValue())){
                     //查询系统本方券可用持仓
                     BigDecimal ownSecAmount=bfqtrkyccAmt;
-                    dd.setEntrustOwnNum(ownSecAmount);
-                    dd.setEntrustIntegrateNum(ArithmeticUtil.subtract(item.getEntrustNum(),ownSecAmount));
+                    if(ownSecAmount.compareTo(item.getEntrustNum())>0){
+                        dd.setEntrustOwnNum(item.getEntrustNum());
+                        dd.setEntrustIntegrateNum(BigDecimal.ZERO);
+                    }else{
+                        dd.setEntrustOwnNum(ownSecAmount);
+                        dd.setEntrustIntegrateNum(ArithmeticUtil.subtract(item.getEntrustNum(),ownSecAmount));
+                    }
                 }else if(StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_行权_回售.getValue())){
                     dd.setEntrustOwnNum(item.getEntrustNum());
                     dd.setEntrustIntegrateNum(BigDecimal.ZERO);
