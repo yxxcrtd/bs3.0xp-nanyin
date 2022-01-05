@@ -11,6 +11,7 @@ import com.joyintech.tams.exchange.common.db.domain.Trade;
 import com.joyintech.tams.exchange.common.db.domain.TradeHistory;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.request.HistoryTradeInfoRequest;
+import com.joyintech.tams.exchange.common.request.PageMode;
 import com.joyintech.tams.exchange.common.request.PageTradeInfoRequest;
 import com.joyintech.tams.exchange.common.request.TradeInfoRequest;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
@@ -87,7 +88,8 @@ public class TradeManagement {
     }
 
     public Message<List<HistoryTrade>> queryHistoryTrade(HistoryTradeInfoRequest request) {
-        return new Message<>(queryHistoryTrade(request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getPostStr(), request.getPageSize(), request.getUserId()));
+        PageMode pageMode = request.getPageMode();
+        return new Message<>(queryHistoryTrade(request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getPostStr(), pageMode.getPageSize(), request.getUserId()));
     }
 
     public ResultBean queryHistoryTrade(String startDay, String endDay, String accountId, String postStr, int pageSize, String userId) {
@@ -101,7 +103,8 @@ public class TradeManagement {
     }
 
     public Message<PageInfo<Object>> queryAllForPage(PageTradeInfoRequest request) {
-        return new Message<>(queryAllForPage(request.getPageNum(), request.getPageSize(), request.getHistoryType(), request.getUserId(), request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustId()));
+        PageMode pageMode = request.getPageMode();
+        return new Message<>(queryAllForPage(pageMode.getPageNo(), pageMode.getPageSize(), request.getHistoryType(), request.getUserId(), request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustId()));
     }
 
     public ResultBean queryAllForPage(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String market, String stockCode, String entrustProp, String entrustId) {
