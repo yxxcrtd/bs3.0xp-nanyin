@@ -243,7 +243,9 @@ public class StlDataDealProcessCommonService {
 				tradeFeatureInformation.setDealDate(DateUtil.parse(keyStrArray[9]));
 				// add by etliu 20220104 start
 				// GZYHTZJY-868: 日终清算，协议回购的佣金没有计算出来
-				tradeFeatureInformation.setRepoType(keyStrArray[10]);
+				if(keyStrArray.length > 10){
+					tradeFeatureInformation.setRepoType(keyStrArray[10]);
+				}
 				// add by etliu 20220104 end
 				List<TrdDetailDto> detailDtos = new ArrayList<TrdDetailDto>();
 				for (StlDownDataDealWriteBaseDto stlDownDataDealWriteBaseDto : list) {
