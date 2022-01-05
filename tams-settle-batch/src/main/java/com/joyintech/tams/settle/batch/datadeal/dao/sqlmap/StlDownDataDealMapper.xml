@@ -675,7 +675,7 @@
 		LEFT JOIN
 			SETTLE_TRANS_DATA_PLEDGE stdp ON std.TRADE_ID = stdp.TRADE_ID
 		WHERE
-			std.F_CJBH = #{sqcjbh, jdbcType=VARCHAR}
+			std.CJBH = #{sqcjbh, jdbcType=VARCHAR}
 			AND std.SEAT_NUMBER = #{seatNumber, jdbcType=VARCHAR}
 			AND std.SEC_ACCT_ID = #{secAcctId, jdbcType=VARCHAR}
 	</select>
