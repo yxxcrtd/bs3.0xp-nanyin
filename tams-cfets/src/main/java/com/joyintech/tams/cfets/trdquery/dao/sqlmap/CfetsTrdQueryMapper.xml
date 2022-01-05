@@ -1715,7 +1715,7 @@
        <!-- mccic.PARTY_ABBR as counterIdStr,-->
         I.INSTITUTIONCHINESEFULLNAME as counterIdStr,
 
-        I.Clearingmethod as clearType,
+        decode(I.Clearingmethod,'13','01','6','02') as clearType,
         to_char(total.trade_date,'yyyy-MM-dd') as tradeDate,
         nvl(ts.dealtext,tr.dealtext) as remark
 
@@ -1873,7 +1873,7 @@
         ts.Strikeyield as exerYield,
         to_char(ts.settdate,'yyyy-MM-dd') as settleDate,
         ts.prinamt as faceValue,
-        I.Clearingmethod as clearType,
+        decode(I.Clearingmethod,'13','01','6','02') as clearType,
         I.Deliverytype as deliveryType,
         ts.dealtext as remark,
         ts.dirtyprice as unitFprice,
@@ -1923,7 +1923,7 @@
         tr.facetotalamt as faceValue,
         tr.repointamt as intAmt,
         null as repoType,
-        I.Clearingmethod as clearType,
+        decode(I.Clearingmethod,'13','01','6','02') as clearType,
         to_date(I.Settldate,'yyyy-MM-dd') as vsettleDate,
         to_date(I.Settldate2,'yyyy-MM-dd') as msettleDate,
         I.Cashholdingdays as actRepoTerm,
