@@ -87,7 +87,7 @@
         and (match.trd_conf_status is null or match.trd_conf_status ='0')
         and reg.ps in ('T01','T02','03','04')
         <if test="userId != null and userId != ''">
-            and reg.create_user= #{userId}
+            and reg.ou_trader_id= #{userId}
         </if>
         <if test="ps != null and !ps.equals('')">
             AND reg.ps=#{ps}
@@ -291,11 +291,14 @@
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ibd.cp_party_id= mcci.party_id
         left join MST_CFETS_CUSTOMER_TRADER t4 on t4.TRADER_ID=ib.ou_trader_id
         left join MST_COUNTER_PARTY t1 on ibd.cp_party_id=t1.party_id
+        left join sys_user_add sua on  sua.ibu_trader=ib.OU_TRADER_ID
+        left join sys_user t3 on t3.user_id=sua.user_id
+
         where ib.quote_date= #{sysDate,jdbcType=DATE}
         and ib.trade_status='07'
         and (match.trd_conf_status is null or match.trd_conf_status ='0')
         <if test="userId != null and userId != ''">
-            and ib.create_user= #{userId}
+            and t3.user_name= #{userId}
         </if>
         <if test="ps != null and !ps.equals('')">
             AND ib.ps=#{ps}
@@ -401,10 +404,12 @@
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ic.cp_party_id= mcci.party_id
         left join MST_CFETS_CUSTOMER_TRADER t4 on t4.TRADER_ID=ic.ou_trader_id
         left join MST_COUNTER_PARTY t1 on ic.cp_party_id=t1.party_id
+        left join sys_user_add sua on  sua.ibu_trader=ic.ou_trader_id
+        left join sys_user t3 on t3.user_id=sua.user_id
         where ic.quote_date= #{sysDate,jdbcType=DATE} and ic.TRADE_STATUS='07'
         and (match.trd_conf_status is null or match.trd_conf_status ='0')
         <if test="userId != null and userId != ''">
-            and ic.create_user= #{userId}
+            and t3.user_name= #{userId}
         </if>
         <if test="ps != null and !ps.equals('')">
             AND ic.repo_ps=#{ps}
