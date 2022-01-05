@@ -54,7 +54,7 @@ public class TradeQuoteController {
     }
 
     @ApiOperation(value = "大宗行情查询", notes = "大宗行情查询")
-    @RequestMapping(value = "/entrust/integrated/bulk_quote", method = RequestMethod.GET)
+    @RequestMapping(value = "/entrust/integrated/bulk_quote", method = RequestMethod.POST)
     public Message<List<IntegratedBulkQuoteBean>> queryIntegratedBulkQuote(@RequestBody @Validated IntegratedBulkQuoteQryBean integratedBulkQuoteQryBean) {
         Instruction instruction = instructionService.findById(integratedBulkQuoteQryBean.getInstructionId());
         integratedBulkQuoteQryBean.setEntrustProp(EntrustPropUtils.getEntrustProp(instruction));
@@ -69,13 +69,13 @@ public class TradeQuoteController {
     }
 
     @ApiOperation(value = "盘后大宗行情查询", notes = "盘后大宗行情查询")
-    @RequestMapping(value = "/entrust/integrated/bulk_close_quote", method = RequestMethod.GET)
+    @RequestMapping(value = "/entrust/integrated/bulk_close_quote", method = RequestMethod.POST)
     public Message<List<IntegratedBulkCloseQuoteBean>> queryIntegratedBulkCloseQuote(@RequestBody @Validated IntegratedBulkCloseQuoteQryBean integratedBulkCloseQuoteQryBean) {
         return new Message<List<IntegratedBulkCloseQuoteBean>>(integratedQuoteManagement.queryIntegratedBulkCloseQuote(integratedBulkCloseQuoteQryBean));
     }
 
     @ApiOperation(value = "质押式协议回购行情查询", notes = "质押式协议回购行情查询")
-    @RequestMapping(value = "/entrust/integrated/repurchase_quote", method = RequestMethod.GET)
+    @RequestMapping(value = "/entrust/integrated/repurchase_quote", method = RequestMethod.POST)
     public Message<List<IntegratedRepurchaseQuoteBean>> queryIntegratedRepurchaseQuote(@RequestBody @Validated IntegratedRepurchaseQuoteQryBean integratedRepurchaseQuoteQryBean) {
         Instruction instruction = instructionService.findById(integratedRepurchaseQuoteQryBean.getInstructionId());
         integratedRepurchaseQuoteQryBean.setEntrustProp(EntrustPropUtils.getEntrustProp(instruction));
@@ -86,7 +86,7 @@ public class TradeQuoteController {
     }
 
     @ApiOperation(value = "上海固收行情查询", notes = "上海固收行情查询")
-    @RequestMapping(value = "/entrust/integrated/fixed_income_quote", method = RequestMethod.GET)
+    @RequestMapping(value = "/entrust/integrated/fixed_income_quote", method = RequestMethod.POST)
     public Message<List<IntegratedFixedIncomeQuoteBean>> queryIntegratedFixedIncomeQuote(@RequestBody @Validated IntegratedFixedIncomeQuoteQryBean integratedFixedIncomeQuoteQryBean) {
         return new Message<List<IntegratedFixedIncomeQuoteBean>>(integratedQuoteManagement.queryIntegratedFixedIncomeQuote(integratedFixedIncomeQuoteQryBean));
     }
