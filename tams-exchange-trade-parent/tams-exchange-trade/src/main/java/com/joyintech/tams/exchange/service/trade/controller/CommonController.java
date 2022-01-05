@@ -107,7 +107,7 @@ public class CommonController {
     @RequestMapping(value = "/common/localUser", method = RequestMethod.POST)
     public ResultBean queryLocalUser() {
         User user = SecurityUtil.getLoginUser();
-        return new ResultBean(ErrorCode.SUCCESS, Objects.isNull(user) ? "li1" : user.getUserName());
+        return new ResultBean(ErrorCode.SUCCESS, Objects.isNull(user) ? "lh1" : user.getUserName());
     }
 
     /**
