@@ -32,7 +32,12 @@
                 A.TRADE_PLAT tradePlat,
                 A.PS ps,
                 NVL(A.SHARE_AMT,0) - NVL(F.MARCH_QTY,0) remainNum,
-                NVL(A.FPRICE_AMT,0) - NVL(F.MARCH_AMT,0) remainAmount,
+                CASE
+                WHEN A.SEC_TYPE = #{SEC_TYPE_09} THEN
+                    NVL(A.SHARE_AMT,0) - NVL(F.MARCH_AMT,0)
+                ELSE
+                    NVL(A.FPRICE_AMT,0) - NVL(F.MARCH_AMT,0)
+                END remainAmount,
                 CASE
                 WHEN A.SEC_TYPE = #{SEC_TYPE_09} THEN A.UNIT_CPRICE
                 ELSE
