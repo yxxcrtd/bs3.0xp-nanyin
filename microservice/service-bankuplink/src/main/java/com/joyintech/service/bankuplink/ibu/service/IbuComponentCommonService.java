@@ -1521,6 +1521,7 @@ public class IbuComponentCommonService extends BaseService {
         ibuQuoteBondDto.setQuoteId(cfetsBondDealDialogueQuoteDto.getQuoteId());
         ibuQuoteBondDto.setEntrustId(cfetsBondDealDialogueQuoteDto.getEntrustId());
         ibuQuoteBondDto.setPortfolioId(cfetsBondDealDialogueQuoteDto.getPortfolioId());
+        ibuQuoteBondDto.setSecManageAcctId(cfetsBondDealDialogueQuoteDto.getSecManageAcctId());
         ibuQuoteBondDto.setRemark(cfetsBondDealDialogueQuoteDto.getRemark());
         inputBean.setIbuQuoteBondDto(ibuQuoteBondDto);
         User user = this.genUserInfo(cfetsBondDealDialogueQuoteDto);
