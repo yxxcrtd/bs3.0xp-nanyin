@@ -1717,8 +1717,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
      */
     public Map<String,Object> preparePosition(CfetsBondDealDialogueQuoteDto dto,String flowStatus,String systemAct){
         com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto entity = JsonUtils.json2Object(JsonUtils.object2Json(dto),com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto.class);
-        Date platDate = iPlatformDate.getSysDate();
-        final Date settleDate = dto.getSettleDate() == null ? platDate : dto.getSettleDate();
+        final Date settleDate =iPlatformDate.getSysDate();
         Map<String,Object> result = new HashMap<>();
         String ps = entity.getPs();
         result.put("interfaceType","Bond001");
