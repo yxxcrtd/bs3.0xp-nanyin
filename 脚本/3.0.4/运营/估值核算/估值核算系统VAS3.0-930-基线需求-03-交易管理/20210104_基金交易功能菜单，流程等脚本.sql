@@ -1,7 +1,7 @@
 /*在交易管理下添加【基金交易】菜单*/
-delete from sys_menu where menu_id='DEAL_001_003_004';
+delete from sys_menu where PAGE_ID='TrdFundValuationTrade001';
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('DEAL_001_003_004', 'VAL', null, 'DEAL_001_003', 'TrdFundValuationTrade001', 1, '2', '基金交易', 'system', null,sysdate, 'system', sysdate);
+values ('DEAL_001_001_016', 'VAL', null, 'DEAL_001_001', 'TrdFundValuationTrade001', 16, '2', '基金交易', 'system', null,sysdate, 'system', sysdate);
 
 /*基金交易-查询及新建页面*/
 delete from sys_page where page_id='TrdFundValuationTrade001';
@@ -50,6 +50,30 @@ values ('TrdFundValuationTrade001', '999999', 'PS', 'T19', null, null, 'system',
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('TrdFundValuationTrade001', '999999', 'PS', 'T24', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
+/*基金交易-新建页面-交易场所下拉框*/
+delete from  sys_page_dictlist where page_id='TrdFundValuationTrade002';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TrdFundValuationTrade002', '999999', 'TRADE_PLACE', '03', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TrdFundValuationTrade002', '999999', 'TRADE_PLACE', '04', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TrdFundValuationTrade002', '999999', 'TRADE_PLACE', '09', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+/*基金交易-查询页面-交易场所下拉框*/
+delete from  sys_page_dictlist where page_id='TrdFundValuationTrade001';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TrdFundValuationTrade001', '999999', 'TRADE_PLACE', '03', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TrdFundValuationTrade001', '999999', 'TRADE_PLACE', '04', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TrdFundValuationTrade001', '999999', 'TRADE_PLACE', '09', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+
+
 /*基金交易-工作流配置*/
 delete from sys_wfl_business_module where page_id='TrdFundValuationTrade002';
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
@@ -60,6 +84,9 @@ values ('TrdFundValuationTrade002', 'TrdFundValuationTrade002_btn_sbumit', 'oneA
 
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
 values ('TrdFundValuationTrade002', 'TrdFundValuationTrade001_btn_delete', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+
+
+
 
 /*基金交易-4位数的交易编号，序列*/
 -- Create sequence
