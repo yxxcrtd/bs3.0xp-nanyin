@@ -204,6 +204,10 @@ public class CfetsTrdConfirmService extends BaseService{
         if(StringUtil.isNotEmpty(secAcctId)){
             pageParam.put("secAcctIdList", StringUtil.splitToList(GlobalConstant.COMMA,secAcctId));
         }
+        String counterId=(String)pageParam.get("counterId");
+        if(StringUtil.isNotEmpty(counterId)){
+            pageParam.put("counterIdList", StringUtil.splitToList(GlobalConstant.COMMA,counterId));
+        }
         if (StringUtil.equals(dto.getSettleSpeed(),
                 DictCodeList.清算速度_T_0.getValue())) {
             pageParam.put("settleSpeed","0");
@@ -2211,6 +2215,10 @@ public class CfetsTrdConfirmService extends BaseService{
         String secAcctId=(String)pageParam.get("secAcctId");
         if(StringUtil.isNotEmpty(secAcctId)){
             pageParam.put("secAcctIdList", StringUtil.splitToList(GlobalConstant.COMMA,secAcctId));
+        }
+        String counterId=(String)pageParam.get("counterId");
+        if(StringUtil.isNotEmpty(counterId)){
+            pageParam.put("counterIdList", StringUtil.splitToList(GlobalConstant.COMMA,counterId));
         }
 
         String trdConfStatus=(String)pageParam.get("trdConfStatus");
