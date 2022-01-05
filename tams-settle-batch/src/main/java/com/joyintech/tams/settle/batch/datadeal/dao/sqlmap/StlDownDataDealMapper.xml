@@ -661,7 +661,7 @@
 		FROM
 			SETTLE_TRANS_DATA
 		WHERE
-			F_CJBH = #{sqcjbh, jdbcType=VARCHAR}
+			CJBH = #{sqcjbh, jdbcType=VARCHAR}
 			AND SEAT_NUMBER = #{seatNumber, jdbcType=VARCHAR}
 			AND SEC_ACCT_ID = #{secAcctId, jdbcType=VARCHAR}
 	</select>
