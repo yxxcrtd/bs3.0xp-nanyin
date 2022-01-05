@@ -295,7 +295,7 @@ public class IbuQuoteBond002Controller extends BaseController {
         }
         cfetsBondDealDialogueQuoteDto.setQuoteOperatorType(quoteOperatorType);
         params.setComment(entity -> "报价日期"+ "(" + DateUtil.format(entity.getSettleDate()) + ")-"
-                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"报价操作("+entity.getQuoteOperatorType()+")-"+"券面总额("+ArithmeticUtil.multiply(entity.getAvaNum(),new BigDecimal(10000))+"元)");
+                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"报价操作("+entity.getQuoteOperatorType()+")-"+"券面总额("+ArithmeticUtil.multiply(entity.getAvaNum(),new BigDecimal(10000))+"万元)");
         processParameter.setWorkFlowParameter(params);
 
         cfetsBondDealDialogueQuoteDto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
