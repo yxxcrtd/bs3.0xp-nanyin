@@ -1032,4 +1032,16 @@
 		order by T1.FINPROD_ID, T1.DECLARED_START_DATE desc
 	</select>
 	<!--modify by etliu 20211227 end-->
+
+	<select id="selectEtrPledges" resultType="com.joyintech.tams.common.base.entity.EtrPledge">
+		SELECT
+			ENTRUST_ID,
+			FINPROD_ID,
+			PLEDGE_NUMBER
+		FROM
+			ETR_PLEDGE
+		WHERE
+			ENTRUST_ID = #{entrustId, jdbcType=VARCHAR}
+			AND FINPROD_ID = #{finProdId, jdbcType=VARCHAR}
+	</select>
 </mapper>

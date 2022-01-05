@@ -197,18 +197,45 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                             continue;
                         }
                         if(currEtrEntrustList.size()==1){
-                            if(null!=settleTransDataDto.getShareAmt()&&settleTransDataDto.getShareAmt().compareTo(currEtrEntrustList.get(0).getEntrustAmt())<=0){
-                                exchangeTransMatchCommonDto.setEntrustIdList(Arrays.asList(currEtrEntrustList.get(0).getEntrustId()));
+                            if(DictCodeListExt3.交易方向_中途换券.getValue().equals(settleTransDataDto.getPs())
+                                    || DictCodeListExt3.交易方向_解除质押.getValue().equals(settleTransDataDto.getPs())){
+                                // 查询指令质押券信息
+                                List<EtrPledge> etrPledges = stlDataGatherMapper.selectEtrPledges(
+                                        currEtrEntrustList.get(0).getEntrustId(), settleTransDataDto.getFinprodId());
+                                if(CollectionUtils.isNotEmpty(etrPledges)){
+                                    if(null!=settleTransDataDto.getShareAmt()&&settleTransDataDto.getShareAmt().compareTo(etrPledges.get(0).getPledgeNumber())<=0){
+                                        exchangeTransMatchCommonDto.setEntrustIdList(Arrays.asList(currEtrEntrustList.get(0).getEntrustId()));
 
-                                needUpdateStatusEntrustIdList.add(currEtrEntrustList.get(0).getEntrustId());
+                                        needUpdateStatusEntrustIdList.add(currEtrEntrustList.get(0).getEntrustId());
+                                    }
+                                }
+                            }else{
+                                if(null!=settleTransDataDto.getShareAmt()&&settleTransDataDto.getShareAmt().compareTo(currEtrEntrustList.get(0).getEntrustAmt())<=0){
+                                    exchangeTransMatchCommonDto.setEntrustIdList(Arrays.asList(currEtrEntrustList.get(0).getEntrustId()));
+
+                                    needUpdateStatusEntrustIdList.add(currEtrEntrustList.get(0).getEntrustId());
+                                }
                             }
                         }
                         if(currEtrEntrustList.size()>1){
                             List<String> entrustIds = Lists.newArrayList();
                             for(EtrEntrustDto currEtrEntrust : currEtrEntrustList){
-                                needUpdateStatusEntrustIdList.add(currEtrEntrust.getEntrustId());
-                                if(null!=settleTransDataDto.getShareAmt()&&settleTransDataDto.getShareAmt().compareTo(currEtrEntrust.getEntrustAmt())<=0){
-                                    entrustIds.add(currEtrEntrust.getEntrustId());
+                                if(DictCodeListExt3.交易方向_中途换券.getValue().equals(settleTransDataDto.getPs())
+                                        || DictCodeListExt3.交易方向_解除质押.getValue().equals(settleTransDataDto.getPs())){
+                                    // 查询指令质押券信息
+                                    List<EtrPledge> etrPledges = stlDataGatherMapper.selectEtrPledges(
+                                            currEtrEntrust.getEntrustId(), settleTransDataDto.getFinprodId());
+                                    if(CollectionUtils.isNotEmpty(etrPledges)){
+                                        needUpdateStatusEntrustIdList.add(currEtrEntrust.getEntrustId());
+                                        if(null!=settleTransDataDto.getShareAmt()&&settleTransDataDto.getShareAmt().compareTo(etrPledges.get(0).getPledgeNumber())<=0){
+                                            entrustIds.add(currEtrEntrust.getEntrustId());
+                                        }
+                                    }
+                                }else{
+                                    needUpdateStatusEntrustIdList.add(currEtrEntrust.getEntrustId());
+                                    if(null!=settleTransDataDto.getShareAmt()&&settleTransDataDto.getShareAmt().compareTo(currEtrEntrust.getEntrustAmt())<=0){
+                                        entrustIds.add(currEtrEntrust.getEntrustId());
+                                    }
                                 }
                             }
                             // 协议回购一对多的情况下,当且仅有一条指令满足条件时,自动匹配

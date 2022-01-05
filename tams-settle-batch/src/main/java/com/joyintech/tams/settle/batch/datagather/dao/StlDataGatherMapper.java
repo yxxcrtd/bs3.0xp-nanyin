@@ -208,4 +208,12 @@ public interface StlDataGatherMapper {
      */
     List<FinProductOthCode> selectFinProductOthCodeData(Map<String, Object> paramMap);
     // modify by etliu 20211227 end
+
+    /**
+     * 查询指令质押券信息
+     * @param entrustId
+     * @param finProdId
+     * @return
+     */
+    List<EtrPledge> selectEtrPledges(@Param("entrustId")String entrustId, @Param("finProdId")String finProdId);
 }
