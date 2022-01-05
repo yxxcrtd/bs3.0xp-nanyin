@@ -198,6 +198,10 @@ public class StlDataDealSzdSjsfxProcessService {
 //            settleTransData.setTradeAmt(abs(szdSjsfx.getFxzjje()));
             //交易金额改为 单位净价 * 交易份额
             settleTransData.setTradeAmt(ArithmeticUtil.multiply(settleTransData.getUnitCprice(), settleTransData.getShareAmt()));
+            // GZYHTZJY-1016:全价总额为空,导致划款指令计算金额为0,导致现金流水表金额为0 modify by fuyongsheng 20220105 start
+            // 全价总额
+            settleTransData.setFpriceAmt(settleTransData.getTradeAmt());
+            // GZYHTZJY-1016:全价总额为空,导致划款指令计算金额为0,导致现金流水表金额为0 modify by fuyongsheng 20220105 end
             // 交易金额_原始
             settleTransData.setTradeAmtRaw(settleTransData.getTradeAmt());
             // 交易方向、业务场景明细分类

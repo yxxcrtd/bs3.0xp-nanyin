@@ -633,8 +633,9 @@ public class StlDataDealSzdSjsjgProcessService {
                         settleTransData.setPs(DictCodeListExt3.交易方向_投资端_提前终止.getValue());
                     }
                 }
-                //全价总额(到期金额+到期利息)
-                settleTransData.setFpriceAmt(settleTransData.getmTradeAmt().add(settleTransData.getmIntAmt()));
+                //全价总额(到期金额)
+                // settleTransData.setFpriceAmt(settleTransData.getmTradeAmt().add(settleTransData.getmIntAmt()));
+                settleTransData.setFpriceAmt(settleTransData.getmTradeAmt());
             }
             //去除 协议回购合约的数据处理
 //            else {
