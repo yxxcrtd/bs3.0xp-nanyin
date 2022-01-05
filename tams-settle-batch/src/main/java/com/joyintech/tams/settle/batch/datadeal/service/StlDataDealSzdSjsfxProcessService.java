@@ -190,6 +190,10 @@ public class StlDataDealSzdSjsfxProcessService {
             settleTransData.setUnitCprice(abs(szdSjsfx.getFxzjje()));
             // 交易份额
             settleTransData.setShareAmt(abs(szdSjsfx.getFxqrgs()));
+            // GZYHTZJY-1017:净价总额未赋值,导致跑批报错 modify by fuyongsheng 20220105 start
+            // 净价总额
+            settleTransData.setCpriceAmt(settleTransData.getUnitCprice().multiply(settleTransData.getShareAmt()));
+            // GZYHTZJY-1017:净价总额未赋值,导致跑批报错 modify by fuyongsheng 20220105 end
             // 交易金额
 //            settleTransData.setTradeAmt(abs(szdSjsfx.getFxzjje()));
             //交易金额改为 单位净价 * 交易份额
