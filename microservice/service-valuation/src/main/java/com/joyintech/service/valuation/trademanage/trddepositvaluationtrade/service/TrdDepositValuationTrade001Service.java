@@ -19,7 +19,6 @@ import com.joyintech.framework.util.StringUtil;
 
 import com.joyintech.service.valuation.trademanage.trddepositvaluationtrade.dao.TrdDepositValuationTrade001Mapper;
 import com.joyintech.service.valuation.trademanage.trddepositvaluationtrade.dto.TrdDepositValuationTrade001Dto;
-import com.joyintech.service.valuation.trademanage.trdplanratevaluationtrade.dto.TrdPlanRateValuationTradeDto;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.InterfSendOpics;
 import com.joyintech.tams.common.base.entity.StlPayOrders;

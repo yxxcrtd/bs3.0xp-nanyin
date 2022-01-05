@@ -23,7 +23,6 @@ import com.joyintech.framework.select.SuggestDto;
 //import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.service.valuation.trademanage.trddepositvaluationtrade.dto.TrdDepositValuationTrade001Dto;
 import com.joyintech.service.valuation.trademanage.trddepositvaluationtrade.service.TrdDepositValuationTrade001Service;
-import com.joyintech.service.valuation.trademanage.trdplanratevaluationtrade.dto.TrdPlanRateValuationTradeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
