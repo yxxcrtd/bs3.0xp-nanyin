@@ -17,6 +17,7 @@ import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.microservice.ServiceApplication;
 import com.joyintech.tams.exchange.common.microservice.TradeServiceURL;
 import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
+import com.joyintech.tams.exchange.common.request.PageMode;
 import com.joyintech.tams.exchange.common.utils.EntrustUtils;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.datacommon.db.service.*;
@@ -459,7 +460,8 @@ public class EntrustManagement extends BaseService {
     }
 
     public Message<PageInfo<Object>> queryAllEntrustForPage(PageEntrustInfoRequest request) {
-        return new Message<>(queryAllEntrustForPage(request.getPageNum(), request.getPageSize(), request.getHistoryType(),
+        PageMode pageMode = request.getPageMode();
+        return new Message<>(queryAllEntrustForPage(pageMode.getPageNo(), pageMode.getPageSize(), request.getHistoryType(),
                 request.getUserId(), request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getPortfolioId(),
                 request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustStatus()));
     }

@@ -3,6 +3,9 @@ package com.joyintech.tams.exchange.common.request;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 /**
  * @author swwan
  * @date 2021/12/22 - 10:55
@@ -24,6 +27,11 @@ public class HistoryTradeInfoRequest extends BaseRequest {
 
     @ApiModelProperty(required = true, name = "pageSize", value = "每页数量", example = "20")
     private Integer pageSize;
+
+    @ApiModelProperty(required = true, name = "pageMode", value = "分页请求信息")
+    @NotNull(message = "分页请求信息不可为空")
+    @Valid
+    private PageMode pageMode;
 
     public HistoryTradeInfoRequest() {
     }
@@ -74,6 +82,14 @@ public class HistoryTradeInfoRequest extends BaseRequest {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public PageMode getPageMode() {
+        return pageMode;
+    }
+
+    public void setPageMode(PageMode pageMode) {
+        this.pageMode = pageMode;
     }
 
     @Override

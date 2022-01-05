@@ -160,8 +160,8 @@ public class EntrustController {
 
     @ApiOperation(value = "查询异常委托", notes = "查询异常委托")
     @RequestMapping(value = "/entrust/exception", method = RequestMethod.POST)
-    public Message<List<EntrustInterface>> queryExceptionEntrust(@RequestBody String userId,
-                                                                 @RequestBody(required = false) String entrustStatus) {
+    public Message<List<EntrustInterface>> queryExceptionEntrust(@RequestParam String userId,
+                                                                 @RequestParam(required = false) String entrustStatus) {
         if (StringUtils.isEmpty(entrustStatus)) {
             entrustStatus = "1,3,4";
         }

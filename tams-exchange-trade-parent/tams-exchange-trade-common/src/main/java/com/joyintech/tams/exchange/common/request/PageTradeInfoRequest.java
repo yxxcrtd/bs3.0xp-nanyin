@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.common.request;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -13,11 +14,11 @@ import javax.validation.constraints.NotNull;
 public class PageTradeInfoRequest extends BaseRequest {
 
     @ApiModelProperty(required = true, name = "pageNum", value = "当前页数，0 表示查出全部", example = "1")
-    @NotNull(message = "当前页数不可为空")
+//    @NotNull(message = "当前页数不可为空")
     private Integer pageNum;
 
     @ApiModelProperty(required = true, name = "pageSize", value = "每页数量，0 表示查出全部", example = "20")
-    @NotNull(message = "每页数量不可为空")
+//    @NotNull(message = "每页数量不可为空")
     private Integer pageSize;
 
     @ApiModelProperty(required = true, name = "historyType", value = "查询类型，0 历史信息；1，当前信息", example = "0")
@@ -44,6 +45,11 @@ public class PageTradeInfoRequest extends BaseRequest {
 
     @ApiModelProperty(required = false, name = "entrustId", value = "委托编号", example = "A001")
     private String entrustId;
+
+    @ApiModelProperty(required = true, name = "pageMode", value = "分页请求信息")
+    @NotNull(message = "分页请求信息不可为空")
+    @Valid
+    private PageMode pageMode;
 
     public PageTradeInfoRequest() {
     }
@@ -139,6 +145,14 @@ public class PageTradeInfoRequest extends BaseRequest {
 
     public void setEntrustId(String entrustId) {
         this.entrustId = entrustId;
+    }
+
+    public PageMode getPageMode() {
+        return pageMode;
+    }
+
+    public void setPageMode(PageMode pageMode) {
+        this.pageMode = pageMode;
     }
 
     @Override
