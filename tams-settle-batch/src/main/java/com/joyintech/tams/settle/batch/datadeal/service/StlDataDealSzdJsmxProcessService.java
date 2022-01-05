@@ -482,6 +482,22 @@ public class StlDataDealSzdJsmxProcessService {
 			settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getJyrq()));
 			// 交割日期(默认是清算日期,后面根据不同场景分别赋值)
 			settleTransData.setSettleDate(DateUtil.parse(szdJsmx.getQsrq()));
+			// 交易场所
+			settleTransData.setTradeMarket(DictCodeList.交易流通场所_上海证券交易所.getValue());
+			// 交易市场
+			settleTransData.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
+			// 席位号
+			settleTransData.setSeatNumber(StringUtil.isNotEmpty(szdJsmx.getXwh1()) ? szdJsmx.getXwh1() : szdJsmx.getXwh2());
+			// 组合代码
+			settleTransData.setPortfolioId(accountInfoDtolist.get(0).getPortfolioId());
+			// 证券账户代码
+			settleTransData.setSecAcctId(accountInfoDtolist.get(0).getSecAcctId());
+			// 资金账户
+			settleTransData.setAcctNo(accountInfoDtolist.get(0).getAcctNo());
+			// 计息基础
+			settleTransData.setBasis(DictCodeList.计息基础_A_365.getValue());
+			// 临时表流水号
+			settleTransData.setSeqNo(szdJsmx.getSeqno());
 			// 不同交易类型数据单独处理
 			// 竞价回购交易
 			if (StringUtil.equals(StlDataDealProcessConstant.YWLX_023, szdJsmx.getYwlx()) || StringUtil.equals(StlDataDealProcessConstant.YWLX_602, szdJsmx.getYwlx())) {
@@ -1226,23 +1242,6 @@ public class StlDataDealSzdJsmxProcessService {
 //			settleTransData.setTradeAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
 			settleTransData.setTradeAmtRaw(new BigDecimal(szdJsmx.getQsje()).abs());
 			// modify by etliu 20211225 end
-
-			// 交易场所
-			settleTransData.setTradeMarket(DictCodeList.交易流通场所_上海证券交易所.getValue());
-			// 交易市场
-			settleTransData.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
-			// 席位号
-			settleTransData.setSeatNumber(StringUtil.isNotEmpty(szdJsmx.getXwh1()) ? szdJsmx.getXwh1() : szdJsmx.getXwh2());
-			// 组合代码
-			settleTransData.setPortfolioId(accountInfoDtolist.get(0).getPortfolioId());
-			// 证券账户代码
-			settleTransData.setSecAcctId(accountInfoDtolist.get(0).getSecAcctId());
-			// 资金账户
-			settleTransData.setAcctNo(accountInfoDtolist.get(0).getAcctNo());
-			// 计息基础
-			settleTransData.setBasis(DictCodeList.计息基础_A_365.getValue());
-			// 临时表流水号
-			settleTransData.setSeqNo(szdJsmx.getSeqno());
 
 			StlDownDataDealWriteBaseDto stlDownDataDealWriteBaseDto = new StlDownDataDealWriteBaseDto();
 			stlDownDataDealWriteBaseDto.setSettleTransData(settleTransData);

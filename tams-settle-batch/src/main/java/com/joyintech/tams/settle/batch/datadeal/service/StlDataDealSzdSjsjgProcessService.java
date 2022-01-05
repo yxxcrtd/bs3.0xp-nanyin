@@ -606,20 +606,20 @@ public class StlDataDealSzdSjsjgProcessService {
                 settleTransData.setTradeDate(DateUtil.parseDate(szdSjsjg.getJgfsrq(), DateUtil.DEFAULT_OTHER_FORMAT));
                 // 到期交收日
                 settleTransData.setMpayDate(DateUtil.parseDate(szdSjsjg.getJgjsrq(), DateUtil.DEFAULT_OTHER_FORMAT));
-                // 到期金额
-                settleTransData.setmTradeAmt(abs(qsbj));
+                // 到期金额 = abs(abs(清算数据.收付净额) - abs(清算数据.经手费) - abs(清算数据.结算费))
+                // settleTransData.setmTradeAmt(abs(qsbj));
+                settleTransData.setmTradeAmt(abs(ArithmeticUtil.subtract(abs(szdSjsjg.getJgsfje()),
+                        ArithmeticUtil.doAdd(szdSjsjg.getJgjyjsf(),szdSjsjg.getJgjsf()))));
                 // 单位净价  add by msk
                 settleTransData.setUnitCprice(ArithmeticUtil.divide(abs(szdSjsjg.getJgcjjg()),100,2));
-                //新增 到期利息  add by msk
-                settleTransData.setmIntAmt(abs(ArithmeticUtil.subtract(abs(szdSjsjg.getJgsfje()),
-                        ArithmeticUtil.doAdd(settleTransData.getmTradeAmt(),szdSjsjg.getJgjyjsf(),szdSjsjg.getJgjsf()))));
-                // 到期本金 add by msk   回购利息=变量.本金金额*变量.回购利率/100*（变量.到期交收日-变量.首期交收日)/365
-                // 到期本金 = 到期金额-回购利息 modify by fuyongsheng 20220104 start
-                // settleTransData.setmPrinAmt(abs(qsbj));
-                settleTransData.setmPrinAmt(settleTransData.getmTradeAmt().subtract(settleTransData.getmIntAmt()));
+                // 到期本金 = abs(清算本金) modify by fuyongsheng 20220105 start
+                settleTransData.setmPrinAmt(abs(qsbj));
+                // settleTransData.setmPrinAmt(settleTransData.getmTradeAmt().subtract(settleTransData.getmIntAmt()));
+                // 到期利息=到期金额-到期本金
+                settleTransData.setmIntAmt(settleTransData.getmTradeAmt().subtract(settleTransData.getmPrinAmt()));
                 // 交易份额
                 settleTransData.setShareAmt(settleTransData.getmPrinAmt());
-                // 到期本金 = 到期金额-回购利息 modify by fuyongsheng 20220104 end
+                // 到期本金 = 到期金额-回购利息 modify by fuyongsheng 20220105 end
                 // 首期成交编号
                 settleTransData.setfCjbh(szdSjsjg.getJgfjsm());
                 // 查询首期
