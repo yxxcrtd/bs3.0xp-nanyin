@@ -54,6 +54,13 @@
             <input type="hidden" id="secAcctId" name="secAcctId" th:value="${entity?.secAcctId}">
             <input type="hidden" id="isRight" name="isRight">
             <input type="hidden" id="profitType" name="profitType">
+                <input type="hidden" id="price" name="price" th:value="${entity?.price}">
+                <input type="hidden" id="matureYield" name="matureYield" th:value="${entity?.matureYield}">
+                <input type="hidden" id="exerYield" name="exerYield" th:value="${entity?.exerYield}">
+                <input type="hidden" id="unitFprice" name="unitFprice" th:value="${entity?.unitFprice}">
+                <input type="hidden" id="unitInt" name="unitInt" th:value="${entity?.unitInt}">
+
+
             <input type="text" id="entrustId" name="entrustId" disabled="disabled" style="display:none;"
                    data-th-value="${entity?.entrustId}"/>
             <input type="text" id="entrustStatus" name="entrustId" disabled="disabled" style="display:none;"
@@ -144,7 +151,7 @@
                                         <input type="radio" id="calculateField_price" name="calculateField" value="price" th:title="#{CfetsEtribBondInfo003.price}" />
                                     </label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" id="price" name="price" placeholder="请输入内容"
+                                        <input type="text" id="priceShow" name="priceShow" placeholder="请输入内容"
                                                data-pattern="" data-fixtype="2" data-textrange='4' required
                                                class="layui-input form-input text-number"
                                                data-th-value="${entity?.price}" disabled>
@@ -156,7 +163,7 @@
                                         <input type="radio" id="calculateField_matureYield" name="calculateField" value="matureYield" th:title="#{CfetsEtribBondInfo003.matureYield}" />
                                     </label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" id="matureYield" name="matureYield" placeholder="请输入内容"
+                                        <input type="text" id="matureYieldShow" name="matureYieldShow" placeholder="请输入内容"
                                                data-pattern="" data-fixtype="2" data-textrange="6"
                                                class="layui-input form-input text-number"
                                                data-th-value="${entity?.matureYield}" disabled>
@@ -170,7 +177,7 @@
                                         <input type="radio" id="calculateField_exerYield" name="calculateField" value="exerYield" th:title="#{CfetsEtribBondInfo003.exerYield}" />
                                     </label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" id="exerYield" name="exerYield" placeholder="请输入内容"
+                                        <input type="text" id="exerYieldShow" name="exerYieldShow" placeholder="请输入内容"
                                                data-pattern="" data-fixtype="2" data-textrange="6"
                                                class="layui-input form-input text-number" disabled
                                                data-th-value="${entity?.exerYield}" >
@@ -239,7 +246,7 @@
                                     <label class="layui-form-label form-lable" style="width: 105px;"
                                            data-th-text="#{CfetsEtribBondInfo003.unitInt}">应计利息</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" id="unitInt" name="unitInt" placeholder="请输入内容"
+                                        <input type="text" id="unitIntShow" name="unitIntShow" placeholder="请输入内容"
                                                data-pattern="" data-fixtype="2" data-textrange='4'
                                                class="layui-input form-input text-number" disabled="disabled"
                                                data-th-value="${entity?.unitInt}">
@@ -250,7 +257,7 @@
                                     <label class="layui-form-label form-lable" style="width: 105px;"
                                            data-th-text="#{CfetsEtribBondInfo003.unitFprice}">全价</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" id="unitFprice" name="unitFprice" placeholder="请输入内容"
+                                        <input type="text" id="unitFpriceShow" name="unitFpriceShow" placeholder="请输入内容"
                                                data-pattern="" data-fixtype="2" data-textrange='4'
                                                class="layui-input form-input text-number" disabled="disabled"
                                                data-th-value="${entity?.unitFprice}">

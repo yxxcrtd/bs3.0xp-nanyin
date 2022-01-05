@@ -1593,7 +1593,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             }
             posport.setSecAmount(dto.getEntrustNum());
             posport.setCashAmount(ArithmeticUtil.divide(ArithmeticUtil.multiply(dto.getUnitFprice(), dto.getEntrustNum()),
-                    new BigDecimal(100), 4));
+                    new BigDecimal(100), 2));
             if(!StringUtil.isEmptyList(dto.getBussCombDistribtList())){
                 posport.setInvAim(dto.getBussCombDistribtList().get(0).getBusinessModel());
             }
