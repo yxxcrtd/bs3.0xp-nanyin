@@ -74,7 +74,7 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name="counterTrader",value="对手方交易员")
     private String counterTrader;
 
-    @ApiModelProperty(name="counterId",value="对手方名称")
+    @ApiModelProperty(name="counterName",value="对手方名称")
     private String counterName;
 
     @ApiModelProperty(name="counterTrader",value="对手方交易员名称")
