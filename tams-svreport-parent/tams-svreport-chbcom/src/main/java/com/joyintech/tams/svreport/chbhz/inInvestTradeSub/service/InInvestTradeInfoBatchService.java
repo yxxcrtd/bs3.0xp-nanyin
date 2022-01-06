@@ -170,6 +170,30 @@ public class InInvestTradeInfoBatchService extends FileImpService {
 			// sub.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
 			// 报送流水号
 			sub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+			//根据数据源规范要求，新增的交易员与交易审批人身份证号字段后6位数据需脱敏为“******”  add by tuqirong 20211223 start
+			if (StringUtil.isNotEmpty(sub.getInvestApproverId()) && sub.getInvestApproverId().length() > 6) {
+				sub.setInvestApproverId(sub.getInvestTraderId().substring(0, sub.getInvestApproverId().length()-6) + "******");
+			}else if (StringUtil.isEmpty(sub.getInvestTraderId())
+					&&!StringUtil.equals(sub.getCurAssetType(), DictCodeListExt2.资金流动类型_资产买入.getValue())
+					&&!StringUtil.equals(sub.getCurAssetType(), DictCodeListExt2.资金流动类型_资产卖出或到期.getValue())
+					&&!StringUtil.equals(sub.getCurAssetType(), DictCodeListExt2.资金流动类型_存入银行存款.getValue())
+					&&!StringUtil.equals(sub.getCurAssetType(), DictCodeListExt2.资金流动类型_银行存款到期.getValue())
+					&&!StringUtil.equals(sub.getCurAssetType(), DictCodeListExt2.资金流动类型_拆放同业和买入返售首期.getValue())
+					&&!StringUtil.equals(sub.getCurAssetType(), DictCodeListExt2.资金流动类型_同业拆入和卖出回购首期.getValue())) {
+				sub.setInvestApproverId("000000");
+			}
+			if (StringUtil.isNotEmpty(sub.getInvestTraderId()) && sub.getInvestApproverId().length() > 6) {
+				sub.setInvestTraderId(sub.getInvestTraderId().substring(0,sub.getInvestApproverId().length()-6) + "******");
+			}else if (StringUtil.isEmpty(sub.getInvestTraderId())
+					&&!StringUtil.equals(sub.getCurAssetType(), DictCodeListExt2.资金流动类型_资产买入.getValue())
+					&&!StringUtil.equals(sub.getCurAssetType(), DictCodeListExt2.资金流动类型_资产卖出或到期.getValue())
+					&&!StringUtil.equals(sub.getCurAssetType(), DictCodeListExt2.资金流动类型_存入银行存款.getValue())
+					&&!StringUtil.equals(sub.getCurAssetType(), DictCodeListExt2.资金流动类型_银行存款到期.getValue())
+					&&!StringUtil.equals(sub.getCurAssetType(), DictCodeListExt2.资金流动类型_拆放同业和买入返售首期.getValue())
+					&&!StringUtil.equals(sub.getCurAssetType(), DictCodeListExt2.资金流动类型_同业拆入和卖出回购首期.getValue())) {
+				sub.setInvestTraderId("000000");
+			}
+			//根据数据源规范要求，新增的交易员与交易审批人身份证号字段后6位数据需脱敏为“******”  add by tuqirong 20211223 end
 			// 业务表不存在数据：
 			if (!mapSub.containsKey(getBusinessKeyStr(sub))) {
 				deleteList.add(sub);
@@ -391,6 +415,14 @@ public class InInvestTradeInfoBatchService extends FileImpService {
 		gendto.setAssetMethod(dto.getAssetMethod());
 		//交易对手方类型
 		gendto.setRivalPartyType(dto.getRivalPartyType());
+		//交易审批人身份证号
+		gendto.setInvestApproverId(dto.getInvestApproverId());
+		//交易审批人姓名
+		gendto.setInvestApproverName(dto.getInvestApproverName());
+		//交易员身份证号
+		gendto.setInvestTraderId(dto.getInvestTraderId());
+		//交易员姓名
+		gendto.setInvestTraderName(dto.getInvestTraderName());
 		return gendto;
 	}
 
