@@ -252,4 +252,13 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
     public String getAssetvalueBStr(){ return null!=this.getAssetvalueB()? BigDecimalConverterUtil.getMonthDetailString(this.getAssetvalueB()):null; }
 
 
+    public BigDecimal getFloatIngplDv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getFloatIngpl()); }
+    public BigDecimal getIntincexpDv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getIntincexp()); }
+    public BigDecimal getIntadjexpAddDv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getIntadjexpAdd()); }
+    public BigDecimal getLossAmtDv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getLossAmt()); }
+    public BigDecimal getAssetvalueADv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getAssetvalueA()); }
+    public BigDecimal getAssetvalueBDv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getAssetvalueB()); }
+
+
+
 }

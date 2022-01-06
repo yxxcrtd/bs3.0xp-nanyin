@@ -1,7 +1,4 @@
 
-alter table  CHB_MONTH_ASSET_POSITIONDETAIL add  IS_FBHY VARCHAR2(50);
-COMMENT ON COLUMN CHB_MONTH_ASSET_POSITIONDETAIL.IS_FBHY
-IS '非标债权行业归属';
 DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SVR_FBHY';
 insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('SVR_FBHY', 'SVR', '中债月度明细_非标行业', null, '02', 'system', null, SYSDATE, 'system', SYSDATE);
@@ -54,7 +51,6 @@ insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRA
 values ('PbcMonthReportDetailAsset001', 'PbcMonthReportDetailAsset001_btn_exportCheck', '01', '01', null, '选择导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
 values ('PbcMonthReportDetailAsset001', 'PbcMonthReportDetailAsset001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system',sysdate, 'COM', null);
-
 
 ALTER TABLE CHB_ASSETS_BASIS_DATA ADD TDY_LOSS_AMT NUMBER(30,2);
 ALTER TABLE CHB_ASSETS_BASIS_DATA_NOBTM ADD TDY_LOSS_AMT NUMBER(30,2);

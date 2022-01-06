@@ -7,6 +7,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport;
 import com.joyintech.tams.svreport.chb.monthreportdetail.dto.ChbMonthReportDetailProd;
@@ -89,13 +90,14 @@ public class ChbMonthReportDetailProd001Controller extends BaseController{
 			searchParm.putAll(pageParam);
 		}
 		List<ChbMonthReportDetailProd> dtoList = chbMonthReportDetailProd001Service.selectForExport(searchParm);
-		File outFile = chbMonthReportDetailProd001Service.makeFile(
-				"/com/joyintech/tams/svreport/chb/monthreportdetail/controller/conf/prodExport_conf.xml", dtoList);
-		return ExportUtil.export(
-				"G06产品端明细台账" + GlobalConstant.OPEN_PARENTHESIS
-						+ pageParam.get("enddate") + GlobalConstant.CLOSE_PARENTHESIS
-						+ GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
-				outFile, true);
+		Map<String,Object> date = new HashMap<>();
+		date.put("keyList",dtoList);
+		String fileName = "G06产品端明细台账" + GlobalConstant.OPEN_PARENTHESIS
+				+ pageParam.get("enddate") + GlobalConstant.CLOSE_PARENTHESIS
+				+ GlobalConstant.POINT + "xls";
+
+		File depositfile = TisUtil.createFileDetail(date, "ChbMonthReportDetailProd001", fileName);
+		return ExportUtil.export(fileName, depositfile, true);
 	}
 
 }

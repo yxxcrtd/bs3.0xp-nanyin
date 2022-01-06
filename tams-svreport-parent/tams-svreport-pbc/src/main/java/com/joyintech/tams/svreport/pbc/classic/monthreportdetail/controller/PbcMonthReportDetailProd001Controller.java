@@ -7,6 +7,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.svreport.pbc.reportdetail.dto.PbcMonthReportDetailProd;
 import com.joyintech.tams.svreport.pbc.reportdetail.service.PbcMonthReportDetailProd001Service;
 import org.slf4j.Logger;
@@ -89,13 +90,15 @@ public class PbcMonthReportDetailProd001Controller extends BaseController{
 			searchParm.putAll(pageParam);
 		}
 		List<PbcMonthReportDetailProd> dtoList = pbcMonthReportDetailProd001Service.selectForExport(searchParm);
-		File outFile = pbcMonthReportDetailProd001Service.makeFile(
-				"/com/joyintech/tams/svreport/pbc/classic/monthreportdetail/controller/conf/prodExport_conf.xml", dtoList);
-		return ExportUtil.export(
-				"人行月报产品端明细台账"+ GlobalConstant.OPEN_PARENTHESIS
-						+ pageParam.get("enddate") + GlobalConstant.CLOSE_PARENTHESIS
-						+ GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
-				outFile, true);
+
+
+		Map<String,Object> date = new HashMap<>();
+		date.put("keyList",dtoList);
+		String fileName = "人行月报产品端明细台账" + GlobalConstant.OPEN_PARENTHESIS
+				+ pageParam.get("enddate") + GlobalConstant.CLOSE_PARENTHESIS
+				+ GlobalConstant.POINT + "xls";
+		File depositfile = TisUtil.createFileDetail(date, "PbcMonthReportDetailProd001", fileName);
+		return ExportUtil.export(fileName, depositfile, true);
 	}
 
 }

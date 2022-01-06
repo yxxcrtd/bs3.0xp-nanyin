@@ -478,7 +478,7 @@ $(function () {
 	 
 	 //批量上传披露文档
 	 var batchUpload = function(){
-		 Joyin.uploadFile({exts:'zip'},function(fileName,file) {
+		 Joyin.uploadFile({exts:'zip|xls|xlsx'},function(fileName,file) {
 	    		Joyin.ajax(basePath +"disclosure/information/reveal/reportconfirm/ReportConfirmManage003/batchUploadFile?", {
 	    			fileName:fileName,fileNo:file[0].fileNo,srcName:file[0].srcName
 	    		},function(result){

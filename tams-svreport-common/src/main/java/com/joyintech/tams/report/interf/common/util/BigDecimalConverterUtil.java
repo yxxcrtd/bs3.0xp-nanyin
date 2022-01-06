@@ -28,6 +28,9 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
  */
 public class BigDecimalConverterUtil {
 
+
+    public final static BigDecimal thenThousand = new BigDecimal("10000");
+
 	/**
      * 日志
      */
@@ -98,5 +101,21 @@ public class BigDecimalConverterUtil {
     public static BigDecimal BigDecimalAdd(BigDecimal number,BigDecimal number2){
 
         return (null!=number?number:BigDecimal.ZERO).add(null!=number2?number2:BigDecimal.ZERO);
+    }
+
+
+    public static BigDecimal BigDecimalDivTenTh(BigDecimal number) {
+        return BigDecimalDivTenTh(number,null,null);
+    }
+
+    public static BigDecimal BigDecimalDivTenTh(BigDecimal number,BigDecimal number2,Integer roundingMode){
+        //如果不赋值直接算10000
+        if(null==number2){
+            number2 = thenThousand;
+        }
+        if(null==roundingMode){
+            roundingMode = BigDecimal.ROUND_HALF_UP;
+        }
+        return null!=number?number.divide(number2,6,roundingMode):null;
     }
 }

@@ -60,7 +60,7 @@
     
     // 新增按钮点击事件
     //点击“新增”按钮，在业绩基准信息列表中展示该条信息，并重置上方要素信息	
-	getElementById('btn_create').click(function() {
+	var btnClick = function() {
 	    var tableArry = bussBenchMarkInfoTable.getAllRows();
 	    var flag = false;
 	    if(tableArry && tableArry.length > 0){
@@ -215,7 +215,7 @@
 	        getElementById('investmentCycle').val('').trigger('change');
 	    }
 	    
-	});
+	}
 	
 	/**
 	 * 绑定删除事件
@@ -264,6 +264,7 @@
             bussBenchMarkInfoTable.reload({data:[],url:null});
             getElementById('div').hide();
         }
+		getElementById('btn_create').click(function() {btnClick()});
     }
 	 /**
 	     * 期限联动事件

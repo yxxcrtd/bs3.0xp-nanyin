@@ -62,6 +62,13 @@ public interface ChbAssetInfoInterfMapper {
 	 */
 	List<String> selectAssetCodeByAssetType(@Param("assetTypeList")List<String> assetTypeList,@Param("cdate")String cdate);
 
+	/**
+	 * 查询所有委外资产
+	 *
+	 * @return
+	 */
+	List<String> selectAssetCodeByAssetTypePtl();
+
 	
 	/**
 	 * 功能:根据接入日期查询需要接入的资产要素信息

@@ -154,7 +154,9 @@
         select
         REPORTUUID, TERMID, REPORTTYPE, STARTDATE, ENDDATE, ISSUE_PARTY_ID,
         ISSUE_PARTY_NAME, REPORTFREQU, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
-        SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS, STATUS_DATE, CREATE_USER, CREATE_TIME,
+        <!-- modify by wuhaisen 修改理财产品转型情况月度统计表中取消手工处理显示系统异常问题 20220104 start -->
+        SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS, STATUS_DATE, CREATE_USER, his.CREATE_TIME,
+        <!-- modify by wuhaisen 修改理财产品转型情况月度统计表中取消手工处理显示系统异常问题 20220104 end -->
         UPDATE_USER, UPDATE_TIME, ORG_CODE, DEPT_CODE, CREATE_DEPT
         from CHB_TRANS_MONTH_HIS  his
         INNER join (

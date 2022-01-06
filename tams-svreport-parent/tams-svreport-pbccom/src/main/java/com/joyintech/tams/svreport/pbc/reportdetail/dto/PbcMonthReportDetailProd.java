@@ -893,4 +893,55 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
     public String getBuyPlaceAllStr(){ return null!=buyPlaceAll? BigDecimalConverterUtil.getMonthDetailString(buyPlaceAll):null; }
 
 
+
+
+
+
+    public BigDecimal getOrdIdentified01Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(ordIdentified01); }
+    public BigDecimal getOrdIdentified02Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(ordIdentified02); }
+    public BigDecimal getOrdIdentified03Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(ordIdentified03); }
+    public BigDecimal getOrdIdentified04Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(ordIdentified04); }
+    public BigDecimal getOrdIdentified05Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(ordIdentified05); }
+    public BigDecimal getOrdIdentified06Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(ordIdentified06); }
+    public BigDecimal getOrdIdentifiedAllDv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(ordIdentifiedAll); }
+
+    public BigDecimal getBuyPlace01Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace01); }
+    public BigDecimal getBuyPlace02Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace02); }
+    public BigDecimal getBuyPlace03Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace03); }
+    public BigDecimal getBuyPlace04Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace04); }
+    public BigDecimal getBuyPlace05Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace05); }
+    public BigDecimal getBuyPlace06Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace06); }
+    public BigDecimal getBuyPlace07Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace07); }
+    public BigDecimal getBuyPlace08Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace08); }
+    public BigDecimal getBuyPlace09Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace09); }
+    public BigDecimal getBuyPlace10Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace10); }
+    public BigDecimal getBuyPlace11Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace11); }
+    public BigDecimal getBuyPlace12Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace12); }
+    public BigDecimal getBuyPlace13Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace13); }
+    public BigDecimal getBuyPlace14Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace14); }
+    public BigDecimal getBuyPlace15Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace15); }
+    public BigDecimal getBuyPlace16Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace16); }
+    public BigDecimal getBuyPlace17Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace17); }
+    public BigDecimal getBuyPlace18Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace18); }
+    public BigDecimal getBuyPlace19Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace19); }
+    public BigDecimal getBuyPlace20Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace20); }
+    public BigDecimal getBuyPlace21Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace21); }
+    public BigDecimal getBuyPlace22Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace22); }
+    public BigDecimal getBuyPlace23Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace23); }
+    public BigDecimal getBuyPlace24Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace24); }
+    public BigDecimal getBuyPlace25Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace25); }
+    public BigDecimal getBuyPlace26Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace26); }
+    public BigDecimal getBuyPlace27Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace27); }
+    public BigDecimal getBuyPlace28Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace28); }
+    public BigDecimal getBuyPlace29Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace29); }
+    public BigDecimal getBuyPlace30Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace30); }
+    public BigDecimal getBuyPlace31Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace31); }
+    public BigDecimal getBuyPlace32Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace32); }
+    public BigDecimal getBuyPlace33Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace33); }
+    public BigDecimal getBuyPlace34Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace34); }
+    public BigDecimal getBuyPlace35Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace35); }
+    public BigDecimal getBuyPlace36Dv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlace36); }
+    public BigDecimal getBuyPlaceAllDv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(buyPlaceAll); }
+
+
 }

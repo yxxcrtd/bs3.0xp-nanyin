@@ -11,6 +11,7 @@ import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListStl;
@@ -142,7 +143,6 @@ public class ChbMonthReportDetailAssetUtil {
             }else if (ruleFlag(ChbMonthAssetRule.其他服务业,position)){
                 isFbhy =DictCodeListExt3.中债月度明细_非标行业_其他服务业.getValue();
             }
-
             chbMonthAssetPositiondetail.setIsFbhy(isFbhy);
         }
         chbMonthAssetPositiondetail.setDetailno(reportDetail.getPropertycode());
@@ -194,7 +194,14 @@ public class ChbMonthReportDetailAssetUtil {
             SubjectName = assetInfo.getAssetName();
         }else if(DictCodeListExt3.中债_上游资产一级分类_质押式回购.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_买断式回购.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_外汇即期.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_外汇远期.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_外汇掉期.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_利率互换.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_债券借贷.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_金融衍生品.getValue().equals(assetType)){
+
+
             SubjectName = assetInfo.getRivalParty();
         }
 
@@ -227,6 +234,11 @@ public class ChbMonthReportDetailAssetUtil {
         Map<String,MstCustomerInfoAdd> customerNameMap = customerList.stream().collect(Collectors.toMap(MstCustomerInfoDetail::getCustomerName,a -> a, (k1, k2) -> k1));
 
         for(ChbMonthAssetPositiondetail dto : prdPositionList) {
+            //如果币种为空.默认塞值人民币
+            if(null!=dto.getCcy()){
+                dto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+            }
+
             //先赋值行业  先用编码.再用code最后用交易对手
             MstCustomerInfoAdd info = null != customerMap.get(dto.getSubjectName()) ? customerMap.get(dto.getSubjectName()) :
                     null != customerNameMap.get(dto.getSubjectName()) ? customerNameMap.get(dto.getSubjectName()) : customerMap.get(dto.getRivalParty());
