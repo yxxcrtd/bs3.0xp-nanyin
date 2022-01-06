@@ -1,0 +1,556 @@
+--总部或分支机构信息表创建
+drop table CHB_SALER_INST_INFO;
+create table CHB_SALER_INST_INFO(
+  SALER_INST_CODE	VARCHAR2(32) NOT NULL
+  ,SALER_INST_NAME	VARCHAR2(80)
+  ,SALER_ORG_CODE 	VARCHAR2(32) NOT NULL
+  ,SALER_ORG_NAME	VARCHAR2(80)
+  ,SALER_ORG_LEVEL	VARCHAR2(2)
+  ,STATUS	VARCHAR2(2)
+  ,DATA_DATE	DATE
+  ,REMARK	VARCHAR2(200)
+  ,CREATE_USER	VARCHAR2(20)
+  ,CREATE_TIME	TIMESTAMP(6)
+  ,UPDATE_USER	VARCHAR2(32)
+  ,UPDATE_TIME	TIMESTAMP(6)
+);
+comment on table CHB_SALER_INST_INFO is '总部或分支机构信息表';
+comment on column CHB_SALER_INST_INFO.SALER_INST_CODE is '销售机构代码 ';
+comment on column CHB_SALER_INST_INFO.SALER_INST_NAME is '销售机构名称 ';
+comment on column CHB_SALER_INST_INFO.SALER_ORG_CODE is '总部或分支机构编码 ';
+comment on column CHB_SALER_INST_INFO.SALER_ORG_NAME is '总部或分支机构名称 ';
+comment on column CHB_SALER_INST_INFO.SALER_ORG_LEVEL is '机构层级 ';
+comment on column CHB_SALER_INST_INFO.STATUS is '数据状态';
+comment on column CHB_SALER_INST_INFO.DATA_DATE is '数据日期 ';
+comment on column CHB_SALER_INST_INFO.CREATE_USER is '创建人 ';
+comment on column CHB_SALER_INST_INFO.CREATE_TIME is '创建时间 ';
+comment on column CHB_SALER_INST_INFO.UPDATE_USER is '更新人 ';
+comment on column CHB_SALER_INST_INFO.UPDATE_TIME is '更新时间 ';
+alter table CHB_SALER_INST_INFO
+  add primary key (SALER_ORG_CODE);
+  
+--总部或分支机构错误信息表创建
+drop table CHB_SALER_INST_ERRODATA;
+create table CHB_SALER_INST_ERRODATA(
+  SALER_INST_CODE	VARCHAR2(32)
+  ,SALER_ORG_CODE 	VARCHAR2(32)
+  ,SALER_ORG_NAME	VARCHAR2(80)
+  ,SALER_ORG_LEVEL	VARCHAR2(2)
+  ,STATUS	VARCHAR2(2)
+  ,DATA_DATE	DATE
+  ,ORG_DATA     CLOB
+  ,ERR_MSG      CLOB
+  ,WORKFLOW_ID  VARCHAR2(20)
+  ,CREATE_USER	VARCHAR2(20)
+  ,CREATE_TIME	TIMESTAMP(6)
+  ,UPDATE_USER	VARCHAR2(32)
+  ,UPDATE_TIME	TIMESTAMP(6)
+);
+comment on table CHB_SALER_INST_ERRODATA is '总部或分支机构错误信息表';
+comment on column CHB_SALER_INST_ERRODATA.SALER_INST_CODE is '销售机构代码 ';
+comment on column CHB_SALER_INST_ERRODATA.SALER_ORG_CODE is '总部或分支机构编码 ';
+comment on column CHB_SALER_INST_ERRODATA.SALER_ORG_NAME is '总部或分支机构名称 ';
+comment on column CHB_SALER_INST_ERRODATA.SALER_ORG_LEVEL is '机构层级 ';
+comment on column CHB_SALER_INST_ERRODATA.STATUS is '数据状态';
+comment on column CHB_SALER_INST_ERRODATA.DATA_DATE is '数据日期 ';
+comment on column CHB_SALER_INST_ERRODATA.ORG_DATA is '原始数据 ';
+comment on column CHB_SALER_INST_ERRODATA.ERR_MSG is '错误信息 ';
+comment on column CHB_SALER_INST_ERRODATA.WORKFLOW_ID is '工作流代码 ';
+comment on column CHB_SALER_INST_ERRODATA.CREATE_USER is '创建人 ';
+comment on column CHB_SALER_INST_ERRODATA.CREATE_TIME is '创建时间 ';
+comment on column CHB_SALER_INST_ERRODATA.UPDATE_USER is '更新人 ';
+comment on column CHB_SALER_INST_ERRODATA.UPDATE_TIME is '更新时间 ';
+  
+--销售人员身份信息表创建
+drop table CHB_SALER_IDEN_INFO;
+create table CHB_SALER_IDEN_INFO(
+   SALER_INS_NO	VARCHAR2(30) NOT NULL
+  ,SALER_REGIST_NO	VARCHAR2(12)
+  ,SALER_INST_CODE 	VARCHAR2(32) NOT NULL
+  ,SALER_NAME	VARCHAR2(200)
+  ,SALER_SEX	VARCHAR2(2)
+  ,SALER_BIRTHDAY DATE
+  ,SALER_CREDENT_TYPE	VARCHAR2(2)
+  ,SALER_OTHER_CREDENT_NAME  VARCHAR2(60)
+  ,SALER_CREDENT_NO VARCHAR2(30)
+  ,SALER_AREA_TYPE VARCHAR2(6)
+  ,SALER_ORG_CODE  VARCHAR2(32)
+  ,SALER_DEPT  VARCHAR2(40)
+  ,SALER_POSITION VARCHAR2(40)
+  ,SALER_EDU_LEVEL VARCHAR2(2)
+  ,SALER_DEGREE VARCHAR2(2)
+  ,SALER_WORK_START_YMD VARCHAR2(20)
+  ,SALER_FINANCE_START_YMD VARCHAR2(20)
+  ,SALER_START_YMD VARCHAR2(20)
+  ,SALER_LEVLE VARCHAR2(2)
+  ,SALER_CERTIFICATE_TYPE VARCHAR2(100)
+  ,SALER_CHB_TRAIN_NO VARCHAR2(50)
+  ,SALER_RISK_LEVEL VARCHAR2(50)
+  ,SALER_QUALIFICATION VARCHAR2(400)
+  ,SALER_TEL VARCHAR2(30)
+  ,SALER_MOBILE VARCHAR2(11)
+  ,SALER_MAIL VARCHAR2(50)
+  ,SALER_STATUS VARCHAR2(2)
+  ,REMARK VARCHAR2(256)
+  ,STATUS VARCHAR2(2)
+  ,DATA_DATE DATE
+  ,CREATE_USER	VARCHAR2(20)
+  ,CREATE_TIME	TIMESTAMP(6)
+  ,UPDATE_USER	VARCHAR2(32)
+  ,UPDATE_TIME	TIMESTAMP(6)
+);
+comment on table CHB_SALER_IDEN_INFO is '销售人员身份信息表';
+comment on column CHB_SALER_IDEN_INFO.SALER_INS_NO is '内部编号';
+comment on column CHB_SALER_IDEN_INFO.SALER_REGIST_NO is '销售人员登记编码 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_INST_CODE is '销售机构代码 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_NAME is '姓名 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_SEX is '性别 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_BIRTHDAY is '出生日期 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_CREDENT_TYPE is '证件类别 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_OTHER_CREDENT_NAME is '其他证件名称 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_CREDENT_NO is '证件号码 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_AREA_TYPE is '所属区域 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_ORG_CODE  is '所属总部或分支机构 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_DEPT is '所属部门 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_POSITION is '职位 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_EDU_LEVEL is '学历 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_DEGREE is '学位 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_WORK_START_YMD is '首次参加工作时间 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_FINANCE_START_YMD is '首次从事金融工作时间 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_START_YMD is '首次从事理财销售时间 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_LEVLE is '专业技术职称';
+comment on column CHB_SALER_IDEN_INFO.SALER_CERTIFICATE_TYPE is '理财专业证书 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_CHB_TRAIN_NO is '理财登记培训证书编号 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_RISK_LEVEL is '可销售产品风险等级 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_QUALIFICATION is '销售资质 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_TEL is '办公电话 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_MOBILE is '移动电话 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_MAIL is '邮箱 ';
+comment on column CHB_SALER_IDEN_INFO.SALER_STATUS is '当前状态 ';
+comment on column CHB_SALER_IDEN_INFO.STATUS is '数据状态';
+comment on column CHB_SALER_IDEN_INFO.DATA_DATE is '数据日期 ';
+comment on column CHB_SALER_IDEN_INFO.REMARK is '备注 ';
+comment on column CHB_SALER_IDEN_INFO.CREATE_USER is '创建人 ';
+comment on column CHB_SALER_IDEN_INFO.CREATE_TIME is '创建时间 ';
+comment on column CHB_SALER_IDEN_INFO.UPDATE_USER is '更新人 ';
+comment on column CHB_SALER_IDEN_INFO.UPDATE_TIME is '更新时间 ';
+alter table CHB_SALER_IDEN_INFO
+  add primary key (SALER_INS_NO);
+  
+--销售人员身份错误信息表创建
+drop table CHB_SALER_IDEN_ERRODATA;
+create table CHB_SALER_IDEN_ERRODATA(
+   SALER_INS_NO	VARCHAR2(30)
+  ,SALER_NAME	VARCHAR2(200)
+  ,SALER_SEX	VARCHAR2(2)
+  ,SALER_CREDENT_TYPE	VARCHAR2(2)
+  ,STATUS VARCHAR2(2)
+  ,DATA_DATE DATE
+  ,ORG_DATA     CLOB
+  ,ERR_MSG      CLOB
+  ,WORKFLOW_ID  VARCHAR2(20)
+  ,CREATE_USER	VARCHAR2(20)
+  ,CREATE_TIME	TIMESTAMP(6)
+  ,UPDATE_USER	VARCHAR2(32)
+  ,UPDATE_TIME	TIMESTAMP(6)
+);
+comment on table CHB_SALER_IDEN_ERRODATA is '销售人员身份错误信息表';
+comment on column CHB_SALER_IDEN_ERRODATA.SALER_INS_NO is '内部编号';
+comment on column CHB_SALER_IDEN_ERRODATA.SALER_NAME is '姓名 ';
+comment on column CHB_SALER_IDEN_ERRODATA.SALER_SEX is '性别 ';
+comment on column CHB_SALER_IDEN_ERRODATA.SALER_CREDENT_TYPE is '证件类别 ';
+comment on column CHB_SALER_IDEN_ERRODATA.STATUS is '数据状态';
+comment on column CHB_SALER_IDEN_ERRODATA.DATA_DATE is '数据日期 ';
+comment on column CHB_SALER_IDEN_ERRODATA.ORG_DATA is '原始数据 ';
+comment on column CHB_SALER_IDEN_ERRODATA.ERR_MSG is '错误信息 ';
+comment on column CHB_SALER_IDEN_ERRODATA.WORKFLOW_ID is '工作流代码 ';
+comment on column CHB_SALER_IDEN_ERRODATA.CREATE_USER is '创建人 ';
+comment on column CHB_SALER_IDEN_ERRODATA.CREATE_TIME is '创建时间 ';
+comment on column CHB_SALER_IDEN_ERRODATA.UPDATE_USER is '更新人 ';
+comment on column CHB_SALER_IDEN_ERRODATA.UPDATE_TIME is '更新时间 ';
+  
+  
+--销售人员奖惩投诉记录信息表创建
+drop table CHB_SALER_REW_PENA_INFO;
+create table CHB_SALER_REW_PENA_INFO(
+   SALER_REW_PENA_NO	VARCHAR2(32) NOT NULL
+  ,SALER_INS_NO	VARCHAR2(30) NOT NULL
+  ,SALER_INST_CODE 	VARCHAR2(32)
+  ,SALER_REW_PENA_TYEP	VARCHAR2(2)
+  ,SALER_REW_PENA_NAME	VARCHAR2(100)
+  ,SALER_REW_PENA_COMMENTS VARCHAR2(400)
+  ,SALER_REW_PENA_INST	VARCHAR2(2)
+  ,SALER_REW_PENA_INST_NAME VARCHAR2(200)
+  ,SALER_REW_PENA_START	DATE
+  ,SALER_REW_PENA_END	DATE
+  ,SALER_COMPLAIN_DETAIL VARCHAR2(400)
+  ,SALER_COMPLAIN_RESULT VARCHAR2(400)
+  ,SALER_COMPLAIN_DATE	DATE
+  ,STATUS	VARCHAR2(2)
+  ,DATA_DATE	DATE
+  ,REMARK	VARCHAR2(200)
+  ,CREATE_USER	VARCHAR2(20)
+  ,CREATE_TIME	TIMESTAMP(6)
+  ,UPDATE_USER	VARCHAR2(32)
+  ,UPDATE_TIME	TIMESTAMP(6)
+);
+comment on table CHB_SALER_REW_PENA_INFO is '销售人员奖惩投诉记录信息表';
+comment on column CHB_SALER_REW_PENA_INFO.SALER_REW_PENA_NO is '奖惩编号 ';
+comment on column CHB_SALER_REW_PENA_INFO.SALER_INS_NO is '内部编号 ';
+comment on column CHB_SALER_REW_PENA_INFO.SALER_INST_CODE is '销售机构代码 ';
+comment on column CHB_SALER_REW_PENA_INFO.SALER_REW_PENA_TYEP is '记录分类 ';
+comment on column CHB_SALER_REW_PENA_INFO.SALER_REW_PENA_NAME is '奖惩名称 ';
+comment on column CHB_SALER_REW_PENA_INFO.SALER_REW_PENA_COMMENTS is '奖惩说明 ';
+comment on column CHB_SALER_REW_PENA_INFO.SALER_REW_PENA_INST is '奖惩单位 ';
+comment on column CHB_SALER_REW_PENA_INFO.SALER_REW_PENA_INST_NAME is '奖惩单位具体名称 ';
+comment on column CHB_SALER_REW_PENA_INFO.SALER_REW_PENA_START is '奖惩起始日期 ';
+comment on column CHB_SALER_REW_PENA_INFO.SALER_REW_PENA_END is '奖惩结束日期 ';
+comment on column CHB_SALER_REW_PENA_INFO.SALER_COMPLAIN_DETAIL is '投诉详情 ';
+comment on column CHB_SALER_REW_PENA_INFO.SALER_COMPLAIN_RESULT is '投诉处理结果 ';
+comment on column CHB_SALER_REW_PENA_INFO.SALER_COMPLAIN_DATE is '投诉日期 ';
+comment on column CHB_SALER_REW_PENA_INFO.STATUS is '数据状态';
+comment on column CHB_SALER_REW_PENA_INFO.DATA_DATE is '数据日期 ';
+comment on column CHB_SALER_REW_PENA_INFO.CREATE_USER is '创建人 ';
+comment on column CHB_SALER_REW_PENA_INFO.CREATE_TIME is '创建时间 ';
+comment on column CHB_SALER_REW_PENA_INFO.UPDATE_USER is '更新人 ';
+comment on column CHB_SALER_REW_PENA_INFO.UPDATE_TIME is '更新时间 ';
+alter table CHB_SALER_REW_PENA_INFO
+  add primary key (SALER_REW_PENA_NO);
+  
+--销售人员奖惩投诉记录错误信息表创建
+drop table CHB_SALER_REW_PENA_ERRODATA;
+create table CHB_SALER_REW_PENA_ERRODATA(
+   SALER_REW_PENA_NO	VARCHAR2(32) NOT NULL
+  ,SALER_INS_NO	VARCHAR2(30)
+  ,SALER_REW_PENA_TYEP	VARCHAR2(2)
+  ,SALER_REW_PENA_INST	VARCHAR2(2)
+  ,SALER_REW_PENA_START	DATE
+  ,SALER_COMPLAIN_DATE	DATE
+  ,STATUS	VARCHAR2(2)
+  ,DATA_DATE	DATE
+  ,ORG_DATA     CLOB
+  ,ERR_MSG      CLOB
+  ,WORKFLOW_ID  VARCHAR2(20)
+  ,CREATE_USER	VARCHAR2(20)
+  ,CREATE_TIME	TIMESTAMP(6)
+  ,UPDATE_USER	VARCHAR2(32)
+  ,UPDATE_TIME	TIMESTAMP(6)
+);
+comment on table CHB_SALER_REW_PENA_ERRODATA is '销售人员奖惩投诉记录错误信息表';
+comment on column CHB_SALER_REW_PENA_ERRODATA.SALER_REW_PENA_NO is '奖惩编号 ';
+comment on column CHB_SALER_REW_PENA_ERRODATA.SALER_INS_NO is '内部编号 ';
+comment on column CHB_SALER_REW_PENA_ERRODATA.SALER_REW_PENA_TYEP is '记录分类 ';
+comment on column CHB_SALER_REW_PENA_ERRODATA.SALER_REW_PENA_INST is '奖惩单位 ';
+comment on column CHB_SALER_REW_PENA_ERRODATA.SALER_REW_PENA_START is '奖惩起始日期 ';
+comment on column CHB_SALER_REW_PENA_ERRODATA.SALER_COMPLAIN_DATE is '投诉日期 ';
+comment on column CHB_SALER_REW_PENA_ERRODATA.STATUS is '数据状态';
+comment on column CHB_SALER_REW_PENA_ERRODATA.DATA_DATE is '数据日期 ';
+comment on column CHB_SALER_REW_PENA_ERRODATA.ORG_DATA is '原始数据 ';
+comment on column CHB_SALER_REW_PENA_ERRODATA.ERR_MSG is '错误信息 ';
+comment on column CHB_SALER_REW_PENA_ERRODATA.CREATE_USER is '创建人 ';
+comment on column CHB_SALER_REW_PENA_ERRODATA.CREATE_TIME is '创建时间 ';
+comment on column CHB_SALER_REW_PENA_ERRODATA.UPDATE_USER is '更新人 ';
+comment on column CHB_SALER_REW_PENA_ERRODATA.UPDATE_TIME is '更新时间 ';
+
+--增加机构层级枚举值
+DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SALER_ORG_LEVEL';
+insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SALER_ORG_LEVEL', 'SYS', '机构层级 01总行或总部/02分支行或分部', 'SALER_ORG_LEVEL', '02', 'system', null, SYSDATE, 'system', SYSDATE);
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SALER_ORG_LEVEL';
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_ORG_LEVEL', '01', '总行或总部', 1, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_ORG_LEVEL', '02', '分支行或分部', 2, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+
+--增加记录分类枚举值
+DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SALER_REW_PENA_TYEP';
+insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SALER_REW_PENA_TYEP', 'SYS', '记录分类 01奖励/02惩处/03投诉', 'SALER_REW_PENA_TYEP', '02', 'system', null, SYSDATE, 'system', SYSDATE);
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SALER_REW_PENA_TYEP';
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_REW_PENA_TYEP', '01', '奖励', 1, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_REW_PENA_TYEP', '02', '惩处', 2, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_REW_PENA_TYEP', '03', '投诉', 3, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+
+--增加奖惩单位枚举值
+DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SALER_REW_PENA_INST';
+insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SALER_REW_PENA_INST', 'SYS', '奖惩单位 01金融管理部门/02本机构/99其他', 'SALER_REW_PENA_INST', '02', 'system', null, SYSDATE, 'system', SYSDATE);
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SALER_REW_PENA_INST';
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_REW_PENA_INST', '01', '金融管理部门', 1, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_REW_PENA_INST', '02', '本机构', 2, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_REW_PENA_INST', '99', '其他', 3, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+
+--增加销售人员证件类型枚举值
+DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SALER_CREDENT_TYPE';
+insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SALER_CREDENT_TYPE', 'SYS', '销售人员证件类型', 'SALER_CREDENT_TYPE', '02', 'system', null, SYSDATE, 'system', SYSDATE);
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SALER_CREDENT_TYPE';
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_CREDENT_TYPE', '01', '居民身份证', 1, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_CREDENT_TYPE', '02', '外国护照', 2, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_CREDENT_TYPE', '03', '港澳往来内地通行证', 3, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_CREDENT_TYPE', '04', '台湾往来内地通行证', 4, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_CREDENT_TYPE', '05', '外国人永久居留证', 5, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_CREDENT_TYPE', '99', '其他', 6, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+
+--增加销售人员学历枚举值
+DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SALER_EDU_LEVEL';
+insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SALER_EDU_LEVEL', 'SYS', '销售人员学历', 'SALER_EDU_LEVEL', '02', 'system', null, SYSDATE, 'system', SYSDATE);
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SALER_EDU_LEVEL';
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_EDU_LEVEL', '01', '高中', 1, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_EDU_LEVEL', '02', '大专', 2, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_EDU_LEVEL', '03', '本科', 3, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_EDU_LEVEL', '04', '硕士研究生', 4, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_EDU_LEVEL', '05', '博士研究生', 5, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_EDU_LEVEL', '99', '其他', 6, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+
+--增加销售人员学位枚举值
+DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SALER_DEGREE';
+insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SALER_DEGREE', 'SYS', '销售人员学位', 'SALER_DEGREE', '02', 'system', null, SYSDATE, 'system', SYSDATE);
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SALER_DEGREE';
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_DEGREE', '01', '学士', 1, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_DEGREE', '02', '硕士', 2, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_DEGREE', '03', '博士', 3, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_DEGREE', '99', '其他', 4, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+
+--增加销售人员专业技术职称枚举值
+DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SALER_LEVLE';
+insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SALER_LEVLE', 'SYS', '销售人员专业技术职称', 'SALER_LEVLE', '02', 'system', null, SYSDATE, 'system', SYSDATE);
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SALER_LEVLE';
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_LEVLE', '01', '初级', 1, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_LEVLE', '02', '中级', 2, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_LEVLE', '03', '高级', 3, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_LEVLE', '99', '其他', 4, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+
+--增加奖销售人员理财专业证书枚举值
+DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SALER_CERTIFICATE_TYPE';
+insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SALER_CERTIFICATE_TYPE', 'SYS', '销售人员理财专业证书', 'SALER_CERTIFICATE_TYPE', '02', 'system', null, SYSDATE, 'system', SYSDATE);
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SALER_CERTIFICATE_TYPE';
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_CERTIFICATE_TYPE', '01', '行内专业证书', 1, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_CERTIFICATE_TYPE', '02', '银行从业资格证书', 2, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_CERTIFICATE_TYPE', '03', 'AFP 金融理财师', 3, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_CERTIFICATE_TYPE', '04', 'CFP 国际金融理财师', 4, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_CERTIFICATE_TYPE', '05', 'CFA 特许金融分析师', 5, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_CERTIFICATE_TYPE', '06', 'CPA 注册会计师', 6, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_CERTIFICATE_TYPE', '07', 'FRM 金融风险管理师', 7, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_CERTIFICATE_TYPE', '99', '其他', 8, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+
+--增加可销售产品风险等级枚举值
+DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SALER_RISK_LEVEL';
+insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SALER_RISK_LEVEL', 'SYS', '可销售产品风险等级', 'SALER_RISK_LEVEL', '02', 'system', null, SYSDATE, 'system', SYSDATE);
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SALER_RISK_LEVEL';
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_RISK_LEVEL', '01', '一级(低)', 1, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_RISK_LEVEL', '02', '二级(中低)', 2, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_RISK_LEVEL', '03', '三级(中)', 3, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_RISK_LEVEL', '04', '四级(中高)', 4, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_RISK_LEVEL', '05', '五级(高)', 5, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+
+--增加销售人员当前状态枚举值
+DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SALER_STATUS';
+insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SALER_STATUS', 'SYS', '销售人员当前状态', 'SALER_STATUS', '02', 'system', null, SYSDATE, 'system', SYSDATE);
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SALER_STATUS';
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_STATUS', '01', '正常', 1, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_STATUS', '02', '转岗', 2, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_STATUS', '03', '停职', 3, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SALER_STATUS', '04', '离职', 4, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+
+  --菜单配置
+DELETE FROM SYS_PAGE WHERE PAGE_ID in ('SalesStaffManage','SalerIdenInfo001','SalerIdenInfo002','SalerInstInfo001','SalerInstInfo002','SalerRewPenaInfo001','SalerRewPenaInfo002');
+delete from SYS_MENU where MENU_ID = 'REPORT_001_001_027';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_027', 'REP', null, 'REPORT_001_001', 'SalesStaffManage', 15, '02', '理财销售人员信息维护', 'system', null, TIMESTAMP '2021-06-30 20:43:03', 'system', TIMESTAMP '2021-06-30 20:43:03');
+INSERT INTO SYS_PAGE VALUES ('SalesStaffManage','REP','/report/submitmaintenance/salesstaffmanage/SalesStaffManage','report/submitmaintenance/salesstaffmanage/SalesStaffManage','REPORT_001_001_027',null,null,'02','01','理财销售人员信息维护','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_PAGE VALUES ('SalerIdenInfo001','REP','/report/submitmaintenance/salerideninfo/SalerIdenInfo001','report/submitmaintenance/salerideninfo/SalerIdenInfo001',null,null,null,'02','01','总部或分支机构信息','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_PAGE VALUES ('SalerIdenInfo002','REP','/report/submitmaintenance/salerideninfo/SalerIdenInfo002','report/submitmaintenance/salerideninfo/SalerIdenInfo002',null,null,null,'02','01','总部或分支机构信息新建','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_PAGE VALUES ('SalerInstInfo001','REP','/report/submitmaintenance/salerinstinfo/SalerInstInfo001','report/submitmaintenance/salerinstinfo/SalerInstInfo001',null,null,null,'02','01','销售人员身份信息','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_PAGE VALUES ('SalerInstInfo002','REP','/report/submitmaintenance/salerinstinfo/SalerInstInfo002','report/submitmaintenance/salerinstinfo/SalerInstInfo002',null,null,null,'02','01','销售人员身份信息新建','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_PAGE VALUES ('SalerRewPenaInfo001','REP','/report/submitmaintenance/salerrewpenainfo/SalerRewPenaInfo001','report/submitmaintenance/salerrewpenainfo/SalerRewPenaInfo001',null,null,null,'02','01','销售人员奖惩投诉记录信息','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_PAGE VALUES ('SalerRewPenaInfo002','REP','/report/submitmaintenance/salerrewpenainfo/SalerRewPenaInfo002','report/submitmaintenance/salerrewpenainfo/SalerRewPenaInfo002',null,null,null,'02','01','销售人员奖惩投诉记录信息新建','system',null,sysdate,'system',sysdate);
+
+--按钮工作流配置
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'SalerInstInfo001';
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'SalerInstInfo002';
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'SalerIdenInfo001';
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'SalerIdenInfo002';
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'SalerRewPenaInfo001';
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'SalerRewPenaInfo002';
+INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('SalerInstInfo002','SalerInstInfo001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('SalerInstInfo002','SalerInstInfo002_btn_submit','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('SalerInstInfo001','SalerInstInfo001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('SalerIdenInfo002','SalerIdenInfo001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('SalerIdenInfo002','SalerIdenInfo002_btn_submit','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('SalerIdenInfo001','SalerIdenInfo001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('SalerRewPenaInfo002','SalerRewPenaInfo001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('SalerRewPenaInfo002','SalerRewPenaInfo002_btn_submit','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('SalerRewPenaInfo001','SalerRewPenaInfo001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
+DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID = 'SalerIdenInfo001';
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalerIdenInfo001','SalerIdenInfo001_btn_add','01','01',null,'新建','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalerIdenInfo001','SalerIdenInfo001_btn_delete','01','01',null,'删除','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalerIdenInfo001','SalerIdenInfo001_btn_import','01','01',null,'导入','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalerIdenInfo001','SalerIdenInfo001_btn_importCode','01','01',null,'导入销售人员登记编码','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalerIdenInfo001','SalerIdenInfo001_btn_reset','01','01',null,'重置','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalerIdenInfo001','SalerIdenInfo001_btn_search','01','01',null,'查询','system',null,sysdate,'system',sysdate,'C',null);
+DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID = 'SalerInstInfo001';
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalerInstInfo001','SalerInstInfo001_btn_add','01','01',null,'新建','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalerInstInfo001','SalerInstInfo001_btn_delete','01','01',null,'删除','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalerInstInfo001','SalerInstInfo001_btn_import','01','01',null,'导入','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalerInstInfo001','SalerInstInfo001_btn_reset','01','01',null,'重置','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalerInstInfo001','SalerInstInfo001_btn_search','01','01',null,'查询','system',null,sysdate,'system',sysdate,'C',null);
+DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID = 'SalerRewPenaInfo001';
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalerRewPenaInfo001','SalerRewPenaInfo001_btn_add','01','01',null,'新建','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalerRewPenaInfo001','SalerRewPenaInfo001_btn_delete','01','01',null,'删除','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalerRewPenaInfo001','SalerRewPenaInfo001_btn_import','01','01',null,'导入','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalerRewPenaInfo001','SalerRewPenaInfo001_btn_reset','01','01',null,'重置','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalerRewPenaInfo001','SalerRewPenaInfo001_btn_search','01','01',null,'查询','system',null,sysdate,'system',sysdate,'C',null);
+
+--总部或分支机构信息check
+DELETE FROM CHB_DATACHECK_RULE_INV WHERE PAGE_ID = 'SalerInstInfo002';
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_INST_INFO-2021-1119-001','SalerInstInfo002','isNotEmpty','salerInstCode',null,null,'N','销售机构代码不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_INST_INFO-2021-1119-002','SalerInstInfo002','isNotEmpty','salerOrgCode',null,null,'N','总部或分支机构编码不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_INST_INFO-2021-1119-003','SalerInstInfo002','lessThanCharLength','salerOrgCode',null,'33','Y','总部或分支机构编码不能超过32字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_INST_INFO-2021-1119-004','SalerInstInfo002','isNotEmpty','salerOrgName',null,null,'N','总部或分支机构名称不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_INST_INFO-2021-1119-005','SalerInstInfo002','lessThanCharLength','salerOrgName',null,'81','Y','总部或分支机构名称不能超过80字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_INST_INFO-2021-1119-008','SalerInstInfo002','isNotEmpty','salerOrgLevel','==','SALER_STATUS','Y','机构层级不可为空或不在值域范围内。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+
+--销售人员信息check
+DELETE FROM CHB_DATACHECK_RULE_INV WHERE PAGE_ID = 'SalerIdenInfo002';
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-001','SalerIdenInfo002','isNotEmpty','salerInsNo',null,null,'N','内部编号不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-002','SalerIdenInfo002','lessThanCharLength','salerInsNo',null,'31','Y','内部编号不能超过30字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-003','SalerIdenInfo002','isNotEmpty','salerInstCode',null,null,'N','销售机构代码不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-004','SalerIdenInfo002','isNotEmpty','salerName',null,null,'N','姓名不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-005','SalerIdenInfo002','lessThanCharLength','salerName',null,'201','Y','姓名不能超过200字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-006','SalerIdenInfo002','isNotEmpty','salerSex','==','SVR_SEX','Y','性别不可为空或不在值域范围内。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-007','SalerIdenInfo002','isNotEmpty','salerBirthday',null,null,'N','出生日期不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-008','SalerIdenInfo002','isNotEmpty','salerCredentType','==','SALER_CREDENT_TYPE','Y','证件类别不可为空或不在值域范围内。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-009','SalerIdenInfo002','isNotEmpty','salerCredentNo',null,null,'N','证件号码不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-010','SalerIdenInfo002','lessThanCharLength','salerCredentNo',null,'31','Y','证件号码不能超过30字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-011','SalerIdenInfo002','isNotEmpty','salerAreaType','==','SVR_BUY_PLACE','Y','所属区域不可为空或不在值域范围内。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-012','SalerIdenInfo002','isNotEmpty','salerOrgCode',null,null,'N','所属总部或分支机构不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-013','SalerIdenInfo002','isNotEmpty','salerDept',null,null,'N','所属部门不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-014','SalerIdenInfo002','lessThanCharLength','salerDept',null,'41','Y','所属部门不能超过40字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-015','SalerIdenInfo002','isNotEmpty','salerPosition',null,null,'N','职位不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-016','SalerIdenInfo002','lessThanCharLength','salerPosition',null,'41','Y','职位不能超过40字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-017','SalerIdenInfo002','isNotEmpty','salerEduLevel','==','SALER_EDU_LEVEL','Y','学历不可为空或不在值域范围内。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-018','SalerIdenInfo002','isNotEmpty','salerDegree','==','SALER_DEGREE','Y','学位不可为空或不在值域范围内。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-019','SalerIdenInfo002','isNotEmpty','salerWorkStartYmd',null,null,'N','首次参加工作时间不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-020','SalerIdenInfo002','isNotEmpty','salerFinanceStartYmd',null,null,'N','首次从事金融工作时间不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-021','SalerIdenInfo002','isNotEmpty','salerStartYmd',null,null,'N','首次从事理财销售时间不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-022','SalerIdenInfo002','isNotEmpty','salerLevle','==','SALER_LEVLE','Y','专业技术职称不可为空或不在值域范围内。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-023','SalerIdenInfo002','isNotEmpty','salerCertificateType',null,null,'N','理财专业证书不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-024','SalerIdenInfo002','isNotEmpty','salerRiskLevel',null,null,'N','可销售产品风险等级不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-025','SalerIdenInfo002','isNotEmpty','salerQualification',null,null,'N','销售资质不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-026','SalerIdenInfo002','lessThanCharLength','salerQualification',null,'401','Y','销售资质不能超过400字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-027','SalerIdenInfo002','isNotEmpty','salerTel',null,null,'N','办公电话不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-028','SalerIdenInfo002', 'isCustomizedStringForWhitelist', 'salerTel', null, '^\d{3,4}-\d{7,8}(-\d{1,8})?', 'Y','办公电话填写格式错误。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-029','SalerIdenInfo002','isNotEmpty','salerMobile',null,null,'N','移动电话不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-030','SalerIdenInfo002', 'isCustomizedStringForWhitelist', 'salerMobile', null, '^1(3|4|5|6|7|8|9)\d{9}$', 'Y','移动电话填写格式错误。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-031','SalerIdenInfo002','isNotEmpty','salerMail',null,null,'N','邮箱不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-032','SalerIdenInfo002', 'isCustomizedStringForWhitelist', 'salerMail', null, '^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$', 'Y','邮箱填写格式错误。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-033','SalerIdenInfo002','isNotEmpty','salerStatus','==','SALER_STATUS','Y','当前状态不可为空或不在值域范围内。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_IDEN_INFO-2021-1119-034','SalerIdenInfo002','lessThanCharLength','remark',null,'257','Y','备注不能超过256字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+
+--销售人员奖惩投诉记录信息check
+DELETE FROM CHB_DATACHECK_RULE_INV WHERE PAGE_ID = 'SalerRewPenaInfo002';
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_REW_PENA_INFO-2021-1119-001','SalerRewPenaInfo002','isNotEmpty','salerInstCode',null,null,'N','销售机构代码不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_REW_PENA_INFO-2021-1119-002','SalerRewPenaInfo002','isNotEmpty','salerInsNo',null,null,'N','内部编号不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_REW_PENA_INFO-2021-1119-003','SalerRewPenaInfo002','isNotEmpty','salerRewPenaTyep','==','SALER_REW_PENA_TYEP','Y','记录分类不可为空或不在值域范围内。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_REW_PENA_INFO-2021-1119-004','SalerRewPenaInfo002','lessThanCharLength','salerRewPenaName',null,'101','Y','奖惩名称不能超过100字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_REW_PENA_INFO-2021-1119-005','SalerRewPenaInfo002','lessThanCharLength','salerRewPenaComments',null,'401','Y','奖惩说明不能超过400字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_REW_PENA_INFO-2021-1119-006','SalerRewPenaInfo002','lessThanCharLength','salerRewPenaInstName',null,'201','Y','奖惩单位具体名称不能超过200字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_REW_PENA_INFO-2021-1119-007','SalerRewPenaInfo002','lessThanCharLength','salerComplainDetail',null,'401','Y','投诉详情不能超过400字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
+values ('CHB_SALER_REW_PENA_INFO-2021-1119-008','SalerRewPenaInfo002','lessThanCharLength','salerComplainResult',null,'401','Y','投诉处理结果不能超过400字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
