@@ -7,7 +7,7 @@
         select * from (select aaa.* from (
             <include refid="onlyRegInfo"></include>
         ) aaa
-        left join SYS_DATADICT_LIST sdl on aaa.finprodType2=sdl.ITEM_CODE and sdl.DICT_CODE='FINPROD_TYPE_TG'
+        left join SYS_DATADICT_LIST sdl on aaa.finprodType2=sdl.ITEM_CODE and sdl.DICT_CODE='REG_ASSET_TYPE'
         left join SYS_DATADICT_LIST dictps on aaa.PS=dictps.ITEM_CODE and dictps.DICT_CODE='PS'
         left join SYS_DATADICT_LIST dicttradeMarket on aaa.tradeMarket=dicttradeMarket.ITEM_CODE and dicttradeMarket.DICT_CODE='TRADE_PLACE'
         left join SYS_DATADICT_LIST dictsp on aaa.settleSpeed=dictsp.ITEM_CODE and dictsp.DICT_CODE='ACCOUNT_SPEED'
@@ -87,7 +87,7 @@
         and (match.trd_conf_status is null or match.trd_conf_status ='0')
         and reg.ps in ('T01','T02','03','04')
         <if test="userId != null and userId != ''">
-            and reg.create_user= #{userId}
+            and reg.ou_trader_id= #{userId}
         </if>
         <if test="ps != null and !ps.equals('')">
             AND reg.ps=#{ps}
@@ -148,10 +148,10 @@
                     or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or  aaa.tradeYield||'' =#{search}
                     or aaa.termDays||'' =#{search}
                     or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
-                    or aaa.tradeDate||'' =#{search}
-                    or aaa.tradeDate||'' =#{year}||'-'||#{search}
-                    or replace(aaa.tradeDate,'-','/')||'' =#{search}
-                    or replace(aaa.tradeDate,'-','/')||'' =#{year}||'/'||#{search}
+                    or to_char(aaa.tradeDate,'yyyy-MM-dd')=#{search}
+                    or to_char(aaa.tradeDate,'yyyy-MM-dd') =#{year}||'-'||#{search}
+                    or to_char(aaa.tradeDate,'yyyy/MM/dd') =#{search}
+                    or to_char(aaa.tradeDate,'yyyy/MM/dd') =#{year}||'/'||#{search}
                     )
             </if>
         </where>
@@ -214,7 +214,7 @@
             UNION ALL
             <include refid="onlyIbuInfo"></include>
         ) aaa
-        left join SYS_DATADICT_LIST sdl on aaa.finprodType2=sdl.ITEM_CODE and sdl.DICT_CODE='FINPROD_TYPE_TG'
+        left join SYS_DATADICT_LIST sdl on aaa.finprodType2=sdl.ITEM_CODE and sdl.DICT_CODE='REG_ASSET_TYPE'
         left join SYS_DATADICT_LIST dictps on aaa.PS=dictps.ITEM_CODE and dictps.DICT_CODE='PS'
         left join SYS_DATADICT_LIST dicttradeMarket on aaa.tradeMarket=dicttradeMarket.ITEM_CODE and dicttradeMarket.DICT_CODE='TRADE_PLACE'
         left join SYS_DATADICT_LIST dictsp on aaa.settleSpeed=dictsp.ITEM_CODE and dictsp.DICT_CODE='ACCOUNT_SPEED'
@@ -291,11 +291,14 @@
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ibd.cp_party_id= mcci.party_id
         left join MST_CFETS_CUSTOMER_TRADER t4 on t4.TRADER_ID=ib.ou_trader_id
         left join MST_COUNTER_PARTY t1 on ibd.cp_party_id=t1.party_id
+        left join sys_user_add sua on  sua.ibu_trader=ib.OU_TRADER_ID
+        left join sys_user t3 on t3.user_id=sua.user_id
+
         where ib.quote_date= #{sysDate,jdbcType=DATE}
         and ib.trade_status='07'
         and (match.trd_conf_status is null or match.trd_conf_status ='0')
         <if test="userId != null and userId != ''">
-            and ib.create_user= #{userId}
+            and t3.user_name= #{userId}
         </if>
         <if test="ps != null and !ps.equals('')">
             AND ib.ps=#{ps}
@@ -401,10 +404,12 @@
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ic.cp_party_id= mcci.party_id
         left join MST_CFETS_CUSTOMER_TRADER t4 on t4.TRADER_ID=ic.ou_trader_id
         left join MST_COUNTER_PARTY t1 on ic.cp_party_id=t1.party_id
+        left join sys_user_add sua on  sua.ibu_trader=ic.ou_trader_id
+        left join sys_user t3 on t3.user_id=sua.user_id
         where ic.quote_date= #{sysDate,jdbcType=DATE} and ic.TRADE_STATUS='07'
         and (match.trd_conf_status is null or match.trd_conf_status ='0')
         <if test="userId != null and userId != ''">
-            and ic.create_user= #{userId}
+            and t3.user_name= #{userId}
         </if>
         <if test="ps != null and !ps.equals('')">
             AND ic.repo_ps=#{ps}
@@ -469,7 +474,8 @@
         reg.quote_type as quoteType,
         reg.remark as remark,
         reg.totle_trade_id as totleTradeId,
-        reg.settle_date as settleDate,
+        CASE WHEN reg.PS = 'T03' AND regAdd.ACT_SETTE_DATE IS NOT NULL THEN regAdd.ACT_SETTE_DATE
+        ELSE reg.settle_date END  settleDate,
         reg.cprice_amt as cpriceAmt,
         reg.yield as yield,
         reg.exer_yield exerYield,
@@ -782,10 +788,10 @@
         QUOTE.QUOTEID as quoteid,
         I.ourinstitutioncode as traderid,
         mccit.PARTY_ABBR as traderidName,
-        su.USER_NAME trader,
+        su.real_name trader,
         I.Counterinstitutioncode as counterId,
         mccic.PARTY_ABBR as counterIdName,
-        I.Clearingmethod as clearType,
+        decode(I.Clearingmethod,'13','01','6','02') as clearType,
         nvl(ts.dealdate,tr.dealdate) as tradeDate,
         nvl(ts.dealtext,tr.dealtext) as remark,
         nvl(ts.dealno,tr.tradeid) as cstpTradeId,
@@ -813,8 +819,8 @@
         ) QUOTE ON QUOTE.EXECID=I.EXECID
         left join stl_sec_acct_info stlinfo
         on nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_id
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON I.Counterinstitutioncode= mccic.party_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_customer_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON I.Counterinstitutioncode= mccic.party_customer_id
         where I.BUSINESSTYPE in ('BOND','REPO')
         <if test="regAssetType != null  and regAssetType!=''">
             AND I.BUSINESSTYPE = #{regAssetType}
@@ -898,10 +904,10 @@
                 or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or  aaa.tradeYield||'' =#{search}
                 or aaa.termDays||'' =#{search}
                 or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
-                or aaa.tradeDate||'' =#{search}
-                or aaa.tradeDate||''=#{year}||'-'||#{search}
-                or replace(aaa.tradeDate,'-','/')||''=#{search}
-                or replace(aaa.tradeDate,'-','/')||''=#{year}||'/'||#{search}
+                or to_char(aaa.tradeDate,'yyyy-MM-dd')=#{search}
+                or to_char(aaa.tradeDate,'yyyy-MM-dd') =#{year}||'-'||#{search}
+                or to_char(aaa.tradeDate,'yyyy/MM/dd') =#{search}
+                or to_char(aaa.tradeDate,'yyyy/MM/dd') =#{year}||'/'||#{search}
                 )
                 </if>
             </where>
@@ -1229,10 +1235,10 @@
                 or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
                 or to_char(aaa.trdFeeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.trdFeeAmt)=#{search}
                 or to_char(aaa.settleFeeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.settleFeeAmt)=#{search}
-                or aaa.tradeDate||'' =#{search}
-                or aaa.tradeDate||''=#{year}||'-'||#{search}
-                or replace(aaa.tradeDate,'-','/')||''=#{search}
-                or replace(aaa.tradeDate,'-','/')||''=#{year}||'/'||#{search}
+                or to_char(aaa.tradeDate,'yyyy-MM-dd')=#{search}
+                or to_char(aaa.tradeDate,'yyyy-MM-dd') =#{year}||'-'||#{search}
+                or to_char(aaa.tradeDate,'yyyy/MM/dd') =#{search}
+                or to_char(aaa.tradeDate,'yyyy/MM/dd') =#{year}||'/'||#{search}
                 )
             </where>
         </if>
@@ -1464,32 +1470,32 @@
         fp.finprod_market_id as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
         ts.ps as ps,
-        ts.settle_speed as settleSpeed,
+        decode(ts.settle_speed,'1','01','2','02','3','03') settleSpeed,
         ts.ourdepositaccountnumber as acctNo,
      <!--   case when ipar.portfolio_id is not null
         then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end as  acctNo,-->
         stlinfo.sec_acct_name as acctNoName,
         ts.settdate as settleDate,
         ts.price_8 as unitCprice,
-        I.yield2 as yield,
-        I.Strikeyield as exerYield,
-        ts.prinamt as lastqty,
+        I.yield2*100 as yield,
+        I.Strikeyield*100 as exerYield,
+        ts.prinamt/10000 as lastqty,
         ts.unit_int as unitInt,
         ts.dirtyprice as unitFprice,
         I.tradecashamt as tradeAmt,
        <!-- I.accruedinteresttotalamt as intAmt,-->
         ts.convintamt as intAmt,
         ts.settamt as mtradeAmt,
-        I.Clearingmethod as clearType,
+        decode(I.Clearingmethod,'13','01','6','02') as clearType,
         decode(I.Deliverytype,'0','03','5','02','4','01')  as deliveryType,
         I.Settlcurrency  as settCcy,
         I.Quoteid as quoteid,
         I.ourinstitutioncode as traderid,
         mccit.PARTY_ABBR as traderidName,
-        su.USER_NAME trader,
+        su.real_name trader,
         I.Counterinstitutioncode as counterId,
         mccic.PARTY_ABBR as counterIdName,
-        I.Institutionenglishshortname as counterTrader,
+        I.COUNTERTRADERCHINESENAME as counterTrader,
         ts.dealtext as remark
         from INTERF_CSTP_TRADE I
         INNER JOIN (SELECT EXECID ,MAX(UPDATETIME) UPDATETIME FROM  INTERF_CSTP_TRADE GROUP BY EXECID)	II ON  II.EXECID = I.EXECID AND II.UPDATETIME = I.UPDATETIME
@@ -1503,8 +1509,8 @@
         LEFT JOIN SYS_USER su ON sua.USER_ID =su.USER_ID
         left join stl_sec_acct_info stlinfo
         on ts.ourdepositaccountnumber=stlinfo.sec_acct_id
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_id
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON I.Counterinstitutioncode= mccic.party_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_customer_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON I.Counterinstitutioncode= mccic.party_customer_id
         where I.EXECID=#{exeid,jdbcType=VARCHAR}
         )
         <!--前端传入排序字段-->
@@ -1522,7 +1528,7 @@
        <!-- case when ipar.portfolio_id is not null
         then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end as  secManageAcctId,-->
         stlinfo.sec_acct_name as secManageAcctIdName,
-        tr.settle_speed as settleSpeed,
+        decode(tr.settle_speed,'1','01','2','02','3','03') settleSpeed,
         tr.term as repoTerm,
         I.Settldate as vsettleDate,
         I.Settldate2 as msettleDate,
@@ -1533,17 +1539,17 @@
         I.Settlcurramt2 as mtradeAmt,
         tr.deal_feeamt as trdFeeAmt,
         tr.sett_feeamt as settleFeeAmt,
-        I.Clearingmethod as clearType,
+        decode(I.Clearingmethod,'13','01','6','02') as clearType,
         decode(I.Deliverytype,'0','03','5','02','4','01') as deliveryType,
         I.Deliverytype2 as mdeliveryType,
         I.Settlcurrency  as settCcy,
         I.Quoteid as quoteid,
         I.ourinstitutioncode as traderid,
         mccit.PARTY_ABBR as traderidName,
-        su.USER_NAME trader,
+        su.real_name trader,
         I.Counterinstitutioncode as counterId,
         mccic.PARTY_ABBR as traderidName,
-        I.Institutionenglishshortname as counterTrader,
+        I.COUNTERTRADERCHINESENAME as counterTrader,
         tr.dealtext as remark
         from INTERF_CSTP_TRADE I
         INNER JOIN (SELECT EXECID ,MAX(UPDATETIME) UPDATETIME FROM  INTERF_CSTP_TRADE GROUP BY EXECID)	II ON  II.EXECID = I.EXECID AND II.UPDATETIME = I.UPDATETIME
@@ -1555,8 +1561,8 @@
         LEFT JOIN SYS_USER su ON sua.USER_ID =su.USER_ID
         left join stl_sec_acct_info stlinfo
         on tr.ourdepositaccountnumber=stlinfo.sec_acct_id
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_id
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON I.Counterinstitutioncode= mccic.party_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_customer_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON I.Counterinstitutioncode= mccic.party_customer_id
         where I.EXECID=#{exeid,jdbcType=VARCHAR}
         )
         <!--前端传入排序字段-->

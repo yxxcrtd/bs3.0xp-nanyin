@@ -50,6 +50,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -184,8 +185,9 @@ public class IbuQuoteBond004Controller extends BaseController {
         workFlowParameter.setElementId("IbuQuoteBond004_btn_revoke");
         workFlowParameter.setBusinessCode(item -> item.getTotleTradeId());
         workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_本币业务交易_登记.getValue());
+        DecimalFormat  df = new DecimalFormat("###,###.##");
         workFlowParameter.setComment(entity -> "登记日期"+ "(" + DateUtil.format(entity.getTradeDate()) + ")-"
-                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"券面总额("+entity.getShareAmt()+")");
+                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"券面总额("+df.format(ArithmeticUtil.divide(entity.getShareAmt(),new BigDecimal(10000),2))+"万元)");
         processParameter.setWorkFlowParameter(workFlowParameter);
         processParameter.setOperationType(OperationType.REVOKE);
         String msg = cfetsBondDealQuotedPrice004Service.start(processParameter,
@@ -235,8 +237,9 @@ public class IbuQuoteBond004Controller extends BaseController {
         params.setElementId("IbuQuoteBond004_btn_submit");
 		params.setBusinessType(DictCodeListExt3.共通业务类型_本币业务交易_登记.getValue());
 		params.setBusinessCode(cfetsBondDealRegisterQuoteDto.getTotleTradeId());
+        DecimalFormat  df = new DecimalFormat("###,###.##");
         params.setComment(entity -> "登记日期"+ "(" + DateUtil.format(entity.getTradeDate()) + ")-"
-                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"券面总额("+entity.getShareAmt()+")");
+                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"券面总额("+df.format(ArithmeticUtil.divide(entity.getShareAmt(),new BigDecimal(10000),2))+"万元)");
         cfetsBondDealRegisterQuoteDto.setQuoteType(DictCodeListExt3.报价系统区分类型_现券登记报价.getValue());
 		processParameter.setWorkFlowParameter(params);
         processParameter.setOperationType(OperationType.NEW);

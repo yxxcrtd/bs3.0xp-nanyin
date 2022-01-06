@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -369,8 +370,9 @@ public class IbuQuoteBond003Controller extends BaseController {
         cfetsBondDealRequestQuoteDto.setSettleDate(bondRequestQuote.getSettleDate());
         cfetsBondDealRequestQuoteDto.setFinprodAbbr(bondRequestQuote.getFinprodAbbr());
         cfetsBondDealRequestQuoteDto.setAvaNum(bondRequestQuote.getAvaNum());
+        DecimalFormat df = new DecimalFormat("###,###.##");
         workFlowParameter.setComment(entity -> "报价日期"+ "(" + DateUtil.format(entity.getSettleDate()) + ")-"
-                + "资产简称("+entity.getFinprodAbbr()+")-" +"报价操作("+entity.getQuoteOperatorType()+")-"+"券面总额("+ArithmeticUtil.multiply(entity.getAvaNum(),new BigDecimal(10000))+")");
+                + "资产简称("+entity.getFinprodAbbr()+")-" +"报价操作("+entity.getQuoteOperatorType()+")-"+"券面总额("+df.format(entity.getAvaNum())+"万元)");
         processParameter.setWorkFlowParameter(workFlowParameter);
 
         String msg = cfetsBondDealQuotedPrice003Service.start(processParameter,
@@ -436,8 +438,9 @@ public class IbuQuoteBond003Controller extends BaseController {
             quoteOperatorType = "成交";
         }
         cfetsBondDealRequestQuoteDto.setQuoteOperatorType(quoteOperatorType);
+        DecimalFormat  df = new DecimalFormat("###,###.##");
         params.setComment(entity -> "报价日期"+ "(" + DateUtil.format(entity.getSettleDate()) + ")-"
-                + "资产简称("+entity.getFinprodAbbr()+")-" +"报价操作("+entity.getQuoteOperatorType()+")-"+"券面总额("+entity.getAvaNum()+"万元)");
+                + "资产简称("+entity.getFinprodAbbr()+")-" +"报价操作("+entity.getQuoteOperatorType()+")-"+"券面总额("+df.format(entity.getAvaNum())+"万元)");
         processParameter.setWorkFlowParameter(params);
         cfetsBondDealRequestQuoteDto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
         cfetsBondDealRequestQuoteDto.setCreateUser(LoginUserUtil.getUserName());// 用户名

@@ -34,3 +34,4 @@ tams-integration/*
 *rebel.xml
 /maven_2.1.2/
 *.rebel.xml.bak
+cache/*

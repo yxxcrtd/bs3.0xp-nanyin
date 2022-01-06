@@ -279,17 +279,18 @@ public class TerminalHelper {
         if (Objects.nonNull(tradeAgent)) {
             try {
                 List<IntegratedBulkQuoteBean> quoteBeanList = tradeAgent.reqIntegratedBulkQuote(integratedBulkQuoteQryBean);
-                if (Objects.nonNull(quoteBeanList)) {
-                    quoteBeanList.forEach(quoteBean -> {
-                        Instrument instrument = instrumentService.findById(quoteBean.getStockCode());
-                        if (Objects.nonNull(instrument)) {
-                            quoteBean.setStockName(instrument.getStockName());
-                            quoteBean.setAssetType(instrument.getAssetType());
-                        } else {
-                            logger.info("未找到匹配的合约代码信息！！ {}", quoteBean.getStockCode());
-                        }
-                    });
+                if (Objects.isNull(quoteBeanList) || quoteBeanList.size() == 0) {
+                    return new ArrayList<>();
                 }
+                quoteBeanList.forEach(quoteBean -> {
+                    Instrument instrument = instrumentService.findById(quoteBean.getStockCode());
+                    if (Objects.nonNull(instrument)) {
+                        quoteBean.setStockName(instrument.getStockName());
+                        quoteBean.setAssetType(instrument.getAssetType());
+                    } else {
+                        logger.info("未找到匹配的合约代码信息！！ {}", quoteBean.getStockCode());
+                    }
+                });
 
                 return quoteBeanList;
             } catch (Exception e) {
@@ -309,17 +310,18 @@ public class TerminalHelper {
         if (Objects.nonNull(tradeAgent)) {
             try {
                 List<IntegratedBulkCloseQuoteBean> beanList = tradeAgent.reqIntegratedBulkCloseQuote(integratedBulkCloseQuoteQryBean);
-                if (Objects.nonNull(beanList)) {
-                    beanList.forEach(quoteBean -> {
-                        Instrument instrument = instrumentService.findById(quoteBean.getStockCode());
-                        if (Objects.nonNull(instrument)) {
-                            quoteBean.setStockName(instrument.getStockName());
-                            quoteBean.setAssetType(instrument.getAssetType());
-                        } else {
-                            logger.info("未找到匹配的合约代码信息！！ {}", quoteBean.getStockCode());
-                        }
-                    });
+                if (Objects.isNull(beanList) || beanList.size() == 0) {
+                    return new ArrayList<>();
                 }
+                beanList.forEach(quoteBean -> {
+                    Instrument instrument = instrumentService.findById(quoteBean.getStockCode());
+                    if (Objects.nonNull(instrument)) {
+                        quoteBean.setStockName(instrument.getStockName());
+                        quoteBean.setAssetType(instrument.getAssetType());
+                    } else {
+                        logger.info("未找到匹配的合约代码信息！！ {}", quoteBean.getStockCode());
+                    }
+                });
                 return beanList;
             } catch (Exception e) {
                 logger.error("reqIntegratedBulkCloseQuote error {}", "\r\n" + e);
