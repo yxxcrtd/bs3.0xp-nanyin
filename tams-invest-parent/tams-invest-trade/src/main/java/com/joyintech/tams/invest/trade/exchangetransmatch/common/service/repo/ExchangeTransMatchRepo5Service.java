@@ -106,8 +106,12 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
         if(StringUtil.isNotEmpty(firstRepoTrade)) {
             //金融产品代码
             dealTotal.setFinprodId(firstRepoTrade.getFinprodId());
+            // 金融产品类型
+            dealTotal.setFinprodType(firstRepoTrade.getFinprodType());
             //金融产品类型投管
             dealTotal.setFinprodType2(firstRepoTrade.getFinprodType2());
+            // 交易市场
+            dealTotal.setTradeMarketMode(firstRepoTrade.getTradeMarketMode());
         }
         // 分支序号
         dealTotal.setBranch(0L);
@@ -122,7 +126,8 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
         // 交割日
         dealTotal.setSettleDate(dealDto.getTradeDate());
         // 清算速度
-        dealTotal.setSettleSpeed(null);
+        // dealTotal.setSettleSpeed(null);
+        dealTotal.setSettleSpeed(0L);
         // 交易币种
         dealTotal.setCcy(null);
 
@@ -174,12 +179,14 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
         //关联系统交易编号
         dealTotal.setfTradeId(dealDto.getSeqId());
 
-        if(StringUtil.equals(dealDto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
-            dealTotal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
-        }
-        else if(StringUtil.equals(dealDto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
-            dealTotal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
-        }
+        // GZYHTZJY-1039:交易对手应为空 fuyongsheng modify 20220106 start
+//        if(StringUtil.equals(dealDto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+//            dealTotal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+//        }
+//        else if(StringUtil.equals(dealDto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+//            dealTotal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+//        }
+        // GZYHTZJY-1039:交易对手应为空 fuyongsheng modify 20220106 end
         // 交易平台
         dealTotal.setTradePlat(dealDto.getTradePlat());
 
@@ -191,12 +198,16 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
         // 投管业务类型
         dealTotal.setTgBusiType(DictCodeListExt3.共通业务类型_质押券置换.getValue());
         // 如果汇总成交.金融产品类型（投管） = 债券质押式正回购，则为‘债券质押式正回购到期’。否则为‘债券质押式逆回购到期’
+        // GZYHTZJY-1039:modify by fuyongsheng 20220106 start
         if(StringUtil.equals(dealDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
-            dealTotal.setTgBusiType(DictCodeListExt1.平安业务类型_正回购.getValue());
+            // dealTotal.setTgBusiType(DictCodeListExt1.平安业务类型_正回购.getValue());
+            dealTotal.setTgBusiType(DictCodeListExt1.平安业务类型_正回购到期.getValue());
         }
         else {
-            dealTotal.setTgBusiType(DictCodeListExt1.平安业务类型_逆回购.getValue());
+            // dealTotal.setTgBusiType(DictCodeListExt1.平安业务类型_逆回购.getValue());
+            dealTotal.setTgBusiType(DictCodeListExt1.平安业务类型_逆回购到期.getValue());
         }
+        // GZYHTZJY-1039:modify by fuyongsheng 20220106 end
         //首期结算方式
         dealTotal.setDeliveryType(DictCodeListExt1.结算方式_券款对付.getValue());
         //到期结算方式
@@ -308,13 +319,14 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
             trdProductDeal.setTradePlat(settleTransData.getTradePlat());
             // 交易市场
             trdProductDeal.setTradeMarketMode(settleTransData.getTradeMarketMode());
-
-            if(StringUtil.equals(settleTransData.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
-                trdProductDeal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
-            }
-            else if(StringUtil.equals(settleTransData.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
-                trdProductDeal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
-            }
+            // GZYHTZJY-1039:交易对手应为空 fuyongsheng modify 20220106 start
+//            if(StringUtil.equals(settleTransData.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+//                trdProductDeal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+//            }
+//            else if(StringUtil.equals(settleTransData.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+//                trdProductDeal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+//            }
+            // GZYHTZJY-1039:交易对手应为空 fuyongsheng modify 20220106 end
             // 本方交易员
             trdProductDeal.setTrader(null);
             // 对手方交易员
