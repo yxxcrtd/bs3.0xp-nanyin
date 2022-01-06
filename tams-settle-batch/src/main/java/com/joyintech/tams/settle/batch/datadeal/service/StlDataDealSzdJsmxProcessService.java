@@ -926,6 +926,9 @@ public class StlDataDealSzdJsmxProcessService {
 //							settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
 						settleTransData.setShareAmt(new BigDecimal(szdJsmx.getCjsl()).abs());
 						// modify by etliu 20211225 end
+							// GZYHTZJY-1062:赋值交易本金 modify by fuyongsheng 20220106 start
+							settleTransData.setPrinAmt(settleTransData.getShareAmt());
+							// GZYHTZJY-1062:赋值交易本金 modify by fuyongsheng 20220106 end
 							// 期限品种
 							settleTransData.setTermType(getTermType(szdJsmx.getZqdm1()));
 							// 回购利率
@@ -949,7 +952,11 @@ public class StlDataDealSzdJsmxProcessService {
 							settleTransData.setMpayDate(DateUtil.parse(szdJsmx.getJsrq()));
 					        // 回购利息
 							settleTransData.setmIntAmt(new BigDecimal(szdJsmx.getQsje()).abs().subtract(new BigDecimal(szdJsmx.getCjsl()).abs()));
-					    	// settleTransData.setUnitInt(ArithmeticUtil.subtract(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())),new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue()))));
+							// 利息总额
+							// GZYHTZJY-1062:赋值利息总额 fuyongsheng modify 20220106 start
+							settleTransData.setIntAmt(settleTransData.getmIntAmt());
+							// GZYHTZJY-1062:赋值利息总额 fuyongsheng modify 20220106 end
+							// settleTransData.setUnitInt(ArithmeticUtil.subtract(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())),new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue()))));
 
 						// modify by etliu 20211225 start
 						// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
