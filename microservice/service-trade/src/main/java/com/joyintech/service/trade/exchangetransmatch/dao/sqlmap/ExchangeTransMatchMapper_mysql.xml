@@ -265,7 +265,12 @@
             AND D1.SEC_ACCT_ID = #{secAccount}
         </if>
         <if test="repoType!=null and repoType!='' and repoType == 'H01'.toString()">
-            AND ifnull(A1.ENTRUST_AMT,0)-ifnull(S.MARCH_AMT_EN,0) >= #{remainNum}
+            <if test="ps!=null and ps!='' and (ps == 'T93'.toString() or ps == 'T94'.toString())">
+                AND ifnull(G1.PLEDGE_NUMBER,0)-ifnull(S.MARCH_AMT_EN,0) >=  #{remainNum}
+            </if>
+            <if test="ps!=null and ps!='' and (ps != 'T93'.toString() and ps != 'T94'.toString())">
+                AND ifnull(A1.ENTRUST_AMT,0)-ifnull(S.MARCH_AMT_EN,0) >= #{remainNum}
+            </if>
         </if>
     </select>
 

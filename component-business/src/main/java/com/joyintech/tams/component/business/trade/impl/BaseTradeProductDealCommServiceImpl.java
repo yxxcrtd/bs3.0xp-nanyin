@@ -446,7 +446,11 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
 //                status.setFinishAmt(new BigDecimal(baseTradeProductDealDto.getTrdProductDeal().getShareAmt().intValue() * 100));
                 // 完成额度取值判断修改 add by yufei 20200807 start
                 EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(baseTradeProductDealDto.getTrdProductDealAdd().getEntrustId());
-                if(etrEntrustAdd != null && StringUtil.isNotEmpty(etrEntrustAdd.getTargetType())
+                if(StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(),DictCodeListExt3.交易方向_中途换券.getValue())
+                        && StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(),DictCodeListExt3.交易方向_解除质押.getValue())) {
+                    status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
+                }
+                else if(etrEntrustAdd != null && StringUtil.isNotEmpty(etrEntrustAdd.getTargetType())
                    && StringUtil.equals(DictCodeListExt3.目标类型_金额.getValue(),etrEntrustAdd.getTargetType())){
                     status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getTradeAmt());
                 }

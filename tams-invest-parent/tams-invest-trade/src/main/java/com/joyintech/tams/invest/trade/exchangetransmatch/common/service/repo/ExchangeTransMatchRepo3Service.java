@@ -240,8 +240,13 @@ public class ExchangeTransMatchRepo3Service extends ExchangeTransMatchRepoCommon
             trdProductDeal.setParValue(null);
             // 净价总额
             trdProductDeal.setCpriceAmt(null);
-            //交易份额
-            trdProductDeal.setShareAmt(entrustDto.getMarchQty());
+            //交易份额 中途换券换入使用匹配份额，换出不需要处理直接使用质押券数量
+            if(StringUtil.equals(settleTransDataTotalPledge.getDisplaceDirection(),DictCodeListExt3.质押券置换_置换方向_换出.getValue())) {
+                trdProductDeal.setShareAmt(settleTransDataTotalPledge.getPledgeNumber());
+            }
+            else {
+                trdProductDeal.setShareAmt(entrustDto.getMarchQty());
+            }
             // 投资目的
             trdProductDeal.setInvAim(null);
             //交易方向

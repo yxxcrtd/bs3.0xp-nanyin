@@ -452,7 +452,9 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
     public List<FinPledgeDisplaceResult> genFinPledgeDisplaceResult(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal){
         //业务编号 = 同汇总交易.金融产品代码
         List<FinPledgeDisplaceResult> finPledgeDisplaceResultList = new ArrayList<>();
-        BigDecimal hrScale = BigDecimal.ZERO;
+        //换入的折算率
+        BigDecimal hrScale = dealDto.getSettleTransDataTotalPledgeList().stream().filter(item->StringUtil.equals(item.getDisplaceDirection(),DictCodeListExt3.质押券置换_置换方向_换入.getValue())).findFirst().get().getPledgeRatio();
+
         for(SettleTransDataTotalPledge settleTransDataTotalPledge: dealDto.getSettleTransDataTotalPledgeList()) {
             FinPledgeDisplaceResult finPledgeDisplaceResult = new FinPledgeDisplaceResult();
             finPledgeDisplaceResult.setBranch(new BigDecimal(0));
@@ -465,8 +467,6 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
                 finPledgeDisplaceResult.setResultType(DictCodeListExt3.质押券置换_置换结果_置换后.getValue());
                 //质押券面总额 = 汇总成交质押品匹配结果表.匹配份额*质押面值
                 finPledgeDisplaceResult.setPledgeAmt(ArithmeticUtil.multiply(entrustDto.getMarchQty(),settleTransDataTotalPledge.getPledgeFaceValue()));
-
-                hrScale = settleTransDataTotalPledge.getPledgeRatio();
             }
             else {
                 finPledgeDisplaceResult.setResultType(DictCodeListExt3.质押券置换_置换结果_置换前.getValue());
