@@ -44,6 +44,16 @@
                 $("#svrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",false);
             }
         }
+        $('#svrBussRepAssetAstBillInfoDto_isBzhpj').change(function() {
+            if ($('#svrBussRepAssetAstBillInfoDto_isBzhpj').val()=="01") {
+                 $("#svrBussRepAssetAstBillInfoDto_billCode").prop("required",true).trigger('change');
+                 $("#svrBussRepAssetAstBillInfoDto_billCode").attr("disabled",false).trigger('change');
+            }else {
+                 $("#svrBussRepAssetAstBillInfoDto_billCode").prop("required",false).trigger('change');
+                 $("#svrBussRepAssetAstBillInfoDto_billCode").val('').attr("disabled",true).trigger('change');
+            }
+            starFinaciall();
+        })
         starFinaciall();
          initBussRepAssetAstBill();
 

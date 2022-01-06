@@ -59,6 +59,11 @@ public class SvrBussRepOtherInfoDto extends RepAssetBond {
      */
     private String pbcAssetType3;
 
+    /**
+     * 是否为同业借款，中债新增
+     */
+    private String isDepositFlag;
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -129,4 +134,11 @@ public class SvrBussRepOtherInfoDto extends RepAssetBond {
         this.pbcAssetType3 = pbcAssetType3;
     }
 
+    public String getIsDepositFlag() {
+        return isDepositFlag;
+    }
+
+    public void setIsDepositFlag(String isDepositFlag) {
+        this.isDepositFlag = isDepositFlag;
+    }
 }
