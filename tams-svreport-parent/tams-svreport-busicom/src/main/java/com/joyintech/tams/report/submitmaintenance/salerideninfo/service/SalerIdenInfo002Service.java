@@ -105,4 +105,13 @@ public class SalerIdenInfo002Service extends BaseService{
     public String selectIssuePartyId(String orgCode){
         return  chbSalerIdenInfoMapper.selectIssuePartyId(orgCode);
     }
+
+    /**
+     * 所属总部或分支机构校验有效性
+     * @param salerOrgCode
+     * @return
+     */
+    public int checkSalerOrgCode(String salerOrgCode){
+        return  chbSalerIdenInfoMapper.checkSalerOrgCode(salerOrgCode);
+    }
 }

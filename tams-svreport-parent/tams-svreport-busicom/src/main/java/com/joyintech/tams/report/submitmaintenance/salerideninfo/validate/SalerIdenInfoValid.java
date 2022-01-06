@@ -32,13 +32,16 @@ public class SalerIdenInfoValid implements BeanValidator {
     public List<ValidMessage> valid(Object value) {
         SalerIdenInfoDto dto = (SalerIdenInfoDto)value;
         List<ValidMessage> errorList = new ArrayList<ValidMessage>();
-        if(dto.getPageModel() != null && dto.getPageModel() != "" && dto.getPageModel().equals(GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
-            //内部编码重复校验
-            if(dto.getSalerInsNo() != null && dto.getSalerInsNo() != ""){
-                    if(salerIdenInfo002Service.checkSalerInsNo(dto.getSalerInsNo()) > 0) {
+        if(dto.getPageModel() != null && dto.getPageModel() != "" &&
+                (dto.getPageModel().equals(GlobalConstant.DETAIL_PAGE_MODEL_NEW) || dto.getPageModel().equals(GlobalConstant.DETAIL_PAGE_MODEL_EDIT))){
+            if(dto.getPageModel().equals(GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
+                //内部编码重复校验
+                if (dto.getSalerInsNo() != null && dto.getSalerInsNo() != "") {
+                    if (salerIdenInfo002Service.checkSalerInsNo(dto.getSalerInsNo()) > 0) {
                         errorList.add(new ValidMessage("salerInsNo", "内部编码已存在。"));
                     }
                 }
+            }
             //其他证件名称
             if(dto.getSalerCredentType() != null && dto.getSalerCredentType() != "") {
                 if (dto.getSalerCredentType().equals("99")) {
@@ -47,20 +50,22 @@ public class SalerIdenInfoValid implements BeanValidator {
                     }
                 }
             }
-            //证件号码重复校验
-            if(dto.getSalerCredentType() != null && dto.getSalerCredentType() != ""){
-                if (dto.getSalerCredentType().equals("99")) {
-                    if(dto.getSalerOtherCredentName() != null && dto.getSalerOtherCredentName() != "") {
-                        if(dto.getSalerCredentNo() != null && dto.getSalerCredentNo() != "") {
-                            if(salerIdenInfo002Service.checkSalerCredentNo(null,dto.getSalerOtherCredentName(),dto.getSalerCredentNo()) > 0) {
-                                errorList.add(new ValidMessage("salerCredentNo", "其他证件名称相同时，证件号码不可重复。"));
+            if(dto.getPageModel().equals(GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
+                //证件号码重复校验
+                if (dto.getSalerCredentType() != null && dto.getSalerCredentType() != "") {
+                    if (dto.getSalerCredentType().equals("99")) {
+                        if (dto.getSalerOtherCredentName() != null && dto.getSalerOtherCredentName() != "") {
+                            if (dto.getSalerCredentNo() != null && dto.getSalerCredentNo() != "") {
+                                if (salerIdenInfo002Service.checkSalerCredentNo(null, dto.getSalerOtherCredentName(), dto.getSalerCredentNo()) > 0) {
+                                    errorList.add(new ValidMessage("salerCredentNo", "其他证件名称相同时，证件号码不可重复。"));
+                                }
                             }
                         }
-                    }
-                }else{
-                    if(dto.getSalerCredentNo() != null && dto.getSalerCredentNo() != "") {
-                        if(salerIdenInfo002Service.checkSalerCredentNo(dto.getSalerCredentType(),null,dto.getSalerCredentNo()) > 0) {
-                            errorList.add(new ValidMessage("salerCredentNo", "证件类别相同时，证件号码不可重复。"));
+                    } else {
+                        if (dto.getSalerCredentNo() != null && dto.getSalerCredentNo() != "") {
+                            if (salerIdenInfo002Service.checkSalerCredentNo(dto.getSalerCredentType(), null, dto.getSalerCredentNo()) > 0) {
+                                errorList.add(new ValidMessage("salerCredentNo", "证件类别相同时，证件号码不可重复。"));
+                            }
                         }
                     }
                 }
@@ -84,6 +89,13 @@ public class SalerIdenInfoValid implements BeanValidator {
                     }
                 }
 
+            }
+
+            //所属总部或分支机构校验有效性
+            if(dto.getSalerOrgCode() != null && dto.getSalerOrgCode() != ""){
+                if(salerIdenInfo002Service.checkSalerOrgCode(dto.getSalerOrgCode()) == 0){
+                    errorList.add(new ValidMessage("salerOrgCode", "所属总部或分支机构已被删除请重新选择。"));
+                }
             }
         }
         if(dto.getPageModel() != null && dto.getPageModel() != "" && dto.getPageModel().equals(GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){

@@ -97,4 +97,11 @@ public interface ChbSalerIdenInfoMapper {
 
     //证件号码重复校验(修改)
     int checkSalerCredentNo(@Param("salerCredentType") String salerCredentType,@Param("salerOtherCredentName") String salerOtherCredentName,@Param("salerCredentNo") String salerCredentNo);
+
+    /**
+     * check所属总部或分支机构校验有效性
+     * @param
+     * @return
+     */
+    int checkSalerOrgCode(@Param("salerOrgCode") String salerOrgCode);
 }
