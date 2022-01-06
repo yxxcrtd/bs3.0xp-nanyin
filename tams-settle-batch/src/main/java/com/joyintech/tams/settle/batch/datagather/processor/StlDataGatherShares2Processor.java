@@ -206,6 +206,9 @@ public class StlDataGatherShares2Processor extends StlDataGatherProcessor {
 					}else {
 						dealDto = setTrdProductDealSgDto(settleTransDataDto,l,shareAmtSum,false);
 					}
+					PtlTrade ptlTrade = setPtlTrade(dealDto);
+					ptlTrade.setSettleDate(dealDto.getSettleDate());
+					investTradeWriteDto.getPtlTradeList().add(ptlTrade);
 					investTradeWriteDto.getProductDealList().add(dealDto);
 				}
 			}
