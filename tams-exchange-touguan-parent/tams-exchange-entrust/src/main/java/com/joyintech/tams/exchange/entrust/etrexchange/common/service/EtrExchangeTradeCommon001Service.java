@@ -90,6 +90,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -5186,7 +5187,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		}
 		List<String> messages = new ArrayList<>();
 		if(StringUtil.isNotEmpty(dto.getPortfolioList())){
-			for(EtrExchangeTradeSaveRequest item:dto.getPortfolioList()){
+			for(EtrExchangeTradePortfolioRequest item:dto.getPortfolioList()){
 				if(!StringUtil.isNotEmpty(item.getPortfolioId())){
 					messages.add("请输入组合名称。");
 				}
@@ -5213,7 +5214,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		EtrExchangeTradeCommonRiskcalDto d=new EtrExchangeTradeCommonRiskcalDto();
 		BeanUtil.copyPropertiesIgnoreNull(d,dto);
 		List<Map> bussTrdTransfenpeiDto=new ArrayList<>();
-		for(EtrExchangeTradeSaveRequest pt:dto.getPortfolioList()){
+		for(EtrExchangeTradePortfolioRequest pt:dto.getPortfolioList()){
 			bussTrdTransfenpeiDto.add(BeanUtil.object2Map(pt));
 		}
 		d.setBussTrdTransfenpeiDto(bussTrdTransfenpeiDto);
@@ -5275,7 +5276,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		 * @param multiPtl001Dto
 		 * @return
 		 */
-		public EtrExchangeTradeSaveRequest genEtrExchangeTradeSaveRequest(EtrExchangeTradeSaveRequest dto,EtrExchangeTradeSaveRequest multiPtl001Dto) {
+		public EtrExchangeTradeSaveRequest genEtrExchangeTradeSaveRequest(EtrExchangeTradeSaveRequest dto,EtrExchangeTradePortfolioRequest multiPtl001Dto) {
 			EtrExchangeTradeSaveRequest etrExchangeTrade001Dto = new EtrExchangeTradeSaveRequest();
 			BeanUtil.copyPropertiesIgnoreNull(etrExchangeTrade001Dto,dto);
 			etrExchangeTrade001Dto.setPortfolioId(multiPtl001Dto.getPortfolioId());
@@ -5314,7 +5315,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 
 		List<EtrEntrustDetail> etrEntrustDetailList = new ArrayList<>();
 		baseEtrInvestInfoDto.setEtrEntrustDetailList(etrEntrustDetailList);
-		for(EtrExchangeTradeSaveRequest item : dto.getPortfolioList()) {
+		for(EtrExchangeTradePortfolioRequest item : dto.getPortfolioList()) {
 			EtrEntrustDetail etrEntrustDetail = new EtrEntrustDetail();
 			etrEntrustDetail.setPortfolioId(item.getPortfolioId());
 			etrEntrustDetail.setEntrustId(etrEntrust.getEntrustId());
@@ -5715,7 +5716,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	public void doInsetOrUpdateForEtrPositionHoldMulti(EtrExchangeTradeSaveRequest dto){
 		if(StringUtil.equals(dto.getIsMulti(),DictCodeList.是否_是.getValue()) ) {
 			List<EtrExchangeTradeSaveRequest> EtrExchangeTrade001DtoList = new ArrayList<>();
-			for (EtrExchangeTradeSaveRequest item:dto.getPortfolioList()) {
+			for (EtrExchangeTradePortfolioRequest item:dto.getPortfolioList()) {
 				EtrExchangeTradeSaveRequest etrExchangeTrade001Dto = this.genEtrExchangeTradeSaveRequest(dto,item);
 			doInsetOrUpdateForEtrPositionHold(etrExchangeTrade001Dto);
 			}
@@ -5744,6 +5745,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		}
 		joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
 	}
+
 
 
 

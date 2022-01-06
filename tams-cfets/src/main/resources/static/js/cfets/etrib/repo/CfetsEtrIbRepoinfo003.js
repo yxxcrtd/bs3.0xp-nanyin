@@ -314,7 +314,7 @@
                     title: '首次净价（元）',
                     sortable: false,
                     render: function (data, type, row, meta) {
-                        return (data*100).toFixed(4);
+                        return (data*1).toFixed(4);
                     }
                 }
                 //折算比例%

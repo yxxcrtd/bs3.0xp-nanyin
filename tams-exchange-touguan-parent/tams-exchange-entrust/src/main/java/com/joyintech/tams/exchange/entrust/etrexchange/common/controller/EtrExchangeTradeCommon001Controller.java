@@ -889,10 +889,10 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			if("dbclick".equals(dto.getOptType())){
 				ajax=etrExchangeTrade001CommonService.dbClickCheck(dto);
 			}
-			List<EtrExchangeTradeSaveRequest> portfolioList=dto.getPortfolioList();
+			List<EtrExchangeTradePortfolioRequest> portfolioList=dto.getPortfolioList();
 			if(!CollectionUtils.isEmpty(portfolioList)) {
 				for (int i = 0; i < portfolioList.size(); i++) {
-					EtrExchangeTradeSaveRequest item = portfolioList.get(i);
+					EtrExchangeTradePortfolioRequest item = portfolioList.get(i);
 					dto.setVdate(dto.getEntrustDate());
 					dto.setMdate(dto.getEntrustDate());
 					dto.setPortfolioId(item.getPortfolioId());
@@ -965,7 +965,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			String msg ="";
 			String businessType = etrExchangeTrade001CommonService.setEntrustBussType(dto);
 			dto.setBusinessTypeName(SysDataUtil.getNameFromDataDict(DictCode.共通业务类型, businessType));
-			Map<String,List<EtrExchangeTradeSaveRequest>> groupMap= dto.getPortfolioList().stream().collect(
+			Map<String,List<EtrExchangeTradePortfolioRequest>> groupMap= dto.getPortfolioList().stream().collect(
 					Collectors.groupingBy(item->item.getAcctNo()));			//如果分组Map，key的数量>1,说明是多组合指令，key的数量=1,则为系列户指令
 			if(groupMap.keySet().size() == 1 && dto.getPortfolioList().size()>1) {
 				//业务编号生成规则参数
@@ -974,13 +974,14 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 					String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
 					dto.setEntrustId(code);
 				}
-				BigDecimal totalEntrustAmt = dto.getPortfolioList().stream().map(EtrExchangeTradeSaveRequest::getEntrustAmt).reduce(BigDecimal::add).get();
-				BigDecimal totalEntrustNum = dto.getPortfolioList().stream().map(EtrExchangeTradeSaveRequest::getEntrustNum).reduce(BigDecimal::add).get();
+				BigDecimal totalEntrustAmt = dto.getPortfolioList().stream().map(EtrExchangeTradePortfolioRequest::getEntrustAmt).reduce(BigDecimal::add).get();
+				BigDecimal totalEntrustNum = dto.getPortfolioList().stream().map(EtrExchangeTradePortfolioRequest::getEntrustNum).reduce(BigDecimal::add).get();
 				dto.setEntrustAmt(totalEntrustAmt);
 				dto.setEntrustNum(totalEntrustNum);
 				dto.setIsMulti(DictCodeList.是否_是.getValue());
 				dto.setVdate(dto.getEntrustDate());
 				dto.setMdate(dto.getEntrustDate());
+				dto.setAcctNo(dto.getAcctNo());
 				// ----------add by zhangrui1 20200703 预占功能 start----------
 				if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
 					String finprodType2 = "";
@@ -1015,7 +1016,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			//多组合指令
 			else {
 					List<EtrExchangeTradeSaveRequest> etrExchangeTrade001DtoList = new ArrayList<>();
-					for(EtrExchangeTradeSaveRequest item:dto.getPortfolioList()) {
+					for(EtrExchangeTradePortfolioRequest item:dto.getPortfolioList()) {
 						EtrExchangeTradeSaveRequest etrExchangeTrade001Dto = etrExchangeTrade001CommonService.genEtrExchangeTradeSaveRequest(dto,item);
 						if (dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue())) {
 							etrExchangeTrade001Dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
@@ -1032,10 +1033,11 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 						etrExchangeTrade001Dto.setBusinessTypeName(businessType);//此处存的是类型
 						etrExchangeTrade001Dto.setOptType(ENTRUST_RECORD_NEW);
 						etrExchangeTrade001Dto.setIsMulti(DictCodeList.是否_否.getValue());
-						List<EtrExchangeTradeSaveRequest> portfolioList=new ArrayList<>();
-						portfolioList.add(etrExchangeTrade001Dto);
+						List<EtrExchangeTradePortfolioRequest> portfolioList=new ArrayList<>();
+						EtrExchangeTradePortfolioRequest portfolioRequest=new EtrExchangeTradePortfolioRequest();
+						BeanUtil.copyPropertiesIgnoreNull(portfolioRequest,etrExchangeTrade001Dto);
+						portfolioList.add(portfolioRequest);
 						etrExchangeTrade001Dto.setPortfolioList(portfolioList);
-
 						etrExchangeTrade001DtoList.add(etrExchangeTrade001Dto);
 					}
 
@@ -1372,6 +1374,19 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		}catch (Exception e){
 			return new Message<List<EtrExchangeTradeSaveRequest>>().fail().setData(null);
 		}
+	}
+
+	/**
+	 * 审核画面查询多组合明细
+	 * @param
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping("selectEtrPortfolioDetail")
+	public List<EtrExchangeTradeSaveRequest> selectEtrPortfolioDetail() {
+		Map<String,Object> pageParam = RequestUtil.getPageParam();
+		EtrExchangeTradeSaveRequest dto=BeanUtil.mapToObject(pageParam,EtrExchangeTradeSaveRequest.class);
+		return etrExchangeTrade001CommonService.selectEtrPortfolioList(dto);
 	}
 
 

@@ -3169,7 +3169,44 @@
         getScale:getScale,
         formatPrice:formatPrice
     }
-
+    var dateTable = $("#dateTable").joyintable({
+        ajax: {
+            url: '/etrexchange/common/etrExchangeTrade001/selectEtrPortfolioDetail',//请求路径
+            type: 'POST',//请求类型
+            data: function() {
+                var object={};
+                object.entrustId=$("#entrustId_" + currentTab).val();
+                return object;//获取请求参数
+            }//ajax请求数据
+        },
+        searchOnInit:true,
+        loadonce:true,
+        page:false,
+        cols:[
+            {field:'portfolioId', title: 'EtrExchangeTrade002.portfolioId', sortField:'portfolioId',width : 200,
+                editOption:{
+                    type: 'select', multiple: false, searchable: true, showField: 'id',
+                    url: JoyinUtil.getRealPath("/business/common/CommonSelect/selectPortfolioId?act=true"),
+                    postData:function () {
+                        return getSearchParams();
+                    }
+                }
+            },
+            {field:'portfolioName',title: 'EtrExchangeTrade002.portfolioName', sortField:'portfolioName',width : 200},
+            {field:'acctNo', title: 'EtrExchangeTrade001.acctNo', width : 200,sortable:false,edit:true,
+                editOption: {
+                    type: 'select', multiple: false, searchable: true, showField: 'id',
+                    url: JoyinUtil.getRealPath("/invest/entrust/etrexchangetrade/EtrExchangeTrade001/getPtlSecAcctInfo"),
+                }
+            },
+            {field:'entrustNum', title: 'EtrExchangeTrade001.entrustNum', sortField:'entrustNum',width : 200,type:'number'},
+            {field:'entrustAmt', title: 'EtrExchangeTrade001.entrustAmt', sortField:'entrustAmt',width : 200,type:'number'},
+            {field:'availableCash', title: '可用现金', sortField:'availableCash',width : 200,type:'number'},
+            {field:'availablePositions', title: '可用持仓', sortField:'availablePositions',width : 200,type:'number'},
+        ],
+        done: function (table, allData) {
+        }
+    });
     /**
      * 查看资产详情事件
      */
