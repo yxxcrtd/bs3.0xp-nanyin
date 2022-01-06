@@ -1061,8 +1061,8 @@ public class StlDataDealSzdJsmxProcessService {
 					// modify by etliu 20211225 start
 					// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
 //					    settleTransData.setShareAmt(ArithmeticUtil.divide(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())),BigDecimal.valueOf(100),2));
-					// settleTransData.setShareAmt(ArithmeticUtil.divide(new BigDecimal(szdJsmx.getCjsl()).abs(), BigDecimal.valueOf(100),2));
-						settleTransData.setShareAmt(new BigDecimal(szdJsmx.getCjsl()).abs());
+					 	settleTransData.setShareAmt(ArithmeticUtil.divide(new BigDecimal(szdJsmx.getCjsl()).abs(), BigDecimal.valueOf(100),2));
+//						settleTransData.setShareAmt(new BigDecimal(szdJsmx.getCjsl()).abs());
 					// modify by etliu 20211225 end
 						// GZYHTZJY-1008:modify by fuyongsheng 20211230 end
 					    // 期限品种
