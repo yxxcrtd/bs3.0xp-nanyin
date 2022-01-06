@@ -16,6 +16,7 @@ import java.util.Map;
 import com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo;
 import com.joyintech.tams.invest.batch.cfetssettle.dto.CfetsSettleDealInfo;
 import com.joyintech.tams.invest.batch.cfetssettle.dto.CfetsSettleAllInfoDto;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -98,5 +99,11 @@ public interface CfetsSettleMapper {
      * @return
      */
     String qryPortfolioCashAcctId(Map<String, Object> param);
+    /**
+     * 回购质押券信息
+     * @param tradeId
+     * @return
+     */
+    List<PledgeBondInfoDto> getPledgeListByTradeId(@Param("tradeId") String tradeId);
 
 }

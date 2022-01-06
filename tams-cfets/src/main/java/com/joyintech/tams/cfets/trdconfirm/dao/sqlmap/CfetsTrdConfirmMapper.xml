@@ -474,7 +474,8 @@
         reg.quote_type as quoteType,
         reg.remark as remark,
         reg.totle_trade_id as totleTradeId,
-        reg.settle_date as settleDate,
+        CASE WHEN reg.PS = 'T03' AND regAdd.ACT_SETTE_DATE IS NOT NULL THEN regAdd.ACT_SETTE_DATE
+        ELSE reg.settle_date END  settleDate,
         reg.cprice_amt as cpriceAmt,
         reg.yield as yield,
         reg.exer_yield exerYield,
