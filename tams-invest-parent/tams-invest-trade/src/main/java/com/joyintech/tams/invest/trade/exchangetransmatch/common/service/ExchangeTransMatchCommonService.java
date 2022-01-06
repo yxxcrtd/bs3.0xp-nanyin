@@ -162,7 +162,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
     public void transactionRecord(String seqId, String tradeId, OperationType type) {
         if(!type.equals(OperationType.REVOKE) && !type.equals(OperationType.DELETE)) {
             //登录:成交数据与投管交易关系（SETTLE_TRANS_TG_MAPPING）
-            logger.error("交易完成,调用共通，成交流水号"+ seqId +",交易编号:"+tradeId +",开始");
+            logger.debug("交易完成,调用共通，成交流水号"+ seqId +",交易编号:"+tradeId +",开始");
             SettleTransDataTotal settleTransDataTotal = settleTransDataTotalMapper.selectByPrimaryKey(seqId);
             if(StringUtil.isNotEmpty(settleTransDataTotal)) {
                 ExchangeTransMatchCommonDto dto = new ExchangeTransMatchCommonDto();
@@ -191,13 +191,13 @@ public class ExchangeTransMatchCommonService extends BaseService {
             }
         }
         else {
-            logger.error("没有查询到成交信息,成交流水号:"+ seqId +",交易编号:"+tradeId);
+            logger.debug("没有查询到成交信息,成交流水号:"+ seqId +",交易编号:"+tradeId);
         }
 
-            logger.error("交易完成,调用共通，成交流水号"+ seqId +",交易编号:"+tradeId +",结束");
+            logger.debug("交易完成,调用共通，成交流水号"+ seqId +",交易编号:"+tradeId +",结束");
         }
         else {
-            logger.error("交易撤销,调用共通,交易编号:"+tradeId +",开始");
+            logger.debug("交易撤销,调用共通,交易编号:"+tradeId +",开始");
             if(StringUtil.endsWith(tradeId,"R")) {
                 tradeId = StringUtil.substring(tradeId,0,tradeId.length()-1);
             }
@@ -239,7 +239,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
                 exchangeTransMatchCommonMapper.deleteSettleTransTgMapping(tradeId);
             }
 
-            logger.error("交易撤销,调用共通,交易编号:"+tradeId +",结束");
+            logger.debug("交易撤销,调用共通,交易编号:"+tradeId +",结束");
 
         }
 
@@ -250,11 +250,11 @@ public class ExchangeTransMatchCommonService extends BaseService {
      * @param dtoList
      */
     public void transactionMacthBatch(List<ExchangeTransMatchCommonDto> dtoList){
-        logger.error("批量处理成交匹配数据---开始，批量成交数据:"+ JsonUtils.objectArray2Json(dtoList));
+        logger.debug("批量处理成交匹配数据---开始，批量成交数据:"+ JsonUtils.objectArray2Json(dtoList));
         for(ExchangeTransMatchCommonDto dto:dtoList) {
             this.transactionMacth(dto);
         }
-        logger.error("批量处理成交匹配数据---结束");
+        logger.debug("批量处理成交匹配数据---结束");
     }
 
     /**
@@ -262,7 +262,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
      * @param dto
      */
     public void transactionMacth(ExchangeTransMatchCommonDto dto) {
-        logger.error("处理成交匹配数据---开始，成交数据:"+ JsonUtils.object2Json(dto));
+        logger.debug("处理成交匹配数据---开始，成交数据:"+ JsonUtils.object2Json(dto));
         //查询汇总成交数据附属表
         dto.setSettleTransDataTotalAdd(settleTransDataTotalAddMapper.selectByPrimaryKey(dto.getSeqId()));
         //查询质押品信息
@@ -360,7 +360,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
             //处理匹配成交相关的表
             this.handleSettleTransTableInfo(dto,commonEntrustDtoList,matchStatus);
         }
-        logger.error("处理成交匹配数据---结束");
+        logger.debug("处理成交匹配数据---结束");
     }
 
     /**
@@ -370,7 +370,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
      * @param matchStatus
      */
     private void handleSettleTransTableInfo(ExchangeTransMatchCommonDto dto,List<ExchangeTransMatchCommonEntrustDto> commonEntrustDtoList,String matchStatus) {
-        logger.error("处理匹配成交相关的表---开始,委托list:"+JsonUtils.objectArray2Json(commonEntrustDtoList));
+        logger.debug("处理匹配成交相关的表---开始,委托list:"+JsonUtils.objectArray2Json(commonEntrustDtoList));
         for(ExchangeTransMatchCommonEntrustDto commonEntrustDto : commonEntrustDtoList) {
             //处理业务交易表
             String tradeId = this.handleFinProductTradeDto(dto,commonEntrustDto);
@@ -412,11 +412,11 @@ public class ExchangeTransMatchCommonService extends BaseService {
             settleTransDataTotalStatus.setMatchStatus(matchStatus);
             settleTransDataTotalStatusMapper.insert(settleTransDataTotalStatus);
         }
-        logger.error("处理匹配成交相关的表---结束");
+        logger.debug("处理匹配成交相关的表---结束");
     }
 
     private String handleFinProductTradeDto(ExchangeTransMatchCommonDto dto,ExchangeTransMatchCommonEntrustDto commonEntrustDto){
-        logger.error("处理业务交易表---开始");
+        logger.debug("处理业务交易表---开始");
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
         finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
         finProductTradeDto.setNeedSum(true);
@@ -660,11 +660,11 @@ public class ExchangeTransMatchCommonService extends BaseService {
 
         }
         baseTradeProductDealDtos.addAll(exchangeTransMatchBaseTradeDtos);
-        logger.error("交易表数据:"+JsonUtils.object2Json(finProductTradeDto));
+        logger.debug("交易表数据:"+JsonUtils.object2Json(finProductTradeDto));
         //处理头寸和指令完成度
         baseTradeProductDealCommService.execute(finProductTradeDto);
 
-        logger.error("处理业务交易表---结束,交易编号:"+tradeId);
+        logger.debug("处理业务交易表---结束,交易编号:"+tradeId);
         return tradeId;
     }
 
@@ -832,13 +832,13 @@ public class ExchangeTransMatchCommonService extends BaseService {
      * @param dtoList
      */
     public void revokeTransactionMacthBatch(List<SettleTransDataTotalMatch> dtoList) {
-        logger.error("批量取消成交匹配数据---开始，批量成交数据:"+ JsonUtils.objectArray2Json(dtoList));
+        logger.debug("批量取消成交匹配数据---开始，批量成交数据:"+ JsonUtils.objectArray2Json(dtoList));
         if(!StringUtil.isEmptyList(dtoList)) {
             for (SettleTransDataTotalMatch dto : dtoList) {
                 this.revokeTransactionMacth(dto);
             }
         }
-        logger.error("批量取消成交匹配数据---结束");
+        logger.debug("批量取消成交匹配数据---结束");
     }
 
     /**
@@ -846,13 +846,13 @@ public class ExchangeTransMatchCommonService extends BaseService {
      * @param dtoList
      */
     public void revokeTransactionAutoMacthBatch(List<SettleTransDataTotalMatch> dtoList) {
-        logger.error("批量取消自动成交匹配数据---开始，批量成交数据:"+ JsonUtils.objectArray2Json(dtoList));
+        logger.debug("批量取消自动成交匹配数据---开始，批量成交数据:"+ JsonUtils.objectArray2Json(dtoList));
         if(!StringUtil.isEmptyList(dtoList)) {
             for (SettleTransDataTotalMatch dto : dtoList) {
                 this.revokeTransactionAutoMacth(dto);
             }
         }
-        logger.error("批量取消自动成交匹配数据---结束");
+        logger.debug("批量取消自动成交匹配数据---结束");
     }
 
     /**
@@ -860,9 +860,9 @@ public class ExchangeTransMatchCommonService extends BaseService {
      * @param dto
      */
     public void revokeTransactionMacth(SettleTransDataTotalMatch dto) {
-        logger.error("取消成交匹配---开始，成交数据:"+ JsonUtils.object2Json(dto));
+        logger.debug("取消成交匹配---开始，成交数据:"+ JsonUtils.object2Json(dto));
         List<ExchangeTransMatchCommonRevokeDto> exchangeTransMatchCommonRevokeDtoList = queryExchangeTransMatchCommonRevokeDto(dto);
-        logger.error("查询取消匹配的成交数据与投管交易关系:"+ JsonUtils.objectArray2Json(exchangeTransMatchCommonRevokeDtoList));
+        logger.debug("查询取消匹配的成交数据与投管交易关系:"+ JsonUtils.objectArray2Json(exchangeTransMatchCommonRevokeDtoList));
         if(!StringUtil.isEmptyList(exchangeTransMatchCommonRevokeDtoList)) {
             // 撤销匹配交易
             revokeMatchTrade(exchangeTransMatchCommonRevokeDtoList, dto);
@@ -871,7 +871,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
             // 撤销清算匹配数据
             revokeSettleMatchData(exchangeTransMatchCommonRevokeDtoList, dto);
         }
-        logger.error("取消成交匹配---结束");
+        logger.debug("取消成交匹配---结束");
     }
 
     /**
@@ -879,16 +879,16 @@ public class ExchangeTransMatchCommonService extends BaseService {
      * @param dto
      */
     public void revokeTransactionAutoMacth(SettleTransDataTotalMatch dto) {
-        logger.error("取消自动成交匹配---开始，成交数据:"+ JsonUtils.object2Json(dto));
+        logger.debug("取消自动成交匹配---开始，成交数据:"+ JsonUtils.object2Json(dto));
         List<ExchangeTransMatchCommonRevokeDto> exchangeTransMatchCommonRevokeDtoList = queryExchangeTransMatchCommonRevokeDto(dto);
-        logger.error("查询取消自动匹配的成交数据与投管交易关系:"+ JsonUtils.objectArray2Json(exchangeTransMatchCommonRevokeDtoList));
+        logger.debug("查询取消自动匹配的成交数据与投管交易关系:"+ JsonUtils.objectArray2Json(exchangeTransMatchCommonRevokeDtoList));
         if(!StringUtil.isEmptyList(exchangeTransMatchCommonRevokeDtoList)) {
             // 撤销质押券
             revokeFinPledge(exchangeTransMatchCommonRevokeDtoList, dto);
             // 撤销清算匹配数据
             revokeSettleMatchData(exchangeTransMatchCommonRevokeDtoList, dto);
         }
-        logger.error("取消自动成交匹配---结束");
+        logger.debug("取消自动成交匹配---结束");
     }
 
     /**
@@ -940,24 +940,24 @@ public class ExchangeTransMatchCommonService extends BaseService {
             param.setRevokeReason("取消成交匹配");
 
             // 处理头寸
-            logger.error("取消成交匹配---处理头寸开始，参数数据:"+ JsonUtils.object2Json(param));
+            logger.debug("取消成交匹配---处理头寸开始，参数数据:"+ JsonUtils.object2Json(param));
             if(isSingle) {
                 simpleRestTemplate.postForObject(tamsSerever + "/invest/trade/api/execute", param, Map.class);
             }
             else {
                 restTemplate.postForObject(tamsSerever + "/invest/trade/api/execute", param, Map.class);
             }
-            logger.error("取消成交匹配---处理头寸结束");
+            logger.debug("取消成交匹配---处理头寸结束");
 
             // 撤销交易
-            logger.error("取消成交匹配---撤销交易开始，参数数据:"+ JsonUtils.object2Json(param));
+            logger.debug("取消成交匹配---撤销交易开始，参数数据:"+ JsonUtils.object2Json(param));
             if(isSingle) {
                 simpleRestTemplate.postForObject(tamsSerever + "/invest/trade/api/revoke", param, String.class);
             }
             else {
                 restTemplate.postForObject(tamsSerever + "/invest/trade/api/revoke", param, String.class);
             }
-            logger.error("取消成交匹配---撤销交易寸结束");
+            logger.debug("取消成交匹配---撤销交易寸结束");
         }
     }
 
@@ -970,8 +970,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
         if(CollectionUtils.isNotEmpty(dtoList)){
             //质押式协议回购处理质押券置换，质押券置换明细，质押券置换结果，回购质押品 表数据
             List<ExchangeTransMatchCommonRevokeDto> repoRevokeDtoList = dtoList.stream()
-                    .filter(item -> (StringUtil.equals(item.getIsTotalDeal(),DictCodeList.是否_是.getValue())
-                            && StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),item.getFinprodType2()) || StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue(),item.getFinprodType2()))
+                    .filter(item -> StringUtil.equals(item.getIsTotalDeal(),DictCodeList.是否_是.getValue())
                             && (StringUtil.equals(item.getPs(), DictCodeListExt3.交易方向_中途换券.getValue()) || StringUtil.equals(item.getPs(), DictCodeListExt3.交易方向_解除质押.getValue()))).collect(Collectors.toList());
             if(!StringUtil.isEmptyList(repoRevokeDtoList)) {
                 //以汇总交易编号分组处理 质押券置换，质押券置换明细
