@@ -24,31 +24,21 @@ DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID IN ('ChbMonthReportDetailProd001','Ch
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
 values ('ChbMonthReportDetailProd001', 'ChbMonthReportDetailProd001_btn_export', '01', '01', null, '导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
-values ('ChbMonthReportDetailProd001', 'ChbMonthReportDetailProd001_btn_exportCheck', '01', '01', null, '选择导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
-insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
 values ('ChbMonthReportDetailProd001', 'ChbMonthReportDetailProd001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system',sysdate, 'COM', null);
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
 values ('ChbMonthReportDetailAsset001', 'ChbMonthReportDetailAsset001_btn_export', '01', '01', null, '导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
-insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
-values ('ChbMonthReportDetailAsset001', 'ChbMonthReportDetailAsset001_btn_exportCheck', '01', '01', null, '选择导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
 values ('ChbMonthReportDetailAsset001', 'ChbMonthReportDetailAsset001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system',sysdate, 'COM', null);
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
 values ('ChbMonthReportDetailAssetB001', 'ChbMonthReportDetailAssetB001_btn_export', '01', '01', null, '导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
-values ('ChbMonthReportDetailAssetB001', 'ChbMonthReportDetailAssetB001_btn_exportCheck', '01', '01', null, '选择导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
-insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
 values ('ChbMonthReportDetailAssetB001', 'ChbMonthReportDetailAssetB001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system',sysdate, 'COM', null);
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
 values ('PbcMonthReportDetailProd001', 'PbcMonthReportDetailProd001_btn_export', '01', '01', null, '导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
-values ('PbcMonthReportDetailProd001', 'PbcMonthReportDetailProd001_btn_exportCheck', '01', '01', null, '选择导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
-insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
 values ('PbcMonthReportDetailProd001', 'PbcMonthReportDetailProd001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system',sysdate, 'COM', null);
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
 values ('PbcMonthReportDetailAsset001', 'PbcMonthReportDetailAsset001_btn_export', '01', '01', null, '导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
-insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
-values ('PbcMonthReportDetailAsset001', 'PbcMonthReportDetailAsset001_btn_exportCheck', '01', '01', null, '选择导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
 values ('PbcMonthReportDetailAsset001', 'PbcMonthReportDetailAsset001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system',sysdate, 'COM', null);
 
