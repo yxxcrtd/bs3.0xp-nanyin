@@ -1940,42 +1940,41 @@ public class IbuComponentCommonService extends BaseService {
             // inputBean.setOrderField("");
             // inputBean.setOrderDirection("");
 
-            // 报价状态列表
-            if (param.get("dayOfferStatus") != null) {
-                List<String> tradeStatusList = new ArrayList<>();
-                if (StringUtil.equals(param.get("dayOfferStatus"), "undo")) {
-                    tradeStatusList.add("NA");// 此处特殊处理，组件那边判断取tradeStatus为空的记录
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_新增中.getValue());
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已新增.getValue());
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_修改中.getValue());
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已修改.getValue());
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_撤回中.getValue());
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_待回复.getValue());
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_成交中.getValue());
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_终止中.getValue());
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已回复.getValue());
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已拒绝.getValue());
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_拒绝中.getValue());
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_回复中.getValue());
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_交谈中.getValue());
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已交谈.getValue());
-                }
-                else if (StringUtil.equals(param.get("dayOfferStatus"), "done")) {
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已撤回.getValue());
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已成交.getValue());
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已终止.getValue());
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已过期.getValue());
-                    tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已撤销.getValue());
-                }
-
-                inputBean.setTradeStatusList(tradeStatusList);
-                if(null != param.get("keywords")){
-                	inputBean.setKeywords(param.get("keywords").toString());
-                }
- 
-            }
         }
+        // 报价状态列表
+        if (param.get("dayOfferStatus") != null) {
+            List<String> tradeStatusList = new ArrayList<>();
+            if (StringUtil.equals(param.get("dayOfferStatus"), "undo")) {
+                tradeStatusList.add("NA");// 此处特殊处理，组件那边判断取tradeStatus为空的记录
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_新增中.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已新增.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_修改中.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已修改.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_撤回中.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_待回复.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_成交中.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_终止中.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已回复.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已拒绝.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_拒绝中.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_回复中.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_交谈中.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已交谈.getValue());
+            }
+            else if (StringUtil.equals(param.get("dayOfferStatus"), "done")) {
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已撤回.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已成交.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已终止.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已过期.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已撤销.getValue());
+            }
 
+            inputBean.setTradeStatusList(tradeStatusList);
+            if(null != param.get("keywords")){
+                inputBean.setKeywords(param.get("keywords").toString());
+            }
+
+        }
         //针对前后端分离 高级查询
         if(null!=param.get("pss")){
             inputBean.setPss((List<String>)param.get("pss"));
