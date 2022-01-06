@@ -39,6 +39,9 @@ public class ExchangeTransMatchService extends BaseService {
         map.put("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         map.put("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
         map.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+        map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        map.put("TARGET_BACK_TYPE_H01", DictCodeList.回购类型_质押式协议回购.getValue());
+        map.put("PS_T07", DictCodeList.交易方向_到期.getValue());
 
         return super.queryForPage(page, length, () -> exchangeTransMatchMapper.findPage(map));
     }

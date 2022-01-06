@@ -92,6 +92,17 @@
         ON A1.R_FINPROD_ID  = E1.FINPROD_MARKET_ID
         AND E1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F10}
         <where>
+            <!--上交所逆回购到期购回没有指令，不需要成交匹配-->
+            A.SEQ_ID NOT IN (
+                select A2.SEQ_ID
+                from SETTLE_TRANS_DATA_TOTAL A2
+                INNER JOIN SETTLE_TRANS_DATA_TOTAL_ADD B2
+                    ON A2.SEQ_ID = B2.TRADE_ID
+                WHERE A2.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F03})
+                    AND A2.TRADE_MARKET IN (#{TRADE_PLACE_03})
+                    AND B2.REPO_TYPE = #{TARGET_BACK_TYPE_H01}
+                    AND A2.PS IN (#{PS_T07})
+            )
             <if test="tradeMarket!=null and tradeMarket!='' ">
                 AND A.TRADE_MARKET = #{tradeMarket}
             </if>
