@@ -207,7 +207,7 @@
     </select>
     <!--	查询已维护的代理销售机构代码-->
     <select id="selectAgentInstitutionCodeList" resultType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto">
-        select AGENT_INSTITUTION_CODE agentInstitutionCode from CHB_AGENT_INSTITUTION_INFO
+        select AGENT_INSTITUTION_CODE agentInstitutionCode from CHB_AGENT_INSTITUTION_INFO where status = 'E'
     </select>
     <!--	查询已维护的产品登记编码-->
     <select id="selectProdRegistCodeList" resultType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto">
