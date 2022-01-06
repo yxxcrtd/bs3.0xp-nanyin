@@ -52,7 +52,7 @@ $(function(){
             ,{field: 'sendStatus', title: "报送状态",visible:false,sortField:'sendStatus'}
             ,{field: 'sendStatusStr', title: "报送状态", width:100 ,sortField:'sendStatus'}
             ,{field: 'submitTimeStr', title: "报送日期", width:150,sortField:'submitTime'}
-            ,{field: 'submitDeadlineStr', title: "报送截止日", width:150,sortField:'submitDeadline'}
+            ,{field: 'submitDeadline', title: "报送截止日", type:'date', width:150,sortField:'submitDeadline'}
             ,{field: 'submitFeedbackStatusStr', title: "反馈状态", width:100,sortField:'submitFeedbackStatus'}
             ,{field: 'issuePartyId', title: '发行机构代码', width:'150',sortField:'issuePartyId'}
             ,{field: 'agentInstitutionCode', title: '代理销售机构代码', width:'150',sortField:'agentInstitutionCode'}

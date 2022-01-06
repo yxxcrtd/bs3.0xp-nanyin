@@ -10,8 +10,8 @@
 		HOLDER_TYPE holderType,
 		sum(DAY_SALE_AMOUNT_SUM) saleAmountTotal,
 		sum(DAY_VALUE_AMOUNT_SUM) valueAmountTotal,
-		sum(DAY_SALE_QTY_SUM)   saleSharesTotal,
-		sum(DAY_VALUE_QTY_SUM)   valueSharesTotal,
+		sum(SALE_TOTAL_BY_QTY)   saleSharesTotal,
+		sum(VALUE_TOTAL_BY_QTY)   valueSharesTotal,
 		CCY ccy
 		FROM
 		CHB_SALE_DEAL_SUM WHERE EQUITY_CONF_DATE between to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')

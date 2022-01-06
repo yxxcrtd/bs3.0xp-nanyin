@@ -316,4 +316,10 @@ public interface EquityInfoRegist001Mapper {
     
     
     int countExportNum(Map<String,Object> map);
+
+    /**
+     *  根据传入 bankCode 和 indentifyMark 获取 SUBMIT_FEEDBACK_STATUS = '03'
+     * @return
+     */
+    List<EquityInfoRegist001Dto> queryAllForEquityInfo(Map<String,Object> param);
 }

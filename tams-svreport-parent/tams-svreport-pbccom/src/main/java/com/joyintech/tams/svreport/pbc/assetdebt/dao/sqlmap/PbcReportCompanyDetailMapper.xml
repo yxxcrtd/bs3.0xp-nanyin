@@ -165,7 +165,7 @@
   <select id="selectByReportuuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from PBC_REPORT_COMPANY_DAT
+    from PBC_REPORT_COMPANY
     where REPORTUUID = #{reportuuid,jdbcType=CHAR}
   </select>
   <delete id="deleteByReportDate"  parameterType="map" >

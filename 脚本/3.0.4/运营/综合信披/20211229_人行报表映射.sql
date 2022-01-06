@@ -4,16 +4,14 @@ TRUNCATE TABLE PBC_REPORT_TEMPLATEDETAIL;
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_1_700000','700000资产合计',1,'2_1',null,1,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_1_810000','810000负债合计',2,'2_1',null,1,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_1_820000','820000权益合计',3,'2_1',null,1,'E');
-
-
-insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_2_700000','700000债务工具',1,'2_1','AMT_1_700000',2,'E');
-insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_2_710000','710000股权',2,'2_1','AMT_1_700000',2,'E');
-insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_2_720000','720000特定目的载体份额',3,'2_1','AMT_1_700000',2,'E');
-insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_2_730000','730000其他',4,'2_1','AMT_1_700000',2,'E');
-insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_2_800000','800000债务工具',5,'2_1','AMT_1_810000',2,'E');
-insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_2_810000','810000实收本金',6,'2_1','AMT_1_810000',2,'E');
-insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_2_820000','820000未分配利润',7,'2_1','AMT_1_820000',2,'E');
-
+insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_2_700000','债务工具',1,'2_1','AMT_1_700000',2,'E');
+insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_2_710000','股权',2,'2_1','AMT_1_700000',2,'E');
+insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_2_720000','特定目的载体份额',3,'2_1','AMT_1_700000',2,'E');
+insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_2_730000','其他',4,'2_1','AMT_1_700000',2,'E');
+insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_2_800000','债务工具',5,'2_1','AMT_1_810000',2,'E');
+insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_2_810000','实收本金',6,'2_1','AMT_1_810000',2,'E');
+insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_2_822000','资本公积',6,'2_1','AMT_1_820000',2,'E');
+insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_2_820000','未分配利润',7,'2_1','AMT_1_820000',2,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_3_700000','710000现金',1,'2_1','AMT_2_700000',3,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_3_720000','720000存款',2,'2_1','AMT_2_700000',3,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_3_730000','730000可转让存单',3,'2_1','AMT_2_700000',3,'E');
@@ -31,10 +29,8 @@ insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_3_814000','814000应付账款',15,'2_1','AMT_2_800000',3,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_3_815000','815000其他负债',16,'2_1','AMT_2_800000',3,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_3_821000','821000实收本金',17,'2_1','AMT_2_810000',3,'E');
-insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_3_822000','822000资本公积',18,'2_1','AMT_2_810000',3,'E');
+insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_3_822000','822000资本公积',18,'2_1','AMT_2_822000',3,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_3_823000','823000未分配利润',19,'2_1','AMT_2_820000',3,'E');
-
-
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_4_710000','710000现金',1,'2_1','AMT_3_710000',4,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_4_721000','721000境内存款',2,'2_1','AMT_3_720000',4,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_4_722000','722000境外存款',3,'2_1','AMT_3_720000',4,'E');
@@ -69,7 +65,6 @@ insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_4_821000','821000实收本金',32,'2_1','AMT_3_821000',4,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_4_822000','822000资本公积',33,'2_1','AMT_3_822000',4,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_4_823000','823000未分配利润',34,'2_1','AMT_3_823000',4,'E');
-
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_5_710000','710000现金',1,'2_1','AMT_4_710000',5,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_5_721000','721000境内存款',2,'2_1','AMT_4_721000',5,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_5_722000','722000境外存款',3,'2_1','AMT_4_722000',5,'E');
@@ -90,7 +85,6 @@ insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_5_752400','752400银行业存款类金融机构',18,'2_1','AMT_4_752000',5,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_5_752500','752500银行业非存款类金融机构',19,'2_1','AMT_4_752000',5,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_5_752600','752600非银行业金融机构',20,'2_1','AMT_4_752000',5,'E');
-insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_5_752600','752600非银行业金融机构',21,'2_1','AMT_4_752000',5,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_5_752700','752700特定目的载体',22,'2_1','AMT_4_752000',5,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_5_752800','752800境外',23,'2_1','AMT_4_752000',5,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_5_771100','771100非金融企业股票',24,'2_1','AMT_4_771000',5,'E');
@@ -130,7 +124,6 @@ insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_5_821000','821000实收本金',58,'2_1','AMT_4_821000',5,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_5_822000','822000资本公积',59,'2_1','AMT_4_822000',5,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_5_823000','823000未分配利润',60,'2_1','AMT_4_823000',5,'E');
-
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_710000_XJ','710000现金',1,'2_1','AMT_5_710000',6,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_721000_JNCK','721000境内存款',2,'2_1','AMT_5_721000',6,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_722000_JWCK','722000境外存款',3,'2_1','AMT_5_722000',6,'E');
@@ -210,12 +203,7 @@ insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_821000_SSBJ','821000实收本金',77,'2_1','AMT_5_821000',6,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_822000_ZBGJ','822000资本公积',78,'2_1','AMT_5_822000',6,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_823000_WFPLR','823000未分配利润',79,'2_1','AMT_5_823000',6,'E');
-
---2_4
-
-
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_3_760000','760000资产收益权',1,'2_4','AMT_2_700000',3,'E');
-
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_4_761000','761000贷款收益权',1,'2_4','AMT_3_760000',4,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_4_762000','762000债务证券收益权',2,'2_4','AMT_3_760000',4,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_4_763000','763000应收账款收益权',3,'2_4','AMT_3_760000',4,'E');
@@ -223,7 +211,6 @@ insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_4_765000','765000股票收益权',5,'2_4','AMT_3_760000',4,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_4_766000','766000其他股权收益权',6,'2_4','AMT_3_760000',4,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_4_767000','767000物权资产收益权',7,'2_4','AMT_3_760000',4,'E');
-
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_761000_DKSYQ','761000贷款收益权',1,'2_4','AMT_4_761000',5,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_762000_ZWZQSYQ','762000债务证券收益权',2,'2_4','AMT_4_762000',5,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_763000_YSZKSYQ','763000应收账款收益权',3,'2_4','AMT_4_763000',5,'E');
@@ -231,8 +218,6 @@ insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_765000_GPSYQ','765000股票收益权',5,'2_4','AMT_4_765000',5,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_766000_QTGQSYQ','766000其他股权收益权',6,'2_4','AMT_4_766000',5,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_767000_WQZCSYQ','767000物权资产收益权',7,'2_4','AMT_4_767000',5,'E');
-
-
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_b10000_ZH','b10000住户',1,'2_4',null,6,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_b20000_GYZF','b20000广义政府',2,'2_4',null,6,'E');
 insert into PBC_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT_b30000_FJRQY','b30000非金融企业',3,'2_4',null,6,'E');

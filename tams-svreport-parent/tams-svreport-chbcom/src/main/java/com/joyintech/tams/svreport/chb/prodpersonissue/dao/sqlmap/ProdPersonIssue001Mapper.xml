@@ -46,6 +46,7 @@
       <result column="BUSI_ACCT_NO" property="busiAcctNo" jdbcType="VARCHAR" />
       <result column="ACCT_NAME" property="acctName" jdbcType="VARCHAR" />
      <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+     <result column="GRAD_PROPORTION" property="gradProportion" jdbcType="DECIMAL" />
 
    </resultMap>
   <sql id="Base_Column_List" >
@@ -732,7 +733,8 @@
             info.YIELD_HIGH,
             info.YIELD_REMARK,
             info.BUSI_ACCT_NO,
-            info.ACCT_NAME
+            info.ACCT_NAME,
+            info.GRAD_PROPORTION
             <if test="model_type != null">
 		      	,info.REG_CODE ISSUE_PARTY_ID /*发行机构代码*/
 		     </if>
@@ -781,7 +783,7 @@
 	        CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
 	        SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
 	        ISSUE_PARTY_ID
-	        ,MANAGE_TYPE,YIELD_LOW,YIELD_HIGH,YIELD_REMARK,BUSI_ACCT_NO,ACCT_NAME
+	        ,MANAGE_TYPE,YIELD_LOW,YIELD_HIGH,YIELD_REMARK,BUSI_ACCT_NO,ACCT_NAME,GRAD_PROPORTION
         )
 		values(#{sumitSeq,jdbcType=VARCHAR},
 		   #{registSeqno,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, 
@@ -798,7 +800,8 @@
 		   #{submitTime,jdbcType=TIMESTAMP}, #{chbSubmitDeadline,jdbcType=TIMESTAMP}, #{submitDeadline,jdbcType=TIMESTAMP}, 
 		   #{issuePartyId,jdbcType=VARCHAR}
 		   ,#{manageType,jdbcType=VARCHAR},#{yieldLow,jdbcType=DECIMAL},#{yieldHigh,jdbcType=DECIMAL}
-		   ,#{yieldRemark,jdbcType=VARCHAR},#{busiAcctNo,jdbcType=VARCHAR},#{acctName,jdbcType=VARCHAR}
+		   ,#{yieldRemark,jdbcType=VARCHAR},#{busiAcctNo,jdbcType=VARCHAR},#{acctName,jdbcType=VARCHAR},
+		   #{gradProportion,jdbcType=DECIMAL}
 		)
     </insert>
     
@@ -872,7 +875,7 @@
       SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
       ISSUE_PARTY_ID, SUMIT_SEQ,
        MANAGE_TYPE, YIELD_LOW, YIELD_HIGH, YIELD_REMARK, 
-      BUSI_ACCT_NO, ACCT_NAME, SUBMIT_FEEDBACK_MSG
+      BUSI_ACCT_NO, ACCT_NAME, SUBMIT_FEEDBACK_MSG,GRAD_PROPORTION
       )
       select
       REGIST_SEQNO, PROD_REGIST_CODE, PROD_ID, 
@@ -889,7 +892,7 @@
       SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
       ISSUE_PARTY_ID, SUMIT_SEQ,
       MANAGE_TYPE, YIELD_LOW, YIELD_HIGH, YIELD_REMARK, 
-      BUSI_ACCT_NO, ACCT_NAME, SUBMIT_FEEDBACK_MSG
+      BUSI_ACCT_NO, ACCT_NAME, SUBMIT_FEEDBACK_MSG,GRAD_PROPORTION
     from CHB_PRD_ISSUE_SUB_HIS
     where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
   	<if test="regList !=null and regList.size()>0">
@@ -942,7 +945,8 @@ CPS.AVG_OPEN_COUNT,
 CPS.OPEN_BUSS,
 CPS.OPEN_BUSS_REMARK,
 CPS.BUSI_ACCT_NO,
-CPS.ACCT_NAME
+CPS.ACCT_NAME,
+CPS.GRAD_PROPORTION
 
 
 from  CHB_PRD_ISSUE_SUB  CPS

@@ -95,7 +95,6 @@ $(function() {
 									title : '报送截止日',
 									field : 'chbSubmitDeadline',
 									type : 'date',
-									type : 'datetime', 
 									sortField:'chbSubmitDeadline'
 								},
 								{

@@ -25,20 +25,20 @@
 			<Cell order="21" name="份额">delayPayAmtStr</Cell>
 			<Cell order="22" name="成本">costAmtStr</Cell>
 			<Cell order="23" name="应计利息">intincexpStr</Cell>
-			<Cell order="24" name="利息调整">intadjexpAddStr</Cell>
-			<Cell order="25" name="公允价值变动">floatIngplStr</Cell>
-			<Cell order="26" name="减值">lossAmtStr</Cell>
-			<Cell order="27" name="期末余额">assetvalueAStr</Cell>
-			<Cell order="28" name="1.12.9.a投向金融资产投资公司或其附属机构发行的私募股权投资基金">privatefundFlagStr</Cell>
-			<Cell order="29" name="1.13.7.a投向金融资产投资公司发行的私募资产管理产品">privateprdFlagStr</Cell>
-			<Cell order="30" name="信用债使用评级">rating</Cell>
-			<Cell order="31" name="1.15.b 投向市场化债转股相关产品的部分">bondtostockFlagStr</Cell>
-			<Cell order="32" name="1.15.c 逾期资产">typeFinal</Cell>
-			<Cell order="33" name="3.1.1 创业投资基金">typeFinal</Cell>
-			<Cell order="34" name="3.1.2 政府出资产业投资基金">isGovernFund1Str</Cell>
-			<Cell order="35" name="投管一级分类">orgAssetType1Str</Cell>
-			<Cell order="36" name="投管二级分类">orgAssetType2Str</Cell>
-			<Cell order="37" name="投管三级分类">orgAssetType3Str</Cell>
+<!--			<Cell order="24" name="利息调整">intadjexpAddStr</Cell>-->
+			<Cell order="24" name="公允价值变动">floatIngplStr</Cell>
+			<Cell order="25" name="减值">lossAmtStr</Cell>
+			<Cell order="26" name="期末余额">assetvalueAStr</Cell>
+			<Cell order="27" name="1.12.9.a投向金融资产投资公司或其附属机构发行的私募股权投资基金">privatefundFlagStr</Cell>
+			<Cell order="28" name="1.13.7.a投向金融资产投资公司发行的私募资产管理产品">privateprdFlagStr</Cell>
+			<Cell order="29" name="信用债使用评级">rating</Cell>
+			<Cell order="30" name="1.15.b 投向市场化债转股相关产品的部分">bondtostockFlagStr</Cell>
+			<Cell order="31" name="1.15.c 逾期资产">typeFinal</Cell>
+			<Cell order="32" name="3.1.1 创业投资基金">typeFinal</Cell>
+			<Cell order="33" name="3.1.2 政府出资产业投资基金">isGovernFund1Str</Cell>
+			<Cell order="34" name="投管一级分类">orgAssetType1Str</Cell>
+			<Cell order="35" name="投管二级分类">orgAssetType2Str</Cell>
+			<Cell order="36" name="投管三级分类">orgAssetType3Str</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import org.apache.commons.lang3.time.DateUtils;
 
 /**
  * 自定义日期类型的json解析
@@ -33,8 +35,7 @@ public class CustomDateDeserialize extends JsonDeserializer<Date> {
         }
         catch (NumberFormatException e) {
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat(DateUtil.DEFAULT_DATE_FORMAT_EN);
-                date = sdf.parse(text);
+                date = DateUtils.parseDate(text,"yyyy-MM-dd","yyyy-MM-dd HH:mm:ss");
             } catch (ParseException ex) {
                 ex.printStackTrace();
             }

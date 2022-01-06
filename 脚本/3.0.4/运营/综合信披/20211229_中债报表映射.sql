@@ -1,8 +1,7 @@
 --CHB_REPORT_TEMPLATEDETAIL初始化
-TRUNCATE TABLE  CHB_REPORT_TEMPLATEDETAIL;
+TRUNCATE TABLE CHB_REPORT_TEMPLATEDETAIL;
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_1','资产类别',1,'BALANCE',null,1,'E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_2','负债类别',2,'BALANCE',null,1,'E');
-
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT2_1_1','1.1 现金及银行存款',1,'BALANCE','AMT1_1',2,'E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT2_1_2','1.2 同业存单',2,'BALANCE','AMT1_1',2,'E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT2_1_3','1.3 拆放同业及债券买入返售',3,'BALANCE','AMT1_1',2,'E');
@@ -19,7 +18,6 @@ insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT2_1_14','1.14 委外投资——协议方式',14,'BALANCE','AMT1_1',2,'E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT2_2_1','2.1 同业拆入及卖出回购',15,'BALANCE','AMT1_2',2,'E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT2_2_2','2.2 其他(负债）',16,'BALANCE','AMT1_2',2,'E');
-
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT3_1_1_1','1.1.1 现金及活期存款',1,'BALANCE','AMT2_1_1',3,'E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT3_1_1_2','1.1.2 本行存款',2,'BALANCE','AMT2_1_1',3,'E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT3_1_1_3','1.1.3 他行存款',3,'BALANCE','AMT2_1_1',3,'E');
@@ -119,7 +117,6 @@ insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT3_2_1_2','2.1.2 卖出回购',97,'BALANCE','AMT2_2_1',3,'E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT3_2_2_1','2.2.1 同业借款',98,'BALANCE','AMT2_2_2',3,'E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT3_2_2_2','其他',99,'BALANCE','AMT2_2_2',3,'E');
-
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_1_1','1.1.1 现金及活期存款','1','BALANCE','AMT3_1_1_1','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_1_2','1.1.2 本行存款','2','BALANCE','AMT3_1_1_2','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_1_3','1.1.3 他行存款','3','BALANCE','AMT3_1_1_3','4','E');
@@ -131,7 +128,7 @@ insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_3_2','1.3.2 债券买入返售','9','BALANCE','AMT3_1_3_2','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_4_1','1.4.1 国债','10','BALANCE','AMT3_1_4_1','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_4_2_a','1.4.2.a 专项债券','11','BALANCE','AMT3_1_4_2','4','E');
-insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_4_2_b','1.4.2.b非专项债券','12','BALANCE','AMT3_1_4_2','4','E');
+insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_4_2_b','非专项债券','12','BALANCE','AMT3_1_4_2','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_4_3','1.4.3 中央银行票据','13','BALANCE','AMT3_1_4_3','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_4_4','1.4.4 政府机构债券','14','BALANCE','AMT3_1_4_4','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_4_5','1.4.5 政策性金融债券','15','BALANCE','AMT3_1_4_5','4','E');
@@ -144,7 +141,7 @@ insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_4_12','1.4.12 非标转标资产','22','BALANCE','AMT3_1_4_12','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_4_13','1.4.13 其他债券','23','BALANCE','AMT3_1_4_13','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_5_1_a','1.5.1.a 标准化票据','24','BALANCE','AMT3_1_5_1','4','E');
-insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_5_1_b','1.5.1.b 非标准化票据','25','BALANCE','AMT3_1_5_1','4','E');
+insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_5_1_b','非标准化票据','25','BALANCE','AMT3_1_5_1','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_5_2','1.5.2 信用证','26','BALANCE','AMT3_1_5_2','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_5_3','1.5.3 信托贷款','27','BALANCE','AMT3_1_5_3','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_5_4','1.5.4 委托贷款','28','BALANCE','AMT3_1_5_4','4','E');
@@ -161,7 +158,7 @@ insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_5_15','1.5.15 信贷资产流转和收益权转让产品','39','BALANCE','AMT3_1_5_15','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_5_16_a','1.5.16.a 场内股票质押回购','40','BALANCE','AMT3_1_5_16','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_5_16_b','1.5.16.b 场外股票质押融资','41','BALANCE','AMT3_1_5_16','4','E');
-insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_5_16_c','1.5.16.c 其他','42','BALANCE','AMT3_1_5_16','4','E');
+insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_5_16_c','其他','42','BALANCE','AMT3_1_5_16','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_6_1','1.6.1 股权','43','BALANCE','AMT3_1_6_1','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_6_2','1.6.2 股票（一级市场）','44','BALANCE','AMT3_1_6_2','4','E');
 insert into CHB_REPORT_TEMPLATEDETAIL(propertycode,propername,orderno,reporttype,codeparent,proplevel,status) values('AMT1_6_3','1.6.3 股票（二级市场）','45','BALANCE','AMT3_1_6_3','4','E');

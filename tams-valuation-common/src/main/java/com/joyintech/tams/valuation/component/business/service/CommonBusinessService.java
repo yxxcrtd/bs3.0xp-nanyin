@@ -1,6 +1,8 @@
 package com.joyintech.tams.valuation.component.business.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName CommonBusinessService
@@ -101,4 +105,38 @@ public class CommonBusinessService {
         }
         return StringUtil.defaultString(finprodMarketId).concat(GlobalConstant.UNDER_LINE).concat(StringUtil.defaultString(chlFinprodId));
     }
+
+    /**
+     * 资产代码下拉框
+     *
+     * @param search 界面查询参数 ,assetType 资产类型
+     * @return
+     */
+    public List<SelectOptionDto> getAssetId( Map<String, Object> param) {
+
+        return commonBusinessMapper.getAssetId(param);
+    }
+
+    /**
+     * 产品代码下拉框
+     * @param search 界面查询参数 ,finprodType 产品类型
+     * @return
+     */
+    public List<SelectOptionDto> getProdId( Map<String, Object> param) {
+
+        return commonBusinessMapper.getProdId(param);
+    }
+
+    /**
+     * 资金账户信息
+     * @param param 画面参数
+     * @return 组合代码：下拉框
+     * @see
+     * @since 1.0
+     */
+    public List<SelectOptionDto> getTrdAcctId(Map<String, Object> param) {
+        List<SelectOptionDto> resultList = commonBusinessMapper.getTrdAcctId(param);
+        return resultList;
+    }
+
 }

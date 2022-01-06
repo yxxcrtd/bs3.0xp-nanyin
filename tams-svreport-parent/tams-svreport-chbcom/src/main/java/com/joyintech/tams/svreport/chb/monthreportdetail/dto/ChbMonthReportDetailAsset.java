@@ -1,7 +1,10 @@
 package com.joyintech.tams.svreport.chb.monthreportdetail.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.ChbMonthAssetPositiondetail;
 import com.joyintech.tams.common.base.entity.ChbMonthPrdPositiondetail;
@@ -113,7 +116,7 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
         this.exerciseDate = exerciseDate;
     }
 
-    public String getExerciseDateStr(){return DateUtil.format(this.getExerciseDate(),"yyyy-MM-dd");}
+    public String getOpenplanStr(){return DateUtil.format(this.getOpenplan(),"yyyy-MM-dd");}
 
     public String getVdateStr() {
         return DateUtil.format(this.getVdate(),"yyyy-MM-dd");
@@ -151,6 +154,14 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getBondtostockFlag());
     }
 
+    public String getMonitTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getMonitType());
+    }
+
+    public String getPppflagStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPppflag());
+    }
+
     public String getIsGovernFund1Str() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsGovernFund1());
     }
@@ -160,7 +171,13 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
     }
 
     public String getIsYhbcgjStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_银行资本补充工具, this.getIsYhbcgj());
+        String  isYhbcgj = "";
+        if(StringUtil.isNotEmpty(this.getIsYhbcgj())){
+            for(String code : this.getIsYhbcgj().split(",")){
+                isYhbcgj = isYhbcgj + ","+SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_银行资本补充工具, code);
+            }
+        }
+        return StringUtil.isNotEmpty(isYhbcgj)&&isYhbcgj.length()>0?isYhbcgj.substring(1,isYhbcgj.length()):null;
     }
 
     public String getOrgAssetType2Str() {
@@ -168,7 +185,20 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
     }
 
     public String getOrgAssetType3Str() {
-        return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产三级分类, this.getOrgAssetType3());
+        String orgCode3 = null;
+        if(null!=SysDataUtil.getNameFromDataDict(DictCode.存款类资产类型,this.getOrgAssetType2())){
+            orgCode3 = SysDataUtil.getNameFromDataDict(DictCode.存款类资产存款类型, this.getOrgAssetType3());
+        }else if(null!=SysDataUtil.getNameFromDataDict(DictCode.WIND一级分类_含债券一级分类等,this.getOrgAssetType2())){
+            orgCode3 = SysDataUtil.getNameFromDataDict(DictCode.WIND二级分类_含债券二级分类等, this.getOrgAssetType3());
+        }else if(null!=SysDataUtil.getNameFromDataDict(DictCode.基金类资产类型,this.getOrgAssetType2())){
+            orgCode3 = SysDataUtil.getNameFromDataDict(DictCode.基金类资产二级类型, this.getOrgAssetType3());
+        }else if(null!=SysDataUtil.getNameFromDataDict(DictCode.项目类一级分类, this.getOrgAssetType2())){
+            orgCode3 = SysDataUtil.getNameFromDataDict(DictCode.项目类资产二级类型, this.getOrgAssetType3());
+        }else if(null!=SysDataUtil.getNameFromDataDict(DictCode.拆借类型,this.getOrgAssetType2())){
+            orgCode3 = SysDataUtil.getNameFromDataDict(DictCode.拆借资产类型, this.getOrgAssetType3());
+        }
+
+        return orgCode3;
     }
 
     private String isFbhy;
@@ -181,6 +211,26 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
         this.isFbhy = isFbhy;
     }
 
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal costAmtB ;
+
+    private BigDecimal costAmtA;
+
+    public BigDecimal getCostAmtA() {
+        return costAmtA;
+    }
+
+    public void setCostAmtA(BigDecimal costAmtA) {
+        this.costAmtA = costAmtA;
+    }
+
+    public BigDecimal getCostAmtB() {
+        return costAmtB;
+    }
+    public void setCostAmtB(BigDecimal costAmtB) {
+        this.costAmtB = costAmtB;
+    }
+
     public String getIsFbhyStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_非标行业, this.getIsFbhy());
     }
@@ -188,17 +238,40 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
 
 
     public String getDelayPayAmtStr(){ return null!=this.getDelayPayAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getDelayPayAmt()):null; }
+
     public String getCostAmtStr(){
         //人行月报资产端成本已经是包含了利息调整了，需求把利息调整又单独列出来，然后余额写的是成本+利息调整，这样的话利息调整会统计重复？  成本直接减去利息调整进行展示
-        return null!=this.getCostAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmt().subtract(
-                null!=this.getIntadjexpAdd()?this.getIntadjexpAdd():BigDecimal.ZERO)):null;
+        return null!=this.getCostAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmt()):null;
     }
+    public String getCostAmtBStr(){
+        //人行月报资产端成本已经是包含了利息调整了，需求把利息调整又单独列出来，然后余额写的是成本+利息调整，这样的话利息调整会统计重复？  成本直接减去利息调整进行展示
+        return null!=this.getCostAmtB()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmtB()):null;
+    }
+
+    public String getCostAmtaStr(){
+        //人行月报资产端成本已经是包含了利息调整了，需求把利息调整又单独列出来，然后余额写的是成本+利息调整，这样的话利息调整会统计重复？  成本直接减去利息调整进行展示
+        return null!=this.getCostAmtA()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmtA()):null;
+    }
+    public String getIsFhxgcpStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsFhxgcp());
+    }
+
+
     public String getFloatIngplStr(){ return null!=this.getFloatIngpl()? BigDecimalConverterUtil.getMonthDetailString(this.getFloatIngpl()):null; }
     public String getIntincexpStr(){ return null!=this.getIntincexp()? BigDecimalConverterUtil.getMonthDetailString(this.getIntincexp()):null; }
     public String getIntadjexpAddStr(){ return null!=this.getIntadjexpAdd()? BigDecimalConverterUtil.getMonthDetailString(this.getIntadjexpAdd()):null; }
     public String getLossAmtStr(){ return null!=this.getLossAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getLossAmt()):null; }
     public String getAssetvalueAStr(){ return null!=this.getAssetvalueA()? BigDecimalConverterUtil.getMonthDetailString(this.getAssetvalueA()):null; }
     public String getAssetvalueBStr(){ return null!=this.getAssetvalueB()? BigDecimalConverterUtil.getMonthDetailString(this.getAssetvalueB()):null; }
+
+
+    public BigDecimal getFloatIngplDv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getFloatIngpl()); }
+    public BigDecimal getIntincexpDv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getIntincexp()); }
+    public BigDecimal getIntadjexpAddDv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getIntadjexpAdd()); }
+    public BigDecimal getLossAmtDv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getLossAmt()); }
+    public BigDecimal getAssetvalueADv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getAssetvalueA()); }
+    public BigDecimal getAssetvalueBDv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getAssetvalueB()); }
+
 
 
 }

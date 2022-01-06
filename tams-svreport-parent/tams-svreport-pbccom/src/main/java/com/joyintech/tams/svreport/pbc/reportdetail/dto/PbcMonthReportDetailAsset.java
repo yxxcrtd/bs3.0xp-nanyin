@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.pbc.reportdetail.dto;
 
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.ChbMonthAssetPositiondetail;
 import com.joyintech.tams.common.base.entity.ChbMonthPrdPositiondetail;
@@ -119,18 +120,19 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
         return DateUtil.format(this.getMdate(),"yyyy-MM-dd");
     }
 
+    public String getOpenplanStr(){return DateUtil.format(this.getOpenplan(),"yyyy-MM-dd");}
+
     public String getRateStr(){
         return null!=this.getRate()?this.getRate()+"%":null;
     }
 
     public String getIndustryStr(){
         String code = SysDataUtil.getNameFromDataDict(DictCode.机构所属行业一级分类, this.getIndustry());
-        return null!=code?code:SysDataUtil.getNameFromDataDict(DictCode.行业门内编码, this.getIndustry());
+        return StringUtil.isNotEmpty(code) ?code:SysDataUtil.getNameFromDataDict(DictCode.行业门内编码, this.getIndustry());
     }
 
     public String getPartyType1Str(){
-        String code = SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, this.getPartyType1());
-        return null!=code?code:SysDataUtil.getNameFromDataDict(DictCode.企业规模, this.getPartyType1());
+        return SysDataUtil.getNameFromDataDict(DictCode.人行月度明细_企业规模, this.getPartyType1());
     }
 
     public String getBuyPlaceStr(){
@@ -150,8 +152,19 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
     }
 
     public String getOrgAssetType3Str() {
-//        return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产三级分类, this.getOrgAssetType3());
-        return SysDataUtil.getNameFromDataDict(DictCode.资产_负债二级类别, this.getOrgAssetType3());
+        String orgCode3 = null;
+        if(null!=SysDataUtil.getNameFromDataDict(DictCode.存款类资产类型,this.getOrgAssetType2())){
+            orgCode3 = SysDataUtil.getNameFromDataDict(DictCode.存款类资产存款类型, this.getOrgAssetType3());
+        }else if(null!=SysDataUtil.getNameFromDataDict(DictCode.WIND一级分类_含债券一级分类等,this.getOrgAssetType2())){
+            orgCode3 = SysDataUtil.getNameFromDataDict(DictCode.WIND二级分类_含债券二级分类等, this.getOrgAssetType3());
+        }else if(null!=SysDataUtil.getNameFromDataDict(DictCode.基金类资产类型,this.getOrgAssetType2())){
+            orgCode3 = SysDataUtil.getNameFromDataDict(DictCode.基金类资产二级类型, this.getOrgAssetType3());
+        }else if(null!=SysDataUtil.getNameFromDataDict(DictCode.项目类一级分类, this.getOrgAssetType2())){
+            orgCode3 = SysDataUtil.getNameFromDataDict(DictCode.项目类资产二级类型, this.getOrgAssetType3());
+        }else if(null!=SysDataUtil.getNameFromDataDict(DictCode.拆借类型,this.getOrgAssetType2())){
+            orgCode3 = SysDataUtil.getNameFromDataDict(DictCode.拆借资产类型, this.getOrgAssetType3());
+        }
+        return orgCode3;
     }
 
     public String getCounterListCode(){
@@ -161,8 +174,7 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
 
     public String getCostAmtStr(){
         //        //人行月报资产端成本已经是包含了利息调整了，需求把利息调整又单独列出来，然后余额写的是成本+利息调整，这样的话利息调整会统计重复？  成本直接减去利息调整进行展示
-        return null!=this.getCostAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmt().subtract(
-                null!=this.getIntadjexpAdd()?this.getIntadjexpAdd():BigDecimal.ZERO)):null;
+        return null!=this.getCostAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmt()):null;
     }
 
     public String getFloatIngplStr(){
@@ -184,7 +196,37 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
         return null!=this.getAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getAmt()):null;
     }
 
+
+    public BigDecimal getCostAmtDv(){
+        return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getCostAmt());
+    }
+
+    public BigDecimal getFloatIngplDv(){
+        return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getFloatIngpl());
+    }
+
+    public BigDecimal getIntincexpDv(){
+        return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getIntincexp());
+    }
+
+    public BigDecimal getIntadjexpAddDv(){
+        return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getIntadjexpAdd());
+    }
+
+    public BigDecimal getLossAmtDv(){
+        return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getLossAmt());
+    }
+    public BigDecimal getAmtDv(){
+        return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getAmt());
+    }
+
+
+
     public String getEndDaysType(){
         return SysDataUtil.getNameFromDataDict(DictCode.人行月度明细_期限类型, PbcMonthReportDetailProdUtil.getTermType(this.getEndDays()));
+    }
+
+    public String getDetailCode(){
+        return this.getProdid()+"_"+this.getAssetCode()+"_"+this.getDetailno();
     }
 }

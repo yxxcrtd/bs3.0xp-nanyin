@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.pbc.reportdetail.service;
 
 import com.joyintech.background.component.common.pack.common.util.BeanUtil;
 import com.joyintech.background.component.common.pack.common.util.IDGenerator;
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoMapper;
@@ -9,18 +10,17 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.constant.DictCodeListStl;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto;
+import com.joyintech.tams.svreport.pbc.common.constants.PbcMonthReportConstants;
 import com.joyintech.tams.svreport.pbc.common.constants.PbcReportProperycode;
 import com.joyintech.tams.svreport.pbc.prod.dto.PbcMonthPrdPostionDto;
 import com.joyintech.tams.svreport.pbc.reportdetail.dao.PbcMonthReportDetailAssetMapper;
 import com.joyintech.tams.svreport.pbc.reportdetail.dto.PbcMonthReportDetailAsset;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +53,28 @@ public class PbcMonthReportDetailAssetUtil {
             ,PbcReportProperycode.AMT_7B0000_FJRZC,PbcReportProperycode.AMT_821000_SSBJ,PbcReportProperycode.AMT_822000_ZBGJ,PbcReportProperycode.AMT_823000_WFPLR);
 
 
-    private static List<String> notExistsCode = Arrays.asList(PbcReportProperycode.AMT_772300_ZQGSJQZGSZGCP,PbcReportProperycode.AMT_772000_TDMDZTFE,PbcReportProperycode.AMT_752000_HGHCJ,
-            PbcReportProperycode.AMT_761000_DKSYQ,  PbcReportProperycode.AMT_763000_YSZKSYQ, PbcReportProperycode.AMT_764000_QTZQSYQ,PbcReportProperycode.AMT_771000_GP);
+    private static List<String> notExistsCode = Arrays.asList(PbcReportProperycode.AMT_772000_TDMDZTFE,PbcReportProperycode.AMT_752000_HGHCJ,
+            PbcReportProperycode.AMT_761000_DKSYQ,  PbcReportProperycode.AMT_763000_YSZKSYQ, PbcReportProperycode.AMT_764000_QTZQSYQ,PbcReportProperycode.AMT_771000_GP,
+            PbcReportProperycode.AMT_767000_WQZCSYQ,PbcReportProperycode.AMT_766000_QTGQSYQ,PbcReportProperycode.AMT_765000_GPSYQ,PbcReportProperycode.AMT_764000_QTZQSYQ,
+            PbcReportProperycode.AMT_763000_YSZKSYQ,PbcReportProperycode.AMT_762000_ZWZQSYQ,PbcReportProperycode.AMT_761000_DKSYQ,PbcReportProperycode.AMT_811200_HGHCJ,
+            PbcReportProperycode.AMT_811000_DK);
+
+
+    private static final Map<String, String> ENTERPRISE_SCALE_MAP = new HashMap<String, String>(1 << 4);
+    static {
+        // CS01-大型 统计到【大型企业】项中
+        ENTERPRISE_SCALE_MAP.put("CS01", "02");
+        // CS02-中型 统计到【中型企业】项中
+        ENTERPRISE_SCALE_MAP.put("CS02", "01");
+        // CS03-小型 统计到【小型企业】项中
+        ENTERPRISE_SCALE_MAP.put("CS03", "03");
+        // CS04-微型 统计到【微型企业】项中
+        ENTERPRISE_SCALE_MAP.put("CS04", "04");
+        // CS05-其他 统计到【中型企业】项中
+        ENTERPRISE_SCALE_MAP.put("CS05", "01");
+    }
+
+
 
     private static Map<String,ChbPrdBaseinfo> prodInfoMap;
 
@@ -63,11 +83,11 @@ public class PbcMonthReportDetailAssetUtil {
     private static  Map<String, BigDecimal> rateMap = new HashMap<String, BigDecimal>();
 
     /**
-     * 2-1入库处理
+     * 2-1入库处理 -产品
      * @param position
      * @return
      */
-    public static PbcMonthReportDetailAsset buildAssetDetailPrd(PbcMonthPrdPostionDto position, Object dto, String code){
+    public static PbcMonthReportDetailAsset buildAssetDetailPrd(PbcMonthPrdPostionDto position, Object dto, String code,BigDecimal amt){
 
         if(null==prodInfoMap){
             /***获取产品信息列表**/
@@ -83,13 +103,10 @@ public class PbcMonthReportDetailAssetUtil {
 
         //先基本信息,再头寸信息,避免错误覆盖
         BeanUtil.copyPropertiesIgnoreNull(pbcMonthReportDetailAsset,position);
-        String source = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE_PBC);
-        //产品端直接赋值金额
-        ChbCcyConvertUtil.exchangeMoney(
-                position.getCcy(),DictCodeListExt1.币种_中债_人民币.getValue(),position.getEnddate(),position.getEndqtysum(),rateMap,source);
 
-        pbcMonthReportDetailAsset.setAmt(position.getEndqtysum());
-
+        //金额丢给最后一起改.资产端也要
+        pbcMonthReportDetailAsset.setAmt(amt);
+        pbcMonthReportDetailAsset.setCcy(position.getCcy());
         BeanUtil.copyPropertiesIgnoreNull(pbcMonthReportDetailAsset,dto);
         //资产端绑定编号
         pbcMonthReportDetailAsset.setDetailno(code);
@@ -101,13 +118,31 @@ public class PbcMonthReportDetailAssetUtil {
     }
 
 
-
     /**
-     * 2-1入库处理
+     * wfplr特殊处理
      * @param position
      * @return
      */
-    public static PbcMonthReportDetailAsset buildAssetDetail(PbcMonthAssetPositionDto position,Object dto,String code){
+    public static PbcMonthReportDetailAsset buildAssetDetailwfplr(String code,BigDecimal amt,Date endDate){
+        PbcMonthReportDetailAsset pbcMonthReportDetailAsset = new PbcMonthReportDetailAsset();
+        //资产端绑定编号
+        pbcMonthReportDetailAsset.setDetailno(code);
+        pbcMonthReportDetailAsset.setAmt(amt);
+        pbcMonthReportDetailAsset.setCcy(DictCodeListExt1.币种_中债_人民币.getValue());
+        //期次赋值
+        pbcMonthReportDetailAsset.setTerm(DateUtil.format(DateUtil.addDay(endDate,-1),"yyyyMM"));
+
+        return pbcMonthReportDetailAsset;
+    }
+
+
+
+    /**
+     * 2-1入库处理-资产
+     * @param position
+     * @return
+     */
+    public static PbcMonthReportDetailAsset buildAssetDetail(PbcMonthAssetPositionDto position,Object dto,String code,String amtFlag){
 
         if(null==assetInfoMap){
             PbcMonthReportDetailAssetMapper detailAssetMapper =  SpringContextUtil.getBean(PbcMonthReportDetailAssetMapper.class);
@@ -133,6 +168,30 @@ public class PbcMonthReportDetailAssetUtil {
                 pbcMonthReportDetailAsset.setOpenplan(assetInfo.getExerciseDate());
             }
             pbcMonthReportDetailAsset.setSubjectName(SubjectName(assetInfo,pbcMonthReportDetailAsset.getOrgAssetType2(),pbcMonthReportDetailAsset.getOrgAssetType1()));
+
+            //2-5取值规则
+            pbcMonthReportDetailAsset.setPartyType1(null);
+            pbcMonthReportDetailAsset.setIndustry(null);
+
+            if(position.getAssetType3()!=null&&PbcMonthReportConstants.PBC_ASSETTYPE3_S05.equals(position.getAssetType3())) {
+                String industryType1 = assetInfo.getIndustry();
+                if (StringUtils.isEmpty(industryType1)){
+                    industryType1 = assetInfo.getIndustryPbc();
+                }
+                String partyType1 = PbcMonthReportConstants.SVR_INSTIT_SIZE_01;
+                if(null!=assetInfo.getInstitSize()){
+                   if(null!=assetInfo.getInstitSize()){
+                       switch (assetInfo.getInstitSize()){
+                           case PbcMonthReportConstants.SVR_INSTIT_SIZE_01:partyType1 =PbcMonthReportConstants.SVR_INSTIT_SIZE_01; break;
+                           case PbcMonthReportConstants.SVR_INSTIT_SIZE_02:partyType1 =PbcMonthReportConstants.SVR_INSTIT_SIZE_02; break;
+                           case PbcMonthReportConstants.SVR_INSTIT_SIZE_03:partyType1 =PbcMonthReportConstants.SVR_INSTIT_SIZE_03; break;
+                           case PbcMonthReportConstants.SVR_INSTIT_SIZE_04:partyType1 =PbcMonthReportConstants.SVR_INSTIT_SIZE_04; break;
+                       }
+                   }
+               }
+                pbcMonthReportDetailAsset.setPartyType1(partyType1);
+                pbcMonthReportDetailAsset.setIndustry(industryType1);
+            }
         }
         //先基本信息,再头寸信息,避免错误覆盖
         BeanUtil.copyPropertiesIgnoreNull(pbcMonthReportDetailAsset,position);
@@ -141,10 +200,15 @@ public class PbcMonthReportDetailAssetUtil {
         //资产端绑定编号
         pbcMonthReportDetailAsset.setDetailno(code);
 
-        if(null!=assetInfoMap.get(position.getAssetCode())){
-            pbcMonthReportDetailAsset.setIndustry(null!=assetInfoMap.get(position.getAssetCode()).getIndustry()?
-                    assetInfoMap.get(position.getAssetCode()).getIndustry(): assetInfoMap.get(position.getAssetCode()).getIndustryPbc());
+        BigDecimal amt = position.getAmt();
+        if(StringUtil.isNotEmpty(amtFlag)){
+            amt = position.getIntAmt();
         }
+        pbcMonthReportDetailAsset.setAmt(amt);
+
+        pbcMonthReportDetailAsset.setChlId(amtFlag);
+
+
         //期次赋值
         pbcMonthReportDetailAsset.setTerm(DateUtil.format(position.getEnddate(),"yyyyMM"));
 
@@ -183,6 +247,29 @@ public class PbcMonthReportDetailAssetUtil {
             }
             pbcMonthReportDetailAsset.setSubjectName(SubjectName(assetInfo,pbcMonthReportDetailAsset.getOrgAssetType1(),pbcMonthReportDetailAsset.getOrgAssetType2()));
 
+
+            pbcMonthReportDetailAsset.setPartyType1(null);
+            pbcMonthReportDetailAsset.setIndustry(null);
+            //2-5 特殊逻辑
+            if(position.getAssetType3()!=null&&PbcMonthReportConstants.PBC_ASSETTYPE3_S05.equals(position.getAssetType3())) {
+                String industryType1 = assetInfo.getIndustry();
+                if (StringUtils.isEmpty(industryType1)){
+                    industryType1 = assetInfo.getIndustryPbc();
+                }
+                String partyType1 = PbcMonthReportConstants.SVR_INSTIT_SIZE_01;
+                if(null!=assetInfo.getInstitSize()){
+                    if(null!=assetInfo.getInstitSize()){
+                        switch (assetInfo.getInstitSize()){
+                            case PbcMonthReportConstants.SVR_INSTIT_SIZE_01:partyType1 =PbcMonthReportConstants.SVR_INSTIT_SIZE_01; break;
+                            case PbcMonthReportConstants.SVR_INSTIT_SIZE_02:partyType1 =PbcMonthReportConstants.SVR_INSTIT_SIZE_02; break;
+                            case PbcMonthReportConstants.SVR_INSTIT_SIZE_03:partyType1 =PbcMonthReportConstants.SVR_INSTIT_SIZE_03; break;
+                            case PbcMonthReportConstants.SVR_INSTIT_SIZE_04:partyType1 =PbcMonthReportConstants.SVR_INSTIT_SIZE_04; break;
+                        }
+                    }
+                }
+                pbcMonthReportDetailAsset.setPartyType1(partyType1);
+                pbcMonthReportDetailAsset.setIndustry(industryType1);
+            }
         }
         //先基本信息,再头寸信息,避免错误覆盖
         BeanUtil.copyPropertiesIgnoreNull(pbcMonthReportDetailAsset,position);
@@ -194,10 +281,6 @@ public class PbcMonthReportDetailAssetUtil {
 
         pbcMonthReportDetailAsset.setDetailno2(code2);
 
-        if(null!=assetInfoMap.get(position.getAssetCode())){
-            pbcMonthReportDetailAsset.setIndustry(null!=assetInfoMap.get(position.getAssetCode()).getIndustry()?
-                    assetInfoMap.get(position.getAssetCode()).getIndustry(): assetInfoMap.get(position.getAssetCode()).getIndustryPbc());
-        }
         //期次赋值
         pbcMonthReportDetailAsset.setTerm(DateUtil.format(position.getEnddate(),"yyyyMM"));
 
@@ -227,7 +310,11 @@ public class PbcMonthReportDetailAssetUtil {
         }else if(DictCodeListExt3.中债_上游资产一级分类_债券.getValue().equals(assetType)){
             SubjectName = assetInfo.getChbIssuerId();
         }else if(DictCodeListExt3.中债_上游资产一级分类_存款类资产.getValue().equals(assetType)){
-            SubjectName = assetInfo.getBankName();
+            if("D02".equals(assetType2)){
+                SubjectName = assetInfo.getBankName();
+            }else if("D01".equals(assetType2)){
+                SubjectName = assetInfo.getRivalParty();
+            }
         }else if(DictCodeListExt3.中债_上游资产一级分类_基金类资产.getValue().equals(assetType)){
             SubjectName = assetInfo.getFundEnpeName();
         }else if(DictCodeListExt3.中债_上游资产一级分类_项目类资产.getValue().equals(assetType)){
@@ -243,8 +330,6 @@ public class PbcMonthReportDetailAssetUtil {
             ||DictCodeListExt3.中债_上游资产一级分类_金融衍生品.getValue().equals(assetType)){
             SubjectName = assetInfo.getRivalParty();
         }
-
-
         return SubjectName;
     }
 
@@ -258,8 +343,46 @@ public class PbcMonthReportDetailAssetUtil {
      */
     public static void updateLoan(List<PbcMonthReportDetailAsset> position, Map<String, ChbLoanDetailInfo> loanMap){
         for(PbcMonthReportDetailAsset detailAsset: position){
+            //所有的应收账款都屏蔽掉行业和机构规模
+
+            if(PbcReportProperycode.AMT_790000_YSZK.equals(detailAsset.getDetailno())){
+                detailAsset.setPartyType1(null);
+                detailAsset.setIndustry(null);
+            }
             if(null!=loanMap.get(detailAsset.getAssetCode())){
-                BeanUtil.copyPropertiesIgnoreNull(detailAsset,loanMap.get(detailAsset.getAssetCode()));
+                //所有贷款的将机构与行业全部清空
+                if(!PbcReportProperycode.AMT_790000_YSZK.equals(detailAsset.getDetailno())){
+                    BeanUtil.copyPropertiesIgnoreNull(detailAsset,loanMap.get(detailAsset.getAssetCode()));
+                    String finArea = detailAsset.getBorrowerCity();
+                    if (com.joyintech.framework.util.StringUtil.isEmpty(finArea)){
+                        continue;
+                    }
+                    String province = finArea;
+                    // 通过融资人所属地区获取上级省
+                    if (SvrDataUtil.getNameFromDataDict(DictCode.行政区划_县, province) != null){
+                        province = SvrDataUtil.getParentCodeFromDataDict(DictCode.行政区划_县, province);
+                    }
+                    if (SvrDataUtil.getNameFromDataDict(DictCode.行政区划_市, province) != null){
+                        province = SvrDataUtil.getParentCodeFromDataDict(DictCode.行政区划_市, province);
+                    }
+                    detailAsset.setBorrowerCity(province);
+
+                    //2-2 企业规模
+                    if (PbcMonthReportConstants.POSITION_TYPE_ZC.equals(detailAsset.getPositionType())
+                            &&PbcMonthReportConstants.PBC_ASSETTYPE1_P05.equals(detailAsset.getAssetType1())
+                            && PbcMonthReportConstants.PBC_ASSETTYPE2_R02.equals(detailAsset.getAssetType2())) {
+                        //企业规模
+                        detailAsset.setPartyType1(ENTERPRISE_SCALE_MAP.get(loanMap.get(detailAsset.getAssetCode()).getEnterpriseScale()));
+
+                        // 行业信息
+                        String industryInfo = detailAsset.getIndustryInfo();
+                        // 行业信息为空，统计到公共管理、社会保障和社会组织中
+                        if (com.joyintech.framework.util.StringUtil.isEmpty(industryInfo)) {
+                            industryInfo = PbcMonthReportConstants.SVR_INDUSTRY_DOOR_CODE_S;
+                        }
+                        detailAsset.setIndustry(industryInfo);
+                    }
+                }
             }
         }
 
@@ -281,7 +404,6 @@ public class PbcMonthReportDetailAssetUtil {
                 flag = true;
             }
         }
-
         return flag;
     }
 
@@ -299,13 +421,13 @@ public class PbcMonthReportDetailAssetUtil {
 
 
 
-    public List<PbcMonthReportDetailAsset>  insertBefore(List<PbcMonthReportDetailAsset> prdPositionList){
+    public List<PbcMonthReportDetailAsset>  insertBefore(List<PbcMonthReportDetailAsset> prdPositionList,Date generateDate){
 
-        //首先根据产品代码/资产代码/科目号进行去重(现金及其他相关科目数据可能重复)
-        prdPositionList = prdPositionList.stream().collect(
-                Collectors. collectingAndThen(
-                        Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(o -> o.getProdid() + ";" + o.getAssetCode()+";"+o.getDetailno()+";"+o.getDetailno2()))), ArrayList::new)
-        );
+        /****需要特殊处理的科目*/
+        Map<String, PbcMonthReportDetailAsset>  detail1001 = prdPositionList.stream().filter(detail ->
+                (detail.getDetailno().equals(PbcReportProperycode.AMT_752600_FYXYJRJG)||detail.getDetailno().equals(PbcReportProperycode.AMT_752610_QZZYJYDSF)
+                )).collect(Collectors.toMap(PbcMonthReportDetailAsset::getDetailCode,Positiondetail -> Positiondetail));
+
 
         /**展示产品购买资产首次买入交易的交易对手名称***/
         Map<String,Object> paraMap = new HashMap<>();
@@ -314,11 +436,31 @@ public class PbcMonthReportDetailAssetUtil {
         //展示产品购买资产首次买入交易的交易对手名称
         List<SelectOptionDto> oDto = pbcMonthReportDetailAssetMapper.getCounterList(paraMap);
         Map<String,String> CounterMap = oDto.stream().collect(JoyinCollectors.toMap(x -> x.getId(), x -> x.getText()));
+
+
+        String source = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE_PBC);
+        Map<String, BigDecimal> rateMap = new HashMap<String, BigDecimal>();
+
         for(PbcMonthReportDetailAsset dto : prdPositionList){
             //再赋值交易对手名称  展示产品购买资产首次买入交易的交易对手名称
             dto.setRivalParty(CounterMap.get(dto.getProdid()+"_"+dto.getAssetCode()));
-        }
+            dto.setAmt(ChbCcyConvertUtil.exchangeMoney(
+                    dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),generateDate,dto.getAmt(),rateMap,source));
 
+            /***银行业金融机构特殊处理**/
+            if (dto.getDetailno().equals(PbcReportProperycode.AMT_752600_FYXYJRJG)) {
+                //转换为AMT1_4_2_b
+                dto.setDetailno("AMT_752620_FZYJYDSF");
+                //如果包含专项债券
+                if (null != detail1001.get(dto.getCounterListCode() + "_" + PbcReportProperycode.AMT_752610_QZZYJYDSF)) {
+                    if (null != dto.getAmt()) {
+                        dto.setAmt(dto.getAmt().subtract(
+                                null != detail1001.get(dto.getCounterListCode() + "_" + PbcReportProperycode.AMT_752610_QZZYJYDSF) ? detail1001.get(dto.getCounterListCode() + "_" + PbcReportProperycode.AMT_752610_QZZYJYDSF).getAmt() : BigDecimal.ZERO));
+                    }
+                }
+            }
+
+        }
         return prdPositionList;
     }
 
@@ -327,13 +469,13 @@ public class PbcMonthReportDetailAssetUtil {
      * @param prdPositionList
      * @return
      */
-    public int insertBatch(List<PbcMonthReportDetailAsset> prdPositionList, String term){
+    public int insertBatch(List<PbcMonthReportDetailAsset> prdPositionList, Date  generateDate){
         //一次性最大插入条数
         int maxDataCountOneTime = reportInsertCount;
         //同批次的详情数据删除
-        pbcMonthReportDetailAssetMapper.deleteDetail(term);
+        pbcMonthReportDetailAssetMapper.deleteDetail(DateUtil.getLastDayOfLayMonth(generateDate,"yyyyMM"));
         //部分数据的统一处理
-        prdPositionList = this.insertBefore(prdPositionList);
+        prdPositionList = this.insertBefore(prdPositionList,generateDate);
 
 
         //插入list大小

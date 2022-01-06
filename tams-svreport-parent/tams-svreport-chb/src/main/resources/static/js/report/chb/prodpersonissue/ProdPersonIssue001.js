@@ -112,8 +112,8 @@ $(function(){
                         return value;
                     }
                 }},
-            { title: "报送日期", field: 'submitTime', type: 'datetime',width:100, sortField:'submitTime' },
-            { title: "报送截止日", field: 'chbSubmitDeadline', type: 'datetime',width:100, sortField:'chbSubmitDeadline' },
+            { title: "报送日期", field: 'submitTime', type: 'date',width:100, sortField:'submitTime' },
+            { title: "报送截止日", field: 'chbSubmitDeadline', type: 'date',width:100, sortField:'chbSubmitDeadline' },
             { title: "反馈状态", field: 'submitFeedbackStatus',width:100, sortField:'submitFeedbackStatus',
                 render:function (value,visible,row,options) {
                     if(value == "发送中" || value == "发送异常"){
@@ -149,8 +149,9 @@ $(function(){
             { title: "平均开放次数（年化）", field: 'avgOpenCount',width:200, sortField:'avgOpenCount'},
             {title:"开放期业务", field: 'openBuss', width:200, sortField:'openBuss'},
             {title:"开放期业务说明", field: 'openBussRemark', width:200, sortField:'openBussRemark'},
-            { title: "资金托管账号", field: 'busiAcctNo',width:200, sortField:'busiAcctNo'},
-            { title: "资金托管账户", field: 'acctName',width:200, sortField:'acctName'},
+           /* { title: "资金托管账号", field: 'busiAcctNo',width:200, sortField:'busiAcctNo'},
+            { title: "资金托管账户", field: 'acctName',width:200, sortField:'acctName'},*/
+            { title: "分级比例", field: 'gradProportion',width:200, sortField:'gradProportion'},
             { field: 'sumitSeq', visible:false}
         ]
     });

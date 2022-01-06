@@ -6,16 +6,8 @@
 package com.joyintech.tams.valuation.batch.common.accountingmethod.accounting;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.CurrencyMarketDto;
 import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCommonBatchService;
@@ -884,6 +876,8 @@ public class BookAccountGenLogic {
         Set<ValBokBussDetsubMem> bussDetsubMems = CacheUtil.getAppCache(GlobalConstant.BUSS_DETSUB,
             Set.class);
         List<BokBussDetsub> bussDetsubs = new ArrayList<>();
+        //add by yinya 去重处理后得到最终的结果集
+        List<BokBussDetsub> resultList = new ArrayList<>();
         BokBussDetsub bussDetsub = null;
         ValBokBussDetsubMem bussDetsubMem = null;
         for (ValBokBookdetailBatch bookDetail : result.getValBokBookdetailBatch()) {
@@ -899,7 +893,10 @@ public class BookAccountGenLogic {
                 bussDetsubMems.add(bussDetsubMem);
             }
         }
-        return bussDetsubs;
+        //add by yinya 去重处理
+        bussDetsubs.stream(). collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(f -> f.getBooksetId()+f.getDetailSubjectNo()))), ArrayList::new))
+                .forEach(f->resultList.add(f));
+        return resultList;
     }
 
     /**
