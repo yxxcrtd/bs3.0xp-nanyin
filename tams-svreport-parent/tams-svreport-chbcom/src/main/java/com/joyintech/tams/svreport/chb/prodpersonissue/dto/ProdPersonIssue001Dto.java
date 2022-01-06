@@ -270,8 +270,21 @@ public class  ProdPersonIssue001Dto extends BaseEntity implements ITableRow{
      * 资金托管账户
      */
     private String acctName;
-	
-//	private String saletarget;
+
+    /**
+     * 分级比例
+     */
+	private   BigDecimal gradProportion;
+
+    public BigDecimal getGradProportion() {
+        return gradProportion;
+    }
+
+    public void setGradProportion(BigDecimal gradProportion) {
+        this.gradProportion = gradProportion;
+    }
+
+    //	private String saletarget;
 	
 //    public String getSaletarget() {
 //		return saletarget;

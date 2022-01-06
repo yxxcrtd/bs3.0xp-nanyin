@@ -473,7 +473,9 @@ public class SvrProdInfoFileImpService extends FileImpService {
         info.setIsFhxgcp(map.get("IS_FHXGCP"));
         info.setIsYllccp(map.get("IS_YLLCCP"));
 		/**end  by dongxiangyang  新增产品基本信息的三个字段  20210126*/
-
+		if (StringUtil.isNotEmpty(map.get("GRAD_PROPORTION"))){
+			info.setGradProportion(new BigDecimal(map.get("GRAD_PROPORTION")));
+		}
 		return info;
 
 	}

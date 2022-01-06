@@ -149,8 +149,9 @@ $(function(){
             { title: "平均开放次数（年化）", field: 'avgOpenCount',width:200, sortField:'avgOpenCount'},
             {title:"开放期业务", field: 'openBuss', width:200, sortField:'openBuss'},
             {title:"开放期业务说明", field: 'openBussRemark', width:200, sortField:'openBussRemark'},
-            { title: "资金托管账号", field: 'busiAcctNo',width:200, sortField:'busiAcctNo'},
-            { title: "资金托管账户", field: 'acctName',width:200, sortField:'acctName'},
+           /* { title: "资金托管账号", field: 'busiAcctNo',width:200, sortField:'busiAcctNo'},
+            { title: "资金托管账户", field: 'acctName',width:200, sortField:'acctName'},*/
+            { title: "分级比例", field: 'gradProportion',width:200, sortField:'gradProportion'},
             { field: 'sumitSeq', visible:false}
         ]
     });
