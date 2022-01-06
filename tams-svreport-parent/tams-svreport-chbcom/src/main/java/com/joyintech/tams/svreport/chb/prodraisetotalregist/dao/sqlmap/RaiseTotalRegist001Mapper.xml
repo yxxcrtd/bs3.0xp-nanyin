@@ -37,6 +37,10 @@
     <result column="ISSUING_STATUS" jdbcType="VARCHAR" property="issuingStatus" />
     <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
     <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
+    <result column="BUSI_ACCT_NO" property="busiAcctNo" jdbcType="VARCHAR" />
+    <result column="ACCT_NAME" property="acctName" jdbcType="VARCHAR" />
+
+
   </resultMap>
   <sql id="Base_Column_List">
     REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL, 
@@ -426,7 +430,9 @@
     info.PROD_NAME prodName,
     code.REG_CODE regCode,
     sub.SUMIT_SEQ sumitSeq,
-    sub.PROD_REGIST_CODE prodRegistCode
+    sub.PROD_REGIST_CODE prodRegistCode,
+    sub.BUSI_ACCT_NO  busiAcctNo,
+    sub.ACCT_NAME  acctName
     
     from CHB_PRD_RAISETOT_SUB sub
     left join chb_prd_baseinfo info
@@ -499,7 +505,7 @@
     sub.SUBSCRIBE_CCY_AMT, sub.SALE_AREA_AMT, sub.TOTAL_AMT, sub.RAISE_QTY, sub.IS_CONSIGN, sub.CONSIGN_AMT, 
     sub.REMARK, sub.SEND_STATUS, sub.SUBMIT_FEEDBACK_STATUS, sub.STATUS_DATE, sub.STATUS, sub.CREATE_USER, sub.CREATE_DEPT, 
     sub.CREATE_TIME, sub.UPDATE_USER, sub.UPDATE_TIME, sub.SUBMIT_TIME, sub.CHB_SUBMIT_DEADLINE, sub.SUBMIT_DEADLINE, 
-    sub.ORG_CODE, sub.DEPT_CODE,info.prod_name prodname,code.reg_code, sub.PROD_REGIST_CODE
+    sub.ORG_CODE, sub.DEPT_CODE,info.prod_name prodname,code.reg_code, sub.PROD_REGIST_CODE,sub.ACCT_NAME,sub.BUSI_ACCT_NO
     
     from CHB_PRD_RAISETOT_SUB sub
     left join chb_prd_baseinfo info
@@ -690,7 +696,8 @@ FROM(
       STATUS_DATE, STATUS, CREATE_USER, 
       CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
       UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, 
-      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE
+      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE,
+      ACCT_NAME,BUSI_ACCT_NO
       )
       <foreach collection="insertList" item="item" index="index" separator="union all" >
       select
@@ -703,7 +710,8 @@ FROM(
       #{item.createDept,jdbcType=VARCHAR}, sysdate, #{item.updateUser,jdbcType=VARCHAR}, 
       sysdate, #{item.submitTime,jdbcType=TIMESTAMP}, #{item.chbSubmitDeadline,jdbcType=TIMESTAMP}, 
       #{item.submitDeadline,jdbcType=TIMESTAMP}, #{item.orgCode,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR},
-      #{item.sumitSeq,jdbcType=VARCHAR}, #{item.prodRegistCode,jdbcType=VARCHAR}
+      #{item.sumitSeq,jdbcType=VARCHAR}, #{item.prodRegistCode,jdbcType=VARCHAR},#{item.acctName,jdbcType=VARCHAR}
+      ,#{item.busiAcctNo,jdbcType=VARCHAR}
       from dual
       </foreach>
   </insert>
@@ -814,7 +822,9 @@ FROM(
 <!-- 	a.prod_id, -->
 	nvl(a.fprod_id,a.prod_id) prod_id,
 	a.RAISE_ENDDATE,
-	sub.REGIST_SEQNO as regseq,a.status status,a.ISSUING_STATUS,a.PROD_REGIST_CODE
+	sub.REGIST_SEQNO as regseq,a.status status,a.ISSUING_STATUS,a.PROD_REGIST_CODE,
+    a.BUSI_ACCT_NO,
+    a.ACCT_NAME
 	from
 	(select 
 <!-- 	nvl(info.fprod_id,info.prod_id) prod_id, -->
@@ -823,7 +833,9 @@ FROM(
     code.REG_CODE PROD_REGIST_CODE,
     nvl(info.RAISE_ENDDATE,info1.RAISE_ENDDATE) RAISE_ENDDATE,
     nvl(info.ISSUING_STATUS,info1.ISSUING_STATUS) ISSUING_STATUS,
-    deal.status
+    deal.status,
+    info.BUSI_ACCT_NO,
+    info.ACCT_NAME
 	from CHB_PRD_BASEINFO info
 	inner join CHB_PRD_DEAL deal
 	on info.prod_id = deal.prod_id
@@ -906,7 +918,7 @@ FROM(
       STATUS_DATE, STATUS, CREATE_USER, 
       CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
       UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, 
-      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUBMIT_FEEDBACK_MSG
+      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUBMIT_FEEDBACK_MSG,ACCT_NAME,BUSI_ACCT_NO
       )
       select  SUMIT_SEQ,PROD_REGIST_CODE,
       REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, 
@@ -917,7 +929,7 @@ FROM(
       STATUS_DATE, STATUS, CREATE_USER, 
       CREATE_DEPT, sysdate, UPDATE_USER, 
       sysdate, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, 
-      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUBMIT_FEEDBACK_MSG
+      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUBMIT_FEEDBACK_MSG,ACCT_NAME,BUSI_ACCT_NO
     from CHB_PRD_RAISETOT_SUB_HIS
     where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
   	<if test="regList !=null and regList.size()>0">
