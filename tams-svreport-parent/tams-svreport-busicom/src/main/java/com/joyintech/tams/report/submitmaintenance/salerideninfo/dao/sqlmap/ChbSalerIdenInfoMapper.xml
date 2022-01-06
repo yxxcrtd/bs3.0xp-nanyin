@@ -200,7 +200,7 @@
     <select id="checkSalerOrgCodeImport" resultType="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto">
         select
         SALER_ORG_CODE salerOrgCode
-        from CHB_SALER_INST_INFO
+        from CHB_SALER_INST_INFO where status = 'E'
     </select>
 
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
