@@ -672,6 +672,18 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      */
     private String isYllccp;
 
+    /**
+     * 分级比例
+     */
+    private  BigDecimal gradProportion;
+
+    public BigDecimal getGradProportion() {
+        return gradProportion;
+    }
+
+    public void setGradProportion(BigDecimal gradProportion) {
+        this.gradProportion = gradProportion;
+    }
 
     public String getIsTransfer() {
         return isTransfer;
