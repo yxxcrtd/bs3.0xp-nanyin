@@ -82,7 +82,9 @@ public class CfetsSettleTask extends BatchBaseService {
             result.setStatus(BatchStatus.COMPLETED);
         }
         catch (Exception e) {
-            logger.error(e.getMessage());
+         //   logger.error(e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return result;

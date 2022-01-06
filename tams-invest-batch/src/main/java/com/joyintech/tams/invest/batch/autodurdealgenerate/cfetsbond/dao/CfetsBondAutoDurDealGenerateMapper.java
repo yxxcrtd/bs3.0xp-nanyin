@@ -13,9 +13,11 @@ package com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dao;
 import com.joyintech.tams.common.base.entity.RegFinProductDeal;
 import com.joyintech.tams.common.base.entity.RegFinProductDealAdd;
 import com.joyintech.tams.common.base.entity.RegFinProductDealTotal;
+import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dto.CfetsManualSettleDealInfo;
 import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dto.CfetsTrdConfirmMatchDto;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondDurationDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -50,4 +52,18 @@ public interface CfetsBondAutoDurDealGenerateMapper {
     //查询托管户
     String qryPortfolioCashAcctId(Map<String, Object> param);
 
+    /**
+     * 查询证券账户
+     * @param param
+     * @return
+     */
+    String qryPortfolioSecAcctId(Map<String, Object> param);
+
+    /**
+     * 成交确认明细查询
+     *
+     * @param tradeId 参数
+     * @return List<CfetsManualSettleDealInfo>
+     */
+    List<CfetsManualSettleDealInfo> getDealDetailsByTradeId(@Param("tradeId") String tradeId);
 }

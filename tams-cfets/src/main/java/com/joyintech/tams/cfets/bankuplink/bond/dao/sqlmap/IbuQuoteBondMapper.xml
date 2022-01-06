@@ -5,7 +5,7 @@
     <select id="listEntrust" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealEntrustOrderDto">
         select * from (SELECT
         ETR_ENTRUST.ENTRUST_STATUS entrustStatus,
-        trunc(nvl(NVL(T5.FINISH_AMT, 0)+ NVL(T6.ENT_FINISH_AMT*100, 0),0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 transactioncom,
+        trunc(nvl(NVL(T5.FINISH_AMT, 0)+ NVL(T7.ENT_FINISH_AMT*100, 0),0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 transactioncom,
         ETR_ENTRUST.INV_MANAGER_ID invManagerId,
         (SELECT
         real_name
@@ -23,9 +23,9 @@
         ETR_ENTRUST_ADD.SETTLE_SPREED settleSpreed,
         ETR_ENTRUST.PS ps,
         ETR_ENTRUST.ENTRUST_NUM/100 entrustNum,
-        (NVL(T5.FINISH_AMT,0)+NVL(T6.ENT_FINISH_AMT*100,0))/10000 finishAmt,
-        NVL(ETR_ENTRUST.ENTRUST_NUM, 0)/100 - NVL(T5.FINISH_AMT,0)/10000 - NVL(T6.ENT_FINISH_AMT,0)/100 avaNum,
-        (NVL(ETR_ENTRUST.ENTRUST_NUM,0) /100 -NVL(T5.FINISH_AMT, 0)/10000 ) - NVL(T6.ENT_FINISH_AMT,0)/100 AS entrustAvaNum,
+        (NVL(T5.FINISH_AMT,0)+NVL(T7.ENT_FINISH_AMT*100,0))/10000 finishAmt,
+        NVL(ETR_ENTRUST.ENTRUST_NUM, 0)/100 - NVL(T5.FINISH_AMT,0)/10000 - NVL(T7.ENT_FINISH_AMT,0)/100 avaNum,
+        (NVL(ETR_ENTRUST.ENTRUST_NUM,0) /100 -NVL(T5.FINISH_AMT, 0)/10000 ) - NVL(T7.ENT_FINISH_AMT,0)/100 AS entrustAvaNum,
         ETR_ENTRUST.PRICE price,
         ETR_ENTRUST_ADD.MATURE_YIELD * 100 matureYield,
         ETR_ENTRUST.VDATE vdate,
@@ -151,14 +151,33 @@
         LEFT JOIN(
         SELECT
         ENTRUST_ID,
-        SUM(FINISH_AMT) AS FINISH_AMT,
-        SUM(ENT_FINISH_AMT) AS ENT_FINISH_AMT
+        SUM(FINISH_AMT) AS FINISH_AMT
         FROM
         ETR_FINISH_STATUS
+        <!--登记与报价分开统计-->
+        INNER JOIN (SELECT
+        DISTINCT T3.TRADE_ID
+        FROM
+        TRDQUTO_MATCH_INFO T1
+        INNER JOIN REG_FIN_PRODUCT_DEAL_TOTAL T2 ON
+        T1.PRE_TRADE_ID = T2.TOTLE_TRADE_ID
+        INNER JOIN TRD_PRODUCT_DEAL T3 ON
+        T3.TOTLE_TRADE_ID = T1.TRD_ID
+        WHERE
+        TRD_CONF_STATUS = '1')	REG ON REG.TRADE_ID = ETR_FINISH_STATUS.TRADE_ID
         GROUP BY
         ENTRUST_ID) T6
         ON
         ETR_ENTRUST.ENTRUST_ID = T6.ENTRUST_ID
+        LEFT JOIN(
+        SELECT
+        ENTRUST_ID,
+        SUM(ENT_FINISH_AMT) AS ENT_FINISH_AMT
+        FROM
+        ETR_FINISH_STATUS
+        GROUP BY
+        ENTRUST_ID) T7 ON
+        ETR_ENTRUST.ENTRUST_ID = T7.ENTRUST_ID
         LEFT JOIN
         FIN_PRODUCT
         ON
@@ -356,7 +375,6 @@
                 to_char(price,'FM99990.9990')=#{search} or  price||'' =#{search} or
                 to_char(matureYield,'FM99990.9990')=#{search} or  matureYield||'' =#{search} or
                 to_char(exerYield,'FM99990.9990')=#{search} or  exerYield||'' =#{search}
-
                 or  to_char(entrustDate,'yyyy-MM-dd')||'' =#{search}
                 or  to_char(entrustDate,'yyyy-MM-dd')=#{year}||'-'||#{search}
                 or  replace(to_char(entrustDate,'yyyy-MM-dd'),'-','/')=#{search}

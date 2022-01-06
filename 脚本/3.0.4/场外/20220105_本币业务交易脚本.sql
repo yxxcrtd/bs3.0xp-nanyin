@@ -1,12 +1,12 @@
 delete from SYS_MENU where MENU_ID = 'DEAL_MANAGEMENT_001_002_011';
 INSERT INTO SYS_MENU(MENU_ID,SYSTEM_CODE ,ICON ,PARENT_MENU_ID ,PAGE_ID ,ORDER_NO ,IS_SPREAD ,REMARK ,CREATE_USER ,CREATE_DEPT ,CREATE_TIME ,UPDATE_USER ,UPDATE_TIME)
 
-VALUES ('DEAL_MANAGEMENT_001_002_011','TRD','','DEAL_MANAGEMENT_001_002','','1','01','本币业务交易','system','',sysdate,'system',sysdate);
+VALUES ('DEAL_MANAGEMENT_001_002_011','TRD','','DEAL_MANAGEMENT_001_002','IbuQuoteBond','1','01','本币业务交易','system','',sysdate,'system',sysdate);
 
 
 delete from SYS_PAGE where PAGE_ID  = 'IbuQuoteBond';
 INSERT INTO SYS_PAGE (PAGE_ID ,SYSTEM_CODE ,PAGE_URL ,PAGE_FILE ,MENU_ID ,HEIGHT ,WIDTH ,IS_HP_SELECT ,IS_NEED_WORKFLOW ,REMARK ,CREATE_USER ,CREATE_DEPT ,CREATE_TIME ,UPDATE_USER ,UPDATE_TIME)
-VALUES ('IbuQuoteBond','TRD','home.html#/interbank/instructiontrade?a=a','/cfets/bankuplink/bond/IbuQuoteBond','DEAL_MANAGEMENT_001_002_011','IbuQuoteBond','','02','01','本币业务交易','system','',sysdate,'system',sysdate);
+VALUES ('IbuQuoteBond','TRD','home.html#/interbank/instructiontrade?a=a','vue','DEAL_MANAGEMENT_001_002_011','','','02','01','本币业务交易','system','',sysdate,'system',sysdate);
 
 delete from SYS_PAGE where PAGE_ID  = 'IbuQuoteBond004';
 INSERT INTO SYS_PAGE (PAGE_ID ,SYSTEM_CODE ,PAGE_URL ,PAGE_FILE ,MENU_ID ,HEIGHT ,WIDTH ,IS_HP_SELECT ,IS_NEED_WORKFLOW ,REMARK ,CREATE_USER ,CREATE_DEPT ,CREATE_TIME ,UPDATE_USER ,UPDATE_TIME)
