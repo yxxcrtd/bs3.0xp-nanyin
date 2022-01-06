@@ -210,7 +210,9 @@ public class StlDataGatherShares2Processor extends StlDataGatherProcessor {
 				}
 			}
 		}
-
+		// GZYHTZJY-1050:赋值sectype modify fuyongsheng 20220106 start
+		investTradeWriteDto.setSecType(getSecType());
+		// GZYHTZJY-1050:赋值sectype modify fuyongsheng 20220106 end
 		return investTradeWriteDto;
 	}
 
