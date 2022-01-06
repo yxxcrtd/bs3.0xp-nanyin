@@ -4,25 +4,20 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
 import com.joyintech.tams.business.common.pojo.Message;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLib001Dto;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLibAvaPledgeBondResponse;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLibDto;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoLibAvaPledgeBondRequest;
 import com.joyintech.tams.cfets.etrib.repo.service.CfetsEtrIbRepoinfoService;
 import com.joyintech.tams.cfets.etrib.repo.service.CfetsIbRepoLibService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,20 +43,6 @@ public class CfetsEtrIbRepoLibController extends BaseController{
 	
     @Autowired(required = false)
     private BaseGetBusinessId baseGetBusinessId;
-    
-    @Override
-    public String init(Model model) {
-    	CfetsEtrIbRepoLib001Dto dto = new CfetsEtrIbRepoLib001Dto();
-        dto.setPortfolioId(this.getParam("portfolioId"));
-        dto.setTradePlace(this.getParam("tradePlace"));
-        dto.setSecAcctId(this.getParam("secAcctId"));
-        model.addAttribute("entity", dto);
-        this.setSelectOptionToModel(model, DictCode.交易场所);
-        this.setSelectOptionToModel(model, DictCode.资产二级分类);
-        this.setSelectOptionToModel(model, DictCode.评级结果);
-        return super.init(model);
-    }
-    
 
     /**
      * 根据画面条件检索可质押券信息
