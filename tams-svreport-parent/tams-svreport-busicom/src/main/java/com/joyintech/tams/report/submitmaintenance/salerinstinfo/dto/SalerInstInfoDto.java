@@ -1,0 +1,116 @@
+package com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto;
+
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.ChbSalerInstInfo;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.submitmaintenance.salerinstinfo.validate.SalerInstInfoValid;
+import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import java.util.List;
+
+@ValidLogic(targetClass = SalerInstInfoValid.class, groups = {ValidateGroupEdit.class,
+        ValidateGroupDelete.class})
+public class SalerInstInfoDto extends ChbSalerInstInfo implements ProcessEntity {
+    private String operateType;//操作类型
+    private String elementId;//页面元素
+    private String pageModel;//页面模型
+    private String disabledThing;//置灰控制
+    private String erroOrInfo;//来自erro还是info
+    private String salerInsNo;//销售人员的内部编号
+    /**
+     * 原始数据
+     */
+    private String orgData;
+    /**
+     * 错误信息
+     */
+    private String errMsg;
+
+    /**
+     * 选中的数据
+     */
+    private transient List<SalerInstInfoDto> selectedItem;
+
+    public String getOperateType() {
+        return operateType;
+    }
+
+    public void setOperateType(String operateType) {
+        this.operateType = operateType;
+    }
+
+    public List<SalerInstInfoDto> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<SalerInstInfoDto> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    public String getStatusStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getStatus());
+    }
+
+    public String getSalerOrgLevelStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.机构层级, this.getSalerOrgLevel());
+    }
+
+    public String getElementId() {
+        return elementId;
+    }
+
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
+    }
+
+    public String getPageModel() {
+        return pageModel;
+    }
+
+    public void setPageModel(String pageModel) {
+        this.pageModel = pageModel;
+    }
+
+    public String getDisabledThing() {
+        return disabledThing;
+    }
+
+    public void setDisabledThing(String disabledThing) {
+        this.disabledThing = disabledThing;
+    }
+
+    public String getErroOrInfo() {
+        return erroOrInfo;
+    }
+
+    public void setErroOrInfo(String erroOrInfo) {
+        this.erroOrInfo = erroOrInfo;
+    }
+
+    public String getSalerInsNo() {
+        return salerInsNo;
+    }
+
+    public void setSalerInsNo(String salerInsNo) {
+        this.salerInsNo = salerInsNo;
+    }
+
+    public String getOrgData() {
+        return orgData;
+    }
+
+    public void setOrgData(String orgData) {
+        this.orgData = orgData;
+    }
+
+    public String getErrMsg() {
+        return errMsg;
+    }
+
+    public void setErrMsg(String errMsg) {
+        this.errMsg = errMsg;
+    }
+}
