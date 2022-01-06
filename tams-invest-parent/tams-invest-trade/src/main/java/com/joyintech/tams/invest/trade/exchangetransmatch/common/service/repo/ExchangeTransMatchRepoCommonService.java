@@ -452,9 +452,6 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
     public List<FinPledgeDisplaceResult> genFinPledgeDisplaceResult(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal){
         //业务编号 = 同汇总交易.金融产品代码
         List<FinPledgeDisplaceResult> finPledgeDisplaceResultList = new ArrayList<>();
-        //换入的折算率
-        BigDecimal hrScale = dealDto.getSettleTransDataTotalPledgeList().stream().filter(item->StringUtil.equals(item.getDisplaceDirection(),DictCodeListExt3.质押券置换_置换方向_换入.getValue())).findFirst().get().getPledgeRatio();
-
         for(SettleTransDataTotalPledge settleTransDataTotalPledge: dealDto.getSettleTransDataTotalPledgeList()) {
             FinPledgeDisplaceResult finPledgeDisplaceResult = new FinPledgeDisplaceResult();
             finPledgeDisplaceResult.setBranch(new BigDecimal(0));
@@ -471,9 +468,14 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
             else {
                 finPledgeDisplaceResult.setResultType(DictCodeListExt3.质押券置换_置换结果_置换前.getValue());
                 if(StringUtil.equals(dealDto.getPs(),DictCodeListExt3.交易方向_中途换券.getValue())) {
-                    //质押券面总额 = 换入券面总额*换入折算率/换出折算率
-                    BigDecimal hcPledgeAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(ArithmeticUtil.multiply(entrustDto.getMarchQty(),settleTransDataTotalPledge.getPledgeFaceValue()),hrScale),settleTransDataTotalPledge.getPledgeRatio(),4);
-                    finPledgeDisplaceResult.setPledgeAmt(hcPledgeAmt);
+                    //换入的折算率
+                    SettleTransDataTotalPledge hrSettleTransDataTotalPledge = dealDto.getSettleTransDataTotalPledgeList().stream().filter(item->StringUtil.equals(item.getDisplaceDirection(),DictCodeListExt3.质押券置换_置换方向_换入.getValue())).findFirst().get();
+                    if(StringUtil.isNotEmpty(hrSettleTransDataTotalPledge)) {
+                        BigDecimal hrScale = hrSettleTransDataTotalPledge.getPledgeRatio();
+                        //质押券面总额 = 换入券面总额*换入折算率/换出折算率
+                        BigDecimal hcPledgeAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(ArithmeticUtil.multiply(entrustDto.getMarchQty(),settleTransDataTotalPledge.getPledgeFaceValue()),hrScale),settleTransDataTotalPledge.getPledgeRatio(),4);
+                        finPledgeDisplaceResult.setPledgeAmt(hcPledgeAmt);
+                    }
                 }
                 else {
                     //质押券面总额 = 汇总成交质押品匹配结果表.匹配份额*质押面值
