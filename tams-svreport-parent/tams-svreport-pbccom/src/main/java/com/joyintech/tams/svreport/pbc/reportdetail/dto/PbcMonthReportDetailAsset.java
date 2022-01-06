@@ -152,8 +152,19 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
     }
 
     public String getOrgAssetType3Str() {
-//        return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产三级分类, this.getOrgAssetType3());
-        return SysDataUtil.getNameFromDataDict(DictCode.资产_负债二级类别, this.getOrgAssetType3());
+        String orgCode3 = null;
+        if(null!=SysDataUtil.getNameFromDataDict(DictCode.存款类资产类型,this.getOrgAssetType2())){
+            orgCode3 = SysDataUtil.getNameFromDataDict(DictCode.存款类资产存款类型, this.getOrgAssetType3());
+        }else if(null!=SysDataUtil.getNameFromDataDict(DictCode.WIND一级分类_含债券一级分类等,this.getOrgAssetType2())){
+            orgCode3 = SysDataUtil.getNameFromDataDict(DictCode.WIND二级分类_含债券二级分类等, this.getOrgAssetType3());
+        }else if(null!=SysDataUtil.getNameFromDataDict(DictCode.基金类资产类型,this.getOrgAssetType2())){
+            orgCode3 = SysDataUtil.getNameFromDataDict(DictCode.基金类资产二级类型, this.getOrgAssetType3());
+        }else if(null!=SysDataUtil.getNameFromDataDict(DictCode.项目类一级分类, this.getOrgAssetType2())){
+            orgCode3 = SysDataUtil.getNameFromDataDict(DictCode.项目类资产二级类型, this.getOrgAssetType3());
+        }else if(null!=SysDataUtil.getNameFromDataDict(DictCode.拆借类型,this.getOrgAssetType2())){
+            orgCode3 = SysDataUtil.getNameFromDataDict(DictCode.拆借资产类型, this.getOrgAssetType3());
+        }
+        return orgCode3;
     }
 
     public String getCounterListCode(){
