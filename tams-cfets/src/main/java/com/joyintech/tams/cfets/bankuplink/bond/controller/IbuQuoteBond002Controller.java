@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -294,8 +295,9 @@ public class IbuQuoteBond002Controller extends BaseController {
             quoteOperatorType = "修改";
         }
         cfetsBondDealDialogueQuoteDto.setQuoteOperatorType(quoteOperatorType);
+        DecimalFormat  df = new DecimalFormat("###,###.##");
         params.setComment(entity -> "报价日期"+ "(" + DateUtil.format(entity.getSettleDate()) + ")-"
-                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"报价操作("+entity.getQuoteOperatorType()+")-"+"券面总额("+ArithmeticUtil.multiply(entity.getAvaNum(),new BigDecimal(10000))+"万元)");
+                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"报价操作("+entity.getQuoteOperatorType()+")-"+"券面总额("+df.format(entity.getAvaNum())+"万元)");
         processParameter.setWorkFlowParameter(params);
 
         cfetsBondDealDialogueQuoteDto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
@@ -337,8 +339,9 @@ public class IbuQuoteBond002Controller extends BaseController {
         cfetsBondDealDialogueQuoteDto.setFinprodAbbr(bondDialogueQuote.getFinprodAbbr());
         cfetsBondDealDialogueQuoteDto.setCounterName(bondDialogueQuote.getCounterName());
         cfetsBondDealDialogueQuoteDto.setAvaNum(bondDialogueQuote.getAvaNum());
+        DecimalFormat df = new DecimalFormat("###,###.##");
         workFlowParameter.setComment(entity -> "报价日期"+ "(" + DateUtil.format(entity.getSettleDate()) + ")-"
-                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"报价操作(撤销)-"+"券面总额("+entity.getAvaNum()+")");
+                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"报价操作(撤销)-"+"券面总额("+df.format(entity.getAvaNum())+"万元)");
         processParameter.setWorkFlowParameter(workFlowParameter);
 
         String msg = cfetsBondDealQuotedPrice002Service.start(processParameter, cfetsBondDealDialogueQuoteDto);
