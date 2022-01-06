@@ -276,6 +276,7 @@
                 object.finprodType1 = item.finprodType2;
                 object.ps = item.ps;
                 object.tradePlat = item.tradePlat;
+                object.tradeMarket = item.tradeMarket;
                 object.dealDate = new Date(item.dealDate).Format("yyyy-MM-dd");
                 object.secAccount = item.secAcctNo;
                 object.repoType = item.repoType;

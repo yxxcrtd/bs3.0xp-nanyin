@@ -263,6 +263,9 @@
             <if test="tradeDateEnd!=null and tradeDateEnd!='' ">
                 AND <![CDATA[ A1.ENTRUST_DATE <= TO_DATE(#{tradeDateEnd}, 'yyyy-mm-dd') ]]>
             </if>
+            <if test="tradeMarket!=null and tradeMarket!='' ">
+                AND A1.TRADE_MARKET = #{tradeMarket}
+            </if>
             <if test="tradePlat!=null and tradePlat!='' ">
                 AND A1.TRADE_PLAT = #{tradePlat}
             </if>
@@ -272,6 +275,7 @@
             <if test="secAccount!=null and secAccount!='' ">
                 AND D1.SEC_ACCT_ID = #{secAccount}
             </if>
+
             <if test="repoType!=null and repoType!='' and repoType == 'H01'.toString()">
                 <if test="ps!=null and ps!='' and (ps == 'T93'.toString() or ps == 'T94'.toString())">
                     AND NVL(G1.PLEDGE_NUMBER,0)-NVL(S.MARCH_AMT_EN,0) >=  #{remainNum}
