@@ -276,8 +276,15 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
             trdProductDeal.setPrinAmt(settleTransData.getPrinAmt());
             //利息总额
             trdProductDeal.setIntAmt(settleTransData.getIntAmt());
-            //全价总额
-            trdProductDeal.setFpriceAmt(settleTransData.getFpriceAmt());
+            if(StringUtil.equals(settleTransData.getPs(),DictCodeList.交易方向_还本到账.getValue())) {
+                //全价总额
+                trdProductDeal.setFpriceAmt(settleTransData.getPrinAmt());
+            }
+            else {
+                //全价总额
+                trdProductDeal.setFpriceAmt(settleTransData.getFpriceAmt());
+            }
+
             //交易金额
             trdProductDeal.setTradeAmt(settleTransData.getTradeAmt());
             //随交易费用和不随交易支付费用

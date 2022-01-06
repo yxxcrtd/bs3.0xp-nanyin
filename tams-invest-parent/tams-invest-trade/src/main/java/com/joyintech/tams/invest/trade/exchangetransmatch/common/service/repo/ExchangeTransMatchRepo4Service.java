@@ -111,8 +111,12 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
         if(StringUtil.isNotEmpty(firstRepoTrade)) {
             //金融产品代码
             dealTotal.setFinprodId(firstRepoTrade.getFinprodId());
+            // 金融产品类型
+            dealTotal.setFinprodType(firstRepoTrade.getFinprodType());
             //金融产品类型投管
             dealTotal.setFinprodType2(firstRepoTrade.getFinprodType2());
+            // 交易市场
+            dealTotal.setTradeMarketMode(firstRepoTrade.getTradeMarketMode());
         }
         // 分支序号
         dealTotal.setBranch(0L);
