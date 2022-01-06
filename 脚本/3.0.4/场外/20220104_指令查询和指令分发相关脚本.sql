@@ -21,7 +21,7 @@ INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) VALUES ('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '05,01', 'remark', '备注', null, 13, '{"colAlign": "left"}', 1, 0, null, null);
 
 --质押式回购首期-指令上指定质押券库模式
-delete from CFG_READONLY_FORM_SHOW where PAGECODE='CfetsEtrDispatcher' and DTCODE='CfetsEtrDispatcherInfo' and SPCDCODE in ('05,01','05,03,03');
+delete from CFG_READONLY_FORM_SHOW where PAGECODE='CfetsEtrDispatcher' and DTCODE='CfetsEtrDispatcherInfo' and SPCDCODE in ('05,03','05,03,03');
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) VALUES ('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '05,03', 'entrustDate', '指令日期', null, 1, '{"colAlign": "left"}', 1, 0, null, null);
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) VALUES ('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '05,03', 'portfolioId', '组合代码', null, 2, '{"colAlign": "left"}', 1, 0, null, null);
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) VALUES ('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '05,03', 'portfolioName', '组合名称', null, 3, '{"colAlign": "left"}', 1, 0, null, null);
