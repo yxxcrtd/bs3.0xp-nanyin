@@ -100,7 +100,11 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
         for (int i = 0; i < dataList.size(); i++ ) {
             for (int j = i+1; j < dataList.size(); j++ ) {
                 if(StringUtils.equals(dataList.get(i).get(1), dataList.get(j).get(1))){
-                    ValidMessage validMessage = new ValidMessage("第"+(i+2)+"代理销售机构代码与"+"第"+(j+2)+"代理销售机构代码");
+                    ValidMessage validMessage = new ValidMessage("第"+(i+2)+"代理销售机构代码与"+"第"+(j+2)+"代理销售机构代码重复");
+                    errorList.add(validMessage);
+                }
+                if(StringUtils.equals(dataList.get(i).get(2), dataList.get(j).get(2))){
+                    ValidMessage validMessage = new ValidMessage("第"+(i+2)+"代理销售机构名称与"+"第"+(j+2)+"代理销售机构名称重复");
                     errorList.add(validMessage);
                 }
             }
@@ -178,8 +182,10 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
         //导入代理销售机构代码重复校验
         List<AgentInstitutionDto> AgentInstitutionCodeList = chbAgentInstitutionInfoMapper.checkAgentInstitutionCodeImport();
         Map<String,AgentInstitutionDto> AgentInstitutionCodeMap = new HashMap<String,AgentInstitutionDto>();
+        Map<String,AgentInstitutionDto> AgentInstitutionNameMap = new HashMap<String,AgentInstitutionDto>();
         for(AgentInstitutionDto info :AgentInstitutionCodeList){
             AgentInstitutionCodeMap.put(info.getAgentInstitutionCode(),info);
+            AgentInstitutionNameMap.put(info.getAgentInstitutionName(),info);
         }
         List<ExcelValidDto> checkResult = new ArrayList<>();
         for (int i = 0; i < dataList.size(); i++ ) {
@@ -217,6 +223,9 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
             if(list.get(2) == null || list.get(2).trim().equals("")){
                 flag = false;
                 message.add("代理销售机构名称不能为空");
+            }else if(AgentInstitutionNameMap.get(list.get(2)) != null){
+                flag = false;
+                message.add("代理销售机构名称已存在");
             }
             if (CollectionUtils.isNotEmpty(message)) {
                 checkResult.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),

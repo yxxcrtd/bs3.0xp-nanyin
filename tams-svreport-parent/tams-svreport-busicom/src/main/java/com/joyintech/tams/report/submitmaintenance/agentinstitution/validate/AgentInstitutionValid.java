@@ -38,7 +38,13 @@ public class AgentInstitutionValid implements BeanValidator {
                         errorList.add(new ValidMessage("", "代理销售机构代码已存在。"));
                     }
                 }
+            //代理销售机构名称重复校验
+            if(dto.getAgentInstitutionName() != null && dto.getAgentInstitutionName() != ""){
+                if(agentInstitution002Service.checkAgentInstitutionName(dto.getAgentInstitutionName()) > 0) {
+                    errorList.add(new ValidMessage("", "代理销售机构名称已存在。"));
+                }
             }
+        }
         //调用数据库配置脚本check方法
         errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, dto, "AgentInstitution002", null, ValidMessage.class);
         return errorList;
