@@ -132,6 +132,7 @@ $(function() {
 				{ title: "交易流通场所",width:150 , field: 'tradeMarket',sortField:'tradeMarket'},
 				{ title: "币种",width:100 , field: 'ccy',sortField:'ccy'},
 				{ title: "资金存入银行",width:150,sortField:'bankName', field: 'bankName'},
+				{ title: "存款帐号",width:150,sortField:'accountNo', field: 'accountNo'},
 				{ title: "存款金额",width:100,sortField:'amt', field: 'amt', digit:2, type: 'money'},
 				{ title: "起息日",width:100,sortField:'vdate', field: 'vdate', type: 'date'},
 				{ title: "到期日",width:100,sortField:'mdate', field: 'mdate', type: 'date'},
@@ -296,6 +297,7 @@ $(function() {
 				{ title: "币种",width:100 , field: 'ccy',sortField:'ccy'},
                 { title: "名称",width:100,sortField:'assetName', field: 'assetName'},
 //                { title: "存款金额",width:100,sortField:'', field: 'amt', type: 'money' ,digit:2},
+                { title: "资产代码",width:100,sortField:'creditAssetCode', field: 'creditAssetCode'},
                 { title: "金额",width:100,sortField:'amt', field: 'amt', type: 'money' ,digit:2},
                 { title: "份额面值",width:100,sortField:'prinBaseamt', field: 'prinBaseamt', type: 'money' ,digit:4},
                 { title: "收/受益权类型",width:150,sortField:'profitType', field: 'profitType'},
@@ -420,6 +422,8 @@ $(function() {
                 { title: "是否为收/受益权",width:100,sortField:'isRight', field: 'isRight'},
                 { title: "是否属于买入返售",width:150,sortField:'isResale', field: 'isResale'},
                 { title: "非标准化债券类资产类型",width:100,sortField:'notstandSecType', field: 'notstandSecType'},
+                { title: "是否为标准化票据",width:100,sortField:'isBzhpj', field: 'isBzhpj'},
+                { title: "票据代码",width:150,sortField:'billCode', field: 'billCode'},
                 { title: "非标准化债券类资产数量",width:100,sortField:'notstandSecNum', field: 'notstandSecNum'},
                 { title: "合计金额",width:150,sortField:'amt', field: 'amt', type: 'money',digit:2},
                 { title: "加权剩余期限（天）",width:150,sortField:'remainTerm', field: 'remainTerm', type: 'number',digit:2},
@@ -811,7 +815,8 @@ $(function() {
 				{ title: "交易流通场所",width:150 , field: 'tradeMarket',sortField:'tradeMarket'},
 				{ title: "币种",width:100 , field: 'ccy',sortField:'ccy'},
                 { title: "资管计划名称",width:150,sortField:'assetName', field: 'assetName'},
-                
+                { title: "是否为银行理财产品",width:150,sortField:'financialProductFlag', field: 'financialProductFlag'},
+                { title: "产品登记编码",width:200,sortField:'prodRegisterCode', field: 'prodRegisterCode'},
                 { title: "是否由金融资产投资公司发行",width:250,sortField:'financialComissue', field: 'financialComissue'},
                 
                 { title: "资管计划发起人机构编码",width:100,sortField:'partyCode', field: 'partyCode'},
@@ -990,6 +995,7 @@ $(function() {
                 { title: "行业分类",width:150,sortField:'industryShares2', field: 'industryShares2'},
                 //modify by wm 行业分类展示列修改  对应bug号 ZZOTZL-352 end
 			    { title: "登记备案机构",width:200,sortField:'registOrg1', field: 'registOrg1'},
+			    { title: "是否为固定收益类",width:150,sortField:'profitFlag', field: 'profitFlag'},
                 { title: "是否属于政府投资基金",width:150,sortField:'isGovernFund', field: 'isGovernFund'},
 			    { title: "政府投资基金投向",width:100,sortField:'governInvestFund', field: 'governInvestFund'},
                 { title: "基金公司名称",width:100,sortField:'fundEnpeName', field: 'fundEnpeName'},
@@ -1113,6 +1119,7 @@ $(function() {
                 { title: "期限(天）",width:150,sortField:'termDate', field: 'termDate',digit:0},
                 { title: "负债规模",width:150,sortField:'debtScale', field: 'debtScale'},
                 { title: "利率(%) ",width:150,sortField:'assetYield', field: 'assetYield', type: 'number',digit :5},
+                { title: "是否为同业借款",width:150,sortField:'isDepositFlag', field: 'isDepositFlag'},
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
