@@ -277,6 +277,8 @@ public class ExchangeTransMatchCommonService extends BaseService {
         entrustMap.put("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
         entrustMap.put("PS_T93", DictCodeListExt3.交易方向_解除质押.getValue());
         entrustMap.put("PS_T94", DictCodeListExt3.交易方向_中途换券.getValue());
+        entrustMap.put("TARGET_CLASS_01", DictCodeListExt3.目标类型_数量.getValue());
+        entrustMap.put("TARGET_CLASS_02", DictCodeListExt3.目标类型_金额.getValue());
         List<ExchangeTransMatchCommonEntrustDto> commonEntrustDtoList = exchangeTransMatchCommonMapper.getEtrEntrustByIdList(entrustMap);
         if(!StringUtil.isEmptyList(commonEntrustDtoList)) {
             String matchStatus = DictCodeListExt3.下行交易匹配状态_未匹配.getValue();
