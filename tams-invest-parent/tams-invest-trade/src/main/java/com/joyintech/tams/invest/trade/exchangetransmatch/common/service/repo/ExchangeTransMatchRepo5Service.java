@@ -147,17 +147,17 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
         // 交易本金
         dealTotal.setPrinAmt(amt);
         // 利息总额
-        dealTotal.setIntAmt(amt);
+        dealTotal.setIntAmt(dealDto.getIntAmt());
         // 全价总额
-        dealTotal.setFpriceAmt(amt);
+        dealTotal.setFpriceAmt(dealDto.getFpriceAmt());
         // 随交易支付费用
-        dealTotal.setFeeAmtPay(amt);
+        dealTotal.setFeeAmtPay(BigDecimal.ZERO);
         // 交易金额
-        dealTotal.setTradeAmt(amt);
+        dealTotal.setTradeAmt(dealDto.getTradeAmt());
         // 未随交易支付费用
-        dealTotal.setFeeAmtUnpay(amt);
+        dealTotal.setFeeAmtUnpay(BigDecimal.ZERO);
         // 总交易费用
-        dealTotal.setFeeAmt(amt);
+        dealTotal.setFeeAmt(ArithmeticUtil.doAdd(dealTotal.getFeeAmtPay(),dealTotal.getFeeAmtUnpay()));
         // 交易方向
         dealTotal.setPs(dealDto.getPs());
         // 到期收益率
