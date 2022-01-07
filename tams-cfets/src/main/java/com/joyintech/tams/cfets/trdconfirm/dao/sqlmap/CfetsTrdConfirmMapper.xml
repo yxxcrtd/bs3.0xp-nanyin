@@ -584,6 +584,54 @@
 
         where  ib.quote_id= #{totleTradeId,jdbcType=VARCHAR} and  ib.trade_status='07'
     </select>
+    <select id="selectRepoIbuInfoByKey" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegInfoListResponse">
+        select
+        ic.repo_ps as ps,
+        '01' as tradeMarket,
+        ic.settle_speed as settleSpeed,
+        ic.sec_manage_acct_id as secManageAcctId,
+        ic.term as termDays,
+        ic.FPRICE_AMT  as tradeAmt,
+        ic.ou_trader_id as trader,
+        ic.quote_date as tradeDate,
+        ic.cp_party_id as counterId,
+        ic.quote_type as quoteType,
+        ic.remark as remark,
+        ic.QUOTE_ID as totleTradeId,
+        ic.OU_PARTY_ID as ouPartyId,
+        t3.user_name  as ouTraderId,
+        t1.counter_id as cpPartyId,
+        ic.CP_TRADER_ID as cpTrader,
+        ic.V_SETTLE_DATE as settleDate,
+        ic.deal_fee_amt as trdFeeAmt,
+        ic.sett_fee_amt as settleFeeAmt,
+        ic.V_DELIVERY_TYPE as deliveryType,
+        ic.sett_type as clearType,
+        ic.TERM_TYPE as termType,
+        ic.act_Days as actRepoTerm,
+        ic.ccy as ccy,
+        ic.rate rate,
+        ic.m_trade_amt mtradeAmt,
+        ic.basis basis,
+        ic.m_int_amt as mintAmt,
+        ic.V_SETTLE_DATE as vsettleDate,
+        ic.M_SETTLE_DATE as msettleDate
+        from IBU_QUOTE_CREP ic
+        left join trdquto_match_info match
+        on ic.QUOTE_ID=match.pre_trade_id
+        left join (
+        select i.* from
+        interf_cstp_trade I
+        INNER JOIN (SELECT EXECID ,MAX(UPDATETIME) UPDATETIME FROM  INTERF_CSTP_TRADE GROUP BY EXECID)	II ON  II.EXECID = I.EXECID AND II.UPDATETIME = I.UPDATETIME
+        )i
+        on match.exe_id=i.execid
+        left join MST_COUNTER_PARTY t1 on t1.party_id=ic.CP_PARTY_ID
+        left join sys_user_add sua on  sua.ibu_trader=ic.OU_TRADER_ID
+        left join sys_user t3 on t3.user_id=sua.user_id
+
+        where  ic.QUOTE_ID= #{totleTradeId,jdbcType=VARCHAR} and  ic.trade_status='07'
+    </select>
+
     <select id="findAllRegFeeInfoList" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegFeeInfoDto">
         select reg.trade_id as tradeId,
         reg.fee_type as feeType,
@@ -744,7 +792,8 @@
         reg.fprice_amt as fpriceAmt,
         reg.remark as remark,
         reg.deal_fee_amt as trdFeeAmt,
-        reg.sett_fee_amt as settleFeeAmt
+        reg.sett_fee_amt as settleFeeAmt,
+        reg.cprice_amt as tradeAmt
         from IBU_QUOTE_ETR_RE  reg
         where reg.quote_id= #{totleTradeId,jdbcType=VARCHAR}
     </select>
@@ -1635,6 +1684,21 @@
         reg.PLEDGE_NUMBER as pledgePrin
         from REG_FIN_PLEDGE reg
         where reg.trade_id =#{tradeId,jdbcType=VARCHAR}
+
+    </select>
+    <select id="selectInvAimByEntrustId" resultType="java.lang.String">
+        select inv_aim
+        from etr_entrust
+        where entrust_id=#{entrustId,jdbcType=VARCHAR}
+    </select>
+    <select id="findAllIbuSecPtlsList" resultType="com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto" parameterType="Map" >
+        select
+        reg.PLEDGE_FINPROD_ID as finprodId,reg.PLEDGE_RATIO as pledgeRatio,
+        reg.PORTFOLIO_ID as portfolioId,reg.ENTRUST_ID as entrustId,
+        reg.PLEDGE_NUMBER as pledgePrin
+        from ibu_quote_ent_crep_pledge reg
+        where reg.quote_id =#{quoteId,jdbcType=VARCHAR}
+        and reg.entrust_id=#{entrustId,jdbcType=VARCHAR}
 
     </select>
 </mapper>

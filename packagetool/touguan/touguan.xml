@@ -79,7 +79,6 @@
         <module>../../tams-cfets</module>
         <module>../../tams-cfets-system</module>
         <module>../../tams-common-basicdata</module>
-        <module>../../tams-exchange-touguan-parent</module>
         <module>../../tams-exchange-touguan-parent/tams-exchange-entrust</module>
         <module>../../tams-exchange-touguan-system</module>
         <module>../../tams-svreport-common</module>

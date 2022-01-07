@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -77,6 +78,66 @@ public class TradeManagement {
         } else {
             return new ResultBean(ErrorCode.REQ_PARAMETER_ERROR);
         }
+    }
+
+    /**
+     * 根据委托ID查询成交
+     */
+    public ResultBean queryTradeByEntrustId(String userId, String entrustId) {
+        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
+        if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
+            return ResultBean.success(Collections.EMPTY_LIST);
+        }
+
+        List<Trade> list = tradeService.queryTradeByEntrust(entrustId);
+        list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+        setFutureStockCode(list);
+        return ResultBean.success(list);
+    }
+
+    /**
+     * 根据订单ID查询成交
+     */
+    public ResultBean queryTradeByOrderId(String userId, String orderId) {
+        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
+        if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
+            return ResultBean.success(Collections.EMPTY_LIST);
+        }
+
+        List<Trade> list = tradeService.queryTradeByOrder(orderId);
+        list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+        setFutureStockCode(list);
+        return ResultBean.success(list);
+    }
+
+    /**
+     * 根据指令ID查询成交
+     */
+    public ResultBean queryTradeByInstructionId(String userId, String instructionId) {
+        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
+        if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
+            return ResultBean.success(Collections.EMPTY_LIST);
+        }
+
+        List<Trade> list = tradeService.queryTradeByInstructionId(instructionId);
+        list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+        setFutureStockCode(list);
+        return ResultBean.success(list);
+    }
+
+    /**
+     * 根据资金账户ID查询成交
+     */
+    public ResultBean queryTradeByAccountId(String userId, String accountId) {
+        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
+        if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
+            return ResultBean.success(Collections.EMPTY_LIST);
+        }
+
+        List<Trade> list = tradeService.queryTradeByAccountId(accountId);
+        list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+        setFutureStockCode(list);
+        return ResultBean.success(list);
     }
 
     private void setFutureStockCode(List<Trade> list) {

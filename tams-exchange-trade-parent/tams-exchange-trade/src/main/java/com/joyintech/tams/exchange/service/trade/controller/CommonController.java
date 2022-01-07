@@ -7,17 +7,20 @@ import com.joyintech.tams.exchange.common.ResponseResultBody;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.SysParamBean;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
+import com.joyintech.tams.exchange.common.db.domain.Instrument;
 import com.joyintech.tams.exchange.common.domain.Message;
-import com.joyintech.tams.exchange.common.request.BaseRequest;
 import com.joyintech.tams.exchange.service.trade.management.service.CommonManagement;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -29,80 +32,59 @@ public class CommonController {
     private CommonManagement commonManagement;
 
 
-    /**
-     * 市场合约代码查询
-     *
-     * @param userId 用户Id
-     * @param market 市场
-     * @return ResultBean
-     */
-    @RequestMapping(value = "/common/instrument", method = RequestMethod.GET)
-    public ResultBean queryInstrument(@RequestParam(value = "user_id") String userId,
-                                      @RequestParam(value = "market", required = false) String market,
+    @ApiOperation(value = "市场合约代码查询", notes = "市场合约代码查询")
+    @RequestMapping(value = "/common/instrument", method = RequestMethod.POST)
+    @Deprecated
+    public ResultBean queryInstrument(@RequestParam(value = "market", required = false) String market,
                                       @RequestParam(value = "asset_type", required = false) String assetType,
                                       @RequestParam(value = "keyword", required = false) String keyword) {
         return commonManagement.queryInstrument(market, assetType, keyword);
     }
 
-    /**
-     * 期货市场合约代码查询
-     *
-     * @param stockCode 合约
-     * @return ResultBean
-     */
+    @ApiOperation(value = "市场合约代码查询", notes = "根据交易场所查询市场合约代码，可传入关键词进行过滤")
+    @RequestMapping(value = "/common/instrumentByMarket", method = RequestMethod.POST)
+    public Message<List<Instrument>> queryInstrumentByMarket(@RequestParam @NotBlank(message = "交易场所不可为空") String market,
+                                                             @RequestParam(required = false) String keyword) {
+        return new Message<>(commonManagement.queryInstrument(market, null, keyword));
+    }
+
+    @ApiOperation(value = "市场合约代码查询", notes = "根据资产类型查询市场合约代码，可传入关键词进行过滤")
+    @RequestMapping(value = "/common/instrumentByAssetType", method = RequestMethod.POST)
+    public Message<List<Instrument>> queryInstrumentByAssetType(@RequestParam @NotBlank(message = "资产类型不可为空") String assetType,
+                                                                @RequestParam(required = false) String keyword) {
+        return new Message<>(commonManagement.queryInstrument(null, assetType, keyword));
+    }
+
+    @ApiOperation(value = "市场合约代码查询", notes = "根据关键字查询市场合约代码，不传关键词检索全部")
+    @RequestMapping(value = "/common/instrumentByKeyword", method = RequestMethod.POST)
+    public Message<List<Instrument>> queryInstrumentByKeyword(@RequestParam(required = false) String keyword) {
+        return new Message<>(commonManagement.queryInstrument(null, null, keyword));
+    }
+
+    @ApiOperation(value = "期货市场合约代码查询", notes = "期货市场合约代码查询")
     @RequestMapping(value = "/common/futuresInstrument", method = RequestMethod.POST)
     public ResultBean queryInstrument(@RequestParam(value = "stock_code", required = false, defaultValue = "") String stockCode) {
         return commonManagement.queryFuturesInstrument(stockCode);
     }
 
-    @ApiOperation(value = "公平交易参数查询", notes = "公平交易参数查询")
+    @ApiOperation(value = "公平交易参数查询", notes = "公平交易参数查询, 01：开；02：关")
     @RequestMapping(value = "/common/fairtrade", method = RequestMethod.POST)
-    public Message<Object> queryFairTradeParam(@RequestBody BaseRequest baseRequest) {
-        Map<String, Object> pageParam = new HashMap<>();
-        pageParam.put("systemCode", "TRD");
-        pageParam.put("paraCode", "TRD_CHECK_FAIR");
-        return new Message<Object>(commonManagement.querySysPara(pageParam));
+    public Message<String> queryFairTradeParam() {
+        return new Message<>(commonManagement.queryFairTradeParam());
     }
 
-    /**
-     * 获取系统平台日
-     *
-     * @param userId
-     * @return
-     */
     @ApiOperation(value = "获取系统平台日", notes = "获取系统平台日")
     @RequestMapping(value = "/common/sysdate", method = RequestMethod.POST)
-    public Message<Date> queryInvestSystemDate(@RequestBody BaseRequest baseRequest) {
-        return new Message<Date>(commonManagement.queryInvestSystemDate());
+    public Message<Date> queryInvestSystemDate() {
+        return new Message<>(commonManagement.queryInvestSystemDate());
     }
 
-    /**
-     * 获取系统平台日
-     *
-     * @param userId
-     * @return
-     */
-    @RequestMapping(value = "/common/platdate", method = RequestMethod.POST)
-    public ResultBean queryPlatDate(@RequestParam(value = "user_id") String userId) {
-        return new ResultBean(ErrorCode.SUCCESS, commonManagement.queryPlatDate());
-    }
-
-    /**
-     * 获取服务器时间
-     *
-     * @return
-     */
     @ApiOperation(value = "获取服务器时间", notes = "获取服务器时间")
     @RequestMapping(value = "/common/localTime", method = RequestMethod.POST)
     public ResultBean queryLocalTime() {
         return new ResultBean(ErrorCode.SUCCESS, DateUtil.now());
     }
 
-    /**
-     * 获取服务器时间
-     *
-     * @return
-     */
     @ApiOperation(value = "获取当前用户", notes = "获取当前用户")
     @RequestMapping(value = "/common/localUser", method = RequestMethod.POST)
     public ResultBean queryLocalUser() {
@@ -110,36 +92,26 @@ public class CommonController {
         return new ResultBean(ErrorCode.SUCCESS, Objects.isNull(user) ? "lh1" : user.getUserName());
     }
 
-    /**
-     * 获取系统参数
-     *
-     * @param userId
-     * @return
-     */
+    @ApiOperation(value = "获取系统参数", notes = "获取系统参数")
     @RequestMapping(value = "/common/sysparam", method = RequestMethod.POST)
-    public ResultBean querySysParam(@RequestParam(value = "user_id") String userId,
-                                    @RequestParam(value = "para_code") String paraCode,
-                                    @RequestParam(value = "system_code") String systemCode) {
+    public ResultBean querySysParam(@RequestParam @NotBlank(message = "参数编号不可为空") String paraCode,
+                                    @RequestParam @NotBlank(message = "子系统编号不可为空") String systemCode) {
         SysParamBean bean = new SysParamBean(paraCode, systemCode);
         return new ResultBean(ErrorCode.SUCCESS, commonManagement.querySysParam(bean));
     }
 
-    @RequestMapping(value = "/common/service/node", method = RequestMethod.GET)
+    @RequestMapping(value = "/common/service/node", method = RequestMethod.POST)
     public ResultBean queryServiceNode(@RequestParam(value = "node_name") String nodeName) {
         return new ResultBean(ErrorCode.SUCCESS, commonManagement.queryServiceNode(nodeName));
     }
 
-    @RequestMapping(value = "/common/eureka/services", method = RequestMethod.GET)
+    @RequestMapping(value = "/common/eureka/services", method = RequestMethod.POST)
     public ResultBean getEurekaServices(@RequestParam(value = "service_name") String serviceName) {
         return new ResultBean(ErrorCode.SUCCESS, commonManagement.getEurekaServices(serviceName));
     }
 
-    /**
-     * 当前的master节点查询
-     *
-     * @return ResultBean
-     */
-    @RequestMapping(value = "/common/master", method = RequestMethod.GET)
+    @ApiOperation(value = "获取主节点信息", notes = "获取主节点信息")
+    @RequestMapping(value = "/common/master", method = RequestMethod.POST)
     public ResultBean queryMasterAddress() {
         return commonManagement.queryMaster();
     }
@@ -153,6 +125,7 @@ public class CommonController {
      * @param asyncDb  是否异步写入数据库 false: 同步写入数据库  true： 异步写入数据库
      * @return ResultBean
      */
+    @ApiOperation(value = "是否启用redis以及是否同步写入db", notes = "是否启用redis以及是否同步写入db")
     @RequestMapping(value = "/common/redis/use", method = RequestMethod.POST)
     public ResultBean changeDbType(@RequestParam(value = "user_id") String userId,
                                    @RequestParam(value = "use_redis", required = false) boolean useRedis,
@@ -160,6 +133,7 @@ public class CommonController {
         return commonManagement.setDataServiceConfig(userId, asyncDb, useRedis);
     }
 
+    @ApiOperation(value = "切换账户持仓检查状态", notes = "切换账户持仓检查状态")
     @RequestMapping(value = "/common/position/check", method = RequestMethod.POST)
     public ResultBean changePositionCheck(@RequestParam(value = "user_id") String userId,
                                           @RequestParam(value = "position_check_flag", required = false) boolean positionCheckFlag) {
@@ -171,15 +145,16 @@ public class CommonController {
      * 取交易日
      *
      * @param tradeCalendarType 交易日类型        3-上交所 4-深交所
-     * @param CDATE             日期              格式：yyyyMMdd，如20200512
-     * @param NDay              第N个交易日       可以传入正数、负数、0
+     * @param cDate             日期              格式：yyyyMMdd，如20200512
+     * @param nDay              第N个交易日       可以传入正数、负数、0
      * @return ResultBean
      */
-    @RequestMapping(value = "/common/trade/date", method = RequestMethod.GET)
+    @ApiOperation(value = "获取交易日信息", notes = "获取交易日信息")
+    @RequestMapping(value = "/common/trade/date", method = RequestMethod.POST)
     public ResultBean queryTradeDate(@RequestParam(value = "calender_type") String tradeCalendarType,
-                                     @RequestParam(value = "current_date") String CDATE,
-                                     @RequestParam(value = "days") int NDay) {
-        return commonManagement.getTradeDate(tradeCalendarType, CDATE, NDay);
+                                     @RequestParam(value = "current_date") String cDate,
+                                     @RequestParam(value = "days") int nDay) {
+        return commonManagement.getTradeDate(tradeCalendarType, cDate, nDay);
     }
 
     /**
@@ -192,7 +167,8 @@ public class CommonController {
      * @return ResultBean
      * @Description: 查询交易时间段数据
      */
-    @RequestMapping(value = "/common/trade/time", method = RequestMethod.GET)
+    @ApiOperation(value = "获取交易时间段信息", notes = "获取交易时间段信息")
+    @RequestMapping(value = "/common/trade/time", method = RequestMethod.POST)
     public ResultBean queryTradeTime(@RequestParam(value = "trade_market", required = false) String tradeMarket,
                                      @RequestParam(value = "trade_plat", required = false) String tradePlat,
                                      @RequestParam(value = "asset_type", required = false) String assetType,
@@ -203,10 +179,7 @@ public class CommonController {
         return commonManagement.queryTradeTime(tradeMarket, tradePlat, assetType, assetType1, assetType2, declarationType, finProdId);
     }
 
-    /**
-     * @return ResultBean
-     * @Description: 交易时间段刷新到缓存
-     */
+    @ApiOperation(value = "缓存交易时间段", notes = "缓存交易时间段")
     @RequestMapping(value = "/common/trade/time/flush", method = RequestMethod.POST)
     public ResultBean tradeTimeCacheFlush() {
         return commonManagement.tradeTimeCache();
