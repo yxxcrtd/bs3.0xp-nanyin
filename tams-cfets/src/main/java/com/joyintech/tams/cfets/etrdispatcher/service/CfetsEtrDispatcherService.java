@@ -54,6 +54,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
@@ -152,6 +154,8 @@ public class CfetsEtrDispatcherService extends BaseService{
      */
     @Autowired
     private EntrCommandDispatcherService entrCommandDispatcherService;
+    @Autowired
+    private MstCustomerInfoMapper mstCustomerInfoMapper;
 
     /**
      * 指令列表分页查询
@@ -172,6 +176,8 @@ public class CfetsEtrDispatcherService extends BaseService{
         pageParam.put("busiTypePosition01", DictCodeListExt3.头寸业务类型_债券一级投标.getValue());
         pageParam.put("busiTypePosition02", DictCodeListExt3.头寸业务类型_现券交易.getValue());
         pageParam.put("busiTypePosition03", DictCodeListExt3.头寸业务类型_债券行权交易.getValue());
+        pageParam.put("busiTypePosition05", DictCodeListExt3.头寸业务类型_质押式回购首期.getValue());
+
 
         List<String> listTemp = Arrays.asList(dto.getEntrustStatus());
         if(!listTemp.contains("all")){
@@ -568,6 +574,16 @@ public class CfetsEtrDispatcherService extends BaseService{
                         }
                         cfetsResponseDto.setPledgeBondList(pledgeList);
                         cfetsResponseDto.setTotalPrinAmt(totalPrinAmt);
+                        if(!CollectionUtils.isEmpty(pledgeList)) {
+                            cfetsResponseDto.setBondCode(pledgeList.get(0).getBondCode());
+                            cfetsResponseDto.setBondAbbrName(pledgeList.get(0).getBondAbbrName());
+                            cfetsResponseDto.setAvaPledgePrin(pledgeList.get(0).getAvaPledgePrin());
+                            MstCustomerInfo msi = mstCustomerInfoMapper.selectByPrimaryKey(pledgeList.get(0).getRepRegistOrg());
+                            cfetsResponseDto.setRepRegistOrg(msi == null? "":msi.getCustomerName());
+                            cfetsResponseDto.setUnderlyingQty(pledgeList.get(0).getPrin());
+                            cfetsResponseDto.setPledgeRatio(pledgeList.get(0).getPledgeRatio());
+
+                        }
                     }
                 }else if(StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_现券交易.getValue())){
                     if(StringUtil.equals("01", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"))){
@@ -1085,12 +1101,20 @@ public class CfetsEtrDispatcherService extends BaseService{
                 infoForm.addAll(cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,newdtCode,spcdCode));
             }
         }else{
-            infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
-            if(StringUtil.equals(CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"),"02")){
-                infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
-                spcdCode = spcdCode+",02";
-                infoForm.addAll(cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode));
-            }    
+            if(StringUtil.equals(DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(),dto.getBusiTypePosition())) {//质押式回购
+                    String repoPledgeModel = CacheUtil.getSysParam("repo_pledge_model");
+                    spcdCode = spcdCode.concat(",").concat(repoPledgeModel);
+                    infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
+                    spcdCode = spcdCode.concat(",").concat(dto.getPs());
+                    infoForm.addAll(cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode));
+            }else {
+                infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
+                if (StringUtil.equals(CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"), "02")) {
+                    infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
+                    spcdCode = spcdCode + ",02";
+                    infoForm.addAll(cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode));
+                }
+            }
         }
         
         //排序
