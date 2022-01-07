@@ -372,7 +372,7 @@ public class IbuQuoteBond003Controller extends BaseController {
         cfetsBondDealRequestQuoteDto.setAvaNum(bondRequestQuote.getAvaNum());
         DecimalFormat df = new DecimalFormat("###,###.##");
         workFlowParameter.setComment(entity -> "报价日期"+ "(" + DateUtil.format(entity.getSettleDate()) + ")-"
-                + "资产简称("+entity.getFinprodAbbr()+")-" +"报价操作("+entity.getQuoteOperatorType()+")-"+"券面总额("+df.format(entity.getAvaNum())+"万元)");
+                + "资产简称("+entity.getFinprodAbbr()+")-" +"报价操作("+entity.getQuoteOperatorType()+")-"+"券面总额("+df.format(entity.getAvaNum().setScale(2))+"万元)");
         processParameter.setWorkFlowParameter(workFlowParameter);
 
         String msg = cfetsBondDealQuotedPrice003Service.start(processParameter,
@@ -438,9 +438,9 @@ public class IbuQuoteBond003Controller extends BaseController {
             quoteOperatorType = "成交";
         }
         cfetsBondDealRequestQuoteDto.setQuoteOperatorType(quoteOperatorType);
-        DecimalFormat  df = new DecimalFormat("###,###.##");
+        DecimalFormat  df = new DecimalFormat("###,###.00");
         params.setComment(entity -> "报价日期"+ "(" + DateUtil.format(entity.getSettleDate()) + ")-"
-                + "资产简称("+entity.getFinprodAbbr()+")-" +"报价操作("+entity.getQuoteOperatorType()+")-"+"券面总额("+df.format(entity.getAvaNum())+"万元)");
+                + "资产简称("+entity.getFinprodAbbr()+")-" +"报价操作("+entity.getQuoteOperatorType()+")-"+"券面总额("+df.format(entity.getAvaNum().setScale(2))+"万元)");
         processParameter.setWorkFlowParameter(params);
         cfetsBondDealRequestQuoteDto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
         cfetsBondDealRequestQuoteDto.setCreateUser(LoginUserUtil.getUserName());// 用户名

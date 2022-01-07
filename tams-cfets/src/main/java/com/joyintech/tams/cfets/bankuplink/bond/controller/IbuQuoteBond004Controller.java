@@ -185,7 +185,7 @@ public class IbuQuoteBond004Controller extends BaseController {
         workFlowParameter.setElementId("IbuQuoteBond004_btn_revoke");
         workFlowParameter.setBusinessCode(item -> item.getTotleTradeId());
         workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_本币业务交易_登记.getValue());
-        DecimalFormat  df = new DecimalFormat("###,###.##");
+        DecimalFormat  df = new DecimalFormat("###,###.00");
         workFlowParameter.setComment(entity -> "登记日期"+ "(" + DateUtil.format(entity.getTradeDate()) + ")-"
                 + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"券面总额("+df.format(ArithmeticUtil.divide(entity.getShareAmt(),new BigDecimal(10000),2))+"万元)");
         processParameter.setWorkFlowParameter(workFlowParameter);
@@ -241,7 +241,7 @@ public class IbuQuoteBond004Controller extends BaseController {
         params.setElementId("IbuQuoteBond004_btn_submit");
 		params.setBusinessType(DictCodeListExt3.共通业务类型_本币业务交易_登记.getValue());
 		params.setBusinessCode(cfetsBondDealRegisterQuoteDto.getTotleTradeId());
-        DecimalFormat  df = new DecimalFormat("###,###.##");
+        DecimalFormat  df = new DecimalFormat("###,###.00");
         params.setComment(entity -> "登记日期"+ "(" + DateUtil.format(entity.getTradeDate()) + ")-"
                 + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"券面总额("+df.format(ArithmeticUtil.divide(entity.getShareAmt(),new BigDecimal(10000),2))+"万元)");
         cfetsBondDealRegisterQuoteDto.setQuoteType(DictCodeListExt3.报价系统区分类型_现券登记报价.getValue());
