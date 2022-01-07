@@ -53,12 +53,17 @@ public class TrdDepositValuationTrade001Service extends CommonExportService<TrdD
      * @return Page类
      * @throws Exception 异常信息
      */
-    public Page<TrdDepositValuationTrade001Dto> selectForPage(Map<String, Object> pageParam){
-        return restTemplate.postForPage(
-                ServiceApplication.VALUATION_SERVICE_NAME + "/TrdDepositValuationTrade001/selectForPage",
+//    public Page<TrdDepositValuationTrade001Dto> findPage(Map<String, Object> pageParam){
+//        return restTemplate.postForPage(
+//                ServiceApplication.VALUATION_SERVICE_NAME + "/TrdDepositValuationTrade001/selectForPage",
+//                pageParam,TrdDepositValuationTrade001Dto.class);
+//    }
+
+    public Page<TrdDepositValuationTrade001Dto> findPage(Map<String, Object> pageParam) {
+
+        return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/TrdDepositValuationTrade001/findPage",
                 pageParam,TrdDepositValuationTrade001Dto.class);
     }
-
 
 
     /**

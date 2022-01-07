@@ -1810,14 +1810,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 			return checkResult;
 		}
 
-
-
-
-//    	List<BaseInformationDto> tableInfoList = baseInformationMapper.queryTableInfoByTableName(tableName);
-//    	if (StringUtil.isEmptyList(tableInfoList) || tableInfoList.size() > 1) {
-//    		checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "导入文件sheet名为："+ tableName +", 在配置表中定义未定义或者重复定义了！"));
-//    		return checkResult;
-//    	}
 		// 导入文件相关表信息
 		//BaseInformationDto baseInformationDto = tableInfoList.get(0);
 		String tableId = chbMgrTableInfo.getMgrTableName();
@@ -1830,13 +1822,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 			return checkResult;
 		}
 
-//    	AjaxResult webResult = new AjaxResult();
 		if (!StringUtil.isEmptyList(originalDataList)) {
-//    		if (!fileName.toLowerCase().endsWith("xlsx")) {
-//    			checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "请导入2007以上版本的excel文件！"));
-//    			return checkResult;
-//    		}
-
 
 			if(CHB_PRD_DECLARE_SUB_TMP.equals(tableName)||
 					CHB_EMPLOYEE_INFO.equals(tableName)||
@@ -1939,9 +1925,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 			if (StringUtil.isEmptyList(baseInformationList)) {
 				checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "导入文件指定的表"+ tableId +"未在配置表中定义！"));
 				return checkResult;
-//				webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-//	           	webResult.setMessage("导入文件指定的表"+ tableId +"未在配置表中定义！");
-//	            return webResult;
 			}
 			if (null != dataList && dataList.size() > 0) {
 				// 错误列名集合
@@ -1952,9 +1935,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 				if(StringUtil.isEmptyList(excelHeadList)) {
 					checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "文件没有列名！"));
 					return checkResult;
-//            		webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-//    	           	webResult.setMessage("文件没有列名！");
-//    	            return webResult;
 				}
 				// 数据库中表的列集合
 				List<String> columnTypeList = columnTypeMapper.queryAllColumnByTableId(tableName);

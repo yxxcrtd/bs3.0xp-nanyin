@@ -27,7 +27,7 @@
                             <select type="text" id="portfolioId" name="portfolioId"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" multiple="true"
-                                data-th-data-url="@{/valuation/trademanage/trddepositvaluationtrade/TrdDepositValuationTrade002/getProdId}">
+                                data-th-data-url="@{/valuation/trademanage/trddepositvaluationtrade/TrdDepositValuationTrade002/findFinprodId}">
                             </select>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
                         <select type="text" id="finprodId" name="finprodId"
                                class="layui-input form-input input-select" placeholder="请输入内容" multiple="true"
                                data-th-placeholder="#{SysCommon.placeholder}"
-                               data-th-data-url="@{/valuation/trademanage/trddepositvaluationtrade/TrdDepositValuationTrade002/getAssetId}">
+                               data-th-data-url="@{/valuation/trademanage/trddepositvaluationtrade/TrdDepositValuationTrade002/findPortfolioId}">
 <!--                               data-idfield="code" data-keyfield="name" multiple="true"-->
 <!--                               data-th-data-effectivefieldsalias='|{"code":"#{TrdDepositInvestTrade001.finprodId}","shortName":"#{TrdDepositInvestTrade001.finprodName}"}|'>-->
                         </select>

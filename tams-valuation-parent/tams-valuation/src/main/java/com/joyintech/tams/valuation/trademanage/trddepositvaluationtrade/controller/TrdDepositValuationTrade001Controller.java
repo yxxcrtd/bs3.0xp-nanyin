@@ -34,8 +34,7 @@ import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import com.joyintech.tams.valuation.trademanage.trddepositvaluationtrade.dto.TrdDepositValuationTrade001Dto;
 import com.joyintech.tams.valuation.trademanage.trddepositvaluationtrade.service.TrdDepositValuationTrade001Service;
 import com.joyintech.tams.valuation.trademanage.trddepositvaluationtrade.service.TrdDepositValuationTrade002Service;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -46,8 +45,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -106,16 +103,26 @@ public class TrdDepositValuationTrade001Controller extends BaseController {
      * @Description:页面查询，表格分页
      * @return:
      */
-    @ResponseBody
+//    @ResponseBody
+//    @RequestMapping("findPage")
+//    public Page<TrdDepositValuationTrade001Dto> findPage()
+//            throws Exception {
+//        Page<TrdDepositValuationTrade001Dto> page = trdDepositValuationTrade001Service.findPage(
+//                RequestUtil.getParameters(getRequest()));
+//        return page;
+//    }
+
+
     @RequestMapping("findPage")
+    @ResponseBody
     public Page<TrdDepositValuationTrade001Dto> findPage()
             throws Exception {
-        Page<TrdDepositValuationTrade001Dto> page = trdDepositValuationTrade001Service.selectForPage(
+                Page<TrdDepositValuationTrade001Dto> page = trdDepositValuationTrade001Service.findPage(
                 RequestUtil.getParameters(getRequest()));
-        return page;
+                return page;
     }
-        
-        /**
+
+    /**
          * 画面导出功能实现
          * 
          * @return ResponseEntity 确认的实体类
@@ -145,81 +152,5 @@ public class TrdDepositValuationTrade001Controller extends BaseController {
             ValidateGroupDelete.class}) TrdDepositValuationTrade001Dto dto, BindingResult result) {
             return commonCheck(result, dto.getOperateType());
         }
-//        /**
-//         * 删除操作
-//         * @param dto 验证的实体类
-//         * @param br 错误结果
-//         * @return 错误信息
-//         * @throws Exception 异常
-//         */
-//        @ResponseBody
-//        @RequestMapping("delete")
-//        public AjaxResult delete(@RequestBody @Validated({
-//            ValidateGroupDelete.class}) TrdDepositInvestTrade001Dto dto, BindingResult br)
-//            throws Exception {
-//            if (br.hasErrors()) {
-//                return new AjaxResult(br);
-//            }
-//            dto = dto.getSelectedItem().get(0);
-//            //判断流程中是否存在,如果流程不存在则说明是生成的反向交易，组装撤销dto yjm start 20191015
-//            WflValidInputParameter parameter = new WflValidInputParameter();
-//            parameter.setPageId("TrdDepositInvestTrade002");
-//            parameter.setBusinessDataPk1(dto.getTradeId());
-//            if (!mstWorkflowCommonService.isProcessData(parameter)){
-//                TrdProductDeal trdProductDeal = new TrdProductDeal();
-//                TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
-//                String tradeId = dto.getTradeId();
-//                String portfolioId = dto.getPortfolioId();
-//                if(bussCommonMapperDelegateService != null){
-//                    trdProductDeal = bussCommonMapperDelegateService.selectBySinglePrimaryKey(TrdProductDealMapper.class, tradeId, TrdProductDeal.class);
-//                    trdProductDealAdd = bussCommonMapperDelegateService.selectBySinglePrimaryKey(TrdProductDealAddMapper.class, tradeId, TrdProductDealAdd.class);
-//                }
-//                String  finprodId = trdProductDeal.getFinprodId();
-//                dto = trdDepositInvestTrade002Service.getFinInfo(finprodId);
-//                dto.setTradeId(tradeId);
-//                dto.setPrinAmt(trdProductDeal.getPrinAmt());
-//                dto.setTradeDate(trdProductDeal.getTradeDate());
-//                dto.setIntAmt(trdProductDeal.getIntAmt());
-//                dto.setPs(trdProductDeal.getPs());
-//                dto.setRemark(trdProductDeal.getRemark());
-//                // 通道交易 新增 强成西 2019/03/26 start
-//                dto.setTradeAmtAndFee(trdProductDeal.getTradeAmt());
-//                dto.setChlId(trdProductDeal.getChlId());
-//                dto.setChannelFee(trdProductDeal.getFeeAmtPay());
-//                // 通道交易 新增 强成西 2019/03/26 end
-//                dto.setLoadRate("");
-//                FinProduct finProduct = bussCommonMapperDelegateService.selectBySinglePrimaryKey(FinProductMapper.class, finprodId, FinProduct.class);
-//                dto.setFinprodMarketId(finProduct.getFinprodMarketId());
-//                dto.setEntrustId(trdProductDealAdd.getEntrustId());
-//                TrdInvestPersonInfo002Dto trdInvestPersonInfo002Dto = new TrdInvestPersonInfo002Dto();
-//                dto.setTrdInvestPersonInfo002Dto(trdInvestPersonInfo002Dto);
-//                trade002Controller.createEntity(dto,portfolioId,trdProductDeal);
-//                StlPayOrdersDto stlPayOrdersList = null;
-//                if(trdDepositInvestTrade002Service.stlInfo(tradeId) != null){
-//                    stlPayOrdersList = trdDepositInvestTrade002Service.stlInfo(tradeId);
-//                    List<StlPayOrdersDto> stlPayOrdersLists = new ArrayList<>();
-//                    stlPayOrdersLists.add(stlPayOrdersList);
-//                    dto.setStlPayOrdersList(stlPayOrdersLists);
-//                };
-//                dto.setOperateType("delete");
-//            }
-//            //判断流程中是否存在,如果流程不存在则说明是生成的反向交易，组装撤销dto yjm end 20191015
-//            ProcessParameter<TrdDepositInvestTrade001Dto> processParameter = new ProcessParameter<TrdDepositInvestTrade001Dto>();
-//            WorkFlowParameter<TrdDepositInvestTrade001Dto> params = new WorkFlowParameter<TrdDepositInvestTrade001Dto>();
-//            params.setPageId("TrdDepositInvestTrade002");
-//            params.setElementId(dto.getElementId());
-//            params.setBusinessCode(item -> item.getTradeId());
-//            params.setBusinessType(DictCodeList.共通业务类型_存款类资产交易.getValue());
-//            // 业务说明：“交易编号：” + 上述取得的交易编号+“资产名称：”+画面.资产名称+“交易日：”+画面.交易日
-//            params.setComment(
-//                entity -> this.getMessage("TrdDepositInvestTrade002.tradeId") + "("
-//                          + entity.getTradeId() + ")" + "-"
-//                          + this.getMessage("TrdDepositInvestTrade001.finprodName") + "("
-//                          + entity.getFinprodName() + ")"
-//                          + this.getMessage("TrdDepositInvestTrade001.tradeDate") + "("
-//                              + DateUtil.format(entity.getTradeDate()) + ")" );
-//            processParameter.setWorkFlowParameter(params);
-//            String msg = trdDepositInvestTrade002Service.start(processParameter, dto);
-//            return new AjaxResult(msg);
-//        }
+
 }

@@ -10,11 +10,15 @@
  
 package com.joyintech.service.valuation.trademanage.trddepositvaluationtrade.dto;
 
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.common.base.entity.PaTrdProductDeal;
-import com.joyintech.tams.common.base.entity.PtlTrade;
+
 import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 
 import java.math.BigDecimal;
@@ -28,26 +32,11 @@ import java.util.List;
  * @see TrdDepositValuationTrade001Dto
  * @since 1.0
  */
-public class TrdDepositValuationTrade001Dto extends WflTrdProductDeal {
+public class TrdDepositValuationTrade001Dto extends WflTrdProductDeal implements ProcessEntity {
         /**
          * <意义，目的和功能，以及可能被用到的地方>
          */
         private static final long serialVersionUID = -4814792523354012630L;
-        /**
-         * 产品代码
-         */
-        private String prodId;
-
-        /**
-         * 资产代码
-         */
-        private String assetId;
-
-        /**
-         * 资产名称
-         */
-        private String assetName;
-
         /**
          * 交易方向
          */
@@ -59,9 +48,40 @@ public class TrdDepositValuationTrade001Dto extends WflTrdProductDeal {
         private String tradeId;
 
         /**
-         * 交易日
+         * 外部交易编号
          */
-        private Date dealDate;
+        private String outTradeId;
+
+        public String getOutTradeId() {
+                return outTradeId;
+        }
+
+        public void setOutTradeId(String outTradeId) {
+                this.outTradeId = outTradeId;
+        }
+
+        /**
+         * 组合代码  产品代码
+         */
+        private String portfolioId;
+        /**
+         * 组合名称  产品名称
+         */
+        private String portfolioName;
+
+        /**
+         * 市场机构代码  资产代码
+         */
+        private String finprodMarketId;
+
+        /**
+         * 金融产品名称  资产名称
+         */
+        private String finprodName;
+
+
+        //交易日
+        private Date tradeDate;
 
         /**
          * 交割日
@@ -71,7 +91,6 @@ public class TrdDepositValuationTrade001Dto extends WflTrdProductDeal {
         /**
          * 交易本金
          */
-        private BigDecimal tradeCapi;
 
         private BigDecimal prinAmt;
 
@@ -96,29 +115,7 @@ public class TrdDepositValuationTrade001Dto extends WflTrdProductDeal {
                 this.otherAmt = otherAmt;
         }
 
-        //资金账户
-        private String acctType;
 
-        public String getAcctType() {
-                return acctType;
-        }
-
-        public void setAcctType(String acctType) {
-                this.acctType = acctType;
-        }
-
-        /**
-         * 映射代码
-         */
-        private String finprodId;
-
-        public String getFinprodId() {
-                return finprodId;
-        }
-
-        public void setFinprodId(String finprodId) {
-                this.finprodId = finprodId;
-        }
 
         /**
          * 应计利息
@@ -152,8 +149,7 @@ public class TrdDepositValuationTrade001Dto extends WflTrdProductDeal {
                 this.settleAmt = settleAmt;
         }
 
-        //交易日
-        private Date tradeDate;
+
 
         @NotEmpty(fieldName = "TrdDepositValuation001.tradeDate", groups = {ValidateGroupEdit.class})
         public Date getTradeDate() {
@@ -164,29 +160,6 @@ public class TrdDepositValuationTrade001Dto extends WflTrdProductDeal {
                 this.tradeDate = tradeDate;
         }
 
-        public String getProdId() {
-                return prodId;
-        }
-
-        public void setProdId(String prodId) {
-                this.prodId = prodId;
-        }
-
-        public String getAssetId() {
-                return assetId;
-        }
-
-        public void setAssetId(String assetId) {
-                this.assetId = assetId;
-        }
-
-        public String getAssetName() {
-                return assetName;
-        }
-
-        public void setAssetName(String assetName) {
-                this.assetName = assetName;
-        }
 
         @NotEmpty(fieldName = "TrdDepositValuation001.ps", groups = {ValidateGroupEdit.class})
         public String getPs() {
@@ -197,6 +170,7 @@ public class TrdDepositValuationTrade001Dto extends WflTrdProductDeal {
                 this.ps = ps;
         }
 
+        @PrimaryKey(PrimaryKey.Field.PK_1)
         @NotEmpty(fieldName = "TrdDepositValuation001.tradeId", groups = {ValidateGroupEdit.class})
         public String getTradeId() {
                 return tradeId;
@@ -206,13 +180,6 @@ public class TrdDepositValuationTrade001Dto extends WflTrdProductDeal {
                 this.tradeId = tradeId;
         }
 
-        public Date getDealDate() {
-                return dealDate;
-        }
-
-        public void setDealDate(Date dealDate) {
-                this.dealDate = dealDate;
-        }
 
         @NotEmpty(fieldName = "TrdDepositValuation001.settDate", groups = {ValidateGroupEdit.class})
         public Date getSettDate() {
@@ -223,13 +190,7 @@ public class TrdDepositValuationTrade001Dto extends WflTrdProductDeal {
                 this.settDate = settDate;
         }
 
-        public BigDecimal getTradeCapi() {
-                return tradeCapi;
-        }
 
-        public void setTradeCapi(BigDecimal tradeCapi) {
-                this.tradeCapi = tradeCapi;
-        }
 
         @NotEmpty(fieldName = "TrdDepositValuation001.intAmt", groups = {ValidateGroupEdit.class})
         public BigDecimal getIntAmt() {
@@ -279,42 +240,11 @@ public class TrdDepositValuationTrade001Dto extends WflTrdProductDeal {
                 this.trdAcctId = trdAcctId;
         }
 
-        /**
-         * 委托代码
-         */
-        private String entrustId;
-        /**
-         * 组合代码
-         */
-        private String portfolioId;
-        /**
-         * 组合名称
-         */
-        private String portfolioName;
-        /**
-         * 金融产品类型
-         */
-        private String type1;
-        /**
-         * 金融产品名称
-         */
-        private String finprodName;
-        /**
-         * 期限
-         */
-        private String termDays;
-        /**
-         * 计息基础
-         */
-        private String basis;
-        /**
-         * 资产提供行
-         */
-        private String assetProvider;
-        /**
-         * 借款利率%
-         */
-        private String loadRate;
+
+
+
+
+
         /**
          * 操作类型
          */
@@ -323,72 +253,6 @@ public class TrdDepositValuationTrade001Dto extends WflTrdProductDeal {
          * elementId
          */
         private String elementId;
-        /**
-         * 市场机构代码
-         */
-        private String finprodMarketId;
-
-        /**
-         * 组合表
-         */
-        private List<PtlTrade> ptlTrade;
-        /**
-         * 金融产品交易扩展
-         */
-        private PaTrdProductDeal paTrdProductDeal;
-//    /**
-//     * 金融产品交易实体类
-//     */
-//    private BaseTradeProductDealDto baseTradeProductDealDto;
-
-        /**新增资产二、三、四级分类	王贵奇	2019/7/30 开始*/
-
-        /**
-         * 资产二级类型
-         */
-        private String type9;
-
-        /**
-         * 资产三级类型
-         */
-        private String type10;
-
-        /**
-         * 资产四级类型
-         */
-        private String type11;
-
-        /**
-         * 交易员
-         */
-        private String createUser;
-
-        public String getType9() {
-                return type9;
-        }
-
-        public void setType9(String type9) {
-                this.type9 = type9;
-        }
-
-        public String getType10() {
-                return type10;
-        }
-
-        public void setType10(String type10) {
-                this.type10 = type10;
-        }
-
-        public String getType11() {
-                return type11;
-        }
-
-        public void setType11(String type11) {
-                this.type11 = type11;
-        }
-        /**新增资产二、三、四级分类	王贵奇	2019/7/30 结束*/
-
-
 
 
 
@@ -411,38 +275,6 @@ public class TrdDepositValuationTrade001Dto extends WflTrdProductDeal {
 
 
 
-
-        /**
-         * 获取 ptlTrade
-         * @return ptlTrade.
-         */
-        public List<PtlTrade> getPtlTrade() {
-                return ptlTrade;
-        }
-
-        /**
-         * 设置 ptlTrade
-         * @param ptlTrade ptlTrade
-         */
-        public void setPtlTrade(List<PtlTrade> ptlTrade) {
-                this.ptlTrade = ptlTrade;
-        }
-
-        /**
-         * 获取 paTrdProductDeal
-         * @return paTrdProductDeal.
-         */
-        public PaTrdProductDeal getPaTrdProductDeal() {
-                return paTrdProductDeal;
-        }
-
-        /**
-         * 设置 paTrdProductDeal
-         * @param paTrdProductDeal paTrdProductDeal
-         */
-        public void setPaTrdProductDeal(PaTrdProductDeal paTrdProductDeal) {
-                this.paTrdProductDeal = paTrdProductDeal;
-        }
 
         /**
          * 获取 elementId
@@ -472,88 +304,8 @@ public class TrdDepositValuationTrade001Dto extends WflTrdProductDeal {
          * 设置 operatType
          * @param operateType operatType
          */
-        public void setOperaetType(String operateType) {
+        public void setOperateType(String operateType) {
                 this.operateType = operateType;
-        }
-
-        /**
-         * 获取 termDays
-         * @return termDays.
-         */
-        public String getTermDays() {
-                return termDays;
-        }
-
-        /**
-         * 设置 termDays
-         * @param termDays termDays
-         */
-        public void setTermDays(String termDays) {
-                this.termDays = termDays;
-        }
-
-        /**
-         * 获取 basis
-         * @return basis.
-         */
-        public String getBasis() {
-                return basis;
-        }
-
-        /**
-         * 设置 basis
-         * @param basis basis
-         */
-        public void setBasis(String basis) {
-                this.basis = basis;
-        }
-
-        /**
-         * 获取 assetProvider
-         * @return assetProvider.
-         */
-        public String getAssetProvider() {
-                return assetProvider;
-        }
-
-        /**
-         * 设置 assetProvider
-         * @param assetProvider assetProvider
-         */
-        public void setAssetProvider(String assetProvider) {
-                this.assetProvider = assetProvider;
-        }
-
-        /**
-         * 获取 loadRate
-         * @return loadRate.
-         */
-        public String getLoadRate() {
-                return loadRate;
-        }
-
-        /**
-         * 设置 loadRate
-         * @param loadRate loadRate
-         */
-        public void setLoadRate(String loadRate) {
-                this.loadRate = loadRate;
-        }
-        /**
-         /**
-         * 获取 entrustId
-         * @return entrustId.
-         */
-        public String getEntrustId() {
-                return entrustId;
-        }
-
-        /**
-         * 设置 entrustId
-         * @param entrustId entrustId
-         */
-        public void setEntrustId(String entrustId) {
-                this.entrustId = entrustId;
         }
 
         /**
@@ -590,21 +342,6 @@ public class TrdDepositValuationTrade001Dto extends WflTrdProductDeal {
                 this.portfolioName = portfolioName;
         }
 
-        /**
-         * 获取 type1
-         * @return type1.
-         */
-        public String getType1() {
-                return type1;
-        }
-
-        /**
-         * 设置 type1
-         * @param type1 type1
-         */
-        public void setType1(String type1) {
-                this.type1 = type1;
-        }
 
         /**
          * 获取 finprodName
@@ -623,13 +360,23 @@ public class TrdDepositValuationTrade001Dto extends WflTrdProductDeal {
                 this.finprodName = finprodName;
         }
 
-        @Override
-        public String getCreateUser() {
-                return createUser;
-        }
 
-        @Override
-        public void setCreateUser(String createUser) {
-                this.createUser = createUser;
+        /**
+         * 取得 交易方向str
+         *
+         * @return 交易方向
+         */
+        public String getPsStr() {
+                return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.交易方向, ps))?
+                        SysDataUtil.getNameFromDataDict(DictCode.交易方向, ps):ps;
+        }
+        /**
+         * 取得 币种Fmt
+         *
+         * @return 币种
+         */
+        public String getCcyFmt() {
+                return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.币种, ccy))?
+                        SysDataUtil.getNameFromDataDict(DictCode.币种, ccy):ccy;
         }
 }
