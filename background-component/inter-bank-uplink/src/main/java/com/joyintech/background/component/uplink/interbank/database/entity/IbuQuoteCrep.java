@@ -1,13 +1,13 @@
 package com.joyintech.background.component.uplink.interbank.database.entity;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.background.component.common.pack.common.base.BaseEntity;
 import com.joyintech.background.component.common.pack.common.json.BigDecimalSerializer;
 import com.joyintech.background.component.common.pack.common.json.CustomDateDeserialize;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 public class IbuQuoteCrep extends BaseEntity {
     /**
@@ -261,6 +261,24 @@ public class IbuQuoteCrep extends BaseEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal sqTotalAmt;
+
+    /**
+     * 交易手续费
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal dealFeeAmt;
+
+    /**
+     * 结算服务费
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal settFeeAmt;
+
+    //分配方式
+    private String dipType;
+
+    //实际占款天数
+    private long actDays;
 
     /**
      * 取得 报价编号（内部代码）
@@ -1032,5 +1050,37 @@ public class IbuQuoteCrep extends BaseEntity {
      */
     public void setSqTotalAmt(BigDecimal sqTotalAmt) {
         this.sqTotalAmt = sqTotalAmt;
+    }
+
+    public BigDecimal getDealFeeAmt() {
+        return dealFeeAmt;
+    }
+
+    public void setDealFeeAmt(BigDecimal dealFeeAmt) {
+        this.dealFeeAmt = dealFeeAmt;
+    }
+
+    public BigDecimal getSettFeeAmt() {
+        return settFeeAmt;
+    }
+
+    public void setSettFeeAmt(BigDecimal settFeeAmt) {
+        this.settFeeAmt = settFeeAmt;
+    }
+
+    public String getDipType() {
+        return dipType;
+    }
+
+    public void setDipType(String dipType) {
+        this.dipType = dipType;
+    }
+
+    public long getActDays() {
+        return actDays;
+    }
+
+    public void setActDays(long actDays) {
+        this.actDays = actDays;
     }
 }

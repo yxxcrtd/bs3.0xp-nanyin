@@ -43,6 +43,7 @@ import com.joyintech.tams.invest.common.util.QuotaPageModelUtil;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -2304,6 +2305,11 @@ public class IbuComponentCommonService extends BaseService {
         ibuQuoteCrepDto.setvSettleDate(cfetsRepoDealQuotedPrice001Dto.getvSettleDate());// 首期结算日
         ibuQuoteCrepDto.setmSettleDate(cfetsRepoDealQuotedPrice001Dto.getmSettleDate());// 到期结算日
         ibuQuoteCrepDto.setTermType(cfetsRepoDealQuotedPrice001Dto.getTermType());// 期限品种
+        ibuQuoteCrepDto.setDealFeeAmt(cfetsRepoDealQuotedPrice001Dto.getDealFeeAmt());// 交易手续费
+        ibuQuoteCrepDto.setSettFeeAmt(cfetsRepoDealQuotedPrice001Dto.getSettFeeAmt());// 结算手续费
+        ibuQuoteCrepDto.setDipType(cfetsRepoDealQuotedPrice001Dto.getDipType());// 分配方式
+        ibuQuoteCrepDto.setSecManageAcctId(cfetsRepoDealQuotedPrice001Dto.getSecAcctId());// 证券账户
+        ibuQuoteCrepDto.setActDays(cfetsRepoDealQuotedPrice001Dto.getActDays());// 实际占款天数
         // 清算速度
         if (StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getSettleSpreed(),
             BussinessDictCodeList.清算速度_T加0.getValue())) {
@@ -2403,10 +2409,15 @@ public class IbuComponentCommonService extends BaseService {
                 ibuQuoteEtrRe.setVersion(-1L);// 版本号
                 ibuQuoteEtrRe.setEntrustId(item.getEntrustId());
                 ibuQuoteEtrRe.setPortfolioId(item.getPortfolioId());
-                ibuQuoteEtrRe.setShareAmt(item.getFpriceAmt());
+                ibuQuoteEtrRe.setShareAmt(item.getShareAmt());
                 ibuQuoteEtrRe.setFpriceAmt(item.getFpriceAmt());
                 ibuQuoteEtrRe.setCbFpriceAmt(item.getCbFpriceAmt());
                 ibuQuoteEtrRe.setScFpriceAmt(item.getScFpriceAmt());
+                ibuQuoteEtrRe.setCpriceAmt(item.getcPriceAmt());
+                ibuQuoteEtrRe.setIntAmt(item.getIntAmt());
+                ibuQuoteEtrRe.setDealFeeAmt(item.getDealFeeAmt());
+                ibuQuoteEtrRe.setSettFeeAmt(item.getSettFeeAmt());
+                ibuQuoteEtrRe.setPriceModel(item.getPriceModel());
                 ibuQuoteEtrRes.add(ibuQuoteEtrRe);
             });
             inputBean.setIbuQuoteEtrReDtoList(ibuQuoteEtrRes);
@@ -2461,6 +2472,11 @@ public class IbuComponentCommonService extends BaseService {
         ibuQuoteCrepDto.setvSettleDate(cfetsRepoDealQuotedPrice001Dto.getvSettleDate());// 首期结算日
         ibuQuoteCrepDto.setmSettleDate(cfetsRepoDealQuotedPrice001Dto.getmSettleDate());// 到期结算日
         ibuQuoteCrepDto.setTermType(cfetsRepoDealQuotedPrice001Dto.getTermType());// 期限品种
+        ibuQuoteCrepDto.setDealFeeAmt(cfetsRepoDealQuotedPrice001Dto.getDealFeeAmt());// 交易手续费
+        ibuQuoteCrepDto.setSettFeeAmt(cfetsRepoDealQuotedPrice001Dto.getSettFeeAmt());// 结算手续费
+        ibuQuoteCrepDto.setDipType(cfetsRepoDealQuotedPrice001Dto.getDipType());// 分配方式
+        ibuQuoteCrepDto.setSecManageAcctId(cfetsRepoDealQuotedPrice001Dto.getSecAcctId());// 分配方式
+        ibuQuoteCrepDto.setActDays(cfetsRepoDealQuotedPrice001Dto.getActDays());// 实际占款天数
         // 清算速度
         if (StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getSettleSpreed(),
             BussinessDictCodeList.清算速度_T加0.getValue())) {
@@ -2570,9 +2586,14 @@ public class IbuComponentCommonService extends BaseService {
                 wflIbuQuoteEtrRe.setVersion(-1L);// 版本号
                 wflIbuQuoteEtrRe.setEntrustId(item.getEntrustId());
                 wflIbuQuoteEtrRe.setPortfolioId(item.getPortfolioId());
-                wflIbuQuoteEtrRe.setShareAmt(item.getFpriceAmt());
+                wflIbuQuoteEtrRe.setShareAmt(item.getShareAmt());
                 wflIbuQuoteEtrRe.setFpriceAmt(item.getFpriceAmt());
                 wflIbuQuoteEtrRe.setWorkflowId(cfetsRepoDealQuotedPrice001Dto.getWorkflowId());
+                wflIbuQuoteEtrRe.setCpriceAmt(item.getcPriceAmt());
+                wflIbuQuoteEtrRe.setIntAmt(item.getIntAmt());
+                wflIbuQuoteEtrRe.setDealFeeAmt(item.getDealFeeAmt());
+                wflIbuQuoteEtrRe.setSettFeeAmt(item.getSettFeeAmt());
+                wflIbuQuoteEtrRe.setPriceModel(item.getPriceModel());
                 wflIbuQuoteEtrRes.add(wflIbuQuoteEtrRe);
             });
             inputBean.setWflIbuQuoteEtrReDtoList(wflIbuQuoteEtrRes);
@@ -2742,6 +2763,12 @@ public class IbuComponentCommonService extends BaseService {
         dto.setbVersion(ibuQuoteCrepDto.getbVersion());
         dto.setpQuoteId(ibuQuoteCrepDto.getpQuoteId());
         dto.setExeType(ibuQuoteCrepDto.getExeType());
+        dto.setDipType(ibuQuoteCrepDto.getDipType());
+        dto.setDealFeeAmt(ibuQuoteCrepDto.getDealFeeAmt());
+        dto.setSettFeeAmt(ibuQuoteCrepDto.getSettFeeAmt());
+        dto.setSecAcctId(ibuQuoteCrepDto.getSecManageAcctId());
+        dto.setActDays(ibuQuoteCrepDto.getActDays());
+        dto.setRemark(ibuQuoteCrepDto.getRemark());
         // endregion
 
         // region 质押品信息

@@ -200,6 +200,11 @@ public class CfetsRepoDealEntrustOrderDto extends EtrEntrust {
     private String partyId;
 
     /**
+     * 交易对手ID，21位编号
+     */
+    private String counterPartyId;
+
+    /**
      * 指令下达时间
      */
     private String transmitTime;
@@ -913,5 +918,13 @@ public class CfetsRepoDealEntrustOrderDto extends EtrEntrust {
 
     public void setRepoEntrustPledgeDtos(List<RepoEntrustPledgeDto> repoEntrustPledgeDtos) {
         this.repoEntrustPledgeDtos = repoEntrustPledgeDtos;
+    }
+
+    public String getCounterPartyId() {
+        return counterPartyId;
+    }
+
+    public void setCounterPartyId(String counterPartyId) {
+        this.counterPartyId = counterPartyId;
     }
 }

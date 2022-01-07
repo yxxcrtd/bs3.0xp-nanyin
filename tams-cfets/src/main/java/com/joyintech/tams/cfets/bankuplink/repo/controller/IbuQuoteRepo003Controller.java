@@ -7,16 +7,16 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.repo.dto.QuotedPriceRequest;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustPledgeDto;
 import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoDealQuotedPrice002Service;
 import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoQuotedPrice004Service;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
@@ -100,6 +100,29 @@ public class IbuQuoteRepo003Controller extends BaseController {
         return super.init(model);
     }
 
+    /**
+     * 拒绝
+     *
+     * @param param 条件
+     * @return 处理结果
+     * @see
+     * @since 1.0
+     */
+    @ApiOperation(value = "报价拒绝", notes = "报价拒绝")
+    @ResponseBody
+    @PostMapping("/reject")
+    public Message<AjaxResult> reject(@RequestBody CfetsRepoDealQuoteCommonDto pageDto) {
+        try {
+            CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = cfetsRepoDealQuotedPrice002Service.page2BackDto(pageDto);
+            cfetsRepoDealQuotedPrice002Service.reject(cfetsRepoDealQuotedPrice001Dto);
+            ;
+            return new Message<AjaxResult>().success().setData(new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS")));
+        } catch (Exception e) {
+            logger.error("报价拒绝异常", e);
+            return new Message<AjaxResult>().fail().setMessage("报价拒绝异常");
+        }
+    }
+
     @ApiOperation(value = "报价提交检查", notes = "报价提交检查")
     @PostMapping("/check")
     @ResponseBody
@@ -123,8 +146,8 @@ public class IbuQuoteRepo003Controller extends BaseController {
             AjaxResult ajaxResult = cfetsRepoDealQuotedPrice002Service.checkSave(cfetsRepoDealQuoteCommonDto);
             return new Message<AjaxResult>().success().setData(ajaxResult);
         } catch (Exception e) {
-            logger.error("报价提交检查异常", e);
-            return new Message<AjaxResult>().fail().setMessage("报价提交检查异常");
+            logger.error("报价成交提交检查异常", e);
+            return new Message<AjaxResult>().fail().setMessage("报价成交提交检查异常");
         }
     }
 
@@ -134,8 +157,8 @@ public class IbuQuoteRepo003Controller extends BaseController {
     public Message<CfetsRepoDealQuoteCommonDto> queryViewPage(@PathVariable("quoteId") String quoteId) {
         try {
             CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = new CfetsRepoDealQuotedPrice001Dto();
-            if (StringUtil.isNotEmpty(quoteId) ) {
-                cfetsRepoDealQuotedPrice001Dto = cfetsRepoDealQuotedPrice002Service.queryRepoInfoByQuoteId(quoteId, null);
+            if (StringUtil.isNotEmpty(quoteId)) {
+                cfetsRepoDealQuotedPrice001Dto = cfetsRepoDealQuotedPrice002Service.queryRepoInfoByQuoteId(quoteId, null, null);
                 //多组合
                 Map<String, Object> map = new HashMap<>();
                 map.put("quoteId", quoteId);
@@ -161,7 +184,7 @@ public class IbuQuoteRepo003Controller extends BaseController {
 
             CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = new CfetsRepoDealQuotedPrice001Dto();
             if (StringUtil.isNotEmpty(quoteId)) {
-                cfetsRepoDealQuotedPrice001Dto = cfetsRepoDealQuotedPrice002Service.queryRepoInfoByQuoteId(quoteId, operation);
+                cfetsRepoDealQuotedPrice001Dto = cfetsRepoDealQuotedPrice002Service.queryRepoInfoByQuoteId(quoteId, operation, quotaPageModel);
                 // 画面模式
                 if (StringUtil.isNotEmpty(quotaPageModel)) {
                     cfetsRepoDealQuotedPrice001Dto.setQuotaPageModel(quotaPageModel);
@@ -194,6 +217,14 @@ public class IbuQuoteRepo003Controller extends BaseController {
             }
 //        cfetsRepoDealQuotedPrice002Service.单独处理页面质押券列表(cfetsRepoDealQuotedPrice001Dto);
             CfetsRepoDealQuoteCommonDto pageDto = cfetsRepoDealQuotedPrice002Service.back2PageDto(cfetsRepoDealQuotedPrice001Dto);
+            if (StringUtil.equals(quotaPageModel, "dialogueResponse")
+                    && StringUtil.isEmpty(cfetsRepoDealQuotedPrice001Dto.getDialogueRecord())
+                    && StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue())) {
+                List<RepoEntrustPledgeDto> list
+                        = JsonUtils.json2List(JsonUtils.object2Json(pageDto.getRepoEntrustPledgeDtos()), RepoEntrustPledgeDto.class);
+                pageDto.getRepoEntrustPledgeDtos().clear();
+                pageDto.setCountPledgeBondList(list);
+            }
             return new Message<CfetsRepoDealQuoteCommonDto>().success().setData(pageDto);
         } catch (Exception e) {
             logger.error("报价初始化异常", e);
@@ -237,7 +268,7 @@ public class IbuQuoteRepo003Controller extends BaseController {
             return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
         } catch (Exception e) {
             logger.error("报价提交异常", e);
-            return new Message<AjaxResult>().fail().setMessage("报价提交异常");
+            return PositionUtil.ajaxErrorReturn(e);
         }
     }
 
@@ -263,6 +294,18 @@ public class IbuQuoteRepo003Controller extends BaseController {
         } catch (Exception e) {
             logger.error("回退异常", e);
             return new Message<Boolean>().fail().setMessage("回退异常");
+        }
+    }
+
+    @ResponseBody
+    @PostMapping("deleteDayOff")
+    @ApiOperation(value = "对话报价删除", notes = "对话报价删除")
+    public Message<Boolean> deleteDayOff(@RequestBody QuotedPriceRequest request) {
+        try {
+            return new Message<Boolean>().success().setData(cfetsRepoDealQuotedPrice002Service.deleteDayOff(request));
+        } catch (Exception e) {
+            logger.error("删除异常", e);
+            return new Message<Boolean>().fail().setMessage("删除异常");
         }
     }
 
