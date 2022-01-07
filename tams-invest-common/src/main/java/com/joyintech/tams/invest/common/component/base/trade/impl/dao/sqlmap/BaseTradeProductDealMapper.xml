@@ -1166,7 +1166,7 @@
 	ttfd.UPDATE_TIME TTFD_UPDATE_TIME
 	FROM
 	TRD_FIN_PRODUCT_DEAL_TOTAL tdeal
-	left join TRD_PRODUCT_DEAL ipd on tdeal.TOTLE_TRADE_ID=ipd.TOTLE_TRADE_ID
+	left join TRD_PRODUCT_DEAL ipd on tdeal.TOTLE_TRADE_ID=ipd.TOTLE_TRADE_ID and ipd.is_cancel = 'N' and ipd.trade_status = '01'
 	left join STL_PAY_ORDERS spo on spo.TRADE_ID = tdeal.TOTLE_TRADE_ID
 	left join TRD_PRODUCT_DEAL_ADD tpda on tpda.TRADE_ID = ipd.TRADE_ID
 	left join PA_TRD_PRODUCT_DEAL PTPD on PTPD.TRADE_ID = ipd.TRADE_ID
@@ -1175,7 +1175,7 @@
 	LEFT JOIN PTL_TRADE PT ON ipd.TRADE_ID = PT.BUSI_NO
 	LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
 	WHERE ((PP.PORTFOLIO_ID IS NOT NULL AND PP.INVEST_YESORNO = 'Y') or PP.PORTFOLIO_ID IS  NULL)
-	and (tdeal.ps in ('T65', 'T66','T56','T93','T94','T95','T96') or tdeal.ps=ipd.ps)
+    and (tdeal.ps in ('T65', 'T66') or tdeal.ps = ipd.ps or ((tdeal.finprod_type2 = 'F02' OR tdeal.finprod_type2 = 'F03') AND tdeal.ps in ('T56', 'T93', 'T94', 'T07', 'T54')))
 	AND tdeal.totle_trade_id = #{tradeId,jdbcType=VARCHAR}
 	</select>
 
