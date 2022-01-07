@@ -119,19 +119,21 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
                             }
                             settleTransDataResult.add(settleTransDataDto);
                         }
-                        //成交明细添加债券确认 add by wangyang1 2021年12月7日 start
-                        searchParam.put("PS_T04", DictCodeList.交易方向_申购.getValue());
-                        searchParam.put("IS_CANCEL_N", DictCodeList.是否_否.getValue());
-                        searchParam.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
-                        searchParam.put("PS_T05", DictCodeList.交易方向_申购确认.getValue());
-                        List<SettleTransDataDto> settlePurConfirTransDataDtos = stlDataGatherService.listBondPurConfirSettleTransData(searchParam);
-                        settleTransDataResult.addAll(settlePurConfirTransDataDtos);
-                        //成交明细添加债券确认 add by wangyang1 2021年12月7日 end
-                        investTradeReaderDto.setSettleTransDataList(settleTransDataResult);
-                        List<InvestTradeReaderDto> result = new ArrayList<>();
-                        result.add(investTradeReaderDto);
-                        return result;
                     }
+                    //成交明细添加债券确认 add by wangyang1 2021年12月7日 start
+                    searchParam.put("PS_T04", DictCodeList.交易方向_申购.getValue());
+                    searchParam.put("IS_CANCEL_N", DictCodeList.是否_否.getValue());
+                    searchParam.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
+                    searchParam.put("PS_T05", DictCodeList.交易方向_申购确认.getValue());
+                    List<SettleTransDataDto> settlePurConfirTransDataDtos = stlDataGatherService.listBondPurConfirSettleTransData(searchParam);
+                    if(CollectionUtils.isNotEmpty(settlePurConfirTransDataDtos)){
+                        settleTransDataResult.addAll(settlePurConfirTransDataDtos);
+                    }
+                    //成交明细添加债券确认 add by wangyang1 2021年12月7日 end
+                    investTradeReaderDto.setSettleTransDataList(settleTransDataResult);
+                    List<InvestTradeReaderDto> result = new ArrayList<>();
+                    result.add(investTradeReaderDto);
+                    return result;
                 }
             }
             //回购存续期
