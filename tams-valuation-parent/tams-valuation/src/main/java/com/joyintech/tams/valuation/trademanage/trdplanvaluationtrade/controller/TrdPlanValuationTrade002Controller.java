@@ -156,7 +156,7 @@ public class TrdPlanValuationTrade002Controller extends BaseController {
     public Page<SelectOptionDto> findPortfolioId(HttpServletRequest request) {
         Map<String, Object> param =RequestUtil.getPageParam();
         //param.put("finprodType", BussinessDictCodeList.金融产品类型_计划类资产.getValue()); //F17
-        param.put("finprodType", "F01"); //测试
+        //param.put("finprodType", "F01"); //测试
         return trdPlanValuationTrade002Service.findPortfolioId(param);
     }
 

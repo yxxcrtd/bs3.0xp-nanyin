@@ -54,7 +54,6 @@ $(function(){
                     basePath + "valuation/trademanage/trdplanvaluationtrade/TrdPlanValuationTrade002/init",
                     "98%", "98%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
                     portfolioId:data.portfolioId,
-                    entrustId:data.entrustId,
                     finprodId:data.finprodId,
                     tradeId:data.tradeId});
         },
@@ -147,29 +146,5 @@ $(function(){
             });
         });
 
-        //组合点击查看详情
-        table.bind('click','.pro-link', function(row) {
-            Joyin.dialog(JoyinUtil.getLabel("PtlManagementInfo002"),
-                    basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
-                    "95%", "90%",{
-                    pageModel:PAGE_MODEL_REFERENCE,
-                    portfolioId:row.portfolioId,
-                    portfolioName: row.portfolioName});
-            
-        });
-        //资产代码点击查看明细
-        table.bind('click','.pro-link-fin', function(row) {
-            Joyin.dialog(JoyinUtil.getLabel("FinPlanProfitAsset002"),
-                    basePath + "invest/asset/plan/planProfit/FinPlanProfitAsset002/init",
-                    "95%", "90%",{
-                    pageModel:PAGE_MODEL_REFERENCE,
-                    finprodId: row.finprodId});
-        });
-      //是否展示资产四五级分类
-        if(IS_SHOW_TYPE == '01'){
-        	$('#type11Div').show();
-        }else{
-        	$('#type11Div').hide();
-        }
     });
 }());

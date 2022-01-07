@@ -1,5 +1,5 @@
 /*
- * 文件名：TrdPlanRateInvestTradeDto.java
+ * 文件名：TrdPlanInvestTradeDto.java
  * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
  * 描述：理财资管管理系统V2.0
  * 修改人：fanshuanghu
@@ -202,7 +202,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
     }
 
     @Override
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade001.tradeDate",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade001.tradeDate",groups = {ValidateGroupEdit.class})
     public Date getTradeDate(){
         return super.getTradeDate();
     }
@@ -233,7 +233,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
      */
     @Override
     @PrimaryKey(Field.PK_1)
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade001.tradeId",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade001.tradeId",groups = {ValidateGroupEdit.class})
     public String getTradeId(){
         return super.getTradeId();
     }
@@ -311,7 +311,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
      * {@inheritDoc}
      */
     @Override
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade001.ccy",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade001.ccy",groups = {ValidateGroupEdit.class})
     public String getCcy(){
         return super.getCcy();
     }
@@ -319,7 +319,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
      * 交易方向
      * {@inheritDoc}
      */
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade001.ps",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade001.ps",groups = {ValidateGroupEdit.class})
     public String getPs(){
         return super.getPs();
     }
@@ -338,7 +338,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
      * 获取 portfolioId
      * @return portfolioId.
      */
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade001.portfolioId",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade001.portfolioId",groups = {ValidateGroupEdit.class})
     public String getPortfolioId() {
         return portfolioId;
     }
@@ -355,7 +355,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
      * 获取 portfolioName
      * @return portfolioName.
      */
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade001.portfolioName",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade001.portfolioName",groups = {ValidateGroupEdit.class})
     public String getPortfolioName() {
         return portfolioName;
     }
@@ -373,7 +373,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
      * 获取 finprodName
      * @return finprodName.
      */
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade001.finprodName",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade001.finprodName",groups = {ValidateGroupEdit.class})
     public String getFinprodName() {
         return finprodName;
     }
@@ -395,7 +395,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
         this.outTradeId = outTradeId;
     }
 
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade002.todayArriveFlag",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade002.todayArriveFlag",groups = {ValidateGroupEdit.class})
     public String getTodayArriveFlag() {
         return todayArriveFlag;
     }
@@ -404,7 +404,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
         this.todayArriveFlag = todayArriveFlag;
     }
 
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade002.nums",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade002.nums",groups = {ValidateGroupEdit.class})
     public BigDecimal getNums() {
         return nums;
     }
@@ -413,7 +413,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
         this.nums = nums;
     }
 
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade002.confirmTradeAmt",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade002.confirmTradeAmt",groups = {ValidateGroupEdit.class})
     public BigDecimal getConfirmTradeAmt() {
         return confirmTradeAmt;
     }
@@ -422,7 +422,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
         this.confirmTradeAmt = confirmTradeAmt;
     }
 
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade002.confirmNums",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade002.confirmNums",groups = {ValidateGroupEdit.class})
     public BigDecimal getConfirmNums() {
         return confirmNums;
     }
@@ -431,7 +431,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
         this.confirmNums = confirmNums;
     }
 
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade002.confirmIntAmt",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade002.confirmIntAmt",groups = {ValidateGroupEdit.class})
     public BigDecimal getConfirmIntAmt() {
         return confirmIntAmt;
     }
@@ -439,7 +439,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
     public void setConfirmIntAmt(BigDecimal confirmIntAmt) {
         this.confirmIntAmt = confirmIntAmt;
     }
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade002.refundAmount",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade002.refundAmount",groups = {ValidateGroupEdit.class})
     public BigDecimal getRefundAmount() {
         return refundAmount;
     }
@@ -449,7 +449,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
         this.refundAmount = refundAmount;
     }
 
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade002.rateRefundAmount",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade002.rateRefundAmount",groups = {ValidateGroupEdit.class})
     public BigDecimal getRateRefundAmount() {
         return rateRefundAmount;
     }
@@ -458,7 +458,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
         this.rateRefundAmount = rateRefundAmount;
     }
 
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade002.unitValue",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade002.unitValue",groups = {ValidateGroupEdit.class})
     public BigDecimal getUnitValue() {
         return unitValue;
     }
@@ -467,7 +467,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
         this.unitValue = unitValue;
     }
 
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade002.advFeeOut",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade002.advFeeOut",groups = {ValidateGroupEdit.class})
     public BigDecimal getAdvFeeOut() {
         return advFeeOut;
     }
@@ -476,7 +476,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
         this.advFeeOut = advFeeOut;
     }
 
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade002.feeAmtQT",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade002.feeAmtQT",groups = {ValidateGroupEdit.class})
     public BigDecimal getFeeAmtQT() {
         return feeAmtQT;
     }
@@ -485,7 +485,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
         this.feeAmtQT = feeAmtQT;
     }
 
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade002.mdateSettleAmt",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade002.mdateSettleAmt",groups = {ValidateGroupEdit.class})
     public BigDecimal getMdateSettleAmt() {
         return mdateSettleAmt;
     }
@@ -494,7 +494,7 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
         this.mdateSettleAmt = mdateSettleAmt;
     }
 
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade002.settleAmt",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade002.settleAmt",groups = {ValidateGroupEdit.class})
     public BigDecimal getSettleAmt() {
         return settleAmt;
     }
@@ -505,20 +505,20 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
 
     //交易金额
     @Override
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade001.tradeAmt",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade001.tradeAmt",groups = {ValidateGroupEdit.class})
     public BigDecimal getTradeAmt() {
         return super.getTradeAmt();
     }
     //交易费用
     @Override
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade002.feeAmt",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade002.feeAmt",groups = {ValidateGroupEdit.class})
     public BigDecimal getFeeAmt() {
         return super.getFeeAmt();
     }
 
     //资产代码
     @Override
-    @NotEmpty(fieldName="TrdPlanRateValuationTrade001.finprodId",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="TrdPlanValuationTrade001.finprodId",groups = {ValidateGroupEdit.class})
     public String getFinprodId() {
         return super.getFinprodId();
     }
