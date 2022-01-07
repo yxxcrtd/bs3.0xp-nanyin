@@ -147,6 +147,11 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
     private List<TrdPlanValuationTradeDto> selectedItem;
 
     /**
+     * 收益类型
+     */
+    private String profitType;//01净值型，02预期收益型,03货币型
+
+    /**
      * 撤销原因
      */
     private String cancelRemark;
@@ -518,6 +523,12 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
         return super.getFinprodId();
     }
 
+    public String getProfitType() {
+        return profitType;
+    }
 
+    public void setProfitType(String profitType) {
+        this.profitType = profitType;
+    }
 }
 
