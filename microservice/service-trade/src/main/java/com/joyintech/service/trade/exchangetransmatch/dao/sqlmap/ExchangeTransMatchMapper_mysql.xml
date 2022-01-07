@@ -179,7 +179,12 @@
         ELSE A1.FINPROD_ID
         END finprodId,
         A1.FINPROD_TYPE2 finprodType2,
-        C1.FINPROD_MARKET_ID finprodMarketId,
+        CASE
+            WHEN A1.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}) THEN
+            NULL
+        ELSE
+            C1.FINPROD_MARKET_ID
+        END finprodMarketId,
         A1.ENTRUST_DATE entrustDate,
         A1.PS ps,
         A1.TRADE_MARKET tradeMarket,
