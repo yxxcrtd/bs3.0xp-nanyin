@@ -359,6 +359,7 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
         bondQuoteInfoDto.setValidStatus(bondQuoteExtDto.getValidStatus());
         bondQuoteInfoDto.setWorkflowId(bondQuoteExtDto.getWorkflowId());
         bondQuoteInfoDto.setIsDzh(bondQuoteExtDto.getIsDzh());
+        bondQuoteInfoDto.setIsDzh(bondQuoteExtDto.getCfetsQuoteId());
         return bondQuoteInfoDto;
     }
 

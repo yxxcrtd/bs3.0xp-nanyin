@@ -56,7 +56,7 @@
             , disabled: true
         }
         , {
-            field: 'tradeAmt',
+            field: 'fpriceAmt',
             width: 120,
             title: '交易金额(元)',
             sortable: false,
@@ -174,7 +174,7 @@
             , disabled: true
         }
         , {
-            field: 'pledgeRatio',
+            field: 'pledgeRate',
             width: 100,
             title: '折算比例(%)',
             sortable: false,

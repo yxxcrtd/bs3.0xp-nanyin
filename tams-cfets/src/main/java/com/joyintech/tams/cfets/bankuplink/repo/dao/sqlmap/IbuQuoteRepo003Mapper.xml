@@ -197,6 +197,10 @@
         <result column="I_Q_C_TRANSACTIME" property="transactime" jdbcType="VARCHAR" />
         <result column="I_Q_C_ZZ_TOTAL_AMT" property="zzTotalAmt" jdbcType="DECIMAL" />
         <result column="I_Q_C_SQ_TOTAL_AMT" property="sqTotalAmt" jdbcType="DECIMAL" />
+        <result column="I_Q_C_DEAL_FEE_AMT" property="dealFeeAmt" jdbcType="DECIMAL" />
+        <result column="I_Q_C_SETT_FEE_AMT" property="settFeeAmt" jdbcType="DECIMAL" />
+        <result column="I_Q_C_DIP_TYPE" property="dipType" jdbcType="VARCHAR" />
+        <result column="I_Q_C_ACT_DAYS" property="actDays" jdbcType="DECIMAL" />
     </resultMap>
     <resultMap id="IqcpResultMap" type="com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteCrepPledge" >
         <id column="IQCP_QUOTE_ID" property="quoteId" jdbcType="VARCHAR" />
@@ -265,10 +269,10 @@
 	    a.CREATE_DEPT                     I_Q_C_CREATE_DEPT,
 	    a.UPDATE_USER                     I_Q_C_UPDATE_USER,
 	    a.UPDATE_TIME                     I_Q_C_UPDATE_TIME,
-	    a.TERM_TYPE                       I_Q_C_TERM_TYPE,
-        a.TRANSACTIME                     I_Q_C_TRANSACTIME,
-        a.ZZ_TOTAL_AMT                    I_Q_C_ZZ_TOTAL_AMT,
-        a.SQ_TOTAL_AMT                    I_Q_C_SQ_TOTAL_AMT
+	    a.DEAL_FEE_AMT                    I_Q_C_DEAL_FEE_AMT,
+	    a.SETT_FEE_AMT                    I_Q_C_SETT_FEE_AMT,
+	    a.DIP_TYPE                        I_Q_C_DIP_TYPE,
+	    a.ACT_DAYS                        I_Q_C_ACT_DAYS
     </sql>
     <sql id="Iqcp_Column_List" >
         QUOTE_ID I_Q_C_P_QUOTE_ID, BRANCH I_Q_C_P_BRANCH, PLEDGE_FINPROD_ID I_Q_C_P_PLEDGE_FINPROD_ID, VERSION I_Q_C_P_VERSION,
@@ -355,7 +359,7 @@
             QUOTE_ID QUOTE_ID, VERSION VERSION, ENTRUST_ID ENTRUST_ID, PORTFOLIO_ID PORTFOLIO_ID,
             SHARE_AMT SHARE_AMT, FPRICE_AMT FPRICE_AMT,WORKFLOW_ID WORKFLOW_ID, REMARK REMARK, CREATE_USER CREATE_USER,
             CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
-            ,CB_FPRICE_AMT CB_FPRICE_AMT,SC_FPRICE_AMT SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT
+            ,CB_FPRICE_AMT CB_FPRICE_AMT,SC_FPRICE_AMT SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT,DIP_TYPE,CPRICE_AMT,INT_AMT
         from WFL_IBU_QUOTE_ETR_RE
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
             and VERSION = (select max(VERSION) from WFL_IBU_QUOTE_ETR_RE where QUOTE_ID = #{quoteId,jdbcType=VARCHAR})
@@ -387,5 +391,83 @@
 			T2.FINPROD_ID = T1.PLEDGE_FINPROD_ID
 		 where T1.QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
 	</select>
+
+    <select id="selectQuoteCrepPledgeForDzh"  resultType="com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto">
+        SELECT
+        T1.QUOTE_ID,
+        T1.PORTFOLIO_ID,
+        T1.PLEDGE_FINPROD_ID finprodId,
+        T1.PLEDGE_RATIO*100 pledgeRate,
+        T1.UNIT_CPRICE netPrice,
+        T1.PLEDGE_NUMBER/10000 pledgePrin,
+        ptl.PORTFOLIO_NAME portfolioName,
+        (NVL(avaExt.AMOUNT, 0) - NVL(pledgeExt.AMOUNT, 0)) / 100  AS avaPledgePrin,
+        T2.FINPROD_MARKET_ID bondCode,
+        T2.FINPROD_NAME bondAbbrName,
+        T2.REGIST_ORG repRegistOrg
+        FROM
+        (SELECT
+        QUOTE_ID,
+        PORTFOLIO_ID,
+        PLEDGE_FINPROD_ID,
+        PLEDGE_RATIO,
+        UNIT_CPRICE,
+        SUM(PLEDGE_NUMBER)*100 PLEDGE_NUMBER
+        FROM
+        WFL_IBU_QUOTE_ENT_CREP_PLEDGE where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
+        GROUP BY 	QUOTE_ID,PORTFOLIO_ID,PLEDGE_FINPROD_ID,PLEDGE_RATIO,UNIT_CPRICE
+        ) T1
+        <!--add by zhangnian 20210111 可用质押券单独处理 start-->
+        LEFT JOIN (
+        SELECT
+        psp.portfolio_id,
+        psp.FINPROD_ID,
+        SUM(DECODE(psp.HODING_TYPE,'04',-psp.AMOUNT,'06',-psp.AMOUNT,'11',-psp.AMOUNT,psp.AMOUNT)) AMOUNT            FROM
+        PTL_SEC_POSITION psp
+        LEFT JOIN FIN_PRODUCT FPSAI ON psp.SEC_ACCT_ID = FPSAI.FINPROD_ID
+        WHERE
+        psp.CDATE &lt;= TO_DATE(#{platDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
+        AND psp.HODING_TYPE IN ( '03','04', '05','06','11','12')
+        AND (FPSAI.FINPROD_ID is null  or FPSAI.FINPROD_TYPE2 !='F28')
+        AND psp.CDATE = (
+        SELECT
+        max(cdate)
+        FROM
+        PTL_SEC_POSITION tt
+        WHERE
+        tt.portfolio_id = psp.portfolio_id
+        AND tt.sec_acct_id = psp.sec_acct_id
+        AND tt.finprod_id = psp.finprod_id
+        AND tt.CDATE &lt;= TO_DATE(#{platDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
+        AND tt.branch = psp.branch
+        AND tt.inv_aim = psp.inv_aim
+        AND tt.hoding_type = psp.hoding_type
+        AND tt.ccy = psp.ccy )
+        GROUP BY
+        psp.portfolio_id,psp.FINPROD_ID
+        ) avaExt
+        ON  avaExt.FINPROD_ID = T1.PLEDGE_FINPROD_ID and avaExt.portfolio_id = T1.portfolio_id
+        LEFT JOIN (
+        SELECT
+        PTL_SEC_POSITION_FLOW.PORTFOLIO_ID,
+        PTL_SEC_POSITION_FLOW.FINPROD_ID,
+        SUM(NVL(-AMOUNT, 0)) AMOUNT
+        FROM
+        PTL_SEC_POSITION_FLOW
+        LEFT JOIN FIN_PRODUCT FPSAI ON PTL_SEC_POSITION_FLOW.SEC_ACCT_ID = FPSAI.FINPROD_ID
+        WHERE
+        <![CDATA[CDATE <= TO_DATE(#{platDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')]]>
+        AND HODING_TYPE = '01'
+        AND (FPSAI.FINPROD_ID is null  or FPSAI.FINPROD_TYPE2 !='F28')
+        <if test="quoteId != null and quoteId != ''">
+            AND PTL_SEC_POSITION_FLOW.TRADE_ID = #{quoteId}
+        </if>
+        GROUP BY
+        PTL_SEC_POSITION_FLOW.PORTFOLIO_ID,PTL_SEC_POSITION_FLOW.FINPROD_ID
+        ) pledgeExt ON  pledgeExt.FINPROD_ID = T1.PLEDGE_FINPROD_ID and pledgeExt.PORTFOLIO_ID = T1.PORTFOLIO_ID
+        <!--add by zhangnian 20210111 可用质押券单独处理 end-->
+        LEFT JOIN PTL_PORTFOLIO ptl ON 	ptl.PORTFOLIO_ID = T1.PORTFOLIO_ID
+        LEFT JOIN FIN_PRODUCT T2 ON T2.FINPROD_ID = T1.PLEDGE_FINPROD_ID
+    </select>
 
 </mapper>

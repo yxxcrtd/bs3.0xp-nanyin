@@ -10,7 +10,6 @@
 		<if test="sysDate != null and sysDate != ''">
 			<![CDATA[AND MDATE <= TO_DATE(#{sysDate},'YYYY-MM-DD')]]>
 		</if>
-		and portfolio_id='JZHCP-xq005'
 		)
 	</select>
 
@@ -22,7 +21,6 @@
 		<if test="sysDate != null and sysDate != ''">
 			<![CDATA[AND MDATE <= TO_DATE(#{sysDate},'YYYY-MM-DD')]]>
 		</if>
-		and portfolio_id='JZHCP-xq005'
 		)
 	</update>
 	<update id="updateDistributeStatus">
@@ -33,7 +31,6 @@
 		<if test="sysDate != null and sysDate != ''">
 			<![CDATA[AND MDATE <= TO_DATE(#{sysDate},'YYYY-MM-DD')]]>
 		</if>
-		and portfolio_id='JZHCP-xq005'
 		)
 	</update>
 </mapper>

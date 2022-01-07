@@ -112,6 +112,7 @@
         <id property="invManagerId" column="invManagerId"/>
         <id property="invManagerName" column="invManagerName"/>
         <id property="counterId" column="counterId"/>
+        <id property="counterPartyId" column="counterPartyId"/>
         <id property="counterName" column="counterName"/>
         <id property="entrustDate" column="ENTRUST_DATE"/>
         <id property="transmitTime" column="TRANSMIT_TIME"/>
@@ -145,13 +146,12 @@
         SELECT *
         FROM (
             SELECT ETR_ENTRUST.ENTRUST_STATUS                                                                 entrustStatus/*指令状态*/
-                , (NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT, 0)) / 10000                                 finishAmt/*已完成额度(万元)*/
+                , (NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT, 0))                                         finishAmt/*已完成额度(元)*/
                 , (NVL(ETR_ENTRUST.ENTRUST_AMT,0) - NVL(T5.FINISH_AMT, 0)
-                    - NVL(T6.ENT_FINISH_AMT, 0)) / 10000                                                       avaNum/*剩余指令额度(万元)*/
-                , (NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT, 0)) /
-                10000                                                                                         finishDealAmt/*已成交额度(万元)*/
+                    - NVL(T6.ENT_FINISH_AMT, 0))                                                              avaNum/*剩余指令额度(元)*/
+                , (NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT, 0))                    finishDealAmt/*已成交额度(元)*/
                 , (ETR_ENTRUST.ENTRUST_AMT - NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0))
-                    - NVL(T6.FINISH_AMT, 0)) / 10000                                                          avaDealAmt/*剩余成交额度(万元)*/
+                    - NVL(T6.FINISH_AMT, 0))                                                                  avaDealAmt/*剩余成交额度(元)*/
                 , trunc(NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT, 0) / (ETR_ENTRUST.ENTRUST_AMT ), 4) *
                 100                                                                                           transactioncom/*执行进度(%)*/
                 , trunc((NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT , 0)) /
@@ -159,14 +159,14 @@
                 , ETR_ENTRUST.ENTRUST_AMT / 10000                                                             entrustNum/*指令额度(万元)*/
                 , ETR_ENTRUST.PORTFOLIO_ID                                                                    portfolioId/*组合代码*/
                 , PTL_PORTFOLIO.PORTFOLIO_NAME                                                                portfolioName/*组合名称*/
-            <if test="repo_pledge_model != null and repo_pledge_model == '02'">
+            <if test="repo_pledge_model != null and repo_pledge_model.equals('02')">
                 ,PLEDGE.finprodIds /*质押债券*/
                 ,PLEDGE.finprodMarketNames /*质押债券*/
                 ,PLEDGES.bondCode
                 ,PLEDGES.bondAbbrName
                 ,PLEDGES.pledgePrin
             </if>
-            <if test="repo_pledge_model != null and repo_pledge_model == '03'">
+            <if test="repo_pledge_model != null and repo_pledge_model.equals('03')">
                 ,ETR_ENTRUST_ADD.PLEDGE_STOCK_ID                                                              pledgeStockId/*质押券库*/
                 ,ETR_SEC_STOCK.PLEDGE_STOCK_NAME                                                              pledgeStockName/*质押券库*/
             </if>
@@ -182,6 +182,7 @@
                     WHERE user_name = ETR_ENTRUST.INV_MANAGER_ID)                                             invManagerName/*投资经理名称*/
                 , MCP.COUNTER_ID                                                                              counterId/* 交易对手*/
                 , MCP.COUNTER_NAME                                                                            counterName/* 交易对手名称*/
+                , MST_CFETS_CI.PARTY_ID                                                                       counterPartyId
                 , ETR_ENTRUST.ENTRUST_DATE                                                                    ENTRUST_DATE/* 指令日期*/
                 , to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME, 'hh24:mi:ss')                                        TRANSMIT_TIME/* 指令下达时间*/
                 , ETR_ENTRUST.ENTRUST_ID                                                                      entrustId/*指令代码*/
@@ -266,7 +267,9 @@
                 ON MST_CFETS_CT.TRADER_ID = ETR_ENTRUST.COUNTER_TRADER
             LEFT JOIN MST_COUNTER_PARTY MCP
                 ON MCP.COUNTER_ID = ETR_ENTRUST.COUNTER_ID
-        <if test="repo_pledge_model != null and repo_pledge_model == '02'">
+            LEFT JOIN MST_CFETS_CUSTOMER_INFO MST_CFETS_CI
+                ON MST_CFETS_CI.PARTY_NAME = MCP.COUNTER_NAME
+        <if test="repo_pledge_model != null and repo_pledge_model.equals('02')">
             LEFT JOIN
             (
                 select ENTRUST_ID, wm_concat(fp.FINPROD_ID) finprodIds, wm_concat(fp.FINPROD_ABBR) finprodMarketNames
@@ -283,7 +286,7 @@
             ) PLEDGES /*质押式回购银行间报价 按指令代码汇总 交易份额，债券数量等*/
             ON PLEDGES.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
         </if>
-        <if test="repo_pledge_model != null and repo_pledge_model == '03'">
+        <if test="repo_pledge_model != null and repo_pledge_model.equals('03')">
             LEFT JOIN ETR_SEC_STOCK ON ETR_SEC_STOCK.PLEDGE_STOCK_ID = ETR_ENTRUST_ADD.PLEDGE_STOCK_ID
         </if>
             LEFT JOIN
@@ -426,7 +429,7 @@
                     /* 查询条件 证券账户*/
                     AND ETR_ENTRUST_ADD.SEC_ACCT_ID = #{secAcctId}
                 </if>
-                <if test="repo_pledge_model != null and repo_pledge_model == '03' and pledgeStockIdList != null and pledgeStockIdList.size() > 0 ">
+                <if test="repo_pledge_model != null and repo_pledge_model.equals('03') and pledgeStockIdList != null and pledgeStockIdList.size() > 0 ">
                     /* 查询条件 质押券库*/
                     AND ETR_ENTRUST.PLEDGE_STOCK_ID IN
                     <foreach collection="pledgeStockIdList" item="item" open="(" close=")" separator=",">
@@ -457,11 +460,11 @@
                         OR to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME, 'hh24:mi:ss') = #{search} /*下达时间*/
                         OR ETR_ENTRUST.ENTRUST_ID LIKE '%' || #{search} || '%' /*指令代码*/
                         OR ETR_ENTRUST.REMARK LIKE '%' || #{search} || '%' /*备注*/
-                        <if test="repo_pledge_model != null and repo_pledge_model == '02'">
+                        <if test="repo_pledge_model != null and repo_pledge_model.equals('02')">
                             OR PLEDGE.finprodIds LIKE '%' || #{search} || '%'/*质押债券*/
                             OR PLEDGE.finprodMarketNames LIKE '%' || #{search} || '%'/*质押债券*/
                         </if>
-                        <if test="repo_pledge_model != null and repo_pledge_model == '03'">
+                        <if test="repo_pledge_model != null and repo_pledge_model.equals('03')">
                             OR ETR_ENTRUST_ADD.PLEDGE_STOCK_ID LIKE '%' || #{search} || '%' /*质押券库*/
                             OR ETR_SEC_STOCK.PLEDGE_STOCK_NAME LIKE '%' || #{search} || '%' /*质押券库*/
                         </if>
@@ -536,6 +539,173 @@
                             #{item}
                         </foreach>
                 </if>
+        ) pledgeList
+        LEFT JOIN ETR_ENTRUST ee
+            ON ee.ENTRUST_ID = pledgeList.bussId
+        INNER JOIN FIN_PRODUCT pfp
+            ON ee.PORTFOLIO_ID = pfp.FINPROD_MARKET_ID
+        LEFT JOIN ETR_ENTRUST_ADD eea
+            ON eea.ENTRUST_ID = pledgeList.bussId
+        LEFT JOIN ETR_SEC_STOCK ess
+            ON ess.PLEDGE_STOCK_ID=eea.PLEDGE_STOCK_ID
+        LEFT JOIN
+        (
+            SELECT  TEMP.PORTFOLIO_ID /*组合代码*/
+                   ,TEMP.PORTFOLIO_NAME
+                   ,TEMP.SEC_ACCT_ID /*证券账户/通道代码*/
+                   ,TEMP.FINPROD_ID /*分支序号*/
+                   ,SUM(TEMP.pledStrdPrinAmt) pledStrdPrinAmt /*可质押券面总额*/
+                   ,SUM(TEMP.pledgeAmount) pledgeAmount /*已质押质押券面总额*/
+            FROM
+            (
+                SELECT  espr.PORTFOLIO_ID
+                       ,pp.PORTFOLIO_NAME
+                       ,espr.SEC_ACCT_ID
+                       ,espr.FINPROD_ID
+                       ,CASE WHEN ppc.S_HOLDINGTYPE = #{S_002} THEN espr.AMOUNT*nvl(ppc.CAL_FLAG,1)  ELSE 0 END AS pledStrdPrinAmt /*可质押券面总额*/
+                       ,CASE WHEN espr.HODING_TYPE=#{A_012} THEN espr.AMOUNT*nvl(ppc.CAL_FLAG,1)  ELSE 0 END    AS pledgeAmount /*已质押质押券面总额*/
+                FROM PTL_SEC_POSITION_RULE espr
+                INNER JOIN PTL_PORTFOLIO pp
+                ON espr.PORTFOLIO_ID = pp.PORTFOLIO_ID
+                LEFT JOIN PTL_POSITION_CFG ppc
+                ON espr.HODING_TYPE =ppc.HOLDINGTYPE AND ppc.S_HOLDINGTYPE =#{S_002}
+                WHERE 1 = 1
+                AND espr.CDATE = to_date(#{platDate}, 'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
+                AND espr.DATE_TYPE =0
+                AND ( ppc.S_HOLDINGTYPE =#{S_002} or espr.HODING_TYPE=#{A_012})
+            ) TEMP
+            LEFT JOIN PTL_PORTFOLIO_AUTHORITY
+            ON TEMP.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+            WHERE 1 = 1
+            AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{loginUserId}
+            GROUP BY  TEMP.PORTFOLIO_ID
+                     ,TEMP.PORTFOLIO_NAME
+                     ,TEMP.SEC_ACCT_ID
+                     ,TEMP.FINPROD_ID
+            HAVING SUM(TEMP.pledStrdPrinAmt) > 0 /*只统计可质押券面总额>0*/
+        )TABLE01/*以上统计可用持仓*/
+            ON TABLE01.FINPROD_ID = pledgeList.pledgeId AND TABLE01.PORTFOLIO_ID = ee.PORTFOLIO_ID
+        INNER JOIN FIN_PRODUCT fp
+            ON fp.FINPROD_ID = pledgeList.pledgeId
+        INNER JOIN FIN_PRODUCT_TYPE FPT
+            ON FPT.FINPROD_ID = fp.FINPROD_ID
+        LEFT JOIN
+        (
+            SELECT  RANK() OVER(PARTITION BY O_CODE ORDER BY GRADE_DATE DESC,CAST(GRADE_RESULT AS DECIMAL) DESC) NUM
+                   ,O_CODE
+                   ,GRADE_RESULT
+            FROM MST_BOND_CREDIT_RATING
+            WHERE GRADE_DATE <![CDATA[<=]]> to_date(#{platDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
+            AND GRADE_ORG_ID !='22'
+        ) MBCR
+            ON MBCR.O_CODE = fp.FINPROD_MARKET_ID AND MBCR.NUM = 1
+		LEFT JOIN (
+            SELECT
+                T2.SEC_ID,
+                T2.PRICE,
+                T2.NETPRICE
+            FROM (
+                SELECT
+                    tmp1.SEC_ID,
+                    tmp1.value_source,
+                    MAX(tmp1.value_date) AS value_date
+                FROM MST_BOND_VALUATION_INFO tmp1
+                LEFT JOIN FIN_PRODUCT tmp2
+                    ON tmp1.sec_id = tmp2.finprod_market_id
+                WHERE 1 = 1
+                    AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+                    AND tmp1.value_source = (
+                                                CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN 'CSD'
+                                                ELSE 'CBC'
+                                            END)
+                GROUP BY tmp1.sec_id, tmp1.value_source
+            ) T1
+            LEFT JOIN MST_BOND_VALUATION_INFO T2
+                ON T1.SEC_ID = T2.SEC_ID
+                AND T1.value_source = T2.value_source
+                AND T1.VALUE_DATE = T2.VALUE_DATE
+		) mbvi/*以上获取债券小于等于平台日的最新估值行情*/
+		    ON fp.FINPROD_MARKET_ID = mbvi.SEC_ID
+        <where>
+            <if test="finprodId !=null and finprodId !=''">
+                and fp.FINPROD_ID =#{finprodId, jdbcType=VARCHAR}
+            </if>
+            <if test="finprodType !=null and finprodType !=''">
+                and FPT.TYPE_11 =#{finprodType, jdbcType=VARCHAR}
+            </if>
+            <if test="repRegistOrg !=null and repRegistOrg !=''">
+                and fp.REGIST_ORG =#{repRegistOrg, jdbcType=VARCHAR}
+            </if>
+        </where>
+   </select>
+
+   <select id="selectRepoEntrustPledgesInit" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustPledgeDto">
+        SELECT  fp.FINPROD_MARKET_ID bondCode
+               ,fp.FINPROD_ABBR bondAbbrName
+               ,fp.FINPROD_ID finprodId
+               ,pfp.FINPROD_MARKET_ID portfolioId
+               ,pfp.FINPROD_ABBR portfolioName
+               ,fp.MDATE mdate
+               ,NVL(TABLE01.pledStrdPrinAmt,0) avaPledgePrin
+               ,NVL(pledgeList.PLEDGE_NUMBER,0) * 100 pledgePrin
+               ,NVL(pledgeList.PLEDGE_NUMBER,0) * 100 pledgePrinInit
+               ,mbvi.NETPRICE firstNetPrice
+               ,pledgeList.PLEDGE_RATIO*100 pledgeRatio
+               ,nvl(TABLE01.pledgeAmount,0) prin
+               ,eea.PLEDGE_STOCK_ID pledgeStockId
+               ,ess.PLEDGE_STOCK_NAME pledgeStockName
+               ,MBCR.GRADE_RESULT gradeResult /*债项评级*/
+               , fp.REGIST_ORG repRegistOrg
+            <if test="entrustIdList != null and entrustIdList.size() > 0">
+                ,pledgeList.bussId entrustId
+            </if>
+        FROM
+        (
+            select ENTRUST_ID bussId, FINPROD_ID pledgeId,PLEDGE_RATIO, sum(PLEDGE_NUMBER) PLEDGE_NUMBER
+            from (
+                     select ENTRUST_ID
+                           ,FINPROD_ID
+                           ,PLEDGE_NUMBER
+                           ,PLEDGE_RATIO
+                     from ETR_PLEDGE ep
+                    <where>
+                        <if test="entrustIdList != null and entrustIdList.size() > 0">
+                            ep.ENTRUST_ID in
+                            <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                                #{item}
+                            </foreach>
+                        </if>
+                    </where>
+                     union all
+                     select ENTRUST_ID
+                           ,PLEDGE_FINPROD_ID FINPROD_ID
+                           ,-1*PLEDGE_NUMBER
+                           ,PLEDGE_RATIO
+                     from WFL_REG_FIN_PLEDGE wrfp
+                    <where>
+                        <if test="entrustIdList != null and entrustIdList.size() > 0">
+                            wrfp.ENTRUST_ID in
+                            <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                                #{item}
+                            </foreach>
+                        </if>
+                    </where>
+                     union all
+                     select  ENTRUST_ID
+                           ,PLEDGE_FINPROD_ID FINPROD_ID
+                           ,-1*PLEDGE_NUMBER
+                           ,PLEDGE_RATIO
+                     from REG_FIN_PLEDGE rfp
+                    <where>
+                        <if test="entrustIdList != null and entrustIdList.size() > 0">
+                            rfp.ENTRUST_ID in
+                            <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                                #{item}
+                            </foreach>
+                        </if>
+                    </where>
+                 )
+            group by ENTRUST_ID , FINPROD_ID ,PLEDGE_RATIO
         ) pledgeList
         LEFT JOIN ETR_ENTRUST ee
             ON ee.ENTRUST_ID = pledgeList.bussId
@@ -799,7 +969,7 @@
                         </foreach>
                     )
             </if>
-            <if test="entrustIdList != null and !entrustIdList.isEmpty()">
+            <if test="entrustIdList != null and !entrustIdList.isEmpty() and repo_pledge_model.equals('03')">
                 AND EEP.PLEDGE_STOCK_ID in
                 (
                 select PLEDGE_STOCK_ID
@@ -1123,17 +1293,43 @@
                    repRegistOrg
    </select>
 
-    <select id="findEtrPrinByEtrId" resultType="java.math.BigDecimal">
-        select sum(PLEDGE_NUMBER) amt
+    <select id="findEtrPrinByEtrIds" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustPledgeDto">
+        select ENTRUST_ID entrustId, FINPROD_ID finprodId, sum(PLEDGE_NUMBER*100) avaPledgePrin
         from (
-                 select PLEDGE_NUMBER
+                 select ENTRUST_ID, FINPROD_ID, PLEDGE_NUMBER
+                 from ETR_PLEDGE ep
+                <where>
+                    <if test="entrustIdList != null and entrustIdList.size() > 0">
+                        ep.ENTRUST_ID in
+                        <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                </where>
+                 union all
+                 select ENTRUST_ID, PLEDGE_FINPROD_ID FINPROD_ID, -1*PLEDGE_NUMBER
                  from WFL_REG_FIN_PLEDGE wrfp
-                 where wrfp.ENTRUST_ID = #{etrId}
-                 union
-                 select PLEDGE_NUMBER
+                <where>
+                    <if test="entrustIdList != null and entrustIdList.size() > 0">
+                        wrfp.ENTRUST_ID in
+                        <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                </where>
+                 union all
+                 select ENTRUST_ID, PLEDGE_FINPROD_ID FINPROD_ID, -1*PLEDGE_NUMBER
                  from REG_FIN_PLEDGE rfp
-                 where rfp.ENTRUST_ID = #{etrId}
+                <where>
+                    <if test="entrustIdList != null and entrustIdList.size() > 0">
+                        rfp.ENTRUST_ID in
+                        <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                </where>
              )
+        group by ENTRUST_ID, FINPROD_ID
     </select>
 
     <select id="findEtrLastNumByEtrId" resultType="java.math.BigDecimal">

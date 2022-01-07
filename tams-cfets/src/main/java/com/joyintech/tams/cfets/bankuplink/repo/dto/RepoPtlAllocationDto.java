@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author jiangpeng
@@ -59,6 +60,9 @@ public class RepoPtlAllocationDto {
 
     @ApiModelProperty(name = "secManageAcctId", value = "证券账户", example = "jpzqyhj001")
     private String secManageAcctId;
+
+    @ApiModelProperty(name = "repoEntrustPledgeDtos", value = "质押券信息")
+    private List<RepoEntrustPledgeDto> repoEntrustPledgeDtos;
 
     public String getEntrustId() {
         return entrustId;
@@ -181,6 +185,14 @@ public class RepoPtlAllocationDto {
 
     public void setPriceModelStr(String priceModelStr) {
         this.priceModelStr = priceModelStr;
+    }
+
+    public List<RepoEntrustPledgeDto> getRepoEntrustPledgeDtos() {
+        return repoEntrustPledgeDtos;
+    }
+
+    public void setRepoEntrustPledgeDtos(List<RepoEntrustPledgeDto> repoEntrustPledgeDtos) {
+        this.repoEntrustPledgeDtos = repoEntrustPledgeDtos;
     }
 }
 

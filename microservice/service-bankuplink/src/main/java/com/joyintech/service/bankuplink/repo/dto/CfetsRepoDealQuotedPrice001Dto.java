@@ -337,6 +337,26 @@ public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust {
      */
     private String isMq;
 
+    /**
+     * 是否软控
+     */
+    private String softSkipMode;
+
+    /**
+     * 交易手续费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal dealFeeAmt;
+
+    /**
+     * 结算服务费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal settFeeAmt;
+
+    // 分配方式
+    private String dipType;
+
     public Date getRepoVdate() {
 		return repoVdate;
 	}
@@ -1306,5 +1326,37 @@ public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust {
 
     public void setSqTotalAmt(BigDecimal sqTotalAmt) {
         this.sqTotalAmt = sqTotalAmt;
+    }
+
+    public BigDecimal getDealFeeAmt() {
+        return dealFeeAmt;
+    }
+
+    public void setDealFeeAmt(BigDecimal dealFeeAmt) {
+        this.dealFeeAmt = dealFeeAmt;
+    }
+
+    public BigDecimal getSettFeeAmt() {
+        return settFeeAmt;
+    }
+
+    public void setSettFeeAmt(BigDecimal settFeeAmt) {
+        this.settFeeAmt = settFeeAmt;
+    }
+
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
+    }
+
+    public String getDipType() {
+        return dipType;
+    }
+
+    public void setDipType(String dipType) {
+        this.dipType = dipType;
     }
 }

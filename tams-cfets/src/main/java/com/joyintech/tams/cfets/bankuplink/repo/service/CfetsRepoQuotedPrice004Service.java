@@ -193,11 +193,6 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         if (CollectionUtils.isEmpty(entity.getPtlAllocations())) {
             errorList.add(new ValidMessage("组合分配不可为空"));
         } else {
-            // 校验质押券总额(该笔交易,流程中及已生效交易)不能超过指令的质押券总额
-            // 按指令维度汇总 质押额
-            Map<String, BigDecimal> ptlSecPrin = new HashMap<>();
-            // 获取指令指定质押额
-            Map<String, BigDecimal> etrPrin = new HashMap<>();
             // 交易金额汇总
             BigDecimal tradeAmtTotal = BigDecimal.ZERO;
             // 到期结算金额汇总
@@ -208,20 +203,6 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             BigDecimal dealFeeAmtTotal = BigDecimal.ZERO;
             // 结算手续费汇总
             BigDecimal settFeeamtTotal = BigDecimal.ZERO;
-            List<RegFinPledge> list = new ArrayList<>();
-            if (StringUtil.equals(repo_pledge_model, "02") && StringUtil.equals(entity.getPs(), DictCodeListExt3.交易方向_正回购.getValue())) {
-                // 将质押券拆分到指令维度
-                list = dealWithPledgeList(entity.getRepoEntrustPledgeDtos(), entrustIdList, null, etrPrin);
-                // 按指令维度汇总质押额
-                for (RegFinPledge pledge : list) {
-                    if (StringUtil.isNotEmpty(ptlSecPrin.get(pledge.getEntrustId()))) {
-                        ptlSecPrin.put(pledge.getEntrustId(), pledge.getPledgeNumber());
-                    } else {
-                        BigDecimal pledgeNumber = ptlSecPrin.get(pledge.getEntrustId());
-                        ptlSecPrin.put(pledge.getEntrustId(), ArithmeticUtil.doAdd(pledgeNumber, pledge.getPledgeNumber()));
-                    }
-                }
-            }
             // 所有限价指令的回购利率中的最小值或最大值
             BigDecimal minOrMaxYield = null;
             // 指定价格的回购利率
@@ -269,20 +250,6 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 BigDecimal etrLastNum = cfetsIbuQuoteRepoMapper.findEtrLastNumByEtrId(ptlAllocatio.getEntrustId());
                 if (ACompareToB(ptlAllocatio.getTradeAmt(), etrLastNum, 12) > 0) {
                     errorList.add(new ValidMessage("组合分配中交易金额要小于等于[" + ptlAllocatio.getEntrustId() + "]剩余的指令额度"));
-                    break;
-                }
-                // 校验质押券总额(该笔交易,流程中及已生效交易)不能超过指令的质押券总额
-                if (StringUtil.equals(repo_pledge_model, "02")) {
-                    continue;
-                }
-                BigDecimal pldegeUsedAmt = cfetsIbuQuoteRepoMapper.findEtrPrinByEtrId(ptlAllocatio.getEntrustId());
-                pldegeUsedAmt = pldegeUsedAmt == null ? BigDecimal.ZERO : pldegeUsedAmt;
-                BigDecimal pldegeNowAmt = ptlSecPrin.get(ptlAllocatio.getEntrustId());
-                pldegeNowAmt = pldegeNowAmt == null ? BigDecimal.ZERO : pldegeNowAmt;
-                BigDecimal pldegeSumAmt = etrPrin.get(ptlAllocatio.getEntrustId());
-                pldegeSumAmt = pldegeSumAmt == null ? BigDecimal.ZERO : pldegeSumAmt;
-                if (ACompareToB(ArithmeticUtil.doSub(pldegeSumAmt, pldegeNowAmt, pldegeUsedAmt), (BigDecimal.ZERO), 12) < 0) {
-                    errorList.add(new ValidMessage("质押券总额不能超过指令" + ptlAllocatio.getEntrustId() + "指定的质押券总额"));
                     break;
                 }
             }
@@ -362,6 +329,24 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                             ArithmeticUtil.doAdd(secPledgePrinMap.get(repoEntrustPledgeDto.getBondCode()), repoEntrustPledgeDto.getPledgePrin()));
                 } else {
                     secPledgePrinMap.put(repoEntrustPledgeDto.getBondCode(), repoEntrustPledgeDto.getPledgePrin());
+                }
+            }
+            // 校验质押券总额(该笔交易,流程中及已生效交易)不能超过指令的质押券总额
+            if (StringUtil.equals(repo_pledge_model, "02") && StringUtil.equals(entity.getPs(), DictCodeListExt3.交易方向_正回购.getValue())) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("entrustIdList", entrustIdList);
+                // 将质押券拆分到指令维度
+                List<RegFinPledge> list = this.dealWithPledgeList(entity.getRepoEntrustPledgeDtos(), entrustIdList, null, null);
+                List<RepoEntrustPledgeDto> pledgeDtos = cfetsIbuQuoteRepoMapper.findEtrPrinByEtrIds(map);
+                // 校验质押券总额(该笔交易,流程中及已生效交易)不能超过指令的质押券总额
+                for (RegFinPledge pledge : list) {
+                    for (RepoEntrustPledgeDto pledgeDto : pledgeDtos) {
+                        if (StringUtil.equals(pledge.getEntrustId(), pledgeDto.getEntrustId())
+                                && StringUtil.equals(pledge.getPledgeFinprodId(), pledgeDto.getFinprodId())
+                                && ACompareToB(pledge.getPledgeNumber(), pledgeDto.getAvaPledgePrin(), 12) > 0) {
+                            errorList.add(new ValidMessage("质押券总额不能超过指令【" + pledge.getEntrustId() + "】指定的质押券总额"));
+                        }
+                    }
                 }
             }
             // 同个质押券的汇总质押券面总额必须为十万的整数倍，且不超过100亿
@@ -876,7 +861,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
 
         // 金融产品分类Entity 构造开始----------------------------------------------------------
         FinProductType finProductType = new FinProductType();
-        BeanUtil.copyPropertiesIgnoreNull(finProductType,deal);
+        BeanUtil.copyPropertiesIgnoreNull(finProductType, deal);
         finProductType.setFinprodId(deal.getTradeId());// 金融产品代码
         finProductType.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));// 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
         finProductType.setType6(deal.getRepoType());// 分类6
@@ -914,8 +899,8 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      */
     public void prepareFinTradeProductAndAdd(CfetsRepoDealRegisterQuoteDto entity, String repRegistOrg,
                                              FinTradeProductDto finTradeProduct, FinTradeProductAdd finTradeProductAdd, RegFinProductDeal deal) {
-        BeanUtil.copyPropertiesIgnoreNull(finTradeProduct,deal);
-        BeanUtil.copyPropertiesIgnoreNull(finTradeProductAdd,deal);
+        BeanUtil.copyPropertiesIgnoreNull(finTradeProduct, deal);
+        BeanUtil.copyPropertiesIgnoreNull(finTradeProductAdd, deal);
         // 交易类金融产品Entity 构造开始----------------------------------------------------------
         finTradeProduct.setFinprodId(deal.getTradeId());// 金融产品代码 = 金融产品交易Entity.交易编号
         finTradeProduct.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));// 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
@@ -1167,7 +1152,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 regFinPledgeMapper.insert(item);
             });
         }
-        // 交易类金融产品
+        /*// 交易类金融产品
         if (StringUtil.isNotEmpty(entity.getFinTradeProducts())) {
             // 先删后插
             entity.getFinTradeProducts().forEach(item -> {
@@ -1196,7 +1181,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     finProductTypeMapper.insertSelective(item);
                 }
             });
-        }
+        }*/
         // TODO TrdRepoTrade003Service 7.5 7.7 数据入库?
         //更新原登记数据状态
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
@@ -1514,14 +1499,20 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
     /**
      * 数值比较 a<b 返回-1,a=b返回0,a>b返回1
      *
-     * @param a
-     * @param b
+     * @param a     空值默认为0
+     * @param b     空值默认为0
      * @param scale 比较精度,默认四舍五入
      * @return int
      * @author jiangpeng
      * @date 2021/12/30 21:10
      */
     public int ACompareToB(BigDecimal a, BigDecimal b, int scale) {
+        if (a == null) {
+            a = BigDecimal.ZERO;
+        }
+        if (b == null) {
+            b = BigDecimal.ZERO;
+        }
         if (scale == 0) {
             scale = yieldScale;
         }
@@ -1538,6 +1529,18 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      */
     public String findTraderByCounterId(String counterId) {
         return cfetsIbuQuoteRepo004Mapper.findTraderByCounterId(counterId);
+    }
+
+    /**
+     * 查询是否已关联有效的银行间机构21位机构码
+     *
+     * @param partyId 21位机构码
+     * @return java.lang.String
+     * @author jiangpeng
+     * @date 2021/12/31 10:23
+     */
+    public String findTraderByPartyId(String partyId) {
+        return cfetsIbuQuoteRepo004Mapper.findTraderByPartyId(partyId);
     }
 
 }

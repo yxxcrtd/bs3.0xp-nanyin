@@ -23,13 +23,18 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrbondfirstlbidding.dao.EtrBondFirstLBiddingMapper;
 import com.joyintech.service.trade.investtrade.commanddispatcher.dto.EntrCommandDispatcherTotalDto;
 import com.joyintech.service.trade.investtrade.commanddispatcher.service.EntrCommandDispatcherService;
+import com.joyintech.tams.business.common.dao.CfgDataTableMapper;
 import com.joyintech.tams.business.common.dao.CfgReadonlyFormShowMapper;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.dto.CommonSearchInfoRequest;
+import com.joyintech.tams.business.common.entity.CfgDataTableShow;
 import com.joyintech.tams.business.common.entity.CfgReadonlyFormShow;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.cfets.etrdispatcher.dao.CfetsEtrDispatcherMapper;
 import com.joyintech.tams.cfets.etrdispatcher.dto.*;
+import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtribRepoInfo003Dto;
+import com.joyintech.tams.cfets.etrib.repo.dto.CfetsPledgeBondInfoDto;
+import com.joyintech.tams.cfets.etrib.repo.service.CfetsEtrIbRepoinfoService;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.core.impl.dao.MstWorkflowCommonServiceMapperImpl;
@@ -155,7 +160,10 @@ public class CfetsEtrDispatcherService extends BaseService{
     @Autowired
     private EntrCommandDispatcherService entrCommandDispatcherService;
     @Autowired
-    private MstCustomerInfoMapper mstCustomerInfoMapper;
+    private CfgDataTableMapper cfgDataTableMapper;
+
+    @Autowired
+    private CfetsEtrIbRepoinfoService cfetsEtrIbRepoinfoService;
 
     /**
      * 指令列表分页查询
@@ -571,19 +579,18 @@ public class CfetsEtrDispatcherService extends BaseService{
                         BigDecimal totalPrinAmt = BigDecimal.ZERO;
                         for (PledgeBondInfoDto pbi : pledgeList) {
                             totalPrinAmt = ArithmeticUtil.doAdd(totalPrinAmt, ArithmeticUtil.multiply(pbi.getPledgePrin(), pbi.getPledgeRatio()).divide(new BigDecimal("100")));
+                            pbi.setAvaPledgePrin(ArithmeticUtil.divide(pbi.getAvaPledgePrin(),new BigDecimal("10000"),4));
+                            if(StringUtil.isNoneBlank(pbi.getRepRegistOrg())){
+                                pbi.setRepRegistOrg(SysDataUtil.getNameFromDataDict(DictCode.登记托管机构_中债, pbi.getRepRegistOrg()));
+                            }
+                            pbi.setPledgePrin(ArithmeticUtil.divide(pledgeList.get(0).getPledgePrin(),new BigDecimal("10000"),4));
+                        }
+                        for (PledgeBondInfoDto pbi : pledgeList) {
+                            pbi.setTotalPrinAmt(totalPrinAmt);
                         }
                         cfetsResponseDto.setPledgeBondList(pledgeList);
-                        cfetsResponseDto.setTotalPrinAmt(totalPrinAmt);
-                        if(!CollectionUtils.isEmpty(pledgeList)) {
-                            cfetsResponseDto.setBondCode(pledgeList.get(0).getBondCode());
-                            cfetsResponseDto.setBondAbbrName(pledgeList.get(0).getBondAbbrName());
-                            cfetsResponseDto.setAvaPledgePrin(pledgeList.get(0).getAvaPledgePrin());
-                            MstCustomerInfo msi = mstCustomerInfoMapper.selectByPrimaryKey(pledgeList.get(0).getRepRegistOrg());
-                            cfetsResponseDto.setRepRegistOrg(msi == null? "":msi.getCustomerName());
-                            cfetsResponseDto.setUnderlyingQty(pledgeList.get(0).getPrin());
-                            cfetsResponseDto.setPledgeRatio(pledgeList.get(0).getPledgeRatio());
+                        cfetsResponseDto.setTotalPrinAmt(ArithmeticUtil.divide(totalPrinAmt,new BigDecimal("10000"),4));
 
-                        }
                     }
                 }else if(StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_现券交易.getValue())){
                     if(StringUtil.equals("01", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"))){
@@ -1072,7 +1079,8 @@ public class CfetsEtrDispatcherService extends BaseService{
     public Map<String, Object> getReadonlyFormEtrInfo(String pageCode, String dtCode, String spcdCode, CommonSearchInfoRequest dto) {
         Map<String, Object> resultData = new HashMap<>();
         List<CfgReadonlyFormShow>  infoForm = new ArrayList<CfgReadonlyFormShow>();
-        
+        List<CfgDataTableShow> infoTable = new ArrayList<>();
+
         if(StringUtil.equals(DictCodeListExt1.交易场所_香港联合交易所.getValue(),dto.getTradeMarket()) ||
             StringUtil.equals(DictCodeListExt1.交易场所_深圳证券交易所.getValue(),dto.getTradeMarket()) ||
             StringUtil.equals(DictCodeListExt1.交易场所_上海证券交易所.getValue(),dto.getTradeMarket())){
@@ -1106,7 +1114,7 @@ public class CfetsEtrDispatcherService extends BaseService{
                     spcdCode = spcdCode.concat(",").concat(repoPledgeModel);
                     infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
                     spcdCode = spcdCode.concat(",").concat(dto.getPs());
-                    infoForm.addAll(cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode));
+                    infoTable = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode,null,null);
             }else {
                 infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
                 if (StringUtil.equals(CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"), "02")) {
@@ -1127,6 +1135,20 @@ public class CfetsEtrDispatcherService extends BaseService{
         CfetsEtrDispatcherInfoResponse cfetsResponseDto = this.getEtrDispatcherInfo(dto);
         resultData.put(dtCode+"_form",infoForm);
         resultData.put(dtCode+"_data",cfetsResponseDto);
+        if(!CollectionUtils.isEmpty(infoTable)) {//如果表格有数据
+            resultData.put(dtCode+"_table",infoTable);
+         /* 这里是另外一种方式获取质押券明细，如果下面那种不正确则修改为下面这种
+            CfetsEtribRepoInfo003Dto item = new CfetsEtribRepoInfo003Dto();
+            item.setEntrustId(dto.getEntrustId());
+            CfetsEtribRepoInfo003Dto result = cfetsEtrIbRepoinfoService.findEtrinfo(item);
+            if(result != null) {
+                List<CfetsPledgeBondInfoDto> detailList = result.getPledgeBondTotalListDetailed();
+                if(CollectionUtils.isEmpty(detailList)) {
+
+                }
+            }*/
+            resultData.put(dtCode+"_datatable",cfetsResponseDto.getPledgeBondList());
+        }
         return resultData;
     }
 }

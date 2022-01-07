@@ -135,6 +135,9 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
     @ApiModelProperty(name="deliveryType",value="结算方式code",example="03")
     private String deliveryType;
 
+    @ApiModelProperty(name="mdeliveryType",value="到期结算方式",example="03")
+    private String mdeliveryType;
+
     @ApiModelProperty(name="settleType",value="清算类型code",example="A1")
     private String settleType;
 
@@ -436,6 +439,18 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
 
     public String getDeliveryTypeStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.结算方式, this.getDeliveryType());
+    }
+
+    public String getMdeliveryTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.结算方式, this.getMdeliveryType());
+    }
+
+    public String getMdeliveryType() {
+        return mdeliveryType;
+    }
+
+    public void setMdeliveryType(String mdeliveryType) {
+        this.mdeliveryType = mdeliveryType;
     }
 
     public String getOtherCcy() {

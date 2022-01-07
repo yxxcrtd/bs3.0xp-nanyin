@@ -16,8 +16,11 @@ import java.util.List;
 @ApiModel(value = "质押式回购报价实体(输入输出共用)", description = "质押式回购报价实体(输入输出共用)")
 public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEntity {
 
-    @ApiModelProperty(name = "quoteId", value = "报价编号")
+    @ApiModelProperty(name = "quoteId", value = "报价编号(内部)")
     private String quoteId;
+
+    @ApiModelProperty(name = "cfetsQuoteId", value = "报价编号(外部)")
+    private String cfetsQuoteId;
 
     @ApiModelProperty(name="elementId",value="按钮id")
     private String elementId;
@@ -28,7 +31,7 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name = "operatorType", value = "操作类型", example = "done")
     private String operatorType;
 
-    @ApiModelProperty(name = "quotaPageModel", value = "报价操作类型(修改,回复,撤回,回退)", example = "marketResponse")
+    @ApiModelProperty(name = "quotaPageModel", value = "报价操作类型(修改,回复,撤回,回退)", example = "copy")
     private String quotaPageModel;
 
     @ApiModelProperty(name = "validStatus", value = "有效状态", example = "01")
@@ -54,6 +57,9 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     @ApiModelProperty(name = "counterId", value = "对手方")
     private String counterId;
+
+    @ApiModelProperty(name = "counterPartyId", value = "对手方(21位码)")
+    private String counterPartyId;
 
     @ApiModelProperty(name = "counterTrader", value = "对手方交易员")
     private String counterTrader;
@@ -112,6 +118,9 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name = "repoEntrustPledgeDtos", value = "质押券信息")
     private List<RepoEntrustPledgeDto> repoEntrustPledgeDtos;
 
+    @ApiModelProperty(name = "countPledgeBondList", value = "对手方质押券信息")
+    private List<RepoEntrustPledgeDto> countPledgeBondList;
+
     @ApiModelProperty(name = "tradeDate", value = "交易日期", example = "2021-07-08")
     private Date tradeDate;
 
@@ -154,6 +163,14 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setQuoteId(String quoteId) {
         this.quoteId = quoteId;
+    }
+
+    public String getCfetsQuoteId() {
+        return cfetsQuoteId;
+    }
+
+    public void setCfetsQuoteId(String cfetsQuoteId) {
+        this.cfetsQuoteId = cfetsQuoteId;
     }
 
     public String getOperateType() {
@@ -498,6 +515,22 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setDialogueRecord(String dialogueRecord) {
         this.dialogueRecord = dialogueRecord;
+    }
+
+    public List<RepoEntrustPledgeDto> getCountPledgeBondList() {
+        return countPledgeBondList;
+    }
+
+    public void setCountPledgeBondList(List<RepoEntrustPledgeDto> countPledgeBondList) {
+        this.countPledgeBondList = countPledgeBondList;
+    }
+
+    public String getCounterPartyId() {
+        return counterPartyId;
+    }
+
+    public void setCounterPartyId(String counterPartyId) {
+        this.counterPartyId = counterPartyId;
     }
 }
 

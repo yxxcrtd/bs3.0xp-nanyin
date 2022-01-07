@@ -70,6 +70,16 @@ public class PtlAllocationDto extends EtrEntrust {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal settFeeAmt;
 
+   //净价总额
+   @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal cPriceAmt;
+
+    //应计利息
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal intAmt;
+
+    //价格模式
+    private String priceModel;
 
     /**
      * 交易费用LIST
@@ -162,6 +172,32 @@ public class PtlAllocationDto extends EtrEntrust {
 
     public void setSettFeeAmt(BigDecimal settFeeAmt) {
         this.settFeeAmt = settFeeAmt;
+    }
+
+    public BigDecimal getcPriceAmt() {
+        return cPriceAmt;
+    }
+
+    public void setcPriceAmt(BigDecimal cPriceAmt) {
+        this.cPriceAmt = cPriceAmt;
+    }
+
+    public BigDecimal getIntAmt() {
+        return intAmt;
+    }
+
+    public void setIntAmt(BigDecimal intAmt) {
+        this.intAmt = intAmt;
+    }
+
+    @Override
+    public String getPriceModel() {
+        return priceModel;
+    }
+
+    @Override
+    public void setPriceModel(String priceModel) {
+        this.priceModel = priceModel;
     }
 }
 
