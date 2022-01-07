@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.google.common.base.Strings;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.syspara.dto.SysParaSet001Dto;
@@ -159,6 +160,10 @@ public class CommonManagement extends BaseService {
 
     @Autowired
     private SysParaSet001Service sysParaSet001Service;
+
+    public String queryFairTradeParam() {
+        return CacheUtil.getSysParam(ExchangeConstant.FAIR_CODE_IN_PARA);
+    }
 
     public List<SysParaSet001Dto> querySysPara(Map<String, Object> pageParam) {
         try {
