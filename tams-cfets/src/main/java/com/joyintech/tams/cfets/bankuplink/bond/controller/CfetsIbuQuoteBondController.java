@@ -14,6 +14,7 @@ import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
 import com.joyintech.tams.cfets.bankuplink.bond.service.*;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
@@ -406,27 +407,37 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@ApiOperation(value = "请求报价撤回", notes = "请求报价撤回")
 	@ResponseBody
 	@RequestMapping("doReCall")
-	public Message<AjaxResult> doReCall(@RequestBody CfetsBondCheckRequst cfetsBondCheckRequst) {
+	public Message<AjaxResult> doReCall(@RequestBody CfetsBondCheckRequst cfetsBondCheckRequst) throws Exception{
 		AjaxResult ar = null;
 		BondQuoteInfoDto bondQuote = new BondQuoteInfoDto();
 		BeanUtil.copyPropertiesIgnoreNull(bondQuote,cfetsBondCheckRequst);
-		if (ibuQuoteBondService.doReCall(bondQuote)) {
-			ar = new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS"));
-		} ;
+		try{
+			if (ibuQuoteBondService.doReCall(bondQuote)) {
+				ar = new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS"));
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+			return PositionUtil.ajaxErrorReturn(e);
+		}
 		return new Message<AjaxResult>().success().setData(ar);
 	}
 
 	@ApiOperation(value = "报价批量撤回", notes = "报价批量撤回")
 	@ResponseBody
 	@RequestMapping("doReCallList")
-	public Message<AjaxResult> doReCallList(@RequestBody List<CfetsBondCheckRequst> cfetsBondCheckRequsts) {
+	public Message<AjaxResult> doReCallList(@RequestBody List<CfetsBondCheckRequst> cfetsBondCheckRequsts) throws Exception{
 		AjaxResult ar = null;
-		for(CfetsBondCheckRequst cfetsBondCheckRequst:cfetsBondCheckRequsts){
-			BondQuoteInfoDto bondQuote = new BondQuoteInfoDto();
-			BeanUtil.copyPropertiesIgnoreNull(bondQuote,cfetsBondCheckRequst);
-			if (ibuQuoteBondService.doReCall(bondQuote)) {
-				ar = new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS"));
-			} ;
+		try{
+			for(CfetsBondCheckRequst cfetsBondCheckRequst:cfetsBondCheckRequsts){
+				BondQuoteInfoDto bondQuote = new BondQuoteInfoDto();
+				BeanUtil.copyPropertiesIgnoreNull(bondQuote,cfetsBondCheckRequst);
+				if (ibuQuoteBondService.doReCall(bondQuote)) {
+					ar = new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS"));
+				}
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+			return PositionUtil.ajaxErrorReturn(e);
 		}
 		return new Message<AjaxResult>().success().setData(ar);
 	}

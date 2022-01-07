@@ -230,6 +230,10 @@ public class IbuQuoteBond004Controller extends BaseController {
         else {
             cfetsBondDealRegisterQuoteDto.setTotleTradeId(IDGenerator.generate());
         }
+        //登记回售  对手方显示发行人名称
+        if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())&&StringUtil.isEmpty(cfetsBondDealRegisterQuoteDto.getCounterName())){
+            cfetsBondDealRegisterQuoteDto.setCounterName(cfetsQuotedCommonServiceVue.getIssuserName(cfetsBondDealRegisterQuoteDto.getFinprodId()));
+        }
 		ProcessParameter<CfetsBondDealRegisterQuoteDto> processParameter = new ProcessParameter<CfetsBondDealRegisterQuoteDto>();
 		WorkFlowParameter<CfetsBondDealRegisterQuoteDto> params = new WorkFlowParameter<CfetsBondDealRegisterQuoteDto>();
 		params.setPageId("IbuQuoteBond004");

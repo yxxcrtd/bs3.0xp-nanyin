@@ -177,6 +177,26 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
      */
     private String quoteOperatorType;
 
+    private BigDecimal lendinShareAmt;
+
+    private BigDecimal ourShareAmt;
+
+    public BigDecimal getLendinShareAmt() {
+        return lendinShareAmt;
+    }
+
+    public void setLendinShareAmt(BigDecimal lendinShareAmt) {
+        this.lendinShareAmt = lendinShareAmt;
+    }
+
+    public BigDecimal getOurShareAmt() {
+        return ourShareAmt;
+    }
+
+    public void setOurShareAmt(BigDecimal ourShareAmt) {
+        this.ourShareAmt = ourShareAmt;
+    }
+
     @Override
     public String getQuoteId() {
         return quoteId;

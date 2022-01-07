@@ -735,6 +735,9 @@ public class IbuComponentCommonService extends BaseService {
                  wflIbuQuoteEtrReDto.setCpriceAmt(item.getCpriceAmt());
                  wflIbuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
                  wflIbuQuoteEtrReDto.setIntAmt(item.getIntAmt());
+                 wflIbuQuoteEtrReDto.setInvAim(item.getInvAim());
+                 wflIbuQuoteEtrReDto.setOurShareAmt(ArithmeticUtil.divide(item.getOurShareAmt(),new BigDecimal(100),2));
+                 wflIbuQuoteEtrReDto.setLendinShareAmt(ArithmeticUtil.divide(item.getLendinShareAmt(),new BigDecimal(100),2));
                  wflIbuQuoteEtrReDtoList.add(wflIbuQuoteEtrReDto);
              });
              inputBean.setWflIbuQuoteEtrReDtoList(wflIbuQuoteEtrReDtoList);
@@ -876,6 +879,8 @@ public class IbuComponentCommonService extends BaseService {
                 ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
                 ibuQuoteEtrReDto.setIntAmt(item.getIntAmt());
                 ibuQuoteEtrReDto.setInvAim(item.getInvAim());
+                ibuQuoteEtrReDto.setOurShareAmt(ArithmeticUtil.divide(item.getOurShareAmt(),new BigDecimal(100),2));
+                ibuQuoteEtrReDto.setLendinShareAmt(ArithmeticUtil.divide(item.getLendinShareAmt(),new BigDecimal(100),2));
 	           	ibuQuoteEtrReDtoList.add(ibuQuoteEtrReDto);
             });
             inputBean.setIbuQuoteEtrReDtoList(ibuQuoteEtrReDtoList);
@@ -1072,6 +1077,8 @@ public class IbuComponentCommonService extends BaseService {
                 ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
                 ibuQuoteEtrReDto.setIntAmt(item.getIntAmt());
                 ibuQuoteEtrReDto.setInvAim(item.getInvAim());
+                ibuQuoteEtrReDto.setOurShareAmt(ArithmeticUtil.divide(item.getOurShareAmt(),new BigDecimal(100),2));
+                ibuQuoteEtrReDto.setLendinShareAmt(ArithmeticUtil.divide(item.getLendinShareAmt(),new BigDecimal(100),2));
 	           	ibuQuoteEtrReDtoList.add(ibuQuoteEtrReDto);
             });
             inputBean.setIbuQuoteEtrReDtoList(ibuQuoteEtrReDtoList);
@@ -1247,6 +1254,9 @@ public class IbuComponentCommonService extends BaseService {
                 wflIbuQuoteEtrReDto.setCpriceAmt(item.getCpriceAmt());
                 wflIbuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
                 wflIbuQuoteEtrReDto.setIntAmt(item.getIntAmt());
+                wflIbuQuoteEtrReDto.setInvAim(item.getInvAim());
+                wflIbuQuoteEtrReDto.setOurShareAmt(ArithmeticUtil.divide(item.getOurShareAmt(),new BigDecimal(100),2));
+                wflIbuQuoteEtrReDto.setLendinShareAmt(ArithmeticUtil.divide(item.getLendinShareAmt(),new BigDecimal(100),2));
                 wflIbuQuoteEtrReDtoList.add(wflIbuQuoteEtrReDto);
             });
             inputBean.setWflIbuQuoteEtrReDtoList(wflIbuQuoteEtrReDtoList);

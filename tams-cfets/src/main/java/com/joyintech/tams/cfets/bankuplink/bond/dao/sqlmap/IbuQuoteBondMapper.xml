@@ -2078,4 +2078,16 @@ SELECT
     <select id="getTradeStatus" resultType="java.lang.String">
         SELECT TRADE_STATUS FROM  IBU_QUOTE_BOND_DET WHERE  QUOTE_ID = #{quoteId} AND CP_PARTY_ID = #{cpPartyId}
     </select>
+
+    <!--获取发行人名称-->
+    <select id="getIssuserName" resultType="java.lang.String">
+        SELECT
+            T2.CUSTOMER_NAME
+        FROM
+            FIN_PRODUCT T1
+        LEFT JOIN MST_CUSTOMER_INFO T2 ON
+            T1.ISSUER = T2.CUSTOMER_ID
+        WHERE
+            T1.FINPROD_ID  = #{finprodId}
+    </select>
 </mapper>

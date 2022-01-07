@@ -68,15 +68,32 @@ public class WflIbuQuoteEtrRe extends WflIbuQuoteEtrReKey {
     private BigDecimal cpriceAmt;
 
     /**
-     * 业务模式
+     * 应计利息
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal intAmt;
 
     /**
-     * null
+     * 业务模式
      */
     private String invAim;
+
+    /**
+     * 本方券交易份额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal ourShareAmt;
+
+    /**
+     * 融入券交易份额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal lendinShareAmt;
+
+    /**
+     * 价格模式
+     */
+    private String priceModel;
 
     /**
      * 取得 组合代码
@@ -255,34 +272,82 @@ public class WflIbuQuoteEtrRe extends WflIbuQuoteEtrReKey {
     }
 
     /**
-     * 取得 业务模式
-     * @return 业务模式
+     * 取得 应计利息
+     * @return 应计利息
      */
     public BigDecimal getIntAmt() {
         return intAmt;
     }
 
     /**
-     * 设置 业务模式
-     * @param intAmt 业务模式
+     * 设置 应计利息
+     * @param intAmt 应计利息
      */
     public void setIntAmt(BigDecimal intAmt) {
         this.intAmt = intAmt;
     }
 
     /**
-     * 取得 null
-     * @return null
+     * 取得 业务模式
+     * @return 业务模式
      */
     public String getInvAim() {
         return invAim;
     }
 
     /**
-     * 设置 null
-     * @param invAim null
+     * 设置 业务模式
+     * @param invAim 业务模式
      */
     public void setInvAim(String invAim) {
         this.invAim = invAim == null ? null : invAim.trim();
+    }
+
+    /**
+     * 取得 本方券交易份额
+     * @return 本方券交易份额
+     */
+    public BigDecimal getOurShareAmt() {
+        return ourShareAmt;
+    }
+
+    /**
+     * 设置 本方券交易份额
+     * @param ourShareAmt 本方券交易份额
+     */
+    public void setOurShareAmt(BigDecimal ourShareAmt) {
+        this.ourShareAmt = ourShareAmt;
+    }
+
+    /**
+     * 取得 融入券交易份额
+     * @return 融入券交易份额
+     */
+    public BigDecimal getLendinShareAmt() {
+        return lendinShareAmt;
+    }
+
+    /**
+     * 设置 融入券交易份额
+     * @param lendinShareAmt 融入券交易份额
+     */
+    public void setLendinShareAmt(BigDecimal lendinShareAmt) {
+        this.lendinShareAmt = lendinShareAmt;
+    }
+
+    /**
+     * 取得 价格模式
+     * @return 价格模式
+     */
+    public String getPriceModel() {
+        return priceModel;
+    }
+
+    /**
+     * 设置 价格模式
+     * @param priceModel 价格模式
+     */
+    public void setPriceModel(String priceModel) {
+        this.priceModel = priceModel == null ? null : priceModel.trim();
     }
 }
