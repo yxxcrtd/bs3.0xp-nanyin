@@ -63,6 +63,30 @@
 
     });
 
+    //净价总额 联动
+    $('#cpriceAmt').change(function(){
+        netPriceCalculate();
+    });
+
+    //本金金额 联动
+    $('#tradeAmt').change(function(){
+        netPriceCalculate();
+    });
+
+    /**
+     * 净价计算 净价总额/本金金额
+     */
+    var netPriceCalculate = function(){
+        if($('#cpriceAmt').val() && $('#cpriceAmt').val() !==null && $('#cpriceAmt').val() !=''
+        &&  $('#tradeAmt').val() && $('#tradeAmt').val() !=null && $('#tradeAmt').val() !='' && $('#tradeAmt').val()!=0){
+            var netPrice = JoyinMath.doDiv($('#cpriceAmt').val(),$('#tradeAmt').val(),2);
+            $('#netPrice').val(netPrice);
+        }else{
+            $('#netPrice').val('');
+        }
+
+    }
+
     //全价总额 联动
     $('#fpriceAmt').change(function(){
         cpriceAmtCalculate();

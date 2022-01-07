@@ -39,11 +39,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 /**
- * @Description:计划类资产(利率型)投资交易新建
+ * @Description:固收类投资交易新建
  * @auther: yuzj
  * @date: 2021/12/30
  * @param:
@@ -82,32 +83,14 @@ public class TrdFixIncomeValuationTrade002Controller extends BaseController {
         String portfolioId = getParam("portfolioId");
         String tradeId = getParam("tradeId");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
-        if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
-            TrdFixIncomeValuationTradeDto entity = trdFixIncomeValuationTrade002Service.getBussinessEntityByWorkflowId(
-                workflowId);
-            model.addAttribute("entity",entity);
+        if(StringUtil.isNotEmpty(workflowId)){
+            TrdFixIncomeValuationTradeDto entity= trdFixIncomeValuationTrade002Service.getBussinessEntityByWorkflowId(workflowId);
+            model.addAttribute("entity", entity);
             model.addAttribute("workflowId", workflowId);
-            model.addAttribute("tradeId", entity.getTradeId());
-        }
-        else if (StringUtil.isNotEmpty(tradeId)) {
-            WflTrdProductDeal wflTrdProductDeal = new WflTrdProductDeal();
-            if (wflTrdProductDeal != null) {
-                String workFlowId = wflTrdProductDeal.getWorkflowId();
-                if (workFlowId != null && !workFlowId.isEmpty()) {
-                    TrdFixIncomeValuationTradeDto entity = trdFixIncomeValuationTrade002Service.getBussinessEntityByWorkflowId(
-                            workFlowId);
-                    model.addAttribute("entity", entity);
-                    model.addAttribute("workflowId", workflowId);
-                    model.addAttribute("tradeId", tradeId);
-                }
-            } else {
-                TrdFixIncomeValuationTradeDto entity = trdFixIncomeValuationTrade002Service.getInitEntity(tradeId);
-                if (StringUtil.isNotEmpty(portfolioId)) {
-                    entity.setPortfolioId(portfolioId);
-                }
-                model.addAttribute("entity", entity);
-                model.addAttribute("tradeId", tradeId);
-            }
+
+        }else if (!StringUtil.isNotEmpty(workflowId) && StringUtil.isNotEmpty(tradeId)){
+            TrdFixIncomeValuationTradeDto entity = trdFixIncomeValuationTrade002Service.queryTradeInfoByTradeId(tradeId);
+            model.addAttribute("entity", entity);
         }else{
             //初始化值
             TrdFixIncomeValuationTradeDto entity = new TrdFixIncomeValuationTradeDto();
@@ -238,6 +221,14 @@ public class TrdFixIncomeValuationTrade002Controller extends BaseController {
         params.setElementId(dto.getElementId());
         params.setBusinessCode(dto.getTradeId());
         params.setBusinessType(DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue());
+
+        //设置主键
+        if(!StringUtil.isNotEmpty(dto.getTradeId())){
+            Date sysDate= DateUtil.platDateFromCache();
+            //新建初始化交易编号
+            dto.setTradeId(trdFixIncomeValuationTrade002Service.createPlanTradeId());
+        }
+
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
                 entity -> SpringContextUtil.getTextValue("TrdFixIncomeValuationTrade001.tradeId")+"("+ entity.getTradeId() +")"+"-"+SpringContextUtil.getTextValue("TrdFixIncomeRateValuationTrade002.tradeDate") + "(" + DateUtil.format(entity.getTradeDate()) + ")"

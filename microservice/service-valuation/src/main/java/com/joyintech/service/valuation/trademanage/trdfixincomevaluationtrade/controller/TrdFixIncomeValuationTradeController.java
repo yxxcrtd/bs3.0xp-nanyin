@@ -14,8 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.service.valuation.trademanage.trdfixincomevaluationtrade.dto.TrdFixIncomeTradeResult;
 import com.joyintech.service.valuation.trademanage.trdfixincomevaluationtrade.dto.TrdFixIncomeValuationTradeDto;
 import com.joyintech.service.valuation.trademanage.trdfixincomevaluationtrade.service.TrdFixIncomeValuationTradeService;
+import com.joyintech.service.valuation.trademanage.trdplanvaluationtrade.dto.TrdPlanTradeResult;
+import com.joyintech.service.valuation.trademanage.trdplanvaluationtrade.dto.TrdPlanValuationTradeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -115,6 +118,50 @@ public class TrdFixIncomeValuationTradeController extends BaseController {
     @PostMapping("/findAll")
     public List<TrdFixIncomeValuationTradeDto> findAll(@RequestBody Map<String, Object> param){
         return trdFixIncomeValuationTradeService.findAll(param);
+    }
+
+    /**
+     * 回调函数 操作具体 new
+     *
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("insert")
+    public void insert(@RequestBody TrdFixIncomeTradeResult dto) {
+        trdFixIncomeValuationTradeService.insert(dto);
+    }
+
+    /**
+     * 回调函数 操作具体 update <功能详细描述>
+     *
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("update")
+    public void update(@RequestBody TrdFixIncomeTradeResult dto) {
+        trdFixIncomeValuationTradeService.update(dto);
+    }
+
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("delete")
+    public int delete(@RequestBody TrdFixIncomeValuationTradeDto dto){
+        return trdFixIncomeValuationTradeService.delete(dto);
+    }
+
+    /**
+     * 根据交易编号查询对象
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("queryTradeInfoByTradeId")
+    public TrdFixIncomeValuationTradeDto queryTradeInfoByTradeId(@RequestBody String  tradeId) {
+        return trdFixIncomeValuationTradeService.queryTradeInfoByTradeId(tradeId);
     }
 
 }
