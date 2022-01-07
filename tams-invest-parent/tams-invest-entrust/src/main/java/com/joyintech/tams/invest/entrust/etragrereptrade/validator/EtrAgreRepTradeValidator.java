@@ -68,9 +68,9 @@ public class EtrAgreRepTradeValidator implements EtrCommonValidator {
             else {
                 param.put("portfolioId", dto.getPortfolioId());
                 param.put("finprodId", firstEtrAgreRepTradeDto.getTradeId());
-                if (null != dto.getSecAcctId()) {
-                    param.put("secAcctId", dto.getSecAcctId());
-                }
+                //if (null != dto.getSecAcctId()) {
+                //    param.put("secAcctId", dto.getSecAcctId());
+               // }
 //            param.put("secAcctId", "999999");
                 param.put("ccy", DictCodeList.币种_人民币_CNY.getValue());
                 BigDecimal availableNum =  etrExchangeTrade001Service.selectAvailableNum(param);
