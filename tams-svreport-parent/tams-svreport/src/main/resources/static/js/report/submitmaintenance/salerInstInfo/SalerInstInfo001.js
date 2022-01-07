@@ -102,6 +102,10 @@
      * 綁定按钮事件
      */
     $(function () {
+    // 绑定重置按钮事件
+                $('#SalerInstInfo001_btn_reset').click(function(){
+                    window.location.reload();
+                });
         /**
          * 查询按钮
          */
