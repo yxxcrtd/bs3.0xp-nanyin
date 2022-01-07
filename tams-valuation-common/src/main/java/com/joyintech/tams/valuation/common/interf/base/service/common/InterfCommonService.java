@@ -853,7 +853,11 @@ public class InterfCommonService {
 
         // 创建时间 = 系统时间
         valBokDetailId.setCreateTime(deal.getCreateTime());
-
+        //调用共通设计->【详细设计-接口共通方法设计.xlsx】->四级科目号设置SHEET
+        BokDetailId bokDetailIdTail = this.settingDetailSubjectNoTaiL(valBokDetailId.getBusiId(),valBokDetailId.getBusiDetailType(),0L,null,valBokDetailId.getBooksetId());
+        valBokDetailId.setDetailSubjectNoTail(bokDetailIdTail.getDetailSubjectNoTail());
+        //T3.账务明细代码.四级科目尾号名称 = dto.四级科目尾号名称
+        valBokDetailId.setDetailSubnameTail(bokDetailIdTail.getDetailSubnameTail());
         // 赋值公共入账信息类
         interfProductDealBookCommonDto.setBokDealAccounting(valDealAccounting);
         interfProductDealBookCommonDto.setBokDealAccountingDetail(valDealAccountingDetail);
