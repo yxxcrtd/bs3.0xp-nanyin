@@ -208,7 +208,7 @@ public class TrdPlanNetInvestTrade002Service extends BaseService<TrdPlanNetInves
                     String createUser = restTemplate.getForObject(
                         ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanNetInvestTrade/getSysDateMark?workflowId="+ entity.getWorkflowId(),
                         String.class);
-                    confirmDto.setCreateUser(createUser);
+                    confirmDto.setCreateUser(createUser == null ? entity.getCreateUser() : createUser);
 
 	                try {
 	                    WorkFlowUtil.startProcess(workFlowPatameter.getWorkFlowParameter(),"","", confirmDto.getCreateUser(),OperationType.NEW,false,confirmDto);

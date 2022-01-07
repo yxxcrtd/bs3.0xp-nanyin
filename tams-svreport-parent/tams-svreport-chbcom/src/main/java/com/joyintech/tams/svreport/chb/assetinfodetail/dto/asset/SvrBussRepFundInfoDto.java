@@ -143,6 +143,11 @@ public class SvrBussRepFundInfoDto extends RepFund {
      */
     private String pbcAssetType3;
 
+    /**
+     * 是否为固定收益类，01：是，02：否， 中债新增
+     */
+    private String profitFlag;
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -330,4 +335,12 @@ public class SvrBussRepFundInfoDto extends RepFund {
 	public void setIsUnlisted(String isUnlisted) {
 		this.isUnlisted = isUnlisted;
 	}
+	
+	public String getProfitFlag() {
+        return profitFlag;
+    }
+
+    public void setProfitFlag(String profitFlag) {
+        this.profitFlag = profitFlag;
+    }
 }

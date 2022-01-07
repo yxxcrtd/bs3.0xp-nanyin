@@ -42,7 +42,8 @@
 		    CPDS.REMARK,
 		    CPDS.SHARE_AMT_WAN shareAmtWan,
 		    CPDS.CASH_AMT_WAN  cashAmtWan,
-			CPDS.SUMIT_SEQ sumitSeq
+			CPDS.SUMIT_SEQ sumitSeq,
+		    CPDS.YIELD_DATE yieldDate
 		FROM CHB_PRD_DEAL_SUB CPDS
 		LEFT JOIN CHB_PRD_BASEINFO CPB 
 		ON CPB.PROD_ID = CPDS.PROD_ID
@@ -221,7 +222,8 @@
 			REMARK,
 			SHARE_AMT_WAN,
 			CASH_AMT_WAN,
-			SUBMIT_FEEDBACK_MSG
+			SUBMIT_FEEDBACK_MSG,
+		    YIELD_DATE
       )
       select  
          REGIST_SEQNO,
@@ -262,7 +264,8 @@
 			REMARK,
 			SHARE_AMT_WAN,
 			CASH_AMT_WAN,
-			SUBMIT_FEEDBACK_MSG
+			SUBMIT_FEEDBACK_MSG,
+	    	YIELD_DATE
       from CHB_PRD_DEAL_SUB
       where 1 =1
        <if test="registList !=null and registList.size()>0">
@@ -324,7 +327,8 @@
 			REMARK,
 			SHARE_AMT_WAN,
 			CASH_AMT_WAN,
-			SUBMIT_FEEDBACK_MSG
+			SUBMIT_FEEDBACK_MSG,
+		    YIELD_DATE
       )
       select   
          HIS_NO,
@@ -365,7 +369,8 @@
 			REMARK,
 			SHARE_AMT_WAN,
 			CASH_AMT_WAN,
-			SUBMIT_FEEDBACK_MSG
+			SUBMIT_FEEDBACK_MSG,
+		   YIELD_DATE
       from (
         select HIS_NO,
 			PROD_ID,
@@ -406,6 +411,7 @@
 			SHARE_AMT_WAN,
 			CASH_AMT_WAN,
 			SUBMIT_FEEDBACK_MSG,
+		    YIELD_DATE,
             rank() over (partition by PROD_ID order by nvl(update_time,create_time) desc) ranknum
          from CHB_PRD_DEAL_SUB_HIS  his
          <where>
@@ -505,7 +511,8 @@ sub.CASH_AMT_WAN  cashAmtWan,
 sub.BALANCE_AMT  balanceAmt,
 sub.PRD_QTY  prdQty,
 sub.CCY_PURCHASE  ccyPurchase,
-sub.REMARK
+sub.REMARK,
+sub.YIELD_DATE yieldDate
 
 from CHB_PRD_DEAL_SUB sub
     where 1=1

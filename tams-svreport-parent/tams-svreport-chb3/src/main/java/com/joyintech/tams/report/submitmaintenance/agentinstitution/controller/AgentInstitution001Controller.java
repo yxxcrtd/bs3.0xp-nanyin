@@ -64,7 +64,7 @@ public class AgentInstitution001Controller extends BaseController {
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
-        super.setSelectOptionToModel(model, DictCode.维护数据状态);
+        super.setSelectOptionToModel(model, DictCode.代理销售机构信息数据状态);
         return super.init(model);
     }
 

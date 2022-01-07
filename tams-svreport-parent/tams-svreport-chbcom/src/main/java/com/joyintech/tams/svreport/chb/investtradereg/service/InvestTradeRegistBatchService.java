@@ -380,6 +380,31 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
 					}
 				}
 
+				//根据数据源规范要求，新增的交易员与交易审批人身份证号字段后6位数据需脱敏为“******”  add by tuqirong 20211223 start
+				if (StringUtil.isNotEmpty(dto.getInvestApproverId()) && dto.getInvestApproverId().length() > 6) {
+					dto.setInvestApproverId(dto.getInvestApproverId().substring(0, dto.getInvestApproverId().length()-6) + "******");
+				}else if (StringUtil.isEmpty(dto.getInvestApproverId())
+						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_资产买入.getValue())
+						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_资产卖出或到期.getValue())
+						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_存入银行存款.getValue())
+						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_银行存款到期.getValue())
+						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_拆放同业和买入返售首期.getValue())
+						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_同业拆入和卖出回购首期.getValue())) {
+					dto.setInvestApproverId("000000");
+				}
+				if (StringUtil.isNotEmpty(dto.getInvestTraderId()) && dto.getInvestTraderId().length() > 6) {
+					dto.setInvestTraderId(dto.getInvestTraderId().substring(0,dto.getInvestTraderId().length()-6) + "******");
+				}else if (StringUtil.isEmpty(dto.getInvestTraderId())
+						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_资产买入.getValue())
+						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_资产卖出或到期.getValue())
+						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_存入银行存款.getValue())
+						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_银行存款到期.getValue())
+						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_拆放同业和买入返售首期.getValue())
+						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_同业拆入和卖出回购首期.getValue())) {
+					dto.setInvestTraderId("000000");
+				}
+				//根据数据源规范要求，新增的交易员与交易审批人身份证号字段后6位数据需脱敏为“******”  add by tuqirong 20211223 end
+
 				// add by zhangliang 20201109 数据流向处理 ===================================start
 				Map<String, InvestTradeRegist001Dto> handleDataMap = handleDataStatus(dto, tradeRegMap.get(dto.getTradeCode()));
 				if (handleDataMap.containsKey(SvrDataStatusUtil.INSERT_DATA)) {
@@ -702,7 +727,10 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
 		genDto.setAssetMethod(dto.getAssetMethod());
 		genDto.setRivalPartyType(dto.getRivalPartyType());
 		genDto.setProdRegistCode(dto.getProdRegistCode());
-
+		genDto.setInvestApproverId(dto.getInvestTraderId());
+		genDto.setInvestApproverName(dto.getInvestApproverName());
+		genDto.setInvestTraderId(dto.getInvestTraderId());
+		genDto.setInvestTraderName(dto.getInvestTraderName());
 		return genDto;
 	}
 }

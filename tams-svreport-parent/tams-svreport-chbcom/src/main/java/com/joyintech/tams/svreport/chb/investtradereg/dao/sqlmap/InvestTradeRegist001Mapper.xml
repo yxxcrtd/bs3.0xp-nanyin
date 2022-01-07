@@ -59,7 +59,10 @@
     <result column="RIVAL_PARTY_TYPE_NUM" property="rivalPartyTypeNum" jdbcType="CHAR" />
     <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
     <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
-    
+    <result column="INVEST_APPROVER_ID" property="investApproverId" jdbcType="VARCHAR" />
+    <result column="INVEST_APPROVER_NAME" property="investApproverName" jdbcType="VARCHAR" />
+    <result column="INVEST_TRADER_ID" property="investTraderId" jdbcType="VARCHAR" />
+    <result column="INVEST_TRADER_NAME" property="investTraderName" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="BaseResultMapHis" type="com.joyintech.tams.svreport.chb.investtradereg.dto.ChbInvestTradeSubHisDto" >
     <id column="HIS_NO" property="hisNo" jdbcType="CHAR" />
@@ -108,6 +111,10 @@
     <result column="NUM" property="num" jdbcType="DECIMAL" />
     <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
     <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
+    <result column="INVEST_APPROVER_ID" property="investApproverId" jdbcType="VARCHAR" />
+    <result column="INVEST_APPROVER_NAME" property="investApproverName" jdbcType="VARCHAR" />
+    <result column="INVEST_TRADER_ID" property="investTraderId" jdbcType="VARCHAR" />
+    <result column="INVEST_TRADER_NAME" property="investTraderName" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     REGIST_SEQNO, TRADE_CODE, PROD_ID, REGIST_BANK_CODE, 
@@ -117,7 +124,7 @@
     ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CHB_SUBMIT_DEADLINE, 
     SUBMIT_DEADLINE, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, SUBMIT_TIME, DELETE_RES, 
     DATA_SOURCE, CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO,ASSET_METHOD,RIVAL_PARTY_TYPE,
-    SUMIT_SEQ, PROD_REGIST_CODE
+    SUMIT_SEQ, PROD_REGIST_CODE, INVEST_APPROVER_ID, INVEST_APPROVER_NAME, INVEST_TRADER_ID, INVEST_TRADER_NAME
   </sql>
   <sql id="Base_Column_List_His" >
     REGIST_SEQNO HIS_NO, TRADE_CODE, PROD_ID, REGIST_BANK_CODE, ASSET_CODE, CCY, CUR_ASSET_TYPE, CUR_ASSETDET_TYPE, 
@@ -126,7 +133,8 @@
     STATUS, ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
     CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, 
     SUBMIT_TIME, DELETE_RES, DATA_SOURCE, CREATE_DEPT, DEAL_REGIST_DATE, IS_ASSET_SUB, 
-    REF_TRADESEQNO, CNY_AMT, AMT, NUM, SUMIT_SEQ, PROD_REGIST_CODE
+    REF_TRADESEQNO, CNY_AMT, AMT, NUM, SUMIT_SEQ, PROD_REGIST_CODE, INVEST_APPROVER_ID,
+    INVEST_APPROVER_NAME, INVEST_TRADER_ID, INVEST_TRADER_NAME
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -159,7 +167,8 @@
       UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
       SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, 
       SUBMIT_TIME, DELETE_RES, DATA_SOURCE, 
-      CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO,ASSET_METHOD,RIVAL_PARTY_TYPE)
+      CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO,ASSET_METHOD,RIVAL_PARTY_TYPE,
+      INVEST_APPROVER_ID, INVEST_APPROVER_NAME, INVEST_TRADER_ID, INVEST_TRADER_NAME)
     values (#{prodRegistCode,jdbcType=VARCHAR},
       #{sumitSeq,jdbcType=VARCHAR},#{registSeqno,jdbcType=CHAR}, #{tradeCode,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{registBankCode,jdbcType=VARCHAR}, 
       #{assetCode,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{cnyAmt,jdbcType=DECIMAL}, 
@@ -175,7 +184,8 @@
       #{sendStatus,jdbcType=VARCHAR}, #{submitFeedbackStatus,jdbcType=VARCHAR}, #{statusDate,jdbcType=TIMESTAMP}, 
       #{submitTime,jdbcType=TIMESTAMP}, #{deleteRes,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, 
       #{createDept,jdbcType=VARCHAR},#{dealRegistDate,jdbcType=TIMESTAMP},#{isAssetSub,jdbcType=VARCHAR},#{refTradeseqno,jdbcType=VARCHAR}
-     ,#{assetMethod,jdbcType=VARCHAR},#{rivalPartyType,jdbcType=VARCHAR})
+     ,#{assetMethod,jdbcType=VARCHAR},#{rivalPartyType,jdbcType=VARCHAR},#{investApproverId,jdbcType=VARCHAR},#{investApproverName,jdbcType=VARCHAR}
+     ,#{investTraderId,jdbcType=VARCHAR},#{investTraderName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto" >
     insert into CHB_INVEST_TRADE_SUB
@@ -318,6 +328,18 @@
       <if test="prodRegistCode != null" >
         PROD_REGIST_CODE,
       </if>
+      <if test="investApproverId != null">
+        INVEST_APPROVER_ID,
+      </if>
+      <if test="investApproverName != null">
+        INVEST_APPROVER_NAME,
+      </if>
+      <if test="investTraderId != null" >
+        INVEST_TRADER_ID,
+      </if>
+      <if test="investTraderName != null" >
+        INVEST_TRADER_NAME,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="registSeqno != null" >
@@ -457,6 +479,18 @@
       </if>
       <if test="prodRegistCode != null" >
         #{prodRegistCode,jdbcType=VARCHAR},
+      </if>
+      <if test="investApproverId != null">
+        #{investApproverId,jdbcType=VARCHAR},
+      </if>
+      <if test="investApproverName != null">
+        #{investApproverName,jdbcType=VARCHAR},
+      </if>
+      <if test="investTraderId != null" >
+        #{investTraderId,jdbcType=VARCHAR},
+      </if>
+      <if test="investTraderName != null" >
+        #{investTraderName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -598,6 +632,19 @@
       <if test="prodRegistCode != null" >
         PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR},
       </if>
+
+      <if test="investApproverId != null">
+        INVEST_APPROVER_ID = #{investApproverId,jdbcType=VARCHAR},
+      </if>
+      <if test="investApproverName != null">
+        INVEST_APPROVER_NAME = #{investApproverName,jdbcType=VARCHAR},
+      </if>
+      <if test="investTraderId != null" >
+        INVEST_TRADER_ID = #{investTraderId,jdbcType=VARCHAR},
+      </if>
+      <if test="investTraderName != null" >
+        INVEST_TRADER_NAME = #{investTraderName,jdbcType=VARCHAR},
+      </if>
     </set>
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </update>
@@ -647,7 +694,11 @@
       IS_ASSET_SUB = #{isAssetSub,jdbcType=VARCHAR},
       REF_TRADESEQNO = #{refTradeseqno,jdbcType=VARCHAR},
       SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
-      PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR}
+      PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR},
+      INVEST_APPROVER_ID = #{investApproverId,jdbcType=VARCHAR},
+      INVEST_APPROVER_NAME = #{investApproverName,jdbcType=VARCHAR},
+      INVEST_TRADER_ID = #{investTraderId,jdbcType=VARCHAR},
+      INVEST_TRADER_NAME = #{investTraderName,jdbcType=VARCHAR}
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </update>
   <select id="selectAllData" resultType="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto">
@@ -720,6 +771,10 @@
 	    ,sub.SUMIT_SEQ sumitSeq
         ,sub.ASSET_METHOD assetMethodNum
         ,sub.RIVAL_PARTY_TYPE rivalPartyTypeNum
+        ,sub.INVEST_APPROVER_ID investApproverId
+        ,sub.INVEST_APPROVER_NAME investApproverName
+        ,sub.INVEST_TRADER_ID investTraderId
+        ,sub.INVEST_TRADER_NAME investTraderName
     from CHB_INVEST_TRADE_SUB sub
     left join CHB_PRD_BASEINFO info
     on sub.prod_id = info.prod_id
@@ -830,6 +885,10 @@
     sub.DATA_SOURCE, sub.CREATE_DEPT, sub.DEAL_REGIST_DATE,sub.IS_ASSET_SUB, info.PROD_NAME, sub.PROD_REGIST_CODE,
     deal.INVEST_VARIETY INVEST_VARIETY,deal.dealtype dealtype,sub.ASSET_METHOD,sub.RIVAL_PARTY_TYPE,
     sub.ASSET_METHOD  ASSET_METHOD_NUM ,sub.RIVAL_PARTY_TYPE   RIVAL_PARTY_TYPE_NUM, sub.SUMIT_SEQ
+    ,sub.INVEST_APPROVER_ID investApproverId
+    ,sub.INVEST_APPROVER_NAME investApproverName
+    ,sub.INVEST_TRADER_ID investTraderId
+    ,sub.INVEST_TRADER_NAME investTraderName
     from CHB_INVEST_TRADE_SUB sub
     left join CHB_PRD_BASEINFO info
     on sub.prod_id = info.prod_id
@@ -958,6 +1017,10 @@
 		prodinfo.prodtype prodtype/*产品类型N M净值型*/
 		,investtrade.ASSET_METHOD
 		,investtrade.RIVAL_PARTY_TYPE
+        ,investtrade.INVEST_APPROVER_ID
+        ,investtrade.INVEST_APPROVER_NAME
+        ,investtrade.INVEST_TRADER_ID
+        ,investtrade.INVEST_TRADER_NAME
 		FROM chb_invest_trade investtrade
         left join chb_prd_baseinfo prodinfo
         on prodinfo.prod_id = investtrade.PROD_ID
@@ -1046,6 +1109,10 @@
         prodinfo.prodtype prodtype/*产品类型N M净值型*/
         ,NULL ASSET_METHOD
 		,RIVAL_PARTY_TYPE RIVAL_PARTY_TYPE
+        ,prdfeedeal.INVEST_APPROVER_ID
+        ,prdfeedeal.INVEST_APPROVER_NAME
+        ,prdfeedeal.INVEST_TRADER_ID
+        ,prdfeedeal.INVEST_TRADER_NAME
 		FROM chb_prd_fee_deal prdfeedeal
         left join chb_prd_baseinfo prodinfo
         on prodinfo.prod_id = prdfeedeal.PROD_ID
@@ -1103,7 +1170,8 @@
       UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
       SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, 
       SUBMIT_TIME, DELETE_RES, DATA_SOURCE, 
-      CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO, SUMIT_SEQ, PROD_REGIST_CODE)
+      CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO, SUMIT_SEQ, PROD_REGIST_CODE,
+      INVEST_APPROVER_ID, INVEST_APPROVER_NAME, INVEST_TRADER_ID, INVEST_TRADER_NAME)
 		<foreach collection="insertList" item="item" index="index" separator="union all" >
 		select
 		  #{item.registSeqno,jdbcType=CHAR}, #{item.tradeCode,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.registBankCode,jdbcType=VARCHAR}, 
@@ -1120,7 +1188,8 @@
 	      #{item.sendStatus,jdbcType=VARCHAR}, #{item.submitFeedbackStatus,jdbcType=VARCHAR}, #{item.statusDate,jdbcType=TIMESTAMP}, 
 	      #{item.submitTime,jdbcType=TIMESTAMP}, #{item.deleteRes,jdbcType=VARCHAR}, #{item.dataSource,jdbcType=VARCHAR}, 
 	      #{item.createDept,jdbcType=VARCHAR},#{item.dealRegistDate,jdbcType=TIMESTAMP},#{item.isAssetSub,jdbcType=VARCHAR},#{item.refTradeseqno,jdbcType=VARCHAR},
-          #{item.sumitSeq,jdbcType=VARCHAR}, #{item.prodRegistCode,jdbcType=VARCHAR}
+          #{item.sumitSeq,jdbcType=VARCHAR}, #{item.prodRegistCode,jdbcType=VARCHAR}, #{item.investApproverId,jdbcType=VARCHAR},
+          #{item.investApproverName,jdbcType=VARCHAR}, #{item.investTraderId,jdbcType=VARCHAR}, #{item.investTraderName,jdbcType=VARCHAR}
 	      from dual
 		</foreach>
 	</insert>
@@ -1280,6 +1349,18 @@
 		      <if test="item.prodRegistCode != null">
 		        PROD_REGIST_CODE = #{item.prodRegistCode,jdbcType=VARCHAR},
 		      </if>
+              <if test="item.investApproverId != null">
+                INVEST_APPROVER_ID = #{item.investApproverId,jdbcType=VARCHAR},
+              </if>
+              <if test="item.investApproverName != null">
+                INVEST_APPROVER_NAME = #{item.investApproverName,jdbcType=VARCHAR},
+              </if>
+              <if test="item.investTraderId != null">
+                INVEST_TRADER_ID = #{item.investTraderId,jdbcType=VARCHAR},
+              </if>
+              <if test="item.investTraderName != null">
+                INVEST_TRADER_NAME = #{item.investTraderName,jdbcType=VARCHAR},
+              </if>
 			</set>
 			<!-- where REGIST_SEQNO = #{item.registSeqno,jdbcType=CHAR} -->
 			where REF_TRADESEQNO = #{item.refTradeseqno,jdbcType=VARCHAR}
@@ -1398,6 +1479,7 @@
 	      SUBMIT_TIME, DELETE_RES, DATA_SOURCE, 
 	      CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO
 	      ,ASSET_METHOD,RIVAL_PARTY_TYPE,SUMIT_SEQ, PROD_REGIST_CODE, SUBMIT_FEEDBACK_MSG
+          ,INVEST_APPROVER_ID, INVEST_APPROVER_NAME, INVEST_TRADER_ID, INVEST_TRADER_NAME
       )
       select  
           REGIST_SEQNO, TRADE_CODE,  PROD_ID, REGIST_BANK_CODE, 
@@ -1415,6 +1497,7 @@
           SUBMIT_TIME, DELETE_RES, DATA_SOURCE, 
           CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO
           ,ASSET_METHOD,RIVAL_PARTY_TYPE,SUMIT_SEQ, PROD_REGIST_CODE, SUBMIT_FEEDBACK_MSG
+          ,INVEST_APPROVER_ID, INVEST_APPROVER_NAME, INVEST_TRADER_ID, INVEST_TRADER_NAME
       from CHB_INVEST_TRADE_SUB
       where 1 =1
        <if test="registList !=null and registList.size()>0">
@@ -1451,6 +1534,7 @@
           SUBMIT_TIME, DELETE_RES, DATA_SOURCE, 
           CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO,
           ASSET_METHOD,RIVAL_PARTY_TYPE,SUMIT_SEQ, PROD_REGIST_CODE, SUBMIT_FEEDBACK_MSG
+          ,INVEST_APPROVER_ID, INVEST_APPROVER_NAME, INVEST_TRADER_ID, INVEST_TRADER_NAME
       )
       select   
           HIS_NO, TRADE_CODE,  PROD_ID, REGIST_BANK_CODE, 
@@ -1468,6 +1552,7 @@
           SUBMIT_TIME, DELETE_RES, DATA_SOURCE, 
           CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO,
           ASSET_METHOD,RIVAL_PARTY_TYPE,SUMIT_SEQ, PROD_REGIST_CODE, SUBMIT_FEEDBACK_MSG
+          ,INVEST_APPROVER_ID, INVEST_APPROVER_NAME, INVEST_TRADER_ID, INVEST_TRADER_NAME
       from (
           select  
 			HIS_NO, TRADE_CODE,  PROD_ID, REGIST_BANK_CODE, 
@@ -1485,6 +1570,7 @@
 			SUBMIT_TIME, DELETE_RES, DATA_SOURCE, 
 			CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO,
 			ASSET_METHOD,RIVAL_PARTY_TYPE,SUMIT_SEQ, PROD_REGIST_CODE, SUBMIT_FEEDBACK_MSG,
+            INVEST_APPROVER_ID, INVEST_APPROVER_NAME, INVEST_TRADER_ID, INVEST_TRADER_NAME,
             rank() over (partition by TRADE_CODE order by nvl(update_time,create_time) desc) ranknum
          from CHB_INVEST_TRADE_SUB_HIS  his
          <where>
@@ -1531,6 +1617,7 @@
 			sub.DATA_SOURCE, sub.CREATE_DEPT, sub.DEAL_REGIST_DATE,
 		    sub.IS_ASSET_SUB,info.PROD_NAME,
             sub.SUMIT_SEQ, sub.PROD_REGIST_CODE,ASSET_METHOD,RIVAL_PARTY_TYPE
+            ,sub.INVEST_APPROVER_ID, sub.INVEST_APPROVER_NAME, sub.INVEST_TRADER_ID, sub.INVEST_TRADER_NAME
 		from CHB_INVEST_TRADE_SUB sub
 		left join CHB_PRD_BASEINFO info
 		on sub.prod_id = info.prod_id

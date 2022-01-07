@@ -60,7 +60,6 @@ $(function(){
             ,{field: 'prodId', title: '产品代码', width:'150',sortField:'prodId'}
             ,{field: 'prodName', title: '产品名称', width:'150',sortField:'prodName'}
             ,{field: 'prodRegistCode', title: '产品登记编码', width:'150',sortField:'prodRegistCode'}
-            ,{field: 'remark', title: '备注', width:'150',sortField:'remark'}
         ]
     });
 

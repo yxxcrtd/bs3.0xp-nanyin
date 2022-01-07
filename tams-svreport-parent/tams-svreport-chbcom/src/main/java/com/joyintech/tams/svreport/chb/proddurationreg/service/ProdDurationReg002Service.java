@@ -522,6 +522,8 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	            ChbPrdPeriodYield newExpYield = chbPrdDurationRegMapper.getReaYield(model.getProdId(), quotationDate, "02");
 	            if(newExpYield!=null&&newExpYield.getProdValue()!=null){
 	            	result.setPrdValue(newExpYield.getProdValue().setScale(5, RoundingMode.HALF_UP));
+					//净值日期
+					result.setYieldDate(newExpYield.getChangeDate());
 	            }else{
 	            	result.setPrdValue(BigDecimal.ONE);
 	            }

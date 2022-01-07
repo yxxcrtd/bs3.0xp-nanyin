@@ -288,6 +288,18 @@
 								   data-fixtype="2" class="layui-input form-input"/>
 						</div>
 					</div>
+					<!-- 中债新增字段 add by tuqirong 2021-12-30 start -->
+					<div class="form-inline-wrap" th:id="|${entityName}_profitFlag_div|" style="disabled:none;">
+						<label class="layui-form-label form-lable" data-th-utext="#{SvrBussRepFundInfo.profitFlag}">是否为固定收益类</label>
+						<div class="layui-input-inline input-inline">
+							<select th:id="|${entityName}_profitFlag|" th:name="|${entityName}.profitFlag|"
+									th:initValue="${entity?.profitFlag}" class="layui-input form-input input-select"
+									placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
+									data-th-data-result="${SVR_YES_OR_NO}">
+							</select>
+						</div>
+					</div>
+					<!-- 中债新增字段 add by tuqirong 2021-12-30 end -->
 
 				</div>
 			<!--add by yjp 估值穿透开发--监管报送资产基本信息维护导入功能合并华夏字段 start -->

@@ -39,13 +39,13 @@
         },
         cols:[
              {field:'statusStr', title: '数据状态', width:'150',sortField:'status'}
-            ,{field:'issuePartyId', title: '发行机构代码', width:'150',sortField:'issuePartyId'}
-            ,{field:'agentInstitutionCode', title: '代理销售机构代码', width:'150',sortField:'agentInstitutionCode'}
-            ,{field:'agentInstitutionName', title: '代理销售机构名称', width:'150',sortField:'agentInstitutionName'}
-            ,{field:'remark', title: '备注', width:'150',sortField:'remark'}
+            ,{field:'issuePartyId', title: '发行机构代码', width:'200',sortField:'issuePartyId'}
+            ,{field:'agentInstitutionCode', title: '代理销售机构代码', width:'200',sortField:'agentInstitutionCode'}
+            ,{field:'agentInstitutionName', title: '代理销售机构名称', width:'200',sortField:'agentInstitutionName'}
+            ,{field:'remark', title: '备注', width:'200',sortField:'remark'}
             ,{field:'enclosureChangeFlag', title: '附件修改标志',visible : false}
             ,{field:'fileNo', title: '附件代码',visible : false}
-            ,{field:'enclosureNum', title: '附件个数', width:'150',sortField:'enclosureNum'}
+            ,{field:'enclosureNum', title: '附件个数', width:'200',sortField:'enclosureNum'}
             ,{title : '操作附件',field : 'operation',type : 'action',width : 150
                ,buttons : [  {text : '&#xe67c;',clas : 'upload',title : '上传'}
                ,{text : '&#xe640;',clas : 'deltAy',title : '删除'}

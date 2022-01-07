@@ -89,6 +89,11 @@ public class SvrBussRepDepositInfoDto extends RepAssetBankDeposit{
      */
     private String repPbcAssetType3;
 
+    /**
+     * 存款账号
+     */
+    private String repAccountNo;
+
     public String getBankName() {
         return bankName;
     }
@@ -301,5 +306,12 @@ public class SvrBussRepDepositInfoDto extends RepAssetBankDeposit{
     public void setRepPbcAssetType3(String repPbcAssetType3) {
         this.repPbcAssetType3 = repPbcAssetType3;
     }
-    
+
+    public String getRepAccountNo() {
+        return repAccountNo;
+    }
+
+    public void setRepAccountNo(String repAccountNo) {
+        this.repAccountNo = repAccountNo;
+    }
 }

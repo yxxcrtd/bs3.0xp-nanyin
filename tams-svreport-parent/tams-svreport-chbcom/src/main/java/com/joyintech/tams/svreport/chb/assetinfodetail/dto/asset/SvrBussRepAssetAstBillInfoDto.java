@@ -311,6 +311,11 @@ public class SvrBussRepAssetAstBillInfoDto extends RepAssetAstBill{
      */
     private String bondtostockFlag;
 
+    /**
+     * 票据代码
+     */
+    private String billCode;
+
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -469,4 +474,11 @@ public class SvrBussRepAssetAstBillInfoDto extends RepAssetAstBill{
         this.isBzhpj = isBzhpj;
     }
 
+    public String getBillCode() {
+        return billCode;
+    }
+
+    public void setBillCode(String billCode) {
+        this.billCode = billCode;
+    }
 }

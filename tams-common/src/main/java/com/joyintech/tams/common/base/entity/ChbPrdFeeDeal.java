@@ -138,6 +138,26 @@ public class ChbPrdFeeDeal extends BaseEntity{
     private String rivalPartyType;
 
     /**
+     * 交易审批人身份证号
+     */
+    private String investApproverId;
+
+    /**
+     * 交易审批人姓名
+     */
+    private String investApproverName;
+
+    /**
+     * 交易员身份证号
+     */
+    private String investTraderId;
+
+    /**
+     * 交易员姓名
+     */
+    private String investTraderName;
+
+    /**
      * 主键 
      * @return SEQNO 主键 
      */
@@ -513,4 +533,36 @@ public class ChbPrdFeeDeal extends BaseEntity{
 	public void setRivalPartyType(String rivalPartyType) {
 		this.rivalPartyType = rivalPartyType;
 	}
+
+    public String getInvestApproverId() {
+        return investApproverId;
+    }
+
+    public void setInvestApproverId(String investApproverId) {
+        this.investApproverId = investApproverId;
+    }
+
+    public String getInvestApproverName() {
+        return investApproverName;
+    }
+
+    public void setInvestApproverName(String investApproverName) {
+        this.investApproverName = investApproverName;
+    }
+
+    public String getInvestTraderId() {
+        return investTraderId;
+    }
+
+    public void setInvestTraderId(String investTraderId) {
+        this.investTraderId = investTraderId;
+    }
+
+    public String getInvestTraderName() {
+        return investTraderName;
+    }
+
+    public void setInvestTraderName(String investTraderName) {
+        this.investTraderName = investTraderName;
+    }
 }

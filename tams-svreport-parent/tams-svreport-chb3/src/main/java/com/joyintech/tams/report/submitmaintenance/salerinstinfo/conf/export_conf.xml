@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="SalerInstInfo.xlsx" name="总部或分支机构信息">
+	<Worksheet javaBean="com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto.SalerInstInfoDto">
+		<Row>
+			<Cell order="1" name="销售机构代码">salerInstCode</Cell>
+			<Cell order="2" name="总部或分支机构编码">salerOrgCode</Cell>
+			<Cell order="3" name="总部或分支机构名称">salerOrgName</Cell>
+			<Cell order="4" name="机构层级">salerOrgLevelStr</Cell>
+			<Cell order="5" name="备注">salerOrgLevelStr</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>
