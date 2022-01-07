@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -82,32 +83,15 @@ public class TrdPlanValuationTrade002Controller extends BaseController {
         String portfolioId = getParam("portfolioId");
         String tradeId = getParam("tradeId");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
-        if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
-            TrdPlanValuationTradeDto entity = trdPlanValuationTrade002Service.getBussinessEntityByWorkflowId(
-                workflowId);
-            model.addAttribute("entity",entity);
+
+        if(StringUtil.isNotEmpty(workflowId)){
+            TrdPlanValuationTradeDto entity= trdPlanValuationTrade002Service.getBussinessEntityByWorkflowId(workflowId);
+            model.addAttribute("entity", entity);
             model.addAttribute("workflowId", workflowId);
-            model.addAttribute("tradeId", entity.getTradeId());
-        }
-        else if (StringUtil.isNotEmpty(tradeId)) {
-            WflTrdProductDeal wflTrdProductDeal = new WflTrdProductDeal();
-            if (wflTrdProductDeal != null) {
-                String workFlowId = wflTrdProductDeal.getWorkflowId();
-                if (workFlowId != null && !workFlowId.isEmpty()) {
-                    TrdPlanValuationTradeDto entity = trdPlanValuationTrade002Service.getBussinessEntityByWorkflowId(
-                            workFlowId);
-                    model.addAttribute("entity", entity);
-                    model.addAttribute("workflowId", workflowId);
-                    model.addAttribute("tradeId", tradeId);
-                }
-            } else {
-                TrdPlanValuationTradeDto entity = trdPlanValuationTrade002Service.getInitEntity(tradeId);
-                if (StringUtil.isNotEmpty(portfolioId)) {
-                    entity.setPortfolioId(portfolioId);
-                }
-                model.addAttribute("entity", entity);
-                model.addAttribute("tradeId", tradeId);
-            }
+
+        }else if (!StringUtil.isNotEmpty(workflowId) && StringUtil.isNotEmpty(tradeId)){
+            TrdPlanValuationTradeDto entity = trdPlanValuationTrade002Service.queryTradeInfoByTradeId(tradeId);
+            model.addAttribute("entity", entity);
         }else{
             //初始化值
             TrdPlanValuationTradeDto entity = new TrdPlanValuationTradeDto();
@@ -119,8 +103,7 @@ public class TrdPlanValuationTrade002Controller extends BaseController {
             entity.setFeeAmtQT(new BigDecimal("0.00"));          //其他费用
             entity.setTodayArriveFlag(DictCodeList.是否_否.getValue()); //初始默认否
             entity.setCcy(DictCodeList.币种_人民币_CNY.getValue());
-            //新建初始化交易编号
-            entity.setTradeId(trdPlanValuationTrade002Service.createPlanTradeId());
+
             model.addAttribute("entity", entity);
         }
         model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
@@ -244,6 +227,14 @@ public class TrdPlanValuationTrade002Controller extends BaseController {
         params.setElementId(dto.getElementId());
         params.setBusinessCode(dto.getTradeId());
         params.setBusinessType(DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue());
+
+        //设置主键
+        if(!StringUtil.isNotEmpty(dto.getTradeId())){
+            Date sysDate= DateUtil.platDateFromCache();
+            //新建初始化交易编号
+            dto.setTradeId(trdPlanValuationTrade002Service.createPlanTradeId());
+        }
+
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
                 entity -> SpringContextUtil.getTextValue("TrdPlanValuationTrade001.tradeId")+"("+ entity.getTradeId() +")"+"-"+SpringContextUtil.getTextValue("TrdPlanRateValuationTrade002.tradeDate") + "(" + DateUtil.format(entity.getTradeDate()) + ")"

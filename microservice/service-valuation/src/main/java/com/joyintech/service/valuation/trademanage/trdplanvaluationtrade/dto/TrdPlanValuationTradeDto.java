@@ -10,6 +10,7 @@
  
 package com.joyintech.service.valuation.trademanage.trdplanvaluationtrade.dto;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
 import com.joyintech.tams.constant.DictCode;
@@ -301,7 +302,12 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
      * @since 1.0
      */
     public String getPsStr(){
-        return SysDataUtil.getNameFromDataDict(DictCode.交易方向, super.getPs());
+        if(StringUtil.isNotEmpty(super.getPs())){
+            return SysDataUtil.getNameFromDataDict(DictCode.交易方向, super.getPs());
+        }else{
+            return "";
+        }
+
     }
 
 

@@ -36,6 +36,8 @@
     <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR" />
     <result column="IS_YLLCCP" property="isYllccp" jdbcType="VARCHAR" />
     <result column="YIELD_E" property="yieldE" jdbcType="DECIMAL" />
+    <result column="PRD_SPEC_PROPERTY" property="prdSpecProperty" jdbcType="VARCHAR" />
+
   </resultMap>
   <sql id="Base_Column_List" >
     POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, TERMTYPE,
@@ -372,7 +374,7 @@
     pos.OPERATE_MODE, pos.PROFIT_TYPE, pos.SALE_TARGET, pos.CON_PRD_TRAGET, pos.ORD_IDENTIFIED, pos.DIRTYAMTSUM,
     pos.CLEANAMTSUM, pos.REDEEMAMT, pos.TERMINATIONAMT, pos.ENDAMTSUM_OTH, pos.CUSTOMERAMT, pos.REDEEMINTAMT,
     pos.TERMINATIONINTAMT, pos.CASHAMT, pos.DURATIONFLAG, pos.VDATE,pos.OPENDURATION,pos.CASH_MANA_CATE, di.INSTITUTION_CODE,
-    pos.PAYAMTSUM,pos.CLOSETERMDAY,info.IS_TRANSFER,info.IS_FHXGCP,info.IS_YLLCCP,pos.YIELD_E
+    pos.PAYAMTSUM,pos.CLOSETERMDAY,info.IS_TRANSFER,info.IS_FHXGCP,info.IS_YLLCCP,pos.YIELD_E,info.PRD_SPEC_PROPERTY
        from CHB_MONTH_PRD_POSITION pos
       left join (      select distinct  di.business_id　finprod_market_id,di.institution_code
       from DATA_AUTH_NOTIFY_INST di where di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
