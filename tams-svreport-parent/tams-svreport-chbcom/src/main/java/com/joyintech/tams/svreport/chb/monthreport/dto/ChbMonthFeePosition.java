@@ -102,8 +102,19 @@ public class ChbMonthFeePosition {
      * 是否养老理财产品
      */
     private String isYllccp;
-    
 
+    /**
+     * 产品特殊属性
+     */
+    private  String  prdSpecProperty;
+
+    public String getPrdSpecProperty() {
+        return prdSpecProperty;
+    }
+
+    public void setPrdSpecProperty(String prdSpecProperty) {
+        this.prdSpecProperty = prdSpecProperty;
+    }
 
     private List<String> prodids;
 
@@ -380,11 +391,4 @@ public class ChbMonthFeePosition {
         this.conPrdTraget = conPrdTraget == null ? null : conPrdTraget.trim();
     }
 
-    public String getIsYllccp() {
-        return isYllccp;
-    }
-
-    public void setIsYllccp(String isYllccp) {
-        this.isYllccp = isYllccp;
-    }
 }
