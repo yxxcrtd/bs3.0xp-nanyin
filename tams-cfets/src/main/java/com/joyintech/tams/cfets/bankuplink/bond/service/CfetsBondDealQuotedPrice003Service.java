@@ -136,6 +136,9 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
             errorList.add(new ValidMessage("请输入资产代码"));
         }
         if(StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())||StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())){
+            if(StringUtil.isEmpty(entity.getMySide())){
+                errorList.add(new ValidMessage("请输入本方"));
+            }
             if(StringUtil.isEmpty(entity.getMySideTrader())){
                 errorList.add(new ValidMessage("请输入本方交易员"));
             }

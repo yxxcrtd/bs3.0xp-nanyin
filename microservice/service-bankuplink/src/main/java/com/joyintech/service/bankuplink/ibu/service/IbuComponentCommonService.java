@@ -1532,6 +1532,8 @@ public class IbuComponentCommonService extends BaseService {
         ibuQuoteBondDto.setEntrustId(cfetsBondDealDialogueQuoteDto.getEntrustId());
         ibuQuoteBondDto.setPortfolioId(cfetsBondDealDialogueQuoteDto.getPortfolioId());
         ibuQuoteBondDto.setSecManageAcctId(cfetsBondDealDialogueQuoteDto.getSecManageAcctId());
+        ibuQuoteBondDto.setDealFeeAmt(cfetsBondDealDialogueQuoteDto.getDealFeeAmt());
+        ibuQuoteBondDto.setSettFeeAmt(cfetsBondDealDialogueQuoteDto.getSettFeeAmt());
         ibuQuoteBondDto.setRemark(cfetsBondDealDialogueQuoteDto.getRemark());
         inputBean.setIbuQuoteBondDto(ibuQuoteBondDto);
         User user = this.genUserInfo(cfetsBondDealDialogueQuoteDto);
@@ -1546,6 +1548,11 @@ public class IbuComponentCommonService extends BaseService {
                 ibuQuoteEtrReDto.setShareAmt(ArithmeticUtil.multiply(
                         item.getAvaNum(), new BigDecimal(100)));
                 ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
+                ibuQuoteEtrReDto.setDealFeeAmt(item.getDealFeeAmt());
+                ibuQuoteEtrReDto.setSettFeeAmt(item.getSettFeeAmt());
+                ibuQuoteEtrReDto.setInvAim(item.getInvAim());
+                ibuQuoteEtrReDto.setOurShareAmt(ArithmeticUtil.divide(item.getOurShareAmt(),new BigDecimal(100),2));
+                ibuQuoteEtrReDto.setLendinShareAmt(ArithmeticUtil.divide(item.getLendinShareAmt(),new BigDecimal(100),2));
                 ibuQuoteEtrReDtoList.add(ibuQuoteEtrReDto);
             });
             inputBean.setIbuQuoteEtrReDtoList(ibuQuoteEtrReDtoList);
