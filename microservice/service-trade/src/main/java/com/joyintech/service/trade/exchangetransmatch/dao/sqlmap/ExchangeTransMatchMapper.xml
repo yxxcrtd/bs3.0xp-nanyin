@@ -580,7 +580,7 @@
                 AND C.SEC_ACCT_ID = #{secAcctNo}
             </if>
             <if test="ps!=null and ps!='' ">
-                AND C.PS = #{ps}
+                AND D.PS = #{ps}
             </if>
             <if test="finprodType2_hg!=null and finprodType2_hg!='' ">
                 AND C.FINPROD_TYPE2 = #{finprodType2_hg}

@@ -134,7 +134,15 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                 map.put("ps",DictCodeList.交易方向_买入.getValue());
                 map.put("finprodType2",StringUtil.equals(ps,DictCodeListExt3.交易方向_正回购.getValue())?DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue():DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
             }
+
+            if(StringUtil.equals(ps,DictCodeListExt3.交易方向_到期购回.getValue())) {
+                map.put("ps",DictCodeList.交易方向_到期.getValue());
+            }
+            else if(StringUtil.equals(ps, DictCodeListExt3.交易方向_提前购回.getValue())){
+                map.put("ps",DictCodeList.交易方向_提前终止.getValue());
+            }
         }
+
 
         Page<ExchangeTransMatch002Dto> page = restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME
                 + "/ExchangeTransMatchController/findPage", map, ExchangeTransMatch002Dto.class);
