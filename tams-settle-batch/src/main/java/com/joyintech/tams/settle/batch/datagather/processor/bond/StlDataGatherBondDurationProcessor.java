@@ -14,6 +14,7 @@ import com.joyintech.tams.settle.batch.datagather.dto.*;
 import com.joyintech.tams.settle.common.service.SettleCommonService;
 import com.joyintech.tams.settle.common.util.DateUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,10 +65,13 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
             // ZGZGST-4216: 查询持仓时日期使用付息截止日前一日 fuyongsheng 20211214 modify start
             // param.put("dealDate",executeDate);
             Date mdate2 = settleTransDataDtos.get(0).getMdate2();
-            param.put("dealDate", DateUtil.parse(DateUtil.getYesterDayDate(mdate2)));
-            // ZGZGST-4216: 查询持仓时日期使用付息截止日前一日 fuyongsheng 20211214 modify end
-            param.put("hodingType",DictCodeList.持仓类型_实际.getValue());
-            List<PtlSecPosition> ptlSecPositions = stlDataGatherMapper.listPtlSecPosition(param);
+            List<PtlSecPosition> ptlSecPositions = Lists.newArrayList();
+            if(null != mdate2){
+                param.put("dealDate", DateUtil.parse(DateUtil.getYesterDayDate(mdate2)));
+                // ZGZGST-4216: 查询持仓时日期使用付息截止日前一日 fuyongsheng 20211214 modify end
+                param.put("hodingType",DictCodeList.持仓类型_实际.getValue());
+                ptlSecPositions = stlDataGatherMapper.listPtlSecPosition(param);
+            }
             //按金融产品代码分组
             Map<String,List<PtlSecPosition> > finprodIdMap = new HashMap<>();
             if(CollectionUtils.isNotEmpty(ptlSecPositions)) {
