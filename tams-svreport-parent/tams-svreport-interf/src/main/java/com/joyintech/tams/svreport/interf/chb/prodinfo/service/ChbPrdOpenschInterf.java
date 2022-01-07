@@ -87,6 +87,7 @@ public class ChbPrdOpenschInterf extends BaseInterfService{
 			openSchlist = chbPrdOpenschInterf2.selectOpenSchData(null,prodidlist);
 			//查询申赎同频的计划
 			List<ChbPrdOpensch> openSchsublist = chbPrdOpenschInterf2.selectOpenSchData("03",prodidlist);
+			String issuePartyId = CommonUtil.selectBankCode();
 			if(CollectionUtils.isNotEmpty(openSchlist)){
 				for(ChbPrdOpensch opensch : openSchlist){
 					//主键
@@ -102,7 +103,7 @@ public class ChbPrdOpenschInterf extends BaseInterfService{
 						opensch.setDataSource("16");
 					}
 					//发行机构代码
-					opensch.setIssuePartyId(CommonUtil.selectBankCode());
+					opensch.setIssuePartyId(issuePartyId);
 
 					if(opensch.getUpdateTime().compareTo(lastUpdatetime) > 0){
 						lastUpdatetime = opensch.getUpdateTime();
@@ -123,7 +124,7 @@ public class ChbPrdOpenschInterf extends BaseInterfService{
 						opensch.setDataSource("16");
 					}
 					//发行机构代码
-					opensch.setIssuePartyId(CommonUtil.selectBankCode());
+					opensch.setIssuePartyId(issuePartyId);
 					//申购计划
 					opensch.setPlanType("01");
 					openSchlist.add(opensch);

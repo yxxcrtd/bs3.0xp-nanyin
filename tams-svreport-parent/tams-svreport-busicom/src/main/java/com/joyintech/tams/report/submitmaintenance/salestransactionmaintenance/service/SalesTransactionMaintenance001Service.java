@@ -336,7 +336,7 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
                 if (list.get(13).length() != 6) {
                     flag = false;
                     message.add("交易时间填写错误（例23:59:59填写235959）");
-                }else if (Integer.parseInt(tradeTime.substring(0,1)) >= 2 && Integer.parseInt(tradeTime.substring(1,2)) > 3){
+                }else if (Integer.parseInt(tradeTime.substring(0,2)) > 23){
                     flag = false;
                     message.add("交易时间填写错误（例23:59:59填写235959）");
                 }else if(Integer.parseInt(tradeTime.substring(2,3)) > 5 || Integer.parseInt(tradeTime.substring(4,5)) > 5){
