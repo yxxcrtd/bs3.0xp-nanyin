@@ -184,5 +184,8 @@ public interface CfetsTrdConfirmMapper {
      * 指令投资目的
      */
     String selectInvAimByEntrustId(Map<String, Object> param);
-
+    /**
+     * 查询所有报价的质押明细数据
+     */
+    List<PledgeBondInfoDto> findAllIbuSecPtlsList(Map<String, Object> param);
 }
