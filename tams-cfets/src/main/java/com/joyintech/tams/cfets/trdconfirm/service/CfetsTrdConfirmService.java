@@ -11,12 +11,10 @@
 package com.joyintech.tams.cfets.trdconfirm.service;
 
 import com.google.common.collect.Lists;
-import com.joyintech.background.component.common.pack.common.validation.annotation.Length;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -24,8 +22,6 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.common.dto.TrdBondInvestTradeDto;
-import com.joyintech.service.bankuplink.common.util.BusinessTypeUtil;
-import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
@@ -33,7 +29,6 @@ import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbBondinfoDto;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbPosPortfolioRequest;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbPositionRequest;
-import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtribBondInfo003Service;
 import com.joyintech.tams.cfets.trdconfirm.dao.CfetsTrdConfirmMapper;
 import com.joyintech.tams.cfets.trdconfirm.dto.*;
@@ -58,25 +53,19 @@ import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
-import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
-import com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt;
-import com.joyintech.tams.invest.common.dto.cstp.InterfTradSecdealDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.PreTrdCommonBaseService;
-import com.joyintech.tams.invest.trade.cstptrdmatchinfo.dto.TrdMatchInfoDto;
 import com.joyintech.tams.invest.trade.lend.dto.FinTradeProductDto;
-import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade003Dto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Service;
@@ -711,8 +700,7 @@ public class CfetsTrdConfirmService extends BaseService{
 
         }else{
             //报价数据
-           // return prepareIbuEntity(dto);
-            return null;
+            return prepareRepoIbuEntity(dto.getTotleTradeId(),DictCodeListExt1.生成方式_画面录入.getValue());
         }
     }
     /**
@@ -1175,7 +1163,8 @@ public class CfetsTrdConfirmService extends BaseService{
             deal.setPortfolioId(regDeal.getPortfolioId());
             //投资目的
             Map<String, Object> map = new HashMap<>();
-            map.put("portfolioId", regDeal.getPortfolioId());
+           // map.put("portfolioId", regDeal.getPortfolioId());
+            map.put("entrustId", regDeal.getEntrustId());
             deal.setInvAim(getInvAim(map));
 
             deals.add(deal);
@@ -1350,6 +1339,12 @@ public class CfetsTrdConfirmService extends BaseService{
         entity.setPaTrdProductDeals(paTrdProductDeals);
         List<PtlTrade> ptlTrades = new ArrayList<>();
         entity.setPtlTrade(ptlTrades);
+        List<FinProductType> finProductTypes = new ArrayList<>();
+        entity.setFinProductTypes(finProductTypes);
+        List<FinTradeProductDto> finTradeProducts= new ArrayList<>();
+        entity.setFinTradeProducts(finTradeProducts);
+        List<FinTradeProductAdd> finTradeProductAdds= new ArrayList<>();
+        entity.setFinTradeProductAdds(finTradeProductAdds);
         // 设置交易费用明细
         List<TrdTradeFeeDetail> trdTradeFeeDetails = new ArrayList<>();
         entity.setTradeFeeList(trdTradeFeeDetails);
@@ -1373,6 +1368,7 @@ public class CfetsTrdConfirmService extends BaseService{
             } else {
                 deal.setTradeId(IDGenerator.generate());
             }
+            deal.setFinprodId(deal.getTradeId());
             deal.setTotleTradeId(entity.getTotleTradeId());
             deal.setBusiType(DictCodeList.共通业务类型_质押式回购交易.getValue());
             // 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
@@ -1409,6 +1405,8 @@ public class CfetsTrdConfirmService extends BaseService{
 
             // 交易状态 = 交易状态_初始
             deal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+
+            deal.setUnitInt(regDeal.getRate());
 
             List<CfetsTrdConfirmRegFeeInfoDto> regFeeDetailList=cfetsTrdConfirmMapper.findAllRegFeeDetailInfoList(regDeal.getTradeId());
             deal.setFeeAmt(getDeatil费用金额(regFeeDetailList, null));
@@ -1469,8 +1467,104 @@ public class CfetsTrdConfirmService extends BaseService{
             // 交易所属部门 = 输出的人员信息结果DTO.本方交易员所属部门
            // paTrdProductDeal.setDeptCode(input.getTrdInvestPersonInfo().getTraderDept());
             paTrdProductDeals.add(paTrdProductDeal);
+
             // 金融产品交易扩展Entity 构造结束----------------------------------------------------------
             trdTradeFeeDetails.addAll(生成交易费用明细数据(regDeal.getTradeId(),deal.getTradeId()));
+
+
+            // 交易类金融产品Entity 构造开始----------------------------------------------------------
+            FinTradeProductDto finTradeProduct = new FinTradeProductDto();
+            // 金融产品代码 = 金融产品交易Entity.交易编号
+            finTradeProduct.setFinprodId(deal.getTradeId());
+            // 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
+            finTradeProduct.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
+            //  金融产品类型 =  数据字典缓存.金融产品类型（投管用）数据字典.债券质押式正回购/逆回购
+            finTradeProduct.setFinprodType2(deal.getFinprodType2());
+            finTradeProduct.setFinprodType(deal.getFinprodType());
+            // 名义本金 = 画面.本金金额
+            finTradeProduct.setPrin(deal.getPrinAmt());
+            // 名义币种 = 画面.币种
+            finTradeProduct.setCcy(deal.getCcy());
+            // 起息日 = 画面.起息日
+            finTradeProduct.setVdate(deal.getVdate());
+            // 到期日 = 画面.到期日
+            finTradeProduct.setMdate(deal.getMdate());
+            finTradeProduct.setVpayDate(deal.getVdate());
+            finTradeProduct.setMpayDate(deal.getMdate());
+            // 查看缺失字段增加 add by renping 20191020 start
+            finTradeProduct.setActCapDays(regDeal.getActRepoTerm());
+            // 查看缺失字段增加 add by renping 20191020 end
+            // 期限(天) = 画面.回购期限
+            finTradeProduct.setTerm(regDeal.getRepoTerm());
+            // 利率类型 = 数据字典缓存.利率类型.固定利率
+            finTradeProduct.setIntType(DictCodeList.利率类型_固定利率.getValue());
+            // 固定利率 = 画面.回购利率/100
+            finTradeProduct.setIntRate(regDeal.getRate());
+            // 计息基础 = 画面.计息基础
+            finTradeProduct.setBasis(DictCodeList.计息基础_A_365.getValue());// 计息基础
+            // 到期本金 = 画面.本金金额
+            finTradeProduct.setmPrinAmt(deal.getPrinAmt());
+            // 到期利息 = 画面.回购利息
+            finTradeProduct.setmIntAmt(regDeal.getmIntAmt());
+            // 到期金额 = 画面.本金金额+画面.回购利息
+            finTradeProduct.setmTradeAmt(regDeal.getmTradeAmt());
+
+            // 本金收益特征 = 逆回购：保本，正回购不存
+            if (DictCodeList.回购拆借方向_逆回购.getValue().equals(regDeal.getPs())) {
+                // ※若画面联动1.7查询出的组合为保本
+                finTradeProduct.setCapiIncomeFeature(DictCodeListExt1.本金收益特征_保本.getValue());
+            }
+            // 交易场所 = 画面.交易场所
+            finTradeProduct.setTradeMarket(DictCodeListExt1.交易场所_银行间.getValue());// 交易场所
+            // 交易日历 = 画面.交易日历
+            finTradeProduct.setCalendarId("03");// 交易日历 银行间
+            // 期限品种 = 画面.期限品种
+            finTradeProduct.setTermType(regDeal.getTermType());
+            // 交易对手 = 画面.交易对手
+            finTradeProduct.setCounterId(regDeal.getCounterId());
+            finTradeProducts.add(finTradeProduct);
+            // 交易类金融产品Entity 构造结束----------------------------------------------------------
+
+            // 交易类金融产品附属Entity 构造开始----------------------------------------------------------
+            FinTradeProductAdd finTradeProductAdd = new FinTradeProductAdd();
+            BeanUtil.copyPropertiesIgnoreNull(finTradeProductAdd,finTradeProduct);
+            // 金融产品代码 = 金融产品交易Entity.交易编号
+            finTradeProductAdd.setFinprodId(deal.getTradeId());
+            // 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
+            finTradeProductAdd.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
+            //  金融产品类型 =  数据字典缓存.金融产品类型（投管用）数据字典.债券质押式正回购/逆回购
+            finTradeProductAdd.setFinprodType2(deal.getFinprodType2());
+            // 登记托管机构
+            StlSecAcctInfo ptlSecAcct = stlSecAcctInfoMapper.selectByPrimaryKey(
+                    regDeal.getSecManageAcctId());
+            finTradeProductAdd.setRegistOrg(null != ptlSecAcct ? ptlSecAcct.getRegistOrg() : null);
+            finTradeProductAdds.add(finTradeProductAdd);
+            // 交易类金融产品附属Entity 构造结束----------------------------------------------------------
+
+            // 金融产品分类Entity 构造开始----------------------------------------------------------
+            FinProductType finProductType = new FinProductType();
+            // 金融产品代码 = 金融产品交易Entity.交易编号
+            finProductType.setFinprodId(deal.getTradeId());
+            // 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
+            finProductType.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
+            // 分类6 = 画面.回购类型
+            finProductType.setType6(regDeal.getRepoType());
+            // 分类7 = 画面.回购类型
+            finProductType.setType7(regDeal.getPs());
+            // 分类8 = 画面.回购类型
+            finProductType.setType8(DictCodeList.平安资产类型_质押式回购.getValue());
+            FinProductTypeConfig finProductTypeConfig = new FinProductTypeConfig();
+            finProductTypeConfig.setConfigType(DictCodeListExt2.配置类型_无标的投管资产类型映射行内资产分类.getValue());
+            finProductTypeConfig.setInputValue1(DictCodeList.平安资产类型_质押式回购.getValue());
+            finProductTypeConfig.setInputValue2(regDeal.getRepoType());
+            finProductTypeConfig.setInputValue3(regDeal.getPs());
+            finProductTypeConfig = restTemplate.postForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/getAssetFiveType",
+                    finProductTypeConfig, FinProductTypeConfig.class);
+            finProductType.setType9(finProductTypeConfig.getOutputValue2());
+            finProductType.setType10(finProductTypeConfig.getOutputValue3());
+            finProductType.setType11(finProductTypeConfig.getOutputValue4());
+            finProductType.setType12(finProductTypeConfig.getOutputValue5());
+            finProductTypes.add(finProductType);
 
             //根据交易编号查询所有的质押券信息
             List<PledgeBondInfoDto> pledgeBondList=cfetsTrdConfirmMapper.findAllSecPtlsList(regDeal.getTradeId());
@@ -1478,8 +1572,9 @@ public class CfetsTrdConfirmService extends BaseService{
             BussRepoSecDto bussRepoSec=new BussRepoSecDto();
             bussRepoSec.setPageFrom(PAGE_FROM_TrdRepoTrade003);
             bussRepoSec.setPledgeBondList(pledgeBondList);
-            bussRepoSec.setFinprodId(regDeal.getTradeId());
+            bussRepoSec.setFinprodId(deal.getTradeId());
             bussRepoSecs.add(bussRepoSec);
+
         }
         entity.setBussRepoSecs(bussRepoSecs);
 
@@ -1545,6 +1640,431 @@ public class CfetsTrdConfirmService extends BaseService{
         }
         return entity;
     }
+    public CfetsTrdRepoTrade003Dto prepareRepoIbuEntity(String totleTradeId,String genType)  {
+        //报价数据
+        CfetsTrdConfirmRegInfoListResponse dtoReg=cfetsTrdConfirmMapper.selectRepoIbuInfoByKey(totleTradeId);
+        // 成交编号
+        String oritradeId = dtoReg.getExecid();
+        String userName = null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"system";
+        CfetsTrdRepoTrade003Dto entity=new CfetsTrdRepoTrade003Dto();
+        entity.setRegIbuId(totleTradeId);
+        BeanUtil.copyPropertiesIgnoreNull(entity,dtoReg);
+        entity.setfTradeId(oritradeId);
+        if (baseGetBusinessId != null) {
+            BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+            if (StringUtil.equals(dtoReg.getPs(),
+                    DictCodeList.回购拆借方向_正回购.getValue())) {
+                codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_正回购录入);
+            } else {
+                codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_逆回购录入);
+            }
+            entity.setTotleTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
+        } else {
+            entity.setTotleTradeId(IDGenerator.generate());
+        }
+        if (StringUtil.equals(dtoReg.getPs(),
+                DictCodeList.回购拆借方向_正回购.getValue())) {
+            entity.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+        } else {
+            entity.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+        }
+        // 业务类型
+        entity.setBusiType(DictCodeList.共通业务类型_质押式回购交易.getValue());
+        // 金融产品类型（估值核算）
+        // 分支序号
+        String branch = CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE);
+        Long branchLong = Long.parseLong(branch);
+        entity.setBranch(branchLong);
+        entity.setFinprodType(dtoReg.getFinprodType2());
+
+        if(StringUtil.isNotEmpty(dtoReg.getSettleSpeed())){
+            entity.setSettleSpeed(new Long(dtoReg.getSettleSpeed()));
+        }
+
+        // 交易本金 = 画面.净价总额
+        entity.setPrinAmt(dtoReg.getTradeAmt());
+        // 交易场所
+        entity.setTradeMarket(DictCodeListExt1.交易场所_银行间.getValue());
+        // 交易日历
+        entity.setCalendarId("03");
+        entity.setRepoType(DictCodeList.回购类型_质押式回购.getValue());
+        entity.setTerm(new Long(String.valueOf(dtoReg.getTermDays())));
+        // 实际占款天数
+        entity.setActCapDays(new Long(String.valueOf(dtoReg.getActRepoTerm())));
+        entity.setTermTypeReback(dtoReg.getTermType());
+        entity.setRebackPrice(dtoReg.getRate());
+        // 计息基础
+        entity.setBasis(dtoReg.getBasis());
+        entity.setMdateSettleAmt(dtoReg.getMtradeAmt());
+        // 回购利息
+        entity.setRebackIntAmt(dtoReg.getMintAmt());
+        // 交易金额
+      //  entity.setTradeRepAmt(dtoReg.getTradeAmt());
+        // 金融产品交易Entity 构造开始----------------------------------------------------------
+
+        // 是否结清 = 数据字典缓存.是否.是
+        entity.setIsClean(DictCodeList.是否_否.getValue());
+        entity.setIsCancel(DictCodeList.是否_否.getValue());
+
+        // 是否外部交易
+        entity.setIsOutTrade(DictCodeList.是否_是.getValue());
+        //本方
+        entity.setOuPartyId(dtoReg.getOuPartyId());
+        // 本方交易员
+        entity.setTrader(dtoReg.getOuTraderId());
+        // 交易对手
+        entity.setCounterId(dtoReg.getCounterId());
+        // 对手方交易员
+        entity.setCounterTrader(dtoReg.getCounterTrader());
+
+        if(StringUtil.equals(dtoReg.getTradeMarket(),DictCodeListExt1.交易场所_银行间.getValue())){
+            entity.setTradePlat(DictCodeList.交易平台_外汇交易中心.getValue());
+        }else{
+            entity.setTradePlat(DictCodeList.交易平台_其它.getValue());
+        }
+
+        // 汇总扩展表
+        PaTrdFinProductDealTotal productDealTotal = new PaTrdFinProductDealTotal();
+        productDealTotal.setTotleTradeId(entity.getTotleTradeId());
+        productDealTotal.setPaBussType(getPaBussType(entity.getPs()));
+        entity.setPaTrdFinProductDealTotal(productDealTotal);
+
+        // 汇总附属表
+        TrdDealTotalAdd trdDealTotalAdd = new TrdDealTotalAdd();
+        trdDealTotalAdd.setTotleTradeId(entity.getTotleTradeId());
+        trdDealTotalAdd.setOuPartyId(dtoReg.getOuPartyId());
+        entity.setTrdDealTotalAdd(trdDealTotalAdd);
+
+
+        //根据报价数据，组装费用信息
+        List<TrdTradeFeeTotal> ttfdList = getTrdTradeIbuFeeTotles(dtoReg,entity.getTotleTradeId());
+        if(null!=ttfdList && ttfdList.size()>0){
+            entity.setFeeAmt(get费用金额(ttfdList, null, null));
+            entity.setFeeAmtPay(get费用金额(ttfdList, DictCodeList.是否_是.getValue(), null));
+            entity.setFeeAmtUnpay(get费用金额(ttfdList, DictCodeList.是否_否.getValue(), null));
+        }
+        entity.setTrdTradeFeeTotals(ttfdList);
+
+        // 设置交易表
+        List<TrdProductDeal> deals = new ArrayList<>();
+        entity.setTrdProductDeals(deals);
+        List<TrdProductDealAdd> trdProductDealAdds = new ArrayList<>();
+        entity.setTrdProductDealAdds(trdProductDealAdds);
+        List<PaTrdProductDeal> paTrdProductDeals = new ArrayList<>();
+        entity.setPaTrdProductDeals(paTrdProductDeals);
+        List<PtlTrade> ptlTrades = new ArrayList<>();
+        entity.setPtlTrade(ptlTrades);
+        List<FinProductType> finProductTypes = new ArrayList<>();
+        entity.setFinProductTypes(finProductTypes);
+        List<FinTradeProductDto> finTradeProducts= new ArrayList<>();
+        entity.setFinTradeProducts(finTradeProducts);
+        List<FinTradeProductAdd> finTradeProductAdds= new ArrayList<>();
+        entity.setFinTradeProductAdds(finTradeProductAdds);
+        // 设置交易费用明细
+        List<TrdTradeFeeDetail> trdTradeFeeDetails = new ArrayList<>();
+        entity.setTradeFeeList(trdTradeFeeDetails);
+        //设置质押券信息
+        List<BussRepoSecDto> bussRepoSecs=new ArrayList<>();
+
+        //根据交易编号查询所有报价明细
+        List<CfetsRegFinProductDealDto>  regDealList=cfetsTrdConfirmMapper.findAllIbuDealList(dtoReg.getTotleTradeId());
+        for(CfetsRegFinProductDealDto regDeal:regDealList){
+            TrdProductDeal deal = new TrdProductDeal();
+            BeanUtil.copyPropertiesIgnoreNull(deal, entity);
+            if (baseGetBusinessId != null) {
+                BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+                if (StringUtil.equals(deal.getPs(),
+                        DictCodeList.回购拆借方向_正回购.getValue())) {
+                    codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_正回购录入);
+                } else {
+                    codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_逆回购录入);
+                }
+                deal.setTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
+            } else {
+                deal.setTradeId(IDGenerator.generate());
+            }
+            deal.setTotleTradeId(entity.getTotleTradeId());
+            deal.setBusiType(DictCodeList.共通业务类型_质押式回购交易.getValue());
+            // 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
+            deal.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
+
+
+            // 起息日 = 画面.起息日
+            deal.setVdate(dtoReg.getVsettleDate());
+            // 到期日 = 画面.到期日
+            deal.setMdate(dtoReg.getMsettleDate());
+            // 交割日 = 画面.交易日
+            deal.setSettleDate(dtoReg.getVsettleDate());
+
+            // 交易份额 = 画面.本金金额
+            deal.setShareAmt(regDeal.getTradeAmt());
+            // 交易本金 = 画面.本金金额
+            deal.setPrinAmt(regDeal.getTradeAmt());
+            // 交易金额 = 画面.本金金额
+            deal.setTradeAmt(regDeal.getTradeAmt());
+
+            // 是否结清 = 数据字典.是否.是
+            deal.setIsClean(DictCodeList.是否_是.getValue());
+            // 是否已撤销 = 数据字典.是否.否
+            deal.setIsCancel(DictCodeList.是否_否.getValue());
+            // 是否外部交易
+            deal.setIsOutTrade(DictCodeList.是否_是.getValue());
+
+
+            // 本方交易员
+            deal.setTrader(dtoReg.getOuTraderId());
+            // 交易对手
+            deal.setCounterId(dtoReg.getCounterId());
+            // 对手方交易员
+            deal.setCounterTrader(dtoReg.getCounterTrader());
+
+            // 交易状态 = 交易状态_初始
+            deal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+            deal.setRemark(regDeal.getRemark());
+
+            deal.setUnitInt(entity.getRebackPrice());
+            if(StringUtils.isNotBlank(entity.getfTradeId())){
+                deal.setfTradeId(entity.getfTradeId());
+            }
+            //交易表存入首期交付日
+            deal.setPayDate(dtoReg.getVsettleDate());
+            deal.setFeeAmt(ArithmeticUtil.doAdd(regDeal.getTrdFeeAmt(),regDeal.getSettleFeeAmt()));
+            deal.setFeeAmtPay(BigDecimal.ZERO);
+            deal.setFeeAmtUnpay(ArithmeticUtil.doAdd(regDeal.getTrdFeeAmt(),regDeal.getSettleFeeAmt()));
+            deal.setPortfolioId(regDeal.getPortfolioId());
+            deal.setEntrustId(regDeal.getEntrustId());
+            deals.add(deal);
+
+            // 金融产品交易附属表Entity 构造开始----------------------------------------------------------
+            // 金融产品交易信息DTO.金融产品交易附属表Entity -> 金融产品交易附属业务流程表
+            TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
+            // 交易编号 = 业务编号 ※2生成的交易编号
+            trdProductDealAdd.setTradeId(deal.getTradeId());
+            // 投资组合代码 = 画面.组合代码
+            trdProductDealAdd.setPortfolioId(regDeal.getPortfolioId());
+            // 委托代码 = 画面.委托代码
+            trdProductDealAdd.setEntrustId(regDeal.getEntrustId());
+            // 生成方式 = 数据字典缓存.生成方式.画面录入
+            trdProductDealAdd.setGenType(genType);
+
+            trdProductDealAdds.add(trdProductDealAdd);
+
+            // 组合交易表Entity 构造开始-----------------------------------------------------------------------
+            PtlTrade ptlTrade = new PtlTrade();
+            // 组合代码 = 画面.组合代码
+            ptlTrade.setPortfolioId(regDeal.getPortfolioId());
+            // 业务编号 = 业务编号 ※2生成的交易编号
+            ptlTrade.setBusiNo(deal.getTradeId());
+            // 业务表 = "金融产品交易"
+            ptlTrade.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
+            // 业务明细代码 = 业务编号 ※2生成的交易编号
+            ptlTrade.setBusiId(deal.getTradeId());
+            // 业务类型 = 数据字典缓存.共通业务类型.回购投资交易
+            ptlTrade.setBusiType(DictCodeList.共通业务类型_质押式回购交易.getValue());
+            // 证券托管户代码 = 画面.证券托管账户
+            ptlTrade.setSecManageAcctId(dtoReg.getSecManageAcctId());
+            // 实际发生日 = 画面.交易日
+            ptlTrade.setSettleDate(dtoReg.getTradeDate());
+            // 工作流代码
+            ptlTrades.add(ptlTrade);
+
+            // 组合交易表Entity 构造结束-----------------------------------------------------------------------
+
+
+            // 金融产品交易扩展Entity 构造开始----------------------------------------------------------
+            PaTrdProductDeal paTrdProductDeal = new PaTrdProductDeal();
+            // 交易编号 = 金融产品交易Entity.交易编号
+            paTrdProductDeal.setTradeId(deal.getTradeId());
+            // 平安业务类型 = 数据字典缓存.平安业务类型（按交易方向取对应值）
+            if (DictCodeList.回购拆借方向_正回购.getValue().equals(deal.getPs())) {
+                // 交易方向为正回购时，取数据字典缓存.平安业务类型.正回购
+                paTrdProductDeal.setPaBussType(DictCodeListExt1.平安业务类型_正回购.getValue());
+            } else {
+                // 交易方向为逆回购时，取数据字典缓存.平安业务类型.逆回购
+                paTrdProductDeal.setPaBussType(DictCodeListExt1.平安业务类型_逆回购.getValue());
+            }
+            // 回购/拆借方向 = 画面.交易方向
+            paTrdProductDeal.setBackLendDirection(dtoReg.getPs());
+            // 交易所属部门 = 输出的人员信息结果DTO.本方交易员所属部门
+            // paTrdProductDeal.setDeptCode(input.getTrdInvestPersonInfo().getTraderDept());
+            paTrdProductDeals.add(paTrdProductDeal);
+            // 金融产品交易扩展Entity 构造结束----------------------------------------------------------
+            trdTradeFeeDetails.addAll(生成交易Ibu费用明细数据(regDeal,deal.getTradeId()));
+
+
+            // 交易类金融产品Entity 构造开始----------------------------------------------------------
+            FinTradeProductDto finTradeProduct = new FinTradeProductDto();
+            // 金融产品代码 = 金融产品交易Entity.交易编号
+            finTradeProduct.setFinprodId(deal.getTradeId());
+            // 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
+            finTradeProduct.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
+            //  金融产品类型 =  数据字典缓存.金融产品类型（投管用）数据字典.债券质押式正回购/逆回购
+            finTradeProduct.setFinprodType2(deal.getFinprodType2());
+            finTradeProduct.setFinprodType(deal.getFinprodType());
+            // 名义本金 = 画面.本金金额
+            finTradeProduct.setPrin(deal.getPrinAmt());
+            // 名义币种 = 画面.币种
+            finTradeProduct.setCcy(deal.getCcy());
+            // 起息日 = 画面.起息日
+            finTradeProduct.setVdate(deal.getVdate());
+            // 到期日 = 画面.到期日
+            finTradeProduct.setMdate(deal.getMdate());
+            finTradeProduct.setVpayDate(deal.getVdate());
+            finTradeProduct.setMpayDate(deal.getMdate());
+            // 查看缺失字段增加 add by renping 20191020 start
+            finTradeProduct.setActCapDays(entity.getActCapDays());
+            // 查看缺失字段增加 add by renping 20191020 end
+            // 期限(天) = 画面.回购期限
+            finTradeProduct.setTerm(entity.getTerm());
+            // 利率类型 = 数据字典缓存.利率类型.固定利率
+            finTradeProduct.setIntType(DictCodeList.利率类型_固定利率.getValue());
+            // 固定利率 = 画面.回购利率/100
+            finTradeProduct.setIntRate(entity.getRebackPrice());
+            // 计息基础 = 画面.计息基础
+            finTradeProduct.setBasis(DictCodeList.计息基础_A_365.getValue());// 计息基础
+            // 到期本金 = 画面.本金金额
+            finTradeProduct.setmPrinAmt(deal.getPrinAmt());
+            // 到期利息 = 画面.回购利息
+            finTradeProduct.setmIntAmt(dtoReg.getMintAmt());
+            // 到期金额 = 画面.本金金额+画面.回购利息
+            finTradeProduct.setmTradeAmt(dtoReg.getMtradeAmt());
+
+            // 本金收益特征 = 逆回购：保本，正回购不存
+            if (DictCodeList.回购拆借方向_逆回购.getValue().equals(dtoReg.getPs())) {
+                // ※若画面联动1.7查询出的组合为保本
+                finTradeProduct.setCapiIncomeFeature(DictCodeListExt1.本金收益特征_保本.getValue());
+            }
+            // 交易场所 = 画面.交易场所
+            finTradeProduct.setTradeMarket(DictCodeListExt1.交易场所_银行间.getValue());// 交易场所
+            // 交易日历 = 画面.交易日历
+            finTradeProduct.setCalendarId("03");// 交易日历 银行间
+            // 期限品种 = 画面.期限品种
+            finTradeProduct.setTermType(dtoReg.getTermType());
+            // 交易对手 = 画面.交易对手
+            finTradeProduct.setCounterId(dtoReg.getCounterId());
+            finTradeProducts.add(finTradeProduct);
+            // 交易类金融产品Entity 构造结束----------------------------------------------------------
+
+            // 交易类金融产品附属Entity 构造开始----------------------------------------------------------
+            FinTradeProductAdd finTradeProductAdd = new FinTradeProductAdd();
+            BeanUtil.copyPropertiesIgnoreNull(finTradeProductAdd,finTradeProduct);
+            // 金融产品代码 = 金融产品交易Entity.交易编号
+            finTradeProductAdd.setFinprodId(deal.getTradeId());
+            // 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
+            finTradeProductAdd.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
+            //  金融产品类型 =  数据字典缓存.金融产品类型（投管用）数据字典.债券质押式正回购/逆回购
+            finTradeProductAdd.setFinprodType2(deal.getFinprodType2());
+            // 登记托管机构
+            StlSecAcctInfo ptlSecAcct = stlSecAcctInfoMapper.selectByPrimaryKey(
+                    dtoReg.getSecManageAcctId());
+            finTradeProductAdd.setRegistOrg(null != ptlSecAcct ? ptlSecAcct.getRegistOrg() : null);
+            finTradeProductAdds.add(finTradeProductAdd);
+            // 交易类金融产品附属Entity 构造结束----------------------------------------------------------
+
+            // 金融产品分类Entity 构造开始----------------------------------------------------------
+            FinProductType finProductType = new FinProductType();
+            // 金融产品代码 = 金融产品交易Entity.交易编号
+            finProductType.setFinprodId(deal.getTradeId());
+            // 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
+            finProductType.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
+            // 分类6 = 画面.回购类型
+
+            finProductType.setType6(DictCodeList.回购类型_质押式回购.getValue());
+            // 分类7 = 画面.回购类型
+            finProductType.setType7(dtoReg.getPs());
+            // 分类8 = 画面.回购类型
+            finProductType.setType8(DictCodeList.平安资产类型_质押式回购.getValue());
+            FinProductTypeConfig finProductTypeConfig = new FinProductTypeConfig();
+            finProductTypeConfig.setConfigType(DictCodeListExt2.配置类型_无标的投管资产类型映射行内资产分类.getValue());
+            finProductTypeConfig.setInputValue1(DictCodeList.平安资产类型_质押式回购.getValue());
+            finProductTypeConfig.setInputValue2(DictCodeList.回购类型_质押式回购.getValue());
+            finProductTypeConfig.setInputValue3(dtoReg.getPs());
+            finProductTypeConfig = restTemplate.postForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/getAssetFiveType",
+                    finProductTypeConfig, FinProductTypeConfig.class);
+            finProductType.setType9(finProductTypeConfig.getOutputValue2());
+            finProductType.setType10(finProductTypeConfig.getOutputValue3());
+            finProductType.setType11(finProductTypeConfig.getOutputValue4());
+            finProductType.setType12(finProductTypeConfig.getOutputValue5());
+            finProductTypes.add(finProductType);
+
+            //根据报价编号和指令编号查询所有的质押券信息
+            Map<String, Object> param = new HashMap<String, Object>();
+            param.put("quoteId", dtoReg.getTotleTradeId());
+            param.put("entrustId", regDeal.getEntrustId());
+
+            List<PledgeBondInfoDto> pledgeBondList=cfetsTrdConfirmMapper.findAllIbuSecPtlsList(param);
+            //设置金融产品交易登记质押品
+            BussRepoSecDto bussRepoSec=new BussRepoSecDto();
+            bussRepoSec.setPageFrom(PAGE_FROM_TrdRepoTrade003);
+            bussRepoSec.setPledgeBondList(pledgeBondList);
+            bussRepoSec.setFinprodId(deal.getTradeId());
+            bussRepoSecs.add(bussRepoSec);
+        }
+        entity.setBussRepoSecs(bussRepoSecs);
+
+        // =====================划款指令信息=====================
+        List<BussTrdTransferOrderDto> bussTrdTransferOrder = new ArrayList<>();
+        BussSettleOrderParameterDto bussSettleOrderParameterDto = new BussSettleOrderParameterDto();
+        bussSettleOrderParameterDto.setIsTotalTrade(BussinessDictCodeList.是否_是.getValue());
+        bussSettleOrderParameterDto.setBankLendingType(null);
+        TrdProductDeal deal = new TrdProductDeal();
+        deal.setFinprodType2(dtoReg.getFinprodType2());
+        //   deal.setSettleDate(dtoReg.getVsettleDate());
+        deal.setSettleDate(dtoReg.getTradeDate());
+        deal.setTradeDate(dtoReg.getTradeDate());
+        deal.setPs(DictCodeList.交易方向_买入.getValue());
+        deal.setCcy(dtoReg.getCcy());
+        deal.setTradeAmt(dtoReg.getTradeAmt());
+        deal.setCounterId(dtoReg.getCounterId());
+        deal.setTradeMarket(dtoReg.getTradeMarket());
+        deal.setTradePlat(entity.getTradePlat());
+        deal.setSecManageAcctId(dtoReg.getSecManageAcctId());
+        deal.setTradeMarketMode(dtoReg.getTradeMarketMode());
+        bussSettleOrderParameterDto.setDeal(deal);
+        BussTrdTransferOrderDto bussTrdTransferOrderDto = bussTrdTransferOrderService.generateOrder(bussSettleOrderParameterDto);
+        bussTrdTransferOrderDto.setPayAcctNoList(null);
+        bussTrdTransferOrderDto.setRecAcctNoList(null);
+        bussTrdTransferOrderDto.setIsTotalTrade(BussinessDictCodeList.是否_是.getValue());
+        if (StringUtil.isNotEmpty(dtoReg.getSecManageAcctId())) {
+            Map<String, Object> param = new HashMap<String, Object>();
+            param.put("secAcctId", dtoReg.getSecManageAcctId());
+            String secAcctSource = cfetsTrdConfirmMapper.selectSecAcctSource(param);
+            if (StringUtil.equals(BussinessDictCodeList.账户来源_自营.getValue(), secAcctSource)
+                    && StringUtil.equals(dtoReg.getPs(), BussinessDictCodeList.交易方向_买入.getValue())) {
+                bussTrdTransferOrderDto.setIsNeedSend(BussinessDictCodeList.是否_否.getValue());
+            }
+        }
+        bussTrdTransferOrderDto.setTradeId(entity.getTotleTradeId());
+        bussTrdTransferOrderDto.setOrderRetStatus(DictCodeList.指令处理状态_处理成功.getValue());
+        bussTrdTransferOrder.add(bussTrdTransferOrderDto);
+        entity.setBussTrdTransferOrder(bussTrdTransferOrderService.save(bussTrdTransferOrder));
+        // =====================划款指令信息=====================
+
+        entity.getBussTrdTransferOrder().get(0).setTradeId(entity.getTotleTradeId());
+        // 划款指令表Entity 构造结束----------------------------------------------------------
+
+        //无下行时，插入下行成交匹配关系.有下行时，手工匹配或自动匹配插入下行成交匹配表
+        String support_cstp_flag_repo=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_REPO");
+        CfetsTrdConfirmMatchDto matchDto=new CfetsTrdConfirmMatchDto();
+        if(StringUtil.equals(support_cstp_flag_repo,DictCodeList.是否_否.getValue())){
+            matchDto.setSeqno(IDGenerator.generate());
+            matchDto.setPreTradeId(totleTradeId);
+            matchDto.setTrdConfStatus(DictCodeList.确认状态_已确认.getValue());
+            matchDto.setCreateUser(userName);
+            matchDto.setCreateDept(CommonUtil.getDeptCode());
+            matchDto.setUpdateUser(userName);
+            matchDto.setTrdId(entity.getTotleTradeId());
+            entity.setCfetsTrdConfirmMatchDto(matchDto);
+        }else{
+            matchDto.setPreTradeId(totleTradeId);
+            matchDto.setTrdConfStatus(DictCodeList.确认状态_已确认.getValue());
+            matchDto.setUpdateUser(userName);
+            matchDto.setTrdId(entity.getTotleTradeId());
+            entity.setCfetsTrdConfirmMatchDto(matchDto);
+        }
+
+        return entity;
+    }
 
 
     private String getPaBussType(String 交易方向) {
@@ -1561,6 +2081,12 @@ public class CfetsTrdConfirmService extends BaseService{
                 || StringUtil.equals(DictCodeList.交易方向_行权_赎回.getValue(), 交易方向)) {
             // 一体化对应etliu end
             return DictCodeListExt1.平安业务类型_债券类资产行权.getValue();
+        }else if (DictCodeList.回购拆借方向_正回购.getValue().equals(交易方向)) {
+            // 交易方向为正回购时，取数据字典缓存.平安业务类型.正回购
+            return DictCodeListExt1.平安业务类型_正回购.getValue();
+        } else if(DictCodeList.回购拆借方向_逆回购.getValue().equals(交易方向)){
+            // 交易方向为逆回购时，取数据字典缓存.平安业务类型.逆回购
+            return DictCodeListExt1.平安业务类型_逆回购.getValue();
         }
         return null;
     }
@@ -1730,7 +2256,7 @@ public class CfetsTrdConfirmService extends BaseService{
      * @return 投资目的
      */
     public String getInvAim(Map<String,Object> map){
-        String invAim = "";
+       /* String invAim = "";
         String portfolioId = (String)map.get("portfolioId");
         PtlPortfolio ptlPortfolio = null;
         if(StringUtil.isNotEmpty(portfolioId)){
@@ -1742,8 +2268,9 @@ public class CfetsTrdConfirmService extends BaseService{
                     ||StringUtil.equals(ptlPortfolio.getProfitType(),DictCodeList.收益类型_收益型.getValue())){
                 invAim = BussinessDictCodeList.投资目的_摊余成本类.getValue();
             }
-        }
-        return invAim;
+        }*/
+
+        return cfetsTrdConfirmMapper.selectInvAimByEntrustId(map);
     }
     public void baseTradeCommExecute(FinProductTradeDto finProductTradeDto) {
         if (finProductTradeDto == null) {
