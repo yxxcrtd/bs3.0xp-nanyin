@@ -12,6 +12,7 @@ package com.joyintech.tams.valuation.trademanage.trdplanvaluationtrade.service;
 
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.tams.valuation.trademanage.trdplanvaluationtrade.dto.TrdPlanValuationTradeDto;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -49,7 +50,8 @@ public class TrdPlanValuationTrade001Service extends CommonExportService<TrdPlan
      */
     @Override
     public void doComplete(TrdPlanValuationTradeDto entity, OperationType type) {
-        simpleRestTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/TrdPlanValuationTrade/doComplete/" + type, entity, Integer.class);
+        String action = "delete";
+        restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/TrdPlanValuationTrade/" + action, entity, Integer.class);
     }
 
 

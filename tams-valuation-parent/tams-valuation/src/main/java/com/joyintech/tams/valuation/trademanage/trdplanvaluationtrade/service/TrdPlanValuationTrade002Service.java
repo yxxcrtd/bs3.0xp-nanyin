@@ -13,10 +13,16 @@ package com.joyintech.tams.valuation.trademanage.trdplanvaluationtrade.service;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
+import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValMngMnfTade;
+import com.joyintech.tams.valuation.trademanage.bond.dto.TrdBondTrade002Dto;
+import com.joyintech.tams.valuation.trademanage.bond.dto.TrdBondTradeResult;
+import com.joyintech.tams.valuation.trademanage.trdplanvaluationtrade.dto.TrdPlanTradeResult;
 import com.joyintech.tams.valuation.trademanage.trdplanvaluationtrade.dto.TrdPlanValuationTradeDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -26,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -45,6 +52,11 @@ public class TrdPlanValuationTrade002Service extends CommonExportService<TrdPlan
 
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
+
+    @Autowired
+    private TrdPlanTradeCommonServer  trdPlanTradeCommonServer;
+    @Autowired
+    private TrdPlanNetTradeCommonServer trdPlanNetTradeCommonServer;
 
 
 
@@ -99,8 +111,30 @@ public class TrdPlanValuationTrade002Service extends CommonExportService<TrdPlan
      * {@inheritDoc}
      */
     @Override
-    public void doComplete(TrdPlanValuationTradeDto entity, OperationType type) {
-        restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/TrdPlanValuationTrade/doComplete/" + type, entity, Integer.class);
+    public void doComplete(TrdPlanValuationTradeDto entity, OperationType operationType) {
+        String action = StringUtil.EMPTY;
+        TrdPlanTradeResult trdPlanTradeResult = new TrdPlanTradeResult();
+        //计划类资产分为净值型和货币型  profitType:01净值型，02预期收益型,03货币型
+        if(entity.getFinprodType().equals("F17") && entity.getProfitType().equals("01")){
+            trdPlanTradeResult = generateNetEntity(entity);
+            if (OperationType.NEW.equals(operationType)) {
+                action = "insertNet";
+            }
+            else {
+                action = "updateNet";
+            }
+        }else if(entity.getFinprodType().equals("F17") && entity.getProfitType().equals("03")){
+            trdPlanTradeResult = generateEntity(entity);
+            if (OperationType.NEW.equals(operationType)) {
+                action = "insert";
+            }
+            else {
+                action = "update";
+            }
+        }
+
+        restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/TrdPlanValuationTrade/" + action, trdPlanTradeResult, Integer.class);
+
     }
 
     /**
@@ -115,6 +149,20 @@ public class TrdPlanValuationTrade002Service extends CommonExportService<TrdPlan
                 ServiceApplication.VALUATION_SERVICE_NAME + "/TrdPlanValuationTrade/findPortfolioId",
                 params, SelectOptionDto.class);
     }
+
+    /**
+     * @Description:根据交易编号查询详情
+     * @auther: yuzj
+     * @date: 2022/1/7
+     * @param:
+     * @return:
+     */
+    public TrdPlanValuationTradeDto queryTradeInfoByTradeId(String tradeId) {
+        return restTemplate.postForObject(
+                ServiceApplication.VALUATION_SERVICE_NAME + "/TrdPlanValuationTrade/queryTradeInfoByTradeId",
+                tradeId, TrdPlanValuationTradeDto.class);
+    }
+
 
     /**
      * 资产代码下拉框
@@ -146,6 +194,43 @@ public class TrdPlanValuationTrade002Service extends CommonExportService<TrdPlan
                 ServiceApplication.VALUATION_SERVICE_NAME + "/TrdPlanValuationTrade/createPlanTradeId",
                 null, String.class);
 
+    }
+
+    //封装实体类
+    public TrdPlanTradeResult generateEntity(TrdPlanValuationTradeDto trdPlanValuationTradeDto){
+        List<ValMngMnfTade> listValValMngMnfTade = new ArrayList<ValMngMnfTade>();
+        ValMngMnfTade valMngMnfTade = new ValMngMnfTade();
+        BeanUtil.copyPropertiesIgnoreNull(valMngMnfTade,trdPlanValuationTradeDto);
+        valMngMnfTade.setTradeDate(trdPlanValuationTradeDto.getTradeDate());
+        //比较界面和接口字段差异，并手动给接口字段赋值
+        valMngMnfTade.setAssetId("F17_"+trdPlanValuationTradeDto.getFinprodId());//资产代码
+        valMngMnfTade.setDataActionSign("01");
+        valMngMnfTade.setCounterId("FYDLCA365001");
+        valMngMnfTade.setCounterType("01");
+        valMngMnfTade.setIsChlFeeAmt("Y");
+        valMngMnfTade.setIsClean("N");
+
+        listValValMngMnfTade.add(valMngMnfTade);
+        return trdPlanTradeCommonServer.generateEntity(trdPlanValuationTradeDto,listValValMngMnfTade);
+
+    }
+
+    //封装实体类
+    public TrdPlanTradeResult generateNetEntity(TrdPlanValuationTradeDto trdPlanValuationTradeDto){
+        List<ValMngMnfTade> listValValMngMnfTade = new ArrayList<ValMngMnfTade>();
+        ValMngMnfTade valMngMnfTade = new ValMngMnfTade();
+        BeanUtil.copyPropertiesIgnoreNull(valMngMnfTade,trdPlanValuationTradeDto);
+        valMngMnfTade.setTradeDate(trdPlanValuationTradeDto.getTradeDate());
+        //比较界面和接口字段差异，并手动给接口字段赋值
+        valMngMnfTade.setAssetId("F17_"+trdPlanValuationTradeDto.getFinprodId());//资产代码
+        valMngMnfTade.setDataActionSign("01");
+        valMngMnfTade.setCounterId("FYDLCA365001");
+        valMngMnfTade.setCounterType("01");
+        valMngMnfTade.setIsChlFeeAmt("Y");
+        valMngMnfTade.setIsClean("N");
+
+        listValValMngMnfTade.add(valMngMnfTade);
+        return trdPlanNetTradeCommonServer.generateNetEntity(trdPlanValuationTradeDto,listValValMngMnfTade);
     }
 
 
