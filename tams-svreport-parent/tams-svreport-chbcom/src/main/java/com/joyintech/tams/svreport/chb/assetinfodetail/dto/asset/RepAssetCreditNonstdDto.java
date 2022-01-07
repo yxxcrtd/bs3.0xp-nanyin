@@ -313,6 +313,11 @@ public class RepAssetCreditNonstdDto extends BaseEntity {
      private String repRelationFinan;
 
     /**
+     * 资产代码  中债新增  20211224
+     */
+    private String repCreditAssetCode;
+
+    /**
      * 取得 金融产品代码
      * @return 金融产品代码
      */
@@ -1215,4 +1220,12 @@ public class RepAssetCreditNonstdDto extends BaseEntity {
 	public void setRepBasicAssetType(String repBasicAssetType) {
 		this.repBasicAssetType = repBasicAssetType;
 	}
+
+    public String getRepCreditAssetCode() {
+        return repCreditAssetCode;
+    }
+
+    public void setRepCreditAssetCode(String repCreditAssetCode) {
+        this.repCreditAssetCode = repCreditAssetCode;
+    }
 }

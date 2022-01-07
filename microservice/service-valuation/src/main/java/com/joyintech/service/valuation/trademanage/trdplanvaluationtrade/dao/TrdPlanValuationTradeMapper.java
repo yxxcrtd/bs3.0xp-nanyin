@@ -13,6 +13,7 @@ package com.joyintech.service.valuation.trademanage.trdplanvaluationtrade.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.valuation.trademanage.bond.dto.TrdBondTrade001Dto;
 import com.joyintech.service.valuation.trademanage.trdplanvaluationtrade.dto.TrdPlanValuationTradeDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -63,5 +64,17 @@ public interface TrdPlanValuationTradeMapper {
     String getNextId(@Param("sequenceName")String sequenceName);
 
 
+	/**
+	 * 检索债券交易列表
+	 *
+	 * @param paraMap 参数
+	 * @return 债券交易列表
+	 * @see
+	 * @since 1.0
+	 */
+	List<TrdPlanValuationTradeDto> selectDeal(Map<String, Object> paraMap);
+
+
+	TrdPlanValuationTradeDto queryTradeInfoByTradeId(String tradeId);
 
 }

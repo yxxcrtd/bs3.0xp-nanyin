@@ -1,0 +1,117 @@
+(function() {
+    /**
+     * 获取表单参数
+     */
+        var informationform = function() {
+            var param = $.serializeToObject('#informationForm');
+            return param;
+        }
+
+
+           //记录分类change事件
+           function salerRewPenaTyepOnChange(){
+               var salerRewPenaTyep = $('#salerRewPenaTyep').val();
+               if (salerRewPenaTyep === '03'){
+                    $('#salerRewPenaName').prop("disabled",true);
+                    $("#salerRewPenaName").val('').trigger('change');
+                    $('#salerRewPenaComments').prop("disabled",true);
+                    $("#salerRewPenaComments").val('').trigger('change');
+                    $('#salerRewPenaInst').prop("disabled",true);
+                    $("#salerRewPenaInst").val('').trigger('change');
+                    $('#salerRewPenaInstName').prop("disabled",true);
+                    $("#salerRewPenaInstName").val('').trigger('change');
+                    $('#salerRewPenaStart').prop("disabled",true);
+                    $("#salerRewPenaStart").val('').trigger('change');
+                    $('#salerRewPenaEnd').prop("disabled",true);
+                    $("#salerRewPenaEnd").val('').trigger('change');
+                    $('#salerComplainDetail').prop("disabled",false);
+                    $('#salerComplainResult').prop("disabled",false);
+                    $('#salerComplainDate').prop("disabled",false);
+               }else{
+                       $('#salerRewPenaName').prop("disabled",false);
+                       $('#salerRewPenaComments').prop("disabled",false);
+                       $('#salerRewPenaInst').prop("disabled",false);
+                       $('#salerRewPenaInstName').prop("disabled",false);
+                       $('#salerRewPenaStart').prop("disabled",false);
+                       $('#salerRewPenaEnd').prop("disabled",false);
+                       $('#salerComplainDetail').prop("disabled",true);
+                       $("#salerComplainDetail").val('').trigger('change');
+                       $('#salerComplainResult').prop("disabled",true);
+                       $("#salerComplainResult").val('').trigger('change');
+                       $('#salerComplainDate').prop("disabled",true);
+                       $("#salerComplainDate").val('').trigger('change');
+               }
+            }
+
+            //奖惩单位change事件
+            function salerRewPenaInstOnChange(){
+               var salerRewPenaInst = $('#salerRewPenaInst').val();
+                   if (salerRewPenaInst === '99'){
+                        $('#salerRewPenaInstName').prop("disabled",false);
+                   }else{
+                        $('#salerRewPenaInstName').prop("disabled",true);
+                        $("#salerRewPenaInstName").val('').trigger('change');
+                   }
+            }
+
+            //获取机构代码默认值
+            function getIssuePartyId(){
+               var salerInstCode = $('#salerInstCode').val();
+               Joyin.ajax(JoyinUtil.getRealPath('report/submitmaintenance/salerrewpenainfo/SalerRewPenaInfo002/getIssuePartyId'), {salerInstCode : salerInstCode}, function(result){
+                         if (result){
+                           $('#salerInstCode').val(result);
+                         }
+               });
+            }
+
+        /**
+         * 保存或提交
+         */
+        function saveOrSubmit(operateType) {
+            var object = informationform();
+            object.operateType = operateType;
+            object.pageModel = pageModel;
+            Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerrewpenainfo/SalerRewPenaInfo002/check', object, function(result) {
+                Joyin.confirm(result.data, function() {
+                    if(operateType === 'save') {
+                        WorkFlow.doSaveList(basePath + 'report/submitmaintenance/salerrewpenainfo/SalerRewPenaInfo002/save', object, "SalerRewPenaInfo002_btn_save");
+                    }
+                    else {
+                        WorkFlow.doSubmitList(basePath + 'report/submitmaintenance/salerrewpenainfo/SalerRewPenaInfo002/save', object, "SalerRewPenaInfo002_btn_submit");
+                    }
+                });
+            });
+        }
+
+          //控制编辑时的输入框置灰
+           var init = function(){
+           if(pageModel==PAGE_MODEL_EDIT){
+                     $('#salerInstCode').prop("disabled",true);
+           }
+           else{
+                     $('#salerInstCode').prop("disabled",true);
+                     getIssuePartyId();
+           }
+           }
+
+      $(document).ready(function(){
+            $('#salerRewPenaTyep').change(function(){
+               salerRewPenaTyepOnChange();
+            });
+            $('#salerRewPenaInst').change(function(){
+                salerRewPenaInstOnChange();
+            });
+      });
+
+        $(function() {
+            //编辑字段置灰
+            init();
+            // 按钮事件
+            $('#SalerRewPenaInfo002_btn_save').click(function() {
+                saveOrSubmit('save');
+            });
+            $('#SalerRewPenaInfo002_btn_submit').click(function() {
+                saveOrSubmit('submit');
+            });
+        });    
+}());

@@ -63,4 +63,13 @@ public class AgentInstitution002Service extends BaseService{
     public int checkAgentInstitutionCode(String agentInstitutionCode){
         return  chbAgentInstitutionInfoMapper.checkAgentInstitutionCode(agentInstitutionCode);
     }
+
+    /**
+     * 代理销售机构名称重复校验
+     * @param agentInstitutionName
+     * @return
+     */
+    public int checkAgentInstitutionName(String agentInstitutionName){
+        return  chbAgentInstitutionInfoMapper.checkAgentInstitutionName(agentInstitutionName);
+    }
 }

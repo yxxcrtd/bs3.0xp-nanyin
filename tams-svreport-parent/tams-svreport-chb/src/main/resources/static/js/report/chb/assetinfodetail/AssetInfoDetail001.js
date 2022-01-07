@@ -49,7 +49,7 @@
 		rowno:false,
 		cols:[
 			{ field: 'assetUuid',width:0,sortField:'',visible:false},
-			{ title: "反馈状态", field: 'dataStatusStr',width:80 ,sortField:'dataStatus'},
+			{ title: "报送信息维护状态", field: 'dataStatusStr',width:120 ,sortField:'dataStatus'},
 			{ title: "资产代码", field: 'assetCode',width:180 ,sortField:'asset_code'},
 			{ title: "资产名称", field: 'assetName',width:300 ,sortField:'asset_name'},
 			{ title: "资产一级类型",field:'orgAssetType1Str', width:120,sortField:'org_asset_type1'},

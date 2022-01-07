@@ -476,6 +476,9 @@ public class SvrProdInfoFileImpService extends FileImpService {
 		if (StringUtil.isNotEmpty(map.get("GRAD_PROPORTION"))){
 			info.setGradProportion(new BigDecimal(map.get("GRAD_PROPORTION")));
 		}
+		if (StringUtil.isNotEmpty(map.get("PRD_SPEC_PROPERTY"))){
+			info.setPrdSpecProperty(map.get("PRD_SPEC_PROPERTY"));
+		}
 		return info;
 
 	}

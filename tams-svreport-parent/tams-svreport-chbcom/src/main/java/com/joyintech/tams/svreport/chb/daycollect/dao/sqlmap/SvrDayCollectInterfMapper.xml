@@ -16,8 +16,8 @@
 		sum(A.valueAmount)                    as dayValueAmountSum,
 		sum(A.saleTotalByQty)                     as daySaleQtySum,
 		sum(A.valueTotalByQty)                    as dayValueQtySum,
-		sum(A.saleAmount) * A.PROD_VALUE        as saleTotalByQty,
-		sum(A.valueAmount) * A.PROD_VALUE       as valueTotalByQty,
+		sum(A.saleTotalByQty) * A.PROD_VALUE        as saleTotalByQty,
+		sum(A.valueTotalByQty) * A.PROD_VALUE       as valueTotalByQty,
 		to_date(#{batchDate,jdbcType=VARCHAR},'yyyy-mm-dd')       as equityConfDate
 		FROM
 		( SELECT

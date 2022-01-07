@@ -87,8 +87,10 @@ INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentInstitution003','AgentInstitut
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentInstitution002','AgentInstitution001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentInstitution002','AgentInstitution002_btn_submit','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentInstitution001','AgentInstitution001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentPrdInfo002','AgentPrdInfo002_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentPrdInfo002','AgentPrdInfo002_btn_submit','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
-INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentPrdInfo001','AgentPrdInfo001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID = 'AgentInstitution001';
+INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentPrdInfo001','AgentPrdInfo001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
+DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID = 'AgentInstitution001';
 INSERT INTO SYS_PAGE_ELEMENT VALUES('AgentInstitution001','AgentInstitution001_btn_add','01','01',null,'新建','system',null,sysdate,'system',sysdate,'C',null);
 INSERT INTO SYS_PAGE_ELEMENT VALUES('AgentInstitution001','AgentInstitution001_btn_delete','01','01',null,'删除','system',null,sysdate,'system',sysdate,'C',null);
 INSERT INTO SYS_PAGE_ELEMENT VALUES('AgentInstitution001','AgentInstitution001_btn_import','01','01',null,'导入','system',null,sysdate,'system',sysdate,'C',null);
@@ -148,3 +150,14 @@ insert into SYS_DATADICT_LIST VALUES ('SVR_REPORT_CODE','41','委托销售产品
 insert into SYS_DATADICT_LIST VALUES ('SVR_CHECK_INTERF_TYPE','CHB_AGENT_PRD_SUB','委托销售产品编码信息登记','20','0','system',null,sysdate,'system',sysdate,null);
 DELETE FROM CHB_REG_TIME_POINTS WHERE CHB_REG_TIME_POINTS.SEQNO = '41';
 INSERT INTO CHB_REG_TIME_POINTS VALUES('41',null,'41',null,'03','03','02','业务发生后N个工作日','1','1','12','4','E',null,null,'qq2',sysdate,'system',sysdate,null);
+
+
+--20220106代理销售机构信息数据状态枚举值
+DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'AGENT_STATUS';
+insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('AGENT_STATUS', 'SYS', '代理销售机构信息数据状态', 'AGENT_STATUS', '02', 'system', null, SYSDATE, 'system', SYSDATE);
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'AGENT_STATUS';
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('AGENT_STATUS', 'D', '删除', 1, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('AGENT_STATUS', 'E', '有效', 2, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);

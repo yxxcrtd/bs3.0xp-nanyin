@@ -82,6 +82,8 @@ $(function() {
               {title: '募集总份额',field:'raiseQty', width:150, type:'money', digit:5,sortField:'raiseQty'},
               {title: '是否有其他机构代销',field:'isConsign', width:200,sortField:'isConsign'},
               {title: '代销总金额',field:'consignAmt', width:200,type:'money', digit:2,sortField:'consignAmt'},
+              { title: "资金托管账号", field: 'busiAcctNo',width:200, sortField:'busiAcctNo'},
+              { title: "资金托管账户", field: 'acctName',width:200, sortField:'acctName'},
               {title: '备注',field:'remark', width:200,sortField:'remark'},
               { field: 'sumitSeq',visible:false}
           ]

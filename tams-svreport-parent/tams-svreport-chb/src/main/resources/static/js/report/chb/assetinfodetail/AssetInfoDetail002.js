@@ -152,6 +152,10 @@ var QueryFunc=function(){
             }
         }else if(obj["04"].indexOf(repAssetType)>=0){
             $("#svrBussRepAssetCreditNonstdInfoDto_repChose").val('无');
+            $('#repCreditAssetCode_Div').hide();
+            if (repAssetType!="2202") {
+                $('#svrBussRepAssetCreditNonstdInfoDto_repCreditAssetCode').val('').trigger('change');
+            }
             //非标准化债权类资产/信贷资产流转项目
             if(repAssetType=='2201'||repAssetType=='2202'){
                 //份额面值置灰不可填
@@ -242,7 +246,9 @@ var QueryFunc=function(){
                 $("#svrBussRepAssetCreditNonstdInfoDto_creditOrgName").val('').trigger("change");
                 $("#svrBussRepAssetCreditNonstdInfoDto_creditOrgName").attr("disabled",true);
 
-
+                if(repAssetType=="2202"){
+                    $('#repCreditAssetCode_Div').show();
+                }
 
             }else{
 
@@ -298,7 +304,7 @@ var QueryFunc=function(){
             }
             if(repAssetType=='2201'||repAssetType=='2202'||repAssetType=='1202'||repAssetType=='1203'
                 ||repAssetType=='1204'||repAssetType=='1206'||repAssetType=='1207'||repAssetType=='1208'||
-                repAssetType=='1209'){
+                repAssetType=='1209'||repAssetType=='1211'||repAssetType=='1212'||repAssetType=='1213'){
                 //收/受益权类型，下拉框选择空白，且置灰不可修改
                 $("#svrBussRepAssetCreditNonstdInfoDto_repProfitType").val('').trigger("change");
                 $("#svrBussRepAssetCreditNonstdInfoDto_repProfitType").attr("disabled",true);
@@ -313,10 +319,11 @@ var QueryFunc=function(){
             if(repAssetType=='1210'){
                 //类型默认05置灰不可修改
                 $("#svrBussRepAssetAstBillInfoDto_notstandSecType").val('05').attr('disabled', true).trigger('change');
+                $("#svrBussRepAssetAstBillInfoDto_content_one_div").hide();
             }else{
                 $("#svrBussRepAssetAstBillInfoDto_notstandSecType").val('').trigger("change");
                 $("#svrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",false);
-
+                $("#svrBussRepAssetAstBillInfoDto_content_one_div").show();
             }
         }else if(obj["06"].indexOf(repAssetType)>=0){
             //权益类资产
@@ -347,8 +354,10 @@ var QueryFunc=function(){
                 repAssetType=='1704'||repAssetType=='1706'||repAssetType=='1702'){
                 $("#svrBussRepAssetMngProdInfoDto_financialComissue").val('').trigger("change");
                 $("#svrBussRepAssetMngProdInfoDto_financialComissue").attr("disabled",true);
+                $("#svrBussRepAssetMngProdInfoDto_content_one_div").hide();
             }else{
                 $("#svrBussRepAssetMngProdInfoDto_financialComissue").attr("disabled",false);
+                $("#svrBussRepAssetMngProdInfoDto_content_one_div").show();
             }
         }else if(obj["13"].indexOf(repAssetType)>=0){
             //商品类资产
@@ -375,8 +384,10 @@ var QueryFunc=function(){
                 //公募
                 $("#svrBussRepFundInfoDto_financialComissue").val('').trigger("change");
                 $("#svrBussRepFundInfoDto_financialComissue").attr("disabled",true);
+                $("#svrBussRepFundInfoDto_profitFlag_div").show();
             }else{
                 $("#svrBussRepFundInfoDto_financialComissue").attr("disabled",false);
+                $("#svrBussRepFundInfoDto_profitFlag_div").hide();
             }
         }
         star();
@@ -391,7 +402,9 @@ var QueryFunc=function(){
         /**【资产基本信息维护】-新建页面（1401、1402、1403、1404、1405、1406、1499），提交报错**/
         object.svrBussRepFinanciallInfoDto.targetType3 = object.svrBussRepFinanciallInfoDto.targetType3?object.svrBussRepFinanciallInfoDto.targetType3.join(","):'';
         object.svrBussRepDepositInfoDto.repTargetType = object.svrBussRepDepositInfoDto.repTargetType?object.svrBussRepDepositInfoDto.repTargetType.join(","):'';
-        object.svrBussRepDepositInfoDto.repAssetType = $('#assetType2').val();
+        object.svrBussRepDepositInfoDto.repBankName = object.svrBussRepDepositInfoDto.bankName?object.svrBussRepDepositInfoDto.bankName:'';
+        object.svrBussRepDepositInfoDto.repBasis = object.svrBussRepDepositInfoDto.basis?object.svrBussRepDepositInfoDto.basis:'';
+
         object.pageModel = pageModel;
 
         Joyin.ajaxJson(basePath + 'chb/assetinfodetail/AssetInfoDetail002/check',object,function(result){
@@ -459,6 +472,42 @@ var QueryFunc=function(){
         // $("input[id$='_assetId']").val($('#assetCode').val());
         $("input[id$='_assetName']").val($('#assetName').val());
     }
+
+    // 置空
+    var resetVal = function () {
+        // 发行人置空
+        $('#svrBussFinBondRepInfoDto_chbIssuerId').val('').trigger('change');
+        $('#svrBussFinBondRepInfoDto_repPartyType1').val('').trigger('change');
+        $('#svrBussFinBondRepInfoDto_repPartyType2').val('').trigger('change');
+        $('#svrBussFinBondRepInfoDto_repPartyType3').val('').trigger('change');
+        $('#svrBussFinBondRepInfoDto_repIndustry').val('').trigger('change');
+        $('#svrBussFinBondRepInfoDto_repIndustryLevel2').val('').trigger('change');
+        // 融资人2置空
+        $('#svrBussRepAssetCreditNonstdInfoDto_chbFinancierId').val('').trigger('change');
+        $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType1').val('').trigger('change');
+        $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType2').val('').trigger('change');
+        $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType3').val('').trigger('change');
+        $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val('0').trigger('change');
+        $('#svrBussRepAssetCreditNonstdInfoDto_industryLevel2Type').val('').trigger('change');
+
+        // 管理人2置空
+        $('#svrBussRepFundInfoDto_chbManagerId').val('').trigger('change');
+        $('#svrBussRepFundInfoDto_sharesType1').val('').trigger('change');
+        $('#svrBussRepFundInfoDto_sharesType2').val('').trigger('change');
+        $('#svrBussRepFundInfoDto_sharesType3').val('').trigger('change');
+        // 托管人置空
+        $('#svrBussRepAssetMngProdInfoDto_trusteeId').val('').trigger('change');
+        // 管理人置空
+        $('#svrBussRepAssetMngProdInfoDto_managerId').val('').trigger('change');
+        // 融资人置空
+        $('#svrBussRepAssetCreditNonstdInfoDto_repFinancie').val('').trigger('change');
+        // $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType1').val('').trigger('change');
+        // $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType2').val('').trigger('change');
+        // $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType3').val('').trigger('change');
+        // $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val('').trigger('change');
+        // $('#svrBussRepAssetCreditNonstdInfoDto_industryLevel2Type').val('').trigger('change');
+    };
+
     /**
      * 画面加载完成
      *
@@ -488,6 +537,7 @@ var QueryFunc=function(){
             //assetType2联动子页面的内容
             changeReport();
             assetVal();
+            resetVal();
         });
 
         $('#assetCode').change(function(){

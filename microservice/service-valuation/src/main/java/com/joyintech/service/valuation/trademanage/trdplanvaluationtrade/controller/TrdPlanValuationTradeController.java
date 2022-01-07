@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.valuation.trademanage.bond.dto.TrdBondTrade001Dto;
+import com.joyintech.service.valuation.trademanage.trdplanvaluationtrade.dto.TrdPlanTradeResult;
 import com.joyintech.service.valuation.trademanage.trdplanvaluationtrade.dto.TrdPlanValuationTradeDto;
 import com.joyintech.service.valuation.trademanage.trdplanvaluationtrade.service.TrdPlanValuationTradeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,18 +71,57 @@ public class TrdPlanValuationTradeController extends BaseController {
     }
 
     /**
-     * 回调函数 操作具体 new delete update <功能详细描述>
+     * 回调函数 操作具体 new
      *
      * @see
      * @since 1.0
      */
     @Transactional
     @DTXTransaction
-    @PostMapping("/doComplete/{type}")
-    public void doComplete(@RequestBody TrdPlanValuationTradeDto dto, @PathVariable("type") String type) {
-        dto.setOperateType(type);
-        trdPlanValuationTradeService.doComplete(dto);
+    @PostMapping("insert")
+    public void insert(@RequestBody TrdPlanTradeResult dto) {
+        trdPlanValuationTradeService.insert(dto);
     }
+
+    /**
+     * 回调函数 操作具体 update <功能详细描述>
+     *
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("update")
+    public void update(@RequestBody TrdPlanTradeResult dto) {
+        trdPlanValuationTradeService.update(dto);
+    }
+
+    /**
+     * 回调函数 操作具体 new
+     *
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("insertNet")
+    public void insertNet(@RequestBody TrdPlanTradeResult dto) {
+        trdPlanValuationTradeService.insertNet(dto);
+    }
+
+    /**
+     * 回调函数 操作具体 update <功能详细描述>
+     *
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("updateNet")
+    public void updateNet(@RequestBody TrdPlanTradeResult dto) {
+        trdPlanValuationTradeService.updateNet(dto);
+    }
+
 
     /**
      * 查询 支持分页 <功能详细描述>
@@ -115,6 +157,24 @@ public class TrdPlanValuationTradeController extends BaseController {
     @PostMapping("/findAll")
     public List<TrdPlanValuationTradeDto> findAll(@RequestBody Map<String, Object> param){
         return trdPlanValuationTradeService.findAll(param);
+    }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("delete")
+    public int delete(@RequestBody TrdPlanValuationTradeDto dto){
+        return trdPlanValuationTradeService.delete(dto);
+    }
+
+
+    /**
+     * 根据交易编号查询对象
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("queryTradeInfoByTradeId")
+    public TrdPlanValuationTradeDto queryTradeInfoByTradeId(@RequestBody String  tradeId) {
+        return trdPlanValuationTradeService.queryTradeInfoByTradeId(tradeId);
     }
 
 }

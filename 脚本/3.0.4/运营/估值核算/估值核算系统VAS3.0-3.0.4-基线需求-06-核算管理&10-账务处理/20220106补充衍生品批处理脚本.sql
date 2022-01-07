@@ -6,4 +6,3 @@ DELETE SYS_BATCH_JOB T WHERE T.TASK_ID = '603' ;
 insert into SYS_BATCH_JOB (BATCH_SEQ_NO, TASK_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) values ('6f8803b3aa6fbaffe050007f01003cad', '603', 'system', null, sysdate, 'system', sysdate);
 
 
-commit;

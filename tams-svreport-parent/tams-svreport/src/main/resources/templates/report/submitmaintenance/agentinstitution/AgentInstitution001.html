@@ -12,17 +12,18 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="form-button-area" >
+    <div class="form-button-area" export="false">
+        <a id="AgentInstitution001_btn_reset" class="layui-btn layui-btn-sm btn-reset" data-th-text="#{SysCommon.reset}">重置</a>
         <a id="AgentInstitution001_btn_add" class="layui-btn layui-btn-sm btn-create"><span>新建</span></a>
         <a id="AgentInstitution001_btn_delete" class="layui-btn layui-btn-sm btn-delete"><span>删除</span></a>
         <a id="AgentInstitution001_btn_import" class="layui-btn layui-btn-sm btn-import"><span>导入</span></a>
         <a id="AgentInstitution001_btn_importFile" class="layui-btn layui-btn-sm btn-import"><span>销售文件上传</span></a>
-        <a id="AgentInstitution001_btn_reset" class="layui-btn layui-btn-sm btn-reset" data-th-text="#{SysCommon.reset}">重置</a>
+        <a id="AgentInstitution001_btn_export" class="layui-btn layui-btn-sm btn-export"><span>导出</span></a>
     </div>
     <div class="joyin-form-wrap joyin-filter-form condition-area">
         <form class="layui-form" id="searchForm">
             <div class="layui-form-item">
-                <div class="layui-inline layui-col-md6">
+                <div class="layui-inline layui-col-md4">
                     <label class="layui-form-label form-lable">代理销售机构代码</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" id="agentInstitutionCode" name="agentInstitutionCode"
@@ -33,11 +34,11 @@
                         />
                     </div>
                 </div>
-                <div class="layui-inline layui-col-md6">
+                <div class="layui-inline layui-col-md4">
                     <label class="layui-form-label form-lable">数据状态</label>
                     <div class="layui-input-inline input-inline">
                         <select id="status" class="input-select" name="status"
-                                allowClear="true" data-th-data-result='${MAINTAIN_STATUS}'
+                                allowClear="true" data-th-data-result='${AGENT_STATUS}'
                                 data-th-initvalue="${status}" placeholder="请选择"
                                 data-th-placeholder="#{SysCommon.selectplaceholder}">
                         </select>
