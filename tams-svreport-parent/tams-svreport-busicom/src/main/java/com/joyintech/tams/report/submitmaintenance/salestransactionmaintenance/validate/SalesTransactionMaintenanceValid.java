@@ -55,7 +55,7 @@ public class SalesTransactionMaintenanceValid implements BeanValidator {
                     if(!checkFigure(dto.getTradeTime().substring(0, 1))){
                         errorList.add(new ValidMessage("", "交易时间填写错误（例23:59:59填写235959）"));
                     }
-                    else if (Integer.parseInt(dto.getTradeTime().substring(0, 1)) > 2 || Integer.parseInt(dto.getTradeTime().substring(1, 2)) > 3
+                    else if (Integer.parseInt(dto.getTradeTime().substring(0, 2)) > 23
                             || Integer.parseInt(dto.getTradeTime().substring(2, 3)) > 5 || Integer.parseInt(dto.getTradeTime().substring(4, 5)) > 5) {
                         errorList.add(new ValidMessage("", "交易时间填写错误（例23:59:59填写235959）"));
                     }
