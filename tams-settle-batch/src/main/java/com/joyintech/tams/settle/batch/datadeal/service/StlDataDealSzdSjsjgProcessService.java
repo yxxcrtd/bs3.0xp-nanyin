@@ -464,14 +464,18 @@ public class StlDataDealSzdSjsjgProcessService {
             settleTransData.setTradeDate(DateUtil.parseDate(szdSjsjg.getJgqsrq(), DateUtil.DEFAULT_OTHER_FORMAT));
     	}
     	// 可交换私募债换股-债券变动
-    	if (StringUtil.equals(StlDataDealProcessConstant.SJSJG_YWLB_ZQHG, szdSjsjg.getJgywlb()) && LIST_ZQLB_BONDS.contains(szdSjsjg.getJgzqlb())) {
+    	if (StringUtil.equals(StlDataDealProcessConstant.SJSJG_YWLB_ZQHG, szdSjsjg.getJgywlb())
+               // && LIST_ZQLB_BONDS.contains(szdSjsjg.getJgzqlb())
+        ) {
     		settleTransData.setPs(DictCodeListExt3.交易方向_债转股.getValue());
             settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券_转股_债转股.getValue());
             //交易份额
             settleTransData.setShareAmt(abs(szdSjsjg.getJgjssl()));
     	}
     	// 可交换私募债换股-股票变动
-    	if (StringUtil.equals(StlDataDealProcessConstant.SJSJG_YWLB_ZQHG, szdSjsjg.getJgywlb()) && LIST_ZQLB_SHARES.contains(szdSjsjg.getJgzqlb())) {
+    	if (StringUtil.equals(StlDataDealProcessConstant.SJSJG_YWLB_ZQHG, szdSjsjg.getJgywlb())
+               // && LIST_ZQLB_SHARES.contains(szdSjsjg.getJgzqlb())
+        ) {
     		settleTransData.setPs(DictCodeListExt3.交易方向_债转股.getValue());
             settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券_转股_债转股.getValue());
             settleTransData.setFinprodId(DictCodeListExt1.金融产品类型_投管用_股票.getValue() + GlobalConstant.UNDER_LINE + szdSjsjg.getJgzqdm() + ".SZ");
@@ -712,7 +716,12 @@ public class StlDataDealSzdSjsjgProcessService {
 //                    ArithmeticUtil.doAdd(settleTransData.getPrinAmt(),szdSjsjg.getJgjyjsf(),szdSjsjg.getJgjsf()))));
             settleTransData.setmIntAmt(ArithmeticUtil.subtract(settleTransData.getmTradeAmt(),settleTransData.getmPrinAmt()));
             //全价总额
-            settleTransData.setFpriceAmt(abs(settleTransData.getPrinAmt().subtract(settleTransData.getmTradeAmt())));
+            settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券协议正回购_到期续作.getValue());
+            if(DictCodeListStl.业务场景分类明细_债券协议正回购_到期续作.getValue().equals(settleTransData.getBusiSceneCalss())){
+                settleTransData.setFpriceAmt(ArithmeticUtil.subtract(settleTransData.getPrinAmt(), settleTransData.getmTradeAmt()));
+            }else if(DictCodeListStl.业务场景分类明细_债券协议逆回购_到期续作.getValue().equals(settleTransData.getBusiSceneCalss())){
+                settleTransData.setFpriceAmt(ArithmeticUtil.subtract(settleTransData.getmTradeAmt(), settleTransData.getPrinAmt()));
+            }
             // GZYHTZJY-1039 交易份额 = abs(清算本金) fuyongsheng modify 20220106 start
             // 交易份额 = abs(清算本金)
             settleTransData.setShareAmt(abs(szdSjsjg.getJgqsbj()));
