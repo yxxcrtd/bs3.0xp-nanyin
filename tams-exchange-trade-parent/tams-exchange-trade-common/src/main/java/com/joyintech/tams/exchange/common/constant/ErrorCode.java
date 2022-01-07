@@ -88,7 +88,7 @@ public enum ErrorCode {
 
     INSTRUCTION_NOT_SUPPORT_ALGORITHM_ERROR(1018, "该指令不支持算法交易"),
 
-    INSTRUMENT_INFO_NOT_EXIT(1019, "获取申报代码信息失败"),
+    INSTRUMENT_INFO_NOT_EXIT(1019, "申报代码信息不存在"),
 
     ENTRUST_PROP_NOT_EXIT(1020, "委托属性不存在"),
 
