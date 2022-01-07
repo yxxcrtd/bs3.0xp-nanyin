@@ -69,6 +69,9 @@ public class XStreamconfiguration {
 		TimeZone.setDefault(tz);
 		// 日期格式化
 		xstream.registerConverter(new DateConverter("yyyy-MM-dd", null));
+		// 不指向引用
+		xstream.setMode(XStream.NO_REFERENCES);
+
 		return xstream;
 	}
 }
