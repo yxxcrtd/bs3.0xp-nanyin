@@ -22,7 +22,7 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name = "cfetsQuoteId", value = "报价编号(外部)")
     private String cfetsQuoteId;
 
-    @ApiModelProperty(name="elementId",value="按钮id")
+    @ApiModelProperty(name = "elementId", value = "按钮id")
     private String elementId;
 
     @ApiModelProperty(name = "operateType", value = "操作类型", example = "save")
@@ -151,11 +151,17 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name = "priceModelClass", value = "价格模式种类,只有指定价格01,只有限价指令02,两种都有03")
     private String priceModelClass;
 
-    @ApiModelProperty(name = "softSkipMode", value = "软控是否跳过校验" ,example = "Y")
+    @ApiModelProperty(name = "softSkipMode", value = "软控是否跳过校验", example = "Y")
     private String softSkipMode;
 
-    @ApiModelProperty(name = "dialogueRecord", value = "交谈记录" ,example = "xx")
+    @ApiModelProperty(name = "dialogueRecord", value = "交谈记录", example = "xx")
     private String dialogueRecord;
+
+    @ApiModelProperty(name = "sendStatus", value = "发送状态", example = "01")
+    private String sendStatus;
+
+    @ApiModelProperty(name = "tradeStatus", value = "交易状态", example = "01")
+    private String tradeStatus;
 
     public String getQuoteId() {
         return quoteId;
@@ -531,6 +537,22 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setCounterPartyId(String counterPartyId) {
         this.counterPartyId = counterPartyId;
+    }
+
+    public String getSendStatus() {
+        return sendStatus;
+    }
+
+    public void setSendStatus(String sendStatus) {
+        this.sendStatus = sendStatus;
+    }
+
+    public String getTradeStatus() {
+        return tradeStatus;
+    }
+
+    public void setTradeStatus(String tradeStatus) {
+        this.tradeStatus = tradeStatus;
     }
 }
 
