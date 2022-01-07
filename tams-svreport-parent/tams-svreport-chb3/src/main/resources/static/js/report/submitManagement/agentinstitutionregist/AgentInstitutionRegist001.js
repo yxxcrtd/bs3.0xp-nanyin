@@ -47,18 +47,18 @@ $(function(){
              {title: "登记序列",field:'registSeqno',visible:false}
             ,{field: 'fileNo',visible : false}
             ,{field: 'status', title: "数据状态",visible:false,sortField:'status'}
-            ,{field: 'statusStr', title: "数据状态",width:100,sortField:'status'}
+            ,{field: 'statusStr', title: "数据状态",width:70,sortField:'status'}
             ,{field: 'sendStatus', title: "报送状态", visible:false ,sortField:'sendStatus'}
             ,{field: 'sendStatusStr', title: "报送状态", width:100 ,sortField:'sendStatus'}
             ,{field: 'submitTimeStr', title: "报送日期", width:150,sortField:'submitTime'}
-            ,{field: 'submitDeadline', title: "报送截止日", type:'date',width:150,sortField:'submitDeadline'}
+            ,{field: 'submitDeadline', title: "报送截止日", type:'date',width:100,sortField:'submitDeadline'}
             ,{field: 'submitFeedbackStatusStr', title: "反馈状态", width:100,sortField:'submitFeedbackStatus'}
-            ,{field: 'issuePartyId', title: '发行机构代码', width:'150',sortField:'issuePartyId'}
-            ,{field: 'agentInstitutionCode', title: '代理销售机构代码', width:'150',sortField:'agentInstitutionCode'}
-            ,{field: 'agentInstitutionName', title: '代理销售机构名称', width:'150',sortField:'agentInstitutionName'}
-            ,{field: 'remark', title: '备注', width:'150',sortField:'remark'}
-            ,{field: 'enclosureNum', title: '附件个数', width:'150',sortField:'enclosureNum'}
-            ,{title : '操作附件',field : 'operation',type : 'action',width : 150
+            ,{field: 'issuePartyId', title: '发行机构代码', width:120,sortField:'issuePartyId'}
+            ,{field: 'agentInstitutionCode', title: '代理销售机构代码', width:120,sortField:'agentInstitutionCode'}
+            ,{field: 'agentInstitutionName', title: '代理销售机构名称', width:120,sortField:'agentInstitutionName'}
+            ,{field: 'remark', title: '备注', width:100,sortField:'remark'}
+            ,{field: 'enclosureNum', title: '附件个数', width:80,sortField:'enclosureNum'}
+            ,{title : '操作附件',field : 'operation',type : 'action',width : 100
                  ,buttons :[
                   {text : '&#xe601;',clas : 'download',title : '下载'}
                  ,{text : '&#xe615;',clas : 'fileView',title : '查看'}
