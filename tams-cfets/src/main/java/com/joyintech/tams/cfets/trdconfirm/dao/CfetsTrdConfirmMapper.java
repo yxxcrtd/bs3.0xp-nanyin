@@ -34,11 +34,17 @@ public interface CfetsTrdConfirmMapper {
      */
     CfetsTrdConfirmRegInfoListResponse selectRegInfoByKey(String totleTradeId);
     /**
-     * 根据主键查询报价信息
+     * 根据主键查询债券报价信息
      * @param pageParam
      * @return
      */
     CfetsTrdConfirmRegInfoListResponse selectIbuInfoByKey(String totleTradeId);
+    /**
+     * 根据主键查询回购报价信息
+     * @param pageParam
+     * @return
+     */
+    CfetsTrdConfirmRegInfoListResponse selectRepoIbuInfoByKey(String totleTradeId);
     /**
      * 查询所有登记费用信息
      * @param pageParam
@@ -174,6 +180,9 @@ public interface CfetsTrdConfirmMapper {
      */
 
     List<PledgeBondInfoDto> findAllSecPtlsList(String tradeId);
-
+    /**
+     * 指令投资目的
+     */
+    String selectInvAimByEntrustId(Map<String, Object> param);
 
 }
