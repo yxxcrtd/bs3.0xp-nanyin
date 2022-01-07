@@ -251,7 +251,9 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
             // 到期日
             trdProductDeal.setMdate(settleTransData.getMdate());
             //支付日
-            trdProductDeal.setPayDate(settleTransData.getVpayDate());
+            // GZYHTZJY-1039 paydate无需赋值 modify fuyongsheng 20220107 start
+            // trdProductDeal.setPayDate(settleTransData.getVpayDate());
+            // GZYHTZJY-1039 paydate无需赋值 modify fuyongsheng 20220107 end
             //交割日
             trdProductDeal.setSettleDate(settleTransData.getSettleDate());
             //清算速度
