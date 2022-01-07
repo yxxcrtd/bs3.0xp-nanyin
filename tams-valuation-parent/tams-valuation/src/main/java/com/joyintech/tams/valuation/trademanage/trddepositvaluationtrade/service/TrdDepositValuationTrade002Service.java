@@ -55,6 +55,37 @@ public class TrdDepositValuationTrade002Service extends CommonExportService<TrdD
     }
 
     /**
+     * 合成初始化实体类
+     *
+     * @param tradeId 交易编号
+     * @return 存款类资产实体类
+     * @see
+     * @since 1.0
+     */
+    public TrdDepositValuationTrade001Dto getInitEntity(String tradeId) {
+        TrdDepositValuationTrade001Dto entity = new TrdDepositValuationTrade001Dto();
+        TrdProductDeal trdProductDeal = null;
+        TrdProductDealAdd trdProductDealAdd = null;
+        String finprodId = null;
+        FinProduct finProduct = null;
+        return entity;
+    }
+
+    /**
+     * 策略代码生成
+     *
+     * @see
+     * @since 1.0
+     */
+    public String createPlanTradeId() {
+        return restTemplate.postForObject(
+                ServiceApplication.VALUATION_SERVICE_NAME + "/TrdDepositValuationTrade001/createPlanTradeId",
+                null, String.class);
+
+    }
+
+
+    /**
      * 产品代码下拉框
      * @auther: Administrator
      * @date: 2021/12/29 17:10
