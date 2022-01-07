@@ -694,28 +694,29 @@ public class StlDataDealSzdSjsjgProcessService {
             // settleTransData.setPrinAmt(abs(szdSjsjg.getJgqssl()));
             // 单位净价
             settleTransData.setUnitCprice(ArithmeticUtil.divide(abs(szdSjsjg.getJgcjjg()),100,2));
-            // 回购利息
-//            BigDecimal repayInt = ArithmeticUtil.multiply(
-//                    ArithmeticUtil.divide(ArithmeticUtil.multiply(abs(qsbj), abs(szdSjsjg.getJgcjjg())), 100, 2),
-//                    ArithmeticUtil.divide(new BigDecimal(DateUtil.getBetweenDayNumber(settleTransData.getMpayDate(), settleTransData.getVpayDate())), 365,2));
-//            // 利息总额 去除利息总额 modify by msk
-//            settleTransData.setIntAmt(abs(szdSjsjg.getJgzjje()));
+            // 首期成交编号
+            settleTransData.setfCjbh(szdSjsjg.getJgfjsm());
             // 到期金额(ABS(资金金额))
             // settleTransData.setmTradeAmt(settleTransData.getPrinAmt());
             settleTransData.setmTradeAmt(abs(szdSjsjg.getJgzjje()));
-            //到期利息(ABS（ABS(清算数据Entity.收付净额) - 变量.本金金额-ABS（清算数据Entity.经手费）-ABS（清算数据Entity.结算费））)
-            settleTransData.setmIntAmt(abs(ArithmeticUtil.subtract(abs(szdSjsjg.getJgsfje()),
-                    ArithmeticUtil.doAdd(settleTransData.getPrinAmt(),szdSjsjg.getJgjyjsf(),szdSjsjg.getJgjsf()))));
-            // 到期本金
-            settleTransData.setmPrinAmt(ArithmeticUtil.subtract(settleTransData.getmTradeAmt(), settleTransData.getmIntAmt()));
+            // 查询首期清算数据
+            List<SettleTransData> sqSettleTransDatas = stlDownDataDealMapper.selectSqSettleTransDatas(
+                    settleTransData.getfCjbh(), settleTransData.getSeatNumber(), settleTransData.getSecAcctId());
+            if(CollectionUtils.isNotEmpty(sqSettleTransDatas)){
+                // 到期本金
+                settleTransData.setmPrinAmt(sqSettleTransDatas.get(0).getPrinAmt());
+            }
+//            settleTransData.setmPrinAmt(ArithmeticUtil.subtract(settleTransData.getmTradeAmt(), settleTransData.getmIntAmt()));
+            //到期利息(到期金额-到期本金)
+//            settleTransData.setmIntAmt(abs(ArithmeticUtil.subtract(abs(szdSjsjg.getJgsfje()),
+//                    ArithmeticUtil.doAdd(settleTransData.getPrinAmt(),szdSjsjg.getJgjyjsf(),szdSjsjg.getJgjsf()))));
+            settleTransData.setmIntAmt(ArithmeticUtil.subtract(settleTransData.getmTradeAmt(),settleTransData.getmPrinAmt()));
             //全价总额
             settleTransData.setFpriceAmt(abs(settleTransData.getPrinAmt().subtract(settleTransData.getmTradeAmt())));
             // GZYHTZJY-1039 交易份额 = abs(清算本金) fuyongsheng modify 20220106 start
             // 交易份额 = abs(清算本金)
             settleTransData.setShareAmt(abs(szdSjsjg.getJgqsbj()));
             // GZYHTZJY-1039 交易份额 = abs(清算本金) fuyongsheng modify 20220106 end
-            // 首期成交编号
-            settleTransData.setfCjbh(szdSjsjg.getJgfjsm());
             // 期限品种
             settleTransData.setTermType(getTermType(settleTransData.getVdate(),settleTransData.getMdate()));
         }
