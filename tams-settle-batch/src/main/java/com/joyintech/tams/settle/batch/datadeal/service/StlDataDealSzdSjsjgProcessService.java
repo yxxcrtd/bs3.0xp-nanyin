@@ -629,7 +629,7 @@ public class StlDataDealSzdSjsjgProcessService {
                     settleTransData.setVdate(sqSettleTransDatas.get(0).getVdate());
                     // 首期交收日 = 起息日+1个工作日
                     settleTransData.setVpayDate(nextWorkDay(settleTransData.getVdate()));
-                    if(sqSettleTransDatas.get(0).getVpayDate().compareTo(settleTransData.getSettleDate())>0){
+                    if(sqSettleTransDatas.get(0).getMpayDate().compareTo(settleTransData.getSettleDate())>0){
                         settleTransData.setPs(DictCodeListExt3.交易方向_投资端_提前终止.getValue());
                     }
                 }
