@@ -240,7 +240,9 @@ public class StlDataDealProcessCommonService {
 				tradeFeatureInformation.setFinprodId(keyStrArray[6]);
 				tradeFeatureInformation.setBranch(null!=keyStrArray[7]&&!StringUtil.equals(keyStrArray[7],"null")?new Long(keyStrArray[7]):0L);
 				tradeFeatureInformation.setFinprodType2(keyStrArray[8]);
-				tradeFeatureInformation.setDealDate(DateUtil.parse(keyStrArray[9]));
+				if(keyStrArray.length > 9){
+					tradeFeatureInformation.setDealDate(DateUtil.parse(keyStrArray[9]));
+				}
 				// add by etliu 20220104 start
 				// GZYHTZJY-868: 日终清算，协议回购的佣金没有计算出来
 				if(keyStrArray.length > 10){
