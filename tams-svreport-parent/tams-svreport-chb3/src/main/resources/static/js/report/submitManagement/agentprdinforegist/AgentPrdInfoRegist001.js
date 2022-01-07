@@ -52,14 +52,14 @@ $(function(){
             ,{field: 'sendStatus', title: "报送状态",visible:false,sortField:'sendStatus'}
             ,{field: 'sendStatusStr', title: "报送状态", width:100 ,sortField:'sendStatus'}
             ,{field: 'submitTimeStr', title: "报送日期", width:150,sortField:'submitTime'}
-            ,{field: 'submitDeadline', title: "报送截止日", type:'date', width:150,sortField:'submitDeadline'}
+            ,{field: 'submitDeadline', title: "报送截止日", type:'date', width:100,sortField:'submitDeadline'}
             ,{field: 'submitFeedbackStatusStr', title: "反馈状态", width:100,sortField:'submitFeedbackStatus'}
-            ,{field: 'issuePartyId', title: '发行机构代码', width:'150',sortField:'issuePartyId'}
-            ,{field: 'agentInstitutionCode', title: '代理销售机构代码', width:'150',sortField:'agentInstitutionCode'}
-            ,{field: 'agentInstitutionName', title: '代理销售机构名称', width:'150',sortField:'agentInstitutionName'}
-            ,{field: 'prodId', title: '产品代码', width:'150',sortField:'prodId'}
-            ,{field: 'prodName', title: '产品名称', width:'150',sortField:'prodName'}
-            ,{field: 'prodRegistCode', title: '产品登记编码', width:'150',sortField:'prodRegistCode'}
+            ,{field: 'issuePartyId', title: '发行机构代码', width:120,sortField:'issuePartyId'}
+            ,{field: 'agentInstitutionCode', title: '代理销售机构代码', width:100,sortField:'agentInstitutionCode'}
+            ,{field: 'agentInstitutionName', title: '代理销售机构名称', width:100,sortField:'agentInstitutionName'}
+            ,{field: 'prodId', title: '产品代码', width:100,sortField:'prodId'}
+            ,{field: 'prodName', title: '产品名称', width:100,sortField:'prodName'}
+            ,{field: 'prodRegistCode', title: '产品登记编码', width:150,sortField:'prodRegistCode'}
         ]
     });
 
