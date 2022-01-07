@@ -18,10 +18,12 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.base.entity.PtlPortfolio;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
+import com.joyintech.tams.component.business.portfolio.service.SecuritiesAccountInfoService;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.portfolio.ptlmanagementinfo.dto.PtlManagementInfo004Dto;
+import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +57,9 @@ public class PtlManagementInfo001Validator implements BeanValidator{
      */
     @Autowired
     private PtlManagementInfo001Service ptlManagementInfo001Service;
+
+    @Autowired
+    private SecuritiesAccountInfoService securitiesAccountInfoService;
 
 	@Autowired
 	private PtlPortfolioMapper ptlPortfolioMapper;
@@ -253,6 +258,25 @@ public class PtlManagementInfo001Validator implements BeanValidator{
             if(set.size() < dto.getSecuritiesAccountInfoDto().size()){
                 errorList.add(new ValidMessage("securitiesAccountInfoDto",getMessage("BUSS_COM_E_0006",getMessage("PtlManagementInfo001.secInfo"))));
             }
+
+            //银行间or商业银行柜台同一登记托管机构只能最多绑定一个证券账户 add by chenkang 20220104 start
+            List<SecuritiesAccountInfoDto> secLists = Lists.newArrayList();
+            dto.getSecuritiesAccountInfoDto().stream().forEach(x -> {
+                if (StringUtil.isNotEmpty(x.getSecAcctId())) {
+                    SecuritiesAccountInfoDto secDto = securitiesAccountInfoService.getSecAcctInfo(x.getSecAcctId());
+                    if (secDto != null && (DictCodeListExt1.交易场所_银行间.getValue().equals(secDto.getTradePlace())
+                    || DictCodeListExt1.交易场所_商业银行柜台.getValue().equals(secDto.getTradePlace()))) {
+                        secLists.add(secDto);
+                    }
+                }
+            });
+
+            List<String> stringList = secLists.stream().map(SecuritiesAccountInfoDto::getRegistOrg)
+                    .distinct().collect(Collectors.toList());
+            if (stringList.size() != secLists.size()) {
+                errorList.add(new ValidMessage("银行间or商业银行柜台同一登记托管机构只能最多绑定一个证券账户！"));
+            }
+            //银行间or商业银行柜台同一登记托管机构只能最多绑定一个证券账户 add by chenkang 20220104 end
         }
     }
 
