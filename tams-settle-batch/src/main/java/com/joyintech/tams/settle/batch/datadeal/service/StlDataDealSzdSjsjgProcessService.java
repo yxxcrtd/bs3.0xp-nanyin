@@ -945,9 +945,13 @@ public class StlDataDealSzdSjsjgProcessService {
                 // 分支序号
                 settleTransData.setBranch(0L);
                 // 交易日期
-                settleTransData.setTradeDate(DateUtil.parseDate(szdSjsjg.getJgqsrq(), DateUtil.DEFAULT_OTHER_FORMAT));
+                if(StringUtil.isNotEmpty(szdSjsjg.getJgqsrq())){
+                    settleTransData.setTradeDate(DateUtil.parseDate(szdSjsjg.getJgqsrq(), DateUtil.DEFAULT_OTHER_FORMAT));
+                }
                 // 交割日期
-                settleTransData.setSettleDate(DateUtil.parseDate(szdSjsjg.getJgjsrq(), DateUtil.DEFAULT_OTHER_FORMAT));
+                if(StringUtil.isNotEmpty(szdSjsjg.getJgjsrq())){
+                    settleTransData.setSettleDate(DateUtil.parseDate(szdSjsjg.getJgjsrq(), DateUtil.DEFAULT_OTHER_FORMAT));
+                }
                 // 清算速度
                 settleTransData.setSettleSpeed(0L);
                 if (DateUtil.compareDate(settleTransData.getTradeDate(), settleTransData.getSettleDate()) != 0){
