@@ -185,6 +185,17 @@ public class ExchangeTransMatch001Controller  extends BaseController {
     @ResponseBody
     @RequestMapping("matchSearch")
     public Page<ExchangeTransMatch003Dto> matchSearch(@RequestBody Map<String,Object> map) {
+
+        if(StringUtil.isNotEmpty(map.get("ps"))) {
+            String ps = (String)map.get("ps");
+            if(StringUtil.equals(ps,DictCodeList.交易方向_到期.getValue())) {
+                map.put("ps",DictCodeListExt3.交易方向_到期购回.getValue());
+            }
+            else if (StringUtil.equals(ps,DictCodeListExt3.交易方向_投资端_提前终止.getValue())) {
+                map.put("ps",DictCodeListExt3.交易方向_提前购回.getValue());
+            }
+        }
+
         if(StringUtil.isNotEmpty(map.get("finprodType1"))) {
             String finprodType = (String)map.get("finprodType1");
             String ps = (String)map.get("ps");
@@ -197,6 +208,7 @@ public class ExchangeTransMatch001Controller  extends BaseController {
                 map.put("ps",DictCodeList.回购拆借方向_逆回购.getValue());
             }
         }
+
         return exchangeTransMatch001Service.findEntrustPage(map);
     }
 
