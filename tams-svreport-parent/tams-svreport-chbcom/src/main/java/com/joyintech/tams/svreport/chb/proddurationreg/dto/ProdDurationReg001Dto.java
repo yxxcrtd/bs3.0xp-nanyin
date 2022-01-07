@@ -261,8 +261,21 @@ public class ProdDurationReg001Dto extends ChbPrdDealSubKey implements ITableRow
      * 交易类型
      */
     private  String  tradeType;
-   
-    
+
+	/***
+	 * 净值日期
+	 */
+    private  Date  yieldDate;
+
+
+	public Date getYieldDate() {
+		return yieldDate;
+	}
+
+	public void setYieldDate(Date yieldDate) {
+		this.yieldDate = yieldDate;
+	}
+
 	public BigDecimal getShareAmtWan() {
 		return shareAmtWan;
 	}
@@ -633,6 +646,15 @@ public class ProdDurationReg001Dto extends ChbPrdDealSubKey implements ITableRow
 	        }
 	        return "";
 		}
+	//净值日
+	private String yieldDateStr;
+	public String getYieldDateStr(){
+		if (!StringUtil.isEmpty(this.getVdate())){
+			return DateUtil.format(this.getYieldDate(), DateUtil.DEFAULT_OTHER_FORMAT);
+		}
+		return "";
+	}
+
 		//业务结束日
 		private String mdateStr;
 		public String getMdateStr(){

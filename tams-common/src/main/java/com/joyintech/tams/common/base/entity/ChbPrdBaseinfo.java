@@ -1,10 +1,10 @@
 package com.joyintech.tams.common.base.entity;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
 	//交易日历
@@ -629,7 +629,14 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     //新增字段 CUSTOMER_TYPE 客户类型  支持多选，多选时用英文“,”分隔
     //  3-住户，4-广义政府，5-非金融企业，6-金融机构（实体），7-特定目的载体 ，8-境外  --人行报表
     private String customerType;//最短持有期后是否自由赎回
-    
+
+
+    /***
+     * 产品特殊属性
+     */
+    private  String  prdSpecProperty;
+
+
     /**
      * 业绩比较基准下限
      */
@@ -676,6 +683,15 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      * 分级比例
      */
     private  BigDecimal gradProportion;
+
+
+    public String getPrdSpecProperty() {
+        return prdSpecProperty;
+    }
+
+    public void setPrdSpecProperty(String prdSpecProperty) {
+        this.prdSpecProperty = prdSpecProperty;
+    }
 
     public BigDecimal getGradProportion() {
         return gradProportion;
