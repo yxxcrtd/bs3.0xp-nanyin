@@ -342,6 +342,27 @@
 					</div>
 				</div>
             </div>
+			<!-- 中债新增字段 add by tuqirong 2021-12-30 start -->
+			<div class="layui-form-item" th:id="|${entityName}_content_one_div|" style="display: none">
+				<div class="form-inline-wrap">
+                    <label class="layui-form-label form-label" data-th-utext="#{SvrBussRepAssetMngProdInfo.financialProductFlag}">是否为银行理财产品</label>
+                    <div class="layui-input-inline input-inline">
+                        <select th:id="|${entityName}_financialProductFlag|" th:name="|${entityName}.financialProductFlag|"
+                                th:initValue="${entity?.financialProductFlag}" class="layui-input form-input input-select"
+                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
+                                data-th-data-result="${SVR_YES_OR_NO}">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-label" data-th-utext="#{SvrBussRepAssetMngProdInfo.prodRegisterCode}">产品登记编码</label>
+                    <div class="layui-input-inline input-inline">
+                        <input th:id="|${entityName}_prodRegisterCode|" th:name="|${entityName}.prodRegisterCode|"
+                               th:value="${entity?.prodRegisterCode}" class="layui-input form-input" disabled
+                               placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" ></input>
+                    </div>
+                </div>
+			</div>
             <!--add by yjp 估值穿透开发--监管报送资产基本信息维护导入功能合并华夏字段start -->
             <div class="layui-form-item">
 

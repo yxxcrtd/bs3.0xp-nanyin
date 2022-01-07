@@ -48,7 +48,7 @@
                                         <div class="layui-input-inline input-inline ">
                                             <input id="agentInstitutionName" data-th-value='${entity?.agentInstitutionName}'
                                                    name="agentInstitutionName"
-                                                   class="layui-input form-input" placeholder="请输入内容" required
+                                                   class="layui-input form-input" placeholder="请输入内容"
                                                    data-th-placeholder="#{SysCommon.placeholder}">
                                         </div>
                                     </div>
@@ -60,16 +60,6 @@
                                                     data-th-data-url="@{/report/submitmaintenance/agentprdinfo/AgentPrdInfo002/selectProdRegistCode}"
                                                     data-th-placeholder="#{SysCommon.selectplaceholder}"
                                                     th:initValue="*{entity?.prodRegistCode}" allowClear="true" required></select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="layui-form-item">
-                                    <div>
-                                        <label class="layui-form-label form-lable" style='width: 11.9%;'>备注</label>
-                                        <div class="layui-input-inline input-inline" style="width: 85%!important;">
-                                            <textarea id="remark" name="remark" placeholder="请输入内容" maxlength="200"
-                                                      data-th-placeholder="#{SysCommon.placeholder}" class="layui-textarea mst-textarea"
-                                                      data-th-text="${entity?.remark}"></textarea>
                                         </div>
                                     </div>
                                 </div>

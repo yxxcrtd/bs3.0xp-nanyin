@@ -241,6 +241,26 @@ public class ChbInvestTradeSubHisDto {
     private String prodRegistCode;
 
     /**
+     * 交易审批人身份证号
+     */
+    private String investApproverId;
+
+    /**
+     * 交易审批人姓名
+     */
+    private String investApproverName;
+
+    /**
+     * 交易员身份证号
+     */
+    private String investTraderId;
+
+    /**
+     * 交易员姓名
+     */
+    private String investTraderName;
+
+    /**
      * 履历序号
      * @return HIS_NO 履历序号
      */
@@ -978,5 +998,37 @@ public class ChbInvestTradeSubHisDto {
      */
     public void setProdRegistCode(String prodRegistCode) {
         this.prodRegistCode = prodRegistCode == null ? null : prodRegistCode.trim();
+    }
+
+    public String getInvestApproverId() {
+        return investApproverId;
+    }
+
+    public void setInvestApproverId(String investApproverId) {
+        this.investApproverId = investApproverId;
+    }
+
+    public String getInvestApproverName() {
+        return investApproverName;
+    }
+
+    public void setInvestApproverName(String investApproverName) {
+        this.investApproverName = investApproverName;
+    }
+
+    public String getInvestTraderId() {
+        return investTraderId;
+    }
+
+    public void setInvestTraderId(String investTraderId) {
+        this.investTraderId = investTraderId;
+    }
+
+    public String getInvestTraderName() {
+        return investTraderName;
+    }
+
+    public void setInvestTraderName(String investTraderName) {
+        this.investTraderName = investTraderName;
     }
 }

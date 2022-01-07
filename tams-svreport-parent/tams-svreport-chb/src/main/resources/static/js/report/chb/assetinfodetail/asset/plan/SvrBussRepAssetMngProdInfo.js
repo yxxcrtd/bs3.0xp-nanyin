@@ -67,8 +67,11 @@
                 assetTvalueAssetMng=='1704'||assetTvalueAssetMng=='1706'||assetTvalueAssetMng=='1702'){
                 $("#svrBussRepAssetMngProdInfoDto_financialComissue").val('').trigger("change");
                 $("#svrBussRepAssetMngProdInfoDto_financialComissue").attr("disabled",true);
+                $("#svrBussRepAssetMngProdInfoDto_content_one_div").hide();
             }else{
                 $("#svrBussRepAssetMngProdInfoDto_financialComissue").attr("disabled",false);
+                $("#svrBussRepAssetMngProdInfoDto_content_one_div").show();
+                getElementById('financialProductFlag').trigger('change');
             }
         }
         initAssetMng();
@@ -77,6 +80,16 @@
         //是否预期收益率change
         getElementById('rateFlag').change(function(){
             rateFlagChangeType();
+        });
+        getElementById('financialProductFlag').on('change', function () {
+             if(getElementById('financialProductFlag').val()=="01") {
+                $("#svrBussRepAssetMngProdInfoDto_prodRegisterCode").prop("required",true).trigger('change');
+                $("#svrBussRepAssetMngProdInfoDto_prodRegisterCode").attr("disabled",false).trigger('change');
+             }else {
+                $("#svrBussRepAssetMngProdInfoDto_prodRegisterCode").attr("required",false).trigger('change');
+                $("#svrBussRepAssetMngProdInfoDto_prodRegisterCode").val('').attr("disabled",true).trigger('change');
+             }
+             startAssetMng();
         });
     })
 }());

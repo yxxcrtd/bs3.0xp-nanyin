@@ -306,9 +306,8 @@
 
     <select id="getCounterList" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT  A.CODE id,A.TRADE_COUNTER text from(
-        SELECT T.PROD_ID||'_'||T.ASSET_CODE CODE,
-        DECODE(MP.COUNTER_NAME,NULL,DECODE(MC.CUSTOMER_NAME,NULL,T.TRADE_COUNTER,MC.CUSTOMER_NAME),MP.COUNTER_NAME) TRADE_COUNTER,
-        row_number() over(partition by T.PROD_ID,T.ASSET_CODE,T.TRADE_COUNTER order by DEALDATE) row_number
+        SELECT T.PROD_ID||'_'||T.ASSET_CODE CODE,T.DEALDATE,wm_concat(distinct(NVL(MC.CUSTOMER_NAME,nvl(Mp.Counter_Name,T.TRADE_COUNTER)))) TRADE_COUNTER,
+        row_number() over(partition by T.PROD_ID,T.ASSET_CODE order by T.DEALDATE) row_number
         FROM CHB_INVEST_TRADE T
         LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = T.TRADE_COUNTER
         LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = T.TRADE_COUNTER
@@ -321,6 +320,7 @@
                 #{item}
             </foreach>
         </if>
+        group by T.PROD_ID,T.ASSET_CODE,T.DEALDATE
         ) a
         WHERE A.row_number = 1
     </select>

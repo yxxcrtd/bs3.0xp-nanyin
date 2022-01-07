@@ -197,20 +197,33 @@
                         </select>
                     </div>
                 </div>
-                
+
+            </div>
+            <!-- 中债新增字段 add by tuqirong 2021-12-30 start -->
+            <div class="layui-form-item" th:id="|${entityName}_content_one_div|">
                 <div class="form-inline-wrap">
-                    <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetCreditNonstdInfo.isBzhpj}">是否标准化票据</label>
+                    <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetAstBillInfo.isBzhpj}">是否标准化票据</label>
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_isBzhpj|" th:name="|${entityName}.isBzhpj|"
                                 th:initValue="${entity?.isBzhpj}" class="layui-input form-input input-select"
-                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${SVR_YES_OR_NO}">
                         </select>
                     </div>
                 </div>
 
-            </div>
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetAstBillInfo.billCode}">票据代码</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" th:id="|${entityName}_billCode|"
+                               th:name="|${entityName}.billCode|" data-th-value="${entity?.billCode}"
+                               class="layui-input form-input" placeholder="请输入内容"
+                               data-th-placeholder="#{SysCommon.placeholder}">
+                    </div>
+                </div>
 
+            </div>
+            <!-- 中债新增字段 add by tuqirong 2021-12-30 end -->
             <div class="layui-form-item">
 
                 <div class="form-inline-wrap">

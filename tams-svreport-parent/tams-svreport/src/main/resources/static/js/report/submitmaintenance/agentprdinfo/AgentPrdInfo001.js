@@ -38,13 +38,12 @@
                     function(){table.reload();});
         },
         cols:[
-             {field:'statusStr', title: '数据状态', width:'150',sortField:'status'}
-            ,{field:'issuePartyId', title: '发行机构代码', width:'150',sortField:'issuePartyId'}
-            ,{field:'agentInstitutionCode', title: '代理销售机构代码', width:'150',sortField:'agentInstitutionCode'}
-            ,{field:'prodId', title: '产品代码', width:'150',sortField:'prodId'}
-            ,{field:'prodName', title: '产品名称', width:'150',sortField:'prodName'}
-            ,{field:'prodRegistCode', title: '产品登记编码', width:'150',sortField:'prodRegistCode'}
-            ,{field:'remark', title: '备注', width:'150',sortField:'remark'}
+             {field:'statusStr', title: '数据状态', width:'200',sortField:'status'}
+            ,{field:'issuePartyId', title: '发行机构代码', width:'250',sortField:'issuePartyId'}
+            ,{field:'agentInstitutionCode', title: '代理销售机构代码', width:'250',sortField:'agentInstitutionCode'}
+            ,{field:'prodId', title: '产品代码', width:'250',sortField:'prodId'}
+            ,{field:'prodName', title: '产品名称', width:'250',sortField:'prodName'}
+            ,{field:'prodRegistCode', title: '产品登记编码', width:'200',sortField:'prodRegistCode'}
             ,{field:'action', title: '操作' , type:'action',buttons: ['delt'] , width:'150'}
         ],
     });

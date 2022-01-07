@@ -1028,6 +1028,14 @@ public class SvrMonthCollectInterf extends BaseService{
 					if (listAmountTotal.get(i).getValueAmountTotal() != null && charge != null) {
 						listAmountTotal.get(i).setValueAmountTotal(listAmountTotal.get(i).getValueAmountTotal().divide(charge, 6, BigDecimal.ROUND_HALF_UP));
 					}
+					//总销售份额
+					if (listAmountTotal.get(i).getSaleSharesTotal() != null && charge != null) {
+						listAmountTotal.get(i).setSaleSharesTotal(listAmountTotal.get(i).getSaleSharesTotal().divide(charge, 6, BigDecimal.ROUND_HALF_UP));
+					}
+					//净销售份额
+					if (listAmountTotal.get(i).getValueSharesTotal() != null && charge != null) {
+						listAmountTotal.get(i).setValueSharesTotal(listAmountTotal.get(i).getValueSharesTotal().divide(charge, 6, BigDecimal.ROUND_HALF_UP));
+					}
 				}
 				if(!ccy.equals("EUR") && !ccy.equals("USD") && !ccy.equals("CNY") && !ccy.equals("JPY")) {//美元对 CFETS:外汇交易中心
 					String USDExccy = ccy + "/USD";
@@ -1055,6 +1063,20 @@ public class SvrMonthCollectInterf extends BaseService{
 //						再转人民币
 						listAmountTotal.get(i).setValueAmountTotal(USDValueAmountTotal.divide(USDchargeCNY,6, BigDecimal.ROUND_HALF_UP));
 					}
+					  //总销售份额
+					  if (listAmountTotal.get(i).getSaleSharesTotal() != null && USDcharge != null && USDchargeCNY != null) {
+//						先转美元
+						  BigDecimal USDSaleSharesTotal = listAmountTotal.get(i).getSaleSharesTotal().divide(USDcharge, 6, BigDecimal.ROUND_HALF_UP);
+//						再转人民币
+						  listAmountTotal.get(i).setSaleSharesTotal(USDSaleSharesTotal.divide(USDchargeCNY ,6, BigDecimal.ROUND_HALF_UP));
+					  }
+					  //净销售金额
+					  if (listAmountTotal.get(i).getValueSharesTotal() != null && USDcharge != null && USDchargeCNY != null) {
+//						先转美元
+						  BigDecimal USDValueSharesTotal = listAmountTotal.get(i).getValueSharesTotal().divide(USDcharge, 6, BigDecimal.ROUND_HALF_UP);
+//						再转人民币
+						  listAmountTotal.get(i).setValueSharesTotal(USDValueSharesTotal.divide(USDchargeCNY,6, BigDecimal.ROUND_HALF_UP));
+					  }
 				  }
 				}
 			}

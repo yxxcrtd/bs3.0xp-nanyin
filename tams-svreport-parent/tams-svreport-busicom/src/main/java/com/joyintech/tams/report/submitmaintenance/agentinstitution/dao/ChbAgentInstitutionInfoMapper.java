@@ -63,6 +63,9 @@ public interface ChbAgentInstitutionInfoMapper {
     //代理销售机构代码重复校验
     int checkAgentInstitutionCode(String agentInstitutionCode);
 
+    //代理销售机构代码重复校验
+    int checkAgentInstitutionName(String agentInstitutionName);
+
     //导入代理销售机构代码重复校验
     List<AgentInstitutionDto> checkAgentInstitutionCodeImport();
 

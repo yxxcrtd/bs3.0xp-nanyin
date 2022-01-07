@@ -172,7 +172,7 @@
     </update>
     <select id="queryForPage" resultType="com.joyintech.tams.report.system.systempbccapassetinfo.dto.PbcCapAssetInfo001Dto">
       select distinct
-              t.ASSET_UUID as assetUuid /*主键*/,
+              b.ASSET_UUID as assetUuid /*主键*/,
               t.ASSET_CODE as assetCode/*资产代码*/,
 		      t.ASSET_NAME as assetName /*资产名称*/,
 		      b.POBCASSETID as pobcassetid/*人行资金信托代码*/,
@@ -180,11 +180,12 @@
               to_char(t.PLAN_EDATE,'yyyy-MM-dd hh:mm:ss') as planEdate /*资产到期日*/,
               b.UPDATE_TIME as updateTime
             from chb_asset_info t
-            left join PBC_CAP_ASSET_INFO b on t.ASSET_CODE = b.ASSETID and b.STATUS!='D'
+            left join PBC_CAP_ASSET_INFO b on t.ASSET_CODE = b.ASSETID
             where t.PBC_ASSET_TYPE1='P07'
             and t.PBC_ASSET_TYPE2='T02'
             and t.PBC_ASSET_TYPE3='M02'
             and t.STATUS!='D'
+            and b.STATUS!='D'
             <if test="planSdateStart != null and planSdateStart != ''" >
                 AND to_char(t.PLAN_SDATE,'yyyy-MM-dd') <![CDATA[>=]]> #{planSdateStart}
             </if>

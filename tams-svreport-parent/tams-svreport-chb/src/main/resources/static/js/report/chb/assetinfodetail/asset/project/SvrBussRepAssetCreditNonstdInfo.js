@@ -292,7 +292,9 @@
             $("#svrBussRepAssetCreditNonstdInfoDto_creditOrgName").val('').trigger("change");
             $("#svrBussRepAssetCreditNonstdInfoDto_creditOrgName").attr("disabled",true);
 
-
+            if(assetTvalueCreditNonstd=="2202"){
+                $('#repCreditAssetCode_Div').show();
+            }
 
         }else{
 

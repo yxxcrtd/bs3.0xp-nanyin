@@ -1143,6 +1143,41 @@ public class ChbAssetInfo extends BaseEntity {
      * 是否持有金融牌照
      */
     private String isFinLicence;
+	
+	/**
+     * 存款账号
+     */
+    private String accountNo;
+
+    /**
+     * 资产代码
+     */
+    private String creditAssetCode;
+
+    /**
+     * 票据代码
+     */
+    private String billCode;
+
+    /**
+     * 是否为银行理财产品
+     */
+    private String financialProductFlag;
+
+    /**
+     * 产品登记编码
+     */
+    private String prodRegisterCode;
+
+    /**
+     * 是否为固定收益类
+     */
+    private String profitFlag;
+
+    /**
+     * 是否为同业借款
+     */
+    private String isDepositFlag;
 
     /**
      * 取得 资产要素uuid（为修改删除使用）
@@ -4656,5 +4691,61 @@ public class ChbAssetInfo extends BaseEntity {
      */
     public void setIsFinLicence(String isFinLicence) {
         this.isFinLicence = isFinLicence == null ? null : isFinLicence.trim();
+    }
+	
+	public String getAccountNo() {
+        return accountNo;
+    }
+
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
+    }
+
+    public String getCreditAssetCode() {
+        return creditAssetCode;
+    }
+
+    public void setCreditAssetCode(String creditAssetCode) {
+        this.creditAssetCode = creditAssetCode;
+    }
+
+    public String getBillCode() {
+        return billCode;
+    }
+
+    public void setBillCode(String billCode) {
+        this.billCode = billCode;
+    }
+
+    public String getFinancialProductFlag() {
+        return financialProductFlag;
+    }
+
+    public void setFinancialProductFlag(String financialProductFlag) {
+        this.financialProductFlag = financialProductFlag;
+    }
+
+    public String getProdRegisterCode() {
+        return prodRegisterCode;
+    }
+
+    public void setProdRegisterCode(String prodRegisterCode) {
+        this.prodRegisterCode = prodRegisterCode;
+    }
+
+    public String getProfitFlag() {
+        return profitFlag;
+    }
+
+    public void setProfitFlag(String profitFlag) {
+        this.profitFlag = profitFlag;
+    }
+
+    public String getIsDepositFlag() {
+        return isDepositFlag;
+    }
+
+    public void setIsDepositFlag(String isDepositFlag) {
+        this.isDepositFlag = isDepositFlag;
     }
 }

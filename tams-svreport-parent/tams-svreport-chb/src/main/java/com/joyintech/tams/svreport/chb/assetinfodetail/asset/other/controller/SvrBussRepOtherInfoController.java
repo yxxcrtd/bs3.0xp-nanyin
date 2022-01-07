@@ -52,7 +52,7 @@ public class SvrBussRepOtherInfoController extends BaseController {
         String entityName = this.getParam("entityName");
 
         //1.赋值界面数据字典
-        setSelectOptionToModel(model,  new DictCode[] {DictCode.所属国家或地区
+        setSelectOptionToModel(model,  new DictCode[] {DictCode.所属国家或地区,DictCode.是否_中债
                 ,DictCode.人行资产一级分类,DictCode.人行资产二级分类,DictCode.人行资产三级分类}
         );
 

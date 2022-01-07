@@ -229,6 +229,12 @@ public class SvrProdFeeDealFileImpService extends FileImpService{
 		feeDeal.setRemark(map.get("REMARK"));
 		feeDeal.setRivalPartyType(map.get("RIVAL_PARTY_TYPE"));
 		feeDeal.setTradeCounter(map.get("TRADE_COUNTER"));
+		//新增交易员和交易审批人身份证号和姓名字段 add by  tuqirong 2021-12-23 start
+		feeDeal.setInvestApproverId(map.get("INVEST_APPROVER_ID"));
+		feeDeal.setInvestApproverName(map.get("INVEST_APPROVER_NAME"));
+		feeDeal.setInvestTraderId(map.get("INVEST_TRADER_ID"));
+		feeDeal.setInvestTraderName(map.get("INVEST_TRADER_NAME"));
+		//新增交易员和交易审批人身份证号和姓名字段 add by  tuqirong 2021-12-23 start
 		return feeDeal;
 		
 	}
