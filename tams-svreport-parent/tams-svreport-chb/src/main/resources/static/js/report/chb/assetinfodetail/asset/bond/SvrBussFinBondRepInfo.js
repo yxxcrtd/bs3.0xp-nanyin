@@ -80,5 +80,51 @@
                 }
             }
         });*/
+        $('#svrBussFinBondRepInfoDto_chbIssuerId').change(function(){
+            // $("#fundType").val('').trigger('change');
+            var svrBussFinBondRepInfoDto_chbIssuerId = $('#svrBussFinBondRepInfoDto_chbIssuerId').val();
+            if(svrBussFinBondRepInfoDto_chbIssuerId ==''|| svrBussFinBondRepInfoDto_chbIssuerId==undefined){
+                // $('#fundName').val('');
+            }
+            else{
+                var data = {
+                    svrBussFinBondRepInfoDto_chbIssuerId: $('#svrBussFinBondRepInfoDto_chbIssuerId').val()
+                }
+                //$('#fundName').val($('#finprodId').select2('data')[0].text).trigger('change');
+                Joyin.ajaxJson(basePath + 'common/select/getIssuerInfo', data,
+                    function (resultObj) {
+                        //if (resultObj.fundType) {
+                        // $('#fundName').val(resultObj.fundName).trigger('change');
+                        // $("#fundType").val(resultObj.fundType).trigger('change');
+                        //}
+                        if (resultObj.partyType1!=null){
+                            $('#svrBussFinBondRepInfoDto_repPartyType1').val(resultObj.partyType1).trigger('change');
+                        } else {
+                            $('#svrBussFinBondRepInfoDto_repPartyType1').val('').trigger('change');
+                        }
+                        if (resultObj.partyType2!=null){
+                            $('#svrBussFinBondRepInfoDto_repPartyType2').val(resultObj.partyType2).trigger('change');
+                        } else {
+                            $('#svrBussFinBondRepInfoDto_repPartyType2').val('').trigger('change');
+                        }
+                        if (resultObj.partyType3!=null){
+                            $('#svrBussFinBondRepInfoDto_repPartyType3').val(resultObj.partyType3).trigger('change');
+                        } else {
+                            $('#svrBussFinBondRepInfoDto_repPartyType3').val('').trigger('change');
+                        }
+                        if (resultObj.industry!=null){
+                            $('#svrBussFinBondRepInfoDto_repIndustry').val(resultObj.industry).trigger('change');
+                        } else {
+                            $('#svrBussFinBondRepInfoDto_repIndustry').val('').trigger('change');
+                        }
+                        if (resultObj.industry2!=null){
+                            $('#svrBussFinBondRepInfoDto_repIndustryLevel2').val(resultObj.industry2).trigger('change');
+                        } else {
+                            $('#svrBussFinBondRepInfoDto_repIndustryLevel2').val('').trigger('change');
+                        }
+
+                    });
+            }
+        });
     })
 }());
