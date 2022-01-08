@@ -4,10 +4,12 @@ import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuote
 import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteCrepPledgeDto;
 import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEntCrepPledgeDto;
 import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEtrReDto;
+import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 本币交易-质押式回购交易 Mapper
@@ -49,4 +51,6 @@ public interface CfetsIbuQuoteRepo003Mapper {
      * @date 2022/1/4 14:51
      */
     List<IbuQuoteEntCrepPledgeDto> selectWflQuoteEntCrepPledgeDataByQuoteId(@Param("quoteId") String quoteId);
+
+    List<CfetsRepoDealQuotedPrice003Dto>  selectQuoteCrepPledgeForDzh(Map<String,Object> map);
 }

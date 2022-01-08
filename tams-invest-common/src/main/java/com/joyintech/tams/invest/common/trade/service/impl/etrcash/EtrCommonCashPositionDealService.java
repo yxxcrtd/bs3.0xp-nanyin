@@ -116,6 +116,8 @@ public class EtrCommonCashPositionDealService extends BaseService {
     public void setPtlCapacctInfoMapper(PtlCapacctInfoMapper ptlCapacctInfoMapper) {
         EtrCommonCashPositionDealService.ptlCapacctInfoMapper = ptlCapacctInfoMapper;
     }
+
+
     
     /**
      * 设置 etrEntrustMapper
@@ -135,6 +137,26 @@ public class EtrCommonCashPositionDealService extends BaseService {
     @Autowired
     public void setEtrEntrustAddMapper(EtrEntrustAddMapper etrEntrustAddMapper) {
         EtrCommonCashPositionDealService.etrEntrustAddMapper = etrEntrustAddMapper;
+    }
+
+    /**
+     * 设置 etrEntrustDetailMapper
+     *
+     * @param etrEntrustDetailMapper etrEntrustDetailMapper
+     */
+    @Autowired
+    public void setEtrEntrustDetailMapper(EtrEntrustDetailMapper etrEntrustDetailMapper) {
+        EtrCommonCashPositionDealService.etrEntrustDetailMapper = etrEntrustDetailMapper;
+    }
+
+    /**
+     * 设置 wflEtrEntrustDetailMapper
+     *
+     * @param wflEtrEntrustDetailMapper wflEtrEntrustDetailMapper
+     */
+    @Autowired
+    public void setWflEtrEntrustDetailMapper(WflEtrEntrustDetailMapper wflEtrEntrustDetailMapper) {
+        EtrCommonCashPositionDealService.wflEtrEntrustDetailMapper = wflEtrEntrustDetailMapper;
     }
 
     /**

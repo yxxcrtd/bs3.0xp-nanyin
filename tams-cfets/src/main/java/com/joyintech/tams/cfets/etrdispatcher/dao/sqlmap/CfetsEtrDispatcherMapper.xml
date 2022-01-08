@@ -496,7 +496,7 @@
             eted.FIRST_UNIT_CPRICE || ' - ' || eted.FIRST_UNIT_CPRICE2 firstprice,
             pss.pledge_stock_name pledgeStockName,
             fp.Is_Right isRight,
-            ete.PRICE rate
+            ete.PRICE * 100 rate
         FROM ETR_ENTRUST ete
         INNER JOIN ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
         LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
@@ -542,7 +542,7 @@
         eted.FIRST_UNIT_CPRICE || ' - ' || eted.FIRST_UNIT_CPRICE2 firstprice,
         pss.pledge_stock_name pledgeStockName,
         fp.Is_Right isRight,
-        ete.PRICE rate
+        ete.PRICE * 100 rate
         FROM WFL_ETR_ENTRUST ete
         INNER JOIN WFL_ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
         LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
@@ -765,7 +765,17 @@
         TO_CHAR(T6.EXERCISE_DATE,'yyyy-MM-dd') exerciseDate,
         TO_CHAR(T6.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate,
         tpdp.TOTLE_TRADE_ID totalTradeId,
-        tpdp.FINPROD_TYPE2
+        tpdp.FINPROD_TYPE2,
+        tpdp.TERM_TYPE termType,
+        tpdp.REPO_TERM  repoTerm,
+        tpdp.V_SETTLE_DATE vpayDate,
+        tpdp.M_SETTLE_DATE mpayDate,
+        tpdp.ACT_REPO_TERM actCapDays,
+        tpdp.RATE rebackPrice,
+        tpdp.TRADE_AMT tradeAmt,
+        tpdp.M_INT_AMT mIntAmt,
+        tpdp.M_TRADE_AMT mTradeAmt,
+        tpdp.M_DELIVERY_TYPE mdeliveryType
     </sql>
     <sql id="etrDispatcherExeListInfo1">
         '' effectFlag,
@@ -803,7 +813,17 @@
         TO_CHAR(T6.EXERCISE_DATE,'yyyy-MM-dd') exerciseDate,
         TO_CHAR(T6.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate,
         tpdp.quote_id totalTradeId,
-        tpdp.FINPROD_TYPE2
+        tpdp.FINPROD_TYPE2,
+        null termType,
+        null  repoTerm,
+        null vpayDate,
+        null mpayDate,
+        null actCapDays,
+        null rebackPrice,
+        null tradeAmt,
+        null mIntAmt,
+        null mTradeAmt,
+        null mdeliveryType
     </sql>
     <select id="getEtrDispatcherExeListInfo"
             resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherExeListInfoResponse">

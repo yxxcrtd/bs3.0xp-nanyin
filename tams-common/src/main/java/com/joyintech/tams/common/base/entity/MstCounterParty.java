@@ -64,6 +64,11 @@ public class MstCounterParty extends BaseEntity {
     private String pTypeTwo;
 
     /**
+     * 银行间机构21位码
+     */
+    private String partyId;
+
+    /**
      * 交易对手一级类型
      */
     private String counterType1;
@@ -268,6 +273,14 @@ public class MstCounterParty extends BaseEntity {
      */
     public void setpTypeTwo(String pTypeTwo) {
         this.pTypeTwo = pTypeTwo == null ? null : pTypeTwo.trim();
+    }
+
+    public String getPartyId() {
+        return partyId;
+    }
+
+    public void setPartyId(String partyId) {
+        this.partyId = partyId == null ? null : partyId.trim();
     }
 
     /**

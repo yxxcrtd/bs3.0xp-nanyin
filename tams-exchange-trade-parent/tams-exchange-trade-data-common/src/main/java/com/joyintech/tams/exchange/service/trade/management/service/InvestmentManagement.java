@@ -1,5 +1,6 @@
 package com.joyintech.tams.exchange.service.trade.management.service;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
@@ -13,7 +14,10 @@ import com.joyintech.tams.exchange.common.bean.investment.CapitalAccountBean;
 import com.joyintech.tams.exchange.common.bean.investment.EntrustOpeBean;
 import com.joyintech.tams.exchange.common.bean.investment.EntrustReBackBean;
 import com.joyintech.tams.exchange.common.constant.*;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCode;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCodeList;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt1;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
 import com.joyintech.tams.exchange.common.db.domain.*;
 import com.joyintech.tams.exchange.common.microservice.ServiceApplication;
 import com.joyintech.tams.exchange.common.microservice.TradeServiceURL;
@@ -35,6 +39,8 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.bouncycastle.asn1.misc.MiscObjectIdentifiers.entrust;
 
 @Component
 public class InvestmentManagement extends BaseService {
@@ -170,7 +176,39 @@ public class InvestmentManagement extends BaseService {
         Map<String, Object> pageParam = JsonUtils.getObjectFromJson(JsonUtils.getJsonFromObject(request), Map.class);
         InstructionPage<Instruction, InstructionPledge,InstructionDetail> page = queryInstructionsFromCache(pageParam);
         List<Instruction> instructionList = page.getEtr_entrust_list();
-        return instructionList;
+        return convertFieldValue(instructionList);
+    }
+
+    /**
+     * 对指令状态、交易平台、委托方向、价格模式、资产类型字典值进行转换
+     */
+    private List<Instruction> convertFieldValue(List<Instruction> instructionList) {
+        if (Objects.isNull(instructionList) || instructionList.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Instruction> returnList = new ArrayList<>(instructionList.size());
+        Instruction newInstruction = null;
+        for (Instruction instruction : instructionList) {
+            newInstruction = new Instruction();
+            BeanUtil.copyProperties(instruction, newInstruction);
+            if (Objects.nonNull(DictCodeList.from(DictCode.委托状态, newInstruction.getEntrustStatus()))) {
+                newInstruction.setEntrustStatus(DictCodeList.from(DictCode.委托状态, newInstruction.getEntrustStatus()).getCodeName());
+            }
+            if (Objects.nonNull(DictCodeList.from(DictCode.交易平台, newInstruction.getTradePlat()))) {
+                newInstruction.setTradePlat(DictCodeList.from(DictCode.交易平台, newInstruction.getTradePlat()).getCodeName());
+            }
+            if (Objects.nonNull(DictCodeListExt2.from(DictCode.交易方向, newInstruction.getPs()))) {
+                newInstruction.setPs(DictCodeListExt2.from(DictCode.交易方向, newInstruction.getPs()).getCodeName());
+            }
+            if (Objects.nonNull(DictCodeListExt2.from(DictCode.价格模式, newInstruction.getPriceMode()))) {
+                newInstruction.setPriceMode(DictCodeListExt2.from(DictCode.价格模式, newInstruction.getPriceMode()).getCodeName());
+            }
+            if (Objects.nonNull(DictCodeList.from(DictCode.平安资产类型, newInstruction.getFinprodType2()))) {
+                newInstruction.setFinprodType2(DictCodeList.from(DictCode.平安资产类型, newInstruction.getFinprodType2()).getCodeName());
+            }
+            returnList.add(newInstruction);
+        }
+        return returnList;
     }
 
     /**

@@ -23,7 +23,10 @@ import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealDbDto;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealRegisterQuoteDto;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
@@ -45,7 +48,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -150,6 +152,9 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             errorList.add(new ValidMessage("请输入资产代码"));
         }
         if(StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())||StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())){
+            if(StringUtil.isEmpty(entity.getMySide())){
+                errorList.add(new ValidMessage("请输入本方"));
+            }
             if(StringUtil.isEmpty(entity.getMySideTrader())){
                 errorList.add(new ValidMessage("请输入本方交易员"));
             }
@@ -547,21 +552,15 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             List<RegFinProductDeal> regFinProductDeals = new ArrayList<>();
             List<RegFinProductDealAdd> regFinProductDealAdds = new ArrayList<>();
             List<RegTradeFee> regTradeFees = new ArrayList<>();
-            if(CollectionUtils.isNotEmpty(entity.getPtlAllocatios())){
+            List<PtlAllocationDto> ptlAllocatios = entity.getPtlAllocatios();
+            if(CollectionUtils.isNotEmpty(ptlAllocatios)){
                 Map<String, Object> entrustReclas = new HashMap<>();
                 if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
                    entrustReclas = cfetsQuotedCommonService.isEntrustReclas(entity.getFinprodId(), entity.getPrice(), entity.getTradeDate());
                 }
                 //处理本方券、融入券
-                Map<String,Object> param = new HashMap<>();
-                List<String> entrustIds = new ArrayList<>();
-                entity.getPtlAllocatios().forEach(item ->{entrustIds.add(item.getEntrustId());});
-                param.put("entrustIds",entrustIds);
-                param.put("workflowId",entity.getWorkflowId());
-                List<EntrustAvaShareAmtDto> entrustAvaShareAmtDtos = cfetsIbuQuoteBondEtrMapper.listAvaShareAmt(param);
-                Map<String, List<EntrustAvaShareAmtDto>> entrustAvaShareAmtGroup = entrustAvaShareAmtDtos.stream().collect(Collectors.groupingBy(EntrustAvaShareAmtDto::getEntrustId));
-                for (PtlAllocationDto ptlAllocatio : entity.getPtlAllocatios()){
-                    EntrustAvaShareAmtDto entrustAvaShareAmtDto = entrustAvaShareAmtGroup.get(ptlAllocatio.getEntrustId()).get(0);
+                Map<String, PtlAllocationDto> ptlAllocatioMap = cfetsQuotedCommonService.handOurAndLendinShareAmt(ptlAllocatios, entity.getWorkflowId(), ps);
+                for (PtlAllocationDto ptlAllocatio : ptlAllocatios){
                     RegFinProductDeal regFinProductDeal = new RegFinProductDeal();
                     BeanUtil.copyPropertiesIgnoreNull(regFinProductDeal,regFinProductDealTotal);
                     BussinessCodeParameter codeParameter = getBussinessCodeParameter(entity.getPs());
@@ -587,78 +586,10 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                     //附属
                     RegFinProductDealAdd regFinProductDealAdd = new RegFinProductDealAdd();
                     regFinProductDealAdd.setTradeId(regFinProductDeal.getTradeId());
-                    if(null!=entrustAvaShareAmtDto){
-                        BigDecimal shareAmt = ptlAllocatio.getShareAmt();
-                        BigDecimal ourEntNum = entrustAvaShareAmtDto.getOurEntNum();
-                        BigDecimal lendinEntNum = entrustAvaShareAmtDto.getLendinEntNum();
-                        BigDecimal avaOurShareAmt = ArithmeticUtil.subtract(ourEntNum, entrustAvaShareAmtDto.getUsedOurShareAmt());
-                        BigDecimal avaLendinShareAmt = ArithmeticUtil.subtract(lendinEntNum, entrustAvaShareAmtDto.getUsedLendinShareAmt());
-                        if(StringUtil.equals(sellPara,"01")||(StringUtil.equals(sellPara,"02")&&StringUtil.equals(sellParaAddRule,"01"))){
-                            if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
-                                if(shareAmt.compareTo(avaLendinShareAmt)>=0){
-                                    regFinProductDealAdd.setLendinShareAmt(avaLendinShareAmt);
-                                    regFinProductDealAdd.setOurShareAmt(ArithmeticUtil.subtract(shareAmt,avaLendinShareAmt));
-                                }else{
-                                    regFinProductDealAdd.setLendinShareAmt(shareAmt);
-                                    regFinProductDealAdd.setOurShareAmt(BigDecimal.ZERO);
-                                }
-                            }
-                            if(StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())||StringUtil.equals(ps,DictCodeList.交易方向_行权_回售.getValue())){
-                                if(shareAmt.compareTo(avaOurShareAmt)>=0){
-                                    regFinProductDealAdd.setOurShareAmt(avaOurShareAmt);
-                                    regFinProductDealAdd.setLendinShareAmt(ArithmeticUtil.subtract(shareAmt,avaOurShareAmt));
-                                }else{
-                                    regFinProductDealAdd.setOurShareAmt(shareAmt);
-                                    regFinProductDealAdd.setLendinShareAmt(BigDecimal.ZERO);
-                                }
-                            }
-                        }
-                        if(StringUtil.equals(sellPara,"02")&&StringUtil.equals(sellParaAddRule,"02")){
-                            //比例计算
-                            if(ourEntNum.compareTo(BigDecimal.ZERO)==0){regFinProductDealAdd.setOurShareAmt(BigDecimal.ZERO);regFinProductDealAdd.setLendinShareAmt(shareAmt);}
-                            if(lendinEntNum.compareTo(BigDecimal.ZERO)==0){regFinProductDealAdd.setOurShareAmt(shareAmt);regFinProductDealAdd.setLendinShareAmt(BigDecimal.ZERO);}
-                            if(ourEntNum.compareTo(BigDecimal.ZERO)!=0&&lendinEntNum.compareTo(BigDecimal.ZERO)!=0){
-                                //递增维度(万元)
-                                BigDecimal faceDimension = new BigDecimal("0.1");
-                                BigDecimal total = ArithmeticUtil.doAdd(ourEntNum, lendinEntNum);
-                                //万元计算  舌位到千位
-                                BigDecimal shareAmt2 = ArithmeticUtil.divide(shareAmt, new BigDecimal(10000),1,RoundingMode.DOWN);
-                                BigDecimal tailDifference = shareAmt2;
-                                BigDecimal ourEntNumdivide = ArithmeticUtil.divide(ArithmeticUtil.multiply(ourEntNum, shareAmt2), total, 1, RoundingMode.DOWN);
-                                BigDecimal lendinEntNumdivide = ArithmeticUtil.divide(ArithmeticUtil.multiply(lendinEntNum, shareAmt2), total, 1, RoundingMode.DOWN);
-                                if(avaOurShareAmt.compareTo(ourEntNumdivide)>=0){
-                                    regFinProductDealAdd.setOurShareAmt(ourEntNumdivide);
-                                    avaOurShareAmt = ArithmeticUtil.subtract(avaOurShareAmt,ourEntNumdivide);
-                                }else{
-                                    avaOurShareAmt = BigDecimal.ZERO;
-                                    regFinProductDealAdd.setOurShareAmt(avaOurShareAmt);
-                                }
-                                if(avaLendinShareAmt.compareTo(lendinEntNumdivide)>=0){
-                                    regFinProductDealAdd.setLendinShareAmt(lendinEntNumdivide);
-                                    avaLendinShareAmt = ArithmeticUtil.subtract(avaLendinShareAmt,lendinEntNumdivide);
-                                }else{
-                                    avaLendinShareAmt = BigDecimal.ZERO;
-                                    regFinProductDealAdd.setLendinShareAmt(avaLendinShareAmt);
-                                }
-                                tailDifference = ArithmeticUtil.subtract(tailDifference,regFinProductDealAdd.getOurShareAmt());tailDifference = ArithmeticUtil.subtract(tailDifference,regFinProductDealAdd.getLendinShareAmt());
-                                //尾差处理
-                                while(tailDifference.compareTo(BigDecimal.ZERO)>0){
-                                    if(tailDifference.compareTo(BigDecimal.ZERO)>0&&avaOurShareAmt.compareTo(BigDecimal.ZERO)>0){
-                                        tailDifference = ArithmeticUtil.subtract(tailDifference,faceDimension);
-                                        regFinProductDealAdd.setOurShareAmt(ArithmeticUtil.doAdd(regFinProductDealAdd.getOurShareAmt(),faceDimension));
-                                    }
-                                    if(tailDifference.compareTo(BigDecimal.ZERO)>0&&avaLendinShareAmt.compareTo(BigDecimal.ZERO)>0){
-                                        tailDifference = ArithmeticUtil.subtract(tailDifference,faceDimension);
-                                        regFinProductDealAdd.setLendinShareAmt(ArithmeticUtil.doAdd(regFinProductDealAdd.getLendinShareAmt(),faceDimension));
-                                    }
-                                }
-                                regFinProductDealAdd.setOurShareAmt(ArithmeticUtil.multiply(regFinProductDealAdd.getOurShareAmt(),new BigDecimal(10000)));
-                                regFinProductDealAdd.setLendinShareAmt(ArithmeticUtil.multiply(regFinProductDealAdd.getLendinShareAmt(),new BigDecimal(10000)));
-                            }
-                        }
+                    if(ptlAllocatioMap.containsKey(ptlAllocatio.getEntrustId())){
+                        regFinProductDealAdd.setOurShareAmt(ArithmeticUtil.divide(ptlAllocatioMap.get(ptlAllocatio.getEntrustId()).getOurShareAmt(),new BigDecimal(100),2));
+                        regFinProductDealAdd.setLendinShareAmt(ArithmeticUtil.divide(ptlAllocatioMap.get(ptlAllocatio.getEntrustId()).getLendinShareAmt(),new BigDecimal(100),2));
                     }
-                    regFinProductDealAdd.setOurShareAmt(ArithmeticUtil.divide(regFinProductDealAdd.getOurShareAmt(),new BigDecimal(100),2));
-                    regFinProductDealAdd.setLendinShareAmt(ArithmeticUtil.divide(regFinProductDealAdd.getLendinShareAmt(),new BigDecimal(100),2));
                     regFinProductDealAdd.setActSetteDate(entity.getActSetteDate());
                     if(null!=ptlAllocatio.getDealFeeAmt()){
                         regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(regFinProductDeal.getTradeId(),BussinessDictCodeList.费用类型_交易手续费.getValue(),ptlAllocatio.getDealFeeAmt()));
@@ -880,8 +811,10 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                     pltMap.put("secAmount",ArithmeticUtil.multiply(regFinProductDeal.getShareAmt(),new BigDecimal(100))); //券面总额
                     pltMap.put("cashAmount",regFinProductDeal.getTradeAmt());
                     RegFinProductDealAdd regFinProductDealAdd = regFinProductDealAddMap.get(regFinProductDeal.getTradeId()).get(0);
-                    pltMap.put("ownSecAmount",ArithmeticUtil.multiply(regFinProductDealAdd.getOurShareAmt(),new BigDecimal(100)));
-                    pltMap.put("integrateSecAmount",ArithmeticUtil.multiply(regFinProductDealAdd.getLendinShareAmt(),new BigDecimal(100)));
+                    if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_卖出.getValue())||StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){
+                        pltMap.put("ownSecAmount",ArithmeticUtil.multiply(regFinProductDealAdd.getOurShareAmt(),new BigDecimal(100)));
+                        pltMap.put("integrateSecAmount",ArithmeticUtil.multiply(regFinProductDealAdd.getLendinShareAmt(),new BigDecimal(100)));
+                    }
                     pltMap.put("etrSecAmount",ArithmeticUtil.multiply(etrEntrustMapper.selectByPrimaryKey(regFinProductDeal.getEntrustId()).getEntrustNum(),new BigDecimal(100)));
                     ptlList.add(pltMap);
                 }

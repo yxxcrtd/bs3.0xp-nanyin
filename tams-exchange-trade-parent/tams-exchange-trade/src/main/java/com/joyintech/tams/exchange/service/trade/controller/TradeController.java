@@ -7,6 +7,7 @@ import com.joyintech.tams.exchange.common.db.domain.Trade;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.request.HistoryTradeInfoRequest;
 import com.joyintech.tams.exchange.common.request.PageTradeInfoRequest;
+import com.joyintech.tams.exchange.common.request.TradeInfoByIdRequest;
 import com.joyintech.tams.exchange.common.request.TradeInfoRequest;
 import com.joyintech.tams.exchange.service.trade.management.service.TradeManagement;
 import io.swagger.annotations.Api;
@@ -47,29 +48,25 @@ public class TradeController {
 
     @ApiOperation(value = "根据委托编号查询成交信息", notes = "根据委托编号查询成交信息")
     @RequestMapping(value = "/tradeByEntrustId", method = RequestMethod.POST)
-    public Message<List<Trade>> queryTradeByEntrustId(@RequestParam @NotBlank(message = "用户编号不可为空") String userId,
-                                                      @RequestParam @NotBlank(message = "委托编号不可为空") String entrustId) {
-        return new Message<>(tradeManagement.queryTradeByEntrustId(userId, entrustId));
+    public Message<List<Trade>> queryTradeByEntrustId(@RequestBody @Validated TradeInfoByIdRequest request) {
+        return new Message<>(tradeManagement.queryTradeByEntrustId(request.getUserId(), request.getId()));
     }
 
     @ApiOperation(value = "根据订单编号查询成交信息", notes = "根据订单编号查询成交信息")
     @RequestMapping(value = "/tradeByOrderId", method = RequestMethod.POST)
-    public Message<List<Trade>> queryTradeByOrderId(@RequestParam @NotBlank(message = "用户编号不可为空") String userId,
-                                                    @RequestParam @NotBlank(message = "订单编号不可为空") String orderId) {
-        return new Message<>(tradeManagement.queryTradeByOrderId(userId, orderId));
+    public Message<List<Trade>> queryTradeByOrderId(@RequestBody @Validated TradeInfoByIdRequest request) {
+        return new Message<>(tradeManagement.queryTradeByOrderId(request.getUserId(), request.getId()));
     }
 
     @ApiOperation(value = "根据指令编号查询成交信息", notes = "根据指令编号查询成交信息")
     @RequestMapping(value = "/tradeByInstructionId", method = RequestMethod.POST)
-    public Message<List<Trade>> queryTradeByInstructionId(@RequestParam @NotBlank(message = "用户编号不可为空") String userId,
-                                                          @RequestParam @NotBlank(message = "指令编号不可为空") String instructionId) {
-        return new Message<>(tradeManagement.queryTradeByInstructionId(userId, instructionId));
+    public Message<List<Trade>> queryTradeByInstructionId(@RequestBody @Validated TradeInfoByIdRequest request) {
+        return new Message<>(tradeManagement.queryTradeByInstructionId(request.getUserId(), request.getId()));
     }
 
     @ApiOperation(value = "根据资金账户编号查询成交信息", notes = "根据资金账户编号查询成交信息")
     @RequestMapping(value = "/tradeByAccountId", method = RequestMethod.POST)
-    public Message<List<Trade>> queryTradeByAccountId(@RequestParam @NotBlank(message = "用户编号不可为空") String userId,
-                                                      @RequestParam @NotBlank(message = "资金账户编号不可为空") String accountId) {
-        return new Message<>(tradeManagement.queryTradeByAccountId(userId, accountId));
+    public Message<List<Trade>> queryTradeByAccountId(@RequestBody @Validated TradeInfoByIdRequest request) {
+        return new Message<>(tradeManagement.queryTradeByAccountId(request.getUserId(), request.getId()));
     }
 }

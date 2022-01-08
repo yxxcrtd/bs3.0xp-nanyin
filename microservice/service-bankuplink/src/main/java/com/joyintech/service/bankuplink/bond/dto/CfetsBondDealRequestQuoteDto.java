@@ -142,6 +142,26 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal fpriceAmt;
 
+    private BigDecimal lendinShareAmt;
+
+    private BigDecimal ourShareAmt;
+
+    public BigDecimal getLendinShareAmt() {
+        return lendinShareAmt;
+    }
+
+    public void setLendinShareAmt(BigDecimal lendinShareAmt) {
+        this.lendinShareAmt = lendinShareAmt;
+    }
+
+    public BigDecimal getOurShareAmt() {
+        return ourShareAmt;
+    }
+
+    public void setOurShareAmt(BigDecimal ourShareAmt) {
+        this.ourShareAmt = ourShareAmt;
+    }
+
     public BigDecimal getCpriceAmt() {
         return cpriceAmt;
     }

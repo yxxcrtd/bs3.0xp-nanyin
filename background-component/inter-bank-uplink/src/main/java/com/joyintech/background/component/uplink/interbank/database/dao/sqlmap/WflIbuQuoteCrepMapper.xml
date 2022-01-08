@@ -336,7 +336,8 @@
             B_VERSION, BRANCH_ID, WORKFLOW_ID, 
             WORKFLOW_STATUS, REMARK, CREATE_USER, 
             CREATE_TIME, CREATE_DEPT, UPDATE_USER, 
-            UPDATE_TIME)
+            UPDATE_TIME,
+            DEAL_FEE_AMT,SETT_FEE_AMT,DIP_TYPE,ACT_DAYS)
         values (#{quoteId,jdbcType=VARCHAR}, #{quoteType,jdbcType=VARCHAR}, #{pQuoteId,jdbcType=VARCHAR}, 
             #{version,jdbcType=DECIMAL}, #{exeType,jdbcType=VARCHAR}, #{cfetsQuoteId,jdbcType=VARCHAR}, 
             #{quoteRoleType,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{entrustId,jdbcType=VARCHAR}, 
@@ -354,7 +355,8 @@
             #{bVersion,jdbcType=DECIMAL}, #{branchId,jdbcType=VARCHAR}, #{workflowId,jdbcType=VARCHAR}, 
             #{workflowStatus,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP})
+            #{updateTime,jdbcType=TIMESTAMP},
+            #{dealFeeAmt,jdbcType=DECIMAL}, #{settFeeAmt,jdbcType=DECIMAL}, #{dipType,jdbcType=VARCHAR},#{actDays,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.WflIbuQuoteCrep" >
         insert into WFL_IBU_QUOTE_CREP
@@ -515,6 +517,18 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="dealFeeAmt != null" >
+                DEAL_FEE_AMT,
+            </if>
+            <if test="settFeeAmt != null" >
+                SETT_FEE_AMT,
+            </if>
+            <if test="dipType != null" >
+                DIP_TYPE,
+            </if>
+            <if test="actDays != null" >
+                ACT_DAYS,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="quoteId != null" >
@@ -673,6 +687,18 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="dealFeeAmt != null" >
+                #{dealFeeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="settFeeAmt != null" >
+                #{settFeeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dipType != null" >
+                #{dipType,jdbcType=VARCHAR},
+            </if>
+            <if test="actDays != null" >
+                #{actDays,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.WflIbuQuoteCrep" >
@@ -683,7 +709,7 @@
         FPRICE_AMT, CB_FPRICE_AMT, SC_FPRICE_AMT, M_INT_AMT, M_TRADE_AMT, BASIS, TRADE_STATUS, 
         SEND_STATUS, EFF_TIME, OU_PARTY_ID, OU_TRADER_ID, CP_PARTY_ID, CP_TRADER_ID, MY_ACCT_NO, 
         SEC_MANAGE_ACCT_ID, EXECID, B_VERSION, BRANCH_ID, WORKFLOW_ID, WORKFLOW_STATUS, REMARK, 
-        CREATE_USER, CREATE_TIME, CREATE_DEPT, UPDATE_USER, UPDATE_TIME)
+        CREATE_USER, CREATE_TIME, CREATE_DEPT, UPDATE_USER, UPDATE_TIME,DEAL_FEE_AMT,SETT_FEE_AMT,DIP_TYPE,ACT_DAYS)
         select QUOTE_ID, QUOTE_TYPE, P_QUOTE_ID, VERSION, EXE_TYPE, 
             CFETS_QUOTE_ID, QUOTE_ROLE_TYPE, PORTFOLIO_ID, ENTRUST_ID, QUOTE_DATE, V_SETTLE_DATE, 
             M_SETTLE_DATE, SETTLE_SPEED, V_DELIVERY_TYPE, M_DELIVERY_TYPE, SETT_TYPE, SETT_CCY, 
@@ -691,7 +717,8 @@
             FPRICE_AMT, CB_FPRICE_AMT, SC_FPRICE_AMT, M_INT_AMT, M_TRADE_AMT, BASIS, TRADE_STATUS, 
             SEND_STATUS, EFF_TIME, OU_PARTY_ID, OU_TRADER_ID, CP_PARTY_ID, CP_TRADER_ID, MY_ACCT_NO, 
             SEC_MANAGE_ACCT_ID, EXECID, B_VERSION, BRANCH_ID, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, WORKFLOW_STATUS, REMARK, 
-            CREATE_USER, CREATE_TIME, CREATE_DEPT, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            CREATE_USER, CREATE_TIME, CREATE_DEPT, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,DEAL_FEE_AMT,
+            SETT_FEE_AMT,DIP_TYPE,ACT_DAYS
              from WFL_IBU_QUOTE_CREP
              where 1 = 1 and QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
     </insert>
@@ -842,6 +869,18 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="dealFeeAmt != null" >
+                DEAL_FEE_AMT = #{dealFeeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="settFeeAmt != null" >
+                SETT_FEE_AMT = #{settFeeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dipType != null" >
+                DIP_TYPE = #{dipType,jdbcType=VARCHAR},
+            </if>
+            <if test="actDays != null" >
+                ACT_DAYS = #{actDays,jdbcType=DECIMAL},
+            </if>
         </set>
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
     </update>
@@ -894,7 +933,11 @@
             WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR},
             REMARK = #{remark,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            DEAL_FEE_AMT = #{dealFeeAmt,jdbcType=DECIMAL},
+            SETT_FEE_AMT = #{settFeeAmt,jdbcType=DECIMAL},
+            DIP_TYPE = #{dipType,jdbcType=VARCHAR},
+            ACT_DAYS = #{actDays,jdbcType=DECIMAL}
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
     </update>
 </mapper>

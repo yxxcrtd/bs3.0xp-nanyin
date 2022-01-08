@@ -37,8 +37,9 @@
 		PLAN.REP_OTHER_FEE_RATE *100 repOtherFeeRate,
 		FIN.TRUSTEE_ID trusteeId,
 		PA.BANK_TRUST_CODE bankTrustCode,
-          PAR.P_TYPE_ONE pTypeOne,
-          PAR.P_TYPE_TWO pTypeTwo
+        PAR.P_TYPE_ONE pTypeOne,
+        PAR.P_TYPE_TWO pTypeTwo,
+        PAR.PARTY_ID partyId
 	FROM
 		MST_COUNTER_PARTY PAR
 	LEFT JOIN 

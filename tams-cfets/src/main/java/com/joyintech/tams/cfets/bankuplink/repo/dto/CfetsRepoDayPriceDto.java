@@ -118,6 +118,9 @@ public class CfetsRepoDayPriceDto {
     @ApiModelProperty(name = "answerFlag", value = "是否回复标志 01表示回复")
     private String answerFlag;
 
+    @ApiModelProperty(name = "answerFlag", value = "发送失败时错误信息")
+    private String errorMsg;
+
     public String getValidStatus() {
         return validStatus;
     }
@@ -410,6 +413,14 @@ public class CfetsRepoDayPriceDto {
 
     public void setmSettleDate(String mSettleDate) {
         this.mSettleDate = mSettleDate;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 }
 

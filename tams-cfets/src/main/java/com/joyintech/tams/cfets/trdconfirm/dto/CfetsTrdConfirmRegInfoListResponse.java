@@ -271,6 +271,8 @@ public class CfetsTrdConfirmRegInfoListResponse{
     private BigDecimal settleFeeAmt;
     @ApiModelProperty(name="quoteId",value="内部报价编号",example="字符串1")
     private String quoteId;
+    @ApiModelProperty(name="basis",value="计息基础",example="字符串1")
+    private String basis;
     @ApiModelProperty(name="selectedItem",value="选中数据",example="字符串1")
     private transient List<CfetsTrdConfirmRegInfoListResponse> selectedItem;
 
@@ -1008,5 +1010,13 @@ public class CfetsTrdConfirmRegInfoListResponse{
 
     public void setQuoteId(String quoteId) {
         this.quoteId = quoteId;
+    }
+
+    public String getBasis() {
+        return basis;
+    }
+
+    public void setBasis(String basis) {
+        this.basis = basis;
     }
 }

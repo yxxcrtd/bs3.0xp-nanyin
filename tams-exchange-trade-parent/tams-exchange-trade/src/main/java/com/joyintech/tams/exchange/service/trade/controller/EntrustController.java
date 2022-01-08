@@ -57,8 +57,8 @@ public class EntrustController {
      */
     @ApiOperation(value = "撤销委托", notes = "撤销委托")
     @RequestMapping(value = "/entrust/cancel", method = RequestMethod.POST)
-    public Message<Object> cancelEntrust(@RequestBody String userId,
-                                         @RequestBody String entrustId) {
+    public Message<Object> cancelEntrust(@RequestParam String userId,
+                                         @RequestParam String entrustId) {
         return new Message<Object>(entrustManagement.cancelEntrust(userId, entrustId));
     }
 
@@ -72,9 +72,9 @@ public class EntrustController {
      */
     @ApiOperation(value = "撤销异常委托", notes = "撤销异常委托")
     @RequestMapping(value = "/entrust/exception/cancel", method = RequestMethod.POST)
-    public Message<Object> cancelExceptionEntrust(@RequestBody String userId,
-                                                  @RequestBody String userName,
-                                                  @RequestBody String entrustId) {
+    public Message<Object> cancelExceptionEntrust(@RequestParam String userId,
+                                                  @RequestParam String userName,
+                                                  @RequestParam String entrustId) {
         return new Message<Object>(entrustManagement.cancelExceptionEntrust(userId, userName, entrustId));
     }
 

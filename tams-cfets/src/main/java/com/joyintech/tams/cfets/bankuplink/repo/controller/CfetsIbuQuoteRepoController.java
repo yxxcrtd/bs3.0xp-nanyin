@@ -482,7 +482,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
     public Message<AjaxResult> recallDelegate(@RequestBody Map<String, Object> param) {
         try {
             AjaxResult result = new AjaxResult();
-            List<ValidMessage> validMessages = ibuQuoteBondService.receiveEntrust(param);
+            List<ValidMessage> validMessages = ibuQuoteRepoService.receiveEntrust(param);
             result.setErrorList(validMessages);
             return new Message<AjaxResult>().success().setData(result);
         } catch (Exception e) {
@@ -524,7 +524,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             if (StringUtil.isNotEmpty(param.get("entrustId"))) {
                 param.put("entrustIdList", StringUtil.splitToList(",", (String) param.get("entrustIds")));
             }
-            result = ibuQuoteBondService.entrustRefuceCheck(param);
+            result = ibuQuoteRepoService.entrustRefuceCheck(param);
             if (CollectionUtils.isNotEmpty(result.getErrorList())) {
                 return new Message<AjaxResult>().success().setData(result);
             }

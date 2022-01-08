@@ -484,6 +484,18 @@ public class CfetsTrdRepoTrade003Dto extends TrdProductDeal implements ProcessEn
      * 费用明细表
      */
     private List<TrdTradeFeeTotal> trdTradeFeeTotals;
+    /**
+     * 金融产品分类
+     */
+    private List<FinProductType> finProductTypes;
+
+    /**
+     * 交易类金融产品Entity
+     */
+
+    private List<FinTradeProductDto> finTradeProducts;
+    private List<FinTradeProductAdd> finTradeProductAdds;
+
 
     public String getZhilingtype() {
         return zhilingtype;
@@ -1701,4 +1713,29 @@ public class CfetsTrdRepoTrade003Dto extends TrdProductDeal implements ProcessEn
     public void setTrdTradeFeeTotals(List<TrdTradeFeeTotal> trdTradeFeeTotals) {
         this.trdTradeFeeTotals = trdTradeFeeTotals;
     }
+
+    public List<FinProductType> getFinProductTypes() {
+        return finProductTypes;
+    }
+
+    public void setFinProductTypes(List<FinProductType> finProductTypes) {
+        this.finProductTypes = finProductTypes;
+    }
+
+    public List<FinTradeProductDto> getFinTradeProducts() {
+        return finTradeProducts;
+    }
+
+    public void setFinTradeProducts(List<FinTradeProductDto> finTradeProducts) {
+        this.finTradeProducts = finTradeProducts;
+    }
+
+    public List<FinTradeProductAdd> getFinTradeProductAdds() {
+        return finTradeProductAdds;
+    }
+
+    public void setFinTradeProductAdds(List<FinTradeProductAdd> finTradeProductAdds) {
+        this.finTradeProductAdds = finTradeProductAdds;
+    }
+
 }

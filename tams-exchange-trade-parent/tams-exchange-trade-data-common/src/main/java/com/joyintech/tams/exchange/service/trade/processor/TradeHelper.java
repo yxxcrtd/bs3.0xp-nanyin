@@ -531,6 +531,11 @@ public class TradeHelper {
         if (EntrustUtils.needOthCode(dto.getEntrustProp())) {
             String stockCode = order.getStockCode();
             String entrustProp = dto.getEntrustProp();
+            // add by lifangpeng 20220107 回售、标准券出入库、可转债转股不检查申报信息 start
+            if (HS.value.equals(entrustProp) || ZYCRK.value.equals(entrustProp) || CHANGE_TO_STOCK.value.equals(entrustProp)) {
+                return true;
+            }
+            // add by lifangpeng 20220107 回售、标准券出入库、可转债转股不检查申报信息 end
             if (EntrustProp.ETF_APPLY.value.equals(dto.getEntrustProp())) {
                 Instrument instrument = instrumentService.findById(stockCode);
                 if (Objects.isNull(instrument) || Strings.isNullOrEmpty(instrument.getPurRedId())) {

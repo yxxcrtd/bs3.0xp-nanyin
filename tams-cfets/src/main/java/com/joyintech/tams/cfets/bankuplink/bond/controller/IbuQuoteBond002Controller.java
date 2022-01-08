@@ -295,9 +295,9 @@ public class IbuQuoteBond002Controller extends BaseController {
             quoteOperatorType = "修改";
         }
         cfetsBondDealDialogueQuoteDto.setQuoteOperatorType(quoteOperatorType);
-        DecimalFormat  df = new DecimalFormat("###,###.##");
+        DecimalFormat  df = new DecimalFormat("###,###.00");
         params.setComment(entity -> "报价日期"+ "(" + DateUtil.format(entity.getSettleDate()) + ")-"
-                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"报价操作("+entity.getQuoteOperatorType()+")-"+"券面总额("+df.format(entity.getAvaNum())+"万元)");
+                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"报价操作("+entity.getQuoteOperatorType()+")-"+"券面总额("+df.format(entity.getAvaNum().setScale(2))+"万元)");
         processParameter.setWorkFlowParameter(params);
 
         cfetsBondDealDialogueQuoteDto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
@@ -339,9 +339,9 @@ public class IbuQuoteBond002Controller extends BaseController {
         cfetsBondDealDialogueQuoteDto.setFinprodAbbr(bondDialogueQuote.getFinprodAbbr());
         cfetsBondDealDialogueQuoteDto.setCounterName(bondDialogueQuote.getCounterName());
         cfetsBondDealDialogueQuoteDto.setAvaNum(bondDialogueQuote.getAvaNum());
-        DecimalFormat df = new DecimalFormat("###,###.##");
+        DecimalFormat df = new DecimalFormat("###,###.00");
         workFlowParameter.setComment(entity -> "报价日期"+ "(" + DateUtil.format(entity.getSettleDate()) + ")-"
-                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"报价操作(撤销)-"+"券面总额("+df.format(entity.getAvaNum())+"万元)");
+                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"报价操作(撤销)-"+"券面总额("+df.format(entity.getAvaNum().setScale(2))+"万元)");
         processParameter.setWorkFlowParameter(workFlowParameter);
 
         String msg = cfetsBondDealQuotedPrice002Service.start(processParameter, cfetsBondDealDialogueQuoteDto);

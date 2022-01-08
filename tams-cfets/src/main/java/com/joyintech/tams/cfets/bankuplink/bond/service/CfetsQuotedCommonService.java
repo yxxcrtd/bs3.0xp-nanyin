@@ -20,6 +20,7 @@ import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.EntrustAvaShareAmtDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
 import com.joyintech.tams.cfets.position.service.PositionInfoService;
 import com.joyintech.tams.common.base.dao.SppiImportDataMapper;
@@ -965,4 +966,140 @@ public class CfetsQuotedCommonService extends BaseService {
         }
         return ajaxResult;
     }
+
+
+    /**
+     * 以执行为维度  统计可用的本方券和融入券
+     * @param param
+     * @return
+     */
+    public   List<EntrustAvaShareAmtDto> listAvaShareAmt(Map<String,Object> param){
+        List<String> quoteStatusIbu = Arrays.asList(com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_新增中.getValue()
+        ,com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_已新增.getValue()
+        ,com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_修改中.getValue()
+        ,com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_已修改.getValue()
+        ,com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_撤回中.getValue()
+        ,com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_已成交.getValue()
+        ,com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_待回复.getValue()
+        ,com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_成交中.getValue()
+        ,com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_终止中.getValue()
+        ,com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_已回复.getValue()
+        ,com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_拒绝中.getValue()
+        ,com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_回复中.getValue()
+        ,com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_交谈中.getValue()
+        ,com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_已交谈.getValue()
+         ,com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_已交谈.getValue());
+        param.put("QUOTE_STUTAS_IBUS",quoteStatusIbu);
+        return cfetsIbuQuoteBondEtrMapper.listAvaShareAmt(param);
+    }
+
+    /**
+     * 处理本方券 融入券  卖空购回
+     * @param ptlAllocatios
+     * @param workflowId
+     * @param ps
+     */
+    public Map<String,PtlAllocationDto> handOurAndLendinShareAmt(List<PtlAllocationDto> ptlAllocatios,String workflowId,String ps){
+        Map<String, PtlAllocationDto> result  = new HashMap<>();
+        if(CollectionUtils.isNotEmpty(ptlAllocatios)){
+            //模式
+            String sellPara = CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
+            //设置一：买入先填充融入券指令额度；卖出先扣除本方券指令额度
+            //设置二：按指令上券面总额、本方券券面总额、融入券券面总额的比例计算交易上券面总额、本方券券面总额、融入券券面总额
+            String sellParaAddRule = CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED_ADDRULE");
+            //处理本方券、融入券
+            Map<String,Object> param = new HashMap<>();
+            List<String> entrustIds = new ArrayList<>();
+            ptlAllocatios.forEach(item ->{entrustIds.add(item.getEntrustId());});
+            param.put("entrustIds",entrustIds);
+            param.put("workflowId",workflowId);
+            List<EntrustAvaShareAmtDto> entrustAvaShareAmtDtos = cfetsQuotedCommonService.listAvaShareAmt(param);
+            Map<String, List<EntrustAvaShareAmtDto>> entrustAvaShareAmtGroup = entrustAvaShareAmtDtos.stream().collect(Collectors.groupingBy(EntrustAvaShareAmtDto::getEntrustId));
+            for (PtlAllocationDto ptlAllocatio : ptlAllocatios){
+                EntrustAvaShareAmtDto entrustAvaShareAmtDto = entrustAvaShareAmtGroup.get(ptlAllocatio.getEntrustId()).get(0);
+                if(null!=entrustAvaShareAmtDto){
+                    BigDecimal shareAmt = ptlAllocatio.getShareAmt();
+                    BigDecimal ourEntNum = entrustAvaShareAmtDto.getOurEntNum();
+                    BigDecimal lendinEntNum = entrustAvaShareAmtDto.getLendinEntNum();
+                    BigDecimal avaOurShareAmt = ArithmeticUtil.subtract(ourEntNum, entrustAvaShareAmtDto.getUsedOurShareAmt());
+                    BigDecimal avaLendinShareAmt = ArithmeticUtil.subtract(lendinEntNum, entrustAvaShareAmtDto.getUsedLendinShareAmt());
+                    if(StringUtil.equals(sellPara,"01")||(StringUtil.equals(sellPara,"02")&&StringUtil.equals(sellParaAddRule,"01"))){
+                        if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
+                            if(shareAmt.compareTo(avaLendinShareAmt)>=0){
+                                ptlAllocatio.setLendinShareAmt(avaLendinShareAmt);
+                                ptlAllocatio.setOurShareAmt(ArithmeticUtil.subtract(shareAmt,avaLendinShareAmt));
+                            }else{
+                                ptlAllocatio.setLendinShareAmt(shareAmt);
+                                ptlAllocatio.setOurShareAmt(BigDecimal.ZERO);
+                            }
+                        }
+                        if(StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())||StringUtil.equals(ps,DictCodeList.交易方向_行权_回售.getValue())){
+                            if(shareAmt.compareTo(avaOurShareAmt)>=0){
+                                ptlAllocatio.setOurShareAmt(avaOurShareAmt);
+                                ptlAllocatio.setLendinShareAmt(ArithmeticUtil.subtract(shareAmt,avaOurShareAmt));
+                            }else{
+                                ptlAllocatio.setOurShareAmt(shareAmt);
+                                ptlAllocatio.setLendinShareAmt(BigDecimal.ZERO);
+                            }
+                        }
+                    }
+                    if(StringUtil.equals(sellPara,"02")&&StringUtil.equals(sellParaAddRule,"02")){
+                        //比例计算
+                        if(ourEntNum.compareTo(BigDecimal.ZERO)==0){ptlAllocatio.setOurShareAmt(BigDecimal.ZERO);ptlAllocatio.setLendinShareAmt(shareAmt);}
+                        if(lendinEntNum.compareTo(BigDecimal.ZERO)==0){ptlAllocatio.setOurShareAmt(shareAmt);ptlAllocatio.setLendinShareAmt(BigDecimal.ZERO);}
+                        if(ourEntNum.compareTo(BigDecimal.ZERO)!=0&&lendinEntNum.compareTo(BigDecimal.ZERO)!=0){
+                            //递增维度(万元)
+                            BigDecimal faceDimension = new BigDecimal("0.1");
+                            BigDecimal total = ArithmeticUtil.doAdd(ourEntNum, lendinEntNum);
+                            //万元计算  舌位到千位
+                            BigDecimal shareAmt2 = ArithmeticUtil.divide(shareAmt, new BigDecimal(10000),1,RoundingMode.DOWN);
+                            BigDecimal tailDifference = shareAmt2;
+                            BigDecimal ourEntNumdivide = ArithmeticUtil.divide(ArithmeticUtil.multiply(ourEntNum, shareAmt2), total, 1, RoundingMode.DOWN);
+                            BigDecimal lendinEntNumdivide = ArithmeticUtil.divide(ArithmeticUtil.multiply(lendinEntNum, shareAmt2), total, 1, RoundingMode.DOWN);
+                            if(avaOurShareAmt.compareTo(ourEntNumdivide)>=0){
+                                ptlAllocatio.setOurShareAmt(ourEntNumdivide);
+                                avaOurShareAmt = ArithmeticUtil.subtract(avaOurShareAmt,ourEntNumdivide);
+                            }else{
+                                avaOurShareAmt = BigDecimal.ZERO;
+                                ptlAllocatio.setOurShareAmt(avaOurShareAmt);
+                            }
+                            if(avaLendinShareAmt.compareTo(lendinEntNumdivide)>=0){
+                                ptlAllocatio.setLendinShareAmt(lendinEntNumdivide);
+                                avaLendinShareAmt = ArithmeticUtil.subtract(avaLendinShareAmt,lendinEntNumdivide);
+                            }else{
+                                avaLendinShareAmt = BigDecimal.ZERO;
+                                ptlAllocatio.setLendinShareAmt(avaLendinShareAmt);
+                            }
+                            tailDifference = ArithmeticUtil.subtract(tailDifference,ptlAllocatio.getOurShareAmt());tailDifference = ArithmeticUtil.subtract(tailDifference,ptlAllocatio.getLendinShareAmt());
+                            //尾差处理
+                            while(tailDifference.compareTo(BigDecimal.ZERO)>0){
+                                if(tailDifference.compareTo(BigDecimal.ZERO)>0&&avaOurShareAmt.compareTo(BigDecimal.ZERO)>0){
+                                    tailDifference = ArithmeticUtil.subtract(tailDifference,faceDimension);
+                                    ptlAllocatio.setOurShareAmt(ArithmeticUtil.doAdd(ptlAllocatio.getOurShareAmt(),faceDimension));
+                                }
+                                if(tailDifference.compareTo(BigDecimal.ZERO)>0&&avaLendinShareAmt.compareTo(BigDecimal.ZERO)>0){
+                                    tailDifference = ArithmeticUtil.subtract(tailDifference,faceDimension);
+                                    ptlAllocatio.setLendinShareAmt(ArithmeticUtil.doAdd(ptlAllocatio.getLendinShareAmt(),faceDimension));
+                                }
+                            }
+                            ptlAllocatio.setOurShareAmt(ArithmeticUtil.multiply(ptlAllocatio.getOurShareAmt(),new BigDecimal(10000)));
+                            ptlAllocatio.setLendinShareAmt(ArithmeticUtil.multiply(ptlAllocatio.getLendinShareAmt(),new BigDecimal(10000)));
+                        }
+                    }
+                }
+                result.put(ptlAllocatio.getEntrustId(),ptlAllocatio);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 获取发行人名称
+     * @param finprodId
+     * @return
+     */
+    public String getIssuserName(String finprodId){
+        return cfetsIbuQuoteBondMapper.getIssuserName(finprodId);
+    }
+
 }

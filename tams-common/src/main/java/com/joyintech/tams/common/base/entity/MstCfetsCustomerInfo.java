@@ -4,12 +4,12 @@ import com.joyintech.framework.base.BaseEntity;
 
 public class MstCfetsCustomerInfo extends BaseEntity {
     /**
-     * 交易成员ID，6位编号
+     * 交易成员ID，21位编号
      */
     private String partyId;
 
     /**
-     * 交易机构ID，21位编号
+     * 交易机构ID，6位编号
      */
     private String partyCustomerId;
 
@@ -39,32 +39,32 @@ public class MstCfetsCustomerInfo extends BaseEntity {
     private String remark;
 
     /**
-     * 取得 交易成员ID，6位编号
-     * @return 交易成员ID，6位编号
+     * 取得 交易成员ID，21位编号
+     * @return 交易成员ID，21位编号
      */
     public String getPartyId() {
         return partyId;
     }
 
     /**
-     * 设置 交易成员ID，6位编号
-     * @param partyId 交易成员ID，6位编号
+     * 设置 交易成员ID，21位编号
+     * @param partyId 交易成员ID，21位编号
      */
     public void setPartyId(String partyId) {
         this.partyId = partyId == null ? null : partyId.trim();
     }
 
     /**
-     * 取得 交易机构ID，21位编号
-     * @return 交易机构ID，21位编号
+     * 取得 交易机构ID，6位编号
+     * @return 交易机构ID，6位编号
      */
     public String getPartyCustomerId() {
         return partyCustomerId;
     }
 
     /**
-     * 设置 交易机构ID，21位编号
-     * @param partyCustomerId 交易机构ID，21位编号
+     * 设置 交易机构ID，6位编号
+     * @param partyCustomerId 交易机构ID，6位编号
      */
     public void setPartyCustomerId(String partyCustomerId) {
         this.partyCustomerId = partyCustomerId == null ? null : partyCustomerId.trim();

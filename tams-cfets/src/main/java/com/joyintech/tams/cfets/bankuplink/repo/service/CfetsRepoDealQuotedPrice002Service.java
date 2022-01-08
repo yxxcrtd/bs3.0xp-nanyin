@@ -15,6 +15,7 @@ import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuote
 import com.joyintech.background.component.uplink.interbank.business.dto.QuoteResultDto;
 import com.joyintech.background.component.uplink.interbank.business.dto.RepoDialogueQuoteDto;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
@@ -348,6 +349,9 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             // 当日报价双击校验
             CfetsRepoDealQuotedPrice001Dto dayOffer = this.queryEntrustInfoByQuoteId(quoteId);
             String sendStatus = request.getSendStatus();
+            if ("".equals(sendStatus)) {
+                sendStatus = null;
+            }
             boolean flag = false;
             // 发送状态
             if (!StringUtil.equals(sendStatus, dayOffer.getSendStatus())) {
@@ -449,6 +453,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         //模式
         String ps = entity.getPs();
         this.checkEntityEmpty(errorList, entity);
+        String massge = null;
         // 记录指令代码
         List<String> entrustIdList = new ArrayList<>();
         entity.getPtlAllocations().forEach(item ->
@@ -460,10 +465,6 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             errorList.add(new ValidMessage("组合分配不可为空"));
         } else {
             // 校验质押券总额(该笔交易,流程中及已生效交易)不能超过指令的质押券总额
-            // 按指令维度汇总 质押额
-            Map<String, BigDecimal> ptlSecPrin = new HashMap<>();
-            // 获取指令指定质押额
-            Map<String, BigDecimal> etrPrin = new HashMap<>();
             // 交易金额汇总
             BigDecimal tradeAmtTotal = BigDecimal.ZERO;
             // 到期结算金额汇总
@@ -475,19 +476,6 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             // 结算手续费汇总
             BigDecimal settFeeamtTotal = BigDecimal.ZERO;
             List<RegFinPledge> list = new ArrayList<>();
-            if (StringUtil.equals(repo_pledge_model, "02") && StringUtil.equals(entity.getPs(), DictCodeListExt3.交易方向_正回购.getValue())) {
-                // 将质押券拆分到指令维度
-                list = cfetsRepoQuotedPrice004Service.dealWithPledgeList(entity.getRepoEntrustPledgeDtos(), entrustIdList, null, etrPrin);
-                // 按指令维度汇总质押额
-                for (RegFinPledge pledge : list) {
-                    if (StringUtil.isNotEmpty(ptlSecPrin.get(pledge.getEntrustId()))) {
-                        ptlSecPrin.put(pledge.getEntrustId(), pledge.getPledgeNumber());
-                    } else {
-                        BigDecimal pledgeNumber = ptlSecPrin.get(pledge.getEntrustId());
-                        ptlSecPrin.put(pledge.getEntrustId(), com.joyintech.calculation.util.ArithmeticUtil.doAdd(pledgeNumber, pledge.getPledgeNumber()));
-                    }
-                }
-            }
             // 所有限价指令的回购利率中的最小值或最大值
             BigDecimal minOrMaxYield = null;
             // 指定价格的回购利率
@@ -535,20 +523,6 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 BigDecimal etrLastNum = cfetsIbuQuoteRepoMapper.findEtrLastNumByEtrId(ptlAllocatio.getEntrustId());
                 if (ptlAllocatio.getTradeAmt().compareTo(etrLastNum) > 0) {
                     errorList.add(new ValidMessage("组合分配中交易金额要小于等于[" + ptlAllocatio.getEntrustId() + "]剩余的指令额度"));
-                    break;
-                }
-                // 校验质押券总额(该笔交易,流程中及已生效交易)不能超过指令的质押券总额
-                if (StringUtil.equals(repo_pledge_model, "02")) {
-                    continue;
-                }
-                BigDecimal pldegeUsedAmt = cfetsIbuQuoteRepoMapper.findEtrPrinByEtrId(ptlAllocatio.getEntrustId());
-                pldegeUsedAmt = pldegeUsedAmt == null ? BigDecimal.ZERO : pldegeUsedAmt;
-                BigDecimal pldegeNowAmt = ptlSecPrin.get(ptlAllocatio.getEntrustId());
-                pldegeNowAmt = pldegeNowAmt == null ? BigDecimal.ZERO : pldegeNowAmt;
-                BigDecimal pldegeSumAmt = etrPrin.get(ptlAllocatio.getEntrustId());
-                pldegeSumAmt = pldegeSumAmt == null ? BigDecimal.ZERO : pldegeSumAmt;
-                if (com.joyintech.calculation.util.ArithmeticUtil.doSub(pldegeSumAmt, pldegeNowAmt, pldegeUsedAmt).compareTo(BigDecimal.ZERO) < 0) {
-                    errorList.add(new ValidMessage("质押券总额不能超过指令" + ptlAllocatio.getEntrustId() + "指定的质押券总额"));
                     break;
                 }
             }
@@ -615,25 +589,29 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         }
         if (!CollectionUtils.isEmpty(entity.getRepoEntrustPledgeDtos())) {
             // 同个质押券的汇总质押券面总额必须为十万的整数倍，且不超过100亿
-            Map<String, BigDecimal> secPledgePrinMap = new HashMap<>();
-            for (RepoEntrustPledgeDto repoEntrustPledgeDto : entity.getRepoEntrustPledgeDtos()) {
-                List<ValidMessage> validMessageList = checkPledgeEmpty(repoEntrustPledgeDto, ps);
-                if (validMessageList != null && !validMessageList.isEmpty()) {
-                    errorList.addAll(validMessageList);
-                    break;
-                }
-                // 按质押券维度 汇总质押券面总额
-                if (StringUtil.isNotEmpty(secPledgePrinMap.get(repoEntrustPledgeDto.getBondCode()))) {
-                    secPledgePrinMap.put(repoEntrustPledgeDto.getBondCode(),
-                            com.joyintech.calculation.util.ArithmeticUtil.doAdd(secPledgePrinMap.get(repoEntrustPledgeDto.getBondCode()), repoEntrustPledgeDto.getPledgePrin()));
-                } else {
-                    secPledgePrinMap.put(repoEntrustPledgeDto.getBondCode(), repoEntrustPledgeDto.getPledgePrin());
-                }
-            }
+//            Map<String, BigDecimal> secPledgePrinMap = new HashMap<>();
+//            for (RepoEntrustPledgeDto repoEntrustPledgeDto : entity.getRepoEntrustPledgeDtos()) {
+//                List<ValidMessage> validMessageList = checkPledgeEmpty(repoEntrustPledgeDto, ps);
+//                if (validMessageList != null && !validMessageList.isEmpty()) {
+//                    errorList.addAll(validMessageList);
+//                    break;
+//                }
+//                // 按质押券维度 汇总质押券面总额
+//                if (StringUtil.isNotEmpty(secPledgePrinMap.get(repoEntrustPledgeDto.getBondCode()))) {
+//                    secPledgePrinMap.put(repoEntrustPledgeDto.getBondCode(),
+//                            com.joyintech.calculation.util.ArithmeticUtil.doAdd(secPledgePrinMap.get(repoEntrustPledgeDto.getBondCode()), repoEntrustPledgeDto.getPledgePrin()));
+//                } else {
+//                    secPledgePrinMap.put(repoEntrustPledgeDto.getBondCode(), repoEntrustPledgeDto.getPledgePrin());
+//                }
+//            }
             // 同个质押券的汇总质押券面总额必须为十万的整数倍，且不超过100亿
 //            checkSecPledgePrin(secPledgePrinMap, errorList);
+            massge = checkMatchCountPledgeBondList(errorList, entity);
         }
         /*************************************************************质押券信息*******************************************/
+        if (CollectionUtils.isEmpty(errorList)) {
+            ajaxResult.setMessage(massge, MessageType.确认消息);
+        }
         ajaxResult.setErrorList(errorList);
         return ajaxResult;
     }
@@ -707,11 +685,24 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             errorList.add(new ValidMessage("请输入结算服务费"));
         }
         /**************************************************************基本信息********************************************/
-        if (StringUtil.isNotEmpty(entity.getCounterId())) {
-            String trader = cfetsRepoQuotedPrice004Service.findTraderByCounterId(entity.getCounterId());
+        if (StringUtil.isNotEmpty(entity.getCounterPartyId())) {
+            String trader = cfetsRepoQuotedPrice004Service.findTraderByPartyId(entity.getCounterPartyId());
             if (!StringUtil.isNotEmpty(trader)) {
                 errorList.add(new ValidMessage("选择的对手方未与系统中交易对手关联，请先去关联"));
             }
+        }
+        // 修改时 提交时校验：首次结算方式、到期结算方式必须为券款对付，清算类型必须为全额清算
+        if (!StringUtil.equals("edit", entity.getQuotaPageModel())) {
+            return;
+        }
+        if (!StringUtil.equals(entity.getDeliverytype(), BussinessDictCodeList.结算方式_券款对付.getValue())) {
+            errorList.add(new ValidMessage("首次结算方式必须为券款对付"));
+        }
+        if (!StringUtil.equals(entity.getmDeliveryType(), BussinessDictCodeList.结算方式_券款对付.getValue())) {
+            errorList.add(new ValidMessage("到期结算方式必须为券款对付"));
+        }
+        if (!StringUtil.equals(entity.getSettleType(), BussinessDictCodeList.清算类型_全额清算.getValue())) {
+            errorList.add(new ValidMessage("清算类型必须为全额清算"));
         }
 
     }
@@ -809,6 +800,48 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         return errorList;
     }
 
+    /**
+     * 校验是否匹配交易对手债券
+     *
+     * @param secPledgePrinMap
+     * @param errorList
+     * @author jiangpeng
+     * @date 2022/1/5 15:32
+     */
+    private String checkMatchCountPledgeBondList(List<ValidMessage> errorList, CfetsRepoDealQuoteCommonDto entity) {
+        String massege = null;
+        if (CollectionUtils.isEmpty(entity.getCountPledgeBondList())) {
+            return massege;
+        }
+        boolean flag = false;
+        boolean isBondIdMatch = true;
+        for (RepoEntrustPledgeDto dto : entity.getCountPledgeBondList()) {
+            BigDecimal pledgePrin = BigDecimal.ZERO;
+            BigDecimal pledgeRatio = dto.getPledgeRatio();
+            for (RepoEntrustPledgeDto pledgeDto : entity.getRepoEntrustPledgeDtos()) {
+                if (!StringUtil.equals(pledgeDto.getFinprodId(), dto.getFinprodId())) {
+                    continue;
+                }
+                if (StringUtil.equals(pledgeDto.getFinprodId(), dto.getFinprodId())) {
+                    isBondIdMatch = false;
+                }
+                if (cfetsRepoQuotedPrice004Service.ACompareToB(pledgeRatio, pledgeDto.getPledgeRatio(), 4) != 0) {
+                    flag = true;
+                }
+                pledgePrin = ArithmeticUtil.doAdd(pledgePrin, pledgeDto.getPledgePrin());
+            }
+            if (cfetsRepoQuotedPrice004Service.ACompareToB(dto.getPledgePrin(), pledgePrin, 12) != 0) {
+                flag = true;
+            }
+            if (isBondIdMatch) {
+                flag = true;
+            }
+        }
+        if (flag) {
+            massege = "对手方发送质押券信息和已添加质押券不匹配，是否继续？";
+        }
+        return massege;
+    }
 
     /**
      * 提交保存check 必填项
@@ -975,7 +1008,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             String quoteId = data.getQuoteId();
             String quotaPageModel = data.getQuotaPageModel();
 
-            CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = this.queryRepoInfoByQuoteId(quoteId, operation);
+            CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = this.queryRepoInfoByQuoteId(quoteId, operation, quotaPageModel);
             // 画面模式
             if (StringUtil.isNotEmpty(quotaPageModel)) {
                 cfetsRepoDealQuotedPrice001Dto.setQuotaPageModel(quotaPageModel);
@@ -1001,19 +1034,9 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
      * @author jiangpeng
      * @date 2021/12/30 17:39
      */
-    public CfetsRepoDealQuotedPrice001Dto queryRepoInfoByQuoteId(String quoteId, String operation) {
+    public CfetsRepoDealQuotedPrice001Dto queryRepoInfoByQuoteId(String quoteId, String operation, String quotaPageModel) {
         // 根据报价id查询数据
         CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = this.queryEntrustInfoByQuoteId(quoteId);
-        if (StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue())) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("quoteId", quoteId);
-            //多组合质押券列表单独处理
-            map.put("platDate", iPlatformDate.getSysDateStr());
-            map.put("ps", cfetsRepoDealQuotedPrice001Dto.getPs());
-            BussRepoSecDto bussRepoSecDto = new BussRepoSecDto();
-            List<CfetsRepoDealQuotedPrice003Dto> cfetsRepoDealQuotedPrice003s = this.selectQuoteCrepPledgeForDzh(map);
-            cfetsRepoDealQuotedPrice001Dto.setPledgeBondList(cfetsRepoDealQuotedPrice003s);
-        }
         //逆回购  质押券列表  可质押以万元为单位
         if (StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getPs(), DictCodeList.回购拆借方向_逆回购.getValue()) && !StringUtil.isEmptyList(cfetsRepoDealQuotedPrice001Dto.getPledgeBondList())) {
             cfetsRepoDealQuotedPrice001Dto.getPledgeBondList().forEach(item -> {
@@ -1024,9 +1047,19 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 && StringUtil.isNotEmpty(quoteId)) {
             cfetsRepoDealQuotedPrice001Dto.setQuoteId(null);
         }
-        if (cfetsRepoDealQuotedPrice001Dto.getQuoteId() != null) {
-            // 交谈记录
-            cfetsRepoDealQuotedPrice001Dto.setDialogueRecord(this.selectDialogueRecord(cfetsRepoDealQuotedPrice001Dto).getDialogueRecord());
+//        if (cfetsRepoDealQuotedPrice001Dto.getQuoteId() != null) {
+//            // 交谈记录
+//            cfetsRepoDealQuotedPrice001Dto.setDialogueRecord(this.selectDialogueRecord(cfetsRepoDealQuotedPrice001Dto).getDialogueRecord());
+//        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("quoteId", quoteId);
+        //多组合质押券列表单独处理
+        map.put("platDate", iPlatformDate.getSysDateStr());
+        map.put("ps", cfetsRepoDealQuotedPrice001Dto.getPs());
+        BussRepoSecDto bussRepoSecDto = new BussRepoSecDto();
+        List<CfetsRepoDealQuotedPrice003Dto> cfetsRepoDealQuotedPrice003s = this.selectQuoteCrepPledgeForDzh(map);
+        if (CollectionUtils.isNotEmpty(cfetsRepoDealQuotedPrice003s)) {
+            cfetsRepoDealQuotedPrice001Dto.setPledgeBondList(cfetsRepoDealQuotedPrice003s);
         }
         return cfetsRepoDealQuotedPrice001Dto;
     }
@@ -1065,8 +1098,17 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
      * @author jiangpeng
      * @date 2021/12/28 20:42
      */
-    public boolean reject(Map<String, Object> param) {
-        ibuComponentCommonService.reject(param);
+    public boolean reject(CfetsRepoDealQuotedPrice001Dto entity) {
+        for (PtlAllocationDto ptl : entity.getPtlAllocationList()) {
+            Map<String, Object> pageParam = new HashMap<>();
+            pageParam.put("quoteId", entity.getQuoteId());
+            pageParam.put("entrustId", ptl.getEntrustId());
+            pageParam.put("portfolioId", ptl.getPortfolioId());
+            pageParam.put("isDzh", DictCodeList.是否_是.getValue());
+            pageParam.put("userName", LoginUserUtil.getUserName());
+            pageParam.put("deptCode", LoginUserUtil.getDeptCode());
+            ibuComponentCommonService.reject(pageParam);
+        }
         return true;
     }
 
@@ -1084,7 +1126,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         String quotaPageModel = request.getQuotaPageModel();
 
         CfetsRepoDealQuotedPrice001Dto dto = new CfetsRepoDealQuotedPrice001Dto();
-        dto = this.queryRepoInfoByQuoteId(quoteId, operation);
+        dto = this.queryRepoInfoByQuoteId(quoteId, operation, quotaPageModel);
         // 画面模式
         if (StringUtil.isNotEmpty(quotaPageModel)) {
             dto.setQuotaPageModel(quotaPageModel);
@@ -1112,8 +1154,8 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
      * @author jiangpeng
      * @date 2021/12/28 20:46
      */
-    public boolean deleteDayOff(CfetsRepoDealQuotedPrice001Dto dto) {
-        Map<String, Object> param = BeanUtil.object2Map(dto);
+    public boolean deleteDayOff(QuotedPriceRequest request) {
+        Map<String, Object> param = BeanUtil.object2Map(request);
         param.put("userName", LoginUserUtil.getUserName());
         param.put("deptCode", LoginUserUtil.getDeptCode());
         ibuComponentCommonService.deleteDayOff(param);
@@ -1132,7 +1174,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 this.deal(pageParam);
             } else if (StringUtil.equals(entity.getOperatorType(), "refuse")) {
                 // 拒绝
-                this.reject(pageParam);
+                this.reject(entity);
             }
         } else if (StringUtil.equals(entity.getQuotaPageModel(), "new")) {
             // 新增
@@ -1490,7 +1532,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                     msg += rowMsg;
                 }
             }
-            msg = HtmlUtils.htmlEscape(msg);
+//            msg = HtmlUtils.htmlEscape(msg);
             return msg;
         }
         return "";
@@ -1601,6 +1643,14 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         backDto.setTerm(pageDto.getRepoTerm());
         // 质押券折算总金额
         backDto.setShareCtAmt(pageDto.getConvertAmt());
+        // 分配方式
+        backDto.setDipType(pageDto.getDistribution());
+        // 证券账户
+        backDto.setSecAcctId(pageDto.getPtlAllocations().get(0).getSecManageAcctId());
+        // 交易对手 21位码
+        if (StringUtil.isNotEmpty(pageDto.getCounterPartyId())) {
+            backDto.setCounterId(pageDto.getCounterPartyId());
+        }
         //TODO 质押券转换
         List<CfetsRepoDealQuotedPrice003Dto> pledgeBondLists = new ArrayList<>();
         for (RepoEntrustPledgeDto pledgeDto : pageDto.getRepoEntrustPledgeDtos()) {
@@ -1619,9 +1669,15 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             BeanUtil.copyPropertiesIgnoreNull(ptlDto, ptlAllocationDto);
             ptlDto.setQuoteId(pageDto.getQuoteId());
             // 交易金额
-            ptlDto.setFpriceAmt(ptlAllocationDto.getTradeAmt());
+            ptlDto.setcPriceAmt(ptlAllocationDto.getTradeAmt());
             // 回购期限
             ptlDto.setTermDays((long) pageDto.getRepoTerm());
+            //折算券面总额
+            ptlDto.setShareAmt(ptlAllocationDto.getConvertAmt());
+            //回购利息
+            ptlDto.setIntAmt(ptlAllocationDto.getmIntAmt());
+            //到期结算金额
+            ptlDto.setFpriceAmt(ptlAllocationDto.getMtradeAmt());
             ptlAllocationList.add(ptlDto);
         }
         backDto.setPtlAllocationList(ptlAllocationList);
@@ -1647,7 +1703,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         // 到期结算金额 转换
         pageDto.setMtradeAmt(backDto.getmTradeAmt());
         // 回购方式 双边回购(1)
-        pageDto.setRepoMethod(StringUtil.isNotEmpty(backDto.getRepoMethod()) ? backDto.getRepoMethod().charAt(0) : null);
+        pageDto.setRepoMethod(StringUtil.isNotEmpty(backDto.getRepoMethod()) ? backDto.getRepoMethod().charAt(0) : DictCodeListExt3.回购方式_双边回购.getValue().charAt(0));
         // 首次结算方式
         pageDto.setDeliverytype(backDto.getvDeliveryType());
         // 清算速度
@@ -1664,30 +1720,49 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         pageDto.setRepoTerm((int) backDto.getTerm());
         // 质押券折算总金额
         pageDto.setConvertAmt(backDto.getShareCtAmt());
+        String trader = cfetsRepoQuotedPrice004Service.findTraderByCounterId(backDto.getCounterId());
+        // 对手方
+        if (StringUtil.isEmpty(trader)) {
+            pageDto.setCounterPartyId(backDto.getCounterId());
+        } else {
+            pageDto.setCounterPartyId(trader);
+        }
+        // 分配方式
+        pageDto.setDistribution(backDto.getDipType());
         //TODO 质押券转换
         List<RepoEntrustPledgeDto> repoEntrustPledgeDtos = new ArrayList<>();
-        for (CfetsRepoDealQuotedPrice003Dto pledgeBondDto : backDto.getPledgeBondList()) {
-            RepoEntrustPledgeDto pledgeDto = new RepoEntrustPledgeDto();
-            BeanUtil.copyPropertiesIgnoreNull(pledgeDto, pledgeBondDto);
-            // 折算比例
-            pledgeDto.setPledgeRatio(pledgeBondDto.getPledgeRate());
-            // 可质押券总额
-            pledgeDto.setAvaPledgePrin(ArithmeticUtil.multiply(pledgeBondDto.getAvaPledgePrin(), new BigDecimal(10000)));
-            // 质押券总额
-            pledgeDto.setPledgePrin(ArithmeticUtil.multiply(pledgeBondDto.getPledgePrin(), new BigDecimal(10000)));
-            pageDto.setQuoteId(pledgeBondDto.getQuoteId());
-            repoEntrustPledgeDtos.add(pledgeDto);
+        if (CollectionUtils.isNotEmpty(backDto.getPledgeBondList())) {
+            for (CfetsRepoDealQuotedPrice003Dto pledgeBondDto : backDto.getPledgeBondList()) {
+                RepoEntrustPledgeDto pledgeDto = new RepoEntrustPledgeDto();
+                BeanUtil.copyPropertiesIgnoreNull(pledgeDto, pledgeBondDto);
+                // 折算比例
+                pledgeDto.setPledgeRatio(pledgeBondDto.getPledgeRate());
+                // 可质押券总额
+                pledgeDto.setAvaPledgePrin(pledgeBondDto.getAvaPledgePrin());
+                // 质押券总额
+                pledgeDto.setPledgePrin(ArithmeticUtil.multiply(pledgeBondDto.getPledgePrin(), new BigDecimal(10000)));
+                pageDto.setQuoteId(pledgeBondDto.getQuoteId());
+                repoEntrustPledgeDtos.add(pledgeDto);
+            }
         }
         pageDto.setRepoEntrustPledgeDtos(repoEntrustPledgeDtos);
         //TODO 组合分配转换
         List<RepoPtlAllocationDto> ptlAllocationList = new ArrayList<>();
-        for (PtlAllocationDto ptlDto : backDto.getPtlAllocationList()) {
-            RepoPtlAllocationDto ptlAllocationDto = new RepoPtlAllocationDto();
-            BeanUtil.copyPropertiesIgnoreNull(ptlAllocationDto, ptlDto);
-            // 交易金额
-            ptlAllocationDto.setTradeAmt(ptlDto.getFpriceAmt());
-            // 回购期限
-            ptlAllocationList.add(ptlAllocationDto);
+        if (CollectionUtils.isNotEmpty(backDto.getPtlAllocationList())) {
+            for (PtlAllocationDto ptlDto : backDto.getPtlAllocationList()) {
+                RepoPtlAllocationDto ptlAllocationDto = new RepoPtlAllocationDto();
+                BeanUtil.copyPropertiesIgnoreNull(ptlAllocationDto, ptlDto);
+                // 交易金额
+                ptlAllocationDto.setTradeAmt(ptlDto.getcPriceAmt());
+                //折算券面总额
+                ptlAllocationDto.setConvertAmt(ptlDto.getShareAmt());
+                // 到期结算金额
+                ptlAllocationDto.setMtradeAmt(ptlDto.getFpriceAmt());
+                // 利息
+                ptlAllocationDto.setmIntAmt(ptlDto.getIntAmt());
+                // 回购期限
+                ptlAllocationList.add(ptlAllocationDto);
+            }
         }
         pageDto.setPtlAllocations(ptlAllocationList);
         pageDto.setTradeDate(iPlatformDate.getSysDate());
@@ -1711,7 +1786,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             CfetsEtrIbRepoPosPortfolioCashRequest posport = new CfetsEtrIbRepoPosPortfolioCashRequest();
             posport.setPortfolioId(ptlDto.getPortfolioId());
             posport.setEtrId(ptlDto.getEntrustId());
-            posport.setTradeId(ptlDto.getQuoteId());
+            posport.setTradeId(entity.getQuoteId());
             if (StringUtil.isNotEmpty(ptlDto.getPortfolioId())) {
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("portfolioId", ptlDto.getPortfolioId());
@@ -1731,7 +1806,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 secport.setPortfolioId(pledgeDto.getPortfolioId());
                 secport.setEtrId(pledgeDto.getEntrustId());
                 secport.setFinprodId(pledgeDto.getFinprodId());
-                secport.setTradeId(pledgeDto.getQuoteId());
+                secport.setTradeId(entity.getQuoteId());
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("portfolioId", pledgeDto.getPortfolioId());
                 map.put("finprodId", pledgeDto.getFinprodId());
@@ -1753,8 +1828,11 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
 
         req.setModelType(DictCodeListExt1.子系统代码_交易.getValue());
-        String balanceCheck = DictCodeList.是否_是.getValue();
         req.setRepoPledgeModel(CacheUtil.getSysParam("repo_pledge_model"));
+        String balanceCheck = DictCodeList.是否_是.getValue();
+        if (StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(), "Y")) {
+            balanceCheck = "N";
+        }
         req.setBalanceCheck(balanceCheck);
         req.setBusiType(DictCodeListExt3.头寸业务类型_质押式回购首期.getValue());
         req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
@@ -1858,6 +1936,10 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 cfetsRepoDayPriceDto.setmSettleDate(DateUtil.format(item.getmSettleDate()));//到期结算日
                 cfetsRepoDayPriceDto.setExecid(item.getfTradeId());
                 cfetsRepoDayPriceDto.setRepoTerm(item.getTerm());//回购期限
+                if (StringUtil.equals(item.getSendStatus(), BussinessDictCodeList.银行间上行发送状态_失败.getValue())) {
+                    String errorMsg = this.selectErrlog(item.getQuoteId());
+                    cfetsRepoDayPriceDto.setErrorMsg(errorMsg);
+                }
                 result.add(cfetsRepoDayPriceDto);
             });
         }
@@ -1905,6 +1987,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         stringObjectMap.put("quoteId", dto.getQuoteId());//报价编号
         stringObjectMap.put("dayOfferStatus", dto.getDayOfferStatus());//成交状态
         stringObjectMap.put("keywords", dto.getSearch());//关键字
+        stringObjectMap.put("psList", dto.getPsList());
         return stringObjectMap;
     }
 
@@ -1934,11 +2017,11 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         //add by zznn 20210730 end
         // 待回复报价是否所有交易员可见（01：不允许，02：允许）
         param.put("unAnswerFlag", CacheUtil.getSysParam("ibuFlag_allTraderCanShowUnAnswerQuote"));
-        String keywords = "";
-        if (param.containsKey("keywords")) {
-            keywords = (String) param.get("keywords");
-            param.remove("keywords");
-        }
+//        String keywords = "";
+//        if (param.containsKey("keywords")) {
+//            keywords = (String) param.get("keywords");
+//            param.remove("keywords");
+//        }
         result = cfetsRepoDealQuotedPrice001Service.getDayOfferTableList(param);
         return result;
     }
@@ -2097,7 +2180,11 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
      */
     public List<PtlAllocationDto> selectPortfolioInit(Map<String, Object> map) {
         if (map.containsKey("quoteId") && StringUtil.isNotEmpty(map.get("quoteId"))) {
-            return cfetsRepoDealQuotedPrice001Mapper.selectPortfolioByQuoteIdInit(map);
+            if (this.isInWflProcess((String) map.get("quoteId"))) {
+                return cfetsRepoDealQuotedPrice001Mapper.selectWflPortfolioByQuoteIdInit(map);
+            } else {
+                return cfetsRepoDealQuotedPrice001Mapper.selectPortfolioByQuoteIdInit(map);
+            }
         }
         return cfetsRepoDealQuotedPrice001Mapper.selectPortfolioInit(map);
     }
@@ -2233,6 +2320,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
     public CfetsRepoDealQuotedPrice001Dto serviceDto2InvestDto(com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto dto) {
         CfetsRepoDealQuotedPrice001Dto result
                 = JsonUtils.json2Object(JsonUtils.object2Json(dto), CfetsRepoDealQuotedPrice001Dto.class);
+        result.setDialogueRecord(dto.getDialogueRecord());
         return result;
     }
 
