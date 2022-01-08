@@ -6,12 +6,8 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.FinProductQuto;
-import com.joyintech.tams.common.base.entity.SettleTransData;
-import com.joyintech.tams.common.base.entity.SettleTransDataAdd;
-import com.joyintech.tams.common.base.entity.SettleTransDataPledge;
-import com.joyintech.tams.common.base.entity.SettleTransTgMapping;
-import com.joyintech.tams.common.base.entity.SzdSjsjg;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -97,6 +93,9 @@ public class StlDataDealSzdSjsjgProcessService {
 	
 	@Autowired
     protected StlDownDataDealMapper stlDownDataDealMapper;
+
+    @Autowired
+    protected FinProductMapper finProductMapper;
 
   /*  @Autowired
     protected ICalendar iCalendar;*/
@@ -463,9 +462,12 @@ public class StlDataDealSzdSjsjgProcessService {
             // 交易日期
             settleTransData.setTradeDate(DateUtil.parseDate(szdSjsjg.getJgqsrq(), DateUtil.DEFAULT_OTHER_FORMAT));
     	}
+    	// GZYHTZJY-1074: 根据标的表资产类型进行判断 modify by fuyongsheng 20220108 start
     	// 可交换私募债换股-债券变动
+        FinProduct finProduct = finProductMapper.selectByPrimaryKey(settleTransData.getFinprodId());
     	if (StringUtil.equals(StlDataDealProcessConstant.SJSJG_YWLB_ZQHG, szdSjsjg.getJgywlb())
                // && LIST_ZQLB_BONDS.contains(szdSjsjg.getJgzqlb())
+            && finProduct != null && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finProduct.getFinprodType2())
         ) {
     		settleTransData.setPs(DictCodeListExt3.交易方向_债转股.getValue());
             settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券_转股_债转股.getValue());
@@ -475,6 +477,8 @@ public class StlDataDealSzdSjsjgProcessService {
     	// 可交换私募债换股-股票变动
     	if (StringUtil.equals(StlDataDealProcessConstant.SJSJG_YWLB_ZQHG, szdSjsjg.getJgywlb())
                // && LIST_ZQLB_SHARES.contains(szdSjsjg.getJgzqlb())
+            && finProduct != null && DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finProduct.getFinprodType2())
+            // GZYHTZJY-1074: 根据标的表资产类型进行判断 modify by fuyongsheng 20220108 end
         ) {
     		settleTransData.setPs(DictCodeListExt3.交易方向_债转股.getValue());
             settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券_转股_债转股.getValue());
@@ -871,13 +875,17 @@ public class StlDataDealSzdSjsjgProcessService {
      */
     private StlDownDataDealWriteDto secTypeCommonDeal(StlDownDataDealOperatorDto stlDownDataDealOperatorDto, Map<String, List<StlDownDataDealAccountInfoDto>> map, PersonalityFunction<SzdSjsjg, SettleTransData, SettleTransDataAdd> funcion) throws ParseException {
         // 资产标的信息
-        List<String> assetList = new ArrayList<>();
-        if(StringUtil.equals(DictCodeListExt1.证券品种_债券.getValue(), stlDownDataDealOperatorDto.getFinprodType())){
-            assetList = settleCommonService.getAllAssetInfo(DictCodeListExt1.金融产品类型_投管用_债券.getValue());    
-        }
-        if(StringUtil.equals(DictCodeListExt1.证券品种_股票.getValue(), stlDownDataDealOperatorDto.getFinprodType())){
-            assetList = settleCommonService.getAllAssetInfo(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
-        }
+//        List<String> assetList = new ArrayList<>();
+//        if(StringUtil.equals(DictCodeListExt1.证券品种_债券.getValue(), stlDownDataDealOperatorDto.getFinprodType())){
+//            assetList = settleCommonService.getAllAssetInfo(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+//        }
+//        if(StringUtil.equals(DictCodeListExt1.证券品种_股票.getValue(), stlDownDataDealOperatorDto.getFinprodType())){
+//            assetList = settleCommonService.getAllAssetInfo(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+//        }
+        // 资产标的信息
+        List<String> bondAssetList = settleCommonService.getAllAssetInfo(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        List<String> sharesAssetList = settleCommonService.getAllAssetInfo(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+
         // 处理结果数据定义
         StlDownDataDealWriteDto stlDownDataDealWriteDto = new StlDownDataDealWriteDto();
         // 遍历 输入.SJSJG清算数据List 清算数据Entity
@@ -899,16 +907,24 @@ public class StlDataDealSzdSjsjgProcessService {
             if(StringUtil.equals(DictCodeListExt1.证券品种_股票.getValue(), stlDownDataDealOperatorDto.getFinprodType()) &&
                     StringUtil.equals(szdSjsjg.getJgywlb(), StlDataDealProcessConstant.SJSJG_YWLB_TGSS) ){
                 String finprodId = DictCodeListExt1.金融产品类型_投管用_股票.getValue() + GlobalConstant.UNDER_LINE + szdSjsjg.getJgzqdm() + ".SZ";
-                if(!assetList.contains(finprodId)) {
+                if(!sharesAssetList.contains(finprodId)) {
                     continue;
                 }
             }
 
             if(StringUtil.equals(DictCodeListExt1.证券品种_债券.getValue(), stlDownDataDealOperatorDto.getFinprodType())){
                 String finprodId = DictCodeListExt1.金融产品类型_投管用_债券.getValue() + GlobalConstant.UNDER_LINE + szdSjsjg.getJgzqdm() + ".SZ";
-                if(!assetList.contains(finprodId)) {
-                    continue;
+                // GZYHTZJY-1074 : 债转股业务,债券类型中包含股票数据 modify by fuyongsheng 20220108 start
+                if(StringUtil.equals(StlDataDealProcessConstant.SJSJG_YWLB_ZQHG, szdSjsjg.getJgywlb())){
+                    if(!bondAssetList.contains(finprodId) && !sharesAssetList.contains(finprodId)) {
+                        continue;
+                    }
+                }else{
+                    if(!bondAssetList.contains(finprodId)) {
+                        continue;
+                    }
                 }
+                // GZYHTZJY-1074 : 债转股业务,债券类型中包含股票数据 modify by fuyongsheng 20220108 end
             }
             
             StlDownDataDealWriteBaseDto stlDownDataDealWriteBaseDto = new StlDownDataDealWriteBaseDto();
