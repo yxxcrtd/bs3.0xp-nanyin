@@ -5,6 +5,8 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dao.SalesTransactionMaintenanceRegist001Mapper;
@@ -76,6 +78,7 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
 	    int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
         Page<SalesTransactionMaintenanceRegist001Dto> pageList = super.queryForPage(
         		pagenum,legth,()->salesTransactionMaintenanceRegist001Mapper.queryForRegistPage(param));
+        dealDataList(pageList.getRoot());
         return pageList;
     }
 
@@ -292,5 +295,13 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
             resultList = salesTransactionMaintenanceRegist001Mapper.setDataList(param);
         }
         return resultList;
+    }
+
+    public void dealDataList(List<SalesTransactionMaintenanceRegist001Dto> list) {
+        list.forEach(item -> {
+            if (StringUtil.isNotEmpty(item.getTradePs())) {
+                item.setTradePs(item.getTradePs() + " " + SvrDataUtil.getNameFromDataDict(DictCode.销售结算资金流动方向, item.getTradePs()));
+            }
+        });
     }
 }
