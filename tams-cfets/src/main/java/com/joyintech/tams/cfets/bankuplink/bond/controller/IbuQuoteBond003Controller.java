@@ -176,6 +176,9 @@ public class IbuQuoteBond003Controller extends BaseController {
         if(CollectionUtils.isNotEmpty(ar.getErrorList())){
             return new Message<AjaxResult>().success().setData(ar);
         }
+        if(CollectionUtils.isEmpty(ar.getErrorList())){
+            ar = cfetsQuotedCommonServiceVue.positionCheck(cfetsBondDealQuoteCommonDto);
+        }
         CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = cfetsQuotedCommonServiceVue.createReueust(cfetsBondDealQuoteCommonDto);
         if(CollectionUtils.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())){
             cfetsBondDealRequestQuoteDto.setCfetsBondDealRequestQuoteDtoList(cfetsQuotedCommonServiceVue.createCfetsBondDealRequestQuoteDtoList(cfetsBondDealQuoteCommonDto.getPtlAllocatios()));

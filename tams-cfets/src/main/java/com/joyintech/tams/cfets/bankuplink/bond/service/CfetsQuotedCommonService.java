@@ -950,15 +950,37 @@ public class CfetsQuotedCommonService extends BaseService {
     }
 
     /**
+     * 交易类型按钮点击检查
+     * @param cfetsBondDealQuoteCommonDto
+     * @return
+     */
+    public AjaxResult radioPartyIdCheck(CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto){
+        AjaxResult ajaxResult = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        if(StringUtil.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())){
+            cfetsBondDealQuoteCommonDto.getPtlAllocatios().forEach(item ->{
+                AjaxResult ar = checkpartyId(item.getEntrustId(), item.getPortfolioId(), cfetsBondDealQuoteCommonDto.getQuoteType());
+                if(StringUtil.isNotEmpty(ar.getMessage())){
+                    errorList.add(new ValidMessage(ar.getMessage()));
+                }
+            });
+        }
+        ajaxResult.setErrorList(errorList);
+        return ajaxResult;
+    }
+
+    /**
      * 检查是否存在未关联交易账户
      * @param entrustId
-     * @param partyId
+     * @param portfolioId
      * @param quoteType
      * @return
      */
-    public AjaxResult checkpartyId(String entrustId,String  partyId,String quoteType) {
+    public AjaxResult checkpartyId(String entrustId,String  portfolioId,String quoteType) {
         AjaxResult ajaxResult = new AjaxResult();
         String exportShow = CacheUtil.getSysParam("EXPORT_SHOW");
+        //防止用户不刷新页面  去绑定账户   查一次数据库
+        String partyId = cfetsIbuQuoteBondMapper.getPartyIdByPtl(portfolioId);
         if(((StringUtil.equals(exportShow,"01")&&StringUtil.equals(quoteType,DictCodeListExt3.报价系统区分类型_现券登记报价.getValue()))
                 ||(StringUtil.equals(exportShow,"02")&&(StringUtil.equals(quoteType,DictCodeListExt3.报价系统区分类型_现券对话报价.getValue())||StringUtil.equals(quoteType,DictCodeListExt3.报价系统区分类型_现券请求报价.getValue()))))
         &&StringUtil.isEmpty(partyId)){

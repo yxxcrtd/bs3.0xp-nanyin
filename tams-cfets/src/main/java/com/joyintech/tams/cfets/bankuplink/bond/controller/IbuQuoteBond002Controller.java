@@ -166,6 +166,9 @@ public class IbuQuoteBond002Controller extends BaseController {
         if(CollectionUtils.isEmpty(ar.getErrorList())){
             ar = cfetsQuotedCommonServiceVue.checkcheckAnchoring(cfetsBondDealQuoteCommonDto);
         }
+        if(CollectionUtils.isEmpty(ar.getErrorList())){
+            ar = cfetsQuotedCommonServiceVue.positionCheck(cfetsBondDealQuoteCommonDto);
+        }
         CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = cfetsQuotedCommonServiceVue.createDialogue(cfetsBondDealQuoteCommonDto);
         if(CollectionUtils.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())){
             cfetsBondDealDialogueQuoteDto.setCfetsBondDealDialogueQuoteDtoList(cfetsQuotedCommonServiceVue.createCfetsBondDealDialogueQuoteDtoList(cfetsBondDealQuoteCommonDto.getPtlAllocatios()));

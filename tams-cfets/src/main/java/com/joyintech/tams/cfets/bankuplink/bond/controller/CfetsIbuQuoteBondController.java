@@ -404,7 +404,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		return new Message<AjaxResult>().success().setData(cfetsQuotedCommonService.checkOperationAllow(bondQuoteInfoDto));
 	}
 
-	@ApiOperation(value = "请求报价撤回", notes = "请求报价撤回")
+	@ApiOperation(value = "报价撤回", notes = "报价撤回")
 	@ResponseBody
 	@RequestMapping("doReCall")
 	public Message<AjaxResult> doReCall(@RequestBody CfetsBondCheckRequst cfetsBondCheckRequst) throws Exception{
@@ -646,4 +646,13 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		String deviationDegree =  ibuQuoteBondCalService.calcDeviationDegree(param);
 		return new Message<String>().success().setData(deviationDegree);
 	}
+
+
+	@ApiOperation(value = "交易类型按钮点击检查", notes = "交易类型按钮点击检查")
+	@ResponseBody
+	@RequestMapping("/radioPartyIdCheck")
+	public Message<AjaxResult> radioPartyIdCheck(@RequestBody  CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto) {
+		return new Message<AjaxResult>().success().setData(cfetsQuotedCommonService.radioPartyIdCheck(cfetsBondDealQuoteCommonDto));
+	}
+
 }

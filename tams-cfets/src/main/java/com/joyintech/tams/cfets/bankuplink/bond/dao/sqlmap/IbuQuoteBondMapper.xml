@@ -278,6 +278,9 @@
         <if test="settleSpeed != null and settleSpeed != ''">
             AND DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED, 0, '01', 1, '02') = #{settleSpeed}
         </if>
+        <if test="settleSpreedCode != null and settleSpreedCode != ''">
+            AND DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED, 0, '01', 1, '02') = #{settleSpreedCode}
+        </if>
         <if test="tradeMarket!= null and tradeMarket != ''">
             AND ETR_ENTRUST.TRADE_MARKET = #{tradeMarket}
         </if>
@@ -2089,5 +2092,17 @@ SELECT
             T1.ISSUER = T2.CUSTOMER_ID
         WHERE
             T1.FINPROD_ID  = #{finprodId}
+    </select>
+
+
+    <!--通过组合代码获取CFETS账户-->
+    <select id="getPartyIdByPtl" resultType="java.lang.String">
+        SELECT
+            PARTY_ID
+        FROM
+            IBU_PORTFOLIO_ACCT_RELA
+        WHERE
+            PORTFOLIO_ID  = #{portfolioId}
+            AND CFETS_ACCT_TYPE = '01'
     </select>
 </mapper>

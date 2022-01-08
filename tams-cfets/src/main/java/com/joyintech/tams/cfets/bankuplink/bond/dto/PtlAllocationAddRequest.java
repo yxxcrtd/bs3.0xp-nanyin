@@ -24,8 +24,8 @@ public class PtlAllocationAddRequest {
     @ApiModelProperty(required = true,name="ps",value="交易方向")
     private String ps;
 
-    @ApiModelProperty(required = true,name="settleSpreed",value="清算速度")
-    private String settleSpreed;
+    @ApiModelProperty(required = true,name="settleSpreedCode",value="清算速度")
+    private String settleSpreedCode;
 
     @ApiModelProperty(required = true,name="entrustIdList",value="排除已经选择的指令")
     private List<String> entrustIdList;
@@ -77,12 +77,12 @@ public class PtlAllocationAddRequest {
         this.ps = ps;
     }
 
-    public String getSettleSpreed() {
-        return settleSpreed;
+    public String getSettleSpreedCode() {
+        return settleSpreedCode;
     }
 
-    public void setSettleSpreed(String settleSpreed) {
-        this.settleSpreed = settleSpreed;
+    public void setSettleSpreedCode(String settleSpreedCode) {
+        this.settleSpreedCode = settleSpreedCode;
     }
 
     public List<String> getEntrustIdList() {

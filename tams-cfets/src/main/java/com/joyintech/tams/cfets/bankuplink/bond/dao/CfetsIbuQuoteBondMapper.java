@@ -85,4 +85,6 @@ public interface CfetsIbuQuoteBondMapper {
     String getTradeStatus(@Param("quoteId") String quoteId,@Param("cpPartyId") String cpPartyId);
 
     String  getIssuserName(@Param("finprodId") String finprodId);
+
+    String  getPartyIdByPtl(@Param("portfolioId") String portfolioId);
 }
