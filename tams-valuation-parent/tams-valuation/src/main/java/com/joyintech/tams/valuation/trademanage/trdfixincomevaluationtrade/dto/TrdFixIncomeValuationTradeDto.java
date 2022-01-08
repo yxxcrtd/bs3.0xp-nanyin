@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.trademanage.trdfixincomevaluationtrade.dto;
 
 import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -463,5 +464,20 @@ public class TrdFixIncomeValuationTradeDto extends WflTrdProductDeal implements 
         return SysDataUtil.getNameFromDataDict(DictCode.投资目的, super.getInvAim());
     }
 
+    public String getTradeDateStr() {
+        String tradeDateStr="";
+        if(super.getTradeDate() !=null){
+            tradeDateStr= DateUtil.format(super.getTradeDate());
+        }
+        return tradeDateStr;
+    }
+
+    public String getSettleDateStr() {
+        String settleDateStr="";
+        if(super.getSettleDate() !=null){
+            settleDateStr= DateUtil.format(super.getSettleDate());
+        }
+        return settleDateStr;
+    }
 }
 

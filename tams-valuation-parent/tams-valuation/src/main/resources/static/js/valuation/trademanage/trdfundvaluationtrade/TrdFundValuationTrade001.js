@@ -60,7 +60,8 @@ $(function(){
             ,{field:'finprodName', width:150, title: '资产名称'}
             ,{field:'psStr', width:150, title: '交易类型',sortField:'ps'}
             ,{field:'tradeMarketStr', width:150, title: '交易场所',sortField:'tradeMarket'}
-            ,{field:'tradeDate', width:150, title: '交易日'}
+            ,{field:'tradeDate', type:'date' ,width:150, title: '交易日', visible: false}
+            ,{field:'tradeDateStr',width:150, title: '交易日'}
             ,{field:'tradeAmt', width:150, title: '交易金额',type:'number'}
             ,{field:'nums', width:150, title: '交易份额',type:'number'}
             ,{field:'unitValue', width:150, title: '单位净值',type:'number'}

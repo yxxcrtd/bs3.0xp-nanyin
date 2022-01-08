@@ -65,7 +65,8 @@ $(function(){
             ,{field:'finprodId', width:150, title: '资产代码'}
             ,{field:'finprodName', width:150, title: '资产名称'}
             ,{field:'psStr', width:150, title: '交易类型',sortField:'ps'}
-            ,{field:'tradeDate', width:150, title: '交易日'}
+            ,{field:'tradeDate', type:'date' ,width:150, title: '交易日', visible: false}
+            ,{field:'tradeDateStr',width:150, title: '交易日'}
             ,{field:'settleDate', width:150, title: '交割日'}
             ,{field:'invAimStr', width:150, title: '会计分类'}
             ,{field:'tradeAmt', width:150, title: '本金金额',type:'number'}
@@ -85,7 +86,7 @@ $(function(){
             var datas = JSON.stringify(selArr);
         }
         if (!selArr || selArr.length == 0) {
-            var paramObj = getSearchParams();
+            var paramObj = getPageParams();
             Joyin.exportExcel('export', paramObj);
         } else {
             Joyin.exportExcel('export', {
