@@ -382,11 +382,14 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         //组装组合金额信息
         List<PositionRulePtlData> ptlList=new ArrayList<>();
         TrdBankManualSettleInfo trdBankManualSettleInfo = cfetsManualSettleRequest.getTrdBankManualSettleInfo();
-        if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_回溯.getValue())){
-            //调用cancel接口
-            PositionHttpRequest.sendRevoke(trdBankManualSettleInfo.getSettleSeqNo(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
-        }else if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收.getValue())
-                     ||StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收修改.getValue())){
+        if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_回溯.getValue()) ||
+             StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收.getValue()) ||
+               StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收修改.getValue())||
+                StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())){
+            //调用cancel接口 暂时注释，防止后面头寸再改
+//            PositionHttpRequest.sendRevoke(trdBankManualSettleInfo.getSettleSeqNo(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+//        }else if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收.getValue())
+//                     ||StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收修改.getValue())){
             List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
 
             for(CfetsManualSettleDealInfo dto : listTemp){
@@ -466,9 +469,11 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             }
             //业务动作BUSI_ACT 09:交收确认 10:交收失败
             req.setBusiAct("09");
-//            if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())){
-//                req.setBusiAct("10");
-//            }
+            if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())){
+                req.setBusiAct("10");
+            }else if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_回溯.getValue())){
+                req.setBusiAct("20");
+            }
             //交易方向
             req.setPs(cfetsManualSettleRequest.getPs());
             //新建 修改 关闭
@@ -637,20 +642,21 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                     }
                 }
                 //交收失败后，自动撤销原交易、交易登记、行权登记数据，关闭对应指令
-    //            if(StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())){
-    //                CfetsTrdBondInvestTradeDto revokeEntity = this.getTrdBondInvestTradeDto(entity.getTradeId());
-    //                cfetsTrdBondInvestTrade002Service.doCompleteRevoke(revokeEntity,"交收失败");
-    //                //关闭对应指令
-    //                List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(entity.getTradeId());
-    //                for(CfetsManualSettleDealInfo dealInfo : listTemp){
-    //                    this.closeDelegateMethod(dealInfo.getEntrustId(),"","交收失败");
-    //                }
-    //                try {
-    //                    this.closeDelegate(listTemp,entity.getRemark());
-    //                } catch (Exception e) {
-    //                    e.printStackTrace();
-    //                }
-    //            }
+                if(StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())){
+                    CfetsTrdBondInvestTradeDto revokeEntity = this.getTrdBondInvestTradeDto(entity.getTradeId());
+                    String settleRemark ="交收失败";
+                    cfetsTrdBondInvestTrade002Service.doCompleteRevoke(revokeEntity,settleRemark,false);
+                    //关闭对应指令
+                    List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(entity.getTradeId());
+                    for(CfetsManualSettleDealInfo dealInfo : listTemp){
+                        this.closeDelegateMethod(dealInfo.getEntrustId(),"","交收失败");
+                    }
+                    try {
+                        this.closeDelegate(listTemp,entity.getRemark());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
         catch (Exception e) {
@@ -786,8 +792,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
 
         }
 
-        //发送头寸，批量关闭
-        this.closeDelegatePositionMethod(listTemp);
+//        //发送头寸，批量关闭
+//        this.closeDelegatePositionMethod(listTemp);
         //更新操作日志
         this.closeDelegatOprHisMethod(listTemp,remark);
     }
@@ -812,29 +818,29 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         }
     }
 
-    public void closeDelegatePositionMethod(List<CfetsManualSettleDealInfo> dtolist){
-        CfetsEtrIbClosePositionRequest req=new CfetsEtrIbClosePositionRequest();
-        List<CfetsEtrIbClosePosEtrRequest> etrList=new ArrayList<>();
-        for(CfetsManualSettleDealInfo t: dtolist){
-            CfetsEtrIbClosePosEtrRequest closeItem=new CfetsEtrIbClosePosEtrRequest();
-            String busiTypePosition=DictCodeListExt3.头寸业务类型_现券交易.getValue();
-            if(StringUtil.isNotEmpty(t.getPs())
-                    && StringUtil.equals(t.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
-                busiTypePosition=DictCodeListExt3.头寸业务类型_债券行权交易.getValue(); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
-            }
-
-            closeItem.setBusiType(busiTypePosition);
-            closeItem.setPs(t.getPs());
-            closeItem.setCloseId(t.getEntrustId());
-            closeItem.setSystemAct(DictCodeListExt3.系统动作_关闭.getValue());
-            closeItem.setBusiAct(DictCodeListExt3.业务动作_指令手动关闭.getValue());
-            etrList.add(closeItem);
-        }
-        req.setData(etrList);
-        req.setUserId(SecurityUtil.getLoginUser().getUserName());
-        req.setTotalTradeId(IDGenerator.generate());
-        req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
-        PositionHttpRequest.batchClose(req);
-    }
+//    public void closeDelegatePositionMethod(List<CfetsManualSettleDealInfo> dtolist){
+//        CfetsEtrIbClosePositionRequest req=new CfetsEtrIbClosePositionRequest();
+//        List<CfetsEtrIbClosePosEtrRequest> etrList=new ArrayList<>();
+//        for(CfetsManualSettleDealInfo t: dtolist){
+//            CfetsEtrIbClosePosEtrRequest closeItem=new CfetsEtrIbClosePosEtrRequest();
+//            String busiTypePosition=DictCodeListExt3.头寸业务类型_现券交易.getValue();
+//            if(StringUtil.isNotEmpty(t.getPs())
+//                    && StringUtil.equals(t.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
+//                busiTypePosition=DictCodeListExt3.头寸业务类型_债券行权交易.getValue(); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
+//            }
+//
+//            closeItem.setBusiType(busiTypePosition);
+//            closeItem.setPs(t.getPs());
+//            closeItem.setCloseId(t.getEntrustId());
+//            closeItem.setSystemAct(DictCodeListExt3.系统动作_关闭.getValue());
+//            closeItem.setBusiAct(DictCodeListExt3.业务动作_指令手动关闭.getValue());
+//            etrList.add(closeItem);
+//        }
+//        req.setData(etrList);
+//        req.setUserId(SecurityUtil.getLoginUser().getUserName());
+//        req.setTotalTradeId(IDGenerator.generate());
+//        req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
+//        PositionHttpRequest.batchClose(req);
+//    }
 
 }

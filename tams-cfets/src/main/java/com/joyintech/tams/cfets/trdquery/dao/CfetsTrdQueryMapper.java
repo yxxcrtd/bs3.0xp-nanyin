@@ -8,8 +8,8 @@ import com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleInfoOther
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleTradeListRespond;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
 import com.joyintech.tams.cfets.trdquery.dto.*;
-import com.joyintech.tams.common.base.entity.InterfHttpLogWithBLOBs;
 import com.joyintech.tams.common.base.entity.RegFinProductDealTotal;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -160,4 +160,11 @@ public interface CfetsTrdQueryMapper {
      * @return
      */
     int updateRegTotalByPrimaryKeySelective(RegFinProductDealTotal record);
+
+    /**
+     * 根据更新报价数据
+     * @param paramMap
+     * @return
+     */
+    void updateIbuByPrimaryKeySelective(Map<String, Object> paramMap);
 }
