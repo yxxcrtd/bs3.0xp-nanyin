@@ -8,7 +8,9 @@ import java.util.Map;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.service.SalesTransactionMaintenance001Service;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.service.SalesTransactionMaintenanceService;
@@ -204,5 +206,20 @@ public class SalesTransactionMaintenance001Controller extends BaseController {
     @ResponseBody
     public List<SelectOptionDto> getTradeNo() {
         return salesTransactionmaintenanceService.getTradeNo(RequestUtil.getPageParam());
+    }
+
+    /**
+     * 修改校验
+     */
+    @ResponseBody
+    @RequestMapping("editCheck")
+    public AjaxResult check(@RequestBody SalesTransactionMaintenanceDto salesTransactionMaintenanceDto) {
+        AjaxResult ar =new AjaxResult();
+        List<ValidMessage> errorList = ar.getErrorList();
+        if (StringUtil.equals(salesTransactionMaintenanceDto.getDataStatus(), DictCodeListExt1.维护数据状态_删除.getValue())) {
+            errorList.add(new ValidMessage("数据状态为删除的数据不允许修改！"));
+            ar.setErrorList(errorList);
+        }
+        return ar;
     }
 }
