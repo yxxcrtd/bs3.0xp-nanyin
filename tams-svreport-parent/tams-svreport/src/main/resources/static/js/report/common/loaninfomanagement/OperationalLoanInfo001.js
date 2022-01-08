@@ -367,6 +367,34 @@
 //	        });
 		}
 	});
+
+    //add by tuqirong 2022-01-07 start 添加表格复选框监听事件
+    layui.table.on('checkbox(dataTable)', function (obj) {
+        // 获取已选择的行数
+        var self = table;
+        var data = self.layTable.checkStatus(self.layOption.id).data;
+        $(".layui-laypage span.layui-hasSelected").remove();
+        if(data.length > 0) {
+            self.$element.next('.layui-table-view').find(".layui-laypage").prepend("<span class='layui-hasSelected'>已选择"+data.length+"条数据</span>")
+        }
+        // 改变选中行背景色
+        setTimeout(function () {
+            if(obj.type === 'all') {
+                // 全选checkbox点击
+                var tbody = self.$element.next('.layui-table-view').find('.layui-table-body');
+                tbody.each(function(i, body) {
+                    $(body).find('tr').toggleClass(self.options.rowSelectedClass, obj.checked);
+                });
+            }
+            else {
+                obj.tr.toggleClass(self.options.rowSelectedClass, obj.checked);
+            }
+        },0);
+        if(self.options.check && $.isFunction(self.options.check)) {
+            self.options.check.call(this, self, obj.data || {}, obj, data);
+        }
+    });
+    //add by tuqirong 2022-01-07 end 添加表格复选框监听事件
 	
 	var table = $("#dataTable").joyintable({
 		ajax : {
