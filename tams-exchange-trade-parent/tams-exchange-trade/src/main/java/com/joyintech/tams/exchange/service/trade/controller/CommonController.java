@@ -9,6 +9,7 @@ import com.joyintech.tams.exchange.common.bean.SysParamBean;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.db.domain.Instrument;
 import com.joyintech.tams.exchange.common.domain.Message;
+import com.joyintech.tams.exchange.common.bean.response.ExchangeContextResponse;
 import com.joyintech.tams.exchange.service.trade.management.service.CommonManagement;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -71,6 +72,12 @@ public class CommonController {
     @RequestMapping(value = "/common/fairtrade", method = RequestMethod.POST)
     public Message<String> queryFairTradeParam() {
         return new Message<>(commonManagement.queryFairTradeParam());
+    }
+
+    @ApiOperation(value = "场内交易系统上下文查询", notes = "场内交易系统上下文查询")
+    @RequestMapping(value = "/common/fairTrade/systemParam", method = RequestMethod.POST)
+    public Message<ExchangeContextResponse> queryExchangeContext() {
+        return new Message<>(commonManagement.queryExchangeContext());
     }
 
     @ApiOperation(value = "获取系统平台日", notes = "获取系统平台日")
