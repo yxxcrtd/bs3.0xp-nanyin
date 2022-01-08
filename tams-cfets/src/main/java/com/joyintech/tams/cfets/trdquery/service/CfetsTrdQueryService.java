@@ -143,7 +143,7 @@ public class CfetsTrdQueryService extends BaseService{
           }
         }
         Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(DateUtil.parse(DateUtil.getSysDate()));
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
         pageParam.put("sort",dto.getPageMode().getSort());
@@ -332,7 +332,7 @@ public class CfetsTrdQueryService extends BaseService{
         //报价状态为已撤销就是已撤销
 
         Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(DateUtil.parse(DateUtil.getSysDate()));
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
         pageParam.put("sort",dto.getPageMode().getSort());
@@ -525,7 +525,7 @@ public class CfetsTrdQueryService extends BaseService{
             }
         }
         Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(DateUtil.parse(DateUtil.getSysDate()));
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
         pageParam.put("sort",dto.getPageMode().getSort());
@@ -726,7 +726,7 @@ public class CfetsTrdQueryService extends BaseService{
         pageParam.put("PS_T02", DictCodeList.交易方向_卖出.getValue());
 
         Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(DateUtil.parse(DateUtil.getSysDate()));
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
 
@@ -838,7 +838,7 @@ public class CfetsTrdQueryService extends BaseService{
         pageParam.put("PS_T02", DictCodeList.交易方向_卖出.getValue());
 
         Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(DateUtil.parse(DateUtil.getSysDate()));
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
 

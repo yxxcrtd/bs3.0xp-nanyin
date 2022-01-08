@@ -190,6 +190,8 @@ public class IbuQuoteBondService extends BaseService {
             CfetsBondDealEntrustOrderDto cfetsBondDealEntrustOrderDto = cfetsBondDealEntrustOrderDtos.get(0);
             BeanUtil.copyPropertiesIgnoreNull(result, cfetsBondDealEntrustOrderDto);
             result.setFpriceAmt(ArithmeticUtil.multiply(result.getEntrustNum(),result.getUnitFprice(),new BigDecimal("100")));
+            result.setOurEntNum(ArithmeticUtil.divide(result.getOurEntNum(),new BigDecimal(10000),2));
+            result.setLendinEntNum(ArithmeticUtil.divide(result.getLendinEntNum(),new BigDecimal(10000),2));
         }
         return result;
     }
