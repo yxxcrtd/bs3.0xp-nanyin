@@ -152,6 +152,17 @@ public class CfetsTrdQueryTradeInfoListResponse {
     @ApiModelProperty(name="tradeDate",value="成交日期",example="admin")
     private Date  tradeDate;
 
+    public String getCalMode() {
+        return calMode;
+    }
+
+    public void setCalMode(String calMode) {
+        this.calMode = calMode;
+    }
+
+    @ApiModelProperty(name="calMode",value="计算方式",example="计算方式供前台判断使用")
+    private String calMode;
+
     public String getEffectiveStatus() {
         return effectiveStatus;
     }

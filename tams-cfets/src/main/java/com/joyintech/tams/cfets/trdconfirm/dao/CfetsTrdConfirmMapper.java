@@ -1,6 +1,8 @@
 package com.joyintech.tams.cfets.trdconfirm.dao;
 
 
+
+import com.joyintech.service.bankuplink.common.dto.TrdConfirmRegAndIbuInfoDto;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbBondinfoDto;
 import com.joyintech.tams.cfets.trdconfirm.dto.*;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
@@ -38,7 +40,7 @@ public interface CfetsTrdConfirmMapper {
      * @param pageParam
      * @return
      */
-    CfetsTrdConfirmRegInfoListResponse selectIbuInfoByKey(String totleTradeId);
+    CfetsTrdConfirmRegInfoListResponse selectIbuInfoByKey(Map<String, Object> pageParam);
     /**
      * 根据主键查询回购报价信息
      * @param pageParam
@@ -188,4 +190,16 @@ public interface CfetsTrdConfirmMapper {
      * 查询所有报价的质押明细数据
      */
     List<PledgeBondInfoDto> findAllIbuSecPtlsList(Map<String, Object> param);
+    /**
+     * 根据成交编号，查询下行成交匹配关系
+     */
+    CfetsTrdConfirmMatchDto selectMatchDtoByExecId(@Param("execid") String execid);
+    /**
+     * 根据登记编号，查询登记信息
+     */
+    List<CfetsTrdConfirmRegInfoListResponse> selectRegDtoByPrimaryKey(Map<String, Object> map);
+    /**
+     * 根据报价编号，查询报价信息
+     */
+   // CfetsTrdConfirmRegInfoListResponse selectIbuDtoByPrimaryKey(@Param("quoteId") String quoteId);
 }

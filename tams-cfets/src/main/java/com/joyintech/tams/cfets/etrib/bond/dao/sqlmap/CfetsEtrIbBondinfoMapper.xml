@@ -1035,12 +1035,12 @@ from
         TO_CHAR(T1.entrust_date, 'yyyy-MM-dd')  as etrDate,
         null as approver,
         T1.REMARK as remark,
-        round((NVL(T6.FINISH_AMT,0)+NVL(T5.ENT_FINISH_AMT*100,0))/(T1.ENTRUST_NUM*100),4)*100 execProcess,
-        round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transProcess,
+        trunc((NVL(T6.FINISH_AMT,0)+NVL(T5.ENT_FINISH_AMT*100,0))/(T1.ENTRUST_NUM*100),4)*100 execProcess,
+        trunc((NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(C3.FINISH_AMT*100,0))/(T1.ENTRUST_NUM*100),4)*100 transProcess,
         NVL(T6.FINISH_AMT,0)/10000+NVL(T5.FINISH_AMT,0)/100  as execFinishAmt,
         (NVL(T1.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100-NVL(T6.FINISH_AMT,0)/10000) as execRemainderAmt,
-        NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
-        (NVL(T1.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
+        NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))/10000+NVL(C3.FINISH_AMT/100,0)  as transFinishAmt,
+        NVL(T1.ENTRUST_NUM,0)/100 - NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))/10000-NVL(C3.FINISH_AMT/100,0) as transRemainderAmt,
         NVL(T7.OUR_ENT_NUM,0)/100  as entrustOwnNum,
         NVL(T7.LENDIN_ENT_NUM,0)/100  as entrustIntegrateNum,
         T7.calculate_field as calculateField,
@@ -1080,8 +1080,42 @@ from
         LEFT JOIN ETR_ENTRUST_ADD T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID
         LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
         LEFT JOIN FIN_PRODUCT_TYPE T4 ON T4.FINPROD_ID = T1.FINPROD_ID
-        where T1.ENTRUST_NUM!=0 and
-        T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+        LEFT JOIN
+        (SELECT C.ENTRUST_ID,
+        SUM(nvl(C.SHARE_AMT, 0)) * 100 totalShareAmt
+        FROM IBU_QUOTE_BOND A
+        LEFT JOIN IBU_QUOTE_BOND_DET B ON A.QUOTE_ID = B.QUOTE_ID
+        LEFT JOIN IBU_QUOTE_ETR_RE C ON A.QUOTE_ID = C.QUOTE_ID
+        WHERE B.TRADE_STATUS = '07'
+        GROUP BY C.ENTRUST_ID) C
+        ON C.ENTRUST_ID = T1.ENTRUST_ID
+        LEFT JOIN
+        (SELECT A.ENTRUST_ID,
+        nvl(A.SHARE_AMT, 0) * 100 totalShareAmt
+        FROM IBU_QUOTE_BOND A
+        LEFT JOIN IBU_QUOTE_BOND_DET B ON A.QUOTE_ID = B.QUOTE_ID
+        WHERE B.TRADE_STATUS = '07') C2
+        ON C2.ENTRUST_ID = T1.ENTRUST_ID
+        LEFT JOIN(
+        SELECT
+        ENTRUST_ID,
+        SUM(FINISH_AMT) AS FINISH_AMT
+        FROM ETR_FINISH_STATUS
+        <!--登记与报价分开统计-->
+        INNER JOIN (SELECT
+        DISTINCT T3.TRADE_ID
+        FROM TRDQUTO_MATCH_INFO T1
+        INNER JOIN REG_FIN_PRODUCT_DEAL_TOTAL T2 ON
+        T1.PRE_TRADE_ID = T2.TOTLE_TRADE_ID
+        INNER JOIN TRD_PRODUCT_DEAL T3 ON
+        T3.TOTLE_TRADE_ID = T1.TRD_ID
+        WHERE
+        TRD_CONF_STATUS = '1')	REG
+        ON REG.TRADE_ID = ETR_FINISH_STATUS.TRADE_ID
+        GROUP BY
+        ENTRUST_ID) C3
+        ON T1.ENTRUST_ID = C3.ENTRUST_ID
+        where T1.ENTRUST_NUM!=0 and T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
         and T1.TRADE_MARKET in (#{TRADE_MARKET_01},#{TRADE_MARKET_02})
         <if test="portfolioIdList != null and portfolioIdList.size() > 0">
             AND T1.portfolio_id in
@@ -1154,8 +1188,8 @@ from
         TO_CHAR(T1.ENTRUST_DATE, 'yyyy-MM-dd') as etrDate,
         nextApp.nowUserId as approver,
         T1.REMARK as remark,
-        round((NVL(T6.FINISH_AMT,0)+NVL(T5.ENT_FINISH_AMT*100,0))/(T1.ENTRUST_NUM*100),4)*100 execProcess,
-        round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transProcess,
+        trunc((NVL(T6.FINISH_AMT,0)+NVL(T5.ENT_FINISH_AMT*100,0))/(T1.ENTRUST_NUM*100),4)*100 execProcess,
+        trunc(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transProcess,
         NVL(T6.FINISH_AMT,0)/10000 +NVL(T5.FINISH_AMT,0)/100  as execFinishAmt,
         (NVL(T1.ENTRUST_NUM,0)/100- NVL(T5.FINISH_AMT,0)/100- NVL(T6.FINISH_AMT,0)/10000) as execRemainderAmt,
         NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,

@@ -255,6 +255,9 @@ public class CfetsTrdQueryIbuInfoListResponse {
     @ApiModelProperty(name="termType",value="期限品种",example="ZC1")
     private String termType;
 
+    @ApiModelProperty(name="calMode",value="计算方式",example="计算方式供前台判断使用")
+    private String calMode;
+
     public String getEffectiveStatus() {
         return effectiveStatus;
     }
@@ -832,5 +835,13 @@ public class CfetsTrdQueryIbuInfoListResponse {
 
     public void setMsettleDate(String msettleDate) {
         this.msettleDate = msettleDate;
+    }
+
+    public String getCalMode() {
+        return calMode;
+    }
+
+    public void setCalMode(String calMode) {
+        this.calMode = calMode;
     }
 }
