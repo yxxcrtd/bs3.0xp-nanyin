@@ -373,7 +373,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         CfetsEtribRepoInfo003Dto entity = getBussinessEntityByWorkflowId(workflowId);
         WFlowCommonService.doCompleteFlow(entity.getWorkflowId());
         //发送头寸
-        PositionHttpRequest.deleteMethod(entity.getTotalEtrustId(),DictCodeListExt1.子系统代码_委托.getValue(),"REPO001");
+        PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(),DictCodeListExt1.子系统代码_委托.getValue());
     }
 
 
@@ -394,7 +394,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                     doInsertFlow(dto);
                 }
                 //发送头寸
-                sendPositionMethod(entity,entity.getSubmitFlag());
+                sendPositionMethod(entity,StringUtil.equals(entity.getSystemAct(),DictCodeListExt3.系统动作_新建.getValue())?true:false);
             }
         }
     }
@@ -474,6 +474,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         req.setInterfaceType("REPO001");
         req.setUserId(SecurityUtil.getLoginUser().getUserName());
         req.setTotalTradeId(entity.getTotalEtrustId());
+        req.setWorkFlowId(entity.getWorkflowId());
         req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
         req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
         String balanceCheck="Y";
@@ -488,13 +489,15 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         req.setBusiAct(DictCodeListExt3.业务动作_投资指令.getValue());
         req.setPs(entity.getPs());
         if(isSubmit){
-            req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+            req.setDecisionAct(DictCodeListExt3.系统动作_新建.getValue());
+            req.setSystemAct(entity.getSystemAct());
         }else{
-            req.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+            req.setDecisionAct(DictCodeListExt3.系统动作_修改.getValue());
+            req.setSystemAct(entity.getSystemAct());
             req.setbTotalTradeId(entity.getTotalEtrustId());
+            req.setCdate(entity.getEntrustDate());
+            req.setCcy(DictCodeList.币种_人民币_CNY.getValue());
         }
-        req.setCdate(entity.getEntrustDate());
-        req.setCcy(DictCodeList.币种_人民币_CNY.getValue());
         req.setPtlCashList(ptlCashList);
         req.setPtlSecList(ptlSecList);
         PositionHttpRequest.send(req);
@@ -632,11 +635,11 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                     RepoInfoDto.setTransmitTime(transmitTimeDto.getTransmitTime());
                     dto.setTransmitTime(transmitTimeDto.getTransmitTime());
                 }
-                RepoInfoDto.setSubmitFlag(false);
-                dto.setSubmitFlag(false);
+                RepoInfoDto.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+                dto.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
             }else{
-                RepoInfoDto.setSubmitFlag(true);
-                dto.setSubmitFlag(true);
+                RepoInfoDto.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+                dto.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
             }
             if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL), "02")
                     ||StringUtil.equals(RepoInfoDto.getPs(), DictCodeListExt1.回购方向_正回购.getValue())){
