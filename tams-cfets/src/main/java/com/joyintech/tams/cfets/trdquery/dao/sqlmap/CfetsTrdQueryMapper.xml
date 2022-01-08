@@ -76,8 +76,11 @@
         decode(reg.is_cancel,'Y','03','N','01') effectiveStatus,
         case when  match.trd_conf_status is null and reg.is_cancel='N' then '01'
         when match.trd_conf_status='1' and reg.is_cancel='N' then '02'
-        when reg.is_cancel='Y' then '03' end as regStatus
+        when reg.is_cancel='Y' then '03' end as regStatus,
+        regAdd.CAL_MODE calMode
         from reg_fin_product_deal_total reg
+        left join reg_fin_product_deal_total_add regAdd
+        on reg.totle_trade_id=regAdd.Totle_Trade_Id
         left join fin_product fp
         on fp.finprod_id=reg.finprod_id
         inner join
@@ -211,8 +214,11 @@
         nvl(match.match_status,'02') as matchStatus,
         reg.remark as remark,
         '04' effectiveStatus,
-        '04' as regStatus
+        '04' as regStatus,
+        regAdd.CAL_MODE calMode
         from wfl_reg_fin_product_deal_total reg
+        left join wfl_reg_fin_pro_deal_total_add regAdd
+        on reg.totle_trade_id=regAdd.Totle_Trade_Id
         left join fin_product fp
         on fp.finprod_id=reg.finprod_id
         inner join
@@ -573,13 +579,14 @@
         deal.entrustId as entrustId,
         to_char(ib.quote_date,'yyyy-MM-dd') as quoteDate,
         to_char(total.trade_date,'yyyy-MM-dd') as tradeDate,
-        ib.remark
+        ib.remark,
+        ibd.calMode as calMode
         from ibu_quote_bond ib
         left join fin_product fp
         on ib.finprod_id=fp.finprod_id
         left join (
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,ibd.yield as yield
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,ibd.yield as yield,ibd.CALCULATE_FIELD as calMode
             from ibu_quote_bond_det ibd
             inner join ibu_quote_bond t1
             on ibd.quote_id=t1.quote_id and t1.quote_type='01'
@@ -590,7 +597,7 @@
         union all
             select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
             wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
-            ibd.execid,null as yield
+            ibd.execid,null as yield,null as calMode
             from ibu_quote_bond_det ibd
             inner join ibu_quote_bond t1
             on ibd.quote_id=t1.quote_id and t1.quote_type='02'
@@ -601,7 +608,7 @@
 
             union all
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,ibd.yield
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,ibd.yield,ibd.CALCULATE_FIELD as calMode
             from ibu_quote_bond_det ibd
             inner join ibu_quote_bond t1
             on ibd.quote_id=t1.quote_id and t1.quote_type='02'
@@ -724,7 +731,8 @@
         deal.entrustId as entrustId,
         to_char(ic.quote_date,'yyyy-MM-dd')  as quoteDate,
         to_char(total.trade_date,'yyyy-MM-dd') as tradeDate,
-        ic.remark
+        ic.remark,
+        null as calMode
         from ibu_quote_crep ic
         inner  join(
         select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
@@ -839,13 +847,14 @@
         deal.entrustId as entrustId,
         to_char(ib.quote_date,'yyyy-MM-dd') as quoteDate,
         null as tradeDate,
-        ib.remark
+        ib.remark,
+        ibd.calMode as calMode
         from wfl_ibu_quote_bond2 ib
         left join fin_product fp
         on ib.finprod_id=fp.finprod_id
         left join (
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,ibd.yield as yield
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,ibd.yield as yield,ibd.CALCULATE_FIELD as calMode
             from wfl_ibu_quote_bond_det ibd
             inner join wfl_ibu_quote_bond2 t1
             on ibd.quote_id=t1.quote_id and t1.quote_type='01'
@@ -855,7 +864,7 @@
             union all
             select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
             wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
-            ibd.execid,null as yield
+            ibd.execid,null as yield,null as calMode
             from wfl_ibu_quote_bond_det ibd
             inner join wfl_ibu_quote_bond2 t1
             on ibd.quote_id=t1.quote_id and t1.quote_type='02'
@@ -866,7 +875,7 @@
 
             union all
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-           nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,ibd.yield
+           nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,ibd.yield,ibd.CALCULATE_FIELD as calMode
             from wfl_ibu_quote_bond_det ibd
             inner join wfl_ibu_quote_bond2 t1
             on ibd.quote_id=t1.quote_id and t1.quote_type='02'
@@ -998,7 +1007,8 @@
         deal.entrustId as entrustId,
         to_char(ic.quote_date,'yyyy-MM-dd') as quoteDate,
         null as tradeDate,
-        ic.remark
+        ic.remark,
+        null as calMode
         from wfl_ibu_quote_crep ic
         inner  join(
         select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
@@ -2005,7 +2015,8 @@
             T1.counter_id as counterId,
             T6.counter_name counterIdStr,
             T1.remark,
-            T1.TRADE_DATE as tradeDate
+            T1.TRADE_DATE as tradeDate,
+            nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
             inner join (
                 select td.totle_trade_id,sum(td.share_amt) share_amt,
@@ -2036,6 +2047,8 @@
             LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
             LEFT JOIN SYS_DATADICT_LIST sdl6 on sdl6.dict_code ='SHARES_TRADE_MARKET' and sdl6.item_code = T1.TRADE_MARKET_MODE
             LEFT JOIN SYS_DATADICT_LIST sdl7 on sdl7.dict_code ='CCY' and sdl7.item_code = T1.ccy
+            left join reg_fin_product_deal_total_add regAdd on match.PRE_TRADE_ID=regAdd.totle_trade_id
+            left join ibu_quote_bond_det ibuDet on match.PRE_TRADE_ID=ibuDet.QUOTE_ID and ibuDet.TRADE_STATUS='07'
             WHERE   T1.trade_status='01' and T1.FINPROD_TYPE2 in ('F01','F02','F03') and T1.ps in ('T01','T02','T03','03','04')
             <![CDATA[ AND T1.trade_date >= #{startDate}]]>
             <![CDATA[ AND T1.trade_date <= #{endDate}]]>
@@ -2171,7 +2184,8 @@
         match.exe_id as execid,
         t1.counter_id as counterId,
         T6.counter_name counterIdStr,
-        t1.remark
+        t1.remark,
+        nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode
         from trd_product_deal t1
         left join trd_product_deal_add t2 on t1.trade_id=t2.trade_id
         left  join ptl_portfolio pp on t2.portfolio_id=pp.portfolio_id
@@ -2194,6 +2208,8 @@
         LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
         LEFT JOIN SYS_DATADICT_LIST sdl6 on sdl6.dict_code ='SHARES_TRADE_MARKET' and sdl6.item_code = T1.TRADE_MARKET_MODE
         LEFT JOIN SYS_DATADICT_LIST sdl7 on sdl7.dict_code ='CCY' and sdl7.item_code = T1.ccy
+        left join reg_fin_product_deal_total_add regAdd on match.PRE_TRADE_ID=regAdd.totle_trade_id
+        left join ibu_quote_bond_det ibuDet on match.PRE_TRADE_ID=ibuDet.QUOTE_ID and ibuDet.TRADE_STATUS='07'
         WHERE   T1.trade_status='01' and T1.FINPROD_TYPE2 in ('F01','F02','F03') and T1.ps in ('T01','T02','T03','03','04')
         <![CDATA[ AND T1.trade_date >= #{startDate}]]>
         <![CDATA[ AND T1.trade_date <= #{endDate}]]>
@@ -2543,6 +2559,15 @@
             </if>
         </set>
         where totle_trade_id = #{totleTradeId,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateIbuByPrimaryKeySelective">
+        update IBU_QUOTE_BOND t
+        set t.trade_status = #{tradeStatus}
+        where t.quote_id in
+        (select tmi.pre_trade_id
+        from trdquto_match_info tmi
+        where tmi.trd_id =#{totleTradeId,jdbcType=VARCHAR})
     </update>
 
 </mapper>

@@ -120,6 +120,8 @@ public class CfetsManualSettleTradeListRespond {
     @ApiModelProperty(name="remark",value="交收失败原因",example="交收失败原因")
     private String remark;
 
+    @ApiModelProperty(name="calMode",value="计算方式",example="计算方式供前台判断使用")
+    private String calMode;
     public String getSettleStatus() {
         return settleStatus;
     }
@@ -394,5 +396,13 @@ public class CfetsManualSettleTradeListRespond {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getCalMode() {
+        return calMode;
+    }
+
+    public void setCalMode(String calMode) {
+        this.calMode = calMode;
     }
 }

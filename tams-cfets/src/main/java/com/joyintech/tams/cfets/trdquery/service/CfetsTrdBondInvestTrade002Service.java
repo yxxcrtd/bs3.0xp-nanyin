@@ -1055,7 +1055,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
      * @see
      * @since 1.0
      */
-    public void doCompleteRevoke(CfetsTrdBondInvestTradeDto entity,String settleRemark) {
+    public void doCompleteRevoke(CfetsTrdBondInvestTradeDto entity,String settleRemark,Boolean isNeedDealPosition) {
         // 调用基础组合.【金融产品交易组件.查询金融产品交易信息】获取原交易信息
         if (entity.getTotleTradeId().lastIndexOf('R') == entity.getTotleTradeId().length() - 1) {
             entity.setTotleTradeId(entity.getTotleTradeId().substring(0, entity.getTotleTradeId().length() - 1));
@@ -1178,7 +1178,14 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         cfetsTrdConfirmMapper.deleteByTrdId(bizCode);
 
        //发送头寸
-        PositionHttpRequest.deleteMethod(bizCode,DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+        if(isNeedDealPosition){
+            PositionHttpRequest.deleteMethod(bizCode,DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+        }else{
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("totleTradeId", bizCode);
+            paramMap.put("tradeStatus", BussinessDictCodeList.银行间上行报价状态_已撤销.getValue());
+            cfetsTrdQueryMapper.updateIbuByPrimaryKeySelective(paramMap);
+        }
     }
 
     /**
@@ -1462,7 +1469,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         }
         // 撤销
         else {
-            this.doCompleteRevoke(entity,"");
+            this.doCompleteRevoke(entity,"",true);
 
             //补充  如果是撤销将交易ID赋值为null
             Map<String, Object> map = new HashMap<>();

@@ -273,6 +273,8 @@ public class CfetsTrdConfirmRegInfoListResponse{
     private String quoteId;
     @ApiModelProperty(name="basis",value="计息基础",example="字符串1")
     private String basis;
+    @ApiModelProperty(name="busAct",value="按钮动作",example="字符串1")
+    private String butAct;
     @ApiModelProperty(name="selectedItem",value="选中数据",example="字符串1")
     private transient List<CfetsTrdConfirmRegInfoListResponse> selectedItem;
 
@@ -1018,5 +1020,13 @@ public class CfetsTrdConfirmRegInfoListResponse{
 
     public void setBasis(String basis) {
         this.basis = basis;
+    }
+
+    public String getButAct() {
+        return butAct;
+    }
+
+    public void setButAct(String butAct) {
+        this.butAct = butAct;
     }
 }
