@@ -498,9 +498,6 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         if (!StringUtil.isNotEmpty(repoEntrustPledgeDto.getPledgePrin())) {
             errorList.add(new ValidMessage("请输入质押券信息质押券面总额"));
         }
-        if (!StringUtil.isNotEmpty(repoEntrustPledgeDto.getFirstNetPrice())) {
-            errorList.add(new ValidMessage("请输入质押券信息首次净价"));
-        }
         if (!StringUtil.isNotEmpty(repoEntrustPledgeDto.getPledgeRatio())) {
             errorList.add(new ValidMessage("请输入质押券信息折算比例"));
         }

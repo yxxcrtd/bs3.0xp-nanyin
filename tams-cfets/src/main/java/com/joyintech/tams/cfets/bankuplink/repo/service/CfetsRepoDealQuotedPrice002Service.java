@@ -590,12 +590,12 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         if (!CollectionUtils.isEmpty(entity.getRepoEntrustPledgeDtos())) {
             // 同个质押券的汇总质押券面总额必须为十万的整数倍，且不超过100亿
 //            Map<String, BigDecimal> secPledgePrinMap = new HashMap<>();
-//            for (RepoEntrustPledgeDto repoEntrustPledgeDto : entity.getRepoEntrustPledgeDtos()) {
-//                List<ValidMessage> validMessageList = checkPledgeEmpty(repoEntrustPledgeDto, ps);
-//                if (validMessageList != null && !validMessageList.isEmpty()) {
-//                    errorList.addAll(validMessageList);
-//                    break;
-//                }
+            for (RepoEntrustPledgeDto repoEntrustPledgeDto : entity.getRepoEntrustPledgeDtos()) {
+                List<ValidMessage> validMessageList = checkPledgeEmpty(repoEntrustPledgeDto, ps);
+                if (validMessageList != null && !validMessageList.isEmpty()) {
+                    errorList.addAll(validMessageList);
+                    break;
+                }
 //                // 按质押券维度 汇总质押券面总额
 //                if (StringUtil.isNotEmpty(secPledgePrinMap.get(repoEntrustPledgeDto.getBondCode()))) {
 //                    secPledgePrinMap.put(repoEntrustPledgeDto.getBondCode(),
@@ -603,7 +603,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
 //                } else {
 //                    secPledgePrinMap.put(repoEntrustPledgeDto.getBondCode(), repoEntrustPledgeDto.getPledgePrin());
 //                }
-//            }
+            }
             // 同个质押券的汇总质押券面总额必须为十万的整数倍，且不超过100亿
 //            checkSecPledgePrin(secPledgePrinMap, errorList);
             massge = checkMatchCountPledgeBondList(errorList, entity);
@@ -776,9 +776,6 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         }
         if (!StringUtil.isNotEmpty(repoEntrustPledgeDto.getPledgePrin())) {
             errorList.add(new ValidMessage("请输入质押券信息质押券面总额"));
-        }
-        if (!StringUtil.isNotEmpty(repoEntrustPledgeDto.getFirstNetPrice())) {
-            errorList.add(new ValidMessage("请输入质押券信息首次净价"));
         }
         if (!StringUtil.isNotEmpty(repoEntrustPledgeDto.getPledgeRatio())) {
             errorList.add(new ValidMessage("请输入质押券信息折算比例"));
