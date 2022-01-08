@@ -1633,9 +1633,9 @@ public class IbuQuoteRepoService extends BaseService {
             // 处理组合分配
             RepoPtlAllocationDto ptlAllocationDto = new RepoPtlAllocationDto();
             BeanUtil.copyPropertiesIgnoreNull(ptlAllocationDto, item);
-            ptlAllocationDto.setAvaNum(ArithmeticUtil.multiply(item.getAvaNum(), new BigDecimal("10000")));
+            ptlAllocationDto.setAvaNum(item.getAvaNum());
             //交易金额应默认等于剩余指令额度
-            ptlAllocationDto.setTradeAmt(ArithmeticUtil.multiply(item.getAvaNum(), new BigDecimal("10000")));
+            ptlAllocationDto.setTradeAmt(item.getAvaNum());
             // 回购利率
             ptlAllocationDto.setPrice(item.getTradeYield());
             ptlAllocations.add(ptlAllocationDto);
@@ -1664,6 +1664,10 @@ public class IbuQuoteRepoService extends BaseService {
         cfetsRepoDealQuoteCommonDto.setRepoEntrustPledgeDtos(repoEntrustPledgeDtos);
         // 基本信息中【交易金额】默认为组合分配中剩余指令额度的汇总
         cfetsRepoDealQuoteCommonDto.setTradeAmt(tradeAmt);
+        if (CollectionUtils.isEmpty(repoEntrustPledgeDtos)
+                && StringUtil.equals(cfetsRepoDealQuoteCommonDto.getPs(), DictCodeListExt3.交易方向_正回购.getValue())) {
+            cfetsRepoDealQuoteCommonDto.setTradeAmt(null);
+        }
         // 【券面总额合计】等于质押券信息列表中质押券面总额的汇总
         BigDecimal shareAmt = BigDecimal.ZERO;
         // 【质押券折算总额】等于质押券信息中质押券面总额*折算比例的汇总
