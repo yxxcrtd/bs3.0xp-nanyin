@@ -23,6 +23,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
+import com.joyintech.tams.valuation.trademanage.bond.dto.TrdBondTrade001Dto;
 import com.joyintech.tams.valuation.trademanage.trddepositvaluationtrade.dto.TrdDepositValuationTrade001Dto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -53,11 +54,6 @@ public class TrdDepositValuationTrade001Service extends CommonExportService<TrdD
      * @return Page类
      * @throws Exception 异常信息
      */
-//    public Page<TrdDepositValuationTrade001Dto> findPage(Map<String, Object> pageParam){
-//        return restTemplate.postForPage(
-//                ServiceApplication.VALUATION_SERVICE_NAME + "/TrdDepositValuationTrade001/selectForPage",
-//                pageParam,TrdDepositValuationTrade001Dto.class);
-//    }
 
     public Page<TrdDepositValuationTrade001Dto> findPage(Map<String, Object> pageParam) {
 
@@ -66,33 +62,19 @@ public class TrdDepositValuationTrade001Service extends CommonExportService<TrdD
     }
 
 
+
     /**
-     * 导出 
+     * 不分页
+     *
+     * @param params
+     * @return
      */
-     @Override
-     protected void buildExportParam(ExportParam exportParam) {
-    	 String isShowType = (String) exportParam.getSelectParam().get("isShowType");
-    	 if(!StringUtil.isNotEmpty(isShowType) || StringUtil.equals(isShowType, "01")) {
-         	exportParam.config("/com/joyintech/tams/invest/trade/trddepositinvesttrade/conf/export_conf.xml").dataSource(DataSourceType.MASERT);
-         }else {
-         	exportParam.config("/com/joyintech/tams/invest/trade/trddepositinvesttrade/conf/export_conf002.xml").dataSource(DataSourceType.MASERT);
-         }
-         
-     }
+    public List<TrdDepositValuationTrade001Dto> queryPageList(Map<String, Object> params) {
+        return restTemplate.postForList(
+                ServiceApplication.VALUATION_SERVICE_NAME + "/TrdDepositValuationTrade001/queryPageList", params,
+                TrdDepositValuationTrade001Dto.class);
+    }
 
-
-//     /**
-//      * {@inheritDoc}
-//      */
-//     @Override
-//     public Page<TrdDepositValuationTrade001Dto> selectPageData(Map<String, Object> selectParam) {
-//         return findPage(selectParam);
-//     }
-//     public Page<TrdDepositValuationTrade001Dto> findPage(Map<String,Object> map){
-//
-//         return simpleRestTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME
-//             + "/TrdDepositValuationTrade001/findPage",map,TrdDepositValuationTrade001Dto.class);
-//     }
 
 
 
@@ -116,8 +98,12 @@ public class TrdDepositValuationTrade001Service extends CommonExportService<TrdD
      }
 
 
+    /**
+     * 工作流（留痕处理进行的操作）
+     */
     @Override
-    public void doComplete(TrdDepositValuationTrade001Dto trdDepositValuationTrade001Dto, OperationType operationType) {
-
+    public void doComplete(TrdDepositValuationTrade001Dto entity, OperationType type) {
+        String action = "delete";
+        restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/TrdDepositValuationTrade001/" + action, entity, Integer.class);
     }
 }

@@ -87,6 +87,7 @@ public interface TrdDepositValuationTrade001Mapper {
 
 
 
+    TrdDepositValuationTrade001Dto queryTradeInfoByTradeId(String tradeId);
 
 
 
