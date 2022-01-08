@@ -75,7 +75,7 @@ public class CommonController {
     }
 
     @ApiOperation(value = "场内交易系统上下文查询", notes = "场内交易系统上下文查询")
-    @RequestMapping(value = "/common/fairTrade/systemParam", method = RequestMethod.POST)
+    @RequestMapping(value = "/common/exchangeContext", method = RequestMethod.POST)
     public Message<ExchangeContextResponse> queryExchangeContext() {
         return new Message<>(commonManagement.queryExchangeContext());
     }
