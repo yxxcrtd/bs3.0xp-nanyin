@@ -809,7 +809,7 @@ public class AssetInfoDetailUtil {
      */
     private SvrBussRepOtherInfoDto getSvrBussRepOtherInfoDto(List<ValidMessage> messages,List<String> list,List<String> headList){
         SvrBussRepOtherInfoDto dto = new SvrBussRepOtherInfoDto();
-        dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(headList.indexOf("*所属国家或地区"))));
+        dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(headList.lastIndexOf("*所属国家或地区"))));
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("期限（天）")))) {
             if (CommonUtil.isFloatNumeric(list.get(headList.indexOf("期限（天）")))){
                 dto.setTermDate(new BigDecimal(list.get(headList.indexOf("期限（天）"))));
@@ -847,8 +847,8 @@ public class AssetInfoDetailUtil {
             dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
         //新增资产代码字段 add by tuqirong 2021-12-31 start
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("是否为同业借款")))) {
-            dto.setIsDepositFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("是否为同业借款"))));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*是否为同业借款")))) {
+            dto.setIsDepositFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("*是否为同业借款"))));
         }
         //新增资产代码字段 add by tuqirong 2021-12-31 end
         return dto;
@@ -1239,7 +1239,7 @@ public class AssetInfoDetailUtil {
      */
     private SvrBussRepQDIIStructureInfoDto getSvrBussRepQDIIStructureInfoDto(List<ValidMessage> messages,List<String> list,List<String> headList){
         SvrBussRepQDIIStructureInfoDto dto = new SvrBussRepQDIIStructureInfoDto();
-        dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(headList.indexOf("*所属国家或地区"))));
+        dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(headList.lastIndexOf("*所属国家或地区"))));
         dto.setContractName(list.get(headList.indexOf("*合约名称")));
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("票面利率%")))) {
             if (CommonUtil.isFloatNumeric(list.get(headList.indexOf("票面利率%")))){
@@ -1332,10 +1332,19 @@ public class AssetInfoDetailUtil {
      */
     private SvrBussQDIISharesInfoDto getSvrBussQDIISharesInfoDto(List<ValidMessage> messages,List<String> list,List<String> headList){
         SvrBussQDIISharesInfoDto dto = new SvrBussQDIISharesInfoDto();
+        //add by tuqirong 2022-01-08 start
+        //由于list集合中存在多个"*所属国家或地区"，为避免获取"*所属国家或地区"位置错误，从第二个"*所属国家或地区"位置开始截取list集合后再获取相应的值
+        int index1 = headList.indexOf("*所属国家或地区");
+        headList = headList.subList(index1 + 1, headList.size());
+        list = list.subList(index1 + 1, list.size());
+        int index2 = headList.indexOf("*所属国家或地区");
+        headList = headList.subList(index2 + 1, headList.size());
+        list = list.subList(index2 + 1, list.size());
+        //add by tuqirong 2022-01-08 end
         dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(headList.indexOf("*所属国家或地区"))));
         dto.setAssetId(list.get(headList.indexOf("*股票/基金代码")));
         dto.setAssetName(list.get(headList.indexOf("*股票/基金名称")));
-        dto.setIssuePartyName(list.get(headList.indexOf("*发行机构")));
+        dto.setIssuePartyName(list.get(headList.lastIndexOf("*发行机构")));
         dto.setIndustryShares2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(headList.indexOf("*行业"))));
         dto.setIndustryShares(dict.get("industry"+dto.getIndustryShares2()));
         dto.setRemark(list.get(headList.indexOf("备注")));
@@ -1360,6 +1369,12 @@ public class AssetInfoDetailUtil {
      */
     private SvrBussRepQDIIdemolitionInfoDto getSvrBussRepQDIIdemolitionInfoDto(List<ValidMessage> messages,List<String> list,List<String> headList){
         SvrBussRepQDIIdemolitionInfoDto dto = new SvrBussRepQDIIdemolitionInfoDto();
+        //add by tuqirong 2022-01-08 start
+        //由于list集合中存在多个"*所属国家或地区"，为避免获取"*所属国家或地区"位置错误，从第一个"*所属国家或地区"位置开始截取list集合后再获取相应的值
+        int index = headList.indexOf("*所属国家或地区");
+        headList = headList.subList(index + 1, headList.size());
+        list = list.subList(index + 1, list.size());
+        //add by tuqirong 2022-01-08 end
         dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(headList.indexOf("*所属国家或地区"))));
         dto.setRivalParty(list.get(headList.indexOf("*对手方")));
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("*年利率%")))) {
