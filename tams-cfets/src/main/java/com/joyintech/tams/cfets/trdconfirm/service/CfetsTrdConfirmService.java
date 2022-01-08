@@ -2935,7 +2935,7 @@ public class CfetsTrdConfirmService extends BaseService{
         PositionHttpRequest.send(req);
     }
     /**
-     * CSTP成交回报-债券自动匹配
+     * CSTP成交回报-自动匹配
      */
     @Transactional(rollbackFor = Exception.class)
     @DTXTransaction
