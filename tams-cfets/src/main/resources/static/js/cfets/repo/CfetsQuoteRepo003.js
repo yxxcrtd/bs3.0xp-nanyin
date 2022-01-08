@@ -56,7 +56,7 @@
             , disabled: true
         }
         , {
-            field: 'fpriceAmt',
+            field: 'cPriceAmt',
             width: 120,
             title: '交易金额(元)',
             sortable: false,
@@ -83,7 +83,7 @@
             , disabled: true
         }
         , {
-            field: 'mIntAmt',
+            field: 'intAmt',
             width: 100,
             title: '回购利息(元)',
             sortable: false,
@@ -92,7 +92,7 @@
             , disabled: true
         }
         , {
-            field: 'mtradeAmt',
+            field: 'fpriceAmt',
             width: 150,
             title: '到期结算金额(元)',
             sortable: false,
@@ -101,7 +101,7 @@
             , disabled: true
         }
         , {
-            field: 'priceModelStr',
+            field: 'priceModel',
             width: 100,
             title: '价格模式',
             sortable: false,

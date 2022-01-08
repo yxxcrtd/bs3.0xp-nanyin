@@ -1047,10 +1047,10 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 && StringUtil.isNotEmpty(quoteId)) {
             cfetsRepoDealQuotedPrice001Dto.setQuoteId(null);
         }
-        if (cfetsRepoDealQuotedPrice001Dto.getQuoteId() != null) {
-            // 交谈记录
-            cfetsRepoDealQuotedPrice001Dto.setDialogueRecord(this.selectDialogueRecord(cfetsRepoDealQuotedPrice001Dto).getDialogueRecord());
-        }
+//        if (cfetsRepoDealQuotedPrice001Dto.getQuoteId() != null) {
+//            // 交谈记录
+//            cfetsRepoDealQuotedPrice001Dto.setDialogueRecord(this.selectDialogueRecord(cfetsRepoDealQuotedPrice001Dto).getDialogueRecord());
+//        }
         Map<String, Object> map = new HashMap<>();
         map.put("quoteId", quoteId);
         //多组合质押券列表单独处理
@@ -1532,7 +1532,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                     msg += rowMsg;
                 }
             }
-            msg = HtmlUtils.htmlEscape(msg);
+//            msg = HtmlUtils.htmlEscape(msg);
             return msg;
         }
         return "";
@@ -2320,6 +2320,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
     public CfetsRepoDealQuotedPrice001Dto serviceDto2InvestDto(com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto dto) {
         CfetsRepoDealQuotedPrice001Dto result
                 = JsonUtils.json2Object(JsonUtils.object2Json(dto), CfetsRepoDealQuotedPrice001Dto.class);
+        result.setDialogueRecord(dto.getDialogueRecord());
         return result;
     }
 
