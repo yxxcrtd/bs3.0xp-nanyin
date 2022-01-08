@@ -4141,6 +4141,52 @@ public class InterfCommonService {
         			checkError.append("prodId"+"：产品["+finprodId+"]没有对应的回补费用["+feeId+"]现金流信息，需要联系管理员进行产品费用基础信息接入确认;");
     	        }
     		}
+
+    		/**add by yinya on 2022-01-08 结算指令自动映射指令类型的检查项 start**/
+            if(TempConstant.结算指令.equals(tmpEName)){
+                String orderId = InterfHelper.getObjectFieldValue(object, "orderId");
+                String finprodType1 = InterfHelper.getObjectFieldValue(object, "finprodType");
+                String busiType = InterfHelper.getObjectFieldValue(object, "busiType");
+                String tradePs = InterfHelper.getObjectFieldValue(object, "tradePs");
+                String invAim = InterfHelper.getObjectFieldValue(object, "invAim");
+                //定义 变量.交易对应指令集合 = 调用共通设计->【详细设计-接口共通方法设计.xlsx】->查询交易需要生成的指令SHEET
+                ProductDealDto deal = new ProductDealDto();
+                deal.setFinprodType(finprodType1);
+                deal.setBusiType(busiType);
+                deal.setPs(tradePs);
+                deal.setInvAim(invAim);
+                //02为接口默认使用的映射类型
+                deal.setMappingType("02");
+                //匹配IS_BOOK为N的指令映射
+                deal.setIsTrade(DictCodeList.是否_否.getValue());
+                List<StlOrdersMapping> somlist = this.queryStlOrdersMapping(deal);
+                List<StlOrdersMapping> stlList =new ArrayList<StlOrdersMapping>();
+                if(somlist==null || somlist.size()==0){
+                    ischeck = false;
+                    checkError.append("指令编号："+orderId
+                       +" 金融产品类型："+finprodType1
+                       +" 业务类型："+busiType
+                       +" 交易方向："+tradePs
+                       +" 投资目的："+invAim
+                       +"未匹配指令类型,请检查结算指令与交易映射关系表");
+                }
+                //去重处理
+                somlist.stream(). collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(f -> f.getOrderType()+f.getMappingType()))), ArrayList::new))
+                        .forEach(f->stlList.add(f));
+
+                if(stlList.size()>1){
+                    ischeck = false;
+                    checkError.append("指令编号："+orderId
+                            +" 金融产品类型："+finprodType1
+                            +" 业务类型："+busiType
+                            +" 交易方向："+tradePs
+                            +" 投资目的："+invAim
+                            +" 匹配多个指令类型，请检查结算指令与交易映射关系表");
+                }
+
+            }
+            /**add by yinya on 2022-01-08 结算指令自动映射指令类型的检查项 end**/
+
     		if(ischeck){
     			rstlist.add(object);
     		}else{
@@ -5183,7 +5229,7 @@ public class InterfCommonService {
      * @see
      * @since 1.0
      */
-    private List<StlOrdersMapping> queryStlOrdersMapping(ProductDealDto productDealDto){
+    public List<StlOrdersMapping> queryStlOrdersMapping(ProductDealDto productDealDto){
     	List<StlOrdersMapping> rstlist = new ArrayList<StlOrdersMapping>();
     	String channelAsset = DictCodeList.是否_否.getValue();
     	if(StringUtil.equals(productDealDto.getFinprodType(), DictCodeListExt1.金融产品类型_计划类资产.getValue())

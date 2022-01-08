@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -47,7 +48,7 @@ public class ValCleanOrder extends BaseEntity {
     /**
      * 结算金额
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
+    @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal settleAmt;
 
     /**
@@ -84,6 +85,22 @@ public class ValCleanOrder extends BaseEntity {
      * 交收状态
      */
     private String settleStatus;
+
+    /**
+     * 金融产品类型
+     */
+    private String finprodType;
+
+    /**
+     * 原交易方向
+     */
+    private String tradePs;
+
+    /**
+     * 原交易投资目的
+     */
+    private String invAim;
+
 
     /**
      * 取得 产品代码
@@ -323,5 +340,29 @@ public class ValCleanOrder extends BaseEntity {
      */
     public void setSettleStatus(String settleStatus) {
         this.settleStatus = settleStatus == null ? null : settleStatus.trim();
+    }
+
+    public String getFinprodType() {
+        return finprodType;
+    }
+
+    public void setFinprodType(String finprodType) {
+        this.finprodType = finprodType;
+    }
+
+    public String getTradePs() {
+        return tradePs;
+    }
+
+    public void setTradePs(String tradePs) {
+        this.tradePs = tradePs;
+    }
+
+    public String getInvAim() {
+        return invAim;
+    }
+
+    public void setInvAim(String invAim) {
+        this.invAim = invAim;
     }
 }
