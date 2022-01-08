@@ -184,10 +184,16 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
     private Date transmitTime;
 
 
+//    /**
+//     *
+//     */
+//    private Boolean submitFlag;
+
+
     /**
      *
      */
-    private Boolean submitFlag;
+    private String systemAct;
 
     /**
      * 投资人员信息DTO
@@ -475,11 +481,19 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
         this.transmitTime = transmitTime;
     }
 
-    public Boolean getSubmitFlag() {
-        return submitFlag;
+//    public Boolean getSubmitFlag() {
+//        return submitFlag;
+//    }
+//
+//    public void setSubmitFlag(Boolean submitFlag) {
+//        this.submitFlag = submitFlag;
+//    }
+
+    public String getSystemAct() {
+        return systemAct;
     }
 
-    public void setSubmitFlag(Boolean submitFlag) {
-        this.submitFlag = submitFlag;
+    public void setSystemAct(String systemAct) {
+        this.systemAct = systemAct;
     }
 }
