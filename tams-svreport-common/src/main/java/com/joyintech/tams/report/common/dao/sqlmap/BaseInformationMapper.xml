@@ -254,6 +254,7 @@ select * from (SELECT t.*,ROWNUM ROW_ID FROM ${tableId} t WHERE
 			<foreach collection="map" index="key" item="value" separator="AND">
 				(${key} = ${value})
 			</foreach>
+			AND STATUS != 'D'
 		</where>
 	</if>
 	</update>
