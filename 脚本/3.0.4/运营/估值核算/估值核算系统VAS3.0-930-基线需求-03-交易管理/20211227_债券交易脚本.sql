@@ -5,7 +5,7 @@ INSERT INTO SYS_MENU
 VALUES('DEAL_001_001_014', 'VAL', NULL, 'DEAL_001_001', 'TrdBondTrade001', 14, '2', '债券交易', 'system', NULL, sysdate, 'system', sysdate);
 
 --债券交易页面表
-DELETE FROM SYS_PAGE WHERE PAGE_ID='TrdBondTrade001';
+DELETE FROM SYS_PAGE WHERE PAGE_ID in('TrdBondTrade001','TrdBondTrade002');
 INSERT INTO SYS_PAGE
 (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 VALUES('TrdBondTrade001', 'VAL', '/valuation/trademanage/bond/TrdBondTrade001', 'valuation/trademanage/bond/TrdBondTrade001', 'DEAL_001_001_014', NULL, NULL, '02', '01', '债券交易查询', 'system', NULL, sysdate, 'system', sysdate);
