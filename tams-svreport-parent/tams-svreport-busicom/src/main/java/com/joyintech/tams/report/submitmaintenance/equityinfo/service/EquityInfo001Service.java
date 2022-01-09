@@ -569,6 +569,8 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
     @Transactional(rollbackFor = Exception.class)
     public List<ExcelValidDto> importData(List<List<String>> dataList,List<List<String>> tempList,String bankCode,String deptCode,String orgCode) {
         if (!StringUtil.isEmptyList(dataList)) {
+        	String templateFlag = SvrDataUtil.getSysParam("SVR_EQU_INFO_TEMPLATE_FLAG");
+        	
             List<String> headList = new ArrayList<String>();
             headList.add("登记银行代码");
             headList.add("识别标识");
@@ -596,7 +598,9 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             headList.add("经办人");
             headList.add("接入检查结果");
             headList.add("中债反馈消息");
-            headList.add("账号开户所在地");
+            if("02".equals(templateFlag)) {
+            	headList.add("账号开户所在地");
+            }            
 
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
             if (!StringUtil.isEmptyList(tempCheckResult)) {
@@ -767,8 +771,10 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
 
             EquityInfo001Dto equityCheck = equityInfoMap.get(
                     equityInfo001Dto.getIndentifyMark() + "_" + equityInfo001Dto.getBankCode());
+            EquityInfo001Dto equityCheckByOrg = equityInfoMap.get(
+                    equityInfo001Dto.getOrgIndentifyMark() + "_" + equityInfo001Dto.getBankCode());
             // 插入前维护表中无数据，将dto放入listN
-            if (equityCheck == null) {
+            if (equityCheck == null && equityCheckByOrg == null) {
                 listN.add(equityInfo001Dto);
             }
             // if(EquityInfoCheckUtil.isEmpty(equityInfo001Dto.getImportStatus())){
@@ -1518,6 +1524,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
      * @since 1.0
      */
     private List<EquityInfo001Dto> converToBean(List<List<String>> dataList,String orgCode) {
+    	String templateFlag = SvrDataUtil.getSysParam("SVR_EQU_INFO_TEMPLATE_FLAG");
         // 返回的list定义
         List<EquityInfo001Dto> returnInfoList = new ArrayList<EquityInfo001Dto>();
         EquityInfo001Dto equityInfo001Dto = null;
@@ -1580,12 +1587,101 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             equityInfo001Dto.setRemark(list.get(21));
             equityInfo001Dto.setAgent(list.get(23));
             equityInfo001Dto.setOrgCode(orgCode);
-            if (!EquityInfoCheckUtil.isEmpty(list.get(22))) {
+            //投资者分类
+        	if (!EquityInfoCheckUtil.isEmpty(list.get(22))) {
                 equityInfo001Dto.setHolderClassify(
                         EquityInfoCheckUtil.subDictcode(list.get(22), " "));
             }
-            //开户行所在地
-            equityInfo001Dto.setFundAccPlace(list.get(26));
+        	
+            if("02".equals(templateFlag)) {
+            	//开户行所在地
+            	equityInfo001Dto.setFundAccPlace(list.get(26));
+            }            
+            // 增加行号
+            equityInfo001Dto.setExcelNum(String.valueOf(i + 2));
+            //检查序列号设置初始值
+            equityInfo001Dto.setCheckSeqno("0");       
+            returnInfoList.add(equityInfo001Dto);
+        }
+        return returnInfoList;
+    }
+    
+    /**
+     * list转换为Bean
+     *
+     * @param dataList excel解析后的list
+     * @return List<EquityInfo001Dto>
+     * @see
+     * @since 1.0
+     */
+    private List<EquityInfo001Dto> converToBeanForChb(List<List<String>> dataList,String orgCode) {    
+        // 返回的list定义
+        List<EquityInfo001Dto> returnInfoList = new ArrayList<EquityInfo001Dto>();
+        EquityInfo001Dto equityInfo001Dto = null;
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> list = dataList.get(i);
+            equityInfo001Dto = new EquityInfo001Dto();
+            equityInfo001Dto.setBankCode(list.get(0));
+            equityInfo001Dto.setIndentifyMark(list.get(1));
+            equityInfo001Dto.setOrgIndentifyMark(list.get(2));
+            if (!EquityInfoCheckUtil.isEmpty(list.get(3))) {
+                equityInfo001Dto.setIsBelongBank(
+                        EquityInfoCheckUtil.subDictcode(list.get(3), " "));
+            }
+            equityInfo001Dto.setTheBankName(list.get(4));
+            equityInfo001Dto.setTheBankCode(list.get(5));
+            if (!EquityInfoCheckUtil.isEmpty(list.get(6))) {
+                equityInfo001Dto.setHolderMark(EquityInfoCheckUtil.subDictcode(list.get(6), " "));
+            }
+            if (!EquityInfoCheckUtil.isEmpty(list.get(7))) {
+                equityInfo001Dto.setHolderRegion(
+                        EquityInfoCheckUtil.subDictcode(list.get(7), " "));
+            }
+            if (!EquityInfoCheckUtil.isEmpty(list.get(8))) {
+                equityInfo001Dto.setHolderType(EquityInfoCheckUtil.subDictcode(list.get(8), " "));
+            }
+            if (!EquityInfoCheckUtil.isEmpty(list.get(9))) {
+                equityInfo001Dto.setPersonalIdentifyType(
+                        EquityInfoCheckUtil.subDictcode(list.get(9), " "));
+            }
+            if (!EquityInfoCheckUtil.isEmpty(list.get(10))) {
+                equityInfo001Dto.setInstitutionIdentifyType(
+                        EquityInfoCheckUtil.subDictcode(list.get(10), " "));
+            }
+            equityInfo001Dto.setOtherIdentifyName(list.get(11));
+            equityInfo001Dto.setIdentifyNumber(list.get(12));
+            if (!EquityInfoCheckUtil.isEmpty(list.get(13))) {
+                equityInfo001Dto.setSpvCapAccBank(
+                        EquityInfoCheckUtil.subDictcode(list.get(13), " "));
+            }
+            equityInfo001Dto.setOtherCapAccBank(list.get(14));
+//            equityInfo001Dto.setSpvRegistCode(list.get(15));
+            //去除投资者名称空格
+            if(StringUtil.equals(DictCodeList.境内外_境内.getValue(), equityInfo001Dto.getHolderMark())
+                    &&StringUtil.isNotEmpty(list.get(15))){
+                equityInfo001Dto.setHolderName(list.get(15).replace(StringUtil.SPACE, StringUtil.EMPTY));
+            }
+            else{
+                equityInfo001Dto.setHolderName(list.get(15));
+            }
+            if (!EquityInfoCheckUtil.isEmpty(list.get(16))) {
+                equityInfo001Dto.setHolderSex(EquityInfoCheckUtil.subDictcode(list.get(16), " "));
+            }
+            if (!EquityInfoCheckUtil.isEmpty(list.get(17))) {
+                equityInfo001Dto.setHolderRiskPrefer(
+                        EquityInfoCheckUtil.subDictcode(list.get(17), " "));
+            }
+            equityInfo001Dto.setHolderCellphone(list.get(18));
+            equityInfo001Dto.setHolderTelephone(list.get(19));
+            equityInfo001Dto.setHolderEmail(list.get(20));
+            equityInfo001Dto.setRemark(list.get(21));
+            equityInfo001Dto.setAgent(list.get(23));
+            equityInfo001Dto.setOrgCode(orgCode);
+            //投资者分类
+        	if (!EquityInfoCheckUtil.isEmpty(list.get(22))) {
+                equityInfo001Dto.setHolderClassify(
+                        EquityInfoCheckUtil.subDictcode(list.get(22), " "));
+            }           
             // 增加行号
             equityInfo001Dto.setExcelNum(String.valueOf(i + 2));
             //检查序列号设置初始值
@@ -2551,6 +2647,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
 	public List<ExcelValidDto> importChbData(List<List<String>> dataList,
 			List<List<String>> tempList,List<List<String>> dataTypeList,String bankCode,String deptCode,String orgCode) {
         if (!StringUtil.isEmptyList(dataList)) {
+        	String templateFlag = SvrDataUtil.getSysParam("SVR_EQU_INFO_TEMPLATE_FLAG");
             List<String> headList = new ArrayList<String>();
             headList.add("登记银行代码");
             headList.add("该投资者是否属于本行");
@@ -2604,7 +2701,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 List<ExcelValidDto> checkResult = equityInfoValid.checkExcelEquity(dataList,
                         listType,dataTypeList,spzMap,objFiledsMap,orgCode);
                 if (checkResult.isEmpty()) {
-                    List<EquityInfo001Dto> equityList = converToBean(dataList,orgCode);
+                    List<EquityInfo001Dto> equityList = converToBeanForChb(dataList,orgCode);
                     EquityInfoDistinctService equityInfoDistinctService =
                             SpringContextUtil.getBean(EquityInfoDistinctService.class);
                     List<String> keys = equityInfoDistinctService.getKeys(equityList);
@@ -2793,7 +2890,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
      */
     public AjaxResult checkConfirmMsgForChbImportData(List<List<String>> dataList,List<List<String>> tempList) {
         AjaxResult webResult = new AjaxResult();
-        if (!StringUtil.isEmptyList(dataList)) {
+        if (!StringUtil.isEmptyList(dataList)) {        	
             List<String> headList = new ArrayList<String>();
             headList.add("登记银行代码");
             headList.add("该投资者是否属于本行");
@@ -2819,6 +2916,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             headList.add("电子邮箱");
             headList.add("备注");
             headList.add("投资者分类");
+                        
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
             if (!StringUtil.isEmptyList(tempCheckResult)) {
                 webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
@@ -2829,7 +2927,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             //将中债的数据格式转换成本系统支持的格式
             toChbList(dataList);
             if (CollectionUtils.isNotEmpty(dataList)) {
-                List<EquityInfo001Dto> entities = converToBean(dataList,null);
+                List<EquityInfo001Dto> entities = converToBeanForChb(dataList,null);
                 List<EquityInfo001Dto> data = new ArrayList<EquityInfo001Dto>();
                 try {
                     data = this.selectEquityByKey(entities);
