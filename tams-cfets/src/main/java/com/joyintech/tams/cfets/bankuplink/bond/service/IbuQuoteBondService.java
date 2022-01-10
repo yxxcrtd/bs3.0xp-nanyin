@@ -1217,6 +1217,25 @@ public class IbuQuoteBondService extends BaseService {
     }
 
     /**
+     * 报价删除
+     * @param bondQuoteInfoDto
+     * @return
+     */
+    public boolean doDel(BondQuoteInfoDto bondQuoteInfoDto) {
+        if (StringUtil.equals(bondQuoteInfoDto.getQuoteType(),
+                BussinessDictCodeList.报价方式_对话报价.getValue())) {
+            cfetsBondDealQuotedPriceService.doDeletePtlPositionHoldByQuoteId(bondQuoteInfoDto.getQuoteId());
+            return cfetsBondDealQuotedPriceService.deleteBondRequestQuote(bondQuoteInfoDto.getQuoteId());
+        }
+        else if (StringUtil.equals(bondQuoteInfoDto.getQuoteType(),
+                BussinessDictCodeList.报价方式_请求报价.getValue())) {
+            cfetsBondDealQuotedPriceService.doDeletePtlPositionHoldByQuoteId(bondQuoteInfoDto.getQuoteId());
+            return cfetsBondDealQuotedPriceService.deleteBondRequestQuote(bondQuoteInfoDto.getQuoteId());
+        }
+        return false;
+    }
+
+    /**
      * 当日登记(分页列表)
      * @param dto
      * @return
