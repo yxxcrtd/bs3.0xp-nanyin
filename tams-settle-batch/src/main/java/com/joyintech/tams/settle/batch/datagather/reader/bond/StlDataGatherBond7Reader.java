@@ -26,6 +26,9 @@ public class StlDataGatherBond7Reader extends StlDataGatherReader {
         // 业务类型
         searchParam.put("busiType", "R3S5");
         searchParam.put("finprodOthCodeType", DictCodeListExt3.金融产品其他代码类型_上市流通.getValue());
+        // GZYHTZJY-1084:readerType为BondDuration modify by fuyongsheng 20220110 start
+        searchParam.put("readerType", "BondDuration");
+        // GZYHTZJY-1084:readerType为BondDuration modify by fuyongsheng 20220110 end
     }
 
     @Override
