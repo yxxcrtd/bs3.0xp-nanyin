@@ -1,7 +1,9 @@
 package com.joyintech.tams.cfets.common.controller;
 
-import com.joyintech.framework.annotation.PageId;
 import com.joyintech.tams.cfets.trdconfirm.service.CfetsTrdConfirmService;
+import com.joyintech.tams.common.base.entity.InterfCstpTrade;
+import com.joyintech.tams.common.base.entity.InterfOpicsTradRepo;
+import com.joyintech.tams.common.base.entity.InterfTradSecdeal;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.workflow.engine.constant.OperationType;
 import org.slf4j.Logger;
@@ -17,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 供批处理用
+ * 共通
  * @author zznn
  * @date 2021/11/26
  */
@@ -29,6 +31,7 @@ public class CfetsIbuQuoteBatchCommonController {
 
     @Autowired
     private CfetsTrdConfirmService cfetsTrdConfirmService;
+
     /**
      * 回溯登记成交确认
      * @param parm
@@ -48,5 +51,26 @@ public class CfetsIbuQuoteBatchCommonController {
         }
     }
 
+
+
+    @ResponseBody
+    @PostMapping("cstpAutoTrade")
+    public void cstpAutoTrade(@RequestBody Map<String,Object> parm) throws Exception {
+        try{
+            InterfCstpTrade interfCstpTrade =  (InterfCstpTrade)parm.get("interfCstpTrade");
+            if(parm.containsKey("interfTradSecdeal")){
+                InterfTradSecdeal interfTradSecdeal = (InterfTradSecdeal)parm.get("interfTradSecdeal");
+                cfetsTrdConfirmService.cstpAutoMatchMethod(interfTradSecdeal,null,interfCstpTrade);
+            }
+            if(parm.containsKey("interfOpicsTradRepo")){
+                InterfOpicsTradRepo interfOpicsTradRepo = (InterfOpicsTradRepo)parm.get("interfOpicsTradRepo");
+                cfetsTrdConfirmService.cstpAutoMatchMethod(null,interfOpicsTradRepo,interfCstpTrade);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            logger.error("cstp成交回报自动匹配异常:"+e.getMessage());
+        }
+    }
 }
 

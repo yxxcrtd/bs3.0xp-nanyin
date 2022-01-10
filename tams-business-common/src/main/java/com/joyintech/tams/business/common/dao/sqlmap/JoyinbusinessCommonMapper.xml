@@ -305,9 +305,12 @@
     </select>
     <select id="queryCstpPartyList" resultType="com.joyintech.framework.select.SelectOptionDto">
         select distinct I.Counterinstitutioncode id,
-        I.Institutionchinesefullname text
+        I.Institutionchinesefullname text,
+        mstc.party_id as object
         from  INTERF_CSTP_TRADE I
-        <where>
+        left join MST_CFETS_CUSTOMER_INFO mstc
+        on mstc.party_customer_id=I.Counterinstitutioncode
+        where I.Counterinstitutioncode is not null
             <if test="search != null and !search.equals('')">
                 AND	(I.Counterinstitutioncode like concat('%',concat(#{search},'%'))
                 or I.Institutionchinesefullname like concat('%',concat(#{search},'%')))
@@ -315,7 +318,12 @@
             <if test="sysDate != null and !sysDate.equals('')">
                 AND  to_date(I.Tradedate,'yyyy-MM-dd')= #{sysDate,jdbcType=DATE}
             </if>
-        </where>
+            <if test="searchList != null and searchList.size() > 0">
+                AND mstc.party_id in
+                <foreach collection="searchList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
     </select>
     <select id="queryCounterPartyList" resultType="com.joyintech.framework.select.SelectOptionDto">
         select distinct mst.counter_id id,mst.counter_name  text,mst.party_id as object
@@ -324,6 +332,12 @@
             <if test="search != null and !search.equals('')">
                 AND	(mst.counter_id like concat('%',concat(#{search},'%'))
                 or mst.counter_name like concat('%',concat(#{search},'%')))
+            </if>
+            <if test="searchList != null and searchList.size() > 0">
+                AND mst.party_id in
+                <foreach collection="searchList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
             </if>
     </select>
     <select id="queryMySideTraderList" resultType="com.joyintech.framework.select.SelectOptionDto">

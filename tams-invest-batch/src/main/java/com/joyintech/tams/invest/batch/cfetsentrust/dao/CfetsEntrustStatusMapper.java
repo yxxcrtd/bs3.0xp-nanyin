@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.batch.cfetsentrust.dao;
 
+import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.invest.batch.cfetsentrust.dto.CfetsEntrustClosePosEtrReqDto;
 import org.springframework.stereotype.Repository;
 
@@ -32,4 +33,6 @@ public interface CfetsEntrustStatusMapper {
     List<CfetsEntrustClosePosEtrReqDto> selectEntrustIds(Map<String, String> sysDate);
 
     void updateDistributeStatus(Map<String, String> sysDate);
+
+    void updateBusModel(Map<String,Object> param);
 }

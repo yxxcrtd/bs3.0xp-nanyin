@@ -685,7 +685,7 @@
             </foreach>
         </if>
         <if test="quoteId != null and quoteId != ''">
-            AND ib.quoteId like CONCAT('%',CONCAT(#{quoteId,jdbcType=VARCHAR},'%'))
+            AND ib.quote_Id like CONCAT('%',CONCAT(#{quoteId,jdbcType=VARCHAR},'%'))
         </if>
         <if test="effectiveStatus != null and effectiveStatus != ''">
             AND decode(ib.trade_status,'15',#{STATUS_VALID_03},#{STATUS_VALID_01})=#{effectiveStatus,jdbcType=VARCHAR}
@@ -803,7 +803,7 @@
             </foreach>
         </if>
         <if test="quoteId != null and quoteId != ''">
-            AND ic.quoteId like CONCAT('%',CONCAT(#{quoteId,jdbcType=VARCHAR},'%'))
+            AND ic.quote_Id like CONCAT('%',CONCAT(#{quoteId,jdbcType=VARCHAR},'%'))
         </if>
         <if test="effectiveStatus != null and effectiveStatus != ''">
             AND decode(ic.trade_status,'15',#{STATUS_VALID_03},#{STATUS_VALID_01})=#{effectiveStatus,jdbcType=VARCHAR}
@@ -953,7 +953,7 @@
             </foreach>
         </if>
         <if test="quoteId != null and quoteId != ''">
-            AND ib.quoteId like CONCAT('%',CONCAT(#{quoteId,jdbcType=VARCHAR},'%'))
+            AND ib.quote_Id like CONCAT('%',CONCAT(#{quoteId,jdbcType=VARCHAR},'%'))
         </if>
         <if test="effectiveStatus != null and effectiveStatus != ''">
             AND #{STATUS_VALID_04}=#{effectiveStatus,jdbcType=VARCHAR}
@@ -1074,7 +1074,7 @@
             </foreach>
         </if>
         <if test="quoteId != null and quoteId != ''">
-            AND ic.quoteId like CONCAT('%',CONCAT(#{quoteId,jdbcType=VARCHAR},'%'))
+            AND ic.quote_Id like CONCAT('%',CONCAT(#{quoteId,jdbcType=VARCHAR},'%'))
         </if>
         <if test="effectiveStatus != null and effectiveStatus != ''">
             AND #{STATUS_VALID_04}=#{effectiveStatus,jdbcType=VARCHAR}

@@ -143,7 +143,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                                 || (StringUtil.equals(cfetsDto.getTgBusiType(), DictCodeListExt3.头寸业务类型_现券交易.getValue())
                                          && !StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_买入.getValue()))
                                 || (StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券质押式正回购.getValue())
-                                && StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_买入.getValue()))))){
+                                && StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_正回购.getValue()))))){
                     returnList.add(cfetsDto);
                 }
             }

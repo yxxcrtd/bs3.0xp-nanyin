@@ -235,7 +235,7 @@ public class CfetsTrdConfirmService extends BaseService{
                 CfetsTrdConfirmCstpInfoListResponse serchExecDto=dto.getSelectedItem().get(0);
                 pageParam.put("isSearchMatch",DictCodeList.是否_是.getValue());
                 //针对报价
-                pageParam.put("quoteid",serchExecDto.getQuoteid());
+                pageParam.put("execid",serchExecDto.getExecid());
                 if(StringUtil.equals(serchExecDto.getBusinesstype(),"BOND")){
                     //基础要素：成交日期、资产代码、交易场所、交易方向、清算速度、证券账户、净价/到期收益率、券面总额、结算日期、结算方式
                     pageParam.put("tradeDate",serchExecDto.getTradeDate());

@@ -33,4 +33,51 @@
 		</if>
 		)
 	</update>
+
+
+	<update id="updateBusModel">
+		UPDATE ETR_ENTRUST SET BUSINESS_MODEL = 'AC' WHERE ENTRUST_ID IN
+		(
+			SELECT
+			T1.ENTRUST_ID ,
+			T1.INV_AIM businessModel
+			FROM
+			REG_FIN_PRODUCT_DEAL T1
+			WHERE
+			EXISTS(
+			SELECT
+			1
+			FROM
+			REG_FIN_PRODUCT_DEAL_TOTAL T2
+			WHERE
+			T2.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID
+			AND T2.TRADE_STATUS = '01'
+			AND (T2.IS_CANCEL = 'N'
+			OR T2.IS_CANCEL IS NULL)
+			AND T2.TRADE_DATE = TO_DATE(#{sysDate},'YYYY-MM-DD'))
+			AND T1.INV_AIM IS NOT NULL
+			UNION ALL
+			SELECT
+			T1.ENTRUST_ID ,
+			T1.INV_AIM businessModel
+			FROM
+			IBU_QUOTE_ETR_RE T1
+			WHERE
+			EXISTS (
+			SELECT
+			1
+			FROM
+			IBU_QUOTE_BOND T2
+			WHERE
+			T2.QUOTE_ID = T1.QUOTE_ID AND T2.QUOTE_DATE = TO_DATE(#{sysDate},'YYYY-MM-DD')
+			<if test="QUOTE_STUTAS_IBUS != null and QUOTE_STUTAS_IBUS.size() > 0">
+				and T2.TRADE_STATUS in
+				<foreach collection="QUOTE_STUTAS_IBUS" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			)
+			AND T1.INV_AIM IS NOT NULL
+		)
+	</update>
 </mapper>

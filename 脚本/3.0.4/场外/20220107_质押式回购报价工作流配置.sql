@@ -2,7 +2,7 @@
 delete from SYS_PAGE where PAGE_ID in('CfetsQuoteRepo003');
 
 INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-VALUES ('CfetsQuoteRepo003', 'TRD', 'home.html#/interbank/instructiontrade?a=a', 'cfets/bankuplink/repo/CfetsQuoteRepo003', null, null, null, '02', '01', '本币业务交易报价-质押式回购', 'system', null, sysdate, 'system', sysdate);
+VALUES ('CfetsQuoteRepo003', 'TRD', '/cfets/bankuplink/repo/IbuQuoteRepo003', 'cfets/repo/CfetsQuoteRepo003', null, null, null, '02', '01', '本币业务交易报价质押式回购', 'system', null, sysdate, 'system', sysdate);
 --工作流配置
 delete from SYS_PAGE_ELEMENT where PAGE_ID = 'CfetsQuoteRepo003';
 

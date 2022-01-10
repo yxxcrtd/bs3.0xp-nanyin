@@ -1943,7 +1943,7 @@
                 (select sec_acct_name from stl_sec_acct_info where stl_sec_acct_info.sec_acct_id = T1.SEC_MANAGE_ACCT_ID)
                 as secAcctName,
                 T8.PORTFOLIO_NAME,
-                NVL(T6.ENTRUST_NUM, 0)/100 - NVL(T9.FINISH_AMT,0)/10000 - NVL(T10.ENT_FINISH_AMT,0)/100 avaNum,
+                NVL(T6.ENTRUST_NUM, 0)*100 - NVL(T9.FINISH_AMT,0) - NVL(T10.ENT_FINISH_AMT,0)*100 avaNum,
                 T1.CPRICE_AMT ,
                 T1.FPRICE_AMT ,
                 T1.INT_AMT
@@ -2011,7 +2011,7 @@ SELECT
                 (select sec_acct_name from stl_sec_acct_info where stl_sec_acct_info.sec_acct_id = T1.SEC_MANAGE_ACCT_ID)
                 as secAcctName,
                 T8.PORTFOLIO_NAME,
-                NVL(T6.ENTRUST_NUM, 0)/100 - NVL(T9.FINISH_AMT,0)/10000 - NVL(T10.ENT_FINISH_AMT,0)/100 avaNum,
+                NVL(T6.ENTRUST_NUM, 0)*100 - NVL(T9.FINISH_AMT,0) - NVL(T10.ENT_FINISH_AMT,0)*100 avaNum,
                 T1.CPRICE_AMT ,
                 T1.FPRICE_AMT ,
                 T1.INT_AMT
