@@ -146,6 +146,8 @@ public class IbuQuoteBond002Controller extends BaseController {
         if(StringUtil.equals(cfetsBondDealQuoteCommonDto.getType11(),DictCodeListExt3.行内资产四级分类_交易商协会ABN.getValue())||StringUtil.equals(cfetsBondDealQuoteCommonDto.getType11(),DictCodeListExt3.行内资产四级分类_银保监会主管ABS.getValue())){
             cfetsBondDealQuoteCommonDto.setCalculateField("01");
         }
+        cfetsBondDealQuoteCommonDto.setMatureYield(ArithmeticUtil.divide(cfetsBondDealQuoteCommonDto.getMatureYield(),new BigDecimal(100),6));
+        cfetsBondDealQuoteCommonDto.setExerYield(ArithmeticUtil.divide(cfetsBondDealQuoteCommonDto.getExerYield(),new BigDecimal(100),6));
         return new Message<CfetsBondDealQuoteCommonDto>().success().setData(cfetsBondDealQuoteCommonDto);
     }
 
