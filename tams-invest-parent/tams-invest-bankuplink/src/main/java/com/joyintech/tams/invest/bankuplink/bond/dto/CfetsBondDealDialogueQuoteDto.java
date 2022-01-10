@@ -206,6 +206,19 @@ public class CfetsBondDealDialogueQuoteDto extends CfetsBondDealEntrustOrderDto 
 
     private BigDecimal ourShareAmt;
 
+    /**
+     * 可用持仓
+     */
+    private BigDecimal secManageAvailablePosition;
+
+    public BigDecimal getSecManageAvailablePosition() {
+        return secManageAvailablePosition;
+    }
+
+    public void setSecManageAvailablePosition(BigDecimal secManageAvailablePosition) {
+        this.secManageAvailablePosition = secManageAvailablePosition;
+    }
+
     public BigDecimal getLendinShareAmt() {
         return lendinShareAmt;
     }
