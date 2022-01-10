@@ -204,7 +204,9 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
     /**
      * 资产简称
      */
-    private Boolean submitFlag;
+  //  private Boolean submitFlag;
+
+    private String systemAct;
 
     public String getBusinessId() {
         return businessId;
@@ -671,11 +673,12 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
         this.finprodAbbr = finprodAbbr;
     }
 
-    public Boolean getSubmitFlag() {
-        return submitFlag;
+
+    public String getSystemAct() {
+        return systemAct;
     }
 
-    public void setSubmitFlag(Boolean submitFlag) {
-        this.submitFlag = submitFlag;
+    public void setSystemAct(String systemAct) {
+        this.systemAct = systemAct;
     }
 }

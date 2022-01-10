@@ -294,7 +294,8 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                     doInsertFlowMethod(entity.getOperateType(), initBaseEtrInvestInfoDto(dto));
                 }
                 //发送头寸
-                sendPositionMethod(entity,entity.getSubmitFlag());
+                //sendPositionMethod(entity,entity.getSubmitFlag());
+                sendPositionMethod(entity,StringUtil.equals(entity.getSystemAct(),DictCodeListExt3.系统动作_新建.getValue())?true:false);
             }
         }
         //无附件上传，删除
@@ -1125,7 +1126,8 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             }
         }
         //发送头寸
-        PositionHttpRequest.deleteMethod(entity.getTotalEtrustId(),DictCodeListExt1.子系统代码_委托.getValue(),"Bond001");
+      //  PositionHttpRequest.deleteMethod(entity.getTotalEtrustId(),DictCodeListExt1.子系统代码_委托.getValue(),"Bond001");
+        PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(),DictCodeListExt1.子系统代码_委托.getValue());
     }
 
     @Override
@@ -1606,6 +1608,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         req.setInterfaceType("Bond001");
         req.setUserId(SecurityUtil.getLoginUser().getUserName());
         req.setTotalTradeId(entity.getTotalEtrustId());
+        req.setWorkFlowId(entity.getWorkflowId());
         req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
         req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
         String balanceCheck="Y";
@@ -1623,9 +1626,11 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         req.setBusiAct(DictCodeListExt3.业务动作_投资指令.getValue());
         req.setPs(entity.getPs());
         if(isSubmit){
-            req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+            req.setDecisionAct(DictCodeListExt3.系统动作_新建.getValue());
+            req.setSystemAct(entity.getSystemAct());
         }else{
-            req.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+            req.setDecisionAct(DictCodeListExt3.系统动作_修改.getValue());
+            req.setSystemAct(entity.getSystemAct());
             req.setbTotalTradeId(entity.getTotalEtrustId());
         }
         req.setCdate(entity.getEtrDate());
