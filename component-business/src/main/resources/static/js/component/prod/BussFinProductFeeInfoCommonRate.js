@@ -52,7 +52,6 @@
 
 		//add by mashukai 20201120  BS-1994 草稿箱反显时费用列表有时反显没有值问题 start
 		if(isDraft && (workflowId==null || workflowId=="")){
-			debugger;
 			workflowId = $('#productFeeInfoDto_workflowId').val();
 		}
 		//add by mashukai 20201120  BS-1994 草稿箱反显时费用列表有时反显没有值问题 end

@@ -393,50 +393,50 @@
     </select>
 
     <select id="getEtrFinProductInfo" resultType="com.joyintech.service.entrust.etribbondinfo.dto.EtrFinProductDto">
+select
+    t1.FINPROD_MARKET_ID secId,
+    t1.FINPROD_ABBR finprodAbbr,
+    t1.FINPROD_NAME secName,
+    t2.TYPE_11 secType,
+    t1.issuer issuer,
+    t3.CUSTOMER_NAME issuerName,
+    TO_CHAR(t1.VDATE,'yyyy-MM-dd') vdate,
+    TO_CHAR(t1.MDATE,'yyyy-MM-dd') mdate,
+    TO_NUMBER(MBVI.LAST_PERIOD) lastqx,
+    TO_CHAR(t4.PAY_DATE,'yyyy-MM-dd') lastPaydate
+    ,t6.INT_TYPE AS rateType
+	,NVL(t8.YIELD, t6.RATE)*100 rate
+	,TO_CHAR(B.EXERCISE_DATE,'yyyy-MM-dd') xqdate
+    ,MBVI.BPYIELD*100 gzRate
+    ,ROUND(MBVI.NETVALUATION_EXERCISE,4) priceXq
+    ,ROUND(MBVI.NETPRICE,4)  priceTj
+    ,MBVI.NETPRICE as newPrice
+    ,t7.CUSTOMER_NAME sponsorName
+from
+    FIN_PRODUCT t1
+    LEFT JOIN FIN_PRODUCT_TYPE t2 ON t2.FINPROD_ID = t1.FINPROD_ID
+    LEFT JOIN mst_customer_info t3 ON t1.ISSUER = t3.CUSTOMER_ID
+    LEFT JOIN (
         select
-        t1.FINPROD_MARKET_ID secId,
-        t1.FINPROD_ABBR finprodAbbr,
-        t1.FINPROD_NAME secName,
-        t2.TYPE_9 secType,
-        t1.issuer issuer,
-        t3.CUSTOMER_NAME issuerName,
-        TO_CHAR(t1.VDATE,'yyyy-MM-dd') vdate,
-        TO_CHAR(t1.MDATE,'yyyy-MM-dd') mdate,
-        TO_NUMBER(MBVI.LAST_PERIOD) lastqx,
-        TO_CHAR(t4.PAY_DATE,'yyyy-MM-dd') lastPaydate
-        ,t6.INT_TYPE AS rateType
-        ,NVL(t8.YIELD, t6.RATE)*100 rate
-        ,TO_CHAR(B.EXERCISE_DATE,'yyyy-MM-dd') xqdate
-        ,NVL(MBVI.BPYIELD, 0)*100 gzRate
-        ,MBVI.NETVALUATION_EXERCISE priceXq
-        ,MBVI.NETVALUATION_RECOMMENDED priceTj
-        ,MBVI.NETPRICE as newPrice
-        ,t7.CUSTOMER_NAME sponsorName
+            f2.FINPROD_ID,
+            min(f1.PAY_DATE) PAY_DATE
         from
-        FIN_PRODUCT t1
-        LEFT JOIN FIN_PRODUCT_TYPE t2 ON t2.FINPROD_ID = t1.FINPROD_ID
-        LEFT JOIN mst_customer_info t3 ON t1.ISSUER = t3.CUSTOMER_ID
-        LEFT JOIN (
-        select
-        f2.FINPROD_ID,
-        min(f1.PAY_DATE) PAY_DATE
-        from
-        fin_cash_plan f1
-        inner join fin_cash_info f2 on f1.CASH_ID = f2.CASH_ID
-        inner join FIN_PRODUCT f3 on f2.FINPROD_ID = f3.FINPROD_ID
-        where
-        f2.CASH_TYPE_2 = 'C02' and
-        f1.MDATE &gt;= to_date(#{sysDate},'yyyy-MM-dd') and
-        f3.FINPROD_TYPE2 = 'F01'
-        <if test="finprodId != null and finprodId != ''">
-            AND f3.FINPROD_ID = #{finprodId}
-        </if>
+            fin_cash_plan f1
+            inner join fin_cash_info f2 on f1.CASH_ID = f2.CASH_ID
+            inner join FIN_PRODUCT f3 on f2.FINPROD_ID = f3.FINPROD_ID
+            where
+            f2.CASH_TYPE_2 = 'C02' and
+            f1.MDATE &gt;= to_date(#{sysDate},'yyyy-MM-dd') and
+            f3.FINPROD_TYPE2 = 'F01'
+            <if test="finprodId != null and finprodId != ''">
+                AND f3.FINPROD_ID = #{finprodId}
+            </if>
         group by f2.FINPROD_ID
-        ) t4 on t4.FINPROD_ID = t1.FINPROD_ID
-        left join fin_cash_info t5 on t5.FINPROD_ID = t1.FINPROD_ID AND t5.CASH_TYPE_2 = 'C02' and t5.FINPROD_TYPE = '01'
-        LEFT JOIN FIN_RATE_INFO t6 ON t6.CASH_ID = t5.CASH_ID
-        LEFT JOIN mst_customer_info t7 ON t1.sponsor = t7.CUSTOMER_ID
-        left join (
+    ) t4 on t4.FINPROD_ID = t1.FINPROD_ID
+    left join fin_cash_info t5 on t5.FINPROD_ID = t1.FINPROD_ID AND t5.CASH_TYPE_2 = 'C02' and t5.FINPROD_TYPE = '01'
+    LEFT JOIN FIN_RATE_INFO t6 ON t6.CASH_ID = t5.CASH_ID
+    LEFT JOIN mst_customer_info t7 ON t1.sponsor = t7.CUSTOMER_ID
+    left join (
         select FINPROD_ID, max(eff_date) as EFF_DATE
         from FIN_CASH_CALC_RULE
         where
@@ -445,47 +445,71 @@
             AND FINPROD_ID = #{finprodId}
         </if>
         group by FINPROD_ID
-        ) tempT8
-        on t1.FINPROD_ID = tempT8.FINPROD_ID
-        LEFT JOIN FIN_CASH_CALC_RULE t8 ON t8.FINPROD_ID=tempT8.FINPROD_ID AND t8.EFF_DATE = tempT8.EFF_DATE
-        and t8.CASH_ID = t5.CASH_ID
-        LEFT JOIN (
+    ) tempT8
+    on t1.FINPROD_ID = tempT8.FINPROD_ID
+    LEFT JOIN FIN_CASH_CALC_RULE t8 ON t8.FINPROD_ID=tempT8.FINPROD_ID AND t8.EFF_DATE = tempT8.EFF_DATE
+    and t8.CASH_ID = t5.CASH_ID
+    LEFT JOIN (
         <!-- 取大于当前时间的最接近的实际行权日 -->
         select A.FINPROD_ID,min(A.EXERCISE_DATE) EXERCISE_DATE
-        from FIN_EXERCISE_PLAN A
+        from FIN_EXERCISE_PLAN A 
         where
-        sysdate &lt;= A.ACT_EXERCISE_DATE and A.EXERCISE_TYPE in (#{EXEC_MODE_01}, #{EXEC_MODE_02})
+        sysdate &lt;= A.ACT_EXERCISE_DATE and A.EXERCISE_TYPE in (#{EXEC_MODE_01}, #{EXEC_MODE_02}) 
         <if test="finprodId != null and finprodId != ''">
-            AND A.FINPROD_ID = #{finprodId}
+            AND A.FINPROD_ID = #{finprodId} 
         </if>
         group by A.FINPROD_ID
-        ) B on t1.FINPROD_ID = B.FINPROD_ID
-        LEFT JOIN (
-        select * from (
-        select ROW_NUMBER() OVER(PARTITION BY SEC_ID ORDER BY VALUE_DATE DESC) rn, MST_BOND_VALUATION_INFO_TOTAL.*
-        from MST_BOND_VALUATION_INFO_TOTAL WHERE VALUE_DATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
-        ) where rn = 1
-        ) MBVI ON t1.FINPROD_MARKET_ID = MBVI.SEC_ID
-        where 1=1 AND t1.FINPROD_TYPE2='F01'
-        <if test="finprodId != null and finprodId != ''">
-            AND t1.FINPROD_ID = #{finprodId}
+    ) B on t1.FINPROD_ID = B.FINPROD_ID
+        <if test="BOND_VALUATION_RULE != null and BOND_VALUATION_RULE =='01'">
+            <!-- 所有银行间债券均优先取中债，没有中债取上清 -->
+            left join (
+            select mbvi_tmp.* from (
+            SELECT ROW_NUMBER () over(
+            PARTITION BY SEC_ID
+            ORDER BY VALUE_DATE DESC, DECODE(VALUE_SOURCE, #{VALUATION_SOURCE_CBC}, 1, 0) DESC
+            ) rn, a.*
+            FROM MST_BOND_VALUATION_INFO a
+            WHERE VALUE_DATE <![CDATA[<=]]> to_date(#{sysDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+            AND VALUE_SOURCE IN (#{VALUATION_SOURCE_CBC},#{VALUATION_SOURCE_SCH})
+            ) mbvi_tmp WHERE rn =1
+            ) MBVI on MBVI.SEC_ID=t1.FINPROD_MARKET_ID
         </if>
+        <if test="BOND_VALUATION_RULE != null and BOND_VALUATION_RULE =='02'">
+            <!-- 银行间债券根据债券登记托管机构判断，中债的债券取中债估值，上清债券取上清所估值，没有再取另外一个 -->
+            left join (
+            select mbvi_tmp.* from (
+            SELECT ROW_NUMBER () over(
+            PARTITION BY SEC_ID
+            ORDER BY VALUE_DATE DESC, DECODE(T2.REGIST_ORG, #{REGIST_ORG_01}, 1, #{REGIST_ORG_02}, 1, 0) DESC
+            ) rn, t1.*
+            FROM MST_BOND_VALUATION_INFO t1
+            LEFT JOIN FIN_PRODUCT t2 ON t1.SEC_ID =t2.FINPROD_MARKET_ID AND t2.FINPROD_TYPE =#{FINPROD_TYPE_TG_F01}
+            AND DECODE(t1.VALUE_SOURCE, #{VALUATION_SOURCE_CBC}, #{REGIST_ORG_01}, #{VALUATION_SOURCE_SCH}, #{REGIST_ORG_02}, 'NULL')=T2.REGIST_ORG
+            WHERE VALUE_DATE <![CDATA[<=]]> to_date(#{sysDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+            AND VALUE_SOURCE IN (#{VALUATION_SOURCE_CBC},#{VALUATION_SOURCE_SCH})
+            ) mbvi_tmp WHERE rn =1
+            ) MBVI on MBVI.SEC_ID=t1.FINPROD_MARKET_ID
+        </if>
+    where 1=1 AND t1.FINPROD_TYPE2='F01' 
+    <if test="finprodId != null and finprodId != ''">
+        AND t1.FINPROD_ID = #{finprodId}
+    </if>
 
     </select>
 
     <select id="getEtrFinExerciseInfo" resultType="java.lang.String">
-        select
-        distinct t2.ITEM_CODE ITEM_CODE
-        from
-        FIN_EXERCISE_PLAN t1
-        inner join sys_datadict_list t2
+    select
+    distinct t2.ITEM_CODE ITEM_CODE
+    from
+    FIN_EXERCISE_PLAN t1
+    inner join sys_datadict_list t2
         on t2.DICT_CODE = 'EXEC_MODE' and t1.EXERCISE_TYPE = t2.ITEM_CODE
-        where
-        t1.FINPROD_TYPE2 = #{FINPROD_TYPE2_F01} and
-        sysdate &lt;= t1.ACT_EXERCISE_DATE and t1.EXERCISE_TYPE in (#{EXEC_MODE_01}, #{EXEC_MODE_02})
-        <if test="finprodId != null and finprodId != ''">
+    where 
+          t1.FINPROD_TYPE2 = #{FINPROD_TYPE2_F01} and 
+          sysdate &lt;= t1.ACT_EXERCISE_DATE and t1.EXERCISE_TYPE in (#{EXEC_MODE_01}, #{EXEC_MODE_02}) 
+      <if test="finprodId != null and finprodId != ''">
             AND t1.FINPROD_ID = #{finprodId}
-        </if>
+      </if>
     </select>
 
 

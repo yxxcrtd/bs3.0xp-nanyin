@@ -16,7 +16,6 @@
     };
 
     function saveOrSubmit(operateType) {
-        debugger;
         var object = getPageParams();
         object.pageModel = pageModel;
         object.operateType = operateType;

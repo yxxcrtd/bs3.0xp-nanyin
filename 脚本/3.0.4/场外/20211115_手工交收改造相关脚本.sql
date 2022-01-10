@@ -1,15 +1,17 @@
 --新增菜单
-delete from sys_page where PAGE_ID in ('CfetsManualSettle','CfetsManualSettleUpdate');
+delete from sys_page where PAGE_ID in ('ManualSettleQuery','CfetsManualSettleUpdate','CfetsManualSettle');
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('CfetsManualSettle', 'STL', 'home.html#/interbank/settlementmanage?a=a', 'cfets/manualsettle/ManualSettle', 'QS_MANAGEMENT_001_008_001', '', '', '02', '01', '交收管理', 'system', '', sysdate, 'system', sysdate);
+values ('ManualSettleQuery', 'STL', 'home.html#/interbank/settlementmanage?a=a', 'cfets/manualsettle/ManualSettleQuery', 'QS_MANAGEMENT_001_008_001', '', '', '02', '01', '交收管理', 'system', '', sysdate, 'system', sysdate);
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('CfetsManualSettleUpdate', 'STL', '/cfets/cfetssettle/CfetsManualSettleUpdate', 'cfets/cfetssettle/CfetsManualSettleUpdate', '', '', '', '02', '01', '交收管理修改', 'system', '', sysdate, 'system', sysdate);
+values ('CfetsManualSettleUpdate', 'STL', '/cfets/manualsettle/ManualSettleUpdate', 'cfets/manualsettle/ManualSettleUpdate', '', '', '', '02', '01', '交收管理修改', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('CfetsManualSettle', 'STL', '/cfets/manualsettle/CfetsManualSettle', 'cfets/manualsettle/CfetsManualSettle', '', '', '', '02', '01', '交收管理', 'system', '', sysdate, 'system', sysdate);
 
 delete from sys_menu where MENU_ID in ('QS_MANAGEMENT_001_008','QS_MANAGEMENT_001_008_001');
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('QS_MANAGEMENT_001_008', 'STL', '', 'QS_MANAGEMENT_001', '', 8, '01', '交收管理', 'system', '', sysdate, 'system', sysdate);
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('QS_MANAGEMENT_001_008_001', 'STL', '', 'QS_MANAGEMENT_001_008', 'CfetsManualSettle', 1, '01', '交收管理', 'system', '', sysdate, 'system', sysdate);
+values ('QS_MANAGEMENT_001_008_001', 'STL', '', 'QS_MANAGEMENT_001_008', 'ManualSettleQuery', 1, '01', '交收管理', 'system', '', sysdate, 'system', sysdate);
 
 --自动刷新
 delete from sys_para t where t.para_code='cfetsManualSettle_tradeList_refresh_period';
@@ -24,7 +26,12 @@ values ('INV', 'auto_settle_flag', 'N', '', '', '日终自动交收Y:自动交�
 --共通业务类型增加枚举值
 delete from sys_datadict_list where DICT_CODE ='COMMON_BUSINESS_TYPE' and ITEM_CODE='STL06';
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('COMMON_BUSINESS_TYPE', 'STL06', '手工交收', 1301, '0', 'system', '', sysdate, 'system', sysdate, '');
+values ('COMMON_BUSINESS_TYPE', 'STL06', '交收管理', 1301, '0', 'system', '', sysdate, 'system', sysdate, '');
+
+--手工交收新增共通业务类型
+delete from sys_page_dictlist where PAGE_ID='MainPage' and DICT_ID = 'COMMON_BUSINESS_TYPE' and DICT_ITEM_VAL='STL06';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('MainPage', '999999', 'COMMON_BUSINESS_TYPE', 'STL06', '', '', 'system', '', sysdate, 'system', sysdate, '');
 
 --交收操作类型增加枚举值
 delete from sys_datadict_list where DICT_CODE ='DELIVERY_OP_TYPE' and ITEM_CODE = '05';
@@ -200,9 +207,7 @@ values ('CfetsManualSettleUpdate', 'CfetsManualSettleUpdate_btn_submit', 'noneAp
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
 values ('CfetsManualSettle', 'CfetsManualSettle_btn_submit', 'noneApproval', 'system', '0001', sysdate, 'system', sysdate, 'ALL', '02');
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-values ('CfetsManualSettle', 'CfetsManualSettle_btn_revoke', 'noneApproval', 'system', '0001', sysdate, 'system', sysdate, 'ALL', '02');
-insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-values ('CfetsManualSettle', 'CfetsManualSettle_btn_fail', 'noneApproval', 'system', '0001', sysdate, 'system', sysdate, 'ALL', '02');
+values ('CfetsManualSettle', 'CfetsManualSettle_btn_modify', 'noneApproval', 'system', '0001', sysdate, 'system', sysdate, 'ALL', '02');
 
 --交收查询明细交收信息中
 delete from CFG_READONLY_FORM_SHOW where PAGECODE = 'cfetsManualSettleQuery';
@@ -320,9 +325,9 @@ insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DIC
 
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleInfo','04,M,P', 'portfolioId', '组合代码', '','1', '1', '0', '0','100','{"colAlign": "left"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleInfo','04,M,P', 'portfolioName', '组合名称', '','2', '1', '0', '0','100','{"colAlign": "left"}','0','COMM','1','0','','','0');
-insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleInfo','04,M,P', 'qtyd', '持有面额（元）', '','3', '1', '0', '0','100','{"colAlign": "left","dataType":"amount","precision":"2"}','0','COMM','1','0','','','0');
+insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleInfo','04,M,P', 'qtydq', '持有面额（元）', '','3', '1', '0', '0','100','{"colAlign": "left","dataType":"amount","precision":"2"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleInfo','04,M,P', 'prinAmtTheoryd', '还本金额（元）', '','4', '1', '0', '0','100','{"colAlign": "left","dataType":"amount","precision":"2"}','0','COMM','1','0','','','0');
-insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleInfo','04,M,P', 'intAmtTheoryd', '理论应收利息（元）', '','5', '1', '0', '0','100','{"colAlign": "left","dataType":"amount","precision":"4"}','0','COMM','1','0','','','0');
+insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleInfo','04,M,P', 'intAmtTheoryd', '理论应收利息（元）', '','5', '1', '0', '0','100','{"colAlign": "left","dataType":"amount","precision":"2"}','0','COMM','1','0','','','0');
 
 --交收查询列表表头配置
 delete from cfg_datatable_show where PAGECODE = 'cfetsManualSettleQuery' and DTCODE ='CfetsManualSettleTradeList';
@@ -335,7 +340,7 @@ insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DIC
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleTradeList','999999', 'finprodType2Str', '资产类型', 'finprodType2','7', '1', '0', '1','100','{"colAlign": "left","supportSearch":"模糊"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleTradeList','999999', 'tgBusiTypeStr', '业务类型', 'tgBusiType','8', '1', '0', '1','100','{"colAlign": "left","supportSearch":"模糊"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleTradeList','999999', 'psStr', '交易方向', '','9', '1', '0', '1','100','{"colAlign": "left","supportSearch":"模糊"}','0','COMM','1','0','','','0');
-insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleTradeList','999999', 'settleNum', '交收数量', '','10', '1', '0', '1','100','{"colAlign": "left","dataType":"amount","precision":"2","supportSearch":"精确"}','0','COMM','1','0','','','0');
+insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleTradeList','999999', 'settleNum', '交收数量(万元)', '','10', '1', '0', '1','100','{"colAlign": "left","dataType":"amount","precision":"2","supportSearch":"精确"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleTradeList','999999', 'settleAmt', '交收金额', '','11', '1', '0', '1','100','{"colAlign": "left","dataType":"amount","precision":"2","supportSearch":"精确"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleTradeList','999999', 'portfolioId', '组合代码', '','12', '1', '0', '1','100','{"colAlign": "left","supportSearch":"模糊"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleTradeList','999999', 'portfolioName', '组合名称', '','13', '1', '0', '1','100','{"colAlign": "left","supportSearch":"模糊"}','0','COMM','1','0','','','0');
@@ -346,6 +351,7 @@ insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DIC
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleTradeList','999999', 'counterName', '交易对手', '','18', '1', '0', '1','100','{"colAlign": "left","supportSearch":"模糊"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleTradeList','999999', 'cleanStlStatus', '结算指令状态', 'cleanStlStatus','19', '1', '0', '1','100','{"colAlign": "left","supportSearch":"模糊"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleTradeList','999999', 'cleanArgStatus', '结算合同状态', 'cleanArgStatus','20', '1', '0', '1','100','{"colAlign": "left","supportSearch":"模糊"}','0','COMM','1','0','','','0');
+insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleTradeList','999999', 'remark', '备注', 'remark','21', '1', '0', '1','100','{"colAlign": "left","supportSearch":"模糊"}','0','COMM','1','0','','','0');
 
 --交收查询明细交收流水
 delete from cfg_datatable_show where PAGECODE = 'cfetsManualSettleQuery' and DTCODE='CfetsManualSettleFlow';
@@ -354,7 +360,7 @@ insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DIC
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleFlow','999999', 'jiaoShouDate', '交收时间', '','3', '1', '0', '0','100','{"colAlign": "left"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleFlow','999999', 'finprodMarketId', '资产代码', '','4', '1', '0', '0','100','{"colAlign": "left"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleFlow','999999', 'finprodAbbr', '资产简称', '','5', '1', '0', '0','100','{"colAlign": "left"}','0','COMM','1','0','','','0');
-insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleFlow','999999', 'settleNum', '交收数量（元）', '','6', '1', '0', '0','100','{"colAlign": "left","dataType":"amount","precision":"2"}','0','COMM','1','0','','','0');
+insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleFlow','999999', 'settleNum', '交收数量（万元）', '','6', '1', '0', '0','100','{"colAlign": "left","dataType":"amount","precision":"2"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleFlow','999999', 'settleAmt', '交收金额（元）', '','7', '1', '0', '0','100','{"colAlign": "left","dataType":"amount","precision":"2"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleFlow','999999', 'operTypeStr', '操作类型', '','8', '1', '0', '0','100','{"colAlign": "left"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleFlow','999999', 'createUser', '操作员', '','9', '1', '0', '0','100','{"colAlign": "left"}','0','COMM','1','0','','','0');
@@ -494,3 +500,10 @@ COMMENT ON COLUMN TRD_BANK_MANUAL_SET_DETAIL.CREATE_DEPT IS '创建部门';
 COMMENT ON COLUMN TRD_BANK_MANUAL_SET_DETAIL.CREATE_TIME IS '创建时间';
 COMMENT ON COLUMN TRD_BANK_MANUAL_SET_DETAIL.UPDATE_USER IS '更新人';
 COMMENT ON COLUMN TRD_BANK_MANUAL_SET_DETAIL.UPDATE_TIME IS '更新时间';
+
+--手工交收新增交收失败原因
+-- Add/modify columns
+alter table TRD_BANK_MANUAL_SETTLE_INFO add REMARK VARCHAR2(200);
+-- Add comments to the columns
+comment on column TRD_BANK_MANUAL_SETTLE_INFO.REMARK
+  is '交收失败原因';

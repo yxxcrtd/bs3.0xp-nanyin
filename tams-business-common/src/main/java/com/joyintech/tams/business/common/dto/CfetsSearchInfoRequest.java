@@ -16,7 +16,7 @@ public class CfetsSearchInfoRequest {
     private PageMode pageMode;
     @ApiModelProperty(name="ps",value="交易方向",example="T03")
     private String ps;
-    @ApiModelProperty(name="partyId",value="本方/对手方",example="111")
+    @ApiModelProperty(name="partyId",value="本方/对手方的21位码",example="111")
     private String partyId;
     @ApiModelProperty(name="dealType",value="交易类型",example="04")
     private String dealType;

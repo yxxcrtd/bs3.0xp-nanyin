@@ -20,7 +20,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * 银行间交易查询
@@ -146,10 +145,10 @@ public class CfetsTrdQueryIbuInfoListResponse {
     private String entrustId;
 
     @ApiModelProperty(name="quoteDate",value="报价日期")
-    private Date quoteDate;
+    private String quoteDate;
 
     @ApiModelProperty(name="tradeDate",value="成交日期")
-    private Date tradeDate;
+    private String tradeDate;
 
     @ApiModelProperty(name="remark",value="备注",example="字符串1")
     private String remark;
@@ -158,7 +157,7 @@ public class CfetsTrdQueryIbuInfoListResponse {
     private String dialogueRecord;
 
     @ApiModelProperty(name="settleDate",value="结算日期",example="字符串1")
-    private Date settleDate;
+    private String settleDate;
 
     @ApiModelProperty(name="ccy",value="币种",example="字符串1")
     private String ccy;
@@ -242,10 +241,10 @@ public class CfetsTrdQueryIbuInfoListResponse {
 
 
     @ApiModelProperty(name="vSettleDate",value="首次结算日",example="字符串1")
-    private Date   vsettleDate;
+    private String    vsettleDate;
 
     @ApiModelProperty(name="mSettleDate",value="到期结算日",example="字符串1")
-    private Date   msettleDate;
+    private String   msettleDate;
 
     @ApiModelProperty(name="mtradeAmt",value="到期结算金额",example="字符串1")
     private BigDecimal   mtradeAmt;
@@ -255,6 +254,9 @@ public class CfetsTrdQueryIbuInfoListResponse {
 
     @ApiModelProperty(name="termType",value="期限品种",example="ZC1")
     private String termType;
+
+    @ApiModelProperty(name="calMode",value="计算方式",example="计算方式供前台判断使用")
+    private String calMode;
 
     public String getEffectiveStatus() {
         return effectiveStatus;
@@ -444,7 +446,7 @@ public class CfetsTrdQueryIbuInfoListResponse {
     }
 
     public String getSettleSpeedStr() {
-        return settleSpeedStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.清算速度, this.getSettleSpeed());
     }
 
     public void setSettleSpeedStr(String settleSpeedStr) {
@@ -539,22 +541,6 @@ public class CfetsTrdQueryIbuInfoListResponse {
         this.entrustId = entrustId;
     }
 
-    public Date getQuoteDate() {
-        return quoteDate;
-    }
-
-    public void setQuoteDate(Date quoteDate) {
-        this.quoteDate = quoteDate;
-    }
-
-    public Date getTradeDate() {
-        return tradeDate;
-    }
-
-    public void setTradeDate(Date tradeDate) {
-        this.tradeDate = tradeDate;
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -571,13 +557,6 @@ public class CfetsTrdQueryIbuInfoListResponse {
         this.dialogueRecord = dialogueRecord;
     }
 
-    public Date getSettleDate() {
-        return settleDate;
-    }
-
-    public void setSettleDate(Date settleDate) {
-        this.settleDate = settleDate;
-    }
 
     public String getCcy() {
         return ccy;
@@ -588,7 +567,7 @@ public class CfetsTrdQueryIbuInfoListResponse {
     }
 
     public String getCcyStr() {
-        return ccyStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.币种, this.getCcy());
     }
 
     public void setCcyStr(String ccyStr) {
@@ -620,7 +599,7 @@ public class CfetsTrdQueryIbuInfoListResponse {
     }
 
     public String getDeliveryTypeStr() {
-        return deliveryTypeStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.结算方式, this.getDeliveryType());
     }
 
     public void setDeliveryTypeStr(String deliveryTypeStr) {
@@ -636,7 +615,7 @@ public class CfetsTrdQueryIbuInfoListResponse {
     }
 
     public String getClearTypeStr() {
-        return clearTypeStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.清算类型, this.getClearType());
     }
 
     public void setClearTypeStr(String clearTypeStr) {
@@ -756,7 +735,7 @@ public class CfetsTrdQueryIbuInfoListResponse {
     }
 
     public String getSettCcyStr() {
-        return settCcyStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.币种, this.getSettCcy());
     }
 
     public void setSettCcyStr(String settCcyStr) {
@@ -772,7 +751,7 @@ public class CfetsTrdQueryIbuInfoListResponse {
     }
 
     public String getMdeliveryTypeStr() {
-        return mdeliveryTypeStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.结算方式, this.getMdeliveryType());
     }
 
     public void setMdeliveryTypeStr(String mdeliveryTypeStr) {
@@ -785,22 +764,6 @@ public class CfetsTrdQueryIbuInfoListResponse {
 
     public void setMdeliveryType(String mdeliveryType) {
         this.mdeliveryType = mdeliveryType;
-    }
-
-    public Date getVsettleDate() {
-        return vsettleDate;
-    }
-
-    public void setVsettleDate(Date vsettleDate) {
-        this.vsettleDate = vsettleDate;
-    }
-
-    public Date getMsettleDate() {
-        return msettleDate;
-    }
-
-    public void setMsettleDate(Date msettleDate) {
-        this.msettleDate = msettleDate;
     }
 
     public BigDecimal getMtradeAmt() {
@@ -830,8 +793,55 @@ public class CfetsTrdQueryIbuInfoListResponse {
     public String getQuoteRoleTypeStr() {
         return SysDataUtil.getNameFromDataDict(BussinessDictCode.银行间上行本方角色, getQuoteRoleType());
     }
-
     public void setQuoteRoleTypeStr(String quoteRoleTypeStr) {
         this.quoteRoleTypeStr = quoteRoleTypeStr;
+    }
+
+    public String getQuoteDate() {
+        return quoteDate;
+    }
+
+    public void setQuoteDate(String quoteDate) {
+        this.quoteDate = quoteDate;
+    }
+
+    public String getTradeDate() {
+        return tradeDate;
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
+    }
+
+    public String getSettleDate() {
+        return settleDate;
+    }
+
+    public void setSettleDate(String settleDate) {
+        this.settleDate = settleDate;
+    }
+
+    public String getVsettleDate() {
+        return vsettleDate;
+    }
+
+    public void setVsettleDate(String vsettleDate) {
+        this.vsettleDate = vsettleDate;
+    }
+
+    public String getMsettleDate() {
+        return msettleDate;
+    }
+
+    public void setMsettleDate(String msettleDate) {
+        this.msettleDate = msettleDate;
+    }
+
+    public String getCalMode() {
+        return calMode;
+    }
+
+    public void setCalMode(String calMode) {
+        this.calMode = calMode;
     }
 }

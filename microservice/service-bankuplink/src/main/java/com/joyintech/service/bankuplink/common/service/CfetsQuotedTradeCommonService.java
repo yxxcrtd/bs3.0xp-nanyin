@@ -183,11 +183,11 @@ public class CfetsQuotedTradeCommonService{
                 thread.start();
             }
             //登记数据自动匹配功能,针对单条指令，自动匹配
-            if(StringUtil.equals(entity.getMarketIndicator(),MarketIndicatorUtil.MARKETINDICATOR_BOND)){
+           /* if(StringUtil.equals(entity.getMarketIndicator(),MarketIndicatorUtil.MARKETINDICATOR_BOND)){
                 cstpSecTradeAutoMatch(interfTradSecdeal,iCstpTrade);
             }else if(StringUtil.equals(entity.getMarketIndicator(),MarketIndicatorUtil.MARKETINDICATOR_REPO)){
-               // cstpRepoTradeAutoMatch(interfOpicsTradRepo,iCstpTrade);
-            }
+                cstpRepoTradeAutoMatch(interfOpicsTradRepo,iCstpTrade);
+            }*/
 
         }catch (Exception e){
             resultBaseDto.setErrMsg(e.getMessage());

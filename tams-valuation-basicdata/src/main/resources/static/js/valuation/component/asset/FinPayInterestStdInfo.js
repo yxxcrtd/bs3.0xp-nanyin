@@ -43,7 +43,6 @@
     //画面根据资产类型show or hide;
     var init = function(){
         showAll();
-        debugger;
         if($('#objectType').val() && $('#objectType').val() === '01'){
             getElementById('isNoIssueAmtFlag_div').show();
         }else{
@@ -60,7 +59,6 @@
         getElementById('payMonth_div').hide();
         getElementById('dayValue_div').hide();
     }
-    debugger;
     /**
      * 定义数据表格
      */
@@ -622,7 +620,6 @@
      */
     function getPreviewParams() {
         //付息信息
-        debugger;
         var param = {}
             ,endTdayRule  = getElementById('endTdayRule').val()
             , payTdayRule = getElementById('payTdayRule').val()

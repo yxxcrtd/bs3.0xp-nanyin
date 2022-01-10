@@ -2,22 +2,25 @@ package com.joyintech.tams.cfets.etrib.aop;
 
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribSaveRequest;
+import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoSaveRequest;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrautomanagementaccount.dto.EtrAutoManagementAccountDto;
 import com.joyintech.tams.invest.entrust.etrbondfirstlbidding.dto.EtrBondFirstLBiddingDto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrIbBondinfo002Dto;
+import com.joyintech.tams.invest.entrust.etribrepo.dto.EtrIbRepoinfo002Dto;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import org.aspectj.lang.JoinPoint;
@@ -85,13 +88,14 @@ public class CfetsEntrustCreditHandlerAop {
     public void creditOccupyCheck(JoinPoint joinPoint, Message<AjaxResult> ajaxResultMessage) throws BusinessException {
         AjaxResult ajaxResult=ajaxResultMessage.getData();
         String code=ajaxResultMessage.getCode();
-        if (ajaxResult != null || StringUtil.equals(code,"001")){
+        if (ajaxResult != null && !StringUtil.isEmptyList(ajaxResult.getErrorList())){
             return;
         }
         try {
-            if (StringUtil.equals(code,"000") && !StringUtil.isNotEmpty(ajaxResult)){
+            if (ajaxResult != null){
                 Object[] args = joinPoint.getArgs();
-                CfetsEtribSaveRequest saveReq=(CfetsEtribSaveRequest) args[0];
+                CfetsEtribSaveRequest saveReq = new CfetsEtribSaveRequest();
+                BeanUtil.copyPropertiesIgnoreNull(saveReq, args[0]);
                 if(StringUtil.isNotEmpty(saveReq)
                         &&  StringUtil.equals(saveReq.getCreditIsContinue(),"Y")){
                     return;
@@ -116,40 +120,50 @@ public class CfetsEntrustCreditHandlerAop {
                     }
                     ar = etrCommonService.executeOccupyCreditLines(list, DictCodeListExt1.交易状态_初始.getValue(),"check");
                 }else {
-                    CfetsEtribSaveRequest pageInputDto = (CfetsEtribSaveRequest) args[0];
-                    //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
-                    if(StringUtil.isNotEmpty(pageInputDto.getTradeAmt())){
-                        pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getTradeAmt(),new BigDecimal(10000),8));
+                    if(args[0] instanceof CfetsEtribSaveRequest){
+//                        CfetsEtribSaveRequest pageInputDto = (CfetsEtribSaveRequest) args[0];
+                        CfetsEtribSaveRequest pageInputDto = new CfetsEtribSaveRequest();
+                        BeanUtil.copyPropertiesIgnoreNull(pageInputDto, args[0]);
+                        //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
+                        if(StringUtil.isNotEmpty(pageInputDto.getTradeAmt())){
+                            pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getTradeAmt(),new BigDecimal(10000),8));
+                        }
+                        if(StringUtil.isNotEmpty(pageInputDto.getEntrustOwnNum())){
+                            pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
+                        }
+                        if(StringUtil.isNotEmpty(pageInputDto.getEntrustIntegrateNum())){
+                            pageInputDto.setEntrustIntegrateNum(ArithmeticUtil.divide(pageInputDto.getEntrustIntegrateNum(),new BigDecimal(10000),8));
+                        }
+                        if(StringUtil.isNotEmpty(pageInputDto.getEntrustAmt())){
+                            pageInputDto.setEntrustAmt(ArithmeticUtil.divide(pageInputDto.getEntrustAmt(),new BigDecimal(10000),8));
+                        }
+                        EtrIbBondinfo002Dto inputDto = new EtrIbBondinfo002Dto();
+                        BeanUtil.copyPropertiesIgnoreNull(inputDto, pageInputDto);
+                        inputDto.setVdate(pageInputDto.getEtrDate());
+                        ar = etrCommonService.executeOccupyCreditLines(inputDto, DictCodeListExt1.交易状态_初始.getValue(),"check");
+                    }else if(args[0] instanceof CfetsEtrRepoSaveRequest){
+                        //正回购不占授信  逆回购无券 也不占用授信
+                        CfetsEtrRepoSaveRequest pageInputDto = new CfetsEtrRepoSaveRequest();
+                        BeanUtil.copyPropertiesIgnoreNull(pageInputDto, args[0]);
+                        EtrIbRepoinfo002Dto inputDto = new EtrIbRepoinfo002Dto();
+                        BeanUtil.copyPropertiesIgnoreNull(inputDto, args[0]);
+                        inputDto.setVdate(pageInputDto.getEntrustDate());
+                        ar = etrCommonService.executeOccupyCreditLines(inputDto, DictCodeListExt1.交易状态_初始.getValue(),"check");
                     }
-                    if(StringUtil.isNotEmpty(pageInputDto.getEntrustOwnNum())){
-                        pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
+                    else {
+                        ar =null;
                     }
-                    if(StringUtil.isNotEmpty(pageInputDto.getEntrustIntegrateNum())){
-                        pageInputDto.setEntrustIntegrateNum(ArithmeticUtil.divide(pageInputDto.getEntrustIntegrateNum(),new BigDecimal(10000),8));
-                    }
-                    EtrIbBondinfo002Dto inputDto = new EtrIbBondinfo002Dto();
-                    BeanUtil.copyPropertiesIgnoreNull(inputDto, pageInputDto);
-                    inputDto.setVdate(pageInputDto.getEtrDate());
-                    ar = etrCommonService.executeOccupyCreditLines(inputDto, DictCodeListExt1.交易状态_初始.getValue(),"check");
                 }
                 if (ar != null && !StringUtil.isEmptyList(ar.getErrorList())){
-                    List<String> messages = new ArrayList<>();
-                    for(ValidMessage t:ar.getErrorList()){
-                        messages.add(t.getMessage());
-                    }
-                    if(messages.size()>0) {
-                        AjaxResult m=new AjaxResult();
-                        m.setStatuCode(220);
-                        m.setMessage(StringUtil.joinString(messages,  GlobalConstant.VERTICAL_LINE));
-                        ajaxResultMessage.setData(m);
+                        AjaxResult errorRs = new AjaxResult();
+                        errorRs.setErrorList(ar.getErrorList());
+                        ajaxResultMessage.setData(errorRs);
 
-                    }
                 }
                 if (ar != null && StringUtil.isNotEmpty(ar.getData())){
                         AjaxResult m=new AjaxResult();
-                        m.setStatuCode(230);
                         String ms=ar.getData().toString().replaceAll(BussinessConstant.MSG_SPLIT,GlobalConstant.VERTICAL_LINE);
-                        m.setMessage(ms);
+                        m.setMessage(ms, MessageType.确认消息);
                         ajaxResultMessage.setData(m);
                 }
             }
@@ -193,6 +207,9 @@ public class CfetsEntrustCreditHandlerAop {
                     && (operationType.equals(OperationType.NEW) || operationType.equals(OperationType.MODIFY))) {
 
                 CfetsEtribBondInfo003Dto pageInputDto = (CfetsEtribBondInfo003Dto) args[0];
+                if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),pageInputDto.getAssetType())){
+                    return ;
+                }
                 //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
                 pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getEntrustNum(),new BigDecimal(10000),8));
                 pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
@@ -225,6 +242,9 @@ public class CfetsEntrustCreditHandlerAop {
           //add by longpeng 债券一级指令多对多导入不占授信 20201228 end
             if (StringUtil.isNotEmpty(mapTrd.get("operateType"))&& mapTrd.get("operateType").equals("submit")) {
                 CfetsEtribBondInfo003Dto pageInputDto = (CfetsEtribBondInfo003Dto) args[0];
+                if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),pageInputDto.getAssetType())){
+                    return ;
+                }
                 //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
                 pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getEntrustNum(),new BigDecimal(10000),8));
                 pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
@@ -250,6 +270,9 @@ public class CfetsEntrustCreditHandlerAop {
         try {
             Object[] args = joinPoint.getArgs();
             CfetsEtribBondInfo003Dto pageInputDto = (CfetsEtribBondInfo003Dto) args[0];
+            if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),pageInputDto.getAssetType())){
+                return ;
+            }
             //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
             pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getEntrustNum(),new BigDecimal(10000),8));
             pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
@@ -269,6 +292,9 @@ public class CfetsEntrustCreditHandlerAop {
         try {
             Object[] args = joinPoint.getArgs();
             CfetsEtribBondInfo003Dto pageInputDto = (CfetsEtribBondInfo003Dto) args[0];
+            if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),pageInputDto.getAssetType())){
+                return ;
+            }
             //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
             pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getEntrustNum(),new BigDecimal(10000),8));
             pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));

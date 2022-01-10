@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface CfgReadonlyFormShowMapper {
@@ -29,6 +30,13 @@ public interface CfgReadonlyFormShowMapper {
      */
     List<CfgReadonlyFormShow> getReadonlyForm(@Param("pageCode") String pageCode, @Param("dtCode") String dtCode,
                                          @Param("spcdCode") String spcdCode);
+
+    /**
+     * 查询页面表单设置
+     * @param param
+     * @return
+     */
+    List<CfgReadonlyFormShow> getReadonlyForms(Map<String,Object> param);
 
 
 

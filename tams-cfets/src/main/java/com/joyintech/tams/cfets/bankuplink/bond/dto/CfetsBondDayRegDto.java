@@ -1,5 +1,6 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dto;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
@@ -47,6 +48,9 @@ public class CfetsBondDayRegDto {
     @ApiModelProperty(name="shareAmt",value="券面总额（万元）")
     private BigDecimal shareAmt;
 
+    @ApiModelProperty(name="intAmt",value="应计利息")
+    private BigDecimal intAmt;
+
     @ApiModelProperty(name="price",value="净价（元）")
     private BigDecimal price;
 
@@ -83,6 +87,12 @@ public class CfetsBondDayRegDto {
 
     @ApiModelProperty(name="settleSpeed",value="清算速度")
     private Long settleSpeed;
+
+    @ApiModelProperty(name="ccy",value="币种")
+    private String settCcy;
+
+    @ApiModelProperty(name="ccyStr",value="币种")
+    private String  settCcyStr;
 
     @ApiModelProperty(name="settleSpeedStr",value="清算速度")
     private String settleSpeedStr;
@@ -130,10 +140,14 @@ public class CfetsBondDayRegDto {
     private String assetTypeStr;
 
     @ApiModelProperty(name="exeId",value="成交编号")
-    private String exeId;
+    private String trdId;
 
     @ApiModelProperty(name="dealDate",value="成交日期")
     private Date dealDate;
+
+    @ApiModelProperty(name="calMode",value="计算方式  锚定值")
+    private String calMode;
+
 
     public String getValidStatus() {
         return validStatus;
@@ -209,6 +223,14 @@ public class CfetsBondDayRegDto {
         this.shareAmt = shareAmt;
     }
 
+    public BigDecimal getIntAmt() {
+        return intAmt;
+    }
+
+    public void setIntAmt(BigDecimal intAmt) {
+        this.intAmt = intAmt;
+    }
+
     public BigDecimal getPrice() {
         return price;
     }
@@ -241,17 +263,38 @@ public class CfetsBondDayRegDto {
         this.settleSpeed = settleSpeed;
     }
 
+    public String getSettCcy() {
+        return settCcy;
+    }
+
+    public void setSettCcy(String settCcy) {
+        this.settCcy = settCcy;
+    }
+
+    public String getSettCcyStr() {
+        if(StringUtil.isEmpty(this.settCcyStr)){
+            return SysDataUtil.getNameFromDataDict(BussinessDictCode.币种, this.getSettCcy());
+        }
+        return this.settCcyStr;
+    }
+
+    public void setSettCcyStr(String settCcyStr) {
+        this.settCcyStr = settCcyStr;
+    }
+
     public String getSettleSpeedStr() {
-        if (this.getSettleSpeed() != null && this.getSettleSpeed() == 0L) {
-            return BussinessDictCodeList.清算速度_T加0.getCodeName();
+        if(StringUtil.isEmpty(this.settleSpeedStr)){
+            if (this.getSettleSpeed() != null && this.getSettleSpeed() == 0L) {
+                return BussinessDictCodeList.清算速度_T加0.getCodeName();
+            }
+            else if (this.getSettleSpeed() != null && this.getSettleSpeed() == 1L) {
+                return BussinessDictCodeList.清算速度_T加1.getCodeName();
+            }
+            else if (this.getSettleSpeed() != null && this.getSettleSpeed() == 2L) {
+                return BussinessDictCodeList.清算速度_T加2.getCodeName();
+            }
         }
-        else if (this.getSettleSpeed() != null && this.getSettleSpeed() == 1L) {
-            return BussinessDictCodeList.清算速度_T加1.getCodeName();
-        }
-        else if (this.getSettleSpeed() != null && this.getSettleSpeed() == 2L) {
-            return BussinessDictCodeList.清算速度_T加2.getCodeName();
-        }
-        return null;
+        return this.settleSpeedStr;
     }
 
     public void setSettleSpeedStr(String settleSpeedStr) {
@@ -438,12 +481,12 @@ public class CfetsBondDayRegDto {
         this.assetType = assetType;
     }
 
-    public String getExeId() {
-        return exeId;
+    public String getTrdId() {
+        return trdId;
     }
 
-    public void setExeId(String exeId) {
-        this.exeId = exeId;
+    public void setTrdId(String trdId) {
+        this.trdId = trdId;
     }
 
     public Date getDealDate() {
@@ -455,11 +498,19 @@ public class CfetsBondDayRegDto {
     }
 
     public String getAssetTypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.行内资产四级分类, getAssetType());
+        return SysDataUtil.getNameFromDataDict(DictCode.行内资产五级分类, getAssetType());
     }
 
     public void setAssetTypeStr(String assetTypeStr) {
         this.assetTypeStr = assetTypeStr;
+    }
+
+    public String getCalMode() {
+        return calMode;
+    }
+
+    public void setCalMode(String calMode) {
+        this.calMode = calMode;
     }
 }
 

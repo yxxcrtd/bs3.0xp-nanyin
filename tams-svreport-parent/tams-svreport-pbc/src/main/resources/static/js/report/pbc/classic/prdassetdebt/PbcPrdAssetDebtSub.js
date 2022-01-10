@@ -317,7 +317,6 @@ $(function(){
     
  // 导出人行Excel按钮
     $('#PbcPrdAssetDebtSub_btn_chbexport').click(function(){
-    	debugger;
     	var expArr=table.getAllCheckedRows();
     	if(expArr != null && expArr.length >0){
     		Joyin.confirm('确认导出选中信息？',function(){
@@ -336,7 +335,6 @@ $(function(){
      * flag:0 全部导出
      */
      var downloadExcel = function(flag) {
-		debugger;
 		var expArr = table.getAllCheckedRows();
 		var param = {};
 		var paramObj = getSearchParams();
@@ -409,7 +407,6 @@ $(function(){
 					}
 				}
 			}
-			debugger;
 			var infoList = [];
 			param.infoList = JSON.stringify(expArr);
 			//param.expKeys = infoList.join(',')
@@ -494,7 +491,6 @@ $(function(){
 	 * 确认导出之后的操作
 	 */
 	var confirmExport = function(param, expArr) {
-		debugger;
      	var datas = JSON.stringify(expArr);
      	Joyin.exportExcel("download",{datas : datas});
      	

@@ -4,24 +4,6 @@
 (function(){
 
     /**根据市场代码，查询行情信息，展示出来*/
-    var queryJJHQXX = function(termType) {
-    	;
-    	if (!termType) {
-    		return;
-    	}
-        $.ajax({
-            /**临时用这个地址，后面调整！！！！**/
-            url: "findQuotations?termType="+termType+"&MarketType="+$(":radio:checked").val(),
-            async: false,
-            type: "GET",
-            dataType:"json",
-            success: function(info) {
-                var result = info.data;
-            }
-        });
-    }
-
-    /**根据市场代码，查询行情信息，展示出来*/
     var TREM_TYPE = null;
     var querySecinfo = function(finprodId,portfolioId,chlFinprodId, termType) {
     	TREM_TYPE = termType;
@@ -119,11 +101,65 @@
                 }
             }, false);
         }
-        
         if (termType) {
-        	queryJJHQXX(termType);
+            // add by caiqun 20211220 调用接口平台外汇cmds行情 start
+            //queryJJHQXX(termType);
+            document.getElementById('tradeType').innerHTML = termType;
+            var hqTypeArr = document.getElementsByName('hqType');
+            var hqType = $("[name='hqType']").attr("title");
+            sendRepo(websocket,termType,hqType);
+            // add by caiqun 20211220 调用接口平台外汇cmds行情 end
         }
     }
+
+    var websocket = cmds(cmdsWebSocketUrl,
+        function (data) {
+            if(data != null && data != "" && "没有数据" != data){
+                var objs = eval('('+data+')');
+                var noMDEntries = objs.noMDTypes.noRelatedSym.noMDEntries;
+                for(var j = 0;j<noMDEntries.length;j++) {
+                    if (noMDEntries[j].mDEntryType === 'e') { // 最新利率
+                        document.getElementById('newRate').innerHTML = JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 4, null, 2) + '%';
+                    } else if (noMDEntries[j].mDEntryType === '4') { // 开盘利率
+                        document.getElementById('kpRate').innerHTML = JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 4, null, 2) + '%';
+                    } else if (noMDEntries[j].mDEntryType === '7') { // 最高利率
+                        document.getElementById('zgRate').innerHTML = JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 4, null, 2) + '%';
+                    } else if (noMDEntries[j].mDEntryType === '8') { // 最低利率
+                        document.getElementById('zdRate').innerHTML = JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 4, null, 2) + '%';
+                    } else if (noMDEntries[j].mDEntryType === 'g') { // 加权平均利率
+                        document.getElementById('pjRate').innerHTML = JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 4, null, 2) + '%';
+                    } else if (noMDEntries[j].mDEntryType === '6') { // 平均回购期限
+                        if (noMDEntries[j].mDEntryPx != 0) {
+                            document.getElementById('pjTerm').innerHTML = noMDEntries[j].mDEntryPx + '天';
+                        } else {
+                            document.getElementById('pjTerm').innerHTML = '--';
+                        }
+                    } else if (noMDEntries[j].mDEntryType === '3') { // 加权平均利率(利率债)
+                        document.getElementById('pjlvRate').innerHTML = JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 4, null, 2) + '%';
+                    }
+                }
+            }else{
+                document.getElementById('newRate').innerHTML ='';// 最新利率
+                document.getElementById('kpRate').innerHTML ='';// 开盘利率
+                document.getElementById('zgRate').innerHTML ='';// 最高利率
+                document.getElementById('zdRate').innerHTML ='';// 最低利率
+                document.getElementById('pjRate').innerHTML ='';// 加权平均利率
+                document.getElementById('pjTerm').innerHTML = '--';// 平均回购期限
+                document.getElementById('pjlvRate').innerHTML ='';// 加权平均利率(利率债)
+            }
+        },
+        function (event) {
+            console.log("建立连接:" + event);
+        },
+        function (event) {
+            console.log("连接发生错误:" + event);
+        }
+    );
+
+    $("[name='hqType']").click(function () {
+        var hqType = $(this).attr("title");
+        sendRepo(websocket,TREM_TYPE,hqType);
+    });
 
     /**
      * 对外公开的接口

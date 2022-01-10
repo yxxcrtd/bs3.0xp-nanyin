@@ -16,7 +16,7 @@
     ETR_ENTRUST.PORTFOLIO_ID portfolioId,
     PTL_PORTFOLIO.PORTFOLIO_NAME portfolioName,
     ETR_ENTRUST_ADD.ASSET_TYPE finprodType2,
-    CASE WHEN ETR_ENTRUST_ADD.ASSET_TYPE ='F07' AND ETR_ENTRUST.PS IN ('03', '04','T56','T93','T94','T95','T96') THEN ETR_ENTRUST.STOCK_ID else(case when FIN_PRODUCT.FINPROD_MARKET_ID is not null
+    CASE WHEN ETR_ENTRUST_ADD.ASSET_TYPE ='F07' AND ETR_ENTRUST.PS IN ('03', '04','T56','T93','T94','T95','T96') THEN ETR_ENTRUST_ADD.TERM_TYPE else(case when FIN_PRODUCT.FINPROD_MARKET_ID is not null
     then FIN_PRODUCT.FINPROD_MARKET_ID
     else ETR_ENTRUST_ADD.ASSET_TYPE_10 end) end finprodMarketId,
     CASE WHEN ETR_ENTRUST_ADD.ASSET_TYPE ='F07' AND ETR_ENTRUST.PS IN('03','04') THEN ETR_ENTRUST.STOCK_ID ELSE FIN_PRODUCT.FINPROD_ID END finprodId,
@@ -46,15 +46,18 @@
     ssai.sec_acct_name secAcctId,
     DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
-    round(decode(btm.busi_type,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,''),4) etrPrice,
-    round(NVL(T5.ent_finish_amt,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 exeProgress,
-    round(NVL(T5.FINISH_AMT,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 dealProgress,
+    round(decode(btm.busi_type,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,#{busiTypePosition05},ETR_ENTRUST.PRICE,''),4) etrPrice,
+    round(NVL(T5.ent_finish_amt,0)*100/(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
+        else ETR_ENTRUST.ENTRUST_NUM*100 end),4)*100 exeProgress,
+    round(NVL(T5.FINISH_AMT,0)*100/(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
+        else  ETR_ENTRUST.ENTRUST_NUM*100 end),4)*100 dealProgress,
     NVL(T5.ent_finish_amt,0)/100  as execFinishAmt,
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/100) as execRemainderAmt,
     NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
-    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer
+    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
+    ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField
     FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
     LEFT JOIN
     PTL_PORTFOLIO
@@ -104,7 +107,7 @@
         ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
         LEFT JOIN SYS_USER su1 ON ETR_ENTRUST.INV_MANAGER_ID = su1.USER_NAME
-        LEFT JOIN BUSI_TYPE_MAPPING btm ON ETR_ENTRUST.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
+        LEFT JOIN BUSI_TYPE_MAPPING btm ON ETR_ENTRUST_ADD.ASSET_TYPE = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
     <where>
         AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall},#{entrustInwfl})
         <if test="entrustStatusList != null and entrustStatusList.size() > 0">
@@ -193,7 +196,7 @@
         WFL_ETR_ENTRUST.PORTFOLIO_ID portfolioId,
         PTL_PORTFOLIO.PORTFOLIO_NAME portfolioName,
         WFL_ETR_ENTRUST_ADD.ASSET_TYPE finprodType2,
-        CASE WHEN WFL_ETR_ENTRUST_ADD.ASSET_TYPE ='F07' AND WFL_ETR_ENTRUST.PS IN ('03', '04','T56','T93','T94','T95','T96') THEN WFL_ETR_ENTRUST.STOCK_ID else(case when FIN_PRODUCT.FINPROD_MARKET_ID is not null
+        CASE WHEN WFL_ETR_ENTRUST_ADD.ASSET_TYPE ='F07' AND WFL_ETR_ENTRUST.PS IN ('03', '04','T56','T93','T94','T95','T96') THEN WFL_ETR_ENTRUST_ADD.TERM_TYPE else(case when FIN_PRODUCT.FINPROD_MARKET_ID is not null
         then FIN_PRODUCT.FINPROD_MARKET_ID
         else WFL_ETR_ENTRUST_ADD.ASSET_TYPE_10 end) end finprodMarketId,
         CASE WHEN WFL_ETR_ENTRUST_ADD.ASSET_TYPE ='F07' AND WFL_ETR_ENTRUST.PS IN('03','04') THEN WFL_ETR_ENTRUST.STOCK_ID ELSE FIN_PRODUCT.FINPROD_ID END finprodId,
@@ -223,15 +226,18 @@
         ssai.sec_acct_name secAcctId,
         DECODE(WFL_ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
         decode(WFL_ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'F10',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'F12',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'F16',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
-        round(decode(btm.busi_type,#{busiTypePosition02},decode(WFL_ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',WFL_ETR_ENTRUST.PRICE,'exerYield',WFL_ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',WFL_ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},WFL_ETR_ENTRUST.PRICE,''),4) etrPrice,
-        round(NVL(T5.ent_finish_amt,0)*100/(WFL_ETR_ENTRUST.ENTRUST_NUM*100),4)*100 exeProgress,
-        round(NVL(T5.FINISH_AMT,0)*100/(WFL_ETR_ENTRUST.ENTRUST_NUM*100),4)*100 dealProgress,
+        round(decode(btm.busi_type,#{busiTypePosition02},decode(WFL_ETR_ENTRUST_ADD.CAL_MODE,'price',WFL_ETR_ENTRUST.PRICE,'exerYield',WFL_ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',WFL_ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},WFL_ETR_ENTRUST.PRICE,#{busiTypePosition05},WFL_ETR_ENTRUST.PRICE,''),4) etrPrice,
+        round(NVL(T5.ent_finish_amt,0)*100/(case when WFL_ETR_ENTRUST.ENTRUST_NUM is null or WFL_ETR_ENTRUST.ENTRUST_NUM=0 then WFL_ETR_ENTRUST.entrust_amt
+        else WFL_ETR_ENTRUST.ENTRUST_NUM*100  end),4)*100 exeProgress,
+        round(NVL(T5.FINISH_AMT,0)*100/(case when WFL_ETR_ENTRUST.ENTRUST_NUM is null or WFL_ETR_ENTRUST.ENTRUST_NUM=0 then WFL_ETR_ENTRUST.entrust_amt
+        else WFL_ETR_ENTRUST.ENTRUST_NUM*100 end ),4)*100 dealProgress,
         NVL(T5.ent_finish_amt,0)/100  as execFinishAmt,
         (NVL(WFL_ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/100) as execRemainderAmt,
         NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
         (NVL(WFL_ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
         NULL transmitTime,
-        NULL transmitTimeSer
+        NULL transmitTimeSer,
+        WFL_ETR_ENTRUST_ADD.CAL_MODE calculateField
         FROM (SELECT * FROM WFL_ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) WFL_ETR_ENTRUST
         LEFT JOIN
         PTL_PORTFOLIO
@@ -260,7 +266,7 @@
         ON
         WFL_ETR_ENTRUST.ENTRUST_ID = WFL_ETR_ENTRUST_ADD.ENTRUST_ID
         LEFT JOIN OPT_TARGET_INFO ON WFL_ETR_ENTRUST_ADD.ASSET_TYPE_10 = OPT_TARGET_INFO.TARGET_ID
-        LEFT JOIN BUSI_TYPE_MAPPING btm ON wfl_ETR_ENTRUST.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND wfl_ETR_ENTRUST.Ps = btm.ps
+        LEFT JOIN BUSI_TYPE_MAPPING btm ON WFL_ETR_ENTRUST_ADD.ASSET_TYPE = btm.Finprod_Type_Tg AND wfl_ETR_ENTRUST.Ps = btm.ps
         <if test="userId != null and userId!='' ">
             INNER JOIN PTL_PORTFOLIO_AUTHORITY
             ON PTL_PORTFOLIO.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
@@ -366,6 +372,7 @@
         left join SYS_DATADICT_LIST sdl4 on sdl4.DICT_CODE='PS' and t.PS=sdl4.ITEM_CODE
         left join SYS_DATADICT_LIST sdl5 on sdl5.DICT_CODE='TRADE_MARKET' and t.tradeMarket=sdl5.ITEM_CODE
         left join SYS_DATADICT_LIST sdl6 on sdl6.DICT_CODE='ACCOUNT_SPEED' and t.settleSpeed=sdl6.ITEM_CODE
+        left join SYS_DATADICT_LIST sdl7 on sdl7.DICT_CODE='CCY' and t.ccy=sdl7.ITEM_CODE
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryWhere"></include>
         order by t.finprodType2,t.entrustStatusOrder,t.busiTypePosition,t.ps)
@@ -385,6 +392,7 @@
                     OR sdl4.ITEM_VALUE like '%' || #{search} || '%'
                     OR sdl5.ITEM_VALUE like '%' || #{search} || '%'
                     OR sdl6.ITEM_VALUE like '%' || #{search} || '%'
+                    OR sdl7.ITEM_VALUE like '%' || #{search} || '%'
                     OR t.entrustId like '%' || #{search} || '%'
                     OR t.invManagerId like '%' || #{search} || '%'
                     OR t.invManagerName like '%' || #{search} || '%'
@@ -410,21 +418,6 @@
             </where>
         </if>
     </sql>
-
-    <select id="getEtrInfoQueryOperate"
-            resultType="com.joyintech.tams.cfets.cfetsetrinfoquery.dto.CfetsEtrInfoOperateListResponse">
-        SELECT rownum SEQ_NO,t.* from (select
-        ENTRUST_ID,
-        OPER_TYPE,
-        to_char(OPER_DATE,'yyyy-MM-dd')  OPER_DATE,
-        to_char(OPER_TIME,'hh24:mi:ss') OPER_TIME,
-        BUSI_DES,
-        real_name userId
-        from ETR_ENTRUST_OPER_HIS
-        LEFT JOIN SYS_USER SU on ETR_ENTRUST_OPER_HIS.user_id = SU.user_name
-        WHERE entrust_id = #{entrustId}
-        order by OPER_TIME desc) t
-    </select>
 
     <select id="queryRolePosByLoginUser" resultType="java.lang.Integer">
         select count(1) from SYS_USER_ROLE sur

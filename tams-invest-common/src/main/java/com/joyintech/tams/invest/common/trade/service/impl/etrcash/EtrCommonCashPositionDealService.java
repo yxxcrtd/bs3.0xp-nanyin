@@ -47,6 +47,7 @@ import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.trade.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
 import com.joyintech.tams.invest.common.trade.service.BussRepoSecService;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @program: 2.1.0
@@ -88,14 +89,18 @@ public class EtrCommonCashPositionDealService extends BaseService {
     private static BussRepoSecService bussRepoSecService;
 
     private static PtlCapacctInfoMapper ptlCapacctInfoMapper;
-    
+
     private static EtrEntrustMapper etrEntrustMapper;
 
     private static EtrEntrustAddMapper etrEntrustAddMapper;
-    
+
+    private static EtrEntrustDetailMapper etrEntrustDetailMapper;
+
     private static WflEtrEntrustMapper wflEtrEntrustMapper;
-    
+
     private static WflEtrEntrustAddMapper wflEtrEntrustAddMapper;
+
+    private static WflEtrEntrustDetailMapper wflEtrEntrustDetailMapper;
     
     @Autowired
 	public void setWflEtrEntrustMapper(WflEtrEntrustMapper wflEtrEntrustMapper) {
@@ -111,6 +116,8 @@ public class EtrCommonCashPositionDealService extends BaseService {
     public void setPtlCapacctInfoMapper(PtlCapacctInfoMapper ptlCapacctInfoMapper) {
         EtrCommonCashPositionDealService.ptlCapacctInfoMapper = ptlCapacctInfoMapper;
     }
+
+
     
     /**
      * 设置 etrEntrustMapper
@@ -130,6 +137,26 @@ public class EtrCommonCashPositionDealService extends BaseService {
     @Autowired
     public void setEtrEntrustAddMapper(EtrEntrustAddMapper etrEntrustAddMapper) {
         EtrCommonCashPositionDealService.etrEntrustAddMapper = etrEntrustAddMapper;
+    }
+
+    /**
+     * 设置 etrEntrustDetailMapper
+     *
+     * @param etrEntrustDetailMapper etrEntrustDetailMapper
+     */
+    @Autowired
+    public void setEtrEntrustDetailMapper(EtrEntrustDetailMapper etrEntrustDetailMapper) {
+        EtrCommonCashPositionDealService.etrEntrustDetailMapper = etrEntrustDetailMapper;
+    }
+
+    /**
+     * 设置 wflEtrEntrustDetailMapper
+     *
+     * @param wflEtrEntrustDetailMapper wflEtrEntrustDetailMapper
+     */
+    @Autowired
+    public void setWflEtrEntrustDetailMapper(WflEtrEntrustDetailMapper wflEtrEntrustDetailMapper) {
+        EtrCommonCashPositionDealService.wflEtrEntrustDetailMapper = wflEtrEntrustDetailMapper;
     }
 
     /**
@@ -1187,6 +1214,10 @@ public class EtrCommonCashPositionDealService extends BaseService {
     public static EntrustCommonDto findEntrust(String entrustId) {
     	EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
         EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entrustId);
+        List<EtrEntrustDetail> etrEntrustDetailList=null;
+        if(StringUtil.equals(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue(),etrEntrust.getEntrustClass())) {
+            etrEntrustDetailList=etrEntrustDetailMapper.selectList(entrustId);
+        }
         //流程中委托查询流程表
         if(etrEntrust == null) {
         	WflEtrEntrustKey wflEtrEntrustKey = new WflEtrEntrustKey();
@@ -1208,9 +1239,24 @@ public class EtrCommonCashPositionDealService extends BaseService {
         		BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd,wflEtrEntrustAdd );
         	}
         }
+        if(StringUtil.equals(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue(),etrEntrust.getEntrustClass())&&
+            CollectionUtils.isEmpty(etrEntrustDetailList)) {
+            WflEtrEntrustDetailKey wflEtrEntrustDetailKey = new WflEtrEntrustDetailKey();
+            wflEtrEntrustDetailKey.setEntrustId(entrustId);
+            wflEtrEntrustDetailKey.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+            List<WflEtrEntrustDetail> wflEtrEntrustDetailList = wflEtrEntrustDetailMapper.selectList(wflEtrEntrustDetailKey);
+            if(!CollectionUtils.isEmpty(etrEntrustDetailList)) {
+                etrEntrustDetailList=new ArrayList<>();
+                wflEtrEntrustDetailList.stream().forEach(item-> {
+                    EtrEntrustDetail etrEntrustDetail=new EtrEntrustDetail();
+                    BeanUtil.copyPropertiesIgnoreNull(etrEntrustDetail, item);
+                });
+            }
+        }
         EntrustCommonDto result = new EntrustCommonDto();
         result.setEtrEntrust(etrEntrust);
         result.setEtrEntrustAdd(etrEntrustAdd);
+        result.setEtrEntrustDetailList(etrEntrustDetailList);
         return result;
     }
 
@@ -1492,5 +1538,87 @@ public class EtrCommonCashPositionDealService extends BaseService {
         }
         return 最新收盘价;
     }
+
+    //封装系列户组合
+    public static List<EntrustCommonDto> findEntrustMulti(String entrustId) {
+        List<EntrustCommonDto> entrustCommonDtoList=new ArrayList<>();
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
+        EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entrustId);
+        List<EtrEntrustDetail> etrEntrustDetailList=etrEntrustDetailMapper.selectList(entrustId);
+        //流程中委托查询流程表
+        if(etrEntrust == null) {
+            WflEtrEntrustKey wflEtrEntrustKey = new WflEtrEntrustKey();
+            wflEtrEntrustKey.setEntrustId(entrustId);
+            wflEtrEntrustKey.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+            WflEtrEntrust wflEtrEntrust = wflEtrEntrustMapper.selectByPrimaryKey(wflEtrEntrustKey);
+            if(wflEtrEntrust != null) {
+                etrEntrust = new EtrEntrust();
+                BeanUtil.copyPropertiesIgnoreNull(etrEntrust,wflEtrEntrust );
+            }
+        }
+        if(etrEntrustAdd == null) {
+            WflEtrEntrustAddKey wflEtrEntrustAddKey = new WflEtrEntrustAddKey();
+            wflEtrEntrustAddKey.setEntrustId(entrustId);
+            wflEtrEntrustAddKey.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+            WflEtrEntrustAdd wflEtrEntrustAdd = wflEtrEntrustAddMapper.selectByPrimaryKey(wflEtrEntrustAddKey);
+            if(wflEtrEntrustAdd != null) {
+                etrEntrustAdd = new EtrEntrustAdd();
+                BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd,wflEtrEntrustAdd );
+            }
+        }
+        if(StringUtil.equals(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue(),etrEntrust.getEntrustClass())&&
+                CollectionUtils.isEmpty(etrEntrustDetailList)) {
+            WflEtrEntrustDetailKey wflEtrEntrustDetailKey = new WflEtrEntrustDetailKey();
+            wflEtrEntrustDetailKey.setEntrustId(entrustId);
+            wflEtrEntrustDetailKey.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+            List<WflEtrEntrustDetail> wflEtrEntrustDetailList = wflEtrEntrustDetailMapper.selectList(wflEtrEntrustDetailKey);
+            if(!CollectionUtils.isEmpty(etrEntrustDetailList)) {
+                etrEntrustDetailList=new ArrayList<>();
+                for(int i=0;i<wflEtrEntrustDetailList.size();i++) {
+                    EtrEntrustDetail etrEntrustDetail = new EtrEntrustDetail();
+                    BeanUtil.copyPropertiesIgnoreNull(etrEntrustDetail, wflEtrEntrustDetailList.get(i));
+                    etrEntrustDetailList.add(etrEntrustDetail);
+                }
+            }
+        }
+        if(StringUtil.equals(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue(),etrEntrust.getEntrustClass())){
+            for(int i=0;i<etrEntrustDetailList.size();i++) {
+                EtrEntrustDetail etrEntrustDetail =etrEntrustDetailList.get(i);
+                EtrEntrust newEtrEntrust=new EtrEntrust();
+                BeanUtil.copyPropertiesIgnoreNull(newEtrEntrust,etrEntrust);
+                etrEntrust.setPortfolioId(etrEntrustDetail.getPortfolioId());
+                etrEntrust.setEntrustNum(etrEntrustDetail.getEntrustNum());
+                etrEntrust.setEntrustAmt(etrEntrustDetail.getEntrustAmt());
+                EntrustCommonDto result = new EntrustCommonDto();
+                result.setEtrEntrust(etrEntrust);
+                result.setEtrEntrustAdd(etrEntrustAdd);
+                entrustCommonDtoList.add(result);
+            }
+        }else{
+            EntrustCommonDto result = new EntrustCommonDto();
+            result.setEtrEntrust(etrEntrust);
+            result.setEtrEntrustAdd(etrEntrustAdd);
+            entrustCommonDtoList.add(result);
+        }
+        return entrustCommonDtoList;
+    }
+
+
+    /**
+     * 场内指令已完成金额或者额度(支持多组合)
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public static BigDecimal getEtrExchangeFinishAmtMuilt(Map<String, Object> map) {
+        BigDecimal bigDecimal=null;
+        if(StringUtil.isNotEmpty(map.get("entrustClass"))&&StringUtil.equals(map.get("entrustClass"),DictCodeList.是否_是.getValue()) ) {
+            bigDecimal=etrCommonCashPositionMapper.getEtrExchangeFinishAmtMuilt(map);
+        }else {
+            bigDecimal=getEtrExchangeFinishAmt(map);
+        }
+        return bigDecimal;
+    }
+
 
 }

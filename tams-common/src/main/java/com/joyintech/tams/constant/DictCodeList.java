@@ -2020,8 +2020,6 @@ public enum DictCodeList implements BaseDictCodeList {
 	产品数据来源_三方分销TA(DictCode.产品数据来源, "02", "三方分销TA"),
     释放状态_未释放(DictCode.释放状态,"0","未释放"),
     释放状态_已释放(DictCode.释放状态,"1","已释放"),
-	CSTP资产类型_现券买卖(DictCode.CSTP资产类型,"BOND","现券买卖"),
-	CSTP资产类型_质押式回购(DictCode.CSTP资产类型,"REPO","质押式回购"),
 	;
 	/*字典值已经满了 ，不要添加了*/
     private String value;

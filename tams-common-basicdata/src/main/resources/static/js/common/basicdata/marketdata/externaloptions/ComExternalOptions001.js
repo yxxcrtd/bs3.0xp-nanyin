@@ -218,7 +218,6 @@ $(function () {
     $(function() {
         // 绑定按钮事件
         $('#ComExternalOptions001_btn_search').click(function() {
-            debugger;
             table.load();
         });
 

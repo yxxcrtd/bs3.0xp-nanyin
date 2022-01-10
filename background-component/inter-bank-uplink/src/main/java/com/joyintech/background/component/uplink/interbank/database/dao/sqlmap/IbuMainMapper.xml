@@ -131,7 +131,8 @@
 		             a.FPRICE_AMT        AS I_Q_B_FPRICE_AMT,
 		             a.TRADE_STATUS      AS I_Q_B_TRADE_STATUS,
 		             a.SEND_STATUS       AS I_Q_B_SEND_STATUS,
-		             a.EFF_TIME          AS I_Q_B_EFF_TIME,
+		             CASE WHEN A.QUOTE_TYPE ='01' THEN NULL
+		             ELSE  a.EFF_TIME    END      AS I_Q_B_EFF_TIME,
 		             a.OU_PARTY_ID       AS I_Q_B_OU_PARTY_ID,
 		             NVL(fa.IBU_TRADER, a.OU_TRADER_ID)      AS I_Q_B_OU_TRADER_ID,
 		             a.B_VERSION            AS I_Q_B_B_VERSION,
@@ -200,7 +201,16 @@
 	                 case when z.PORTFOLIO_ID IS NOT null then 'Y'
 	                 	else 'N'
 	                 	end ISDZH,
-					 round((c.mdate-a.QUOTE_DATE)/365,2) pendingPeriod
+					 round((c.mdate-a.QUOTE_DATE)/365,2) pendingPeriod,
+					A1.ITEM_VALUE ITEM_VALUEA1,
+					B.ITEM_VALUE ITEM_VALUEB,
+					C.ITEM_VALUE ITEM_VALUEC,
+					D.ITEM_VALUE ITEM_VALUED,
+					E.ITEM_VALUE ITEM_VALUEE,
+					F.ITEM_VALUE ITEM_VALUEF,
+					H.ITEM_VALUE ITEM_VALUEH,
+					I.ITEM_VALUE ITEM_VALUEI,
+					J.ITEM_VALUE ITEM_VALUEJ
 		from (select nvl(a.QUOTE_ID, b.QUOTE_ID) QUOTE_ID,
 		        nvl(a.QUOTE_TYPE, b.QUOTE_TYPE) QUOTE_TYPE,
        nvl(a.QUOTE_ROLE_TYPE, b.QUOTE_ROLE_TYPE) QUOTE_ROLE_TYPE,
@@ -368,12 +378,14 @@
 	            LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'STATUS_VALID')A1 ON A.WORKFLOW_STATUS = A1.ITEM_CODE 
                 LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'QUOTE_ROLE_TYPE')B ON A.QUOTE_ROLE_TYPE = B.ITEM_CODE 
                 LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'PS')C ON A.PS = C.ITEM_CODE
-                LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'QUOTE_TYPE')D ON A.QUOTE_TYPE = D.ITEM_CODE 
+                LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'QUOTE_TYPE')D ON A.QUOTE_TYPE = D.ITEM_CODE
                 LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'QUOTE_STUTAS_IBU')E ON A.TRADE_STATUS = E.ITEM_CODE
-                LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'SEND_TYPE_IBU')F ON A.SEND_STATUS = F.ITEM_CODE 
-                LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'WINDTYPEONE')H ON C.TYPE_6 = H.ITEM_CODE 
-                <!--LEFT JOIN (SELECT COUNT(*) COUNTS, QUOTE_ID FROM IBU_QUOTE_ETR_RE GROUP BY QUOTE_ID
-                			UNION ALL SELECT COUNT(*) COUNTS, QUOTE_ID FROM WFL_IBU_QUOTE_ETR_RE GROUP BY QUOTE_ID )I ON  I.QUOTE_ID=A.QUOTE_ID -->
+                LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'SEND_TYPE_IBU')F ON A.SEND_STATUS = F.ITEM_CODE
+				LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'WINDTYPEONE')H ON C.TYPE_6 = H.ITEM_CODE
+				LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'QUOTE_STUTAS_IBU')I ON B.TRADE_STATUS = I.ITEM_CODE
+				LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'SEND_TYPE_IBU')J ON B.SEND_STATUS = J.ITEM_CODE
+		<!--LEFT JOIN (SELECT COUNT(*) COUNTS, QUOTE_ID FROM IBU_QUOTE_ETR_RE GROUP BY QUOTE_ID
+                    UNION ALL SELECT COUNT(*) COUNTS, QUOTE_ID FROM WFL_IBU_QUOTE_ETR_RE GROUP BY QUOTE_ID )I ON  I.QUOTE_ID=A.QUOTE_ID -->
 		LEFT JOIN (SELECT
 		QUOTE_ID,
 		LISTAGG(PORTFOLIO_ID, ',') WITHIN GROUP(
@@ -543,32 +555,101 @@
 	            	and concat(nvl(a.QUOTE_ROLE_TYPE, ''), concat(',', nvl(a.TRADE_STATUS, ''))) != '04,09'
 	            	<!-- add by zhangliang 20200803  做市方已撤回的数据也不能显示在当日报价页面   start-->
 	            </if>
-	             <if test="keywords != null and keywords != ''">
-	      AND (a.WORKFLOW_STATUS like '%'||#{keywords}||'%'  OR A1.ITEM_VALUE LIKE '%'||#{keywords}||'%' 
-          OR A.QUOTE_ROLE_TYPE like '%'||#{keywords}||'%' OR B.ITEM_VALUE LIKE '%'||#{keywords}||'%' 
-          OR A.PS like '%'||#{keywords}||'%' OR C.ITEM_VALUE LIKE '%'||#{keywords}||'%' 
-          OR A.FINPROD_ID like '%'||#{keywords}||'%'
-          OR C.FINPROD_ABBR like '%'||#{keywords}||'%'
-          OR A.QUOTE_TYPE like '%'||#{keywords}||'%'   OR D.ITEM_VALUE LIKE '%'||#{keywords}||'%' 
-          OR A.TRADE_STATUS like '%'||#{keywords}||'%' OR E.ITEM_VALUE LIKE '%'||#{keywords}||'%' 
-          OR A.SEND_STATUS like '%'||#{keywords}||'%'  OR F.ITEM_VALUE LIKE '%'||#{keywords}||'%' 
-          OR m.TRADER_NAME like '%'||#{keywords}||'%' OR b.TRADER_NAME like '%' ||#{keywords}||'%'
-          OR n.PARTY_ABBR like '%'||#{keywords}||'%' OR b.PARTY_ABBR like '%' ||#{keywords}|| '%'
-          OR b.CP_PARTY_ID like '%'||#{keywords}||'%'
-          OR b.CP_TRADER like '%'||#{keywords}||'%'
-          OR A.EFF_TIME LIKE '%'||#{keywords}||'%'
-          OR A.SHARE_AMT LIKE  '%'||#{keywords}||'%' 
-          OR A.SETTLE_SPEED LIKE '%' || decode(#{keywords},'T+0','0','T+1','1','T+2','2',#{keywords})||'%'
-          OR B.UNIT_CPRICE LIKE  '%'||#{keywords}||'%'
-          OR B.YIELD LIKE  '%'||#{keywords}||'%'
-          OR B.PRIN_AMT LIKE  '%'||#{keywords}||'%'
-          OR C.TYPE_6 LIKE  '%'||#{keywords}||'%' OR H.ITEM_VALUE LIKE '%'||#{keywords}||'%' 
-          OR A.CFETS_QUOTE_ID like '%' || #{keywords} || '%' 
-          OR B.EXECID LIKE '%' || #{keywords} || '%'
-          OR A.QUOTE_ID LIKE  '%'||#{keywords}||'%')
-	             </if>
+				<if test="pss != null and pss.size() > 0">
+					and a.PS in
+					<foreach item="item" index="index" collection="pss" open="(" separator="," close=")">
+						#{item, jdbcType=VARCHAR}
+					</foreach>
+				</if>
+				<if test="finprodMarketIds != null and finprodMarketIds.size() > 0">
+					and c.FINPROD_MARKET_ID in
+					<foreach item="item" index="index" collection="finprodMarketIds" open="(" separator="," close=")">
+						#{item, jdbcType=VARCHAR}
+					</foreach>
+				</if>
+				<if test="counterIds != null and counterIds.size() > 0">
+					and b.CP_PARTY_ID in
+					<foreach item="item" index="index" collection="counterIds" open="(" separator="," close=")">
+						#{item, jdbcType=VARCHAR}
+					</foreach>
+				</if>
+				<if test="mySideTraders != null and mySideTraders.size() > 0">
+					and a.OU_TRADER_ID in
+					<foreach item="item" index="index" collection="mySideTraders" open="(" separator="," close=")">
+						#{item, jdbcType=VARCHAR}
+					</foreach>
+				</if>
+				<if test="counterTraders != null and counterTraders.size() > 0">
+					and b.CP_TRADER in
+					<foreach item="item" index="index" collection="counterTraders" open="(" separator="," close=")">
+						#{item, jdbcType=VARCHAR}
+					</foreach>
+				</if>
+				<if test="mySideTrader !=null and mySideTrader !=''">
+					and a.OU_TRADER_ID LIKE concat('%',concat(#{mySideTrader,jdbcType=VARCHAR},'%'))
+
+				</if>
+				<if test="counterTrader !=null and counterTrader !=''">
+					and b.CP_TRADER LIKE concat('%',concat(#{counterTrader,jdbcType=VARCHAR},'%'))
+				</if>
+	          <!--   <if test="keywords != null and keywords != ''">
+					  AND (a.WORKFLOW_STATUS like '%'||#{keywords}||'%'  OR A1.ITEM_VALUE LIKE '%'||#{keywords}||'%'
+					 OR A.TRADE_STATUS like '%'||#{keywords}||'%' OR E.ITEM_VALUE LIKE '%'||#{keywords}||'%'
+					 OR A.SEND_STATUS like '%'||#{keywords}||'%'  OR F.ITEM_VALUE LIKE '%'||#{keywords}||'%'
+					 OR A.QUOTE_ROLE_TYPE like '%'||#{keywords}||'%' OR B.ITEM_VALUE LIKE '%'||#{keywords}||'%'
+					  OR A.PS like '%'||#{keywords}||'%' OR C.ITEM_VALUE LIKE '%'||#{keywords}||'%'
+					  OR c.TYPE_6 like '%'||#{keywords}||'%' OR H.ITEM_VALUE LIKE '%'||#{keywords}||'%'
+					  OR A.FINPROD_ID like '%'||#{keywords}||'%'
+					  OR C.FINPROD_MARKET_ID like '%'||#{keywords}||'%'
+					  OR C.FINPROD_ABBR like '%'||#{keywords}||'%'
+					  OR A.QUOTE_TYPE like '%'||#{keywords}||'%'   OR D.ITEM_VALUE LIKE '%'||#{keywords}||'%'
+					  OR n.PARTY_NAME like '%'||#{keywords}||'%' OR b.TRADER_NAME like '%' ||#{keywords}||'%'
+					  OR m.TRADER_NAME like '%'||#{keywords}||'%' OR m.TRADER_NAME like '%' ||#{keywords}||'%'
+					  OR  b.PARTY_ABBR like '%'||#{keywords}||'%' OR  b.PARTY_ABBR like '%' ||#{keywords}|| '%'
+					  OR  b.TRADER_NAME like '%'||#{keywords}||'%' OR  b.TRADER_NAME like '%' ||#{keywords}|| '%'
+					  OR A.EFF_TIME LIKE '%'||#{keywords}||'%'
+					  OR b.RE_EFF_TIME LIKE '%'||#{keywords}||'%'
+					  OR to_char(A.SHARE_AMT,'FM99999.90')=#{keywords}
+					  OR to_char(B.PRIN_AMT,'FM99999.90')=#{keywords}
+					  OR A.SETTLE_SPEED LIKE '%' || decode(#{keywords},'T+0','0','T+1','1','T+2','2',#{keywords})||'%'
+					  OR to_char(B.UNIT_CPRICE,'FM99990.9999')=#{keywords} or  B.UNIT_CPRICE||'' =#{keywords}
+					  OR to_char(B.YIELD*100,'FM99990.9999')=#{keywords} or  B.YIELD||'' =#{keywords}
+					  OR to_char( b.EXER_YIELD*100,'FM99990.9999')=#{keywords} or   b.EXER_YIELD||'' =#{keywords}
+					  OR A.CFETS_QUOTE_ID like '%' || #{keywords} || '%'
+					  OR B.EXECID LIKE '%' || #{keywords} || '%'
+					  OR A.QUOTE_ID LIKE  '%'||#{keywords}||'%')
+	             </if>-->
 	    	</where>
     		) y
+    		<where>
+				<if test="keywords != null and keywords != ''">
+					(y.VALID_STATUS like '%'||#{keywords}||'%'  OR y.ITEM_VALUEA1 LIKE '%'||#{keywords}||'%'
+					OR ((y.I_Q_B_TRADE_STATUS like '%'||#{keywords}||'%' OR y.ITEM_VALUEE LIKE '%'||#{keywords}||'%') and (y.I_Q_B_D_TRADE_STATUS like '%'||#{keywords}||'%' OR y.ITEM_VALUEI LIKE '%'||#{keywords}||'%'))
+					OR ((y.I_Q_B_SEND_STATUS like '%'||#{keywords}||'%'  OR y.ITEM_VALUEF LIKE '%'||#{keywords}||'%') and (y.I_Q_B_D_SEND_STATUS like '%'||#{keywords}||'%'  OR y.ITEM_VALUEJ LIKE '%'||#{keywords}||'%'))
+					OR y.I_Q_B_QUOTE_ROLE_TYPE like '%'||#{keywords}||'%' OR y.ITEM_VALUEB LIKE '%'||#{keywords}||'%'
+					OR y.I_Q_B_PS like '%'||#{keywords}||'%' OR y.ITEM_VALUEC LIKE '%'||#{keywords}||'%'
+					OR y.EXT_TYPE6 like '%'||#{keywords}||'%' OR y.ITEM_VALUEH LIKE '%'||#{keywords}||'%'
+					OR y.I_Q_B_FINPROD_ID like '%'||#{keywords}||'%'
+					OR y.I_Q_B_FINPROD_MARKET_ID like '%'||#{keywords}||'%'
+					OR y.EXT_FINPROD_ABBR like '%'||#{keywords}||'%'
+					OR y.I_Q_B_QUOTE_TYPE like '%'||#{keywords}||'%'   OR y.ITEM_VALUED LIKE '%'||#{keywords}||'%'
+					OR y.EXT_PARTY_NAME like '%'||#{keywords}||'%' OR y.EXT_PARTY_NAME like '%' ||#{keywords}||'%'
+					OR y.EXT_OUTRADER_NAME like '%'||#{keywords}||'%' OR y.EXT_OUTRADER_NAME like '%' ||#{keywords}||'%'
+					OR y.I_Q_B_D_CP_PARTY_NAME like '%'||#{keywords}||'%' OR  y.I_Q_B_D_CP_PARTY_NAME like '%' ||#{keywords}|| '%'
+					OR y.I_Q_B_D_CP_TRADER_NAME like '%'||#{keywords}||'%' OR  y.I_Q_B_D_CP_TRADER_NAME like '%' ||#{keywords}|| '%'
+					OR to_char(y.I_Q_B_EFF_TIME,'hh24:mi') = #{keywords}
+					OR to_char(y.I_Q_B_D_RE_EFF_TIME,'hh24:mi') = #{keywords}
+					OR to_char(y.I_Q_B_SHARE_AMT/100,'FM99999.90')=#{keywords}
+					OR to_char(y.I_Q_B_D_PRIN_AMT/10000,'FM99999')=#{keywords}
+					OR y.I_Q_B_SETTLE_SPEED LIKE '%' || decode(#{keywords},'T+0','0','T+1','1','T+2','2',#{keywords})||'%'
+					OR to_char(y.I_Q_B_D_UNIT_CPRICE,'FM99990.9999')=#{keywords} or  y.I_Q_B_D_UNIT_CPRICE||'' =#{keywords}
+					OR to_char(y.I_Q_B_D_YIELD*100,'FM99990.9999')=#{keywords} or  y.I_Q_B_D_YIELD||'' =#{keywords}
+					OR to_char(y.I_Q_B_D_EXER_YIELD*100,'FM99990.9999')=#{keywords} or   y.I_Q_B_D_EXER_YIELD||'' =#{keywords}
+					OR y.I_Q_B_CFETS_QUOTE_ID like '%' || #{keywords} || '%'
+					OR y.I_Q_B_D_EXECID LIKE '%' || #{keywords} || '%'
+					OR y.I_Q_B_QUOTE_ID LIKE  '%'||#{keywords}||'%')
+				</if>
+			</where>
     	<!-- where y.rowno = 1 -->
     	order by decode(y.I_Q_B_TRADE_STATUS, '06', 2, '08', 3, '13', 4,  '07', 5, 1) asc, y.I_Q_B_UPDATE_TIME desc
         <!-- order by decode(y.I_Q_B_TRADE_STATUS, '06', 96, '08', 97, '13', 98,  '07', 99, to_number(y.I_Q_B_TRADE_STATUS)) asc, y.I_Q_B_UPDATE_TIME desc -->
@@ -936,6 +1017,12 @@ SELECT T.QUOTE_ID,
 			        and TO_CHAR(a.QUOTE_DATE,'yyyy-MM-dd') &lt; = #{endQuoteDate}
 			    </if>
 	            <if test="ps !=null and ps !=''">and a.REPO_PS = #{ps,jdbcType=VARCHAR}</if>
+				<if test="psList != null and psList.size() > 0">
+					and a.REPO_PS in
+					<foreach item="item" index="index" collection="psList" open="(" separator="," close=")">
+						#{item, jdbcType=VARCHAR}
+					</foreach>
+				</if>
 	            <if test="cpPartyId !=null and cpPartyId !=''">and a.CP_PARTY_ID = #{cpPartyId,jdbcType=VARCHAR}</if>
 				<if test="pQuoteIdList != null and pQuoteIdList.size() > 0">
 					and a.P_QUOTE_ID in 

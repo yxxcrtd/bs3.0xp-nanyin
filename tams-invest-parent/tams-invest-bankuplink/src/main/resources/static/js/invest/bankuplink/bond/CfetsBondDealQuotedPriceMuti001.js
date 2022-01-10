@@ -104,7 +104,6 @@
         object.isDzh = 'Y';
         Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceMuti001/check', object,
             function(result) {
-                debugger;
                 if (result.data) {
                     Joyin.confirm(result.data,
                         function() {

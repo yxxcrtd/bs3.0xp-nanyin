@@ -263,6 +263,18 @@ public class CfetsTrdConfirmRegInfoListResponse{
     private String   pledgeFaceValues;
     @ApiModelProperty(name="idDirectTrd",value="是否直接交易",example="字符串1")
     private String  isDirectTrd;
+
+    @ApiModelProperty(name="trdFeeAmt",value="交易手续费",example="字符串1")
+    private BigDecimal trdFeeAmt;
+
+    @ApiModelProperty(name="settleFeeAmt",value="结算手续费",example="字符串1")
+    private BigDecimal settleFeeAmt;
+    @ApiModelProperty(name="quoteId",value="内部报价编号",example="字符串1")
+    private String quoteId;
+    @ApiModelProperty(name="basis",value="计息基础",example="字符串1")
+    private String basis;
+    @ApiModelProperty(name="busAct",value="按钮动作",example="字符串1")
+    private String butAct;
     @ApiModelProperty(name="selectedItem",value="选中数据",example="字符串1")
     private transient List<CfetsTrdConfirmRegInfoListResponse> selectedItem;
 
@@ -963,7 +975,7 @@ public class CfetsTrdConfirmRegInfoListResponse{
     }
 
     public String getQuoteTypeName() {
-        return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式_登记, getDealType());
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式_登记, getQuoteType());
     }
 
     public void setQuoteTypeName(String quoteTypeName) {
@@ -976,5 +988,45 @@ public class CfetsTrdConfirmRegInfoListResponse{
 
     public void setMtradeAmt(BigDecimal mtradeAmt) {
         this.mtradeAmt = mtradeAmt;
+    }
+
+    public BigDecimal getTrdFeeAmt() {
+        return trdFeeAmt;
+    }
+
+    public void setTrdFeeAmt(BigDecimal trdFeeAmt) {
+        this.trdFeeAmt = trdFeeAmt;
+    }
+
+    public BigDecimal getSettleFeeAmt() {
+        return settleFeeAmt;
+    }
+
+    public void setSettleFeeAmt(BigDecimal settleFeeAmt) {
+        this.settleFeeAmt = settleFeeAmt;
+    }
+
+    public String getQuoteId() {
+        return quoteId;
+    }
+
+    public void setQuoteId(String quoteId) {
+        this.quoteId = quoteId;
+    }
+
+    public String getBasis() {
+        return basis;
+    }
+
+    public void setBasis(String basis) {
+        this.basis = basis;
+    }
+
+    public String getButAct() {
+        return butAct;
+    }
+
+    public void setButAct(String butAct) {
+        this.butAct = butAct;
     }
 }

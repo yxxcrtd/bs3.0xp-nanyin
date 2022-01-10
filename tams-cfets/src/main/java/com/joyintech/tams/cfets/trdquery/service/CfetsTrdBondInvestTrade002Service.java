@@ -33,15 +33,11 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.service.trade.bond.dto.TrdBondInvestTradeDto;
 import com.joyintech.system.base.dao.SysUploadFileInfoMapper;
 import com.joyintech.system.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
 import com.joyintech.tams.cfets.trdconfirm.dao.CfetsTrdConfirmMapper;
-import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmCstpInfoListResponse;
-import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmManualMatchInfoRequest;
-import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmMatchDto;
-import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegInfoListResponse;
 import com.joyintech.tams.cfets.trdquery.dao.CfetsTrdQueryMapper;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdInvestPersonInfoDto;
@@ -58,7 +54,6 @@ import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommServi
 import com.joyintech.tams.component.business.trade.BussTrdAvailableCashQueryService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
-import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
 import com.joyintech.tams.component.business.trade.impl.BaseTradeProductDealCommServiceImpl;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -75,18 +70,11 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.cstp.service.CstpCommonService;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
-import com.joyintech.tams.invest.common.dto.BaseTradeProductDealRevokeDto;
-import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
-import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
-import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;
 import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
 import com.joyintech.tams.invest.common.dto.cstp.InterfTradSecdealDto;
-import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
-import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
-import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.service.MapperDelegateService;
@@ -95,7 +83,6 @@ import com.joyintech.tams.invest.common.trade.CeLinesUpdate;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
-import com.joyintech.tams.invest.common.trade.dto.PreTrdCommonDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.common.trade.service.MultiApproveTradeCheckService;
@@ -135,7 +122,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.joyintech.tams.invest.common.asset.service.BondAssetCalcService.*;
-import static com.joyintech.tams.invest.common.trade.AllTradeCommonUtil.copyFileInfoByFileNo;
 
 /**
  * 债券投资交易新建画面Service
@@ -1069,7 +1055,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
      * @see
      * @since 1.0
      */
-    private void doCompleteRevoke(CfetsTrdBondInvestTradeDto entity) {
+    public void doCompleteRevoke(CfetsTrdBondInvestTradeDto entity,String settleRemark,Boolean isNeedDealPosition) {
         // 调用基础组合.【金融产品交易组件.查询金融产品交易信息】获取原交易信息
         if (entity.getTotleTradeId().lastIndexOf('R') == entity.getTotleTradeId().length() - 1) {
             entity.setTotleTradeId(entity.getTotleTradeId().substring(0, entity.getTotleTradeId().length() - 1));
@@ -1166,7 +1152,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         }
         params.put("bizCode", bizCode);
         params.put("updateUser", SecurityUtil.getLoginUser().getUserName());
-        params.put("revokeReason", entity.getRevokeReason());
+        params.put("revokeReason", entity.getRevokeReason()==null?settleRemark : entity.getRevokeReason()+settleRemark);
         restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/doRevokeComplete?", params,
             String.class);
 
@@ -1181,9 +1167,9 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         if(null!=regTotal){
             String remark=StringUtil.isEmpty(regTotal.getRemark()) ? "" : regTotal.getRemark();
             if(StringUtil.isNotBlank(remark)){
-                remark=remark+"\n"+"交易撤销：" + bizCode;
+                remark=remark+settleRemark+"\n"+"交易撤销：" + bizCode;
             }else{
-                remark="交易撤销：" + bizCode;
+                remark=settleRemark+"交易撤销：" + bizCode;
             }
             regTotal.setRemark(remark);
             regTotal.setTradeStatus(DictCodeListExt1.有效状态_撤销.getValue());
@@ -1192,7 +1178,14 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         cfetsTrdConfirmMapper.deleteByTrdId(bizCode);
 
        //发送头寸
-        PositionHttpRequest.deleteMethod(bizCode,DictCodeListExt1.子系统代码_交易.getValue());
+        if(isNeedDealPosition){
+            PositionHttpRequest.deleteMethod(bizCode,DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+        }else{
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("totleTradeId", bizCode);
+            paramMap.put("tradeStatus", BussinessDictCodeList.银行间上行报价状态_已撤销.getValue());
+            cfetsTrdQueryMapper.updateIbuByPrimaryKeySelective(paramMap);
+        }
     }
 
     /**
@@ -1476,7 +1469,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         }
         // 撤销
         else {
-            this.doCompleteRevoke(entity);
+            this.doCompleteRevoke(entity,"",true);
 
             //补充  如果是撤销将交易ID赋值为null
             Map<String, Object> map = new HashMap<>();
@@ -2029,7 +2022,15 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         params.put("Y", DictCodeList.是否_是.getValue());
         CfetsTrdBondInvestTradeDto resultDto = cfetsTrdQueryMapper.getTrdBondInvestTradeDto(params);
         if (resultDto != null) {
-            if (resultDto.getSettleSpeed() != null) {
+            //待办事项中显示组合分配
+            Map<String,Object> pageParam = new HashMap<>();
+            pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
+            pageParam.put("feeType08", BussinessDictCodeList.费用类型_结算手续费.getValue());
+            pageParam.put("totleTradeId",tradeId);
+            List<PortIntFenPeiInfoDto> fenPeiList=cfetsTrdQueryMapper.findPortIntFenPeiInfoList(pageParam);
+            resultDto.setCfetsBussCombDistribtList(fenPeiList);
+
+          /*  if (resultDto.getSettleSpeed() != null) {
                 resultDto.setSettleSpeedStr(String.valueOf(resultDto.getSettleSpeed()));
             }
             else if(resultDto.getSettleSpeed() == 1L){
@@ -2038,7 +2039,16 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
                 resultDto.setSettleSpeedStr("2");
             }else{
                 resultDto.setSettleSpeedStr(resultDto.getSettleSpeed().toString());
-            }
+            }*/
+           /* if(StringUtil.isNotEmpty(resultDto.getSettleSpeed())) {
+                if (resultDto.getSettleSpeed() == 0L) {
+                    resultDto.setSettleSpeedStr("01");
+                } else if (resultDto.getSettleSpeed() == 1L) {
+                    resultDto.setSettleSpeedStr("02");
+                } else if (resultDto.getSettleSpeed() == 2L) {
+                    resultDto.setSettleSpeedStr("03");
+                }
+            }*/
             // 到期收益率
             if (resultDto.getYield() != null) {
                 resultDto.setYield(ArithmeticUtil.multiply(resultDto.getYield(), BigDecimal.valueOf(100)));
@@ -3386,6 +3396,19 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         return codeParameter;
     }
 
+    /**
+     * 查询交易对手是否为净值高频或者货币
+     *
+     * @param map
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public String getCounterId(Map<String, Object> map) {
+        return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getCounterId", map,
+            String.class);
+    }
+
     private void setWorkflowId(CfetsTrdBondInvestTradeDto entity) {
         if (entity.getPaTrdFinProductDealTotal() != null) {
             entity.getPaTrdFinProductDealTotal().setWorkflowId(entity.getWorkflowId());
@@ -3403,19 +3426,6 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
             entity.getPaTrdProductDeals().forEach(trdProductDeal -> trdProductDeal.setWorkflowId(entity.getWorkflowId()));
         }
         entity.getBussTrdTransferOrder().get(0).setWorkflowId(entity.getWorkflowId());
-    }
-
-    /**
-     * 查询交易对手是否为净值高频或者货币
-     * 
-     * @param map
-     * @return
-     * @see
-     * @since 1.0
-     */
-    public String getCounterId(Map<String, Object> map) {
-        return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getCounterId", map,
-            String.class);
     }
 
     /**
@@ -4374,8 +4384,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
     }
     /**
      * 撤销提交时check检查
-     * @param allDto
-     * @param br
+     * @param input
      * @return
      */
     public AjaxResult  checkRevoke(CfetsTrdBondInvestTradeDto input) {
@@ -4384,18 +4393,31 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
             WflValidInputParameter parameter = new WflValidInputParameter();
             parameter.setPageId("CfetsTrdBondInvestTrade002");
             parameter.setBusinessDataPk1(inputDto.getTotleTradeId() + "R");
-            parameter.setBusinessDataPk2("F01");
+            //parameter.setBusinessDataPk2("F01");
             if (mstWorkflowCommonService.isInWflProcess(parameter)) {
                 AjaxResult m = new AjaxResult();
-                m.setStatuCode(220);
-                m.setMessage(this.getMessage("BUSS_COM_E_0041"));
+                m.setErrorList(Arrays.asList(new ValidMessage(this.getMessage("BUSS_COM_E_0023"))));
                 return m;
             }
-            CfetsTrdBondInvestTradeDto dto = this.getTrdBondInvestTradeDto(inputDto.getTotleTradeId() + "R");
-            if(com.joyintech.framework.util.StringUtil.isNotEmpty(dto)){
+            if(inputDto.getTradeDate().compareTo(iPlatformDate.getSysDate())!=0){
                 AjaxResult m = new AjaxResult();
-                m.setStatuCode(220);
-                m.setMessage("已撤销的交易不允许撤销");
+                m.setErrorList(Arrays.asList(new ValidMessage("只可在交易生效日进行撤销操作")));
+                return m;
+            }
+           if(StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_卖出.getValue())
+                || StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_行权_回售.getValue())
+                   || StringUtil.equals(inputDto.getPs(),DictCodeList.回购拆借方向_正回购.getValue())
+           ){
+                if(!StringUtil.equals(inputDto.getSettleStatus(),DictCodeListExt3.交收状态_未交收.getValue())){
+                    AjaxResult m = new AjaxResult();
+                    m.setErrorList(Arrays.asList(new ValidMessage("已完成交收,不可撤销")));
+                    return m;
+                }
+            }
+            CfetsTrdBondInvestTradeDto dto = this.getTrdBondInvestTradeDto(inputDto.getTotleTradeId() + "R");
+            if(StringUtil.isNotEmpty(dto)){
+                AjaxResult m = new AjaxResult();
+                m.setErrorList(Arrays.asList(new ValidMessage("已撤销的交易不允许撤销")));
                 return m;
             }
         }

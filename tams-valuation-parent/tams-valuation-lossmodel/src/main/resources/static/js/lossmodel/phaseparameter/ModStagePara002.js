@@ -5,7 +5,6 @@ $(function () {
 	
     //判断是提交或是保存
     function saveOrSubmit(operateType) {
-    	debugger;
         // var object = $.serializeToObject('#submitForm', true);
 		var object = $.serializeToObject('#submitForm');
 		object.useStatus=$('#useStatus').val();

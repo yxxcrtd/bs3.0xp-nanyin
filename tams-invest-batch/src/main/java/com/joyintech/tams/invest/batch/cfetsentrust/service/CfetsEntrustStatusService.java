@@ -88,7 +88,7 @@ public class CfetsEntrustStatusService {
             etrList.add(closeItem);
         }
         req.setData(etrList);
-        req.setUserId(SecurityUtil.getLoginUser().getUserName());
+        req.setUserId("SYSTEM");
         req.setTotalTradeId(IDGenerator.generate());
         req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
         PositionHttpRequest.batchClose(req);

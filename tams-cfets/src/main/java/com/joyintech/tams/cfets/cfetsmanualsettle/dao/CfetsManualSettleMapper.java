@@ -1,10 +1,13 @@
 package com.joyintech.tams.cfets.cfetsmanualsettle.dao;
 
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
+import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto;
 import com.joyintech.tams.common.base.entity.TrdBankManualSetDetail;
 import com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo;
 import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.common.base.entity.User;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -129,4 +132,30 @@ public interface CfetsManualSettleMapper {
      * @since 1.0
      */
     User getRealNameByUserName(@Param("userName")String userName);
+
+    /**
+     *
+     * 根据查询参数查询留痕表数据
+     * <功能详细描述>
+     * @param wflValidInputParameter 函数输入参数
+     * @return 结果
+     * @see
+     * @since 1.0
+     */
+    List<String> getBusinessData(WflValidInputParameter wflValidInputParameter);
+
+    /**
+     * 查询债券交易基本信息
+     * @param params
+     * @return
+     */
+    CfetsTrdBondInvestTradeDto getTrdBondInvestTradeDto(Map<String, Object> params);
+
+    /**
+     * 回购质押券信息
+     * @param tradeId
+     * @return
+     */
+    List<PledgeBondInfoDto> getPledgeListByTradeId(@Param("tradeId") String tradeId);
+
 }

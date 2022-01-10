@@ -53,6 +53,8 @@ public class CfetsTrdConfirmMatchDto {
     private String updateUser;
     @ApiModelProperty(name="updateTime",value="修改时间",example="字符串1")
     private Date updateTime;
+    @ApiModelProperty(name="dealType",value="交易类型",example="字符串1")
+    private String dealType;
 
     public String getSeqno() {
         return seqno;
@@ -156,5 +158,13 @@ public class CfetsTrdConfirmMatchDto {
 
     public void setTrdId(String trdId) {
         this.trdId = trdId;
+    }
+
+    public String getDealType() {
+        return dealType;
+    }
+
+    public void setDealType(String dealType) {
+        this.dealType = dealType;
     }
 }

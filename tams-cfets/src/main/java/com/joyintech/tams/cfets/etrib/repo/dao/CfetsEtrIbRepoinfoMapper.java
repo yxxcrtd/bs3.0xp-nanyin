@@ -10,20 +10,15 @@
  
 package com.joyintech.tams.cfets.etrib.repo.dao;
 
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.cfets.etrib.repo.dto.*;
+import com.joyintech.tams.common.base.entity.EtrEntrustPledge;
+import com.joyintech.tams.common.base.entity.EtrSecStockConfig;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoRkDto;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoZLCXPositionResponse;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoZLCXResponse;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsTreePortfolioResponse;
-import com.joyintech.tams.common.base.entity.EtrEntrustPledge;
-import com.joyintech.tams.common.base.entity.EtrSecStockConfig;
-import com.joyintech.tams.common.base.entity.PtlPortfolio;
+import java.util.List;
+import java.util.Map;
 
 /**
  *  场内交易委托
@@ -104,10 +99,11 @@ public interface CfetsEtrIbRepoinfoMapper {
     
     /**
      * 根据组合ID 查询质押库
-     * @param portfolioId 组合ID
      * @return
      */
     List<SelectOptionDto> getPledgeStockIdByPortfolioId(Map<String, Object> param);
+
+    List<SelectOptionDto> getPledgeStockId(Map<String, Object> param);
     
     /**
      * 查询登录用户是否满足指定的角色岗位 
@@ -121,6 +117,5 @@ public interface CfetsEtrIbRepoinfoMapper {
 
     int deleteWflEtrEntrustAddByEntrustId(String entrustId);
 
-    Map queryPositionInfo(Map RequestDto);
-    
+    CfetsEtribRepoInfo003Dto findEtrinfo(Map<String,Object> map);
 }

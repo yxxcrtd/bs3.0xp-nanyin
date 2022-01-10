@@ -19,7 +19,11 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.util.ExcelUitl;
+import com.joyintech.tams.business.common.util.PositionUtil;
+import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegInfoListRequest;
 import com.joyintech.tams.cfets.trdquery.dto.*;
 import com.joyintech.tams.cfets.trdquery.service.CfetsTrdBondInvestTrade002Service;
 import com.joyintech.tams.cfets.trdquery.service.CfetsTrdQueryService;
@@ -92,7 +96,9 @@ public class CfetsTrdQueryController extends BaseController {
     public Message<Map<String, Object>> getPageParams(){
         Map<String, Object> initPageParams = new HashMap<>();
         //是否支持CSTP下行接口
-        initPageParams.put("IS_SUPPORT_CSTP_FLAG", CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG"));
+       // initPageParams.put("IS_SUPPORT_CSTP_FLAG", CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG"));
+        initPageParams.put("IS_SUPPORT_CSTP_FLAG_BOND", CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_BOND"));
+        initPageParams.put("IS_SUPPORT_CSTP_FLAG_REPO", CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_REPO"));
 
 
         //自动刷新时间
@@ -116,13 +122,14 @@ public class CfetsTrdQueryController extends BaseController {
         initPageParams.put("REG_STATUS", this.getSelectDataFromDataDic(DictCode.登记状态, null));
         initPageParams.put("DEAL_TYPE_IBU", this.getSelectDataFromDataDic(BussinessDictCode.银行间成交状态, null));
         initPageParams.put("CSTP_MATCH_STATUS", this.getSelectDataFromDataDic(DictCode.CSTP匹配状态, null));
-
-
-
+        initPageParams.put("SETTLE_STATUS", this.getSelectDataFromDataDic(DictCode.清算状态, null));
+        initPageParams.put("BUSI_TYPE_POSITION", this.getSelectDataFromDataDic(DictCode.头寸业务类型, null));
 
         initPageParams.put("TRD_MATCH_TYPE", this.getSelectDataFromDataDic(DictCode.下行交易匹配类型, null));
         initPageParams.put("CSTP_BUSINESS_TYPE", this.getSelectDataFromDataDic(DictCode.CSTP资产类型, null));
         initPageParams.put("QUOTE_STYLE", this.getSelectDataFromDataDic(BussinessDictCode.报价方式_登记, null));
+        initPageParams.put("DELIVERY_STATUS", this.getSelectDataFromDataDic(DictCode.交收状态, null));
+        initPageParams.put("SHARES_TRADE_MARKET", this.getSelectDataFromDataDic(DictCode.交易市场, null));
 
 
         //pageId
@@ -168,6 +175,17 @@ public class CfetsTrdQueryController extends BaseController {
             return new Message<Map<String,Object>>().fail().setMessage("查询登记信息数据异常");
         }
     }
+
+    @PostMapping(value="/exportQueryAllRegInfoList")
+    @ResponseBody
+    @ApiOperation(value = "交易登记列表导出", notes = "交易登记列表导出")
+    public void exportQueryAllRegInfoList(@RequestBody CfetsExportRequestDto req, HttpServletResponse response) {
+        // 导出
+        ExcelUitl.doExport(req, response, "交易登记列表管理", () -> {
+            List dataList = cfetsTrdQueryService.queryAllRegInfoList(req.getDto(CfetsTrdQueryRegInfoListRequest.class)).getRoot();
+            return dataList;
+        });
+    }
     /**
      * 报价列表分页查询
      *
@@ -203,6 +221,16 @@ public class CfetsTrdQueryController extends BaseController {
             logger.error("查询报价信息数据异常", e);
             return new Message<Map<String,Object>>().fail().setMessage("查询报价信息数据异常");
         }
+    }
+    @PostMapping(value="/exportQueryAllIbuInfoList")
+    @ResponseBody
+    @ApiOperation(value = "报价列表导出", notes = "报价列表导出")
+    public void exportQueryAllIbuInfoList(@RequestBody CfetsExportRequestDto req, HttpServletResponse response) {
+        // 导出
+        ExcelUitl.doExport(req, response, "报价列表管理", () -> {
+            List dataList = cfetsTrdQueryService.queryAllIbuInfoList(req.getDto(CfetsTrdQueryIbuInfoListRequest.class)).getRoot();
+            return dataList;
+        });
     }
     /**
      * CSTP列表分页查询
@@ -240,6 +268,16 @@ public class CfetsTrdQueryController extends BaseController {
             return new Message<Map<String,Object>>().fail().setMessage("查询成交信息数据异常");
         }
     }
+    @PostMapping(value="/exportQueryAllCstpInfoList")
+    @ResponseBody
+    @ApiOperation(value = "成交列表导出", notes = "成交列表导出")
+    public void exportQueryAllCstpInfoList(@RequestBody CfetsExportRequestDto req, HttpServletResponse response) {
+        // 导出
+        ExcelUitl.doExport(req, response, "成交列表管理", () -> {
+            List dataList = cfetsTrdQueryService.queryAllCstpInfoList(req.getDto(CfetsTrdQueryCstpInfoListRequest.class)).getRoot();
+            return dataList;
+        });
+    }
     /**
      * 银行间交易汇总分页查询
      *
@@ -261,6 +299,16 @@ public class CfetsTrdQueryController extends BaseController {
             logger.error("查询银行间交易汇总数据异常", e);
             return new Message<Page<CfetsTrdQueryTradeInfoListResponse>>().fail().setMessage("查询银行间交易汇总数据异常");
         }
+    }
+    @PostMapping(value="/exportQueryAllTradeInfoList")
+    @ResponseBody
+    @ApiOperation(value = "交易汇总列表导出", notes = "交易汇总列表导出")
+    public void exportQueryAllTradeInfoList(@RequestBody CfetsExportRequestDto req, HttpServletResponse response) {
+        // 导出
+        ExcelUitl.doExport(req, response, "交易汇总列表管理", () -> {
+            List dataList = cfetsTrdQueryService.queryAllTradeInfoList(req.getDto(CfetsTrdQueryTradeInfoListRequest.class)).getRoot();
+            return dataList;
+        });
     }
     /**
      * 银行间交易明细分页查询
@@ -284,6 +332,16 @@ public class CfetsTrdQueryController extends BaseController {
             return new Message<Page<CfetsTrdQueryTradeInfoListResponse>>().fail().setMessage("查询银行间交易明细数据异常");
         }
     }
+    @PostMapping(value="/exportQueryAllTradeDetailInfoList")
+    @ResponseBody
+    @ApiOperation(value = "交易明细列表导出", notes = "交易明细列表导出")
+    public void exportQueryAllTradeDetailInfoList(@RequestBody CfetsExportRequestDto req, HttpServletResponse response) {
+        // 导出
+        ExcelUitl.doExport(req, response, "交易明细列表管理", () -> {
+            List dataList = cfetsTrdQueryService.queryAllTradeDetailInfoList(req.getDto(CfetsTrdQueryTradeInfoListRequest.class)).getRoot();
+            return dataList;
+        });
+    }
 
     @ApiOperation(value = "只读表单设置及数据查询_交易信息查询", notes = "只读表单设置及数据查询_交易信息查询")
     @PostMapping("/findTradeInfo/{pageCode}/{dtCode}/{spcdCode}")
@@ -294,6 +352,21 @@ public class CfetsTrdQueryController extends BaseController {
                                                             @RequestBody CfetsTrdQueryTradeInfoListResponse dto) throws Exception {
         try {
             Map<String,Object> resultData = cfetsTrdQueryService.findTradeInfo(pageCode,dtCode,spcdCode,dto);
+            return new Message<Map<String,Object>>().success().setData(resultData);
+        } catch (Exception e) {
+            logger.error("查询交易信息数据异常", e);
+            return new Message<Map<String,Object>>().fail().setMessage("查询交易信息数据异常");
+        }
+    }
+    @ApiOperation(value = "只读表单设置及数据查询_明细交易信息查询", notes = "只读表单设置及数据查询_明细交易信息查询")
+    @PostMapping("/findTradeDetailInfo/{pageCode}/{dtCode}/{spcdCode}")
+    @ResponseBody
+    public Message<Map<String,Object>> findTradeDetailInfo(@PathVariable("pageCode") String pageCode,
+                                                     @PathVariable("dtCode") String dtCode,
+                                                     @PathVariable("spcdCode") String spcdCode,
+                                                     @RequestBody CfetsTrdQueryTradeInfoListResponse dto) throws Exception {
+        try {
+            Map<String,Object> resultData = cfetsTrdQueryService.findTradeDetailInfo(pageCode,dtCode,spcdCode,dto);
             return new Message<Map<String,Object>>().success().setData(resultData);
         } catch (Exception e) {
             logger.error("查询交易信息数据异常", e);
@@ -330,7 +403,7 @@ public class CfetsTrdQueryController extends BaseController {
     @ApiOperation(value = "交易撤销", notes = "交易撤销")
     @PostMapping("/doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody CfetsTrdBondInvestTradeDto input) throws WorkFlowException {
+    public Message<AjaxResult> doRevoke(@RequestBody CfetsTrdBondInvestTradeDto input) throws WorkFlowException {
         List<CfetsTrdBondInvestTradeDto> list=input.getSelectedItem();
         String msg="";
         for(CfetsTrdBondInvestTradeDto inputDto:list){
@@ -380,11 +453,13 @@ public class CfetsTrdQueryController extends BaseController {
              msg += cfetsTrdBondInvestTrade002Service.start(processParameter, inputDto);
 
         }
-        if(StringUtil.isNotEmpty(msg) && ""!=msg){
-            return new AjaxResult(msg);
+        try {
+            AjaxResult m =new AjaxResult(msg);
+            return new Message<AjaxResult>().success().setData(m);
+        }catch (Exception e) {
+            logger.error("撤销交易失败",e);
+            return PositionUtil.ajaxErrorReturn(e);
         }
-        return  null;
-
     }
 
 

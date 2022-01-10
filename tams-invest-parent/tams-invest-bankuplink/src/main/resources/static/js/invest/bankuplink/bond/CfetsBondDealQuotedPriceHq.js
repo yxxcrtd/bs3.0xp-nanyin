@@ -5,35 +5,6 @@
 
     var finprodAbbr = '';
     var secId = '';
-    /**根据市场代码，查询行情信息，展示出来*/
-    var queryJJHQXX = function(seccode) {
-        $.ajax({
-            /**临时用这个地址，后面调整！！！！**/
-            url: "findQuotations?seccode="+seccode,
-            async: true,
-            type: "POST",
-            dataType:"json",
-            success: function(info) {
-                var result = info.data;
-                if (result != null && result != '') {
-                    if (result.latestCleanPrice != null && result.latestCleanPrice != '') {
-                        document.getElementById('newPrice').innerHTML = JoyinUtil.formatNumber(result.latestCleanPrice, 4, null, 2);
-                    } else {
-                        document.getElementById('newPrice').innerHTML = '';
-                    }
-                    if (result.latestYield != null && result.latestYield != '') {
-                        document.getElementById('newRate').innerHTML = JoyinUtil.formatNumber(result.latestYield, 4, null, 2) + '%';
-                    } else {
-                        document.getElementById('newRate').innerHTML = '';
-                    }
-                }
-                else {
-                    document.getElementById('newPrice').innerHTML = '';
-                    document.getElementById('newRate').innerHTML = '';
-                }
-            }
-        });
-    }
 
     var viewPositionInfo = function(result){
         // 组合T日可用现金
@@ -288,7 +259,11 @@
                 }
             }, false);
 
-            queryJJHQXX(secId);
+            // add by caiqun 20211220 调用接口平台外汇cmds行情 start
+            //queryJJHQXX(secId);
+            var secIdStr = secId.split(".");
+            sendBond(websocket,secIdStr[0]);
+            // add by caiqun 20211220 调用接口平台外汇cmds行情 end
             if(window.initAmount)
             window.initAmount.queryAmountInfo(secId,finprodAbbr,finprodId,portfolioId,chlFinprodId,ccy,sysDateT1,calId);
             return rs;
@@ -310,6 +285,35 @@
         window.initAmount.changeElement(changeFlg);
     }
 
+    var websocket = cmds(cmdsWebSocketUrl,
+        function (data) {
+            if(data != null && data != "" && "没有数据" != data){
+                var objs = eval('('+data+')');
+                var noMDEntries = objs.noMDTypes.noRelatedSym.noMDEntries;
+                for(var j = 0;j<noMDEntries.length;j++) {
+                    if (noMDEntries[j].mDEntryType === '1') { // 最新收益率
+                        document.getElementById('EtrIbBondinfoHq_newRate').innerHTML = JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 4, null, 2) + '%';
+                    } else if (noMDEntries[j].mDEntryType === 'N') { // 收益率的涨跌
+                        document.getElementById('EtrIbBondinfoHq_latestYield').innerHTML =  JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 2, null, 2)+'BP';
+                    } else if (noMDEntries[j].mDEntryType === 'e') { // 最新净价
+                        document.getElementById('EtrIbBondinfoHq_newPrice').innerHTML =  JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 4, null, 2)+'元';
+                    }
+                }
+            }else{
+                document.getElementById('EtrIbBondinfoHq_newRate').innerHTML = ''; // 最新收益率
+                document.getElementById('EtrIbBondinfoHq_latestYield').innerHTML ='';// 收益率的涨跌
+                document.getElementById('EtrIbBondinfoHq_newPrice').innerHTML ='';// 最新净价
+            }
+        }
+        ,
+        function (event) {
+            console.log("建立连接:" + event);
+        },
+        function (event) {
+            console.log("连接发生错误:" + event);
+        }
+    );
+
     /**
      * 对外公开的接口
      */
@@ -328,7 +332,7 @@
      */
     var dynview; 
     $(function() {
-        dynview = new DynamicView("CfetsBondDealQuotedPriceHq", "CfetsBondDealQuotedPriceHq_dyn");
+        dynview = new DynamicView("EtrIbBondinfoHq", "EtrIbBondinfoHq_dyn");
         dynview.init();
     });
     

@@ -1,0 +1,74 @@
+package com.joyintech.tams.exchange.util;
+
+
+import cn.hutool.core.util.StrUtil;
+import com.joyintech.tams.exchange.common.BusinessResultException;
+import com.joyintech.tams.exchange.common.constant.*;
+import com.joyintech.tams.exchange.common.db.domain.Instruction;
+
+public class EntrustPropUtils {
+
+    public static String getEntrustProp(Instruction instruction) {
+        if (null == instruction) {
+            throw BusinessResultException.create(ErrorCode.INSTRUCTIONS_NOT_EXIST);
+        }
+        String tradePlat = instruction.getTradePlat();
+        //竞价平台
+        if (StrUtil.equals(tradePlat, TradePlat.NORMAL.value)) {
+            return decideEntrustProp(instruction.getPs());
+        }
+
+        //协议回购
+        String firstRepoPs = instruction.getFirstRepoPs();
+        if (InstructionPs.POSITIVEREPO.value.equals(firstRepoPs) || InstructionPs.REVERSEDREPO.value.equals(firstRepoPs)) {
+            return decideEntrustProp(instruction.getPs(), instruction.getTradeMarket());
+        }
+
+        //大宗平台、固收平台
+        String dealMode = instruction.getDealMode();
+        if (StrUtil.isNotEmpty(dealMode)) {
+            return decideEntrustProp(dealMode);
+        }
+
+        return null;
+    }
+
+    private static String decideEntrustProp(String ps) {
+        EntrustProp entrustProp = EntrustBsProp.getEntrustProp(ps);
+        if (null == entrustProp) {
+            throw BusinessResultException.create(ErrorCode.ENTRUST_PROP_NOT_EXIT);
+        }
+        return entrustProp.value;
+    }
+
+    private static String decideEntrustProp(String ps, String tradeMarket) {
+        RepoOperation repoOperation = getRepoOperation(ps);
+        if (null == repoOperation) {
+            throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ENTRUST_BS_ERROR);
+        }
+        boolean isSh = StrUtil.equals(tradeMarket, Market.SHSE.investValue);
+        boolean isPos = StrUtil.equals(ps, InstructionPs.POSITIVEREPO.value);
+        if (repoOperation == RepoOperation.ESTABLISH) {
+            return isSh ? (isPos ? EntrustProp.SH_REPURCHASE_TRADE.value : EntrustProp.SH_REPURCHASE_TRADE_CONFIRM.value) : EntrustProp.SZ_REPURCHASE_BEGIN.value;
+        } else if (repoOperation == RepoOperation.RENEW) {
+            return isSh ? (isPos ? EntrustProp.SH_REPURCHASE_RENEWAL.value : EntrustProp.SH_REPURCHASE_RENEWAL_CONFIRM.value) : EntrustProp.SZ_REPURCHASE_RENEWAL.value;
+        } else if (repoOperation == RepoOperation.RELEASE) {
+            return isSh ? (isPos ? EntrustProp.SH_REPURCHASE_RELEASE.value : EntrustProp.SH_REPURCHASE_RELEASE_CONFIRM.value) : null;
+        } else if (repoOperation == RepoOperation.CHANGE) {
+            return isSh ? (isPos ? EntrustProp.SH_REPURCHASE_EXCHANGE.value : EntrustProp.SH_REPURCHASE_EXCHANGE_CONFIRM.value) : null;
+        } else if (repoOperation == RepoOperation.PRECEDE) {
+            return isSh ? (isPos ? EntrustProp.SH_REPURCHASE_TERMINATE.value : EntrustProp.SH_REPURCHASE_TERMINATE_CONFIRM.value) : EntrustProp.SZ_REPURCHASE_BUYBACK.value;
+        } else if (repoOperation == RepoOperation.TERMINATE) {
+            return isSh ? EntrustProp.SH_REPURCHASE_EXPIRE.value : EntrustProp.SZ_REPURCHASE_BUYBACK.value;
+        }
+
+        return null;
+    }
+
+    private static RepoOperation getRepoOperation(String ps) {
+        if (InstructionPs.POSITIVEREPO.value.equals(ps) || InstructionPs.REVERSEDREPO.value.equals(ps)) {
+            return RepoOperation.ESTABLISH;
+        }
+        return RepoOperation.getRepoOperation(ps);
+    }
+}

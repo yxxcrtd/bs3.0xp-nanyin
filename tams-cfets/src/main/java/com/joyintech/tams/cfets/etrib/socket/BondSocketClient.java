@@ -30,8 +30,8 @@ public class BondSocketClient {
     @Value("${bondWebSocketKey}")
     private String bondWebSocketKey;
     
-    @Value("${bondWebSocketUrl}")
-    private String bondWebSocketUrl;
+    @Value("${cmdsWebSocketUrl}")
+    private String cmdsWebSocketUrl;
     
     boolean isStart = false;  // 是否启动开关
     boolean loopFlag = false; // 10秒重连循环开关
@@ -58,7 +58,7 @@ public class BondSocketClient {
         try {
             util = new WebSocketClientUtil();
             
-            util.start(bondWebSocketUrl, new WebSocketClientUtil.WebSocketListener() {
+            util.start(cmdsWebSocketUrl, new WebSocketClientUtil.WebSocketListener() {
                 @Override
                 public void onMessage(String message) {
                     try {
@@ -153,7 +153,7 @@ public class BondSocketClient {
         synchronized (this){
             while (!start()){
                 logger.info("债券服务通信失败，10秒后重连");
-                logger.info(bondWebSocketUrl);
+                logger.info(cmdsWebSocketUrl);
                 try {
                     TimeUnit.SECONDS.sleep(10l);
                 } catch (InterruptedException e) {

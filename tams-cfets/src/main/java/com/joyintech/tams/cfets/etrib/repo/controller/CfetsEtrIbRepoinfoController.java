@@ -10,43 +10,8 @@
  
 package com.joyintech.tams.cfets.etrib.repo.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletResponse;
-
-import com.joyintech.framework.base.dto.UploadFile;
-import com.joyintech.framework.util.*;
-import com.joyintech.tams.business.common.pojo.BaseMap;
-import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbBondPosiInfoRequestDto;
-import com.joyintech.tams.cfets.etrib.repo.dto.*;
-import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
-import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
-import com.joyintech.tams.invest.entrust.etribrepo.dto.EtribRepoInfo003Dto;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.joyintech.background.component.common.pack.common.util.BeanUtil;
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
@@ -55,17 +20,40 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
+import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
+import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.util.ExcelUitl;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
+import com.joyintech.tams.cfets.etrib.repo.dto.*;
 import com.joyintech.tams.cfets.etrib.repo.service.CfetsEtrIbRepoinfoService;
+import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
 import com.joyintech.tams.component.business.trade.BussEtrInvestPersonInfoService;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
-
+import com.joyintech.tams.invest.common.client.ClientData;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 银行间债券指令
@@ -101,8 +89,19 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
     @Autowired(required=false)
     private BussEtrInvestPersonInfoService bussEtrInvestPersonInfoService;
 
-    @Value("${BondWebSocketUrl}")
+    @Value("${cmdsWebSocketUrl}")
     private String RepoWebSocketUrl;
+
+    /**
+     * 风险接口组件Controller
+     */
+    @Autowired
+    private InterfRiskRdsController interfRiskRdsController;
+
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
+
+
 
 
     @ApiOperation(value = "查询页面初始化参数", notes = "查询页面初始化参数")
@@ -111,13 +110,23 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
         Map<String, Object> initPageParams = new HashMap<>();
         initPageParams.put("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         initPageParams.put("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+        initPageParams.put("PINAN_ASSET_TYPE_F07", DictCodeList.平安资产类型_质押式回购.getValue());
         // 回购模式
         initPageParams.put("repo_pledge_model", CacheUtil.getSysParam("repo_pledge_model"));
         //本币业务指令画面头寸信息区域自动刷新时间(ms)
         initPageParams.put("cfetsEtrIbRepoinfo_positionTable_refresh_period", CacheUtil.getSysParam("cfetsEtrIbRepoinfo_positionTable_refresh_period"));
         //本币业务指令画面指令列表区域自动刷新时间(ms)
         initPageParams.put("cfetsEtrIbRepoinfo_etrTable_refresh_period", CacheUtil.getSysParam("cfetsEtrIbRepoinfo_etrTable_refresh_period"));
-
+        Map<String,Object> map = new HashMap<>();
+        map.put("role_pos", DictCodeListExt2.角色岗位_投资经理.getValue());
+        map.put("userId", SecurityUtil.getLoginUser().getUserName());
+        Long count = cfetsEtrIbRepoinfoService.selectUserRolePosList(map) ;
+        //是否投资经理
+        if(count > 0){
+            initPageParams.put("is_role_pos", "Y");
+        }else{
+            initPageParams.put("is_role_pos", "N");
+        }
         //CMDS地址
         initPageParams.put("RepoWebSocketUrl", RepoWebSocketUrl);
         initPageParams.put("NEED_WORKFLOW", true);
@@ -128,11 +137,19 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
         initPageParams.put("isRiskmathSoftcontrol", CacheUtil.getSysParam("IS_RISKMATH_SOFTCONTROL"));
         //数据字典初始化数据
         initPageParams.put("FINPROD_TYPE", this.getSelectDataFromDataDic(DictCode.行内资产四级分类, null));
+        initPageParams.put("FINPROD_TYPE_THREE", this.getSelectDataFromDataDic(DictCode.行内资产三级分类, null));
         initPageParams.put("PRICE_MODEL", this.getSelectDataFromDataDic(DictCode.价格模式, null));
         initPageParams.put("ACCOUNT_SPEED", this.getSelectDataFromDataDic(DictCode.清算速度, null));
         initPageParams.put("REGIST_ORG", this.getSelectDataFromDataDic(DictCode.登记托管机构, null));
+        initPageParams.put("MAIN_GRADE_RESULT", this.getSelectDataFromDataDic(DictCode.评级结果, null));
+        initPageParams.put("TERM_TYPE_REBACK", this.getSelectDataFromDataDic(DictCode.回购期限品种, null));
+        initPageParams.put("PROFIT_TYPE",this.getSelectDataFromDataDic(DictCode.收益类型, null));
+        initPageParams.put("ISSUE_MODE",this.getSelectDataFromDataDic(DictCode.开放类型, null));
+        initPageParams.put("RAISE_TYPE",this.getSelectDataFromDataDic(DictCode.募集方式, null));
+        initPageParams.put("INVEST_TYPE",this.getSelectDataFromDataDic(DictCode.投资性质, null));
         //pageId
         initPageParams.put("pageId", "CfetsEtrIbRepoinfo003");
+        initPageParams.put("elementId", "CfetsEtrIbRepoinfo003_btn_submit");
         return new Message<Map<String, Object>>(initPageParams).success();
     }
     
@@ -170,9 +187,27 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
             return new Message<Page<CfetsEtrRepoZLCXPositionResponse>>().success().setData(list);
         }catch (Exception e) {
             e.printStackTrace();
-            logger.error("查询指令管理分页数据异常",e);
-            return new Message<Page<CfetsEtrRepoZLCXPositionResponse>>().fail().setMessage("查询债券质押持仓");
+            logger.error("查询质押券管理查询分页数据异常",e);
+            return new Message<Page<CfetsEtrRepoZLCXPositionResponse>>().fail().setMessage("查询质押券管理查询分页数据异常");
         }
+    }
+
+    @PostMapping("/getSecManageAcctId")
+    @ApiOperation(value = "证券账户列表查询", notes = "证券账户列表查询")
+    public Message<Page<SelectOptionDto>> getSecManageAcctId(@RequestBody SecManageAcctIdRequestDto secManageAcctIdRequestDto) {
+        try {
+            Page<SelectOptionDto> tempList = cfetsEtrIbRepoinfoService.getSecManageAcctId(secManageAcctIdRequestDto);
+            return new Message<Page<SelectOptionDto>>().success().setData(tempList);
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
+        }
+    }
+
+    @RequestMapping("/queryMySideList")
+    public Page<SelectOptionDto> queryMySideList(@RequestBody CfetsSearchInfoRequest item){
+        Page<SelectOptionDto> list = joyinbusinessCommonService.queryMySideList(item);
+        return list;
     }
 
     @PostMapping(value="/exportPosition")
@@ -206,13 +241,13 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
      */
     @PostMapping("getPledgeStockIdByPortfolioId")
     @ApiOperation(value = "质押库：下拉框", notes = "质押库：下拉框")
-    public Message<Page<SelectOptionDto>> getPledgeStockIdByPortfolioId(@RequestBody CfetsSearchPledgeStockRequest params) {
+    public Message<List<SelectOptionDto>> getPledgeStockIdByPortfolioId(@RequestBody CfetsSearchPledgeStockRequest params) {
     	try {
-    		Page<SelectOptionDto> page = cfetsEtrIbRepoinfoService.getPledgeStockIdByPortfolioId(params);
-			return new Message<Page<SelectOptionDto>>().success().setData(page);
+            List<SelectOptionDto> page = cfetsEtrIbRepoinfoService.getPledgeStockIdByPortfolioId(params);
+			return new Message<List<SelectOptionDto>>().success().setData(page);
 		} catch (Exception e) {
 			logger.error("查询功能异常", e);
-			return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
+			return new Message<List<SelectOptionDto>>().fail().setMessage("查询异常");
 		}
     	
     }
@@ -227,9 +262,10 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
      */
     @ApiOperation(value = "出库操作", notes = "出库操作")
     @PostMapping("outSave")
-    public AjaxResult outSave(@RequestBody CfetsEtrRepoSaveRequest dto) {
+    public Message<AjaxResult> outSave(@RequestBody CfetsEtrRepoSaveRequest dto) {
      // 校验操作的角色是否是投资经理
         Map<String,Object> map = new HashMap<>();
+        AjaxResult ajax = new AjaxResult();
         map.put("role_pos", DictCodeListExt2.角色岗位_投资经理.getValue());
         map.put("userId", SecurityUtil.getLoginUser().getUserName());
         Long count = cfetsEtrIbRepoinfoService.selectUserRolePosList(map) ;
@@ -237,18 +273,22 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
             Long outFlat = cfetsEtrIbRepoinfoService.outSave(dto);
             // 标记为大于0，出库成功
             if(outFlat > 0){
-                return new AjaxResult(this.getMessage("EtrStandardBond001.outSave_002"));
+                ajax= new AjaxResult(this.getMessage("EtrStandardBond001.outSave_002"));
+                return new Message<AjaxResult>().success().setData(ajax);
             }else{
-                return new AjaxResult(this.getMessage("EtrStandardBond001.outSave_003"));
+                ajax=  new AjaxResult(this.getMessage("EtrStandardBond001.outSave_003"));
+                return new Message<AjaxResult>().success().setData(ajax);
             }
         }else{
-            AjaxResult ar = new AjaxResult();
             List<JoyinMessage> joyinMessages = new ArrayList<>();
             joyinMessages.add(
                     new JoyinMessage("角色岗位为投资经理才能操作", MessageType.警告消息));
-            ar.setJoyinMessages(joyinMessages);
-
-            return ar ;
+            ajax.setJoyinMessages(joyinMessages);
+            List<ValidMessage>  errorList = new ArrayList<>();
+            errorList.add(new ValidMessage("角色岗位为投资经理才能操作"));
+            ajax=  new AjaxResult();
+            ajax.setErrorList(errorList);
+            return new Message<AjaxResult>().success().setData(ajax);
         }
     }
     
@@ -275,11 +315,130 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
         }
     }
 
-    @ApiOperation(value = "头寸信息查询", notes = "头寸信息查询")
-    @PostMapping("/queryPositionInfo")
+
     @ResponseBody
-    public Message<List<BaseMap>> queryPositionInfo(@RequestBody CfetsEtrIbBondPosiInfoRequestDto requestDto) {
-        List<BaseMap> m = cfetsEtrIbRepoinfoService.queryPositionInfo(requestDto);
-        return new Message<List<BaseMap>>().success().setData(m);
+    @ApiOperation(value = "风险试算", notes = "风险试算")
+    @PostMapping("doRiskcal")
+    public Message<AjaxResult> doRiskcal(@RequestBody CfetsEtribRepoInfo003Dto dto) throws Exception {
+        try {
+            //风险试算check
+            String  message = cfetsEtrIbRepoinfoService.doRiskcalCheckMethod(dto);
+            if (StringUtil.isNotEmpty(message)) {
+                return new Message<AjaxResult>().fail().setMessage(message);
+            }
+            CfetsEtribdoRiskcalResponse result=new CfetsEtribdoRiskcalResponse();
+            //风险试算组装dto
+            List<Map<String, Object>> dataMap= cfetsEtrIbRepoinfoService.doRiskcalPackageEquity(dto);
+            String resultArrList=interfRiskRdsController.batchRiskTrialRds(dataMap,"0", "F07");
+            result.setRiskMathFlag("02");
+            Boolean forbidFlag=false;
+            Boolean cluflag=true;
+            List<CfetsEtribdoRiskcalResponse> resultlist=new ArrayList<>();
+            if(StringUtil.isNotEmpty(resultArrList) ){
+//                for(String row:resultArrList){
+                    ClientData resultArr = JsonUtils.json2Object(resultArrList, ClientData.class);
+                    if(StringUtil.isNotEmpty(resultArr) && StringUtil.isNotEmpty(resultArr.getHead())
+                            && StringUtil.isNotEmpty(resultArr.getHead().get("std400msgt"))
+                    ){
+                        if (StringUtil.equals(resultArr.getHead().get("std400msgt"),"E")) {
+                            return new Message<AjaxResult>().fail().setMessage(resultArr.getHead().get("stdrtninfo").toString());
+                        }
+                    }
+                    if (!StringUtil.isNotEmpty(resultArr) || !StringUtil.isNotEmpty(resultArr.getBody())
+                            || !StringUtil.isNotEmpty(resultArr.getBody().get("RSK_LIST"))
+                            || !StringUtil.isNotEmpty(resultArr.getBody().get("rskStatus"))) {
+                        return new Message<AjaxResult>().success().setMessage("无");
+                    }
+                    List<Map<String, Object>> riskList = (List<Map<String, Object>>)resultArr.getBody().get("RSK_LIST");
+                    for(Map<String, Object> map: riskList){
+                        if(StringUtil.equals(map.get("kriStatus"),"0") && !StringUtil.equals(map.get("kriTrend"),"向好")){
+                            forbidFlag=true;
+                        }
+                        map.put("kriStatusCn",cfetsEtrIbRepoinfoService.getKriStatusCnByKriStatus(map.get("kriStatus").toString()));
+                        resultlist.add(BeanUtil.mapToObject(map, CfetsEtribdoRiskcalResponse.class));
+                    }
+                    result.setRiskcalReturnList(resultlist);
+                    result.setStdrtninfo(resultArr.getHead().get("stdrtninfo").toString());
+                    //当置为不通过时就不再进来了
+                    if(cluflag) {
+                        if(!StringUtil.equals(resultArr.getBody().get("rskStatus"),"3")){
+                            if(StringUtil.equals(resultArr.getBody().get("rskStatus"),"4")&&forbidFlag){
+                                cluflag=false;
+                                resultArr.getBody().put("rskStatus","3");
+                                result.setRskStatus("3");
+                            }
+                        }else{
+                            cluflag=false;
+                        }
+                        if (!cluflag) {
+                            result.setRiskTrialSpan("试算不通过");
+                        } else {
+                            result.setRiskTrialSpan("试算通过");
+                        }
+                    }
+//                }
+            }
+            AjaxResult m =new AjaxResult();
+            m.setData(result);
+            return new Message<AjaxResult>().success().setData(m);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("查询功能异常", e);
+            return new Message<AjaxResult>().fail().setMessage("查询异常");
+        }
     }
+
+
+    @ResponseBody
+    @ApiOperation(value = "修改委托", notes = "修改委托")
+    @PostMapping("modifyDelegate")
+    public Message<AjaxResult> modifyDelegate(@RequestBody CfetsEtribRepoInfo003Dto dto) throws Exception {
+        //对选择的数据进行check
+        AjaxResult ajaxResult = cfetsEtrIbRepoinfoService.modifyDelegateCheckMethod(dto);
+        if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+            return new Message<AjaxResult>().success().setData(ajaxResult);
+        }
+        try {
+            CfetsEtribRepoInfo003Dto item = dto.getSelectedItem().get(0);
+            CfetsEtribRepoInfo003Dto result = cfetsEtrIbRepoinfoService.findEtrinfo(item);
+            AjaxResult m =new AjaxResult();
+            m.setData(result);
+            return new Message<AjaxResult>().success().setData(m);
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return new Message<AjaxResult>().fail().setMessage("查询异常");
+        }
+    }
+
+    @ResponseBody
+    @ApiOperation(value = "查看指令", notes = "查看指令")
+    @PostMapping("referenceDelegate")
+    public Message<AjaxResult> referenceDelegate(@RequestBody CfetsEtribRepoInfo003Dto dto)  {
+        //对选择的数据进行check
+        try {
+            CfetsEtribRepoInfo003Dto item = dto.getSelectedItem().get(0);
+            CfetsEtribRepoInfo003Dto result = cfetsEtrIbRepoinfoService.findEtrinfo(item);
+            AjaxResult m =new AjaxResult();
+            m.setData(result);
+            return new Message<AjaxResult>().success().setData(m);
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return new Message<AjaxResult>().fail().setMessage("查询异常");
+        }
+    }
+
+    @ResponseBody
+    @ApiOperation(value = "计算期限品种", notes = "计算期限品种")
+    @PostMapping("getTermType")
+    public Message<AjaxResult> getTermType(@RequestBody Map<String,Object> map) throws Exception {
+        String msg = null;
+        if(StringUtil.isNotEmpty(map.get("repoTerm"))){
+            msg = cfetsEtrIbRepoinfoService.getTermType((Integer) map.get("repoTerm"));
+        }
+        AjaxResult m =new AjaxResult();
+        m.setData(msg);
+        return new Message<AjaxResult>().success().setData(m);
+    }
+
+
 }

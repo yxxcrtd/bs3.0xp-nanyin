@@ -154,6 +154,10 @@ public class CfetsBondDealDialogueQuoteDto extends CfetsBondDealEntrustOrderDto 
     private String businessId;
 
     /**
+     * 交易手续费
+     */
+    private BigDecimal  dealFeeAmt;
+    /**
      * 结算服务费
      */
     private BigDecimal  settFeeAmt;
@@ -191,6 +195,48 @@ public class CfetsBondDealDialogueQuoteDto extends CfetsBondDealEntrustOrderDto 
      */
     private String distribution;
 
+    private String type11;
+
+    /**
+     * 报价操作主要包含“发起、回复、修改、交谈”
+     */
+    private String quoteOperatorType;
+
+    private BigDecimal lendinShareAmt;
+
+    private BigDecimal ourShareAmt;
+
+    public BigDecimal getLendinShareAmt() {
+        return lendinShareAmt;
+    }
+
+    public void setLendinShareAmt(BigDecimal lendinShareAmt) {
+        this.lendinShareAmt = lendinShareAmt;
+    }
+
+    public BigDecimal getOurShareAmt() {
+        return ourShareAmt;
+    }
+
+    public void setOurShareAmt(BigDecimal ourShareAmt) {
+        this.ourShareAmt = ourShareAmt;
+    }
+
+    public String getQuoteOperatorType() {
+        return quoteOperatorType;
+    }
+
+    public void setQuoteOperatorType(String quoteOperatorType) {
+        this.quoteOperatorType = quoteOperatorType;
+    }
+
+    public String getType11() {
+        return type11;
+    }
+
+    public void setType11(String type11) {
+        this.type11 = type11;
+    }
 
     public String getBusinessId() {
         return businessId;
@@ -622,6 +668,14 @@ public class CfetsBondDealDialogueQuoteDto extends CfetsBondDealEntrustOrderDto 
 
     public void setIsDzh(String isDzh) {
         this.isDzh = isDzh;
+    }
+
+    public BigDecimal getDealFeeAmt() {
+        return dealFeeAmt;
+    }
+
+    public void setDealFeeAmt(BigDecimal dealFeeAmt) {
+        this.dealFeeAmt = dealFeeAmt;
     }
 
     public BigDecimal getSettFeeAmt() {

@@ -106,11 +106,14 @@ public class PositionHttpRequest {
                 .put("interfaceType", interfaceType);
         String msg = cancel(bm);
         Map message = JsonUtils.json2Object(msg, Map.class);
-        if (message == null || !StringUtil.equals("success", message.get("code"))){
+        if (message == null) {
+            throw new PositionException("头寸返回数据为空！");
+        }
+        if (!StringUtil.equals("success", message.get("code"))){
             if(StringUtil.equals("FL0007", message.get("code"))){
-                throw new PositionException(CODE_BUSI_RK + "|" + (message==null?"":message.get("message")));
+                throw new PositionException(CODE_BUSI_RK + "|" + message.get("message"));
             }else {
-                throw new PositionException("头寸返回数据为空！");
+                throw new PositionException(message.get("message") + "");
             }
         }
     }
@@ -145,13 +148,13 @@ public class PositionHttpRequest {
         // 页面端根据异常信息返回前端
         throw new PositionException(errorMsg);
     }
-    public static void deleteMethod(String totalId, String modelType) throws PositionException{
+    public static void deleteMethod(String totalId, String modelType,String interfaceType) throws PositionException{
         //
         BaseMap bm = BaseMap.newMap()
                 .put("totalTradeId", totalId)
                 .put("modelType", modelType)
                 .put("userId", LoginUserUtil.getUserName())
-                .put("interfaceType", "Bond001");
+                .put("interfaceType", interfaceType);//"Bond001"
         String res = cancel(bm);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){
@@ -162,6 +165,26 @@ public class PositionHttpRequest {
         return httpPostRequest(positionUrl + "/position/endpoint/updatePosition", param);
     }
 
+    public static void doDeleteByWorkFlowId(String revokeId, String modelType) throws PositionException{
+        //
+        BaseMap bm = BaseMap.newMap()
+                .put("workFlowId", revokeId)
+                .put("modelType", modelType)
+                .put("userId", LoginUserUtil.getUserName());
+        String res = delete(bm);
+        Map msgMap = JsonUtils.json2Object(res, Map.class);
+        if(msgMap == null){
+            throw new PositionException("头寸返回数据为空！");
+        }
+    }
+    /**
+     * 作废
+     * @param param
+     * @return
+     */
+    private static String delete(Object param) {
+        return httpPostRequest(positionUrl + "/position/endpoint/delete", param);
+    }
     /**
      * 冲正撤销
      * @param param

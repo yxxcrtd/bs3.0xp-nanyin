@@ -73,7 +73,6 @@
     $(function () {
         var operateType=$('#operateType').val();
         console.log(operateType);
-        debugger;
        if(operateType=='add'||operateType=='copy'){
             $('#FxSecRequestQuote002_btn_confirm').hide();
             $('#FxSecRequestQuote002_btn_revoke').hide();
@@ -95,7 +94,6 @@
                 "/interf/cfetsup/secrequestquote/FxSecRequestQuote003/init",
                 "49%", "80%", {pageModel:PAGE_MODEL_NEW,counterList:counterList}, function(data) {
                     if(!data) return;
-                    debugger;
                     var result = data.data;
                     var selArr = JSON.parse(result.data);
                     console.log(selArr);

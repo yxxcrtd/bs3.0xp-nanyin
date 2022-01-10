@@ -34,4 +34,6 @@ public interface EntrustBankCommonMapper {
 	List<EtrQuoteFinishStatus> selectEtrQuoteFinishStatusList(Map<String, Object> param);
 	
 	int checkDataStatus(Map<String, Object> param);
+
+	int checkRegDataStatus(Map<String, Object> param);
 }

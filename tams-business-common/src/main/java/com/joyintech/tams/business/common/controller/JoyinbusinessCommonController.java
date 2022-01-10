@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/common/joyinbusinessCommon")
@@ -68,7 +69,7 @@ public class JoyinbusinessCommonController extends BaseController {
 	@PostMapping("/getEntrustId")
 	@ApiOperation(value = "指令代码列表查询", notes = "指令代码列表查询")
 	@ResponseBody
-	public Message<Page<SelectOptionDto>> getEntrustId(@RequestBody EntrustIdRequestDto entrustIdRequestDto) {
+	public Message<Page<SelectOptionDto>> getEntrustId(@RequestBody CfetsSearchInfoRequest entrustIdRequestDto) {
 		try {
 			Page<SelectOptionDto> tempList = joyinbusinessCommonService.getEntrustId(entrustIdRequestDto);
 			return new Message<Page<SelectOptionDto>>().success().setData(tempList);
@@ -152,5 +153,17 @@ public class JoyinbusinessCommonController extends BaseController {
 			return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
 		}
 	}
+
+	@ApiOperation(value = "查询是否走流程", notes = "查询是否走流程Y 走  N 不走  pageId elementId 必传")
+	@PostMapping("/isNeedWorkflow")
+	public Message<String> isNeedWorkflow(@RequestBody Map<String,String> param){
+		try {
+			String needWorkflow = joyinbusinessCommonService.isNeedWorkflow(param);
+			return new Message<String>(needWorkflow).success();
+		} catch (Exception e) {
+			return new Message<String>().fail().setMessage("查询是否走流程失败");
+		}
+	}
+
 
 }

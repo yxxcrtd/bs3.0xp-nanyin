@@ -87,7 +87,6 @@
     }
     //初始化
     var init =function(){
-        debugger;
         var payType = $("#payType").val();
         /* 收付款账户显示 add by liuwei 20210226 start */
         if(!payType || payType==payType1001){

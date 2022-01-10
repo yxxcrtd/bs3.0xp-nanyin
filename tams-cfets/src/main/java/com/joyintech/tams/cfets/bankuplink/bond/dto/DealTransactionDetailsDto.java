@@ -33,6 +33,9 @@ public class DealTransactionDetailsDto {
     @ApiModelProperty(name="quoteRoleType",value="本方角色")
     private String quoteRoleType;
 
+    @ApiModelProperty(name="quoteRoleTypeStr",value="本方角色名称")
+    private String quoteRoleTypeStr;
+
     @ApiModelProperty(name="settleDate",value="成交日期")
     private Date settleDate;
 
@@ -117,8 +120,8 @@ public class DealTransactionDetailsDto {
     @ApiModelProperty(name="quoteId",value="业务编号")
     private String quoteId;
 
-    @ApiModelProperty(name="execid",value="成交编号")
-    private String execid;
+    @ApiModelProperty(name="trdId",value="成交编号")
+    private String trdId;
 
     @ApiModelProperty(name="remark",value="备注")
     private String remark;
@@ -145,6 +148,15 @@ public class DealTransactionDetailsDto {
 
     public void setQuoteRoleType(String quoteRoleType) {
         this.quoteRoleType = quoteRoleType;
+    }
+
+    public String getQuoteRoleTypeStr() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.银行间上行本方角色,
+                this.getQuoteRoleType());
+    }
+
+    public void setQuoteRoleTypeStr(String quoteRoleTypeStr) {
+        this.quoteRoleTypeStr = quoteRoleTypeStr;
     }
 
     public Date getSettleDate() {
@@ -299,12 +311,12 @@ public class DealTransactionDetailsDto {
         this.quoteId = quoteId;
     }
 
-    public String getExecid() {
-        return execid;
+    public String getTrdId() {
+        return trdId;
     }
 
-    public void setExecid(String execid) {
-        this.execid = execid;
+    public void setTrdId(String trdId) {
+        this.trdId = trdId;
     }
 
     public String getRemark() {
@@ -350,7 +362,9 @@ public class DealTransactionDetailsDto {
     public String getValidStatusStr() {
         if (StringUtils.equals(this.getValidStatus(), BussinessDictCodeList.有效状态_流程中.getValue())) {
             return BussinessDictCodeList.有效状态_流程中.getCodeName();
-        } else {
+        } else if (StringUtils.equals(this.getValidStatus(), BussinessDictCodeList.有效状态_撤销.getValue())) {
+            return BussinessDictCodeList.有效状态_撤销.getCodeName();
+        }else{
             return BussinessDictCodeList.有效状态_有效.getCodeName();
         }
     }

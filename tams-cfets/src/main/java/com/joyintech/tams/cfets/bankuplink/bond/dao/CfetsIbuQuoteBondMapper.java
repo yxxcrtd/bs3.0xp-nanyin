@@ -8,6 +8,7 @@ import com.joyintech.tams.common.base.entity.RegTradeFeeTotal;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -78,4 +79,12 @@ public interface CfetsIbuQuoteBondMapper {
     List<PtlAllocationDto> listWflPtlAllocationDto(@Param("quoteId") String quoteId);
 
     int countMatchInfo(@Param("quoteId") String quoteId,@Param("CONFIRM_STATUS_1") String CONFIRM_STATUS_1);
+
+    BigDecimal getWflShareAmtByEntrustId(@Param("entrustId") String entrustId);
+
+    String getTradeStatus(@Param("quoteId") String quoteId,@Param("cpPartyId") String cpPartyId);
+
+    String  getIssuserName(@Param("finprodId") String finprodId);
+
+    String  getPartyIdByPtl(@Param("portfolioId") String portfolioId);
 }

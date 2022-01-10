@@ -232,6 +232,10 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
     @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal avaDealAmt;
 
+    /**
+     * 资产四级类型
+     */
+    private String type11;
 
     public String getPortfolioSeries() {
         return portfolioSeries;
@@ -1082,5 +1086,13 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
 
     public void setAvaDealAmt(BigDecimal avaDealAmt) {
         this.avaDealAmt = avaDealAmt;
+    }
+
+    public String getType11() {
+        return type11;
+    }
+
+    public void setType11(String type11) {
+        this.type11 = type11;
     }
 }

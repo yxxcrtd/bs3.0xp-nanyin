@@ -1,0 +1,1 @@
+update sys_datadict_list set item_value='回售' where dict_code='PS' and item_code='T03';

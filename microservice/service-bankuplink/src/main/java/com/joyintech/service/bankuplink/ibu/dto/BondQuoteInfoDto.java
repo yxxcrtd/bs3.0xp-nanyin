@@ -173,6 +173,19 @@ public class BondQuoteInfoDto extends BaseEntity {
      */
     private String remark;
 
+    /**
+     * 行权收益率
+     */
+    private BigDecimal exerYield;
+
+    public BigDecimal getExerYield() {
+        return exerYield;
+    }
+
+    public void setExerYield(BigDecimal exerYield) {
+        this.exerYield = exerYield;
+    }
+
     public BigDecimal getPendingPeriod() {
         return pendingPeriod;
     }

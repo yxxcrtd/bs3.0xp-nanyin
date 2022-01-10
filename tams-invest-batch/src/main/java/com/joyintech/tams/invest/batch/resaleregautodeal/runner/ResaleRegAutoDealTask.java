@@ -56,19 +56,14 @@ public class ResaleRegAutoDealTask extends BatchBaseService{
                 isRunning = true;
             }
         }
-        try {
-            if(null!=batchExecuteInfo&&null!=batchExecuteInfo.getExecuteDate()){
-                supDate=batchExecuteInfo.getExecuteDate();
-            }
-            else{
-                supDate = new Date();
-            }
-            resaleRegAutoDealService.run(supDate);
-            result.setStatus(BatchStatus.COMPLETED);
+        if(null!=batchExecuteInfo&&null!=batchExecuteInfo.getExecuteDate()){
+            supDate=batchExecuteInfo.getExecuteDate();
         }
-        catch (Exception e) {
-            logger.error(e.getMessage());
+        else{
+            supDate = new Date();
         }
+        resaleRegAutoDealService.run(supDate);
+        result.setStatus(BatchStatus.COMPLETED);
         isRunning=false;
         return result;
     }

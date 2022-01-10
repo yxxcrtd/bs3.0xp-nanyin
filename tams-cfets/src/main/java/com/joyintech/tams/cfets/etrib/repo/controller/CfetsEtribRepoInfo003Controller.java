@@ -3,50 +3,40 @@ package com.joyintech.tams.cfets.etrib.repo.controller;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoSaveRequest;
+import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtribRepoInfo003Dto;
 import com.joyintech.tams.cfets.etrib.repo.service.CfetsEtrIbRepoinfo003Service;
-import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
-import com.joyintech.tams.invest.entrust.etribrepo.dto.EtribRepoInfo003Dto;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 银行间质押式回购指令- 多组合指令新建
@@ -61,6 +51,8 @@ import java.util.stream.Collectors;
 @Api(tags = "银行间回购指令新建")
 public class CfetsEtribRepoInfo003Controller extends BaseController {
 
+    private static final Logger logger = LoggerFactory.getLogger(CfetsEtribRepoInfo003Controller.class);
+
     @Autowired
     private CfetsEtrIbRepoinfo003Service cfetsEtrIbRepoinfo003Service;
 
@@ -72,6 +64,7 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
      * @return
      */
     @Override
+    @RequestMapping(PAGE_INIT)
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.交易场所);
         this.setSelectOptionToModel(model, DictCode.交易市场);
@@ -80,10 +73,7 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.回购类型);
         this.setSelectOptionToModel(model, DictCode.回购期限品种);
         this.setSelectOptionToModel(model, DictCode.清算速度);
-        this.setSelectOptionToModel(model, DictCode.投资目的);
-        this.setSelectOptionToModel(model, DictCode.交易平台);
         this.setSelectOptionToModel(model, DictCode.价格模式);
-        this.setSelectOptionToModel(model, DictCode.组合系列);
         Date sysDate = DateUtil.platDateFromCache();
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         CfetsEtribRepoInfo003Dto entity = null;
@@ -95,9 +85,10 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
             model.addAttribute(GlobalConstant.ENTITY, entity);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("person_entity", JsonUtils.object2Json(entity.getEtrInvestPersonInfo()));
-            model.addAttribute("businessId",workflowId);
-            model.addAttribute("entity_BussCombDistribtList",  JsonUtils.object2Json(entity.getBussCombDistribtList()));
+//            model.addAttribute("businessId",workflowId);
+            model.addAttribute("entity_BussCombDistribtList",  JsonUtils.object2Json(entity.getEtrInvestRepoInfoDtos()));
             model.addAttribute("entity_PledgeBondTotalListDetailed",  JsonUtils.object2Json(entity.getPledgeBondTotalListDetailed()));
+            model.addAttribute("entity_RiskTrialRetList",  JsonUtils.object2Json(entity.getRiskTrialRetDto()));
             todoList = true;
             model.addAttribute("businessId", entity.getTotalEtrustId());
         } else {
@@ -174,88 +165,67 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
     @ResponseBody
     @PostMapping("save")
     @ApiOperation(value = "多组合指令新建", notes = "多组合指令新建")
-    public AjaxResult save(@RequestBody CfetsEtribRepoInfo003Dto RepoInfoDto, BindingResult br)
+    public Message<AjaxResult> save(@RequestBody CfetsEtribRepoInfo003Dto RepoInfoDto, BindingResult br)
             throws Exception {
         if (br.hasErrors()) {
-            return new AjaxResult(br);
+            return new Message<AjaxResult>().setData(new AjaxResult(br));
         }
         RepoInfoDto.setAssetType1(DictCodeList.回购类型_质押式回购.getValue());
         // ----------add by zhangrui1 20200715 预占功能 start----------
         List<CfetsEtribRepoInfo003Dto> dataList = new ArrayList<>();
         // ----------add by zhangrui1 20200715 预占功能 end----------
-        // 针对每个单组合绑定附件
-        for(CfetsEtribRepoInfo003Dto dto: RepoInfoDto.getEtrInvestRepoInfoDtos()) {
-            if (StringUtil.isEmpty(dto.getEntrustId())) {
-                BussinessCodeParameter param = new BussinessCodeParameter();
-                param.setCommonBusinessType(DictCodeList.共通业务类型_回购投资委托);
-                String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(
-                        param) : IDGenerator.generate();
-                dto.setEntrustId(code);
-            }
-
-            // ----------add by zhangrui1 20200715 预占功能 start----------
-            if (StringUtil.isNotEmpty(dto.getEntrustId())) {
-                dataList.add(dto);
-            }
-            // ----------add by zhangrui1 20200715 预占功能 end----------
-            if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL), "02")
-                    ||StringUtil.equals(RepoInfoDto.getPs(), DictCodeListExt1.回购方向_正回购.getValue())){
-                dto.setBussRepoSec(new BussRepoSecDto());
-                dto.getBussRepoSec().setPageFrom(this.getPageId());;
-                List<PledgeBondInfoDto> pledgeBondList= new ArrayList<>();
-                // ZGZGST-2152: 回购方向是逆回购时,质押券信息列表明细是null,增加非空判断 fuyongsheng 20210907 edit start
-                if(CollectionUtils.isNotEmpty(RepoInfoDto.getPledgeBondTotalListDetailed())){
-                    for(PledgeBondInfoDto pledgeBondInfoDto :RepoInfoDto.getPledgeBondTotalListDetailed()){
-                        if(StringUtil.equals(dto.getPortfolioId(), pledgeBondInfoDto.getPortfolioId())){
-                            //组合代码相同
-                            pledgeBondList.add(pledgeBondInfoDto);
-                        }
-                    }
-                }
-                // ZGZGST-2152: 回购方向是逆回购时,质押券信息列表明细是null,增加非空判断 fuyongsheng 20210907 edit end
-                dto.getBussRepoSec().setPledgeBondList(pledgeBondList);
-            }
-        }
+        cfetsEtrIbRepoinfo003Service.packageEquity(RepoInfoDto,dataList);
         if (StringUtil.equals(BussinessConstant.SUBMIT, RepoInfoDto.getOperateType())) {
             AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(
                     dataList, DictCodeList.平安资产类型_质押式回购.getValue(),
                     BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
                     true, RepoInfoDto.getEtrInvestPersonInfo());
             if (StringUtil.isNotEmpty(ar)) {
-                return ar;
+                return new Message<AjaxResult>().setData(ar);
             }
         }
         EntrustRdsCommonAop.riskListToChildren(RepoInfoDto.getRiskTrialRetDto(), RepoInfoDto.getEtrInvestRepoInfoDtos(),
                 (dto, list) -> dto.setRiskTrialRetDto(list));
 
         // 临时主键
-        BussinessCodeParameter param = new BussinessCodeParameter();
-        param.setCommonBusinessType(DictCodeList.共通业务类型_回购投资委托);
-        String generatedId = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator.generate();
-        RepoInfoDto.setTotalEtrustId(generatedId);
-        for (int i = 0; i < RepoInfoDto.getBussCombDistribtList().size(); i++) {
-            RepoInfoDto.getBussCombDistribtList().get(i).setEntrustId(RepoInfoDto.getEtrInvestRepoInfoDtos().get(i).getEntrustId());
+        if(!StringUtil.isNotEmpty(RepoInfoDto.getEntrustId())) {
+            BussinessCodeParameter param = new BussinessCodeParameter();
+            param.setCommonBusinessType(DictCodeList.共通业务类型_回购投资委托);
+            String generatedId = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
+            RepoInfoDto.setTotalEtrustId(generatedId);
+        }else{
+            RepoInfoDto.setTotalEtrustId(RepoInfoDto.getEntrustId());
         }
+//        for (int i = 0; i < RepoInfoDto.getBussCombDistribtList().size(); i++) {
+//            RepoInfoDto.getBussCombDistribtList().get(i).setEntrustId(RepoInfoDto.getEtrInvestRepoInfoDtos().get(i).getEntrustId());
+//        }
         ProcessParameter<CfetsEtribRepoInfo003Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<CfetsEtribRepoInfo003Dto> params = new WorkFlowParameter<>();
         params.setPageId("CfetsEtrIbRepoinfo003");
         params.setElementId(RepoInfoDto.getEtrInvestRepoInfoDtos().get(0).getElementId());
         params.setBusinessCode(CfetsEtribRepoInfo003Dto::getTotalEtrustId);
-        params.setBusinessType(DictCodeList.共通业务类型_回购投资委托.getValue());
-
+        params.setBusinessType(DictCodeListExt3.共通业务类型_本币业务指令_质押式回购.getValue());
+        DecimalFormat df4 = new DecimalFormat("#,##0.00");
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
-                entity -> this.getMessage("EtribRepoInfo003") + "(" + entity.getTotalEtrustId() + ")"
-                        + "-" + this.getMessage("EtribRepoInfo003.ps")+"("+ SysDataUtil.getNameFromDataDict(DictCode.回购拆借方向, entity.getPs())+")" + "-" + "("
-                        + this.getMessage("EtribRepoInfo003.vdate") + ":" + DateUtil.format(entity.getVdate())
-                        + ")-(" + this.getMessage("EtribRepoInfo003.mdate") + ":"
-                        + DateUtil.format(entity.getMdate())+ ")-"
-                        + this.getMessage("EtrRepo002.entrustAmt") + ":"
-                        + entity.getEntrustAmt());
+                entity ->  "(" + "指令日期" + ":" + DateUtil.format(entity.getEntrustDate()) + ")-"
+                        +"("+ "回购期限" +entity.getRepoTerm()+ "天"+")-"
+                        + this.getMessage("EtrRepo002.entrustAmt") + ":" + df4.format(entity.getEntrustAmt())+"元");
         processParameter.setWorkFlowParameter(params);
 
-        String msg = cfetsEtrIbRepoinfo003Service.start(processParameter, RepoInfoDto);
-        return new AjaxResult(msg);
+//        String msg = cfetsEtrIbRepoinfo003Service.start(processParameter, RepoInfoDto);
+//        return new Message<AjaxResult>().setData(new AjaxResult(msg));
+        String msg = null;
+        try {
+            msg = cfetsEtrIbRepoinfo003Service.start(processParameter, RepoInfoDto);
+            AjaxResult m =new AjaxResult(msg);
+            return new Message<AjaxResult>().success().setData(m);
+        }catch (Exception e) {
+            logger.error("保存银行间质押式多组合指令新建失败",e);
+            return PositionUtil.ajaxErrorReturn(e);
+        }
     }
+
+
 
 }

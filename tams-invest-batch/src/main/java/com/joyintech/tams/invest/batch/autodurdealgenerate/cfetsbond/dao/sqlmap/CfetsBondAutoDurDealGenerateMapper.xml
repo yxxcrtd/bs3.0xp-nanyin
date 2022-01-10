@@ -115,7 +115,8 @@
         LEFT JOIN STL_SEC_ACCT_INFO SAI ON T8.SEC_ACCT_ID = SAI.SEC_ACCT_ID
         LEFT JOIN FIN_PRODUCT FP ON T8.SEC_ACCT_ID = FP.FINPROD_ID
         where
-        t8.PAY_DATE = #{PLATEFORM_DATE}
+        t8.PAY_DATE >= #{PLATEFORM_DATE}
+        AND T8.MDATE = #{PLATEFORM_DATE}
         GROUP BY
         t8.SEC_ACCT_ID,SAI.SEC_ACCT_NAME, fp.FINPROD_NAME,
         t10.FINPROD_MARKET_ID,
@@ -153,7 +154,7 @@
         ROUND(t8.PRIN_AMT, 4) prinAmt,/*还本面额/百元*/
         T8.RANGE_YIELD*100 yield,/*区间票面利率（%）*/
         TO_CHAR(T8.PAY_DATE, 'yyyy-MM-dd') payDate,/*支付日*/
-        TO_CHAR(T8.PAY_DATE, 'yyyy-MM-dd') tradeDate,/*交易日*/
+        TO_CHAR(T8.mdate, 'yyyy-MM-dd') tradeDate,/*交易日*/
         ROUND(sum(T8.intAmt), 8) intAmtTheory,/*理论应计利息*/
         ROUND(sum(T8.prinAmt), 4) prinAmtTheory,/*理论还本金额*/
         T10.TRADE_MARKET,
@@ -180,7 +181,7 @@
         from (SELECT
         T1.FINPROD_ID,
         T1.PORTFOLIO_ID,
-        DECODE(T1.HODING_TYPE, '06', T1.AMOUNT*-1,'11', T1.AMOUNT*-1, T1.AMOUNT) AMOUNT,
+        DECODE(T1.HODING_TYPE, '06', T1.AMOUNT*-1,'11', T1.AMOUNT*-1, T1.AMOUNT)/100 AMOUNT,
         T1.SEC_ACCT_ID,
         t2.vdate,
         t2.mdate,
@@ -199,6 +200,7 @@
         T1.AMOUNT > 0
         <!--AND T1.HODING_TYPE IN ('03', '05', '06','11')-->
         AND T1.HODING_TYPE = 'A_004'
+        AND T1.DATE_TYPE = 0
         and nvl(pp.PARENT_PORTFOLIO_ID,'null') = 'null'
         AND T1.SEC_ACCT_ID = #{secAcctId}
         AND T2.FINPROD_ID = #{finprodId} AND T2.MDATE = to_date(#{mDate}, 'yyyy-MM-dd')
@@ -323,7 +325,7 @@
             INVEST_YESORNO,
             FINPROD_ID,
             CDATE,
-            SUM(AMOUNT) AMOUNT,
+            SUM(AMOUNT)/100 AMOUNT,
             vDate,
             mDate,
             yield,
@@ -417,19 +419,226 @@
 
     <select id="findShData" resultType="com.joyintech.tams.common.base.entity.RegFinProductDealTotal">
         select
-        <include refid="com.joyintech.tams.common.base.dao.RegFinProductDealTotalMapper.Base_Column_List" />
+        t1.totle_trade_id as totleTradeId,t1.finprod_id as finprodId,
+        t1.finprod_type2 as finprodType2,t1.ps as ps,t1.trade_date as tradeDate,
+        t1.ccy as ccy,t1.settle_speed as settleSpeed,t1.settle_date as settleDate,
+        t3.faceValue/100 as shareAmt, t3.faceValue as faceValue,
+        t3.sec_acct_id as secManageAcctId,t3.ACCT_NO as acctId,
+        t1.trade_market as tradeMarket,t1.trade_market_mode as tradeMarketMode,
+        t1.tg_busi_type as tgBusiType,
+        t2.exercise_price as exercisePrice,t2.redeem_rate as redeemRate,
+        fcp.int_amt*(#{PLATEFORM_DATE,jdbcType=DATE}-fcp.vdate) as intAmt
         from REG_FIN_PRODUCT_DEAL_TOTAL T1
-        WHERE T1.PS = #{psT39}
-        AND T1.TRADE_DATE = #{PLATEFORM_DATE}
+        left join reg_fin_product_deal_total_add t2
+        on t1.totle_trade_id=t2.totle_trade_id
+        left join (
+        select p.finprod_id,p.sec_acct_id,pc.ACCT_NO,sum(p.amount) as faceValue
+        from PTL_SEC_POSITION_RULE p
+        left join PTL_CAPACCT_INFO pc
+        on p.PORTFOLIO_ID=pc.PORTFOLIO_ID
+        and pc.acct_type='A01'
+        where p.HODING_TYPE = #{A_001} and p.DATE_TYPE = 0
+        and p.cdate=#{PLATEFORM_DATE}-1
+        group by p.finprod_id,p.sec_acct_id,pc.ACCT_NO
+        )t3
+        on t1.finprod_id=t3.finprod_id
+        left join FIN_CASH_PLAN fcp
+        on T1.finprod_id=fcp.finprod_id
+        and fcp.cash_type in ('01','04')
+        and fcp.vdate<![CDATA[<=]]>#{PLATEFORM_DATE,jdbcType=DATE}
+        and fcp.mdate>#{PLATEFORM_DATE,jdbcType=DATE}
+        WHERE T1.PS = #{psT39} and t3.faceValue!=0
+        AND T1.settle_date = #{PLATEFORM_DATE,jdbcType=DATE}
         AND T1.TRADE_STATUS = #{TRADE_STATUS01}
         AND T1.IS_CANCEL != #{YESNO_Y}
+        /*不存在生效的交易*/
+        and NOT EXISTS (SELECT 1 FROM TRD_FIN_PRODUCT_DEAL_TOTAL TPDA
+        left join trd_product_deal deal
+        on TPDA.totle_trade_id=deal.totle_trade_id
+        left join trd_product_deal_add dealAdd
+        on deal.trade_id=dealAdd.trade_id
+        left join PTL_CAPACCT_INFO pc
+        on dealAdd.PORTFOLIO_ID=pc.PORTFOLIO_ID
+        and pc.acct_type='A01'
+        where TPDA.TRADE_STATUS = #{TRADE_STATUS01}
+        AND TPDA.IS_CANCEL = #{YESNO_N}
+        and TPDA.trade_date=#{PLATEFORM_DATE,jdbcType=DATE}
+        AND TPDA.FINPROD_ID = T1.FINPROD_ID
+        and TPDA.ps=#{psT39}
+        AND TPDA.SEC_MANAGE_ACCT_ID = t3.sec_acct_id and t3.ACCT_NO=pc.ACCT_NO )
+        /*不存在流程中的当期或之前的交易*/
+        AND NOT EXISTS (SELECT 1 FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL TPDA
+        left join wfl_trd_product_deal deal
+        on TPDA.totle_trade_id=deal.totle_trade_id
+        left join wfl_trd_product_deal_add dealAdd
+        on deal.trade_id=dealAdd.trade_id
+        left join PTL_CAPACCT_INFO pc
+        on dealAdd.PORTFOLIO_ID=pc.PORTFOLIO_ID
+        and pc.acct_type='A01'
+        where TPDA.TRADE_STATUS = #{TRADE_STATUS01}
+        AND TPDA.IS_CANCEL = #{YESNO_N}
+        and TPDA.ps=#{psT39}
+        and TPDA.trade_date=#{PLATEFORM_DATE,jdbcType=DATE}
+        AND TPDA.FINPROD_ID = T1.FINPROD_ID
+        AND TPDA.SEC_MANAGE_ACCT_ID = t3.sec_acct_id and t3.ACCT_NO=pc.ACCT_NO )
     </select>
 
-    <select id="queryRegDealnfo" resultType="com.joyintech.tams.common.base.entity.RegFinProductDeal">
-        select
-        <include refid="com.joyintech.tams.common.base.dao.RegFinProductDealMapper.Base_Column_List" />
-        from REG_FIN_PRODUCT_DEAL
-        where TOTLE_TRADE_ID = #{totalTradeId}
+    <select id="queryRegDealInfo" resultType="com.joyintech.tams.common.base.entity.RegFinProductDeal">
+        select *
+        from (SELECT
+        T1.FINPROD_ID as finprodId,
+        T1.PORTFOLIO_ID as portfolioId,
+        sum(T1.AMOUNT) as faceValue,
+        sum(T1.AMOUNT) /100 as shareAmt,
+        T1.SEC_ACCT_ID as secManageAcctId
+        FROM PTL_SEC_POSITION_RULE T1
+        INNER JOIN fin_exercise_plan T2 ON T1.FINPROD_ID = T2.FINPROD_ID
+        AND T2.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+        AND t1.CDATE = t2.exercise_date-1
+        and t2.exercise_type='01'
+
+        left join PTL_CAPACCT_INFO pc
+        on T1.PORTFOLIO_ID=pc.PORTFOLIO_ID
+        and pc.acct_type='A01'
+        WHERE
+        T1.AMOUNT != 0
+        AND T1.HODING_TYPE = #{A_001}
+        AND T1.DATE_TYPE = 0
+        AND T2.FINPROD_ID = #{finprodId}
+        AND t2.exercise_date = #{cdate,jdbcType=DATE}
+        and T1.SEC_ACCT_ID = #{SEC_ACCT_ID}
+        and pc.ACCT_NO= #{ACCT_NO}
+        group by T1.FINPROD_ID,T1.PORTFOLIO_ID,T1.SEC_ACCT_ID)aaa
+        where aaa.faceValue!=0
+    </select>
+    <insert id="insertTrdQutoMatchInfo" parameterType="com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dto.CfetsTrdConfirmMatchDto" >
+        insert into trdquto_match_info (SEQNO, CSTP_TRADE_ID, EXE_ID,TRD_ID,
+        PRE_TRADE_ID, MATCH_TYPE, MATCH_STATUS,
+        TRD_CONF_STATUS, CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        values (#{seqno,jdbcType=VARCHAR}, #{cstpTradeId,jdbcType=VARCHAR}, #{exeId,jdbcType=VARCHAR},#{trdId,jdbcType=VARCHAR},
+        #{preTradeId,jdbcType=VARCHAR}, #{matchType,jdbcType=VARCHAR}, #{matchStatus,jdbcType=VARCHAR},
+        #{trdConfStatus,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+        sysdate, #{updateUser,jdbcType=VARCHAR},sysdate
+        )
+    </insert>
+    <select id="qryPortfolioCashAcctId" resultType="java.lang.String">
+        SELECT P.ACCT_NO CASHACCTID
+        FROM
+        PTL_CAPACCT_INFO P
+        LEFT JOIN
+        STL_CAPACCT_INFO S
+        ON
+        P.ACCT_NO = S.ACCT_NO
+        where P.PORTFOLIO_ID = #{portfolioId}
+        AND P.ACCT_TYPE = #{acctType}
+        and rownum=1
+    </select>
+
+    <select id="getDealDetailsByTradeId" parameterType="java.lang.String"
+            resultType="com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dto.CfetsManualSettleDealInfo">
+        SELECT
+        TPD.TRADE_ID TRADE_ID,
+        BUSI_TYPE BUSI_TYPE,
+        FINPROD_ID FINPROD_ID,
+        FINPROD_TYPE FINPROD_TYPE,
+        FINPROD_TYPE2 FINPROD_TYPE2,
+        BRANCH BRANCH,
+        TRADE_DATE TRADE_DATE,
+        VDATE VDATE,
+        MDATE MDATE,
+        SETTLE_DATE SETTLE_DATE,
+        SETTLE_SPEED SETTLE_SPEED,
+        CCY CCY,
+        CPRICE_DATE CPRICE_DATE,
+        UNIT_CPRICE UNIT_CPRICE,
+        UNIT_INT UNIT_INT,
+        UNIT_FPRICE UNIT_FPRICE,
+        PAR_VALUE PAR_VALUE,
+        CPRICE_AMT CPRICE_AMT,
+        SHARE_AMT*100 SHARE_AMT,
+        PRIN_AMT PRIN_AMT,
+        INT_AMT INT_AMT,
+        FPRICE_AMT FPRICE_AMT,
+        FEE_AMT_PAY FEE_AMT_PAY,
+        TRADE_AMT TRADE_AMT,
+        FEE_AMT_UNPAY FEE_AMT_UNPAY,
+        FEE_AMT FEE_AMT,
+        PS PS, YIELD YIELD,
+        EXER_YIELD EXER_YIELD,
+        INV_AIM INV_AIM,
+        TRADE_STATUS TRADE_STATUS,
+        IS_CANCEL IS_CANCEL,
+        P_TRADE_ID P_TRADE_ID,
+        IS_CLEAN IS_CLEAN,
+        TPD.TOTLE_TRADE_ID TOTLE_TRADE_ID,
+        R_TRADE_ID R_TRADE_ID,
+        B_TRADE_ID B_TRADE_ID,
+        CHL_ID CHL_ID,
+        COUNTER_ID COUNTER_ID,
+        IS_OUT_TRADE IS_OUT_TRADE,
+        TRADE_MARKET TRADE_MARKET,
+        TRADE_PLAT TRADE_PLAT,
+        TRADE_MARKET_MODE TRADE_MARKET_MODE,
+        TRADER TRADER,
+        COUNTER_TRADER COUNTER_TRADER,
+        COUNTER_CONTACT COUNTER_CONTACT,
+        SEC_MANAGE_ACCT_ID SEC_MANAGE_ACCT_ID,
+        F_TRADE_ID F_TRADE_ID,
+        CASH_ID CASH_ID,
+        REGIST_ORG REGIST_ORG,
+        REMARK REMARK,
+        CANCEL_REMARK CANCEL_REMARK,
+        DELIVERY_TYPE DELIVERY_TYPE,
+        PAY_DATE PAY_DATE,
+        SALE_CODE SALE_CODE,
+        ACCR_NUM ACCR_NUM,
+        TG_BUSI_TYPE TG_BUSI_TYPE,
+        PS_PAYMENT PS_PAYMENT,
+        SPLIT_TRADE_ID SPLIT_TRADE_ID,
+        IS_SWAP_TRANSACTION IS_SWAP_TRANSACTION,
+        SEAT_ID SEAT_ID,
+        SETTLEMEN_TYPE SETTLEMEN_TYPE,
+        HK_MARKET HK_MARKET,
+        BUY_SETTLE_RATE BUY_SETTLE_RATE,
+        SELL_SETTLE_RATE SELL_SETTLE_RATE,
+        DEAL_AMT DEAL_AMT,
+        TPDA.PORTFOLIO_ID,
+        TPDA.ENTRUST_ID,
+        TPDA.OUR_SHARE_AMT,
+        TPDA.LENDIN_SHARE_AMT
+        FROM
+        TRD_PRODUCT_DEAL TPD
+        LEFT JOIN TRD_PRODUCT_DEAL_ADD TPDA
+        ON TPD.TRADE_ID = TPDA.TRADE_ID
+        LEFT JOIN TRD_DEAL_TOTAL_ADD TDTA
+        ON TPD.TOTLE_TRADE_ID = TDTA.TOTLE_TRADE_ID
+        WHERE
+        TPD.TOTLE_TRADE_ID = #{tradeId}
+    </select>
+
+    <select id="qryPortfolioSecAcctId" resultType="java.lang.String">
+        SELECT V.SEC_ACCT_ID AS SECACCTID
+        FROM PTL_SEC_ACCT PSA, STL_SEC_ACCT_INFO V
+        LEFT JOIN FIN_PRODUCT R
+        ON R.REGIST_ORG = V.REGIST_ORG
+        WHERE PSA.ACCT_NO = V.SEC_ACCT_ID
+        AND V.SEC_ACCT_TYPE = 'SEC'
+        AND V.TRADE_PLACE in ('01','02')
+        AND V.TRADE_PLACE = R.TRADE_MARKET
+        AND PSA.PORTFOLIO_ID = #{portfolioId}
+        AND R.FINPROD_ID = #{finprodId}
+    </select>
+
+    <select id="selectTrdFinProductDealTotalData" resultType="java.lang.String">
+        select tfpft.totle_trade_id from TRD_FIN_PRODUCT_DEAL_TOTAL tfpft
+        where tfpft.trade_date =#{batchDate}
+        and tfpft.BUSI_TYPE = #{busiType}
+        and tfpft.update_user = #{updateUser}
+        <if test="finProdType2 != null and finProdType2 != ''">
+            and tfpft.FINPROD_TYPE2 = #{finProdType2}
+        </if>
     </select>
 
 </mapper>

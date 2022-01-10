@@ -145,7 +145,6 @@ $(function () {
     $(function() {
         // 绑定按钮事件
         $('#ExternalOptions001_btn_search').click(function() {
-            debugger;
             table.load();
         });
 

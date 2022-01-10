@@ -120,10 +120,10 @@ public class CfetsTrdQueryTradeInfoListResponse {
     private String ccyStr;
 
     @ApiModelProperty(name="confirmTradeDate",value="成交日期Date",example="admin")
-    private Date confirmTradeDate;
+    private String  confirmTradeDate;
 
     @ApiModelProperty(name="settleDate",value="结算日期",example="字符串1")
-    private Date settleDate;
+    private String settleDate;
 
     @ApiModelProperty(name="execid",value="成交编号",example="1")
     private String execid;
@@ -148,6 +148,20 @@ public class CfetsTrdQueryTradeInfoListResponse {
 
     @ApiModelProperty(name="portfolioName",value="组合名称",example="A1")
     private String portfolioName;
+
+    @ApiModelProperty(name="tradeDate",value="成交日期",example="admin")
+    private Date  tradeDate;
+
+    public String getCalMode() {
+        return calMode;
+    }
+
+    public void setCalMode(String calMode) {
+        this.calMode = calMode;
+    }
+
+    @ApiModelProperty(name="calMode",value="计算方式",example="计算方式供前台判断使用")
+    private String calMode;
 
     public String getEffectiveStatus() {
         return effectiveStatus;
@@ -389,22 +403,6 @@ public class CfetsTrdQueryTradeInfoListResponse {
         this.ccyStr = ccyStr;
     }
 
-    public Date getConfirmTradeDate() {
-        return confirmTradeDate;
-    }
-
-    public void setConfirmTradeDate(Date confirmTradeDate) {
-        this.confirmTradeDate = confirmTradeDate;
-    }
-
-    public Date getSettleDate() {
-        return settleDate;
-    }
-
-    public void setSettleDate(Date settleDate) {
-        this.settleDate = settleDate;
-    }
-
     public String getExecid() {
         return execid;
     }
@@ -467,5 +465,29 @@ public class CfetsTrdQueryTradeInfoListResponse {
 
     public void setCounterId(String counterId) {
         this.counterId = counterId;
+    }
+
+    public String getConfirmTradeDate() {
+        return confirmTradeDate;
+    }
+
+    public void setConfirmTradeDate(String confirmTradeDate) {
+        this.confirmTradeDate = confirmTradeDate;
+    }
+
+    public String getSettleDate() {
+        return settleDate;
+    }
+
+    public void setSettleDate(String settleDate) {
+        this.settleDate = settleDate;
+    }
+
+    public Date getTradeDate() {
+        return tradeDate;
+    }
+
+    public void setTradeDate(Date tradeDate) {
+        this.tradeDate = tradeDate;
     }
 }

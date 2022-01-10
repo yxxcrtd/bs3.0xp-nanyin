@@ -135,11 +135,26 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
     @ApiModelProperty(name="deliveryType",value="结算方式code",example="03")
     private String deliveryType;
 
+    @ApiModelProperty(name="mdeliveryType",value="到期结算方式",example="03")
+    private String mdeliveryType;
+
     @ApiModelProperty(name="settleType",value="清算类型code",example="A1")
     private String settleType;
 
     @ApiModelProperty(name="counterTrader",value="对手方交易员",example="A1")
     private String counterTrader;
+
+    @ApiModelProperty(name="exerciseDate",value="理论行权日",example="字符串1")
+    private String exerciseDate;
+
+    @ApiModelProperty(name="actExerciseDate",value="实际行权日",example="字符串1")
+    private String actExerciseDate;
+
+    @ApiModelProperty(name="totalTradeId",value="汇总交易编号",example="A1")
+    private String totalTradeId;
+
+    @ApiModelProperty(name="finprodType2",value="资产类型",example="债券、回购")
+    private String finprodType2;
 
     public String getEffectFlag() {
         return effectFlag;
@@ -426,6 +441,18 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
         return SysDataUtil.getNameFromDataDict(DictCode.结算方式, this.getDeliveryType());
     }
 
+    public String getMdeliveryTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.结算方式, this.getMdeliveryType());
+    }
+
+    public String getMdeliveryType() {
+        return mdeliveryType;
+    }
+
+    public void setMdeliveryType(String mdeliveryType) {
+        this.mdeliveryType = mdeliveryType;
+    }
+
     public String getOtherCcy() {
         return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
     }
@@ -483,5 +510,37 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
 
     public String getBusiTypeStr() {
         return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式, this.getBusiType());
+    }
+
+    public String getExerciseDate() {
+        return exerciseDate;
+    }
+
+    public void setExerciseDate(String exerciseDate) {
+        this.exerciseDate = exerciseDate;
+    }
+
+    public String getActExerciseDate() {
+        return actExerciseDate;
+    }
+
+    public void setActExerciseDate(String actExerciseDate) {
+        this.actExerciseDate = actExerciseDate;
+    }
+
+    public String getTotalTradeId() {
+        return totalTradeId;
+    }
+
+    public void setTotalTradeId(String totalTradeId) {
+        this.totalTradeId = totalTradeId;
+    }
+
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
     }
 }

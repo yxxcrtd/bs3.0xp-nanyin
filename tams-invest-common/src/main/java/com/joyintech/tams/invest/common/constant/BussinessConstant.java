@@ -498,4 +498,9 @@ public interface BussinessConstant {
      * 中债导入估值表中文件名称拆分分隔符：估值表
      */
     String CHB_VAL_SPLIT_STR = "CHB_VAL_SPLIT_STR";
+
+    /**
+     * 修改债券计划是否需要重新生成待交收数据
+     */
+    String IS_TODO_SETTLE_FLAG = "IS_TODO_SETTLE_FLAG";
 }

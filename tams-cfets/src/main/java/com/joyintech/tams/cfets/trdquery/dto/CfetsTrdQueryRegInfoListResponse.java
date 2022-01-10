@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.cfets.trdquery.dto;
 
+import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -95,10 +96,10 @@ public class CfetsTrdQueryRegInfoListResponse {
     private String trader;
 
     @ApiModelProperty(name="regTradeDate",value="登记日期Date",example="admin")
-    private Date regTradeDate;
+    private String regTradeDate;
 
     @ApiModelProperty(name="confirmTradeDate",value="成交日期Date",example="admin")
-    private Date confirmTradeDate;
+    private String confirmTradeDate;
 
     @ApiModelProperty(name="counterId",value="对手方Code",example="admin")
     private String counterId;
@@ -134,7 +135,7 @@ public class CfetsTrdQueryRegInfoListResponse {
     private String counterTrader;
 
     @ApiModelProperty(name="settleDate",value="结算日期",example="字符串1")
-    private Date settleDate;
+    private String settleDate;
 
     @ApiModelProperty(name="ccy",value="币种",example="字符串1")
     private String ccy;
@@ -191,10 +192,10 @@ public class CfetsTrdQueryRegInfoListResponse {
     private String distriType;
 
     @ApiModelProperty(name="exerciseDate",value="理论行权日",example="admin")
-    private Date exerciseDate;
+    private String exerciseDate;
 
     @ApiModelProperty(name="acrExerciseDate",value="实际行权日",example="admin")
-    private Date acrExerciseDate;
+    private String acrExerciseDate;
 
     @ApiModelProperty(name="exercisePrice",value="行权净价",example="字符串1")
     private BigDecimal exercisePrice;
@@ -224,10 +225,10 @@ public class CfetsTrdQueryRegInfoListResponse {
     private String mdeliveryType;
 
     @ApiModelProperty(name="vSettleDate",value="首次结算日",example="字符串1")
-    private Date   vsettleDate;
+    private String   vsettleDate;
 
     @ApiModelProperty(name="mSettleDate",value="到期结算日",example="字符串1")
-    private Date   msettleDate;
+    private String   msettleDate;
 
     @ApiModelProperty(name="mtradeAmt",value="到期结算金额",example="字符串1")
     private BigDecimal   mtradeAmt;
@@ -237,6 +238,12 @@ public class CfetsTrdQueryRegInfoListResponse {
 
     @ApiModelProperty(name="termType",value="期限品种",example="ZC1")
     private String termType;
+
+    @ApiModelProperty(name="settleAmt",value="结算金额",example="字符串1")
+    private BigDecimal settleAmt;
+
+    @ApiModelProperty(name="calMode",value="计算方式",example="计算方式供前台判断使用")
+    private String calMode;
 
     public String getEffectiveStatus() {
         return effectiveStatus;
@@ -409,21 +416,7 @@ public class CfetsTrdQueryRegInfoListResponse {
         this.trader = trader;
     }
 
-    public Date getRegTradeDate() {
-        return regTradeDate;
-    }
 
-    public void setRegTradeDate(Date regTradeDate) {
-        this.regTradeDate = regTradeDate;
-    }
-
-    public Date getConfirmTradeDate() {
-        return confirmTradeDate;
-    }
-
-    public void setConfirmTradeDate(Date confirmTradeDate) {
-        this.confirmTradeDate = confirmTradeDate;
-    }
 
     public String getCounterId() {
         return counterId;
@@ -513,16 +506,8 @@ public class CfetsTrdQueryRegInfoListResponse {
         this.counterTrader = counterTrader;
     }
 
-    public Date getSettleDate() {
-        return settleDate;
-    }
-
-    public void setSettleDate(Date settleDate) {
-        this.settleDate = settleDate;
-    }
-
     public String getCcyStr() {
-        return ccyStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.币种, getCcy());
     }
 
     public void setCcyStr(String ccyStr) {
@@ -554,7 +539,7 @@ public class CfetsTrdQueryRegInfoListResponse {
     }
 
     public String getDeliveryTypeStr() {
-        return deliveryTypeStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.结算方式, this.getDeliveryType());
     }
 
     public void setDeliveryTypeStr(String deliveryTypeStr) {
@@ -570,7 +555,7 @@ public class CfetsTrdQueryRegInfoListResponse {
     }
 
     public String getClearTypeStr() {
-        return clearTypeStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.清算类型, this.getClearType());
     }
 
     public void setClearTypeStr(String clearTypeStr) {
@@ -642,7 +627,7 @@ public class CfetsTrdQueryRegInfoListResponse {
     }
 
     public String getDistriTypeStr() {
-        return distriTypeStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.分配方式, this.getDistriType());
     }
 
     public void setDistriTypeStr(String distriTypeStr) {
@@ -663,5 +648,174 @@ public class CfetsTrdQueryRegInfoListResponse {
 
     public void setCcy(String ccy) {
         this.ccy = ccy;
+    }
+
+    public BigDecimal getExercisePrice() {
+        return exercisePrice;
+    }
+
+    public void setExercisePrice(BigDecimal exercisePrice) {
+        this.exercisePrice = exercisePrice;
+    }
+
+    public BigDecimal getRepoTerm() {
+        return repoTerm;
+    }
+
+    public void setRepoTerm(BigDecimal repoTerm) {
+        this.repoTerm = repoTerm;
+    }
+
+    public String getSecCcyStr() {
+        return secCcyStr;
+    }
+
+    public void setSecCcyStr(String secCcyStr) {
+        this.secCcyStr = secCcyStr;
+    }
+
+    public String getSecCcy() {
+        return secCcy;
+    }
+
+    public void setSecCcy(String secCcy) {
+        this.secCcy = secCcy;
+    }
+
+    public String getSettCcy() {
+        return settCcy;
+    }
+
+    public void setSettCcy(String settCcy) {
+        this.settCcy = settCcy;
+    }
+
+    public String getSettCcyStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.币种, this.getSettCcy());
+    }
+
+    public void setSettCcyStr(String settCcyStr) {
+        this.settCcyStr = settCcyStr;
+    }
+
+    public BigDecimal getDisFaceValue() {
+        return disFaceValue;
+    }
+
+    public void setDisFaceValue(BigDecimal disFaceValue) {
+        this.disFaceValue = disFaceValue;
+    }
+
+    public String getMdeliveryTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.结算方式, this.getMdeliveryType());
+    }
+
+    public void setMdeliveryTypeStr(String mdeliveryTypeStr) {
+        this.mdeliveryTypeStr = mdeliveryTypeStr;
+    }
+
+    public String getMdeliveryType() {
+        return mdeliveryType;
+    }
+
+    public void setMdeliveryType(String mdeliveryType) {
+        this.mdeliveryType = mdeliveryType;
+    }
+
+
+    public BigDecimal getMtradeAmt() {
+        return mtradeAmt;
+    }
+
+    public void setMtradeAmt(BigDecimal mtradeAmt) {
+        this.mtradeAmt = mtradeAmt;
+    }
+
+    public BigDecimal getActRepoTerm() {
+        return actRepoTerm;
+    }
+
+    public void setActRepoTerm(BigDecimal actRepoTerm) {
+        this.actRepoTerm = actRepoTerm;
+    }
+
+    public String getTermType() {
+        return termType;
+    }
+
+    public void setTermType(String termType) {
+        this.termType = termType;
+    }
+
+    public BigDecimal getSettleAmt() {
+        return settleAmt;
+    }
+
+    public void setSettleAmt(BigDecimal settleAmt) {
+        this.settleAmt = settleAmt;
+    }
+
+    public String getRegTradeDate() {
+        return regTradeDate;
+    }
+
+    public void setRegTradeDate(String regTradeDate) {
+        this.regTradeDate = regTradeDate;
+    }
+
+    public String getConfirmTradeDate() {
+        return confirmTradeDate;
+    }
+
+    public void setConfirmTradeDate(String confirmTradeDate) {
+        this.confirmTradeDate = confirmTradeDate;
+    }
+
+    public String getSettleDate() {
+        return settleDate;
+    }
+
+    public void setSettleDate(String settleDate) {
+        this.settleDate = settleDate;
+    }
+
+    public String getExerciseDate() {
+        return exerciseDate;
+    }
+
+    public void setExerciseDate(String exerciseDate) {
+        this.exerciseDate = exerciseDate;
+    }
+
+    public String getAcrExerciseDate() {
+        return acrExerciseDate;
+    }
+
+    public void setAcrExerciseDate(String acrExerciseDate) {
+        this.acrExerciseDate = acrExerciseDate;
+    }
+
+    public String getVsettleDate() {
+        return vsettleDate;
+    }
+
+    public void setVsettleDate(String vsettleDate) {
+        this.vsettleDate = vsettleDate;
+    }
+
+    public String getMsettleDate() {
+        return msettleDate;
+    }
+
+    public void setMsettleDate(String msettleDate) {
+        this.msettleDate = msettleDate;
+    }
+
+    public String getCalMode() {
+        return calMode;
+    }
+
+    public void setCalMode(String calMode) {
+        this.calMode = calMode;
     }
 }

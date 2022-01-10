@@ -1,5 +1,6 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dto;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -34,11 +35,14 @@ public class CfetsBondDayPriceDto {
     @ApiModelProperty(name="sendStatusStr",value="发送状态名称")
     private String sendStatusStr;
 
+    @ApiModelProperty(name="finprodId",value="资产代码")
+    private String finprodId;
+
     @ApiModelProperty(name="finprodMarketId",value="资产代码")
     private String finprodMarketId;
 
-    @ApiModelProperty(name="finprodName",value="资产简称")
-    private String finprodName;
+    @ApiModelProperty(name="finprodAbbr",value="资产简称")
+    private String finprodAbbr;
 
     @ApiModelProperty(name="assetTypeOne",value="资产一级分类")
     private String assetTypeOne;
@@ -49,8 +53,16 @@ public class CfetsBondDayPriceDto {
     @ApiModelProperty(name="quoteType",value="报价方式")
     private String quoteType;
 
+    @ApiModelProperty(name="quoteTypeStr",value="报价方式名称")
+    private String quoteTypeStr;
+
+
     @ApiModelProperty(name="quoteRoleType",value="本方角色")
     private String quoteRoleType;
+
+    @ApiModelProperty(name="quoteRoleTypeStr",value="本方角色名称")
+    private String quoteRoleTypeStr;
+
 
     @ApiModelProperty(name="settleDate",value="成交日期")
     private Date settleDate;
@@ -100,7 +112,7 @@ public class CfetsBondDayPriceDto {
     @ApiModelProperty(name="cpPartyName",value="对手方名称")
     private String cpPartyName;
 
-    @ApiModelProperty(name="ouTraderName",value="对手方交易员名称")
+    @ApiModelProperty(name="cpTraderName",value="对手方交易员名称")
     private String cpTraderName;
 
     @ApiModelProperty(name="shareAmtHun",value="回复量（万）")
@@ -114,6 +126,9 @@ public class CfetsBondDayPriceDto {
 
     @ApiModelProperty(name="quoteId",value="业务编号")
     private String quoteId;
+
+    @ApiModelProperty(name="quoteId",value="CFETS报价编号")
+    private String cfetsQuoteId;
 
     @ApiModelProperty(name="execid",value="成交编号")
     private String execid;
@@ -176,6 +191,14 @@ public class CfetsBondDayPriceDto {
         this.sendStatusStr = sendStatusStr;
     }
 
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
+    }
+
     public String getFinprodMarketId() {
         return finprodMarketId;
     }
@@ -184,12 +207,12 @@ public class CfetsBondDayPriceDto {
         this.finprodMarketId = finprodMarketId;
     }
 
-    public String getFinprodName() {
-        return finprodName;
+    public String getFinprodAbbr() {
+        return finprodAbbr;
     }
 
-    public void setFinprodName(String finprodName) {
-        this.finprodName = finprodName;
+    public void setFinprodAbbr(String finprodAbbr) {
+        this.finprodAbbr = finprodAbbr;
     }
 
     public String getAssetTypeOne() {
@@ -201,7 +224,7 @@ public class CfetsBondDayPriceDto {
     }
 
     public String getAssetTypeOneStr() {
-        return assetTypeOneStr;
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, this.getAssetTypeOne());
     }
 
     public void setAssetTypeOneStr(String assetTypeOneStr) {
@@ -216,12 +239,39 @@ public class CfetsBondDayPriceDto {
         this.quoteType = quoteType;
     }
 
+    public String getQuoteTypeStr() {
+        if (StringUtil.isNotEmpty(this.getQuoteType())) {
+            String quoteTypeStr = SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式,
+                    this.getQuoteType());
+            if (quoteTypeStr == null) {
+                return this.quoteType;
+            }
+            return quoteTypeStr;
+        }
+        return "";
+    }
+
+    public void setQuoteTypeStr(String quoteTypeStr) {
+        this.quoteTypeStr = quoteTypeStr;
+    }
+
     public String getQuoteRoleType() {
         return quoteRoleType;
     }
 
     public void setQuoteRoleType(String quoteRoleType) {
         this.quoteRoleType = quoteRoleType;
+    }
+
+    public String getQuoteRoleTypeStr() {
+        if (StringUtil.isNotEmpty(this.getQuoteRoleType())){
+            return SysDataUtil.getNameFromDataDict(BussinessDictCode.银行间上行本方角色, this.getQuoteRoleType());
+        }
+        return null;
+    }
+
+    public void setQuoteRoleTypeStr(String quoteRoleTypeStr) {
+        this.quoteRoleTypeStr = quoteRoleTypeStr;
     }
 
     public Date getSettleDate() {
@@ -423,6 +473,14 @@ public class CfetsBondDayPriceDto {
 
     public void setAnswerFlag(String answerFlag) {
         this.answerFlag = answerFlag;
+    }
+
+    public String getCfetsQuoteId() {
+        return cfetsQuoteId;
+    }
+
+    public void setCfetsQuoteId(String cfetsQuoteId) {
+        this.cfetsQuoteId = cfetsQuoteId;
     }
 }
 

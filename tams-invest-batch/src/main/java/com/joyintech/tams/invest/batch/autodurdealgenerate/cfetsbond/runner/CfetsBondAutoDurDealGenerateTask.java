@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 /**
- * 债券存续期 自动生成债券还本、收息、到期交易
+ * 债券存续期 自动生成债券还本、收息、到期交易。赎回交易
  *
  * @author sjj
  * @version 1.0 2021年11月22日
@@ -80,7 +80,9 @@ public class CfetsBondAutoDurDealGenerateTask extends BatchBaseService {
             result.setStatus(BatchStatus.COMPLETED);
         }
         catch (Exception e) {
-            logger.error(e.getMessage());
+            e.printStackTrace();
+           // logger.error(e.getMessage());
+            throw new RuntimeException(e);
         }
 
         return result;

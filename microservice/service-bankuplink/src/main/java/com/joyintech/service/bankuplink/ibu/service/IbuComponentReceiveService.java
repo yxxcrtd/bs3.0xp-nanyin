@@ -331,6 +331,8 @@ public class IbuComponentReceiveService extends BaseService{
                     ibuQuoteEtrReDto.setPortfolioId(item.getPortfolioId());
                     ibuQuoteEtrReDto.setShareAmt(item.getShareAmt());
                     ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
+                    ibuQuoteEtrReDto.setDealFeeAmt(item.getDealFeeAmt());
+                    ibuQuoteEtrReDto.setSettFeeAmt(item.getSettFeeAmt());
                     ibuQuoteEtrRes.add(ibuQuoteEtrReDto);
                 }
                 inputBean.setIbuQuoteEtrReDtoList(ibuQuoteEtrRes);
@@ -499,6 +501,8 @@ public class IbuComponentReceiveService extends BaseService{
                     ibuQuoteEtrReDto.setPortfolioId(item.getPortfolioId());
                     ibuQuoteEtrReDto.setShareAmt(item.getShareAmt());
                     ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
+                    ibuQuoteEtrReDto.setDealFeeAmt(item.getDealFeeAmt());
+                    ibuQuoteEtrReDto.setSettFeeAmt(item.getSettFeeAmt());
                     ibuQuoteEtrRes.add(ibuQuoteEtrReDto);
                 }
                 inputBean.setIbuQuoteEtrReDtoList(ibuQuoteEtrRes);

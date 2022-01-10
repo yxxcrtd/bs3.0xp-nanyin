@@ -1,7 +1,8 @@
-package com.joyintech.tams.cfets.etrib.bond.socket;
+package com.joyintech.tams.cfets.etrib.socket;
 
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.business.common.pojo.BaseMap;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.business.common.util.WebSocketClientUtil;
 import com.joyintech.tams.cfets.etrib.bond.service.PositionSocketService;
 import org.apache.commons.lang3.StringUtils;
@@ -49,10 +50,14 @@ public class PositionSocketClient {
     @PostConstruct
     public void init(){
         logger.info("WebSocketClient初始化一次...");
-        
         new Thread(this::loopStart).start();
     }
 
+    @Autowired
+    public void initPositionUtil(PositionUtil positionUtil){
+        logger.info("positionUtil初始化");
+    }
+    
     private WebSocketClientUtil util = null;
     
     public boolean start(){

@@ -97,6 +97,10 @@ public class CfetsManualSettleQueryService extends BaseService{
             pageParam.put("settleDateStart", DateUtil.parse(dto.getSettleDate()[0]));
             pageParam.put("settleDateEnd", DateUtil.parse(dto.getSettleDate()[1]));
         }
+        if(dto.getTradeDate() != null){
+            pageParam.put("tradeDateStart", DateUtil.parse(dto.getTradeDate()[0]));
+            pageParam.put("tradeDateEnd", DateUtil.parse(dto.getTradeDate()[1]));
+        }
 
         String portfolioId = (String)pageParam.get("portfolioId");
         if(StringUtil.isNotEmpty(pageParam.get("portfolioId"))){
@@ -145,6 +149,7 @@ public class CfetsManualSettleQueryService extends BaseService{
         //交收状态
         pageParam.put("DELIVERY_STATUS_01", DictCodeListExt3.交收状态_未交收.getValue());
         pageParam.put("DELIVERY_STATUS_02", DictCodeListExt3.交收状态_已交收.getValue());
+        pageParam.put("DELIVERY_STATUS_04", DictCodeListExt3.交收状态_交收失败.getValue());
         pageParam.put("DELIVERY_STATUS_NAME01", DictCodeListExt3.交收状态_未交收.getCodeName());
 
         pageParam.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
@@ -178,6 +183,9 @@ public class CfetsManualSettleQueryService extends BaseService{
      * @return Page<CfetsManualSettleFlowRespond>
      */
     public Page<CfetsManualSettleFlowRespond> findManualSettleFlow(CfetsManualSettleCommonRequest dto) {
+        if(dto.getSelectedItem().size()==0){
+            return new Page<CfetsManualSettleFlowRespond>();
+        }
         CfetsManualSettleDto cfetsManualSettleDto =dto.getSelectedItem().get(0);
         Map<String,Object> pageParam = BeanUtil.object2Map(cfetsManualSettleDto);
         List<CfetsManualSettleFlowRespond> cfetsManualSettleFlowRespondList = new ArrayList<CfetsManualSettleFlowRespond>();
@@ -189,7 +197,7 @@ public class CfetsManualSettleQueryService extends BaseService{
             //组装流水信息
             cfetsManualSettleFlowRespond.setSeqNo(1);
             cfetsManualSettleFlowRespond.setSettleDate(cfetsManualSettleDto.getSettleDate());
-            cfetsManualSettleFlowRespond.setJiaoShouDate(DateUtil.format(new Date(),"hh:mm:ss"));
+            cfetsManualSettleFlowRespond.setJiaoShouDate(DateUtil.format(new Date(),"HH:mm:ss"));
             cfetsManualSettleFlowRespond.setFinprodMarketId(cfetsManualSettleDto.getFinprodMarketId());
             cfetsManualSettleFlowRespond.setFinprodAbbr(cfetsManualSettleDto.getFinprodAbbr());
             cfetsManualSettleFlowRespond.setSettleNum(cfetsManualSettleDto.getSettleNum());
@@ -268,7 +276,6 @@ public class CfetsManualSettleQueryService extends BaseService{
         resultData.put(dtCode+"_form2",infoForm2);
 
         //组合分配信息
-        pageParam.put("userName", LoginUserUtil.getUserName());
         pageParam.put("CASH_TYPE_1_02", DictCodeListExt1.现金流一级类型_利息.getValue());
         pageParam.put("CASH_TYPE_2_C02", DictCodeListExt1.现金流二级类型_利息.getValue());
         List<PortIntFenPeiInfoDto> portIntFenPeiInfoDtoList =  cfetsManualSettleMapper.findPortIntFenPeiInfoList(pageParam);

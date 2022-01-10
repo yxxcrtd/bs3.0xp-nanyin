@@ -1,18 +1,14 @@
 package com.joyintech.tams.cfets.etrib.repo.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.invest.entrust.etrstandardbond.dto.EtrStandardBond002Dto;
-import com.joyintech.workflow.engine.annotation.PrimaryKey;
-import com.joyintech.workflow.engine.dto.ProcessEntity;
 
-@PageId("CfetsEtrIbRepoLibDto")
-public class CfetsEtrIbRepoLibDto extends CfetsEtrIbRepoLib001Dto implements ProcessEntity{
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CfetsEtrIbRepoLibDto  {
 
     /**
      * 
@@ -25,24 +21,23 @@ public class CfetsEtrIbRepoLibDto extends CfetsEtrIbRepoLib001Dto implements Pro
     private String pageModel; 
     
     private String tradePlace;
-    
-    @Override
-    @PrimaryKey(PrimaryKey.Field.PK_1)
+
+    private String pledgeStockId;
+
+    /**
+     * 证券账户
+     */
+    private String secAcctId;
+
+
     public String getSecAcctId() {
-        return super.getSecAcctId();
+        return secAcctId;
     }
-    
-    @Override
-    @PrimaryKey(PrimaryKey.Field.PK_2)
-    public String getPortfolioId() {
-        return super.getPortfolioId();
+
+    public void setSecAcctId(String secAcctId) {
+        this.secAcctId = secAcctId;
     }
-    @Override
-    @PrimaryKey(PrimaryKey.Field.PK_3)
-    public String getFinProdId() {
-        return super.getFinProdId();
-    }
-    
+
     /**
      * 质押券列表信息
      */
@@ -52,14 +47,43 @@ public class CfetsEtrIbRepoLibDto extends CfetsEtrIbRepoLib001Dto implements Pro
      * 可质押券列表信息
      */
     List<CfetsEtrIbRepoLibDto> avaPledgeBondList;
+
+    /**
+     * 组合代码
+     */
+    private String portfolioId;
+
+
+    /**
+     * 分支序号
+     */
+    private Long branch;
+
+    /**
+     * 折算比例
+     */
+    private BigDecimal scale;
+
+    /**
+     * 金融产品代码
+     */
+    private String finprodId;
     
     private String tradeId;
     
     private String finProdAbbr;
     
-    private String pledgeStockId;
-    
     private String pledgeStockName;
+
+    /**
+     * 债项评级
+     */
+    private String gradeResult ;
+
+    /**
+     * 登记托管机构
+     */
+    private String registOrg ;
     
     /**
      * 取得 交易编号
@@ -77,9 +101,31 @@ public class CfetsEtrIbRepoLibDto extends CfetsEtrIbRepoLib001Dto implements Pro
         this.tradeId = tradeId == null ? null : tradeId.trim();
     }
 
-    
+    public String getPortfolioId() {
+        return portfolioId;
+    }
 
-	public String getPageModel() {
+    public void setPortfolioId(String portfolioId) {
+        this.portfolioId = portfolioId;
+    }
+
+    public Long getBranch() {
+        return branch;
+    }
+
+    public void setBranch(Long branch) {
+        this.branch = branch;
+    }
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
+    }
+
+    public String getPageModel() {
 		return pageModel;
 	}
 
@@ -143,16 +189,43 @@ public class CfetsEtrIbRepoLibDto extends CfetsEtrIbRepoLib001Dto implements Pro
         this.parentPortfolioId = parentPortfolioId;
     }
 
-	@Override
-	public void setWorkflowId(String workflowId) {
-		// TODO Auto-generated method stub
-		
-	}
+    public List<CfetsEtrIbRepoLibDto> getPledgeBondList() {
+        return pledgeBondList;
+    }
 
-	@Override
-	public void setStatus(String status) {
-		// TODO Auto-generated method stub
-		
-	}
-    
+    public BigDecimal getScale() {
+        return scale;
+    }
+
+    public void setScale(BigDecimal scale) {
+        this.scale = scale;
+    }
+
+    public void setPledgeBondList(List<CfetsEtrIbRepoLibDto> pledgeBondList) {
+        this.pledgeBondList = pledgeBondList;
+    }
+
+    public List<CfetsEtrIbRepoLibDto> getAvaPledgeBondList() {
+        return avaPledgeBondList;
+    }
+
+    public void setAvaPledgeBondList(List<CfetsEtrIbRepoLibDto> avaPledgeBondList) {
+        this.avaPledgeBondList = avaPledgeBondList;
+    }
+
+    public String getGradeResult() {
+        return gradeResult;
+    }
+
+    public void setGradeResult(String gradeResult) {
+        this.gradeResult = gradeResult;
+    }
+
+    public String getRegistOrg() {
+        return registOrg;
+    }
+
+    public void setRegistOrg(String registOrg) {
+        this.registOrg = registOrg;
+    }
 }

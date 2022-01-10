@@ -234,6 +234,9 @@
             <if test="clearLossAmt != null" >
                 CLEAR_LOSS_AMT,
             </if>
+            <if test="ouPartyId != null" >
+                OU_PARTY_ID,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="totleTradeId != null" >
@@ -358,6 +361,9 @@
             </if>
             <if test="clearLossAmt != null" >
                 #{clearLossAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ouPartyId != null" >
+                #{ouPartyId,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>

@@ -91,7 +91,6 @@ $(function() {
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-        debugger;
         var object = {
             finprodId:data.finprodId,
             secId:data.secId,
@@ -120,7 +119,6 @@ $(function() {
      * 删除
      */
     $('#ComBondMarketInfo001_btn_delete').click(function () {
-        debugger;
         if(table!=null && table!=''){
             var selArr = table.getAllCheckedRows();
         }

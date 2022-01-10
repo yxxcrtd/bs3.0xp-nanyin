@@ -42,7 +42,7 @@ module.exports = {
     proxy: {
       [process.env.VUE_APP_BASE_API]: {
         // target: `http://192.168.90.208:1666/dsp`,
-        target: `http://192.168.10.53:1667/joyinsso`,
+        target: `http://192.168.90.208:1660/joyinsso`,
         changeOrigin: true,
         ws: true,
         secure: false,

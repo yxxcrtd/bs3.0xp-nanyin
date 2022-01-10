@@ -7,11 +7,14 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper;
 import com.joyintech.tams.business.common.pojo.Message;
-import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleUpdateRequest;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortSettleinfoDto;
 import com.joyintech.tams.cfets.cfetsmanualsettle.service.CfetsManualSettleUpdateService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -27,7 +30,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +50,9 @@ public class CfetsManualSettleUpdateController extends BaseController {
 
     @Override
     public String init(Model model) {
+        this.setSelectOptionToModel(model, DictCode.交易方向, DictCode.平安资产类型,
+                DictCode.头寸业务类型);
+
         CfetsManualSettleUpdateRequest entity = null;
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         // 代办中过来
@@ -83,6 +88,10 @@ public class CfetsManualSettleUpdateController extends BaseController {
         initPageParams.put("SESSION_SYS_DATE", DateUtil.format(platformDateImpl.getSysDate()));
 
         initPageParams.put("pageId", "CfetsManualSettleUpdate");
+
+        Map<String,String> param =new HashMap<String,String>();
+        initPageParams.put("isNeedWorkflow", (Object) cfetsManualSettleUpdateService.isNeedWorkflow(param));
+
         return new Message<Map<String, Object>>(initPageParams).success();
     }
 
@@ -130,10 +139,17 @@ public class CfetsManualSettleUpdateController extends BaseController {
         WorkFlowParameter<CfetsManualSettleUpdateRequest> params = new WorkFlowParameter<CfetsManualSettleUpdateRequest>();
         params.setPageId("CfetsManualSettleUpdate");
         params.setElementId(cfetsRequest.getElementId());
-        params.setBusinessCode(cfetsRequest.getSelectedItem().getTradeId());
+        params.setBusinessCode(cfetsRequest.getTradeId());
         params.setBusinessType(DictCodeListExt3.共通业务类型_手工交收.getValue());
         processParameter.setOperationType(OperationType.NEW);
         processParameter.setWorkFlowParameter(params);
+        params.setComment((entity) -> WorkFlowUtil.concatComment(
+                getMessage("交收日期") + GlobalConstant.COLON + entity.getSettleDate(),
+                getMessage("原业务编号") + GlobalConstant.COLON + entity.getTradeId(),
+                getMessage("业务类型") + GlobalConstant.COLON + entity.getTgBusiTypeStr(),
+                getMessage("资产简称") + GlobalConstant.COLON + entity.getFinprodAbbr(),
+                getMessage("交收操作") + GlobalConstant.COLON + DictCodeListExt3.交收操作类型_交收修改.getCodeName(),
+                getMessage("交收金额") + GlobalConstant.COLON + entity.getSettleAmt()));
 
         try{
             String msg = cfetsManualSettleUpdateService.start(processParameter,cfetsRequest);

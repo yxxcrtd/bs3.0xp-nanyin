@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.batch.resaleregautodeal.service;
 
+import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.invest.batch.resaleregautodeal.dao.ResaleRegAutoDealMapper;
@@ -44,18 +45,22 @@ public class ResaleRegAutoDealService {
      * 回售登记数据自动生成成交数据
      * @param currentDate
      */
-    public void run(Date currentDate){
+    public void run(Date currentDate) throws BatchException {
         Map<String,Object> paramMap = new HashMap<String,Object>();
         paramMap.put("cdate", DateUtil.format(currentDate));
         List<String> totleTradeIds = resaleRegAutoDealMapper.listTotleTradeId(paramMap);
         if(CollectionUtils.isNotEmpty(totleTradeIds)){
             paramMap.put("totleTradeIds",totleTradeIds);
             //调用页面自动成交确认
-            if(isSingle) {
-                simpleRestTemplate.postForObject(tamsSerever + "/cfets/common/CfetsIbuQuoteBatchCommon/resaleregautodeal", paramMap, Map.class);
-            }
-            else {
-                restTemplate.postForObject(tamsSerever + "/cfets/common/CfetsIbuQuoteBatchCommon/resaleregautodeal", paramMap, Map.class);
+            try{
+                if(isSingle) {
+                    simpleRestTemplate.postForObject(tamsSerever + "/cfets/common/CfetsIbuQuoteBatchCommon/resaleregautodeal", paramMap, Map.class);
+                }
+                else {
+                    restTemplate.postForObject(tamsSerever + "/cfets/common/CfetsIbuQuoteBatchCommon/resaleregautodeal", paramMap, Map.class);
+                }
+            }catch (Exception e){
+                throw new BatchException(e.getMessage());
             }
         }
     }

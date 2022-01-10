@@ -33,6 +33,8 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.controller.EntrustCommonBaseController;
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
+import com.joyintech.system.base.dao.SysWflBusinessListMapper;
+import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
@@ -41,6 +43,7 @@ import com.joyintech.tams.cfets.etrib.bond.dto.*;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
+import com.joyintech.tams.common.base.dao.WflEtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
@@ -158,6 +161,12 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
     @Autowired
     private JoyinbusinessCommonService joyinbusinessCommonService;
 
+
+    @Autowired(required = false)
+    private WflEtrEntrustMapper wflEtrEntrustMapper;
+    @Autowired
+    private SysWflBusinessListMapper sysWflBusinessListMapper;
+
     /**
      * 判断是否含权债
      *
@@ -264,9 +273,12 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
      */
     @Override
     public String generateTitle(CfetsEtribBondInfo003Dto entity, OperationType type) {
-        return  "交易编号" + "(" + entity.getTotalEtrustId()  + ")" +"-"+
+        /*return  "交易编号" + "(" + entity.getTotalEtrustId()  + ")" +"-"+
                 "("+ SysDataUtil.getNameFromDataDict(DictCode.交易方向, entity.getPs())+")"+"-"+
-                "指令日期"+ ":" + DateUtil.format(entity.getEtrDate());
+                "指令日期"+ ":" + DateUtil.format(entity.getEtrDate());*/
+        return  "指令日期"+ ":" + DateUtil.format(entity.getEtrDate())+"-"+
+                "资产简称" + ":" + entity.getFinprodAbbr()  + "-"+
+                "券面总额"+ ":" +  ArithmeticUtil.divide(entity.getTradeAmt(),new BigDecimal(10000),2)+"万元";
     }
     /**
      *
@@ -280,10 +292,9 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
                     dto.setWorkflowId(entity.getWorkflowId());
                     doInsertFlowMethod(entity.getOperateType(), initBaseEtrInvestInfoDto(dto));
-
                 }
                 //发送头寸
-                sendPositionMethod(entity);
+                sendPositionMethod(entity,entity.getSubmitFlag());
             }
         }
         //无附件上传，删除
@@ -293,6 +304,11 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
     @Override
     public void doUpdate(CfetsEtribBondInfo003Dto entity) {
         if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
+            boolean isSubmit = true;
+            SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
+            if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
+                isSubmit = false;
+            }
             for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
                 dto.setWorkflowId(entity.getWorkflowId());
                 WFlowCommonService.deleteFlow(initBaseEtrInvestInfoDto(dto).getWorkFlowId());
@@ -300,7 +316,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             }
             //发送头寸
             entity.setSoftSkipMode("Y");
-            sendPositionMethod(entity);
+            sendPositionMethod(entity,isSubmit);
         }
     }
 
@@ -1109,7 +1125,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             }
         }
         //发送头寸
-        PositionHttpRequest.deleteMethod(entity.getTotalEtrustId(),DictCodeListExt1.子系统代码_委托.getValue());
+        PositionHttpRequest.deleteMethod(entity.getTotalEtrustId(),DictCodeListExt1.子系统代码_委托.getValue(),"Bond001");
     }
 
     @Override
@@ -1550,7 +1566,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         }
         return result;
     }
-    private  void sendPositionMethod(CfetsEtribBondInfo003Dto entity){
+    private  void sendPositionMethod(CfetsEtribBondInfo003Dto entity,boolean isSubmit){
         List<CfetsEtrIbPosPortfolioRequest> ptlList=new ArrayList<>();
         for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
             //调用头寸
@@ -1577,7 +1593,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             }
             posport.setSecAmount(dto.getEntrustNum());
             posport.setCashAmount(ArithmeticUtil.divide(ArithmeticUtil.multiply(dto.getUnitFprice(), dto.getEntrustNum()),
-                    new BigDecimal(100), 4));
+                    new BigDecimal(100), 2));
             if(!StringUtil.isEmptyList(dto.getBussCombDistribtList())){
                 posport.setInvAim(dto.getBussCombDistribtList().get(0).getBusinessModel());
             }
@@ -1606,7 +1622,12 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         req.setSettleSpeed(entity.getSettleSpeed());
         req.setBusiAct(DictCodeListExt3.业务动作_投资指令.getValue());
         req.setPs(entity.getPs());
-        req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+        if(isSubmit){
+            req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+        }else{
+            req.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+            req.setbTotalTradeId(entity.getTotalEtrustId());
+        }
         req.setCdate(entity.getEtrDate());
         req.setCcy(entity.getCcy());
         req.setFinprodId(entity.getFinprodId());

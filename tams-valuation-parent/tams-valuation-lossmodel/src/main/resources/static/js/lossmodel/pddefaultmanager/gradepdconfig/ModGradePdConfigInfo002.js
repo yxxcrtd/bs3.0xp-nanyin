@@ -67,7 +67,6 @@
         /*alert(pageModel+"================="+operateTypeTh);*/
         //编辑模式资产代码、估值日期、资产简称不可编辑
         //operateTypeTh != undefined
-        debugger;
         if (pageModel == PAGE_MODEL_EDIT ) {
             $('#vouchYear').attr("disabled", true);
             $('#gradeResult').attr("disabled", true);

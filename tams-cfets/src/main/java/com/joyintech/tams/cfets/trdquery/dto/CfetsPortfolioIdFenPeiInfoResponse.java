@@ -1,6 +1,8 @@
 package com.joyintech.tams.cfets.trdquery.dto;
 
 
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -162,7 +164,7 @@ public class CfetsPortfolioIdFenPeiInfoResponse {
     }
 
     public String getPriceModelStr() {
-        return priceModelStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.价格模式, getPriceModel());
     }
 
     public void setPriceModelStr(String priceModelStr) {
@@ -178,7 +180,7 @@ public class CfetsPortfolioIdFenPeiInfoResponse {
     }
 
     public String getBusinessModelStr() {
-        return businessModelStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.业务模式, getBusinessModel());
     }
 
     public void setBusinessModelStr(String businessModelStr) {

@@ -1,32 +1,27 @@
 package com.joyintech.tams.cfets.etrib.repo.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoLib001Mapper;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLibAvaPledgeBondResponse;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoZLCXPositionRequest;
+import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLibDto;
+import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoLibAvaPledgeBondRequest;
+import com.joyintech.tams.common.base.dao.EtrEntrustPledgeMapper;
+import com.joyintech.tams.common.base.entity.EtrEntrustPledge;
+import com.joyintech.tams.common.base.entity.EtrEntrustPledgeKey;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoLib001Mapper;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLib001Dto;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLibDto;
-import com.joyintech.tams.common.base.dao.EtrEntrustPledgeMapper;
-import com.joyintech.tams.common.base.entity.EtrEntrustPledge;
-import com.joyintech.tams.common.base.entity.EtrEntrustPledgeKey;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.workflow.engine.constant.OperationType;
-import com.joyintech.workflow.engine.service.BaseProcessService;
+import java.util.List;
+import java.util.Map;
 
 @Service
-public class CfetsIbRepoLibService extends BaseService<CfetsEtrIbRepoLibDto> implements BaseProcessService<CfetsEtrIbRepoLibDto>{
+public class CfetsIbRepoLibService {
 
 	@Autowired
 	private CfetsEtrIbRepoLib001Mapper cfetsEtrIbRepoLib001Mapper;
@@ -39,19 +34,7 @@ public class CfetsIbRepoLibService extends BaseService<CfetsEtrIbRepoLibDto> imp
      */
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
-    /**
-     * 质押券入库画面，查询可质押债券列表
-     *
-     * @return List<TrdStandardBondDto>
-     * @throws Exception 异常
-     * @see
-     * @since 1.0
-     */
-    public List<CfetsEtrIbRepoLibAvaPledgeBondResponse> selectAvaPledgeBondList(CfetsEtrRepoZLCXPositionRequest cfetsEtrRepoZLCXPositionRequest) {
-        Map<String,Object> pageParam = BeanUtil.object2Map(cfetsEtrRepoZLCXPositionRequest);
-        this.setParam(pageParam);
-        return cfetsEtrIbRepoLib001Mapper.selectAvaPledgeBondList(pageParam);
-    }
+
     /**
      * 质押券入库画面，查询已入库债券列表
      *
@@ -60,8 +43,8 @@ public class CfetsIbRepoLibService extends BaseService<CfetsEtrIbRepoLibDto> imp
      * @see
      * @since 1.0
      */
-    public List<CfetsEtrIbRepoLibAvaPledgeBondResponse> selectPledgeBondList( CfetsEtrRepoZLCXPositionRequest cfetsEtrRepoZLCXPositionRequest){
-        Map<String,Object> pageParam = BeanUtil.object2Map(cfetsEtrRepoZLCXPositionRequest);
+    public List<CfetsEtrIbRepoLibAvaPledgeBondResponse> selectPledgeBondList(  CfetsEtrRepoLibAvaPledgeBondRequest dto){
+        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         this.setParam(pageParam);
         return cfetsEtrIbRepoLib001Mapper.selectPledgeBondList(pageParam);
     }
@@ -95,23 +78,28 @@ public class CfetsIbRepoLibService extends BaseService<CfetsEtrIbRepoLibDto> imp
      * @see
      * @since 1.0
      */
-    public Long inSave(CfetsEtrIbRepoLib001Dto dto) {
+    @Transactional(rollbackFor = Exception.class)
+    public Long inSave(CfetsEtrIbRepoLibDto dto) {
         Long saveCount = 0L;
         if (!StringUtil.isEmptyList(dto.getPledgeBondList())) {
-            for (CfetsEtrIbRepoLib001Dto temp : dto.getPledgeBondList()) {
+            for (CfetsEtrIbRepoLibDto temp : dto.getPledgeBondList()) {
                 EtrEntrustPledge etrEntrustPledge = new EtrEntrustPledge();
                 etrEntrustPledge.setPortfolioId(temp.getPortfolioId());
-                etrEntrustPledge.setFinprodId(temp.getFinProdId());
+                etrEntrustPledge.setFinprodId(temp.getFinprodId());
                 etrEntrustPledge.setBranch(temp.getBranch());
                 etrEntrustPledge.setSecAcctId(temp.getSecAcctId());
                 etrEntrustPledge.setScale(temp.getScale());
+                if(!StringUtil.isNotEmpty(dto.getPledgeStockId())){
+                    dto.setPledgeStockId("999999");
+                }
                 etrEntrustPledge.setPledgeStockId(dto.getPledgeStockId());
                 
                 EtrEntrustPledgeKey etrEntrustPledgeKey = new EtrEntrustPledge();
                 etrEntrustPledgeKey.setPortfolioId(temp.getPortfolioId());
-                etrEntrustPledgeKey.setFinprodId(temp.getFinProdId());
+                etrEntrustPledgeKey.setFinprodId(temp.getFinprodId());
                 etrEntrustPledgeKey.setBranch(temp.getBranch());
                 etrEntrustPledgeKey.setSecAcctId(temp.getSecAcctId());
+                etrEntrustPledgeKey.setPledgeStockId(dto.getPledgeStockId());
                 
                 // 若存在数据，则删除后，在插入。
                 EtrEntrustPledge count = cfetsEtrIbRepoLib001Mapper.selectEtrEntrustPledge(etrEntrustPledge) ;
@@ -123,10 +111,5 @@ public class CfetsIbRepoLibService extends BaseService<CfetsEtrIbRepoLibDto> imp
         }
         return saveCount;
     }
-	@Override
-	public void doComplete(CfetsEtrIbRepoLibDto entity, OperationType type) {
-		 if (!StringUtil.isEmptyList(entity.getPledgeBondList())) {
-			 inSave(entity);
-		 }
-	}
+
 }

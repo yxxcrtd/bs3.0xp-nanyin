@@ -59,7 +59,7 @@ $(function() {
         done : function(allData, table){
         	var totalAmt = '0';
         	var actPayAmtCurSum = '0';
-        	var yesterdayPositionSum = '0';debugger;
+        	var yesterdayPositionSum = '0';
         	if (allData && allData.length > 0 && !isTodoList && $('#BondPtlFeePay002_hidden_operateType').val() === 'new'){
         		// 当前理论支付金额
         		//var payAmtCur = $('#BondPtlFeePay002_payAmt').val();

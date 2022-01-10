@@ -286,7 +286,6 @@
 		var jsonResult={};
 		 //限制型 
 		if(jqModal.find('[name="rskSupervisionIndicatorDto.indType"]').val().indexOf("LIMIT_")!=-1 ||jqModal.find('[name="rskSupervisionIndicatorDto.indType"]').val().indexOf("INNER_")!=-1){
-			debugger;
 			var comparison = $("#RskSupervisionIndicator002_comparison").val();
 			var unit = $("#RskSupervisionIndicator002_unit").val();
 			var isModel = "";

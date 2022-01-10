@@ -5,6 +5,7 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -53,6 +54,11 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
      */
     @Autowired(required = false)
     private IPlatformDate platformDateImpl;
+    /**
+     * 委托指令Mapper
+     */
+    @Autowired
+    private EtrEntrustMapper etrEntrustMapper;
 
     @Override
     public CommonResult executeEtrCashPosition(BaseTradeProductDealDto finProductTradeDto, DictCodeList 持仓类型,
@@ -288,102 +294,17 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
     @Override
     public CommonResult entrustCloseExecute(String entrustId) {
         if (StringUtil.isNotEmpty(entrustId)) {
-            EntrustCommonDto entrustCommonDto = EtrCommonCashPositionDealService.findEntrust(entrustId);
-            if (entrustCommonDto != null && entrustCommonDto.getEtrEntrust()!=null) {
-                // 处理结果
-                EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
-                // 持仓流水
-                List<EtrSecPositionFlowDto> etrSecPositionFlows = new ArrayList<>();
-                // 现金流水
-                List<EtrCashPositionFlowDto> etrCashPositionFlows = new ArrayList<>();
-                etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlows);
-                etrPositionHoldDto.setPtlSecPositionFlows(etrSecPositionFlows);
-                etrPositionHoldDto.setDealEtr(true);
-                EtrEntrust etrEntrust = entrustCommonDto.getEtrEntrust();
-                EtrEntrustAdd etrEntrustAdd = entrustCommonDto.getEtrEntrustAdd();
-                // 资产类型
-                String finprodType = etrEntrust.getFinprodType2();
-
-                Map<String, Object> vDateNato;
-                String profitType = null;
-                if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue())) {
-                    vDateNato = baseAssetCashPositionCommMapper.selectVDateNato(etrEntrust.getFinprodId());
-                    /**
-                     * 收益类型
-                     */
-                    profitType = vDateNato == null ? null : (String)vDateNato.get("PROFIT_TYPE");
-                }
-
-                if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(etrEntrust.getFinprodType2())
-                        && !(StringUtil.equals(etrEntrust.getPs(),DictCodeList.交易方向_申购.getValue())
-                        		||StringUtil.equals(etrEntrust.getPs(),DictCodeListExt1.交易方向_债转股.getValue()))) {
-                    EtrSecCashPositionDealService.deal债券EntrustClose(entrustCommonDto, etrPositionHoldDto);
-                }
-                else if (StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_存款.getValue())) {
-                    EtrDepoCashPositionDealService.deal存款EntrustClose(entrustCommonDto, etrPositionHoldDto);
-                }
-                else if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue())
-                        && DictCodeList.收益类型_收益型.getValue().equals(profitType)) {
-                    EtrPlanRateCashPositionDealService.deal计划利率型CEntrustClose(entrustCommonDto, etrPositionHoldDto);
-                }
-                else if (StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_拆入.getValue())
-                         || StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_拆出.getValue())) {
-                    EtrLendCashPositionDealService.genLendEtrCloseCashPosition(entrustCommonDto, etrPositionHoldDto);
-                }
-                else if (StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue())) {
-                    EtrProjectCashPositionDealService.deal项目类资产EntrustClose(entrustCommonDto, etrPositionHoldDto);
-                }
-                else if (StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt2.金融产品类型_投管用_一级投标债券.getValue())) {
-                    EtrSecPrimaryBiddingCashPositionDealService.deal债券一级投标EntrustEnd(entrustCommonDto, etrPositionHoldDto);
-                }
-                else if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
-                    EtrFundCashPositionDealService.deal基金EntrustClose(entrustCommonDto, etrPositionHoldDto);
-                }
-                else if (StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())
-                         || StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue())) {
-                    EtrSecLendCashPositionDealService.deal债券借贷CEntrustClose(entrustCommonDto, etrPositionHoldDto);
-                }
-                else if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue())
-                        && (DictCodeList.收益类型_净值型.getValue().equals(profitType) || DictCodeList.收益类型_货币型.getValue().equals(profitType))) {
-                    EtrNetCashPositionDealService.deal计划类EntrustClose(entrustCommonDto, etrPositionHoldDto);
-                }
-                else if (StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
-                         || StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
-                    EtrRepoCashPositionDealService.deal质押式回购EntrustClose(entrustCommonDto, etrPositionHoldDto);
-                }
-                else if (StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue())
-                         || StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue())) {
-                    EtrBuyoutCashPositionDealService.deal买断式回购EntrustClose(entrustCommonDto, etrPositionHoldDto);
-                }
-                else if (StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
-                    EtrSharesCashPositionDealService.deal股票EntrustClose(entrustCommonDto, etrPositionHoldDto);
-                }
-                else if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(etrEntrust.getFinprodType2())
-                        && (StringUtil.equals(etrEntrust.getPs(),DictCodeList.交易方向_申购.getValue())||
-                        		StringUtil.equals(etrEntrust.getPs(),DictCodeListExt1.交易方向_债转股.getValue()))) {
-                    EtrEntrust etr = entrustCommonDto.getEtrEntrust();
-                    String payType = baseAssetCashPositionCommMapper.findPayTypeByProductId(etr.getChlId());
-                    EtrConBondCashPositionDealService.deal可转债EntrustClose(entrustCommonDto, etrPositionHoldDto,payType);
-                }
-                // add by etliu 20210421 权益类资产相关代码合并 start
-                //权益类资产
-                else if(DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(finprodType)){
-                    EtrNetCashPositionDealService.deal计划类EntrustClose(entrustCommonDto, etrPositionHoldDto);
-                }
-                // add by etliu 20210421 权益类资产相关代码合并 end
-                // 委托撤回或拒绝时，当前平台日处理实时持仓
-                //协议是回购处理头寸  走配置化头寸共通
-                for(EtrCashPositionFlowDto flowDto:etrPositionHoldDto.getPtlCashPositionFlows()){
-                    if(StringUtil.isEmpty(flowDto.getAcctId())){
-                        System.out.println("AccId IS NULL");
-                    }
-                }
-                if(!StringUtil.equals(etrEntrustAdd.getAssetType1(), DictCodeList.回购类型_质押式协议回购.getValue())){
-                    etrPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(platformDateImpl.getSysDate()));
-                    etrPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(platformDateImpl.getSysDate()));
-                    EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
-                }
+            EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
+            if(StringUtil.equals(DictCodeListExt3.投资指令类型_单组合单资产指令.getValue(),etrEntrust.getEntrustClass())) {
+                EntrustCommonDto entrustCommonDto = EtrCommonCashPositionDealService.findEntrust(entrustId);
+                entrustCloseExecuteSinglePortfolio(entrustCommonDto);
+            }else{
+                List<EntrustCommonDto> entrustCommonDtoList = EtrCommonCashPositionDealService.findEntrustMulti(entrustId);
+                entrustCommonDtoList.stream().forEach(entrustCommonDto->{
+                    entrustCloseExecuteSinglePortfolio(entrustCommonDto);
+                });
             }
+
         }
         return new CommonResult(CommonResult.SUCCED, "处理完成");
     }
@@ -549,4 +470,104 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
         EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
         return new CommonResult(CommonResult.SUCCED, "处理完成");
     }
+
+    //单组合关闭指令头寸处理
+    public void entrustCloseExecuteSinglePortfolio(EntrustCommonDto entrustCommonDto) {
+        if (entrustCommonDto != null && entrustCommonDto.getEtrEntrust()!=null) {
+            // 处理结果
+            EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+            // 持仓流水
+            List<EtrSecPositionFlowDto> etrSecPositionFlows = new ArrayList<>();
+            // 现金流水
+            List<EtrCashPositionFlowDto> etrCashPositionFlows = new ArrayList<>();
+            etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlows);
+            etrPositionHoldDto.setPtlSecPositionFlows(etrSecPositionFlows);
+            etrPositionHoldDto.setDealEtr(true);
+            EtrEntrust etrEntrust = entrustCommonDto.getEtrEntrust();
+            EtrEntrustAdd etrEntrustAdd = entrustCommonDto.getEtrEntrustAdd();
+            // 资产类型
+            String finprodType = etrEntrust.getFinprodType2();
+
+            Map<String, Object> vDateNato;
+            String profitType = null;
+            if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue())) {
+                vDateNato = baseAssetCashPositionCommMapper.selectVDateNato(etrEntrust.getFinprodId());
+                /**
+                 * 收益类型
+                 */
+                profitType = vDateNato == null ? null : (String)vDateNato.get("PROFIT_TYPE");
+            }
+
+            if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(etrEntrust.getFinprodType2())
+                    && !(StringUtil.equals(etrEntrust.getPs(),DictCodeList.交易方向_申购.getValue())
+                    ||StringUtil.equals(etrEntrust.getPs(),DictCodeListExt1.交易方向_债转股.getValue()))) {
+                EtrSecCashPositionDealService.deal债券EntrustClose(entrustCommonDto, etrPositionHoldDto);
+            }
+            else if (StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_存款.getValue())) {
+                EtrDepoCashPositionDealService.deal存款EntrustClose(entrustCommonDto, etrPositionHoldDto);
+            }
+            else if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue())
+                    && DictCodeList.收益类型_收益型.getValue().equals(profitType)) {
+                EtrPlanRateCashPositionDealService.deal计划利率型CEntrustClose(entrustCommonDto, etrPositionHoldDto);
+            }
+            else if (StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_拆入.getValue())
+                    || StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_拆出.getValue())) {
+                EtrLendCashPositionDealService.genLendEtrCloseCashPosition(entrustCommonDto, etrPositionHoldDto);
+            }
+            else if (StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue())) {
+                EtrProjectCashPositionDealService.deal项目类资产EntrustClose(entrustCommonDto, etrPositionHoldDto);
+            }
+            else if (StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt2.金融产品类型_投管用_一级投标债券.getValue())) {
+                EtrSecPrimaryBiddingCashPositionDealService.deal债券一级投标EntrustEnd(entrustCommonDto, etrPositionHoldDto);
+            }
+            else if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
+                EtrFundCashPositionDealService.deal基金EntrustClose(entrustCommonDto, etrPositionHoldDto);
+            }
+            else if (StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())
+                    || StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue())) {
+                EtrSecLendCashPositionDealService.deal债券借贷CEntrustClose(entrustCommonDto, etrPositionHoldDto);
+            }
+            else if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue())
+                    && (DictCodeList.收益类型_净值型.getValue().equals(profitType) || DictCodeList.收益类型_货币型.getValue().equals(profitType))) {
+                EtrNetCashPositionDealService.deal计划类EntrustClose(entrustCommonDto, etrPositionHoldDto);
+            }
+            else if (StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
+                    || StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
+                EtrRepoCashPositionDealService.deal质押式回购EntrustClose(entrustCommonDto, etrPositionHoldDto);
+            }
+            else if (StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue())
+                    || StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue())) {
+                EtrBuyoutCashPositionDealService.deal买断式回购EntrustClose(entrustCommonDto, etrPositionHoldDto);
+            }
+            else if (StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
+                EtrSharesCashPositionDealService.deal股票EntrustClose(entrustCommonDto, etrPositionHoldDto);
+            }
+            else if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(etrEntrust.getFinprodType2())
+                    && (StringUtil.equals(etrEntrust.getPs(),DictCodeList.交易方向_申购.getValue())||
+                    StringUtil.equals(etrEntrust.getPs(),DictCodeListExt1.交易方向_债转股.getValue()))) {
+                EtrEntrust etr = entrustCommonDto.getEtrEntrust();
+                String payType = baseAssetCashPositionCommMapper.findPayTypeByProductId(etr.getChlId());
+                EtrConBondCashPositionDealService.deal可转债EntrustClose(entrustCommonDto, etrPositionHoldDto,payType);
+            }
+            // add by etliu 20210421 权益类资产相关代码合并 start
+            //权益类资产
+            else if(DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(finprodType)){
+                EtrNetCashPositionDealService.deal计划类EntrustClose(entrustCommonDto, etrPositionHoldDto);
+            }
+            // add by etliu 20210421 权益类资产相关代码合并 end
+            // 委托撤回或拒绝时，当前平台日处理实时持仓
+            //协议是回购处理头寸  走配置化头寸共通
+            for(EtrCashPositionFlowDto flowDto:etrPositionHoldDto.getPtlCashPositionFlows()){
+                if(StringUtil.isEmpty(flowDto.getAcctId())){
+                    System.out.println("AccId IS NULL");
+                }
+            }
+            if(!StringUtil.equals(etrEntrustAdd.getAssetType1(), DictCodeList.回购类型_质押式协议回购.getValue())){
+                etrPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(platformDateImpl.getSysDate()));
+                etrPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(platformDateImpl.getSysDate()));
+                EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+            }
+        }
+    }
+
 }

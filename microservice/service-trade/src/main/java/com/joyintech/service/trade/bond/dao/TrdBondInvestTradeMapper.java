@@ -317,4 +317,6 @@ public interface TrdBondInvestTradeMapper {
      * @return
      */
     List<TrdBondInvestTradePdfDto> selectExportPdf(Map<String, Object> param);
+
+    BigDecimal getResidualFace(Map<String,Object> param);
 }

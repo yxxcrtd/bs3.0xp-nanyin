@@ -9,18 +9,7 @@
  */
  
 package com.joyintech.tams.invest.basicdata.msttradeopponent.service;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.joyintech.tams.common.base.dao.MstFeeinfoMapper;
-import com.joyintech.tams.common.base.entity.MstFeeinfo;
-import com.joyintech.tams.common.base.entity.StlCapacctInfo;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -29,15 +18,23 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.common.base.dao.MstFeeinfoMapper;
+import com.joyintech.tams.common.base.entity.MstFeeinfo;
+import com.joyintech.tams.common.base.entity.StlCapacctInfo;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
-import com.joyintech.tams.invest.basicdata.msttradeopponent.dto.MstTradeOpponentDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.basicdata.msttradeopponent.dto.MstTradeOpponentDto;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 交易对手管理Service
@@ -139,7 +136,7 @@ public class MstTradeOpponent001Service extends CommonExportService<MstTradeOppo
     
     /**
      * 获取市場機構
-     * @param param 请求参数
+     * @param map 请求参数
      * @return 市場機構下拉框集合
      * @see
      * @since 1.0
@@ -307,7 +304,7 @@ public class MstTradeOpponent001Service extends CommonExportService<MstTradeOppo
     
     /**
      * 验证交易对手关联代码是否唯一
-     * @param linkId 账号名称
+     * @param counterName 账号名称
      * @return 数量
      * @see
      * @since 1.0
@@ -377,5 +374,16 @@ public class MstTradeOpponent001Service extends CommonExportService<MstTradeOppo
         return restTemplate.postForObject(
                 ServiceApplication.BASICDATA_SERVICE_NAME + "/MstTradeOpponent/selectFHCounter",
                 counterId,Integer.class);
+    }
+
+
+    /**
+     * 获取银行间机构21位码
+     * @param param
+     * @return
+     */
+    public List<SuggestDto> selectPartyId(Map<String, Object> param) {
+        return restTemplate.postForList(
+                ServiceApplication.BASICDATA_SERVICE_NAME + "/MstTradeOpponent/selectPartyId", param, SuggestDto.class);
     }
 }

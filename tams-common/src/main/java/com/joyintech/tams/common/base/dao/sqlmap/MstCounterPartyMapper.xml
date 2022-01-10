@@ -115,6 +115,9 @@
             <if test="pTypeTwo != null" >
                 P_TYPE_TWO,
             </if>
+            <if test="partyId != null" >
+                PARTY_ID,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="counterId != null" >
@@ -167,6 +170,9 @@
             </if>
             <if test="pTypeTwo != null" >
                 #{pTypeTwo,jdbcType=VARCHAR},
+            </if>
+            <if test="partyId != null" >
+                #{partyId,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
