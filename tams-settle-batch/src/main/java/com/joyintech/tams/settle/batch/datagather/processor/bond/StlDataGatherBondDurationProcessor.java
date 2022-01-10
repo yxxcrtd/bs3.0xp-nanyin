@@ -5,6 +5,8 @@ import com.joyintech.batch.batchbase.baseclass.BaseProcessor;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.batch.util.JoyinCollectors;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -56,6 +58,8 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
             List<SettleTransTgMapping>  settleTransTgMappingList = new ArrayList<>();
             //划款指令
             List<StlPayOrders> stlPayOrdersList = new ArrayList<>();
+            //金融产品交易汇总表
+            List<TotalTrdProductDealDto> totalProductDealList = new ArrayList<>();
             //金融产品交易明细
             List<TrdProductDealDto> productDealList = new ArrayList<>();
             //金融产品汇总附属交易
@@ -195,6 +199,8 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                         }
                     }
                 }else{
+                    TotalTrdProductDealDto totalTrdProductDeal = new TotalTrdProductDealDto();
+                    String totalTradeId = IDGenerator.generate();
                     // 构造 金融产品交易明细
                     List<SettleTransDataDto> settleTransDataList = SettleTransDataMap.get(settleTransData.getSecType()+","
                             + settleTransData.getPs()+","+settleTransData.getSecAcctId()+","+settleTransData.getSeatNumber());
@@ -226,10 +232,19 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                     trdProductDeal.setbTradeId(settleTransData.getTradeId2());
                     // 关联系统交易编号
                     trdProductDeal.setfTradeId(settleTransData.getTradeId());
+                    // 汇总交易编号
+                    trdProductDeal.setTotleTradeId(totalTradeId);
                     // 投管业务类型
                     trdProductDeal.setTgBusiType(DictCodeListExt1.平安业务类型_债券类资产买入.getValue());
                     // 成交明细.委托代码
                     trdProductDeal.setEntrustId(settleTransData.getEntrustId());
+                    // GZYHTZJY-1043: 生成可转债申购确认汇总交易 modify by fuyongsheng 20220110 start
+                    // 构造金融交易汇总表数据
+                    BeanUtil.copyProperties(totalTrdProductDeal, trdProductDeal);
+                    // 汇总交易编号
+                    totalTrdProductDeal.setTotleTradeId(totalTradeId);
+                    totalProductDealList.add(totalTrdProductDeal);
+                    // GZYHTZJY-1043: 生成可转债申购确认汇总交易 modify by fuyongsheng 20220110 end
                     //构造 金融产品交易明细附属
                     TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
                     trdProductDealAdd.setTradeId(trdProductDeal.getTradeId());
@@ -240,7 +255,7 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                     //构造 成交数据与投管交易关系
                     SettleTransTgMapping settleTransTgMapping = new SettleTransTgMapping();
                     settleTransTgMapping.setTradeId(settleTransData.getTradeId());
-                    settleTransTgMapping.setTradeIdTg(trdProductDeal.getTradeId());
+                    settleTransTgMapping.setTradeIdTg(totalTradeId);
                     settleTransTgMapping.setTgDataStatus("02");
                     settleTransTgMapping.setDealDate(settleTransData.getDealDate());
                     settleTransTgMappingList.add(settleTransTgMapping);
@@ -250,6 +265,7 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
             investTradeWriteDto.setPtlTradeList(ptlTradeList);
             investTradeWriteDto.setStlPayOrdersList(stlPayOrdersList);
             investTradeWriteDto.setProductDealList(productDealList);
+            investTradeWriteDto.setFinProductDealTotalList(totalProductDealList);
             investTradeWriteDto.setTrdProductDealAddList(trdProductDealAddList);
             // ZGZGST-4219: 对SettleTransTgMappingList赋值,解决撤销问题 fuyongsheng 20211217 add start
             investTradeWriteDto.setSettleTransTgMappingList(settleTransTgMappingList);
