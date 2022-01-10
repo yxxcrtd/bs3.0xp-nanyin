@@ -5413,7 +5413,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		BeanUtil.copyPropertiesIgnoreNull(d,dto);
 		List<Map> bussTrdTransfenpeiDto=new ArrayList<>();
 		for(EtrExchangeTradeSaveRequest pt:dto.getPortfolioList()){
-			bussTrdTransfenpeiDto.add(BeanUtil.object2Map(pt));
+			Map<String, Object> map = BeanUtil.object2Map(pt);
+			map.entrySet().removeIf(item->!StringUtil.isNotEmpty(item.getValue()));
+			bussTrdTransfenpeiDto.add(map);
 		}
 		d.setBussTrdTransfenpeiDto(bussTrdTransfenpeiDto);
 		d.setBusiType("02");
