@@ -832,7 +832,7 @@ WHERE
             NULL TRADE_ID,
             SEC_ACCT_ID,
             NULL SETTLEMEN_TYPE,
-            PRICE,
+            NUll PRICE,
             NULL UNIT,
             NULL FULL_PRICE,
             NULL HGDQR,
@@ -1036,8 +1036,9 @@ WHERE
             MARKET_ID,
             FINPROD_ID,
             FINPROD_TYPE,
-            SEC_ACCT_ID,
-            PRICE
+            SEC_ACCT_ID
+            <!--到期续作对账单有两笔,一笔到期,一笔新开,两个price不一致-->
+            <!--PRICE-->
         UNION ALL
         <!--金证直接按照明细接入-->
         SELECT
