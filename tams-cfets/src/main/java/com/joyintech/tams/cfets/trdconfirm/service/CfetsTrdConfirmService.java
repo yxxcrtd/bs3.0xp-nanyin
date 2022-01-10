@@ -209,7 +209,7 @@ public class CfetsTrdConfirmService extends BaseService{
         }
         pageParam.put("sysDate",iPlatformDate.getSysDate());
         Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(DateUtil.parse(DateUtil.getSysDate()));
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
         pageParam.put("sort",dto.getPageMode().getSort());
@@ -2423,7 +2423,7 @@ public class CfetsTrdConfirmService extends BaseService{
         }
         pageParam.put("sysDate",iPlatformDate.getSysDate());
         Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(DateUtil.parse(DateUtil.getSysDate()));
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
         pageParam.put("sort",dto.getPageMode().getSort());
@@ -2777,7 +2777,7 @@ public class CfetsTrdConfirmService extends BaseService{
         }
         pageParam.put("sysDate",iPlatformDate.getSysDate());
         Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(DateUtil.parse(DateUtil.getSysDate()));
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
         pageParam.put("sort",dto.getPageMode().getSort());

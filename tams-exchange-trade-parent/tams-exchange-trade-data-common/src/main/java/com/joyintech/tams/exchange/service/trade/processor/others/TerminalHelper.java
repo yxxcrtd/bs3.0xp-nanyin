@@ -275,24 +275,24 @@ public class TerminalHelper {
         if (pageSize > 1000) {
             integratedBulkQuoteQryBean.setPageSize(1000);
         }
+
+        List<IntegratedBulkQuoteBean> list = new ArrayList<>();
         TradeAgent tradeAgent = getAgent(integratedBulkQuoteQryBean.getAccountId());
         if (Objects.nonNull(tradeAgent)) {
             try {
                 List<IntegratedBulkQuoteBean> quoteBeanList = tradeAgent.reqIntegratedBulkQuote(integratedBulkQuoteQryBean);
-                if (Objects.isNull(quoteBeanList) || quoteBeanList.size() == 0) {
-                    return new ArrayList<>();
+                if (Objects.nonNull(quoteBeanList) && quoteBeanList.size() > 0) {
+                    quoteBeanList.forEach(quoteBean -> {
+                        Instrument instrument = instrumentService.findById(quoteBean.getStockCode());
+                        if (Objects.nonNull(instrument)) {
+                            quoteBean.setStockName(instrument.getStockName());
+                            quoteBean.setAssetType(instrument.getAssetType());
+                        } else {
+                            logger.info("未找到匹配的合约代码信息！！ {}", quoteBean.getStockCode());
+                        }
+                    });
+                    list.addAll(quoteBeanList);
                 }
-                quoteBeanList.forEach(quoteBean -> {
-                    Instrument instrument = instrumentService.findById(quoteBean.getStockCode());
-                    if (Objects.nonNull(instrument)) {
-                        quoteBean.setStockName(instrument.getStockName());
-                        quoteBean.setAssetType(instrument.getAssetType());
-                    } else {
-                        logger.info("未找到匹配的合约代码信息！！ {}", quoteBean.getStockCode());
-                    }
-                });
-
-                return quoteBeanList;
             } catch (Exception e) {
                 logger.error("reqIntegratedBulkQuote error {}", "\r\n" + e);
             }
@@ -306,23 +306,23 @@ public class TerminalHelper {
             integratedBulkCloseQuoteQryBean.setPageSize(1000);
         }
 
+        List<IntegratedBulkCloseQuoteBean> list = new ArrayList<>();
         TradeAgent tradeAgent = getAgent(integratedBulkCloseQuoteQryBean.getAccountId());
         if (Objects.nonNull(tradeAgent)) {
             try {
                 List<IntegratedBulkCloseQuoteBean> beanList = tradeAgent.reqIntegratedBulkCloseQuote(integratedBulkCloseQuoteQryBean);
-                if (Objects.isNull(beanList) || beanList.size() == 0) {
-                    return new ArrayList<>();
+                if (Objects.nonNull(beanList) && beanList.size() > 0) {
+                    beanList.forEach(quoteBean -> {
+                        Instrument instrument = instrumentService.findById(quoteBean.getStockCode());
+                        if (Objects.nonNull(instrument)) {
+                            quoteBean.setStockName(instrument.getStockName());
+                            quoteBean.setAssetType(instrument.getAssetType());
+                        } else {
+                            logger.info("未找到匹配的合约代码信息！！ {}", quoteBean.getStockCode());
+                        }
+                    });
+                    list.addAll(beanList);
                 }
-                beanList.forEach(quoteBean -> {
-                    Instrument instrument = instrumentService.findById(quoteBean.getStockCode());
-                    if (Objects.nonNull(instrument)) {
-                        quoteBean.setStockName(instrument.getStockName());
-                        quoteBean.setAssetType(instrument.getAssetType());
-                    } else {
-                        logger.info("未找到匹配的合约代码信息！！ {}", quoteBean.getStockCode());
-                    }
-                });
-                return beanList;
             } catch (Exception e) {
                 logger.error("reqIntegratedBulkCloseQuote error {}", "\r\n" + e);
             }
@@ -347,16 +347,21 @@ public class TerminalHelper {
     }
 
     public List<IntegratedRepurchaseQuoteBean> sendIntegratedRepurchaseQuote(int actionIn, String entrustProp, String accountId, int pageSize) {
+
+        List<IntegratedRepurchaseQuoteBean> list = new ArrayList<>();
         TradeAgent tradeAgent = getAgent(accountId);
-        IntegratedRepurchaseQuoteQryBean integratedRepurchaseQuoteQryBean = new IntegratedRepurchaseQuoteQryBean(actionIn, entrustProp, accountId, pageSize);
         if (Objects.nonNull(tradeAgent)) {
             try {
-                return tradeAgent.reqIntegratedRepurchaseQuote(integratedRepurchaseQuoteQryBean);
+                IntegratedRepurchaseQuoteQryBean integratedRepurchaseQuoteQryBean = new IntegratedRepurchaseQuoteQryBean(actionIn, entrustProp, accountId, pageSize);
+                List<IntegratedRepurchaseQuoteBean> beanList = tradeAgent.reqIntegratedRepurchaseQuote(integratedRepurchaseQuoteQryBean);
+                if (Objects.nonNull(beanList) && beanList.size() > 0) {
+                    list.addAll(beanList);
+                }
             } catch (Exception e) {
                 logger.error("reqIntegratedRepurchaseQuote error {}", "\r\n" + e);
             }
         }
-        return new ArrayList<>();
+        return list;
     }
 
     public List<IntegratedFixedIncomeQuoteBean> queryIntegratedFixedIncomeQuote(IntegratedFixedIncomeQuoteQryBean integratedFixedIncomeQuoteQryBean) {
@@ -365,15 +370,19 @@ public class TerminalHelper {
             integratedFixedIncomeQuoteQryBean.setPageSize(1000);
         }
 
+        List<IntegratedFixedIncomeQuoteBean> list = new ArrayList<>();
         TradeAgent tradeAgent = getAgent(integratedFixedIncomeQuoteQryBean.getAccountId());
         if (Objects.nonNull(tradeAgent)) {
             try {
-                return tradeAgent.reqIntegratedFixedIncomeQuote(integratedFixedIncomeQuoteQryBean);
+                List<IntegratedFixedIncomeQuoteBean> beanList = tradeAgent.reqIntegratedFixedIncomeQuote(integratedFixedIncomeQuoteQryBean);
+                if (Objects.nonNull(beanList) && beanList.size() > 0) {
+                    list.addAll(beanList);
+                }
             } catch (Exception e) {
                 logger.error("reqIntegratedFixedIncomeQuote error {}", "\r\n" + e);
             }
         }
-        return new ArrayList<>();
+        return list;
     }
 
     public List<FuturesInstrument> queryFuturesInstrument(String stockCode, String exchangeId, String accountId) {

@@ -890,7 +890,8 @@
         on nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_customer_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON I.Counterinstitutioncode= mccic.party_customer_id
-        where I.BUSINESSTYPE in ('BOND','REPO')
+        where I.BUSINESSTYPE in ('BOND','REPO') and   nvl(ts.dealdate,tr.dealdate)= #{sysDate,jdbcType=DATE}
+        AND NOT EXISTS (SELECT 1 FROM trdquto_match_info match where I.EXECID=match.exe_id)
         <if test="regAssetType != null  and regAssetType!=''">
             AND I.BUSINESSTYPE = #{regAssetType}
         </if>

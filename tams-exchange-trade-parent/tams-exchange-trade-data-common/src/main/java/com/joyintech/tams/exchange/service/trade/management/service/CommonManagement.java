@@ -1,11 +1,14 @@
 package com.joyintech.tams.exchange.service.trade.management.service;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.google.common.base.Strings;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.security.User;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -15,6 +18,7 @@ import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.SysParamBean;
 import com.joyintech.tams.exchange.common.bean.investment.PtlAuthInfo;
 import com.joyintech.tams.exchange.common.bean.investment.TradeTimeBean;
+import com.joyintech.tams.exchange.common.bean.response.ExchangeContextResponse;
 import com.joyintech.tams.exchange.common.cache.TradeTimeService;
 import com.joyintech.tams.exchange.common.cache.config.DataServiceConfig;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
@@ -163,6 +167,51 @@ public class CommonManagement extends BaseService {
 
     public String queryFairTradeParam() {
         return CacheUtil.getSysParam(ExchangeConstant.FAIR_CODE_IN_PARA);
+    }
+
+    public ExchangeContextResponse queryExchangeContext() {
+        ExchangeContextResponse response = new ExchangeContextResponse();
+
+        User user = SecurityUtil.getLoginUser();
+        response.setUserId(Objects.isNull(user) ? "lh1" : user.getUserName());
+        response.setUserName(Objects.isNull(user) ? "lh1" : user.getRealName());
+
+        response.setPlatDate(DateUtil.platDateFromCache());
+        response.setShTradingDay(checkTradeDate("3",DateUtil.getSysDate()));
+        response.setSzTradingDay(checkTradeDate("4",DateUtil.getSysDate()));
+
+        response.setFairMode(CacheUtil.getSysParam(ExchangeConstant.FAIR_CODE_IN_PARA));
+        response.setFairModeWithUnacceptInstruction(CacheUtil.getSysParam(ExchangeConstant.FAIR_MODE_WITH_UNACCEPT_INSTRUCTION_IN_PARA));
+        response.setFairModeEntrustPriceBestThanInstruction(CacheUtil.getSysParam(ExchangeConstant.FAIR_MODE_ENTRUST_PRICE_BEST_THAN_INSTRUCTION_IN_PARA));
+        response.setTradeTimeSwitch(CacheUtil.getSysParam(ExchangeConstant.ETR_TRADE_TIME_SWITCH));
+
+        return response;
+    }
+
+    /**
+     * 查询输入日期是否交易日
+     *
+     * @param tradeCalendarType 交易日历类型  3-上交所; 4-深交所
+     * @param CDATE 日期 格式：yyyyMMdd，如20200512
+     * @return 是否交易日 0-是；1-否
+     */
+    public String checkTradeDate(String tradeCalendarType, String CDATE) {
+        try {
+            String url = ServiceApplication.BASIC_DATA_SERVICE + TradeServiceURL.checkTradeDate;
+            String result = "";
+            Map<String, Object> pageParam = new HashMap<>();
+            pageParam.put("tradeCalendarType", tradeCalendarType);
+            pageParam.put("CDATE", CDATE);
+            if (isSingle) {
+                result = simpleRestTemplate.postForObject(url, pageParam, String.class);
+            } else {
+                result = restTemplate.postForObject(url, pageParam, String.class);
+            }
+            return JSON.parseObject(result).getString("tradeDayFlag");
+        } catch (Exception e) {
+            logger.error("取交易日调用投管接口出错");
+            return StrUtil.EMPTY;
+        }
     }
 
     public List<SysParaSet001Dto> querySysPara(Map<String, Object> pageParam) {

@@ -104,6 +104,16 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
      */
     public void execute(Date batchDate, List<String> productIdList) {
 
+        Map<String, Object> paramMap1 = new HashMap<String, Object>();
+        paramMap1.put("busiType", DictCodeList.共通业务类型_债券类资产存续期.getValue());
+        paramMap1.put("finProdType2", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        paramMap1.put("updateUser", "system");
+        paramMap1.put("batchDate", batchDate);
+        //paramMap1.put("settleStatus", DictCodeListExt3.交收状态_未交收.getValue());
+        List<String> totalTradeIds = cfetsBondAutoDurDealGenerateMapper.selectTrdFinProductDealTotalData(paramMap1);
+        for(String totalTradeId : totalTradeIds){
+            PositionHttpRequest.sendRevoke(totalTradeId,DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+        }
         //删除当日数据
         autoPeriodCommonService.deleteActData(DictCodeList.共通业务类型_债券类资产存续期.getValue(),
                 DictCodeListExt1.金融产品类型_投管用_债券.getValue(),batchDate);

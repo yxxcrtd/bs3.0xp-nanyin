@@ -1399,7 +1399,7 @@ public class IbuQuoteRepoService extends BaseService {
             //银行间质押式回购质押券模式：01无质押券库，02单个质押库，03多个质押券库
             param.put("repo_pledge_model", CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL));
         } else {
-            param.put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+            param.put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue());
             param.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
             param.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
             param.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
@@ -1407,7 +1407,7 @@ public class IbuQuoteRepoService extends BaseService {
             param.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
             param.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
             param.put("loginUserId", loginUserId);
-            param.put("plateDate", iPlatformDate.getSysDateStr());
+            param.put("platDate", iPlatformDate.getSysDateStr());
             //银行间质押式回购质押券模式：01无质押券库，02单个质押库，03多个质押券库
             param.put("repo_pledge_model", CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL));
         }

@@ -631,4 +631,14 @@
         AND R.FINPROD_ID = #{finprodId}
     </select>
 
+    <select id="selectTrdFinProductDealTotalData" resultType="java.lang.String">
+        select tfpft.totle_trade_id from TRD_FIN_PRODUCT_DEAL_TOTAL tfpft
+        where tfpft.trade_date =#{batchDate}
+        and tfpft.BUSI_TYPE = #{busiType}
+        and tfpft.update_user = #{updateUser}
+        <if test="finProdType2 != null and finProdType2 != ''">
+            and tfpft.FINPROD_TYPE2 = #{finProdType2}
+        </if>
+    </select>
+
 </mapper>

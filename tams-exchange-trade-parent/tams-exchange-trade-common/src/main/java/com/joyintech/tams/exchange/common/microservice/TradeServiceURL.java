@@ -144,6 +144,7 @@ public class TradeServiceURL {
     public static String addCounterTrader = "/InterfSysTrdConfig/insertCounterTraderId";//新增交易对手交易员
 
     public static String queryTradeDate = "/MstMarketCalendarInfo/queryTradeDate"; //取交易日
+    public static String checkTradeDate = "/MstMarketCalendarInfo/queryIsTradeDate"; //查询输入日期是否交易日
     public static String queryTradeTime = "/InterfSysTrdConfig/getTrdTimeConfig"; //取交易时间
 
     public static String selectStockInfo = "/InterfSysTrdConfig/selectStockInfo";//从投管获取合约基础数据
