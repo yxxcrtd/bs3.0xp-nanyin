@@ -49,6 +49,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -440,5 +441,20 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
         return new Message<AjaxResult>().success().setData(m);
     }
 
+    @RequestMapping("/queryMySideListOfPage")
+    @ResponseBody
+    public List<SelectOptionDto> queryMySideListOfPage( HttpServletRequest request){
+        try {
+            Map<String,Object> map = new HashMap<>();
+            map.put("dealType",request.getParameter("dealType"));
+            map.put("initValue",request.getParameter("initValue"));
+            List<SelectOptionDto> list = cfetsEtrIbRepoinfoService.queryMySideList(map);
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("查询功能异常", e);
+            return null;
+        }
+    }
 
 }

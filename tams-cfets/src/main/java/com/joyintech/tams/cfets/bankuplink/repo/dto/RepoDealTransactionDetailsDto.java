@@ -15,7 +15,7 @@ import java.util.Date;
  * @date 2021/12/14
  */
 @ApiModel(value = "交易执行明细", description = "交易执行明细")
-public class DealTransactionDetailsDto {
+public class RepoDealTransactionDetailsDto {
 
     @ApiModelProperty(name = "validStatus", value = "有效状态")
     private String validStatus;

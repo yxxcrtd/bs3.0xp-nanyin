@@ -381,10 +381,11 @@
         from ibu_quote_crep ic
         left join (
         select I.quote_id,
-        wm_concat(i.pledge_finprod_id) as pledgeFinprodId,wm_concat(i.pledge_ratio) pledgeRatio,
-        wm_concat(i.pledge_face_value) pledgeFaceValue
-        from (select * from ibu_quote_crep_pledge order by pledge_finprod_id) I
-        group by  I.quote_id
+        listagg(I.pledge_finprod_id, ',') within group(order by I.pledge_finprod_id) as pledgeFinprodId,
+        listagg(to_char(i.pledge_ratio,'FM99990.999999'), ',') within group(order by I.pledge_finprod_id) as pledgeRatio,
+        listagg(I.pledge_face_value, ',') within group(order by I.pledge_finprod_id) as pledgeFaceValue
+        from ibu_quote_crep_pledge I
+        group by I.quote_id
         )icpledge
         on  ic.quote_id=icpledge.quote_id
         left join(
@@ -805,7 +806,9 @@
         reg.remark as remark,
         reg.deal_fee_amt as trdFeeAmt,
         reg.sett_fee_amt as settleFeeAmt,
-        reg.cprice_amt as tradeAmt
+        reg.cprice_amt as tradeAmt,
+        reg.OUR_SHARE_AMT as ourShareAmt,
+        reg.LENDIN_SHARE_AMT as lendinShareAmt
         from IBU_QUOTE_ETR_RE  reg
         where reg.quote_id= #{totleTradeId,jdbcType=VARCHAR}
     </select>

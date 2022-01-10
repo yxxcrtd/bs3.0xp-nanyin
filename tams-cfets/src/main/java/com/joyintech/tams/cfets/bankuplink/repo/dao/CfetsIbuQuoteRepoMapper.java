@@ -121,7 +121,7 @@ public interface CfetsIbuQuoteRepoMapper {
      * @author jiangpeng
      * @date 2021/12/14 15:31
      */
-    List<DealTransactionDetailsDto> listDealTransactionDetails(Map<String, Object> param);
+    List<RepoDealTransactionDetailsDto> listDealTransactionDetails(Map<String, Object> param);
 
     /**
      * 查询质押券信息

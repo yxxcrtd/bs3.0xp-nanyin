@@ -3,9 +3,9 @@ delete from sys_page where PAGE_ID ='FieldEtrInfoQuery';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('FieldEtrInfoQuery', 'ETR', 'home.html#/instructions/instructionsearch?a=a', 'exchange/entrust/fieldetrinfoquerymain/fieldetrinfoquery/FieldEtrInfoQuery', 'SH_DEAL_MANAGEMENT_001_001_099', '', '', '02', '01', '指令查询', 'system', '', sysdate, 'system', sysdate);
 
-delete from sys_menu where MENU_ID ='SETTLE_MANAGEMENT_001_003_010';
+delete from sys_menu where MENU_ID ='SH_DEAL_MANAGEMENT_001_001_099';
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SH_DEAL_MANAGEMENT_001_001_099', 'ETR', '', 'SH_DEAL_MANAGEMENT_001_001', 'FieldEtrInfoQuery', 10, '02', '指令查询', 'system', '', sysdate, 'system', sysdate);
+values ('SH_DEAL_MANAGEMENT_001_001_099', 'ETR', '', 'SH_DEAL_MANAGEMENT_001_001', 'FieldEtrInfoQuery', 99, '02', '指令查询', 'system', '', sysdate, 'system', sysdate);
 
 
 --银行间指令查询配置脚本

@@ -1837,6 +1837,20 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     res.setErrorList(Arrays.asList(validMessage));
                     return res;
                 }
+                if(StringUtil.isNotEmpty(Item.getEntrustId()))
+                {
+                    WflEtrEntrustKey wflEtrEntrustKey = new WflEtrEntrustKey();
+                    wflEtrEntrustKey.setEntrustId(Item.getEntrustId());
+                    wflEtrEntrustKey.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                    WflEtrEntrust wflEtrEntrust = wflEtrEntrustMapper.selectByPrimaryKey(wflEtrEntrustKey);
+                    if(wflEtrEntrust!=null){
+                        AjaxResult res=new AjaxResult();
+                        ValidMessage  validMessage= new ValidMessage();
+                        validMessage.setMessage("存在流程中数据，无法关闭。");
+                        res.setErrorList(Arrays.asList(validMessage));
+                        return res;
+                    }
+                }
                 entrustIds.add(Item.getEntrustId());
             }
             Map<String,Object> param= new HashMap<>();

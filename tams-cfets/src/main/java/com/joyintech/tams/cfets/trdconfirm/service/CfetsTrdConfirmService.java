@@ -1170,10 +1170,11 @@ public class CfetsTrdConfirmService extends BaseService{
             trdProductDealAdd.setPortfolioId(regDeal.getPortfolioId()); // 投资组合代码
             trdProductDealAdd.setEntrustId(regDeal.getEntrustId()); // 委托代码
             trdProductDealAdd.setGenType(genType); // 生成方式
-            trdProductDealAdd.setOurShareAmt(deal.getShareAmt());
-            trdProductDealAdd.setOurCpriceAmt(deal.getCpriceAmt());
+            trdProductDealAdd.setOurShareAmt(regDeal.getOurShareAmt());
+            trdProductDealAdd.setLendinShareAmt(regDeal.getLendinShareAmt());
+          /*  trdProductDealAdd.setOurCpriceAmt(deal.getCpriceAmt());
             trdProductDealAdd.setOurFpriceAmt(deal.getFpriceAmt());
-            trdProductDealAdd.setOurIntAmt(deal.getIntAmt());
+            trdProductDealAdd.setOurIntAmt(deal.getIntAmt());*/
 
             trdProductDealAdds.add(trdProductDealAdd);
 

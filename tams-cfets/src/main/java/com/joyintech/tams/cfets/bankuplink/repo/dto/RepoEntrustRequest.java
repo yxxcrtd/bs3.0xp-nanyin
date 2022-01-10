@@ -82,6 +82,9 @@ public class RepoEntrustRequest {
     @ApiModelProperty(name = "dayOfferStatus", value = "成交状态 whole undo done", example = "whole")
     private String dayOfferStatus;
 
+    @ApiModelProperty(name = "entrustId", value = "委托代码", example = "WTREPO202107082043")
+    private String entrustId;
+
     public PageMode getPageMode() {
         return pageMode;
     }
@@ -257,5 +260,13 @@ public class RepoEntrustRequest {
 
     public void setDayOfferStatus(String dayOfferStatus) {
         this.dayOfferStatus = dayOfferStatus;
+    }
+
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
     }
 }
