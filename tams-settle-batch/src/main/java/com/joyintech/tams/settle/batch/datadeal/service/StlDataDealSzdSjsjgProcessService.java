@@ -721,11 +721,7 @@ public class StlDataDealSzdSjsjgProcessService {
             settleTransData.setmIntAmt(ArithmeticUtil.subtract(settleTransData.getmTradeAmt(),settleTransData.getmPrinAmt()));
             //全价总额
             settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券协议正回购_到期续作.getValue());
-            if(DictCodeListStl.业务场景分类明细_债券协议正回购_到期续作.getValue().equals(settleTransData.getBusiSceneCalss())){
-                settleTransData.setFpriceAmt(ArithmeticUtil.subtract(settleTransData.getPrinAmt(), settleTransData.getmTradeAmt()));
-            }else if(DictCodeListStl.业务场景分类明细_债券协议逆回购_到期续作.getValue().equals(settleTransData.getBusiSceneCalss())){
-                settleTransData.setFpriceAmt(ArithmeticUtil.subtract(settleTransData.getmTradeAmt(), settleTransData.getPrinAmt()));
-            }
+            settleTransData.setFpriceAmt(ArithmeticUtil.subtract(settleTransData.getPrinAmt(), settleTransData.getmTradeAmt()));
             // GZYHTZJY-1039 交易份额 = abs(清算本金) fuyongsheng modify 20220106 start
             // 交易份额 = abs(清算本金)
             settleTransData.setShareAmt(abs(szdSjsjg.getJgqsbj()));
@@ -914,9 +910,10 @@ public class StlDataDealSzdSjsjgProcessService {
 
             if(StringUtil.equals(DictCodeListExt1.证券品种_债券.getValue(), stlDownDataDealOperatorDto.getFinprodType())){
                 String finprodId = DictCodeListExt1.金融产品类型_投管用_债券.getValue() + GlobalConstant.UNDER_LINE + szdSjsjg.getJgzqdm() + ".SZ";
+                String shareFinprodId = DictCodeListExt1.金融产品类型_投管用_股票.getValue() + GlobalConstant.UNDER_LINE + szdSjsjg.getJgzqdm() + ".SZ";
                 // GZYHTZJY-1074 : 债转股业务,债券类型中包含股票数据 modify by fuyongsheng 20220108 start
                 if(StringUtil.equals(StlDataDealProcessConstant.SJSJG_YWLB_ZQHG, szdSjsjg.getJgywlb())){
-                    if(!bondAssetList.contains(finprodId) && !sharesAssetList.contains(finprodId)) {
+                    if(!bondAssetList.contains(finprodId) && !sharesAssetList.contains(shareFinprodId)) {
                         continue;
                     }
                 }else{
