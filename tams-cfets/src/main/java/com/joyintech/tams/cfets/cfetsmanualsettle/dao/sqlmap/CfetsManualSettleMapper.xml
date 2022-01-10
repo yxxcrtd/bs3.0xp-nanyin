@@ -200,9 +200,7 @@
         left join trdquto_match_info match on T1.totle_trade_id=match.trd_id
         left join reg_fin_product_deal_total_add regAdd on match.PRE_TRADE_ID=regAdd.totle_trade_id
         left join ibu_quote_bond_det ibuDet on match.PRE_TRADE_ID=ibuDet.QUOTE_ID and ibuDet.TRADE_STATUS='07'
-        WHERE T1.TRADE_STATUS =#{TRADE_STATUS_01}
-        AND T0.SETTLE_STATUS IN (#{DELIVERY_STATUS_02},#{DELIVERY_STATUS_04})
-        AND T1.Is_Cancel =#{isCalcN}
+        WHERE T0.SETTLE_STATUS IN (#{DELIVERY_STATUS_02},#{DELIVERY_STATUS_04})
         <![CDATA[ AND T0.SETTLE_DATE >= #{settleDateStart}]]>
         <![CDATA[ AND T0.SETTLE_DATE <= #{settleDateEnd}]]>
         <if test="settleStatusList != null and settleStatusList.size() > 0">
