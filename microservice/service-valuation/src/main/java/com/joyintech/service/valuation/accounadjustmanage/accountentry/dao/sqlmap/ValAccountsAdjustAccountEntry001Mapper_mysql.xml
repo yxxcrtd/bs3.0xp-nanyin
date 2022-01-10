@@ -3,30 +3,6 @@
 <mapper namespace="com.joyintech.service.valuation.accounadjustmanage.accountentry.dao.ValAccountsAdjustAccountEntry001Mapper_mysql">
     <select id="findAccountEntry" resultType="com.joyintech.service.valuation.accounadjustmanage.accountentry.dto.ValAccountsAdjustAccountEntry001Dto">
         SELECT
-<<<<<<< .mine
-            BS.SCENE_NODE_ID AS sceneNodeId,
-            <if test="level != -1">
-               <![CDATA[CASE WHEN BS."LEVEL" <= #{level} then 1 ELSE 0 END as expanded,]]> 
-            </if>
-            <if test="level == -1">
-                1 as expanded,
-            </if>
-            CASE BS.NODE_ID WHEN 'ACCOUNTEVENTS' THEN 'ACCOUNTEVENTS' ELSE
-            IFNULL(BTD1.DICT_CODE, BS.NODE_VALUE) END AS dictId,
-            IFNULL(BTD1.DICT_NAME, #{bookEvent}) AS tableName,
-            BS.NODE_VALUE AS nodeValue,
-            CASE BS.NODE_ID
-            WHEN 'ACCOUNTEVENTS' THEN
-            BT.TABLE_NAME
-            ELSE
-            SD.ITEM_VALUE
-            end AS dictName,
-            CASE WHEN COUNT(BSS.SCENE_NODE_ID) > 0 THEN 1 ELSE 0 END  AS isEntry,
-            CASE WHEN COUNT(BS1.SCENE_NODE_ID) > 0 THEN 0 ELSE 1 END AS isLeaf,
-            BS.BOOKSET_ID AS booksetId,
-            BS.UPDATE_TIME AS updateTime,
-            CASE WHEN BS.FSCENE_NODEID IS NULL THEN 'root' ELSE BS.FSCENE_NODEID END fsceneNodeid,
-=======
         BS.SCENE_NODE_ID AS sceneNodeId,
         <if test="level != -1">
             <![CDATA[CASE WHEN BS."LEVEL" <= #{level} then 1 ELSE 0 END as expanded,]]>
@@ -49,7 +25,6 @@
         BS.BOOKSET_ID AS booksetId,
         BS.UPDATE_TIME AS updateTime,
         CASE WHEN BS.FSCENE_NODEID IS NULL THEN 'root' ELSE BS.FSCENE_NODEID END fsceneNodeid,
->>>>>>> .theirs
 
         (case
         when BS.FSCENE_NODEID = NULL
@@ -72,25 +47,25 @@
         ORDER BY BS.SCENE_NODE_ID
     </select>
 
-	<update id="deleteConfig">
+    <update id="deleteConfig">
         DELETE FROM BOK_SCENECONFIG
         WHERE SCENE_NODE_ID LIKE concat_ws('',#{sceneNodeId},'%')
     </update>
-	<update id="updateSceneSubjectToD">
+    <update id="updateSceneSubjectToD">
         UPDATE BOK_SCENESUBJECT SET UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}, UPDATE_USER = #{updateUser} 
         WHERE SCENE_NODE_ID LIKE concat_ws('',#{sceneNodeId}, '%')
     </update>
-	<sql id="whereCondition">
+    <sql id="whereCondition">
         WHERE 1 = 1
         AND BS.BOOKSET_ID = #{booksetId}
         <if test="nodeId != null and nodeId != ''">
             AND BS.SCENE_NODE_ID LIKE
             concat_ws(IFNULL((SELECT SCENE_NODE_ID
-                FROM BOK_SCENECONFIG
-                WHERE NODE_ID = #{ACCOUNTEVENTS}
-                AND BOOKSET_ID = #{booksetId}
-                AND NODE_VALUE = #{nodeId})
-                ,'#无该节点内容#'),'%')
+            FROM BOK_SCENECONFIG
+            WHERE NODE_ID = #{ACCOUNTEVENTS}
+            AND BOOKSET_ID = #{booksetId}
+            AND NODE_VALUE = #{nodeId})
+            ,'#无该节点内容#'),'%')
         </if>
     </sql>
 </mapper>
