@@ -10,35 +10,23 @@
 
 package com.joyintech.tams.valuation.common.interf.base.service.assetdeal.cleanorder;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.valuation.common.interf.base.dto.*;
+import org.jasypt.commons.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.BokBooksetCapacctInfo;
-import com.joyintech.tams.common.base.entity.BokDealAccounting;
-import com.joyintech.tams.common.base.entity.BokDealAccountingDetail;
-import com.joyintech.tams.common.base.entity.BokDetailId;
-import com.joyintech.tams.common.base.entity.StlOrders;
-import com.joyintech.tams.common.base.entity.StlOrdersExt;
-import com.joyintech.tams.common.base.entity.ValInterflog;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
-import com.joyintech.tams.valuation.common.interf.base.dto.CleanOrderCommonResult;
-import com.joyintech.tams.valuation.common.interf.base.dto.TemplateCheckReturnResult;
-import com.joyintech.tams.valuation.common.interf.base.dto.TemplateOrderInfoReaderResult;
-import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
-import com.joyintech.tams.valuation.common.interf.base.dto.ValBooksetInfoDto;
 import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValCleanOrder;
@@ -69,7 +57,7 @@ public class CleanOrderTemplateRecSerive {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public CleanOrderCommonResult execute(TemplateSourceFlgDTO templateSourceFlgDTO,
-                                          TemplateOrderInfoReaderResult acctEntity) {
+                                          TemplateOrderInfoReaderResult acctEntity) throws Exception{
         // 初始化 模板处理返回共通结果
         CleanOrderCommonResult result = new CleanOrderCommonResult();
         Map<String,Object> params = acctEntity.getParams();
@@ -125,7 +113,7 @@ public class CleanOrderTemplateRecSerive {
     }
     @SuppressWarnings({"unchecked"})
     private Map<String, Object> handleValCleanOrder(List<ValCleanOrder> listValCleanOrder,
-            Date resovleDate,Map<String,Object> params,List<ValInterflog> valInterflog) {
+            Date resovleDate,Map<String,Object> params,List<ValInterflog> valInterflog) throws Exception{
 		List<String> bookSetIds = (List<String>)params.get(InterfCommonConstant.接口_运行接口账套ID);
 		String valModel = (String)params.get(InterfCommonConstant.接口模式);
         // 初始化返回结果
@@ -190,14 +178,57 @@ public class CleanOrderTemplateRecSerive {
      * @see
      * @since 1.0
      */
-    private StlOrders getValStlOrders(ValCleanOrder dto) {
+    private StlOrders getValStlOrders(ValCleanOrder dto) throws Exception {
         StlOrders stlOrders = new StlOrders();
         //指令编号 = interfCommonService.getTradeid(A.指令类型,A.结算日期，“B")
         stlOrders.setOrderId(interfCommonService.getTradeid(dto.getOrderType(), dto.getSettleDate(), "B"));
         //业务类型 = A.业务类型
         stlOrders.setBusiType(dto.getBusiType());
         //指令类型 = A.指令类型
-        stlOrders.setOrderType(dto.getOrderType());
+        /**update by yinya on 2022-01-08 上游投管传交易相关属性，由估值自动映射指令类型**/
+        //stlOrders.setOrderType(dto.getOrderType());
+        if(CommonUtils.isNotEmpty(dto.getOrderType())){
+            stlOrders.setOrderType(dto.getOrderType());
+        }else{
+            //定义 变量.交易对应指令集合 = 调用共通设计->【详细设计-接口共通方法设计.xlsx】->查询交易需要生成的指令SHEET
+            ProductDealDto deal = new ProductDealDto();
+            deal.setFinprodType(dto.getFinprodType());
+            deal.setBusiType(dto.getBusiType());
+            deal.setPs(dto.getTradePs());
+            deal.setInvAim(dto.getInvAim());
+            //02为接口默认使用的映射类型
+            deal.setMappingType("02");
+            //匹配IS_BOOK为N的指令映射
+            deal.setIsTrade(DictCodeList.是否_否.getValue());
+            List<StlOrdersMapping> somlist = interfCommonService.queryStlOrdersMapping(deal);
+//            List<StlOrdersMapping> stlList =new ArrayList<StlOrdersMapping>();
+//            if(somlist==null || somlist.size()==0){
+//               throw new Exception(
+//                       "指令编号："+dto.getOrderId()
+//                       +" 金融产品类型："+dto.getFinprodType()
+//                       +" 业务类型："+dto.getBusiType()
+//                       +" 交易方向："+dto.getTradePs()
+//                       +" 投资目的："+dto.getInvAim()
+//                       +"未匹配指令类型,请检查结算指令与交易映射关系表");
+//            }
+//            //去重处理
+//            somlist.stream(). collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(f -> f.getOrderType()+f.getMappingType()))), ArrayList::new))
+//                    .forEach(f->stlList.add(f));
+//
+//            if(stlList.size()>1){
+//                throw new Exception(
+//                                "指令编号："+dto.getOrderId()
+//                                +" 金融产品类型："+deal.getFinprodType()
+//                                +" 业务类型："+dto.getBusiType()
+//                                +" 交易方向："+dto.getTradePs()
+//                                +" 投资目的："+dto.getInvAim()
+//                                +" 匹配多个指令类型，请检查结算指令与交易映射关系表");
+//            }
+            stlOrders.setOrderType(somlist.get(0).getOrderType());
+
+        }
+
+
         //结算日期 = A.结算日期
         stlOrders.setSettleDate(dto.getSettleDate());
         //交易编号 = A.交易编号

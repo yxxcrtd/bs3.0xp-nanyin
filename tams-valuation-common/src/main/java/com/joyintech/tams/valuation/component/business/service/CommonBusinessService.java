@@ -1,7 +1,6 @@
 package com.joyintech.tams.valuation.component.business.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
@@ -125,6 +124,16 @@ public class CommonBusinessService {
     public List<SelectOptionDto> getProdId( Map<String, Object> param) {
 
         return commonBusinessMapper.getProdId(param);
+    }
+
+    /**
+     * 产品名称下拉框
+     * @param search 界面查询参数 ,finprodType 产品类型
+     * @return
+     */
+    public List<SelectOptionDto> getProdName( Map<String, Object> param) {
+
+        return commonBusinessMapper.getProdName(param);
     }
 
     /**

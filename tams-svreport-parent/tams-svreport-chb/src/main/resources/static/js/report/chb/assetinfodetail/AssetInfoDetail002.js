@@ -249,7 +249,17 @@ var QueryFunc=function(){
                 if(repAssetType=="2202"){
                     $('#repCreditAssetCode_Div').show();
                 }
-
+                //要素去除必填标识 add by tuqirong 2022-01-08 start
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPrinBaseamt").prop("required",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repCouponSpecies").prop("required",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_interestRuleFlag").prop("required",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repIntpayRule").prop("required",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_floatFactorFlag").prop("required",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").prop("required",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPerpetualClauseType").prop("required",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repDeferredInterestType").prop("required",false);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPartRedemFlag").prop("required",false);
+                //要素去除必填标识 add by tuqirong 2022-01-08 end
             }else{
 
                 $("#svrBussRepAssetCreditNonstdInfoDto_repPrinBaseamt").attr("disabled",false);
@@ -300,7 +310,17 @@ var QueryFunc=function(){
                 $("#svrBussRepAssetCreditNonstdInfoDto_repPartRedemFlag").attr("disabled",false);
                 $("#svrBussRepAssetCreditNonstdInfoDto_creditOrgCode").attr("disabled",false);
                 $("#svrBussRepAssetCreditNonstdInfoDto_creditOrgName").attr("disabled",false);
-
+                //要素添加必填标识 add by tuqirong 2022-01-08 start
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPrinBaseamt").prop("required",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repCouponSpecies").prop("required",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_interestRuleFlag").prop("required",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repIntpayRule").prop("required",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_floatFactorFlag").prop("required",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").prop("required",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPerpetualClauseType").prop("required",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repDeferredInterestType").prop("required",true);
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPartRedemFlag").prop("required",true);
+                //要素添加必填标识 add by tuqirong 2022-01-08 end
             }
             if(repAssetType=='2201'||repAssetType=='2202'||repAssetType=='1202'||repAssetType=='1203'
                 ||repAssetType=='1204'||repAssetType=='1206'||repAssetType=='1207'||repAssetType=='1208'||

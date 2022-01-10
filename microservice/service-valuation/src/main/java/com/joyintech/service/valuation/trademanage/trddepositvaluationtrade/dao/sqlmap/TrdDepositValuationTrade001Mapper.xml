@@ -34,6 +34,9 @@
 		FIN_PRODUCT p
 		<where>
 			1=1
+			<if test="initValue != null and initValue != ''">
+				AND FINPROD_ID = #{initValue}
+			</if>
 			<if test="finprodType !=null and finprodType != ''">
 				and FINPROD_TYPE =#{finprodType}
 			</if>
@@ -61,6 +64,9 @@
 		FIN_PRODUCT
 		<where>
 			1=1
+			<if test="initValue != null and initValue != ''">
+				AND FINPROD_MARKET_ID = #{initValue}
+			</if>
 			<if test="assetType !=null and assetType != ''">
 				and FINPROD_TYPE = #{assetType}
 			</if>
@@ -144,6 +150,37 @@
 			</foreach>
 		</if>
 		order by t.TRADE_ID desc
+	</select>
+    <select id="queryTradeInfoByTradeId" resultType="com.joyintech.service.valuation.trademanage.trddepositvaluationtrade.dto.TrdDepositValuationTrade001Dto">
+
+		SELECT
+		t.TRADE_ID tradeId,/**交易编号**/
+		null outTradeId,    /*外部成交编号*/
+		deal.BOOKSET_ID portfolioId,/**金融产品代码**/
+		bok.BOOKSET_NAME portfolioName,/**金融产品名称**/
+		zc.FINPROD_MARKET_ID  finprodMarketId, /**资产代码**/
+		zc.FINPROD_ABBR  finprodName,/**资产名称**/
+		t.PS ps,/**交易方向**/
+		t.TRADE_DATE tradeDate,/**交易日**/
+		t.SETTLE_DATE settDate,/**交割日期**/
+		t.PRIN_AMT prinAmt, /**交易本金**/
+		mst.COUNTER_NAME counterId,  /**交易对手**/
+		t.INT_AMT intAmt,/**应收利息总额**/
+		t.CCY ccy,/**币种**/
+		stl.SETTLE_AMT settleAmt,/**结算金额**/
+		t.TRADE_AMT dealAmt,/**本币交易金额**/
+		stl.MY_ACCT_NO trdAcctId /**资金账户**/
+		from TRD_PRODUCT_DEAL t
+		LEFT JOIN FIN_PRODUCT zc on zc.finprod_id = t.finprod_id
+		LEFT JOIN BOK_DEAL_ACCOUNTING deal on deal.BUSI_NO = t.TRADE_ID
+		LEFT JOIN BOK_BOOKSET bok on bok.BOOKSET_ID = deal.BOOKSET_ID
+		LEFT JOIN MST_COUNTER_PARTY mst on mst.COUNTER_ID = t.COUNTER_ID
+		LEFT JOIN STL_ORDERS stl ON stl.TRADE_ID = t.TRADE_ID AND stl.BUSI_TYPE ='02'
+		where
+		t.BUSI_TYPE ='02'
+		and t.TRADE_ID  = #{tradeId,jdbcType=VARCHAR}
+		and rownum=1
+
 	</select>
 
 

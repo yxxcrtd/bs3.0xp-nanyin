@@ -147,7 +147,7 @@ public class TrdPlanValuationTradeController extends BaseController {
     }
 
     /**
-     * 分页数据查询
+     * 不分页数据查询
      *
      * @return page
      * @throws Exception 异常

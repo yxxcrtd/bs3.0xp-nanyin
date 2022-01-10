@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.trademanage.trdfundvaluationtrade.dto;
 
 import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -523,6 +524,14 @@ public class TrdFundValuationTradeDto extends WflTrdProductDeal implements Proce
     @Override
     public String getTradeMarket() {
         return tradeMarket;
+    }
+
+    public String getTradeDateStr() {
+        String tradeDateStr="";
+        if(super.getTradeDate() !=null){
+            tradeDateStr= DateUtil.format(super.getTradeDate());
+        }
+        return tradeDateStr;
     }
 
 
