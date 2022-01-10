@@ -1,8 +1,6 @@
 package com.joyintech.service.bankuplink.common.service;
 
 import com.joyintech.background.component.uplink.interbank.business.dto.ResultBaseDto;
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.bankuplink.common.dao.CstpTradeMapper;
@@ -24,7 +22,6 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.util.CommonUtil;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -174,9 +171,9 @@ public class CfetsQuotedTradeCommonService{
                     @Override
                     public void run() {
                         if(StringUtil.equals(entity.getMarketIndicator(),MarketIndicatorUtil.MARKETINDICATOR_BOND)){
-                                secAutoTradeService.secAutoTrade(iCstpTrade, finalInterfTradSecdeal,resultBaseDto);
+                                secAutoTradeService.secAutoTrade2(iCstpTrade, finalInterfTradSecdeal,resultBaseDto);
                         }else if(StringUtil.equals(entity.getMarketIndicator(),MarketIndicatorUtil.MARKETINDICATOR_REPO)){
-                                repoAutoTradeService.repoAutoTrade(iCstpTrade, finalInterfOpicsTradRepo,resultBaseDto);
+                                repoAutoTradeService.repoAutoTrade2(iCstpTrade, finalInterfOpicsTradRepo,resultBaseDto);
                         }
                     }
                 });

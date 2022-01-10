@@ -1174,6 +1174,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
 
     交易方向_正回购(DictCode.交易方向, "03", "正回购"),
     交易方向_逆回购(DictCode.交易方向, "04", "逆回购"),
+    交易方向_首期(DictCode.交易方向, "T92", "首期"),
     申报类型_不指定(DictCode.申报类型, "PRM05", "不指定"),
     申报类型_意向申报(DictCode.申报类型, "PRM06", "意向申报"),
     申报类型_定价申报(DictCode.申报类型, "PRM07", "定价申报"),
@@ -1260,6 +1261,8 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     交易单位_张(DictCode.交易单位,"01","张"),
     交易单位_份(DictCode.交易单位,"02","份"),
     交易单位_股(DictCode.交易单位,"03","股"),
+    交易单位_手(DictCode.交易单位,"04","手"),
+
     交易方向_提前购回(DictCode.交易方向, "T96", "提前购回"),
     交易方向_到期购回(DictCode.交易方向, "T95", "到期购回"),
     交易方向_中途换券(DictCode.交易方向, "T94", "中途换券"),

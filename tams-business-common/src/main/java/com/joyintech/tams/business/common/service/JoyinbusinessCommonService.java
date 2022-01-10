@@ -2,6 +2,7 @@ package com.joyintech.tams.business.common.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -141,6 +142,10 @@ public class JoyinbusinessCommonService extends BaseService {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("search", dto.getSearch());
         param.put("sysDate",iPlatformDate.getSysDate());
+        String searchs = dto.getSearchs();
+        if(StringUtil.isNotEmpty(searchs)){
+            param.put("searchList", StringUtil.splitToList(GlobalConstant.COMMA,searchs));
+        }
         if(StringUtil.equals(dto.getDealType(),"01")){
             //系统内的交易对手，即市场机构和资管产品的数据
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryCounterPartyList(param));

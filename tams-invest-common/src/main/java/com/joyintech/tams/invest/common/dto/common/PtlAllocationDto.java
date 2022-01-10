@@ -82,9 +82,35 @@ public class PtlAllocationDto extends EtrEntrust {
     private String priceModel;
 
     /**
+     * 本方券券面
+     */
+    private BigDecimal ourShareAmt;
+
+    /**
+     * 融入券券面
+     */
+    private BigDecimal lendinShareAmt;
+
+    /**
      * 交易费用LIST
      */
     private List<TrdTradeFeeDetail> tradeFeeList;
+
+    public BigDecimal getOurShareAmt() {
+        return ourShareAmt;
+    }
+
+    public void setOurShareAmt(BigDecimal ourShareAmt) {
+        this.ourShareAmt = ourShareAmt;
+    }
+
+    public BigDecimal getLendinShareAmt() {
+        return lendinShareAmt;
+    }
+
+    public void setLendinShareAmt(BigDecimal lendinShareAmt) {
+        this.lendinShareAmt = lendinShareAmt;
+    }
 
     public Long getTermDays() {
         return termDays;
