@@ -13,7 +13,6 @@ import com.joyintech.calculation.util.BasicUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.*;
-import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.AutoAllocationRequest;
@@ -92,11 +91,11 @@ public class IbuQuoteBondCalService extends BaseService {
      */
     public CalRespone calculation(CalRequest calRequest) {
         CalRespone calRespone = new CalRespone();
-        CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = new CfetsBondDealDialogueQuoteDto();
-        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto, calRequest);
-        cfetsBondDealDialogueQuoteDto.setAvaNum(calRequest.getShareAmt());
-        BeanUtil.copyPropertiesIgnoreNull(calRespone,cfetsBondDealQuotedPriceService.calcAmt(cfetsBondDealDialogueQuoteDto));
-        //BeanUtil.copyPropertiesIgnoreNull(calRespone, calAmt(cfetsBondDealDialogueQuoteDto));
+        //CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = new CfetsBondDealDialogueQuoteDto();
+        //BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto, calRequest);
+        //cfetsBondDealDialogueQuoteDto.setAvaNum(calRequest.getShareAmt());
+        //BeanUtil.copyPropertiesIgnoreNull(calRespone,cfetsBondDealQuotedPriceService.calcAmt(cfetsBondDealDialogueQuoteDto));
+        calRespone = calAmt(calRequest);
         if (null != calRespone.getFpriceAmt()) {
             calRequest.setFpriceAmt(calRespone.getFpriceAmt());
         }
@@ -413,7 +412,9 @@ public class IbuQuoteBondCalService extends BaseService {
     /**
      * 计算净价、到期收益率、行权收益率
      */
-    public CfetsBondDealDialogueQuoteDto calAmt(CfetsBondDealDialogueQuoteDto dto) {
+    public CalRespone calAmt(CalRequest dto) {
+        CalRespone calRespone = new CalRespone();
+        BeanUtil.copyPropertiesIgnoreNull(calRespone,dto);
         final int SCALE = 12;
         YieldByPriceCalculator yieldByPriceCalculator = new YieldByPriceCalculator();
         PriceByYieldCalculator priceByYieldCalculator = new PriceByYieldCalculator();
@@ -533,61 +534,56 @@ public class IbuQuoteBondCalService extends BaseService {
         // 百元面值应计利息
         BigDecimal accurInt = BigDecimal.ZERO;
         // 交易方式为“一级市场”时，单位应计利息=应计利息总额=0
-        if (StringUtil.equals(dto.getTradeMarketMode(),
-                DictCodeListExt1.交易市场_一级市场.getValue())) {
-            dto.setIntAmt(BigDecimal.ZERO);
-            dto.setUnitInt(accurInt);
-        }
         // 交易方式为“二级市场”时，单位应计利息 =e取得的百元面值应计利息/100*a取得的当前债券面额
-        else {
-            Date tempSettleDate = dto.getSettleDate();
-            // a.当前债券面额取得（根据还本计划计算）
-            Map<String, Object> paraMap = new HashMap<String, Object>();
-            paraMap.put("finprodId", dto.getFinprodId());
-            paraMap.put("settleDate", DateUtil.format(tempSettleDate));
-            BigDecimal curSecAmt = restTemplate.postForObject(
-                    ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getCurSecAmt",
-                    paraMap, BigDecimal.class);
+        Date tempSettleDate = dto.getSettleDate();
+        // a.当前债券面额取得（根据还本计划计算）
+        Map<String, Object> paraMap = new HashMap<String, Object>();
+        paraMap.put("finprodId", dto.getFinprodId());
+        paraMap.put("settleDate", DateUtil.format(tempSettleDate));
+        BigDecimal curSecAmt = restTemplate.postForObject(
+                ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getCurSecAmt",
+                paraMap, BigDecimal.class);
 
-            AccurIntCalInParameter accurIntCalInParameter = new AccurIntCalInParameter();
-            // 计算日
+        AccurIntCalInParameter accurIntCalInParameter = new AccurIntCalInParameter();
+        // 计算日
 //            accurIntCalInParameter.setCalDate(this.toLocalDate(dto.getSettleDate()));
-            accurIntCalInParameter.setCalDate(DateUtil.dateToLocal(tempSettleDate));
-            // 债券基本资料
-            accurIntCalInParameter.setSecInfoModel(secInfoModel);
-            // 付息计划
-            accurIntCalInParameter.setSecIntScheduleList(invScheduleList);
-            // 利率重置信息
-            accurIntCalInParameter.setPaperIrResetList(paperIrResetList);
+        accurIntCalInParameter.setCalDate(DateUtil.dateToLocal(tempSettleDate));
+        // 债券基本资料
+        accurIntCalInParameter.setSecInfoModel(secInfoModel);
+        // 付息计划
+        accurIntCalInParameter.setSecIntScheduleList(invScheduleList);
+        // 利率重置信息
+        accurIntCalInParameter.setPaperIrResetList(paperIrResetList);
 
-            //交易所债券特殊处理start----------------------------------------------------------------
-            AccurIntCalOutParameter out = null;
+        //交易所债券特殊处理start----------------------------------------------------------------
+        AccurIntCalOutParameter out = null;
 
-            if (out != null) {
-                accurInt = ArithmeticUtil.round(out.getInterest(), SCALE, RoundingMode.HALF_UP);
-            } else {
-                // 从计算工厂中创建应计利息计算器
-                AccurIntCalculator calc = CalculatorFactory.createAccurIntCalculator();
-                // 计算利息
-                AccurIntCalOutParameter accurIntCalOutParameter = calc.calculate(accurIntCalInParameter);
-                accurInt = ArithmeticUtil.round(accurIntCalOutParameter.getInterest(), SCALE, RoundingMode.HALF_UP);
-            }
+        if (out != null) {
+            accurInt = ArithmeticUtil.round(out.getInterest(), SCALE, RoundingMode.HALF_UP);
+        } else {
+            // 从计算工厂中创建应计利息计算器
+            AccurIntCalculator calc = CalculatorFactory.createAccurIntCalculator();
+            // 计算利息
+            AccurIntCalOutParameter accurIntCalOutParameter = calc.calculate(accurIntCalInParameter);
+            accurInt = ArithmeticUtil.round(accurIntCalOutParameter.getInterest(), SCALE, RoundingMode.HALF_UP);
+        }
 
-            // 单位应计利息
-            if (dto.getUnitInt() == null) {
-                dto.setUnitInt(ArithmeticUtil.divide(ArithmeticUtil.multiply(accurInt, curSecAmt), new BigDecimal(100),
-                        Integer.parseInt(StringUtils.isEmpty(CacheUtil.getSysParam(
-                                "SEC_INT_SCALE_BANK")) ? "12" : CacheUtil.getSysParam(
-                                "SEC_INT_SCALE_BANK")), RoundingMode.HALF_UP));
-            }
+        // 单位应计利息
+        if (calRespone.getUnitInt() == null) {
+            calRespone.setUnitInt(ArithmeticUtil.divide(ArithmeticUtil.multiply(accurInt, curSecAmt), new BigDecimal(100),
+                    Integer.parseInt(StringUtils.isEmpty(CacheUtil.getSysParam(
+                            "SEC_INT_SCALE_BANK")) ? "12" : CacheUtil.getSysParam(
+                            "SEC_INT_SCALE_BANK")), RoundingMode.HALF_UP));
         }
         try {
             // 单位净价
             if (StringUtil.equals(dto.getCalculateField(), "01")) {
                 // 单位全价 = 单位净价 + 单位应计利息
-                dto.setUnitFprice(ArithmeticUtil.doAdd(dto.getPrice(), dto.getUnitInt()));
+                calRespone.setUnitFprice(ArithmeticUtil.doAdd(dto.getPrice(), calRespone.getUnitInt()));
                 // 全价总额 = 单位全价 * 券面总额/100
-                dto.setFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(dto.getUnitFprice(), dto.getEntrustNum()),
+                calRespone.setFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(calRespone.getUnitFprice(), calRespone.getShareAmt()),
+                        new BigDecimal(100), SCALE));
+                calRespone.setCpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(calRespone.getPrice(), calRespone.getShareAmt()),
                         new BigDecimal(100), SCALE));
             }
             switch (dto.getCalculateField()) {
@@ -595,10 +591,10 @@ public class IbuQuoteBondCalService extends BaseService {
                 case "01":
                     // 全价总额==>到期收益率
                     yieldPriceInParameter.setFullPrice(
-                            dto.getUnitFprice()/* dto.getFpriceAmt() */);
+                            calRespone.getUnitFprice()/* dto.getFpriceAmt() */);
                     yieldPriceOutParameter = yieldByPriceCalculator.calculate(
                             yieldPriceInParameter);
-                    dto.setMatureYield(yieldPriceOutParameter.getMatYield());
+                    calRespone.setMatureYield(yieldPriceOutParameter.getMatYield());
                     if (secInfoModelDto.getNextExeDate() != null) {
                         // 全价总额==>行权收益率
                         yieldPriceInParameter.setNextExeDate(
@@ -608,9 +604,9 @@ public class IbuQuoteBondCalService extends BaseService {
                         if (yieldPriceInParameter.getNextExePrice() != null) {
                             yieldPriceOutParameter = yieldByPriceCalculator.calculate(
                                     yieldPriceInParameter);
-                            dto.setExerYield(yieldPriceOutParameter.getExeYield());
+                            calRespone.setExerYield(yieldPriceOutParameter.getExeYield());
                         } else {
-                            dto.setExerYield(null);
+                            calRespone.setExerYield(null);
                         }
                     }
                     break;
@@ -621,11 +617,11 @@ public class IbuQuoteBondCalService extends BaseService {
                     priceYieldOutParameter = priceByYieldCalculator.calculate(
                             priceYieldInParameter);
                     // dto.setFpriceAmt(priceYieldOutParameter.getFullPrice());
-                    dto.setUnitFprice(priceYieldOutParameter.getFullPrice());
+                    calRespone.setUnitFprice(priceYieldOutParameter.getFullPrice());
                     // 全价总额==>行权收益率
                     if (secInfoModelDto.getNextExeDate() != null) {
                         yieldPriceInParameter.setFullPrice(
-                                dto.getUnitFprice()/* dto.getFpriceAmt() */);
+                                calRespone.getUnitFprice()/* dto.getFpriceAmt() */);
                         yieldPriceInParameter.setNextExeDate(
                                 DateUtil.dateToLocal(secInfoModelDto.getNextExeDate()));
                         yieldPriceInParameter.setNextExePrice(
@@ -634,9 +630,9 @@ public class IbuQuoteBondCalService extends BaseService {
                             yieldPriceOutParameter = yieldByPriceCalculator.calculate(
                                     yieldPriceInParameter);
                             // dto.setExerYield(yieldPriceOutParameter.getMatYield());
-                            dto.setExerYield(yieldPriceOutParameter.getExeYield());
+                            calRespone.setExerYield(yieldPriceOutParameter.getExeYield());
                         } else {
-                            dto.setExerYield(null);
+                            calRespone.setExerYield(null);
                         }
                     }
                     break;
@@ -652,13 +648,13 @@ public class IbuQuoteBondCalService extends BaseService {
                                 secInfoModelDto.getNextExercisePrice());
                         priceYieldOutParameter = priceByYieldCalculator.calculate(
                                 priceYieldInParameter);
-                        dto.setFpriceAmt(priceYieldOutParameter.getFullPrice());
-                        dto.setUnitFprice(priceYieldOutParameter.getFullPrice());
+                        calRespone.setFpriceAmt(priceYieldOutParameter.getFullPrice());
+                        calRespone.setUnitFprice(priceYieldOutParameter.getFullPrice());
                         // 全价总额==>到期收益率
-                        yieldPriceInParameter.setFullPrice(dto.getFpriceAmt());
+                        yieldPriceInParameter.setFullPrice(calRespone.getFpriceAmt());
                         yieldPriceOutParameter = yieldByPriceCalculator.calculate(
                                 yieldPriceInParameter);
-                        dto.setMatureYield(yieldPriceOutParameter.getMatYield());
+                        calRespone.setMatureYield(yieldPriceOutParameter.getMatYield());
                     }
                     break;
                 default:
@@ -667,15 +663,20 @@ public class IbuQuoteBondCalService extends BaseService {
             // 到期收益率 或 行权收益率
             if (StringUtil.equals(dto.getCalculateField(), "02")
                     || StringUtil.equals(dto.getCalculateField(), "03")) {
-                dto.setFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(dto.getUnitFprice(), dto.getEntrustNum()),
+                calRespone.setFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(calRespone.getUnitFprice(), calRespone.getShareAmt()),
                         new BigDecimal(100), SCALE));
                 // 单位净价 = 单位全价 - 单位应计利息
-                dto.setPrice(com.joyintech.calculation.util.ArithmeticUtil.doSub(dto.getUnitFprice(), dto.getUnitInt()));
+                calRespone.setPrice(com.joyintech.calculation.util.ArithmeticUtil.doSub(calRespone.getUnitFprice(), calRespone.getUnitInt()));
+                calRespone.setCpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(calRespone.getPrice(), calRespone.getShareAmt()),
+                        new BigDecimal(100), SCALE));
+            }
+            if(null!=calRespone.getFpriceAmt()&&null!=calRespone.getCpriceAmt()){
+                calRespone.setIntAmt(ArithmeticUtil.subtract(calRespone.getFpriceAmt(),calRespone.getCpriceAmt()));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return dto;
+        return calRespone;
     }
 
     private SecInfoModel toSecInfoModel(SecInfoModelDto secInfoModelDto) {
