@@ -875,10 +875,9 @@ public class IbuQuoteRepoService extends BaseService {
                 cfetsOprHisInfoRequest.setCreateUser(SecurityUtil.getLoginUser().getUserName());
                 cfetsOprHisInfoRequest.setCreateDept(CommonUtil.getDeptCode());
                 cfetsOprHisInfoRequest.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
-                result.add(cfetsOprHisInfoRequest);
+                joyinbusinessCommonService.updateCfetsOprHis(cfetsOprHisInfoRequest);
             }
         });
-        joyinbusinessCommonMapper.mergeCfetsOprHis(result);
     }
 
     /**
