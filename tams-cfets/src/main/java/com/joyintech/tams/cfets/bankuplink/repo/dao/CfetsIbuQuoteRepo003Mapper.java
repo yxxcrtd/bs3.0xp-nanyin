@@ -53,4 +53,6 @@ public interface CfetsIbuQuoteRepo003Mapper {
     List<IbuQuoteEntCrepPledgeDto> selectWflQuoteEntCrepPledgeDataByQuoteId(@Param("quoteId") String quoteId);
 
     List<CfetsRepoDealQuotedPrice003Dto>  selectQuoteCrepPledgeForDzh(Map<String,Object> map);
+
+    List<CfetsRepoDealQuotedPrice003Dto>  selectWflQuoteCrepPledgeForDzh(Map<String,Object> map);
 }

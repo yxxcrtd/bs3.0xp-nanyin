@@ -650,11 +650,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             result.setRegTradeFees(cfetsIbuQuoteBondMapper.listRegTradeFee(entity.getTotleTradeId()));
             result.setRegFinPledges(cfetsIbuQuoteRepoMapper.listRegFinPledge(entity.getTotleTradeId()));
         } else {
-            if (StringUtil.isNotEmpty(entity.getTotleTradeId())) {
-                result.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
-            } else {
-                result.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
-            }
+            result.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
             entity.setOuPartyId(entity.getMySide());
             entity.setOuTraderId(entity.getMySideTrader());
             entity.setClearType(entity.getSettleType());
