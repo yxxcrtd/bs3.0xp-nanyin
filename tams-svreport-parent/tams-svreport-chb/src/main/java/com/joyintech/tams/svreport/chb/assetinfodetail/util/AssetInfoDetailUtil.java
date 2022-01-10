@@ -729,11 +729,17 @@ public class AssetInfoDetailUtil {
             }
             messages.addAll(chbDataCheckCommonUtil.chbCheckCommon(resultList, entity, "AssetInfoRegist002", entity.getAssetType2(), ValidMessage.class));
             if (!StringUtil.isEmptyList(messages)){
+                //modify by tuqirong 2022-01-10 start 错误信息去重处理
+                Map<String, Object> errMap = new HashMap<>();
                 messages.forEach(validMessage -> {
                     if (StringUtil.isNotEmpty(validMessage.getMessage())){
-                        message.add(validMessage.getMessage());
+                        if (!errMap.containsKey(validMessage.getMessage())) {
+                            message.add(validMessage.getMessage());
+                            errMap.put(validMessage.getMessage(),validMessage.getMessage());
+                        }
                     }
                 });
+                //modify by tuqirong 2022-01-10 end 错误信息去重处理
             }
             getDtoByPageMessgae(entity);
             if (StringUtil.isNotEmpty(entity.getPbcAssetType1()) && StringUtil.isNotEmpty(entity.getPbcAssetType2())){
