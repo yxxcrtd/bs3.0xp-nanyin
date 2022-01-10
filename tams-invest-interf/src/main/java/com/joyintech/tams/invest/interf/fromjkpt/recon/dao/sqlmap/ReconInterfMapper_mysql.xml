@@ -738,7 +738,11 @@
                 T5.SEC_ACCT_ID SEC_ACCT_ID,
                 XWBH SEAT_NUMBER,
                 '' SETTLEMEN_TYPE,
-                CJSL TRADE_NUM,
+                CASE
+                    WHEN YWBS = '4446' AND JYLB = '2' THEN 0
+                    WHEN YWBS = '债券质押到期续做新开' AND JYLB = '深圳' THEN 0
+                    ELSE CJSL
+                END TRADE_NUM,
                 CJJG PRICE,
                 NULL UNIT,
                 NULL FULL_PRICE,
