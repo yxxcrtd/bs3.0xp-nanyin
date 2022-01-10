@@ -16,18 +16,22 @@ import java.util.List;
 @ApiModel(value = "质押式回购报价实体(输入输出共用)", description = "质押式回购报价实体(输入输出共用)")
 public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEntity {
 
-    @ApiModelProperty(name = "quoteId", value = "报价编号")
+    @ApiModelProperty(name = "quoteId", value = "报价编号(内部)")
     private String quoteId;
-    /**
-     * 按钮id
-     */
-    @ApiModelProperty(name="elementId",value="按钮id")
+
+    @ApiModelProperty(name = "cfetsQuoteId", value = "报价编号(外部)")
+    private String cfetsQuoteId;
+
+    @ApiModelProperty(name = "elementId", value = "按钮id")
     private String elementId;
 
     @ApiModelProperty(name = "operateType", value = "操作类型", example = "save")
     private String operateType;
 
-    @ApiModelProperty(name = "quotaPageModel", value = "报价操作类型", example = "marketResponse")
+    @ApiModelProperty(name = "operatorType", value = "操作类型", example = "done")
+    private String operatorType;
+
+    @ApiModelProperty(name = "quotaPageModel", value = "报价操作类型(修改,回复,撤回,回退)", example = "copy")
     private String quotaPageModel;
 
     @ApiModelProperty(name = "validStatus", value = "有效状态", example = "01")
@@ -53,6 +57,9 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     @ApiModelProperty(name = "counterId", value = "对手方")
     private String counterId;
+
+    @ApiModelProperty(name = "counterPartyId", value = "对手方(21位码)")
+    private String counterPartyId;
 
     @ApiModelProperty(name = "counterTrader", value = "对手方交易员")
     private String counterTrader;
@@ -111,6 +118,9 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name = "repoEntrustPledgeDtos", value = "质押券信息")
     private List<RepoEntrustPledgeDto> repoEntrustPledgeDtos;
 
+    @ApiModelProperty(name = "countPledgeBondList", value = "对手方质押券信息")
+    private List<RepoEntrustPledgeDto> countPledgeBondList;
+
     @ApiModelProperty(name = "tradeDate", value = "交易日期", example = "2021-07-08")
     private Date tradeDate;
 
@@ -141,8 +151,17 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name = "priceModelClass", value = "价格模式种类,只有指定价格01,只有限价指令02,两种都有03")
     private String priceModelClass;
 
-    @ApiModelProperty(name = "softSkipMode", value = "软控是否跳过校验" ,example = "Y")
+    @ApiModelProperty(name = "softSkipMode", value = "软控是否跳过校验", example = "Y")
     private String softSkipMode;
+
+    @ApiModelProperty(name = "dialogueRecord", value = "交谈记录", example = "xx")
+    private String dialogueRecord;
+
+    @ApiModelProperty(name = "sendStatus", value = "发送状态", example = "01")
+    private String sendStatus;
+
+    @ApiModelProperty(name = "tradeStatus", value = "交易状态", example = "01")
+    private String tradeStatus;
 
     public String getQuoteId() {
         return quoteId;
@@ -150,6 +169,14 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setQuoteId(String quoteId) {
         this.quoteId = quoteId;
+    }
+
+    public String getCfetsQuoteId() {
+        return cfetsQuoteId;
+    }
+
+    public void setCfetsQuoteId(String cfetsQuoteId) {
+        this.cfetsQuoteId = cfetsQuoteId;
     }
 
     public String getOperateType() {
@@ -478,6 +505,54 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setSoftSkipMode(String softSkipMode) {
         this.softSkipMode = softSkipMode;
+    }
+
+    public String getOperatorType() {
+        return operatorType;
+    }
+
+    public void setOperatorType(String operatorType) {
+        this.operatorType = operatorType;
+    }
+
+    public String getDialogueRecord() {
+        return dialogueRecord;
+    }
+
+    public void setDialogueRecord(String dialogueRecord) {
+        this.dialogueRecord = dialogueRecord;
+    }
+
+    public List<RepoEntrustPledgeDto> getCountPledgeBondList() {
+        return countPledgeBondList;
+    }
+
+    public void setCountPledgeBondList(List<RepoEntrustPledgeDto> countPledgeBondList) {
+        this.countPledgeBondList = countPledgeBondList;
+    }
+
+    public String getCounterPartyId() {
+        return counterPartyId;
+    }
+
+    public void setCounterPartyId(String counterPartyId) {
+        this.counterPartyId = counterPartyId;
+    }
+
+    public String getSendStatus() {
+        return sendStatus;
+    }
+
+    public void setSendStatus(String sendStatus) {
+        this.sendStatus = sendStatus;
+    }
+
+    public String getTradeStatus() {
+        return tradeStatus;
+    }
+
+    public void setTradeStatus(String tradeStatus) {
+        this.tradeStatus = tradeStatus;
     }
 }
 

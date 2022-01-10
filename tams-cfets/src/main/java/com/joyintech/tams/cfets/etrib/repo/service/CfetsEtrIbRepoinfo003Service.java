@@ -15,6 +15,8 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
+import com.joyintech.system.base.dao.SysWflBusinessListMapper;
+import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
@@ -23,8 +25,10 @@ import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
 import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtribBondInfo003Service;
 import com.joyintech.tams.cfets.etrib.repo.dto.*;
-import com.joyintech.tams.common.base.dao.WflEtrEntrustMapper;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.base.entity.EtrDistribute;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
+import com.joyintech.tams.common.base.entity.EtrPledge;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
@@ -112,9 +116,8 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
     @Autowired(required = false)
     private CfetsEtrIbBondinfoMapper cfetsEtrIbBondinfoMapper;
 
-   @Autowired(required = false)
-    private WflEtrEntrustMapper wflEtrEntrustMapper;
-
+    @Autowired
+    private SysWflBusinessListMapper sysWflBusinessListMapper;
 
 
 
@@ -370,7 +373,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         CfetsEtribRepoInfo003Dto entity = getBussinessEntityByWorkflowId(workflowId);
         WFlowCommonService.doCompleteFlow(entity.getWorkflowId());
         //发送头寸
-        PositionHttpRequest.deleteMethod(entity.getTotalEtrustId(),DictCodeListExt1.子系统代码_委托.getValue());
+        PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(),DictCodeListExt1.子系统代码_委托.getValue());
     }
 
 
@@ -391,7 +394,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                     doInsertFlow(dto);
                 }
                 //发送头寸
-                sendPositionMethod(entity,entity.getSubmitFlag());
+                sendPositionMethod(entity,StringUtil.equals(entity.getSystemAct(),DictCodeListExt3.系统动作_新建.getValue())?true:false);
             }
         }
     }
@@ -403,7 +406,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         }
         if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
             boolean isSubmit = true;
-            for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
+           /* for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
                 WflEtrEntrustKey wflEtrEntrustKey = new WflEtrEntrustKey();
                 wflEtrEntrustKey.setEntrustId(dto.getEntrustId());
                 wflEtrEntrustKey.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
@@ -411,6 +414,10 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                 if(wflEtrEntrust != null) {
                     isSubmit = false;
                 }
+            }*/
+            SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
+            if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
+                isSubmit = false;
             }
             WFlowCommonService.deleteFlow(entity.getWorkflowId());
             for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
@@ -467,6 +474,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         req.setInterfaceType("REPO001");
         req.setUserId(SecurityUtil.getLoginUser().getUserName());
         req.setTotalTradeId(entity.getTotalEtrustId());
+        req.setWorkFlowId(entity.getWorkflowId());
         req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
         req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
         String balanceCheck="Y";
@@ -481,9 +489,11 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         req.setBusiAct(DictCodeListExt3.业务动作_投资指令.getValue());
         req.setPs(entity.getPs());
         if(isSubmit){
-            req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+            req.setDecisionAct(DictCodeListExt3.系统动作_新建.getValue());
+            req.setSystemAct(entity.getSystemAct());
         }else{
-            req.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+            req.setDecisionAct(DictCodeListExt3.系统动作_修改.getValue());
+            req.setSystemAct(entity.getSystemAct());
             req.setbTotalTradeId(entity.getTotalEtrustId());
         }
         req.setCdate(entity.getEntrustDate());
@@ -625,11 +635,11 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                     RepoInfoDto.setTransmitTime(transmitTimeDto.getTransmitTime());
                     dto.setTransmitTime(transmitTimeDto.getTransmitTime());
                 }
-                RepoInfoDto.setSubmitFlag(false);
-                dto.setSubmitFlag(false);
+                RepoInfoDto.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+                dto.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
             }else{
-                RepoInfoDto.setSubmitFlag(true);
-                dto.setSubmitFlag(true);
+                RepoInfoDto.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+                dto.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
             }
             if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL), "02")
                     ||StringUtil.equals(RepoInfoDto.getPs(), DictCodeListExt1.回购方向_正回购.getValue())){

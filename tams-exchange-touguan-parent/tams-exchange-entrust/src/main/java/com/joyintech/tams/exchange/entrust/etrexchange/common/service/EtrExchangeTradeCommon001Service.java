@@ -45,6 +45,8 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
@@ -62,6 +64,7 @@ import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfo
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
@@ -84,8 +87,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -1128,14 +1133,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @param map 检索参数
      * @return 联想文本框
      */
-    public List<SuggestDto> selectCounterDealer(SelectOptionRequestDto dto) {
-//        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectCounterDealer",
-//                map, SuggestDto.class);
-		// 交易场所
-		Map<String, Object> map = BeanUtil.object2Map(dto);
-		map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
-		List<SuggestDto> suggestDtos = etrExchangeTradeCommonMapper.selectCounterDealer(map);
-		return suggestDtos;
+    public List<SuggestDto> selectCounterDealer(Map<String, Object> map) {
+        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectCounterDealer",
+                map, SuggestDto.class);
     }
 
     /**

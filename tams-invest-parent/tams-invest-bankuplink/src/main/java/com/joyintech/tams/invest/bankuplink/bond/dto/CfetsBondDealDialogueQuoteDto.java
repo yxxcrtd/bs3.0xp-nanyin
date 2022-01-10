@@ -197,6 +197,39 @@ public class CfetsBondDealDialogueQuoteDto extends CfetsBondDealEntrustOrderDto 
 
     private String type11;
 
+    /**
+     * 报价操作主要包含“发起、回复、修改、交谈”
+     */
+    private String quoteOperatorType;
+
+    private BigDecimal lendinShareAmt;
+
+    private BigDecimal ourShareAmt;
+
+    public BigDecimal getLendinShareAmt() {
+        return lendinShareAmt;
+    }
+
+    public void setLendinShareAmt(BigDecimal lendinShareAmt) {
+        this.lendinShareAmt = lendinShareAmt;
+    }
+
+    public BigDecimal getOurShareAmt() {
+        return ourShareAmt;
+    }
+
+    public void setOurShareAmt(BigDecimal ourShareAmt) {
+        this.ourShareAmt = ourShareAmt;
+    }
+
+    public String getQuoteOperatorType() {
+        return quoteOperatorType;
+    }
+
+    public void setQuoteOperatorType(String quoteOperatorType) {
+        this.quoteOperatorType = quoteOperatorType;
+    }
+
     public String getType11() {
         return type11;
     }

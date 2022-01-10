@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.datacommon.db.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
 import com.joyintech.tams.exchange.common.constant.TradeType;
 import com.joyintech.tams.exchange.common.db.domain.Trade;
@@ -31,21 +32,21 @@ public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements
     private Map<String, Map<String, Trade>> entrustIdMap = new ConcurrentHashMap<>();
     private Map<String, Map<String, Trade>> instructionIdMap = new ConcurrentHashMap<>();
     private Map<String, Map<String, Trade>> accountIdMap = new ConcurrentHashMap<>();
-    private String tradingDay;
+//    private String tradingDay;
 
     private Set<String> tradeIdSet = new HashSet<>();
 
     @Override
     public void clearSet(String date) {
         tradeIdSet.clear();
-        fillPlatDate(date);
+//        fillPlatDate(date);
     }
 
-    @Override
-    public void fillPlatDate(String date) {
-        tradingDay = date;
-        logger.info("trade tradingDay is {}", tradingDay);
-    }
+//    @Override
+//    public void fillPlatDate(String date) {
+//        tradingDay = date;
+//        logger.info("trade tradingDay is {}", tradingDay);
+//    }
 
     /**
      * 根据传入的Trade行数据的LocalTradeId与BrokerTradeId在Trade中查询
@@ -78,7 +79,7 @@ public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements
     public Trade queryTradeByAccountIdAndBrokerTradeId(String accountId, String brokerTradeId) {
         Map<String, Trade> map = accountIdMap.get(accountId);
         if (Objects.nonNull(map)) {
-            return map.get(tradingDay + "_" + brokerTradeId);
+            return map.get(DateUtil.getSysDate().replace("-","") + "_" + brokerTradeId);
         }
         return null;
     }

@@ -27,13 +27,8 @@ import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoLib001Mapper;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoinfoMapper;
 import com.joyintech.tams.cfets.etrib.repo.dto.*;
-import com.joyintech.tams.common.base.dao.EtrEntrustPledgeMapper;
-import com.joyintech.tams.common.base.dao.EtrSecStockConfigMapper;
-import com.joyintech.tams.common.base.dao.EtrSecStockMapper;
-import com.joyintech.tams.common.base.dao.PtlSecStockMapper;
-import com.joyintech.tams.common.base.entity.EtrEntrustPledge;
-import com.joyintech.tams.common.base.entity.EtrSecStockConfig;
-import com.joyintech.tams.common.base.entity.PtlSecStock;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -82,6 +77,10 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
      */
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
+
+
+    @Autowired(required = false)
+    private WflEtrEntrustMapper wflEtrEntrustMapper;
 
     /**
      * 指令管理查询
@@ -262,9 +261,36 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         return result;
     }
     
-    public List<EtrSecStockConfig> getAssetDetailBySeqno(CfetsEtrRepoPledgeAssetDetailRequest cfetsEtrRepoPledgeAssetDetailRequest) {
+    public Collection<CfetsEtrSecStockConfig> getAssetDetailBySeqno(CfetsEtrRepoPledgeAssetDetailRequest cfetsEtrRepoPledgeAssetDetailRequest) {
     	Map<String, Object> pageParam = BeanUtil.object2Map(cfetsEtrRepoPledgeAssetDetailRequest);
-    	return cfetsEtrIbRepoinfoMapper.getAssetDetailBySeqno(pageParam);
+        List<EtrSecStockConfig> etrSecStockConfigList = cfetsEtrIbRepoinfoMapper.getAssetDetailBySeqno(pageParam);
+    	Map<String,CfetsEtrSecStockConfig> map = new HashMap<>();
+    	for(EtrSecStockConfig etrSecStockConfig:etrSecStockConfigList){
+            String key =etrSecStockConfig.getIsPpb()+etrSecStockConfig.getIsRight()+etrSecStockConfig.getIsSecBond();
+            CfetsEtrSecStockConfig cfetsEtrSecStockConfig = null;
+            if(map.containsKey(key)){
+                 cfetsEtrSecStockConfig = map.get(key);
+//                cfetsEtrSecStockConfig.
+//                List<>
+
+            }else{
+                 cfetsEtrSecStockConfig = new CfetsEtrSecStockConfig();
+                BeanUtil.copyPropertiesIgnoreNull(cfetsEtrSecStockConfig,etrSecStockConfig);
+            }
+            List<String> windtype = new ArrayList<>();
+            windtype.add(etrSecStockConfig.getWindtypeone());
+            windtype.add(etrSecStockConfig.getWindtypetwo());
+            if(cfetsEtrSecStockConfig.getWindtype()==null){
+                List<List<String>> windtypeList = new ArrayList<>();
+                windtypeList.add(windtype);
+                cfetsEtrSecStockConfig.setWindtype(windtypeList);
+            }else{
+                cfetsEtrSecStockConfig.getWindtype().add(windtype);
+            }
+            map.put(key,cfetsEtrSecStockConfig);
+        }
+        Collection<CfetsEtrSecStockConfig> collection =map.values();
+        return collection;
     }
 
     /**
@@ -413,21 +439,11 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
     }
     
    public List<CfetsEtrRepoZLCXPositionResponse> selectF01List(Map<String, Object> pageParam){
-	   pageParam.put("POSITION_TYPE_01", DictCodeList.持仓类型_可用.getValue());
-       pageParam.put("POSITION_TYPE_03", DictCodeList.持仓类型_实际.getValue());
-       pageParam.put("POSITION_TYPE_04", DictCodeList.持仓类型_质押.getValue());
-       pageParam.put("POSITION_TYPE_05", DictCodeList.持仓类型_融入.getValue());
-       pageParam.put("POSITION_TYPE_06", DictCodeList.持仓类型_融出.getValue());
-       pageParam.put("POSITION_TYPE_08", DictCodeListExt1.持仓类型_预占用.getValue());
-       pageParam.put("POSITION_TYPE_11", DictCodeListExt1.持仓类型_卖空.getValue());
-       pageParam.put("POSITION_TYPE_12", DictCodeListExt1.持仓类型_卖空可用.getValue());
-
-       pageParam.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
+       pageParam.put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue());
+       pageParam.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
        pageParam.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
        pageParam.put("sysDate", iPlatformDate.getSysDateStr());
        pageParam.put("TRADEPLACE01", DictCodeListExt1.交易场所_银行间.getValue());
-       pageParam.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
-       pageParam.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
        pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
        pageParam.put("VALUATION_SOURCE_CBC", DictCodeList.估值来源_中债登_CBC.getValue());
 	   return cfetsEtrIbRepoinfoMapper.selectF01List(pageParam);
@@ -568,6 +584,21 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
                     validMessage.setMessage("只有指令状态为已撤回、已退回的指令允许修改");
                     res.setErrorList(Arrays.asList(validMessage));
                     return res;
+                }
+
+                if(StringUtil.isNotEmpty(Item.getEntrustId()))
+                {
+                    WflEtrEntrustKey wflEtrEntrustKey = new WflEtrEntrustKey();
+                    wflEtrEntrustKey.setEntrustId(Item.getEntrustId());
+                    wflEtrEntrustKey.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                    WflEtrEntrust wflEtrEntrust = wflEtrEntrustMapper.selectByPrimaryKey(wflEtrEntrustKey);
+                    if(wflEtrEntrust!=null){
+                        AjaxResult res=new AjaxResult();
+                        ValidMessage  validMessage= new ValidMessage();
+                        validMessage.setMessage("存在流程中数据，无法修改。");
+                        res.setErrorList(Arrays.asList(validMessage));
+                        return res;
+                    }
                 }
             };
         }

@@ -93,11 +93,6 @@ public class IbuQuoteRepo004Controller extends BaseController {
             cfetsRepoDealRegisterQuoteDto = cfetsRepoQuotedPrice004Service.getBussinessEntityByWorkflowId(getParam(GlobalConstant.WORKFLOW_ID));
             model.addAttribute(GlobalConstant.WORKFLOW_ID, getParam(GlobalConstant.WORKFLOW_ID));
             BeanUtil.copyPropertiesIgnoreNull(cfetsRepoDealQuoteCommonDto, cfetsRepoDealRegisterQuoteDto);
-//            if (CollectionUtils.isNotEmpty(cfetsRepoDealQuoteCommonDto.getPtlAllocations())) {
-//                cfetsRepoDealQuoteCommonDto.getPtlAllocations().stream().forEach(item -> {
-//                    item.setAvaNum(ArithmeticUtil.divide(item.getAvaNum(), new BigDecimal(10000), 2));
-//                });
-//            }
         }
         model.addAttribute("PRICE_MODEL_PRM01", DictCodeListExt2.价格模式_指定价格.getValue());
         model.addAttribute("PS_03", DictCodeListExt3.交易方向_正回购.getValue());

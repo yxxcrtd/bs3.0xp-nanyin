@@ -238,7 +238,6 @@
     }
     var pledgeBondTotalTblDetailed ;
     if(repo_pledge_model=='02') {
-
         /**
          * 质押券汇总信息（Total）
          */
@@ -255,7 +254,7 @@
                 /* {field: 'entrustId',title: 'BussRepoSecPtl.entrustId',type: 'text',align: 'left',sortable: false,edit: false},*/
                 // 债券代码
                 {
-                    field: 'finprodId',
+                    field: 'finprodMarketId',
                     title: 'BussRepoSecPtl.secId',
                     type: 'text',
                     align: 'left',
@@ -300,31 +299,34 @@
                 // 可质押券面总额
                 , {field: 'pledStrdPrinAmt', title: '可质押券面总额（万元）', type: 'number', edit: false, sortable: false, width: 240,
                     render: function (data, type, row, meta) {
-                        return data/10000;
+                        return (data/10000).toFixed(2);
                     }
                 }
                 //质押券汇总券面总额
                 , {field: 'pledgePrin', title: '质押券面总额（万元）', type: 'number', edit: false, sortable: false, width: 240,
                     render: function (data, type, row, meta) {
-                        return data/10000;
+                        return (data/10000).toFixed(2);
                     }}
                 // 首次净价
                 , {
                     field: 'firstNetPrice',
-                    width: 100,digit: 4,
+                    width: 150,digit: 4,
                     title: '首次净价（元）',
-                    sortable: false
+                    sortable: false,
+                    render: function (data, type, row, meta) {
+                        return (data*1).toFixed(4);
+                    }
                 }
                 //折算比例%
-                , {field: 'scale', title: '折算比例%', type: 'number', edit: false, sortable: false,digit: 2, width: 100,
+                , {field: 'scale', title: '折算比例(%)', type: 'number', edit: false, sortable: false,digit: 2, width: 100,
                     render: function (data, type, row, meta) {
-                        return data*100;
+                        return (data*100).toFixed(2);
                     }
                 }
 
                 // 登记托管机构
                 , {
-                    field: 'repRegistOrgStr',
+                    field: 'registOrgStr',
                     title: 'BussRepoSecPtl.repRegistOrg',
                     type: 'text',
                     align: 'left',

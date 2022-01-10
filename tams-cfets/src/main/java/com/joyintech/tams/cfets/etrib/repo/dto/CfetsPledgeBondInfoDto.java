@@ -85,6 +85,11 @@ public class CfetsPledgeBondInfoDto extends BaseEntity {
     private BigDecimal pledgePrin;
 
     /**
+     * 质押券面额
+     */
+    private BigDecimal pledgeAmount;
+
+    /**
      * 首次竞价
      */
     private BigDecimal firstNetPrice;
@@ -243,5 +248,13 @@ public class CfetsPledgeBondInfoDto extends BaseEntity {
 
     public void setFinprodMarketId(String finprodMarketId) {
         this.finprodMarketId = finprodMarketId;
+    }
+
+    public BigDecimal getPledgeAmount() {
+        return pledgeAmount;
+    }
+
+    public void setPledgeAmount(BigDecimal pledgeAmount) {
+        this.pledgeAmount = pledgeAmount;
     }
 }

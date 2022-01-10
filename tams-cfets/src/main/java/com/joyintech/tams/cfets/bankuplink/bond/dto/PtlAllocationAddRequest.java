@@ -15,11 +15,17 @@ public class PtlAllocationAddRequest {
     @ApiModelProperty(required = true,name="finprodId",value="资产代码")
     private String finprodId;
 
+    @ApiModelProperty(name="mySide",value="本方")
+    private String mySide;
+
+    @ApiModelProperty(required = true,name="secManageAcctId",value="证券账户")
+    private String secManageAcctId;
+
     @ApiModelProperty(required = true,name="ps",value="交易方向")
     private String ps;
 
-    @ApiModelProperty(required = true,name="settleSpreed",value="清算速度")
-    private String settleSpreed;
+    @ApiModelProperty(required = true,name="settleSpreedCode",value="清算速度")
+    private String settleSpreedCode;
 
     @ApiModelProperty(required = true,name="entrustIdList",value="排除已经选择的指令")
     private List<String> entrustIdList;
@@ -47,6 +53,22 @@ public class PtlAllocationAddRequest {
         this.finprodId = finprodId;
     }
 
+    public String getMySide() {
+        return mySide;
+    }
+
+    public void setMySide(String mySide) {
+        this.mySide = mySide;
+    }
+
+    public String getSecManageAcctId() {
+        return secManageAcctId;
+    }
+
+    public void setSecManageAcctId(String secManageAcctId) {
+        this.secManageAcctId = secManageAcctId;
+    }
+
     public String getPs() {
         return ps;
     }
@@ -55,12 +77,12 @@ public class PtlAllocationAddRequest {
         this.ps = ps;
     }
 
-    public String getSettleSpreed() {
-        return settleSpreed;
+    public String getSettleSpreedCode() {
+        return settleSpreedCode;
     }
 
-    public void setSettleSpreed(String settleSpreed) {
-        this.settleSpreed = settleSpreed;
+    public void setSettleSpreedCode(String settleSpreedCode) {
+        this.settleSpreedCode = settleSpreedCode;
     }
 
     public List<String> getEntrustIdList() {

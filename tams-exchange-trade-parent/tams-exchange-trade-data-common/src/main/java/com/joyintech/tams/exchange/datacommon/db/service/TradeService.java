@@ -23,5 +23,5 @@ public interface TradeService extends AsyncService<String, Trade> {
 
     void clearSet(String date);
 
-    void fillPlatDate(String date);
+//    void fillPlatDate(String date);
 }

@@ -33,18 +33,12 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.service.trade.bond.dto.TrdBondInvestTradeDto;
 import com.joyintech.system.base.dao.SysUploadFileInfoMapper;
 import com.joyintech.system.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
 import com.joyintech.tams.cfets.trdconfirm.dao.CfetsTrdConfirmMapper;
-import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmCstpInfoListResponse;
-import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmManualMatchInfoRequest;
-import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmMatchDto;
-import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegInfoListResponse;
 import com.joyintech.tams.cfets.trdquery.dao.CfetsTrdQueryMapper;
-import com.joyintech.tams.cfets.trdquery.dto.CfetsPortfolioIdFenPeiInfoResponse;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdInvestPersonInfoDto;
 import com.joyintech.tams.common.base.dao.*;
@@ -60,7 +54,6 @@ import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommServi
 import com.joyintech.tams.component.business.trade.BussTrdAvailableCashQueryService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
-import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
 import com.joyintech.tams.component.business.trade.impl.BaseTradeProductDealCommServiceImpl;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -77,18 +70,11 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.cstp.service.CstpCommonService;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
-import com.joyintech.tams.invest.common.dto.BaseTradeProductDealRevokeDto;
-import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
-import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
-import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;
 import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
 import com.joyintech.tams.invest.common.dto.cstp.InterfTradSecdealDto;
-import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
-import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
-import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.service.MapperDelegateService;
@@ -97,7 +83,6 @@ import com.joyintech.tams.invest.common.trade.CeLinesUpdate;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
-import com.joyintech.tams.invest.common.trade.dto.PreTrdCommonDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.common.trade.service.MultiApproveTradeCheckService;
@@ -137,7 +122,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.joyintech.tams.invest.common.asset.service.BondAssetCalcService.*;
-import static com.joyintech.tams.invest.common.trade.AllTradeCommonUtil.copyFileInfoByFileNo;
 
 /**
  * 债券投资交易新建画面Service
@@ -1071,7 +1055,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
      * @see
      * @since 1.0
      */
-    public void doCompleteRevoke(CfetsTrdBondInvestTradeDto entity,String settleRemark) {
+    public void doCompleteRevoke(CfetsTrdBondInvestTradeDto entity,String settleRemark,Boolean isNeedDealPosition) {
         // 调用基础组合.【金融产品交易组件.查询金融产品交易信息】获取原交易信息
         if (entity.getTotleTradeId().lastIndexOf('R') == entity.getTotleTradeId().length() - 1) {
             entity.setTotleTradeId(entity.getTotleTradeId().substring(0, entity.getTotleTradeId().length() - 1));
@@ -1194,7 +1178,14 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         cfetsTrdConfirmMapper.deleteByTrdId(bizCode);
 
        //发送头寸
-        PositionHttpRequest.deleteMethod(bizCode,DictCodeListExt1.子系统代码_交易.getValue());
+        if(isNeedDealPosition){
+            PositionHttpRequest.deleteMethod(bizCode,DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+        }else{
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("totleTradeId", bizCode);
+            paramMap.put("tradeStatus", BussinessDictCodeList.银行间上行报价状态_已撤销.getValue());
+            cfetsTrdQueryMapper.updateIbuByPrimaryKeySelective(paramMap);
+        }
     }
 
     /**
@@ -1478,7 +1469,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         }
         // 撤销
         else {
-            this.doCompleteRevoke(entity,"");
+            this.doCompleteRevoke(entity,"",true);
 
             //补充  如果是撤销将交易ID赋值为null
             Map<String, Object> map = new HashMap<>();

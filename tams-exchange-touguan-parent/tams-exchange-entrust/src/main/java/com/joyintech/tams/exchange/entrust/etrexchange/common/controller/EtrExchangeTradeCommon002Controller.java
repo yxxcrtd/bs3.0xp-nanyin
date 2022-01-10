@@ -248,6 +248,7 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
         ExcelUitl.doExport(requestDto, response, "指令列表", () -> {
             EtrExchangeTradeEtrExchangeCommonRequest dto = requestDto.getDto(EtrExchangeTradeEtrExchangeCommonRequest.class);
             List dataList = etrExchangeTradeCommon002Service.selectEtrExchange(dto).getRoot();
+            etrExchangeTradeCommon002Service.handExportTimes(dataList);
             return dataList;
         });
     }

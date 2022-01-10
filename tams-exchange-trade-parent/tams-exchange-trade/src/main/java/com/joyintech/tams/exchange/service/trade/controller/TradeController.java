@@ -7,16 +7,15 @@ import com.joyintech.tams.exchange.common.db.domain.Trade;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.request.HistoryTradeInfoRequest;
 import com.joyintech.tams.exchange.common.request.PageTradeInfoRequest;
+import com.joyintech.tams.exchange.common.request.TradeInfoByIdRequest;
 import com.joyintech.tams.exchange.common.request.TradeInfoRequest;
 import com.joyintech.tams.exchange.service.trade.management.service.TradeManagement;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -45,5 +44,29 @@ public class TradeController {
     @RequestMapping(value = "/trade/page", method = RequestMethod.POST)
     public Message<PageInfo<Object>> queryAllForPage(@RequestBody @Validated PageTradeInfoRequest request) {
         return tradeManagement.queryAllForPage(request);
+    }
+
+    @ApiOperation(value = "根据委托编号查询成交信息", notes = "根据委托编号查询成交信息")
+    @RequestMapping(value = "/tradeByEntrustId", method = RequestMethod.POST)
+    public Message<List<Trade>> queryTradeByEntrustId(@RequestBody @Validated TradeInfoByIdRequest request) {
+        return new Message<>(tradeManagement.queryTradeByEntrustId(request.getUserId(), request.getId()));
+    }
+
+    @ApiOperation(value = "根据订单编号查询成交信息", notes = "根据订单编号查询成交信息")
+    @RequestMapping(value = "/tradeByOrderId", method = RequestMethod.POST)
+    public Message<List<Trade>> queryTradeByOrderId(@RequestBody @Validated TradeInfoByIdRequest request) {
+        return new Message<>(tradeManagement.queryTradeByOrderId(request.getUserId(), request.getId()));
+    }
+
+    @ApiOperation(value = "根据指令编号查询成交信息", notes = "根据指令编号查询成交信息")
+    @RequestMapping(value = "/tradeByInstructionId", method = RequestMethod.POST)
+    public Message<List<Trade>> queryTradeByInstructionId(@RequestBody @Validated TradeInfoByIdRequest request) {
+        return new Message<>(tradeManagement.queryTradeByInstructionId(request.getUserId(), request.getId()));
+    }
+
+    @ApiOperation(value = "根据资金账户编号查询成交信息", notes = "根据资金账户编号查询成交信息")
+    @RequestMapping(value = "/tradeByAccountId", method = RequestMethod.POST)
+    public Message<List<Trade>> queryTradeByAccountId(@RequestBody @Validated TradeInfoByIdRequest request) {
+        return new Message<>(tradeManagement.queryTradeByAccountId(request.getUserId(), request.getId()));
     }
 }

@@ -146,8 +146,12 @@ public class CfetsTrdConfirmController extends BaseController {
     @PostMapping("cstpManualMatch")
     public Message<AjaxResult> cstpManualMatch(@RequestBody CfetsTrdConfirmManualMatchInfoRequest manualMatchDto) throws Exception {
         try {
-            cfetsTrdConfirmService.cstpManualMatchMethod(manualMatchDto);
-            return new Message<AjaxResult>().success().setData(new AjaxResult("手工匹配成功"));
+            AjaxResult ajaxResult = cfetsTrdConfirmService.cstpManualMatchMethod(manualMatchDto);
+            if (null!=ajaxResult && !StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+                return new Message<AjaxResult>().success().setData(ajaxResult);
+            }else{
+                return new Message<AjaxResult>().success().setData(new AjaxResult("手工匹配确定成功"));
+            }
         } catch (Exception e) {
             logger.error("手工匹配数据异常", e);
             return new Message<AjaxResult>().fail().setMessage("手工匹配数据异常");

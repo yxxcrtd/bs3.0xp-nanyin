@@ -1,8 +1,11 @@
 package com.joyintech.tams.cfets.trdconfirm.dao;
 
 
+
+import com.joyintech.service.bankuplink.common.dto.TrdConfirmRegAndIbuInfoDto;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbBondinfoDto;
 import com.joyintech.tams.cfets.trdconfirm.dto.*;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -33,11 +36,17 @@ public interface CfetsTrdConfirmMapper {
      */
     CfetsTrdConfirmRegInfoListResponse selectRegInfoByKey(String totleTradeId);
     /**
-     * 根据主键查询报价信息
+     * 根据主键查询债券报价信息
      * @param pageParam
      * @return
      */
-    CfetsTrdConfirmRegInfoListResponse selectIbuInfoByKey(String totleTradeId);
+    CfetsTrdConfirmRegInfoListResponse selectIbuInfoByKey(Map<String, Object> pageParam);
+    /**
+     * 根据主键查询回购报价信息
+     * @param pageParam
+     * @return
+     */
+    CfetsTrdConfirmRegInfoListResponse selectRepoIbuInfoByKey(String totleTradeId);
     /**
      * 查询所有登记费用信息
      * @param pageParam
@@ -166,6 +175,31 @@ public interface CfetsTrdConfirmMapper {
      * @return
      */
     List<CfetsTrdConfirmRegInfoListResponse> isExistDealInfo(Map<String, Object> pageParam);
+    /**
+     * 查询所有质押明细数据
+     * @param pageParam
+     * @return
+     */
 
-
+    List<PledgeBondInfoDto> findAllSecPtlsList(String tradeId);
+    /**
+     * 指令投资目的
+     */
+    String selectInvAimByEntrustId(Map<String, Object> param);
+    /**
+     * 查询所有报价的质押明细数据
+     */
+    List<PledgeBondInfoDto> findAllIbuSecPtlsList(Map<String, Object> param);
+    /**
+     * 根据成交编号，查询下行成交匹配关系
+     */
+    CfetsTrdConfirmMatchDto selectMatchDtoByExecId(@Param("execid") String execid);
+    /**
+     * 根据登记编号，查询登记信息
+     */
+    List<CfetsTrdConfirmRegInfoListResponse> selectRegDtoByPrimaryKey(Map<String, Object> map);
+    /**
+     * 根据报价编号，查询报价信息
+     */
+   // CfetsTrdConfirmRegInfoListResponse selectIbuDtoByPrimaryKey(@Param("quoteId") String quoteId);
 }

@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -119,7 +120,7 @@ public class CfetsBondDealQuotedPrice005Controller extends BaseController {
             model.addAttribute("busWorkflowId",getParam(GlobalConstant.WORKFLOW_ID));
             cfetsBondDealRequestQuoteDto = cfetsBondDealQuotedPrice003Service.getBussinessEntityByWorkflowId(getParam(GlobalConstant.WORKFLOW_ID));
 //            cfetsBondDealRequestQuoteDto.setAvaNum(cfetsBondDealRequestQuoteDto.getAvaNum().multiply(new BigDecimal(10000)));
-			if (null == cfetsBondDealRequestQuoteDto.getCounterInfoList()
+			if ((null == cfetsBondDealRequestQuoteDto.getCounterInfoList()|| CollectionUtils.isEmpty(cfetsBondDealRequestQuoteDto.getCounterInfoList()))
 					&& cfetsBondDealRequestQuoteDto.getCounterIdList().size() > 0) {
 				List<CounterInfoDto> counterInfoList = new ArrayList<CounterInfoDto>();
 				for (String counterId : cfetsBondDealRequestQuoteDto.getCounterIdList()) {

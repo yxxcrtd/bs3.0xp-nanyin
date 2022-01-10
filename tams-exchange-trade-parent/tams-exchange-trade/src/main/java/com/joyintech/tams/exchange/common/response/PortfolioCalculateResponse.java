@@ -22,6 +22,15 @@ public class PortfolioCalculateResponse {
     @JsonProperty("finprodName")
     private String finprodName;
 
+    @JsonProperty("acctNo")
+    private String acctNo;
+
+    @JsonProperty("fullPrice")
+    private String fullPrice;
+
+    @JsonProperty("priceMode")
+    private String priceMode;
+
     @JsonProperty("instructionId")
     private String instructionId;
 
@@ -51,6 +60,9 @@ public class PortfolioCalculateResponse {
 
     @JsonProperty("entrustNum")
     private Long entrustNum;
+
+    @JsonProperty("conNum")
+    private Long conNum;
 
     @JsonProperty("instructionLeftNum")
     private Long instructionLeftNum;
@@ -129,6 +141,63 @@ public class PortfolioCalculateResponse {
 
     public void setFinprodName(String finprodName) {
         this.finprodName = finprodName;
+    }
+
+    public PortfolioCalculateResponse acctNo(String acctNo) {
+        this.acctNo = acctNo;
+        return this;
+    }
+
+    /**
+     * 资金账户
+     *
+     * @return acctNo
+     */
+    @ApiModelProperty(required = true, value = "资金账户")
+    public String getAcctNo() {
+        return acctNo;
+    }
+
+    public void setAcctNo(String acctNo) {
+        this.acctNo = acctNo;
+    }
+
+    public PortfolioCalculateResponse fullPrice(String fullPrice) {
+        this.fullPrice = fullPrice;
+        return this;
+    }
+
+    /**
+     * 全价
+     *
+     * @return fullPrice
+     */
+    @ApiModelProperty(required = true, value = "资金账户")
+    public String getFullPrice() {
+        return fullPrice;
+    }
+
+    public void setFullPrice(String fullPrice) {
+        this.fullPrice = fullPrice;
+    }
+
+    public PortfolioCalculateResponse priceMode(String priceMode) {
+        this.priceMode = priceMode;
+        return this;
+    }
+
+    /**
+     * 价格模式
+     *
+     * @return priceMode
+     */
+    @ApiModelProperty(required = true, value = "价格模式")
+    public String getPriceMode() {
+        return priceMode;
+    }
+
+    public void setPriceMode(String priceMode) {
+        this.priceMode = priceMode;
     }
 
     public PortfolioCalculateResponse instructionId(String instructionId) {
@@ -321,6 +390,25 @@ public class PortfolioCalculateResponse {
         this.entrustNum = entrustNum;
     }
 
+    public PortfolioCalculateResponse conNum(Long conNum) {
+        this.conNum = conNum;
+        return this;
+    }
+
+    /**
+     * 转股数量
+     *
+     * @return conNum
+     */
+    @ApiModelProperty(required = true, value = "转股数量")
+    public Long getConNum() {
+        return conNum;
+    }
+
+    public void setConNum(Long conNum) {
+        this.conNum = conNum;
+    }
+
     public PortfolioCalculateResponse instructionLeftNum(Long instructionLeftNum) {
         this.instructionLeftNum = instructionLeftNum;
         return this;
@@ -343,7 +431,6 @@ public class PortfolioCalculateResponse {
         this.instructionLeftNum = instructionLeftNum;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -352,27 +439,13 @@ public class PortfolioCalculateResponse {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        PortfolioCalculateResponse portfolioCalculateResponse = (PortfolioCalculateResponse) o;
-        return Objects.equals(this.portfolioInfo, portfolioCalculateResponse.portfolioInfo) &&
-                Objects.equals(this.portfolioName, portfolioCalculateResponse.portfolioName) &&
-                Objects.equals(this.portfolioId, portfolioCalculateResponse.portfolioId) &&
-                Objects.equals(this.finprodName, portfolioCalculateResponse.finprodName) &&
-                Objects.equals(this.instructionId, portfolioCalculateResponse.instructionId) &&
-                Objects.equals(this.finprodMarketId, portfolioCalculateResponse.finprodMarketId) &&
-                Objects.equals(this.entrustAmt, portfolioCalculateResponse.entrustAmt) &&
-                Objects.equals(this.entrustPrice, portfolioCalculateResponse.entrustPrice) &&
-                Objects.equals(this.entrustProp, portfolioCalculateResponse.entrustProp) &&
-                Objects.equals(this.instructionTotalAmt, portfolioCalculateResponse.instructionTotalAmt) &&
-                Objects.equals(this.instructionTotalNum, portfolioCalculateResponse.instructionTotalNum) &&
-                Objects.equals(this.instructionLeftAmt, portfolioCalculateResponse.instructionLeftAmt) &&
-                Objects.equals(this.disRate, portfolioCalculateResponse.disRate) &&
-                Objects.equals(this.entrustNum, portfolioCalculateResponse.entrustNum) &&
-                Objects.equals(this.instructionLeftNum, portfolioCalculateResponse.instructionLeftNum);
+        PortfolioCalculateResponse that = (PortfolioCalculateResponse) o;
+        return Objects.equals(portfolioInfo, that.portfolioInfo) && Objects.equals(portfolioName, that.portfolioName) && Objects.equals(portfolioId, that.portfolioId) && Objects.equals(finprodName, that.finprodName) && Objects.equals(acctNo, that.acctNo) && Objects.equals(fullPrice, that.fullPrice) && Objects.equals(priceMode, that.priceMode) && Objects.equals(instructionId, that.instructionId) && Objects.equals(finprodMarketId, that.finprodMarketId) && Objects.equals(entrustAmt, that.entrustAmt) && Objects.equals(entrustPrice, that.entrustPrice) && Objects.equals(entrustProp, that.entrustProp) && Objects.equals(instructionTotalAmt, that.instructionTotalAmt) && Objects.equals(instructionTotalNum, that.instructionTotalNum) && Objects.equals(instructionLeftAmt, that.instructionLeftAmt) && Objects.equals(disRate, that.disRate) && Objects.equals(entrustNum, that.entrustNum) && Objects.equals(conNum, that.conNum) && Objects.equals(instructionLeftNum, that.instructionLeftNum);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(portfolioInfo, portfolioName, portfolioId, finprodName, instructionId, finprodMarketId, entrustAmt, entrustPrice, entrustProp, instructionTotalAmt, instructionTotalNum, instructionLeftAmt, disRate, entrustNum, instructionLeftNum);
+        return Objects.hash(portfolioInfo, portfolioName, portfolioId, finprodName, acctNo, fullPrice, priceMode, instructionId, finprodMarketId, entrustAmt, entrustPrice, entrustProp, instructionTotalAmt, instructionTotalNum, instructionLeftAmt, disRate, entrustNum, conNum, instructionLeftNum);
     }
 
     @Override
@@ -384,6 +457,9 @@ public class PortfolioCalculateResponse {
         sb.append("    portfolioName: ").append(toIndentedString(portfolioName)).append("\n");
         sb.append("    portfolioId: ").append(toIndentedString(portfolioId)).append("\n");
         sb.append("    finprodName: ").append(toIndentedString(finprodName)).append("\n");
+        sb.append("    acctNo: ").append(toIndentedString(acctNo)).append("\n");
+        sb.append("    fullPrice: ").append(toIndentedString(fullPrice)).append("\n");
+        sb.append("    priceMode: ").append(toIndentedString(priceMode)).append("\n");
         sb.append("    instructionId: ").append(toIndentedString(instructionId)).append("\n");
         sb.append("    finprodMarketId: ").append(toIndentedString(finprodMarketId)).append("\n");
         sb.append("    entrustAmt: ").append(toIndentedString(entrustAmt)).append("\n");
@@ -394,6 +470,7 @@ public class PortfolioCalculateResponse {
         sb.append("    instructionLeftAmt: ").append(toIndentedString(instructionLeftAmt)).append("\n");
         sb.append("    disRate: ").append(toIndentedString(disRate)).append("\n");
         sb.append("    entrustNum: ").append(toIndentedString(entrustNum)).append("\n");
+        sb.append("    conNum: ").append(toIndentedString(conNum)).append("\n");
         sb.append("    instructionLeftNum: ").append(toIndentedString(instructionLeftNum)).append("\n");
         sb.append("}");
         return sb.toString();

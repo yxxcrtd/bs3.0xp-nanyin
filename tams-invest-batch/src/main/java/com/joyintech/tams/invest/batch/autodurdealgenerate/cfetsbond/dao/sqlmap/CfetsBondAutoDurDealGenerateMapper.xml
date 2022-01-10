@@ -116,6 +116,7 @@
         LEFT JOIN FIN_PRODUCT FP ON T8.SEC_ACCT_ID = FP.FINPROD_ID
         where
         t8.PAY_DATE >= #{PLATEFORM_DATE}
+        AND T8.MDATE = #{PLATEFORM_DATE}
         GROUP BY
         t8.SEC_ACCT_ID,SAI.SEC_ACCT_NAME, fp.FINPROD_NAME,
         t10.FINPROD_MARKET_ID,
@@ -535,5 +536,109 @@
         and rownum=1
     </select>
 
+    <select id="getDealDetailsByTradeId" parameterType="java.lang.String"
+            resultType="com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dto.CfetsManualSettleDealInfo">
+        SELECT
+        TPD.TRADE_ID TRADE_ID,
+        BUSI_TYPE BUSI_TYPE,
+        FINPROD_ID FINPROD_ID,
+        FINPROD_TYPE FINPROD_TYPE,
+        FINPROD_TYPE2 FINPROD_TYPE2,
+        BRANCH BRANCH,
+        TRADE_DATE TRADE_DATE,
+        VDATE VDATE,
+        MDATE MDATE,
+        SETTLE_DATE SETTLE_DATE,
+        SETTLE_SPEED SETTLE_SPEED,
+        CCY CCY,
+        CPRICE_DATE CPRICE_DATE,
+        UNIT_CPRICE UNIT_CPRICE,
+        UNIT_INT UNIT_INT,
+        UNIT_FPRICE UNIT_FPRICE,
+        PAR_VALUE PAR_VALUE,
+        CPRICE_AMT CPRICE_AMT,
+        SHARE_AMT*100 SHARE_AMT,
+        PRIN_AMT PRIN_AMT,
+        INT_AMT INT_AMT,
+        FPRICE_AMT FPRICE_AMT,
+        FEE_AMT_PAY FEE_AMT_PAY,
+        TRADE_AMT TRADE_AMT,
+        FEE_AMT_UNPAY FEE_AMT_UNPAY,
+        FEE_AMT FEE_AMT,
+        PS PS, YIELD YIELD,
+        EXER_YIELD EXER_YIELD,
+        INV_AIM INV_AIM,
+        TRADE_STATUS TRADE_STATUS,
+        IS_CANCEL IS_CANCEL,
+        P_TRADE_ID P_TRADE_ID,
+        IS_CLEAN IS_CLEAN,
+        TPD.TOTLE_TRADE_ID TOTLE_TRADE_ID,
+        R_TRADE_ID R_TRADE_ID,
+        B_TRADE_ID B_TRADE_ID,
+        CHL_ID CHL_ID,
+        COUNTER_ID COUNTER_ID,
+        IS_OUT_TRADE IS_OUT_TRADE,
+        TRADE_MARKET TRADE_MARKET,
+        TRADE_PLAT TRADE_PLAT,
+        TRADE_MARKET_MODE TRADE_MARKET_MODE,
+        TRADER TRADER,
+        COUNTER_TRADER COUNTER_TRADER,
+        COUNTER_CONTACT COUNTER_CONTACT,
+        SEC_MANAGE_ACCT_ID SEC_MANAGE_ACCT_ID,
+        F_TRADE_ID F_TRADE_ID,
+        CASH_ID CASH_ID,
+        REGIST_ORG REGIST_ORG,
+        REMARK REMARK,
+        CANCEL_REMARK CANCEL_REMARK,
+        DELIVERY_TYPE DELIVERY_TYPE,
+        PAY_DATE PAY_DATE,
+        SALE_CODE SALE_CODE,
+        ACCR_NUM ACCR_NUM,
+        TG_BUSI_TYPE TG_BUSI_TYPE,
+        PS_PAYMENT PS_PAYMENT,
+        SPLIT_TRADE_ID SPLIT_TRADE_ID,
+        IS_SWAP_TRANSACTION IS_SWAP_TRANSACTION,
+        SEAT_ID SEAT_ID,
+        SETTLEMEN_TYPE SETTLEMEN_TYPE,
+        HK_MARKET HK_MARKET,
+        BUY_SETTLE_RATE BUY_SETTLE_RATE,
+        SELL_SETTLE_RATE SELL_SETTLE_RATE,
+        DEAL_AMT DEAL_AMT,
+        TPDA.PORTFOLIO_ID,
+        TPDA.ENTRUST_ID,
+        TPDA.OUR_SHARE_AMT,
+        TPDA.LENDIN_SHARE_AMT
+        FROM
+        TRD_PRODUCT_DEAL TPD
+        LEFT JOIN TRD_PRODUCT_DEAL_ADD TPDA
+        ON TPD.TRADE_ID = TPDA.TRADE_ID
+        LEFT JOIN TRD_DEAL_TOTAL_ADD TDTA
+        ON TPD.TOTLE_TRADE_ID = TDTA.TOTLE_TRADE_ID
+        WHERE
+        TPD.TOTLE_TRADE_ID = #{tradeId}
+    </select>
+
+    <select id="qryPortfolioSecAcctId" resultType="java.lang.String">
+        SELECT V.SEC_ACCT_ID AS SECACCTID
+        FROM PTL_SEC_ACCT PSA, STL_SEC_ACCT_INFO V
+        LEFT JOIN FIN_PRODUCT R
+        ON R.REGIST_ORG = V.REGIST_ORG
+        WHERE PSA.ACCT_NO = V.SEC_ACCT_ID
+        AND V.SEC_ACCT_TYPE = 'SEC'
+        AND V.TRADE_PLACE in ('01','02')
+        AND V.TRADE_PLACE = R.TRADE_MARKET
+        AND PSA.PORTFOLIO_ID = #{portfolioId}
+        AND R.FINPROD_ID = #{finprodId}
+    </select>
+
+    <select id="selectTrdFinProductDealTotalData" resultType="java.lang.String">
+        select tfpft.totle_trade_id from TRD_FIN_PRODUCT_DEAL_TOTAL tfpft
+        where tfpft.trade_date =#{batchDate}
+        and tfpft.BUSI_TYPE = #{busiType}
+        and tfpft.update_user = #{updateUser}
+        <if test="finProdType2 != null and finProdType2 != ''">
+            and tfpft.FINPROD_TYPE2 = #{finProdType2}
+        </if>
+    </select>
 
 </mapper>

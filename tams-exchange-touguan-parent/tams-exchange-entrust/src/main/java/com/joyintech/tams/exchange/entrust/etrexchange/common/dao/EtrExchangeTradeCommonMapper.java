@@ -18,6 +18,7 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeEtrExchangeCommonResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonResponse;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.FinProductOthCodeDto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.SubEqutityDto;
@@ -296,5 +297,5 @@ public interface EtrExchangeTradeCommonMapper {
 
 
 
-    List<EtrExchangeTradePortfolioResponse>	selectEtrPortfolioList(@Param("entrustId") String entrustId);
+    List<EtrExchangeTradeSaveRequest>	selectEntrustDetail(EtrExchangeTradeSaveRequest dto);
 }

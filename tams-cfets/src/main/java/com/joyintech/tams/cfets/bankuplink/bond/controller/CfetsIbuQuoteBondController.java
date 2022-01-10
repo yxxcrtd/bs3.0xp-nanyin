@@ -14,6 +14,7 @@ import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
 import com.joyintech.tams.cfets.bankuplink.bond.service.*;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
@@ -385,6 +386,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		for(CfetsBondCheckRequst cfetsBondCheckRequst:cfetsBondCheckRequsts){
 			BondQuoteInfoDto bondQuoteInfoDto = new BondQuoteInfoDto();
 			BeanUtil.copyPropertiesIgnoreNull(bondQuoteInfoDto,cfetsBondCheckRequst);
+			bondQuoteInfoDto.setOperationType("recall");
 			aj =cfetsQuotedCommonService.checkOperationAllow(bondQuoteInfoDto);
 			if(!com.joyintech.framework.util.StringUtil.isEmptyList(aj.getErrorList())){
 				return new Message<AjaxResult>().success().setData(aj);
@@ -393,7 +395,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		return new Message<AjaxResult>().success().setData(aj);
 	}
 
-	@ApiOperation(value = "报价检查", notes = "报价修改、复制、回退、回复、撤回检查")
+	@ApiOperation(value = "报价检查", notes = "报价修改、复制、回退、回复、删除、撤回检查")
 	@ResponseBody
 	@RequestMapping("/checkOperationAllow")
 	public Message<AjaxResult> checkOperationAllow(@RequestBody CfetsBondCheckRequst cfetsBondCheckRequst) {
@@ -402,30 +404,41 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		return new Message<AjaxResult>().success().setData(cfetsQuotedCommonService.checkOperationAllow(bondQuoteInfoDto));
 	}
 
-	@ApiOperation(value = "请求报价撤回", notes = "请求报价撤回")
+	@ApiOperation(value = "报价撤回", notes = "报价撤回")
 	@ResponseBody
 	@RequestMapping("doReCall")
-	public Message<AjaxResult> doReCall(@RequestBody CfetsBondCheckRequst cfetsBondCheckRequst) {
+	public Message<AjaxResult> doReCall(@RequestBody CfetsBondCheckRequst cfetsBondCheckRequst) throws Exception{
 		AjaxResult ar = null;
 		BondQuoteInfoDto bondQuote = new BondQuoteInfoDto();
 		BeanUtil.copyPropertiesIgnoreNull(bondQuote,cfetsBondCheckRequst);
-		if (ibuQuoteBondService.doReCall(bondQuote)) {
-			ar = new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS"));
-		} ;
+		try{
+			if (ibuQuoteBondService.doReCall(bondQuote)) {
+				ar = new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS"));
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+			return PositionUtil.ajaxErrorReturn(e);
+		}
 		return new Message<AjaxResult>().success().setData(ar);
 	}
+
 
 	@ApiOperation(value = "报价批量撤回", notes = "报价批量撤回")
 	@ResponseBody
 	@RequestMapping("doReCallList")
-	public Message<AjaxResult> doReCallList(@RequestBody List<CfetsBondCheckRequst> cfetsBondCheckRequsts) {
+	public Message<AjaxResult> doReCallList(@RequestBody List<CfetsBondCheckRequst> cfetsBondCheckRequsts) throws Exception{
 		AjaxResult ar = null;
-		for(CfetsBondCheckRequst cfetsBondCheckRequst:cfetsBondCheckRequsts){
-			BondQuoteInfoDto bondQuote = new BondQuoteInfoDto();
-			BeanUtil.copyPropertiesIgnoreNull(bondQuote,cfetsBondCheckRequst);
-			if (ibuQuoteBondService.doReCall(bondQuote)) {
-				ar = new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS"));
-			} ;
+		try{
+			for(CfetsBondCheckRequst cfetsBondCheckRequst:cfetsBondCheckRequsts){
+				BondQuoteInfoDto bondQuote = new BondQuoteInfoDto();
+				BeanUtil.copyPropertiesIgnoreNull(bondQuote,cfetsBondCheckRequst);
+				if (ibuQuoteBondService.doReCall(bondQuote)) {
+					ar = new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS"));
+				}
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+			return PositionUtil.ajaxErrorReturn(e);
 		}
 		return new Message<AjaxResult>().success().setData(ar);
 	}
@@ -443,6 +456,22 @@ public class CfetsIbuQuoteBondController extends BaseController {
 
 		return new Message<AjaxResult>().success().setData(ar);
 	}
+
+	@ApiOperation(value = "报价删除", notes = "报价删除")
+	@ResponseBody
+	@RequestMapping("doDel")
+	public Message<AjaxResult> doDel(@RequestBody CfetsBondCheckRequst cfetsBondCheckRequst) {
+		AjaxResult ar = null;
+		BondQuoteInfoDto bondQuote = new BondQuoteInfoDto();
+		BeanUtil.copyPropertiesIgnoreNull(bondQuote,cfetsBondCheckRequst);
+		if (ibuQuoteBondService.doDel(bondQuote)) {
+			ar = new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS"));
+		} ;
+
+		return new Message<AjaxResult>().success().setData(ar);
+	}
+
+
 
 	@ApiOperation(value = "强制完成检查", notes = "强制完成检查")
 	@ResponseBody
@@ -594,6 +623,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
                 if(StringUtil.isNotEmpty(item.getSettleSpeedStr())){
                     item.setSettleSpeedStr(item.getSettleSpeedStr().substring(item.getSettleSpeedStr().indexOf("+"),item.getSettleSpeedStr().length()));
                 }
+                item.setSettCcyStr(item.getSettCcy());
 				if(StringUtil.equals(item.getCalMode(),"01")){item.setMatureYield(null);item.setExerYield(null);}
 				if(StringUtil.equals(item.getCalMode(),"02")){item.setMatureYield(ArithmeticUtil.multiply(item.getMatureYield(),new BigDecimal(100)));item.setPrice(null);item.setExerYield(null);}
 				if(StringUtil.equals(item.getCalMode(),"03")){item.setExerYield(ArithmeticUtil.multiply(item.getExerYield(),new BigDecimal(100)));item.setPrice(null);item.setMatureYield(null);}
@@ -609,14 +639,14 @@ public class CfetsIbuQuoteBondController extends BaseController {
 				List<CfetsBondDayRegDto> cfetsBondDayRegDtos = collect.get(i);
 				String appendString = collect.size()>=1?String.format("%04d", sequenceIndexData):StringUtil.EMPTY;
 				String excelAndSheetName = StringUtil.join(prefix,"_",appendString);
-				ExcelUitl.doExport(requestDto, response, excelAndSheetName,() -> {
+				ExcelUitl.doExport2(requestDto, response, excelAndSheetName,() -> {
 							return cfetsBondDayRegDtos;
 					});
 			}
 		}
 		else{
 			String excelAndSheetName = StringUtil.join(prefix,"_",sequenceIndexData);
-			ExcelUitl.doExport(requestDto, response, excelAndSheetName,() -> {
+			ExcelUitl.doExport2(requestDto, response, excelAndSheetName,() -> {
 				return dataList;
 			});
 		}
@@ -633,4 +663,13 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		String deviationDegree =  ibuQuoteBondCalService.calcDeviationDegree(param);
 		return new Message<String>().success().setData(deviationDegree);
 	}
+
+
+	@ApiOperation(value = "交易类型按钮点击检查", notes = "交易类型按钮点击检查")
+	@ResponseBody
+	@RequestMapping("/radioPartyIdCheck")
+	public Message<AjaxResult> radioPartyIdCheck(@RequestBody  CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto) {
+		return new Message<AjaxResult>().success().setData(cfetsQuotedCommonService.radioPartyIdCheck(cfetsBondDealQuoteCommonDto));
+	}
+
 }

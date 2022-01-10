@@ -2,34 +2,75 @@ package com.joyintech.tams.exchange.common.bean;
 
 import org.springframework.data.annotation.Id;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by yking on 2016/5/15 0015.
  */
+@ApiModel(value = "行情对象", description = "行情对象")
 public class TickBean {
+	@ApiModelProperty(name = "exchange", value = "exchange")
     private String exchange;
+	
+	@ApiModelProperty(name = "instrumentID", value = "合约ID")
     private String instrumentID;
+	
+	@ApiModelProperty(name = "updateTime", value = "行情时间戳")
     private double updateTime;            //行情时间戳
+	
+	@ApiModelProperty(name = "strTime", value = "可视化时间")
     private String strTime;             //可视化时间
+	
+	@ApiModelProperty(name = "lastPrice", value = "最新价")
     private double lastPrice;            //最新价
+	
+	@ApiModelProperty(name = "openPrice", value = "开盘价")
     private double openPrice;            //开盘价
+	
+	@ApiModelProperty(name = "highPrice", value = "最高价")
     private double highPrice;            //最高价
+	
+	@ApiModelProperty(name = "lowPrice", value = "最低价")
     private double lowPrice;             //最低价
 
+	@ApiModelProperty(name = "volume", value = "成交总量")
     private long volume;                //成交总量
+	
+	@ApiModelProperty(name = "turnover", value = "换手率")
     private long turnover;              //换手率
+	
+	@ApiModelProperty(name = "position", value = "合约持仓量(期)")
     private long position;              //合约持仓量(期)
+	
+	@ApiModelProperty(name = "tradeBalance", value = "tradeBalance")
     private double tradeBalance;
+	
+	@ApiModelProperty(name = "upperLimitPrice", value = "涨停价")
     private double upperLimitPrice;      //涨停价
+	
+	@ApiModelProperty(name = "lowerLimitPrice", value = "跌停价")
     private double lowerLimitPrice;      //跌停价
+	
+	@ApiModelProperty(name = "settlePrice", value = "结算价")
     private double settlePrice;          //结算价
+	
+	@ApiModelProperty(name = "preClosePrice", value = "昨收盘价")
     private double preClosePrice;        //昨收盘价
 
+	@ApiModelProperty(name = "askPrice", value = "卖方价格")
     private List<Double> askPrice = new ArrayList<>();
+	
+	@ApiModelProperty(name = "askVolume", value = "卖方数量")
     private List<Integer> askVolume = new ArrayList<>();
+	
+	@ApiModelProperty(name = "bidPrice", value = "买方价格")
     private List<Double> bidPrice = new ArrayList<>();
+	
+	@ApiModelProperty(name = "bidVolume", value = "买方数量")
     private List<Integer> bidVolume = new ArrayList<>();
 
     public void addAskPrice(double price) {

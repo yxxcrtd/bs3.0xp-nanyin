@@ -14,6 +14,8 @@
             <input type="hidden" id="workflowId" name="workflowId" th:value="${workflowId?: ''}">
             <input type="hidden" id="invManagerId" name="invManagerId" th:value="${entity?.invManagerId}">
             <input type="hidden" id="tradeMarketMode" name="tradeMarketMode" th:value="${entity?.tradeMarketMode}">
+            <input type="hidden" id="totalEtrustId" name="totalEtrustId" th:value="${entity?.totalEtrustId}">
+            <input type="hidden" id="systemAct" name="systemAct" th:value="${entity?.systemAct}">
 
 
             <div class="layui-form-item" >
@@ -137,8 +139,8 @@
                         <div class="layui-input-inline input-inline">
                             <input
                                     class="layui-input form-input input-dateSelect"
-                                    id="entrust"
-                                    name="entrust"
+                                    id="entrustDate"
+                                    name="entrustDate"
                                     placeholder="请选择时间"
                                     data-th-value='${#dates.format(entity?.entrustDate,"yyyy-MM-dd")}'
                                     required="required"

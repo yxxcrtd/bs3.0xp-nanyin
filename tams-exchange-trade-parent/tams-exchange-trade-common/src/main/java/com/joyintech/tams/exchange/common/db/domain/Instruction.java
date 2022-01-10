@@ -328,7 +328,7 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal mTradeAmt = new BigDecimal(0);
 
-    @ApiModelProperty(required = false, name = "firstRepoPs", value = "到期结算金额")
+    @ApiModelProperty(required = false, name = "firstRepoPs", value = "首期交易方向")
     @Size(max = 50)
     private String firstRepoPs;
 

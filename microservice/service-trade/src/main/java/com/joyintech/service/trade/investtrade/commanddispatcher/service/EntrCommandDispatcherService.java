@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.trade.investtrade.commanddispatcher.dto.EtrEntrustDetailDto;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,7 @@ public class EntrCommandDispatcherService extends BaseService<EntrCommandDispatc
 		}
 		dto.setEtr_entrust_list(selectList);
 		dto.setEtr_pledge_list(this.selectPledgeList(selectList));
+		dto.setEtr_entrust_detail_list(selectEtrDetailList(param));
 		if (selectList != null && !selectList.isEmpty()) {
 			dto.setAMOUNT(selectList.size());
 			dto.setPageCount(1);
@@ -95,5 +97,16 @@ public class EntrCommandDispatcherService extends BaseService<EntrCommandDispatc
     	}
     	return pledgelist;
     }
+	/**
+	 * 委托指令明细列表查询
+	 * <功能详细描述>
+	 * @param param
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	public List<EtrEntrustDetailDto> selectEtrDetailList(Map<String, Object> param){
+		return entrTradeSysInterfMapper.selectEtrDetailList(param);
+	}
 
 }

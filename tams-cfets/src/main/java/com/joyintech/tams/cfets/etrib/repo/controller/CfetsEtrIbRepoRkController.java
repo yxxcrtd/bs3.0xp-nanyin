@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -104,15 +106,15 @@ public class CfetsEtrIbRepoRkController extends BaseController {
     @ResponseBody
     @PostMapping("findPage")
     @ApiOperation(value = "质押券库设置查询", notes = "质押券库设置查询")
-    public Message<List<EtrSecStockConfig>> findPage(@RequestBody CfetsEtrRepoPledgeAssetDetailRequest cfetsEtrRepoPledgeAssetDetailRequest) {
+    public Message<Collection<CfetsEtrSecStockConfig>> findPage(@RequestBody CfetsEtrRepoPledgeAssetDetailRequest cfetsEtrRepoPledgeAssetDetailRequest) {
         try{
             if (StringUtil.isNotEmpty(cfetsEtrRepoPledgeAssetDetailRequest.getPledgeStockId())) {
-                return new Message<List<EtrSecStockConfig>>().success().setData(cfetsEtrIbRepoinfoService.getAssetDetailBySeqno(cfetsEtrRepoPledgeAssetDetailRequest));
+                return new Message<Collection<CfetsEtrSecStockConfig>>().success().setData(cfetsEtrIbRepoinfoService.getAssetDetailBySeqno(cfetsEtrRepoPledgeAssetDetailRequest));
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return new Message<List<EtrSecStockConfig>>().fail();
+        return new Message<Collection<CfetsEtrSecStockConfig>>().fail();
     }
     
     /**
@@ -160,11 +162,28 @@ public class CfetsEtrIbRepoRkController extends BaseController {
     //        BussinessCodeParameter parameter = new BussinessCodeParameter();
     //        parameter.setSeqNo("0666");
     //        RepoInfoDto.setPledgeStockId(baseGetBusinessId.buildBussinessCode(parameter));
-            String generatedId = IDGenerator.generate();
-            for (int i = 0; i < RepoInfoDto.getEtrSecStockConfig().size(); i++) {
-                RepoInfoDto.getEtrSecStockConfig().get(i).setConfigId(IDGenerator.generate());
-                RepoInfoDto.getEtrSecStockConfig().get(i).setPledgeStockId(RepoInfoDto.getPledgeStockId());
+//            String generatedId = IDGenerator.generate();
+            List<EtrSecStockConfig> etrSecStockConfigList = new ArrayList<>();
+            for(CfetsEtrSecStockConfig cfetsEtrSecStockConfig:RepoInfoDto.getCfetsEtrSecStockConfig()){
+                for(int i = 0; i < cfetsEtrSecStockConfig.getWindtype().size(); i++){
+                    EtrSecStockConfig etrSecStockConfig = new EtrSecStockConfig();
+                    etrSecStockConfig.setPledgeStockId(RepoInfoDto.getPledgeStockId());
+                    etrSecStockConfig.setConfigId(IDGenerator.generate());
+                    etrSecStockConfig.setIsSecBond(cfetsEtrSecStockConfig.getIsSecBond());
+                    etrSecStockConfig.setIsPpb(cfetsEtrSecStockConfig.getIsPpb());
+                    etrSecStockConfig.setIsRight(cfetsEtrSecStockConfig.getIsRight());
+                    etrSecStockConfig.setmGradeResult(cfetsEtrSecStockConfig.getmGradeResult());
+                    etrSecStockConfig.setSecGradeResult(cfetsEtrSecStockConfig.getSecGradeResult());
+                    etrSecStockConfig.setWindtypeone(cfetsEtrSecStockConfig.getWindtype().get(i).get(0));
+                    etrSecStockConfig.setWindtypetwo(cfetsEtrSecStockConfig.getWindtype().get(i).get(1));
+                    etrSecStockConfigList.add(etrSecStockConfig);
+                }
             }
+            RepoInfoDto.setEtrSecStockConfig(etrSecStockConfigList);
+//            for (int i = 0; i < RepoInfoDto.getEtrSecStockConfig().size(); i++) {
+//                RepoInfoDto.getEtrSecStockConfig().get(i).setConfigId(IDGenerator.generate());
+//                RepoInfoDto.getEtrSecStockConfig().get(i).setPledgeStockId(RepoInfoDto.getPledgeStockId());
+//            }
             for (int i = 0; i < RepoInfoDto.getPtlSecStock().size(); i++) {
                 RepoInfoDto.getPtlSecStock().get(i).setPledgeStockName(RepoInfoDto.getPledgeStockName());
                 RepoInfoDto.getPtlSecStock().get(i).setPledgeStockId(RepoInfoDto.getPledgeStockId());

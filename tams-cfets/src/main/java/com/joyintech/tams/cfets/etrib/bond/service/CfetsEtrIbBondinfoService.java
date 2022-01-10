@@ -452,7 +452,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
 
         Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(DateUtil.parse(DateUtil.getSysDate()));
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
         pageParam.put("sort",dto.getPageMode().getSort());
@@ -1314,13 +1314,23 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 }
                 if(StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_买入.getValue())){
                     BigDecimal integrateSecAmount=rrqmkdghAmt;
-                    dd.setEntrustIntegrateNum(integrateSecAmount);
-                    dd.setEntrustOwnNum(ArithmeticUtil.subtract(item.getEntrustNum(),integrateSecAmount));
+                    if(integrateSecAmount.compareTo(item.getEntrustNum())>0){
+                        dd.setEntrustIntegrateNum(item.getEntrustNum());
+                        dd.setEntrustOwnNum(BigDecimal.ZERO);
+                    }else{
+                        dd.setEntrustIntegrateNum(integrateSecAmount);
+                        dd.setEntrustOwnNum(ArithmeticUtil.subtract(item.getEntrustNum(),integrateSecAmount));
+                    }
                 }else if(StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_卖出.getValue())){
                     //查询系统本方券可用持仓
                     BigDecimal ownSecAmount=bfqtrkyccAmt;
-                    dd.setEntrustOwnNum(ownSecAmount);
-                    dd.setEntrustIntegrateNum(ArithmeticUtil.subtract(item.getEntrustNum(),ownSecAmount));
+                    if(ownSecAmount.compareTo(item.getEntrustNum())>0){
+                        dd.setEntrustOwnNum(item.getEntrustNum());
+                        dd.setEntrustIntegrateNum(BigDecimal.ZERO);
+                    }else{
+                        dd.setEntrustOwnNum(ownSecAmount);
+                        dd.setEntrustIntegrateNum(ArithmeticUtil.subtract(item.getEntrustNum(),ownSecAmount));
+                    }
                 }else if(StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_行权_回售.getValue())){
                     dd.setEntrustOwnNum(item.getEntrustNum());
                     dd.setEntrustIntegrateNum(BigDecimal.ZERO);
@@ -1447,11 +1457,11 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     dd.setTransmitTime(transmitTimeDto.getTransmitTime());
                     dto.setTransmitTime(transmitTimeDto.getTransmitTime());
                 }
-                dd.setSubmitFlag(false);
-                dto.setSubmitFlag(false);
+                dd.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+                dto.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
             }else{
-                dd.setSubmitFlag(true);
-                dto.setSubmitFlag(true);
+                dd.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+                dto.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
             }
             etrInvestBondInfoDtosList.add(dd);
         }

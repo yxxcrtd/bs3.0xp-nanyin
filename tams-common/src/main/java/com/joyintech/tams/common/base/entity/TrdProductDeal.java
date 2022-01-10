@@ -396,6 +396,10 @@ public class TrdProductDeal extends BaseEntity {
      *业务模式
      */
     private String businessModel;
+    /**
+     * 指令编号
+     */
+    private String entrustId;
 
 
     public String getPortfolioId() {
@@ -1625,5 +1629,13 @@ public class TrdProductDeal extends BaseEntity {
 
     public void setSharePaymentFee(BigDecimal sharePaymentFee) {
         this.sharePaymentFee = sharePaymentFee;
+    }
+
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
     }
 }

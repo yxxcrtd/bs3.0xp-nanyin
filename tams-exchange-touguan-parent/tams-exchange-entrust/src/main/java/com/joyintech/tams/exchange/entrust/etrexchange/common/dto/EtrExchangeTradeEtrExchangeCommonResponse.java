@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -130,6 +131,9 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
     @ApiModelProperty(name="calMode",value="计算方式",example="A1")
     private String calMode;
 
+    @ApiModelProperty(name="price",value="净价",example="")
+    private BigDecimal price;
+
     /**
      * 全价
      */
@@ -208,6 +212,15 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
      */
     @ApiModelProperty(name="tradePlatString",value="委托状态",example="A1")
     private String tradePlatString;
+
+    /**
+     * 投资目的
+     */
+    @ApiModelProperty(name="invAim",value="委托状态",example="A1")
+    private String invAim;
+
+    @ApiModelProperty(name = "entrustDate", value = "指令日期")
+    private Date entrustDate;
 
 
 
@@ -609,6 +622,30 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
 
     public void setDealCurAcctName(String dealCurAcctName) {
         this.dealCurAcctName = dealCurAcctName;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public String getInvAim() {
+        return invAim;
+    }
+
+    public void setInvAim(String invAim) {
+        this.invAim = invAim;
+    }
+
+    public Date getEntrustDate() {
+        return entrustDate;
+    }
+
+    public void setEntrustDate(Date entrustDate) {
+        this.entrustDate = entrustDate;
     }
     //add by chenjiaxing 20210824 end
 

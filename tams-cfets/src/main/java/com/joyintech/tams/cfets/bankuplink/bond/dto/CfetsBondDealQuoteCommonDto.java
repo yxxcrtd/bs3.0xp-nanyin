@@ -31,6 +31,9 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name="openModel",value="打开入口" ,example = "copy:表示复制入口")
     private String openModel;
 
+    @ApiModelProperty(name="quoteType",value="交易类型")
+    private String quoteType;
+
     @ApiModelProperty(name="quoteStyle",value="报价方式")
     private String quoteStyle;
 
@@ -74,7 +77,7 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name="counterTrader",value="对手方交易员")
     private String counterTrader;
 
-    @ApiModelProperty(name="counterId",value="对手方名称")
+    @ApiModelProperty(name="counterName",value="对手方名称")
     private String counterName;
 
     @ApiModelProperty(name="counterTrader",value="对手方交易员名称")
@@ -593,6 +596,14 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setDistribution(String distribution) {
         this.distribution = distribution;
+    }
+
+    public String getQuoteType() {
+        return quoteType;
+    }
+
+    public void setQuoteType(String quoteType) {
+        this.quoteType = quoteType;
     }
 
     public String getQuoteStyle() {

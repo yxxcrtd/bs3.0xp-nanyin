@@ -40,6 +40,20 @@
             <groupId>com.joyintech</groupId>
             <artifactId>framework-redis</artifactId>
         </dependency>
+        <dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>joyintech-system</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>framework-rabbitmq</artifactId>
+			<version>0.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.rabbitmq</groupId>
+			<artifactId>amqp-client</artifactId>
+			<version>4.0.3</version>
+		</dependency>
     </dependencies>
 
 </project>

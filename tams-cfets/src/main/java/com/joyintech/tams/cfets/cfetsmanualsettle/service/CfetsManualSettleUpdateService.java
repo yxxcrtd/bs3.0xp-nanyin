@@ -270,6 +270,19 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
         List<PositionRulePtlData> ptlList=new ArrayList<>();
         List<PortSettleinfoDto> listTemp = cfetsManualSettleUpdateRequest.getPortSettleinfoDtoList();
 
+        List<CfetsManualSettleDealInfo> listTemp1 = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleUpdateRequest.getTradeId());
+        //存放<交易编号,券面总额>
+        Map<String,BigDecimal> mapTemp = new HashMap<>();
+        for(CfetsManualSettleDealInfo cfetsManualSettleDealInfo : listTemp1){
+
+            mapTemp.put(cfetsManualSettleDealInfo.getTradeId(),cfetsManualSettleDealInfo.getShareAmt());
+
+            String key = cfetsManualSettleDealInfo.getTradeId();
+
+            if(mapTemp.get(key) ==null){
+                mapTemp.put(cfetsManualSettleDealInfo.getTradeId(),cfetsManualSettleDealInfo.getShareAmt());
+            }
+        }
         for(PortSettleinfoDto dto : listTemp){
             PositionRulePtlData positionRulePtlData = new PositionRulePtlData();
             positionRulePtlData.setPortfolioId(dto.getPortfolioId());
@@ -294,7 +307,7 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
                     positionRulePtlData.setSecAcctId(secAcctId); // 证券账户
                 }
             }
-            positionRulePtlData.setSecAmount(ArithmeticUtil.multiply(dto.getSettleNum(),new BigDecimal(10000)));
+            positionRulePtlData.setSecAmount(mapTemp.get(dto.getTradeId())==null?BigDecimal.ZERO : mapTemp.get(dto.getTradeId()));
             positionRulePtlData.setCashAmount(dto.getSettleAmt());
             positionRulePtlData.setInvAim(dto.getInvAim());
             positionRulePtlData.setOwnSecAmount(dto.getOurShareAmt()==null? BigDecimal.ZERO : ArithmeticUtil.multiply(dto.getOurShareAmt(),new BigDecimal(100)));

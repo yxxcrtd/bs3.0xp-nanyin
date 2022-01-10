@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.business.common.dao.EtrCommonTableInfoQueryMapper">
+
+    <select id="getCommonSearchTabInfoQueryOperate"                                        
+            resultType="com.joyintech.tams.business.common.dto.CommonSearchInfoOperateListResponse">
+        SELECT rownum SEQ_NO,t.* from (select
+        ENTRUST_ID,
+        OPER_TYPE,
+        to_char(OPER_DATE,'yyyy-MM-dd')  OPER_DATE,
+        to_char(OPER_TIME,'hh24:mi:ss') OPER_TIME,
+        BUSI_DES,
+        real_name userId
+        from ETR_ENTRUST_OPER_HIS
+        LEFT JOIN SYS_USER SU on ETR_ENTRUST_OPER_HIS.user_id = SU.user_name
+        WHERE entrust_id = #{entrustId}
+        order by OPER_TIME desc) t
+    </select>
+
+    <select id="getCommonSearchTabRskInfo"
+            resultType="com.joyintech.tams.business.common.dto.CommonSearchRskInfoResponse">
+        SELECT rit.sup_stat supStat,
+            rii.ind_name indName,
+            rii.ind_type indType,
+            pp.portfolio_name portfolioName,
+            fp.finprod_abbr finprodAbbr,
+            rit.warn_cond warnCond,
+            rit.approve_cond approveCond,
+            rit.foul_cond foulCond,
+            rit.sup_val supVal,
+            rit.old_sup_val oldSupVal,
+            rit.sup_trend supTrend
+        FROM RSK_ISUP_TRIAL rit
+        INNER JOIN RSK_ISUP_INDICATOR rii ON rit.ind_id = rii.ind_id
+        LEFT JOIN ptl_portfolio pp ON rit.portfolio_id = pp.portfolio_id
+        LEFT JOIN fin_product fp ON rit.asset_code = fp.finprod_id
+        WHERE rit.trade_id = #{entrustId}
+        AND rit.conclusion is null
+        <!--AND fp.finprod_id is not null 注释掉这个过滤条件否则质押式回购的风险试算信息无法查出,add by gaowenlong at 20220110-->
+    </select>
+
+    <select id="queryAllWorkFlowInfoList"
+            resultType="com.joyintech.tams.business.common.dto.CommonSearchQueryWorkflowResponse">
+        select  T2.ASSIGNEE_ hiUser,
+        T2.TASK_DEF_KEY_ nodeId,
+        T2.NAME_ nodeName,
+        NVL(T2.END_TIME_, T2.CLAIM_TIME_) operTime
+        from SYS_WFL_BUSINESS_LIST T1
+        left join ACT_HI_TASKINST T2
+        on T1.workflow_id=T2.PROC_INST_ID_
+        left join ACT_HI_COMMENT T3
+        ON T3.TASK_ID_ = T2.ID_
+        AND T3.PROC_INST_ID_ = T2.PROC_INST_ID_
+        AND T3.USER_ID_ = T2.ASSIGNEE_
+        where T1.TRADE_ID= #{busiCode,jdbcType=VARCHAR}
+    </select>
+</mapper>

@@ -7,6 +7,7 @@ import cn.hutool.json.JSONUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.common.bean.MinTrdUnitLimit;
 import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
@@ -373,6 +374,8 @@ public class PortfolioManager extends BaseService {
         Integer entrustVolume = 0;
         BigDecimal entrustAmt = BigDecimal.ZERO;
 
+        boolean isVolume = instruction.getEntrustNum() > 0L;
+
         for (InstructionDetail detail : instructionDetails) {
             calculateResponse = new PortfolioCalculateResponse();
 
@@ -387,22 +390,27 @@ public class PortfolioManager extends BaseService {
             calculateResponse.setFinprodName(instruction.getFinprodName());
             calculateResponse.setDisRate(new BigDecimal(detail.getDisRate()));
             calculateResponse.setEntrustProp(bean.getEntrustProp());
-            calculateResponse.setInstructionLeftAmt(BigDecimal.ZERO.equals(instruction.getEntrustAmt()) ? BigDecimal.ZERO : instruction.getEntrustLeftAmt());
-            calculateResponse.setInstructionLeftNum(instruction.getEntrustNum() == 0L ? 0L : instruction.getEntrustLeftAmt().longValue());
+            calculateResponse.setInstructionLeftAmt(isVolume ? BigDecimal.ZERO : ArithmeticUtil.subtract(ArithmeticUtil.subtract(instruction.getEntrustAmt(), instruction.getEntrustLeftAmt()),instruction.getFrozenQuantity()));
+            calculateResponse.setInstructionLeftNum(isVolume ? instruction.getEntrustNum()-instruction.getEntrustLeftAmt().longValue()-instruction.getFrozenQuantity().longValue() : 0L);
             calculateResponse.setInstructionTotalAmt(instruction.getEntrustAmt());
             calculateResponse.setInstructionTotalNum(instruction.getEntrustNum());
+            calculateResponse.setFullPrice(Objects.nonNull(instruction.getFullPrice()) ? instruction.getFullPrice().toString() : BigDecimal.ZERO.toString());
+            calculateResponse.setPriceMode(instruction.getPriceMode());
+            calculateResponse.setAcctNo(instruction.getAcctName());
 
             // - 计算组合委托额度
             // 数量
             BigDecimal volume = ArithmeticUtil.multiply(BigDecimal.valueOf(bean.getEntrustVolume()), new BigDecimal(detail.getDisRate()));
             if (volume.compareTo(BigDecimal.valueOf(minNum)) == 0) {
                 entrustVolume = minNum;
+                entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), bean.getEntrustPrice());
             } else if (volume.compareTo(BigDecimal.valueOf(minNum)) > 0) {
                 entrustVolume = Integer.valueOf(ArithmeticUtil.divide(volume, BigDecimal.valueOf(minStep), 0, RoundingMode.DOWN).multiply(BigDecimal.valueOf(minStep)).toString());
+                entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), bean.getEntrustPrice());
             }
             if ("02".equals(detail.getTargetType())) {
                 entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), price);
-                entrustVolume = 0;
+                entrustVolume = Integer.valueOf(ArithmeticUtil.divide(ArithmeticUtil.divide(entrustAmt, bean.getEntrustPrice(),12), BigDecimal.valueOf(minStep), 0, RoundingMode.DOWN).multiply(BigDecimal.valueOf(minStep)).toString());
             }
             calculateResponse.setEntrustAmt(entrustAmt);
             calculateResponse.setEntrustNum(Long.valueOf(entrustVolume));
@@ -417,6 +425,13 @@ public class PortfolioManager extends BaseService {
                     .mapToLong(PortfolioCalculateResponse::getEntrustNum)
                     .sum();
             maxPortfolioCalculateResponse.setEntrustNum(bean.getEntrustVolume() - sum);
+        }
+
+        if (isVolume && DictCodeListExt3.交易方向_债转股.getValue().equals(instruction.getPs())) {
+            long bondPaperValue = 100L;
+            for (PortfolioCalculateResponse response : list) {
+                response.setConNum(response.getInstructionLeftNum() * bondPaperValue / response.getEntrustPrice().longValue());
+            }
         }
 
         return ResultBean.success(list);

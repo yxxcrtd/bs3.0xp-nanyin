@@ -9,31 +9,6 @@
  */
 package com.joyintech.background.component.uplink.interbank.business.service.impl;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import com.joyintech.background.component.uplink.interbank.database.dao.*;
-import com.joyintech.background.component.uplink.interbank.database.entity.WflIbuQuoteEtrRe;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.util.StringUtil;
 import com.joyintech.background.component.common.pack.common.base.BaseService;
@@ -43,29 +18,7 @@ import com.joyintech.background.component.common.pack.common.security.UserUtil;
 import com.joyintech.background.component.common.pack.common.util.BeanUtil;
 import com.joyintech.background.component.uplink.interbank.business.bonddlgservice.BondDialogueQuoteSubService;
 import com.joyintech.background.component.uplink.interbank.business.bondreqservice.BondRequestQuoteSubService;
-import com.joyintech.background.component.uplink.interbank.business.dto.BondDialogueQuoteDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.BondQuoteExtDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.BondQuoteSearchDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.BondRequestQuoteDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.GateWayReturnMsgDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuInrfErrMsgSearchDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuIntfErrMsgDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteBondDetDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteBondDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteCrepDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteCrepPledgeDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteErrlogDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEtrReDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.QuoteResultBatDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.QuoteResultDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.ReceiveBondDialogueQuoteDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.ReceiveBondRequestQuoteDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.ReceiveRepoDialogueQuoteDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.RepoDialogueQuoteDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.RepoQuoteExtDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.RepoQuoteSearchDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.ResultBaseDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.ValidMessageDto;
+import com.joyintech.background.component.uplink.interbank.business.dto.*;
 import com.joyintech.background.component.uplink.interbank.business.intferrmsgservice.IbuIntfErrMsgService;
 import com.joyintech.background.component.uplink.interbank.business.quoteerrlog.IbuQuoteErrlogService;
 import com.joyintech.background.component.uplink.interbank.business.repodlgservice.RepoDialogueQuoteSubService;
@@ -76,9 +29,26 @@ import com.joyintech.background.component.uplink.interbank.common.CommonUtils;
 import com.joyintech.background.component.uplink.interbank.common.DictCodeList;
 import com.joyintech.background.component.uplink.interbank.common.IbuDictCode;
 import com.joyintech.background.component.uplink.interbank.common.QuoteResultException;
+import com.joyintech.background.component.uplink.interbank.database.dao.*;
 import com.joyintech.background.component.uplink.interbank.database.entity.IbuIntfScheme;
 import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBond;
 import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBondDet;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * 银行间上行组件服务统一实现类
@@ -615,6 +585,15 @@ public class IbuMainServiceImpl extends BaseService<IbuQuoteBond> implements Ibu
                     }
                     if(ibuQuoteBondDto.getEntrustId() != null){
                         bondDialogueQuote.getIbuQuoteBondDto().setEntrustId(ibuQuoteBondDto.getEntrustId());
+                    }
+                    if(ibuQuoteBondDto.getSecManageAcctId()!=null){
+                        bondDialogueQuote.getIbuQuoteBondDto().setSecManageAcctId(ibuQuoteBondDto.getSecManageAcctId());
+                    }
+                    if(ibuQuoteBondDto.getDealFeeAmt()!=null){
+                        bondDialogueQuote.getIbuQuoteBondDto().setDealFeeAmt(ibuQuoteBondDto.getDealFeeAmt());
+                    }
+                    if(ibuQuoteBondDto.getSettFeeAmt()!=null){
+                        bondDialogueQuote.getIbuQuoteBondDto().setSettFeeAmt(ibuQuoteBondDto.getSettFeeAmt());
                     }
                     //多组合 关系表数据单独处理
                     if(null!=ibuQuoteEtrRes&&ibuQuoteEtrRes.size()>0){

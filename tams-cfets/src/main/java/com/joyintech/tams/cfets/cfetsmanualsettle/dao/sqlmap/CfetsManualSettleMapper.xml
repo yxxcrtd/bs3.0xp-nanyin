@@ -41,14 +41,15 @@
         T1.FINPROD_ID finprodId,
         T1.CCY ccy,
         decode(T1.PS,#{PS_T07},'04',#{PS_T08},'04',#{PS_T09},'04',#{PS_T39},'03',#{PS_T03},'01',#{PS_T01},'02',#{PS_T02},'02','02') spcdCode,
-        '' remark
+        '' remark,
+        nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN FIN_PRODUCT  T2 ON T1.FINPROD_ID = T2.FINPROD_ID
         LEFT JOIN TRD_PRODUCT_DEAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
         LEFT JOIN TRD_PRODUCT_DEAL_ADD T4 ON T3.TRADE_ID = T4.TRADE_ID
         LEFT JOIN PTL_PORTFOLIO T5 ON T4.PORTFOLIO_ID = T5.PORTFOLIO_ID
         LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.COUNTER_ID
-        LEFT JOIN MST_COUNTER_PARTY T61 ON T1.COUNTER_ID = T61.LINK_ID
+        LEFT JOIN MST_COUNTER_PARTY T61 ON T2.ISSUER = T61.LINK_ID AND T61.P_TYPE_ONE IS NOT NULL
         LEFT JOIN STL_SEC_ACCT_INFO T7 ON T1.SEC_MANAGE_ACCT_ID = T7.SEC_ACCT_ID
         LEFT JOIN TRD_BANK_MANUAL_SETTLE_INFO T8 ON T1.TOTLE_TRADE_ID = T8.TRADE_ID
         LEFT JOIN STL_PAY_ORDERS T9 ON T1.TOTLE_TRADE_ID = T9.TRADE_ID
@@ -61,6 +62,9 @@
         LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
         LEFT JOIN SYS_DATADICT_LIST sdl5 on sdl5.dict_code ='SHARES_TRADE_PLATFORM' and sdl5.item_code = T1.TRADE_PLAT
         LEFT JOIN SYS_DATADICT_LIST sdl6 on sdl6.dict_code ='SHARES_TRADE_MARKET' and sdl6.item_code = T1.TRADE_MARKET_MODE
+        left join trdquto_match_info match on T1.totle_trade_id=match.trd_id
+        left join reg_fin_product_deal_total_add regAdd on match.PRE_TRADE_ID=regAdd.totle_trade_id
+        left join ibu_quote_bond_det ibuDet on match.PRE_TRADE_ID=ibuDet.QUOTE_ID and ibuDet.TRADE_STATUS='07'
         WHERE (T8.SETTLE_SEQ_NO IS NULL OR T8.SETTLE_STATUS = #{DELIVERY_STATUS_01})
         AND T1.TG_BUSI_TYPE IN (#{PINAN_BUSINESS_TYPE_09},#{PINAN_BUSINESS_TYPE_10},#{PINAN_BUSINESS_TYPE_11},
                 #{PINAN_BUSINESS_TYPE_35},#{PINAN_BUSINESS_TYPE_36},#{PINAN_BUSINESS_TYPE_37},
@@ -132,7 +136,8 @@
             T7.SEC_ACCT_NAME,
             T1.TRADE_MARKET_MODE,
             sdl6.item_value,
-            T8.SETTLE_SEQ_NO
+            T8.SETTLE_SEQ_NO,
+            nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD)
         union all
         </if>
 
@@ -171,7 +176,8 @@
         T0.FINPROD_ID finprodId,
         T1.CCY ccy,
         decode(T1.PS,#{PS_T07},'04',#{PS_T08},'04',#{PS_T09},'04',#{PS_T39},'03',#{PS_T03},'01',#{PS_T01},'02',#{PS_T02},'02','02') spcdCode,
-        T0.REMARK remark
+        T0.REMARK remark,
+        nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode
         FROM TRD_BANK_MANUAL_SETTLE_INFO T0
         LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL T1  ON T0.TRADE_ID =T1.TOTLE_TRADE_ID
         LEFT JOIN FIN_PRODUCT T2 ON T1.FINPROD_ID = T2.FINPROD_ID
@@ -179,7 +185,7 @@
         LEFT JOIN TRD_PRODUCT_DEAL_ADD T4 ON T3.TRADE_ID = T4.TRADE_ID
         LEFT JOIN PTL_PORTFOLIO T5 ON T4.PORTFOLIO_ID = T5.PORTFOLIO_ID
         LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.COUNTER_ID
-        LEFT JOIN MST_COUNTER_PARTY T61 ON T1.COUNTER_ID = T61.LINK_ID
+        LEFT JOIN MST_COUNTER_PARTY T61 ON T2.ISSUER = T61.LINK_ID AND T61.P_TYPE_ONE IS NOT NULL
         LEFT JOIN STL_SEC_ACCT_INFO T7 ON T1.SEC_MANAGE_ACCT_ID = T7.SEC_ACCT_ID
         LEFT JOIN STL_PAY_ORDERS T9 ON T1.TOTLE_TRADE_ID = T9.TRADE_ID
         LEFT JOIN INF_PAY_ORDERS_STATUS T10 ON T9.ORDER_ID = T10.ORDER_ID
@@ -191,9 +197,10 @@
         LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
         LEFT JOIN SYS_DATADICT_LIST sdl5 on sdl5.dict_code ='SHARES_TRADE_PLATFORM' and sdl5.item_code = T1.TRADE_PLAT
         LEFT JOIN SYS_DATADICT_LIST sdl6 on sdl6.dict_code ='SHARES_TRADE_MARKET' and sdl6.item_code = T1.TRADE_MARKET_MODE
-        WHERE T1.TRADE_STATUS =#{TRADE_STATUS_01}
-        AND T0.SETTLE_STATUS IN (#{DELIVERY_STATUS_02},#{DELIVERY_STATUS_04})
-        AND T1.Is_Cancel =#{isCalcN}
+        left join trdquto_match_info match on T1.totle_trade_id=match.trd_id
+        left join reg_fin_product_deal_total_add regAdd on match.PRE_TRADE_ID=regAdd.totle_trade_id
+        left join ibu_quote_bond_det ibuDet on match.PRE_TRADE_ID=ibuDet.QUOTE_ID and ibuDet.TRADE_STATUS='07'
+        WHERE T0.SETTLE_STATUS IN (#{DELIVERY_STATUS_02},#{DELIVERY_STATUS_04})
         <![CDATA[ AND T0.SETTLE_DATE >= #{settleDateStart}]]>
         <![CDATA[ AND T0.SETTLE_DATE <= #{settleDateEnd}]]>
         <if test="settleStatusList != null and settleStatusList.size() > 0">
@@ -263,7 +270,8 @@
             T7.SEC_ACCT_NAME,
             T1.TRADE_MARKET_MODE,
             sdl6.item_value,
-            T0.REMARK)t
+            T0.REMARK,
+            nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD))t
         left join SYS_DATADICT_LIST sdl on sdl.DICT_CODE='SETTLE_STATUS' and t.cleanStatus=sdl.ITEM_CODE
         where 1=1
         <if test="cleanStatus != null and cleanStatus!='' ">
@@ -789,11 +797,11 @@
         T1.TRADE_MARKET tradeMarket,
         T1.TRADE_MARKET_MODE tradeMarketMode,
         T1.TRADE_PLAT tradePlat,
-        T1.TOTLE_TRADE_ID tradeId,
-        NVL(T9.PARTY_NAME,T8.OU_PARTY_ID) ouPartyId ,
-        NVL(T10.REAL_NAME,T8.OU_TRADER_ID) ouTraderId,
-        NVL(T11.COUNTER_NAME,T8.COUNTER_ID) counterId,
-        NVL(T12.TRADER_NAME,T8.COUNTER_TRADER) counterTrade,
+        T7.EXE_ID tradeId,
+        NVL(T9.PARTY_NAME,T5.OU_PARTY_ID) ouPartyId ,
+        NVL(T10.REAL_NAME,T1.TRADER) ouTraderId,
+        NVL(T11.COUNTER_NAME,T1.COUNTER_ID) counterId,
+        NVL(T12.TRADER_NAME,T1.COUNTER_TRADER) counterTrade,
         sdl.item_value spanTextOne,
         T4.IS_RIGHT isRight,
         T1.Delivery_Type deliveryType,
@@ -801,18 +809,17 @@
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
         LEFT JOIN FIN_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
-        LEFT JOIN FIN_EXERCISE_PLAN T6 ON T1.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='01'
-        LEFT JOIN FIN_EXERCISE_PLAN T61 ON T1.FINPROD_ID = T61.FINPROD_ID AND T61.EXERCISE_TYPE ='02'
+        LEFT JOIN FIN_EXERCISE_PLAN T6 ON T1.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02' AND T1.SETTLE_DATE = T6.ACT_EXERCISE_DATE
+        LEFT JOIN FIN_EXERCISE_PLAN T61 ON T1.FINPROD_ID = T61.FINPROD_ID AND T61.EXERCISE_TYPE ='01' AND T1.SETTLE_DATE = T61.ACT_EXERCISE_DATE
         LEFT JOIN TRD_TRADE_FEE_TOTAL ttft ON T1.totle_trade_id = ttft.totle_trade_id AND ttft.fee_type =#{feeType06}
         LEFT JOIN TRD_TRADE_FEE_TOTAL ttft1 ON T1.totle_trade_id = ttft1.totle_trade_id AND ttft1.fee_type = #{feeType08}
+        LEFT JOIN TRD_DEAL_TOTAL_ADD T5 ON T1.TOTLE_TRADE_ID = T5.TOTLE_TRADE_ID
         LEFT JOIN TRDQUTO_MATCH_INFO T7 ON T7.Trd_Id = T1.TOTLE_TRADE_ID
         LEFT JOIN REG_FIN_PRODUCT_DEAL_TOTAL T8 ON T8.TOTLE_TRADE_ID = T7.PRE_TRADE_ID
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO T9 ON T9.PARTY_ID = T8.OU_PARTY_ID
-        LEFT JOIN SYS_USER T10 ON T10.USER_NAME = T8.OU_TRADER_ID
-        LEFT JOIN MST_COUNTER_PARTY T11 ON T11.COUNTER_ID = T8.COUNTER_ID
-<!--        LEFT JOIN MST_CFETS_CUSTOMER_TRADER T10 ON T10.TRADER_ID = T8.OU_TRADER_ID-->
-<!--        LEFT JOIN MST_CFETS_CUSTOMER_INFO T11 ON T11.PARTY_NAME = T8.COUNTER_ID-->
-        LEFT JOIN MST_CFETS_CUSTOMER_TRADER T12 ON T12.TRADER_ID = T8.COUNTER_TRADER
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO T9 ON T9.PARTY_ID = T5.OU_PARTY_ID
+        LEFT JOIN SYS_USER T10 ON T10.USER_NAME = T1.TRADER
+        LEFT JOIN MST_COUNTER_PARTY T11 ON T11.COUNTER_ID = T1.COUNTER_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER T12 ON T12.PARTY_ID = T9.PARTY_ID
         LEFT JOIN sys_datadict_list sdl ON sdl.dict_code='DISTRIBUTION' and sdl.item_code = T8.DIP_TYPE
         WHERE T4.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01}
         AND T1.TOTLE_TRADE_ID = #{tradeId}
@@ -943,5 +950,13 @@
         LEFT JOIN PTL_PORTFOLIO PP ON tpd.PORTFOLIO_ID = PP.PORTFOLIO_ID
         left join trd_product_deal on TRD_PRODUCT_DEAL.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
         WHERE tpd.TOTLE_TRADE_ID = #{tradeId}
+    </select>
+    <select id="getPledgeListByTradeId" parameterType="java.lang.String"
+            resultType="com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto">
+        select
+        reg.PLEDGE_FINPROD_ID as finprodId,reg.PLEDGE_RATIO as pledgeRatio,
+        reg.PLEDGE_NUMBER as pledgePrin
+        from FIN_DEAL_PLEDGE reg
+        where reg.finprod_id =#{tradeId,jdbcType=VARCHAR}
     </select>
 </mapper>

@@ -143,7 +143,7 @@ public class CfetsTrdQueryService extends BaseService{
           }
         }
         Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(DateUtil.parse(DateUtil.getSysDate()));
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
         pageParam.put("sort",dto.getPageMode().getSort());
@@ -332,7 +332,7 @@ public class CfetsTrdQueryService extends BaseService{
         //报价状态为已撤销就是已撤销
 
         Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(DateUtil.parse(DateUtil.getSysDate()));
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
         pageParam.put("sort",dto.getPageMode().getSort());
@@ -440,6 +440,11 @@ public class CfetsTrdQueryService extends BaseService{
 
         //表单data
         CfetsTrdQueryIbuInfoListResponse dataform=new CfetsTrdQueryIbuInfoListResponse();
+        pageParam.put("effectiveStatus",dto.getEffectiveStatus());
+        //有效状态
+        pageParam.put("STATUS_VALID_01", DictCodeListExt1.有效状态_有效.getValue());
+        pageParam.put("STATUS_VALID_03", DictCodeListExt1.有效状态_撤销.getValue());
+        pageParam.put("STATUS_VALID_04", DictCodeListExt1.有效状态_流程中.getValue());
         if(StringUtil.equals(dto.getFinprodType2(),"01")){
             dataform=cfetsTrdQueryMapper.selectIbuBondFormDataByKey(pageParam);
         }else{
@@ -520,7 +525,7 @@ public class CfetsTrdQueryService extends BaseService{
             }
         }
         Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(DateUtil.parse(DateUtil.getSysDate()));
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
         pageParam.put("sort",dto.getPageMode().getSort());
@@ -721,7 +726,7 @@ public class CfetsTrdQueryService extends BaseService{
         pageParam.put("PS_T02", DictCodeList.交易方向_卖出.getValue());
 
         Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(DateUtil.parse(DateUtil.getSysDate()));
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
 
@@ -833,7 +838,7 @@ public class CfetsTrdQueryService extends BaseService{
         pageParam.put("PS_T02", DictCodeList.交易方向_卖出.getValue());
 
         Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(DateUtil.parse(DateUtil.getSysDate()));
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
 
@@ -949,17 +954,4 @@ public class CfetsTrdQueryService extends BaseService{
 
         return resultData;
     }
-    /**
-     * 审批记录分页查询
-     * @param dto 入数
-     * @return Page<CfetsTrdQueryTradeInfoListResponse>
-     */
-    public Page<CfetsTrdQueryWorkflowResponse> queryAllWorkFlowInfoList(CfetsTrdQueryWorkflowRequest dto) {
-        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
-        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
-                () -> cfetsTrdQueryMapper.queryAllWorkFlowInfoList(pageParam));
-    }
-
-
-
 }

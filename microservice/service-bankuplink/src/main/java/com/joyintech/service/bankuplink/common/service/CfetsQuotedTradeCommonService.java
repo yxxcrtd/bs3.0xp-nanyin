@@ -1,8 +1,6 @@
 package com.joyintech.service.bankuplink.common.service;
 
 import com.joyintech.background.component.uplink.interbank.business.dto.ResultBaseDto;
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.bankuplink.common.dao.CstpTradeMapper;
@@ -24,7 +22,6 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.util.CommonUtil;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -166,7 +163,7 @@ public class CfetsQuotedTradeCommonService{
                     resultBaseDto.setErrMsg("银行间下行自动匹配(债券)录单开关关闭!");
                 }
             }
-            if (StringUtil.equals(flagAutoTrade, "01")) {
+           // if (StringUtil.equals(flagAutoTrade, "01")) {
                 InterfTradSecdeal finalInterfTradSecdeal = interfTradSecdeal;
                 InterfOpicsTradRepo finalInterfOpicsTradRepo = interfOpicsTradRepo;
                 getLogger().info("银行间下行成交处理业务数据线程开启");
@@ -174,20 +171,20 @@ public class CfetsQuotedTradeCommonService{
                     @Override
                     public void run() {
                         if(StringUtil.equals(entity.getMarketIndicator(),MarketIndicatorUtil.MARKETINDICATOR_BOND)){
-                                secAutoTradeService.secAutoTrade(iCstpTrade, finalInterfTradSecdeal,resultBaseDto);
+                                secAutoTradeService.secAutoTrade2(iCstpTrade, finalInterfTradSecdeal,resultBaseDto);
                         }else if(StringUtil.equals(entity.getMarketIndicator(),MarketIndicatorUtil.MARKETINDICATOR_REPO)){
-                                repoAutoTradeService.repoAutoTrade(iCstpTrade, finalInterfOpicsTradRepo,resultBaseDto);
+                                repoAutoTradeService.repoAutoTrade2(iCstpTrade, finalInterfOpicsTradRepo,resultBaseDto);
                         }
                     }
                 });
                 thread.start();
-            }
+          //  }
             //登记数据自动匹配功能,针对单条指令，自动匹配
-            if(StringUtil.equals(entity.getMarketIndicator(),MarketIndicatorUtil.MARKETINDICATOR_BOND)){
+           /* if(StringUtil.equals(entity.getMarketIndicator(),MarketIndicatorUtil.MARKETINDICATOR_BOND)){
                 cstpSecTradeAutoMatch(interfTradSecdeal,iCstpTrade);
             }else if(StringUtil.equals(entity.getMarketIndicator(),MarketIndicatorUtil.MARKETINDICATOR_REPO)){
-               // cstpRepoTradeAutoMatch(interfOpicsTradRepo,iCstpTrade);
-            }
+                cstpRepoTradeAutoMatch(interfOpicsTradRepo,iCstpTrade);
+            }*/
 
         }catch (Exception e){
             resultBaseDto.setErrMsg(e.getMessage());

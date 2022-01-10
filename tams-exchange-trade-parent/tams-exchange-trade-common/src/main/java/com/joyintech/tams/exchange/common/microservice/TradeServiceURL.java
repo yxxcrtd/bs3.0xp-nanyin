@@ -133,8 +133,8 @@ public class TradeServiceURL {
 
     public static String unitCprice = "/TrdBondInvestTrade/calculate01Data";//净价
     public static String fpriceAmt = "/TrdBondInvestTrade/calculate02Data";//全价总额
+    public static String yield = "/TrdBondInvestTrade/calculate03Data";//按照到期收益率计算
     public static String selectForInterf = "/AssetDeclarationCodeMaintenance/selectForInterf";//申报代码获取
-
     public static String querySysDate = "/InterfSysPara/getSysDate"; //平台日
     public static String querySysParam = "/InterfSysPara/getSysPara"; //系统参数
     public static String selectMstCounterParty = "/InterfSysTrdConfig/selectMstCounterParty";//查询交易对手信息
@@ -144,6 +144,7 @@ public class TradeServiceURL {
     public static String addCounterTrader = "/InterfSysTrdConfig/insertCounterTraderId";//新增交易对手交易员
 
     public static String queryTradeDate = "/MstMarketCalendarInfo/queryTradeDate"; //取交易日
+    public static String checkTradeDate = "/MstMarketCalendarInfo/queryIsTradeDate"; //查询输入日期是否交易日
     public static String queryTradeTime = "/InterfSysTrdConfig/getTrdTimeConfig"; //取交易时间
 
     public static String selectStockInfo = "/InterfSysTrdConfig/selectStockInfo";//从投管获取合约基础数据

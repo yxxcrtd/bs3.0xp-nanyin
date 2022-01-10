@@ -18,8 +18,6 @@ import com.joyintech.framework.util.*;
 
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dao.FieldEtrInfoQueryMapper;
-import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoOperateListRequest;
-import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoOperateListResponse;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListRequest;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,8 +88,6 @@ public class FieldEtrInfoQueryService extends BaseService{
 
         String finprodType2Old = (String)pageParam.get("finprodType2");
         if (StringUtil.isNotEmpty(finprodType2Old) || StringUtil.isNotEmpty(pageParam.get("ps"))) {
-            List<String> finprodType2ListOld = StringUtil.splitToList(GlobalConstant.COMMA, finprodType2Old);
-            //交易方向为利率互换 转换
             if(StringUtil.isNotEmpty((String)pageParam.get("ps"))){
                 pageParam.put("PS_T01", DictCodeList.交易方向_买入.getValue());
             }
@@ -144,27 +140,5 @@ public class FieldEtrInfoQueryService extends BaseService{
             return pageLimit;
         }
         return pageLimit;
-    }
-
-    /**
-     * 操作记录查询
-     *
-     * @param dto
-     * @return Page<FieldEtrInfoOperateListResponse>
-     * @throws Exception Exception
-     * @see
-     * @since 1.0
-     */
-    public Page<FieldEtrInfoOperateListResponse> getEtrInfoQueryOperate(FieldEtrInfoOperateListRequest dto) {
-
-        //dto转成map
-        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
-        List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
-        if(StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1){
-            return new Page<FieldEtrInfoOperateListResponse>();
-        }else{
-            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
-                    () -> fieldEtrInfoQueryMapper.getEtrInfoQueryOperate(pageParam));
-        }
     }
 }

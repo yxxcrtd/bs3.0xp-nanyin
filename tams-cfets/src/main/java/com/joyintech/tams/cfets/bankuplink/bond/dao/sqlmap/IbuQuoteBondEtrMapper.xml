@@ -190,10 +190,10 @@
     <select id="listAvaShareAmt" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.EntrustAvaShareAmtDto">
         SELECT
             T5.ENTRUST_ID,
-            nvl(T4.OUR_SHARE_AMT,0) usedOurShareAmt,
-            nvl(T4.LENDIN_SHARE_AMT,0) usedLendinShareAmt,
-            nvl(T5.OUR_ENT_NUM,0) ourEntNum,
-            nvl(T5.LENDIN_ENT_NUM,0) lendinEntNum
+            nvl(T4.OUR_SHARE_AMT,0)*100 usedOurShareAmt,
+            nvl(T4.LENDIN_SHARE_AMT,0)*100 usedLendinShareAmt,
+            nvl(T5.OUR_ENT_NUM,0)*100 ourEntNum,
+            nvl(T5.LENDIN_ENT_NUM,0)*100 lendinEntNum
         FROM
         ETR_ENTRUST_ADD T5
         LEFT JOIN (
@@ -228,7 +228,48 @@
                          T1.WORKFLOW_ID != #{workflowId}
                      </if>
                  </where>
-                    ) T3
+            union all
+                SELECT
+                ENTRUST_ID,
+                OUR_SHARE_AMT,
+                LENDIN_SHARE_AMT
+                FROM
+                IBU_QUOTE_ETR_RE T1
+                WHERE
+                EXISTS (
+                SELECT
+                1
+                FROM
+                IBU_QUOTE_BOND T2
+                WHERE
+                T2.QUOTE_ID = T1.QUOTE_ID
+                <if test="QUOTE_STUTAS_IBUS != null and QUOTE_STUTAS_IBUS.size() > 0">
+                    and T2.TRADE_STATUS in
+                    <foreach collection="QUOTE_STUTAS_IBUS" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                )
+                AND NOT EXISTS (
+                SELECT
+                1
+                FROM
+                WFL_IBU_QUOTE_BOND2 T3
+                WHERE
+                T3.QUOTE_ID = T1.QUOTE_ID)
+                UNION ALL
+                SELECT
+                ENTRUST_ID,
+                OUR_SHARE_AMT,
+                LENDIN_SHARE_AMT
+                FROM
+                WFL_IBU_QUOTE_ETR_RE T1
+                <where>
+                    <if test="workflowId != null and !workflowId.equals('')">
+                        T1.WORKFLOW_ID != #{workflowId}
+                    </if>
+                </where>
+                ) T3
             GROUP BY
                 ENTRUST_ID) T4  ON T5.ENTRUST_ID = T4.ENTRUST_ID
             <where>

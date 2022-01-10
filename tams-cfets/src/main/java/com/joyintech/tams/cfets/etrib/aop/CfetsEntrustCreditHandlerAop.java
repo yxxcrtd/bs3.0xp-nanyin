@@ -2,6 +2,7 @@ package com.joyintech.tams.cfets.etrib.aop;
 
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.ArithmeticUtil;
@@ -154,17 +155,6 @@ public class CfetsEntrustCreditHandlerAop {
                     }
                 }
                 if (ar != null && !StringUtil.isEmptyList(ar.getErrorList())){
-                   /* List<String> messages = new ArrayList<>();
-                    for(ValidMessage t:ar.getErrorList()){
-                        messages.add(t.getMessage());
-                    }
-                    if(messages.size()>0) {
-                        AjaxResult m=new AjaxResult();
-                        m.setStatuCode(220);
-                        m.setMessage(StringUtil.joinString(messages,  GlobalConstant.VERTICAL_LINE));
-                        ajaxResultMessage.setData(m);
-
-                    }*/
                         AjaxResult errorRs = new AjaxResult();
                         errorRs.setErrorList(ar.getErrorList());
                         ajaxResultMessage.setData(errorRs);
@@ -172,9 +162,8 @@ public class CfetsEntrustCreditHandlerAop {
                 }
                 if (ar != null && StringUtil.isNotEmpty(ar.getData())){
                         AjaxResult m=new AjaxResult();
-                        m.setStatuCode(230);
                         String ms=ar.getData().toString().replaceAll(BussinessConstant.MSG_SPLIT,GlobalConstant.VERTICAL_LINE);
-                        m.setMessage(ms);
+                        m.setMessage(ms, MessageType.确认消息);
                         ajaxResultMessage.setData(m);
                 }
             }

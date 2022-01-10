@@ -6,15 +6,18 @@ import org.hibernate.validator.constraints.NotBlank;
 
 @ApiModel(value = "质押式协议回购行情请求报文", description = "质押式协议回购行情请求报文")
 public class IntegratedRepurchaseQuoteQryBean {
+    @ApiModelProperty(required = true, name = "instructionId", value = "指令编号", example = "FUND000121")
+    @NotBlank(message = "指令编号不能为空")
+    private String instructionId;
+
     @ApiModelProperty(required = true, name = "actionIn", value = "行情类别（0-公开行情，1-非公开行情）", example = "1")
     private int actionIn;
 
-    @ApiModelProperty(name = "entrustProp", value = "委托属性", example = "BPB")
-    @NotBlank(message = "委托属性不能为空")
+    @ApiModelProperty(name = "entrustProp", value = "委托属性", example = "BPB", hidden = true)
     private String entrustProp;
 
     @ApiModelProperty(required = true, name = "accountId", value = "网点账号", example = "A0001:12345")
-    @NotBlank(message = "网点账号不能为空")
+//    @NotBlank(message = "网点账号不能为空")
     private String accountId;
 
     @ApiModelProperty(name = "pageSize", value = "记录数", example = "100")
@@ -28,6 +31,14 @@ public class IntegratedRepurchaseQuoteQryBean {
         this.entrustProp = entrustProp;
         this.accountId = accountId;
         this.pageSize = pageSize;
+    }
+
+    public String getInstructionId() {
+        return instructionId;
+    }
+
+    public void setInstructionId(String instructionId) {
+        this.instructionId = instructionId;
     }
 
     public int getActionIn() {

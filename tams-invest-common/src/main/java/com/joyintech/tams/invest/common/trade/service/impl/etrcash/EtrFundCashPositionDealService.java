@@ -23,7 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService.getSeqNo;
 
@@ -345,12 +347,19 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
             }
             if (etrEntrust.getTradeMarket().equals(BussinessDictCodeList.交易场所_上海证券交易所.getValue())
                     || etrEntrust.getTradeMarket().equals(BussinessDictCodeList.交易场所_深圳证券交易所.getValue())) {
-                BigDecimal tradeAmt = etrCommonCashPositionDealService.selectSumTradeAmt(etrEntrust.getEntrustId());
+                Map<String,Object> map=new HashMap<>();
+                map.put("sumTradeFlag","01");
+                map.put("entrustClass", etrEntrust.getEntrustClass());
+                map.put("portfolioId",etrEntrust.getPortfolioId());
+                map.put("entrustId",etrEntrust.getEntrustId());
+                BigDecimal tradeAmt = EtrCommonCashPositionDealService.getEtrExchangeFinishAmtMuilt(map);
+                //BigDecimal tradeAmt = etrCommonCashPositionDealService.selectSumTradeAmt(etrEntrust.getEntrustId());
                 if (null != tradeAmt) {
                     etrCashPositionFlowDto.setAmount(ArithmeticUtil.subtract(tradeAmt.multiply(new BigDecimal(-1)), etrEntrust.getEntrustAmt()).multiply(new BigDecimal(-1)));
-                }else{
-                    etrCashPositionFlowDto.setAmount(etrEntrust.getEntrustAmt());
                 }
+//                else{
+//                    etrCashPositionFlowDto.setAmount(etrEntrust.getEntrustAmt());
+//                }
             } else {
                 etrCashPositionFlowDto.setAmount(ArithmeticUtil.subtract(etrEntrust.getEntrustAmt(), etrFinish));
             }
@@ -366,12 +375,19 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
             EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDtoFromEtr(entrustCommonDto);
             if (etrEntrust.getTradeMarket().equals(BussinessDictCodeList.交易场所_上海证券交易所.getValue())
                     || etrEntrust.getTradeMarket().equals(BussinessDictCodeList.交易场所_深圳证券交易所.getValue())) {
-                BigDecimal shartAmt = etrCommonCashPositionDealService.selectSumShareAmt(etrEntrust.getEntrustId());
+                Map<String,Object> map=new HashMap<>();
+                map.put("sumTradeFlag","01");
+                map.put("entrustClass", etrEntrust.getEntrustClass());
+                map.put("portfolioId",etrEntrust.getPortfolioId());
+                map.put("entrustId",etrEntrust.getEntrustId());
+                BigDecimal shartAmt = EtrCommonCashPositionDealService.getEtrExchangeFinishAmtMuilt(map);
+//                BigDecimal shartAmt = etrCommonCashPositionDealService.selectSumShareAmt(etrEntrust.getEntrustId());
                 if (null != shartAmt) {
                     etrSecPositionFlowDto.setAmount(ArithmeticUtil.subtract(shartAmt.multiply(new BigDecimal(-1)), etrEntrust.getEntrustNum()).multiply(new BigDecimal(-1)));
-                } else {
-                    etrSecPositionFlowDto.setAmount(etrEntrust.getEntrustNum());
                 }
+//                else {
+//                    etrSecPositionFlowDto.setAmount(etrEntrust.getEntrustNum());
+//                }
             } else {
                 etrSecPositionFlowDto.setAmount(ArithmeticUtil.subtract(etrEntrust.getEntrustNum(), etrFinish));
             }

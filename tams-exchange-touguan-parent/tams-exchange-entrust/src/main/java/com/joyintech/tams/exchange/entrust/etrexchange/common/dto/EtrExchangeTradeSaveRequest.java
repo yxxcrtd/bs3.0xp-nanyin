@@ -220,7 +220,21 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
     private List<RiskTrialRetDto> riskTrialRetDto;
 
     @ApiModelProperty(required = true,name="portfolioList",value="组合列表",example="[{'portfolioId':'qwqw'}]]")
-    List<EtrExchangeTradeSaveRequest> portfolioList;
+    List<EtrExchangeTradePortfolioRequest> portfolioList;
+
+    /**
+     * 组合名称
+     */
+    private String portfolioName;
+
+    /**
+     * 是否多组合
+     */
+    private String isMulti;
+    /**
+     * 申报类型
+     */
+    private String declaTypeStr;
     
 
 
@@ -235,6 +249,15 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
     public String getEntrustId() {
         return super.getEntrustId();
     }
+
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
+    }
+
     /**
      * 获取 fprice
      * @return fprice.
@@ -260,11 +283,11 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
         this.fprice = fprice;
     }
 
-    public List<EtrExchangeTradeSaveRequest> getPortfolioList() {
+    public List<EtrExchangeTradePortfolioRequest> getPortfolioList() {
         return portfolioList;
     }
 
-    public void setPortfolioList(List<EtrExchangeTradeSaveRequest> portfolioList) {
+    public void setPortfolioList(List<EtrExchangeTradePortfolioRequest> portfolioList) {
         this.portfolioList = portfolioList;
     }
 
@@ -617,6 +640,14 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
         this.tradeMarket = tradeMarket;
     }
 
+    public String getIsMulti() {
+        return isMulti;
+    }
+
+    public void setIsMulti(String isMulti) {
+        this.isMulti = isMulti;
+    }
+
     public String getSecAcctId() {
         return secAcctId;
     }
@@ -624,4 +655,9 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
     public void setSecAcctId(String secAcctId) {
         this.secAcctId = secAcctId;
     }
+
+    public String getDeclaTypeStr(){
+        return  SysDataUtil.getNameFromDataDict(DictCode.申报类型, getDeclaType());
+    }
+
 }

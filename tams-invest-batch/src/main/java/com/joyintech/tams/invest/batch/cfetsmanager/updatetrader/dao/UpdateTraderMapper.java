@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.batch.cfetsmanager.updatetrader.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.MstCfetsCustomerInfo;
@@ -14,7 +15,7 @@ public interface UpdateTraderMapper {
 	 * 查询在交易对手中不存在的银行间机构
 	 * @return
 	 */
-	List<MstCfetsCustomerInfo> selectCustomerNew(String batchDate);
+	List<MstCfetsCustomerInfo> selectCustomerNew(@Param("batchDate") String batchDate);
 
 	/**
 	 * 查询在交易对手中的非法人机构
@@ -39,5 +40,19 @@ public interface UpdateTraderMapper {
 	 * 查询在主机构代码
 	 * @return
 	 */
-	MstCfetsCustomerInfo selectInfo(String batchDate);
+	MstCfetsCustomerInfo selectInfo(@Param("batchDate") String batchDate);
+
+	/**
+	 * 交易成员全称匹配交易对手信息
+	 * @param map
+	 * @return
+	 */
+	String checkPartyNameOfParty(Map<String, Object> map);
+
+	/**
+	 * 获取机构信息
+	 * @param mpartyId 6位机构码
+	 * @return
+	 */
+	MstCfetsCustomerInfo selectMpartyInfo(@Param("mpartyId") String mpartyId);
 }

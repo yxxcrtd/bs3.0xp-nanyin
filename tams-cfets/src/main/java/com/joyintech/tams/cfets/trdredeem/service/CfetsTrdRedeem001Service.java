@@ -336,7 +336,12 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
             result.setOperationType(entity.getOperatorType());
             result.setRegFinProductDealTotal(regFinProductDealTotalMapper.selectByPrimaryKey(entity.getTotleTradeId()));
             if(StringUtil.isNotEmpty(result.getRegFinProductDealTotal())){
-                result.getRegFinProductDealTotal().setRemark(result.getRegFinProductDealTotal().getRemark()+"。赎回登记撤销："+entity.getRevokeReason());
+                String remark=result.getRegFinProductDealTotal().getRemark();
+                if(StringUtil.isNotEmpty(remark)){
+                    result.getRegFinProductDealTotal().setRemark(result.getRegFinProductDealTotal().getRemark()+"。赎回登记撤销："+entity.getRevokeReason());
+                }else{
+                    result.getRegFinProductDealTotal().setRemark("赎回登记撤销："+entity.getRevokeReason());
+                }
             }
             result.setRegFinProductDealTotalAdd(regFinProductDealTotalAddMapper.selectByPrimaryKey(entity.getTotleTradeId()));
           //  result.setRegTradeFeeTotals(cfetsIbuQuoteBondMapper.listRegTradeFeeTotal(entity.getTotleTradeId()));

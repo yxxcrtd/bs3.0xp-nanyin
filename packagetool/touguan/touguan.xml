@@ -79,13 +79,15 @@
         <module>../../tams-cfets</module>
         <module>../../tams-cfets-system</module>
         <module>../../tams-common-basicdata</module>
-        <module>../../tams-exchange-touguan-parent</module>
-<!--        <module>../../tams-exchange-touguan-parent/tams-exchange-entrust</module>-->
+        <module>../../tams-exchange-touguan-parent/tams-exchange-entrust</module>
         <module>../../tams-exchange-touguan-system</module>
         <module>../../tams-svreport-common</module>
         <module>../../tams-svreport-parent/tams-svreport-interf</module>
         <module>../../tams-exchange-trade-parent/tams-exchange-trade-common</module>
         <module>../../tams-exchange-trade-parent/tams-exchange-trade-data-common</module>
+        <module>../../tams-exchange-trade-parent/tams-exchange-trade-quote</module>
+        <module>../../tams-exchange-trade-parent/tams-exchange-trade-server-dsp</module>
+        <module>../../tams-exchange-trade-parent/tams-exchange-trade-server-terminal</module>
         <module>../../tams-exchange-trade-parent/tams-exchange-trade</module>
 
     </modules>

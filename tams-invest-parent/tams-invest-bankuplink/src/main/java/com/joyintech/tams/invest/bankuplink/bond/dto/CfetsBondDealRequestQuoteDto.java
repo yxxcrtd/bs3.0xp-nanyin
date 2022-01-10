@@ -10,6 +10,8 @@
 
 package com.joyintech.tams.invest.bankuplink.bond.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -122,6 +124,10 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
     private String businessId;
 
     /**
+     * 交易手续费
+     */
+    private BigDecimal dealFeeAmt;
+    /**
      * 结算服务费
      */
     private BigDecimal  settFeeAmt;
@@ -140,6 +146,11 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
 
     private BigDecimal sellAbleNum;
 
+    /**
+     * 全价总额
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal fpriceAmt;
 
     private Date theoreticalExerciseDate;
 
@@ -160,6 +171,49 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
     private String distribution;
 
     private BigDecimal unitFprice;
+
+    /**
+     * 报价操作主要包含“发起、回复、修改、交谈”
+     */
+    private String quoteOperatorType;
+
+    private BigDecimal lendinShareAmt;
+
+    private BigDecimal ourShareAmt;
+
+    public BigDecimal getLendinShareAmt() {
+        return lendinShareAmt;
+    }
+
+    public void setLendinShareAmt(BigDecimal lendinShareAmt) {
+        this.lendinShareAmt = lendinShareAmt;
+    }
+
+    public BigDecimal getOurShareAmt() {
+        return ourShareAmt;
+    }
+
+    public void setOurShareAmt(BigDecimal ourShareAmt) {
+        this.ourShareAmt = ourShareAmt;
+    }
+
+    @Override
+    public String getQuoteId() {
+        return quoteId;
+    }
+
+    @Override
+    public void setQuoteId(String quoteId) {
+        this.quoteId = quoteId;
+    }
+
+    public BigDecimal getFpriceAmt() {
+        return fpriceAmt;
+    }
+
+    public void setFpriceAmt(BigDecimal fpriceAmt) {
+        this.fpriceAmt = fpriceAmt;
+    }
 
     public BigDecimal getUnitFprice() {
         return unitFprice;
@@ -492,6 +546,14 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
         this.secManageAvailablePosition = secManageAvailablePosition;
     }
 
+    public BigDecimal getDealFeeAmt() {
+        return dealFeeAmt;
+    }
+
+    public void setDealFeeAmt(BigDecimal dealFeeAmt) {
+        this.dealFeeAmt = dealFeeAmt;
+    }
+
     public BigDecimal getSettFeeAmt() {
         return settFeeAmt;
     }
@@ -607,5 +669,13 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
 
     public void setDistribution(String distribution) {
         this.distribution = distribution;
+    }
+
+    public String getQuoteOperatorType() {
+        return quoteOperatorType;
+    }
+
+    public void setQuoteOperatorType(String quoteOperatorType) {
+        this.quoteOperatorType = quoteOperatorType;
     }
 }

@@ -4,8 +4,8 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoLib001Mapper;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLib001Dto;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLibAvaPledgeBondResponse;
+import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLibDto;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoLibAvaPledgeBondRequest;
 import com.joyintech.tams.common.base.dao.EtrEntrustPledgeMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrustPledge;
@@ -79,10 +79,10 @@ public class CfetsIbRepoLibService {
      * @since 1.0
      */
     @Transactional(rollbackFor = Exception.class)
-    public Long inSave(CfetsEtrIbRepoLib001Dto dto) {
+    public Long inSave(CfetsEtrIbRepoLibDto dto) {
         Long saveCount = 0L;
         if (!StringUtil.isEmptyList(dto.getPledgeBondList())) {
-            for (CfetsEtrIbRepoLib001Dto temp : dto.getPledgeBondList()) {
+            for (CfetsEtrIbRepoLibDto temp : dto.getPledgeBondList()) {
                 EtrEntrustPledge etrEntrustPledge = new EtrEntrustPledge();
                 etrEntrustPledge.setPortfolioId(temp.getPortfolioId());
                 etrEntrustPledge.setFinprodId(temp.getFinprodId());

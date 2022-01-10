@@ -23,6 +23,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
 import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
@@ -264,7 +265,7 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
     public Message<AjaxResult> outSave(@RequestBody CfetsEtrRepoSaveRequest dto) {
      // 校验操作的角色是否是投资经理
         Map<String,Object> map = new HashMap<>();
-        AjaxResult ajax = null;
+        AjaxResult ajax = new AjaxResult();
         map.put("role_pos", DictCodeListExt2.角色岗位_投资经理.getValue());
         map.put("userId", SecurityUtil.getLoginUser().getUserName());
         Long count = cfetsEtrIbRepoinfoService.selectUserRolePosList(map) ;
@@ -283,8 +284,11 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
             joyinMessages.add(
                     new JoyinMessage("角色岗位为投资经理才能操作", MessageType.警告消息));
             ajax.setJoyinMessages(joyinMessages);
-
-            return new Message<AjaxResult>().fail().setData(ajax);
+            List<ValidMessage>  errorList = new ArrayList<>();
+            errorList.add(new ValidMessage("角色岗位为投资经理才能操作"));
+            ajax=  new AjaxResult();
+            ajax.setErrorList(errorList);
+            return new Message<AjaxResult>().success().setData(ajax);
         }
     }
     
@@ -378,6 +382,7 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
             m.setData(result);
             return new Message<AjaxResult>().success().setData(m);
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error("查询功能异常", e);
             return new Message<AjaxResult>().fail().setMessage("查询异常");
         }
@@ -391,7 +396,7 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
         //对选择的数据进行check
         AjaxResult ajaxResult = cfetsEtrIbRepoinfoService.modifyDelegateCheckMethod(dto);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
-            return new Message<AjaxResult>().fail().setData(ajaxResult);
+            return new Message<AjaxResult>().success().setData(ajaxResult);
         }
         try {
             CfetsEtribRepoInfo003Dto item = dto.getSelectedItem().get(0);

@@ -44,6 +44,14 @@ public interface CfetsIbuQuoteRepoMapper {
     List<RepoEntrustPledgeDto> selectRepoEntrustPledges(Map<String, Object> param);
 
     /**
+     * 查询质押券信息
+     *
+     * @param param 条件
+     * @return 质押券列表
+     */
+    List<RepoEntrustPledgeDto> selectRepoEntrustPledgesInit(Map<String, Object> param);
+
+    /**
      * 查询可用质押券信息 按组合、债券维度汇总
      *
      * @param param 条件
@@ -70,12 +78,12 @@ public interface CfetsIbuQuoteRepoMapper {
     /**
      * 按指令维度汇总质押额
      *
-     * @param etrId 指令代码
-     * @return java.math.BigDecimal
+     * @param param
+     * @return java.util.List<com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustPledgeDto>
      * @author jiangpeng
-     * @date 2021/12/11 16:27
+     * @date 2022/1/5 11:21
      */
-    BigDecimal findEtrPrinByEtrId(@Param("etrId") String etrId);
+    List<RepoEntrustPledgeDto> findEtrPrinByEtrIds(Map<String, Object> param);
 
     /**
      * 按指令维度汇总指令额度
@@ -113,7 +121,7 @@ public interface CfetsIbuQuoteRepoMapper {
      * @author jiangpeng
      * @date 2021/12/14 15:31
      */
-    List<DealTransactionDetailsDto> listDealTransactionDetails(Map<String, Object> param);
+    List<RepoDealTransactionDetailsDto> listDealTransactionDetails(Map<String, Object> param);
 
     /**
      * 查询质押券信息
@@ -194,4 +202,15 @@ public interface CfetsIbuQuoteRepoMapper {
      * @return 指令列表
      */
     List<FinExercisePlan> findFinExercisePlan(Map<String, Object> param);
+
+    /**
+     * 资产五级分类联动检索
+     * <功能详细描述>
+     *
+     * @param param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<FinProductTypeConfig> getAssetFiveType(FinProductTypeConfig param);
 }

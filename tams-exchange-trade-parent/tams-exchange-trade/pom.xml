@@ -25,6 +25,16 @@
 			<version>3.0.0</version>
 		</dependency>
 		<dependency>
+			<artifactId>tams-exchange-trade-server-terminal</artifactId>
+			<groupId>com.joyintech</groupId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<artifactId>tams-exchange-trade-quote</artifactId>
+			<groupId>com.joyintech</groupId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>disruptor</artifactId>
 			<version>3.3.7</version>
@@ -63,12 +73,6 @@
 		<dependency>
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.joyintech</groupId>
-			<artifactId>tams-business-common</artifactId>
-			<version>3.0.4</version>
-			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 

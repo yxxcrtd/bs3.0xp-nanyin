@@ -40,13 +40,15 @@
     B.TRADER trader,
     B.realName realName,
     ETR_ENTRUST.REMARK remark,
-    btm.busi_type busiTypePosition,
+    btm.OUTPUT_VALUE_1 busiTypePosition,
     ssai.sec_acct_name secAcctId,
     DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
-    round(decode(btm.busi_type,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,''),4) etrPrice,
-    round(NVL(T5.ent_finish_amt,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 exeProgress,
-    round(NVL(T5.FINISH_AMT,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 dealProgress,
+    round(decode(btm.OUTPUT_VALUE_1,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,''),4) etrPrice,
+    DECODE(T5.ent_finish_amt,null,0,
+        round(NVL(T5.ent_finish_amt,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100) exeProgress,
+    DECODE(T5.FINISH_AMT,null,0,
+        round(NVL(T5.FINISH_AMT,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100) dealProgress,
     NVL(T5.ent_finish_amt,0)/100  as execFinishAmt,
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/100) as execRemainderAmt,
     NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
@@ -55,6 +57,7 @@
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
     ETR_ENTRUST.PRICE_MODEL priceModel,
     ssai.TRD_ACCT_ID trdAcctId,
+    ETR_ENTRUST.ENTRUST_NUM entrustNum,
     ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField
     FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
     LEFT JOIN
@@ -105,7 +108,9 @@
         ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
         LEFT JOIN SYS_USER su1 ON ETR_ENTRUST.INV_MANAGER_ID = su1.USER_NAME
-        LEFT JOIN BUSI_TYPE_MAPPING btm ON ETR_ENTRUST.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
+        LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm ON (ETR_ENTRUST.FINPROD_TYPE2 = btm.INPUT_VALUE_2 OR  btm.INPUT_VALUE_2 is null) 
+            AND (ETR_ENTRUST.Ps = btm.INPUT_VALUE_3 OR  btm.INPUT_VALUE_3 is null) 
+            AND (ETR_ENTRUST.TRADE_PLAT = btm.INPUT_VALUE_1 OR btm.INPUT_VALUE_1 IS NULL)
     <where>
         AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall},#{entrustInwfl})
         <if test="entrustStatusList != null and entrustStatusList.size() > 0">
@@ -128,7 +133,7 @@
             AND ETR_ENTRUST_ADD.ASSET_TYPE  = #{finprodType2}
         </if>
         <if test="busiTypePosition != null and busiTypePosition!='' ">
-            AND btm.busi_type  = #{busiTypePosition}
+            AND btm.OUTPUT_VALUE_1  = #{busiTypePosition}
         </if>
         <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
             AND FIN_PRODUCT.FINPROD_MARKET_ID IN(
@@ -208,13 +213,15 @@
         B.TRADER trader,
         B.realName realName,
         WFL_ETR_ENTRUST.REMARK remark,
-        btm.busi_type busiTypePosition,
+        btm.OUTPUT_VALUE_1 busiTypePosition,
         ssai.sec_acct_name secAcctId,
         DECODE(WFL_ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
         decode(WFL_ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'F10',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'F12',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'F16',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
-        round(decode(btm.busi_type,#{busiTypePosition02},decode(WFL_ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',WFL_ETR_ENTRUST.PRICE,'exerYield',WFL_ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',WFL_ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},WFL_ETR_ENTRUST.PRICE,''),4) etrPrice,
-        round(NVL(T5.ent_finish_amt,0)*100/(WFL_ETR_ENTRUST.ENTRUST_NUM*100),4)*100 exeProgress,
-        round(NVL(T5.FINISH_AMT,0)*100/(WFL_ETR_ENTRUST.ENTRUST_NUM*100),4)*100 dealProgress,
+        round(decode(btm.OUTPUT_VALUE_1,#{busiTypePosition02},decode(WFL_ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',WFL_ETR_ENTRUST.PRICE,'exerYield',WFL_ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',WFL_ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},WFL_ETR_ENTRUST.PRICE,''),4) etrPrice,
+        DECODE(T5.ent_finish_amt,null,0,
+            round(NVL(T5.ent_finish_amt,0)*100/(WFL_ETR_ENTRUST.ENTRUST_NUM*100),4)*100) exeProgress,
+        DECODE(T5.FINISH_AMT,null,0,
+            round(NVL(T5.FINISH_AMT,0)*100/(WFL_ETR_ENTRUST.ENTRUST_NUM*100),4)*100) dealProgress,
         NVL(T5.ent_finish_amt,0)/100  as execFinishAmt,
         (NVL(WFL_ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/100) as execRemainderAmt,
         NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
@@ -223,6 +230,7 @@
         NULL transmitTimeSer,
         WFL_ETR_ENTRUST.PRICE_MODEL priceModel,
         ssai.TRD_ACCT_ID trdAcctId,
+        WFL_ETR_ENTRUST.ENTRUST_NUM entrustNum,
         WFL_ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField
         FROM (SELECT * FROM WFL_ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) WFL_ETR_ENTRUST
         LEFT JOIN
@@ -252,7 +260,9 @@
         ON
         WFL_ETR_ENTRUST.ENTRUST_ID = WFL_ETR_ENTRUST_ADD.ENTRUST_ID
         LEFT JOIN OPT_TARGET_INFO ON WFL_ETR_ENTRUST_ADD.ASSET_TYPE_10 = OPT_TARGET_INFO.TARGET_ID
-        LEFT JOIN BUSI_TYPE_MAPPING btm ON wfl_ETR_ENTRUST.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND wfl_ETR_ENTRUST.Ps = btm.ps
+        LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm ON (WFL_ETR_ENTRUST.FINPROD_TYPE2 = btm.INPUT_VALUE_2 OR  btm.INPUT_VALUE_2 is null)
+            AND (WFL_ETR_ENTRUST.Ps = btm.INPUT_VALUE_3 OR  btm.INPUT_VALUE_3 is null)
+            AND (WFL_ETR_ENTRUST.TRADE_PLAT = btm.INPUT_VALUE_1 OR btm.INPUT_VALUE_1 IS NULL)
         <if test="userId != null and userId!='' ">
             INNER JOIN PTL_PORTFOLIO_AUTHORITY
             ON PTL_PORTFOLIO.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
@@ -296,7 +306,7 @@
                 AND WFL_ETR_ENTRUST_ADD.ASSET_TYPE  = #{finprodType2}
             </if>
             <if test="busiTypePosition != null and busiTypePosition!='' ">
-                AND btm.busi_type = #{busiTypePosition}
+                AND btm.OUTPUT_VALUE_1 = #{busiTypePosition}
             </if>
             <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
                 AND FIN_PRODUCT.FINPROD_MARKET_ID IN(
@@ -344,7 +354,7 @@
         left join SYS_DATADICT_LIST sdl on sdl.DICT_CODE='STATUS_VALID' and t.effectFlag=sdl.ITEM_CODE
         left join SYS_DATADICT_LIST sdl1 on sdl1.DICT_CODE='ENTRUST_STATUS' and t.entrustStatus=sdl1.ITEM_CODE
         left join SYS_DATADICT_LIST sdl2 on sdl2.DICT_CODE='PINAN_ASSET_TYPE' and t.finprodType2=sdl2.ITEM_CODE
-        left join SYS_DATADICT_LIST sdl3 on sdl3.DICT_CODE='BUSI_TYPE_POSITION' and t.busiTypePosition=sdl3.ITEM_CODE
+        left join SYS_DATADICT_LIST sdl3 on sdl3.DICT_CODE='BUSI_TYPE_TG' and t.busiTypePosition=sdl3.ITEM_CODE
         left join SYS_DATADICT_LIST sdl4 on sdl4.DICT_CODE='PS' and t.PS=sdl4.ITEM_CODE
         left join SYS_DATADICT_LIST sdl5 on sdl5.DICT_CODE='TRADE_MARKET' and t.tradeMarket=sdl5.ITEM_CODE
         left join SYS_DATADICT_LIST sdl6 on sdl6.DICT_CODE='ACCOUNT_SPEED' and t.settleSpeed=sdl6.ITEM_CODE
@@ -359,8 +369,9 @@
     </select>
 
     <sql id="vagueQueryWhere">
+        <where>
         <if test="search != null and search != '' and search !='有效' ">
-            <where>
+            
                 (sdl.ITEM_VALUE like '%' || #{search} || '%'
                     OR sdl1.ITEM_VALUE like '%' || #{search} || '%'
                     OR sdl2.ITEM_VALUE like '%' || #{search} || '%'
@@ -391,24 +402,10 @@
                     OR replace(TO_CHAR(t.entrustDate,'yyyy-MM-dd'),'-','/')=#{year}||'/'||#{search}
                     OR t.transmitTimeSer = #{search}
                 )
-            </where>
         </if>
+            AND t.tradeMarket in ('03','04','12')
+        </where>
     </sql>
-
-    <select id="getEtrInfoQueryOperate"
-            resultType="com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoOperateListResponse">
-        SELECT rownum SEQ_NO,t.* from (select
-        ENTRUST_ID,
-        OPER_TYPE,
-        to_char(OPER_DATE,'yyyy-MM-dd')  OPER_DATE,
-        to_char(OPER_TIME,'hh24:mi:ss') OPER_TIME,
-        BUSI_DES,
-        real_name userId
-        from ETR_ENTRUST_OPER_HIS
-        LEFT JOIN SYS_USER SU on ETR_ENTRUST_OPER_HIS.user_id = SU.user_name
-        WHERE entrust_id = #{entrustId}
-        order by OPER_TIME desc) t
-    </select>
 
     <select id="queryRolePosByLoginUser" resultType="java.lang.Integer">
         select count(1) from SYS_USER_ROLE sur

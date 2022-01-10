@@ -6,19 +6,22 @@ import org.hibernate.validator.constraints.NotBlank;
 
 @ApiModel(value = "大宗行情请求报文", description = "大宗行情请求报文")
 public class IntegratedBulkQuoteQryBean {
+    @ApiModelProperty(required = true, name = "instructionId", value = "指令编号", example = "FUND000121")
+    @NotBlank(message = "指令编号不能为空")
+    private String instructionId;
 
     @ApiModelProperty(required = true, name = "stockCode", value = "证券代码", example = "000001.SZ")
-    @NotBlank(message = "证券代码不能为空")
+//    @NotBlank(message = "证券代码不能为空")
     private String stockCode;
 
-    @ApiModelProperty(name = "entrustProp", value = "委托属性", example = "a")
+    @ApiModelProperty(name = "entrustProp", value = "委托属性", example = "a", hidden = true)
     private String entrustProp;
 
-    @ApiModelProperty(name = "entrustBs", value = "委托方向", example = "1")
+    @ApiModelProperty(name = "entrustBs", value = "委托方向", example = "1", hidden = true)
     private String entrustBs;
 
     @ApiModelProperty(required = true, name = "accountId", value = "网点账号", example = "A0001:12345")
-    @NotBlank(message = "网点账号不能为空")
+//    @NotBlank(message = "网点账号不能为空")
     private String accountId;
 
     @ApiModelProperty(name = "pageSize", value = "记录数", example = "100")
@@ -33,6 +36,14 @@ public class IntegratedBulkQuoteQryBean {
     }
 
     public IntegratedBulkQuoteQryBean() {
+    }
+
+    public String getInstructionId() {
+        return instructionId;
+    }
+
+    public void setInstructionId(String instructionId) {
+        this.instructionId = instructionId;
     }
 
     public String getStockCode() {

@@ -467,6 +467,7 @@
 		SEC.REC_ACCT_ID recAcctId,
 		SEC.TRD_ACCT_ID trdAcctId,
 		SEC.SEC_ACCT_SOURCE secAcctSource,
+	    SEC.TRADE_PLACE tradePlace,
 		CAP.ACCT_NAME acctName
 		FROM
 		STL_SEC_ACCT_INFO SEC

@@ -4,12 +4,18 @@ import com.joyintech.tams.exchange.common.bean.AlgorithmPlaceBean;
 import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
 import com.joyintech.tams.exchange.common.bean.ReviewDto;
 import com.joyintech.tams.exchange.common.bean.TrdExchangeDto;
+import com.joyintech.tams.exchange.common.constant.EntrustBsProp;
 import com.joyintech.tams.exchange.common.db.domain.Algorithm;
+import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
 import com.joyintech.tams.exchange.common.domain.Message;
+import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
 import com.joyintech.tams.exchange.service.trade.management.service.OrderManagement;
+import com.joyintech.tams.exchange.util.EntrustPropUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,9 +23,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/trade/joyin")
 @Api(tags = "场内交易-委托操作接口")
 public class OrderController {
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     @Autowired
     private OrderManagement orderManagement;
+    @Autowired
+    private InstructionService instructionService;
 
 //    /**
 //     * 查询订单信息
@@ -39,27 +48,41 @@ public class OrderController {
     /**
      * 普通下单
      *
-     * @param userId 用户id
-     * @param order  下单信息
+     * @param order 下单信息
      * @return Message
      */
     @ApiOperation(value = "普通下单（竞价下单）", notes = "普通下单（竞价下单）")
     @RequestMapping(value = "/order", method = RequestMethod.POST)
-    public Message<OrderPlaceBean> sendOrder(@RequestParam String userId, @RequestBody OrderPlaceBean order) {
-        return new Message<OrderPlaceBean>(orderManagement.sendOrder(userId, order));
+    public Message<OrderPlaceBean> sendOrder(@RequestBody OrderPlaceBean order) {
+        logger.info("普通下单（竞价下单）：order entrustBs is [{}]", order.getEntrustBs());
+        order.setEntrustBs(EntrustBsProp.getEntrustBs(order.getEntrustBs()));
+
+        Instruction instruction = instructionService.findById(order.getInstructionId());
+        String entrustProp = EntrustPropUtils.getEntrustProp(instruction);
+        logger.info("普通下单（竞价下单）：order entrustProp is [{}]", entrustProp);
+        order.setEntrustProp(entrustProp);
+
+        return new Message<OrderPlaceBean>(orderManagement.sendOrder(order.getUserId(), order));
     }
 
     /**
      * 综合业务下单
      *
-     * @param userId            用户Id
      * @param integratedEntrust 综合订单信息
      * @return Message
      */
     @ApiOperation(value = "综合业务下单", notes = "综合业务下单")
     @RequestMapping(value = "/order/integratedEntrust", method = RequestMethod.POST)
-    public Message<IntegratedEntrust> sendIntegratedEntrust(@RequestParam String userId, @RequestBody IntegratedEntrust integratedEntrust) {
-        return new Message<IntegratedEntrust>(orderManagement.sendIntegratedEntrust(userId, integratedEntrust));
+    public Message<IntegratedEntrust> sendIntegratedEntrust(@RequestBody IntegratedEntrust integratedEntrust) {
+        Instruction instruction = instructionService.findById(integratedEntrust.getInstructionId());
+        logger.info("综合业务下单：integratedEntrust entrustBs is [{}]", instruction.getPs());
+        integratedEntrust.setEntrustBs(EntrustBsProp.getEntrustBs(instruction.getPs()));
+
+        String entrustProp = EntrustPropUtils.getEntrustProp(instruction);
+        logger.info("综合业务下单：order entrustProp is [{}]", entrustProp);
+        integratedEntrust.setEntrustProp(entrustProp);
+
+        return new Message<IntegratedEntrust>(orderManagement.sendIntegratedEntrust(integratedEntrust.getUserId(), integratedEntrust));
     }
 
     /**
@@ -118,4 +141,5 @@ public class OrderController {
 //                                             @RequestBody RevokeDto dto) {
 //        return orderManagement.cancelOrderWithRevoke(userId, dto);
 //    }
+
 }

@@ -883,9 +883,59 @@
         A.PORTFOLIO_ID AS portfolioId,
         B.PORTFOLIO_NAME AS portfolioName,
         (A.ENTRUST_AMT -NVL(T5.FINISH_AMT, 0) ) AS avaNum,
-        C.TERM_DAYS
+        C.TERM_DAYS,
+        IQER.DEAL_FEE_AMT,
+        IQER.SETT_FEE_AMT,
+        IQER.CPRICE_AMT,
+        IQER.INT_AMT,
+        IQER.PRICE_MODEL,
+        IQER.SHARE_AMT
         FROM
         IBU_QUOTE_ETR_RE  IQER
+        LEFT JOIN ETR_ENTRUST A ON  A.ENTRUST_ID = IQER.ENTRUST_ID
+        INNER JOIN PTL_PORTFOLIO B ON
+        A.PORTFOLIO_ID = B.PORTFOLIO_ID
+        LEFT JOIN ETR_ENTRUST_ADD C ON
+        A.ENTRUST_ID = C.ENTRUST_ID
+        LEFT JOIN (
+        SELECT
+        ENTRUST_ID,
+        SUM(FINISH_AMT) AS FINISH_AMT
+        FROM
+        ETR_QUOTE_FINISH_STATUS
+        GROUP BY
+        ENTRUST_ID) T5 ON
+        A.ENTRUST_ID = T5.ENTRUST_ID
+        LEFT JOIN ETR_DISTRIBUTE E ON
+        A.ENTRUST_ID = E.ENTRUST_ID
+        <where>
+            <if test="quoteId !=null and quoteId != ''">
+                IQER.QUOTE_ID = #{quoteId}
+            </if>
+        </where>
+    </select>
+
+    <!--根据报价编号 初始化组合分配列表-->
+    <select id="selectWflPortfolioByQuoteIdInit" resultType="com.joyintech.tams.invest.common.dto.common.PtlAllocationDto">
+        SELECT
+        IQER.QUOTE_ID,
+        IQER.FPRICE_AMT,
+        IQER.CB_FPRICE_AMT,
+        IQER.SC_FPRICE_AMT,
+        A.ENTRUST_ID AS entrustId,
+        A.PRICE * 100 AS price,
+        A.PORTFOLIO_ID AS portfolioId,
+        B.PORTFOLIO_NAME AS portfolioName,
+        (A.ENTRUST_AMT -NVL(T5.FINISH_AMT, 0) ) AS avaNum,
+        C.TERM_DAYS,
+        IQER.DEAL_FEE_AMT,
+        IQER.SETT_FEE_AMT,
+        IQER.CPRICE_AMT,
+        IQER.INT_AMT,
+        IQER.PRICE_MODEL,
+        IQER.SHARE_AMT
+        FROM
+        WFL_IBU_QUOTE_ETR_RE  IQER
         LEFT JOIN ETR_ENTRUST A ON  A.ENTRUST_ID = IQER.ENTRUST_ID
         INNER JOIN PTL_PORTFOLIO B ON
         A.PORTFOLIO_ID = B.PORTFOLIO_ID
@@ -918,7 +968,11 @@
             FPRICE_AMT,
             SHARE_AMT,
             CB_FPRICE_AMT,
-            SC_FPRICE_AMT
+            SC_FPRICE_AMT,
+            DEAL_FEE_AMT,
+            SETT_FEE_AMT,
+            OUR_SHARE_AMT ,
+            LENDIN_SHARE_AMT
         FROM
         <choose>
             <when test="workflowId !=null and workflowId != ''">

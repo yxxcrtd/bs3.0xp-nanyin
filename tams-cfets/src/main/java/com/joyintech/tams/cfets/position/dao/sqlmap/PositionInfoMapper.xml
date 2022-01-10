@@ -184,9 +184,8 @@
     <!--指令持仓-->
     <select id="queryEtrPosition" parameterType="Map" resultType="map">
         select
-        a.PORTFOLIO_ID,
         sum(
-            CASE WHEN b.S_HOLDINGTYPE=#{S_003} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE NULL END
+            CASE WHEN b1.S_HOLDINGTYPE=#{S_003} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b1.CAL_FLAG,1) ELSE NULL END
         ) AS RRQMKDGH, /*融入券卖空待购回持仓*/
         sum(
             CASE WHEN b.S_HOLDINGTYPE=#{S_001} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE NULL END
@@ -198,8 +197,9 @@
         sum(CASE WHEN a.HODING_TYPE=#{A_004} AND a.DATE_TYPE ='1' THEN AMOUNT ELSE NULL END) AS BFQT1RKYCC, /*本方券T+1日可用持仓*/
         sum(CASE WHEN a.HODING_TYPE=#{A_005} AND a.DATE_TYPE ='0' THEN AMOUNT ELSE NULL END) AS RRQTRKYCC, /*融入券T日可用持仓*/
         sum(CASE WHEN a.HODING_TYPE=#{A_005} AND a.DATE_TYPE ='1' THEN AMOUNT ELSE NULL END) AS RRQT1RKYCC /*融入券T+1日可用持仓*/
-        from ETR_SEC_POSITION_RULE a
-        LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_001},#{S_003})
+        from ETR_SEC_POSITION_RULE a 
+        LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE = #{S_001} 
+        LEFT JOIN PTL_POSITION_CFG b1 ON a.HODING_TYPE =b1.HOLDINGTYPE AND b1.S_HOLDINGTYPE = #{S_003} 
         where a.cdate = to_date(#{cdate},'yyyy-MM-dd') and (b.S_HOLDINGTYPE IN (#{S_001},#{S_003}) or a.HODING_TYPE in (#{A_004},#{A_005}))
         <if test="finprodId != null and finprodId !='' ">
             and a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
@@ -210,13 +210,11 @@
                 #{item}
             </foreach>
         </if>
-        GROUP BY a.PORTFOLIO_ID
     </select>
 
     <!--交易持仓-->
     <select id="queryTrdPosition" parameterType="Map" resultType="map">
         select
-        a.PORTFOLIO_ID,
         sum(
         CASE WHEN b1.S_HOLDINGTYPE=#{S_003} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b1.CAL_FLAG,1) ELSE NULL END
         ) AS RRQMKDGHCC, /*融入券卖空待购回持仓*/
@@ -243,6 +241,5 @@
                 #{item}
             </foreach>
         </if>
-        GROUP BY a.PORTFOLIO_ID
     </select>
 </mapper>

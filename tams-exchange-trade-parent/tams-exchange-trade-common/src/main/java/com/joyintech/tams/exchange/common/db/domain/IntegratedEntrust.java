@@ -181,7 +181,7 @@ public class IntegratedEntrust extends BaseEntity implements Serializable, Entru
     @Size(max = 8)
     private String backDate;
 
-    @ApiModelProperty(required = true, name = "compactTerm", value = "")
+    @ApiModelProperty(required = true, name = "compactTerm", value = "回购期限")
     @NotNull
     @Digits(integer = 4, fraction = 0)
     private int compactTerm;

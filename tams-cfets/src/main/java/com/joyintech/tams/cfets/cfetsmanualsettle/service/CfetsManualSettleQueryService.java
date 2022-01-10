@@ -183,6 +183,9 @@ public class CfetsManualSettleQueryService extends BaseService{
      * @return Page<CfetsManualSettleFlowRespond>
      */
     public Page<CfetsManualSettleFlowRespond> findManualSettleFlow(CfetsManualSettleCommonRequest dto) {
+        if(dto.getSelectedItem().size()==0){
+            return new Page<CfetsManualSettleFlowRespond>();
+        }
         CfetsManualSettleDto cfetsManualSettleDto =dto.getSelectedItem().get(0);
         Map<String,Object> pageParam = BeanUtil.object2Map(cfetsManualSettleDto);
         List<CfetsManualSettleFlowRespond> cfetsManualSettleFlowRespondList = new ArrayList<CfetsManualSettleFlowRespond>();

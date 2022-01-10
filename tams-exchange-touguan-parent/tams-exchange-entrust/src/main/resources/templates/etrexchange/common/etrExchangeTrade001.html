@@ -408,7 +408,7 @@
             </div>
             <div class="layui-form-item">
                 <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
-                    <label class="layui-form-label " data-th-text="#{EtrExchangeTradeCommon001.entrustDate}">指令日期</label>
+                    <label class="layui-form-label " data-th-text="#{EtrInvestBondInfo001.entrustDate}">指令日期</label>
                     <div class="layui-input-inline input-inline">
                         <input required class="layui-input form-input input-dateSelect" id="entrustDate_jj" name="entrustDate" placeholder="请选择时间" data-th-value="${iPlatformDate}" disabled="disabled">
                     </div>
@@ -992,7 +992,7 @@
             </div>
             <div class="layui-form-item">
                 <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
-                    <label class="layui-form-label " data-th-text="#{EtrExchangeTradeCommon001.entrustDate}">指令日期</label>
+                    <label class="layui-form-label " data-th-text="#{EtrInvestBondInfo001.entrustDate}">指令日期</label>
                     <div class="layui-input-inline input-inline">
                         <input required class="layui-input form-input input-dateSelect" id="entrustDate_gd" name="entrustDate" placeholder="请选择时间"
                                data-th-value='${iPlatformDate}' disabled="disabled">
@@ -1007,6 +1007,15 @@
 <!--                </div>-->
             </div>
         </form>
+    </div>
+    <div>
+        <div class="layui-row layui-col-space5" style="width: 100%; margin-top:8px">
+            <h3 class="pro-module-title"><span class="title-des">组合分配</span>
+            </h3>
+        </div>
+    </div>
+    <div>
+        <table class="layui-table" id="dateTable"></table>
     </div>
     <div class="pro-module-wrapper pro-module-block">
         <!--     <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin: 10px; margin-bottom: 20px;">

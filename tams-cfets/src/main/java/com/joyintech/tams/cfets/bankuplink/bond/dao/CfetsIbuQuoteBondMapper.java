@@ -81,4 +81,10 @@ public interface CfetsIbuQuoteBondMapper {
     int countMatchInfo(@Param("quoteId") String quoteId,@Param("CONFIRM_STATUS_1") String CONFIRM_STATUS_1);
 
     BigDecimal getWflShareAmtByEntrustId(@Param("entrustId") String entrustId);
+
+    String getTradeStatus(@Param("quoteId") String quoteId,@Param("cpPartyId") String cpPartyId);
+
+    String  getIssuserName(@Param("finprodId") String finprodId);
+
+    String  getPartyIdByPtl(@Param("portfolioId") String portfolioId);
 }

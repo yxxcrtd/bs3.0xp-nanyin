@@ -1,7 +1,5 @@
 package com.joyintech.tams.cfets.etrib.repo.dto;
 
-import java.util.List;
-
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
@@ -14,6 +12,8 @@ import com.joyintech.tams.invest.entrust.etribrepo.validator.EtrIbRepoRk002Valid
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import java.util.List;
 
 /**
  * 
@@ -52,6 +52,8 @@ public class CfetsEtrIbRepoRkDto extends EtrSecStock implements ProcessEntity {
      * 组合质押库
      */
     List<PtlSecStock> ptlSecStock;
+
+    List<CfetsEtrSecStockConfig> cfetsEtrSecStockConfig;
     
     
     
@@ -329,7 +331,12 @@ public class CfetsEtrIbRepoRkDto extends EtrSecStock implements ProcessEntity {
 	public void setOperateType(String operateType) {
 		this.operateType = operateType;
 	}
-    
-    
-	
+
+    public List<CfetsEtrSecStockConfig> getCfetsEtrSecStockConfig() {
+        return cfetsEtrSecStockConfig;
+    }
+
+    public void setCfetsEtrSecStockConfig(List<CfetsEtrSecStockConfig> cfetsEtrSecStockConfig) {
+        this.cfetsEtrSecStockConfig = cfetsEtrSecStockConfig;
+    }
 }

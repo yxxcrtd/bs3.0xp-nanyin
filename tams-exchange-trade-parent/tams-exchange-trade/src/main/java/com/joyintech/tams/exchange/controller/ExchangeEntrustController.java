@@ -168,8 +168,8 @@ public class ExchangeEntrustController {
      * @return
      */
     @RequestMapping(value = "/entrust/page", method = RequestMethod.GET)
-    public ResultBean queryAllForPage(@RequestParam(value = "page_num", required = false, defaultValue = "0") int pageNum,
-                                      @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize,
+    public ResultBean queryAllForPage(@RequestParam(value = "page_num", required = false, defaultValue = "1") int pageNum,
+                                      @RequestParam(value = "page_size", required = false, defaultValue = "999999") int pageSize,
                                       @RequestParam(value = "history_type") int historyType,
                                       @RequestParam(value = "user_id") String userId,
                                       @RequestParam(value = "start_day", required = false) String startDay,
@@ -238,8 +238,8 @@ public class ExchangeEntrustController {
      * @return
      */
     @RequestMapping(value = "/entrust/integrated/page", method = RequestMethod.GET)
-    public ResultBean queryIntegratedEntrustForPage(@RequestParam(value = "page_num", required = false, defaultValue = "0") int pageNum,
-                                                    @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize,
+    public ResultBean queryIntegratedEntrustForPage(@RequestParam(value = "page_num", required = false, defaultValue = "1") int pageNum,
+                                                    @RequestParam(value = "page_size", required = false, defaultValue = "99999") int pageSize,
                                                     @RequestParam(value = "history_type") int historyType,
                                                     @RequestParam(value = "user_id") String userId,
                                                     @RequestParam(value = "start_day", required = false) String startDay,

@@ -22,6 +22,10 @@
         <result column="DIP_TYPE" property="dipType" jdbcType="VARCHAR" />
         <result column="CPRICE_AMT" property="cpriceAmt" jdbcType="DECIMAL" />
         <result column="INT_AMT" property="intAmt" jdbcType="DECIMAL" />
+        <result column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
+        <result column="OUR_SHARE_AMT" property="ourShareAmt" jdbcType="DECIMAL" />
+        <result column="LENDIN_SHARE_AMT" property="lendinShareAmt" jdbcType="DECIMAL" />
+        <result column="PRICE_MODEL" property="priceModel" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         QUOTE_ID QUOTE_ID, VERSION VERSION, ENTRUST_ID ENTRUST_ID, PORTFOLIO_ID PORTFOLIO_ID, 
@@ -29,7 +33,8 @@
         CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT, UPDATE_USER UPDATE_USER, 
         UPDATE_TIME UPDATE_TIME, CB_FPRICE_AMT CB_FPRICE_AMT, SC_FPRICE_AMT SC_FPRICE_AMT, 
         DEAL_FEE_AMT DEAL_FEE_AMT, SETT_FEE_AMT SETT_FEE_AMT, DIP_TYPE DIP_TYPE, CPRICE_AMT CPRICE_AMT, 
-        INT_AMT INT_AMT
+        INT_AMT INT_AMT, INV_AIM INV_AIM, OUR_SHARE_AMT OUR_SHARE_AMT, LENDIN_SHARE_AMT LENDIN_SHARE_AMT, 
+        PRICE_MODEL PRICE_MODEL
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -63,11 +68,11 @@
         insert into WFL_IBU_QUOTE_ETR_RE(QUOTE_ID, VERSION, ENTRUST_ID, PORTFOLIO_ID, SHARE_AMT, 
         FPRICE_AMT, WORKFLOW_ID, REMARK, CREATE_USER, CREATE_TIME, CREATE_DEPT, UPDATE_USER, 
         UPDATE_TIME, CB_FPRICE_AMT, SC_FPRICE_AMT, DEAL_FEE_AMT, SETT_FEE_AMT, DIP_TYPE, 
-        CPRICE_AMT, INT_AMT)
+        CPRICE_AMT, INT_AMT, INV_AIM, OUR_SHARE_AMT, LENDIN_SHARE_AMT, PRICE_MODEL)
         select QUOTE_ID, VERSION, ENTRUST_ID, PORTFOLIO_ID, SHARE_AMT, 
             FPRICE_AMT, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, REMARK, CREATE_USER, CREATE_TIME, CREATE_DEPT, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
             #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CB_FPRICE_AMT, SC_FPRICE_AMT, DEAL_FEE_AMT, SETT_FEE_AMT, DIP_TYPE, 
-            CPRICE_AMT, INT_AMT
+            CPRICE_AMT, INT_AMT, INV_AIM, OUR_SHARE_AMT, LENDIN_SHARE_AMT, PRICE_MODEL
              from WFL_IBU_QUOTE_ETR_RE
              where WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
     </insert>
@@ -122,6 +127,18 @@
             <if test="intAmt != null" >
                 INT_AMT = #{intAmt,jdbcType=DECIMAL},
             </if>
+            <if test="invAim != null" >
+                INV_AIM = #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="ourShareAmt != null" >
+                OUR_SHARE_AMT = #{ourShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinShareAmt != null" >
+                LENDIN_SHARE_AMT = #{lendinShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="priceModel != null" >
+                PRICE_MODEL = #{priceModel,jdbcType=VARCHAR},
+            </if>
         </set>
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
@@ -143,7 +160,11 @@
         SETT_FEE_AMT = #{settFeeAmt,jdbcType=DECIMAL},
         DIP_TYPE = #{dipType,jdbcType=VARCHAR},
         CPRICE_AMT = #{cpriceAmt,jdbcType=DECIMAL},
-        INT_AMT = #{intAmt,jdbcType=DECIMAL}
+        INT_AMT = #{intAmt,jdbcType=DECIMAL},
+        INV_AIM = #{invAim,jdbcType=VARCHAR},
+        OUR_SHARE_AMT = #{ourShareAmt,jdbcType=DECIMAL},
+        LENDIN_SHARE_AMT = #{lendinShareAmt,jdbcType=DECIMAL},
+        PRICE_MODEL = #{priceModel,jdbcType=VARCHAR}
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
     <insert id="insert" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.WflIbuQuoteEtrRe" >
@@ -153,14 +174,18 @@
             CREATE_TIME, CREATE_DEPT, UPDATE_USER, 
             UPDATE_TIME, CB_FPRICE_AMT, SC_FPRICE_AMT, 
             DEAL_FEE_AMT, SETT_FEE_AMT, DIP_TYPE, 
-            CPRICE_AMT, INT_AMT)
+            CPRICE_AMT, INT_AMT, INV_AIM, 
+            OUR_SHARE_AMT, LENDIN_SHARE_AMT, PRICE_MODEL
+            )
         values (#{quoteId,jdbcType=VARCHAR}, #{version,jdbcType=DECIMAL}, #{entrustId,jdbcType=VARCHAR}, 
             #{portfolioId,jdbcType=VARCHAR}, #{shareAmt,jdbcType=DECIMAL}, #{fpriceAmt,jdbcType=DECIMAL}, 
             #{workflowId,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
             #{updateTime,jdbcType=TIMESTAMP}, #{cbFpriceAmt,jdbcType=DECIMAL}, #{scFpriceAmt,jdbcType=DECIMAL}, 
             #{dealFeeAmt,jdbcType=DECIMAL}, #{settFeeAmt,jdbcType=DECIMAL}, #{dipType,jdbcType=VARCHAR}, 
-            #{cpriceAmt,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL})
+            #{cpriceAmt,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL}, #{invAim,jdbcType=VARCHAR}, 
+            #{ourShareAmt,jdbcType=DECIMAL}, #{lendinShareAmt,jdbcType=DECIMAL}, #{priceModel,jdbcType=VARCHAR}
+            )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.WflIbuQuoteEtrRe" >
         insert into WFL_IBU_QUOTE_ETR_RE
@@ -225,6 +250,18 @@
             <if test="intAmt != null" >
                 INT_AMT,
             </if>
+            <if test="invAim != null" >
+                INV_AIM,
+            </if>
+            <if test="ourShareAmt != null" >
+                OUR_SHARE_AMT,
+            </if>
+            <if test="lendinShareAmt != null" >
+                LENDIN_SHARE_AMT,
+            </if>
+            <if test="priceModel != null" >
+                PRICE_MODEL,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="quoteId != null" >
@@ -287,17 +324,29 @@
             <if test="intAmt != null" >
                 #{intAmt,jdbcType=DECIMAL},
             </if>
+            <if test="invAim != null" >
+                #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="ourShareAmt != null" >
+                #{ourShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinShareAmt != null" >
+                #{lendinShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="priceModel != null" >
+                #{priceModel,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.WflIbuQuoteEtrRe" >
         insert into WFL_IBU_QUOTE_ETR_RE(QUOTE_ID, VERSION, ENTRUST_ID, PORTFOLIO_ID, SHARE_AMT, 
         FPRICE_AMT, WORKFLOW_ID, REMARK, CREATE_USER, CREATE_TIME, CREATE_DEPT, UPDATE_USER, 
         UPDATE_TIME, CB_FPRICE_AMT, SC_FPRICE_AMT, DEAL_FEE_AMT, SETT_FEE_AMT, DIP_TYPE, 
-        CPRICE_AMT, INT_AMT)
+        CPRICE_AMT, INT_AMT, INV_AIM, OUR_SHARE_AMT, LENDIN_SHARE_AMT, PRICE_MODEL)
         select QUOTE_ID, VERSION, ENTRUST_ID, PORTFOLIO_ID, SHARE_AMT, 
             FPRICE_AMT, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, REMARK, CREATE_USER, CREATE_TIME, CREATE_DEPT, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
             #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CB_FPRICE_AMT, SC_FPRICE_AMT, DEAL_FEE_AMT, SETT_FEE_AMT, DIP_TYPE, 
-            CPRICE_AMT, INT_AMT
+            CPRICE_AMT, INT_AMT, INV_AIM, OUR_SHARE_AMT, LENDIN_SHARE_AMT, PRICE_MODEL
              from WFL_IBU_QUOTE_ETR_RE
              where 1 = 1 and QUOTE_ID = #{quoteId,jdbcType=VARCHAR} and VERSION = #{version,jdbcType=DECIMAL} and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
     </insert>
@@ -346,6 +395,18 @@
             <if test="intAmt != null" >
                 INT_AMT = #{intAmt,jdbcType=DECIMAL},
             </if>
+            <if test="invAim != null" >
+                INV_AIM = #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="ourShareAmt != null" >
+                OUR_SHARE_AMT = #{ourShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinShareAmt != null" >
+                LENDIN_SHARE_AMT = #{lendinShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="priceModel != null" >
+                PRICE_MODEL = #{priceModel,jdbcType=VARCHAR},
+            </if>
         </set>
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
           and VERSION = #{version,jdbcType=DECIMAL}
@@ -366,7 +427,11 @@
             SETT_FEE_AMT = #{settFeeAmt,jdbcType=DECIMAL},
             DIP_TYPE = #{dipType,jdbcType=VARCHAR},
             CPRICE_AMT = #{cpriceAmt,jdbcType=DECIMAL},
-            INT_AMT = #{intAmt,jdbcType=DECIMAL}
+            INT_AMT = #{intAmt,jdbcType=DECIMAL},
+            INV_AIM = #{invAim,jdbcType=VARCHAR},
+            OUR_SHARE_AMT = #{ourShareAmt,jdbcType=DECIMAL},
+            LENDIN_SHARE_AMT = #{lendinShareAmt,jdbcType=DECIMAL},
+            PRICE_MODEL = #{priceModel,jdbcType=VARCHAR}
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
           and VERSION = #{version,jdbcType=DECIMAL}
           and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}

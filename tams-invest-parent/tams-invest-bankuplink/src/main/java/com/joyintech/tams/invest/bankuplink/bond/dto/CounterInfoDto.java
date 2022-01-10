@@ -69,7 +69,16 @@ public class CounterInfoDto{
      * 行权收益率(%
      */
     private BigDecimal exerYield;
-    
+
+    private String tradeStatusStr;
+
+    public String getTradeStatusStr() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.银行间上行报价状态, this.getTradeStatus());
+    }
+
+    public void setTradeStatusStr(String tradeStatusStr) {
+        this.tradeStatusStr = tradeStatusStr;
+    }
     /**
      * 获取 counterValue
      * @return counterValue.
@@ -246,12 +255,7 @@ public class CounterInfoDto{
         this.exerYield = exerYield;
     }
 
-    
-    public String getTradeStatusStr(){
-        return SysDataUtil.getNameFromDataDict(BussinessDictCode.银行间上行报价状态, this.getTradeStatus());
-    }
 
-    
     /**
      * 获取 detId
      * @return detId.

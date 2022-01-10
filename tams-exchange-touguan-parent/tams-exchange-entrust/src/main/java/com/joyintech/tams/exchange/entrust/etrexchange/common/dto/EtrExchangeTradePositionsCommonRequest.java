@@ -28,7 +28,8 @@ import java.util.List;
 public class EtrExchangeTradePositionsCommonRequest {
 
 
-
+    @ApiModelProperty(name="search",value="关键字",example="A1")
+    private String search;
 
     @ApiModelProperty(name="portfolioId",value="组合代码",example="A1")
     private String portfolioId;
@@ -99,6 +100,14 @@ public class EtrExchangeTradePositionsCommonRequest {
 
     public void setSecId(String secId) {
         this.secId = secId;
+    }
+
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
     }
 
     public String getFinprodType2() {

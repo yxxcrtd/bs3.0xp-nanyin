@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.bean.risk.EntrustCountBean;
 import com.joyintech.tams.exchange.common.constant.EntrustStatus;
@@ -30,7 +31,6 @@ import java.util.stream.Collectors;
 @Service
 public class EntrustServiceImpl extends AsyncServiceImpl<String, Entrust> implements EntrustService {
     private static final Logger logger = LoggerFactory.getLogger(EntrustServiceImpl.class);
-
     @Autowired
     private EntrustMapper entrustMapper;
     private Map<String, Map<String, Entrust>> orderIdMap = new ConcurrentHashMap<>();
@@ -42,7 +42,7 @@ public class EntrustServiceImpl extends AsyncServiceImpl<String, Entrust> implem
 
     //记录统一账户下，相同合约的委托 stockCode accountId entrustId
     private Map<String, Map<String, Map<String, Entrust>>> selfTradeCheckMap = new ConcurrentHashMap<>();
-    private String tradingDay;
+//    private String tradingDay;
 
     private Set<String> entrustIdSet = new HashSet<>();
 
@@ -80,7 +80,7 @@ public class EntrustServiceImpl extends AsyncServiceImpl<String, Entrust> implem
         Map<String, Entrust> accountEntrustMap = accountIdMap.get(accountId);
         if (Objects.nonNull(accountEntrustMap)) {
             for (Entrust entrust : accountEntrustMap.values()) {
-                if (brokerEntrustId.equals(entrust.getBrokerEntrustId()) && tradingDay.equals(entrust.getTradingDay()))
+                if (brokerEntrustId.equals(entrust.getBrokerEntrustId()) && DateUtil.getSysDate().replace("-","").equals(entrust.getTradingDay()))
                     return entrust;
             }
         }
@@ -141,6 +141,7 @@ public class EntrustServiceImpl extends AsyncServiceImpl<String, Entrust> implem
         return entrustMapper;
     }
 
+    @Override
     public String genLocalId(Entrust entrust) {
         int tempOffSet = localOffset.incrementAndGet();
         if (tempOffSet > 9999) {
@@ -282,6 +283,7 @@ public class EntrustServiceImpl extends AsyncServiceImpl<String, Entrust> implem
         return new PageInfo<>(entrustList);
     }
 
+    @Override
     public double getAccountCancelRatio(String accountId) {
         EntrustCountBean entrustCountBean = entrustCountBeanMap.get(accountId);
         if (Objects.nonNull(entrustCountBean)) {
@@ -292,6 +294,7 @@ public class EntrustServiceImpl extends AsyncServiceImpl<String, Entrust> implem
         return 0;
     }
 
+    @Override
     public int getAccountTotalCount(String accountId) {
         EntrustCountBean entrustCountBean = entrustCountBeanMap.get(accountId);
         if (Objects.nonNull(entrustCountBean))
@@ -313,14 +316,14 @@ public class EntrustServiceImpl extends AsyncServiceImpl<String, Entrust> implem
         entrustCountBeanMap.clear();
         selfTradeCheckMap.clear();
         entrustIdSet.clear();
-        fillPlatDate(date);
+//        fillPlatDate(date);
     }
 
-    @Override
-    public void fillPlatDate(String date) {
-        tradingDay = date;
-        logger.info("entrust tradingDay is {}", tradingDay);
-    }
+//    @Override
+//    public void fillPlatDate(String date) {
+//        tradingDay = date;
+//        logger.info("entrust tradingDay is {}", tradingDay);
+//    }
 
     @Override
     public List<Entrust> queryEntrustByStatus(String userId, String entrustStatus, List<String> ptlAuthList) {

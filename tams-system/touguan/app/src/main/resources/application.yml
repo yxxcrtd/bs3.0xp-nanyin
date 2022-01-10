@@ -1,7 +1,7 @@
 prod:
   bussRep: 1
 server:
-  port: 8081
+  port: 8080
   address: 0.0.0.0
   maxHttpHeaderSize: 102400
   context-path: /tams
@@ -327,9 +327,9 @@ application:
 flag: false
 
 #头寸引擎地址
-positionUrl: http://192.168.70.146:1667/dsp
+positionUrl: http://192.168.70.146:2667/dsp
 #监听头寸余额地址
-webSocketUrl: ws://192.168.70.146:1667/dsp/positionTopic
+webSocketUrl: ws://192.168.70.146:2667/dsp/positionTopic
 #监听键值
 webSocketKey: "[{\"table\":\"ETR_CASH_POSITION\",\"hodingTypes\":[]}, {\"table\":\"PTL_CASH_POSITION\",\"hodingTypes\":[]}, {\"table\":\"ETR_SEC_POSITION\",\"hodingTypes\":[]}, {\"table\":\"PTL_SEC_POSITION\",\"hodingTypes\":[]}]"
 #监听市场行情最新净价
@@ -357,8 +357,8 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_TEST
-    password: BS30INIT_TEST
+    username: BS303INIT_TEST1008_03
+    password: BS303INIT_TEST1008_03
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
   rabbitmq:
     # 需求环境使用mq配置如下
@@ -368,11 +368,11 @@ spring:
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30INIT_TEST
-  sqldirpassword: BS30INIT_TEST
+  sqldiruserName: BS303INIT_TEST1008_03
+  sqldirpassword: BS303INIT_TEST1008_03
 shiro:
   ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
-  #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
+#  loginUrl: http://127.0.0.1:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
     /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
     /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
@@ -390,26 +390,26 @@ base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_TEST
-    password: BS30INIT_TEST
+    username: BS303INIT_TEST1008_03
+    password: BS303INIT_TEST1008_03
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_TEST
-    password: BS30INIT_TEST
+    username: BS303INIT_TEST1008_03
+    password: BS303INIT_TEST1008_03
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_TEST
-    password: BS30INIT_TEST
+    username: BS303INIT_TEST1008_03
+    password: BS303INIT_TEST1008_03
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_TEST
-    password: BS30INIT_TEST
+    username: BS303INIT_TEST1008_03
+    password: BS303INIT_TEST1008_03
 log:
   path: /home/tams/logs/tams/touguan
   level: debug

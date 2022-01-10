@@ -45,6 +45,28 @@ public class CfetsManualSettlePositionDto extends PositionRuleHead {
     @ApiModelProperty(name="bTotalTradeId",value="前次交易编号",example="1")
     private String bTotalTradeId;
 
+    public String getWorkFlowId() {
+        return workFlowId;
+    }
+
+    public void setWorkFlowId(String workFlowId) {
+        this.workFlowId = workFlowId;
+    }
+
+    @ApiModelProperty(name="workFlowId",value="流程编号",example="01")
+    private String workFlowId;
+
+    public String getDecisionAct() {
+        return decisionAct;
+    }
+
+    public void setDecisionAct(String decisionAct) {
+        this.decisionAct = decisionAct;
+    }
+
+    @ApiModelProperty(name="decisionAct",value="决策动作",example="01")
+    private String decisionAct;
+
     public List<PositionRulePtlData> getPtlList() {
         return ptlList;
     }

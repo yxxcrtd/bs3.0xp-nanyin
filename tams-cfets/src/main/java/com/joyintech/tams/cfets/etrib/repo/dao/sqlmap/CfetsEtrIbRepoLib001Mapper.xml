@@ -4,6 +4,7 @@
 	
 	<select id="selectAvaPledgeBondList" resultType="com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLibAvaPledgeBondResponse">
 		select * from (SELECT DISTINCT
+		TABLE01.PORTFOLIO_ID||TABLE01.FINPROD_ID||TABLE01.SEC_ACCT_ID id,
 		TABLE01.PORTFOLIO_ID 			portfolioId,/*组合代码*/
 		TABLE01.PORTFOLIO_NAME			portfolioName,
 		TABLE01.SEC_ACCT_ID 			secAcctId,/*证券账户/通道代码*/
@@ -198,6 +199,13 @@
 		<if test="pledgeStockId !=null and pledgeStockId !=''">
 			AND (EEP.PLEDGE_STOCK_ID !=#{pledgeStockId,jdbcType=VARCHAR} or EEP.PLEDGE_STOCK_ID is null)
 		</if>)
+		WHERE 1=1
+		<if test="idList !=null and !idList.isEmpty()">
+			AND id not  in
+			<foreach collection="idList" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
 		<!--前端传入排序字段-->
 		<if test="sort != null and sort != '' and direction != null and direction != ''">
 			order by ${sort} ${direction}

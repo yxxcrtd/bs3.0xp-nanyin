@@ -319,6 +319,7 @@ public class IbuComponentReceiveService extends BaseService{
                 //尾差处理  尾差放在指令的交易金额最大的记录
                 for(PtlAllocationDto item : ptlAllocations){
                     IbuQuoteEtrReDto ibuQuoteEtrReDto = new IbuQuoteEtrReDto();
+                    BigDecimal total = ArithmeticUtil.doAdd(item.getOurShareAmt(),item.getLendinShareAmt());
                     if(交易份额尾差.compareTo(BigDecimal.ZERO)>0&&StringUtil.equals(item.getEntrustId(),ptlAllocationDtoMax.getEntrustId())){
                         item.setShareAmt(ArithmeticUtil.doAdd(item.getShareAmt(),交易份额尾差));
                     }
@@ -331,6 +332,19 @@ public class IbuComponentReceiveService extends BaseService{
                     ibuQuoteEtrReDto.setPortfolioId(item.getPortfolioId());
                     ibuQuoteEtrReDto.setShareAmt(item.getShareAmt());
                     ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
+                    ibuQuoteEtrReDto.setDealFeeAmt(item.getDealFeeAmt());
+                    ibuQuoteEtrReDto.setSettFeeAmt(item.getSettFeeAmt());
+                    ibuQuoteEtrReDto.setInvAim(item.getInvAim());
+                    //按比例处理融入券和本方券
+                    if(null!=total&&total.compareTo(BigDecimal.ZERO)!=0){
+                        //万元保留一位小数处理
+                        item.setOurShareAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getOurShareAmt(),item.getShareAmt()),ArithmeticUtil.multiply(total,new BigDecimal(100)),1,RoundingMode.HALF_DOWN),new BigDecimal(100)));
+                        item.setLendinShareAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getLendinShareAmt(),item.getShareAmt()),ArithmeticUtil.multiply(total,new BigDecimal(100)),1,RoundingMode.HALF_DOWN),new BigDecimal(100)));
+                        BigDecimal 剩余券面 = ArithmeticUtil.subtract(item.getShareAmt(),ArithmeticUtil.doAdd(item.getOurShareAmt(),item.getLendinShareAmt()));
+                        item.setOurShareAmt(ArithmeticUtil.doAdd(item.getOurShareAmt(),剩余券面));
+                        ibuQuoteEtrReDto.setOurShareAmt(item.getOurShareAmt());
+                        ibuQuoteEtrReDto.setLendinShareAmt(item.getLendinShareAmt());
+                    }
                     ibuQuoteEtrRes.add(ibuQuoteEtrReDto);
                 }
                 inputBean.setIbuQuoteEtrReDtoList(ibuQuoteEtrRes);
@@ -487,6 +501,7 @@ public class IbuComponentReceiveService extends BaseService{
                 //尾差处理  尾差放在指令的交易金额最大的记录
                 for(PtlAllocationDto item : ptlAllocations){
                     IbuQuoteEtrReDto ibuQuoteEtrReDto = new IbuQuoteEtrReDto();
+                    BigDecimal total = ArithmeticUtil.doAdd(item.getOurShareAmt(),item.getLendinShareAmt());
                     if(交易份额尾差.compareTo(BigDecimal.ZERO)>0&&StringUtil.equals(item.getEntrustId(),ptlAllocationDtoMax.getEntrustId())){
                         item.setShareAmt(ArithmeticUtil.doAdd(item.getShareAmt(),交易份额尾差));
                     }
@@ -499,6 +514,19 @@ public class IbuComponentReceiveService extends BaseService{
                     ibuQuoteEtrReDto.setPortfolioId(item.getPortfolioId());
                     ibuQuoteEtrReDto.setShareAmt(item.getShareAmt());
                     ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
+                    ibuQuoteEtrReDto.setDealFeeAmt(item.getDealFeeAmt());
+                    ibuQuoteEtrReDto.setSettFeeAmt(item.getSettFeeAmt());
+                    ibuQuoteEtrReDto.setInvAim(item.getInvAim());
+                    //按比例处理融入券和本方券
+                    if(null!=total&&total.compareTo(BigDecimal.ZERO)!=0){
+                        //万元保留一位小数处理
+                        item.setOurShareAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getOurShareAmt(),item.getShareAmt()),ArithmeticUtil.multiply(total,new BigDecimal(100)),1,RoundingMode.HALF_DOWN),new BigDecimal(100)));
+                        item.setLendinShareAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getLendinShareAmt(),item.getShareAmt()),ArithmeticUtil.multiply(total,new BigDecimal(100)),1,RoundingMode.HALF_DOWN),new BigDecimal(100)));
+                        BigDecimal 剩余券面 = ArithmeticUtil.subtract(item.getShareAmt(),ArithmeticUtil.doAdd(item.getOurShareAmt(),item.getLendinShareAmt()));
+                        item.setOurShareAmt(ArithmeticUtil.doAdd(item.getOurShareAmt(),剩余券面));
+                        ibuQuoteEtrReDto.setOurShareAmt(item.getOurShareAmt());
+                        ibuQuoteEtrReDto.setLendinShareAmt(item.getLendinShareAmt());
+                    }
                     ibuQuoteEtrRes.add(ibuQuoteEtrReDto);
                 }
                 inputBean.setIbuQuoteEtrReDtoList(ibuQuoteEtrRes);
@@ -514,7 +542,7 @@ public class IbuComponentReceiveService extends BaseService{
             // 7、MQ发布消息前台订阅通过ws控制表格刷新
             cfetsQuotedCommonService.publishMQCommonHandle(quoteResultDto, true);
             // 8、头寸处理
-            updateBondRequestPosition(quoteResultDto);
+            //updateBondRequestPosition(quoteResultDto);
             // 成交后风险处理
             ibuComponentRiskService.excuteRiskHandle(quoteResultDto);
         }

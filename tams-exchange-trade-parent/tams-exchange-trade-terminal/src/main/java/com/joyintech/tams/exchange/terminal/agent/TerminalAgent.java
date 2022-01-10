@@ -27,6 +27,7 @@ import io.netty.channel.Channel;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -372,8 +373,7 @@ public class TerminalAgent extends Agent implements ITerminalMsgHandler, ITermin
         agentType = AgentType.MOCK.value.equals(agentType) ? agentType : serverExtendInfo.getAgentType();
         ITradeRequest tradeRequest = SpringContextUtils.getBean(agentType);
         tradeRequest.setITerminalMsgNotify(this);
-        if (AgentType.KD_GATEWAY.value.equals(agentType))
-            TypeUtils.compatibleWithFieldName = true;
+        if (AgentType.KD_GATEWAY.value.equals(agentType)) TypeUtils.compatibleWithFieldName = true;
         agentTypeMap.put(agentType, tradeRequest);
         // 若营业部信息已经连接过，则不重复连接,否则连接
         if (!serverExtendInfoSet.contains(serverExtendInfo)) {
@@ -605,7 +605,19 @@ public class TerminalAgent extends Agent implements ITerminalMsgHandler, ITermin
                         onEntrust(entrust);
                     }
                 } else {
-                    IntegratedEntrust integratedEntrust = (IntegratedEntrust) entrustInterfaceMap.get(s);
+                    // modify by lifangpeng 20211230  start
+                    //通过接口410411下单的大宗交易， 调用接口410510查询委托状态，和普通竞价的查询接口一致，410510接口在组装查询结果时用是Entrust
+                    //因此(IntegratedEntrust) entrustInterfaceMap.get(s) 转换会报错
+//                    IntegratedEntrust integratedEntrust = (IntegratedEntrust) entrustInterfaceMap.get(s);
+                    EntrustInterface entrustInterface = entrustInterfaceMap.get(s);
+                    IntegratedEntrust integratedEntrust;
+                    if (entrustInterface instanceof Entrust) {
+                        integratedEntrust = new IntegratedEntrust();
+                        BeanUtils.copyProperties(entrustInterface, integratedEntrust);
+                    } else {
+                        integratedEntrust = (IntegratedEntrust) entrustInterfaceMap.get(s);
+                    }
+                    // modify by lifangpeng 20211230 XXX功能开发 end
                     if (Objects.nonNull(integratedEntrust) && integratedEntrust.getEntrustStatus() != reissueEntrustBean.getEntrustStatus()) {
                         onIntegratedEntrust(integratedEntrust);
                     }

@@ -207,7 +207,7 @@ public class MstTradeOpponentController {
      * 
      * 001工作流完成
      * <功能详细描述>
-     * @param map
+     * @param entity
      * @see
      * @since 1.0
      */
@@ -222,7 +222,7 @@ public class MstTradeOpponentController {
      * 
      * 002工作流完成
      * <功能详细描述>
-     * @param map
+     * @param entity
      * @see
      * @since 1.0
      */
@@ -278,7 +278,7 @@ public class MstTradeOpponentController {
     /**
      * 校验交易对手名字 是否重复
      * 重写方法  联社模式下会走拦截器。
-     * @param linkId
+     * @param counterName
      * @return
      */
     @GetMapping("checkCounterName1")
@@ -310,7 +310,7 @@ public class MstTradeOpponentController {
     
     /**
      * 删除交易对手下账户信息前的检测
-     * @param mstCounterAcctKey
+     * @param map
      * @return
      */
     @PostMapping("isExistHistoryDeal")
@@ -340,4 +340,13 @@ public class MstTradeOpponentController {
         return mstTradeOpponent001Service.selectCounterIdByCustomer(map);
     }
 
+    /**
+     * 获取银行间机构21位码
+     * @param map
+     * @return
+     */
+    @PostMapping("/selectPartyId")
+    public List<SuggestDto> selectPartyId(@RequestBody Map<String,Object> map) {
+        return mstTradeOpponent001Service.selectPartyId(map);
+    }
 }

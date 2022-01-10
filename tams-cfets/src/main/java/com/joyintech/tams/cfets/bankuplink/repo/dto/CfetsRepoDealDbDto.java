@@ -39,11 +39,23 @@ public class CfetsRepoDealDbDto {
 
     private List<RegTradeFee> regTradeFees;
 
+    private List<RegFinTotalPledge> regFinTotalPledges;
+
     private List<RegFinPledge> regFinPledges;
     /**
      * 交易类金融产品Entity
      */
-    FinTradeProductDto finTradeProduct;
+    private List<FinTradeProductDto> finTradeProducts;
+    /**
+     *
+     * 交易类金融产品复附属表Entity
+     */
+    private List<FinTradeProductAdd> finTradeProductAdds;
+    /**
+     *
+     * 业务明细科目
+     */
+    private List<FinProductType> finProductTypes;
 
     public String getWorkflowId() {
         return workflowId;
@@ -117,6 +129,14 @@ public class CfetsRepoDealDbDto {
         this.regTradeFees = regTradeFees;
     }
 
+    public List<RegFinTotalPledge> getRegFinTotalPledges() {
+        return regFinTotalPledges;
+    }
+
+    public void setRegFinTotalPledges(List<RegFinTotalPledge> regFinTotalPledges) {
+        this.regFinTotalPledges = regFinTotalPledges;
+    }
+
     public List<RegFinPledge> getRegFinPledges() {
         return regFinPledges;
     }
@@ -125,12 +145,28 @@ public class CfetsRepoDealDbDto {
         this.regFinPledges = regFinPledges;
     }
 
-    public FinTradeProductDto getFinTradeProduct() {
-        return finTradeProduct;
+    public List<FinTradeProductDto> getFinTradeProducts() {
+        return finTradeProducts;
     }
 
-    public void setFinTradeProduct(FinTradeProductDto finTradeProduct) {
-        this.finTradeProduct = finTradeProduct;
+    public void setFinTradeProducts(List<FinTradeProductDto> finTradeProducts) {
+        this.finTradeProducts = finTradeProducts;
+    }
+
+    public List<FinTradeProductAdd> getFinTradeProductAdds() {
+        return finTradeProductAdds;
+    }
+
+    public void setFinTradeProductAdds(List<FinTradeProductAdd> finTradeProductAdds) {
+        this.finTradeProductAdds = finTradeProductAdds;
+    }
+
+    public List<FinProductType> getFinProductTypes() {
+        return finProductTypes;
+    }
+
+    public void setFinProductTypes(List<FinProductType> finProductTypes) {
+        this.finProductTypes = finProductTypes;
     }
 }
 
