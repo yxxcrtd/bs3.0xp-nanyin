@@ -66,9 +66,11 @@ public class ExchangeTransMatchValidator implements BeanValidator {
             && !StringUtil.equals(dealDto.getMatchStatus(), DictCodeListExt3.下行交易匹配状态_部分匹配.getValue())) {
                 errorList.add(new ValidMessage("请选择未匹配或者部分匹配的数据"));
             }
-            if((StringUtil.equals(dealDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue()) || StringUtil.equals(dealDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()))
-                    && StringUtil.equals(dealDto.getRepoType(),DictCodeList.回购类型_质押式协议回购.getValue())) {
-                errorList.add(new ValidMessage("协议回购禁止成交录单！"));
+            if(((StringUtil.equals(dealDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
+                    || StringUtil.equals(dealDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()))
+                    && StringUtil.equals(dealDto.getRepoType(),DictCodeList.回购类型_质押式协议回购.getValue()))
+               || (StringUtil.equals(dealDto.getPs(),DictCodeList.交易方向_申购.getValue()))) {
+                errorList.add(new ValidMessage("暂不支持此类业务成交录单"));
             }
 
 
