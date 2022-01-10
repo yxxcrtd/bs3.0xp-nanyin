@@ -68,7 +68,7 @@
 	) ,0) as datanum
 	from (select '01' reportcode,'CHB_EQU_HOLD' htmlindex from dual
 	union all select '02' reportcode,'CHB_INVESTHOLD_INFO' htmlindex from dual
-	union all select '03' reportcode,'MST_EXCHANGE_QUOTE' htmlindex from dual
+	union all select '03' reportcode,'MST_EXCHARGE_QUOTE' htmlindex from dual
 	union all select '04' reportcode,'MST_HOLIDAY' htmlindex from dual
 	union all select '05' reportcode,'CHB_PRD_BASEINFO' htmlindex from dual
 	union all select '06' reportcode,'CHB_PRD_DEAL' htmlindex from dual
