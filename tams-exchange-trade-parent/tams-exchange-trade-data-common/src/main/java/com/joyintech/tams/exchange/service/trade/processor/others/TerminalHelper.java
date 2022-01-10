@@ -297,7 +297,7 @@ public class TerminalHelper {
                 logger.error("reqIntegratedBulkQuote error {}", "\r\n" + e);
             }
         }
-        return new ArrayList<>();
+        return list;
     }
 
     public List<IntegratedBulkCloseQuoteBean> queryIntegratedBulkCloseQuote(IntegratedBulkCloseQuoteQryBean integratedBulkCloseQuoteQryBean) {
@@ -327,7 +327,7 @@ public class TerminalHelper {
                 logger.error("reqIntegratedBulkCloseQuote error {}", "\r\n" + e);
             }
         }
-        return new ArrayList<>();
+        return list;
     }
 
     public List<IntegratedRepurchaseQuoteBean> queryIntegratedRepurchaseQuote(IntegratedRepurchaseQuoteQryBean integratedRepurchaseQuoteQryBean) {
