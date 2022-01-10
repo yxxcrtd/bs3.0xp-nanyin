@@ -5,7 +5,7 @@ values ('FieldEtrInfoQuery', 'ETR', 'home.html#/instructions/instructionsearch?a
 
 delete from sys_menu where MENU_ID ='SH_DEAL_MANAGEMENT_001_001_099';
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SH_DEAL_MANAGEMENT_001_001_099', 'ETR', '', 'SH_DEAL_MANAGEMENT_001_001', 'FieldEtrInfoQuery', 10, '02', '指令查询', 'system', '', sysdate, 'system', sysdate);
+values ('SH_DEAL_MANAGEMENT_001_001_099', 'ETR', '', 'SH_DEAL_MANAGEMENT_001_001', 'FieldEtrInfoQuery', 99, '02', '指令查询', 'system', '', sysdate, 'system', sysdate);
 
 
 --银行间指令查询配置脚本
