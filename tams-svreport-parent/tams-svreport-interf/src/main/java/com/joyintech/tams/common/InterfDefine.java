@@ -81,7 +81,8 @@ public enum InterfDefine {
     资产要素登记信息("CHB_ASSET_INFO_SUB","资产要素登记信息"),
     资产交易登记信息("CHB_INVEST_TRADE_SUB","资产交易登记信息"),
     底层资产持仓登记("CHB_BOT_AST_POS_SUB","底层资产持仓登记"),
-    资产估值登记信息("CHB_AST_VAL_SUB","资产估值登记信息")
+    资产估值登记信息("CHB_AST_VAL_SUB","资产估值登记信息"),
+    总部或分支机构信息接口数据("CHB_SALER_INST_INFO","总部或分支机构信息接口数据")
     ;
 
     /*两个属性*/

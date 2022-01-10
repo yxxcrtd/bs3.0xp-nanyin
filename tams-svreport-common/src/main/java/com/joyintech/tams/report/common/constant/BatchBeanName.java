@@ -112,6 +112,7 @@ public enum BatchBeanName {
 	投资者持有信息登记导出("3076","investorsHoldInfoExportService","investorsHoldInfoExportMainService","投资者持有信息登记导出"),
     // TODO
     理财产品转型情况月度统计表生成("3042","investorsHoldInfoExportService","investorsHoldInfoExportMainService","理财产品转型情况月度统计表生成"),
+    总部或分支机构信息接入("3091","svrSaleInstInterfTaskService","SvrSaleInstImpMainService","总部或分支机构信息接入"),
 
             ;
 	/**
