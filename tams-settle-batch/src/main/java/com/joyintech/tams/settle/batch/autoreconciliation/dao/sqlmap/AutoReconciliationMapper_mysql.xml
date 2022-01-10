@@ -499,6 +499,7 @@
 					)
 				)
 				AND NOT EXISTS (SELECT 1 FROM STL_SEC_RECON_DETAIL detail WHERE detail.TRADE_ID = std.TRADE_ID)
+				AND NOT EXISTS (SELECT 1 FROM SETTLE_TRANS_DATA stdtmp WHERE std.TRADE_ID = stdtmp.TRADE_ID AND stdtmp.PS = #{PS_T49} AND stdtmp.FINPROD_TYPE2 = #{prodType2_F01})
 			GROUP BY
 				std.DEAL_DATE,
 				std.ACCT_NO,
