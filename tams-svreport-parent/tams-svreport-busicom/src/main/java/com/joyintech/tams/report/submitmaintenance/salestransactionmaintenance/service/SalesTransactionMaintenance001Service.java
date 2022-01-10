@@ -3,12 +3,6 @@ package com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.
 import java.math.BigDecimal;
 import java.util.*;
 
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto;
-import com.joyintech.tams.report.submitmaintenance.equityinfo.service.EquityInfoDistinctService;
-import com.joyintech.tams.report.submitmaintenance.equityinfo.util.EquityInfoCheckUtil;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dao.SalesTransactionMaintenanceMapper;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto;
 import org.apache.commons.collections4.CollectionUtils;
@@ -28,7 +22,6 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
-import com.joyintech.tams.systemtools.util.CommonUtil;
 
 /**
  *销售结算资金交易信息维护
@@ -227,11 +220,23 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
             if(list.get(0) == null || list.get(0).trim().equals("")){
                 flag = false;
                 message.add("提供销售结算资金服务机构代码不能为空");
+            }else if(list.get(0) != null && !list.get(0).trim().equals("")){
+                String regex = "^([CZ][0-9]{5})$";
+                if(!list.get(0).matches(regex)){
+                    flag = false;
+                    message.add("提供销售结算资金服务机构代码格式不对");
+                }
             }
             //产品登记编码
             if(list.get(1) == null || list.get(1).trim().equals("")){
                 flag = false;
                 message.add("产品登记编码不能为空");
+            }else if(list.get(1) != null && !list.get(1).trim().equals("")){
+                String regex =  "^([CZ][0-9]{7}[A]?[0-9]{6})$";
+                if(!list.get(1).matches(regex)){
+                    flag = false;
+                    message.add("产品登记编码要素格式不对");
+                }
             }
             //销售结算资金账号
             if(list.get(2) == null || list.get(2).trim().equals("")){
@@ -247,6 +252,17 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
             if(list.get(4) == null || list.get(4).trim().equals("")){
                 flag = false;
                 message.add("销售结算资金交易流水号不能为空");
+            }
+            //导入的数据提供销售结算资金服务机构代码、产品登记编码与销售结算资金账号相等时，销售结算资金交易流水号不能重复
+            if(list.get(2) != null && !list.get(2).trim().equals("") && list.get(0) != null && !list.get(0).trim().equals("") && list.get(1) != null && !list.get(1).trim().equals("") && list.get(4) != null && !list.get(4).trim().equals("")){
+                String institutionCode = list.get(0);
+                String prdRegistCode = list.get(1);
+                String accounNo = list.get(2);
+                String tradeNo = list.get(4);
+                if(salestransactionmaintenanceMapper.selectTradeNo(institutionCode,prdRegistCode,accounNo,tradeNo) != 0){
+                    flag = false;
+                    message.add("提供销售结算资金服务机构代码、产品登记编码与销售结算资金账号相等时，销售结算资金交易流水号不能重复");
+                }
             }
             //销售结算资金流动方向
             if(list.get(5) == null || list.get(5).trim().equals("")){
@@ -287,7 +303,16 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
                     flag = false;
                     message.add("销售结算资金交易金额不是数字");
                 }
+                else{
+                    BigDecimal amt=new BigDecimal(list.get(11));
+                    BigDecimal Zero = BigDecimal.ZERO;
+                    if(amt.compareTo(Zero) == -1 || amt.compareTo(Zero) == 0){
+                        flag = false;
+                        message.add("销售结算资金交易金额要大于0");
+                    }
+                }
             }
+            
             //销售结算资金交易日期
             if(list.get(12) == null || list.get(12).trim().equals("")){
                 flag = false;
@@ -307,11 +332,16 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
                     flag = false;
                     message.add("销售结算资金交易时间不是数字");
                 }
-            }else {
-                int a = Integer.parseInt(list.get(13));
-                if(a > 235959){
+                String tradeTime = list.get(13);
+                if (list.get(13).length() != 6) {
                     flag = false;
-                    message.add("销售结算资金交易时间格式不对");
+                    message.add("交易时间填写错误（例23:59:59填写235959）");
+                }else if (Integer.parseInt(tradeTime.substring(0,2)) > 23){
+                    flag = false;
+                    message.add("交易时间填写错误（例23:59:59填写235959）");
+                }else if(Integer.parseInt(tradeTime.substring(2,3)) > 5 || Integer.parseInt(tradeTime.substring(4,5)) > 5){
+                    flag = false;
+                    message.add("交易时间填写错误（例23:59:59填写235959）");
                 }
             }
 

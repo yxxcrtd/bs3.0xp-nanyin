@@ -74,6 +74,8 @@
     <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
     <result column="DATASOURCE" property="datasource" jdbcType="VARCHAR" />
     <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR" />
+    <result column="PRD_SPEC_PROPERTY" property="prdSpecProperty" jdbcType="VARCHAR" />
+
   </resultMap>
   <sql id="Base_Column_List" >
     DECLARE_UUID, PROD_INS_ID, PROD_NAME, ISSUE_PARTY_ID, PROD_BRAND, PROD_STAGE, APPROVER_ID, 
@@ -1036,7 +1038,8 @@
 		#{dto.deptCode,jdbcType=VARCHAR} DEPT_CODE,
 		#{dto.workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
 		#{dto.datasource,jdbcType=VARCHAR} DATASOURCE,
-        #{dto.isFhxgcp,jdbcType=VARCHAR} IS_FHXGCP
+        #{dto.isFhxgcp,jdbcType=VARCHAR} IS_FHXGCP,
+        #{dto.prdSpecProperty,jdbcType=VARCHAR} PRD_SPEC_PROPERTY
 		from dual
 		</foreach>
 		) TEMP
@@ -1114,8 +1117,9 @@
       CII.DEPT_CODE = TEMP.DEPT_CODE,
       CII.WORKFLOW_ID = TEMP.WORKFLOW_ID,
       CII.DATASOURCE = TEMP.DATASOURCE,
-      CII.IS_FHXGCP = TEMP.IS_FHXGCP
-		<!-- 未匹配到这插入 -->
+      CII.IS_FHXGCP = TEMP.IS_FHXGCP,
+      CII.PRD_SPEC_PROPERTY = TEMP.PRD_SPEC_PROPERTY
+     <!-- 未匹配到这插入 -->
 	 WHEN NOT MATCHED THEN
 	 INSERT (DECLARE_UUID, PROD_INS_ID, PROD_NAME, 
       ISSUE_PARTY_ID, PROD_BRAND, PROD_STAGE, 
@@ -1140,7 +1144,7 @@
       INV_TYPE_RAT, REMARK, STATUS, 
       CREATE_USER, CREATE_TIME, UPDATE_USER, 
       UPDATE_TIME, ORG_CODE, DEPT_CODE, 
-      WORKFLOW_ID, DATASOURCE, IS_FHXGCP
+      WORKFLOW_ID, DATASOURCE, IS_FHXGCP,PRD_SPEC_PROPERTY
 		)
 	 values(
 	  TEMP.DECLARE_UUID, 
@@ -1214,7 +1218,8 @@
       TEMP.DEPT_CODE, 
       TEMP.WORKFLOW_ID, 
       TEMP.DATASOURCE,
-      TEMP.IS_FHXGCP
+      TEMP.IS_FHXGCP,
+      TEMP.PRD_SPEC_PROPERTY
 		)
 	</insert>
 </mapper>

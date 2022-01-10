@@ -646,6 +646,22 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
                 item.setCapUseInduName(item.getCapUseInduLevel2Name());
                 item.setCapUseIndu(item.getCapUseInduLevel2Name());
 			}
+			//是否为标准化票据
+			if(StringUtil.isNotEmpty(item.getIsBzhpj())) {
+				item.setIsBzhpj(item.getIsBzhpj()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是或否,item.getIsBzhpj()));
+			}
+			//是否为银行理财产品
+			if(StringUtil.isNotEmpty(item.getFinancialProductFlag())) {
+				item.setFinancialProductFlag(item.getFinancialProductFlag()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是或否,item.getFinancialProductFlag()));
+			}
+			//是否为固定收益类
+			if(StringUtil.isNotEmpty(item.getProfitFlag())) {
+				item.setProfitFlag(item.getProfitFlag()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是或否,item.getProfitFlag()));
+			}
+			//是否为同业借款
+			if(StringUtil.isNotEmpty(item.getIsDepositFlag())) {
+				item.setIsDepositFlag(item.getIsDepositFlag()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是或否,item.getIsDepositFlag()));
+			}
 		});
 	}
 	

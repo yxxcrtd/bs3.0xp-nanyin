@@ -87,7 +87,22 @@ public class DataCheckCommonUtil {
                 }else if (StringUtil.equals(pageId, "SalesTransactionMaintenance002")){
                     pageId = "SalesTransactionMaintenance002";
                     pageFlag = null;
-                }                
+                }else if (StringUtil.equals(pageId, "AgentPrdInfo002")){
+                    pageId = "AgentPrdInfo002";
+                    pageFlag = null;
+                }else if (StringUtil.equals(pageId, "AgentInstitution002")){
+                    pageId = "AgentInstitution002";
+                    pageFlag = null;
+                }else if (StringUtil.equals(pageId, "SalerInstInfo002")){
+                    pageId = "SalerInstInfo002";
+                    pageFlag = null;
+                }else if (StringUtil.equals(pageId, "SalerIdenInfo002")){
+                    pageId = "SalerIdenInfo002";
+                    pageFlag = null;
+                }else if (StringUtil.equals(pageId, "SalerRewPenaInfo002")){
+                    pageId = "SalerRewPenaInfo002";
+                    pageFlag = null;
+                }
 
                 Map<String, String> entityMap = new HashMap<>();
 

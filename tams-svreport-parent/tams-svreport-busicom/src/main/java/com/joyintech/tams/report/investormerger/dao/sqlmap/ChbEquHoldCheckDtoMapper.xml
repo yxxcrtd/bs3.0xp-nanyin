@@ -657,6 +657,74 @@
      HOLD.INDENTIFY_MARK
    </select>
    
+   <select id="selectChekForRepair" resultMap="BaseResultMap" parameterType="java.lang.String">
+      select 
+        HOLD.INDENTIFY_MARK,
+		HOLD.ORG_INDENTIFY_MARK,
+		HOLD.MERGER_INDENTIFY_MARK,
+		HOLD.REGIST_BANK_CODE,
+		HOLD.IS_BELONG_BANK,
+		HOLD.THE_BANK_NAME,
+		HOLD.THE_BANK_CODE,
+		HOLD.HOLDER_MARK,
+		HOLD.HOLDER_REGION,
+		HOLD.HOLDER_TYPE,
+		HOLD.PERSONAL_IDENTIFY_TYPE,
+		HOLD.INSTITUTION_IDENTIFY_TYPE,
+		HOLD.OTHER_IDENTIFY_NAME,
+		HOLD.IDENTIFY_NUMBER,
+		HOLD.SPV_CAP_ACC_BANK,
+		HOLD.OTHER_CAP_ACC_BANK,
+		HOLD.SPV_REGIST_CODE,
+		HOLD.HOLDER_DATE,
+		HOLD.HOLDER_NAME,
+		HOLD.HOLDER_SEX,
+		HOLD.HOLDER_RISK_PREFER,
+		HOLD.HOLDER_CELLPHONE,
+		HOLD.HOLDER_TELEPHONE,
+		HOLD.IS_SUBMIT,
+		HOLD.HOLDER_EMAIL,
+		HOLD.REMARK,
+		HOLD.STATUS,
+		HOLD.OPERATE_STATUS,
+		HOLD.WORKFLOW_ID,
+		HOLD.DEPT_CODE,
+		HOLD.UPDATE_USER,
+		HOLD.UPDATE_TIME,
+		HOLD.CREATE_USER,
+		HOLD.CREATE_TIME,
+		HOLD.DATA_DATE,
+		HOLD.DATA_SOURCE,
+		HOLD.ORG_CODE,
+		HOLD.AGENT,
+		HOLD.CREATE_DEPT,
+		HOLD.INTERF_CHECK_RESULT,
+		HOLD.HOLDER_CLASSIFY,
+	  	HOLD.FUND_ACC_PLACE
+  	  from CHB_EQU_HOLD_CHECK HOLD
+      where 1=1
+      <if test="keys !=null and keys.size()>0">
+        AND HOLD.REGIST_BANK_CODE
+            ||'_'||HOLD.IDENTIFY_NUMBER
+            ||'_'||HOLD.HOLDER_NAME
+            ||'_'||HOLD.PERSONAL_IDENTIFY_TYPE
+            ||'_'||HOLD.INSTITUTION_IDENTIFY_TYPE
+            ||'_'||HOLD.OTHER_IDENTIFY_NAME IN
+        <foreach collection="keys" item="key" open="(" separator=","  close=")">
+            #{key,jdbcType=VARCHAR}
+        </foreach>
+	 </if>
+	 ORDER BY 
+	 HOLD.REGIST_BANK_CODE,
+     HOLD.IDENTIFY_NUMBER,
+     HOLD.HOLDER_NAME,
+     HOLD.PERSONAL_IDENTIFY_TYPE,
+     HOLD.INSTITUTION_IDENTIFY_TYPE,
+     HOLD.OTHER_IDENTIFY_NAME,
+     HOLD.IS_BELONG_BANK,
+     HOLD.INDENTIFY_MARK
+   </select>
+   
    <delete id="deleteEquityInfoBatch" parameterType="java.util.List">
 	            DELETE FROM CHB_EQU_HOLD HOLD
 	            WHERE 1=1
@@ -673,7 +741,7 @@
         			 </if>
 			    AND NOT EXISTS( SELECT 1 FROM CHB_EQU_SUB T
 				    			WHERE HOLD.INDENTIFY_MARK = T.INDENTIFY_MARK
-				    		    AND T.SUBMIT_STATUS = '03'
+				    		    AND T.SUBMIT_STATUS in('02','03')
 			                  )
   </delete>
   
@@ -770,6 +838,18 @@
     </choose>
     
    </update>
+   
+    <update id="updateForRepair" parameterType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto">
+	update 
+		CHB_EQU_HOLD_CHECK
+	set 
+		HOLDER_CLASSIFY = #{holderClassify,jdbcType=VARCHAR},
+		FUND_ACC_PLACE = #{fundAccPlace,jdbcType=VARCHAR}	
+	where 
+		REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}	
+	and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
+  </update>
+  
    
   <update id="refreshMergerIndentifyMark"  parameterType="java.util.List">
    <choose>

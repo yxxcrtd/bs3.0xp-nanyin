@@ -42,7 +42,7 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 
 /**
  * 新建账套
- * 
+ *
  * @author 黄健
  * @version 1.0 2018年5月10日
  * @see ValAssetBook002Service
@@ -72,7 +72,7 @@ public class ValAssetBook002Service extends CommonExportService<ValAssetbook002D
 
     /**
      * 获取账套准则
-     * 
+     *
      * @return List<SelectOptionDto>
      * @see
      * @since 1.0
@@ -88,7 +88,7 @@ public class ValAssetBook002Service extends CommonExportService<ValAssetbook002D
 
     /**
      * 获取本位币 <功能详细描述>
-     * 
+     *
      * @return List<SelectOptionDto>
      * @see
      * @since 1.0
@@ -104,7 +104,7 @@ public class ValAssetBook002Service extends CommonExportService<ValAssetbook002D
 
     /**
      * 格式化创建SelectOptionDto对象
-     * 
+     *
      * @param selectId 下拉Id值
      * @param text 下拉文本值
      * @return SelectOptionDto
@@ -120,7 +120,7 @@ public class ValAssetBook002Service extends CommonExportService<ValAssetbook002D
 
     /**
      * 检查账套代码是否存在
-     * 
+     *
      * @param id 账套代码
      * @return boolean
      * @see
@@ -129,10 +129,10 @@ public class ValAssetBook002Service extends CommonExportService<ValAssetbook002D
     public boolean checkBooksetId(String id) {
         return mapper.checkBooksetId(id);
     }
-    
+
     /**
      * 检查账套代码是否存在
-     * 
+     *
      * @param id 账套代码
      * @return boolean
      * @see
@@ -141,11 +141,11 @@ public class ValAssetBook002Service extends CommonExportService<ValAssetbook002D
     public boolean checkBooksetName(ValAssetbook002Dto dto) {
         return mapper.checkBooksetName(dto);
     }
-    
+
 
     /**
      * 插入 <一句话功能简述> <功能详细描述>
-     * 
+     *
      * @param dto 账套dto
      * @return int
      * @see
@@ -153,8 +153,13 @@ public class ValAssetBook002Service extends CommonExportService<ValAssetbook002D
      */
     public int insert(ValAssetbook002Dto dto) {
         BokBooksetDate valBokBooksetDate = bokBooksetDateMapper.selectByPrimaryKey(
+<<<<<<< .mine
             dto.getBooksetId());
         // 不存在账套日期，新增，已存在则更新 注释修改账套日期的逻辑by yinya on 20211221： 修改账套日期会导致手工凭证余额方向置空
+=======
+                dto.getBooksetId());
+        // 不存在账套日期，新增，已存在则更新 注释修改账套日期的逻辑by yinya on 20211221： 修改账套日期会导致手工凭证余额方向置空
+>>>>>>> .theirs
         if (valBokBooksetDate != null) {
 //            valBokBooksetDate.setBooksetId(dto.getBooksetId());
 //            // 账套日期 = 账套.开始日期
@@ -210,7 +215,7 @@ public class ValAssetBook002Service extends CommonExportService<ValAssetbook002D
 
     /**
      * 下拉框：所属估值方案
-     * 
+     *
      * @param pageParam
      * @return
      */
@@ -228,10 +233,10 @@ public class ValAssetBook002Service extends CommonExportService<ValAssetbook002D
         return selectOptionList;
     }
 
- 
+
     public void doComplete(ValAssetbook002Dto entity, OperationType type) {
         BokBooksetDate valBokBooksetDate = bokBooksetDateMapper.selectByPrimaryKey(
-            entity.getBooksetId());
+                entity.getBooksetId());
         // 不存在账套日期，新增，已存在则更新 注释修改账套日期的逻辑by yinya on 20211221： 修改账套日期会导致手工凭证余额方向置空
         if (valBokBooksetDate != null) {
 //            valBokBooksetDate.setBooksetId(entity.getBooksetId());
@@ -269,7 +274,7 @@ public class ValAssetBook002Service extends CommonExportService<ValAssetbook002D
             bokBooksetPlan.setSchemeType(DictCodeListExt1.配置方案类型_估值方案.getValue());
             mapper.insertBooksetPlan(bokBooksetPlan);
         }
-     // 税务方案表 TODO
+        // 税务方案表 TODO
         if (StringUtils.isNoneEmpty(entity.getBooksetTaxSchemeId())) {
             BokBooksetPlan bokBooksetPlan = new BokBooksetPlan();
             bokBooksetPlan.setBooksetSchemeId(entity.getBooksetTaxSchemeId());
@@ -284,7 +289,7 @@ public class ValAssetBook002Service extends CommonExportService<ValAssetbook002D
             bokBooksetPlan.setSchemeType(DictCodeListExt1.配置方案类型_税务方案.getValue());
             mapper.insertBooksetPlan(bokBooksetPlan);
         }
-     // 影子定价方案表 TODO
+        // 影子定价方案表 TODO
         if (StringUtils.isNoneEmpty(entity.getBooksetShadowPriceSchemeId())) {
             BokBooksetPlan bokBooksetPlan = new BokBooksetPlan();
             bokBooksetPlan.setBooksetSchemeId(entity.getBooksetShadowPriceSchemeId());
@@ -318,59 +323,59 @@ public class ValAssetBook002Service extends CommonExportService<ValAssetbook002D
 
     /**
      * 查询账套生成凭证数
-     * 
+     *
      * @param booksetId
      * @return
      */
-	public int queryVoucherCount(String booksetId) {
-		return mapper.queryVoucherCount(booksetId);
-	}
-	
-	/**
-	 * 
-	 *税务方案
-	 * @param pageParam
-	 * @return
-	 * @see
-	 * @since 1.0
-	 */
-	   public List<SelectOptionDto> findTaxScheme(Map<String, Object> pageParam) {
-	        List<BokSchemeInfo> resultList = mapper.selectTaxScheme(pageParam);
-	        List<SelectOptionDto> selectOptionList = new ArrayList<>();
-	        if (CollectionUtils.isNotEmpty(resultList)) {
-	            for (BokSchemeInfo single : resultList) {
-	                SelectOptionDto selectOptionDto = new SelectOptionDto();
-	                selectOptionDto.setId(single.getSchId());
-	                selectOptionDto.setText(single.getSchName());
-	                selectOptionList.add(selectOptionDto);
-	            }
-	        }
-	        return selectOptionList;
-	    }
-	   
-	   /**
-	    * 
-	    * 影子定价方案
-	    * @param pageParam
-	    * @return
-	    * @see
-	    * @since 1.0
-	    */
-	   public List<SelectOptionDto> findShadowPriceScheme(Map<String, Object> pageParam) {
-	       List<BokSchemeInfo> resultList = mapper.selectShadowPriceScheme(pageParam);
-	       List<SelectOptionDto> selectOptionList = new ArrayList<>();
-           if (CollectionUtils.isNotEmpty(resultList)) {
-               for (BokSchemeInfo single : resultList) {
-                   SelectOptionDto selectOptionDto = new SelectOptionDto();
-                   selectOptionDto.setId(single.getSchId());
-                   selectOptionDto.setText(single.getSchName());
-                   selectOptionList.add(selectOptionDto);
-               }
-           }
-           return selectOptionList;
-	    }
-	
-	
-	
-	
+    public int queryVoucherCount(String booksetId) {
+        return mapper.queryVoucherCount(booksetId);
+    }
+
+    /**
+     *
+     *税务方案
+     * @param pageParam
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public List<SelectOptionDto> findTaxScheme(Map<String, Object> pageParam) {
+        List<BokSchemeInfo> resultList = mapper.selectTaxScheme(pageParam);
+        List<SelectOptionDto> selectOptionList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(resultList)) {
+            for (BokSchemeInfo single : resultList) {
+                SelectOptionDto selectOptionDto = new SelectOptionDto();
+                selectOptionDto.setId(single.getSchId());
+                selectOptionDto.setText(single.getSchName());
+                selectOptionList.add(selectOptionDto);
+            }
+        }
+        return selectOptionList;
+    }
+
+    /**
+     *
+     * 影子定价方案
+     * @param pageParam
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public List<SelectOptionDto> findShadowPriceScheme(Map<String, Object> pageParam) {
+        List<BokSchemeInfo> resultList = mapper.selectShadowPriceScheme(pageParam);
+        List<SelectOptionDto> selectOptionList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(resultList)) {
+            for (BokSchemeInfo single : resultList) {
+                SelectOptionDto selectOptionDto = new SelectOptionDto();
+                selectOptionDto.setId(single.getSchId());
+                selectOptionDto.setText(single.getSchName());
+                selectOptionList.add(selectOptionDto);
+            }
+        }
+        return selectOptionList;
+    }
+
+
+
+
 }

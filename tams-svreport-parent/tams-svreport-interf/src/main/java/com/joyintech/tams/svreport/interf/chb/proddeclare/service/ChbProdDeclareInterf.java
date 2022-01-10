@@ -65,7 +65,7 @@ public class ChbProdDeclareInterf extends BaseInterfService {
 	 */
 	public void generatePrdDeclareData(Date batchDate){
 		// 查询数据
-		List<ChbPrdDeclareInfoDto> prodidlist = getBusEntity(null, "D");
+		List<ChbPrdDeclareInfoDto> prodidlist = getBusEntity(null, null, null, "D");
 		// 入库
 		if(!StringUtil.isEmptyList(prodidlist)){
 			insertDataMerge(prodidlist);
@@ -73,7 +73,7 @@ public class ChbProdDeclareInterf extends BaseInterfService {
 	}
 
 	@Override
-	public List<ChbPrdDeclareInfoDto> getBusEntity(List<String> prodIdlist,String source) {
+	public List<ChbPrdDeclareInfoDto> getBusEntity(List<String> prodIdlist, Date date, String institutionCode, String source) {
 		//切换数据源查询信息
 		ChbProdDeclareInterf chbPrdOpenschInterf2 =  SpringContextUtil.getBean(ChbProdDeclareInterf.class);
 		logger.debug("读取申报要素信息----开始-----:" +  df.format(new Date()));

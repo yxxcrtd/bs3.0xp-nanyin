@@ -70,8 +70,18 @@
                         <span class="input-right-show">%</span>
                     </div>
                 </div>
-
-
+                <!-- 中债新增字段 add by tuqirong 2021-12-30 start -->
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepOtherInfo.isDepositFlag}">是否为同业借款</label>
+                    <div class="layui-input-inline input-inline">
+                        <select th:id="|${entityName}_isDepositFlag|" th:name="|${entityName}.isDepositFlag|"
+                                th:initValue="${entity?.isDepositFlag}" class="layui-input form-input input-select"
+                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
+                                data-th-data-result="${SVR_YES_OR_NO}">
+                        </select>
+                    </div>
+                </div>
+                <!-- 中债新增字段 add by tuqirong 2021-12-30 end -->
             </div>
             <!--add by yjp 估值穿透开发--监管报送资产基本信息维护导入功能合并华夏字段start -->
             <div class="layui-form-item">

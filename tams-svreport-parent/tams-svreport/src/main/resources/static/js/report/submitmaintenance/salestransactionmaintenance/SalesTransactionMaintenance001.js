@@ -52,7 +52,7 @@
             ,{field:'tradeCounterAccName', title: '销售结算资金交易对手方账户名称', width:'150',sortField:'tradeCounterAccName'}
             ,{field:'tradeCounterAccBankNo', title: '销售结算资金交易对手方开户行名称 ', width:'150',sortField:'tradeCounterAccBankNo'}
             ,{field:'tradeCounterAccBankName', title: '销售结算资金交易对手方账户开户行号 ', width:'150',sortField:'tradeCounterAccBankName'}
-            ,{field:'tradeCcy', title: '销售结算资金交易币种', width:'150',sortField:'tradeCcy'}
+            ,{field:'tradeCcyName', title: '销售结算资金交易币种', width:'150',sortField:'tradeCcy'}
             ,{field:'tradeAmt', title: '销售结算资金交易金额', width:'150',sortField:'tradeAmt',type:'money',digit: 2}
             ,{field:'tradeTime', title: '销售结算资金交易时间', width:'150',sortField:'tradeTime'}
             ,{field:'tradeNo', title: '销售结算资金交易流水号', width:'150',sortField:'tradeNo'}
@@ -88,15 +88,21 @@
     table.bind('click', '.edit', function(data, index) {
         data.operateType = "edit";
         data.pageModel=PAGE_MODEL_EDIT;
-        Joyin.dialog(JoyinUtil.getLabel("销售结算资金交易信息维护编辑"),
+        Joyin.ajaxJson(basePath + 'report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/editCheck', data, function(result) {
+            Joyin.dialog(JoyinUtil.getLabel("销售结算资金交易信息维护编辑"),
                 JoyinUtil.getRealPath("report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance002/init"),
                 "98%", "95%", data,
            function(){table.reload();});
+        });
+
     });
     /**
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
+                    if(data.dataStatus !="E"){
+                        return Joyin.error("只能删除有效数据，请重新选择");
+                    }
         var object = {selectedItem: [data], operateType:"delete"};
         Joyin.ajaxJson(basePath + 'report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/check', object, function(result) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
@@ -169,6 +175,11 @@
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
+            }
+            for(var i=0;i<selArr.length;i++){
+              if(selArr[i].dataStatus !="E"){
+                 return Joyin.error("只能删除有效数据，请重新选择");
+              }
             }
             var object = {selectedItem: selArr, operateType:"delete"};
             Joyin.ajaxJson(basePath + 'report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/check', object, function(result) {

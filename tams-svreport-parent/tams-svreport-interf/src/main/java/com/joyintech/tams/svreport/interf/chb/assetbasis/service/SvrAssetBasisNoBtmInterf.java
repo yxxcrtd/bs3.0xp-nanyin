@@ -152,8 +152,18 @@ public class SvrAssetBasisNoBtmInterf extends BaseService{
 //	            		lastUpdatetime =data.getUpdateTime();
 //	        	}
 	        	Map<String,ChbAssetsBasisData> listChbAssetsBasisDataNotBtmMapResult=new HashMap<String,ChbAssetsBasisData>();
-	        	for(String key:listChbAssetsBasisDataNotBtmMap.keySet()){
+				List<ChbAssetsBasisData> listIntadjexpAdd = chbAssetBasisInterfMapper.selectIntadjexpAdd(DateUtil.format(date));
+
+				for(String key:listChbAssetsBasisDataNotBtmMap.keySet()){
 	        		ChbAssetsBasisData data=listChbAssetsBasisDataNotBtmMap.get(key);
+
+					// 增加利息调整字段
+					listIntadjexpAdd.stream().forEach(item ->{
+						if(data.getAssetId().equals(item.getAssetId()) &&  data.getProdId().equals(item.getProdId())){
+							data.setTdyIntadjexpAdd(item.getTdyIntadjexpAdd());
+						}
+					});
+
 //	        		String key=data.getProdId() + GlobalConstant.UNDER_LINE + data.getAssetId();
 	        		data.setValId(IDGenerator.generate(36));
 	        		data.setCreateUser("system");
@@ -327,7 +337,7 @@ public class SvrAssetBasisNoBtmInterf extends BaseService{
 	        				&& isNullAmt(data.getDelayPayAmt())) {
 	        			continue;
 	        		}
-	        		batchMapper.insertNoBtm(data);
+					chbAssetBasisInterfMapper.insertNoBtm(data);
 	        		count++;
 	        		if(count%1000==0){
 	        			logger.debug("已插入"+count+"条"+DateUtil.getCurrentDateTime());

@@ -8,10 +8,10 @@ public interface ChbAssetsBasisDataMapper {
     int deleteByPrimaryKey(String valId);
 
     int insert(ChbAssetsBasisData record);
-    
-    int insertNoBtm(ChbAssetsBasisData record);
 
     int insertSelective(ChbAssetsBasisData record);
+
+    int insertBasicByBasicInfo(ChbAssetsBasisData record);
 
     ChbAssetsBasisData selectByPrimaryKey(String valId);
 

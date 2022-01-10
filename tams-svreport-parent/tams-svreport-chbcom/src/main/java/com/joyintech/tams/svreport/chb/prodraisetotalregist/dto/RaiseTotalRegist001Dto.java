@@ -198,8 +198,32 @@ public class RaiseTotalRegist001Dto extends BaseEntity implements ITableRow {
 	private  String equType;
     //客户数
 	private Integer  equCount;
-	
-	
+    /**
+     * 资金托管账号
+     */
+    private String busiAcctNo;
+
+    /**
+     * 资金托管账户
+     */
+    private String acctName;
+
+    public String getBusiAcctNo() {
+        return busiAcctNo;
+    }
+
+    public void setBusiAcctNo(String busiAcctNo) {
+        this.busiAcctNo = busiAcctNo;
+    }
+
+    public String getAcctName() {
+        return acctName;
+    }
+
+    public void setAcctName(String acctName) {
+        this.acctName = acctName;
+    }
+
     public String getRegseq() {
 		return regseq;
 	}

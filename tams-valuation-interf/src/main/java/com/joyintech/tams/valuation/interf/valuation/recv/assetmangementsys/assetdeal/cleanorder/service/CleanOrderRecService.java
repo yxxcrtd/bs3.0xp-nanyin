@@ -10,7 +10,15 @@
  
 package com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.assetdeal.cleanorder.service;
 
-import com.joyintech.tams.constant.DictCodeList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.joyintech.tams.valuation.interf.core.exception.InterfException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
 import com.joyintech.tams.valuation.common.interf.base.constant.DictCodeInterfList;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.constant.TempConstant;

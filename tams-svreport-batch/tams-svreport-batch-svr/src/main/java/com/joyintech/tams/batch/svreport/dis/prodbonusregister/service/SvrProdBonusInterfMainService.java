@@ -51,7 +51,7 @@ public class SvrProdBonusInterfMainService extends AutoSendCBBaseService {
      */
     public HashMap<String, List<String>> generateData(Date batchDate,List<String> prodIdList) {
         // 设置批处理bean
-        setBatchBeanName(BatchBeanName.产品资产种类投资比例调整数据接入);
+        setBatchBeanName(BatchBeanName.产品分红登记接入);
         logInfoBatchStart();
         HashMap<String, List<String>> mapPara = new HashMap<String, List<String>>();
         ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(com.joyintech.tams.common.InterfDefine.产品分红登记.getCode());

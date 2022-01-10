@@ -6,6 +6,8 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.common.base.annotate.BusinessKey;
+import com.joyintech.tams.report.common.base.annotate.DictFormat;
 import com.joyintech.tams.report.common.base.annotate.TableName;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
@@ -59,6 +61,7 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
     /**
      *反馈状态
      */
+    @DictFormat(DictCode.报送反馈状态)
     private String submitFeedbackStatus;
 
     /**
@@ -84,11 +87,13 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
     /**
      * 提供销售结算资金服务机构代码
      */
+    @BusinessKey("INSTITUTION_CODE")
     private String institutionCode;
 
     /**
      * 产品登记编码
      */
+    @BusinessKey("PRD_REGIST_CODE")
     private String prdRegistCode;
 
     /**
@@ -104,11 +109,13 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
     /**
      * 销售结算资金交易流水号
      */
+    @BusinessKey("TRADE_NO")
     private String tradeNo;
 
     /**
      * 销售结算资金流动方向
      */
+    @DictFormat(DictCode.销售结算资金流动方向)
     private String tradePs;
 
     /**
@@ -398,7 +405,7 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
     }
 
     public String getTradePsName() {
-        return SysDataUtil.getNameFromDataDict(DictCode.销售结算资金流动方向, this.getTradePs());
+        return this.getTradePs() + " " + SysDataUtil.getNameFromDataDict(DictCode.销售结算资金流动方向, this.getTradePs());
     }
     public String getDataStatusName() {
         return SysDataUtil.getNameFromDataDict(DictCode.报送数据状态, this.getDataStatus());
@@ -408,6 +415,9 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
     }
     public String getSendStatusName() {
         return SysDataUtil.getNameFromDataDict(DictCode.报送状态, this.getSendStatus());
+    }
+    public String getStatus() {
+        return SysDataUtil.getNameFromDataDict(DictCode.报送数据状态, this.getDataStatus());
     }
 
     public String getSubmitTimeStr() {
@@ -435,4 +445,6 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
     public void setCheckSeqno(String checkSeqno) {
         this.checkSeqno = checkSeqno;
     }
+    
+
 }

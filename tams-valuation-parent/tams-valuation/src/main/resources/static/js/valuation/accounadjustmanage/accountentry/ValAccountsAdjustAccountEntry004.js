@@ -14,14 +14,15 @@ $(function () {
         },
         searchOnInit: true,
         checkbox: false,
-		cols: [
-		   {field:'subjectNo', title: '科目号'},
-           {field:'subjectName', title: '科目名称'},
-           {field:'cdFlag', title: '借贷'},
-           {field:'dictName',sortField:'formEle', title: '金额元素'},
-           {field:'bokDetailId', title: '账务明细元素'},
-           {field:'accountNet', title: '记账网点',visible:false}
-		],
+        cols: [
+            {field:'subjectNo', title: '科目号'},
+            {field:'subjectName', title: '科目名称'},
+            {field:'cdFlag', title: '借贷'},
+            {field:'dictName',sortField:'formEle', title: '金额元素'},
+            {field:'dictCode',sortField:'formEle', title: '金额元素代码'},
+            {field:'bokDetailId', title: '账务明细元素'},
+            {field:'accountNet', title: '记账网点',visible:false}
+        ],
 		loadonce:true
 	});
 	

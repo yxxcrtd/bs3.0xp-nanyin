@@ -5,6 +5,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -22,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +34,7 @@ import java.util.Map;
  */
 @Controller
 @PageId("SalesTransactionMaintenanceRegist001")
-@RequestMapping("report/submitmanagement/salestransactionmaintenanceregist/SalesTransactionMaintenanceRegist001")
+@RequestMapping("/report/submitmanagement/salestransactionmaintenanceregist/SalesTransactionMaintenanceRegist001")
 public class SalesTransactionMaintenanceRegist001Controller extends BaseController {
 
     @Autowired
@@ -68,6 +70,13 @@ public class SalesTransactionMaintenanceRegist001Controller extends BaseControll
 
         super.setSelectOptionToModel(model, DictCode.报送数据状态,
             DictCode.报送状态,DictCode.报送反馈状态);
+        List<SelectOptionDto> listSendStatus = querySendStatus();
+        model.addAttribute("institutionCode",RequestUtil.getParam("institutionCode"));
+        model.addAttribute("prdRegistCode",RequestUtil.getParam("prdRegistCode"));
+        model.addAttribute("tradeNo",RequestUtil.getParam("tradeNo"));
+        model.addAttribute("accountNo",RequestUtil.getParam("accountNo"));
+        // 增加发送状态
+        model.addAttribute("SUBMIT_SEND_STATUS", JsonUtils.objectArray2Json(listSendStatus.toArray()));
         return super.init(model);
     }
     /**
@@ -164,4 +173,26 @@ public class SalesTransactionMaintenanceRegist001Controller extends BaseControll
                 outFile, true);
 
 }
+
+    /**
+     * @Title: querySendStatus
+     * @Description: (报送登记发送状态)
+     * @param @return    参数
+     * @return List<SelectOptionDto>    返回类型
+     * @throws
+     */
+    private List<SelectOptionDto> querySendStatus() {
+        List<SelectOptionDto> listSendStatus = new ArrayList<SelectOptionDto>();
+        SelectOptionDto selectOptionDto1 = new SelectOptionDto();
+        selectOptionDto1.setId("01");
+        selectOptionDto1.setText("发送成功");
+        selectOptionDto1.setCol("");
+        listSendStatus.add(selectOptionDto1);
+        SelectOptionDto selectOptionDto2 = new SelectOptionDto();
+        selectOptionDto2.setId("02");
+        selectOptionDto2.setText("发送失败");
+        selectOptionDto2.setCol("");
+        listSendStatus.add(selectOptionDto2);
+        return listSendStatus;
+    }
 }

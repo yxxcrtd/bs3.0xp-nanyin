@@ -65,7 +65,7 @@ $(function() {
                       }
                   }},
               { title: "报送日期", field: 'submitTime', type: 'datetime',sortField:'submitTime'},
-              { title: "报送截止日", field: 'chbSubmitDeadline', type: 'datetime',sortField:'chbSubmitDeadline'},
+              { title: "报送截止日", field: 'chbSubmitDeadline', type: 'date',sortField:'chbSubmitDeadline'},
               { title: "反馈状态", field: 'submitFeedbackStatus',width:100 ,sortField:'submitFeedbackStatus',
                   render:function (value,visible,row,options) {
                       if(value == "发送中" || value == "发送异常"){
@@ -96,6 +96,10 @@ $(function() {
               {title: '单位成交价格（净价）',field:'unitPriceNet', digit:4,type:'money',width:200,sortField:'unitPriceNet'},
               {title: '到期收益率(%)',field:'endRate',type:'number', digit:5,width:200,sortField:'endRate'},
               {title: '成交编号/合同号',field:'contractCode', width:200,sortField:'contractCode'},
+              {title: '交易审批人身份证号',field:'investApproverId', width:200,sortField:'investApproverId'},
+              {title: '交易审批人姓名',field:'investApproverName', width:150,sortField:'investApproverName'},
+              {title: '交易员身份证号',field:'investTraderId', width:200,sortField:'investTraderId'},
+              {title: '交易员姓名',field:'investTraderName', width:150,sortField:'investTraderName'},
               {title: '备注',field:'remark', width:200,sortField:'remark'}
           ]
       });

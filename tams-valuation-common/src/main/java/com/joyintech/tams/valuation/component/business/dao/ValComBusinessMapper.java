@@ -10,9 +10,12 @@
 
 package com.joyintech.tams.valuation.component.business.dao;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 组件共通服务
@@ -37,5 +40,35 @@ public interface ValComBusinessMapper {
      * @since 1.0
      */
     int isTransInAsset(String finprodId);
+
+    /**
+     * 资产代码
+     * @param pageParam
+     * @return
+     */
+    List<SelectOptionDto> getAssetId(Map<String, Object> pageParam);
+
+    /**
+     * 产品代码
+     * @param pageParam
+     * @return
+     */
+    List<SelectOptionDto> getProdId(Map<String, Object> pageParam);
+
+    /**
+     * 产品代码
+     * @param pageParam
+     * @return
+     */
+    List<SelectOptionDto> getProdName(Map<String, Object> pageParam);
+
+    /**
+     * 资金账户信息
+     * @param param 参数
+     * @return 债券交易列表
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> getTrdAcctId(Map<String, Object> param);
 
 }

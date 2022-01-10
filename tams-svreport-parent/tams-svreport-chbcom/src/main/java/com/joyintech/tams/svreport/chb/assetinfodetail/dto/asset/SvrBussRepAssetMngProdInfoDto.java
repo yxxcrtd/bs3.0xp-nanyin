@@ -164,6 +164,16 @@ public class SvrBussRepAssetMngProdInfoDto extends BaseEntity {
      * 管理人代码
      */
     private String chbManagerId;
+	
+	/**
+     * 是否为银行理财产品，01 是/02 否，中债新增字段
+     */
+    private String financialProductFlag;
+
+    /**
+     * 产品登记编码，中债新增字段
+     */
+    private String prodRegisterCode;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -392,4 +402,20 @@ public class SvrBussRepAssetMngProdInfoDto extends BaseEntity {
 	public void setChbManagerId(String chbManagerId) {
 		this.chbManagerId = chbManagerId;
 	}
+	
+	public String getFinancialProductFlag() {
+        return financialProductFlag;
+    }
+
+    public void setFinancialProductFlag(String financialProductFlag) {
+        this.financialProductFlag = financialProductFlag;
+    }
+
+    public String getProdRegisterCode() {
+        return prodRegisterCode;
+    }
+
+    public void setProdRegisterCode(String prodRegisterCode) {
+        this.prodRegisterCode = prodRegisterCode;
+    }
 }

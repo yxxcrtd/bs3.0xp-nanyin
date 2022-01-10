@@ -14,6 +14,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.joyintech.background.component.common.pack.common.json.CustomDateDeserialize;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.util.StringUtil;
@@ -109,6 +113,7 @@ public class FinNetProductDurationDto extends BaseEntity implements ProcessEntit
     /**
      * 产品起息日
      */
+
     private Date vDate;
     /**
      * 产品到期日
@@ -873,6 +878,7 @@ public class FinNetProductDurationDto extends BaseEntity implements ProcessEntit
      * 设置 vDate
      * @param vDate vDate
      */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setvDate(Date vDate) {
         this.vDate = vDate;
     }

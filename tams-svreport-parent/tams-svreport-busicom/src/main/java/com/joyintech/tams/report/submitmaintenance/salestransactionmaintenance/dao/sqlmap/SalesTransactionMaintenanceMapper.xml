@@ -27,14 +27,14 @@
 		erro.TRADE_PS             as tradePs,
 		erro.TRADE_VDATE          as tradeVdate,
 		null                      as remark,
-		erro.ERR_MSG              as errMsg
+		to_char(erro.ERR_MSG)     as errMsg
 		from CHB_SALER_STL_DEA_ERRODATA erro
 		where 1=1
 		<if test="tradePs != null and tradePs != ''">
 			and erro.TRADE_PS = #{tradePs,jdbcType=VARCHAR}
 		</if>
 		<if test="institutionCode != null and institutionCode != ''">
-			and erro.INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR}
+			and erro.INSTITUTION_CODE like concat(concat('%',#{institutionCode,jdbcType=VARCHAR}),'%')
 		</if>
 		<if test="dataStatus != null and dataStatus != ''">
 			and erro.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
@@ -168,6 +168,8 @@
 
 <!--	提供销售结算资金服务机构代码下拉框-->
 	<select id="getInstitutionCode" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
+		select distinct(code),name,shortName,hidCode
+		from(
 		SELECT
 		INSTITUTION_CODE code,
 		INSTITUTION_CODE name,
@@ -193,10 +195,13 @@
 				AND	INSTITUTION_CODE like concat('%',concat(#{institutionCode,jdbcType=VARCHAR},'%'))
 			</if>
 		</where>
+		)
 	</select>
 
 <!--登记编码下拉框-->
 	<select id="getPrdRegistCode" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
+		select distinct(code),name,shortName,hidCode
+		from(
 		SELECT
 		PRD_REGIST_CODE code,
 		PRD_REGIST_CODE name,
@@ -222,11 +227,14 @@
 				AND	PRD_REGIST_CODE like concat('%',concat(#{prdRegistCode,jdbcType=VARCHAR},'%'))
 			</if>
 		</where>
+		)
 	</select>
 
 <!--交易流水下拉框-->
 	<select id="getTradeNo" resultType="com.joyintech.framework.select.SelectOptionDto">
-		SELECT
+		select distinct(id),text
+		from
+		(SELECT
 		TRADE_NO id,
 		TRADE_NO text
 		from CHB_SALER_STL_DEAL_INFO
@@ -248,6 +256,8 @@
 				and TRADE_NO like concat(concat('%', #{search}),'%')
 			</if>
 		</where>
+		)
+
 	</select>
 	<!--	导入时校验数据是否重复-->
 	<select id="getRegistExcelList" resultType="java.lang.Integer">
@@ -332,6 +342,12 @@
 		UPDATE_TIME = SYSDATE
 		where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
 	</update>
+
+	<delete id="deleteErr" parameterType="java.lang.String" >
+		delete from CHB_SALER_STL_DEA_ERRODATA
+		where
+		REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
+	</delete>
 
 	<select id="selectTradeNo" resultType="java.lang.Integer">
 		SELECT count(*) from CHB_SALER_STL_DEAL_INFO

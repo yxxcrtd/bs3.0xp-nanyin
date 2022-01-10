@@ -69,6 +69,45 @@
 			isGovernFundChangeType();
 		});
 
+		// 管理人
+		$('#svrBussRepFundInfoDto_chbManagerId').change(function(){
+			// $("#fundType").val('').trigger('change');
+			var svrBussRepFundInfoDto_chbManagerId = $('#svrBussRepFundInfoDto_chbManagerId').val();
+			if(svrBussRepFundInfoDto_chbManagerId ==''|| svrBussRepFundInfoDto_chbManagerId==undefined){
+				// $('#fundName').val('');
+			}
+			else{
+				var data = {
+					svrBussRepFundInfoDto_chbManagerId: $('#svrBussRepFundInfoDto_chbManagerId').val()
+				}
+				//$('#fundName').val($('#finprodId').select2('data')[0].text).trigger('change');
+				Joyin.ajaxJson(basePath + 'common/select/getManagerInfo', data,
+					function (resultObj) {
+						//if (resultObj.fundType) {
+						// $('#fundName').val(resultObj.fundName).trigger('change');
+						// $("#fundType").val(resultObj.fundType).trigger('change');
+						//}
+						// console.log($('#svrBussRepFundInfoDto_chbManagerId').val());
+						// console.log(resultObj);
+						if (resultObj.partyType1!=null){
+							$('#svrBussRepFundInfoDto_sharesType1').val(resultObj.partyType1).trigger('change');
+						} else {
+							$('#svrBussRepFundInfoDto_sharesType1').val('').trigger('change');
+						}
+						if (resultObj.partyType2!=null){
+							$('#svrBussRepFundInfoDto_sharesType2').val(resultObj.partyType2).trigger('change');
+						} else {
+							$('#svrBussRepFundInfoDto_sharesType2').val('').trigger('change');
+						}
+						if (resultObj.partyType3!=null){
+							$('#svrBussRepFundInfoDto_sharesType3').val(resultObj.partyType3).trigger('change');
+						} else {
+							$('#svrBussRepFundInfoDto_sharesType3').val('').trigger('change');
+						}
+
+					});
+			}
+		});
 
 	});
 

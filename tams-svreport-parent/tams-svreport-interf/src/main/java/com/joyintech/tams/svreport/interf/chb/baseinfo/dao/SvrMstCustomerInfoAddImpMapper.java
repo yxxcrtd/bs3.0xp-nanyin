@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.interf.chb.baseinfo.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.MstCustomerInfoAddWithBLOBs;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.common.base.entity.MstCustomerInfoAdd;
@@ -22,11 +23,11 @@ public interface SvrMstCustomerInfoAddImpMapper {
 
     int updateByPrimaryKey(MstCustomerInfoAdd record);
     
-    int deleteCustomerAddBatch(@Param("list")List<MstCustomerInfoAdd> record);
+    int deleteCustomerAddBatch(@Param("list")List<MstCustomerInfoAddWithBLOBs> record);
     
     int deleteAllData();
     
-    int mergeMstCustomerInfoData(@Param("list")List<MstCustomerInfoAdd> record);
+    int mergeMstCustomerInfoData(@Param("list")List<MstCustomerInfoAddWithBLOBs> record);
     
     int deleteTodayData();
 

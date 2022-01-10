@@ -11,6 +11,8 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.TimeZone;
+
 /**
  *
  * XStream工具工厂
@@ -62,8 +64,14 @@ public class XStreamconfiguration {
 		xstream.omitField(BaseEntity.class,"updateUser");
 		xstream.omitField(BaseEntity.class,"updateTime");
 		xstream.omitField(BaseEntity.class,"status");
+		// 设置时区
+		TimeZone tz = TimeZone.getTimeZone("ETC/GMT-8");
+		TimeZone.setDefault(tz);
 		// 日期格式化
 		xstream.registerConverter(new DateConverter("yyyy-MM-dd", null));
+		// 不指向引用
+		xstream.setMode(XStream.NO_REFERENCES);
+
 		return xstream;
 	}
 }

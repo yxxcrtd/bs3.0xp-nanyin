@@ -66,18 +66,18 @@ public class SvrMonthCollectInterfTaskService extends BatchBaseService{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date bdate=new Date();
         Long bt=bdate.getTime();
-        logger.info("销售月报每日明细汇总批处理启动:"+sdf.format(bdate));
+        logger.info("销售月报每月明细汇总批处理启动:"+sdf.format(bdate));
         try {
             monthCollectImpMainService.generateSalesTransactionSubInfo(batchDateStart,batchDateStart,batchDateEnd);
             result.setStatus(BatchStatus.COMPLETED);
         }
         catch (Exception e) {
-            logger.error("销售月报每日明细汇总批处理Error",e);
+            logger.error("销售月报每月明细汇总批处理Error",e);
         }finally{
         	Date edate=new Date();
             Long et=edate.getTime();
             Long time=(et-bt)/1000;
-        	logger.info("销售月报每日明细汇总批处理结束:"+sdf.format(edate)+"耗时"+time+"秒");
+        	logger.info("销售月报每月明细汇总批处理结束:"+sdf.format(edate)+"耗时"+time+"秒");
         }
         return result;
 	}

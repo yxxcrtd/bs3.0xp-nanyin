@@ -48,6 +48,10 @@
     <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
     <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
     <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="HS_TYPE" property="hsType" jdbcType="VARCHAR" />
+    <result column="IS_FIN_LICENCE" property="isFinLicence" jdbcType="VARCHAR" />
+    <result column="INDUSTRY3" property="industry3" jdbcType="VARCHAR" />
+    <result column="INDUSTRY4" property="industry4" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List">
     CUSTOMER_ID, PARTY_TYPE3, PARTY_TYPE2, PARTY_TYPE1, INDUSTRY, INDUSTRY2, INSITITUTE_CODE, 
@@ -56,7 +60,8 @@
     IS_ESCAPE_DEPT, CREDIT_TYPE, IS_CREDIT_RELATED_TRD, STRUCT_ADJUST_TYPE, INDUS_UPGRATE_TYPE, 
     BUSI_SCOPE, MAIN_BUSI, SEX, PERSON_ID, M_PHONE, PHONE, POSITION, COMPANY_NAME, ADDRESS, 
     MAIL, PROPERTY, COMPANY_NATURE, LINK_ID1, LINK_ID2, LINK_ID3, REMARK, CREATE_USER, 
-    CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+    CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, HS_TYPE HS_TYPE,
+    IS_FIN_LICENCE IS_FIN_LICENCE, INDUSTRY3 INDUSTRY3, INDUSTRY4 INDUSTRY4
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -93,7 +98,8 @@
       COMPANY_NATURE, LINK_ID1, LINK_ID2, 
       LINK_ID3, REMARK, CREATE_USER, 
       CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-      UPDATE_TIME)
+      UPDATE_TIME, HS_TYPE,
+      IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4)
     values (#{customerId,jdbcType=VARCHAR}, #{partyType3,jdbcType=VARCHAR}, #{partyType2,jdbcType=VARCHAR}, 
       #{partyType1,jdbcType=VARCHAR}, #{industry,jdbcType=VARCHAR}, #{industry2,jdbcType=VARCHAR}, 
       #{insitituteCode,jdbcType=VARCHAR}, #{isGov,jdbcType=VARCHAR}, #{mainCapital,jdbcType=DECIMAL}, 
@@ -109,7 +115,9 @@
       #{companyNature,jdbcType=VARCHAR}, #{linkId1,jdbcType=VARCHAR}, #{linkId2,jdbcType=VARCHAR}, 
       #{linkId3,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
       #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{updateTime,jdbcType=TIMESTAMP}, #{hsType,jdbcType=VARCHAR},
+      #{isFinLicence,jdbcType=VARCHAR},
+      #{industry3,jdbcType=VARCHAR}, #{industry4,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd">
     insert into MST_CUSTOMER_INFO_ADD
@@ -252,6 +260,18 @@
       <if test="updateTime != null">
         UPDATE_TIME,
       </if>
+      <if test="hsType != null" >
+        HS_TYPE,
+      </if>
+      <if test="isFinLicence != null" >
+        IS_FIN_LICENCE,
+      </if>
+      <if test="industry3 != null" >
+        INDUSTRY3,
+      </if>
+      <if test="industry4 != null" >
+        INDUSTRY4,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="customerId != null">
@@ -391,6 +411,18 @@
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hsType != null" >
+        #{hsType,jdbcType=VARCHAR},
+      </if>
+      <if test="isFinLicence != null" >
+        #{isFinLicence,jdbcType=VARCHAR},
+      </if>
+      <if test="industry3 != null" >
+        #{industry3,jdbcType=VARCHAR},
+      </if>
+      <if test="industry4 != null" >
+        #{industry4,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -532,6 +564,18 @@
       <if test="updateTime != null">
         UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="hsType != null" >
+        HS_TYPE = #{hsType,jdbcType=VARCHAR},
+      </if>
+      <if test="isFinLicence != null" >
+        IS_FIN_LICENCE = #{isFinLicence,jdbcType=VARCHAR},
+      </if>
+      <if test="industry3 != null" >
+        INDUSTRY3 = #{industry3,jdbcType=VARCHAR},
+      </if>
+      <if test="industry4 != null" >
+        INDUSTRY4 = #{industry4,jdbcType=VARCHAR},
+      </if>
     </set>
     where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
   </update>
@@ -581,7 +625,11 @@
       CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
       CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
       UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      HS_TYPE = #{hsType,jdbcType=VARCHAR},
+      IS_FIN_LICENCE = #{isFinLicence,jdbcType=VARCHAR},
+      INDUSTRY3 = #{industry3,jdbcType=VARCHAR},
+      INDUSTRY4 = #{industry4,jdbcType=VARCHAR}
     where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
   </update>
   
@@ -645,6 +693,10 @@
 		sysdate CREATE_TIME,
 		#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
 		sysdate UPDATE_TIME,
+        #{item.hsType,jdbcType=VARCHAR} HS_TYPE,
+        #{item.isFinLicence,jdbcType=VARCHAR} IS_FIN_LICENCE,
+        #{item.industry3,jdbcType=VARCHAR} INDUSTRY3,
+        #{item.industry4,jdbcType=VARCHAR} INDUSTRY4,
 		#{item.customerId,jdbcType=VARCHAR} CUSTOMER_ID
 		FROM
 		DUAL
@@ -699,8 +751,12 @@
 	CREATE_DEPT = TEMP.CREATE_DEPT,
 	CREATE_TIME = TEMP.CREATE_TIME,
 	UPDATE_USER = TEMP.UPDATE_USER,
-	UPDATE_TIME = TEMP.UPDATE_TIME
-	<!-- 未匹配到这插入 -->
+	UPDATE_TIME = TEMP.UPDATE_TIME,
+    HS_TYPE = TEMP.HS_TYPE,
+    IS_FIN_LICENCE = TEMP.IS_FIN_LICENCE,
+    INDUSTRY3 = TEMP.INDUSTRY3,
+    INDUSTRY4 = TEMP.INDUSTRY4
+    <!-- 未匹配到这插入 -->
 	WHEN NOT MATCHED THEN INSERT
 	(CUSTOMER_ID, PARTY_TYPE3, PARTY_TYPE2,
 	PARTY_TYPE1, INDUSTRY, INDUSTRY2,
@@ -717,7 +773,7 @@
 	COMPANY_NATURE, LINK_ID1, LINK_ID2,
 	LINK_ID3, REMARK, CREATE_USER,
 	CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-	UPDATE_TIME)
+	UPDATE_TIME, HS_TYPE, IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4)
 	values (TEMP.CUSTOMER_ID, TEMP.PARTY_TYPE3, TEMP.PARTY_TYPE2,
 	TEMP.PARTY_TYPE1, TEMP.INDUSTRY, TEMP.INDUSTRY2,
 	TEMP.INSITITUTE_CODE, TEMP.IS_GOV, TEMP.MAIN_CAPITAL,
@@ -733,6 +789,6 @@
 	TEMP.COMPANY_NATURE, TEMP.LINK_ID1, TEMP.LINK_ID2,
 	TEMP.LINK_ID3, TEMP.REMARK, TEMP.CREATE_USER,
 	TEMP.CREATE_DEPT, TEMP.CREATE_TIME, TEMP.UPDATE_USER,
-	TEMP.UPDATE_TIME)
+	TEMP.UPDATE_TIME, TEMP.HS_TYPE, TEMP.IS_FIN_LICENCE, TEMP.INDUSTRY3, TEMP.INDUSTRY4)
 </insert>
 </mapper>

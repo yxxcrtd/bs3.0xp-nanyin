@@ -19,7 +19,7 @@
         </div>
         <div class="layui-form-item" >
             <div class="layui-inline layui-col-md12">
-                <label class="layui-form-label form-lable">登记银行代码</label>
+                <label class="layui-form-label form-lable">中债登记机构代码</label>
                 <div class="layui-input-inline input-inline">
                   <input type="text" id="SysInstRegBankCode002_registBankCode" name="registBankCode" data-th-value="${entity?.registBankCode}" class="layui-input form-input" placeholder="请输入内容" required>
                 </div>
@@ -27,7 +27,7 @@
         </div>
         <div class="layui-form-item" >
             <div class="layui-inline layui-col-md12">
-                <label class="layui-form-label form-lable">总行机构代码</label>
+                <label class="layui-form-label form-lable">人行登记机构代码</label>
                 <div class="layui-input-inline input-inline">
                   <input type="text" id="SysInstRegBankCode002_pbcBankCode" name="pbcBankCode" data-th-value="${entity?.pbcBankCode}" class="layui-input form-input" onKeyUp="value=value.replace(/[^\a-\z\A-\Z0-9]/g,'')" onblur="checkPbcBankCode();" placeholder="请输入14位的数字和英文组合" required>
                   <span ><font id="pbcBankCodeErrText" color="#FF0000"></font></span>

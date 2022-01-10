@@ -21,12 +21,16 @@
     <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
     <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
     <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="IS_BROKER" property="isBroker" jdbcType="VARCHAR" />
+    <result column="IS_COUNTER" property="isCounter" jdbcType="VARCHAR" />
+    <result column="IS_BANK" property="isBank" jdbcType="VARCHAR" />
+    <result column="IS_FUTURE_COM" property="isFutureCom" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List">
     CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_ABBR, CUSTOMER_TYPE, IS_ISSUER, IS_ASSTE_MANAGER, 
     IS_TRUSTER, IS_SALER, IS_FINANCIER, IS_GUARANTEE, IS_RATING_AGENCIES, IS_PLEDGOR, 
     IS_DEPOSIT_BANK, IS_INVEST_ADVISER, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-    UPDATE_TIME
+    UPDATE_TIME, IS_BROKER IS_BROKER, IS_COUNTER IS_COUNTER, IS_BANK IS_BANK, IS_FUTURE_COM IS_FUTURE_COM
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -45,14 +49,16 @@
       IS_GUARANTEE, IS_RATING_AGENCIES, IS_PLEDGOR, 
       IS_DEPOSIT_BANK, IS_INVEST_ADVISER, CREATE_USER, 
       CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-      UPDATE_TIME)
+      UPDATE_TIME, IS_BROKER, IS_COUNTER,
+      IS_BANK, IS_FUTURE_COM)
     values (#{customerId,jdbcType=VARCHAR}, #{customerName,jdbcType=VARCHAR}, #{customerAbbr,jdbcType=VARCHAR}, 
       #{customerType,jdbcType=VARCHAR}, #{isIssuer,jdbcType=VARCHAR}, #{isAssteManager,jdbcType=VARCHAR}, 
       #{isTruster,jdbcType=VARCHAR}, #{isSaler,jdbcType=VARCHAR}, #{isFinancier,jdbcType=VARCHAR}, 
       #{isGuarantee,jdbcType=VARCHAR}, #{isRatingAgencies,jdbcType=VARCHAR}, #{isPledgor,jdbcType=VARCHAR}, 
       #{isDepositBank,jdbcType=VARCHAR}, #{isInvestAdviser,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
       #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{updateTime,jdbcType=TIMESTAMP}, #{isBroker,jdbcType=VARCHAR}, #{isCounter,jdbcType=VARCHAR},
+      #{isBank,jdbcType=VARCHAR}, #{isFutureCom,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
     insert into MST_CUSTOMER_INFO
@@ -114,6 +120,18 @@
       <if test="updateTime != null">
         UPDATE_TIME,
       </if>
+      <if test="isBroker != null" >
+        IS_BROKER,
+      </if>
+      <if test="isCounter != null" >
+        IS_COUNTER,
+      </if>
+      <if test="isBank != null" >
+        IS_BANK,
+      </if>
+      <if test="isFutureCom != null" >
+        IS_FUTURE_COM,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="customerId != null">
@@ -173,6 +191,18 @@
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
+        <if test="isBroker != null" >
+            #{isBroker,jdbcType=VARCHAR},
+        </if>
+        <if test="isCounter != null" >
+            #{isCounter,jdbcType=VARCHAR},
+        </if>
+        <if test="isBank != null" >
+            #{isBank,jdbcType=VARCHAR},
+        </if>
+        <if test="isFutureCom != null" >
+            #{isFutureCom,jdbcType=VARCHAR},
+        </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
@@ -232,6 +262,18 @@
       <if test="updateTime != null">
         UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="isBroker != null" >
+        IS_BROKER = #{isBroker,jdbcType=VARCHAR},
+      </if>
+      <if test="isCounter != null" >
+        IS_COUNTER = #{isCounter,jdbcType=VARCHAR},
+      </if>
+      <if test="isBank != null" >
+        IS_BANK = #{isBank,jdbcType=VARCHAR},
+      </if>
+      <if test="isFutureCom != null" >
+        IS_FUTURE_COM = #{isFutureCom,jdbcType=VARCHAR},
+      </if>
     </set>
     where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
   </update>
@@ -254,7 +296,11 @@
       CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
       CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
       UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        IS_BROKER = #{isBroker,jdbcType=VARCHAR},
+        IS_COUNTER = #{isCounter,jdbcType=VARCHAR},
+        IS_BANK = #{isBank,jdbcType=VARCHAR},
+        IS_FUTURE_COM = #{isFutureCom,jdbcType=VARCHAR}
     where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
   </update>
   
@@ -276,14 +322,15 @@
             IS_GUARANTEE, IS_RATING_AGENCIES, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
             UPDATE_TIME, IS_PLEDGOR, IS_DEPOSIT_BANK, 
-            IS_INVEST_ADVISER)
+            IS_INVEST_ADVISER, IS_BROKER, IS_COUNTER, IS_BANK, IS_FUTURE_COM)
         values (#{customerId,jdbcType=VARCHAR}, #{customerName,jdbcType=VARCHAR}, #{customerAbbr,jdbcType=VARCHAR}, 
             #{customerType,jdbcType=VARCHAR}, #{isIssuer,jdbcType=VARCHAR}, #{isAssteManager,jdbcType=VARCHAR}, 
             #{isTruster,jdbcType=VARCHAR}, #{isSaler,jdbcType=VARCHAR}, #{isFinancier,jdbcType=VARCHAR}, 
             #{isGuarantee,jdbcType=VARCHAR}, #{isRatingAgencies,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
             #{updateTime,jdbcType=TIMESTAMP}, #{isPledgor,jdbcType=VARCHAR}, #{isDepositBank,jdbcType=VARCHAR}, 
-            #{isInvestAdviser,jdbcType=VARCHAR})
+            #{isInvestAdviser,jdbcType=VARCHAR},#{isBroker,jdbcType=VARCHAR},#{isCounter,jdbcType=VARCHAR}
+            ,#{isBank,jdbcType=VARCHAR},#{isFutureCom,jdbcType=VARCHAR})
     </insert>
     
     <delete id="deletAllData">
@@ -319,7 +366,11 @@
 			sysdate CREATE_TIME,
 			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
 			sysdate UPDATE_TIME,
-			#{item.customerId,jdbcType=VARCHAR} CUSTOMER_ID
+            #{item.isBroker,jdbcType=VARCHAR} IS_BROKER,
+            #{item.isCounter,jdbcType=VARCHAR} IS_COUNTER,
+            #{item.isBank,jdbcType=VARCHAR} IS_BANK,
+            #{item.isFutureCom,jdbcType=VARCHAR} IS_FUTURE_COM,
+            #{item.customerId,jdbcType=VARCHAR} CUSTOMER_ID
 			FROM
 			DUAL
 		</foreach>
@@ -346,8 +397,12 @@
 		CREATE_DEPT = TEMP.CREATE_DEPT,
 		CREATE_TIME = TEMP.CREATE_TIME,
 		UPDATE_USER = TEMP.UPDATE_USER,
-		UPDATE_TIME = TEMP.UPDATE_TIME
-		<!-- 未匹配到这插入 -->
+		UPDATE_TIME = TEMP.UPDATE_TIME,
+        IS_BROKER = TEMP.IS_BROKER,
+        IS_COUNTER = TEMP.IS_COUNTER,
+        IS_BANK = TEMP.IS_BANK,
+        IS_FUTURE_COM = TEMP.IS_FUTURE_COM
+        <!-- 未匹配到这插入 -->
 		WHEN NOT MATCHED THEN INSERT
 		(CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_ABBR,
 		CUSTOMER_TYPE, IS_ISSUER, IS_ASSTE_MANAGER,
@@ -355,13 +410,15 @@
 		IS_GUARANTEE, IS_RATING_AGENCIES, CREATE_USER,
 		CREATE_DEPT, CREATE_TIME, UPDATE_USER,
 		UPDATE_TIME, IS_PLEDGOR, IS_DEPOSIT_BANK,
-		IS_INVEST_ADVISER)
+		IS_INVEST_ADVISER, IS_BROKER, IS_COUNTER,
+        IS_BANK, IS_FUTURE_COM)
 		values (TEMP.CUSTOMER_ID, TEMP.CUSTOMER_NAME, TEMP.CUSTOMER_ABBR,
 		TEMP.CUSTOMER_TYPE, TEMP.IS_ISSUER, TEMP.IS_ASSTE_MANAGER,
 		TEMP.IS_TRUSTER, TEMP.IS_SALER, TEMP.IS_FINANCIER,
 		TEMP.IS_GUARANTEE, TEMP.IS_RATING_AGENCIES, TEMP.CREATE_USER,
 		TEMP.CREATE_DEPT, TEMP.CREATE_TIME, TEMP.UPDATE_USER,
 		TEMP.UPDATE_TIME, TEMP.IS_PLEDGOR, TEMP.IS_DEPOSIT_BANK,
-		TEMP.IS_INVEST_ADVISER)
+		TEMP.IS_INVEST_ADVISER, TEMP.IS_BROKER, TEMP.IS_COUNTER,
+        TEMP.IS_BANK, TEMP.IS_FUTURE_COM)
 	</insert>
 </mapper>

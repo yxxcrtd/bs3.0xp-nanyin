@@ -1,13 +1,29 @@
 package com.joyintech.tams.svreport.interf.chb.investtrade.service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import com.joyintech.framework.base.intf.DataDictItem;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.jdbc.datasource.DataSource;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.BaseInterfService;
+import com.joyintech.tams.common.InterfDefine;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.report.interf.common.constant.InterfConstant;
+import com.joyintech.tams.report.interf.common.constant.InterfConstants;
+import com.joyintech.tams.report.interf.common.constant.InterfMappingConstants;
+import com.joyintech.tams.svreport.interf.chb.assetinfo.service.ChbAssetInfoInterf;
+import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
+import com.joyintech.tams.svreport.interf.chb.investtrade.dao.ChbMstCounterPartyInterfMapper;
+import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -22,19 +38,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.jdbc.datasource.DataSource;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
-import com.joyintech.tams.report.interf.common.constant.InterfConstants;
-import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
-import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
-import com.joyintech.tams.svreport.interf.chb.investtrade.dao.ChbMstCounterPartyInterfMapper;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 功能:资产要素表接口
@@ -47,7 +53,7 @@ import com.joyintech.tams.svreport.interf.chb.investtrade.dao.ChbMstCounterParty
 @SuppressWarnings("rawtypes")
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ChbMstCounterPartyInterf  extends BaseService{
+public class ChbMstCounterPartyInterf  extends BaseInterfService {
 	
 	/**
 	 * 日志
@@ -74,18 +80,47 @@ public class ChbMstCounterPartyInterf  extends BaseService{
      * void
      */
     public Map<String,List<String>> generateCounterPartyInfoData(Date batchDate,List<String> prodList,boolean isSynchronizeTask) {
-		logger.debug("上游交易对手信息入库:----开始------" +  df.format(new Date()));	
-    	// 用于返回的数据
-    	Map<String,List<String>> mapPara = new HashMap<String,List<String>>();    	
-    	List<String> tradenoList = new ArrayList<String>(); 
-    	// 切换数据源查询信息
-		Date lastUpdatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.中债交易对手信息接口.getInterId());	
-    	//查询信息
-    	ChbMstCounterPartyInterf chbMstCounterPartyInterf =  SpringContextUtil.getBean(ChbMstCounterPartyInterf.class);
-		logger.debug("上游交易对手信息查询:----开始------" +  df.format(new Date()));	
-    	// 查询当日新增/更改交易对手信息
-    	List<ChbMstCounterParty> listChbAssetInfo = chbMstCounterPartyInterf.queryCounterPartyByInterfdateBatch(lastUpdatetime,prodList);
-		logger.debug("上游交易对手信息查询:----结束------" +  df.format(new Date()));	
+		logger.debug("上游交易对手信息入库:----开始------" +  df.format(new Date()));
+		List<ChbMstCounterParty> insertDataList = getBusEntity(prodList, batchDate, null, "D");
+		if(CollectionUtils.isNotEmpty(insertDataList)){
+
+			Map<String ,List<ChbMstCounterParty>> mapList = insertDataList.stream().collect(JoyinCollectors.groupingBy(item->item.getRemark()));
+
+			logger.debug("上游交易对手信息插入:----开始------" +  df.format(new Date()));
+			List<ChbMstCounterParty> insertDataListRes =  mapList.get("insertDataList");
+			if(CollectionUtils.isNotEmpty(insertDataListRes)){
+				dealResultCommitSingle(insertDataListRes);
+			}
+			logger.debug("上游交易对手信息插入:----结束------" +  df.format(new Date()));
+
+			logger.debug("上游交易对手信息更新:----开始------" +  df.format(new Date()));
+			List<ChbMstCounterParty> updateDataListRes =  mapList.get("updateDataList");
+			if(CollectionUtils.isNotEmpty(updateDataListRes)){
+				dealUpdateData(updateDataListRes);
+			}
+			logger.debug("上游交易对手信息更新:----结束------" +  df.format(new Date()));
+		}
+
+//    	tradenoList.add(InterfConstants.SVR_TRADENOLIST_ALLDEAL);
+//    	mapPara.put(InterfConstants.SVR_TRADENOLIST, tradenoList);
+		logger.debug("上游交易对手信息入库:----结束------" +  df.format(new Date()));	
+    	return new HashMap<String,List<String>>();
+	}
+
+
+	@Override
+	public List<ChbMstCounterParty> getBusEntity(List<String> prodIdlist, Date date, String institutionCode, String source) {
+		// 用于返回的数据
+		Map<String,List<String>> mapPara = new HashMap<String,List<String>>();
+//		List<String> tradenoList = new ArrayList<String>();
+		// 切换数据源查询信息
+		Date lastUpdatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.中债交易对手信息接口.getInterId());
+		//查询信息
+		ChbMstCounterPartyInterf chbMstCounterPartyInterf =  SpringContextUtil.getBean(ChbMstCounterPartyInterf.class);
+		logger.debug("上游交易对手信息查询:----开始------" +  df.format(new Date()));
+		// 查询当日新增/更改交易对手信息
+		List<ChbMstCounterParty> listChbAssetInfo = chbMstCounterPartyInterf.queryCounterPartyByInterfdateBatch(lastUpdatetime,prodIdlist);
+		logger.debug("上游交易对手信息查询:----结束------" +  df.format(new Date()));
 //		// 登记更新列表
 		List<ChbMstCounterParty> updateDataList = new ArrayList<ChbMstCounterParty>();
 		// 登记插入列表
@@ -93,48 +128,56 @@ public class ChbMstCounterPartyInterf  extends BaseService{
 		//根据counter_id查询重复数据
 		List<List<ChbMstCounterParty>> lists = ListUtils.partition(listChbAssetInfo, 100);
 		List<String> counterId = new ArrayList<String>();
-		for(List<ChbMstCounterParty> sublist : lists){
-			counterId.addAll(chbMstCounterPartyInterfMapper.getExists(sublist));
+		if("D".equals(source)){
+			// TODO 优化
+			for(List<ChbMstCounterParty> sublist : lists){
+				counterId.addAll(chbMstCounterPartyInterfMapper.getExists(sublist));
+			}
 		}
-    	for(ChbMstCounterParty counterParty : listChbAssetInfo){
-    		//新的最后更新时间
-    		if (counterParty.getUpdateTime() != null 
-    				&& lastUpdatetime.compareTo(counterParty.getUpdateTime()) < 0){
-    			lastUpdatetime = counterParty.getUpdateTime();
-    		}
-    		// 填充默认值
+		for(ChbMstCounterParty counterParty : listChbAssetInfo){
+			//新的最后更新时间
+			if (counterParty.getUpdateTime() != null
+					&& lastUpdatetime.compareTo(counterParty.getUpdateTime()) < 0){
+				lastUpdatetime = counterParty.getUpdateTime();
+			}
+			// 填充默认值
 //    		counterParty.setAssetUuid(IDGenerator.generate(36));
 //    		counterParty.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-    		// 数据日期取原始数据日期
+			// 数据日期取原始数据日期
 //    		counterParty.setStatusDate(batchDate);
 //    		counterParty.setOrgCode(CommonUtil.getOrgCode());
 //    		counterParty.setDeptCode(CommonUtil.getDeptCode());
 //    		counterParty.setStatusDate(batchDate);
 //	    		if (chbMstCounterPartyInterfMapper.selectIsExistAssetByAssetCode(counterParty.getAssetCode()) > 0){
-    			if(counterId.contains(counterParty.getCounterId())){
-	    			// 创建人默认system
+			if(counterId.contains(counterParty.getCounterId())){
+				// 创建人默认system
 //		    		counterParty.setUpdateUser(SecurityUtil.getLoginUser().getUid());
-		//        	dto.setCreateUser(SecurityUtil.getLoginUser().getUid());
+				//        	dto.setCreateUser(SecurityUtil.getLoginUser().getUid());
 //		    		counterParty.setUpdateTime(DateUtil.now());
-		    		updateDataList.add(counterParty);
-	    		} else {
-	    			// 创建人默认system
-		    		counterParty.setCreateUser("system");
-		//        	dto.setCreateUser(SecurityUtil.getLoginUser().getUid());
-		    		counterParty.setCreateTime(DateUtil.now());
-		    		counterParty.setUpdateTime(null);
-		    		counterParty.setUpdateUser(null);
-		    		counterParty.setUuid(UUID.randomUUID().toString());
-		    		counterParty.setStatus("E");
-		    		insertDataList.add(counterParty);
-	    		}
-				//是否中央交易对手方：若交易对手二级类型等于“非银行业金融机构”，则中央交易对手方默认为：01 是，否则为空
-    			if(DictCodeListExt2.客户二级类型_非银行业金融机构.getValue().equals(counterParty.getCounterType2())) {
-    				counterParty.setIsCentralCounter(DictCodeListExt2.是否_是.getValue());
-    			}
-    		
-    	}
-//		List<BaseEntity> allData = new ArrayList<BaseEntity>();
+				counterParty.setRemark("updateDataList");
+				updateDataList.add(counterParty);
+			} else {
+				// 创建人默认system
+				counterParty.setCreateUser("system");
+				//        	dto.setCreateUser(SecurityUtil.getLoginUser().getUid());
+				counterParty.setCreateTime(DateUtil.now());
+				counterParty.setUpdateTime(null);
+				counterParty.setUpdateUser(null);
+				counterParty.setUuid(UUID.randomUUID().toString());
+				counterParty.setStatus("E");
+				counterParty.setRemark("insertDataList");
+				insertDataList.add(counterParty);
+			}
+			//是否中央交易对手方：若交易对手二级类型等于“非银行业金融机构”，则中央交易对手方默认为：01 是，否则为空
+			if(DictCodeListExt2.客户二级类型_非银行业金融机构.getValue().equals(counterParty.getCounterType2())) {
+				counterParty.setIsCentralCounter(DictCodeListExt2.是否_是.getValue());
+			}
+
+		}
+		if(lastUpdatetime!=null){
+			ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.中债交易对手信息接口.getInterId(), lastUpdatetime);
+		}
+		//		List<BaseEntity> allData = new ArrayList<BaseEntity>();
 //		if (CollectionUtils.isNotEmpty(updateDataList)) {
 //		allData.addAll(updateDataList);
 //			// 批量更新
@@ -179,19 +222,19 @@ public class ChbMstCounterPartyInterf  extends BaseService{
 //				}
 //			}
 //		}
-		logger.debug("上游交易对手信息插入:----开始------" +  df.format(new Date()));	
-		dealResultCommitSingle(insertDataList);
-		logger.debug("上游交易对手信息插入:----结束------" +  df.format(new Date()));	
-		logger.debug("上游交易对手信息更新:----开始------" +  df.format(new Date()));	
-		dealUpdateData(updateDataList);
-		logger.debug("上游交易对手信息更新:----结束------" +  df.format(new Date()));	
-    	if(lastUpdatetime!=null){
-        	ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.中债交易对手信息接口.getInterId(), lastUpdatetime);;
-    	}
-    	tradenoList.add(InterfConstants.SVR_TRADENOLIST_ALLDEAL);
-    	mapPara.put(InterfConstants.SVR_TRADENOLIST, tradenoList);
-		logger.debug("上游交易对手信息入库:----结束------" +  df.format(new Date()));	
-    	return mapPara;
+		insertDataList.addAll(updateDataList);
+		return insertDataList;
+	}
+
+
+	@Override
+	public Class getEntityClass() {
+		return ChbMstCounterParty.class;
+	}
+
+	@Override
+	public String getFileName() {
+		return InterfDefine.交易对手接口数据.getCode();
 	}
     
     /**

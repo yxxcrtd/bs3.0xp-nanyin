@@ -809,7 +809,7 @@ public class AssetInfoDetailUtil {
      */
     private SvrBussRepOtherInfoDto getSvrBussRepOtherInfoDto(List<ValidMessage> messages,List<String> list,List<String> headList){
         SvrBussRepOtherInfoDto dto = new SvrBussRepOtherInfoDto();
-        dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(headList.indexOf("*所属国家或地区"))));
+        dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(headList.lastIndexOf("*所属国家或地区"))));
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("期限（天）")))) {
             if (CommonUtil.isFloatNumeric(list.get(headList.indexOf("期限（天）")))){
                 dto.setTermDate(new BigDecimal(list.get(headList.indexOf("期限（天）"))));
@@ -846,6 +846,11 @@ public class AssetInfoDetailUtil {
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
             dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
+        //新增资产代码字段 add by tuqirong 2021-12-31 start
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*是否为同业借款")))) {
+            dto.setIsDepositFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("*是否为同业借款"))));
+        }
+        //新增资产代码字段 add by tuqirong 2021-12-31 end
         return dto;
     }
 
@@ -982,6 +987,11 @@ public class AssetInfoDetailUtil {
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
             dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
+        //新增是否为固定收益类字段 add by tuqirong 2021-12-31 start
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("是否为固定收益类")))) {
+            dto.setProfitFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("是否为固定收益类"))));
+        }
+        //新增是否为固定收益类字段 add by tuqirong 2021-12-31 end
         return dto;
     }
 
@@ -1210,6 +1220,14 @@ public class AssetInfoDetailUtil {
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
             dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
+        //新增是否为银行理财产品和产品登记编码字段 add by tuqirong 2021-12-31 start
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("是否为银行理财产品")))) {
+            dto.setFinancialProductFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("是否为银行理财产品"))));
+        }
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("产品登记编码")))) {
+            dto.setProdRegisterCode(list.get(headList.indexOf("产品登记编码")));
+        }
+        //新增是否为银行理财产品和产品登记编码字段 add by tuqirong 2021-12-31 end
 
         return dto;
     }
@@ -1221,7 +1239,7 @@ public class AssetInfoDetailUtil {
      */
     private SvrBussRepQDIIStructureInfoDto getSvrBussRepQDIIStructureInfoDto(List<ValidMessage> messages,List<String> list,List<String> headList){
         SvrBussRepQDIIStructureInfoDto dto = new SvrBussRepQDIIStructureInfoDto();
-        dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(headList.indexOf("*所属国家或地区"))));
+        dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(headList.lastIndexOf("*所属国家或地区"))));
         dto.setContractName(list.get(headList.indexOf("*合约名称")));
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("票面利率%")))) {
             if (CommonUtil.isFloatNumeric(list.get(headList.indexOf("票面利率%")))){
@@ -1314,10 +1332,19 @@ public class AssetInfoDetailUtil {
      */
     private SvrBussQDIISharesInfoDto getSvrBussQDIISharesInfoDto(List<ValidMessage> messages,List<String> list,List<String> headList){
         SvrBussQDIISharesInfoDto dto = new SvrBussQDIISharesInfoDto();
+        //add by tuqirong 2022-01-08 start
+        //由于list集合中存在多个"*所属国家或地区"，为避免获取"*所属国家或地区"位置错误，从第二个"*所属国家或地区"位置开始截取list集合后再获取相应的值
+        int index1 = headList.indexOf("*所属国家或地区");
+        headList = headList.subList(index1 + 1, headList.size());
+        list = list.subList(index1 + 1, list.size());
+        int index2 = headList.indexOf("*所属国家或地区");
+        headList = headList.subList(index2 + 1, headList.size());
+        list = list.subList(index2 + 1, list.size());
+        //add by tuqirong 2022-01-08 end
         dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(headList.indexOf("*所属国家或地区"))));
         dto.setAssetId(list.get(headList.indexOf("*股票/基金代码")));
         dto.setAssetName(list.get(headList.indexOf("*股票/基金名称")));
-        dto.setIssuePartyName(list.get(headList.indexOf("*发行机构")));
+        dto.setIssuePartyName(list.get(headList.lastIndexOf("*发行机构")));
         dto.setIndustryShares2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(headList.indexOf("*行业"))));
         dto.setIndustryShares(dict.get("industry"+dto.getIndustryShares2()));
         dto.setRemark(list.get(headList.indexOf("备注")));
@@ -1342,6 +1369,12 @@ public class AssetInfoDetailUtil {
      */
     private SvrBussRepQDIIdemolitionInfoDto getSvrBussRepQDIIdemolitionInfoDto(List<ValidMessage> messages,List<String> list,List<String> headList){
         SvrBussRepQDIIdemolitionInfoDto dto = new SvrBussRepQDIIdemolitionInfoDto();
+        //add by tuqirong 2022-01-08 start
+        //由于list集合中存在多个"*所属国家或地区"，为避免获取"*所属国家或地区"位置错误，从第一个"*所属国家或地区"位置开始截取list集合后再获取相应的值
+        int index = headList.indexOf("*所属国家或地区");
+        headList = headList.subList(index + 1, headList.size());
+        list = list.subList(index + 1, list.size());
+        //add by tuqirong 2022-01-08 end
         dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(headList.indexOf("*所属国家或地区"))));
         dto.setRivalParty(list.get(headList.indexOf("*对手方")));
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("*年利率%")))) {
@@ -1571,7 +1604,7 @@ public class AssetInfoDetailUtil {
         dto.setPppflag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("*公共PPP"))));
         dto.setBondtostockFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("*是否投向市场化债转股相关产品的部分"))));
         dto.setPrivateFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("投向地方政府融资平台的部分"))));
-        dto.setIsBzhpj(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("是否标准化票据"))));
+        dto.setIsBzhpj(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("是否为标准化票据"))));
         dto.setRemark(list.get(headList.indexOf("备注")));
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类"))) && list.get(headList.indexOf("新人行一级分类")).length()>2){
             dto.setPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
@@ -1584,6 +1617,12 @@ public class AssetInfoDetailUtil {
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
             dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
+        //新增票据代码字段 add by tuqirong 2021-12-31 start
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("票据代码")))) {
+            dto.setBillCode(list.get(headList.indexOf("票据代码")));
+        }
+
+        //新增资票据代码字段 add by tuqirong 2021-12-31 end
         return dto;
     }
 
@@ -1701,6 +1740,8 @@ public class AssetInfoDetailUtil {
         dto.setRepFinanceProj(list.get(headList.indexOf("*融资项目")));
         dto.setRepIndustryLevel2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类,
                 list.get(headList.indexOf("*融资人所属行业"))));
+        dto.setIndustryLevel2Type(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类,
+                list.get(headList.indexOf("*融资人所属行业"))));
         dto.setRepIndustry1(dict.get("industry"+dto.getRepIndustryLevel2()));
         dto.setRepIndustryFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债,
                 list.get(headList.indexOf("*项目是否属于重点监控行业和领域"))));
@@ -1816,6 +1857,11 @@ public class AssetInfoDetailUtil {
         if (StringUtil.isNotEmpty(list.get(77)) && list.get(77).length()>2){
             dto.setPbcAssetType3(list.get(77).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
+        //新增资产代码字段 add by tuqirong 2021-12-31 start
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("资产代码")))) {
+            dto.setRepCreditAssetCode(list.get(headList.indexOf("资产代码")));
+        }
+        //新增资产代码字段 add by tuqirong 2021-12-31 end
         return dto;
     }
 
@@ -1827,6 +1873,7 @@ public class AssetInfoDetailUtil {
     private SvrBussRepDepositInfoDto getSvrBussRepDepositInfoDto(List<ValidMessage> messages,List<String> list,List<String> headList){
         SvrBussRepDepositInfoDto dto = new SvrBussRepDepositInfoDto();
         dto.setRepBankName(list.get(headList.indexOf("资金存入银行")));
+        dto.setBankName(list.get(headList.indexOf("资金存入银行")));
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("*存款金额")))) {
             if (CommonUtil.isFloatNumeric(list.get(headList.indexOf("*存款金额")))){
                 dto.setAmt(new BigDecimal(list.get(headList.indexOf("*存款金额"))));
@@ -1887,6 +1934,11 @@ public class AssetInfoDetailUtil {
                 && list.get(headList.indexOf("新人行三级分类")).length()>2){
             dto.setRepPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
+        //新增字段存款账号 add by tuqirong 2021-12-31 start
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*存款账号")))) {
+            dto.setRepAccountNo(list.get(headList.indexOf("*存款账号")));
+        }
+        //新增字段存款账号 add by tuqirong 2021-12-31 end
         return dto;
     }
 
@@ -2074,6 +2126,7 @@ public class AssetInfoDetailUtil {
         headList.add("*币种");
         headList.add("*资产一级分类");
         headList.add("资金存入银行");
+        headList.add("*存款账号");
         headList.add("*存款金额");
         headList.add("*名称");
         headList.add("*起息日");
@@ -2153,6 +2206,7 @@ public class AssetInfoDetailUtil {
         headList.add("收/受益权类型");
         headList.add("*是否属于买入返售");
         headList.add("*名称");
+        headList.add("资产代码");
         headList.add("*金额");
         headList.add("份额面值");
         headList.add("*起息日");
@@ -2235,6 +2289,8 @@ public class AssetInfoDetailUtil {
         headList.add("*是否为收/受益权");
         headList.add("*是否属于买入返售");
         headList.add("*类型");
+        headList.add("是否为标准化票据");
+        headList.add("票据代码");
         headList.add("*数量");
         headList.add("*合计金额");
         headList.add("*加权剩余期限（天）");
@@ -2245,7 +2301,6 @@ public class AssetInfoDetailUtil {
         headList.add("*公共PPP");
         headList.add("*是否投向市场化债转股相关产品的部分");
         headList.add("投向地方政府融资平台的部分");
-        headList.add("是否标准化票据");
         headList.add("*所属国家或地区");
         headList.add("期限（天）");
         headList.add("*资产价值");
@@ -2277,6 +2332,7 @@ public class AssetInfoDetailUtil {
         headList.add("期限（天）");
         headList.add("*负债规模");
         headList.add(" 利率%");
+        headList.add("*是否为同业借款");
         headList.add("*名称");
         headList.add("*起息日");
         headList.add("*到期日");
@@ -2394,6 +2450,8 @@ public class AssetInfoDetailUtil {
         headList.add("*币种");
         headList.add("*资产一级分类");
         headList.add(" *资管计划名称");
+        headList.add("是否为银行理财产品");
+        headList.add("产品登记编码");
         headList.add("是否由金融资产投资公司发行");
         headList.add("*资管计划发起人机构编码");
         headList.add("资管计划登记编码");
@@ -2480,6 +2538,7 @@ public class AssetInfoDetailUtil {
         headList.add("*到期日");
         headList.add("*行业");
         headList.add("*登记备案机构");
+        headList.add("是否为固定收益类");
         headList.add("是否属于政府投资基金");
         headList.add("政府投资基金投向");
         headList.add("是否由金融资产投资公司发行");

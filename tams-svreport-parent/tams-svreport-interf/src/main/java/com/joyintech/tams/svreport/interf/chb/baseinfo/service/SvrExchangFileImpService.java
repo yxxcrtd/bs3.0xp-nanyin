@@ -158,7 +158,7 @@ public class SvrExchangFileImpService extends FileImpService {
 			}
 			// 任务结束，停止线程池的所有线程
 			service.shutdown();
-			Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/MST_EXCHANGE_QUOTE/"), new String[] { "tmp" }, false);
+			Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/MST_EXCHARGE_QUOTE/"), new String[] { "tmp" }, false);
 			List<String> content = new ArrayList<>(listData.size());
 			String result = "";
 			for (File f : files) {
@@ -184,7 +184,7 @@ public class SvrExchangFileImpService extends FileImpService {
 				// db2数据库处理
 				if (CollectionUtils.isNotEmpty(content)) {
 					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/MST_EXCHANGE_QUOTE/", content,
+						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/MST_EXCHARGE_QUOTE/", content,
 								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
 								reportSqlldrDatabaseName);
 					} catch (IOException | InterruptedException e) {
@@ -198,7 +198,7 @@ public class SvrExchangFileImpService extends FileImpService {
 				if (CollectionUtils.isNotEmpty(content)) {
 					try {
 						logger.debug("sqlloader入库开始");
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/MST_EXCHANGE_QUOTE/", content,
+						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/MST_EXCHARGE_QUOTE/", content,
 								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
 								reportSqlldrDatabaseName);
 						logger.debug("sqlloader入库结束");
@@ -256,7 +256,7 @@ public class SvrExchangFileImpService extends FileImpService {
 			if (tmpPath == null) {
 				insertExchangeInfo(listNE);
 			} else {
-				createDataFile(tmpPath + "/MST_EXCHANGE_QUOTE/MST_EXCHANGE_QUOTE", listNE, table.getColumns());
+				createDataFile(tmpPath + "/MST_EXCHARGE_QUOTE/MST_EXCHARGE_QUOTE", listNE, table.getColumns());
 			}
 			return (CollectionUtils.isNotEmpty(listNE));
 		}

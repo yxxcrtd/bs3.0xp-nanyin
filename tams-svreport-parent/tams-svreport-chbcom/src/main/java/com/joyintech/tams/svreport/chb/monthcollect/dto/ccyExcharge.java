@@ -17,6 +17,16 @@ public class ccyExcharge extends BaseEntity {
    BigDecimal lowPrice;
 //中间价
    BigDecimal midPrice;
+   //汇率比例
+   BigDecimal charge;
+
+    public BigDecimal getCharge() {
+        return charge;
+    }
+
+    public void setCharge(BigDecimal charge) {
+        this.charge = charge;
+    }
 
     public String getExchargeCode() {
         return exchargeCode;

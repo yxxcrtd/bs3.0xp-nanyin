@@ -1,10 +1,12 @@
 package com.joyintech.tams.svreport.interf.chb.investmentsinfo.service;
 
-import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.BaseInterfService;
+import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.common.base.entity.ChbPrdPeriodYield;
 import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
@@ -37,7 +39,7 @@ import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ChbProdInfoRateInterf extends BaseService {
+public class ChbProdInfoRateInterf extends BaseInterfService {
     /**
      * 日志
      */
@@ -57,6 +59,22 @@ public class ChbProdInfoRateInterf extends BaseService {
      * @param batchDate
      */
     public List<String> generateProdInfoRateData(Date batchDate, List<String> prodidList, boolean isSynchronizeTask){
+        // 查询数据
+        List<ChbProdInfoRate> prodInfoRatelist = getBusEntity(prodidList,batchDate, null, "D");
+        // 入库
+        if(!StringUtil.isEmptyList(prodInfoRatelist)){
+                //先删后插
+    //		deleteBatch(periodyieldlist);
+    //		insertBatch(periodyieldlist);
+                mergeIntoData(prodInfoRatelist);
+                //批量插入(先删再插)        }
+        }
+        return new ArrayList<String>();
+
+    }
+
+    @Override
+    public List<ChbProdInfoRate> getBusEntity(List<String> prodIdlist, Date date, String institutionCode, String source) {
         //获取数据进入CHB_PRD_RATE
         //产品代码集合
         List<String> prodList = new ArrayList<String>();
@@ -67,9 +85,9 @@ public class ChbProdInfoRateInterf extends BaseService {
         //单位净值取值来源读系统参数 01:估值核算系统，02:信息批露系统，03:第三方
 //        String valueSource = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_NET_UNIT_VALUE_SOURCE);
 //        if("01".equals(valueSource)){
-            //单位净值取自估值核算系统
-            ChbProdInfoRateInterf chbProdInfoRateInterf2 =  SpringContextUtil.getBean(ChbProdInfoRateInterf.class);
-            prodInfoRatelist = chbProdInfoRateInterf2.selectPrdPeriodyieldData(lastUpdatetime,prodidList);
+        //单位净值取自估值核算系统
+        ChbProdInfoRateInterf chbProdInfoRateInterf2 =  SpringContextUtil.getBean(ChbProdInfoRateInterf.class);
+        prodInfoRatelist = chbProdInfoRateInterf2.selectPrdPeriodyieldData(lastUpdatetime, prodIdlist);
 //        }else if("02".equals(valueSource)){
 //            //TODO 单位净值取自信息批露系统
 //
@@ -96,7 +114,9 @@ public class ChbProdInfoRateInterf extends BaseService {
                 //数据状态
                 dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
                 //数据来源
-                dto.setDataSource("DB");
+                if("D".equals(source)){
+                    dto.setDataSource("16");
+                }
                 if(dto.getUpdateTime().compareTo(lastUpdatetime) > 0){
                     lastUpdatetime = dto.getUpdateTime();
                 }
@@ -104,16 +124,21 @@ public class ChbProdInfoRateInterf extends BaseService {
 
             }
         }
-        //先删后插
-//		deleteBatch(periodyieldlist);
-//		insertBatch(periodyieldlist);
-        mergeIntoData(prodInfoRatelist);
-        //批量插入(先删再插)
         //新的最后更新时间
         if(lastUpdatetime!=null){
             ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.产品利率基本信息接口.getInterId(), lastUpdatetime);;
         }
-        return prodList;
+        return prodInfoRatelist;
+    }
+
+    @Override
+    public Class getEntityClass() {
+        return ChbProdInfoRate.class;
+    }
+
+    @Override
+    public String getFileName() {
+        return InterfDefine.产品利率基本信息接口数据.getCode();
     }
 
     /**

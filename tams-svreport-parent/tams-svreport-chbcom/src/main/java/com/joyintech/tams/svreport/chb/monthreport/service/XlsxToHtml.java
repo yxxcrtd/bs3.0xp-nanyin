@@ -130,8 +130,7 @@ public class XlsxToHtml {
 
         StringBuffer sb = new StringBuffer();
         evaluator=wb.getCreationHelper().createFormulaEvaluator();
-        for(int i=0;i<3;i++){
-            Sheet sheet = wb.getSheetAt(i);//获取第一个Sheet的内容
+            Sheet sheet = wb.getSheetAt(0);//获取第一个Sheet的内容
             int lastRowNum = sheet.getLastRowNum();
             Map<String, String> map[] = getRowSpanColSpanMap(sheet);
             sb.append("<table style='border-collapse:collapse;' width='100%'>");
@@ -187,8 +186,6 @@ public class XlsxToHtml {
             }
 
             sb.append("</table>");
-
-        }
 
         return sb.toString();
     }

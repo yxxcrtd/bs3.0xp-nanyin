@@ -1,14 +1,24 @@
 package com.joyintech.tams.svreport.interf.chb.assetbasis.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.jdbc.datasource.DataSource;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.BaseInterfService;
+import com.joyintech.tams.common.InterfDefine;
+import com.joyintech.tams.common.base.dao.ChbAssetsBasisDataMapper;
+import com.joyintech.tams.common.base.entity.ChbAssetsBasisData;
+import com.joyintech.tams.common.base.entity.ChbAstValue;
+import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.svreport.interf.chb.assetbasis.dao.ChbAssetBasisInterfMapper;
+import com.joyintech.tams.svreport.interf.chb.assetbasis.dao.ChbAstValInterfMapper;
+import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.ResultContext;
@@ -22,21 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.jdbc.datasource.DataSource;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.tams.common.base.dao.ChbAssetsBasisDataMapper;
-import com.joyintech.tams.common.base.entity.ChbAssetsBasisData;
-import com.joyintech.tams.common.base.entity.ChbAstValue;
-import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.svreport.interf.chb.assetbasis.dao.ChbAssetBasisInterfMapper;
-import com.joyintech.tams.svreport.interf.chb.assetbasis.dao.ChbAstValInterfMapper;
-import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
+import java.math.BigDecimal;
+import java.util.*;
 
 
 /**
@@ -47,7 +44,7 @@ import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
 @SuppressWarnings("rawtypes")
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class SvrAssetBasisInterf extends BaseService{
+public class SvrAssetBasisInterf extends BaseInterfService {
 	@Autowired
 	private ChbAssetBasisInterfMapper chbAssetBasisInterfMapper;
 	@Autowired
@@ -60,44 +57,58 @@ public class SvrAssetBasisInterf extends BaseService{
 	 * 日志
 	 */
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	
-    public List<Date> generateData(Date batchTime) {	
-    	logger.info("资产基础指标数据接口导入批处理开始");
-    	long startTime=System.currentTimeMillis();
-    	SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
-    	//批量插入mapper
-    	ChbAssetsBasisDataMapper batchMapper =  session.getMapper(ChbAssetsBasisDataMapper.class);
-    	//通道投资资产管理产品是否穿透报送
-    	String isChlBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
-    	String isChlBtmPbc = SvrDataUtil.getSysParam(SVReportGlobalConstant.PBC_IS_CHL_BTM);
+
+	public List<Date> generateData(Date batchTime) {
+		logger.info("资产基础指标数据接口导入批处理开始");
+
+		long startTime=System.currentTimeMillis();
+
+		// 查询数据
+		List<ChbAssetsBasisData> listChbAssetsBasisData = getBusEntity(null,batchTime, null, "D");
+		// 入库
+		if(!StringUtil.isEmptyList(listChbAssetsBasisData)){
+			insertData2(listChbAssetsBasisData);
+		}
+		logger.info("资产基础指标数据接口导入批处理结束。用时："+(System.currentTimeMillis()-startTime)/1000+"s");
+		return new ArrayList<Date>();
+	}
+
+	@Override
+	public List<ChbAssetsBasisData> getBusEntity(List<String> prodIdlist, Date batchDate, String institutionCode, String source) {
+		long startTime=System.currentTimeMillis();
+		//通道投资资产管理产品是否穿透报送
+		String isChlBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
+		String isChlBtmPbc = SvrDataUtil.getSysParam(SVReportGlobalConstant.PBC_IS_CHL_BTM);
 //    	String isCalLoadRate =  CacheUtil.getSysParam("IS_CAL_LOADRATE");
-    	SvrAssetBasisInterf svrAssetBasisInterf2 =  SpringContextUtil.getBean(SvrAssetBasisInterf.class);
-    	Date lastUpdatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.资产基础指标信息接口.getInterId());
-    	List<Date> isUpdated = svrAssetBasisInterf2.isUpdated(lastUpdatetime);
-    	String channelAssetsMdateConf = SvrDataUtil.getSysParam(SVReportGlobalConstant.CHANNEL_ASSETS_MDATE_CONF);
-    	Integer channelAssetsMdates = Integer.parseInt(SvrDataUtil.getSysParam(SVReportGlobalConstant.CHANNEL_ASSETS_MDATES) == null ?
-    			"0" : SvrDataUtil.getSysParam(SVReportGlobalConstant.CHANNEL_ASSETS_MDATES));
-    	String imfAssetsMdateConf = SvrDataUtil.getSysParam(SVReportGlobalConstant.IMF_ASSETS_MDATE_CONF);
-    	Integer imfAssetsMdates = Integer.parseInt(SvrDataUtil.getSysParam(SVReportGlobalConstant.IMF_ASSETS_MDATES) == null ?
-    			"0" : SvrDataUtil.getSysParam(SVReportGlobalConstant.IMF_ASSETS_MDATES));
-    	List<String> imfAssetIdList =  chbAssetBasisInterfMapper.queryAllImfAssetIds();
-    	
-    	//债券资产资产到期日配置参数
-    	String seAssetsMdateConf = SvrDataUtil.getSysParam(SVReportGlobalConstant.SEC_ASSETS_MDATE_CONF);
-    	//查询所有有效的行权债代码
-    	List<String> secXQAssetIdList =  chbAssetBasisInterfMapper.queryAllSecXQAssetIds();
-    	try{
-    		int count = 0;
-    		for(Date date :isUpdated){
-	        	//查询信息
-    			List<ChbAssetsBasisData> listChbAssetsBasisData = new ArrayList<ChbAssetsBasisData>();
+		SvrAssetBasisInterf svrAssetBasisInterf2 =  SpringContextUtil.getBean(SvrAssetBasisInterf.class);
+		Date lastUpdatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.资产基础指标信息接口.getInterId());
+		List<Date> isUpdated = svrAssetBasisInterf2.isUpdated(lastUpdatetime);
+		String channelAssetsMdateConf = SvrDataUtil.getSysParam(SVReportGlobalConstant.CHANNEL_ASSETS_MDATE_CONF);
+		Integer channelAssetsMdates = Integer.parseInt(SvrDataUtil.getSysParam(SVReportGlobalConstant.CHANNEL_ASSETS_MDATES) == null ?
+				"0" : SvrDataUtil.getSysParam(SVReportGlobalConstant.CHANNEL_ASSETS_MDATES));
+		String imfAssetsMdateConf = SvrDataUtil.getSysParam(SVReportGlobalConstant.IMF_ASSETS_MDATE_CONF);
+		Integer imfAssetsMdates = Integer.parseInt(SvrDataUtil.getSysParam(SVReportGlobalConstant.IMF_ASSETS_MDATES) == null ?
+				"0" : SvrDataUtil.getSysParam(SVReportGlobalConstant.IMF_ASSETS_MDATES));
+		List<String> imfAssetIdList =  chbAssetBasisInterfMapper.queryAllImfAssetIds();
+
+		//债券资产资产到期日配置参数
+		String seAssetsMdateConf = SvrDataUtil.getSysParam(SVReportGlobalConstant.SEC_ASSETS_MDATE_CONF);
+		//查询所有有效的行权债代码
+		List<String> secXQAssetIdList =  chbAssetBasisInterfMapper.queryAllSecXQAssetIds();
+		List<ChbAssetsBasisData> listChbAssetsBasisDataAll = new ArrayList<ChbAssetsBasisData>();
+
+
+			int count = 0;
+			for(Date date :isUpdated){
+				//查询信息
+				List<ChbAssetsBasisData> listChbAssetsBasisData = new ArrayList<ChbAssetsBasisData>();
 //    			List<ChbAssetsBasisData> listChbAssetsBasisDataNotBtm = new ArrayList<ChbAssetsBasisData>();
 //    			List<ChbAssetsBasisData> listChbAssetsBasisDataNotBtmSp = new ArrayList<ChbAssetsBasisData>();
 //    			Map<String,ChbAssetsBasisData> spAssetsBasisDataMap=new HashMap<String,ChbAssetsBasisData>();
 //    			Map<String,ChbAssetsBasisData> listChbAssetsBasisDataNotBtmMap=new HashMap<String,ChbAssetsBasisData>();
-    			if("01".equals(isChlBtm)||"01".equals(isChlBtmPbc)){
-    				listChbAssetsBasisData = svrAssetBasisInterf2.getDataFromInterf(DateUtil.format(date));
-    			}
+				if("01".equals(isChlBtm)||"01".equals(isChlBtmPbc)){
+					listChbAssetsBasisData = svrAssetBasisInterf2.getDataFromInterf(DateUtil.format(date));
+				}
 //    			if("02".equals(isChlBtm)||"02".equals(isChlBtmPbc)){
 //    				listChbAssetsBasisDataNotBtm = svrAssetBasisInterf2.getChlBtmDataFromInterf(DateUtil.format(date));
 //    				listChbAssetsBasisDataNotBtmMap=listChbAssetsBasisDataNotBtm.stream().collect(
@@ -107,57 +118,70 @@ public class SvrAssetBasisInterf extends BaseService{
 //    				spAssetsBasisDataMap=listChbAssetsBasisDataNotBtmSp.stream().collect(
 //    		                JoyinCollectors.toMap(
 //    		                        x -> x.getProdId() + GlobalConstant.UNDER_LINE + x.getAssetId(), x -> x));
-//    		                       
+//
 //    			}
-    			
-	    		// 生成日期为空防止要素（维护）变动更新日期
-	        	for(ChbAssetsBasisData data : listChbAssetsBasisData){
-	        		data.setValId(IDGenerator.generate(36));
-	        		data.setCreateUser("system");
-	        		data.setUpdateUser("system");
-	        		data.setStatus("E");
-	        		data.setDataSource("16");
-	        		// 【资产基础指标数据接入】时，若通道不穿透报送，在接入通道时，MDATE的取值根据参数判断
-	        		if ("02".equals(isChlBtm) && "02".equals(channelAssetsMdateConf)) {
-	        			Date valueDate = data.getValueDate();
-	        			if (null != valueDate) {
-	        				Date mDate = DateUtil.addDay(valueDate, channelAssetsMdates);
-	        				data.setMdate(mDate);
-	        			}
-	        		}
-	        		// 【资产基础指标数据接入】时，判断若资产是货币基金资产, MDATE的取值根据参数判断
-	        		if ("02".equals(imfAssetsMdateConf) && imfAssetIdList.contains(data.getAssetId())) {
-	        			Date valueDate = data.getValueDate();
-	        			if (null != valueDate) {
-	        				Date mDate = DateUtil.addDay(valueDate, imfAssetsMdates);
-	        				data.setMdate(mDate);
-	        			}
-	        		}
-	        		
-	        		// 【资产基础指标数据接入】时，判断资产是否行权债, MDATE的取值根据参数判断
-	        		if ("02".equals(seAssetsMdateConf) && secXQAssetIdList.contains(data.getAssetId())) {
-	        			//取最近的行权日，取不到为原来资产的到期日
-	        			String secid = "F01_"+data.getAssetId();
-	        			Date valueDate = data.getValueDate();
-	        			Date exerciseDate =  chbAssetBasisInterfMapper.queryExerciseDate(secid,valueDate);
-	        			if (null != exerciseDate) {
-	        				data.setMdate(exerciseDate);
-	        			}
-	        		}
+//				listChbAssetsBasisData = svrAssetBasisInterf2.getDataFromInterf(DateUtil.format(date));
+//				List<ChbAssetsBasisData> listIntadjexpAdd = chbAssetBasisInterfMapper.selectIntadjexpAdd(DateUtil.format(date));
 
-	        		//上市流通交易，上市标的修改成发行标的资产代码
-	        		String pulicAssetId = chbAssetBasisInterfMapper.getPulicAssetId(data.getAssetId());
-	        		if(StringUtil.isNotEmpty(pulicAssetId)){
+				// 生成日期为空防止要素（维护）变动更新日期
+				for(ChbAssetsBasisData data : listChbAssetsBasisData){
+
+//					// 增加利息调整字段
+//					listIntadjexpAdd.stream().forEach(item ->{
+//						if(data.getAssetId().equals(item.getAssetId()) &&  data.getProdId().equals(item.getProdId())){
+//							data.setTdyIntadjexpAdd(item.getTdyIntadjexpAdd());
+//						}
+//					});
+
+					data.setValId(IDGenerator.generate(36));
+					data.setCreateUser("system");
+					data.setUpdateUser("system");
+					data.setStatus("E");
+					//数据来源
+					if("D".equals(source)){
+						data.setDataSource("16");
+					}
+					// 【资产基础指标数据接入】时，若通道不穿透报送，在接入通道时，MDATE的取值根据参数判断
+					if ("02".equals(isChlBtm) && "02".equals(channelAssetsMdateConf)) {
+						Date valueDate = data.getValueDate();
+						if (null != valueDate) {
+							Date mDate = DateUtil.addDay(valueDate, channelAssetsMdates);
+							data.setMdate(mDate);
+						}
+					}
+					// 【资产基础指标数据接入】时，判断若资产是货币基金资产, MDATE的取值根据参数判断
+					if ("02".equals(imfAssetsMdateConf) && imfAssetIdList.contains(data.getAssetId())) {
+						Date valueDate = data.getValueDate();
+						if (null != valueDate) {
+							Date mDate = DateUtil.addDay(valueDate, imfAssetsMdates);
+							data.setMdate(mDate);
+						}
+					}
+
+					// 【资产基础指标数据接入】时，判断资产是否行权债, MDATE的取值根据参数判断
+					if ("02".equals(seAssetsMdateConf) && secXQAssetIdList.contains(data.getAssetId())) {
+						//取最近的行权日，取不到为原来资产的到期日
+						String secid = "F01_"+data.getAssetId();
+						Date valueDate = data.getValueDate();
+						Date exerciseDate =  chbAssetBasisInterfMapper.queryExerciseDate(secid,valueDate);
+						if (null != exerciseDate) {
+							data.setMdate(exerciseDate);
+						}
+					}
+
+					//上市流通交易，上市标的修改成发行标的资产代码
+					String pulicAssetId = chbAssetBasisInterfMapper.getPulicAssetId(data.getAssetId());
+					if(StringUtil.isNotEmpty(pulicAssetId)){
 						data.setAssetId(pulicAssetId);
 					}
 //
-	        		StringBuffer keyVFinal = new StringBuffer();
-	            	keyVFinal.append(data.getProdId()).append(data.getAssetId()).append(data.getValueDate());
-	            	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
-	            	data.setMd5primarykey(md5Key);
-	            	if(data.getUpdateTime().compareTo(lastUpdatetime)>0)
-	            		lastUpdatetime =data.getUpdateTime();
-	        	}
+					StringBuffer keyVFinal = new StringBuffer();
+					keyVFinal.append(data.getProdId()).append(data.getAssetId()).append(data.getValueDate());
+					String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
+					data.setMd5primarykey(md5Key);
+					if(data.getUpdateTime().compareTo(lastUpdatetime)>0)
+						lastUpdatetime =data.getUpdateTime();
+				}
 //	        	Map<String,ChbAssetsBasisData> listChbAssetsBasisDataNotBtmMapResult=new HashMap<String,ChbAssetsBasisData>();
 //	        	for(String key:listChbAssetsBasisDataNotBtmMap.keySet()){
 //	        		ChbAssetsBasisData data=listChbAssetsBasisDataNotBtmMap.get(key);
@@ -183,7 +207,7 @@ public class SvrAssetBasisInterf extends BaseService{
 //	        				data.setMdate(mDate);
 //	        			}
 //	        		}
-//	        		
+//
 //	        		// 【资产基础指标数据接入】时，判断资产是否行权债, MDATE的取值根据参数判断
 //	        		if ("02".equals(seAssetsMdateConf) && secXQAssetIdList.contains(data.getAssetId())) {
 //	        			//取最近的行权日，取不到为原来资产的到期日
@@ -194,7 +218,7 @@ public class SvrAssetBasisInterf extends BaseService{
 //	        				data.setMdate(exerciseDate);
 //	        			}
 //	        		}
-//	        		
+//
 //	        		StringBuffer keyVFinal = new StringBuffer();
 //	            	keyVFinal.append(data.getProdId()).append(data.getAssetId()).append(data.getValueDate());
 //	            	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
@@ -219,38 +243,24 @@ public class SvrAssetBasisInterf extends BaseService{
 //	        			listChbAssetsBasisDataNotBtmMapResult.put(key,data);
 //	        		}
 //	        	}
-	        	//先删后插
-	        	String dateStr = DateUtil.format(date);
-	        	logger.info("删除"+dateStr+"日的资产基础指标数据，开始");
-	        	ChbAssetsBasisData param = new ChbAssetsBasisData();
-	        	param.setValueDate(date);
-	        	chbAssetBasisInterfMapper.deleteData(param);
-//	        	chbAssetBasisInterfMapper.deleteDataNoBtm(param);
-	        	logger.info("删除"+dateStr+"日的资产基础指标数据，结束");
-	        	logger.info("插入"+dateStr+"日的资产基础指标数据，开始");
-	        	for(ChbAssetsBasisData data : listChbAssetsBasisData){
+				//先删后插
+				for(ChbAssetsBasisData data : listChbAssetsBasisData){
 	        		/* 当前持仓、当日成本、当日公允价值变动、当日累计应计利息余额、当日累计应计利息余额
 	        		/全为空或者为0时不入库 */
-	        		if (isNullAmt(data.getPosAmt()) 
-	        				&& isNullAmt(data.getTdyCostAmt())
-	        				&& isNullAmt(data.getTdyFloatIngpl())
-	        				&& isNullAmt(data.getTdyIntincexp())
-	        				&& isNullAmt(data.getDelayPayAmt())) {
-	        			continue;
-	        		}
-	        		batchMapper.insert(data);
-	        		count++;
-	        		if(count%1000==0){
-	        			logger.debug("已插入"+count+"条"+DateUtil.getCurrentDateTime());
-	            		session.commit();
-	            		session.clearCache();
-	        		}
-	        	}
+					if (isNullAmt(data.getPosAmt())
+							&& isNullAmt(data.getTdyCostAmt())
+							&& isNullAmt(data.getTdyFloatIngpl())
+							&& isNullAmt(data.getTdyIntincexp())
+							&& isNullAmt(data.getDelayPayAmt())) {
+						continue;
+					}
+					listChbAssetsBasisDataAll.add(data);
+				}
 //	        	for(String key : listChbAssetsBasisDataNotBtmMapResult.keySet()){
 //	        		ChbAssetsBasisData data=listChbAssetsBasisDataNotBtmMapResult.get(key);
 //	        		/* 当前持仓、当日成本、当日公允价值变动、当日累计应计利息余额、当日累计应计利息余额
 //	        		/全为空或者为0时不入库 */
-//	        		if (isNullAmt(data.getPosAmt()) 
+//	        		if (isNullAmt(data.getPosAmt())
 //	        				&& isNullAmt(data.getTdyCostAmt())
 //	        				&& isNullAmt(data.getTdyFloatIngpl())
 //	        				&& isNullAmt(data.getTdyIntincexp())
@@ -264,28 +274,33 @@ public class SvrAssetBasisInterf extends BaseService{
 //	            		session.commit();
 //	            		session.clearCache();
 //	        		}
-//	        	}	
-	        	logger.debug("插入"+dateStr+"日的资产基础指标数据，结束");
+//	        	}
+			}
 
-	        }
-    	
-    		session.commit();
-    		session.clearCache();
-    	}finally {
-    		session.close();
-    	}
-    		
 //    	for(Date date :isUpdated){
 //        	//生成估值信息
 //        	genAssetValueInfo(date);
 //    	}
-    	//新的最后更新时间
-    	if(lastUpdatetime!=null){
-    		ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.资产基础指标信息接口.getInterId(), lastUpdatetime);
-    	}
-    	logger.info("资产基础指标数据接口导入批处理结束。用时："+(System.currentTimeMillis()-startTime)/1000+"s");
-    	return isUpdated;
+		//新的最后更新时间
+		if(lastUpdatetime!=null){
+			ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.资产基础指标信息接口.getInterId(), lastUpdatetime);
+		}
+		logger.info("资产基础指标数据接口导入批处理结束。用时："+(System.currentTimeMillis()-startTime)/1000+"s");
+
+		return listChbAssetsBasisDataAll;
 	}
+
+		@Override
+	public Class getEntityClass() {
+		return ChbAssetsBasisData.class;
+	}
+
+	@Override
+	public String getFileName() {
+		return InterfDefine.资产基础指标数据.getCode();
+	}
+
+
     
 	/**
 	 * 根据资产基础指标生成资产估值信息
@@ -391,5 +406,42 @@ public class SvrAssetBasisInterf extends BaseService{
 			flag = true;
 		} 
 		return flag;
+	}
+
+	private void insertData2(List<ChbAssetsBasisData> listChbAssetsBasisData) {
+		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+		//批量插入mapper
+		ChbAssetsBasisDataMapper batchMapper =  session.getMapper(ChbAssetsBasisDataMapper.class);
+
+		Map<Date, List<ChbAssetsBasisData>> listChbAssetsBasisDataMap =
+				listChbAssetsBasisData.stream().collect(JoyinCollectors.groupingBy(chbAssetsBasisData -> chbAssetsBasisData.getValueDate()));
+		int count = 0;
+		try {
+			for (Date date : listChbAssetsBasisDataMap.keySet()) {
+
+				String dateStr = DateUtil.format(date);
+				logger.info("删除" + dateStr + "日的资产基础指标数据，开始");
+				ChbAssetsBasisData param = new ChbAssetsBasisData();
+				param.setValueDate(date);
+				chbAssetBasisInterfMapper.deleteData(param);
+//	        	chbAssetBasisInterfMapper.deleteDataNoBtm(param);
+				logger.info("删除" + dateStr + "日的资产基础指标数据，结束");
+				logger.info("插入" + dateStr + "日的资产基础指标数据，开始");
+				for (ChbAssetsBasisData data : listChbAssetsBasisDataMap.get(date)) {
+					batchMapper.insert(data);
+					count++;
+					if (count % 1000 == 0) {
+						logger.debug("已插入" + count + "条" + DateUtil.getCurrentDateTime());
+						session.commit();
+						session.clearCache();
+					}
+				}
+				logger.info("插入" + dateStr + "日的资产基础指标数据，结束");
+			}
+			session.commit();
+			session.clearCache();
+		}finally {
+			session.close();
+		}
 	}
 }

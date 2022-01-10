@@ -58,7 +58,7 @@ public class CreateZHXPFileController extends BaseController{
             public void run() {
                 BaseInterfService baseInterfService = (BaseInterfService) SpringContextUtil.getBean(serviceName);
                 // TODO 路径和产品的参数问题
-                baseInterfService.createFileFromEntity(null, date, path);
+                baseInterfService.createFileFromEntity(null, date, path, "");
             }
         });
 

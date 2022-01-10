@@ -1,13 +1,13 @@
 package com.joyintech.tams.svreport.interf.chb.assetinfo.dao;
 
-import java.util.Date;
-import java.util.List;
-
+import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.base.entity.ChbSecRepayInfo;
+import com.joyintech.tams.common.base.entity.RepAssetDept;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface ChbAssetInfoInterfMapper {
@@ -61,6 +61,13 @@ public interface ChbAssetInfoInterfMapper {
 	 * List<String>
 	 */
 	List<String> selectAssetCodeByAssetType(@Param("assetTypeList")List<String> assetTypeList,@Param("cdate")String cdate);
+
+	/**
+	 * 查询所有委外资产
+	 *
+	 * @return
+	 */
+	List<String> selectAssetCodeByAssetTypePtl();
 
 	
 	/**
@@ -159,4 +166,7 @@ public interface ChbAssetInfoInterfMapper {
 	void deleteAllChbSecRepayInfoData();
 	//插入查询债券的还本付息计划a
 	int insertChbSecRepayInfoData(ChbSecRepayInfo record);
+
+	// 中债资产报送状态更新逻辑
+	void updateRepAssetStatus(RepAssetDept dto);
 }

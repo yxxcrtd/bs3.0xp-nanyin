@@ -126,6 +126,15 @@ public class SalesTransactionMaintenanceController {
     public void update(@RequestBody SalesTransactionMaintenanceDto dto) {
         salestransactionmaintenance002Service.update(dto);
     }
+
+    /**
+     *
+     * 删除err表并保存在info表
+     */
+    @PostMapping("deleteAndSave")
+    public void deleteAndSave(@RequestBody SalesTransactionMaintenanceDto dto) {
+        salestransactionmaintenance002Service.deleteAndSave(dto);
+    }
     /**
      *
      * 删除erro

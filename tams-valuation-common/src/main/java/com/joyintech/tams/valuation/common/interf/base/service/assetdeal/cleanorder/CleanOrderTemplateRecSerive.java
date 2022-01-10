@@ -10,12 +10,22 @@
 
 package com.joyintech.tams.valuation.common.interf.base.service.assetdeal.cleanorder;
 
-import com.joyintech.framework.util.StringUtil;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.valuation.common.interf.base.dto.*;
+import org.jasypt.commons.CommonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
-import com.joyintech.tams.valuation.common.interf.base.dto.*;
 import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValCleanOrder;

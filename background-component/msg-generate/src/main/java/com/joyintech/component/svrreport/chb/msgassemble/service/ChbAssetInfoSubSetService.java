@@ -1738,18 +1738,19 @@ public class ChbAssetInfoSubSetService {
 		if(StringUtil.isNotEmpty(item.getFinArea())){
 			CnBondInterfItemDto cnBondItem32 = new CnBondInterfItemDto();
 			//融资人所属地区  地区字典如果为四个直辖市,且是市辖区或者县.则直接替换为  地区代码+"市辖区" 或者 地区代码+"县"
+			String area = item.getFinArea();
 			if(item.getFinArea().startsWith("110")||
 					item.getFinArea().contains("120")||
-						item.getFinArea().contains("310")||
-							item.getFinArea().contains("500")){
-				String area = item.getFinArea().split(" ")[0];
-				if(area.endsWith("100")){
-					cnBondItem32.setValue(area+" "+"市辖区");
-				}else if(area.endsWith("200")){
-					cnBondItem32.setValue(area+" "+"县");
+					item.getFinArea().contains("310")||
+					item.getFinArea().contains("500")){
+				if(item.getFinArea().split(" ")[0].endsWith("100")){
+					area = item.getFinArea().split(" ")[0]+" "+"市辖区";
+				}else if(item.getFinArea().split(" ")[0].endsWith("200")){
+					area = item.getFinArea().split(" ")[0]+" "+"县";
 				}
-			}			
-		    cnBondItemMap1.put("RegionOfDebtor", cnBondItem32);
+			}
+			cnBondItem32.setValue(area);
+			cnBondItemMap1.put("RegionOfDebtor", cnBondItem32);
 		}
 		//融资人组织机构（社会信用）代码
 		if(StringUtil.isNotEmpty(item.getFinOrgCode())){

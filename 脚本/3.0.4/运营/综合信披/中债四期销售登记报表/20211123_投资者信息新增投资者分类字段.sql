@@ -1,8 +1,0 @@
-DELETE from SYS_DATADICT WHERE DICT_CODE =  'HOLDER_CLASSIFY';
-delete from SYS_DATADICT_LIST WHERE DICT_CODE = 'HOLDER_CLASSIFY';
-INSERT INTO SYS_DATADICT VALUES ('HOLDER_CLASSIFY','REP','投资者分类',null,'02','system',null,SYSDATE,'system',SYSDATE);
-INSERT INTO SYS_DATADICT_LIST VALUES ('HOLDER_CLASSIFY','01','不特定社会公众','1','0','system',null,sysdate,'system',sysdate,null);
-INSERT INTO SYS_DATADICT_LIST VALUES ('HOLDER_CLASSIFY','02','合格投资者','2','0','system',null,sysdate,'system',sysdate,null);
-
-ALTER TABLE CHB_EQU_HOLD ADD HOLDER_CLASSIFY char(2);
-comment on column CHB_EQU_HOLD.HOLDER_CLASSIFY is '投资者分类';

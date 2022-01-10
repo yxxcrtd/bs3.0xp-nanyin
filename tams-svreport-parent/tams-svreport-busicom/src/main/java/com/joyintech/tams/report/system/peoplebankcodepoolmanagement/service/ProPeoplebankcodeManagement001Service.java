@@ -91,7 +91,7 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 				() -> peoplebankcodeManagement001DtoMapper.queryForPage(param));
 		List<ProPeoplebankcodeManagement001Dto>  list=page.getRoot();
 		page.setRoot(getList(list));
-		page.setRecords(getList(list).size());
+//		page.setRecords(getList(list).size());
 		return page;
 	}
 	/*

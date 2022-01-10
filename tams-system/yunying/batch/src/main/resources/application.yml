@@ -167,15 +167,15 @@ spring:
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.5:1521/orcl
-    username: CVR30INIT_XUQIU
-    password: CVR30INIT_XUQIU
-    reportSqlldrDatabaseName: 192.168.90.5:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+    url: jdbc:oracle:thin:@192.168.70.245:1521/orcl
+    username: CVR30INIT_TEST
+    password: CVR30INIT_TEST
+    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
-  sqldiruserName: CVR30INIT_XUQIU
-  sqldirpassword: CVR30INIT_XUQIU
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+  sqldiruserName: CVR30INIT_TEST
+  sqldirpassword: CVR30INIT_TEST
   loadbalance: false
   micorservice:
     contextPath:
@@ -207,20 +207,20 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.5:1521/orcl
-    username: CVR30INIT_XUQIU
-    password: CVR30INIT_XUQIU
+    url: jdbc:oracle:thin:@192.168.70.245:1521/orcl
+    username: CVR30INIT_TEST
+    password: CVR30INIT_TEST
 #interf数据源配置
 interf:  
    datasource:
-    url: jdbc:oracle:thin:@192.168.90.5:1521/orcl
-    username: CVR30INIT_XUQIU
-    password: CVR30INIT_XUQIU
+    url: jdbc:oracle:thin:@192.168.70.245:1521/orcl
+    username: CVR30INIT_TEST
+    password: CVR30INIT_TEST
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
-    username: CVR30INIT_XUQIU
-    password: CVR30INIT_XUQIU
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: CVR30INIT_TEST
+    password: CVR30INIT_TEST
 #日志路径配置
 log:
   path: /home/tams/logs/batch

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 public interface ChbEquHoldCheckDtoMapper {
     int insert(ChbEquHoldCheckDto record);
     
+    
     /**
      * @Description 分页查询
      * @param pageParam
@@ -57,6 +58,8 @@ public interface ChbEquHoldCheckDtoMapper {
 	
 	void deleteEquitySubInfoBatch(@Param("keys")List<String> keys);
 	
+	List<ChbEquHoldCheckDto> selectChekForRepair(@Param("keys")List<String> keys);
+	
 	/**
 	 * @Description 根据三要素查询身份信息
 	 * @param record
@@ -78,6 +81,9 @@ public interface ChbEquHoldCheckDtoMapper {
 	 * @return int
 	 */
 	int updatechbEquHoldCheck(ChbEquHoldCheckDto record);
+	
+
+    int updateForRepair(ChbEquHoldCheckDto record);
 
 	/**
 	 * @Description 根据主键查询
