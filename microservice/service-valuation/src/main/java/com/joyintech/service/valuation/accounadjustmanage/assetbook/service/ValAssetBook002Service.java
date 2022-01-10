@@ -153,13 +153,8 @@ public class ValAssetBook002Service extends CommonExportService<ValAssetbook002D
      */
     public int insert(ValAssetbook002Dto dto) {
         BokBooksetDate valBokBooksetDate = bokBooksetDateMapper.selectByPrimaryKey(
-<<<<<<< .mine
-            dto.getBooksetId());
-        // 不存在账套日期，新增，已存在则更新 注释修改账套日期的逻辑by yinya on 20211221： 修改账套日期会导致手工凭证余额方向置空
-=======
                 dto.getBooksetId());
         // 不存在账套日期，新增，已存在则更新 注释修改账套日期的逻辑by yinya on 20211221： 修改账套日期会导致手工凭证余额方向置空
->>>>>>> .theirs
         if (valBokBooksetDate != null) {
 //            valBokBooksetDate.setBooksetId(dto.getBooksetId());
 //            // 账套日期 = 账套.开始日期
