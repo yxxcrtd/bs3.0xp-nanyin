@@ -61,12 +61,14 @@
                 SUM(
                     CASE WHEN std.PS = #{PS_T01} AND std.FINPROD_TYPE2 != #{prodType2_F02} THEN std.FPRICE_AMT*-1
                     WHEN std.PS = #{PS_T56} AND std.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RS03} AND std.TRADE_MARKET = #{TRADE_MARKET_03} THEN std.FPRICE_AMT*-1
+                    WHEN std.PS = #{PS_T56} AND std.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RB01} AND std.TRADE_MARKET = #{TRADE_MARKET_03} THEN std.FPRICE_AMT*-1
                     WHEN std.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T95},#{PS_T96}) AND std.FINPROD_TYPE2 = #{prodType2_F02} THEN std.FPRICE_AMT*-1
                     ELSE std.FPRICE_AMT END
                 ) FPRICE_AMT,
                 SUM(
                     CASE WHEN std.PS = #{PS_T01} AND std.FINPROD_TYPE2 != #{prodType2_F02} THEN std.SHARE_AMT
                     WHEN std.PS = #{PS_T56} AND std.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RS03} THEN std.SHARE_AMT
+                    WHEN std.PS = #{PS_T56} AND std.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RB01} THEN std.SHARE_AMT
                     WHEN std.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T95},#{PS_T96}) AND std.FINPROD_TYPE2 = #{prodType2_F02} THEN std.SHARE_AMT
                     ELSE std.SHARE_AMT*-1 END
                 ) SHARE_AMT
