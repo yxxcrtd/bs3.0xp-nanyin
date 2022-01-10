@@ -99,6 +99,7 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
     @ApiModelProperty(name="repoTerm",value="回购期限(天)",example="5")
     private String repoTerm;
 
+
     @ApiModelProperty(name="vpayDate",value="到期结算日",example="2021-01-01")
     private String vpayDate;
 

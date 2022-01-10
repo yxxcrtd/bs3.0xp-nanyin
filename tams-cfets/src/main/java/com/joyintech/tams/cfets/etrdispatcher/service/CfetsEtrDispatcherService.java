@@ -579,14 +579,7 @@ public class CfetsEtrDispatcherService extends BaseService{
                         BigDecimal totalPrinAmt = BigDecimal.ZERO;
                         for (PledgeBondInfoDto pbi : pledgeList) {
                             totalPrinAmt = ArithmeticUtil.doAdd(totalPrinAmt, ArithmeticUtil.multiply(pbi.getPledgePrin(), pbi.getPledgeRatio()).divide(new BigDecimal("100")));
-                            pbi.setAvaPledgePrin(ArithmeticUtil.divide(pbi.getAvaPledgePrin(),new BigDecimal("10000"),4));
-                            if(StringUtil.isNoneBlank(pbi.getRepRegistOrg())){
-                                pbi.setRepRegistOrg(SysDataUtil.getNameFromDataDict(DictCode.登记托管机构_中债, pbi.getRepRegistOrg()));
-                            }
-                            pbi.setPledgePrin(ArithmeticUtil.divide(pledgeList.get(0).getPledgePrin(),new BigDecimal("10000"),4));
-                        }
-                        for (PledgeBondInfoDto pbi : pledgeList) {
-                            pbi.setTotalPrinAmt(totalPrinAmt);
+
                         }
                         cfetsResponseDto.setPledgeBondList(pledgeList);
                         cfetsResponseDto.setTotalPrinAmt(ArithmeticUtil.divide(totalPrinAmt,new BigDecimal("10000"),4));
@@ -650,8 +643,31 @@ public class CfetsEtrDispatcherService extends BaseService{
         if(StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1){
             return new Page<CfetsEtrDispatcherDealListInfoResponse>();
         }
-        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
+        Page<CfetsEtrDispatcherDealListInfoResponse> page =  super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
                 () -> cfetsEtrDispatcherMapper.getEtrDispatcherDealListInfo(pageParam));
+        if("02".equals(CacheUtil.getSysParam("repo_pledge_model")) && "05".equals(dto.getBusiTypePosition())) {
+            //处理质押券明细
+            CfetsEtribRepoInfo003Dto item = new CfetsEtribRepoInfo003Dto();
+            item.setEntrustId(dto.getEntrustId());
+            CfetsEtribRepoInfo003Dto result = cfetsEtrIbRepoinfoService.findEtrinfo(item);
+            if (result != null) {
+                List<CfetsPledgeBondInfoDto> detailList = result.getPledgeBondTotalListDetailed();
+                if (!CollectionUtils.isEmpty(detailList)) {
+                    StringBuffer sb = new StringBuffer("");
+                    for (CfetsPledgeBondInfoDto infoDto : detailList) {
+                        infoDto.setPledgePrin(ArithmeticUtil.divide(infoDto.getPledgePrin(), new BigDecimal("10000"), 4));
+                        infoDto.setPledStrdPrinAmt(ArithmeticUtil.divide(infoDto.getPledStrdPrinAmt(), new BigDecimal("10000"), 4));
+                        sb.append(infoDto.getFinprodAbbr()).append(",");
+                    }
+                    String finprodAbbr = sb.substring(0, sb.length() - 1);
+                    for (CfetsEtrDispatcherDealListInfoResponse response : page.getRoot()) {
+                        response.setPledgeStockName(finprodAbbr);
+                        response.setDetailList(detailList);
+                    }
+                }
+            }
+        }
+        return  page;
     }
 
     /**
@@ -1137,17 +1153,28 @@ public class CfetsEtrDispatcherService extends BaseService{
         resultData.put(dtCode+"_data",cfetsResponseDto);
         if(!CollectionUtils.isEmpty(infoTable)) {//如果表格有数据
             resultData.put(dtCode+"_table",infoTable);
-         /* 这里是另外一种方式获取质押券明细，如果下面那种不正确则修改为下面这种
+         // 这里是另外一种方式获取质押券明细，如果下面那种不正确则修改为下面这种
             CfetsEtribRepoInfo003Dto item = new CfetsEtribRepoInfo003Dto();
             item.setEntrustId(dto.getEntrustId());
             CfetsEtribRepoInfo003Dto result = cfetsEtrIbRepoinfoService.findEtrinfo(item);
             if(result != null) {
                 List<CfetsPledgeBondInfoDto> detailList = result.getPledgeBondTotalListDetailed();
-                if(CollectionUtils.isEmpty(detailList)) {
-
+                BigDecimal totalPrinAmt = BigDecimal.ZERO;
+                if(!CollectionUtils.isEmpty(detailList)) {
+                    for(CfetsPledgeBondInfoDto infoDto : detailList) {
+                        infoDto.setPledgePrin(ArithmeticUtil.divide(infoDto.getPledgePrin(),new BigDecimal("10000"),4));
+                        infoDto.setPledStrdPrinAmt(ArithmeticUtil.divide(infoDto.getPledStrdPrinAmt(),new BigDecimal("10000"),4));
+                        if(StringUtil.isNoneBlank(infoDto.getRepRegistOrg())){
+                            infoDto.setRepRegistOrg(SysDataUtil.getNameFromDataDict(DictCode.登记托管机构_中债, infoDto.getRepRegistOrg()));
+                        }
+                        totalPrinAmt = ArithmeticUtil.doAdd(totalPrinAmt, ArithmeticUtil.multiply(infoDto.getPledgePrin(), infoDto.getPledgeRatio()).divide(new BigDecimal("100")));
+                    }
+                    for(CfetsPledgeBondInfoDto infoDto : detailList) {
+                        infoDto.setTotalAmount(totalPrinAmt);
+                    }
                 }
-            }*/
-            resultData.put(dtCode+"_datatable",cfetsResponseDto.getPledgeBondList());
+                resultData.put(dtCode+"_datatable",detailList);
+            }
         }
         return resultData;
     }
