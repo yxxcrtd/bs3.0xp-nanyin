@@ -27,7 +27,6 @@
         SELECT count(*)
         FROM MST_CFETS_CUSTOMER_RELA B
         WHERE B.SPARTY_ID = #{partyId}
-          and B.MPARTY_ID is null
     </select>
 
 
@@ -38,9 +37,14 @@
     <select id="checkPartyNameOfParty" resultType="java.lang.String">
         SELECT COUNTER_ID FROM  MST_COUNTER_PARTY WHERE COUNTER_NAME = #{partyCustomerName}
     </select>
+    <select id="selectMpartyId" resultType="java.lang.String">
+        SELECT B.MPARTY_ID
+        FROM MST_CFETS_CUSTOMER_RELA B
+        WHERE B.SPARTY_ID = #{partyId}
+    </select>
     <select id="selectMpartyInfo" resultType="com.joyintech.tams.common.base.entity.MstCfetsCustomerInfo">
         SELECT  A.PARTY_NAME partyName
         FROM MST_CFETS_CUSTOMER_INFO A
-        WHERE A.PARTY_CUSTOMER_ID = #{mpartyId,jdbcType=VARCHAR}
+        WHERE A.PARTY_ID = #{mpartyId,jdbcType=VARCHAR}
     </select>
 </mapper>

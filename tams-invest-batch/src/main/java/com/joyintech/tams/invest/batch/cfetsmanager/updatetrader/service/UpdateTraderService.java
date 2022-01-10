@@ -122,18 +122,25 @@ public class UpdateTraderService {
                         mstCounterParty.setCounterType(DictCodeListExt1.交易对手类型_资管产品.getValue());
                         mstCounterParty.setPartyId(mstCfetsCustomerInfo.getPartyId());
 
-                        //获取主机构交易对手的link_Id
+                        //获取主机构ID
+                        map.put("partyId", mstCfetsCustomerInfo.getPartyId());
+                        String mpartyId = updateTraderMapper.selectMpartyId(map);
                         //获取主机构名称
-                        MstCfetsCustomerInfo temp = updateTraderMapper.selectInfo(mstCfetsCustomerInfo.getPartyId());
+                        //MstCfetsCustomerInfo temp = updateTraderMapper.selectInfo(mstCfetsCustomerInfo.getPartyId());
+                        MstCfetsCustomerInfo temp = new MstCfetsCustomerInfo();
+                        if (StringUtil.isNotEmpty(mpartyId)) {
+                            temp = updateTraderMapper.selectMpartyInfo(mpartyId);
+                        }
                         String linkId = "";
                         if (temp != null) {
                             //按名称进行匹配
                             map.put("partyCustomerName",temp.getPartyName());
+                            //获取主机构交易对手的link_Id
                             linkId = updateTraderMapper.checkCustomerName(map);
                         }
                         if(StringUtil.isNotEmpty(linkId)){
                             mstCounterParty.setLinkId(linkId);
-                            mstCounterParty.setManagerId(mstCfetsCustomerInfo.getPartyId());
+                            mstCounterParty.setManagerId(mpartyId);
                         }
                         mstCounterPartyMapper.insertSelective(mstCounterParty);
                     }

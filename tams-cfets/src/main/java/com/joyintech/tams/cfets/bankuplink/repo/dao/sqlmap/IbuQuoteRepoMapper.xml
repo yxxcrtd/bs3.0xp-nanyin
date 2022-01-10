@@ -647,8 +647,8 @@
                ,pfp.FINPROD_ABBR portfolioName
                ,fp.MDATE mdate
                ,NVL(TABLE01.pledStrdPrinAmt,0) avaPledgePrin
-               ,NVL(pledgeList.PLEDGE_NUMBER,0) * 100 pledgePrin
-               ,NVL(pledgeList.PLEDGE_NUMBER,0) * 100 pledgePrinInit
+               ,sum(NVL(pledgeList.PLEDGE_NUMBER, 0) * 100) pledgePrin
+               ,sum(NVL(pledgeList.PLEDGE_NUMBER, 0) * 100) pledgePrinInit
                ,mbvi.NETPRICE firstNetPrice
                ,pledgeList.PLEDGE_RATIO*100 pledgeRatio
                ,nvl(TABLE01.pledgeAmount,0) prin
@@ -656,9 +656,6 @@
                ,ess.PLEDGE_STOCK_NAME pledgeStockName
                ,MBCR.GRADE_RESULT gradeResult /*债项评级*/
                , fp.REGIST_ORG repRegistOrg
-            <if test="entrustIdList != null and entrustIdList.size() > 0">
-                ,pledgeList.bussId entrustId
-            </if>
         FROM
         (
             select ENTRUST_ID bussId, FINPROD_ID pledgeId,PLEDGE_RATIO, sum(PLEDGE_NUMBER) PLEDGE_NUMBER
@@ -804,6 +801,20 @@
                 and fp.REGIST_ORG =#{repRegistOrg, jdbcType=VARCHAR}
             </if>
         </where>
+       group by fp.FINPROD_MARKET_ID,
+           fp.FINPROD_ABBR,
+           fp.FINPROD_ID,
+           pfp.FINPROD_MARKET_ID,
+           pfp.FINPROD_ABBR,
+           fp.MDATE,
+           TABLE01.pledStrdPrinAmt,
+           mbvi.NETPRICE,
+           pledgeList.PLEDGE_RATIO,
+           TABLE01.pledgeAmount,
+           eea.PLEDGE_STOCK_ID,
+           ess.PLEDGE_STOCK_NAME,
+           MBCR.GRADE_RESULT,
+           fp.REGIST_ORG
    </select>
 
     <select id="selectUsablePledges" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustPledgeDto">
