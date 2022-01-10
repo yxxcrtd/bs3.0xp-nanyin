@@ -71,20 +71,6 @@ public class TrdFixIncomeValuationTradeController extends BaseController {
     }
 
     /**
-     * 回调函数 操作具体 new delete update <功能详细描述>
-     *
-     * @see
-     * @since 1.0
-     */
-    @Transactional
-    @DTXTransaction
-    @PostMapping("/doComplete/{type}")
-    public void doComplete(@RequestBody TrdFixIncomeValuationTradeDto dto, @PathVariable("type") String type) {
-        dto.setOperateType(type);
-        trdFixIncomeValuationTradeService.doComplete(dto);
-    }
-
-    /**
      * 查询 支持分页 <功能详细描述>
      *
      * @since 1.0

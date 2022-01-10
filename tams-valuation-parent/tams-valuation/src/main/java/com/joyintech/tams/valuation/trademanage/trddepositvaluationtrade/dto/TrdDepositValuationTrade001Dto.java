@@ -10,9 +10,11 @@
  
 package com.joyintech.tams.valuation.trademanage.trddepositvaluationtrade.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
@@ -251,7 +253,7 @@ public class TrdDepositValuationTrade001Dto extends BaseEntity implements Proces
 
     //资金账户
     private String trdAcctId;
-    @NotEmpty(fieldName = "TrdDepositValuation001.trdAcctId", groups = {ValidateGroupEdit.class})
+//    @NotEmpty(fieldName = "TrdDepositValuation001.trdAcctId", groups = {ValidateGroupEdit.class})
     public String getTrdAcctId() {
         return trdAcctId;
     }
@@ -402,4 +404,38 @@ public class TrdDepositValuationTrade001Dto extends BaseEntity implements Proces
     }
 
 
+    //导出转化交易日
+    private  String tradeDateStr;
+
+    public String getTradeDateStr() {
+        String tradeDateStr=" ";
+        if(getTradeDate() !=null){
+            tradeDateStr=DateUtil.format(getTradeDate());
+        }
+        return tradeDateStr;
+    }
+
+    //导出转化交割日
+    private String settDateStr;
+    public String getSettDateStr(){
+        String settDateStr=" ";
+        if(getSettDate() !=null){
+            settDateStr=DateUtil.format(getSettDate());
+        }
+        return settDateStr;
+    }
+
+
+    /**
+     * 存款类交易实体类
+     */
+    private List<TrdDepositValuationTrade001Dto> selectedItem;
+
+    public List<TrdDepositValuationTrade001Dto> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<TrdDepositValuationTrade001Dto> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
 }

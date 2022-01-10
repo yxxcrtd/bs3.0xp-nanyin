@@ -7,6 +7,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.base.annotate.BusinessKey;
+import com.joyintech.tams.report.common.base.annotate.DictFormat;
 import com.joyintech.tams.report.common.base.annotate.TableName;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
@@ -60,6 +61,7 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
     /**
      *反馈状态
      */
+    @DictFormat(DictCode.报送反馈状态)
     private String submitFeedbackStatus;
 
     /**
@@ -113,6 +115,7 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
     /**
      * 销售结算资金流动方向
      */
+    @DictFormat(DictCode.销售结算资金流动方向)
     private String tradePs;
 
     /**

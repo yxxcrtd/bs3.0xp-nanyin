@@ -125,4 +125,37 @@ public class TrdDepositValuationTrade001Controller {
     }
 
 
+    /**
+     * 不分页数据查询
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/queryPageList")
+    public List<TrdDepositValuationTrade001Dto> queryPageList(@RequestBody Map<String, Object> param){
+        return trdDepositValuationTrade001Service.queryPageList(param);
+    }
+
+    /**
+     * 根据交易编号查询对象
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("queryTradeInfoByTradeId")
+    public TrdDepositValuationTrade001Dto queryTradeInfoByTradeId(@RequestBody String  tradeId) {
+        return trdDepositValuationTrade001Service.queryTradeInfoByTradeId(tradeId);
+    }
+
+    /**
+     * 删除
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("delete")
+    public int delete(@RequestBody TrdDepositValuationTrade001Dto dto){
+        return trdDepositValuationTrade001Service.delete(dto);
+    }
+
+
 }

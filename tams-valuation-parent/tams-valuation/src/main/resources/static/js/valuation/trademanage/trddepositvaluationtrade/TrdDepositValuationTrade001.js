@@ -64,8 +64,10 @@ $(function(){
             ,{field:'finprodName', width:150, sortField:'finprodName',title: '资产名称'}
             ,{field:'psStr', width:150, title: 'TrdDepositValuation001.ps',sortField:'ps'}
             ,{field:'ps', title: '交易类型',visible:false}
-            ,{field:'tradeDate', width:150,  title: '交易日',type:'date'}
-            ,{field:'settDate', width:150,  title: '交割日',type:'date'}
+            ,{field:'tradeDateStr', width:150,  title: '交易日',sortField:'tradeDate'}
+            ,{field:'tradeDate',title: '交易日',visible:false}
+            ,{field:'settDateStr', width:150,  title: '交割日',sortField:'settDate'}
+            ,{field:'settDate', title: '交割日',visible:false}
             ,{field:'prinAmt', width:150, title: '交易本金',type:'number',sortField:'prinAmt'}
             ,{field:'intAmt', width:150, title: '应记利息',type:'number',sortField:'intAmt'}
             ,{field:'counterId', title: '交易对手',width:100}
@@ -78,83 +80,77 @@ $(function(){
         ]
     });
     /**
-     * 导出事件
+     * 导出选中的表格数据
      */
     var exportExcel = function() {
-        var paramObj = getPageParams();
-        Joyin.exportExcel('export', paramObj);
+
+        var selArr = [];
+        var datas = null;
+        if (table != null && table != '') {
+            selArr = table.getAllCheckedRows();
+            datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getPageParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas
+            });
+        }
     };
     
     /**
      * 画面加载完成
      */
     $(function() {
-        $('#TrdDepositValuationTrade001_btn_add').click(function() {
+        $('#TrdDepositValuationTrade001_btn_add').click(function () {
             Joyin.dialog(JoyinUtil.getLabel("TrdDepositValuationTrade002"),
-                    basePath+ "valuation/trademanage/trddepositvaluationtrade/TrdDepositValuationTrade002/init",
-                        "98%", "98%", {pageModel:PAGE_MODEL_NEW});
+                basePath + "valuation/trademanage/trddepositvaluationtrade/TrdDepositValuationTrade002/init",
+                "98%", "98%", {pageModel: PAGE_MODEL_NEW});
         });
-       
         //导出
-        $('#TrdDepositValuationTrade001_btn_export').click(function() {
+        $('#TrdDepositValuationTrade001_btn_export').click(function () {
             exportExcel();
         });
         //查询
-        $('#TrdDepositValuationTrade001_btn_search').click(function(){
+        $('#TrdDepositValuationTrade001_btn_search').click(function () {
             table.load();
         });
-        //撤销操作
-        $('#TrdDepositValuationTrade001_btn_revoke').click(function(){
-            if(table!=null && table!=''){
-                var selArr = table.getAllCheckedRows();//判断表格不为空，然后获取选择的数据
-            }
-            if (!selArr || selArr.length == 0) {//判断是否选择，如果没有则报错COMMON_E_0026
-                Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0046"));
-                return;
-            }
-         // 列表中勾选对象1条以上时
-            if (selArr.length > 1) {
-                Joyin.error(JoyinUtil.getMessage("COMMON_E_0058"));
-                return;
-            }else if(selArr[0].tradeStatus !== TRADE_STATUS){
-                Joyin.error(JoyinUtil.getLabel("TrdPlanRateInvestTrade002.revokeStatus"))
-                return;
-            }
-            var object = {selectedItem: selArr, operateType:"delete"};//请求参数
-            Joyin.ajaxJson(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade001/check', object, function(result) {//数据验证
-//                Joyin.confirm(JoyinUtil.getMessage('COMMON_C_0001',JoyinUtil.getMessage(JoyinUtil.getLabel("SysCommon.delete"))), function(){
-                Joyin.prompt(JoyinUtil.getLabel('TrdDepositInvestTrade001.cancelText'), 0, function (result) {
-                    for(var select in object.selectedItem){
-                        object.selectedItem[select].cancelRemark = result;
-                    }
-//                    WorkFlow.doRevokeList(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade001/delete', object, "TrdDepositInvestTrade001_btn_delete", "TrdDepositInvestTrade002");//删除
-                    WorkFlow.doDeleteList(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade001/delete', object, "TrdDepositInvestTrade001_btn_revoke", "TrdDepositInvestTrade002");//删除
+
+        /**
+         * 绑定编辑事件
+         */
+        table.bind('click', '.edit', function(data, index) {
+            data.pageModel = PAGE_MODEL_EDIT;
+            var object = {selectedItem: [data], operateType:"edit"};//请求参数
+            Joyin.dialog(JoyinUtil.getLabel("项目类交易-修改"),
+                basePath + "valuation/trademanage/trddepositvaluationtrade/TrdDepositValuationTrade002/init",//打开新界面
+                "98%", "98%", {pageModel:PAGE_MODEL_EDIT,//请求的page_model
+                    tradeId:data.tradeId  //金融产品代码
+                },function(){
+                    table.reload();//回调函数，表格刷新
                 });
+        });
+
+        /**
+         * 绑定删除事件
+         */
+        table.bind('click', '.delt', function(data, index) {
+            var object = {selectedItem: [data], operateType:"delete"};
+            Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
+                WorkFlow.doDeleteList(
+                    basePath + 'valuation/trademanage/trddepositvaluationtrade/TrdDepositValuationTrade001/delete',
+                    object,
+                    "TrdDepositValuationTrade001_btn_delete",
+                    "TrdDepositValuationTrade002",
+                    function() {
+                        table.reload();
+                    }
+                );
             });
         });
-        //组合点击查看详情
-        table.bind('click','.pro-link', function(row) {
-            Joyin.dialog(JoyinUtil.getLabel("PtlManagementInfo002"),
-                    basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
-                    "95%", "90%",{
-                    pageModel:PAGE_MODEL_REFERENCE,
-                    portfolioId:row.portfolioId,
-                    portfolioName: row.portfolioName});
-            
-        });
-        //资产代码点击查看明细
-        table.bind('click','.pro-link-fin', function(row) {
-            Joyin.dialog(JoyinUtil.getLabel("FinDepositTarget002"),
-                    basePath + "invest/asset/depo/FinDepositTarget002/init",
-                    "95%", "90%",{
-                    pageModel:PAGE_MODEL_REFERENCE,
-                    finprodId: row.finprodId});
-        });
-        //是否展示资产四五级分类
-        if(IS_SHOW_TYPE == '01'){
-        	$('#type11Div').show();
-        }else{
-        	$('#type11Div').hide();
-        }
+
     });
+
 }());

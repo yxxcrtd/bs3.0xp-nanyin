@@ -201,9 +201,14 @@ public class TrdPlanValuationTrade002Service extends CommonExportService<TrdPlan
         List<ValMngMnfTade> listValValMngMnfTade = new ArrayList<ValMngMnfTade>();
         ValMngMnfTade valMngMnfTade = new ValMngMnfTade();
         BeanUtil.copyPropertiesIgnoreNull(valMngMnfTade,trdPlanValuationTradeDto);
+        valMngMnfTade.setProdId(trdPlanValuationTradeDto.getPortfolioId());
         valMngMnfTade.setTradeDate(trdPlanValuationTradeDto.getTradeDate());
         //比较界面和接口字段差异，并手动给接口字段赋值
         valMngMnfTade.setAssetId("F17_"+trdPlanValuationTradeDto.getFinprodId());//资产代码
+        valMngMnfTade.setAssetName(trdPlanValuationTradeDto.getFinprodName());   //资产名称
+        valMngMnfTade.setShareAmt(trdPlanValuationTradeDto.getNums());           //交易份额
+        valMngMnfTade.setIntAmt(trdPlanValuationTradeDto.getConfirmIntAmt());//应收红利-利息确认金额
+        valMngMnfTade.setUnitCprice(trdPlanValuationTradeDto.getUnitValue());//单位净价
         valMngMnfTade.setDataActionSign("01");
         valMngMnfTade.setCounterId("FYDLCA365001");
         valMngMnfTade.setCounterType("01");
