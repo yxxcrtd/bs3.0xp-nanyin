@@ -163,7 +163,7 @@ public class CfetsQuotedTradeCommonService{
                     resultBaseDto.setErrMsg("银行间下行自动匹配(债券)录单开关关闭!");
                 }
             }
-            if (StringUtil.equals(flagAutoTrade, "01")) {
+           // if (StringUtil.equals(flagAutoTrade, "01")) {
                 InterfTradSecdeal finalInterfTradSecdeal = interfTradSecdeal;
                 InterfOpicsTradRepo finalInterfOpicsTradRepo = interfOpicsTradRepo;
                 getLogger().info("银行间下行成交处理业务数据线程开启");
@@ -178,7 +178,7 @@ public class CfetsQuotedTradeCommonService{
                     }
                 });
                 thread.start();
-            }
+          //  }
             //登记数据自动匹配功能,针对单条指令，自动匹配
            /* if(StringUtil.equals(entity.getMarketIndicator(),MarketIndicatorUtil.MARKETINDICATOR_BOND)){
                 cstpSecTradeAutoMatch(interfTradSecdeal,iCstpTrade);
