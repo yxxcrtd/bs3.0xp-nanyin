@@ -1137,8 +1137,7 @@ public class KCBPTradeAgent extends TradeAgent {
         parameters.put("ordersno", "");
         parameters.put("count", "100");
         parameters.put("qryflag", "1");
-        parameters.put("poststr", "");
-//        parameters.put("poststr", kcbpAccount.getEntrustPositionStr());
+        parameters.put("poststr", kcbpAccount.getEntrustPositionStr());
 
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ACCOUNT_ENTRUST_REISSUE.value, "Bidding");
         agentInfo.setAccountId(accountId);
@@ -1169,8 +1168,7 @@ public class KCBPTradeAgent extends TradeAgent {
         parameters.put("ordersno", "");
         parameters.put("count", "100");
         parameters.put("qryflag", "1");
-        parameters.put("poststr", "");
-//        parameters.put("poststr", kcbpAccount.getFixedIncome_PositionStr_entrust());
+        parameters.put("poststr", kcbpAccount.getFixedIncome_PositionStr_entrust());
 
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ACCOUNT_ENTRUST_REISSUE.value, "FixedIncome");
         agentInfo.setAccountId(accountId);
@@ -1204,8 +1202,7 @@ public class KCBPTradeAgent extends TradeAgent {
         parameters.put("begindate", beginDate);
         parameters.put("enddate", beginDate);
         parameters.put("count", "100");
-        parameters.put("posstr", "");
-//        parameters.put("posstr", kcbpAccount.getProtocolBack_SH_PositionStr_entrust());
+        parameters.put("posstr", kcbpAccount.getProtocolBack_SH_PositionStr_entrust());
 
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ACCOUNT_ENTRUST_REISSUE.value, "ProtocolBack_SH");
         agentInfo.setAccountId(accountId);
@@ -1236,8 +1233,7 @@ public class KCBPTradeAgent extends TradeAgent {
         parameters.put("ordersno", "");
         parameters.put("stkcode", "");
         parameters.put("count", "100");
-        parameters.put("posstr", "");
-//        parameters.put("posstr", kcbpAccount.getProtocolBack_SZ_PositionStr_entrust());
+        parameters.put("posstr", kcbpAccount.getProtocolBack_SZ_PositionStr_entrust());
         parameters.put("begindate", beginDate);
         parameters.put("enddate", beginDate);
 
@@ -1270,8 +1266,7 @@ public class KCBPTradeAgent extends TradeAgent {
         parameters.put("ordersno", "");
         parameters.put("count", "100");
         parameters.put("qryflag", "1");
-        parameters.put("poststr", "");
-//        parameters.put("poststr", kcbpAccount.getTradePositionStr());
+        parameters.put("poststr", kcbpAccount.getTradePositionStr());
 
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ACCOUNT_TRADE_REISSUE.value, "Bidding");
         agentInfo.setAccountId(accountId);
@@ -1302,8 +1297,7 @@ public class KCBPTradeAgent extends TradeAgent {
         parameters.put("ordersno", "");
         parameters.put("count", "100");
         parameters.put("qryflag", "1");
-        parameters.put("poststr", "");
-//        parameters.put("poststr", kcbpAccount.getFixedIncome_PositionStr_trade());
+        parameters.put("poststr", kcbpAccount.getFixedIncome_PositionStr_trade());
 
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ACCOUNT_TRADE_REISSUE.value, "FixedIncome");
         agentInfo.setAccountId(accountId);
@@ -1334,8 +1328,7 @@ public class KCBPTradeAgent extends TradeAgent {
         parameters.put("ordersno", "");
         parameters.put("qryflag", "1");
         parameters.put("count", "100");
-        parameters.put("posstr", "");
-//        parameters.put("posstr", kcbpAccount.getProtocolBack_SZ_PositionStr_trade());
+        parameters.put("posstr", kcbpAccount.getProtocolBack_SZ_PositionStr_trade());
         parameters.put("begindate", beginDate);
         parameters.put("enddate", beginDate);
 
@@ -1370,8 +1363,7 @@ public class KCBPTradeAgent extends TradeAgent {
         parameters.put("begindate", beginDate);
         parameters.put("enddate", beginDate);
         parameters.put("count", "100");
-        parameters.put("posstr", "");
-//        parameters.put("posstr", kcbpAccount.getProtocolBack_SH_PositionStr_trade());
+        parameters.put("posstr", kcbpAccount.getProtocolBack_SH_PositionStr_trade());
 
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ACCOUNT_TRADE_REISSUE.value, "ProtocolBack_SH");
         agentInfo.setAccountId(accountId);

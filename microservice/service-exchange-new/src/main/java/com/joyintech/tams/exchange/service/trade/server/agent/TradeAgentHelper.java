@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
+import com.joyintech.tams.exchange.common.db.domain.Account;
 import com.joyintech.tams.exchange.common.utils.JsonUtils;
 import com.joyintech.tams.exchange.service.trade.dao.domain.TerminalAgentInfo;
 import com.joyintech.tams.exchange.service.trade.util.http.HttpClientUtil;
@@ -53,9 +54,11 @@ public class TradeAgentHelper {
         if (!loginStatus && agentInfo.getFunctionCode() != 4) {
             return new ResultBean(ErrorCode.ACCOUNT_NOT_LOGIN);
         }
-
+        Account account = accountManager.getAccountById(accountId);
+        String dspUrl = StringUtils.isNotEmpty(account.getDspUrl()) ? account.getDspUrl() : host + url;
+        logger.info("访问接口平台dspUrl:[{}]", dspUrl);
         try {
-            HttpResult result = doRequest(agentInfo.getGpCode(), agentInfo.getTriggerCode(), message);
+            HttpResult result = doRequest(agentInfo.getGpCode(), agentInfo.getTriggerCode(), dspUrl, message);
             AgentResult agentResult = JsonUtils.getObjectFromJson(result.getResult(), AgentResult.class);
             JSONObject jsonObject = (JSONObject) agentResult.getData();
             if (null == jsonObject) {
@@ -81,9 +84,9 @@ public class TradeAgentHelper {
         return resultBean;
     }
 
-    public HttpResult doRequest(String gpCode, String triggerCode, Object message) throws Exception {
+    public HttpResult doRequest(String gpCode, String triggerCode, String dspUrl, Object message) throws Exception {
         HttpClientUtil clientUtil = HttpClientUtil.create();
-        clientUtil.url(host + url);
+        clientUtil.url(dspUrl);
         HttpParameter parameter = buildHttpParameter(gpCode, triggerCode, message);
         clientUtil.context(JsonUtils.getJsonFromObject(parameter));
         return clientUtil.send();

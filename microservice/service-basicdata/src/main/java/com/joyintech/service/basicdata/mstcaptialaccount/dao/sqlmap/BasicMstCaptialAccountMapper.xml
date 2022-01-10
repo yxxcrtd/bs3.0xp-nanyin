@@ -23,6 +23,8 @@
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+		<result column="IS_RZRQ" property="isRzrq" jdbcType="VARCHAR" />
+		<result column="DSP_URL" property="dspUrl" jdbcType="VARCHAR" />
     </resultMap>
     
     <sql id="Base_Column_List" >
@@ -31,7 +33,7 @@
         <!-- 一体化对应etliu -->
         BLN_AREA, IS_OVERDRAW, <!-- IS_DVP, DVP_RETUEN_ACCT_NO, -->REMARK, 
         CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-        UPDATE_TIME,V.SALE_DEPNAME ownDept
+        UPDATE_TIME,V.SALE_DEPNAME ownDept,IS_RZRQ,DSP_URL
     </sql>
     
     <select id="select" resultMap="BaseResultMap">
@@ -76,7 +78,9 @@
 			capinfo.OWN_DEPT stockExchangeNo,
 			'1' status,
 			capinfo.ACC_PASS acctPwd,
-			capinfo.TRADE_PASS tradePwd
+			capinfo.TRADE_PASS tradePwd,
+		    capinfo.IS_RZRQ isRzrq,
+		    capinfo.DSP_URL dspUrl
 		from STL_CAPACCT_INFO capinfo LEFT JOIN PTL_CAPACCT_INFO ptl
 		ON capinfo.ACCT_NO=ptl.ACCT_NO
 		left join mst_sale_department msd on msd.sale_depid=capinfo.OWN_DEPT
@@ -144,6 +148,8 @@
           stl.OWN_DEPT,
           stl.ACC_PASS,
           stl.TRADE_PASS,
+		  stl.IS_RZRQ isRzrq,
+		  stl.DSP_URL dspUrl,
           case when tmp.finprod_id is not null
             then #{YES_OR_NO_Y}
               else 

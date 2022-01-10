@@ -704,4 +704,8 @@ public class MstCaptialAccountDto extends StlCapacctInfo implements ITableRow, P
     public void setIsCalint(String isCalint) {
         this.isCalint = isCalint;
     }
+
+    public String getRzrqStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否, super.getIsRzrq());
+    }
 }

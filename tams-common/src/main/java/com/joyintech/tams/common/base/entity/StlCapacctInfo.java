@@ -55,7 +55,7 @@ public class StlCapacctInfo extends StlCapacctInfoKey {
      * 流水号
      */
     private String seqNo;
-	
+
 	/**
      * 账户性质
      */
@@ -80,6 +80,16 @@ public class StlCapacctInfo extends StlCapacctInfoKey {
      * 交易密码
      */
     private String tradePass;
+
+    /**
+     * 是否融资融券
+     */
+    private String isRzrq;
+
+    /**
+     * 接口平台URL
+     */
+    private String dspUrl;
 
     /**
      * 取得 账号
@@ -320,7 +330,7 @@ public class StlCapacctInfo extends StlCapacctInfoKey {
     public void setTradePass(String tradePass) {
         this.tradePass = tradePass == null ? null : tradePass.trim();
     }
-	
+
 	/**
      * 取得 账户性质
      * @return 账户性质
@@ -334,5 +344,21 @@ public class StlCapacctInfo extends StlCapacctInfoKey {
      */
     public void setAccountNature(String accountNature) {
         this.accountNature = accountNature;
+    }
+
+    public String getIsRzrq() {
+        return isRzrq;
+    }
+
+    public void setIsRzrq(String isRzrq) {
+        this.isRzrq = isRzrq;
+    }
+
+    public String getDspUrl() {
+        return dspUrl;
+    }
+
+    public void setDspUrl(String dspUrl) {
+        this.dspUrl = dspUrl;
     }
 }

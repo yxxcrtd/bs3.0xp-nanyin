@@ -25,6 +25,8 @@
         <result column="OWN_DEPT" property="ownDept" jdbcType="VARCHAR" />
         <result column="ACC_PASS" property="accPass" jdbcType="VARCHAR" />
         <result column="TRADE_PASS" property="tradePass" jdbcType="VARCHAR" />
+        <result column="IS_RZRQ" property="isRzrq" jdbcType="VARCHAR" />
+        <result column="DSP_URL" property="dspUrl" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         ACCT_NO ACCT_NO, CCY CCY, BUSI_ACCT_NO BUSI_ACCT_NO, ACCT_NAME ACCT_NAME, BANK_DEP BANK_DEP, 
@@ -32,7 +34,7 @@
         BLN_AREA BLN_AREA, IS_OVERDRAW IS_OVERDRAW, REMARK REMARK, CREATE_USER CREATE_USER, 
         CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
         SEQ_NO SEQ_NO, ACCOUNT_NATURE ACCOUNT_NATURE, IS_CALINT IS_CALINT, OWN_DEPT OWN_DEPT, 
-        ACC_PASS ACC_PASS, TRADE_PASS TRADE_PASS
+        ACC_PASS ACC_PASS, TRADE_PASS TRADE_PASS,IS_RZRQ,DSP_URL
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -64,7 +66,7 @@
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
             UPDATE_USER, UPDATE_TIME, SEQ_NO, 
             ACCOUNT_NATURE, IS_CALINT, OWN_DEPT, 
-            ACC_PASS, TRADE_PASS)
+            ACC_PASS, TRADE_PASS,IS_RZRQ,DSP_URL)
         values (#{acctNo,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{busiAcctNo,jdbcType=VARCHAR}, 
             #{acctName,jdbcType=VARCHAR}, #{bankDep,jdbcType=VARCHAR}, #{inOutBank,jdbcType=VARCHAR}, 
             #{corrNo,jdbcType=VARCHAR}, #{largePayno,jdbcType=VARCHAR}, #{swiftCode,jdbcType=VARCHAR}, 
@@ -72,7 +74,8 @@
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{seqNo,jdbcType=VARCHAR}, 
             #{accountNature,jdbcType=VARCHAR}, #{isCalint,jdbcType=VARCHAR}, #{ownDept,jdbcType=VARCHAR}, 
-            #{accPass,jdbcType=VARCHAR}, #{tradePass,jdbcType=VARCHAR})
+            #{accPass,jdbcType=VARCHAR}, #{tradePass,jdbcType=VARCHAR},#{isRzrq,jdbcType=VARCHAR},
+            #{dspUrl,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.StlCapacctInfo" >
         insert into STL_CAPACCT_INFO
@@ -146,6 +149,12 @@
             <if test="tradePass != null" >
                 TRADE_PASS,
             </if>
+            <if test="isRzrq != null" >
+                IS_RZRQ,
+            </if>
+            <if test="dspUrl != null" >
+                DSP_URL,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="acctNo != null" >
@@ -217,17 +226,23 @@
             <if test="tradePass != null" >
                 #{tradePass,jdbcType=VARCHAR},
             </if>
+            <if test="isRzrq != null" >
+                #{isRzrq,jdbcType=VARCHAR},
+            </if>
+            <if test="dspUrl != null" >
+                #{dspUrl,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.StlCapacctInfo" >
         insert into STL_CAPACCT_INFO(ACCT_NO, CCY, BUSI_ACCT_NO, ACCT_NAME, BANK_DEP, IN_OUT_BANK, 
         CORR_NO, LARGE_PAYNO, SWIFT_CODE, BLN_AREA, IS_OVERDRAW, REMARK, CREATE_USER, CREATE_DEPT, 
         CREATE_TIME, UPDATE_USER, UPDATE_TIME, SEQ_NO, ACCOUNT_NATURE, IS_CALINT, OWN_DEPT, 
-        ACC_PASS, TRADE_PASS)
+        ACC_PASS, TRADE_PASS,IS_RZRQ,DSP_URL)
         select ACCT_NO, CCY, BUSI_ACCT_NO, ACCT_NAME, BANK_DEP, IN_OUT_BANK, 
             CORR_NO, LARGE_PAYNO, SWIFT_CODE, BLN_AREA, IS_OVERDRAW, REMARK, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, SEQ_NO, ACCOUNT_NATURE, IS_CALINT, OWN_DEPT, 
-            ACC_PASS, TRADE_PASS
+            ACC_PASS, TRADE_PASS,IS_RZRQ,DSP_URL
              from STL_CAPACCT_INFO
              where 1 = 1 and ACCT_NO = #{acctNo,jdbcType=VARCHAR} and CCY = #{ccy,jdbcType=VARCHAR}
     </insert>
@@ -288,6 +303,12 @@
             <if test="tradePass != null" >
                 TRADE_PASS = #{tradePass,jdbcType=VARCHAR},
             </if>
+            <if test="isRzrq != null">
+                IS_RZRQ = #{isRzrq,jdbcType=VARCHAR},
+            </if>
+            <if test="dspUrl != null">
+                DSP_URL = #{dspUrl,jdbcType=VARCHAR},
+            </if>
         </set>
         where ACCT_NO = #{acctNo,jdbcType=VARCHAR}
           and CCY = #{ccy,jdbcType=VARCHAR}
@@ -311,7 +332,9 @@
             IS_CALINT = #{isCalint,jdbcType=VARCHAR},
             OWN_DEPT = #{ownDept,jdbcType=VARCHAR},
             ACC_PASS = #{accPass,jdbcType=VARCHAR},
-            TRADE_PASS = #{tradePass,jdbcType=VARCHAR}
+            TRADE_PASS = #{tradePass,jdbcType=VARCHAR},
+            IS_RZRQ = #{isRzrq,jdbcType=VARCHAR},
+            DSP_URL = #{isRzrq,jdbcType=VARCHAR}
         where ACCT_NO = #{acctNo,jdbcType=VARCHAR}
           and CCY = #{ccy,jdbcType=VARCHAR}
     </update>
