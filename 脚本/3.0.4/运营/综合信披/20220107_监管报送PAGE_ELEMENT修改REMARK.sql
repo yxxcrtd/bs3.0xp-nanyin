@@ -73,6 +73,9 @@ UPDATE SYS_PAGE_ELEMENT SET "REMARK" = '查询' WHERE "PAGE_ID" = 'ReportStatusI
 -- 中债反馈文件管理 
 UPDATE SYS_PAGE_ELEMENT SET "REMARK" = '查询' WHERE "PAGE_ID" = 'ChbFeedbackFileManagement001' AND "ELEMENT_ID" = 'ChbFeedbackFileManagement001_btn_search';
 
+-- 产品发行登记
+UPDATE SYS_PAGE_ELEMENT SET "REMARK" = '报送' WHERE "PAGE_ID" = 'SvrProdPersonIssue001' AND "ELEMENT_ID" = 'SvrProdPersonIssue001_btn_submitChb';
+UPDATE SYS_PAGE_ELEMENT SET "REMARK" = '重新报送' WHERE "PAGE_ID" = 'SvrProdPersonIssue001' AND "ELEMENT_ID" = 'SvrProdPersonIssue001_btn_reSubmitChb';
 
 --查询统计
 -- 增值税台账

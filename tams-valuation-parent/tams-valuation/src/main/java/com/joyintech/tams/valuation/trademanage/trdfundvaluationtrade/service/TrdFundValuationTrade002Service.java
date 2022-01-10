@@ -13,10 +13,14 @@ package com.joyintech.tams.valuation.trademanage.trdfundvaluationtrade.service;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
+import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValMngMnfTade;
+import com.joyintech.tams.valuation.trademanage.trdfundvaluationtrade.dto.TrdFundTradeResult;
 import com.joyintech.tams.valuation.trademanage.trdfundvaluationtrade.dto.TrdFundValuationTradeDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -29,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 /**
- * 计划类资产投资交易新建
+ * 基金交易新建
  *
  * @author fanshuanghu
  * @version 1.0 2018年11月22日
@@ -77,12 +81,15 @@ public class TrdFundValuationTrade002Service extends CommonExportService<TrdFund
     @Autowired
     private FinRateInfoMapper finRateInfoMapper;
 
+    @Autowired
+    private TrdFundTradeCommonServer trdFundTradeCommonServer;
+
 
     /**
      * 合成初始化实体类
      *
      * @param tradeId 交易编号
-     * @return 计划类资产实体类
+     * @return 基金实体类
      * @see
      * @since 1.0
      */
@@ -99,8 +106,18 @@ public class TrdFundValuationTrade002Service extends CommonExportService<TrdFund
      * {@inheritDoc}
      */
     @Override
-    public void doComplete(TrdFundValuationTradeDto entity, OperationType type) {
-        restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/TrdFundValuationTrade/doComplete/" + type, entity, Integer.class);
+    public void doComplete(TrdFundValuationTradeDto entity, OperationType operationType) {
+        String action = StringUtil.EMPTY;
+        TrdFundTradeResult trdFundTradeResult = new TrdFundTradeResult();
+        trdFundTradeResult = generateEntity(entity);
+        if (OperationType.NEW.equals(operationType)) {
+            action = "insert";
+        }
+        else {
+            action = "update";
+        }
+
+        restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/TrdFundValuationTrade/" + action, trdFundTradeResult, Integer.class);
     }
 
     /**
@@ -145,6 +162,38 @@ public class TrdFundValuationTrade002Service extends CommonExportService<TrdFund
         return restTemplate.postForObject(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/TrdFundValuationTrade/createFundTradeId",
                 null, String.class);
+
+    }
+
+    /**
+     * @Description:根据交易编号查询详情
+     * @auther: yuzj
+     * @date: 2022/1/7
+     * @param:
+     * @return:
+     */
+    public TrdFundValuationTradeDto queryTradeInfoByTradeId(String tradeId) {
+        return restTemplate.postForObject(
+                ServiceApplication.VALUATION_SERVICE_NAME + "/TrdFundValuationTrade/queryTradeInfoByTradeId",
+                tradeId, TrdFundValuationTradeDto.class);
+    }
+
+    //封装实体类
+    public TrdFundTradeResult generateEntity(TrdFundValuationTradeDto trdFundValuationTradeDto){
+        List<ValMngMnfTade> listValValMngMnfTade = new ArrayList<ValMngMnfTade>();
+        ValMngMnfTade valMngMnfTade = new ValMngMnfTade();
+        BeanUtil.copyPropertiesIgnoreNull(valMngMnfTade,trdFundValuationTradeDto);
+        valMngMnfTade.setTradeDate(trdFundValuationTradeDto.getTradeDate());
+        //比较界面和接口字段差异，并手动给接口字段赋值
+        valMngMnfTade.setAssetId("F06_"+trdFundValuationTradeDto.getFinprodId());//资产代码  F06基金
+        valMngMnfTade.setDataActionSign("01");
+        valMngMnfTade.setCounterId("FYDLCA365001");
+        valMngMnfTade.setCounterType("01");
+        valMngMnfTade.setIsChlFeeAmt("Y");
+        valMngMnfTade.setIsClean("N");
+
+        listValValMngMnfTade.add(valMngMnfTade);
+        return trdFundTradeCommonServer.generateNetEntity(trdFundValuationTradeDto,listValValMngMnfTade);
 
     }
 

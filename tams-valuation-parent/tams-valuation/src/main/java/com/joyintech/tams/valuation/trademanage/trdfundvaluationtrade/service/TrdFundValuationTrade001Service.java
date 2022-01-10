@@ -32,7 +32,7 @@ import java.util.Map;
  */
 @Service
 @Transactional(rollbackFor=Exception.class)
-public class TrdFundValuationTrade001Service extends CommonExportService<TrdFundValuationTradeDto>  implements BaseProcessService<TrdFundValuationTradeDto> {
+public class TrdFundValuationTrade001Service extends CommonExportService<TrdFundValuationTradeDto> implements BaseProcessService<TrdFundValuationTradeDto> {
     /**
      * 查询
      * @param pageParam Map
@@ -50,7 +50,8 @@ public class TrdFundValuationTrade001Service extends CommonExportService<TrdFund
      */
     @Override
     public void doComplete(TrdFundValuationTradeDto entity, OperationType type) {
-        simpleRestTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/TrdFundValuationTrade/doComplete/" + type, entity, Integer.class);
+        String action = "delete";
+        simpleRestTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/TrdFundValuationTrade/" + action, entity, Integer.class);
     }
 
 
@@ -67,6 +68,9 @@ public class TrdFundValuationTrade001Service extends CommonExportService<TrdFund
                 params, TrdFundValuationTradeDto.class);
 
     }
+
+
+
 
 
 }
