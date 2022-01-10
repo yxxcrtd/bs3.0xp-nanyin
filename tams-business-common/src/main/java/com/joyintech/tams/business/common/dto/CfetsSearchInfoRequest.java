@@ -20,6 +20,8 @@ public class CfetsSearchInfoRequest {
     private String partyId;
     @ApiModelProperty(name="dealType",value="交易类型",example="04")
     private String dealType;
+    @ApiModelProperty(name="searchs",value="模糊查询输入多个值",example="1")
+    private String searchs;
 
 
     public String getSearch() {
@@ -60,5 +62,13 @@ public class CfetsSearchInfoRequest {
 
     public void setPartyId(String partyId) {
         this.partyId = partyId;
+    }
+
+    public String getSearchs() {
+        return searchs;
+    }
+
+    public void setSearchs(String searchs) {
+        this.searchs = searchs;
     }
 }

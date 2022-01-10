@@ -318,6 +318,12 @@
             <if test="sysDate != null and !sysDate.equals('')">
                 AND  to_date(I.Tradedate,'yyyy-MM-dd')= #{sysDate,jdbcType=DATE}
             </if>
+            <if test="searchList != null and searchList.size() > 0">
+                AND mstc.party_id in
+                <foreach collection="searchList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
         </where>
     </select>
     <select id="queryCounterPartyList" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -327,6 +333,12 @@
             <if test="search != null and !search.equals('')">
                 AND	(mst.counter_id like concat('%',concat(#{search},'%'))
                 or mst.counter_name like concat('%',concat(#{search},'%')))
+            </if>
+            <if test="searchList != null and searchList.size() > 0">
+                AND mst.party_id in
+                <foreach collection="searchList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
             </if>
     </select>
     <select id="queryMySideTraderList" resultType="com.joyintech.framework.select.SelectOptionDto">
