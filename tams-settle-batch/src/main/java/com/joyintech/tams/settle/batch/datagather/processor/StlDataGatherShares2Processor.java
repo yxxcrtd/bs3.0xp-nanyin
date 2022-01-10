@@ -1,6 +1,7 @@
 package com.joyintech.tams.settle.batch.datagather.processor;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -613,19 +614,19 @@ public class StlDataGatherShares2Processor extends StlDataGatherProcessor {
 			trdProductDealDto.setTradeAmt(null == settleTransDataDto.getTradeAmt() ? BigDecimal.ZERO : settleTransDataDto.getTradeAmt().subtract(list.get(4)));
 		}else {
 			//交易份额
-			trdProductDealDto.setShareAmt(null == settleTransDataDto.getShareAmt() ? BigDecimal.ZERO : settleTransDataDto.getShareAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum));
+			trdProductDealDto.setShareAmt(null == settleTransDataDto.getShareAmt() ? BigDecimal.ZERO : settleTransDataDto.getShareAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum, 4, RoundingMode.HALF_UP));
 			list.set(0,list.get(0).add(trdProductDealDto.getShareAmt()));
 			//净价总额
-			trdProductDealDto.setCpriceAmt(null == settleTransDataDto.getCpriceAmt() ? BigDecimal.ZERO : settleTransDataDto.getCpriceAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum));
+			trdProductDealDto.setCpriceAmt(null == settleTransDataDto.getCpriceAmt() ? BigDecimal.ZERO : settleTransDataDto.getCpriceAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum, 4, RoundingMode.HALF_UP));
 			list.set(1, list.get(1).add(trdProductDealDto.getCpriceAmt()));
 			//交易本金
-			trdProductDealDto.setPrinAmt(null == settleTransDataDto.getPrinAmt() ? BigDecimal.ZERO : settleTransDataDto.getPrinAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum));
+			trdProductDealDto.setPrinAmt(null == settleTransDataDto.getPrinAmt() ? BigDecimal.ZERO : settleTransDataDto.getPrinAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum, 4, RoundingMode.HALF_UP));
 			list.set(2, list.get(2).add(trdProductDealDto.getPrinAmt()));
 			// 全价总额
-			trdProductDealDto.setFpriceAmt(null == settleTransDataDto.getFpriceAmt() ? BigDecimal.ZERO : settleTransDataDto.getFpriceAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum));
+			trdProductDealDto.setFpriceAmt(null == settleTransDataDto.getFpriceAmt() ? BigDecimal.ZERO : settleTransDataDto.getFpriceAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum, 4, RoundingMode.HALF_UP));
 			list.set(3, list.get(3).add(trdProductDealDto.getFpriceAmt()));
 			//交易金额
-			trdProductDealDto.setTradeAmt(null == settleTransDataDto.getTradeAmt() ? BigDecimal.ZERO : settleTransDataDto.getTradeAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum));
+			trdProductDealDto.setTradeAmt(null == settleTransDataDto.getTradeAmt() ? BigDecimal.ZERO : settleTransDataDto.getTradeAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum, 4, RoundingMode.HALF_UP));
 			list.set(4, list.get(4).add(trdProductDealDto.getTradeAmt()));
 		}
 		// 交易方向
