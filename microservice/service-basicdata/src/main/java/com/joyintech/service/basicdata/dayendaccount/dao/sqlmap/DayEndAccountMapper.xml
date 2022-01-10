@@ -11,8 +11,10 @@
             ssr.TRADE_MARKET,
             ssr.CHECK_RESULT,
             CASE
+                <!--GZYHTZJY-1075:优先取明细资产类型 modify by fuyongsheng 20220110 start-->
+                WHEN settle.FINPROD_TYPE2 IS NOT NULL THEN settle.FINPROD_TYPE2
                 WHEN ssrd.FINPROD_TYPE IS NOT NULL THEN ssrd.FINPROD_TYPE
-                WHEN ssrd.FINPROD_TYPE IS NOT NULL THEN ssrd.FINPROD_TYPE
+                <!--GZYHTZJY-1075:优先取明细资产类型 modify by fuyongsheng 20220110 end-->
                 WHEN ins.STOCK_CODE IS NOT NULL THEN #{prodType2_F07}
                 WHEN fpt.TYPE_8 IS NOT NULL THEN fpt.TYPE_8
             END  FINPROD_TYPE,
