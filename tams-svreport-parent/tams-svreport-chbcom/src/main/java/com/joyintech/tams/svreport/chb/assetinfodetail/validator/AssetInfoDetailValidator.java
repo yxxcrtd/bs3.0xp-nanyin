@@ -21,9 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  *  存款类资产--业务验证
@@ -96,18 +94,6 @@ public class AssetInfoDetailValidator implements BeanValidator{
         // add by zhangliang 20210126 中债check调用 start
         resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getAssetType2(), ValidMessage.class);
         // add by zhangliang 20210126 中债check调用 end
-        //modify by tuqirong 2022-01-10 start 错误信息去重处理
-        Map<String, Object> errMap = new HashMap<>();
-        List<ValidMessage> result = new ArrayList<>();
-        resultList.forEach(validMessage -> {
-            if (!errMap.containsKey(validMessage.getMessage())) {
-                result.add(validMessage);
-                errMap.put(validMessage.getMessage(),validMessage.getMessage());
-            }
-        });
-        resultList.clear();
-        resultList.addAll(result);
-        //modify by tuqirong 2022-01-10 end 错误信息去重处理
          return resultList;
     }
 
