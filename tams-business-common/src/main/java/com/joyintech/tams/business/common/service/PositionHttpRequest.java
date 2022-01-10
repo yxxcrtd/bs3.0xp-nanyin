@@ -7,6 +7,8 @@ import com.joyintech.tams.business.common.exception.PositionException;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.util.HttpUtil;
 import com.joyintech.tams.business.common.util.PositionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,11 @@ import java.util.Map;
 @Component
 @Lazy(value=false)
 public class PositionHttpRequest {
+
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(PositionHttpRequest.class);
 
     public final static String CODE_BUSI_RK = "300";    // 返回业务信息拒绝，余额不足，软控，前端确认
     public final static String CODE_BUSI_YK = "310";    // 返回业务信息拒绝，余额不足，硬控，前端提示
@@ -39,6 +46,7 @@ public class PositionHttpRequest {
     public static void send(Object req) throws PositionException{
         // 
         String res = sendPrivate(req);
+        logger.info("头寸返回数据:"+res);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){
             throw new PositionException("头寸返回数据为空！");
