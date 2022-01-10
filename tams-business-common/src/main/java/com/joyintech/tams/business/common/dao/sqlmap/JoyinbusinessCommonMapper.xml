@@ -305,8 +305,11 @@
     </select>
     <select id="queryCstpPartyList" resultType="com.joyintech.framework.select.SelectOptionDto">
         select distinct I.Counterinstitutioncode id,
-        I.Institutionchinesefullname text
+        I.Institutionchinesefullname text,
+        mstc.party_id as object
         from  INTERF_CSTP_TRADE I
+        left join MST_CFETS_CUSTOMER_INFO mstc
+        on mstc.party_customer_id=I.Counterinstitutioncode
         <where>
             <if test="search != null and !search.equals('')">
                 AND	(I.Counterinstitutioncode like concat('%',concat(#{search},'%'))

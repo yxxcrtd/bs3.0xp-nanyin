@@ -551,6 +551,8 @@ public enum DictCodeList implements BaseDictCodeList {
 	交易方向_赎回到账(DictCode.交易方向,"T24","赎回到账"),
 	交易方向_应收款项转入(DictCode.交易方向,"T25","应收款项转入"),
 	交易方向_应收款项转出(DictCode.交易方向,"T26","应收款项转出"),
+	交易方向_正回购(DictCode.交易方向,"03","正回购"),
+	交易方向_逆回购(DictCode.交易方向,"04","逆回购"),
 //	交易方向_债券派息(DictCode.交易方向,"T27","债券派息"),
 	交易方向_资金调配(DictCode.交易方向,"C21","资金调配"),
     上市板_主板(DictCode.上市板,"BD01","主板"),
