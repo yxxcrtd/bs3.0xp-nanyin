@@ -87,7 +87,7 @@ INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentInstitution003','AgentInstitut
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentInstitution002','AgentInstitution001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentInstitution002','AgentInstitution002_btn_submit','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentInstitution001','AgentInstitution001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
-INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentPrdInfo002','AgentPrdInfo002_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentPrdInfo002','AgentPrdInfo001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentPrdInfo002','AgentPrdInfo002_btn_submit','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('AgentPrdInfo001','AgentPrdInfo001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
 DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID = 'AgentInstitution001';
