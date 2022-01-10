@@ -806,7 +806,9 @@
         reg.remark as remark,
         reg.deal_fee_amt as trdFeeAmt,
         reg.sett_fee_amt as settleFeeAmt,
-        reg.cprice_amt as tradeAmt
+        reg.cprice_amt as tradeAmt,
+        reg.OUR_SHARE_AMT as ourShareAmt,
+        reg.LENDIN_SHARE_AMT as lendinShareAmt
         from IBU_QUOTE_ETR_RE  reg
         where reg.quote_id= #{totleTradeId,jdbcType=VARCHAR}
     </select>
