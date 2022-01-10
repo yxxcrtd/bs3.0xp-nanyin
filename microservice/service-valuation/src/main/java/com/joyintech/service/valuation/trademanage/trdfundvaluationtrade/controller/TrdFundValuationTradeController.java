@@ -14,8 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.service.valuation.trademanage.trdfundvaluationtrade.dto.TrdFundTradeResult;
 import com.joyintech.service.valuation.trademanage.trdfundvaluationtrade.dto.TrdFundValuationTradeDto;
 import com.joyintech.service.valuation.trademanage.trdfundvaluationtrade.service.TrdFundValuationTradeService;
+import com.joyintech.service.valuation.trademanage.trdplanvaluationtrade.dto.TrdPlanTradeResult;
+import com.joyintech.service.valuation.trademanage.trdplanvaluationtrade.dto.TrdPlanValuationTradeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -67,19 +70,7 @@ public class TrdFundValuationTradeController extends BaseController {
         return trdFundValuationTradeService.findFinprodId(page,length,map);
     }
 
-    /**
-     * 回调函数 操作具体 new delete update <功能详细描述>
-     *
-     * @see
-     * @since 1.0
-     */
-    @Transactional
-    @DTXTransaction
-    @PostMapping("/doComplete/{type}")
-    public void doComplete(@RequestBody TrdFundValuationTradeDto dto, @PathVariable("type") String type) {
-        dto.setOperateType(type);
-        trdFundValuationTradeService.doComplete(dto);
-    }
+
 
     /**
      * 查询 支持分页 <功能详细描述>
@@ -115,6 +106,50 @@ public class TrdFundValuationTradeController extends BaseController {
     @PostMapping("/findAll")
     public List<TrdFundValuationTradeDto> findAll(@RequestBody Map<String, Object> param){
         return trdFundValuationTradeService.findAll(param);
+    }
+
+    /**
+     * 根据交易编号查询对象
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("queryTradeInfoByTradeId")
+    public TrdFundValuationTradeDto queryTradeInfoByTradeId(@RequestBody String  tradeId) {
+        return trdFundValuationTradeService.queryTradeInfoByTradeId(tradeId);
+    }
+
+
+    /**
+     * 回调函数 操作具体 new
+     *
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("insert")
+    public void insertNet(@RequestBody TrdFundTradeResult dto) {
+        trdFundValuationTradeService.insert(dto);
+    }
+
+    /**
+     * 回调函数 操作具体 update <功能详细描述>
+     *
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("update")
+    public void updateNet(@RequestBody TrdFundTradeResult dto) {
+        trdFundValuationTradeService.update(dto);
+    }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("delete")
+    public int delete(@RequestBody TrdFundValuationTradeDto dto){
+        return trdFundValuationTradeService.delete(dto);
     }
 
 }
