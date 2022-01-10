@@ -228,6 +228,9 @@
             <if test="pTypeTwo != null" >
                 P_TYPE_TWO = #{pTypeTwo,jdbcType=VARCHAR},
             </if>
+            <if test="partyId != null" >
+                PARTY_ID = #{partyId,jdbcType=VARCHAR},
+            </if>
         </set>
         where COUNTER_ID = #{counterId,jdbcType=VARCHAR}
     </update>

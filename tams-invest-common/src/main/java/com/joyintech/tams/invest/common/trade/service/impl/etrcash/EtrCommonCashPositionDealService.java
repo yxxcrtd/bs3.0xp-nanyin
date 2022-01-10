@@ -1215,7 +1215,7 @@ public class EtrCommonCashPositionDealService extends BaseService {
     	EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
         EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entrustId);
         List<EtrEntrustDetail> etrEntrustDetailList=null;
-        if(StringUtil.equals(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue(),etrEntrust.getEntrustClass())) {
+        if(etrEntrust!=null&&etrEntrust.getEntrustClass()!=null&&StringUtil.equals(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue(),etrEntrust.getEntrustClass())) {
             etrEntrustDetailList=etrEntrustDetailMapper.selectList(entrustId);
         }
         //流程中委托查询流程表
@@ -1239,7 +1239,7 @@ public class EtrCommonCashPositionDealService extends BaseService {
         		BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd,wflEtrEntrustAdd );
         	}
         }
-        if(StringUtil.equals(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue(),etrEntrust.getEntrustClass())&&
+        if(etrEntrust!=null&&etrEntrust.getEntrustClass()!=null&&StringUtil.equals(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue(),etrEntrust.getEntrustClass())&&
             CollectionUtils.isEmpty(etrEntrustDetailList)) {
             WflEtrEntrustDetailKey wflEtrEntrustDetailKey = new WflEtrEntrustDetailKey();
             wflEtrEntrustDetailKey.setEntrustId(entrustId);

@@ -395,7 +395,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		return new Message<AjaxResult>().success().setData(aj);
 	}
 
-	@ApiOperation(value = "报价检查", notes = "报价修改、复制、回退、回复、撤回检查")
+	@ApiOperation(value = "报价检查", notes = "报价修改、复制、回退、回复、删除、撤回检查")
 	@ResponseBody
 	@RequestMapping("/checkOperationAllow")
 	public Message<AjaxResult> checkOperationAllow(@RequestBody CfetsBondCheckRequst cfetsBondCheckRequst) {
@@ -421,6 +421,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		}
 		return new Message<AjaxResult>().success().setData(ar);
 	}
+
 
 	@ApiOperation(value = "报价批量撤回", notes = "报价批量撤回")
 	@ResponseBody
@@ -455,6 +456,22 @@ public class CfetsIbuQuoteBondController extends BaseController {
 
 		return new Message<AjaxResult>().success().setData(ar);
 	}
+
+	@ApiOperation(value = "报价删除", notes = "报价删除")
+	@ResponseBody
+	@RequestMapping("doDel")
+	public Message<AjaxResult> doDel(@RequestBody CfetsBondCheckRequst cfetsBondCheckRequst) {
+		AjaxResult ar = null;
+		BondQuoteInfoDto bondQuote = new BondQuoteInfoDto();
+		BeanUtil.copyPropertiesIgnoreNull(bondQuote,cfetsBondCheckRequst);
+		if (ibuQuoteBondService.doDel(bondQuote)) {
+			ar = new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS"));
+		} ;
+
+		return new Message<AjaxResult>().success().setData(ar);
+	}
+
+
 
 	@ApiOperation(value = "强制完成检查", notes = "强制完成检查")
 	@ResponseBody

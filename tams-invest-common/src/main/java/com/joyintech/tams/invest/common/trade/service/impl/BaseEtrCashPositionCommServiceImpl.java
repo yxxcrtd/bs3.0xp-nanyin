@@ -28,6 +28,7 @@ import com.joyintech.tams.invest.common.trade.service.impl.etrcash.*;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -295,14 +296,16 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
     public CommonResult entrustCloseExecute(String entrustId) {
         if (StringUtil.isNotEmpty(entrustId)) {
             EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
-            if(StringUtil.equals(DictCodeListExt3.投资指令类型_单组合单资产指令.getValue(),etrEntrust.getEntrustClass())) {
+            if(etrEntrust!=null&&etrEntrust.getEntrustClass()!=null&&StringUtil.equals(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue(),etrEntrust.getEntrustClass())) {
+                List<EntrustCommonDto> entrustCommonDtoList = EtrCommonCashPositionDealService.findEntrustMulti(entrustId);
+                if(!CollectionUtils.isEmpty(entrustCommonDtoList)) {
+                    entrustCommonDtoList.stream().forEach(entrustCommonDto -> {
+                        entrustCloseExecuteSinglePortfolio(entrustCommonDto);
+                    });
+                }
+            }else{
                 EntrustCommonDto entrustCommonDto = EtrCommonCashPositionDealService.findEntrust(entrustId);
                 entrustCloseExecuteSinglePortfolio(entrustCommonDto);
-            }else{
-                List<EntrustCommonDto> entrustCommonDtoList = EtrCommonCashPositionDealService.findEntrustMulti(entrustId);
-                entrustCommonDtoList.stream().forEach(entrustCommonDto->{
-                    entrustCloseExecuteSinglePortfolio(entrustCommonDto);
-                });
             }
 
         }
