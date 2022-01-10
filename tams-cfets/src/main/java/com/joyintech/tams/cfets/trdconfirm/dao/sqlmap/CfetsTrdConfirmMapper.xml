@@ -108,7 +108,7 @@
             AND reg.trade_market=#{tradeMarket,jdbcType=VARCHAR}
         </if>
         <if test="settleSpeed != null and settleSpeed != ''">
-            AND  reg.settle_speed = #{settleSpeed,jdbcType=VARCHAR}
+            AND  decode(reg.settle_speed,0,'01',1,'02',2,'03')= #{settleSpeed,jdbcType=VARCHAR}
         </if>
         <if test="secAcctIdList != null and secAcctIdList.size() > 0">
             AND reg.sec_manage_acct_id in
@@ -160,9 +160,9 @@
             <if test="tradeDate != null and !tradeDate.equals('')">
                 AND aaa.tradeDate = #{tradeDate,jdbcType=DATE}
             </if>
-            <if test="quoteid != null and !''.equals(quoteid)">
+          <!--  <if test="quoteid != null and !''.equals(quoteid)">
                 and aaa.totleTradeId = #{quoteid,jdbcType=VARCHAR}
-            </if>
+            </if>-->
             <if test="finprodMarketId != null and !''.equals(finprodMarketId)">
                and  aaa.finprodMarketId = #{finprodMarketId,jdbcType=VARCHAR}
             </if>
@@ -310,7 +310,7 @@
             AND '01'=#{tradeMarket,jdbcType=VARCHAR}
         </if>
         <if test="settleSpeed != null and settleSpeed != ''">
-            AND  ib.settle_speed = #{settleSpeed,jdbcType=VARCHAR}
+            AND  decode(ib.settle_speed,0,'01',1,'02',2,'03') = #{settleSpeed,jdbcType=VARCHAR}
         </if>
         <if test="secAcctIdList != null and secAcctIdList.size() > 0">
             AND ib.sec_manage_acct_id in
@@ -338,6 +338,9 @@
             <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
+        </if>
+        <if test="execid != null and execid != ''">
+            AND ibd.execid = #{execid,jdbcType=VARCHAR}
         </if>
         union all
         select  '有效' as effectiveStatusName,
@@ -421,7 +424,7 @@
             AND '01'=#{tradeMarket,jdbcType=VARCHAR}
         </if>
         <if test="settleSpeed != null and settleSpeed != ''">
-            AND  ic.settle_speed = #{settleSpeed,jdbcType=VARCHAR}
+            AND  decode(ic.settle_speed,0,'01',1,'02',2,'03') = #{settleSpeed,jdbcType=VARCHAR}
         </if>
         <if test="secAcctIdList != null and secAcctIdList.size() > 0">
             AND ic.sec_manage_acct_id in
@@ -449,6 +452,9 @@
             <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
+        </if>
+        <if test="execid != null and execid != ''">
+            AND ic.execid = #{execid,jdbcType=VARCHAR}
         </if>
     </sql>
 
