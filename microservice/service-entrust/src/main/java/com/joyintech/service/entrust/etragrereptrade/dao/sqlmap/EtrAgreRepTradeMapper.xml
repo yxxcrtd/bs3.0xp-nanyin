@@ -87,17 +87,17 @@
         AND t2.BRANCH = t1.BRANCH
         LEFT JOIN FIN_PRODUCT t4
         ON t4.FINPROD_ID = t2.PLEDGE_FINPROD_ID
-        LEFT JOIN TRD_PRODUCT_TEMP_DEAL t5
+        INNER JOIN TRD_PRODUCT_DEAL t5
         ON t5.FINPROD_ID = t1.FINPROD_ID
         AND t5.BRANCH = t1.BRANCH
-        AND t5.PS in ('03','04')
-        LEFT JOIN TRD_PRODUCT_TEMP_DEAL_ADD t6
+        AND t5.PS in ('T01')
+        INNER JOIN TRD_PRODUCT_DEAL_ADD t6
         ON t5.TRADE_ID = t6.TRADE_ID
         LEFT JOIN ETR_ENTRUST t7
         ON t7.ENTRUST_ID = t6.ENTRUST_ID
         LEFT JOIN ETR_ENTRUST_ADD t8
         ON t8.ENTRUST_ID = t7.ENTRUST_ID
-        WHERE  t1.FINPROD_ID = #{tradeId}
+        WHERE  t5.f_trade_id = #{tradeId}
         AND t1.BRANCH = 0
     </select>
     <!-- 查询原成交指令信息 -->
@@ -444,21 +444,21 @@
     <!-- 在途回购查询 -->
     <select id="findOnWayRepPage" parameterType="Map" resultType="com.joyintech.service.entrust.etragrereptrade.dto.OnWayRep002Dto">
         select
-        decode(trd_product_temp_deal_add.portfolio_id,null,TPDA.portfolio_id,trd_product_temp_deal_add.portfolio_id) portfolioId, /** 组合代码 **/
+        trd_product_deal_add.portfolio_id portfolioId, /** 组合代码 **/
         PTL_PORTFOLIO.PORTFOLIO_NAME portfolioName, /** 组合名称 **/
         FIN_PRODUCT_TYPE.Type_7 as ps, /** 交易方向 **/
         case
-        when trd_product_temp_deal_1.trade_id is not null OR TPD1.trade_id is not null then
+        when trd_fin_product_deal_total.totle_trade_id is not null then
         '已购回'
         else
         '未购回'
         end as purStatus, /** 购回状态  **/
-        case
+        <!--case
         when TPD1.trade_id is not null then
         '已交收'
         else
         '未交收'
-        end as settleStatus, /** 交收状态 **/
+        end as settleStatus, /** 交收状态 **/-->
         fin_trade_product.TERM repDays, /** 回购天数 **/
         fin_trade_product.Mdate backDate, /** 回购到期日 **/
         fin_trade_product.Trade_Market market, /** 市场 **/
@@ -475,45 +475,32 @@
         fin_trade_product.act_cap_days occupyDays, /** 实际占款天数 **/
         fin_trade_product.m_int_amt mIntAmt, /** 回购利息 **/
         fin_trade_product.m_Trade_Amt expireSettleAmt, /** 到期结算金额 **/
-        decode(fin_trade_product.TRADE_MARKET,'03',fin_trade_product.finprod_id,'04','') tradeId, /** 成交编号 **/
-        decode(fin_trade_product.TRADE_MARKET,'03','','04',fin_trade_product.finprod_id) intiTradeId /** 初始交易编号 **/
+        decode(fin_trade_product.TRADE_MARKET,'03',trd_product_deal_2.f_trade_id,'04','') tradeId, /** 成交编号 **/
+        decode(fin_trade_product.TRADE_MARKET,'03','','04',trd_product_deal_2.f_trade_id) intiTradeId /** 初始交易编号 **/
         from fin_trade_product /** 交易类金融产品 **/
         inner join FIN_PRODUCT_TYPE /** 金融产品分类表 **/
         on fin_trade_product.finprod_id = FIN_PRODUCT_TYPE.Finprod_Id
         and fin_trade_product.BRANCH = FIN_PRODUCT_TYPE.Branch
         and FIN_PRODUCT_TYPE.Type_6 = 'H01'
         AND FIN_PRODUCT_TYPE.TYPE_7 in ('03', '04')
-        LEFT JOIN trd_product_temp_deal trd_product_temp_deal_2 /** 金融产品临时交易 **/
-        on fin_trade_product.finprod_id = trd_product_temp_deal_2.Finprod_Id
-        and fin_trade_product.branch = trd_product_temp_deal_2.branch
-        and trd_product_temp_deal_2.ps in ('03', '04')
-        LEFT JOIN trd_product_temp_deal_add /** 金融产品临时交易附属表 **/
-        on trd_product_temp_deal_2.trade_id = trd_product_temp_deal_add.trade_id
-        LEFT JOIN TRD_PRODUCT_DEAL TPD
-        ON fin_trade_product.finprod_id = TPD.Finprod_Id
-        AND fin_trade_product.branch = TPD.branch
-        AND TPD.PS in ('03', '04')
-        AND TPD.TRADE_STATUS = '01'
-        AND TPD.IS_CANCEL = 'N'
-        LEFT JOIN TRD_PRODUCT_DEAL_ADD TPDA
-        ON TPD.TRADE_ID = TPDA.TRADE_ID
+        INNER JOIN trd_product_deal trd_product_deal_2 /** 金融产品临时交易 **/
+        on fin_trade_product.finprod_id = trd_product_deal_2.Finprod_Id
+        and fin_trade_product.branch = trd_product_deal_2.branch
+        and trd_product_deal_2.ps in ('T01')
+        LEFT JOIN trd_product_deal_add /** 金融产品临时交易附属表 **/
+        on trd_product_deal_2.trade_id = trd_product_deal_add.trade_id
         left join fin_deal_pledge /** 回购质押品 **/
         on fin_trade_product.finprod_id = fin_deal_pledge.finprod_id
         AND fin_trade_product.branch = fin_deal_pledge.branch
-        left join FIN_PRODUCT fp on fp.finprod_id = fin_deal_pledge.pledge_finprod_id
+        left join FIN_PRODUCT fp
+        on fp.finprod_id = fin_deal_pledge.pledge_finprod_id
         LEFT JOIN PTL_PORTFOLIO /** 组合 **/
-        on trd_product_temp_deal_add.Portfolio_Id = PTL_PORTFOLIO.Portfolio_Id
-        LEFT JOIN trd_product_temp_deal trd_product_temp_deal_1 /** 金融产品临时交易1 **/
-        on fin_trade_product.finprod_id = trd_product_temp_deal_1.finprod_id
-        AND fin_trade_product.branch = trd_product_temp_deal_1.branch
-        AND trd_product_temp_deal_1.ps in ('T96', 'T95', 'T93', 'T56')
-        LEFT JOIN TRD_PRODUCT_DEAL TPD1
-        ON fin_trade_product.finprod_id = TPD1.Finprod_Id
-        AND fin_trade_product.branch = TPD1.branch
-        AND TPD1.PS in ('T96', 'T95', 'T93', 'T56')
-        AND TPD1.TRADE_STATUS = '01'
-        AND TPD1.IS_CANCEL = 'N'
-        LEFT JOIN PTL_PORTFOLIO_AUTHORITY      /** 组合权限表 **/
+        on trd_product_deal_add.Portfolio_Id = PTL_PORTFOLIO.Portfolio_Id
+        LEFT JOIN trd_fin_product_deal_total trd_fin_product_deal_total /** 金融产品临时交易1 **/
+        on fin_trade_product.finprod_id = trd_fin_product_deal_total.finprod_id
+        AND fin_trade_product.branch = trd_fin_product_deal_total.branch
+        AND trd_fin_product_deal_total.ps in ('T96', 'T95', 'T93', 'T56')
+        LEFT JOIN PTL_PORTFOLIO_AUTHORITY /** 组合权限表 **/
         ON PTL_PORTFOLIO.Portfolio_Id = PTL_PORTFOLIO_AUTHORITY.Portfolio_Id
         where fin_trade_product.branch = '0'
         AND fin_trade_product.trade_market IN ('03', '04')
