@@ -2325,7 +2325,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             			for (int i = beginIndex; i <= endIndex; i ++) {
             				indexList.add(i);
             			}
-            			for (int i = 275; i < size; i ++) {
+            			for (int i = 283; i < size; i ++) {
             				indexList.add(i);
             			}
             		} else {
@@ -2721,7 +2721,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             			for (int i = beginIndex; i <= endIndex; i ++) {
             				indexList.add(i);
             			}
-            			for (int i = 275; i < size; i ++) {
+            			for (int i = 283; i < size; i ++) {
             				indexList.add(i);
             			}
             		} else {
