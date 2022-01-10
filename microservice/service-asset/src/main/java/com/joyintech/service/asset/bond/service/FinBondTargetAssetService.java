@@ -523,8 +523,8 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
             return;
         }
         //若两个list有不同的值，则做以下check，确认是否需要删除/生成当日的数据
-        //iPlatformDate.getSysDate();
-        Date uuu = DateUtil.parse("2021-12-16");
+        Date iPlatformDateSysDate = iPlatformDate.getSysDate();
+//        Date uuu = DateUtil.parse("2021-12-16");
         //是否需要重新生成待交收数据
         Boolean isNeedSettleFlag = false;
         //是否需要删除已生成待交收数据
@@ -533,14 +533,14 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
         //还本付息list
         List<FinCashPlan> finCashPlanListTemp = entity.getBaseFinProductBaseInfoList().get(0).getFinCashPlanList();
         for(FinCashPlan finCashPlan : finCashPlanListTemp){
-            if(finCashPlan.getMdate().compareTo(uuu)==0){
+            if(finCashPlan.getMdate().compareTo(iPlatformDateSysDate)==0){
                 isNeedSettleFlag = true;
             }
             break;
         }
         //行权计划list
         for(FinExercisePlan finExercisePlan : finExercisePlanList){
-            if (finExercisePlan.getExerciseDate().compareTo(uuu)==0){
+            if (finExercisePlan.getExerciseDate().compareTo(iPlatformDateSysDate)==0){
                 isNeedSettleFlag = true;
             }
             break;
@@ -549,21 +549,21 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
         //新计划非空并且新计划中有今日的数据
         //还本付息list
         for(FinCashPlan finCashPlan : finCashPlanfxOldList){
-            if(finCashPlan.getMdate().compareTo(uuu)==0){
+            if(finCashPlan.getMdate().compareTo(iPlatformDateSysDate)==0){
                 isNeedDeleteSettleFlag = true;
             }
             break;
         }
         //还本付息list
         for(FinCashPlan finCashPlan : finCashPlanhbOldList){
-            if(finCashPlan.getMdate().compareTo(uuu)==0){
+            if(finCashPlan.getMdate().compareTo(iPlatformDateSysDate)==0){
                 isNeedDeleteSettleFlag = true;
             }
             break;
         }
         //行权计划list
         for(FinExercisePlan finExercisePlan : finExercisePlanList){
-            if (finExercisePlan.getExerciseDate().compareTo(uuu)==0){
+            if (finExercisePlan.getExerciseDate().compareTo(iPlatformDateSysDate)==0){
                 isNeedDeleteSettleFlag = true;
             }
             break;
@@ -572,7 +572,7 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
         //删除今日是否存在未交收数据
         if(isNeedDeleteSettleFlag){
             this.deleteActData(DictCodeList.共通业务类型_债券类资产存续期.getValue(),
-                    DictCodeListExt1.金融产品类型_投管用_债券.getValue(),uuu,entity.getFinprodId());
+                    DictCodeListExt1.金融产品类型_投管用_债券.getValue(),iPlatformDateSysDate,entity.getFinprodId());
         }
         if(isNeedSettleFlag){
             //重新生成待交收数据
@@ -594,7 +594,7 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
             paramMap.put("CASH_TYPE_1_02", DictCodeListExt1.现金流一级类型_利息.getValue());
             paramMap.put("CASH_TYPE_2_C02", DictCodeListExt1.现金流二级类型_利息.getValue());
             //调整后的计算结束日
-            paramMap.put("mDate", DateUtil.format(uuu));
+            paramMap.put("mDate", DateUtil.format(iPlatformDateSysDate));
 
             List<TrdBondDurationDto> trdBondDurationDtoInsertList = new ArrayList<TrdBondDurationDto>();
 

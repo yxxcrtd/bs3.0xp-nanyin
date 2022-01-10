@@ -52,8 +52,14 @@ public class CfetsEtrIbPositionRequest {
     @ApiModelProperty(name="busiAct",value="业务动作",example="1")
     private String busiAct;
 
+    @ApiModelProperty(name="workFlowId",value="流程编号",example="01")
+    private String workFlowId;
+
     @ApiModelProperty(name="ps",value="交易方向",example="1")
     private String ps;
+
+    @ApiModelProperty(name="decisionAct",value="决策动作",example="01")
+    private String decisionAct;
 
     @ApiModelProperty(name="systemAct",value="系统动作",example="1")
     private String systemAct;
@@ -247,5 +253,21 @@ public class CfetsEtrIbPositionRequest {
 
     public void setCdate(Date cdate) {
         this.cdate = cdate;
+    }
+
+    public String getDecisionAct() {
+        return decisionAct;
+    }
+
+    public void setDecisionAct(String decisionAct) {
+        this.decisionAct = decisionAct;
+    }
+
+    public String getWorkFlowId() {
+        return workFlowId;
+    }
+
+    public void setWorkFlowId(String workFlowId) {
+        this.workFlowId = workFlowId;
     }
 }

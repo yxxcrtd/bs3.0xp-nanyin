@@ -175,9 +175,9 @@
             }
         },
         dblclick:function(table, data) {
-            if(data.ps == BACK_LEND_DIRECTION_04 && data.market == TRADE_MARKET_03){
+            if(data.ps == BACK_LEND_DIRECTION_04){
                 //Joyin.error(data.entrustStatusString+"的指令不允许修改!");
-                Joyin.error("上海证券交易所逆回购不能主动发起请求！");
+                Joyin.error("逆回购不能主动发起请求！");
                 return false;
             }
             window.parent.doResetRiskMathFlag();
