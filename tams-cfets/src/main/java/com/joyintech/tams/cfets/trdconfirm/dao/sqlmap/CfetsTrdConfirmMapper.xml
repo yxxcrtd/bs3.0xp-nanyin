@@ -1767,7 +1767,8 @@
         from reg_fin_product_deal_total reg
         left join fin_product fp
         on reg.finprod_id=fp.finprod_id
-        where reg.trade_market='01'
+        where reg.trade_market='01' and reg.TRADE_STATUS='01' and reg.IS_CANCEL='N'
+        AND NOT EXISTS (SELECT 1 FROM trdquto_match_info match where reg.totle_trade_id=match.PRE_TRADE_ID)
         <if test="totleTradeId != null and totleTradeId != ''">
             and reg.totle_trade_id=#{totleTradeId,jdbcType=VARCHAR}
         </if>
