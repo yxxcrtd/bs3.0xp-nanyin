@@ -1511,7 +1511,8 @@ public class IbuQuoteRepoService extends BaseService {
             if (StringUtil.isEmpty(counterId)) {
                 counterId = item.getCounterId();
             }
-            if (secManageAcctIdFlag && !StringUtil.equals(one.getSecManageAcctId(), item.getSecManageAcctId())) {
+            if (secManageAcctIdFlag && !StringUtil.equals(one.getSecManageAcctIdZZ(), item.getSecManageAcctIdZZ())
+                    && !StringUtil.equals(one.getSecManageAcctIdSQ(), item.getSecManageAcctIdSQ())) {
                 secManageAcctIdFlag = false;
                 message = msgSplicing(message, "OR");
                 message = message + "证券账户";
