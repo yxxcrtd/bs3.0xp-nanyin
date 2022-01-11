@@ -131,6 +131,11 @@ public class Sqlldr implements ImpExcutor {
             String pattern = "[0-9a-zA-Z_]{1,}[/][0-9a-zA-Z_]{1,}[@][0-9a-zA-Z_ =./|:]{1,}";
             Pattern pa = Pattern.compile(pattern);
             Matcher matcher = pa.matcher(command);
+            LOGGER.info("sqlldr--------------------------------------------------------------------------------："+sh+command);
+            LOGGER.info("sqlldr--------------------------------------------------------------------------------："+sh+command);
+            LOGGER.info("sqlldr--------------------------------------------------------------------------------："+sh+command);
+            LOGGER.info("sqlldr--------------------------------------------------------------------------------："+sh+command);
+
             if (matcher.matches()){
                 Process process = Runtime.getRuntime().exec(sh + command);
                 reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
