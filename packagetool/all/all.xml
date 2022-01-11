@@ -96,5 +96,11 @@
 				<module>../../tams-valuation-basicdata</module>
 				<module>../../tams-system/yunying/app</module>
 				<module>../../tams-valuation-interf</module>
+        				<module>../../tams-exchange-trade-parent/tams-exchange-trade-common</module>
+        				<module>../../tams-exchange-trade-parent/tams-exchange-trade-data-common</module>
+        				<module>../../tams-exchange-trade-parent/tams-exchange-trade-quote</module>
+        				<module>../../tams-exchange-trade-parent/tams-exchange-trade-server-dsp</module>
+        				<module>../../tams-exchange-trade-parent/tams-exchange-trade-server-terminal</module>
+        				<module>../../tams-exchange-trade-parent/tams-exchange-trade</module>
     </modules>
 </project>
