@@ -281,7 +281,7 @@ public class IbuQuoteRepoService extends BaseService {
      */
     public AjaxResult dealexecutioncheck(CfetsRepoDealQuoteRequest cfetsRepoDealQuoteRequest) {
         AjaxResult ajaxResult = new AjaxResult();
-        if(CollectionUtils.isEmpty(cfetsRepoDealQuoteRequest.getEntrustIdList())) {
+        if(CollectionUtils.isNotEmpty(cfetsRepoDealQuoteRequest.getEntrustIdList())) {
             try {
                 Map<String, Object> param = BeanUtil.object2Map(cfetsRepoDealQuoteRequest);
                 setParam(param, 1);
