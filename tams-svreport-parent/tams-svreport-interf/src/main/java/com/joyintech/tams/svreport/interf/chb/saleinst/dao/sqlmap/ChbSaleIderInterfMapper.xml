@@ -38,6 +38,8 @@
                 #{item.remark,jdbcType=VARCHAR}  REMARK,
                 #{item.status,jdbcType=VARCHAR}  STATUS,
                 #{item.dataDate,jdbcType=DATE}  DATA_DATE,
+                #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+                sysdate CREATE_TIME,
                 #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
                 sysdate  UPDATE_TIME
                 from dual
@@ -121,40 +123,40 @@
         ,UPDATE_TIME
         )
         values(
-         TMP.SALER_INS_NO
-        ,TMP.SALER_REGIST_NO
-        ,TMP.SALER_INST_CODE
-        ,TMP.SALER_NAME
-        ,TMP.SALER_SEX
-        ,TMP.SALER_BIRTHDAY
-        ,TMP.SALER_CREDENT_TYPE
-        ,TMP.SALER_OTHER_CREDENT_NAME
-        ,TMP.SALER_CREDENT_NO
-        ,TMP.SALER_AREA_TYPE
-        ,TMP.SALER_ORG_CODE
-        ,TMP.SALER_DEPT
-        ,TMP.SALER_POSITION
-        ,TMP.SALER_EDU_LEVEL
-        ,TMP.SALER_DEGREE
-        ,TMP.SALER_WORK_START_YMD
-        ,TMP.SALER_FINANCE_START_YMD
-        ,TMP.SALER_START_YMD
-        ,TMP.SALER_LEVLE
-        ,TMP.SALER_CERTIFICATE_TYPE
-        ,TMP.SALER_CHB_TRAIN_NO
-        ,TMP.SALER_RISK_LEVEL
-        ,TMP.SALER_QUALIFICATION
-        ,TMP.SALER_TEL
-        ,TMP.SALER_MOBILE
-        ,TMP.SALER_MAIL
-        ,TMP.SALER_STATUS
-        ,TMP.REMARK
-        ,TMP.STATUS
-        ,TMP.DATA_DATE
-        ,TMP.CREATE_USER
-        ,TMP.CREATE_TIME
-        ,TMP.UPDATE_USER
-        ,TMP.UPDATE_TIME
+        TEMP.SALER_INS_NO
+        ,TEMP.SALER_REGIST_NO
+        ,TEMP.SALER_INST_CODE
+        ,TEMP.SALER_NAME
+        ,TEMP.SALER_SEX
+        ,TEMP.SALER_BIRTHDAY
+        ,TEMP.SALER_CREDENT_TYPE
+        ,TEMP.SALER_OTHER_CREDENT_NAME
+        ,TEMP.SALER_CREDENT_NO
+        ,TEMP.SALER_AREA_TYPE
+        ,TEMP.SALER_ORG_CODE
+        ,TEMP.SALER_DEPT
+        ,TEMP.SALER_POSITION
+        ,TEMP.SALER_EDU_LEVEL
+        ,TEMP.SALER_DEGREE
+        ,TEMP.SALER_WORK_START_YMD
+        ,TEMP.SALER_FINANCE_START_YMD
+        ,TEMP.SALER_START_YMD
+        ,TEMP.SALER_LEVLE
+        ,TEMP.SALER_CERTIFICATE_TYPE
+        ,TEMP.SALER_CHB_TRAIN_NO
+        ,TEMP.SALER_RISK_LEVEL
+        ,TEMP.SALER_QUALIFICATION
+        ,TEMP.SALER_TEL
+        ,TEMP.SALER_MOBILE
+        ,TEMP.SALER_MAIL
+        ,TEMP.SALER_STATUS
+        ,TEMP.REMARK
+        ,TEMP.STATUS
+        ,TEMP.DATA_DATE
+        ,TEMP.CREATE_USER
+        ,TEMP.CREATE_TIME
+        ,TEMP.UPDATE_USER
+        ,TEMP.UPDATE_TIME
         )
     </insert>
 

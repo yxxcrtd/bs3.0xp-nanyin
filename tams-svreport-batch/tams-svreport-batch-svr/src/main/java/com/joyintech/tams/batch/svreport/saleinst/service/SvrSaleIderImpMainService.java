@@ -3,7 +3,7 @@ package com.joyintech.tams.batch.svreport.saleinst.service;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
-import com.joyintech.tams.common.SaleInstFileImpService;
+import com.joyintech.tams.common.SaleIderFileImpService;
 import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
 import com.joyintech.tams.report.common.constant.BatchBeanName;
@@ -33,7 +33,7 @@ public class SvrSaleIderImpMainService extends AutoSendCBBaseService{
      */
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
-    private SaleInstFileImpService saleInstFileImpService;
+    private SaleIderFileImpService saleIderFileImpService;
 	 public List<String> generateSaleInstData(Date batchDate,List<String> prodIdList) {
 	    	// 设置批处理bean
 	    	setBatchBeanName(BatchBeanName.销售人员身份信息接入);
@@ -50,7 +50,7 @@ public class SvrSaleIderImpMainService extends AutoSendCBBaseService{
 	            } else  if (InterfConstants.CONTENTSRC_FILE_XML.equals(contentSrc) 
 	                    || InterfConstants.CONTENTSRC_FILE_TXT.equals(contentSrc)) {
                     String currentDate=DateUtil.format(batchDate);
-                    String result = saleInstFileImpService.execute(batchDate,com.joyintech.tams.common.InterfDefine.销售人员身份信息接口数据.getCode());
+                    String result = saleIderFileImpService.execute(batchDate,com.joyintech.tams.common.InterfDefine.销售人员身份信息接口数据.getCode());
 	                 if ("fail".equals(result)){
 	                     throw new BusinessException("fail");
 	                 }
