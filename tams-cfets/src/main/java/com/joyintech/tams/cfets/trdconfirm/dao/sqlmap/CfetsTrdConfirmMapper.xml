@@ -806,7 +806,7 @@
         reg.remark as remark,
         reg.deal_fee_amt as trdFeeAmt,
         reg.sett_fee_amt as settleFeeAmt,
-        reg.cprice_amt as tradeAmt,
+        reg.fprice_amt as tradeAmt,
         reg.cprice_amt as cpriceAmt,
         reg.OUR_SHARE_AMT as ourShareAmt,
         reg.LENDIN_SHARE_AMT as lendinShareAmt
