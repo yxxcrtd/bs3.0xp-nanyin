@@ -587,6 +587,7 @@ public class PortfolioManager extends BaseService {
             // 提示：“委托价格必须优于所有指令价格”
             if (adjustedPrice.compareTo(bean.getEntrustPrice()) != 0) {
                 result.setInfo("委托价格必须优于所有指令价格");
+                result.setPrice(adjustedPrice);
             }
         } else {
             // 02时，剔除该指令并继续时
@@ -699,7 +700,7 @@ public class PortfolioManager extends BaseService {
             if (Objects.isNull(instructionDetails) || instructionDetails.size() == 0 || instructionDetails.size() == 1) {
                 // 处理单组合
                 ins.setEntrustNum(ins.getConNum().longValue());
-                ins.setEntrustAmt(ArithmeticUtil.multiply(BigDecimal.valueOf(ins.getEntrustNum()),ins.getEntrustPrice()));
+                ins.setEntrustAmt(ArithmeticUtil.multiply(BigDecimal.valueOf(ins.getEntrustNum()),result.getPrice()));
                 list.add(ins);
                 continue;
             }
@@ -742,7 +743,7 @@ public class PortfolioManager extends BaseService {
             for (Instruction item : singleList) {
                 item.setConPrice(ArithmeticUtil.divide(item.getConNum(), BigDecimal.valueOf(result.getTotalEntrustVolume()), 4));
                 item.setEntrustNum(item.getConNum().longValue());
-                item.setEntrustAmt(ArithmeticUtil.multiply(BigDecimal.valueOf(item.getEntrustNum()),item.getEntrustPrice()));
+                item.setEntrustAmt(ArithmeticUtil.multiply(BigDecimal.valueOf(item.getEntrustNum()),result.getPrice()));
             }
 
             list.addAll(singleList);
