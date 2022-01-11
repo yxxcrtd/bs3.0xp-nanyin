@@ -10,6 +10,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
 import com.joyintech.tams.settle.batch.datagather.dao.StlDataGatherMapper;
 import com.joyintech.tams.settle.batch.datagather.dto.*;
@@ -191,6 +192,10 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                     // modify by etliu 20211210 end
                 }else{
                     if(DictCodeList.回购类型_质押式协议回购.getValue().equals(settleTransDataDto.getRepoType())){
+                        // 协议回购特殊处理,筛选已接收的
+                        etrEntrustDtos = etrEntrustDtos.stream()
+                                .filter(entry-> BussinessDictCodeList.委托接收状态_已接收.getValue().equals(entry.getEntrustStatus()))
+                                .collect(Collectors.toList());;
                         // 处理质押式协议回购匹配逻辑
                         List<EtrEntrustDto> currEtrEntrustList = executeRepoH01Match(settleTransDataDto, etrEntrustDtos);
                         if(CollectionUtils.isEmpty(currEtrEntrustList)){
