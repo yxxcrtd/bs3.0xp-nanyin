@@ -481,6 +481,16 @@
                     <foreach collection="notentrustIdList" item="item" open="(" close=")" separator=",">
                         #{item}
                     </foreach>
+                    and ( ETR_ENTRUST.COUNTER_ID in
+                    (
+                        select
+                            COUNTER_ID
+                        from ETR_ENTRUST
+                        where ENTRUST_ID in
+                        <foreach collection="notentrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    ) or ETR_ENTRUST.COUNTER_ID is null )
                 </if>
             order by decode(ETR_ENTRUST.ENTRUST_STATUS,'09',1,'02',2,'03',3,'04',4,'06',5,'05',6,'07',7),ETR_ENTRUST_ADD.TRANSMIT_TIME,ETR_ENTRUST.ps)
         <if test="sort != null and sort != '' and direction != null and direction != ''">
@@ -1018,7 +1028,8 @@
                finprodId,
                mdate,
                firstNetPrice,
-               repRegistOrg
+               repRegistOrg,
+               pledgeRatio
         FROM (
             SELECT
                 fp.FINPROD_MARKET_ID bondCode,
@@ -1026,7 +1037,12 @@
                 fp.FINPROD_ID finprodId,
                 fp.MDATE mdate,
                 mbvi.NETPRICE firstNetPrice,
-                fp.REGIST_ORG repRegistOrg
+                fp.REGIST_ORG repRegistOrg,
+                case
+                    when mbvi.NETPRICE>nvl(PA.prinAmt,100) then round(100/100,4)*100
+                    when mbvi.NETPRICE is null then round(nvl(PA.prinAmt,100)/100,4)*100
+                    else round(mbvi.NETPRICE/nvl(PA.prinAmt,100),4)*100
+                end as pledgeRatio /*折算比例*/
             FROM FIN_PRODUCT fp
            INNER JOIN  FIN_PRODUCT_TYPE FPT
                ON  FPT.FINPROD_ID = fp.FINPROD_ID
@@ -1057,6 +1073,10 @@
                     AND T1.VALUE_DATE = T2.VALUE_DATE
             ) mbvi/*以上获取债券小于等于平台日的最新估值行情*/
                 ON fp.FINPROD_MARKET_ID = mbvi.SEC_ID
+            left join ( select 100-sum(nvl(PRIN_AMT,0)) prinAmt,FINPROD_ID
+                        from FIN_CASH_PLAN
+                        WHERE MDATE &lt;= to_date(#{platDate},'yyyy-MM-dd')
+                        group by FINPROD_ID) PA on PA.FINPROD_ID = fp.FINPROD_ID
             <where>
                 fp.VDATE <![CDATA[<=]]>TO_DATE(#{platDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
                 AND fp.MDATE <![CDATA[>=]]>TO_DATE(#{platDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
@@ -1065,6 +1085,12 @@
                     AND fp.FINPROD_ID in
                     <foreach  collection="finprodIdList" item="item" open="(" close=")" separator=",">
                         #{item}
+                    </foreach>
+                </if>
+                <if test="finprodTypeList != null and finprodTypeList.size() > 0">
+                    AND FPT.TYPE_11 in
+                    <foreach  collection="finprodTypeList" item="finprodType" open="(" close=")" separator=",">
+                        #{finprodType}
                     </foreach>
                 </if>
                 <if test="nofinprodIdList != null and nofinprodIdList.size() > 0">
