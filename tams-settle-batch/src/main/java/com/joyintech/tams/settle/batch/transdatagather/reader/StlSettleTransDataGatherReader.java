@@ -522,6 +522,10 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                                 dealTotal.setCommissionAmtRaw(item.getCommissionAmtRaw());
                                 //交易金额_原始
                                 dealTotal.setTradeAmtRaw(item.getTradeAmtRaw());
+                                //单位净价
+                                // GZYHTZJY-1088:单位净价赋值  modify by fuyongsheng 20220111 start
+                                dealTotal.setUnitCprice(item.getUnitCprice());
+                                // GZYHTZJY-1088:单位净价赋值 modify by fuyongsheng 20220111 end
                                 // 首期成交编号
                                 dealTotal.setfCjbh(item.getCjbh());
                             }
@@ -550,10 +554,6 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                                 dealTotal.setmTradeAmt(item.getmTradeAmt());
                                 //首期成交编号
                                 dealTotal.setfCjbh(item.getfCjbh());
-                                //单位净价
-                                // GZYHTZJY-1088:单位净价赋值 modify by fuyongsheng 20220111 start
-                                dealTotal.setUnitCprice(item.getUnitCprice());
-                                // GZYHTZJY-1088:单位净价赋值 modify by fuyongsheng 20220111 end
                             }
                             //当笔成交数据明细.质押品信息流水号 非空
                             if(StringUtil.isNotEmpty(item.getPledgeTradeId())){
