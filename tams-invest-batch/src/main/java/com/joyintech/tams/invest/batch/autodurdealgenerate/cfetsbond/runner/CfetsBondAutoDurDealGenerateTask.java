@@ -10,13 +10,13 @@
 
 package com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.runner;
 
-import com.joyintech.batch.batchbase.baseclass.*;
+import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
 import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.constant.BatchDictCodeList;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.web.PlatformDate;
-import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.service.CfetsBondAutoDurDealGenerateProcessorService;
+import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.service.CfetsAutoDurDealProcessorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
@@ -51,7 +51,7 @@ public class CfetsBondAutoDurDealGenerateTask extends BatchBaseService {
     private PlatformDate platformDateService;
 
     @Autowired
-    private CfetsBondAutoDurDealGenerateProcessorService cfetsBondAutoDurDealGenerateProcessorService;
+    private CfetsAutoDurDealProcessorService cfetsAutoDurDealProcessorService;
 
     /**
      * {@inheritDoc}
@@ -76,7 +76,7 @@ public class CfetsBondAutoDurDealGenerateTask extends BatchBaseService {
         }
 
         try {
-            cfetsBondAutoDurDealGenerateProcessorService.execute(batchDate, this.getProductIdList());
+            cfetsAutoDurDealProcessorService.execute(batchDate, this.getProductIdList());
             result.setStatus(BatchStatus.COMPLETED);
         }
         catch (Exception e) {

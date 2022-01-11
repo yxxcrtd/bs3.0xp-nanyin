@@ -1,7 +1,13 @@
 package com.joyintech.tams.exchange.common.utils;
 
+import cn.hutool.core.util.StrUtil;
 import com.google.common.base.Strings;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
 import com.joyintech.tams.exchange.common.constant.*;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
+import com.joyintech.tams.exchange.common.constant.joyin.InvestmentAssetType1;
+import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.Instrument;
 import com.joyintech.tams.exchange.common.enums.DeliveryMethodEnum;
 import com.joyintech.tams.exchange.common.enums.ETFTypeEnum;
@@ -378,19 +384,19 @@ public class EntrustUtils {
 
     /**
      * 处理ETF申赎买卖类别
-     *
+     * <p>
      * 金证：
-     *    深圳单市场ETF、上海单市场ETF、上海跨市场ETF、上海债券ETF、深圳货币ETF的申购或赎回，买卖类别送1或2；
-     *    深圳跨境ETF、上海跨境ETF、上海货币ETF的申购或赎回、深圳跨市场现金申购赎回，买卖类别送90或91；
-     *    深圳跨市场ETF的实物申购或实物赎回，买卖类别送82或84。
+     * 深圳单市场ETF、上海单市场ETF、上海跨市场ETF、上海债券ETF、深圳货币ETF的申购或赎回，买卖类别送1或2；
+     * 深圳跨境ETF、上海跨境ETF、上海货币ETF的申购或赎回、深圳跨市场现金申购赎回，买卖类别送90或91；
+     * 深圳跨市场ETF的实物申购或实物赎回，买卖类别送82或84。
      *
+     * @param entrustBs      买卖方向
+     * @param deliveryMethod 申赎方式
+     * @param market         市场
+     * @param etfType        ETF类型
+     * @return 买卖类别
      * @author swwan
      * @date 2020/12/2
-     * @param entrustBs         买卖方向
-     * @param deliveryMethod    申赎方式
-     * @param market            市场
-     * @param etfType           ETF类型
-     * @return 买卖类别
      */
     public static String getBsFlagForETF(String entrustBs, String deliveryMethod, String market, String etfType) {
         if (ETFTypeEnum.ETF_CROSS_MARKET.code.equals(etfType)
@@ -399,17 +405,17 @@ public class EntrustUtils {
             return EntrustBs.BUY.value.equals(entrustBs) ? BSFlag.ETF_SWSG.value : BSFlag.ETF_SWSH.value;
         }
         if (ETFTypeEnum.ETF_CROSS_BORDER.code.equals(etfType)
-            || (ETFTypeEnum.ETF_CURRENCY.code.equals(etfType) && (Market.SHSE.value.equals(market)))
-            || (ETFTypeEnum.ETF_CROSS_MARKET.code.equals(etfType)
+                || (ETFTypeEnum.ETF_CURRENCY.code.equals(etfType) && (Market.SHSE.value.equals(market)))
+                || (ETFTypeEnum.ETF_CROSS_MARKET.code.equals(etfType)
                 && (Market.SZSE.value.equals(market))
                 && DeliveryMethodEnum.CASH_DELIVERY.value.equals(deliveryMethod))) {
             return EntrustBs.BUY.value.equals(entrustBs) ? BSFlag.ETF_KJKSCSG.value : BSFlag.ETF_KJKSCSH.value;
         }
         // 深圳单市场ETF、上海单市场ETF、上海跨市场ETF、上海债券ETF、深圳货币ETF的申购或赎回
         if (ETFTypeEnum.ETF_SINGLE_MARKET.code.equals(etfType)
-            || (ETFTypeEnum.ETF_CROSS_MARKET.code.equals(etfType) && Market.SHSE.value.equals(market))
-            || (ETFTypeEnum.ETF_BOND.code.equals(etfType) && Market.SHSE.value.equals(market))
-            || (ETFTypeEnum.ETF_CURRENCY.code.equals(etfType) && Market.SZSE.value.equals(market))) {
+                || (ETFTypeEnum.ETF_CROSS_MARKET.code.equals(etfType) && Market.SHSE.value.equals(market))
+                || (ETFTypeEnum.ETF_BOND.code.equals(etfType) && Market.SHSE.value.equals(market))
+                || (ETFTypeEnum.ETF_CURRENCY.code.equals(etfType) && Market.SZSE.value.equals(market))) {
             return EntrustBs.BUY.value.equals(entrustBs) ? BSFlag.ETF_SG.value : BSFlag.ETF_SH.value;
         }
         return null;
@@ -503,6 +509,93 @@ public class EntrustUtils {
                 || EntrustProp.isMarketPrice(entrustProp);
     }
 
+    // 判断是否可以做公平交易
+    public static boolean allowFairOrder(Instruction instruction) {
+        return TradePlat.NORMAL.value.equals(instruction.getTradePlat())
+                && (
+                DictCodeListExt2.交易方向_买入.getValue().equals(instruction.getPs())
+                        || DictCodeListExt2.交易方向_卖出.getValue().equals(instruction.getPs())
+                        || DictCodeListExt2.交易方向_正回购.getValue().equals(instruction.getPs())
+                        || DictCodeListExt2.交易方向_逆回购.getValue().equals(instruction.getPs())
+        );
+    }
+
+    /**
+     * 是否处于公平交易模式
+     */
+    public static boolean isFairMode() {
+        return ExchangeConstant.TRUE_IN_PARA.equals(CacheUtil.getSysParam(ExchangeConstant.FAIR_CODE_IN_PARA));
+    }
+
+    /**
+     * 是否为算法单
+     */
+    public static boolean isAlgorithmOrder(OrderPlaceBean bean) {
+        return StrUtil.isNotBlank(bean.getAlgorithmId());
+    }
+
+    /**
+     * 是否为批量单
+     */
+    public static boolean isBatchOrder(OrderPlaceBean bean) {
+        return Objects.nonNull(bean.getBatchInfo());
+    }
+
+    // 是否为公平单
+    public static boolean isFairOrder(OrderPlaceBean bean, Instruction instruction) {
+        return EntrustUtils.isFairMode()
+                && EntrustUtils.allowFairOrder(instruction)
+                && !EntrustUtils.isAlgorithmOrder(bean)
+                && !EntrustUtils.isBatchOrder(bean);
+    }
+
+    // 是否为数量指令
+    public static boolean isVolume(Instruction instruction) {
+        return instruction.getEntrustNum() > 0;
+    }
+
+    // 是否为金额指令
+    public static boolean isAmt(Instruction instruction) {
+        return !isVolume(instruction);
+    }
+
+    // 是否为股票指令
+    public static boolean isStock(Instruction instruction) {
+        return InvestmentAssetType.STOCK.value.equals(instruction.getAssetType());
+    }
+
+    // 是否为债券指令
+    public static boolean isBond(Instruction instruction) {
+        return InvestmentAssetType.BOND.value.equals(instruction.getAssetType());
+    }
+
+    // 是否为基金指令
+    public static boolean isFund(Instruction instruction) {
+        return InvestmentAssetType.FUND.value.equals(instruction.getAssetType());
+    }
+
+    // 是否为期货指令
+    public static boolean isFutures(Instruction instruction) {
+        return InvestmentAssetType.FUTURES.value.equals(instruction.getAssetType());
+    }
+
+    // 是否为质押式回购指令
+    public static boolean isPledgeRepurchase(Instruction instruction) {
+        return InvestmentAssetType.PLEDGE_REPURCHASE.value.equals(instruction.getAssetType());
+    }
+
+    // 是否为质押式竞价回购指令
+    public static boolean isPledgeAuctionRepurchase(Instruction instruction) {
+        return InvestmentAssetType.PLEDGE_REPURCHASE.value.equals(instruction.getAssetType())
+                && InvestmentAssetType1.BIDDING_REPO.value.equals(instruction.getAssetType1());
+    }
+
+    // 是否为质押式协议回购指令
+    public static boolean isPledgegreementRepurchase(Instruction instruction) {
+        return InvestmentAssetType.PLEDGE_REPURCHASE.value.equals(instruction.getAssetType())
+                && InvestmentAssetType1.NEGOTIATED_REPO.value.equals(instruction.getAssetType1());
+    }
+
     // 判断是否为需要进行自成交检测的业务
     public static boolean isSelfTradeTyper(String entrustProp) {
         return EntrustProp.NORMAL.value.equals(entrustProp)
@@ -521,8 +614,16 @@ public class EntrustUtils {
         return ExchangeConstant.TRUE_IN_PARA.equals(fairModeEntrustPriceBestThanInstruction);
     }
 
+    public static boolean isfairModeEntrustPriceBestThanInstructionForbid() {
+        return ExchangeConstant.TRUE_IN_PARA.equals(CacheUtil.getSysParam(ExchangeConstant.FAIR_MODE_ENTRUST_PRICE_BEST_THAN_INSTRUCTION_IN_PARA));
+    }
+
     public static boolean isfairModeWithUnacceptInstructionForbid(String fairModeWithUnacceptInstruction) {
         return ExchangeConstant.TRUE_IN_PARA.equals(fairModeWithUnacceptInstruction);
+    }
+
+    public static boolean isfairModeWithUnacceptInstructionForbid() {
+        return ExchangeConstant.TRUE_IN_PARA.equals(CacheUtil.getSysParam(ExchangeConstant.FAIR_MODE_WITH_UNACCEPT_INSTRUCTION_IN_PARA));
     }
 
     // 判断是否是回购
@@ -678,7 +779,6 @@ public class EntrustUtils {
         }
         return Objects.nonNull(instrument) && FullPriceConst.FULL_PRICE.value.equals(instrument.getIsFullPrice());
     }
-
 
     //判断是否是上海债券，单位为手（1手=10张）
     public static boolean isSHZQ(String market, String instructionAssetType, String stock_code) {

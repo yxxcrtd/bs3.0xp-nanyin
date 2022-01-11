@@ -103,7 +103,7 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         pageParam.put("sysDate", iPlatformDate.getSysDateStr());
         pageParam.put("TRADE_PLACE_01", DictCodeListExt1.交易场所_银行间.getValue());
         Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(DateUtil.parse(DateUtil.getSysDate()));
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
         pageParam.put("sort",cfetsEtrRepoZLCXRequest.getPageMode().getSort());
@@ -256,7 +256,7 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         pageParam.put("TRADEPLACE01", DictCodeListExt1.交易场所_银行间.getValue());
         pageParam.put("VALUATION_SOURCE_CBC", DictCodeList.估值来源_中债登_CBC.getValue());
         Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(DateUtil.parse(DateUtil.getSysDate()));
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
         pageParam.put("sort",cfetsEtrRepoZLCXPositionRequest.getPageMode().getSort());
