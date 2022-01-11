@@ -183,4 +183,6 @@ public interface StlDataGatherMapper {
     void deleteCqTrdDealTotalAdd(String totleTradeId);
 
     String selectCqBtradeId(@Param("secAcctId") String secAcctId, @Param("finprodId") String finprodId,@Param("dealDate") Date dealDate);
+
+    int selectDzcjList(Map<String, Object> searchParam);
 }

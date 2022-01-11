@@ -5,6 +5,8 @@ import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.batch.batchbase.baseclass.BaseReader;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.base.dao.StlSecReconConfigMapper;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.settle.batch.datadeal.service.StlDownDataDealService;
 import com.joyintech.tams.settle.batch.datagather.dao.StlDataGatherMapper;
@@ -31,6 +33,9 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
     protected StlDownDataDealService stlDownDataDealService;
     @Autowired
     protected StlDataGatherMapper stlDataGatherMapper;
+
+    @Autowired
+    protected StlSecReconConfigMapper stlSecReconConfigMapper;
 
     @Autowired
     private StlDataGatherService stlDataGatherService;
@@ -146,6 +151,16 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
                 // 业务场景分类
                 searchParam.put("busiSceneCalssList",  Arrays.asList(DictCodeListStl.业务场景分类明细_债券质押式竞价逆回购_到期.getValue(),DictCodeListStl.业务场景分类明细_债券质押式竞价正回购_到期.getValue()));
                 // ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 add end
+                //
+                String isRecon = CacheUtil.getSysParam("IS_RECON");
+                //（ YWBS IN （4030，债券质押购回交易）or 摘要标识 IN （220134，债券回购购回收取））
+                searchParam.put("dzcjList",  Arrays.asList("债券质押购回交易","4030"));
+                searchParam.put("zybsList",  Arrays.asList("债券回购购回收取","220134"));
+                int dzcjCount =  stlDataGatherMapper.selectDzcjList(searchParam);
+                if (StringUtil.equals(isRecon,"02") && dzcjCount > 0){
+                    searchParam.put("checkResult",  "1");
+                }
+                searchParam.put("dqPs",  DictCodeList.交易方向_到期.getValue());
                 List<SettleTransDataDto> settleTransDataDtos = stlDataGatherService.listRepoSettleTransData(searchParam);
                 investTradeReaderDto.setSettleTransDataList(settleTransDataDtos);
                 List<InvestTradeReaderDto> result = new ArrayList<>();

@@ -308,7 +308,79 @@
 					#{busiSceneCalss,jdbcType=VARCHAR}
 				</foreach>
 			</if>
-			<!--ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 add end-->
+		</where>
+		<!--ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 add end-->
+		UNION ALL
+		SELECT
+			T1.TRADE_ID tradeId2,
+			T1.SHARE_AMT SHARE_NUM,
+			T3.PORTFOLIO_ID,
+			T2.FINPROD_ID ,
+			T2.VDATE ,
+			T2.MDATE,
+			<include refid="settleTransDataSql"></include>
+		INNER JOIN SETTLE_TRANS_DATA_STATUS stds
+		        ON std.TRADE_ID = stds.TRADE_ID
+		INNER JOIN SETTLE_TRANS_DATA stdsq
+			    ON std.SEAT_NUMBER = stdsq.SEAT_NUMBER
+			   AND std.TRADE_DATE = stdsq.TRADE_DATE
+			   AND std.APPLY_TRADE_ID = stdsq.CJBH
+		INNER JOIN SETTLE_TRANS_TG_MAPPING M
+				ON M.TRADE_ID = std.TRADE_ID
+		INNER JOIN TRD_PRODUCT_DEAL T1
+				ON M.TRADE_ID_TG = T1.TRADE_ID
+		LEFT JOIN TRD_PRODUCT_DEAL_ADD T3
+			   ON T3.TRADE_ID = T1.TRADE_ID
+		LEFT JOIN FIN_TRADE_PRODUCT T2
+			   ON T2.FINPROD_ID = T1.FINPROD_ID
+			  AND T2.BRANCH = '0'
+		<!--INNER JOIN SETTLE_TRANS_DATA_STATUS stds2
+				ON std.TRADE_ID = stds2.TRADE_ID
+			   AND stds2.CHECK_RESULT = '1' -->
+		<where>
+			<if test="checkResult != null">
+		        AND stds.CHECK_RESULT = #{checkResult,jdbcType=VARCHAR}
+			</if>
+			<if test="dealDate != null">
+				AND std.DEAL_DATE = #{dealDate,jdbcType=DATE}
+			</if>
+			<if test="dqPs!= null">
+				AND std.PS = #{dqPs,jdbcType=VARCHAR}
+			</if>
+			<if test="busiSceneCalssList != null and busiSceneCalssList.size() > 0">
+				<foreach collection="busiSceneCalssList" item="busiSceneCalss" open="AND std.BUSI_SCENE_CALSS IN (" close=")" separator=",">
+					#{busiSceneCalss,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="finprodIdList != null and finprodIdList.size() > 0">
+				<foreach collection="finprodIdList" item="finprodId" open="AND std.FINPROD_ID IN (" close=")" separator=",">
+					#{finprodId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="busiType != null">
+				AND std.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+			</if>
+			<if test="busiTypeList != null and busiTypeList.size() > 0">
+				<foreach collection="busiTypeList" item="busiType" open="AND std.BUSI_TYPE IN (" close=")" separator=",">
+					#{busiType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				<foreach collection="portfolioIdList" item="portfolioId" open="AND std.PORTFOLIO_ID IN (" close=")" separator=",">
+					#{portfolioId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="finprodTypes != null and finprodTypes.size() > 0">
+				<foreach collection="finprodTypes" item="finprodType" open="AND std.FINPROD_TYPE2 IN (" close=")" separator=",">
+					#{finprodType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<!--ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 add start-->
+			<if test="busiSceneCalssList != null and busiSceneCalssList.size() > 0">
+				<foreach collection="busiSceneCalssList" item="busiSceneCalss" open="AND std.BUSI_SCENE_CALSS IN (" close=")" separator=",">
+					#{busiSceneCalss,jdbcType=VARCHAR}
+				</foreach>
+			</if>
 		</where>
 	</select>
 
@@ -908,4 +980,16 @@
 		WHERE rownum = 1
 	</select>
 
+    <select id="selectDzcjList" resultType="int">
+	   SELECT count(SEQ_NO)
+		 FROM STL_SEC_RECON_CONFIG
+		<where>
+			<foreach collection="dzcjList" item="dzcj" open=" YWBS IN (" close=")" separator=",">
+			    #{dzcj,jdbcType=VARCHAR}
+			</foreach>
+			<foreach collection="zybsList" item="zybs" open=" OR ZYBS IN (" close=")" separator=",">
+				#{zybs,jdbcType=VARCHAR}
+			</foreach>
+		</where>
+	</select>
 </mapper>
