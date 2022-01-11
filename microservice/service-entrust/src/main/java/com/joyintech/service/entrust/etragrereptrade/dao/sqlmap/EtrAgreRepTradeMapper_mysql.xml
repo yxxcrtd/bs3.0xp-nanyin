@@ -487,6 +487,8 @@
         on fin_trade_product.finprod_id = trd_product_deal_2.Finprod_Id
         and fin_trade_product.branch = trd_product_deal_2.branch
         and trd_product_deal_2.ps in ('T01')
+        and trd_product_deal_2.is_cancel = 'N'
+        and trd_product_deal_2.trade_status = '01'
         LEFT JOIN trd_product_deal_add /** 金融产品临时交易附属表 **/
         on trd_product_deal_2.trade_id = trd_product_deal_add.trade_id
         left join fin_deal_pledge /** 回购质押品 **/
