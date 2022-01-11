@@ -487,7 +487,8 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@RequestMapping("/selectCounterDealer")
 	public Message<List<SuggestDto>> selectCounterDealer(SelectOptionRequestDto dto) {
 		try {
-			List<SuggestDto> tempList= etrExchangeTrade001CommonService.selectCounterDealer(dto);
+			List<SuggestDto> tempList= new ArrayList<>();
+			//etrExchangeTrade001CommonService.selectCounterDealer(dto);
 			return new Message<List<SuggestDto>>().success().setData(tempList);
 		} catch (Exception e) {
 			logger.error("查询功能异常", e);
