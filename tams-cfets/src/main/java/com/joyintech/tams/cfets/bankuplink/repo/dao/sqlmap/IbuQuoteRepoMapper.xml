@@ -1971,10 +1971,10 @@
                     RFPDT.RATE             rate,
                     RFPDT.REPO_TERM        repoTerm,
                     MCCI2.PARTY_NAME       ouPartyName,
-                    MCCI.PARTY_NAME        cpPartyName,
-                    MCCT2.TRADER_NAME      ouTraderName,
+                    MSCP.COUNTER_NAME      cpPartyName,
+                    SU.REAL_NAME           ouTraderName,
                     MCCT.TRADER_NAME       cpTraderName,
-                    DECODE(RFPDT.SETTLE_SPEED, 0, '01', 1, '02')                                              settleSpeed/*清算速度*/,
+                    RFPDT.SETTLE_SPEED     settleSpeed/*清算速度*/,
                     RFPDT.V_SETTLE_DATE    vSettleDate,
                     RFPDT.M_SETTLE_DATE    mSettleDate,
                     RFPDT.TRADE_DATE       tradeDate,
@@ -1986,18 +1986,17 @@
                     RFPDT.DELIVERY_TYPE   deliverytype,
                     RFPDT.M_DELIVERY_TYPE mDeliveryType,
                     RFPDT.CCY             ccy,
-                    RFPDT.SETT_CCY        settCcy
+                    RFPDT.SETT_CCY        settCcy,
+                    RFPDT.CREATE_USER     createUser
             FROM REG_FIN_PRODUCT_DEAL_TOTAL RFPDT
             LEFT JOIN MST_COUNTER_PARTY MSCP
                  ON MSCP.COUNTER_ID = RFPDT.COUNTER_ID
-            LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI
-                ON MCCI.PARTY_NAME = MSCP.COUNTER_NAME
             LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI2
                 ON MCCI2.PARTY_ID = RFPDT.OU_PARTY_ID
             LEFT JOIN MST_CFETS_CUSTOMER_TRADER MCCT
                 ON MCCT.TRADER_ID = RFPDT.COUNTER_TRADER
-            LEFT JOIN MST_CFETS_CUSTOMER_TRADER MCCT2
-                ON MCCT2.TRADER_ID = RFPDT.OU_TRADER_ID
+            LEFT JOIN SYS_USER SU
+                ON SU.USER_NAME = RFPDT.OU_TRADER_ID
             LEFT JOIN ETR_ENTRUST_OPER_HIS EEOH
                 ON EEOH.ENTRUST_ID = RFPDT.TOTLE_TRADE_ID
                     <if test="OPR_TYPE_09 !=null and OPR_TYPE_09 !=''">
@@ -2032,10 +2031,10 @@
                 RFPDT.RATE             rate,
                 RFPDT.REPO_TERM        repoTerm,
                 MCCI2.PARTY_NAME       ouPartyName,
-                MCCI.PARTY_NAME        cpPartyName,
-                MCCT2.TRADER_NAME      ouTraderName,
+                MSCP.COUNTER_NAME      cpPartyName,
+                SU.REAL_NAME           ouTraderName,
                 MCCT.TRADER_NAME       cpTraderName,
-                DECODE(RFPDT.SETTLE_SPEED, 0, '01', 1, '02')                                              settleSpeed/*清算速度*/,
+                RFPDT.SETTLE_SPEED     settleSpeed/*清算速度*/,
                 RFPDT.V_SETTLE_DATE    vSettleDate,
                 RFPDT.M_SETTLE_DATE    mSettleDate,
                 RFPDT.TRADE_DATE       tradeDate,
@@ -2047,18 +2046,17 @@
                 RFPDT.DELIVERY_TYPE   deliverytype,
                 RFPDT.M_DELIVERY_TYPE mDeliveryType,
                 RFPDT.CCY             ccy,
-                RFPDT.SETT_CCY        settCcy
+                RFPDT.SETT_CCY        settCcy,
+                RFPDT.CREATE_USER     createUser
         FROM WFL_REG_FIN_PRODUCT_DEAL_TOTAL RFPDT
         LEFT JOIN MST_COUNTER_PARTY MSCP
             ON MSCP.COUNTER_ID = RFPDT.COUNTER_ID
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI
-            ON MCCI.PARTY_NAME = MSCP.COUNTER_NAME
         LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI2
             ON MCCI2.PARTY_ID = RFPDT.OU_PARTY_ID
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER MCCT
             ON MCCT.TRADER_ID = RFPDT.COUNTER_TRADER
-        LEFT JOIN MST_CFETS_CUSTOMER_TRADER MCCT2
-            ON MCCT2.TRADER_ID = RFPDT.OU_TRADER_ID
+        LEFT JOIN SYS_USER SU
+            ON SU.USER_NAME = RFPDT.OU_TRADER_ID
         LEFT JOIN ETR_ENTRUST_OPER_HIS EEOH
             ON EEOH.ENTRUST_ID = RFPDT.TOTLE_TRADE_ID
             <if test="OPR_TYPE_09 !=null and OPR_TYPE_09 !=''">
@@ -2145,6 +2143,13 @@
                 <foreach collection="cpTraderNameList" item="item" open="(" close=")" separator=",">
                     #{item}
                 </foreach>
+            </if>
+            <if test="role_pos != null and role_pos != ''" >
+                and ( TT.createUser = #{loginUserId}
+                        or exists(
+                                    select 1 from SYS_USER_ROLE sur
+                                    left join SYS_ROLE sr on sur.ROLE_ID = sr.ROLE_ID
+                                    where sur.USER_ID = #{loginUserId} and sr.ROLE_POS = #{role_pos}))
             </if>
             <if test="search != null and search != ''">
                 and (

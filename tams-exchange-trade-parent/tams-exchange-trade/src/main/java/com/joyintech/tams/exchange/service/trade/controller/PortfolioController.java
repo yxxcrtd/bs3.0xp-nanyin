@@ -5,6 +5,7 @@ import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.request.PortfolioInfoRequest;
 import com.joyintech.tams.exchange.common.request.PortfolioPositionRequest;
+import com.joyintech.tams.exchange.common.response.PortfolioAllocationResponse;
 import com.joyintech.tams.exchange.common.response.PortfolioCalculateResponse;
 import com.joyintech.tams.exchange.common.response.PortfolioInfoResponse;
 import com.joyintech.tams.exchange.service.trade.management.service.PortfolioManager;
@@ -60,5 +61,11 @@ public class PortfolioController {
     @ApiOperation(value = "查询组合计算信息", notes = "查询组合计算信息")
     public Message<List<PortfolioCalculateResponse>> queryPortfolioCalculate(@RequestBody @Validated OrderPlaceBean bean) {
         return new Message<>(portfolioManager.queryPortfolioCalculate(bean));
+    }
+
+    @PostMapping(value = "/fairList")
+    @ApiOperation(value = "查询公平指令信息", notes = "查询公平指令信息")
+    public Message<PortfolioAllocationResponse> queryPortfolioCalculateWithFair(@RequestBody @Validated OrderPlaceBean bean) {
+        return new Message<>(portfolioManager.queryPortfolioCalculateWithFair(bean));
     }
 }
