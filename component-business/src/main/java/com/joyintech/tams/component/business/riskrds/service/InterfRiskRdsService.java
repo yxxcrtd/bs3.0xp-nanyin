@@ -1010,6 +1010,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                     finTradeProductKey.setBranch(0L);
                     finTradeProductKey.setFinprodId(preTradeId);
                     FinTradeProduct finTradeProduct = finTradeProductMapper.selectByPrimaryKey(finTradeProductKey);
+                    // add by etliu 20220111 start
+                    // GZYHTZJY-1081:【场内对账清结算1231】深交所协议回购，到期续作指令 提交后，缺少T07到期的那笔预占【解决日期：2022-01-11】
+                    if (finTradeProduct == null) {
+                        if (CommonUtil.findValue(dataMap,"intiTradeId") != null){
+                            finTradeProductKey.setFinprodId(String.valueOf(CommonUtil.findValue(dataMap,"intiTradeId")));
+                            finTradeProduct = finTradeProductMapper.selectByPrimaryKey(finTradeProductKey);
+                        }
+                    }
+                    // add by etliu 20220111 end
+
                     // add by zhangrui1 正反同步交易特殊处理 start
                     String groupId = String.valueOf(System.nanoTime());
                     // add by zhangrui1 正反同步交易特殊处理 end
