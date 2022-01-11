@@ -10,4 +10,16 @@ import com.joyintech.tams.invest.common.dto.period.common.BaseTrdDurDbInertDto;
  **/
 public class TrdBondDurDbInertDto extends BaseTrdDurDbInertDto {
 
+    /**
+     * 交易编号
+     */
+    private String tradeId;
+
+    public String getTradeId() {
+        return tradeId;
+    }
+
+    public void setTradeId(String tradeId) {
+        this.tradeId = tradeId;
+    }
 }
