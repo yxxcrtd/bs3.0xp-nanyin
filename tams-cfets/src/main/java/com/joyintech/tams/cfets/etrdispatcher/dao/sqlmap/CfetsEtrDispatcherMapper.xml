@@ -46,15 +46,17 @@
     ssai.sec_acct_name secAcctId,
     DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
-    round(decode(btm.busi_type,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,#{busiTypePosition05},ETR_ENTRUST.PRICE,''),4) etrPrice,
-        round(NVL(T5.ent_finish_amt,0)*100/(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
-        else ETR_ENTRUST.ENTRUST_NUM*100 end),4)*100 exeProgress,
-        round(NVL(T5.FINISH_AMT,0)*100/(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
-        else  ETR_ENTRUST.ENTRUST_NUM*100 end),4)*100 dealProgress,
-    NVL(T5.ent_finish_amt,0)/100  as execFinishAmt,
-    (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/100) as execRemainderAmt,
-    NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
-    (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
+    round(decode(btm.busi_type,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,#{busiTypePosition05},ETR_ENTRUST.PRICE*100,''),4) etrPrice,
+    round(NVL(T5.ent_finish_amt,0)*100/(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
+        else ETR_ENTRUST.ENTRUST_NUM*100 end),4) exeProgress,
+    round(NVL(T5.FINISH_AMT,0)*100/(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
+        else  ETR_ENTRUST.ENTRUST_NUM*100 end),4) dealProgress,
+    NVL(T5.ent_finish_amt,0)/10000  as execFinishAmt,
+    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round((ETR_ENTRUST.entrust_amt- NVL(T5.ent_finish_amt,0))/10000,4) else
+    (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/100) end as execRemainderAmt,
+    NVL(T5.FINISH_AMT,0)/10000  as transFinishAmt,
+    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round((ETR_ENTRUST.entrust_amt - NVL(T5.FINISH_AMT,0))/10000 ,4) else
+    (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) end as transRemainderAmt,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
     ETR_ENTRUST_ADD.CALCULATE_FIELD
@@ -107,7 +109,7 @@
         ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
         LEFT JOIN SYS_USER su1 ON ETR_ENTRUST.INV_MANAGER_ID = su1.USER_NAME
-        LEFT JOIN BUSI_TYPE_MAPPING btm ON ETR_ENTRUST_ADD.ASSET_TYPE = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
+        LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON ETR_ENTRUST_ADD.ASSET_TYPE = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
     <where>
         AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall})
         <if test="entrustStatusList != null and entrustStatusList.size() > 0">
@@ -223,15 +225,17 @@
     ssai.sec_acct_name secAcctId,
     DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
-    round(decode(btm.busi_type,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,#{busiTypePosition05},ETR_ENTRUST.PRICE,''),4) etrPrice,
+    round(decode(btm.busi_type,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,#{busiTypePosition05},ETR_ENTRUST.PRICE*100,''),4) etrPrice,
     round(NVL(T5.ent_finish_amt,0)*100/(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
-    else ETR_ENTRUST.ENTRUST_NUM*100 end),4)*100 exeProgress,
+    else ETR_ENTRUST.ENTRUST_NUM*100 end),4) exeProgress,
     round(NVL(T5.FINISH_AMT,0)*100/(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
-    else  ETR_ENTRUST.ENTRUST_NUM*100 end),4)*100 dealProgress,
-    NVL(T5.ent_finish_amt,0)/100  as execFinishAmt,
-    (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/100) as execRemainderAmt,
-    NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
-    (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
+    else  ETR_ENTRUST.ENTRUST_NUM*100 end),4) dealProgress,
+    NVL(T5.ent_finish_amt,0)/10000  as execFinishAmt,
+    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round((ETR_ENTRUST.entrust_amt - NVL(T5.ent_finish_amt,0))/10000,4) else
+    (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/100)  end as execRemainderAmt,
+    NVL(T5.FINISH_AMT,0)/10000  as transFinishAmt,
+    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round((ETR_ENTRUST.entrust_amt-NVL(T5.FINISH_AMT,0))/10000)  else
+    (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) end as transRemainderAmt,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
     ETR_ENTRUST_ADD.CALCULATE_FIELD
@@ -279,7 +283,7 @@
     ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
     LEFT JOIN STL_SEC_ACCT_INFO ssai ON ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
     LEFT JOIN SYS_USER su2 ON ETR_ENTRUST.INV_MANAGER_ID = su2.USER_NAME
-    LEFT JOIN BUSI_TYPE_MAPPING btm ON ETR_ENTRUST.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
+    LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON ETR_ENTRUST.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
     <where>
         AND ETR_ENTRUST.FINPROD_TYPE2 = 'F36'
         AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall})
@@ -586,7 +590,7 @@
         TO_CHAR(FTP.VPAY_DATE,'YYYY-MM-DD') vpayDate,/*首次结算日*/
         TO_CHAR(FTP.MPAY_DATE,'YYYY-MM-DD') mpayDate,/*到期结算日*/
         ftp.ACT_CAP_DAYS actCapDays,
-        ftp.INT_RATE * 100 rebackPrice,
+        ftp.INT_RATE rebackPrice,
         TPD.TRADE_AMT tradeAmt,
         FTP.M_INT_AMT mIntAmt, /*回购利息*/
         FTP.M_TRADE_AMT mTradeAmt,/* 到期金额*/
@@ -768,8 +772,8 @@
         tpdp.FINPROD_TYPE2,
         tpdp.TERM_TYPE termType,
         tpdp.REPO_TERM  repoTerm,
-        tpdp.V_SETTLE_DATE vpayDate,
-        tpdp.M_SETTLE_DATE mpayDate,
+        to_char(tpdp.V_SETTLE_DATE,'yyyy-MM-dd') vpayDate,
+        to_char(tpdp.M_SETTLE_DATE,'yyyy-MM-dd') mpayDate,
         tpdp.ACT_REPO_TERM actCapDays,
         tpdp.RATE rebackPrice,
         tpdp.TRADE_AMT tradeAmt,

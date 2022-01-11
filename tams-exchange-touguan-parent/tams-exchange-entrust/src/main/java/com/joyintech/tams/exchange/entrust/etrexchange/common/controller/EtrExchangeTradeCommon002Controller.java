@@ -64,13 +64,6 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
     @Autowired
     private EtrExchangeTradeCommon002Service etrExchangeTradeCommon002Service;
 
-    @Autowired
-    private EtrExchangeTradeCommon001Service etrExchangeTradeCommon001Service;
-
-    @Autowired
-    private EtrExchangeTradeCommon003Service etrExchangeTradeCommon003Service;
-
-
     @ApiOperation(value="查询页面初始化参数", notes = "查询页面初始化参数")
     @PostMapping("/init")
     @ResponseBody

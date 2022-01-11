@@ -353,7 +353,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         //更新操作记录日志
         CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
         oprHisReq.setEntrustId(dto.getEntrustId());
-        if(StringUtil.equals(type, "NEW")){
+        if(StringUtil.equals(type.name(), "NEW")){
             oprHisReq.setOperType(DictCodeListExt3.操作类型_新建.getValue());
         }else{
             oprHisReq.setOperType(DictCodeListExt3.操作类型_修改.getValue());
@@ -373,7 +373,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         CfetsEtribRepoInfo003Dto entity = getBussinessEntityByWorkflowId(workflowId);
         WFlowCommonService.doCompleteFlow(entity.getWorkflowId());
         //发送头寸
-        PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(),DictCodeListExt1.子系统代码_委托.getValue());
+        PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(),DictCodeListExt1.子系统代码_委托.getValue(),DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(),entity.getPs());
     }
 
 
@@ -495,9 +495,9 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             req.setDecisionAct(DictCodeListExt3.系统动作_修改.getValue());
             req.setSystemAct(entity.getSystemAct());
             req.setbTotalTradeId(entity.getTotalEtrustId());
-            req.setCdate(entity.getEntrustDate());
-            req.setCcy(DictCodeList.币种_人民币_CNY.getValue());
         }
+        req.setCdate(entity.getEntrustDate());
+        req.setCcy(DictCodeList.币种_人民币_CNY.getValue());
         req.setPtlCashList(ptlCashList);
         req.setPtlSecList(ptlSecList);
         PositionHttpRequest.send(req);
@@ -635,11 +635,11 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                     RepoInfoDto.setTransmitTime(transmitTimeDto.getTransmitTime());
                     dto.setTransmitTime(transmitTimeDto.getTransmitTime());
                 }
-                RepoInfoDto.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
-                dto.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
-            }else{
                 RepoInfoDto.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
                 dto.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+            }else{
+                RepoInfoDto.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+                dto.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
             }
             if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL), "02")
                     ||StringUtil.equals(RepoInfoDto.getPs(), DictCodeListExt1.回购方向_正回购.getValue())){

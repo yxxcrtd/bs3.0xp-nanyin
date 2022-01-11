@@ -117,7 +117,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         // 登记托管机构
         initPageParams.put("REGIST_ORG", this.getSelectDataFromDataDic(DictCode.登记托管机构, null));
         // 债券类型
-        initPageParams.put("BOND_TYPE", this.getSelectDataFromDataDic(DictCode.债券类型, null));
+        initPageParams.put("BOND_TYPE", this.getSelectDataFromDataDic(DictCode.行内资产四级分类, null));
         // 回购方式_双边回购
         initPageParams.put("REPO_METHOD_1", DictCodeListExt3.回购方式_双边回购.getValue());
         // 资金账户类型_托管账户
@@ -543,7 +543,8 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         BondQuoteInfoDto bondQuoteInfoDto = new BondQuoteInfoDto();
         AjaxResult ar = null;
         List<String> entrustIds = StringUtil.splitToList(",", (String) param.get("entrustIds"));
-        param.put("entrustIds", entrustIds);
+        param.put("entrustIdList", entrustIds);
+        param.remove("entrustIds");
         return new Message<AjaxResult>().success().setData(ibuQuoteBondService.doForcedFinishCheck(param, false));
     }
 
@@ -554,8 +555,9 @@ public class CfetsIbuQuoteRepoController extends BaseController {
     public Message<AjaxResult> doForcedFinish(@RequestBody Map<String, Object> param) {
         AjaxResult ar;
         List<String> entrustIds = StringUtil.splitToList(",", (String) param.get("entrustIds"));
-        param.put("entrustIds", entrustIds);
-        ar = ibuQuoteBondService.doForcedFinishCheck(param, true);
+        param.put("entrustIdList", entrustIds);
+        param.remove("entrustIds");
+        ar = ibuQuoteRepoService.doForcedFinishCheck(param, true);
         if (CollectionUtils.isNotEmpty(ar.getErrorList())) {
             return new Message<AjaxResult>().success().setData(ar);
         }
@@ -563,6 +565,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             ibuQuoteRepoService.doForcedFinish(param);
             ar = new AjaxResult(this.getMessage("强制完成成功"));
         } catch (Exception e) {
+            logger.error("强制完成异常", e);
             ar = new AjaxResult(this.getMessage("强制完成异常"));
         }
         return new Message<AjaxResult>().success().setData(ar);

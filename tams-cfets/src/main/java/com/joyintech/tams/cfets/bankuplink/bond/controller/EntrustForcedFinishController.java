@@ -6,6 +6,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.EntrustForcedFinishDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.EntrustRequest;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +60,12 @@ public class EntrustForcedFinishController extends BaseController {
                 entrustRequest.setEntrustId(entrustForcedFinishDto.getEntrustId());
                 entrustForcedFinishDto.setEntrustList(ibuQuoteBondService.listEntrust(entrustRequest,entrustForcedFinishDto.getLoginUserId()));
                 entrustForcedFinishDto.setDealTransactionList(ibuQuoteBondService.listDealTransactionDetails(entrustForcedFinishDto.getEntrustId()));
+                if(StringUtil.isNotEmpty(entrustForcedFinishDto.getDealTransactionList())){
+                    entrustForcedFinishDto.getDealTransactionList().forEach(item->{
+                        item.setMatureYield(ArithmeticUtil.multiply(item.getMatureYield(),new BigDecimal(100)));
+                        item.setExerYield(ArithmeticUtil.multiply(item.getExerYield(),new BigDecimal(100)));
+                    });
+                }
             }
         }
         model.addAttribute(GlobalConstant.ENTITY, entrustForcedFinishDto);

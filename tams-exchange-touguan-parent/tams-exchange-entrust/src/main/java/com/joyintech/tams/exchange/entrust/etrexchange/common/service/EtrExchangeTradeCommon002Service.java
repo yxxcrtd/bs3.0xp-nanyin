@@ -233,8 +233,8 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 
 	public Page<EtrExchangeTradeEtrExchangeCommonResponse> selectEtrExchange(EtrExchangeTradeEtrExchangeCommonRequest request) {
 		Map<String, Object> param = BeanUtil.object2Map(request);
-		param.put("userId", "hxy");//LoginUserUtil.getUserName());
-		//param.put("sysDate",iPlatformDate.getSysDateStr());
+		param.put("userId", LoginUserUtil.getUserName());
+		param.put("sysDate",iPlatformDate.getSysDateStr());
 		param.put("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
 		param.put("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
 		param.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());

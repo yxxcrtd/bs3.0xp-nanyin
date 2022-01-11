@@ -143,7 +143,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                                 || (StringUtil.equals(cfetsDto.getTgBusiType(), DictCodeListExt3.头寸业务类型_现券交易.getValue())
                                          && !StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_买入.getValue()))
                                 || (StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券质押式正回购.getValue())
-                                && StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_买入.getValue()))))){
+                                && StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_正回购.getValue()))))){
                     returnList.add(cfetsDto);
                 }
             }
@@ -435,6 +435,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             req.setbTotalTradeId(cfetsManualSettleRequest.getTradeId());
             //汇总交易编号
             req.setTotalTradeId(trdBankManualSettleInfo.getSettleSeqNo());
+            req.setWorkFlowId(trdBankManualSettleInfo.getWorkflowId());
             //流程状态	流程节点 ，提交 审批通过
             req.setFlowStatus(DictCodeListExt3.流程节点_审批生效.getValue());
             //余额校验	Y：需校验   N：不需校验
@@ -477,7 +478,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             //交易方向
             req.setPs(cfetsManualSettleRequest.getPs());
             //新建 修改 关闭
-            req.setSystemAct("01");
+            req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+            req.setDecisionAct(DictCodeListExt3.系统动作_新建.getValue());
             req.setCdate(platformDateImpl.getSysDate());
             req.setCcy(cfetsManualSettleRequest.getCcy());
             req.setFinprodId(trdBankManualSettleInfo.getFinprodId());
@@ -549,6 +551,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             req.setInterfaceType("REPO001");
             req.setUserId(SecurityUtil.getLoginUser().getUserName());
             req.setTotalTradeId(trdBankManualSettleInfo.getSettleSeqNo());
+            req.setWorkFlowId(trdBankManualSettleInfo.getWorkflowId());
             req.setFlowStatus(DictCodeListExt3.流程节点_审批生效.getValue());
             req.setModelType(DictCodeListExt1.子系统代码_交易.getValue());
             req.setRepoPledgeModel(CacheUtil.getSysParam("repo_pledge_model"));
@@ -581,6 +584,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             }else if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue())){
                 req.setPs(DictCodeList.回购拆借方向_逆回购.getValue());
             }
+            req.setDecisionAct(DictCodeListExt3.系统动作_新建.getValue());
             req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
             req.setCdate(platformDateImpl.getSysDate());
             req.setCcy(cfetsManualSettleRequest.getCcy());

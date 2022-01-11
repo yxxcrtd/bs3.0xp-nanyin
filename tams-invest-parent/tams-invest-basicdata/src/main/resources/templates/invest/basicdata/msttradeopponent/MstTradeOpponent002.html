@@ -131,13 +131,13 @@
 									</div>
 									<!-- 增加银行间机构21位码 add by chenkang  20220105 start-->
 									<div class="form-inline-wrap">
-										<label class="layui-form-label form-lable" data-th-text="#{MstTradeOpponent002.partyId}">银行间机构21位码</label>
+										<label class="layui-form-label form-lable" data-th-text="#{MstTradeOpponent002.partyId1}">银行间机构21位码</label>
 										<div class="layui-input-inline input-inline">
 											<input type="text" id="partyId"  name="partyId" class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
 												   data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-url="@{/invest/basicdata/msttradeopponent/MstTradeOpponent002/selectPartyId?act=true}"
-												   data-idfield="code" data-keyfield="code"
+												   data-idfield="code" data-keyfield="code" formatOption="false"
 												   data-th-value='${dto?.partyId}'
-												   data-th-data-effectivefieldsalias='|{"shortName":"#{MstTradeOpponent001.customerAbbr}","code":"#{MstTradeOpponent002.partyId}"}|'>
+												   data-th-data-effectivefieldsalias='|{"shortName":"#{MstTradeOpponent002.customerNameCn}","code":"#{MstTradeOpponent002.partyId}"}|'>
 										</div>
 									</div>
 									<!-- 增加银行间机构21位码 add by chenkang  20220105 end-->
@@ -248,14 +248,22 @@
 									</div>
 									<!-- 增加银行间机构21位码 add by chenkang  20220105 start-->
 									<div class="form-inline-wrap">
-										<label class="layui-form-label form-lable" data-th-text="#{MstTradeOpponent002.partyId}">银行间机构21位码</label>
+										<label class="layui-form-label form-lable" data-th-text="#{MstTradeOpponent002.partyId1}">银行间机构21位码</label>
 										<div class="layui-input-inline input-inline">
 											<input type="text" id="partyId2"  name="partyId" class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
 												   data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-url="@{/invest/basicdata/msttradeopponent/MstTradeOpponent002/selectPartyId?act=true}"
-												   data-idfield="code" data-keyfield="code"
+												   data-idfield="code" data-keyfield="code" formatOption="false"
 												   data-th-value='${dto?.partyId}'
-												   data-th-data-effectivefieldsalias='|{"shortName":"#{MstTradeOpponent001.customerAbbr}","code":"#{MstTradeOpponent002.partyId}"}|'>
+												   data-th-data-effectivefieldsalias='|{"shortName":"#{MstTradeOpponent002.customerNameCn}","code":"#{MstTradeOpponent002.partyId}"}|'>
 										</div>
+<!--										<div class="layui-input-inline input-inline">-->
+<!--											<select class="layui-input form-input input-select" id="partyId2"-->
+<!--													name="reportTerm" data-th-placeholder="#{SysCommon.placeholder}" allowClear="true"-->
+<!--													data-th-data-url="@{/invest/basicdata/msttradeopponent/MstTradeOpponent002/selectPartyId?act=true}"-->
+<!--													data-th-value='${dto?.partyId}'-->
+<!--													data-th-data-effectivefieldsalias='|{"shortName":"#{MstTradeOpponent002.customerNameCn}","code":"#{MstTradeOpponent002.partyId}"}|'>-->
+<!--											</select>-->
+<!--										</div>-->
 									</div>
 									<!-- 增加银行间机构21位码 add by chenkang  20220105 end-->
 								</div>

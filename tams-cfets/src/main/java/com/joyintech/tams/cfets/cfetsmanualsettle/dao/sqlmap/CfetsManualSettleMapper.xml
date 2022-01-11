@@ -200,9 +200,7 @@
         left join trdquto_match_info match on T1.totle_trade_id=match.trd_id
         left join reg_fin_product_deal_total_add regAdd on match.PRE_TRADE_ID=regAdd.totle_trade_id
         left join ibu_quote_bond_det ibuDet on match.PRE_TRADE_ID=ibuDet.QUOTE_ID and ibuDet.TRADE_STATUS='07'
-        WHERE T1.TRADE_STATUS =#{TRADE_STATUS_01}
-        AND T0.SETTLE_STATUS IN (#{DELIVERY_STATUS_02},#{DELIVERY_STATUS_04})
-        AND T1.Is_Cancel =#{isCalcN}
+        WHERE T0.SETTLE_STATUS IN (#{DELIVERY_STATUS_02},#{DELIVERY_STATUS_04})
         <![CDATA[ AND T0.SETTLE_DATE >= #{settleDateStart}]]>
         <![CDATA[ AND T0.SETTLE_DATE <= #{settleDateEnd}]]>
         <if test="settleStatusList != null and settleStatusList.size() > 0">
@@ -821,7 +819,7 @@
         LEFT JOIN MST_CFETS_CUSTOMER_INFO T9 ON T9.PARTY_ID = T5.OU_PARTY_ID
         LEFT JOIN SYS_USER T10 ON T10.USER_NAME = T1.TRADER
         LEFT JOIN MST_COUNTER_PARTY T11 ON T11.COUNTER_ID = T1.COUNTER_ID
-        LEFT JOIN MST_CFETS_CUSTOMER_TRADER T12 ON T12.TRADER_ID = T1.COUNTER_TRADER
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER T12 ON T12.PARTY_ID = T9.PARTY_ID
         LEFT JOIN sys_datadict_list sdl ON sdl.dict_code='DISTRIBUTION' and sdl.item_code = T8.DIP_TYPE
         WHERE T4.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01}
         AND T1.TOTLE_TRADE_ID = #{tradeId}

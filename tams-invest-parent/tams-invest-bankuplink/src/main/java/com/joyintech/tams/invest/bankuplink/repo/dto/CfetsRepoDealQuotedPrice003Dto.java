@@ -162,6 +162,11 @@ public class CfetsRepoDealQuotedPrice003Dto extends BaseEntity {
      */
     private String portfolioName;
 
+    /*
+     * 首次净价
+     */
+    private String firstNetPrice;
+
     /**
      * 获取 prinSysDate
      * 
@@ -705,5 +710,13 @@ public class CfetsRepoDealQuotedPrice003Dto extends BaseEntity {
 
     public void setPortfolioSeries(String portfolioSeries) {
         this.portfolioSeries = portfolioSeries;
+    }
+
+    public String getFirstNetPrice() {
+        return firstNetPrice;
+    }
+
+    public void setFirstNetPrice(String firstNetPrice) {
+        this.firstNetPrice = firstNetPrice;
     }
 }

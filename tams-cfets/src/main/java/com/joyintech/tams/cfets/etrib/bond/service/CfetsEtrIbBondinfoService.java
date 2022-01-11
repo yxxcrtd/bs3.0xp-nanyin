@@ -1457,11 +1457,11 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     dd.setTransmitTime(transmitTimeDto.getTransmitTime());
                     dto.setTransmitTime(transmitTimeDto.getTransmitTime());
                 }
-                dd.setSubmitFlag(false);
-                dto.setSubmitFlag(false);
+                dd.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+                dto.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
             }else{
-                dd.setSubmitFlag(true);
-                dto.setSubmitFlag(true);
+                dd.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+                dto.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
             }
             etrInvestBondInfoDtosList.add(dd);
         }
@@ -1836,6 +1836,20 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     validMessage.setMessage("流程中的数据不允许关闭");
                     res.setErrorList(Arrays.asList(validMessage));
                     return res;
+                }
+                if(StringUtil.isNotEmpty(Item.getEntrustId()))
+                {
+                    WflEtrEntrustKey wflEtrEntrustKey = new WflEtrEntrustKey();
+                    wflEtrEntrustKey.setEntrustId(Item.getEntrustId());
+                    wflEtrEntrustKey.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                    WflEtrEntrust wflEtrEntrust = wflEtrEntrustMapper.selectByPrimaryKey(wflEtrEntrustKey);
+                    if(wflEtrEntrust!=null){
+                        AjaxResult res=new AjaxResult();
+                        ValidMessage  validMessage= new ValidMessage();
+                        validMessage.setMessage("存在流程中数据，无法关闭。");
+                        res.setErrorList(Arrays.asList(validMessage));
+                        return res;
+                    }
                 }
                 entrustIds.add(Item.getEntrustId());
             }

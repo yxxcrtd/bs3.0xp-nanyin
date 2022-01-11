@@ -39,10 +39,10 @@ public class PtlAllocationDto {
     @ApiModelProperty(name="inSec",value="融入券券面总额(万元)")
     private BigDecimal lendinEntNum;
 
-    @ApiModelProperty(name="lendinShareAmt",value="本方券券面")
+    @ApiModelProperty(name="lendinShareAmt",value="融入券券面")
     private BigDecimal lendinShareAmt;
 
-    @ApiModelProperty(name="ourShareAmt",value="融入券券面")
+    @ApiModelProperty(name="ourShareAmt",value="本方券券面")
     private BigDecimal ourShareAmt;
 
     @ApiModelProperty(name="sellRepurchaseSec",value="卖空购回券面总额(万元)")

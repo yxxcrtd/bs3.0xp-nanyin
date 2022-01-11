@@ -108,7 +108,7 @@
             AND reg.trade_market=#{tradeMarket,jdbcType=VARCHAR}
         </if>
         <if test="settleSpeed != null and settleSpeed != ''">
-            AND  reg.settle_speed = #{settleSpeed,jdbcType=VARCHAR}
+            AND  decode(reg.settle_speed,0,'01',1,'02',2,'03')= #{settleSpeed,jdbcType=VARCHAR}
         </if>
         <if test="secAcctIdList != null and secAcctIdList.size() > 0">
             AND reg.sec_manage_acct_id in
@@ -160,9 +160,9 @@
             <if test="tradeDate != null and !tradeDate.equals('')">
                 AND aaa.tradeDate = #{tradeDate,jdbcType=DATE}
             </if>
-            <if test="quoteid != null and !''.equals(quoteid)">
+          <!--  <if test="quoteid != null and !''.equals(quoteid)">
                 and aaa.totleTradeId = #{quoteid,jdbcType=VARCHAR}
-            </if>
+            </if>-->
             <if test="finprodMarketId != null and !''.equals(finprodMarketId)">
                and  aaa.finprodMarketId = #{finprodMarketId,jdbcType=VARCHAR}
             </if>
@@ -310,7 +310,7 @@
             AND '01'=#{tradeMarket,jdbcType=VARCHAR}
         </if>
         <if test="settleSpeed != null and settleSpeed != ''">
-            AND  ib.settle_speed = #{settleSpeed,jdbcType=VARCHAR}
+            AND  decode(ib.settle_speed,0,'01',1,'02',2,'03') = #{settleSpeed,jdbcType=VARCHAR}
         </if>
         <if test="secAcctIdList != null and secAcctIdList.size() > 0">
             AND ib.sec_manage_acct_id in
@@ -338,6 +338,9 @@
             <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
+        </if>
+        <if test="execid != null and execid != ''">
+            AND ibd.execid = #{execid,jdbcType=VARCHAR}
         </if>
         union all
         select  '有效' as effectiveStatusName,
@@ -378,10 +381,11 @@
         from ibu_quote_crep ic
         left join (
         select I.quote_id,
-        wm_concat(i.pledge_finprod_id) as pledgeFinprodId,wm_concat(i.pledge_ratio) pledgeRatio,
-        wm_concat(i.pledge_face_value) pledgeFaceValue
-        from (select * from ibu_quote_crep_pledge order by pledge_finprod_id) I
-        group by  I.quote_id
+        listagg(I.pledge_finprod_id, ',') within group(order by I.pledge_finprod_id) as pledgeFinprodId,
+        listagg(to_char(i.pledge_ratio,'FM99990.999999'), ',') within group(order by I.pledge_finprod_id) as pledgeRatio,
+        listagg(I.pledge_face_value, ',') within group(order by I.pledge_finprod_id) as pledgeFaceValue
+        from ibu_quote_crep_pledge I
+        group by I.quote_id
         )icpledge
         on  ic.quote_id=icpledge.quote_id
         left join(
@@ -421,7 +425,7 @@
             AND '01'=#{tradeMarket,jdbcType=VARCHAR}
         </if>
         <if test="settleSpeed != null and settleSpeed != ''">
-            AND  ic.settle_speed = #{settleSpeed,jdbcType=VARCHAR}
+            AND  decode(ic.settle_speed,0,'01',1,'02',2,'03') = #{settleSpeed,jdbcType=VARCHAR}
         </if>
         <if test="secAcctIdList != null and secAcctIdList.size() > 0">
             AND ic.sec_manage_acct_id in
@@ -449,6 +453,9 @@
             <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
+        </if>
+        <if test="execid != null and execid != ''">
+            AND ic.execid = #{execid,jdbcType=VARCHAR}
         </if>
     </sql>
 
@@ -799,7 +806,9 @@
         reg.remark as remark,
         reg.deal_fee_amt as trdFeeAmt,
         reg.sett_fee_amt as settleFeeAmt,
-        reg.cprice_amt as tradeAmt
+        reg.cprice_amt as tradeAmt,
+        reg.OUR_SHARE_AMT as ourShareAmt,
+        reg.LENDIN_SHARE_AMT as lendinShareAmt
         from IBU_QUOTE_ETR_RE  reg
         where reg.quote_id= #{totleTradeId,jdbcType=VARCHAR}
     </select>

@@ -50,7 +50,7 @@ public interface UpdateTraderMapper {
 	String checkPartyNameOfParty(Map<String, Object> map);
 
 	/**
-	 * 查询主从机构的主机构的6位机构码
+	 * 查询主从机构的主机构的21位机构码
 	 * @param map
 	 * @return
 	 */

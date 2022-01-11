@@ -90,17 +90,18 @@ public class UpdateTraderService {
                      * 处理规则：与系统内的市场机构进行精确名称匹配：匹配上：生成市场机构时 数据生成的link_id为当前市场机构的市场机构代码，匹配不上link_id置为空
                      * 非法人：MST_CFETS_CUSTOMER_INFO表中为从机构的机构，管理人为主机构对应的交易对手数据的link_Id*/
 
-                    map.put("partyCustomerId", mstCfetsCustomerInfo.getPartyCustomerId());
-//                    int temp01 = updateTraderMapper.selectCustomer01(map);
-//                    int temp02 = updateTraderMapper.selectCustomer02(map);
-                    String mpartyId = updateTraderMapper.selectMpartyId(map);
+                    map.put("partyId", mstCfetsCustomerInfo.getPartyId());
+                    int temp01 = updateTraderMapper.selectCustomer01(map);
+                    int temp02 = updateTraderMapper.selectCustomer02(map);
+//                    String mpartyId = updateTraderMapper.selectMpartyId(map);
                     //法人（主机构）
-                    if(StringUtil.isEmpty(mpartyId)){
+                    if(temp01 > 0){
                         //法人相关处理
                         MstCounterParty mstCounterParty = new MstCounterParty();
                         mstCounterParty.setCounterId(baseGetBusinessId != null ? baseGetBusinessId.buildBussinessCode(
                                 bussinessCodeParameter) : IDGenerator.generate());
                         mstCounterParty.setCounterName(mstCfetsCustomerInfo.getPartyName());
+                        mstCounterParty.setCounterType(DictCodeListExt1.交易对手类型_资管产品.getValue());
                         mstCounterParty.setPartyId(mstCfetsCustomerInfo.getPartyId());
                         //按名称进行匹配
                         map.put("partyCustomerName",mstCfetsCustomerInfo.getPartyName());
@@ -112,7 +113,7 @@ public class UpdateTraderService {
 
                     }
                     //非法人（从机构）
-                    if(StringUtil.isNotEmpty(mpartyId)){
+                    if(temp02 > 0){
                         //非法人相关处理
                         MstCounterParty mstCounterParty = new MstCounterParty();
                         mstCounterParty.setCounterId(baseGetBusinessId != null ? baseGetBusinessId.buildBussinessCode(
@@ -121,14 +122,20 @@ public class UpdateTraderService {
                         mstCounterParty.setCounterType(DictCodeListExt1.交易对手类型_资管产品.getValue());
                         mstCounterParty.setPartyId(mstCfetsCustomerInfo.getPartyId());
 
-                        //获取主机构交易对手的link_Id
+                        //获取主机构ID
+                        map.put("partyId", mstCfetsCustomerInfo.getPartyId());
+                        String mpartyId = updateTraderMapper.selectMpartyId(map);
                         //获取主机构名称
-                        //MstCfetsCustomerInfo temp = updateTraderMapper.selectInfo(mstCfetsCustomerInfo.getPartyCustomerId());
-                        MstCfetsCustomerInfo temp = updateTraderMapper.selectMpartyInfo(mpartyId);
+                        //MstCfetsCustomerInfo temp = updateTraderMapper.selectInfo(mstCfetsCustomerInfo.getPartyId());
+                        MstCfetsCustomerInfo temp = new MstCfetsCustomerInfo();
+                        if (StringUtil.isNotEmpty(mpartyId)) {
+                            temp = updateTraderMapper.selectMpartyInfo(mpartyId);
+                        }
                         String linkId = "";
                         if (temp != null) {
                             //按名称进行匹配
                             map.put("partyCustomerName",temp.getPartyName());
+                            //获取主机构交易对手的link_Id
                             linkId = updateTraderMapper.checkCustomerName(map);
                         }
                         if(StringUtil.isNotEmpty(linkId)){

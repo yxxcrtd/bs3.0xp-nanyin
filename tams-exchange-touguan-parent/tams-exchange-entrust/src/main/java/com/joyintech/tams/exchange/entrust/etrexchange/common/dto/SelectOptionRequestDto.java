@@ -4,11 +4,19 @@ import com.joyintech.tams.business.common.dto.PageMode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+/**
+ * 下拉框请求requesyt
+ * @author wangyang1
+ * @version 1.0 2021年12月29日
+ */
 @ApiModel(value="证券代码列表查询请求参数",description="证券代码列表查询请求参数")
 public class SelectOptionRequestDto {
 
     @ApiModelProperty(name="search",value="关键字",example="A1")
     private String search;
+
+    @ApiModelProperty(name="initValue",value="初始值",example="A1")
+    private String initValue;
 
     @ApiModelProperty(name="pageMode",value="分页对象")
     private PageMode pageMode;
@@ -24,6 +32,12 @@ public class SelectOptionRequestDto {
 
     @ApiModelProperty(name="counterIdName",value="交易对手名称",example="A1")
     private String counterIdName;
+
+    @ApiModelProperty(name="counterId",value="交易对手",example="A1")
+    private String counterId;
+
+    @ApiModelProperty(name="param",value="交易对手名称",example="A1")
+    private String param;
 
     public String getSearch() {
         return search;
@@ -71,5 +85,13 @@ public class SelectOptionRequestDto {
 
     public void setCounterIdName(String counterIdName) {
         this.counterIdName = counterIdName;
+    }
+
+    public String getInitValue() {
+        return initValue;
+    }
+
+    public void setInitValue(String initValue) {
+        this.initValue = initValue;
     }
 }

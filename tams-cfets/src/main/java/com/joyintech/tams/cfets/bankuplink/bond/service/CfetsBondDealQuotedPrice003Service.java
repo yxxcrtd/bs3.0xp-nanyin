@@ -1158,7 +1158,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
                 pltMap.put("secAcctId",cfetsIbuQuoteBondMapper.getSecAcctId(portfolioId,entity.getFinprodId(),entity.getTradeMarket()));
                 pltMap.put("secAmount",ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(),new BigDecimal(10000))); //券面总额
                 if(null!=cfetsBondDealDialogueQuoteDto.getFpriceAmt()&&BigDecimal.ZERO.compareTo(cfetsBondDealDialogueQuoteDto.getFpriceAmt())!=0){
-                    pltMap.put("cashAmount",cfetsBondDealDialogueQuoteDto.getFpriceAmt());//全价总额
+                    pltMap.put("cashAmount",cfetsBondDealDialogueQuoteDto.getFpriceAmt().setScale(4,RoundingMode.DOWN));//全价总额
                 }else{
                     if(null!=dto.getUnitFprice()&&BigDecimal.ZERO.compareTo(dto.getUnitFprice())!=0){
                         pltMap.put("cashAmount",ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(),dto.getUnitFprice(),new BigDecimal(100)).setScale(4,RoundingMode.DOWN));

@@ -28,20 +28,20 @@ public interface CfetsIbuQuoteRepoMapper {
     Map queryPositionInfo(Map RequestDto);
 
     /**
-     * 委托列表初始化
-     *
-     * @param param 条件
-     * @return 指令列表
-     */
-    List<CfetsRepoDealEntrustOrderDto> listEntrust(Map<String, Object> param);
-
-    /**
      * 查询质押券信息
      *
      * @param param 条件
      * @return 质押券列表
      */
     List<RepoEntrustPledgeDto> selectRepoEntrustPledges(Map<String, Object> param);
+
+    /**
+     * 委托列表初始化
+     *
+     * @param param 条件
+     * @return 指令列表
+     */
+    List<CfetsRepoDealEntrustOrderDto> listEntrust(Map<String, Object> param);
 
     /**
      * 查询质押券信息
@@ -121,7 +121,7 @@ public interface CfetsIbuQuoteRepoMapper {
      * @author jiangpeng
      * @date 2021/12/14 15:31
      */
-    List<DealTransactionDetailsDto> listDealTransactionDetails(Map<String, Object> param);
+    List<RepoDealTransactionDetailsDto> listDealTransactionDetails(Map<String, Object> param);
 
     /**
      * 查询质押券信息

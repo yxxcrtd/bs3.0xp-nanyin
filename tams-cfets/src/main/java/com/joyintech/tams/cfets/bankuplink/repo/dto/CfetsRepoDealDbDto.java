@@ -56,6 +56,10 @@ public class CfetsRepoDealDbDto {
      * 业务明细科目
      */
     private List<FinProductType> finProductTypes;
+    /**
+     * 决策动作
+     */
+    private String systemAct;
 
     public String getWorkflowId() {
         return workflowId;
@@ -167,6 +171,14 @@ public class CfetsRepoDealDbDto {
 
     public void setFinProductTypes(List<FinProductType> finProductTypes) {
         this.finProductTypes = finProductTypes;
+    }
+
+    public String getSystemAct() {
+        return systemAct;
+    }
+
+    public void setSystemAct(String systemAct) {
+        this.systemAct = systemAct;
     }
 }
 

@@ -12,9 +12,7 @@ import com.joyintech.service.bankuplink.common.util.BusinessTypeUtil;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.core.impl.dao.BaseGetBussinessIdMapper;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
@@ -25,7 +23,7 @@ import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
 import com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt;
 import com.joyintech.tams.invest.common.dto.cstp.InterfTradRepoasstDto;
-import com.netflix.discovery.converters.Auto;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -321,6 +319,73 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 					cstpCommonMatchService.dealMatchEntrust(map);
 					logger.info("下行交易处理失败,自动生成匹配信息结束");
 					resultBaseDto.setErrMsg(e.getMessage());
+					logger.error(this.getClass()+"质押式回购成交明细接口异常:"+e.getMessage());
+				}
+			} else {
+				String msg = "成交单编号：" + oritradeId + "，已经存在有效交易！";
+				resultBaseDto.setErrMsg(msg);
+				logger.info(msg);
+			}
+		} else {
+			String msg = "没有对应的报价信息!";
+			resultBaseDto.setErrMsg(msg);
+			logger.info(msg);
+		}
+
+	}
+
+
+	/**
+	 * 前后端分离版本用
+	 * @param interfCstpTrade
+	 * @param interfcstpTradRepo
+	 * @param resultBaseDto
+	 */
+	public void repoAutoTrade2(InterfCstpTrade interfCstpTrade,InterfOpicsTradRepo interfcstpTradRepo, ResultBaseDto resultBaseDto) {
+		String oritradeId = interfCstpTrade.getExecid();
+		int QueryCount = 1;
+		EtrEntrustExt entrust = null;
+		while (QueryCount <= 10 && entrust == null) {
+			logger.info("下行自动匹配（回购）第" + QueryCount + "次查询上行报价指令信息！！！");
+			entrust = autoTradeMapper.queryRepoEntrustInfo(oritradeId);
+			if(null!=entrust){
+				String isDzh = cstpMapper.getIsDzh(entrust.getQuoteId());
+				if(StringUtil.equals(isDzh,"Y")||(StringUtil.equals(isDzh,"N")&&StringUtil.isNotEmpty(entrust.getPortfolioId()))){
+					break;
+				}
+			}
+			else {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					logger.error("下行（回购）自动录单匹配指令信息失败！！！");
+				}
+				QueryCount++ ;
+			}
+		}
+		// 查询抵押品债券信息
+		List<InterfTradRepoasstDto> repoasst = autoTradeMapper.queryRepoAsst(oritradeId);
+		if (StringUtil.isNotEmpty(entrust)) {
+			//正回购必须有质押券
+			if(StringUtil.equals(entrust.getPs(), DictCodeList.回购拆借方向_正回购.getValue())&&StringUtil.isEmptyList(repoasst)){
+				String msg = "抵押品债券不存在！";
+				resultBaseDto.setErrMsg(msg);
+				logger.info(msg);
+				return;
+			}
+			// 判断是否已经生成了交易
+			TrdProductDeal deal = autoTradeMapper.isExistsTrade(oritradeId);
+			if (!StringUtil.isNotEmpty(deal)) {
+				try{
+					Map<String,Object> param = new HashMap<>();
+					param.put("interfCstpTrade",interfCstpTrade);
+					param.put("interfOpicsTradRepo",interfcstpTradRepo);
+					restTemplate.postForObject(
+							ServiceApplication.PINGAN_SERVICE_NAME+ "/cfets/common/CfetsIbuQuoteBatchCommon",
+							param, Map.class);
+				}
+				catch (Exception e){
 					logger.error(this.getClass()+"质押式回购成交明细接口异常:"+e.getMessage());
 				}
 			} else {

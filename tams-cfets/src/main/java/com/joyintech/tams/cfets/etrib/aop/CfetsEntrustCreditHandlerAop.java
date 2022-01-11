@@ -189,13 +189,14 @@ public class CfetsEntrustCreditHandlerAop {
             //update zhangweiqi 20210119 修改授信begin
             if(args[0] instanceof EtrAutoManagementAccountDto && operationType.equals(OperationType.MODIFY)){
                 CfetsEtribBondInfo003Dto pageInputDto = (CfetsEtribBondInfo003Dto) args[0];
-                //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
-                pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getEntrustNum(),new BigDecimal(10000),8));
-                pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
-                pageInputDto.setEntrustIntegrateNum(ArithmeticUtil.divide(pageInputDto.getEntrustIntegrateNum(),new BigDecimal(10000),8));
-                EtrIbBondinfo002Dto inputDto = new EtrIbBondinfo002Dto();
+                 EtrIbBondinfo002Dto inputDto = new EtrIbBondinfo002Dto();
                 BeanUtil.copyPropertiesIgnoreNull(inputDto, pageInputDto);
-            	etrCommonService.executeOccupyCreditLines(inputDto, DictCodeListExt1.交易状态_撤销.getValue(),"doBack");
+                //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
+                inputDto.setEntrustNum(ArithmeticUtil.divide(inputDto.getEntrustNum(),new BigDecimal(10000),8));
+                inputDto.setEntrustOwnNum(ArithmeticUtil.divide(inputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
+                inputDto.setEntrustIntegrateNum(ArithmeticUtil.divide(inputDto.getEntrustIntegrateNum(),new BigDecimal(10000),8));
+
+                etrCommonService.executeOccupyCreditLines(inputDto, DictCodeListExt1.交易状态_撤销.getValue(),"doBack");
             }
           //update zhangweiqi 20210119 修改授信end
             //add by longpeng 债券一级指令多对多导入不占授信 20201228 start
@@ -210,12 +211,13 @@ public class CfetsEntrustCreditHandlerAop {
                 if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),pageInputDto.getAssetType())){
                     return ;
                 }
-                //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
-                pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getEntrustNum(),new BigDecimal(10000),8));
-                pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
-                pageInputDto.setEntrustIntegrateNum(ArithmeticUtil.divide(pageInputDto.getEntrustIntegrateNum(),new BigDecimal(10000),8));
-                EtrIbBondinfo002Dto inputDto = new EtrIbBondinfo002Dto();
+               EtrIbBondinfo002Dto inputDto = new EtrIbBondinfo002Dto();
                 BeanUtil.copyPropertiesIgnoreNull(inputDto, pageInputDto);
+                //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
+                inputDto.setEntrustNum(ArithmeticUtil.divide(inputDto.getEntrustNum(),new BigDecimal(10000),8));
+                inputDto.setEntrustOwnNum(ArithmeticUtil.divide(inputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
+                inputDto.setEntrustIntegrateNum(ArithmeticUtil.divide(inputDto.getEntrustIntegrateNum(),new BigDecimal(10000),8));
+
                 etrCommonService.executeOccupyCreditLines(inputDto, DictCodeListExt1.交易状态_初始.getValue(),"doInsert");
             }
         }catch (Exception e){
@@ -245,12 +247,13 @@ public class CfetsEntrustCreditHandlerAop {
                 if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),pageInputDto.getAssetType())){
                     return ;
                 }
-                //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
-                pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getEntrustNum(),new BigDecimal(10000),8));
-                pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
-                pageInputDto.setEntrustIntegrateNum(ArithmeticUtil.divide(pageInputDto.getEntrustIntegrateNum(),new BigDecimal(10000),8));
                 EtrIbBondinfo002Dto inputDto = new EtrIbBondinfo002Dto();
                 BeanUtil.copyPropertiesIgnoreNull(inputDto, pageInputDto);
+                //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
+                inputDto.setEntrustNum(ArithmeticUtil.divide(inputDto.getEntrustNum(),new BigDecimal(10000),8));
+                inputDto.setEntrustOwnNum(ArithmeticUtil.divide(inputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
+                inputDto.setEntrustIntegrateNum(ArithmeticUtil.divide(inputDto.getEntrustIntegrateNum(),new BigDecimal(10000),8));
+
                 etrCommonService.executeOccupyCreditLines(inputDto, DictCodeListExt1.交易状态_初始.getValue(),"doUpdate");
             }
         }catch (Exception e){
@@ -273,12 +276,13 @@ public class CfetsEntrustCreditHandlerAop {
             if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),pageInputDto.getAssetType())){
                 return ;
             }
-            //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
-            pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getEntrustNum(),new BigDecimal(10000),8));
-            pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
-            pageInputDto.setEntrustIntegrateNum(ArithmeticUtil.divide(pageInputDto.getEntrustIntegrateNum(),new BigDecimal(10000),8));
-            EtrIbBondinfo002Dto inputDto = new EtrIbBondinfo002Dto();
+           EtrIbBondinfo002Dto inputDto = new EtrIbBondinfo002Dto();
             BeanUtil.copyPropertiesIgnoreNull(inputDto, pageInputDto);
+            //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
+            inputDto.setEntrustNum(ArithmeticUtil.divide(inputDto.getEntrustNum(),new BigDecimal(10000),8));
+            inputDto.setEntrustOwnNum(ArithmeticUtil.divide(inputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
+            inputDto.setEntrustIntegrateNum(ArithmeticUtil.divide(inputDto.getEntrustIntegrateNum(),new BigDecimal(10000),8));
+
             etrCommonService.executeOccupyCreditLines(inputDto, DictCodeListExt1.交易状态_撤销.getValue(),"doBack");
         }catch (Exception e){
             e.printStackTrace();
@@ -295,12 +299,13 @@ public class CfetsEntrustCreditHandlerAop {
             if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),pageInputDto.getAssetType())){
                 return ;
             }
-            //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
-            pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getEntrustNum(),new BigDecimal(10000),8));
-            pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
-            pageInputDto.setEntrustIntegrateNum(ArithmeticUtil.divide(pageInputDto.getEntrustIntegrateNum(),new BigDecimal(10000),8));
-            EtrIbBondinfo002Dto inputDto = new EtrIbBondinfo002Dto();
+           EtrIbBondinfo002Dto inputDto = new EtrIbBondinfo002Dto();
             BeanUtil.copyPropertiesIgnoreNull(inputDto, pageInputDto);
+            //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
+            inputDto.setEntrustNum(ArithmeticUtil.divide(inputDto.getEntrustNum(),new BigDecimal(10000),8));
+            inputDto.setEntrustOwnNum(ArithmeticUtil.divide(inputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
+            inputDto.setEntrustIntegrateNum(ArithmeticUtil.divide(inputDto.getEntrustIntegrateNum(),new BigDecimal(10000),8));
+
             etrCommonService.executeOccupyCreditLines(inputDto, DictCodeListExt1.交易状态_撤销.getValue(),"close");
         }catch (Exception e){
             e.printStackTrace();

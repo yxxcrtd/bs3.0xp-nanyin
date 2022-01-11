@@ -6,10 +6,16 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.PositionUtil;
+import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
+import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice002Service;
+import com.joyintech.tams.cfets.position.service.PositionInfoService;
+import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonService;
@@ -33,9 +39,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 现券买卖(对话)
@@ -71,6 +75,18 @@ public class IbuQuoteBond002Controller extends BaseController {
 
     @Autowired
     private com.joyintech.tams.cfets.bankuplink.bond.service.CfetsQuotedCommonService cfetsQuotedCommonServiceVue;
+
+    @Autowired
+    private CfetsIbuQuoteBondEtrMapper cfetsIbuQuoteBondEtrMapper;
+
+    @Autowired
+    private StlSecAcctInfoMapper stlSecAcctInfoMapper;
+
+    @Autowired
+    private PositionInfoService positionInfoService;
+
+    @Autowired
+    private CfetsIbuQuoteBondMapper cfetsIbuQuoteBondMapper;
 
     @ApiOperation(value = "对话报价初始化", notes = "对话报价初始化")
     @PostMapping("/initPrice")
@@ -146,6 +162,8 @@ public class IbuQuoteBond002Controller extends BaseController {
         if(StringUtil.equals(cfetsBondDealQuoteCommonDto.getType11(),DictCodeListExt3.行内资产四级分类_交易商协会ABN.getValue())||StringUtil.equals(cfetsBondDealQuoteCommonDto.getType11(),DictCodeListExt3.行内资产四级分类_银保监会主管ABS.getValue())){
             cfetsBondDealQuoteCommonDto.setCalculateField("01");
         }
+        cfetsBondDealQuoteCommonDto.setMatureYield(ArithmeticUtil.divide(cfetsBondDealQuoteCommonDto.getMatureYield(),new BigDecimal(100),6));
+        cfetsBondDealQuoteCommonDto.setExerYield(ArithmeticUtil.divide(cfetsBondDealQuoteCommonDto.getExerYield(),new BigDecimal(100),6));
         return new Message<CfetsBondDealQuoteCommonDto>().success().setData(cfetsBondDealQuoteCommonDto);
     }
 
@@ -268,6 +286,29 @@ public class IbuQuoteBond002Controller extends BaseController {
         CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = cfetsQuotedCommonServiceVue.createDialogue(cfetsBondDealQuoteCommonDto);
         if(CollectionUtils.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())){
             cfetsBondDealDialogueQuoteDto.setCfetsBondDealDialogueQuoteDtoList(cfetsQuotedCommonServiceVue.createCfetsBondDealDialogueQuoteDtoList(cfetsBondDealQuoteCommonDto.getPtlAllocatios()));
+                //处理下组合的可用现金和可用持仓  带到审批画面
+                for (CfetsBondDealDialogueQuoteDto item : cfetsBondDealDialogueQuoteDto.getCfetsBondDealDialogueQuoteDtoList()) {
+                    try{
+                        Map<String,String> accnoParm = new HashMap<>();
+                        accnoParm.put("ccy",cfetsBondDealQuoteCommonDto.getCcy());
+                        accnoParm.put("portfolioId",item.getPortfolioId());
+                        accnoParm.put("acctType", DictCodeListExt1.资金账户类型_产品托管户.getValue());
+                        String accNo = cfetsIbuQuoteBondEtrMapper.getAccNo(accnoParm);
+                        if(StringUtil.isEmpty(accNo)){
+                            accNo = stlSecAcctInfoMapper.selectByPrimaryKey(cfetsBondDealQuoteCommonDto.getSecManageAcctId()).getTrdAcctId();
+                        }
+                        BaseMap baseMap = positionInfoService.queryTrdAvailableCash(Arrays.asList(item.getPortfolioId()), DateUtil.format(cfetsBondDealQuoteCommonDto.getTradeDate()), accNo, cfetsBondDealQuoteCommonDto.getCcy(), "03", Arrays.asList(DictCodeListExt1.资金账户类型_产品托管户.getValue()), null);
+                        if(null!=baseMap&&baseMap.containsKey("cashT")){
+                            item.setProAvailableCash((BigDecimal) baseMap.get("cashT"));
+                        }
+                        BaseMap baseMapSec = positionInfoService.queryTrdPosition(Arrays.asList(item.getPortfolioId()), DateUtil.format(cfetsBondDealQuoteCommonDto.getTradeDate()), cfetsBondDealQuoteCommonDto.getFinprodId());
+                        if(null!=baseMapSec&&baseMapSec.containsKey("ZCTRKYCC")){
+                            item.setSecManageAvailablePosition((BigDecimal)baseMapSec.get("ZCTRKYCC"));
+                        }
+                    }catch (Exception e){
+
+                    }
+                }
         }
         if (!StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getQuoteId())) {
             BussinessCodeParameter codeParameter = new BussinessCodeParameter();

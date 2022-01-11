@@ -1095,14 +1095,27 @@ public class CfetsQuotedCommonService extends BaseService {
                             tailDifference = ArithmeticUtil.subtract(tailDifference,ptlAllocatio.getOurShareAmt());tailDifference = ArithmeticUtil.subtract(tailDifference,ptlAllocatio.getLendinShareAmt());
                             //尾差处理
                             while(tailDifference.compareTo(BigDecimal.ZERO)>0){
-                                if(tailDifference.compareTo(BigDecimal.ZERO)>0&&avaOurShareAmt.compareTo(BigDecimal.ZERO)>0){
-                                    tailDifference = ArithmeticUtil.subtract(tailDifference,faceDimension);
-                                    ptlAllocatio.setOurShareAmt(ArithmeticUtil.doAdd(ptlAllocatio.getOurShareAmt(),faceDimension));
+                                if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
+                                    if(tailDifference.compareTo(BigDecimal.ZERO)>0&&avaLendinShareAmt.compareTo(BigDecimal.ZERO)>0){
+                                        tailDifference = ArithmeticUtil.subtract(tailDifference,faceDimension);
+                                        ptlAllocatio.setLendinShareAmt(ArithmeticUtil.doAdd(ptlAllocatio.getLendinShareAmt(),faceDimension));
+                                    }
+                                    if(tailDifference.compareTo(BigDecimal.ZERO)>0&&avaOurShareAmt.compareTo(BigDecimal.ZERO)>0){
+                                        tailDifference = ArithmeticUtil.subtract(tailDifference,faceDimension);
+                                        ptlAllocatio.setOurShareAmt(ArithmeticUtil.doAdd(ptlAllocatio.getOurShareAmt(),faceDimension));
+                                    }
                                 }
-                                if(tailDifference.compareTo(BigDecimal.ZERO)>0&&avaLendinShareAmt.compareTo(BigDecimal.ZERO)>0){
-                                    tailDifference = ArithmeticUtil.subtract(tailDifference,faceDimension);
-                                    ptlAllocatio.setLendinShareAmt(ArithmeticUtil.doAdd(ptlAllocatio.getLendinShareAmt(),faceDimension));
+                                else{
+                                    if(tailDifference.compareTo(BigDecimal.ZERO)>0&&avaOurShareAmt.compareTo(BigDecimal.ZERO)>0){
+                                        tailDifference = ArithmeticUtil.subtract(tailDifference,faceDimension);
+                                        ptlAllocatio.setOurShareAmt(ArithmeticUtil.doAdd(ptlAllocatio.getOurShareAmt(),faceDimension));
+                                    }
+                                    if(tailDifference.compareTo(BigDecimal.ZERO)>0&&avaLendinShareAmt.compareTo(BigDecimal.ZERO)>0){
+                                        tailDifference = ArithmeticUtil.subtract(tailDifference,faceDimension);
+                                        ptlAllocatio.setLendinShareAmt(ArithmeticUtil.doAdd(ptlAllocatio.getLendinShareAmt(),faceDimension));
+                                    }
                                 }
+
                             }
                             ptlAllocatio.setOurShareAmt(ArithmeticUtil.multiply(ptlAllocatio.getOurShareAmt(),new BigDecimal(10000)));
                             ptlAllocatio.setLendinShareAmt(ArithmeticUtil.multiply(ptlAllocatio.getLendinShareAmt(),new BigDecimal(10000)));
