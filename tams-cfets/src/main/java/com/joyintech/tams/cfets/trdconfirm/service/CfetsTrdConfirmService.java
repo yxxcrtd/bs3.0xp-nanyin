@@ -1149,11 +1149,16 @@ public class CfetsTrdConfirmService extends BaseService{
             deal.setTradeId(baseGetBusinessId.buildBussinessCode(getBussinessCodeParameter(deal.getPs())));
             // 交易本金 = 画面.净价总额
             deal.setShareAmt(regDeal.getShareAmt());
-            deal.setCpriceAmt(ArithmeticUtil.multiply(dtoReg.getUnitCprice(), regDeal.getShareAmt()));
+            if(!StringUtil.isNotEmpty(regDeal.getCpriceAmt())){
+                deal.setCpriceAmt(ArithmeticUtil.multiply(dtoReg.getUnitCprice(), regDeal.getShareAmt()));
+            }else{
+                deal.setCpriceAmt(regDeal.getCpriceAmt());
+            }
             deal.setIntAmt(ArithmeticUtil.multiply(dtoReg.getUnitInt(), regDeal.getShareAmt()));
             deal.setFpriceAmt(regDeal.getFpriceAmt());
+            deal.setTradeAmt(deal.getCpriceAmt());
             deal.setDealAmt(regDeal.getFpriceAmt());
-            deal.setPrinAmt(regDeal.getCpriceAmt());
+            deal.setPrinAmt(deal.getCpriceAmt());
             deal.setFeeAmt(ArithmeticUtil.doAdd(regDeal.getTrdFeeAmt(),regDeal.getSettleFeeAmt()));
             deal.setFeeAmtPay(BigDecimal.ZERO);
             deal.setFeeAmtUnpay(ArithmeticUtil.doAdd(regDeal.getTrdFeeAmt(),regDeal.getSettleFeeAmt()));
