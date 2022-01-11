@@ -2076,7 +2076,7 @@ public class AssetInfoDetailUtil {
         List<String> headList = new ArrayList();
         if (excelTypeList.contains("本行/他行存款||大额存单")){
             getHeadList_01(headList);
-        }else if (excelTypeList.contains("拆放同业及买入返售/同业拆入及卖出回购")){
+        }else if (excelTypeList.contains("拆放同业及债券买入返售/同业拆入及卖出回购")){
             getHeadList_02(headList);
         }else if (excelTypeList.contains("债券类资产/理财直接融资工具/同业存单")){
             getHeadList_03(headList);

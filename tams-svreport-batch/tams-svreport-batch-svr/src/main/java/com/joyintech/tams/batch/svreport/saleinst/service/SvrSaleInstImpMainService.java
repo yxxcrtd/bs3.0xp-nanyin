@@ -58,7 +58,7 @@ public class SvrSaleInstImpMainService extends AutoSendCBBaseService{
 	                logger.error("CHB_INTERF_CONFIG表中内容来源配置无效！");
 	            }
 	            
-			logger.debug("产品要素数据接入批处理结束");
+			logger.debug("销售人员身份信息接入批处理结束");
 			logInfoBatchEnd();
 			return resultList;
 	    }

@@ -280,7 +280,7 @@ public class SvrSaleInstFileImpService extends FileImpService{
         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
             int count = 0;
-            logger.debug("资产要素插入开始--------------" + new Date());
+            logger.debug("总部或分支机构信息插入开始--------------" + new Date());
             ChbSaleInstInterfMapper batchMapper = session.getMapper(ChbSaleInstInterfMapper.class);
             int batchCount = reportInsertLongCount==0?50:reportInsertLongCount;//每批commit的个数
             int batchLastIndex = batchCount;//每批最后一个的下标
@@ -302,7 +302,7 @@ public class SvrSaleInstFileImpService extends FileImpService{
                     session.clearCache();
                 }
             }
-            logger.debug("资产要素插入结束--------------" + new Date());
+            logger.debug("总部或分支机构信息插入结束--------------" + new Date());
             session.commit();
             // 清理缓存，防止溢出
             session.clearCache();

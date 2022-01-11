@@ -70,7 +70,7 @@ public class SaleInstFileImpService extends AbstractFileImpService {
 			try {
 				 // 添加文件类型和接口类型
 				interfFile.setFileType(interfConfig.getContentSrc());
-				interfFile.setInterfType(DictCodeListExt2.上游接口文件类型_产品基本要素信息.getValue());
+				interfFile.setInterfType(DictCodeListExt2.上游接口文件类型_总部或分支机构信息.getValue());
 				parseResult = svrSaleInstFileImpService.parseFile(interfFile);
                 String parseFailResult = (String) parseResult.get("remoteDir");
                 if ("fail".equals(parseFailResult)){
