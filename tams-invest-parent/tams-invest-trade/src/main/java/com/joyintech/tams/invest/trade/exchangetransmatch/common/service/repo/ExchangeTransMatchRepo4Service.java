@@ -467,6 +467,7 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
                                 DictCodeList.交易方向_买入.getValue(),entrustDto.getPortfolioId());
                         if(StringUtil.isNotEmpty(firstRepoTrade)) {
                             IntSettleTransData.setFinprodId(firstRepoTrade.getFinprodId());
+                            IntSettleTransData.setVdate(firstRepoTrade.getVdate());
                         }
                         IntSettleTransData.setBranch(0L);
                         settleTransDataList.add(IntSettleTransData);
@@ -496,6 +497,7 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
                                 DictCodeList.交易方向_买入.getValue(),entrustDto.getPortfolioId());
                         if(StringUtil.isNotEmpty(firstRepoTrade)) {
                             prinSettleTransData.setFinprodId(firstRepoTrade.getFinprodId());
+                            prinSettleTransData.setVdate(firstRepoTrade.getVdate());
                         }
                         prinSettleTransData.setBranch(0L);
                         settleTransDataList.add(prinSettleTransData);
