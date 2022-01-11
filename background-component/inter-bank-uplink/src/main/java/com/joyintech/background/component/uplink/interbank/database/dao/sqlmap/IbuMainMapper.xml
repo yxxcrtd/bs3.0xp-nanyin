@@ -1185,6 +1185,7 @@ SELECT T.QUOTE_ID,
                      OR A.TERM LIKE '%' || #{keywords} || '%'
                      OR A.SETTLE_SPEED LIKE '%' || #{keywords} || '%' OR G.ITEM_VALUE LIKE '%' || #{keywords} || '%'
                      OR A.QUOTE_ID LIKE '%' || #{keywords} || '%'
+					 OR A.CFETS_QUOTE_ID LIKE '%' || #{keywords} || '%'
                      OR A.EXECID LIKE '%' || #{keywords} || '%')
 	            </if>
 	    </where>
