@@ -104,113 +104,6 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@Autowired
 	private EtrExchangeTradeCommonMapper etrExchangeTradeCommonMapper;
 
-	@Override
-	public String init(Model model) {
-		this.setSelectOptionToModel(model, DictCode.交易方向, DictCode.投资目的, DictCode.交易场所, DictCode.目标类型, DictCode.申报类型, DictCode.业务模式);
-		this.setPsSelectOptions(model);
-		this.setPriceModelSelectOptions(model);
-		this.setDeclaTypeSelectOptions(model);
-		// 设置固定的数据字典明细参数
-		this.setConstSelectOption(model);
-		Date platformDate = DateUtil.platDateFromCache();
-		model.addAttribute("iPlatformDate", DateUtil.format(platformDate));
-
-		//配置单位 add by yeming 20210728 start
-		String bondTradedUnit = CacheUtil.getSysParam("bond_traded_unit");
-		model.addAttribute("bond_traded_unit", bondTradedUnit );
-		//配置单位 add by yeming 20210728 end
-
-		//流程id
-		String workflowId = "null".equals(getParam(GlobalConstant.WORKFLOW_ID))?null:getParam(GlobalConstant.WORKFLOW_ID);
-		model.addAttribute("workflowId", workflowId);
-
-		//委托代码
-		String entrustId = "null".equals(getParam("entrustId"))?null:getParam("entrustId");
-		model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_委托监控.getValue());
-
-		//母页面的pageModel
-		String parentPageModel = getParam(GlobalConstant.DETAIL_PAGE_MODEL_KEY);
-		model.addAttribute("parentPageModel", parentPageModel);
-		//是否_是
-		model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
-
-		String isFromToDoList = getParam("isFromToDoList");
-		EtrExchangeTradeSaveRequest entity = new EtrExchangeTradeSaveRequest();
-		if (StringUtil.isNotEmpty(workflowId)) {
-			//流程代办checkImportData
-			entity = etrExchangeTrade001CommonService.getBussinessEntityByWorkflowId(
-					workflowId);
-			//add by chenjiaxing 流程中不显示资产名称 start
-			String[] secIds = StringUtil.split(entity.getFinprodId(),"_");
-			if(secIds.length == 2 && StringUtil.isEmpty(entity.getStockId())){
-				entity.setStockId(secIds[1]);
-			}
-
-			//add by chenjiaxing 流程中不显示资产名称 end
-			model.addAttribute(GlobalConstant.ENTITY, entity);
-			model.addAttribute("workflowId", workflowId);
-		}
-		else if (StringUtil.isNotEmpty(entrustId) && !"true".equals(isFromToDoList)) {
-			//查看
-			entity = etrExchangeTrade001CommonService.getEtrExchangeTradeInfo(entrustId);
-		}
-		else{
-			//新建页面初始化
-			entity.setEntrustDate(platformDate);
-			entity.setEntrustStatus(BussinessDictCodeList.委托状态_新建.getValue());
-		}
-
-		model.addAttribute("ENTRUST_RECORD_NEW", ENTRUST_RECORD_NEW);
-		model.addAttribute("ENTRUST_RECORD_MODIFY", ENTRUST_RECORD_MODIFY);
-		// 根据价格模式确定当前的数据来源
-		if(entity != null && StringUtil.equals(entity.getPriceModel(), DictCodeListExt3.申报类型_点击成交申报.getValue())) {
-			entity.setDataSource("01");
-		}
-		model.addAttribute(GlobalConstant.ENTITY, entity);
-		if (null != entity && null != entity.getEntrustPrice()) {
-			model.addAttribute("BOND_SCALE", entity.getEntrustPrice().scale());
-		} else {
-			model.addAttribute("BOND_SCALE", 3);
-		}
-		if(null != entity && null != entity.getCalculateField()) {
-			model.addAttribute("calculateField", entity.getCalculateField());
-		}
-		//最小价差List
-		List<MinPirceDto> minPriceWhole = getInterfSysMinPriceAll(new HashMap<>());
-		model.addAttribute("minPriceWhole", minPriceWhole);
-		model.addAttribute("CONTROL_TYPE_01", BussinessDictCodeListRds.控制类型_大于.getValue());
-		model.addAttribute("CONTROL_TYPE_02", BussinessDictCodeListRds.控制类型_大于等于.getValue());
-		model.addAttribute("CONTROL_TYPE_03", BussinessDictCodeListRds.控制类型_小于.getValue());
-		model.addAttribute("CONTROL_TYPE_04", BussinessDictCodeListRds.控制类型_小于等于.getValue());
-
-		//清算速度
-		//setSettleSpreedSelectOptions(model);
-		model.addAttribute("ACCOUNT_SPEED_01", DictCodeList.清算速度_T_0.getValue());
-		model.addAttribute("ACCOUNT_SPEED_02", DictCodeList.清算速度_T_1.getValue());
-		//展示投资目的或业务模式参数
-		String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
-		model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
-
-		// 场内交易指令画面行情区域自动刷新时间（毫秒）
-		long etrExchange_HqArea_refresh_period = 20000;
-		String tempSysParaVal = CacheUtil.getSysParam(
-				BussinessConstant.ETREXCHANGE_HQAREA_REFRESH_PERIOD);
-		if (StringUtil.isNotBlank(tempSysParaVal)
-				&& !StringUtil.equals(BussinessConstant.ETREXCHANGE_HQAREA_REFRESH_PERIOD,
-				tempSysParaVal)) {
-			try {
-				etrExchange_HqArea_refresh_period = Long.parseLong(tempSysParaVal);
-			}
-			catch (Exception e) {
-			}
-		}
-		model.addAttribute("etrExchange_HqArea_refresh_period", etrExchange_HqArea_refresh_period);
-
-		model.addAttribute("useInterfQuoteFlag", useInterfQuoteFlag);
-		model.addAttribute("wsUri", wsHost + wsUrl);
-
-		return super.init(model);
-	}
 	/**
 	 * 由于交易平台不同，设置不同交易平台对应的委托方向
 	 *
@@ -405,11 +298,11 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	public Message<Map<String, Object>> getPageParams(){
 		Map<String, Object> initPageParams = new HashMap<>();
 		initPageParams.put("PS", this.getSelectDataFromDataDic(DictCode.交易方向, null));
-		initPageParams.put("INV_AIM", this.getSelectDataFromDataDic(DictCode.投资目的, null));
 		initPageParams.put("TRADE_PLACE", this.getSelectDataFromDataDic(DictCode.交易场所, null));
 		initPageParams.put("TARGET_CLASS", this.getSelectDataFromDataDic(DictCode.目标类型, null));
 		initPageParams.put("DECLA_TYPE", this.getSelectDataFromDataDic(DictCode.申报类型, null));
 		initPageParams.put("BUSINESS_MODEL", this.getSelectDataFromDataDic(DictCode.业务模式, null));
+		this.setInvAimSelectOption(initPageParams);
 		this.setPsSelectOptions(initPageParams);
 		this.setPriceModelSelectOptions(initPageParams);
 		this.setDeclaTypeSelectOptions(initPageParams);
@@ -686,6 +579,21 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		initPageParams.put("WINDTYPEONE_B13", DictCodeList.WIND一级分类_含债券一级分类等_资产支持证券.getValue());
 		initPageParams.put("WINDTYPEONE_B14", DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue());
 		initPageParams.put("WINDTYPEONE_B15", DictCodeList.WIND一级分类_含债券一级分类等_可交换债.getValue());
+	}
+
+	/**
+	 * 设置投资目的
+	 * @param initPageParams initPageParams
+	 */
+	private void setInvAimSelectOption(Map<String, Object> initPageParams) {
+		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.投资目的, null);
+		List<SelectOptionDto> invAimList = selectDto.getOptions().stream().filter(option -> {
+			return StringUtil.equals(option.getId(), DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue())
+					|| StringUtil.equals(option.getId(), DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue())
+					|| StringUtil.equals(option.getId(), DictCodeListExt1.投资目的_摊余成本类.getValue());
+		}).collect(Collectors.toList());
+		selectDto.setOptions(invAimList);
+		initPageParams.put("INV_AIM", selectDto);
 	}
 
 	/**
