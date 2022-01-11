@@ -1024,9 +1024,8 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     BigDecimal pledgePrin = ptlSecPrin.get(dto.getPortfolioId() + dto.getFinprodId());//指令中质押额
                     //质押面值 = 指令中质押额/所有同组合,同债券指令的质押总额*质押信息中的质押额  按比例分配质押额
                     if (ACompareToB(addDimension, pledgePrin, 12) < 0) {
-                        pledgePrin = ArithmeticUtil.multiply(
-                                ArithmeticUtil.divide(
-                                        dto.getPledgePrin(), pledgePrin, 2, RoundingMode.HALF_UP), tailDifference);
+                        pledgePrin = ArithmeticUtil.divide(
+                                ArithmeticUtil.multiply(dto.getPledgePrin(), tailDifference), pledgePrin, 12, RoundingMode.HALF_UP);
                         pledgePrin = ArithmeticUtil.multiply(
                                 ArithmeticUtil.divide(pledgePrin,
                                         ArithmeticUtil.multiply(addDimension, new BigDecimal(100)), 2),
@@ -1073,9 +1072,8 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     BigDecimal pledgePrin = ptlSecPrin.get(pledgeDto.getPortfolioId());//指令中质押额
                     //质押面值 = 指令剩余额度/统一组合的总额度*质押信息中的质押额  按比例分配质押额
                     if (ACompareToB(addDimension, pledgePrin, 12) < 0) {
-                        pledgePrin = ArithmeticUtil.multiply(
-                                ArithmeticUtil.divide(
-                                        dto.getAvaNum(), pledgePrin, 12, RoundingMode.HALF_UP), tailDifference);
+                        pledgePrin = ArithmeticUtil.divide(
+                                ArithmeticUtil.multiply(dto.getAvaNum(), tailDifference), pledgePrin, 12, RoundingMode.HALF_UP);
                         pledgePrin = ArithmeticUtil.multiply(
                                 ArithmeticUtil.divide(pledgePrin,
                                         ArithmeticUtil.multiply(addDimension, new BigDecimal(100)), 2),
