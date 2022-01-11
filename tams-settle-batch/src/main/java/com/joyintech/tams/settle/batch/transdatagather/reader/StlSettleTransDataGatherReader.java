@@ -526,8 +526,12 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                                 // GZYHTZJY-1088:单位净价赋值  modify by fuyongsheng 20220111 start
                                 dealTotal.setUnitCprice(item.getUnitCprice());
                                 // GZYHTZJY-1088:单位净价赋值 modify by fuyongsheng 20220111 end
+                                //本金金额
+                                dealTotal.setPrinAmt(item.getPrinAmt());
                                 // 首期成交编号
-                                dealTotal.setfCjbh(item.getCjbh());
+                                if(!DictCodeList.交易方向_到期续做.getValue().equals(settleTransDataDto.getPs())){
+                                    dealTotal.setfCjbh(item.getCjbh());
+                                }
                             }
                             if(StringUtil.equals(item.getBusiSceneCalss(), DictCodeListStl.业务场景分类明细_债券协议正回购_到期.getValue())
                                     ||StringUtil.equals(item.getBusiSceneCalss(), DictCodeListStl.业务场景分类明细_债券协议逆回购_到期.getValue())){
