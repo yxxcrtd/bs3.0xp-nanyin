@@ -10,6 +10,7 @@
  
 package com.joyintech.service.valuation.trademanage.trddepositvaluationtrade.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
@@ -379,4 +380,19 @@ public class TrdDepositValuationTrade001Dto extends WflTrdProductDeal implements
                 return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.币种, ccy))?
                         SysDataUtil.getNameFromDataDict(DictCode.币种, ccy):ccy;
         }
+
+
+
+    /**
+     * 存款类交易实体类
+     */
+    private List<TrdDepositValuationTrade001Dto> selectedItem;
+
+    public List<TrdDepositValuationTrade001Dto> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<TrdDepositValuationTrade001Dto> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
 }

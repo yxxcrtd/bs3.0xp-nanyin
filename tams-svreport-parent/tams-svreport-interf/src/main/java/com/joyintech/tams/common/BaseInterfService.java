@@ -69,7 +69,7 @@ public class BaseInterfService extends BaseService  {
 
 		xstream.alias("info", getEntityClass());
 		try {
-			FileOutputStream out = new FileOutputStream(saveFileDirPath) ;
+			FileOutputStream out = new FileOutputStream(saveFileDirPath);
 			xstream.toXML(list, out);
 			out.close();
 		} catch (Exception e1) {

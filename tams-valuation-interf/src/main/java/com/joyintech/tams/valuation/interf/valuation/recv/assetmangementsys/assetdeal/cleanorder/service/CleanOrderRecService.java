@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.valuation.interf.core.exception.InterfException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,7 @@ public class CleanOrderRecService {
     @Autowired
     CleanOrderTemplateRecSerive cleanOrderTemplateRecSerive;
     @SuppressWarnings({"unchecked"})
-    public CleanOrderProcessorResult execute(TemplateOrderInfoReaderResult acctEntity) {
+    public CleanOrderProcessorResult execute(TemplateOrderInfoReaderResult acctEntity) throws Exception {
         //初始化 模板解析对象
         CleanOrderCommonResult result = new CleanOrderCommonResult();
         

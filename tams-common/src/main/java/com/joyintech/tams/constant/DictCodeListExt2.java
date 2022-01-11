@@ -2033,8 +2033,10 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
     销售人员当前状态_正常(DictCode.销售人员当前状态,"01","正常"),
     销售人员当前状态_转岗(DictCode.销售人员当前状态,"02","转岗"),
     销售人员当前状态_停职(DictCode.销售人员当前状态,"03","停职"),
-    销售人员当前状态_离职(DictCode.销售人员当前状态,"04","离职")
+    销售人员当前状态_离职(DictCode.销售人员当前状态,"04","离职"),
     //中债四期 add by wyn 20211230 end
+
+    业务类型_证券转换交易(DictCode.业务类型,"40","证券转换交易")
 
 ;
     /**

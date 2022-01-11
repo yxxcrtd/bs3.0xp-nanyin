@@ -3,30 +3,37 @@ $(function(){
      * 获取查询参数
      */
     var getPageParams = function() {
-        // add by 2021-04-06  wbq  3.5投资交易查询优化 begin
         var createUser=$("#createUser").val()
         if(createUser){
             createUser=createUser.join(",");
         }
-        // add by 2021-04-06  wbq  3.5投资交易查询优化 end
+        //产品代码 多选择
         var portfolioIdTemp = $('#portfolioId').val();
         var portfolioId = null;
-        if(portfolioIdTemp != null)
+        if(portfolioIdTemp != null){
             portfolioId = portfolioIdTemp.join(",");
+        }
+
+        //资产代码  多选择
+        var finprodIdTemp = $('#finprodId').val();
+        var finprodId = null;
+        if(finprodIdTemp != null){
+            finprodId = finprodIdTemp.join(",");
+        }
+
+        //交易类型  多选择
+        var psTemp = $('#ps').val();
+        var ps = null;
+        if(psTemp != null && psTemp != ''){
+            ps = psTemp.join(",");
+        }
         return {
-            entrustId:$('#entrustId').val(),
+            tradeId:$('#tradeId').val(),
             portfolioId:portfolioId,
             finprodType:$('#finprodType').val(),
-           /* 增加2,3,4分类的查询参数、zhuyongkang 2019/7/30  start*/
-            type9:$('#type9').val(),
-            type10:$('#type10').val(),
-            type11:$('#type11').val(),
-          /* zhuyongkang 2019/7/30   end*/
-            finprodId:$('#finprodId').val(),
-            ps:$('#ps').val(),
-            status:$('#status').val(),
-            tradeDateBegin:$('#tradeDate').startDate(),
-            tradeDateEnd:$('#tradeDate').endDate(),
+            finprodId:finprodId,
+            ps:ps,
+            tradeMarket:$('#tradeMarket').val(),
             createUser:createUser
         };
     };
@@ -47,7 +54,6 @@ $(function(){
                     basePath + "valuation/trademanage/trdfundvaluationtrade/TrdFundValuationTrade002/init",
                     "98%", "98%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
                     portfolioId:data.portfolioId,
-                    entrustId:data.entrustId,
                     finprodId:data.finprodId,
                     tradeId:data.tradeId});
         },
@@ -60,11 +66,13 @@ $(function(){
             ,{field:'finprodName', width:150, title: '资产名称'}
             ,{field:'psStr', width:150, title: '交易类型',sortField:'ps'}
             ,{field:'tradeMarketStr', width:150, title: '交易场所',sortField:'tradeMarket'}
-            ,{field:'tradeDate', width:150, title: '交易日'}
+            ,{field:'tradeDate', type:'date' ,width:150, title: '交易日', visible: false}
+            ,{field:'tradeDateStr',width:150, title: '交易日'}
             ,{field:'tradeAmt', width:150, title: '交易金额',type:'number'}
             ,{field:'nums', width:150, title: '交易份额',type:'number'}
             ,{field:'unitValue', width:150, title: '单位净值',type:'number'}
             ,{field:'ccy', width:150, title: '币种',sortField:'ccy'}
+            ,{field:'tradeDateStr',width:150, title: '净值日期'}
             ,{field:'mdateSettleAmt', width:150, title: '结算金额',type:'number'}
             ,{field:'assetAccount', width:150, title: '资金账户'}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
@@ -79,7 +87,7 @@ $(function(){
             var datas = JSON.stringify(selArr);
         }
         if (!selArr || selArr.length == 0) {
-            var paramObj = getSearchParams();
+            var paramObj = getPageParams();
             Joyin.exportExcel('export', paramObj);
         } else {
             Joyin.exportExcel('export', {
@@ -107,23 +115,37 @@ $(function(){
             table.load();
         });
 
-        //组合点击查看详情
-        table.bind('click','.pro-link', function(row) {
-            Joyin.dialog(JoyinUtil.getLabel("PtlManagementInfo002"),
-                    basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
-                    "95%", "90%",{
-                    pageModel:PAGE_MODEL_REFERENCE,
-                    portfolioId:row.portfolioId,
-                    portfolioName: row.portfolioName});
-            
+        /**
+         * 绑定编辑事件
+         */
+        table.bind('click', '.edit', function(data, index) {
+            data.pageModel = PAGE_MODEL_EDIT;
+            var object = {selectedItem: [data], operateType:"edit"};//请求参数
+            Joyin.dialog(JoyinUtil.getLabel("基金交易-修改"),
+                basePath + "valuation/trademanage/trdfundvaluationtrade/TrdFundValuationTrade002/init",//打开新界面
+                "98%", "98%", {pageModel:PAGE_MODEL_EDIT,//请求的page_model
+                    tradeId:data.tradeId  //金融产品代码
+                },function(){
+                    table.reload();//回调函数，表格刷新
+                });
         });
-        //资产代码点击查看明细
-        table.bind('click','.pro-link-fin', function(row) {
-            Joyin.dialog(JoyinUtil.getLabel("FinPlanProfitAsset002"),
-                    basePath + "invest/asset/plan/planProfit/FinPlanProfitAsset002/init",
-                    "95%", "90%",{
-                    pageModel:PAGE_MODEL_REFERENCE,
-                    finprodId: row.finprodId});
+
+        /**
+         * 绑定删除事件
+         */
+        table.bind('click', '.delt', function(data, index) {
+            var object = {selectedItem: [data], operateType:"delete"};
+            Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
+                WorkFlow.doDeleteList(
+                    basePath + 'valuation/trademanage/trdfundvaluationtrade/TrdFundValuationTrade001/delete',
+                    object,
+                    "TrdFundValuationTrade001_btn_delete",
+                    "TrdFundValuationTrade002",
+                    function() {
+                        table.reload();
+                    }
+                );
+            });
         });
     });
 }());

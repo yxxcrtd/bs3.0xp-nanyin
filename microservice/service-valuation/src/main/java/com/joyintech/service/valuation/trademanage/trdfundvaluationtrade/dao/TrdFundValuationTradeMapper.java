@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.service.valuation.trademanage.trdfundvaluationtrade.dto.TrdFundValuationTradeDto;
-import com.joyintech.service.valuation.trademanage.trdplanvaluationtrade.dto.TrdPlanValuationTradeDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -63,6 +62,18 @@ public interface TrdFundValuationTradeMapper {
      */
     String getNextId(@Param("sequenceName") String sequenceName);
 
+
+	TrdFundValuationTradeDto queryTradeInfoByTradeId(String tradeId);
+
+	/**
+	 * 检索债券交易列表
+	 *
+	 * @param paraMap 参数
+	 * @return 债券交易列表
+	 * @see
+	 * @since 1.0
+	 */
+	List<TrdFundValuationTradeDto> selectDeal(Map<String, Object> paraMap);
 
 
 }

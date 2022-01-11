@@ -13,11 +13,19 @@ package com.joyintech.tams.valuation.trademanage.trdfixincomevaluationtrade.serv
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
+import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValMngBuyTrade;
+import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValMngMnfTade;
+import com.joyintech.tams.valuation.trademanage.trdfixincomevaluationtrade.dto.TrdFixIncomeTradeResult;
 import com.joyintech.tams.valuation.trademanage.trdfixincomevaluationtrade.dto.TrdFixIncomeValuationTradeDto;
+import com.joyintech.tams.valuation.trademanage.trdplanvaluationtrade.dto.TrdPlanTradeResult;
+import com.joyintech.tams.valuation.trademanage.trdplanvaluationtrade.dto.TrdPlanValuationTradeDto;
+import com.joyintech.tams.valuation.trademanage.trdplanvaluationtrade.service.TrdPlanNetTradeCommonServer;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.slf4j.Logger;
@@ -27,6 +35,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+
+import static org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd.type;
 
 /**
  * 计划类资产投资交易新建
@@ -77,6 +87,9 @@ public class TrdFixIncomeValuationTrade002Service extends CommonExportService<Tr
     @Autowired
     private FinRateInfoMapper finRateInfoMapper;
 
+    @Autowired
+    private TrdFixIncomeTradeCommonServer trdFixIncomeTradeCommonServer;
+
 
     /**
      * 合成初始化实体类
@@ -99,8 +112,16 @@ public class TrdFixIncomeValuationTrade002Service extends CommonExportService<Tr
      * {@inheritDoc}
      */
     @Override
-    public void doComplete(TrdFixIncomeValuationTradeDto entity, OperationType type) {
-        restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/TrdFixIncomeValuationTrade/doComplete/" + type, entity, Integer.class);
+    public void doComplete(TrdFixIncomeValuationTradeDto entity, OperationType operationType) {
+        String action = StringUtil.EMPTY;
+        TrdFixIncomeTradeResult trdFixIncomeTradeResult = trdFixIncomeTradeResult = generateEntity(entity);
+        if (OperationType.NEW.equals(operationType)) {
+            action = "insert";
+        }
+        else {
+            action = "update";
+        }
+        restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/TrdFixIncomeValuationTrade/" + action, trdFixIncomeTradeResult, Integer.class);
     }
 
     /**
@@ -148,5 +169,42 @@ public class TrdFixIncomeValuationTrade002Service extends CommonExportService<Tr
 
     }
 
+    /**
+     * @Description:根据交易编号查询详情
+     * @auther: yuzj
+     * @date: 2022/1/7
+     * @param:
+     * @return:
+     */
+    public TrdFixIncomeValuationTradeDto queryTradeInfoByTradeId(String tradeId) {
+        return restTemplate.postForObject(
+                ServiceApplication.VALUATION_SERVICE_NAME + "/TrdFixIncomeValuationTrade/queryTradeInfoByTradeId",
+                tradeId, TrdFixIncomeValuationTradeDto.class);
+    }
 
+    //封装实体类
+    public TrdFixIncomeTradeResult generateEntity(TrdFixIncomeValuationTradeDto trdFixIncomeValuationTradeDto){
+        List<ValMngBuyTrade> listValMngBuyTrade = new ArrayList<ValMngBuyTrade>();
+        ValMngBuyTrade valMngBuyTrade = new ValMngBuyTrade();
+        BeanUtil.copyPropertiesIgnoreNull(valMngBuyTrade,trdFixIncomeValuationTradeDto);
+        valMngBuyTrade.setTradeDate(trdFixIncomeValuationTradeDto.getTradeDate());
+        //比较界面和接口字段差异，并手动给接口字段赋值
+        valMngBuyTrade.setAssetId("F17_"+trdFixIncomeValuationTradeDto.getFinprodId());//资产代码
+        valMngBuyTrade.setDataActionSign("01");
+        valMngBuyTrade.setCounterId("FYDLCA365001");
+        valMngBuyTrade.setCounterType("01");
+        valMngBuyTrade.setIsChlFeeAmt("Y");
+        valMngBuyTrade.setIsClean("N");
+
+        listValMngBuyTrade.add(valMngBuyTrade);
+        return trdFixIncomeTradeCommonServer.generateEntity(trdFixIncomeValuationTradeDto,listValMngBuyTrade);
+    }
+
+    public TrdFixIncomeTradeCommonServer getTrdFixIncomeTradeCommonServer() {
+        return trdFixIncomeTradeCommonServer;
+    }
+
+    public void setTrdFixIncomeTradeCommonServer(TrdFixIncomeTradeCommonServer trdFixIncomeTradeCommonServer) {
+        this.trdFixIncomeTradeCommonServer = trdFixIncomeTradeCommonServer;
+    }
 }

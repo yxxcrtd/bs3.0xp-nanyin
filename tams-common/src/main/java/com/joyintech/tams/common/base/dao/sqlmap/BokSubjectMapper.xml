@@ -41,12 +41,12 @@
         from BOK_SUBJECT
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.BokSubjectKey" >
-        select 
-        <include refid="com.joyintech.tams.common.base.dao.BokSubjectMapper.Base_Column_List" />
-        from BOK_SUBJECT
-        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
-          and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
-    </select>
+    select
+    <include refid="com.joyintech.tams.common.base.dao.BokSubjectMapper.Base_Column_List" />
+    from BOK_SUBJECT
+    where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+    and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+</select>
     <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokSubjectKey" >
         delete from BOK_SUBJECT
         where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
