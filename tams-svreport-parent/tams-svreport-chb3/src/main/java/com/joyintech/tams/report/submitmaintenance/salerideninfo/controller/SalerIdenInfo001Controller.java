@@ -41,7 +41,7 @@ import java.util.Map;
 
 @Controller
 @PageId("SalerIdenInfo001")
-@RequestMapping("/report/submitmaintenance/salerideninfo/SalerIdenInfo001")
+@RequestMapping("/report/submitmaintenance/salerideninfo/SalerIdencont001")
 public class SalerIdenInfo001Controller extends BaseController {
 
     @Autowired
