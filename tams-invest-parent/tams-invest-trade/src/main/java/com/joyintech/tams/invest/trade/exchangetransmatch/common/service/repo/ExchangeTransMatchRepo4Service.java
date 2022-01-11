@@ -53,10 +53,15 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
         TrdFinProductDealTotal trdFinProductDealTotal = this.genTrdFinProductDealTotal(dealDto, entrustDto);
         TrdDealTotalAdd trdDealTotalAdd = this.generateDealTotalAdd(dealDto, entrustDto,trdFinProductDealTotal);
 
+        // 首期成交交易信息---处理汇总表的金融产品代码，如果是存在首期则用首期的金融产品代码，如果不存在则使用买入那笔的交易编号
+        TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getMpayDate(),DictCodeList.交易方向_买入.getValue()
+                ,entrustDto.getPortfolioId());
+
         List<SettleTransData> settleTransDataList = this.handleSettleTransData(dealDto,entrustDto);
         for(SettleTransData settleTransData:settleTransDataList) {
             ExchangeTransMatchBaseTradeDto exchangeTransMatchBaseTradeDto = new ExchangeTransMatchBaseTradeDto();
             TrdProductDeal trdProductDeal = genTrdProductDeal(dealDto, entrustDto,trdFinProductDealTotal,settleTransData);
+
             exchangeTransMatchBaseTradeDto.setTrdFinProductDealTotal(trdFinProductDealTotal);
             //生成汇总表数据
             exchangeTransMatchBaseTradeDto.setTrdDealTotalAdd(trdDealTotalAdd);
@@ -82,6 +87,35 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
             exchangeTransMatchBaseTradeDtoList.add(exchangeTransMatchBaseTradeDto);
         }
 
+        //存在第三方无首期，直接做到期续做的场景，金融产品ID需要特殊处理，如果存在首期就取首期的金融产品代码，没有就用买入的交易编号
+        if(!StringUtil.isEmptyList(settleTransDataList)) {
+            if(StringUtil.isNotEmpty(firstRepoTrade)) {
+                //金融产品代码
+                trdFinProductDealTotal.setFinprodId(firstRepoTrade.getFinprodId());
+            }
+            else {
+                ExchangeTransMatchBaseTradeDto ExchangeTransMatchBaseTradeDtoT01 = exchangeTransMatchBaseTradeDtoList.stream().filter(item->StringUtil.equals(item.getTrdProductDeal().getPs(),DictCodeList.交易方向_买入.getValue())).findFirst().get();
+                if(StringUtil.isNotEmpty(ExchangeTransMatchBaseTradeDtoT01)) {
+                    //金融产品代码
+                    trdFinProductDealTotal.setFinprodId(ExchangeTransMatchBaseTradeDtoT01.getTrdProductDeal().getTradeId());
+                }
+            }
+
+            for(ExchangeTransMatchBaseTradeDto item:exchangeTransMatchBaseTradeDtoList) {
+                //金融产品代码 : 交易方向 = 买入时同交易编号，否则为交易明细.金融产品代码
+                if(StringUtil.equals(item.getTrdProductDeal().getPs(),DictCodeList.交易方向_买入.getValue())) {
+                    item.getTrdProductDeal().setFinprodId(item.getTrdProductDeal().getTradeId());
+                }
+                else {
+                    item.getTrdProductDeal().setFinprodId(trdFinProductDealTotal.getFinprodId());
+                }
+
+                for(PtlTrade ptlTrade: item.getPtlTrade()) {
+                    ptlTrade.setBusiId(item.getTrdProductDeal().getFinprodId());
+                }
+            }
+        }
+
         return exchangeTransMatchBaseTradeDtoList;
     }
 
@@ -105,19 +139,12 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
         dealTotal.setTotleTradeId(baseGetBusinessId.buildBussinessCode(bussinessCodeParameter));
         // 业务类型
         dealTotal.setBusiType(DictCodeList.共通业务类型_质押式回购存续期.getValue());
-        // 金融产品代码
-        TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getMpayDate(),DictCodeList.交易方向_买入.getValue()
-                ,entrustDto.getPortfolioId());
-        if(StringUtil.isNotEmpty(firstRepoTrade)) {
-            //金融产品代码
-            dealTotal.setFinprodId(firstRepoTrade.getFinprodId());
-            // 金融产品类型
-            dealTotal.setFinprodType(firstRepoTrade.getFinprodType());
-            //金融产品类型投管
-            dealTotal.setFinprodType2(firstRepoTrade.getFinprodType2());
-            // 交易市场
-            dealTotal.setTradeMarketMode(firstRepoTrade.getTradeMarketMode());
-        }
+        // 金融产品类型
+        dealTotal.setFinprodType(dealDto.getFinprodType());
+        //金融产品类型投管
+        dealTotal.setFinprodType2(dealDto.getFinprodType2());
+        // 交易市场
+        dealTotal.setTradeMarketMode(dealDto.getTradeMarketMode());
         // 分支序号
         dealTotal.setBranch(0L);
         // 交易日
@@ -229,13 +256,7 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
                 bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_逆回购录入);
             }
             trdProductDeal.setTradeId(baseGetBusinessId.buildBussinessCode(bussinessCodeParameter));
-            //金融产品代码 : 交易方向 = 买入时同交易编号，否则为交易明细.金融产品代码
-            if(StringUtil.equals(settleTransData.getPs(),DictCodeList.交易方向_买入.getValue())) {
-                trdProductDeal.setFinprodId(trdProductDeal.getTradeId());
-            }
-            else {
-                trdProductDeal.setFinprodId(trdFinProductDealTotal.getFinprodId());
-            }
+
             // 金融产品类型
             trdProductDeal.setFinprodType(settleTransData.getFinprodType());
             // 金融产品类型_投管
