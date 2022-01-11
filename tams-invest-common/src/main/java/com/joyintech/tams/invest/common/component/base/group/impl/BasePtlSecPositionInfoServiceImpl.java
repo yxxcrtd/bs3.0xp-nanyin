@@ -179,9 +179,9 @@ public class BasePtlSecPositionInfoServiceImpl implements BasePtlSecPositionInfo
             || DictCodeList.持仓类型_融入.getValue().equals(positionFlowDto.getHodingType())
             || DictCodeListExt1.持仓类型_卖空.getValue().equals(positionFlowDto.getHodingType())
             || DictCodeList.持仓类型_融出.getValue().equals(positionFlowDto.getHodingType())
-            //增加冻结持仓类型 modify by fuyongsheng 20220111 start
-            || DictCodeList.持仓类型_冻结.getValue().equals(positionFlowDto.getHodingType())
-            //增加冻结持仓类型 modify by fuyongsheng 20220111 end
+            //增加持仓类型_场内上市前冻结 modify by fuyongsheng 20220111 start
+            || DictCodeList.持仓类型_场内上市前冻结.getValue().equals(positionFlowDto.getHodingType())
+            //增加持仓类型_场内上市前冻结 modify by fuyongsheng 20220111 end
         ) {
             PtlSecPosition position = getPtlSecPosition(positionFlowDto);
             BigDecimal amount = basePtlSecPositionInfoMapper.selectSecPosition(positionFlowDto);
