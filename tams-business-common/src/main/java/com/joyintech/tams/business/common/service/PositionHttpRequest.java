@@ -173,12 +173,15 @@ public class PositionHttpRequest {
         return httpPostRequest(positionUrl + "/position/endpoint/updatePosition", param);
     }
 
-    public static void doDeleteByWorkFlowId(String revokeId, String modelType) throws PositionException{
+    public static void doDeleteByWorkFlowId(String revokeId, String modelType,String busiType,String ps) throws PositionException{
         //
         BaseMap bm = BaseMap.newMap()
                 .put("workFlowId", revokeId)
                 .put("modelType", modelType)
-                .put("userId", LoginUserUtil.getUserName());
+                .put("userId", LoginUserUtil.getUserName())
+                .put("busiType", busiType)
+                .put("ps", ps)
+                ;
         String res = delete(bm);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){
