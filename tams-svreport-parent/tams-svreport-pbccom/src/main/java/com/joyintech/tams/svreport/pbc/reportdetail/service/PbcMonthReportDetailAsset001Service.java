@@ -71,7 +71,7 @@ public class PbcMonthReportDetailAsset001Service extends CommonExportService<Pbc
 			pageParam.put("prodIds",pageParam.get("prodId").toString().split(","));
 		}
 		if(StringUtil.isNotEmpty(pageParam.get("assetCode"))){
-			pageParam.put("assetCodes",pageParam.get("assetCodes").toString().split(","));
+			pageParam.put("assetCodes",pageParam.get("assetCode").toString().split(","));
 		}
 		if(pageParam.containsKey("keyList")){
 			pageParam.put("keysList",
