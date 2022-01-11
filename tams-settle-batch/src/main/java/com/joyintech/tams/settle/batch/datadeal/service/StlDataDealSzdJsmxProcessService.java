@@ -776,6 +776,9 @@ public class StlDataDealSzdJsmxProcessService {
 //								settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券协议逆回购_到期续作.getValue());
 								settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券协议逆回购_首期_买入.getValue());
 							}
+							// GZYHTZJY-1086: modify by fuyongsheng 20220111 start
+							settleTransData.setfCjbh(settleTransData.getCjbh());
+							// GZYHTZJY-1086: modify by fuyongsheng 20220111 end
 							/*if (StringUtil.equals(StlDataDealProcessConstant.YWLX_117, szdJsmx.getYwlx()) && StringUtil.equals(StlDataDealProcessConstant.MMBS_B, szdJsmx.getMmbz())) {
 								settleTransData.setPs(DictCodeList.交易方向_买入.getValue());
 								settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_报价正回购_首期_买入.getValue());
