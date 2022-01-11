@@ -84,6 +84,7 @@ public class AutoReconciliationService {
         param.put("TARGET_BACK_TYPE_H01", DictCodeList.回购类型_质押式协议回购.getValue());
         param.put("BUSI_SCENE_CALSS_0902RS03", DictCodeListStl.业务场景分类明细_债券协议正回购_到期.getValue());
         param.put("BUSI_SCENE_CALSS_0902RB01", DictCodeListStl.业务场景分类明细_债券协议逆回购_首期_买入.getValue());
+        param.put("BUSI_SCENE_CALSS_0902RB04", DictCodeListStl.业务场景分类明细_债券协议逆回购_到期续作.getValue());
         param.put("INTER_TYPE_1", DictCodeListExt3.柜台接口类型_恒生.getValue());
         param.put("INTER_TYPE_2", DictCodeListExt3.柜台接口类型_金证w版.getValue());
         param.put("INTER_TYPE_4", DictCodeListExt3.柜台接口类型_金证u版.getValue());
