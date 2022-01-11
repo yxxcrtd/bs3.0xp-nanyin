@@ -58,6 +58,7 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
                 ,entrustDto.getPortfolioId());
 
         List<SettleTransData> settleTransDataList = this.handleSettleTransData(dealDto,entrustDto);
+
         for(SettleTransData settleTransData:settleTransDataList) {
             ExchangeTransMatchBaseTradeDto exchangeTransMatchBaseTradeDto = new ExchangeTransMatchBaseTradeDto();
             TrdProductDeal trdProductDeal = genTrdProductDeal(dealDto, entrustDto,trdFinProductDealTotal,settleTransData);
@@ -103,10 +104,7 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
 
             for(ExchangeTransMatchBaseTradeDto item:exchangeTransMatchBaseTradeDtoList) {
                 //金融产品代码 : 交易方向 = 买入时同交易编号，否则为交易明细.金融产品代码
-                if(StringUtil.equals(item.getTrdProductDeal().getPs(),DictCodeList.交易方向_买入.getValue())) {
-                    item.getTrdProductDeal().setFinprodId(item.getTrdProductDeal().getTradeId());
-                }
-                else {
+                if(!StringUtil.equals(item.getTrdProductDeal().getPs(),DictCodeList.交易方向_买入.getValue())) {
                     item.getTrdProductDeal().setFinprodId(trdFinProductDealTotal.getFinprodId());
                 }
 
@@ -256,6 +254,11 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
                 bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_逆回购录入);
             }
             trdProductDeal.setTradeId(baseGetBusinessId.buildBussinessCode(bussinessCodeParameter));
+
+            //金融产品代码 : 交易方向 = 买入时同交易编号，否则为交易明细.金融产品代码
+            if(StringUtil.equals(settleTransData.getPs(),DictCodeList.交易方向_买入.getValue())) {
+                trdProductDeal.setFinprodId(trdProductDeal.getTradeId());
+            }
 
             // 金融产品类型
             trdProductDeal.setFinprodType(settleTransData.getFinprodType());
