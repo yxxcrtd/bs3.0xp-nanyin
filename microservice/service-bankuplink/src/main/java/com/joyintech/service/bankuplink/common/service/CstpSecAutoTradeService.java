@@ -265,8 +265,9 @@ public class CstpSecAutoTradeService extends BaseService<TrdBondInvestTradeDto> 
 			// 防止有些标的的finprodId带有前缀，因此这里进行第二次查询
 			finProduct = finProductMapper.selectByPrimaryKey("F01_" + interfCstpSecdeal.getSecid());
 		}
-		if (StringUtil.isNotEmpty(entrustInfo)
-				&& StringUtil.isNotEmpty(finProduct)) {
+	/*	if (StringUtil.isNotEmpty(entrustInfo)
+				&& StringUtil.isNotEmpty(finProduct)) {*/
+		if (StringUtil.isNotEmpty(finProduct)) {
 			// 判断是否已经生成了交易
 			TrdProductDeal deal = autoTradeMapper.isExistsTrade(oritradeId);
 			if (!StringUtil.isNotEmpty(deal)) {
@@ -275,7 +276,7 @@ public class CstpSecAutoTradeService extends BaseService<TrdBondInvestTradeDto> 
 					param.put("interfCstpTrade",interfCstpTrade);
 					param.put("interfTradSecdeal",interfTradSecdeal);
 					restTemplate.postForObject(
-							ServiceApplication.PINGAN_SERVICE_NAME+ "/cfets/common/CfetsIbuQuoteBatchCommon",
+							ServiceApplication.PINGAN_SERVICE_NAME+ "/cfets/common/CfetsIbuQuoteBatchCommon/cstpAutoTrade",
 							param, Map.class);
 				}
 				catch (Exception e){
