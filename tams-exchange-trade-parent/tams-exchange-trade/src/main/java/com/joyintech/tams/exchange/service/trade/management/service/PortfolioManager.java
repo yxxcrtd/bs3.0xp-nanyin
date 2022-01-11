@@ -699,8 +699,7 @@ public class PortfolioManager extends BaseService {
 
             if (Objects.isNull(instructionDetails) || instructionDetails.size() == 0 || instructionDetails.size() == 1) {
                 // 处理单组合
-                ins.setEntrustNum(ins.getConNum().longValue());
-                ins.setEntrustAmt(ArithmeticUtil.multiply(BigDecimal.valueOf(ins.getEntrustNum()),result.getPrice()));
+                handleParameters(result, ins);
                 list.add(ins);
                 continue;
             }
@@ -742,12 +741,28 @@ public class PortfolioManager extends BaseService {
             // 重新计算占比；赋值委托数量，委托金额
             for (Instruction item : singleList) {
                 item.setConPrice(ArithmeticUtil.divide(item.getConNum(), BigDecimal.valueOf(result.getTotalEntrustVolume()), 4));
-                item.setEntrustNum(item.getConNum().longValue());
-                item.setEntrustAmt(ArithmeticUtil.multiply(BigDecimal.valueOf(item.getEntrustNum()),result.getPrice()));
+                handleParameters(result, item);
             }
 
             list.addAll(singleList);
         }
         return list;
+    }
+
+    /**
+     * 配置参数
+     */
+    private void handleParameters(PortfolioAllocationResponse result, Instruction ins) {
+        // 委托数量
+        ins.setEntrustNum(ins.getConNum().longValue());
+        // 委托金额
+        ins.setEntrustAmt(ArithmeticUtil.multiply(BigDecimal.valueOf(ins.getEntrustNum()), result.getPrice()));
+        if (EntrustUtils.isVolume(ins)) {
+            // 借用mIntAmt存放剩余总数量
+            ins.setmIntAmt(BigDecimal.valueOf(ins.getEntrustNum() - ins.getEntrustLeftAmt().longValue() - ins.getFrozenQuantity().longValue()));
+        } else {
+            // 借用mTradeAmt存放剩余总金额
+            ins.setmTradeAmt(TradeUtils.subtract(ins.getEntrustAmt(), ins.getEntrustLeftAmt(), ins.getFrozenQuantity(), 2));
+        }
     }
 }
