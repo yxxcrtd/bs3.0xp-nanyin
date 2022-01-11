@@ -1,11 +1,17 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
-import java.util.List;
-
+import com.joyintech.exchange.service.quote.service.QuoteService;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.constant.EntrustBsProp;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
+import com.joyintech.tams.exchange.common.domain.Message;
+import com.joyintech.tams.exchange.common.request.QueryTickRequest;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
+import com.joyintech.tams.exchange.service.trade.management.service.IntegratedQuoteManagement;
 import com.joyintech.tams.exchange.util.EntrustPropUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,22 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.joyintech.exchange.service.quote.service.QuoteService;
-import com.joyintech.tams.exchange.common.bean.IntegratedBulkCloseQuoteBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedBulkCloseQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedBulkQuoteBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedBulkQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedFixedIncomeQuoteBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedFixedIncomeQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedRepurchaseQuoteBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedRepurchaseQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.TickBean;
-import com.joyintech.tams.exchange.common.domain.Message;
-import com.joyintech.tams.exchange.common.request.QueryTickRequest;
-import com.joyintech.tams.exchange.service.trade.management.service.IntegratedQuoteManagement;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import java.util.List;
 
 @RestController
 @RequestMapping("/trade/joyin")
@@ -41,7 +32,7 @@ public class TradeQuoteController {
 
     @Autowired
     private QuoteService quoteService;
-    
+
     @Autowired
     private IntegratedQuoteManagement integratedQuoteManagement;
     @Autowired
@@ -57,7 +48,13 @@ public class TradeQuoteController {
     @RequestMapping(value = "/entrust/integrated/bulk_quote", method = RequestMethod.POST)
     public Message<List<IntegratedBulkQuoteBean>> queryIntegratedBulkQuote(@RequestBody @Validated IntegratedBulkQuoteQryBean integratedBulkQuoteQryBean) {
         Instruction instruction = instructionService.findById(integratedBulkQuoteQryBean.getInstructionId());
-        integratedBulkQuoteQryBean.setEntrustProp(EntrustPropUtils.getEntrustProp(instruction));
+        String entrustProp;
+        if (StringUtils.equals(DictCodeListExt3.申报类型_不指定.getValue(), instruction.getDealMode())) {
+            entrustProp = integratedBulkQuoteQryBean.getEntrustProp();
+        } else {
+            entrustProp = EntrustPropUtils.getEntrustProp(instruction);
+        }
+        integratedBulkQuoteQryBean.setEntrustProp(entrustProp);
         integratedBulkQuoteQryBean.setEntrustBs(EntrustBsProp.getEntrustBs(instruction.getPs()));
         if (StringUtils.isEmpty(integratedBulkQuoteQryBean.getStockCode())) {
             integratedBulkQuoteQryBean.setStockCode(instruction.getFinprodMarketId());
@@ -78,7 +75,13 @@ public class TradeQuoteController {
     @RequestMapping(value = "/entrust/integrated/repurchase_quote", method = RequestMethod.POST)
     public Message<List<IntegratedRepurchaseQuoteBean>> queryIntegratedRepurchaseQuote(@RequestBody @Validated IntegratedRepurchaseQuoteQryBean integratedRepurchaseQuoteQryBean) {
         Instruction instruction = instructionService.findById(integratedRepurchaseQuoteQryBean.getInstructionId());
-        integratedRepurchaseQuoteQryBean.setEntrustProp(EntrustPropUtils.getEntrustProp(instruction));
+        String entrustProp;
+        if (StringUtils.equals(DictCodeListExt3.申报类型_不指定.getValue(), instruction.getDealMode())) {
+            entrustProp = integratedRepurchaseQuoteQryBean.getEntrustProp();
+        } else {
+            entrustProp = EntrustPropUtils.getEntrustProp(instruction);
+        }
+        integratedRepurchaseQuoteQryBean.setEntrustProp(entrustProp);
         if (StringUtils.isEmpty(integratedRepurchaseQuoteQryBean.getAccountId())) {
             integratedRepurchaseQuoteQryBean.setAccountId(instruction.getAcctNo());
         }

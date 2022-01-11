@@ -1,10 +1,12 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.common.bean.AlgorithmPlaceBean;
 import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
 import com.joyintech.tams.exchange.common.bean.ReviewDto;
 import com.joyintech.tams.exchange.common.bean.TrdExchangeDto;
 import com.joyintech.tams.exchange.common.constant.EntrustBsProp;
+import com.joyintech.tams.exchange.common.constant.joyin.InstructionPriceMode;
 import com.joyintech.tams.exchange.common.db.domain.Algorithm;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
@@ -14,6 +16,7 @@ import com.joyintech.tams.exchange.service.trade.management.service.OrderManagem
 import com.joyintech.tams.exchange.util.EntrustPropUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +61,12 @@ public class OrderController {
         order.setEntrustBs(EntrustBsProp.getEntrustBs(order.getEntrustBs()));
 
         Instruction instruction = instructionService.findById(order.getInstructionId());
-        String entrustProp = EntrustPropUtils.getEntrustProp(instruction);
+        String entrustProp;
+        if (StringUtils.equals(InstructionPriceMode.MARKET.value, instruction.getPriceMode())) {
+            entrustProp = order.getEntrustProp();
+        } else {
+            entrustProp = EntrustPropUtils.getEntrustProp(instruction);
+        }
         logger.info("普通下单（竞价下单）：order entrustProp is [{}]", entrustProp);
         order.setEntrustProp(entrustProp);
 
@@ -77,8 +85,12 @@ public class OrderController {
         Instruction instruction = instructionService.findById(integratedEntrust.getInstructionId());
         logger.info("综合业务下单：integratedEntrust entrustBs is [{}]", instruction.getPs());
         integratedEntrust.setEntrustBs(EntrustBsProp.getEntrustBs(instruction.getPs()));
-
-        String entrustProp = EntrustPropUtils.getEntrustProp(instruction);
+        String entrustProp;
+        if (StringUtils.equals(DictCodeListExt3.申报类型_不指定.getValue(), instruction.getDealMode())) {
+            entrustProp = integratedEntrust.getEntrustProp();
+        } else {
+            entrustProp = EntrustPropUtils.getEntrustProp(instruction);
+        }
         logger.info("综合业务下单：order entrustProp is [{}]", entrustProp);
         integratedEntrust.setEntrustProp(entrustProp);
 
