@@ -136,10 +136,10 @@ var etrAmt = '';
 	            }
 	        }
 	        }
-            if(!$('#invAim').val()){
+            /*if(!$('#invAim').val()){
                 Joyin.error("请输入投资目的");
                 return;
-            }
+            }*/
 	     // 检查生成划款指令参数是否发生变化
 	        if (window.BussTrdTransferOrder['bussTrdTransferOrder'].isCalcConditionChanged()) {
 	            return;
