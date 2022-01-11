@@ -861,6 +861,7 @@
         nvl(VAL.TDY_INTINCEXP,0) int_amt,/*利息 组合资产估值.当日应计利息+组合资产估值.其他应收款（本金）+组合资产估值.其他应收款（收益）*/
         NVL(VAL.DELAY_PAY_AMT,0) DELAY_PAY_AMT,/*待清算款*/
         val.MDATE MDATE,/*到期日*/
+        assetinfo.MDATE assetMdate,/*到期日*/
         assetinfo.BLN_AREA BLN_AREA,/*境内、境外*/
         assetinfo.rival_party COUNTER_ID,/*交易对手id*/
         nvl(assetinfo.INDUSTRY,assetinfo.INDUSTRY_PBC) INDUSTRY,/*融资人、发行人行业一级类别*/
