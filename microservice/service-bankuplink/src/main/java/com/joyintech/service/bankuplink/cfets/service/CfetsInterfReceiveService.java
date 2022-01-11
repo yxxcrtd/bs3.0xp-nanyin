@@ -686,7 +686,7 @@ public class CfetsInterfReceiveService {
                     mapFpriceAmt.put("cbfpriceAmt",null!=ibuQuoteCrepDto.getCbFpriceAmt()?ibuQuoteCrepDto.getCbFpriceAmt():BigDecimal.ZERO);
                     mapFpriceAmt.put("scfpriceAmt",null!=ibuQuoteCrepDto.getScFpriceAmt()?ibuQuoteCrepDto.getScFpriceAmt():BigDecimal.ZERO);
                 }else{
-                    BigDecimal  fpriceAmtTotalBW = null!=ibuQuoteCrepDto.getmTradeAmt()?ibuQuoteCrepDto.getmTradeAmt():BigDecimal.ZERO;
+                    BigDecimal  fpriceAmtTotalBW = null!=ibuQuoteCrepDto.getFpriceAmt()?ibuQuoteCrepDto.getFpriceAmt():BigDecimal.ZERO;
                     BigDecimal  shareAmtTotalBW = null!=ibuQuoteCrepDto.getShareCtAmt()?ibuQuoteCrepDto.getShareCtAmt():BigDecimal.ZERO;
                     mapFpriceAmt.put("fpriceAmt",fpriceAmtTotalBW);
                     mapFpriceAmt.put("shareAmt",shareAmtTotalBW);

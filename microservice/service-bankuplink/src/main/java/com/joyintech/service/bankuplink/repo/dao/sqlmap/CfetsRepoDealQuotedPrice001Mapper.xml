@@ -889,7 +889,8 @@
         IQER.CPRICE_AMT,
         IQER.INT_AMT,
         IQER.PRICE_MODEL,
-        IQER.SHARE_AMT
+        IQER.SHARE_AMT,
+        IQER.M_TRADE_AMT mtradeAmt
         FROM
         IBU_QUOTE_ETR_RE  IQER
         LEFT JOIN ETR_ENTRUST A ON  A.ENTRUST_ID = IQER.ENTRUST_ID
@@ -933,7 +934,8 @@
         IQER.CPRICE_AMT,
         IQER.INT_AMT,
         IQER.PRICE_MODEL,
-        IQER.SHARE_AMT
+        IQER.SHARE_AMT,
+        IQER.M_TRADE_AMT mtradeAmt
         FROM
         WFL_IBU_QUOTE_ETR_RE  IQER
         LEFT JOIN ETR_ENTRUST A ON  A.ENTRUST_ID = IQER.ENTRUST_ID
@@ -975,7 +977,8 @@
             LENDIN_SHARE_AMT,
             CPRICE_AMT,
             INT_AMT,
-            PRICE_MODEL
+            PRICE_MODEL,
+            M_TRADE_AMT mtradeAmt
         FROM
         <choose>
             <when test="workflowId !=null and workflowId != ''">

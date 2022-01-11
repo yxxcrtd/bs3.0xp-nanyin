@@ -1262,7 +1262,7 @@
 		PORTFOLIO_ID, SHARE_AMT, FPRICE_AMT,
 		REMARK, CREATE_USER, CREATE_TIME,
 		CREATE_DEPT, UPDATE_USER, UPDATE_TIME,CB_FPRICE_AMT,SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT, CPRICE_AMT, INT_AMT,INV_AIM,PRICE_MODEL
-		,OUR_SHARE_AMT,LENDIN_SHARE_AMT
+		,OUR_SHARE_AMT,LENDIN_SHARE_AMT,M_TRADE_AMT
 		)
 		<foreach collection="inputList" item="item" separator="from dual union all select" open="select * from (select "
 				 close=" from dual)">
@@ -1272,7 +1272,7 @@
 			#{item.createDept,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},
 			#{item.cbFpriceAmt,jdbcType=DECIMAL},#{item.scFpriceAmt,jdbcType=DECIMAL},#{item.dealFeeAmt,jdbcType=DECIMAL},
 			#{item.settFeeAmt,jdbcType=DECIMAL}, #{item.cpriceAmt,jdbcType=DECIMAL}, #{item.intAmt,jdbcType=DECIMAL}, #{item.invAim,jdbcType=VARCHAR}
-			, #{item.priceModel,jdbcType=VARCHAR}, #{item.ourShareAmt,jdbcType=DECIMAL},#{item.lendinShareAmt,jdbcType=DECIMAL}
+			, #{item.priceModel,jdbcType=VARCHAR}, #{item.ourShareAmt,jdbcType=DECIMAL},#{item.lendinShareAmt,jdbcType=DECIMAL},#{item.mtradeAmt,jdbcType=DECIMAL}
 		</foreach>
 	</insert>
 	<insert id="batchInsetIbuQuoteEntCrepPledge">
@@ -1297,7 +1297,7 @@
 		PORTFOLIO_ID, SHARE_AMT, FPRICE_AMT,
 		REMARK, CREATE_USER, CREATE_TIME,
 		CREATE_DEPT, UPDATE_USER, UPDATE_TIME,CB_FPRICE_AMT,SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT, CPRICE_AMT, INT_AMT
-		,INV_AIM,OUR_SHARE_AMT,LENDIN_SHARE_AMT,PRICE_MODEL
+		,INV_AIM,OUR_SHARE_AMT,LENDIN_SHARE_AMT,PRICE_MODEL,M_TRADE_AMT
 		)
 		<foreach close=")" collection="inputList" index="index" item="dto" open="(" separator=" union all ">
 			select
@@ -1307,7 +1307,7 @@
 			#{dto.createDept,jdbcType=VARCHAR}, #{dto.updateUser,jdbcType=VARCHAR}, #{dto.updateTime,jdbcType=TIMESTAMP}
 			, #{dto.cbFpriceAmt,jdbcType=DECIMAL}, #{dto.scFpriceAmt,jdbcType=DECIMAL},#{dto.dealFeeAmt,jdbcType=DECIMAL},
 			#{dto.settFeeAmt,jdbcType=DECIMAL}, #{dto.cpriceAmt,jdbcType=DECIMAL}, #{dto.intAmt,jdbcType=DECIMAL}
-			,#{dto.invAim,jdbcType=VARCHAR}, #{dto.ourShareAmt,jdbcType=DECIMAL},#{dto.lendinShareAmt,jdbcType=DECIMAL},#{dto.priceModel,jdbcType=VARCHAR}
+			,#{dto.invAim,jdbcType=VARCHAR}, #{dto.ourShareAmt,jdbcType=DECIMAL},#{dto.lendinShareAmt,jdbcType=DECIMAL},#{dto.priceModel,jdbcType=VARCHAR},#{dto.mtradeAmt,jdbcType=VARCHAR}
 			from dual
 		</foreach>
 	</insert>
@@ -1334,7 +1334,7 @@
 		PORTFOLIO_ID, SHARE_AMT, FPRICE_AMT,WORKFLOW_ID,
 		REMARK, CREATE_USER, CREATE_TIME,
 		CREATE_DEPT, UPDATE_USER, UPDATE_TIME,CB_FPRICE_AMT,SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT,CPRICE_AMT,INT_AMT,PRICE_MODEL
-		,INV_AIM,OUR_SHARE_AMT,LENDIN_SHARE_AMT
+		,INV_AIM,OUR_SHARE_AMT,LENDIN_SHARE_AMT,M_TRADE_AMT
 		)
 		<foreach collection="inputList" item="item" separator="from dual union all select" open="select * from (select "
 				 close=" from dual)">
@@ -1344,7 +1344,7 @@
 			#{item.createDept,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}
 			, #{item.cbFpriceAmt,jdbcType=DECIMAL}, #{item.scFpriceAmt,jdbcType=DECIMAL},#{item.dealFeeAmt,jdbcType=DECIMAL},
 			#{item.settFeeAmt,jdbcType=DECIMAL}, #{item.cpriceAmt,jdbcType=DECIMAL}, #{item.intAmt,jdbcType=DECIMAL}, #{item.priceModel,jdbcType=VARCHAR}
-			,#{item.invAim,jdbcType=VARCHAR}, #{item.ourShareAmt,jdbcType=DECIMAL},#{item.lendinShareAmt,jdbcType=DECIMAL}
+			,#{item.invAim,jdbcType=VARCHAR}, #{item.ourShareAmt,jdbcType=DECIMAL},#{item.lendinShareAmt,jdbcType=DECIMAL},#{item.mtradeAmt,jdbcType=DECIMAL}
 		</foreach>
 	</insert>
 	<insert id="batchInsetWflIbuQuoteEntCrepPledge" parameterType="java.util.List">
@@ -1393,7 +1393,7 @@
 	        SHARE_AMT SHARE_AMT, FPRICE_AMT FPRICE_AMT, REMARK REMARK, CREATE_USER CREATE_USER, 
 	        CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
 	        ,CB_FPRICE_AMT CB_FPRICE_AMT,SC_FPRICE_AMT SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT,DIP_TYPE,CPRICE_AMT,INT_AMT,PRICE_MODEL
-			,OUR_SHARE_AMT ,LENDIN_SHARE_AMT
+			,OUR_SHARE_AMT ,LENDIN_SHARE_AMT,M_TRADE_AMT
         from IBU_QUOTE_ETR_RE
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
             and VERSION = (select max(VERSION) from IBU_QUOTE_ETR_RE where QUOTE_ID = #{quoteId,jdbcType=VARCHAR})
@@ -1403,7 +1403,7 @@
             QUOTE_ID QUOTE_ID, VERSION VERSION, ENTRUST_ID ENTRUST_ID, PORTFOLIO_ID PORTFOLIO_ID, 
             SHARE_AMT SHARE_AMT, FPRICE_AMT FPRICE_AMT,WORKFLOW_ID WORKFLOW_ID, REMARK REMARK, CREATE_USER CREATE_USER,
             CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
-            ,CB_FPRICE_AMT CB_FPRICE_AMT,SC_FPRICE_AMT SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT,PRICE_MODEL
+            ,CB_FPRICE_AMT CB_FPRICE_AMT,SC_FPRICE_AMT SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT,PRICE_MODEL,M_TRADE_AMT
         from WFL_IBU_QUOTE_ETR_RE
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
             and VERSION = (select max(VERSION) from WFL_IBU_QUOTE_ETR_RE where QUOTE_ID = #{quoteId,jdbcType=VARCHAR})
