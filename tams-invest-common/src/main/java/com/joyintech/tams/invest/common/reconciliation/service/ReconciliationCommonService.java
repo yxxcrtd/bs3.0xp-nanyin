@@ -604,8 +604,6 @@ public class ReconciliationCommonService {
             saveStlSecRecon(dto);
             // 查询成交明细数据
             List<SettleTransData> listSettleTransData = querySettleTransDatas(dto);
-            // 删除无需对账数据
-            deleteNoNeedAccountData(listSettleTransData);
             if(CollectionUtils.isNotEmpty(listSettleTransData)){
                 // 重新结算交易明细数据
                 SettleTransData std = getReCalSettleTransData(listSettleTransData.get(0),dto);
@@ -634,20 +632,8 @@ public class ReconciliationCommonService {
             if(CollectionUtils.isEmpty(listSettleTransData)){
                 continue;
             }
-            // 删除无需对账数据
-            deleteNoNeedAccountData(listSettleTransData);
             // 登录成交明细状态表和券商对账单详情表
             saveSettleTransDataStatusDetail(dto, listSettleTransData);
-        }
-    }
-
-    /**
-     * 剔除债转股的债券数据
-     */
-    private void deleteNoNeedAccountData(List<SettleTransData> listSettleTransDatas){
-        if(CollectionUtils.isNotEmpty(listSettleTransDatas)){
-            listSettleTransDatas.removeIf(settleTransData -> DictCodeListExt3.交易方向_债转股.getValue().equals(settleTransData.getPs())
-                    && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(settleTransData.getFinprodType()));
         }
     }
 
