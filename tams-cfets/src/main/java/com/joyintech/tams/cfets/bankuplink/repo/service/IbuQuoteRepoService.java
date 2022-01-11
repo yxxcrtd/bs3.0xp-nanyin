@@ -1397,6 +1397,7 @@ public class IbuQuoteRepoService extends BaseService {
         }
         param.put("platDate", iPlatformDate.getSysDateStr());
         param.put("loginUserId", loginUserId);
+        param.put("role_pos", DictCodeListExt2.角色岗位_投资处长.getValue());
         //银行间质押式回购质押券模式：01无质押券库，02单个质押库，03多个质押券库
         param.put("repo_pledge_model", CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL));
         if (type == 1) {

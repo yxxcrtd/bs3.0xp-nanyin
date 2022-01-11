@@ -5,7 +5,7 @@
 	 */
 	var editFlag = true;
 	//这个标志是防止查询结果返回赋值后不停的联动calcAmt;
-	var entrustIdChangeFlag = false;
+	var entrustIdChangeFlag = true;
     /**
 	 * 委托代码
 	 */

@@ -52,12 +52,12 @@
         T1.VDATE vdate,
         T1.MDATE mdate,
         NVL(T5.FINISH_AMT,0) finishAmt,
-         round((NVL(T4.FINISH_AMT*100,0)+NVL(T5.ENT_FINISH_AMT*100,0))/(T1.ENTRUST_AMT*100),4)*100 execProcess,
-         round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_AMT*100),4)*100 transProcess,
-         (NVL(T4.FINISH_AMT, 0)+ NVL(T5.ENT_FINISH_AMT, 0))/10000  as execFinishAmt,
-         (NVL(T1.ENTRUST_AMT,0)/10000 - NVL(T5.ENT_FINISH_AMT,0)/10000 - NVL(T4.FINISH_AMT,0)/10000) as execRemainderAmt,
-         NVL(T5.FINISH_AMT,0)/10000  as transFinishAmt,
-         (NVL(T1.ENTRUST_AMT,0)/10000 - NVL(T5.FINISH_AMT,0)/10000) as transRemainderAmt,
+         round((NVL(T4.FINISH_AMT,0)+NVL(T5.ENT_FINISH_AMT,0))/(T1.ENTRUST_AMT),4)*100 execProcess,
+         round(NVL(T5.FINISH_AMT,0)/(T1.ENTRUST_AMT),4)*100 transProcess,
+         (NVL(T4.FINISH_AMT, 0)+ NVL(T5.ENT_FINISH_AMT, 0))  as execFinishAmt,
+         (NVL(T1.ENTRUST_AMT,0) - NVL(T5.ENT_FINISH_AMT,0) - NVL(T4.FINISH_AMT,0)) as execRemainderAmt,
+         NVL(T5.FINISH_AMT,0)  as transFinishAmt,
+         (NVL(T1.ENTRUST_AMT,0) - NVL(T5.FINISH_AMT,0)) as transRemainderAmt,
         T1.REMARK,
           null approver,
          TO_CHAR(T1.ENTRUST_DATE, 'yyyy-MM-dd') as entrustDateStr,
@@ -125,12 +125,12 @@
         T1.VDATE vdate,
         T1.MDATE mdate,
         NVL(T5.FINISH_AMT,0) finishAmt,
-         round((NVL(T4.FINISH_AMT*100,0)+NVL(T5.ENT_FINISH_AMT*100,0))/(T1.ENTRUST_AMT*100),4)*100 execProcess,
-         round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_AMT*100),4)*100 transProcess,
-         (NVL(T4.FINISH_AMT, 0)+ NVL(T5.ENT_FINISH_AMT, 0))/10000  as execFinishAmt,
-         (NVL(T1.ENTRUST_AMT,0)/10000 - NVL(T5.ENT_FINISH_AMT,0)/10000 - NVL(T4.FINISH_AMT,0)/10000) as execRemainderAmt,
-         NVL(T5.FINISH_AMT,0)/10000  as transFinishAmt,
-         (NVL(T1.ENTRUST_AMT,0)/10000 - NVL(T5.FINISH_AMT,0)/10000) as transRemainderAmt,
+         round((NVL(T4.FINISH_AMT,0)+NVL(T5.ENT_FINISH_AMT,0))/(T1.ENTRUST_AMT),4)*100 execProcess,
+         round(NVL(T5.FINISH_AMT,0)/(T1.ENTRUST_AMT),4)*100 transProcess,
+         (NVL(T4.FINISH_AMT, 0)+ NVL(T5.ENT_FINISH_AMT, 0))  as execFinishAmt,
+         (NVL(T1.ENTRUST_AMT,0) - NVL(T5.ENT_FINISH_AMT,0) - NVL(T4.FINISH_AMT,0)) as execRemainderAmt,
+         NVL(T5.FINISH_AMT,0)  as transFinishAmt,
+         (NVL(T1.ENTRUST_AMT,0) - NVL(T5.FINISH_AMT,0)) as transRemainderAmt,
         T1.REMARK,
          nextApp.nowUserId as approver,
          TO_CHAR(T1.ENTRUST_DATE, 'yyyy-MM-dd') as entrustDateStr,
@@ -241,13 +241,13 @@
     <sql id="keywordsWhere">
         <if test="search != null and search != ''">
             <where>( aaa.entrustId || '|' || aaa.entrustStatus || '|' || aaa.invManagerId || '|' || aaa.portfolioId || '|'
-                || aaa.portfolioName || '|' || aaa.termType || '|' || aaa.ps || '|' || priceModel
+                || '|T+' || aaa.settleSpreed || '|' || aaa.portfolioName || '|' || aaa.termType || '|' || aaa.ps || '|' || priceModel
                 || '|' || aaa.settleSpreed || '|' || aaa.approver || '|' || aaa.REMARK
-                || '|' || sdl_es.item_value || '|' || sdl_pm.item_value || '|' || sdl_ps.item_value
+                || '|' || sdl_es.item_value || '|' || sdl_pm.item_value || '|' || sdl_ps.item_value || '|' || aaa.counterName
                 like '%' || #{search} || '%'
+                or to_char(aaa.entrustAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.entrustAmt)=#{search}
+                or to_char(aaa.price,'FM99990.9990')=#{search} or  aaa.price||'' =#{search}
                 or to_char(aaa.repoTerm)=#{search}
-                or to_char(aaa.entrustAmt)=#{search}
-                or to_char(aaa.price)=#{search}
                 or aaa.entrustDateStr=#{search}
                 or aaa.entrustDateStr||'' =#{search}
                 or aaa.entrustDateStr=#{year}||'-'||#{search}
@@ -418,7 +418,10 @@
                 or to_char(aaa.pledStrdPrinAmt)=#{search}
                 or to_char(aaa.pledgeAmount)=#{search}
                 or to_char(aaa.firstNetPrice)=#{search}
-                or to_char(aaa.scale)=#{search}
+                or to_char(aaa.pledStrdPrinAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.pledStrdPrinAmt)=#{search}
+                or to_char(aaa.pledgeAmount,'FM9999999999999990.90')=#{search} or  aaa.pledgeAmount||'' =#{search}
+                or to_char(aaa.firstNetPrice,'FM9999999999999990.9990')=#{search} or to_char(aaa.firstNetPrice)=#{search}
+                or to_char(aaa.scale,'FM9999999999999990.90')=#{search} or  aaa.scale||'' =#{search}
                 or aaa.mdateStr=#{search}
                 or aaa.mdateStr||'' =#{search}
                 or aaa.mdateStr=#{year}||'-'||#{search}

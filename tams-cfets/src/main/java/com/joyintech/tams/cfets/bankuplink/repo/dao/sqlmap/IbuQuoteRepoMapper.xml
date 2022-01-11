@@ -481,6 +481,16 @@
                     <foreach collection="notentrustIdList" item="item" open="(" close=")" separator=",">
                         #{item}
                     </foreach>
+                    and ( ETR_ENTRUST.COUNTER_ID in
+                    (
+                        select
+                            COUNTER_ID
+                        from ETR_ENTRUST
+                        where ENTRUST_ID in
+                        <foreach collection="notentrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    ) or ETR_ENTRUST.COUNTER_ID is null )
                 </if>
             order by decode(ETR_ENTRUST.ENTRUST_STATUS,'09',1,'02',2,'03',3,'04',4,'06',5,'05',6,'07',7),ETR_ENTRUST_ADD.TRANSMIT_TIME,ETR_ENTRUST.ps)
         <if test="sort != null and sort != '' and direction != null and direction != ''">
@@ -492,8 +502,8 @@
         SELECT  fp.FINPROD_MARKET_ID bondCode
                ,fp.FINPROD_ABBR bondAbbrName
                ,fp.FINPROD_ID finprodId
-               ,pfp.FINPROD_MARKET_ID portfolioId
-               ,pfp.FINPROD_ABBR portfolioName
+               ,pp.PORTFOLIO_ID portfolioId
+               ,pp.PORTFOLIO_NAME portfolioName
                ,fp.MDATE mdate
                ,NVL(TABLE01.pledStrdPrinAmt,0) avaPledgePrin
                ,NVL(pledgeList.PLEDGE_NUMBER,0) * 100 pledgePrin
@@ -542,8 +552,8 @@
         ) pledgeList
         LEFT JOIN ETR_ENTRUST ee
             ON ee.ENTRUST_ID = pledgeList.bussId
-        INNER JOIN FIN_PRODUCT pfp
-            ON ee.PORTFOLIO_ID = pfp.FINPROD_MARKET_ID
+        INNER JOIN PTL_PORTFOLIO pp
+            ON ee.PORTFOLIO_ID = pp.PORTFOLIO_ID
         LEFT JOIN ETR_ENTRUST_ADD eea
             ON eea.ENTRUST_ID = pledgeList.bussId
         LEFT JOIN ETR_SEC_STOCK ess
@@ -574,10 +584,6 @@
                 AND espr.DATE_TYPE =0
                 AND ( ppc.S_HOLDINGTYPE =#{S_002} or espr.HODING_TYPE=#{A_012})
             ) TEMP
-            LEFT JOIN PTL_PORTFOLIO_AUTHORITY
-            ON TEMP.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
-            WHERE 1 = 1
-            AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{loginUserId}
             GROUP BY  TEMP.PORTFOLIO_ID
                      ,TEMP.PORTFOLIO_NAME
                      ,TEMP.SEC_ACCT_ID
@@ -643,8 +649,8 @@
         SELECT  fp.FINPROD_MARKET_ID bondCode
                ,fp.FINPROD_ABBR bondAbbrName
                ,fp.FINPROD_ID finprodId
-               ,pfp.FINPROD_MARKET_ID portfolioId
-               ,pfp.FINPROD_ABBR portfolioName
+               ,pp.PORTFOLIO_ID portfolioId
+               ,pp.PORTFOLIO_NAME portfolioName
                ,fp.MDATE mdate
                ,NVL(TABLE01.pledStrdPrinAmt,0) avaPledgePrin
                ,sum(NVL(pledgeList.PLEDGE_NUMBER, 0) * 100) pledgePrin
@@ -706,8 +712,8 @@
         ) pledgeList
         LEFT JOIN ETR_ENTRUST ee
             ON ee.ENTRUST_ID = pledgeList.bussId
-        INNER JOIN FIN_PRODUCT pfp
-            ON ee.PORTFOLIO_ID = pfp.FINPROD_MARKET_ID
+        INNER JOIN PTL_PORTFOLIO pp
+            ON ee.PORTFOLIO_ID = pp.PORTFOLIO_ID
         LEFT JOIN ETR_ENTRUST_ADD eea
             ON eea.ENTRUST_ID = pledgeList.bussId
         LEFT JOIN ETR_SEC_STOCK ess
@@ -800,8 +806,8 @@
        group by fp.FINPROD_MARKET_ID,
            fp.FINPROD_ABBR,
            fp.FINPROD_ID,
-           pfp.FINPROD_MARKET_ID,
-           pfp.FINPROD_ABBR,
+           pp.PORTFOLIO_ID,
+           pp.PORTFOLIO_NAME,
            fp.MDATE,
            TABLE01.pledStrdPrinAmt,
            mbvi.NETPRICE,
@@ -1018,7 +1024,8 @@
                finprodId,
                mdate,
                firstNetPrice,
-               repRegistOrg
+               repRegistOrg,
+               pledgeRatio
         FROM (
             SELECT
                 fp.FINPROD_MARKET_ID bondCode,
@@ -1026,7 +1033,12 @@
                 fp.FINPROD_ID finprodId,
                 fp.MDATE mdate,
                 mbvi.NETPRICE firstNetPrice,
-                fp.REGIST_ORG repRegistOrg
+                fp.REGIST_ORG repRegistOrg,
+                case
+                    when mbvi.NETPRICE>nvl(PA.prinAmt,100) then round(100/100,4)*100
+                    when mbvi.NETPRICE is null then round(nvl(PA.prinAmt,100)/100,4)*100
+                    else round(mbvi.NETPRICE/nvl(PA.prinAmt,100),4)*100
+                end as pledgeRatio /*折算比例*/
             FROM FIN_PRODUCT fp
            INNER JOIN  FIN_PRODUCT_TYPE FPT
                ON  FPT.FINPROD_ID = fp.FINPROD_ID
@@ -1057,6 +1069,10 @@
                     AND T1.VALUE_DATE = T2.VALUE_DATE
             ) mbvi/*以上获取债券小于等于平台日的最新估值行情*/
                 ON fp.FINPROD_MARKET_ID = mbvi.SEC_ID
+            left join ( select 100-sum(nvl(PRIN_AMT,0)) prinAmt,FINPROD_ID
+                        from FIN_CASH_PLAN
+                        WHERE MDATE &lt;= to_date(#{platDate},'yyyy-MM-dd')
+                        group by FINPROD_ID) PA on PA.FINPROD_ID = fp.FINPROD_ID
             <where>
                 fp.VDATE <![CDATA[<=]]>TO_DATE(#{platDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
                 AND fp.MDATE <![CDATA[>=]]>TO_DATE(#{platDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
@@ -1065,6 +1081,12 @@
                     AND fp.FINPROD_ID in
                     <foreach  collection="finprodIdList" item="item" open="(" close=")" separator=",">
                         #{item}
+                    </foreach>
+                </if>
+                <if test="finprodTypeList != null and finprodTypeList.size() > 0">
+                    AND FPT.TYPE_11 in
+                    <foreach  collection="finprodTypeList" item="finprodType" open="(" close=")" separator=",">
+                        #{finprodType}
                     </foreach>
                 </if>
                 <if test="nofinprodIdList != null and nofinprodIdList.size() > 0">
@@ -1111,8 +1133,8 @@
                 fp.FINPROD_MARKET_ID bondCode,
                 fp.FINPROD_ABBR bondAbbrName,
                 fp.FINPROD_ID finprodId,
-                pfp.FINPROD_MARKET_ID portfolioId,
-                pfp.FINPROD_ABBR portfolioName,
+                pp.PORTFOLIO_ID portfolioId,
+                pp.PORTFOLIO_NAME portfolioName,
                 fp.MDATE mdate,
                 (NVL(TABLE01.pledStrdPrinAmt, 0)) * 100 avaPledgePrin,
                 NVL(pledgeList.PLEDGE_NUMBER, 0) * 100 pledgePrin,
@@ -1158,7 +1180,7 @@
                </if>
                ) pledgeList
             left join ETR_ENTRUST ee on ee.ENTRUST_ID = pledgeList.bussId
-            INNER JOIN FIN_PRODUCT pfp ON ee.PORTFOLIO_ID = pfp.FINPROD_MARKET_ID
+            INNER JOIN PTL_PORTFOLIO pp ON ee.PORTFOLIO_ID = pp.PORTFOLIO_ID
             left join ETR_ENTRUST_ADD eea on eea.ENTRUST_ID = pledgeList.bussId
             LEFT JOIN(
                  SELECT
@@ -1949,10 +1971,10 @@
                     RFPDT.RATE             rate,
                     RFPDT.REPO_TERM        repoTerm,
                     MCCI2.PARTY_NAME       ouPartyName,
-                    MCCI.PARTY_NAME        cpPartyName,
-                    MCCT2.TRADER_NAME      ouTraderName,
+                    MSCP.COUNTER_NAME      cpPartyName,
+                    SU.REAL_NAME           ouTraderName,
                     MCCT.TRADER_NAME       cpTraderName,
-                    DECODE(RFPDT.SETTLE_SPEED, 0, '01', 1, '02')                                              settleSpeed/*清算速度*/,
+                    RFPDT.SETTLE_SPEED     settleSpeed/*清算速度*/,
                     RFPDT.V_SETTLE_DATE    vSettleDate,
                     RFPDT.M_SETTLE_DATE    mSettleDate,
                     RFPDT.TRADE_DATE       tradeDate,
@@ -1964,18 +1986,17 @@
                     RFPDT.DELIVERY_TYPE   deliverytype,
                     RFPDT.M_DELIVERY_TYPE mDeliveryType,
                     RFPDT.CCY             ccy,
-                    RFPDT.SETT_CCY        settCcy
+                    RFPDT.SETT_CCY        settCcy,
+                    RFPDT.CREATE_USER     createUser
             FROM REG_FIN_PRODUCT_DEAL_TOTAL RFPDT
             LEFT JOIN MST_COUNTER_PARTY MSCP
                  ON MSCP.COUNTER_ID = RFPDT.COUNTER_ID
-            LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI
-                ON MCCI.PARTY_NAME = MSCP.COUNTER_NAME
             LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI2
                 ON MCCI2.PARTY_ID = RFPDT.OU_PARTY_ID
             LEFT JOIN MST_CFETS_CUSTOMER_TRADER MCCT
                 ON MCCT.TRADER_ID = RFPDT.COUNTER_TRADER
-            LEFT JOIN MST_CFETS_CUSTOMER_TRADER MCCT2
-                ON MCCT2.TRADER_ID = RFPDT.OU_TRADER_ID
+            LEFT JOIN SYS_USER SU
+                ON SU.USER_NAME = RFPDT.OU_TRADER_ID
             LEFT JOIN ETR_ENTRUST_OPER_HIS EEOH
                 ON EEOH.ENTRUST_ID = RFPDT.TOTLE_TRADE_ID
                     <if test="OPR_TYPE_09 !=null and OPR_TYPE_09 !=''">
@@ -2010,10 +2031,10 @@
                 RFPDT.RATE             rate,
                 RFPDT.REPO_TERM        repoTerm,
                 MCCI2.PARTY_NAME       ouPartyName,
-                MCCI.PARTY_NAME        cpPartyName,
-                MCCT2.TRADER_NAME      ouTraderName,
+                MSCP.COUNTER_NAME      cpPartyName,
+                SU.REAL_NAME           ouTraderName,
                 MCCT.TRADER_NAME       cpTraderName,
-                DECODE(RFPDT.SETTLE_SPEED, 0, '01', 1, '02')                                              settleSpeed/*清算速度*/,
+                RFPDT.SETTLE_SPEED     settleSpeed/*清算速度*/,
                 RFPDT.V_SETTLE_DATE    vSettleDate,
                 RFPDT.M_SETTLE_DATE    mSettleDate,
                 RFPDT.TRADE_DATE       tradeDate,
@@ -2025,18 +2046,17 @@
                 RFPDT.DELIVERY_TYPE   deliverytype,
                 RFPDT.M_DELIVERY_TYPE mDeliveryType,
                 RFPDT.CCY             ccy,
-                RFPDT.SETT_CCY        settCcy
+                RFPDT.SETT_CCY        settCcy,
+                RFPDT.CREATE_USER     createUser
         FROM WFL_REG_FIN_PRODUCT_DEAL_TOTAL RFPDT
         LEFT JOIN MST_COUNTER_PARTY MSCP
             ON MSCP.COUNTER_ID = RFPDT.COUNTER_ID
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI
-            ON MCCI.PARTY_NAME = MSCP.COUNTER_NAME
         LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI2
             ON MCCI2.PARTY_ID = RFPDT.OU_PARTY_ID
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER MCCT
             ON MCCT.TRADER_ID = RFPDT.COUNTER_TRADER
-        LEFT JOIN MST_CFETS_CUSTOMER_TRADER MCCT2
-            ON MCCT2.TRADER_ID = RFPDT.OU_TRADER_ID
+        LEFT JOIN SYS_USER SU
+            ON SU.USER_NAME = RFPDT.OU_TRADER_ID
         LEFT JOIN ETR_ENTRUST_OPER_HIS EEOH
             ON EEOH.ENTRUST_ID = RFPDT.TOTLE_TRADE_ID
             <if test="OPR_TYPE_09 !=null and OPR_TYPE_09 !=''">
@@ -2123,6 +2143,13 @@
                 <foreach collection="cpTraderNameList" item="item" open="(" close=")" separator=",">
                     #{item}
                 </foreach>
+            </if>
+            <if test="role_pos != null and role_pos != ''" >
+                and ( TT.createUser = #{loginUserId}
+                        or exists(
+                                    select 1 from SYS_USER_ROLE sur
+                                    left join SYS_ROLE sr on sur.ROLE_ID = sr.ROLE_ID
+                                    where sur.USER_ID = #{loginUserId} and sr.ROLE_POS = #{role_pos}))
             </if>
             <if test="search != null and search != ''">
                 and (
@@ -2277,7 +2304,7 @@
             pledge.pledgeRatio pledgeRatio/*折算比例*/,
             fp.REGIST_ORG repRegistOrg/*登记托管机构code*/,
             pledge.portfolioId portfolioId/*组合代码*/,
-            pfp.FINPROD_ABBR portfolioName/*组合名称*/
+            pp.PORTFOLIO_NAME portfolioName/*组合名称*/
         from (
             select
             portfolio_id portfolioId,
@@ -2372,7 +2399,7 @@
                 AND T1.VALUE_DATE = T2.VALUE_DATE
 		) mbvi/*以上获取债券小于等于平台日的最新估值行情*/
 		    ON fp.FINPROD_MARKET_ID = mbvi.SEC_ID
-        LEFT JOIN FIN_PRODUCT pfp ON pledge.portfolioId = pfp.FINPROD_MARKET_ID
+        LEFT JOIN PTL_PORTFOLIO pp ON pledge.portfolioId = pp.PORTFOLIO_ID
 
     </select>
 
@@ -2380,7 +2407,7 @@
         select
             deal.ENTRUST_ID entrustId/*指令代码*/,
             deal.PORTFOLIO_ID portfolioId/*组合代码*/,
-            fp.FINPROD_ABBR portfolioName/*组合名称*/,
+            pp.PORTFOLIO_NAME portfolioName/*组合名称*/,
             ROUND((ee.ENTRUST_AMT) - NVL(T5.FINISH_AMT, 0) - NVL(T6.ENT_FINISH_AMT, 0) )  avaNum/*剩余指令额度*/,
             null avaNumold/*剩余指令额度*/,
             deal.TRADE_AMT tradeAmt/*交易金额*/,
@@ -2400,7 +2427,7 @@
             on deal.TRADE_ID = fee1.TRADE_ID and fee1.FEE_TYPE = 'B06' /*交易手续费*/
         left join (<include refid="sql_Fee"></include>) fee2
             on deal.TRADE_ID = fee2.TRADE_ID and fee2.FEE_TYPE = 'B08' /*结算手续费*/
-        left join FIN_PRODUCT fp on fp.FINPROD_MARKET_ID = deal.PORTFOLIO_ID
+        left join PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = deal.PORTFOLIO_ID
         LEFT JOIN
         (
             SELECT ENTRUST_ID
