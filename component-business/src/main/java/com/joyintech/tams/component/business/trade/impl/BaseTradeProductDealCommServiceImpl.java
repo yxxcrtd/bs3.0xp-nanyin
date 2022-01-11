@@ -458,6 +458,14 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                         &&StringUtil.equals(baseTradeProductDealDto.getTrdFinProductDealTotal().getPs(),DictCodeListExt3.交易方向_解除质押.getValue())) {
                     status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
                 }
+                else if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdFinProductDealTotal())
+                        &&StringUtil.equals(baseTradeProductDealDto.getTrdFinProductDealTotal().getPs(),DictCodeList.交易方向_到期续做.getValue())) {
+                    //到期续作中，只考虑新做首期，收息到账和还本到账不写入指令完成度
+                    if(!StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(),DictCodeList.交易方向_买入.getValue())) {
+                        continue;
+                    }
+                    status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
+                }
                 else if(etrEntrustAdd != null && StringUtil.isNotEmpty(etrEntrustAdd.getTargetType())
                    && StringUtil.equals(DictCodeListExt3.目标类型_金额.getValue(),etrEntrustAdd.getTargetType())){
                     status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getTradeAmt());

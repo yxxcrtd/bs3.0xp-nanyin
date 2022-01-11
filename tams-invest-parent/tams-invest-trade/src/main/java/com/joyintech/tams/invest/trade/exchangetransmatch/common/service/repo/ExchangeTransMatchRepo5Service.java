@@ -143,17 +143,17 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
         dealTotal.setCpriceAmt(null);
         // 交易份额
         dealTotal.setShareAmt(entrustDto.getMarchQty());
-        BigDecimal amt = ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getShareAmt(),2),dealDto.getPrinAmt());
+        BigDecimal proportion = ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getShareAmt(),2);
         // 交易本金
-        dealTotal.setPrinAmt(amt);
+        dealTotal.setPrinAmt(ArithmeticUtil.multiply(proportion,dealDto.getPrinAmt()));
         // 利息总额
-        dealTotal.setIntAmt(dealDto.getIntAmt());
+        dealTotal.setIntAmt(ArithmeticUtil.multiply(proportion,dealDto.getIntAmt()));
         // 全价总额
-        dealTotal.setFpriceAmt(dealDto.getFpriceAmt());
+        dealTotal.setFpriceAmt(ArithmeticUtil.multiply(proportion,dealDto.getFpriceAmt()));
         // 随交易支付费用
         dealTotal.setFeeAmtPay(BigDecimal.ZERO);
         // 交易金额
-        dealTotal.setTradeAmt(dealDto.getTradeAmt());
+        dealTotal.setTradeAmt(ArithmeticUtil.multiply(proportion,dealDto.getTradeAmt()));
         // 未随交易支付费用
         dealTotal.setFeeAmtUnpay(BigDecimal.ZERO);
         // 总交易费用
