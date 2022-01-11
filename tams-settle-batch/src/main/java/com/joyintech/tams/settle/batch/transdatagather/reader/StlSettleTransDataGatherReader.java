@@ -544,6 +544,8 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                                 dealTotal.setmPrinAmt(item.getPrinAmt());
                                 //到期利息
                                 dealTotal.setmIntAmt(item.getIntAmt());
+                                //到期利息
+                                dealTotal.setIntAmt(item.getIntAmt());
                                 //到期金额
                                 dealTotal.setmTradeAmt(item.getmTradeAmt());
                                 //首期成交编号

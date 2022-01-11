@@ -606,6 +606,12 @@ public class StlDataDealSzdSjsjgProcessService {
                 settleTransData.setPs(DictCodeList.交易方向_到期.getValue());
                 // 交易份额
                 // settleTransData.setShareAmt(abs(szdSjsjg.getJgjssl()));
+                // 业务场景分类
+                if(BigDecimal.ZERO.compareTo(szdSjsjg.getJgqsbj()) < 0){
+                    settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券协议逆回购_到期.getValue());
+                }else if(BigDecimal.ZERO.compareTo(szdSjsjg.getJgqsbj()) > 0){
+                    settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券协议正回购_到期.getValue());
+                }
                 // 交易本金
                 settleTransData.setPrinAmt(abs(qsbj));
                 // 到期日
@@ -720,7 +726,7 @@ public class StlDataDealSzdSjsjgProcessService {
 //                    ArithmeticUtil.doAdd(settleTransData.getPrinAmt(),szdSjsjg.getJgjyjsf(),szdSjsjg.getJgjsf()))));
             settleTransData.setmIntAmt(ArithmeticUtil.subtract(settleTransData.getmTradeAmt(),settleTransData.getmPrinAmt()));
             //全价总额
-            settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券协议正回购_到期续作.getValue());
+            // settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券协议正回购_到期续作.getValue());
             settleTransData.setFpriceAmt(ArithmeticUtil.subtract(settleTransData.getPrinAmt(), settleTransData.getmTradeAmt()));
             // GZYHTZJY-1039 交易份额 = abs(清算本金) fuyongsheng modify 20220106 start
             // 交易份额 = abs(清算本金)
