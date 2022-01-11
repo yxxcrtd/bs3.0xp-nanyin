@@ -968,7 +968,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 				params.setElementId(dto.getElementId());
 				params.setBusinessType(businessType);
 				params.setBusinessCode(item->item.getEntrustId());
-				params.setComment(entity -> getMessage("EtrExchangeTradeCommon001.entrustId") + "(" + entity.getEntrustId() + ")"
+				params.setComment(entity -> getMessage("EtrExchangeTrade003.entrustId") + "(" + entity.getEntrustId() + ")"
 						+ "-" + "业务类型" + "(" + dto.getBusinessTypeName() + ")-"
 						+ "平台日" + "(" + DateUtil.format(iPlatformDate.getSysDate()) + ")");
 				processParameter.setWorkFlowParameter(params);
