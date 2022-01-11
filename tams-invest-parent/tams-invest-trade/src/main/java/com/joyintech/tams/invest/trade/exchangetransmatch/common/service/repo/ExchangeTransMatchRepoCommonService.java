@@ -368,6 +368,8 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         Map<String,Object> queryMap = new HashMap<>();
         queryMap.put("fCjbh",fCjbh);
         queryMap.put("vdate",vdate);
+        queryMap.put("BUSI_SCENE_CALSS_0902RS02",DictCodeListStl.业务场景分类明细_债券协议正回购_首期_买入.getValue());
+        queryMap.put("BUSI_SCENE_CALSS_0902RB01",DictCodeListStl.业务场景分类明细_债券协议逆回购_首期_买入.getValue());
         return exchangeTransMatchCommonMapper.getFirstRepoSettleTransData(queryMap);
     }
 
