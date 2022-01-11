@@ -50,6 +50,7 @@
           <!--/*AND EXISTS  (
                 SELECT 1 FROM stl_sec_recon_detail ssrd
                 where ssrd.TRADE_ID = A.TRADE_ID)*/-->
+          and A.PS !=#{PS_T05}
 
     </select>
 

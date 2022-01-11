@@ -3,7 +3,9 @@ package com.joyintech.tams.settle.batch.transdatagather.service;
 import com.joyintech.tams.common.base.dao.SettleTransDataTotalAddMapper;
 import com.joyintech.tams.common.base.dao.SettleTransDataTotalMapper;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.settle.batch.datadeal.dao.StlDownDataDealMapper;
 import com.joyintech.tams.settle.batch.transdatagather.dao.StlSettleTransDataGatherMapper;
 import com.joyintech.tams.settle.batch.transdatagather.dto.StlSettleTransDataGatherDto;
@@ -50,7 +52,8 @@ public class StlSettleTransDataGatherService {
         String matchStatus = DictCodeListExt3.下行交易匹配状态_未匹配.getValue();
         String checkResult1=DictCodeListExt3.对账状态结果_一致.getValue();
         String checkResult3=DictCodeListExt3.对账状态结果_手工完成.getValue();
-        return stlSettleTransDataGatherMapper.selectNeedTotalDataList(dealDate,matchStatus,checkResult1,checkResult3);
+        String PS_T05= DictCodeList.交易方向_申购确认.getValue();
+        return stlSettleTransDataGatherMapper.selectNeedTotalDataList(dealDate,matchStatus,checkResult1,checkResult3,PS_T05);
     }
 
     public int batchInsetSettleTransDataTotal(List<SettleTransDataTotal> inputList) {
