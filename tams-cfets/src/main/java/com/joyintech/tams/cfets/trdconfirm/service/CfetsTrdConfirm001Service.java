@@ -326,7 +326,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
                     }else{
                         //不存在对应的成交匹配数据，插入下行成交匹配表
                         entity.getCfetsTrdConfirmMatchDto().setSeqno(IDGenerator.generate());
-                        entity.getCfetsTrdConfirmMatchDto().setCreateUser(SecurityUtil.getLoginUser().getUserName());
+                        entity.getCfetsTrdConfirmMatchDto().setCreateUser(null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"SYSTEM");
                         entity.getCfetsTrdConfirmMatchDto().setCreateDept(CommonUtil.getDeptCode());
                         cfetsTrdConfirmMapper.insertTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
                     }

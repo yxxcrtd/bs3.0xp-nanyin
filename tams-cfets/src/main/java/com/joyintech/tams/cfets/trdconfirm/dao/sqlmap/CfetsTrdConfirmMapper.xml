@@ -354,7 +354,7 @@
         ic.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdName,
         null as faceValue,
-        nvl(ic.rate,100) as tradeYield,
+        ic.rate*100 as tradeYield,
         ic.term as termDays,
         ic.fprice_amt as tradeAmt,
         ic.quote_id as busiCode,
@@ -589,7 +589,7 @@
         left join sys_user_add sua on  sua.ibu_trader=ib.OU_TRADER_ID
         left join sys_user t3 on t3.user_id=sua.user_id
 
-        where  ib.trade_status='07'
+        where  rownum=1 and ib.trade_status='07'
         <if test="quoteId != null  and quoteId!=''">
             AND ib.quote_id= #{quoteId,jdbcType=VARCHAR}
         </if>
@@ -876,7 +876,10 @@
         decode(I.deliveryType,'0','03','5','02','4','01') as deliveryType,
         to_date(I.Settldate,'yyyy-MM-dd') as vsettleDate,
         to_date(I.Settldate2,'yyyy-MM-dd') as msettleDate,
-        nvl(ts.settdate,tr.dealdate) as settleDate
+        nvl(ts.settdate,tr.dealdate) as settleDate,
+        icpledge.pledgeFinprodId as pledgeFinprodIds,
+        icpledge.pledgeRatio as pledgeRatios,
+        icpledge.pledgeFaceValue as pledgeFaceValues
         from INTERF_CSTP_TRADE I
         INNER JOIN (SELECT EXECID ,MAX(UPDATETIME) UPDATETIME FROM  INTERF_CSTP_TRADE GROUP BY EXECID)	II ON  II.EXECID = I.EXECID AND II.UPDATETIME = I.UPDATETIME
         left join INTERF_OPICS_TRAD_REPO tr on tr.oritradeid = I.EXECID
@@ -884,8 +887,6 @@
         left join fin_product fp
         on ts.SECID=fp.finprod_market_id
         and fp.finprod_type='F01'
-      <!--  LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON I.OURINSTITUTIONCODE= mcci.PARTY_CUSTOMER_ID
-        LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID-->
         LEFT JOIN SYS_USER_ADD sua ON nvl(ts.TRAD,tr.BUYTRADER) =sua.IBU_TRADER
         LEFT JOIN SYS_USER su ON sua.USER_ID =su.USER_ID
         LEFT JOIN (
@@ -897,6 +898,18 @@
         ) QUOTE ON QUOTE.EXECID=I.EXECID
         left join stl_sec_acct_info stlinfo
         on nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id
+        left join (
+        select itr.tradeid as tradeid,
+        listagg(fprepo.finprod_id, ',') within group(order by fprepo.finprod_id) as pledgeFinprodId,
+        listagg(to_char(itr.CONVRATE,'FM99990.999999'), ',') within group(order by fprepo.finprod_id) as pledgeRatio,
+        listagg(itr.FACETOTALAMT, ',') within group(order by fprepo.finprod_id) as pledgeFaceValue
+        from INTERF_TRAD_REPOASST itr
+        inner join fin_product fprepo
+        on itr.SECID=fprepo.finprod_market_id
+        and fprepo.finprod_type='F01'
+        group by itr.tradeid
+        )icpledge
+        on  tr.oritradeid=icpledge.tradeid
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_customer_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON I.Counterinstitutioncode= mccic.party_customer_id
         where I.BUSINESSTYPE in ('BOND','REPO') and   nvl(ts.dealdate,tr.dealdate)= #{sysDate,jdbcType=DATE}
@@ -1609,8 +1622,8 @@
         stlinfo.sec_acct_name as secManageAcctIdName,
         decode(tr.settle_speed,'1','01','2','02','3','03') settleSpeed,
         tr.term as repoTerm,
-        I.Settldate as vsettleDate,
-        I.Settldate2 as msettleDate,
+        to_date(I.Settldate,'yyyy-MM-dd') as vsettleDate,
+        to_date(I.Settldate2,'yyyy-MM-dd') as msettleDate,
         I.Cashholdingdays as actRepoTerm,
         I.Price as tradeYield,
         I.Tradecashamt as tradeAmt,
@@ -1627,7 +1640,7 @@
         mccit.PARTY_ABBR as traderidName,
         su.real_name trader,
         I.Counterinstitutioncode as counterId,
-        mccic.PARTY_ABBR as traderidName,
+        mccic.PARTY_ABBR as counterIdName,
         I.COUNTERTRADERCHINESENAME as counterTrader,
         tr.dealtext as remark
         from INTERF_CSTP_TRADE I
@@ -1758,63 +1771,75 @@
             and reg.totle_trade_id=#{totleTradeId,jdbcType=VARCHAR}
         </if>
         <if test="finprodType2 != null and finprodType2 != ''">
-            and reg.finprod_type2 = #{finprodType2}
+            and reg.finprod_type2 = #{finprodType2,jdbcType=VARCHAR}
         </if>
         <if test="tradeDate != null and tradeDate != ''">
-            and reg.trade_date = #{tradeDate}
+            and to_char(reg.trade_date,'yyyy-MM-dd') = #{tradeDate,jdbcType=VARCHAR}
         </if>
         <if test="finprodMarketId != null and finprodMarketId != ''">
-            and fp.finprod_market_id = #{finprodMarketId}
+            and fp.finprod_market_id = #{finprodMarketId,jdbcType=VARCHAR}
         </if>
         <if test="ps != null and ps != ''">
-            and reg.ps = #{ps}
+            and reg.ps = #{ps,jdbcType=VARCHAR}
         </if>
         <if test="settleSpeed != null and settleSpeed != ''">
-            and reg.settle_date = #{settleSpeed}
+            and  decode(reg.settle_speed,0,'01',1,'02',2,'03') = #{settleSpeed,jdbcType=VARCHAR}
         </if>
         <if test="secManageAcctId != null and secManageAcctId != ''">
-            and reg.sec_manage_acct_id = #{secManageAcctId}
+            and reg.sec_manage_acct_id = #{secManageAcctId,jdbcType=VARCHAR}
         </if>
         <if test="tradeYield != null and tradeYield != ''">
-            and (to_char(reg.yield,'FM990.9999')=#{tradeYield}
-            or to_char(reg.yield)=#{tradeYield})
+            and (to_char(reg.yield,'FM990.999999')=#{tradeYield,jdbcType=VARCHAR}
+            or to_char(reg.yield)=#{tradeYield,jdbcType=VARCHAR})
         </if>
         <if test="faceValue != null and faceValue != ''">
-            and (to_char(reg.face_value,'FM999999999999999999990.999999')=#{faceValue}
-            or to_char(reg.face_value)=#{faceValue})
+            and (to_char(reg.face_value,'FM999999999999999999990.999999')=#{faceValue,jdbcType=VARCHAR}
+            or to_char(reg.face_value)=#{faceValue,jdbcType=VARCHAR})
         </if>
         <if test="settleDate != null and settleDate != ''">
-            and reg.settle_date = #{settleDate}
+            and to_char(reg.settle_date,'yyyy-MM-dd') = #{settleDate,jdbcType=VARCHAR}
         </if>
         <if test="deliveryType != null and deliveryType != ''">
-            and reg.delivery_type = #{deliveryType}
+            and reg.delivery_type = #{deliveryType,jdbcType=VARCHAR}
         </if>
     </select>
+    <!-- 查询所有登记或报价回购的质押券信息 -->
+    <select id="findAllRegAndIbuPledgesList"
+            resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegInfoListResponse">
+        select
+        ic.pledge_finprod_id as pledgeFinprodId,
+        ic.pledge_ratio as pledgeRatio,
+        ic.pledge_number*100 as pledgeFaceValue
+        from ibu_quote_crep_pledge ic
+        where ic.quote_id=#{busiCode,jdbcType=VARCHAR}
+        order by  ic.pledge_finprod_id
+        union
+        select
+        reg.pledge_finprod_id as pledgeFinprodId,
+        reg.pledge_ratio as pledgeRatio,
+        sum(reg.pledge_number*100) as pledgeFaceValue
+        from REG_FIN_PLEDGE reg
+        inner join reg_fin_product_deal deal
+        on reg.trade_id=deal.trade_id
+        where deal.totle_trade_id=#{busiCode,jdbcType=VARCHAR}
+        group by reg.pledge_finprod_id,reg.pledge_ratio
+        order by  reg.pledge_finprod_id
 
-    <!-- <select id="selectIbuDtoByPrimaryKey" parameterType="String"  resultType="com.joyintech.service.bankuplink.common.dto.TrdConfirmRegAndIbuInfoDto">
-         select
-         ib.quote_date as tradeDate,
-         ib.finprod_id as finprodId,
-         fp.finprod_market_id as finprodMarketId,
-         ib.ps as ps,
-         decode(ib.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
-         ib.sec_manage_acct_id as secManageAcctId,
-         ibd.yield as tradeYield,
-         nvl(ib.share_amt,0)*100 as faceValue,
-         ib.settle_date as settleDate,
-         ib.delivery_type as deliveryType,
-         ib.quote_id as totleTradeId
-         from ibu_quote_bond ib
-         left join (
-         select I.*
-         from ibu_quote_bond_det I
-         INNER JOIN (SELECT quote_id ,MAX(update_time) UPDATETIME FROM  ibu_quote_bond_det GROUP BY quote_id)	II ON  I.quote_id = II.quote_id AND II.UPDATETIME = I.Update_Time
-         )ibd
-         on  ib.quote_id=ibd.quote_id
-         left join fin_product fp
-         on ib.finprod_id=fp.finprod_id
-         where  ib.quote_id =#{quoteId,jdbcType=VARCHAR}
-     </select>-->
+    </select>
+    <!-- 查询所有下行的质押券信息 -->
+    <select id="findAllCstpPledgesList"
+            resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmCstpInfoListResponse">
+        select
+        fprepo.finprod_id as pledgeFinprodId,
+        itr.CONVRATE as pledgeRatio,
+        itr.FACETOTALAMT as pledgeFaceValue
+        from INTERF_TRAD_REPOASST itr
+        inner join fin_product fprepo
+        on itr.SECID=fprepo.finprod_market_id
+        and fprepo.finprod_type='F01'
+        where itr.tradeid=#{execid,jdbcType=VARCHAR}
+        order by fprepo.finprod_id
+    </select>
 
 </mapper>
 
