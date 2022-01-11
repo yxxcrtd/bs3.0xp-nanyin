@@ -795,6 +795,7 @@
 		<result column="I_Q_C_DEAL_FEE_AMT" property="dealFeeAmt" jdbcType="DECIMAL" />
 		<result column="I_Q_C_SETT_FEE_AMT" property="settFeeAmt" jdbcType="DECIMAL" />
 		<result column="I_Q_C_DIP_TYPE" property="dipType" jdbcType="VARCHAR" />
+		<result column="I_Q_C_ACT_DAYS" property="actDays" jdbcType="VARCHAR" />
     </resultMap>
     <resultMap id="IqcpResultMap" type="com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteCrepPledge" >
         <id column="IQCP_QUOTE_ID" property="quoteId" jdbcType="VARCHAR" />
@@ -869,7 +870,8 @@
         a.SQ_TOTAL_AMT                    I_Q_C_SQ_TOTAL_AMT,
 	    a.DEAL_FEE_AMT                    I_Q_C_DEAL_FEE_AMT,
 	    a.SETT_FEE_AMT                    I_Q_C_SETT_FEE_AMT,
-	    a.DIP_TYPE                        I_Q_C_DIP_TYPE
+	    a.DIP_TYPE                        I_Q_C_DIP_TYPE,
+	    a.ACT_DAYS                        I_Q_C_ACT_DAYS
     </sql>
     <sql id="Iqcp_Column_List" >
         QUOTE_ID I_Q_C_P_QUOTE_ID, BRANCH I_Q_C_P_BRANCH, PLEDGE_FINPROD_ID I_Q_C_P_PLEDGE_FINPROD_ID, VERSION I_Q_C_P_VERSION, 
@@ -1295,7 +1297,7 @@
 		PORTFOLIO_ID, SHARE_AMT, FPRICE_AMT,
 		REMARK, CREATE_USER, CREATE_TIME,
 		CREATE_DEPT, UPDATE_USER, UPDATE_TIME,CB_FPRICE_AMT,SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT, CPRICE_AMT, INT_AMT
-		,INV_AIM,OUR_SHARE_AMT,LENDIN_SHARE_AMT
+		,INV_AIM,OUR_SHARE_AMT,LENDIN_SHARE_AMT,PRICE_MODEL
 		)
 		<foreach close=")" collection="inputList" index="index" item="dto" open="(" separator=" union all ">
 			select
@@ -1305,7 +1307,7 @@
 			#{dto.createDept,jdbcType=VARCHAR}, #{dto.updateUser,jdbcType=VARCHAR}, #{dto.updateTime,jdbcType=TIMESTAMP}
 			, #{dto.cbFpriceAmt,jdbcType=DECIMAL}, #{dto.scFpriceAmt,jdbcType=DECIMAL},#{dto.dealFeeAmt,jdbcType=DECIMAL},
 			#{dto.settFeeAmt,jdbcType=DECIMAL}, #{dto.cpriceAmt,jdbcType=DECIMAL}, #{dto.intAmt,jdbcType=DECIMAL}
-			,#{dto.invAim,jdbcType=VARCHAR}, #{dto.ourShareAmt,jdbcType=DECIMAL},#{dto.lendinShareAmt,jdbcType=DECIMAL}
+			,#{dto.invAim,jdbcType=VARCHAR}, #{dto.ourShareAmt,jdbcType=DECIMAL},#{dto.lendinShareAmt,jdbcType=DECIMAL},#{dto.priceModel,jdbcType=VARCHAR}
 			from dual
 		</foreach>
 	</insert>

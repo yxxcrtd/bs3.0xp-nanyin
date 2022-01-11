@@ -686,9 +686,10 @@ public class CfetsInterfReceiveService {
                     mapFpriceAmt.put("cbfpriceAmt",null!=ibuQuoteCrepDto.getCbFpriceAmt()?ibuQuoteCrepDto.getCbFpriceAmt():BigDecimal.ZERO);
                     mapFpriceAmt.put("scfpriceAmt",null!=ibuQuoteCrepDto.getScFpriceAmt()?ibuQuoteCrepDto.getScFpriceAmt():BigDecimal.ZERO);
                 }else{
-                    BigDecimal  fpriceAmtTotalBW = null!=ibuQuoteCrepDto.getFpriceAmt()?ibuQuoteCrepDto.getFpriceAmt():BigDecimal.ZERO;
+                    BigDecimal  fpriceAmtTotalBW = null!=ibuQuoteCrepDto.getmTradeAmt()?ibuQuoteCrepDto.getmTradeAmt():BigDecimal.ZERO;
+                    BigDecimal  shareAmtTotalBW = null!=ibuQuoteCrepDto.getShareCtAmt()?ibuQuoteCrepDto.getShareCtAmt():BigDecimal.ZERO;
                     mapFpriceAmt.put("fpriceAmt",fpriceAmtTotalBW);
-                    mapFpriceAmt.put("shareAmt",fpriceAmtTotalBW);
+                    mapFpriceAmt.put("shareAmt",shareAmtTotalBW);
                 }
                 ptlAllocations = cstpCommonService.组合分配拆分(ptlAllocations,mapFpriceAmt);
                 //尾差处理  尾差放在指令的交易金额最大的记录
@@ -698,10 +699,15 @@ public class CfetsInterfReceiveService {
                     ibuQuoteEtrReDto.setVersion(ibuQuoteCrepDto.getVersion());// 版本号
                     ibuQuoteEtrReDto.setEntrustId(item.getEntrustId());
                     ibuQuoteEtrReDto.setPortfolioId(item.getPortfolioId());
-                    ibuQuoteEtrReDto.setShareAmt(item.getFpriceAmt());
+                    ibuQuoteEtrReDto.setShareAmt(item.getShareAmt());
                     ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
                     ibuQuoteEtrReDto.setCbFpriceAmt(item.getCbFpriceAmt());
                     ibuQuoteEtrReDto.setScFpriceAmt(item.getScFpriceAmt());
+                    ibuQuoteEtrReDto.setCpriceAmt(item.getcPriceAmt());
+                    ibuQuoteEtrReDto.setDealFeeAmt(item.getDealFeeAmt());
+                    ibuQuoteEtrReDto.setSettFeeAmt(item.getSettFeeAmt());
+                    ibuQuoteEtrReDto.setPriceModel(item.getPriceModel());
+                    ibuQuoteEtrReDto.setIntAmt(item.getIntAmt());
                     ibuQuoteEtrRes.add(ibuQuoteEtrReDto);
                 }
                 CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = new CfetsRepoDealQuotedPrice001Dto();

@@ -972,7 +972,10 @@
             DEAL_FEE_AMT,
             SETT_FEE_AMT,
             OUR_SHARE_AMT ,
-            LENDIN_SHARE_AMT
+            LENDIN_SHARE_AMT,
+            CPRICE_AMT,
+            INT_AMT,
+            PRICE_MODEL
         FROM
         <choose>
             <when test="workflowId !=null and workflowId != ''">

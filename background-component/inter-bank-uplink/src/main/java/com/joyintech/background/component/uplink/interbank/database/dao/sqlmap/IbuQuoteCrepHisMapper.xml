@@ -70,7 +70,8 @@
         MY_ACCT_NO MY_ACCT_NO, SEC_MANAGE_ACCT_ID SEC_MANAGE_ACCT_ID, EXECID EXECID, B_VERSION B_VERSION, 
         REMARK REMARK, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT, 
         UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, BRANCH_ID BRANCH_ID, TERM_TYPE TERM_TYPE, 
-        TRANSACTIME TRANSACTIME, ZZ_TOTAL_AMT ZZ_TOTAL_AMT, SQ_TOTAL_AMT SQ_TOTAL_AMT
+        TRANSACTIME TRANSACTIME, ZZ_TOTAL_AMT ZZ_TOTAL_AMT, SQ_TOTAL_AMT SQ_TOTAL_AMT,
+        DEAL_FEE_AMT DEAL_FEE_AMT,SETT_FEE_AMT SETT_FEE_AMT,DIP_TYPE DIP_TYPE,ACT_DAYS ACT_DAYS
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -112,7 +113,8 @@
             REMARK, CREATE_USER, CREATE_TIME, 
             CREATE_DEPT, UPDATE_USER, UPDATE_TIME, 
             BRANCH_ID, TERM_TYPE, TRANSACTIME, 
-            ZZ_TOTAL_AMT, SQ_TOTAL_AMT)
+            ZZ_TOTAL_AMT, SQ_TOTAL_AMT,
+            DEAL_FEE_AMT,SETT_FEE_AMT,DIP_TYPE,ACT_DAYS)
         values (#{quoteId,jdbcType=VARCHAR}, #{version,jdbcType=DECIMAL}, #{quoteType,jdbcType=VARCHAR}, 
             #{pQuoteId,jdbcType=VARCHAR}, #{exeType,jdbcType=VARCHAR}, #{cfetsQuoteId,jdbcType=VARCHAR}, 
             #{quoteRoleType,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{entrustId,jdbcType=VARCHAR}, 
@@ -130,7 +132,8 @@
             #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
             #{createDept,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
             #{branchId,jdbcType=VARCHAR}, #{termType,jdbcType=VARCHAR}, #{transactime,jdbcType=VARCHAR}, 
-            #{zzTotalAmt,jdbcType=DECIMAL}, #{sqTotalAmt,jdbcType=DECIMAL})
+            #{zzTotalAmt,jdbcType=DECIMAL}, #{sqTotalAmt,jdbcType=DECIMAL},
+            #{dealFeeAmt,jdbcType=DECIMAL}, #{settFeeAmt,jdbcType=DECIMAL}, #{dipType,jdbcType=VARCHAR},#{actDays,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteCrepHis" >
         insert into IBU_QUOTE_CREP_HIS
@@ -294,6 +297,18 @@
             <if test="sqTotalAmt != null" >
                 SQ_TOTAL_AMT,
             </if>
+            <if test="dealFeeAmt != null" >
+                DEAL_FEE_AMT,
+            </if>
+            <if test="settFeeAmt != null" >
+                SETT_FEE_AMT,
+            </if>
+            <if test="dipType != null" >
+                DIP_TYPE,
+            </if>
+            <if test="actDays != null" >
+                ACT_DAYS,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="quoteId != null" >
@@ -455,6 +470,18 @@
             <if test="sqTotalAmt != null" >
                 #{sqTotalAmt,jdbcType=DECIMAL},
             </if>
+            <if test="dealFeeAmt != null" >
+                #{dealFeeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="settFeeAmt != null" >
+                #{settFeeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dipType != null" >
+                #{dipType,jdbcType=VARCHAR},
+            </if>
+            <if test="actDays != null" >
+                #{actDays,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertHisByBasicInfo" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteCrepHis" >
@@ -465,7 +492,7 @@
         FPRICE_AMT, CB_FPRICE_AMT, SC_FPRICE_AMT, M_INT_AMT, M_TRADE_AMT, BASIS, TRADE_STATUS, 
         SEND_STATUS, EFF_TIME, OU_PARTY_ID, OU_TRADER_ID, CP_PARTY_ID, CP_TRADER_ID, MY_ACCT_NO, 
         SEC_MANAGE_ACCT_ID, EXECID, B_VERSION, REMARK, CREATE_USER, CREATE_TIME, CREATE_DEPT, 
-        UPDATE_USER, UPDATE_TIME, BRANCH_ID, TERM_TYPE, TRANSACTIME, ZZ_TOTAL_AMT, SQ_TOTAL_AMT
+        UPDATE_USER, UPDATE_TIME, BRANCH_ID, TERM_TYPE, TRANSACTIME, ZZ_TOTAL_AMT, SQ_TOTAL_AMT,DEAL_FEE_AMT,SETT_FEE_AMT,DIP_TYPE,ACT_DAYS
         )
         select QUOTE_ID, VERSION, QUOTE_TYPE, P_QUOTE_ID, EXE_TYPE, 
             CFETS_QUOTE_ID, QUOTE_ROLE_TYPE, PORTFOLIO_ID, ENTRUST_ID, QUOTE_DATE, V_SETTLE_DATE, 
@@ -475,7 +502,7 @@
             SEND_STATUS, EFF_TIME, OU_PARTY_ID, OU_TRADER_ID, CP_PARTY_ID, CP_TRADER_ID, MY_ACCT_NO, 
             SEC_MANAGE_ACCT_ID, EXECID, B_VERSION, REMARK, CREATE_USER, CREATE_TIME, CREATE_DEPT, 
             #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, BRANCH_ID, TERM_TYPE, TRANSACTIME, ZZ_TOTAL_AMT, SQ_TOTAL_AMT
-            
+            ,DEAL_FEE_AMT,SETT_FEE_AMT,DIP_TYPE,ACT_DAYS
              from IBU_QUOTE_CREP
              where 1 = 1 and QUOTE_ID = #{quoteId,jdbcType=VARCHAR} and VERSION = #{version,jdbcType=DECIMAL}
     </insert>
@@ -626,6 +653,18 @@
             <if test="sqTotalAmt != null" >
                 SQ_TOTAL_AMT = #{sqTotalAmt,jdbcType=DECIMAL},
             </if>
+            <if test="dealFeeAmt != null" >
+                DEAL_FEE_AMT = #{dealFeeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="settFeeAmt != null" >
+                SETT_FEE_AMT = #{settFeeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dipType != null" >
+                DIP_TYPE = #{dipType,jdbcType=VARCHAR},
+            </if>
+            <if test="actDays != null" >
+                ACT_DAYS = #{actDays,jdbcType=DECIMAL},
+            </if>
         </set>
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
           and VERSION = #{version,jdbcType=DECIMAL}
@@ -679,7 +718,11 @@
             TERM_TYPE = #{termType,jdbcType=VARCHAR},
             TRANSACTIME = #{transactime,jdbcType=VARCHAR},
             ZZ_TOTAL_AMT = #{zzTotalAmt,jdbcType=DECIMAL},
-            SQ_TOTAL_AMT = #{sqTotalAmt,jdbcType=DECIMAL}
+            SQ_TOTAL_AMT = #{sqTotalAmt,jdbcType=DECIMAL},
+            DEAL_FEE_AMT = #{dealFeeAmt,jdbcType=DECIMAL},
+            SETT_FEE_AMT = #{settFeeAmt,jdbcType=DECIMAL},
+            DIP_TYPE = #{dipType,jdbcType=VARCHAR},
+            ACT_DAYS = #{actDays,jdbcType=DECIMAL}
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
           and VERSION = #{version,jdbcType=DECIMAL}
     </update>

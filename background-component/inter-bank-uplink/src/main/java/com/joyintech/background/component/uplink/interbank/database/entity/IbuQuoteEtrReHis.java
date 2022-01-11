@@ -86,6 +86,11 @@ public class IbuQuoteEtrReHis extends IbuQuoteEtrReHisKey {
     private BigDecimal lendinShareAmt;
 
     /**
+     * 价格模式
+     */
+    private String priceModel;
+
+    /**
      * 取得 组合代码
      * @return 组合代码
      */
@@ -307,5 +312,13 @@ public class IbuQuoteEtrReHis extends IbuQuoteEtrReHisKey {
      */
     public void setLendinShareAmt(BigDecimal lendinShareAmt) {
         this.lendinShareAmt = lendinShareAmt;
+    }
+
+    public String getPriceModel() {
+        return priceModel;
+    }
+
+    public void setPriceModel(String priceModel) {
+        this.priceModel = priceModel;
     }
 }
