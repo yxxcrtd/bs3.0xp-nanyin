@@ -9,7 +9,7 @@
 		<result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP"/>
 		<result column="CASHMDATE" property="cashmdate" jdbcType="TIMESTAMP"/>
 		<result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR"/>
-		<result column="CHANGE_TYPE" property="changType" jdbcType="VARCHAR"/>
+		<result column="CHANGE_TYPE" property="changeType" jdbcType="VARCHAR"/>
 		<result column="PROD_YIELD" property="prodYield" jdbcType="DECIMAL"/>
 		<result column="PROD_BENCHMARK_RATE" property="prodBenchmarkRate" jdbcType="DECIMAL"/>
 		<result column="UNIT_VALUE_TOTAL" property="unitValueTotal" jdbcType="DECIMAL"/>
@@ -47,7 +47,7 @@
 	  rul.EFF_DATE AS changeDate,
 	  null as cashmdate,
 	  info.PROFIT_TYPE as profitType,
-	  '01' changType,
+	  '01' changeType,
 	  rul.YIELD AS prodYield,
 	  null as prodBenchmarkRate,
 	  null as unitValueTotal,
@@ -79,7 +79,7 @@
 	  val.VAL_DATE as changeDate,
 	  null as cashmdate,
 	  info.PROFIT_TYPE as profitType,
-	  '02' changType,
+	  '02' changeType,
 	  null AS prodYield,
 	  null as prodBenchmarkRate,
 	  val.TOTAL_NET_VALUE as unitValueTotal,
@@ -114,7 +114,7 @@
 	  rul.EFF_DATE AS changeDate,
 	  plan.E_ACCR_DATE as cashmdate,
 	  info.PROFIT_TYPE as profitType,
-	  '03' changType,
+	  '03' changeType,
 	  null AS prodYield,
 	  rul.rate as prodBenchmarkRate,
 	  null as unitValueTotal,
@@ -160,7 +160,7 @@
 	<foreach collection="list" item="dto" separator="union all">
 		select #{dto.seqno,jdbcType=CHAR},
 		#{dto.prodId,jdbcType=VARCHAR},
-		#{dto.changeDate,jdbcType=TIMESTAMP}, #{dto.profitType,jdbcType=VARCHAR},#{dto.changType,jdbcType=VARCHAR},
+		#{dto.changeDate,jdbcType=TIMESTAMP}, #{dto.profitType,jdbcType=VARCHAR},#{dto.changeType,jdbcType=VARCHAR},
 		#{dto.prodYield,jdbcType=DECIMAL},#{dto.prodBenchmarkRate,jdbcType=DECIMAL},#{dto.unitValueTotal,jdbcType=DECIMAL},
 		#{dto.unitValue,jdbcType=DECIMAL},#{dto.sevenDayRate,jdbcType=DECIMAL},
 		#{dto.orgCode,jdbcType=VARCHAR}, #{dto.deptCode,jdbcType=VARCHAR},
@@ -184,7 +184,7 @@
 	values(
 		#{seqno,jdbcType=CHAR}, #{fprodId,jdbcType=VARCHAR},
 		#{prodId,jdbcType=VARCHAR},
-		#{changeDate,jdbcType=TIMESTAMP}, #{changType,jdbcType=VARCHAR}, #{prodValue,jdbcType=DECIMAL},
+		#{changeDate,jdbcType=TIMESTAMP}, #{changeType,jdbcType=VARCHAR}, #{prodValue,jdbcType=DECIMAL},
 		#{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR},
 		#{status,jdbcType=VARCHAR},
 		#{revDate,jdbcType=TIMESTAMP}, #{dataSource,jdbcType=VARCHAR},
@@ -246,7 +246,7 @@
 		#{item.changeDate,jdbcType=TIMESTAMP} CHANGE_DATE,
 		#{item.cashmdate,jdbcType=TIMESTAMP} CASHMDATE,
 		#{item.profitType,jdbcType=VARCHAR} PROFIT_TYPE,
-		#{item.changType,jdbcType=VARCHAR} CHANGE_TYPE,
+		#{item.changeType,jdbcType=VARCHAR} CHANGE_TYPE,
 		#{item.prodYield,jdbcType=DECIMAL} PROD_YIELD,
 		#{item.prodBenchmarkRate,jdbcType=DECIMAL} PROD_BENCHMARK_RATE,
 		#{item.unitValueTotal,jdbcType=DECIMAL} UNIT_VALUE_TOTAL,
