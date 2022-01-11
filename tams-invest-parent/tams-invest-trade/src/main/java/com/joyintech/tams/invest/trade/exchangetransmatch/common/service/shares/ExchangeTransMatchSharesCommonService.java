@@ -360,6 +360,11 @@ public class ExchangeTransMatchSharesCommonService extends BaseService {
     }
 
     public List<StlPayOrdersDto> generateStlPayOrdersList(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdProductDeal trdProductDeal) {
+        // GZYHTZJY-1016:股票的申购确认只处理持仓,不处理现金 modify by fuyongsheng 20220104 start
+        if(StringUtil.equals(dealDto.getPs(), DictCodeList.交易方向_申购确认.getValue())){
+            return new ArrayList<>();
+        }
+        // GZYHTZJY-1016:股票的申购确认只处理持仓,不处理现金 modify by fuyongsheng 20220104 end
         List<StlPayOrdersDto> stlPayOrdersList = new ArrayList<>();
         StlPayOrdersDto stlPayOsrdersDto = new StlPayOrdersDto();
         // 指令编号

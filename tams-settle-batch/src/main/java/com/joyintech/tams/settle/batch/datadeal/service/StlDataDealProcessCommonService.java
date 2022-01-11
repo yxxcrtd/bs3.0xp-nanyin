@@ -13,6 +13,8 @@ import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -57,6 +59,16 @@ public class StlDataDealProcessCommonService {
 
 	@Autowired(required = false)
 	private JoyinRestTemplate restTemplate;
+
+	@Autowired(required = false)
+	@Qualifier("simpleRestTemplate")
+	protected JoyinRestTemplate simpleRestTemplate;
+
+	/**
+	 * 是否单体服务
+	 */
+	@Value("${application.micorservice.contextPath.single:false}")
+	private boolean isSingle;
 
 	// 无需计算佣金场景
 	public static final List<String> NO_NEED_CALCULATE_COMMISSION_LIST = Arrays.asList(
@@ -111,7 +123,7 @@ public class StlDataDealProcessCommonService {
 		}
 		// 综合金融服务平台交易(经深交所)
 		if (StringUtil.equals(StlDataDealProcessConstant.SJSMX_JYFS_02, jsfs)) {
-			return DictCodeList.交易平台_大宗交易平台.getValue();
+			return DictCodeList.交易平台_综合协议交易平台.getValue();
 		}
 		return null;
 	}
@@ -131,7 +143,20 @@ public class StlDataDealProcessCommonService {
 	public Date getNextWorkDay(Date nowday, String calendarId) {
 		return stlDownDataDealMapper.getNextWorkDay(nowday, calendarId);
 	}
-	
+
+	/**
+	 *
+	 * 是否节假日
+	 * @param nowday 查询日期
+	 * @param calendarId 交易日历
+	 * @return 是否节假日（0：工作日；其他：节假日）
+	 * @see
+	 * @since 1.0
+	 */
+	public String getIsHoliday(Date nowday, String calendarId){
+		return stlDownDataDealMapper.getIsHoliday(nowday, calendarId);
+	}
+
 	// 获取上个工作日
 	public Date getBeforeWorkDay(Date nowday, String calendarId) {
 		return stlDownDataDealMapper.getBeforeWorkDay(nowday, calendarId);
@@ -168,6 +193,15 @@ public class StlDataDealProcessCommonService {
 				buffer.append(stlDownDataDealWriteBaseDto.getSettleTransData().getBranch() + "//");
 				buffer.append(stlDownDataDealWriteBaseDto.getSettleTransData().getFinprodType2() + "//");
 				buffer.append(DateUtil.format(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeDate(), DateUtil.DEFAULT_OTHER_FORMAT));
+                // add by etliu 20220104 start
+                // GZYHTZJY-868: 日终清算，协议回购的佣金没有计算出来
+                buffer.append("//");
+                if (stlDownDataDealWriteBaseDto.getSettleTransDataAdd() != null
+                        && StringUtil.isNotBlank(stlDownDataDealWriteBaseDto.getSettleTransDataAdd().getRepoType())) {
+                    buffer.append(stlDownDataDealWriteBaseDto.getSettleTransDataAdd().getRepoType());
+                }
+                // add by etliu 20220104 end
+
 				if (map.containsKey(buffer.toString())) {
 					map.get(buffer.toString()).add(stlDownDataDealWriteBaseDto);
 				}
@@ -206,7 +240,15 @@ public class StlDataDealProcessCommonService {
 				tradeFeatureInformation.setFinprodId(keyStrArray[6]);
 				tradeFeatureInformation.setBranch(null!=keyStrArray[7]&&!StringUtil.equals(keyStrArray[7],"null")?new Long(keyStrArray[7]):0L);
 				tradeFeatureInformation.setFinprodType2(keyStrArray[8]);
-				tradeFeatureInformation.setDealDate(DateUtil.parse(keyStrArray[9]));
+				if(keyStrArray.length > 9){
+					tradeFeatureInformation.setDealDate(DateUtil.parse(keyStrArray[9]));
+				}
+				// add by etliu 20220104 start
+				// GZYHTZJY-868: 日终清算，协议回购的佣金没有计算出来
+				if(keyStrArray.length > 10){
+					tradeFeatureInformation.setRepoType(keyStrArray[10]);
+				}
+				// add by etliu 20220104 end
 				List<TrdDetailDto> detailDtos = new ArrayList<TrdDetailDto>();
 				for (StlDownDataDealWriteBaseDto stlDownDataDealWriteBaseDto : list) {
 					// 无需计算佣金场景跳过
@@ -443,7 +485,13 @@ public class StlDataDealProcessCommonService {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("finprodId", finprodId);
 		parameters.put("settleDate", DateUtil.format(settleDate));
-		return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getUnitPrice", parameters,
-				BigDecimal.class);
+//		return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getUnitPrice", parameters,
+//				BigDecimal.class);
+		if(isSingle) {
+			return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME  + "/TrdBondInvestTrade/getUnitPrice", parameters, BigDecimal.class);
+		}
+		else {
+			return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME  + "/TrdBondInvestTrade/getUnitPrice", parameters, BigDecimal.class);
+		}
 	}
 }

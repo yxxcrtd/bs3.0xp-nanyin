@@ -305,7 +305,7 @@ public class AutoPeriodRepoCommonService extends BaseService {
             } else {
                 trdProductDeal.setMdate(DateUtil.parse(entity.getmDate()));
             }
-            trdProductDeal.setVdate(DateTime.parse(entity.getvDate()).toDate());
+            trdProductDeal.setVdate(entity.getvDate() ==null ? null : DateTime.parse(entity.getvDate()).toDate());
             trdProductDeal.setShareAmt(entity.getTheoryPrin());
 //        修改为交易本金 20191127 start
             trdProductDeal.setPrinAmt(entity.getTheoryPrin());

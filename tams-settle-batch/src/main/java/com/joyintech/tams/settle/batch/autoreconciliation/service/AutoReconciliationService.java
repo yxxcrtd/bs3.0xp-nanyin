@@ -64,6 +64,9 @@ public class AutoReconciliationService {
         param.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
         param.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
         param.put("PS_T94", DictCodeListExt3.交易方向_中途换券.getValue());
+        // GZYHTZJY-1015:解除质押不需要对账 modify by fuyongsheng 20211231 start
+        param.put("PS_T93", DictCodeListExt3.交易方向_解除质押.getValue());
+        // GZYHTZJY-1015:解除质押不需要对账 modify by fuyongsheng 20211231 end
         param.put("PS_T04", DictCodeList.交易方向_申购.getValue());
         param.put("PS_T05", DictCodeList.交易方向_申购确认.getValue());
         param.put("PS_T11", DictCodeList.交易方向_现金分红.getValue());
@@ -73,11 +76,15 @@ public class AutoReconciliationService {
         param.put("PS_T09", DictCodeList.交易方向_收息.getValue());
         // add by fuyongsheng 20211208 没有对账单的自动批处理(step2)功能开发 end
         param.put("prodType2_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        param.put("prodType2_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+        param.put("prodType2_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
         param.put("prodType2_F07", DictCodeList.平安资产类型_质押式回购.getValue());
         param.put("prodType2_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         param.put("prodType2_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
         param.put("TARGET_BACK_TYPE_H01", DictCodeList.回购类型_质押式协议回购.getValue());
         param.put("BUSI_SCENE_CALSS_0902RS03", DictCodeListStl.业务场景分类明细_债券协议正回购_到期.getValue());
+        param.put("BUSI_SCENE_CALSS_0902RB01", DictCodeListStl.业务场景分类明细_债券协议逆回购_首期_买入.getValue());
+        param.put("BUSI_SCENE_CALSS_0902RB04", DictCodeListStl.业务场景分类明细_债券协议逆回购_到期续作.getValue());
         param.put("INTER_TYPE_1", DictCodeListExt3.柜台接口类型_恒生.getValue());
         param.put("INTER_TYPE_2", DictCodeListExt3.柜台接口类型_金证w版.getValue());
         param.put("INTER_TYPE_4", DictCodeListExt3.柜台接口类型_金证u版.getValue());

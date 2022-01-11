@@ -1,6 +1,7 @@
 package com.joyintech.tams.settle.batch.datagather.processor;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -206,11 +207,16 @@ public class StlDataGatherShares2Processor extends StlDataGatherProcessor {
 					}else {
 						dealDto = setTrdProductDealSgDto(settleTransDataDto,l,shareAmtSum,false);
 					}
+					PtlTrade ptlTrade = setPtlTrade(dealDto);
+					ptlTrade.setSettleDate(dealDto.getSettleDate());
+					investTradeWriteDto.getPtlTradeList().add(ptlTrade);
 					investTradeWriteDto.getProductDealList().add(dealDto);
 				}
 			}
 		}
-
+		// GZYHTZJY-1050:赋值sectype modify fuyongsheng 20220106 start
+		investTradeWriteDto.setSecType(getSecType());
+		// GZYHTZJY-1050:赋值sectype modify fuyongsheng 20220106 end
 		return investTradeWriteDto;
 	}
 
@@ -460,8 +466,8 @@ public class StlDataGatherShares2Processor extends StlDataGatherProcessor {
 
 	/**
 	 * 除权交易和交易（现金分红，送转深交所） 金融产品交易明细设置
-	 * @param trdProductDealDto 金融产品交易明细
-	 * @param settleTransDataDelDtoList 除权交易明细列表
+	 * @param totalTrdProductDealDto 金融产品交易明细
+	 * @param settleTransDataDto 除权交易明细列表
 	 */
 	private TrdProductDealDto setTrdProductDealDto(TotalTrdProductDealDto totalTrdProductDealDto,SettleTransDataDto settleTransDataDto,boolean isCq) {
 		//返回值
@@ -530,7 +536,6 @@ public class StlDataGatherShares2Processor extends StlDataGatherProcessor {
 	/**
 	 * 生成划款明细
 	 * @param deal
-	 * @param StlPayOrders
 	 * @return
 	 */
 	protected StlPayOrders generateStlPayOrders(TrdProductDealDto deal) {
@@ -566,8 +571,8 @@ public class StlDataGatherShares2Processor extends StlDataGatherProcessor {
 
 	/**
 	 * 申购确认交易 金融产品交易明细设置
-	 * @param trdProductDealDto 金融产品交易明细
-	 * @param settleTransDataDelDtoList 除权交易明细列表
+	 * @param settleTransDataDto 金融产品交易明细
+	 * @param list 除权交易明细列表
 	 */
 	private TrdProductDealDto setTrdProductDealSgDto(SettleTransDataDto settleTransDataDto,List<BigDecimal> list,BigDecimal shareAmtSum,boolean last) {
 		//返回值
@@ -598,31 +603,31 @@ public class StlDataGatherShares2Processor extends StlDataGatherProcessor {
 		trdProductDealDto.setParValue(settleTransDataDto.getParValue());
 		if(last){
 			//交易份额
-			trdProductDealDto.setShareAmt(settleTransDataDto.getShareAmt().subtract(list.get(0)));
+			trdProductDealDto.setShareAmt(null == settleTransDataDto.getShareAmt() ? BigDecimal.ZERO : settleTransDataDto.getShareAmt().subtract(list.get(0)));
 			//净价总额
-			trdProductDealDto.setCpriceAmt(settleTransDataDto.getCpriceAmt().subtract(list.get(1)));
+			trdProductDealDto.setCpriceAmt(null == settleTransDataDto.getCpriceAmt() ? BigDecimal.ZERO : settleTransDataDto.getCpriceAmt().subtract(list.get(1)));
 			//交易本金
-			trdProductDealDto.setPrinAmt(settleTransDataDto.getPrinAmt().subtract(list.get(2)));
+			trdProductDealDto.setPrinAmt(null == settleTransDataDto.getPrinAmt() ? BigDecimal.ZERO : settleTransDataDto.getPrinAmt().subtract(list.get(2)));
 			// 全价总额
-			trdProductDealDto.setFpriceAmt(settleTransDataDto.getFpriceAmt().subtract(list.get(3)));
+			trdProductDealDto.setFpriceAmt(null == settleTransDataDto.getFpriceAmt() ? BigDecimal.ZERO : settleTransDataDto.getFpriceAmt().subtract(list.get(3)));
 			//交易金额
-			trdProductDealDto.setTradeAmt(settleTransDataDto.getTradeAmt().subtract(list.get(4)));
+			trdProductDealDto.setTradeAmt(null == settleTransDataDto.getTradeAmt() ? BigDecimal.ZERO : settleTransDataDto.getTradeAmt().subtract(list.get(4)));
 		}else {
 			//交易份额
-			trdProductDealDto.setShareAmt(settleTransDataDto.getShareAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum));
-			list.get(0).add(trdProductDealDto.getShareAmt());
+			trdProductDealDto.setShareAmt(null == settleTransDataDto.getShareAmt() ? BigDecimal.ZERO : settleTransDataDto.getShareAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum, 4, RoundingMode.HALF_UP));
+			list.set(0,list.get(0).add(trdProductDealDto.getShareAmt()));
 			//净价总额
-			trdProductDealDto.setCpriceAmt(settleTransDataDto.getCpriceAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum));
-			list.get(1).add(trdProductDealDto.getCpriceAmt());
+			trdProductDealDto.setCpriceAmt(null == settleTransDataDto.getCpriceAmt() ? BigDecimal.ZERO : settleTransDataDto.getCpriceAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum, 4, RoundingMode.HALF_UP));
+			list.set(1, list.get(1).add(trdProductDealDto.getCpriceAmt()));
 			//交易本金
-			trdProductDealDto.setPrinAmt(settleTransDataDto.getPrinAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum));
-			list.get(2).add(trdProductDealDto.getPrinAmt());
+			trdProductDealDto.setPrinAmt(null == settleTransDataDto.getPrinAmt() ? BigDecimal.ZERO : settleTransDataDto.getPrinAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum, 4, RoundingMode.HALF_UP));
+			list.set(2, list.get(2).add(trdProductDealDto.getPrinAmt()));
 			// 全价总额
-			trdProductDealDto.setFpriceAmt(settleTransDataDto.getFpriceAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum));
-			list.get(3).add(trdProductDealDto.getFpriceAmt());
+			trdProductDealDto.setFpriceAmt(null == settleTransDataDto.getFpriceAmt() ? BigDecimal.ZERO : settleTransDataDto.getFpriceAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum, 4, RoundingMode.HALF_UP));
+			list.set(3, list.get(3).add(trdProductDealDto.getFpriceAmt()));
 			//交易金额
-			trdProductDealDto.setTradeAmt(settleTransDataDto.getTradeAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum));
-			list.get(4).add(trdProductDealDto.getTradeAmt());
+			trdProductDealDto.setTradeAmt(null == settleTransDataDto.getTradeAmt() ? BigDecimal.ZERO : settleTransDataDto.getTradeAmt().multiply(settleTransDataDto.getShareAmtSg()).divide(shareAmtSum, 4, RoundingMode.HALF_UP));
+			list.set(4, list.get(4).add(trdProductDealDto.getTradeAmt()));
 		}
 		// 交易方向
 		trdProductDealDto.setPs(settleTransDataDto.getPs());

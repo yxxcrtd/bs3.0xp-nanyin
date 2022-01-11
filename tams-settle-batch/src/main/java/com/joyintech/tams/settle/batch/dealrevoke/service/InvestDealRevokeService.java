@@ -79,7 +79,11 @@ public class InvestDealRevokeService {
         param.put("psList", Arrays.asList(/*DictCodeList.交易方向_买入.getValue()
                 ,*/DictCodeList.交易方向_卖出.getValue(),DictCodeList.交易方向_行权_回售.getValue(),/*DictCodeList.交易方向_申购确认.getValue()
                 ,DictCodeList.交易方向_申购.getValue(),*/DictCodeListExt3.交易方向_债转股.getValue(),DictCodeListExt3.交易方向_配债.getValue(),
-                DictCodeList.交易方向_上市流通.getValue()));
+                DictCodeList.交易方向_上市流通.getValue()
+                // ZGZGST-4219: 对债券存续期交易进行撤销 fuyongsheng add start
+                ,DictCodeList.交易方向_收息到账.getValue(),DictCodeList.交易方向_还本到账.getValue()
+                // ZGZGST-4219: 对债券存续期交易进行撤销 fuyongsheng add end
+        ));
         param.put("isBond", DictCodeList.是否_是.getValue());
         param.put("PS_01", DictCodeList.交易方向_买入.getValue());
         param.put("SHARES_TRADE_MARKET_01", DictCodeListExt1.交易市场_一级市场.getValue());
@@ -245,6 +249,21 @@ public class InvestDealRevokeService {
             }
         });
     }
+
+    public void updateEtrStatusByTrdId(List<String> tradeIdList, List<String> totalTradeIdList) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("ENTRUST_STATUS_03",DictCodeList.委托状态_已接收.getValue());
+        if (!StringUtil.isEmptyList(tradeIdList)){
+            param.put("trdIdList", tradeIdList);
+            investDealRevokeMapper.updateEtrStatusByTrdId(param);
+        }
+        if (!StringUtil.isEmptyList(totalTradeIdList)){
+            param.put("trdIdList", totalTradeIdList);
+            investDealRevokeMapper.updateEtrStatusByTrdId(param);
+        }
+
+
+    }
     
     /**
      * 删除日终交易占用的委托完成度信息
@@ -369,9 +388,9 @@ public class InvestDealRevokeService {
                       String totalkey = null;
                       String psvalue = null;
                       for (Map.Entry<String,String> i:item.entrySet()) {
-                         if ("TOTALKEY".equals(i.getKey())) {
+                         if ("TOTALKEY".equalsIgnoreCase(i.getKey())) {
                             totalkey = i.getValue();
-                         }else if ("PSVALUE".equals(i.getKey())) {
+                         }else if ("PSVALUE".equalsIgnoreCase(i.getKey())) {
                             psvalue = i.getValue();
                          }
                          if (totalkey != null) {
@@ -382,9 +401,9 @@ public class InvestDealRevokeService {
                        String tradekey = null;
                        String psvalue = null;
                        for (Map.Entry<String,String> i:item.entrySet()) {
-                         if ("TRADEKEY".equals(i.getKey())) {
+                         if ("TRADEKEY".equalsIgnoreCase(i.getKey())) {
                              tradekey = i.getValue();
-                         }else if ("PSVALUE".equals(i.getKey())) {
+                         }else if ("PSVALUE".equalsIgnoreCase(i.getKey())) {
                               psvalue = i.getValue();
                           }
                            if (tradekey != null) {

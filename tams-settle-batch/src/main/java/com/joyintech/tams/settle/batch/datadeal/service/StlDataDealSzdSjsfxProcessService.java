@@ -150,6 +150,14 @@ public class StlDataDealSzdSjsfxProcessService {
             settleTransData.setSettleFee(BigDecimal.ZERO);
             // 交易方向、业务场景明细分类
             setBondDeal(szdSjsfx, settleTransData);
+            // 清算速度:申购是T+2
+            if(DictCodeList.交易方向_申购.getValue().equals(settleTransData.getPs())){
+                settleTransData.setSettleSpeed(2L);
+            }
+            // GZYHTZJY-986:申购和申购确认,赋值竞价平台 fuyongsheng modify 20211230 start
+            // 交易平台
+            settleTransData.setTradePlat(DictCodeList.交易平台_竞价撮合平台.getValue());
+            // GZYHTZJY-986:申购和申购确认,赋值竞价平台 fuyongsheng modify 20211230 start
             return true;
         }));
     }
@@ -182,15 +190,26 @@ public class StlDataDealSzdSjsfxProcessService {
             settleTransData.setUnitCprice(abs(szdSjsfx.getFxzjje()));
             // 交易份额
             settleTransData.setShareAmt(abs(szdSjsfx.getFxqrgs()));
+            // GZYHTZJY-1017:净价总额未赋值,导致跑批报错 modify by fuyongsheng 20220105 start
+            // 净价总额
+            settleTransData.setCpriceAmt(settleTransData.getUnitCprice().multiply(settleTransData.getShareAmt()));
+            // GZYHTZJY-1017:净价总额未赋值,导致跑批报错 modify by fuyongsheng 20220105 end
             // 交易金额
 //            settleTransData.setTradeAmt(abs(szdSjsfx.getFxzjje()));
             //交易金额改为 单位净价 * 交易份额
             settleTransData.setTradeAmt(ArithmeticUtil.multiply(settleTransData.getUnitCprice(), settleTransData.getShareAmt()));
+            // GZYHTZJY-1016:全价总额为空,导致划款指令计算金额为0,导致现金流水表金额为0 modify by fuyongsheng 20220105 start
+            // 全价总额
+            settleTransData.setFpriceAmt(settleTransData.getTradeAmt());
+            // GZYHTZJY-1016:全价总额为空,导致划款指令计算金额为0,导致现金流水表金额为0 modify by fuyongsheng 20220105 end
             // 交易金额_原始
             settleTransData.setTradeAmtRaw(settleTransData.getTradeAmt());
             // 交易方向、业务场景明细分类
             setSharesDeal(szdSjsfx, settleTransData);
-            
+            // GZYHTZJY-986:申购和申购确认,赋值竞价平台 fuyongsheng modify 20211230 start
+            // 交易平台
+            settleTransData.setTradePlat(DictCodeList.交易平台_竞价撮合平台.getValue());
+            // GZYHTZJY-986:申购和申购确认,赋值竞价平台 fuyongsheng modify 20211230 start
             // add by zhangliang 20200902 汇总批处理算价格会用到全价总额
             if (StringUtil.equals(settleTransData.getPs(), DictCodeListExt2.交易方向_新股中签.getValue())){
             	settleTransData.setFpriceAmt(abs(szdSjsfx.getFxzjje()));

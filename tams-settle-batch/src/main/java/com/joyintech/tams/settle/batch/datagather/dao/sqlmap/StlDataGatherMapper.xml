@@ -4,6 +4,7 @@
 	<sql id="settleTransDataTotalSql">
 		std.SEQ_ID TRADE_ID,
 			/*std.CJBH CJBH,*/
+			std.F_CJBH,
 			std.DEAL_DATE DEAL_DATE,
 			std.SEC_TYPE SEC_TYPE,
 			std.APPLY_TRADE_ID APPLY_TRADE_ID,
@@ -980,12 +981,114 @@
 		WHERE rownum = 1
 	</select>
 
-    <select id="selectDzcjList" resultType="int">
-	   SELECT count(SEQ_NO)
-		 FROM STL_SEC_RECON_CONFIG
+	<select id="selectSettleTransDataTotalPledge" parameterType="java.lang.String" resultType="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge">
+		SELECT
+			TRADE_ID,
+		   	PLEDGE_FINPROD_ID,
+			DISPLACE_DIRECTION
+		FROM
+			SETTLE_TRANS_DATA_TOTAL_PLEDGE
+		WHERE
+			TRADE_ID = #{seqId,jdbcType=VARCHAR}
+	</select>
+
+	<!--modify by etliu 20211227 start-->
+	<!--债回售、可转债申购、新股申购、配债、配股对应指令信息查询-->
+	<select id="selectSpecialEtrEntrustData" resultType="com.joyintech.tams.settle.batch.datagather.dto.EtrEntrustDto">
+		SELECT
+		T1.ENTRUST_ID,
+		T1.FINPROD_ID,
+		T1.PS,
+		T1.ENTRUST_DATE,
+		T2.SEC_ACCT_ID,
+		T2.DEAL_CUR_ACCT,
+		T2.TRADE_ID,
+		T2.VDATE,
+		T1.TRADE_PLAT,
+		T1.ENTRUST_NUM ,
+		T1.ENTRUST_AMT
+		FROM
+		ETR_ENTRUST T1
+		LEFT JOIN ETR_ENTRUST_ADD T2 ON
+		T2.ENTRUST_ID = T1.ENTRUST_ID
+		<where>
+			T1.TRADE_MARKET in ('03', '04')
+			<if test="dataList != null and dataList.size() > 0">
+				AND T1.FINPROD_ID IN
+				<foreach collection="dataList" item="currData" open=" (" close=")" separator=",">
+					#{currData.finprodId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="finprodTypeList != null and finprodTypeList.size()>0">
+				AND T1.FINPROD_TYPE2  IN
+				<foreach item="item" index="index" collection="finprodTypeList" open="(" separator=","  close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="psList != null and psList.size()>0">
+				AND T1.PS  IN
+				<foreach item="item" index="index" collection="psList" open="(" separator=","  close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	<!--查询行权-回售计划-->
+	<select id="selectFinExercisePlanData" resultType="com.joyintech.tams.common.base.entity.FinExercisePlan">
+		SELECT
+			T1.VDATE, T1.MDATE, T1.FINPROD_ID
+		FROM
+			FIN_EXERCISE_PLAN T1
+		<where>
+			T1.EXERCISE_TYPE = '02'
+			<if test="dataList != null and dataList.size() > 0">
+				AND T1.FINPROD_ID IN
+				<foreach collection="dataList" item="currData" open=" (" close=")" separator=",">
+					#{currData.finprodId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			AND T1.MDATE &lt;= #{dealDate,jdbcType=DATE}
+		</where>
+		order by T1.FINPROD_ID, T1.VDATE desc
+	</select>
+	<!--查询配股、配债对应申报信息-->
+	<select id="selectFinProductOthCodeData" resultType="com.joyintech.tams.common.base.entity.FinProductOthCode">
+		SELECT
+			T1.FINPROD_ID, T1.OTH_TYPE, T1.DECLARED_START_DATE, T1.DECLARED_END_DATE
+		from
+			FIN_PRODUCT_OTH_CODE T1
+		<where>
+			T1.OTH_TYPE in ('05', '06')
+			<if test="dataList != null and dataList.size() > 0">
+				AND T1.FINPROD_ID IN
+				<foreach collection="dataList" item="currData" open=" (" close=")" separator=",">
+					#{currData.finprodId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			AND T1.DECLARED_END_DATE &lt;= #{dealDate,jdbcType=DATE}
+		</where>
+		order by T1.FINPROD_ID, T1.DECLARED_START_DATE desc
+	</select>
+	<!--modify by etliu 20211227 end-->
+
+	<select id="selectEtrPledges" resultType="com.joyintech.tams.common.base.entity.EtrPledge">
+		SELECT
+			ENTRUST_ID,
+			FINPROD_ID,
+			PLEDGE_NUMBER
+		FROM
+			ETR_PLEDGE
+		WHERE
+			ENTRUST_ID = #{entrustId, jdbcType=VARCHAR}
+			AND FINPROD_ID = #{finProdId, jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectDzcjList" resultType="int">
+		SELECT count(SEQ_NO)
+		FROM STL_SEC_RECON_CONFIG
 		<where>
 			<foreach collection="dzcjList" item="dzcj" open=" YWBS IN (" close=")" separator=",">
-			    #{dzcj,jdbcType=VARCHAR}
+				#{dzcj,jdbcType=VARCHAR}
 			</foreach>
 			<foreach collection="zybsList" item="zybs" open=" OR ZYBS IN (" close=")" separator=",">
 				#{zybs,jdbcType=VARCHAR}

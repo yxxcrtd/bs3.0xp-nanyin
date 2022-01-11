@@ -273,7 +273,7 @@
             }
             else {
                 $('#CfetsBondDealQuotedPriceMuti001_settleSpreed').attr('disabled', true);
-                $('#CfetsBondDealQuotedPriceMuti001_mySide').attr('disabled', true);
+                // $('#CfetsBondDealQuotedPriceMuti001_mySide').attr('disabled', true);
                 $('#CfetsBondDealQuotedPriceMuti001_settleDate').attr('disabled', true);
                 $('#CfetsBondDealQuotedPriceMuti001_ps').attr('disabled', true);
                 $('#CfetsBondDealQuotedPriceMuti001_finprodId').attr('disabled', true);
@@ -283,7 +283,7 @@
             if (!quotaPageModel || (quotaPageModel != 'dialogueResponse')) {
                 //$('#CfetsBondDealQuotedPriceMuti001_settleSpreed').val('01').trigger('change').attr('disabled', false);
                 $('#CfetsBondDealQuotedPriceMuti001_settleSpreed').trigger('change').attr('disabled', false);
-                $('#CfetsBondDealQuotedPriceMuti001_mySide').attr('disabled', false);
+                // $('#CfetsBondDealQuotedPriceMuti001_mySide').attr('disabled', false);
                 $('#CfetsBondDealQuotedPriceMuti001_settleDate').attr('disabled', false);
                 $('#CfetsBondDealQuotedPriceMuti001_ps').attr('disabled', false);
                 $('#CfetsBondDealQuotedPriceMuti001_finprodId').attr('disabled', false);
@@ -345,7 +345,7 @@
                 $('#CfetsBondDealQuotedPriceMuti001_portfolioName').attr('disabled', true);
             }
             $('#CfetsBondDealQuotedPriceMuti001_ps').attr('disabled', true);
-            $('#CfetsBondDealQuotedPriceMuti001_mySide').attr('disabled', true);
+            // $('#CfetsBondDealQuotedPriceMuti001_mySide').attr('disabled', true);
             $('#CfetsBondDealQuotedPriceMuti001_counterId').attr('disabled', true);
             $('#CfetsBondDealQuotedPriceMuti001_counterTrader').attr('disabled', true);
             $('#CfetsBondDealQuotedPriceMuti001_finprodName').attr('disabled', true);
@@ -374,7 +374,7 @@
             }
             $('#CfetsBondDealQuotedPriceMuti001_mySideTrader').attr('disabled', true);
             $('#CfetsBondDealQuotedPriceMuti001_ps').attr('disabled', true);
-            $('#CfetsBondDealQuotedPriceMuti001_mySide').attr('disabled', true);
+            // $('#CfetsBondDealQuotedPriceMuti001_mySide').attr('disabled', true);
             $('#CfetsBondDealQuotedPriceMuti001_counterId').attr('disabled', true);
             $('#CfetsBondDealQuotedPriceMuti001_counterTrader').attr('disabled', true);
             $('#CfetsBondDealQuotedPriceMuti001_finprodName').attr('disabled', true);
@@ -422,7 +422,7 @@
         }// 对话报价发起和保存后双击
         else if (quotaPageModel && quotaPageModel == 'edit'){
             $('#CfetsBondDealQuotedPriceMuti001_div_settleCcy').toggle(true);
-            $('#CfetsBondDealQuotedPriceMuti001_mySide').attr('disabled', true);
+            // $('#CfetsBondDealQuotedPriceMuti001_mySide').attr('disabled', true);
             $('#CfetsBondDealQuotedPriceMuti001_mySideTrader').attr('disabled', true);
             $('#CfetsBondDealQuotedPriceMuti001_counterId').attr('disabled', true);
             $('#CfetsBondDealQuotedPriceMuti001_counterTrader').attr('disabled', true);

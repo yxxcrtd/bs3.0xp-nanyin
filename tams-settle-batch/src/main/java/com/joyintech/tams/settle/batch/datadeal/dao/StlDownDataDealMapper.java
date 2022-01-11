@@ -25,7 +25,11 @@ public interface StlDownDataDealMapper {
      * @return List<SettleBatchPara>
      */
     List<SettleBatchPara> selectAllParam(@Param("dealDate") Date dealDate);
-    
+
+    // 查询需要撤销的清算明细数据数据
+    List<SettleTransDataTotalMatch> selectNeedRevokeSettleTransDataTotals(@Param("dealDate") Date dealDate, @Param("portfolioIdList") List<String> portfolioIdList,
+                   @Param("secTypeList") List<String> secTypeList);
+
     // 删除【成交数据与投管交易关系】
     int deleteSettleTransTgMapping(@Param("dealDate") Date dealDate, @Param("portfolioIdList") List<String> portfolioIdList, 
     		@Param("secTypeList") List<String> secTypeList);
@@ -75,7 +79,18 @@ public interface StlDownDataDealMapper {
     
     // 获取上一工作日
     Date getBeforeWorkDay(@Param("nowday") Date nowday, @Param("calendarId") String calendarId);
-    
+
+    /**
+     *
+     * 是否节假日
+     * @param cdate 查询日期
+     * @param calendarId 交易日历
+     * @return 是否节假日（0：工作日；其他：节假日）
+     * @see
+     * @since 1.0
+     */
+    String getIsHoliday(@Param("cdate") Date cdate,@Param("calendarId") String calendarId);
+
     // 删除SETTLE_BATCH_PARA
     int deleteSettleBatchPara(@Param("dealDate") Date dealDate, @Param("portfolioIdList") List<String> portfolioIdList, 
     		@Param("secTypeList") List<String> secTypeList);
@@ -129,4 +144,22 @@ public interface StlDownDataDealMapper {
     int deletemstFundBonusNoticeByCdate(@Param("dealDate") Date dealDate);
 
    List<String> getZzgFinprodId(@Param("zqdm1") String zqdm1);
+
+    /**
+     * 查询首期清算数据
+     * @param sqcjbh
+     * @param seatNumber
+     * @param secAcctId
+     * @return
+     */
+   List<SettleTransData> selectSqSettleTransDatas(@Param("sqcjbh") String sqcjbh, @Param("seatNumber") String seatNumber, @Param("secAcctId") String secAcctId);
+
+    /**
+     * 查询首期质押券信息
+     * @param sqcjbh
+     * @param seatNumber
+     * @param secAcctId
+     * @return
+     */
+    List<SettleTransDataPledge> selectSqSettleTransDataPledges(@Param("sqcjbh") String sqcjbh, @Param("seatNumber") String seatNumber, @Param("secAcctId") String secAcctId);
 }

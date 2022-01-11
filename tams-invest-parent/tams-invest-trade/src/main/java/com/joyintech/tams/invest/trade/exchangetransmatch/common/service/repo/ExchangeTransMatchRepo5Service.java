@@ -91,22 +91,27 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
 
         // 交易编号，按现有的交易编号生成规则，自动生成
         BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
-        if(DictCodeListExt3.交易方向_提前购回.getValue().equals(dealDto.getPs())){
-            bussinessCodeParameter.setCommonBusinessType(DictCodeListExt3.共通业务类型_协议回购提前购回指令);
-        } else if(DictCodeListExt3.交易方向_到期购回.getValue().equals(dealDto.getPs())){
-            bussinessCodeParameter.setCommonBusinessType(DictCodeListExt3.共通业务类型_协议回购到期购回指令);
+        if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(), dealDto.getFinprodType2())) {
+            bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_正回购录入);
+        }   else {
+            bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_逆回购录入);
         }
         dealTotal.setTotleTradeId(baseGetBusinessId.buildBussinessCode(bussinessCodeParameter));
 
         // 业务类型
         dealTotal.setBusiType(DictCodeList.共通业务类型_质押式回购存续期.getValue());
         // 金融产品代码
-        TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto,entrustDto);
+        TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getVdate(),DictCodeList.交易方向_买入.getValue(),
+                entrustDto.getPortfolioId());
         if(StringUtil.isNotEmpty(firstRepoTrade)) {
             //金融产品代码
             dealTotal.setFinprodId(firstRepoTrade.getFinprodId());
+            // 金融产品类型
+            dealTotal.setFinprodType(firstRepoTrade.getFinprodType());
             //金融产品类型投管
             dealTotal.setFinprodType2(firstRepoTrade.getFinprodType2());
+            // 交易市场
+            dealTotal.setTradeMarketMode(firstRepoTrade.getTradeMarketMode());
         }
         // 分支序号
         dealTotal.setBranch(0L);
@@ -121,7 +126,8 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
         // 交割日
         dealTotal.setSettleDate(dealDto.getTradeDate());
         // 清算速度
-        dealTotal.setSettleSpeed(null);
+        // dealTotal.setSettleSpeed(null);
+        dealTotal.setSettleSpeed(0L);
         // 交易币种
         dealTotal.setCcy(null);
 
@@ -137,21 +143,21 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
         dealTotal.setCpriceAmt(null);
         // 交易份额
         dealTotal.setShareAmt(entrustDto.getMarchQty());
-        BigDecimal amt = ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getShareAmt(),2),dealDto.getPrinAmt());
+        BigDecimal proportion = ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getShareAmt(),2);
         // 交易本金
-        dealTotal.setPrinAmt(amt);
+        dealTotal.setPrinAmt(ArithmeticUtil.multiply(proportion,dealDto.getPrinAmt()));
         // 利息总额
-        dealTotal.setIntAmt(amt);
+        dealTotal.setIntAmt(ArithmeticUtil.multiply(proportion,dealDto.getIntAmt()));
         // 全价总额
-        dealTotal.setFpriceAmt(amt);
+        dealTotal.setFpriceAmt(ArithmeticUtil.multiply(proportion,dealDto.getFpriceAmt()));
         // 随交易支付费用
-        dealTotal.setFeeAmtPay(amt);
+        dealTotal.setFeeAmtPay(BigDecimal.ZERO);
         // 交易金额
-        dealTotal.setTradeAmt(amt);
+        dealTotal.setTradeAmt(ArithmeticUtil.multiply(proportion,dealDto.getTradeAmt()));
         // 未随交易支付费用
-        dealTotal.setFeeAmtUnpay(amt);
+        dealTotal.setFeeAmtUnpay(BigDecimal.ZERO);
         // 总交易费用
-        dealTotal.setFeeAmt(amt);
+        dealTotal.setFeeAmt(ArithmeticUtil.doAdd(dealTotal.getFeeAmtPay(),dealTotal.getFeeAmtUnpay()));
         // 交易方向
         dealTotal.setPs(dealDto.getPs());
         // 到期收益率
@@ -173,12 +179,14 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
         //关联系统交易编号
         dealTotal.setfTradeId(dealDto.getSeqId());
 
-        if(StringUtil.equals(dealDto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
-            dealTotal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
-        }
-        else if(StringUtil.equals(dealDto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
-            dealTotal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
-        }
+        // GZYHTZJY-1039:交易对手应为空 fuyongsheng modify 20220106 start
+//        if(StringUtil.equals(dealDto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+//            dealTotal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+//        }
+//        else if(StringUtil.equals(dealDto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+//            dealTotal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+//        }
+        // GZYHTZJY-1039:交易对手应为空 fuyongsheng modify 20220106 end
         // 交易平台
         dealTotal.setTradePlat(dealDto.getTradePlat());
 
@@ -190,12 +198,16 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
         // 投管业务类型
         dealTotal.setTgBusiType(DictCodeListExt3.共通业务类型_质押券置换.getValue());
         // 如果汇总成交.金融产品类型（投管） = 债券质押式正回购，则为‘债券质押式正回购到期’。否则为‘债券质押式逆回购到期’
+        // GZYHTZJY-1039:modify by fuyongsheng 20220106 start
         if(StringUtil.equals(dealDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
-            dealTotal.setTgBusiType(DictCodeListExt1.平安业务类型_正回购.getValue());
+            // dealTotal.setTgBusiType(DictCodeListExt1.平安业务类型_正回购.getValue());
+            dealTotal.setTgBusiType(DictCodeListExt1.平安业务类型_正回购到期.getValue());
         }
         else {
-            dealTotal.setTgBusiType(DictCodeListExt1.平安业务类型_逆回购.getValue());
+            // dealTotal.setTgBusiType(DictCodeListExt1.平安业务类型_逆回购.getValue());
+            dealTotal.setTgBusiType(DictCodeListExt1.平安业务类型_逆回购到期.getValue());
         }
+        // GZYHTZJY-1039:modify by fuyongsheng 20220106 end
         //首期结算方式
         dealTotal.setDeliveryType(DictCodeListExt1.结算方式_券款对付.getValue());
         //到期结算方式
@@ -213,10 +225,10 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
             TrdProductDealDto trdProductDeal = new TrdProductDealDto();
             // 交易编号，按现有的交易编号生成规则，自动生成
             BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
-            if(DictCodeListExt3.交易方向_提前购回.getValue().equals(dealDto.getPs())){
-                bussinessCodeParameter.setCommonBusinessType(DictCodeListExt3.共通业务类型_协议回购提前购回指令);
-            } else if(DictCodeListExt3.交易方向_到期购回.getValue().equals(dealDto.getPs())){
-                bussinessCodeParameter.setCommonBusinessType(DictCodeListExt3.共通业务类型_协议回购到期购回指令);
+            if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(), dealDto.getFinprodType2())) {
+                bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_正回购录入);
+            }   else {
+                bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_逆回购录入);
             }
             trdProductDeal.setTradeId(baseGetBusinessId.buildBussinessCode(bussinessCodeParameter));
             //金融产品代码 : 交易方向 = 买入时同交易编号，否则为交易明细.金融产品代码
@@ -224,7 +236,7 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
                 trdProductDeal.setFinprodId(trdProductDeal.getTradeId());
             }
             else {
-                trdProductDeal.setFinprodId(settleTransData.getFinprodId());
+                trdProductDeal.setFinprodId(trdFinProductDealTotal.getFinprodId());
             }
             // 金融产品类型
             trdProductDeal.setFinprodType(settleTransData.getFinprodType());
@@ -239,7 +251,9 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
             // 到期日
             trdProductDeal.setMdate(settleTransData.getMdate());
             //支付日
-            trdProductDeal.setPayDate(settleTransData.getVpayDate());
+            // GZYHTZJY-1039 paydate无需赋值 modify fuyongsheng 20220107 start
+            // trdProductDeal.setPayDate(settleTransData.getVpayDate());
+            // GZYHTZJY-1039 paydate无需赋值 modify fuyongsheng 20220107 end
             //交割日
             trdProductDeal.setSettleDate(settleTransData.getSettleDate());
             //清算速度
@@ -264,8 +278,15 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
             trdProductDeal.setPrinAmt(settleTransData.getPrinAmt());
             //利息总额
             trdProductDeal.setIntAmt(settleTransData.getIntAmt());
-            //全价总额
-            trdProductDeal.setFpriceAmt(settleTransData.getFpriceAmt());
+            if(StringUtil.equals(settleTransData.getPs(),DictCodeList.交易方向_还本到账.getValue())) {
+                //全价总额
+                trdProductDeal.setFpriceAmt(settleTransData.getPrinAmt());
+            }
+            else {
+                //全价总额
+                trdProductDeal.setFpriceAmt(settleTransData.getFpriceAmt());
+            }
+
             //交易金额
             trdProductDeal.setTradeAmt(settleTransData.getTradeAmt());
             //随交易费用和不随交易支付费用
@@ -307,13 +328,14 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
             trdProductDeal.setTradePlat(settleTransData.getTradePlat());
             // 交易市场
             trdProductDeal.setTradeMarketMode(settleTransData.getTradeMarketMode());
-
-            if(StringUtil.equals(settleTransData.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
-                trdProductDeal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
-            }
-            else if(StringUtil.equals(settleTransData.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
-                trdProductDeal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
-            }
+            // GZYHTZJY-1039:交易对手应为空 fuyongsheng modify 20220106 start
+//            if(StringUtil.equals(settleTransData.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+//                trdProductDeal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+//            }
+//            else if(StringUtil.equals(settleTransData.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+//                trdProductDeal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+//            }
+            // GZYHTZJY-1039:交易对手应为空 fuyongsheng modify 20220106 end
             // 本方交易员
             trdProductDeal.setTrader(null);
             // 对手方交易员
@@ -397,7 +419,8 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
                 IntSettleTransData.setCommissionAmt(BigDecimal.ZERO);
 
                 IntSettleTransData.setPs(DictCodeList.交易方向_收息到账.getValue());
-                TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto,entrustDto);
+                TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getVdate(),DictCodeList.交易方向_买入.getValue(),
+                        entrustDto.getPortfolioId());
                 if(StringUtil.isNotEmpty(firstRepoTrade)) {
                     IntSettleTransData.setFinprodId(firstRepoTrade.getFinprodId());
                 }
@@ -424,7 +447,8 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
                 prinSettleTransData.setSettleFee(BigDecimal.ZERO);
                 prinSettleTransData.setCommissionAmt(BigDecimal.ZERO);
 
-                TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto,entrustDto);
+                TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getVdate(),DictCodeList.交易方向_买入.getValue(),
+                        entrustDto.getPortfolioId());
                 if(StringUtil.isNotEmpty(firstRepoTrade)) {
                     prinSettleTransData.setFinprodId(firstRepoTrade.getFinprodId());
                 }

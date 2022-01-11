@@ -116,8 +116,6 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         trdProductDeal.setrTradeId(null);
         // 通道代码
         trdProductDeal.setChlId(null);
-        // 交易对手
-        trdProductDeal.setCounterId(null);
         // 是否外部交易
         trdProductDeal.setIsOutTrade(DictCodeList.是否_是.getValue());
         // 交易场所
@@ -142,7 +140,8 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         // 证券管理户代码
         trdProductDeal.setSecManageAcctId(settleTransData.getSecAcctId());
         // 关联系统交易编号
-        trdProductDeal.setfTradeId(settleTransData.getApplyTradeId());
+        // trdProductDeal.setfTradeId(settleTransData.getApplyTradeId());
+        trdProductDeal.setfTradeId(settleTransData.getfCjbh());
         // 现金流代码
         trdProductDeal.setCashId(null);
         // 登记托管机构
@@ -298,7 +297,7 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         // 指令状态
         stlPayOrders.setOrderType(DictCodeListExt1.交易状态_初始.getValue());
         // 投资组合代码
-        stlPayOrders.setPortfolioId(dealDto.getPortfolioId());
+        stlPayOrders.setPortfolioId(entrustDto.getPortfolioId());
         // 理财产品代码
         stlPayOrders.setProdId(trdProductDeal.getFinprodId());
         // 备注
@@ -344,15 +343,18 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
 
     /**
      * 获取回购首期交易
-     * @param dealDto
-     * @param entrustDto
+     * @param fCjbh
+     * @param vdate
+     * @param ps
+     * @param portfolioId
      * @return
      */
-    public TrdProductDeal getFirstRepoTrade(ExchangeTransMatchCommonDto dealDto,ExchangeTransMatchCommonEntrustDto entrustDto) {
+    public TrdProductDeal getFirstRepoTrade(String fCjbh,Date vdate,String ps,String portfolioId) {
         Map<String,Object> queryMap = new HashMap<>();
-        queryMap.put("fCjbh",dealDto.getfCjbh());
-        queryMap.put("vdate",dealDto.getVdate());
-        queryMap.put("portfolioId",entrustDto.getPortfolioId());
+        queryMap.put("fCjbh",fCjbh);
+        queryMap.put("vdate",vdate);
+        queryMap.put("ps",ps);
+        queryMap.put("portfolioId",portfolioId);
         return exchangeTransMatchCommonMapper.getFirstRepoTrade(queryMap);
     }
 
@@ -366,7 +368,24 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         Map<String,Object> queryMap = new HashMap<>();
         queryMap.put("fCjbh",fCjbh);
         queryMap.put("vdate",vdate);
+        queryMap.put("BUSI_SCENE_CALSS_0902RS02",DictCodeListStl.业务场景分类明细_债券协议正回购_首期_买入.getValue());
+        queryMap.put("BUSI_SCENE_CALSS_0902RB01",DictCodeListStl.业务场景分类明细_债券协议逆回购_首期_买入.getValue());
         return exchangeTransMatchCommonMapper.getFirstRepoSettleTransData(queryMap);
+    }
+
+    /**
+     * 获取回购首期交易
+     * @param fCjbh
+     * @param vdate
+     * @param portfolioId
+     * @return
+     */
+    public List<FinDealPledge> getFirstRepoFinDealPledge(String fCjbh,Date vdate,String portfolioId) {
+        Map<String,Object> queryMap = new HashMap<>();
+        queryMap.put("fCjbh",fCjbh);
+        queryMap.put("vdate",vdate);
+        queryMap.put("portfolioId",portfolioId);
+        return exchangeTransMatchCommonMapper.getFirstRepoFinDealPledge(queryMap);
     }
 
     public TrdDealTotalAdd generateDealTotalAdd(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal) {
@@ -437,6 +456,7 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         List<FinPledgeDisplaceResult> finPledgeDisplaceResultList = new ArrayList<>();
         for(SettleTransDataTotalPledge settleTransDataTotalPledge: dealDto.getSettleTransDataTotalPledgeList()) {
             FinPledgeDisplaceResult finPledgeDisplaceResult = new FinPledgeDisplaceResult();
+            finPledgeDisplaceResult.setBranch(new BigDecimal(0));
             //金融产品代码 = 汇总成交质押品匹配结果表.质押金融产品代码
             finPledgeDisplaceResult.setTradeId(trdFinProductDealTotal.getTotleTradeId());
             //金融产品代码 = 汇总成交质押品匹配结果表.质押金融产品代码
@@ -444,12 +464,29 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
             //结果类型 = if 汇总成交质押品匹配结果表.置换方向= 换入 then 置换后 else 置换前 end if
             if(StringUtil.equals(settleTransDataTotalPledge.getDisplaceDirection(),DictCodeListExt3.质押券置换_置换方向_换入.getValue())) {
                 finPledgeDisplaceResult.setResultType(DictCodeListExt3.质押券置换_置换结果_置换后.getValue());
+                //质押券面总额 = 汇总成交质押品匹配结果表.匹配份额*质押面值
+                finPledgeDisplaceResult.setPledgeAmt(ArithmeticUtil.multiply(entrustDto.getMarchQty(),settleTransDataTotalPledge.getPledgeFaceValue()));
             }
             else {
                 finPledgeDisplaceResult.setResultType(DictCodeListExt3.质押券置换_置换结果_置换前.getValue());
+                if(StringUtil.equals(dealDto.getPs(),DictCodeListExt3.交易方向_中途换券.getValue())) {
+                    //换入的折算率
+                    SettleTransDataTotalPledge hrSettleTransDataTotalPledge = dealDto.getSettleTransDataTotalPledgeList().stream().filter(item->StringUtil.equals(item.getDisplaceDirection(),DictCodeListExt3.质押券置换_置换方向_换入.getValue())).findFirst().get();
+                    if(StringUtil.isNotEmpty(hrSettleTransDataTotalPledge)) {
+                        BigDecimal hrScale = hrSettleTransDataTotalPledge.getPledgeRatio();
+                        //质押券面总额 = 换入券面总额*换入折算率/换出折算率
+                        BigDecimal hcPledgeAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(ArithmeticUtil.multiply(entrustDto.getMarchQty(),settleTransDataTotalPledge.getPledgeFaceValue()),hrScale),settleTransDataTotalPledge.getPledgeRatio(),4);
+                        finPledgeDisplaceResult.setPledgeAmt(hcPledgeAmt);
+                    }
+                }
+                else {
+                    //质押券面总额 = 汇总成交质押品匹配结果表.匹配份额*质押面值
+                    BigDecimal hcPledgeAmt = ArithmeticUtil.multiply(entrustDto.getMarchQty(),settleTransDataTotalPledge.getPledgeFaceValue());
+                    finPledgeDisplaceResult.setPledgeAmt(hcPledgeAmt);
+                }
+
             }
-            //质押券面总额 = 汇总成交质押品匹配结果表.匹配份额*质押面值
-            finPledgeDisplaceResult.setPledgeAmt(ArithmeticUtil.multiply(entrustDto.getMarchQty(),settleTransDataTotalPledge.getPledgeFaceValue()));
+
             //折算比例 = 汇总成交质押品匹配结果表.质押率
             finPledgeDisplaceResult.setScale(settleTransDataTotalPledge.getPledgeRatio());
 
@@ -477,18 +514,31 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         finTradeProduct.setMdate(trdProductDeal.getMdate());
         finTradeProduct.setVpayDate(settleTransData.getVpayDate());
         finTradeProduct.setMpayDate(settleTransData.getMpayDate());
-        finTradeProduct.setTerm(DateUtil.getBetweenDayNumber(trdProductDeal.getVdate(),trdProductDeal.getMdate()));
+        finTradeProduct.setTermType(settleTransData.getTermType());
+        if(null != trdProductDeal.getVdate() && null != trdProductDeal.getMdate()){
+            finTradeProduct.setTerm(DateUtil.getBetweenDayNumber(trdProductDeal.getVdate(),trdProductDeal.getMdate()));
+        }
+        if(null != trdProductDeal.getVdate() && null != trdProductDeal.getMdate()){
+            finTradeProduct.setActCapDays(DateUtil.getBetweenDayNumber(settleTransData.getVpayDate(),settleTransData.getMpayDate()));
+        }
         finTradeProduct.setIntType(DictCodeList.利率类型_固定利率.getValue());
         finTradeProduct.setIntRate(settleTransData.getUnitCprice());
         finTradeProduct.setBasis(DictCodeList.计息基础_A_365.getValue());
         finTradeProduct.setmDeliveryType("DVP");
         finTradeProduct.setmPrinAmt(trdProductDeal.getShareAmt());
-        finTradeProduct.setmIntAmt(settleTransData.getmIntAmt());
-        finTradeProduct.setmPrinAmt(settleTransData.getmPrinAmt());
+        BigDecimal mIntAmt = ArithmeticUtil.multiply(ArithmeticUtil.multiply(finTradeProduct.getmPrinAmt(), finTradeProduct.getIntRate()),
+                ArithmeticUtil.divide(new BigDecimal(DateUtil.getBetweenDayNumber(finTradeProduct.getVpayDate(), finTradeProduct.getMpayDate())), 365, 14));
+        finTradeProduct.setmIntAmt(mIntAmt);
+        finTradeProduct.setmTradeAmt(finTradeProduct.getmPrinAmt().add(finTradeProduct.getmIntAmt()));
+//        finTradeProduct.setmIntAmt(settleTransData.getmIntAmt());
+//        finTradeProduct.setmPrinAmt(settleTransData.getmPrinAmt());
         finTradeProduct.setTradeMarket(trdProductDeal.getTradeMarket());
+        finTradeProduct.setCounterId(trdProductDeal.getCounterId());
         finTradeProduct.setCalendarId(StringUtil.equals(trdProductDeal.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())?DictCodeList.交易日历_上海交易所日历.getValue():DictCodeList.交易日历_深圳交易所日历.getValue());
         finTradeProduct.setTermType(settleTransData.getTermType());
-        finTradeProduct.setActCapDays(DateUtil.getBetweenDayNumber(finTradeProduct.getVpayDate(),finTradeProduct.getMpayDate()));
+        if(null != finTradeProduct.getVpayDate() && null != finTradeProduct.getMpayDate()){
+            finTradeProduct.setActCapDays(DateUtil.getBetweenDayNumber(finTradeProduct.getVpayDate(),finTradeProduct.getMpayDate()));
+        }
         return finTradeProduct;
     }
 
@@ -514,9 +564,9 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
      * @param trdProductDeal
      * @return
      */
-    public List<FinDealPledge> genFinDealPledgeList(SettleTransData settleTransData,TrdProductDeal trdProductDeal){
+    public List<FinDealPledge> genFinDealPledgeList(SettleTransData settleTransData,String cjbh,TrdProductDeal trdProductDeal){
         List<FinDealPledge> finDealPledgeList = new ArrayList<>();
-        SettleTransData firstSettleTransData = this.getFirstRepoSettleTransData(settleTransData.getfCjbh(),settleTransData.getVdate());
+        SettleTransData firstSettleTransData = this.getFirstRepoSettleTransData(cjbh,settleTransData.getVdate());
         if(StringUtil.isNotEmpty(firstSettleTransData)) {
             SettleTransDataPledge firstSettleTransDataPledge = settleTransDataPledgeMapper.selectByPrimaryKey(firstSettleTransData.getTradeId());
             if(StringUtil.isNotEmpty(firstSettleTransDataPledge)) {
@@ -525,7 +575,7 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
                 finDealPledge.setBranch(trdProductDeal.getBranch());
                 finDealPledge.setPledgeFinprodId(firstSettleTransDataPledge.getPledgeFinprodId());
                 finDealPledge.setPledgeFaceValue(firstSettleTransDataPledge.getPledgeFaceValue());
-                finDealPledge.setPledgeNumber(settleTransData.getShareAmt());
+                finDealPledge.setPledgeNumber(firstSettleTransDataPledge.getPledgeNumber());
                 finDealPledge.setPledgeRatio(firstSettleTransDataPledge.getPledgeRatio());
                 finDealPledge.setPledgeAmt(ArithmeticUtil.multiply(firstSettleTransDataPledge.getPledgeFaceValue(),settleTransData.getShareAmt()));
                 finDealPledgeList.add(finDealPledge);

@@ -21,6 +21,11 @@ public class StlSettleTransDataGatherDto extends BaseEntity {
     private String cjbh;
 
     /**
+     * 首期成交编号
+     */
+    private String fCjbh;
+
+    /**
      * 执行日期
      */
     private Date dealDate;
@@ -443,6 +448,10 @@ public class StlSettleTransDataGatherDto extends BaseEntity {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal pledgeAmt;
 
+    /**
+     * 置换方向，中途换券、解除质押时登录
+     */
+    private String displaceDirection;
 
     /**
      * 取得 质押金融产品代码
@@ -522,6 +531,22 @@ public class StlSettleTransDataGatherDto extends BaseEntity {
      */
     public void setPledgeAmt(BigDecimal pledgeAmt) {
         this.pledgeAmt = pledgeAmt;
+    }
+
+    /**
+     * 取得 置换方向，中途换券、解除质押时登录
+     * @return 置换方向，中途换券、解除质押时登录
+     */
+    public String getDisplaceDirection() {
+        return displaceDirection;
+    }
+
+    /**
+     * 设置 置换方向，中途换券、解除质押时登录
+     * @param displaceDirection 置换方向，中途换券、解除质押时登录
+     */
+    public void setDisplaceDirection(String displaceDirection) {
+        this.displaceDirection = displaceDirection == null ? null : displaceDirection.trim();
     }
 
     /**
@@ -1705,5 +1730,13 @@ public class StlSettleTransDataGatherDto extends BaseEntity {
 
     public void setCheckResult(String checkResult) {
         this.checkResult = checkResult;
+    }
+
+    public String getfCjbh() {
+        return fCjbh;
+    }
+
+    public void setfCjbh(String fCjbh) {
+        this.fCjbh = fCjbh;
     }
 }

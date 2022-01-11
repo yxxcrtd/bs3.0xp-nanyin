@@ -168,7 +168,10 @@ public class StlDownDataGatherTask extends BatchBaseService {
         JobExecution jobExecution = batchBuilder.init(this)
             .batch("bond1", stlDataGatherBond1Reader, stlDataGatherBond1Processor, stlDataGatherWriter)
             .batch("bond2", stlDataGatherBond2Reader, stlDataGatherBond2Processor, stlDataGatherWriter)
-            .batch("bond3", stlDataGatherBond3Reader, stlDataGatherBond3Processor, stlDataGatherWriter)
+            // GZYHTZJY-1043:债券申购确认走债券存续期Processor modify by fuyongsheng 20220108 start
+            //.batch("bond3", stlDataGatherBond3Reader, stlDataGatherBond3Processor, stlDataGatherWriter)
+            .batch("bond3", stlDataGatherBond3Reader, stlDataGatherBondDurationProcessor, stlDataGatherWriter)
+            // GZYHTZJY-1043:债券申购确认走债券存续期Processor modify by fuyongsheng 20220108 end
             .batch("bond4", stlDataGatherBond4Reader, stlDataGatherBond4Processor, stlDataGatherWriter)
             .batch("bond5", stlDataGatherBond5Reader, stlDataGatherBond5Processor, stlDataGatherWriter)
             .batch("fund1", stlDataGatherFund1Reader, stlDataGatherFund1Processor, stlDataGatherWriter)

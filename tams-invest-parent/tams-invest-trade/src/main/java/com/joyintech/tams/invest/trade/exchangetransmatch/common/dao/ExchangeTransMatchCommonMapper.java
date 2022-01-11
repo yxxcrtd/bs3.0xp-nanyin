@@ -1,9 +1,6 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.common.dao;
 
-import com.joyintech.tams.common.base.entity.SettleTransData;
-import com.joyintech.tams.common.base.entity.SettleTransTgMapping;
-import com.joyintech.tams.common.base.entity.TrdDealTotalAdd;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDetailDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonRevokeDto;
@@ -24,6 +21,13 @@ public interface ExchangeTransMatchCommonMapper {
      * @return
      */
     List<ExchangeTransMatchCommonEntrustDto> getEtrEntrustByIdList(Map<String,Object> entrustMap);
+
+    /**
+     * 查询回购质押品汇总信息信息
+     * @param entrustMap
+     * @return
+     */
+    List<SettleTransDataTotalPledge> getSettleTransDataTotalPledgeList(Map<String,Object> entrustMap);
 
     /**
      * 获取下一工作日
@@ -111,4 +115,32 @@ public interface ExchangeTransMatchCommonMapper {
      * @return
      */
     SettleTransData getFirstRepoSettleTransData(Map<String, Object> paraMap);
+
+    /**
+     * 获取首期交易的
+     * @param paraMap
+     * @return
+     */
+    List<FinDealPledge> getFirstRepoFinDealPledge(Map<String, Object> paraMap);
+
+    /**
+     * 根据汇总交易编号获取质押券置换结果list
+     * @param paraMap
+     */
+    List<FinPledgeDisplaceResult> getFinPledgeDisplaceResult (Map<String, Object> paraMap);
+
+
+    /**
+     * 删除汇总成交质押品匹配结果表数据
+     * @param paraMap
+     * @return
+     */
+    int deleteSettleDataTotalPledgeMatch(Map<String, Object> paraMap);
+
+    /**
+     * 批量更新指令状态
+     * @param paraMap
+     * @return
+     */
+    int updateEntrustStatus(Map<String, Object> paraMap);
 }

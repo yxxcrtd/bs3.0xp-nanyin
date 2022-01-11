@@ -446,7 +446,27 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
 //                status.setFinishAmt(new BigDecimal(baseTradeProductDealDto.getTrdProductDeal().getShareAmt().intValue() * 100));
                 // 完成额度取值判断修改 add by yufei 20200807 start
                 EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(baseTradeProductDealDto.getTrdProductDealAdd().getEntrustId());
-                if(etrEntrustAdd != null && StringUtil.isNotEmpty(etrEntrustAdd.getTargetType())
+                if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdFinProductDealTotal())
+                        && StringUtil.equals(baseTradeProductDealDto.getTrdFinProductDealTotal().getPs(),DictCodeListExt3.交易方向_中途换券.getValue())) {
+                    //中途换券换出交易不更新指令完成度
+                    if(StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(),DictCodeListExt3.质押券置换_置换方向_换出.getValue())) {
+                        continue;
+                    }
+                    status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
+                }
+                else if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdFinProductDealTotal())
+                        &&StringUtil.equals(baseTradeProductDealDto.getTrdFinProductDealTotal().getPs(),DictCodeListExt3.交易方向_解除质押.getValue())) {
+                    status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
+                }
+                else if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdFinProductDealTotal())
+                        &&StringUtil.equals(baseTradeProductDealDto.getTrdFinProductDealTotal().getPs(),DictCodeList.交易方向_到期续做.getValue())) {
+                    //到期续作中，只考虑新做首期，收息到账和还本到账不写入指令完成度
+                    if(!StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(),DictCodeList.交易方向_买入.getValue())) {
+                        continue;
+                    }
+                    status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
+                }
+                else if(etrEntrustAdd != null && StringUtil.isNotEmpty(etrEntrustAdd.getTargetType())
                    && StringUtil.equals(DictCodeListExt3.目标类型_金额.getValue(),etrEntrustAdd.getTargetType())){
                     status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getTradeAmt());
                 }
@@ -675,12 +695,12 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                     // 债券  申购确认  持仓类型为冻结
                     if (StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                             && StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_申购确认.getValue())) {
-                       dto.setHodingType(DictCodeList.持仓类型_冻结.getValue());
+                       dto.setHodingType(DictCodeList.持仓类型_场内上市前冻结.getValue());
                     }
                     // 股票存续期  申购确认  持仓类型为冻结
                     if (StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())
                             && StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_申购确认.getValue())) {
-                        dto.setHodingType(DictCodeList.持仓类型_冻结.getValue());
+                        dto.setHodingType(DictCodeList.持仓类型_场内上市前冻结.getValue());
                     }
                     if (DictCodeListExt1.交易场所_银行间.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getTradeMarket())
                             && DictCodeList.交易方向_买入.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getPs())

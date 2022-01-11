@@ -2,6 +2,7 @@ package com.joyintech.tams.settle.batch.datadeal.reader;
 
 import com.joyintech.batch.batchbase.baseclass.BaseReader;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalMatch;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.settle.batch.datadeal.dto.StlDownDataDealDeleteOperatorDto;
@@ -77,6 +78,12 @@ public class StlDownDataDealDeleteReader extends BaseReader<StlDownDataDealDelet
 			secTypeList = Arrays.asList(DictCodeListExt1.证券品种_债券.getValue(),DictCodeListExt1.证券品种_基金.getValue(),DictCodeListExt1.证券品种_股票.getValue(),DictCodeListExt1.证券品种_回购.getValue());
 			otherBusinessTypeList = Arrays.asList(DictCodeListExt3.金融产品其他代码类型_配债代码.getValue());
 			xgsgBusinessTypeList = Arrays.asList(DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
+
+			// 删除清算相关表
+			List<SettleTransDataTotalMatch> settleTransDataTotalMatches = stlDownDataDealService.selectNeedRevokeSettleTransDataTotals(
+					execInfo.getExecuteDate(), portfolioIdList, secTypeList);
+			stlDownDataDealService.transactionMacthRevokeBatch(settleTransDataTotalMatches);
+
 	        // 删除【成交数据与投管交易关系】
 	        stlDownDataDealService.deleteSettleTransTgMapping(execInfo.getExecuteDate(), portfolioIdList, secTypeList);
 	        

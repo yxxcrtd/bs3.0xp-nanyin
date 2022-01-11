@@ -33,15 +33,13 @@ import com.joyintech.tams.invest.trade.fund.dto.TrdFundInvestTradeDto;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade002Dto;
 import com.joyintech.tams.invest.trade.trdstockconnect.controller.TrdStockConnect002Controller;
 import com.joyintech.tams.invest.trade.trdstockconnect.dto.TrdStockConnectDto;
+import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional(rollbackFor=Exception.class)
@@ -136,7 +134,15 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                 map.put("ps",DictCodeList.交易方向_买入.getValue());
                 map.put("finprodType2",StringUtil.equals(ps,DictCodeListExt3.交易方向_正回购.getValue())?DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue():DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
             }
+
+            if(StringUtil.equals(ps,DictCodeListExt3.交易方向_到期购回.getValue())) {
+                map.put("ps",DictCodeList.交易方向_到期.getValue());
+            }
+            else if(StringUtil.equals(ps, DictCodeListExt3.交易方向_提前购回.getValue())){
+                map.put("ps",DictCodeList.交易方向_提前终止.getValue());
+            }
         }
+
 
         Page<ExchangeTransMatch002Dto> page = restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME
                 + "/ExchangeTransMatchController/findPage", map, ExchangeTransMatch002Dto.class);
@@ -181,10 +187,10 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
             map.put("portfolioIdList",StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
         }
 
-        if(StringUtil.isNotEmpty(map.get("dealId"))) {
-            String dealId = (String)map.get("dealId");
-            map.put("dealIdList",StringUtil.splitToList(GlobalConstant.COMMA, dealId));
-        }
+//        if(StringUtil.isNotEmpty(map.get("dealId"))) {
+//            String dealId = (String)map.get("dealId");
+//            map.put("dealIdList",StringUtil.splitToList(GlobalConstant.COMMA, dealId));
+//        }
         if(StringUtil.isNotEmpty(map.get("ps"))) {
             String ps = (String)map.get("ps");
             if(StringUtil.equals(ps,DictCodeListExt3.交易方向_正回购.getValue())
@@ -214,6 +220,20 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
     protected void buildExportParam(ExportParam exportParam) {
         exportParam.config(
                 "/com/joyintech/tams/invest/trade/exchangetransmatch/manualmatch/conf/export_conf.xml").dataSource(DataSourceType.MASERT);
+    }
+
+    /**
+     * 处理导出参数，格式化导出的格式
+     * @param beanName beanName
+     * @param cell 单元格
+     * @param propName 配置
+     * @param value 值
+     */
+    @Override
+    public void setCellValue(String beanName, Cell cell, String propName, Object value) {
+        if(StringUtil.equals("tradeDate", propName)) {
+            cell.setCellValue(DateUtil.format((Date)value));
+        }
     }
 
 

@@ -144,29 +144,31 @@ shiro:
 ---
 spring:
   profiles: allinone
-#  redis:    ##单节点配置
-#    database: 1
-#    password: joyin!234
-#    host: 192.168.90.198
-#    port: 6379
-#    timeout: 20000
+  cache:
+    type: redis
+  #  redis:    ##单节点配置
+  #    database: 1
+  #    password: joyin!234
+  #    host: 192.168.90.198
+  #    port: 6379
+  #    timeout: 20000
   redis:
     cluster:
-      nodes: 192.168.70.246:6379,192.168.70.246:6380,192.168.70.246:6381,192.168.70.246:6382,192.168.70.246:6383,192.168.70.246:6384
+      nodes: 192.168.70.97:6379,192.168.70.97:6380,192.168.70.97:6381,192.168.70.97:6382,192.168.70.97:6383,192.168.70.97:6384
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
-    reportSqlldrDatabaseName: 192.168.90.5:1521/orcl
+    username: GZBANK_DEV
+    password: GZBANK_DEV
+    reportSqlldrDatabaseName: 192.168.70.88:1521/orcl
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30INIT_XUQIU
-  sqldirpassword: BS30INIT_XUQIU
+  sqldiruserName: GZBANK_DEV
+  sqldirpassword: GZBANK_DEV
   #以下根据实际ip和端口进行修改
   micorservice:
     contextPath:
@@ -198,17 +200,17 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
+    username: GZBANK_DEV
+    password: GZBANK_DEV
 #interf数据源配置
 interf:
-   datasource:
-     url: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
-     driverClassName: oracle.jdbc.driver.OracleDriver
-     username: BS30INIT_XUQIU
-     password: BS30INIT_XUQIU
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: GZBANK_DEV
+    password: GZBANK_DEV
 #日志路径配置
 log:
   path: /home/tams/logs/touguan/batch

@@ -113,7 +113,11 @@ public class StlDataDealSzdSjsmxProcessService {
             		String tradeId = stlDownDataDealWriteDto.getStlDownDataDealWriteBaseDtoList().get(index).getSettleTransData().getTradeId();
             		for (SzdSjsmx szdSjsmx : stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getSjsmxList()) {
             			if (StringUtil.equals(szdSjsmx.getMxywlsh(), tradeId)) {
-            				stlDownDataDealWriteDto.getStlDownDataDealWriteBaseDtoList().get(index).getSettleTransData().setTradeAmtRaw(new BigDecimal(Math.abs(szdSjsmx.getMxsfje().doubleValue())));
+                            // modify by etliu 20211225 start
+                            // 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//            				stlDownDataDealWriteDto.getStlDownDataDealWriteBaseDtoList().get(index).getSettleTransData().setTradeAmtRaw(new BigDecimal(Math.abs(szdSjsmx.getMxsfje().doubleValue())));
+                            stlDownDataDealWriteDto.getStlDownDataDealWriteBaseDtoList().get(index).getSettleTransData().setTradeAmtRaw(szdSjsmx.getMxsfje().abs());
+                            // modify by etliu 20211225 end
             			}
             		}
             	}

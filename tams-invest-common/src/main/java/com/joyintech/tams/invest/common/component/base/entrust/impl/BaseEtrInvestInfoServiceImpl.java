@@ -992,13 +992,13 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
                         委托额度 = etrPledge.getPledgeNumber();
                     }
                 }
-//                //交易所竞价回购默认是已数量下单，委托完成度表中交易入库数据是已金额入的库，这里特殊处理下。不然拿数量比对金额，指令状态会不对
-//                else if(etrEntrustAdd != null && (StringUtil.equals(etrEntrust.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())
-//                        ||StringUtil.equals(etrEntrust.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue()))
-//                && StringUtil.equals(etrEntrustAdd.getAssetType(),DictCodeList.平安资产类型_质押式回购.getValue())
-//                && StringUtil.equals(etrEntrustAdd.getAssetType1(),"H02")) {
-//                    委托额度 = etrEntrust.getEntrustAmt();
-//                }
+                //交易所竞价回购默认是已数量下单，委托完成度表中交易入库数据是已金额入的库，这里特殊处理下。不然拿数量比对金额，指令状态会不对
+                else if(etrEntrustAdd != null && (StringUtil.equals(etrEntrust.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())
+                        ||StringUtil.equals(etrEntrust.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue()))
+                && StringUtil.equals(etrEntrustAdd.getAssetType(),DictCodeList.平安资产类型_质押式回购.getValue())
+                && StringUtil.equals(etrEntrustAdd.getAssetType1(),"H02")) {
+                    委托额度 = etrEntrust.getEntrustAmt();
+                }
                 else if(etrEntrustAdd != null && StringUtil.isNotEmpty(etrEntrustAdd.getTargetType())){
                     if(StringUtil.equals(DictCodeListExt3.目标类型_数量.getValue(),etrEntrustAdd.getTargetType())){
                         // 如果是数量则取份额来判断是否已完成

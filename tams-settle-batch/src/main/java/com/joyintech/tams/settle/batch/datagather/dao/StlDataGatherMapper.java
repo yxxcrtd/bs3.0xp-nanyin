@@ -1,8 +1,6 @@
 package com.joyintech.tams.settle.batch.datagather.dao;
 
-import com.joyintech.tams.common.base.entity.PtlSecPosition;
-import com.joyintech.tams.common.base.entity.PtlSecPositionFlow;
-import com.joyintech.tams.common.base.entity.TrdDealTotalAdd;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.settle.batch.datagather.dto.EtrEntrustDto;
 import com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto;
 import com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto;
@@ -184,5 +182,41 @@ public interface StlDataGatherMapper {
 
     String selectCqBtradeId(@Param("secAcctId") String secAcctId, @Param("finprodId") String finprodId,@Param("dealDate") Date dealDate);
 
+    List<SettleTransDataTotalPledge> selectSettleTransDataTotalPledge(String seqId);
+
+    // modify by etliu 20211227 start
+    // GZYHTZJY-777:回售交易当日无法得到成交的清算数据，导致无法匹配到对应的上行委托或指令
+
+    /**
+     * 查询债回售、可转债申购、新股申购、配债、配股对应指令
+     * @param paramMap paramMap
+     * @return 债回售、可转债申购、新股申购、配债、配股对应指令
+     */
+    List<EtrEntrustDto> selectSpecialEtrEntrustData(Map<String, Object> paramMap);
+
+    /**
+     * 查询行权-回售计划
+     * @param paramMap paramMap
+     * @return 行权-回售计划
+     */
+    List<FinExercisePlan> selectFinExercisePlanData(Map<String, Object> paramMap);
+
+    /**
+     * 查询配股、配债对应申报信息
+     * @param paramMap paramMap
+     * @return 配股、配债对应申报信息
+     */
+    List<FinProductOthCode> selectFinProductOthCodeData(Map<String, Object> paramMap);
+    // modify by etliu 20211227 end
+
+    /**
+     * 查询指令质押券信息
+     * @param entrustId
+     * @param finProdId
+     * @return
+     */
+    List<EtrPledge> selectEtrPledges(@Param("entrustId")String entrustId, @Param("finProdId")String finProdId);
+
     int selectDzcjList(Map<String, Object> searchParam);
+
 }

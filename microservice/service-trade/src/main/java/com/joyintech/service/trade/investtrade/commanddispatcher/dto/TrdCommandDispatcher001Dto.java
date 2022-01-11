@@ -11,10 +11,10 @@
 package com.joyintech.service.trade.investtrade.commanddispatcher.dto;
 
 
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+
 import java.math.BigDecimal;
 import java.util.Date;
-
-import com.joyintech.tams.common.base.entity.EtrEntrust;
 
 /**
  * 指令分发dto
@@ -367,5 +367,15 @@ public class TrdCommandDispatcher001Dto extends EtrEntrust{
 
 	public void setPurchModle(String purchModle) {
 		this.purchModle = purchModle;
+	}
+
+	private String xyFlag;
+
+	public String getXyFlag() {
+		return xyFlag;
+	}
+
+	public void setXyFlag(String xyFlag) {
+		this.xyFlag = xyFlag;
 	}
 }

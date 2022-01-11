@@ -1,11 +1,12 @@
 package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalPledgeKey;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SettleTransDataTotalPledgeMapper {
-    int deleteByPrimaryKey(String tradeId);
+    int deleteByPrimaryKey(SettleTransDataTotalPledgeKey key);
 
     int insert(SettleTransDataTotalPledge record);
 
@@ -13,7 +14,7 @@ public interface SettleTransDataTotalPledgeMapper {
 
     int insertBasicByBasicInfo(SettleTransDataTotalPledge record);
 
-    SettleTransDataTotalPledge selectByPrimaryKey(String tradeId);
+    SettleTransDataTotalPledge selectByPrimaryKey(SettleTransDataTotalPledgeKey key);
 
     int updateByPrimaryKeySelective(SettleTransDataTotalPledge record);
 

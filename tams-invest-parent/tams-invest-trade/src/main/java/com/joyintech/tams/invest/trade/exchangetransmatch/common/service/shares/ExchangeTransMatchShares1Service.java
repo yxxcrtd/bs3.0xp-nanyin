@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 股票（新股中签、增发(配售)、配股、买入、卖出）
+ * 股票（新股中签、增发(配售)、配股、买入、卖出、申购）
  * @author meifaxin
  * @date 2021/11/1
  * @see ExchangeTransMatchShares1Service

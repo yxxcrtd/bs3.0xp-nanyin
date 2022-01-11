@@ -410,7 +410,11 @@ public class TrdFeeCalcService {
 				localPlanSearchInfo.setAssetClassify2(finProductType.getType7());
 			}
 			// 结算数据下行相关处理（针对上农商只有竞价回购）
-			if (StringUtil.equals(tradeType, DictCodeList.平安资产类型_质押式回购.getValue())) {
+			// modify by etliu 20220104 start
+			// GZYHTZJY-868: 日终清算，协议回购的佣金没有计算出来
+//			if (StringUtil.equals(tradeType, DictCodeList.平安资产类型_质押式回购.getValue())) {
+			if (StringUtil.equals(tradeType, DictCodeList.平安资产类型_质押式回购.getValue())
+					&& !StringUtil.equals(DictCodeList.回购类型_质押式协议回购.getValue(), tradeFeatureInformation.getRepoType())) {
 				// 质押式回购需要单独设置成竞价回购
 				localPlanSearchInfo.setAssetClassify1(DictCodeList.回购类型_质押式竞价回购.getValue());
 				localPlanSearchInfo.setAssetClassify2(DictCodeList.回购类型_质押式竞价回购.getValue());
@@ -422,6 +426,15 @@ public class TrdFeeCalcService {
 					localPlanSearchInfo.setPs(DictCodeList.回购拆借方向_逆回购.getValue());
 				}
 			}
+			else if (StringUtil.equals(tradeType, DictCodeList.平安资产类型_质押式回购.getValue())
+					&& StringUtil.equals(DictCodeList.回购类型_质押式协议回购.getValue(), tradeFeatureInformation.getRepoType())) {
+				localPlanSearchInfo.setAssetClassify1(DictCodeList.回购类型_质押式协议回购.getValue());
+				localPlanSearchInfo.setAssetClassify2(DictCodeList.回购类型_质押式协议回购.getValue());
+				if (!StringUtil.isEmptyList(detailDtos)) {
+					localPlanSearchInfo.setPs(detailDtos.get(0).getPs());
+				}
+			}
+			// modify by etliu 20220104 end
 			
 			if (StringUtil.equals(tradeType, DictCodeList.平安资产类型_基金.getValue())){
 			    FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(tradeFeatureInformation.getFinprodId());

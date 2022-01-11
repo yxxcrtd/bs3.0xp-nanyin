@@ -2,33 +2,56 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.invest.trade.exchangetransmatch.common.dao.ExchangeTransMatchCommonMapper" >
     <select id="getEtrEntrustByIdList" resultType="com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto">
-        select
-        T2.TARGET_TYPE targetType,
-        T2.TRADER trader,
-        NVL(T1.ENTRUST_NUM,0) - NVL(S.MARCH_QTY_EN,0) remainEntrustNum,
-        NVL(T1.ENTRUST_AMT,0) - NVL(S.MARCH_AMT_EN,0) remainEntrustAmt,
-        T1.*
-        from ETR_ENTRUST T1
-        left join
-            ETR_ENTRUST_ADD T2
-            ON T1.ENTRUST_ID = T2.ENTRUST_ID
-        LEFT JOIN (SELECT ENTRUNST_TRADE_ID,
-                    NVL(SUM(MARCH_QTY_EN), 0) MARCH_QTY_EN,
-                    NVL(SUM(MARCH_AMT_EN), 0) MARCH_AMT_EN
+        SELECT * FROM (
+            select
+            T2.TARGET_TYPE targetType,
+            T2.TRADER trader,
+            CASE
+                WHEN (T1.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}) AND T1.PS IN (#{PS_T93},#{PS_T94})) THEN
+                    NVL(T3.PLEDGE_NUMBER,0) - NVL(S.MARCH_QTY_EN,0)
+            ELSE
+                    NVL(T1.ENTRUST_NUM,0) - NVL(S.MARCH_QTY_EN,0) END remainEntrustNum,
+            CASE
+            WHEN (T1.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}) AND T1.PS IN (#{PS_T93},#{PS_T94})) THEN
+                    NVL(T3.PLEDGE_NUMBER,0) - NVL(S.MARCH_QTY_EN,0)
+            ELSE
+                    NVL(T1.ENTRUST_AMT,0) - NVL(S.MARCH_AMT_EN,0)
+            END remainEntrustAmt,
+            T1.*
+            from ETR_ENTRUST T1
+            left join
+                ETR_ENTRUST_ADD T2
+                ON T1.ENTRUST_ID = T2.ENTRUST_ID
+            LEFT JOIN (SELECT ENTRUNST_TRADE_ID,
+                        NVL(SUM(MARCH_QTY_EN), 0) MARCH_QTY_EN,
+                        NVL(SUM(MARCH_AMT_EN), 0) MARCH_AMT_EN
                         FROM SETTLE_TRANS_DATA_TOTAL_MATCH
-                    GROUP BY ENTRUNST_TRADE_ID) S
-            ON S.ENTRUNST_TRADE_ID = T1.ENTRUST_ID
-        <where>
-            <if test="entrustIdList!=null and entrustIdList.size()>0 ">
-                AND (T1.ENTRUST_ID IN
-                <foreach item="item" index="index" collection="entrustIdList" open="(" close=")" separator=",">
-                    <if test="(index % 998) == 0">
-                        null) or T1.ENTRUST_ID in (
-                    </if>
-                    #{item,jdbcType=VARCHAR}
-                </foreach>)
-            </if>
-        </where>
+                        GROUP BY ENTRUNST_TRADE_ID) S
+                ON S.ENTRUNST_TRADE_ID = T1.ENTRUST_ID
+            LEFT JOIN ETR_PLEDGE T3
+                ON T3.ENTRUST_ID = T1.ENTRUST_ID
+                AND T3.FINPROD_ID = T1.FINPROD_ID
+            <where>
+                <if test="entrustIdList!=null and entrustIdList.size()>0 ">
+                    AND (T1.ENTRUST_ID IN
+                    <foreach item="item" index="index" collection="entrustIdList" open="(" close=")" separator=",">
+                        <if test="(index % 998) == 0">
+                            null) or T1.ENTRUST_ID in (
+                        </if>
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>)
+                </if>
+                <if test="entrustId !=null and entrustId != ''">
+                    AND T1.ENTRUST_ID = #{entrustId}
+                </if>
+                AND T1.ENTRUST_STATUS = #{ENTRUST_STATUS_03}
+            </where>
+
+        ) T
+        WHERE (T.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}) AND T.remainEntrustNum > 0)
+        OR (T.FINPROD_TYPE2 NOT IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}) AND T.targetType = #{TARGET_CLASS_01} AND T.remainEntrustNum > 0)
+        OR (T.FINPROD_TYPE2 NOT IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}) AND T.targetType = #{TARGET_CLASS_02} AND T.remainEntrustAmt > 0)
+
     </select>
 
     <select id="getNextWorkDay" parameterType="java.util.Map" resultType="java.util.Date">
@@ -106,7 +129,7 @@
     </select>
 
     <select id="getEntrunstId" resultType="java.lang.String">
-            SELECT DISTINCT ENTRUST_ID
+            SELECT DISTINCT T.ENTRUST_ID
               from (SELECT A.ENTRUST_ID
                       FROM ETR_ENTRUST A
                      INNER JOIN TRD_PRODUCT_DEAL_ADD B
@@ -117,7 +140,7 @@
                       FROM ETR_ENTRUST A1
                      INNER JOIN TRD_DEAL_TOTAL_ADD B1
                         ON A1.ENTRUST_ID = B1.ENTRUST_ID
-                     WHERE B1.TOTLE_TRADE_ID = #{tradeId})
+                     WHERE B1.TOTLE_TRADE_ID = #{tradeId}) T
     </select>
 
     <select id="getRemainNum" resultType="java.math.BigDecimal">
@@ -129,6 +152,11 @@
     <select id="getSettleTransTgMapping" resultType="com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonRevokeDto">
             select
                 'N'    isTotalDeal,
+                E.FINPROD_TYPE2 finprodType2,
+                E.TRADE_ID tradeIdTgDetail,
+                C.PS ps,
+                C.SEQ_ID seqTotalId,
+                F.PORTFOLIO_ID portfolioId,
                 <!--<include refid="com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper.Base_Column_List" />-->
                 A.*
               from SETTLE_TRANS_TG_MAPPING A
@@ -153,6 +181,11 @@
             union  all
             select
             'Y'   isTotalDeal,
+            E.FINPROD_TYPE2 finprodType2,
+            E.TRADE_ID tradeIdTgDetail,
+            C.PS ps,
+            C.SEQ_ID seqTotalId,
+            F.PORTFOLIO_ID portfolioId,
             <!--<include refid="com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper.Base_Column_List" />-->
             A.*
             from SETTLE_TRANS_TG_MAPPING A
@@ -189,6 +222,7 @@
             ON A.TRADE_ID  = B.TRADE_ID
             WHERE A.F_TRADE_ID = #{fCjbh}
             AND A.VDATE = #{vdate}
+            AND A.PS = #{ps}
             AND B.PORTFOLIO_ID = #{portfolioId}
     </select>
 
@@ -196,6 +230,54 @@
         select A.*
           from SETTLE_TRANS_DATA A
          WHERE A.CJBH = #{fCjbh}
-           AND A.DEAL_DATE = #{portfolioId}
+           AND A.DEAL_DATE = #{vdate}
+           AND (A.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RS02} or A.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RB01})
     </select>
+
+    <select id="getFirstRepoFinDealPledge" resultType="com.joyintech.tams.common.base.entity.FinDealPledge">
+        select A.*
+          from FIN_DEAL_PLEDGE A
+         INNER JOIN TRD_PRODUCT_DEAL B
+            ON A.FINPROD_ID = B.TRADE_ID
+         INNER JOIN TRD_PRODUCT_DEAL_ADD C
+            ON B.TRADE_ID = C.TRADE_ID
+         WHERE B.F_TRADE_ID = #{fCjbh}
+           AND B.VDATE = #{vdate}
+           AND C.PORTFOLIO_ID = #{portfolioId}
+    </select>
+
+    <select id="getFinPledgeDisplaceResult" resultType = "com.joyintech.tams.common.base.entity.FinPledgeDisplaceResult">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinPledgeDisplaceResultMapper.Base_Column_List" />
+        from FIN_PLEDGE_DISPLACE_RESULT
+        <where>
+            TRADE_ID = #{tradeId}
+            AND BRANCH = #{branch}
+        </where>
+    </select>
+
+    <select id="getSettleTransDataTotalPledgeList" resultType="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.SettleTransDataTotalPledgeMapper.Base_Column_List" />
+        from SETTLE_TRANS_DATA_TOTAL_PLEDGE
+        WHERE TRADE_ID = #{tradeId}
+    </select>
+
+    <delete id="deleteSettleDataTotalPledgeMatch" parameterType="java.util.Map">
+        delete from SETTLE_DATA_TOTAL_PLEDGE_MATCH
+         WHERE SEQ_NO = #{seqNo}
+           AND ENTRUNST_TRADE_ID = #{entrustId}
+    </delete>
+
+    <update id="updateEntrustStatus">
+        update
+            ETR_ENTRUST
+        set
+            ENTRUST_STATUS = #{entrustStatus}
+        where
+            ENTRUST_ID in
+            <foreach collection="entrustIdList" item="entrustId" open=" (" close=")" separator=",">
+                #{entrustId,jdbcType=VARCHAR}
+            </foreach>
+    </update>
 </mapper>

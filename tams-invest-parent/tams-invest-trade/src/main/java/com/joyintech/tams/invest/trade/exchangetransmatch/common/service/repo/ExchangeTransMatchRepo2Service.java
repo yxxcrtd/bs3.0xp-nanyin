@@ -3,9 +3,7 @@ package com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.SettleTransData;
-import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -22,6 +20,7 @@ import com.joyintech.tams.invest.trade.exchangetransmatch.common.dto.ExchangeTra
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +41,11 @@ public class ExchangeTransMatchRepo2Service extends ExchangeTransMatchRepoCommon
         List<ExchangeTransMatchBaseTradeDto> baseTradeProductDealDtoList = new ArrayList<>();
 
         if(StringUtil.equals(entrustDto.getEntrustClass(),DictCodeListExt3.投资指令类型_多组合单资产指令.getValue())) {
-            //生成汇总表数据
-            TrdFinProductDealTotal trdFinProductDealTotal = this.genTrdFinProductDealTotal(dealDto,entrustDto);
+//            TrdFinProductDealTotal trdFinProductDealTotal = null;
+//            if(!StringUtil.equals(dealDto.getPs(),DictCodeList.交易方向_买入.getValue())) {
+//                trdFinProductDealTotal = this.genTrdFinProductDealTotal(dealDto,entrustDto);
+//            }
+
             for (ExchangeTransMatchCommonEntrustDetailDto detailDto:entrustDto.getEntrustDetailDtoList()) {
                 ExchangeTransMatchBaseTradeDto baseTradeProductDealDto = new ExchangeTransMatchBaseTradeDto();
 
@@ -55,7 +57,11 @@ public class ExchangeTransMatchRepo2Service extends ExchangeTransMatchRepoCommon
                 entrustDtoTmp.setMarchFeeAmtUnPay(detailDto.getMarchFeeAmtUnPay());
                 entrustDtoTmp.setMarchFeeAmtPay(detailDto.getMarchFeeAmtPay());
 
-                baseTradeProductDealDto.setTrdFinProductDealTotal(trdFinProductDealTotal);
+//                //生成汇总表数据
+//                if(!StringUtil.equals(dealDto.getPs(),DictCodeList.交易方向_买入.getValue())) {
+//                    baseTradeProductDealDto.setTrdFinProductDealTotal(trdFinProductDealTotal);
+//                }
+
                 //生成金融产品交易信息
                 baseTradeProductDealDto.setTrdProductDeal(this.genTrdProductDeal(dealDto,entrustDtoTmp,baseTradeProductDealDto.getTrdFinProductDealTotal()));
                 //生成金融产品交易附属表信息
@@ -73,17 +79,17 @@ public class ExchangeTransMatchRepo2Service extends ExchangeTransMatchRepoCommon
                 BeanUtil.copyPropertiesIgnoreNull(settleTransData,dealDto);
                 baseTradeProductDealDto.setFinTradeProduct(this.genFinTradeProduct(settleTransData, baseTradeProductDealDto.getTrdProductDeal()));
                 baseTradeProductDealDto.setFinProductType(this.genFinProductType(dealDto,baseTradeProductDealDto.getTrdProductDeal()));
-                baseTradeProductDealDto.setFinDealPledgeList(this.genFinDealPledgeList(settleTransData,baseTradeProductDealDto.getTrdProductDeal()));
+                baseTradeProductDealDto.setFinDealPledgeList(this.genFinDealPledgeList(dealDto,baseTradeProductDealDto.getTrdProductDeal()));
 
                 baseTradeProductDealDtoList.add(baseTradeProductDealDto);
             }
         }
         else {
             ExchangeTransMatchBaseTradeDto baseTradeProductDealDto = new ExchangeTransMatchBaseTradeDto();
-            //首期不入汇总表
-            if(!StringUtil.equals(dealDto.getPs(),DictCodeList.交易方向_买入.getValue())) {
-                baseTradeProductDealDto.setTrdFinProductDealTotal(this.genTrdFinProductDealTotal(dealDto,entrustDto));
-            }
+//            //首期不入汇总表
+//            if(!StringUtil.equals(dealDto.getPs(),DictCodeList.交易方向_买入.getValue())) {
+//                baseTradeProductDealDto.setTrdFinProductDealTotal(this.genTrdFinProductDealTotal(dealDto,entrustDto));
+//            }
             //生成金融产品交易信息
             baseTradeProductDealDto.setTrdProductDeal(this.genTrdProductDeal(dealDto,entrustDto,baseTradeProductDealDto.getTrdFinProductDealTotal()));
             //生成金融产品交易附属表信息
@@ -99,9 +105,10 @@ public class ExchangeTransMatchRepo2Service extends ExchangeTransMatchRepoCommon
 
             SettleTransData settleTransData = new SettleTransData();
             BeanUtil.copyPropertiesIgnoreNull(settleTransData,dealDto);
+            settleTransData.setCjbh(dealDto.getApplyTradeId());
             baseTradeProductDealDto.setFinTradeProduct(this.genFinTradeProduct(settleTransData, baseTradeProductDealDto.getTrdProductDeal()));
             baseTradeProductDealDto.setFinProductType(this.genFinProductType(dealDto,baseTradeProductDealDto.getTrdProductDeal()));
-            baseTradeProductDealDto.setFinDealPledgeList(this.genFinDealPledgeList(settleTransData,baseTradeProductDealDto.getTrdProductDeal()));
+            baseTradeProductDealDto.setFinDealPledgeList(this.genFinDealPledgeList(dealDto,baseTradeProductDealDto.getTrdProductDeal()));
 
             baseTradeProductDealDtoList.add(baseTradeProductDealDto);
         }
@@ -244,8 +251,6 @@ public class ExchangeTransMatchRepo2Service extends ExchangeTransMatchRepoCommon
         trdProductDeal.setMdate(dealDto.getMdate());
         // 交付日
         trdProductDeal.setPayDate(dealDto.getVpayDate());
-        // 交付日
-        trdProductDeal.setPayDate(dealDto.getMpayDate());
         // 交割日
         trdProductDeal.setSettleDate(dealDto.getSettleDate());
         // 清算速度
@@ -266,6 +271,8 @@ public class ExchangeTransMatchRepo2Service extends ExchangeTransMatchRepoCommon
         }
         // 交易金额
         trdProductDeal.setTradeAmt(entrustDto.getMarchAmt());
+        //交易份额
+        trdProductDeal.setShareAmt(entrustDto.getMarchAmt());
         // 未随交易支付费用
         if(!StringUtil.equals(DictCodeList.是否_是.getValue(), dealDto.getIsPayWithTrade())) {
             trdProductDeal.setFeeAmtUnpay(dealDto.getCommissionAmt());
@@ -307,5 +314,25 @@ public class ExchangeTransMatchRepo2Service extends ExchangeTransMatchRepoCommon
         }
         stlPayOrdersList.add(stlPayOsrdersDto);
         return stlPayOrdersList;
+    }
+
+
+    public List<FinDealPledge> genFinDealPledgeList(ExchangeTransMatchCommonDto dealDto,TrdProductDeal trdProductDeal){
+        List<FinDealPledge> finDealPledgeList = new ArrayList<>();
+        if(!StringUtil.isEmptyList(dealDto.getSettleTransDataTotalPledgeList())) {
+            for(SettleTransDataTotalPledge transDataTotalPledge:dealDto.getSettleTransDataTotalPledgeList()) {
+                FinDealPledge finDealPledge = new FinDealPledge();
+                finDealPledge.setFinprodId(trdProductDeal.getFinprodId());
+                finDealPledge.setBranch(trdProductDeal.getBranch());
+                finDealPledge.setPledgeFinprodId(transDataTotalPledge.getPledgeFinprodId());
+                finDealPledge.setPledgeFaceValue(transDataTotalPledge.getPledgeFaceValue());
+                finDealPledge.setPledgeNumber(trdProductDeal.getShareAmt().divide(new BigDecimal(100)));
+                finDealPledge.setPledgeRatio(transDataTotalPledge.getPledgeRatio());
+                finDealPledge.setPledgeAmt(transDataTotalPledge.getPledgeAmt());
+                finDealPledgeList.add(finDealPledge);
+            }
+        }
+
+        return finDealPledgeList;
     }
 }

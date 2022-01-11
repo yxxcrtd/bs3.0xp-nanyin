@@ -67,7 +67,9 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
             //持仓分配
             Map<String,Object> param = new HashMap<>();
             param.put("dealDate",executeDate);
-            param.put("hodingType", DictCodeList.持仓类型_冻结.getValue());
+            // GZYHTZJY-1084:修改持仓类型 modify fuyongsheng 20220111 start
+            param.put("hodingType", DictCodeList.持仓类型_场内上市前冻结.getValue());
+            // GZYHTZJY-1084:修改持仓类型 modify fuyongsheng 20220111 end
             List<PtlSecPosition> ptlSecPositions = stlDataGatherMapper.listPtlSecPosition(param);
             List<PtlSecPositionFlow> ptlSecPositionFlows = stlDataGatherMapper.listPtlSecPositionFolw(param);
             Map<String, List<PtlSecPositionFlow>> ptlSecPositionFlowMap = ptlSecPositionFlows.stream().collect(JoyinCollectors.groupingBy(i -> i.getFinprodId() + "," + i.getSecAcctId() + "," + i.getInvAim()));
