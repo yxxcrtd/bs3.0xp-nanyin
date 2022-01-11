@@ -109,7 +109,7 @@
         ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
         LEFT JOIN SYS_USER su1 ON ETR_ENTRUST.INV_MANAGER_ID = su1.USER_NAME
-        LEFT JOIN BUSI_TYPE_MAPPING btm ON ETR_ENTRUST_ADD.ASSET_TYPE = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
+        LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON ETR_ENTRUST_ADD.ASSET_TYPE = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
     <where>
         AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall},#{entrustInwfl})
         <if test="entrustStatusList != null and entrustStatusList.size() > 0">
@@ -270,7 +270,7 @@
         ON
         WFL_ETR_ENTRUST.ENTRUST_ID = WFL_ETR_ENTRUST_ADD.ENTRUST_ID
         LEFT JOIN OPT_TARGET_INFO ON WFL_ETR_ENTRUST_ADD.ASSET_TYPE_10 = OPT_TARGET_INFO.TARGET_ID
-        LEFT JOIN BUSI_TYPE_MAPPING btm ON WFL_ETR_ENTRUST_ADD.ASSET_TYPE = btm.Finprod_Type_Tg AND wfl_ETR_ENTRUST.Ps = btm.ps
+        LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON WFL_ETR_ENTRUST_ADD.ASSET_TYPE = btm.Finprod_Type_Tg AND wfl_ETR_ENTRUST.Ps = btm.ps
         <if test="userId != null and userId!='' ">
             INNER JOIN PTL_PORTFOLIO_AUTHORITY
             ON PTL_PORTFOLIO.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID

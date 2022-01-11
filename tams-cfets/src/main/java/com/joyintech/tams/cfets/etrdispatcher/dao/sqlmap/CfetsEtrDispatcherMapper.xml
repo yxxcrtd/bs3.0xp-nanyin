@@ -109,7 +109,7 @@
         ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
         LEFT JOIN SYS_USER su1 ON ETR_ENTRUST.INV_MANAGER_ID = su1.USER_NAME
-        LEFT JOIN BUSI_TYPE_MAPPING btm ON ETR_ENTRUST_ADD.ASSET_TYPE = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
+        LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON ETR_ENTRUST_ADD.ASSET_TYPE = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
     <where>
         AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall})
         <if test="entrustStatusList != null and entrustStatusList.size() > 0">
@@ -283,7 +283,7 @@
     ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
     LEFT JOIN STL_SEC_ACCT_INFO ssai ON ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
     LEFT JOIN SYS_USER su2 ON ETR_ENTRUST.INV_MANAGER_ID = su2.USER_NAME
-    LEFT JOIN BUSI_TYPE_MAPPING btm ON ETR_ENTRUST.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
+    LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON ETR_ENTRUST.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
     <where>
         AND ETR_ENTRUST.FINPROD_TYPE2 = 'F36'
         AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall})

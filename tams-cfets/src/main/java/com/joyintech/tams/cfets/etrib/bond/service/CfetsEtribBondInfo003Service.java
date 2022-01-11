@@ -1127,7 +1127,12 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         }
         //发送头寸
       //  PositionHttpRequest.deleteMethod(entity.getTotalEtrustId(),DictCodeListExt1.子系统代码_委托.getValue(),"Bond001");
-        PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(),DictCodeListExt1.子系统代码_委托.getValue());
+        String busiType =DictCodeListExt3.头寸业务类型_现券交易.getValue();
+        if(StringUtil.isNotEmpty(entity.getPs())
+                && StringUtil.equals(entity.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
+            busiType =DictCodeListExt3.头寸业务类型_债券行权交易.getValue(); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
+        }
+        PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(),DictCodeListExt1.子系统代码_委托.getValue(),busiType,entity.getPs());
     }
 
     @Override
