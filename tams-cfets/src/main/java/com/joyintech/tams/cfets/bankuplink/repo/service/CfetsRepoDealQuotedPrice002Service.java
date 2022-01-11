@@ -1844,7 +1844,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                     posport.setCashAcctId(cashAcctId); // 托管户
                 }
             }
-            posport.setCashAmount(ptlDto.getFpriceAmt());
+            posport.setCashAmount(ptlDto.getcPriceAmt());
             ptlCashList.add(posport);
         }
         List<com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto> pledgeBondList = this.质押券拆分(this.investDto2ServiceDto(entity));
