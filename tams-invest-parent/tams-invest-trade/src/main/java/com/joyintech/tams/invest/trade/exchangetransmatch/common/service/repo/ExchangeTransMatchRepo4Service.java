@@ -176,7 +176,7 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
         // 交易本金
         dealTotal.setPrinAmt(ArithmeticUtil.multiply(proportion,dealDto.getPrinAmt()));
         // 利息总额
-        dealTotal.setIntAmt(ArithmeticUtil.multiply(proportion,dealDto.getIntAmt()));
+        dealTotal.setIntAmt(BigDecimal.ZERO);
         // 全价总额
         dealTotal.setFpriceAmt(ArithmeticUtil.multiply(proportion,dealDto.getFpriceAmt()));
         // 随交易支付费用
