@@ -575,7 +575,7 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
                 finDealPledge.setBranch(trdProductDeal.getBranch());
                 finDealPledge.setPledgeFinprodId(firstSettleTransDataPledge.getPledgeFinprodId());
                 finDealPledge.setPledgeFaceValue(firstSettleTransDataPledge.getPledgeFaceValue());
-                finDealPledge.setPledgeNumber(settleTransData.getShareAmt());
+                finDealPledge.setPledgeNumber(firstSettleTransDataPledge.getPledgeNumber());
                 finDealPledge.setPledgeRatio(firstSettleTransDataPledge.getPledgeRatio());
                 finDealPledge.setPledgeAmt(ArithmeticUtil.multiply(firstSettleTransDataPledge.getPledgeFaceValue(),settleTransData.getShareAmt()));
                 finDealPledgeList.add(finDealPledge);

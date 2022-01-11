@@ -304,11 +304,11 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
             trdProductDeal.setTradeAmt(settleTransData.getTradeAmt());
             //随交易费用和不随交易支付费用
             if(StringUtil.equals(settleTransData.getIsPayWithTrade(),DictCodeList.是否_是.getValue())) {
-                trdProductDeal.setFeeAmtPay(ArithmeticUtil.doAdd(settleTransData.getJsfAmt(),settleTransData.getGhfAmt(),settleTransData.getZgfAmt(),settleTransData.getSxfAmt(),settleTransData.getSettleFee(),settleTransData.getCommissionAmt()));
+                trdProductDeal.setFeeAmtPay(ArithmeticUtil.doAdd(settleTransData.getStampFee(),settleTransData.getJsfAmt(),settleTransData.getGhfAmt(),settleTransData.getZgfAmt(),settleTransData.getSxfAmt(),settleTransData.getSettleFee(),settleTransData.getCommissionAmt()));
                 trdProductDeal.setFeeAmtUnpay(BigDecimal.ZERO);
             }
             else {
-                trdProductDeal.setFeeAmtPay(ArithmeticUtil.doAdd(settleTransData.getJsfAmt(),settleTransData.getGhfAmt(),settleTransData.getZgfAmt(),settleTransData.getSxfAmt(),settleTransData.getSettleFee()));
+                trdProductDeal.setFeeAmtPay(ArithmeticUtil.doAdd(settleTransData.getStampFee(),settleTransData.getJsfAmt(),settleTransData.getGhfAmt(),settleTransData.getZgfAmt(),settleTransData.getSxfAmt(),settleTransData.getSettleFee()));
                 trdProductDeal.setFeeAmtUnpay(settleTransData.getCommissionAmt());
             }
             //总费用
@@ -480,6 +480,7 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
                         prinSettleTransData.setShareAmt(item.getmPrinAmt());
                         prinSettleTransData.setPrinAmt(item.getmPrinAmt());
                         prinSettleTransData.setTradeAmt(item.getmPrinAmt());
+                        prinSettleTransData.setFpriceAmt(item.getmPrinAmt());
                         prinSettleTransData.setPs(DictCodeList.交易方向_还本到账.getValue());
 
                         prinSettleTransData.setIntAmt(BigDecimal.ZERO);
