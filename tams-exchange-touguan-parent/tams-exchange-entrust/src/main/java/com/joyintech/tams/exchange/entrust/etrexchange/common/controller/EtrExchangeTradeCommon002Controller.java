@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -42,6 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 交易所指令交易（债券股票回购基金场内指令交易）
@@ -69,10 +71,9 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
     @ResponseBody
     public Message<Map<String,Object>> init() {
         Map<String, Object> initPageParams = new HashMap<>();
-        initPageParams.put("TRADE_PLACE", this.getSelectDataFromDataDic(BussinessDictCode.交易场所, null));
-        initPageParams.put("FINPROD_TYPE_TG", this.getSelectDataFromDataDic(DictCode.金融产品类型_投管用, null));
-        initPageParams.put("PS", this.getSelectDataFromDataDic(DictCode.交易方向, null));
-
+        setTradePlaceSelectOptions(initPageParams);
+        setFinprodTypeTgSelectOptions(initPageParams);
+        setPsSelectOptions(initPageParams);
         EtrExchangeTrade002Dto exchangeTradeDto002 = new EtrExchangeTrade002Dto();
         initPageParams.put("entity",exchangeTradeDto002);
         initPageParams.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
@@ -83,7 +84,8 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
         initPageParams.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
         initPageParams.put("TARGET_CLASS_01", DictCodeListExt3.目标类型_数量.getValue());
         initPageParams.put("PRICE_MODEL_PRM01", DictCodeListExt2.价格模式_指定价格.getValue());
-        
+        initPageParams.put("SHARES_TRADE_PLATFORM_02", DictCodeList.交易平台_竞价撮合平台.getValue());
+
         // 场内交易指令画面持仓列表自动刷新时间（毫秒）
         long etrExchange_posTable_refresh_period = 20000;
         String tempSysParaVal = CacheUtil.getSysParam(
@@ -109,6 +111,76 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
         initPageParams.put("PS_ETR", JsonUtils.objectArray2Json(optionsGradeResult.toArray()));
         /*add by chenjiaxing 更改交易方向枚举值 end*/
         return new Message<Map<String, Object>>(initPageParams).success();
+    }
+    /**
+     * 由于交易平台不同，设置不同交易平台对应的委托方向
+     *
+     * @param model Model
+     */
+    private void setTradePlaceSelectOptions(Map<String, Object> initPageParams) {
+        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.交易场所, null);
+        // 固定收益
+        List<SelectOptionDto> tradePlaceList = selectDto.getOptions().stream().filter(option -> {
+            return StringUtil.equals(option.getId(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
+                    || StringUtil.equals(option.getId(), DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+        }).collect(Collectors.toList());
+        selectDto.setOptions(tradePlaceList);
+        initPageParams.put("TRADE_PLACE", selectDto);
+    }
+    /**
+     * 由于交易平台不同，设置不同资产类型
+     *
+     * @param initPageParams initPageParams
+     */
+    private void setFinprodTypeTgSelectOptions(Map<String, Object> initPageParams) {
+        SelectDto selectDto =this.getSelectDataFromDataDic(DictCode.金融产品类型_投管用, null);
+        // 固定收益
+        List<SelectOptionDto> finprodTypeTgList = selectDto.getOptions().stream().filter(option -> {
+            return StringUtil.equals(option.getId(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
+                    || StringUtil.equals(option.getId(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())
+                    || StringUtil.equals(option.getId(), DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+        }).collect(Collectors.toList());
+        selectDto.setOptions(finprodTypeTgList);
+        initPageParams.put("FINPROD_TYPE_TG", selectDto);
+    }
+    /**
+     * 由于交易平台不同，设置不同交易平台对应的委托方向
+     *
+     * @param model Model
+     */
+    private void setPsSelectOptions(Map<String, Object> initPageParams) {
+        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.交易方向, null);
+        // 竞价平台
+        List<SelectOptionDto> ps_jj = selectDto.getOptions().stream().filter(option -> {
+            return StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_正回购.getValue())
+                    || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_逆回购.getValue())
+                    || StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
+                    || StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue())
+                    || StringUtil.equals(option.getId(), DictCodeList.交易方向_行权_回售.getValue())
+                    || StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue())
+                    || StringUtil.equals(option.getId(), DictCodeListExt2.交易方向_配股.getValue())
+                    || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_债转股.getValue())
+                    || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_质押券入库.getValue())
+                    || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_质押券出库.getValue())
+                     || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_配债.getValue());
+        }).collect(Collectors.toList());
+        selectDto.setOptions(ps_jj);
+        initPageParams.put("PS_JJ", selectDto);
+
+        // 大宗平台
+        List<SelectOptionDto> ps_dz = selectDto.getOptions().stream().filter(option -> {
+            return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
+                    || StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue())
+                    || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_正回购.getValue())
+                    || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_逆回购.getValue());
+        }).collect(Collectors.toList());
+        initPageParams.put("PS_DZ", JsonUtils.objectArray2Json(ps_dz.toArray()));
+        // 固定收益
+        List<SelectOptionDto> ps_gd = selectDto.getOptions().stream().filter(option -> {
+            return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
+                    || StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue());
+        }).collect(Collectors.toList());
+        initPageParams.put("PS_GD", JsonUtils.objectArray2Json(ps_gd.toArray()));
     }
     
     /**

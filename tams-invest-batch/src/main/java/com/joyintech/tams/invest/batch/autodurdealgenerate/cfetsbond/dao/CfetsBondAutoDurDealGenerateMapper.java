@@ -68,4 +68,6 @@ public interface CfetsBondAutoDurDealGenerateMapper {
     List<CfetsManualSettleDealInfo> getDealDetailsByTradeId(@Param("tradeId") String tradeId);
 
     List<String> selectTrdFinProductDealTotalData(Map<String, Object> paramMap);
+
+    String getSecAcctId(@Param("portfolioId") String portfolioId,@Param("finprodId") String finprodId,@Param("tradeMarket") String tradeMarket);
 }

@@ -313,7 +313,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         }
         /**************************************************************组合分配********************************************/
         /*************************************************************质押券信息*******************************************/
-        if (CollectionUtils.isEmpty(entity.getRepoEntrustPledgeDtos()) && StringUtil.equals(ps, DictCodeListExt3.交易方向_正回购.getValue())) {
+        if (CollectionUtils.isEmpty(entity.getRepoEntrustPledgeDtos())) {
             errorList.add(new ValidMessage("质押券不可为空"));
         }
         if (!CollectionUtils.isEmpty(entity.getRepoEntrustPledgeDtos())) {
@@ -452,8 +452,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         if (!StringUtil.isNotEmpty(ptlAllocatio.getTradeAmt())) {
             errorList.add(new ValidMessage("请输入组合分配交易金额"));
         }
-        if (!StringUtil.isNotEmpty(ptlAllocatio.getConvertAmt())
-                && StringUtil.equals(ps, DictCodeListExt3.交易方向_正回购.getValue())) {
+        if (!StringUtil.isNotEmpty(ptlAllocatio.getConvertAmt())) {
             errorList.add(new ValidMessage("请输入组合分配质押券折算总额"));
         }
         if (!StringUtil.isNotEmpty(ptlAllocatio.getDealFeeAmt())) {
@@ -655,11 +654,15 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             entity.setOuTraderId(entity.getMySideTrader());
             entity.setClearType(entity.getSettleType());
             entity.setRate(ArithmeticUtil.divide(entity.getPrice(), new BigDecimal(100), 6, RoundingMode.HALF_UP));
-            //托管机构
-            String repRegistOrg = StringUtil.EMPTY;
-            if (CollectionUtils.isNotEmpty(entity.getRepoEntrustPledgeDtos())) {
-                repRegistOrg = entity.getRepoEntrustPledgeDtos().get(0).getRepRegistOrg();
+            // 证券账户
+            String secAcctId = StringUtil.EMPTY;
+            if (CollectionUtils.isNotEmpty(entity.getRepoEntrustPledgeDtos())&&CollectionUtils.isNotEmpty(entity.getPtlAllocations())) {
+                Map<String,Object> map = new HashMap<>();
+                map.put("portfolioId", entity.getPtlAllocations().get(0).getPortfolioId());
+                map.put("finprodId", entity.getRepoEntrustPledgeDtos().get(0).getFinprodId());
+                secAcctId = this.qryPortfolioSecAcctId(map);
             }
+            entity.setSecManageAcctId(secAcctId);
             Long settleSpreed = 0L;
             if (StringUtil.equals(entity.getSettleSpreedCode(), BussinessDictCodeList.清算速度_T加0.getValue())) {
                 settleSpreed = 0L;
@@ -731,7 +734,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     regFinProductDeal.setSettleDate(entity.getvSettleDate());//结算日
                     regFinProductDeal.setTradeMarket(DictCodeListExt1.交易场所_银行间.getValue());//交易场所
                     regFinProductDeal.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());//交易市场
-                    regFinProductDeal.setSecManageAcctId(ptlAllocatio.getSecManageAcctId());//证券账户
+                    regFinProductDeal.setSecManageAcctId(entity.getSecManageAcctId());//证券账户
                     regFinProductDeal.setFinprodId(regFinProductDeal.getTradeId());
                     if (null != ptlAllocatio.getDealFeeAmt()) {//交易手续费
                         regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(
@@ -837,11 +840,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         total.setBranch(0L);
         total.setFinprodType2(finprodType2);
         total.setTgBusiType(tgBusiType);
-        if (StringUtil.isNotEmpty(entity.getSecManageAcctId())) {
-            total.setSecManageAcctId(entity.getSecManageAcctId());
-        } else if (CollectionUtils.isNotEmpty(entity.getPtlAllocations())) {
-            total.setSecManageAcctId(entity.getPtlAllocations().get(0).getSecManageAcctId());
-        }
+        total.setSecManageAcctId(entity.getSecManageAcctId());
         total.setSettleDate(entity.getSettlementStartDate());
         total.setTradeMarket(DictCodeListExt1.交易场所_银行间.getValue());
         total.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());

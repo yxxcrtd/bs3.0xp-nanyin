@@ -275,6 +275,12 @@ public class CfetsTrdConfirmRegInfoListResponse{
     private String basis;
     @ApiModelProperty(name="busAct",value="按钮动作",example="字符串1")
     private String butAct;
+    @ApiModelProperty(name="pledgeFinprodId",value="质押券债券",example="字符串1")
+    private String   pledgeFinprodId;
+    @ApiModelProperty(name="pledgeRatio",value="质押券折算比例",example="字符串1")
+    private BigDecimal   pledgeRatio;
+    @ApiModelProperty(name="pledgeFaceValue",value="质押券面值",example="字符串1")
+    private BigDecimal   pledgeFaceValue;
     @ApiModelProperty(name="selectedItem",value="选中数据",example="字符串1")
     private transient List<CfetsTrdConfirmRegInfoListResponse> selectedItem;
 
@@ -1028,5 +1034,29 @@ public class CfetsTrdConfirmRegInfoListResponse{
 
     public void setButAct(String butAct) {
         this.butAct = butAct;
+    }
+
+    public String getPledgeFinprodId() {
+        return pledgeFinprodId;
+    }
+
+    public void setPledgeFinprodId(String pledgeFinprodId) {
+        this.pledgeFinprodId = pledgeFinprodId;
+    }
+
+    public BigDecimal getPledgeRatio() {
+        return pledgeRatio;
+    }
+
+    public void setPledgeRatio(BigDecimal pledgeRatio) {
+        this.pledgeRatio = pledgeRatio;
+    }
+
+    public BigDecimal getPledgeFaceValue() {
+        return pledgeFaceValue;
+    }
+
+    public void setPledgeFaceValue(BigDecimal pledgeFaceValue) {
+        this.pledgeFaceValue = pledgeFaceValue;
     }
 }

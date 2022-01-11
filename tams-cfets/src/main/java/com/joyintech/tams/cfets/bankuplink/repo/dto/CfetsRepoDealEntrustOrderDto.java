@@ -190,6 +190,16 @@ public class CfetsRepoDealEntrustOrderDto extends EtrEntrust {
     private String secManageAcctId;
 
     /**
+     * 证券账户-中债登
+     */
+    private String secManageAcctIdZZ;
+
+    /**
+     * 证券账户-上清所
+     */
+    private String secManageAcctIdSQ;
+
+    /**
      * 组合系列
      */
     private String portfolioSeries;
@@ -926,5 +936,21 @@ public class CfetsRepoDealEntrustOrderDto extends EtrEntrust {
 
     public void setCounterPartyId(String counterPartyId) {
         this.counterPartyId = counterPartyId;
+    }
+
+    public String getSecManageAcctIdZZ() {
+        return secManageAcctIdZZ;
+    }
+
+    public void setSecManageAcctIdZZ(String secManageAcctIdZZ) {
+        this.secManageAcctIdZZ = secManageAcctIdZZ;
+    }
+
+    public String getSecManageAcctIdSQ() {
+        return secManageAcctIdSQ;
+    }
+
+    public void setSecManageAcctIdSQ(String secManageAcctIdSQ) {
+        this.secManageAcctIdSQ = secManageAcctIdSQ;
     }
 }

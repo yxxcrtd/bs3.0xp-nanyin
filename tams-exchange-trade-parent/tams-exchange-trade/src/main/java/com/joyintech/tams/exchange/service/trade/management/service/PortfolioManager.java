@@ -587,6 +587,7 @@ public class PortfolioManager extends BaseService {
             // 提示：“委托价格必须优于所有指令价格”
             if (adjustedPrice.compareTo(bean.getEntrustPrice()) != 0) {
                 result.setInfo("委托价格必须优于所有指令价格");
+                result.setPrice(adjustedPrice);
             }
         } else {
             // 02时，剔除该指令并继续时
@@ -698,52 +699,70 @@ public class PortfolioManager extends BaseService {
 
             if (Objects.isNull(instructionDetails) || instructionDetails.size() == 0 || instructionDetails.size() == 1) {
                 // 处理单组合
+                handleParameters(result, ins);
                 list.add(ins);
+                continue;
             }
 
-            if (Objects.nonNull(instructionDetails) && instructionDetails.size() > 1) {
-                // 单指令多组合扩展列表
-                List<Instruction> singleList = new ArrayList<>();
-                for (InstructionDetail detail : instructionDetails) {
-                    // 生成多条指令，替换组合信息，将分配比例存入转股价格（conPrice字段）
-                    Instruction copyInstruction = new Instruction();
-                    BeanUtil.copyProperties(ins, copyInstruction);
-                    copyInstruction.setPortfolioId(detail.getPortfolioId());
-                    copyInstruction.setPortfolioName(detail.getPortfolioName());
-                    copyInstruction.setConPrice(ins.getConPrice().multiply(new BigDecimal(detail.getDisRate())));
+            // 单指令多组合扩展列表
+            List<Instruction> singleList = new ArrayList<>();
+            for (InstructionDetail detail : instructionDetails) {
+                // 生成多条指令，替换组合信息，将分配比例存入转股价格（conPrice字段）
+                Instruction copyInstruction = new Instruction();
+                BeanUtil.copyProperties(ins, copyInstruction);
+                copyInstruction.setPortfolioId(detail.getPortfolioId());
+                copyInstruction.setPortfolioName(detail.getPortfolioName());
+                copyInstruction.setConPrice(ins.getConPrice().multiply(new BigDecimal(detail.getDisRate())));
 
-                    Long realVolume = 0L;
-                    if (EntrustUtils.isBond(copyInstruction)) {
+                Long realVolume = 0L;
+                if (EntrustUtils.isBond(copyInstruction)) {
+                    realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 1);
+                } else if (EntrustUtils.isPledgeRepurchase(copyInstruction)) {
+                    if (Market.SZSE.value.equals(copyInstruction.getTradeMarket())) {
                         realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 1);
-                    } else if (EntrustUtils.isPledgeRepurchase(copyInstruction)) {
-                        if (Market.SZSE.value.equals(copyInstruction.getTradeMarket())) {
-                            realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 1);
-                        } else {
-                            realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 3);
-                        }
-                    } else if (EntrustUtils.isFutures(copyInstruction)) {
-                        realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 0);
                     } else {
-                        realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 2);
+                        realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 3);
                     }
-                    copyInstruction.setConNum(BigDecimal.valueOf(realVolume));
-
-                    singleList.add(copyInstruction);
+                } else if (EntrustUtils.isFutures(copyInstruction)) {
+                    realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 0);
+                } else {
+                    realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 2);
                 }
+                copyInstruction.setConNum(BigDecimal.valueOf(realVolume));
 
-                // 尾插处理
-                Instruction maxInstruction = singleList.stream().max(Comparator.comparing(Instruction::getConPrice)).get();
-                long totalExceptMaxVolume = singleList.stream().filter(item -> !item.getEntrustId().equals(maxInstruction.getEntrustId()))
-                        .mapToLong(item -> item.getConNum().longValue()).sum();
-                maxInstruction.setConNum(BigDecimal.valueOf(totalExceptMaxVolume));
-                // 重新计算占比
-                for (Instruction item : singleList) {
-                    item.setConPrice(ArithmeticUtil.divide(item.getConNum(), BigDecimal.valueOf(result.getTotalEntrustVolume()), 4));
-                }
-
-                list.addAll(singleList);
+                singleList.add(copyInstruction);
             }
+
+            // 尾插处理
+            Instruction maxInstruction = singleList.stream().max(Comparator.comparing(Instruction::getConPrice)).get();
+            long totalExceptMaxVolume = singleList.stream().filter(item -> !item.getEntrustId().equals(maxInstruction.getEntrustId()))
+                    .mapToLong(item -> item.getConNum().longValue()).sum();
+            maxInstruction.setConNum(BigDecimal.valueOf(ins.getEntrustNum()- totalExceptMaxVolume));
+            // 重新计算占比；赋值委托数量，委托金额
+            for (Instruction item : singleList) {
+                item.setConPrice(ArithmeticUtil.divide(item.getConNum(), BigDecimal.valueOf(result.getTotalEntrustVolume()), 4));
+                handleParameters(result, item);
+            }
+
+            list.addAll(singleList);
         }
         return list;
+    }
+
+    /**
+     * 配置参数
+     */
+    private void handleParameters(PortfolioAllocationResponse result, Instruction ins) {
+        // 委托数量
+        ins.setEntrustNum(ins.getConNum().longValue());
+        // 委托金额
+        ins.setEntrustAmt(ArithmeticUtil.multiply(BigDecimal.valueOf(ins.getEntrustNum()), result.getPrice()));
+        if (EntrustUtils.isVolume(ins)) {
+            // 借用mIntAmt存放剩余总数量
+            ins.setmIntAmt(BigDecimal.valueOf(ins.getEntrustNum() - ins.getEntrustLeftAmt().longValue() - ins.getFrozenQuantity().longValue()));
+        } else {
+            // 借用mTradeAmt存放剩余总金额
+            ins.setmTradeAmt(TradeUtils.subtract(ins.getEntrustAmt(), ins.getEntrustLeftAmt(), ins.getFrozenQuantity(), 2));
+        }
     }
 }
