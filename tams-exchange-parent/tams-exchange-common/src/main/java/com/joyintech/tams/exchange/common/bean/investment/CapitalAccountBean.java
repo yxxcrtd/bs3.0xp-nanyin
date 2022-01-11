@@ -57,15 +57,6 @@ public class CapitalAccountBean implements Serializable {
      */
     private String tradePwd;
 
-    /**
-     * 是否融资融券
-     */
-    private String isRzrq;
-
-    /**
-     * 接口平台URL
-     */
-    private String dspUrl;
 
     public String getAcctNo() {
         return acctNo;
@@ -139,22 +130,6 @@ public class CapitalAccountBean implements Serializable {
         this.accountName = accountName;
     }
 
-    public String getIsRzrq() {
-        return isRzrq;
-    }
-
-    public void setIsRzrq(String isRzrq) {
-        this.isRzrq = isRzrq;
-    }
-
-    public String getDspUrl() {
-        return dspUrl;
-    }
-
-    public void setDspUrl(String dspUrl) {
-        this.dspUrl = dspUrl;
-    }
-
     public Account createAccount() {
         try {
             Account account = new Account();
@@ -177,8 +152,6 @@ public class CapitalAccountBean implements Serializable {
             account.setUsingStatus(Short.valueOf(this.status));
             account.setPwd(this.acctPwd);
             account.setTradePwd(this.tradePwd);
-            account.setIsRzrq(this.isRzrq);
-            account.setDspUrl(this.dspUrl);
             return account;
         } catch (Exception e) {
             return null;

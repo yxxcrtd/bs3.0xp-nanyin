@@ -34,8 +34,6 @@
             ,{field:'largePayno',width:'20%', sortField:'LARGE_PAYNO', title: 'MstCaptialAccount002.accountOutlet'}
             ,{field:'swiftCode',width:'20%', sortField:'SWIFT_CODE', title: 'MstCaptialAccount002.swiftCode'}
             ,{field:'ccyStr',width:'20%', sortField:'CCY', title: 'MstCaptialAccount002.currency'}
-            ,{field:'rzrqStr',width:'15%', sortField:'isRzrq', title: 'MstCaptialAccount002.isRzrq'}
-            ,{field:'dspUrl',width:'15%', sortField:'dspUrl', title: 'MstCaptialAccount002.dspUrl'}
             ,{field:'acctNo',width:'20%', visible: false}
             ,{field:'ccy',width:'20%', visible: false}
             ,{field:'operation', title: '操作' , type:'action',buttons: ['edit', 'delt']}

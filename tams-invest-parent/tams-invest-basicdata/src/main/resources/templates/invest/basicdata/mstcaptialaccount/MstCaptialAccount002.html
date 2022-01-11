@@ -178,16 +178,6 @@
                             <div class="layui-form-item">
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap"
-                                           data-th-text="#{MstCaptialAccount002.isRzrq}">是否融资融券</label>
-                                    <div class="layui-input-inline input-inline">
-                                        <input type="text" id="isRzrq" name="isRzrq"
-                                               class="layui-input form-input input-checkbox"
-                                               data-th-data-result='${YES_OR_NO}'
-                                               th:initValue="${entity?.isRzrq?:YES_OR_NO_N}" required>
-                                    </div>
-                                </div>
-                                <div class="form-inline-wrap">
-                                    <label class="layui-form-label form-label-wrap"
                                            data-th-text="#{MstCaptialAccount002.isCalint}">是否计提活期利息</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="isCalint" name="isCalint"
@@ -206,8 +196,6 @@
                                                required>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
                                 <div class="form-inline-wrap" id="basis_div">
                                     <label class="layui-form-label form-label-wrap"
                                            data-th-text="#{MstCaptialAccount002.basis}">计息基础</label>
@@ -220,6 +208,8 @@
                                         </select>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <div class="form-inline-wrap" id="rateType_div">
                                     <label class="layui-form-label form-label-wrap"
                                            data-th-text="#{MstCaptialAccount002.rateType}">利率类型</label>
@@ -277,24 +267,6 @@
                                                data-th-placeholder="#{SysCommon.placeholder}" required
                                                data-th-value="${entity?.spreadRate}">
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="pro-module-wrap">
-                    <div class="pro-module">
-                        <h3 class="pro-module-title">
-                            <span class="title-des">接口平台地址</span>
-                            <i class="iconfont icon-arrow-down pro-down-icon"></i>
-                        </h3>
-                        <div class="pro-module-item">
-                            <div class="layui-form-item">
-                                <div class="layui-input-inline input-inline"
-                                     style="margin:0 10px;width: 98%!important;">
-                                        <textarea id="dspUrl" name="dspUrl" placeholder="请输入内容" maxlength="300"
-                                                  data-th-placeholder="#{SysCommon.placeholder}" class="layui-textarea"
-                                                  data-th-text="${entity?.dspUrl}"></textarea>
                                 </div>
                             </div>
                         </div>

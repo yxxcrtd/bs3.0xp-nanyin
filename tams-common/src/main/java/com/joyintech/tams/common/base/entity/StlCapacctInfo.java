@@ -82,16 +82,6 @@ public class StlCapacctInfo extends StlCapacctInfoKey {
     private String tradePass;
 
     /**
-     * 是否融资融券
-     */
-    private String isRzrq;
-
-    /**
-     * 接口平台URL
-     */
-    private String dspUrl;
-
-    /**
      * 取得 账号
      * @return 账号
      */
@@ -344,21 +334,5 @@ public class StlCapacctInfo extends StlCapacctInfoKey {
      */
     public void setAccountNature(String accountNature) {
         this.accountNature = accountNature;
-    }
-
-    public String getIsRzrq() {
-        return isRzrq;
-    }
-
-    public void setIsRzrq(String isRzrq) {
-        this.isRzrq = isRzrq;
-    }
-
-    public String getDspUrl() {
-        return dspUrl;
-    }
-
-    public void setDspUrl(String dspUrl) {
-        this.dspUrl = dspUrl;
     }
 }

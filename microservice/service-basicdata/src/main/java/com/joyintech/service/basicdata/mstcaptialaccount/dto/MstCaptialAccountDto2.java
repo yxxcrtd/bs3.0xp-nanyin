@@ -42,16 +42,6 @@ public class MstCaptialAccountDto2 {
      */
     private String tradePwd;
 
-    /**
-     * 是否融资融券
-     */
-    private String isRzrq;
-
-    /**
-     * 接口平台URL
-     */
-    private String dspUrl;
-
     public String getAcctNo() {
         return acctNo;
     }
@@ -124,19 +114,4 @@ public class MstCaptialAccountDto2 {
         this.tradePwd = tradePwd;
     }
 
-    public String getIsRzrq() {
-        return isRzrq;
-    }
-
-    public void setIsRzrq(String isRzrq) {
-        this.isRzrq = isRzrq;
-    }
-
-    public String getDspUrl() {
-        return dspUrl;
-    }
-
-    public void setDspUrl(String dspUrl) {
-        this.dspUrl = dspUrl;
-    }
 }
