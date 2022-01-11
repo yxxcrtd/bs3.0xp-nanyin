@@ -353,7 +353,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         //更新操作记录日志
         CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
         oprHisReq.setEntrustId(dto.getEntrustId());
-        if(StringUtil.equals(type, "NEW")){
+        if(StringUtil.equals(type.name(), "NEW")){
             oprHisReq.setOperType(DictCodeListExt3.操作类型_新建.getValue());
         }else{
             oprHisReq.setOperType(DictCodeListExt3.操作类型_修改.getValue());

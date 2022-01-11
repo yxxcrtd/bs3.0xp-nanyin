@@ -419,6 +419,9 @@ public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust implements Proces
     // 分配方式
     private String dipType;
 
+    //
+    private String systemAct;
+
     public Date getRepoVdate() {
 		return repoVdate;
 	}
@@ -1569,5 +1572,13 @@ public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust implements Proces
 
     public void setDipType(String dipType) {
         this.dipType = dipType;
+    }
+
+    public String getSystemAct() {
+        return systemAct;
+    }
+
+    public void setSystemAct(String systemAct) {
+        this.systemAct = systemAct;
     }
 }

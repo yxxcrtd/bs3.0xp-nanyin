@@ -310,9 +310,9 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
                 isSubmit = false;
             }
+            WFlowCommonService.deleteFlow(entity.getWorkflowId());
             for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
                 dto.setWorkflowId(entity.getWorkflowId());
-                WFlowCommonService.deleteFlow(initBaseEtrInvestInfoDto(dto).getWorkFlowId());
                 WFlowCommonService.insertFlow(initBaseEtrInvestInfoDto(dto));
             }
             //发送头寸

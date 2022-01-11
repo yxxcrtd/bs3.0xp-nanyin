@@ -171,6 +171,11 @@ public class CfetsRepoDealQuotedPrice003Dto extends BaseEntity {
     @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal pledgeRatio;
 
+    /*
+     * 首次净价
+     */
+    private String firstNetPrice;
+
     /**
      * 获取 prinSysDate
      * 
@@ -721,5 +726,13 @@ public class CfetsRepoDealQuotedPrice003Dto extends BaseEntity {
 
     public void setPledgeRatio(BigDecimal pledgeRatio) {
         this.pledgeRatio = pledgeRatio;
+    }
+
+    public String getFirstNetPrice() {
+        return firstNetPrice;
+    }
+
+    public void setFirstNetPrice(String firstNetPrice) {
+        this.firstNetPrice = firstNetPrice;
     }
 }

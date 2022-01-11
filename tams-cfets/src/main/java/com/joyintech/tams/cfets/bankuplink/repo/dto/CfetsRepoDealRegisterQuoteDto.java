@@ -144,6 +144,10 @@ public class CfetsRepoDealRegisterQuoteDto extends RegFinProductDealTotal implem
      * 实际占款天数(天)
      */
     private Long actCapDays;
+    /**
+     * 决策动作
+     */
+    private String systemAct;
 
 
     public String getOperatorType() {
@@ -372,5 +376,13 @@ public class CfetsRepoDealRegisterQuoteDto extends RegFinProductDealTotal implem
 
     public void setSoftSkipMode(String softSkipMode) {
         this.softSkipMode = softSkipMode;
+    }
+
+    public String getSystemAct() {
+        return systemAct;
+    }
+
+    public void setSystemAct(String systemAct) {
+        this.systemAct = systemAct;
     }
 }

@@ -22,6 +22,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper;
 import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
 import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoLib001Mapper;
@@ -81,6 +82,9 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
 
     @Autowired(required = false)
     private WflEtrEntrustMapper wflEtrEntrustMapper;
+
+    @Autowired
+    private JoyinbusinessCommonMapper joyinbusinessCommonMapper;
 
     /**
      * 指令管理查询
@@ -711,6 +715,23 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
     }
 
 
+    public List<SelectOptionDto> queryMySideList(Map<String,Object> dto) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("sysDate",iPlatformDate.getSysDate());
+        if(StringUtil.equals(dto.get("dealType"),"01")){
+            //系统内的交易对手，即市场机构和资管产品的数据
+            return joyinbusinessCommonMapper.queryCounterPartyList(param);
+        }else if(StringUtil.equals(dto.get("dealType"),"02")){
+            //银行间机构，且必须关联到系统的交易对手
+            return joyinbusinessCommonMapper.queryMySideAndPartyList(param);
+        }else if(StringUtil.equals(dto.get("dealType"),"03")){
+            //CSTP下行接口对手方
+            return joyinbusinessCommonMapper.queryCstpPartyList(param);
+        }else{
+            //组合关联的银行间机构,此处前端能拿到组合的21位码
+            return joyinbusinessCommonMapper.queryMySideList(param);
+        }
+    }
 }
 
 

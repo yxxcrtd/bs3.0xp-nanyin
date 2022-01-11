@@ -396,15 +396,15 @@
             tradeAmt += parseFloat(item.entrustNum);
             if(item.entrustNum&&item.entrustNum!=''){
                 item.entrustNum=item.entrustNum * 10000;
-              //  temp.entrustNum = item.entrustNum;
+                temp.entrustNum = item.entrustNum;
             }
             if(item.entrustOwnNum&&item.entrustOwnNum!=''){
                 item.entrustOwnNum=item.entrustOwnNum * 10000;
-              //  temp.entrustOwnNum = item.entrustOwnNum;
+                temp.entrustOwnNum = item.entrustOwnNum;
             }
             if(item.entrustIntegrateNum&&item.entrustIntegrateNum!=''){
                 item.entrustIntegrateNum=item.entrustIntegrateNum * 10000;
-             //   temp.entrustIntegrateNum = item.entrustIntegrateNum;
+                temp.entrustIntegrateNum = item.entrustIntegrateNum;
             }
             finprodId = temp.finprodId;
             tradeMarket = temp.tradeMarket;

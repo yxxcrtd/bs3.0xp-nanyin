@@ -63,10 +63,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 质押回购报价(登记)
@@ -170,6 +168,10 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      * 利率保留位数
      */
     private static final int yieldScale = 4;
+    /**
+     * 质押券递增维度
+     */
+    private static BigDecimal pledgeDimension = new BigDecimal("1000");
 
     /**
      * 提交保存check 必填项
@@ -533,7 +535,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             //头寸
             sendPositionMethod(entity, cfetsRepoDealDbDto, true);
         }
-//        if(StringUtil.isNotEmpty(type)){
+//        if (StringUtil.isNotEmpty(type)) {
 //            throw new RuntimeException("cs by jp");
 //        }
     }
@@ -648,6 +650,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             result.setRegTradeFees(cfetsIbuQuoteBondMapper.listRegTradeFee(entity.getTotleTradeId()));
             result.setRegFinPledges(cfetsIbuQuoteRepoMapper.listRegFinPledge(entity.getTotleTradeId()));
         } else {
+            result.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
             entity.setOuPartyId(entity.getMySide());
             entity.setOuTraderId(entity.getMySideTrader());
             entity.setClearType(entity.getSettleType());
@@ -743,22 +746,22 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     entrustIdList.add(ptlAllocatio.getEntrustId());
                     // 记录交易编号
                     entrustIdTradeIdMap.put(ptlAllocatio.getEntrustId(), regFinProductDeal.getTradeId());
-                    // 交易类金融产品
-                    FinTradeProductDto finTradeProduct = new FinTradeProductDto();
-                    // 交易类金融产品附属表
-                    FinTradeProductAdd finTradeProductAdd = new FinTradeProductAdd();
-                    this.prepareFinTradeProductAndAdd(entity, repRegistOrg, finTradeProduct, finTradeProductAdd, regFinProductDeal);
-                    finTradeProductDtos.add(finTradeProduct);
-                    finTradeProductAdds.add(finTradeProductAdd);
-                    // 金融产品分类信息
-                    FinProductType finProductType = this.prepareFinProductTypeEntity(regFinProductDeal);
-                    finProductTypes.add(finProductType);
+//                    // 交易类金融产品
+//                    FinTradeProductDto finTradeProduct = new FinTradeProductDto();
+//                    // 交易类金融产品附属表
+//                    FinTradeProductAdd finTradeProductAdd = new FinTradeProductAdd();
+//                    this.prepareFinTradeProductAndAdd(entity, repRegistOrg, finTradeProduct, finTradeProductAdd, regFinProductDeal);
+//                    finTradeProductDtos.add(finTradeProduct);
+//                    finTradeProductAdds.add(finTradeProductAdd);
+//                    // 金融产品分类信息
+//                    FinProductType finProductType = this.prepareFinProductTypeEntity(regFinProductDeal);
+//                    finProductTypes.add(finProductType);
                 }
             }
-            result.setFinTradeProducts(finTradeProductDtos);
-            result.setFinTradeProductAdds(finTradeProductAdds);
+//            result.setFinTradeProducts(finTradeProductDtos);
+//            result.setFinTradeProductAdds(finTradeProductAdds);
             result.setRegFinProductDeals(regFinProductDeals);
-            result.setFinProductTypes(finProductTypes);
+//            result.setFinProductTypes(finProductTypes);
             result.setRegTradeFees(regTradeFees);
             // 质押品明细汇总
             List<RegFinTotalPledge> regFinTotalPledges = new ArrayList<>();
@@ -1005,29 +1008,45 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 pledgeMap.put(dto.getPortfolioId() + dto.getFinprodId(),
                         ArithmeticUtil.multiply(new BigDecimal(dto.getPledgePrinStr()), new BigDecimal(10000)));
             });
-            for (RepoEntrustPledgeDto dto : repoEntrustPledgeDtos) {
-                if (StringUtil.isNotEmpty(dto.getPledgePrinStr())) {
-                    dto.setPledgePrin(ArithmeticUtil.multiply(new BigDecimal(dto.getPledgePrinStr()), new BigDecimal(10000)));
-                }
-                RegFinPledge regFinPledge = new RegFinPledge();
-                if (pledgeMap.get(dto.getPortfolioId() + dto.getFinprodId()) == null) {
-                    continue;
-                }
-                BigDecimal pledgePrin = ptlSecPrin.get(dto.getPortfolioId() + dto.getFinprodId());//指令中质押额
-                //质押面值 = 指令中质押额/所有同组合,同债券指令的质押总额*质押信息中的质押额  按比例分配质押额
-                pledgePrin = ArithmeticUtil.multiply(
-                        ArithmeticUtil.divide(
-                                dto.getPledgePrin(), pledgePrin, 12, RoundingMode.HALF_UP), pledgeMap.get(dto.getPortfolioId() + dto.getFinprodId()));
-                regFinPledge.setEntrustId(dto.getEntrustId());//指令代码
-                if (entrustIdTradeIdMap != null && !entrustIdTradeIdMap.isEmpty()) {
-                    regFinPledge.setTradeId(entrustIdTradeIdMap.get(dto.getEntrustId()));//交易编号
-                }
-                regFinPledge.setPledgeFinprodId(dto.getFinprodId());//质押券id
-                regFinPledge.setPortfolioId(dto.getPortfolioId());//组合代码
+            // 按质押券面排序 倒序
+            repoEntrustPledgeDtos = repoEntrustPledgeDtos.stream()
+                    .sorted(Comparator.comparing(RepoEntrustPledgeDto::getPledgePrin).reversed()).collect(Collectors.toList());
+            //递增维度
+            BigDecimal addDimension = pledgeDimension;
+            for (Map.Entry<String, BigDecimal> map : pledgeMap.entrySet()) {
+                //尾差
+                BigDecimal tailDifference = map.getValue();
+                for (RepoEntrustPledgeDto dto : repoEntrustPledgeDtos) {
+                    if (!StringUtil.equals(dto.getPortfolioId() + dto.getFinprodId(), map.getKey())) {
+                        continue;
+                    }
+                    if (StringUtil.isNotEmpty(dto.getPledgePrinStr())) {
+                        dto.setPledgePrin(ArithmeticUtil.multiply(new BigDecimal(dto.getPledgePrinStr()), new BigDecimal(10000)));
+                    }
+                    RegFinPledge regFinPledge = new RegFinPledge();
+                    BigDecimal pledgePrin = ptlSecPrin.get(dto.getPortfolioId() + dto.getFinprodId());//指令中质押额
+                    //质押面值 = 指令中质押额/所有同组合,同债券指令的质押总额*质押信息中的质押额  按比例分配质押额
+                    if (ACompareToB(addDimension, pledgePrin, 12) < 0) {
+                        pledgePrin = ArithmeticUtil.multiply(
+                                ArithmeticUtil.divide(
+                                        dto.getPledgePrin(), pledgePrin, 2, RoundingMode.HALF_UP), tailDifference);
+                        pledgePrin = ArithmeticUtil.multiply(
+                                ArithmeticUtil.divide(pledgePrin,
+                                        ArithmeticUtil.multiply(addDimension, new BigDecimal(100)), 2),
+                                ArithmeticUtil.multiply(addDimension, new BigDecimal(100)));
+                    }
+                    tailDifference = ArithmeticUtil.subtract(tailDifference, pledgePrin);
+                    regFinPledge.setEntrustId(dto.getEntrustId());//指令代码
+                    if (entrustIdTradeIdMap != null && !entrustIdTradeIdMap.isEmpty()) {
+                        regFinPledge.setTradeId(entrustIdTradeIdMap.get(dto.getEntrustId()));//交易编号
+                    }
+                    regFinPledge.setPledgeFinprodId(dto.getFinprodId());//质押券id
+                    regFinPledge.setPortfolioId(dto.getPortfolioId());//组合代码
 //                regFinPledge.setPledgeFaceValue(pledgePrin);//质押面值
-                regFinPledge.setPledgeNumber(pledgePrin);//质押数量
-                regFinPledge.setPledgeRatio(dto.getPledgeRatio());//质押率
-                regFinPledges.add(regFinPledge);
+                    regFinPledge.setPledgeNumber(pledgePrin);//质押数量
+                    regFinPledge.setPledgeRatio(dto.getPledgeRatio());//质押率
+                    regFinPledges.add(regFinPledge);
+                }
             }
         } else {
             List<CfetsRepoDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteRepoMapper.listEntrustAvaNum(param);
@@ -1041,8 +1060,12 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     ptlSecPrin.put(dto.getPortfolioId(), ArithmeticUtil.doAdd(avaNum, dto.getAvaNum()));
                 }
             }
-            for (CfetsRepoDealEntrustOrderDto dto : entrustDtos) {
-                for (RepoEntrustPledgeDto pledgeDto : pledgeDtos) {
+            //递增维度
+            BigDecimal addDimension = pledgeDimension;
+            for (RepoEntrustPledgeDto pledgeDto : pledgeDtos) {
+                //尾差
+                BigDecimal tailDifference = pledgeDto.getPledgePrin();
+                for (CfetsRepoDealEntrustOrderDto dto : entrustDtos) {
                     RegFinPledge regFinPledge = new RegFinPledge();
                     if (!StringUtil.equals(dto.getPortfolioId(), pledgeDto.getPortfolioId())) {
                         continue;
@@ -1052,9 +1075,16 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     }
                     BigDecimal pledgePrin = ptlSecPrin.get(pledgeDto.getPortfolioId());//指令中质押额
                     //质押面值 = 指令剩余额度/统一组合的总额度*质押信息中的质押额  按比例分配质押额
-                    pledgePrin = ArithmeticUtil.multiply(
-                            ArithmeticUtil.divide(
-                                    dto.getAvaNum(), pledgePrin, 12, RoundingMode.HALF_UP), pledgeDto.getPledgePrin());
+                    if (ACompareToB(addDimension, pledgePrin, 12) < 0) {
+                        pledgePrin = ArithmeticUtil.multiply(
+                                ArithmeticUtil.divide(
+                                        dto.getAvaNum(), pledgePrin, 12, RoundingMode.HALF_UP), tailDifference);
+                        pledgePrin = ArithmeticUtil.multiply(
+                                ArithmeticUtil.divide(pledgePrin,
+                                        ArithmeticUtil.multiply(addDimension, new BigDecimal(100)), 2),
+                                ArithmeticUtil.multiply(addDimension, new BigDecimal(100)));
+                    }
+                    tailDifference = ArithmeticUtil.subtract(tailDifference, pledgePrin);
                     regFinPledge.setEntrustId(dto.getEntrustId());//指令代码
                     if (entrustIdTradeIdMap != null && !entrustIdTradeIdMap.isEmpty()) {
                         regFinPledge.setTradeId(entrustIdTradeIdMap.get(dto.getEntrustId()));//交易编号
@@ -1400,9 +1430,12 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         req.setBusiAct(DictCodeListExt3.业务动作_交易登记.getValue());
         req.setPs(dealTotal.getPs());
         if (isSubmit) {
-            req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+            req.setDecisionAct(DictCodeListExt3.系统动作_新建.getValue());
+            req.setSystemAct(cfetsRepoDealDbDto.getSystemAct());
         } else {
-            req.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+            req.setDecisionAct(DictCodeListExt3.系统动作_修改.getValue());
+            req.setSystemAct(cfetsRepoDealDbDto.getSystemAct());
+            req.setbTotalTradeId(cfetsRepoDealDbDto.getTotleTradeId());
         }
         req.setCdate(dealTotal.getTradeDate());
         req.setCcy(DictCodeList.币种_人民币_CNY.getValue());

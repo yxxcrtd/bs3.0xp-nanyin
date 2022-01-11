@@ -871,6 +871,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         if ("save".equals(entity.getOperatorType()) || StringUtil.equals(entity.getOperatorType(), "revoke")) {
             return;
         }
+        entity.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
         insertWflRepoDealQuote(entity);
         // 发头寸
         sendPositionMethod(entity, true);
@@ -1202,6 +1203,9 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         if (type.equals(OperationType.REVOKE) || type.equals(OperationType.DELETE)) {
             PositionHttpRequest.sendRevoke(entity.getQuoteId(), DictCodeListExt1.子系统代码_交易.getValue(), "REPO001");
         }
+//        if (StringUtil.isNotEmpty(type)) {
+//            throw new RuntimeException("cs by jp");
+//        }
     }
 
     /**
@@ -1837,9 +1841,12 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         req.setBusiAct(DictCodeListExt3.业务动作_对话报价.getValue());
         req.setPs(entity.getPs());
         if (isSubmit) {
-            req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+            req.setDecisionAct(DictCodeListExt3.系统动作_新建.getValue());
+            req.setSystemAct(entity.getSystemAct());
         } else {
-            req.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+            req.setDecisionAct(DictCodeListExt3.系统动作_修改.getValue());
+            req.setSystemAct(entity.getSystemAct());
+            req.setbTotalTradeId(entity.getQuoteId());
         }
         req.setCdate(entity.getTradeDate());
         req.setCcy(DictCodeList.币种_人民币_CNY.getValue());
@@ -2195,7 +2202,15 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
      * @date 2021/12/30 9:38
      */
     public List<CfetsRepoDealQuotedPrice003Dto> selectQuoteCrepPledgeForDzh(Map<String, Object> map) {
-        List<com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto> list = cfetsRepoDealQuotedPrice001Mapper.selectQuoteCrepPledgeForDzh(map);
+        map.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        map.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+        map.put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue());
+        map.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
+        // 流程中数据
+        List<com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto> list = ibuQuoteRepo003Mapper.selectQuoteCrepPledgeForDzh(map);
+        if(CollectionUtils.isEmpty(list)) {
+            list = ibuQuoteRepo003Mapper.selectWflQuoteCrepPledgeForDzh(map);
+        }
         List<CfetsRepoDealQuotedPrice003Dto> results = null;
         try {
             results = JsonUtils.json2List(JsonUtils.object2Json(list), CfetsRepoDealQuotedPrice003Dto.class);
