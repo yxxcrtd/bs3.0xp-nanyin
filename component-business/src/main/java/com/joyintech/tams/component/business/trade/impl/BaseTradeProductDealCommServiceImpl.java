@@ -695,12 +695,12 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                     // 债券  申购确认  持仓类型为冻结
                     if (StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                             && StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_申购确认.getValue())) {
-                       dto.setHodingType(DictCodeList.持仓类型_冻结.getValue());
+                       dto.setHodingType(DictCodeList.持仓类型_场内上市前冻结.getValue());
                     }
                     // 股票存续期  申购确认  持仓类型为冻结
                     if (StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())
                             && StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_申购确认.getValue())) {
-                        dto.setHodingType(DictCodeList.持仓类型_冻结.getValue());
+                        dto.setHodingType(DictCodeList.持仓类型_场内上市前冻结.getValue());
                     }
                     if (DictCodeListExt1.交易场所_银行间.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getTradeMarket())
                             && DictCodeList.交易方向_买入.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getPs())
