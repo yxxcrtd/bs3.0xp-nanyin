@@ -737,7 +737,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             errorList.add(new ValidMessage("请输入组合分配交易金额"));
         }
         if (!StringUtil.isNotEmpty(ptlAllocatio.getConvertAmt())
-                && StringUtil.equals(ps, DictCodeList.交易方向_正回购)) {
+                && StringUtil.equals(ps, DictCodeListExt3.交易方向_正回购)) {
             errorList.add(new ValidMessage("请输入组合分配质押券折算总额"));
         }
         if (!StringUtil.isNotEmpty(ptlAllocatio.getDealFeeAmt())) {
