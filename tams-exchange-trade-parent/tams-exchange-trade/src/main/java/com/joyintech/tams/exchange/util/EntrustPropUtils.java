@@ -2,11 +2,47 @@ package com.joyintech.tams.exchange.util;
 
 
 import cn.hutool.core.util.StrUtil;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.common.BusinessResultException;
 import com.joyintech.tams.exchange.common.constant.*;
+import com.joyintech.tams.exchange.common.constant.joyin.InstructionPriceMode;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
+import org.apache.commons.lang3.StringUtils;
 
 public class EntrustPropUtils {
+
+    public static String getEntrustProp(Instruction instruction, String entrustProp) {
+        if (null == instruction) {
+            return entrustProp;
+        }
+        String tradePlat = instruction.getTradePlat();
+        //竞价平台
+        if (StrUtil.equals(tradePlat, TradePlat.NORMAL.value)) {
+            if (StringUtils.equals(InstructionPriceMode.MARKET.value, instruction.getPriceMode())) {
+                return entrustProp;
+            } else {
+                return decideEntrustProp(instruction.getPs());
+            }
+        }
+
+        //协议回购
+        String firstRepoPs = instruction.getFirstRepoPs();
+        if (InstructionPs.POSITIVEREPO.value.equals(firstRepoPs) || InstructionPs.REVERSEDREPO.value.equals(firstRepoPs)) {
+            return decideEntrustProp(instruction.getPs(), instruction.getTradeMarket());
+        }
+
+        //大宗平台、固收平台
+        String dealMode = instruction.getDealMode();
+        if (StrUtil.isNotEmpty(dealMode)) {
+            if (StringUtils.equals(DictCodeListExt3.申报类型_不指定.getValue(), instruction.getDealMode())) {
+                return entrustProp;
+            } else {
+                return decideEntrustProp(dealMode);
+            }
+        }
+
+        return entrustProp;
+    }
 
     public static String getEntrustProp(Instruction instruction) {
         if (null == instruction) {

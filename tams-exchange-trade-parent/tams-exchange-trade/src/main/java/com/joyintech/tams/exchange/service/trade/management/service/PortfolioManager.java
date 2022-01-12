@@ -537,7 +537,7 @@ public class PortfolioManager extends BaseService {
         String entrustBs = EntrustBsProp.getEntrustBs(instruction.getPs());
         // 获取委托属性
         // TODO 方法需要重写
-        String entrustProp = EntrustPropUtils.getEntrustProp(instruction);
+        String entrustProp = EntrustPropUtils.getEntrustProp(instruction, bean.getEntrustProp());
         // 获取委托价格
         BigDecimal entrustPrice = bean.getEntrustPrice();
 

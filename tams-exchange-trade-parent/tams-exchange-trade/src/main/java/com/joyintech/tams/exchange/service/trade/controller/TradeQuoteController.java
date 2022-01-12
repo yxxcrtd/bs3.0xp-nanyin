@@ -1,7 +1,6 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
 import com.joyintech.exchange.service.quote.service.QuoteService;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.constant.EntrustBsProp;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
@@ -48,12 +47,7 @@ public class TradeQuoteController {
     @RequestMapping(value = "/entrust/integrated/bulk_quote", method = RequestMethod.POST)
     public Message<List<IntegratedBulkQuoteBean>> queryIntegratedBulkQuote(@RequestBody @Validated IntegratedBulkQuoteQryBean integratedBulkQuoteQryBean) {
         Instruction instruction = instructionService.findById(integratedBulkQuoteQryBean.getInstructionId());
-        String entrustProp;
-        if (StringUtils.equals(DictCodeListExt3.申报类型_不指定.getValue(), instruction.getDealMode())) {
-            entrustProp = integratedBulkQuoteQryBean.getEntrustProp();
-        } else {
-            entrustProp = EntrustPropUtils.getEntrustProp(instruction);
-        }
+        String entrustProp = EntrustPropUtils.getEntrustProp(instruction, integratedBulkQuoteQryBean.getEntrustProp());
         integratedBulkQuoteQryBean.setEntrustProp(entrustProp);
         integratedBulkQuoteQryBean.setEntrustBs(EntrustBsProp.getEntrustBs(instruction.getPs()));
         if (StringUtils.isEmpty(integratedBulkQuoteQryBean.getStockCode())) {
@@ -75,12 +69,7 @@ public class TradeQuoteController {
     @RequestMapping(value = "/entrust/integrated/repurchase_quote", method = RequestMethod.POST)
     public Message<List<IntegratedRepurchaseQuoteBean>> queryIntegratedRepurchaseQuote(@RequestBody @Validated IntegratedRepurchaseQuoteQryBean integratedRepurchaseQuoteQryBean) {
         Instruction instruction = instructionService.findById(integratedRepurchaseQuoteQryBean.getInstructionId());
-        String entrustProp;
-        if (StringUtils.equals(DictCodeListExt3.申报类型_不指定.getValue(), instruction.getDealMode())) {
-            entrustProp = integratedRepurchaseQuoteQryBean.getEntrustProp();
-        } else {
-            entrustProp = EntrustPropUtils.getEntrustProp(instruction);
-        }
+        String entrustProp = EntrustPropUtils.getEntrustProp(instruction, integratedRepurchaseQuoteQryBean.getEntrustProp());
         integratedRepurchaseQuoteQryBean.setEntrustProp(entrustProp);
         if (StringUtils.isEmpty(integratedRepurchaseQuoteQryBean.getAccountId())) {
             integratedRepurchaseQuoteQryBean.setAccountId(instruction.getAcctNo());
