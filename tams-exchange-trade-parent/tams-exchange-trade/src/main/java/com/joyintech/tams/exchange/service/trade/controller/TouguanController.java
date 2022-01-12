@@ -1,5 +1,7 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,9 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.joyintech.tams.exchange.common.bean.InstructionPage;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
+import com.joyintech.tams.exchange.common.db.domain.Entrust;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.InstructionDetail;
 import com.joyintech.tams.exchange.common.db.domain.InstructionPledge;
+import com.joyintech.tams.exchange.common.db.domain.Trade;
+import com.joyintech.tams.exchange.common.domain.Message;
+import com.joyintech.tams.exchange.datacommon.db.service.EntrustService;
+import com.joyintech.tams.exchange.datacommon.db.service.TradeService;
 import com.joyintech.tams.exchange.service.trade.management.service.InvestmentManagement;
 import com.joyintech.tams.exchange.service.trade.management.service.SettleManagement;
 
@@ -28,6 +35,12 @@ public class TouguanController {
     
     @Autowired
     private SettleManagement settleManagement;
+    
+    @Autowired
+    private EntrustService entrustService;
+    
+    @Autowired
+    private TradeService tradeService;
 
     /**
      * 处理审核指令
@@ -90,6 +103,30 @@ public class TouguanController {
     @RequestMapping(value = "/settle", method = RequestMethod.POST)
     public String settleHistory() {
         return settleManagement.settleHistory();
+    }
+    
+    /**
+     * 投管用委托查询
+     *
+     * @param instructionId 指令编号号
+     * @return ResultBean
+     */
+    @ApiOperation(value = "投管用-委托查询接口", notes = "投管用-委托查询接口")
+    @RequestMapping(value = "/queryEntrust", method = RequestMethod.POST)
+    public Message<List<Entrust>> queryEntrust(@RequestParam(value = "entrustId") String instructionId) {
+        return new Message<List<Entrust>>(entrustService.queryEntrust2Touguan(instructionId));
+    }
+    
+    /**
+     * 投管用成交查询
+     *
+     * @param instructionId 指令编号号
+     * @return ResultBean
+     */
+    @ApiOperation(value = "投管用-成交查询接口", notes = "投管用-成交查询接口")
+    @RequestMapping(value = "/queryTrade", method = RequestMethod.POST)
+    public Message<List<Trade>> queryTrade(@RequestParam(value = "entrustId") String instructionId) {
+        return new Message<List<Trade>>(tradeService.queryTrade2Touguan(instructionId));
     }
 
 }

@@ -458,17 +458,30 @@ public class PortfolioManager extends BaseService {
             return ResultBean.error(ErrorCode.INSTRUCTIONS_NOT_EXIST);
         }
 
-        // 行情数据
-        QuoteProto.TickBean tick = quoteTickService.getTickFromCache(bean.getStockCode());
-        if (Objects.isNull(tick)) {
-            log.warn("未找到行情信息: stockId [{}]", instruction.getFinprodMarketId());
-            return ResultBean.error(ErrorCode.QUOTE_NOT_EXIT);
-        }
+        // 过滤公平相关指令
+        // 1. 同交易员 2. 同证券编码 3. 同交易方向
+        // 4. 指令状态——已接收 5. 交易平台——沪深竞价撮合平台 6. 指令进度——未100%
+        List<Instruction> simpleFiltingList = instructionService.queryInstructionByUserIdAndStockCode(instruction.getTradeId(), instruction.getFinprodMarketId())
+                .stream().filter(item ->
+                        instruction.getPs().equals(item.getPs())
+                                && InstructionStatus.ALREADY_RECEIVE.value.equals(item.getEntrustStatus())
+                                && InvestmentUtils.isNormalTradeFromInstruction(item.getTradePlat())
+                                && !InvestmentUtils.isInstructionProcessComplete(item))
+                .collect(Collectors.toList());
+        log.debug("初步过滤出公平相关指令：{}", JSONUtil.toJsonStr(simpleFiltingList));
+        result.setList(simpleFiltingList);
 
         // 判断进入公平交易
         if (!EntrustUtils.isFairOrder(bean, instruction)) {
             log.warn("非公平交易模式，无法进行公平交易！param = {}", JSONUtil.toJsonStr(bean));
-            return ResultBean.error(ErrorCode.NOT_FAIR_INSTRUCTION_ERROR);
+            return ResultBean.error(ErrorCode.NOT_FAIR_INSTRUCTION_ERROR, result);
+        }
+
+        // 行情数据
+        QuoteProto.TickBean tick = quoteTickService.getTickFromCache(bean.getStockCode());
+        if (Objects.isNull(tick)) {
+            log.warn("未找到行情信息: stockId [{}]", instruction.getFinprodMarketId());
+            return ResultBean.error(ErrorCode.QUOTE_NOT_EXIT, result);
         }
 
         // 系统参数：未接收指令的公平处理模式 01：是；02：否
@@ -490,7 +503,7 @@ public class PortfolioManager extends BaseService {
 
             if (waitReceiveList.size() > 0) {
                 log.warn("未接收且影响公平交易的相关指令: {}", JsonUtils.getJsonFromObject(waitReceiveList));
-                return ResultBean.error(ErrorCode.FAIR_INSTRUCTIONS_UNACCEPT_ERROR.value(), "存在需要执行公平交易但未接收的指令，请先接收指令！");
+                return ResultBean.error(ErrorCode.FAIR_INSTRUCTIONS_UNACCEPT_ERROR.value(), "存在需要执行公平交易但未接收的指令，请先接收指令！", result);
             }
         }
 
@@ -699,7 +712,7 @@ public class PortfolioManager extends BaseService {
 
             if (Objects.isNull(instructionDetails) || instructionDetails.size() == 0 || instructionDetails.size() == 1) {
                 // 处理单组合
-                handleParameters(result, ins);
+                handleFields(result, ins);
                 list.add(ins);
                 continue;
             }
@@ -737,11 +750,11 @@ public class PortfolioManager extends BaseService {
             Instruction maxInstruction = singleList.stream().max(Comparator.comparing(Instruction::getConPrice)).get();
             long totalExceptMaxVolume = singleList.stream().filter(item -> !item.getEntrustId().equals(maxInstruction.getEntrustId()))
                     .mapToLong(item -> item.getConNum().longValue()).sum();
-            maxInstruction.setConNum(BigDecimal.valueOf(ins.getEntrustNum()- totalExceptMaxVolume));
+            maxInstruction.setConNum(BigDecimal.valueOf(ins.getEntrustNum() - totalExceptMaxVolume));
             // 重新计算占比；赋值委托数量，委托金额
             for (Instruction item : singleList) {
                 item.setConPrice(ArithmeticUtil.divide(item.getConNum(), BigDecimal.valueOf(result.getTotalEntrustVolume()), 4));
-                handleParameters(result, item);
+                handleFields(result, item);
             }
 
             list.addAll(singleList);
@@ -752,17 +765,19 @@ public class PortfolioManager extends BaseService {
     /**
      * 配置参数
      */
-    private void handleParameters(PortfolioAllocationResponse result, Instruction ins) {
-        // 委托数量
-        ins.setEntrustNum(ins.getConNum().longValue());
-        // 委托金额
-        ins.setEntrustAmt(ArithmeticUtil.multiply(BigDecimal.valueOf(ins.getEntrustNum()), result.getPrice()));
+    private void handleFields(PortfolioAllocationResponse result, Instruction ins) {
+        // 借用termDays存放委托数量leftAmt
+        ins.setTermDays(ins.getConNum());
+        // 借用minAmt存放委托金额
+        ins.setMinAmt(ArithmeticUtil.multiply(BigDecimal.valueOf(ins.getEntrustNum()), result.getPrice()));
         if (EntrustUtils.isVolume(ins)) {
             // 借用mIntAmt存放剩余总数量
-            ins.setmIntAmt(BigDecimal.valueOf(ins.getEntrustNum() - ins.getEntrustLeftAmt().longValue() - ins.getFrozenQuantity().longValue()));
+            BigDecimal leftNum = BigDecimal.valueOf(ins.getEntrustNum() - ins.getEntrustLeftAmt().longValue() - ins.getFrozenQuantity().longValue());
+            ins.setmIntAmt(leftNum.compareTo(BigDecimal.ZERO) > 0 ? leftNum : BigDecimal.ZERO);
         } else {
             // 借用mTradeAmt存放剩余总金额
-            ins.setmTradeAmt(TradeUtils.subtract(ins.getEntrustAmt(), ins.getEntrustLeftAmt(), ins.getFrozenQuantity(), 2));
+            BigDecimal leftAmt = TradeUtils.subtract(ins.getEntrustAmt(), ins.getEntrustLeftAmt(), ins.getFrozenQuantity(), 2);
+            ins.setmTradeAmt(leftAmt.compareTo(BigDecimal.ZERO) > 0 ? leftAmt : BigDecimal.ZERO);
         }
     }
 }

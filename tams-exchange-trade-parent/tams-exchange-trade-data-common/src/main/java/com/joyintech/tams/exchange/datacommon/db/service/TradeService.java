@@ -1,10 +1,10 @@
 package com.joyintech.tams.exchange.datacommon.db.service;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.joyintech.tams.exchange.common.db.domain.Trade;
 import com.joyintech.tams.exchange.datacommon.cache.AsyncService;
-
-import java.util.List;
 
 public interface TradeService extends AsyncService<String, Trade> {
     List<Trade> queryTradeByEntrust(String entrustId);
@@ -24,4 +24,11 @@ public interface TradeService extends AsyncService<String, Trade> {
     void clearSet(String date);
 
 //    void fillPlatDate(String date);
+    
+    /**
+     * 投管用成交查询
+     * @param instructionId
+     * @return
+     */
+    List<Trade> queryTrade2Touguan(String instructionId);
 }

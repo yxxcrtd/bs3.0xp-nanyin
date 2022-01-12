@@ -632,4 +632,16 @@
       FULL_PRICE = #{fullPrice,jdbcType=NUMERIC}
     where ID = #{id,jdbcType=VARCHAR}
   </update>
+  
+  <select id="queryTrade2Touguan" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from T_TRADE
+        where INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
+        UNION ALL
+        select
+        <include refid="Base_Column_List"/>
+        from T_TRADEHISTORY
+        where INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
+    </select>
 </mapper>
