@@ -6,6 +6,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.common.BusinessResultException;
 import com.joyintech.tams.exchange.common.constant.*;
 import com.joyintech.tams.exchange.common.constant.joyin.InstructionPriceMode;
+import com.joyintech.tams.exchange.common.constant.joyin.InvestmentAssetType1;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,8 +27,8 @@ public class EntrustPropUtils {
         }
 
         //协议回购
-        String firstRepoPs = instruction.getFirstRepoPs();
-        if (InstructionPs.POSITIVEREPO.value.equals(firstRepoPs) || InstructionPs.REVERSEDREPO.value.equals(firstRepoPs)) {
+        if (StringUtils.equals(instruction.getFinprodType2(), InvestmentAssetType.PLEDGE_REPURCHASE.value) &&
+                StringUtils.equals(instruction.getFinprodType2(), InvestmentAssetType1.NEGOTIATED_REPO.value)) {
             return decideEntrustProp(instruction.getPs(), instruction.getTradeMarket());
         }
 
@@ -55,8 +56,8 @@ public class EntrustPropUtils {
         }
 
         //协议回购
-        String firstRepoPs = instruction.getFirstRepoPs();
-        if (InstructionPs.POSITIVEREPO.value.equals(firstRepoPs) || InstructionPs.REVERSEDREPO.value.equals(firstRepoPs)) {
+        if (StringUtils.equals(instruction.getFinprodType2(), InvestmentAssetType.PLEDGE_REPURCHASE.value) &&
+                StringUtils.equals(instruction.getFinprodType2(), InvestmentAssetType1.NEGOTIATED_REPO.value)) {
             return decideEntrustProp(instruction.getPs(), instruction.getTradeMarket());
         }
 
@@ -69,8 +70,8 @@ public class EntrustPropUtils {
         return null;
     }
 
-    private static String decideEntrustProp(String ps) {
-        EntrustProp entrustProp = EntrustBsProp.getEntrustProp(ps);
+    private static String decideEntrustProp(String code) {
+        EntrustProp entrustProp = EntrustBsProp.getEntrustProp(code);
         if (null == entrustProp) {
             throw BusinessResultException.create(ErrorCode.ENTRUST_PROP_NOT_EXIT);
         }
