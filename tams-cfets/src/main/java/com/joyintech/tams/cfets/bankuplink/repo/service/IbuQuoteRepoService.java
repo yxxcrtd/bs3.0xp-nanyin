@@ -453,7 +453,6 @@ public class IbuQuoteRepoService extends BaseService {
         param.put("notentrustIdList", ptlAllocationAddRequest.getNotEntrustIdList());
         param.put("platDate", iPlatformDate.getSysDateStr());
         param.put("entrustStatus", Collections.singletonList(DictCodeList.委托状态_已接收.getValue()));
-        param.remove("entrustIdList");
         setParam(param, 1);
         param.put("repo_pledge_model", CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL));
         List<CfetsRepoDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
