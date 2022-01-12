@@ -35,10 +35,7 @@ import com.joyintech.tams.common.base.dao.EtrDistributeMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.DateCalService;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
@@ -281,7 +278,7 @@ public class IbuQuoteRepoService extends BaseService {
      */
     public AjaxResult dealexecutioncheck(CfetsRepoDealQuoteRequest cfetsRepoDealQuoteRequest) {
         AjaxResult ajaxResult = new AjaxResult();
-        if(CollectionUtils.isNotEmpty(cfetsRepoDealQuoteRequest.getEntrustIdList())) {
+        if (CollectionUtils.isNotEmpty(cfetsRepoDealQuoteRequest.getEntrustIdList())) {
             try {
                 Map<String, Object> param = BeanUtil.object2Map(cfetsRepoDealQuoteRequest);
                 setParam(param, 1);
@@ -2228,8 +2225,6 @@ public class IbuQuoteRepoService extends BaseService {
             entrustOrderDto = entrustDtos.get(0);
         }
         entrustOrderDto.setTradeMarket(DictCodeListExt1.交易场所_银行间.getValue());
-        resultData.put(dtCode + "_form", infoForm);
-        resultData.put(dtCode + "_data", entrustOrderDto);
         if (StringUtil.equals(repo_pledge_model, "02")) {
             List<CfgDataTableShow> infoForm1;
             //获取登录用户的ID
@@ -2240,11 +2235,17 @@ public class IbuQuoteRepoService extends BaseService {
             } else {
                 infoForm1 = cfgDataTableMapper.getBySpcdCodes(pageCode, dtCode, spcdCodeList, EFFERANGE_IS, userId);
             }
-
             List<RepoEntrustPledgeDto> list = this.selectRepoEntrustPledges(dto);
+            BigDecimal shareAmt = BigDecimal.ZERO;
+            for (RepoEntrustPledgeDto temp : list) {
+                shareAmt = ArithmeticUtil.doAdd(shareAmt, ArithmeticUtil.divide(ArithmeticUtil.multiply(temp.getPledgePrin(), temp.getPledgeRatio()),new BigDecimal(100),2));
+            }
+            entrustOrderDto.setSumShareAmt(ArithmeticUtil.divide(shareAmt,new BigDecimal(10000),2));
             resultData.put(dtCode + "_table", infoForm1);
             resultData.put(dtCode + "_tableData", list);
         }
+        resultData.put(dtCode + "_form", infoForm);
+        resultData.put(dtCode + "_data", entrustOrderDto);
 
         return resultData;
     }

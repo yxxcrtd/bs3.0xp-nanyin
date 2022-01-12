@@ -1,3 +1,16 @@
+--表格
+delete from CFG_DATATABLE_SHOW_FLAG where PAGECODE = 'IbuQuoteRepo' and DTCODE = 'ETRDETINFO';
+delete cfg_datatable_show where PAGECODE = 'IbuQuoteRepo' and DTCODE = 'ETRDETINFO';
+
+insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('IbuQuoteRepo', 'ETRDETINFO','999999', 'bondCode', '债券代码', '','1', '1', '0', '0','100','{"colAlign": "left"}','0','COMM','1','0','','','1');
+insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('IbuQuoteRepo', 'ETRDETINFO','999999', 'bondAbbrName', '债券简称', '','2', '1', '0', '0','100','{"colAlign": "left"}','0','COMM','1','0','','','0');
+insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('IbuQuoteRepo', 'ETRDETINFO','999999', 'avaPledgePrinStr', '可质押券面总额(万元)', 'avaPledgePrin','3', '1', '0', '0','100','{"colAlign": "left"}','0','COMM','1','0','','','0');
+insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('IbuQuoteRepo', 'ETRDETINFO','999999', 'pledgePrinStr', '质押券券面总额（万元）', 'pledgePrin','4', '1', '0', '0','100','{"colAlign": "left"}','0','COMM','1','0','','','0');
+insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('IbuQuoteRepo', 'ETRDETINFO','999999', 'firstNetPrice', '首次净价(元)', '','5', '1', '0', '0','100','{"colAlign": "right","dataType":"amount","precision":"2"}','0','COMM','1','0','','','0');
+insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('IbuQuoteRepo', 'ETRDETINFO','999999', 'pledgeRatio', '折算比例(%)', '','6', '1', '0', '0','100','{"colAlign": "right","dataType":"amount","precision":"4"}','0','COMM','1','0','','','0');
+insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('IbuQuoteRepo', 'ETRDETINFO','999999', 'repRegistOrgStr', '登记托管机构', 'repRegistOrg','7', '1', '0', '0','100','{"colAlign": "left"}','0','COMM','1','0','','','0');
+
+
 delete from CFG_READONLY_FORM_SHOW where PAGECODE = 'IbuQuoteRepo';
 
 insert into CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) values('IbuQuoteRepo', 'ETRDETINFO','999999', 'entrustDate', '指令日期', '','1', '{"colAlign": "left"}', '1', '0', '', '');
