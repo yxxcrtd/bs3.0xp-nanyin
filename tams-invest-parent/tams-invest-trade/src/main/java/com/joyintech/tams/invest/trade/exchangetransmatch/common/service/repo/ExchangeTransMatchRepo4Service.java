@@ -234,7 +234,7 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
         //利率
         dealTotal.setRate(dealDto.getUnitCprice());
         //回购品种
-        dealDto.setTermType(dealDto.getTermType());
+        dealTotal.setTermType(dealDto.getTermType());
 
         // 备注
         dealTotal.setRemark("数据清算自动处理");
