@@ -24,6 +24,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.common.dto.TrdBondInvestTradeDto;
 import com.joyintech.service.bankuplink.common.dto.TrdConfirmMatchDto;
 import com.joyintech.service.bankuplink.common.dto.TrdConfirmRegAndIbuInfoDto;
+import com.joyintech.service.bankuplink.common.util.ProdTypeUtil;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
@@ -75,6 +76,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -1654,7 +1656,9 @@ public class CfetsTrdConfirmService extends BaseService{
     }
     public CfetsTrdRepoTrade003Dto prepareRepoIbuEntity(String totleTradeId,String genType)  {
         //报价数据
-        CfetsTrdConfirmRegInfoListResponse dtoReg=cfetsTrdConfirmMapper.selectRepoIbuInfoByKey(totleTradeId);
+        Map<String, Object> pageParam=new HashMap<>();
+        pageParam.put("quoteId",totleTradeId);
+        CfetsTrdConfirmRegInfoListResponse dtoReg=cfetsTrdConfirmMapper.selectRepoIbuInfoByKey(pageParam);
         // 成交编号
         String oritradeId = dtoReg.getExecid();
         String userName = null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"system";
@@ -1796,6 +1800,7 @@ public class CfetsTrdConfirmService extends BaseService{
             } else {
                 deal.setTradeId(IDGenerator.generate());
             }
+            deal.setFinprodId(deal.getTradeId());
             deal.setTotleTradeId(entity.getTotleTradeId());
             deal.setBusiType(DictCodeList.共通业务类型_质押式回购交易.getValue());
             // 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
@@ -3065,9 +3070,11 @@ public class CfetsTrdConfirmService extends BaseService{
             param.put("finprodType2",DictCodeListExt1.金融产品类型_债券.getValue());
             //根据登记编号，查询登记信息
             confirmDto=cfetsTrdConfirmMapper.selectRegInfoByKey(matchDto.getPreTradeId());
-            isContinue=false;
-            isUpdate=true;
-            dealType="999999";
+            if(null!=confirmDto){
+                isContinue=false;
+                isUpdate=true;
+                dealType="999999";
+            }
         }
         //2.CSTP下行成交回报数据中的报价编号匹配报价数据的业务编号（报价编号）
         if(isContinue && null!=iCstpTrade && StringUtil.isNotEmpty(iCstpTrade.getQuoteid())){
@@ -3109,6 +3116,14 @@ public class CfetsTrdConfirmService extends BaseService{
             //根据登记编号，查询登记信息
             List<CfetsTrdConfirmRegInfoListResponse> confirmDtoList=cfetsTrdConfirmMapper.selectRegDtoByPrimaryKey(param);
             if(!StringUtil.isEmptyList(confirmDtoList)){
+                //比较抵押品基本信息
+                //查询登记或报价的质押券信息
+              /*  List<CfetsTrdConfirmRegInfoListResponse>
+                        regAndIbuPledges=cfetsTrdConfirmMapper.findAllRegAndIbuPledgesList(regInfo.getBusiCode());
+                //查询cstp数据的质押券信息
+                List<CfetsTrdConfirmCstpInfoListResponse>
+                        cstpPledges=cfetsTrdConfirmMapper.findAllCstpPledgesList(cstpInfo.getExecid());*/
+
                 confirmDto=confirmDtoList.get(0);
                 isInsert=true;
                 dealType=BussinessDictCodeList.报价方式_登记报价.getValue();
@@ -3187,9 +3202,10 @@ public class CfetsTrdConfirmService extends BaseService{
         return null;
     }
    private CfetsTrdConfirmMatchDto cstpRepoTradeAutoMatch(InterfOpicsTradRepo interfOpicsTradRepo,InterfCstpTrade iCstpTrade) {
-        /* if(!StringUtil.isNotEmpty(interfTradSecdeal.getYield8()) || !StringUtil.isNotEmpty(interfTradSecdeal.getPrinamt())
-                || ! StringUtil.isNotEmpty(interfTradSecdeal.getSettdate()) || !StringUtil.isNotEmpty(interfTradSecdeal.getDealdate())
-        ){
+         if(!StringUtil.isNotEmpty(interfOpicsTradRepo.getDealdate()) || !StringUtil.isNotEmpty(iCstpTrade.getPrice())
+                 || !StringUtil.isNotEmpty(iCstpTrade.getTradecashamt()) || !StringUtil.isNotEmpty(iCstpTrade.getSettldate())
+                 || !StringUtil.isNotEmpty(iCstpTrade.getSettldate2())  || !StringUtil.isNotEmpty(interfOpicsTradRepo.getTerm())
+           ){
             return null;
         }
         CfetsTrdConfirmRegInfoListResponse confirmDto=new CfetsTrdConfirmRegInfoListResponse();
@@ -3197,23 +3213,22 @@ public class CfetsTrdConfirmService extends BaseService{
         Boolean isContinue=true;
         Boolean isUpdate=false;Boolean isInsert=false;
         //1.CSTP下行成交回报数据的成交编号匹配已生成的银行间交易数据中的成交编号,根据cstp下行成交回报的成交编号，查询匹配关系
-        CfetsTrdConfirmMatchDto matchDto=cfetsTrdConfirmMapper.selectMatchDtoByExecId(interfTradSecdeal.getFedealno());
+        CfetsTrdConfirmMatchDto matchDto=cfetsTrdConfirmMapper.selectMatchDtoByExecId(interfOpicsTradRepo.getOritradeid());
         if(isContinue && null!=matchDto && StringUtil.isNotEmpty(matchDto.getPreTradeId())){
-            Map<String, Object> param=new HashMap<>();
-            param.put("totleTradeId",matchDto.getPreTradeId());
-            param.put("finprodType2",DictCodeListExt1.金融产品类型_债券.getValue());
             //根据登记编号，查询登记信息
             confirmDto=cfetsTrdConfirmMapper.selectRegInfoByKey(matchDto.getPreTradeId());
-            isContinue=false;
-            isUpdate=true;
-            dealType="999999";
+            if(null!=confirmDto){
+                isContinue=false;
+                isUpdate=true;
+                dealType="999999";
+            }
         }
         //2.CSTP下行成交回报数据中的报价编号匹配报价数据的业务编号（报价编号）
         if(isContinue && null!=iCstpTrade && StringUtil.isNotEmpty(iCstpTrade.getQuoteid())){
             //根据报价编号，查询报价信息
             Map<String, Object> pageParam=new HashMap<>();
             pageParam.put("cfetsQuoteId",iCstpTrade.getQuoteid());
-            confirmDto=cfetsTrdConfirmMapper.selectIbuInfoByKey(pageParam);
+            confirmDto=cfetsTrdConfirmMapper.selectRepoIbuInfoByKey(pageParam);
             if(null!=confirmDto && StringUtil.isNotEmpty(confirmDto.getQuoteType())){
                 isContinue=false;
                 isInsert=true;
@@ -3221,30 +3236,30 @@ public class CfetsTrdConfirmService extends BaseService{
             }
         }
         //3.CSTP下行成交回报数据再与已生成的银行间交易品种（默认债券买卖和质押式回购首期）交易登记数据进行匹配,查询所有的符合条件登记信息
-        if(isContinue && null!=interfTradSecdeal  && null!=iCstpTrade){
+        if(isContinue && null!=interfOpicsTradRepo  && null!=iCstpTrade){
             Map<String, Object> param=new HashMap<>();
-            param.put("finprodType2",DictCodeListExt1.金融产品类型_债券.getValue());
-            param.put("tradeDate",DateUtil.format(interfTradSecdeal.getDealdate(),"yyyy-MM-dd"));
-            param.put("finprodMarketId",interfTradSecdeal.getSecid());
-            param.put("ps",interfTradSecdeal.getPs());
-            if(StringUtil.equals(interfTradSecdeal.getSettleSpeed(),"1")){
+            if (StringUtil.equals(interfOpicsTradRepo.getProdtype(),ProdTypeUtil.PRODTYPE_PLEDGE)
+                     && StringUtil.equals(interfOpicsTradRepo.getPs(),DictCodeList.回购拆借方向_正回购.getValue())) {
+                param.put("finprodType2",DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+            } else if(StringUtil.equals(interfOpicsTradRepo.getProdtype(),ProdTypeUtil.PRODTYPE_PLEDGE)
+                       && StringUtil.equals(interfOpicsTradRepo.getPs(),DictCodeList.回购拆借方向_逆回购.getValue())) {
+                param.put("finprodType2",DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+            }
+            param.put("tradeDate",DateUtil.format(interfOpicsTradRepo.getDealdate(),"yyyy-MM-dd"));
+            param.put("termDays",interfOpicsTradRepo.getTerm().toString());
+            param.put("ps",interfOpicsTradRepo.getPs());
+            if(StringUtil.equals(interfOpicsTradRepo.getSettleSpeed(),"1")){
                 param.put("settleSpeed","01");
-            }else if(StringUtil.equals(interfTradSecdeal.getSettleSpeed(),"2")){
+            }else if(StringUtil.equals(interfOpicsTradRepo.getSettleSpeed(),"2")){
                 param.put("settleSpeed","02");
-            }else if(StringUtil.equals(interfTradSecdeal.getSettleSpeed(),"3")){
+            }else if(StringUtil.equals(interfOpicsTradRepo.getSettleSpeed(),"3")){
                 param.put("settleSpeed","03");
             }
-            param.put("secManageAcctId",interfTradSecdeal.getOurdepositaccountnumber());
-            param.put("tradeYield",interfTradSecdeal.getYield8().toString());
-            param.put("faceValue",interfTradSecdeal.getPrinamt().toString());
-            param.put("settleDate",DateUtil.format(interfTradSecdeal.getSettdate(),"yyyy-MM-dd"));
-            if(StringUtil.equals(iCstpTrade.getDeliverytype(),"0")){
-                param.put("deliveryType","03");
-            }else if(StringUtil.equals(iCstpTrade.getDeliverytype(),"5")){
-                param.put("deliveryType","02");
-            }else if(StringUtil.equals(iCstpTrade.getDeliverytype(),"4")){
-                param.put("deliveryType","01");
-            }
+            param.put("secManageAcctId",interfOpicsTradRepo.getOurdepositaccountnumber());
+            param.put("rate",iCstpTrade.getPrice().toString());
+            param.put("vsettleDate", iCstpTrade.getSettldate());
+            param.put("msettleDate",iCstpTrade.getSettldate2());
+            param.put("tradeAmt",iCstpTrade.getTradecashamt().toString());//首次结算金额
             //根据登记编号，查询登记信息
             List<CfetsTrdConfirmRegInfoListResponse> confirmDtoList=cfetsTrdConfirmMapper.selectRegDtoByPrimaryKey(param);
             if(!StringUtil.isEmptyList(confirmDtoList)){
@@ -3254,28 +3269,23 @@ public class CfetsTrdConfirmService extends BaseService{
             }
         }
         //将CSTP数据和已有的登记或报价数据进行比较
-        //债券
-        if( null==confirmDto || !StringUtil.isNotEmpty(confirmDto.getTradeYield())
-                || !StringUtil.isNotEmpty(confirmDto.getFaceValue())
-                || !StringUtil.isNotEmpty(confirmDto.getSettleDate())
+        //回购
+        if( null==confirmDto || !StringUtil.isNotEmpty(confirmDto.getRate())
+                || !StringUtil.isNotEmpty(confirmDto.getTermDays())
+                || !StringUtil.isNotEmpty(confirmDto.getTradeAmt())
+                || !StringUtil.isNotEmpty(confirmDto.getVsettleDate())
+                || !StringUtil.isNotEmpty(confirmDto.getMsettleDate())
                 || !StringUtil.isNotEmpty(confirmDto.getTradeDate())
         ){
             return null;
         }
         //对下行数据进行处理
-        if(StringUtil.equals(iCstpTrade.getDeliverytype(),"0")){
-            iCstpTrade.setDeliverytype("03");
-        }else if(StringUtil.equals(iCstpTrade.getDeliverytype(),"5")){
-            iCstpTrade.setDeliverytype("02");
-        }else if(StringUtil.equals(iCstpTrade.getDeliverytype(),"4")){
-            iCstpTrade.setDeliverytype("01");
-        }
-        if(StringUtil.equals(interfTradSecdeal.getSettleSpeed(),"1")){
-            interfTradSecdeal.setSettleSpeed("01");
-        }else if(StringUtil.equals(interfTradSecdeal.getSettleSpeed(),"2")){
-            interfTradSecdeal.setSettleSpeed("02");
-        }else if(StringUtil.equals(interfTradSecdeal.getSettleSpeed(),"3")){
-            interfTradSecdeal.setSettleSpeed("03");
+        if(StringUtil.equals(interfOpicsTradRepo.getSettleSpeed(),"1")){
+            interfOpicsTradRepo.setSettleSpeed("01");
+        }else if(StringUtil.equals(interfOpicsTradRepo.getSettleSpeed(),"2")){
+            interfOpicsTradRepo.setSettleSpeed("02");
+        }else if(StringUtil.equals(interfOpicsTradRepo.getSettleSpeed(),"3")){
+            interfOpicsTradRepo.setSettleSpeed("03");
         }
         //对上行数据进行处理
         if(StringUtil.equals(confirmDto.getSettleSpeed(),"0")){
@@ -3285,16 +3295,16 @@ public class CfetsTrdConfirmService extends BaseService{
         }else if(StringUtil.equals(confirmDto.getSettleSpeed(),"2")){
             confirmDto.setSettleSpeed("03");
         }
-
-        if (confirmDto.getTradeDate().compareTo(interfTradSecdeal.getDealdate())==0
-                && StringUtil.equals(confirmDto.getFinprodMarketId(),interfTradSecdeal.getSecid())
-                && StringUtil.equals(confirmDto.getPs(), interfTradSecdeal.getPs())
-                && StringUtil.equals(confirmDto.getSettleSpeed(), interfTradSecdeal.getSettleSpeed())
-                && StringUtil.equals(confirmDto.getSecManageAcctId(), interfTradSecdeal.getOurdepositaccountnumber())
-                && confirmDto.getTradeYield().compareTo(interfTradSecdeal.getYield8())==0
-                && confirmDto.getFaceValue().compareTo(interfTradSecdeal.getPrinamt())==0
-                && confirmDto.getSettleDate().compareTo(interfTradSecdeal.getSettdate())==0
-                && StringUtil.equals(confirmDto.getDeliveryType(), iCstpTrade.getDeliverytype())
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        if (confirmDto.getTradeDate().compareTo(interfOpicsTradRepo.getDealdate())==0
+                && confirmDto.getTermDays().compareTo(new BigDecimal(interfOpicsTradRepo.getTerm()))==0
+                && StringUtil.equals(confirmDto.getPs(), interfOpicsTradRepo.getPs())
+                && StringUtil.equals(confirmDto.getSettleSpeed(), interfOpicsTradRepo.getSettleSpeed())
+                && StringUtil.equals(confirmDto.getSecManageAcctId(), interfOpicsTradRepo.getOurdepositaccountnumber())
+                && confirmDto.getRate().compareTo(iCstpTrade.getPrice())==0
+                && StringUtil.equals(sdf.format(confirmDto.getVsettleDate()), iCstpTrade.getSettldate())
+                && StringUtil.equals(sdf.format(confirmDto.getMsettleDate()), iCstpTrade.getSettldate2())
+                && confirmDto.getTradeAmt().compareTo(iCstpTrade.getTradecashamt())==0
         ) {
             //更新下行匹配关系表
             if (isUpdate) {
@@ -3310,8 +3320,8 @@ public class CfetsTrdConfirmService extends BaseService{
                 //插入匹配表
                 CfetsTrdConfirmMatchDto match=new CfetsTrdConfirmMatchDto();
                 match.setSeqno(IDGenerator.generate());
-                match.setCstpTradeId(interfTradSecdeal.getDealno());
-                match.setExeId(interfTradSecdeal.getFedealno());
+                match.setCstpTradeId(interfOpicsTradRepo.getTradeid());
+                match.setExeId(interfOpicsTradRepo.getOritradeid());
                 match.setPreTradeId(confirmDto.getTotleTradeId());
                 match.setMatchType(DictCodeListExt3.下行交易匹配类型_自动匹配.getValue());
                 match.setMatchStatus(BussinessDictCodeList.匹配状态_已匹配.getValue());
@@ -3322,7 +3332,7 @@ public class CfetsTrdConfirmService extends BaseService{
                 match.setDealType(dealType);
                 return match;
             }
-        }*/
+        }
         return null;
     }
 

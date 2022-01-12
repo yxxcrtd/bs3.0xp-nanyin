@@ -382,7 +382,7 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 					param.put("interfCstpTrade",interfCstpTrade);
 					param.put("interfOpicsTradRepo",interfcstpTradRepo);
 					restTemplate.postForObject(
-							ServiceApplication.PINGAN_SERVICE_NAME+ "/cfets/common/CfetsIbuQuoteBatchCommon",
+							ServiceApplication.PINGAN_SERVICE_NAME+ "/cfets/common/CfetsIbuQuoteBatchCommon/cstpAutoTrade",
 							param, Map.class);
 				}
 				catch (Exception e){

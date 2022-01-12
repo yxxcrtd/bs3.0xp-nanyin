@@ -642,7 +642,13 @@
         left join sys_user_add sua on  sua.ibu_trader=ic.OU_TRADER_ID
         left join sys_user t3 on t3.user_id=sua.user_id
 
-        where  ic.QUOTE_ID= #{totleTradeId,jdbcType=VARCHAR} and  ic.trade_status='07'
+        where  rownum=1 and ic.trade_status='07'
+        <if test="quoteId != null  and quoteId!=''">
+            and ic.QUOTE_ID= #{quoteId,jdbcType=VARCHAR}
+        </if>
+        <if test="cfetsQuoteId != null  and cfetsQuoteId!=''">
+            AND ic.cfets_quote_id= #{cfetsQuoteId,jdbcType=VARCHAR}
+        </if>
     </select>
 
     <select id="findAllRegFeeInfoList" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegFeeInfoDto">
@@ -1765,7 +1771,12 @@
         reg.delivery_type as deliveryType,
         reg.finprod_type2  as finprodType2,
         fp.finprod_market_id as finprodMarketId,
-        reg.totle_trade_id as totleTradeId
+        reg.totle_trade_id as totleTradeId,
+        reg.trade_Amt as tradeAmt,
+        reg.repo_term as termDays,
+        reg.rate as rate,
+        reg.v_settle_date as vsettleDate,
+        reg.m_settle_date as msettleDate
         from reg_fin_product_deal_total reg
         left join fin_product fp
         on reg.finprod_id=fp.finprod_id
@@ -1806,6 +1817,24 @@
         <if test="deliveryType != null and deliveryType != ''">
             and reg.delivery_type = #{deliveryType,jdbcType=VARCHAR}
         </if>
+        <if test="termDays != null and termDays != ''">
+            and reg.repo_term = #{termDays,jdbcType=VARCHAR}
+        </if>
+        <if test="rate != null and rate != ''">
+            and (to_char(reg.rate,'FM990.999999')=#{rate,jdbcType=VARCHAR}
+            or to_char(reg.rate)=#{rate,jdbcType=VARCHAR})
+        </if>
+        <if test="vsettleDate != null and vsettleDate != ''">
+            and to_char(reg.v_settle_date,'yyyyMMdd') = #{vsettleDate,jdbcType=VARCHAR}
+        </if>
+        <if test="msettleDate != null and msettleDate != ''">
+            and to_char(reg.m_settle_date,'yyyyMMdd') = #{msettleDate,jdbcType=VARCHAR}
+        </if>
+        <if test="tradeAmt != null and tradeAmt != ''">
+            and (to_char(reg.trade_Amt,'FM999999999999999999990.999999')=#{tradeAmt,jdbcType=VARCHAR}
+            or to_char(reg.trade_Amt)=#{faceValue,jdbcType=VARCHAR})
+        </if>
+
     </select>
     <!-- 查询所有登记或报价回购的质押券信息 -->
     <select id="findAllRegAndIbuPledgesList"
