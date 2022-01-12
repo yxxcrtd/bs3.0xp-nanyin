@@ -79,9 +79,9 @@ public enum EntrustBsProp {
     }
 
     public static EntrustProp getEntrustProp(String code) {
-        for (EntrustBsProp entrustPropBsFlag : values()) {
-            if (entrustPropBsFlag.code.equals(code)) {
-                return entrustPropBsFlag.entrustProp;
+        for (EntrustBsProp entrustBsProp : values()) {
+            if (entrustBsProp.code.equals(code)) {
+                return entrustBsProp.entrustProp;
             }
         }
         return null;
