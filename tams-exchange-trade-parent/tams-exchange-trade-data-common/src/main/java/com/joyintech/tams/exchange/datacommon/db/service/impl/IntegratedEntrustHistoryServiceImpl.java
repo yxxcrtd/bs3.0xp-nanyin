@@ -4,10 +4,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
 import com.joyintech.tams.exchange.common.bean.EntrustQryBean;
+import com.joyintech.tams.exchange.common.bean.EntrustQueryBean;
 import com.joyintech.tams.exchange.common.constant.EntrustType;
 import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrustHistory;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrustHistoryExample;
+import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
+import com.joyintech.tams.exchange.common.request.PageMode;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.datacommon.db.dao.IntegratedEntrustHistoryMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.IntegratedEntrustHistoryService;
@@ -28,6 +31,7 @@ public class IntegratedEntrustHistoryServiceImpl implements IntegratedEntrustHis
     private IntegratedEntrustHistoryMapper integratedEntrustHistoryMapper;
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
+
     @Override
     public List<IntegratedEntrustHistory> queryAll() {
         return integratedEntrustHistoryMapper.selectByExample(null);
@@ -35,13 +39,13 @@ public class IntegratedEntrustHistoryServiceImpl implements IntegratedEntrustHis
 
     @Override
     public void saveIntegratedEntrustHistory(List<IntegratedEntrustHistory> integratedEntrustHistories) {
-        SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH,false);
+        SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         IntegratedEntrustHistoryMapper integratedEntrustHistoryMapper = sqlSession.getMapper(IntegratedEntrustHistoryMapper.class);
         AtomicInteger index = new AtomicInteger(0);
         integratedEntrustHistories.forEach(integratedEntrustHistory -> {
             index.getAndIncrement();
             integratedEntrustHistoryMapper.insertSelective(integratedEntrustHistory);
-            if (index.get() % 500 == 0){
+            if (index.get() % 500 == 0) {
                 sqlSession.flushStatements();
             }
         });
@@ -92,6 +96,31 @@ public class IntegratedEntrustHistoryServiceImpl implements IntegratedEntrustHis
             }
         });
         return new PageInfo<>(integratedEntrustHistoryList);
+    }
+
+    @Override
+    public PageInfo<EntrustQueryBean> queryAllEntrustForPage(PageEntrustInfoRequest request, List<String> ptlAuthList) {
+        PageMode pageMode = request.getPageMode();
+        String userId = request.getUserId();
+        String portfolioId = request.getPortfolioId();
+        String accountId = request.getAccountId();
+        String market = request.getMarket();
+        String stockCode = request.getStockCode();
+        String entrustProp = request.getEntrustProp();
+        Integer entrustStatus = request.getEntrustStatus();
+        String startDay = request.getStartDay();
+        String endDay = request.getEndDay();
+
+        PageHelper.startPage(pageMode.getPageNo(), pageMode.getPageSize());
+        //过滤撤单委托
+        EntrustQryBean entrustQryBean = new EntrustQryBean(userId, startDay, endDay, accountId, "", portfolioId, market, stockCode, entrustProp, entrustStatus, EntrustType.CANCEL.value, ptlAuthList);
+        List<EntrustQueryBean> entrustQueryBeanList = integratedEntrustHistoryMapper.selectEntrustsByPage(entrustQryBean);
+        entrustQueryBeanList.forEach(entrustQueryBean -> {
+            if (InvestmentAssetType.isFutures(entrustQueryBean.getAssetType())) {
+                entrustQueryBean.setStockCode(StockCodeUtils.getStockCode(entrustQueryBean.getStockCode()));
+            }
+        });
+        return new PageInfo<>(entrustQueryBeanList);
     }
 
     @Override

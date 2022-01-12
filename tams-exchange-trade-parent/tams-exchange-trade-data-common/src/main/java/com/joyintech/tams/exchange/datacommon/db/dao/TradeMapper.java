@@ -2,6 +2,7 @@ package com.joyintech.tams.exchange.datacommon.db.dao;
 
 import java.util.List;
 
+import com.joyintech.tams.exchange.common.bean.TradeQueryBean;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -23,6 +24,8 @@ public interface TradeMapper extends IMybatisMapper<Trade, String, TradeExample>
     int updateByPrimaryKey(Trade record);
 
     List<Trade> selectByExample(TradeExample example);
+
+    List<TradeQueryBean> selectTradeByExample(TradeExample example);
 
     int updateByExampleSelective(@Param("record") Trade record, @Param("example") TradeExample example);
 

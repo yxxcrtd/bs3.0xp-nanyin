@@ -7,11 +7,14 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.bean.EntrustQryBean;
+import com.joyintech.tams.exchange.common.bean.EntrustQueryBean;
 import com.joyintech.tams.exchange.common.constant.EntrustStatus;
 import com.joyintech.tams.exchange.common.constant.EntrustType;
 import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrustExample;
+import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
+import com.joyintech.tams.exchange.common.request.PageMode;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.datacommon.cache.impl.AsyncServiceImpl;
 import com.joyintech.tams.exchange.datacommon.db.dao.IMybatisMapper;
@@ -71,7 +74,7 @@ public class IntegratedEntrustServiceImpl extends AsyncServiceImpl<String, Integ
         Map<String, IntegratedEntrust> accountIntegratedEntrustMap = accountIdMap.get(accountId);
         if (Objects.nonNull(accountIntegratedEntrustMap)) {
             for (IntegratedEntrust integratedEntrust : accountIntegratedEntrustMap.values()) {
-                if (brokerEntrustId.equals(integratedEntrust.getBrokerEntrustId()) && DateUtil.getSysDate().replace("-","").equals(integratedEntrust.getTradingDay()))
+                if (brokerEntrustId.equals(integratedEntrust.getBrokerEntrustId()) && DateUtil.getSysDate().replace("-", "").equals(integratedEntrust.getTradingDay()))
                     return integratedEntrust;
             }
         }
@@ -154,6 +157,29 @@ public class IntegratedEntrustServiceImpl extends AsyncServiceImpl<String, Integ
             }
         });
         return new PageInfo<>(integratedEntrustList);
+    }
+
+    @Override
+    public PageInfo<EntrustQueryBean> queryAllEntrustForPage(PageEntrustInfoRequest request, List<String> ptlAuthList) {
+        PageMode pageMode = request.getPageMode();
+        String userId = request.getUserId();
+        String portfolioId = request.getPortfolioId();
+        String accountId = request.getAccountId();
+        String market = request.getMarket();
+        String stockCode = request.getStockCode();
+        String entrustProp = request.getEntrustProp();
+        Integer entrustStatus = request.getEntrustStatus();
+
+        PageHelper.startPage(pageMode.getPageNo(), pageMode.getPageSize());
+        //过滤撤单委托
+        EntrustQryBean entrustQryBean = new EntrustQryBean(userId, accountId, "", portfolioId, market, stockCode, entrustProp, entrustStatus, EntrustType.CANCEL.value, ptlAuthList);
+        List<EntrustQueryBean> entrustQueryBeanList = integratedEntrustMapper.selectEntrustsByPage(entrustQryBean);
+        entrustQueryBeanList.forEach(entrustQueryBean -> {
+            if (InvestmentAssetType.isFutures(entrustQueryBean.getAssetType())) {
+                entrustQueryBean.setStockCode(StockCodeUtils.getStockCode(entrustQueryBean.getStockCode()));
+            }
+        });
+        return new PageInfo<>(entrustQueryBeanList);
     }
 
     @Override
