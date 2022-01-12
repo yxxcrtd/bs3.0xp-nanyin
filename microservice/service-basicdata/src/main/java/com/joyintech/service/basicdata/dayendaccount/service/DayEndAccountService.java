@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author chengzhong
@@ -278,9 +279,20 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
                     // 处理误差值
                     DayEndAccountDaichuliDto daichuliDto = covertToDaichuliDto(dto);
                     reconciliationCommonService.chuliWucha(daichuliDto);
-
+                    // GZYHTZJY-1106: 协议回购到期续作,更新首期的成交明细 modify fuyongsheng 20220112 start
+                    SettleTransData updateSettleTransData = settleTransDatas.get(0);
+                    // 协议回购到期续作更新成交明细更新首期
+                    if(DictCodeListExt3.交易方向_到期续做.getValue().equals(settleTransDatas.get(0).getPs())){
+                        for(SettleTransData settleTransData : settleTransDatas){
+                            if(DictCodeListStl.业务场景分类明细_债券协议逆回购_首期_买入.getValue().equals(settleTransData.getBusiSceneCalss())
+                            || DictCodeListStl.业务场景分类明细_债券协议正回购_首期_买入.getValue().equals(settleTransData.getBusiSceneCalss())){
+                                updateSettleTransData = settleTransData;
+                            }
+                        }
+                    }
+                    // GZYHTZJY-1106: 协议回购到期续作,更新首期的成交明细 modify fuyongsheng 20220112 end
                     // 重新结算交易明细数据
-                    SettleTransData std = reconciliationCommonService.getReCalSettleTransData(settleTransDatas.get(0),daichuliDto);
+                    SettleTransData std = reconciliationCommonService.getReCalSettleTransData(updateSettleTransData,daichuliDto);
                     settleTransDataMapper.updateByPrimaryKeySelective(std);
                 }else if(DictCodeListStl.对账维度_成交明细.getValue().equals(dto.getStlSecDeme())){
                     for(SettleTransData settleTransData : settleTransDatas){
