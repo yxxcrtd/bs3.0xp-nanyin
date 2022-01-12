@@ -33,7 +33,11 @@ public enum ChbCheckTableInfo {
 	从业人员登记表INFO("CHB_EMPLOYEE_INFO", true, "", new String[] {"EMPLOYEE_TYPE","IDENTIFY_NUMBER"}, ""),
     销售结算资金交易信息表INFO("CHB_SALER_STL_DEAL_INFO", true, "TRADE_NO", new String[] {"INSTITUTION_CODE","TRADE_NO"}, ""),
 
-	/*杭州TMP*/
+    总部或分支机构信息表INFO("CHB_SALER_INST_INFO", true, "SALER_ORG_CODE", new String[] {"SALER_ORG_CODE"}, ""),
+    销售人员身份信息表INFO("CHB_SALER_IDEN_INFO", true, "SALER_INS_NO", new String[] {"SALER_INS_NO"}, ""),
+
+
+    /*杭州TMP*/
     募集总量登记TMP("CHB_PRD_RAISETOT_SUB_TMP", true, "PROD_ID", new String[] {"PROD_REGIST_CODE"}, "CHB_PRD_RAISETOT_SUB"),
     个人发行登记TMP("CHB_PRD_ISSUE_SUB_TMP", true, "PROD_ID", new String[] {"PROD_ID"}, "CHB_PRD_ISSUE_SUB"),
     底层资产持仓信息登记TMP("CHB_BOT_AST_POS_SUB_TMP", true, null, new String[] {"PLAN_ASSET_ID", "ASSET_CODE", "POS_DATE"}, "CHB_BOT_AST_POS_SUB"),

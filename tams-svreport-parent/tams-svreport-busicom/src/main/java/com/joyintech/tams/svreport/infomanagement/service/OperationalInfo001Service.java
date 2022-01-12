@@ -233,6 +233,9 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		assetMap.put("1207","04:36-102");
 		assetMap.put("1208","04:36-102");
 		assetMap.put("1209","04:36-102");
+		assetMap.put("1211","04:36-102");
+		assetMap.put("1212","04:36-102");
+		assetMap.put("1213","04:36-102");
 		assetMap.put("2201","04:36-102");
 		assetMap.put("1201","05:103-116");
 		assetMap.put("1210","05:103-116");
@@ -2322,7 +2325,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             			for (int i = beginIndex; i <= endIndex; i ++) {
             				indexList.add(i);
             			}
-            			for (int i = 275; i < size; i ++) {
+            			for (int i = 283; i < size; i ++) {
             				indexList.add(i);
             			}
             		} else {
@@ -2718,7 +2721,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             			for (int i = beginIndex; i <= endIndex; i ++) {
             				indexList.add(i);
             			}
-            			for (int i = 275; i < size; i ++) {
+            			for (int i = 283; i < size; i ++) {
             				indexList.add(i);
             			}
             		} else {

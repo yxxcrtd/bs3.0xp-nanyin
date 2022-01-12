@@ -1300,6 +1300,10 @@ public class CommonCodeCheckBatchService {
                 if (StringUtil.isEmpty(dataMap.get("CNY_TAL_VALUE"))){
                     errMsg +="对于净值型产品,折算人民币累计净值不能为空[CNY_TAL_VALUE="+dataMap.get("CNY_TAL_VALUE")+"];";
                 }
+                //对于净值型产品，净值日期不可为空
+                if (StringUtil.isEmpty(dataMap.get("YIELD_DATE"))){
+                    errMsg +="对于净值型产品,净值日期不可为空[YIELD_DATE="+dataMap.get("YIELD_DATE")+"];";
+                }
             }else if(StringUtil.equals(operateMode, DictCodeListExt2.产品运作模式_开放式非净值型.getValue())||
                     StringUtil.equals(operateMode, DictCodeListExt2.产品运作模式_封闭式非净值型.getValue())  ){
                 //对于非净值型产品,实现收益率不能为空。

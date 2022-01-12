@@ -45,7 +45,7 @@ public class ChbProdInfoRate extends BaseEntity{
     /**
      * 变动类型
      */
-    private String changType;
+    private String changeType;
     /**
      * 产品最新收益率
      */
@@ -294,12 +294,12 @@ public class ChbProdInfoRate extends BaseEntity{
         this.ccy = ccy;
     }
 
-    public String getChangType() {
-        return changType;
+    public String getChangeType() {
+        return changeType;
     }
 
-    public void setChangType(String changType) {
-        this.changType = changType;
+    public void setChangeType(String changeType) {
+        this.changeType = changeType;
     }
 
     public String getFprodId() {

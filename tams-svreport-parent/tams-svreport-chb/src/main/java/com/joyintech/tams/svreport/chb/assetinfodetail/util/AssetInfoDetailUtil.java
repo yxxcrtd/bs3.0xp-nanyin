@@ -729,11 +729,15 @@ public class AssetInfoDetailUtil {
             }
             messages.addAll(chbDataCheckCommonUtil.chbCheckCommon(resultList, entity, "AssetInfoRegist002", entity.getAssetType2(), ValidMessage.class));
             if (!StringUtil.isEmptyList(messages)){
+                //modify by tuqirong 2022-01-10 start 错误信息去重处理
+                Map<String, Object> errMap = new HashMap<>();
                 messages.forEach(validMessage -> {
-                    if (StringUtil.isNotEmpty(validMessage.getMessage())){
+                    if (!errMap.containsKey(validMessage.getMessage())) {
                         message.add(validMessage.getMessage());
+                        errMap.put(validMessage.getMessage(),validMessage.getMessage());
                     }
                 });
+                //modify by tuqirong 2022-01-10 end 错误信息去重处理
             }
             getDtoByPageMessgae(entity);
             if (StringUtil.isNotEmpty(entity.getPbcAssetType1()) && StringUtil.isNotEmpty(entity.getPbcAssetType2())){
@@ -2072,7 +2076,7 @@ public class AssetInfoDetailUtil {
         List<String> headList = new ArrayList();
         if (excelTypeList.contains("本行/他行存款||大额存单")){
             getHeadList_01(headList);
-        }else if (excelTypeList.contains("拆放同业及买入返售/同业拆入及卖出回购")){
+        }else if (excelTypeList.contains("拆放同业及债券买入返售/同业拆入及卖出回购")){
             getHeadList_02(headList);
         }else if (excelTypeList.contains("债券类资产/理财直接融资工具/同业存单")){
             getHeadList_03(headList);
