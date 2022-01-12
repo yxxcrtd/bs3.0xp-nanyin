@@ -586,12 +586,13 @@ public class PbcMonthAssetPositionService  extends BaseService{
 //            if(PbcAssetPositionConstants.BS_ASSETTYPE1_F02.equals(singel.getAssetType1())){
 //                days=0;
             /* add by  dongxiangyang  人行资产头寸改造 20210105  start*/
-            if(DateUtil.compareDate(singel.getMdate(),openJdate)==0 || PbcAssetPositionConstants.BS_ASSETTYPE1_F02.equals(singel.getAssetType1())
-            		|| PbcAssetPositionConstants.PBC_ASSETTYPE1_P07.equals(singel.getAssetType1())
+            if(DateUtil.compareDate(singel.getMdate(),openJdate)==0
             ){
                 days=1; //开放式基金  统计为一个月以下
             /* add by  dongxiangyang  人行资产头寸改造 20210105  end*/
-            }else if (singel.getMdate() == null){
+                //添加判断逻辑.. 资产信息到期日2099-12-31全部是资管计划.直接设置为无固定期限
+            }else if (singel.getMdate() == null|| PbcAssetPositionConstants.BS_ASSETTYPE1_F02.equals(singel.getAssetType1())
+                    || PbcAssetPositionConstants.PBC_ASSETTYPE1_P07.equals(singel.getAssetType1())||(null!=singel.getAssetMdate()&&singel.getAssetMdate().compareTo(DateUtil.parse("2099-12-31"))==0)){
                 days=0;
             }else{
                 days=DateUtil.getBetweenDayNumber(reportEndDate, singel.getMdate());

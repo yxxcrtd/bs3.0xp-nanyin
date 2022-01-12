@@ -1,5 +1,5 @@
 /*在交易管理下添加【固收类交易】菜单*/
-delete from sys_menu where PAGE_ID='TrdFixIncomeValuationTrade001';
+delete from sys_menu where MENU_ID='DEAL_001_001_017';
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('DEAL_001_001_017', 'VAL', null, 'DEAL_001_001', 'TrdFixIncomeValuationTrade001', 17, '2', '固收类交易', 'system', null,sysdate, 'system', sysdate);
 
@@ -13,7 +13,7 @@ insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT
 values ('TrdFixIncomeValuationTrade002', 'TRD', '/valuation/trademanage/trdfixincomevaluationtrade/TrdFixIncomeValuationTrade002', 'valuation/trademanage/trdfixincomevaluationtrade/TrdFixIncomeValuationTrade002', null, null, null, '02', '01', '固收类交易新建', 'system', null, sysdate, 'system', sysdate);
 
 /*固收类交易-新建页面-交易类型下拉框*/
-delete from  sys_page_dictlist where page_id='TrdFixIncomeValuationTrade002';
+delete from  sys_page_dictlist where page_id='TrdFixIncomeValuationTrade002' and DICT_ID='PS';
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('TrdFixIncomeValuationTrade002', '999999', 'PS', 'T01', null, null, 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
@@ -21,14 +21,14 @@ values ('TrdFixIncomeValuationTrade002', '999999', 'PS', 'T02', null, null, 'sys
 
 
 /*固收类交易-查询页面-交易类型下拉框*/
-delete from  sys_page_dictlist where page_id='TrdFixIncomeValuationTrade001';
+delete from  sys_page_dictlist where page_id='TrdFixIncomeValuationTrade001' and DICT_ID='PS';
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('TrdFixIncomeValuationTrade001', '999999', 'PS', 'T01', null, null, 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('TrdFixIncomeValuationTrade001', '999999', 'PS', 'T02', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
 /*固收类交易-新建页面-会计分类下拉框*/
-delete from  sys_page_dictlist where page_id='TrdFixIncomeValuationTrade002';
+delete from  sys_page_dictlist where page_id='TrdFixIncomeValuationTrade002' and DICT_ID='INV_AIM';
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('TrdFixIncomeValuationTrade002', '999999', 'INV_AIM', 'AC', null, null, 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
@@ -37,7 +37,7 @@ insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DIC
 values ('TrdFixIncomeValuationTrade002', '999999', 'INV_AIM', 'FVTPL', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
 /*固收类交易-查询页面-会计分类下拉框*/
-delete from  sys_page_dictlist where page_id='TrdFixIncomeValuationTrade001';
+delete from  sys_page_dictlist where page_id='TrdFixIncomeValuationTrade001' and DICT_ID='INV_AIM';
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('TrdFixIncomeValuationTrade001', '999999', 'INV_AIM', 'AC', null, null, 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)

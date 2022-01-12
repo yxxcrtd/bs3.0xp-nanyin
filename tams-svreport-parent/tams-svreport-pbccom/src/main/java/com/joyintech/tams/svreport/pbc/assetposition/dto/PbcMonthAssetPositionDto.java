@@ -138,6 +138,8 @@ public class PbcMonthAssetPositionDto implements Cloneable{
      * 资产到期日
      */
     private Date mdate;
+
+    private Date assetMdate;
     /**
      * 境内、境外
      */
@@ -187,8 +189,16 @@ public class PbcMonthAssetPositionDto implements Cloneable{
 	}
 //  START add by wujian 20200317 多法人改造--单产品报表生成 区分部门
 
-    
-	 private String institutionCode;
+
+    public Date getAssetMdate() {
+        return assetMdate;
+    }
+
+    public void setAssetMdate(Date assetMdate) {
+        this.assetMdate = assetMdate;
+    }
+
+    private String institutionCode;
 	    
     public String getInstitutionCode() {
 		return institutionCode;
