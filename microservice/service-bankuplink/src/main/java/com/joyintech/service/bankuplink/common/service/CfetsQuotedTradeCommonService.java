@@ -645,7 +645,7 @@ public class CfetsQuotedTradeCommonService{
      * 下行交易债券自动匹配
      * @param interfCstpTrade
      */
-    private void cstpSecTradeAutoMatch(InterfTradSecdeal interfTradSecdeal,InterfCstpTrade iCstpTrade) {
+   /* private void cstpSecTradeAutoMatch(InterfTradSecdeal interfTradSecdeal,InterfCstpTrade iCstpTrade) {
         if(!StringUtil.isNotEmpty(interfTradSecdeal.getYield8()) || !StringUtil.isNotEmpty(interfTradSecdeal.getPrinamt())
                  || ! StringUtil.isNotEmpty(interfTradSecdeal.getSettdate()) || !StringUtil.isNotEmpty(interfTradSecdeal.getDealdate())
         ){
@@ -743,7 +743,7 @@ public class CfetsQuotedTradeCommonService{
                 return;
             }
         }
-    }
+    }*/
 
 } 
 
