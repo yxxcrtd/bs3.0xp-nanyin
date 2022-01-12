@@ -750,7 +750,7 @@ public class PortfolioManager extends BaseService {
             Instruction maxInstruction = singleList.stream().max(Comparator.comparing(Instruction::getConPrice)).get();
             long totalExceptMaxVolume = singleList.stream().filter(item -> !item.getEntrustId().equals(maxInstruction.getEntrustId()))
                     .mapToLong(item -> item.getConNum().longValue()).sum();
-            maxInstruction.setConNum(BigDecimal.valueOf(ins.getEntrustNum()- totalExceptMaxVolume));
+            maxInstruction.setConNum(BigDecimal.valueOf(ins.getEntrustNum() - totalExceptMaxVolume));
             // 重新计算占比；赋值委托数量，委托金额
             for (Instruction item : singleList) {
                 item.setConPrice(ArithmeticUtil.divide(item.getConNum(), BigDecimal.valueOf(result.getTotalEntrustVolume()), 4));
@@ -766,16 +766,18 @@ public class PortfolioManager extends BaseService {
      * 配置参数
      */
     private void handleFields(PortfolioAllocationResponse result, Instruction ins) {
-        // 委托数量
-        ins.setEntrustNum(ins.getConNum().longValue());
-        // 委托金额
-        ins.setEntrustAmt(ArithmeticUtil.multiply(BigDecimal.valueOf(ins.getEntrustNum()), result.getPrice()));
+        // 借用termDays存放委托数量leftAmt
+        ins.setTermDays(ins.getConNum());
+        // 借用minAmt存放委托金额
+        ins.setMinAmt(ArithmeticUtil.multiply(BigDecimal.valueOf(ins.getEntrustNum()), result.getPrice()));
         if (EntrustUtils.isVolume(ins)) {
             // 借用mIntAmt存放剩余总数量
-            ins.setmIntAmt(BigDecimal.valueOf(ins.getEntrustNum() - ins.getEntrustLeftAmt().longValue() - ins.getFrozenQuantity().longValue()));
+            BigDecimal leftNum = BigDecimal.valueOf(ins.getEntrustNum() - ins.getEntrustLeftAmt().longValue() - ins.getFrozenQuantity().longValue());
+            ins.setmIntAmt(leftNum.compareTo(BigDecimal.ZERO) > 0 ? leftNum : BigDecimal.ZERO);
         } else {
             // 借用mTradeAmt存放剩余总金额
-            ins.setmTradeAmt(TradeUtils.subtract(ins.getEntrustAmt(), ins.getEntrustLeftAmt(), ins.getFrozenQuantity(), 2));
+            BigDecimal leftAmt = TradeUtils.subtract(ins.getEntrustAmt(), ins.getEntrustLeftAmt(), ins.getFrozenQuantity(), 2);
+            ins.setmTradeAmt(leftAmt.compareTo(BigDecimal.ZERO) > 0 ? leftAmt : BigDecimal.ZERO);
         }
     }
 }
