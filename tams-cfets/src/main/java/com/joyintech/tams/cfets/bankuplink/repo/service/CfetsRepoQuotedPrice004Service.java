@@ -776,7 +776,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     finTotalPledge.setTotleTradeId(entity.getTotleTradeId());//登记编号
                     finTotalPledge.setPortfolioId(pledgeDto.getPortfolioId());//组合代码
                     finTotalPledge.setPledgeFinprodId(pledgeDto.getFinprodId());//质押金融产品代码
-                    finTotalPledge.setPledgeNumber(pledgeDto.getPledgePrin());//质押数量
+                    finTotalPledge.setPledgeNumber(ArithmeticUtil.divide(pledgeDto.getPledgePrin(), new BigDecimal(100), 12));//质押数量
                     finTotalPledge.setPledgeRatio(ArithmeticUtil.divide(pledgeDto.getPledgeRatio(), new BigDecimal(100), yieldScale));//质押率
                     finTotalPledge.setWorkflowId(entity.getWorkflowId());
                     regFinTotalPledges.add(finTotalPledge);
@@ -791,12 +791,12 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     }
                     finTotalPledge.setTotleTradeId(entity.getTotleTradeId());//登记编号
                     finTotalPledge.setPledgeFinprodId(dto.getFinprodId());//质押金融产品代码
-                    finTotalPledge.setPledgeNumber(dto.getPledgePrin());//质押数量
+                    finTotalPledge.setPledgeNumber(ArithmeticUtil.divide(dto.getPledgePrin(), new BigDecimal(100), 12));//质押数量
                     finTotalPledge.setPledgeRatio(ArithmeticUtil.divide(dto.getPledgeRatio(), new BigDecimal(100), yieldScale));//质押率
                     regFinTotalPledges.add(finTotalPledge);
                     regFinPledge.setTradeId(entity.getTotleTradeId());//登记编号
                     regFinPledge.setPledgeFinprodId(dto.getFinprodId());//质押券id
-                    regFinPledge.setPledgeNumber(dto.getPledgePrin());//质押数量
+                    regFinPledge.setPledgeNumber(ArithmeticUtil.divide(dto.getPledgePrin(), new BigDecimal(100), 12));//质押数量
                     regFinPledge.setPledgeRatio(ArithmeticUtil.divide(dto.getPledgeRatio(), new BigDecimal(100), yieldScale));//质押率
                     regFinPledges.add(regFinPledge);
                 }
@@ -1043,7 +1043,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     regFinPledge.setPledgeFinprodId(dto.getFinprodId());//质押券id
                     regFinPledge.setPortfolioId(dto.getPortfolioId());//组合代码
 //                regFinPledge.setPledgeFaceValue(pledgePrin);//质押面值
-                    regFinPledge.setPledgeNumber(pledgePrin);//质押数量
+                    regFinPledge.setPledgeNumber(ArithmeticUtil.divide(pledgePrin, new BigDecimal(100), 12));//质押数量
                     regFinPledge.setPledgeRatio(ArithmeticUtil.divide(dto.getPledgeRatio(), new BigDecimal(100), yieldScale));//质押率
                     regFinPledges.add(regFinPledge);
                 }
@@ -1091,7 +1091,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     regFinPledge.setPledgeFinprodId(pledgeDto.getFinprodId());//质押券id
                     regFinPledge.setPortfolioId(pledgeDto.getPortfolioId());//组合代码
 //                    regFinPledge.setPledgeFaceValue(pledgePrin);//质押面值
-                    regFinPledge.setPledgeNumber(pledgePrin);//质押数量
+                    regFinPledge.setPledgeNumber(ArithmeticUtil.divide(pledgePrin, new BigDecimal(100), 12));//质押数量
                     regFinPledge.setPledgeRatio(ArithmeticUtil.divide(pledgeDto.getPledgeRatio(), new BigDecimal(100), yieldScale));//质押率
                     regFinPledges.add(regFinPledge);
                 }
