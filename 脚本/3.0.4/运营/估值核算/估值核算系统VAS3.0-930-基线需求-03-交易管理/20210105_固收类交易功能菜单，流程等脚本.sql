@@ -1,5 +1,5 @@
 /*在交易管理下添加【固收类交易】菜单*/
-delete from sys_menu where PAGE_ID='TrdFixIncomeValuationTrade001';
+delete from sys_menu where MENU_ID='DEAL_001_001_017';
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('DEAL_001_001_017', 'VAL', null, 'DEAL_001_001', 'TrdFixIncomeValuationTrade001', 17, '2', '固收类交易', 'system', null,sysdate, 'system', sysdate);
 
