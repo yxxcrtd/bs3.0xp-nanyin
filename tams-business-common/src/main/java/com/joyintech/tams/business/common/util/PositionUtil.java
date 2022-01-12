@@ -96,7 +96,7 @@ public class PositionUtil {
                                 strb.append("(");
                                 strb.append(portfolioName);
                                 strb.append(")余额为");
-                                strb.append(CHECKBALANCE);
+                                strb.append(CHECKBALANCE.toPlainString());
                                 strb.append("元【");
                                 strb.append(SysDataUtil.getNameFromDataDict(DictCode.头寸资产类型, HODING_TYPE));
                                 if ((i+1) == checkResults.size()){
