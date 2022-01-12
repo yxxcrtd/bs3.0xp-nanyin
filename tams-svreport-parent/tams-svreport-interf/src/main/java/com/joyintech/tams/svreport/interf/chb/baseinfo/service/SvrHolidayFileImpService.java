@@ -246,6 +246,9 @@ public class SvrHolidayFileImpService extends FileImpService {
 	private MstHoliday dataConversionEntity(Map<String, String> map) {
 		MstHoliday dto = new MstHoliday();
 		dto.setCalendarId(map.get("MARKET_CODE"));//日历编号
+		if(dto.getCalendarId() == null){
+			dto.setCalendarId(map.get("MARKET_CODE"));//日历编号
+		}
 		dto.setCdate(DateUtil.parse(map.get("CDATE")));//日期
 		dto.setCreateDept(map.get("CREATE_DEPT"));//创建部门
 		dto.setCreateTime(DateUtil.parse(map.get("CREATE_TIME")));//创建时间
