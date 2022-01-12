@@ -15,14 +15,18 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.valuation.trademanage.bond.dao.TrdBondTradeMapper;
 import com.joyintech.service.valuation.trademanage.trdlendvaluationtrade.dto.TrdLendValuationTradeDto;
 import com.joyintech.service.valuation.trademanage.trdrepovaluationtrade.dao.TrdRepoValuationTrade001Mapper;
 import com.joyintech.service.valuation.trademanage.trdrepovaluationtrade.dto.TrdRepoValuationTrade001Dto;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCommonBatchMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +42,13 @@ public class TrdRepoValuationTrade001Service extends CommonExportService<TrdRepo
      */
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
+
+    @Autowired
+    private ValCommonBatchMapper valCommonBatchMapper;
+
+    @Autowired
+    private TrdBondTradeMapper trdBondTradeMapper;
+
 
 
     /**
@@ -188,5 +199,37 @@ public class TrdRepoValuationTrade001Service extends CommonExportService<TrdRepo
         return trdRepoValuationTrade001Mapper.queryTradeInfoByTradeId(tradeId);
     }
 
+    //删除
+    public int delete(TrdRepoValuationTrade001Dto dto) {
+        int count=0;
+        Map<String, Object> params = new HashMap<>();
+        params.put("booksetId",dto.getPortfolioId());   //产品代码
+        params.put("tradeId",dto.getTradeId());
+
+        List<TrdProductDeal> listDeal = new ArrayList<>();
+        TrdProductDeal entity = new TrdProductDeal();
+        entity.setTradeId(dto.getTradeId());
+        listDeal.add(entity);
+        // 1.估值核算交易扩展表 TRD_PRODUCT_DEAL_ADD
+        count += valCommonBatchMapper.delProductDealExtByTradeId(listDeal);
+        // 2.交易费用明细表 TRD_TRADE_FEE_DETAIL
+        count += valCommonBatchMapper.delTradeFeeDetailByTradeId(listDeal);
+        // 3.入账账务明细表 BOK_DEAL_ACCOUNTING_DETAIL
+        count += valCommonBatchMapper.delDealAccountingDetailByTradeId(listDeal);
+        // 4.入账信息表 BOK_DEAL_ACCOUNTING
+        count += valCommonBatchMapper.delDealAccountingByTradeId(listDeal);
+        // 5.结算指令扩展表 STL_ORDERS_EXT
+        count += valCommonBatchMapper.delOrdersExtByTradeId(listDeal);
+        // 6.结算指令表 STL_ORDERS
+        count += valCommonBatchMapper.delOrdersByTradeId(listDeal);
+        // 7.金融产品交易 TRD_PRODUCT_DEAL
+        count += valCommonBatchMapper.delProductDealByTradeId(listDeal);
+        // 8.金融产品实物交易 TRD_FIN_PRODUCT_BARTER
+        count += valCommonBatchMapper.delTrdFinProductBarterByTradeId(listDeal);
+        // 9.账务明细代码表 BOK_DETAIL_ID
+        count += trdBondTradeMapper.delBokDetailIdByTradeId(params);
+
+        return count;
+    }
 
 }

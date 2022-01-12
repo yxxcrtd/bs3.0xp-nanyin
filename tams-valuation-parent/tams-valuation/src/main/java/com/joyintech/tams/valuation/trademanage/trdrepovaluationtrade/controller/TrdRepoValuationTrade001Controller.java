@@ -29,6 +29,9 @@ import com.joyintech.tams.valuation.trademanage.trddepositvaluationtrade.service
 import com.joyintech.tams.valuation.trademanage.trddepositvaluationtrade.service.TrdDepositValuationTrade002Service;
 import com.joyintech.tams.valuation.trademanage.trdrepovaluationtrade.dto.TrdRepoValuationTrade001Dto;
 import com.joyintech.tams.valuation.trademanage.trdrepovaluationtrade.service.TrdRepoValuationTrade001Service;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -120,5 +123,47 @@ public class TrdRepoValuationTrade001Controller extends BaseController {
                 outFile, true);
     }
 
+
+    //删除
+    @ResponseBody
+    @RequestMapping(ACTION_DELETE)
+    public AjaxResult delete(@RequestBody @Valid TrdRepoValuationTrade001Dto dto, BindingResult br)
+    {
+        if (br.hasErrors()) {
+            return new AjaxResult(br);
+        }
+        // 启动流程
+        ProcessParameter<TrdRepoValuationTrade001Dto> proParam = new ProcessParameter<>();
+        WorkFlowParameter<TrdRepoValuationTrade001Dto> params = new WorkFlowParameter<>();
+
+        // 业务代码（凭证流水号）
+        params.setBusinessCode(item -> item.getTradeId());
+        // 业务类型
+        params.setBusinessType(DictCodeList.业务类型_银行间债券交易.getValue());
+        // 页面id
+        params.setPageId("BondTradeQuery001");
+        // 元素id
+        params.setElementId(dto.getElementId());
+
+        // 设置流程业务说明, entity即传入的dto
+        params.setComment(entity -> WorkFlowUtil.concatComment("质押式回购交易删除：", entity.getTradeId(),
+                DateUtil.format(entity.getTradeDate(),DateUtil.DEFAULT_DATETIME_FORMAT)
+        ));
+
+        // 塞入流程参数
+        proParam.setWorkFlowParameter(params);
+
+        String msg = getMessage("COMMON_I_0001");
+        try {
+            msg = trdRepoValuationTrade001Service.start(proParam, dto.getSelectedItem().toArray(
+                    new TrdRepoValuationTrade001Dto[dto.getSelectedItem().size()]));
+        }
+        catch (Exception e) {
+            getLogger().error("启动流程失败：", e);
+            return new AjaxResult(e.getMessage());
+        }
+
+        return new AjaxResult(msg);
+    }
 
 }

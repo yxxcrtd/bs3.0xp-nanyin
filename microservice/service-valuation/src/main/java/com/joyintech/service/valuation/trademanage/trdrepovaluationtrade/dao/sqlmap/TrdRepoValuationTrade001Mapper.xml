@@ -117,6 +117,7 @@
 		t.SETTLE_DATE settleDate,/**交割日期**/
 		zc.VDATE vdate,/**起息日**/
 		zc.MDATE mdate,/**到期日**/
+		zc.MDATE-zc.VDATE actpaydays, /**实际占款天数**/
 		t.PRIN_AMT prinAmt, /**交易本金**/
 		null rebackPrice,  /**回购利率**/
 		t.INT_AMT intAmt,/**应计利息**/

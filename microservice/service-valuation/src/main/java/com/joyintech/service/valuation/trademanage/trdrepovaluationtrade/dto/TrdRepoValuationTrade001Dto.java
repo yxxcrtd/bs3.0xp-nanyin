@@ -22,6 +22,7 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 
 public class TrdRepoValuationTrade001Dto extends WflTrdProductDeal implements ProcessEntity {
@@ -169,6 +170,32 @@ public class TrdRepoValuationTrade001Dto extends WflTrdProductDeal implements Pr
      * 操作类型
      */
     private String operateType;
+
+    /**
+     * elementId
+     */
+    private String elementId;
+
+    public String getElementId() {
+        return elementId;
+    }
+
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
+    }
+
+    /**
+     * 质押式回购交易实体类
+     */
+    private List<TrdRepoValuationTrade001Dto> selectedItem;
+
+    public List<TrdRepoValuationTrade001Dto> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<TrdRepoValuationTrade001Dto> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
 
     @PrimaryKey(PrimaryKey.Field.PK_1)
     public String getTradeId() {
@@ -403,7 +430,31 @@ public class TrdRepoValuationTrade001Dto extends WflTrdProductDeal implements Pr
         this.operateType = operateType;
     }
 
+    /**
+     * 市场机构代码  资产代码
+     */
+    private String finprodMarketId;
 
+    /**
+     * 金融产品名称  资产名称
+     */
+    private String finprodName;
+
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
+    }
+
+    public String getFinprodName() {
+        return finprodName;
+    }
+
+    public void setFinprodName(String finprodName) {
+        this.finprodName = finprodName;
+    }
 
     /**
      * 取得 交易方向str
@@ -468,5 +519,6 @@ public class TrdRepoValuationTrade001Dto extends WflTrdProductDeal implements Pr
         }
         return tradeDateStr;
     }
+
 
 }
