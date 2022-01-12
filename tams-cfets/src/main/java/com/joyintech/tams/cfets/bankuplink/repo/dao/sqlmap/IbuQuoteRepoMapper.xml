@@ -526,8 +526,8 @@
                ,pp.PORTFOLIO_NAME portfolioName
                ,fp.MDATE mdate
                ,NVL(TABLE01.pledStrdPrinAmt,0) avaPledgePrin
-               ,NVL(pledgeList.PLEDGE_NUMBER,0) pledgePrin
-               ,NVL(pledgeList.PLEDGE_NUMBER,0) pledgePrinInit
+               ,NVL(pledgeList.PLEDGE_NUMBER,0)*100 pledgePrin
+               ,NVL(pledgeList.PLEDGE_NUMBER,0)*100 pledgePrinInit
                ,mbvi.NETPRICE firstNetPrice
                ,pledgeList.PLEDGE_RATIO*100 pledgeRatio
                ,nvl(TABLE01.pledgeAmount,0) prin
@@ -681,8 +681,8 @@
                ,pp.PORTFOLIO_NAME portfolioName
                ,fp.MDATE mdate
                ,NVL(TABLE01.pledStrdPrinAmt,0) avaPledgePrin
-               ,sum(NVL(pledgeList.PLEDGE_NUMBER, 0) ) pledgePrin
-               ,sum(NVL(pledgeList.PLEDGE_NUMBER, 0) ) pledgePrinInit
+               ,sum(NVL(pledgeList.PLEDGE_NUMBER, 0)*100) pledgePrin
+               ,sum(NVL(pledgeList.PLEDGE_NUMBER, 0)*100) pledgePrinInit
                ,mbvi.NETPRICE firstNetPrice
                ,pledgeList.PLEDGE_RATIO*100 pledgeRatio
                ,nvl(TABLE01.pledgeAmount,0) prin
