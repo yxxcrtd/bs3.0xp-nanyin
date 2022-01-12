@@ -1014,7 +1014,7 @@ public class TrdConBondService extends BaseService {
 			return tradeId;
 		}else{
 			Map<String, Object> map = this.getBusicode(busiCode);
-			if(StringUtil.isNotEmpty(map.get("BUSICODE"))){
+			if(map != null && StringUtil.isNotEmpty(map.get("BUSICODE"))){
 				return (String)map.get("BUSICODE");
 			}
 			return null;
