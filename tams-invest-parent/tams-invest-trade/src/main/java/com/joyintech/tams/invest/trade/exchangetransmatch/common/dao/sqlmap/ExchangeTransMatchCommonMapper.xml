@@ -280,4 +280,15 @@
                 #{entrustId,jdbcType=VARCHAR}
             </foreach>
     </update>
+
+    <!--modify by etliu 20220110 start-->
+    <!--GZYHTZJY-1032: 协议回购的头寸处理，需要走PTL_POSITION_FLOW_CFG配置-->
+    <select id="selectFinDealPledgeByPrimaryKey" resultType="com.joyintech.tams.common.base.entity.FinDealPledge" parameterType="com.joyintech.tams.common.base.entity.FinDealPledgeKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinDealPledgeMapper.Base_Column_List" />
+        from FIN_DEAL_PLEDGE
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        and BRANCH = #{branch,jdbcType=DECIMAL}
+    </select>
+    <!--modify by etliu 20220110 end-->
 </mapper>

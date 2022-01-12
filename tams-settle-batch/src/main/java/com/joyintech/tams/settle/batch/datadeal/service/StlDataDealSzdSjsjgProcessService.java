@@ -663,7 +663,7 @@ public class StlDataDealSzdSjsjgProcessService {
             // 根据清算本金设置金融产品类型
             setFinprodType(ywlb,qsbj,settleTransData);
             // 金融产品代码
-            settleTransData.setFinprodId(szdSjsjg.getJgzqdm());
+            settleTransData.setFinprodId(DictCodeListExt1.金融产品类型_投管用_债券.getValue() + "_" + szdSjsjg.getJgzqdm() + ".SZ");
 //            // 业务场景分类
 //            settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券协议逆回购_到期续作.getValue());
             // 设置业务场景分类 modify by msk  

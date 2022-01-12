@@ -145,6 +145,12 @@ public class ExchangeTransMatchCommonService extends BaseService {
     @Autowired
     private FinDealPledgeMapper finDealPledgeMapper;
 
+    // modify by etliu 20220110 start
+    // GZYHTZJY-1032: 协议回购的头寸处理，需要走PTL_POSITION_FLOW_CFG配置
+    @Autowired
+    private ExchangeTransMatchRepoCommonService exchangeTransMatchRepoCommonService;
+    // modify by etliu 20220110 end
+
     @Value("${application.micorservice.contextPath.tamsServer:http://tams-server}")
     private String tamsSerever;
 
@@ -614,6 +620,11 @@ public class ExchangeTransMatchCommonService extends BaseService {
             }
         }
 
+        // modify by etliu 20220110 start
+        // GZYHTZJY-1032: 协议回购的头寸处理，需要走PTL_POSITION_FLOW_CFG配置
+        FinPledgeDisplaceDetail finPledgeDisplaceDetailHuanChu = null;
+        // modify by etliu 20220110 end
+
         //中途换券和解除质押时需要处理 质押券置换和质押券置换结果
         if(StringUtil.equals(commonEntrustDto.getPs(), DictCodeListExt3.交易方向_中途换券.getValue())
                 || StringUtil.equals(commonEntrustDto.getPs(), DictCodeListExt3.交易方向_解除质押.getValue())) {
@@ -623,6 +634,14 @@ public class ExchangeTransMatchCommonService extends BaseService {
             for(BaseTradeProductDealDto baseTradeProductDealDto: exchangeTransMatchBaseTradeDtos) {
                 if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdProductDeal())){
                     FinPledgeDisplaceDetail finPledgeDisplaceDetail = exchangeTransMatchRepo3Service.genFinPledgeDisplaceDetail(finPledgeDisplace,baseTradeProductDealDto.getTrdProductDeal());
+
+                    // modify by etliu 20220110 start
+                    // GZYHTZJY-1032: 协议回购的头寸处理，需要走PTL_POSITION_FLOW_CFG配置
+                    if (StringUtil.equals(DictCodeListExt3.质押券置换_置换方向_换出.getValue(), finPledgeDisplaceDetail.getTradeType())) {
+                        finPledgeDisplaceDetailHuanChu = finPledgeDisplaceDetail;
+                    }
+                    // modify by etliu 20220110 end
+
                     finPledgeDisplaceDetailMapper.insertSelective(finPledgeDisplaceDetail);
                 }
             }
@@ -662,8 +681,26 @@ public class ExchangeTransMatchCommonService extends BaseService {
         }
         baseTradeProductDealDtos.addAll(exchangeTransMatchBaseTradeDtos);
         logger.debug("交易表数据:"+JsonUtils.object2Json(finProductTradeDto));
-        //处理头寸和指令完成度
-        baseTradeProductDealCommService.execute(finProductTradeDto);
+
+        // modify by etliu 20220110 start
+        // GZYHTZJY-1032: 协议回购的头寸处理，需要走PTL_POSITION_FLOW_CFG配置
+//        if ((StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
+//                || StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()))
+//                && dto.getSettleTransDataTotalAdd() != null
+//                && StringUtil.equals(dto.getSettleTransDataTotalAdd().getRepoType(),DictCodeList.回购类型_质押式协议回购.getValue())) {
+//            // 协议回购头寸特殊处理
+//            exchangeTransMatchRepoCommonService.handlePositionOfXyhg(dto, commonEntrustDto, baseTradeProductDealDtos, finPledgeDisplaceDetailHuanChu);
+//
+//            // 3.调用基础组件.【投资委托组件.完成委托】，写入委托完成状况信息(投资委托场合才执行此步)
+//            if(!finProductTradeDto.isNeedHandleFinishEntrust()) {
+//                baseTradeProductDealCommService.finishEntrust(finProductTradeDto.getBaseTradeProductDealDtos(), false);
+//            }
+//        }
+//        else {
+            //处理头寸和指令完成度
+            baseTradeProductDealCommService.execute(finProductTradeDto);
+//        }
+        // modify by etliu 20220110 end
 
         logger.debug("处理业务交易表---结束,交易编号:"+tradeId);
         return tradeId;

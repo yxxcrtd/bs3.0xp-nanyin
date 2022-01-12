@@ -228,7 +228,8 @@
         <where>
             tpd.TRADE_STATUS = #{TRADE_STATUS_01}
             AND (tpd.IS_CANCEL IS NULL OR tpd.IS_CANCEL = 'N')
-            AND sttm.TRADE_ID is null
+            <!--AND sttm.TRADE_ID is null-->
+            AND sttm.TRADE_ID is not null
             AND tpd.TOTLE_TRADE_ID is null
             <if test="dealDateStr != null">
                 AND DATE_FORMAT(tpd.TRADE_DATE, '%Y-%m-%d') = #{dealDateStr,jdbcType=VARCHAR}

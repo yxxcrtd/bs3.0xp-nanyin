@@ -2,6 +2,7 @@ package com.joyintech.tams.exchange.service.trade.server.agent;
 
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.MoreObjects;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.db.domain.Account;
@@ -47,6 +48,15 @@ public class TradeAgentHelper {
         return requestID.incrementAndGet();
     }
 
+    private String getDspUrl(TerminalAgentInfo agentInfo) {
+        String dspUrl1 = agentInfo.getDspUrl();
+        if (StringUtils.isEmpty(dspUrl1)) {
+            Account account = accountManager.getAccountById(agentInfo.getAccountId());
+            dspUrl1 = account != null ? account.getDspUrl() : null;
+        }
+        return MoreObjects.firstNonNull(dspUrl1, host + url);
+    }
+
     public synchronized ResultBean doRequest(TerminalAgentInfo agentInfo, Object message) {
         ResultBean resultBean;
         String accountId = agentInfo.getAccountId();
@@ -54,8 +64,8 @@ public class TradeAgentHelper {
         if (!loginStatus && agentInfo.getFunctionCode() != 4) {
             return new ResultBean(ErrorCode.ACCOUNT_NOT_LOGIN);
         }
-        Account account = accountManager.getAccountById(accountId);
-        String dspUrl = StringUtils.isNotEmpty(account.getDspUrl()) ? account.getDspUrl() : host + url;
+
+        String dspUrl = getDspUrl(agentInfo);
         logger.info("访问接口平台dspUrl:[{}]", dspUrl);
         try {
             HttpResult result = doRequest(agentInfo.getGpCode(), agentInfo.getTriggerCode(), dspUrl, message);
@@ -71,8 +81,7 @@ public class TradeAgentHelper {
             }
 
             int errorCode = resultBean.getErrorCode();
-            if (errorCode == ErrorCode.ACCOUNT_NOT_LOGIN.value ||
-                    StringUtils.contains(resultBean.getErrorMsg(), "证书已经过期")) {
+            if (errorCode == ErrorCode.ACCOUNT_NOT_LOGIN.value || StringUtils.contains(resultBean.getErrorMsg(), "证书已经过期")) {
                 tradeAgentManager.addAgentLoginStatus(accountId, false);
                 logger.error("{}终端登录状态异常：{}，{}", agentInfo.getAgentType(), accountId, JsonUtils.getJsonFromObject(resultBean));
             }
