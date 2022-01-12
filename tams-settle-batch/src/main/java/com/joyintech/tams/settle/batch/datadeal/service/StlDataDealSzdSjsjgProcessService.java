@@ -1192,14 +1192,21 @@ public class StlDataDealSzdSjsjgProcessService {
 //            else if (stlDownDataDealOperatorDto.getPortfolioIdList().size() > 0 && !stlDownDataDealOperatorDto.getPortfolioIdList().contains(accountInfoDtolist.get(0).getPortfolioId())) {
 //                continue;
 //            }
-            String approvalNo = szdSjsjg.getJgzqdm() + ".SZ";
+            String approvalNo = szdSjsjg.getJgzqdm();
             List<String> finprodIdList = new ArrayList<>();
-            if (StringUtil.equals(szdSjsjg.getJgywlb(), StlDataDealProcessConstant.YWLB_PGQZ)){
-                finprodIdList = stlDownDataDealMapper.getFinproductIdByApprovalNo(DictCodeListExt3.金融产品其他代码类型_配股代码.getValue(), approvalNo);    
-            }else if(StringUtil.equals(szdSjsjg.getJgywlb(), StlDataDealProcessConstant.SJSJG_YWLB_TGSS) &&
-                    StringUtil.equals(szdSjsjg.getJgltlx(), StlDataCreateConstant.JSMX_LTLX)){
-                finprodIdList = stlDownDataDealMapper.getFinproductIdByApprovalNo(DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue(), approvalNo);    
+            // GZYHTZJY-1084:优先查标的表 modify fuyongsheng 20220112 start
+            FinProduct finProduct = finProductMapper.selectByPrimaryKey(DictCodeListExt1.金融产品类型_投管用_股票.getValue() + GlobalConstant.UNDER_LINE + szdSjsjg.getJgzqdm() + ".SZ");
+            if(finProduct != null){
+                finprodIdList.add(finProduct.getFinprodId());
+            }else{
+                if (StringUtil.equals(szdSjsjg.getJgywlb(), StlDataDealProcessConstant.YWLB_PGQZ)){
+                    finprodIdList = stlDownDataDealMapper.getFinproductIdByApprovalNo(DictCodeListExt3.金融产品其他代码类型_配股代码.getValue(), approvalNo);
+                }else if(StringUtil.equals(szdSjsjg.getJgywlb(), StlDataDealProcessConstant.SJSJG_YWLB_TGSS) &&
+                        StringUtil.equals(szdSjsjg.getJgltlx(), StlDataCreateConstant.JSMX_LTLX)){
+                    finprodIdList = stlDownDataDealMapper.getFinproductIdByApprovalNo(DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue(), approvalNo);
+                }
             }
+            // GZYHTZJY-1084:优先查标的表 modify fuyongsheng 20220112 end
 			if (finprodIdList != null && finprodIdList.size() > 0) {
 	            FinProductQuto finProductQuto = new FinProductQuto();
 	            finProductQuto.setSeqNo(IDGenerator.generate());
