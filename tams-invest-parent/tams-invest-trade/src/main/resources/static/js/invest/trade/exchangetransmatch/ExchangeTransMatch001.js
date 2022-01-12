@@ -278,7 +278,7 @@
                 object.tradePlat = item.tradePlat;
                 object.tradeMarket = item.tradeMarket;
                 object.dealDate = new Date(item.dealDate).Format("yyyy-MM-dd");
-                object.secAccount = item.secAcctNo;
+                object.secAccount = item.secAcctId;
                 object.repoType = item.repoType;
                 object.remainNum = item.remainNum;
                 if(entrustDataTable.table) {
@@ -356,7 +356,7 @@
                 object.ps = item.ps;
                 object.tradePlat = item.tradePlat;
                 object.dealDate = new Date(item.dealDate).format('yyyy-MM-dd');
-                object.secAccount = item.secAcctNo;
+                object.secAccount = item.secAcctId;
                 object.repoType = item.repoType;
                 object.remainNum = item.remainNum;
 
