@@ -10,6 +10,7 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListStl;
 import com.joyintech.tams.settle.batch.datagather.dao.StlDataGatherMapper;
 import com.joyintech.tams.settle.batch.datagather.dto.*;
@@ -200,7 +201,7 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                     }
                 }else{
                     TotalTrdProductDealDto totalTrdProductDeal = new TotalTrdProductDealDto();
-                    String totalTradeId = IDGenerator.generate();
+                    String totalTradeId = settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易);
                     // 构造 金融产品交易明细
                     List<SettleTransDataDto> settleTransDataList = SettleTransDataMap.get(settleTransData.getSecType()+","
                             + settleTransData.getPs()+","+settleTransData.getSecAcctId()+","+settleTransData.getSeatNumber());
@@ -238,6 +239,8 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                     trdProductDeal.setTgBusiType(DictCodeListExt1.平安业务类型_债券类资产买入.getValue());
                     // 成交明细.委托代码
                     trdProductDeal.setEntrustId(settleTransData.getEntrustId());
+                     //
+                    trdProductDeal.setCounterId(settleTransData.getPurchCounter());
                     // GZYHTZJY-1043: 生成可转债申购确认汇总交易 modify by fuyongsheng 20220110 start
                     // 构造金融交易汇总表数据
                     BeanUtil.copyProperties(totalTrdProductDeal, trdProductDeal);
@@ -250,6 +253,8 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                     trdProductDealAdd.setTradeId(trdProductDeal.getTradeId());
                     trdProductDealAdd.setPortfolioId(settleTransData.getPortfolioId());
                     trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_接口接入.getValue());
+                    trdProductDealAdd.setPurchModle(settleTransData.getPurchModle());
+                    trdProductDealAdd.setPurchType(DictCodeListExt2.申购类型_普通申购.getValue());
                     productDealList.add(trdProductDeal);
                     trdProductDealAddList.add(trdProductDealAdd);
                     //构造 成交数据与投管交易关系

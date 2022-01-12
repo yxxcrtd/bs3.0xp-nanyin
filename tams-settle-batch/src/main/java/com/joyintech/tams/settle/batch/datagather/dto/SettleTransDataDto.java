@@ -202,4 +202,53 @@ public class SettleTransDataDto extends SettleTransData {
         return StringUtil.joinString(Arrays.asList(getFinprodId(), DateUtil.format(getMdate()),getSecAcctId(),getSeatNumber(),getAcctNo()),"_");
     }
 
+    private String purchModle;
+
+    private String purchType;
+
+    private Date purchDate;
+
+    private String purchCounter;
+
+    private BigDecimal purchAmt;
+
+    public String getPurchModle() {
+        return purchModle;
+    }
+
+    public void setPurchModle(String purchModle) {
+        this.purchModle = purchModle;
+    }
+
+    public String getPurchType() {
+        return purchType;
+    }
+
+    public void setPurchType(String purchType) {
+        this.purchType = purchType;
+    }
+
+    public Date getPurchDate() {
+        return purchDate;
+    }
+
+    public void setPurchDate(Date purchDate) {
+        this.purchDate = purchDate;
+    }
+
+    public String getPurchCounter() {
+        return purchCounter;
+    }
+
+    public void setPurchCounter(String purchCounter) {
+        this.purchCounter = purchCounter;
+    }
+
+    public BigDecimal getPurchAmt() {
+        return purchAmt;
+    }
+
+    public void setPurchAmt(BigDecimal purchAmt) {
+        this.purchAmt = purchAmt;
+    }
 }

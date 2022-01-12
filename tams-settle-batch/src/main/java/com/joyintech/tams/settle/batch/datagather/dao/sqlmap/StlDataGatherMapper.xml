@@ -801,6 +801,12 @@
 	<select id="listBondPurConfirSettleTransData" parameterType="java.util.Map"
 			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
 		SELECT
+			trd.TRADE_ID  tradeId2,
+			trda.PURCH_MODLE  purchModle,
+			trda.PURCH_TYPE purchType,
+			trd.TRADE_DATE  purchDate,
+			trd.COUNTER_ID  purchCounter,
+			trd.PRIN_AMT    purchAmt,
 			trda.PORTFOLIO_ID  PORTFOLIO_ID,
 			trd.SHARE_AMT   SHARE_NUM,
 		    trda.ENTRUST_ID ENTRUST_ID,
