@@ -2241,7 +2241,7 @@
                 T2.TOTLE_TRADE_ID,
                 T1.portfolio_id portfolioId,
                 T1.pledge_finprod_id finprodId,
-                SUM(T1.pledge_number) pledgePrin,
+                SUM(T1.pledge_number*100) pledgePrin,
                 T1.pledge_ratio pledgeRatio
             from (
                 SELECT
@@ -2345,7 +2345,7 @@
             select
             portfolio_id portfolioId,
             pledge_finprod_id finprodId,
-            SUM(pledge_number) pledgePrin,
+            SUM(pledge_number * 100) pledgePrin,
             pledge_ratio pledgeRatio
             from (
             <include refid="listRegFinPledge_sql"></include>
