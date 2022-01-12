@@ -149,7 +149,10 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
                             //投资目的
                             ptlSecPositionFlowFrozen.setInvAim(positionFlow.getInvAim());
                             //持仓类型
-                            ptlSecPositionFlowFrozen.setHodingType(DictCodeList.持仓类型_实际.getValue());
+                            // GZYHTZJY-1084:冲销掉上市前冻结的头寸 modify fuyongsheng 20220112 start
+                            // ptlSecPositionFlowFrozen.setHodingType(DictCodeList.持仓类型_实际.getValue());
+                            ptlSecPositionFlowFrozen.setHodingType(DictCodeList.持仓类型_场内上市前冻结.getValue());
+                            // GZYHTZJY-1084:冲销掉上市前冻结的头寸 modify fuyongsheng 20220112 end
                             //日期
                             ptlSecPositionFlowFrozen.setCdate(ptlTrade.getSettleDate());
                             //币种

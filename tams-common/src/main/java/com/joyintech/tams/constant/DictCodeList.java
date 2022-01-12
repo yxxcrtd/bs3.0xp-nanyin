@@ -1959,7 +1959,6 @@ public enum DictCodeList implements BaseDictCodeList {
 	持仓类型_质押(DictCode.持仓类型,"04","质押"),
 	持仓类型_融入(DictCode.持仓类型,"05","融入"),
 	持仓类型_融出(DictCode.持仓类型,"06","融出"),
-	持仓类型_冻结(DictCode.持仓类型,"08","冻结"),
 	持仓类型_场内上市前冻结(DictCode.持仓类型,"15","场内上市前冻结"),
 	分红尾差处理方式_无需处理(DictCode.分红尾差处理方式,"01","无需处理"),
 	分红尾差处理方式_确认为当期损益(DictCode.分红尾差处理方式,"02","确认为当期损益"),
