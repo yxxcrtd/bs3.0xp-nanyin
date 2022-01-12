@@ -33,7 +33,7 @@ public class CustomDateDeserialize extends JsonDeserializer<Date> {
         }
         catch (NumberFormatException e) {
             try {
-                date = DateUtils.parseDate(text,"yyyy-MM-dd","yyyy-MM-dd HH:mm:ss");
+                date = DateUtils.parseDate(text,"yyyy-MM-dd","yyyy-MM-dd HH:mm:ss","yyyy-MM-dd'T'HH:mm:ss.SSSXXX","yyyy-MM-dd'T'HH:mm:ss.SSSZ");
             } catch (ParseException ex) {
                 ex.printStackTrace();
             }

@@ -1096,6 +1096,7 @@ public class CfetsEtrDispatcherService extends BaseService{
         Map<String, Object> resultData = new HashMap<>();
         List<CfgReadonlyFormShow>  infoForm = new ArrayList<CfgReadonlyFormShow>();
         List<CfgDataTableShow> infoTable = new ArrayList<>();
+        List<CfgReadonlyFormShow> totalInfo = new ArrayList<>();
 
         if(StringUtil.equals(DictCodeListExt1.交易场所_香港联合交易所.getValue(),dto.getTradeMarket()) ||
             StringUtil.equals(DictCodeListExt1.交易场所_深圳证券交易所.getValue(),dto.getTradeMarket()) ||
@@ -1131,6 +1132,7 @@ public class CfetsEtrDispatcherService extends BaseService{
                     infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
                     spcdCode = spcdCode.concat(",").concat(dto.getPs());
                     infoTable = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode,null,null);
+                    totalInfo = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
             }else {
                 infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
                 if (StringUtil.equals(CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"), "02")) {
@@ -1153,7 +1155,8 @@ public class CfetsEtrDispatcherService extends BaseService{
         resultData.put(dtCode+"_data",cfetsResponseDto);
         if(!CollectionUtils.isEmpty(infoTable)) {//如果表格有数据
             resultData.put(dtCode+"_table",infoTable);
-         // 这里是另外一种方式获取质押券明细，如果下面那种不正确则修改为下面这种
+            resultData.put(dtCode+"_total",totalInfo);
+            // 获取质押券信息
             CfetsEtribRepoInfo003Dto item = new CfetsEtribRepoInfo003Dto();
             item.setEntrustId(dto.getEntrustId());
             CfetsEtribRepoInfo003Dto result = cfetsEtrIbRepoinfoService.findEtrinfo(item);
@@ -1162,16 +1165,16 @@ public class CfetsEtrDispatcherService extends BaseService{
                 BigDecimal totalPrinAmt = BigDecimal.ZERO;
                 if(!CollectionUtils.isEmpty(detailList)) {
                     for(CfetsPledgeBondInfoDto infoDto : detailList) {
+                        totalPrinAmt = ArithmeticUtil.doAdd(totalPrinAmt, ArithmeticUtil.multiply(infoDto.getPledgePrin(), infoDto.getPledgeRatio()).divide(new BigDecimal("100")));
                         infoDto.setPledgePrin(ArithmeticUtil.divide(infoDto.getPledgePrin(),new BigDecimal("10000"),4));
                         infoDto.setPledStrdPrinAmt(ArithmeticUtil.divide(infoDto.getPledStrdPrinAmt(),new BigDecimal("10000"),4));
-                        if(StringUtil.isNoneBlank(infoDto.getRepRegistOrg())){
-                            infoDto.setRepRegistOrg(SysDataUtil.getNameFromDataDict(DictCode.登记托管机构_中债, infoDto.getRepRegistOrg()));
+                        if(StringUtil.isNoneBlank(infoDto.getRegistOrg())){
+                            infoDto.setRepRegistOrg(SysDataUtil.getNameFromDataDict(DictCode.登记托管机构_中债, infoDto.getRegistOrg()));
                         }
-                        totalPrinAmt = ArithmeticUtil.doAdd(totalPrinAmt, ArithmeticUtil.multiply(infoDto.getPledgePrin(), infoDto.getPledgeRatio()).divide(new BigDecimal("100")));
                     }
-                    for(CfetsPledgeBondInfoDto infoDto : detailList) {
-                        infoDto.setTotalAmount(totalPrinAmt);
-                    }
+                    CfetsEtrDispatcherInfoResponse totalResult = new CfetsEtrDispatcherInfoResponse();
+                    totalResult.setTotalPrinAmt(ArithmeticUtil.divide(totalPrinAmt,new BigDecimal("10000"),4));
+                    resultData.put(dtCode+"_datatotal",totalResult);
                 }
                 resultData.put(dtCode+"_datatable",detailList);
             }

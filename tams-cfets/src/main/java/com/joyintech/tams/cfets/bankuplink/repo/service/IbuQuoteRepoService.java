@@ -281,16 +281,18 @@ public class IbuQuoteRepoService extends BaseService {
      */
     public AjaxResult dealexecutioncheck(CfetsRepoDealQuoteRequest cfetsRepoDealQuoteRequest) {
         AjaxResult ajaxResult = new AjaxResult();
-        try {
-            Map<String, Object> param = BeanUtil.object2Map(cfetsRepoDealQuoteRequest);
-            setParam(param, 1);
-            List<CfetsRepoDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
-            if (!StringUtil.isEmptyList(entrustDtos)) {
-                ajaxResult = preconditionJudgment(entrustDtos);
+        if(CollectionUtils.isNotEmpty(cfetsRepoDealQuoteRequest.getEntrustIdList())) {
+            try {
+                Map<String, Object> param = BeanUtil.object2Map(cfetsRepoDealQuoteRequest);
+                setParam(param, 1);
+                List<CfetsRepoDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
+                if (!StringUtil.isEmptyList(entrustDtos)) {
+                    ajaxResult = preconditionJudgment(entrustDtos);
+                }
+            } catch (Exception e) {
+                ajaxResult.setMessage("交易执行检查异常!");
+                return ajaxResult;
             }
-        } catch (Exception e) {
-            ajaxResult.setMessage("交易执行检查异常!");
-            return ajaxResult;
         }
         return ajaxResult;
     }
@@ -381,6 +383,7 @@ public class IbuQuoteRepoService extends BaseService {
         }
         // 期限品种
         cfetsRepoDealQuoteCommonDto.setTermType(cfetsEtrIbRepoinfoService.getTermType(cfetsRepoDealQuoteCommonDto.getRepoTerm()));
+        cfetsRepoDealQuoteCommonDto.setLoginUserId(LoginUserUtil.getUserName());
         cfetsRepoDealQuoteCommonDto.setQuotaPageModel("new");
         return cfetsRepoDealQuoteCommonDto;
     }
@@ -2224,6 +2227,7 @@ public class IbuQuoteRepoService extends BaseService {
         if (CollectionUtils.isNotEmpty(entrustDtos)) {
             entrustOrderDto = entrustDtos.get(0);
         }
+        entrustOrderDto.setTradeMarket(DictCodeListExt1.交易场所_银行间.getValue());
         resultData.put(dtCode + "_form", infoForm);
         resultData.put(dtCode + "_data", entrustOrderDto);
         if (StringUtil.equals(repo_pledge_model, "02")) {

@@ -58,7 +58,7 @@ public class OrderController {
         order.setEntrustBs(EntrustBsProp.getEntrustBs(order.getEntrustBs()));
 
         Instruction instruction = instructionService.findById(order.getInstructionId());
-        String entrustProp = EntrustPropUtils.getEntrustProp(instruction);
+        String entrustProp = EntrustPropUtils.getEntrustProp(instruction, order.getEntrustProp());
         logger.info("普通下单（竞价下单）：order entrustProp is [{}]", entrustProp);
         order.setEntrustProp(entrustProp);
 
@@ -77,8 +77,7 @@ public class OrderController {
         Instruction instruction = instructionService.findById(integratedEntrust.getInstructionId());
         logger.info("综合业务下单：integratedEntrust entrustBs is [{}]", instruction.getPs());
         integratedEntrust.setEntrustBs(EntrustBsProp.getEntrustBs(instruction.getPs()));
-
-        String entrustProp = EntrustPropUtils.getEntrustProp(instruction);
+        String entrustProp = EntrustPropUtils.getEntrustProp(instruction, integratedEntrust.getEntrustProp());
         logger.info("综合业务下单：order entrustProp is [{}]", entrustProp);
         integratedEntrust.setEntrustProp(entrustProp);
 

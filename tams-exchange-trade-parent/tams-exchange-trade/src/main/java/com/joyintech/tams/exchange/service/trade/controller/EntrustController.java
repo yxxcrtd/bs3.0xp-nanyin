@@ -121,13 +121,13 @@ public class EntrustController {
     @RequestMapping(value = "/entrust/enable", method = RequestMethod.POST)
     public ResultBean queryEnable(@RequestBody @Validated EnableQryBean enableQryBean) {
         Instruction instruction = instructionService.findById(enableQryBean.getInstructionId());
-        enableQryBean.setEntrustProp(EntrustPropUtils.getEntrustProp(instruction));
-        enableQryBean.setEntrustProp(EntrustBsProp.getEntrustBs(instruction.getPs()));
+        enableQryBean.setEntrustProp(EntrustPropUtils.getEntrustProp(instruction, enableQryBean.getEntrustProp()));
+        enableQryBean.setEntrustBs(EntrustBsProp.getEntrustBs(instruction.getPs()));
         if (StringUtils.isNotEmpty(enableQryBean.getStockCode())) {
             enableQryBean.setStockCode(instruction.getFinprodMarketId());
         }
         if (StringUtils.isNotEmpty(enableQryBean.getAccountId())) {
-            enableQryBean.setStockCode(instruction.getAcctNo());
+            enableQryBean.setAccountId(instruction.getAcctNo());
         }
         return entrustManagement.queryEnable(enableQryBean);
     }

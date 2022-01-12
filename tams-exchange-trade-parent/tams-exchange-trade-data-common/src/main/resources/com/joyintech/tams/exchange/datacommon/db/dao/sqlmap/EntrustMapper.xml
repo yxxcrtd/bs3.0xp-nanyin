@@ -826,4 +826,17 @@
       HEDGE_FLAG = #{hedgeFlag,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=VARCHAR}
   </update>
+  
+  
+  <select id="queryEntrust2Touguan" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from T_ENTRUST
+        where INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
+        UNION ALL
+        select
+        <include refid="Base_Column_List"/>
+        from T_ENTRUSTHISTORY
+        where INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
+    </select>
 </mapper>

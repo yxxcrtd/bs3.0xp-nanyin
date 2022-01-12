@@ -1,11 +1,12 @@
 package com.joyintech.tams.exchange.datacommon.db.dao;
 
-import com.joyintech.tams.exchange.common.db.domain.Trade;
-import com.joyintech.tams.exchange.common.db.domain.TradeExample;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.joyintech.tams.exchange.common.db.domain.Trade;
+import com.joyintech.tams.exchange.common.db.domain.TradeExample;
 
 @Repository
 public interface TradeMapper extends IMybatisMapper<Trade, String, TradeExample> {
@@ -33,4 +34,6 @@ public interface TradeMapper extends IMybatisMapper<Trade, String, TradeExample>
     int deleteByPrimaryKey(String id);
 
     int deleteBatchByPrimaryKey(List<String> ids);
+    
+    List<Trade> queryTrade2Touguan(@Param("instructionId")String instructionId);
 }
