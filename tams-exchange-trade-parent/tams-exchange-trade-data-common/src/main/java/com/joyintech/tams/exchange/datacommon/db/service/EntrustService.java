@@ -53,4 +53,11 @@ public interface EntrustService extends AsyncService<String, Entrust> {
      * @Date: 2020/10/13
      */
     List<Entrust> queryEntrustByStatus(String userId, String entrustStatus, List<String> ptlAuthList);
+    
+    /**
+     * 投管用委托查询
+     * @param instructionId
+     * @return
+     */
+    List<Entrust> queryEntrust2Touguan(String instructionId);
 }
