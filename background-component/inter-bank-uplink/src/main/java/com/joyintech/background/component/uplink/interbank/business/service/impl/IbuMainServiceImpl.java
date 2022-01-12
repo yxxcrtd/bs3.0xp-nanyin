@@ -1576,6 +1576,11 @@ public class IbuMainServiceImpl extends BaseService<IbuQuoteBond> implements Ibu
             		}
             	}
             }
+            //多组合改造  成交的关系表数据  从前台带出
+            List<IbuQuoteEtrReDto> ibuQuoteEtrRes = new ArrayList<>();
+            if(StringUtils.equals(exeTypeIBU, DictCodeList.银行间上行操作类型_本方回复成交.getValue())){
+                ibuQuoteEtrRes = inputBean.getIbuQuoteEtrReDtoList();
+            }
             // 现券请求报价必须项校验
             ResultBaseDto validation = routeIntfSubService.inputBondReqCheck(bondRequestQuoteDto);
             // 校验不通过
@@ -1604,6 +1609,14 @@ public class IbuMainServiceImpl extends BaseService<IbuQuoteBond> implements Ibu
                     }
                     if(ibuQuoteBondDto.getEntrustId() != null){
                         bondRequestQuoteDto.getIbuQuoteBondDto().setEntrustId(ibuQuoteBondDto.getEntrustId());
+                    }
+                    //多组合 关系表数据单独处理
+                    if(null!=ibuQuoteEtrRes&&ibuQuoteEtrRes.size()>0){
+                        //版本号取值主表
+                        ibuQuoteEtrRes.stream().forEach(item -> {
+                            item.setVersion(bondRequestQuoteDto.getIbuQuoteBondDto().getVersion());
+                        });
+                        bondRequestQuoteDto.setIbuQuoteEtrReDtoList(ibuQuoteEtrRes);
                     }
                 }
                 
