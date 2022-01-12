@@ -617,6 +617,8 @@ public class StlDataDealSzdSjsjgProcessService {
                 // settleTransData.setmPrinAmt(settleTransData.getmTradeAmt().subtract(settleTransData.getmIntAmt()));
                 // 到期利息=到期金额-到期本金
                 settleTransData.setmIntAmt(settleTransData.getmTradeAmt().subtract(settleTransData.getmPrinAmt()));
+                // 利息总额
+                settleTransData.setIntAmt(settleTransData.getmIntAmt());
                 // 交易份额
                 settleTransData.setShareAmt(settleTransData.getmPrinAmt());
                 // 到期本金 = 到期金额-回购利息 modify by fuyongsheng 20220105 end
