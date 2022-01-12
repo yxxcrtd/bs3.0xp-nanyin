@@ -114,6 +114,7 @@ public enum BatchBeanName {
     理财产品转型情况月度统计表生成("3042","investorsHoldInfoExportService","investorsHoldInfoExportMainService","理财产品转型情况月度统计表生成"),
     总部或分支机构信息接入("3091","svrSaleInstInterfTaskService","SvrSaleInstImpMainService","总部或分支机构信息接入"),
     销售人员身份信息接入("3092","svrSaleIderInterfTaskService","SvrSaleIderImpMainService","销售人员身份信息接入"),
+    销售人员奖惩投诉记录信息接入("3093","svrSaleIRewPenaInterfTaskService","SvrSaleRewPenaImpMainService","销售人员奖惩投诉记录信息接入"),
 
             ;
 	/**
