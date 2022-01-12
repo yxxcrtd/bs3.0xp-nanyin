@@ -72,7 +72,7 @@
 	</sql>
 
 	<sql id="settleTransDataSql">
-			std.TRADE_ID TRADE_ID,
+		std.TRADE_ID TRADE_ID,
 			std.CJBH CJBH,
 			std.DEAL_DATE DEAL_DATE,
 			std.SEC_TYPE SEC_TYPE,
@@ -252,13 +252,14 @@
 		<include refid="settleTransDataSql"></include>
 		<!--首期-->
 		INNER JOIN
-			SETTLE_TRANS_DATA stdsq ON std.SEAT_NUMBER = stdsq.SEAT_NUMBER
-				AND std.TRADE_DATE = stdsq.TRADE_DATE
-				AND std.APPLY_TRADE_ID = stdsq.CJBH
+		SETTLE_TRANS_DATA stdsq ON std.SEAT_NUMBER = stdsq.SEAT_NUMBER
+		<!--AND std.TRADE_DATE = stdsq.TRADE_DATE-->
+		AND std.VDATE = stdsq.TRADE_DATE
+		AND std.APPLY_TRADE_ID = stdsq.CJBH
 		INNER JOIN SETTLE_TRANS_TG_MAPPING M
-		        ON M.TRADE_ID = std.TRADE_ID
+		ON M.TRADE_ID = std.TRADE_ID
 		INNER JOIN TRD_PRODUCT_DEAL T1
-		        ON M.TRADE_ID_TG = T1.TRADE_ID
+		ON M.TRADE_ID_TG = T1.TRADE_ID
 		<!-- ON T1.F_TRADE_ID = std.CJBH
 		AND T1.SEAT_ID = std.SEAT_NUMBER
 		AND T1.VDATE = STD .TRADE_DATE -->
@@ -309,38 +310,38 @@
 					#{busiSceneCalss,jdbcType=VARCHAR}
 				</foreach>
 			</if>
+			<!--ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 add end-->
 		</where>
-		<!--ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 add end-->
 		UNION ALL
 		SELECT
-			T1.TRADE_ID tradeId2,
-			T1.SHARE_AMT SHARE_NUM,
-			T3.PORTFOLIO_ID,
-			T2.FINPROD_ID ,
-			T2.VDATE ,
-			T2.MDATE,
-			<include refid="settleTransDataSql"></include>
+		T1.TRADE_ID tradeId2,
+		T1.SHARE_AMT SHARE_NUM,
+		T3.PORTFOLIO_ID,
+		T2.FINPROD_ID ,
+		T2.VDATE ,
+		T2.MDATE,
+		<include refid="settleTransDataSql"></include>
 		INNER JOIN SETTLE_TRANS_DATA_STATUS stds
-		        ON std.TRADE_ID = stds.TRADE_ID
+		ON std.TRADE_ID = stds.TRADE_ID
 		INNER JOIN SETTLE_TRANS_DATA stdsq
-			    ON std.SEAT_NUMBER = stdsq.SEAT_NUMBER
-			   AND std.TRADE_DATE = stdsq.TRADE_DATE
-			   AND std.APPLY_TRADE_ID = stdsq.CJBH
+		ON std.SEAT_NUMBER = stdsq.SEAT_NUMBER
+		AND std.TRADE_DATE = stdsq.TRADE_DATE
+		AND std.APPLY_TRADE_ID = stdsq.CJBH
 		INNER JOIN SETTLE_TRANS_TG_MAPPING M
-				ON M.TRADE_ID = std.TRADE_ID
+		ON M.TRADE_ID = std.TRADE_ID
 		INNER JOIN TRD_PRODUCT_DEAL T1
-				ON M.TRADE_ID_TG = T1.TRADE_ID
+		ON M.TRADE_ID_TG = T1.TRADE_ID
 		LEFT JOIN TRD_PRODUCT_DEAL_ADD T3
-			   ON T3.TRADE_ID = T1.TRADE_ID
+		ON T3.TRADE_ID = T1.TRADE_ID
 		LEFT JOIN FIN_TRADE_PRODUCT T2
-			   ON T2.FINPROD_ID = T1.FINPROD_ID
-			  AND T2.BRANCH = '0'
+		ON T2.FINPROD_ID = T1.FINPROD_ID
+		AND T2.BRANCH = '0'
 		<!--INNER JOIN SETTLE_TRANS_DATA_STATUS stds2
 				ON std.TRADE_ID = stds2.TRADE_ID
 			   AND stds2.CHECK_RESULT = '1' -->
 		<where>
 			<if test="checkResult != null">
-		        AND stds.CHECK_RESULT = #{checkResult,jdbcType=VARCHAR}
+				AND stds.CHECK_RESULT = #{checkResult,jdbcType=VARCHAR}
 			</if>
 			<if test="dealDate != null">
 				AND std.DEAL_DATE = #{dealDate,jdbcType=DATE}
@@ -385,62 +386,90 @@
 		</where>
 	</select>
 
-    <select id="selectSettleTransData" parameterType="java.util.Map"
-            resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
+	<select id="selectSettleTransData" parameterType="java.util.Map"
+			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
 		SELECT
-			NVL(NVL(te.INSTRUCTION_ID, teh.INSTRUCTION_ID), NVL(tie.INSTRUCTION_ID, tieh.INSTRUCTION_ID)) ORDER_ID,
-			case when ptl.PROFIT_TYPE = '01' then 'FVTPL' else 'AC' end as invAim,ee.ENTRUST_ID,
-			<!--<include refid="settleTransDataSql"></include>-->
-			<include refid="settleTransDataTotalSql"></include>
-			LEFT JOIN T_ENTRUSTHISTORY teh ON LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = teh.BROKER_ENTRUST_ID
-				and teh.ENTRUST_STATUS IN ('2', '5', '6', '8') AND to_char(DEAL_DATE, 'yyyyMMdd') = teh.TRADING_DAY AND (std.TRADE_PLAT = '02' or std.TRADE_PLAT IS NULL)
-			LEFT JOIN T_ENTRUST te ON LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = te.BROKER_ENTRUST_ID 
-				and te.ENTRUST_STATUS IN ('2', '5', '6', '8') AND to_char(DEAL_DATE, 'yyyyMMdd') = te.TRADING_DAY AND (std.TRADE_PLAT = '02' or std.TRADE_PLAT IS NULL)
-			LEFT JOIN T_INTEGRATED_ENTRUSTHISTORY tieh ON LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = tieh.BROKER_ENTRUST_ID 
-				and tieh.ENTRUST_STATUS IN ('2', '5', '6', '8') AND to_char(DEAL_DATE, 'yyyyMMdd') = tieh.TRADING_DAY AND std.TRADE_PLAT IN ('03', '04', '05')
-			LEFT JOIN T_INTEGRATED_ENTRUST tie ON LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = tie.BROKER_ENTRUST_ID 
-				and tie.ENTRUST_STATUS IN ('2', '5', '6', '8') AND to_char(DEAL_DATE, 'yyyyMMdd') = tie.TRADING_DAY AND std.TRADE_PLAT IN ('03', '04', '05')
-			LEFT JOIN ETR_ENTRUST ee ON (ee.ENTRUST_ID = NVL(te.INSTRUCTION_ID, teh.INSTRUCTION_ID) OR ee.ENTRUST_ID = NVL(tie.INSTRUCTION_ID, tieh.INSTRUCTION_ID))
-			LEFT JOIN PTL_PORTFOLIO ptl ON (ptl.PORTFOLIO_ID = std.PORTFOLIO_ID)
+		NVL(NVL(te.INSTRUCTION_ID, teh.INSTRUCTION_ID), NVL(tie.INSTRUCTION_ID, tieh.INSTRUCTION_ID)) ORDER_ID,
+		case when ptl.PROFIT_TYPE = '01' then 'FVTPL' else 'AC' end as invAim,ee.ENTRUST_ID,
+		<!--<include refid="settleTransDataSql"></include>-->
+		<include refid="settleTransDataTotalSql"></include>
+		LEFT JOIN SETTLE_TRANS_DATA_TOTAL_STATUS stdts ON std.SEQ_ID = stdts.SEQ_NO
+		LEFT JOIN SETTLE_TRANS_DATA_TOTAL_ADD stdta ON std.SEQ_ID = stdta.TRADE_ID
+		LEFT JOIN T_ENTRUSTHISTORY teh
+		ON (
+		LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = teh.BROKER_ENTRUST_ID
+		OR
+		std.APPLY_TRADE_ID = teh.BROKER_ENTRUST_ID
+		)
+		and teh.ENTRUST_STATUS IN ('2', '5', '6', '8') AND to_char(DEAL_DATE, 'yyyyMMdd') = teh.TRADING_DAY AND (std.TRADE_PLAT = '02' or std.TRADE_PLAT IS NULL)
+		LEFT JOIN T_ENTRUST te
+		ON (
+		LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = te.BROKER_ENTRUST_ID
+		OR
+		std.APPLY_TRADE_ID = te.BROKER_ENTRUST_ID
+		)
+		and te.ENTRUST_STATUS IN ('2', '5', '6', '8') AND to_char(DEAL_DATE, 'yyyyMMdd') = te.TRADING_DAY AND (std.TRADE_PLAT = '02' or std.TRADE_PLAT IS NULL)
+		LEFT JOIN T_INTEGRATED_ENTRUSTHISTORY tieh
+		ON (
+		LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = tieh.BROKER_ENTRUST_ID
+		OR
+		std.APPLY_TRADE_ID = tieh.BROKER_ENTRUST_ID
+		)
+		and tieh.ENTRUST_STATUS IN ('2', '5', '6', '8') AND to_char(DEAL_DATE, 'yyyyMMdd') = tieh.TRADING_DAY AND std.TRADE_PLAT IN ('03', '04', '05')
+		LEFT JOIN T_INTEGRATED_ENTRUST tie
+		ON (
+		LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = tie.BROKER_ENTRUST_ID
+		OR
+		std.APPLY_TRADE_ID = tie.BROKER_ENTRUST_ID
+		)
+		and tie.ENTRUST_STATUS IN ('2', '5', '6', '8') AND to_char(DEAL_DATE, 'yyyyMMdd') = tie.TRADING_DAY AND std.TRADE_PLAT IN ('03', '04', '05')
+		LEFT JOIN ETR_ENTRUST ee ON (ee.ENTRUST_ID = NVL(te.INSTRUCTION_ID, teh.INSTRUCTION_ID) OR ee.ENTRUST_ID = NVL(tie.INSTRUCTION_ID, tieh.INSTRUCTION_ID))
+		LEFT JOIN PTL_PORTFOLIO ptl ON (ptl.PORTFOLIO_ID = std.PORTFOLIO_ID)
 		<where>
 			<!--(te.BROKER_ENTRUST_ID IS NOT NULL OR teh.BROKER_ENTRUST_ID IS NOT NULL OR tie.BROKER_ENTRUST_ID IS NOT NULL OR tieh.BROKER_ENTRUST_ID IS NOT NULL)-->
+			(stdts.MATCH_STATUS != '2' OR stdts.MATCH_STATUS IS NULL)
 			<if test="dealDate != null">
 				std.DEAL_DATE = #{dealDate,jdbcType=DATE}
 			</if>
 			<if test="finprodIdList != null and finprodIdList.size() > 0">
 				<foreach collection="finprodIdList" item="finprodId" open="AND std.FINPROD_ID IN (" close=")" separator=",">
-           			#{finprodId,jdbcType=VARCHAR}
-           		</foreach>
+					#{finprodId,jdbcType=VARCHAR}
+				</foreach>
 			</if>
 			<if test="busiType != null">
 				AND std.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
 			</if>
 			<if test="busiTypeList != null and busiTypeList.size() > 0">
 				<foreach collection="busiTypeList" item="busiType" open="AND std.BUSI_TYPE IN (" close=")" separator=",">
-           			#{busiType,jdbcType=VARCHAR}
-           		</foreach>
+					#{busiType,jdbcType=VARCHAR}
+				</foreach>
 			</if>
-            <if test="portfolioIdList != null and portfolioIdList.size() > 0">
-           		<foreach collection="portfolioIdList" item="portfolioId" open="AND std.PORTFOLIO_ID IN (" close=")" separator=",">
-           			#{portfolioId,jdbcType=VARCHAR}
-           		</foreach>
-       		</if>
+			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				<foreach collection="portfolioIdList" item="portfolioId" open="AND std.PORTFOLIO_ID IN (" close=")" separator=",">
+					#{portfolioId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
 			<if test="psList != null and psList.size() > 0">
 				<foreach collection="psList" item="ps" open="AND std.PS IN (" close=")" separator=",">
 					#{ps,jdbcType=VARCHAR}
 				</foreach>
 			</if>
-        </where>
-    </select>
+			<!--协议回购特殊处理 fuyongsheng add 20211228 start-->
+			<if test="readerType != null and readerType != '' and readerType == 'Repo1Reader'">
+				AND (stdta.REPO_TYPE = 'H01' OR std.PS = 'T01')
+			</if>
+			<!--协议回购特殊处理 fuyongsheng add 20211228 end-->
+		</where>
+	</select>
 
 	<!-- 前置交易编号查询 -->
 	<select id="selectBTradeId" resultType="java.lang.String">
 		SELECT DISTINCT
-			TRADE_ID_TG
+		TRADE_ID_TG
 		FROM
-			SETTLE_TRANS_DATA t1
+		SETTLE_TRANS_DATA t1
 		INNER JOIN SETTLE_TRANS_TG_MAPPING t2
-			ON t1.TRADE_ID = t2.TRADE_ID
+		ON t1.TRADE_ID = t2.TRADE_ID
 		<where>
 			t1.APPLY_TRADE_ID = #{tradeId,jdbcType=VARCHAR}
 			<if test="ps != null">
@@ -587,8 +616,8 @@
 		</where>
 	</select>
 
-    <select id="selectSettleDelDealDetail" parameterType="java.util.Map"
-            resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto">
+	<select id="selectSettleDelDealDetail" parameterType="java.util.Map"
+			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto">
 		SELECT fp.FINPROD_ID finprodId,
 		fp.TRADE_MARKET tradeMarket,
 		sbr.SHARES_ID ,
@@ -605,18 +634,18 @@
 		ON fp.FINPROD_MARKET_ID = sbr.SHARES_ID
 		AND fp.FINPROD_TYPE = 'F10' AND fp.FINPROD_TYPE2 = 'F10'
 		INNER JOIN ptl_sec_position psp
-		ON sbr.FINPROD_ID = psp.FINPROD_ID
+		ON fp.FINPROD_ID = psp.FINPROD_ID
 		AND psp.CDATE = REG_DATE
 		AND psp.HODING_TYPE = '03'
-        <where>
+		<where>
 			sbr.REG_DATE = #{dealDate,jdbcType=DATE}
 			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
-           		<foreach collection="portfolioIdList" item="portfolioId" open="AND psp.PORTFOLIO_ID IN (" close=")" separator=",">
-           			#{portfolioId,jdbcType=VARCHAR}
-           		</foreach>
-       		</if>
-        </where>
-    </select>
+				<foreach collection="portfolioIdList" item="portfolioId" open="AND psp.PORTFOLIO_ID IN (" close=")" separator=",">
+					#{portfolioId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+	</select>
 
 	<select id="selectCashBonusSettleTransData" parameterType="java.util.Map"
 			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
@@ -716,7 +745,7 @@
 			</if>
 		</where>
 	</select>
-	
+
 	<update id="updateSettleTransTgMapping" parameterType="java.util.Map">
 		UPDATE SETTLE_TRANS_TG_MAPPING
 		<set>
@@ -738,17 +767,17 @@
 	<select id="selectNhfTotalTrdProductDealDto" parameterType="java.util.Map"
 			resultType="com.joyintech.tams.settle.batch.datagather.dto.TotalTrdProductDealDto">
 		SELECT
-			A.TOTLE_TRADE_ID
+		A.TOTLE_TRADE_ID
 		FROM
-			TRD_FIN_PRODUCT_DEAL_TOTAL A,
-			PA_TRD_FIN_PRODUCT_DEAL_TOTAL B
+		TRD_FIN_PRODUCT_DEAL_TOTAL A,
+		PA_TRD_FIN_PRODUCT_DEAL_TOTAL B
 		<where>
-			A.FINPROD_ID = #{finprodId,jdbcType=VARCHAR} AND A.PS = #{ps,jdbcType=VARCHAR} AND A.TRADE_DATE &lt;= #{fhDate,jdbcType=DATE} 
-			AND A.TRADE_STATUS = #{tradeStatus,jdbcType=VARCHAR} AND A.IS_CANCEL = #{isCancel,jdbcType=VARCHAR} 
+			A.FINPROD_ID = #{finprodId,jdbcType=VARCHAR} AND A.PS = #{ps,jdbcType=VARCHAR} AND A.TRADE_DATE &lt;= #{fhDate,jdbcType=DATE}
+			AND A.TRADE_STATUS = #{tradeStatus,jdbcType=VARCHAR} AND A.IS_CANCEL = #{isCancel,jdbcType=VARCHAR}
 			AND A.TOTLE_TRADE_ID = B.TOTLE_TRADE_ID AND B.BONUS_CFM_DATE = #{fhDate,jdbcType=DATE}
 		</where>
 	</select>
-	
+
 	<select id="queryTotalAddByTradeId" resultMap="com.joyintech.tams.common.base.dao.TrdDealTotalAddMapper.BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="com.joyintech.tams.common.base.dao.TrdDealTotalAddMapper.Base_Column_List" />
@@ -759,19 +788,23 @@
 	<!--指令信息查询-->
 	<select id="listEtrEntrust" resultType="com.joyintech.tams.settle.batch.datagather.dto.EtrEntrustDto">
 		SELECT
-			T1.ENTRUST_ID,
-			T1.FINPROD_ID,
-			T1.PS,
-			T1.ENTRUST_DATE,
-			T2.SEC_ACCT_ID,
-			T2.DEAL_CUR_ACCT,
-			T1.TRADE_PLAT,
-			T1.ENTRUST_NUM ,
-			T1.ENTRUST_AMT
+		T1.ENTRUST_ID,
+		T1.FINPROD_ID,
+		T1.PS,
+		T1.ENTRUST_DATE,
+		T2.SEC_ACCT_ID,
+		T2.DEAL_CUR_ACCT,
+		T2.TRADE_ID,
+		T2.VDATE,
+		T2.VPAY_DATE,
+		T1.TRADE_PLAT,
+		T1.ENTRUST_NUM ,
+		T1.ENTRUST_AMT,
+		T1.ENTRUST_STATUS
 		FROM
-			ETR_ENTRUST T1
+		ETR_ENTRUST T1
 		LEFT JOIN ETR_ENTRUST_ADD T2 ON
-			T2.ENTRUST_ID = T1.ENTRUST_ID
+		T2.ENTRUST_ID = T1.ENTRUST_ID
 		WHERE ENTRUST_DATE = #{entrustDate,jdbcType=DATE}
 		<if test="finprodType != null and finprodType.size()>0">
 			AND T1.FINPROD_TYPE2  IN
@@ -801,26 +834,26 @@
 	<select id="listBondPurConfirSettleTransData" parameterType="java.util.Map"
 			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
 		SELECT
-			trd.TRADE_ID  tradeId2,
-			trda.PURCH_MODLE  purchModle,
-			trda.PURCH_TYPE purchType,
-			trd.TRADE_DATE  purchDate,
-			trd.COUNTER_ID  purchCounter,
-			trd.PRIN_AMT    purchAmt,
-			trda.PORTFOLIO_ID  PORTFOLIO_ID,
-			trd.SHARE_AMT   SHARE_NUM,
-		    trda.ENTRUST_ID ENTRUST_ID,
-	    	trd.INV_AIM     INV_AIM,
+		trd.TRADE_ID  tradeId2,
+		trda.PURCH_MODLE  purchModle,
+		trda.PURCH_TYPE purchType,
+		trd.TRADE_DATE  purchDate,
+		trd.COUNTER_ID  purchCounter,
+		trd.PRIN_AMT    purchAmt,
+		trda.PORTFOLIO_ID  PORTFOLIO_ID,
+		trd.SHARE_AMT   SHARE_NUM,
+		trda.ENTRUST_ID ENTRUST_ID,
+		trd.INV_AIM     INV_AIM,
 		<include refid="settleTransDataSql"></include>
 		LEFT JOIN FIN_PRODUCT fp
-		       ON fp.FINPROD_ID = std.FINPROD_ID
+		ON fp.FINPROD_ID = std.FINPROD_ID
 		INNER JOIN TRD_PRODUCT_DEAL trd
-		       ON trd.PS = #{PS_T04}
-		      AND trd.TRADE_DATE &lt; std.DEAL_DATE
-			  AND trd.SEAT_ID = std.SEAT_NUMBER
-			  AND trd.SEC_MANAGE_ACCT_ID = std.SEC_ACCT_ID
-			  AND trd.IS_CANCEL = #{IS_CANCEL_N}
-			  AND trd.TRADE_STATUS = #{TRADE_STATUS_01}
+		ON trd.PS = #{PS_T04}
+		AND trd.TRADE_DATE &lt; std.DEAL_DATE
+		AND trd.SEAT_ID = std.SEAT_NUMBER
+		AND trd.SEC_MANAGE_ACCT_ID = std.SEC_ACCT_ID
+		AND trd.IS_CANCEL = #{IS_CANCEL_N}
+		AND trd.TRADE_STATUS = #{TRADE_STATUS_01}
 		LEFT JOIN TRD_PRODUCT_DEAL_ADD trda ON trda.TRADE_ID = trd.TRADE_ID
 		<where>
 			std.PS = #{PS_T05}
@@ -848,29 +881,29 @@
 	<select id="listBoundSharesMarketTradeData" parameterType="java.util.Map"
 			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
 		SELECT
-			SEC_ACCT_ID secAcctId,
-			CDATE dealDate,
-			FINPROD_ID finprodId
+		SEC_ACCT_ID secAcctId,
+		CDATE dealDate,
+		FINPROD_ID finprodId
 		FROM
-			FIN_PRODUCT_QUTO
+		FIN_PRODUCT_QUTO
 		WHERE 1=1
-			<if test="dealDate != null">
-				AND FIN_PRODUCT_QUTO.CDATE = #{dealDate,jdbcType=DATE}
-			</if>
-		     AND FIN_PRODUCT_QUTO.OTH_TYPE = #{OTH_TYPE_15}
+		<if test="dealDate != null">
+			AND FIN_PRODUCT_QUTO.CDATE = #{dealDate,jdbcType=DATE}
+		</if>
+		AND FIN_PRODUCT_QUTO.OTH_TYPE = #{OTH_TYPE_15}
 	</select>
 
 	<!--组合持仓-->
 	<select id="listPtlSecPositionFolw" resultType="com.joyintech.tams.common.base.entity.PtlSecPositionFlow">
-       SELECT
+		SELECT
 			PORTFOLIO_ID,
 			SEC_ACCT_ID,
-	    	FINPROD_ID,
-		    INV_AIM,
-            CCY,
-		    AMOUNT,
-		    TRADE_ID,
-		    ENTRUST_ID
+			FINPROD_ID,
+			INV_AIM,
+			CCY,
+			AMOUNT,
+			TRADE_ID,
+			ENTRUST_ID
 		FROM
 			PTL_SEC_POSITION_FOLW
 		WHERE HODING_TYPE = #{hodingType,jdbcType=DATE}
@@ -879,7 +912,8 @@
 
 	<select id="selectFundSettleTransData" parameterType="java.util.Map"
 			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
-		std.SEQ_ID TRADE_ID,
+		SELECT
+		std.SEQ_NO TRADE_ID,
 		/*std.CJBH CJBH,*/
 		std.DEAL_DATE DEAL_DATE,/*执行日期*/
 		std.FINPROD_ID,/*金融产品代码*/
@@ -902,10 +936,12 @@
 		psp.PORTFOLIO_ID, /*组合代码*/
 		psp.AMOUNT shareAmt, /*数量*/
 		psp.CDATE regDate, /*权益登记日*/
-		(SELECT TOTLE_TRADE_ID FROM (SELECT t1.REG_DATE FROM	TRD_FIN_PRODUCT_DEAL_TOTAL t1
+		(SELECT TOTLE_TRADE_ID FROM (SELECT t1.TOTLE_TRADE_ID FROM	TRD_FIN_PRODUCT_DEAL_TOTAL t1
 		WHERE t1.FINPROD_ID=std.FINPROD_ID AND t1.BUSI_TYPE='TRD14'
-		AND t1.PS='T13' AND t1.REG_DATE &lt;= #{dealDate,jdbcType=DATE} ORDER BY t1.REG_DATE desc) a WHERE rownum=1) bTradeId, /*前置交易编号*/
+		AND t1.PS='T13' AND t1.REG_DATE &lt;= #{dealDate,jdbcType=DATE} ORDER BY t1.REG_DATE desc) a limit 1) bTradeId /*前置交易编号*/
 		FROM SETTLE_TRANS_DATA std
+		left join FIN_PRODUCT fp on std.FINPROD_ID = fp.FINPROD_ID
+		LEFT JOIN fin_product_type fpt ON fp.FINPROD_ID=fpt.FINPROD_ID
 		INNER JOIN PTL_SEC_POSITION psp
 		ON psp.FINPROD_ID=std.FINPROD_ID
 		AND psp.SEC_ACCT_ID=std.SEC_ACCT_ID
@@ -917,10 +953,9 @@
 		)
 		ELSE(SELECT REG_DATE FROM (SELECT t1.REG_DATE FROM	TRD_FIN_PRODUCT_DEAL_TOTAL t1
 		WHERE t1.FINPROD_ID=std.FINPROD_ID AND t1.BUSI_TYPE='TRD14'
-		AND t1.PS='T13' AND t1.REG_DATE &lt;= #{dealDate,jdbcType=DATE} ORDER BY t1.REG_DATE desc) WHERE rownum=1)
+		AND t1.PS='T13' AND t1.REG_DATE &lt;= #{dealDate,jdbcType=DATE} ORDER BY t1.REG_DATE desc)b limit 1)
+		END
 		)
-		left join FIN_PRODUCT fp on std.FINPROD_ID = fp.FINPROD_ID
-		LEFT JOIN fin_product_type fpt ON fp.FINPROD_ID=fpt.FINPROD_ID
 		<where>
 			std.DEAL_DATE = #{dealDate,jdbcType=DATE}
 			AND std.FINPROD_TYPE2 = 'F06'
@@ -990,7 +1025,7 @@
 	<select id="selectSettleTransDataTotalPledge" parameterType="java.lang.String" resultType="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge">
 		SELECT
 			TRADE_ID,
-		   	PLEDGE_FINPROD_ID,
+			PLEDGE_FINPROD_ID,
 			DISPLACE_DIRECTION
 		FROM
 			SETTLE_TRANS_DATA_TOTAL_PLEDGE
@@ -1042,9 +1077,9 @@
 	<!--查询行权-回售计划-->
 	<select id="selectFinExercisePlanData" resultType="com.joyintech.tams.common.base.entity.FinExercisePlan">
 		SELECT
-			T1.VDATE, T1.MDATE, T1.FINPROD_ID
+		T1.VDATE, T1.MDATE, T1.FINPROD_ID
 		FROM
-			FIN_EXERCISE_PLAN T1
+		FIN_EXERCISE_PLAN T1
 		<where>
 			T1.EXERCISE_TYPE = '02'
 			<if test="dataList != null and dataList.size() > 0">
@@ -1060,9 +1095,9 @@
 	<!--查询配股、配债对应申报信息-->
 	<select id="selectFinProductOthCodeData" resultType="com.joyintech.tams.common.base.entity.FinProductOthCode">
 		SELECT
-			T1.FINPROD_ID, T1.OTH_TYPE, T1.DECLARED_START_DATE, T1.DECLARED_END_DATE
+		T1.FINPROD_ID, T1.OTH_TYPE, T1.DECLARED_START_DATE, T1.DECLARED_END_DATE
 		from
-			FIN_PRODUCT_OTH_CODE T1
+		FIN_PRODUCT_OTH_CODE T1
 		<where>
 			T1.OTH_TYPE in ('05', '06')
 			<if test="dataList != null and dataList.size() > 0">
@@ -1086,7 +1121,7 @@
 			ETR_PLEDGE
 		WHERE
 			ENTRUST_ID = #{entrustId, jdbcType=VARCHAR}
-			AND FINPROD_ID = #{finProdId, jdbcType=VARCHAR}
+		  AND FINPROD_ID = #{finProdId, jdbcType=VARCHAR}
 	</select>
 
 	<select id="selectDzcjList" resultType="int">
