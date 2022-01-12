@@ -40,6 +40,8 @@ import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPosPortfolioCashReq
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPosPortfolioSecRequest;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPositionRequest;
 import com.joyintech.tams.common.base.entity.RegFinPledge;
+import com.joyintech.tams.common.base.entity.RegFinProductDeal;
+import com.joyintech.tams.common.base.entity.RegFinProductDealTotal;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
@@ -51,6 +53,7 @@ import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonServ
 import com.joyintech.tams.invest.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto;
 import com.joyintech.tams.invest.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto;
 import com.joyintech.tams.invest.bankuplink.repo.service.CfetsRepoDealQuotedPrice003Service;
+import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -62,6 +65,7 @@ import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
 import com.joyintech.tams.invest.common.dto.cstp.CfetsRepoDealQuotedPriceDto;
 import com.joyintech.tams.invest.common.dto.cstp.CfetsRepoPledgeBondDto;
 import com.joyintech.tams.invest.common.dto.cstp.IbuQuoteEntCrepPledgeCommonDto;
+import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -120,6 +124,9 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
 
     @Autowired
     private IbuComponentCommonService ibuComponentCommonService;
+
+    @Autowired
+    private BaseEtrInvestInfoService baseEtrInvestInfoServiceImpl;
 
     @Autowired
     private CstpCommonService cstpCommonService;
@@ -584,7 +591,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         }
         /**************************************************************组合分配********************************************/
         /*************************************************************质押券信息*******************************************/
-        if (CollectionUtils.isEmpty(entity.getRepoEntrustPledgeDtos()) && StringUtil.equals(ps, DictCodeListExt3.交易方向_正回购.getValue())) {
+        if (CollectionUtils.isEmpty(entity.getRepoEntrustPledgeDtos())) {
             errorList.add(new ValidMessage("质押券不可为空"));
         }
         if (!CollectionUtils.isEmpty(entity.getRepoEntrustPledgeDtos())) {
@@ -730,7 +737,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             errorList.add(new ValidMessage("请输入组合分配交易金额"));
         }
         if (!StringUtil.isNotEmpty(ptlAllocatio.getConvertAmt())
-                && StringUtil.equals(ps, DictCodeListExt3.交易方向_正回购.getValue())) {
+                && StringUtil.equals(ps, DictCodeListExt3.交易方向_正回购)) {
             errorList.add(new ValidMessage("请输入组合分配质押券折算总额"));
         }
         if (!StringUtil.isNotEmpty(ptlAllocatio.getDealFeeAmt())) {
@@ -1183,6 +1190,8 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 // 提交
                 this.sendNewRepoDealQuote(dto);
             }
+            //处理指令执行进度
+            this.insertEtrFinishStatus(entity, type);
         } else if (StringUtil.equals(entity.getQuotaPageModel(), "edit")) {
             // 修改
             if (StringUtil.equals(entity.getOperatorType(), "save")) {
@@ -1206,6 +1215,35 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
 //        if (StringUtil.isNotEmpty(type)) {
 //            throw new RuntimeException("cs by jp");
 //        }
+    }
+
+    /**
+     * 处理指令完成度
+     *
+     * @param cfetsRepoDealDbDto 入库dto
+     * @param operationType      操作类型
+     */
+    public void insertEtrFinishStatus(CfetsRepoDealQuotedPrice001Dto entity, OperationType operationType) {
+        List<PtlAllocationDto> ptlAllocationDtos = entity.getPtlAllocationList();
+        if (CollectionUtils.isNotEmpty(ptlAllocationDtos)) {
+            List<EtrFinishStatusDto> etrFinishStatusDtos = new ArrayList<>();
+            for (PtlAllocationDto ptlAllocationDto : ptlAllocationDtos) {
+                EtrFinishStatusDto status = new EtrFinishStatusDto();
+                status.setEntrustId(ptlAllocationDto.getEntrustId());
+                status.setTradeId(entity.getQuoteId());
+                status.setCstpTradeId(entity.getQuoteId());
+                status.setFinishDate(entity.getTradeDate());
+                status.setEntFinishAmt(ptlAllocationDto.getFpriceAmt());
+                status.setTrader(entity.getMySideTrader());
+                if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+                    baseEtrInvestInfoServiceImpl.cancelCompleteDelegate(status.getEntrustId(), status.getTradeId());
+                }
+                etrFinishStatusDtos.add(status);
+            }
+            if (!operationType.equals(OperationType.REVOKE) && !operationType.equals(OperationType.DELETE)) {
+                baseEtrInvestInfoServiceImpl.completeDelegate(etrFinishStatusDtos);
+            }
+        }
     }
 
     /**
@@ -1614,6 +1652,15 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
      */
     public CfetsRepoDealQuotedPrice001Dto page2BackDto(CfetsRepoDealQuoteCommonDto pageDto) {
         CfetsRepoDealQuotedPrice001Dto backDto = new CfetsRepoDealQuotedPrice001Dto();
+        // 证券账户
+        String secAcctId = StringUtil.EMPTY;
+        if (CollectionUtils.isNotEmpty(pageDto.getRepoEntrustPledgeDtos()) && CollectionUtils.isNotEmpty(pageDto.getPtlAllocations())) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("portfolioId", pageDto.getPtlAllocations().get(0).getPortfolioId());
+            map.put("finprodId", pageDto.getRepoEntrustPledgeDtos().get(0).getFinprodId());
+            secAcctId = this.qryPortfolioSecAcctId(map);
+        }
+        pageDto.setSecManageAcctId(secAcctId);
         BeanUtil.copyPropertiesIgnoreNull(backDto, pageDto);
         backDto.setOperatorType(pageDto.getOperateType());
         // 卷面总额合计(万) 转换
@@ -1647,7 +1694,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         // 分配方式
         backDto.setDipType(pageDto.getDistribution());
         // 证券账户
-        backDto.setSecAcctId(pageDto.getPtlAllocations().get(0).getSecManageAcctId());
+        backDto.setSecAcctId(pageDto.getSecManageAcctId());
         // 交易对手 21位码
         if (StringUtil.isNotEmpty(pageDto.getCounterPartyId())) {
             backDto.setCounterId(pageDto.getCounterPartyId());
@@ -1670,15 +1717,13 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             BeanUtil.copyPropertiesIgnoreNull(ptlDto, ptlAllocationDto);
             ptlDto.setQuoteId(pageDto.getQuoteId());
             // 交易金额
-            ptlDto.setcPriceAmt(ptlAllocationDto.getTradeAmt());
+            ptlDto.setFpriceAmt(ptlAllocationDto.getTradeAmt());
             // 回购期限
             ptlDto.setTermDays((long) pageDto.getRepoTerm());
             //折算券面总额
             ptlDto.setShareAmt(ptlAllocationDto.getConvertAmt());
             //回购利息
             ptlDto.setIntAmt(ptlAllocationDto.getmIntAmt());
-            //到期结算金额
-            ptlDto.setFpriceAmt(ptlAllocationDto.getMtradeAmt());
             ptlAllocationList.add(ptlDto);
         }
         backDto.setPtlAllocationList(ptlAllocationList);
@@ -1754,7 +1799,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 RepoPtlAllocationDto ptlAllocationDto = new RepoPtlAllocationDto();
                 BeanUtil.copyPropertiesIgnoreNull(ptlAllocationDto, ptlDto);
                 // 交易金额
-                ptlAllocationDto.setTradeAmt(ptlDto.getcPriceAmt());
+                ptlAllocationDto.setTradeAmt(ptlDto.getFpriceAmt());
                 //折算券面总额
                 ptlAllocationDto.setConvertAmt(ptlDto.getShareAmt());
                 // 到期结算金额
@@ -2208,7 +2253,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         map.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
         // 流程中数据
         List<com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto> list = ibuQuoteRepo003Mapper.selectQuoteCrepPledgeForDzh(map);
-        if(CollectionUtils.isEmpty(list)) {
+        if (CollectionUtils.isEmpty(list)) {
             list = ibuQuoteRepo003Mapper.selectWflQuoteCrepPledgeForDzh(map);
         }
         List<CfetsRepoDealQuotedPrice003Dto> results = null;

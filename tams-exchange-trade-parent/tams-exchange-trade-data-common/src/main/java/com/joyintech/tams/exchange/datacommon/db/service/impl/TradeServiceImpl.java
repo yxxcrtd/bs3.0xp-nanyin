@@ -1,5 +1,20 @@
 package com.joyintech.tams.exchange.datacommon.db.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
@@ -13,14 +28,6 @@ import com.joyintech.tams.exchange.datacommon.cache.impl.AsyncServiceImpl;
 import com.joyintech.tams.exchange.datacommon.db.dao.IMybatisMapper;
 import com.joyintech.tams.exchange.datacommon.db.dao.TradeMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.TradeService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @Service
 public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements TradeService {
@@ -205,5 +212,13 @@ public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements
     @Override
     public IMybatisMapper<Trade, String, TradeExample> getMapper() {
         return tradeMapper;
+    }
+    
+    /**
+     * 投管用成交查询
+     */
+    @Override
+    public List<Trade> queryTrade2Touguan(String instructionId){
+    	return tradeMapper.queryTrade2Touguan(instructionId);
     }
 }

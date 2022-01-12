@@ -132,6 +132,8 @@
         <id property="secAcctSource" column="secAcctSource"/>
         <id property="partyId" column="partyId"/>
         <id property="secManageAcctId" column="secManageAcctId"/>
+        <id property="secManageAcctIdZZ" column="secManageAcctIdZZ"/>
+        <id property="secManageAcctIdSQ" column="secManageAcctIdSQ"/>
         <id property="portfolioSeries" column="portfolioSeries"/>
         <id property="termType" column="termType"/>
         <collection property="repoEntrustPledgeDtos" ofType="com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustPledgeDto"
@@ -224,6 +226,8 @@
                 , IPAR.CFETS_ACCT_TYPE                                                                          secAcctSource/* 银行间账户类型，自营/理财*/
                 , IPAR.PARTY_ID                                                                                 partyId/* 交易成员ID，21位编号*/
                 , ETR_ENTRUST_ADD.SEC_ACCT_ID                                                                   secManageAcctId/* 证券账户代码*/
+                , SECACCT1.ACCT_NO                                                                              secManageAcctIdZZ/* 中债登 证券账户代码*/
+                , SECACCT2.ACCT_NO                                                                              secManageAcctIdSQ/* 上清所 证券账户代码*/
                 , PA_PTL_PORTFOLIO.PORTFOLIO_SERIES                                                             portfolioSeries/* 组合系列*/
                 , ETR_ENTRUST_ADD.TERM_TYPE                                                                     termType /*期限品种*/
                 , ETR_ENTRUST.TRADE_MARKET/*交易场所，银行间、上交所、深交所、柜面等*/
@@ -236,6 +240,24 @@
                 ON ETR_ENTRUST.ENTRUST_ID = ETR_DISTRIBUTE.ENTRUST_ID
             LEFT JOIN ETR_ENTRUST_ADD
                 ON ETR_ENTRUST.ENTRUST_ID = ETR_ENTRUST_ADD.ENTRUST_ID
+            LEFT JOIN (
+                        select PORTFOLIO_ID,ACCT_NO
+                        from PTL_SEC_ACCT psa
+                        inner join STL_SEC_ACCT_INFO ssai
+                            on psa.ACCT_NO = ssai.SEC_ACCT_ID
+                            and ssai.REGIST_ORG in ('01')
+                            and NVL(ssai.sec_acct_type, 'SEC') = 'SEC'
+                            and TRADE_PLACE = '01'
+                     ) SECACCT1 ON ETR_ENTRUST.PORTFOLIO_ID = SECACCT1.PORTFOLIO_ID
+            LEFT JOIN (
+                        select PORTFOLIO_ID,ACCT_NO
+                        from PTL_SEC_ACCT psa
+                        inner join STL_SEC_ACCT_INFO ssai
+                            on psa.ACCT_NO = ssai.SEC_ACCT_ID
+                            and ssai.REGIST_ORG in ('02')
+                            and NVL(ssai.sec_acct_type, 'SEC') = 'SEC'
+                            and TRADE_PLACE = '01'
+                     ) SECACCT2 ON ETR_ENTRUST.PORTFOLIO_ID = SECACCT2.PORTFOLIO_ID
             LEFT JOIN
             (
                 SELECT ENTRUST_ID

@@ -281,16 +281,18 @@ public class IbuQuoteRepoService extends BaseService {
      */
     public AjaxResult dealexecutioncheck(CfetsRepoDealQuoteRequest cfetsRepoDealQuoteRequest) {
         AjaxResult ajaxResult = new AjaxResult();
-        try {
-            Map<String, Object> param = BeanUtil.object2Map(cfetsRepoDealQuoteRequest);
-            setParam(param, 1);
-            List<CfetsRepoDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
-            if (!StringUtil.isEmptyList(entrustDtos)) {
-                ajaxResult = preconditionJudgment(entrustDtos);
+        if(CollectionUtils.isNotEmpty(cfetsRepoDealQuoteRequest.getEntrustIdList())) {
+            try {
+                Map<String, Object> param = BeanUtil.object2Map(cfetsRepoDealQuoteRequest);
+                setParam(param, 1);
+                List<CfetsRepoDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
+                if (!StringUtil.isEmptyList(entrustDtos)) {
+                    ajaxResult = preconditionJudgment(entrustDtos);
+                }
+            } catch (Exception e) {
+                ajaxResult.setMessage("交易执行检查异常!");
+                return ajaxResult;
             }
-        } catch (Exception e) {
-            ajaxResult.setMessage("交易执行检查异常!");
-            return ajaxResult;
         }
         return ajaxResult;
     }
@@ -1511,7 +1513,8 @@ public class IbuQuoteRepoService extends BaseService {
             if (StringUtil.isEmpty(counterId)) {
                 counterId = item.getCounterId();
             }
-            if (secManageAcctIdFlag && !StringUtil.equals(one.getSecManageAcctId(), item.getSecManageAcctId())) {
+            if (secManageAcctIdFlag && !StringUtil.equals(one.getSecManageAcctIdZZ(), item.getSecManageAcctIdZZ())
+                    && !StringUtil.equals(one.getSecManageAcctIdSQ(), item.getSecManageAcctIdSQ())) {
                 secManageAcctIdFlag = false;
                 message = msgSplicing(message, "OR");
                 message = message + "证券账户";

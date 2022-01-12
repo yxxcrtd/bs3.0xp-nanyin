@@ -138,6 +138,12 @@ public class CfetsTrdConfirmCstpInfoListResponse {
     @ApiModelProperty(name="pledgeFaceValues",value="质押券面值",example="字符串1")
     private String   pledgeFaceValues;
 
+    @ApiModelProperty(name="pledgeFinprodId",value="质押券债券",example="字符串1")
+    private String   pledgeFinprodId;
+    @ApiModelProperty(name="pledgeRatio",value="质押券折算比例",example="字符串1")
+    private BigDecimal   pledgeRatio;
+    @ApiModelProperty(name="pledgeFaceValue",value="质押券面值",example="字符串1")
+    private BigDecimal   pledgeFaceValue;
     public String getExecid() {
         return execid;
     }
@@ -362,28 +368,28 @@ public class CfetsTrdConfirmCstpInfoListResponse {
         this.deliveryType = deliveryType;
     }
 
-    public String getPledgeFinprodIds() {
-        return pledgeFinprodIds;
+    public String getPledgeFinprodId() {
+        return pledgeFinprodId;
     }
 
-    public void setPledgeFinprodIds(String pledgeFinprodIds) {
-        this.pledgeFinprodIds = pledgeFinprodIds;
+    public void setPledgeFinprodId(String pledgeFinprodId) {
+        this.pledgeFinprodId = pledgeFinprodId;
     }
 
-    public String getPledgeRatios() {
-        return pledgeRatios;
+    public BigDecimal getPledgeRatio() {
+        return pledgeRatio;
     }
 
-    public void setPledgeRatios(String pledgeRatios) {
-        this.pledgeRatios = pledgeRatios;
+    public void setPledgeRatio(BigDecimal pledgeRatio) {
+        this.pledgeRatio = pledgeRatio;
     }
 
-    public String getPledgeFaceValues() {
-        return pledgeFaceValues;
+    public BigDecimal getPledgeFaceValue() {
+        return pledgeFaceValue;
     }
 
-    public void setPledgeFaceValues(String pledgeFaceValues) {
-        this.pledgeFaceValues = pledgeFaceValues;
+    public void setPledgeFaceValue(BigDecimal pledgeFaceValue) {
+        this.pledgeFaceValue = pledgeFaceValue;
     }
 
     public String getAcctNoName() {
@@ -440,5 +446,29 @@ public class CfetsTrdConfirmCstpInfoListResponse {
 
     public void setMtradeAmt(BigDecimal mtradeAmt) {
         this.mtradeAmt = mtradeAmt;
+    }
+
+    public String getPledgeFinprodIds() {
+        return pledgeFinprodIds;
+    }
+
+    public void setPledgeFinprodIds(String pledgeFinprodIds) {
+        this.pledgeFinprodIds = pledgeFinprodIds;
+    }
+
+    public String getPledgeRatios() {
+        return pledgeRatios;
+    }
+
+    public void setPledgeRatios(String pledgeRatios) {
+        this.pledgeRatios = pledgeRatios;
+    }
+
+    public String getPledgeFaceValues() {
+        return pledgeFaceValues;
+    }
+
+    public void setPledgeFaceValues(String pledgeFaceValues) {
+        this.pledgeFaceValues = pledgeFaceValues;
     }
 }

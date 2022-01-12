@@ -412,7 +412,15 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         //头寸
         try{
             if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
-                PositionHttpRequest.sendRevoke(cfetsBondDealDbDto.getRegFinProductDealTotal().getpTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+                //PositionHttpRequest.sendRevoke(cfetsBondDealDbDto.getRegFinProductDealTotal().getpTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+                String busiType = StringUtil.EMPTY;
+                String ps = cfetsBondDealDbDto.getRegFinProductDealTotal().getPs();
+                if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){
+                    busiType = DictCodeListExt3.头寸业务类型_债券行权交易.getValue();
+                }else{
+                    busiType = DictCodeListExt3.头寸业务类型_现券交易.getValue();
+                }
+                PositionHttpRequest.dorevoke(cfetsBondDealDbDto.getRegFinProductDealTotal().getpTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),busiType,ps);
             }/*else{
                 PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,operationType));
             }*/

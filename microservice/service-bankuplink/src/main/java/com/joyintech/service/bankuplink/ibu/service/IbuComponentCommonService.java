@@ -2425,6 +2425,7 @@ public class IbuComponentCommonService extends BaseService {
                 ibuQuoteEtrRe.setDealFeeAmt(item.getDealFeeAmt());
                 ibuQuoteEtrRe.setSettFeeAmt(item.getSettFeeAmt());
                 ibuQuoteEtrRe.setPriceModel(item.getPriceModel());
+                ibuQuoteEtrRe.setMtradeAmt(item.getMtradeAmt());
                 ibuQuoteEtrRes.add(ibuQuoteEtrRe);
             });
             inputBean.setIbuQuoteEtrReDtoList(ibuQuoteEtrRes);
@@ -2482,7 +2483,7 @@ public class IbuComponentCommonService extends BaseService {
         ibuQuoteCrepDto.setDealFeeAmt(cfetsRepoDealQuotedPrice001Dto.getDealFeeAmt());// 交易手续费
         ibuQuoteCrepDto.setSettFeeAmt(cfetsRepoDealQuotedPrice001Dto.getSettFeeAmt());// 结算手续费
         ibuQuoteCrepDto.setDipType(cfetsRepoDealQuotedPrice001Dto.getDipType());// 分配方式
-        ibuQuoteCrepDto.setSecManageAcctId(cfetsRepoDealQuotedPrice001Dto.getSecAcctId());// 分配方式
+        ibuQuoteCrepDto.setSecManageAcctId(cfetsRepoDealQuotedPrice001Dto.getSecAcctId());// 证券账户
         ibuQuoteCrepDto.setActDays(cfetsRepoDealQuotedPrice001Dto.getActDays());// 实际占款天数
         // 清算速度
         if (StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getSettleSpreed(),
@@ -2601,6 +2602,7 @@ public class IbuComponentCommonService extends BaseService {
                 wflIbuQuoteEtrRe.setDealFeeAmt(item.getDealFeeAmt());
                 wflIbuQuoteEtrRe.setSettFeeAmt(item.getSettFeeAmt());
                 wflIbuQuoteEtrRe.setPriceModel(item.getPriceModel());
+                wflIbuQuoteEtrRe.setMtradeAmt(item.getMtradeAmt());
                 wflIbuQuoteEtrRes.add(wflIbuQuoteEtrRe);
             });
             inputBean.setWflIbuQuoteEtrReDtoList(wflIbuQuoteEtrRes);

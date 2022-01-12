@@ -1162,12 +1162,12 @@ public class CfetsEtrDispatcherService extends BaseService{
                 BigDecimal totalPrinAmt = BigDecimal.ZERO;
                 if(!CollectionUtils.isEmpty(detailList)) {
                     for(CfetsPledgeBondInfoDto infoDto : detailList) {
+                        totalPrinAmt = ArithmeticUtil.doAdd(totalPrinAmt, ArithmeticUtil.multiply(infoDto.getPledgePrin(), infoDto.getPledgeRatio()).divide(new BigDecimal("100")));
                         infoDto.setPledgePrin(ArithmeticUtil.divide(infoDto.getPledgePrin(),new BigDecimal("10000"),4));
                         infoDto.setPledStrdPrinAmt(ArithmeticUtil.divide(infoDto.getPledStrdPrinAmt(),new BigDecimal("10000"),4));
-                        if(StringUtil.isNoneBlank(infoDto.getRepRegistOrg())){
-                            infoDto.setRepRegistOrg(SysDataUtil.getNameFromDataDict(DictCode.登记托管机构_中债, infoDto.getRepRegistOrg()));
+                        if(StringUtil.isNoneBlank(infoDto.getRegistOrg())){
+                            infoDto.setRepRegistOrg(SysDataUtil.getNameFromDataDict(DictCode.登记托管机构_中债, infoDto.getRegistOrg()));
                         }
-                        totalPrinAmt = ArithmeticUtil.doAdd(totalPrinAmt, ArithmeticUtil.multiply(infoDto.getPledgePrin(), infoDto.getPledgeRatio()).divide(new BigDecimal("100")));
                     }
                     for(CfetsPledgeBondInfoDto infoDto : detailList) {
                         infoDto.setTotalAmount(totalPrinAmt);
