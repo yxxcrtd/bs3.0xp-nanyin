@@ -236,6 +236,8 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
         //回购品种
         dealTotal.setTermType(dealDto.getTermType());
 
+        //汇总表的期限=Mdate-Vdate
+        dealTotal.setRepoTerm(DateUtil.getBetweenDayNumber(dealDto.getVdate(),dealDto.getMdate()));
         // 备注
         dealTotal.setRemark("数据清算自动处理");
 
