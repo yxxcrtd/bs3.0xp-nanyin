@@ -74,6 +74,7 @@ public class AutoReconciliationService {
         param.put("PS_T39", DictCodeList.交易方向_行权_赎回.getValue());
         param.put("PS_T08", DictCodeList.交易方向_还本.getValue());
         param.put("PS_T09", DictCodeList.交易方向_收息.getValue());
+        param.put("PS_T49", DictCodeListExt1.交易方向_债转股.getValue());
         // add by fuyongsheng 20211208 没有对账单的自动批处理(step2)功能开发 end
         param.put("prodType2_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         param.put("prodType2_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
