@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Workbook filePath="trademanage/trdplanvaluationtrade/TrdPlanValuationTrade001.xlsx" name="计划类资产交易查询">
+<Workbook filePath="trademanage/trdplanvaluationtrade/TrdPlanValuationTrade001.xlsx" name="基金交易导出">
 	<Worksheet javaBean="com.joyintech.tams.valuation.trademanage.trdplanvaluationtrade.dto.TrdPlanValuationTradeDto">
 		<Row>
 			<Cell order="1" name="交易编号">tradeId</Cell>
@@ -14,8 +14,9 @@
 			<Cell order="10" name="交易份额">nums</Cell>
 			<Cell order="11" name="单位净值">unitValue</Cell>
 			<Cell order="12" name="币种">ccy</Cell>
-			<Cell order="13" name="结算金额">mdateSettleAmt</Cell>
-			<Cell order="14" name="资金账户">trdAcctId</Cell>
+			<Cell order="13" name="净值日期">tradeDateStr</Cell>
+			<Cell order="14" name="结算金额">mdateSettleAmt</Cell>
+			<Cell order="15" name="资金账户">trdAcctId</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

@@ -1134,9 +1134,7 @@ public class MonthReportProdService {
 
 			flagType(2, flag, pos);
 			// 7.3  养老理财产品
-			/** modify by wuhaisen  ZGZGST-4574 增加判空处理  20210112 start*/
-			if (pos.getPrdSpecProperty() != null && pos.getPrdSpecProperty().contains(ProdConstants.IS_YLLCCP)) { // 金融机构资产管理产品
-			// /** modify by wuhaisen  ZGZGST-4574 增加判空处理  20210112 end*/
+			if (pos.getPrdSpecProperty()!=null&&pos.getPrdSpecProperty().contains(ProdConstants.IS_YLLCCP)) { // 金融机构资产管理产品
 				buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.YLLCCP);
 				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.YLLCCP);
 			}
@@ -1249,9 +1247,8 @@ public class MonthReportProdService {
 //					}
 					// 7.3  养老理财产品
 				}
-				/** modify by wuhaisen  ZGZGST-4574 增加判空处理  20210112 start*/
-				if (pos.getPrdSpecProperty() != null &&pos.getPrdSpecProperty().contains(ProdConstants.IS_YLLCCP)) { // 金融机构资产管理产品
-				/** modify by wuhaisen  ZGZGST-4574 增加判空处理  20210112 end*/
+
+				if (pos.getPrdSpecProperty()!=null&&pos.getPrdSpecProperty().contains(ProdConstants.IS_YLLCCP)) { // 金融机构资产管理产品
 					setFee(pos,result,prodDetailList,ChbMonthReportPrdConstants.YLLCCP);
 					setFee(pos,deptMap.get(pos.getInstitutionCode()),null,ChbMonthReportPrdConstants.YLLCCP);
 
