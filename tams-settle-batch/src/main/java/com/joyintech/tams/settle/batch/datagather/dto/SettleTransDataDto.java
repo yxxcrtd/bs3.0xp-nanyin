@@ -212,6 +212,8 @@ public class SettleTransDataDto extends SettleTransData {
 
     private BigDecimal purchAmt;
 
+    private String tradeTotalId;
+
     public String getPurchModle() {
         return purchModle;
     }
@@ -250,5 +252,13 @@ public class SettleTransDataDto extends SettleTransData {
 
     public void setPurchAmt(BigDecimal purchAmt) {
         this.purchAmt = purchAmt;
+    }
+
+    public String getTradeTotalId() {
+        return tradeTotalId;
+    }
+
+    public void setTradeTotalId(String tradeTotalId) {
+        this.tradeTotalId = tradeTotalId;
     }
 }

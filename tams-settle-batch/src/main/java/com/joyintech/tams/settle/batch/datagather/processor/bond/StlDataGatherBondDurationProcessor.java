@@ -12,6 +12,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListStl;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.settle.batch.datagather.dao.StlDataGatherMapper;
 import com.joyintech.tams.settle.batch.datagather.dto.*;
 import com.joyintech.tams.settle.common.service.SettleCommonService;
@@ -43,6 +44,7 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
 
     @Autowired
     private SettleCommonService settleCommonService;
+
     @Override
     public InvestTradeWriteDto process (NeedOperateEntity operateEntity) throws Exception {
         InvestTradeWriteDto investTradeWriteDto = new InvestTradeWriteDto();
@@ -65,6 +67,8 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
             List<TrdProductDealDto> productDealList = new ArrayList<>();
             //金融产品汇总附属交易
             List<TrdProductDealAdd> trdProductDealAddList = new ArrayList<>();
+            //金融产品汇总附属交易
+            List<TrdDealTotalAdd> trdDealTotalAddList = new ArrayList<>();
             //持仓分配
             Map<String,Object> param = new HashMap<>();
             // ZGZGST-4216: 查询持仓时日期使用付息截止日前一日 fuyongsheng 20211214 modify start
@@ -201,7 +205,7 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                     }
                 }else{
                     TotalTrdProductDealDto totalTrdProductDeal = new TotalTrdProductDealDto();
-                    String totalTradeId = settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易);
+                    String totalTradeId = settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_可转债申购交易);
                     // 构造 金融产品交易明细
                     List<SettleTransDataDto> settleTransDataList = SettleTransDataMap.get(settleTransData.getSecType()+","
                             + settleTransData.getPs()+","+settleTransData.getSecAcctId()+","+settleTransData.getSeatNumber());
@@ -241,12 +245,18 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                     trdProductDeal.setEntrustId(settleTransData.getEntrustId());
                      //
                     trdProductDeal.setCounterId(settleTransData.getPurchCounter());
+                    String tradeId = settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_可转债申购交易);
+                    trdProductDeal.setTradeId(tradeId);
                     // GZYHTZJY-1043: 生成可转债申购确认汇总交易 modify by fuyongsheng 20220110 start
                     // 构造金融交易汇总表数据
                     BeanUtil.copyProperties(totalTrdProductDeal, trdProductDeal);
                     // 汇总交易编号
                     totalTrdProductDeal.setTotleTradeId(totalTradeId);
+                    totalTrdProductDeal.setbTradeId(settleTransData.getTradeTotalId());
                     totalProductDealList.add(totalTrdProductDeal);
+
+
+
                     // GZYHTZJY-1043: 生成可转债申购确认汇总交易 modify by fuyongsheng 20220110 end
                     //构造 金融产品交易明细附属
                     TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
@@ -257,6 +267,15 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                     trdProductDealAdd.setPurchType(DictCodeListExt2.申购类型_普通申购.getValue());
                     productDealList.add(trdProductDeal);
                     trdProductDealAddList.add(trdProductDealAdd);
+
+                    TrdDealTotalAdd trdDealTotalAdd = new TrdDealTotalAdd();
+                    BeanUtil.copyProperties(trdDealTotalAdd, trdProductDealAdd);
+                    trdDealTotalAdd.setEntrustId(settleTransData.getEntrustId());
+                    trdDealTotalAdd.setTotleTradeId(totalTradeId);
+                    trdDealTotalAdd.setPurAmt(settleTransData.getPurchAmt());
+                    trdDealTotalAdd.setPurchDate(settleTransData.getPurchDate());
+                    trdDealTotalAddList.add(trdDealTotalAdd);
+
                     //构造 成交数据与投管交易关系
                     SettleTransTgMapping settleTransTgMapping = new SettleTransTgMapping();
                     settleTransTgMapping.setTradeId(settleTransData.getTradeId());
@@ -264,6 +283,7 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                     settleTransTgMapping.setTgDataStatus("02");
                     settleTransTgMapping.setDealDate(settleTransData.getDealDate());
                     settleTransTgMappingList.add(settleTransTgMapping);
+
                 }
             }
             investTradeWriteDto.setFinProductDealTotalList(finProductDealTotalList);
@@ -272,6 +292,7 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
             investTradeWriteDto.setProductDealList(productDealList);
             investTradeWriteDto.setFinProductDealTotalList(totalProductDealList);
             investTradeWriteDto.setTrdProductDealAddList(trdProductDealAddList);
+            investTradeWriteDto.setTrdDealTotalAddList(trdDealTotalAddList);
             // ZGZGST-4219: 对SettleTransTgMappingList赋值,解决撤销问题 fuyongsheng 20211217 add start
             investTradeWriteDto.setSettleTransTgMappingList(settleTransTgMappingList);
             // ZGZGST-4219: 对SettleTransTgMappingList赋值,解决撤销问题 fuyongsheng 20211217 add end

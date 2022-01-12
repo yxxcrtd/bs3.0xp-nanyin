@@ -835,6 +835,7 @@
 			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
 		SELECT
 		trd.TRADE_ID  tradeId2,
+		trd.TOTLE_TRADE_ID  tradeTotalId,
 		trda.PURCH_MODLE  purchModle,
 		trda.PURCH_TYPE purchType,
 		trd.TRADE_DATE  purchDate,
