@@ -1403,8 +1403,8 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     if (StringUtil.isNotEmpty(secAcctId)) {
                         secport.setSecAcctId(secAcctId); // 证券账户
                     }
-                    secport.setSecAmount(regFinPledge.getPledgeNumber());
-                    secport.setOwnSecAmount(regFinPledge.getPledgeNumber());
+                    secport.setSecAmount(ArithmeticUtil.multiply(regFinPledge.getPledgeNumber(),new BigDecimal(100)));
+                    secport.setOwnSecAmount(ArithmeticUtil.multiply(regFinPledge.getPledgeNumber(),new BigDecimal(100)));
                     secport.setIntegrateSecAmount(BigDecimal.ZERO);
                     ptlSecList.add(secport);
                 }
