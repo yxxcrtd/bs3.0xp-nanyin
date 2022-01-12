@@ -684,22 +684,22 @@ public class ExchangeTransMatchCommonService extends BaseService {
 
         // modify by etliu 20220110 start
         // GZYHTZJY-1032: 协议回购的头寸处理，需要走PTL_POSITION_FLOW_CFG配置
-//        if ((StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
-//                || StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()))
-//                && dto.getSettleTransDataTotalAdd() != null
-//                && StringUtil.equals(dto.getSettleTransDataTotalAdd().getRepoType(),DictCodeList.回购类型_质押式协议回购.getValue())) {
-//            // 协议回购头寸特殊处理
-//            exchangeTransMatchRepoCommonService.handlePositionOfXyhg(dto, commonEntrustDto, baseTradeProductDealDtos, finPledgeDisplaceDetailHuanChu);
-//
-//            // 3.调用基础组件.【投资委托组件.完成委托】，写入委托完成状况信息(投资委托场合才执行此步)
-//            if(!finProductTradeDto.isNeedHandleFinishEntrust()) {
-//                baseTradeProductDealCommService.finishEntrust(finProductTradeDto.getBaseTradeProductDealDtos(), false);
-//            }
-//        }
-//        else {
+        if ((StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
+                || StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()))
+                && dto.getSettleTransDataTotalAdd() != null
+                && StringUtil.equals(dto.getSettleTransDataTotalAdd().getRepoType(),DictCodeList.回购类型_质押式协议回购.getValue())) {
+            // 协议回购头寸特殊处理
+            exchangeTransMatchRepoCommonService.handlePositionOfXyhg(dto, commonEntrustDto, baseTradeProductDealDtos, finPledgeDisplaceDetailHuanChu);
+
+            // 3.调用基础组件.【投资委托组件.完成委托】，写入委托完成状况信息(投资委托场合才执行此步)
+            if(!finProductTradeDto.isNeedHandleFinishEntrust()) {
+                baseTradeProductDealCommService.finishEntrust(finProductTradeDto.getBaseTradeProductDealDtos(), false);
+            }
+        }
+        else {
             //处理头寸和指令完成度
             baseTradeProductDealCommService.execute(finProductTradeDto);
-//        }
+        }
         // modify by etliu 20220110 end
 
         logger.debug("处理业务交易表---结束,交易编号:"+tradeId);

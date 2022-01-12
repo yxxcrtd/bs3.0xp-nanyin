@@ -617,6 +617,8 @@ public class StlDataDealSzdSjsjgProcessService {
                 // settleTransData.setmPrinAmt(settleTransData.getmTradeAmt().subtract(settleTransData.getmIntAmt()));
                 // 到期利息=到期金额-到期本金
                 settleTransData.setmIntAmt(settleTransData.getmTradeAmt().subtract(settleTransData.getmPrinAmt()));
+                // 利息总额
+                settleTransData.setIntAmt(settleTransData.getmIntAmt());
                 // 交易份额
                 settleTransData.setShareAmt(settleTransData.getmPrinAmt());
                 // 到期本金 = 到期金额-回购利息 modify by fuyongsheng 20220105 end
@@ -1192,14 +1194,21 @@ public class StlDataDealSzdSjsjgProcessService {
 //            else if (stlDownDataDealOperatorDto.getPortfolioIdList().size() > 0 && !stlDownDataDealOperatorDto.getPortfolioIdList().contains(accountInfoDtolist.get(0).getPortfolioId())) {
 //                continue;
 //            }
-            String approvalNo = szdSjsjg.getJgzqdm() + ".SZ";
+            String approvalNo = szdSjsjg.getJgzqdm();
             List<String> finprodIdList = new ArrayList<>();
-            if (StringUtil.equals(szdSjsjg.getJgywlb(), StlDataDealProcessConstant.YWLB_PGQZ)){
-                finprodIdList = stlDownDataDealMapper.getFinproductIdByApprovalNo(DictCodeListExt3.金融产品其他代码类型_配股代码.getValue(), approvalNo);    
-            }else if(StringUtil.equals(szdSjsjg.getJgywlb(), StlDataDealProcessConstant.SJSJG_YWLB_TGSS) &&
-                    StringUtil.equals(szdSjsjg.getJgltlx(), StlDataCreateConstant.JSMX_LTLX)){
-                finprodIdList = stlDownDataDealMapper.getFinproductIdByApprovalNo(DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue(), approvalNo);    
+            // GZYHTZJY-1084:优先查标的表 modify fuyongsheng 20220112 start
+            FinProduct finProduct = finProductMapper.selectByPrimaryKey(DictCodeListExt1.金融产品类型_投管用_股票.getValue() + GlobalConstant.UNDER_LINE + szdSjsjg.getJgzqdm() + ".SZ");
+            if(finProduct != null){
+                finprodIdList.add(finProduct.getFinprodId());
+            }else{
+                if (StringUtil.equals(szdSjsjg.getJgywlb(), StlDataDealProcessConstant.YWLB_PGQZ)){
+                    finprodIdList = stlDownDataDealMapper.getFinproductIdByApprovalNo(DictCodeListExt3.金融产品其他代码类型_配股代码.getValue(), approvalNo);
+                }else if(StringUtil.equals(szdSjsjg.getJgywlb(), StlDataDealProcessConstant.SJSJG_YWLB_TGSS) &&
+                        StringUtil.equals(szdSjsjg.getJgltlx(), StlDataCreateConstant.JSMX_LTLX)){
+                    finprodIdList = stlDownDataDealMapper.getFinproductIdByApprovalNo(DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue(), approvalNo);
+                }
             }
+            // GZYHTZJY-1084:优先查标的表 modify fuyongsheng 20220112 end
 			if (finprodIdList != null && finprodIdList.size() > 0) {
 	            FinProductQuto finProductQuto = new FinProductQuto();
 	            finProductQuto.setSeqNo(IDGenerator.generate());
