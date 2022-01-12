@@ -497,7 +497,7 @@
 				AND (
 					std.PS NOT IN (#{PS_T68},#{PS_T69},#{PS_T94},#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12},#{PS_T49})
 				AND (
-					(std.FINPROD_TYPE2 = #{prodType2_F01} AND std.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}),#{PS_T49})
+					(std.FINPROD_TYPE2 = #{prodType2_F01} AND std.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09},#{PS_T49}))
 					OR ((std.FINPROD_TYPE2 = #{prodType2_F02} OR std.FINPROD_TYPE2 = #{prodType2_F03}) AND std.PS NOT IN (#{PS_T07},#{PS_T49}))
 					OR ((std.FINPROD_TYPE2 = #{prodType2_F06} OR std.FINPROD_TYPE2 = #{prodType2_F10}) AND std.PS NOT IN (#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12},#{PS_T49}))
 					)
