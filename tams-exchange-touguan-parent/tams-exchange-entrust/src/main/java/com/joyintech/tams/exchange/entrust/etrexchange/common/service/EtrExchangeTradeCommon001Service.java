@@ -5115,6 +5115,12 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 					return StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue()) ;
 				}).collect(Collectors.toList());
 			}
+		}else 	if(StringUtil.equals(tradePlat,DictCodeList.交易平台_固定收益平台.getValue())){
+			// 固定收益
+			return  selectDto.getOptions().stream().filter(option -> {
+				return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
+						|| StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue());
+			}).collect(Collectors.toList());
 		}
 		return selectOptionDtos;
 	}
