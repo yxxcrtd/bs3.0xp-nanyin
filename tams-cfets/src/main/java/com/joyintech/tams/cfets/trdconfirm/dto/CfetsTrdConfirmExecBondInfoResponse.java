@@ -169,7 +169,6 @@ public class CfetsTrdConfirmExecBondInfoResponse {
 
     public String getBusiTypeStr() {
         return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式, getBusiType());
-        //return busiTypeStr;
     }
 
     public void setBusiTypeStr(String busiTypeStr) {

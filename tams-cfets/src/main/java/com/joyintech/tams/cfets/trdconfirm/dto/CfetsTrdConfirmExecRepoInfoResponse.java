@@ -13,6 +13,7 @@ package com.joyintech.tams.cfets.trdconfirm.dto;
 
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -159,7 +160,7 @@ public class CfetsTrdConfirmExecRepoInfoResponse {
     }
 
     public String getBusiTypeStr() {
-        return busiTypeStr;
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式, getBusiType());
     }
 
     public void setBusiTypeStr(String busiTypeStr) {

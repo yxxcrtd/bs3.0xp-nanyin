@@ -7,6 +7,7 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.bankuplink.common.dao.CstpAutoTradeMapper;
 import com.joyintech.service.bankuplink.common.dao.CstpTradeMapper;
+import com.joyintech.service.bankuplink.common.dto.TrdConfirmMatchDto;
 import com.joyintech.service.bankuplink.common.dto.TrdRepoTrade002Dto;
 import com.joyintech.service.bankuplink.common.util.BusinessTypeUtil;
 import com.joyintech.tams.common.base.dao.*;
@@ -376,7 +377,9 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 			}
 			// 判断是否已经生成了交易
 			TrdProductDeal deal = autoTradeMapper.isExistsTrade(oritradeId);
-			if (!StringUtil.isNotEmpty(deal)) {
+			//判断该下行数据，是否已经匹配成功了。
+			TrdConfirmMatchDto matchDto=cstpMapper.selectMatchDtoByExecId(oritradeId);
+			if (!StringUtil.isNotEmpty(deal) && !StringUtil.isNotEmpty(matchDto) ) {
 				try{
 					Map<String,Object> param = new HashMap<>();
 					param.put("interfCstpTrade",interfCstpTrade);
