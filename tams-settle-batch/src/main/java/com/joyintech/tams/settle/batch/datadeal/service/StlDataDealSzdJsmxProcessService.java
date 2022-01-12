@@ -415,6 +415,12 @@ public class StlDataDealSzdJsmxProcessService {
 				if(DictCodeList.交易方向_申购.getValue().equals(settleTransData.getPs())){
 					settleTransData.setSettleSpeed(2L);
 				}
+				if(DictCodeList.交易方向_申购确认.getValue().equals(settleTransData.getPs())){
+					// 交割日期
+					settleTransData.setSettleDate(DateUtil.parse(szdJsmx.getJsrq()));
+					// 交易日期
+					settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getJsrq()));
+				}
 				if (StringUtil.lowerCase(stlDownDataDealOperatorDto.getDataFile()).startsWith(StlDataDealProcessConstant.SZD_JSMX_02)) {
 					if (StringUtil.equals(szdJsmx.getYwlx(), StlDataDealProcessConstant.YWLX_012)) {
 						settleTransData.setIsPurchTypeYx(DictCodeList.是否_是.getValue());
@@ -1660,7 +1666,8 @@ public class StlDataDealSzdJsmxProcessService {
 				settleTransData.setShareAmt(new BigDecimal(szdJsmx.getSl()).abs());
 				// modify by etliu 20211225 end
 				//交易日期
-				settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getQsrq()));
+				// settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getQsrq()));
+				settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getJsrq()));
 				//交割日期
 				settleTransData.setSettleDate(DateUtil.parse(szdJsmx.getJsrq()));
 				// 成交编号 = 交收编号
