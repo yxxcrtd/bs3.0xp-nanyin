@@ -624,7 +624,10 @@ public class CfetsInterfReceiveService {
                 else {
                     pledgeDto.setPledgeFinprodId(finMarketId);
                 }
-                BigDecimal 质押券券面总额 = new BigDecimal(noUnderlyingDto.getUnderlyingQty());
+                BigDecimal 质押券券面总额 = null;
+                if (StringUtil.isNotEmpty(noUnderlyingDto.getUnderlyingQty())) {
+                    质押券券面总额 = new BigDecimal(noUnderlyingDto.getUnderlyingQty());
+                }
                 // 版本号
                 pledgeDto.setVersion(ibuQuoteCrepDto.getVersion());
                 // 质押数量
@@ -682,6 +685,7 @@ public class CfetsInterfReceiveService {
                 Map<String,Object> mapFpriceAmt= new HashMap<>();
                 //报文返回总金额
                 mapFpriceAmt.put("isKtg",isKtg);
+                mapFpriceAmt.put("ps",ibuQuoteCrepDto.getRepoPs());
                 if(StringUtil.equals(isKtg,"Y")){
                     mapFpriceAmt.put("cbfpriceAmt",null!=ibuQuoteCrepDto.getCbFpriceAmt()?ibuQuoteCrepDto.getCbFpriceAmt():BigDecimal.ZERO);
                     mapFpriceAmt.put("scfpriceAmt",null!=ibuQuoteCrepDto.getScFpriceAmt()?ibuQuoteCrepDto.getScFpriceAmt():BigDecimal.ZERO);
