@@ -736,7 +736,8 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         if (!StringUtil.isNotEmpty(ptlAllocatio.getTradeAmt())) {
             errorList.add(new ValidMessage("请输入组合分配交易金额"));
         }
-        if (!StringUtil.isNotEmpty(ptlAllocatio.getConvertAmt())) {
+        if (!StringUtil.isNotEmpty(ptlAllocatio.getConvertAmt())
+                && StringUtil.equals(ps, DictCodeListExt3.交易方向_正回购)) {
             errorList.add(new ValidMessage("请输入组合分配质押券折算总额"));
         }
         if (!StringUtil.isNotEmpty(ptlAllocatio.getDealFeeAmt())) {
@@ -1232,7 +1233,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 status.setTradeId(entity.getQuoteId());
                 status.setCstpTradeId(entity.getQuoteId());
                 status.setFinishDate(entity.getTradeDate());
-                status.setEntFinishAmt(ptlAllocationDto.getcPriceAmt());
+                status.setEntFinishAmt(ptlAllocationDto.getFpriceAmt());
                 status.setTrader(entity.getMySideTrader());
                 if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
                     baseEtrInvestInfoServiceImpl.cancelCompleteDelegate(status.getEntrustId(), status.getTradeId());
@@ -1716,15 +1717,13 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             BeanUtil.copyPropertiesIgnoreNull(ptlDto, ptlAllocationDto);
             ptlDto.setQuoteId(pageDto.getQuoteId());
             // 交易金额
-            ptlDto.setcPriceAmt(ptlAllocationDto.getTradeAmt());
+            ptlDto.setFpriceAmt(ptlAllocationDto.getTradeAmt());
             // 回购期限
             ptlDto.setTermDays((long) pageDto.getRepoTerm());
             //折算券面总额
             ptlDto.setShareAmt(ptlAllocationDto.getConvertAmt());
             //回购利息
             ptlDto.setIntAmt(ptlAllocationDto.getmIntAmt());
-            //到期结算金额
-            ptlDto.setFpriceAmt(ptlAllocationDto.getMtradeAmt());
             ptlAllocationList.add(ptlDto);
         }
         backDto.setPtlAllocationList(ptlAllocationList);
@@ -1800,7 +1799,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 RepoPtlAllocationDto ptlAllocationDto = new RepoPtlAllocationDto();
                 BeanUtil.copyPropertiesIgnoreNull(ptlAllocationDto, ptlDto);
                 // 交易金额
-                ptlAllocationDto.setTradeAmt(ptlDto.getcPriceAmt());
+                ptlAllocationDto.setTradeAmt(ptlDto.getFpriceAmt());
                 //折算券面总额
                 ptlAllocationDto.setConvertAmt(ptlDto.getShareAmt());
                 // 到期结算金额

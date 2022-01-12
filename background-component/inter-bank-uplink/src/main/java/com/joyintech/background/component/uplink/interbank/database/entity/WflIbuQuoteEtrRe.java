@@ -96,6 +96,11 @@ public class WflIbuQuoteEtrRe extends WflIbuQuoteEtrReKey {
     private String priceModel;
 
     /**
+     * 到期结算金额(元)
+     */
+    private BigDecimal mtradeAmt;
+
+    /**
      * 取得 组合代码
      * @return 组合代码
      */
@@ -349,5 +354,13 @@ public class WflIbuQuoteEtrRe extends WflIbuQuoteEtrReKey {
      */
     public void setPriceModel(String priceModel) {
         this.priceModel = priceModel == null ? null : priceModel.trim();
+    }
+
+    public BigDecimal getMtradeAmt() {
+        return mtradeAmt;
+    }
+
+    public void setMtradeAmt(BigDecimal mtradeAmt) {
+        this.mtradeAmt = mtradeAmt;
     }
 }

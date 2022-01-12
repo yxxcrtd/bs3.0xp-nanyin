@@ -173,7 +173,7 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                            	<!-- 投资目的 add by yzg 20201019 start-->
+                            	<!-- 投资目的 add by yzg 20201019 start
                                 	<div class="form-inline-wrap" id = "invAimDiv">
 	                                    <label class="layui-form-label form-lable"
 	                                           data-th-text="#{EtrInvestBondInfo002.invAim}">投资目的</label>
@@ -186,22 +186,23 @@
 	                                                data-th-initValue="${entity?.invAim}">
 	                                        </select>
 	                                    </div>
-                                	</div>
+                                	</div>-->
                                     <!-- 投资目的 add by yzg 20201019 end-->
-
-                                <!--<div class="form-inline-wrap" id="businessModelDiv">
+                                <!-- 业务模式 add by gwl 2022/01/11 start-->
+                                <div class="form-inline-wrap" id="businessModelDiv">
                                     <label class="layui-form-label form-label-wrap"
                                            data-th-text="#{EtrBondFirstLBidding002.businessModel}">业务模式</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select type="text" id="businessModel" name="businessModel"
+                                        <select type="text" id="businessModel" name="invAim"
                                                 class="layui-input form-input input-select"
                                                 data-th-data-result='${BUSINESS_MODEL}' allowClear="true"
                                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                                 required="required" formatoption="true"
-                                                data-th-initValue="${entity?.businessModel}">
+                                                data-th-initValue="${entity?.invAim}">
                                         </select>
                                     </div>
-                                </div>-->
+                                </div>
+                                <!-- 业务模式 add by gwl 2022/01/11 start-->
 
                             </div>
                             <div class="layui-form-item">

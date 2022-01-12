@@ -87,7 +87,6 @@
                 , {field: 'amount', width: "200", title: '持有本金', type: 'money', sortable:false}
                 , {field: 'returnAmount', width: "200", title: '还本金额', type: 'money', sortable:false}
                 , {field: 'calcRuleString', width: "200", title: '付息周期', sortable:false}
-                , {field: 'invAim', width: "200", title: '投资目的', sortable:false,editOption:{type:'select',formatoption:true,result: INV_AIM},edit:true, visible: SHOW_INVAIM_OR_BUSSINSSMODEL=='01'?true:false}
                 , {field: 'vDate', width: "200", title: '计息开始日', sortable:false}
                 , {field: 'mDate', width: "200", title: '计息结束日', sortable:false}
                 , {field: 'yield', width: "200", title: '计提利率(%)', type: 'number', sortable:false}
@@ -119,9 +118,6 @@
                 }
             },
             beforeEditCell:function(value, field, data){
-         	   if(field == 'invAim'){
-         		   return false;
-         	   }
          	   return true;
             },
             data: []
@@ -316,7 +312,6 @@
                     , 'bankLendingType': null
                     , 'portfolioId': finAssetIntInfos[i].portfolioId
                     ,'finprodId' : $('#finAssetInfo_finprodMarketId').val()
-                    , 'invAim': finAssetIntInfos[i].invAim
                     , 'deal': {
                         finprodType2: F17,
                         ps: ps,
@@ -325,8 +320,7 @@
                         chlId:$('#chlId').val(),
                         tradeAmt:finAssetIntInfos[i].fpriceAmt,
 //                        tradeAmt:  COLLECT_TYPE==COLLECT_TYPE_01?JoyinMath.doMinus(finAssetIntInfos[i].fpriceAmt,finAssetIntInfos[i].channelFee):finAssetIntInfos[i].fpriceAmt,//add by zhangweiqi 通道费修改
-                        ccy: $("#finAssetInfo_ccy").val(),
-                        'invAim': finAssetIntInfos[i].invAim
+                        ccy: $("#finAssetInfo_ccy").val()
                     }
                 })
             }
