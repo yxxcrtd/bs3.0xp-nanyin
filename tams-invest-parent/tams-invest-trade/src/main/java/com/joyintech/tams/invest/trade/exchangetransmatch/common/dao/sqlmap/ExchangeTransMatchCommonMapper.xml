@@ -290,5 +290,9 @@
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         and BRANCH = #{branch,jdbcType=DECIMAL}
     </select>
+
+    <select id="selectHgsqFinprodId" resultType="string">
+        select max(FINPROD_ID) from TRD_PRODUCT_DEAL where F_TRADE_ID = #{fTradeId,jdbcType=VARCHAR}
+    </select>
     <!--modify by etliu 20220110 end-->
 </mapper>

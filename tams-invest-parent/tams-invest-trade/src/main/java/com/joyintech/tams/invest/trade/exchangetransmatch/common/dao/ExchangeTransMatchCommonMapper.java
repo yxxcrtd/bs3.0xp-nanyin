@@ -147,5 +147,12 @@ public interface ExchangeTransMatchCommonMapper {
     // modify by etliu 20220110 start
     // GZYHTZJY-1032: 协议回购的头寸处理，需要走PTL_POSITION_FLOW_CFG配置
     FinDealPledge selectFinDealPledgeByPrimaryKey(FinDealPledgeKey finDealPledgeKey);
+
+    /**
+     * 根据首期成交编号查询协议回购首期的交易编号
+     * @param paraMap 参数
+     * @return 协议回购首期的交易编号
+     */
+    String selectHgsqFinprodId(Map<String, Object> paraMap);
     // modify by etliu 20220110 end
 }
