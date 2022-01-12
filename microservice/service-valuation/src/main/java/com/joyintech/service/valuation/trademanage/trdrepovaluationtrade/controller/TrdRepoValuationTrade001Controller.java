@@ -122,6 +122,14 @@ public class TrdRepoValuationTrade001Controller extends BaseController {
         return trdRepoValuationTrade001Service.queryTradeInfoByTradeId(tradeId);
     }
 
-
+    /**
+     * 删除
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("delete")
+    public int delete(@RequestBody TrdRepoValuationTrade001Dto dto){
+        return trdRepoValuationTrade001Service.delete(dto);
+    }
 
 }

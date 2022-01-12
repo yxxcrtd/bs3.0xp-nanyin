@@ -123,7 +123,39 @@
                     }, function() {
                         table.reload();
                     });
-                });
+        });
 
+        /**
+         * 绑定编辑事件
+         */
+        table.bind('click', '.edit', function(data, index) {
+            data.pageModel = PAGE_MODEL_EDIT;
+            var object = {selectedItem: [data], operateType:"edit"};//请求参数
+            Joyin.dialog(JoyinUtil.getLabel("质押式回购交易-修改"),
+                basePath + "valuation/trademanage/trdrepovaluationtrade/TrdRepoValuationTrade002/init",//打开新界面
+                "98%", "98%", {pageModel:PAGE_MODEL_EDIT,//请求的page_model
+                    tradeId:data.tradeId  //金融产品代码
+                },function(){
+                    table.reload();//回调函数，表格刷新
+                });
+        });
+
+        /**
+         * 绑定删除事件
+         */
+        table.bind('click', '.delt', function(data, index) {
+            var object = {selectedItem: [data], operateType:"delete"};
+            Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
+                WorkFlow.doDeleteList(
+                    basePath + 'valuation/trademanage/trdrepovaluationtrade/TrdRepoValuationTrade001/delete',
+                    object,
+                    "TrdRepoValuationTrade001_btn_delete",
+                    "TrdRepoValuationTrade002",
+                    function() {
+                        table.reload();
+                    }
+                );
+            });
+        });
     });
 }());

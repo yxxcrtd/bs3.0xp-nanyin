@@ -16,8 +16,11 @@ import com.joyintech.framework.grid.Page;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
+import com.joyintech.tams.valuation.trademanage.trddepositvaluationtrade.dto.TrdDepositValuationTrade001Dto;
 import com.joyintech.tams.valuation.trademanage.trdlendvaluationtrade.dto.TrdLendValuationTradeDto;
 import com.joyintech.tams.valuation.trademanage.trdrepovaluationtrade.dto.TrdRepoValuationTrade001Dto;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -35,7 +38,7 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 @Service
-public class TrdRepoValuationTrade001Service extends CommonExportService<TrdRepoValuationTrade001Dto> {
+public class TrdRepoValuationTrade001Service extends CommonExportService<TrdRepoValuationTrade001Dto> implements BaseProcessService<TrdRepoValuationTrade001Dto> {
 
 
 
@@ -75,5 +78,16 @@ public class TrdRepoValuationTrade001Service extends CommonExportService<TrdRepo
 				ServiceApplication.VALUATION_SERVICE_NAME + "/TrdRepoValuationTrade001/queryPageList", params,
 				TrdRepoValuationTrade001Dto.class);
 	}
+
+
+	/**
+	 * 工作流（留痕处理进行的操作）
+	 */
+	@Override
+	public void doComplete(TrdRepoValuationTrade001Dto entity, OperationType type) {
+		String action = "delete";
+		restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/TrdRepoValuationTrade001/" + action, entity, Integer.class);
+	}
+
 
 }
