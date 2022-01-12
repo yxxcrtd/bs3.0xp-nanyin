@@ -155,7 +155,7 @@ public class TrdDepositValuationTrade002Controller extends BaseController {
 
 
     /**
-     * 自定义产品代码下拉框
+     * 自定义资产代码下拉框
      * @param request
      * @return
      */

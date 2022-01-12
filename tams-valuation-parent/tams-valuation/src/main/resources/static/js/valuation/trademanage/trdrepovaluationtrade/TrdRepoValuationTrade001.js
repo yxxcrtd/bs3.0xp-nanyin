@@ -1,0 +1,129 @@
+(function(){
+    /**
+     * 获取查询参数
+     */
+    var getPageParams = function() {
+        //产品代码 多选择
+        var portfolioIdTemp = $('#portfolioId').val();
+        var portfolioId = null;
+        if(portfolioIdTemp != null){
+            portfolioId = portfolioIdTemp.join(",");
+        }
+
+        //交易场所  多选择
+        var tradeMarketTemp = $('#tradeMarket').val();
+        var tradeMarket = null;
+        if(tradeMarketTemp != null){
+            tradeMarket = tradeMarketTemp.join(",");
+        }
+
+        //交易类型  多选择
+        var psTemp = $('#ps').val();
+        var ps = null;
+        if(psTemp != null){
+            ps = psTemp.join(",");
+        }
+
+        return {
+            tradeId: $('#tradeId').val(),
+            portfolioId: portfolioId,
+            tradeDateBegin: $("#tradeDate").startDate(),
+            tradeDateEnd: $("#tradeDate").endDate(),
+            ps: ps,
+            tradeMarket: tradeMarket
+        }
+    };
+
+    /**
+     * 定义数据表格
+     */
+    var table=$("#dataTable").joyintable({
+        ajax: {
+            url: 'findPage',
+            type: 'POST',
+            data: function() {
+                return getPageParams();
+            }
+        },
+
+        dblclick:function(table, data) {
+            Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+                basePath + "valuation/trademanage/trdrepovaluationtrade/TrdRepoValuationTrade002/init",
+                "98%", "98%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
+                    portfolioId:data.portfolioId,
+                    entrustId:data.entrustId,
+                    finprodId:data.finprodId,
+                    tradeId:data.tradeId});
+        },
+        cols:[
+            {field:'tradeId', width:150, sortField:'tradeId',title: '交易编号'}
+            ,{field:'outTradeId', width:150, sortField:'outTradeId',title: '外部交易编号'}
+            ,{field:'portfolioId', width:150, title: '产品代码',sortField:'portfolioId'}
+            ,{field:'portfolioName', width:150, title: '产品名称',sortField:'portfolioName'}
+            ,{field:'psStr', width:150, title: '交易类型',sortField:'ps'}
+            ,{field:'ps', title: '交易类型',visible:false}
+            ,{field:'tradeMarketStr', width:150, title: '交易场所',sortField:'tradeMarket'}
+            ,{field:'tradeMarket', title: '交易场所',visible:false}
+            ,{field:'counterId', title: '交易对手',width:100}
+            ,{field:'term', width:150, title: '回购期限',type:'number',sortField:'term'}
+            ,{field:'tradeDateStr', width:150,  title: '交易日',sortField:'tradeDate'}
+            ,{field:'tradeDate',title: '交易日',visible:false}
+            ,{field:'vdateStr', width:150,  title: '起息日',sortField:'vdate'}
+            ,{field:'vdate', title: '起息日',visible:false}
+            ,{field:'mdateStr', width:150,  title: '到期日',sortField:'mdate'}
+            ,{field:'mdate', title: '到期日',visible:false}
+            ,{field:'prinAmt', width:150, title: '交易本金',type:'number',sortField:'prinAmt'}
+            ,{field:'rebackPrice', width:150, title: '回购利率%',type:'number',sortField:'rebackPrice'}
+            ,{field:'intAmt', width:150, title: '应记利息',type:'number',sortField:'intAmt'}
+            ,{field:'settleAmt', width:150, title: '结算金额',type:'number',sortField:'settleAmt'}
+            ,{field:'ccyFmt', width:150, title: '币种',sortField:'ccy'}
+            ,{field:'ccy', title: '币种',visible:false}
+            ,{field:'trdAcctId', title: '资金账户',width:100}
+            ,{field:'action', title: '操作' , type:'action',buttons: ['edit', 'delt'] , width:'10%'}
+        ],
+        //loadonce:tru
+    });
+
+    /**
+     * 导出选中的表格数据
+     */
+    var exportExcel = function() {
+
+        var selArr = [];
+        var datas = null;
+        if (table != null && table != '') {
+            selArr = table.getAllCheckedRows();
+            datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getPageParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas
+            });
+        }
+    };
+
+    
+    $(function () {
+        // 绑定按钮事件
+        $('#TrdRepoValuationTrade001_btn_search').click(function() {
+            table.load();
+        });
+        
+        $('#TrdRepoValuationTrade001_btn_export').click(function() {
+            exportExcel();
+        });
+        $('#TrdRepoValuationTrade001_btn_add').click(
+                function() {
+                    Joyin.dialog(JoyinUtil.getLabel("TrdRepoValuationTrade002"), basePath
+                            + "valuation/trademanage/trdrepovaluationtrade/TrdRepoValuationTrade002/init", "99%", "99%", {
+                        pageModel : PAGE_MODEL_NEW
+                    }, function() {
+                        table.reload();
+                    });
+                });
+
+    });
+}());
