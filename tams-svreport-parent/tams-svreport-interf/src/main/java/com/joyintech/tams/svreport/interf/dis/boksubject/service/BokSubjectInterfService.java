@@ -54,6 +54,9 @@ public class BokSubjectInterfService extends FileImpService {
 			BokSubject dto = new BokSubject();
 			try{
 				dto.setBooksetId(map.get("PROD_ID"));
+				if(dto.getBooksetId() == null){
+					dto.setBooksetId(map.get("BOOKSET_ID"));
+				}
 				dto.setSubjectNo(map.get("SUBJECT_ID"));
 				dto.setSubjectName(map.get("SUBJECT_NAME"));
 				dto.setFsubjectId(map.get("FSUBJECT_ID"));
