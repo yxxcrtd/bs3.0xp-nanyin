@@ -13,17 +13,23 @@ public class PortfolioAllocationResponse {
     @ApiModelProperty(value = "指令列表")
     private List<Instruction> list;
 
-    @ApiModelProperty(value = "调整后的委托价格")
+    @ApiModelProperty(value = "委托价格")
     private BigDecimal price;
 
     @ApiModelProperty(value = "试算委托总数量")
     private Long totalEntrustVolume;
 
+    @ApiModelProperty(value = "试算委托总金额")
+    private Long totalEntrustAmt;
+
     @ApiModelProperty(value = "剩余委托总数量")
     private Long totalLeftVolume;
 
     @ApiModelProperty(value = "警告信息")
-    private String info;
+    private String infoDetails;
+
+    @ApiModelProperty(value = "警告信息类别：1 错误；2 警告")
+    private String infoLevel;
 
     public List<Instruction> getList() {
         return list;
@@ -37,12 +43,24 @@ public class PortfolioAllocationResponse {
         return price;
     }
 
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
     public Long getTotalEntrustVolume() {
         return totalEntrustVolume;
     }
 
     public void setTotalEntrustVolume(Long totalEntrustVolume) {
         this.totalEntrustVolume = totalEntrustVolume;
+    }
+
+    public Long getTotalEntrustAmt() {
+        return totalEntrustAmt;
+    }
+
+    public void setTotalEntrustAmt(Long totalEntrustAmt) {
+        this.totalEntrustAmt = totalEntrustAmt;
     }
 
     public Long getTotalLeftVolume() {
@@ -53,16 +71,20 @@ public class PortfolioAllocationResponse {
         this.totalLeftVolume = totalLeftVolume;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public String getInfoDetails() {
+        return infoDetails;
     }
 
-    public String getInfo() {
-        return info;
+    public void setInfoDetails(String infoDetails) {
+        this.infoDetails = infoDetails;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public String getInfoLevel() {
+        return infoLevel;
+    }
+
+    public void setInfoLevel(String infoLevel) {
+        this.infoLevel = infoLevel;
     }
 
     @Override
@@ -71,8 +93,10 @@ public class PortfolioAllocationResponse {
                 "list=" + list +
                 ", price=" + price +
                 ", totalEntrustVolume=" + totalEntrustVolume +
+                ", totalEntrustAmt=" + totalEntrustAmt +
                 ", totalLeftVolume=" + totalLeftVolume +
-                ", info='" + info + '\'' +
+                ", infoDetails='" + infoDetails + '\'' +
+                ", infoLevel='" + infoLevel + '\'' +
                 '}';
     }
 }
