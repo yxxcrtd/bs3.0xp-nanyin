@@ -534,7 +534,9 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                                 }
                             }
                             if(StringUtil.equals(item.getBusiSceneCalss(), DictCodeListStl.业务场景分类明细_债券协议正回购_到期.getValue())
-                                    ||StringUtil.equals(item.getBusiSceneCalss(), DictCodeListStl.业务场景分类明细_债券协议逆回购_到期.getValue())){
+                                    ||StringUtil.equals(item.getBusiSceneCalss(), DictCodeListStl.业务场景分类明细_债券协议逆回购_到期.getValue())
+                                    || StringUtil.equals(item.getBusiSceneCalss(), DictCodeListStl.业务场景分类明细_债券协议逆回购_到期续作.getValue())
+                                    || StringUtil.equals(item.getBusiSceneCalss(), DictCodeListStl.业务场景分类明细_债券协议正回购_到期续作.getValue())){
                                 // 深交所的到期续作需特殊处理,需要查询首期的起息日
                                 if(DictCodeListExt1.交易场所_深圳证券交易所.getValue().equals(item.getTradeMarket())
                                         && DictCodeList.交易方向_到期续做.getValue().equals(item.getPs())){
