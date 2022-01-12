@@ -52,6 +52,9 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name = "mySideTrader", value = "本方交易员")
     private String mySideTrader;
 
+    @ApiModelProperty(name = "loginUserId", value = "登录用户(系统内)")
+    private String loginUserId;
+
     @ApiModelProperty(name = "ouTraderName", value = "本方交易员名称")
     private String ouTraderName;
 
@@ -553,6 +556,14 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setTradeStatus(String tradeStatus) {
         this.tradeStatus = tradeStatus;
+    }
+
+    public String getLoginUserId() {
+        return loginUserId;
+    }
+
+    public void setLoginUserId(String loginUserId) {
+        this.loginUserId = loginUserId;
     }
 }
 

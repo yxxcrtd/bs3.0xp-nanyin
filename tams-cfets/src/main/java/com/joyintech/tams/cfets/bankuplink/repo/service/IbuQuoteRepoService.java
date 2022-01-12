@@ -383,6 +383,7 @@ public class IbuQuoteRepoService extends BaseService {
         }
         // 期限品种
         cfetsRepoDealQuoteCommonDto.setTermType(cfetsEtrIbRepoinfoService.getTermType(cfetsRepoDealQuoteCommonDto.getRepoTerm()));
+        cfetsRepoDealQuoteCommonDto.setLoginUserId(LoginUserUtil.getUserName());
         cfetsRepoDealQuoteCommonDto.setQuotaPageModel("new");
         return cfetsRepoDealQuoteCommonDto;
     }
@@ -2226,6 +2227,7 @@ public class IbuQuoteRepoService extends BaseService {
         if (CollectionUtils.isNotEmpty(entrustDtos)) {
             entrustOrderDto = entrustDtos.get(0);
         }
+        entrustOrderDto.setTradeMarket(DictCodeListExt1.交易场所_银行间.getValue());
         resultData.put(dtCode + "_form", infoForm);
         resultData.put(dtCode + "_data", entrustOrderDto);
         if (StringUtil.equals(repo_pledge_model, "02")) {
