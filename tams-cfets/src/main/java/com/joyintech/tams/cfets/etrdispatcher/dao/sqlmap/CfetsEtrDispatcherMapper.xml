@@ -565,7 +565,7 @@
         pp.portfolio_name portfolioName,
         fp.finprod_market_id finprodMarketId,
         fp.finprod_abbr finprodAbbr,
-        tpd.ps ps,
+        tpdt.ps ps,
         ssai.sec_acct_name secAcctId,
         to_char(tpd.trade_date,'yyyy-MM-dd') tradeDate,
         DECODE(tpd.settle_speed,0,'01',1,'02','2','03') settleSpeed,
@@ -606,6 +606,7 @@
         <include refid="etrDispatcherDealListInfo"/>
         FROM trd_product_deal tpd
         LEFT JOIN trd_product_deal_add tpda ON tpd.trade_id = tpda.trade_id
+        left join TRD_FIN_PRODUCT_DEAL_TOTAL tpdt on tpd.TOTLE_TRADE_ID=tpdt.TOTLE_TRADE_ID
         LEFT JOIN PTL_PORTFOLIO pp ON tpda.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT fp ON tpd.finprod_id = fp.finprod_id
         LEFT JOIN MST_COUNTER_PARTY mcp ON tpd.counter_id = mcp.counter_id
@@ -627,6 +628,7 @@
         <include refid="etrDispatcherDealListInfo"/>
         FROM wfl_trd_product_deal tpd
         LEFT JOIN wfl_trd_product_deal_add tpda ON tpd.trade_id = tpda.trade_id
+        left join WFL_TRD_FIN_PRODUCT_DEAL_TOTAL tpdt on tpd.TOTLE_TRADE_ID=tpdt.TOTLE_TRADE_ID
         LEFT JOIN PTL_PORTFOLIO pp ON tpda.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT fp ON tpd.finprod_id = fp.finprod_id
         LEFT JOIN MST_COUNTER_PARTY mcp ON tpd.counter_id = mcp.counter_id

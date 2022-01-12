@@ -147,7 +147,7 @@ public enum ErrorCode {
 
     REQ_PARAMETER_INSTRUCTION_ID_ERROR(4015, "指令ID错误"),
 
-    FAIR_INSTRUCTIONS_UNACCEPT_ERROR(4016, "存在公平指令未接收"),
+    FAIR_INSTRUCTIONS_UNACCEPT_ERROR(4016, "存在需要执行公平交易但未接收的指令，请先接收指令！"),
 
     NOT_FAIR_INSTRUCTION_ERROR(4017, "非公平交易模式，无法进行公平交易！"),
 
@@ -213,5 +213,9 @@ public enum ErrorCode {
 
     public static boolean isSuccess(int value) {
         return value == 0;
+    }
+
+    public static String getStr(ErrorCode errorCode) {
+        return errorCode.value + ":" + errorCode.errorMsg;
     }
 }

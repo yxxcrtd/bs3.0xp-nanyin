@@ -455,7 +455,9 @@ public class PortfolioManager extends BaseService {
         Instruction instruction = instructionService.findById(instructionId);
         if (Objects.isNull(instruction)) {
             log.warn("未找到指令信息: InstructionId [{}]", instructionId);
-            return ResultBean.error(ErrorCode.INSTRUCTIONS_NOT_EXIST);
+            result.setInfoLevel("1");
+            result.setInfoDetails(ErrorCode.getStr(ErrorCode.INSTRUCTIONS_NOT_EXIST));
+            return ResultBean.success(result);
         }
 
         // 过滤公平相关指令
@@ -474,14 +476,18 @@ public class PortfolioManager extends BaseService {
         // 判断进入公平交易
         if (!EntrustUtils.isFairOrder(bean, instruction)) {
             log.warn("非公平交易模式，无法进行公平交易！param = {}", JSONUtil.toJsonStr(bean));
-            return ResultBean.error(ErrorCode.NOT_FAIR_INSTRUCTION_ERROR, result);
+            result.setInfoLevel("1");
+            result.setInfoDetails(ErrorCode.getStr(ErrorCode.NOT_FAIR_INSTRUCTION_ERROR));
+            return ResultBean.success(result);
         }
 
         // 行情数据
         QuoteProto.TickBean tick = quoteTickService.getTickFromCache(bean.getStockCode());
         if (Objects.isNull(tick)) {
             log.warn("未找到行情信息: stockId [{}]", instruction.getFinprodMarketId());
-            return ResultBean.error(ErrorCode.QUOTE_NOT_EXIT, result);
+            result.setInfoLevel("1");
+            result.setInfoDetails(ErrorCode.getStr(ErrorCode.QUOTE_NOT_EXIT));
+            return ResultBean.success(result);
         }
 
         // 系统参数：未接收指令的公平处理模式 01：是；02：否
@@ -503,7 +509,9 @@ public class PortfolioManager extends BaseService {
 
             if (waitReceiveList.size() > 0) {
                 log.warn("未接收且影响公平交易的相关指令: {}", JsonUtils.getJsonFromObject(waitReceiveList));
-                return ResultBean.error(ErrorCode.FAIR_INSTRUCTIONS_UNACCEPT_ERROR.value(), "存在需要执行公平交易但未接收的指令，请先接收指令！", result);
+                result.setInfoLevel("1");
+                result.setInfoDetails(ErrorCode.getStr(ErrorCode.FAIR_INSTRUCTIONS_UNACCEPT_ERROR));
+                return ResultBean.success(result);
             }
         }
 
@@ -531,7 +539,8 @@ public class PortfolioManager extends BaseService {
         // 构造返回列表
         List<PortfolioInstructionContextDto> resultList = new ArrayList<>();
         // 调整后的价格
-        BigDecimal adjustedPrice = null;
+        BigDecimal adjustedPrice = bean.getEntrustPrice();
+        result.setPrice(adjustedPrice);
 
         // 获取买卖方向
         String entrustBs = EntrustBsProp.getEntrustBs(instruction.getPs());
@@ -599,7 +608,8 @@ public class PortfolioManager extends BaseService {
 
             // 提示：“委托价格必须优于所有指令价格”
             if (adjustedPrice.compareTo(bean.getEntrustPrice()) != 0) {
-                result.setInfo("委托价格必须优于所有指令价格");
+                result.setInfoLevel("2");
+                result.setInfoDetails("委托价格必须优于所有指令价格");
                 result.setPrice(adjustedPrice);
             }
         } else {
@@ -666,9 +676,10 @@ public class PortfolioManager extends BaseService {
             context.getInstruction().setConNum(BigDecimal.valueOf(Math.min(context.getLeftVolume(), realVolume)));
         }
 
-        // 计算总委托数量
+        // 计算总委托数量和总委托金额
         long sumEntrustVolume = getTotalEntrustVolume(resultList);
         result.setTotalEntrustVolume(sumEntrustVolume);
+        result.setTotalEntrustAmt(result.getPrice().longValue() * sumEntrustVolume);
         for (PortfolioInstructionContextDto context : resultList) {
             // 分配到指令的委托数量比例，借用转股价格字段
             context.getInstruction().setConPrice(ArithmeticUtil.divide(BigDecimal.valueOf(context.getEntrustVolume()), BigDecimal.valueOf(sumEntrustVolume), 4));
