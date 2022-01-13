@@ -55,8 +55,9 @@ public class SalerRewPenaInfo002Service extends BaseService{
     public void update(SalerRewPenaInfoDto dto) {
         //来自info表的直接更新数据
         if(dto.getErroOrInfo().equals("info")){
-        //更新代理销售机构信息
-        chbSalerRewPenaInfoMapper.updateByPrimaryKeySelective(dto);
+            dto.setStatus("E");
+            //更新代理销售机构信息
+            chbSalerRewPenaInfoMapper.updateByPrimaryKeySelective(dto);
         }
         //来自erro表的先删除erro表数据再插入info表
         else{

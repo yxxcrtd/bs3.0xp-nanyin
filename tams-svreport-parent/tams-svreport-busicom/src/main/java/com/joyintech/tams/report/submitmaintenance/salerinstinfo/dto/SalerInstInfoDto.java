@@ -55,7 +55,7 @@ public class SalerInstInfoDto extends ChbSalerInstInfo implements ProcessEntity 
     }
 
     public String getSalerOrgLevelStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.机构层级, this.getSalerOrgLevel());
+        return this.getSalerOrgLevel() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构层级, this.getSalerOrgLevel());
     }
 
     public String getElementId() {
