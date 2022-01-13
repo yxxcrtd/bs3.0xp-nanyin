@@ -464,6 +464,8 @@ public class StlDataDealSzdSjsjgProcessService {
     	}
     	// GZYHTZJY-1075
     	if (StringUtil.equals(StlDataDealProcessConstant.SJSJG_YWLB_ZQHG, szdSjsjg.getJgywlb())) {
+            settleTransData.setTradeDate(DateUtil.parseDate(szdSjsjg.getJgcjrq(),DateUtil.DEFAULT_OTHER_FORMAT));
+            settleTransData.setSettleDate(DateUtil.parseDate(szdSjsjg.getJgcjrq(),DateUtil.DEFAULT_OTHER_FORMAT));
             // 金融产品代码
             String finprodId = DictCodeListExt1.金融产品类型_投管用_债券.getValue() + GlobalConstant.UNDER_LINE + szdSjsjg.getJgzqdm() + ".SZ";
             FinProduct finProduct = finProductMapper.selectByPrimaryKey(finprodId);

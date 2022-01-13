@@ -125,6 +125,10 @@ public class StlDataDealProcessCommonService {
 		if (StringUtil.equals(StlDataDealProcessConstant.SJSMX_JYFS_02, jsfs)) {
 			return DictCodeList.交易平台_综合协议交易平台.getValue();
 		}
+		// 综合金融服务平台交易(经深交所)
+		if (StringUtil.equals(StlDataDealProcessConstant.SJSMX_JYFS_03, jsfs)) {
+			return DictCodeList.交易平台_竞价撮合平台.getValue();
+		}
 		return null;
 	}
 	
