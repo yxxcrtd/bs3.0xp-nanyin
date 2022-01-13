@@ -392,6 +392,17 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                             || StringUtil.equals(checkResult, DictCodeListExt3.对账状态结果_手工完成.getValue())) {
                         dealTotal = new SettleTransDataTotal();
                         BeanUtils.copyProperties(settleTransDataDto, dealTotal);
+                        // GZYHTZJY-1100:深交所的到期续作到期交付日特殊处理 modify fuyongsheng 20220113 start
+                        if(DictCodeListExt1.交易场所_深圳证券交易所.getValue().equals(settleTransDataDto.getTradeMarket())
+                                && DictCodeList.交易方向_到期续做.getValue().equals(settleTransDataDto.getPs())){
+                            // 查询首期
+                            List<SettleTransData> sqSettleTransDatas = stlSettleTransDataGatherService.selectSqSettleTransDatas(settleTransDataDto);
+                            if(CollectionUtils.isNotEmpty(sqSettleTransDatas)){
+                                //到期交付日
+                                dealTotal.setMpayDate(sqSettleTransDatas.get(0).getVdate());
+                            }
+                        }
+                        // GZYHTZJY-1100:深交所的到期续作到期交付日特殊处理 modify fuyongsheng 20220113 end
                         //  汇总交易编号
                         dealTotal.setSeqId(IDGenerator.generate());
                         if(DictCodeList.交易方向_买入.getValue().equals(dealTotal.getPs())){
