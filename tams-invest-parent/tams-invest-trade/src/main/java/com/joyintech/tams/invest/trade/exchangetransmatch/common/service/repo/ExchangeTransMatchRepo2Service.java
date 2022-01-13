@@ -172,7 +172,7 @@ public class ExchangeTransMatchRepo2Service extends ExchangeTransMatchRepoCommon
         // 交割日
         dealTotal.setSettleDate(dealDto.getSettleDate());
         // 清算速度
-        dealTotal.setSettleSpeed(dealDto.getSettleSpeed());
+        dealTotal.setSettleSpeed(StringUtil.isNotEmpty(dealDto.getSettleSpeed())?dealDto.getSettleSpeed():0L);
         // 交易币种
         dealTotal.setCcy(dealDto.getCcy());
         // 首期结算方式
@@ -230,6 +230,8 @@ public class ExchangeTransMatchRepo2Service extends ExchangeTransMatchRepoCommon
         dealTotal.setPortfolioId(entrustDto.getPortfolioId());
         // 备注
         dealTotal.setRemark(entrustDto.getRemark());
+        //是否逾期
+        dealTotal.setIsOverdueDeal(DictCodeList.是否_否.getValue());
 
         return dealTotal;
     }
@@ -254,7 +256,7 @@ public class ExchangeTransMatchRepo2Service extends ExchangeTransMatchRepoCommon
         // 交割日
         trdProductDeal.setSettleDate(dealDto.getSettleDate());
         // 清算速度
-        trdProductDeal.setSettleSpeed(0L);
+        trdProductDeal.setSettleSpeed(StringUtil.isNotEmpty(dealDto.getSettleSpeed())?dealDto.getSettleSpeed():0L);
         // 单位净价
         trdProductDeal.setUnitCprice(null);
         // 交易本金

@@ -156,10 +156,9 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
         // 交割日
         dealTotal.setSettleDate(dealDto.getSettleDate());
         // 清算速度
-        dealTotal.setSettleSpeed(dealDto.getSettleSpeed());
+        dealTotal.setSettleSpeed(StringUtil.isNotEmpty(dealDto.getSettleSpeed())?dealDto.getSettleSpeed():0L);
         // 交易币种
         dealTotal.setCcy(dealDto.getCcy());
-
         // 单位净价
         dealTotal.setUnitCprice(dealDto.getUnitCprice());
         // 单位利息
@@ -238,6 +237,8 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
 
         //汇总表的期限=Mdate-Vdate
         dealTotal.setRepoTerm(DateUtil.getBetweenDayNumber(dealDto.getVdate(),dealDto.getMdate()));
+        //是否逾期
+        dealTotal.setIsOverdueDeal(DictCodeList.是否_否.getValue());
         // 备注
         dealTotal.setRemark("数据清算自动处理");
 
@@ -279,7 +280,8 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
             //交割日
             trdProductDeal.setSettleDate(settleTransData.getSettleDate());
             //清算速度
-            trdProductDeal.setSettleSpeed(settleTransData.getSettleSpeed());
+        //清算速度
+        trdProductDeal.setSettleSpeed(StringUtil.isNotEmpty(settleTransData.getSettleSpeed())?settleTransData.getSettleSpeed():0L);
             // 交易币种
             trdProductDeal.setCcy(settleTransData.getCcy());
             // 净值日期

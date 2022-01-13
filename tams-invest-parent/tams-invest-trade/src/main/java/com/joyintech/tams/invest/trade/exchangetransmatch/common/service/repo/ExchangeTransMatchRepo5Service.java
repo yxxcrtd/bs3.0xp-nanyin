@@ -126,13 +126,11 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
         // 交割日
         dealTotal.setSettleDate(dealDto.getTradeDate());
         // 清算速度
-        // dealTotal.setSettleSpeed(null);
-        dealTotal.setSettleSpeed(0L);
+        dealTotal.setSettleSpeed(StringUtil.isNotEmpty(dealDto.getSettleSpeed())?dealDto.getSettleSpeed():0L);
         // 交易币种
-        dealTotal.setCcy(null);
-
+        dealTotal.setCcy(dealDto.getCcy());
         // 单位净价
-        dealTotal.setUnitCprice(null);
+        dealTotal.setUnitCprice(dealDto.getUnitCprice());
         // 单位利息
         dealTotal.setUnitInt(null);
         // 单位全价
@@ -178,6 +176,8 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
         dealTotal.setTradeMarket(dealDto.getTradeMarket());
         //关联系统交易编号
         dealTotal.setfTradeId(dealDto.getSeqId());
+        //是否逾期
+        dealTotal.setIsOverdueDeal(DictCodeList.是否_否.getValue());
 
         // GZYHTZJY-1039:交易对手应为空 fuyongsheng modify 20220106 start
 //        if(StringUtil.equals(dealDto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
@@ -257,13 +257,13 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
             //交割日
             trdProductDeal.setSettleDate(settleTransData.getSettleDate());
             //清算速度
-            trdProductDeal.setSettleSpeed(settleTransData.getSettleSpeed());
+            trdProductDeal.setSettleSpeed(StringUtil.isNotEmpty(settleTransData.getSettleSpeed())?settleTransData.getSettleSpeed():0L);
             // 交易币种
             trdProductDeal.setCcy(settleTransData.getCcy());
             // 净值日期
             trdProductDeal.setCpriceDate(null);
             //单位净价
-            trdProductDeal.setUnitCprice(null);
+            trdProductDeal.setUnitCprice(settleTransData.getUnitCprice());
             // 单位利息
             trdProductDeal.setUnitInt(null);
             // 单位全价
@@ -374,8 +374,7 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
                     trdProductDeal.setTgBusiType(DictCodeListExt3.平安业务类型_质押式逆回购到期.getValue());
                 }
             }
-
-
+            trdProductDeal.setRemark("数据清算自动处理");
             trdProductDealList.add(trdProductDeal);
 
         }

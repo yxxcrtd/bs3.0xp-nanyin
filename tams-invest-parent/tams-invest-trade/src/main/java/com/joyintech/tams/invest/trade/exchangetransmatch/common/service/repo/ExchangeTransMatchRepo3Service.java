@@ -113,7 +113,7 @@ public class ExchangeTransMatchRepo3Service extends ExchangeTransMatchRepoCommon
         // 交割日
         dealTotal.setSettleDate(dealDto.getTradeDate());
         // 清算速度
-        dealTotal.setSettleSpeed(null);
+        dealTotal.setSettleSpeed(StringUtil.isNotEmpty(dealDto.getSettleSpeed())?dealDto.getSettleSpeed():0L);
         // 交易币种
         dealTotal.setCcy(null);
 
@@ -187,6 +187,8 @@ public class ExchangeTransMatchRepo3Service extends ExchangeTransMatchRepoCommon
 
         //交易市场
         dealTotal.setTradeMarketMode(dealDto.getTradeMarketMode());
+        //是否逾期
+        dealTotal.setIsOverdueDeal(DictCodeList.是否_否.getValue());
         // 备注
         dealTotal.setRemark("数据清算自动处理");
 
@@ -225,7 +227,7 @@ public class ExchangeTransMatchRepo3Service extends ExchangeTransMatchRepoCommon
             //交割日
             trdProductDeal.setSettleDate(dealDto.getTradeDate());
             //清算速度
-            trdProductDeal.setSettleSpeed(null);
+            trdProductDeal.setSettleSpeed(StringUtil.isNotEmpty(dealDto.getSettleSpeed())?dealDto.getSettleSpeed():0L);
             // 交易币种
             trdProductDeal.setCcy(dealDto.getCcy());
             // 净值日期
