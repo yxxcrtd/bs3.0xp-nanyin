@@ -252,12 +252,12 @@ public class SvrHolidayFileImpService extends FileImpService {
 		dto.setCdate(DateUtil.parse(map.get("CDATE")));//日期
 		dto.setCreateDept(map.get("CREATE_DEPT"));//创建部门
 		dto.setCreateTime(DateUtil.parse(map.get("CREATE_TIME")));//创建时间
-		dto.setCreateUser(map.get("CREATE_USER"));//创建人
+		dto.setCreateUser("interf");//创建人
 		if(map.get("IS_HOLIDAY")!=null){
 			dto.setIsHoliday(Long.parseLong(map.get("IS_HOLIDAY")));//是否节假日，0：工作日，1：节假日
 		}
 		dto.setUpdateTime(DateUtil.parse(map.get("UPDATE_TIME")));//更新时间
-		dto.setUpdateUser(map.get("UPDATE_USER"));//更新人
+		dto.setUpdateUser("interf");//更新人
 		return dto;
 	}
 	
