@@ -183,7 +183,7 @@ public class MessageSenderService {
         String assetType = instruction.getAssetType();
 
         // 协议回购
-        if (BusinessFlag.PROTOCOL_BACK.value.equals(bsFlag)) {
+        if(IntegratedEntrustUtils.isProtocolBack(trade.getEntrustProp())) {
             return handleProtocolBakBusiType(trade, instruction, entrust);
         }
 
