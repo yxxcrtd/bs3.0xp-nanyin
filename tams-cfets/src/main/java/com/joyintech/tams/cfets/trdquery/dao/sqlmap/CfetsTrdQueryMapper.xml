@@ -629,8 +629,8 @@
         fp.REGIST_ORG as repRegistOrg
         from REG_FIN_PLEDGE rp
         left join reg_fin_product_deal regdeal
-        on rp.trade_id=regdeal.trade_id
-        inner join ptl_portfolio pp
+        on rp.trade_id=decode(regdeal.finprod_type2,'F02',regdeal.trade_id,'F03',regdeal.totle_trade_id)
+        left join ptl_portfolio pp
         on pp.portfolio_id=rp.portfolio_id
         <if test="userId != null and userId != ''">
             inner JOIN  PTL_PORTFOLIO_AUTHORITY PPA
@@ -688,8 +688,8 @@
         fp.REGIST_ORG as repRegistOrg
         from wfl_REG_FIN_PLEDGE rp
         left join wfl_reg_fin_product_deal regdeal
-        on rp.trade_id=regdeal.trade_id
-        inner join ptl_portfolio pp
+        on rp.trade_id=decode(regdeal.finprod_type2,'F02',regdeal.trade_id,'F03',regdeal.totle_trade_id)
+        left join ptl_portfolio pp
         on pp.portfolio_id=rp.portfolio_id
         <if test="userId != null and userId != ''">
             inner JOIN  PTL_PORTFOLIO_AUTHORITY PPA
