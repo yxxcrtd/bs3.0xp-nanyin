@@ -420,6 +420,10 @@ public class StlDataDealSzdJsmxProcessService {
 					settleTransData.setSettleDate(DateUtil.parse(szdJsmx.getJsrq()));
 					// 交易日期
 					settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getJsrq()));
+					// 交易本金
+					// GZYHTZJY-1107:modify by fuyongsheng 20220113 start
+					settleTransData.setPrinAmt(settleTransData.getFpriceAmt());
+					// GZYHTZJY-1107:modify by fuyongsheng 20220113 end
 				}
 				if (StringUtil.lowerCase(stlDownDataDealOperatorDto.getDataFile()).startsWith(StlDataDealProcessConstant.SZD_JSMX_02)) {
 					if (StringUtil.equals(szdJsmx.getYwlx(), StlDataDealProcessConstant.YWLX_012)) {
