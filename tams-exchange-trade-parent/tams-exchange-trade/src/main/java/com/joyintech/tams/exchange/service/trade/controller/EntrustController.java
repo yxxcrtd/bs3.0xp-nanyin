@@ -161,7 +161,7 @@ public class EntrustController {
     @PostMapping(value = "/entrust/export")
     @ResponseBody
     @ApiOperation(value = "导出委托信息列表", notes = "导出委托信息列表")
-    public void exportPosition(@RequestBody EntrustExportRequest request, HttpServletResponse response) {
+    public void exportEntrust(@RequestBody EntrustExportRequest request, HttpServletResponse response) {
         ExcelUitl.doExport(request, response, "委托列表", () -> entrustManagement.queryAllEntrustForPage(request.getDto(PageEntrustInfoRequest.class)).getData().getList());
     }
 
@@ -174,4 +174,11 @@ public class EntrustController {
         }
         return new Message<List<EntrustInterface>>(entrustManagement.queryEntrustByStatus(userId, entrustStatus));
     }
+
+//    @PostMapping(value = "/entrust/exception/export")
+//    @ResponseBody
+//    @ApiOperation(value = "导出异常委托信息列表", notes = "导出异常委托信息列表")
+//    public void exportExceptionEntrust(@RequestBody EntrustExportRequest request, HttpServletResponse response) {
+//        ExcelUitl.doExport(request, response, "异常委托列表", () -> entrustManagement.queryEntrustByStatus(request.getDto(PageEntrustInfoRequest.class)).getData().getList());
+//    }
 }

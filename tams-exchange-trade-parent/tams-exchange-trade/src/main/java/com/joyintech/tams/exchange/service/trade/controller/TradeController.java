@@ -48,7 +48,7 @@ public class TradeController {
     @PostMapping(value = "/trade/export")
     @ResponseBody
     @ApiOperation(value = "导出成交信息列表", notes = "导出成交信息列表")
-    public void exportPosition(@RequestBody TradeExportRequest request, HttpServletResponse response) {
+    public void exportTrade(@RequestBody TradeExportRequest request, HttpServletResponse response) {
         ExcelUitl.doExport(request, response, "成交列表", () -> tradeManagement.queryAllForPage(request.getDto(PageTradeInfoRequest.class)).getData().getList());
     }
 
