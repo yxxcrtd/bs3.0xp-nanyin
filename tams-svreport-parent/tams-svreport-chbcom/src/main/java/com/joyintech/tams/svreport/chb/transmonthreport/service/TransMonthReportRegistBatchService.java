@@ -14,6 +14,7 @@ import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportPrdConstants;
 import com.joyintech.tams.svreport.chb.monthreport.service.MonthReportAssetService;
 import com.joyintech.tams.svreport.chb.monthreport.service.MonthReportProdService;
+import com.joyintech.tams.svreport.chb.monthreport.service.MonthReportServiceUtil;
 import com.joyintech.tams.svreport.chb.transmonthreport.dao.ChbTransMonthReportSubRegistBatchMapper;
 import com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthReportSubDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -54,6 +55,8 @@ public class TransMonthReportRegistBatchService extends SvrCBBaseService{
     private ChbTransMonthReportProdBatchService chbTransMonthReportProdBatchService;
     @Autowired
     private ChbTransMonthReportAssetBatchService chbTransMonthReportAssetBatchService;
+    @Autowired
+    private MonthReportServiceUtil monthReportServiceUtil;
     
     @Transactional(rollbackFor = Exception.class)
 	public void genReport(Date executeDate,List<String> prodids,boolean ifTrigger){
@@ -136,14 +139,21 @@ public class TransMonthReportRegistBatchService extends SvrCBBaseService{
         chbTransMonth.setReportfrequ(ChbMonthReportPrdConstants.REPORT_FREQU_M);
 
         // 发行机构代码取值
-        chbTransMonth.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
-        chbTransMonth.setIssuePartyName(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_NAME));
+        //chbTransMonth.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+        //chbTransMonth.setIssuePartyName(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_NAME));
 
         // 用户信息
         chbTransMonth.setOrgCode(CommonUtil.getOrgCode());
         chbTransMonth.setCreateDept(CommonUtil.getDeptCode());
         chbTransMonth.setCreateUser(CommonUtil.getUserName());
         chbTransMonth.setUpdateUser(CommonUtil.getUserName());
+
+        //发行机构代码取值
+        /** add by wuhaisen ZGZGST-4257 修改转型表月度报表机构代码取值逻辑  20210113 start */
+        String[] code = monthReportServiceUtil.getRegistCode(chbTransMonth.getOrgCode());
+        chbTransMonth.setIssuePartyId(code[0]);
+        chbTransMonth.setIssuePartyName(code[1]);
+        /** add by wuhaisen ZGZGST-4257 修改转型表月度报表机构代码取值逻辑  20210113 end */
 
         // 数据状态
         chbTransMonth.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
