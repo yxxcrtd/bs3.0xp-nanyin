@@ -1,6 +1,7 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.exchange.common.ResponseResultBody;
 import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.constant.EntrustBsProp;
@@ -8,6 +9,7 @@ import com.joyintech.tams.exchange.common.db.domain.EntrustInterface;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
 import com.joyintech.tams.exchange.common.domain.Message;
+import com.joyintech.tams.exchange.common.request.EntrustExportRequest;
 import com.joyintech.tams.exchange.common.request.EntrustQueryRequest;
 import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -153,6 +156,13 @@ public class EntrustController {
     @PostMapping(value = "/entrust/integrated/page")
     public Message<PageInfo<EntrustQueryBean>> queryIntegratedEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
         return entrustManagement.queryIntegratedEntrustForPage(request);
+    }
+
+    @PostMapping(value = "/entrust/integrated/export")
+    @ResponseBody
+    @ApiOperation(value = "导出委托信息列表", notes = "导出委托信息列表")
+    public void exportPosition(@RequestBody EntrustExportRequest request, HttpServletResponse response) {
+        ExcelUitl.doExport(request, response, "委托列表", () -> entrustManagement.queryIntegratedEntrustForPage(request.getDto(PageEntrustInfoRequest.class)).getData().getList());
     }
 
     @ApiOperation(value = "查询异常委托", notes = "查询异常委托")

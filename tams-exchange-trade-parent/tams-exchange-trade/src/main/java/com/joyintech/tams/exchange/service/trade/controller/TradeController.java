@@ -1,23 +1,21 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.exchange.common.ResponseResultBody;
 import com.joyintech.tams.exchange.common.bean.HistoryTrade;
 import com.joyintech.tams.exchange.common.bean.TradeQueryBean;
 import com.joyintech.tams.exchange.common.db.domain.Trade;
 import com.joyintech.tams.exchange.common.domain.Message;
-import com.joyintech.tams.exchange.common.request.HistoryTradeInfoRequest;
-import com.joyintech.tams.exchange.common.request.PageTradeInfoRequest;
-import com.joyintech.tams.exchange.common.request.TradeInfoByIdRequest;
-import com.joyintech.tams.exchange.common.request.TradeInfoRequest;
+import com.joyintech.tams.exchange.common.request.*;
 import com.joyintech.tams.exchange.service.trade.management.service.TradeManagement;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController("TradeController_dtx")
@@ -45,6 +43,13 @@ public class TradeController {
     @RequestMapping(value = "/trade/page", method = RequestMethod.POST)
     public Message<PageInfo<TradeQueryBean>> queryAllForPage(@RequestBody @Validated PageTradeInfoRequest request) {
         return tradeManagement.queryAllForPage(request);
+    }
+
+    @PostMapping(value = "/trade/export")
+    @ResponseBody
+    @ApiOperation(value = "导出成交信息列表", notes = "导出成交信息列表")
+    public void exportPosition(@RequestBody TradeExportRequest request, HttpServletResponse response) {
+        ExcelUitl.doExport(request, response, "成交列表", () -> tradeManagement.queryAllForPage(request.getDto(PageTradeInfoRequest.class)).getData().getList());
     }
 
     @ApiOperation(value = "根据委托编号查询成交信息", notes = "根据委托编号查询成交信息")
