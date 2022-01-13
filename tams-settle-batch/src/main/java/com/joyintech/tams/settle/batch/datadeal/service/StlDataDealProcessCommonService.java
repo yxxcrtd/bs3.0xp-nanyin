@@ -101,6 +101,10 @@ public class StlDataDealProcessCommonService {
 		if (StringUtil.equals(StlDataDealProcessConstant.JYFS_002, jsfs)) {
 			return DictCodeList.交易平台_大宗交易平台.getValue();
 		}
+		// 大宗交易
+		if (StringUtil.equals(StlDataDealProcessConstant.JYFS_003, jsfs)) {
+			return DictCodeList.交易平台_竞价撮合平台.getValue();
+		}
 		// 固定收益综合电子平台交易
 		if (StringUtil.equals(StlDataDealProcessConstant.JYFS_101, jsfs)) {
 			return DictCodeList.交易平台_固定收益平台.getValue();
