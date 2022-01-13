@@ -779,7 +779,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         // 手工交收判断 add by yufei 20201022 end
 
         // 质押式协议回购头寸、现金走配置处理逻辑 质押式回购 走手工交收
-        if (DictCodeList.回购类型_质押式协议回购.getValue().equals(trdTempDto.getAssetType())){
+//        if (DictCodeList.回购类型_质押式协议回购.getValue().equals(trdTempDto.getAssetType())){
 //            // 场景参数设置
 //            PostionParameter parameter = new PostionParameter();
 //            parameter.setPs(trdTempDto.getPs());
@@ -807,9 +807,9 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
 //            if(!finProductTradeDto.isNeedHandleFinishEntrust()){
 //                baseTradeProductDealCommService.finishEntrust(finProductTradeDto.getBaseTradeProductDealDtos(), false);
 //            }
-        }else {
+//        }else {
             baseTradeProductDealCommService.execute(finProductTradeDto);
-        }
+//        }
     }
 
     /**
