@@ -22,6 +22,8 @@ public class CfetsSearchInfoRequest {
     private String dealType;
     @ApiModelProperty(name="searchs",value="模糊查询输入多个值",example="1")
     private String searchs;
+    @ApiModelProperty(name="dateType",value="时间类型",example="历史：01")
+    private String dateType;
 
 
     public String getSearch() {
@@ -70,5 +72,13 @@ public class CfetsSearchInfoRequest {
 
     public void setSearchs(String searchs) {
         this.searchs = searchs;
+    }
+
+    public String getDateType() {
+        return dateType;
+    }
+
+    public void setDateType(String dateType) {
+        this.dateType = dateType;
     }
 }

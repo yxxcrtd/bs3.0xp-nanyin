@@ -179,6 +179,12 @@ public class ComBondMarketInfo001Dto extends BaseEntity implements ProcessEntity
 	private BigDecimal minPriceFull;
 
 	/**
+	 * 债券市场余额
+	 */
+	@JsonSerialize(using = BigDecimalSerializer.class)
+	private BigDecimal marketAmt;
+
+	/**
 	 * 获取 cloPriceFull
 	 * @return cloPriceFull
 	 */
@@ -581,5 +587,13 @@ public class ComBondMarketInfo001Dto extends BaseEntity implements ProcessEntity
 
 	public void setProcessState(String processState) {
 		this.processState = processState;
+	}
+
+	public BigDecimal getMarketAmt() {
+		return marketAmt;
+	}
+
+	public void setMarketAmt(BigDecimal marketAmt) {
+		this.marketAmt = marketAmt;
 	}
 }

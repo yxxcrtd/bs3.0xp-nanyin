@@ -750,4 +750,12 @@ public class CfetsEtrFinProductDto {
     public void setDeadline(String deadline) {
         this.deadline = deadline;
     }
+
+    public String getSecMarketAmt() {
+        return secMarketAmt;
+    }
+
+    public void setSecMarketAmt(String secMarketAmt) {
+        this.secMarketAmt = secMarketAmt;
+    }
 }

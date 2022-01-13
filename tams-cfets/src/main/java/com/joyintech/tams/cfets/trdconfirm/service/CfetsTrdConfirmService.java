@@ -2402,14 +2402,14 @@ public class CfetsTrdConfirmService extends BaseService{
      */
     public Page<CfetsTrdConfirmCstpInfoListResponse> findAllCstpInfoList(CfetsTrdConfirmCstpInfoListRequest dto) {
         Map<String, Object> pageParam = BeanUtil.object2Map(dto);
-        String regAssetType= (String)pageParam.get("regAssetType");
+     /*   String regAssetType= (String)pageParam.get("regAssetType");
         if(StringUtil.isNotEmpty(regAssetType)){
             if(StringUtil.equals(regAssetType,"01")){
                 pageParam.put("regAssetType", "BOND");
             }else{
                 pageParam.put("regAssetType","REPO");
             }
-        }
+        }*/
         String finprodId = (String)pageParam.get("finprodId");
         if(StringUtil.isNotEmpty(finprodId)){
             pageParam.put("finprodIdList", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));
@@ -3101,8 +3101,8 @@ public class CfetsTrdConfirmService extends BaseService{
                 param.put("settleSpeed","03");
             }
             param.put("secManageAcctId",interfTradSecdeal.getOurdepositaccountnumber());
-            param.put("tradeYield",interfTradSecdeal.getYield8().toString());
-            param.put("faceValue",interfTradSecdeal.getPrinamt().toString());
+            param.put("tradeYield",interfTradSecdeal.getYield8());
+            param.put("faceValue",interfTradSecdeal.getPrinamt());
             param.put("settleDate",DateUtil.format(interfTradSecdeal.getSettdate(),"yyyy-MM-dd"));
             if(StringUtil.equals(iCstpTrade.getDeliverytype(),"0")){
                 param.put("deliveryType","03");
@@ -3259,7 +3259,7 @@ public class CfetsTrdConfirmService extends BaseService{
                param.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
            }
            param.put("tradeDate", DateUtil.format(interfOpicsTradRepo.getDealdate(), "yyyy-MM-dd"));
-           param.put("termDays", interfOpicsTradRepo.getTerm().toString());
+           param.put("termDays", interfOpicsTradRepo.getTerm());
            param.put("ps", interfOpicsTradRepo.getPs());
            if (StringUtil.equals(interfOpicsTradRepo.getSettleSpeed(), "1")) {
                param.put("settleSpeed", "01");
@@ -3269,10 +3269,10 @@ public class CfetsTrdConfirmService extends BaseService{
                param.put("settleSpeed", "03");
            }
            param.put("secManageAcctId", interfOpicsTradRepo.getOurdepositaccountnumber());
-           param.put("rate", iCstpTrade.getPrice().toString());
+           param.put("rate", iCstpTrade.getPrice());
            param.put("vsettleDate", iCstpTrade.getSettldate());
            param.put("msettleDate", iCstpTrade.getSettldate2());
-           param.put("tradeAmt", iCstpTrade.getTradecashamt().toString());//首次结算金额
+           param.put("tradeAmt", iCstpTrade.getTradecashamt());//首次结算金额
            //根据登记编号，查询登记信息
            List<CfetsTrdConfirmRegInfoListResponse> confirmDtoList = cfetsTrdConfirmMapper.selectRegDtoByPrimaryKey(param);
            if (!StringUtil.isEmptyList(confirmDtoList)) {
@@ -3284,6 +3284,9 @@ public class CfetsTrdConfirmService extends BaseService{
                    List<CfetsTrdConfirmRegInfoListResponse>
                            regAndIbuPledges = cfetsTrdConfirmMapper.findAllRegAndIbuPledgesList(item.getTotleTradeId());
                    Boolean isMatch = true;
+                   if(StringUtil.isEmptyList(regAndIbuPledges) || StringUtil.isEmptyList(cstpPledges)){
+                       continue;
+                   }
                    if (!StringUtil.isEmptyList(regAndIbuPledges) && !StringUtil.isEmptyList(cstpPledges)) {
                        for (int i = 0; i < regAndIbuPledges.size(); i++) {
                            CfetsTrdConfirmRegInfoListResponse regAndIbuDemo = regAndIbuPledges.get(i);

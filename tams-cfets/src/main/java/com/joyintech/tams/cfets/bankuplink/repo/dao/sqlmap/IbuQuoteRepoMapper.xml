@@ -1172,11 +1172,11 @@
                 pp.PORTFOLIO_ID portfolioId,
                 pp.PORTFOLIO_NAME portfolioName,
                 fp.MDATE mdate,
-                (NVL(TABLE01.pledStrdPrinAmt, 0)) * 100 avaPledgePrin,
+                (NVL(TABLE01.pledStrdPrinAmt, 0)) avaPledgePrin,
                 NVL(pledgeList.PLEDGE_NUMBER, 0) * 100 pledgePrin,
                 mbvi.NETPRICE firstNetPrice,
                 pledgeList.PLEDGE_RATIO*100 pledgeRatio,
-                nvl(TABLE01.pledgeAmount,0) * 100 prin,
+                nvl(TABLE01.pledgeAmount,0)  prin,
                 sdl.ITEM_VALUE 				gradeResult,/*债项评级*/
                 fp.REGIST_ORG repRegistOrg
             FROM
@@ -1216,6 +1216,14 @@
                </if>
                ) pledgeList
             left join ETR_ENTRUST ee on ee.ENTRUST_ID = pledgeList.bussId
+            left join (
+                   SELECT V.SEC_ACCT_ID AS SECACCTID, PSA.PORTFOLIO_ID, R.FINPROD_ID
+                   FROM PTL_SEC_ACCT PSA, STL_SEC_ACCT_INFO V
+                   LEFT JOIN FIN_PRODUCT R
+                    ON R.REGIST_ORG = V.REGIST_ORG and V.TRADE_PLACE = R.trade_market
+                   WHERE PSA.ACCT_NO = V.SEC_ACCT_ID
+                    AND V.SEC_ACCT_TYPE = 'SEC') secAcct
+            on secAcct.PORTFOLIO_ID = ee.PORTFOLIO_ID and secAcct.FINPROD_ID = pledgeList.pledgeId
             INNER JOIN PTL_PORTFOLIO pp ON ee.PORTFOLIO_ID = pp.PORTFOLIO_ID
             left join ETR_ENTRUST_ADD eea on eea.ENTRUST_ID = pledgeList.bussId
             LEFT JOIN(
@@ -1252,7 +1260,7 @@
                      TEMP.SEC_ACCT_ID, TEMP.FINPROD_ID
                  HAVING SUM(TEMP.pledStrdPrinAmt) > 0 /*只统计可质押券面总额>0*/
            )TABLE01/*以上统计可用持仓*/
-                ON TABLE01.FINPROD_ID = pledgeList.pledgeId AND TABLE01.PORTFOLIO_ID = ee.PORTFOLIO_ID
+                ON TABLE01.FINPROD_ID = pledgeList.pledgeId AND TABLE01.PORTFOLIO_ID = ee.PORTFOLIO_ID and secAcct.SECACCTID = TABLE01.SEC_ACCT_ID
            LEFT JOIN (
                        SELECT
                            PORTFOLIO_ID,FINPROD_ID,
@@ -2296,7 +2304,7 @@
                 DECODE(T.settle_speed, 0, '01', 1, '02')  settleSpreedCode /*清算速度*/,
                 T.ccy ccy /*币种*/,
                 T.repo_term repoTerm /*回购期限*/,
-                T.rate price /*回购利率*/,
+                T.rate*100 price /*回购利率*/,
                 T.sett_ccy settCcy /*结算币种*/,
                 T.trade_amt tradeAmt /*交易金额*/,
                 T.share_amt shareAmt /*券面总额合计*/,
@@ -2352,6 +2360,14 @@
             )
             group by portfolio_id,pledge_finprod_id,pledge_ratio
         ) pledge
+       left join (
+                   SELECT V.SEC_ACCT_ID AS SECACCTID, PSA.PORTFOLIO_ID, R.FINPROD_ID
+                   FROM PTL_SEC_ACCT PSA, STL_SEC_ACCT_INFO V
+                   LEFT JOIN FIN_PRODUCT R
+                    ON R.REGIST_ORG = V.REGIST_ORG and V.TRADE_PLACE = R.trade_market
+                   WHERE PSA.ACCT_NO = V.SEC_ACCT_ID
+                    AND V.SEC_ACCT_TYPE = 'SEC') secAcct
+           on secAcct.PORTFOLIO_ID = pledge.portfolioId and secAcct.FINPROD_ID = pledge.finprodId
         LEFT JOIN
         (
             SELECT  TEMP.PORTFOLIO_ID /*组合代码*/
@@ -2386,7 +2402,7 @@
                     ,TEMP.FINPROD_ID
             HAVING SUM(TEMP.pledStrdPrinAmt) > 0 /*只统计可质押券面总额>0*/
         )TABLE01/*以上统计可用持仓*/
-            ON TABLE01.FINPROD_ID = pledge.finprodId AND TABLE01.PORTFOLIO_ID = pledge.portfolioId
+            ON TABLE01.FINPROD_ID = pledge.finprodId AND TABLE01.PORTFOLIO_ID = pledge.portfolioId and secAcct.SECACCTID = TABLE01.SEC_ACCT_ID
        LEFT JOIN (
                    SELECT
                        PORTFOLIO_ID,FINPROD_ID,
@@ -2453,7 +2469,7 @@
             deal.M_TRADE_AMT mtradeAmt/*到期结算金额*/,
             deal.DIS_FACE_VALUE convertAmt/*质押券折算总额*/,
             ee.PRICE_MODEL priceModel/*价格模式*/,
-            deal.RATE price/*回购利率*/,
+            deal.RATE*100 price/*回购利率*/,
             deal.SEC_MANAGE_ACCT_ID secManageAcctId/*证券账户*/
         from (
             <include refid="sql_ProductDeal"></include>
