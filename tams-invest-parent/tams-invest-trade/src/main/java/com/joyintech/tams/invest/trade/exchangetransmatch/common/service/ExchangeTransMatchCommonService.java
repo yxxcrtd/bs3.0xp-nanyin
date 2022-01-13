@@ -233,11 +233,12 @@ public class ExchangeTransMatchCommonService extends BaseService {
                 settleTransDataTotalStatus.setUpdateTime(new Date());
                 settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
                 settleTransDataTotalStatusMapper.updateByPrimaryKey(settleTransDataTotalStatus);
-            } else {
+            }
+            else {
                 settleTransDataTotalStatus = new SettleTransDataTotalStatus();
-                settleTransDataTotalStatus.setSeqNo(totalSeqId);
+                settleTransDataTotalStatus.setSeqNo(seqId);
                 //取得剩余匹配份额
-                BigDecimal remainNum = exchangeTransMatchCommonMapper.getRemainNum(totalSeqId);
+                BigDecimal remainNum = exchangeTransMatchCommonMapper.getRemainNum(seqId);
                 settleTransDataTotalStatus.setMatchStatus(BigDecimal.ZERO.compareTo(remainNum) >=0
                         ?DictCodeListExt3.下行交易匹配状态_未匹配.getValue():DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
                 settleTransDataTotalStatus.setUpdateTime(new Date());
