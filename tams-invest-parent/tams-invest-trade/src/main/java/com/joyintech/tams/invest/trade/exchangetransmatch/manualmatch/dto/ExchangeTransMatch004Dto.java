@@ -124,7 +124,7 @@ public class ExchangeTransMatch004Dto extends SettleTransDataTotal implements IT
             else if(StringUtil.equals(this.getPs(), DictCodeList.交易方向_到期.getValue())){
                 return SysDataUtil.getNameFromDataDict(DictCode.交易方向, DictCodeListExt3.交易方向_到期购回.getValue());
             }
-            else if(StringUtil.equals(this.getPs(), DictCodeList.交易方向_提前终止.getValue())){
+            else if(StringUtil.equals(this.getPs(), DictCodeListExt3.交易方向_投资端_提前终止.getValue())){
                 return SysDataUtil.getNameFromDataDict(DictCode.交易方向, DictCodeListExt3.交易方向_提前购回.getValue());
             }
             else {
@@ -137,7 +137,7 @@ public class ExchangeTransMatch004Dto extends SettleTransDataTotal implements IT
             else if(StringUtil.equals(this.getPs(), DictCodeList.交易方向_到期.getValue())){
                 return SysDataUtil.getNameFromDataDict(DictCode.交易方向, DictCodeListExt3.交易方向_到期购回.getValue());
             }
-            else if(StringUtil.equals(this.getPs(), DictCodeList.交易方向_提前终止.getValue())){
+            else if(StringUtil.equals(this.getPs(), DictCodeListExt3.交易方向_投资端_提前终止.getValue())){
                 return SysDataUtil.getNameFromDataDict(DictCode.交易方向, DictCodeListExt3.交易方向_提前购回.getValue());
             }
             else {
