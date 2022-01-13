@@ -14,10 +14,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondRegCheckDetaileRequst;
@@ -53,6 +50,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,10 +148,12 @@ public class IbuQuoteRepo004Controller extends BaseController {
         if (StringUtil.isEmpty(dto.getCounterTrader())) {
             counterTrader = "-";
         } else {
-            counterTrader = "天-对手方交易员:" + dto.getCounterTrader() + "-";
+            counterTrader = "天-对手方交易员:" + dto.getCounterTrader()+ "-";
         }
+        DecimalFormat df = new DecimalFormat("#,##0.00");
+        String tradeAmtStr = df.format(ArithmeticUtil.round(dto.getTradeAmt(),2, RoundingMode.HALF_UP));
         params.setComment(entity -> "交易日期:" + DateUtil.format(iPlatformDate.getSysDate()) + "-回购期限:"
-                + dto.getRepoTerm() + "天" + counterTrader + "交易本金:" + dto.getTradeAmt());
+                + dto.getRepoTerm() + "天" + counterTrader + "交易金额:" + tradeAmtStr);
         cfetsBondDealRegisterQuoteDto.setQuoteType(DictCodeListExt3.报价系统区分类型_质押式回购登记报价.getValue());
         processParameter.setWorkFlowParameter(params);
         processParameter.setOperationType(OperationType.NEW);
