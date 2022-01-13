@@ -1722,7 +1722,7 @@
         decode(I.BUSINESSTYPE, 'BOND', I.yield2*100, 'REPO', I.PRICE*100) tradeYield,
         I.TRADELIMITDAYS as termDays,
         I.TRADECASHAMT as tradeAmt,
-        QUOTE.QUOTEID as quoteid,
+        I.QUOTEID as quoteid,
 
         I.ourinstitutioncode as traderid,
        <!-- mccit.PARTY_ABBR as traderidStr,-->
@@ -1746,13 +1746,13 @@
         and fp.finprod_type='F01'
         LEFT JOIN SYS_USER_ADD sua ON nvl(ts.TRAD,tr.BUYTRADER) =sua.IBU_TRADER
         LEFT JOIN SYS_USER su ON sua.USER_ID =su.USER_ID
-        LEFT JOIN (
+       <!-- LEFT JOIN (
         SELECT distinct i.EXECID ,nvl(iqb.QUOTE_ID,iqc.QUOTE_ID) QUOTEID
         FROM  INTERF_CSTP_TRADE i
         LEFT JOIN IBU_QUOTE_BOND_DET iqbd ON i.EXECID = iqbd.EXECID
         LEFT JOIN IBU_QUOTE_BOND iqb ON iqbd.QUOTE_ID = iqb.QUOTE_ID
         LEFT JOIN IBU_QUOTE_CREP iqc ON i.EXECID = iqc.EXECID
-        ) QUOTE ON QUOTE.EXECID=I.EXECID
+        ) QUOTE ON QUOTE.EXECID=I.EXECID-->
         left join stl_sec_acct_info stlinfo
         on nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id
       <!--  LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_id
@@ -1814,7 +1814,7 @@
             and I.Execid LIKE CONCAT('%',CONCAT(#{execid},'%'))
         </if>
         <if test="quoteid != null and !''.equals(quoteid)">
-            and QUOTE.QUOTEID LIKE CONCAT('%',CONCAT(#{quoteid},'%'))
+            and  I.QUOTEID LIKE CONCAT('%',CONCAT(#{quoteid},'%'))
         </if>
         <if test="traderidList!=null and traderidList.size() > 0">
             AND I.ourinstitutioncode IN
