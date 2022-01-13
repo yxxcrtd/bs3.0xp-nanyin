@@ -27,6 +27,7 @@ public interface IntegratedEntrustHistoryMapper extends IMybatisMapper<Integrate
 
     List<EntrustQueryBean> selectEntrustHistoryByPage(EntrustQryBean entrustQryBean);
 
+    @Deprecated
     List<IntegratedEntrustHistory> selectEntrustsPageInfo(EntrustQryBean entrustQryBean);
 
     List<EntrustQueryBean> selectEntrustsByPage(EntrustQryBean entrustQryBean);

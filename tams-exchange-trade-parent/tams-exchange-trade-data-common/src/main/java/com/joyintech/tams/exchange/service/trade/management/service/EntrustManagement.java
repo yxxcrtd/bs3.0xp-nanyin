@@ -417,6 +417,7 @@ public class EntrustManagement extends BaseService {
         return new ResultBean(ErrorCode.SYSTEM_ERROR);
     }
 
+    @Deprecated
     public ResultBean queryAllForPage(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus) {
         if (historyType == PresentOrHistoryQryType.PRESENT.value) {
             PageInfo<Entrust> entrustPageInfo = entrustService.queryAllForPage(pageNum, pageSize, accountId, portfolioId, market, stockCode, entrustProp, entrustStatus);
@@ -457,6 +458,7 @@ public class EntrustManagement extends BaseService {
         return new Message<PageInfo<EntrustQueryBean>>().fail(ErrorCode.REQ_PARAMETER_ERROR.value + "", ErrorCode.REQ_PARAMETER_ERROR.errorMsg);
     }
 
+    @Deprecated
     public ResultBean queryIntegratedEntrustForPage(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus) {
         List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
@@ -477,13 +479,6 @@ public class EntrustManagement extends BaseService {
             return new ResultBean(ErrorCode.REQ_PARAMETER_ERROR);
         }
     }
-
-//    public Message<PageInfo<Object>> queryAllEntrustForPage(PageEntrustInfoRequest request) {
-//        PageMode pageMode = request.getPageMode();
-//        return new Message<>(queryAllEntrustForPage(pageMode.getPageNo(), pageMode.getPageSize(), request.getHistoryType(),
-//                request.getUserId(), request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getPortfolioId(),
-//                request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustStatus()));
-//    }
 
     public Message<PageInfo<EntrustQueryBean>> queryAllEntrustForPage(PageEntrustInfoRequest request) {
         String userId = request.getUserId();
@@ -510,6 +505,7 @@ public class EntrustManagement extends BaseService {
         return new Message<PageInfo<EntrustQueryBean>>().fail(ErrorCode.REQ_PARAMETER_ERROR.value + "", ErrorCode.REQ_PARAMETER_ERROR.errorMsg);
     }
 
+    @Deprecated
     public ResultBean queryAllEntrustForPage(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus) {
         List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
