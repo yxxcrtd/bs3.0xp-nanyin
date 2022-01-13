@@ -459,7 +459,10 @@ public class StlDataDealProcessConstant {
 	
 	// 流通类型-0
 	public static final String LTLX_0 = "0";
-	
+
+	// 流通类型-N
+	public static final String LTLX_N = "N";
+
 	// 证券变动-变动类型-00K
 	public static final String BDLX_00K = "00K";
 	

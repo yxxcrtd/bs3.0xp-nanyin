@@ -67,12 +67,20 @@ public class StlDataDealSzdZqbdProcessService {
        			stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList() != null && 
        			stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList().size() > 0) {
         		for (SzdZqbd szdZqbd : stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList()) {
-        			if (StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PG) && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLX_00K)) {
+        			if (StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PG)
+                            && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLX_00K)) {
         				pgSzdZqbdList.add(szdZqbd);
         			}
-        			else if(StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
-                            && StringUtil.equals(szdZqbd.getQylb(),StlDataDealProcessConstant.QYLB_P)
-                            && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G)){
+        			else if(
+                            (StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
+                                && StringUtil.equals(szdZqbd.getLtlx(),StlDataDealProcessConstant.LTLX_N)
+                                && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G))
+                            ||
+                            (StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
+                                && !StringUtil.equals(szdZqbd.getLtlx(),StlDataDealProcessConstant.LTLX_N)
+                                && StringUtil.equals(szdZqbd.getQylb(),StlDataDealProcessConstant.QYLB_P)
+                                && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G))
+                    ){
                         gpSsltList.add(szdZqbd);
                     }
         			else {
@@ -100,7 +108,24 @@ public class StlDataDealSzdZqbdProcessService {
            			stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList() != null && 
            			stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList().size() > 0) {
 	        	List<FinProductQuto> finProductQutoList = generatorBondFinProductQutoList(stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList(), map, stlDownDataDealOperatorDto);
-                List<FinProductQuto> circulateFinProductQutoList = generatorBondCirculateFinProductQutoList(stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList(), map, stlDownDataDealOperatorDto);
+                List<SzdZqbd> zqSsltList = new ArrayList<>();
+	        	for (SzdZqbd szdZqbd : stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList()) {
+                    if(
+                        (StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
+                            && StringUtil.equals(szdZqbd.getLtlx(),StlDataDealProcessConstant.LTLX_N)
+                            && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G)
+                        )
+                        ||
+                        (StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
+                            && !StringUtil.equals(szdZqbd.getLtlx(),StlDataDealProcessConstant.LTLX_N)
+                            && StringUtil.equals(szdZqbd.getQylb(),StlDataDealProcessConstant.QYLB_P)
+                            && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G)
+                        )
+                    ){
+                        zqSsltList.add(szdZqbd);
+                    }
+                }
+	        	List<FinProductQuto> circulateFinProductQutoList = generatorBondCirculateFinProductQutoList(stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList(), map, stlDownDataDealOperatorDto);
                 finProductQutoList.addAll(circulateFinProductQutoList);
                 stlDownDataDealWriteDto.setFinProductQutoList(finProductQutoList);
         	}
@@ -354,7 +379,14 @@ public class StlDataDealSzdZqbdProcessService {
     	}
     	return list;
     }
-    
+
+    /**
+     * 配债
+     * @param pgSzdZqbdList
+     * @param map
+     * @param stlDownDataDealOperatorDto
+     * @return
+     */
     private List<FinProductQuto> generatorBondFinProductQutoList(List<SzdZqbd> pgSzdZqbdList, 
     		Map<String, List<StlDownDataDealAccountInfoDto>> map,
     		StlDownDataDealOperatorDto stlDownDataDealOperatorDto) {
@@ -373,7 +405,13 @@ public class StlDataDealSzdZqbdProcessService {
                 continue;
             }
             String approvalNo = szdZqbd.getZqdm();
-            List<String> finprodIdList = stlDownDataDealMapper.getFinproductIdByApprovalNo(DictCodeListExt3.金融产品其他代码类型_配债代码.getValue(), approvalNo);
+            List<String> finprodIdList = new ArrayList<>();
+            List<FinProduct> finProducts = stlDownDataDealMapper.getFinproductByFinProdMarketId(szdZqbd.getZqdm() + ".SH");
+            if(CollectionUtils.isNotEmpty(finProducts) && finProducts.get(0).getFinprodType2().equals(stlDownDataDealOperatorDto.getFinprodType())){
+                finprodIdList.add(finProducts.get(0).getFinprodId());
+            }else{
+                finprodIdList = stlDownDataDealMapper.getFinproductIdByApprovalNo(DictCodeListExt3.金融产品其他代码类型_配债代码.getValue(), approvalNo);
+            }
 			if (finprodIdList != null && finprodIdList.size() > 0) {
 	            FinProductQuto finProductQuto = new FinProductQuto();
 	            finProductQuto.setSeqNo(IDGenerator.generate());
@@ -445,7 +483,13 @@ public class StlDataDealSzdZqbdProcessService {
                 continue;
             }
             String approvalNo = szdZqbd.getZqdm();
-            List<String> finprodIdList = stlDownDataDealMapper.getFinproductIdByApprovalNo(DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue(), approvalNo);
+            List<String> finprodIdList = new ArrayList<>();
+            List<FinProduct> finProducts = stlDownDataDealMapper.getFinproductByFinProdMarketId(szdZqbd.getZqdm() + ".SH");
+            if(CollectionUtils.isNotEmpty(finProducts) && finProducts.get(0).getFinprodType2().equals(stlDownDataDealOperatorDto.getFinprodType())){
+                finprodIdList.add(finProducts.get(0).getFinprodId());
+            }else{
+                finprodIdList = stlDownDataDealMapper.getFinproductIdByApprovalNo(DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue(), approvalNo);
+            }
             if (finprodIdList != null && finprodIdList.size() > 0) {
                 FinProductQuto finProductQuto = new FinProductQuto();
                 finProductQuto.setSeqNo(IDGenerator.generate());

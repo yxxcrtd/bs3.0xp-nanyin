@@ -162,4 +162,11 @@ public interface StlDownDataDealMapper {
      * @return
      */
     List<SettleTransDataPledge> selectSqSettleTransDataPledges(@Param("sqcjbh") String sqcjbh, @Param("seatNumber") String seatNumber, @Param("secAcctId") String secAcctId);
+
+    /**
+     * 根据市场代码查询标的
+     * @param finProdMarketId
+     * @return List<String>
+     */
+    List<FinProduct> getFinproductByFinProdMarketId(@Param("finProdMarketId") String finProdMarketId);
 }
