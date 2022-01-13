@@ -606,7 +606,7 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
         // 本方资金账户
         stlPayOrders.setMyAcctNo(dealDto.getAcctNo());
         // 结算金额
-        stlPayOrders.setSettleAmt(trdProductDeal.getTradeAmt());
+        stlPayOrders.setSettleAmt(null != trdProductDeal.getTradeAmt() ? trdProductDeal.getTradeAmt() : BigDecimal.ZERO);
         // 币种
         stlPayOrders.setCcy(trdProductDeal.getCcy());
         // 是否需要发送
