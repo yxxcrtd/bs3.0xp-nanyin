@@ -680,7 +680,7 @@ public class PortfolioManager extends BaseService {
             if (EntrustUtils.isBond(context.getInstruction())) {
                 realVolume = getEntrustVolume(totalLeftVolume, bean.getEntrustVolume(), context.getLeftVolume(), 1);
             } else if (EntrustUtils.isPledgeRepurchase(context.getInstruction())) {
-                if (Market.SZSE.value.equals(context.getInstruction().getTradeMarket())) {
+                if (Market.SZSE.investValue.equals(context.getInstruction().getTradeMarket())) {
                     realVolume = getEntrustVolume(totalLeftVolume, bean.getEntrustVolume(), context.getLeftVolume(), 1);
                 } else {
                     realVolume = getEntrustVolume(totalLeftVolume, bean.getEntrustVolume(), context.getLeftVolume(), 3);
@@ -766,7 +766,7 @@ public class PortfolioManager extends BaseService {
                 if (EntrustUtils.isBond(copyInstruction)) {
                     realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 1);
                 } else if (EntrustUtils.isPledgeRepurchase(copyInstruction)) {
-                    if (Market.SZSE.value.equals(copyInstruction.getTradeMarket())) {
+                    if (Market.SZSE.investValue.equals(copyInstruction.getTradeMarket())) {
                         realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 1);
                     } else {
                         realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 3);
@@ -801,10 +801,10 @@ public class PortfolioManager extends BaseService {
      * 配置参数
      */
     private void handleFields(PortfolioAllocationResponse result, Instruction ins) {
-        // 借用termDays存放委托数量leftAmt
+        // 借用termDays存放委托数量
         ins.setTermDays(ins.getConNum());
         // 借用minAmt存放委托金额
-        ins.setMinAmt(ArithmeticUtil.multiply(BigDecimal.valueOf(ins.getEntrustNum()), result.getPrice()));
+        ins.setMinAmt(ArithmeticUtil.multiply(ins.getConNum(), result.getPrice()));
         if (EntrustUtils.isVolume(ins)) {
             // 借用mIntAmt存放剩余总数量
             BigDecimal leftNum = BigDecimal.valueOf(ins.getEntrustNum() - ins.getEntrustLeftAmt().longValue() - ins.getFrozenQuantity().longValue());
