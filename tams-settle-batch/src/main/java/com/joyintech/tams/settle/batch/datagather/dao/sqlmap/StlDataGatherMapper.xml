@@ -349,11 +349,6 @@
 			<if test="dqPs!= null">
 				AND std.PS = #{dqPs,jdbcType=VARCHAR}
 			</if>
-			<if test="busiSceneCalssList != null and busiSceneCalssList.size() > 0">
-				<foreach collection="busiSceneCalssList" item="busiSceneCalss" open="AND std.BUSI_SCENE_CALSS IN (" close=")" separator=",">
-					#{busiSceneCalss,jdbcType=VARCHAR}
-				</foreach>
-			</if>
 			<if test="finprodIdList != null and finprodIdList.size() > 0">
 				<foreach collection="finprodIdList" item="finprodId" open="AND std.FINPROD_ID IN (" close=")" separator=",">
 					#{finprodId,jdbcType=VARCHAR}
@@ -375,12 +370,6 @@
 			<if test="finprodTypes != null and finprodTypes.size() > 0">
 				<foreach collection="finprodTypes" item="finprodType" open="AND std.FINPROD_TYPE2 IN (" close=")" separator=",">
 					#{finprodType,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-			<!--ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 add start-->
-			<if test="busiSceneCalssList != null and busiSceneCalssList.size() > 0">
-				<foreach collection="busiSceneCalssList" item="busiSceneCalss" open="AND std.BUSI_SCENE_CALSS IN (" close=")" separator=",">
-					#{busiSceneCalss,jdbcType=VARCHAR}
 				</foreach>
 			</if>
 		</where>
