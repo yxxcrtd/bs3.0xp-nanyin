@@ -17,7 +17,6 @@ import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.microservice.ServiceApplication;
 import com.joyintech.tams.exchange.common.microservice.TradeServiceURL;
 import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
-import com.joyintech.tams.exchange.common.request.PageMode;
 import com.joyintech.tams.exchange.common.utils.EntrustUtils;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.datacommon.db.service.*;
@@ -301,8 +300,7 @@ public class EntrustManagement extends BaseService {
         }
         // 公平委托且还处于待复核或待审批状态时，不进行撤审
         if (isFairEntrust(entrust)) {
-            if (entrust.getEntrustStatus() == EntrustStatus.PENDING_APPROVAL.value
-                    || entrust.getEntrustStatus() == EntrustStatus.PENDING_REVIEW.value) {
+            if (entrust.getEntrustStatus() == EntrustStatus.PENDING_APPROVAL.value || entrust.getEntrustStatus() == EntrustStatus.PENDING_REVIEW.value) {
                 logger.info("公平委托且处在流程中，不允许发起撤销审批");
                 return false;
             }
@@ -386,8 +384,7 @@ public class EntrustManagement extends BaseService {
     }
 
     public ResultBean queryEnable(EnableQryBean enableQryBean) {
-        int maxEntrustVolume = terminalHelper.queryEnable(enableQryBean.getStockCode(), enableQryBean.getEntrustProp(),
-                enableQryBean.getEntrustBs(), enableQryBean.getEntrustPrice(), enableQryBean.getAccountId());
+        int maxEntrustVolume = terminalHelper.queryEnable(enableQryBean.getStockCode(), enableQryBean.getEntrustProp(), enableQryBean.getEntrustBs(), enableQryBean.getEntrustPrice(), enableQryBean.getAccountId());
         return new ResultBean(ErrorCode.SUCCESS, maxEntrustVolume);
     }
 
@@ -432,10 +429,32 @@ public class EntrustManagement extends BaseService {
         }
     }
 
-    public Message<PageInfo<Object>> queryIntegratedEntrustForPage(PageEntrustInfoRequest request) {
-        return new Message<>(queryIntegratedEntrustForPage(request.getPageNum(), request.getPageSize(), request.getHistoryType(),
-                request.getUserId(), request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getPortfolioId(),
-                request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustStatus()));
+//    public Message<PageInfo<Object>> queryIntegratedEntrustForPage(PageEntrustInfoRequest request) {
+//        return new Message<>(queryIntegratedEntrustForPage(request.getPageNum(), request.getPageSize(), request.getHistoryType(), request.getUserId(), request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getPortfolioId(), request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustStatus()));
+//    }
+
+    public Message<PageInfo<EntrustQueryBean>> queryIntegratedEntrustForPage(PageEntrustInfoRequest request) {
+        String userId = request.getUserId();
+        String portfolioId = request.getPortfolioId();
+        //组合权限查询
+        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
+        if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
+            logger.info("用户：{}没有组合权限", userId);
+            return new Message<PageInfo<EntrustQueryBean>>(new PageInfo());
+        }
+        if (!Strings.isNullOrEmpty(portfolioId) && !ptlAuthList.contains(portfolioId)) {
+            logger.info("用户：{}没有{}的组合权限", userId, portfolioId);
+            return new Message<PageInfo<EntrustQueryBean>>(new PageInfo());
+        }
+        Integer historyType = request.getHistoryType();
+        if (historyType == PresentOrHistoryQryType.PRESENT.value) {
+            PageInfo<EntrustQueryBean> entrustForPage = integratedEntrustService.queryAllForPage(request, ptlAuthList);
+            return new Message<PageInfo<EntrustQueryBean>>(entrustForPage);
+        } else if (historyType == PresentOrHistoryQryType.HISTORY.value) {
+            PageInfo<EntrustQueryBean> entrustHistoryForPage = integratedEntrustHistoryService.queryAllForPage(request, ptlAuthList);
+            return new Message<PageInfo<EntrustQueryBean>>(entrustHistoryForPage);
+        }
+        return new Message<PageInfo<EntrustQueryBean>>().fail(ErrorCode.REQ_PARAMETER_ERROR.value + "", ErrorCode.REQ_PARAMETER_ERROR.errorMsg);
     }
 
     public ResultBean queryIntegratedEntrustForPage(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus) {
@@ -459,11 +478,36 @@ public class EntrustManagement extends BaseService {
         }
     }
 
-    public Message<PageInfo<Object>> queryAllEntrustForPage(PageEntrustInfoRequest request) {
-        PageMode pageMode = request.getPageMode();
-        return new Message<>(queryAllEntrustForPage(pageMode.getPageNo(), pageMode.getPageSize(), request.getHistoryType(),
-                request.getUserId(), request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getPortfolioId(),
-                request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustStatus()));
+//    public Message<PageInfo<Object>> queryAllEntrustForPage(PageEntrustInfoRequest request) {
+//        PageMode pageMode = request.getPageMode();
+//        return new Message<>(queryAllEntrustForPage(pageMode.getPageNo(), pageMode.getPageSize(), request.getHistoryType(),
+//                request.getUserId(), request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getPortfolioId(),
+//                request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustStatus()));
+//    }
+
+    public Message<PageInfo<EntrustQueryBean>> queryAllEntrustForPage(PageEntrustInfoRequest request) {
+        String userId = request.getUserId();
+        String portfolioId = request.getPortfolioId();
+        //组合权限查询
+        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
+        if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
+            logger.info("用户：{}没有组合权限", userId);
+            return new Message<PageInfo<EntrustQueryBean>>(new PageInfo());
+        }
+        if (!Strings.isNullOrEmpty(portfolioId) && !ptlAuthList.contains(portfolioId)) {
+            logger.info("用户：{}没有{}的组合权限", userId, portfolioId);
+            return new Message<PageInfo<EntrustQueryBean>>(new PageInfo());
+        }
+        Integer historyType = request.getHistoryType();
+        if (historyType == PresentOrHistoryQryType.PRESENT.value) {
+            PageInfo<EntrustQueryBean> entrustForPage = integratedEntrustService.queryAllEntrustForPage(request, ptlAuthList);
+            return new Message<PageInfo<EntrustQueryBean>>(entrustForPage);
+        } else if (historyType == PresentOrHistoryQryType.HISTORY.value) {
+            PageInfo<EntrustQueryBean> entrustHistoryForPage = integratedEntrustHistoryService.queryAllEntrustForPage(request, ptlAuthList);
+            return new Message<PageInfo<EntrustQueryBean>>(entrustHistoryForPage);
+        }
+
+        return new Message<PageInfo<EntrustQueryBean>>().fail(ErrorCode.REQ_PARAMETER_ERROR.value + "", ErrorCode.REQ_PARAMETER_ERROR.errorMsg);
     }
 
     public ResultBean queryAllEntrustForPage(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus) {

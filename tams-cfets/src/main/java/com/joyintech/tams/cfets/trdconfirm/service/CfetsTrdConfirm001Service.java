@@ -539,7 +539,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
                 }else{
                     //不存在对应的成交匹配数据，插入下行成交匹配表
                     entity.getCfetsTrdConfirmMatchDto().setSeqno(IDGenerator.generate());
-                    entity.getCfetsTrdConfirmMatchDto().setCreateUser(SecurityUtil.getLoginUser().getUserName());
+                    entity.getCfetsTrdConfirmMatchDto().setCreateUser(null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"SYSTEM");
                     entity.getCfetsTrdConfirmMatchDto().setCreateDept(CommonUtil.getDeptCode());
                     cfetsTrdConfirmMapper.insertTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
                 }
@@ -1206,7 +1206,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
         closeItem.setBusiAct(DictCodeListExt3.业务动作_指令自动完成.getValue());
         etrList.add(closeItem);
         req.setData(etrList);
-        req.setUserId(SecurityUtil.getLoginUser().getUserName());
+        req.setUserId(null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"SYSTEM");
         req.setTotalTradeId(IDGenerator.generate());
         req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
         PositionHttpRequest.batchClose(req);
@@ -1222,7 +1222,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
         closeItem.setBusiAct(DictCodeListExt3.业务动作_指令自动完成.getValue());
         etrList.add(closeItem);
         req.setData(etrList);
-        req.setUserId(SecurityUtil.getLoginUser().getUserName());
+        req.setUserId(null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"SYSTEM");
         req.setTotalTradeId(IDGenerator.generate());
         req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
         PositionHttpRequest.batchClose(req);
@@ -1654,7 +1654,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
         //调用头寸
         CfetsEtrIbRepoPositionRequest req = new CfetsEtrIbRepoPositionRequest();
         req.setInterfaceType("REPO001");
-        req.setUserId(SecurityUtil.getLoginUser().getUserName());
+        req.setUserId(null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"SYSTEM");
         req.setTotalTradeId(entity.getTotleTradeId());
         req.setWorkFlowId(null);
         req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());

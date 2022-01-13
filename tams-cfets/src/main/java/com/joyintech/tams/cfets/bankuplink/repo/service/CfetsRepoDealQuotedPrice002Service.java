@@ -641,7 +641,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         if (!StringUtil.isNotEmpty(entity.getMySideTrader())) {
             errorList.add(new ValidMessage("请输入本方交易员"));
         }
-        if (!StringUtil.isNotEmpty(entity.getCounterId())) {
+        if (!StringUtil.isNotEmpty(entity.getCounterPartyId())) {
             errorList.add(new ValidMessage("请输入对手方"));
         }
         if (StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"), "01")

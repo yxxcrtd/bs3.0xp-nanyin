@@ -687,7 +687,7 @@ public class CfetsTrdQueryIbuInfoListResponse {
     }
 
     public String getDistriTypeStr() {
-        return distriTypeStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.分配方式, this.getDistriType());
     }
 
     public void setDistriTypeStr(String distriTypeStr) {

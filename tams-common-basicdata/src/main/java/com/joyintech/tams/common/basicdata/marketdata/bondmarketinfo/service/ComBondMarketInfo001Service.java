@@ -311,6 +311,9 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
             if (StringUtil.isNotEmpty(list.get(14))&&CommonUtil.isFloatNumeric(list.get(14))) {
                 ComBondMarketInfo001Dto.setMinPriceFull(new BigDecimal(list.get(14).trim()));
             }
+            if (StringUtil.isNotEmpty(list.get(15))&&CommonUtil.isFloatNumeric(list.get(15))) {
+                ComBondMarketInfo001Dto.setMarketAmt(new BigDecimal(list.get(15).trim()));
+            }
             // Date date = new Date();
             ComBondMarketInfo001Dto.setCreateUser(CommonUtil.getUserName());
             ComBondMarketInfo001Dto.setCreateDept(CommonUtil.getDeptCode());
@@ -333,8 +336,8 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
      */
     private List<ExcelValidDto> checkExcelCow(int i, List<String> list) {
         List<ExcelValidDto> excelValidDtolist = new ArrayList<ExcelValidDto>();
-        // 列数为15
-        if (null == list || list.size() != 15) {
+        // 列数为16
+        if (null == list || list.size() != 16) {
             ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i), "数据列数错误");
             excelValidDtolist.add(dto);
         }
@@ -500,6 +503,16 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
         }else{
             if(!CommonUtil.isFloatNumeric(list.get(14))){
                 ExcelValidDto dto = new ExcelValidDto(list.get(14), String.valueOf(i+2), "最低价全价不为数字");
+                excelValidDtolist.add(dto);
+            }
+        }
+        if (StringUtil.isEmpty(list.get(15))) {
+            // 验证导入债券市场余额是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(15), String.valueOf(i+2), "债券市场余额为空");
+            excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(15))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(15), String.valueOf(i+2), "债券市场余额不为数字");
                 excelValidDtolist.add(dto);
             }
         }

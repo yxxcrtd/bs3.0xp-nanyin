@@ -1,7 +1,9 @@
 package com.joyintech.tams.exchange.datacommon.db.service;
 
 import com.github.pagehelper.PageInfo;
+import com.joyintech.tams.exchange.common.bean.EntrustQueryBean;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
+import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
 import com.joyintech.tams.exchange.datacommon.cache.AsyncService;
 
 import java.util.List;
@@ -20,7 +22,10 @@ public interface IntegratedEntrustService extends AsyncService<String, Integrate
 
     IntegratedEntrust queryIntegratedEntrustByLocalEntrustIdAndAccount(String localEntrustId, String accountId);
 
+    @Deprecated
     PageInfo<IntegratedEntrust> queryAllForPage(int pageNum, int pageSize, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus, List<String> ptlAuthList);
+
+    PageInfo<EntrustQueryBean> queryAllForPage(PageEntrustInfoRequest request, List<String> ptlAuthList);
 
     /**
      * 查询 普通委托 和 综合业务委托 总和
@@ -36,7 +41,17 @@ public interface IntegratedEntrustService extends AsyncService<String, Integrate
      * @param entrustStatus
      * @return
      */
+    @Deprecated
     PageInfo<IntegratedEntrust> queryAllEntrustForPage(int pageNum, int pageSize, String userId, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus, List<String> ptlAuthList);
+
+    /**
+     * 查询 普通委托 和 综合业务委托 总和
+     *
+     * @param request
+     * @param ptlAuthList
+     * @return
+     */
+    PageInfo<EntrustQueryBean> queryAllEntrustForPage(PageEntrustInfoRequest request, List<String> ptlAuthList);
 
     String genDbId();
 

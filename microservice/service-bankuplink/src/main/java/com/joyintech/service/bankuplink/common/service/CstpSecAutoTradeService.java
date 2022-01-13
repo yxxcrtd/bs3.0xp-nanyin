@@ -292,7 +292,7 @@ public class CstpSecAutoTradeService extends BaseService<TrdBondInvestTradeDto> 
 				logger.info(msg);
 			}
 		} else {
-			String msg = "无报价的指令代码或债券代码不存在！";
+			String msg = "无债券代码不存在！";
 			resultBaseDto.setErrMsg(msg);
 			logger.info(msg);
 		}

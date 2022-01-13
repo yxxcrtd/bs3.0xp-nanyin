@@ -3,11 +3,16 @@ package com.joyintech.tams.exchange.datacommon.db.service;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
+import com.joyintech.tams.exchange.common.bean.TradeQueryBean;
 import com.joyintech.tams.exchange.common.db.domain.Trade;
+import com.joyintech.tams.exchange.common.request.PageTradeInfoRequest;
 import com.joyintech.tams.exchange.datacommon.cache.AsyncService;
 
 public interface TradeService extends AsyncService<String, Trade> {
+    @Deprecated
     List<Trade> queryTradeByEntrust(String entrustId);
+
+    List<TradeQueryBean> queryTradeByEntrustId(String entrustId);
 
     List<Trade> queryTradeByOrder(String orderId);
 
@@ -19,7 +24,10 @@ public interface TradeService extends AsyncService<String, Trade> {
 
     String genDBId();
 
+    @Deprecated
     PageInfo<Trade> queryAllForPage(int pageNum, int pageSize, String userId, String accountId, String market, String stockCode, String entrustProp, List<String> ptlAuthList);
+
+    PageInfo<TradeQueryBean> queryAllForPage(PageTradeInfoRequest request, List<String> ptlAuthList);
 
     void clearSet(String date);
 

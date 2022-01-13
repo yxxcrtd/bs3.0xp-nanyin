@@ -78,13 +78,11 @@
         group by regdeal.totle_trade_id
         )deal
         on reg.totle_trade_id=deal.totle_trade_id
-        left join trdquto_match_info match
-        on reg.totle_trade_id=match.pre_trade_id
         left join stl_sec_acct_info stlinfo  on reg.sec_manage_acct_id=stlinfo.sec_acct_id
         left join MST_COUNTER_PARTY t1 on t1.counter_id=reg.counter_id
         left join sys_user t3 on t3.user_name=reg.ou_trader_id
         where reg.trade_date= #{sysDate,jdbcType=DATE} and reg.trade_status='01' and reg.is_cancel='N'
-        and (match.trd_conf_status is null or match.trd_conf_status ='0')
+        AND NOT EXISTS (SELECT 1 FROM trdquto_match_info match where reg.totle_trade_id=match.pre_trade_id)
         and reg.ps in ('T01','T02','03','04')
         <if test="userId != null and userId != ''">
             and reg.ou_trader_id= #{userId}
@@ -284,8 +282,6 @@
         </if>
         group by ir.quote_id)deal
         on ib.quote_id=deal.quote_id
-        left join trdquto_match_info match
-        on ib.quote_id=match.pre_trade_id
         left join stl_sec_acct_info stlinfo
         on ib.sec_manage_acct_id=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ibd.cp_party_id= mcci.party_id
@@ -296,7 +292,7 @@
 
         where ib.quote_date= #{sysDate,jdbcType=DATE}
         and ib.trade_status='07'
-        and (match.trd_conf_status is null or match.trd_conf_status ='0')
+        AND NOT EXISTS (SELECT 1 FROM trdquto_match_info match where ib.quote_id=match.pre_trade_id)
         <if test="userId != null and userId != ''">
             and t3.user_name= #{userId}
         </if>
@@ -401,8 +397,6 @@
         </if>
         group by ir.quote_id)deal
         on ic.quote_id=deal.quote_id
-        left join trdquto_match_info match
-        on ic.quote_id=match.pre_trade_id
         left join stl_sec_acct_info stlinfo
         on ic.sec_manage_acct_id=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ic.cp_party_id= mcci.party_id
@@ -411,7 +405,7 @@
         left join sys_user_add sua on  sua.ibu_trader=ic.ou_trader_id
         left join sys_user t3 on t3.user_id=sua.user_id
         where ic.quote_date= #{sysDate,jdbcType=DATE} and ic.TRADE_STATUS='07'
-        and (match.trd_conf_status is null or match.trd_conf_status ='0')
+        AND NOT EXISTS (SELECT 1 FROM trdquto_match_info match where ic.quote_id=match.pre_trade_id)
         <if test="userId != null and userId != ''">
             and t3.user_name= #{userId}
         </if>
@@ -642,7 +636,13 @@
         left join sys_user_add sua on  sua.ibu_trader=ic.OU_TRADER_ID
         left join sys_user t3 on t3.user_id=sua.user_id
 
-        where  ic.QUOTE_ID= #{totleTradeId,jdbcType=VARCHAR} and  ic.trade_status='07'
+        where  rownum=1 and ic.trade_status='07'
+        <if test="quoteId != null  and quoteId!=''">
+            and ic.QUOTE_ID= #{quoteId,jdbcType=VARCHAR}
+        </if>
+        <if test="cfetsQuoteId != null  and cfetsQuoteId!=''">
+            AND ic.cfets_quote_id= #{cfetsQuoteId,jdbcType=VARCHAR}
+        </if>
     </select>
 
     <select id="findAllRegFeeInfoList" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegFeeInfoDto">
@@ -863,7 +863,7 @@
         I.LASTQTY/10000 as lastqty,
         decode(I.BUSINESSTYPE, 'BOND', I.yield2*100, 'REPO', I.PRICE*100) tradeYield,
         I.TRADELIMITDAYS termDays,
-        I.SETTLCURRAMT as tradeAmt,
+        decode(I.BUSINESSTYPE, 'BOND', I.SETTLCURRAMT, 'REPO', DECODE(I.MARKETINDICATOR, 9, I.TRADECASHAMT, 10, I.SETTLCURRAMT))  as tradeAmt,
         QUOTE.QUOTEID as quoteid,
         I.ourinstitutioncode as traderid,
         mccit.PARTY_ABBR as traderidName,
@@ -1063,7 +1063,7 @@
         case when reg.finprod_type2='F01' then reg.face_value/10000 end as printAmt,
         decode(reg.finprod_type2,'F01',reg.yield,reg.rate)*100 as tradeYield,
         reg.repo_term as termDays,
-        decode(reg.finprod_type2,'F01',reg.fprice_amt,tr.vdealamt) as tradeAmt,
+        decode(reg.finprod_type2,'F01',reg.fprice_amt,tr.repoamt) as tradeAmt,
         reg.trade_date as tradeDate,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
@@ -1188,7 +1188,7 @@
         decode(ct.BUSINESSTYPE,'BOND',ib.share_amt/100,null) as printAmt,
         decode(ct.BUSINESSTYPE,'BOND',ib.yield,ic.rate)*100 as tradeYield,
         decode(ct.BUSINESSTYPE,'REPO',ic.term,null) as termDays,
-        decode(ct.BUSINESSTYPE,'BOND',ib.fprice_amt,tr.vdealamt) as tradeAmt,
+        decode(ct.BUSINESSTYPE,'BOND',ib.fprice_amt,tr.repoamt) as tradeAmt,
         nvl(ib.quote_date,ic.quote_date) as tradeDate,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
@@ -1469,7 +1469,7 @@
         reg.v_settle_date as vsettleDate,
         reg.m_settle_date as msettleDate,
         reg.act_repo_term as actRepoTerm,
-        reg.rate as tradeYield,
+        reg.rate*100 as tradeYield,
         reg.trade_amt as tradeAmt,
         reg.int_amt as intAmt,
         reg.m_trade_amt as mtradeAmt,
@@ -1482,8 +1482,8 @@
         reg.m_delivery_type as mdeliveryType,
         reg.ccy as ccy,
         reg.counter_id as counterId,
-        mccic.PARTY_ABBR as counterIdName,
-        reg.counter_trader as counterTrader,
+        t1.counter_name as counterIdName,
+        nvl(t4.TRADER_NAME, reg.counter_trader) as counterTrader,
         reg.remark as remark
         from reg_fin_product_deal_total reg
         left join fin_product fp
@@ -1505,7 +1505,8 @@
         on reg.totle_trade_id=deal.totle_trade_id
         left join stl_sec_acct_info stlinfo
         on reg.sec_manage_acct_id=stlinfo.sec_acct_id
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON reg.counter_id= mccic.party_id
+        LEFT JOIN  MST_COUNTER_PARTY t1 ON t1.counter_id=reg.counter_id
+        left join MST_CFETS_CUSTOMER_TRADER t4 on t4.TRADER_ID=reg.counter_trader
         where reg.totle_trade_id=#{busiCode} and reg.finprod_type2 in ('F02','F03')
 
         union all
@@ -1522,12 +1523,12 @@
         ic.v_settle_date as vsettleDate,
         ic.m_settle_date as msettleDate,
         ic.term as actRepoTerm,
-        ic.rate as tradeYield,
+        ic.rate*100 as tradeYield,
         ic.fprice_amt as tradeAmt,
         ic.m_int_amt as intAmt,
         ic.m_trade_amt as mtradeAmt,
-        null as trdFeeAmt,
-        null as settleFeeAmt,
+        ic.DEAL_FEE_AMT as trdFeeAmt,
+        ic.SETT_FEE_AMT as settleFeeAmt,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         ic.sett_type as clearType,
@@ -1536,7 +1537,7 @@
         ic.ccy as ccy,
         ic.cp_party_id as counterId,
         mccic.PARTY_ABBR as counterIdName,
-        ic.cp_trader_id as counterTrader,
+        t4.TRADER_NAME as counterTrader,
         ic.remark as remark
         from  ibu_quote_crep ic
         left join(
@@ -1548,8 +1549,9 @@
         group by ir.quote_id)deal
         on ic.quote_id=deal.quote_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ic.cp_party_id= mccic.party_id
-        left join stl_sec_acct_info stlinfo
-        on ic.sec_manage_acct_id=stlinfo.sec_acct_id
+        left join stl_sec_acct_info stlinfo on ic.sec_manage_acct_id=stlinfo.sec_acct_id
+        left join MST_CFETS_CUSTOMER_TRADER t4 on t4.TRADER_ID= ic.cp_trader_id
+
         where ic.quote_id=#{busiCode}  and ic.TRADE_STATUS='07'
         )
         <!--前端传入排序字段-->
@@ -1628,15 +1630,15 @@
         to_date(I.Settldate,'yyyy-MM-dd') as vsettleDate,
         to_date(I.Settldate2,'yyyy-MM-dd') as msettleDate,
         I.Cashholdingdays as actRepoTerm,
-        I.Price as tradeYield,
-        I.Tradecashamt as tradeAmt,
+        I.Price*100 as tradeYield,
+        DECODE(I.MARKETINDICATOR, 9, I.TRADECASHAMT, 10, I.SETTLCURRAMT) as tradeAmt,
         I.Accruedinteresttotalamt as mintAmt,
         I.Settlcurramt2 as mtradeAmt,
         tr.deal_feeamt as trdFeeAmt,
         tr.sett_feeamt as settleFeeAmt,
         decode(I.Clearingmethod,'13','01','6','02') as clearType,
         decode(I.Deliverytype,'0','03','5','02','4','01') as deliveryType,
-        I.Deliverytype2 as mdeliveryType,
+        decode(I.Deliverytype2,'0','03','5','02','4','01') as mdeliveryType,
         I.Settlcurrency  as settCcy,
         I.Quoteid as quoteid,
         I.ourinstitutioncode as traderid,
@@ -1765,7 +1767,12 @@
         reg.delivery_type as deliveryType,
         reg.finprod_type2  as finprodType2,
         fp.finprod_market_id as finprodMarketId,
-        reg.totle_trade_id as totleTradeId
+        reg.totle_trade_id as totleTradeId,
+        reg.trade_Amt as tradeAmt,
+        reg.repo_term as termDays,
+        reg.rate as rate,
+        reg.v_settle_date as vsettleDate,
+        reg.m_settle_date as msettleDate
         from reg_fin_product_deal_total reg
         left join fin_product fp
         on reg.finprod_id=fp.finprod_id
@@ -1792,13 +1799,11 @@
         <if test="secManageAcctId != null and secManageAcctId != ''">
             and reg.sec_manage_acct_id = #{secManageAcctId,jdbcType=VARCHAR}
         </if>
-        <if test="tradeYield != null and tradeYield != ''">
-            and (to_char(reg.yield,'FM990.999999')=#{tradeYield,jdbcType=VARCHAR}
-            or to_char(reg.yield)=#{tradeYield,jdbcType=VARCHAR})
+        <if test="tradeYield != null">
+            and reg.yield=#{tradeYield}
         </if>
-        <if test="faceValue != null and faceValue != ''">
-            and (to_char(reg.face_value,'FM999999999999999999990.999999')=#{faceValue,jdbcType=VARCHAR}
-            or to_char(reg.face_value)=#{faceValue,jdbcType=VARCHAR})
+        <if test="faceValue != null">
+            and reg.face_value=#{faceValue}
         </if>
         <if test="settleDate != null and settleDate != ''">
             and to_char(reg.settle_date,'yyyy-MM-dd') = #{settleDate,jdbcType=VARCHAR}
@@ -1806,17 +1811,33 @@
         <if test="deliveryType != null and deliveryType != ''">
             and reg.delivery_type = #{deliveryType,jdbcType=VARCHAR}
         </if>
+        <if test="termDays != null">
+            and reg.repo_term = #{termDays}
+        </if>
+        <if test="rate != null">
+            and reg.rate=#{rate}
+        </if>
+        <if test="vsettleDate != null and vsettleDate != ''">
+            and to_char(reg.v_settle_date,'yyyyMMdd') = #{vsettleDate,jdbcType=VARCHAR}
+        </if>
+        <if test="msettleDate != null and msettleDate != ''">
+            and to_char(reg.m_settle_date,'yyyyMMdd') = #{msettleDate,jdbcType=VARCHAR}
+        </if>
+        <if test="tradeAmt != null">
+            and reg.trade_Amt=#{tradeAmt,jdbcType=VARCHAR}
+        </if>
+
     </select>
     <!-- 查询所有登记或报价回购的质押券信息 -->
     <select id="findAllRegAndIbuPledgesList"
             resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegInfoListResponse">
+        select * from (
         select
         ic.pledge_finprod_id as pledgeFinprodId,
         ic.pledge_ratio as pledgeRatio,
         ic.pledge_number*100 as pledgeFaceValue
         from ibu_quote_crep_pledge ic
         where ic.quote_id=#{busiCode,jdbcType=VARCHAR}
-        order by  ic.pledge_finprod_id
         union
         select
         reg.pledge_finprod_id as pledgeFinprodId,
@@ -1826,8 +1847,8 @@
         inner join reg_fin_product_deal deal
         on reg.trade_id=deal.trade_id
         where deal.totle_trade_id=#{busiCode,jdbcType=VARCHAR}
-        group by reg.pledge_finprod_id,reg.pledge_ratio
-        order by  reg.pledge_finprod_id
+        group by reg.pledge_finprod_id,reg.pledge_ratio)
+        order by pledgeFinprodId
 
     </select>
     <!-- 查询所有下行的质押券信息 -->
@@ -1837,9 +1858,11 @@
         fprepo.finprod_id as pledgeFinprodId,
         itr.CONVRATE as pledgeRatio,
         itr.FACETOTALAMT as pledgeFaceValue
-        from INTERF_TRAD_REPOASST itr
-        inner join fin_product fprepo
-        on itr.SECID=fprepo.finprod_market_id
+        from interf_opics_trad_repo repo
+        inner join INTERF_TRAD_REPOASST itr
+        on repo.oritradeid=itr.tradeid
+        inner  join fin_product fprepo
+        on fprepo.finprod_market_id= itr.SECID|| '.' || repo.MARKET
         and fprepo.finprod_type='F01'
         where itr.tradeid=#{execid,jdbcType=VARCHAR}
         order by fprepo.finprod_id

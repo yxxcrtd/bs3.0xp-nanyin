@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
 import com.joyintech.tams.exchange.common.bean.HistoryTrade;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
+import com.joyintech.tams.exchange.common.bean.TradeQueryBean;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
 import com.joyintech.tams.exchange.common.constant.PresentOrHistoryQryType;
@@ -163,9 +164,40 @@ public class TradeManagement {
         return new ResultBean(ErrorCode.SUCCESS, historyTrade);
     }
 
-    public Message<PageInfo<Object>> queryAllForPage(PageTradeInfoRequest request) {
-        PageMode pageMode = request.getPageMode();
-        return new Message<>(queryAllForPage(pageMode.getPageNo(), pageMode.getPageSize(), request.getHistoryType(), request.getUserId(), request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustId()));
+//    public Message<PageInfo<Object>> queryAllForPage(PageTradeInfoRequest request) {
+//        PageMode pageMode = request.getPageMode();
+//        return new Message<>(queryAllForPage(pageMode.getPageNo(), pageMode.getPageSize(), request.getHistoryType(), request.getUserId(), request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustId()));
+//    }
+
+    public Message<PageInfo<TradeQueryBean>> queryAllForPage(PageTradeInfoRequest request) {
+        String userId = request.getUserId();
+        String entrustId = request.getEntrustId();
+        Integer historyType = request.getHistoryType();
+        //组合权限查询
+        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
+        if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
+            if (!Strings.isNullOrEmpty(entrustId)) {
+                return new Message<PageInfo<TradeQueryBean>>(new PageInfo());
+            }
+            return new Message<PageInfo<TradeQueryBean>>(new PageInfo());
+        }
+
+        if (historyType == PresentOrHistoryQryType.PRESENT.value) {
+            if (!Strings.isNullOrEmpty(entrustId)) {
+                List<TradeQueryBean> tradeList = tradeService.queryTradeByEntrustId(entrustId);
+                tradeList = tradeList.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+                return new Message<PageInfo<TradeQueryBean>>(new PageInfo<TradeQueryBean>(tradeList));
+            }
+            return new Message<PageInfo<TradeQueryBean>>(tradeService.queryAllForPage(request, ptlAuthList));
+        } else if (historyType == PresentOrHistoryQryType.HISTORY.value) {
+            if (!Strings.isNullOrEmpty(entrustId)) {
+                List<TradeQueryBean> tradeList = tradeHistoryService.queryTradeHistoryByEntrustId(entrustId);
+                tradeList = tradeList.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+                return new Message<PageInfo<TradeQueryBean>>(new PageInfo<TradeQueryBean>(tradeList));
+            }
+            return new Message<PageInfo<TradeQueryBean>>(tradeHistoryService.queryAllForPage(request, ptlAuthList));
+        }
+        return new Message<PageInfo<TradeQueryBean>>().fail(ErrorCode.REQ_PARAMETER_ERROR.value + "", ErrorCode.REQ_PARAMETER_ERROR.errorMsg);
     }
 
     public ResultBean queryAllForPage(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String market, String stockCode, String entrustProp, String entrustId) {

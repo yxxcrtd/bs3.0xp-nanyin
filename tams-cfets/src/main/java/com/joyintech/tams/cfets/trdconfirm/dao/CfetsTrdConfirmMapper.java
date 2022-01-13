@@ -46,7 +46,7 @@ public interface CfetsTrdConfirmMapper {
      * @param pageParam
      * @return
      */
-    CfetsTrdConfirmRegInfoListResponse selectRepoIbuInfoByKey(String totleTradeId);
+    CfetsTrdConfirmRegInfoListResponse selectRepoIbuInfoByKey(Map<String, Object> pageParam);
     /**
      * 查询所有登记费用信息
      * @param pageParam

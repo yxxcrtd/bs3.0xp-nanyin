@@ -2,10 +2,7 @@ package com.joyintech.tams.exchange.service.trade.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.joyintech.tams.exchange.common.ResponseResultBody;
-import com.joyintech.tams.exchange.common.bean.EnableQryBean;
-import com.joyintech.tams.exchange.common.bean.OrderAndEntrustQryResult;
-import com.joyintech.tams.exchange.common.bean.ResultBean;
-import com.joyintech.tams.exchange.common.bean.RevokeDto;
+import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.constant.EntrustBsProp;
 import com.joyintech.tams.exchange.common.db.domain.EntrustInterface;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
@@ -148,13 +145,13 @@ public class EntrustController {
 
     @ApiOperation(value = "查询分页委托信息", notes = "查询分页委托信息")
     @PostMapping(value = "/entrust/page")
-    public Message<PageInfo<Object>> queryAllEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
+    public Message<PageInfo<EntrustQueryBean>> queryAllEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
         return entrustManagement.queryAllEntrustForPage(request);
     }
 
     @ApiOperation(value = "查询分页综合业务委托信息", notes = "查询分页综合业务委托信息")
     @PostMapping(value = "/entrust/integrated/page")
-    public Message<PageInfo<Object>> queryIntegratedEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
+    public Message<PageInfo<EntrustQueryBean>> queryIntegratedEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
         return entrustManagement.queryIntegratedEntrustForPage(request);
     }
 

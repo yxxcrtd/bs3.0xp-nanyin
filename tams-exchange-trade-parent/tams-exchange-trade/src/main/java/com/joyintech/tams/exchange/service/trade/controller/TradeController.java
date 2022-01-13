@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.service.trade.controller;
 import com.github.pagehelper.PageInfo;
 import com.joyintech.tams.exchange.common.ResponseResultBody;
 import com.joyintech.tams.exchange.common.bean.HistoryTrade;
+import com.joyintech.tams.exchange.common.bean.TradeQueryBean;
 import com.joyintech.tams.exchange.common.db.domain.Trade;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.request.HistoryTradeInfoRequest;
@@ -42,7 +43,7 @@ public class TradeController {
 
     @ApiOperation(value = "查询分页成交信息", notes = "查询分页成交信息")
     @RequestMapping(value = "/trade/page", method = RequestMethod.POST)
-    public Message<PageInfo<Object>> queryAllForPage(@RequestBody @Validated PageTradeInfoRequest request) {
+    public Message<PageInfo<TradeQueryBean>> queryAllForPage(@RequestBody @Validated PageTradeInfoRequest request) {
         return tradeManagement.queryAllForPage(request);
     }
 
