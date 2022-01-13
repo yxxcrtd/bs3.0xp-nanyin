@@ -101,6 +101,12 @@ public class ChbAssetsBasisDataNobtm extends BaseEntity {
     private BigDecimal tdyIntadjexpAdd;
 
     /**
+     * null
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal tdyLossAmt;
+
+    /**
      * 取得 主键
      * @return 主键
      */
@@ -372,5 +378,21 @@ public class ChbAssetsBasisDataNobtm extends BaseEntity {
      */
     public void setTdyIntadjexpAdd(BigDecimal tdyIntadjexpAdd) {
         this.tdyIntadjexpAdd = tdyIntadjexpAdd;
+    }
+
+    /**
+     * 取得 null
+     * @return null
+     */
+    public BigDecimal getTdyLossAmt() {
+        return tdyLossAmt;
+    }
+
+    /**
+     * 设置 null
+     * @param tdyLossAmt null
+     */
+    public void setTdyLossAmt(BigDecimal tdyLossAmt) {
+        this.tdyLossAmt = tdyLossAmt;
     }
 }

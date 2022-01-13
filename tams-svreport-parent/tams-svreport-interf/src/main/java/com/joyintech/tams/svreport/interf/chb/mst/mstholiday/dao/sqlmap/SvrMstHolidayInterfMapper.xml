@@ -14,11 +14,10 @@
 
     <select id="select" resultMap="BaseResultMap"  >
         SELECT
-        CDATE                        AS BUSI_DATE,
+        CDATE                        AS CDATE,
         CALENDAR_ID,
         '01'                         AS MARKET_CODE,
-        DECODE(IS_HOLIDAY,0,'1','0') AS IS_HOLIDAY,
-        ''                           AS WORKFLOW_ID,
+        IS_HOLIDAY AS IS_HOLIDAY,
         CREATE_USER,
         CREATE_DEPT,
         CREATE_TIME,
