@@ -37,6 +37,20 @@ public class EtrEntrustDto extends EtrEntrust {
     private Date vpayDate;
 
     /**
+     * 匹配状态
+     */
+    private String matchClass;
+
+    public String getMatchClass() {
+        return matchClass;
+    }
+
+    public void setMatchClass(String matchClass) {
+        this.matchClass = matchClass;
+    }
+
+
+    /**
      * 取得 首次交收日
      * @return 首次交收日
      */

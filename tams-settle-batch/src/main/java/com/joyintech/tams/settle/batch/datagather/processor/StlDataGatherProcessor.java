@@ -192,10 +192,10 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                     // modify by etliu 20211210 end
                 }else{
                     if(DictCodeList.回购类型_质押式协议回购.getValue().equals(settleTransDataDto.getRepoType())){
-                        // 协议回购特殊处理,筛选已接收的
+                        // 协议回购特殊处理,筛选未完成匹配的(协议回购没有部分匹配)
                         etrEntrustDtos = etrEntrustDtos.stream()
-                                .filter(entry-> BussinessDictCodeList.委托接收状态_已接收.getValue().equals(entry.getEntrustStatus()))
-                                .collect(Collectors.toList());;
+                                .filter(entry-> !DictCodeListExt3.下行交易匹配状态_匹配完成.getValue().equals(entry.getMatchClass()))
+                                .collect(Collectors.toList());
                         // 处理质押式协议回购匹配逻辑
                         List<EtrEntrustDto> currEtrEntrustList = executeRepoH01Match(settleTransDataDto, etrEntrustDtos);
                         if(CollectionUtils.isEmpty(currEtrEntrustList)){
