@@ -6,7 +6,7 @@
 			<Cell order="2" name="总部或分支机构编码">salerOrgCode</Cell>
 			<Cell order="3" name="总部或分支机构名称">salerOrgName</Cell>
 			<Cell order="4" name="机构层级">salerOrgLevelStr</Cell>
-			<Cell order="5" name="备注">salerOrgLevelStr</Cell>
+			<Cell order="5" name="备注">remark</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>
