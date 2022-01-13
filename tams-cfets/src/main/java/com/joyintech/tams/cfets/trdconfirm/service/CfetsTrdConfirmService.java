@@ -2402,14 +2402,14 @@ public class CfetsTrdConfirmService extends BaseService{
      */
     public Page<CfetsTrdConfirmCstpInfoListResponse> findAllCstpInfoList(CfetsTrdConfirmCstpInfoListRequest dto) {
         Map<String, Object> pageParam = BeanUtil.object2Map(dto);
-        String regAssetType= (String)pageParam.get("regAssetType");
+     /*   String regAssetType= (String)pageParam.get("regAssetType");
         if(StringUtil.isNotEmpty(regAssetType)){
             if(StringUtil.equals(regAssetType,"01")){
                 pageParam.put("regAssetType", "BOND");
             }else{
                 pageParam.put("regAssetType","REPO");
             }
-        }
+        }*/
         String finprodId = (String)pageParam.get("finprodId");
         if(StringUtil.isNotEmpty(finprodId)){
             pageParam.put("finprodIdList", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));

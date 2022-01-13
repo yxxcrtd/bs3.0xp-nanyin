@@ -1157,7 +1157,7 @@
         ibd.cprice_amt as cpriceAmt,
         ibd.int_amt as intAmt,
         ibd.fprice_amt as fpriceAmt,
-        null as distriType,
+        ib.dip_type as distriType,
         ib.remark
         from ibu_quote_bond ib
         left join fin_product fp
@@ -1266,7 +1266,7 @@
         ibd.cprice_amt as cpriceAmt,
         ibd.int_amt as intAmt,
         ibd.fprice_amt as fpriceAmt,
-        null as distriType,
+        ib.dip_type as distriType,
         ib.remark
         from wfl_ibu_quote_bond2 ib
         left join fin_product fp
@@ -1354,7 +1354,7 @@
         ic.quote_type as quoteType,
         to_char(ic.quote_date,'yyyy-MM-dd') as quoteDate,
         ic.term as repoTerm,
-        ic.rate as tradeYield,
+        ic.rate*100 as tradeYield,
         ic.ccy as secCcy,
         ic.sett_ccy settCcy,
         ic.fprice_amt as tradeAmt,
@@ -1363,15 +1363,15 @@
         ic.sett_type as clearType,
         ic.v_delivery_type as deliveryType,
         ic.m_delivery_type as mdeliveryType,
-        null as trdFeeAmt,
-        null as settleFeeAmt,
+        ic.DEAL_FEE_AMT as trdFeeAmt,
+        ic.SETT_FEE_AMT as settleFeeAmt,
         to_char(ic.v_settle_date,'yyyy-MM-dd') as vsettleDate,
         to_char(ic.m_settle_date,'yyyy-MM-dd') as msettleDate,
         ic.m_int_amt as intAmt,
         ic.m_trade_amt as mtradeAmt,
         (ic.m_settle_date-ic.v_settle_date) as actRepoTerm,
         ic.term_type as termType,
-        null as distriType,
+        ic.DIP_TYPE as distriType,
         ic.remark
         from ibu_quote_crep ic
         inner join(
@@ -2373,7 +2373,9 @@
         LEFT JOIN SYS_USER T10 ON T10.USER_NAME = T1.TRADER
         LEFT JOIN MST_COUNTER_PARTY T11 ON T11.COUNTER_ID = T1.COUNTER_ID
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER T12 ON T12.trader_id = T1.COUNTER_TRADER
-        LEFT JOIN sys_datadict_list sdl ON sdl.dict_code='DISTRIBUTION' and sdl.item_code = T8.DIP_TYPE
+        LEFT JOIN IBU_QUOTE_BOND ib ON ib.quote_id = T7.PRE_TRADE_ID
+        LEFT JOIN ibu_quote_crep ic ON ic.quote_id = T7.PRE_TRADE_ID
+        LEFT JOIN sys_datadict_list sdl ON sdl.dict_code='DISTRIBUTION' and sdl.item_code = coalesce(T8.DIP_TYPE,ib.DIP_TYPE,ic.DIP_TYPE)
         WHERE T1.TOTLE_TRADE_ID = #{totleTradeId} and T.trade_id=#{busiCode}
         AND T1.TRADE_STATUS = #{TRADE_STATUS01}
 
