@@ -1465,6 +1465,9 @@
         	}
         //应计利息change
         $('#intAmt').change(intAmtChange);
+        if($('#businessModel').val()) {
+            $('#businessModel').attr("disabled",true);
+        }
     }
     ()
 )

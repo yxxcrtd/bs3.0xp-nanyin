@@ -158,7 +158,7 @@
                 100                                                                                           transactioncom/*执行进度(%)*/
                 , trunc((NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT , 0)) /
                 (ETR_ENTRUST.ENTRUST_AMT), 4) * 100                                                           tradeFinishPercent/* 成交进度(%)*/
-                , ETR_ENTRUST.ENTRUST_AMT / 10000                                                             entrustNum/*指令额度(万元)*/
+                , ETR_ENTRUST.ENTRUST_AMT                                                                     entrustNum/*指令额度(元)*/
                 , ETR_ENTRUST.PORTFOLIO_ID                                                                    portfolioId/*组合代码*/
                 , PTL_PORTFOLIO.PORTFOLIO_NAME                                                                portfolioName/*组合名称*/
             <if test="repo_pledge_model != null and repo_pledge_model.equals('02')">
@@ -178,10 +178,7 @@
                 , ETR_ENTRUST_ADD.TERM_DAYS                                                                   repoTerm/*回购期限*/
                 , ETR_ENTRUST.PRICE*100                                                                       tradeYield/*回购利率(%)*/
                 , ETR_ENTRUST.INV_MANAGER_ID                                                                  invManagerId/*投资经理ID*/
-                , (
-                    SELECT real_name
-                    FROM SYS_USER
-                    WHERE user_name = ETR_ENTRUST.INV_MANAGER_ID)                                             invManagerName/*投资经理名称*/
+                , SU.real_name                                                                                invManagerName/*投资经理名称*/
                 , MCP.COUNTER_ID                                                                              counterId/* 交易对手*/
                 , MCP.COUNTER_NAME                                                                            counterName/* 交易对手名称*/
                 , MST_CFETS_CI.PARTY_ID                                                                       counterPartyId
@@ -279,6 +276,8 @@
                 ON ETR_ENTRUST.PORTFOLIO_ID = IPAR.PORTFOLIO_ID AND IPAR.CFETS_ACCT_TYPE = '01'
             LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI
                 ON IPAR.PARTY_ID = MCCI.PARTY_ID
+            LEFT JOIN SYS_USER SU
+                ON ETR_ENTRUST.INV_MANAGER_ID = SU.USER_NAME
             LEFT JOIN SYS_USER
                 ON ETR_ENTRUST.CREATE_USER = SYS_USER.USER_NAME
             LEFT JOIN SYS_USER_ADD
@@ -460,10 +459,10 @@
                     AND (
                         ETR_ENTRUST.ENTRUST_STATUS like '%' || #{search} || '%' /*指令状态*/
                         OR D.ITEM_VALUE LIKE '%' || #{search} || '%' /*指令状态*/
-                        OR to_char(trunc(NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT , 0) / (ETR_ENTRUST.ENTRUST_AMT ), 4))  = #{search} /*执行进度(%)*/
+                        OR to_char(trunc(NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT , 0) / (ETR_ENTRUST.ENTRUST_AMT ), 4)*100)  = #{search} /*执行进度(%)*/
                         OR to_char(trunc((NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT , 0)) /
-                            (ETR_ENTRUST.ENTRUST_AMT ), 4)) = #{search}/* 成交进度(%)*/
-                        OR to_char(ETR_ENTRUST.ENTRUST_AMT)  = #{search} /*指令额度(万元)*/
+                            (ETR_ENTRUST.ENTRUST_AMT ), 4)*100) = #{search}/* 成交进度(%)*/
+                        OR to_char(ETR_ENTRUST.ENTRUST_AMT,'FM9999999999999990.90') = #{search} /*指令额度(元)*/
                         OR ETR_ENTRUST.PORTFOLIO_ID LIKE '%' || #{search} || '%' /*组合代码*/
                         OR PTL_PORTFOLIO.PORTFOLIO_NAME LIKE '%' || #{search} || '%' /*组合名称*/
                         OR ETR_ENTRUST_ADD.SETTLE_SPREED LIKE '%' || decode(#{search},'T+0','0','T+1','1','T+2','2',#{search}) ||'%' /*清算速度*/
@@ -472,8 +471,9 @@
                         OR ETR_ENTRUST.PRICE_MODEL LIKE '%' || #{search} || '%' /*价格模式*/
                         OR F.ITEM_VALUE LIKE '%' || #{search} || '%' /*价格模式*/
                         OR to_char(ETR_ENTRUST_ADD.TERM_DAYS) = #{search} /*回购期限*/
-                        OR to_char(ETR_ENTRUST.PRICE) = #{search} /*回购利率*/
+                        OR to_char(ETR_ENTRUST.PRICE,'FM99990.9990') = #{search}  /*回购利率*/
                         OR ETR_ENTRUST.INV_MANAGER_ID LIKE '%' || #{search} || '%' /*投资经理*/
+                        OR SU.real_name  LIKE '%' || #{search} || '%' /*投资经理*/
                         OR MCP.COUNTER_ID LIKE '%' || #{search} || '%'  /*交易对手*/
                         OR MCP.COUNTER_NAME LIKE '%' || #{search} || '%' /*交易对手*/
                         OR to_char(ETR_ENTRUST.ENTRUST_DATE,'yyyy-MM-dd') = #{search} /*指令日期*/

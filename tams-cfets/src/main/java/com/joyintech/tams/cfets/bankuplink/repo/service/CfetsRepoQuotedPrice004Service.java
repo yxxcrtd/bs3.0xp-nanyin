@@ -594,7 +594,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
     public void doDelete(String workflowId) {
         deleteBussFlowData(workflowId);
         CfetsRepoDealRegisterQuoteDto entity = getBussinessEntityByWorkflowId(workflowId);
-        PositionHttpRequest.sendRevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"REPO001");
+        PositionHttpRequest.sendRevoke(entity.getTotleTradeId(), DictCodeListExt1.子系统代码_交易.getValue(), "REPO001");
     }
 
     /**
@@ -736,6 +736,8 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     regFinProductDeal.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());//交易市场
                     regFinProductDeal.setSecManageAcctId(entity.getSecManageAcctId());//证券账户
                     regFinProductDeal.setFinprodId(regFinProductDeal.getTradeId());
+                    regFinProductDeal.setShareAmt(ArithmeticUtil.divide(ptlAllocatio.getShareAmt(), new BigDecimal(100), 2, RoundingMode.HALF_UP));
+                    regFinProductDeal.setFaceValue(ptlAllocatio.getShareAmt());
                     if (null != ptlAllocatio.getDealFeeAmt()) {//交易手续费
                         regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(
                                 regFinProductDeal.getTradeId(), BussinessDictCodeList.费用类型_交易手续费.getValue(), ptlAllocatio.getDealFeeAmt()));
@@ -828,9 +830,10 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         total.setQuoteType(entity.getQuoteStyle());// 报价方式
         total.setDeliveryType(entity.getDeliverytype());// 首次结算方式
         total.setmTradeAmt(entity.getMtradeAmt());// 到期结算金额
-        total.setShareAmt(entity.getShareAmt());//质押总券面
+        total.setFaceValue(entity.getShareAmt());//质押总券面
+        total.setShareAmt(ArithmeticUtil.divide(entity.getShareAmt(), new BigDecimal(100), 2, RoundingMode.HALF_UP));//质押总券面
         total.setDipType(entity.getDistribution());//组合分配方式
-        total.setRate(ArithmeticUtil.multiply(entity.getPrice(),new BigDecimal(100)));//回购利率
+        total.setRate(ArithmeticUtil.multiply(entity.getPrice(), new BigDecimal(100)));//回购利率
         total.setDisFaceValue(entity.getConvertAmt());//质押券折算总额
         total.setRepoType(entity.getRepoMethod().toString());//回购方式
         total.setvSettleDate(entity.getSettlementStartDate());//首期结算日
@@ -1403,8 +1406,8 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     if (StringUtil.isNotEmpty(secAcctId)) {
                         secport.setSecAcctId(secAcctId); // 证券账户
                     }
-                    secport.setSecAmount(ArithmeticUtil.multiply(regFinPledge.getPledgeNumber(),new BigDecimal(100)));
-                    secport.setOwnSecAmount(ArithmeticUtil.multiply(regFinPledge.getPledgeNumber(),new BigDecimal(100)));
+                    secport.setSecAmount(ArithmeticUtil.multiply(regFinPledge.getPledgeNumber(), new BigDecimal(100)));
+                    secport.setOwnSecAmount(ArithmeticUtil.multiply(regFinPledge.getPledgeNumber(), new BigDecimal(100)));
                     secport.setIntegrateSecAmount(BigDecimal.ZERO);
                     ptlSecList.add(secport);
                 }

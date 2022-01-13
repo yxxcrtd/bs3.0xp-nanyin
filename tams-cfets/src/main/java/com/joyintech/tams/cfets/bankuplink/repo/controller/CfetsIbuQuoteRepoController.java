@@ -545,7 +545,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         List<String> entrustIds = StringUtil.splitToList(",", (String) param.get("entrustIds"));
         param.put("entrustIdList", entrustIds);
         param.remove("entrustIds");
-        return new Message<AjaxResult>().success().setData(ibuQuoteBondService.doForcedFinishCheck(param, false));
+        return new Message<AjaxResult>().success().setData(ibuQuoteRepoService.doForcedFinishCheck(param, false));
     }
 
 
