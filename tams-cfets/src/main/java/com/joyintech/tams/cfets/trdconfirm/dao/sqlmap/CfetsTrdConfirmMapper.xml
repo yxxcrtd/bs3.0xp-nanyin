@@ -1799,13 +1799,11 @@
         <if test="secManageAcctId != null and secManageAcctId != ''">
             and reg.sec_manage_acct_id = #{secManageAcctId,jdbcType=VARCHAR}
         </if>
-        <if test="tradeYield != null and tradeYield != ''">
-            and (to_char(reg.yield,'FM990.999999')=#{tradeYield,jdbcType=VARCHAR}
-            or to_char(reg.yield)=#{tradeYield,jdbcType=VARCHAR})
+        <if test="tradeYield != null">
+            and reg.yield=#{tradeYield}
         </if>
-        <if test="faceValue != null and faceValue != ''">
-            and (to_char(reg.face_value,'FM999999999999999999990.999999')=#{faceValue,jdbcType=VARCHAR}
-            or to_char(reg.face_value)=#{faceValue,jdbcType=VARCHAR})
+        <if test="faceValue != null">
+            and reg.face_value=#{faceValue}
         </if>
         <if test="settleDate != null and settleDate != ''">
             and to_char(reg.settle_date,'yyyy-MM-dd') = #{settleDate,jdbcType=VARCHAR}
@@ -1813,12 +1811,11 @@
         <if test="deliveryType != null and deliveryType != ''">
             and reg.delivery_type = #{deliveryType,jdbcType=VARCHAR}
         </if>
-        <if test="termDays != null and termDays != ''">
-            and reg.repo_term = #{termDays,jdbcType=VARCHAR}
+        <if test="termDays != null">
+            and reg.repo_term = #{termDays}
         </if>
-        <if test="rate != null and rate != ''">
-            and (to_char(reg.rate,'FM990.999999')=#{rate,jdbcType=VARCHAR}
-            or to_char(reg.rate)=#{rate,jdbcType=VARCHAR})
+        <if test="rate != null">
+            and reg.rate=#{rate}
         </if>
         <if test="vsettleDate != null and vsettleDate != ''">
             and to_char(reg.v_settle_date,'yyyyMMdd') = #{vsettleDate,jdbcType=VARCHAR}
@@ -1826,22 +1823,21 @@
         <if test="msettleDate != null and msettleDate != ''">
             and to_char(reg.m_settle_date,'yyyyMMdd') = #{msettleDate,jdbcType=VARCHAR}
         </if>
-        <if test="tradeAmt != null and tradeAmt != ''">
-            and (to_char(reg.trade_Amt,'FM999999999999999999990.999999')=#{tradeAmt,jdbcType=VARCHAR}
-            or to_char(reg.trade_Amt)=#{faceValue,jdbcType=VARCHAR})
+        <if test="tradeAmt != null">
+            and reg.trade_Amt=#{tradeAmt,jdbcType=VARCHAR}
         </if>
 
     </select>
     <!-- 查询所有登记或报价回购的质押券信息 -->
     <select id="findAllRegAndIbuPledgesList"
             resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegInfoListResponse">
+        select * from (
         select
         ic.pledge_finprod_id as pledgeFinprodId,
         ic.pledge_ratio as pledgeRatio,
         ic.pledge_number*100 as pledgeFaceValue
         from ibu_quote_crep_pledge ic
         where ic.quote_id=#{busiCode,jdbcType=VARCHAR}
-        order by  ic.pledge_finprod_id
         union
         select
         reg.pledge_finprod_id as pledgeFinprodId,
@@ -1851,8 +1847,8 @@
         inner join reg_fin_product_deal deal
         on reg.trade_id=deal.trade_id
         where deal.totle_trade_id=#{busiCode,jdbcType=VARCHAR}
-        group by reg.pledge_finprod_id,reg.pledge_ratio
-        order by  reg.pledge_finprod_id
+        group by reg.pledge_finprod_id,reg.pledge_ratio)
+        order by pledgeFinprodId
 
     </select>
     <!-- 查询所有下行的质押券信息 -->
@@ -1862,9 +1858,11 @@
         fprepo.finprod_id as pledgeFinprodId,
         itr.CONVRATE as pledgeRatio,
         itr.FACETOTALAMT as pledgeFaceValue
-        from INTERF_TRAD_REPOASST itr
-        inner join fin_product fprepo
-        on itr.SECID=fprepo.finprod_market_id
+        from interf_opics_trad_repo repo
+        inner join INTERF_TRAD_REPOASST itr
+        on repo.oritradeid=itr.tradeid
+        inner  join fin_product fprepo
+        on fprepo.finprod_market_id= itr.SECID|| '.' || repo.MARKET
         and fprepo.finprod_type='F01'
         where itr.tradeid=#{execid,jdbcType=VARCHAR}
         order by fprepo.finprod_id
