@@ -467,7 +467,7 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
                         IntSettleTransData.setCommissionAmt(BigDecimal.ZERO);
 
                         IntSettleTransData.setPs(DictCodeList.交易方向_收息到账.getValue());
-                        TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getVdate(),
+                        TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getMpayDate(),
                                 DictCodeList.交易方向_买入.getValue(),entrustDto.getPortfolioId());
                         if(StringUtil.isNotEmpty(firstRepoTrade)) {
                             IntSettleTransData.setFinprodId(firstRepoTrade.getFinprodId());
@@ -496,7 +496,7 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
                         prinSettleTransData.setSettleFee(BigDecimal.ZERO);
                         prinSettleTransData.setCommissionAmt(BigDecimal.ZERO);
 
-                        TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getVdate(),
+                        TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getMpayDate(),
                                 DictCodeList.交易方向_买入.getValue(),entrustDto.getPortfolioId());
                         if(StringUtil.isNotEmpty(firstRepoTrade)) {
                             prinSettleTransData.setFinprodId(firstRepoTrade.getFinprodId());
@@ -558,7 +558,7 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
                         IntSettleTransData.setCommissionAmt(BigDecimal.ZERO);
 
                         IntSettleTransData.setPs(DictCodeList.交易方向_收息到账.getValue());
-                        TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getVdate(),
+                        TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getMpayDate(),
                                 DictCodeList.交易方向_买入.getValue(),entrustDto.getPortfolioId());
                         if(StringUtil.isNotEmpty(firstRepoTrade)) {
                             IntSettleTransData.setFinprodId(firstRepoTrade.getFinprodId());
@@ -577,6 +577,7 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
                         prinSettleTransData.setShareAmt(item.getmPrinAmt());
                         prinSettleTransData.setPrinAmt(item.getmPrinAmt());
                         prinSettleTransData.setTradeAmt(item.getmPrinAmt());
+                        prinSettleTransData.setFpriceAmt(item.getmPrinAmt());
                         prinSettleTransData.setPs(DictCodeList.交易方向_还本到账.getValue());
 
                         prinSettleTransData.setIntAmt(BigDecimal.ZERO);
@@ -588,7 +589,7 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
                         prinSettleTransData.setSettleFee(BigDecimal.ZERO);
                         prinSettleTransData.setCommissionAmt(BigDecimal.ZERO);
 
-                        TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getVdate(),
+                        TrdProductDeal firstRepoTrade = this.getFirstRepoTrade(dealDto.getfCjbh(),dealDto.getMpayDate(),
                                 DictCodeList.交易方向_买入.getValue(),entrustDto.getPortfolioId());
                         if(StringUtil.isNotEmpty(firstRepoTrade)) {
                             prinSettleTransData.setFinprodId(firstRepoTrade.getFinprodId());
