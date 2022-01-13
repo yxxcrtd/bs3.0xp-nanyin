@@ -20,7 +20,7 @@ public class PortfolioAllocationResponse {
     private Long totalEntrustVolume;
 
     @ApiModelProperty(value = "试算委托总金额")
-    private Long totalEntrustAmt;
+    private BigDecimal totalEntrustAmt;
 
     @ApiModelProperty(value = "剩余委托总数量")
     private Long totalLeftVolume;
@@ -55,11 +55,11 @@ public class PortfolioAllocationResponse {
         this.totalEntrustVolume = totalEntrustVolume;
     }
 
-    public Long getTotalEntrustAmt() {
+    public BigDecimal getTotalEntrustAmt() {
         return totalEntrustAmt;
     }
 
-    public void setTotalEntrustAmt(Long totalEntrustAmt) {
+    public void setTotalEntrustAmt(BigDecimal totalEntrustAmt) {
         this.totalEntrustAmt = totalEntrustAmt;
     }
 
