@@ -7,8 +7,8 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
 import java.util.List;
 
 /**
- * @author zznn
- * @date 2021/12/23
+ * @author jiangpeng
+ * @date 2022/01/13
  */
 public class RepoEntrustForcedFinishDto extends BaseEntity implements ProcessEntity {
 
