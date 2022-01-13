@@ -11,8 +11,9 @@
 package com.joyintech.tams.common;
 
 import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -29,6 +30,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -36,6 +39,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.ReflectionUtils;
 import org.xml.sax.SAXException;
 
 import com.jcraft.jsch.ChannelSftp.LsEntry;
@@ -1067,6 +1071,102 @@ public abstract class FileImpService extends InterfService{
         	}
     	}
     	return dest;
+    }
+
+    /**
+     *
+     * @param dataList
+     * @param clz
+     * @return
+     */
+    public List<? extends BaseEntity> convertMapToEntity(List<Map<String, String>> dataList, Class clz) {
+        // 返回对象list
+        List<BaseEntity> rs = new ArrayList<>();
+
+        for (Map<String, String> map : dataList) {
+            BaseEntity baseEntity = null;
+            try {
+                baseEntity  = (BaseEntity) clz.newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            baseEntity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+            for (String key : map.keySet()) {
+                // 空数据和错误数据置为待处理
+                if(key==null||key.equals("ERRMSG")){
+                    baseEntity.setStatus(DictCodeListExt1.维护数据状态_待处理.getValue());
+                    continue;
+                }
+                // 获取map值
+                String value = map.get(key);
+                // 反射通过字段名寻找字段
+                Field field = ReflectionUtils.findField(clz, subBlank(key.toLowerCase()));
+
+                if(field==null){
+                    continue;
+                }
+                field.setAccessible(true);
+                Type type = field.getGenericType();
+                if("java.lang.String".equals(type.getTypeName())){
+                    try {
+                        field.set(baseEntity, value);
+                    } catch ( IllegalAccessException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                }else if ("java.math.BigDecimal".equals(type.getTypeName())) {
+                    try {
+                        field.set(baseEntity ,(value == null || "".equals(value)) ? BigDecimal.ZERO : new BigDecimal(value));
+                    } catch ( IllegalAccessException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                }
+                else if ("java.lang.Integer".equals(type.getTypeName())) {
+                    try {
+                        field.set(baseEntity ,(value == null || "".equals(value)) ? 0 : Integer.valueOf(value));
+                    } catch (IllegalAccessException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                }
+                else if ("java.lang.Short".equals(type.getTypeName())) {
+                    try {
+                        field.set(baseEntity, (value == null || "".equals(value)) ? 0 : Short.valueOf(value));
+                    } catch ( IllegalAccessException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                } else if ("java.lang.Long".equals(type.getTypeName())) {
+                    try {
+                        field.set(baseEntity, (value == null || "".equals(value)) ? 0 : Long.valueOf(value));
+                    } catch ( IllegalAccessException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                } else if ("java.util.Date".equals(type.getTypeName())) {
+                    if (value != null&&""!=value) {
+                        try {
+                            field.set(baseEntity, DateUtil.parse(value));
+                        } catch ( IllegalAccessException e) {
+                            logger.error(e.getMessage(),e);
+                        }
+                    }
+                } else{
+                    try {
+                        field.set(baseEntity, value);
+                    } catch ( IllegalAccessException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                }
+            }
+            // 创建人
+            baseEntity.setCreateUser("interf");
+            // 更新人
+            baseEntity.setUpdateUser("interf");
+            // 创建人
+            baseEntity.setCreateDept(CommonUtil.getDeptCode());
+
+            rs.add(baseEntity);
+        }
+        return rs;
     }
 
 }

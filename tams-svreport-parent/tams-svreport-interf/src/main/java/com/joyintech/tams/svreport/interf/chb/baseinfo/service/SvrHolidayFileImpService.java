@@ -134,23 +134,14 @@ public class SvrHolidayFileImpService extends FileImpService {
 			String tmpPath, ImpTable table, ImpTable subTable) {
 		boolean  isSucess=false;
 		// 定义新增数据list-验证通过数据
-		List<MstHoliday> listNE = new ArrayList<MstHoliday>();
+		List<MstHoliday> listNE = null;
 		logger.debug("节假日数据转dto---开始-----:" +  df.format(new Date()));
 		if(holidayList!=null&&holidayList.size()>0){
-			for(Map<String, String> map : holidayList){
-				try{
-					MstHoliday dto = dataConversionEntity(map);
-					listNE.add(dto);
-				}catch(Exception  e){
-					logger.error("读取数据出错:",e.getMessage(),e);
-					isSucess=false;
-				}
-			}
+            listNE = (List<MstHoliday>) convertMapToEntity(holidayList, MstHoliday.class);
 		}
 		logger.debug("节假日数据转dto---结束-----:" +  df.format(new Date()));
 		if (listNE != null && listNE.size() > 0) {
-			// 插入节假日（有就更新没有就插入）
-			isSucess=mergeHoliday(listNE);
+		    isSucess=mergeHoliday(listNE);
 		}
 		return isSucess;
 	}
