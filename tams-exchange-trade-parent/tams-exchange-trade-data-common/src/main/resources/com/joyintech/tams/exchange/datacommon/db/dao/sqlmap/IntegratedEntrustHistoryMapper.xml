@@ -202,14 +202,15 @@
     <sql id="Query_Column_List">
         a.ID, a.PARENT_ORDER_ID, a.INSTRUCTION_ID, a.PORTFOLIO_ID,a.USER_ID, a.USERNAME,a.ACCOUNT_ID,
     a.FINANCE_ACCOUNT, a.ACCOUNT_NAME, a.ASSET_TYPE, a.MARKET, a.STOCK_CODE, a.STOCK_NAME, a.ENTRUST_TYPE,
-    a.ENTRUST_PROP, a.ENTRUST_BS, a.BS_FLAG, a.ENTRUST_VOLUME, a.ENTRUST_PRICE, a.FULL_PRICE, a.ENTRUST_BALANCE,
+    a.ENTRUST_PROP, a.BS_FLAG, a.ENTRUST_VOLUME, a.ENTRUST_PRICE, a.FULL_PRICE, a.ENTRUST_BALANCE,
     a.DISCOUNT, a.TRANS_CODE, a.EXPIRE_YEAR_RATE, a.PRETERM_YEAR_RATE, a.LIAISON_NAME, a.LIAISON_TEL,
     a.PROP_SEAT_NO, a.PROP_SEAT_NAME, a.SELLER_NO, a.CONTRACT_ID, a.FIRST_SETTLE_DATE, a.BACK_DATE,
     a.COMPACT_TERM, a.BACK_BALANCE, a.ORIG_SERIAL_NO, a.REDUCTION_TYPE, a.FROZEN_BALANCE, a.FROZEN_VOLUME,
     a.TRADED_BALANCE, a.TRADED_VOLUME, a.TRADED_PRICE, a.CANCEL_VOLUME, a.REPORT_TIME, a.TRADE_TIME,
     a.CANCEL_TIME, a.ERROR_CODE, a.ERROR_MSG, a.TRADING_DAY, a.LOCAL_ENTRUST_ID, a.BROKER_ENTRUST_ID,
     a.IP_MAC, a.REMARK, a.CREATE_TIME,a.UPDATE_TIME, a.ENTRUST_STATUS, a.ORIG_ENTRUST_ID, a.INTEGRATED_ENTRUST_ID,
-    a.REPORT_NO, a.OPERATE_USER,b.PORTFOLIO_NAME,b.SEC_ACCT_ID,b.TRADE_PLAT,b.FINPROD_TYPE2,b.INV_MANAGER_ID
+    a.REPORT_NO, a.OPERATE_USER,b.PORTFOLIO_NAME,b.SEC_ACCT_ID,b.TRADE_PLAT,b.FINPROD_TYPE2,b.INV_MANAGER_ID,
+    b.PS as ENTRUST_BS
     </sql>
 
     <select id="queryLastClearDate" resultType="java.lang.String">
@@ -234,25 +235,17 @@
         </if>
     </select>
 
-    <select id="selectEntrustHistoryByExample" resultMap="QueryResultMap"
-            parameterType="com.joyintech.tams.exchange.common.db.domain.IntegratedEntrustHistoryExample">
+    <select id="selectEntrustHistoryByPage" resultMap="QueryResultMap"
+            parameterType="com.joyintech.tams.exchange.common.bean.EntrustQryBean">
         select
-        <if test="distinct">
-            distinct
-        </if>
         <include refid="Query_Column_List"/>
         from T_INTEGRATED_ENTRUSTHISTORY a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
-        <if test="_parameter != null">
-            <include refid="Example_Where_Clause"/>
-        </if>
-        <if test="orderByClause != null">
-            order by ${orderByClause}
-        </if>
+        <include refid="queryCondition2"/>
     </select>
 
     <sql id="QueryEntrustHistory">
         a.ID, a.PARENT_ORDER_ID, a.INSTRUCTION_ID, a.PORTFOLIO_ID, a.USER_ID, a.USERNAME, a.ACCOUNT_ID,a.FINANCE_ACCOUNT,
-        a.ACCOUNT_NAME, a.ASSET_TYPE, a.MARKET,a.STOCK_CODE, a.STOCK_NAME, a.ENTRUST_TYPE,a.ENTRUST_PROP, a.ENTRUST_BS,
+        a.ACCOUNT_NAME, a.ASSET_TYPE, a.MARKET,a.STOCK_CODE, a.STOCK_NAME, a.ENTRUST_TYPE,a.ENTRUST_PROP,
         a.BS_FLAG, a.ENTRUST_VOLUME, a.ENTRUST_PRICE, a.FULL_PRICE,a. ENTRUST_BALANCE, NULL AS DISCOUNT, NULL AS TRANS_CODE,
         NULL AS EXPIRE_YEAR_RATE, NULL AS PRETERM_YEAR_RATE, NULL AS LIAISON_NAME, NULL AS LIAISON_TEL,
         NULL AS PROP_SEAT_NO, NULL AS PROP_SEAT_NAME, NULL AS SELLER_NO, NULL AS CONTRACT_ID,
@@ -261,7 +254,7 @@
         a.TRADED_VOLUME, a.TRADED_PRICE, a.CANCEL_VOLUME,a. REPORT_TIME,a.TRADE_TIME, a.CANCEL_TIME, a.ERROR_CODE,
         a.ERROR_MSG, a.TRADING_DAY, a.LOCAL_ENTRUST_ID, a.BROKER_ENTRUST_ID,a.IP_MAC, a.REMARK, a.CREATE_TIME, a.UPDATE_TIME,
         a.ENTRUST_STATUS, a.ORIG_ENTRUST_ID, a.ENTRUST_ID AS INTEGRATED_ENTRUST_ID, a.REPORT_NO, a.OPERATE_USER,
-        b.PORTFOLIO_NAME,b.SEC_ACCT_ID,b.TRADE_PLAT,b.FINPROD_TYPE2,b.INV_MANAGER_ID
+        b.PORTFOLIO_NAME,b.SEC_ACCT_ID,b.TRADE_PLAT,b.FINPROD_TYPE2,b.INV_MANAGER_ID,b.PS as ENTRUST_BS
     </sql>
 
     <sql id="entrustHistory">
@@ -326,6 +319,9 @@
 
     <sql id="queryCondition2">
         <where>
+            <if test="userId != null and userId != ''">
+                AND a.USER_ID &gt;= #{userId}
+            </if>
             <if test="startDay != null and startDay != ''">
                 AND a.TRADING_DAY &gt;= #{startDay}
             </if>

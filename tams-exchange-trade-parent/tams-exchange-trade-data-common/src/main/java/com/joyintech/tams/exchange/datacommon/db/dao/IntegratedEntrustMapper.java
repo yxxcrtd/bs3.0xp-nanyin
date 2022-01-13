@@ -33,6 +33,8 @@ public interface IntegratedEntrustMapper extends IMybatisMapper<IntegratedEntrus
 
     List<EntrustQueryBean> selectEntrustsByPage(EntrustQryBean entrustQryBean);
 
+    List<EntrustQueryBean> selectEntrustsById(@Param("entrustId") String entrustId);
+
     IntegratedEntrust selectByPrimaryKey(String id);
 
     int updateByExampleSelective(@Param("record") IntegratedEntrust record, @Param("example") IntegratedEntrustExample example);

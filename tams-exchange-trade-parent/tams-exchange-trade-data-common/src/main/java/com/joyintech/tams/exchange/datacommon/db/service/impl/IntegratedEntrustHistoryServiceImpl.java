@@ -94,35 +94,13 @@ public class IntegratedEntrustHistoryServiceImpl implements IntegratedEntrustHis
         String stockCode = request.getStockCode();
         String entrustProp = request.getEntrustProp();
         Integer entrustStatus = request.getEntrustStatus();
-        String startDay = request.getStartDay();
-        String endDay = request.getEndDay();
 
-        IntegratedEntrustHistoryExample historyExample = new IntegratedEntrustHistoryExample();
-        IntegratedEntrustHistoryExample.Criteria criteria = historyExample.createCriteria();
-        if (!Strings.isNullOrEmpty(userId))
-            criteria.andUserIdEqualTo(userId);
-        if (!Strings.isNullOrEmpty(startDay))
-            criteria.andTradingDayGreaterThanOrEqualTo(startDay);
-        if (!Strings.isNullOrEmpty(endDay))
-            criteria.andTradingDayLessThanOrEqualTo(endDay);
-        if (!Strings.isNullOrEmpty(accountId))
-            criteria.andAccountIdEqualTo(accountId);
-        if (!Strings.isNullOrEmpty(portfolioId))
-            criteria.andPortfolioIdEqualTo(portfolioId);
-        if (Strings.isNullOrEmpty(portfolioId) && Objects.nonNull(ptlAuthList) && ptlAuthList.size() > 0)
-            criteria.andPortfolioIdIn(ptlAuthList);
-        if (!Strings.isNullOrEmpty(market))
-            criteria.andMarketEqualTo(market);
-        if (!Strings.isNullOrEmpty(stockCode))
-            criteria.andStockCodeEqualTo(stockCode);
-        if (!Strings.isNullOrEmpty(entrustProp))
-            criteria.andEntrustPropEqualTo(entrustProp);
-        if (entrustStatus > -100)
-            criteria.andEntrustStatusEqualTo(entrustStatus);
-        // 过滤撤单委托
-        criteria.andEntrustTypeNotEqualTo(EntrustType.CANCEL.value);
+        EntrustQryBean entrustQryBean = new EntrustQryBean(userId, accountId, "", portfolioId, market, stockCode, entrustProp, entrustStatus, EntrustType.CANCEL.value, ptlAuthList);
+        entrustQryBean.setStartDay(request.getStartDay());
+        entrustQryBean.setEndDay(request.getEndDay());
+
         PageHelper.startPage(pageMode.getPageNo(), pageMode.getPageSize());
-        List<EntrustQueryBean> historyList = integratedEntrustHistoryMapper.selectEntrustHistoryByExample(historyExample);
+        List<EntrustQueryBean> historyList = integratedEntrustHistoryMapper.selectEntrustHistoryByPage(entrustQryBean);
         return new PageInfo<>(historyList);
     }
 
