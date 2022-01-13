@@ -145,6 +145,9 @@ public class TrdRepoTradeService extends BaseService<TrdRepoTradeDto> {
         pageParam.put("PINAN_BUSINESS_TYPE_20", DictCodeListExt1.平安业务类型_正回购.getValue());
         pageParam.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
         pageParam.put("TRADE_STATUS_03", DictCodeListExt1.交易状态_撤销.getValue());
+
+        pageParam.put("ps_T22", BussinessDictCodeList.交易方向_收息到账.getValue());
+        pageParam.put("ps_T23", BussinessDictCodeList.交易方向_还本到账.getValue());
         
         //update by zhangnian start 20200318
         //有回购类型查询条件是 不显示银行间的数据
