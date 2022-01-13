@@ -165,6 +165,8 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
                     searchParam.put("checkResult",  "1");
                 }
                 searchParam.put("dqPs",  DictCodeList.交易方向_到期.getValue());
+                searchParam.put("busiSceneCalssDqList",  Arrays.asList(DictCodeListStl.业务场景分类明细_债券协议逆回购_到期.getValue()));
+                searchParam.put("tradeMarketSh", DictCodeListExt1.交易场所_上海证券交易所.getValue());
                 List<SettleTransDataDto> settleTransDataDtos = stlDataGatherService.listRepoSettleTransData(searchParam);
                 investTradeReaderDto.setSettleTransDataList(settleTransDataDtos);
                 List<InvestTradeReaderDto> result = new ArrayList<>();

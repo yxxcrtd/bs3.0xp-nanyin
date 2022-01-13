@@ -349,6 +349,9 @@
 			<if test="dqPs!= null">
 				AND std.PS = #{dqPs,jdbcType=VARCHAR}
 			</if>
+			<if test="tradeMarketSh!= null">
+				AND std.TRADE_MARKET = #{tradeMarketSh,jdbcType=VARCHAR}
+			</if>
 			<if test="finprodIdList != null and finprodIdList.size() > 0">
 				<foreach collection="finprodIdList" item="finprodId" open="AND std.FINPROD_ID IN (" close=")" separator=",">
 					#{finprodId,jdbcType=VARCHAR}
@@ -367,9 +370,9 @@
 					#{portfolioId,jdbcType=VARCHAR}
 				</foreach>
 			</if>
-			<if test="finprodTypes != null and finprodTypes.size() > 0">
-				<foreach collection="finprodTypes" item="finprodType" open="AND std.FINPROD_TYPE2 IN (" close=")" separator=",">
-					#{finprodType,jdbcType=VARCHAR}
+			<if test="busiSceneCalssDqList != null and busiSceneCalssDqList.size() > 0">
+				<foreach collection="busiSceneCalssDqList" item="busiSceneCalss" open="AND std.BUSI_SCENE_CALSS IN (" close=")" separator=",">
+					#{busiSceneCalss,jdbcType=VARCHAR}
 				</foreach>
 			</if>
 		</where>
