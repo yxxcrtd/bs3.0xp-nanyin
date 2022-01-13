@@ -1027,17 +1027,17 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                         settleTransDataTotalAdd.setTradeId(dealTotal.getSeqId());
                         for(StlSettleTransDataGatherDto item:list) {
                             if(StringUtil.equals(settleTransDataDto.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())
-                                    &&StringUtil.equals(settleTransDataDto.getFinprodType2(),DictCodeListExt1.证券品种_股票.getValue())
+                                    &&StringUtil.equals(item.getFinprodType2(),DictCodeListExt1.证券品种_股票.getValue())
                                     && item.getShareAmt().compareTo(BigDecimal.ZERO) == 0){
                                 settleTransDataTotalAdd.setConPrice(item.getUnitCprice());
                             }
                             if(StringUtil.equals(settleTransDataDto.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())
-                            && StringUtil.equals(settleTransDataDto.getFinprodType2(),DictCodeListExt1.证券品种_股票.getValue())){
+                            && StringUtil.equals(item.getFinprodType2(),DictCodeListExt1.证券品种_股票.getValue())){
                                 settleTransDataTotalAdd.setConPrice(item.getUnitCprice());
                             }
                         }
                         for(StlSettleTransDataGatherDto item:list) {
-                            if(StringUtil.equals(settleTransDataDto.getFinprodType2(),DictCodeListExt1.证券品种_股票.getValue())
+                            if(StringUtil.equals(item.getFinprodType2(),DictCodeListExt1.证券品种_股票.getValue())
                                     && item.getShareAmt().compareTo(BigDecimal.ZERO) > 0){
                                 settleTransDataTotalAdd.setConAmt(item.getTradeAmt());
                             }
