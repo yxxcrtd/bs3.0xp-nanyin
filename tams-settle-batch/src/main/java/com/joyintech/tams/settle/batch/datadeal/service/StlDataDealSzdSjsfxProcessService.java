@@ -298,7 +298,8 @@ public class StlDataDealSzdSjsfxProcessService {
 
             StlDownDataDealWriteBaseDto stlDownDataDealWriteBaseDto = new StlDownDataDealWriteBaseDto();
             stlDownDataDealWriteBaseDto.setSettleTransData(settleTransData);
-            if (settleTransDataAdd != null && StringUtil.isNotEmpty(settleTransDataAdd.getTradeId())) {
+            if (settleTransDataAdd != null && StringUtil.isNotEmpty(settleTransData.getTradeId())) {
+                settleTransDataAdd.setTradeId(settleTransData.getTradeId());
                 stlDownDataDealWriteBaseDto.setSettleTransDataAdd(settleTransDataAdd);
             }
             // 成交数据与投管交易关系

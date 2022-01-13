@@ -374,7 +374,7 @@ public class StlDataDealSzdSjsmxProcessService {
 
             StlDownDataDealWriteBaseDto stlDownDataDealWriteBaseDto = new StlDownDataDealWriteBaseDto();
             stlDownDataDealWriteBaseDto.setSettleTransData(settleTransData);
-            if (settleTransDataAdd != null && StringUtil.isNotEmpty(settleTransDataAdd.getTradeId())) {
+            if (settleTransDataAdd != null && StringUtil.isNotEmpty(settleTransData.getTradeId())) {
                 settleTransDataAdd.setTradeId(settleTransData.getTradeId());
             	stlDownDataDealWriteBaseDto.setSettleTransDataAdd(settleTransDataAdd);
             }
