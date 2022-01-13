@@ -146,6 +146,9 @@ public class ComBondMarketInfo002Controller extends BaseController {
         if (dto.getMinPriceFull() == null){
             errorList.add(new ValidMessage("最低价全价为必填项！"));
         }
+        if (dto.getMarketAmt() == null){
+            errorList.add(new ValidMessage("债券市场余额必填项！"));
+        }
         if (errorList.size()>0)
         {
             ajaxResult.setErrorList(errorList);
