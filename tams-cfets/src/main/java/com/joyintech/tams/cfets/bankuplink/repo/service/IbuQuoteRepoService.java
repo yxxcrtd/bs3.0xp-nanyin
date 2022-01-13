@@ -2262,12 +2262,13 @@ public class IbuQuoteRepoService extends BaseService {
             errorList.add(new ValidMessage("请输入退回原因!"));
         }
         setParam(param, 1);
-        List<CfetsBondDealEntrustOrderDto> cfetsBondDealEntrustOrderDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
+        List<CfetsRepoDealEntrustOrderDto> cfetsBondDealEntrustOrderDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
         if (CollectionUtils.isNotEmpty(cfetsBondDealEntrustOrderDtos)) {
             cfetsBondDealEntrustOrderDtos.forEach(item -> {
                 if (StringUtil.equals(item.getEntrustStatus(), com.joyintech.tams.constant.DictCodeList.委托状态_待接收)
-                        || (StringUtil.equals(item.getEntrustStatus(), com.joyintech.tams.constant.DictCodeList.委托状态_待接收) && item.getTransactioncom().compareTo(BigDecimal.ZERO) != 0)) {
-                    errorList.add(new ValidMessage("只可对待分发或者已接收执行进度为0的指令执行退回操作!"));
+                        || (StringUtil.equals(item.getEntrustStatus(), com.joyintech.tams.constant.DictCodeList.委托状态_待接收)
+                        && item.getTransactioncom().compareTo(BigDecimal.ZERO) != 0)) {
+                    errorList.add(new ValidMessage("只可对待分发或者已接收执行进度为0%的指令执行退回操作!"));
                 }
                 param.put("entrustId", item.getEntrustId());
                 if (cfetsIbuQuoteBondEtrMapper.checkDataStatus(param) > 0) {
