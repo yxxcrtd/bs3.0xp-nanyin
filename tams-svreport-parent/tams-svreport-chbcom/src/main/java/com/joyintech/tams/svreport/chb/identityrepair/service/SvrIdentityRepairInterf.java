@@ -77,6 +77,7 @@ public class SvrIdentityRepairInterf extends BaseService{
 				String registBankCode = sub.getRegistBankCode();
 				if(sub.getEquMark().equals("SUB")) {
 					svrIdentityRepairInterfMapper.updataSub(agencyCode,registBankCode,fundAccPlace,orgIndentifyMark);
+					svrIdentityRepairInterfMapper.updataInfo(agencyCode,registBankCode,fundAccPlace,orgIndentifyMark);
 				}
 				if(sub.getEquMark().equals("CHECK")) {
 					svrIdentityRepairInterfMapper.updataCheck(agencyCode,registBankCode,fundAccPlace,orgIndentifyMark);

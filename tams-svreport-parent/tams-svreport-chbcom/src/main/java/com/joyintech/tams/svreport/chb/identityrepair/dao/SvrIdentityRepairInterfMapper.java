@@ -42,6 +42,13 @@ public interface SvrIdentityRepairInterfMapper {
 	int updataSub(@Param("agencyCode")String agencyCode,@Param("registBankCode")String registBankCode,@Param("fundAccPlace")String fundAccPlace,@Param("orgIndentifyMark")String orgIndentifyMark);
 
 	/**
+	 * 更新数据INFO
+	 * @param
+	 */
+	int updataInfo(@Param("agencyCode")String agencyCode,@Param("registBankCode")String registBankCode,@Param("fundAccPlace")String fundAccPlace,@Param("orgIndentifyMark")String orgIndentifyMark);
+
+	
+	/**
 	 * 更新数据CHECK
 	 * @param
 	 */
