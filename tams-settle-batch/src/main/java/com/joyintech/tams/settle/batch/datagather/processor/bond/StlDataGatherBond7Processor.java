@@ -266,7 +266,7 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
         // 交割日
         trdProductDeal.setSettleDate(trdProductDeal.getTradeDate());
         // 交易币种
-        trdProductDeal.setCcy(trdProductDeal.getCcy());
+        trdProductDeal.setCcy(DictCodeList.币种_人民币_CNY.getValue());
         // 净值日期
         trdProductDeal.setCpriceDate(null);
         // 投资目的

@@ -813,6 +813,7 @@
 			SEC_ACCT_ID,
 			FINPROD_ID,
 			PORTFOLIO_ID,
+			INV_AIM,
 			SUM(AMOUNT) AMOUNT
 		FROM
 			PTL_SEC_POSITION psp
@@ -820,7 +821,8 @@
 		GROUP BY
 			SEC_ACCT_ID,
 			FINPROD_ID,
-			PORTFOLIO_ID
+			PORTFOLIO_ID,
+			INV_AIM
 	</select>
 
 	<!--债券申购确认-->
@@ -899,7 +901,7 @@
 			TRADE_ID,
 			ENTRUST_ID
 		FROM
-			PTL_SEC_POSITION_FOLW
+			PTL_SEC_POSITION_FLOW
 		WHERE HODING_TYPE = #{hodingType,jdbcType=DATE}
 		  AND CDATE &lt;= #{dealDate,jdbcType=DATE}
 	</select>

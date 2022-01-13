@@ -299,7 +299,10 @@ public class StlDownDataDealReaderService {
     				List<SzdZqbd> szdZqbdList = this.selectSzdZqbd(dealDate, settleDataRulePartitionDto.getDataFile(), searchMap);
     				for (SzdZqbd szdZqbd : szdZqbdList) {
     					// 流通类型为0的数据才处理。未来了能会修改。
-    					if (StringUtil.isNotEmpty(szdZqbd.getLtlx()) && StringUtil.equals(szdZqbd.getLtlx(), "0")) {
+    					if (StringUtil.isNotEmpty(szdZqbd.getLtlx()) &&
+								(StringUtil.equals(szdZqbd.getLtlx(), "0")
+								|| StringUtil.equals(szdZqbd.getLtlx(), "N")
+								)) {
 	    					String key = settleDataRulePartitionDto.getFinprodType() + settleDataRulePartitionDto.getTableName() + 
 	    							settleDataRulePartitionDto.getDataFile() + szdZqbd.getZqzh();
 	    					if (dealSettleDataMap.get(key) == null) {

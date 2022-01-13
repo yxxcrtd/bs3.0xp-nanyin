@@ -125,7 +125,7 @@ public class StlDataDealSzdZqbdProcessService {
                         zqSsltList.add(szdZqbd);
                     }
                 }
-	        	List<FinProductQuto> circulateFinProductQutoList = generatorBondCirculateFinProductQutoList(stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList(), map, stlDownDataDealOperatorDto);
+	        	List<FinProductQuto> circulateFinProductQutoList = generatorBondCirculateFinProductQutoList(zqSsltList, map, stlDownDataDealOperatorDto);
                 finProductQutoList.addAll(circulateFinProductQutoList);
                 stlDownDataDealWriteDto.setFinProductQutoList(finProductQutoList);
         	}
@@ -485,9 +485,17 @@ public class StlDataDealSzdZqbdProcessService {
             String approvalNo = szdZqbd.getZqdm();
             List<String> finprodIdList = new ArrayList<>();
             List<FinProduct> finProducts = stlDownDataDealMapper.getFinproductByFinProdMarketId(szdZqbd.getZqdm() + ".SH");
-            if(CollectionUtils.isNotEmpty(finProducts) && finProducts.get(0).getFinprodType2().equals(stlDownDataDealOperatorDto.getFinprodType())){
-                finprodIdList.add(finProducts.get(0).getFinprodId());
-            }else{
+            if(CollectionUtils.isNotEmpty(finProducts)){
+                if(DictCodeListExt1.证券品种_债券.getValue().equals(stlDownDataDealOperatorDto.getFinprodType())
+                    && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finProducts.get(0).getFinprodType2())){
+                    finprodIdList.add(finProducts.get(0).getFinprodId());
+                }
+                if(DictCodeListExt1.证券品种_股票.getValue().equals(stlDownDataDealOperatorDto.getFinprodType())
+                        && DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finProducts.get(0).getFinprodType2())){
+                    finprodIdList.add(finProducts.get(0).getFinprodId());
+                }
+            }
+            if(CollectionUtils.isEmpty(finProducts)){
                 finprodIdList = stlDownDataDealMapper.getFinproductIdByApprovalNo(DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue(), approvalNo);
             }
             if (finprodIdList != null && finprodIdList.size() > 0) {

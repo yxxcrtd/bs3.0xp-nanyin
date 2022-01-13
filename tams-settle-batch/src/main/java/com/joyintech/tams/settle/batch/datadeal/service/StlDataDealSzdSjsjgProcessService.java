@@ -1156,8 +1156,10 @@ public class StlDataDealSzdSjsjgProcessService {
             String approvalNo = szdSjsjg.getJgzqdm();
             List<String> finprodIdList = new ArrayList<>();
             List<FinProduct> finProducts = stlDownDataDealMapper.getFinproductByFinProdMarketId(approvalNo + ".SZ");
-            if(CollectionUtils.isNotEmpty(finProducts) && finProducts.get(0).getFinprodType2().equals(stlDownDataDealOperatorDto.getFinprodType())){
-                finprodIdList.add(finProducts.get(0).getFinprodId());
+            if(CollectionUtils.isNotEmpty(finProducts)){
+                if( DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finProducts.get(0).getFinprodType2())){
+                    finprodIdList.add(finProducts.get(0).getFinprodId());
+                }
             }
             if(CollectionUtils.isEmpty(finprodIdList)){
                 if(StringUtil.equals(szdSjsjg.getJgywlb(), StlDataDealProcessConstant.YWLB_PGQZ)){
