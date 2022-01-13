@@ -174,10 +174,10 @@ public class ManualSettleService extends BaseService<ManualSettleDto> {
                     parameter.setCustom(trdTempDto);
                     commonPositionService.process(parameter);
 
-                    // 3.调用基础组件.【投资委托组件.完成委托】，写入委托完成状况信息(投资委托场合才执行此步)
-                    if (!finProductTradeDto.isNeedHandleFinishEntrust()) {
-                        baseTradeProductDealCommService.finishEntrust(finProductTradeDto.getBaseTradeProductDealDtos(), false);
-                    }
+//                    // 3.调用基础组件.【投资委托组件.完成委托】，写入委托完成状况信息(投资委托场合才执行此步)
+//                    if (!finProductTradeDto.isNeedHandleFinishEntrust()) {
+//                        baseTradeProductDealCommService.finishEntrust(finProductTradeDto.getBaseTradeProductDealDtos(), false);
+//                    }
                 }else{
                     List<PtlCashPosition> ptlCashPositions = manualSettleMapper.listPtlCashPositionFlow(stlPayOrdersDto.getOrderId());
                     List<PtlSecPosition> ptlSecPositions = manualSettleMapper.listPtlSecPositionFlow(trdProductDeal.getTradeId());
