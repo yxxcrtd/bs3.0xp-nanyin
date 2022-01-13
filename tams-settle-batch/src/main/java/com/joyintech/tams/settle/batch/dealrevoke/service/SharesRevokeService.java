@@ -57,12 +57,16 @@ public class SharesRevokeService implements BaseRevokeService {
             investDealRevokeService.revokeDeal(tradeIdList);
             for (String tradeId : tradeIdList) {
                 PaTrdProductDeal paTrdProductDeal = paTrdProductDealMapper.selectByPrimaryKey(tradeId);
-                paTrdProductDeal.setTradeId(paTrdProductDeal.getTradeId() + "R");
-                paTrdProductDeal.setCreateUser(GlobalConstant.SYSTEM_USER);
-                paTrdProductDeal.setCreateTime(new Date());
-                paTrdProductDeal.setUpdateUser(paTrdProductDeal.getCreateUser());
-                paTrdProductDeal.setUpdateTime(paTrdProductDeal.getCreateTime());
-                paTrdProductDealMapper.insertSelective(paTrdProductDeal);
+                // GZYHTZJY-1084:判断paTrdProductDeal是否为空 modify fuyongsheng 20220112 start
+                if(paTrdProductDeal != null){
+                    paTrdProductDeal.setTradeId(paTrdProductDeal.getTradeId() + "R");
+                    paTrdProductDeal.setCreateUser(GlobalConstant.SYSTEM_USER);
+                    paTrdProductDeal.setCreateTime(new Date());
+                    paTrdProductDeal.setUpdateUser(paTrdProductDeal.getCreateUser());
+                    paTrdProductDeal.setUpdateTime(paTrdProductDeal.getCreateTime());
+                    paTrdProductDealMapper.insertSelective(paTrdProductDeal);
+                }
+                // GZYHTZJY-1084:判断paTrdProductDeal是否为空 modify fuyongsheng 20220112 end
             }
         }
         // 参考股票分红送转交易撤销逻辑，生成已生效的撤销交易数据，同时反向更新头寸信息、持仓信息以及委托完成信息。注意不要调用对外发送逻辑。
