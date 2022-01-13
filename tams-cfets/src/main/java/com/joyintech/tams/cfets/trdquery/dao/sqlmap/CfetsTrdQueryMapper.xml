@@ -1442,7 +1442,7 @@
             where ibd.trade_status='07' and ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
         )ibd
         on ib.quote_id=ibd.quote_id
-        inner join(
+        left join(
         select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
         sum(ir.share_amt)/100 as faceValue
         from ibu_quote_etr_re ir
@@ -1496,60 +1496,60 @@
         left join fin_product fp
         on ib.finprod_id=fp.finprod_id
         left join (
-        select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-        nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.yield as yield,
-        ibd.unit_cprice,
-        ibd.exer_yield,
-        ibd.unit_int,
-        ibd.unit_fprice,
-        ibd.cprice_amt,
-        ibd.int_amt,
-        ibd.fprice_amt
-        from wfl_ibu_quote_bond_det ibd
-        inner join wfl_ibu_quote_bond2 t1
-        on ibd.quote_id=t1.quote_id and t1.quote_type='01'
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
-        left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
-        where   ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
-        union all
-        select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
-        wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
-        null as yield,
-        null as unit_cprice,
-        null as exer_yield,
-        null as  unit_int,
-        null as unit_fprice,
-        null as cprice_amt,
-        null as int_amt,
-        null as fprice_amt
-        from wfl_ibu_quote_bond_det ibd
-        inner join wfl_ibu_quote_bond2 t1
-        on ibd.quote_id=t1.quote_id and t1.quote_type='02'
-        and t1.trade_status!='07' and ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
-        left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
-        group by ibd.quote_id
-        union all
-        select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-        nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,
-        ibd.yield as yield,
-        ibd.unit_cprice,
-        ibd.exer_yield,
-        ibd.unit_int,
-        ibd.unit_fprice,
-        ibd.cprice_amt,
-        ibd.int_amt,
-        ibd.fprice_amt
-        from wfl_ibu_quote_bond_det ibd
-        inner join wfl_ibu_quote_bond2 t1
-        on ibd.quote_id=t1.quote_id and t1.quote_type='02'
-        and t1.trade_status='07'
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
-        left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
-        where ibd.trade_status='07' and ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
+            select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.yield as yield,
+            ibd.unit_cprice,
+            ibd.exer_yield,
+            ibd.unit_int,
+            ibd.unit_fprice,
+            ibd.cprice_amt,
+            ibd.int_amt,
+            ibd.fprice_amt
+            from wfl_ibu_quote_bond_det ibd
+            inner join wfl_ibu_quote_bond2 t1
+            on ibd.quote_id=t1.quote_id and t1.quote_type='01'
+            LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
+            left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
+            where   ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
+            union all
+            select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
+            wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
+            null as yield,
+            null as unit_cprice,
+            null as exer_yield,
+            null as  unit_int,
+            null as unit_fprice,
+            null as cprice_amt,
+            null as int_amt,
+            null as fprice_amt
+            from wfl_ibu_quote_bond_det ibd
+            inner join wfl_ibu_quote_bond2 t1
+            on ibd.quote_id=t1.quote_id and t1.quote_type='02'
+            and t1.trade_status!='07' and ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
+            LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
+            left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
+            group by ibd.quote_id
+            union all
+            select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,
+            ibd.yield as yield,
+            ibd.unit_cprice,
+            ibd.exer_yield,
+            ibd.unit_int,
+            ibd.unit_fprice,
+            ibd.cprice_amt,
+            ibd.int_amt,
+            ibd.fprice_amt
+            from wfl_ibu_quote_bond_det ibd
+            inner join wfl_ibu_quote_bond2 t1
+            on ibd.quote_id=t1.quote_id and t1.quote_type='02'
+            and t1.trade_status='07'
+            LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
+            left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
+            where ibd.trade_status='07' and ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
         )ibd
         on ib.quote_id=ibd.quote_id
-        inner join(
+        left join(
         select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
         sum(ir.share_amt)/100 as faceValue
         from wfl_ibu_quote_etr_re ir
