@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 配债
+ * 质押券出入库
  */
 @Service
 public class ExchangeTransMatchBond6Service extends ExchangeTransMatchBondCommonService {

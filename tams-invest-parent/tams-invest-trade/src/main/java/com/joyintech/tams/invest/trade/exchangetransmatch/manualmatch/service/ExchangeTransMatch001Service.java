@@ -382,7 +382,7 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                         trdBondToStock001Dto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
                         trdBondToStock001Dto.setIsOutTrade(DictCodeList.是否_是.getValue());
                         trdBondToStock001Dto.setConShareId(settleTransDataTotalAdd.getrFinprodId());
-                        trdBondToStock001Dto.setConvdate(settleTransDataTotal.getVdate());
+//                        trdBondToStock001Dto.setConvdate(settleTransDataTotal.getVdate());
                         trdBondToStock001Dto.setConNum(settleTransDataTotalAdd.getConAmt());
                         trdBondToStock001Dto.setConPrice(settleTransDataTotalAdd.getConPrice());
                         trdBondToStock001Dto.setTradeAmt(dto.getRemainAmount());
