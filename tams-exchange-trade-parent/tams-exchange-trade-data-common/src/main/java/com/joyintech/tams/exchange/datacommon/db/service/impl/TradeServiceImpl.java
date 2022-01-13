@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.exchange.common.bean.TradeQryBean;
 import com.joyintech.tams.exchange.common.bean.TradeQueryBean;
 import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
 import com.joyintech.tams.exchange.common.constant.TradeType;
@@ -68,6 +69,7 @@ public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements
         if (CollectionUtils.isEmpty(values)) {
             return new ArrayList<>();
         }
+
         List<TradeQueryBean> tradeQueryBeans = Lists.newArrayList();
         values.forEach(trade -> {
             TradeQueryBean tradeQueryBean = new TradeQueryBean();
@@ -136,26 +138,10 @@ public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements
         String stockCode = request.getStockCode();
         String entrustProp = request.getEntrustProp();
         PageMode pageMode = request.getPageMode();
-        TradeExample tradeExample = new TradeExample();
-        TradeExample.Criteria criteria = tradeExample.createCriteria();
-        if (!Strings.isNullOrEmpty(accountId)) {
-            criteria.andAccountIdEqualTo(accountId);
-        }
-        if (!Strings.isNullOrEmpty(market)) {
-            criteria.andMarketEqualTo(market);
-        }
-        if (!Strings.isNullOrEmpty(stockCode)) {
-            criteria.andStockCodeEqualTo(stockCode);
-        }
-        if (!Strings.isNullOrEmpty(entrustProp)) {
-            criteria.andEntrustPropEqualTo(entrustProp);
-        }
-        if (Objects.nonNull(ptlAuthList) && ptlAuthList.size() > 0) {
-            criteria.andPortfolioIdIn(ptlAuthList);
-        }
 
+        TradeQryBean tradeQryBean = new TradeQryBean(accountId, market, stockCode, entrustProp, ptlAuthList);
         PageHelper.startPage(pageMode.getPageNo(), pageMode.getPageSize());
-        List<TradeQueryBean> tradeHistories = tradeMapper.selectTradeByExample(tradeExample);
+        List<TradeQueryBean> tradeHistories = tradeMapper.selectTradeByPage(tradeQryBean);
         tradeHistories.forEach(tradeHistory -> {
             if (InvestmentAssetType.isFutures(tradeHistory.getAssetType())) {
                 tradeHistory.setStockCode(StockCodeUtils.getStockCode(tradeHistory.getStockCode()));

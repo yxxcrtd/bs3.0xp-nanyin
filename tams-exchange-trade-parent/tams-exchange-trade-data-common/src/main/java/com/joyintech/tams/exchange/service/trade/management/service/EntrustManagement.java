@@ -429,8 +429,32 @@ public class EntrustManagement extends BaseService {
         }
     }
 
-    public Message<PageInfo<Object>> queryIntegratedEntrustForPage(PageEntrustInfoRequest request) {
-        return new Message<>(queryIntegratedEntrustForPage(request.getPageNum(), request.getPageSize(), request.getHistoryType(), request.getUserId(), request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getPortfolioId(), request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustStatus()));
+//    public Message<PageInfo<Object>> queryIntegratedEntrustForPage(PageEntrustInfoRequest request) {
+//        return new Message<>(queryIntegratedEntrustForPage(request.getPageNum(), request.getPageSize(), request.getHistoryType(), request.getUserId(), request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getPortfolioId(), request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustStatus()));
+//    }
+
+    public Message<PageInfo<EntrustQueryBean>> queryIntegratedEntrustForPage(PageEntrustInfoRequest request) {
+        String userId = request.getUserId();
+        String portfolioId = request.getPortfolioId();
+        //组合权限查询
+        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
+        if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
+            logger.info("用户：{}没有组合权限", userId);
+            return new Message<PageInfo<EntrustQueryBean>>(new PageInfo());
+        }
+        if (!Strings.isNullOrEmpty(portfolioId) && !ptlAuthList.contains(portfolioId)) {
+            logger.info("用户：{}没有{}的组合权限", userId, portfolioId);
+            return new Message<PageInfo<EntrustQueryBean>>(new PageInfo());
+        }
+        Integer historyType = request.getHistoryType();
+        if (historyType == PresentOrHistoryQryType.PRESENT.value) {
+            PageInfo<EntrustQueryBean> entrustForPage = integratedEntrustService.queryAllForPage(request, ptlAuthList);
+            return new Message<PageInfo<EntrustQueryBean>>(entrustForPage);
+        } else if (historyType == PresentOrHistoryQryType.HISTORY.value) {
+            PageInfo<EntrustQueryBean> entrustHistoryForPage = integratedEntrustHistoryService.queryAllForPage(request, ptlAuthList);
+            return new Message<PageInfo<EntrustQueryBean>>(entrustHistoryForPage);
+        }
+        return new Message<PageInfo<EntrustQueryBean>>().fail(ErrorCode.REQ_PARAMETER_ERROR.value + "", ErrorCode.REQ_PARAMETER_ERROR.errorMsg);
     }
 
     public ResultBean queryIntegratedEntrustForPage(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus) {

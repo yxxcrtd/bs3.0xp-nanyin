@@ -22,7 +22,10 @@ public interface IntegratedEntrustService extends AsyncService<String, Integrate
 
     IntegratedEntrust queryIntegratedEntrustByLocalEntrustIdAndAccount(String localEntrustId, String accountId);
 
+    @Deprecated
     PageInfo<IntegratedEntrust> queryAllForPage(int pageNum, int pageSize, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus, List<String> ptlAuthList);
+
+    PageInfo<EntrustQueryBean> queryAllForPage(PageEntrustInfoRequest request, List<String> ptlAuthList);
 
     /**
      * 查询 普通委托 和 综合业务委托 总和

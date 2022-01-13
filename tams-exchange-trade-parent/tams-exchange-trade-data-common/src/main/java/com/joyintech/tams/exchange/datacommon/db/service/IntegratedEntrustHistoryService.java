@@ -13,7 +13,10 @@ public interface IntegratedEntrustHistoryService {
 
     void saveIntegratedEntrustHistory(List<IntegratedEntrustHistory> integratedEntrustHistories);
 
+    @Deprecated
     PageInfo<IntegratedEntrustHistory> queryAllForPage(int pageNum, int pageSize, String userId, String startDay, String endDay, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus, List<String> ptlAuthList);
+
+    PageInfo<EntrustQueryBean> queryAllForPage(PageEntrustInfoRequest request, List<String> ptlAuthList);
 
     @Deprecated
     PageInfo<IntegratedEntrustHistory> queryAllEntrustForPage(int pageNum, int pageSize, String userId, String startDay, String endDay, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus, List<String> ptlAuthList);

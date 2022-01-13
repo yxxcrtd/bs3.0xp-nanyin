@@ -77,6 +77,10 @@
         <result column="HEDGE_FLAG" property="hedgeFlag" jdbcType="VARCHAR"/>
         <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR"/>
         <result column="FULL_PRICE" property="fullPrice" jdbcType="NUMERIC"/>
+        <result column="PORTFOLIO_NAME" property="portfolioName" jdbcType="NUMERIC"/>
+        <result column="SEC_ACCT_ID" property="secAcctId" jdbcType="VARCHAR"/>
+        <result column="TRADE_PLAT" property="tradePlat" jdbcType="VARCHAR"/>
+        <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -146,6 +150,46 @@
     BROKER_TRADE_ID, REPORT_NO, CREATE_TIME, UPDATE_TIME, OFFSET_FLAG, HEDGE_FLAG, PORTFOLIO_ID, FULL_PRICE
     </sql>
 
+    <sql id="Query_Column_List">
+        a.ID, a.INSTRUCTION_ID, a.PARENT_ORDER_ID, a.ENTRUST_ID, a.ACCOUNT_ID, a.FINANCE_ACCOUNT, a.ACCOUNT_NAME,
+        a.MARKET, a.ASSET_TYPE, a.STOCK_CODE, a.STOCK_NAME, a.BUSINESS_FLAG, a.ENTRUST_TYPE, a.ENTRUST_PROP, a.ENTRUST_BS,
+        a.BS_FLAG, a.TRADE_TYPE, a.TRADED_BALANCE, a.TRADED_VOLUME, a.TRADED_PRICE, a.CLEAR_BALANCE, a.TRADE_TIME,
+        a.DISCOUNT, a.TRANS_CODE, a.PROP_SEAT_NO,  a.TRADING_DAY, a.LOCAL_ENTRUST_ID, a.BROKER_ENTRUST_ID, a.BROKER_TRADE_ID,
+        a.REPORT_NO, a.CREATE_TIME, a.UPDATE_TIME, a.OFFSET_FLAG, a.HEDGE_FLAG, a.PORTFOLIO_ID, a.FULL_PRICE,
+        b.PORTFOLIO_NAME,b.SEC_ACCT_ID,b.TRADE_PLAT,b.FINPROD_TYPE2
+    </sql>
+    <sql id="queryCondition2">
+        <where>
+            <if test="accountId != null and entrustId != ''">
+                AND a.ENTRUST_ID = #{entrustId}
+            </if>
+            <if test="accountId != null and accountId != ''">
+                AND a.ACCOUNT_ID = #{accountId}
+            </if>
+            <if test="market != null and market != ''">
+                AND a.MARKET = #{market}
+            </if>
+            <if test="stockCode != null and stockCode != ''">
+                AND a.STOCK_CODE = #{stockCode}
+            </if>
+            <if test="entrustProp != null and entrustProp != ''">
+                AND a.ENTRUST_PROP = #{entrustProp}
+            </if>
+            <if test="startDay != null and startDay != ''">
+                AND a.TRADING_DAY &gt;= #{startDay}
+            </if>
+            <if test="endDay != null and endDay != ''">
+                AND a.TRADING_DAY &lt;= #{endDay}
+            </if>
+            <if test="portfolioList != null and portfolioList.size()>0">
+                AND a.PORTFOLIO_ID in
+                <foreach collection="portfolioList" item="portfolioCode" index="index" open="(" close=")" separator=",">
+                    #{portfolioCode,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </sql>
+
     <!--GZYHTZJY-126:修改查询语句,关联资产表,获取正确的资产简称 fuyongsheng 20211030 edit start-->
     <select id="selectByExample" resultMap="BaseResultMap"
             parameterType="com.joyintech.tams.exchange.common.db.domain.TradeExample">
@@ -202,56 +246,12 @@
     </select>
     <!--GZYHTZJY-126:修改查询语句,关联资产表,获取正确的资产简称 fuyongsheng 20211030 edit end-->
 
-    <select id="selectTradeByExample" resultMap="QueryResultMap"
-            parameterType="com.joyintech.tams.exchange.common.db.domain.TradeExample">
+    <select id="selectTradeByPage" resultMap="QueryResultMap"
+            parameterType="com.joyintech.tams.exchange.common.bean.TradeQryBean">
         SELECT
-        <if test="distinct">
-            DISTINCT
-        </if>
-        a.ID,
-        a.INSTRUCTION_ID,
-        a.PARENT_ORDER_ID,
-        a.ENTRUST_ID,
-        a.ACCOUNT_ID,
-        a.FINANCE_ACCOUNT,
-        a.ACCOUNT_NAME,
-        a.MARKET,
-        a.ASSET_TYPE,
-        a.STOCK_CODE,
-        b.FINPROD_ABBR STOCK_NAME,
-        a.BUSINESS_FLAG,
-        a.ENTRUST_TYPE,
-        a.ENTRUST_PROP,
-        a.ENTRUST_BS,
-        a.BS_FLAG,
-        a.TRADE_TYPE,
-        a.TRADED_BALANCE,
-        a.TRADED_VOLUME,
-        a.TRADED_PRICE,
-        a.CLEAR_BALANCE,
-        a.TRADE_TIME,
-        a.DISCOUNT,
-        a.TRANS_CODE,
-        a.PROP_SEAT_NO,
-        a.TRADING_DAY,
-        a.LOCAL_ENTRUST_ID,
-        a.BROKER_ENTRUST_ID,
-        a.BROKER_TRADE_ID,
-        a.REPORT_NO,
-        a.CREATE_TIME,
-        a.UPDATE_TIME,
-        a.OFFSET_FLAG,
-        a.HEDGE_FLAG,
-        a.PORTFOLIO_ID,
-        a.FULL_PRICE
-        FROM T_TRADE a
-        LEFT JOIN FIN_PRODUCT b ON a.STOCK_CODE = b.FINPROD_MARKET_ID
-        <if test="_parameter != null">
-            <include refid="Example_Where_Clause"/>
-        </if>
-        <if test="orderByClause != null">
-            ORDER BY ${orderByClause}
-        </if>
+        <include refid="Query_Column_List"/>
+        FROM T_TRADE a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
+        <include refid="queryCondition2"/>
     </select>
 
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">

@@ -151,7 +151,7 @@ public class EntrustController {
 
     @ApiOperation(value = "查询分页综合业务委托信息", notes = "查询分页综合业务委托信息")
     @PostMapping(value = "/entrust/integrated/page")
-    public Message<PageInfo<Object>> queryIntegratedEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
+    public Message<PageInfo<EntrustQueryBean>> queryIntegratedEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
         return entrustManagement.queryIntegratedEntrustForPage(request);
     }
 

@@ -14,202 +14,221 @@ import java.util.Date;
 public class EntrustQueryBean implements Serializable {
     private static final long serialVersionUID = 3485015523935180239L;
 
-    @ApiModelProperty(required = true, name = "id", value = "委托ID")
-    private String id;
-
-    @ApiModelProperty(required = true, name = "positionStr", value = "定位串")
-    private String positionStr;
-
-    @ApiModelProperty(required = true, name = "parentOrderId", value = "订单编号")
-    private String parentOrderId;
-
-    @ApiModelProperty(required = true, name = "instructionId", value = "指令编号")
+    @ApiModelProperty(name = "instructionId", value = "指令编号")
     private String instructionId;
 
-    @ApiModelProperty(required = true, name = "portfolioId", value = "组合代码")
+    @ApiModelProperty(name = "brokerEntrustId", value = "委托编号")
+    private String brokerEntrustId;
+
+    @ApiModelProperty(name = "portfolioId", value = "组合代码")
     private String portfolioId;
 
-    @ApiModelProperty(required = true, name = "userId", value = "操作人Id")
-    private String userId;
+    @ApiModelProperty(name = "portfolioName", value = "组合名称")
+    private String portfolioName;
 
-    @ApiModelProperty(required = true, name = "username", value = "操作人名称")
-    private String username;
-
-    @ApiModelProperty(required = true, name = "accountId", value = "网点账号")
-    private String accountId;
-
-    @ApiModelProperty(required = true, name = "financeAccount", value = "资金账号")
+    @ApiModelProperty(name = "financeAccount", value = "资金账户")
     private String financeAccount;
 
-    @ApiModelProperty(required = true, name = "accountName", value = "网点账号名称")
-    private String accountName;
+    @ApiModelProperty(name = "secAcctId", value = "证券账户")
+    private String secAcctId;
 
-    @ApiModelProperty(required = true, name = "assetType", value = "资产类型")
-    private String assetType;
-
-    @ApiModelProperty(required = true, name = "market", value = "市场")
+    @ApiModelProperty(name = "market", value = "交易市场")
     private String market;
 
-    @ApiModelProperty(required = true, name = "stockCode", value = "证券代码")
+    @ApiModelProperty(name = "tradePlat", value = "交易平台")
+    private String tradePlat;
+
+    @ApiModelProperty(name = "stockCode", value = "资产代码")
     private String stockCode;
 
-    @ApiModelProperty(required = true, name = "stockName", value = "证券名称")
+    @ApiModelProperty(name = "stockName", value = "资产名称")
     private String stockName;
 
-    @ApiModelProperty(required = true, name = "entrustType", value = "委托类型")
-    private String entrustType;
+    @ApiModelProperty(name = "finprodType2", value = "资产类型")
+    private String finprodType2;
 
-    @ApiModelProperty(required = true, name = "entrustProp", value = "委托属性")
-    private String entrustProp;
-
-    @ApiModelProperty(required = true, name = "entrustBs", value = "交易方向")
+    @ApiModelProperty(name = "entrustBs", value = "委托方向")
     private String entrustBs;
 
-    @ApiModelProperty(required = true, name = "bsFlag", value = "买卖标志")
-    private String bsFlag;
+    @ApiModelProperty(name = "entrustProp", value = "价格类型")
+    private String entrustProp;
 
-    @ApiModelProperty(required = true, name = "entrustVolume", value = "委托数量")
-    private long entrustVolume;
-
-    @ApiModelProperty(required = true, name = "entrustPrice", value = "委托价格")
+    @ApiModelProperty(name = "entrustPrice", value = "委托价格")
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal entrustPrice;
 
-    @ApiModelProperty(required = true, name = "fullPrice", value = "全价价格")
-    @JsonSerialize(using = DoubleSerializerUtils.class)
-    private BigDecimal fullPrice;
+    @ApiModelProperty(name = "entrustVolume", value = "委托数量")
+    private long entrustVolume;
 
-    @ApiModelProperty(required = true, name = "entrustBalance", value = "委托金额")
+    @ApiModelProperty(name = "entrustBalance", value = "委托金额")
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal entrustBalance;
 
-    @ApiModelProperty(required = true, name = "discount", value = "质押券折算比例")
-    @JsonSerialize(using = DoubleSerializerUtils.class)
-    private BigDecimal discount;
+    @ApiModelProperty(name = "entrustStatus", value = "委托状态")
+    private int entrustStatus;
 
-    @ApiModelProperty(required = true, name = "transCode", value = "到期续作类型（0-非第三方，1-第三方）")
-    private String transCode;
+    @ApiModelProperty(name = "tradedVolume", value = "已成交数量")
+    private long tradedVolume;
 
-    @ApiModelProperty(required = true, name = "expireYearRate", value = "到期交割比率")
-    @JsonSerialize(using = DoubleSerializerUtils.class)
-    private BigDecimal expireYearRate;
-
-    @ApiModelProperty(required = true, name = "pretermYearRate", value = "年化收益率")
-    private long pretermYearRate;
-
-    @ApiModelProperty(required = true, name = "liaisonName", value = "联络人姓名")
-    private String liaisonName;
-
-    @ApiModelProperty(required = true, name = "liaisonTel", value = "对手方交易员ID")
-    private String liaisonTel;
-
-    @ApiModelProperty(required = true, name = "propSeatNo", value = "对手方交易商ID")
-    private String propSeatNo;
-
-    @ApiModelProperty(required = true, name = "sellerNo", value = "本方交易员ID")
-    private String sellerNo;
-
-    @ApiModelProperty(required = true, name = "propSeatName", value = "对手方交易商名称")
-    private String propSeatName;
-
-    @ApiModelProperty(required = true, name = "contractId", value = "交易所请求编号")
-    private String contractId;
-
-    @ApiModelProperty(required = true, name = "firstSettleDate", value = "首次结算日")
-    private String firstSettleDate;
-
-    @ApiModelProperty(required = true, name = "backDate", value = "到期结算日")
-    private String backDate;
-
-    @ApiModelProperty(required = true, name = "compactTerm", value = "回购期限")
-    private int compactTerm;
-
-    @ApiModelProperty(required = true, name = "backBalance", value = "到期结算金额")
-    @JsonSerialize(using = DoubleSerializerUtils.class)
-    private BigDecimal backBalance;
-
-    @ApiModelProperty(required = true, name = "origSerialNo", value = "原交易编号")
-    private String origSerialNo;
-
-    @ApiModelProperty(required = true, name = "reductionType", value = "类型", hidden = true)
-    private String reductionType;
-
-    @ApiModelProperty(required = true, name = "frozenBalance", value = "冻结金额")
-    @JsonSerialize(using = DoubleSerializerUtils.class)
-    private BigDecimal frozenBalance;
-
-    @ApiModelProperty(required = true, name = "frozenVolume", value = "冻结数量")
-    private long frozenVolume;
-
-    @ApiModelProperty(required = true, name = "tradedBalance", value = "成交金额")
+    @ApiModelProperty(name = "tradedBalance", value = "已成交金额")
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal tradedBalance;
 
-    @ApiModelProperty(required = true, name = "tradedVolume", value = "成交数量")
-    private long tradedVolume;
-
-    @ApiModelProperty(required = true, name = "tradedPrice", value = "成交价格")
+    @ApiModelProperty(name = "tradedPrice", value = "成交价格")
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal tradedPrice;
 
-    @ApiModelProperty(required = true, name = "cancelVolume", value = "撤销数量")
-    private long cancelVolume;
+    @ApiModelProperty(name = "invManagerId", value = "投资经理")
+    private String invManagerId;
 
-    @ApiModelProperty(required = true, name = "reportTime", value = "申报时间")
-    private String reportTime;
+    @ApiModelProperty(name = "userId", value = "交易员")
+    private String userId;
 
-    @ApiModelProperty(required = true, name = "tradeTime", value = "成交时间")
-    private String tradeTime;
+    @ApiModelProperty(name = "username", value = "交易员名称")
+    private String username;
 
-    @ApiModelProperty(required = true, name = "cancelTime", value = "撤销时间")
-    private String cancelTime;
-
-    @ApiModelProperty(required = true, name = "errorCode", value = "错误码")
-    private int errorCode;
-
-    @ApiModelProperty(required = true, name = "errorMsg", value = "错误描述")
-    private String errorMsg;
-
-    @ApiModelProperty(required = true, name = "tradingDay", value = "交易日期")
+    @ApiModelProperty(name = "tradingDay", value = "委托时间/业务日期")
     private String tradingDay;
 
-    @ApiModelProperty(required = true, name = "localEntrustId", value = "本地委托编号")
+    @ApiModelProperty(name = "frozenBalance", value = "冻结金额")
+    @JsonSerialize(using = DoubleSerializerUtils.class)
+    private BigDecimal frozenBalance;
+
+    @ApiModelProperty(name = "frozenVolume", value = "冻结数量")
+    private long frozenVolume;
+
+    @ApiModelProperty(name = "cancelVolume", value = "撤销数量")
+    private long cancelVolume;
+
+
+    @ApiModelProperty(name = "id", value = "委托ID", hidden = true)
+    private String id;
+
+    @ApiModelProperty(name = "positionStr", value = "定位串", hidden = true)
+    private String positionStr;
+
+    @ApiModelProperty(name = "parentOrderId", value = "订单编号", hidden = true)
+    private String parentOrderId;
+
+    @ApiModelProperty(name = "accountId", value = "网点账号", hidden = true)
+    private String accountId;
+
+    @ApiModelProperty(name = "accountName", value = "网点账号名称", hidden = true)
+    private String accountName;
+
+    @ApiModelProperty(name = "assetType", value = "资产类型", hidden = true)
+    private String assetType;
+
+    @ApiModelProperty(name = "entrustType", value = "委托类型", hidden = true)
+    private String entrustType;
+
+    @ApiModelProperty(name = "bsFlag", value = "买卖标志", hidden = true)
+    private String bsFlag;
+
+    @ApiModelProperty(name = "fullPrice", value = "全价价格", hidden = true)
+    @JsonSerialize(using = DoubleSerializerUtils.class)
+    private BigDecimal fullPrice;
+
+    @ApiModelProperty(name = "discount", value = "质押券折算比例", hidden = true)
+    @JsonSerialize(using = DoubleSerializerUtils.class)
+    private BigDecimal discount;
+
+    @ApiModelProperty(name = "transCode", value = "到期续作类型（0-非第三方，1-第三方）", hidden = true)
+    private String transCode;
+
+    @ApiModelProperty(name = "expireYearRate", value = "到期交割比率", hidden = true)
+    @JsonSerialize(using = DoubleSerializerUtils.class)
+    private BigDecimal expireYearRate;
+
+    @ApiModelProperty(name = "pretermYearRate", value = "年化收益率", hidden = true)
+    private long pretermYearRate;
+
+    @ApiModelProperty(name = "liaisonName", value = "联络人姓名", hidden = true)
+    private String liaisonName;
+
+    @ApiModelProperty(name = "liaisonTel", value = "对手方交易员ID", hidden = true)
+    private String liaisonTel;
+
+    @ApiModelProperty(name = "propSeatNo", value = "对手方交易商ID", hidden = true)
+    private String propSeatNo;
+
+    @ApiModelProperty(name = "sellerNo", value = "本方交易员ID", hidden = true)
+    private String sellerNo;
+
+    @ApiModelProperty(name = "propSeatName", value = "对手方交易商名称", hidden = true)
+    private String propSeatName;
+
+    @ApiModelProperty(name = "contractId", value = "交易所请求编号", hidden = true)
+    private String contractId;
+
+    @ApiModelProperty(name = "firstSettleDate", value = "首次结算日", hidden = true)
+    private String firstSettleDate;
+
+    @ApiModelProperty(name = "backDate", value = "到期结算日", hidden = true)
+    private String backDate;
+
+    @ApiModelProperty(name = "compactTerm", value = "回购期限", hidden = true)
+    private int compactTerm;
+
+    @ApiModelProperty(name = "backBalance", value = "到期结算金额", hidden = true)
+    @JsonSerialize(using = DoubleSerializerUtils.class)
+    private BigDecimal backBalance;
+
+    @ApiModelProperty(name = "origSerialNo", value = "原交易编号", hidden = true)
+    private String origSerialNo;
+
+    @ApiModelProperty(name = "reductionType", value = "类型", hidden = true)
+    private String reductionType;
+
+    @ApiModelProperty(name = "reportTime", value = "申报时间", hidden = true)
+    private String reportTime;
+
+    @ApiModelProperty(name = "tradeTime", value = "成交时间", hidden = true)
+    private String tradeTime;
+
+    @ApiModelProperty(name = "cancelTime", value = "撤销时间", hidden = true)
+    private String cancelTime;
+
+    @ApiModelProperty(name = "errorCode", value = "错误码", hidden = true)
+    private int errorCode;
+
+    @ApiModelProperty(name = "errorMsg", value = "错误描述", hidden = true)
+    private String errorMsg;
+
+    @ApiModelProperty(name = "localEntrustId", value = "本地委托编号", hidden = true)
     private String localEntrustId;
 
-    @ApiModelProperty(required = true, name = "brokerEntrustId", value = "柜台委托编号")
-    private String brokerEntrustId;
-
-    @ApiModelProperty(required = true, name = "ipMac", value = "IP及MAC信息")
+    @ApiModelProperty(name = "ipMac", value = "IP及MAC信息", hidden = true)
     private String ipMac;
 
-    @ApiModelProperty(required = true, name = "remark", value = "备注")
+    @ApiModelProperty(name = "remark", value = "备注", hidden = true)
     private String remark;
 
-    @ApiModelProperty(required = true, name = "createTime", value = "创建时间")
+    @ApiModelProperty(name = "createTime", value = "创建时间", hidden = true)
     private Date createTime;
 
-    @ApiModelProperty(required = true, name = "updateTime", value = "修改时间")
+    @ApiModelProperty(name = "updateTime", value = "修改时间", hidden = true)
     private Date updateTime;
 
-    @ApiModelProperty(required = true, name = "entrustStatus", value = "委托状态")
-    private int entrustStatus;
-
-    @ApiModelProperty(required = true, name = "origEntrustId", value = "原委托ID")
+    @ApiModelProperty(name = "origEntrustId", value = "原委托ID", hidden = true)
     private String origEntrustId;
 
-    @ApiModelProperty(required = true, name = "count", value = "记录数")
+    @ApiModelProperty(name = "entrustId", value = "委托编号", hidden = true)
+    private String entrustId;
+
+    @ApiModelProperty(name = "count", value = "记录数", hidden = true)
     private int count;
 
-    @ApiModelProperty(required = true, name = "isFullPrice", value = "是否全价（Y-是 ，N-否）")
+    @ApiModelProperty(name = "isFullPrice", value = "是否全价（Y-是 ，N-否）", hidden = true)
     private String isFullPrice;
 
-    @ApiModelProperty(required = true, name = "reportNo", value = "柜台报盘编号")
+    @ApiModelProperty(name = "reportNo", value = "柜台报盘编号", hidden = true)
     private String reportNo;
 
-    @ApiModelProperty(required = true, name = "noCancelEntrust", value = "是否撤单")
+    @ApiModelProperty(name = "noCancelEntrust", value = "是否撤单", hidden = true)
     private boolean noCancelEntrust = false;
 
-    @ApiModelProperty(required = true, name = "operateUser", value = "操作人员ID 执行撤销异常委托操作人员ID")
+    @ApiModelProperty(name = "operateUser", value = "操作人员ID 执行撤销异常委托操作人员ID", hidden = true)
     private String operateUser;
 
     public boolean isNoCancelEntrust() {
@@ -729,4 +748,51 @@ public class EntrustQueryBean implements Serializable {
         this.operateUser = operateUser;
     }
 
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
+    }
+
+    public String getSecAcctId() {
+        return secAcctId;
+    }
+
+    public void setSecAcctId(String secAcctId) {
+        this.secAcctId = secAcctId;
+    }
+
+    public String getTradePlat() {
+        return tradePlat;
+    }
+
+    public void setTradePlat(String tradePlat) {
+        this.tradePlat = tradePlat;
+    }
+
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
+    }
+
+    public String getInvManagerId() {
+        return invManagerId;
+    }
+
+    public void setInvManagerId(String invManagerId) {
+        this.invManagerId = invManagerId;
+    }
+
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
+    }
 }

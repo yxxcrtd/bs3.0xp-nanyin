@@ -146,6 +146,23 @@ public class IntegratedEntrustServiceImpl extends AsyncServiceImpl<String, Integ
     }
 
     @Override
+    public PageInfo<EntrustQueryBean> queryAllForPage(PageEntrustInfoRequest request, List<String> ptlAuthList) {
+        PageMode pageMode = request.getPageMode();
+        String userId = request.getUserId();
+        String portfolioId = request.getPortfolioId();
+        String accountId = request.getAccountId();
+        String market = request.getMarket();
+        String stockCode = request.getStockCode();
+        String entrustProp = request.getEntrustProp();
+        Integer entrustStatus = request.getEntrustStatus();
+        EntrustQryBean entrustQryBean = new EntrustQryBean(userId, accountId, "", portfolioId, market, stockCode, entrustProp, entrustStatus, EntrustType.CANCEL.value, ptlAuthList);
+
+        PageHelper.startPage(pageMode.getPageNo(), pageMode.getPageSize());
+        List<EntrustQueryBean> integratedEntrustList = integratedEntrustMapper.selectIntegratedEntrustByPage(entrustQryBean);
+        return new PageInfo<>(integratedEntrustList);
+    }
+
+    @Override
     public PageInfo<IntegratedEntrust> queryAllEntrustForPage(int pageNum, int pageSize, String userId, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus, List<String> ptlAuthList) {
         PageHelper.startPage(pageNum, pageSize);
         //过滤撤单委托

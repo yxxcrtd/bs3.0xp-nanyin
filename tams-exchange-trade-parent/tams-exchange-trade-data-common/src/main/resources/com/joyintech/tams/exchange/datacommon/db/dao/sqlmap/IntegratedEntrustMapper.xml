@@ -123,6 +123,11 @@
         <result column="ORIG_ENTRUST_ID" property="origEntrustId" jdbcType="VARCHAR"/>
         <result column="REPORT_NO" property="reportNo" jdbcType="VARCHAR"/>
         <result column="OPERATE_USER" property="operateUser" jdbcType="VARCHAR"/>
+        <result column="PORTFOLIO_NAME" property="portfolioName" jdbcType="NUMERIC"/>
+        <result column="SEC_ACCT_ID" property="secAcctId" jdbcType="VARCHAR"/>
+        <result column="TRADE_PLAT" property="tradePlat" jdbcType="VARCHAR"/>
+        <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR"/>
+        <result column="INV_MANAGER_ID" property="invManagerId" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Example_Where_Clause">
@@ -196,6 +201,18 @@
     CANCEL_TIME, ERROR_CODE, ERROR_MSG, TRADING_DAY, LOCAL_ENTRUST_ID, BROKER_ENTRUST_ID, 
     IP_MAC, REMARK, CREATE_TIME, UPDATE_TIME, ENTRUST_STATUS, ORIG_ENTRUST_ID, REPORT_NO, OPERATE_USER
     </sql>
+    <sql id="Query_Column_List">
+        a.ID, a.PARENT_ORDER_ID, a.INSTRUCTION_ID, a.PORTFOLIO_ID, a.USER_ID, a.USERNAME, a.ACCOUNT_ID,
+    a.FINANCE_ACCOUNT, a.ACCOUNT_NAME, a.ASSET_TYPE, a.MARKET, a.STOCK_CODE, a.STOCK_NAME, a.ENTRUST_TYPE,
+    a.ENTRUST_PROP, a.ENTRUST_BS, a.BS_FLAG, a.ENTRUST_VOLUME, a.ENTRUST_PRICE, a.FULL_PRICE, a.ENTRUST_BALANCE,
+    a.DISCOUNT, a.TRANS_CODE, a.EXPIRE_YEAR_RATE, a.PRETERM_YEAR_RATE, a.LIAISON_NAME, a.LIAISON_TEL,
+    a.PROP_SEAT_NO,a.PROP_SEAT_NAME, a.SELLER_NO, a.CONTRACT_ID, a.FIRST_SETTLE_DATE, a.BACK_DATE,
+    a.COMPACT_TERM, a.BACK_BALANCE, a.ORIG_SERIAL_NO,a.REDUCTION_TYPE, a.FROZEN_BALANCE, a.FROZEN_VOLUME,
+    a.TRADED_BALANCE, a.TRADED_VOLUME, a.TRADED_PRICE, a.CANCEL_VOLUME, a.REPORT_TIME, a.TRADE_TIME,
+    a.CANCEL_TIME, a.ERROR_CODE, a.ERROR_MSG, a.TRADING_DAY, a.LOCAL_ENTRUST_ID, a.BROKER_ENTRUST_ID,
+    a.IP_MAC, a.REMARK, a.CREATE_TIME, a.UPDATE_TIME, a.ENTRUST_STATUS, a.ORIG_ENTRUST_ID, a.REPORT_NO, a.OPERATE_USER,
+    b.PORTFOLIO_NAME,b.SEC_ACCT_ID,b.TRADE_PLAT,b.FINPROD_TYPE2,b.INV_MANAGER_ID
+    </sql>
     <select id="selectByExample" resultMap="BaseResultMap"
             parameterType="com.joyintech.tams.exchange.common.db.domain.IntegratedEntrustExample">
         select
@@ -211,6 +228,17 @@
             order by ${orderByClause}
         </if>
     </select>
+
+    <select id="selectIntegratedEntrustByPage" resultMap="QueryResultMap"
+            parameterType="com.joyintech.tams.exchange.common.bean.EntrustQryBean">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Query_Column_List"/>
+        from T_INTEGRATED_ENTRUST a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
+        <include refid="queryCondition2"/>
+    </select>
     <sql id="entrust">
         ID, PARENT_ORDER_ID, INSTRUCTION_ID, PORTFOLIO_ID, USER_ID, USERNAME, ACCOUNT_ID,
         FINANCE_ACCOUNT, ACCOUNT_NAME, ASSET_TYPE, MARKET, STOCK_CODE, STOCK_NAME, ENTRUST_TYPE,
@@ -218,6 +246,20 @@
         FROZEN_VOLUME, TRADED_BALANCE, TRADED_VOLUME, TRADED_PRICE, CANCEL_VOLUME, REPORT_TIME,
         TRADE_TIME, CANCEL_TIME, ERROR_CODE, ERROR_MSG, TRADING_DAY, LOCAL_ENTRUST_ID, BROKER_ENTRUST_ID,
         IP_MAC, REMARK, CREATE_TIME, UPDATE_TIME, ENTRUST_STATUS, ORIG_ENTRUST_ID, REPORT_NO, OPERATE_USER
+    </sql>
+
+    <sql id="query_entrust">
+        a.ID, a.PARENT_ORDER_ID, a.INSTRUCTION_ID, a.PORTFOLIO_ID, a.USER_ID, a.USERNAME, a.ACCOUNT_ID,
+        a.FINANCE_ACCOUNT, a.ACCOUNT_NAME, a.ASSET_TYPE, a.MARKET, a.STOCK_CODE, a.STOCK_NAME, a.ENTRUST_TYPE,
+        a.ENTRUST_PROP, a.ENTRUST_BS, a.BS_FLAG, a.ENTRUST_VOLUME, a.ENTRUST_PRICE, a.FULL_PRICE, a.ENTRUST_BALANCE,
+        NULL AS DISCOUNT, NULL AS TRANS_CODE, NULL AS EXPIRE_YEAR_RATE, NULL AS PRETERM_YEAR_RATE, NULL AS LIAISON_NAME,
+        NULL AS LIAISON_TEL, NULL AS PROP_SEAT_NO, NULL AS PROP_SEAT_NAME, NULL AS SELLER_NO, NULL AS CONTRACT_ID,
+        NULL AS FIRST_SETTLE_DATE, NULL AS BACK_DATE, NULL AS COMPACT_TERM, NULL AS BACK_BALANCE, NULL AS ORIG_SERIAL_NO,
+        NULL AS REDUCTION_TYPE, FROZEN_BALANCE,
+        a.FROZEN_VOLUME, a.TRADED_BALANCE, a.TRADED_VOLUME, a.TRADED_PRICE, a.CANCEL_VOLUME, a.REPORT_TIME,
+        a.TRADE_TIME, a.CANCEL_TIME, a.ERROR_CODE, a.ERROR_MSG, a.TRADING_DAY, a.LOCAL_ENTRUST_ID, a.BROKER_ENTRUST_ID,
+        a.IP_MAC, a.REMARK, a.CREATE_TIME, a.UPDATE_TIME, a.ENTRUST_STATUS, a.ORIG_ENTRUST_ID, a.REPORT_NO, a.OPERATE_USER,
+        b.PORTFOLIO_NAME,b.SEC_ACCT_ID,b.TRADE_PLAT,b.FINPROD_TYPE2,b.INV_MANAGER_ID
     </sql>
 
     <sql id="queryCondition">
@@ -261,6 +303,47 @@
         </where>
     </sql>
 
+    <sql id="queryCondition2">
+        <where>
+            <if test="portfolioId != null and portfolioId != ''">
+                AND a.PORTFOLIO_ID = #{portfolioId}
+            </if>
+            <if test="accountId != null and accountId != ''">
+                AND a.ACCOUNT_ID = #{accountId}
+            </if>
+            <if test="financeAccount != null and financeAccount != ''">
+                AND a.FINANCE_ACCOUNT = #{financeAccount}
+            </if>
+            <if test="market != null and market != ''">
+                AND a.MARKET = #{market}
+            </if>
+            <if test="stockCode != null and stockCode != ''">
+                AND a.STOCK_CODE = #{stockCode}
+            </if>
+            <if test="entrustProp != null and entrustProp != ''">
+                AND a.ENTRUST_PROP = #{entrustProp}
+            </if>
+            <if test="entrustStatus != -100">
+                AND a.ENTRUST_STATUS = #{entrustStatus}
+            </if>
+            <if test="entrustType != null and entrustType != ''">
+                AND a.ENTRUST_TYPE != #{entrustType}
+            </if>
+            <if test="startDay != null and startDay != ''">
+                AND a.TRADING_DAY &gt;= #{startDay}
+            </if>
+            <if test="endDay != null and endDay != ''">
+                AND a.TRADING_DAY &lt;= #{endDay}
+            </if>
+            <if test="(portfolioId == null or portfolioId == '') and portfolioList != null">
+                AND a.PORTFOLIO_ID in
+                <foreach collection="portfolioList" item="portfolioCode" index="index" open="(" close=")" separator=",">
+                    #{portfolioCode,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </sql>
+
     <select id="selectEntrustsPageInfo" resultMap="BaseResultMap"
             parameterType="com.joyintech.tams.exchange.common.bean.EntrustQryBean">
         SELECT
@@ -277,14 +360,14 @@
     <select id="selectEntrustsByPage" resultMap="QueryResultMap"
             parameterType="com.joyintech.tams.exchange.common.bean.EntrustQryBean">
         SELECT
-        <include refid="entrust"/>
-        FROM T_ENTRUST
-        <include refid="queryCondition"/>
+        <include refid="query_entrust"/>
+        FROM T_ENTRUST a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
+        <include refid="queryCondition2"/>
         UNION ALL
         SELECT
-        <include refid="Base_Column_List"/>
-        FROM T_INTEGRATED_ENTRUST
-        <include refid="queryCondition"/>
+        <include refid="Query_Column_List"/>
+        FROM T_INTEGRATED_ENTRUST a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
+        <include refid="queryCondition2"/>
     </select>
 
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">

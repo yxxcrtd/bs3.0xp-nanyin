@@ -13,65 +13,46 @@ import java.util.Date;
 public class TradeQueryBean implements Serializable {
     private static final long serialVersionUID = 6002608629073057691L;
 
-    @ApiModelProperty(value = "主键ID")
-    private String id;
-
-    @ApiModelProperty(value = "定位串")
-    private String positionStr;
-
     @ApiModelProperty(value = "指令编号")
     private String instructionId;
 
-    @ApiModelProperty(value = "订单编号")
-    private String parentOrderId;
-
     @ApiModelProperty(value = "委托编号")
-    private String entrustId;
+    private String brokerEntrustId;
 
-    @ApiModelProperty(value = "网点号:资金账户编号")
-    private String accountId;
+    @ApiModelProperty(value = "成交编号")
+    private String brokerTradeId;
 
-    @ApiModelProperty(value = "资金账户编号")
+    @ApiModelProperty(name = "portfolioId", value = "组合代码")
+    private String portfolioId;
+
+    @ApiModelProperty(name = "portfolioName", value = "组合名称")
+    private String portfolioName;
+
+    @ApiModelProperty(value = "资金账户")
     private String financeAccount;
 
-    @ApiModelProperty(value = "资金账户名称")
-    private String accountName;
+    @ApiModelProperty(name = "secAcctId", value = "证券账户")
+    private String secAcctId;
 
-    @ApiModelProperty(value = "交易场所")
+    @ApiModelProperty(value = "交易市场")
     private String market;
 
-    @ApiModelProperty(value = "资产类型")
-    private String assetType;
+    @ApiModelProperty(name = "tradePlat", value = "交易平台")
+    private String tradePlat;
 
-    @ApiModelProperty(value = "证券代码")
+    @ApiModelProperty(value = "资产代码")
     private String stockCode;
 
-    @ApiModelProperty(value = "证券名称")
+    @ApiModelProperty(value = "资产名称")
     private String stockName;
 
-    @ApiModelProperty(value = "业务标识：5 公平；6 批量")
-    private String businessFlag;
-
-    @ApiModelProperty(value = "委托类别")
-    private String entrustType;
-
-    @ApiModelProperty(value = "委托属性")
-    private String entrustProp;
+    @ApiModelProperty(name = "finprodType2", value = "资产类型")
+    private String finprodType2;
 
     @ApiModelProperty(value = "委托方向")
     private String entrustBs;
 
-    @ApiModelProperty(value = "委托方向标识")
-    private String bsFlag;
-
-    @ApiModelProperty(value = "成交类别")
-    private int tradeType;
-
-    @JsonSerialize(using = DoubleSerializerUtils.class)
-    @ApiModelProperty(value = "已成交金额")
-    private BigDecimal tradedBalance;
-
-    @ApiModelProperty(value = "已成交数量")
+    @ApiModelProperty(value = "成交数量")
     private long tradedVolume;
 
     @JsonSerialize(using = DoubleSerializerUtils.class)
@@ -79,66 +60,97 @@ public class TradeQueryBean implements Serializable {
     private BigDecimal tradedPrice;
 
     @JsonSerialize(using = DoubleSerializerUtils.class)
-    @ApiModelProperty(value = "全价价格")
+    @ApiModelProperty(value = "成交金额")
+    private BigDecimal tradedBalance;
+
+    @ApiModelProperty(value = "成交时间")
+    private String tradingDay;
+
+    @ApiModelProperty(value = "委托属性", hidden = true)
+    private String entrustProp;
+
+    @ApiModelProperty(value = "委托方向标识", hidden = true)
+    private String bsFlag;
+    
+    @ApiModelProperty(value = "主键ID", hidden = true)
+    private String id;
+
+    @ApiModelProperty(value = "定位串", hidden = true)
+    private String positionStr;
+
+    @ApiModelProperty(value = "委托编号", hidden = true)
+    private String entrustId;
+
+    @ApiModelProperty(value = "订单编号", hidden = true)
+    private String parentOrderId;
+
+    @ApiModelProperty(value = "网点号:资金账户编号", hidden = true)
+    private String accountId;
+
+    @ApiModelProperty(value = "资金账户名称", hidden = true)
+    private String accountName;
+
+    @ApiModelProperty(value = "资产类型", hidden = true)
+    private String assetType;
+
+    @ApiModelProperty(value = "业务标识：5 公平；6 批量", hidden = true)
+    private String businessFlag;
+
+    @ApiModelProperty(value = "委托类别", hidden = true)
+    private String entrustType;
+
+    @ApiModelProperty(value = "成交类别", hidden = true)
+    private int tradeType;
+
+    @JsonSerialize(using = DoubleSerializerUtils.class)
+    @ApiModelProperty(value = "全价价格", hidden = true)
     private BigDecimal fullPrice;
 
     @JsonSerialize(using = DoubleSerializerUtils.class)
-    @ApiModelProperty(value = "清算金额")
+    @ApiModelProperty(value = "清算金额", hidden = true)
     private BigDecimal clearBalance;
 
-    @ApiModelProperty(value = "成交时间")
+    @ApiModelProperty(value = "成交时间", hidden = true)
     private String tradeTime;
 
     @JsonSerialize(using = DoubleSerializerUtils.class)
-    @ApiModelProperty(value = "质押券折算比例")
+    @ApiModelProperty(value = "质押券折算比例", hidden = true)
     private BigDecimal discount;
 
-    @ApiModelProperty(value = "到期续作类型：0 非第三方；1 第三方")
+    @ApiModelProperty(value = "到期续作类型：0 非第三方；1 第三方", hidden = true)
     private String transCode;
 
-    @ApiModelProperty(value = "对手方交易商编号")
+    @ApiModelProperty(value = "对手方交易商编号", hidden = true)
     private String propSeatNo;
 
-    @ApiModelProperty(value = "交易日期")
-    private String tradingDay;
-
-    @ApiModelProperty(value = "本地委托编号")
+    @ApiModelProperty(value = "本地委托编号", hidden = true)
     private String localEntrustId;
 
-    @ApiModelProperty(value = "柜台委托编号")
-    private String brokerEntrustId;
-
-    @ApiModelProperty(value = "柜台成交编号")
-    private String brokerTradeId;
-
-    @ApiModelProperty(value = "创建时间")
+    @ApiModelProperty(value = "创建时间", hidden = true)
     private Date createTime;
 
-    @ApiModelProperty(value = "更新时间")
+    @ApiModelProperty(value = "更新时间", hidden = true)
     private Date updateTime;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "记录数", hidden = true)
     public int count;
 
-    @ApiModelProperty(value = "报文编号")
+    @ApiModelProperty(value = "报文编号", hidden = true)
     private String reportNo;
 
-    @ApiModelProperty(value = "无撤销委托标识")
+    @ApiModelProperty(value = "无撤销委托标识", hidden = true)
     private boolean noCancelEntrust;
 
-    @ApiModelProperty(value = "冲正标识")
+    @ApiModelProperty(value = "冲正标识", hidden = true)
     private String offsetFlag;
 
-    @ApiModelProperty(value = "套期保值标识")
+    @ApiModelProperty(value = "套期保值标识", hidden = true)
     private String hedgeFlag;
 
-    @ApiModelProperty(value = "组合编号")
-    private String portfolioId;
-
-    @ApiModelProperty(value = "错误信息")
+    @ApiModelProperty(value = "错误信息", hidden = true)
     private String errorMsg;
 
-    @ApiModelProperty(value = "成交ID")
+    @ApiModelProperty(value = "成交ID", hidden = true)
     private String tradeId;
 
     public TradeQueryBean() {
@@ -475,5 +487,37 @@ public class TradeQueryBean implements Serializable {
 
     public void setTradeId(String tradeId) {
         this.tradeId = tradeId;
+    }
+
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
+    }
+
+    public String getSecAcctId() {
+        return secAcctId;
+    }
+
+    public void setSecAcctId(String secAcctId) {
+        this.secAcctId = secAcctId;
+    }
+
+    public String getTradePlat() {
+        return tradePlat;
+    }
+
+    public void setTradePlat(String tradePlat) {
+        this.tradePlat = tradePlat;
+    }
+
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
     }
 }

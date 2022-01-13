@@ -85,6 +85,48 @@ public class IntegratedEntrustHistoryServiceImpl implements IntegratedEntrustHis
     }
 
     @Override
+    public PageInfo<EntrustQueryBean> queryAllForPage(PageEntrustInfoRequest request, List<String> ptlAuthList) {
+        PageMode pageMode = request.getPageMode();
+        String userId = request.getUserId();
+        String portfolioId = request.getPortfolioId();
+        String accountId = request.getAccountId();
+        String market = request.getMarket();
+        String stockCode = request.getStockCode();
+        String entrustProp = request.getEntrustProp();
+        Integer entrustStatus = request.getEntrustStatus();
+        String startDay = request.getStartDay();
+        String endDay = request.getEndDay();
+
+        IntegratedEntrustHistoryExample historyExample = new IntegratedEntrustHistoryExample();
+        IntegratedEntrustHistoryExample.Criteria criteria = historyExample.createCriteria();
+        if (!Strings.isNullOrEmpty(userId))
+            criteria.andUserIdEqualTo(userId);
+        if (!Strings.isNullOrEmpty(startDay))
+            criteria.andTradingDayGreaterThanOrEqualTo(startDay);
+        if (!Strings.isNullOrEmpty(endDay))
+            criteria.andTradingDayLessThanOrEqualTo(endDay);
+        if (!Strings.isNullOrEmpty(accountId))
+            criteria.andAccountIdEqualTo(accountId);
+        if (!Strings.isNullOrEmpty(portfolioId))
+            criteria.andPortfolioIdEqualTo(portfolioId);
+        if (Strings.isNullOrEmpty(portfolioId) && Objects.nonNull(ptlAuthList) && ptlAuthList.size() > 0)
+            criteria.andPortfolioIdIn(ptlAuthList);
+        if (!Strings.isNullOrEmpty(market))
+            criteria.andMarketEqualTo(market);
+        if (!Strings.isNullOrEmpty(stockCode))
+            criteria.andStockCodeEqualTo(stockCode);
+        if (!Strings.isNullOrEmpty(entrustProp))
+            criteria.andEntrustPropEqualTo(entrustProp);
+        if (entrustStatus > -100)
+            criteria.andEntrustStatusEqualTo(entrustStatus);
+        // 过滤撤单委托
+        criteria.andEntrustTypeNotEqualTo(EntrustType.CANCEL.value);
+        PageHelper.startPage(pageMode.getPageNo(), pageMode.getPageSize());
+        List<EntrustQueryBean> historyList = integratedEntrustHistoryMapper.selectEntrustHistoryByExample(historyExample);
+        return new PageInfo<>(historyList);
+    }
+
+    @Override
     public PageInfo<IntegratedEntrustHistory> queryAllEntrustForPage(int pageNum, int pageSize, String userId, String startDay, String endDay, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus, List<String> ptlAuthList) {
         PageHelper.startPage(pageNum, pageSize);
         //过滤撤单委托
