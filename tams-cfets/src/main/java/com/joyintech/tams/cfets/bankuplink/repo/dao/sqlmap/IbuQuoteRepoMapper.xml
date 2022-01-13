@@ -2304,7 +2304,7 @@
                 DECODE(T.settle_speed, 0, '01', 1, '02')  settleSpreedCode /*清算速度*/,
                 T.ccy ccy /*币种*/,
                 T.repo_term repoTerm /*回购期限*/,
-                T.rate price /*回购利率*/,
+                T.rate*100 price /*回购利率*/,
                 T.sett_ccy settCcy /*结算币种*/,
                 T.trade_amt tradeAmt /*交易金额*/,
                 T.share_amt shareAmt /*券面总额合计*/,
@@ -2469,7 +2469,7 @@
             deal.M_TRADE_AMT mtradeAmt/*到期结算金额*/,
             deal.DIS_FACE_VALUE convertAmt/*质押券折算总额*/,
             ee.PRICE_MODEL priceModel/*价格模式*/,
-            deal.RATE price/*回购利率*/,
+            deal.RATE*100 price/*回购利率*/,
             deal.SEC_MANAGE_ACCT_ID secManageAcctId/*证券账户*/
         from (
             <include refid="sql_ProductDeal"></include>
