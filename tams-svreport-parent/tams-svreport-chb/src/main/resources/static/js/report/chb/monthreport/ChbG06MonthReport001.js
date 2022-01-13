@@ -78,7 +78,7 @@ $(function() {
               { title: "数据日期", field: 'statusDate', type: 'datetime',sortField:'statusDate'},
               { title: "报送状态", field: 'sendStatusStr',width : 100,sortField:'sendStatus'},
               { title: "报送日期", field: 'submitTime', type: 'datetime',sortField:'submitTime'},
-              { title: "报送截止日", field: 'chbSubmitDeadline', type: 'datetime',sortField:'chbSubmitDeadline'},
+              { title: "报送截止日", field: 'chbSubmitDeadline', type: 'date',sortField:'chbSubmitDeadline'},
               { title: "反馈状态", field: 'submitFeedbackStatusStr',width : 100,sortField:'submitFeedbackStatus'},
               {title: '统计年月',field:'termname',width : 100,sortField:'termid'},
               { title: "机构名称",  width : 130,field: 'orgName',sortField:'orgCode'},
