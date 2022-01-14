@@ -40,6 +40,9 @@ public class SvrIdentityRepairInterf extends BaseService{
 	public void generateData(Date batchDate) {
         //获取最后一次修复时间参数
 		String lastRepairTime = svrIdentityRepairInterfMapper.getLastRepairTime();
+		if(lastRepairTime == null || lastRepairTime == ""){
+			lastRepairTime = "1900-01-01 00:00:00";
+		}
 		if(svrIdentityRepairInterfMapper.idenCheck(lastRepairTime) == 0){
 			logger.info("当日身份信息数据不存在，或者没有接入，批处理退出。");
 			return;
@@ -77,6 +80,7 @@ public class SvrIdentityRepairInterf extends BaseService{
 				String registBankCode = sub.getRegistBankCode();
 				if(sub.getEquMark().equals("SUB")) {
 					svrIdentityRepairInterfMapper.updataSub(agencyCode,registBankCode,fundAccPlace,orgIndentifyMark);
+					svrIdentityRepairInterfMapper.updataInfo(agencyCode,registBankCode,fundAccPlace,orgIndentifyMark);
 				}
 				if(sub.getEquMark().equals("CHECK")) {
 					svrIdentityRepairInterfMapper.updataCheck(agencyCode,registBankCode,fundAccPlace,orgIndentifyMark);

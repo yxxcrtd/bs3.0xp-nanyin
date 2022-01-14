@@ -38,7 +38,7 @@ public class SalerIdenInfoValid implements BeanValidator {
                 //内部编码重复校验
                 if (dto.getSalerInsNo() != null && dto.getSalerInsNo() != "") {
                     if (salerIdenInfo002Service.checkSalerInsNo(dto.getSalerInsNo()) > 0) {
-                        errorList.add(new ValidMessage("salerInsNo", "内部编码已存在。"));
+                        errorList.add(new ValidMessage("salerInsNo", "内部编号已存在。"));
                     }
                 }
             }

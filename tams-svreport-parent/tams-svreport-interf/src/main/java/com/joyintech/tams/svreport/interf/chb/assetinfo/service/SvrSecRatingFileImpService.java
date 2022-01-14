@@ -9,6 +9,7 @@ import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.dao.MstBondCreditRatingMapper;
 import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
 import com.joyintech.tams.common.base.entity.MstBondCreditRating;
+import com.joyintech.tams.common.base.entity.MstHoliday;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -227,57 +228,57 @@ public class SvrSecRatingFileImpService extends FileImpService {
 		String remoteDir = "";
 		String result = "";
 		logger.debug("数据转换---开始-----");
-		List<Map<String, String>> listDataConvert = new ArrayList<>();
-
-		for(Map<String, String> mapData : listData){
-			Map<String,String> mapDataConvert = new HashMap<>();
-			// 债券代码
-			mapDataConvert.put("O_CODE",mapData.get("SECID"));
-			// 评级日期
-			mapDataConvert.put("GRADE_DATE",mapData.get("PUBDATE"));
-			// 评级机构
-			mapDataConvert.put("GRADE_ORG_ID",mapData.get("RATINGORG"));
-			// 评级类型
-			mapDataConvert.put("O_TYPE",mapData.get("RATINGTYPE"));
-			// 长短期
-			mapDataConvert.put("SHORT_LONG_TERM",mapData.get("RATINGSUBTYPE"));
-			// 评级结果
-			mapDataConvert.put("GRADE_RESULT",mapData.get("RATING"));
-			// 评级结果
-			mapDataConvert.put("IS_RECOMMAND",mapData.get("IS_RECOMMAND"));
-			// 创建部门
-			if (StringUtil.isNotBlank(mapData.get("CREATE_DEPT"))){
-				mapDataConvert.put("CREATE_DEPT",mapData.get("CREATE_DEPT"));
-			}
-			// 创建人
-			if (StringUtil.isNotBlank(mapData.get("CREATE_USER"))){
-				mapDataConvert.put("CREATE_USER",mapData.get("CREATE_USER"));
-			}
-			// 创建时间
-			if (StringUtil.isNotBlank(mapData.get("UPDATE_TIME"))){
-				mapDataConvert.put("UPDATE_TIME",mapData.get("UPDATE_TIME"));
-			}
-			// 更新人
-			if (StringUtil.isNotBlank(mapData.get("UPDATE_USER"))){
-				mapDataConvert.put("UPDATE_USER",mapData.get("UPDATE_USER"));
-			}
-			// 更新时间
-			if (StringUtil.isNotBlank(mapData.get("UPDATE_TIME"))){
-				mapDataConvert.put("UPDATE_TIME",mapData.get("UPDATE_TIME"));
-			}
-			// 装入list
-			listDataConvert.add(mapDataConvert);
-		}
+//		List<Map<String, String>> listDataConvert = new ArrayList<>();
+//
+//		for(Map<String, String> mapData : listData){
+//			Map<String,String> mapDataConvert = new HashMap<>();
+//			// 债券代码
+//			mapDataConvert.put("O_CODE",mapData.get("SECID"));
+//			// 评级日期
+//			mapDataConvert.put("GRADE_DATE",mapData.get("PUBDATE"));
+//			// 评级机构
+//			mapDataConvert.put("GRADE_ORG_ID",mapData.get("RATINGORG"));
+//			// 评级类型
+//			mapDataConvert.put("O_TYPE",mapData.get("RATINGTYPE"));
+//			// 长短期
+//			mapDataConvert.put("SHORT_LONG_TERM",mapData.get("RATINGSUBTYPE"));
+//			// 评级结果
+//			mapDataConvert.put("GRADE_RESULT",mapData.get("RATING"));
+//			// 评级结果
+//			mapDataConvert.put("IS_RECOMMAND",mapData.get("IS_RECOMMAND"));
+//			// 创建部门
+//			if (StringUtil.isNotBlank(mapData.get("CREATE_DEPT"))){
+//				mapDataConvert.put("CREATE_DEPT",mapData.get("CREATE_DEPT"));
+//			}
+//			// 创建人
+//			if (StringUtil.isNotBlank(mapData.get("CREATE_USER"))){
+//				mapDataConvert.put("CREATE_USER",mapData.get("CREATE_USER"));
+//			}
+//			// 创建时间
+//			if (StringUtil.isNotBlank(mapData.get("UPDATE_TIME"))){
+//				mapDataConvert.put("UPDATE_TIME",mapData.get("UPDATE_TIME"));
+//			}
+//			// 更新人
+//			if (StringUtil.isNotBlank(mapData.get("UPDATE_USER"))){
+//				mapDataConvert.put("UPDATE_USER",mapData.get("UPDATE_USER"));
+//			}
+//			// 更新时间
+//			if (StringUtil.isNotBlank(mapData.get("UPDATE_TIME"))){
+//				mapDataConvert.put("UPDATE_TIME",mapData.get("UPDATE_TIME"));
+//			}
+//			// 装入list
+//			listDataConvert.add(mapDataConvert);
+//		}
 		logger.debug("数据转换---结束-----");
 
 		logger.debug("评级数据检查---开始-----:" +  df.format(new Date()));
 		@SuppressWarnings("unused")
-		List<Map<String, String>> listError = checkData(listDataConvert, interfFile.getFilename(),
+		List<Map<String, String>> listError = checkData(listData, interfFile.getFilename(),
 				"MST_BOND_CREDIT_RATING",
 				InterfDefine.债券评级数据.getCode(),
 				null,"O_CODE","GRADE_DATE","GRADE_ORG_ID","O_TYPE","SHORT_LONG_TERM");
 		logger.debug("评级数据检查---结束-----:" +  df.format(new Date()));
-		if(CollectionUtils.isEmpty(listDataConvert)){
+		if(CollectionUtils.isEmpty(listData)){
 			return "success";
 		}
 		ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.债券评级数据.getCode());
@@ -287,7 +288,7 @@ public class SvrSecRatingFileImpService extends FileImpService {
         }
         String saveFlag = interfConfig.getContentType();
         logger.debug("评级数据入库---开始-----:" +  df.format(new Date()));
-		result = saveData(listDataConvert,saveFlag,null);
+		result = saveData(listData,saveFlag,null);
 		logger.debug("评级数据入库---结束-----:" +  df.format(new Date()));
 		// 更新系统配置时间
         ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.债券评级数据.getCode());
@@ -303,7 +304,7 @@ public class SvrSecRatingFileImpService extends FileImpService {
 		// 定义新增数据list-验证通过数据
 		List<MstBondCreditRating> listNE = new ArrayList<MstBondCreditRating>();
 		logger.debug("评级数据转换dto---开始-----:" +  df.format(new Date()));
-		listNE = dataConversionEntity(datalist);
+		listNE = (List<MstBondCreditRating>) convertMapToEntity(datalist, MstBondCreditRating.class);
 		logger.debug("评级数据转换dto---结束-----:" +  df.format(new Date()));
 		if (listNE != null && listNE.size() > 0) {
 			// 删除评级(当日)

@@ -3740,7 +3740,11 @@ public class PbcMonthAssetReportService  extends BaseService{
         
         // 插入数据，先删除明细表数据，再删除主表数据
         //WFPLR倒剪数据处理
-        assetDetailList.add(pbcMonthReportDetailAssetUtil.buildAssetDetailwfplr(PbcReportProperycode.AMT_823000_WFPLR,result.get(PbcReportProperycode.AMT_823000_WFPLR).getTotal(),generateDate));
+        if(!StringUtil.isEmptyList(assetDetailList)){
+            assetDetailList.add(pbcMonthReportDetailAssetUtil.buildAssetDetailwfplr(PbcReportProperycode.AMT_823000_WFPLR,result.get(PbcReportProperycode.AMT_823000_WFPLR).getTotal(),generateDate));
+
+        }
+
         buildSumValAndInster(result, null, pbcReport, !CollectionUtils.isEmpty(posAssetList) ||
                 !CollectionUtils.isEmpty(posProdList) ||
                 DictCodeListExt2.报送数据状态_删除.getValue()

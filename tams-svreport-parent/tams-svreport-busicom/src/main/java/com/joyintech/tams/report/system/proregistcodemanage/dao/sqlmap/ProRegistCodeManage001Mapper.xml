@@ -108,6 +108,9 @@
 		 <!--left join PRD_SALE_PARAM  psp
 		 on psp.FINPROD_ID = 'F16_'||a.PRODID-->
 		 <where>
+			 <!-- add by 数据有效状态 yangxianjiu start 2022-1-13 -->
+			 b.status !='D'
+			 <!-- add end  -->
 			 <!-- modify by 输入框和选择框 联合查询取交集 yangxianjiu start end 2021-12-29 -->
 <!--		    <if test="prodList != null and prodList.size() > 0">-->
 <!--		 	<foreach collection="prodList" item="prodid" open=" A.PRODID IN (" close=")" separator=",">-->

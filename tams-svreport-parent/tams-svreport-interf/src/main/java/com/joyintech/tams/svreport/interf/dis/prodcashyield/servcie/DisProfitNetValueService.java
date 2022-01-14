@@ -10,12 +10,17 @@
  
 package com.joyintech.tams.svreport.interf.dis.prodcashyield.servcie;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.FileImpService;
+import com.joyintech.tams.common.InterfDefine;
+import com.joyintech.tams.common.InterfFile;
+import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
+import com.joyintech.tams.common.base.entity.RepCashYield;
+import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
+import com.joyintech.tams.svreport.interf.dis.common.DisInterfDecimalUtil;
+import com.joyintech.tams.svreport.interf.dis.prodcashyield.dao.DisRepCashYieldMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,17 +28,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.tams.common.FileImpService;
-import com.joyintech.tams.common.InterfDefine;
-import com.joyintech.tams.common.InterfFile;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
-import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
-import com.joyintech.tams.svreport.interf.dis.common.DisInterfDecimalUtil;
-import com.joyintech.tams.svreport.interf.dis.prodcashyield.dao.DisRepCashYieldMapper;
-import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 产品收益率净值接口
@@ -75,8 +74,8 @@ public class DisProfitNetValueService extends FileImpService {
             return "success";
         }
         // 解析文件数据到dto
-        DisRepCashYield dto = null;
-        List<DisRepCashYield> dtoList = new ArrayList<DisRepCashYield>();
+        RepCashYield dto = null;
+        List<RepCashYield> dtoList = new ArrayList<RepCashYield>();
         for (Map<String, String> data : listData) {
             // 将map转换为dto
             dto = transMap2Dto(data);
@@ -97,8 +96,8 @@ public class DisProfitNetValueService extends FileImpService {
      * @see
      * @since 1.0
      */
-    private DisRepCashYield transMap2Dto(Map<String, String> data) {
-        DisRepCashYield dto = new DisRepCashYield();
+    private RepCashYield transMap2Dto(Map<String, String> data) {
+        RepCashYield dto = new RepCashYield();
         dto.setBusiId(data.get("PROD_ID"));// 产品代码
         dto.setCashId(IDGenerator.generate());// 现金流代码
         dto.setCashName("收益率");// 现金流名称：固定写：收益率
@@ -141,7 +140,7 @@ public class DisProfitNetValueService extends FileImpService {
      * @see
      * @since 1.0
      */
-    private int deleteAndInsertRepCashYieldByPart(List<DisRepCashYield> dtoList) {
+    private int deleteAndInsertRepCashYieldByPart(List<RepCashYield> dtoList) {
         //删除
         int delCount = disRepCashYieldMapper.deleteRepCashYieldByStartDateAndCashType(dtoList.get(0));
         logger.info("deleteAndInsertRepCashYieldByPart方法删除REP_CASH_YIELD数据：" + delCount + "条");
@@ -157,7 +156,7 @@ public class DisProfitNetValueService extends FileImpService {
             return insertCount;
         }
         
-        List<DisRepCashYield> newDataList = new ArrayList<DisRepCashYield>();
+        List<RepCashYield> newDataList = new ArrayList<RepCashYield>();
         newDataList.addAll(dtoList);
         
         // 分批存入
