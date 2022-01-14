@@ -496,6 +496,7 @@ public class StlDataDealSzdSjsjgProcessService {
                             settleTransData.setUnitCprice(ArithmeticUtil.divide(ArithmeticUtil.subtract(
                                     ArithmeticUtil.multiply(data.getJgcjsl(),new BigDecimal(100L)),szdSjsjg.getJgzjje()),
                                     szdSjsjg.getJgjssl(),2));
+                            settleTransData.setUnitFprice(settleTransData.getUnitCprice());
                         }
                     }
                 }
