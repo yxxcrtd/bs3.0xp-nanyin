@@ -155,7 +155,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 if(!isInwflFlag && (StringUtil.equals(cfetsDto.getSettleDate(),DateUtil.format(platformDateImpl.getSysDate())))
                     &&(StringUtil.equals(cfetsDto.getSettleStatus(),DictCodeListExt3.交收状态_未交收.getValue())
                         &&(StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue())
-                            ||StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_债券行权交易.getValue())))){
+                            ||StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_债券行权交易.getValue())
+                            || StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_质押式回购首期.getValue())))){
                     returnList.add(cfetsDto);
                 }
             }
