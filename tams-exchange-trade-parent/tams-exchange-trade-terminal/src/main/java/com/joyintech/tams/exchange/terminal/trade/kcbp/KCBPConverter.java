@@ -942,6 +942,7 @@ public class KCBPConverter {
                         break;
                     }
                     case "OrderRestrictions": {//到期续做类型
+                        integratedRepurchaseQuoteBean.setBprsrcStatus(value);
                         break;
                     }
                     case "OrigTradeDate": {//初始交易日期
