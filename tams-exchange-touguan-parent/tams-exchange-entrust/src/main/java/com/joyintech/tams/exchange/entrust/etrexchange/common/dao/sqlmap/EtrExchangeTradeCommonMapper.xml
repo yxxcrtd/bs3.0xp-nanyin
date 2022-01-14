@@ -113,6 +113,11 @@
         <if test="endDate != null and !endDate.equals('')">
             AND T1.ENTRUST_DATE &lt;=to_date(#{endDate},'yyyy-MM-dd')
         </if>
+        <if test="entrustTypeList != null and entrustTypeList.size()>0">
+            <foreach collection="entrustTypeList" open="AND T1.ENTRUST_TYPE in(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+        </if>
         union all
         SELECT
         T1.ENTRUST_ID
@@ -218,6 +223,11 @@
         </if>
         <if test="finprodType2 != null and finprodType2 !=''">
             AND T1.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+        </if>
+        <if test="entrustTypeList != null and entrustTypeList.size()>0">
+            <foreach collection="entrustTypeList" open="AND T1.ENTRUST_TYPE in(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
         </if>
         ORDER BY T1.CREATE_TIME DESC
     </select>
