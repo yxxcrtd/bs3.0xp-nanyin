@@ -594,7 +594,7 @@
         TO_CHAR(FTP.VPAY_DATE,'YYYY-MM-DD') vpayDate,/*首次结算日*/
         TO_CHAR(FTP.MPAY_DATE,'YYYY-MM-DD') mpayDate,/*到期结算日*/
         ftp.ACT_CAP_DAYS actCapDays,
-        ftp.INT_RATE rebackPrice,
+        ftp.INT_RATE * 100 rebackPrice,
         TPD.TRADE_AMT tradeAmt,
         FTP.M_INT_AMT mIntAmt, /*回购利息*/
         FTP.M_TRADE_AMT mTradeAmt,/* 到期金额*/
