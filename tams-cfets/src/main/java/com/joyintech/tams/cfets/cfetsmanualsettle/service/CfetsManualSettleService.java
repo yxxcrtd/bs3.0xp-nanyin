@@ -538,8 +538,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                         if (StringUtil.isNotEmpty(secAcctId)) {
                             secport.setSecAcctId(secAcctId); // 证券账户
                         }
-                        secport.setSecAmount(regFinPledge.getPledgePrin());
-                        secport.setOwnSecAmount(regFinPledge.getPledgePrin());
+                        secport.setSecAmount(ArithmeticUtil.multiply(regFinPledge.getPledgePrin(),new BigDecimal("100")));
+                        secport.setOwnSecAmount(ArithmeticUtil.multiply(regFinPledge.getPledgePrin(),new BigDecimal("100")));
                         secport.setIntegrateSecAmount(BigDecimal.ZERO);
                         ptlSecList.add(secport);
                     }
