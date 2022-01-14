@@ -383,6 +383,7 @@ public class CfetsTrdQueryService extends BaseService{
      * @return
      */
     public Map<String, Object> findIbuInfo(String pageCode, String dtCode, String spcdCode, CfetsTrdQueryIbuInfoListResponse dto) {
+        //spcdCode 01:现券买卖 03:回购
         Map<String, Object> resultData = new HashMap<>();
         if(StringUtil.isBlank(spcdCode)){
             return resultData;

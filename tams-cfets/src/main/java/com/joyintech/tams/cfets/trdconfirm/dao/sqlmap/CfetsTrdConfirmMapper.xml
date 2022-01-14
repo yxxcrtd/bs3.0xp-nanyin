@@ -1845,7 +1845,7 @@
         sum(reg.pledge_number*100) as pledgeFaceValue
         from REG_FIN_PLEDGE reg
         inner join reg_fin_product_deal deal
-        on reg.trade_id=deal.trade_id
+        on reg.trade_id=decode(deal.finprod_type2,'F02',deal.trade_id,'F03',deal.totle_trade_id)
         where deal.totle_trade_id=#{busiCode,jdbcType=VARCHAR}
         group by reg.pledge_finprod_id,reg.pledge_ratio)
         order by pledgeFinprodId

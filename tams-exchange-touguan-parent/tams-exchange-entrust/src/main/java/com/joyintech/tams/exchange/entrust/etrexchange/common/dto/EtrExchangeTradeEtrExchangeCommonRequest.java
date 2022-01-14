@@ -58,6 +58,8 @@ public class EtrExchangeTradeEtrExchangeCommonRequest {
     @ApiModelProperty(name="invManagerId",value="投资经理",example="A1")
     private String invManagerId;
 
+    @ApiModelProperty(name="entrustTypeList",value="指令类型",example="A1")
+    private List<String> entrustTypeList;
 
     public PageMode getPageMode() {
         return pageMode;
@@ -138,5 +140,13 @@ public class EtrExchangeTradeEtrExchangeCommonRequest {
 
     public void setFinprodType2(String finprodType2) {
         this.finprodType2 = finprodType2;
+    }
+
+    public List<String> getEntrustTypeList() {
+        return entrustTypeList;
+    }
+
+    public void setEntrustTypeList(List<String> entrustTypeList) {
+        this.entrustTypeList = entrustTypeList;
     }
 }
