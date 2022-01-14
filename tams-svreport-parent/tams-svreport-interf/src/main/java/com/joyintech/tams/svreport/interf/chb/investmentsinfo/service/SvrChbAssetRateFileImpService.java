@@ -108,7 +108,7 @@ public class SvrChbAssetRateFileImpService extends FileImpService {
 	public String importDB(List<Map<String, String>> listData, InterfFile interfFile) {
 		String result = "";
 		logger.debug("资产利率基本信息检查----开始-----:" +  df.format(new Date()));
-		checkData(listData, interfFile.getFilename(), InterfDefine.资产利率基本信息接口数据.getCode(),InterfDefine.资产利率基本信息接口数据.getCode(), null,"FPROD_ID","PROD_ID", "CHANGE_DATE", "CHANG_TYPE");
+		checkData(listData, interfFile.getFilename(), InterfDefine.资产利率基本信息接口数据.getCode(),InterfDefine.资产利率基本信息接口数据.getCode(), null,"ASSET_ID", "CHANGE_DATE", "CHANG_TYPE");
 		logger.debug("资产利率基本信息检查----结束-----:" +  df.format(new Date()));
 		if(CollectionUtils.isEmpty(listData)){
 			return "success";
