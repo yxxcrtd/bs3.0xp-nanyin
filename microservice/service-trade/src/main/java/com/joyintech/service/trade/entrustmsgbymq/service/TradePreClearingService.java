@@ -2215,11 +2215,28 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         EtrEntrust etrEntrust = entrustMsgbyMQMapper.queryEtrEntrust(infContractDetailfile.getEntrustId());
         settleInfo.setCounterId(etrEntrust.getCounterId());
 
-        settleInfo.setPrin(trdTempDto.getPositionBaseData().getFinTradeProductDto().getPrin());
-        settleInfo.setmTradeAmt(trdTempDto.getPositionBaseData().getFinTradeProductDto().getmTradeAmt());
-        settleInfo.setPledgeNumber(trdTempDto.getPositionBaseData().getFinDealPledge().getPledgeNumber());
-        settleInfo.setPledgeId(trdTempDto.getPositionBaseData().getFinDealPledge().getPledgeFinprodId());
-        settleInfo.setbPledgeId(entrustMsgbyMQMapper.selectPledgeId(infContractDetailfile.getvTradeId()));
+        // modify by etliu 20220114 start
+        // GZYHTZJY-1128: 【场内对账清结算1231】深交所协议回购首期，下单后“手工交收”页面查不到数据 【解决日期：2022-01-14】
+//        settleInfo.setPrin(trdTempDto.getPositionBaseData().getFinTradeProductDto().getPrin());
+//        settleInfo.setmTradeAmt(trdTempDto.getPositionBaseData().getFinTradeProductDto().getmTradeAmt());
+//        settleInfo.setPledgeNumber(trdTempDto.getPositionBaseData().getFinDealPledge().getPledgeNumber());
+//        settleInfo.setPledgeId(trdTempDto.getPositionBaseData().getFinDealPledge().getPledgeFinprodId());
+//        settleInfo.setbPledgeId(entrustMsgbyMQMapper.selectPledgeId(infContractDetailfile.getvTradeId()));
+        FinTradeProduct finTradeProduct = trdTempDto.getFinTradeProduct();
+        if (finTradeProduct == null && trdTempDto.getPositionBaseData() != null) {
+            finTradeProduct = trdTempDto.getPositionBaseData().getFinTradeProductDto();
+        }
+        if (finTradeProduct != null) {
+            settleInfo.setPrin(finTradeProduct.getPrin());
+            settleInfo.setmTradeAmt(finTradeProduct.getmTradeAmt());
+
+            if (trdTempDto.getPositionBaseData() != null && trdTempDto.getPositionBaseData().getFinDealPledge() != null) {
+                settleInfo.setPledgeNumber(trdTempDto.getPositionBaseData().getFinDealPledge().getPledgeNumber());
+                settleInfo.setPledgeId(trdTempDto.getPositionBaseData().getFinDealPledge().getPledgeFinprodId());
+            }
+            settleInfo.setbPledgeId(entrustMsgbyMQMapper.selectPledgeId(infContractDetailfile.getvTradeId()));
+        }
+        // modify by etliu 20220114 end
 
         trdManualSettleInfoMapper.insertSelective(settleInfo);
     }
