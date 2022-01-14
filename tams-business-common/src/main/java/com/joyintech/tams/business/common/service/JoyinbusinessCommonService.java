@@ -190,4 +190,63 @@ public class JoyinbusinessCommonService extends BaseService {
         param.put("yesOrNoN",DictCodeList.是否_否.getValue());
         return joyinbusinessCommonMapper.isNeedWorkflow(param);
     }
+
+    /**
+     * 审批页面 根据id查询本方或对手方
+     *
+     * @param dto
+     * @return java.util.List<com.joyintech.framework.select.SelectOptionDto>
+     * @author jiangpeng
+     * @date 2022/1/14 14:37
+     */
+    public List<SelectOptionDto> queryMySideOrCount(CfetsSearchInfoRequest dto) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("search", dto.getSearch());
+        param.put("sysDate", iPlatformDate.getSysDate());
+        if (StringUtil.isNotEmpty(dto.getDateType()) && StringUtil.equals(dto.getDateType(), "01")) {
+            //查询历史数据，不需要当日日期
+            param.remove("sysDate");
+        }
+        String searchs = dto.getSearchs();
+        if (StringUtil.isNotEmpty(searchs)) {
+            param.put("searchList", StringUtil.splitToList(GlobalConstant.COMMA, searchs));
+        }
+        if (StringUtil.equals(dto.getDealType(), "01")) {
+            //系统内的交易对手，即市场机构和资管产品的数据
+            return joyinbusinessCommonMapper.queryCounterPartyList(param);
+        } else if (StringUtil.equals(dto.getDealType(), "02")) {
+            //银行间机构，且必须关联到系统的交易对手
+            return joyinbusinessCommonMapper.queryMySideAndPartyList(param);
+        } else if (StringUtil.equals(dto.getDealType(), "03")) {
+            //CSTP下行接口对手方
+            return joyinbusinessCommonMapper.queryCstpPartyList(param);
+        } else if (StringUtil.equals(dto.getDealType(), "04")) {
+            //CSTP下行接口本方
+            return joyinbusinessCommonMapper.queryCstpOuPartyList(param);
+        } else {
+            //组合关联的银行间机构,此处前端能拿到组合的21位码
+            return joyinbusinessCommonMapper.queryMySideList(param);
+        }
+    }
+
+    /**
+     * 审批页面 根据id查询本方交易员或对手方交易员
+     *
+     * @param dto
+     * @return java.util.List<com.joyintech.framework.select.SelectOptionDto>
+     * @author jiangpeng
+     * @date 2022/1/14 14:42
+     */
+    public List<SelectOptionDto> queryMySideTraderOrCountTrader(CfetsSearchInfoRequest dto) {
+        Map<String, Object> param = BeanUtil.object2Map(dto);
+        if (StringUtil.equals(dto.getDealType(), "01")) {
+            //系统内的用户
+            return joyinbusinessCommonMapper.queryUserIdList(param);
+        } else if (StringUtil.equals(dto.getDealType(), "02")) {
+            // 根据系统内机构查询用户
+            return joyinbusinessCommonMapper.queryMySideTraderListByCounterId(param);
+        } else {
+            return joyinbusinessCommonMapper.queryMySideTraderList(param);
+        }
+    }
 }
