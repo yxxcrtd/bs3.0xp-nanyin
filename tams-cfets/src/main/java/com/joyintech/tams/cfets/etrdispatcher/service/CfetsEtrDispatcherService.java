@@ -1165,6 +1165,7 @@ public class CfetsEtrDispatcherService extends BaseService{
                 BigDecimal totalPrinAmt = BigDecimal.ZERO;
                 if(!CollectionUtils.isEmpty(detailList)) {
                     for(CfetsPledgeBondInfoDto infoDto : detailList) {
+                        infoDto.setPledgeRatio(ArithmeticUtil.multiply(infoDto.getPledgeRatio(),new BigDecimal("100")));
                         totalPrinAmt = ArithmeticUtil.doAdd(totalPrinAmt, ArithmeticUtil.multiply(infoDto.getPledgePrin(), infoDto.getPledgeRatio()).divide(new BigDecimal("100")));
                         infoDto.setPledgePrin(ArithmeticUtil.divide(infoDto.getPledgePrin(),new BigDecimal("10000"),4));
                         infoDto.setPledStrdPrinAmt(ArithmeticUtil.divide(infoDto.getPledStrdPrinAmt(),new BigDecimal("10000"),4));
