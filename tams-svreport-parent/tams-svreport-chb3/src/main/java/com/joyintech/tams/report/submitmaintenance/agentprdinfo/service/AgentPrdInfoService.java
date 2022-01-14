@@ -1,5 +1,6 @@
 package com.joyintech.tams.report.submitmaintenance.agentprdinfo.service;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
@@ -56,6 +57,12 @@ public class AgentPrdInfoService extends CommonExportService<AgentPrdInfoDto> {
      * @return
      */
     public AjaxResult saveAndSubmit(AgentPrdInfoDto dto){
+        if(StringUtil.isEmpty(dto.getOrgCode())){
+            dto.setOrgCode(CommonUtil.getOrgCode());
+        }
+        if(StringUtil.isEmpty(dto.getCreateDept())){
+            dto.setCreateDept(CommonUtil.getDeptCode());
+        }
         return restTemplate.postForObject(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/AgentPrdInfo/saveAndSubmit", dto,
                 SvrAjaxResult.class);

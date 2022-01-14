@@ -274,6 +274,8 @@ public class AgentPrdInfo001Service extends CommonExportService<AgentPrdInfoDto>
 
             //数据状态
             AgentPrdInfoDto.setStatus("E");
+            AgentPrdInfoDto.setCreateDept(CommonUtil.getDeptCode());
+            AgentPrdInfoDto.setCreateDept(CommonUtil.getOrgCode());
             returnInfoList.add(AgentPrdInfoDto);
         }
         return returnInfoList;

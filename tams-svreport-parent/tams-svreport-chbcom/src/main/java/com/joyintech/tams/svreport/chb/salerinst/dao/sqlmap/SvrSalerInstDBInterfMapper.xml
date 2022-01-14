@@ -11,6 +11,8 @@
 		SALER_ORG_LEVEL,
 		DATA_DATE,
 		STATUS,
+		CREATE_DEPT,
+		ORG_CODE,
 		CREATE_USER,
 		CREATE_TIME,
 		UPDATE_USER,
@@ -36,6 +38,8 @@
 		 SUBMIT_FEEDBACK_STATUS,
 		 SUBMIT_FEEDBACK_MSG,
 		 DATA_DATE,
+		 CREATE_DEPT,
+		 ORG_CODE,
 		 CREATE_USER,
 		 CREATE_TIME,
 		 UPDATE_USER,
@@ -59,13 +63,13 @@
 		insert into CHB_SALER_INST_SUB(
 		REGIST_SEQNO,SALER_INST_CODE,
 		SALER_INST_NAME,SALER_ORG_CODE,SALER_ORG_NAME,SALER_ORG_LEVEL,
-		STATUS,SUMIT_SEQ, CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE, SEND_STATUS,DATA_DATE,
+		STATUS,SUMIT_SEQ, CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE, SEND_STATUS,DATA_DATE,CREATE_DEPT,ORG_CODE,
 		CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 		values(
 		#{registSeqno,jdbcType=VARCHAR},#{salerInstCode,jdbcType=VARCHAR},#{salerInstName,jdbcType=VARCHAR},
 		#{salerOrgCode,jdbcType=VARCHAR},#{salerOrgName,jdbcType=VARCHAR},#{salerOrgLevel,jdbcType=VARCHAR},
 		#{status,jdbcType=VARCHAR}, #{sumitSeq,jdbcType=VARCHAR}, #{chbSubmitDeadline,jdbcType=DATE},
-		#{submitDeadline,jdbcType=DATE}, #{sendStatus,jdbcType=VARCHAR},#{dataDate,jdbcType=DATE},
+		#{submitDeadline,jdbcType=DATE}, #{sendStatus,jdbcType=VARCHAR},#{dataDate,jdbcType=DATE},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
 		#{createUser,jdbcType=VARCHAR},sysdate,#{updateUser,jdbcType=VARCHAR},sysdate)
 	</insert>
 

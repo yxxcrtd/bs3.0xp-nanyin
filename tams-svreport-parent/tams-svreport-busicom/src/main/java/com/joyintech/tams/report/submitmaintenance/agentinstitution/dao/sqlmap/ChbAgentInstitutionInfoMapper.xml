@@ -70,10 +70,11 @@
     <insert id="insert" parameterType="com.joyintech.tams.report.submitmaintenance.agentinstitution.dto.AgentInstitutionDto" >
         insert into CHB_AGENT_INSTITUTION_INFO (AGENT_INSTITUTION_CODE, AGENT_INSTITUTION_NAME, 
             ISSUE_PARTY_ID, STATUS, ENCLOSURE_NUM, 
-            ENCLOSURE_ADDRESS,ENCLOSURE_CHANGE_FLAG ,DATA_DATE, REMARK,CREATE_TIME, UPDATE_TIME)
+            ENCLOSURE_ADDRESS,ENCLOSURE_CHANGE_FLAG ,DATA_DATE, REMARK,CREATE_DEPT,ORG_CODE,CREATE_TIME, UPDATE_TIME)
         values (#{agentInstitutionCode,jdbcType=VARCHAR}, #{agentInstitutionName,jdbcType=VARCHAR}, 
             #{issuePartyId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{enclosureNum,jdbcType=VARCHAR}, 
-            #{enclosureAddress,jdbcType=VARCHAR},#{enclosureChangeFlag,jdbcType=VARCHAR}, SYSDATE, #{remark,jdbcType=VARCHAR},sysdate, sysdate)
+            #{enclosureAddress,jdbcType=VARCHAR},#{enclosureChangeFlag,jdbcType=VARCHAR}, SYSDATE, #{remark,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},sysdate, sysdate)
     </insert>
 
 <!--  修改更新-->

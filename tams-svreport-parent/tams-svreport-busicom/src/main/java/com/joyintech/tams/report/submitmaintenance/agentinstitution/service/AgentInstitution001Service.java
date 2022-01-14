@@ -266,6 +266,8 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
 
             //数据状态
             agentInstitutionDto.setStatus("E");
+            agentInstitutionDto.setCreateDept(CommonUtil.getDeptCode());
+            agentInstitutionDto.setCreateDept(CommonUtil.getOrgCode());
             returnInfoList.add(agentInstitutionDto);
         }
         return returnInfoList;
