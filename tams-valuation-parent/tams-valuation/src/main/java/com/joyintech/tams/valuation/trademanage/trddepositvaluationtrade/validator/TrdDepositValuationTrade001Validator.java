@@ -8,26 +8,16 @@
  * 系统名称：理财资管管理系统V2.0
  */
  
-package com.joyintech.tams.valuation.trademanage.trddepositvaluationtrade.validate;
+package com.joyintech.tams.valuation.trademanage.trddepositvaluationtrade.validator;
 
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.constant.DictCodeList;
-//import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
-//import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
-//import com.joyintech.tams.invest.trade.common.validator.TradeCommonValidator;
-//import com.joyintech.tams.invest.trade.trddepositinvesttrade.dto.TrdDepositInvestTrade001Dto;
-//import com.joyintech.tams.invest.trade.trddepositinvesttrade.service.TrdDepositInvestTrade002Service;
+
 import com.joyintech.tams.valuation.trademanage.trddepositvaluationtrade.service.TrdDepositValuationTrade002Service;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

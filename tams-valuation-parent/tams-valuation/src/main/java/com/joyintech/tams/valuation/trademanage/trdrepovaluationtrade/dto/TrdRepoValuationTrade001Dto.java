@@ -25,7 +25,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-@PageId("TrdRepoTrade001")
+@PageId("TrdRepoValuationTrade002")
 public class TrdRepoValuationTrade001Dto extends BaseEntity implements ProcessEntity {
 
     /**

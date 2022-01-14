@@ -299,6 +299,11 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                         flag = false;
                         message.add("证件类别为其他时，其他证件名称不能为空");
                     }
+                }else {
+                    if(list.get(5) != null && !(list.get(5).trim().equals(""))){
+                        flag = false;
+                        message.add("证件类别为非其他时，其他证件名称不能填写");
+                    }
                 }
             }
             //证件号码

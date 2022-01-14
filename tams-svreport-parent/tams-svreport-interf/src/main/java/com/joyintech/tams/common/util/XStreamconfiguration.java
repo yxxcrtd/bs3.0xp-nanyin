@@ -64,11 +64,8 @@ public class XStreamconfiguration {
 		xstream.omitField(BaseEntity.class,"updateUser");
 		xstream.omitField(BaseEntity.class,"updateTime");
 		xstream.omitField(BaseEntity.class,"status");
-		// 设置时区
-		TimeZone tz = TimeZone.getTimeZone("ETC/GMT-8");
-		TimeZone.setDefault(tz);
-		// 日期格式化
-		xstream.registerConverter(new DateConverter("yyyy-MM-dd", null));
+		// 日期格式化(设置时区)
+		xstream.registerConverter(new DateConverter("yyyy-MM-dd", null, TimeZone.getTimeZone("ETC/GMT-8")));
 		// 不指向引用
 		xstream.setMode(XStream.NO_REFERENCES);
 
