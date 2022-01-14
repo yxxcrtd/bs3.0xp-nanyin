@@ -231,6 +231,9 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
     @ApiModelProperty(name="entrustNum",value="指令数量",example="12")
     private BigDecimal entrustNum;
 
+    @ApiModelProperty(name="entrustType",value="指令类型",example="12")
+    private String entrustType;
+
     public String getFinprodId() {
         return finprodId;
     }
@@ -649,5 +652,11 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
     }
     //add by chenjiaxing 20210824 end
 
+    public String getEntrustType() {
+        return entrustType;
+    }
 
+    public void setEntrustType(String entrustType) {
+        this.entrustType = entrustType;
+    }
 }
