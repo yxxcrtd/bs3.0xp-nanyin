@@ -182,10 +182,10 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
         dealTotal.setFpriceAmt(ArithmeticUtil.multiply(proportion,ArithmeticUtil.doAdd(dealTotal.getPrinAmt(),dealTotal.getIntAmt())));
         // 交易金额 正回购到期续作：全价总额 - 随交易支付费用 逆回购到期续作：全价总额+ 随交易支付费用
         if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(), dealDto.getFinprodType2())) {
-            dealTotal.setTradeAmt(ArithmeticUtil.multiply(proportion,ArithmeticUtil.subtract(dealTotal.getFpriceAmt(),dealTotal.getIntAmt())));
+            dealTotal.setTradeAmt(ArithmeticUtil.multiply(proportion,ArithmeticUtil.subtract(dealTotal.getFpriceAmt(),dealTotal.getFeeAmtPay())));
         }
         else {
-            dealTotal.setTradeAmt(ArithmeticUtil.multiply(proportion,ArithmeticUtil.doAdd(dealTotal.getFpriceAmt(),dealTotal.getIntAmt())));
+            dealTotal.setTradeAmt(ArithmeticUtil.multiply(proportion,ArithmeticUtil.doAdd(dealTotal.getFpriceAmt(),dealTotal.getFeeAmtPay())));
         }
         // 未随交易支付费用
         dealTotal.setFeeAmtUnpay(ArithmeticUtil.multiply(proportion,dealDto.getTotalUnFeeAmtPay()));
