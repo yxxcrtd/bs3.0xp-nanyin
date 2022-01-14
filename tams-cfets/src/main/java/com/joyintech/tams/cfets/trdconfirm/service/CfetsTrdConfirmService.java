@@ -1154,7 +1154,11 @@ public class CfetsTrdConfirmService extends BaseService{
             }else{
                 deal.setCpriceAmt(regDeal.getCpriceAmt());
             }
-            deal.setIntAmt(ArithmeticUtil.multiply(dtoReg.getUnitInt(), regDeal.getShareAmt()));
+            if(!StringUtil.isNotEmpty(regDeal.getIntAmt())){
+                deal.setIntAmt(ArithmeticUtil.multiply(dtoReg.getUnitInt(), regDeal.getShareAmt()));
+            }else{
+                deal.setCpriceAmt(regDeal.getIntAmt());
+            }
             deal.setFpriceAmt(regDeal.getFpriceAmt());
             deal.setTradeAmt(regDeal.getFpriceAmt());
             deal.setDealAmt(regDeal.getFpriceAmt());

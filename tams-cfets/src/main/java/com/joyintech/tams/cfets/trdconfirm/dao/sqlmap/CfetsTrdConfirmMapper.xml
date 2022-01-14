@@ -808,6 +808,7 @@
         reg.sett_fee_amt as settleFeeAmt,
         reg.fprice_amt as tradeAmt,
         reg.cprice_amt as cpriceAmt,
+        reg.INT_AMT as intAmt,
         reg.OUR_SHARE_AMT as ourShareAmt,
         reg.LENDIN_SHARE_AMT as lendinShareAmt
         from IBU_QUOTE_ETR_RE  reg
@@ -1727,9 +1728,9 @@
     </select>
     <select id="findAllSecPtlsList" resultType="com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto" parameterType="java.lang.String" >
         select
-        reg.PLEDGE_FINPROD_ID as finprodId,reg.PLEDGE_RATIO as pledgeRatio,
+        reg.PLEDGE_FINPROD_ID as finprodId,reg.PLEDGE_RATIO*100 as pledgeRatio,
         reg.PORTFOLIO_ID as portfolioId,reg.ENTRUST_ID as entrustId,
-        reg.PLEDGE_NUMBER as pledgePrin
+        reg.PLEDGE_NUMBER*100 as pledgePrin
         from REG_FIN_PLEDGE reg
         where reg.trade_id =#{tradeId,jdbcType=VARCHAR}
 
@@ -1741,9 +1742,9 @@
     </select>
     <select id="findAllIbuSecPtlsList" resultType="com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto" parameterType="Map" >
         select
-        reg.PLEDGE_FINPROD_ID as finprodId,reg.PLEDGE_RATIO as pledgeRatio,
+        reg.PLEDGE_FINPROD_ID as finprodId,reg.PLEDGE_RATIO*100 as pledgeRatio,
         reg.PORTFOLIO_ID as portfolioId,reg.ENTRUST_ID as entrustId,
-        reg.PLEDGE_NUMBER as pledgePrin
+        reg.PLEDGE_NUMBER*100 as pledgePrin
         from ibu_quote_ent_crep_pledge reg
         where reg.quote_id =#{quoteId,jdbcType=VARCHAR}
         and reg.entrust_id=#{entrustId,jdbcType=VARCHAR}
