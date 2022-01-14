@@ -423,7 +423,9 @@ public class CfetsTrdConfirmService extends BaseService{
                     cfetsTrdConfirmMapper.insertTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
                 }else{
                     //根据登记编号查询下行成交匹配表
-                    boolean flag=cfetsTrdConfirmMapper.isExistMatchInfo(entity.getCfetsTrdConfirmMatchDto().getPreTradeId());
+                    Map<String, Object> param = new HashMap<String, Object>();
+                    param.put("preTradeId", entity.getCfetsTrdConfirmMatchDto().getPreTradeId());
+                    boolean flag=cfetsTrdConfirmMapper.isExistMatchInfo(param);
                     if(flag){
                         //若存在对应的成交匹配数据，则更新下行成交匹配表
                         cfetsTrdConfirmMapper.updateTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());

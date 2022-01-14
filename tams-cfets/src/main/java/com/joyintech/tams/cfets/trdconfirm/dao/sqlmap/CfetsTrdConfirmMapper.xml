@@ -872,6 +872,9 @@
             <if test="trdId != null" >
                 TRD_ID =#{trdId,jdbcType=VARCHAR},
             </if>
+            <if test="exeId != null" >
+                EXE_ID =#{exeId,jdbcType=VARCHAR},
+            </if>
             UPDATE_TIME = sysdate
         </set>
         where PRE_TRADE_ID=#{preTradeId,jdbcType=VARCHAR}
@@ -1732,7 +1735,13 @@
     <select id="isExistMatchInfo" resultType="Boolean">
         SELECT count(*)
         from Trdquto_Match_Info t
-        where t.pre_trade_id=#{preTradeId,jdbcType=VARCHAR}
+        where  1=1
+        <if test="preTradeId != null and preTradeId != ''">
+          and t.pre_trade_id=#{preTradeId,jdbcType=VARCHAR}
+        </if>
+        <if test="exeId != null and exeId != ''">
+            and t.EXE_ID=#{exeId,jdbcType=VARCHAR}
+        </if>
     </select>
     <delete id="deleteByTrdId" parameterType="java.lang.String" >
         delete from TRDQUTO_MATCH_INFO

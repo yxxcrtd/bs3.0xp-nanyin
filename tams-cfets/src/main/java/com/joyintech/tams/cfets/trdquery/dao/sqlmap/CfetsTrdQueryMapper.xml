@@ -2261,7 +2261,8 @@
             T6.counter_name counterIdStr,
             T1.remark,
             T1.TRADE_DATE as tradeDate,
-            nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode
+            nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode,
+            match.pre_trade_id preTradeId
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
             inner join (
                 select td.totle_trade_id,sum(td.share_amt) share_amt,
