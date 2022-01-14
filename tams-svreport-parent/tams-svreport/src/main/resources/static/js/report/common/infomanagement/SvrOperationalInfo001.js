@@ -5,7 +5,7 @@ var assetColList1 = [ //标题栏
 	{align: 'center', title: '公共信息（必填）', colspan: 5},
 	{align: 'center', title: '本行/他行存款||大额存单', colspan: 10},
 	{align: 'center', title: '债券类资产/理财直接融资工具/同业存单', colspan: 11},
-	{align: 'center', title: '拆放同业及买入返售/同业拆入及卖出回购', colspan: 8},
+	{align: 'center', title: '拆放同业及债券买入返售/同业拆入及卖出回购', colspan: 8},
 	//中债五月份资产大类名称修改
 	{align: 'center', title: '非标准化债权类资产/新增可投资资产', colspan: 67},
 	{align: 'center', title: '票据类/信用证类资产', colspan: 14},
@@ -675,7 +675,7 @@ function showSelectColumns() {
 								+ curColumn
 								+ "-D"
 								+ "\" placeholder=\"请选择日期区间\" />"
-								+ "</div>"
+								// + "</div>"
 								+ "<div class=\"time-icon\"><i class=\"iconfont icon-date\"></i></div></div>");
 						var laydate = layui.laydate;
 						laydate.render({

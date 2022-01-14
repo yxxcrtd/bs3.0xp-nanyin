@@ -1439,8 +1439,15 @@ public class PbcPrdBaseinfoSubNew extends BaseEntity{
 	public String getStatusStr(){
 		return SvrDataUtil.getNameFromDataDict(DictCode.报送数据状态, this.getStatus());
 	}
-	
-	public String getSendStatusStr(){
+
+	public String getStatusDateStr(){return null!=this.getStatusDate()?DateUtil.format(this.getStatusDate()):null;}
+
+    public String getSubmitTimeStr(){return null!=this.getSubmitTime()?DateUtil.format(this.getSubmitTime()):null;}
+
+    public String getPbcSubmitDeadlineStr(){return null!=this.getPbcSubmitDeadline()?DateUtil.format(this.getPbcSubmitDeadline()):null;}
+
+
+    public String getSendStatusStr(){
 		return SvrDataUtil.getNameFromDataDict(DictCode.报送状态, this.getSendStatus());
 	}
 	

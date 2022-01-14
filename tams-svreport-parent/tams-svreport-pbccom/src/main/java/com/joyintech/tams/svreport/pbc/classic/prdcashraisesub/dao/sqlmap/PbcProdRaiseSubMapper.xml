@@ -2430,18 +2430,20 @@
     </select>
     
     <select id="queryListByKeys" parameterType="java.lang.String" resultType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub">
-    	SELECT  REGIST_SEQNO, RAISING_DATE, PBC_PROD_ID PROD_ID, BUY_PLACE, CUSTOMER_TYPE1, CCY, RAISING_AMTSUM, 
-    	RAISING_AMTSUM_CNY, RAISING_QTY, REDAMT, REDAMT_CNY, REDQTY, ENDAMTSUM, ENDAMTSUM_CNY, 
-    	ENDQTY, PROD_VALUE, PROD_VALUE_CNY, UNIT_VALUE_TOTAL, UNIT_VALUE_TOTAL_CNY, PROD_HIGH_YIELD, 
-    	PROD_LOW_YIELD, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, 
-    	PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, 
-    	CREATE_TIME, UPDATE_USER, UPDATE_TIME
-    	FROM PBC_PROD_RAISING_SUB
+    	SELECT  r.REGIST_SEQNO, r.RAISING_DATE, f.PROD_ID PROD_ID, r.BUY_PLACE, r.CUSTOMER_TYPE1, r.CCY, r.RAISING_AMTSUM,
+        r.RAISING_AMTSUM_CNY, r.RAISING_QTY, r.REDAMT, r.REDAMT_CNY, r.REDQTY, r.ENDAMTSUM, r.ENDAMTSUM_CNY,
+        r.ENDQTY, r.PROD_VALUE, r.PROD_VALUE_CNY, r.UNIT_VALUE_TOTAL, r.UNIT_VALUE_TOTAL_CNY, r.PROD_HIGH_YIELD,
+        r.PROD_LOW_YIELD, r.SEND_STATUS, r.SUBMIT_TIME, r.SUBMIT_FEEDBACK_STATUS, r.SUMIT_SEQ, r.STATUS_DATE,
+        r.PBC_SUBMIT_DEADLINE, r.SUBMIT_DEADLINE, r.STATUS, r.CREATE_USER, r.ORG_CODE, r.CREATE_DEPT,
+        r.CREATE_TIME, r.UPDATE_USER, r.UPDATE_TIME
+    	FROM PBC_PROD_RAISING_SUB r
+        left join pbc_prd_baseinfo_sub f
+        on f.PBC_PROD_ID=r.PBC_PROD_ID
     	where 1=1 
     	<if test="list!=null and list.size()!=0">
 			<foreach collection="list" item="item" open="and ((" close="))"
 				separator=") or (">
-				trim(REGIST_SEQNO)= #{item,jdbcType=VARCHAR}
+				trim(r.REGIST_SEQNO)= #{item,jdbcType=VARCHAR}
 			</foreach>
 		</if>
     </select>

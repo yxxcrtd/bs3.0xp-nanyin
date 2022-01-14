@@ -42,10 +42,19 @@ public enum  ChbInterfConfig {
 	产品汇总交易接口("CHB_PRD_DEAL_TOTAL"),
 	市场机构信息数据("MST_CUSTOMER_INFO"),
 	科目余额数据("CHB_SUBJECT_BALANCE"),
+	科目数据("DIS_BOK_SUBJECT"),
 
-	产品分红登记("DIS_PRD_BONUS")
+	产品分红登记("DIS_PRD_BONUS"),
+	产品费率数据("DIS_PRD_FEE_RATE"),
+	产品资产调整数据("DIS_PRD_ADJUST"),
+	关联机构信息("DIS_REL_ORG"),
+	债券评级数据("CHB_SEC_RATING"),
+	汇率信息数据("MST_EXCHARGE_QUOTE"),
+	基础日历信息数据("DIS_CALENDAR_INFO"),
+	日历管理信息数据("DIS_CALENDAR_MGR"),
+	节假日数据("MST_HOLIDAY")
 
-			;
+	;
 	
 	
     /**

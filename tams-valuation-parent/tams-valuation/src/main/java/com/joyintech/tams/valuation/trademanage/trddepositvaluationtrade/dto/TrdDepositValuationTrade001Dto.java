@@ -12,29 +12,20 @@ package com.joyintech.tams.valuation.trademanage.trddepositvaluationtrade.dto;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.framework.base.dto.UploadFile;
-import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.framework.validation.annotation.Amount;
-import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.common.base.entity.InterfSendOpics;
-import com.joyintech.tams.common.base.entity.PaTrdProductDeal;
-import com.joyintech.tams.common.base.entity.PtlTrade;
-import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
 
 import com.joyintech.tams.constant.DictCode;
 
-import com.joyintech.tams.valuation.trademanage.trddepositvaluationtrade.validate.TrdDepositValuationTrade001Validator;
+import com.joyintech.tams.valuation.trademanage.trddepositvaluationtrade.validator.TrdDepositValuationTrade001Validator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
-import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
-import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -251,7 +242,7 @@ public class TrdDepositValuationTrade001Dto extends BaseEntity implements Proces
 
     //资金账户
     private String trdAcctId;
-    @NotEmpty(fieldName = "TrdDepositValuation001.trdAcctId", groups = {ValidateGroupEdit.class})
+//    @NotEmpty(fieldName = "TrdDepositValuation001.trdAcctId", groups = {ValidateGroupEdit.class})
     public String getTrdAcctId() {
         return trdAcctId;
     }
@@ -402,4 +393,38 @@ public class TrdDepositValuationTrade001Dto extends BaseEntity implements Proces
     }
 
 
+    //导出转化交易日
+    private  String tradeDateStr;
+
+    public String getTradeDateStr() {
+        String tradeDateStr=" ";
+        if(getTradeDate() !=null){
+            tradeDateStr=DateUtil.format(getTradeDate());
+        }
+        return tradeDateStr;
+    }
+
+    //导出转化交割日
+    private String settDateStr;
+    public String getSettDateStr(){
+        String settDateStr=" ";
+        if(getSettDate() !=null){
+            settDateStr=DateUtil.format(getSettDate());
+        }
+        return settDateStr;
+    }
+
+
+    /**
+     * 存款类交易实体类
+     */
+    private List<TrdDepositValuationTrade001Dto> selectedItem;
+
+    public List<TrdDepositValuationTrade001Dto> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<TrdDepositValuationTrade001Dto> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
 }

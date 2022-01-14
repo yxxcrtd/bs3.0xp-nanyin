@@ -1015,26 +1015,28 @@ public class SvrMonthCollectInterf extends BaseService{
 				String ccy = listAmountTotal.get(i).getCcy();
 				if(ccy.equals("EUR") || ccy.equals("USD") || ccy.equals("JPY")){//SAFE：外管局汇率数据
 					String CNYExccy = ccy + "/CNY";
-					BigDecimal charge = CNYExchangeMap.get(CNYExccy).getCharge();
-					//余额
-					if (listAmountTotal.get(i).getBalanceAmt() != null && charge != null) {
-						listAmountTotal.get(i).setBalanceAmt(listAmountTotal.get(i).getBalanceAmt().divide(charge, 6, BigDecimal.ROUND_HALF_UP));
-					}
-					//总销售金额
-					if (listAmountTotal.get(i).getSaleAmountTotal() != null && charge != null) {
-						listAmountTotal.get(i).setSaleAmountTotal(listAmountTotal.get(i).getSaleAmountTotal().divide(charge, 6, BigDecimal.ROUND_HALF_UP));
-					}
-					//净销售金额
-					if (listAmountTotal.get(i).getValueAmountTotal() != null && charge != null) {
-						listAmountTotal.get(i).setValueAmountTotal(listAmountTotal.get(i).getValueAmountTotal().divide(charge, 6, BigDecimal.ROUND_HALF_UP));
-					}
-					//总销售份额
-					if (listAmountTotal.get(i).getSaleSharesTotal() != null && charge != null) {
-						listAmountTotal.get(i).setSaleSharesTotal(listAmountTotal.get(i).getSaleSharesTotal().divide(charge, 6, BigDecimal.ROUND_HALF_UP));
-					}
-					//净销售份额
-					if (listAmountTotal.get(i).getValueSharesTotal() != null && charge != null) {
-						listAmountTotal.get(i).setValueSharesTotal(listAmountTotal.get(i).getValueSharesTotal().divide(charge, 6, BigDecimal.ROUND_HALF_UP));
+					if(CNYExchangeMap.get(CNYExccy) != null) {
+						BigDecimal charge = CNYExchangeMap.get(CNYExccy).getCharge();
+						//余额
+						if (listAmountTotal.get(i).getBalanceAmt() != null && charge != null) {
+							listAmountTotal.get(i).setBalanceAmt(listAmountTotal.get(i).getBalanceAmt().divide(charge, 6, BigDecimal.ROUND_HALF_UP));
+						}
+						//总销售金额
+						if (listAmountTotal.get(i).getSaleAmountTotal() != null && charge != null) {
+							listAmountTotal.get(i).setSaleAmountTotal(listAmountTotal.get(i).getSaleAmountTotal().divide(charge, 6, BigDecimal.ROUND_HALF_UP));
+						}
+						//净销售金额
+						if (listAmountTotal.get(i).getValueAmountTotal() != null && charge != null) {
+							listAmountTotal.get(i).setValueAmountTotal(listAmountTotal.get(i).getValueAmountTotal().divide(charge, 6, BigDecimal.ROUND_HALF_UP));
+						}
+						//总销售份额
+						if (listAmountTotal.get(i).getSaleSharesTotal() != null && charge != null) {
+							listAmountTotal.get(i).setSaleSharesTotal(listAmountTotal.get(i).getSaleSharesTotal().divide(charge, 6, BigDecimal.ROUND_HALF_UP));
+						}
+						//净销售份额
+						if (listAmountTotal.get(i).getValueSharesTotal() != null && charge != null) {
+							listAmountTotal.get(i).setValueSharesTotal(listAmountTotal.get(i).getValueSharesTotal().divide(charge, 6, BigDecimal.ROUND_HALF_UP));
+						}
 					}
 				}
 				if(!ccy.equals("EUR") && !ccy.equals("USD") && !ccy.equals("CNY") && !ccy.equals("JPY")) {//美元对 CFETS:外汇交易中心

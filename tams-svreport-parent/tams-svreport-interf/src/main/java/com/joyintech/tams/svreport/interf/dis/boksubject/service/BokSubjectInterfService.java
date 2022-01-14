@@ -53,8 +53,16 @@ public class BokSubjectInterfService extends FileImpService {
 		for (Map<String, String> map : listData) {
 			BokSubject dto = new BokSubject();
 			try{
-				dto.setBooksetId(map.get("PROD_ID"));
+                // 兼容老接口PROD_ID
+                dto.setBooksetId(map.get("PROD_ID"));
+				if(dto.getBooksetId() == null){
+					dto.setBooksetId(map.get("BOOKSET_ID"));
+				}
+				// 兼容老接口SUBJECT_ID
 				dto.setSubjectNo(map.get("SUBJECT_ID"));
+                if(dto.getSubjectNo() == null){
+                    dto.setSubjectNo(map.get("SUBJECT_NO"));
+                }
 				dto.setSubjectName(map.get("SUBJECT_NAME"));
 				dto.setFsubjectId(map.get("FSUBJECT_ID"));
 				dto.setSubjectType(map.get("SUBJECT_TYPE"));

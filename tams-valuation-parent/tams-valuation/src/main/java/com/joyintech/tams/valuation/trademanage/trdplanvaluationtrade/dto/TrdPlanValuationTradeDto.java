@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.trademanage.trdplanvaluationtrade.dto;
 
 import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -150,6 +151,8 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
      * 收益类型
      */
     private String profitType;//01净值型，02预期收益型,03货币型
+
+
 
     /**
      * 撤销原因
@@ -527,8 +530,19 @@ public class TrdPlanValuationTradeDto extends WflTrdProductDeal implements Proce
         return profitType;
     }
 
+
     public void setProfitType(String profitType) {
         this.profitType = profitType;
     }
+    public String getTradeDateStr() {
+        String tradeDateStr="";
+        if(super.getTradeDate() !=null){
+            tradeDateStr= DateUtil.format(super.getTradeDate());
+        }
+        return tradeDateStr;
+    }
+
+
+
 }
 

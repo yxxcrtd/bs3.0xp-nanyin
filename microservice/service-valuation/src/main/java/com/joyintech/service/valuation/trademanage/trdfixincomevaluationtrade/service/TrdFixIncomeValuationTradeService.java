@@ -127,25 +127,6 @@ public class TrdFixIncomeValuationTradeService extends CommonExportService<TrdFi
         return this.queryForPageForSelectReturn(page, length, ()->trdFixIncomeValuationTradeMapper.findFinprodId(params));
     }
 
-
-    /**
-     *
-     * 工作流完结之后的操作
-     * <功能详细描述>
-     * @param entity 实体
-     * @see
-     * @since 1.0
-     */
-    public void doComplete(TrdFixIncomeValuationTradeDto entity) {
-//        if(StringUtil.equals(entity.getOperateType(), "DELETE")) {
-//            trdFixIncomeRateValuationTradeMapper.deleteByPrimaryKey(entity);
-//        }else if(StringUtil.equals(entity.getOperateType(), "NEW")){
-//            trdFixIncomeRateValuationTradeMapper.insert(entity);
-//        }else{
-//            trdFixIncomeRateValuationTradeMapper.updateByPrimaryKeySelective(entity);
-//        }
-    }
-
     /**
      *
      * 获取分页查询结果（sharesId  dealDateString）
@@ -229,7 +210,30 @@ public class TrdFixIncomeValuationTradeService extends CommonExportService<TrdFi
      * @since 1.0
      */
     public List<TrdFixIncomeValuationTradeDto> findAll(Map<String, Object> params) {
-        return trdFixIncomeValuationTradeMapper.select(params);
+        //产品代码
+        String portfolioId = (String)params.get("portfolioId");
+        String[] portfolioIdArr = null;
+        if(StringUtil.isNotEmpty(portfolioId)){
+            portfolioIdArr = portfolioId.split(",");
+        }
+        params.put("portfolioIdArr", portfolioIdArr);
+        //资产代码
+        String finprodId = (String)params.get("finprodId");
+        String[] finprodIdArr = null;
+        if(StringUtil.isNotEmpty(finprodId)){
+            finprodIdArr = finprodId.split(",");
+        }
+        params.put("finprodIdArr", finprodIdArr);
+
+        // 获取交易方向
+        String ps = (String)params.get("ps");
+        // 交易方向多选，转为数组
+        String[] psArr = null;
+        if (StringUtil.isNotEmpty(ps)) {
+            psArr = ps.split(",");
+        }
+        params.put("psArr", psArr);
+        return trdFixIncomeValuationTradeMapper.selectDeal(params);
     }
 
 

@@ -73,7 +73,7 @@ public interface TrdFixIncomeValuationTradeMapper {
 	 * @see
 	 * @since 1.0
 	 */
-	List<TrdPlanValuationTradeDto> selectDeal(Map<String, Object> paraMap);
+	List<TrdFixIncomeValuationTradeDto> selectDeal(Map<String, Object> paraMap);
 
 
 

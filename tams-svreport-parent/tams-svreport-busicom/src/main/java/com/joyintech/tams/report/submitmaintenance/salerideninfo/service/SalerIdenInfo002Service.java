@@ -68,9 +68,12 @@ public class SalerIdenInfo002Service extends BaseService{
     public void update(SalerIdenInfoDto dto) {
         //来自info表的直接更新数据
         if(dto.getErroOrInfo().equals("info")){
-        dto.setStatus("E");
-        //更新代理销售机构信息
-        chbSalerIdenInfoMapper.updateByPrimaryKeySelective(dto);
+            dto.setSalerWorkStartYmd(dto.getSalerWorkStartYmd().replace("-", "").replace("/", ""));
+            dto.setSalerFinanceStartYmd(dto.getSalerFinanceStartYmd().replace("-", "").replace("/", ""));
+            dto.setSalerStartYmd(dto.getSalerStartYmd().replace("-", "").replace("/", ""));
+            dto.setStatus("E");
+            //更新代理销售机构信息
+            chbSalerIdenInfoMapper.updateByPrimaryKeySelective(dto);
         }
         //来自erro表的先删除erro表数据再插入info表
         else{

@@ -159,7 +159,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		headerMap.put("2-6", "00:公共信息（必填）");
 		headerMap.put("7-16", "01:本行/他行存款||大额存单");
 		headerMap.put("17-27", "03:债券类资产/理财直接融资工具/同业存单");
-		headerMap.put("28-35", "02:拆放同业及买入返售/同业拆入及卖出回购");
+		headerMap.put("28-35", "02:拆放同业及债券买入返售/同业拆入及卖出回购");
 		headerMap.put("36-102", "04:非标准化债权类资产/新增可投资资产");
 		headerMap.put("103-116", "05:票据类/信用证类资产");
 		headerMap.put("117-127", "06:权益类资产");
@@ -233,6 +233,9 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		assetMap.put("1207","04:36-102");
 		assetMap.put("1208","04:36-102");
 		assetMap.put("1209","04:36-102");
+		assetMap.put("1211","04:36-102");
+		assetMap.put("1212","04:36-102");
+		assetMap.put("1213","04:36-102");
 		assetMap.put("2201","04:36-102");
 		assetMap.put("1201","05:103-116");
 		assetMap.put("1210","05:103-116");
@@ -2322,7 +2325,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             			for (int i = beginIndex; i <= endIndex; i ++) {
             				indexList.add(i);
             			}
-            			for (int i = 275; i < size; i ++) {
+            			for (int i = 283; i < size; i ++) {
             				indexList.add(i);
             			}
             		} else {
@@ -2718,7 +2721,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             			for (int i = beginIndex; i <= endIndex; i ++) {
             				indexList.add(i);
             			}
-            			for (int i = 275; i < size; i ++) {
+            			for (int i = 283; i < size; i ++) {
             				indexList.add(i);
             			}
             		} else {

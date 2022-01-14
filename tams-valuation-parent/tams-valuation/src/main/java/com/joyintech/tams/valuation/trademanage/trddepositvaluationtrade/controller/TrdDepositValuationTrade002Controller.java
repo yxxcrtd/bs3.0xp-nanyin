@@ -96,14 +96,14 @@ public class TrdDepositValuationTrade002Controller extends BaseController {
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.交易方向, DictCode.计息基础, DictCode.是否, DictCode.存款类资产类型, DictCode.币种
-        		, DictCode.行内资产二级分类, DictCode.行内资产三级分类, DictCode.行内资产四级分类);// 新增资产二、三、四级分类 王贵奇 2019/8/1
+        		);// 新增资产二、三、四级分类 王贵奇 2019/8/1
         // 一体化对应etliu start
         model.addAttribute("PS_T01", DictCodeList.交易方向_买入.getValue());
         model.addAttribute("PS_T02", DictCodeList.交易方向_卖出.getValue());
         // 一体化对应etliu end
 
         model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
-        model.addAttribute("FINPROD_TYPE_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
+        model.addAttribute("FINPROD_TYPE_F07", DictCodeListExt1.金融产品类型_存款.getValue());
         String portfolioId = getParam("portfolioId");
         String tradeId = getParam("tradeId");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
@@ -113,44 +113,19 @@ public class TrdDepositValuationTrade002Controller extends BaseController {
             model.addAttribute("entity",entity);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("tradeId", entity.getTradeId());
-        }
-        else if (StringUtil.isNotEmpty(tradeId)) {
-            WflTrdProductDeal wflTrdProductDeal = new WflTrdProductDeal();
-            if (wflTrdProductDeal != null) {
-                String workFlowId = wflTrdProductDeal.getWorkflowId();
-                if (workFlowId != null && !workFlowId.isEmpty()) {
-                    TrdDepositValuationTrade001Dto entity = trdDepositValuationTrade002Service.getBussinessEntityByWorkflowId(
-                            workFlowId);
-                    model.addAttribute("entity", entity);
-                    model.addAttribute("workflowId", workflowId);
-                    model.addAttribute("tradeId", tradeId);
-                }
-            } else {
-                TrdDepositValuationTrade001Dto entity = trdDepositValuationTrade002Service.getInitEntity(tradeId);
-                if (StringUtil.isNotEmpty(portfolioId)) {
-                    entity.setPortfolioId(portfolioId);
-                }
-                model.addAttribute("entity", entity);
-                model.addAttribute("tradeId", tradeId);
-            }
+        }else if (!StringUtil.isNotEmpty(workflowId) && StringUtil.isNotEmpty(tradeId)){
+            TrdDepositValuationTrade001Dto entity = trdDepositValuationTrade002Service.queryTradeInfoByTradeId(tradeId);
+            model.addAttribute("entity", entity);
         }else{
             //初始化值
             TrdDepositValuationTrade001Dto entity = new TrdDepositValuationTrade001Dto();
-                entity.setOtherAmt(new BigDecimal("0.00"));   //其他费用
-//            entity.setConfirmIntAmt(new BigDecimal("0.00"));     //利息确认金额
-//            entity.setRefundAmount(new BigDecimal("0.00"));      //返款金额
-//            entity.setRateRefundAmount(new BigDecimal("0.00"));  //利息返还金额
-//            entity.setFeeAmt(new BigDecimal("0.00"));            //交易费用
-//            entity.setAdvFeeOut(new BigDecimal("0.00"));         //投资顾问费
-//            entity.setFeeAmtQT(new BigDecimal("0.00"));          //其他费用
-//            entity.setTodayArriveFlag(DictCodeList.是否_否.getValue()); //初始默认否
+            entity.setOtherAmt(new BigDecimal("0.00"));   //其他费用
             entity.setCcy(DictCodeList.币种_人民币_CNY.getValue());
-            //新建初始化交易编号
-            entity.setTradeId(trdDepositValuationTrade002Service.createPlanTradeId());
             model.addAttribute("entity", entity);
         }
-//        model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+        model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
         return super.init(model);
+
     }
 
 
@@ -174,13 +149,13 @@ public class TrdDepositValuationTrade002Controller extends BaseController {
     public Page<SelectOptionDto> findPortfolioId(HttpServletRequest request) {
         Map<String, Object> param =RequestUtil.getPageParam();
         //param.put("finprodType", BussinessDictCodeList.金融产品类型_计划类资产.getValue()); //F17
-        param.put("finprodType", "F01"); //测试
+//        param.put("finprodType", "F01"); //测试
         return trdDepositValuationTrade002Service.findPortfolioId(param);
     }
 
 
     /**
-     * 自定义产品代码下拉框
+     * 自定义资产代码下拉框
      * @param request
      * @return
      */

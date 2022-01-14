@@ -334,7 +334,7 @@ public class TrdPlanValuationTradeService extends CommonExportService<TrdPlanVal
      *
      * 工作流完结之后的操作
      * <功能详细描述>
-     * @param dto 实体
+     * @param result 实体
      * @see
      * @since 1.0
      */
@@ -671,7 +671,30 @@ public class TrdPlanValuationTradeService extends CommonExportService<TrdPlanVal
      * @since 1.0
      */
     public List<TrdPlanValuationTradeDto> findAll(Map<String, Object> params) {
-        return trdPlanValuationTradeMapper.select(params);
+        //产品代码
+        String portfolioId = (String)params.get("portfolioId");
+        String[] portfolioIdArr = null;
+        if(StringUtil.isNotEmpty(portfolioId)){
+            portfolioIdArr = portfolioId.split(",");
+        }
+        params.put("portfolioIdArr", portfolioIdArr);
+        //资产代码
+        String finprodId = (String)params.get("finprodId");
+        String[] finprodIdArr = null;
+        if(StringUtil.isNotEmpty(finprodId)){
+            finprodIdArr = finprodId.split(",");
+        }
+        params.put("finprodIdArr", finprodIdArr);
+
+        // 获取交易方向
+        String ps = (String)params.get("ps");
+        // 交易方向多选，转为数组
+        String[] psArr = null;
+        if (StringUtil.isNotEmpty(ps)) {
+            psArr = ps.split(",");
+        }
+        params.put("psArr", psArr);
+        return trdPlanValuationTradeMapper.selectDeal(params);
     }
 
     public int delete(TrdPlanValuationTradeDto dto) {

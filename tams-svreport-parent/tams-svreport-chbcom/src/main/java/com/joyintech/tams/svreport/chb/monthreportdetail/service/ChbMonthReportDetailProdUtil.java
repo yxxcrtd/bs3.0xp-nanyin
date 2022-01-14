@@ -134,10 +134,14 @@ public class ChbMonthReportDetailProdUtil {
      */
     public static void setFeeDetail(List<ChbMonthPrdPositiondetail> prdPositiondetail, ChbMonthFeePosition feePosition){
         Map<String, List<ChbMonthPrdPositiondetail>> entrustIdMap = prdPositiondetail.stream().collect(JoyinCollectors.groupingBy(ChbMonthPrdPositiondetail::getProdid));
-        for(ChbMonthPrdPositiondetail detail : entrustIdMap.get(feePosition.getProdid())){
-            //覆盖费用数据
-            BeanUtil.copyPropertiesIgnoreNull(detail,feePosition);
+        /** modify by wuhaisen  ZGZGST-4574 增加判空处理  20210112 start*/
+        if(entrustIdMap.get(feePosition.getProdid()) != null){
+            for(ChbMonthPrdPositiondetail detail : entrustIdMap.get(feePosition.getProdid())){
+                //覆盖费用数据
+                BeanUtil.copyPropertiesIgnoreNull(detail,feePosition);
+            }
         }
+        /** modify by wuhaisen  ZGZGST-4574 增加判空处理  20210112 end*/
     }
 
 
@@ -196,6 +200,7 @@ public class ChbMonthReportDetailProdUtil {
         int dataCount = prdPositionList.size();
         //若需要插入的数据比最大插入的数据少，则直接全部插入
         if (dataCount <= maxDataCountOneTime) {
+            dataCount = chbMonthReportDetailProdMapper.insertBatch(prdPositionList);
             dataCount = chbMonthReportDetailProdMapper.insertBatch(prdPositionList);
             return dataCount;
         }

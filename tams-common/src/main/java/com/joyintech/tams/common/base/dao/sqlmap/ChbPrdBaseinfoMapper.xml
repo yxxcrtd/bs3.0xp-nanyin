@@ -1882,6 +1882,9 @@
         <include refid="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoMapper.Base_Column_List" />
         from CHB_PRD_BASEINFO
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        <!-- add by yangxiainjiuyang start 2022-1-13-->
+        AND STATUS != 'D'
+        <!-- add end -->
     </select>
 
 

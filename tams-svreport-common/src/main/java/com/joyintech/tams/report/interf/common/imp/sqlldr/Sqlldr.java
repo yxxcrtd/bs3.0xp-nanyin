@@ -98,6 +98,11 @@ public class Sqlldr implements ImpExcutor {
 			//add by liubin start 将sqlldr执行日志输出到文件
 			String sqlldrLogFilePath = CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, InterfConstant.SQLLDR_LOG_FILEPATH);
 			LOGGER.info("sqlldr输出日志路径："+sqlldrLogFilePath);
+            // 本地文件夹不存在先创建文件夹 add by zcw
+            File saveFileDir = new File(sqlldrLogFilePath);
+            if (!saveFileDir.exists()) {
+                saveFileDir.mkdirs();
+            }
 			File file = new SafelyFile(sqlldrLogFilePath+File.separator+"sqlldr_log.txt");
 //    	//判断sqlldr输出日志路径下是否存在日志文件，若存在则加上时间戳
 			if(file.exists()){

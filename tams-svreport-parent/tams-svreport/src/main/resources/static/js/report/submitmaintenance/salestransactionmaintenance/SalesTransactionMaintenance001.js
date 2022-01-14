@@ -88,10 +88,13 @@
     table.bind('click', '.edit', function(data, index) {
         data.operateType = "edit";
         data.pageModel=PAGE_MODEL_EDIT;
-        Joyin.dialog(JoyinUtil.getLabel("销售结算资金交易信息维护编辑"),
+        Joyin.ajaxJson(basePath + 'report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/editCheck', data, function(result) {
+            Joyin.dialog(JoyinUtil.getLabel("销售结算资金交易信息维护编辑"),
                 JoyinUtil.getRealPath("report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance002/init"),
                 "98%", "95%", data,
            function(){table.reload();});
+        });
+
     });
     /**
      * 绑定删除事件

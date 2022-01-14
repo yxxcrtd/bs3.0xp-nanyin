@@ -57,7 +57,7 @@ public class SalerRewPenaInfoDto extends ChbSalerRewPenaInfo implements ProcessE
     }
 
     public String getSalerRewPenaTyepStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.记录分类, this.getSalerRewPenaTyep());
+        return this.getSalerRewPenaTyep() + " " +  SysDataUtil.getNameFromDataDict(DictCode.记录分类, this.getSalerRewPenaTyep());
     }
 
     public String getSalerRewPenaInstStr() {

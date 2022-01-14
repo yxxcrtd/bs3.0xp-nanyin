@@ -25,6 +25,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.component.business.service.CommonBusinessService;
 import com.joyintech.tams.valuation.trademanage.trdfundvaluationtrade.dto.TrdFundValuationTradeDto;
 import com.joyintech.tams.valuation.trademanage.trdfundvaluationtrade.service.TrdFundValuationTrade002Service;
+import com.joyintech.tams.valuation.trademanage.trdplanvaluationtrade.dto.TrdPlanValuationTradeDto;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -82,32 +84,15 @@ public class TrdFundValuationTrade002Controller extends BaseController {
         String portfolioId = getParam("portfolioId");
         String tradeId = getParam("tradeId");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
-        if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
-            TrdFundValuationTradeDto entity = trdFundValuationTrade002Service.getBussinessEntityByWorkflowId(
-                workflowId);
-            model.addAttribute("entity",entity);
+
+        if(StringUtil.isNotEmpty(workflowId)){
+            TrdFundValuationTradeDto entity= trdFundValuationTrade002Service.getBussinessEntityByWorkflowId(workflowId);
+            model.addAttribute("entity", entity);
             model.addAttribute("workflowId", workflowId);
-            model.addAttribute("tradeId", entity.getTradeId());
-        }
-        else if (StringUtil.isNotEmpty(tradeId)) {
-            WflTrdProductDeal wflTrdProductDeal = new WflTrdProductDeal();
-            if (wflTrdProductDeal != null) {
-                String workFlowId = wflTrdProductDeal.getWorkflowId();
-                if (workFlowId != null && !workFlowId.isEmpty()) {
-                    TrdFundValuationTradeDto entity = trdFundValuationTrade002Service.getBussinessEntityByWorkflowId(
-                            workFlowId);
-                    model.addAttribute("entity", entity);
-                    model.addAttribute("workflowId", workflowId);
-                    model.addAttribute("tradeId", tradeId);
-                }
-            } else {
-                TrdFundValuationTradeDto entity = trdFundValuationTrade002Service.getInitEntity(tradeId);
-                if (StringUtil.isNotEmpty(portfolioId)) {
-                    entity.setPortfolioId(portfolioId);
-                }
-                model.addAttribute("entity", entity);
-                model.addAttribute("tradeId", tradeId);
-            }
+
+        }else if (!StringUtil.isNotEmpty(workflowId) && StringUtil.isNotEmpty(tradeId)){
+            TrdFundValuationTradeDto entity = trdFundValuationTrade002Service.queryTradeInfoByTradeId(tradeId);
+            model.addAttribute("entity", entity);
         }else{
             //初始化值
             TrdFundValuationTradeDto entity = new TrdFundValuationTradeDto();
@@ -120,6 +105,7 @@ public class TrdFundValuationTrade002Controller extends BaseController {
             entity.setTradeId(trdFundValuationTrade002Service.createFundTradeId());
             model.addAttribute("entity", entity);
         }
+
         model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
         return super.init(model);
     }
@@ -170,7 +156,7 @@ public class TrdFundValuationTrade002Controller extends BaseController {
     public Page<SelectOptionDto> findPortfolioId(HttpServletRequest request) {
         Map<String, Object> param =RequestUtil.getPageParam();
         //param.put("finprodType", BussinessDictCodeList.金融产品类型_计划类资产.getValue()); //F17
-        param.put("finprodType", "F01"); //测试
+//        param.put("finprodType", "F01"); //测试
         return trdFundValuationTrade002Service.findPortfolioId(param);
     }
 
@@ -239,11 +225,19 @@ public class TrdFundValuationTrade002Controller extends BaseController {
         WorkFlowParameter<TrdFundValuationTradeDto> params = new WorkFlowParameter<TrdFundValuationTradeDto>();
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
+
+        //设置主键
+        if(!StringUtil.isNotEmpty(dto.getTradeId())){
+            Date sysDate= DateUtil.platDateFromCache();
+            //新建初始化交易编号
+            dto.setTradeId(trdFundValuationTrade002Service.createFundTradeId());
+        }
+
         params.setBusinessCode(dto.getTradeId());
         params.setBusinessType(DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue());
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
-                entity -> SpringContextUtil.getTextValue("TrdFundValuationTrade001.tradeId")+"("+ entity.getTradeId() +")"+"-"+SpringContextUtil.getTextValue("TrdFundRateValuationTrade002.tradeDate") + "(" + DateUtil.format(entity.getTradeDate()) + ")"
+                entity -> SpringContextUtil.getTextValue("TrdFundValuationTrade001.tradeId")+"("+ entity.getTradeId() +")"+"-"+SpringContextUtil.getTextValue("TrdFundValuationTrade002.tradeDate") + "(" + DateUtil.format(entity.getTradeDate()) + ")"
         );
         //给参数变成ProcessParameter而非WorkFlowParameter
         ProcessParameter<TrdFundValuationTradeDto> parameter = new ProcessParameter<TrdFundValuationTradeDto>();
