@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -230,6 +231,7 @@ public class SvrChbEmployeeDBInterf extends BaseService{
                 } else {
                 	sub.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
                     deleteList.add(sub);
+                    insertList.add(sub);
                 }
             }
 			Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
@@ -319,7 +321,7 @@ public class SvrChbEmployeeDBInterf extends BaseService{
     public boolean compareEmployeeRegData(ChbEmployeeInfoSub dto,ChbEmployeeInfoSub regdto){
     	ChbEmployeeInfoSub compare1 = genEmployeeDto(dto);
     	ChbEmployeeInfoSub compare2 = genEmployeeDto(regdto);
-        if(JSON.toJSONString(compare1).equals(JSON.toJSONString(compare2))){
+        if(JSON.toJSONString(compare1,SerializerFeature.WriteNullStringAsEmpty).equals(JSON.toJSONString(compare2,SerializerFeature.WriteNullStringAsEmpty))){
             return true;
         }else{
             return false;
@@ -333,6 +335,8 @@ public class SvrChbEmployeeDBInterf extends BaseService{
      */
 	private ChbEmployeeInfoSub genEmployeeDto(ChbEmployeeInfoSub dto) {
 		ChbEmployeeInfoSub tmpDto = new ChbEmployeeInfoSub();
+		tmpDto.setCreateTime(null);
+		tmpDto.setUpdateTime(null);
 		tmpDto.setEmployeeType(null==dto.getEmployeeType()?"":dto.getEmployeeType());
 		tmpDto.setEmployeeName(null==dto.getEmployeeName()?"":dto.getEmployeeName());
 		tmpDto.setEmployeeSex(null==dto.getEmployeeSex()?"":dto.getEmployeeSex());

@@ -80,7 +80,7 @@
 			  DECODE(ORD_IDENTIFIED,'09',P.ENDAMTSUM_OTH) ordIdentified09
 
 			  FROM CHB_MONTH_PRD_POSITIONDETAIL P
-			  LEFT JOIN CHB_PRD_BASEINFO B ON P.PRODID= b.Prod_Id
+			  LEFT JOIN CHB_PRD_BASEINFO B ON P.PRODID= b.Prod_Id AND B.FPROD_ID IS NULL AND B.STATUS IN ('E','M')
 			  WHERE 1=1
 			  <if test="enddate != null and enddate != ''">
 				  and P.TERM =  #{enddate,jdbcType=VARCHAR}

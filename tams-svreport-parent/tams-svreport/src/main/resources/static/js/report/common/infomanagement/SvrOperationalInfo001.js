@@ -675,7 +675,7 @@ function showSelectColumns() {
 								+ curColumn
 								+ "-D"
 								+ "\" placeholder=\"请选择日期区间\" />"
-								+ "</div>"
+								// + "</div>"
 								+ "<div class=\"time-icon\"><i class=\"iconfont icon-date\"></i></div></div>");
 						var laydate = layui.laydate;
 						laydate.render({
