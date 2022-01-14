@@ -1594,7 +1594,7 @@
                tradeStatus/*报价状态*/,
                sendStatus/*发送状态*/,
                tradeAmt/*交易金额*/,
-               rate/*回购利率*/,
+               rate*100 rate/*回购利率*/,
                repoTerm/*回购期限*/,
                quoteRoleType/*本方角色*/,
                ouPartyName/*本方*/,
