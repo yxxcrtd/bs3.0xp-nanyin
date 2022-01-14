@@ -149,10 +149,9 @@ public class IbuQuoteRepo004Controller extends BaseController {
         params.setBusinessType(DictCodeListExt3.共通业务类型_本币业务交易_质押式回购_登记.getValue());
         params.setBusinessCode(cfetsBondDealRegisterQuoteDto.getTotleTradeId());
         String counterTrader = null;
-        if (StringUtil.isEmpty(dto.getCounterTrader())) {
-            counterTrader = "-";
-        } else {
+        if (StringUtil.isNotEmpty(dto.getCounterTrader())) {
             CfetsSearchInfoRequest item = new CfetsSearchInfoRequest();
+            item.setDealType("02");
             item.setPartyId(dto.getCounterId());
             item.setSearch(dto.getCounterTrader());
             List<SelectOptionDto> list = joyinbusinessCommonService.queryMySideTraderOrCountTrader(item);
@@ -162,7 +161,7 @@ public class IbuQuoteRepo004Controller extends BaseController {
         }
         DecimalFormat df = new DecimalFormat("#,##0.00");
         String tradeAmtStr = df.format(ArithmeticUtil.round(dto.getTradeAmt(), 2, RoundingMode.HALF_UP));
-        String finalCounterTrader = counterTrader;
+        String finalCounterTrader = StringUtil.isEmpty(counterTrader) ? "-" : counterTrader;
         params.setComment(entity -> "交易日期:" + DateUtil.format(iPlatformDate.getSysDate()) + "-回购期限:"
                 + dto.getRepoTerm() + "天" + finalCounterTrader + "交易金额:" + tradeAmtStr);
         cfetsBondDealRegisterQuoteDto.setQuoteType(DictCodeListExt3.报价系统区分类型_质押式回购登记报价.getValue());
