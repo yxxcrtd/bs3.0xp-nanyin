@@ -58,8 +58,12 @@
         reg.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
         decode(reg.finprod_type2,'F01',deal.faceValue,null) as faceValue,
-        case when reg.finprod_type2='F01'  then reg.yield*100
-        when reg.finprod_type2 in ('F02','F03') then reg.rate*100 else null end as tradeYield,
+        case when reg.finprod_type2='F01'
+        then decode(regAdd.CAL_MODE,'01',TO_CHAR(ROUND(reg.unit_cprice,4),'FM990.0000'),
+                                    '02',TO_CHAR(ROUND(reg.yield*100,4),'FM990.0000') ||'%',
+                                    '03',TO_CHAR(ROUND(reg.exer_yield*100,4),'FM990.0000')||'%')
+        when reg.finprod_type2 in ('F02','F03') then  TO_CHAR(ROUND(reg.rate*100,4),'FM990.0000') ||'%'
+        else null end as tradeYield,
         reg.repo_term as termDays,
         deal.tradeAmt as tradeAmt,
         reg.totle_trade_id as busiCode,
@@ -198,8 +202,12 @@
         reg.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
         decode(reg.finprod_type2,'F01',deal.faceValue,null) as faceValue,
-        case when reg.finprod_type2='F01' then reg.yield*100
-        when reg.finprod_type2 in ('F02','F03') then reg.rate*100 else null end as tradeYield,
+        case when reg.finprod_type2='F01'
+        then decode(regAdd.CAL_MODE,'01',TO_CHAR(ROUND(reg.unit_cprice,4),'FM990.0000'),
+                                    '02',TO_CHAR(ROUND(reg.yield*100,4),'FM990.0000') ||'%',
+                                    '03',TO_CHAR(ROUND(reg.exer_yield*100,4),'FM990.0000')||'%')
+        when reg.finprod_type2 in ('F02','F03') then  TO_CHAR(ROUND(reg.rate*100,4),'FM990.0000') ||'%'
+        else null end as tradeYield,
         reg.repo_term as termDays,
         deal.tradeAmt as tradeAmt,
         reg.totle_trade_id as busiCode,
@@ -331,7 +339,7 @@
                 || '|' || dictquote.ITEM_VALUE  || '|' || dictms.ITEM_VALUE || '|' || aaa.remark
                 like '%' || #{search} || '%')
                 or to_char(aaa.faceValue,'FM9999999999999990.90')=#{search} or to_char(aaa.faceValue)=#{search}
-                or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or  aaa.tradeYield||'' =#{search}
+                or aaa.tradeYield =#{search} or aaa.tradeYield =#{search}||'%'
                 or aaa.termDays||'' =#{search}
                 or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
                 or aaa.regTradeDate||'' =#{search}
@@ -389,7 +397,7 @@
         to_char(regAdd.Act_Sette_Date,'yyyy-MM-dd')  as  acrExerciseDate,
         reg.unit_cprice as exercisePrice,
         reg.repo_term as repoTerm,
-        reg.rate as tradeYield,
+        reg.rate*100 as tradeYield,
         reg.ccy as secCcy,
         reg.sett_ccy settCcy,
         reg.trade_amt tradeAmt,
@@ -477,7 +485,7 @@
         to_char(regAdd.Act_Sette_Date,'yyyy-MM-dd')  as  acrExerciseDate,
         reg.unit_cprice as exercisePrice,
         reg.repo_term as repoTerm,
-        reg.rate as tradeYield,
+        reg.rate*100 as tradeYield,
         reg.ccy as secCcy,
         reg.sett_ccy settCcy,
         reg.trade_amt tradeAmt,
@@ -550,7 +558,7 @@
         reg.trade_amt as tradeAmt,
         reg.m_trade_amt as mtradeAmt,
         reg.dis_face_value as disFaceValue,
-        reg.rate tradeYield,
+        reg.rate*100 tradeYield,
         reg.yield*100 as yield,
         reg.exer_yield*100 as exerYield
         from reg_fin_product_deal reg
@@ -591,7 +599,7 @@
         reg.trade_amt as tradeAmt,
         reg.m_trade_amt as mtradeAmt,
         reg.dis_face_value as disFaceValue,
-        reg.rate tradeYield,
+        reg.rate*100 tradeYield,
         reg.yield*100 as yield,
         reg.exer_yield*100 as exerYield
         from wfl_reg_fin_product_deal reg
@@ -793,7 +801,7 @@
         ib.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
         ib.share_amt/100 as faceValue,
-        ibd.yield*100 as tradeYield,
+        ibd.tradeYield as tradeYield,
         null as termDays,
         ib.fprice_amt as tradeAmt,
         ib.quote_id as quoteId,
@@ -810,7 +818,11 @@
         on ib.finprod_id=fp.finprod_id
         left join (
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,ibd.yield as yield,ibd.CALCULATE_FIELD as calMode
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,
+            decode(ibd.CALCULATE_FIELD,'01',TO_CHAR(ROUND(ibd.unit_cprice,4),'FM990.0000'),
+                                      '02',TO_CHAR(ROUND(ibd.yield*100,4),'FM990.0000') ||'%',
+                                       '03',TO_CHAR(ROUND(ibd.exer_yield*100,4),'FM990.0000')||'%') as tradeYield,
+            ibd.CALCULATE_FIELD as calMode
             from ibu_quote_bond_det ibd
             inner join ibu_quote_bond t1
             on ibd.quote_id=t1.quote_id and t1.quote_type='01'
@@ -821,7 +833,7 @@
         union all
             select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
             wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
-            ibd.execid,null as yield,null as calMode
+            ibd.execid,null as tradeYield,null as calMode
             from ibu_quote_bond_det ibd
             inner join ibu_quote_bond t1
             on ibd.quote_id=t1.quote_id and t1.quote_type='02'
@@ -832,7 +844,9 @@
 
             union all
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,ibd.yield,ibd.CALCULATE_FIELD as calMode
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,
+            TO_CHAR(ROUND(ibd.yield*100,4),'FM990.0000') ||'%' as tradeYield,
+            ibd.CALCULATE_FIELD as calMode
             from ibu_quote_bond_det ibd
             inner join ibu_quote_bond t1
             on ibd.quote_id=t1.quote_id and t1.quote_type='02'
@@ -945,7 +959,7 @@
         ic.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
         ic.share_amt/100 as faceValue,
-        ic.rate*100 as tradeYield,
+        TO_CHAR(ROUND(ic.rate*100,4),'FM990.0000') ||'%' as tradeYield,
         ic.term as termDays,
         ic.fprice_amt as tradeAmt,
         ic.quote_id as quoteId,
@@ -1061,7 +1075,7 @@
         ib.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
         ib.share_amt/100 as faceValue,
-        ibd.yield*100 as tradeYield,
+        ibd.tradeYield as tradeYield,
         null as termDays,
         ib.fprice_amt as tradeAmt,
         ib.quote_id as quoteId,
@@ -1078,7 +1092,11 @@
         on ib.finprod_id=fp.finprod_id
         left join (
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,ibd.yield as yield,ibd.CALCULATE_FIELD as calMode
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,
+            decode(ibd.CALCULATE_FIELD,'01',TO_CHAR(ROUND(ibd.unit_cprice,4),'FM990.0000'),
+                                        '02',TO_CHAR(ROUND(ibd.yield*100,4),'FM990.0000') ||'%',
+                                        '03',TO_CHAR(ROUND(ibd.exer_yield*100,4),'FM990.0000')||'%') as tradeYield,
+            ibd.CALCULATE_FIELD as calMode
             from wfl_ibu_quote_bond_det ibd
             inner join wfl_ibu_quote_bond2 t1
             on ibd.quote_id=t1.quote_id and t1.quote_type='01'
@@ -1088,7 +1106,7 @@
             union all
             select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
             wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
-            ibd.execid,null as yield,null as calMode
+            ibd.execid,null as tradeYield,null as calMode
             from wfl_ibu_quote_bond_det ibd
             inner join wfl_ibu_quote_bond2 t1
             on ibd.quote_id=t1.quote_id and t1.quote_type='02'
@@ -1099,7 +1117,9 @@
 
             union all
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-           nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,ibd.yield,ibd.CALCULATE_FIELD as calMode
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,
+            TO_CHAR(ROUND(ibd.yield*100,4),'FM990.0000') ||'%' as tradeYield,
+            ibd.CALCULATE_FIELD as calMode
             from wfl_ibu_quote_bond_det ibd
             inner join wfl_ibu_quote_bond2 t1
             on ibd.quote_id=t1.quote_id and t1.quote_type='02'
@@ -1221,7 +1241,7 @@
         stlinfo.sec_acct_name as secManageAcctIdStr,
 
         ic.share_amt/100 as faceValue,
-        ic.rate*100*100 as tradeYield,
+        TO_CHAR(ROUND(ic.rate*100,4),'FM990.0000') ||'%' as tradeYield,
         ic.term as termDays,
         ic.fprice_amt as tradeAmt,
         ic.quote_id as quoteId,
@@ -1336,7 +1356,7 @@
                     || '|' || aaa.entrustId || '|' || aaa.remark
                     like '%' || #{search} || '%')
                     or to_char(aaa.faceValue,'FM9999999999999990.90')=#{search} or to_char(aaa.faceValue)=#{search}
-                    or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or  aaa.tradeYield||'' =#{search}
+                    or aaa.tradeYield=#{search} or  aaa.tradeYield =#{search}||'%'
                     or aaa.termDays||'' =#{search}
                     or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
                     or aaa.quoteDate||'' =#{search}
@@ -2228,7 +2248,13 @@
             T1.SEC_MANAGE_ACCT_ID as secManageAcctId,
             T7.SEC_ACCT_NAME secManageAcctIdStr,
             deal.share_amt/100 as faceValue,
-            nvl(T1.yield,T1.rate) as tradeYield,
+            case when T1.finprod_type2='F01'
+            then decode(nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD),'01',TO_CHAR(ROUND(T1.unit_cprice,4),'FM990.0000'),
+            '02',TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%',
+            '03',TO_CHAR(ROUND(T1.exer_yield*100,4),'FM990.0000')||'%',
+            TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%')
+            when T1.finprod_type2 in ('F02','F03') then  TO_CHAR(ROUND(T1.rate*100,4),'FM990.0000') ||'%'
+            else null end as tradeYield,
             T1.repo_term as termDays,
             deal.trade_Amt tradeAmt,
             T1.ccy as ccy,
@@ -2350,7 +2376,7 @@
                 || '|' || aaa.execid   || '|' || aaa.counterIdStr || '|' || aaa.remark
                 like '%' || #{search} || '%')
                 or to_char(aaa.faceValue,'FM9999999999999990.90')=#{search} or to_char(aaa.faceValue)=#{search}
-                or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or  aaa.tradeYield||'' =#{search}
+                or aaa.tradeYield=#{search} or  aaa.tradeYield =#{search}||'%'
                 or aaa.termDays||'' =#{search}
                 or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
                 or aaa.confirmTradeDate||'' =#{search}
@@ -2398,7 +2424,13 @@
         t1.sec_manage_acct_id as secManageAcctId,
         T7.SEC_ACCT_NAME  as secManageAcctIdStr,
         t1.share_amt/100 as faceValue,
-        t1.yield*100 as tradeYield,
+        case when T1.finprod_type2='F01'
+        then decode(nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD),'01',TO_CHAR(ROUND(T1.unit_cprice,4),'FM990.0000'),
+             '02',TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%',
+             '03',TO_CHAR(ROUND(T1.exer_yield*100,4),'FM990.0000')||'%',
+              TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%')
+        when T1.finprod_type2 in ('F02','F03') then  TO_CHAR(ROUND(T1.unit_int*100,4),'FM990.0000') ||'%'
+        else null end as tradeYield,
         (t1.mdate-t1.vdate) as termDays,
         t1.trade_amt as tradeAmt,
         t1.ccy as ccy,
@@ -2526,7 +2558,7 @@
                 || '|' || aaa.execid   || '|' || aaa.counterIdStr || '|' || aaa.remark
                 like '%' || #{search} || '%')
                 or to_char(aaa.faceValue,'FM9999999999999990.90')=#{search} or to_char(aaa.faceValue)=#{search}
-                or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or  aaa.tradeYield||'' =#{search}
+                or aaa.tradeYield=#{search} or  aaa.tradeYield =#{search}||'%'
                 or aaa.termDays||'' =#{search}
                 or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
                 or aaa.confirmTradeDate||'' =#{search}
