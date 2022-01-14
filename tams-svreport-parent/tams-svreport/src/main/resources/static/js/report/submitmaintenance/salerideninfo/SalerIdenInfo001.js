@@ -59,9 +59,9 @@
             ,{field:'salerFinanceStartYmd', title: '首次从事金融工作时间', width:'150',sortField:'salerFinanceStartYmd'}
             ,{field:'salerStartYmd', title: '首次从事理财销售时间', width:'150',sortField:'salerStartYmd'}
             ,{field:'salerLevleStr', title: '专业技术职称', width:'150',sortField:'salerLevle'}
-            ,{field:'salerCertificateType', title: '理财专业证书', width:'150',sortField:'salerCertificateType'}
+            ,{field:'salerCertificateTypeStr', title: '理财专业证书', width:'150',sortField:'salerCertificateType'}
             ,{field:'salerChbTrainNo', title: '理财登记培训证书编号', width:'150',sortField:'salerChbTrainNo'}
-            ,{field:'salerRiskLevel', title: '可销售产品风险等级', width:'150',sortField:'salerRiskLevel'}
+            ,{field:'salerRiskLevelStr', title: '可销售产品风险等级', width:'150',sortField:'salerRiskLevel'}
             ,{field:'salerQualification', title: '销售资质', width:'150',sortField:'salerQualification'}
             ,{field:'salerTel', title: '办公电话', width:'150',sortField:'salerTel'}
             ,{field:'salerMobile', title: '移动电话', width:'150',sortField:'salerMobile'}
