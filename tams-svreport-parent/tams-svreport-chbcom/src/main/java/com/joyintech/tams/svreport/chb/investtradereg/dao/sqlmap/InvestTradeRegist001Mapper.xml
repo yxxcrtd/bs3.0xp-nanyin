@@ -777,7 +777,7 @@
         ,sub.INVEST_TRADER_NAME investTraderName
     from CHB_INVEST_TRADE_SUB sub
     left join CHB_PRD_BASEINFO info
-    on sub.prod_id = info.prod_id
+    on sub.prod_id = info.prod_id and info.STATUS='E'
     left join chb_prdresist_code reginfo
     on sub.prod_id = reginfo.prodid
     left join CHB_INVEST_TRADE deal
