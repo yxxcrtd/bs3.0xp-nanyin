@@ -6,6 +6,7 @@ import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.TrdProductDealDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
@@ -34,6 +35,7 @@ public class ExchangeTransMatchBond4Service extends ExchangeTransMatchBondCommon
     protected void setDealTotal(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal) {
         // 业务类型
         trdFinProductDealTotal.setBusiType(DictCodeList.共通业务类型_债券类资产交易.getValue());
+        trdFinProductDealTotal.setTgBusiType(DictCodeListExt3.平安业务类型_债转股.getValue());
     }
 
     @Override
@@ -68,7 +70,7 @@ public class ExchangeTransMatchBond4Service extends ExchangeTransMatchBondCommon
         // 到期收益率和行权收益率
         this.calc(trdProductDeal);
 
-        trdProductDeal.setTgBusiType(getTgBusiType(entrustDto.getPs()));
+        trdProductDeal.setTgBusiType( DictCodeListExt3.平安业务类型_债转股.getValue());
 
         // 到期收益率
         trdFinProductDealTotal.setYield(trdProductDeal.getYield());
