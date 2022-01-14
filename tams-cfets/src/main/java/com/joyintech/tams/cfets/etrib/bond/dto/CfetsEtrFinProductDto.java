@@ -758,4 +758,12 @@ public class CfetsEtrFinProductDto {
     public void setSecMarketAmt(String secMarketAmt) {
         this.secMarketAmt = secMarketAmt;
     }
+
+    public String getLastXQDate() {
+        return lastXQDate;
+    }
+
+    public void setLastXQDate(String lastXQDate) {
+        this.lastXQDate = lastXQDate;
+    }
 }
