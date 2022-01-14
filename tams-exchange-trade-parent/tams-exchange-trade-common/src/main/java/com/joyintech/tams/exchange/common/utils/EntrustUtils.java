@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.google.common.base.Strings;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
+import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.constant.*;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
 import com.joyintech.tams.exchange.common.constant.joyin.InvestmentAssetType1;
@@ -874,5 +875,13 @@ public class EntrustUtils {
             return true;
         }
         return false;
+    }
+
+    public static boolean isSuccess(ResultBean resultBean) {
+        return ErrorCode.isSuccess(resultBean.getErrorCode());
+    }
+
+    public static boolean isFailed(ResultBean resultBean) {
+        return !isSuccess(resultBean);
     }
 }
