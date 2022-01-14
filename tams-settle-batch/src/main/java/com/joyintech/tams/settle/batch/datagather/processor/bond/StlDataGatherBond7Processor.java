@@ -186,7 +186,7 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
                         //投资目的
                         etrSecPositionFlow.setInvAim(ptlTrade.getInvAim());
                         //持仓类型
-                        etrSecPositionFlow.setHodingType(DictCodeList.持仓类型_实际.getValue());
+                        etrSecPositionFlow.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
                         //日期
                         etrSecPositionFlow.setCdate(ptlTrade.getSettleDate());
                         //币种
