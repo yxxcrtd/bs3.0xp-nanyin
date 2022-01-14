@@ -488,6 +488,17 @@ public class StlDataDealSzdSjsjgProcessService {
                 settleTransData.setShareAmt(abs(szdSjsjg.getJgjssl()));
                 //交易份额
                 settleTransData.setFpriceAmt(abs(szdSjsjg.getJgzjje()));
+                List<SzdSjsjg> szdSjsjgs = stlDownDataDealMapper.getSzdSjsjgByApplyTradeId(settleTransData.getApplyTradeId());
+                if(CollectionUtils.isNotEmpty(szdSjsjgs)){
+                    for(SzdSjsjg data : szdSjsjgs){
+                        if(!data.getJgzqdm().equals(szdSjsjg.getJgzqdm())){
+                            // (债券Jgcjsl*100-股票Jgzjje)/股票Jgjssl
+                            settleTransData.setUnitCprice(ArithmeticUtil.divide(ArithmeticUtil.subtract(
+                                    ArithmeticUtil.multiply(data.getJgcjsl(),new BigDecimal(100L)),szdSjsjg.getJgzjje()),
+                                    szdSjsjg.getJgjssl(),2));
+                        }
+                    }
+                }
             }
     	}
     	// 债转股业务

@@ -703,4 +703,13 @@
 		WHERE CDATE = #{cdate}
 		  AND TRADE_CALENDAR_ID = #{calendarId}
 	</select>
+
+	<select id="getSzdSjsjgByApplyTradeId" resultType="com.joyintech.tams.common.base.entity.SzdSjsjg">
+		SELECT
+		<include refid="com.joyintech.tams.common.base.dao.SzdSjsjgMapper.Base_Column_List" />
+		FROM
+			SZD_SJSJG
+		WHERE
+			JGDDBH = #{applyTradeId}
+	</select>
 </mapper>

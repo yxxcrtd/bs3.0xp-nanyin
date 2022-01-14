@@ -1039,7 +1039,7 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                         for(StlSettleTransDataGatherDto item:list) {
                             if(StringUtil.equals(item.getFinprodType2(),DictCodeListExt1.证券品种_股票.getValue())
                                     && item.getShareAmt().compareTo(BigDecimal.ZERO) > 0){
-                                settleTransDataTotalAdd.setConAmt(item.getTradeAmt());
+                                settleTransDataTotalAdd.setConAmt(item.getShareAmt());
                             }
                         }
                         if(settleTransDataTotalAdd.getConAmt()!=null&&settleTransDataTotalAdd.getConPrice()!=null) {

@@ -169,4 +169,6 @@ public interface StlDownDataDealMapper {
      * @return List<String>
      */
     List<FinProduct> getFinproductByFinProdMarketId(@Param("finProdMarketId") String finProdMarketId);
+
+    List<SzdSjsjg> getSzdSjsjgByApplyTradeId(@Param("applyTradeId") String applyTradeId);
 }
