@@ -271,8 +271,13 @@ public class ExchangeTransMatchRepo2Service extends ExchangeTransMatchRepoCommon
         }else {
             trdProductDeal.setFeeAmtPay(ArithmeticUtil.doAdd(dealDto.getJsfAmt(), dealDto.getGhfAmt(), dealDto.getZgfAmt(), dealDto.getSxfAmt(), dealDto.getSettleFee(), dealDto.getStampFee()));
         }
-        // 交易金额
-        trdProductDeal.setTradeAmt(entrustDto.getMarchAmt());
+        // 交易金额 正回购：匹配金额 - 随交易支付费用 逆回购：匹配金额+ 随交易支付费用
+        if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(), dealDto.getFinprodType2())) {
+            trdProductDeal.setTradeAmt(ArithmeticUtil.subtract(entrustDto.getMarchAmt(),trdProductDeal.getFeeAmtPay()));
+        }   else {
+            trdProductDeal.setTradeAmt(ArithmeticUtil.doAdd(entrustDto.getMarchAmt(),trdProductDeal.getFeeAmtPay()));
+        }
+
         //交易份额
         trdProductDeal.setShareAmt(entrustDto.getMarchAmt());
         // 未随交易支付费用

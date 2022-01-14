@@ -176,12 +176,17 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
         dealTotal.setPrinAmt(ArithmeticUtil.multiply(proportion,dealDto.getPrinAmt()));
         // 利息总额
         dealTotal.setIntAmt(BigDecimal.ZERO);
-        // 全价总额
-        dealTotal.setFpriceAmt(ArithmeticUtil.multiply(proportion,dealDto.getFpriceAmt()));
         // 随交易支付费用
         dealTotal.setFeeAmtPay(ArithmeticUtil.multiply(proportion,dealDto.getTotalFeeAmtPay()));
-        // 交易金额
-        dealTotal.setTradeAmt(ArithmeticUtil.multiply(proportion,dealDto.getTradeAmt()));
+        // 全价总额 交易本金 + 利息总额
+        dealTotal.setFpriceAmt(ArithmeticUtil.multiply(proportion,ArithmeticUtil.doAdd(dealTotal.getPrinAmt(),dealTotal.getIntAmt())));
+        // 交易金额 正回购到期续作：全价总额 - 随交易支付费用 逆回购到期续作：全价总额+ 随交易支付费用
+        if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(), dealDto.getFinprodType2())) {
+            dealTotal.setTradeAmt(ArithmeticUtil.multiply(proportion,ArithmeticUtil.subtract(dealTotal.getFpriceAmt(),dealTotal.getIntAmt())));
+        }
+        else {
+            dealTotal.setTradeAmt(ArithmeticUtil.multiply(proportion,ArithmeticUtil.doAdd(dealTotal.getFpriceAmt(),dealTotal.getIntAmt())));
+        }
         // 未随交易支付费用
         dealTotal.setFeeAmtUnpay(ArithmeticUtil.multiply(proportion,dealDto.getTotalUnFeeAmtPay()));
         // 总交易费用
@@ -280,8 +285,7 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
             //交割日
             trdProductDeal.setSettleDate(settleTransData.getSettleDate());
             //清算速度
-        //清算速度
-        trdProductDeal.setSettleSpeed(StringUtil.isNotEmpty(settleTransData.getSettleSpeed())?settleTransData.getSettleSpeed():0L);
+            trdProductDeal.setSettleSpeed(StringUtil.isNotEmpty(settleTransData.getSettleSpeed())?settleTransData.getSettleSpeed():0L);
             // 交易币种
             trdProductDeal.setCcy(settleTransData.getCcy());
             // 净值日期
@@ -304,8 +308,7 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
             trdProductDeal.setIntAmt(settleTransData.getIntAmt());
             //全价总额
             trdProductDeal.setFpriceAmt(settleTransData.getFpriceAmt());
-            //交易金额
-            trdProductDeal.setTradeAmt(settleTransData.getTradeAmt());
+
             //随交易费用和不随交易支付费用
             if(StringUtil.equals(settleTransData.getIsPayWithTrade(),DictCodeList.是否_是.getValue())) {
                 trdProductDeal.setFeeAmtPay(ArithmeticUtil.doAdd(settleTransData.getStampFee(),settleTransData.getJsfAmt(),settleTransData.getGhfAmt(),settleTransData.getZgfAmt(),settleTransData.getSxfAmt(),settleTransData.getSettleFee(),settleTransData.getCommissionAmt()));
@@ -315,6 +318,20 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
                 trdProductDeal.setFeeAmtPay(ArithmeticUtil.doAdd(settleTransData.getStampFee(),settleTransData.getJsfAmt(),settleTransData.getGhfAmt(),settleTransData.getZgfAmt(),settleTransData.getSxfAmt(),settleTransData.getSettleFee()));
                 trdProductDeal.setFeeAmtUnpay(settleTransData.getCommissionAmt());
             }
+
+            // if 正回购买入时，交易明细的交易本金 - 明细费用随交易支付的费用 逆回购买入时，交易明细的交易本金+ 明细费用随交易支付的费用 else 交易明细明细对应字段
+            if(StringUtil.equals(settleTransData.getPs(),DictCodeList.交易方向_买入.getValue())) {
+                if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(), dealDto.getFinprodType2())) {
+                    trdProductDeal.setTradeAmt(ArithmeticUtil.subtract(settleTransData.getPrinAmt(),trdProductDeal.getFeeAmtPay()));
+                }   else {
+                    trdProductDeal.setTradeAmt(ArithmeticUtil.doAdd(settleTransData.getPrinAmt(),trdProductDeal.getFeeAmtPay()));
+                }
+            }
+            else {
+                //交易金额
+                trdProductDeal.setTradeAmt(settleTransData.getTradeAmt());
+            }
+
             //总费用
             trdProductDeal.setFeeAmt(ArithmeticUtil.doAdd(trdProductDeal.getFeeAmtPay(),trdProductDeal.getFeeAmtUnpay()));
             // 投资目的
@@ -525,8 +542,9 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
 
                     firstSettleTransData.setShareAmt(entrustDto.getMarchQty());
                     firstSettleTransData.setPrinAmt(entrustDto.getMarchQty());
-                    firstSettleTransData.setFpriceAmt(ArithmeticUtil.multiply(shareRate,item.getFpriceAmt()));
-                    firstSettleTransData.setTradeAmt(ArithmeticUtil.multiply(shareRate,item.getTradeAmt()));
+                    firstSettleTransData.setFpriceAmt(entrustDto.getMarchQty());
+                    firstSettleTransData.setTradeAmt(entrustDto.getMarchQty());
+
                     //交易数据明细.到期利息 =  汇总成交匹配结果表.匹配份额*成交数据明细.交易净价/成交数据明细.计息基础*（成交数据明细.到期交收日 - 成交数据明细.首期交收日）
                     BigDecimal mIntAmt = ArithmeticUtil.multiply(ArithmeticUtil.divide(ArithmeticUtil.multiply(entrustDto.getMarchQty(),item.getUnitCprice()),new BigDecimal(365),2), new BigDecimal(DateUtil.getBetweenDayNumber(item.getMpayDate(),item.getVpayDate())));
                     firstSettleTransData.setmIntAmt(mIntAmt);
