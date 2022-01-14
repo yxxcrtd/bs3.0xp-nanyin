@@ -68,6 +68,7 @@
             ,{field:'salerMail', title: '邮箱', width:'150',sortField:'salerMail'}
             ,{field:'salerStatusStr', title: '当前状态', width:'150',sortField:'salerStatus'}
             ,{field:'remark', title: '备注', width:'150',sortField:'remark'}
+            ,{field:'errMsg', title: '错误信息', width:'150',sortField:'errMsg'}
             ,{field:'action', title: '操作' , type:'action',buttons: ['edit', 'delt'] , width:'150'}
         ],
     });
