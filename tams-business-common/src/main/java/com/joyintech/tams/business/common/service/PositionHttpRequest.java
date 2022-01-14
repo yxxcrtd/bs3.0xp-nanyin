@@ -192,7 +192,7 @@ public class PositionHttpRequest {
     public static void dorevoke(String revokeId, String modelType,String busiType,String ps) throws PositionException{
         //
         BaseMap bm = BaseMap.newMap()
-                .put("workFlowId", revokeId)
+                .put("revokeId", revokeId)
                 .put("modelType", modelType)
                 .put("userId", LoginUserUtil.getUserName())
                 .put("busiType", busiType)
