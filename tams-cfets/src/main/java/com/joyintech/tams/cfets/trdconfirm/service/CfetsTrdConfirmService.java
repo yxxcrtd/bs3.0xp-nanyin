@@ -247,7 +247,7 @@ public class CfetsTrdConfirmService extends BaseService{
                     pageParam.put("ps",serchExecDto.getPs());
                     pageParam.put("settleSpeed",serchExecDto.getSettleSpeed());
                     pageParam.put("secManageAcctId",serchExecDto.getAcctNo());
-                    pageParam.put("tradeYield",serchExecDto.getTradeYield());
+                    pageParam.put("yield",serchExecDto.getTradeYield());
                     pageParam.put("faceValue",serchExecDto.getLastqty());
                     pageParam.put("settleDate",serchExecDto.getSettleDate());
                     pageParam.put("deliveryType",serchExecDto.getDeliveryType());
@@ -260,7 +260,7 @@ public class CfetsTrdConfirmService extends BaseService{
                     pageParam.put("ps",serchExecDto.getPs());
                     pageParam.put("settleSpeed",serchExecDto.getSettleSpeed());
                     pageParam.put("secManageAcctId",serchExecDto.getAcctNo());
-                    pageParam.put("tradeYield",serchExecDto.getTradeYield());
+                    pageParam.put("rate",serchExecDto.getTradeYield());
                     pageParam.put("vsettleDate",serchExecDto.getVsettleDate());
                     pageParam.put("msettleDate",serchExecDto.getMsettleDate());
                     pageParam.put("tradeAmt",serchExecDto.getTradeAmt());
@@ -2463,7 +2463,7 @@ public class CfetsTrdConfirmService extends BaseService{
                 pageParam.put("ps",serchCstpDto.getPs());
                 pageParam.put("settleSpeed",serchCstpDto.getSettleSpeed());
                 pageParam.put("secManageAcctId",serchCstpDto.getSecManageAcctId());
-                pageParam.put("tradeYield",serchCstpDto.getTradeYield());
+                pageParam.put("tradeYield",serchCstpDto.getYield());
                 pageParam.put("faceValue",serchCstpDto.getFaceValue());
                 pageParam.put("settleDate",serchCstpDto.getSettleDate());
                 pageParam.put("deliveryType",serchCstpDto.getDeliveryType());
@@ -2475,7 +2475,7 @@ public class CfetsTrdConfirmService extends BaseService{
                 pageParam.put("ps",serchCstpDto.getPs());
                 pageParam.put("settleSpeed",serchCstpDto.getSettleSpeed());
                 pageParam.put("secManageAcctId",serchCstpDto.getSecManageAcctId());
-                pageParam.put("tradeYield",serchCstpDto.getTradeYield());
+                pageParam.put("tradeYield",serchCstpDto.getRate());
                 pageParam.put("vsettleDate",serchCstpDto.getVsettleDate());
                 pageParam.put("msettleDate",serchCstpDto.getMsettleDate());
                 pageParam.put("tradeAmt",serchCstpDto.getTradeAmt());
@@ -2558,8 +2558,8 @@ public class CfetsTrdConfirmService extends BaseService{
                 if (!StringUtil.equals(regInfo.getSecManageAcctId(), cstpInfo.getAcctNo())) {
                     str.append(",证券账户");
                 }
-                if (StringUtil.isNotEmpty(regInfo.getTradeYield()) && StringUtil.isNotEmpty(cstpInfo.getTradeYield())
-                       && cfetsRepoQuotedPrice004Service.ACompareToB(regInfo.getTradeYield(), cstpInfo.getTradeYield(), 4)!=0) {
+                if (StringUtil.isNotEmpty(regInfo.getYield()) && StringUtil.isNotEmpty(cstpInfo.getTradeYield())
+                       && cfetsRepoQuotedPrice004Service.ACompareToB(regInfo.getYield(), cstpInfo.getTradeYield(), 4)!=0) {
                     str.append(",净价/到期收益率");
                 }
                 if (StringUtil.isNotEmpty(regInfo.getFaceValue()) && StringUtil.isNotEmpty(cstpInfo.getLastqty())
@@ -2623,8 +2623,8 @@ public class CfetsTrdConfirmService extends BaseService{
                     if (!StringUtil.equals(regInfo.getSecManageAcctId(), cstpInfo.getAcctNo())) {
                         str.append(",证券账户");
                     }
-                    if (StringUtil.isNotEmpty(regInfo.getTradeYield()) && StringUtil.isNotEmpty(cstpInfo.getTradeYield())
-                            && regInfo.getTradeYield().compareTo(cstpInfo.getTradeYield())!=0) {
+                    if (StringUtil.isNotEmpty(regInfo.getRate()) && StringUtil.isNotEmpty(cstpInfo.getTradeYield())
+                            && cfetsRepoQuotedPrice004Service.ACompareToB(regInfo.getRate(),cstpInfo.getTradeYield(),4)!=0) {
                         str.append(",回购利率");
                     }
                     if (StringUtil.isNotEmpty(regInfo.getVsettleDate()) && StringUtil.isNotEmpty(cstpInfo.getVsettleDate())
@@ -3105,7 +3105,7 @@ public class CfetsTrdConfirmService extends BaseService{
                 param.put("settleSpeed","03");
             }
             param.put("secManageAcctId",interfTradSecdeal.getOurdepositaccountnumber());
-            param.put("tradeYield",interfTradSecdeal.getYield8());
+            param.put("yield",interfTradSecdeal.getYield8());
             param.put("faceValue",interfTradSecdeal.getPrinamt());
             param.put("settleDate",DateUtil.format(interfTradSecdeal.getSettdate(),"yyyy-MM-dd"));
             if(StringUtil.equals(iCstpTrade.getDeliverytype(),"0")){
@@ -3161,7 +3161,7 @@ public class CfetsTrdConfirmService extends BaseService{
                 && StringUtil.equals(confirmDto.getPs(), interfTradSecdeal.getPs())
                 && StringUtil.equals(confirmDto.getSettleSpeed(), interfTradSecdeal.getSettleSpeed())
                 && StringUtil.equals(confirmDto.getSecManageAcctId(), interfTradSecdeal.getOurdepositaccountnumber())
-                && confirmDto.getTradeYield().compareTo(interfTradSecdeal.getYield8())==0
+                && confirmDto.getYield().compareTo(interfTradSecdeal.getYield8())==0
                 && confirmDto.getFaceValue().compareTo(interfTradSecdeal.getPrinamt())==0
                 && confirmDto.getSettleDate().compareTo(interfTradSecdeal.getSettdate())==0
                 && StringUtil.equals(confirmDto.getDeliveryType(), iCstpTrade.getDeliverytype())
