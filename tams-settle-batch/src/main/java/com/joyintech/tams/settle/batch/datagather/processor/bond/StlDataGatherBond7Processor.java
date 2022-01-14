@@ -86,7 +86,7 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
                     BigDecimal amountTotal = ptlSecPositionsByFinprodId.stream().map(item2 -> item2.getAmount()).reduce(BigDecimal.ZERO, BigDecimal::add);
                     for (PtlSecPosition ptlSecPosition : ptlSecPositionsByFinprodId) {
                         TrdProductDealDto trdProductDeal = new TrdProductDealDto();
-                        createDeal(trdProductDeal, settleTransData,finProduct);
+                        createDeal(trdProductDeal, settleTransData,finProduct, ptlSecPosition);
                         trdProductDeal.setPs(DictCodeList.交易方向_上市流通.getValue());
                         //交易份额
                         trdProductDeal.setShareAmt(ptlSecPosition.getAmount());
@@ -241,7 +241,7 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
      * @param settleTransData
      * @param finProduct
      */
-    private void createDeal(TrdProductDealDto trdProductDeal, SettleTransDataDto settleTransData, FinProduct finProduct){
+    private void createDeal(TrdProductDealDto trdProductDeal, SettleTransDataDto settleTransData, FinProduct finProduct, PtlSecPosition ptlSecPosition){
         trdProductDeal.setTradeId(settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易));
         // 业务类型
         if (StringUtil.equals(finProduct.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
@@ -270,7 +270,7 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
         // 净值日期
         trdProductDeal.setCpriceDate(null);
         // 投资目的
-        trdProductDeal.setInvAim(settleTransData.getInvAim());
+        trdProductDeal.setInvAim(ptlSecPosition.getInvAim());
         // 交易状态
         trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
         // 是否已撤销
