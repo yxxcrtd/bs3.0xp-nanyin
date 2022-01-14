@@ -711,7 +711,7 @@ public class CfetsTrdQueryIbuInfoListResponse {
     }
 
     public String getSecCcyStr() {
-        return secCcyStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.币种, this.getSecCcy());
     }
 
     public void setSecCcyStr(String secCcyStr) {
