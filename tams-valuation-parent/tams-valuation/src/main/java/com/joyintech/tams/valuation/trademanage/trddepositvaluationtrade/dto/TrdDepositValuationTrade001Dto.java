@@ -10,33 +10,22 @@
  
 package com.joyintech.tams.valuation.trademanage.trddepositvaluationtrade.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.framework.validation.annotation.Amount;
-import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.common.base.entity.InterfSendOpics;
-import com.joyintech.tams.common.base.entity.PaTrdProductDeal;
-import com.joyintech.tams.common.base.entity.PtlTrade;
-import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
 
 import com.joyintech.tams.constant.DictCode;
 
-import com.joyintech.tams.valuation.trademanage.trddepositvaluationtrade.validate.TrdDepositValuationTrade001Validator;
+import com.joyintech.tams.valuation.trademanage.trddepositvaluationtrade.validator.TrdDepositValuationTrade001Validator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
-import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
-import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;

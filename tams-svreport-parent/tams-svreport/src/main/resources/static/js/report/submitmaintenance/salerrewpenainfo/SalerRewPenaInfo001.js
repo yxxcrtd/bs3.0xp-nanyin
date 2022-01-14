@@ -43,6 +43,7 @@
         },
         cols:[
              {field:'erroOrInfo', title:'来自erro还是info',visible:false}
+            ,{field:'statusStr', title: '数据状态', width:'150',sortField:'status'}
             ,{field:'salerRewPenaNo', title:'奖惩编号',visible:false}
             ,{field:'statusStr', title: '数据状态', width:'150',sortField:'status'}
             ,{field:'salerInstCode', title: '销售机构代码', width:'150',sortField:'salerInstCode'}
@@ -57,6 +58,7 @@
             ,{field:'salerComplainDetail', title: '投诉详情', width:'150',sortField:'salerComplainDetail'}
             ,{field:'salerComplainResult', title: '投诉处理结果', width:'150',sortField:'salerComplainResult'}
             ,{field:'salerComplainDate', title: '投诉日期', width:'150',sortField:'salerComplainDate',type:'date'}
+            ,{field:'errMsg', title: '错误信息', width:'150',sortField:'errMsg'}
             ,{field:'action', title: '操作' , type:'action',buttons: ['edit', 'delt'] , width:'150'}
         ],
     });
