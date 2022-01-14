@@ -82,7 +82,7 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
             if(StringUtil.equals(trdProductDeal.getPs(),DictCodeList.交易方向_买入.getValue())) {
                 exchangeTransMatchBaseTradeDto.setFinTradeProduct(this.genFinTradeProduct(settleTransData, trdProductDeal));
                 exchangeTransMatchBaseTradeDto.setFinProductType(this.genFinProductType(dealDto,trdProductDeal));
-                exchangeTransMatchBaseTradeDto.setFinDealPledgeList(this.genFinDealPledgeList(settleTransData,settleTransData.getfCjbh(),trdProductDeal));
+                exchangeTransMatchBaseTradeDto.setFinDealPledgeList(this.genFinDealPledgeList(settleTransData,dealDto,trdProductDeal));
             }
 
             exchangeTransMatchBaseTradeDtoList.add(exchangeTransMatchBaseTradeDto);
