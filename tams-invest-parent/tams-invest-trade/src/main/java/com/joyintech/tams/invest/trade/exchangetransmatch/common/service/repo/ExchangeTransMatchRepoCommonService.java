@@ -610,9 +610,9 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
      * @param trdProductDeal
      * @return
      */
-    public List<FinDealPledge> genFinDealPledgeList(SettleTransData settleTransData,String cjbh,TrdProductDeal trdProductDeal){
+    public List<FinDealPledge> genFinDealPledgeList(SettleTransData settleTransData,ExchangeTransMatchCommonDto dealDto,TrdProductDeal trdProductDeal){
         List<FinDealPledge> finDealPledgeList = new ArrayList<>();
-        SettleTransData firstSettleTransData = this.getFirstRepoSettleTransData(cjbh,settleTransData.getMpayDate());
+        SettleTransData firstSettleTransData = this.getFirstRepoSettleTransData(settleTransData.getfCjbh(),dealDto.getMpayDate());
         if(StringUtil.isNotEmpty(firstSettleTransData)) {
             SettleTransDataPledge firstSettleTransDataPledge = settleTransDataPledgeMapper.selectByPrimaryKey(firstSettleTransData.getTradeId());
             if(StringUtil.isNotEmpty(firstSettleTransDataPledge)) {
