@@ -2955,7 +2955,7 @@ public class CfetsTrdConfirmService extends BaseService{
         req.setInterfaceType("Bond001");
         req.setUserId(null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"system");
         req.setTotalTradeId(entity.getTotleTradeId());
-        req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
+        req.setFlowStatus(DictCodeListExt3.流程节点_审批生效.getValue());
         req.setModelType(DictCodeListExt1.子系统代码_交易.getValue());
         req.setBusiType(DictCodeListExt3.头寸业务类型_现券交易.getValue());
         if(StringUtil.isNotEmpty(entity.getPs())

@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.exchange.common.bean.EntrustQueryBean;
 import com.joyintech.tams.exchange.common.bean.TradeQryBean;
 import com.joyintech.tams.exchange.common.bean.TradeQueryBean;
 import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
@@ -16,6 +17,7 @@ import com.joyintech.tams.exchange.common.request.PageTradeInfoRequest;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.datacommon.cache.impl.AsyncServiceImpl;
 import com.joyintech.tams.exchange.datacommon.db.dao.IMybatisMapper;
+import com.joyintech.tams.exchange.datacommon.db.dao.IntegratedEntrustMapper;
 import com.joyintech.tams.exchange.datacommon.db.dao.TradeMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.TradeService;
 import org.apache.commons.collections.CollectionUtils;
@@ -35,6 +37,9 @@ public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements
 
     @Autowired
     private TradeMapper tradeMapper;
+    @Autowired
+    private IntegratedEntrustMapper integratedEntrustMapper;
+
     private Map<String, Map<String, Trade>> orderIdMap = new ConcurrentHashMap<>();
     private Map<String, Map<String, Trade>> entrustIdMap = new ConcurrentHashMap<>();
     private Map<String, Map<String, Trade>> instructionIdMap = new ConcurrentHashMap<>();
@@ -70,10 +75,21 @@ public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements
             return new ArrayList<>();
         }
 
+        List<EntrustQueryBean> list = integratedEntrustMapper.selectEntrustsById(entrustId);
+        EntrustQueryBean entrust = list.get(0);
+
         List<TradeQueryBean> tradeQueryBeans = Lists.newArrayList();
         values.forEach(trade -> {
             TradeQueryBean tradeQueryBean = new TradeQueryBean();
             BeanUtils.copyProperties(trade, tradeQueryBean);
+            if (null != entrust) {
+                tradeQueryBean.setPortfolioName(entrust.getPortfolioName());
+                tradeQueryBean.setSecAcctId(entrust.getSecAcctId());
+                tradeQueryBean.setTradePlat(entrust.getTradePlat());
+                tradeQueryBean.setFinprodType2(entrust.getFinprodType2());
+                tradeQueryBean.setEntrustBs(entrust.getEntrustBs());
+            }
+
             tradeQueryBeans.add(tradeQueryBean);
         });
         return tradeQueryBeans;

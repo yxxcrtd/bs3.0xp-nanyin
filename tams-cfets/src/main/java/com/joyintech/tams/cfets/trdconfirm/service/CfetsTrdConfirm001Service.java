@@ -1574,7 +1574,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
         req.setUserId(null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"SYSTEM");
         req.setTotalTradeId(entity.getTotleTradeId());
         req.setWorkFlowId(null);
-        req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
+        req.setFlowStatus(DictCodeListExt3.流程节点_审批生效.getValue());
         req.setModelType(DictCodeListExt1.子系统代码_交易.getValue());
         req.setBusiType(DictCodeListExt3.头寸业务类型_现券交易.getValue());
         if(StringUtil.isNotEmpty(entity.getPs())
@@ -1657,7 +1657,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
         req.setUserId(null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"SYSTEM");
         req.setTotalTradeId(entity.getTotleTradeId());
         req.setWorkFlowId(null);
-        req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
+        req.setFlowStatus(DictCodeListExt3.流程节点_审批生效.getValue());
         req.setModelType(DictCodeListExt1.子系统代码_交易.getValue());
         req.setRepoPledgeModel(CacheUtil.getSysParam("repo_pledge_model"));
         req.setBalanceCheck("N");

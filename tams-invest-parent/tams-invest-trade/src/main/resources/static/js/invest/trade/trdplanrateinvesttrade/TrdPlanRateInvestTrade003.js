@@ -1360,7 +1360,9 @@ var etrAmt = '';
         }else{
         	$('#BussTrdTransferOrder').show() ;
         }
-
+        if($('#businessModel').val()) {
+            $('#businessModel').attr("disabled",true);
+        }
          //根据参数 选择显示投资目的或者业务模式
         /*if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
            $("#invAimDiv").hide();

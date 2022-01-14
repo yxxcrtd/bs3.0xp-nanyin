@@ -24,9 +24,9 @@
     </select>
     <sql id="onlyRegInfo">
         select   '有效' as effectiveStatusName,
-        decode(reg.finprod_type2,'F01','01','02') as finprodType2,
-        reg.finprod_id as finprodId,
-        fp.finprod_market_id as finprodMarketId,
+        decode(reg.finprod_type2,'F01','01','F02','02','F03','02') as finprodType2,
+        decode(reg.finprod_type2,'F01',reg.finprod_id,reg.term_type) as finprodId,
+        decode(reg.finprod_type2,'F01',fp.finprod_market_id,reg.term_type) as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
         reg.ps as ps,
         reg.trade_market as tradeMarket,
@@ -35,7 +35,7 @@
         stlinfo.sec_acct_name as secManageAcctIdName,
         reg.face_value/10000 as faceValue,
         case when reg.finprod_type2='F01' and reg.ps in ('T01','T02') then reg.yield*100
-        when reg.finprod_id in ('F02','F03') then reg.rate*100 else null end as tradeYield,
+        when reg.finprod_type2 in ('F02','F03') then reg.rate*100 else null end as tradeYield,
         reg.repo_term as termDays,
         reg.trade_amt as tradeAmt,
         reg.totle_trade_id as busiCode,
@@ -465,7 +465,7 @@
         reg.sec_manage_acct_id as secManageAcctId,
         reg.face_value as faceValue,
         case when reg.finprod_type2='F01' and reg.ps in ('T01','T02') then reg.yield
-        when reg.finprod_id in ('F02','F03') then reg.rate else null end as tradeYield,
+        when reg.finprod_type2 in ('F02','F03') then reg.rate else null end as tradeYield,
         reg.repo_term as termDays,
         reg.trade_amt as tradeAmt,
         reg.totle_trade_id as busiCode,
@@ -1845,7 +1845,7 @@
         sum(reg.pledge_number*100) as pledgeFaceValue
         from REG_FIN_PLEDGE reg
         inner join reg_fin_product_deal deal
-        on reg.trade_id=deal.trade_id
+        on reg.trade_id=decode(deal.finprod_type2,'F02',deal.trade_id,'F03',deal.totle_trade_id)
         where deal.totle_trade_id=#{busiCode,jdbcType=VARCHAR}
         group by reg.pledge_finprod_id,reg.pledge_ratio)
         order by pledgeFinprodId

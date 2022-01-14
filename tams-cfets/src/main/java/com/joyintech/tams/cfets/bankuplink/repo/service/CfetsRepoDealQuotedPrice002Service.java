@@ -1674,7 +1674,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         // 是否多组合
         backDto.setIsDzh(DictCodeList.是否_是.getValue());
         // 回购方式 双边回购(1)
-        backDto.setRepoMethod(pageDto.getRepoMethod().toString());
+        backDto.setRepoMethod(pageDto.getRepoMethod());
         // 首次结算方式
         backDto.setvDeliveryType(pageDto.getDeliverytype());
         // 清算速度
@@ -1749,7 +1749,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         // 到期结算金额 转换
         pageDto.setMtradeAmt(backDto.getmTradeAmt());
         // 回购方式 双边回购(1)
-        pageDto.setRepoMethod(StringUtil.isNotEmpty(backDto.getRepoMethod()) ? backDto.getRepoMethod().charAt(0) : DictCodeListExt3.回购方式_双边回购.getValue().charAt(0));
+        pageDto.setRepoMethod(StringUtil.isNotEmpty(backDto.getRepoMethod()) ? backDto.getRepoMethod() : DictCodeListExt3.回购方式_双边回购.getValue());
         // 首次结算方式
         pageDto.setDeliverytype(backDto.getvDeliveryType());
         // 清算速度

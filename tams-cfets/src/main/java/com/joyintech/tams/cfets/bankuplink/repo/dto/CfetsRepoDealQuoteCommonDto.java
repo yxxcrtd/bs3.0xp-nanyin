@@ -68,7 +68,7 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
     private String counterTrader;
 
     @ApiModelProperty(name = "repoMethod", value = "回购方式", example = "1")
-    private Character repoMethod;
+    private String repoMethod;
 
     @ApiModelProperty(name = "settleSpreedCode", value = "清算速度", example = "01")
     private String settleSpreedCode;
@@ -165,6 +165,10 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     @ApiModelProperty(name = "tradeStatus", value = "交易状态", example = "01")
     private String tradeStatus;
+    /**
+     * 决策动作
+     */
+    private String systemAct;
 
     public String getQuoteId() {
         return quoteId;
@@ -270,11 +274,11 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
         this.counterTrader = counterTrader;
     }
 
-    public Character getRepoMethod() {
+    public String getRepoMethod() {
         return repoMethod;
     }
 
-    public void setRepoMethod(Character repoMethod) {
+    public void setRepoMethod(String repoMethod) {
         this.repoMethod = repoMethod;
     }
 
@@ -564,6 +568,14 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setLoginUserId(String loginUserId) {
         this.loginUserId = loginUserId;
+    }
+
+    public String getSystemAct() {
+        return systemAct;
+    }
+
+    public void setSystemAct(String systemAct) {
+        this.systemAct = systemAct;
     }
 }
 

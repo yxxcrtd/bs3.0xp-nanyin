@@ -1,6 +1,11 @@
 package com.joyintech.tams.exchange.common.bean;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.exchange.common.constant.Market;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCode;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCodeList;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -37,8 +42,14 @@ public class TradeQueryBean implements Serializable {
     @ApiModelProperty(value = "交易市场")
     private String market;
 
+    @ApiModelProperty(value = "交易市场")
+    private String marketStr;
+
     @ApiModelProperty(name = "tradePlat", value = "交易平台")
     private String tradePlat;
+
+    @ApiModelProperty(name = "tradePlatStr", value = "交易平台")
+    private String tradePlatStr;
 
     @ApiModelProperty(value = "资产代码")
     private String stockCode;
@@ -49,8 +60,14 @@ public class TradeQueryBean implements Serializable {
     @ApiModelProperty(name = "finprodType2", value = "资产类型")
     private String finprodType2;
 
+    @ApiModelProperty(name = "finprodType2Str", value = "资产类型")
+    private String finprodType2Str;
+
     @ApiModelProperty(value = "委托方向")
     private String entrustBs;
+
+    @ApiModelProperty(value = "委托方向")
+    private String entrustBsStr;
 
     @ApiModelProperty(value = "成交数量")
     private long tradedVolume;
@@ -64,6 +81,12 @@ public class TradeQueryBean implements Serializable {
     private BigDecimal tradedBalance;
 
     @ApiModelProperty(value = "成交时间")
+    private Date createTime;
+
+    /**
+     * ///////////////////////////////////查询无用字段
+     */
+    @ApiModelProperty(value = "交易日期",hidden = true)
     private String tradingDay;
 
     @ApiModelProperty(value = "委托属性", hidden = true)
@@ -71,7 +94,7 @@ public class TradeQueryBean implements Serializable {
 
     @ApiModelProperty(value = "委托方向标识", hidden = true)
     private String bsFlag;
-    
+
     @ApiModelProperty(value = "主键ID", hidden = true)
     private String id;
 
@@ -125,9 +148,6 @@ public class TradeQueryBean implements Serializable {
 
     @ApiModelProperty(value = "本地委托编号", hidden = true)
     private String localEntrustId;
-
-    @ApiModelProperty(value = "创建时间", hidden = true)
-    private Date createTime;
 
     @ApiModelProperty(value = "更新时间", hidden = true)
     private Date updateTime;
@@ -519,5 +539,49 @@ public class TradeQueryBean implements Serializable {
 
     public void setFinprodType2(String finprodType2) {
         this.finprodType2 = finprodType2;
+    }
+
+    public String getMarketStr() {
+        if(StringUtil.isEmpty(market)){
+            return null;
+        }
+        return Market.getMarketName(market);
+    }
+
+    public void setMarketStr(String marketStr) {
+        this.marketStr = marketStr;
+    }
+
+    public String getTradePlatStr() {
+        if(StringUtil.isEmpty(tradePlat)){
+            return null;
+        }
+        return DictCodeList.from(DictCode.交易平台, tradePlat).getCodeName();
+    }
+
+    public void setTradePlatStr(String tradePlatStr) {
+        this.tradePlatStr = tradePlatStr;
+    }
+
+    public String getFinprodType2Str() {
+        if(StringUtil.isEmpty(finprodType2)){
+            return null;
+        }
+        return DictCodeList.from(DictCode.平安资产类型, finprodType2).getCodeName();
+    }
+
+    public void setFinprodType2Str(String finprodType2Str) {
+        this.finprodType2Str = finprodType2Str;
+    }
+
+    public String getEntrustBsStr() {
+        if(StringUtil.isEmpty(entrustBs)){
+            return null;
+        }
+        return  DictCodeListExt2.from(DictCode.交易方向, entrustBs).getCodeName();
+    }
+
+    public void setEntrustBsStr(String entrustBsStr) {
+        this.entrustBsStr = entrustBsStr;
     }
 }

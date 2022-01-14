@@ -48,7 +48,7 @@
     </select>
     <sql id="onlyRegInfo">
         select  decode(reg.is_cancel,'Y','撤销','N','有效') as effectiveStatusStr,
-        decode(reg.finprod_type2,'F01','01','02') as finprodType2,
+        decode(reg.finprod_type2,'F01','01','F02','02','F03','02') as finprodType2,
         reg.finprod_id as finprodId,
         nvl(fp.finprod_market_id,reg.term_type) as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
@@ -58,8 +58,12 @@
         reg.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
         decode(reg.finprod_type2,'F01',deal.faceValue,null) as faceValue,
-        case when reg.finprod_type2='F01'  then reg.yield*100
-        when reg.finprod_id in ('F02','F03') then reg.rate*100 else null end as tradeYield,
+        case when reg.finprod_type2='F01'
+        then decode(regAdd.CAL_MODE,'01',TO_CHAR(ROUND(reg.unit_cprice,4),'FM990.0000'),
+                                    '02',TO_CHAR(ROUND(reg.yield*100,4),'FM990.0000') ||'%',
+                                    '03',TO_CHAR(ROUND(reg.exer_yield*100,4),'FM990.0000')||'%')
+        when reg.finprod_type2 in ('F02','F03') then  TO_CHAR(ROUND(reg.rate*100,4),'FM990.0000') ||'%'
+        else null end as tradeYield,
         reg.repo_term as termDays,
         deal.tradeAmt as tradeAmt,
         reg.totle_trade_id as busiCode,
@@ -188,7 +192,7 @@
     </sql>
     <sql id="onlyWflRegInfo">
         select  '流程中' as effectiveStatusStr,
-        decode(reg.finprod_type2,'F01','01','02') as finprodType2,
+        decode(reg.finprod_type2,'F01','01','F02','02','F03','02') as finprodType2,
         reg.finprod_id as finprodId,
         nvl(fp.finprod_market_id,reg.term_type) as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
@@ -198,8 +202,12 @@
         reg.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
         decode(reg.finprod_type2,'F01',deal.faceValue,null) as faceValue,
-        case when reg.finprod_type2='F01' then reg.yield*100
-        when reg.finprod_id in ('F02','F03') then reg.rate*100 else null end as tradeYield,
+        case when reg.finprod_type2='F01'
+        then decode(regAdd.CAL_MODE,'01',TO_CHAR(ROUND(reg.unit_cprice,4),'FM990.0000'),
+                                    '02',TO_CHAR(ROUND(reg.yield*100,4),'FM990.0000') ||'%',
+                                    '03',TO_CHAR(ROUND(reg.exer_yield*100,4),'FM990.0000')||'%')
+        when reg.finprod_type2 in ('F02','F03') then  TO_CHAR(ROUND(reg.rate*100,4),'FM990.0000') ||'%'
+        else null end as tradeYield,
         reg.repo_term as termDays,
         deal.tradeAmt as tradeAmt,
         reg.totle_trade_id as busiCode,
@@ -331,7 +339,7 @@
                 || '|' || dictquote.ITEM_VALUE  || '|' || dictms.ITEM_VALUE || '|' || aaa.remark
                 like '%' || #{search} || '%')
                 or to_char(aaa.faceValue,'FM9999999999999990.90')=#{search} or to_char(aaa.faceValue)=#{search}
-                or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or  aaa.tradeYield||'' =#{search}
+                or aaa.tradeYield =#{search} or aaa.tradeYield =#{search}||'%'
                 or aaa.termDays||'' =#{search}
                 or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
                 or aaa.regTradeDate||'' =#{search}
@@ -373,7 +381,7 @@
         reg.unit_cprice as unitCprice,
         reg.yield*100 as yield,
         reg.exer_yield*100 as exerYield,
-        deal.faceValue as faceValue,
+        nvl(deal.faceValue,reg.face_value/10000) as faceValue,
         reg.delivery_type deliveryType,
         reg.clear_type as clearType,
         deal.trdFeeAmt as trdFeeAmt,
@@ -389,8 +397,8 @@
         to_char(regAdd.Act_Sette_Date,'yyyy-MM-dd')  as  acrExerciseDate,
         reg.unit_cprice as exercisePrice,
         reg.repo_term as repoTerm,
-        reg.rate as tradeYield,
-        fp.ccy as secCcy,
+        reg.rate*100 as tradeYield,
+        reg.ccy as secCcy,
         reg.sett_ccy settCcy,
         reg.trade_amt tradeAmt,
         deal.disFaceValue as disFaceValue,
@@ -409,7 +417,7 @@
         (
             select regdeal.totle_trade_id,
             sum(regdeal.face_value)/10000 as faceValue,
-            sum(regdeal.int_amt) as intAmt,
+            sum(decode(regdeal.finprod_type2,'F01',regdeal.int_amt,'F02',regdeal.m_int_amt,'F03',regdeal.m_int_amt)) as intAmt,
             sum(regdeal.cprice_amt) as cpriceAmt,
             sum(regdeal.fprice_amt) as fpriceAmt,
             sum(regdeal.trade_amt) as tradeAmt,
@@ -439,20 +447,108 @@
         LEFT JOIN MST_COUNTER_PARTY m2 ON reg.counter_id= m2.counter_id
         left join sys_user su on reg.ou_trader_id=su.user_name
         left join MST_CFETS_CUSTOMER_TRADER su1 on reg.counter_trader=su1.TRADER_ID
-
         where reg.totle_trade_id= #{totleTradeId,jdbcType=VARCHAR}
+        and decode(reg.is_cancel,'Y','03','N','01')= #{effectiveStatus,jdbcType=VARCHAR}
+        union all
+        select
+        reg.ou_party_id as traderid,
+        m1.PARTY_ABBR as traderidStr,
+        nvl(su.real_name,reg.ou_trader_id) as trader,
+        reg.counter_id as counterId,
+        m2.counter_name as counterIdStr,
+        nvl(su1.TRADER_NAME,reg.counter_trader)  as counterTrader,
+        reg.finprod_id as finprodId,
+        fp.finprod_market_id as finprodMarketId,
+        fp.finprod_abbr as finprodAbbr,
+        reg.ps as ps,
+        reg.quote_type as quoteType,
+        to_char(reg.trade_date,'yyyy-MM-dd') as regTradeDate,
+        decode(reg.settle_speed,0,'01',1,'02',2,'03')  as settleSpeed,
+        to_char(reg.settle_date,'yyyy-MM-dd') as settleDate,
+        reg.ccy as ccy,
+        reg.unit_cprice as unitCprice,
+        reg.yield*100 as yield,
+        reg.exer_yield*100 as exerYield,
+        nvl(deal.faceValue,reg.face_value/10000) as faceValue,
+        reg.delivery_type deliveryType,
+        reg.clear_type as clearType,
+        deal.trdFeeAmt as trdFeeAmt,
+        deal.settleFeeAmt  as settleFeeAmt,
+        reg.unit_int as unitInt,
+        reg.unit_fprice as unitFprice,
+        deal.cpriceAmt as cpriceAmt,
+        deal.intAmt as intAmt,
+        deal.fpriceAmt as fpriceAmt,
+        reg.dip_type as distriType,
+        reg.remark as remark,
+        to_char(reg.settle_date,'yyyy-MM-dd') as exerciseDate,
+        to_char(regAdd.Act_Sette_Date,'yyyy-MM-dd')  as  acrExerciseDate,
+        reg.unit_cprice as exercisePrice,
+        reg.repo_term as repoTerm,
+        reg.rate*100 as tradeYield,
+        reg.ccy as secCcy,
+        reg.sett_ccy settCcy,
+        reg.trade_amt tradeAmt,
+        deal.disFaceValue as disFaceValue,
+        reg.m_delivery_type mdeliveryType,
+        to_char(reg.v_settle_date,'yyyy-MM-dd') as vsettleDate,
+        to_char(reg.m_settle_date,'yyyy-MM-dd') as msettleDate,
+        deal.mtradeAmt as  mtradeAmt,
+        reg.act_repo_term   actRepoTerm,
+        reg.term_type as termType
+        from wfl_reg_fin_product_deal_total reg
+        left join fin_product fp
+        on fp.finprod_id=reg.finprod_id
+        left join wfl_reg_fin_pro_deal_total_add regAdd
+        on reg.totle_trade_id=regAdd.Totle_Trade_Id
+        inner join
+        (
+        select regdeal.totle_trade_id,
+        sum(regdeal.face_value)/10000 as faceValue,
+        sum(decode(regdeal.finprod_type2,'F01',regdeal.int_amt,'F02',regdeal.m_int_amt,'F03',regdeal.m_int_amt)) as intAmt,
+        sum(regdeal.cprice_amt) as cpriceAmt,
+        sum(regdeal.fprice_amt) as fpriceAmt,
+        sum(regdeal.trade_amt) as tradeAmt,
+        sum(regdeal.dis_face_value) as disFaceValue,
+        sum(regdeal.m_trade_amt) as mtradeAmt,
+        sum(feeDeal.trdFeeAmt) as trdFeeAmt,
+        sum(feeDeal.settleFeeAmt) as settleFeeAmt
+        from wfl_reg_fin_product_deal regdeal
+        inner join ptl_portfolio pp
+        on regdeal.portfolio_id=pp.portfolio_id
+        <if test="userId != null and userId != ''">
+            inner JOIN  PTL_PORTFOLIO_AUTHORITY PPA
+            ON regdeal.portfolio_id = PPA.PORTFOLIO_ID
+            AND PPA.USER_ID = #{userId}
+        </if>
+        left join (
+        select rf.trade_id,sum(decode(rf.fee_type,'B06',rf.fee_amt)) as trdFeeAmt,
+        sum(decode(rf.fee_type,'B08',rf.fee_amt)) as settleFeeAmt
+        from wfl_reg_trade_fee rf
+        group by rf.trade_id
+        )feeDeal on regdeal.trade_id=feeDeal.trade_id
+        where regdeal.totle_trade_id=#{totleTradeId,jdbcType=VARCHAR}
+        group by regdeal.totle_trade_id
+        )deal
+        on reg.totle_trade_id=deal.totle_trade_id
+        left join MST_CFETS_CUSTOMER_INFO m1 on reg.ou_party_id=m1.PARTY_ID
+        LEFT JOIN MST_COUNTER_PARTY m2 ON reg.counter_id= m2.counter_id
+        left join sys_user su on reg.ou_trader_id=su.user_name
+        left join MST_CFETS_CUSTOMER_TRADER su1 on reg.counter_trader=su1.TRADER_ID
+        where reg.totle_trade_id= #{totleTradeId,jdbcType=VARCHAR}
+        and #{STATUS_VALID_04}= #{effectiveStatus,jdbcType=VARCHAR}
+
     </select>
     <select id="selectRegTableFenPeiInfoList"
             resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsPortfolioIdFenPeiInfoResponse">
         select reg.entrust_id as entrustId,
         reg.portfolio_id as portfolioId,
         pp.portfolio_name as portfolioName,
-        (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
         reg.face_value/10000 as faceValue,
         feeDeal.trdFeeAmt as trdFeeAmt,
         feeDeal.settleFeeAmt as settleFeeAmt,
         reg.cprice_amt as cpriceAmt,
-        reg.int_amt as intAmt,
+        decode(reg.finprod_type2,'F01',reg.int_amt,'F02',reg.m_int_amt,'F03',reg.m_int_amt) as intAmt,
         reg.fprice_amt as fpriceAmt,
         EE.PRICE_MODEL as priceModel,
         EE.BUSINESS_MODEL as businessModel,
@@ -462,7 +558,7 @@
         reg.trade_amt as tradeAmt,
         reg.m_trade_amt as mtradeAmt,
         reg.dis_face_value as disFaceValue,
-        reg.rate tradeYield,
+        reg.rate*100 tradeYield,
         reg.yield*100 as yield,
         reg.exer_yield*100 as exerYield
         from reg_fin_product_deal reg
@@ -481,14 +577,51 @@
         )feeDeal
         on reg.trade_id=feeDeal.trade_id
         LEFT JOIN ETR_ENTRUST ee ON reg.entrust_id = ee.entrust_id
-        LEFT JOIN (
-        select t.entrust_id, sum(t.ent_finish_amt) as ent_finish_amt
-        from ETR_FINISH_STATUS t
-        group by t.entrust_id
-        )efs ON ee.Entrust_Id = efs.entrust_id
         left join stl_sec_acct_info stlinfo
         on reg.sec_manage_acct_id=stlinfo.sec_acct_id
         where reg.totle_trade_id=#{totleTradeId,jdbcType=VARCHAR}
+        and decode(reg.is_cancel,'Y','03','N','01')= #{effectiveStatus,jdbcType=VARCHAR}
+        union all
+        select reg.entrust_id as entrustId,
+        reg.portfolio_id as portfolioId,
+        pp.portfolio_name as portfolioName,
+        reg.face_value/10000 as faceValue,
+        feeDeal.trdFeeAmt as trdFeeAmt,
+        feeDeal.settleFeeAmt as settleFeeAmt,
+        reg.cprice_amt as cpriceAmt,
+        decode(reg.finprod_type2,'F01',reg.int_amt,'F02',reg.m_int_amt,'F03',reg.m_int_amt) as intAmt,
+        reg.fprice_amt as fpriceAmt,
+        EE.PRICE_MODEL as priceModel,
+        EE.BUSINESS_MODEL as businessModel,
+        reg.sec_manage_acct_id as secManageAcctId,
+        stlinfo.sec_acct_name as secManageAcctIdStr,
+        reg.unit_cprice as unitCprice,
+        reg.trade_amt as tradeAmt,
+        reg.m_trade_amt as mtradeAmt,
+        reg.dis_face_value as disFaceValue,
+        reg.rate*100 tradeYield,
+        reg.yield*100 as yield,
+        reg.exer_yield*100 as exerYield
+        from wfl_reg_fin_product_deal reg
+        inner join ptl_portfolio pp
+        on reg.portfolio_id=pp.portfolio_id
+        <if test="userId != null and userId != ''">
+            inner JOIN  PTL_PORTFOLIO_AUTHORITY PPA
+            ON reg.portfolio_id = PPA.PORTFOLIO_ID
+            AND PPA.USER_ID = #{userId}
+        </if>
+        left join (
+        select rf.trade_id,sum(decode(rf.fee_type,'B06',rf.fee_amt)) as trdFeeAmt,
+        sum(decode(rf.fee_type,'B08',rf.fee_amt)) as settleFeeAmt
+        from wfl_reg_trade_fee rf
+        group by rf.trade_id
+        )feeDeal
+        on reg.trade_id=feeDeal.trade_id
+        LEFT JOIN ETR_ENTRUST ee ON reg.entrust_id = ee.entrust_id
+        left join stl_sec_acct_info stlinfo
+        on reg.sec_manage_acct_id=stlinfo.sec_acct_id
+        where reg.totle_trade_id=#{totleTradeId,jdbcType=VARCHAR}
+        and #{STATUS_VALID_04}= #{effectiveStatus,jdbcType=VARCHAR}
 
     </select>
     <select id="selectRegTablePledgeInfoList"
@@ -498,10 +631,14 @@
         fp.finprod_abbr as finprodAbbr,
         rp.portfolio_id as portfolioId,
         pp.portfolio_name as portfolioName,
-        rp.pledge_face_value as pledgePrin,
-        rp.pledge_ratio as pledgeRate
-        from reg_fin_total_pledge rp
-        inner join ptl_portfolio pp
+        sum(rp.pledge_number)/100 as pledgePrin,
+        rp.pledge_ratio*100 as pledgeRate,
+        mbvi.NETPRICE as firstNetPrice,
+        fp.REGIST_ORG as repRegistOrg
+        from REG_FIN_PLEDGE rp
+        left join reg_fin_product_deal regdeal
+        on rp.trade_id=decode(regdeal.finprod_type2,'F02',regdeal.trade_id,'F03',regdeal.totle_trade_id)
+        left join ptl_portfolio pp
         on pp.portfolio_id=rp.portfolio_id
         <if test="userId != null and userId != ''">
             inner JOIN  PTL_PORTFOLIO_AUTHORITY PPA
@@ -510,7 +647,102 @@
         </if>
         left join fin_product fp
         on fp.finprod_id=rp.pledge_finprod_id
-        where rp.totle_trade_id=#{totleTradeId,jdbcType=VARCHAR}
+        LEFT JOIN (
+            SELECT
+            T2.SEC_ID,
+            T2.PRICE,
+            T2.NETPRICE
+            FROM (
+                SELECT
+                tmp1.SEC_ID,
+                tmp1.value_source,
+                MAX(tmp1.value_date) AS value_date
+                FROM MST_BOND_VALUATION_INFO tmp1
+                LEFT JOIN FIN_PRODUCT tmp2
+                ON tmp1.sec_id = tmp2.finprod_market_id
+                WHERE 1 = 1
+                AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+                AND tmp1.value_source = (
+                CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN 'CSD'
+                ELSE 'CBC'
+                END)
+                GROUP BY tmp1.sec_id, tmp1.value_source
+                ) T1
+                LEFT JOIN MST_BOND_VALUATION_INFO T2
+                ON T1.SEC_ID = T2.SEC_ID
+                AND T1.value_source = T2.value_source
+                AND T1.VALUE_DATE = T2.VALUE_DATE
+        ) mbvi/*以上获取债券小于等于平台日的最新估值行情*/
+        ON fp.FINPROD_MARKET_ID = mbvi.SEC_ID
+        where regdeal.totle_trade_id=#{totleTradeId,jdbcType=VARCHAR}
+        and decode(regdeal.is_cancel,'Y','03','N','01')= #{effectiveStatus,jdbcType=VARCHAR}
+        group by rp.pledge_finprod_id,
+        fp.finprod_market_id,
+        fp.finprod_abbr,
+        rp.portfolio_id,
+        pp.portfolio_name,
+        rp.pledge_ratio,
+        mbvi.NETPRICE,
+        fp.REGIST_ORG
+        union all
+        select rp.pledge_finprod_id as finprodId,
+        fp.finprod_market_id as finprodMarketId,
+        fp.finprod_abbr as finprodAbbr,
+        rp.portfolio_id as portfolioId,
+        pp.portfolio_name as portfolioName,
+        sum(rp.pledge_number)/100 as pledgePrin,
+        rp.pledge_ratio*100 as pledgeRate,
+        mbvi.NETPRICE as firstNetPrice,
+        fp.REGIST_ORG as repRegistOrg
+        from wfl_REG_FIN_PLEDGE rp
+        left join wfl_reg_fin_product_deal regdeal
+        on rp.trade_id=decode(regdeal.finprod_type2,'F02',regdeal.trade_id,'F03',regdeal.totle_trade_id)
+        left join ptl_portfolio pp
+        on pp.portfolio_id=rp.portfolio_id
+        <if test="userId != null and userId != ''">
+            inner JOIN  PTL_PORTFOLIO_AUTHORITY PPA
+            ON rp.portfolio_id = PPA.PORTFOLIO_ID
+            AND PPA.USER_ID = #{userId}
+        </if>
+        left join fin_product fp
+        on fp.finprod_id=rp.pledge_finprod_id
+        LEFT JOIN (
+        SELECT
+        T2.SEC_ID,
+        T2.PRICE,
+        T2.NETPRICE
+        FROM (
+        SELECT
+        tmp1.SEC_ID,
+        tmp1.value_source,
+        MAX(tmp1.value_date) AS value_date
+        FROM MST_BOND_VALUATION_INFO tmp1
+        LEFT JOIN FIN_PRODUCT tmp2
+        ON tmp1.sec_id = tmp2.finprod_market_id
+        WHERE 1 = 1
+        AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+        AND tmp1.value_source = (
+        CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN 'CSD'
+        ELSE 'CBC'
+        END)
+        GROUP BY tmp1.sec_id, tmp1.value_source
+        ) T1
+        LEFT JOIN MST_BOND_VALUATION_INFO T2
+        ON T1.SEC_ID = T2.SEC_ID
+        AND T1.value_source = T2.value_source
+        AND T1.VALUE_DATE = T2.VALUE_DATE
+        ) mbvi/*以上获取债券小于等于平台日的最新估值行情*/
+        ON fp.FINPROD_MARKET_ID = mbvi.SEC_ID
+        where regdeal.totle_trade_id=#{totleTradeId,jdbcType=VARCHAR}
+        and #{STATUS_VALID_04}= #{effectiveStatus,jdbcType=VARCHAR}
+        group by rp.pledge_finprod_id,
+        fp.finprod_market_id,
+        fp.finprod_abbr,
+        rp.portfolio_id,
+        pp.portfolio_name,
+        rp.pledge_ratio,
+        mbvi.NETPRICE,
+        fp.REGIST_ORG
     </select>
     <!-- 报价管理查询 -->
     <select id="queryAllIbuInfoList" parameterType="Map"
@@ -569,7 +801,7 @@
         ib.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
         ib.share_amt/100 as faceValue,
-        ibd.yield*100 as tradeYield,
+        ibd.tradeYield as tradeYield,
         null as termDays,
         ib.fprice_amt as tradeAmt,
         ib.quote_id as quoteId,
@@ -586,7 +818,11 @@
         on ib.finprod_id=fp.finprod_id
         left join (
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,ibd.yield as yield,ibd.CALCULATE_FIELD as calMode
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,
+            decode(ibd.CALCULATE_FIELD,'01',TO_CHAR(ROUND(ibd.unit_cprice,4),'FM990.0000'),
+                                      '02',TO_CHAR(ROUND(ibd.yield*100,4),'FM990.0000') ||'%',
+                                       '03',TO_CHAR(ROUND(ibd.exer_yield*100,4),'FM990.0000')||'%') as tradeYield,
+            ibd.CALCULATE_FIELD as calMode
             from ibu_quote_bond_det ibd
             inner join ibu_quote_bond t1
             on ibd.quote_id=t1.quote_id and t1.quote_type='01'
@@ -597,7 +833,7 @@
         union all
             select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
             wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
-            ibd.execid,null as yield,null as calMode
+            ibd.execid,null as tradeYield,null as calMode
             from ibu_quote_bond_det ibd
             inner join ibu_quote_bond t1
             on ibd.quote_id=t1.quote_id and t1.quote_type='02'
@@ -608,7 +844,9 @@
 
             union all
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,ibd.yield,ibd.CALCULATE_FIELD as calMode
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,
+            TO_CHAR(ROUND(ibd.yield*100,4),'FM990.0000') ||'%' as tradeYield,
+            ibd.CALCULATE_FIELD as calMode
             from ibu_quote_bond_det ibd
             inner join ibu_quote_bond t1
             on ibd.quote_id=t1.quote_id and t1.quote_type='02'
@@ -721,7 +959,7 @@
         ic.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
         ic.share_amt/100 as faceValue,
-        ic.rate*100 as tradeYield,
+        TO_CHAR(ROUND(ic.rate*100,4),'FM990.0000') ||'%' as tradeYield,
         ic.term as termDays,
         ic.fprice_amt as tradeAmt,
         ic.quote_id as quoteId,
@@ -837,7 +1075,7 @@
         ib.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
         ib.share_amt/100 as faceValue,
-        ibd.yield*100 as tradeYield,
+        ibd.tradeYield as tradeYield,
         null as termDays,
         ib.fprice_amt as tradeAmt,
         ib.quote_id as quoteId,
@@ -854,7 +1092,11 @@
         on ib.finprod_id=fp.finprod_id
         left join (
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,ibd.yield as yield,ibd.CALCULATE_FIELD as calMode
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,
+            decode(ibd.CALCULATE_FIELD,'01',TO_CHAR(ROUND(ibd.unit_cprice,4),'FM990.0000'),
+                                        '02',TO_CHAR(ROUND(ibd.yield*100,4),'FM990.0000') ||'%',
+                                        '03',TO_CHAR(ROUND(ibd.exer_yield*100,4),'FM990.0000')||'%') as tradeYield,
+            ibd.CALCULATE_FIELD as calMode
             from wfl_ibu_quote_bond_det ibd
             inner join wfl_ibu_quote_bond2 t1
             on ibd.quote_id=t1.quote_id and t1.quote_type='01'
@@ -864,7 +1106,7 @@
             union all
             select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
             wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
-            ibd.execid,null as yield,null as calMode
+            ibd.execid,null as tradeYield,null as calMode
             from wfl_ibu_quote_bond_det ibd
             inner join wfl_ibu_quote_bond2 t1
             on ibd.quote_id=t1.quote_id and t1.quote_type='02'
@@ -875,7 +1117,9 @@
 
             union all
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-           nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,ibd.yield,ibd.CALCULATE_FIELD as calMode
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,
+            TO_CHAR(ROUND(ibd.yield*100,4),'FM990.0000') ||'%' as tradeYield,
+            ibd.CALCULATE_FIELD as calMode
             from wfl_ibu_quote_bond_det ibd
             inner join wfl_ibu_quote_bond2 t1
             on ibd.quote_id=t1.quote_id and t1.quote_type='02'
@@ -997,7 +1241,7 @@
         stlinfo.sec_acct_name as secManageAcctIdStr,
 
         ic.share_amt/100 as faceValue,
-        ic.rate*100*100 as tradeYield,
+        TO_CHAR(ROUND(ic.rate*100,4),'FM990.0000') ||'%' as tradeYield,
         ic.term as termDays,
         ic.fprice_amt as tradeAmt,
         ic.quote_id as quoteId,
@@ -1112,7 +1356,7 @@
                     || '|' || aaa.entrustId || '|' || aaa.remark
                     like '%' || #{search} || '%')
                     or to_char(aaa.faceValue,'FM9999999999999990.90')=#{search} or to_char(aaa.faceValue)=#{search}
-                    or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or  aaa.tradeYield||'' =#{search}
+                    or aaa.tradeYield=#{search} or  aaa.tradeYield =#{search}||'%'
                     or aaa.termDays||'' =#{search}
                     or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
                     or aaa.quoteDate||'' =#{search}
@@ -1218,7 +1462,7 @@
             where ibd.trade_status='07' and ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
         )ibd
         on ib.quote_id=ibd.quote_id
-        inner join(
+        left join(
         select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
         sum(ir.share_amt)/100 as faceValue
         from ibu_quote_etr_re ir
@@ -1272,60 +1516,60 @@
         left join fin_product fp
         on ib.finprod_id=fp.finprod_id
         left join (
-        select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-        nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.yield as yield,
-        ibd.unit_cprice,
-        ibd.exer_yield,
-        ibd.unit_int,
-        ibd.unit_fprice,
-        ibd.cprice_amt,
-        ibd.int_amt,
-        ibd.fprice_amt
-        from wfl_ibu_quote_bond_det ibd
-        inner join wfl_ibu_quote_bond2 t1
-        on ibd.quote_id=t1.quote_id and t1.quote_type='01'
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
-        left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
-        where   ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
-        union all
-        select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
-        wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
-        null as yield,
-        null as unit_cprice,
-        null as exer_yield,
-        null as  unit_int,
-        null as unit_fprice,
-        null as cprice_amt,
-        null as int_amt,
-        null as fprice_amt
-        from wfl_ibu_quote_bond_det ibd
-        inner join wfl_ibu_quote_bond2 t1
-        on ibd.quote_id=t1.quote_id and t1.quote_type='02'
-        and t1.trade_status!='07' and ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
-        left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
-        group by ibd.quote_id
-        union all
-        select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-        nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,
-        ibd.yield as yield,
-        ibd.unit_cprice,
-        ibd.exer_yield,
-        ibd.unit_int,
-        ibd.unit_fprice,
-        ibd.cprice_amt,
-        ibd.int_amt,
-        ibd.fprice_amt
-        from wfl_ibu_quote_bond_det ibd
-        inner join wfl_ibu_quote_bond2 t1
-        on ibd.quote_id=t1.quote_id and t1.quote_type='02'
-        and t1.trade_status='07'
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
-        left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
-        where ibd.trade_status='07' and ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
+            select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.yield as yield,
+            ibd.unit_cprice,
+            ibd.exer_yield,
+            ibd.unit_int,
+            ibd.unit_fprice,
+            ibd.cprice_amt,
+            ibd.int_amt,
+            ibd.fprice_amt
+            from wfl_ibu_quote_bond_det ibd
+            inner join wfl_ibu_quote_bond2 t1
+            on ibd.quote_id=t1.quote_id and t1.quote_type='01'
+            LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
+            left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
+            where   ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
+            union all
+            select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
+            wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
+            null as yield,
+            null as unit_cprice,
+            null as exer_yield,
+            null as  unit_int,
+            null as unit_fprice,
+            null as cprice_amt,
+            null as int_amt,
+            null as fprice_amt
+            from wfl_ibu_quote_bond_det ibd
+            inner join wfl_ibu_quote_bond2 t1
+            on ibd.quote_id=t1.quote_id and t1.quote_type='02'
+            and t1.trade_status!='07' and ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
+            LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
+            left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
+            group by ibd.quote_id
+            union all
+            select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
+            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,
+            ibd.yield as yield,
+            ibd.unit_cprice,
+            ibd.exer_yield,
+            ibd.unit_int,
+            ibd.unit_fprice,
+            ibd.cprice_amt,
+            ibd.int_amt,
+            ibd.fprice_amt
+            from wfl_ibu_quote_bond_det ibd
+            inner join wfl_ibu_quote_bond2 t1
+            on ibd.quote_id=t1.quote_id and t1.quote_type='02'
+            and t1.trade_status='07'
+            LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
+            left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
+            where ibd.trade_status='07' and ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
         )ibd
         on ib.quote_id=ibd.quote_id
-        inner join(
+        left join(
         select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
         sum(ir.share_amt)/100 as faceValue
         from wfl_ibu_quote_etr_re ir
@@ -2004,7 +2248,13 @@
             T1.SEC_MANAGE_ACCT_ID as secManageAcctId,
             T7.SEC_ACCT_NAME secManageAcctIdStr,
             deal.share_amt/100 as faceValue,
-            nvl(T1.yield,T1.rate) as tradeYield,
+            case when T1.finprod_type2='F01'
+            then decode(nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD),'01',TO_CHAR(ROUND(T1.unit_cprice,4),'FM990.0000'),
+            '02',TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%',
+            '03',TO_CHAR(ROUND(T1.exer_yield*100,4),'FM990.0000')||'%',
+            TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%')
+            when T1.finprod_type2 in ('F02','F03') then  TO_CHAR(ROUND(T1.rate*100,4),'FM990.0000') ||'%'
+            else null end as tradeYield,
             T1.repo_term as termDays,
             deal.trade_Amt tradeAmt,
             T1.ccy as ccy,
@@ -2126,7 +2376,7 @@
                 || '|' || aaa.execid   || '|' || aaa.counterIdStr || '|' || aaa.remark
                 like '%' || #{search} || '%')
                 or to_char(aaa.faceValue,'FM9999999999999990.90')=#{search} or to_char(aaa.faceValue)=#{search}
-                or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or  aaa.tradeYield||'' =#{search}
+                or aaa.tradeYield=#{search} or  aaa.tradeYield =#{search}||'%'
                 or aaa.termDays||'' =#{search}
                 or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
                 or aaa.confirmTradeDate||'' =#{search}
@@ -2174,7 +2424,13 @@
         t1.sec_manage_acct_id as secManageAcctId,
         T7.SEC_ACCT_NAME  as secManageAcctIdStr,
         t1.share_amt/100 as faceValue,
-        t1.yield*100 as tradeYield,
+        case when T1.finprod_type2='F01'
+        then decode(nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD),'01',TO_CHAR(ROUND(T1.unit_cprice,4),'FM990.0000'),
+             '02',TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%',
+             '03',TO_CHAR(ROUND(T1.exer_yield*100,4),'FM990.0000')||'%',
+              TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%')
+        when T1.finprod_type2 in ('F02','F03') then  TO_CHAR(ROUND(T1.unit_int*100,4),'FM990.0000') ||'%'
+        else null end as tradeYield,
         (t1.mdate-t1.vdate) as termDays,
         t1.trade_amt as tradeAmt,
         t1.ccy as ccy,
@@ -2302,7 +2558,7 @@
                 || '|' || aaa.execid   || '|' || aaa.counterIdStr || '|' || aaa.remark
                 like '%' || #{search} || '%')
                 or to_char(aaa.faceValue,'FM9999999999999990.90')=#{search} or to_char(aaa.faceValue)=#{search}
-                or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or  aaa.tradeYield||'' =#{search}
+                or aaa.tradeYield=#{search} or  aaa.tradeYield =#{search}||'%'
                 or aaa.termDays||'' =#{search}
                 or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
                 or aaa.confirmTradeDate||'' =#{search}

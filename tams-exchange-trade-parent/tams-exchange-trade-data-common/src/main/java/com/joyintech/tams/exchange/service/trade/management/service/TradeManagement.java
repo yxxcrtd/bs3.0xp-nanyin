@@ -164,11 +164,6 @@ public class TradeManagement {
         return new ResultBean(ErrorCode.SUCCESS, historyTrade);
     }
 
-//    public Message<PageInfo<Object>> queryAllForPage(PageTradeInfoRequest request) {
-//        PageMode pageMode = request.getPageMode();
-//        return new Message<>(queryAllForPage(pageMode.getPageNo(), pageMode.getPageSize(), request.getHistoryType(), request.getUserId(), request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustId()));
-//    }
-
     public Message<PageInfo<TradeQueryBean>> queryAllForPage(PageTradeInfoRequest request) {
         String userId = request.getUserId();
         String entrustId = request.getEntrustId();
@@ -200,6 +195,7 @@ public class TradeManagement {
         return new Message<PageInfo<TradeQueryBean>>().fail(ErrorCode.REQ_PARAMETER_ERROR.value + "", ErrorCode.REQ_PARAMETER_ERROR.errorMsg);
     }
 
+    @Deprecated
     public ResultBean queryAllForPage(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String market, String stockCode, String entrustProp, String entrustId) {
         List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {

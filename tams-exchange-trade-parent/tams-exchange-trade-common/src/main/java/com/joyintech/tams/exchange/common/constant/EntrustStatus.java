@@ -1,5 +1,8 @@
 package com.joyintech.tams.exchange.common.constant;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum EntrustStatus {
 
     CREATED("新建", -10),
@@ -25,6 +28,31 @@ public enum EntrustStatus {
 
     public final int value;
     public final String name;
+
+    private static Map<Integer, String> entrustStatusMap = new HashMap<>();
+
+    static {
+        entrustStatusMap.put(CREATED.value, CREATED.name);
+        entrustStatusMap.put(PENDING_APPROVAL.value, PENDING_APPROVAL.name);
+        entrustStatusMap.put(PENDING_REVIEW.value, PENDING_REVIEW.name);
+        entrustStatusMap.put(PENDING_REVOKE.value, PENDING_REVOKE.name);
+        entrustStatusMap.put(UNREPORTED.value, UNREPORTED.name);
+        entrustStatusMap.put(TOBE_REPORTED.value, TOBE_REPORTED.name);
+        entrustStatusMap.put(REPORTED.value, REPORTED.name);
+        entrustStatusMap.put(REPORTED_TOBE_CANCEL.value, REPORTED_TOBE_CANCEL.name);
+        entrustStatusMap.put(PART_TRADED_TOBE_CANCELED.value, PART_TRADED_TOBE_CANCELED.name);
+        entrustStatusMap.put(PART_SUCCESS.value, PART_SUCCESS.name);
+        entrustStatusMap.put(PART_TRADED_CANCELED.value, PART_TRADED_CANCELED.name);
+        entrustStatusMap.put(CANCELED.value, CANCELED.name);
+        entrustStatusMap.put(SUCCEEDED.value, SUCCEEDED.name);
+        entrustStatusMap.put(INVALID.value, INVALID.name);
+        entrustStatusMap.put(SYSTEM_INVALID.value, SYSTEM_INVALID.name);
+        entrustStatusMap.put(ABNORMAL_CANCELED.value, ABNORMAL_CANCELED.name);
+        entrustStatusMap.put(NOT_APPROVAL.value, NOT_APPROVAL.name);
+        entrustStatusMap.put(NOT_REVIEW.value, NOT_REVIEW.name);
+        entrustStatusMap.put(NOT_REVOKE.value, NOT_REVOKE.name);
+        entrustStatusMap.put(NOT_RISK.value, NOT_RISK.name);
+    }
 
     EntrustStatus(String name, int value) {
         this.name = name;
@@ -58,4 +86,7 @@ public enum EntrustStatus {
                 || status == PART_TRADED_TOBE_CANCELED.value;
     }
 
+    public static String getEntrustStatusName(int entrustStatus) {
+        return entrustStatusMap.get(entrustStatus);
+    }
 }

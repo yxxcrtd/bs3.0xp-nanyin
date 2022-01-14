@@ -2,9 +2,9 @@ package com.joyintech.tams.exchange.util;
 
 
 import cn.hutool.core.util.StrUtil;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.common.BusinessResultException;
 import com.joyintech.tams.exchange.common.constant.*;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt3;
 import com.joyintech.tams.exchange.common.constant.joyin.InstructionPriceMode;
 import com.joyintech.tams.exchange.common.constant.joyin.InvestmentAssetType1;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;

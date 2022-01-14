@@ -1,6 +1,12 @@
 package com.joyintech.tams.exchange.common.bean;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.exchange.common.constant.EntrustStatus;
+import com.joyintech.tams.exchange.common.constant.Market;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCode;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCodeList;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,6 +19,12 @@ import java.util.Date;
 @ApiModel(value = "委托信息", description = "委托信息")
 public class EntrustQueryBean implements Serializable {
     private static final long serialVersionUID = 3485015523935180239L;
+
+    @ApiModelProperty(name = "id", value = "委托ID")
+    private String id;
+
+    @ApiModelProperty(name = "tradingDay", value = "业务日期")
+    private String tradingDay;
 
     @ApiModelProperty(name = "instructionId", value = "指令编号")
     private String instructionId;
@@ -35,8 +47,14 @@ public class EntrustQueryBean implements Serializable {
     @ApiModelProperty(name = "market", value = "交易市场")
     private String market;
 
+    @ApiModelProperty(name = "marketStr", value = "交易市场")
+    private String marketStr;
+
     @ApiModelProperty(name = "tradePlat", value = "交易平台")
     private String tradePlat;
+
+    @ApiModelProperty(name = "tradePlat", value = "交易平台")
+    private String tradePlatStr;
 
     @ApiModelProperty(name = "stockCode", value = "资产代码")
     private String stockCode;
@@ -47,11 +65,20 @@ public class EntrustQueryBean implements Serializable {
     @ApiModelProperty(name = "finprodType2", value = "资产类型")
     private String finprodType2;
 
+    @ApiModelProperty(name = "finprodType2Str", value = "资产类型")
+    private String finprodType2Str;
+
     @ApiModelProperty(name = "entrustBs", value = "委托方向")
     private String entrustBs;
 
+    @ApiModelProperty(name = "entrustBsStr", value = "委托方向")
+    private String entrustBsStr;
+
     @ApiModelProperty(name = "entrustProp", value = "价格类型")
     private String entrustProp;
+
+    @ApiModelProperty(name = "entrustPropStr", value = "价格类型")
+    private String entrustPropStr;
 
     @ApiModelProperty(name = "entrustPrice", value = "委托价格")
     @JsonSerialize(using = DoubleSerializerUtils.class)
@@ -66,6 +93,9 @@ public class EntrustQueryBean implements Serializable {
 
     @ApiModelProperty(name = "entrustStatus", value = "委托状态")
     private int entrustStatus;
+
+    @ApiModelProperty(name = "entrustStatusStr", value = "委托状态")
+    private String entrustStatusStr;
 
     @ApiModelProperty(name = "tradedVolume", value = "已成交数量")
     private long tradedVolume;
@@ -87,9 +117,6 @@ public class EntrustQueryBean implements Serializable {
     @ApiModelProperty(name = "username", value = "交易员名称")
     private String username;
 
-    @ApiModelProperty(name = "tradingDay", value = "委托时间/业务日期")
-    private String tradingDay;
-
     @ApiModelProperty(name = "frozenBalance", value = "冻结金额")
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal frozenBalance;
@@ -100,10 +127,12 @@ public class EntrustQueryBean implements Serializable {
     @ApiModelProperty(name = "cancelVolume", value = "撤销数量")
     private long cancelVolume;
 
+    @ApiModelProperty(name = "createTime", value = "委托时间")
+    private Date createTime;
 
-    @ApiModelProperty(name = "id", value = "委托ID", hidden = true)
-    private String id;
-
+    /**
+     * ////////////////////////////查询无用字段
+     */
     @ApiModelProperty(name = "positionStr", value = "定位串", hidden = true)
     private String positionStr;
 
@@ -203,9 +232,6 @@ public class EntrustQueryBean implements Serializable {
 
     @ApiModelProperty(name = "remark", value = "备注", hidden = true)
     private String remark;
-
-    @ApiModelProperty(name = "createTime", value = "创建时间", hidden = true)
-    private Date createTime;
 
     @ApiModelProperty(name = "updateTime", value = "修改时间", hidden = true)
     private Date updateTime;
@@ -794,5 +820,65 @@ public class EntrustQueryBean implements Serializable {
 
     public void setEntrustId(String entrustId) {
         this.entrustId = entrustId;
+    }
+
+    public String getMarketStr() {
+        if(StringUtil.isEmpty(market)){
+            return null;
+        }
+        return Market.getMarketName(market);
+    }
+
+    public void setMarketStr(String marketStr) {
+        this.marketStr = marketStr;
+    }
+
+    public String getTradePlatStr() {
+        if(StringUtil.isEmpty(tradePlat)){
+            return null;
+        }
+        return DictCodeList.from(DictCode.交易平台, tradePlat).getCodeName();
+    }
+
+    public void setTradePlatStr(String tradePlatStr) {
+        this.tradePlatStr = tradePlatStr;
+    }
+
+    public String getFinprodType2Str() {
+        if(StringUtil.isEmpty(finprodType2)){
+            return null;
+        }
+        return DictCodeList.from(DictCode.平安资产类型, finprodType2).getCodeName();
+    }
+
+    public void setFinprodType2Str(String finprodType2Str) {
+        this.finprodType2Str = finprodType2Str;
+    }
+
+    public String getEntrustBsStr() {
+        if(StringUtil.isEmpty(entrustBs)){
+            return null;
+        }
+        return DictCodeListExt2.from(DictCode.交易方向, entrustBs).getCodeName();
+    }
+
+    public void setEntrustBsStr(String entrustBsStr) {
+        this.entrustBsStr = entrustBsStr;
+    }
+
+    public String getEntrustPropStr() {
+        return entrustPropStr;
+    }
+
+    public void setEntrustPropStr(String entrustPropStr) {
+        this.entrustPropStr = entrustPropStr;
+    }
+
+    public String getEntrustStatusStr() {
+        return EntrustStatus.getEntrustStatusName(entrustStatus);
+    }
+
+    public void setEntrustStatusStr(String entrustStatusStr) {
+        this.entrustStatusStr = entrustStatusStr;
     }
 }

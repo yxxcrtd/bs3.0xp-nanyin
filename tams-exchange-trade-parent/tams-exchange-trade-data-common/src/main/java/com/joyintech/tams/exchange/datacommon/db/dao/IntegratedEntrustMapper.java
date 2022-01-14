@@ -29,9 +29,12 @@ public interface IntegratedEntrustMapper extends IMybatisMapper<IntegratedEntrus
 
     List<EntrustQueryBean> selectIntegratedEntrustByPage(EntrustQryBean entrustQryBean);
 
+    @Deprecated
     List<IntegratedEntrust> selectEntrustsPageInfo(EntrustQryBean entrustQryBean);
 
     List<EntrustQueryBean> selectEntrustsByPage(EntrustQryBean entrustQryBean);
+
+    List<EntrustQueryBean> selectEntrustsById(@Param("entrustId") String entrustId);
 
     IntegratedEntrust selectByPrimaryKey(String id);
 
