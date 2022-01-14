@@ -1505,9 +1505,8 @@ public class TrdConBond003Service extends BaseService<TrdConBond003Dto> implemen
                     entity,Integer.class);
 
             //成交录单---调用共通
-            if(StringUtil.isNotEmpty(entity.getDealSqeId())) {
-                exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTotleTradeId(),OperationType.REVOKE);
-            }
+            exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTotleTradeId(),OperationType.REVOKE);
+
 
         }
         //        调用接口  add by zhangpuyu 2019/12/6 start

@@ -333,7 +333,7 @@ public class ExchangeTransMatchRepo2Service extends ExchangeTransMatchRepoCommon
                 finDealPledge.setBranch(trdProductDeal.getBranch());
                 finDealPledge.setPledgeFinprodId(transDataTotalPledge.getPledgeFinprodId());
                 finDealPledge.setPledgeFaceValue(transDataTotalPledge.getPledgeFaceValue());
-                finDealPledge.setPledgeNumber(trdProductDeal.getShareAmt().divide(new BigDecimal(100)));
+                finDealPledge.setPledgeNumber(transDataTotalPledge.getPledgeNumber());
                 finDealPledge.setPledgeRatio(transDataTotalPledge.getPledgeRatio());
                 finDealPledge.setPledgeAmt(transDataTotalPledge.getPledgeAmt());
                 finDealPledgeList.add(finDealPledge);
