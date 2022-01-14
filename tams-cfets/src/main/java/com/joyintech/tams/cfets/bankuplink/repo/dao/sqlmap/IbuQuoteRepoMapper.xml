@@ -2307,7 +2307,7 @@
                 T.rate*100 price /*回购利率*/,
                 T.sett_ccy settCcy /*结算币种*/,
                 T.trade_amt tradeAmt /*交易金额*/,
-                T.share_amt shareAmt /*券面总额合计*/,
+                T.share_amt*100 shareAmt /*券面总额合计*/,
                 T.dis_face_value convertAmt /*质押券折算总额*/,
                 T.delivery_type deliverytype /*首次结算方式*/,
                 T.m_delivery_type mDeliveryType /*到期结算方式*/,
@@ -2345,7 +2345,7 @@
             NVL(TABLE01.pledStrdPrinAmt,0) avaPledgePrin/*可质押券面总额*/,
             pledge.pledgePrin pledgePrin/*质押券面额*/,
             mbvi.NETPRICE firstNetPrice/*首次净价*/,
-            pledge.pledgeRatio pledgeRatio/*折算比例*/,
+            pledge.pledgeRatio*100 pledgeRatio/*折算比例*/,
             fp.REGIST_ORG repRegistOrg/*登记托管机构code*/,
             pledge.portfolioId portfolioId/*组合代码*/,
             pp.PORTFOLIO_NAME portfolioName/*组合名称*/
