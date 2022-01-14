@@ -207,45 +207,46 @@ public class ExchangeTransMatchCommonService extends BaseService {
             if(StringUtil.endsWith(tradeId,"R")) {
                 tradeId = StringUtil.substring(tradeId,0,tradeId.length()-1);
             }
+            SettleTransDataTotal settleTransDataTotal = settleTransDataTotalMapper.selectByPrimaryKey(seqId);
+            if(StringUtil.isNotEmpty(settleTransDataTotal)) {
+                String totalSeqId = exchangeTransMatchCommonMapper.getTotalSeqId(tradeId);
+                if(StringUtil.isNotEmpty(totalSeqId)) {
+                    //如果存在委托代码，需要删除汇总成交数据匹配结果表数据
+                    String entrunstId = exchangeTransMatchCommonMapper.getEntrunstId(tradeId);
+                    if(StringUtil.isNotEmpty(entrunstId)) {
+                        Map<String, String> paraMap = new HashMap<>();
+                        paraMap.put("totalSeqId",totalSeqId);
+                        paraMap.put("entrunstId",entrunstId);
+                        exchangeTransMatchCommonMapper.deleteSettleTransDataTotalMatch(paraMap);
+                    }
+                }
 
-            String totalSeqId = exchangeTransMatchCommonMapper.getTotalSeqId(tradeId);
-            if(StringUtil.isNotEmpty(totalSeqId)) {
-                //如果存在委托代码，需要删除汇总成交数据匹配结果表数据
-                String entrunstId = exchangeTransMatchCommonMapper.getEntrunstId(tradeId);
-                if(StringUtil.isNotEmpty(entrunstId)) {
-                    Map<String, String> paraMap = new HashMap<>();
-                    paraMap.put("totalSeqId",totalSeqId);
-                    paraMap.put("entrunstId",entrunstId);
-                    exchangeTransMatchCommonMapper.deleteSettleTransDataTotalMatch(paraMap);
+                //更新汇总成交数据状态表
+                SettleTransDataTotalStatus settleTransDataTotalStatus = settleTransDataTotalStatusMapper.selectByPrimaryKey(seqId);
+                if(StringUtil.isNotEmpty(settleTransDataTotalStatus)) {
+                    //取得剩余匹配份额
+                    BigDecimal remainNum = exchangeTransMatchCommonMapper.getRemainNum(totalSeqId);
+                    settleTransDataTotalStatus.setMatchStatus(BigDecimal.ZERO.compareTo(remainNum) >=0
+                            ?DictCodeListExt3.下行交易匹配状态_未匹配.getValue():DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
+                    settleTransDataTotalStatus.setUpdateTime(new Date());
+                    settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
+                    settleTransDataTotalStatusMapper.updateByPrimaryKey(settleTransDataTotalStatus);
+                }
+                else {
+                    settleTransDataTotalStatus = new SettleTransDataTotalStatus();
+                    settleTransDataTotalStatus.setSeqNo(seqId);
+                    //取得剩余匹配份额
+                    BigDecimal remainNum = exchangeTransMatchCommonMapper.getRemainNum(seqId);
+                    settleTransDataTotalStatus.setMatchStatus(BigDecimal.ZERO.compareTo(remainNum) >=0
+                            ?DictCodeListExt3.下行交易匹配状态_未匹配.getValue():DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
+                    settleTransDataTotalStatus.setUpdateTime(new Date());
+                    settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
+                    settleTransDataTotalStatusMapper.insert(settleTransDataTotalStatus);
                 }
             }
 
             //成交数据与投管交易关系（SETTLE_TRANS_TG_MAPPING）：删除
             exchangeTransMatchCommonMapper.deleteSettleTransTgMapping(tradeId);
-
-            //更新汇总成交数据状态表
-            SettleTransDataTotalStatus settleTransDataTotalStatus = settleTransDataTotalStatusMapper.selectByPrimaryKey(seqId);
-            if(StringUtil.isNotEmpty(settleTransDataTotalStatus)) {
-                //取得剩余匹配份额
-                BigDecimal remainNum = exchangeTransMatchCommonMapper.getRemainNum(totalSeqId);
-                settleTransDataTotalStatus.setMatchStatus(BigDecimal.ZERO.compareTo(remainNum) >=0
-                        ?DictCodeListExt3.下行交易匹配状态_未匹配.getValue():DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
-                settleTransDataTotalStatus.setUpdateTime(new Date());
-                settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
-                settleTransDataTotalStatusMapper.updateByPrimaryKey(settleTransDataTotalStatus);
-            }
-            else {
-                settleTransDataTotalStatus = new SettleTransDataTotalStatus();
-                settleTransDataTotalStatus.setSeqNo(seqId);
-                //取得剩余匹配份额
-                BigDecimal remainNum = exchangeTransMatchCommonMapper.getRemainNum(seqId);
-                settleTransDataTotalStatus.setMatchStatus(BigDecimal.ZERO.compareTo(remainNum) >=0
-                        ?DictCodeListExt3.下行交易匹配状态_未匹配.getValue():DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
-                settleTransDataTotalStatus.setUpdateTime(new Date());
-                settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
-                settleTransDataTotalStatusMapper.insert(settleTransDataTotalStatus);
-            }
-
             logger.debug("交易撤销,调用共通,交易编号:"+tradeId +",结束");
 
         }
