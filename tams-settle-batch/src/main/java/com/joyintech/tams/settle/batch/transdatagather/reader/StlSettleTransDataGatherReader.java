@@ -511,6 +511,8 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                                 dealTotal.setSxfAmt(item.getSxfAmt());
                                 //结算费
                                 dealTotal.setJsfAmt(item.getJsfAmt());
+                                // 清算费
+                                dealTotal.setSettleFee(item.getSettleFee());
                                 //佣金
                                 dealTotal.setCommissionAmt(item.getCommissionAmt());
                                 //佣金是否随交易支付
