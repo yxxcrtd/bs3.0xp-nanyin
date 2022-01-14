@@ -798,13 +798,17 @@
 		LEFT JOIN ETR_ENTRUST_ADD T2 ON
 		T2.ENTRUST_ID = T1.ENTRUST_ID
 		LEFT JOIN SETTLE_TRANS_DATA_TOTAL_MATCH T3 ON T1.ENTRUST_ID = T3.ENTRUNST_TRADE_ID
-		WHERE ENTRUST_DATE = #{entrustDate,jdbcType=DATE}
-		<if test="finprodType != null and finprodType.size()>0">
-			AND T1.FINPROD_TYPE2  IN
-			<foreach item="item" index="index" collection="finprodType" open="(" separator=","  close=")">
-				#{item}
-			</foreach>
-		</if>
+		WHERE
+			ENTRUST_DATE = #{entrustDate,jdbcType=DATE}
+		  	<!--只取已接收和已完成的指令 modify fuyongsheng 20220114 start-->
+		  	AND T1.ENTRUST_STATUS IN ('03','04')
+			<!--只取已接收和已完成的指令 modify fuyongsheng 20220114 end-->
+			<if test="finprodType != null and finprodType.size()>0">
+				AND T1.FINPROD_TYPE2  IN
+				<foreach item="item" index="index" collection="finprodType" open="(" separator=","  close=")">
+					#{item}
+				</foreach>
+			</if>
 	</select>
 
 	<!--组合持仓-->
