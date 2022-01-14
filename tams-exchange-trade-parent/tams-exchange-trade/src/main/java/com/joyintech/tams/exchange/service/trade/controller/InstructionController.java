@@ -79,7 +79,7 @@ public class InstructionController {
     @PostMapping(value = "/instruction/export")
     @ResponseBody
     @ApiOperation(value = "导出指令列表", notes = "导出指令列表")
-    public void exportPosition(@RequestBody InstructionExportRequest request, HttpServletResponse response) {
+    public void exportInstruction(@RequestBody InstructionExportRequest request, HttpServletResponse response) {
         ExcelUitl.doExport(request, response, "指令列表", () -> investmentManagement.queryExportPage(request.getDto(InstructionQueryRequest.class)));
     }
 

@@ -342,4 +342,9 @@ public class EntrustServiceImpl extends AsyncServiceImpl<String, Entrust> implem
         }
         return entrustList;
     }
+    
+    @Override
+    public List<Entrust> queryEntrust2Touguan(String instructionId){
+    	return entrustMapper.queryEntrust2Touguan(instructionId);
+    }
 }

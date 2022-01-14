@@ -142,6 +142,10 @@ public class JoyinbusinessCommonService extends BaseService {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("search", dto.getSearch());
         param.put("sysDate",iPlatformDate.getSysDate());
+        if(StringUtil.isNotEmpty(dto.getDateType()) && StringUtil.equals(dto.getDateType(),"01")){
+            //查询历史数据，不需要当日日期
+            param.remove("sysDate");
+        }
         String searchs = dto.getSearchs();
         if(StringUtil.isNotEmpty(searchs)){
             param.put("searchList", StringUtil.splitToList(GlobalConstant.COMMA,searchs));
@@ -155,6 +159,9 @@ public class JoyinbusinessCommonService extends BaseService {
         }else if(StringUtil.equals(dto.getDealType(),"03")){
             //CSTP下行接口对手方
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryCstpPartyList(param));
+        }else if(StringUtil.equals(dto.getDealType(),"04")){
+            //CSTP下行接口本方
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryCstpOuPartyList(param));
         }else{
             //组合关联的银行间机构,此处前端能拿到组合的21位码
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryMySideList(param));

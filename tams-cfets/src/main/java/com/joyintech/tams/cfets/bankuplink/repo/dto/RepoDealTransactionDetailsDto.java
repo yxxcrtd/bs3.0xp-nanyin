@@ -90,7 +90,7 @@ public class RepoDealTransactionDetailsDto {
     private String cpTraderName;
 
     @ApiModelProperty(name = "settleSpeed", value = "清算速度")
-    private Long settleSpeed;
+    private String settleSpeed;
 
     @ApiModelProperty(name = "settleSpreedStr", value = "清算速度")
     private String settleSpeedStr;
@@ -168,11 +168,11 @@ public class RepoDealTransactionDetailsDto {
     }
 
 
-    public Long getSettleSpeed() {
+    public String getSettleSpeed() {
         return settleSpeed;
     }
 
-    public void setSettleSpeed(Long settleSpeed) {
+    public void setSettleSpeed(String settleSpeed) {
         this.settleSpeed = settleSpeed;
     }
 
@@ -302,14 +302,7 @@ public class RepoDealTransactionDetailsDto {
     }
 
     public String getSettleSpeedStr() {
-        if (this.getSettleSpeed() != null && this.getSettleSpeed() == 0L) {
-            return BussinessDictCodeList.清算速度_T加0.getCodeName();
-        } else if (this.getSettleSpeed() != null && this.getSettleSpeed() == 1L) {
-            return BussinessDictCodeList.清算速度_T加1.getCodeName();
-        } else if (this.getSettleSpeed() != null && this.getSettleSpeed() == 2L) {
-            return BussinessDictCodeList.清算速度_T加2.getCodeName();
-        }
-        return null;
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.清算速度, this.getSettleSpeed());
     }
 
     public void setSettleSpeedStr(String settleSpeedStr) {

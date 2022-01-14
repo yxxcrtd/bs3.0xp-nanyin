@@ -325,6 +325,22 @@
                 </foreach>
             </if>
     </select>
+    <select id="queryCstpOuPartyList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select distinct I.OURINSTITUTIONCODE id,
+        I.OURINSTITUTIONCHINESEFULLNAME text,
+        mstc.party_id as object
+        from  INTERF_CSTP_TRADE I
+        left join MST_CFETS_CUSTOMER_INFO mstc
+        on mstc.party_customer_id=I.OURINSTITUTIONCODE
+        where I.OURINSTITUTIONCODE is not null
+        <if test="sysDate != null and !sysDate.equals('')">
+            AND  to_date(I.Tradedate,'yyyy-MM-dd')= #{sysDate,jdbcType=DATE}
+        </if>
+        <if test="search != null and !search.equals('')">
+            AND	(I.OURINSTITUTIONCODE like concat('%',concat(#{search},'%'))
+            or I.OURINSTITUTIONCHINESEFULLNAME like concat('%',concat(#{search},'%')))
+        </if>
+    </select>
     <select id="queryCounterPartyList" resultType="com.joyintech.framework.select.SelectOptionDto">
         select distinct mst.counter_id id,mst.counter_name  text,mst.party_id as object
         from MST_COUNTER_PARTY mst

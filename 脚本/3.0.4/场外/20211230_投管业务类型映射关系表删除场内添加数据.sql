@@ -1,1 +1,0 @@
-delete from BUSI_TYPE_MAPPING where seqno like '%BUSI_TYPE_TG_EX%';

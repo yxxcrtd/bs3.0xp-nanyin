@@ -1,16 +1,15 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.exchange.common.ResponseResultBody;
-import com.joyintech.tams.exchange.common.bean.EnableQryBean;
-import com.joyintech.tams.exchange.common.bean.OrderAndEntrustQryResult;
-import com.joyintech.tams.exchange.common.bean.ResultBean;
-import com.joyintech.tams.exchange.common.bean.RevokeDto;
+import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.constant.EntrustBsProp;
 import com.joyintech.tams.exchange.common.db.domain.EntrustInterface;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
 import com.joyintech.tams.exchange.common.domain.Message;
+import com.joyintech.tams.exchange.common.request.EntrustExportRequest;
 import com.joyintech.tams.exchange.common.request.EntrustQueryRequest;
 import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
@@ -23,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -121,13 +121,13 @@ public class EntrustController {
     @RequestMapping(value = "/entrust/enable", method = RequestMethod.POST)
     public ResultBean queryEnable(@RequestBody @Validated EnableQryBean enableQryBean) {
         Instruction instruction = instructionService.findById(enableQryBean.getInstructionId());
-        enableQryBean.setEntrustProp(EntrustPropUtils.getEntrustProp(instruction));
-        enableQryBean.setEntrustProp(EntrustBsProp.getEntrustBs(instruction.getPs()));
+        enableQryBean.setEntrustProp(EntrustPropUtils.getEntrustProp(instruction, enableQryBean.getEntrustProp()));
+        enableQryBean.setEntrustBs(EntrustBsProp.getEntrustBs(instruction.getPs()));
         if (StringUtils.isNotEmpty(enableQryBean.getStockCode())) {
             enableQryBean.setStockCode(instruction.getFinprodMarketId());
         }
         if (StringUtils.isNotEmpty(enableQryBean.getAccountId())) {
-            enableQryBean.setStockCode(instruction.getAcctNo());
+            enableQryBean.setAccountId(instruction.getAcctNo());
         }
         return entrustManagement.queryEnable(enableQryBean);
     }
@@ -148,14 +148,21 @@ public class EntrustController {
 
     @ApiOperation(value = "查询分页委托信息", notes = "查询分页委托信息")
     @PostMapping(value = "/entrust/page")
-    public Message<PageInfo<Object>> queryAllEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
+    public Message<PageInfo<EntrustQueryBean>> queryAllEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
         return entrustManagement.queryAllEntrustForPage(request);
     }
 
     @ApiOperation(value = "查询分页综合业务委托信息", notes = "查询分页综合业务委托信息")
     @PostMapping(value = "/entrust/integrated/page")
-    public Message<PageInfo<Object>> queryIntegratedEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
+    public Message<PageInfo<EntrustQueryBean>> queryIntegratedEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
         return entrustManagement.queryIntegratedEntrustForPage(request);
+    }
+
+    @PostMapping(value = "/entrust/export")
+    @ResponseBody
+    @ApiOperation(value = "导出委托信息列表", notes = "导出委托信息列表")
+    public void exportEntrust(@RequestBody EntrustExportRequest request, HttpServletResponse response) {
+        ExcelUitl.doExport(request, response, "委托列表", () -> entrustManagement.queryAllEntrustForPage(request.getDto(PageEntrustInfoRequest.class)).getData().getList());
     }
 
     @ApiOperation(value = "查询异常委托", notes = "查询异常委托")
@@ -167,4 +174,11 @@ public class EntrustController {
         }
         return new Message<List<EntrustInterface>>(entrustManagement.queryEntrustByStatus(userId, entrustStatus));
     }
+
+//    @PostMapping(value = "/entrust/exception/export")
+//    @ResponseBody
+//    @ApiOperation(value = "导出异常委托信息列表", notes = "导出异常委托信息列表")
+//    public void exportExceptionEntrust(@RequestBody EntrustExportRequest request, HttpServletResponse response) {
+//        ExcelUitl.doExport(request, response, "异常委托列表", () -> entrustManagement.queryEntrustByStatus(request.getDto(PageEntrustInfoRequest.class)).getData().getList());
+//    }
 }

@@ -46,7 +46,7 @@ public interface CfetsTrdConfirmMapper {
      * @param pageParam
      * @return
      */
-    CfetsTrdConfirmRegInfoListResponse selectRepoIbuInfoByKey(String totleTradeId);
+    CfetsTrdConfirmRegInfoListResponse selectRepoIbuInfoByKey(Map<String, Object> pageParam);
     /**
      * 查询所有登记费用信息
      * @param pageParam
@@ -198,8 +198,17 @@ public interface CfetsTrdConfirmMapper {
      * 根据登记编号，查询登记信息
      */
     List<CfetsTrdConfirmRegInfoListResponse> selectRegDtoByPrimaryKey(Map<String, Object> map);
+
     /**
-     * 根据报价编号，查询报价信息
+     * 查询所有登记或报价回购的质押券信息
+     * @param pageParam
+     * @return
      */
-   // CfetsTrdConfirmRegInfoListResponse selectIbuDtoByPrimaryKey(@Param("quoteId") String quoteId);
+    List<CfetsTrdConfirmRegInfoListResponse> findAllRegAndIbuPledgesList(@Param("busiCode") String busiCode);
+    /**
+     * 查询所有下行的质押券信息
+     * @param pageParam
+     * @return
+     */
+    List<CfetsTrdConfirmCstpInfoListResponse> findAllCstpPledgesList(@Param("execid") String execid);
 }

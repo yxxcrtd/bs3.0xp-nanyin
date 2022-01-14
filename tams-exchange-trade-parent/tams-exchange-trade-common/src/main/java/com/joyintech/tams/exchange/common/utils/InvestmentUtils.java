@@ -20,6 +20,19 @@ public class InvestmentUtils {
         }
     }
 
+    public static boolean hasSameDir(Instruction instruction, String entrustBs) {
+        if (InvestmentAssetType.FUTURES.value.equals(instruction.getAssetType())) {
+            if (EntrustBs.BUY.value.equals(entrustBs)) {
+                return DerivativeBsDir.BUY.value.equals(instruction.getDerivativeBsDir());
+            } else if (EntrustBs.SELL.value.equals(entrustBs)) {
+                return DerivativeBsDir.SELL.value.equals(instruction.getDerivativeBsDir());
+            }
+            return false;
+        } else {
+            return instruction.getPs().equals(InvestmentUtils.getInstructionBs(instruction.getAssetType(), entrustBs));
+        }
+    }
+
     public static String getInstructionBs(String assetType, String entrustBS) {
         if (InvestmentAssetType.PLEDGE_REPURCHASE.value.equals(assetType) && EntrustBs.BUY.value.equals(entrustBS)) {
             return InstructionPs.POSITIVEREPO.value;

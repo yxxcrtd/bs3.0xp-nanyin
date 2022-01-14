@@ -661,7 +661,7 @@
             <if test="dipType != null" >
                 DIP_TYPE = #{dipType,jdbcType=VARCHAR},
             </if>
-            <if test="actDays != null" >
+            <if test="actDays != null and actDays != 0 " >
                 ACT_DAYS = #{actDays,jdbcType=DECIMAL},
             </if>
         </set>

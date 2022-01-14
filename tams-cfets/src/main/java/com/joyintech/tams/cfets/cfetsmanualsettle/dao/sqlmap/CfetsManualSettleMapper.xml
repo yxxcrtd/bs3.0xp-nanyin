@@ -11,7 +11,7 @@
         T1.TOTLE_TRADE_ID tradeId,
         to_char(T1.TRADE_DATE,'yyyy-MM-dd') tradeDate,
         to_char(T1.SETTLE_DATE,'yyyy-MM-dd') settleDate,
-        T2.FINPROD_MARKET_ID finprodMarketId,
+        nvl(T2.FINPROD_MARKET_ID,t1.TERM_TYPE) finprodMarketId,
         T2.FINPROD_ABBR finprodAbbr,
         T1.FINPROD_TYPE2 finprodType2,
         sdl1.item_value finprodType2Str,
@@ -113,7 +113,7 @@
             T1.TOTLE_TRADE_ID,
             T1.TRADE_DATE,
             T1.SETTLE_DATE,
-            T2.FINPROD_MARKET_ID,
+            nvl(T2.FINPROD_MARKET_ID,t1.TERM_TYPE),
             T2.FINPROD_ABBR,
             T1.FINPROD_TYPE2,
             sdl1.item_value,
@@ -819,10 +819,11 @@
         LEFT JOIN MST_CFETS_CUSTOMER_INFO T9 ON T9.PARTY_ID = T5.OU_PARTY_ID
         LEFT JOIN SYS_USER T10 ON T10.USER_NAME = T1.TRADER
         LEFT JOIN MST_COUNTER_PARTY T11 ON T11.COUNTER_ID = T1.COUNTER_ID
-        LEFT JOIN MST_CFETS_CUSTOMER_TRADER T12 ON T12.PARTY_ID = T9.PARTY_ID
-        LEFT JOIN sys_datadict_list sdl ON sdl.dict_code='DISTRIBUTION' and sdl.item_code = T8.DIP_TYPE
-        WHERE T4.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01}
-        AND T1.TOTLE_TRADE_ID = #{tradeId}
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER T12 ON T12.trader_id = T1.COUNTER_TRADER
+        LEFT JOIN IBU_QUOTE_BOND ib ON ib.quote_id = T7.PRE_TRADE_ID
+        LEFT JOIN ibu_quote_crep ic ON ic.quote_id = T7.PRE_TRADE_ID
+        LEFT JOIN sys_datadict_list sdl ON sdl.dict_code='DISTRIBUTION' and sdl.item_code = coalesce(T8.DIP_TYPE,ib.DIP_TYPE,ic.DIP_TYPE)
+        WHERE T1.TOTLE_TRADE_ID = #{tradeId}
         AND T1.TRADE_STATUS = #{TRADE_STATUS01}
     </select>
 

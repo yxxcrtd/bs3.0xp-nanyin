@@ -105,6 +105,8 @@ public enum ErrorCode {
 
     ACCOUNT_NOT_EXIT(2004, "账号不存在"),
 
+    QUOTE_NOT_EXIT(2005, "行情不存在"),
+
     TERMINAL_UN_SUPPORT_FUNCTION(2998, "柜台暂不支持该业务"),
 
     TERMINAL_RETURN_ERROR(2999, "柜台返回错误"),
@@ -145,7 +147,9 @@ public enum ErrorCode {
 
     REQ_PARAMETER_INSTRUCTION_ID_ERROR(4015, "指令ID错误"),
 
-    FAIR_INSTRUCTIONS_UNACCEPT_ERROR(4016, "存在公平指令未接收"),
+    FAIR_INSTRUCTIONS_UNACCEPT_ERROR(4016, "存在需要执行公平交易但未接收的指令，请先接收指令！"),
+
+    NOT_FAIR_INSTRUCTION_ERROR(4017, "非公平交易模式，无法进行公平交易！"),
 
     INSTRUCTIONS_DERIVATIVE_BS_OC_ERROR(4030, "指令中衍生品买卖方向和开平仓标志不能为空"),
 
@@ -209,5 +213,9 @@ public enum ErrorCode {
 
     public static boolean isSuccess(int value) {
         return value == 0;
+    }
+
+    public static String getStr(ErrorCode errorCode) {
+        return errorCode.value + ":" + errorCode.errorMsg;
     }
 }

@@ -46,6 +46,9 @@ public class RepoPtlAllocationDto {
     @ApiModelProperty(name = "mtradeAmt", value = "到期结算金额(元)", example = "1300")
     private BigDecimal mtradeAmt;
 
+    @ApiModelProperty(name = "shareAmt", value = "质押券总额(元)", example = "1300")
+    private BigDecimal shareAmt;
+
     @ApiModelProperty(name = "convertAmt", value = "质押券折算总额(元)", example = "1300")
     private BigDecimal convertAmt;
 
@@ -142,6 +145,14 @@ public class RepoPtlAllocationDto {
 
     public void setMtradeAmt(BigDecimal mtradeAmt) {
         this.mtradeAmt = mtradeAmt;
+    }
+
+    public BigDecimal getShareAmt() {
+        return shareAmt;
+    }
+
+    public void setShareAmt(BigDecimal shareAmt) {
+        this.shareAmt = shareAmt;
     }
 
     public BigDecimal getConvertAmt() {

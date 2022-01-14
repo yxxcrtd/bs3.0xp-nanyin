@@ -9,6 +9,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.bankuplink.common.dao.CstpAutoTradeMapper;
 import com.joyintech.service.bankuplink.common.dao.CstpTradeMapper;
 import com.joyintech.service.bankuplink.common.dto.TrdBondInvestTradeDto;
+import com.joyintech.service.bankuplink.common.dto.TrdConfirmMatchDto;
 import com.joyintech.service.bankuplink.common.util.BusinessTypeUtil;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
@@ -265,17 +266,20 @@ public class CstpSecAutoTradeService extends BaseService<TrdBondInvestTradeDto> 
 			// 防止有些标的的finprodId带有前缀，因此这里进行第二次查询
 			finProduct = finProductMapper.selectByPrimaryKey("F01_" + interfCstpSecdeal.getSecid());
 		}
-		if (StringUtil.isNotEmpty(entrustInfo)
-				&& StringUtil.isNotEmpty(finProduct)) {
+	/*	if (StringUtil.isNotEmpty(entrustInfo)
+				&& StringUtil.isNotEmpty(finProduct)) {*/
+		if (StringUtil.isNotEmpty(finProduct)) {
 			// 判断是否已经生成了交易
 			TrdProductDeal deal = autoTradeMapper.isExistsTrade(oritradeId);
-			if (!StringUtil.isNotEmpty(deal)) {
+			//判断该下行数据，是否已经匹配成功了。
+			TrdConfirmMatchDto matchDto=cstpMapper.selectMatchDtoByExecId(oritradeId);
+			if (!StringUtil.isNotEmpty(deal) && !StringUtil.isNotEmpty(matchDto)) {
 				try{
 					Map<String,Object> param = new HashMap<>();
 					param.put("interfCstpTrade",interfCstpTrade);
 					param.put("interfTradSecdeal",interfTradSecdeal);
 					restTemplate.postForObject(
-							ServiceApplication.PINGAN_SERVICE_NAME+ "/cfets/common/CfetsIbuQuoteBatchCommon",
+							ServiceApplication.PINGAN_SERVICE_NAME+ "/cfets/common/CfetsIbuQuoteBatchCommon/cstpAutoTrade",
 							param, Map.class);
 				}
 				catch (Exception e){
@@ -288,7 +292,7 @@ public class CstpSecAutoTradeService extends BaseService<TrdBondInvestTradeDto> 
 				logger.info(msg);
 			}
 		} else {
-			String msg = "无报价的指令代码或债券代码不存在！";
+			String msg = "无债券代码不存在！";
 			resultBaseDto.setErrMsg(msg);
 			logger.info(msg);
 		}

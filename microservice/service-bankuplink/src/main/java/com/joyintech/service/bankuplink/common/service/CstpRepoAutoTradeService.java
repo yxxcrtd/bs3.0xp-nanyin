@@ -7,6 +7,7 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.bankuplink.common.dao.CstpAutoTradeMapper;
 import com.joyintech.service.bankuplink.common.dao.CstpTradeMapper;
+import com.joyintech.service.bankuplink.common.dto.TrdConfirmMatchDto;
 import com.joyintech.service.bankuplink.common.dto.TrdRepoTrade002Dto;
 import com.joyintech.service.bankuplink.common.util.BusinessTypeUtil;
 import com.joyintech.tams.common.base.dao.*;
@@ -366,9 +367,10 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 		}
 		// 查询抵押品债券信息
 		List<InterfTradRepoasstDto> repoasst = autoTradeMapper.queryRepoAsst(oritradeId);
-		if (StringUtil.isNotEmpty(entrust)) {
-			//正回购必须有质押券
-			if(StringUtil.equals(entrust.getPs(), DictCodeList.回购拆借方向_正回购.getValue())&&StringUtil.isEmptyList(repoasst)){
+		//if (StringUtil.isNotEmpty(entrust)) {
+			//正逆回购必须有质押券
+			//if(StringUtil.equals(entrust.getPs(), DictCodeList.回购拆借方向_正回购.getValue())&&StringUtil.isEmptyList(repoasst)){
+			if(StringUtil.isEmptyList(repoasst)){
 				String msg = "抵押品债券不存在！";
 				resultBaseDto.setErrMsg(msg);
 				logger.info(msg);
@@ -376,13 +378,15 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 			}
 			// 判断是否已经生成了交易
 			TrdProductDeal deal = autoTradeMapper.isExistsTrade(oritradeId);
-			if (!StringUtil.isNotEmpty(deal)) {
+			//判断该下行数据，是否已经匹配成功了。
+			TrdConfirmMatchDto matchDto=cstpMapper.selectMatchDtoByExecId(oritradeId);
+			if (!StringUtil.isNotEmpty(deal) && !StringUtil.isNotEmpty(matchDto) ) {
 				try{
 					Map<String,Object> param = new HashMap<>();
 					param.put("interfCstpTrade",interfCstpTrade);
 					param.put("interfOpicsTradRepo",interfcstpTradRepo);
 					restTemplate.postForObject(
-							ServiceApplication.PINGAN_SERVICE_NAME+ "/cfets/common/CfetsIbuQuoteBatchCommon",
+							ServiceApplication.PINGAN_SERVICE_NAME+ "/cfets/common/CfetsIbuQuoteBatchCommon/cstpAutoTrade",
 							param, Map.class);
 				}
 				catch (Exception e){
@@ -393,11 +397,11 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 				resultBaseDto.setErrMsg(msg);
 				logger.info(msg);
 			}
-		} else {
+		/*} else {
 			String msg = "没有对应的报价信息!";
 			resultBaseDto.setErrMsg(msg);
 			logger.info(msg);
-		}
+		}*/
 
 	}
 }

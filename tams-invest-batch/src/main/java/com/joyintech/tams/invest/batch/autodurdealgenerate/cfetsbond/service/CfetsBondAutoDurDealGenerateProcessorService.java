@@ -10,18 +10,16 @@
 
 package com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
-
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dao.CfetsBondAutoDurDealGenerateMapper;
@@ -29,24 +27,24 @@ import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dto.CfetsEt
 import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dto.CfetsEtrIbPositionRequest;
 import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dto.CfetsManualSettleDealInfo;
 import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dto.CfetsTrdConfirmMatchDto;
+import com.joyintech.tams.invest.batch.common.dto.BatchBussSettleOrderParameterDto;
+import com.joyintech.tams.invest.batch.common.service.PinganBatchCommonService;
+import com.joyintech.tams.invest.common.autoperiod.bond.AutoPeriodBondCommonService;
+import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonService;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
+import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondDurDbInertDto;
+import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondDurationDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.tams.invest.batch.common.dto.BatchBussSettleOrderParameterDto;
-import com.joyintech.tams.invest.batch.common.service.PinganBatchCommonService;
-import com.joyintech.tams.invest.common.autoperiod.bond.AutoPeriodBondCommonService;
-import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonService;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondDurDbInertDto;
-import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondDurationDto;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
 
 /**
  * processor相关业务处理
@@ -88,6 +86,9 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
      */
     @Autowired(required = false)
     private BaseGetBussinessId baseGetBussinessId;
+
+    @Autowired
+    private CfetsRepoAutoDurDealGenerateProcessorService cfetsRepoAutoDurDealGenerateProcessorService;
     /**
      * 递增维度(元)
      */
@@ -102,11 +103,11 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
      * @see
      * @since 1.0
      */
-    public void execute(Date batchDate, List<String> productIdList) {
+    public void execute(Date batchDate) {
 
         Map<String, Object> paramMap1 = new HashMap<String, Object>();
         paramMap1.put("busiType", DictCodeList.共通业务类型_债券类资产存续期.getValue());
-        paramMap1.put("finProdType2", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        paramMap1.put("finProdType2", Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券.getValue()));
         paramMap1.put("updateUser", "system");
         paramMap1.put("batchDate", batchDate);
         //paramMap1.put("settleStatus", DictCodeListExt3.交收状态_未交收.getValue());
@@ -181,6 +182,9 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
 
             sendPositionMethod(trdBondDurationDto.getTrdBondDurDbInertDto().getTrdFinProductDealTotal());
         }
+
+        //回购自动处理
+        cfetsRepoAutoDurDealGenerateProcessorService.execute(batchDate);
     }
 
     /**

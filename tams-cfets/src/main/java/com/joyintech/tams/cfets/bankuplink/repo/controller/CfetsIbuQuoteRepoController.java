@@ -117,7 +117,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         // 登记托管机构
         initPageParams.put("REGIST_ORG", this.getSelectDataFromDataDic(DictCode.登记托管机构, null));
         // 债券类型
-        initPageParams.put("BOND_TYPE", this.getSelectDataFromDataDic(DictCode.债券类型, null));
+        initPageParams.put("BOND_TYPE", this.getSelectDataFromDataDic(DictCode.行内资产四级分类, null));
         // 回购方式_双边回购
         initPageParams.put("REPO_METHOD_1", DictCodeListExt3.回购方式_双边回购.getValue());
         // 资金账户类型_托管账户
@@ -545,7 +545,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         List<String> entrustIds = StringUtil.splitToList(",", (String) param.get("entrustIds"));
         param.put("entrustIdList", entrustIds);
         param.remove("entrustIds");
-        return new Message<AjaxResult>().success().setData(ibuQuoteBondService.doForcedFinishCheck(param, false));
+        return new Message<AjaxResult>().success().setData(ibuQuoteRepoService.doForcedFinishCheck(param, false));
     }
 
 

@@ -1,5 +1,6 @@
 package com.joyintech.tams.cfets.common.controller;
 
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.cfets.trdconfirm.service.CfetsTrdConfirmService;
 import com.joyintech.tams.common.base.entity.InterfCstpTrade;
 import com.joyintech.tams.common.base.entity.InterfOpicsTradRepo;
@@ -57,13 +58,13 @@ public class CfetsIbuQuoteBatchCommonController {
     @PostMapping("cstpAutoTrade")
     public void cstpAutoTrade(@RequestBody Map<String,Object> parm) throws Exception {
         try{
-            InterfCstpTrade interfCstpTrade =  (InterfCstpTrade)parm.get("interfCstpTrade");
+            InterfCstpTrade interfCstpTrade = JsonUtils.json2Object(JsonUtils.object2Json(parm.get("interfCstpTrade")), InterfCstpTrade.class);
             if(parm.containsKey("interfTradSecdeal")){
-                InterfTradSecdeal interfTradSecdeal = (InterfTradSecdeal)parm.get("interfTradSecdeal");
+                InterfTradSecdeal interfTradSecdeal = JsonUtils.json2Object(JsonUtils.object2Json(parm.get("interfTradSecdeal")), InterfTradSecdeal.class);
                 cfetsTrdConfirmService.cstpAutoMatchMethod(interfTradSecdeal,null,interfCstpTrade);
             }
             if(parm.containsKey("interfOpicsTradRepo")){
-                InterfOpicsTradRepo interfOpicsTradRepo = (InterfOpicsTradRepo)parm.get("interfOpicsTradRepo");
+                InterfOpicsTradRepo interfOpicsTradRepo = JsonUtils.json2Object(JsonUtils.object2Json(parm.get("interfOpicsTradRepo")), InterfOpicsTradRepo.class);
                 cfetsTrdConfirmService.cstpAutoMatchMethod(null,interfOpicsTradRepo,interfCstpTrade);
             }
         }

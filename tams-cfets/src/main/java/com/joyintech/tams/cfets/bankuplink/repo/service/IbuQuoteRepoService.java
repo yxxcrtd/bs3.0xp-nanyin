@@ -35,10 +35,7 @@ import com.joyintech.tams.common.base.dao.EtrDistributeMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.DateCalService;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
@@ -281,16 +278,18 @@ public class IbuQuoteRepoService extends BaseService {
      */
     public AjaxResult dealexecutioncheck(CfetsRepoDealQuoteRequest cfetsRepoDealQuoteRequest) {
         AjaxResult ajaxResult = new AjaxResult();
-        try {
-            Map<String, Object> param = BeanUtil.object2Map(cfetsRepoDealQuoteRequest);
-            setParam(param, 1);
-            List<CfetsRepoDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
-            if (!StringUtil.isEmptyList(entrustDtos)) {
-                ajaxResult = preconditionJudgment(entrustDtos);
+        if (CollectionUtils.isNotEmpty(cfetsRepoDealQuoteRequest.getEntrustIdList())) {
+            try {
+                Map<String, Object> param = BeanUtil.object2Map(cfetsRepoDealQuoteRequest);
+                setParam(param, 1);
+                List<CfetsRepoDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
+                if (!StringUtil.isEmptyList(entrustDtos)) {
+                    ajaxResult = preconditionJudgment(entrustDtos);
+                }
+            } catch (Exception e) {
+                ajaxResult.setMessage("交易执行检查异常!");
+                return ajaxResult;
             }
-        } catch (Exception e) {
-            ajaxResult.setMessage("交易执行检查异常!");
-            return ajaxResult;
         }
         return ajaxResult;
     }
@@ -381,6 +380,7 @@ public class IbuQuoteRepoService extends BaseService {
         }
         // 期限品种
         cfetsRepoDealQuoteCommonDto.setTermType(cfetsEtrIbRepoinfoService.getTermType(cfetsRepoDealQuoteCommonDto.getRepoTerm()));
+        cfetsRepoDealQuoteCommonDto.setLoginUserId(LoginUserUtil.getUserName());
         cfetsRepoDealQuoteCommonDto.setQuotaPageModel("new");
         return cfetsRepoDealQuoteCommonDto;
     }
@@ -453,7 +453,6 @@ public class IbuQuoteRepoService extends BaseService {
         param.put("notentrustIdList", ptlAllocationAddRequest.getNotEntrustIdList());
         param.put("platDate", iPlatformDate.getSysDateStr());
         param.put("entrustStatus", Collections.singletonList(DictCodeList.委托状态_已接收.getValue()));
-        param.remove("entrustIdList");
         setParam(param, 1);
         param.put("repo_pledge_model", CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL));
         List<CfetsRepoDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
@@ -1397,6 +1396,7 @@ public class IbuQuoteRepoService extends BaseService {
         }
         param.put("platDate", iPlatformDate.getSysDateStr());
         param.put("loginUserId", loginUserId);
+        param.put("role_pos", DictCodeListExt2.角色岗位_投资处长.getValue());
         //银行间质押式回购质押券模式：01无质押券库，02单个质押库，03多个质押券库
         param.put("repo_pledge_model", CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL));
         if (type == 1) {
@@ -1510,7 +1510,8 @@ public class IbuQuoteRepoService extends BaseService {
             if (StringUtil.isEmpty(counterId)) {
                 counterId = item.getCounterId();
             }
-            if (secManageAcctIdFlag && !StringUtil.equals(one.getSecManageAcctId(), item.getSecManageAcctId())) {
+            if (secManageAcctIdFlag && !StringUtil.equals(one.getSecManageAcctIdZZ(), item.getSecManageAcctIdZZ())
+                    && !StringUtil.equals(one.getSecManageAcctIdSQ(), item.getSecManageAcctIdSQ())) {
                 secManageAcctIdFlag = false;
                 message = msgSplicing(message, "OR");
                 message = message + "证券账户";
@@ -2222,8 +2223,7 @@ public class IbuQuoteRepoService extends BaseService {
         if (CollectionUtils.isNotEmpty(entrustDtos)) {
             entrustOrderDto = entrustDtos.get(0);
         }
-        resultData.put(dtCode + "_form", infoForm);
-        resultData.put(dtCode + "_data", entrustOrderDto);
+        entrustOrderDto.setTradeMarket(DictCodeListExt1.交易场所_银行间.getValue());
         if (StringUtil.equals(repo_pledge_model, "02")) {
             List<CfgDataTableShow> infoForm1;
             //获取登录用户的ID
@@ -2234,11 +2234,17 @@ public class IbuQuoteRepoService extends BaseService {
             } else {
                 infoForm1 = cfgDataTableMapper.getBySpcdCodes(pageCode, dtCode, spcdCodeList, EFFERANGE_IS, userId);
             }
-
             List<RepoEntrustPledgeDto> list = this.selectRepoEntrustPledges(dto);
+            BigDecimal shareAmt = BigDecimal.ZERO;
+            for (RepoEntrustPledgeDto temp : list) {
+                shareAmt = ArithmeticUtil.doAdd(shareAmt, ArithmeticUtil.divide(ArithmeticUtil.multiply(temp.getPledgePrin(), temp.getPledgeRatio()),new BigDecimal(100),2));
+            }
+            entrustOrderDto.setSumShareAmt(ArithmeticUtil.divide(shareAmt,new BigDecimal(10000),2));
             resultData.put(dtCode + "_table", infoForm1);
             resultData.put(dtCode + "_tableData", list);
         }
+        resultData.put(dtCode + "_form", infoForm);
+        resultData.put(dtCode + "_data", entrustOrderDto);
 
         return resultData;
     }
@@ -2256,12 +2262,13 @@ public class IbuQuoteRepoService extends BaseService {
             errorList.add(new ValidMessage("请输入退回原因!"));
         }
         setParam(param, 1);
-        List<CfetsBondDealEntrustOrderDto> cfetsBondDealEntrustOrderDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
+        List<CfetsRepoDealEntrustOrderDto> cfetsBondDealEntrustOrderDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
         if (CollectionUtils.isNotEmpty(cfetsBondDealEntrustOrderDtos)) {
             cfetsBondDealEntrustOrderDtos.forEach(item -> {
                 if (StringUtil.equals(item.getEntrustStatus(), com.joyintech.tams.constant.DictCodeList.委托状态_待接收)
-                        || (StringUtil.equals(item.getEntrustStatus(), com.joyintech.tams.constant.DictCodeList.委托状态_待接收) && item.getTransactioncom().compareTo(BigDecimal.ZERO) != 0)) {
-                    errorList.add(new ValidMessage("只可对待分发或者已接收执行进度为0的指令执行退回操作!"));
+                        || (StringUtil.equals(item.getEntrustStatus(), com.joyintech.tams.constant.DictCodeList.委托状态_待接收)
+                        && item.getTransactioncom().compareTo(BigDecimal.ZERO) != 0)) {
+                    errorList.add(new ValidMessage("只可对待分发或者已接收执行进度为0%的指令执行退回操作!"));
                 }
                 param.put("entrustId", item.getEntrustId());
                 if (cfetsIbuQuoteBondEtrMapper.checkDataStatus(param) > 0) {

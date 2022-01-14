@@ -1,5 +1,6 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dto;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -38,6 +39,9 @@ public class DealTransactionDetailsDto {
 
     @ApiModelProperty(name="settleDate",value="成交日期")
     private Date settleDate;
+
+    @ApiModelProperty(name="settleDateStr",value="成交日期格式化")
+    private String settleDateStr;
 
     @ApiModelProperty(name="ps",value="本方方向")
     private String ps;
@@ -165,6 +169,17 @@ public class DealTransactionDetailsDto {
 
     public void setSettleDate(Date settleDate) {
         this.settleDate = settleDate;
+    }
+
+    public String getSettleDateStr() {
+        if(null!=this.getSettleDate()){
+            return DateUtil.format(this.getSettleDate());
+        }
+        return settleDateStr;
+    }
+
+    public void setSettleDateStr(String settleDateStr) {
+        this.settleDateStr = settleDateStr;
     }
 
     public String getPs() {

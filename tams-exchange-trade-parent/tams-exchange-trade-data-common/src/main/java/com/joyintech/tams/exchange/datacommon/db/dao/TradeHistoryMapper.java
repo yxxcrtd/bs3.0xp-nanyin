@@ -1,5 +1,7 @@
 package com.joyintech.tams.exchange.datacommon.db.dao;
 
+import com.joyintech.tams.exchange.common.bean.TradeQryBean;
+import com.joyintech.tams.exchange.common.bean.TradeQueryBean;
 import com.joyintech.tams.exchange.common.db.domain.TradeHistory;
 import com.joyintech.tams.exchange.common.db.domain.TradeHistoryExample;
 import org.apache.ibatis.annotations.Param;
@@ -21,16 +23,11 @@ public interface TradeHistoryMapper extends IMybatisMapper<TradeHistory, String,
 
     List<TradeHistory> selectByExample(TradeHistoryExample example);
 
+    List<TradeQueryBean> selectTradeByPage(TradeQryBean tradeQryBean);
+
     int updateByExampleSelective(@Param("record") TradeHistory record, @Param("example") TradeHistoryExample example);
 
     int updateByExample(@Param("record") TradeHistory record, @Param("example") TradeHistoryExample example);
-
-    int updateByPrimaryKey(TradeHistory record);
-
-    //允许默认值
-    int updateByPrimaryKeySelective(TradeHistory record);
-
-    int deleteByPrimaryKey(String id);
 
     String queryLastClearDate();
 }

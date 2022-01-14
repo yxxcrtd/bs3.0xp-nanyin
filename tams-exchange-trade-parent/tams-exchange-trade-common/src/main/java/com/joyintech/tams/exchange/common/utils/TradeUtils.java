@@ -27,6 +27,11 @@ public class TradeUtils {
         return bd.setScale(round, roundingMode).doubleValue();
     }
 
+    public static Long formatLong(Double d, int round, int roundingMode) {
+        BigDecimal bd = new BigDecimal(d);
+        return bd.setScale(round, roundingMode).longValue();
+    }
+
     public static BigDecimal add(BigDecimal d, BigDecimal decimal, int round) {
         return d.add(decimal).setScale(round, BigDecimal.ROUND_HALF_UP);
     }

@@ -72,7 +72,7 @@ public class CfetsRepoDealRegisterQuoteDto extends RegFinProductDealTotal implem
     /**
      * 回购方式
      */
-    private Character repoMethod;
+    private String repoMethod;
     /**
      * 清算速度
      */
@@ -248,11 +248,11 @@ public class CfetsRepoDealRegisterQuoteDto extends RegFinProductDealTotal implem
         this.counterTraderName = counterTraderName;
     }
 
-    public Character getRepoMethod() {
+    public String getRepoMethod() {
         return repoMethod;
     }
 
-    public void setRepoMethod(Character repoMethod) {
+    public void setRepoMethod(String repoMethod) {
         this.repoMethod = repoMethod;
     }
 

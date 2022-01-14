@@ -173,13 +173,32 @@ public class PositionHttpRequest {
         return httpPostRequest(positionUrl + "/position/endpoint/updatePosition", param);
     }
 
-    public static void doDeleteByWorkFlowId(String revokeId, String modelType) throws PositionException{
+    public static void doDeleteByWorkFlowId(String revokeId, String modelType,String busiType,String ps) throws PositionException{
         //
         BaseMap bm = BaseMap.newMap()
                 .put("workFlowId", revokeId)
                 .put("modelType", modelType)
-                .put("userId", LoginUserUtil.getUserName());
+                .put("userId", LoginUserUtil.getUserName())
+                .put("busiType", busiType)
+                .put("ps", ps)
+                ;
         String res = delete(bm);
+        Map msgMap = JsonUtils.json2Object(res, Map.class);
+        if(msgMap == null){
+            throw new PositionException("头寸返回数据为空！");
+        }
+    }
+
+    public static void dorevoke(String revokeId, String modelType,String busiType,String ps) throws PositionException{
+        //
+        BaseMap bm = BaseMap.newMap()
+                .put("revokeId", revokeId)
+                .put("modelType", modelType)
+                .put("userId", LoginUserUtil.getUserName())
+                .put("busiType", busiType)
+                .put("ps", ps)
+                ;
+        String res = revoke(bm);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){
             throw new PositionException("头寸返回数据为空！");
@@ -192,6 +211,15 @@ public class PositionHttpRequest {
      */
     private static String delete(Object param) {
         return httpPostRequest(positionUrl + "/position/endpoint/delete", param);
+    }
+
+    /**
+     * 作废
+     * @param param
+     * @return
+     */
+    private static String revoke(Object param) {
+        return httpPostRequest(positionUrl + "/position/endpoint/revoke", param);
     }
     /**
      * 冲正撤销

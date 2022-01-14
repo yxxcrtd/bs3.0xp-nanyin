@@ -173,8 +173,8 @@ public class CommonManagement extends BaseService {
         ExchangeContextResponse response = new ExchangeContextResponse();
 
         User user = SecurityUtil.getLoginUser();
-        response.setUserId(Objects.isNull(user) ? "lh1" : user.getUserName());
-        response.setUserName(Objects.isNull(user) ? "lh1" : user.getRealName());
+        response.setUserId(Objects.isNull(user) ? "zzz1" : user.getUserName());
+        response.setUserName(Objects.isNull(user) ? "zzz1" : user.getRealName());
 
         response.setPlatDate(DateUtil.platDateFromCache());
         response.setShTradingDay(checkTradeDate("3",DateUtil.getSysDate()));

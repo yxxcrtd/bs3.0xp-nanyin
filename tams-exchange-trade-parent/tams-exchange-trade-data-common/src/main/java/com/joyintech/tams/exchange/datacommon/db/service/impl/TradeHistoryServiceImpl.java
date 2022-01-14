@@ -3,9 +3,13 @@ package com.joyintech.tams.exchange.datacommon.db.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
+import com.joyintech.tams.exchange.common.bean.TradeQryBean;
+import com.joyintech.tams.exchange.common.bean.TradeQueryBean;
 import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
 import com.joyintech.tams.exchange.common.db.domain.TradeHistory;
 import com.joyintech.tams.exchange.common.db.domain.TradeHistoryExample;
+import com.joyintech.tams.exchange.common.request.PageMode;
+import com.joyintech.tams.exchange.common.request.PageTradeInfoRequest;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.datacommon.db.dao.TradeHistoryMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.TradeHistoryService;
@@ -37,13 +41,13 @@ public class TradeHistoryServiceImpl implements TradeHistoryService {
 
     @Override
     public void saveTradeHistory(List<TradeHistory> tradeHistories) {
-        SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH,false);
+        SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         TradeHistoryMapper tradeHistoryMapperBatch = sqlSession.getMapper(TradeHistoryMapper.class);
         AtomicInteger index = new AtomicInteger(0);
         tradeHistories.forEach(tradeHistory -> {
             index.getAndIncrement();
             tradeHistoryMapperBatch.insertSelective(tradeHistory);
-            if (index.get() % 500 == 0){
+            if (index.get() % 500 == 0) {
                 sqlSession.flushStatements();
             }
         });
@@ -81,11 +85,39 @@ public class TradeHistoryServiceImpl implements TradeHistoryService {
     }
 
     @Override
+    public PageInfo<TradeQueryBean> queryAllForPage(PageTradeInfoRequest request, List<String> ptlAuthList) {
+        PageMode pageMode = request.getPageMode();
+        String accountId = request.getAccountId();
+        String market = request.getMarket();
+        String stockCode = request.getStockCode();
+        String entrustProp = request.getEntrustProp();
+        String startDay = request.getStartDay();
+        String endDay = request.getEndDay();
+
+        TradeQryBean tradeQryBean = new TradeQryBean(accountId, market, stockCode, entrustProp, ptlAuthList, startDay, endDay);
+        PageHelper.startPage(pageMode.getPageNo(), pageMode.getPageSize());
+        List<TradeQueryBean> tradeHistories = tradeHistoryMapper.selectTradeByPage(tradeQryBean);
+        tradeHistories.forEach(tradeHistory -> {
+            if (InvestmentAssetType.isFutures(tradeHistory.getAssetType())) {
+                tradeHistory.setStockCode(StockCodeUtils.getStockCode(tradeHistory.getStockCode()));
+            }
+        });
+        return new PageInfo<>(tradeHistories);
+    }
+
+    @Override
     public List<TradeHistory> queryTradeHistoryByEntrust(String entrustId) {
         TradeHistoryExample tradeHistoryExample = new TradeHistoryExample();
         TradeHistoryExample.Criteria criteria = tradeHistoryExample.createCriteria();
         criteria.andEntrustIdEqualTo(entrustId);
         return tradeHistoryMapper.selectByExample(tradeHistoryExample);
+    }
+
+    @Override
+    public List<TradeQueryBean> queryTradeHistoryByEntrustId(String entrustId) {
+        TradeQryBean tradeQryBean = new TradeQryBean();
+        tradeQryBean.setEntrustId(entrustId);
+        return tradeHistoryMapper.selectTradeByPage(tradeQryBean);
     }
 
     @Override

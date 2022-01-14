@@ -1,5 +1,7 @@
 package com.joyintech.tams.exchange.datacommon.db.dao;
 
+import com.joyintech.tams.exchange.common.bean.TradeQryBean;
+import com.joyintech.tams.exchange.common.bean.TradeQueryBean;
 import com.joyintech.tams.exchange.common.db.domain.Trade;
 import com.joyintech.tams.exchange.common.db.domain.TradeExample;
 import org.apache.ibatis.annotations.Param;
@@ -23,6 +25,8 @@ public interface TradeMapper extends IMybatisMapper<Trade, String, TradeExample>
 
     List<Trade> selectByExample(TradeExample example);
 
+    List<TradeQueryBean> selectTradeByPage(TradeQryBean tradeQryBean);
+
     int updateByExampleSelective(@Param("record") Trade record, @Param("example") TradeExample example);
 
     int updateByExample(@Param("record") Trade record, @Param("example") TradeExample example);
@@ -33,4 +37,6 @@ public interface TradeMapper extends IMybatisMapper<Trade, String, TradeExample>
     int deleteByPrimaryKey(String id);
 
     int deleteBatchByPrimaryKey(List<String> ids);
+
+    List<Trade> queryTrade2Touguan(@Param("instructionId") String instructionId);
 }
