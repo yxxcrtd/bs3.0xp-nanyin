@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,7 +66,7 @@ public class ChbDeadlineService extends BaseService<ChbDeadLine001Dto>{
         ChbDeadLine001Dto holidaymarket001DtoChb = new ChbDeadLine001Dto();
         //行内报送截止日
         ChbDeadLine001Dto holidaymarket001Dto = new ChbDeadLine001Dto();
-        if(DictCodeListExt2.报送数据状态_新建.getValue().equals(flag)){
+        if(DictCodeListExt2.报送数据状态_新建.getValue().equals(flag)|| DictCodeListExt1.维护数据状态_有效.getValue().equals(flag)){
             if(DictCodeListExt2.报送时点类型_每周.getValue().equals(regTimePoints001Dto.getSubmitTimetype())){//中债报送截止日
 //                holidaymarket001DtoChb = new Holidaymarket001Dto();
 //                //行内报送截止日
@@ -121,7 +122,7 @@ public class ChbDeadlineService extends BaseService<ChbDeadLine001Dto>{
                 regTimePoints001Dto.getSubmitRequire2());
         }
         //修改与删除时中债报送截止日与行内报送截止日相同
-        else if(DictCodeListExt2.报送数据状态_修改.getValue().equals(flag)){
+        else if(DictCodeListExt2.报送数据状态_修改.getValue().equals(flag)||DictCodeListExt1.维护数据状态_修改.getValue().equals(flag)){
             holidaymarket001DtoChb =  chbDeadLineMapper.getChbDeadline(CacheUtil.getSysParam(SVReportGlobalConstant.SVR_CALENDAR_ID),
                 dates, "02", regTimePoints001Dto.getUpdateSubmitPoint().intValue());
             //中债报送截止日非空处理
@@ -129,7 +130,7 @@ public class ChbDeadlineService extends BaseService<ChbDeadLine001Dto>{
                 regTimePoints001Dto.getSubmitRequire2());
             BeanUtil.copyPropertiesIgnoreNull(holidaymarket001Dto, holidaymarket001DtoChb);
         }
-        else if(DictCodeListExt2.报送数据状态_删除.getValue().equals(flag)){
+        else if(DictCodeListExt2.报送数据状态_删除.getValue().equals(flag)||DictCodeListExt1.维护数据状态_删除.getValue().equals(flag)){
             holidaymarket001DtoChb =  chbDeadLineMapper.getChbDeadline(CacheUtil.getSysParam(SVReportGlobalConstant.SVR_CALENDAR_ID),
                 dates, "02", regTimePoints001Dto.getDeleteSubmingPoint().intValue());
             //中债报送截止日非空处理

@@ -53,11 +53,11 @@
             var object = informationform();
              // 理财专业证书
              if (object.salerCertificateType) {
-                   object.salerCertificateType = object.salerCertificateType.join(';');
+                   object.salerCertificateType = object.salerCertificateType.join(',');
              }
              // 可销售产品风险等级
              if (object.salerRiskLevel) {
-                   object.salerRiskLevel = object.salerRiskLevel.join(';');
+                   object.salerRiskLevel = object.salerRiskLevel.join(',');
              }
             object.operateType = operateType;
             object.pageModel = pageModel;

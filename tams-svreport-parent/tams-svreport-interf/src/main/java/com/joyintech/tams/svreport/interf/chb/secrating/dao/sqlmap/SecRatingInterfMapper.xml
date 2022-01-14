@@ -23,13 +23,13 @@
 
     <select id="select" resultMap="BaseResultMap"  >
         SELECT
-        A.O_CODE SEC_ID,
-        A.GRADE_ORG_ID RATINGORG,
-        A.GRADE_DATE PUBDATE,
-        A.O_TYPE RATINGTYPE,
-        A.SHORT_LONG_TERM RATINGSUBTYPE,
-        A.GRADE_RESULT RATING,
-        'wind' SOURCE ,
+        A.O_CODE O_CODE,
+        A.GRADE_ORG_ID GRADE_ORG_ID,
+        A.GRADE_DATE GRADE_DATE,
+        A.O_TYPE O_TYPE,
+        A.SHORT_LONG_TERM SHORT_LONG_TERM,
+        A.GRADE_RESULT GRADE_RESULT,
+        'interf' SOURCE ,
         B.IS_RECOMMAND,
         'interf' CREATE_USER,
         A.CREATE_DEPT,

@@ -299,6 +299,11 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                         flag = false;
                         message.add("证件类别为其他时，其他证件名称不能为空");
                     }
+                }else {
+                    if(list.get(5) != null && !(list.get(5).trim().equals(""))){
+                        flag = false;
+                        message.add("证件类别为非其他时，其他证件名称不能填写");
+                    }
                 }
             }
             //证件号码
@@ -553,7 +558,7 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             salerIdenInfoDto.setSalerLevle(this.subDictcode(list.get(17), " "));
 
             //理财专业证书
-            salerIdenInfoDto.setSalerCertificateType(list.get(18));
+            salerIdenInfoDto.setSalerCertificateType(this.subDictcodeMultiple(list.get(18), ","));
 
             //理财登记培训证书编号
             if(list.get(19) != null && list.get(19) != "") {
@@ -561,7 +566,7 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             }
 
             //可销售产品风险等级
-            salerIdenInfoDto.setSalerRiskLevel(this.subDictcode(list.get(20), " "));
+            salerIdenInfoDto.setSalerRiskLevel(this.subDictcodeMultiple(list.get(20), ","));
 
             //销售资质
             salerIdenInfoDto.setSalerQualification(list.get(21));
@@ -603,6 +608,34 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             int i = value.indexOf(sign);
             if (i > -1) {
                 value = value.substring(0, i);
+            }
+        }
+        return value;
+    }
+
+    public static String subDictcodeMultiple(String value, String sign) {
+        if (!isEmpty(value)) {
+            //value含有sign的个数
+            int i = ciShu(value,sign);
+            if(i == 0){
+                return subDictcode(value, " ");
+            }
+            else {
+                String Str = value;
+                String Str1 = "null";
+                int k = Str.indexOf(sign);
+                for (int j = 0; j <= i; j++) {
+                    if (Str1.equals("null")) {
+                        Str1 = subDictcode(value, " ");
+                    } else {
+                        int index = Str.indexOf(",", k + j -1);
+                        if (index > -1) {
+                            value = Str.substring(index+1, index+3);
+                        }
+                        Str1 = Str1 + "," + value;
+                    }
+                }
+                return Str1;
             }
         }
         return value;
@@ -819,5 +852,22 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             returnInfoList.add(salerIdenInfoDto);
         }
         return returnInfoList;
+    }
+
+    /**
+     * 判断str1中包含str2的个数
+     * @param str1
+     * @param str2
+     * @return counter
+     */
+    public static int ciShu(String str1,String str2){
+        int counter = 0;
+        for(int i = 0;i < str1.length() ;i++) {
+            int index = str1.indexOf(str2, i);
+            if (i == index) {
+                counter++;
+            }
+        }
+        return counter;
     }
 }

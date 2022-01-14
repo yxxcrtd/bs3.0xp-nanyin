@@ -187,6 +187,14 @@
 		THE_BANK_CODE = NVL(#{agencyCode,jdbcType=VARCHAR},#{registBankCode,jdbcType=VARCHAR})
 		WHERE INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR}
 	</update>
+	
+	<update id="updataInfo" parameterType="string">
+		UPDATE CHB_EQU_HOLD
+		SET
+		FUND_ACC_PLACE = #{fundAccPlace,jdbcType=VARCHAR},
+		THE_BANK_CODE = NVL(#{agencyCode,jdbcType=VARCHAR},#{registBankCode,jdbcType=VARCHAR})
+		WHERE INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR}
+	</update>
 
 	<update id="updataCheck" parameterType="string">
 		update CHB_EQU_HOLD_CHECK
