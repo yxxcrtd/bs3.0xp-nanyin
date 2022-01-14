@@ -2130,7 +2130,31 @@
 
     <!--当日登记-->
     <select id="listDayReg" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDayRegDto">
-        select * from (
+        select
+            TT.validStatus,
+            TT.quoteType,
+            TT.tradeAmt,
+            TT.rate*100 rate,
+            TT.repoTerm,
+            TT.ouPartyName,
+            TT.cpPartyName,
+            TT.ouTraderName,
+            TT.cpTraderName,
+            TT.settleSpeed/*清算速度*/,
+            TT.vSettleDate,
+            TT.mSettleDate,
+            TT.tradeDate,
+            TT.statisticalTimes,
+            TT.quoteId,
+            TT.trdId,
+            TT.ps,
+            TT.settleType,
+            TT.deliverytype,
+            TT.mDeliveryType,
+            TT.ccy,
+            TT.settCcy,
+            TT.createUser
+         from (
             <include refid="sql_listDayReg"></include>
         ) TT
         LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'STATUS_VALID')D ON TT.validStatus = D.ITEM_CODE
@@ -2217,7 +2241,7 @@
             TT.validStatus,
             TT.quoteType,
             TT.tradeAmt,
-            TT.rate,
+            TT.rate*100 rate,
             TT.repoTerm,
             TT.ouPartyName,
             TT.cpPartyName,
