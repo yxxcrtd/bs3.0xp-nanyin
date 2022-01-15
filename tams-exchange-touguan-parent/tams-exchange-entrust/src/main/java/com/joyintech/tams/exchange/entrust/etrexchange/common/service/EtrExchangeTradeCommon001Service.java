@@ -5289,16 +5289,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		BeanUtil.copyPropertiesIgnoreNull(etrExchangeTrade001Dto,dto);
 		etrExchangeTrade001Dto.setPortfolioId(multiPtl001Dto.getPortfolioId());
 		etrExchangeTrade001Dto.setAcctNo(multiPtl001Dto.getAcctNo());
-		if (StringUtil.isNotEmpty(multiPtl001Dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("portfolioId", multiPtl001Dto.getPortfolioId());
-			map.put("finprodId", dto.getFinprodId());
-			map.put("tradePlat",dto.getTradeMarket());
-			String secAcctId = etrExchangeTradeCommonMapper.qryPortfolioSecAcctId(map);
-			if (StringUtil.isNotEmpty(secAcctId)) {
-				etrExchangeTrade001Dto.setSecAcctId(secAcctId); // 证券账户
-			}
-		}
+		etrExchangeTrade001Dto.setSecAcctId(multiPtl001Dto.getSecAcctId());
 		etrExchangeTrade001Dto.setEntrustAmt(multiPtl001Dto.getEntrustAmt());
 		etrExchangeTrade001Dto.setEntrustNum(multiPtl001Dto.getEntrustNum());
 		etrExchangeTrade001Dto.setAccAvailableCash(multiPtl001Dto.getAccAvailableCash());

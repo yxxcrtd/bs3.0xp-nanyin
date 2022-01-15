@@ -876,6 +876,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			Map<String,List<EtrExchangeTradePortfolioRequest>> groupMap= dto.getPortfolioList().stream().collect(
 					Collectors.groupingBy(item->item.getAcctNo()));			//如果分组Map，key的数量>1,说明是多组合指令，key的数量=1,则为系列户指令
 			if(groupMap.keySet().size() == 1 && dto.getPortfolioList().size()>1) {
+				EtrExchangeTradePortfolioRequest item=dto.getPortfolioList().get(0);
 				//业务编号生成规则参数
 				if (!StringUtil.isNotEmpty(dto.getEntrustId())) {
 					BussinessCodeParameter param = etrExchangeTrade001CommonService.genBussinessCodeParameter(dto);
@@ -889,7 +890,8 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 				dto.setIsMulti(DictCodeList.是否_是.getValue());
 				dto.setVdate(dto.getEntrustDate());
 				dto.setMdate(dto.getEntrustDate());
-				dto.setAcctNo(dto.getAcctNo());
+				dto.setAcctNo(item.getAcctNo());
+				dto.setSecAcctId(item.getSecAcctId());
 				// ----------add by zhangrui1 20200703 预占功能 start----------
 				if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
 					String finprodType2 = "";
