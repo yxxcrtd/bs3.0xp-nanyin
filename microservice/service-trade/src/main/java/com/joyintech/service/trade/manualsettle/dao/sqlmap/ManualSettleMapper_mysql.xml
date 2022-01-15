@@ -31,7 +31,11 @@
         T3.PORTFOLIO_NAME portfolioName,
         T4.COUNTER_NAME counterName,
         T1.DEAL_NO dealNo,
-        decode( T1.SETTLE_STATUS,'01',1,'02',3,'03',2,'04',4) sort
+        case T1.SETTLE_STATUS when '01' then 1
+            when '02' then 3
+            when '03' then 2
+            when '04' then 4
+        end as sort
         FROM TRD_MANUAL_SETTLE_INFO T1
         LEFT JOIN  FIN_PRODUCT  T2 ON T1.FINPROD_ID = T2.FINPROD_ID
         LEFT JOIN PTL_PORTFOLIO T3 ON T1.PORTFOLIO_ID = T3.PORTFOLIO_ID
