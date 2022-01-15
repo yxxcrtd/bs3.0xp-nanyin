@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeEtrExchangeCommonResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonResponse;
@@ -298,4 +299,6 @@ public interface EtrExchangeTradeCommonMapper {
 
 
     List<EtrExchangeTradeSaveRequest>	selectEntrustDetail(EtrExchangeTradeSaveRequest dto);
+
+	FinStockInfoDto selectByFinprodId(Map<String, Object> map);
 }
