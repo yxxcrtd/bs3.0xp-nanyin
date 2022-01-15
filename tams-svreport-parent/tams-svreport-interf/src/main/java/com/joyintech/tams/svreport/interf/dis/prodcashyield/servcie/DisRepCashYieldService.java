@@ -210,7 +210,7 @@ public class DisRepCashYieldService extends FileImpService{
         //检查数据类型
         String dataType = InterfDefine.产品费率数据.getCode();
         //重复性检查的keys
-        String[] checkEuplicatedKeys = {"PROD_ID","CASH_TYPE_2","START_DATE"};
+        String[] checkEuplicatedKeys = {"BUSI_ID","CASH_TYPE2","START_DATE"};
         String filename = interfFile == null ? null : interfFile.getFilename();
         List<Map<String, String>>  listA = super.checkData(dataList, filename, inerfType, dataType,null, checkEuplicatedKeys);
 //        dataList.addAll(listA);// listA为错误数据，在checkData时被remove，需要重新放回dataList
