@@ -2,10 +2,15 @@ package com.joyintech.tams.invest.common.dto.common;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
+import com.joyintech.tams.constant.DictCode;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -94,6 +99,7 @@ public class PtlAllocationDto extends EtrEntrust {
     /**
      * 到期结算金额(元)
      */
+    @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal mtradeAmt;
 
     /**
@@ -237,6 +243,13 @@ public class PtlAllocationDto extends EtrEntrust {
 
     public void setMtradeAmt(BigDecimal mtradeAmt) {
         this.mtradeAmt = mtradeAmt;
+    }
+
+    public String getPriceModelStr(){
+        if (StringUtil.isEmpty(this.getPriceModel())) {
+            return null;
+        }
+        return SysDataUtil.getNameFromDataDict(DictCode.价格模式, this.getPriceModel());
     }
 }
 

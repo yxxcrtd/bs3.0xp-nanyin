@@ -28,9 +28,9 @@ import java.util.Map;
 @RequestMapping("/common/joyinbusinessCommon")
 @Api(tags = "公共方法")
 public class JoyinbusinessCommonController extends BaseController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(JoyinbusinessCommonController.class);
-	
+
 
 	@Autowired
 	private HttpServletRequest request;
@@ -201,14 +201,17 @@ public class JoyinbusinessCommonController extends BaseController {
 	public List<SelectOptionDto> queryMySideTraderOrCountTrader(@RequestParam Map<String, Object> params) {
 		CfetsSearchInfoRequest item = new CfetsSearchInfoRequest();
 		String dealType = (String) params.get("dealType");//查询类型
-		String counterId = (String) params.get("counterId");//交易对手
+		String counterId = (String) params.get("counterId");//交易对手方
+		String mySide = (String) params.get("mySide");//本方
 		String initValue = (String) params.get("initValue");//关键字
 		if (StringUtil.isNotEmpty(dealType)) {
 			item.setDealType(dealType);
 		}
 		if (StringUtil.isNotEmpty(counterId)) {
 			item.setPartyId(counterId);
-		}
+        } else if (StringUtil.isNotEmpty(mySide)) {
+            item.setPartyId(mySide);
+        }
 		if (StringUtil.isNotEmpty(initValue)) {
 			item.setSearch(initValue);
 		}

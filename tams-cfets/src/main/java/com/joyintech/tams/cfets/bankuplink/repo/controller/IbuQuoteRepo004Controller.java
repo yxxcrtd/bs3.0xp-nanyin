@@ -105,6 +105,8 @@ public class IbuQuoteRepo004Controller extends BaseController {
         model.addAttribute("repoEntrustPledgeDtos", cfetsRepoDealRegisterQuoteDto.getRepoEntrustPledgeDtos());
         //分配方式
         model.addAttribute("distribution", cfetsRepoDealRegisterQuoteDto.getDistribution());
+        //本币导出按钮配置
+        model.addAttribute("EXPORT_SHOW", CacheUtil.getSysParam("EXPORT_SHOW"));
         //卖空模式
         model.addAttribute(GlobalConstant.ENTITY, cfetsRepoDealRegisterQuoteDto);
         return super.init(model);

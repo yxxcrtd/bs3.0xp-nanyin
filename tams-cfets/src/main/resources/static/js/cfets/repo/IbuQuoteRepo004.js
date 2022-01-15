@@ -53,7 +53,7 @@
             width: 150,
             title: '剩余指令金额(元)',
             sortable: false,
-            type: 'number',
+            type: 'money',
             digit: 2
             , disabled: true
         }
@@ -62,7 +62,7 @@
             width: 120,
             title: '交易金额(元)',
             sortable: false,
-            type: 'number',
+            type: 'money',
             digit: 2
             , disabled: true
         }
@@ -71,7 +71,7 @@
             width: 120,
             title: '交易手续费(元)',
             sortable: false,
-            type: 'number',
+            type: 'money',
             digit: 2
             , disabled: true
         }
@@ -80,7 +80,7 @@
             width: 100,
             title: '结算服务费(元)',
             sortable: false,
-            type: 'number',
+            type: 'money',
             digit: 2
             , disabled: true
         }
@@ -89,7 +89,7 @@
             width: 100,
             title: '回购利息(元)',
             sortable: false,
-            type: 'number',
+            type: 'money',
             digit: 2
             , disabled: true
         }
@@ -98,7 +98,7 @@
             width: 150,
             title: '到期结算金额(元)',
             sortable: false,
-            type: 'number',
+            type: 'money',
             digit: 2
             , disabled: true
         }
@@ -106,8 +106,7 @@
             field: 'priceModelStr',
             width: 100,
             title: '价格模式',
-            sortable: false,
-            editOption: {type: 'select', formatoption: true, showField: 'text', result: PRICE_MODEL}
+            sortable: false
         }
         , {
             field: 'price',
@@ -171,8 +170,8 @@
             width: 100,
             title: '首次净价(元)',
             sortable: false,
-            type: 'number',
-            digit: 2
+            type: 'money',
+            digit: 4
             , disabled: true
         }
         , {
@@ -209,8 +208,19 @@
         page:false
     });
 
+    var init = function() {
+        if(EXPORT_SHOW==='01'){
+            $("#select_counterTrader_div").show();
+            $("#input_counterTrader_div").hide();
+        }else{
+            $("#select_counterTrader_div").hide();
+            $("#input_counterTrader_div").show();
+        }
+    }
+
 
     $(function () {
+        init();
         /**
          * 保存按钮按下处理
          */
