@@ -108,7 +108,7 @@
         group by  PORTFOLIO_ID,SEC_ACCT_ID,FINPROD_ID,BRANCH,INV_AIM,HODING_TYPE,CDATE,ccy,P_FINPROD_ID,TRADE_ID
     </select>
     <select id="getEtrFinishAmt" resultType="java.math.BigDecimal">
-        SELECT NVL(SUM(ENT_FINISH_AMT),0) FROM ETR_FINISH_STATUS WHERE ENTRUST_ID = #{entrustId}
+        SELECT NVL(SUM(FINISH_AMT),0) FROM ETR_FINISH_STATUS WHERE ENTRUST_ID = #{entrustId} and TRADE_ID != #{entrustId}
     </select>
     <select id="selectPtlCashPositionFlowByTradeId" resultType="com.joyintech.tams.common.base.entity.PtlCashPositionFlow"  >
        select sum(amount) amount,PORTFOLIO_ID,ACCT_ID,HODING_TYPE,CDATE,ccy,order_id,CHL_FINPROD_ID 
