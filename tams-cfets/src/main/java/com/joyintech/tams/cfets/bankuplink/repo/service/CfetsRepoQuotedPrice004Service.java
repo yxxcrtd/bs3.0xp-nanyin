@@ -834,7 +834,6 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         total.setFaceValue(entity.getShareAmt());//质押总券面
         total.setShareAmt(ArithmeticUtil.divide(entity.getShareAmt(), new BigDecimal(100), 2, RoundingMode.HALF_UP));//质押总券面
         total.setDipType(entity.getDistribution());//组合分配方式
-        total.setRate(ArithmeticUtil.divide(entity.getPrice(), new BigDecimal(100),2,RoundingMode.HALF_UP));//回购利率
         total.setDisFaceValue(entity.getConvertAmt());//质押券折算总额
         total.setRepoType(entity.getRepoMethod());//回购方式
         total.setvSettleDate(entity.getSettlementStartDate());//首期结算日
