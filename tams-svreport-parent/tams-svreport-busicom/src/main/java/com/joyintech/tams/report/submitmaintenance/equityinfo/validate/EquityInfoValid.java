@@ -1152,6 +1152,7 @@ public class EquityInfoValid {
                             Map<String, String> map) {
     	
     	String updateFlg = SvrDataUtil.getSysParam("SVR_EQU_REPAIR_BATCH_FLAG");
+    	String templateFlag = SvrDataUtil.getSysParam("SVR_EQU_INFO_TEMPLATE_FLAG");
         //需要做变更类型的分析，然后返回变更类型
         //03 重要信息变更   04 其他信息变更
         // 投资者是否属于本行比较
@@ -1288,12 +1289,14 @@ public class EquityInfoValid {
                     type = "05";
                 }
                 // 开户行所在地- 仅供四期使用字段
-                if (StringUtil.isNotEmpty(list.get(26))
-                        && !list.get(26).equals(
-                        equityInfoRegist001Dto.getFundAccPlace())) {
-                    map.put("FUND_ACC_PLACE", list.get(26));
-                    type = "05";
-                }            	            	
+            	if("02".equals(templateFlag)) {
+            		if (StringUtil.isNotEmpty(list.get(26))
+                            && !list.get(26).equals(
+                            equityInfoRegist001Dto.getFundAccPlace())) {
+                        map.put("FUND_ACC_PLACE", list.get(26));
+                        type = "05";
+                    }  
+            	}                          	            	
             }
 //            if (!StringUtil.equals(type, "04")) {
 //                // 备注
