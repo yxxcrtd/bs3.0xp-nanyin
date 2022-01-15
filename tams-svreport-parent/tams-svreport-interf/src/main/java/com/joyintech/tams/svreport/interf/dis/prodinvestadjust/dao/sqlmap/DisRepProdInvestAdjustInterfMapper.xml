@@ -23,7 +23,12 @@
 
     <select id="select" resultMap="BaseResultMap"  >
         /*每天抽取全量数据*/
-        SELECT
+        SELECT A.ID,
+        F.FINPROD_MARKET_ID PROD_ID,
+        A.INVEST_RANGE,
+        A.INVEST_TYPE,
+        A.RAISE_MAX
+        FROM (SELECT
         sys_guid() ID,
         nvl(t2.REP_FINPROD_ID,t4.finprod_id) PROD_ID,
         t2.INVEST_RANGE,
@@ -45,7 +50,9 @@
         SUM(t3.SALE_MAX) RAISE_MAX--募集上限(多地区之和)
         FROM PRD_SALE_PARAM t3
         GROUP BY t3.finprod_id
-        ) t4 ON t4.finprod_id = t2.rep_finprod_id
+        ) t4 ON t4.finprod_id = t2.rep_finprod_id) A
+        LEFT JOIN FIN_PRODUCT F ON F.FINPROD_ID=A.PROD_ID
+        WHERE F.FINPROD_MARKET_ID IS NOT NULL
 <!--        <if test="updatetime != null" >-->
         <!--            and nvl(FIN_CASH_CALC_RULE.UPDATE_TIME,FIN_CASH_CALC_RULE.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}-->
         <!--        </if>-->
