@@ -10,6 +10,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.base.annotate.BusinessKey;
 import com.joyintech.tams.report.common.base.annotate.DictFormat;
 import com.joyintech.tams.report.common.base.annotate.TableName;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.position.dto.ChbPrdPosition;
 
 /**
@@ -671,7 +672,9 @@ public class PbcInitProdRaisingSub extends BaseEntity {
 	public String getStatusStr(){
 		return SvrDataUtil.getNameFromDataDict(DictCode.报送数据状态, this.getStatus());
 	}
-		
+    public String getVdateStr() {
+        return DateUtil.format(this.getVdate());
+    }
 	public String getSendStatusStr(){
 		return SvrDataUtil.getNameFromDataDict(DictCode.报送状态, this.getSendStatus());
 	}
