@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.trade.manualsettle.dao.ManualSettleMapper_mysql" >
+    <select id="queryForPage" resultType="com.joyintech.service.trade.manualsettle.dto.ManualSettleDto">
+        SELECT
+        T1.SETTLE_SEQ_NO SETTLE_SEQ_NO,
+        T1.SETTLE_STATUS settleStatus,
+        T1.ORDER_ID orderId,
+        T1.TRADE_ID tradeId,
+        T1.TRADE_DATE tradeDate,
+        T1.SETTLE_DATE settleDate,
+        T1.PORTFOLIO_ID portfolioId,
+        concat(concat(sci.BUSI_ACCT_NO,':'),sci.ACCT_NAME) acctNo,
+        concat(concat(ssai.SEC_ACCT_ID,':'),ssai.SEC_ACCT_NAME) secAcctId,
+        T1.TRADE_MARKET tradeMarket,
+        T1.TRADE_PLAT tradePlat,
+        T1.FINPROD_ID finprodId,
+        T1.SETTLE_NUM settleNum,
+        T1.SETTLE_AMT settleAmt,
+        T1.PRIN prin,
+        T1.M_TRADE_AMT mTradeAmt,
+        T1.PLEDGE_NUMBER pledgeNumber,
+        T1.PLEDGE_ID pledgeId,
+        T1.B_PLEDGE_ID bPledgeId,
+        F1.FINPROD_NAME pledgeName,
+        T1.BUSI_TYPE busiType,
+        T1.COUNTER_ID counterId,
+        T1.ENTRUST_NO entrustNo,
+        T2.FINPROD_NAME finprodName ,
+        T2.FINPROD_MARKET_ID finprodMarketId ,
+        T3.PORTFOLIO_NAME portfolioName,
+        T4.COUNTER_NAME counterName,
+        T1.DEAL_NO dealNo,
+        decode( T1.SETTLE_STATUS,'01',1,'02',3,'03',2,'04',4) sort
+        FROM TRD_MANUAL_SETTLE_INFO T1
+        LEFT JOIN  FIN_PRODUCT  T2 ON T1.FINPROD_ID = T2.FINPROD_ID
+        LEFT JOIN PTL_PORTFOLIO T3 ON T1.PORTFOLIO_ID = T3.PORTFOLIO_ID
+        Left join MST_COUNTER_PARTY T4 ON T4.COUNTER_ID = T1.COUNTER_ID
+
+        LEFT JOIN  STL_CAPACCT_INFO  sci ON T1.ACCT_NO = sci.ACCT_NO
+        LEFT JOIN  STL_SEC_ACCT_INFO ssai ON T1.SEC_ACCT_ID = ssai.SEC_ACCT_ID
+        LEFT JOIN  FIN_PRODUCT  F1 ON T1.PLEDGE_ID = F1.FINPROD_ID
+        <where>
+            <if test="userName != null and userName != ''">
+                AND T1.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userName})
+            </if>
+            <if test="portfolioId != null and !portfolioId.isEmpty()">
+                AND (
+                T1.PORTFOLIO_ID IN
+                <foreach collection="portfolioId" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+                OR T1.PORTFOLIO_ID IN
+                <foreach collection="portfolioId" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="tradeMarket != null and tradeMarket != ''">
+                and T1.TRADE_MARKET =#{tradeMarket}
+            </if>
+            <if test="finprodMarketId != null and finprodMarketId != ''">
+                and T1.FINPROD_ID like CONCAT('%',CONCAT(#{finprodMarketId}, '%'))
+            </if>
+            <if test="settleStatus != null and settleStatus != ''">
+                and T1.SETTLE_STATUS =#{settleStatus}
+            </if>
+            <if test="busiType != null and busiType != ''">
+                and T1.BUSI_TYPE =#{busiType}
+            </if>
+            <if test="tradeDateStart != null and tradeDateStart != ''">
+                and T1.TRADE_DATE >= STR_TO_DATE(#{tradeDateStart},'%Y-%m-%d')
+            </if>
+            <if test="tradeDateEnd != null and tradeDateEnd != ''">
+                and T1.TRADE_DATE &lt;= STR_TO_DATE(#{tradeDateEnd},'%Y-%m-%d')
+            </if>
+            <if test="settleDateStart != null and settleDateStart != ''">
+                and T1.SETTLE_DATE >= STR_TO_DATE(#{settleDateStart},'%Y-%m-%d')
+            </if>
+            <if test="settleDateEnd != null and settleDateEnd != ''">
+                and T1.SETTLE_DATE &lt;= STR_TO_DATE(#{settleDateEnd},'%Y-%m-%d')
+            </if>
+        </where>
+        order by sort,T1.UPDATE_TIME desc
+    </select>
+
+</mapper>
