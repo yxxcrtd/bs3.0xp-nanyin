@@ -663,6 +663,7 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
             trdTempDto.setTradeAmt(baseTradeProductDealDtos.get(0).getTrdProductDeal().getTradeAmt());
             trdTempDto.setTradeId(baseTradeProductDealDtos.get(0).getTrdProductDeal().getTradeId());
             trdTempDto.setFinprodId(baseTradeProductDealDtos.get(0).getTrdProductDeal().getFinprodId());
+            trdTempDto.setHgShareAmt(baseTradeProductDealDtos.get(0).getTrdProductDeal().getShareAmt());
             infContractDetailfile.setShareAmt(baseTradeProductDealDtos.get(0).getTrdProductDeal().getShareAmt());
             infContractDetailfile.setTradeAmt(baseTradeProductDealDtos.get(0).getTrdProductDeal().getTradeAmt());
 //            infContractDetailfile.setFinprodId(entrustDto.getFinprodId());
@@ -674,6 +675,7 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
                 trdTempDto.setTradeAmt(baseTradeProductDealDtos.get(0).getTrdFinProductDealTotal().getTradeAmt());
                 trdTempDto.setTradeId(baseTradeProductDealDtos.get(0).getTrdFinProductDealTotal().getTotleTradeId());
                 trdTempDto.setFinprodId(baseTradeProductDealDtos.get(0).getTrdFinProductDealTotal().getFinprodId());
+                trdTempDto.setHgShareAmt(baseTradeProductDealDtos.get(0).getTrdFinProductDealTotal().getShareAmt());
                 infContractDetailfile.setShareAmt(baseTradeProductDealDtos.get(0).getTrdFinProductDealTotal().getShareAmt());
                 infContractDetailfile.setTradeAmt(baseTradeProductDealDtos.get(0).getTrdFinProductDealTotal().getTradeAmt());
 //                infContractDetailfile.setFinprodId(entrustDto.getFinprodId());
@@ -715,7 +717,7 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         parameter.setTradeMarket(trdTempDto.getTradeMarket());
         parameter.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
         parameter.setOperationType("NEW");
-        parameter.setTradeType("02");
+        parameter.setTradeType("03");
         parameter.setBusinessType(DictCodeList.回购类型_质押式协议回购.getValue().concat(trdTempDto.getFinprodType2()));
 //        // 数据来源设置
 //        if (StringUtil.equals(trdTempDto.getPs(), DictCodeListExt3.交易方向_解除质押.getValue())){

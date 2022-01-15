@@ -315,6 +315,11 @@ public class CommonTrdTempDto extends TrdProductDeal{
 	 */
 	private String redoType;
 
+	/**
+	 * 回购首期交易本金
+	 */
+	private BigDecimal hgShareAmt;
+
 	public String getIsFinish() {
 		return isFinish;
 	}
@@ -1076,5 +1081,13 @@ public class CommonTrdTempDto extends TrdProductDeal{
 
 	public void setRedoType(String redoType) {
 		this.redoType = redoType;
+	}
+
+	public BigDecimal getHgShareAmt() {
+		return hgShareAmt;
+	}
+
+	public void setHgShareAmt(BigDecimal hgShareAmt) {
+		this.hgShareAmt = hgShareAmt;
 	}
 }
