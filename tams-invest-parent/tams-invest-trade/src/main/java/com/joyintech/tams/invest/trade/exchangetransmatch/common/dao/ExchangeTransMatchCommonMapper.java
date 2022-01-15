@@ -155,4 +155,6 @@ public interface ExchangeTransMatchCommonMapper {
      */
     String selectHgsqFinprodId(Map<String, Object> paraMap);
     // modify by etliu 20220110 end
+
+    String getTradeIdByTotalTradeId(@Param("totalTradeId") String totalTradeId);
 }

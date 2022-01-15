@@ -1622,4 +1622,8 @@ public class ExchangeTransMatchCommonService extends BaseService {
             exchangeTransMatchCommonMapper.updateEntrustStatus(paramMap);
         }
     }
+
+    public String getTradeIdByTotalTradeId(String totalTradeId){
+        return exchangeTransMatchCommonMapper.getTradeIdByTotalTradeId(totalTradeId);
+    }
 }

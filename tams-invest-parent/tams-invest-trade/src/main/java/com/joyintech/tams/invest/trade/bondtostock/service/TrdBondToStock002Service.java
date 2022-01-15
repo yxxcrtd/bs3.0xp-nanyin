@@ -644,6 +644,10 @@ public class TrdBondToStock002Service extends BaseService<TrdBondToStock001Dto> 
 //        删除流程数据
         doDelete(entity.getWorkflowId());
 
+        String tradeId = exchangeTransMatchCommonService.getTradeIdByTotalTradeId(entity.getTotleTradeId());
+        if(StringUtil.isNotEmpty(tradeId)){
+            entity.setTotleTradeId(tradeId);
+        }
         //成交录单---调用共通
         exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTotleTradeId(),OperationType.REVOKE);
 

@@ -297,4 +297,8 @@
         select max(FINPROD_ID) from TRD_PRODUCT_DEAL where F_TRADE_ID = #{fTradeId,jdbcType=VARCHAR}
     </select>
     <!--modify by etliu 20220110 end-->
+
+    <select id="getTradeIdByTotalTradeId" resultType="string">
+        select TRADE_ID from TRD_PRODUCT_DEAL where TOTLE_TRADE_ID = #{totalTradeId,jdbcType=VARCHAR}
+    </select>
 </mapper>
