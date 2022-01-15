@@ -33,6 +33,10 @@
         <result column="ROW_DATE" property="rowDate" jdbcType="DATE" />
         <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
         <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="INVEST_APPROVER_ID" property="investApproverId" jdbcType="VARCHAR" />
+        <result column="INVEST_APPROVER_NAME" property="investApproverName" jdbcType="VARCHAR" />
+        <result column="INVEST_TRADER_ID" property="investTraderId" jdbcType="VARCHAR" />
+        <result column="INVEST_TRADER_NAME" property="investTraderName" jdbcType="VARCHAR" />
     </resultMap>
      <resultMap type="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto" id="InvestTradeRegist001DtoRM">
     <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
@@ -90,6 +94,10 @@
     <result column="RIVAL_PARTY_TYPE" property="rivalPartyType" jdbcType="CHAR" />
     <result column="ASSET_METHOD_NUM" property="assetMethodNum" jdbcType="CHAR" />
     <result column="RIVAL_PARTY_TYPE_NUM" property="rivalPartyTypeNum" jdbcType="CHAR" />
+    <result column="INVEST_APPROVER_ID" property="investApproverId" jdbcType="VARCHAR" />
+    <result column="INVEST_APPROVER_NAME" property="investApproverName" jdbcType="VARCHAR" />
+    <result column="INVEST_TRADER_ID" property="investTraderId" jdbcType="VARCHAR" />
+    <result column="INVEST_TRADER_NAME" property="investTraderName" jdbcType="VARCHAR" />
  </resultMap>
  
  <select id="genChbInvestTradeSubTmpList"  resultMap="BaseResultMap">

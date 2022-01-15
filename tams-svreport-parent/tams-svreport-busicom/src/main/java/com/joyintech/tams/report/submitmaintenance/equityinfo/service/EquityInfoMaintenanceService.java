@@ -233,11 +233,15 @@ public class EquityInfoMaintenanceService extends BaseService{
                 equityInfo001Dto.setHolderEmail(map.get("HOLDER_EMAIL"));
             }
 
-            //新增字段添加
-            equityInfo001Dto.setHolderClassify(map.get("HOLDER_CLASSIFY"));
-            equityInfo001Dto.setFundAccPlace(map.get("FUND_ACC_PLACE"));
-
-
+            //投资者类型
+            if(StringUtil.isNotEmpty(map.get("HOLDER_CLASSIFY"))){
+            	equityInfo001Dto.setHolderClassify(map.get("HOLDER_CLASSIFY"));
+            }
+            //账号开户所在地
+            if(StringUtil.isNotEmpty(map.get("FUND_ACC_PLACE"))){
+            	equityInfo001Dto.setFundAccPlace(map.get("FUND_ACC_PLACE"));
+            }
+            
             equityInfo001Dto.setRemark(map.get("REMARK"));
             equityInfo001Dto.setOrgCode(map.get("ORG_CODE"));
             equityInfo001Dto.setAgent(map.get("AGENT"));
@@ -584,6 +588,12 @@ public class EquityInfoMaintenanceService extends BaseService{
                 }
                 if(StringUtil.isNotEmpty(map.get("IDENTIFY_NUMBER"))){
                     equityInfo001Dto.setIdentifyNumber(map.get("IDENTIFY_NUMBER"));    
+                }
+                if(StringUtil.isNotEmpty(map.get("HOLDER_CLASSIFY"))){
+                    equityInfo001Dto.setHolderClassify(map.get("HOLDER_CLASSIFY"));    
+                }
+                if(StringUtil.isNotEmpty(map.get("FUND_ACC_PLACE"))){
+                    equityInfo001Dto.setFundAccPlace(map.get("FUND_ACC_PLACE"));    
                 }
     		}
     	}

@@ -22,14 +22,18 @@ $(function(){
         },
         showDetail: true,//双击详情对比画面
         done :function(){
-            if(indentifyMark){
+            if(institutionCode){
+            if(prdRegistCode){
+            if(accountNo){
+            if(tradeNo){
                 table.resize($(document).height() - $('.container').height() + table.getHeight());
                 var addTableData = table.getAllRows();
                 //标志是否在当前页选中数据
                 var isChecked = false;
                 if(addTableData){
                     $(addTableData).each(function(i,v){
-                        if(indentifyMark===v.indentifyMark && v.sendStatusName==='未报送'){
+                        if(institutionCode===v.institutionCode && prdRegistCode===v.prdRegistCode && tradeNo===v.tradeNo &&
+                        accountNo===v.accountNo && v.sendStatusName==='未报送'){
                             table.checkRow(v.LAY_TABLE_INDEX);
                             dateCheckMethod();
                             isChecked = true;
@@ -41,26 +45,32 @@ $(function(){
                     pageCount++;
                     table.reload({page:{curr:pageCount}});
                 }
+                }
+                }
+                }
             }
         },
         cols: [
              { title: "主键uuid",field:'registSeqno',visible:false}
+            ,{field: 'status', title: "数据状态",visible:false,sortField:'dataStatus'}
             ,{field: 'dataStatusName', title: "数据状态",width:100,sortField:'dataStatus'}
+            ,{field: 'sendStatus', title: "报送状态",visible:false,sortField:'sendStatus'}
             ,{field: 'sendStatusName', title: "报送状态", width:100 ,sortField:'sendStatus'}
             ,{field: 'submitTimeStr', title: "报送日期", width:150,sortField:'submitTime'}
-            ,{field: 'submitDeadlineStr', title: "报送截止日", width:150,sortField:'submitDeadline'}
+            ,{field: 'submitDeadline', title: "报送截止日", type:"date",width:150,sortField:'submitDeadline'}
             ,{field: 'submitFeedbackStatusStr', title: "反馈状态", width:100,sortField:'submitFeedbackStatus'}
             ,{field:'institutionCode', title: '提供销售结算资金服务机构代码', width:'150',sortField:'institutionCode'}
             ,{field:'prdRegistCode', title: '产品登记编码', width:'150',sortField:'prdRegistCode'}
             ,{field:'accountNo', title: '销售结算资金账号', width:'150',sortField:'accountNo'}
             ,{field:'accountName', title: '销售结算资金账户名称', width:'150',sortField:'accountName'}
             ,{field:'tradeNo', title: '销售结算资金交易流水号', width:'150',sortField:'tradeNo'}
-            ,{field:'tradePsName', title: '销售结算资金流动方向', width:'150',sortField:'tradePs'}
+            ,{field:'tradePs', title: '销售结算资金流动方向', width:'150'}
+            ,{field:'tradePsName', title: '销售结算资金流动方向', visible:false}
             ,{field:'tradeCounterAccNo', title: '销售结算资金交易对手方账号', width:'150',sortField:'tradeCounterAccNo'}
             ,{field:'tradeCounterAccName', title: '销售结算资金交易对手方账户名称', width:'150',sortField:'tradeCounterAccName'}
             ,{field:'tradeCounterAccBankName', title: '销售结算资金交易对手方开户行名称', width:'150',sortField:'tradeCounterAccBankName'}
             ,{field:'tradeCounterAccBankNo', title: '销售结算资金交易对手方账户开户行号', width:'150',sortField:'tradeCounterAccBankNo'}
-            ,{field:'tradeCcyName', title: '销售结算资金交易币种', width:'150',sortField:'tradeCcy'}
+            ,{field:'tradeCcy', title: '销售结算资金交易币种', width:'150',sortField:'tradeCcy'}
             ,{field:'tradeAmt', title: '销售结算资金交易金额', width:'150',sortField:'tradeAmt',type:'money',digit: 2}
             ,{field:'tradeVdate', title: '销售结算资金交易日期', width:'150',sortField:'tradeVdate',type:'date'}
             ,{field:'tradeTime', title: '销售结算资金交易时间', width:'150',sortField:'tradeTime'}
@@ -155,7 +165,7 @@ $(function(){
                   if (!(rows[i].sendStatus == '01'
                       || (rows[i].sendStatus == '02' && (rows[i].submitFeedbackStatus == '02' || rows[i].submitFeedbackStatus == '04'
                       || rows[i].submitFeedbackStatus == '00' || rows[i].submitFeedbackStatus == '06')))) {
-                      Joyin.error("只能选择报送状态为未报送的数据，或报送状态为接口报送且反馈状态为发送中、发送失败、中债退回和发送异常的数据进行手工处理，请重新选择！");
+                      Joyin.error("只能选择报送状态为未报送的数据进行手工处理，请重新选择！");
                       return;
                   }
               }
@@ -213,9 +223,9 @@ $(function(){
         if(isMain=='01'){
             setTimeout(function() {
                 if($('#sendStatus').val()=='02'||$('#sendStatus').val()=='03'){
-                    $('#submitDate').val(searchDataStart+' - '+searchDataEnd);
+                    $('#submitTime').val(searchDataStart+' - '+searchDataEnd);
                 }else{
-                    $('#submitDeadLine').val(searchDataStart+' - '+searchDataEnd);
+                    $('#submitDeadline').val(searchDataStart+' - '+searchDataEnd);
                 }
                 table.load();
             }, 500);
@@ -259,28 +269,26 @@ $(function(){
     	var expArr=table.getAllCheckedRows();
         var param={};
         if(!expArr || expArr.length ==0){
-        	if(expArr.length ==0){
-        		Joyin.error("请选择导出数据！");
-    			return;
-        	}
-            param = getSearchParams();
+            param = getPageParams();
             param.flag = flag;
-            if(flag=="0" &&(param.dataStatus==null||param.dataStatus=='')){
-            	param.dataStatus="01,02";
+            if(flag=="0"){
+                param.status="01";
+                param.sendStatus="01";
             }
             param.exportflag = 'export';
             Joyin.exportExcel("export",param);
+            Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
+                //页面添加滚动条
+                layui.layer.open({type:3});
+                Joyin.ajaxJson('doManual', param, function() {
+                    table.load();
+                    layui.layer.closeAll();
+                });
+            });
         }
         else{
-//        	Joyin.error("请选择导出数据！");
-//			return;
-//        }
         	if(flag=="0")
         		{
-        		if(expArr.length >1){
-        			Joyin.error("只能选择一条数据导出！");
-        			return;
-        		}
         	for(var i=0;i<expArr.length;i++){
         		if(expArr[i].dataStatus=="03"){
         			Joyin.error("只能导出新建或修改状态的数据，请重新选择");

@@ -216,7 +216,7 @@ public class SysInstRegBankCode001Service extends CommonExportService<SysInstReg
 
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list = dataList.get(i);
-            if (null == list || list.size() != 5) {
+            if (null == list || list.size() != 6) {
                 checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 1),
                     this.getMessage("REPORT_COMMON_FILE_E_0001", "导入行内容")));
                 continue;
@@ -237,15 +237,15 @@ public class SysInstRegBankCode001Service extends CommonExportService<SysInstReg
             }
 
             // 登记银行代码
-            String registBankCode = list.get(1);
+            String registBankCode = list.get(2);
             Map<String,TransformRule001Dto> spzMap=new HashMap<String,TransformRule001Dto>();
             Map<String,List<ChbTransformRuleObjDto>> objFiledsMap=new HashMap<String,List<ChbTransformRuleObjDto>>();
             equityInfoValid.checkBankCodeNew(messageList, registBankCode,spzMap,objFiledsMap,null);
             // 总行机构代码
-            String pbcBankCode = list.get(2);
+            String pbcBankCode = list.get(3);
             equityInfoValid.checkPbcBankCode(messageList, pbcBankCode);
             // 是否理财子公司
-            String isFinSubCompany = list.get(3);
+            String isFinSubCompany = list.get(4);
             if (StringUtil.isEmpty(isFinSubCompany)) {
                 messageList.add(this.getMessage("REPORT_COMMON_E_0057", "是否理财子公司"));
             }else{
@@ -254,8 +254,8 @@ public class SysInstRegBankCode001Service extends CommonExportService<SysInstReg
                 }
             }
 
-            // 是否理财子公司
-            String insitituteCode = list.get(4);
+            //社会信用代码
+            String insitituteCode = list.get(5);
             if (StringUtil.isEmpty(insitituteCode)) {
                 messageList.add(this.getMessage("REPORT_COMMON_E_0057", "社会信用代码"));
             }

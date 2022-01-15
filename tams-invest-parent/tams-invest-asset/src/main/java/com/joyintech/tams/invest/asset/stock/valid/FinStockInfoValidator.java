@@ -105,7 +105,12 @@ public class FinStockInfoValidator implements BeanValidator {
                    }
                }
                Page page = CacheUtil.getPage("FinStockInfo002");
-               if (null != page && null != page.getElementcontrol("bussRepStockInfo") && page.getElementcontrol("bussRepStockInfo").getIsShow()) {
+               // modify by etliu 20211223 start
+               // SYS_ELEMENT_CONTROL表没有配置，认为是显示，需要做check
+//               if (null != page && null != page.getElementcontrol("bussRepStockInfo") && page.getElementcontrol("bussRepStockInfo").getIsShow()) {
+               if (null != page && ((null != page.getElementcontrol("bussRepStockInfo") && page.getElementcontrol("bussRepStockInfo").getIsShow())
+                    || page.getElementcontrol("bussRepStockInfo") == null)) {
+               // modify by etliu 20211223 end
                    //中债,3个投资阶段选其他,备注必填
                    if((dto.getBussRepEquityInfoDto().getRepSharesType().equals(DictCodeListExt2.股票类型_其他.getValue())||
                            dto.getBussRepEquityInfoDto().getRepPartyType1().equals(DictCodeListExt2.发行机构类型_按规模划分_其他.getValue())

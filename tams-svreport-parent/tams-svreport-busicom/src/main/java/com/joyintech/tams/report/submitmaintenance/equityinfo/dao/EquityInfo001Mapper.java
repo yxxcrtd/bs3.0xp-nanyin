@@ -90,6 +90,15 @@ public interface EquityInfo001Mapper {
     EquityInfo001Dto getEquityInfo001DtoByKey(EquityInfo001Dto equityInfo001Dto);
     
     /**
+     * 通过主键获取投资者身份登记SUB表信息
+     * @param equityInfo001Dto 传入信息
+     * @return  返回信息
+     * @see
+     * @since 1.0
+     */
+    EquityInfo001Dto getEquityInfoSub001DtoByKey(EquityInfo001Dto equityInfo001Dto);
+    
+    /**
      * 
      * @param list 数据列表
      * @see
@@ -199,4 +208,6 @@ public interface EquityInfo001Mapper {
      * @return 结果
      */
     List<EquityInfo001Dto> selectEquityInfoForTrans();
+
+    List<EquityInfo001Dto> selectAllEquityInfo();
 }

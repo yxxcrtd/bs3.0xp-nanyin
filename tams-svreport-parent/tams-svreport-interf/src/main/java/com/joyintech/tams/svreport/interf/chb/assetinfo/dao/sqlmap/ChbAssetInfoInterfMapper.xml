@@ -2027,6 +2027,17 @@
         </if>
     </select>
 
+    <select id="selectAssetCodeByAssetTypePtl" resultType="java.lang.String">
+        select PORTFOLIO_ID
+        from PTL_PORTFOLIO
+        where  PORTFOLIO_TYPE = '02'
+        union all
+        select FINPROD_MARKET_ID
+        from FIN_PRODUCT
+        where FINPROD_TYPE = 'F26'
+        AND FINPROD_TYPE2 = 'F28'
+    </select>
+
 
     <select id="selectAssetCodeBySysdate" parameterType="java.util.Map" resultType="java.lang.String">
         select ASSET_CODE
@@ -16099,4 +16110,40 @@
         AND T1.FINPROD_ID = T2.FINPROD_ID
         AND T2.CASH_ID = T3.CASH_ID
     </insert>
+
+    <update id="updateRepAssetStatus" parameterType="com.joyintech.tams.common.base.entity.RepAssetDept">
+        UPDATE REP_ASSET_DEPT
+        SET IS_REP_TARGET = 'Y' ,
+        UPDATE_TIME = #{updateTime}
+        WHERE(
+        REP_FINPROD_ID IN (
+        SELECT
+        T1.REP_FINPROD_ID
+        FROM
+        REP_ASSET_DEPT T1
+        INNER JOIN ( SELECT DISTINCT T3.FINPROD_ID FROM TRD_PRODUCT_DEAL T3 ) T2 ON T1.REP_FINPROD_ID = T2.FINPROD_ID
+        AND T2.FINPROD_ID IS NOT NULL
+        )
+        <!-- 增加母子资管计划更新   dzh 19/4/22-->
+        or REP_FINPROD_ID IN
+        (SELECT distinct T1.P_FINPROD_ID
+        FROM FIN_PRODUCT T1
+        INNER JOIN (SELECT DISTINCT T3.FINPROD_ID
+        FROM TRD_PRODUCT_DEAL T3) T2
+        ON (T1.FINPROD_ID = T2.FINPROD_ID
+        AND T2.FINPROD_ID IS NOT NULL)
+        where     T1.P_FINPROD_ID is not null
+        )
+        <!--dzh end -->
+        <!-- 估值表导入资产 lizhi 2019/05/06 start-->
+        or REP_FINPROD_ID IN
+        (
+        SELECT distinct T1.FINPROD_ID
+        FROM RSK_VALTBL_ASSET_SUB T1
+        where t1.FINPROD_ID is not null
+        )
+        )
+        and (IS_REP_TARGET is null or IS_REP_TARGET != 'Y')
+        <!-- 估值表导入资产 lizhi 2019/05/06 end-->
+    </update>
 </mapper>

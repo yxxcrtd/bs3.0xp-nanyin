@@ -112,7 +112,11 @@ public class FinBondTargetAssetValidator implements BeanValidator{
             // 获取对应画面的page
             Page page = CacheUtil.getPage("FinBondTargetAsset002");
             // 获取page中SYS_ELEMENT_CONTROL表配置的是否展示or隐藏画面元素。如果隐藏则跳过判断，如果展示则进入判断逻辑
-            if (null != page && null != page.getElementcontrol("bussRepBondInfo") && page.getElementcontrol("bussRepBondInfo").getIsShow()) {
+            // modify by etliu 20211223 start
+            // SYS_ELEMENT_CONTROL表没有配置，认为是显示，需要做check
+//            if (null != page && null != page.getElementcontrol("bussRepBondInfo") && page.getElementcontrol("bussRepBondInfo").getIsShow()) {
+            if (null != page && ((null != page.getElementcontrol("bussRepBondInfo") && page.getElementcontrol("bussRepBondInfo").getIsShow())
+                || page.getElementcontrol("bussRepBondInfo") == null)) {
                 if(StringUtil.isNotEmpty(dto.getRepAssetType())
                         &&StringUtil.equals(dto.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_地方政府债.getValue())){
                     if(dto.getBussFinBondRepInfoDto()!=null && !StringUtil.isNotEmpty(dto.getBussFinBondRepInfoDto().getBankSecZxzq())){

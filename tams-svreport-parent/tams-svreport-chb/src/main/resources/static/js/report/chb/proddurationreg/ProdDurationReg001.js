@@ -55,7 +55,7 @@ $(function() {
                       }
                   }},
               { title:'报送日期', field: 'submitTime', type: 'datetime', sortField:'submitTime'},
-              { title:'报送截止日', field: 'chbSubmitDeadline', type:'datetime', sortField:'chbSubmitDeadline'},
+              { title:'报送截止日', field: 'chbSubmitDeadline', type:'date', sortField:'chbSubmitDeadline'},
               { title:'反馈状态', field: 'submitFeedbackStatus',width:100, sortField:'',sortField:'submitFeedbackStatus',
                   render:function (value,visible,row,options) {
                       if(value == "发送中" || value == "发送异常"){
@@ -73,7 +73,8 @@ $(function() {
               {title: '净值币种',field:'valueCcy', width:100, sortField:'valueCcy'},
               {title: '折算人民币初始净值',field:'cnyOrlValue', type:'money', digit:5, width:150, sortField:'cnyOrlValue'},
               {title: '折算人民币产品净值',field:'cnyPrdValue', type:'money', digit:5, width:150, sortField:'cnyPrdValue'},
-              {title: '折算人民币累计净值',field:'cnyTalValue', type:'money', digit:5, width:150, sortField:'cnyTalValue'}, 
+              {title: '折算人民币累计净值',field:'cnyTalValue', type:'money', digit:5, width:150, sortField:'cnyTalValue'},
+              {title: '净值日期', field:'yieldDate', type:'date',format:'yyyy-MM-dd', width:100, sortField:'yieldDate'},
               {title: '实现收益率(%)',field:'reaYield', type:'money', digit:5, width:150, sortField:'newExpYield'},
               {title: '最新预期收益率(%)',field:'newExpYield', type:'money', digit:5, width:150, sortField:'reaYield'},
               {title: '银行实现收益(元)',field:'bankImpInt',type:'money', width:150, sortField:'bankImpInt'},

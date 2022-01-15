@@ -20,6 +20,7 @@
     <result column="CON_PRD_TRAGET" property="conPrdTraget" jdbcType="VARCHAR" />
     <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
     <result column="IS_YLLCCP" property="isYllccp" jdbcType="VARCHAR" />
+    <result column="PRD_SPEC_PROPERTY" property="prdSpecProperty" jdbcType="VARCHAR" />
 
 
   </resultMap>
@@ -239,7 +240,8 @@
   <select id="select" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthFeePosition" >
     select 
     POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, P.IVSTORIENTATION, BANKAMT,
-    TRUSTFEEAMT, SALEFEEAMT, OTHERFEEAMT, MANAFEEAMT, FLOATFEEAMT, P.PROFIT_TYPE, P.CON_PRD_TRAGET,B.IS_YLLCCP, INSTITUTION_CODE
+    TRUSTFEEAMT, SALEFEEAMT, OTHERFEEAMT, MANAFEEAMT, FLOATFEEAMT, P.PROFIT_TYPE, P.CON_PRD_TRAGET,B.IS_YLLCCP, INSTITUTION_CODE,
+    b.PRD_SPEC_PROPERTY
     from CHB_MONTH_FEE_POSITION p
     LEFT JOIN CHB_prd_baseinfo b on b.prod_id = p.prodid
        left join (      select distinct di.business_id finprod_market_id,di.institution_code

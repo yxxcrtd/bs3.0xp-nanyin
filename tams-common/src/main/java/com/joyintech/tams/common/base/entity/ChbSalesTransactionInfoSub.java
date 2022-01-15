@@ -389,6 +389,6 @@ public class ChbSalesTransactionInfoSub extends BaseEntity {
     }
 
     public String getKey(){
-        return this.getInstitutionCode() + "_" + this.getTradeNo();
+        return this.getInstitutionCode() + "_" + this.getTradeNo() + "_" + this.getPrdRegistCode() + "_" + this.getAccountNo();
     }
 }

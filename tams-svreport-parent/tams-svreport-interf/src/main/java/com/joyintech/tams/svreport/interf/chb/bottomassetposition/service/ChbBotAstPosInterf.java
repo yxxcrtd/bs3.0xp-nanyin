@@ -2,12 +2,24 @@ package com.joyintech.tams.svreport.interf.chb.bottomassetposition.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.base.intf.DataDictItem;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.*;
-import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.common.BaseInterfService;
+import com.joyintech.tams.common.InterfDefine;
+import com.joyintech.tams.common.base.dao.ChbAssetsBasisDataMapper;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.report.interf.common.constant.InterfConstant;
+import com.joyintech.tams.report.interf.common.constant.InterfConstants;
+import com.joyintech.tams.report.interf.common.constant.InterfMappingConstants;
+import com.joyintech.tams.svreport.interf.chb.assetinfo.service.ChbAssetInfoInterf;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -27,8 +39,6 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.common.base.entity.ChbAssetsBasisData;
-import com.joyintech.tams.common.base.entity.ChbBotAstPosition;
 import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
@@ -48,7 +58,7 @@ import com.joyintech.tools.collectors.JoyinCollectors;
 @SuppressWarnings("rawtypes")
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ChbBotAstPosInterf extends BaseService{
+public class ChbBotAstPosInterf extends BaseInterfService {
 	@Autowired
 	private ChbBotAstPosInterfMapper chbBotAstPosInterfMapper;
 	@Autowired
@@ -64,182 +74,159 @@ public class ChbBotAstPosInterf extends BaseService{
 	 */
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
-    public List<Date> generatePtlValutionData(Date batchTime) {	
-    	logger.debug("底层资产持仓信息接口导入批处理开始");
-    	long startTime=System.currentTimeMillis();
-    	SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
-    	String source = CacheUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE);
-    	//批量插入mapper
-    	ChbBotAstPosInterfMapper batchMapper =  session.getMapper(ChbBotAstPosInterfMapper.class);
-    	//通道投资资产管理产品是否穿透报送
-    	String isChlBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
-    	String isCalLoadRate =  CacheUtil.getSysParam("IS_CAL_LOADRATE");
-    	ChbBotAstPosInterf chbBotAstPosInterf2 =  SpringContextUtil.getBean(ChbBotAstPosInterf.class);
-    	Date lastUpdatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.底层持仓信息接口.getInterId());
-    	List<Date> isUpdated = chbBotAstPosInterf2.isUpdated(lastUpdatetime);
-    	List<Date> isUpdatedChl = new ArrayList<Date>();
-    	if("02".equals(isChlBtm)){
-    		isUpdatedChl = chbBotAstPosInterf2.isUpdatedChl(lastUpdatetime);
-    	}
-    	try{
-    		int count = 0;
-    		for(Date date :isUpdated){
-	        	//查询信息
-	        	//List<ChbBotAstPosition> listChbBotAstPosition = chbBotAstPosInterf2.getDataFromInterf(date);
-				List<ChbBotAstPosition> listChbBotAstPosition = getBotDataFromRsk(date);//估值表升级
-	        	if("02".equals(isChlBtm)){
-	        		List<ChbBotAstPosition> listBotAstPosition = chbBotAstPosInterf2.getChlBtmDataFromInterf(date, source);
-	        		List<ChbBotAstPosition> listBotAstPositionSp = chbBotAstPosInterf2.getChlBtmDataFromInterfSp(date, source,isCalLoadRate);
-	        		Map<String,ChbBotAstPosition> spAssetsBasisDataMap=new HashMap<String,ChbBotAstPosition>(listBotAstPosition.size());
-	        		spAssetsBasisDataMap=listBotAstPosition.stream().collect(
-    		                JoyinCollectors.toMap(
-    		                        x -> x.getPlanAssetId() + GlobalConstant.UNDER_LINE + x.getAssetCode(), x -> x));
-	        		for(ChbBotAstPosition single:listBotAstPositionSp){
-	        			String key=single.getPlanAssetId() + GlobalConstant.UNDER_LINE + single.getAssetCode();
-	        			spAssetsBasisDataMap.put(key, single);
-	        		}
-	        		
-	        		if(!spAssetsBasisDataMap.isEmpty()){
-	        			for(String key:spAssetsBasisDataMap.keySet()){
-	        				listChbBotAstPosition.add(spAssetsBasisDataMap.get(key));
-	        			}
-	        		}
-	        	}
-	        	List<String> assetTypeList = new ArrayList<String>();
-	    		assetTypeList.add(DictCodeListExt2.资产_负债类别_资产管理产品.getValue());
-	    		assetTypeList.add(DictCodeListExt2.资产_负债类别_私募基金.getValue());
-	    		assetTypeList.add(DictCodeListExt2.资产_负债类别_委外投资_协议方式.getValue());
-	    		// 生成日期为空防止要素（维护）变动更新日期
-	    		List<String> assetPlanLList = chbAssetInfoInterfMapper.selectAssetCodeByAssetType(assetTypeList, null);
-	    		Map<String, BigDecimal> rateMap = new HashMap<>();
-	        	for(ChbBotAstPosition position : listChbBotAstPosition){
-	        		position.setPosId(IDGenerator.generate(36));
-	        		position.setIssuePartyId(CommonUtil.selectBankCode());
-	        		position.setCreateUser("system");
-	        		position.setUpdateUser("system");
-	        		position.setStatus("E");
-	        		position.setIschl("02");
-	        		position.setDatasource("16");
-	        		//人民币发行金额 = 总发行数量*币种汇率
-	    			/*if (position.getTotalNum() != null){
-	    				position.setIssueAmt(ChbCcyConvertUtil.changeCnyMoney(position.getCcy(), position.getTotalNum(), position.getPosDate(), rateMap));
-	    			}*/
-	        		if(assetPlanLList.contains(position.getAssetCode())){
-	        			position.setIsfinaplan("01");
-	        		}else{
-	        			position.setIsfinaplan("02");
-	        		}
-	            	if(position.getUpdateTime().compareTo(lastUpdatetime)>0)
-	            		lastUpdatetime =position.getUpdateTime();
-	        	}
-	        	//先删后插
-	        	String dateStr = DateUtil.format(date);
-	        	logger.debug("删除"+dateStr+"日的底层资产持仓信息，开始");
-	        	chbBotAstPosInterfMapper.deleteByPosdate(date);
-	        	logger.debug("删除"+dateStr+"日的底层资产持仓信息，结束");
-	        	logger.debug("插入"+dateStr+"日的底层资产持仓信息，开始");
-	        	for(ChbBotAstPosition position : listChbBotAstPosition){
-	        		batchMapper.insert(position);
-	        		count++;
-	        		if(count%1000==0){
-	        			logger.debug("已插入"+count+"条"+DateUtil.getCurrentDateTime());
-	            		session.commit();
-	            		session.clearCache();
-	        		}
-	        			
-	        	}	
-	        	logger.debug("插入"+dateStr+"日的底层资产持仓信息，结束");
-	        }
-    		
-			for (Date date : isUpdatedChl) {
-				List<ChbBotAstPosition> listBotAstPosition = chbBotAstPosInterf2.getChlBtmDataFromInterf(date, source);
-				List<ChbBotAstPosition> listBotAstPositionSp = chbBotAstPosInterf2.getChlBtmDataFromInterfSp(date, source,isCalLoadRate);
-				Map<String,ChbBotAstPosition> spAssetsBasisDataMap=new HashMap<String,ChbBotAstPosition>(listBotAstPosition.size());
-        		spAssetsBasisDataMap=listBotAstPosition.stream().collect(
-		                JoyinCollectors.toMap(
-		                        x -> x.getPlanAssetId() + GlobalConstant.UNDER_LINE + x.getAssetCode(), x -> x));
-        		for(ChbBotAstPosition single:listBotAstPositionSp){
-        			String key=single.getPlanAssetId() + GlobalConstant.UNDER_LINE + single.getAssetCode();
-        			spAssetsBasisDataMap.put(key, single);
-        		}
-				if(!spAssetsBasisDataMap.isEmpty()){
-					listBotAstPosition.clear();
-					for(String key:spAssetsBasisDataMap.keySet()){
-						listBotAstPosition.add(spAssetsBasisDataMap.get(key));
-        			}
-        		}
-				List<String> assetTypeList = new ArrayList<String>();
-				assetTypeList.add(DictCodeListExt2.资产_负债类别_资产管理产品.getValue());
-				assetTypeList.add(DictCodeListExt2.资产_负债类别_私募基金.getValue());
-				assetTypeList.add(DictCodeListExt2.资产_负债类别_委外投资_协议方式.getValue());
-				// 生成日期为空防止要素（维护）变动更新日期
-				List<String> assetPlanLList = chbAssetInfoInterfMapper.selectAssetCodeByAssetType(assetTypeList, null);
-				for (ChbBotAstPosition position : listBotAstPosition) {
-					position.setPosId(IDGenerator.generate(36));
-					position.setIssuePartyId(CommonUtil.selectBankCode());
-					position.setCreateUser("system");
-					position.setUpdateUser("system");
-					position.setStatus("E");
-					position.setDatasource("16");
-					if (assetPlanLList.contains(position.getAssetCode())) {
-						position.setIsfinaplan("01");
-					} else {
-						position.setIsfinaplan("02");
-					}
-					if (null != position.getUpdateTime() && position.getUpdateTime().compareTo(lastUpdatetime) > 0)
-						lastUpdatetime = position.getUpdateTime();
-				}
-				// 先删后插
-				String dateStr = DateUtil.format(date);
-				logger.debug("删除" + dateStr + "日的底层资产持仓信息，开始");
-				chbBotAstPosInterfMapper.deleteByPosdate(date);
-				logger.debug("删除" + dateStr + "日的底层资产持仓信息，结束");
-				logger.debug("插入" + dateStr + "日的底层资产持仓信息，开始");
-				for (ChbBotAstPosition position : listBotAstPosition) {
-					batchMapper.insert(position);
-					count++;
-					if (count % 1000 == 0) {
-						logger.debug("已插入" + count + "条" + DateUtil.getCurrentDateTime());
-						session.commit();
-						session.clearCache();
-					}
+    public List<Date> generatePtlValutionData(Date batchTime) {
+		logger.info("底层资产持仓信息数据接口导入批处理开始");
 
-				}
-				logger.debug("插入" + dateStr + "日的底层资产持仓信息，结束");
-			}
-//        	//批量插入
-//    		int  singalCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"500" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));
-//    		int totalCount = listChbBotAstPosition.size();
-//
-//    		if(totalCount>0){
-//    			if(totalCount<=singalCount){
-//    				chbBotAstPosInterfMapper.insertBatchList(listChbBotAstPosition);
-//    			}
-//    			else{
-//    				for(int i = 0; i < totalCount/singalCount ; i++){
-//    					chbBotAstPosInterfMapper.insertBatchList(listChbBotAstPosition.subList(0, singalCount));
-//    					listChbBotAstPosition.removeAll(listChbBotAstPosition.subList(0, singalCount));
-//    				}
-//                    if(CollectionUtils.isNotEmpty(listChbBotAstPosition)){
-//                    	chbBotAstPosInterfMapper.insertBatchList(listChbBotAstPosition);
-//                    }
-//    			}
-//    		}
-    	
-    		session.commit();
-    		session.clearCache();
-    	}finally {
-    		session.close();
-    	}
-    		
-    	
-    	//新的最后更新时间
-    	if(lastUpdatetime!=null){
-    		ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.底层持仓信息接口.getInterId(), lastUpdatetime);
-    	}
-    	logger.debug("底层资产持仓信息接口导入批处理结束。用时："+(System.currentTimeMillis()-startTime)/1000+"s");
-    	return isUpdated;
+		long startTime=System.currentTimeMillis();
+
+		// 查询数据
+		List<ChbBotAstPosition> listChbBotAstPosition = getBusEntity(null,batchTime, null, "D");
+		// 入库
+		if(!StringUtil.isEmptyList(listChbBotAstPosition)){
+			insertData2(listChbBotAstPosition);
+		}
+		logger.info("底层资产持仓信息数据接口导入批处理结束。用时："+(System.currentTimeMillis()-startTime)/1000+"s");
+		return new ArrayList<Date>();
 	}
+
+
+	@Override
+	public List<ChbBotAstPosition> getBusEntity(List<String> prodIdlist, Date dateNew, String institutionCode, String sourceNew) {
+		String source = CacheUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE);
+		//批量插入mapper
+		//通道投资资产管理产品是否穿透报送
+		String isChlBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
+		String isCalLoadRate =  CacheUtil.getSysParam("IS_CAL_LOADRATE");
+		ChbBotAstPosInterf chbBotAstPosInterf2 =  SpringContextUtil.getBean(ChbBotAstPosInterf.class);
+		Date lastUpdatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.底层持仓信息接口.getInterId());
+		List<Date> isUpdated = chbBotAstPosInterf2.isUpdated(lastUpdatetime);
+		List<Date> isUpdatedChl = new ArrayList<Date>();
+		List<ChbBotAstPosition> listChbBotAstPosition = new ArrayList<ChbBotAstPosition>();
+		if("02".equals(isChlBtm)){
+			isUpdatedChl = chbBotAstPosInterf2.isUpdatedChl(lastUpdatetime);
+		}
+		for(Date date :isUpdated){
+			//查询信息
+			//List<ChbBotAstPosition> listChbBotAstPosition = chbBotAstPosInterf2.getDataFromInterf(date);
+
+			listChbBotAstPosition = getBotDataFromRsk(date);//估值表升级
+
+//	        	if("02".equals(isChlBtm)){
+//					//  用到了PTL_CASH_POSITION和bok_balance和BOK_BOOKSET_RE
+//	        		List<ChbBotAstPosition> listBotAstPosition = chbBotAstPosInterf2.getChlBtmDataFromInterf(date, source);
+//	        		List<ChbBotAstPosition> listBotAstPositionSp = chbBotAstPosInterf2.getChlBtmDataFromInterfSp(date, source,isCalLoadRate);
+//	        		Map<String,ChbBotAstPosition> spAssetsBasisDataMap=new HashMap<String,ChbBotAstPosition>(listBotAstPosition.size());
+//	        		spAssetsBasisDataMap=listBotAstPosition.stream().collect(
+//    		                JoyinCollectors.toMap(
+//    		                        x -> x.getPlanAssetId() + GlobalConstant.UNDER_LINE + x.getAssetCode(), x -> x));
+//	        		for(ChbBotAstPosition single:listBotAstPositionSp){
+//	        			String key=single.getPlanAssetId() + GlobalConstant.UNDER_LINE + single.getAssetCode();
+//	        			spAssetsBasisDataMap.put(key, single);
+//	        		}
+//
+//	        		if(!spAssetsBasisDataMap.isEmpty()){
+//	        			for(String key:spAssetsBasisDataMap.keySet()){
+//	        				listChbBotAstPosition.add(spAssetsBasisDataMap.get(key));
+//	        			}
+//	        		}
+//	        	}
+//	        	List<String> assetTypeList = new ArrayList<String>();
+//	    		assetTypeList.add(DictCodeListExt2.资产_负债类别_资产管理产品.getValue());
+//	    		assetTypeList.add(DictCodeListExt2.资产_负债类别_私募基金.getValue());
+//	    		assetTypeList.add(DictCodeListExt2.资产_负债类别_委外投资_协议方式.getValue());
+//	    		// 生成日期为空防止要素（维护）变动更新日期
+//	    		List<String> assetPlanLList = chbAssetInfoInterfMapper.selectAssetCodeByAssetType(assetTypeList, null);
+//	    		Map<String, BigDecimal> rateMap = new HashMap<>();
+//	        	for(ChbBotAstPosition position : listChbBotAstPosition){
+//	        		position.setPosId(IDGenerator.generate(36));
+//	        		position.setIssuePartyId(CommonUtil.selectBankCode());
+//	        		position.setCreateUser("system");
+//	        		position.setUpdateUser("system");
+//	        		position.setStatus("E");
+//	        		position.setIschl("02");
+//	        		position.setDatasource("16");
+//	        		//人民币发行金额 = 总发行数量*币种汇率
+//	    			/*if (position.getTotalNum() != null){
+//	    				position.setIssueAmt(ChbCcyConvertUtil.changeCnyMoney(position.getCcy(), position.getTotalNum(), position.getPosDate(), rateMap));
+//	    			}*/
+//	        		if(assetPlanLList.contains(position.getAssetCode())){
+//	        			position.setIsfinaplan("01");
+//	        		}else{
+//	        			position.setIsfinaplan("02");
+//	        		}
+//	            	if(position.getUpdateTime().compareTo(lastUpdatetime)>0)
+//	            		lastUpdatetime =position.getUpdateTime();
+//	        	}
+//	        	//先删后插
+//	        	String dateStr = DateUtil.format(date);
+//	        	logger.debug("删除"+dateStr+"日的底层资产持仓信息，开始");
+//	        	chbBotAstPosInterfMapper.deleteByPosdate(date);
+//	        	logger.debug("删除"+dateStr+"日的底层资产持仓信息，结束");
+//	        	logger.debug("插入"+dateStr+"日的底层资产持仓信息，开始");
+//	        	for(ChbBotAstPosition position : listChbBotAstPosition){
+//	        		batchMapper.insert(position);
+//	        		count++;
+//	        		if(count%1000==0){
+//	        			logger.debug("已插入"+count+"条"+DateUtil.getCurrentDateTime());
+//	            		session.commit();
+//	            		session.clearCache();
+//	        		}
+//
+//	        	}
+//	        	logger.debug("插入"+dateStr+"日的底层资产持仓信息，结束");
+		}
+
+		for (Date date : isUpdatedChl) {
+			List<ChbBotAstPosition> listBotAstPosition = chbBotAstPosInterf2.getChlBtmDataFromInterf(date, source);
+			List<ChbBotAstPosition> listBotAstPositionSp = chbBotAstPosInterf2.getChlBtmDataFromInterfSp(date, source,isCalLoadRate);
+			Map<String,ChbBotAstPosition> spAssetsBasisDataMap=new HashMap<String,ChbBotAstPosition>(listBotAstPosition.size());
+			spAssetsBasisDataMap=listBotAstPosition.stream().collect(
+					JoyinCollectors.toMap(
+							x -> x.getPlanAssetId() + GlobalConstant.UNDER_LINE + x.getAssetCode(), x -> x));
+			for(ChbBotAstPosition single:listBotAstPositionSp){
+				String key=single.getPlanAssetId() + GlobalConstant.UNDER_LINE + single.getAssetCode();
+				spAssetsBasisDataMap.put(key, single);
+			}
+			if(!spAssetsBasisDataMap.isEmpty()){
+				for(String key:spAssetsBasisDataMap.keySet()){
+					listChbBotAstPosition.add(spAssetsBasisDataMap.get(key));
+				}
+			}
+		}
+		// 生成日期为空防止要素（维护）变动更新日期
+		List<String> assetPlanLList = chbAssetInfoInterfMapper.selectAssetCodeByAssetTypePtl();
+		for (ChbBotAstPosition position : listChbBotAstPosition) {
+			position.setPosId(IDGenerator.generate(36));
+			position.setIssuePartyId(CommonUtil.selectBankCode());
+			position.setCreateUser("system");
+			position.setUpdateUser("system");
+			position.setStatus("E");
+			//数据来源
+			if("D".equals(source)){
+				position.setDatasource("16");
+			}
+			if (assetPlanLList.contains(position.getAssetCode())) {
+				position.setIsfinaplan("01");
+			} else {
+				position.setIsfinaplan("02");
+			}
+			if (null != position.getUpdateTime() && position.getUpdateTime().compareTo(lastUpdatetime) > 0)
+				lastUpdatetime = position.getUpdateTime();
+		}
+		return listChbBotAstPosition;
+	}
+
+	@Override
+	public Class getEntityClass() {
+		return ChbBotAstPosition.class;
+	}
+
+	@Override
+	public String getFileName() {
+		return InterfDefine.资管计划底层资产持仓接口数据.getCode();
+	}
+
+
 
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     @DataSource(DataSourceType.INTERF)
@@ -404,6 +391,7 @@ public class ChbBotAstPosInterf extends BaseService{
 		List<ChbBotAstPosition> botRepList = chbBotAstPosInterfMapper.getRepBotDataFromRsk(date);
 		//根据上述的回购资产查找符合的底层回购要素开始占比拆分
 		//Step1、先将跑批日所有未到期的回购资产检索出来
+		// 这块回购是信批录入
 		List<ChbAssetInfo> repInfoList = chbBotAstPosInterfMapper.selectRepAstByBatchDate(date);
 		//Step2、计算利息的占比(根据底层资产的二级科目号映射资产二级类型筛选出同类资产)
 		Map<String,BigDecimal> intAmtMap = calBotAstIntAmt(botRepList, repInfoList);
@@ -609,6 +597,45 @@ public class ChbBotAstPosInterf extends BaseService{
 			//nothing to do
 		}
 		return null;
+	}
+
+
+	private void insertData2(List<ChbBotAstPosition> listChbBotAstPosition) {
+		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+
+		//批量插入mapper
+		ChbBotAstPosInterfMapper batchMapper =  session.getMapper(ChbBotAstPosInterfMapper.class);
+
+		Map<Date, List<ChbBotAstPosition>> listChbBotAstPositionMap =
+				listChbBotAstPosition.stream().collect(JoyinCollectors.groupingBy(chbAssetsBasisData -> chbAssetsBasisData.getPosDate()));
+		int count = 0;
+		try {
+			for (Date date : listChbBotAstPositionMap.keySet()) {
+
+				String dateStr = DateUtil.format(date);
+
+				// 先删后插
+				logger.debug("删除" + dateStr + "日的底层资产持仓信息，开始");
+				chbBotAstPosInterfMapper.deleteByPosdate(date);
+				logger.debug("删除" + dateStr + "日的底层资产持仓信息，结束");
+				logger.debug("插入" + dateStr + "日的底层资产持仓信息，开始");
+
+				for (ChbBotAstPosition data : listChbBotAstPositionMap.get(date)) {
+					batchMapper.insert(data);
+					count++;
+					if (count % 1000 == 0) {
+						logger.debug("已插入" + count + "条" + DateUtil.getCurrentDateTime());
+						session.commit();
+						session.clearCache();
+					}
+				}
+				logger.info("插入" + dateStr + "日的资产基础指标数据，结束");
+			}
+			session.commit();
+			session.clearCache();
+		}finally {
+			session.close();
+		}
 	}
 
 }

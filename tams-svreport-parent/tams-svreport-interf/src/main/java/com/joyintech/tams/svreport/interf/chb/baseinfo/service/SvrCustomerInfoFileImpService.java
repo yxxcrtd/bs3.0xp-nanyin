@@ -1,14 +1,20 @@
 package com.joyintech.tams.svreport.interf.chb.baseinfo.service;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.tams.common.FileImpService;
+import com.joyintech.tams.common.InterfDefine;
+import com.joyintech.tams.common.InterfFile;
+import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
+import com.joyintech.tams.common.base.entity.MstCustomerInfo;
+import com.joyintech.tams.common.base.entity.MstCustomerInfoAddWithBLOBs;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
+import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper;
+import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoImpMapper;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -21,21 +27,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.common.FileImpService;
-import com.joyintech.tams.common.InterfDefine;
-import com.joyintech.tams.common.InterfFile;
-import com.joyintech.tams.common.base.entity.MstCustomerInfo;
-import com.joyintech.tams.common.base.entity.MstCustomerInfoAdd;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
-import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.report.interf.common.constant.DateUtil;
-import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
-import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper;
-import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoImpMapper;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 市场机构信息文件接口
@@ -139,7 +138,7 @@ public class SvrCustomerInfoFileImpService extends FileImpService {
 	private boolean excuteCustomerInfoAddByStep(String saveFlag,List<Map<String, String>> list, String type, String[] result,
 			String tmpPath, ImpTable table, ImpTable subTable) {
 		// 定义新增数据list-验证通过数据
-		List<MstCustomerInfoAdd> listNE = new ArrayList<MstCustomerInfoAdd >();
+		List<MstCustomerInfoAddWithBLOBs> listNE = new ArrayList<MstCustomerInfoAddWithBLOBs >();
 		logger.debug("市场机构数据add表转dto---开始-----:" +  df.format(new Date()));
 		listNE = dataConversionEntity(list);
 		logger.debug("市场机构数据add表转dto---结束-----:" +  df.format(new Date()));
@@ -154,7 +153,7 @@ public class SvrCustomerInfoFileImpService extends FileImpService {
 		svrMstCustomerInfoAddImpMapper.deleteTodayData();
 	}
 
-	private void mergeAddData(List<MstCustomerInfoAdd> listNE) {
+	private void mergeAddData(List<MstCustomerInfoAddWithBLOBs> listNE) {
 		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
             int count = 0;
@@ -335,11 +334,11 @@ public class SvrCustomerInfoFileImpService extends FileImpService {
         return rs;
 	}
 
-	private List<MstCustomerInfoAdd> dataConversionEntity(List<Map<String, String>> dataList) {
+	private List<MstCustomerInfoAddWithBLOBs> dataConversionEntity(List<Map<String, String>> dataList) {
 		// 获取产品表的列
-		List<MstCustomerInfoAdd> rs = new ArrayList<MstCustomerInfoAdd>();
+		List<MstCustomerInfoAddWithBLOBs> rs = new ArrayList<MstCustomerInfoAddWithBLOBs>();
         for (Map<String, String> map : dataList) {
-        	MstCustomerInfoAdd t = new MstCustomerInfoAdd();
+            MstCustomerInfoAddWithBLOBs t = new MstCustomerInfoAddWithBLOBs();
         	t.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
             for (String key : map.keySet()) {
             	if(key==null||key.equals("ERRMSG")){//待处理的数据
@@ -347,7 +346,7 @@ public class SvrCustomerInfoFileImpService extends FileImpService {
             		continue;
             	}
                 String value = map.get(key);
-                Field field = ReflectionUtils.findField(MstCustomerInfoAdd.class,
+                Field field = ReflectionUtils.findField(MstCustomerInfoAddWithBLOBs.class,
                 			subBlank(key.toLowerCase()));
                 if(field==null)
                 	continue;
@@ -418,7 +417,7 @@ public class SvrCustomerInfoFileImpService extends FileImpService {
 	}
 
 	@SuppressWarnings("unused")
-	private void deleteCustomerAdd(List<MstCustomerInfoAdd> addlist){
+	private void deleteCustomerAdd(List<MstCustomerInfoAddWithBLOBs> addlist){
 		int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
 		int batchLastIndex = batchCount;// 每批最后一个的下标
 		logger.debug("市场机构删除开始--------------"+new Date());
@@ -456,13 +455,13 @@ public class SvrCustomerInfoFileImpService extends FileImpService {
 	}
 	
 	@SuppressWarnings("unused")
-	private void insertCustomerAdd(List<MstCustomerInfoAdd> addlist){
+	private void insertCustomerAdd(List<MstCustomerInfoAddWithBLOBs> addlist){
 		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
 		try {
 			int count = 0;
 			logger.debug("市场机构ADD表插入开始--------------"+new Date());
 			SvrMstCustomerInfoAddImpMapper batchMapper = session.getMapper(SvrMstCustomerInfoAddImpMapper.class);
-			for (MstCustomerInfoAdd dto : addlist) {
+			for (MstCustomerInfoAddWithBLOBs dto : addlist) {
 				batchMapper.insert(dto);
 				count++;
 				if (count % 1000 == 0) {

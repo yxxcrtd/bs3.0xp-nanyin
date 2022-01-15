@@ -81,7 +81,7 @@ public class ProdInfoInterfService extends BaseInterfService {
 	public List<String> getIssueData(Date batchTime) {
 
 		// 查询数据
-		List<ChbPrdBaseinfo> prodinfos = getBusEntity(null, "D");
+		List<ChbPrdBaseinfo> prodinfos = getBusEntity(null, null, null, "D");
 		// 入库
 		if(!StringUtil.isEmptyList(prodinfos)){
 			insertDataMerge(prodinfos);
@@ -100,7 +100,7 @@ public class ProdInfoInterfService extends BaseInterfService {
 	}
 
 	@Override
-	public List<ChbPrdBaseinfo> getBusEntity(List<String> prodIdlist, String source) {
+	public List<ChbPrdBaseinfo> getBusEntity(List<String> prodIdlist, Date date, String institutionCode, String source) {
 		Date lastUpdatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.产品要素信息接口.getInterId());
 		// 入库
 		ProdInfoInterfService prodInfoInterfService = SpringContextUtil.getBean(ProdInfoInterfService.class);

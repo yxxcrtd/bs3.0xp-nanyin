@@ -232,7 +232,16 @@
 	<result column='DEPT_EQUITY' property='deptEquity' jdbcType='VARCHAR' />
 	<result column='HOLD_PURPOSE' property='holdPurpose' jdbcType='VARCHAR' />
 	<result column='FINANCIAL_COMISSUE' property='financialComissue' jdbcType='VARCHAR' />
-	
+	<!-- 中债报送资产要素登记升级新增字段 add by tuqirong 2021-12-28 start -->
+	<result column="ACCOUNT_NO" property="accountNo" jdbcType="VARCHAR" />
+	<result column="CREDIT_ASSET_CODE" property="creditAssetCode" jdbcType="VARCHAR" />
+	<result column="IS_BZHPJ" property="isBzhpj" jdbcType="VARCHAR" />
+	<result column="BILL_CODE" property="billCode" jdbcType="VARCHAR" />
+	<result column="FINANCIAL_PRODUCT_FLAG" property="financialProductFlag" jdbcType="VARCHAR" />
+	<result column="PROD_REGISTER_CODE" property="prodRegisterCode" jdbcType="VARCHAR" />
+	<result column="PROFIT_FLAG" property="profitFlag" jdbcType="VARCHAR" />
+	<result column="IS_DEPOSIT_FLAG" property="isDepositFlag" jdbcType="VARCHAR" />
+	<!-- 中债报送资产要素登记升级新增字段 add by tuqirong 2021-12-28 end -->
 	</resultMap>
     <resultMap id="BaseResultMapForBatch"
         type="com.joyintech.tams.svreport.chb.assetinforeg.dto.ChbAssetInfoSub001Dto">
@@ -465,7 +474,16 @@
 	<result column='HOLD_PURPOSE' property='holdPurpose' jdbcType='VARCHAR' />
 	<result column='FINANCIAL_COMISSUE' property='financialComissue' jdbcType='VARCHAR' />
     <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
-   
+	<!-- 中债报送资产要素登记升级新增字段 add by tuqirong 2021-12-28 start -->
+	<result column="ACCOUNT_NO" property="accountNo" jdbcType="VARCHAR" />
+	<result column="CREDIT_ASSET_CODE" property="creditAssetCode" jdbcType="VARCHAR" />
+	<result column="IS_BZHPJ" property="isBzhpj" jdbcType="VARCHAR" />
+	<result column="BILL_CODE" property="billCode" jdbcType="VARCHAR" />
+	<result column="FINANCIAL_PRODUCT_FLAG" property="financialProductFlag" jdbcType="VARCHAR" />
+	<result column="PROD_REGISTER_CODE" property="prodRegisterCode" jdbcType="VARCHAR" />
+	<result column="PROFIT_FLAG" property="profitFlag" jdbcType="VARCHAR" />
+	<result column="IS_DEPOSIT_FLAG" property="isDepositFlag" jdbcType="VARCHAR" />
+	<!-- 中债报送资产要素登记升级新增字段 add by tuqirong 2021-12-28 end -->
     </resultMap>
 	
 	<resultMap id="BaseResultMapHis" type="com.joyintech.tams.svreport.chb.assetinforeg.dto.ChbAssetInfoSubHisDto" >
@@ -621,6 +639,16 @@
     <result column="CAP_USE_INDU_LEVEL2" property="capUseInduLevel2" jdbcType="VARCHAR" />
     <result column="ISSUE_PARTY_NAME" property="issuePartyName" jdbcType="VARCHAR" />
     <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+	<!-- 中债报送资产要素登记升级新增字段 add by tuqirong 2021-12-28 start -->
+	<result column="ACCOUNT_NO" property="accountNo" jdbcType="VARCHAR" />
+	<result column="CREDIT_ASSET_CODE" property="creditAssetCode" jdbcType="VARCHAR" />
+	<result column="IS_BZHPJ" property="isBzhpj" jdbcType="VARCHAR" />
+	<result column="BILL_CODE" property="billCode" jdbcType="VARCHAR" />
+	<result column="FINANCIAL_PRODUCT_FLAG" property="financialProductFlag" jdbcType="VARCHAR" />
+	<result column="PROD_REGISTER_CODE" property="prodRegisterCode" jdbcType="VARCHAR" />
+	<result column="PROFIT_FLAG" property="profitFlag" jdbcType="VARCHAR" />
+	<result column="IS_DEPOSIT_FLAG" property="isDepositFlag" jdbcType="VARCHAR" />
+	<!-- 中债报送资产要素登记升级新增字段 add by tuqirong 2021-12-28 end -->
       </resultMap>
     <sql id="Base_Column_List_His" >
     REGIST_SEQNO HIS_NO, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2, CCY, TRADE_MARKET, VDATE, MDATE, ASSET_YIELD, 
@@ -681,7 +709,17 @@
         DEPT_EQUITY,
         HOLD_PURPOSE,
         FINANCIAL_COMISSUE,
-	SUMIT_SEQ
+		SUMIT_SEQ
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+		,ACCOUNT_NO,
+		CREDIT_ASSET_CODE,
+		IS_BZHPJ,
+		BILL_CODE,
+		FINANCIAL_PRODUCT_FLAG,
+		PROD_REGISTER_CODE,
+		PROFIT_FLAG,
+		IS_DEPOSIT_FLAG
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
     </sql>
 	
 	<sql id="Base_Column_List">
@@ -781,7 +819,17 @@
         DEPT_EQUITY,
         HOLD_PURPOSE,
         FINANCIAL_COMISSUE,
-	SUMIT_SEQ
+		SUMIT_SEQ
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+		,ACCOUNT_NO,
+		CREDIT_ASSET_CODE,
+		IS_BZHPJ,
+		BILL_CODE,
+		FINANCIAL_PRODUCT_FLAG,
+		PROD_REGISTER_CODE,
+		PROFIT_FLAG,
+		IS_DEPOSIT_FLAG
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
@@ -901,7 +949,17 @@
         EQUITY_QUIT,
         DEPT_EQUITY,
         HOLD_PURPOSE,
-        FINANCIAL_COMISSUE)
+        FINANCIAL_COMISSUE
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+		,ACCOUNT_NO,
+		CREDIT_ASSET_CODE,
+		IS_BZHPJ,
+		BILL_CODE,
+		FINANCIAL_PRODUCT_FLAG,
+		PROD_REGISTER_CODE,
+		PROFIT_FLAG,
+		IS_DEPOSIT_FLAG
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->)
         values (#{sumitSeq,jdbcType=VARCHAR},#{registSeqno,jdbcType=CHAR},
         #{assetCode,jdbcType=VARCHAR},
         #{assetType,jdbcType=VARCHAR},
@@ -1051,7 +1109,17 @@
 				#{equityQuit,jdbcType=TIMESTAMP},
 				#{deptEquity,jdbcType=VARCHAR},
 				#{holdPurpose,jdbcType=VARCHAR},
-				#{financialComissue,jdbcType=VARCHAR} 
+				#{financialComissue,jdbcType=VARCHAR}
+				<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+				,#{accountNo,jdbcType=VARCHAR},
+				#{creditAssetCode,jdbcType=VARCHAR},
+				#{isBzhpj,jdbcType=VARCHAR},
+				#{billCode,jdbcType=VARCHAR},
+				#{financialProductFlag,jdbcType=VARCHAR},
+				#{prodRegisterCode,jdbcType=VARCHAR},
+				#{profitFlag,jdbcType=VARCHAR},
+				#{isDepositFlag,jdbcType=VARCHAR}
+				<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
         )
     </insert>
 	<insert id="insert"
@@ -1123,7 +1191,17 @@
 		UPDATE_TIME, ORG_CODE, DEPT_CODE,
 		SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
 		DATA_SOURCE,
-		DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME, SUMIT_SEQ)
+		DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME, SUMIT_SEQ
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+		,ACCOUNT_NO,
+		CREDIT_ASSET_CODE,
+		IS_BZHPJ,
+		BILL_CODE,
+		FINANCIAL_PRODUCT_FLAG,
+		PROD_REGISTER_CODE,
+		PROFIT_FLAG,
+		IS_DEPOSIT_FLAG
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->)
 		values (#{registSeqno,jdbcType=CHAR},
 		#{assetCode,jdbcType=VARCHAR},
 		#{assetType,jdbcType=VARCHAR},
@@ -1237,7 +1315,17 @@
 		#{createDept,jdbcType=VARCHAR},
 		#{dataSource,jdbcType=VARCHAR},
 		#{deleteRes,jdbcType=VARCHAR},#{secCreditGradeType,jdbcType=VARCHAR},
-		#{capUseInduLevel2,jdbcType=VARCHAR},#{issuePartyName,jdbcType=VARCHAR},#{sumitSeq,jdbcType=VARCHAR})
+		#{capUseInduLevel2,jdbcType=VARCHAR},#{issuePartyName,jdbcType=VARCHAR},#{sumitSeq,jdbcType=VARCHAR}
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+		,#{accountNo,jdbcType=VARCHAR},
+		#{creditAssetCode,jdbcType=VARCHAR},
+		#{isBzhpj,jdbcType=VARCHAR},
+		#{billCode,jdbcType=VARCHAR},
+		#{financialProductFlag,jdbcType=VARCHAR},
+		#{prodRegisterCode,jdbcType=VARCHAR},
+		#{profitFlag,jdbcType=VARCHAR},
+		#{isDepositFlag,jdbcType=VARCHAR}
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->)
 	</insert>
 	<insert id="insertSelective"
 		parameterType="com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto">
@@ -1696,9 +1784,33 @@
             <if test="issuePartyName != null" >
               ISSUE_PARTY_NAME,
             </if>
-	      <if test="sumitSeq != null" >
-	        SUMIT_SEQ,
-	      </if>
+	    	<if test="sumitSeq != null" >
+	        	SUMIT_SEQ,
+	    	</if>
+			<if test="accountNo != null">
+				ACCOUNT_NO,
+			</if>
+			<if test="creditAssetCode != null">
+				CREDIT_ASSET_CODE,
+			</if>
+			<if test="isBzhpj != null" >
+				IS_BZHPJ,
+			</if>
+			<if test="billCode != null" >
+				BILL_CODE,
+			</if>
+			<if test="financialProductFlag != null">
+				FINANCIAL_PRODUCT_FLAG,
+			</if>
+			<if test="prodRegisterCode != null">
+				PROD_REGISTER_CODE,
+			</if>
+			<if test="profitFlag != null" >
+				PROFIT_FLAG,
+			</if>
+			<if test="isDepositFlag != null" >
+				IS_DEPOSIT_FLAG,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="registSeqno != null">
@@ -2154,9 +2266,33 @@
             <if test="issuePartyName != null" >
               #{issuePartyName,jdbcType=VARCHAR},
             </if>
-	      <if test="sumitSeq != null" >
-	        #{sumitSeq,jdbcType=VARCHAR},
-	      </if>
+	      	<if test="sumitSeq != null" >
+	        	#{sumitSeq,jdbcType=VARCHAR},
+	      	</if>
+			<if test="accountNo != null">
+				#{accountNo,jdbcType=VARCHAR},
+			</if>
+			<if test="creditAssetCode != null">
+				#{creditAssetCode,jdbcType=VARCHAR},
+			</if>
+			<if test="isBzhpj != null" >
+				#{isBzhpj,jdbcType=VARCHAR},
+			</if>
+			<if test="billCode != null" >
+				#{billCode,jdbcType=VARCHAR},
+			</if>
+			<if test="financialProductFlag != null">
+				#{financialProductFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="prodRegisterCode != null">
+				#{prodRegisterCode,jdbcType=VARCHAR},
+			</if>
+			<if test="profitFlag != null" >
+				#{profitFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="isDepositFlag != null" >
+				#{isDepositFlag,jdbcType=VARCHAR},
+			</if>
 		</trim>
 	</insert>
 	<update id="updateByPrimaryKeySelective"
@@ -2618,9 +2754,33 @@
             <if test="issuePartyName != null" >
               ISSUE_PARTY_NAME=#{issuePartyName,jdbcType=VARCHAR},
             </if>
-	      <if test="sumitSeq != null" >
-	        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
-	      </if>
+	      	<if test="sumitSeq != null" >
+	        	SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+	      	</if>
+			<if test="accountNo != null">
+				ACCOUNT_NO = #{accountNo,jdbcType=VARCHAR},
+			</if>
+			<if test="creditAssetCode != null">
+				CREDIT_ASSET_CODE = #{creditAssetCode,jdbcType=VARCHAR},
+			</if>
+			<if test="isBzhpj != null" >
+				IS_BZHPJ = #{isBzhpj,jdbcType=VARCHAR},
+			</if>
+			<if test="billCode != null" >
+				BILL_CODE = #{billCode,jdbcType=VARCHAR},
+			</if>
+			<if test="financialProductFlag != null">
+				FINANCIAL_PRODUCT_FLAG = #{financialProductFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="prodRegisterCode != null">
+				PROD_REGISTER_CODE = #{prodRegisterCode,jdbcType=VARCHAR},
+			</if>
+			<if test="profitFlag != null" >
+				PROFIT_FLAG = #{profitFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="isDepositFlag != null" >
+				IS_DEPOSIT_FLAG = #{isDepositFlag,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
 	</update>
@@ -2901,7 +3061,15 @@
 		sec_credit_grade_type = #{secCreditGradeType,jdbcType=VARCHAR},
 		CAP_USE_INDU_LEVEL2=#{capUseInduLevel2,jdbcType=VARCHAR},
         ISSUE_PARTY_NAME=#{issuePartyName,jdbcType=VARCHAR},
-        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR}
+        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+		ACCOUNT_NO = #{accountNo,jdbcType=VARCHAR},
+		CREDIT_ASSET_CODE = #{creditAssetCode,jdbcType=VARCHAR},
+		IS_BZHPJ = #{isBzhpj,jdbcType=VARCHAR},
+		BILL_CODE = #{billCode,jdbcType=VARCHAR},
+		FINANCIAL_PRODUCT_FLAG = #{financialProductFlag,jdbcType=VARCHAR},
+		PROD_REGISTER_CODE = #{prodRegisterCode,jdbcType=VARCHAR},
+		PROFIT_FLAG = #{profitFlag,jdbcType=VARCHAR},
+		IS_DEPOSIT_FLAG = #{isDepositFlag,jdbcType=VARCHAR}
 		where REGIST_SEQNO =
 		#{registSeqno,jdbcType=CHAR}
 	</update>
@@ -3098,6 +3266,16 @@
 			HOLD_PURPOSE  holdPurpose,
 			FINANCIAL_COMISSUE  financialComissue,
 			ASSETINFO.SUMIT_SEQ  sumitSeq
+			<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+			,ACCOUNT_NO accountNo,
+			CREDIT_ASSET_CODE creditAssetCode,
+			IS_BZHPJ isBzhpj,
+			BILL_CODE billCode,
+			FINANCIAL_PRODUCT_FLAG financialProductFlag,
+			PROD_REGISTER_CODE prodRegisterCode,
+			PROFIT_FLAG profitFlag,
+			IS_DEPOSIT_FLAG isDepositFlag
+			<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
 		from CHB_ASSET_INFO_SUB ASSETINFO
 		<where>
 			<if test="assetTypeList != null and assetTypeList.size() > 0">
@@ -3381,6 +3559,16 @@
 		       ASSETINFO.HOLD_PURPOSE           holdPurpose,
 		       ASSETINFO.FINANCIAL_COMISSUE     financialComissue,
 			   NULL belongInstitutionCode,
+				<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+				ASSETINFO.ACCOUNT_NO accountNo,
+				ASSETINFO.CREDIT_ASSET_CODE creditAssetCode,
+				ASSETINFO.IS_BZHPJ isBzhpj,
+				ASSETINFO.BILL_CODE billCode,
+				ASSETINFO.FINANCIAL_PRODUCT_FLAG financialProductFlag,
+				ASSETINFO.PROD_REGISTER_CODE prodRegisterCode,
+				ASSETINFO.PROFIT_FLAG profitFlag,
+				ASSETINFO.IS_DEPOSIT_FLAG isDepositFlag,
+				<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
 			  '02' model_type 
 		from CHB_ASSET_INFO_SUB ASSETINFO
 		<!--LEFT JOIN FIN_PRODUCT F ON ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID
@@ -3738,6 +3926,16 @@
 	       ASSETINFO.HOLD_PURPOSE           holdPurpose,
 	       ASSETINFO.FINANCIAL_COMISSUE     financialComissue,
 			DA.BELONG_INSTITUTION_CODE belongInstitutionCode,
+			<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+			ASSETINFO.ACCOUNT_NO accountNo,
+			ASSETINFO.CREDIT_ASSET_CODE creditAssetCode,
+			ASSETINFO.IS_BZHPJ isBzhpj,
+			ASSETINFO.BILL_CODE billCode,
+			ASSETINFO.FINANCIAL_PRODUCT_FLAG financialProductFlag,
+			ASSETINFO.PROD_REGISTER_CODE prodRegisterCode,
+			ASSETINFO.PROFIT_FLAG profitFlag,
+			ASSETINFO.IS_DEPOSIT_FLAG isDepositFlag,
+			<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
 			'02' model_type 
 		from CHB_ASSET_INFO_SUB ASSETINFO
 	<!--	LEFT JOIN FIN_PRODUCT F ON ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID-->
@@ -4121,6 +4319,16 @@
 		       ASSETINFO.HOLD_PURPOSE           holdPurpose,
 		       ASSETINFO.FINANCIAL_COMISSUE     financialComissue,
 			   NULL belongInstitutionCode,
+				<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+				ASSETINFO.ACCOUNT_NO accountNo,
+				ASSETINFO.CREDIT_ASSET_CODE creditAssetCode,
+				ASSETINFO.IS_BZHPJ isBzhpj,
+				ASSETINFO.BILL_CODE billCode,
+				ASSETINFO.FINANCIAL_PRODUCT_FLAG financialProductFlag,
+				ASSETINFO.PROD_REGISTER_CODE prodRegisterCode,
+				ASSETINFO.PROFIT_FLAG profitFlag,
+				ASSETINFO.IS_DEPOSIT_FLAG isDepositFlag,
+				<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
 			  '02' model_type 
 		from CHB_ASSET_INFO_SUB ASSETINFO
 	<!--	LEFT JOIN FIN_PRODUCT F ON ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID
@@ -4412,6 +4620,16 @@
 	       ASSETINFO.HOLD_PURPOSE           holdPurpose,
 	       ASSETINFO.FINANCIAL_COMISSUE     financialComissue,
 			DA.BELONG_INSTITUTION_CODE belongInstitutionCode,
+			<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+			ASSETINFO.ACCOUNT_NO accountNo,
+			ASSETINFO.CREDIT_ASSET_CODE creditAssetCode,
+			ASSETINFO.IS_BZHPJ isBzhpj,
+			ASSETINFO.BILL_CODE billCode,
+			ASSETINFO.FINANCIAL_PRODUCT_FLAG financialProductFlag,
+			ASSETINFO.PROD_REGISTER_CODE prodRegisterCode,
+			ASSETINFO.PROFIT_FLAG profitFlag,
+			ASSETINFO.IS_DEPOSIT_FLAG isDepositFlag,
+			<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
 			'02' model_type 
 		from CHB_ASSET_INFO_SUB ASSETINFO
 		<!--LEFT JOIN FIN_PRODUCT F ON ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID-->
@@ -4774,7 +4992,17 @@
 		assetinfo.EQUITY_QUIT  ,
 		assetinfo.DEPT_EQUITY  ,
 		assetinfo.HOLD_PURPOSE  ,
-		assetinfo.FINANCIAL_COMISSUE  
+		assetinfo.FINANCIAL_COMISSUE
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+		,assetinfo.ACCOUNT_NO,
+		assetinfo.CREDIT_ASSET_CODE,
+		assetinfo.IS_BZHPJ,
+		assetinfo.BILL_CODE,
+		assetinfo.FINANCIAL_PRODUCT_FLAG,
+		assetinfo.PROD_REGISTER_CODE,
+		assetinfo.PROFIT_FLAG,
+		assetinfo.IS_DEPOSIT_FLAG
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
 		FROM chb_asset_info assetinfo
 		<!-- LEFT JOIN secrating 
 		on secrating.asset_code = assetinfo.asset_code -->
@@ -4932,7 +5160,17 @@
 		UPDATE_TIME, ORG_CODE, DEPT_CODE,
 		SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
 		DATA_SOURCE,
-		DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME,SUMIT_SEQ)
+		DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME,SUMIT_SEQ
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+		,ACCOUNT_NO,
+		CREDIT_ASSET_CODE,
+		IS_BZHPJ,
+		BILL_CODE,
+		FINANCIAL_PRODUCT_FLAG,
+		PROD_REGISTER_CODE,
+		PROFIT_FLAG,
+		IS_DEPOSIT_FLAG
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->)
 		<foreach collection="insertList" item="item" index="index" separator="union all " >
 		select
 		#{item.registSeqno,jdbcType=CHAR},
@@ -5052,6 +5290,16 @@
 		#{item.capUseInduLevel2,jdbcType=VARCHAR},
         #{item.issuePartyName,jdbcType=VARCHAR},
         #{item.sumitSeq,jdbcType=VARCHAR}
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+		,#{item.accountNo,jdbcType=VARCHAR},
+		#{item.creditAssetCode,jdbcType=VARCHAR},
+		#{item.isBzhpj,jdbcType=VARCHAR},
+		#{item.billCode,jdbcType=VARCHAR},
+		#{item.financialProductFlag,jdbcType=VARCHAR},
+		#{item.prodRegisterCode,jdbcType=VARCHAR},
+		#{item.profitFlag,jdbcType=VARCHAR},
+		#{item.isDepositFlag,jdbcType=VARCHAR}
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
 		from dual
 		</foreach>
 	</insert>
@@ -5536,6 +5784,30 @@
                 <if test="item.sumitSeq != null" >
                   SUMIT_SEQ = #{item.sumitSeq,jdbcType=VARCHAR},
                 </if>
+				<if test="item.accountNo != null">
+					ACCOUNT_NO = #{item.accountNo,jdbcType=VARCHAR},
+				</if>
+				<if test="item.creditAssetCode != null">
+					CREDIT_ASSET_CODE = #{item.creditAssetCode,jdbcType=VARCHAR},
+				</if>
+				<if test="item.isBzhpj != null" >
+					IS_BZHPJ = #{item.isBzhpj,jdbcType=VARCHAR},
+				</if>
+				<if test="item.billCode != null" >
+					BILL_CODE = #{item.billCode,jdbcType=VARCHAR},
+				</if>
+				<if test="item.financialProductFlag != null">
+					FINANCIAL_PRODUCT_FLAG = #{item.financialProductFlag,jdbcType=VARCHAR},
+				</if>
+				<if test="item.prodRegisterCode != null">
+					PROD_REGISTER_CODE = #{item.prodRegisterCode,jdbcType=VARCHAR},
+				</if>
+				<if test="item.profitFlag != null" >
+					PROFIT_FLAG = #{item.profitFlag,jdbcType=VARCHAR},
+				</if>
+				<if test="item.isDepositFlag != null" >
+					IS_DEPOSIT_FLAG = #{item.isDepositFlag,jdbcType=VARCHAR},
+				</if>
 			</set>
 			<!-- where REGIST_SEQNO = #{item.registSeqno,jdbcType=CHAR} -->
 			where asset_code = #{item.assetCode,jdbcType=VARCHAR}
@@ -5712,7 +5984,17 @@
         FINANCIAL_COMISSUE,
         SUMIT_SEQ,
 		SUBMIT_FEEDBACK_MSG
-      )
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+		,ACCOUNT_NO,
+		CREDIT_ASSET_CODE,
+		IS_BZHPJ,
+		BILL_CODE,
+		FINANCIAL_PRODUCT_FLAG,
+		PROD_REGISTER_CODE,
+		PROFIT_FLAG,
+		IS_DEPOSIT_FLAG
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
+		)
       select  
         REGIST_SEQNO,
         ASSET_CODE, ASSET_TYPE,
@@ -5820,7 +6102,17 @@
         FINANCIAL_COMISSUE,
         SUMIT_SEQ,
 		SUBMIT_FEEDBACK_MSG
-      from CHB_ASSET_INFO_SUB
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+		,ACCOUNT_NO,
+		CREDIT_ASSET_CODE,
+		IS_BZHPJ,
+		BILL_CODE,
+		FINANCIAL_PRODUCT_FLAG,
+		PROD_REGISTER_CODE,
+		PROFIT_FLAG,
+		IS_DEPOSIT_FLAG
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
+		from CHB_ASSET_INFO_SUB
       where 1 =1
       <if test="registList !=null and registList.size()>0">
          <foreach collection="registList" item="regist" open="and ((" separator=") OR ("  close="))">
@@ -5947,6 +6239,16 @@
         FINANCIAL_COMISSUE,
         SUMIT_SEQ,
 		SUBMIT_FEEDBACK_MSG
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+		,ACCOUNT_NO,
+		CREDIT_ASSET_CODE,
+		IS_BZHPJ,
+		BILL_CODE,
+		FINANCIAL_PRODUCT_FLAG,
+		PROD_REGISTER_CODE,
+		PROFIT_FLAG,
+		IS_DEPOSIT_FLAG
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
       )
       select HIS_NO,
         ASSET_CODE, ASSET_TYPE,
@@ -6054,6 +6356,16 @@
         FINANCIAL_COMISSUE,
         SUMIT_SEQ,
 		SUBMIT_FEEDBACK_MSG
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+		,ACCOUNT_NO,
+		CREDIT_ASSET_CODE,
+		IS_BZHPJ,
+		BILL_CODE,
+		FINANCIAL_PRODUCT_FLAG,
+		PROD_REGISTER_CODE,
+		PROFIT_FLAG,
+		IS_DEPOSIT_FLAG
+		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
       from (
           select  HIS_NO,
 	        ASSET_CODE, ASSET_TYPE,
@@ -6161,6 +6473,16 @@
 			FINANCIAL_COMISSUE,
 			SUMIT_SEQ,
 			SUBMIT_FEEDBACK_MSG,
+			<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 start -->
+			ACCOUNT_NO,
+			CREDIT_ASSET_CODE,
+			IS_BZHPJ,
+			BILL_CODE,
+			FINANCIAL_PRODUCT_FLAG,
+			PROD_REGISTER_CODE,
+			PROFIT_FLAG,
+			IS_DEPOSIT_FLAG,
+			<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
             rank() over (partition by ASSET_CODE order by nvl(update_time,create_time) desc) ranknum
          from CHB_ASSET_INFO_SUB_HIS  his
          <where>

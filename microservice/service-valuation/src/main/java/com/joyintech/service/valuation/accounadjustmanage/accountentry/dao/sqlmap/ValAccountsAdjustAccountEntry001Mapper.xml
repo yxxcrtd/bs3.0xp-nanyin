@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.service.valuation.accounadjustmanage.accountentry.dao.ValAccountsAdjustAccountEntry001Mapper">
-	
-	<select id="findBooksets" resultType="com.joyintech.framework.select.SelectOptionDto">
+
+    <select id="findBooksets" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
             BOOKSET_ID AS id,
             BOOKSET_NAME AS text,
@@ -11,17 +11,17 @@
     </select>
 
     <select id="findTableIds" resultType="com.joyintech.framework.select.SelectOptionDto">
-        SELECT distinct 
-            TABLE_ID AS id,
-            TABLE_NAME AS text
+        SELECT distinct
+        TABLE_ID AS id,
+        TABLE_NAME AS text
         FROM BOK_TABLELIST BT
         where 1=1
         <if test="search != null and search !=''">
-			and (TABLE_NAME like concat(concat('%', #{search,jdbcType=VARCHAR}),'%') or TABLE_id like concat(concat('%', #{search,jdbcType=VARCHAR}),'%'))
-		</if>
-		<if test="booksetId != null and booksetId !=''">
-			and BOOKSET_ID = #{booksetId}
-		</if>
+            and (TABLE_NAME like concat(concat('%', #{search,jdbcType=VARCHAR}),'%') or TABLE_id like concat(concat('%', #{search,jdbcType=VARCHAR}),'%'))
+        </if>
+        <if test="booksetId != null and booksetId !=''">
+            and BOOKSET_ID = #{booksetId}
+        </if>
     </select>
 
 
@@ -63,34 +63,34 @@
         BS.NODE_VALUE, BS.BOOKSET_ID,BS.UPDATE_TIME,BS.FSCENE_NODEID,BS."LEVEL"
         ORDER BY BS.SCENE_NODE_ID
     </select>
-    
+
     <sql id="whereCondition">
         WHERE 1 = 1
         AND BS.BOOKSET_ID = #{booksetId}
         <if test="nodeId != null and nodeId != ''">
-            AND BS.SCENE_NODE_ID LIKE 
+            AND BS.SCENE_NODE_ID LIKE
             nvl((SELECT SCENE_NODE_ID
-                FROM BOK_SCENECONFIG
-                WHERE NODE_ID = #{ACCOUNTEVENTS}
-                AND BOOKSET_ID = #{booksetId}
-                AND NODE_VALUE = #{nodeId})
-                ,'#无该节点内容#')||'%'
+            FROM BOK_SCENECONFIG
+            WHERE NODE_ID = #{ACCOUNTEVENTS}
+            AND BOOKSET_ID = #{booksetId}
+            AND NODE_VALUE = #{nodeId})
+            ,'#无该节点内容#')||'%'
         </if>
     </sql>
-    
-    
+
+
     <update id="deleteConfig">
         DELETE FROM BOK_SCENECONFIG
         WHERE SCENE_NODE_ID LIKE #{sceneNodeId}||'%'
     </update>
-    
+
     <update id="updateSceneSubjectToD">
         UPDATE BOK_SCENESUBJECT SET UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}, UPDATE_USER = #{updateUser} 
         WHERE SCENE_NODE_ID LIKE #{sceneNodeId}||'%'
     </update>
-    
+
     <select id="findAccountEntryByNodeId" resultType="java.util.Date">
         SELECT UPDATE_TIME FROM BOK_SCENECONFIG WHERE SCENE_NODE_ID = #{sceneNodeId}
     </select>
-    
+
 </mapper>

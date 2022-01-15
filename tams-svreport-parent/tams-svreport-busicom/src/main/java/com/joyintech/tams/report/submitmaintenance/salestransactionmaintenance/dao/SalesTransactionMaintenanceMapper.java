@@ -66,6 +66,13 @@ public interface SalesTransactionMaintenanceMapper {
     int update(SalesTransactionMaintenanceDto dto);
 
     /**
+     * 删除err
+     * @param
+     * @return
+     */
+    int deleteErr(@Param("registSeqno") String registSeqno);
+
+    /**
      * 提供销售结算资金服务机构代码下拉框
      */
     List<SuggestDto> getInstitutionCode(Map<String, Object> map);

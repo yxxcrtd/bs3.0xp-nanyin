@@ -222,6 +222,20 @@ public class ChbPrdDealSub extends ChbPrdDealSubKey {
      */
     private Date updateTime;
 
+	/***
+	 *净值日期
+	 */
+    private Date  yieldDate;
+
+
+	public Date getYieldDate() {
+		return yieldDate;
+	}
+
+	public void setYieldDate(Date yieldDate) {
+		this.yieldDate = yieldDate;
+	}
+
 	public String getRegistSeqno() {
 		return registSeqno;
 	}

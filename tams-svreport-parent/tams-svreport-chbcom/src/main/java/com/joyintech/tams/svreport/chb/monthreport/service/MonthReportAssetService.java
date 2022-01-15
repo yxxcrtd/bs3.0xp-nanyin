@@ -6,10 +6,9 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.busicommon.productRating.service.CommonProductRatingService;
-import com.joyintech.tams.common.base.entity.ChbAssetInfo;
-import com.joyintech.tams.common.base.entity.ChbBotAstPosition;
-import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
-import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
+import com.joyintech.tams.common.base.dao.ChbAssetInfoMapper;
+import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoMapper;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.svreport.base.service.ChbTypeMappingService;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
@@ -19,10 +18,18 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.interf.common.constant.InterfMappingConstants;
+import com.joyintech.tams.svreport.chb.assetinforeg.dto.ChbAssetInfoSub001Dto;
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthAssetPositionMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportDetailMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportTemplateMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dto.*;
+import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition;
+import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetRule;
+import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition;
+import com.joyintech.tams.svreport.chb.monthreportdetail.dto.ChbMonthReportDetailAsset;
+import com.joyintech.tams.svreport.chb.monthreportdetail.service.ChbMonthReportDetailAssetUtil;
+import com.joyintech.tams.svreport.chb.monthreportdetail.service.ChbMonthReportDetailProdUtil;
+import com.joyintech.tams.svreport.interf.chb.assetinfo.dao.ChbAssetInfoInterfMapper;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -46,6 +53,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
 /**
  * 银行月度报表生成资产端数据处理类
  * @author yuluan 
@@ -77,6 +86,12 @@ public class MonthReportAssetService {
     
     @Autowired
 	private ChbMonthReportTemplateMapper chbMonthReportTemplateMapper;
+    @Autowired
+    private ChbMonthReportDetailAssetUtil chbMonthReportDetailAssetUtil;
+
+
+	@Autowired
+	private ChbPrdBaseinfoMapper chbPrdBaseinfoMapper;
 
 	/**
 	 * 映射service
@@ -99,6 +114,7 @@ public class MonthReportAssetService {
         logger.info("生成月报资产头寸结束："+year+"年"+month+"月");
         logger.info("生成月报资产明细数据开始："+year+"年"+month+"月");
 		try {
+
 			generateAssetMonthReportDetail(report,ifTrigger);
 		} catch (Exception e) {
 			logger.error("资产端月报生成错误："+e.getMessage(),e);
@@ -296,19 +312,20 @@ public class MonthReportAssetService {
 						// 评级结果取值改变
                         // 判断走独立子系统还是走共通
                         if(isSubSystem != null){
-                            if (StringUtils.equalsIgnoreCase(isSubSystem, DictCodeList.是否_中债_是.getValue())){
-                                m=chbMonthAssetPositionMapper.selectPlanInfo(qm);
-                            }else{
-//                            	qm.setGradeDateEnd(formatter.format(lastday));
-//								qm.setGetProductRatingOrderSqlByZx(getProductRatingOrderSqlByZx);
-//								qm.setGetProductRatingOrderSqlByZt(getProductRatingOrderSqlByZt);
-//								m = chbMonthAssetPositionMapper.selectPlanInfoByCommon(qm);
-								ChbMonthAssetPosition cmamap =cmapMap.get(p11.getAssetCode());
-								if(cmamap!=null) {
-									BeanUtil.copyPropertiesIgnoreNull(m, cmamap);
-								}
+//                            if (StringUtils.equalsIgnoreCase(isSubSystem, DictCodeList.是否_中债_是.getValue())){
+//                                m=chbMonthAssetPositionMapper.selectPlanInfo(qm);
+//                            }else{
+////                            	qm.setGradeDateEnd(formatter.format(lastday));
+////								qm.setGetProductRatingOrderSqlByZx(getProductRatingOrderSqlByZx);
+////								qm.setGetProductRatingOrderSqlByZt(getProductRatingOrderSqlByZt);
+////								m = chbMonthAssetPositionMapper.selectPlanInfoByCommon(qm);
+//
+//                            }
 
-                            }
+							ChbMonthAssetPosition cmamap =cmapMap.get(p11.getAssetCode());
+							if(cmamap!=null) {
+								BeanUtil.copyPropertiesIgnoreNull(m, cmamap);
+							}
                         }
 
 						if(m == null){
@@ -673,8 +690,10 @@ public class MonthReportAssetService {
 //        // 获取前月的第一天
         // 查询月度日期之间的资产头寸
         logger.info("查询本月月报资产头寸开始：");
-			List<ChbMonthAssetPosition> assetMonthPositionList = chbMonthAssetPositionMapper.selectByMonthDate(DateUtil.
-        		format(firstday),DateUtil.format(lastday),report.getProdids());
+//			List<ChbMonthAssetPosition> assetMonthPositionList = chbMonthAssetPositionMapper.selectByMonthDate(DateUtil.
+//        		format(firstday),DateUtil.format(lastday),report.getProdids());
+		List<ChbMonthAssetPosition> assetMonthPositionList = chbMonthAssetPositionMapper.selectByMonthDateAll(DateUtil.
+				format(firstday),DateUtil.format(lastday),report.getProdids());
         logger.info("查询本月月报资产头寸结束：");
         // 用于统计穿透前期末余额 穿透后期末余额,key=propertyCode
         Map<String,ChbMonthReportDetail> assetMonthReportDetailMap = new HashMap<String,ChbMonthReportDetail>();
@@ -732,6 +751,11 @@ public class MonthReportAssetService {
      */
     private Map<String,ChbMonthReportDetail> countMonthReportAmtInvest(List<ChbMonthAssetPosition> assetMonthPositionList
     		,Date reportStartDate,ChbMonthReport report,boolean ifTrigger) {
+
+		 Map<String,ChbPrdBaseinfo> prodMap = new HashMap<>();
+		 Map<String,ChbAssetInfo> assetMap = new HashMap<>();
+		 List<ChbMonthAssetPositiondetail> assetDetailList = new ArrayList();
+
     	// 规则项检查
     	if (!checkRuleIsRight(true)){
     		return null;
@@ -749,10 +773,21 @@ public class MonthReportAssetService {
 		 * 分支机构汇总类
 		 */
 		Map<String,Map<String,ChbMonthReportDetail>> deptMap = new HashMap();
-        
-        
-        
-        // 根据配置规则汇总相应数据
+
+		Set<String> assetList = assetMonthPositionList.stream().map(ChbMonthAssetPosition::getAssetCode).collect(Collectors.toSet());
+		//清除可能出现的null的科目
+		assetList.remove(null);
+		/***获取资产信息列表**/
+		if(null!=assetList&&assetList.size()>0){
+			List<ChbAssetInfo> assetInfoList = chbMonthAssetPositionMapper.selectChbAssetInfoByAssetCodeList(assetList);
+			assetMap = null!=assetInfoList?assetInfoList.stream().collect(Collectors.toMap(p->p.getAssetCode(), p-> p,(key1, key2)->key1)):new HashMap<>();
+		}
+		/***获取产品信息列表**/
+		List<ChbPrdBaseinfo> prdBaseinfoList = chbPrdBaseinfoMapper.selectAllProd(null);
+		prodMap = null!=prdBaseinfoList?prdBaseinfoList.stream().collect(Collectors.toMap(p->p.getProdId(), p-> p,(key1,key2)->key1)):new HashMap<>();
+
+
+		// 根据配置规则汇总相应数据
 //        int count=0;
         for (ChbMonthAssetPosition position :assetMonthPositionList){
         	
@@ -790,13 +825,13 @@ public class MonthReportAssetService {
     					//汇总表记录总数
     					if (!assetMonthReportDetailMap.containsKey(singleRule.getPropertyCode()+"合计")){
         					assetMonthReportDetailMap.put(singleRule.getPropertyCode()+"合计", 
-        							buildDetail(reportStartDate, singleRule.getPropertyCode(), BigDecimal.ZERO, BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO));
+        							buildDetail(position,false,reportStartDate, singleRule.getPropertyCode(), BigDecimal.ZERO, BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO));
         				}
     					//保存分支的合计数据
     					if(null!=deptMap.get(position.getOrgId())){
     						//拷贝一份相同数据并传入当前机构分支数据中
     						deptMap.get(position.getOrgId()).put(singleRule.getPropertyCode()+"合计", 
-    								buildDetail(reportStartDate, singleRule.getPropertyCode(), BigDecimal.ZERO, BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO));
+    								buildDetail(position,false,reportStartDate, singleRule.getPropertyCode(), BigDecimal.ZERO, BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO));
 
     					}
     				}
@@ -888,12 +923,6 @@ public class MonthReportAssetService {
 	        			}
 	        		}
 	        		
-	        		
-	        		if(singleRule.getPropertyCode().contains("AMT1_4_10")||
-	        				singleRule.getPropertyCode().contains("AMT1_4_c")){
-	        			logger.debug("检查数据");
-	        		}
-	        		
         			// 值域匹配则累计，值域不匹配则计0
     				// 判断key值是否已存在，已存在则累计，未存在则新建
 	        		//	汇总值数据组装
@@ -920,6 +949,12 @@ public class MonthReportAssetService {
 									detail.setXgbalance(detail.getXgbalance().add(BigDecimal.ZERO));
 									detail.setXgbottombalance(detail.getXgbottombalance().add(BigDecimal.ZERO));
 								}
+								//每次合計數據均需要計入
+								ChbMonthAssetPositiondetail assetDetail = ChbMonthReportDetailAssetUtil.buildAssetDetail(position,prodMap.get(position.getProdId()),assetMap.get(position.getAssetCode()),detail);
+								if(null!=assetDetail){
+									assetDetailList.add(assetDetail);
+								}
+
 								/**G06资产端改造  add by  dongxiangyang  end*/
 
     	    					// 场外(内)股票质押融资（穿透后）计行内一级分类IN_ASSET_TYPE1=01场内股票质押回购的资产价值ASSETVALUE_B+ASSETVALUE_A（除一级分类=资管，委外，私募）
@@ -931,6 +966,7 @@ public class MonthReportAssetService {
 //    	    							detail.setBottombalance(detail.getBottombalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
 //    	    						}
 //    	    					}
+
                 			}
     					} else if (assetMonthReportDetailMap.containsKey(singleRule.getPropertyCode() + "合计")){
         					ChbMonthReportDetail detail = assetMonthReportDetailMap.get(singleRule.getPropertyCode()+"合计");
@@ -997,11 +1033,16 @@ public class MonthReportAssetService {
 //	    							detail.setBottombalance(detail.getBottombalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
 //	    						}
 //	    					}
-            			}
+							ChbMonthAssetPositiondetail assetDetail = ChbMonthReportDetailAssetUtil.buildAssetDetail(position,prodMap.get(position.getProdId()),assetMap.get(position.getAssetCode()),
+									buildDetail(position,true,reportStartDate, singleRule.getPropertyCode(), balance, bottombalance,xgbalance,xgbottombalance));
+							if(null!=assetDetail){
+								assetDetailList.add(assetDetail);
+							}
+						}
             			
             			//如果汇总项无此合计项则填入
             			assetMonthReportDetailMap.put(singleRule.getPropertyCode(), 
-								buildDetail(reportStartDate, singleRule.getPropertyCode(), balance
+								buildDetail(position,true,reportStartDate, singleRule.getPropertyCode(), balance
 										, bottombalance,xgbalance,xgbottombalance));
             			
             			
@@ -1086,7 +1127,7 @@ public class MonthReportAssetService {
 
 	            			}
 	            			deptMap.get(position.getOrgId()).put(singleRule.getPropertyCode(), 
-									buildDetail(reportStartDate, singleRule.getPropertyCode(), balance
+									buildDetail(position,false,reportStartDate, singleRule.getPropertyCode(), balance
 											, bottombalance,xgbalance,xgbottombalance));
 	    				}
     				}
@@ -1102,9 +1143,9 @@ public class MonthReportAssetService {
         sumDetail(assetMonthReportDetailMap);
         //汇总数据入库
         insertDetail(assetMonthReportDetailMap, report.getTermid(),null);
-        
-        
-        //机构数据合计以及入库
+		chbMonthReportDetailAssetUtil.insertBatch(assetDetailList,report.getTermid(),report.getEnddate());
+
+		//机构数据合计以及入库
         for (Entry<String, Map<String, ChbMonthReportDetail>> details : deptMap.entrySet()) {
         	sumDetail(details.getValue());
             insertDetail(details.getValue(), report.getTermid(),details.getKey());
@@ -1251,9 +1292,20 @@ public class MonthReportAssetService {
         }
     	
     }
-    
-    
-    public ChbMonthReportDetail buildDetail(Date reportStartDate,String properCode,BigDecimal balance,BigDecimal bottombalance,
+
+	/**
+	 *
+	 * @param position 資產頭寸訊息
+	 * @param flag  銀行模式數據為true, 合計及聯社數據flase
+	 * @param reportStartDate 開始時間
+	 * @param properCode 結束時間
+	 * @param balance
+	 * @param bottombalance
+	 * @param xgbalance
+	 * @param xgbottombalance
+	 * @return
+	 */
+    public ChbMonthReportDetail buildDetail(ChbMonthAssetPosition position, boolean flag,Date reportStartDate,String properCode,BigDecimal balance,BigDecimal bottombalance,
 	     BigDecimal xgbalance,BigDecimal xgbottombalance){
     	ChbMonthReportDetail detail = new ChbMonthReportDetail();
 		// uuid
@@ -1274,7 +1326,6 @@ public class MonthReportAssetService {
         //dto.合规穿透后金额 = 入参.合规穿透后金额
 		detail.setXgbottombalance(xgbottombalance);
 		/**新增合规穿透代码字段 start  by dongxiangyang */
-
 		return detail;
     }
     

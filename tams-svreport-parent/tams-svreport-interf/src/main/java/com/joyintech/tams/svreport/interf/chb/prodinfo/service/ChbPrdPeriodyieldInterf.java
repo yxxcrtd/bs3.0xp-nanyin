@@ -60,7 +60,7 @@ public class ChbPrdPeriodyieldInterf extends BaseInterfService {
 	 */
 	public List<String> generatePrdPeriodyieldData(Date batchDate,List<String> prodidList,boolean isSynchronizeTask){
 		// 查询数据
-		List<ChbPrdPeriodYield> list = getBusEntity(prodidList, "D");
+		List<ChbPrdPeriodYield> list = getBusEntity(prodidList, batchDate, null, "D");
 		// 入库
 		if(!StringUtil.isEmptyList(list)){
 			mergeIntoData(list);
@@ -69,7 +69,7 @@ public class ChbPrdPeriodyieldInterf extends BaseInterfService {
 	}
 
 	@Override
-	public List<ChbPrdPeriodYield> getBusEntity(List<String> prodIdlist, String source) {
+	public List<ChbPrdPeriodYield> getBusEntity(List<String> prodIdlist, Date date, String institutionCode, String source) {
 		//获取数据进入CHB_PRD_PERIODYIELD
 		//产品代码集合
 		List<String> prodList = new ArrayList<String>();

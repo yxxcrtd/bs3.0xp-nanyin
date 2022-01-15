@@ -13,6 +13,7 @@ package com.joyintech.tams.report.submitexamination.delayverification.dto;
 import com.joyintech.framework.base.BaseEntity;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 〈一句话功能简述〉
@@ -65,8 +66,19 @@ public class DelayVerification002Dto extends BaseEntity{
     /**
      * 报送截止日期
      */
-    private String submitDeadline;
-    
+//    private String submitDeadline;
+    // modify start  yangxianjiu 2022-1-5
+    private Date submitDeadline;
+
+    public Date getSubmitDeadline() {
+        return submitDeadline;
+    }
+
+    public void setSubmitDeadline(Date submitDeadline) {
+        this.submitDeadline = submitDeadline;
+    }
+    // modify end
+
     /**
      * 获取 code
      * @return code.
@@ -135,17 +147,17 @@ public class DelayVerification002Dto extends BaseEntity{
      * 获取 submitDeadline
      * @return submitDeadline.
      */
-    public String getSubmitDeadline() {
-        return submitDeadline;
-    }
+//    public String getSubmitDeadline() {
+//        return submitDeadline;
+//    }
     
     /**
      * 设置 submitDeadline
      * @param submitDeadline submitDeadline
      */
-    public void setSubmitDeadline(String submitDeadline) {
-        this.submitDeadline = submitDeadline;
-    }
+//    public void setSubmitDeadline(String submitDeadline) {
+//        this.submitDeadline = submitDeadline;
+//    }
 
 	public String getUnSubmitNum() {
 		return unSubmitNum;

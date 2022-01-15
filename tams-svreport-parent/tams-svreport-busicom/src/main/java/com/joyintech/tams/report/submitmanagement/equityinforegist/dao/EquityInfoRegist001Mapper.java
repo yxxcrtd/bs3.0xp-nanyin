@@ -56,6 +56,10 @@ public interface EquityInfoRegist001Mapper {
 
     int insertBatchEquityRegist(List<EquityInfo001Dto> list);
 
+    int updateEquityInfoForBatch(List<EquityInfo001Dto> list);
+    
+    int updateEquitySubForBatch(List<EquityInfo001Dto> list);
+        
     int deleteBatchEquityRegist(List<EquityInfo001Dto> list);
 
     int insertExcelEquityRegist(List<EquityInfoRegist001Dto> list);
@@ -312,4 +316,10 @@ public interface EquityInfoRegist001Mapper {
     
     
     int countExportNum(Map<String,Object> map);
+
+    /**
+     *  根据传入 bankCode 和 indentifyMark 获取 SUBMIT_FEEDBACK_STATUS = '03'
+     * @return
+     */
+    List<EquityInfoRegist001Dto> queryAllForEquityInfo(Map<String,Object> param);
 }

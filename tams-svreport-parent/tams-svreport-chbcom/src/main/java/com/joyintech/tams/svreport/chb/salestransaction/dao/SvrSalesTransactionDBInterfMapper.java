@@ -25,11 +25,6 @@ public interface SvrSalesTransactionDBInterfMapper {
 	List<ChbSalesTransactionInfoSub> selectRegSalesTransactionData();
 	
 	int deleteBatchData(@Param("deleleList")List<ChbSalesTransactionInfoSub> deleleList);
-    /**
-     * 增量插入数据
-     * @param subList
-     */
-    int insertChbSalesTransactionSubData(@Param("subList")List<ChbSalesTransactionInfoSub> subList);
 
 	/**
 	 * 插入数据

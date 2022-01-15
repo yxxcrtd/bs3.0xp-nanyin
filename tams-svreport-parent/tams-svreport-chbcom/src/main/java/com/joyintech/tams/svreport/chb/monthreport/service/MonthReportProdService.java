@@ -3,6 +3,9 @@ package com.joyintech.tams.svreport.chb.monthreport.service;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoMapper;
+import com.joyintech.tams.common.base.entity.ChbMonthPrdPositiondetail;
+import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.common.base.entity.ChbPrdPeriodYield;
 import com.joyintech.tams.common.svreport.chb.constant.ProdConstants;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
@@ -15,6 +18,7 @@ import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthPrdPositionMapper
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportDetailMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportTemplateMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dto.*;
+import com.joyintech.tams.svreport.chb.monthreportdetail.service.ChbMonthReportDetailProdUtil;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +31,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 /**
  * 银行月度报表生成产品端数据处理类
@@ -59,8 +64,15 @@ public class MonthReportProdService {
 	@Autowired
 	private ChbMonthReportDetailMapper chbMonthReportDetailMapper;
 
+
+
+	@Autowired
+	private ChbMonthReportDetailProdUtil chbMonthReportDetailProdUtil;
+
 	@Value("${application.reportSelectOrDeleteCount}")
 	public int reportSelectOrDeleteCount;
+	@Autowired
+	private ChbPrdBaseinfoMapper chbPrdBaseinfoMapper;
 	
 	
 	private final String  calcProdcounts = "calcProdcounts";
@@ -191,6 +203,8 @@ public class MonthReportProdService {
 		Date firstday = report.getStartdate();
 		Date lastday = report.getEnddate();
 
+		 Map<String,ChbPrdBaseinfo> prodMap;
+		 List<ChbMonthPrdPositiondetail> prodDetailList = new ArrayList();
 		
         /****update by leipeng 20200606  多法人改造.主表由数据实时生成**/
 
@@ -275,9 +289,11 @@ public class MonthReportProdService {
 		fee.setProdids(report.getProdids());
 		//修改查询逻辑.一定会查出产品对应机构信息
 		List<ChbMonthFeePosition> listFeePosition = chbMonthFeePositionMapper.select(fee);
-		
-		
-		
+
+		/***获取产品信息列表**/
+		List<ChbPrdBaseinfo> prdBaseinfoList = chbPrdBaseinfoMapper.selectAllProd(null);
+		prodMap = null!=prdBaseinfoList?prdBaseinfoList.stream().collect(Collectors.toMap(p->p.getProdId(), p-> p,(key1,key2)->key1)):new HashMap<>();
+
 		/********================********/
 		
 		
@@ -453,8 +469,8 @@ public class MonthReportProdService {
 //					line6Sub1.setBalance(line6Sub1.getBalance().add(pos.getEndamtsumOth()));
 					
 
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.RMB);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.RMB);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.RMB);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.RMB);
  
 				}
 
@@ -469,8 +485,8 @@ public class MonthReportProdService {
 //						line6Sub2.calcDurationprodcounts(pos.getProdid());
 //					line6Sub2.setBalance(line6Sub2.getBalance().add(pos.getEndamtsumOth()));
 					
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.MY);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.MY);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.MY);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.MY);
 					
 				}
 
@@ -487,8 +503,8 @@ public class MonthReportProdService {
 					
 					
 
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.OY);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.OY);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.OY);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.OY);
 					
 					
 				}
@@ -505,8 +521,8 @@ public class MonthReportProdService {
 //					line6Sub4.setBalance(line6Sub4.getBalance().add(pos.getEndamtsumOth()));
 //					
 				
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.QTBZ);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.QTBZ);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.QTBZ);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.QTBZ);
 					
 				}
 
@@ -535,8 +551,8 @@ public class MonthReportProdService {
 //					line1Sub1.setCustomerprofit(line1Sub1.getCustomerprofit().add(pos.getCustomeramt()));
 					
 					
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.GMLCCP);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.GMLCCP);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.GMLCCP);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.GMLCCP);
 					
 					
 				}
@@ -555,8 +571,8 @@ public class MonthReportProdService {
 //					
 //					
 
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.SMLCCP);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.SMLCCP);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.SMLCCP);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.SMLCCP);
 					
 				}
 
@@ -572,8 +588,8 @@ public class MonthReportProdService {
 //					line2Sub1.setBalance(line2Sub1.getBalance().add(pos.getEndamtsumOth()));
 //					line2Sub1.setCustomerprofit(line2Sub1.getCustomerprofit().add(pos.getCustomeramt()));
 					
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.GDSYL);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.GDSYL);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.GDSYL);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.GDSYL);
 					
 				}
 				// 第四行 2.2 权益类
@@ -590,8 +606,8 @@ public class MonthReportProdService {
 					
 					
 					
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.QYL);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.QYL);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.QYL);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.QYL);
 				}
 
 				// 第五行 2.3 商品及金融衍生品类
@@ -607,8 +623,8 @@ public class MonthReportProdService {
 //					line2Sub3.setCustomerprofit(line2Sub3.getCustomerprofit().add(pos.getCustomeramt()));
 					
 					
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.SPJJRYSPL);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.SPJJRYSPL);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.SPJJRYSPL);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.SPJJRYSPL);
 				}
 
 				// 第六行 2.4 混合类
@@ -624,8 +640,8 @@ public class MonthReportProdService {
 //					line2Sub4.setCustomerprofit(line2Sub4.getCustomerprofit().add(pos.getCustomeramt()));
 					
 					
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.HHL);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.HHL);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.HHL);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.HHL);
 				}
 				
 				
@@ -647,8 +663,8 @@ public class MonthReportProdService {
 //					line3Sub1Sub1.setBalance(line3Sub1Sub1.getBalance().add(pos.getEndamtsumOth()));
 					
 					
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.FBSJZX);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.FBSJZX);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.FBSJZX);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.FBSJZX);
 					
 				}
 
@@ -662,8 +678,8 @@ public class MonthReportProdService {
 //					if ("01".equals(pos.getDurationflag())) // 存续状态：存续
 //						line3Sub1Sub2.calcDurationprodcounts(pos.getProdid());
 //					line3Sub1Sub2.setBalance(line3Sub1Sub2.getBalance().add(pos.getEndamtsumOth()));
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.KFSJZX);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.KFSJZX);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.KFSJZX);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.KFSJZX);
 
 					// 第9行 3.1.2.a 现金管理类产品
 					if ("01".equals(pos.getCashmanacate())) { // 现金管理类产品 非保本
@@ -677,8 +693,8 @@ public class MonthReportProdService {
 //							line3Sub1Sub2a.calcDurationprodcounts(pos.getProdid());
 //						line3Sub1Sub2a.setBalance(line3Sub1Sub2a.getBalance().add(pos.getEndamtsumOth()));
 						
-						buildAmt(pos, flag, result, ChbMonthReportPrdConstants.XJGLLCP);
-						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.XJGLLCP);
+						buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.XJGLLCP);
+						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.XJGLLCP);
 					}
 
 					// 第10行 3.1.2.b 封闭期在半年以上的定期开放式产品
@@ -693,8 +709,8 @@ public class MonthReportProdService {
 //							line3Sub1Sub2b.calcDurationprodcounts(pos.getProdid());
 //						line3Sub1Sub2b.setBalance(line3Sub1Sub2b.getBalance().add(pos.getEndamtsumOth()));
 						
-						buildAmt(pos, flag, result, ChbMonthReportPrdConstants.FBQZBNYSDDQKFCP);
-						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.FBQZBNYSDDQKFCP);
+						buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.FBQZBNYSDDQKFCP);
+						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.FBQZBNYSDDQKFCP);
 					}
 				}
 
@@ -710,8 +726,8 @@ public class MonthReportProdService {
 //					line3Sub2Sub1.setBalance(line3Sub2Sub1.getBalance().add(pos.getEndamtsumOth()));
 					
 					
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.FBSFJZX);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.FBSFJZX);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.FBSFJZX);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.FBSFJZX);
 				}
 
 				// 第12行 3.2.2 开放式非净值型
@@ -726,8 +742,8 @@ public class MonthReportProdService {
 //					line3Sub2Sub2.setBalance(line3Sub2Sub2.getBalance().add(pos.getEndamtsumOth()));
 					
 					
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.KFSFJZX);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.KFSFJZX);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.KFSFJZX);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.KFSFJZX);
 				}
 
 				if ((ProdConstants.OPERATEMODE_FBSJZX.equals(pos.getOperateMode())
@@ -738,8 +754,8 @@ public class MonthReportProdService {
 					if(StringUtil.equals(DictCodeList.产品收益标识_非保本浮动收益.getValue(),pos.getProfitType())
 							&&pos.getClosetermday().compareTo(new BigDecimal(90))<0){
 
-						buildAmt(pos, flag, result, ChbMonthReportPrdConstants.FBSSGYYN);
-						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.FBSSGYYN);
+						buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.FBSSGYYN);
+						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.FBSSGYYN);
 					}
 
 					// 第14行 4.1.2 3-6个月(含)
@@ -748,8 +764,8 @@ public class MonthReportProdService {
 					        &&pos.getClosetermday().compareTo(new BigDecimal(184))<=0) { // 封闭式
 																						// 3-6个月(含)
 																						// 非保本
-						buildAmt(pos, flag, result, ChbMonthReportPrdConstants.FBSSLGY);
-						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.FBSSLGY);
+						buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.FBSSLGY);
+						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.FBSSLGY);
 						
 					}
 					// 第15行
@@ -758,8 +774,8 @@ public class MonthReportProdService {
 							&&pos.getClosetermday().compareTo(new BigDecimal(366))<=0) { // 封闭式
 																						// 6-12个月（含）
 																						// 非保本
-						buildAmt(pos, flag, result, ChbMonthReportPrdConstants.FBSLSGY);
-						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.FBSLSGY);
+						buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.FBSLSGY);
+						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.FBSLSGY);
 					}
 
 					// 第16行
@@ -769,8 +785,8 @@ public class MonthReportProdService {
 																						// 1-3年（含）
 																						// 非保本
 						
-						buildAmt(pos, flag, result, ChbMonthReportPrdConstants.FBSYSN);
-						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.FBSYSN);
+						buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.FBSYSN);
+						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.FBSYSN);
 					}
 
 					// 第17行产品收益标识_非保本浮动收益
@@ -780,8 +796,8 @@ public class MonthReportProdService {
 																						// 3年以上
 																						// 非保本
 
-						buildAmt(pos, flag, result, ChbMonthReportPrdConstants.FBSSNYS);
-						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.FBSSNYS);
+						buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.FBSSNYS);
+						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.FBSSNYS);
 					}
 					/**add  4.1 封闭式产品 ，重写各分支判断逻辑：    by  dongxiangyang  end*/
 
@@ -802,8 +818,8 @@ public class MonthReportProdService {
 //							line4Sub2Sub1.calcDurationprodcounts(pos.getProdid());
 //						line4Sub2Sub1.setBalance(line4Sub2Sub1.getBalance().add(pos.getEndamtsumOth()));
 						
-						buildAmt(pos, flag, result, ChbMonthReportPrdConstants.KFSMR);
-						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.KFSMR);
+						buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.KFSMR);
+						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.KFSMR);
 					}
 
 					// 第19行
@@ -820,8 +836,8 @@ public class MonthReportProdService {
 //						line4Sub2Sub2.setBalance(line4Sub2Sub2.getBalance().add(pos.getEndamtsumOth()));
 						
 						
-						buildAmt(pos, flag, result, ChbMonthReportPrdConstants.KFSQT);
-						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.KFSQT);
+						buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.KFSQT);
+						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.KFSQT);
 					}
 
 					// 第20行
@@ -838,8 +854,8 @@ public class MonthReportProdService {
 //						line4Sub2Sub3.setBalance(line4Sub2Sub3.getBalance().add(pos.getEndamtsumOth()));
 						
 						
-						buildAmt(pos, flag, result, ChbMonthReportPrdConstants.KFSQTYGY);
-						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.KFSQTYGY);
+						buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.KFSQTYGY);
+						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.KFSQTYGY);
 					}
 
 					// 第21行
@@ -856,8 +872,8 @@ public class MonthReportProdService {
 //						line4Sub2Sub4.setBalance(line4Sub2Sub4.getBalance().add(pos.getEndamtsumOth()));
 						
 						
-						buildAmt(pos, flag, result, ChbMonthReportPrdConstants.KFSYSY);
-						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.KFSYSY);
+						buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.KFSYSY);
+						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.KFSYSY);
 					}
 
 					// 第22行
@@ -872,8 +888,8 @@ public class MonthReportProdService {
 //							line4Sub2Sub5.calcDurationprodcounts(pos.getProdid());
 //						line4Sub2Sub5.setBalance(line4Sub2Sub5.getBalance().add(pos.getEndamtsumOth()));
 						
-						buildAmt(pos, flag, result, ChbMonthReportPrdConstants.KFSSLY);
-						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.KFSSLY);
+						buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.KFSSLY);
+						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.KFSSLY);
 						
 					}
 
@@ -892,8 +908,8 @@ public class MonthReportProdService {
 						
 						
 						
-						buildAmt(pos, flag, result, ChbMonthReportPrdConstants.KFSLSY);
-						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.KFSLSY);
+						buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.KFSLSY);
+						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.KFSLSY);
 					}
 
 					// 第24行
@@ -910,8 +926,8 @@ public class MonthReportProdService {
 //						line4Sub2Sub7.setBalance(line4Sub2Sub7.getBalance().add(pos.getEndamtsumOth()));
 						
 						
-						buildAmt(pos, flag, result, ChbMonthReportPrdConstants.KFSYSN);
-						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.KFSYSN);
+						buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.KFSYSN);
+						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.KFSYSN);
 					}
 
 					// 第25行
@@ -927,8 +943,8 @@ public class MonthReportProdService {
 //							line4Sub2Sub8.calcDurationprodcounts(pos.getProdid());
 //						line4Sub2Sub8.setBalance(line4Sub2Sub8.getBalance().add(pos.getEndamtsumOth()));
 						
-						buildAmt(pos, flag, result, ChbMonthReportPrdConstants.KFSSNYS);
-						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.KFSSNYS);
+						buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.KFSSNYS);
+						buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.KFSSNYS);
 					}
 				}
 			if(!"001".equals(isPsbc)){
@@ -940,68 +956,68 @@ public class MonthReportProdService {
 				if (ProdConstants.ORDIDENTIFIED_ZRR.equals(pos.getOrdIdentified())
 				&&StringUtil.equals(DictCodeList.产品收益标识_非保本浮动收益.getValue(),pos.getProfitType())) { // 5.1
 
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.ZRR);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.ZRR);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.ZRR);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.ZRR);
 					
 				}
 				// 第28行  5.2.1 非金融机构
 				else if (ProdConstants.ORDIDENTIFIED_FJRJG.equals(pos.getOrdIdentified())
 						&&StringUtil.equals(DictCodeList.产品收益标识_非保本浮动收益.getValue(),pos.getProfitType())) { // 5.2.1
 					// 非金融机构
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.FJRJG);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.FJRJG);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.FJRJG);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.FJRJG);
 				}
 				
 				// 第29行  5.2.2 银行类金融机构
 				else if (ProdConstants.ORDIDENTIFIED_YHJRJG.equals(pos.getOrdIdentified())
 						&&StringUtil.equals(DictCodeList.产品收益标识_非保本浮动收益.getValue(),pos.getProfitType())) { // 5.2.2
 					// 银行类金融机构
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.YHLJRJG);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.YHLJRJG);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.YHLJRJG);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.YHLJRJG);
 				}
 				
 				// 第30行  5.2.7 其他金融机构
 				else if (ProdConstants.ORDIDENTIFIED_QTJRJG.equals(pos.getOrdIdentified())
 						&&StringUtil.equals(DictCodeList.产品收益标识_非保本浮动收益.getValue(),pos.getProfitType())) { // 5.2.3
 					// 其他金融机构
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.QTJRJG);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.QTJRJG);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.QTJRJG);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.QTJRJG);
 				}
 
 				//    5.2.3 保险业金融机构
 				else if (ProdConstants.ORDIDENTIFIED_BXJRJG.equals(pos.getOrdIdentified())
 						&&StringUtil.equals(DictCodeList.产品收益标识_非保本浮动收益.getValue(),pos.getProfitType())) { // 5.2.3
 					// 保险业金融机构
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.BXJRJG);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.BXJRJG);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.BXJRJG);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.BXJRJG);
 				}
 				// 5.2.4 信托公司
 				else if (ProdConstants.ORDIDENTIFIED_XTGS.equals(pos.getOrdIdentified())
 						&&StringUtil.equals(DictCodeList.产品收益标识_非保本浮动收益.getValue(),pos.getProfitType())) { // 5.2.3
 					// 信托公司
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.XTGS);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.XTGS);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.XTGS);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.XTGS);
 				}
 				//    5.2.5 证券公司
 				else if (ProdConstants.ORDIDENTIFIED_ZQGS.equals(pos.getOrdIdentified())
 						&&StringUtil.equals(DictCodeList.产品收益标识_非保本浮动收益.getValue(),pos.getProfitType())) { // 5.2.3
 					// 信托公司
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.ZQGS);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.ZQGS);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.ZQGS);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.ZQGS);
 				}
 				//  5.2.6 基金公司
 				else if (ProdConstants.ORDIDENTIFIED_JJGS.equals(pos.getOrdIdentified())
 						&&StringUtil.equals(DictCodeList.产品收益标识_非保本浮动收益.getValue(),pos.getProfitType())) { // 5.2.3
 					// 基金公司
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.JJGS);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.JJGS);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.JJGS);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.JJGS);
 				}
 				//  5.2.8 金融机构资产管理产品
 				else if (ProdConstants.ORDIDENTIFIED_JRJGZCGLCP.equals(pos.getOrdIdentified())
 						&&StringUtil.equals(DictCodeList.产品收益标识_非保本浮动收益.getValue(),pos.getProfitType())) { // 5.2.3
 					// 金融机构资产管理产品
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.JRJGZCGLCP);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.JRJGZCGLCP);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.JRJGZCGLCP);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.JRJGZCGLCP);
 				}
 				//5.2 法人或其他组织 求和
 				result.get(ChbMonthReportPrdConstants.FRHQTZZ).setBalance(
@@ -1046,8 +1062,8 @@ public class MonthReportProdService {
 //					line7Sub1.setBalance(line7Sub1.getBalance().add(pos.getEndamtsumOth()));
 					
 					
-					buildAmt(pos, flag, result, ChbMonthReportPrdConstants.BBLCCP);
-					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.BBLCCP);
+					buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.BBLCCP);
+					buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.BBLCCP);
 				}
 			}
 			
@@ -1056,73 +1072,76 @@ public class MonthReportProdService {
            /**add  7、附注   处理分支改造     by  dongxiangyang   start*/
 			//增加 【7.1 从母行划转的产品】
 			if (ProdConstants.SALETARGET_CMHHZCP.equals(pos.getIsTransfer())) { // 金融理财产品
-				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.CMHHZCP);
-				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.CMHHZCP);
+				buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.CMHHZCP);
+				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.CMHHZCP);
 			}
 
 			// 第36行 7.2 金融同业专属理财产品
 			if (ProdConstants.SALETARGET_JRTY.equals(pos.getSaleTarget())) { // 金融理财产品
 				
-				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.JRTYZSLCCP);
-				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.JRTYZSLCCP);
+				buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.JRTYZSLCCP);
+				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.JRTYZSLCCP);
 			}
 			//其中：7.2.1 银行类金融机构
 			if (ProdConstants.SALETARGET_JRTY.equals(pos.getSaleTarget())
 			&&ProdConstants.ORDIDENTIFIED_YHJRJG.equals(pos.getOrdIdentified())) { // 银行类金融机构
 
-				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.TYZS_YHLJRJG);
-				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.TYZS_YHLJRJG);
+				buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.TYZS_YHLJRJG);
+				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.TYZS_YHLJRJG);
 			}
 			// 7.2.2 保险业金融机构
 			if (ProdConstants.SALETARGET_JRTY.equals(pos.getSaleTarget())
 					&&ProdConstants.ORDIDENTIFIED_BXJRJG.equals(pos.getOrdIdentified())) { // 保险业金融机构
 
-				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.TYZS_BXJRJG);
-				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.TYZS_BXJRJG);
+				buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.TYZS_BXJRJG);
+				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.TYZS_BXJRJG);
 			}
 			//  7.2.3 信托公司
 			if (ProdConstants.SALETARGET_JRTY.equals(pos.getSaleTarget())
 					&&ProdConstants.ORDIDENTIFIED_XTGS.equals(pos.getOrdIdentified())) { // 信托公司
 
-				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.TYZS_XTGS);
-				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.TYZS_XTGS);
+				buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.TYZS_XTGS);
+				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.TYZS_XTGS);
 			}
 			//  7.2.4 证券公司
 			if (ProdConstants.SALETARGET_JRTY.equals(pos.getSaleTarget())
 					&&ProdConstants.ORDIDENTIFIED_ZQGS.equals(pos.getOrdIdentified())) { // 证券公司
 
-				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.TYZS_ZQGS);
-				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.TYZS_ZQGS);
+				buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.TYZS_ZQGS);
+				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.TYZS_ZQGS);
 			}
 			//   7.2.5 基金公司
 			if (ProdConstants.SALETARGET_JRTY.equals(pos.getSaleTarget())
 					&&ProdConstants.ORDIDENTIFIED_JJGS.equals(pos.getOrdIdentified())) { // 基金公司
 
-				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.TYZS_JJGS);
-				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.TYZS_JJGS);
+				buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.TYZS_JJGS);
+				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.TYZS_JJGS);
 			}
 			//     7.2.6 其他金融机构
 			if (ProdConstants.SALETARGET_JRTY.equals(pos.getSaleTarget())
 					&&ProdConstants.ORDIDENTIFIED_QTJRJG.equals(pos.getOrdIdentified())) { // 其他金融机构
 
-				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.TYZS_QTJRJG);
-				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.TYZS_QTJRJG);
+				buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.TYZS_QTJRJG);
+				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.TYZS_QTJRJG);
 			}
 			// 7.2.7 金融机构资产管理产品
 			if (ProdConstants.SALETARGET_JRTY.equals(pos.getSaleTarget())
 					&&ProdConstants.ORDIDENTIFIED_JRJGZCGLCP.equals(pos.getOrdIdentified())) { // 金融机构资产管理产品
 
-				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.TYZS_JRJGZCGLCP);
-				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.TYZS_JRJGZCGLCP);
+				buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.TYZS_JRJGZCGLCP);
+				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.TYZS_JRJGZCGLCP);
 			}
 
 			flagType(2, flag, pos);
 			// 7.3  养老理财产品
-			if (ProdConstants.IS_YLLCCP.equals(pos.getIsYllccp())) { // 金融机构资产管理产品
-				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.YLLCCP);
-				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.YLLCCP);
+			if (pos.getPrdSpecProperty().contains(ProdConstants.IS_YLLCCP)) { // 金融机构资产管理产品
+				buildAmt(pos, flag, result,true, ChbMonthReportPrdConstants.YLLCCP);
+				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()),false, ChbMonthReportPrdConstants.YLLCCP);
 			}
 			/**add  7、附注   处理分支改造     by  dongxiangyang   end*/
+
+			/****详情入库方法*/
+			prodDetailList.add(ChbMonthReportDetailProdUtil.buildProdDetail(pos, prodMap.get(pos.getProdid()), report.getTermid()));
 
 		} // 产品头寸循环结束
 
@@ -1152,81 +1171,92 @@ public class MonthReportProdService {
 					if (exchangeRate == null)
 						exchangeRate = BigDecimal.ONE;
 					pos.setBankamt(pos.getBankamt().multiply(exchangeRate));
-//					pos.setBankamt(pos.getBankamt().multiply(exchangeRate));
-//					pos.setBankamt(pos.getBankamt().multiply(exchangeRate));
-//					pos.setBankamt(pos.getBankamt().multiply(exchangeRate));
 				}
 
 				// 第一行
 				if (ProdConstants.RAISEMODE_GM.equals(pos.getRaisemode())) { // 募集方式－公募
 //					line1Sub1.setBankprofit(line1Sub1.getBankprofit().add(pos.getBankamt()));
-					
-					result.get(ChbMonthReportPrdConstants.GMLCCP).setBankprofit(result.get(ChbMonthReportPrdConstants.GMLCCP).getBankprofit().add(pos.getBankamt()));
-					if(null!=deptMap&&null!=deptMap.get(pos.getInstitutionCode())){
-						deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.GMLCCP).
-						setBankprofit(deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.GMLCCP).getBankprofit().add(pos.getBankamt()));
-					}
+					setFee(pos,result,prodDetailList,ChbMonthReportPrdConstants.GMLCCP);
+					setFee(pos,deptMap.get(pos.getInstitutionCode()),null,ChbMonthReportPrdConstants.GMLCCP);
+//					result.get(ChbMonthReportPrdConstants.GMLCCP).setBankprofit(result.get(ChbMonthReportPrdConstants.GMLCCP).getBankprofit().add(pos.getBankamt()));
+//					if(null!=deptMap&&null!=deptMap.get(pos.getInstitutionCode())){
+//						deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.GMLCCP).
+//						setBankprofit(deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.GMLCCP).getBankprofit().add(pos.getBankamt()));
+//					}
 
 				}
 
 				// 第二行
 				if (ProdConstants.RAISEMODE_SM.equals(pos.getRaisemode())) { // 募集方式－私募
 //					line1Sub2.setBankprofit(line1Sub2.getBankprofit().add(pos.getBankamt()));
-					
-					result.get(ChbMonthReportPrdConstants.SMLCCP).setBankprofit(result.get(ChbMonthReportPrdConstants.SMLCCP).getBankprofit().add(pos.getBankamt()));
-					if(null!=deptMap&&null!=deptMap.get(pos.getInstitutionCode())){
-						deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.SMLCCP).
-							setBankprofit(deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.SMLCCP).getBankprofit().add(pos.getBankamt()));
-					}
+					setFee(pos,result,prodDetailList,ChbMonthReportPrdConstants.SMLCCP);
+					setFee(pos,deptMap.get(pos.getInstitutionCode()),null,ChbMonthReportPrdConstants.SMLCCP);
+//					result.get(ChbMonthReportPrdConstants.SMLCCP).setBankprofit(result.get(ChbMonthReportPrdConstants.SMLCCP).getBankprofit().add(pos.getBankamt()));
+//					if(null!=deptMap&&null!=deptMap.get(pos.getInstitutionCode())){
+//						deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.SMLCCP).
+//							setBankprofit(deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.SMLCCP).getBankprofit().add(pos.getBankamt()));
+//					}
 				}
 
 				if (ProdConstants.IVSTORIENTATION_GDSY.equals(pos.getIvstorientation())) { // 投资性质－固定收益类
 //					line2Sub1.setBankprofit(line2Sub1.getBankprofit().add(pos.getBankamt())); // 第三行
-					
-					result.get(ChbMonthReportPrdConstants.GDSYL).setBankprofit(result.get(ChbMonthReportPrdConstants.GDSYL).getBankprofit().add(pos.getBankamt()));
-					if(null!=deptMap&&null!=deptMap.get(pos.getInstitutionCode())){
 
-					deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.GDSYL).
-							setBankprofit(deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.GDSYL).getBankprofit().add(pos.getBankamt()));
-					}
+					setFee(pos,result,prodDetailList,ChbMonthReportPrdConstants.GDSYL);
+					setFee(pos,deptMap.get(pos.getInstitutionCode()),null,ChbMonthReportPrdConstants.GDSYL);
+
+//					result.get(ChbMonthReportPrdConstants.GDSYL).setBankprofit(result.get(ChbMonthReportPrdConstants.GDSYL).getBankprofit().add(pos.getBankamt()));
+//					if(null!=deptMap&&null!=deptMap.get(pos.getInstitutionCode())){
+//
+//					deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.GDSYL).
+//							setBankprofit(deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.GDSYL).getBankprofit().add(pos.getBankamt()));
+//					}
 					
 				} else if (ProdConstants.IVSTORIENTATION_QYL.equals(pos.getIvstorientation())) { // 投资性质－权益类
 //					line2Sub2.setBankprofit(line2Sub2.getBankprofit().add(pos.getBankamt())); // 第四行
-					
-					result.get(ChbMonthReportPrdConstants.QYL).setBankprofit(result.get(ChbMonthReportPrdConstants.QYL).getBankprofit().add(pos.getBankamt()));
-					if(null!=deptMap&&null!=deptMap.get(pos.getInstitutionCode())){
 
-					deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.QYL).
-							setBankprofit(deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.QYL).getBankprofit().add(pos.getBankamt()));
-					}
+					setFee(pos,result,prodDetailList,ChbMonthReportPrdConstants.QYL);
+					setFee(pos,deptMap.get(pos.getInstitutionCode()),null,ChbMonthReportPrdConstants.QYL);
+//					result.get(ChbMonthReportPrdConstants.QYL).setBankprofit(result.get(ChbMonthReportPrdConstants.QYL).getBankprofit().add(pos.getBankamt()));
+//					if(null!=deptMap&&null!=deptMap.get(pos.getInstitutionCode())){
+//
+//					deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.QYL).
+//							setBankprofit(deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.QYL).getBankprofit().add(pos.getBankamt()));
+//					}
 					
 				} else if (ProdConstants.IVSTORIENTATION_SPJRP.equals(pos.getIvstorientation())) { // 投资性质－商品及金融衍生品类
 //					line2Sub3.setBankprofit(line2Sub3.getBankprofit().add(pos.getBankamt())); // 第五行
-					
-					result.get(ChbMonthReportPrdConstants.SPJJRYSPL).setBankprofit(result.get(ChbMonthReportPrdConstants.SPJJRYSPL).getBankprofit().add(pos.getBankamt()));
-					if(null!=deptMap&&null!=deptMap.get(pos.getInstitutionCode())){
 
-					deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.SPJJRYSPL).
-							setBankprofit(deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.SPJJRYSPL).getBankprofit().add(pos.getBankamt()));
-					}
+					setFee(pos,result,prodDetailList,ChbMonthReportPrdConstants.SPJJRYSPL);
+					setFee(pos,deptMap.get(pos.getInstitutionCode()),null,ChbMonthReportPrdConstants.SPJJRYSPL);
+//					result.get(ChbMonthReportPrdConstants.SPJJRYSPL).setBankprofit(result.get(ChbMonthReportPrdConstants.SPJJRYSPL).getBankprofit().add(pos.getBankamt()));
+//					if(null!=deptMap&&null!=deptMap.get(pos.getInstitutionCode())){
+//
+//					deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.SPJJRYSPL).
+//							setBankprofit(deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.SPJJRYSPL).getBankprofit().add(pos.getBankamt()));
+//					}
 				} else if (ProdConstants.IVSTORIENTATION_HHL.equals(pos.getIvstorientation())) { // 投资性质－混合类
 //					line2Sub4.setBankprofit(line2Sub4.getBankprofit().add(pos.getBankamt())); // 第六行
-					
-					result.get(ChbMonthReportPrdConstants.HHL).setBankprofit(result.get(ChbMonthReportPrdConstants.HHL).getBankprofit().add(pos.getBankamt()));
-					if(null!=deptMap&&null!=deptMap.get(pos.getInstitutionCode())){
+					setFee(pos,result,prodDetailList,ChbMonthReportPrdConstants.HHL);
+					setFee(pos,deptMap.get(pos.getInstitutionCode()),null,ChbMonthReportPrdConstants.HHL);
 
-					deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.HHL).
-							setBankprofit(deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.HHL).getBankprofit().add(pos.getBankamt()));
-					}
+//					result.get(ChbMonthReportPrdConstants.HHL).setBankprofit(result.get(ChbMonthReportPrdConstants.HHL).getBankprofit().add(pos.getBankamt()));
+//					if(null!=deptMap&&null!=deptMap.get(pos.getInstitutionCode())){
+//
+//					deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.HHL).
+//							setBankprofit(deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.HHL).getBankprofit().add(pos.getBankamt()));
+//					}
 					// 7.3  养老理财产品
 				}
 
-				if (ProdConstants.IS_YLLCCP.equals(pos.getIsYllccp())) { // 金融机构资产管理产品
-					result.get(ChbMonthReportPrdConstants.YLLCCP).setBankprofit(result.get(ChbMonthReportPrdConstants.YLLCCP).getBankprofit().add(pos.getBankamt()));
-					if(null!=deptMap&&null!=deptMap.get(pos.getInstitutionCode())){
-						deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.YLLCCP).
-								setBankprofit(deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.YLLCCP).getBankprofit().add(pos.getBankamt()));
-					}
+				if (pos.getPrdSpecProperty().contains(ProdConstants.IS_YLLCCP)) { // 金融机构资产管理产品
+					setFee(pos,result,prodDetailList,ChbMonthReportPrdConstants.YLLCCP);
+					setFee(pos,deptMap.get(pos.getInstitutionCode()),null,ChbMonthReportPrdConstants.YLLCCP);
+
+//					result.get(ChbMonthReportPrdConstants.YLLCCP).setBankprofit(result.get(ChbMonthReportPrdConstants.YLLCCP).getBankprofit().add(pos.getBankamt()));
+//					if(null!=deptMap&&null!=deptMap.get(pos.getInstitutionCode())){
+//						deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.YLLCCP).
+//								setBankprofit(deptMap.get(pos.getInstitutionCode()).get(ChbMonthReportPrdConstants.YLLCCP).getBankprofit().add(pos.getBankamt()));
+//					}
 				}
 			}
 		}
@@ -1383,6 +1413,7 @@ public class MonthReportProdService {
 //
 //		
 		//联社模式下不进行汇总项的统计
+
 		if(!CommonUtil.isBAmodel()){
 			//主表进行数据汇总计算
 			sumDetail(result);
@@ -1401,6 +1432,10 @@ public class MonthReportProdService {
 				chbMonthReportDetailMapper.insert(v);
 			}
 		}
+
+		/**数据详情入库方法*/
+		chbMonthReportDetailProdUtil.insertBatch(prodDetailList,report.getTermid());
+
 
 		//各个分行进行数据汇总计算
 		for (Entry<String, Map<String, ChbMonthReportDetail>> map : deptMap.entrySet()) {
@@ -1422,7 +1457,24 @@ public class MonthReportProdService {
 		}
 
 	}
-	
+
+
+	/**
+	 * 数据组装
+	 * @param pos 当前pos
+	 * @param result 参数
+	 * @param code 编号
+	 */
+	public void setFee(ChbMonthFeePosition pos , Map<String,ChbMonthReportDetail> result,List<ChbMonthPrdPositiondetail> prodDetailList,String  code){
+		//银行模式子项为空.直接跳出
+		if(null==result){
+			return;
+		}
+		result.get(code).setBankprofit(result.get(code).getBankprofit().add(pos.getBankamt()));
+		if(!StringUtil.isEmptyList(prodDetailList)){
+			ChbMonthReportDetailProdUtil.setFeeDetail(prodDetailList, pos);
+		}
+	}
 
 	/**
 	 * 数据组装
@@ -1431,7 +1483,7 @@ public class MonthReportProdService {
 	 * @param result 参数
 	 * @param code 编号
 	 */
-	public void buildAmt(ChbMonthPrdPosition pos , Map<String,Boolean> flag,Map<String,ChbMonthReportDetail> result,String  code){
+	public void buildAmt(ChbMonthPrdPosition pos , Map<String,Boolean> flag,Map<String,ChbMonthReportDetail> result,boolean isBank,String  code){
 		//银行模式子项为空.直接跳出
 		if(null==result){
 			return;
@@ -1472,12 +1524,13 @@ public class MonthReportProdService {
 			//合规新产品期末余额
 			result.get(code).setXgbalance(result.get(code).getXgbalance().add(pos.getEndamtsumOth()));
 		}
-
+		/**add  新增列  by  dongxiangyang  end*/
          //本期兑付金额
 		result.get(code).setProdpayamount(result.get(code).getProdpayamount().add(pos.getPayamtsum()));
 
-		/**add  新增列  by  dongxiangyang  end*/
-
+//		if(isBank){
+//			prodDetailList.add(ChbMonthReportDetailProdUtil.buildProdDetail(pos, prodMap.get(pos.getProdid()), result.get(code)));
+//		}
 	}
 	
 	/**

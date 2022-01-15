@@ -16,7 +16,7 @@
     <div class="joyin-form-wrap joyin-filter-form condition-area">
         <form class="layui-form" id="searchForm">
             <div class="layui-form-item">
-                <div class="layui-inline layui-col-md4">
+                <div class="layui-inline layui-col-md6">
                     <label class="layui-form-label form-lable">销售结算资金流动方向</label>
                     <div class="layui-input-inline input-inline">
                         <select id="tradePs" name="tradePs" class="input-select"
@@ -26,7 +26,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4 layui-col-xs4">
+                <div class="layui-inline layui-col-md6">
                     <label class="layui-form-label form-lable"
                            data-th-text="#{SalesTransactionMaintenance001.institutionCode}">提供销售结算资金服务机构代码</label>
                     <div class="layui-input-inline input-inline">
@@ -34,12 +34,14 @@
                                class="layui-input form-input input-lenovoselect" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                data-parentIds="institutionCode"
                                data-th-data-url="@{/report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/getInstitutionCode}"
-                               data-idfield="code"
+                               data-idfield="code" data-effectivefields="code"
                                data-th-data-effectivefieldsalias='|{"code":"#{SalesTransactionMaintenance001.institutionCode}"}|'
                         />
                     </div>
                 </div>
-                <div class="layui-inline layui-col-md4">
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline layui-col-md6">
                     <label class="layui-form-label form-lable">数据状态</label>
                     <div class="layui-input-inline input-inline">
                         <select id="dataStatus" class="input-select" name="dataStatus"
@@ -49,9 +51,7 @@
                         </select>
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4 layui-col-xs4">
+                <div class="layui-inline layui-col-md6">
                     <label class="layui-form-label form-lable"
                            data-th-text="#{SalesTransactionMaintenance001.prdRegistCode}">产品登记编码</label>
                     <div class="layui-input-inline input-inline">
@@ -59,12 +59,14 @@
                                class="layui-input form-input input-lenovoselect" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                data-parentIds="prdRegistCode"
                                data-th-data-url="@{/report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/getPrdRegistCode}"
-                               data-idfield="code"
+                               data-idfield="code" data-effectivefields="code"
                                data-th-data-effectivefieldsalias='|{"code":"#{SalesTransactionMaintenance001.prdRegistCode}"}|'
                         />
                     </div>
                 </div>
-                <div class="layui-inline layui-col-md4">
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline layui-col-md6">
                     <label class="layui-form-label form-lable">销售结算资金交易流水号</label>
                     <div class="layui-input-inline input-inline">
                         <select id="tradeNo" class="input-select" name="tradeNo" formatoption="false"
@@ -76,7 +78,7 @@
 
                     </div>
                 </div>
-                <div class="layui-inline layui-col-md4">
+                <div class="layui-inline layui-col-md6">
                     <label class="layui-form-label form-lable">销售结算资金交易日期</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" id="tradeVdate" name="tradeVdate" placeholder="请选择、支持区间"

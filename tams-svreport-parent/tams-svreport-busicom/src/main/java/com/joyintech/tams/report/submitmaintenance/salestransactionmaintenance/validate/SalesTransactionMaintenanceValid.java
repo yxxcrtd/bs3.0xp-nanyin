@@ -1,7 +1,7 @@
 package com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.validate;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,17 +48,25 @@ public class SalesTransactionMaintenanceValid implements BeanValidator {
             if (dto.getTradeTime() != null && dto.getTradeTime() != "") {
                 if (dto.getTradeTime().length() != 6) {
                     errorList.add(new ValidMessage("", "交易时间填写错误（例23:59:59填写235959）"));
-                }else if (Integer.parseInt(dto.getTradeTime().substring(0,1)) == 2 && Integer.parseInt(dto.getTradeTime().substring(1,2)) > 3){
-                    errorList.add(new ValidMessage("", "交易时间填写错误（例23:59:59填写235959）"));
-                }else if(Integer.parseInt(dto.getTradeTime().substring(2,3)) > 5 || Integer.parseInt(dto.getTradeTime().substring(4,5)) > 5){
+                }else if (!checkFigure(dto.getTradeTime())){
                     errorList.add(new ValidMessage("", "交易时间填写错误（例23:59:59填写235959）"));
                 }
+                if(dto.getTradeTime().length() == 6 && checkFigure(dto.getTradeTime())) {
+                    if(!checkFigure(dto.getTradeTime().substring(0, 1))){
+                        errorList.add(new ValidMessage("", "交易时间填写错误（例23:59:59填写235959）"));
+                    }
+                    else if (Integer.parseInt(dto.getTradeTime().substring(0, 2)) > 23
+                            || Integer.parseInt(dto.getTradeTime().substring(2, 3)) > 5 || Integer.parseInt(dto.getTradeTime().substring(4, 5)) > 5) {
+                        errorList.add(new ValidMessage("", "交易时间填写错误（例23:59:59填写235959）"));
+                    }
+                }
             }
+
             if("0".equals(dto.getPageModel()) || ("1".equals(dto.getPageModel()) && "01".equals(dto.getMaintainStatus())))
             if(dto.getInstitutionCode() != null && dto.getInstitutionCode() != "" && dto.getPrdRegistCode() != null && dto.getPrdRegistCode() != ""
                && dto.getAccountNo() != null && dto.getAccountNo() != "" && dto.getTradeNo() != null && dto.getTradeNo() != ""){
                 if(salestransactionmaintenance002Service.selectTradeNo(dto.getInstitutionCode(),dto.getPrdRegistCode(),dto.getAccountNo(),dto.getTradeNo()) != 0){
-                    errorList.add(new ValidMessage("", "提供销售结算资金服务机构代码、产品登记编码与销售结算资金账号相等时，销售结算资金交易流水号不能重复。"));
+                    errorList.add(new ValidMessage("", "提供销售结算资金服务机构代码、产品登记编码与销售结算资金账号相同时，销售结算资金交易流水号不能重复。"));
                 }
             }
         return errorList;
@@ -105,5 +113,20 @@ public class SalesTransactionMaintenanceValid implements BeanValidator {
             }
         }
         return checkResult;
+    }
+
+    /**
+     * 判断是否为数字
+     *
+     * @param
+     * @return 返回boolean
+     */
+    private boolean checkFigure(String figure) {
+        try{
+            new BigDecimal(figure);
+            return true;
+        }catch(Exception e){
+            return false;
+        }
     }
 }

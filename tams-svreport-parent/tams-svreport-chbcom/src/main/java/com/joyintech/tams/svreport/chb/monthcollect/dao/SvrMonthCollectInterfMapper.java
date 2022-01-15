@@ -63,12 +63,6 @@ public interface SvrMonthCollectInterfMapper {
 	 * @return
 	 */
 	int checkSubmission(@Param("termid")String termid);
-//	获取美元，欧元转人民币汇率
-	BigDecimal getCNYExchange(@Param("ccy")String ccy,@Param("batchDateEnd")String batchDateEnd);
-//	获取非美欧外币转美元汇率
-	BigDecimal getUSDExchange(@Param("ccy")String ccy,@Param("batchDateEnd")String batchDateEnd);
-//	获取美元转人民币汇率
-	BigDecimal USDExchangeCNY(@Param("batchDateEnd")String batchDateEnd);
 //	取得银行月报信息
 	List<ChbMonthCollect> selectChbPrdPosition(@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
 //	分投资者类型获得投资者数量
@@ -78,7 +72,9 @@ public interface SvrMonthCollectInterfMapper {
 //	分销售渠道获得投资者数量
 	List<ChbMonthCollect> channelHolderNum(@Param("batchDateEnd")String batchDateEnd);
 //获取人民币对
-	List<ccyExcharge> CNYExchange(@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
+	List<ccyExcharge> CNYExchange(@Param("exchangeSource")String exchangeSource,@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
 //获取美元对
-	List<ccyExcharge> USDExchange(@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
+	List<ccyExcharge> USDExchange(@Param("exchangeSource")String exchangeSource,@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
+	//	获取美元转人民币汇率
+	ccyExcharge USDExchangeCNY(@Param("exchangeSource")String exchangeSource,@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
 }

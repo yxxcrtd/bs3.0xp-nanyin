@@ -392,4 +392,6 @@ public interface InvestorsHoldInfo001Mapper {
     int updateRegistRegCodeByProdid(Map<String, Object> paramMap);
     
     int countInvestorByIndentifyMark(@Param("indentifyMark")String indentifyMark);
+
+    List<String> selectAllInvestor();
 }

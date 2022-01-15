@@ -93,4 +93,15 @@ public interface ChbAssetBasisInterfMapper {
 	 * @return
 	 */
     String getPulicAssetId(@Param("assetId")String assetId);
+
+	/**
+	 * 查询当日利息调整
+	 * @param batchTime
+	 * @return
+	 */
+	List<ChbAssetsBasisData> selectIntadjexpAdd(String batchTime);
+
+
+
+	int insertNoBtm(ChbAssetsBasisData record);
 }

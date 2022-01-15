@@ -65,15 +65,15 @@ public class ChbPrdOpenschInterf extends BaseInterfService{
 	 */
 	public List<String> generatePrdOpenschData(Date batchDate,List<String> prodIdlist){
 		// 查询数据
-		List<ChbPrdOpensch> openSchlist = getBusEntity(prodIdlist, "D");
+		List<ChbPrdOpensch> openSchlist = getBusEntity(prodIdlist,null, null, "D");
 		// 入库
 		if(!StringUtil.isEmptyList(openSchlist)){
 			insertData2(openSchlist);
 		}
-		return null;
+		return new ArrayList<String>();
 	}
 	@Override
-	public List<ChbPrdOpensch> getBusEntity(List<String> prodIdlist, String source) {
+	public List<ChbPrdOpensch> getBusEntity(List<String> prodIdlist, Date date, String institutionCode, String source) {
 		//从FIN_OPEN_PLAN获取数据进入CHB_PRD_OPENSCH
 		//切换数据源查询信息
 		ChbPrdOpenschInterf chbPrdOpenschInterf2 =  SpringContextUtil.getBean(ChbPrdOpenschInterf.class);
@@ -87,6 +87,7 @@ public class ChbPrdOpenschInterf extends BaseInterfService{
 			openSchlist = chbPrdOpenschInterf2.selectOpenSchData(null,prodidlist);
 			//查询申赎同频的计划
 			List<ChbPrdOpensch> openSchsublist = chbPrdOpenschInterf2.selectOpenSchData("03",prodidlist);
+			String issuePartyId = CommonUtil.selectBankCode();
 			if(CollectionUtils.isNotEmpty(openSchlist)){
 				for(ChbPrdOpensch opensch : openSchlist){
 					//主键
@@ -102,7 +103,7 @@ public class ChbPrdOpenschInterf extends BaseInterfService{
 						opensch.setDataSource("16");
 					}
 					//发行机构代码
-					opensch.setIssuePartyId(CommonUtil.selectBankCode());
+					opensch.setIssuePartyId(issuePartyId);
 
 					if(opensch.getUpdateTime().compareTo(lastUpdatetime) > 0){
 						lastUpdatetime = opensch.getUpdateTime();
@@ -123,7 +124,7 @@ public class ChbPrdOpenschInterf extends BaseInterfService{
 						opensch.setDataSource("16");
 					}
 					//发行机构代码
-					opensch.setIssuePartyId(CommonUtil.selectBankCode());
+					opensch.setIssuePartyId(issuePartyId);
 					//申购计划
 					opensch.setPlanType("01");
 					openSchlist.add(opensch);

@@ -205,6 +205,20 @@ public class ChbMonthPrdPosition {
     @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal yieldE;
 
+
+    /**
+     * 产品特殊属性
+     */
+    private  String  prdSpecProperty;
+
+    public String getPrdSpecProperty() {
+        return prdSpecProperty;
+    }
+
+    public void setPrdSpecProperty(String prdSpecProperty) {
+        this.prdSpecProperty = prdSpecProperty;
+    }
+
     public BigDecimal getPayamtsum() {
         return payamtsum;
     }

@@ -24,6 +24,7 @@ import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -34,7 +35,6 @@ import java.util.TimeZone;
  */
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class, DataSourceAutoConfiguration.class })
 public class TamsApplication extends WebApplication {
-
     @PostConstruct
     void started() {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));

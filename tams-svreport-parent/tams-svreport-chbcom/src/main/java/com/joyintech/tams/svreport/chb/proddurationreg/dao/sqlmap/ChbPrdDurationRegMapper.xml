@@ -449,7 +449,8 @@
 	<!-- 获取实现收益率 -->
 	<select id="getReaYield" resultType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield">
 		select 
-		  yield.prod_value prodValue,yield.ccy
+		  yield.prod_value prodValue,yield.ccy,
+		  yield.change_date changeDate
 		from chb_prd_periodyield yield
 		where yield.change_date = (select max(change_date)
 									from chb_prd_periodyield yield1
@@ -575,7 +576,7 @@
 		STATUS_DATE,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,
 		STATUS,CREATE_USER,ORG_CODE,CREATE_DEPT,
 		CREATE_TIME,UPDATE_USER,UPDATE_TIME,SUBMIT_TIME,REMARK,
-		SHARE_AMT_WAN,CASH_AMT_WAN
+		SHARE_AMT_WAN,CASH_AMT_WAN,YIELD_DATE
 		)  
 		values(    
 		    #{registSeqno,jdbcType=VARCHAR},
@@ -615,7 +616,8 @@
 		 	#{submitTime,jdbcType=TIMESTAMP},
 		 	#{remark,jdbcType=VARCHAR},
 		 	#{shareAmtWan,jdbcType=DECIMAL},
-		 	#{cashAmtWan,jdbcType=DECIMAL}
+		 	#{cashAmtWan,jdbcType=DECIMAL},
+		 	#{yieldDate,jdbcType=DATE}
 		  ) 
 	</insert>
 	

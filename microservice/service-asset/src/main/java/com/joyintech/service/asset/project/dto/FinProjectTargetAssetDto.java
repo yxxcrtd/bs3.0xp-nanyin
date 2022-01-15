@@ -14,7 +14,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.background.component.common.pack.common.json.CustomDateDeserialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.service.asset.common.dto.BusiFinBondRatingInfoDto;
@@ -1009,6 +1011,7 @@ public class FinProjectTargetAssetDto extends FinProduct{
      * 设置 oldVdate
      * @param oldVdate oldVdate
      */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setOldVdate(Date oldVdate) {
         this.oldVdate = oldVdate;
     }

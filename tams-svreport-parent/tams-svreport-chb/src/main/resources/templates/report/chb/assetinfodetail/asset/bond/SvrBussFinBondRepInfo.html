@@ -155,10 +155,18 @@
             <div class="form-inline-wrap">
                 <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussFinBondRepInfo.chbIssuerId}">发行人代码</label>
                 <div class="layui-input-inline input-inline">
-                    <input th:id="|${entityName}_chbIssuerId|" th:name="|${entityName}.chbIssuerId|"
-                           th:value="${entity?.chbIssuerId}"
-                           class="layui-input form-input" placeholder="请输入内容"
-                           data-th-placeholder="#{SysCommon.placeholder}" >
+<!--                    <input th:id="|${entityName}_chbIssuerId|" th:name="|${entityName}.chbIssuerId|"-->
+<!--                           th:value="${entity?.chbIssuerId}"-->
+<!--                           class="layui-input form-input" placeholder="请输入内容"-->
+<!--                           data-th-placeholder="#{SysCommon.placeholder}" >-->
+                    <select th:id="|${entityName}_chbIssuerId|"
+                            th:name="|${entityName}.chbIssuerId|"
+                            th:value="${entity?.chbIssuerId}"
+                            class="layui-input form-input input-select" placeholder="请输入内容"
+                            data-th-placeholder="#{SysCommon.placeholder}" 
+                            data-th-data-url="@{/common/select/getIssuerId}">
+<!--                            data-th-data-url="@{/chb/assetinfodetail/asset/SvrBussFinBondRepInfo/getIssuerId}">-->
+                    </select>
                 </div>
             </div>
         </div>

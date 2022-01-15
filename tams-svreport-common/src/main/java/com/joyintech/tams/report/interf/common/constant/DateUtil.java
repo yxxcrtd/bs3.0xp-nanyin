@@ -226,6 +226,7 @@ public class DateUtil extends DateUtils {
 
         return format(date);
     }
+
     /**
      * 根据格式化字符串格式化日期
      *
@@ -731,6 +732,18 @@ public class DateUtil extends DateUtils {
     }
 
     /**
+     * 日期按月相加，
+     *
+     * @param str 原日期
+     * @param num 相加月数，正数为加，负数为减
+     * @return Date
+     * @throws ParseException 异常
+     */
+    public static Date addMonthDateStrM(String str, Integer num) {
+        return addMonthDate(DateUtil.parse(str), num);
+    }
+
+    /**
      * 主要功能: 获取上个月 注意事项:无
      *
      * @param selMonth yyyy-MM
@@ -888,6 +901,26 @@ public class DateUtil extends DateUtils {
         calendar.set(Calendar.DAY_OF_MONTH, 0);
         Date endDate = calendar.getTime();
         return DateUtil.format(endDate);
+    }
+
+
+    /**
+     * 功能：获取上一个月的最后一天
+     * @since 1.7.0
+     * @version 1.7.0
+     * @author：weiyuqiang 2019年4月22日
+     * @param date
+     * @return
+     * Date
+     */
+    public static String getLastDayOfLayMonth(Date date,String format){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        // 获取上月的最后一天
+        calendar.add(Calendar.MONTH, 0);
+        calendar.set(Calendar.DAY_OF_MONTH, 0);
+        Date endDate = calendar.getTime();
+        return DateUtil.format(endDate,format);
     }
 
     /**

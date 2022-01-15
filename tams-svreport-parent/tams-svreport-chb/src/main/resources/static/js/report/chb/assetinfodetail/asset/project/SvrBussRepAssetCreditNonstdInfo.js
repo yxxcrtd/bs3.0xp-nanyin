@@ -3,7 +3,34 @@
  * @auth zhangnian
  */
 (function(){
-    
+
+    var star = function() {
+        // 加红星星
+        // 查找label
+        var _findPrevLabel = function(element, level) {
+            var $el = element.prev();
+            if (!$el.is('label') && level > 0) {
+                $el = $el.find('label');
+                if ($el.length === 0) {
+                    return _findPrevLabel(element.parent(), level - 1);
+                }
+            }
+            return $el;
+        };
+
+        // 非查看模式
+        $('.must').each(function() {
+            $(this).remove();
+        })
+        $('*[required]').each(function() {
+            var $el = $(this);
+            var $target = _findPrevLabel($el, 3);
+            if ($target.find('> .must').length === 0) {
+                $target.append($('<i class="must">*</i>'));
+            }
+        });
+    }
+
     var getElementById = function(id) {
         return $('#' + entityName_BussRepAssetCreditNonstdInfo + '_' + id);
     };
@@ -194,12 +221,12 @@
     }
 
     var  repPartRedemFlagChangeType=function(){
-        if(getElementById('repPartRedemFlag').val()=='02'){
-            getElementById('repPartRedemRate').val('').trigger("change");
-            getElementById('repPartRedemRate').attr("disabled",true);
-        }else if(getElementById('repPartRedemFlag').val() != null &&　getElementById('repPartRedemFlag').val() != ''){
-            getElementById('repPartRedemRate').attr("disabled",false);
-        }
+//        if(getElementById('repPartRedemFlag').val()=='02'){
+//            getElementById('repPartRedemRate').val('').trigger("change");
+//            getElementById('repPartRedemRate').attr("disabled",true);
+//        }else if(getElementById('repPartRedemFlag').val() != null &&　getElementById('repPartRedemFlag').val() != ''){
+//            getElementById('repPartRedemRate').attr("disabled",false);
+//        }
     }
 
     var  initAssetCreditNonstd=function(){
@@ -292,8 +319,20 @@
             $("#svrBussRepAssetCreditNonstdInfoDto_creditOrgName").val('').trigger("change");
             $("#svrBussRepAssetCreditNonstdInfoDto_creditOrgName").attr("disabled",true);
 
-
-
+            if(assetTvalueCreditNonstd=="2202"){
+                $('#repCreditAssetCode_Div').show();
+            }
+            //要素去除必填标识 add by tuqirong 2022-01-08 start
+            $("#svrBussRepAssetCreditNonstdInfoDto_repPrinBaseamt").prop("required",false);
+            $("#svrBussRepAssetCreditNonstdInfoDto_repCouponSpecies").prop("required",false);
+            $("#svrBussRepAssetCreditNonstdInfoDto_interestRuleFlag").prop("required",false);
+            $("#svrBussRepAssetCreditNonstdInfoDto_repIntpayRule").prop("required",false);
+            $("#svrBussRepAssetCreditNonstdInfoDto_floatFactorFlag").prop("required",false);
+            $("#svrBussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").prop("required",false);
+            $("#svrBussRepAssetCreditNonstdInfoDto_repPerpetualClauseType").prop("required",false);
+            $("#svrBussRepAssetCreditNonstdInfoDto_repDeferredInterestType").prop("required",false);
+            $("#svrBussRepAssetCreditNonstdInfoDto_repPartRedemFlag").prop("required",false);
+            //要素去除必填标识 add by tuqirong 2022-01-08 end
         }else{
 
             $("#svrBussRepAssetCreditNonstdInfoDto_repPrinBaseamt").attr("disabled",false);
@@ -342,12 +381,22 @@
             $("#svrBussRepAssetCreditNonstdInfoDto_repPartRedemFlag").attr("disabled",false);
             $("#svrBussRepAssetCreditNonstdInfoDto_creditOrgCode").attr("disabled",false);
             $("#svrBussRepAssetCreditNonstdInfoDto_creditOrgName").attr("disabled",false);
-
+            //要素添加必填标识 add by tuqirong 2022-01-08 start
+            $("#svrBussRepAssetCreditNonstdInfoDto_repPrinBaseamt").prop("required",true);
+            $("#svrBussRepAssetCreditNonstdInfoDto_repCouponSpecies").prop("required",true);
+            $("#svrBussRepAssetCreditNonstdInfoDto_interestRuleFlag").prop("required",true);
+            $("#svrBussRepAssetCreditNonstdInfoDto_repIntpayRule").prop("required",true);
+            $("#svrBussRepAssetCreditNonstdInfoDto_floatFactorFlag").prop("required",true);
+            $("#svrBussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").prop("required",true);
+            $("#svrBussRepAssetCreditNonstdInfoDto_repPerpetualClauseType").prop("required",true);
+            $("#svrBussRepAssetCreditNonstdInfoDto_repDeferredInterestType").prop("required",true);
+            $("#svrBussRepAssetCreditNonstdInfoDto_repPartRedemFlag").prop("required",true);
+            //要素添加必填标识 add by tuqirong 2022-01-08 end
         }
-
+        star();
         if(assetTvalueCreditNonstd=='2201'||assetTvalueCreditNonstd=='2202'||assetTvalueCreditNonstd=='1202'||assetTvalueCreditNonstd=='1203'
             ||assetTvalueCreditNonstd=='1204'||assetTvalueCreditNonstd=='1206'||assetTvalueCreditNonstd=='1207'||assetTvalueCreditNonstd=='1208'||
-            assetTvalueCreditNonstd=='1209'){
+            assetTvalueCreditNonstd=='1209'||assetTvalueCreditNonstd=='1211'||assetTvalueCreditNonstd=='1212'||assetTvalueCreditNonstd=='1213'){
             //收/受益权类型，下拉框选择空白，且置灰不可修改
             $("#svrBussRepAssetCreditNonstdInfoDto_repProfitType").val('').trigger("change");
             $("#svrBussRepAssetCreditNonstdInfoDto_repProfitType").attr("disabled",true);
@@ -424,6 +473,98 @@
             floatFactorFlagChangeType();
         });
 
+        // 融资人2
+        $('#svrBussRepAssetCreditNonstdInfoDto_chbFinancierId').change(function(){
+            // $("#fundType").val('').trigger('change');
+            var svrBussRepAssetCreditNonstdInfoDto_chbFinancierId = $('#svrBussRepAssetCreditNonstdInfoDto_chbFinancierId').val();
+            if(svrBussRepAssetCreditNonstdInfoDto_chbFinancierId ==''|| svrBussRepAssetCreditNonstdInfoDto_chbFinancierId==undefined){
+                // $('#fundName').val('');
+            }
+            else{
+                var data = {
+                    svrBussRepAssetCreditNonstdInfoDto_chbFinancierId: $('#svrBussRepAssetCreditNonstdInfoDto_chbFinancierId').val()
+                }
+                //$('#fundName').val($('#finprodId').select2('data')[0].text).trigger('change');
+                Joyin.ajaxJson(basePath + 'common/select/getFinancierInfo', data,
+                    function (resultObj) {
+                        //if (resultObj.fundType) {
+                        // $('#fundName').val(resultObj.fundName).trigger('change');
+                        // $("#fundType").val(resultObj.fundType).trigger('change');
+                        //}
+                        if (resultObj.partyType1!=null){
+                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType1').val(resultObj.partyType1).trigger('change');
+                        } else {
+                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType1').val('').trigger('change');
+                        }
+                        if (resultObj.partyType2!=null){
+                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType2').val(resultObj.partyType2).trigger('change');
+                        } else {
+                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType2').val('').trigger('change');
+                        }
+                        if (resultObj.partyType3!=null){
+                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType3').val(resultObj.partyType3).trigger('change');
+                        } else {
+                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType3').val('').trigger('change');
+                        }
+                        if (resultObj.industry!=null){
+                            $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val(resultObj.industry).trigger('change');
+                        } else {
+                            $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val('').trigger('change');
+                        }
+                        if (resultObj.industry2!=null){
+                            $('#svrBussRepAssetCreditNonstdInfoDto_industryLevel2Type').val(resultObj.industry2).trigger('change');
+                        } else {
+                            $('#svrBussRepAssetCreditNonstdInfoDto_industryLevel2Type').val('').trigger('change');
+                        }
+                    });
+            }
+        });
 
+        // 融资人
+        $('#svrBussRepAssetCreditNonstdInfoDto_repFinancie').change(function(){
+            // $("#fundType").val('').trigger('change');
+            var svrBussRepAssetCreditNonstdInfoDto_repFinancie = $('#svrBussRepAssetCreditNonstdInfoDto_repFinancie').val();
+            if(svrBussRepAssetCreditNonstdInfoDto_repFinancie ==''|| svrBussRepAssetCreditNonstdInfoDto_repFinancie==undefined){
+                // $('#fundName').val('');
+            }
+            else{
+                var data = {
+                    svrBussRepAssetCreditNonstdInfoDto_chbFinancierId: $('#svrBussRepAssetCreditNonstdInfoDto_repFinancie').val()
+                };
+                //$('#fundName').val($('#finprodId').select2('data')[0].text).trigger('change');
+                Joyin.ajaxJson(basePath + 'common/select/getFinancierInfo', data,
+                    function (resultObj) {
+                        //if (resultObj.fundType) {
+                        // $('#fundName').val(resultObj.fundName).trigger('change');
+                        // $("#fundType").val(resultObj.fundType).trigger('change');
+                        //}
+                        if (resultObj.partyType1!=null){
+                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType1').val(resultObj.partyType1).trigger('change');
+                        } else {
+                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType1').val('').trigger('change');
+                        }
+                        if (resultObj.partyType2!=null){
+                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType2').val(resultObj.partyType2).trigger('change');
+                        } else {
+                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType2').val('').trigger('change');
+                        }
+                        if (resultObj.partyType3!=null){
+                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType3').val(resultObj.partyType3).trigger('change');
+                        } else {
+                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType3').val('').trigger('change');
+                        }
+                        if (resultObj.industry!=null){
+                            $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val(resultObj.industry).trigger('change');
+                        } else {
+                            $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val('').trigger('change');
+                        }
+                        if (resultObj.industry2!=null){
+                            $('#svrBussRepAssetCreditNonstdInfoDto_industryLevel2Type').val(resultObj.industry2).trigger('change');
+                        } else {
+                            $('#svrBussRepAssetCreditNonstdInfoDto_industryLevel2Type').val('').trigger('change');
+                        }
+                    });
+            }
+        });
     });
 }());

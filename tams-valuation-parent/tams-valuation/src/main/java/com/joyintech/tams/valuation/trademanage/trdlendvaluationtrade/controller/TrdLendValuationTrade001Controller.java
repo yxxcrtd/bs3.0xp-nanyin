@@ -1,0 +1,147 @@
+/*
+ * 文件名：TrdLendInvestTrade001.java
+ * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
+ * 描述：理财资管管理系统V2.0
+ * 修改人：杨智
+ * 修改时间：2018年10月10日
+ * 修改内容：新建
+ * 系统名称：理财资管管理系统V2.0
+ */
+package com.joyintech.tams.valuation.trademanage.trdlendvaluationtrade.controller;
+
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+
+import com.joyintech.tams.valuation.trademanage.trdlendvaluationtrade.dto.TrdLendValuationTradeDto;
+import com.joyintech.tams.valuation.trademanage.trdlendvaluationtrade.service.TrdLendValuationTrade001Service;
+import com.joyintech.tams.valuation.trademanage.trdlendvaluationtrade.service.TrdLendValuationTrade002Service;
+import com.joyintech.tams.valuation.trademanage.trdplanvaluationtrade.dto.TrdPlanValuationTradeDto;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.validation.Valid;
+
+/**
+ * 拆借投资交易查询
+ */
+@Controller
+@PageId("TrdLendValuationTrade001")
+@RequestMapping("/valuation/trademanage/trdlendvaluationtrade/TrdLendValuationTrade001")
+public class TrdLendValuationTrade001Controller extends BaseController {
+
+    /**
+     * TrdLendInvestTrade001Service
+     */
+    @Autowired
+    private TrdLendValuationTrade001Service trdLendValuationTrade001Service;
+
+    /**
+     * TrdLendInvestTrade002Service
+     */
+    @Autowired
+    private TrdLendValuationTrade002Service trdLendValuationTrade002Service;
+
+    @Override
+    public String init(Model model) {
+        this.setSelectOptionToModel(model, DictCode.拆借方向, DictCode.拆借类型,
+                DictCode.交易流程状态);
+        return super.init(model);
+    }
+
+    /**
+     * @Description:页面查询，表格分页
+     * @auther: yuzj
+     * @date: 2021/12/30
+     * @param:
+     * @return:
+     */
+    @ResponseBody
+    @RequestMapping("findPage")
+    public Page<TrdLendValuationTradeDto> findPage()
+            throws Exception {
+        Page<TrdLendValuationTradeDto> page = trdLendValuationTrade001Service.selectForPage(
+                RequestUtil.getParameters(getRequest()));
+        return page;
+    }
+
+//    /**
+//     * 导出信息excel
+//     *
+//     * @return excel
+//     * @throws Exception 异常
+//     * @param parameter 页面参数
+//     * @see
+//     * @since 1.0
+//     */
+//    @RequestMapping(ACTION_EXPORT)
+//    public ResponseEntity<byte[]> export()
+//        throws Exception {
+//        return trdLendInvestTrade001Service.export(this.getPageId(), RequestUtil.getPageParam());
+//    }
+//
+//    /**
+//     * 撤销前check
+//     *
+//     * @param inputDto 画面输入参数dto
+//     * @param result BindingResult
+//     * @return check结果
+//     * @see
+//     * @since 1.0
+//     */
+//    @RequestMapping("checkRevoke")
+//    @ResponseBody
+//    public AjaxResult check(@Valid @RequestBody TrdLendInvestTradeRevokeDto inputDto,
+//                            BindingResult result) {
+//        return commonCheck(result, inputDto.getOperateType());
+//    }
+//
+//    /**
+//     * 撤销
+//     * @param inputDto 画面输入参数dto
+//     * @return 撤销结果
+//     * @throws Exception
+//     * @see
+//     * @since 1.0
+//     */
+//    @RequestMapping("doRevoke")
+//    @ResponseBody
+//    AjaxResult doRevoke(@RequestBody TrdLendInvestTradeDto inputDto)
+//        throws Exception {
+//
+//        ProcessParameter<TrdLendInvestTradeDto> processParameter = new ProcessParameter<>();
+//        WorkFlowParameter<TrdLendInvestTradeDto> workFlowParameter = new WorkFlowParameter<>();
+//        processParameter.setWorkFlowParameter(workFlowParameter);
+//        processParameter.setPageId("TrdLendInvestTrade002");
+//        processParameter.setOperationType(OperationType.REVOKE);
+//
+//        workFlowParameter.setPageId("TrdLendInvestTrade002");
+//        workFlowParameter.setElementId(this.getParam("elementId"));
+//        workFlowParameter.setBusinessCode((entity) -> entity.getTradeId());
+//        workFlowParameter.setBusinessType(DictCodeList.共通业务类型_拆借投资交易.getValue());
+//        workFlowParameter.setComment((entity) -> WorkFlowUtil.concatComment(
+//            getMessage("TrdLendInvestTrade002.tradeId") + GlobalConstant.OPEN_PARENTHESIS + entity.getTradeId() + GlobalConstant.CLOSE_PARENTHESIS,
+//            getMessage("TrdLendInvestTrade002.paBussType") + GlobalConstant.OPEN_PARENTHESIS + SysDataUtil.getNameFromDataDict(DictCode.拆借类型, entity.getPaBussType()) + GlobalConstant.CLOSE_PARENTHESIS,
+//            getMessage("TrdLendInvestTrade002.tradeDate")+ GlobalConstant.OPEN_PARENTHESIS + DateUtil.format(entity.getTradeDate()) + GlobalConstant.CLOSE_PARENTHESIS));
+//        String msg = trdLendInvestTrade002Service.start(processParameter, inputDto);
+//
+//        return new AjaxResult(msg);
+//    }
+}

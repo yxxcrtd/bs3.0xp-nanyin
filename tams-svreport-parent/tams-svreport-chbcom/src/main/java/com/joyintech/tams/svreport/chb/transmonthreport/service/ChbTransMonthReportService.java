@@ -334,7 +334,7 @@ public class ChbTransMonthReportService extends SvrCommonExportService<ChbTransM
         Map<String, Object> data = restTemplate.postForObject(
                 SvrServiceApplication.CHB_SERVICE_NAME + "/ChbTransMonthReport/createData", selectParam, Map.class);
         String termname = data.get("termname").toString();
-        String exceltemplate = "TransMonthReport";
+        String exceltemplate = "TransMonthreport";
         String fileName = "理财产品转型情况月度报表" + "（" + termname + "）.xls";
 
         try {
@@ -367,12 +367,12 @@ public class ChbTransMonthReportService extends SvrCommonExportService<ChbTransM
         String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.CHB_IS_SHOW_ZERO);
         ChbTransMonthReportSubDto monthreport = chbTransMonthReportMapper.selectMonthReportSubByPrimaryKey(reportuuid);
         data.put("report", monthreport);
-    	/**青岛月报日期修改  start  by dongxiangyang  start*/
-    	SimpleDateFormat  formate=new  SimpleDateFormat("yyyy-MM-dd");
-    	String  termname=formate.format(monthreport.getEnddate());
-    	/**青岛月报日期修改  start  by dongxiangyang  end*/
-    	//data.put("termname", monthreport.getTermname());
-    	data.put("termname", termname);
+        /**青岛月报日期修改  start  by dongxiangyang  start*/
+        SimpleDateFormat  formate=new  SimpleDateFormat("yyyy-MM-dd");
+        String  termname=formate.format(monthreport.getEnddate());
+        /**青岛月报日期修改  start  by dongxiangyang  end*/
+        //data.put("termname", monthreport.getTermname());
+        data.put("termname", termname);
         selectParam.put("termid", monthreport.getTermid());
         selectParam.put("reportuuid", reportuuid);
         List<ChbTransMonthReportSubDetailDto> detailList = chbTransMonthReportMapper
@@ -390,7 +390,7 @@ public class ChbTransMonthReportService extends SvrCommonExportService<ChbTransM
     }
 
     public ResponseEntity<byte[]> exportMonthReportExcel(Map<String, Object> data, String exceltemplate,
-            String fileName) throws IOException {
+                                                         String fileName) throws IOException {
         File depositfile = TisUtil.createFile(data, exceltemplate, fileName);
         return ExportUtil.export(fileName, depositfile, true);
     }
@@ -403,7 +403,7 @@ public class ChbTransMonthReportService extends SvrCommonExportService<ChbTransM
      * @return 数据
      */
     public String priview(String pageid, Map<String, Object> selectParam) {
-        String exceltemplate = "TransMonthReport";
+        String exceltemplate = "TransMonthreport";
         @SuppressWarnings("unchecked")
         Map<String, Object> data = restTemplate.postForObject(
                 SvrServiceApplication.CHB_SERVICE_NAME + "/ChbTransMonthReport/createData", selectParam, Map.class);

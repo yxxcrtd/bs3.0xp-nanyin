@@ -37,7 +37,12 @@ public class InvDataCheckService {
         String elementId = dataCheckCommonMapper.queryElementIdByPageId(pageId);
         Page page= CacheUtil.getPage(pageId);
         // 获取page中SYS_ELEMENT_CONTROL表配置的是否展示or隐藏画面元素。如果隐藏则跳过判断，如果展示则进入判断逻辑
-        if (null != page && null != page.getElementcontrol(elementId) && page.getElementcontrol(elementId).getIsShow()) {
+        // modify by etliu 20211223 start
+        // SYS_ELEMENT_CONTROL表没有配置，认为是显示，需要做check
+//        if (null != page && null != page.getElementcontrol(elementId) && page.getElementcontrol(elementId).getIsShow()) {
+        if (null != page && ((null != page.getElementcontrol(elementId) && page.getElementcontrol(elementId).getIsShow())
+            || page.getElementcontrol(elementId) == null)) {
+        // modify by etliu 20211223 end
             return dataCheckCommonUtil.chbCheckCommon(checkResultList, entity, pageId, repType, ValidMessage.class);
         }
         return new ArrayList<ValidMessage>();

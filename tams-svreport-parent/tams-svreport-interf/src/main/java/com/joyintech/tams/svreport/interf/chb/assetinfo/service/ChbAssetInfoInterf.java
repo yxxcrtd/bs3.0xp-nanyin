@@ -1,34 +1,15 @@
 package com.joyintech.tams.svreport.interf.chb.assetinfo.service;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.framework.util.*;
-import com.joyintech.tams.busicommon.productRating.service.CommonProductRatingService;
-import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper;
-import com.joyintech.tams.systemtools.service.TamsBaseCommonService;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.ResultContext;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.SqlSession;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.jdbc.datasource.DataSource;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.busicommon.productRating.service.CommonProductRatingService;
+import com.joyintech.tams.common.BaseInterfService;
+import com.joyintech.tams.common.InterfDefine;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.svreport.base.service.ChbTypeMappingService;
 import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
@@ -43,9 +24,28 @@ import com.joyintech.tams.report.interf.common.constant.InterfConstants;
 import com.joyintech.tams.report.interf.common.constant.InterfMappingConstants;
 import com.joyintech.tams.svreport.interf.chb.assetinfo.dao.ChbAssetInfoInterfMapper;
 import com.joyintech.tams.svreport.interf.chb.assetinfo.dao.ChbTypeMappingMapper;
+import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper;
 import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
 import com.joyintech.tams.svreport.interf.chb.investtrade.dao.ChbMstCounterPartyInterfMapper;
+import com.joyintech.tams.systemtools.service.TamsBaseCommonService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.ResultContext;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 功能:资产要素表接口
@@ -58,7 +58,7 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 @SuppressWarnings("rawtypes")
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ChbAssetInfoInterf  extends BaseService{
+public class ChbAssetInfoInterf  extends BaseInterfService {
     
     /**
      * 日志
@@ -97,7 +97,6 @@ public class ChbAssetInfoInterf  extends BaseService{
     
     private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-
     /**
      * 功能:接入资产要素信息
      * @since 1.6.0
@@ -109,12 +108,24 @@ public class ChbAssetInfoInterf  extends BaseService{
      * void
      */
     public Map<String,List<String>> generateAssetInfoData(Date batchDate,List<String> prodList,boolean isSynchronizeTask,String institutionCode) {
-        logger.debug("上游资产要素信息入库:----开始------" +  df.format(new Date()));
+        // 查询数据
+        List<ChbAssetInfo> insertDataList = getBusEntity(prodList, batchDate, institutionCode, "D");
+
+        if(CollectionUtils.isNotEmpty(insertDataList)){
+            logger.debug("上游资产要素信息插入:----开始------" +  df.format(new Date()));
+            insertDataMerge(insertDataList,null);
+            logger.debug("上游资产要素信息插入:----结束------" +  df.format(new Date()));
+        }
+        return new HashMap<>();
+    }
+
+    @Override
+    public List<ChbAssetInfo> getBusEntity(List<String> prodIdlist, Date date, String institutionCode, String source) {
         // 通道交易是否穿透報送 01 是 02 否
         String isChlBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
         // 用于返回的数据
-        Map<String,List<String>> mapPara = new HashMap<String,List<String>>();      
-        List<String> assetList = new ArrayList<String>(); 
+        Map<String,List<String>> mapPara = new HashMap<String,List<String>>();
+        List<String> assetList = new ArrayList<String>();
         // 切换数据源查询信息
         Date lastUpdatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.中债资产要素信息接口.getInterId());
 //        Date lastUpdatetime = DateUtil.parse("2019-09-06");
@@ -124,15 +135,17 @@ public class ChbAssetInfoInterf  extends BaseService{
         // 走共通逻辑取主体评级结果
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Map<String, Object> productRatingOrderSqlMap = new HashMap<>();
-        String gradeDateEnd = formatter.format(batchDate);
+//        String gradeDateEnd = formatter.format(batchDate);
         productRatingOrderSqlMap.put("oType","01");
         String getProductRatingOrderSqlByZt = commonProductRatingService.getProductRatingOrderSql(productRatingOrderSqlMap);
+        // 调用原中债资产报送状态更新
+        chbAssetInfoInterfMapper.updateRepAssetStatus(new RepAssetDept());
         // 查询当日新增/更改资产要素信息
-        List<ChbAssetInfo> listChbAssetInfo = chbAssetInfoInterf.queryAssetByInterfdateBatch(lastUpdatetime,prodList,gradeDateEnd,getProductRatingOrderSqlByZt);
+        List<ChbAssetInfo> listChbAssetInfo = chbAssetInfoInterf.queryAssetByInterfdateBatch(lastUpdatetime,prodIdlist,"",getProductRatingOrderSqlByZt);
         // 不穿透报送通道资产信息
         if (DictCodeList.是否_中债_否.getValue().equals(isChlBtm)){
             // 查询当日新增/更改通道资产要素信息
-            List<ChbAssetInfo> listChlAssetInfo = chbAssetInfoInterf.queryChlAssetByInterfdateBatch(lastUpdatetime,prodList);
+            List<ChbAssetInfo> listChlAssetInfo = chbAssetInfoInterf.queryChlAssetByInterfdateBatch(lastUpdatetime,prodIdlist);
             if (CollectionUtils.isNotEmpty(listChlAssetInfo)){
                 listChbAssetInfo.addAll(listChlAssetInfo);
             }
@@ -184,7 +197,7 @@ public class ChbAssetInfoInterf  extends BaseService{
                 (map, item)->map.put(item.getCustomerId(), item.getPartyType1()), (m, n)->m.putAll(n));
         for(ChbAssetInfo assetInfo : listChbAssetInfo){
             //新的最后更新时间
-            if (assetInfo.getUpdateTime() != null 
+            if (assetInfo.getUpdateTime() != null
                     && lastUpdatetime.compareTo(assetInfo.getUpdateTime()) < 0){
                 lastUpdatetime = assetInfo.getUpdateTime();
             }
@@ -198,7 +211,7 @@ public class ChbAssetInfoInterf  extends BaseService{
 //          assetInfo.setStatusDate(batchDate);
             assetInfo.setOrgCode(CommonUtil.getOrgCode());
             assetInfo.setDeptCode(CommonUtil.getDeptCode());
-            assetInfo.setStatusDate(batchDate);
+            assetInfo.setStatusDate(date);
             // 映射源数据和中债所需数据
             if (!StringUtil.isEmptyList(assetTypeTwoMappingList)){
                 if (assetTypeTwoMappingMap.get(assetInfo.getAssetType2()) != null){
@@ -215,25 +228,25 @@ public class ChbAssetInfoInterf  extends BaseService{
                     String[] p = StringUtil.split(parent,GlobalConstant.POINT);
                     if(DictCode.资产_负债类别.getValue().equals(p[0]))
                     {
-                    	if(!DictCodeListExt3.资产_负债类别_公募和私募基金.getValue().equals(p[1])){
-                    		assetType = p[1];
-                    	}
+                        if(!DictCodeListExt3.资产_负债类别_公募和私募基金.getValue().equals(p[1])){
+                            assetType = p[1];
+                        }
                     }
-                        
+
                 }
                 assetInfo.setAssetType(assetType);
             }
-    		// 为委外资产时，assetid=assetcode
-    		if("16".equals(assetInfo.getAssetType())) {
-    			assetInfo.setAssetId(assetInfo.getAssetCode());
-    		}
-    		// 项目类资产，资产类别信贷资产流转项目，资产/负债类别=2201,ASSET_TYPE3默认02,10月份版本投管修改后再更改
-    		if("2201".equals(assetInfo.getAssetType2())) {
-    			assetInfo.setAssetType3("02");
-    		}
+            // 为委外资产时，assetid=assetcode
+            if("16".equals(assetInfo.getAssetType())) {
+                assetInfo.setAssetId(assetInfo.getAssetCode());
+            }
+            // 项目类资产，资产类别信贷资产流转项目，资产/负债类别=2201,ASSET_TYPE3默认02,10月份版本投管修改后再更改
+            if("2201".equals(assetInfo.getAssetType2())) {
+                assetInfo.setAssetType3("02");
+            }
 
             //modify by zhangliang 20201212 当是否有预期收益率为否时不取
-    		if (StringUtil.equals(assetInfo.getRateFlag(), "02")){
+            if (StringUtil.equals(assetInfo.getRateFlag(), "02")){
                 assetInfo.setAssetYield(null);
             }
             // 是否字段
@@ -289,37 +302,38 @@ public class ChbAssetInfoInterf  extends BaseService{
 //                  assetInfo.setUpdateTime(DateUtil.now());
 //                  updateDataList.add(assetInfo);
 //              } else {
-                    // 创建人默认system
-                    assetInfo.setCreateUser(CommonUtil.getUserName());
-        //          dto.setCreateUser(SecurityUtil.getLoginUser().getUid());
-                    assetInfo.setCreateTime(DateUtil.now());
-                    assetInfo.setUpdateTime(null);
-                    assetInfo.setUpdateUser(CommonUtil.getUserName());
-                    // 映射人行资产一级二级三级分类
-                    convertPbcAssetType(assetInfo,counterPartyMap);
-                    //2-5企业债券分行业、企业规模统计的列统计维度调整为根据市场机构管理中“机构类型（规模）”字段来取值。
-                    convertInstitSize(assetInfo,institMap);
-                    if(DictCodeListExt2.资产_负债类别_债券类资产_理财直接融资工具_同业存单.getValue().equals(assetInfo.getAssetType())
-                            ||DictCodeListExt2.资产_负债类别_公募基金.getValue().equals(assetInfo.getAssetType())
-                            ||DictCodeListExt2.资产_负债类别_私募基金.getValue().equals(assetInfo.getAssetType())){
-                        if(StringUtil.isNotEmpty(assetInfo.getAssetId())){
-                            String assetId=assetInfo.getAssetId();
-                            if(assetId.contains(".")){
-                                assetId=assetId.substring(0,assetId.indexOf("."));
-                                assetInfo.setAssetId(assetId);
-                            }
-                        }
+            // 创建人默认system
+            assetInfo.setCreateUser(CommonUtil.getUserName());
+            //          dto.setCreateUser(SecurityUtil.getLoginUser().getUid());
+            assetInfo.setCreateTime(DateUtil.now());
+            assetInfo.setUpdateTime(null);
+            assetInfo.setUpdateUser(CommonUtil.getUserName());
+            // 映射人行资产一级二级三级分类
+            convertPbcAssetType(assetInfo,counterPartyMap);
+            //2-5企业债券分行业、企业规模统计的列统计维度调整为根据市场机构管理中“机构类型（规模）”字段来取值。
+            convertInstitSize(assetInfo,institMap);
+            if(DictCodeListExt2.资产_负债类别_债券类资产_理财直接融资工具_同业存单.getValue().equals(assetInfo.getAssetType())
+                    ||DictCodeListExt2.资产_负债类别_公募基金.getValue().equals(assetInfo.getAssetType())
+                    ||DictCodeListExt2.资产_负债类别_私募基金.getValue().equals(assetInfo.getAssetType())){
+                if(StringUtil.isNotEmpty(assetInfo.getAssetId())){
+                    String assetId=assetInfo.getAssetId();
+                    if(assetId.contains(".")){
+                        assetId=assetId.substring(0,assetId.indexOf("."));
+                        assetInfo.setAssetId(assetId);
                     }
-                    insertDataList.add(assetInfo);
-                    // 插入到返回的数据中
-                    if (isSynchronizeTask){
-                        if(!assetList.contains(assetInfo.getAssetCode())){
-                            assetList.add(assetInfo.getAssetCode());
-                        }
-                    }
+                }
+            }
+            insertDataList.add(assetInfo);
+
+//            // 插入到返回的数据中
+//            if (isSynchronizeTask){
+//                if(!assetList.contains(assetInfo.getAssetCode())){
+//                    assetList.add(assetInfo.getAssetCode());
+//                }
+//            }
 //              }
 //          }
-            
+
         }
 //      List<BaseEntity> allData = new ArrayList<BaseEntity>();
 //      if (CollectionUtils.isNotEmpty(updateDataList)) {
@@ -342,9 +356,6 @@ public class ChbAssetInfoInterf  extends BaseService{
 //              }
 //          }
 //      }
-        logger.debug("上游资产要素信息插入:----开始------" +  df.format(new Date()));
-        insertDataMerge(insertDataList,null);
-        logger.debug("上游资产要素信息插入:----结束------" +  df.format(new Date()));
 
         //抽数债券的还本付息计划
         this.generateChbSecRepayInfoData();
@@ -373,11 +384,21 @@ public class ChbAssetInfoInterf  extends BaseService{
 //          }
 //      }
         if(lastUpdatetime!=null){
-            ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.中债资产要素信息接口.getInterId(), lastUpdatetime);;
+            ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.中债资产要素信息接口.getInterId(), lastUpdatetime);
         }
         mapPara.put(InterfConstants.SVR_ASSETLIST, assetList);
         logger.debug("上游资产要素信息入库:----结束------" +  df.format(new Date()));
-        return mapPara;
+        return insertDataList;
+    }
+
+    @Override
+    public Class getEntityClass() {
+        return ChbAssetInfo.class;
+    }
+
+    @Override
+    public String getFileName() {
+        return InterfDefine.资产要素信息接口数据.getCode();
     }
     
     /**

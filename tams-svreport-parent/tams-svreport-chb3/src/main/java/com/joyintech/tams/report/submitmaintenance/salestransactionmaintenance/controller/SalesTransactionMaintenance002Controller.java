@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @PageId("SalesTransactionMaintenance002")
-@RequestMapping("report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance002")
+@RequestMapping("/report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance002")
 public class SalesTransactionMaintenance002Controller extends BaseController {
     
     /**
@@ -95,9 +95,14 @@ public class SalesTransactionMaintenance002Controller extends BaseController {
             SalesTransactionMaintenanceService.save(dto);
             return new AjaxResult("保存成功");
         }
-        if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
+        if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT) && dto.getMaintainStatus().equals("02")){
             SalesTransactionMaintenanceService.update(dto);
-            return new AjaxResult("保存成功");
+            return new AjaxResult("操作成功");
+        }
+        //来自err表的数据要先删除err表中的数据再保存在info表中
+        if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT) && dto.getMaintainStatus() == ""){
+            SalesTransactionMaintenanceService.deleteAndSave(dto);
+            return new AjaxResult("操作成功");
         }
         return new AjaxResult("保存失败");
     }

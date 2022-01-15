@@ -63,6 +63,7 @@
                 REPORTUUID =  #{reportuuid,jdbcType=VARCHAR}
             </if>
         </where>
+        ORDER BY PRD_REGIST_CODE DESC
     </select>
 
     <select id="selectReportDate" parameterType="string" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.SellMonthReport">

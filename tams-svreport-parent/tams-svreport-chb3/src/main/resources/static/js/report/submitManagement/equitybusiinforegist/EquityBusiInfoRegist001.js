@@ -89,7 +89,7 @@ $(function() {
             { title: "报送状态", field: 'submitStatusName',width:100 ,sortField:'submitStatus'},
             { field: 'submitStatus',visible:false},
             { title: "报送日期", field: 'submitTimeStr', width:100,sortField:'submitTime'},
-            { title: "报送截止日", field: 'chbSubmitDeadlineStr', width:100,sortField:'chbSubmitDeadline'},
+            { title: "报送截止日", field: 'chbSubmitDeadline', type: 'date', width:100,sortField:'chbSubmitDeadline'},
             { title: "反馈状态", field: 'submitFeedbackStatus',width:100,visible: false},
             { title: "反馈状态", field: 'submitFeedbackStatusStr',width:100,sortField:'submitFeedbackStatus' /*界面查询性能优化,
                   render: function (data, type, row, meta) {

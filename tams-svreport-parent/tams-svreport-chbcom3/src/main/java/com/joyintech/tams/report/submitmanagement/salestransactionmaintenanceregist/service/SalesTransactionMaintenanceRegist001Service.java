@@ -5,6 +5,8 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dao.SalesTransactionMaintenanceRegist001Mapper;
@@ -76,6 +78,7 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
 	    int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
         Page<SalesTransactionMaintenanceRegist001Dto> pageList = super.queryForPage(
         		pagenum,legth,()->salesTransactionMaintenanceRegist001Mapper.queryForRegistPage(param));
+        dealDataList(pageList.getRoot());
         return pageList;
     }
 
@@ -289,15 +292,16 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
                 return null;
             }
         } else {
-            param.put("submitDeadline", StringUtil.isNotEmpty(param.get("vdate"))?(param.get("vdate").toString().split(",")):null);
-            param.put("sendStatus", StringUtil.isNotEmpty(param.get("mdate"))?(param.get("mdate").toString().split(",")):null);
-            param.put("dataStatus", StringUtil.isNotEmpty(param.get("ptlId"))?(param.get("ptlId").toString().split(",")):null);
-            param.put("statusDate", StringUtil.isNotEmpty(param.get("assetCode"))?(param.get("assetCode").toString().split(",")):null);
-            param.put("submitTime", StringUtil.isNotEmpty(param.get("assetType2"))?(param.get("assetType2").toString().split(",")):null);
-            param.put("submitFeedbackStatus", StringUtil.isNotEmpty(param.get("finprodType2"))?(param.get("finprodType2").toString().split(",")):null);
-
             resultList = salesTransactionMaintenanceRegist001Mapper.setDataList(param);
         }
         return resultList;
+    }
+
+    public void dealDataList(List<SalesTransactionMaintenanceRegist001Dto> list) {
+        list.forEach(item -> {
+            if (StringUtil.isNotEmpty(item.getTradePs())) {
+                item.setTradePs(item.getTradePs() + " " + SvrDataUtil.getNameFromDataDict(DictCode.销售结算资金流动方向, item.getTradePs()));
+            }
+        });
     }
 }

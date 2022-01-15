@@ -140,6 +140,8 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 			total.setProdRegCode(prodid.getProdRegCode());
 			total.setProdRegistCode(prodid.getProdRegistCode());
 			total.setStatus(prodid.getStatus());
+			total.setBusiAcctNo(prodid.getBusiAcctNo());
+			total.setAcctName(prodid.getAcctName());
 			//募集结束日
 			if(prodid.getRaiseEnddate()==null){
 				continue;
@@ -541,17 +543,9 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 		}
 //		 报送截止日生成
 //		当前批次报送时点集合
-		String subStaus=dto.getStatus();
-		if(StringUtil.equals(dto.getStatus(),DictCodeListExt2.数据状态_有效.getValue())){
-			subStaus=DictCodeListExt2.报送数据状态_新建.getValue();
-		}else if(StringUtil.equals(dto.getStatus(),DictCodeListExt2.数据状态_修改.getValue())){
-			subStaus=DictCodeListExt2.报送数据状态_修改.getValue();
-		}else if( dto.getStatus()==null||StringUtil.equals(dto.getStatus(),DictCodeListExt2.数据状态_删除.getValue())){
-			subStaus=DictCodeListExt2.报送数据状态_删除.getValue();
-		}
 		Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
 		List<Date> dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_募集总量登记.getValue(),
-				subStaus,dateMap, dto.getRaiseEnddate());
+				dto.getStatus(),dateMap, dto.getRaiseEnddate());
 		if (!StringUtil.isEmptyList(dateList)) {
 			dto.setChbSubmitDeadline(dateList.get(0));
 			dto.setSubmitDeadline(dateList.get(1));

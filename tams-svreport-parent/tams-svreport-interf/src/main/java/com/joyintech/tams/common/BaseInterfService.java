@@ -3,11 +3,16 @@ package com.joyintech.tams.common;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.thoughtworks.xstream.XStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,6 +28,8 @@ public class BaseInterfService extends BaseService  {
 	@Autowired
 	private XStream xstream;
 
+	private static final Logger logger = LoggerFactory.getLogger(BaseInterfService.class);
+
 
 	/**
 	 * 根据Entity生成文件
@@ -32,10 +39,14 @@ public class BaseInterfService extends BaseService  {
 	 * @param path
 	 * @return
 	 */
-	public String createFileFromEntity(List<String> prodIdlist, String date, String path) {
-		List<? extends BaseEntity> list = getBusEntity(prodIdlist, "F");
+	public String createFileFromEntity(List<String> prodIdlist, String date, String path, String institutionCode) {
+		logger.info("下游数据发布-"+getFileName()+"获取业务Entity开始-------------------");
+		List<? extends BaseEntity> list = getBusEntity(prodIdlist, StringUtil.isEmpty(date) ?new Date(): DateUtil.parse(date), institutionCode, "F");
+		logger.info("下游数据发布-"+getFileName()+"获取业务Entity结束-------------------");
 		// 生成xml文件
+		logger.info("下游数据发布-"+getFileName()+"生成文件开始-------------------------");
 		writeEntityToXmlFile(list, path, date);
+		logger.info("下游数据发布-"+getFileName()+"生成文件结束-------------------------");
 		return "";
 	}
 
@@ -58,7 +69,7 @@ public class BaseInterfService extends BaseService  {
 
 		xstream.alias("info", getEntityClass());
 		try {
-			FileOutputStream out = new FileOutputStream(saveFileDirPath) ;
+			FileOutputStream out = new FileOutputStream(saveFileDirPath);
 			xstream.toXML(list, out);
 			out.close();
 		} catch (Exception e1) {
@@ -68,11 +79,13 @@ public class BaseInterfService extends BaseService  {
 
 	/**
 	 * 获取业务对象
+	 *
 	 * @param prodIdlist
+	 * @param date
 	 * @param source
 	 * @return
 	 */
-	public List<? extends BaseEntity> getBusEntity(List<String> prodIdlist, String source) {
+	public List<? extends BaseEntity> getBusEntity(List<String> prodIdlist, Date date, String institutionCode, String source) {
 		return null;
 	}
 

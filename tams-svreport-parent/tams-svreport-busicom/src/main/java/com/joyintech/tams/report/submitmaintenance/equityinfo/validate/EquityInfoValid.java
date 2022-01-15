@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import com.joyintech.tams.report.submitmaintenance.equityinfo.util.CheckUtil;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -431,7 +432,7 @@ public class EquityInfoValid {
      * @see
      * @since 1.0
      */
-    private void getEditMap(List<String> list, Map<String, String> map) {
+    private void getEditMap(List<String> list, Map<String, String> map, List<Map<String,EquityInfoRegist001Dto>> bankCodeMarkList) {
 //        EquityInfoRegist001Mapper equityInfoRegist001Mapper1 = SpringContextUtil.getBean(
 //            EquityInfoRegist001Mapper.class);
         //根据识别标识查询登记表的数据
@@ -441,8 +442,12 @@ public class EquityInfoValid {
 
         try {
             if (StringUtil.isNotBlank(list.get(1)) && list.get(1).length() <= 30) {
-                equityRegist = equityInfoRegist001Mapper.queryBatchForEquityInfoSingle(list.get(0),
-                        list.get(1));
+//                equityRegist = equityInfoRegist001Mapper.queryBatchForEquityInfoSingle(list.get(0),
+//                        list.get(1));
+                // 优化 避免多次查询数据库
+                if (bankCodeMarkList != null && bankCodeMarkList.size() >0) {
+                    equityRegist = bankCodeMarkList.get(0).get((list.get(0) + "_" + list.get(1)));
+                }
             }
         }
         catch (Exception e) {
@@ -556,17 +561,17 @@ public class EquityInfoValid {
             map.put("HOLDER_TYPE", equityInfo001Dto.getHolderType());
             sb.append("01");
         }
-        // 投资者分类
-        else if (!CommonUtil.equalsIgnoreNull(equityInfo001Dto.getHolderClassify(),
-                equityInfoRegist001Dto.getHolderClassify())) {
-            map.put("HOLDER_CLASSIFY", equityInfo001Dto.getHolderClassify());
-            sb.append("01");
-        }
-        else if (!CommonUtil.equalsIgnoreNull(equityInfo001Dto.getFundAccPlace(),
-                equityInfoRegist001Dto.getFundAccPlace())) {
-            map.put("FUND_ACC_PLACE", equityInfo001Dto.getFundAccPlace());
-            sb.append("01");
-        }
+//        // 投资者分类
+//        else if (!CommonUtil.equalsIgnoreNull(equityInfo001Dto.getHolderClassify(),
+//                equityInfoRegist001Dto.getHolderClassify())) {
+//            map.put("HOLDER_CLASSIFY", equityInfo001Dto.getHolderClassify());
+//            sb.append("01");
+//        }
+//        else if (!CommonUtil.equalsIgnoreNull(equityInfo001Dto.getFundAccPlace(),
+//                equityInfoRegist001Dto.getFundAccPlace())) {
+//            map.put("FUND_ACC_PLACE", equityInfo001Dto.getFundAccPlace());
+//            sb.append("01");
+//        }
         // 个人证件类别
         else if (!CommonUtil.equalsIgnoreNull(equityInfo001Dto.getPersonalIdentifyType(),
                 equityInfoRegist001Dto.getPersonalIdentifyType())) {
@@ -665,6 +670,8 @@ public class EquityInfoValid {
     private void getDiffDto(EquityInfo001Dto equityInfo001Dto,
                             EquityInfoRegist001Dto equityInfoRegist001Dto,
                             Map<String, String> map ,boolean flag) {
+    	String updateFlg = SvrDataUtil.getSysParam("SVR_EQU_REPAIR_BATCH_FLAG");
+		    	
         // 投资者是否属于本行比较
         String type = "03";
         if (StringUtil.isNotEmpty(equityInfo001Dto.getIsBelongBank())
@@ -679,10 +686,10 @@ public class EquityInfoValid {
             map.put("THE_BANK_NAME", equityInfo001Dto.getTheBankName());
         }
         // 投资者所属银行代码
-        else if (StringUtil.isNotEmpty(equityInfo001Dto.getTheBankCode())
+        else if (!"01".equals(updateFlg) && StringUtil.isNotEmpty(equityInfo001Dto.getTheBankCode())
                 && !equityInfo001Dto.getTheBankCode().equals(
-                equityInfoRegist001Dto.getTheBankCode())) {
-            map.put("THE_BANK_CODE", equityInfo001Dto.getTheBankCode());
+                equityInfoRegist001Dto.getTheBankCode())) {        	
+    		map.put("THE_BANK_CODE", equityInfo001Dto.getTheBankCode());
         }
         // 投资者境内外标识
         else if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderMark())
@@ -702,12 +709,6 @@ public class EquityInfoValid {
                 && !equityInfo001Dto.getHolderType().equals(
                 equityInfoRegist001Dto.getHolderType())) {
             map.put("HOLDER_TYPE", equityInfo001Dto.getHolderType());
-        }
-        // 投资者分类
-        else if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderClassify())
-                && !equityInfo001Dto.getHolderClassify().equals(
-                equityInfoRegist001Dto.getHolderClassify())) {
-            map.put("HOLDER_CLASSIFY", equityInfo001Dto.getHolderClassify());
         }
         // 个人证件类别
         else if (StringUtil.isNotEmpty(equityInfo001Dto.getPersonalIdentifyType())
@@ -765,42 +766,63 @@ public class EquityInfoValid {
             map.put("HOLDER_SEX", equityInfo001Dto.getHolderSex());
         }
         else {
+        	//若固话不合规，则赋默认值对比
+        	this.getDefaultTelphone(equityInfo001Dto,flag);
             // 备注
             if (StringUtil.isNotEmpty(equityInfo001Dto.getRemark())
                     && !equityInfo001Dto.getRemark().equals(equityInfoRegist001Dto.getRemark())) {
                 map.put("REMARK", equityInfo001Dto.getRemark());
-            }
-            else {
+            } 
                 // 风险偏好
-                if (!equityInfo001Dto.getHolderRiskPrefer().equals(
+            else if (!equityInfo001Dto.getHolderRiskPrefer().equals(
                         equityInfoRegist001Dto.getHolderRiskPrefer())) {
                     map.put("HOLDER_RISK_PREFER", equityInfo001Dto.getHolderRiskPrefer());
                     type = "04";
                 }
                 // 手机号码
-                if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderCellphone())
+            else if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderCellphone())
                         && !equityInfo001Dto.getHolderCellphone().equals(
                         equityInfoRegist001Dto.getHolderCellphone())) {
                     map.put("HOLDER_CELLPHONE", equityInfo001Dto.getHolderCellphone());
                     type = "04";
                 }
-                //若固话不合规，则赋默认值对比
-                this.getDefaultTelphone(equityInfo001Dto,flag);
                 // 固定电话
-                if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderTelephone())
+            else if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderTelephone())
                         && !equityInfo001Dto.getHolderTelephone().equals(
                         equityInfoRegist001Dto.getHolderTelephone())) {
                     map.put("HOLDER_TELEPHONE", equityInfo001Dto.getHolderTelephone());
                     type = "04";
                 }
                 // 电子邮箱
-                if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderEmail())
+            else if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderEmail())
                         && !equityInfo001Dto.getHolderEmail().equals(
                         equityInfoRegist001Dto.getHolderEmail())) {
                     map.put("HOLDER_EMAIL", equityInfo001Dto.getHolderEmail());
                     type = "04";
                 }
-            }
+                // 电子邮箱
+            else if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderEmail())
+                        && !equityInfo001Dto.getHolderEmail().equals(
+                        equityInfoRegist001Dto.getHolderEmail())) {
+                    map.put("HOLDER_EMAIL", equityInfo001Dto.getHolderEmail());
+                    type = "04";
+                                           
+            } else {
+            	// 投资者分类 - 仅供四期使用字段
+            	if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderClassify())
+                        && !equityInfo001Dto.getHolderClassify().equals(
+                        equityInfoRegist001Dto.getHolderClassify())) {
+                    map.put("HOLDER_CLASSIFY", equityInfo001Dto.getHolderClassify());
+                    type = "05";
+                }
+                // 开户行所在地- 仅供四期使用字段
+                if (StringUtil.isNotEmpty(equityInfo001Dto.getFundAccPlace())
+                        && !equityInfo001Dto.getFundAccPlace().equals(
+                        equityInfoRegist001Dto.getFundAccPlace())) {
+                    map.put("FUND_ACC_PLACE", equityInfo001Dto.getFundAccPlace());
+                    type = "05";
+                }
+            } 
         }
         if (map.isEmpty()) {
             map.put("flag", "01");
@@ -1100,12 +1122,12 @@ public class EquityInfoValid {
             map.put("HOLDER_EMAIL", list.get(20));
             sb.append("01");
         }
-        //投资者分类
-        else if (!CommonUtil.equalsIgnoreNull(list.get(22),
-                equityInfoRegist001Dto.getHolderClassify())) {
-            map.put("HOLDER_CLASSIFY", list.get(22));
-            sb.append("01");
-        }
+//        //投资者分类
+//        else if (!CommonUtil.equalsIgnoreNull(list.get(22),
+//                equityInfoRegist001Dto.getHolderClassify())) {
+//            map.put("HOLDER_CLASSIFY", list.get(22));
+//            sb.append("01");
+//        }
         //投资者分类
 //        else if (!CommonUtil.equalsIgnoreNull(list.get(23),
 //                equityInfoRegist001Dto.getFundAccPlace())) {
@@ -1128,6 +1150,8 @@ public class EquityInfoValid {
      */
     private void getDiffMap(List<String> list, EquityInfoRegist001Dto equityInfoRegist001Dto,
                             Map<String, String> map) {
+    	
+    	String updateFlg = SvrDataUtil.getSysParam("SVR_EQU_REPAIR_BATCH_FLAG");
         //需要做变更类型的分析，然后返回变更类型
         //03 重要信息变更   04 其他信息变更
         // 投资者是否属于本行比较
@@ -1141,9 +1165,9 @@ public class EquityInfoValid {
             map.put("THE_BANK_NAME", list.get(4));
         }
         // 投资者所属银行代码
-        else if (!CommonUtil.equalsIgnoreNull(list.get(5),
+        else if (!"01".equals(updateFlg) && !CommonUtil.equalsIgnoreNull(list.get(5),
                 equityInfoRegist001Dto.getTheBankCode())) {
-            map.put("THE_BANK_CODE", list.get(5));
+        	map.put("THE_BANK_CODE", list.get(5));
         }
         // 投资者境内外标识
         else if (!CommonUtil.equalsIgnoreNull(list.get(6),
@@ -1212,11 +1236,11 @@ public class EquityInfoValid {
         else if (!CommonUtil.equalsIgnoreNull(list.get(21), equityInfoRegist001Dto.getRemark())) {
             map.put("REMARK", list.get(21));
         }
-        //投资者分类
-        else if (!CommonUtil.equalsIgnoreNull(list.get(22),
-                equityInfoRegist001Dto.getHolderClassify())) {
-            map.put("HOLDER_CLASSIFY", list.get(22));
-        }
+//        //投资者分类
+//        else if (!CommonUtil.equalsIgnoreNull(list.get(22),
+//                equityInfoRegist001Dto.getHolderClassify())) {
+//            map.put("HOLDER_CLASSIFY", list.get(22));
+//        }
 //        //TODO  销售区域
 //        else if (!CommonUtil.equalsIgnoreNull(list.get(23),
 //                equityInfoRegist001Dto.getFundAccPlace())) {
@@ -1230,22 +1254,46 @@ public class EquityInfoValid {
                 type = "04";
             }
             // 手机号码
-            if (!CommonUtil.equalsIgnoreNull(list.get(18),
+            else if (!CommonUtil.equalsIgnoreNull(list.get(18),
                     equityInfoRegist001Dto.getHolderCellphone())) {
                 map.put("HOLDER_CELLPHONE", list.get(18));
                 type = "04";
             }
             // 固定电话
-            if (!CommonUtil.equalsIgnoreNull(list.get(19),
+            else if (!CommonUtil.equalsIgnoreNull(list.get(19),
                     equityInfoRegist001Dto.getHolderTelephone())) {
                 map.put("HOLDER_TELEPHONE", list.get(19));
                 type = "04";
             }
             // 电子邮箱
-            if (!CommonUtil.equalsIgnoreNull(list.get(20),
+            else if (!CommonUtil.equalsIgnoreNull(list.get(20),
                     equityInfoRegist001Dto.getHolderEmail())) {
                 map.put("HOLDER_EMAIL", list.get(20));
                 type = "04";
+            }else {
+            	if("01".equals(updateFlg)) {
+            		// 所属银行代码                    
+                    if (StringUtil.isNotEmpty(list.get(5))
+                            && !list.get(5).equals(
+                            equityInfoRegist001Dto.getTheBankCode())) {
+                    	map.put("THE_BANK_CODE", list.get(5));
+                        type = "05";
+                    }
+            	}
+        		// 投资者分类 - 仅供四期使用字段
+            	if (StringUtil.isNotEmpty(list.get(22))
+                        && !list.get(22).equals(
+                        equityInfoRegist001Dto.getHolderClassify())) {
+                    map.put("HOLDER_CLASSIFY", list.get(22));
+                    type = "05";
+                }
+                // 开户行所在地- 仅供四期使用字段
+                if (StringUtil.isNotEmpty(list.get(26))
+                        && !list.get(26).equals(
+                        equityInfoRegist001Dto.getFundAccPlace())) {
+                    map.put("FUND_ACC_PLACE", list.get(26));
+                    type = "05";
+                }            	            	
             }
 //            if (!StringUtil.equals(type, "04")) {
 //                // 备注
@@ -1389,6 +1437,10 @@ public class EquityInfoValid {
                                           Map<String,List<ChbTransformRuleObjDto>> objFiledsMap,
                                           EquityInfo001Dto equityInfo001Dto) {
 //        String isBelongBankKey = EquityInfoCheckUtil.subDictcode(isBelongBank, StringUtil.SPACE);
+    	String isBelongBankStr = null;
+    	if(StringUtil.isNotEmpty(isBelongBank) && isBelongBank.length() > 2) {
+    		isBelongBankStr = isBelongBank.substring(0,2);
+        }
         if ("01".equals(type) || "03".equals(type)) {
             //当“数据类型”选择“新增”和“重要信息变更”时，该要素登记要求由必填变更为选填。
             if(StringUtil.isNotEmpty(theBankCode)){
@@ -1408,40 +1460,11 @@ public class EquityInfoValid {
                     message.add(this.getMessage("CHB_EQUITYINFO_E_035", "投资者所属银行代码"));
                 }
                 // add by etliu 20180912 end
+            }else {                
+            	if(DictCodeList.是否_中债_否.getValue().equals(isBelongBankStr)) {
+            		message.add(this.getMessage("CHB_EQUITYINFO_E_036", "投资者所属银行代码"));
+            	}
             }
-/*            if (!EquityInfoCheckUtil.isEmpty(isBelongBankKey)) {
-                if ("02".equals(isBelongBankKey)) {
-                    if (EquityInfoCheckUtil.isEmpty(theBankCode)) {
-                        message.add(this.getMessage("CHB_EQUITYINFO_E_005", "新增或重要信息变更，并且不属于本行",
-                            "投资者所属银行代码"));
-                    }
-                    else if (bankCode.equals(theBankCode)) {
-                        message.add(this.getMessage("CHB_EQUITYINFO_E_011",
-                            "新增或重要信息变更，并且该投资者是否属于本行为否时", "投资者所属银行代码", "登记银行代码"));
-                    }
-                    else if (theBankCode.length() != 6) {
-                        message.add(this.getMessage("CHB_EQUITYINFO_E_002", "投资者所属银行代码", "6"));
-                    }
-                    else if (EquityInfoCheckUtil.findPatern(PATTERN_REGIST_BANK_CODE,
-                        theBankCode)) {
-                        message.add(this.getMessage("CHB_EQUITYINFO_E_003", "投资者所属银行代码"));
-                    }
-                }
-                else {
-                    // 投资者所属银行代码
-                    if (!EquityInfoCheckUtil.isEmpty(theBankCode)) {
-                        message.add(this.getMessage("CHB_EQUITYINFO_E_006", "新增或重要信息变更，并且属于本行",
-                            "投资者所属银行代码"));
-                    }
-                }
-            }
-            else {
-                // 投资者所属银行代码
-                if (!EquityInfoCheckUtil.isEmpty(theBankCode)) {
-                    message.add(this.getMessage("CHB_EQUITYINFO_E_006", "新增或重要信息变更，投资者所属银行为空",
-                        "投资者所属银行代码"));
-                }
-            }*/
         }
 
         return message;
@@ -1464,6 +1487,10 @@ public class EquityInfoValid {
                                           Map<String,List<ChbTransformRuleObjDto>> objFiledsMap,
                                           EquityInfo001Dto equityInfo001Dto) {
 //        String isBelongBankKey = EquityInfoCheckUtil.subDictcode(isBelongBank, StringUtil.SPACE);
+    	String isBelongBankStr = null;
+    	if(StringUtil.isNotEmpty(isBelongBank) && isBelongBank.length() > 2) {
+    		isBelongBankStr = isBelongBank.substring(0,2);
+        }
         if ("01".equals(type) || "03".equals(type)) {
 //            当“数据类型”选择“新增”和“重要信息变更”时，该要素登记要求由必填变更为选填。
 //            if (StringUtil.isNotEmpty(theBankName) && theBankName.getBytes().length>90) {
@@ -1479,6 +1506,10 @@ public class EquityInfoValid {
 
             else if(StringUtil.isNotEmpty(theBankName) &&EquityInfoCheckUtil.whiteListCheck( theBankName,objFileds,spzMap,equityInfo001Dto) ){
                 message.add(this.getMessage("CHB_EQUITYINFO_E_035", "投资者所属银行名称"));
+            }else if(StringUtil.isEmpty(theBankName)) {
+            	if(DictCodeList.是否_中债_否.getValue().equals(isBelongBankStr)) {
+            		message.add(this.getMessage("CHB_EQUITYINFO_E_036", "投资者所属银行名称"));
+            	}
             }
             /*if (!EquityInfoCheckUtil.isEmpty(isBelongBankKey)) {
                 if ("02".equals(isBelongBankKey)) {
@@ -2598,6 +2629,20 @@ public class EquityInfoValid {
         }
         //modified 判断导入的数据是否存在重复的原始标识 by liupengfei 2018/10/19 start
 
+        // add by yangxianjiu 2021-12-24 start 优化投资者身份导入check end
+        List<EquityInfoRegist001Dto> equityInfoRegist001DtoList = getAllForEquityInfo(dataList);
+
+        // 获取所有
+        // List<EquityInfoRegist001Dto> equityInfoRegist001DtoList = equityInfoRegist001Mapper.queryAllForEquityInfo(paramMap);
+        // BankCode 拼接 IndentifyMark
+        Map<String, EquityInfoRegist001Dto> bankCodeIndentifyMarkMap = equityInfoRegist001DtoList.stream().collect(JoyinCollectors.toMap(x -> x.getBankCode() + "_" + x.getIndentifyMark(), part -> part));
+        // BankCode 拼接 OrgIndentifyMark
+//        Map<String, EquityInfoRegist001Dto> bankCodeOrgIndentifyMarkMap = equityInfoRegist001DtoList.stream().collect(JoyinCollectors.toMap(x -> x.getBankCode() + "_" + x.getOrgIndentifyMark(), part -> part));
+
+        List<Map<String,EquityInfoRegist001Dto>> bankCodeMarkList = new ArrayList<>();
+        bankCodeMarkList.add(bankCodeIndentifyMarkMap);
+//        bankCodeMarkList.add(bankCodeOrgIndentifyMarkMap);
+
         for (int i = 0; i < dataList.size(); i++ ) {
             map = new HashMap<String, String>();
             List<String> list = dataList.get(i);
@@ -2671,7 +2716,8 @@ public class EquityInfoValid {
             // equityInfoRegist001Mapper.queryForEquityInfoRegist(
             // list.get(0), list.get(1));
             try {
-                this.getEditMap(list, map);
+                this.getEditMap(list, map, bankCodeMarkList);
+//                this.getEditMap(list, map);
             }
             catch (Exception e) {
 //                System.out.println("getEditMap出异常，异常信息：" + e.getMessage());
@@ -2876,7 +2922,7 @@ public class EquityInfoValid {
                 // 投资者类别
                 message = checkHolderType(message, equityInfoRegist001Dto.getHolderType(), type,spzMap,objFiledsMap,null);
                 // 投资者分类
-                message = checkHolderClassify(message,equityInfoRegist001Dto.getHolderClassify(), type,spzMap,objFiledsMap,null);
+//                message = checkHolderClassify(message,equityInfoRegist001Dto.getHolderClassify(), type,spzMap,objFiledsMap,null);
                 // 个人证件类别验证
                 message = checkPersonalIdentifyType(message,
                         equityInfoRegist001Dto.getPersonalIdentifyType(), type,
@@ -3283,6 +3329,61 @@ public class EquityInfoValid {
                 list.add(equityInfoRegist001Dto);
             }
         }
+    }
+
+    /**
+     * 查询 导入文件中 bankCode and indentifyMark 在数据库中存在的Dto
+     *
+     * @param dataList
+     * @return
+     */
+    private List<EquityInfoRegist001Dto> getAllForEquityInfo(List<List<String>> dataList) {
+        // 银行编码 列表
+        List<String> bankCodeList = new ArrayList<>();
+        // 识别标识 列表
+        List<String> indentifyMarkList = new ArrayList<>();
+        // 查询参数
+        Map<String, Object> paramMap = new HashMap<>();
+
+        List<EquityInfoRegist001Dto> equityInfoRegist001DtoList = null;
+        List<EquityInfoRegist001Dto> equityInfoRegist001DtoListTemp = null;
+        // 所有 bankCode indentifyMark 列表
+        for (int i = 0; i < dataList.size(); i++) {
+            bankCodeList.add(dataList.get(i).get(0));
+            indentifyMarkList.add(dataList.get(i).get(1));
+        }
+
+        int dataCount = dataList.size();
+        // 是否需要分批
+        if (dataCount < 1000) {
+            paramMap.put("bankCodeList", bankCodeList);
+            paramMap.put("indentifyMarkList", indentifyMarkList);
+            equityInfoRegist001DtoList = equityInfoRegist001Mapper.queryAllForEquityInfo(paramMap);
+            paramMap = null;
+        } else {
+            // 分批处理
+            int part = dataCount / 1000;
+            // 分批数
+            for (int i = 0; i < part; i++) {
+                paramMap.put("bankCodeList", bankCodeList.subList(0, 1000));
+                paramMap.put("indentifyMarkList", indentifyMarkList.subList(0, 1000));
+                equityInfoRegist001DtoListTemp = equityInfoRegist001Mapper.queryAllForEquityInfo(paramMap);
+                bankCodeList.subList(0, 1000).clear();
+                indentifyMarkList.subList(0, 1000).clear();
+                paramMap = null;
+                // 追加临时列表的数据
+                equityInfoRegist001DtoList.addAll(equityInfoRegist001DtoListTemp);
+            }
+            // 剩下的数据
+            if (CollectionUtils.isNotEmpty(bankCodeList) && CollectionUtils.isNotEmpty(indentifyMarkList)) {
+                paramMap.put("bankCodeList", bankCodeList);
+                paramMap.put("indentifyMarkList", indentifyMarkList);
+                equityInfoRegist001DtoListTemp = equityInfoRegist001Mapper.queryAllForEquityInfo(paramMap);
+                // 追加临时列表的数据
+                equityInfoRegist001DtoList.addAll(equityInfoRegist001DtoListTemp);
+            }
+        }
+        return equityInfoRegist001DtoList;
     }
 
 }

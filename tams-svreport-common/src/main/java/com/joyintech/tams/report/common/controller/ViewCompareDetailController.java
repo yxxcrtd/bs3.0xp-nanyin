@@ -463,6 +463,9 @@ public class ViewCompareDetailController extends BaseController {
                 searchParam.put("order", " ORDER BY nvl(UPDATE_TIME,CREATE_TIME) DESC");
             }
             else {
+                if(searchParam.get("tableName").equals("CHB_SALER_STL_DEAL_SUB")){
+                    oder = " ORDER BY DATA_STATUS DESC,SEND_STATUS";
+                }
                 searchParam.put("order", oder);
             }
         }
