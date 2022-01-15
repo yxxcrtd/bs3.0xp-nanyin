@@ -27,7 +27,9 @@
             $("#finprodMarketName").val($('#finprodId').select2('data')[0].object.shareName);
             if(!isTranRecord ||isTranRecord == 'N' || isTranRecord == '') {
                 $("#conShareId").val($('#finprodId').select2('data')[0].object.conShareId);
-                $("#conPrice").val($('#finprodId').select2('data')[0].object.conPrice).trigger("blur");
+                if(!$("#conPrice").val()){
+                    $("#conPrice").val($('#finprodId').select2('data')[0].object.conPrice).trigger("blur");
+                }
             }
             $("#convdate").val(new Date($('#finprodId').select2('data')[0].object.conVdate).format());
             //股票对应金融产品代码
