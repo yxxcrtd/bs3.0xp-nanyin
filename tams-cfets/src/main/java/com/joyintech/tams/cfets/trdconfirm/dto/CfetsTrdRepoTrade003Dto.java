@@ -456,6 +456,10 @@ public class CfetsTrdRepoTrade003Dto extends TrdProductDeal implements ProcessEn
 
 
     private String zhilingtype;
+    /**
+     * 回购利率
+     */
+    private BigDecimal  rate;
 
     /**
      * 登记或报价的汇总编号
@@ -1738,4 +1742,11 @@ public class CfetsTrdRepoTrade003Dto extends TrdProductDeal implements ProcessEn
         this.finTradeProductAdds = finTradeProductAdds;
     }
 
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
 }

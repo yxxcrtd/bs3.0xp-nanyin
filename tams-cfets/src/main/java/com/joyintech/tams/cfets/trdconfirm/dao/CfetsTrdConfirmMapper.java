@@ -162,7 +162,7 @@ public interface CfetsTrdConfirmMapper {
      * @param pageParam
      * @return
      */
-    public boolean isExistMatchInfo(@Param("preTradeId") String preTradeId);
+    public boolean isExistMatchInfo(Map<String, Object> pageParam);
     /**
      * 根据交易汇总编号删除匹配关系表
      * @param seqno

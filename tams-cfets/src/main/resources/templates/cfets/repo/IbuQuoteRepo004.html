@@ -35,17 +35,17 @@
     </style>
     <div class="pro-module-container" style="margin-bottom: 20px;">
         <form class="layui-form joyin-form-wrap pro-module-form" id="submitForm">
-            <input type="hidden" id="distribution" name="distribution" th:value="${entity?.distribution}"/>
-            <input type="hidden" id="openModel" name="openModel" th:value="${entity?.openModel}"/>
-            <input type="hidden" id="operateType" name="operateType" th:value="${entity?.operateType}"/>
-            <input type="hidden" id="quotaPageModel" name="quotaPageModel" th:value="${entity?.quotaPageModel}"/>
-            <input type="hidden" id="quoteId" name="quoteId" th:value="${entity?.quoteId}"/>
+            <input type="hidden" id="operatorType" name="operatorType" th:value="${entity?.operatorType}"/>
+            <input type="hidden" id="elementId" name="elementId" th:value="${entity?.elementId}"/>
+            <input type="hidden" id="tradeDate" name="tradeDate" th:value="${#dates.format(entity?.tradeDate,'yyyy-MM-dd')}"/>
             <input type="hidden" id="secManageAcctId" name="secManageAcctId" th:value="${entity?.secManageAcctId}"/>
             <input type="hidden" id="tradeMarket" name="tradeMarket" th:value="${entity?.tradeMarket}"/>
-            <input type="hidden" id="tradeDate" name="tradeDate" th:value="${entity?.tradeDate}"/>
-            <input type="hidden" id="ptlAllocations" name="ptlAllocations" th:value="${entity?.ptlAllocations}"/>
-            <input type="hidden" id="repoEntrustPledgeDtos" name="repoEntrustPledgeDtos"
-                   th:value="${entity?.repoEntrustPledgeDtos}"/>
+            <input type="hidden" id="distribution" name="distribution" th:value="${entity?.distribution}"/>
+            <input type="hidden" id="totleTradeId" name="totleTradeId" th:value="${entity?.totleTradeId}"/>
+            <input type="hidden" id="workflowId" name="workflowId" th:value="${entity?.workflowId}"/>
+            <input type="hidden" id="quoteType" name="quoteType" th:value="${entity?.quoteType}"/>
+            <input type="hidden" id="systemAct" name="systemAct" th:value="${entity?.systemAct}"/>
+
             <div class="pro-module-wrapper pro-module-base" th:title="#{IbuQuoteRepo004.baseinfo}">
                 <div class="pro-module-wrap">
                     <div class="pro-module">
@@ -82,20 +82,22 @@
                                     <label class="layui-form-label form-label-wrap"
                                            th:text="#{IbuQuoteRepo004.my}">本方</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" name="mySide"
-                                               data-th-value="${entity?.mySide}"
-                                               class="layui-input form-input" placeholder="请输入内容"
-                                               data-th-placeholder="#{SysCommon.placeholder}">
+                                        <select required type="text" id="mySide" name="mySide"
+                                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                                th:placeholder="#{SysCommon.placeholder}"
+                                                th:data-url="@{/common/joyinbusinessCommon/queryMySideOrCount}"
+                                                allowClear="true" th:initValue="${entity?.mySide}"></select>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap"
                                            th:text="#{IbuQuoteRepo004.myTradeId}">本方交易员</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" name="ouTraderName"
-                                               data-th-value="${entity?.ouTraderName}"
-                                               class="layui-input form-input" placeholder="请输入内容"
-                                               data-th-placeholder="#{SysCommon.placeholder}">
+                                        <select required type="text" id="mySideTrader" name="mySideTrader"
+                                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                                th:placeholder="#{SysCommon.placeholder}"
+                                                th:data-url="@{/common/joyinbusinessCommon/queryMySideTraderOrCountTrader?dealType=01}"
+                                                allowClear="true" th:initValue="${entity?.mySideTrader}"></select>
                                     </div>
                                 </div>
                             </div>
@@ -104,19 +106,21 @@
                                     <label class="layui-form-label form-label-wrap"
                                            th:text="#{IbuQuoteRepo004.counterId}">对手方</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" name="counterId"
-                                               data-th-value="${entity?.counterId}"
-                                               class="layui-input form-input" placeholder="请输入内容"
-                                               data-th-placeholder="#{SysCommon.placeholder}">
+                                        <select required type="text" id="counterId" name="counterId"
+                                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                                th:placeholder="#{SysCommon.placeholder}"
+                                                th:data-url="@{/common/joyinbusinessCommon/queryMySideOrCount?dealType=01}"
+                                                allowClear="true" th:initValue="${entity?.counterId}"></select>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">对手方交易员</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" name="counterTraderName"
-                                               data-th-value="${entity?.counterTrader}"
-                                               class="layui-input form-input" placeholder="请输入内容"
-                                               data-th-placeholder="#{SysCommon.placeholder}">
+                                        <select required type="text" id="counterTrader" name="counterTrader"
+                                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                                th:placeholder="#{SysCommon.placeholder}" parentIds="counterId"
+                                                th:data-url="@{/common/joyinbusinessCommon/queryMySideTraderOrCountTrader?dealType=02}"
+                                                allowClear="true" th:initValue="${entity?.counterTrader}"></select>
                                     </div>
                                 </div>
                             </div>
@@ -391,6 +395,10 @@
                 </div>
             </div>
         </form>
+        <div class="row text-center" style="margin: 20px 0;">
+            <a id="IbuQuoteRepo004_btn_submit" class="layui-btn layui-btn-sm btn-submit" data-th-text="#{SysCommon.submit}">提交</a>
+            <a id="IbuQuoteRepo004_btn_cancel" class="layui-btn layui-btn-sm btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a>
+        </div>
     </div>
 </div>
 <div layout:fragment="script">

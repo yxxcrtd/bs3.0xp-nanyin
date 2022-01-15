@@ -23,7 +23,6 @@ import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealEntrustOrderDto;
 import com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepoMapper;
 import com.joyintech.tams.cfets.bankuplink.repo.dto.*;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbClosePosEtrRequest;
@@ -32,10 +31,14 @@ import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtrIbBondinfoService;
 import com.joyintech.tams.cfets.etrib.repo.service.CfetsEtrIbRepoinfoService;
 import com.joyintech.tams.common.base.dao.EtrDistributeMapper;
+import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.DateCalService;
-import com.joyintech.tams.constant.*;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
@@ -110,6 +113,9 @@ public class IbuQuoteRepoService extends BaseService {
     @Autowired
     private JoyinbusinessCommonService joyinbusinessCommonService;
 
+    @Autowired
+    private BaseEtrInvestInfoServiceImpl etrInvestInfoServiceImpl;
+
     @Autowired(required = false)
     private BaseEtrInvestInfoServiceImpl etrInvesInfo;
 
@@ -142,6 +148,9 @@ public class IbuQuoteRepoService extends BaseService {
 
     @Autowired
     private EtrDistributeMapper etrDistributeMapper;
+
+    @Autowired
+    private EtrEntrustAddMapper etrEntrustAddMapper;
     /**
      * 递增维度
      */
@@ -2237,9 +2246,9 @@ public class IbuQuoteRepoService extends BaseService {
             List<RepoEntrustPledgeDto> list = this.selectRepoEntrustPledges(dto);
             BigDecimal shareAmt = BigDecimal.ZERO;
             for (RepoEntrustPledgeDto temp : list) {
-                shareAmt = ArithmeticUtil.doAdd(shareAmt, ArithmeticUtil.divide(ArithmeticUtil.multiply(temp.getPledgePrin(), temp.getPledgeRatio()),new BigDecimal(100),2));
+                shareAmt = ArithmeticUtil.doAdd(shareAmt, ArithmeticUtil.divide(ArithmeticUtil.multiply(temp.getPledgePrin(), temp.getPledgeRatio()), new BigDecimal(100), 2));
             }
-            entrustOrderDto.setSumShareAmt(ArithmeticUtil.divide(shareAmt,new BigDecimal(10000),2));
+            entrustOrderDto.setSumShareAmt(ArithmeticUtil.divide(shareAmt, new BigDecimal(10000), 2));
             resultData.put(dtCode + "_table", infoForm1);
             resultData.put(dtCode + "_tableData", list);
         }
@@ -2329,6 +2338,71 @@ public class IbuQuoteRepoService extends BaseService {
             list.add(etrDistributeMapper.selectByPrimaryKey(etrKey));
         }
         return list;
+    }
+
+    /**
+     * 指令放弃
+     *
+     * @param entrustId
+     * @return
+     */
+    public String giveUpEntrust(String entrustId) {
+        String massege = "";
+        if (StringUtil.isEmpty(entrustId)) {
+            massege = "请选择指令！";
+        }
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
+        if (etrEntrust == null) {
+            massege = "未查询到指令信息！";
+        }
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("entrustId", entrustId);
+        setParam(params, 1);
+        List<CfetsRepoDealEntrustOrderDto> cfetsBondDealEntrustOrderDtos = cfetsIbuQuoteRepoMapper.listEntrust(params);
+        // 已接收且执行进度<100%的指令可以选择【放弃】接收
+        if (CollectionUtils.isNotEmpty(cfetsBondDealEntrustOrderDtos)) {
+            for (CfetsRepoDealEntrustOrderDto item : cfetsBondDealEntrustOrderDtos) {
+                if (!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已接收)
+                        && cfetsRepoQuotedPrice004Service.ACompareToB(item.getTransactioncom(), new BigDecimal(100), 2) >= 0) {
+                    return "已接收且执行进度<100%的指令,才能执行放弃操作！";
+                }
+            }
+        }
+        Map<String, Object> param = new HashMap<>();
+        param.put("entrustId", entrustId);
+        EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entrustId);
+        if (etrEntrustAdd == null) {
+            return "未查询到指令附属信息！";
+        }
+        //是否存在流程中或者有效且数据状态不为 已撤回 已终止
+        int i = cfetsIbuQuoteBondEtrMapper.checkDataStatus(param);
+        if (i > 0) {
+            return "存在流程中的报价，不可放弃！";
+        }
+        //2.查询指令分发的临时表数据  插入  指令分发表，并将状态改为  待接收。
+        List<EtrDistributeInterfTmp> distmpList = cfetsIbuQuoteBondEtrMapper.listEtrDistributeInterfTmp(param);
+        if (!StringUtil.isEmptyList(distmpList)) {
+            boolean status = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId, DictCodeList.委托状态_待接收.getValue());
+            List<EtrDistribute> disList = new ArrayList<EtrDistribute>();
+            for (EtrDistributeInterfTmp entity : distmpList) {
+                EtrDistribute dis = new EtrDistribute();
+                dis.setEntrustId(entity.getEntrustId());
+                dis.setTrader(entity.getTrader());
+                dis.setRecStatus(DictCodeList.委托状态_待接收.getValue());
+                dis.setTradingHeader(entity.getTradingHeader());
+                disList.add(dis);
+            }
+            this.etrInvestInfoServiceImpl.distributeDelegate(disList);
+        } else {
+            boolean status = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId, DictCodeListExt3.委托状态_待分发.getValue());
+        }
+        //更新操作记录日志
+        CfetsOprHisInfoRequest oprHisReq = new CfetsOprHisInfoRequest();
+        oprHisReq.setEntrustId(entrustId);
+        oprHisReq.setOperType(DictCodeListExt3.操作类型_放弃.getValue());
+        joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
+        return null;
     }
 }
 

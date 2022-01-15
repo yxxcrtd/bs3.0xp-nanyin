@@ -6,31 +6,33 @@
     /**
      * 保存
      */
-    // var saveOrSubmitAction = function (operatorType) {
-    //     var object = $.serializeToObject('#submitForm', true);
-    //     object.operatorType = operatorType;
-    //     object.isDzh = 'Y';
-    //     object.pageId = "IbuQuoteRepo004";
-    //     Joyin.confirm("是否确认提交?",
-    //         function () {
-    //             //保存 走流程
-    //             if (operatorType === 'save') {
-    //                 WorkFlow.doSaveList(basePath + 'cfets/repo/IbuQuoteRepo004/save', object, "IbuQuoteRepo004_btn_save", null,
-    //                     function () {
-    //                         var index = window.parent.layer.getFrameIndex(window.name);
-    //                         window.parent.layer.close(index);
-    //                     })
-    //             }
-    //             //提交 走流程
-    //             else if (operatorType === 'submit') {
-    //                 WorkFlow.doSubmitList(basePath + 'cfets/repo/IbuQuoteRepo004/save', object, "IbuQuoteRepo004_btn_submit", null,
-    //                     function () {
-    //                         var index = window.parent.layer.getFrameIndex(window.name);
-    //                         window.parent.layer.close(index);
-    //                     })
-    //             }
-    //         });
-    // };
+    var saveOrSubmitAction = function (operatorType) {
+        var object = $.serializeToObject('#submitForm', true);
+        object.operatorType = operatorType;
+        object.isDzh = 'Y';
+        object.pageId = "IbuQuoteRepo004";
+        object.ptlAllocations = ptlAllocations;
+        object.repoEntrustPledgeDtos = repoEntrustPledgeDtos;
+        Joyin.confirm("是否确认提交?",
+            function () {
+                //保存 走流程
+                if (operatorType === 'save') {
+                    WorkFlow.doSaveList(basePath + 'cfets/repo/IbuQuoteRepo004/save', object, "IbuQuoteRepo004_btn_save", null,
+                        function () {
+                            var index = window.parent.layer.getFrameIndex(window.name);
+                            window.parent.layer.close(index);
+                        })
+                }
+                //提交 走流程
+                else if (operatorType === 'submit') {
+                    WorkFlow.doSubmitList(basePath + 'cfets/repo/IbuQuoteRepo004/save', object, "IbuQuoteRepo004_btn_submit", null,
+                        function () {
+                            var index = window.parent.layer.getFrameIndex(window.name);
+                            window.parent.layer.close(index);
+                        })
+                }
+            });
+    };
     /**
      * 组合分配
      */
@@ -212,16 +214,16 @@
         /**
          * 保存按钮按下处理
          */
-        // $('#IbuQuoteRepo004_btn_save').click(function () {
-        //     saveOrSubmitAction('save');
-        // });
+        $('#IbuQuoteRepo004_btn_save').click(function () {
+            saveOrSubmitAction('save');
+        });
 
         /**
          * 提交按钮按下处理
          */
-        // $('#IbuQuoteRepo004_btn_submit').click(function () {
-        //     saveOrSubmitAction('submit');
-        // });
+        $('#IbuQuoteRepo004_btn_submit').click(function () {
+            saveOrSubmitAction('submit');
+        });
 
     });
 

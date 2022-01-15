@@ -1594,7 +1594,7 @@
                tradeStatus/*报价状态*/,
                sendStatus/*发送状态*/,
                tradeAmt/*交易金额*/,
-               rate/*回购利率*/,
+               rate*100 rate/*回购利率*/,
                repoTerm/*回购期限*/,
                quoteRoleType/*本方角色*/,
                ouPartyName/*本方*/,
@@ -2130,7 +2130,31 @@
 
     <!--当日登记-->
     <select id="listDayReg" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDayRegDto">
-        select * from (
+        select
+            TT.validStatus,
+            TT.quoteType,
+            TT.tradeAmt,
+            TT.rate*100 rate,
+            TT.repoTerm,
+            TT.ouPartyName,
+            TT.cpPartyName,
+            TT.ouTraderName,
+            TT.cpTraderName,
+            TT.settleSpeed/*清算速度*/,
+            TT.vSettleDate,
+            TT.mSettleDate,
+            TT.tradeDate,
+            TT.statisticalTimes,
+            TT.quoteId,
+            TT.trdId,
+            TT.ps,
+            TT.settleType,
+            TT.deliverytype,
+            TT.mDeliveryType,
+            TT.ccy,
+            TT.settCcy,
+            TT.createUser
+         from (
             <include refid="sql_listDayReg"></include>
         ) TT
         LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'STATUS_VALID')D ON TT.validStatus = D.ITEM_CODE
@@ -2217,7 +2241,7 @@
             TT.validStatus,
             TT.quoteType,
             TT.tradeAmt,
-            TT.rate,
+            TT.rate*100 rate,
             TT.repoTerm,
             TT.ouPartyName,
             TT.cpPartyName,
@@ -2307,7 +2331,7 @@
                 T.rate*100 price /*回购利率*/,
                 T.sett_ccy settCcy /*结算币种*/,
                 T.trade_amt tradeAmt /*交易金额*/,
-                T.share_amt shareAmt /*券面总额合计*/,
+                T.share_amt*100 shareAmt /*券面总额合计*/,
                 T.dis_face_value convertAmt /*质押券折算总额*/,
                 T.delivery_type deliverytype /*首次结算方式*/,
                 T.m_delivery_type mDeliveryType /*到期结算方式*/,
@@ -2345,7 +2369,7 @@
             NVL(TABLE01.pledStrdPrinAmt,0) avaPledgePrin/*可质押券面总额*/,
             pledge.pledgePrin pledgePrin/*质押券面额*/,
             mbvi.NETPRICE firstNetPrice/*首次净价*/,
-            pledge.pledgeRatio pledgeRatio/*折算比例*/,
+            pledge.pledgeRatio*100 pledgeRatio/*折算比例*/,
             fp.REGIST_ORG repRegistOrg/*登记托管机构code*/,
             pledge.portfolioId portfolioId/*组合代码*/,
             pp.PORTFOLIO_NAME portfolioName/*组合名称*/
