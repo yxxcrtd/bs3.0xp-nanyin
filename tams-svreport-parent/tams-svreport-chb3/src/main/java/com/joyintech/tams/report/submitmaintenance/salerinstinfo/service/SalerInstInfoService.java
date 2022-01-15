@@ -4,6 +4,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.dto.SvrAjaxResult;
@@ -51,6 +52,12 @@ public class SalerInstInfoService extends CommonExportService<SalerInstInfoDto> 
      * @return
      */
     public AjaxResult saveAndSubmit(SalerInstInfoDto dto){
+        if(StringUtil.isEmpty(dto.getOrgCode())){
+            dto.setOrgCode(CommonUtil.getOrgCode());
+        }
+        if(StringUtil.isEmpty(dto.getCreateDept())){
+            dto.setCreateDept(CommonUtil.getDeptCode());
+        }
         return restTemplate.postForObject(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/SalerInstInfo/saveAndSubmit", dto,
                 SvrAjaxResult.class);
@@ -62,6 +69,12 @@ public class SalerInstInfoService extends CommonExportService<SalerInstInfoDto> 
      * @return
      */
     public AjaxResult update(SalerInstInfoDto dto){
+        if(StringUtil.isEmpty(dto.getOrgCode())){
+            dto.setOrgCode(CommonUtil.getOrgCode());
+        }
+        if(StringUtil.isEmpty(dto.getCreateDept())){
+            dto.setCreateDept(CommonUtil.getDeptCode());
+        }
         return restTemplate.postForObject(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/SalerInstInfo/update", dto,
                 SvrAjaxResult.class);

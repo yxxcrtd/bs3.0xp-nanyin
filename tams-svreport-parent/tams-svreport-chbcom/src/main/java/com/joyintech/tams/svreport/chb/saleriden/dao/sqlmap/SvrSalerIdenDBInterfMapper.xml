@@ -34,6 +34,8 @@
 		REMARK,
 		STATUS,
 		DATA_DATE,
+		CREATE_DEPT,
+		ORG_CODE,
 		CREATE_USER,
 		CREATE_TIME,
 		UPDATE_USER,
@@ -83,6 +85,8 @@
 		 SUBMIT_FEEDBACK_STATUS,
 		 SUBMIT_FEEDBACK_MSG,
 		 DATA_DATE,
+		 CREATE_DEPT,
+		 ORG_CODE,
 		 CREATE_USER,
 		 CREATE_TIME,
 		 UPDATE_USER,
@@ -114,7 +118,7 @@
 		SALER_CHB_TRAIN_NO, SALER_RISK_LEVEL, SALER_QUALIFICATION,
 		SALER_TEL, SALER_MOBILE, SALER_MAIL,
 		SALER_STATUS, REMARK, STATUS,SUMIT_SEQ, CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE, SEND_STATUS,
-		DATA_DATE, CREATE_USER, CREATE_TIME,
+		DATA_DATE,CREATE_DEPT,ORG_CODE, CREATE_USER, CREATE_TIME,
 		UPDATE_USER, UPDATE_TIME)
 		values(
 		#{registSeqno,jdbcType=VARCHAR},#{salerInsNo,jdbcType=VARCHAR}, #{salerRegistNo,jdbcType=VARCHAR}, #{salerInstCode,jdbcType=VARCHAR},
@@ -128,7 +132,7 @@
 		#{salerTel,jdbcType=VARCHAR}, #{salerMobile,jdbcType=VARCHAR}, #{salerMail,jdbcType=VARCHAR},
 		#{salerStatus,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
 		#{status,jdbcType=VARCHAR},#{sumitSeq,jdbcType=VARCHAR}, #{chbSubmitDeadline,jdbcType=DATE},
-		#{submitDeadline,jdbcType=DATE}, #{sendStatus,jdbcType=VARCHAR},#{dataDate,jdbcType=DATE},
+		#{submitDeadline,jdbcType=DATE}, #{sendStatus,jdbcType=VARCHAR},#{dataDate,jdbcType=DATE},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
 		#{createUser,jdbcType=VARCHAR},sysdate,#{updateUser,jdbcType=VARCHAR},sysdate)
 	</insert>
 

@@ -284,6 +284,8 @@ public class SalerInstInfo001Service extends CommonExportService<SalerInstInfoDt
 
             //数据状态
             SalerInstInfoDto.setStatus("E");
+            SalerInstInfoDto.setOrgCode(CommonUtil.getOrgCode());
+            SalerInstInfoDto.setCreateDept(CommonUtil.getDeptCode());
             returnInfoList.add(SalerInstInfoDto);
         }
         return returnInfoList;

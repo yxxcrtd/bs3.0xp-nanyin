@@ -17,6 +17,8 @@ create table CHB_SALER_INST_SUB(
   ,SUBMIT_FEEDBACK_MSG  VARCHAR2(2000)
   ,DATA_DATE	DATE
   ,REMARK	VARCHAR2(200)
+  ,CREATE_DEPT	VARCHAR2(20)
+  ,ORG_CODE	VARCHAR2(20)
   ,CREATE_USER	VARCHAR2(20)
   ,CREATE_TIME	TIMESTAMP(6)
   ,UPDATE_USER	VARCHAR2(32)
@@ -39,6 +41,8 @@ comment on column CHB_SALER_INST_SUB.SUBMIT_FEEDBACK_STATUS is '反馈状态 ';
 comment on column CHB_SALER_INST_SUB.SUBMIT_FEEDBACK_MSG is '报送反馈消息 ';
 comment on column CHB_SALER_INST_SUB.DATA_DATE is '数据日期 ';
 comment on column CHB_SALER_INST_SUB.REMARK is '备注 ';
+comment on column CHB_SALER_INST_SUB.CREATE_DEPT is '创建部门 ';
+comment on column CHB_SALER_INST_SUB.ORG_CODE is '机构代码 ';
 comment on column CHB_SALER_INST_SUB.CREATE_USER is '创建人 ';
 comment on column CHB_SALER_INST_SUB.CREATE_TIME is '创建时间 ';
 comment on column CHB_SALER_INST_SUB.UPDATE_USER is '更新人 ';
@@ -63,6 +67,8 @@ create table CHB_SALER_INST_SUB_HIS(
   ,SUBMIT_FEEDBACK_MSG  VARCHAR2(2000)
   ,DATA_DATE	DATE
   ,REMARK	VARCHAR2(200)
+  ,CREATE_DEPT	VARCHAR2(20)
+  ,ORG_CODE	VARCHAR2(20)
   ,CREATE_USER	VARCHAR2(20)
   ,CREATE_TIME	TIMESTAMP(6)
   ,UPDATE_USER	VARCHAR2(32)
@@ -85,6 +91,8 @@ comment on column CHB_SALER_INST_SUB_HIS.SUBMIT_FEEDBACK_STATUS is '反馈状态
 comment on column CHB_SALER_INST_SUB_HIS.SUBMIT_FEEDBACK_MSG is '报送反馈消息 ';
 comment on column CHB_SALER_INST_SUB_HIS.DATA_DATE is '数据日期 ';
 comment on column CHB_SALER_INST_SUB_HIS.REMARK is '备注 ';
+comment on column CHB_SALER_INST_SUB_HIS.CREATE_DEPT is '创建部门 ';
+comment on column CHB_SALER_INST_SUB_HIS.ORG_CODE is '机构代码 ';
 comment on column CHB_SALER_INST_SUB_HIS.CREATE_USER is '创建人 ';
 comment on column CHB_SALER_INST_SUB_HIS.CREATE_TIME is '创建时间 ';
 comment on column CHB_SALER_INST_SUB_HIS.UPDATE_USER is '更新人 ';
@@ -131,6 +139,8 @@ create table CHB_SALER_IDEN_SUB(
   ,SUBMIT_FEEDBACK_MSG  VARCHAR2(2000)
   ,DATA_DATE	DATE
   ,REMARK	VARCHAR2(200)
+  ,CREATE_DEPT	VARCHAR2(20)
+  ,ORG_CODE	VARCHAR2(20)
   ,CREATE_USER	VARCHAR2(20)
   ,CREATE_TIME	TIMESTAMP(6)
   ,UPDATE_USER	VARCHAR2(32)
@@ -175,6 +185,8 @@ comment on column CHB_SALER_IDEN_SUB.SUBMIT_FEEDBACK_STATUS is '反馈状态 ';
 comment on column CHB_SALER_IDEN_SUB.SUBMIT_FEEDBACK_MSG is '报送反馈消息 ';
 comment on column CHB_SALER_IDEN_SUB.DATA_DATE is '数据日期 ';
 comment on column CHB_SALER_IDEN_SUB.REMARK is '备注 ';
+comment on column CHB_SALER_IDEN_SUB.CREATE_DEPT is '创建部门 ';
+comment on column CHB_SALER_IDEN_SUB.ORG_CODE is '机构代码 ';
 comment on column CHB_SALER_IDEN_SUB.CREATE_USER is '创建人 ';
 comment on column CHB_SALER_IDEN_SUB.CREATE_TIME is '创建时间 ';
 comment on column CHB_SALER_IDEN_SUB.UPDATE_USER is '更新人 ';
@@ -221,6 +233,8 @@ create table CHB_SALER_IDEN_SUB_HIS(
   ,SUBMIT_FEEDBACK_MSG  VARCHAR2(2000)
   ,DATA_DATE	DATE
   ,REMARK	VARCHAR2(200)
+  ,CREATE_DEPT	VARCHAR2(20)
+  ,ORG_CODE	VARCHAR2(20)
   ,CREATE_USER	VARCHAR2(20)
   ,CREATE_TIME	TIMESTAMP(6)
   ,UPDATE_USER	VARCHAR2(32)
@@ -265,6 +279,8 @@ comment on column CHB_SALER_IDEN_SUB_HIS.SUBMIT_FEEDBACK_STATUS is '反馈状态
 comment on column CHB_SALER_IDEN_SUB_HIS.SUBMIT_FEEDBACK_MSG is '报送反馈消息 ';
 comment on column CHB_SALER_IDEN_SUB_HIS.DATA_DATE is '数据日期 ';
 comment on column CHB_SALER_IDEN_SUB_HIS.REMARK is '备注 ';
+comment on column CHB_SALER_IDEN_SUB_HIS.CREATE_DEPT is '创建部门 ';
+comment on column CHB_SALER_IDEN_SUB_HIS.ORG_CODE is '机构代码 ';
 comment on column CHB_SALER_IDEN_SUB_HIS.CREATE_USER is '创建人 ';
 comment on column CHB_SALER_IDEN_SUB_HIS.CREATE_TIME is '创建时间 ';
 comment on column CHB_SALER_IDEN_SUB_HIS.UPDATE_USER is '更新人 ';
@@ -296,6 +312,8 @@ create table CHB_SALER_REW_PENA_SUB(
   ,SUBMIT_FEEDBACK_STATUS VARCHAR2(50)
   ,SUBMIT_FEEDBACK_MSG  VARCHAR2(2000)
   ,DATA_DATE	DATE
+  ,CREATE_DEPT	VARCHAR2(20)
+  ,ORG_CODE	VARCHAR2(20)
   ,CREATE_USER	VARCHAR2(20)
   ,CREATE_TIME	TIMESTAMP(6)
   ,UPDATE_USER	VARCHAR2(32)
@@ -325,6 +343,8 @@ comment on column CHB_SALER_REW_PENA_SUB.SUBMIT_TIME is '报送时间 ';
 comment on column CHB_SALER_REW_PENA_SUB.SUBMIT_FEEDBACK_STATUS is '反馈状态 ';
 comment on column CHB_SALER_REW_PENA_SUB.SUBMIT_FEEDBACK_MSG is '报送反馈消息 ';
 comment on column CHB_SALER_REW_PENA_SUB.DATA_DATE is '数据日期 ';
+comment on column CHB_SALER_REW_PENA_SUB.CREATE_DEPT is '创建部门 ';
+comment on column CHB_SALER_REW_PENA_SUB.ORG_CODE is '机构代码 ';
 comment on column CHB_SALER_REW_PENA_SUB.CREATE_USER is '创建人 ';
 comment on column CHB_SALER_REW_PENA_SUB.CREATE_TIME is '创建时间 ';
 comment on column CHB_SALER_REW_PENA_SUB.UPDATE_USER is '更新人 ';
@@ -356,6 +376,8 @@ create table CHB_SALER_REW_PENA_SUB_HIS(
   ,SUBMIT_FEEDBACK_STATUS VARCHAR2(50)
   ,SUBMIT_FEEDBACK_MSG  VARCHAR2(2000)
   ,DATA_DATE	DATE
+  ,CREATE_DEPT	VARCHAR2(20)
+  ,ORG_CODE	VARCHAR2(20)
   ,CREATE_USER	VARCHAR2(20)
   ,CREATE_TIME	TIMESTAMP(6)
   ,UPDATE_USER	VARCHAR2(32)
@@ -385,6 +407,8 @@ comment on column CHB_SALER_REW_PENA_SUB_HIS.SUBMIT_TIME is '报送时间 ';
 comment on column CHB_SALER_REW_PENA_SUB_HIS.SUBMIT_FEEDBACK_STATUS is '反馈状态 ';
 comment on column CHB_SALER_REW_PENA_SUB_HIS.SUBMIT_FEEDBACK_MSG is '报送反馈消息 ';
 comment on column CHB_SALER_REW_PENA_SUB_HIS.DATA_DATE is '数据日期 ';
+comment on column CHB_SALER_REW_PENA_SUB_HIS.CREATE_DEPT is '创建部门 ';
+comment on column CHB_SALER_REW_PENA_SUB_HIS.ORG_CODE is '机构代码 ';
 comment on column CHB_SALER_REW_PENA_SUB_HIS.CREATE_USER is '创建人 ';
 comment on column CHB_SALER_REW_PENA_SUB_HIS.CREATE_TIME is '创建时间 ';
 comment on column CHB_SALER_REW_PENA_SUB_HIS.UPDATE_USER is '更新人 ';

@@ -590,6 +590,8 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
 
             //数据状态
             salerIdenInfoDto.setStatus("E");
+            salerIdenInfoDto.setOrgCode(CommonUtil.getOrgCode());
+            salerIdenInfoDto.setCreateDept(CommonUtil.getDeptCode());
             returnInfoList.add(salerIdenInfoDto);
         }
         return returnInfoList;

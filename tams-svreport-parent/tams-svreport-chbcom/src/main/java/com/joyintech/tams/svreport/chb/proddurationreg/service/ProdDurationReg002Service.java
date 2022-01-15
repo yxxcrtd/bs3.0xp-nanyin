@@ -647,9 +647,17 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	        if(submitDateMap.containsKey(key)){
 	        	dateList = submitDateMap.get(key);
 	        }else{
+				String subStaus=model.getStatus();
+				if(StringUtil.equals(model.getStatus(),DictCodeListExt2.数据状态_有效.getValue())){
+					subStaus=DictCodeListExt2.报送数据状态_新建.getValue();
+				}else if(StringUtil.equals(model.getStatus(),DictCodeListExt2.数据状态_修改.getValue())){
+					subStaus=DictCodeListExt2.报送数据状态_修改.getValue();
+				}else if( model.getStatus()==null||StringUtil.equals(model.getStatus(),DictCodeListExt2.数据状态_删除.getValue())){
+					subStaus=DictCodeListExt2.报送数据状态_删除.getValue();
+				}
 	        	dateList = ChbDeadlineUtil.getChbEndDate(
 	    	            DictCodeListExt2.报表名称_产品存续期登记.getValue(), typeDetail,
-						result.getStatus(),dateMap, model.getOpenEnd() == null ? batchDate : model.getOpenEnd());
+						subStaus,dateMap, model.getOpenEnd() == null ? batchDate : model.getOpenEnd());
 	        	submitDateMap.put(key, dateList);
 	        }
 

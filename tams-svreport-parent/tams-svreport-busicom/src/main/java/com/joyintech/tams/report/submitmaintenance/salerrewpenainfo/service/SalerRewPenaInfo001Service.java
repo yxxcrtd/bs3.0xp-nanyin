@@ -414,6 +414,8 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
             //数据状态
             salerRewPenaInfoDto.setStatus("E");
             salerRewPenaInfoDto.setSalerRewPenaNo(UUID.randomUUID().toString().replace("-","").toUpperCase());
+            salerRewPenaInfoDto.setOrgCode(CommonUtil.getOrgCode());
+            salerRewPenaInfoDto.setCreateDept(CommonUtil.getDeptCode());
             returnInfoList.add(salerRewPenaInfoDto);
         }
         return returnInfoList;
