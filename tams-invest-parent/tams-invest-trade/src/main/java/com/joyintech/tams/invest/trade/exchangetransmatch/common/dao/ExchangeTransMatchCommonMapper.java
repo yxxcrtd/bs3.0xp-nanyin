@@ -157,4 +157,6 @@ public interface ExchangeTransMatchCommonMapper {
     // modify by etliu 20220110 end
 
     String getTradeIdByTotalTradeId(@Param("totalTradeId") String totalTradeId);
+
+    List<PtlSecPosition> searchPtlSecPositionList(Map<String, Object> paraMap);
 }

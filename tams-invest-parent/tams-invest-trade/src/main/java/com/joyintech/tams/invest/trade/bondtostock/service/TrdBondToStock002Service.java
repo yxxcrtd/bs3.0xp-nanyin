@@ -1044,6 +1044,7 @@ public class TrdBondToStock002Service extends BaseService<TrdBondToStock001Dto> 
         total.setIsCancel(DictCodeListExt1.是否_否.getValue());
         total.setTgBusiType(DictCodeListExt3.平安业务类型_债转股.getValue());
         total.setPortfolioId(dto.getActPortfolioId());
+        total.setUnitCprice(dto.getConPrice());
      // 单位面值
         total.setParValue(trdBondInvestTrade002Service.getUnitPrice(dto.getFinprodId(), dto.getSettleDate()));
         if(dto.getTrdInvestPersonInfo()!=null){

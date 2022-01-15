@@ -21,15 +21,14 @@ import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
 import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.dao.ExchangeTransMatchCommonMapper;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.dto.ExchangeTransMatchBaseTradeDto;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
@@ -315,7 +314,20 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
         // 净值日期
         trdProductDeal.setCpriceDate(null);
         // 投资目的
-        trdProductDeal.setInvAim(entrustDto.getInvAim());
+        if(StringUtil.isNotEmpty(entrustDto.getInvAim())){
+            trdProductDeal.setInvAim(entrustDto.getInvAim());
+        }else{
+            // 查询持仓的投资目的
+            Map<String,Object> param = new HashMap<>();
+            param.put("dealDate", trdProductDeal.getTradeDate());
+            param.put("finProductId",trdProductDeal.getFinprodId());
+            param.put("secManageAcctId",dealDto.getSecAcctId());
+            List<PtlSecPosition>  ptlSecPositions = exchangeTransMatchCommonMapper.searchPtlSecPositionList(param);
+            if(CollectionUtils.isNotEmpty(ptlSecPositions)){
+                trdProductDeal.setInvAim(ptlSecPositions.get(0).getInvAim());
+            }
+        }
+
         // 交易状态
         trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
         // 是否已撤销
