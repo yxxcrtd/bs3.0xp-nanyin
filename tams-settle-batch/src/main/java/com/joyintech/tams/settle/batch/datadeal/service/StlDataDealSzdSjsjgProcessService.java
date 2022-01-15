@@ -1071,9 +1071,15 @@ public class StlDataDealSzdSjsjgProcessService {
                     settleTransDataPledge.setTradeId(settleTransData.getTradeId());
                     settleTransDataPledge.setBranch(0L);
                     settleTransDataPledge.setPledgeFinprodId(DictCodeListExt1.金融产品类型_投管用_债券.getValue() + "_" + szdSjsjg.getJgzqdm() + ".SZ");
-                    settleTransDataPledge.setPledgeNumber(ArithmeticUtil.divide(abs(szdSjsjg.getJgjssl()), 100, 2));
-                    settleTransDataPledge.setPledgeRatio(ArithmeticUtil.divide(settleTransData.getPrinAmt(), abs(szdSjsjg.getJgjssl()), 2));
-                    settleTransDataPledge.setPledgeAmt(abs(szdSjsjg.getJgjssl()));
+                    if(DictCodeListStl.业务场景分类明细_债券协议逆回购_首期_买入.getValue().equals(settleTransData.getBusiSceneCalss())){
+                        settleTransDataPledge.setPledgeNumber(ArithmeticUtil.divide(abs(szdSjsjg.getJgcjsl()), 100, 2));
+                        settleTransDataPledge.setPledgeRatio(ArithmeticUtil.divide(settleTransData.getPrinAmt(), abs(szdSjsjg.getJgcjsl()), 2));
+                        settleTransDataPledge.setPledgeAmt(abs(szdSjsjg.getJgcjsl()));
+                    }else{
+                        settleTransDataPledge.setPledgeNumber(ArithmeticUtil.divide(abs(szdSjsjg.getJgjssl()), 100, 2));
+                        settleTransDataPledge.setPledgeRatio(ArithmeticUtil.divide(settleTransData.getPrinAmt(), abs(szdSjsjg.getJgjssl()), 2));
+                        settleTransDataPledge.setPledgeAmt(abs(szdSjsjg.getJgjssl()));
+                    }
                     stlDownDataDealWriteBaseDto.getSettleTransDataPledgeList().add(settleTransDataPledge);     
                 }else if (StringUtil.equals(szdSjsjg.getJgywlb(), StlDataDealProcessConstant.SJSJG_YWLB_XYXZ)){
                     //业务类别 = 到期续做 时新增数据明细质押品信息DTO  add by msk
