@@ -280,7 +280,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
                     // 首期信息、指令信息处理
                     this.buildPositionBaseData(trdTempDto, infContractDetailfile);
                     // 临时交易及其他数据处理
-                    this.trdRepoPeriodT56(trdTempDto, infContractDetailfile);
+                    this.trdRepoPeriodT56(trdTempDto, infContractDetailfile, false);
                     logger.info("【成交数据预清算dto拼装-协议回购结束】tradePreClearing entrustId: {}, seqno: {}",
                             infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
                 }
@@ -1143,7 +1143,9 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         }else if(DictCodeList.回购拆借方向_正回购.getValue().equals(infContractDetailfile.getPs())){
             param.setCommonBusinessType(DictCodeList.共通业务类型_正回购录入);
         }
-        dto.setTradeId(autoPeriodCommonService.buildBussinessCode(param));
+        if (StringUtil.isBlank(dto.getTradeId())) {
+            dto.setTradeId(autoPeriodCommonService.buildBussinessCode(param));
+        }
         // 全价总额
         dto.setFpriceAmt(infContractDetailfile.getTradeAmt());
         // 清算速度_T_0
@@ -1194,13 +1196,15 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
 
         // 临时划款指令表Entity
         // 构造开始----------------------------------------------------------
-        String orderId = null;
-        if (baseGetBusinessId != null) {
-            BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
-            bussinessCodeParameter.setSeqNo("9998");
-            orderId = baseGetBusinessId.buildBussinessCode(bussinessCodeParameter);
-        } else {
-            orderId = IDGenerator.generate();
+        String orderId = dto.getOrderId();
+        if (StringUtil.isBlank(orderId)) {
+            if (baseGetBusinessId != null) {
+                BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
+                bussinessCodeParameter.setSeqNo("9998");
+                orderId = baseGetBusinessId.buildBussinessCode(bussinessCodeParameter);
+            } else {
+                orderId = IDGenerator.generate();
+            }
         }
         BussTrdTransferOrderDto bussTrdTransferOrderDto = new BussTrdTransferOrderDto();
         bussTrdTransferOrderDto.setOrderId(orderId); // 指令编号
@@ -1395,7 +1399,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
     /**
      * 根据成交明细Dto，构筑质押式回购需要反映到数据库的实体(到期续做)
      */
-    public void trdRepoPeriodT56(TrdTempDto dto,InfContractDetailfile infContractDetailfile){
+    public void trdRepoPeriodT56(TrdTempDto dto,InfContractDetailfile infContractDetailfile, Boolean isManualSettle){
         // 交易对手
         // 查询首期交易类金融产品数据
         FinTradeProduct firstFinTradeProduct = dto.getPositionBaseData().getFinTradeProductDto();
@@ -1427,7 +1431,9 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             // 交易编号
             BussinessCodeParameter param = new BussinessCodeParameter();
             param.setCommonBusinessType(DictCodeListExt3.共通业务类型_协议回购到期购回指令);
-            trdProductTempDealB.setTradeId(autoPeriodCommonService.buildBussinessCode(param));
+            if (!isManualSettle) {
+                trdProductTempDealB.setTradeId(autoPeriodCommonService.buildBussinessCode(param));
+            }
             trdProductTempDealB.setbTradeId(dto.getTrdProductTempDeal().getTradeId());
             trdProductTempDealB.setFinprodId(vTradeId);
             trdProductTempDealB.setPs(DictCodeListExt3.交易方向_到期购回.getValue());
@@ -1498,7 +1504,9 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
                     // 交易编号
                     BussinessCodeParameter param = new BussinessCodeParameter();
                     param.setCommonBusinessType(DictCodeListExt3.共通业务类型_协议回购到期购回指令);
-                    trdProductTempDealB.setTradeId(autoPeriodCommonService.buildBussinessCode(param));
+                    if (!isManualSettle) {
+                        trdProductTempDealB.setTradeId(autoPeriodCommonService.buildBussinessCode(param));
+                    }
                     trdProductTempDealB.setbTradeId(dto.getTrdProductTempDeal().getTradeId());
                     trdProductTempDealB.setFinprodId(vTradeId);
                     trdProductTempDealB.setPs(DictCodeListExt3.交易方向_到期购回.getValue());
@@ -1580,7 +1588,9 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         } else if(DictCodeListExt3.交易方向_中途换券.getValue().equals(infContractDetailfile.getPs())){
             param.setCommonBusinessType(DictCodeListExt3.共通业务类型_协议回购中途换券指令);
         }
-        dto.setTradeId(autoPeriodCommonService.buildBussinessCode(param));
+        if (StringUtil.isBlank(dto.getTradeId())) {
+            dto.setTradeId(autoPeriodCommonService.buildBussinessCode(param));
+        }
         // 交易方向
         dto.setPs(infContractDetailfile.getPs());
         // 全价总额
@@ -1635,13 +1645,15 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
 
         // 临时划款指令表Entity
         // 构造开始----------------------------------------------------------
-        String orderId = null;
-        if (baseGetBusinessId != null) {
-            BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
-            bussinessCodeParameter.setSeqNo("9998");
-            orderId = baseGetBusinessId.buildBussinessCode(bussinessCodeParameter);
-        } else {
-            orderId = IDGenerator.generate();
+        String orderId = dto.getOrderId();
+        if (StringUtil.isBlank(orderId)) {
+            if (baseGetBusinessId != null) {
+                BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
+                bussinessCodeParameter.setSeqNo("9998");
+                orderId = baseGetBusinessId.buildBussinessCode(bussinessCodeParameter);
+            } else {
+                orderId = IDGenerator.generate();
+            }
         }
         BussTrdTransferOrderDto bussTrdTransferOrderDto = new BussTrdTransferOrderDto();
         bussTrdTransferOrderDto.setOrderId(orderId); // 指令编号

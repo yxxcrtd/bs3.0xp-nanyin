@@ -149,9 +149,34 @@ public class ManualSettleService extends BaseService<ManualSettleDto> {
                 if(StringUtil.equals(dto.getPageModel(),DictCodeListExt3.交收操作类型_交收.getValue())) {
                     InfContractDetailfile infContractDetailfile = manualSettleMapper.selectInfContractDetailfile(dto.getEntrustNo(), dto.getDealNo());
                     TrdTempDto trdTempDto = new TrdTempDto();
-                    // 指令信息处理
-                    tradePreClearingService.buildPositionBaseData(trdTempDto, infContractDetailfile);
-                    tradePreClearingService.trdRepo(trdTempDto, infContractDetailfile);
+                    trdTempDto.setTradeId(dto.getTradeId());
+                    if (stlPayOrdersDto != null) {
+                        trdTempDto.setOrderId(stlPayOrdersDto.getOrderId());
+                    }
+
+                    if (DictCodeList.回购拆借方向_正回购.getValue().equals(infContractDetailfile.getPs())
+                            || DictCodeList.回购拆借方向_逆回购.getValue().equals(infContractDetailfile.getPs())) {
+                        // 指令信息处理
+                        tradePreClearingService.buildPositionBaseData(trdTempDto, infContractDetailfile);
+                        // 临时交易及其他数据处理
+                        tradePreClearingService.trdRepo(trdTempDto, infContractDetailfile);
+                    }
+                    else if (DictCodeListExt3.交易方向_提前购回.getValue().equals(infContractDetailfile.getPs())
+                            || DictCodeListExt3.交易方向_到期购回.getValue().equals(infContractDetailfile.getPs())
+                            || DictCodeListExt3.交易方向_解除质押.getValue().equals(infContractDetailfile.getPs())
+                            || DictCodeListExt3.交易方向_中途换券.getValue().equals(infContractDetailfile.getPs())) {
+                        // 指令信息处理
+                        tradePreClearingService.buildPositionBaseData(trdTempDto, infContractDetailfile);
+                        // 临时交易及其他数据处理
+                        tradePreClearingService.trdRepoPeriod(trdTempDto, infContractDetailfile);
+                    }
+                    else if (DictCodeListExt3.交易方向_到期续做.getValue().equals(infContractDetailfile.getPs())){
+                        // 指令信息处理
+                        tradePreClearingService.buildPositionBaseData(trdTempDto, infContractDetailfile);
+                        // 临时交易及其他数据处理
+                        tradePreClearingService.trdRepoPeriodT56(trdTempDto, infContractDetailfile, true);
+                    }
+
                     // 场景参数设置
                     PostionParameter parameter = new PostionParameter();
                     parameter.setPs(trdTempDto.getPs());

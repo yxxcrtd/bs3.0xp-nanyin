@@ -317,6 +317,11 @@ public class TrdTempDto extends TrdProductDeal{
 	 */
 	private String redoType;
 
+	/**
+	 * 划款指令编号
+	 */
+	private String orderId;
+
 	public String getIsFinish() {
 		return isFinish;
 	}
@@ -1078,5 +1083,13 @@ public class TrdTempDto extends TrdProductDeal{
 
 	public void setRedoType(String redoType) {
 		this.redoType = redoType;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 }
