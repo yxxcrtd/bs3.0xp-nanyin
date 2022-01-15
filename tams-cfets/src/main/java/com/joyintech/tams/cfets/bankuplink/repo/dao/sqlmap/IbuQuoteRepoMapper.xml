@@ -181,7 +181,7 @@
                 , SU.real_name                                                                                invManagerName/*投资经理名称*/
                 , MCP.COUNTER_ID                                                                              counterId/* 交易对手*/
                 , MCP.COUNTER_NAME                                                                            counterName/* 交易对手名称*/
-                , MST_CFETS_CI.PARTY_ID                                                                       counterPartyId
+                , MCP.PARTY_ID                                                                                counterPartyId
                 , ETR_ENTRUST.ENTRUST_DATE                                                                    ENTRUST_DATE/* 指令日期*/
                 , to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME, 'hh24:mi:ss')                                        TRANSMIT_TIME/* 指令下达时间*/
                 , ETR_ENTRUST.ENTRUST_ID                                                                      entrustId/*指令代码*/
@@ -288,8 +288,6 @@
                 ON MST_CFETS_CT.TRADER_ID = ETR_ENTRUST.COUNTER_TRADER
             LEFT JOIN MST_COUNTER_PARTY MCP
                 ON MCP.COUNTER_ID = ETR_ENTRUST.COUNTER_ID
-            LEFT JOIN MST_CFETS_CUSTOMER_INFO MST_CFETS_CI
-                ON MST_CFETS_CI.PARTY_NAME = MCP.COUNTER_NAME
         <if test="repo_pledge_model != null and repo_pledge_model.equals('02')">
             LEFT JOIN
             (
