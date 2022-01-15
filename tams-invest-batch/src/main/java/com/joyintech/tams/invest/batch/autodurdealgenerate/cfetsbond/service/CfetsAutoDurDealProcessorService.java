@@ -47,7 +47,7 @@ public class CfetsAutoDurDealProcessorService extends BaseService {
      * @since 1.0
      */
     public void execute(Date batchDate, List<String> productIdList) {
-        //cfetsBondAutoDurDealGenerateProcessorService.execute(batchDate);
+        cfetsBondAutoDurDealGenerateProcessorService.execute(batchDate);
         cfetsRepoAutoDurDealGenerateProcessorService.execute(batchDate);
     }
 

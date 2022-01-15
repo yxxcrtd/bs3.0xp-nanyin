@@ -55,6 +55,9 @@ public class CfetsEtrIbPositionRequest {
     @ApiModelProperty(name="ps",value="交易方向",example="1")
     private String ps;
 
+    @ApiModelProperty(name="decisionAct",value="决策动作",example="01")
+    private String decisionAct;
+
     @ApiModelProperty(name="systemAct",value="系统动作",example="1")
     private String systemAct;
 
@@ -188,6 +191,14 @@ public class CfetsEtrIbPositionRequest {
 
     public void setPs(String ps) {
         this.ps = ps;
+    }
+
+    public String getDecisionAct() {
+        return decisionAct;
+    }
+
+    public void setDecisionAct(String decisionAct) {
+        this.decisionAct = decisionAct;
     }
 
     public String getSystemAct() {
