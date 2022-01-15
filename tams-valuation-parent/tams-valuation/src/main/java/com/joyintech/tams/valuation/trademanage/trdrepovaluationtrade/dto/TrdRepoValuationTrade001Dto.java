@@ -22,6 +22,7 @@ import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -520,4 +521,31 @@ public class TrdRepoValuationTrade001Dto extends BaseEntity implements ProcessEn
         }
         return tradeDateStr;
     }
+
+    //导出保留小数位
+
+    //交易本金  2位
+    public String getPrinAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getPrinAmt()==null?"0.00":decimalFormat.format(this.getPrinAmt().setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
+
+    //回购利率 4位
+    public String getRebackPriceStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.0000#");
+        return this.getRebackPrice()==null?"0.0000":decimalFormat.format(this.getRebackPrice().setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
+
+    //应计利息 2位
+    public String getIntAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getIntAmt()==null?"0.00":decimalFormat.format(this.getIntAmt().setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
+
+    //结算金额 2位
+    public String getSettleAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getSettleAmt()==null?"0.00":decimalFormat.format(this.getSettleAmt().setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
+
 }

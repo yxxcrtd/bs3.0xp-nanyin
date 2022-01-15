@@ -27,6 +27,7 @@ import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -426,5 +427,31 @@ public class TrdDepositValuationTrade001Dto extends BaseEntity implements Proces
 
     public void setSelectedItem(List<TrdDepositValuationTrade001Dto> selectedItem) {
         this.selectedItem = selectedItem;
+    }
+
+    //导出保留小数位
+
+    //交易本金
+    public String getPrinAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getPrinAmt()==null?"0.00":decimalFormat.format(this.getPrinAmt().setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
+
+    //应计利息
+    public String getIntAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getIntAmt()==null?"0.00":decimalFormat.format(this.getIntAmt().setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
+
+    //结算金额
+    public String getSettleAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getSettleAmt()==null?"0.00":decimalFormat.format(this.getSettleAmt().setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
+
+    //本币交易金额 dealAmt
+    public String getDealAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getDealAmt()==null?"0.00":decimalFormat.format(this.getDealAmt().setScale(2,BigDecimal.ROUND_HALF_UP));
     }
 }
