@@ -386,8 +386,10 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                         trdBondToStock001Dto.setConNum(settleTransDataTotalAdd.getConAmt());
                         trdBondToStock001Dto.setConPrice(settleTransDataTotalAdd.getConPrice());
                         trdBondToStock001Dto.setTradeAmt(dto.getRemainAmount());
-                        trdBondToStock001Dto.setShareAmt(dto.getRemainNum());
-
+                        // GZYHTZJY-1140:债转股带入的“转股券面总额”有误 modify fuyongsheng 20220115 start
+                        // trdBondToStock001Dto.setShareAmt(dto.getRemainNum());
+                        trdBondToStock001Dto.setShareAmt(ArithmeticUtil.divide(dto.getRemainNum(),new BigDecimal(100L), 4));
+                        // GZYHTZJY-1140:债转股带入的“转股券面总额”有误 modify fuyongsheng 20220115 end
                         if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
                             trdBondToStock001Dto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
                         }
