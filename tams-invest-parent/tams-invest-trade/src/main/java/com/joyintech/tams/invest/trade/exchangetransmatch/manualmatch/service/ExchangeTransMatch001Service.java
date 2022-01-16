@@ -139,7 +139,7 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                 map.put("ps",DictCodeList.交易方向_到期.getValue());
             }
             else if(StringUtil.equals(ps, DictCodeListExt3.交易方向_提前购回.getValue())){
-                map.put("ps",DictCodeList.交易方向_提前终止.getValue());
+                map.put("ps",DictCodeListExt3.交易方向_投资端_提前终止.getValue());
             }
         }
 
