@@ -47,11 +47,11 @@
                 AND DATE_FORMAT(B.DEAL_DATE, '%Y-%m-%d') = #{dealDateStr,jdbcType=VARCHAR}
             </if>
             <if test="busiType != null">
-                AND C.BUSI_TYPE = #{busiType,jdbcType=DATE}
+                AND C.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
             </if>
             <if test="busiTypeList != null and busiTypeList.size() > 0">
-                <foreach collection="busiTypeList" item="busiType" open="AND C.BUSI_TYPE IN (" close=")" separator=",">
-                    #{busiType,jdbcType=VARCHAR}
+                <foreach collection="busiTypeList" item="tempBusiType" open="AND C.BUSI_TYPE IN (" close=")" separator=",">
+                    #{tempBusiType,jdbcType=VARCHAR}
                 </foreach>
             </if>
             <if test="psList != null and psList.size() > 0">
@@ -98,11 +98,11 @@
                         AND DATE_FORMAT(A.TRADE_DATE, '%Y-%m-%d') = #{dealDateStr,jdbcType=VARCHAR}
                     </if>
                     <if test="busiType != null">
-                        AND C.BUSI_TYPE = #{busiType,jdbcType=DATE}
+                        AND C.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
                     </if>
                     <if test="busiTypeList != null and busiTypeList.size() > 0">
-                        <foreach collection="busiTypeList" item="busiType" open="AND C.BUSI_TYPE IN (" close=")" separator=",">
-                            #{busiType,jdbcType=VARCHAR}
+                        <foreach collection="busiTypeList" item="tempBusiType" open="AND C.BUSI_TYPE IN (" close=")" separator=",">
+                            #{tempBusiType,jdbcType=VARCHAR}
                         </foreach>
                     </if>
                     <choose>

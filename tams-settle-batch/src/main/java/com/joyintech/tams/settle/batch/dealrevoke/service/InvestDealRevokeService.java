@@ -72,6 +72,7 @@ public class InvestDealRevokeService {
         //param.put("busiType", DictCodeList.共通业务类型_债券类资产交易.getValue());
         List<String> busiTypeList = new ArrayList<String>();
         busiTypeList.add(DictCodeList.共通业务类型_债券类资产交易.getValue());
+        busiTypeList.add(DictCodeList.共通业务类型_债券类资产存续期.getValue());
         busiTypeList.add(DictCodeListExt2.共通业务类型_可转债申购交易.getValue());
         // GZYHTZJY-1142: 对债券债转股交易进行撤销 fuyongsheng add start
         busiTypeList.add(DictCodeListExt2.共通业务类型_可转债转股交易.getValue());
