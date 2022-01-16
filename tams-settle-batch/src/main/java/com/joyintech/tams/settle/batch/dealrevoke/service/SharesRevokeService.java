@@ -46,7 +46,7 @@ public class SharesRevokeService implements BaseRevokeService {
     @Override
     public void doRevoke(Map<String,String> tradeIdMap, Map<String,String> totalTradeIdMap) {
         // 参考股票交易撤销逻辑，生成已生效的撤销交易数据，同时反向更新头寸信息、持仓信息以及委托完成信息。注意不要调用对外发送逻辑。
-        if(!tradeIdMap.isEmpty() && tradeIdMap.size()>0) {
+        if(tradeIdMap != null && !tradeIdMap.isEmpty() && tradeIdMap.size()>0) {
             List<String> tradeIdList =  tradeIdMap.entrySet().stream().filter(item-> !StringUtil.equals(item.getValue(), DictCodeList.交易方向_上市流通.getValue()))
                     .map(item->item.getKey()).collect(Collectors.toList());
             Map<String, Object> param = new HashMap<>();
@@ -70,7 +70,7 @@ public class SharesRevokeService implements BaseRevokeService {
             }
         }
         // 参考股票分红送转交易撤销逻辑，生成已生效的撤销交易数据，同时反向更新头寸信息、持仓信息以及委托完成信息。注意不要调用对外发送逻辑。
-        if(!totalTradeIdMap.isEmpty() && totalTradeIdMap.size()>0) {
+        if(totalTradeIdMap != null && !totalTradeIdMap.isEmpty() && totalTradeIdMap.size()>0) {
             List<String> totalTradeIdList =  totalTradeIdMap.entrySet().stream()
                     .map(item->item.getKey()).collect(Collectors.toList());
             Map<String, Object> param = new HashMap<>();
