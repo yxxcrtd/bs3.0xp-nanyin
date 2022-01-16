@@ -331,7 +331,7 @@ public class CommonPositionService {
 			// 重新插入一条反向流水
 			etrSecPositionFlow.setAmount(etrSecPositionFlow.getAmount().negate());
 			etrSecPositionFlow.setOffsetId(String.valueOf(param.get("entrustId")));
-			etrSecPositionFlow.setInvAim(String.valueOf(param.get("invAim")));
+//			etrSecPositionFlow.setInvAim(String.valueOf(param.get("invAim")));
 			etrSecPositionFlow.setSeqno(IDGenerator.generate());
 			insertEtrSecPositionFlow(etrSecPositionFlow);
 		});
@@ -380,7 +380,7 @@ public class CommonPositionService {
 				// 重新插入一条反向流水
 				etrSecPositionFlow.setAmount(etrSecPositionFlow.getAmount().negate());
 				etrSecPositionFlow.setOffsetId(String.valueOf(param.get("entrustId")));
-				etrSecPositionFlow.setInvAim(String.valueOf(param.get("invAim")));
+//				etrSecPositionFlow.setInvAim(String.valueOf(param.get("invAim")));
 				etrSecPositionFlow.setSeqno(IDGenerator.generate());
 				insertEtrSecPositionFlow(etrSecPositionFlow);
 			});
@@ -423,6 +423,8 @@ public class CommonPositionService {
 		return true;
 	}
 
+	// add by etliu 20220116 start
+	// GZYHTZJY-1145: 【场内对账清结算1231】深交所协议回购首期交易，日终头寸更新有误【解决日期：2022-01-14】】
 	/**
 	 * 指令撤回、关闭，交易冲销（指令可用现金冲销）
 	 * @param param
@@ -471,6 +473,25 @@ public class CommonPositionService {
 
 		return true;
 	}
+
+	/**
+	 * 查询组合持有资产的投资目的
+	 * @param portfolioId 组合代码
+	 * @param finprodId 金融产品代码
+	 * @return 投资目的
+	 */
+	public String selectHoldInvAim(String portfolioId, String finprodId) {
+		if (StringUtil.isBlank(portfolioId) || StringUtil.isBlank(finprodId)) {
+			return null;
+		}
+
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("portfolioId", portfolioId);
+		paramMap.put("finprodId", finprodId);
+
+		return commonPtlPositionMapper.selectHoldInvAim(paramMap);
+	}
+	// add by etliu 20220116 end
 
 	/**
 	 * 入库委托现金流水信息

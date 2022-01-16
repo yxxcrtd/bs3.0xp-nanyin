@@ -322,4 +322,28 @@
           and CDATE = #{cdate,jdbcType=DATE}
           and CCY = #{ccy,jdbcType=VARCHAR}
     </update>
+
+    <!--add by etliu 20220116 start-->
+    <!--GZYHTZJY-1145: 【场内对账清结算1231】深交所协议回购首期交易，日终头寸更新有误【解决日期：2022-01-14】】-->
+    <select id="selectHoldInvAim" resultType="string" >
+        SELECT
+            MAX(PTL_SEC_POSITION.INV_AIM)
+        FROM
+            PTL_SEC_POSITION
+        WHERE
+            PTL_SEC_POSITION.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          AND PTL_SEC_POSITION.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          AND PTL_SEC_POSITION.HODING_TYPE = '03'
+          AND PTL_SEC_POSITION.CDATE =
+              (
+                  SELECT
+                      MAX(PTL_SEC_POSITION.CDATE)
+                  FROM
+                      PTL_SEC_POSITION
+                  WHERE
+                      PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+                    AND PTL_SEC_POSITION.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+                    AND PTL_SEC_POSITION.HODING_TYPE = '03')
+    </select>
+    <!--add by etliu 20220116 end-->
 </mapper>

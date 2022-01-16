@@ -287,6 +287,17 @@ public class EtrAgreRepTrade001Service extends CommonExportService<EtrAgreRepTra
 	@Override
 	public void doBack(EtrAgreRepTradeDto entity) {
 		doDeleteWflEntity(entity.getWorkflowId());
+
+		// add by etliu 20220116 start
+		// GZYHTZJY-1145: 【场内对账清结算1231】深交所协议回购首期交易，日终头寸更新有误【解决日期：2022-01-14】】
+		if (StringUtil.isNotBlank(entity.getFinprodId())) {
+			entity.setPledgeInvAim(commonPositionService.selectHoldInvAim(entity.getPortfolioId(), entity.getFinprodId()));
+		}
+		if (StringUtil.isNotBlank(entity.getNewfinprodId())) {
+			entity.setNewPledgeInvAim(commonPositionService.selectHoldInvAim(entity.getPortfolioId(), entity.getNewfinprodId()));
+		}
+		// add by etliu 20220116 end
+
 		// 释放指令头寸
 		revokeOrCloseEntrust(entity);
 	}
@@ -354,6 +365,17 @@ public class EtrAgreRepTrade001Service extends CommonExportService<EtrAgreRepTra
 			}
 		}
 		dto.setTradeDate(DateUtil.parse(dto.getVdate()));
+
+		// add by etliu 20220116 start
+		// GZYHTZJY-1145: 【场内对账清结算1231】深交所协议回购首期交易，日终头寸更新有误【解决日期：2022-01-14】】
+		if (StringUtil.isNotBlank(dto.getFinprodId())) {
+			dto.setPledgeInvAim(commonPositionService.selectHoldInvAim(dto.getPortfolioId(), dto.getFinprodId()));
+		}
+		if (StringUtil.isNotBlank(dto.getNewfinprodId())) {
+			dto.setNewPledgeInvAim(commonPositionService.selectHoldInvAim(dto.getPortfolioId(), dto.getNewfinprodId()));
+		}
+		// add by etliu 20220116 end
+
 		parameter.setCustom(dto);
 		try {
 			logger.info("持仓请求报文:" + JsonUtils.object2Json(parameter));

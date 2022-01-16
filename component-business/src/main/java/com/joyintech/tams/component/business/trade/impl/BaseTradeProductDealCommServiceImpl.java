@@ -466,6 +466,12 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                     }
                     status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
                 }
+                // add by etliu 20220116 start
+                // GZYHTZJY-1145: 【场内对账清结算1231】深交所协议回购首期交易，日终头寸更新有误【解决日期：2022-01-14】】
+                else if (etrEntrustAdd != null && StringUtil.equals(DictCodeList.回购类型_质押式协议回购.getValue(), etrEntrustAdd.getAssetType1())) {
+                    status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
+                }
+                // add by etliu 20220116 end
                 else if(etrEntrustAdd != null && StringUtil.isNotEmpty(etrEntrustAdd.getTargetType())
                    && StringUtil.equals(DictCodeListExt3.目标类型_金额.getValue(),etrEntrustAdd.getTargetType())){
                     status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getTradeAmt());
