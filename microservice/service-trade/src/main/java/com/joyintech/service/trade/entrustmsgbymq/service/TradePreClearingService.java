@@ -2250,11 +2250,17 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             settleInfo.setPrin(finTradeProduct.getPrin());
             settleInfo.setmTradeAmt(finTradeProduct.getmTradeAmt());
 
-            if (trdTempDto.getPositionBaseData() != null && trdTempDto.getPositionBaseData().getFinDealPledge() != null) {
-                settleInfo.setPledgeNumber(trdTempDto.getPositionBaseData().getFinDealPledge().getPledgeNumber());
-                settleInfo.setPledgeId(trdTempDto.getPositionBaseData().getFinDealPledge().getPledgeFinprodId());
+            FinDealPledge finDealPledge = trdTempDto.getFinDealPledge();
+            if (finDealPledge == null && trdTempDto.getPositionBaseData() != null && trdTempDto.getPositionBaseData().getFinDealPledge() != null) {
+                finDealPledge = trdTempDto.getPositionBaseData().getFinDealPledge();
             }
-            settleInfo.setbPledgeId(entrustMsgbyMQMapper.selectPledgeId(infContractDetailfile.getvTradeId()));
+            if (finDealPledge != null) {
+                settleInfo.setPledgeNumber(finDealPledge.getPledgeNumber());
+                settleInfo.setPledgeId(finDealPledge.getPledgeFinprodId());
+            }
+            if (StringUtil.equals(DictCodeListExt3.交易方向_中途换券.getValue(), trdTempDto.getPs())) {
+                settleInfo.setbPledgeId(entrustMsgbyMQMapper.selectPledgeId(infContractDetailfile.getvTradeId()));
+            }
         }
         // modify by etliu 20220114 end
 

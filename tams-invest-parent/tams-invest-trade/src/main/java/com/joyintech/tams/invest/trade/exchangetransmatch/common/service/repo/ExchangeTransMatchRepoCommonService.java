@@ -787,6 +787,7 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
 //            if (etrEntrustAdd.getTradeId() != null) {
 //                finprodId = etrEntrustAdd.getTradeId();
 //            }
+            etrEntrustAddDto.setmTradeAmt(trdTempDto.getTradeAmt());
         }
         positionBaseData.setEtrEntrustAddDto(etrEntrustAddDto);
         // 首期主键为空
@@ -836,6 +837,7 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
 
         if (finDealPledge != null) {
             infContractDetailfile.setFinprodId(finDealPledge.getPledgeFinprodId());
+            infContractDetailfile.setShareAmt(finDealPledge.getPledgeNumber());
         }
 
         trdTempDto.setFinDealPledge(finDealPledge);
