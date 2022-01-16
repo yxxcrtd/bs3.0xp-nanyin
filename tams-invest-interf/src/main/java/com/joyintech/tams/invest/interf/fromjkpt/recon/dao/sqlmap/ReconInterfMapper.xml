@@ -309,6 +309,9 @@ FROM
                 #{item.entrustTradeId}
             </foreach>
         </if>
+        <if test="execDate != null">
+            AND T1.JYRQ = #{execDate,jdbcType=VARCHAR}
+        </if>
     </where>
 UNION ALL
 SELECT
@@ -442,6 +445,9 @@ WHERE
         <foreach item="item" index="index" collection="tradeIds" open="(" separator=","  close=")">
             #{item.entrustTradeId}
         </foreach>
+    </if>
+    <if test="execDate != null">
+        AND T1.JYRQ = #{execDate,jdbcType=VARCHAR}
     </if>
 </sql>
 <sql id="detailesql2">
@@ -587,6 +593,9 @@ WHERE
                 #{item.entrustTradeId}
             </foreach>
         </if>
+        <if test="execDate != null">
+            AND T1.JYRQ = #{execDate,jdbcType=VARCHAR}
+        </if>
     </where>
     UNION ALL
     SELECT
@@ -730,6 +739,9 @@ WHERE
             <foreach item="item" index="index" collection="tradeIds" open="(" separator=","  close=")">
                 #{item.entrustTradeId}
             </foreach>
+        </if>
+        <if test="execDate != null">
+            AND T1.JYRQ = #{execDate,jdbcType=VARCHAR}
         </if>
 </sql>
 
