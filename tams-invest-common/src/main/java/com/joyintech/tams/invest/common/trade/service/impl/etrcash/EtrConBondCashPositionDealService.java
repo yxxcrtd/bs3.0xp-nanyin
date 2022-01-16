@@ -159,11 +159,13 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
                     Date tradeDate = finProductTradeDto.getTrdProductDeal().getTradeDate();
                     
                     // 交易生成的持仓流水 (债券)
-                    EtrSecPositionFlowDto etrSecPositionFlowDtoBond = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(finProductTradeDto);
-                    etrSecPositionFlowDtoBond.setAmount(deal.getShareAmt().negate());
-                    etrSecPositionFlowDtoBond.setFinprodId(deal.getFinprodId());
-                    etrSecPositionFlowDtoBond.setCdate(deal.getTradeDate());
-                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDtoBond);
+                    if(StringUtil.isEmpty(entrustId)){
+                        EtrSecPositionFlowDto etrSecPositionFlowDtoBond = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(finProductTradeDto);
+                        etrSecPositionFlowDtoBond.setAmount(deal.getShareAmt().negate());
+                        etrSecPositionFlowDtoBond.setFinprodId(deal.getFinprodId());
+                        etrSecPositionFlowDtoBond.setCdate(deal.getTradeDate());
+                        etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDtoBond);
+                    }
                     // 交易生成的持仓流水 (股票)
                     EtrSecPositionFlowDto etrSecPositionFlowDtoShare = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(finProductTradeDto);
                     etrSecPositionFlowDtoShare.setAmount(barterDeal.getShareAmt());
