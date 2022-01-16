@@ -487,7 +487,7 @@ public class StlDataDealSzdSjsjgProcessService {
                 //交易份额
                 settleTransData.setShareAmt(abs(szdSjsjg.getJgjssl()));
                 //交易份额
-                settleTransData.setFpriceAmt(abs(szdSjsjg.getJgzjje()));
+                // settleTransData.setFpriceAmt(abs(szdSjsjg.getJgzjje()));
                 List<SzdSjsjg> szdSjsjgs = stlDownDataDealMapper.getSzdSjsjgByApplyTradeId(settleTransData.getApplyTradeId());
                 if(CollectionUtils.isNotEmpty(szdSjsjgs)){
                     for(SzdSjsjg data : szdSjsjgs){
@@ -500,6 +500,10 @@ public class StlDataDealSzdSjsjgProcessService {
                         }
                     }
                 }
+                //交易金额
+                // GZYHTZJY-1130:债券数量*转股价格 modify fuyongsheng 20220116 start
+                settleTransData.setFpriceAmt(ArithmeticUtil.multiply(settleTransData.getUnitCprice(),settleTransData.getShareAmt()));
+                // GZYHTZJY-1130:债券数量*转股价格 modify fuyongsheng 20220116 end
             }
     	}
     	// 债转股业务
