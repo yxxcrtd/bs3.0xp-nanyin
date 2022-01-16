@@ -5,6 +5,7 @@ import com.joyintech.batch.batchbase.baseclass.BaseProcessor;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.batch.util.JoyinCollectors;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
@@ -62,6 +63,8 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
             List<PtlTrade> ptlTradeList = new ArrayList<>();
             //金融产品交易明细
             List<TrdProductDealDto> productDealList = new ArrayList<>();
+            //金融产品交易汇总表
+            List<TotalTrdProductDealDto> totalProductDealList = new ArrayList<>();
             //金融产品汇总附属交易
             List<TrdProductDealAdd> trdProductDealAddList = new ArrayList<>();
             //持仓分配
@@ -85,17 +88,27 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
                     FinProduct finProduct = finProductMapper.selectByPrimaryKey(settleTransData.getFinprodId());
                     BigDecimal amountTotal = ptlSecPositionsByFinprodId.stream().map(item2 -> item2.getAmount()).reduce(BigDecimal.ZERO, BigDecimal::add);
                     for (PtlSecPosition ptlSecPosition : ptlSecPositionsByFinprodId) {
+                        TotalTrdProductDealDto totalTrdProductDeal = new TotalTrdProductDealDto();
+                        String totalTradeId = settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易);
                         TrdProductDealDto trdProductDeal = new TrdProductDealDto();
                         createDeal(trdProductDeal, settleTransData,finProduct, ptlSecPosition);
                         trdProductDeal.setPs(DictCodeList.交易方向_上市流通.getValue());
                         //交易份额
                         trdProductDeal.setShareAmt(ptlSecPosition.getAmount());
+                        trdProductDeal.setTotleTradeId(totalTradeId);
                         productDealList.add(trdProductDeal);
                         TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
                         trdProductDealAdd.setTradeId(trdProductDeal.getTradeId());
                         trdProductDealAdd.setPortfolioId(ptlSecPosition.getPortfolioId());
                         trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_接口接入.getValue());
                         trdProductDealAddList.add(trdProductDealAdd);
+
+                        // 构造金融交易汇总表数据
+                        BeanUtil.copyProperties(totalTrdProductDeal, trdProductDeal);
+                        // 汇总交易编号
+                        totalTrdProductDeal.setTotleTradeId(totalTradeId);
+                        totalProductDealList.add(totalTrdProductDeal);
+
                         //组合交易
                         PtlTrade ptlTrade = new PtlTrade();
                         ptlTrade.setPortfolioId(ptlSecPosition.getPortfolioId());
@@ -210,6 +223,7 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
             investTradeWriteDto.setPtlSecPositionFlowList(ptlSecPositionFlowList);
             investTradeWriteDto.setPtlTradeList(ptlTradeList);
             investTradeWriteDto.setProductDealList(productDealList);
+            investTradeWriteDto.setFinProductDealTotalList(totalProductDealList);
             investTradeWriteDto.setTrdProductDealAddList(trdProductDealAddList);
             investTradeWriteDto.setSecType(DictCodeListExt1.证券品种_债券.getValue());
         }
@@ -218,7 +232,8 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
 
     private PtlTrade createPtlTrade(PtlTrade ptlTrade,TrdProductDealDto trdProductDealDto) {
         // 业务编号
-        ptlTrade.setBusiNo(trdProductDealDto.getTradeId());
+        // ptlTrade.setBusiNo(trdProductDealDto.getTradeId());
+        ptlTrade.setBusiNo(trdProductDealDto.getTotleTradeId());
         // 业务表
         ptlTrade.setBusiTable(DictCodeListStl.业务表_金融产品交易表.getValue());
         // 业务明细代码
