@@ -37,6 +37,7 @@ import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.position.dto.PostionParameter;
 import com.joyintech.tams.invest.common.position.service.CommonPositionService;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.entrust.etragrereptrade.dto.EtrAgreRepTradeDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -95,6 +96,10 @@ public class EtrAgreRepTrade001Service extends CommonExportService<EtrAgreRepTra
 	@Autowired
 	private FinTradeProductMapper finTradeProductMapper;
 
+	// add by etliu 20220116 start
+	@Autowired
+	private TrdCommonBaseService trdCommonBaseService;
+	// add by etliu 20220116 end
 
     /**
      * 对手方交易员联想文本框初始化。
@@ -352,9 +357,20 @@ public class EtrAgreRepTrade001Service extends CommonExportService<EtrAgreRepTra
 		finTradeProductKey.setFinprodId(dto.getTradeId());
 		finTradeProductKey.setBranch(0L);
 		FinTradeProduct firstFinTradeProduct = finTradeProductMapper.selectByPrimaryKey(finTradeProductKey);
+		// add by etliu 20220116 start
+		if (firstFinTradeProduct == null){
+			String hgsqFinprodId = trdCommonBaseService.selectHgsqFinprodId(dto.getPortfolioId(), dto.getTradeId());
+			if (StringUtil.isNotBlank(hgsqFinprodId)) {
+				finTradeProductKey.setFinprodId(hgsqFinprodId);
+				firstFinTradeProduct = finTradeProductMapper.selectByPrimaryKey(finTradeProductKey);
+			}
+		}
+		// add by etliu 20220116 end
+
 		if (firstFinTradeProduct != null){
 			dto.setFirstFinTradeProduct(firstFinTradeProduct);
 		}
+
 		if (StringUtil.equals(dto.getPs(),DictCodeListExt3.交易方向_到期续做.getValue()) && DictCodeList.回购拆借方向_逆回购.getValue().equals(dto.getRepPs())){
 			// 三方续做
 			if (StringUtil.equals(dto.getRedoType(),"1") || firstFinTradeProduct == null){
@@ -377,12 +393,12 @@ public class EtrAgreRepTrade001Service extends CommonExportService<EtrAgreRepTra
 		// add by etliu 20220116 end
 
 		parameter.setCustom(dto);
-		try {
-			logger.info("持仓请求报文:" + JsonUtils.object2Json(parameter));
-			commonPositionService.process(parameter);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+		logger.info("持仓请求报文:" + JsonUtils.object2Json(parameter));
+		commonPositionService.process(parameter);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	public void revokeOrCloseEntrust(Object object){
@@ -395,11 +411,11 @@ public class EtrAgreRepTrade001Service extends CommonExportService<EtrAgreRepTra
 		parameter.setTradeType("01");
 		parameter.setBusinessType(DictCodeList.回购类型_质押式协议回购.getValue());
 		parameter.setCustom(object);
-		try {
-			commonPositionService.process(parameter);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+		commonPositionService.process(parameter);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	private void doDeleteWflEntity(String workflowId) {

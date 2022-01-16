@@ -379,6 +379,14 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         if (StringUtil.isEmpty(finprodId)) {
             return;
         }
+
+        // add by etliu 20220116 start
+        String hgsqFinprodId = trdCommonBaseService.selectHgsqFinprodId(trdTempDto.getPortfolioId(), finprodId);
+        if (StringUtil.isNotBlank(hgsqFinprodId)) {
+            finprodId = hgsqFinprodId;
+        }
+        // add by etliu 20220116 end
+
         // 首期信息
         trdTempDto.setFinprodId(finprodId);
         // 查询首期交易类金融产品数据

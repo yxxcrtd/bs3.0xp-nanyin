@@ -361,4 +361,13 @@ public interface TrdCommonBaseMapper {
      * @since 1.0
      */
     String queryFinprodIdByFinprodMarketId(Map<String, Object> param);
+
+    // modify by etliu 20220110 start
+    /**
+     * 根据首期成交编号查询协议回购首期的交易编号
+     * @param paraMap 参数
+     * @return 协议回购首期的交易编号
+     */
+    String selectHgsqFinprodId(Map<String, Object> paraMap);
+    // modify by etliu 20220110 end
 }

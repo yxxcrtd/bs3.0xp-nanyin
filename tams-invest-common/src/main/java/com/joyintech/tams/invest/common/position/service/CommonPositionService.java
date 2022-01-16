@@ -489,7 +489,12 @@ public class CommonPositionService {
 		paramMap.put("portfolioId", portfolioId);
 		paramMap.put("finprodId", finprodId);
 
-		return commonPtlPositionMapper.selectHoldInvAim(paramMap);
+		String invAim = commonPtlPositionMapper.selectHoldInvAim(paramMap);
+		if (StringUtil.isBlank(invAim)) {
+			invAim = "999999";
+		}
+
+		return invAim;
 	}
 	// add by etliu 20220116 end
 
