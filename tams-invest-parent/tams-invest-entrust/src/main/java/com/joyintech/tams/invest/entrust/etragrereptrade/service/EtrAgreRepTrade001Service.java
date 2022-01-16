@@ -363,6 +363,7 @@ public class EtrAgreRepTrade001Service extends CommonExportService<EtrAgreRepTra
 			if (StringUtil.isNotBlank(hgsqFinprodId)) {
 				finTradeProductKey.setFinprodId(hgsqFinprodId);
 				firstFinTradeProduct = finTradeProductMapper.selectByPrimaryKey(finTradeProductKey);
+				dto.setTradeId(hgsqFinprodId);
 			}
 		}
 		// add by etliu 20220116 end
