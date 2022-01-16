@@ -274,6 +274,12 @@
             TRD_PRODUCT_DEAL tpd
         LEFT JOIN TRD_PRODUCT_DEAL_ADD tpda ON
             tpda.TRADE_ID = tpd.TRADE_ID
+        left join FIN_TRADE_PRODUCT ftp
+                  on ftp.FINPROD_ID = tpd.FINPROD_ID
+                      and ftp.BRANCH= '0'
+        left join FIN_PRODUCT_TYPE fpt
+                  on fpt.FINPROD_ID=ftp.FINPROD_ID
+                      and fpt.BRANCH=ftp.BRANCH
         where tpd.TRADE_MARKET in (#{TRADE_PLACE_03},#{TRADE_PLACE_04})
         and  tpd.TRADE_DATE = STR_TO_DATE(#{executeDate},'%Y-%m-%d')
         and  tpd.TRADE_STATUS = #{status} and tpd.IS_CANCEL = #{YES_OR_NO_N}
