@@ -1264,7 +1264,7 @@
                             on tpd.TRADE_ID = tpda.TRADE_ID
         where
             tpda.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
-            tpd.F_TRADE_ID = #{firstFTradeId,jdbcType=VARCHAR}
+            and tpd.F_TRADE_ID = #{firstFTradeId,jdbcType=VARCHAR}
     </select>
     <!--modify by etliu 20220116 end-->
 </mapper>
