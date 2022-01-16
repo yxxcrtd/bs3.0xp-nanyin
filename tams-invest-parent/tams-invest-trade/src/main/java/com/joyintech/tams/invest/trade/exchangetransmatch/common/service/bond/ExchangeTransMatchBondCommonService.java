@@ -204,7 +204,19 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
         // 交易方向
         dealTotal.setPs(entrustDto.getPs());
         // 投资目的
-        dealTotal.setInvAim(entrustDto.getInvAim());
+        if(StringUtil.isNotEmpty(entrustDto.getInvAim())){
+            dealTotal.setInvAim(entrustDto.getInvAim());
+        }else{
+            // 查询持仓的投资目的
+            Map<String,Object> param = new HashMap<>();
+            param.put("dealDate", dealTotal.getTradeDate());
+            param.put("finProductId",dealTotal.getFinprodId());
+            param.put("secManageAcctId",dealDto.getSecAcctId());
+            List<PtlSecPosition> ptlSecPositions = exchangeTransMatchCommonMapper.searchPtlSecPositionList(param);
+            if(CollectionUtils.isNotEmpty(ptlSecPositions)){
+                dealTotal.setInvAim(ptlSecPositions.get(0).getInvAim());
+            }
+        }
         // 交易状态
         dealTotal.setTradeStatus(BussinessDictCodeList.交易状态_初始.getValue());
         // 是否已撤销
