@@ -232,8 +232,7 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
 
     private PtlTrade createPtlTrade(PtlTrade ptlTrade,TrdProductDealDto trdProductDealDto) {
         // 业务编号
-        // ptlTrade.setBusiNo(trdProductDealDto.getTradeId());
-        ptlTrade.setBusiNo(trdProductDealDto.getTotleTradeId());
+        ptlTrade.setBusiNo(trdProductDealDto.getTradeId());
         // 业务表
         ptlTrade.setBusiTable(DictCodeListStl.业务表_金融产品交易表.getValue());
         // 业务明细代码
