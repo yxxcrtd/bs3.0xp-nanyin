@@ -56,8 +56,8 @@ public class SalerInstInfoRegist001Controller extends BaseController {
             if(StringUtil.isNotEmpty(map.get("submitFeedbackStatus"))){
                 model.addAttribute("submitFeedbackStatus", map.get("submitFeedbackStatus").toString().trim());
             }
-            model.addAttribute("searchDataDateStart", map.get("searchDataDateStart"));
-            model.addAttribute("searchDataDateEnd", map.get("searchDataDateEnd"));
+            model.addAttribute("searchDataStart", map.get("searchDataStart"));
+            model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
             model.addAttribute("isMain", "01");
         }
         super.setSelectOptionToModel(model, DictCode.报送数据状态,

@@ -143,6 +143,15 @@ public class ReportHomeService{
 				} else if ("25".equals(report)){
         			dtoList.addAll(reportHomeMapper.selectChbG06(parmMap));
         		}
+				else if (DictCodeListExt2.报表名称_总部或分支机构信息登记.getValue().equals(report)){
+					dtoList.addAll(reportHomeMapper.selectChbInst(parmMap));
+				}
+				else if (DictCodeListExt2.报表名称_销售人员身份信息登记.getValue().equals(report)){
+					dtoList.addAll(reportHomeMapper.selectChbIder(parmMap));
+				}
+				else if (DictCodeListExt2.报表名称_销售人员奖惩投诉记录登记.getValue().equals(report)){
+					dtoList.addAll(reportHomeMapper.selectChbIrew(parmMap));
+				}
         	}
         }
 //        List<SubmitInformationRegistrationDto> dtoList = reportHomeMapper.searchReportInfo(parmMap);
@@ -328,6 +337,9 @@ public class ReportHomeService{
     			}
     		}
     	}
+		menulist1.add(DictCodeListExt2.报表名称_总部或分支机构信息登记.getValue());
+		menulist1.add(DictCodeListExt2.报表名称_销售人员身份信息登记.getValue());
+		menulist1.add(DictCodeListExt2.报表名称_销售人员奖惩投诉记录登记.getValue());
     	return menulist1;
     }
 }

@@ -291,4 +291,34 @@ public interface ReportHomeMapper {
 	 * @version 1.7 2019年6月22日
 	 */
 	List<SubmitInformationRegistrationDto> selectChbG06(Map<String, Object> parmMap);
+
+	/**
+	 * @Description
+	 * @param parmMap
+	 * @return
+	 * @return List<SubmitInformationRegistrationDto>
+	 * @version 1.7 2019年6月22日
+	 */
+	List<SubmitInformationRegistrationDto> selectChbInst(Map<String, Object> parmMap);
+
+	/**
+	 * @Description
+	 * @param parmMap
+	 * @return
+	 * @return List<SubmitInformationRegistrationDto>
+	 * @version 1.7 2019年6月22日
+	 */
+	List<SubmitInformationRegistrationDto> selectChbIder(Map<String, Object> parmMap);
+
+	/**
+	 * @Description
+	 * @param parmMap
+	 * @return
+	 * @return List<SubmitInformationRegistrationDto>
+	 * @version 1.7 2019年6月22日
+	 */
+	List<SubmitInformationRegistrationDto> selectChbIrew(Map<String, Object> parmMap);
+
+
+
 }
