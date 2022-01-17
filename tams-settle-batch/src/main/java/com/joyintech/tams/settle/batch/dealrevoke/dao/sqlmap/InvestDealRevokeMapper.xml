@@ -151,7 +151,36 @@
         </choose>
     </select>
 
-
+    <select id="selectSsltTotalTradeIdTgM" resultType="java.lang.String">
+        SELECT
+        DISTINCT A.TOTLE_TRADE_ID
+        FROM
+        TRD_PRODUCT_DEAL A
+        INNER JOIN
+        SETTLE_TRANS_TG_MAPPING B ON A.TOTLE_TRADE_ID = B.TRADE_ID_TG
+        INNER JOIN
+        TRD_FIN_PRODUCT_DEAL_TOTAL C ON A.TOTLE_TRADE_ID = C.TOTLE_TRADE_ID
+        <where>
+            A.TRADE_STATUS = #{TRADE_STATUS_01}
+            AND (A.IS_CANCEL IS NULL OR A.IS_CANCEL = 'N')
+            <if test="dealDateStr != null">
+                AND TO_CHAR(A.TRADE_DATE, 'yyyy-MM-dd') = #{dealDateStr,jdbcType=VARCHAR}
+            </if>
+            <if test="busiType != null">
+                AND C.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+            </if>
+            <if test="psList != null and psList.size() > 0">
+                <foreach collection="psList" item="ps" open="AND A.PS IN (" close=")" separator=",">
+                    #{ps,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="tradeMarketList != null and tradeMarketList.size() > 0">
+                <foreach collection="tradeMarketList" item="tradeMarket" open="AND A.TRADE_MARKET IN (" close=")" separator=",">
+                    #{tradeMarket,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </select>
 
     <!-- 回购，交易编号查询 -->
     <select id="selectTradeId" resultType="java.lang.String">
@@ -691,4 +720,41 @@ FROM TRD_PRODUCT_DEAL A
         </if>
     </where>
  </select>
+    <delete id="deleteSsltSecPositionFlow">
+        DELETE FROM PTL_SEC_POSITION_FLOW
+        <where>
+            <if test="tradeIds != null and tradeIds.size() > 0">
+                <foreach collection="tradeIds" item="item" open="TRADE_ID IN (" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </delete>
+
+    <delete id="deleteSsltEtrSecPositionFlow">
+        DELETE FROM
+             ETR_SEC_POSITION_FLOW
+        <where>
+            <if test="tradeIds != null and tradeIds.size() > 0">
+                <foreach collection="tradeIds" item="item" open="TRADE_ID IN (" close=")" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </delete>
+
+    <select id = 'searchTradeIdsByTotalTradeIds' resultType="java.lang.String">
+        SELECT
+            A.TRADE_ID
+        FROM
+            TRD_PRODUCT_DEAL A,
+            TRD_FIN_PRODUCT_DEAL_TOTAL B
+        WHERE
+            A.TOTLE_TRADE_ID = B.TOTLE_TRADE_ID
+        <if test="totalTradeIds != null and totalTradeIds.size() > 0">
+            <foreach collection="totalTradeIds" item="item" open="AND A.TOTLE_TRADE_ID IN (" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
 </mapper>

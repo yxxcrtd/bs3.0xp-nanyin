@@ -72,6 +72,7 @@ public class SharesRevokeService implements BaseRevokeService {
         // 参考股票分红送转交易撤销逻辑，生成已生效的撤销交易数据，同时反向更新头寸信息、持仓信息以及委托完成信息。注意不要调用对外发送逻辑。
         if(totalTradeIdMap != null && !totalTradeIdMap.isEmpty() && totalTradeIdMap.size()>0) {
             List<String> totalTradeIdList =  totalTradeIdMap.entrySet().stream()
+                    .filter(item-> !StringUtil.equals(item.getValue(), DictCodeList.交易方向_上市流通.getValue()))
                     .map(item->item.getKey()).collect(Collectors.toList());
             Map<String, Object> param = new HashMap<>();
             param.put("totalTradeIdList", totalTradeIdList);
@@ -79,6 +80,16 @@ public class SharesRevokeService implements BaseRevokeService {
             param.put("busiType", DictCodeListExt2.共通业务类型_股票投资交易.getValue());
             stlDataGatherService.excutePosition(param);
             investDealRevokeService.revokeDealTotal(totalTradeIdList);
+
+            List<String> ssltTotalTradeIdList = totalTradeIdMap.entrySet().stream()
+                    .filter(item-> StringUtil.equals(item.getValue(), DictCodeList.交易方向_上市流通.getValue()))
+                    .map(item->item.getKey()).collect(Collectors.toList());
+            List<String> tradeIds = investDealRevokeService.searchTradeIdsByTotalTradeIds(ssltTotalTradeIdList);
+            if(CollectionUtils.isNotEmpty(tradeIds)){
+                investDealRevokeService.deleteSsltSecPositionFlow(tradeIds);
+                investDealRevokeService.deleteSsltEtrSecPositionFlow(tradeIds);
+            }
+            investDealRevokeService.revokeDealTotal(ssltTotalTradeIdList);
         }
     }
 

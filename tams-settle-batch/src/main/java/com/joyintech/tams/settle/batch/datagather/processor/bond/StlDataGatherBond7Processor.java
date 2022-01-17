@@ -63,6 +63,8 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
             List<PtlTrade> ptlTradeList = new ArrayList<>();
             //金融产品交易明细
             List<TrdProductDealDto> productDealList = new ArrayList<>();
+            //投管交易关系
+            List<SettleTransTgMapping> settleTransTgMappingList = new ArrayList<>();
             //金融产品交易汇总表
             List<TotalTrdProductDealDto> totalProductDealList = new ArrayList<>();
             //金融产品汇总附属交易
@@ -108,6 +110,14 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
                         // 汇总交易编号
                         totalTrdProductDeal.setTotleTradeId(totalTradeId);
                         totalProductDealList.add(totalTrdProductDeal);
+
+                        //投管交易关系
+                        SettleTransTgMapping settleTransTgMapping = new SettleTransTgMapping();
+                        settleTransTgMapping.setTradeId(totalTradeId);
+                        settleTransTgMapping.setTradeIdTg(totalTradeId);
+                        settleTransTgMapping.setTgDataStatus("02");
+                        settleTransTgMapping.setDealDate(settleTransData.getDealDate());
+                        settleTransTgMappingList.add(settleTransTgMapping);
 
                         //组合交易
                         PtlTrade ptlTrade = new PtlTrade();
@@ -224,6 +234,7 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
             investTradeWriteDto.setPtlTradeList(ptlTradeList);
             investTradeWriteDto.setProductDealList(productDealList);
             investTradeWriteDto.setFinProductDealTotalList(totalProductDealList);
+            investTradeWriteDto.setSettleTransTgMappingList(settleTransTgMappingList);
             investTradeWriteDto.setTrdProductDealAddList(trdProductDealAddList);
             investTradeWriteDto.setSecType(DictCodeListExt1.证券品种_债券.getValue());
         }

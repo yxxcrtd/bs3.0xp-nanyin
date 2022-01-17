@@ -1,6 +1,7 @@
 package com.joyintech.tams.settle.batch.dealrevoke.service;
 
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.tams.common.base.entity.EtrSecPositionFlow;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -49,6 +50,14 @@ public class BondRevokeService implements BaseRevokeService {
             param.put("busiType", DictCodeList.共通业务类型_债券类资产交易.getValue());
             stlDataGatherService.excutePosition(param);
             investDealRevokeService.revokeDealTotal(totalTradeIdList);
+            List<String> ssltTotalTradeIdList =  totalTradeIdMap.entrySet().stream().filter(item-> StringUtil.equals(item.getValue(), DictCodeList.交易方向_上市流通.getValue()))
+                    .map(item->item.getKey()).collect(Collectors.toList());
+            List<String> tradeIds = investDealRevokeService.searchTradeIdsByTotalTradeIds(ssltTotalTradeIdList);
+            if(CollectionUtils.isNotEmpty(tradeIds)){
+                investDealRevokeService.deleteSsltSecPositionFlow(tradeIds);
+                investDealRevokeService.deleteSsltEtrSecPositionFlow(tradeIds);
+            }
+            investDealRevokeService.revokeDealTotal(ssltTotalTradeIdList);
         }
     }
 

@@ -151,6 +151,37 @@
         </choose>
     </select>
 
+    <select id="selectSsltTotalTradeIdTgM" resultType="java.lang.String">
+        SELECT
+            DISTINCT A.TOTLE_TRADE_ID
+        FROM
+            TRD_PRODUCT_DEAL A
+        INNER JOIN
+            SETTLE_TRANS_TG_MAPPING B ON A.TOTLE_TRADE_ID = B.TRADE_ID_TG
+        INNER JOIN
+            TRD_FIN_PRODUCT_DEAL_TOTAL C ON A.TOTLE_TRADE_ID = C.TOTLE_TRADE_ID
+        <where>
+            A.TRADE_STATUS = #{TRADE_STATUS_01}
+            AND (A.IS_CANCEL IS NULL OR A.IS_CANCEL = 'N')
+            <if test="dealDateStr != null">
+                AND DATE_FORMAT(A.TRADE_DATE, '%Y-%m-%d') = #{dealDateStr,jdbcType=VARCHAR}
+            </if>
+            <if test="busiType != null">
+                AND C.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+            </if>
+            <if test="psList != null and psList.size() > 0">
+                <foreach collection="psList" item="ps" open="AND A.PS IN (" close=")" separator=",">
+                    #{ps,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="tradeMarketList != null and tradeMarketList.size() > 0">
+                <foreach collection="tradeMarketList" item="tradeMarket" open="AND A.TRADE_MARKET IN (" close=")" separator=",">
+                    #{tradeMarket,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
     <!-- 回购，交易编号查询 -->
     <select id="selectTradeId" resultType="java.lang.String">
         SELECT
