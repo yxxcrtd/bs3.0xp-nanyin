@@ -10,22 +10,14 @@
 
 package com.joyintech.tams.valuation.batch.assetintdatecarryoverdeal.service;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.batch.assetintdatecarryover.dao.AssetIntdateCarryoverMapper;
 import com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.AssetIntdateCarryoverDeal;
 import com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.AssetIntdateCarryoverReaderDetail;
@@ -36,19 +28,19 @@ import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalanc
 import com.joyintech.tams.valuation.batch.common.accounting.service.AccountingCommonService;
 import com.joyintech.tams.valuation.batch.common.finproduct.service.FinProductCommonService;
 import com.joyintech.tams.valuation.common.constants.BookConstant;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
-import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
-import com.joyintech.tams.common.base.entity.BokDealAccounting;
-import com.joyintech.tams.common.base.entity.BokDealAccountingDetail;
-import com.joyintech.tams.common.base.entity.BokDetailId;
-import com.joyintech.tams.common.base.entity.FinTradeProduct;
-import com.joyintech.tams.common.base.entity.FinTradeProductKey;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 资产理论结息日结转- processor相关业务处理
@@ -80,6 +72,13 @@ public class AssetIntdateCarryoverDealProcessorService {
     @Autowired
     private FinTradeProductMapper finTradeProductMapper;
 
+    // add by weipeng on 20220114 增加批处理报错时相关明细日志打印 start
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(getClass());
+    // add by weipeng on 20220114 增加批处理报错时相关明细日志打印 end
+
     /**
      * process 数据处理
      * 
@@ -88,7 +87,7 @@ public class AssetIntdateCarryoverDealProcessorService {
      * @see
      * @since 1.0
      */
-    public AssetIntdateCarryoverResult execute(Map<String, Object> param1) {
+    public AssetIntdateCarryoverResult execute(Map<String, Object> param1) throws Exception {
         // 获取reader返回值
         AssetIntdateCarryoverReaderResult acctEntity = (AssetIntdateCarryoverReaderResult)param1.get(
             GlobalConstant.READER_RESULT);
@@ -111,104 +110,105 @@ public class AssetIntdateCarryoverDealProcessorService {
 
         // 循环生成数据
         for (AssetIntdateCarryoverReaderDetail detail : acctEntity.getAssetIntdateCarryoverReaderDetailList()) {
+            // add by weipeng on 20220114 增加批处理报错时相关明细日志打印 start
+            try{
+                // 变量.本金分支号
+                Long branchPri = BookConstant.DEFALUT_BRANCH;
+                // 变量.利息分支号
+                Long branchInt = BookConstant.DEFALUT_BRANCH;
 
-            // 变量.本金分支号
-            Long branchPri = BookConstant.DEFALUT_BRANCH;
-            // 变量.利息分支号
-            Long branchInt = BookConstant.DEFALUT_BRANCH;
+                // 定义交易方向
+                String glob_ps = null;
 
-            // 定义交易方向
-            String glob_ps = null;
+                // if（DTO.现金流一级类型 = "本金"）
+                if (detail.getCashType1().equals(DictCodeListExt1.现金流一级类型_本金.getValue())) {
+                    // 变量.本金分支号 = 调用共通标的【当前计划对应分支序号查询（DTO.金融产品代码，DTO.金融产品类型，"本金"，DTO.调整后的计算结束日）】
+                    branchPri = finProductCommonService.queryValFinProductDealBranchNow(
+                            detail.getFinprodId(), detail.getFinprodType(),
+                            DictCodeList.分支类型_应收本金.getValue(), detail.getMdate());
+                    // 变量.利息分支号 = 调用共通标的【当前计划对应分支序号查询（DTO.金融产品代码，DTO.金融产品类型，"利息"，DTO.调整后的计算结束日）】
+                    branchInt = finProductCommonService.queryValFinProductDealBranchNow(
+                            detail.getFinprodId(), detail.getFinprodType(),
+                            DictCodeList.分支类型_应收利息.getValue(), detail.getMdate());
 
-            // if（DTO.现金流一级类型 = "本金"）
-            if (detail.getCashType1().equals(DictCodeListExt1.现金流一级类型_本金.getValue())) {
-                // 变量.本金分支号 = 调用共通标的【当前计划对应分支序号查询（DTO.金融产品代码，DTO.金融产品类型，"本金"，DTO.调整后的计算结束日）】
-                branchPri = finProductCommonService.queryValFinProductDealBranchNow(
-                    detail.getFinprodId(), detail.getFinprodType(),
-                    DictCodeList.分支类型_应收本金.getValue(), detail.getMdate());
-                // 变量.利息分支号 = 调用共通标的【当前计划对应分支序号查询（DTO.金融产品代码，DTO.金融产品类型，"利息"，DTO.调整后的计算结束日）】
-                branchInt = finProductCommonService.queryValFinProductDealBranchNow(
-                    detail.getFinprodId(), detail.getFinprodType(),
-                    DictCodeList.分支类型_应收利息.getValue(), detail.getMdate());
+                    // 一级类型为本金的时候，交易方向取还本
+                    glob_ps = DictCodeList.交易方向_还本.getValue();
 
-                // 一级类型为本金的时候，交易方向取还本
-                glob_ps = DictCodeList.交易方向_还本.getValue();
+                }
+                else {
+                    // 变量.利息分支号 = 调用共通标的【当前计划对应分支序号查询（DTO.金融产品代码，DTO.金融产品类型，"利息"，DTO.调整后的计算结束日）】
+                    branchInt = finProductCommonService.queryValFinProductDealBranchNow(
+                            detail.getFinprodId(), detail.getFinprodType(),
+                            DictCodeList.分支类型_应收利息.getValue(), detail.getMdate());
 
-            }
-            else {
-                // 变量.利息分支号 = 调用共通标的【当前计划对应分支序号查询（DTO.金融产品代码，DTO.金融产品类型，"利息"，DTO.调整后的计算结束日）】
-                branchInt = finProductCommonService.queryValFinProductDealBranchNow(
-                    detail.getFinprodId(), detail.getFinprodType(),
-                    DictCodeList.分支类型_应收利息.getValue(), detail.getMdate());
+                    // 其他情况，交易方向取交易方向_收息
+                    glob_ps = DictCodeList.交易方向_收息.getValue();
+                }
 
-                // 其他情况，交易方向取交易方向_收息
-                glob_ps = DictCodeList.交易方向_收息.getValue();
-            }
+                // 1.是否存在已交易生成
+                int dealCount = assetIntdateCarryoverMapper.queryDealCount(detail.getFinprodId(),
+                        detail.getFinprodType(), detail.getMdate(), detail.getBooksetId(), glob_ps);
+                if (dealCount > 0) {
+                    continue;
+                }
 
-            // 1.是否存在已交易生成
-            int dealCount = assetIntdateCarryoverMapper.queryDealCount(detail.getFinprodId(),
-                detail.getFinprodType(), detail.getMdate(), detail.getBooksetId(), glob_ps);
-            if (dealCount > 0) {
-                continue;
-            }
+                // 2.成本查询
+                // 2.1基础科目性质查询
+                List<String> subjectNatureList = accountingCommonService.getValSubjectNatureList(
+                        DictCodeListExt1.分组代码_成本类对应科目查询.getValue());
 
-            // 2.成本查询
-            // 2.1基础科目性质查询
-            List<String> subjectNatureList = accountingCommonService.getValSubjectNatureList(
-                    DictCodeListExt1.分组代码_成本类对应科目查询.getValue());
+                // 2.2 最新余额查询
+                SubjectBalanceSearchDto searchDao = new SubjectBalanceSearchDto();
+                searchDao.setHappenDate(detail.getBooksetDate());
+                searchDao.setBookDate(detail.getBooksetDate());
+                searchDao.setBooksetId(detail.getBooksetId());
+                searchDao.setBusiId(detail.getFinprodId());
+                searchDao.setOnwayDate(detail.getBooksetDate());
+                searchDao.setBaseSubjectNatureList(subjectNatureList);
+                searchDao.setoCcy(detail.getCcy());
+                List<SubjectBalance> listSubjectBalance = accountingCommonService.getSubjectBalanceExpectDirection(
+                        searchDao, DictCodeList.余额方向_借方.getValue());
+                if (listSubjectBalance != null && listSubjectBalance.size() > 0) {
+                    // 3.根据科目余额生成交易
+                    for (SubjectBalance subjectBalance : listSubjectBalance) {
+                        // 变量.利息 = 0
+                        BigDecimal intAmt = BigDecimal.ZERO;
+                        // 变量.本金 = 0
+                        BigDecimal printAmt = BigDecimal.ZERO;
+                        // 变量.业务类型
+                        String busiType = null;
+                        // 变量.交易方向
+                        String dealPs = null;
+                        // 变量.单位面值 = 0
+                        BigDecimal faceValue = BigDecimal.ZERO;
 
-            // 2.2 最新余额查询
-            SubjectBalanceSearchDto searchDao = new SubjectBalanceSearchDto();
-            searchDao.setHappenDate(detail.getBooksetDate());
-            searchDao.setBookDate(detail.getBooksetDate());
-            searchDao.setBooksetId(detail.getBooksetId());
-            searchDao.setBusiId(detail.getFinprodId());
-            searchDao.setOnwayDate(detail.getBooksetDate());
-            searchDao.setBaseSubjectNatureList(subjectNatureList);
-            searchDao.setoCcy(detail.getCcy());
-            List<SubjectBalance> listSubjectBalance = accountingCommonService.getSubjectBalanceExpectDirection(
-                searchDao, DictCodeList.余额方向_借方.getValue());
-            if (listSubjectBalance != null && listSubjectBalance.size() > 0) {
-                // 3.根据科目余额生成交易
-                for (SubjectBalance subjectBalance : listSubjectBalance) {
-                    // 变量.利息 = 0
-                    BigDecimal intAmt = BigDecimal.ZERO;
-                    // 变量.本金 = 0
-                    BigDecimal printAmt = BigDecimal.ZERO;
-                    // 变量.业务类型
-                    String busiType = null;
-                    // 变量.交易方向
-                    String dealPs = null;
-                    // 变量.单位面值 = 0
-                    BigDecimal faceValue = BigDecimal.ZERO;
+                        // if（变量.科目余额信息.科目余额 = 0）
+                        if (ArithmeticUtil.equals(subjectBalance.getBalance(), BigDecimal.ZERO)) {
+                            continue;
+                        }
+                        else {
 
-                    // if（变量.科目余额信息.科目余额 = 0）
-                    if (ArithmeticUtil.equals(subjectBalance.getBalance(), BigDecimal.ZERO)) {
-                        continue;
-                    }
-                    else {
+                            // if(DTO.金融产品类型 = "债券")
+                            if (detail.getFinprodType().equals(DictCodeListExt1.金融产品类型_拆出.getValue())||detail.getFinprodType().equals(DictCodeListExt1.金融产品类型_同业借款.getValue())) {
 
-                        // if(DTO.金融产品类型 = "债券")
-                        if (detail.getFinprodType().equals(DictCodeListExt1.金融产品类型_拆出.getValue())||detail.getFinprodType().equals(DictCodeListExt1.金融产品类型_同业借款.getValue())) {
+                                // 变量.业务类型 = "拆借预交易处理"
+                                busiType = DictCodeList.业务类型_拆借预交易.getValue();
+                                // 变量.当前本金 = 调用共通计算类共通【当前未还本金（DTO.账套日期,DTO.金融产品代码,DTO.名义本金）】
+                                BigDecimal printAmtCut = finProductCommonService.getUnpaidPrinAmt(detail.getBooksetDate(), detail.getFinprodId(),detail.getIssueAmt());
 
-                            // 变量.业务类型 = "拆借预交易处理"
-                            busiType = DictCodeList.业务类型_拆借预交易.getValue();
-                            // 变量.当前本金 = 调用共通计算类共通【当前未还本金（DTO.账套日期,DTO.金融产品代码,DTO.名义本金）】 
-                            BigDecimal printAmtCut = finProductCommonService.getUnpaidPrinAmt(detail.getBooksetDate(), detail.getFinprodId(),detail.getIssueAmt());
-                            
-                            if (detail.getCashType1().equals(DictCodeListExt1.现金流一级类型_本金.getValue())) {
-                                //变量.本金 = DTO.计划支付本金/变量.名义本金 ---按单位净值方式保留小数位（ 高精度数字）
-                                printAmt = ArithmeticUtil.divide(detail.getPrinAmt(), printAmtCut,NumberEnum.HIGH_PREC_NUM.getCode());
-                                //变量.利息 = DTO.计划支付利息/变量.名义本金    ----按单位应计利息方式保留小数位（ 高精度数字）
-                                intAmt = ArithmeticUtil.divide(detail.getIntAmt(), printAmtCut,NumberEnum.HIGH_PREC_NUM.getCode());
-                                
-                            }else{
-                                //变量.利息 = DTO.计划支付利息/DTO.名义本金       ----按单位应计利息方式保留小数位（ 高精度数字）
-                                intAmt = ArithmeticUtil.divide(detail.getIntAmt(), detail.getIssueAmt(),NumberEnum.HIGH_PREC_NUM.getCode());
-                            }
-                            
-                            // 变量.业务类型 = "债券交易"
-                           // busiType = DictCodeList.业务类型_拆借预交易.getValue();
+                                if (detail.getCashType1().equals(DictCodeListExt1.现金流一级类型_本金.getValue())) {
+                                    //变量.本金 = DTO.计划支付本金/变量.名义本金 ---按单位净值方式保留小数位（ 高精度数字）
+                                    printAmt = ArithmeticUtil.divide(detail.getPrinAmt(), printAmtCut,NumberEnum.HIGH_PREC_NUM.getCode());
+                                    //变量.利息 = DTO.计划支付利息/变量.名义本金    ----按单位应计利息方式保留小数位（ 高精度数字）
+                                    intAmt = ArithmeticUtil.divide(detail.getIntAmt(), printAmtCut,NumberEnum.HIGH_PREC_NUM.getCode());
+
+                                }else{
+                                    //变量.利息 = DTO.计划支付利息/DTO.名义本金       ----按单位应计利息方式保留小数位（ 高精度数字）
+                                    intAmt = ArithmeticUtil.divide(detail.getIntAmt(), detail.getIssueAmt(),NumberEnum.HIGH_PREC_NUM.getCode());
+                                }
+
+                                // 变量.业务类型 = "债券交易"
+                                // busiType = DictCodeList.业务类型_拆借预交易.getValue();
 //                            faceValue = finProductCommonService.getFaceValue(detail.getFinprodId(),
 //                                DateUtil.addDay(detail.getBooksetDate(), -1));
 //                            // if（DTO.现金流一级类型 = "本金"）
@@ -222,87 +222,90 @@ public class AssetIntdateCarryoverDealProcessorService {
 //                                // 变量.利息 = DTO.计划支付利息
 //                                intAmt = detail.getIntAmt();
 //                            }
-                            //变量.利息 = DTO.计划支付利息/DTO.名义本金
-                            //intAmt = ArithmeticUtil.divide(detail.getIntAmt(), detail.getIssueAmt(),NumberEnum.ALL_PRECISION.getCode());
+                                //变量.利息 = DTO.计划支付利息/DTO.名义本金
+                                //intAmt = ArithmeticUtil.divide(detail.getIntAmt(), detail.getIssueAmt(),NumberEnum.ALL_PRECISION.getCode());
+                            }
                         }
-                    }
-                    // 变量.账务明细代码信息 = 调用共通标的【账务明细代码信息查询（变量.科目余额信息.账务明细代码，变量.账套明细.账套代码）】
-                    List<BokDetailId> listValBokBookdetail = finProductCommonService.bookdetailInforQuery(
-                        detail.getBooksetId(), subjectBalance.getBokDetailId());
-                    BokDetailId valBokBookdetail = new BokDetailId();
-                    if (listValBokBookdetail != null && listValBokBookdetail.size() > 0) {
-                        valBokBookdetail = listValBokBookdetail.get(0);
-                    }
+                        // 变量.账务明细代码信息 = 调用共通标的【账务明细代码信息查询（变量.科目余额信息.账务明细代码，变量.账套明细.账套代码）】
+                        List<BokDetailId> listValBokBookdetail = finProductCommonService.bookdetailInforQuery(
+                                detail.getBooksetId(), subjectBalance.getBokDetailId());
+                        BokDetailId valBokBookdetail = new BokDetailId();
+                        if (listValBokBookdetail != null && listValBokBookdetail.size() > 0) {
+                            valBokBookdetail = listValBokBookdetail.get(0);
+                        }
 
-                    // if（变量.利息 != 0）
-                    if (!ArithmeticUtil.equals(intAmt, BigDecimal.ZERO)) {
-                        // 变量.交易方向 = "收息"
-                        dealPs = DictCodeList.交易方向_收息.getValue();
-                        // if（变量.利息分支号 = null）
-                        if (branchInt == null) {
+                        // if（变量.利息 != 0）
+                        if (!ArithmeticUtil.equals(intAmt, BigDecimal.ZERO)) {
+                            // 变量.交易方向 = "收息"
+                            dealPs = DictCodeList.交易方向_收息.getValue();
+                            // if（变量.利息分支号 = null）
+                            if (branchInt == null) {
 //                            // 变量.最大分支序号++
 //                            maxBranch++ ;
-                            // 变量.最大分支序号 =  （DTO.调整后的计算结束日 （'YYYYMMDD'）|| 02）转成数值型
-                            maxBranch = new Long(DateUtil.format(detail.getMdate(),"yyyyMMdd")+"02");
-                            // 创建交易信息("利息"，变量.利息，变量.业务类型，变量.账务明细代码信息，变量.最大分支序号，变量.交易方向，DTO)
-                            AssetIntdateCarryoverDeal assetIntdateCarryoverDeal = creatCarryoverDeal(
-                                DictCodeListExt1.现金流一级类型_利息.getValue(), intAmt, busiType,
-                                valBokBookdetail, maxBranch, dealPs, detail, faceValue, true,
-                                assetIntdateCarryoverResult);
-                            assetIntdateCarryoverResult.getAssetIntdateCarryoverDealList().add(
-                                assetIntdateCarryoverDeal);
+                                // 变量.最大分支序号 =  （DTO.调整后的计算结束日 （'YYYYMMDD'）|| 02）转成数值型
+                                maxBranch = new Long(DateUtil.format(detail.getMdate(),"yyyyMMdd")+"02");
+                                // 创建交易信息("利息"，变量.利息，变量.业务类型，变量.账务明细代码信息，变量.最大分支序号，变量.交易方向，DTO)
+                                AssetIntdateCarryoverDeal assetIntdateCarryoverDeal = creatCarryoverDeal(
+                                        DictCodeListExt1.现金流一级类型_利息.getValue(), intAmt, busiType,
+                                        valBokBookdetail, maxBranch, dealPs, detail, faceValue, true,
+                                        assetIntdateCarryoverResult);
+                                assetIntdateCarryoverResult.getAssetIntdateCarryoverDealList().add(
+                                        assetIntdateCarryoverDeal);
+                            }
+                            else {
+                                // 创建交易信息("利息"，变量.利息，变量.业务类型，变量.账务明细代码信息，变量.利息分支号，变量.交易方向，DTO)
+                                AssetIntdateCarryoverDeal assetIntdateCarryoverDeal = creatCarryoverDeal(
+                                        DictCodeListExt1.现金流一级类型_利息.getValue(), intAmt, busiType,
+                                        valBokBookdetail, branchInt, dealPs, detail, faceValue, false,
+                                        assetIntdateCarryoverResult);
+                                assetIntdateCarryoverResult.getAssetIntdateCarryoverDealList().add(
+                                        assetIntdateCarryoverDeal);
+                            }
                         }
-                        else {
-                            // 创建交易信息("利息"，变量.利息，变量.业务类型，变量.账务明细代码信息，变量.利息分支号，变量.交易方向，DTO)
-                            AssetIntdateCarryoverDeal assetIntdateCarryoverDeal = creatCarryoverDeal(
-                                DictCodeListExt1.现金流一级类型_利息.getValue(), intAmt, busiType,
-                                valBokBookdetail, branchInt, dealPs, detail, faceValue, false,
-                                assetIntdateCarryoverResult);
-                            assetIntdateCarryoverResult.getAssetIntdateCarryoverDealList().add(
-                                assetIntdateCarryoverDeal);
-                        }
-                    }
-                    
-                    
-                    
-                    // if（变量.本金 != 0）
-                    if (!ArithmeticUtil.equals(printAmt, BigDecimal.ZERO)) {
-                        // 变量.交易方向 = "还本"
-                        dealPs = DictCodeList.交易方向_还本.getValue();
-                        // if（DTO.实际到期日 = DTO.调整后的计算结束日）
-                        if (detail.getActmdate().equals(detail.getMdate())) {
-                            // 变量.交易方向 = "到期"
-                            dealPs = DictCodeList.交易方向_到期.getValue();
-                        }
-                        // if（变量.本金分支号 = null）
-                        if (branchPri == null) {
+
+
+
+                        // if（变量.本金 != 0）
+                        if (!ArithmeticUtil.equals(printAmt, BigDecimal.ZERO)) {
+                            // 变量.交易方向 = "还本"
+                            dealPs = DictCodeList.交易方向_还本.getValue();
+                            // if（DTO.实际到期日 = DTO.调整后的计算结束日）
+                            if (detail.getActmdate().equals(detail.getMdate())) {
+                                // 变量.交易方向 = "到期"
+                                dealPs = DictCodeList.交易方向_到期.getValue();
+                            }
+                            // if（变量.本金分支号 = null）
+                            if (branchPri == null) {
 //                            // 变量.最大分支序号++
 //                            maxBranch++ ;
-                            // 变量.最大分支序号 =  （DTO.调整后的计算结束日 （'YYYYMMDD'）|| 01）转成数值型
-                            maxBranch = new Long(DateUtil.format(detail.getMdate(),"yyyyMMdd")+"01");
-                            // 创建交易信息("本金"，变量.利息，变量.业务类型，变量.账务明细代码信息，变量.最大分支序号，变量.交易方向，DTO)
-                            AssetIntdateCarryoverDeal assetIntdateCarryoverDeal = creatCarryoverDeal(
-                                DictCodeListExt1.现金流一级类型_本金.getValue(), printAmt, busiType,
-                                valBokBookdetail, maxBranch, dealPs, detail, faceValue, true,
-                                assetIntdateCarryoverResult);
-                            assetIntdateCarryoverResult.getAssetIntdateCarryoverDealList().add(
-                                assetIntdateCarryoverDeal);
-                        }
-                        else {
-                            // 创建交易信息("本金"，变量.利息，变量.业务类型，变量.账务明细代码信息，变量.本金分支号，变量.交易方向，DTO)
-                            AssetIntdateCarryoverDeal assetIntdateCarryoverDeal = creatCarryoverDeal(
-                                DictCodeListExt1.现金流一级类型_本金.getValue(), printAmt, busiType,
-                                valBokBookdetail, branchPri, dealPs, detail, faceValue, false,
-                                assetIntdateCarryoverResult);
-                            assetIntdateCarryoverResult.getAssetIntdateCarryoverDealList().add(
-                                assetIntdateCarryoverDeal);
+                                // 变量.最大分支序号 =  （DTO.调整后的计算结束日 （'YYYYMMDD'）|| 01）转成数值型
+                                maxBranch = new Long(DateUtil.format(detail.getMdate(),"yyyyMMdd")+"01");
+                                // 创建交易信息("本金"，变量.利息，变量.业务类型，变量.账务明细代码信息，变量.最大分支序号，变量.交易方向，DTO)
+                                AssetIntdateCarryoverDeal assetIntdateCarryoverDeal = creatCarryoverDeal(
+                                        DictCodeListExt1.现金流一级类型_本金.getValue(), printAmt, busiType,
+                                        valBokBookdetail, maxBranch, dealPs, detail, faceValue, true,
+                                        assetIntdateCarryoverResult);
+                                assetIntdateCarryoverResult.getAssetIntdateCarryoverDealList().add(
+                                        assetIntdateCarryoverDeal);
+                            }
+                            else {
+                                // 创建交易信息("本金"，变量.利息，变量.业务类型，变量.账务明细代码信息，变量.本金分支号，变量.交易方向，DTO)
+                                AssetIntdateCarryoverDeal assetIntdateCarryoverDeal = creatCarryoverDeal(
+                                        DictCodeListExt1.现金流一级类型_本金.getValue(), printAmt, busiType,
+                                        valBokBookdetail, branchPri, dealPs, detail, faceValue, false,
+                                        assetIntdateCarryoverResult);
+                                assetIntdateCarryoverResult.getAssetIntdateCarryoverDealList().add(
+                                        assetIntdateCarryoverDeal);
+                            }
                         }
                     }
-                    
-                    
-
                 }
             }
+            catch (Exception e){
+                logger.error("《资产理论结息日结转批处理-交易类》报错相关信息： 账套信息【"+detail.getBooksetId()+"】；金融产品代码【"+detail.getFinprodId()+"】",e);
+                throw new Exception(e);
+            }
+            // add by weipeng on 20220114 增加批处理报错时相关明细日志打印 end
         }
 
         return assetIntdateCarryoverResult;
