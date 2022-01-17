@@ -342,7 +342,7 @@ public class RepoDealTransactionDetailsDto {
     }
 
     public String getQuoteRoleTypeStr() {
-        return quoteRoleTypeStr;
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.银行间上行本方角色, this.getQuoteRoleType());
     }
 
     public void setQuoteRoleTypeStr(String quoteRoleTypeStr) {
