@@ -843,7 +843,7 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
 
         trdTempDto.setFinDealPledge(finDealPledge);
 
-        // 上交所正回购到期续做
+        // 正回购到期续做
         if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(), trdTempDto.getFinprodType2())
                 && StringUtil.equals(DictCodeListExt3.交易方向_到期续做.getValue(), trdTempDto.getPs())) {
             // 到期结算金额需要取交易表中交易方向为收息到账、还本到账的数据中的交易金额的汇总
@@ -873,6 +873,20 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
                 }
             }
             etrEntrustAddDto.setmTradeAmt(mTradeAmt);
+        }
+        // 逆回购到期续做
+        else if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue(), trdTempDto.getFinprodType2())
+                && StringUtil.equals(DictCodeListExt3.交易方向_到期续做.getValue(), trdTempDto.getPs())) {
+            if (etrEntrustAddDto != null){
+                // 首期和其他方做，到期续做和本方做,
+                if (StringUtil.equals(etrEntrustAddDto.getRedoType(),"1") || StringUtil.isEmpty(firstFinTradeProduct.getFinprodId())) {
+                    trdTempDto.setRedoType("_1");
+                }
+                else {
+                    // 首期和本方做，到期续做和本方做
+                    trdTempDto.setRedoType("_0");
+                }
+            }
         }
     }
     // modify by etliu 20220110 end

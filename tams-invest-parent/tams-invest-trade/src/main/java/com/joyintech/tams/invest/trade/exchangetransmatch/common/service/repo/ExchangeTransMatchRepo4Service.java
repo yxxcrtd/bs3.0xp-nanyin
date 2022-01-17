@@ -82,7 +82,7 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
             if(StringUtil.equals(trdProductDeal.getPs(),DictCodeList.交易方向_买入.getValue())) {
                 exchangeTransMatchBaseTradeDto.setFinTradeProduct(this.genFinTradeProduct(settleTransData, trdProductDeal));
                 exchangeTransMatchBaseTradeDto.setFinProductType(this.genFinProductType(dealDto,trdProductDeal));
-                exchangeTransMatchBaseTradeDto.setFinDealPledgeList(this.genFinDealPledgeList(settleTransData,dealDto,trdProductDeal));
+                exchangeTransMatchBaseTradeDto.setFinDealPledgeList(this.genFinDealPledgeList(dealDto,trdProductDeal));
             }
 
             exchangeTransMatchBaseTradeDtoList.add(exchangeTransMatchBaseTradeDto);
@@ -115,6 +115,25 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
         }
 
         return exchangeTransMatchBaseTradeDtoList;
+    }
+
+    public List<FinDealPledge> genFinDealPledgeList(ExchangeTransMatchCommonDto dealDto,TrdProductDeal trdProductDeal){
+        List<FinDealPledge> finDealPledgeList = new ArrayList<>();
+        if(!StringUtil.isEmptyList(dealDto.getSettleTransDataTotalPledgeList())) {
+            for(SettleTransDataTotalPledge transDataTotalPledge:dealDto.getSettleTransDataTotalPledgeList()) {
+                FinDealPledge finDealPledge = new FinDealPledge();
+                finDealPledge.setFinprodId(trdProductDeal.getFinprodId());
+                finDealPledge.setBranch(trdProductDeal.getBranch());
+                finDealPledge.setPledgeFinprodId(transDataTotalPledge.getPledgeFinprodId());
+                finDealPledge.setPledgeFaceValue(transDataTotalPledge.getPledgeFaceValue());
+                finDealPledge.setPledgeNumber(transDataTotalPledge.getPledgeNumber());
+                finDealPledge.setPledgeRatio(transDataTotalPledge.getPledgeRatio());
+                finDealPledge.setPledgeAmt(transDataTotalPledge.getPledgeAmt());
+                finDealPledgeList.add(finDealPledge);
+            }
+        }
+
+        return finDealPledgeList;
     }
 
     /**

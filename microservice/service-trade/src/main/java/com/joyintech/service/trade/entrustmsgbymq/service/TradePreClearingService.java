@@ -1419,10 +1419,12 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             infContractDetailfile.setPs(DictCodeList.回购拆借方向_正回购.getValue());
             dto.setPs(DictCodeList.回购拆借方向_正回购.getValue());
 
-            if (!StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
-                // 当前成交编号作为首期交易编号生成新的首期信息
-                infContractDetailfile.setvTradeId(infContractDetailfile.getDealNo());
-            }
+            // modify by etliu 20220117 start
+//            if (!StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+//                // 当前成交编号作为首期交易编号生成新的首期信息
+//                infContractDetailfile.setvTradeId(infContractDetailfile.getDealNo());
+//            }
+            // modify by etliu 20220117 end
 
             // 生成首期信息
             this.trdRepo(dto,infContractDetailfile);
@@ -1430,9 +1432,11 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             infContractDetailfile.setPs(DictCodeListExt3.交易方向_到期续做.getValue());
             // 还原原首期编号
             infContractDetailfile.setvTradeId(vTradeId);
-            if (StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
-                return;
-            }
+            // modify by etliu 20220117 start
+//            if (StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+//                return;
+//            }
+            // modify by etliu 20220117 end
             // 到期续做，到期购回数据
             TrdProductTempDeal trdProductTempDealB = new TrdProductTempDeal();
             BeanUtil.copyPropertiesIgnoreNull(trdProductTempDealB,dto.getTrdProductTempDeal());
@@ -1464,17 +1468,19 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             // 构造结束----------------------------------------------------------
         }else {
             dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
-            if (StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
-                // 到期续做，处理回购首期数据
-                infContractDetailfile.setPs(DictCodeList.回购拆借方向_逆回购.getValue());
-                dto.setPs(DictCodeList.回购拆借方向_逆回购.getValue());
-                // 生成首期信息
-                this.trdRepo(dto,infContractDetailfile);
-                dto.setPs(DictCodeListExt3.交易方向_到期续做.getValue());
-                infContractDetailfile.setPs(DictCodeListExt3.交易方向_到期续做.getValue());
-
-                return;
-            }
+            // modify by etliu 20220117 start
+//            if (StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+//                // 到期续做，处理回购首期数据
+//                infContractDetailfile.setPs(DictCodeList.回购拆借方向_逆回购.getValue());
+//                dto.setPs(DictCodeList.回购拆借方向_逆回购.getValue());
+//                // 生成首期信息
+//                this.trdRepo(dto,infContractDetailfile);
+//                dto.setPs(DictCodeListExt3.交易方向_到期续做.getValue());
+//                infContractDetailfile.setPs(DictCodeListExt3.交易方向_到期续做.getValue());
+//
+//                return;
+//            }
+            // modify by etliu 20220117 end
 
             EtrEntrustAddDto etrEntrustAddDto = dto.getPositionBaseData().getEtrEntrustAddDto();
             if (etrEntrustAddDto != null){
