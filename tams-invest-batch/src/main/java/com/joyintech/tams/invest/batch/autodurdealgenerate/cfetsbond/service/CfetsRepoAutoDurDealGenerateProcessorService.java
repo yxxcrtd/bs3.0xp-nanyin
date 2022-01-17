@@ -186,8 +186,10 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         PaTrdFinProductDealTotal paTrdFinProductDealTotal = new PaTrdFinProductDealTotal();
         paTrdFinProductDealTotal.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
         if (DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(entity.getFinprodType2())) {
+            trdFinProductDealTotal.setTgBusiType(DictCodeListExt1.平安业务类型_正回购到期.getValue());
             paTrdFinProductDealTotal.setPaBussType(DictCodeListExt1.平安业务类型_正回购到期.getValue());
         } else if (DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(entity.getFinprodType2())) {
+            trdFinProductDealTotal.setTgBusiType(DictCodeListExt1.平安业务类型_逆回购到期.getValue());
             paTrdFinProductDealTotal.setPaBussType(DictCodeListExt1.平安业务类型_逆回购到期.getValue());
         }
         paTrdFinProductDealTotal.setRate(ArithmeticUtil.divide(entity.getIntRate(), 100, 5));
