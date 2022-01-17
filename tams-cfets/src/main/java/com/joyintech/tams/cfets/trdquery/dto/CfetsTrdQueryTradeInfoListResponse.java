@@ -158,6 +158,11 @@ public class CfetsTrdQueryTradeInfoListResponse {
     @ApiModelProperty(name="calMode",value="计算方式",example="计算方式供前台判断使用")
     private String calMode;
 
+    @ApiModelProperty(name="matchStatus",value="匹配状态",example="matchStatus")
+    private String matchStatus;
+
+    @ApiModelProperty(name="trader",value="交易员",example="trader")
+    private String trader;
 
     public String getCalMode() {
         return calMode;
@@ -501,5 +506,21 @@ public class CfetsTrdQueryTradeInfoListResponse {
 
     public void setPreTradeId(String preTradeId) {
         this.preTradeId = preTradeId;
+    }
+
+    public String getMatchStatus() {
+        return matchStatus;
+    }
+
+    public void setMatchStatus(String matchStatus) {
+        this.matchStatus = matchStatus;
+    }
+
+    public String getTrader() {
+        return trader;
+    }
+
+    public void setTrader(String trader) {
+        this.trader = trader;
     }
 }

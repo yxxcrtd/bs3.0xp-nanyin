@@ -142,6 +142,11 @@ public class InvestPeriodCommonService {
      */
     @Autowired
     private FinProductMapper finProductMapper;
+    /**
+     * IPlatformDate
+     */
+    @Autowired(required = false)
+    private IPlatformDate iPlatformDate;
 
     public void revoke后续交易相关表(String bizCode, String updateUser, String revokeReason, String type6, String actPortfolio) {
     	// 现金分红场景
@@ -293,8 +298,8 @@ public class InvestPeriodCommonService {
         trdProductDeals.forEach(trdProductDeal1 -> {
             TrdProductDeal trdProductDeal = new TrdProductDeal();
             BeanUtils.copyProperties(trdProductDeal1, trdProductDeal);
-            trdProductDeal.setIsCancel(DictCodeList.是否_是.getValue());
-            // 原数据 是否撤销 => 是
+            trdProductDeal.setIsCancel(DictCodeList.是否_是.getValue());  // 原数据 是否撤销 => 是
+            trdProductDeal.setCancelDate(iPlatformDate.getSysDate());//原数据增加撤销日期
             trdProductDealMapper.updateByPrimaryKey(trdProductDeal);
             // 交易状态为撤销
             String oldTradeId = trdProductDeal.getTradeId();

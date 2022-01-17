@@ -1082,11 +1082,6 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
             finProductTradeDto.setNeedSum(true);
 
 
-
-
-
-
-
             // 委托代码不为空设置委托编号
             if (StringUtil.isNotEmpty(entity.getEntrustId())) {
                 baseTradeProductDealDto.setEntrustId(entity.getEntrustId());
@@ -3426,7 +3421,9 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         if (entity.getTrdProductDealAdds() != null) {
             entity.getPaTrdProductDeals().forEach(trdProductDeal -> trdProductDeal.setWorkflowId(entity.getWorkflowId()));
         }
-        entity.getBussTrdTransferOrder().get(0).setWorkflowId(entity.getWorkflowId());
+        if(entity.getBussTrdTransferOrder()!=null){
+            entity.getBussTrdTransferOrder().get(0).setWorkflowId(entity.getWorkflowId());
+        }
     }
 
     /**
@@ -4430,14 +4427,16 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
      * @return
      */
     public AjaxResult  checkModifyExecId(CfetsTrdBondInvestTradeDto input) {
-       //判断该成交编号，是否已经被匹配
-        Map<String, Object> param = new HashMap<String, Object>();
-        param.put("exeId", input.getExecId());
-        boolean flag=cfetsTrdConfirmMapper.isExistMatchInfo(param);
-        if(flag){
-            AjaxResult m = new AjaxResult();
-            m.setErrorList(Arrays.asList(new ValidMessage("成交编号已存在，请重新填写！")));
-            return m;
+        if(StringUtil.isNotEmpty(input.getExecid())){
+            //判断该成交编号，是否已经被匹配
+            Map<String, Object> param = new HashMap<String, Object>();
+            param.put("exeId", input.getExecid());
+            boolean flag=cfetsTrdConfirmMapper.isExistMatchInfo(param);
+            if(flag){
+                AjaxResult m = new AjaxResult();
+                m.setErrorList(Arrays.asList(new ValidMessage("成交编号已存在，请重新填写！")));
+                return m;
+            }
         }
         return null;
     }
@@ -4450,7 +4449,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
     public AjaxResult  modifyExecIdMethod(CfetsTrdBondInvestTradeDto input) {
         CfetsTrdConfirmMatchDto dto=new CfetsTrdConfirmMatchDto();
         dto.setPreTradeId(input.getPreTradeId());
-        dto.setExeId(input.getExecId());
+        dto.setExeId(input.getExecid());
         cfetsTrdConfirmMapper.updateTrdQutoMatchInfo(dto);
         return null;
     }
