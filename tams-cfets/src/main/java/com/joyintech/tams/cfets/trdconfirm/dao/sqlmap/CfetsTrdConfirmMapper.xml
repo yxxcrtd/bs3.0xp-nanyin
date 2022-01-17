@@ -1411,7 +1411,8 @@
         nvl(t1.counter_name,reg.counter_id) as counterIdName,
         nvl(t4.TRADER_NAME, reg.counter_trader) as counterTrader,
         reg.remark as remark,
-        reg.settle_date as settleDate
+        reg.settle_date as settleDate,
+        reg.totle_trade_id totleTradeId
         from reg_fin_product_deal_total reg
         left join fin_product fp
         on reg.finprod_id=fp.finprod_id
@@ -1468,7 +1469,8 @@
         mccic.PARTY_ABBR as counterIdName,
         nvl(t4.TRADER_NAME, ibd.cp_trader) as counterTrader,
         ib.remark as remark,
-        ib.settle_date as settleDate
+        ib.settle_date as settleDate,
+        ib.quote_id totleTradeId
         from  ibu_quote_bond ib
         left join fin_product fp
         on ib.finprod_id=fp.finprod_id
@@ -1525,7 +1527,8 @@
         reg.counter_id as counterId,
         t1.counter_name as counterIdName,
         nvl(t4.TRADER_NAME, reg.counter_trader) as counterTrader,
-        reg.remark as remark
+        reg.remark as remark,
+        reg.totle_trade_id totleTradeId
         from reg_fin_product_deal_total reg
         left join fin_product fp
         on reg.finprod_id=fp.finprod_id
@@ -1579,7 +1582,8 @@
         ic.cp_party_id as counterId,
         mccic.PARTY_ABBR as counterIdName,
         t4.TRADER_NAME as counterTrader,
-        ic.remark as remark
+        ic.remark as remark,
+        ic.quote_id totleTradeId
         from  ibu_quote_crep ic
         left join(
         select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName

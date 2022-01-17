@@ -27,8 +27,8 @@ public class EntrustPropUtils {
         }
 
         //协议回购
-        if (StringUtils.equals(instruction.getFinprodType2(), InvestmentAssetType.PLEDGE_REPURCHASE.value) &&
-                StringUtils.equals(instruction.getFinprodType2(), InvestmentAssetType1.NEGOTIATED_REPO.value)) {
+        if (StringUtils.equals(instruction.getAssetType(), InvestmentAssetType.PLEDGE_REPURCHASE.value) &&
+                StringUtils.equals(instruction.getAssetType1(), InvestmentAssetType1.NEGOTIATED_REPO.value)) {
             return decideEntrustProp(instruction.getPs(), instruction.getTradeMarket());
         }
 

@@ -2054,12 +2054,13 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         if (user == null) {
             return Collections.emptyList();
         }
-        param.put("loginUserId", user.getUserName());
+        param.put("loginUserId", LoginUserUtil.getUserName());
+        param.put("loginTraderId", LoginUserUtil.getUserName());
         //add by zznn 20210730 start
         //岗位信息 框架没有封装  单独处理
         //交易主管(交易处长03)、超级管理员能够查询出所有的报价信息
         Map<String, Object> paramUser = new HashMap<>();
-        paramUser.put("userId", user.getUserName());
+        paramUser.put("userId", LoginUserUtil.getUserName());
         paramUser.put("rolePos", "03");
         boolean traDirector = commonBusinessService.isTraDirector(paramUser);
         param.put("isAdmin", user.isAdmin() || traDirector);

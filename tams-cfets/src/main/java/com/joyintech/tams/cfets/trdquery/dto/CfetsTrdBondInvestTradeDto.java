@@ -435,7 +435,7 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
      *成交编号
      * @return
      */
-    private String execId;
+    private String execid;
     /**
      *资产代码
      * @return
@@ -2471,12 +2471,12 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
         this.ouTraderId = ouTraderId;
     }
 
-    public String getExecId() {
-        return execId;
+    public String getExecid() {
+        return execid;
     }
 
-    public void setExecId(String execId) {
-        this.execId = execId;
+    public void setExecid(String execid) {
+        this.execid = execid;
     }
 
     public String getFinprodMarketId() {

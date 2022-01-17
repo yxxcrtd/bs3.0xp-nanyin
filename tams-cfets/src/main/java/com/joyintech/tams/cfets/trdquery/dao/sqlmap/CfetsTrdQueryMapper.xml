@@ -2262,7 +2262,9 @@
             T1.remark,
             T1.TRADE_DATE as tradeDate,
             nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode,
-            match.pre_trade_id preTradeId
+            match.pre_trade_id preTradeId,
+            match.match_status as matchStatus,
+            T1.trader as trader
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
             inner join (
                 select td.totle_trade_id,sum(td.share_amt) share_amt,
@@ -2708,7 +2710,7 @@
         <result column="FPRICE_AMT"       property="fpriceAmt"      jdbcType="DECIMAL" />
         <result column="ouPartyId"       property="ouPartyId"      jdbcType="VARCHAR" />
         <result column="ouTraderId"       property="ouPartyId"      jdbcType="VARCHAR" />
-        <result column="execId"       property="execId"      jdbcType="VARCHAR" />
+        <result column="execid"       property="execid"      jdbcType="VARCHAR" />
         <result column="finprodMarketId"       property="finprodMarketId"      jdbcType="VARCHAR" />
         <result column="settleSpeedStr"       property="settleSpeedStr"      jdbcType="VARCHAR" />
         <result column="deliveryType"       property="deliveryType"      jdbcType="VARCHAR" />
@@ -2761,7 +2763,7 @@
         ,TRD_PRODUCT_DEAL.BUSINESS_MODEL as businessModel
         ,tpda.ou_party_id as ouPartyId
         ,tpd.TRADER as ouTraderId
-        ,match.exe_id as execId
+        ,match.exe_id as execid
         ,fp.Finprod_Market_Id as finprodMarketId
         ,decode(tpd.settle_speed,'0','01','1','02','2','03') as settleSpeedStr
         ,tpd.delivery_type as deliveryType
