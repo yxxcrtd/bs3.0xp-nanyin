@@ -433,7 +433,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             //用户名	当前操作用户
             req.setUserId(SecurityUtil.getLoginUser().getUserName());
             //汇总交易编号	单交易时传交易编号
-            req.setbTotalTradeId(cfetsManualSettleRequest.getTradeId());
+            req.setbTotalTradeId(trdBankManualSettleInfo.getSettleSeqNo());
             //汇总交易编号
             req.setTotalTradeId(trdBankManualSettleInfo.getSettleSeqNo());
             req.setWorkFlowId(trdBankManualSettleInfo.getWorkflowId());
