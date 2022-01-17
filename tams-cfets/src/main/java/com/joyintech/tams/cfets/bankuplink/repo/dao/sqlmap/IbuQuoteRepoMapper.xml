@@ -297,7 +297,7 @@
                 ON PLEDGE.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
             LEFT JOIN
             (
-            select ENTRUST_ID, fp.FINPROD_MARKET_ID bondCode, fp.FINPROD_ABBR bondAbbrName,PLEDGE_AMT pledgePrin
+            select ENTRUST_ID, fp.FINPROD_MARKET_ID bondCode, fp.FINPROD_ABBR bondAbbrName,PLEDGE_NUMBER*100 pledgePrin
             from ETR_PLEDGE ep
             left join FIN_PRODUCT fp on ep.FINPROD_ID = fp.FINPROD_ID
             ) PLEDGES /*质押式回购银行间报价 按指令代码汇总 交易份额，债券数量等*/
@@ -541,7 +541,7 @@
                    ,PLEDGE_FACE_VALUE
                    ,PLEDGE_NUMBER
                    ,PLEDGE_RATIO
-                   ,PLEDGE_AMT
+                   ,PLEDGE_NUMBER*100
             FROM ETR_PLEDGE
             WHERE
                 <if test="entrustIdList != null and entrustIdList.size() > 0">
@@ -556,7 +556,7 @@
                    ,PLEDGE_FACE_VALUE
                    ,PLEDGE_NUMBER
                    ,PLEDGE_RATIO
-                   ,PLEDGE_AMT
+                   ,PLEDGE_NUMBER*100
             FROM WFL_ETR_PLEDGE
             WHERE
                 <if test="entrustIdList != null and entrustIdList.size() > 0">
@@ -1192,7 +1192,7 @@
                     PLEDGE_FACE_VALUE,
                     PLEDGE_NUMBER,
                     PLEDGE_RATIO,
-                    PLEDGE_AMT
+                    PLEDGE_NUMBER*100
                 FROM
                     ETR_PLEDGE
                 WHERE
@@ -1209,7 +1209,7 @@
                     PLEDGE_FACE_VALUE,
                     PLEDGE_NUMBER,
                     PLEDGE_RATIO,
-                    PLEDGE_AMT
+                    PLEDGE_NUMBER*100
                 FROM
                     WFL_ETR_PLEDGE
                 WHERE
