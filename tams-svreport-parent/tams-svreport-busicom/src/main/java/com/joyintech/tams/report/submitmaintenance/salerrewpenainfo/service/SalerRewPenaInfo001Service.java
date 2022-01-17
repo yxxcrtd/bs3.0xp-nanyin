@@ -287,6 +287,12 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
                     }else if(!checkDate(list.get(8))){
                         flag = false;
                         message.add("奖惩结束日期格式不正确");
+                    }else{
+                        Integer datecheck = list.get(7).compareTo(list.get(8));
+                        if(datecheck > 0){
+                            flag = false;
+                            message.add("奖惩结束日期不可小于奖惩开始日期。");
+                        }
                     }
                 }
             }
