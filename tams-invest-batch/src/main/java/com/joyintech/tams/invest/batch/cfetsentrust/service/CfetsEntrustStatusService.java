@@ -105,6 +105,7 @@ public class CfetsEntrustStatusService {
                 ,BussinessDictCodeList.银行间上行报价状态_撤回中.getValue()
                 ,BussinessDictCodeList.银行间上行报价状态_已成交.getValue()
                 ,BussinessDictCodeList.银行间上行报价状态_待回复.getValue()
+                ,BussinessDictCodeList.银行间上行报价状态_成交中.getValue()
                 ,BussinessDictCodeList.银行间上行报价状态_终止中.getValue()
                 ,BussinessDictCodeList.银行间上行报价状态_已回复.getValue()
                 ,BussinessDictCodeList.银行间上行报价状态_拒绝中.getValue()
