@@ -846,33 +846,7 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         // 正回购到期续做
         if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(), trdTempDto.getFinprodType2())
                 && StringUtil.equals(DictCodeListExt3.交易方向_到期续做.getValue(), trdTempDto.getPs())) {
-            // 到期结算金额需要取交易表中交易方向为收息到账、还本到账的数据中的交易金额的汇总
-            BigDecimal mTradeAmt = BigDecimal.ZERO;
-            for (ExchangeTransMatchBaseTradeDto x : baseTradeProductDealDtos) {
-                if (StringUtil.equals(DictCodeList.交易方向_收息到账.getValue(), x.getTrdProductDeal().getPs())
-                        || StringUtil.equals(DictCodeList.交易方向_还本到账.getValue(), x.getTrdProductDeal().getPs())) {
-                    mTradeAmt = ArithmeticUtil.doAdd(mTradeAmt, x.getTrdProductDeal().getTradeAmt());
-                }
-                else if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), x.getTrdProductDeal().getPs())) {
-                    infContractDetailfile.setDealNo(x.getTrdProductDeal().getFinprodId());
-                    trdTempDto.setHgShareAmt(x.getTrdProductDeal().getShareAmt());
-                    if (!StringUtil.isEmptyList(x.getFinDealPledgeList())) {
-                        infContractDetailfile.setFinprodId(x.getFinDealPledgeList().get(0).getPledgeFinprodId());
-                        infContractDetailfile.setShareAmt(x.getFinDealPledgeList().get(0).getPledgeNumber());
-                    }
-                    infContractDetailfile.setTradeAmt(x.getTrdProductDeal().getTradeAmt());
-
-                    if (!StringUtil.isEmptyList(x.getStlPayOrdersList())) {
-                        BussTrdTransferOrderDto bussTrdTransferOrderDto = new BussTrdTransferOrderDto();
-                        BeanUtil.copyPropertiesIgnoreNull(bussTrdTransferOrderDto, x.getStlPayOrdersList().get(0));
-
-                        List<BussTrdTransferOrderDto> bussTrdTransferOrderList = new ArrayList<>();
-                        bussTrdTransferOrderList.add(bussTrdTransferOrderDto);
-                        trdTempDto.setBussTrdTransferOrder(bussTrdTransferOrderList);
-                    }
-                }
-            }
-            etrEntrustAddDto.setmTradeAmt(mTradeAmt);
+            this.handleRepoT56(trdTempDto, infContractDetailfile, baseTradeProductDealDtos, finTradeProductDto);
         }
         // 逆回购到期续做
         else if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue(), trdTempDto.getFinprodType2())
@@ -885,9 +859,48 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
                 else {
                     // 首期和本方做，到期续做和本方做
                     trdTempDto.setRedoType("_0");
+                    this.handleRepoT56(trdTempDto, infContractDetailfile, baseTradeProductDealDtos, finTradeProductDto);
                 }
             }
         }
+    }
+
+    /**
+     * 处理到期续做逻辑
+     * @param trdTempDto
+     * @param infContractDetailfile
+     * @param baseTradeProductDealDtos
+     */
+    private void handleRepoT56(CommonTrdTempDto trdTempDto, InfContractDetailfile infContractDetailfile,
+                               List<ExchangeTransMatchBaseTradeDto> baseTradeProductDealDtos,
+                               FinTradeProductDto finTradeProductDto) {
+        // 到期结算金额需要取交易表中交易方向为收息到账、还本到账的数据中的交易金额的汇总
+        BigDecimal mTradeAmt = BigDecimal.ZERO;
+        for (ExchangeTransMatchBaseTradeDto x : baseTradeProductDealDtos) {
+            if (StringUtil.equals(DictCodeList.交易方向_收息到账.getValue(), x.getTrdProductDeal().getPs())
+                    || StringUtil.equals(DictCodeList.交易方向_还本到账.getValue(), x.getTrdProductDeal().getPs())) {
+                mTradeAmt = ArithmeticUtil.doAdd(mTradeAmt, x.getTrdProductDeal().getTradeAmt());
+            }
+            else if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), x.getTrdProductDeal().getPs())) {
+                infContractDetailfile.setDealNo(x.getTrdProductDeal().getFinprodId());
+                trdTempDto.setHgShareAmt(x.getTrdProductDeal().getShareAmt());
+                if (!StringUtil.isEmptyList(x.getFinDealPledgeList())) {
+                    infContractDetailfile.setFinprodId(x.getFinDealPledgeList().get(0).getPledgeFinprodId());
+                    infContractDetailfile.setShareAmt(x.getFinDealPledgeList().get(0).getPledgeNumber());
+                }
+                infContractDetailfile.setTradeAmt(x.getTrdProductDeal().getTradeAmt());
+
+                if (!StringUtil.isEmptyList(x.getStlPayOrdersList())) {
+                    BussTrdTransferOrderDto bussTrdTransferOrderDto = new BussTrdTransferOrderDto();
+                    BeanUtil.copyPropertiesIgnoreNull(bussTrdTransferOrderDto, x.getStlPayOrdersList().get(0));
+
+                    List<BussTrdTransferOrderDto> bussTrdTransferOrderList = new ArrayList<>();
+                    bussTrdTransferOrderList.add(bussTrdTransferOrderDto);
+                    trdTempDto.setBussTrdTransferOrder(bussTrdTransferOrderList);
+                }
+            }
+        }
+        finTradeProductDto.setmTradeAmt(mTradeAmt);
     }
     // modify by etliu 20220110 end
 }
