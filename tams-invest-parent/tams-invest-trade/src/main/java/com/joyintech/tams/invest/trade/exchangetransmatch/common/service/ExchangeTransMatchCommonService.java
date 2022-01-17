@@ -689,7 +689,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
             }
             
             // 协议回购头寸特殊处理
-            exchangeTransMatchRepoCommonService.handlePositionOfXyhg(dto, commonEntrustDto, baseTradeProductDealDtos,
+            exchangeTransMatchRepoCommonService.handlePositionOfXyhg(dto, commonEntrustDto, exchangeTransMatchBaseTradeDtos,
                     finPledgeDisplaceDetailHuanChu, firstFinDealPledgeTempList, finPledgeDisplaceResultTempList);
         }
         else {

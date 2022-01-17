@@ -643,7 +643,7 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
      * @param finPledgeDisplaceResultTempList 中途换券结果列表
      */
     public void handlePositionOfXyhg(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto,
-                                     List<BaseTradeProductDealDto> baseTradeProductDealDtos,
+                                     List<ExchangeTransMatchBaseTradeDto> baseTradeProductDealDtos,
                                      FinPledgeDisplaceDetail finPledgeDisplaceDetailHuanChu,
                                      List<FinDealPledge> firstFinDealPledgeTempList,
                                      List<FinPledgeDisplaceResult> finPledgeDisplaceResultTempList) {
@@ -709,7 +709,7 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
             trdTempDto.setFinPledgeDispDetailTempList(finPledgeDispDetailTempList);
         }
 
-        this.buildPositionBaseData(trdTempDto, infContractDetailfile, firstFinDealPledgeTempList, finPledgeDisplaceResultTempList);
+        this.buildPositionBaseData(trdTempDto, infContractDetailfile, baseTradeProductDealDtos, firstFinDealPledgeTempList, finPledgeDisplaceResultTempList);
 
         // 场景参数设置
         PostionParameter parameter = new PostionParameter();
@@ -754,6 +754,7 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
     }
 
     private void buildPositionBaseData(CommonTrdTempDto trdTempDto, InfContractDetailfile infContractDetailfile,
+                                       List<ExchangeTransMatchBaseTradeDto> baseTradeProductDealDtos,
                                        List<FinDealPledge> firstFinDealPledgeTempList,
                                        List<FinPledgeDisplaceResult> finPledgeDisplaceResultTempList) {
         // 构造开始----------------------------------------------------------
@@ -787,8 +788,8 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
 //            if (etrEntrustAdd.getTradeId() != null) {
 //                finprodId = etrEntrustAdd.getTradeId();
 //            }
-            etrEntrustAddDto.setmTradeAmt(trdTempDto.getTradeAmt());
         }
+        etrEntrustAddDto.setmTradeAmt(trdTempDto.getTradeAmt());
         positionBaseData.setEtrEntrustAddDto(etrEntrustAddDto);
         // 首期主键为空
         if (StringUtil.isEmpty(finprodId)) {
@@ -841,6 +842,38 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         }
 
         trdTempDto.setFinDealPledge(finDealPledge);
+
+        // 上交所正回购到期续做
+        if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(), trdTempDto.getFinprodType2())
+                && StringUtil.equals(DictCodeListExt3.交易方向_到期续做.getValue(), trdTempDto.getPs())) {
+            // 到期结算金额需要取交易表中交易方向为收息到账、还本到账的数据中的交易金额的汇总
+            BigDecimal mTradeAmt = BigDecimal.ZERO;
+            for (ExchangeTransMatchBaseTradeDto x : baseTradeProductDealDtos) {
+                if (StringUtil.equals(DictCodeList.交易方向_收息到账.getValue(), x.getTrdProductDeal().getPs())
+                        || StringUtil.equals(DictCodeList.交易方向_还本到账.getValue(), x.getTrdProductDeal().getPs())) {
+                    mTradeAmt = ArithmeticUtil.doAdd(mTradeAmt, x.getTrdProductDeal().getTradeAmt());
+                }
+                else if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), x.getTrdProductDeal().getPs())) {
+                    infContractDetailfile.setDealNo(x.getTrdProductDeal().getFinprodId());
+                    trdTempDto.setHgShareAmt(x.getTrdProductDeal().getShareAmt());
+                    if (!StringUtil.isEmptyList(x.getFinDealPledgeList())) {
+                        infContractDetailfile.setFinprodId(x.getFinDealPledgeList().get(0).getPledgeFinprodId());
+                        infContractDetailfile.setShareAmt(x.getFinDealPledgeList().get(0).getPledgeNumber());
+                    }
+                    infContractDetailfile.setTradeAmt(x.getTrdProductDeal().getTradeAmt());
+
+                    if (!StringUtil.isEmptyList(x.getStlPayOrdersList())) {
+                        BussTrdTransferOrderDto bussTrdTransferOrderDto = new BussTrdTransferOrderDto();
+                        BeanUtil.copyPropertiesIgnoreNull(bussTrdTransferOrderDto, x.getStlPayOrdersList().get(0));
+
+                        List<BussTrdTransferOrderDto> bussTrdTransferOrderList = new ArrayList<>();
+                        bussTrdTransferOrderList.add(bussTrdTransferOrderDto);
+                        trdTempDto.setBussTrdTransferOrder(bussTrdTransferOrderList);
+                    }
+                }
+            }
+            etrEntrustAddDto.setmTradeAmt(mTradeAmt);
+        }
     }
     // modify by etliu 20220110 end
 }
