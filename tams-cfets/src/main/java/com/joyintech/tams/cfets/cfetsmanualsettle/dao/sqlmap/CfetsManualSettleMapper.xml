@@ -95,7 +95,7 @@
             AND T1.TOTLE_TRADE_ID= #{tradeId}
         </if>
         <if test="finprodType2 != null and finprodType2!='' ">
-            AND T1.Finprod_Type2= #{finprodType2}
+            AND FIN_PRODUCT_TYPE.TYPE_8= #{finprodType2}
         </if>
         <if test="tgBusiType != null and tgBusiType!='' ">
             AND btm.busi_type = #{tgBusiType}
@@ -231,7 +231,7 @@
             AND T1.TOTLE_TRADE_ID= #{tradeId}
         </if>
         <if test="finprodType2 != null and finprodType2!='' ">
-            AND T1.Finprod_Type2= #{finprodType2}
+            AND FIN_PRODUCT_TYPE.TYPE_8= #{finprodType2}
         </if>
         <if test="tgBusiType != null and tgBusiType!='' ">
             AND btm.busi_type= #{tgBusiType}
