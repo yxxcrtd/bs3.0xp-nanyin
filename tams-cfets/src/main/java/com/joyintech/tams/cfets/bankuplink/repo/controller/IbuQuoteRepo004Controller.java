@@ -152,7 +152,7 @@ public class IbuQuoteRepo004Controller extends BaseController {
         params.setBusinessCode(cfetsBondDealRegisterQuoteDto.getTotleTradeId());
         String counterTrader = null;
         if (StringUtil.isNotEmpty(dto.getCounterTrader())
-                && StringUtil.equals(CacheUtil.getSysParam("ibuFlag_allTraderCanShowUnAnswerQuote"), "Y")) {
+                && StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"), "01")) {
             CfetsSearchInfoRequest item = new CfetsSearchInfoRequest();
             item.setDealType("02");
             item.setPartyId(dto.getCounterId());
@@ -163,14 +163,14 @@ public class IbuQuoteRepo004Controller extends BaseController {
             }
         }
         if (StringUtil.isNotEmpty(dto.getCounterTrader())
-                && StringUtil.equals(CacheUtil.getSysParam("ibuFlag_allTraderCanShowUnAnswerQuote"), "N")) {
+                && StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"), "02")) {
             counterTrader = "-对手方交易员:" + dto.getCounterTrader() + "-";
         }
         DecimalFormat df = new DecimalFormat("#,##0.00");
         String tradeAmtStr = df.format(ArithmeticUtil.round(dto.getTradeAmt(), 2, RoundingMode.HALF_UP));
         String finalCounterTrader = StringUtil.isEmpty(counterTrader) ? "-" : counterTrader;
         params.setComment(entity -> "交易日期:" + DateUtil.format(iPlatformDate.getSysDate()) + "-回购期限:"
-                + dto.getRepoTerm() + "天" + finalCounterTrader + "交易金额:" + tradeAmtStr+"元");
+                + dto.getRepoTerm() + "天" + finalCounterTrader + "交易金额:" + tradeAmtStr + "元");
         cfetsBondDealRegisterQuoteDto.setQuoteType(DictCodeListExt3.报价系统区分类型_质押式回购登记报价.getValue());
         processParameter.setWorkFlowParameter(params);
         processParameter.setOperationType(OperationType.NEW);

@@ -148,12 +148,12 @@
         SELECT *
         FROM (
             SELECT ETR_ENTRUST.ENTRUST_STATUS                                                                 entrustStatus/*指令状态*/
-                , NVL(T5.FINISH_AMT, 0)                                                                       finishAmt/*已完成额度(元)*/
-                , NVL(ETR_ENTRUST.ENTRUST_AMT,0) - NVL(T5.FINISH_AMT, 0)                                      avaNum/*剩余指令额度(元)*/
+                , NVL(T6.ENT_FINISH_AMT, 0)                                                                   finishAmt/*已完成额度(元)*/
+                , NVL(ETR_ENTRUST.ENTRUST_AMT,0) - NVL(T6.ENT_FINISH_AMT, 0)                                  avaNum/*剩余指令额度(元)*/
                 , (NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT, 0))                    finishDealAmt/*已成交额度(元)*/
                 , (ETR_ENTRUST.ENTRUST_AMT - NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0))
                     - NVL(T6.FINISH_AMT, 0))                                                                  avaDealAmt/*剩余成交额度(元)*/
-                , trunc(NVL(T5.FINISH_AMT, 0)/ (ETR_ENTRUST.ENTRUST_AMT ), 4) * 100                           transactioncom/*执行进度(%)*/
+                , trunc(NVL(T6.ENT_FINISH_AMT, 0)/ (ETR_ENTRUST.ENTRUST_AMT ), 4) * 100                       transactioncom/*执行进度(%)*/
                 , trunc((NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT , 0)) /
                 (ETR_ENTRUST.ENTRUST_AMT), 4) * 100                                                           tradeFinishPercent/* 成交进度(%)*/
                 , ETR_ENTRUST.ENTRUST_AMT                                                                     entrustNum/*指令额度(元)*/

@@ -508,6 +508,23 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         }
     }
 
+    @ApiOperation(value = "退回校验", notes = "退回校验(批量,key=entrustIds指令代码)")
+    @PostMapping("entrustRefuceCheck")
+    @ResponseBody
+    public Message<AjaxResult> entrustRefuceCheck(@RequestBody Map<String, Object> param) {
+        try {
+            AjaxResult result = new AjaxResult();
+            if (StringUtil.isNotEmpty(param.get("entrustId"))) {
+                param.put("entrustIdList", StringUtil.splitToList(",", (String) param.get("entrustIds")));
+            }
+            result = ibuQuoteRepoService.entrustRefuceCheck(param, false);
+            return new Message<AjaxResult>().success().setData(result);
+        } catch (Exception e) {
+            logger.error("指令退回异常", e);
+            return new Message<AjaxResult>().fail().setMessage("指令退回异常");
+        }
+    }
+
     @ApiOperation(value = "指令退回(批量)", notes = "指令退回(批量,key=entrustIds指令代码, key=remark退回原因)")
     @PostMapping("entrustRefuce")
     @ResponseBody
@@ -517,7 +534,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             if (StringUtil.isNotEmpty(param.get("entrustId"))) {
                 param.put("entrustIdList", StringUtil.splitToList(",", (String) param.get("entrustIds")));
             }
-            result = ibuQuoteRepoService.entrustRefuceCheck(param);
+            result = ibuQuoteRepoService.entrustRefuceCheck(param, true);
             if (CollectionUtils.isNotEmpty(result.getErrorList())) {
                 return new Message<AjaxResult>().success().setData(result);
             }
