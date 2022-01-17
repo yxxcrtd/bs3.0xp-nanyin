@@ -32,10 +32,12 @@
         <include refid="com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper.Base_Column_List" />
         from SETTLE_TRANS_TG_MAPPING
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+        and TRADE_ID_TG = #{tradeIdTg,jdbcType=VARCHAR}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
         delete from SETTLE_TRANS_TG_MAPPING
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and TRADE_ID_TG = #{tradeIdTg,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SettleTransTgMapping" >
         insert into SETTLE_TRANS_TG_MAPPING (TRADE_ID, TRADE_ID_TG, TG_DATA_STATUS,
@@ -112,7 +114,7 @@
         select TRADE_ID, TRADE_ID_TG, TG_DATA_STATUS, DEAL_DATE,
            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
              from SETTLE_TRANS_TG_MAPPING
-             where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+             where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR} and TRADE_ID_TG = #{tradeIdTg,jdbcType=VARCHAR}
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SettleTransTgMapping" >
         update SETTLE_TRANS_TG_MAPPING

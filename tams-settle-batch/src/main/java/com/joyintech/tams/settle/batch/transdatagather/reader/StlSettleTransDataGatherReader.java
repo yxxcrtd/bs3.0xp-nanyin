@@ -1011,6 +1011,9 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                             if(StringUtil.equals(item.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())
                                     && item.getShareAmt().compareTo(BigDecimal.ZERO) == 0){
                                 dealTotal.setUnitCprice(item.getUnitCprice());
+                                if(dealTotal.getTradeAmt().compareTo(BigDecimal.ZERO) == 0){
+                                    dealTotal.setTradeAmt(item.getTradeAmt());
+                                }
                             }
                             if(StringUtil.equals(item.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
                                 dealTotal.setUnitCprice(item.getUnitCprice());
