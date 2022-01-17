@@ -10,31 +10,19 @@
 
 package com.joyintech.tams.valuation.batch.assetintdatecarryover.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListTableId;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.BokDetailIdMapper;
+import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListNatureGroup;
+import com.joyintech.tams.constant.DictCodeListTableId;
 import com.joyintech.tams.valuation.batch.assetintdatecarryover.dao.AssetIntdateCarryoverMapper;
-import com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.AssetIntdateCarryoverDeal;
-import com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.AssetIntdateCarryoverReaderDetail;
-import com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.AssetIntdateCarryoverReaderResult;
-import com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.AssetIntdateCarryoverResult;
-import com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.SecIsnotPledgeDto;
+import com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.*;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.BookLatestInfoDto;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalance;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalanceSearchDto;
@@ -42,20 +30,18 @@ import com.joyintech.tams.valuation.batch.common.accounting.service.AccountingCo
 import com.joyintech.tams.valuation.batch.common.finproduct.service.FinProductCommonService;
 import com.joyintech.tams.valuation.common.constants.BookConstant;
 import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import com.joyintech.tams.valuation.common.service.BookAccountCommonService;
-import com.joyintech.tams.common.base.dao.BokDetailIdMapper;
-import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
-import com.joyintech.tams.common.base.entity.BokDealAccounting;
-import com.joyintech.tams.common.base.entity.BokDealAccountingDetail;
-import com.joyintech.tams.common.base.entity.BokDetailId;
-import com.joyintech.tams.common.base.entity.BokDetailIdKey;
-import com.joyintech.tams.common.base.entity.FinTradeProduct;
-import com.joyintech.tams.common.base.entity.FinTradeProductKey;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 资产理论结息日结转- processor相关业务处理
@@ -96,6 +82,13 @@ public class AssetIntdateCarryoverProcessorService {
     @Autowired
     private FinTradeProductMapper finTradeProductMapper;
 
+    // add by weipeng on 20220114 增加批处理报错时相关明细日志打印 start
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(getClass());
+    // add by weipeng on 20220114 增加批处理报错时相关明细日志打印 end
+
     /**
      * process 数据处理
      * 
@@ -104,7 +97,7 @@ public class AssetIntdateCarryoverProcessorService {
      * @see
      * @since 1.0
      */
-    public AssetIntdateCarryoverResult execute(Map<String, Object> param1) {
+    public AssetIntdateCarryoverResult execute(Map<String, Object> param1) throws Exception {
         // 获取reader返回值
         AssetIntdateCarryoverReaderResult acctEntity = (AssetIntdateCarryoverReaderResult)param1.get(
             GlobalConstant.READER_RESULT);
@@ -127,10 +120,18 @@ public class AssetIntdateCarryoverProcessorService {
 
         // 循环生成数据
         for (AssetIntdateCarryoverReaderDetail detail : acctEntity.getAssetIntdateCarryoverReaderDetailList()) {
-            // 债券预交易 处理
-            handleStep1(detail, assetIntdateCarryoverResult, maxBranch);
-            // 4.处理 买断式回购派息交易
-            handleStep2(detail, assetIntdateCarryoverResult, maxBranch);
+            // add by weipeng on 20220114 增加批处理报错时相关明细日志打印 start
+            try{
+                // 债券预交易 处理
+                handleStep1(detail, assetIntdateCarryoverResult, maxBranch);
+                // 4.处理 买断式回购派息交易
+                handleStep2(detail, assetIntdateCarryoverResult, maxBranch);
+            }
+            catch (Exception e){
+                logger.error("《资产理论结息日结转批处理-标的类》--自动结转处理 报错相关信息： 账套信息【"+detail.getBooksetId()+"】；金融产品代码【"+detail.getFinprodId()+"】",e);
+                throw new Exception(e);
+            }
+            // add by weipeng on 20220114 增加批处理报错时相关明细日志打印 end
         }
 
         return assetIntdateCarryoverResult;
