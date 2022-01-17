@@ -57,7 +57,7 @@ $(function(){
             ,{field: 'agentInstitutionCode', title: '代理销售机构代码', width:120,sortField:'agentInstitutionCode'}
             ,{field: 'agentInstitutionName', title: '代理销售机构名称', width:120,sortField:'agentInstitutionName'}
             ,{field: 'remark', title: '备注', width:100,sortField:'remark'}
-            ,{field: 'enclosureNum', title: '附件个数', width:80,sortField:'enclosureNum'}
+            ,{field: 'enclosureNum', title: '附件个数', width:160,sortField:'enclosureNum'}
             ,{title : '操作附件',field : 'operation',type : 'action',width : 100
                  ,buttons :[
                   {text : '&#xe601;',clas : 'download',title : '下载'}

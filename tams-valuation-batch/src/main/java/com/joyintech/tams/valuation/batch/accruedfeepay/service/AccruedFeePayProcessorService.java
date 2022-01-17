@@ -16,8 +16,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.valuation.batch.accountmaintfeebook.service.AccountMaintFeeBookProcessorService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -48,7 +52,7 @@ import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 
 /**
  * TA计提式费用支付批处理 process相关业务处理
- * 
+ *
  * @author niuqianyu
  * @version 1.0 2018年6月11日
  * @see AccruedFeePayProcessorService
@@ -83,14 +87,19 @@ public class AccruedFeePayProcessorService {
     private FinProductCommonService finProductCommonService;
 
     /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    /**
      * process 数据处理
-     * 
+     *
      * @param param1 传递参数
      * @return BookGenerateResult
      * @see
      * @since 1.0
      */
-    public BookGenerateResult execute(Map<String, Object> param1) {
+    public BookGenerateResult execute(Map<String, Object> param1) throws Exception {
         // 获取reader返回值
         FinProductDealInfoResult acctEntity = (FinProductDealInfoResult)param1.get(GlobalConstant.READER_RESULT);
 
@@ -128,145 +137,154 @@ public class AccruedFeePayProcessorService {
 
         // 循环金融产品交易信息list,进行逻辑处理
         for (FinProductDealInfoComDTO dealNow : listFinProductDealInfoComDTONow) {
-            // 获取当前 金融产品类型
-            String finprodTypeNow = dealNow.getFinprodType();
-            // 获取当前 金融产品 现金流是否结清
-            String isClean = dealNow.getIsClean();
-            // [待处理交易].[交易金额]
-            BigDecimal jyje = dealNow.getTradeAmt() == null ? BigDecimal.ZERO : dealNow.getTradeAmt();
+            // add by weipeng on 20220114 增加批处理报错时相关明细日志打印 start
+            try{
+                // add by weipeng on 20220114 增加批处理报错时相关明细日志打印 end
+                // 获取当前 金融产品类型
+                String finprodTypeNow = dealNow.getFinprodType();
+                // 获取当前 金融产品 现金流是否结清
+                String isClean = dealNow.getIsClean();
+                // [待处理交易].[交易金额]
+                BigDecimal jyje = dealNow.getTradeAmt() == null ? BigDecimal.ZERO : dealNow.getTradeAmt();
 
-            // 初始化定义 - 记账场景要素管理
-            AccountDriver ad = new AccountDriver();
-            // 初始化定义 - 存放该笔记账的场景要素 map定义
-            Map<String, Object> accountSceneMap = new HashMap<>();
-            // 初始化定义 - 存放该笔记账的相关金额要素 map定义
-            Map<String, BigDecimal> accountAmountMap = new HashMap<>();
-            // 初始化定义 - 存放该笔记账的相关金额对应的币种 map定义
-            Map<String, Object> accountCurrencyMap = new HashMap<>();
+                // 初始化定义 - 记账场景要素管理
+                AccountDriver ad = new AccountDriver();
+                // 初始化定义 - 存放该笔记账的场景要素 map定义
+                Map<String, Object> accountSceneMap = new HashMap<>();
+                // 初始化定义 - 存放该笔记账的相关金额要素 map定义
+                Map<String, BigDecimal> accountAmountMap = new HashMap<>();
+                // 初始化定义 - 存放该笔记账的相关金额对应的币种 map定义
+                Map<String, Object> accountCurrencyMap = new HashMap<>();
 
-            // 共通元素设值 - 设置账务引擎参数
-            ad.setTreeNode(bookSetTreeNodNow);// 塞入记账场景树节点 = 会计场景
+                // 共通元素设值 - 设置账务引擎参数
+                ad.setTreeNode(bookSetTreeNodNow);// 塞入记账场景树节点 = 会计场景
 
-            // 记账场景要素map塞值,(调用共通方法-交易类场景元素赋值)
-            accountSceneMap = bookCommonLogic.transactionElementAssign(acctEntity, dealNow);
-            accountSceneMap.put(BookConstant.TYPE_1, type1Now);// 分类1 - 变量.交易信息.分类1
-            accountSceneMap.put(BookConstant.TYPE_2, type2Now);// 分类2 - 变量.交易信息.分类2
-            accountSceneMap.put(BookConstant.MDATE,dealNow.getMdate()); //结息日 - 到期日
+                // 记账场景要素map塞值,(调用共通方法-交易类场景元素赋值)
+                accountSceneMap = bookCommonLogic.transactionElementAssign(acctEntity, dealNow);
+                accountSceneMap.put(BookConstant.TYPE_1, type1Now);// 分类1 - 变量.交易信息.分类1
+                accountSceneMap.put(BookConstant.TYPE_2, type2Now);// 分类2 - 变量.交易信息.分类2
+                accountSceneMap.put(BookConstant.MDATE,dealNow.getMdate()); //结息日 - 到期日
 
-            // 根据金融产品类型生成不同的记账凭证数据
-            if (DictCodeListExt1.现金流二级类型_固定管理费.getValue().equals(finprodTypeNow)) {// 【固定管理费】
-                // 设置账务引擎参数
-                ad.setTableId(DictCodeListTableId.会计场景代码_产品_固定资产管理费支付.getValue());
-                // 记账场景要素map塞值
-                accountSceneMap.put(BookConstant.BOOK_REMARK, "固定管理费交易登账");// 凭证说明
+                // 根据金融产品类型生成不同的记账凭证数据
+                if (DictCodeListExt1.现金流二级类型_固定管理费.getValue().equals(finprodTypeNow)) {// 【固定管理费】
+                    // 设置账务引擎参数
+                    ad.setTableId(DictCodeListTableId.会计场景代码_产品_固定资产管理费支付.getValue());
+                    // 记账场景要素map塞值
+                    accountSceneMap.put(BookConstant.BOOK_REMARK, "固定管理费交易登账");// 凭证说明
 
-            }
-            else if (DictCodeListExt1.现金流二级类型_销售费.getValue().equals(finprodTypeNow)) {// 【销售服务费】
-                // 设置账务引擎参数
-                ad.setTableId(DictCodeListTableId.会计场景代码_产品_销售服务费支付.getValue());// ad.会计场景代码 = 净值型产品销售服务费;
-                // 记账场景要素map塞值
-                accountSceneMap.put(BookConstant.BOOK_REMARK, "销售服务费交易登账");// 凭证说明
-
-            }
-            else if (DictCodeListExt1.现金流二级类型_托管费.getValue().equals(finprodTypeNow)) {// 【托管费】
-                // 设置账务引擎参数
-                ad.setTableId(DictCodeListTableId.会计场景代码_产品_托管费支付.getValue());// ad.会计场景代码 = 净值型产品托管费;
-                // 记账场景要素map塞值
-                accountSceneMap.put(BookConstant.BOOK_REMARK, "固定托管费交易登账");// 凭证说明
-
-            }
-            else if (DictCodeListExt1.现金流二级类型_浮动管理费.getValue().equals(finprodTypeNow)) {// 【浮动管理费】
-                // 设置账务引擎参数
-                ad.setTableId(DictCodeListTableId.会计场景代码_产品_浮动管理费支付.getValue());// ad.会计场景代码 = 净值型产品浮动管理费;
-                // 记账场景要素map塞值
-                accountSceneMap.put(BookConstant.BOOK_REMARK, "固定浮动费交易登账");// 凭证说明
-
-            }
-            else if (DictCodeListExt1.现金流二级类型_代销费.getValue().equals(finprodTypeNow)) {// 【代销费】
-                // 设置账务引擎参数
-                ad.setTableId(DictCodeListTableId.会计场景代码_产品_代销费支付.getValue());// ad.会计场景代码 = 代销费;
-                // 记账场景要素map塞值
-                accountSceneMap.put(BookConstant.BOOK_REMARK, "代销费交易登账");// 凭证说明
-
-            }
-            else if (DictCodeListExt1.现金流二级类型_外包服务费.getValue().equals(finprodTypeNow)) {// 【外包服务费】
-                // 设置账务引擎参数
-                ad.setTableId(DictCodeListTableId.会计场景代码_产品_外包服务费支付.getValue());// ad.会计场景代码 = 外包服务费;
-                // 记账场景要素map塞值
-                accountSceneMap.put(BookConstant.BOOK_REMARK, "外包服务费交易登账");// 凭证说明
-
-            }
-            // 根据是否结清状态，进行数据处理
-            if (DictCodeList.是否_是.getValue().equals(isClean)) {// 已结清
-                // 定义当前基础科目性质
-                List<String> baseSubjectNature = new ArrayList<>();
-                if (DictCodeListExt1.现金流二级类型_固定管理费.getValue().equals(finprodTypeNow)) {
-                    baseSubjectNature.add(DictCodeBaseSubjectNatrue.应付管理人报酬.getValue());
                 }
-                else if (DictCodeListExt1.现金流二级类型_销售费.getValue().equals(finprodTypeNow)) {
-                    baseSubjectNature.add(DictCodeBaseSubjectNatrue.应付销售服务费.getValue());
-                }
-                else if (DictCodeListExt1.现金流二级类型_托管费.getValue().equals(finprodTypeNow)) {
-                    baseSubjectNature.add(DictCodeBaseSubjectNatrue.应付托管费.getValue());
-                }
-                else if (DictCodeListExt1.现金流二级类型_浮动管理费.getValue().equals(finprodTypeNow)) {
-                    baseSubjectNature.add(DictCodeBaseSubjectNatrue.应付超额管理费.getValue());
-                }
-                else if (DictCodeListExt1.现金流二级类型_代销费.getValue().equals(finprodTypeNow)) {
-                    baseSubjectNature.add(DictCodeBaseSubjectNatrue.应付代销费.getValue());
-                }
-                else if (DictCodeListExt1.现金流二级类型_外包服务费.getValue().equals(finprodTypeNow)) {
-                    baseSubjectNature.add(DictCodeBaseSubjectNatrue.应付外包服务费.getValue());
-                }
-                // 设置科目余额汇总查询参数 Dto
-                SubjectBalanceSearchDto searchDto = new SubjectBalanceSearchDto();
-                searchDto.setBooksetId(booksetIdNow);// 账套代码
-                searchDto.setBokDetailId(finprodIdNow);// 账务明细代码
-                searchDto.setHappenDate(DateUtil.addDay(dealNow.getMdate(), -1));// 发生日
-                searchDto.setBookDate(dealNow.getBookDate());// 入账日
-                searchDto.setTaskPri(dealNow.getTaskPri());// 任务优先级
-                searchDto.setBaseSubjectNatureList(baseSubjectNature);// 基础科目性质
-                // 获取科目余额 -【调用共通方法：科目余额汇总查询】
-                Map<String, BigDecimal> feeBaseMap = accountingCommonService.getSubjectBalanceCollection(searchDto, DictCodeList.借贷方向_贷.getValue(),null);
-                // 获取科目余额
-                BigDecimal kmye = ArithmeticUtil.round(feeBaseMap.get(dealNow.getCcy()), NumberEnum.MONEY);
-                // 科目余额  - 调用金额共通方法设置有效小数位
-                kmye = ArithmeticUtil.round(kmye, NumberEnum.MONEY);
-                
-                // 金额元素.交易金额 - 交易金额
-                accountAmountMap.put("DEALAMT", jyje);
-                // 金额元素.应计费用 - 科目余额
-                accountAmountMap.put("ACCOUNTS_FEE", kmye);
-                // 金额元素.费用调整 = 交易金额 - 科目余额
-                accountAmountMap.put("MARGINAL_COST", ArithmeticUtil.doSub(jyje, kmye));
-                // 金额元素.实付费用 = 交易金额
-                accountAmountMap.put("REAL_PAYMEET", jyje);
+                else if (DictCodeListExt1.现金流二级类型_销售费.getValue().equals(finprodTypeNow)) {// 【销售服务费】
+                    // 设置账务引擎参数
+                    ad.setTableId(DictCodeListTableId.会计场景代码_产品_销售服务费支付.getValue());// ad.会计场景代码 = 净值型产品销售服务费;
+                    // 记账场景要素map塞值
+                    accountSceneMap.put(BookConstant.BOOK_REMARK, "销售服务费交易登账");// 凭证说明
 
+                }
+                else if (DictCodeListExt1.现金流二级类型_托管费.getValue().equals(finprodTypeNow)) {// 【托管费】
+                    // 设置账务引擎参数
+                    ad.setTableId(DictCodeListTableId.会计场景代码_产品_托管费支付.getValue());// ad.会计场景代码 = 净值型产品托管费;
+                    // 记账场景要素map塞值
+                    accountSceneMap.put(BookConstant.BOOK_REMARK, "固定托管费交易登账");// 凭证说明
+
+                }
+                else if (DictCodeListExt1.现金流二级类型_浮动管理费.getValue().equals(finprodTypeNow)) {// 【浮动管理费】
+                    // 设置账务引擎参数
+                    ad.setTableId(DictCodeListTableId.会计场景代码_产品_浮动管理费支付.getValue());// ad.会计场景代码 = 净值型产品浮动管理费;
+                    // 记账场景要素map塞值
+                    accountSceneMap.put(BookConstant.BOOK_REMARK, "固定浮动费交易登账");// 凭证说明
+
+                }
+                else if (DictCodeListExt1.现金流二级类型_代销费.getValue().equals(finprodTypeNow)) {// 【代销费】
+                    // 设置账务引擎参数
+                    ad.setTableId(DictCodeListTableId.会计场景代码_产品_代销费支付.getValue());// ad.会计场景代码 = 代销费;
+                    // 记账场景要素map塞值
+                    accountSceneMap.put(BookConstant.BOOK_REMARK, "代销费交易登账");// 凭证说明
+
+                }
+                else if (DictCodeListExt1.现金流二级类型_外包服务费.getValue().equals(finprodTypeNow)) {// 【外包服务费】
+                    // 设置账务引擎参数
+                    ad.setTableId(DictCodeListTableId.会计场景代码_产品_外包服务费支付.getValue());// ad.会计场景代码 = 外包服务费;
+                    // 记账场景要素map塞值
+                    accountSceneMap.put(BookConstant.BOOK_REMARK, "外包服务费交易登账");// 凭证说明
+
+                }
+                // 根据是否结清状态，进行数据处理
+                if (DictCodeList.是否_是.getValue().equals(isClean)) {// 已结清
+                    // 定义当前基础科目性质
+                    List<String> baseSubjectNature = new ArrayList<>();
+                    if (DictCodeListExt1.现金流二级类型_固定管理费.getValue().equals(finprodTypeNow)) {
+                        baseSubjectNature.add(DictCodeBaseSubjectNatrue.应付管理人报酬.getValue());
+                    }
+                    else if (DictCodeListExt1.现金流二级类型_销售费.getValue().equals(finprodTypeNow)) {
+                        baseSubjectNature.add(DictCodeBaseSubjectNatrue.应付销售服务费.getValue());
+                    }
+                    else if (DictCodeListExt1.现金流二级类型_托管费.getValue().equals(finprodTypeNow)) {
+                        baseSubjectNature.add(DictCodeBaseSubjectNatrue.应付托管费.getValue());
+                    }
+                    else if (DictCodeListExt1.现金流二级类型_浮动管理费.getValue().equals(finprodTypeNow)) {
+                        baseSubjectNature.add(DictCodeBaseSubjectNatrue.应付超额管理费.getValue());
+                    }
+                    else if (DictCodeListExt1.现金流二级类型_代销费.getValue().equals(finprodTypeNow)) {
+                        baseSubjectNature.add(DictCodeBaseSubjectNatrue.应付代销费.getValue());
+                    }
+                    else if (DictCodeListExt1.现金流二级类型_外包服务费.getValue().equals(finprodTypeNow)) {
+                        baseSubjectNature.add(DictCodeBaseSubjectNatrue.应付外包服务费.getValue());
+                    }
+                    // 设置科目余额汇总查询参数 Dto
+                    SubjectBalanceSearchDto searchDto = new SubjectBalanceSearchDto();
+                    searchDto.setBooksetId(booksetIdNow);// 账套代码
+                    searchDto.setBokDetailId(finprodIdNow);// 账务明细代码
+                    searchDto.setHappenDate(DateUtil.addDay(dealNow.getMdate(), -1));// 发生日
+                    searchDto.setBookDate(dealNow.getBookDate());// 入账日
+                    searchDto.setTaskPri(dealNow.getTaskPri());// 任务优先级
+                    searchDto.setBaseSubjectNatureList(baseSubjectNature);// 基础科目性质
+                    // 获取科目余额 -【调用共通方法：科目余额汇总查询】
+                    Map<String, BigDecimal> feeBaseMap = accountingCommonService.getSubjectBalanceCollection(searchDto, DictCodeList.借贷方向_贷.getValue(),null);
+                    // 获取科目余额
+                    BigDecimal kmye = ArithmeticUtil.round(feeBaseMap.get(dealNow.getCcy()), NumberEnum.MONEY);
+                    // 科目余额  - 调用金额共通方法设置有效小数位
+                    kmye = ArithmeticUtil.round(kmye, NumberEnum.MONEY);
+
+                    // 金额元素.交易金额 - 交易金额
+                    accountAmountMap.put("DEALAMT", jyje);
+                    // 金额元素.应计费用 - 科目余额
+                    accountAmountMap.put("ACCOUNTS_FEE", kmye);
+                    // 金额元素.费用调整 = 交易金额 - 科目余额
+                    accountAmountMap.put("MARGINAL_COST", ArithmeticUtil.doSub(jyje, kmye));
+                    // 金额元素.实付费用 = 交易金额
+                    accountAmountMap.put("REAL_PAYMEET", jyje);
+
+                }
+                else {// 未结清
+                    // 金额元素.交易金额 - 交易金额
+                    accountAmountMap.put("DEALAMT", jyje);
+                    // 金额元素.应计费用 = 交易金额
+                    accountAmountMap.put("ACCOUNTS_FEE", jyje);
+                    // 金额元素.实付费用 = 交易金额
+                    accountAmountMap.put("REAL_PAYMEET", jyje);
+                }
+
+                // 记账金额元素币种信息塞值
+                // 因为与记账金额元素map的key及数量一致，故采用循环
+                for (String keyNow : accountAmountMap.keySet()) {
+                    accountCurrencyMap.put(keyNow, dealNow.getCcy());// value值塞入当前交易币种
+                }
+
+                // map塞入场景要素管理中
+                ad.setAccountSceneMap(accountSceneMap);// 记账场景要素
+                ad.setAccountAmountMap(accountAmountMap);// 记账金额要素
+                ad.setAccountCurrencyMap(accountCurrencyMap);// 记账金额币种要素
+
+                // 记账凭证生成
+                BookGenerateResult resultNowNow = bookLogic.genAccount(ad, batchExecuteInfo);
+                // 因为当前属于同一个维度，故将生成的账务名中的账务明细（当前表）数据，累加到返回数据中
+                returnResult.getValBokBookdetailBatch().addAll(resultNowNow.getValBokBookdetailBatch());
             }
-            else {// 未结清
-                  // 金额元素.交易金额 - 交易金额
-                accountAmountMap.put("DEALAMT", jyje);
-                // 金额元素.应计费用 = 交易金额
-                accountAmountMap.put("ACCOUNTS_FEE", jyje);
-                // 金额元素.实付费用 = 交易金额
-                accountAmountMap.put("REAL_PAYMEET", jyje);
+            catch (Exception e){
+                logger.error("《TA计提式费用支付批处理》报错信息： 账套信息【"+dealNow.getBooksetId()+"】；费用类型【"+ SysDataUtil.getNameFromDataDict(DictCode.现金流二级类型,dealNow.getFinprodType())+"】",e);
+                throw new Exception(e);
             }
-
-            // 记账金额元素币种信息塞值
-            // 因为与记账金额元素map的key及数量一致，故采用循环
-            for (String keyNow : accountAmountMap.keySet()) {
-                accountCurrencyMap.put(keyNow, dealNow.getCcy());// value值塞入当前交易币种
-            }
-
-            // map塞入场景要素管理中
-            ad.setAccountSceneMap(accountSceneMap);// 记账场景要素
-            ad.setAccountAmountMap(accountAmountMap);// 记账金额要素
-            ad.setAccountCurrencyMap(accountCurrencyMap);// 记账金额币种要素
-
-            // 记账凭证生成
-            BookGenerateResult resultNowNow = bookLogic.genAccount(ad, batchExecuteInfo);
-            // 因为当前属于同一个维度，故将生成的账务名中的账务明细（当前表）数据，累加到返回数据中
-            returnResult.getValBokBookdetailBatch().addAll(resultNowNow.getValBokBookdetailBatch());
+            // add by weipeng on 20220114 增加批处理报错时相关明细日志打印 end
         }
 
         return returnResult;
@@ -274,7 +292,7 @@ public class AccruedFeePayProcessorService {
 
     /**
      * 获取标的基本信息
-     * 
+     *
      * @param bokDetailId 账务明细代码
      * @return TargetFinProduct 标的基本信息
      * @see
