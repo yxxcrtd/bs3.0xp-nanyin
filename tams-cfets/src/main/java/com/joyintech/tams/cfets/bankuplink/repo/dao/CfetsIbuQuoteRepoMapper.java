@@ -213,4 +213,6 @@ public interface CfetsIbuQuoteRepoMapper {
      * @since 1.0
      */
     List<FinProductTypeConfig> getAssetFiveType(FinProductTypeConfig param);
+
+    int countWflEtr(Map<String, Object> param);
 }

@@ -6,6 +6,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustForcedFinishDto;
 import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustRequest;
@@ -13,6 +14,7 @@ import com.joyintech.tams.cfets.bankuplink.repo.service.IbuQuoteRepoService;
 import com.joyintech.tams.cfets.bankuplink.repo.service.RepoEntrustForcedFinishService;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -53,16 +55,18 @@ public class RepoEntrustForcedFinishController extends BaseController {
     @Override
     public String init(Model model) {
         RepoEntrustForcedFinishDto entrustForcedFinishDto = new RepoEntrustForcedFinishDto();
-        if (com.joyintech.framework.util.StringUtil.equals(this.getParam("workflowStatus"), BussinessDictCodeList.交易流程状态_流程中.getValue())
+        if (StringUtil.equals(this.getParam("workflowStatus"), BussinessDictCodeList.交易流程状态_流程中.getValue())
                 || (!WorkFlowUtil.isNotFromToDoList() && com.joyintech.framework.util.StringUtil.isNotBlank(getParam(GlobalConstant.WORKFLOW_ID)))) {
             entrustForcedFinishDto = repoEntrustForcedFinishService.getBussinessEntityByWorkflowId(getParam(GlobalConstant.WORKFLOW_ID));
             if (null != entrustForcedFinishDto) {
                 RepoEntrustRequest entrustRequest = new RepoEntrustRequest();
                 entrustRequest.setEntrustId(entrustForcedFinishDto.getEntrustId());
                 entrustForcedFinishDto.setEntrustList(ibuQuoteRepoService.listEntrust(entrustRequest, entrustForcedFinishDto.getLoginUserId()));
-                entrustForcedFinishDto.setDealTransactionList(ibuQuoteRepoService.listDealTransactionDetails(entrustForcedFinishDto.getEntrustId()));
+                entrustForcedFinishDto.setDealTransactionList(ibuQuoteRepoService.listDealTransactionDetailsNoUserId(entrustForcedFinishDto.getEntrustId()));
             }
         }
+        //银行间质押式回购质押券模式：01无质押券库，02单个质押库，03多个质押券库
+        model.addAttribute("repo_pledge_model", CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL));
         model.addAttribute(GlobalConstant.ENTITY, entrustForcedFinishDto);
         return super.init(model);
     }
