@@ -870,7 +870,11 @@
             sdl.ITEM_VALUE 				    gradeResult,/*债项评级*/
             mbvi.NETPRICE                   firstNetPrice,/*首次净价*/
             FIN_PRODUCT.REGIST_ORG 			repRegistOrg,/*登记托管机构*/
-            NVL(EEP.SCALE, 1)*100 			scale,	/*折算比例*/
+            case when EEP.SCALE is not null then NVL(EEP.SCALE, 1)*100
+                when mbvi.NETPRICE>nvl(prinAmt.prinAmt,100) then round(100/100,4)*100
+                when mbvi.NETPRICE is null then round(nvl(prinAmt.prinAmt,100)/100,4)*100
+                else round(mbvi.NETPRICE/nvl(prinAmt.prinAmt,100),4)*100
+            end as pledgeRatio, /*折算比例*/
             FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,/*市场代码*/
             EEP.PLEDGE_STOCK_ID             pledgeStockId/*债券库代码*/,
             ESS.PLEDGE_STOCK_NAME           pledgeStockName/*债券库名称*/,
@@ -945,6 +949,11 @@
                 AND T1.VALUE_DATE = T2.VALUE_DATE
 		) MST_BOND_VALUATION_INFO/*以上获取债券小于等于平台日的最新估值行情*/
 		    ON FIN_PRODUCT.FINPROD_MARKET_ID = MST_BOND_VALUATION_INFO.SEC_ID
+        left join ( select 100-sum(nvl(PRIN_AMT,0)) prinAmt,FINPROD_ID
+                        from FIN_CASH_PLAN
+                        WHERE MDATE &lt;= to_date(#{platDate},'yyyy-mm-dd')
+                        group by FINPROD_ID) prinAmt
+        on prinAmt.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
 		LEFT JOIN (SELECT RANK() OVER(PARTITION BY O_CODE ORDER BY  GRADE_DATE DESC,CAST(GRADE_RESULT AS DECIMAL) DESC) NUM,
                 O_CODE,
                 GRADE_RESULT
