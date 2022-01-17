@@ -207,6 +207,16 @@ public class StlDataGatherShares2Processor extends StlDataGatherProcessor {
 					}else {
 						dealDto = setTrdProductDealSgDto(settleTransDataDto,l,shareAmtSum,false);
 					}
+
+					// GZYHTZJY-1087:股票申购确认需登录SettleTransTgMapping modify by fuyongsheng 20220117 start
+					SettleTransTgMapping settleTransTgMapping = new SettleTransTgMapping();
+					settleTransTgMapping.setTradeId(IDGenerator.generate(20));
+					settleTransTgMapping.setTradeIdTg(dealDto.getTradeId());
+					settleTransTgMapping.setDealDate(dealDto.getTradeDate());
+					settleTransTgMapping.setTgDataStatus(DictCodeListStl.投管交易数据状态_处理结束.getValue());
+					investTradeWriteDto.getSettleTransTgMappingList().add(settleTransTgMapping);
+					// GZYHTZJY-1087:股票申购确认需登录SettleTransTgMapping modify by fuyongsheng 20220117 end
+
 					PtlTrade ptlTrade = setPtlTrade(dealDto);
 					ptlTrade.setSettleDate(dealDto.getSettleDate());
 					investTradeWriteDto.getPtlTradeList().add(ptlTrade);
