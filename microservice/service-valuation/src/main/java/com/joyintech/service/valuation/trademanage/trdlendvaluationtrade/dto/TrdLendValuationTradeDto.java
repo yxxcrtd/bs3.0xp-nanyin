@@ -52,6 +52,7 @@ public class TrdLendValuationTradeDto extends WflTrdProductDeal implements Proce
      */
     private String portfolioName;
 
+
     /**
      * 交易类型
      */
@@ -137,6 +138,7 @@ public class TrdLendValuationTradeDto extends WflTrdProductDeal implements Proce
      */
     private String trdAcctId;
 
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     @NotEmpty(fieldName = "TrdLendValuationTrade002.tradeId", groups = {ValidateGroupEdit.class})
     public String getTradeId() {
         return tradeId;
@@ -316,11 +318,6 @@ public class TrdLendValuationTradeDto extends WflTrdProductDeal implements Proce
 
 
 
-    /**
-     * 拆借类型
-     */
-    @NotEmpty(fieldName = "TrdLendInvestTrade002.paBussType")
-    private String paBussType;
 
 
 
@@ -405,6 +402,61 @@ public class TrdLendValuationTradeDto extends WflTrdProductDeal implements Proce
      */
     public void setBusiPs(String busiPs) {
         this.busiPs = busiPs;
+    }
+
+
+    /**
+     * 产品类型
+     */
+    private String finprodType;
+
+    public String getFinprodType() {
+        return finprodType;
+    }
+
+    public void setFinprodType(String finprodType) {
+        this.finprodType = finprodType;
+    }
+
+
+    /**
+     * 交易方向
+     */
+    private String ps;
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
+    }
+
+
+    /**
+     * elementId
+     */
+    private String elementId;
+
+    public String getElementId() {
+        return elementId;
+    }
+
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
+    }
+
+    /**
+     * 信用拆借交易实体类
+     */
+    private List<TrdLendValuationTradeDto> selectedItem;
+
+    public List<TrdLendValuationTradeDto> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<TrdLendValuationTradeDto> selectedItem) {
+        this.selectedItem = selectedItem;
     }
 
 

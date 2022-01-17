@@ -14,21 +14,14 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.*;
-//import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-//import com.joyintech.tams.constant.DictCode;
-//import com.joyintech.tams.constant.DictCodeList;
-//import com.joyintech.tams.constant.DictCodeListExt1;
-//import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-//import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
-//import com.joyintech.tams.invest.trade.lend.dto.TrdLendInvestTradeDto;
-//import com.joyintech.tams.invest.trade.lend.service.TrdLendInvestTrade002Service;
+
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.valuation.trademanage.trddepositvaluationtrade.dto.TrdDepositValuationTrade001Dto;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.trademanage.trdlendvaluationtrade.dto.TrdLendValuationTradeDto;
-import com.joyintech.workflow.engine.constant.OperationType;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.tams.valuation.trademanage.trdlendvaluationtrade.service.TrdLendValuationTrade002Service;
+
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,19 +47,42 @@ public class TrdLendValuationTrade002Controller extends BaseController {
 //    /**
 //     * trdLendInvestTrade002Service
 //     */
-//    @Autowired
-//    private TrdLendInvestTrade002Service trdLendInvestTrade002Service;
-//
-//    @Autowired(required = false)
-//    private BaseGetBusinessId baseGetBusinessId;
-//
+    @Autowired
+    private TrdLendValuationTrade002Service trdLendValuationTrade002Service;
+
+
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.拆借方向, DictCode.拆借类型,
             DictCode.有效状态, DictCode.币种, DictCode.计息基础);// 新增资产二、三、四级分类 王贵奇 2019/8/1
+        // 一体化对应etliu start
+        model.addAttribute("PS_T01", DictCodeList.交易方向_买入.getValue());
+        model.addAttribute("PS_T02", DictCodeList.交易方向_卖出.getValue());
+        // 一体化对应etliu end
 
-        TrdLendValuationTradeDto entity=new TrdLendValuationTradeDto();
-//        model.addAttribute("entity", entity);
+        model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+        model.addAttribute("FINPROD_TYPE_F07", DictCodeListExt1.金融产品类型_存款.getValue());
+        String portfolioId = getParam("portfolioId");
+        String tradeId = getParam("tradeId");
+        String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+        if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
+            TrdLendValuationTradeDto entity = trdLendValuationTrade002Service.getBussinessEntityByWorkflowId(
+                    workflowId);
+            model.addAttribute("entity",entity);
+            model.addAttribute("workflowId", workflowId);
+            model.addAttribute("tradeId", entity.getTradeId());
+        }else if (!StringUtil.isNotEmpty(workflowId) && StringUtil.isNotEmpty(tradeId)){
+            TrdLendValuationTradeDto entity = trdLendValuationTrade002Service.queryTradeInfoByTradeId(tradeId);
+            model.addAttribute("entity", entity);
+        }else{
+            //初始化值
+            TrdLendValuationTradeDto entity = new TrdLendValuationTradeDto();
+//            entity.setOtherAmt(new BigDecimal("0.00"));   //其他费用
+            entity.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+            model.addAttribute("entity", entity);
+        }
+//        model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
         return super.init(model);
+
     }
 
 
