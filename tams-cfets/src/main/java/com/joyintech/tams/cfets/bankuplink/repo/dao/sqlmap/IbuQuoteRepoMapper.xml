@@ -961,7 +961,7 @@
 		) MBCR
 		    ON MBCR.O_CODE = FIN_PRODUCT.FINPROD_MARKET_ID
 		    AND MBCR.NUM = 1
-        left join SYS_DATADICT_LIST sdl on sdl.DICT_CODE = 'MODEL_STANDARD_GRADE_RESULT' and sdl.ITEM_CODE = MBCR.GRADE_RESULT
+        left join SYS_DATADICT_LIST sdl on sdl.DICT_CODE = 'SVR_MAIN_GRADE' and sdl.ITEM_CODE = MBCR.GRADE_RESULT
         LEFT JOIN (
             SELECT
                 T2.SEC_ID,
@@ -1291,7 +1291,7 @@
             ) MBCR
                 ON MBCR.O_CODE = fp.FINPROD_MARKET_ID
                 AND MBCR.NUM = 1
-            left join SYS_DATADICT_LIST sdl on sdl.DICT_CODE = 'MODEL_STANDARD_GRADE_RESULT' and sdl.ITEM_CODE = MBCR.GRADE_RESULT
+            left join SYS_DATADICT_LIST sdl on sdl.DICT_CODE = 'SVR_MAIN_GRADE' and sdl.ITEM_CODE = MBCR.GRADE_RESULT
             LEFT JOIN (
                 SELECT
                     T2.SEC_ID,
@@ -1510,7 +1510,7 @@
                RFPDT.RATE                                                                                 rate/*回购利率*/,
                RFPDT.REPO_TERM                                                                            repoTerm/*回购期限*/,
                null                                                                                       quoteRoleType/*本方角色*/,
-               MCCI.PARTY_NAME                                                                            ouPartyName/*本方*/,
+               MCCI.PARTY_ABBR                                                                            ouPartyName/*本方*/,
                SU.REAL_NAME                                                                               ouTraderName /*本方交易员*/,
                MCP.COUNTER_NAME                                                                           cpPartyName/*对手方*/,
                CASE WHEN MCCT.TRADER_NAME is not null THEN MCCT.TRADER_NAME ELSE RFPDT.COUNTER_TRADER END cpTraderName/*对手方交易员*/,
@@ -2021,7 +2021,7 @@
                     RFPDT.TRADE_AMT        tradeAmt,
                     RFPDT.RATE             rate,
                     RFPDT.REPO_TERM        repoTerm,
-                    MCCI2.PARTY_NAME       ouPartyName,
+                    MCCI2.PARTY_ABBR       ouPartyName,
                     MSCP.COUNTER_NAME      cpPartyName,
                     SU.REAL_NAME           ouTraderName,
                     MCCT.TRADER_NAME       cpTraderName,
@@ -2081,7 +2081,7 @@
                 RFPDT.TRADE_AMT        tradeAmt,
                 RFPDT.RATE             rate,
                 RFPDT.REPO_TERM        repoTerm,
-                MCCI2.PARTY_NAME       ouPartyName,
+                MCCI2.PARTY_ABBR       ouPartyName,
                 MSCP.COUNTER_NAME      cpPartyName,
                 SU.REAL_NAME           ouTraderName,
                 MCCT.TRADER_NAME       cpTraderName,
