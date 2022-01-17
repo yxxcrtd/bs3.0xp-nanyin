@@ -2037,6 +2037,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         stringObjectMap.put("dayOfferStatus", dto.getDayOfferStatus());//成交状态
         stringObjectMap.put("keywords", dto.getSearch());//关键字
         stringObjectMap.put("psList", dto.getPsList());
+        stringObjectMap.put("cfetsQuoteId", dto.getCfetsQuoteId());
         return stringObjectMap;
     }
 
