@@ -282,8 +282,8 @@ public class StlDataDealProcessCommonService {
 					
 					String busiSceneCalss = stlDownDataDealWriteBaseDto.getSettleTransData().getBusiSceneCalss();
 					if ((StringUtil.equals(busiSceneCalss,DictCodeListStl.业务场景分类明细_债券协议正回购_到期续作.getValue()) ||
-							StringUtil.equals(busiSceneCalss,DictCodeListStl.业务场景分类明细_债券协议正回购_首期_买入.getValue())) &&
-						BigDecimal.ZERO.compareTo(stlDownDataDealWriteBaseDto.getSettleTransData().getPrinAmt()) < 0){
+							StringUtil.equals(busiSceneCalss,DictCodeListStl.业务场景分类明细_债券协议正回购_首期_买入.getValue())) /*&&
+						BigDecimal.ZERO.compareTo(stlDownDataDealWriteBaseDto.getSettleTransData().getPrinAmt()) < 0*/){
 						// 交易方向
 						trdDetailDto.setPs(DictCodeListExt3.交易方向_正回购.getValue());
 						// add by etliu 20220118 start
@@ -292,8 +292,8 @@ public class StlDataDealProcessCommonService {
 						fpriceAmtBeSet = true;
 						// add by etliu 20220118 end
 					}else if ((StringUtil.equals(busiSceneCalss,DictCodeListStl.业务场景分类明细_债券协议逆回购_到期续作.getValue()) ||
-								StringUtil.equals(busiSceneCalss,DictCodeListStl.业务场景分类明细_债券协议逆回购_首期_买入.getValue())) &&
-							BigDecimal.ZERO.compareTo(stlDownDataDealWriteBaseDto.getSettleTransData().getPrinAmt()) > 0){
+								StringUtil.equals(busiSceneCalss,DictCodeListStl.业务场景分类明细_债券协议逆回购_首期_买入.getValue())) /*&&
+							BigDecimal.ZERO.compareTo(stlDownDataDealWriteBaseDto.getSettleTransData().getPrinAmt()) > 0*/){
 						// 交易方向
 						trdDetailDto.setPs(DictCodeListExt3.交易方向_逆回购.getValue());
 						// add by etliu 20220118 start
