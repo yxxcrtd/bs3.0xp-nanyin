@@ -148,14 +148,12 @@
         SELECT *
         FROM (
             SELECT ETR_ENTRUST.ENTRUST_STATUS                                                                 entrustStatus/*指令状态*/
-                , (NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT, 0))                                         finishAmt/*已完成额度(元)*/
-                , (NVL(ETR_ENTRUST.ENTRUST_AMT,0) - NVL(T5.FINISH_AMT, 0)
-                    - NVL(T6.ENT_FINISH_AMT, 0))                                                              avaNum/*剩余指令额度(元)*/
+                , NVL(T5.FINISH_AMT, 0)                                                                       finishAmt/*已完成额度(元)*/
+                , NVL(ETR_ENTRUST.ENTRUST_AMT,0) - NVL(T5.FINISH_AMT, 0)                                      avaNum/*剩余指令额度(元)*/
                 , (NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT, 0))                    finishDealAmt/*已成交额度(元)*/
                 , (ETR_ENTRUST.ENTRUST_AMT - NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0))
                     - NVL(T6.FINISH_AMT, 0))                                                                  avaDealAmt/*剩余成交额度(元)*/
-                , trunc(NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT, 0) / (ETR_ENTRUST.ENTRUST_AMT ), 4) *
-                100                                                                                           transactioncom/*执行进度(%)*/
+                , trunc(NVL(T5.FINISH_AMT, 0)/ (ETR_ENTRUST.ENTRUST_AMT ), 4) * 100                           transactioncom/*执行进度(%)*/
                 , trunc((NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT , 0)) /
                 (ETR_ENTRUST.ENTRUST_AMT), 4) * 100                                                           tradeFinishPercent/* 成交进度(%)*/
                 , ETR_ENTRUST.ENTRUST_AMT                                                                     entrustNum/*指令额度(元)*/
@@ -457,7 +455,7 @@
                     AND (
                         ETR_ENTRUST.ENTRUST_STATUS like '%' || #{search} || '%' /*指令状态*/
                         OR D.ITEM_VALUE LIKE '%' || #{search} || '%' /*指令状态*/
-                        OR to_char(trunc(NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT , 0) / (ETR_ENTRUST.ENTRUST_AMT ), 4)*100)  = #{search} /*执行进度(%)*/
+                        OR to_char(trunc(NVL(T5.FINISH_AMT, 0) / (ETR_ENTRUST.ENTRUST_AMT ), 4)*100)  = #{search} /*执行进度(%)*/
                         OR to_char(trunc((NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT , 0)) /
                             (ETR_ENTRUST.ENTRUST_AMT ), 4)*100) = #{search}/* 成交进度(%)*/
                         OR to_char(ETR_ENTRUST.ENTRUST_AMT,'FM9999999999999990.90') = #{search} /*指令额度(元)*/
@@ -2221,12 +2219,12 @@
                     #{item}
                 </foreach>
             </if>
-            <if test="role_pos != null and role_pos != ''" >
+            <if test="rolePos03 != null and rolePos03 != ''" >
                 and ( TT.createUser = #{loginUserId}
                         or exists(
                                     select 1 from SYS_USER_ROLE sur
                                     left join SYS_ROLE sr on sur.ROLE_ID = sr.ROLE_ID
-                                    where sur.USER_ID = #{loginUserId} and sr.ROLE_POS = #{role_pos}))
+                                    where sur.USER_ID = #{loginUserId} and sr.ROLE_POS = #{rolePos03}))
             </if>
             <if test="search != null and search != ''">
                 and (
