@@ -148,7 +148,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         AjaxResult ajaxResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
         //模式
-        String sellPara = CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
+        String exportShow = CacheUtil.getSysParam("EXPORT_SHOW");
         String ps = entity.getPs();
         if(StringUtil.isEmpty(ps)){
             errorList.add(new ValidMessage("请输入交易方向"));
@@ -157,7 +157,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             errorList.add(new ValidMessage("请输入资产代码"));
         }
         if(StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())||StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())){
-            if(StringUtil.isEmpty(entity.getMySide())){
+            if(StringUtil.equals(exportShow,"01")&&StringUtil.isEmpty(entity.getMySide())){
                 errorList.add(new ValidMessage("请输入本方"));
             }
             if(StringUtil.isEmpty(entity.getMySideTrader())){

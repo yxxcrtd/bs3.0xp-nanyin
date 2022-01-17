@@ -156,7 +156,7 @@
         sdl2.item_value tgBusiTypeStr,
         T1.PS ps,
         sdl3.item_value psStr,
-        T0.SETTLE_NUM/100 settleNum,
+        T0.SETTLE_NUM settleNum,
         T0.SETTLE_AMT settleAmt,
         LISTAGG(T4.PORTFOLIO_ID,',') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID))  portfolioId,
         LISTAGG(T5.PORTFOLIO_NAME,',') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID)) portfolioName,
@@ -324,7 +324,7 @@
         SELECT rownum seqNo,t.* from (SELECT
             to_char(T1.SETTLE_TIME,'yyyy-MM-dd') settleDate,
             to_char(T1.Update_Time,'hh24:mi:ss') jiaoShouDate,
-            T2.FINPROD_MARKET_ID finprodMarketId,
+            nvl(T2.FINPROD_MARKET_ID,rfpd.TERM_TYPE) finprodMarketId,
             T2.Finprod_Abbr finprodAbbr,
             T1.SETTLE_NUM settleNum,
             T1.SETTLE_AMT settleAmt,
@@ -333,6 +333,9 @@
         FROM TRD_BANK_MANUAL_SETTLE_INFO T0
         LEFT JOIN TRD_BANK_MANUAL_SETTLE_FLOW T1 ON T0.SETTLE_SEQ_NO = T1.SETTLE_SEQ_NO
         LEFT JOIN FIN_PRODUCT T2 ON T0.FINPROD_ID = T2.FINPROD_ID
+        LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL T4  ON T0.TRADE_ID =T4.TOTLE_TRADE_ID
+        LEFT JOIN TRD_PRODUCT_DEAL T3 ON T4.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
+        left join FIN_TRADE_PRODUCT rfpd on T3.TRADE_ID = rfpd.FINPROD_ID
         WHERE T0.TRADE_ID = #{tradeId}
         ORDER BY T1.UPDATE_TIME DESC) t
     </select>
