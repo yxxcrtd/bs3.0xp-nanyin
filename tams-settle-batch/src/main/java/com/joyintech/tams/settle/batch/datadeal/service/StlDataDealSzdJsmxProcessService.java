@@ -234,10 +234,6 @@ public class StlDataDealSzdJsmxProcessService {
 //					settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).divide(new BigDecimal(100)).doubleValue())));
 					settleTransData.setShareAmt(new BigDecimal(szdJsmx.getSl()).abs().divide(new BigDecimal(100)));
 					// modify by etliu 20211225 end
-					//交易金额
-					// GZYHTZJY-1130:债券数量*转股价格 modify fuyongsheng 20220116 start
-					settleTransData.setFpriceAmt(ArithmeticUtil.multiply(settleTransData.getUnitFprice(),settleTransData.getShareAmt()));
-					// GZYHTZJY-1130:债券数量*转股价格 modify fuyongsheng 20220116 end
 				}
 				// 金融产品代码
 				if (StringUtil.equals(settleTransData.getPs(), DictCodeListExt3.交易方向_配债.getValue())){

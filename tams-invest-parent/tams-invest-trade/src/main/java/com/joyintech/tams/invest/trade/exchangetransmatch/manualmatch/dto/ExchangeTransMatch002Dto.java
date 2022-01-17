@@ -161,6 +161,9 @@ public class ExchangeTransMatch002Dto extends SettleTransDataTotal implements IT
     }
 
     public BigDecimal getRemainAmount() {
+        if(DictCodeListExt3.交易方向_债转股.getValue().equals(this.getPs())){
+            return BigDecimal.ZERO;
+        }
         return remainAmount;
     }
 
