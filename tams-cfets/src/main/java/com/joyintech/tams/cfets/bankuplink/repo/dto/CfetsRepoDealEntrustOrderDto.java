@@ -219,6 +219,11 @@ public class CfetsRepoDealEntrustOrderDto extends EtrEntrust {
      */
     private String transmitTime;
 
+    /**
+     * 汇总质押券折算总额
+     */
+    private BigDecimal sumShareAmt;
+
     //质押券信息
     private List<RepoEntrustPledgeDto> repoEntrustPledgeDtos;
 
@@ -534,6 +539,17 @@ public class CfetsRepoDealEntrustOrderDto extends EtrEntrust {
                 return super.getPs();
             }
             return psStr;
+        }
+        return "";
+    }
+
+    public String getCcyStr() {
+        if (StringUtil.isNotEmpty(super.getCcy())) {
+            String ccyStr = SysDataUtil.getNameFromDataDict(BussinessDictCode.币种, super.getCcy());
+            if (ccyStr == null) {
+                return super.getCcy();
+            }
+            return ccyStr;
         }
         return "";
     }
@@ -952,5 +968,13 @@ public class CfetsRepoDealEntrustOrderDto extends EtrEntrust {
 
     public void setSecManageAcctIdSQ(String secManageAcctIdSQ) {
         this.secManageAcctIdSQ = secManageAcctIdSQ;
+    }
+
+    public BigDecimal getSumShareAmt() {
+        return sumShareAmt;
+    }
+
+    public void setSumShareAmt(BigDecimal sumShareAmt) {
+        this.sumShareAmt = sumShareAmt;
     }
 }

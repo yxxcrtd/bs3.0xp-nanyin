@@ -664,7 +664,7 @@ public class CfetsInterfReceiveService {
                 ibuQuoteCrepPledgeDtoList.add(pledgeDto);
             }
         }
-        ibuQuoteCrepDto.setShareAmt(shareAmt); // 交易份额
+        ibuQuoteCrepDto.setShareAmt(ArithmeticUtil.multiply(shareAmt,new BigDecimal(100))); // 交易份额
         ibuQuoteCrepDto.setShareCtAmt(shareCtAmt); // 折算券面金额
         String isKtg = "N";
         if (cbShareCtAmt != null && scShareCtAmt != null) {

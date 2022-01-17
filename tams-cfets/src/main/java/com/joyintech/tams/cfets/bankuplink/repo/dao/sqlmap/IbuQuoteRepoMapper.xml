@@ -158,7 +158,7 @@
                 100                                                                                           transactioncom/*执行进度(%)*/
                 , trunc((NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT , 0)) /
                 (ETR_ENTRUST.ENTRUST_AMT), 4) * 100                                                           tradeFinishPercent/* 成交进度(%)*/
-                , ETR_ENTRUST.ENTRUST_AMT / 10000                                                             entrustNum/*指令额度(万元)*/
+                , ETR_ENTRUST.ENTRUST_AMT                                                                     entrustNum/*指令额度(元)*/
                 , ETR_ENTRUST.PORTFOLIO_ID                                                                    portfolioId/*组合代码*/
                 , PTL_PORTFOLIO.PORTFOLIO_NAME                                                                portfolioName/*组合名称*/
             <if test="repo_pledge_model != null and repo_pledge_model.equals('02')">
@@ -178,13 +178,10 @@
                 , ETR_ENTRUST_ADD.TERM_DAYS                                                                   repoTerm/*回购期限*/
                 , ETR_ENTRUST.PRICE*100                                                                       tradeYield/*回购利率(%)*/
                 , ETR_ENTRUST.INV_MANAGER_ID                                                                  invManagerId/*投资经理ID*/
-                , (
-                    SELECT real_name
-                    FROM SYS_USER
-                    WHERE user_name = ETR_ENTRUST.INV_MANAGER_ID)                                             invManagerName/*投资经理名称*/
+                , SU.real_name                                                                                invManagerName/*投资经理名称*/
                 , MCP.COUNTER_ID                                                                              counterId/* 交易对手*/
                 , MCP.COUNTER_NAME                                                                            counterName/* 交易对手名称*/
-                , MST_CFETS_CI.PARTY_ID                                                                       counterPartyId
+                , MCP.PARTY_ID                                                                                counterPartyId
                 , ETR_ENTRUST.ENTRUST_DATE                                                                    ENTRUST_DATE/* 指令日期*/
                 , to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME, 'hh24:mi:ss')                                        TRANSMIT_TIME/* 指令下达时间*/
                 , ETR_ENTRUST.ENTRUST_ID                                                                      entrustId/*指令代码*/
@@ -279,6 +276,8 @@
                 ON ETR_ENTRUST.PORTFOLIO_ID = IPAR.PORTFOLIO_ID AND IPAR.CFETS_ACCT_TYPE = '01'
             LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI
                 ON IPAR.PARTY_ID = MCCI.PARTY_ID
+            LEFT JOIN SYS_USER SU
+                ON ETR_ENTRUST.INV_MANAGER_ID = SU.USER_NAME
             LEFT JOIN SYS_USER
                 ON ETR_ENTRUST.CREATE_USER = SYS_USER.USER_NAME
             LEFT JOIN SYS_USER_ADD
@@ -289,8 +288,6 @@
                 ON MST_CFETS_CT.TRADER_ID = ETR_ENTRUST.COUNTER_TRADER
             LEFT JOIN MST_COUNTER_PARTY MCP
                 ON MCP.COUNTER_ID = ETR_ENTRUST.COUNTER_ID
-            LEFT JOIN MST_CFETS_CUSTOMER_INFO MST_CFETS_CI
-                ON MST_CFETS_CI.PARTY_NAME = MCP.COUNTER_NAME
         <if test="repo_pledge_model != null and repo_pledge_model.equals('02')">
             LEFT JOIN
             (
@@ -460,10 +457,10 @@
                     AND (
                         ETR_ENTRUST.ENTRUST_STATUS like '%' || #{search} || '%' /*指令状态*/
                         OR D.ITEM_VALUE LIKE '%' || #{search} || '%' /*指令状态*/
-                        OR to_char(trunc(NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT , 0) / (ETR_ENTRUST.ENTRUST_AMT ), 4))  = #{search} /*执行进度(%)*/
+                        OR to_char(trunc(NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT , 0) / (ETR_ENTRUST.ENTRUST_AMT ), 4)*100)  = #{search} /*执行进度(%)*/
                         OR to_char(trunc((NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT , 0)) /
-                            (ETR_ENTRUST.ENTRUST_AMT ), 4)) = #{search}/* 成交进度(%)*/
-                        OR to_char(ETR_ENTRUST.ENTRUST_AMT)  = #{search} /*指令额度(万元)*/
+                            (ETR_ENTRUST.ENTRUST_AMT ), 4)*100) = #{search}/* 成交进度(%)*/
+                        OR to_char(ETR_ENTRUST.ENTRUST_AMT,'FM9999999999999990.90') = #{search} /*指令额度(元)*/
                         OR ETR_ENTRUST.PORTFOLIO_ID LIKE '%' || #{search} || '%' /*组合代码*/
                         OR PTL_PORTFOLIO.PORTFOLIO_NAME LIKE '%' || #{search} || '%' /*组合名称*/
                         OR ETR_ENTRUST_ADD.SETTLE_SPREED LIKE '%' || decode(#{search},'T+0','0','T+1','1','T+2','2',#{search}) ||'%' /*清算速度*/
@@ -472,8 +469,9 @@
                         OR ETR_ENTRUST.PRICE_MODEL LIKE '%' || #{search} || '%' /*价格模式*/
                         OR F.ITEM_VALUE LIKE '%' || #{search} || '%' /*价格模式*/
                         OR to_char(ETR_ENTRUST_ADD.TERM_DAYS) = #{search} /*回购期限*/
-                        OR to_char(ETR_ENTRUST.PRICE) = #{search} /*回购利率*/
+                        OR to_char(ETR_ENTRUST.PRICE,'FM99990.9990') = #{search}  /*回购利率*/
                         OR ETR_ENTRUST.INV_MANAGER_ID LIKE '%' || #{search} || '%' /*投资经理*/
+                        OR SU.real_name  LIKE '%' || #{search} || '%' /*投资经理*/
                         OR MCP.COUNTER_ID LIKE '%' || #{search} || '%'  /*交易对手*/
                         OR MCP.COUNTER_NAME LIKE '%' || #{search} || '%' /*交易对手*/
                         OR to_char(ETR_ENTRUST.ENTRUST_DATE,'yyyy-MM-dd') = #{search} /*指令日期*/
@@ -526,8 +524,8 @@
                ,pp.PORTFOLIO_NAME portfolioName
                ,fp.MDATE mdate
                ,NVL(TABLE01.pledStrdPrinAmt,0) avaPledgePrin
-               ,NVL(pledgeList.PLEDGE_NUMBER,0) * 100 pledgePrin
-               ,NVL(pledgeList.PLEDGE_NUMBER,0) * 100 pledgePrinInit
+               ,NVL(pledgeList.PLEDGE_NUMBER,0)*100 pledgePrin
+               ,NVL(pledgeList.PLEDGE_NUMBER,0)*100 pledgePrinInit
                ,mbvi.NETPRICE firstNetPrice
                ,pledgeList.PLEDGE_RATIO*100 pledgeRatio
                ,nvl(TABLE01.pledgeAmount,0) prin
@@ -572,6 +570,14 @@
         ) pledgeList
         LEFT JOIN ETR_ENTRUST ee
             ON ee.ENTRUST_ID = pledgeList.bussId
+       left join (
+                   SELECT V.SEC_ACCT_ID AS SECACCTID, PSA.PORTFOLIO_ID, R.FINPROD_ID
+                   FROM PTL_SEC_ACCT PSA, STL_SEC_ACCT_INFO V
+                   LEFT JOIN FIN_PRODUCT R
+                    ON R.REGIST_ORG = V.REGIST_ORG and V.TRADE_PLACE = R.trade_market
+                   WHERE PSA.ACCT_NO = V.SEC_ACCT_ID
+                    AND V.SEC_ACCT_TYPE = 'SEC') secAcct
+           on secAcct.PORTFOLIO_ID = ee.PORTFOLIO_ID and secAcct.FINPROD_ID = pledgeList.pledgeId
         INNER JOIN PTL_PORTFOLIO pp
             ON ee.PORTFOLIO_ID = pp.PORTFOLIO_ID
         LEFT JOIN ETR_ENTRUST_ADD eea
@@ -610,7 +616,7 @@
                      ,TEMP.FINPROD_ID
             HAVING SUM(TEMP.pledStrdPrinAmt) > 0 /*只统计可质押券面总额>0*/
         )TABLE01/*以上统计可用持仓*/
-            ON TABLE01.FINPROD_ID = pledgeList.pledgeId AND TABLE01.PORTFOLIO_ID = ee.PORTFOLIO_ID
+            ON TABLE01.FINPROD_ID = pledgeList.pledgeId AND TABLE01.PORTFOLIO_ID = ee.PORTFOLIO_ID and secAcct.SECACCTID = TABLE01.SEC_ACCT_ID
         INNER JOIN FIN_PRODUCT fp
             ON fp.FINPROD_ID = pledgeList.pledgeId
         INNER JOIN FIN_PRODUCT_TYPE FPT
@@ -673,8 +679,8 @@
                ,pp.PORTFOLIO_NAME portfolioName
                ,fp.MDATE mdate
                ,NVL(TABLE01.pledStrdPrinAmt,0) avaPledgePrin
-               ,sum(NVL(pledgeList.PLEDGE_NUMBER, 0) * 100) pledgePrin
-               ,sum(NVL(pledgeList.PLEDGE_NUMBER, 0) * 100) pledgePrinInit
+               ,sum(NVL(pledgeList.PLEDGE_NUMBER, 0)*100) pledgePrin
+               ,sum(NVL(pledgeList.PLEDGE_NUMBER, 0)*100) pledgePrinInit
                ,mbvi.NETPRICE firstNetPrice
                ,pledgeList.PLEDGE_RATIO*100 pledgeRatio
                ,nvl(TABLE01.pledgeAmount,0) prin
@@ -732,6 +738,14 @@
         ) pledgeList
         LEFT JOIN ETR_ENTRUST ee
             ON ee.ENTRUST_ID = pledgeList.bussId
+       left join (
+                   SELECT V.SEC_ACCT_ID AS SECACCTID, PSA.PORTFOLIO_ID, R.FINPROD_ID
+                   FROM PTL_SEC_ACCT PSA, STL_SEC_ACCT_INFO V
+                   LEFT JOIN FIN_PRODUCT R
+                    ON R.REGIST_ORG = V.REGIST_ORG and V.TRADE_PLACE = R.trade_market
+                   WHERE PSA.ACCT_NO = V.SEC_ACCT_ID
+                    AND V.SEC_ACCT_TYPE = 'SEC') secAcct
+           on secAcct.PORTFOLIO_ID = ee.PORTFOLIO_ID and secAcct.FINPROD_ID = pledgeList.pledgeId
         INNER JOIN PTL_PORTFOLIO pp
             ON ee.PORTFOLIO_ID = pp.PORTFOLIO_ID
         LEFT JOIN ETR_ENTRUST_ADD eea
@@ -770,7 +784,7 @@
                      ,TEMP.FINPROD_ID
             HAVING SUM(TEMP.pledStrdPrinAmt) > 0 /*只统计可质押券面总额>0*/
         )TABLE01/*以上统计可用持仓*/
-            ON TABLE01.FINPROD_ID = pledgeList.pledgeId AND TABLE01.PORTFOLIO_ID = ee.PORTFOLIO_ID
+            ON TABLE01.FINPROD_ID = pledgeList.pledgeId AND TABLE01.PORTFOLIO_ID = ee.PORTFOLIO_ID and secAcct.SECACCTID = TABLE01.SEC_ACCT_ID
         INNER JOIN FIN_PRODUCT fp
             ON fp.FINPROD_ID = pledgeList.pledgeId
         INNER JOIN FIN_PRODUCT_TYPE FPT
@@ -1156,11 +1170,11 @@
                 pp.PORTFOLIO_ID portfolioId,
                 pp.PORTFOLIO_NAME portfolioName,
                 fp.MDATE mdate,
-                (NVL(TABLE01.pledStrdPrinAmt, 0)) * 100 avaPledgePrin,
+                (NVL(TABLE01.pledStrdPrinAmt, 0)) avaPledgePrin,
                 NVL(pledgeList.PLEDGE_NUMBER, 0) * 100 pledgePrin,
                 mbvi.NETPRICE firstNetPrice,
                 pledgeList.PLEDGE_RATIO*100 pledgeRatio,
-                nvl(TABLE01.pledgeAmount,0) * 100 prin,
+                nvl(TABLE01.pledgeAmount,0)  prin,
                 sdl.ITEM_VALUE 				gradeResult,/*债项评级*/
                 fp.REGIST_ORG repRegistOrg
             FROM
@@ -1200,6 +1214,14 @@
                </if>
                ) pledgeList
             left join ETR_ENTRUST ee on ee.ENTRUST_ID = pledgeList.bussId
+            left join (
+                   SELECT V.SEC_ACCT_ID AS SECACCTID, PSA.PORTFOLIO_ID, R.FINPROD_ID
+                   FROM PTL_SEC_ACCT PSA, STL_SEC_ACCT_INFO V
+                   LEFT JOIN FIN_PRODUCT R
+                    ON R.REGIST_ORG = V.REGIST_ORG and V.TRADE_PLACE = R.trade_market
+                   WHERE PSA.ACCT_NO = V.SEC_ACCT_ID
+                    AND V.SEC_ACCT_TYPE = 'SEC') secAcct
+            on secAcct.PORTFOLIO_ID = ee.PORTFOLIO_ID and secAcct.FINPROD_ID = pledgeList.pledgeId
             INNER JOIN PTL_PORTFOLIO pp ON ee.PORTFOLIO_ID = pp.PORTFOLIO_ID
             left join ETR_ENTRUST_ADD eea on eea.ENTRUST_ID = pledgeList.bussId
             LEFT JOIN(
@@ -1236,7 +1258,7 @@
                      TEMP.SEC_ACCT_ID, TEMP.FINPROD_ID
                  HAVING SUM(TEMP.pledStrdPrinAmt) > 0 /*只统计可质押券面总额>0*/
            )TABLE01/*以上统计可用持仓*/
-                ON TABLE01.FINPROD_ID = pledgeList.pledgeId AND TABLE01.PORTFOLIO_ID = ee.PORTFOLIO_ID
+                ON TABLE01.FINPROD_ID = pledgeList.pledgeId AND TABLE01.PORTFOLIO_ID = ee.PORTFOLIO_ID and secAcct.SECACCTID = TABLE01.SEC_ACCT_ID
            LEFT JOIN (
                        SELECT
                            PORTFOLIO_ID,FINPROD_ID,
@@ -1570,7 +1592,7 @@
                tradeStatus/*报价状态*/,
                sendStatus/*发送状态*/,
                tradeAmt/*交易金额*/,
-               rate/*回购利率*/,
+               rate*100 rate/*回购利率*/,
                repoTerm/*回购期限*/,
                quoteRoleType/*本方角色*/,
                ouPartyName/*本方*/,
@@ -2106,7 +2128,31 @@
 
     <!--当日登记-->
     <select id="listDayReg" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDayRegDto">
-        select * from (
+        select
+            TT.validStatus,
+            TT.quoteType,
+            TT.tradeAmt,
+            TT.rate*100 rate,
+            TT.repoTerm,
+            TT.ouPartyName,
+            TT.cpPartyName,
+            TT.ouTraderName,
+            TT.cpTraderName,
+            TT.settleSpeed/*清算速度*/,
+            TT.vSettleDate,
+            TT.mSettleDate,
+            TT.tradeDate,
+            TT.statisticalTimes,
+            TT.quoteId,
+            TT.trdId,
+            TT.ps,
+            TT.settleType,
+            TT.deliverytype,
+            TT.mDeliveryType,
+            TT.ccy,
+            TT.settCcy,
+            TT.createUser
+         from (
             <include refid="sql_listDayReg"></include>
         ) TT
         LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'STATUS_VALID')D ON TT.validStatus = D.ITEM_CODE
@@ -2193,7 +2239,7 @@
             TT.validStatus,
             TT.quoteType,
             TT.tradeAmt,
-            TT.rate,
+            TT.rate*100 rate,
             TT.repoTerm,
             TT.ouPartyName,
             TT.cpPartyName,
@@ -2225,7 +2271,7 @@
                 T2.TOTLE_TRADE_ID,
                 T1.portfolio_id portfolioId,
                 T1.pledge_finprod_id finprodId,
-                SUM(T1.pledge_number) pledgePrin,
+                SUM(T1.pledge_number*100) pledgePrin,
                 T1.pledge_ratio pledgeRatio
             from (
                 SELECT
@@ -2280,10 +2326,10 @@
                 DECODE(T.settle_speed, 0, '01', 1, '02')  settleSpreedCode /*清算速度*/,
                 T.ccy ccy /*币种*/,
                 T.repo_term repoTerm /*回购期限*/,
-                T.rate price /*回购利率*/,
+                T.rate*100 price /*回购利率*/,
                 T.sett_ccy settCcy /*结算币种*/,
                 T.trade_amt tradeAmt /*交易金额*/,
-                T.share_amt shareAmt /*券面总额合计*/,
+                T.share_amt*100 shareAmt /*券面总额合计*/,
                 T.dis_face_value convertAmt /*质押券折算总额*/,
                 T.delivery_type deliverytype /*首次结算方式*/,
                 T.m_delivery_type mDeliveryType /*到期结算方式*/,
@@ -2321,7 +2367,7 @@
             NVL(TABLE01.pledStrdPrinAmt,0) avaPledgePrin/*可质押券面总额*/,
             pledge.pledgePrin pledgePrin/*质押券面额*/,
             mbvi.NETPRICE firstNetPrice/*首次净价*/,
-            pledge.pledgeRatio pledgeRatio/*折算比例*/,
+            pledge.pledgeRatio*100 pledgeRatio/*折算比例*/,
             fp.REGIST_ORG repRegistOrg/*登记托管机构code*/,
             pledge.portfolioId portfolioId/*组合代码*/,
             pp.PORTFOLIO_NAME portfolioName/*组合名称*/
@@ -2329,13 +2375,21 @@
             select
             portfolio_id portfolioId,
             pledge_finprod_id finprodId,
-            SUM(pledge_number) pledgePrin,
+            SUM(pledge_number * 100) pledgePrin,
             pledge_ratio pledgeRatio
             from (
             <include refid="listRegFinPledge_sql"></include>
             )
             group by portfolio_id,pledge_finprod_id,pledge_ratio
         ) pledge
+       left join (
+                   SELECT V.SEC_ACCT_ID AS SECACCTID, PSA.PORTFOLIO_ID, R.FINPROD_ID
+                   FROM PTL_SEC_ACCT PSA, STL_SEC_ACCT_INFO V
+                   LEFT JOIN FIN_PRODUCT R
+                    ON R.REGIST_ORG = V.REGIST_ORG and V.TRADE_PLACE = R.trade_market
+                   WHERE PSA.ACCT_NO = V.SEC_ACCT_ID
+                    AND V.SEC_ACCT_TYPE = 'SEC') secAcct
+           on secAcct.PORTFOLIO_ID = pledge.portfolioId and secAcct.FINPROD_ID = pledge.finprodId
         LEFT JOIN
         (
             SELECT  TEMP.PORTFOLIO_ID /*组合代码*/
@@ -2370,7 +2424,7 @@
                     ,TEMP.FINPROD_ID
             HAVING SUM(TEMP.pledStrdPrinAmt) > 0 /*只统计可质押券面总额>0*/
         )TABLE01/*以上统计可用持仓*/
-            ON TABLE01.FINPROD_ID = pledge.finprodId AND TABLE01.PORTFOLIO_ID = pledge.portfolioId
+            ON TABLE01.FINPROD_ID = pledge.finprodId AND TABLE01.PORTFOLIO_ID = pledge.portfolioId and secAcct.SECACCTID = TABLE01.SEC_ACCT_ID
        LEFT JOIN (
                    SELECT
                        PORTFOLIO_ID,FINPROD_ID,
@@ -2437,7 +2491,7 @@
             deal.M_TRADE_AMT mtradeAmt/*到期结算金额*/,
             deal.DIS_FACE_VALUE convertAmt/*质押券折算总额*/,
             ee.PRICE_MODEL priceModel/*价格模式*/,
-            deal.RATE price/*回购利率*/,
+            deal.RATE*100 price/*回购利率*/,
             deal.SEC_MANAGE_ACCT_ID secManageAcctId/*证券账户*/
         from (
             <include refid="sql_ProductDeal"></include>

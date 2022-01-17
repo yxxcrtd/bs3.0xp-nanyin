@@ -46,7 +46,7 @@ public interface CfetsTrdConfirmMapper {
      * @param pageParam
      * @return
      */
-    CfetsTrdConfirmRegInfoListResponse selectRepoIbuInfoByKey(String totleTradeId);
+    CfetsTrdConfirmRegInfoListResponse selectRepoIbuInfoByKey(Map<String, Object> pageParam);
     /**
      * 查询所有登记费用信息
      * @param pageParam
@@ -162,7 +162,7 @@ public interface CfetsTrdConfirmMapper {
      * @param pageParam
      * @return
      */
-    public boolean isExistMatchInfo(@Param("preTradeId") String preTradeId);
+    public boolean isExistMatchInfo(Map<String, Object> pageParam);
     /**
      * 根据交易汇总编号删除匹配关系表
      * @param seqno

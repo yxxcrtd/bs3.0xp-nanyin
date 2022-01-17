@@ -10,11 +10,14 @@
 
 package com.joyintech.tams.cfets.bankuplink.repo.dto;
 
+import com.joyintech.background.component.common.pack.common.util.ArithmeticUtil;
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.tams.common.base.entity.RegFinProductDealTotal;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 
@@ -72,7 +75,7 @@ public class CfetsRepoDealRegisterQuoteDto extends RegFinProductDealTotal implem
     /**
      * 回购方式
      */
-    private Character repoMethod;
+    private String repoMethod;
     /**
      * 清算速度
      */
@@ -148,6 +151,8 @@ public class CfetsRepoDealRegisterQuoteDto extends RegFinProductDealTotal implem
      * 决策动作
      */
     private String systemAct;
+
+    private String shareAmtStr;
 
 
     public String getOperatorType() {
@@ -248,11 +253,11 @@ public class CfetsRepoDealRegisterQuoteDto extends RegFinProductDealTotal implem
         this.counterTraderName = counterTraderName;
     }
 
-    public Character getRepoMethod() {
+    public String getRepoMethod() {
         return repoMethod;
     }
 
-    public void setRepoMethod(Character repoMethod) {
+    public void setRepoMethod(String repoMethod) {
         this.repoMethod = repoMethod;
     }
 
@@ -384,5 +389,16 @@ public class CfetsRepoDealRegisterQuoteDto extends RegFinProductDealTotal implem
 
     public void setSystemAct(String systemAct) {
         this.systemAct = systemAct;
+    }
+
+    public String getShareAmtStr() {
+        if (StringUtil.isNotEmpty(this.getShareAmt())) {
+            return ArithmeticUtil.divide(this.getShareAmt(), new BigDecimal(10000), 2, RoundingMode.HALF_UP).toPlainString();
+        }
+        return shareAmtStr;
+    }
+
+    public void setShareAmtStr(String shareAmtStr) {
+        this.shareAmtStr = shareAmtStr;
     }
 }

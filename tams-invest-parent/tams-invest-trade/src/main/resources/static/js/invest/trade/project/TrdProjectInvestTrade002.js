@@ -676,7 +676,7 @@
 	                        }
 	                    });
 	                },false,function (result) {
-                        var disabledFlag = $('#invAim').attr('disabled');
+                        var disabledFlag = $('#businessModel').attr('disabled');
                         if(disabledFlag) return;
                         var msg = result.errorList;
                         var message ="";
@@ -684,7 +684,7 @@
                             message = msg[i];
                             if(message.field!=null && message.field=='invAim'){
                                 if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
-                                    $('#invAim').textSelect('setValue', "FVTPL");
+                                    $('#businessModel').textSelect('setValue', "FVTPL");
                                     break;
                                 }
                             }
@@ -807,6 +807,9 @@
         	}
         //应计利息change
         $('#intAmt').change(intAmtChange);
+        if($('#businessModel').val()) {
+            $('#businessModel').attr("disabled",true);
+        }
     }
     ()
 )

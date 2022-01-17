@@ -25,7 +25,7 @@ public class EnableQryBean {
     @ApiModelProperty(required = true, name = "entrustPrice", value = "委托价格", example = "3.45")
     private double entrustPrice;
 
-    @ApiModelProperty(name = "entrustPrice", value = "网点账号", example = "A001:123456")
+    @ApiModelProperty(name = "accountId", value = "网点账号", example = "A001:123456")
     private String accountId;
 
     public EnableQryBean() {

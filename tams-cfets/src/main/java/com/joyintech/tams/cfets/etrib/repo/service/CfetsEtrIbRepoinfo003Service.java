@@ -579,8 +579,8 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
 	                // 质押金额 = 输出质押品DTO.质押金额
 	                etrPledge.setPledgeAmt(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), etrPledge.getPledgeRatio()));
 	                etrPledgeList.add(etrPledge);
-	                return etrPledgeList;
 	       	 }
+             return etrPledgeList;
 	   	 }
 	   	 return null;
 	}

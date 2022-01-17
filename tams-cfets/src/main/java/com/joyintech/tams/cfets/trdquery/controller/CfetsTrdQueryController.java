@@ -462,6 +462,39 @@ public class CfetsTrdQueryController extends BaseController {
         }
     }
 
+    @ApiOperation(value = "修改成交编号前check", notes = "修改成交编号前check")
+    @PostMapping("checkModifyExecId")
+    @ResponseBody
+    public  Message<AjaxResult> checkModifyExecId(@RequestBody CfetsTrdBondInvestTradeDto inputDto)
+            throws Exception {
+        try {
+            AjaxResult ajax= cfetsTrdBondInvestTrade002Service.checkModifyExecId(inputDto);
+            if(null!=ajax){
+                return new Message<AjaxResult>().success().setData(ajax);
+            }else{
+                return new Message<AjaxResult>().success().setMessage("校验通过");
+            }
+        }catch (Exception e) {
+            logger.error("修改成交编号校验异常",e);
+            return new Message<AjaxResult>().fail().setMessage("校验失败");
+        }
+    }
 
+    @ApiOperation(value = "修改成交编号", notes = "修改成交编号")
+    @PostMapping("/modifyExecId")
+    @ResponseBody
+    public Message<AjaxResult> modifyExecIdMethod(@RequestBody CfetsTrdBondInvestTradeDto input) throws WorkFlowException {
+        try {
+            AjaxResult ajax= cfetsTrdBondInvestTrade002Service.modifyExecIdMethod(input);
+            if(null!=ajax){
+                return new Message<AjaxResult>().success().setData(ajax);
+            }else{
+                return new Message<AjaxResult>().success().setMessage("修改成交编号成功");
+            }
+        }catch (Exception e) {
+            logger.error("修改成交编号成功异常",e);
+            return new Message<AjaxResult>().fail().setMessage("修改成交编号失败");
+        }
+    }
 
 }

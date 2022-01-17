@@ -117,6 +117,15 @@ public interface JoyinbusinessCommonMapper {
      */
     List<SelectOptionDto> queryCstpPartyList(Map<String, Object> param);
     /**
+     * 查询本方机构列表-银行间
+     * <功能详细描述>
+     * @param param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> queryCstpOuPartyList(Map<String, Object> param);
+    /**
      * 查询本方机构列表
      * <功能详细描述>
      * @param param
@@ -134,6 +143,15 @@ public interface JoyinbusinessCommonMapper {
      * @since 1.0
      */
     List<SelectOptionDto> queryMySideTraderList(Map<String, Object> param);
+    /**
+     * 查询本方交易员列表
+     * <功能详细描述>
+     * @param param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> queryMySideTraderListByCounterId(Map<String, Object> param);
 
     /**
      * 查询系统用户

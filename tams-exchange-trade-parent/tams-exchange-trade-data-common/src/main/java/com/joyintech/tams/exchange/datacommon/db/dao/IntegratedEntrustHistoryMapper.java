@@ -1,6 +1,7 @@
 package com.joyintech.tams.exchange.datacommon.db.dao;
 
 import com.joyintech.tams.exchange.common.bean.EntrustQryBean;
+import com.joyintech.tams.exchange.common.bean.EntrustQueryBean;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrustHistory;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrustHistoryExample;
 import org.apache.ibatis.annotations.Param;
@@ -24,7 +25,12 @@ public interface IntegratedEntrustHistoryMapper extends IMybatisMapper<Integrate
 
     List<IntegratedEntrustHistory> selectByExample(IntegratedEntrustHistoryExample example);
 
+    List<EntrustQueryBean> selectEntrustHistoryByPage(EntrustQryBean entrustQryBean);
+
+    @Deprecated
     List<IntegratedEntrustHistory> selectEntrustsPageInfo(EntrustQryBean entrustQryBean);
+
+    List<EntrustQueryBean> selectEntrustsByPage(EntrustQryBean entrustQryBean);
 
     IntegratedEntrustHistory selectByPrimaryKey(String id);
 

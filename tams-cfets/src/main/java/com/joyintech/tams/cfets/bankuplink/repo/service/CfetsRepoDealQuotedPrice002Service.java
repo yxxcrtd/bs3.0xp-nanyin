@@ -641,7 +641,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         if (!StringUtil.isNotEmpty(entity.getMySideTrader())) {
             errorList.add(new ValidMessage("请输入本方交易员"));
         }
-        if (!StringUtil.isNotEmpty(entity.getCounterId())) {
+        if (!StringUtil.isNotEmpty(entity.getCounterPartyId())) {
             errorList.add(new ValidMessage("请输入对手方"));
         }
         if (StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"), "01")
@@ -931,7 +931,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         CfetsRepoDealQuotedPrice001Dto entity = getBussinessEntityByWorkflowId(workflowId);
         WFlowCommonService.doCompleteFlow(entity.getWorkflowId());
         //发送头寸
-        PositionHttpRequest.deleteMethod(entity.getQuoteId(), DictCodeListExt1.子系统代码_交易.getValue(), "REPO001");
+        PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(),DictCodeListExt1.子系统代码_交易.getValue(),DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(),entity.getPs());
     }
 
     /**
@@ -1210,7 +1210,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         doDeleteWflDataForRepo(entity.getWorkflowId());
         //头寸
         if (type.equals(OperationType.REVOKE) || type.equals(OperationType.DELETE)) {
-            PositionHttpRequest.sendRevoke(entity.getQuoteId(), DictCodeListExt1.子系统代码_交易.getValue(), "REPO001");
+            PositionHttpRequest.dorevoke(entity.getQuoteId(),DictCodeListExt1.子系统代码_交易.getValue(),DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(),entity.getPs());
         }
 //        if (StringUtil.isNotEmpty(type)) {
 //            throw new RuntimeException("cs by jp");
@@ -1674,7 +1674,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         // 是否多组合
         backDto.setIsDzh(DictCodeList.是否_是.getValue());
         // 回购方式 双边回购(1)
-        backDto.setRepoMethod(pageDto.getRepoMethod().toString());
+        backDto.setRepoMethod(pageDto.getRepoMethod());
         // 首次结算方式
         backDto.setvDeliveryType(pageDto.getDeliverytype());
         // 清算速度
@@ -1749,7 +1749,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         // 到期结算金额 转换
         pageDto.setMtradeAmt(backDto.getmTradeAmt());
         // 回购方式 双边回购(1)
-        pageDto.setRepoMethod(StringUtil.isNotEmpty(backDto.getRepoMethod()) ? backDto.getRepoMethod().charAt(0) : DictCodeListExt3.回购方式_双边回购.getValue().charAt(0));
+        pageDto.setRepoMethod(StringUtil.isNotEmpty(backDto.getRepoMethod()) ? backDto.getRepoMethod() : DictCodeListExt3.回购方式_双边回购.getValue());
         // 首次结算方式
         pageDto.setDeliverytype(backDto.getvDeliveryType());
         // 清算速度
@@ -1872,8 +1872,8 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         req.setUserId(SecurityUtil.getLoginUser().getUserName());
         req.setTotalTradeId(entity.getQuoteId());
         req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
-
         req.setModelType(DictCodeListExt1.子系统代码_交易.getValue());
+        req.setWorkFlowId(entity.getWorkflowId());
         req.setRepoPledgeModel(CacheUtil.getSysParam("repo_pledge_model"));
         String balanceCheck = DictCodeList.是否_是.getValue();
         if (StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(), "Y")) {

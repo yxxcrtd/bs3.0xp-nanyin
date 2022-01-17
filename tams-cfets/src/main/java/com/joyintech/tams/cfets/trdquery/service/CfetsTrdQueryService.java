@@ -179,6 +179,7 @@ public class CfetsTrdQueryService extends BaseService{
      * @return
      */
     public Map<String, Object> findRegInfo(String pageCode, String dtCode, String spcdCode, CfetsTrdQueryRegInfoListResponse dto) {
+        //spcdCode 01现券买卖 02 回售 03 回购
         Map<String, Object> resultData = new HashMap<>();
         if(StringUtil.isBlank(spcdCode)){
             return resultData;
@@ -244,12 +245,26 @@ public class CfetsTrdQueryService extends BaseService{
             //投资经理
             pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
         }
+        if(StringUtil.equals(dto.getEffectiveStatus(), DictCodeListExt1.有效状态_流程中.getValue())){
+            pageParam.put("effectiveStatus",DictCodeListExt1.有效状态_流程中.getValue());
+        }else if(StringUtil.equals(dto.getEffectiveStatus(), DictCodeListExt1.有效状态_撤销.getValue())){
+            pageParam.put("effectiveStatus",DictCodeListExt1.有效状态_撤销.getValue());
+        }else{
+            pageParam.put("effectiveStatus",DictCodeListExt1.有效状态_有效.getValue());
+        }
+        pageParam.put("STATUS_VALID_01", DictCodeListExt1.有效状态_有效.getValue());
+        pageParam.put("STATUS_VALID_03", DictCodeListExt1.有效状态_撤销.getValue());
+        pageParam.put("STATUS_VALID_04", DictCodeListExt1.有效状态_流程中.getValue());
 
         //表单data
         CfetsTrdQueryRegInfoListResponse dataform=cfetsTrdQueryMapper.selectRegFormDataByKey(pageParam);
         //表格组合分配data
         List<CfetsPortfolioIdFenPeiInfoResponse> portIntFenPeiInfoDtoList =  cfetsTrdQueryMapper.selectRegTableFenPeiInfoList(pageParam);
         //表格质押券data
+        pageParam.put("TRADEPLACE01", DictCodeListExt1.交易场所_银行间.getValue());
+        pageParam.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        pageParam.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+        pageParam.put("platDate", iPlatformDate.getSysDateStr());
         List<CfetsPledgeInfoResponse> pledgeInfoDtoList =  cfetsTrdQueryMapper.selectRegTablePledgeInfoList(pageParam);
 
 
@@ -368,6 +383,7 @@ public class CfetsTrdQueryService extends BaseService{
      * @return
      */
     public Map<String, Object> findIbuInfo(String pageCode, String dtCode, String spcdCode, CfetsTrdQueryIbuInfoListResponse dto) {
+        //spcdCode 01:现券买卖 03:回购
         Map<String, Object> resultData = new HashMap<>();
         if(StringUtil.isBlank(spcdCode)){
             return resultData;

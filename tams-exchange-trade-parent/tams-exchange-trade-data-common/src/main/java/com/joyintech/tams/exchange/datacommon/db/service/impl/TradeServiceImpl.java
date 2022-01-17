@@ -1,33 +1,35 @@
 package com.joyintech.tams.exchange.datacommon.db.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.exchange.common.bean.EntrustQueryBean;
+import com.joyintech.tams.exchange.common.bean.TradeQryBean;
+import com.joyintech.tams.exchange.common.bean.TradeQueryBean;
 import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
 import com.joyintech.tams.exchange.common.constant.TradeType;
 import com.joyintech.tams.exchange.common.db.domain.Trade;
 import com.joyintech.tams.exchange.common.db.domain.TradeExample;
+import com.joyintech.tams.exchange.common.request.PageMode;
+import com.joyintech.tams.exchange.common.request.PageTradeInfoRequest;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.datacommon.cache.impl.AsyncServiceImpl;
 import com.joyintech.tams.exchange.datacommon.db.dao.IMybatisMapper;
+import com.joyintech.tams.exchange.datacommon.db.dao.IntegratedEntrustMapper;
 import com.joyintech.tams.exchange.datacommon.db.dao.TradeMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.TradeService;
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
 public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements TradeService {
@@ -35,6 +37,9 @@ public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements
 
     @Autowired
     private TradeMapper tradeMapper;
+    @Autowired
+    private IntegratedEntrustMapper integratedEntrustMapper;
+
     private Map<String, Map<String, Trade>> orderIdMap = new ConcurrentHashMap<>();
     private Map<String, Map<String, Trade>> entrustIdMap = new ConcurrentHashMap<>();
     private Map<String, Map<String, Trade>> instructionIdMap = new ConcurrentHashMap<>();
@@ -63,6 +68,33 @@ public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements
         return new ArrayList<>(entrustIdMap.getOrDefault(entrustId, new HashMap<>()).values());
     }
 
+    @Override
+    public List<TradeQueryBean> queryTradeByEntrustId(String entrustId) {
+        Collection<Trade> values = entrustIdMap.getOrDefault(entrustId, new HashMap<>()).values();
+        if (CollectionUtils.isEmpty(values)) {
+            return new ArrayList<>();
+        }
+
+        List<EntrustQueryBean> list = integratedEntrustMapper.selectEntrustsById(entrustId);
+        EntrustQueryBean entrust = list.get(0);
+
+        List<TradeQueryBean> tradeQueryBeans = Lists.newArrayList();
+        values.forEach(trade -> {
+            TradeQueryBean tradeQueryBean = new TradeQueryBean();
+            BeanUtils.copyProperties(trade, tradeQueryBean);
+            if (null != entrust) {
+                tradeQueryBean.setPortfolioName(entrust.getPortfolioName());
+                tradeQueryBean.setSecAcctId(entrust.getSecAcctId());
+                tradeQueryBean.setTradePlat(entrust.getTradePlat());
+                tradeQueryBean.setFinprodType2(entrust.getFinprodType2());
+                tradeQueryBean.setEntrustBs(entrust.getEntrustBs());
+            }
+
+            tradeQueryBeans.add(tradeQueryBean);
+        });
+        return tradeQueryBeans;
+    }
+
     /**
      * 根据传入的Order表行数据的主键在Trade表中以ParentOrderId字段查询
      */
@@ -86,7 +118,7 @@ public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements
     public Trade queryTradeByAccountIdAndBrokerTradeId(String accountId, String brokerTradeId) {
         Map<String, Trade> map = accountIdMap.get(accountId);
         if (Objects.nonNull(map)) {
-            return map.get(DateUtil.getSysDate().replace("-","") + "_" + brokerTradeId);
+            return map.get(DateUtil.getSysDate().replace("-", "") + "_" + brokerTradeId);
         }
         return null;
     }
@@ -100,18 +132,32 @@ public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements
     public PageInfo<Trade> queryAllForPage(int pageNum, int pageSize, String userId, String accountId, String market, String stockCode, String entrustProp, List<String> ptlAuthList) {
         TradeExample tradeExample = new TradeExample();
         TradeExample.Criteria criteria = tradeExample.createCriteria();
-        if (!Strings.isNullOrEmpty(accountId))
-            criteria.andAccountIdEqualTo(accountId);
-        if (!Strings.isNullOrEmpty(market))
-            criteria.andMarketEqualTo(market);
-        if (!Strings.isNullOrEmpty(stockCode))
-            criteria.andStockCodeEqualTo(stockCode);
-        if (!Strings.isNullOrEmpty(entrustProp))
-            criteria.andEntrustPropEqualTo(entrustProp);
-        if (Objects.nonNull(ptlAuthList) && ptlAuthList.size() > 0)
-            criteria.andPortfolioIdIn(ptlAuthList);
+        if (!Strings.isNullOrEmpty(accountId)) criteria.andAccountIdEqualTo(accountId);
+        if (!Strings.isNullOrEmpty(market)) criteria.andMarketEqualTo(market);
+        if (!Strings.isNullOrEmpty(stockCode)) criteria.andStockCodeEqualTo(stockCode);
+        if (!Strings.isNullOrEmpty(entrustProp)) criteria.andEntrustPropEqualTo(entrustProp);
+        if (Objects.nonNull(ptlAuthList) && ptlAuthList.size() > 0) criteria.andPortfolioIdIn(ptlAuthList);
         PageHelper.startPage(pageNum, pageSize);
         List<Trade> tradeHistories = tradeMapper.selectByExample(tradeExample);
+        tradeHistories.forEach(tradeHistory -> {
+            if (InvestmentAssetType.isFutures(tradeHistory.getAssetType())) {
+                tradeHistory.setStockCode(StockCodeUtils.getStockCode(tradeHistory.getStockCode()));
+            }
+        });
+        return new PageInfo<>(tradeHistories);
+    }
+
+    @Override
+    public PageInfo<TradeQueryBean> queryAllForPage(PageTradeInfoRequest request, List<String> ptlAuthList) {
+        String accountId = request.getAccountId();
+        String market = request.getMarket();
+        String stockCode = request.getStockCode();
+        String entrustProp = request.getEntrustProp();
+        PageMode pageMode = request.getPageMode();
+
+        TradeQryBean tradeQryBean = new TradeQryBean(accountId, market, stockCode, entrustProp, ptlAuthList);
+        PageHelper.startPage(pageMode.getPageNo(), pageMode.getPageSize());
+        List<TradeQueryBean> tradeHistories = tradeMapper.selectTradeByPage(tradeQryBean);
         tradeHistories.forEach(tradeHistory -> {
             if (InvestmentAssetType.isFutures(tradeHistory.getAssetType())) {
                 tradeHistory.setStockCode(StockCodeUtils.getStockCode(tradeHistory.getStockCode()));
@@ -195,16 +241,13 @@ public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements
     private void deleteMemoryCache(Trade trade) {
         if (!Strings.isNullOrEmpty(trade.getParentOrderId())) {
             Map<String, Trade> map = orderIdMap.get(trade.getParentOrderId());
-            if (Objects.nonNull(map))
-                map.remove(trade.getId());
+            if (Objects.nonNull(map)) map.remove(trade.getId());
         }
         Map<String, Trade> map = entrustIdMap.get(trade.getEntrustId());
-        if (Objects.nonNull(map))
-            map.remove(trade.getId());
+        if (Objects.nonNull(map)) map.remove(trade.getId());
         if (!Strings.isNullOrEmpty(trade.getInstructionId())) {
             Map<String, Trade> map1 = instructionIdMap.get(trade.getInstructionId());
-            if (Objects.nonNull(map1))
-                map1.remove(trade.getId());
+            if (Objects.nonNull(map1)) map1.remove(trade.getId());
         }
         accountIdMap.get(trade.getAccountId()).remove(trade.getTradingDay() + "_" + trade.getBrokerTradeId());
     }
@@ -213,12 +256,12 @@ public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements
     public IMybatisMapper<Trade, String, TradeExample> getMapper() {
         return tradeMapper;
     }
-    
+
     /**
      * 投管用成交查询
      */
     @Override
-    public List<Trade> queryTrade2Touguan(String instructionId){
-    	return tradeMapper.queryTrade2Touguan(instructionId);
+    public List<Trade> queryTrade2Touguan(String instructionId) {
+        return tradeMapper.queryTrade2Touguan(instructionId);
     }
 }

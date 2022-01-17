@@ -1,6 +1,7 @@
 package com.joyintech.tams.exchange.datacommon.db.dao;
 
 import com.joyintech.tams.exchange.common.bean.EntrustQryBean;
+import com.joyintech.tams.exchange.common.bean.EntrustQueryBean;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrustExample;
 import org.apache.ibatis.annotations.Param;
@@ -26,7 +27,14 @@ public interface IntegratedEntrustMapper extends IMybatisMapper<IntegratedEntrus
 
     List<IntegratedEntrust> selectByExample(IntegratedEntrustExample example);
 
+    List<EntrustQueryBean> selectIntegratedEntrustByPage(EntrustQryBean entrustQryBean);
+
+    @Deprecated
     List<IntegratedEntrust> selectEntrustsPageInfo(EntrustQryBean entrustQryBean);
+
+    List<EntrustQueryBean> selectEntrustsByPage(EntrustQryBean entrustQryBean);
+
+    List<EntrustQueryBean> selectEntrustsById(@Param("entrustId") String entrustId);
 
     IntegratedEntrust selectByPrimaryKey(String id);
 
