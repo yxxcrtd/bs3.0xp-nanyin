@@ -140,7 +140,7 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
                                            EtrPositionHoldDto etrPositionHoldDto) {
             if(StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_债转股.getValue())){
 //                交易生效（有委托）	增加股票指令可用持仓		增加股票指令可用持仓
-                if(StringUtil.isNotEmpty(finProductTradeDto.getTrdProductDealAdd().getEntrustId())&&持仓类型.equals(DictCodeList.持仓类型_实际)){
+                if(持仓类型.equals(DictCodeList.持仓类型_实际)){
                     TrdProductDeal deal = finProductTradeDto.getTrdProductDeal();
                     TrdProductDealAdd dealAdd = finProductTradeDto.getTrdProductDealAdd();
                     TrdFinProductBarter barterDeal = finProductTradeDto.getTrdFinProductBarterList().get(0);
