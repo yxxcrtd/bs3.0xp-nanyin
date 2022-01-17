@@ -482,7 +482,14 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
     @Override
     public void doDelete(String workflowId) {
         CfetsBondDealRegisterQuoteDto entity = getBussinessEntityByWorkflowId(workflowId);
-        PositionHttpRequest.sendRevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+        String busiType = StringUtil.EMPTY;
+        if(StringUtil.equals(entity.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
+            busiType = DictCodeListExt3.头寸业务类型_债券行权交易.getValue();
+        }else{
+            busiType = DictCodeListExt3.头寸业务类型_现券交易.getValue();
+        }
+        PositionHttpRequest.doDeleteByWorkFlowId(workflowId,DictCodeListExt1.子系统代码_交易.getValue(),busiType,entity.getPs());
+        //PositionHttpRequest.sendRevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
         deleteBussFlowData(workflowId);
     }
 
@@ -816,6 +823,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             result.put("cdate",DateUtil.format(entity.getRegFinProductDealTotal().getTradeDate()));
             result.put("ccy",entity.getRegFinProductDealTotal().getCcy());
             result.put("finprodId",entity.getRegFinProductDealTotal().getFinprodId());
+            result.put("workFlowId",entity.getWorkflowId());
             if(StringUtil.equals(decisionAct,DictCodeListExt3.系统动作_修改.getValue())){
                 result.put("bTotalTradeId",entity.getRegFinProductDealTotal().getTotleTradeId());
             }
