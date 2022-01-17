@@ -108,6 +108,14 @@ public class ManualSettleService extends BaseService<ManualSettleDto> {
             //临时交易表
             TrdProductDeal trdProductDeal = new TrdProductDeal();
             TrdProductTempDeal trdProductTempDeal = trdProductTempDealMapper.selectByPrimaryKey(dto.getTradeId());
+
+            // add by etliu 20220117 start
+            // GZYHTZJY-1128:到期续作日间手工交收报系统异常，报错日志见附件，委托编号WTREPO202107261907，日期：2021-07-26
+            if (trdProductTempDeal == null) {
+                return;
+            }
+            // add by etliu 20220117 end
+
             BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, trdProductTempDeal);
             //临时交易附属表
             TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
