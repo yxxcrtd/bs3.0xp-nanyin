@@ -816,6 +816,9 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             result.put("cdate",DateUtil.format(entity.getRegFinProductDealTotal().getTradeDate()));
             result.put("ccy",entity.getRegFinProductDealTotal().getCcy());
             result.put("finprodId",entity.getRegFinProductDealTotal().getFinprodId());
+            if(StringUtil.equals(decisionAct,DictCodeListExt3.系统动作_修改.getValue())){
+                result.put("bTotalTradeId",entity.getRegFinProductDealTotal().getTotleTradeId());
+            }
             if(CollectionUtils.isNotEmpty(entity.getRegFinProductDeals())){
                 List<Map<String,Object>> ptlList = new ArrayList<>();
                 Map<String,List<RegFinProductDealAdd>> regFinProductDealAddMap = new HashMap<>();
