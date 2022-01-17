@@ -274,6 +274,11 @@ public class StlDataDealProcessCommonService {
 					trdDetailDto.setTradeMarket(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeMarket());
 					// 交易平台
 					trdDetailDto.setTradePlat(stlDownDataDealWriteBaseDto.getSettleTransData().getTradePlat());
+
+					// add by etliu 20220118 start
+					// GZYHTZJY-1080: 【场内对账清结算1231】深交所协议回购 逆回购首期佣金没有计算出来，正回购到期续作佣金计算有误【解决日期：2022-01-12】
+					boolean fpriceAmtBeSet = false;
+					// add by etliu 20220118 end
 					
 					String busiSceneCalss = stlDownDataDealWriteBaseDto.getSettleTransData().getBusiSceneCalss();
 					if ((StringUtil.equals(busiSceneCalss,DictCodeListStl.业务场景分类明细_债券协议正回购_到期续作.getValue()) ||
@@ -281,11 +286,21 @@ public class StlDataDealProcessCommonService {
 						BigDecimal.ZERO.compareTo(stlDownDataDealWriteBaseDto.getSettleTransData().getPrinAmt()) < 0){
 						// 交易方向
 						trdDetailDto.setPs(DictCodeListExt3.交易方向_正回购.getValue());
+						// add by etliu 20220118 start
+						// GZYHTZJY-1080: 【场内对账清结算1231】深交所协议回购 逆回购首期佣金没有计算出来，正回购到期续作佣金计算有误【解决日期：2022-01-12】
+						trdDetailDto.setFpriceAmt(stlDownDataDealWriteBaseDto.getSettleTransData().getShareAmt());
+						fpriceAmtBeSet = true;
+						// add by etliu 20220118 end
 					}else if ((StringUtil.equals(busiSceneCalss,DictCodeListStl.业务场景分类明细_债券协议逆回购_到期续作.getValue()) ||
 								StringUtil.equals(busiSceneCalss,DictCodeListStl.业务场景分类明细_债券协议逆回购_首期_买入.getValue())) &&
 							BigDecimal.ZERO.compareTo(stlDownDataDealWriteBaseDto.getSettleTransData().getPrinAmt()) > 0){
 						// 交易方向
 						trdDetailDto.setPs(DictCodeListExt3.交易方向_逆回购.getValue());
+						// add by etliu 20220118 start
+						// GZYHTZJY-1080: 【场内对账清结算1231】深交所协议回购 逆回购首期佣金没有计算出来，正回购到期续作佣金计算有误【解决日期：2022-01-12】
+						trdDetailDto.setFpriceAmt(stlDownDataDealWriteBaseDto.getSettleTransData().getShareAmt());
+						fpriceAmtBeSet = true;
+						// add by etliu 20220118 end
 					}else {
 						// 交易方向
 						trdDetailDto.setPs(stlDownDataDealWriteBaseDto.getSettleTransData().getPs());	
@@ -293,8 +308,17 @@ public class StlDataDealProcessCommonService {
 					
 					// 期限品种
 					trdDetailDto.setTermType(stlDownDataDealWriteBaseDto.getSettleTransData().getTermType());
-					// 全价总额
-					trdDetailDto.setFpriceAmt(stlDownDataDealWriteBaseDto.getSettleTransData().getFpriceAmt());
+
+					// add by etliu 20220118 start
+					// GZYHTZJY-1080: 【场内对账清结算1231】深交所协议回购 逆回购首期佣金没有计算出来，正回购到期续作佣金计算有误【解决日期：2022-01-12】
+//					// 全价总额
+//					trdDetailDto.setFpriceAmt(stlDownDataDealWriteBaseDto.getSettleTransData().getFpriceAmt());
+					if (!fpriceAmtBeSet) {
+						// 全价总额
+						trdDetailDto.setFpriceAmt(stlDownDataDealWriteBaseDto.getSettleTransData().getFpriceAmt());
+					}
+					// add by etliu 20220118 end
+
 					// 交易份额
 					trdDetailDto.setShareAmt(stlDownDataDealWriteBaseDto.getSettleTransData().getShareAmt());
 					// 申请编号

@@ -430,9 +430,26 @@ public class TrdFeeCalcService {
 					&& StringUtil.equals(DictCodeList.回购类型_质押式协议回购.getValue(), tradeFeatureInformation.getRepoType())) {
 				localPlanSearchInfo.setAssetClassify1(DictCodeList.回购类型_质押式协议回购.getValue());
 				localPlanSearchInfo.setAssetClassify2(DictCodeList.回购类型_质押式协议回购.getValue());
+				// modify by etliu 20220117 start
+				// GZYHTZJY-1080:【场内对账清结算1231】深交所协议回购 逆回购首期佣金没有计算出来，正回购到期续作佣金计算有误【解决日期：2022-01-12】
 				if (!StringUtil.isEmptyList(detailDtos)) {
-					localPlanSearchInfo.setPs(detailDtos.get(0).getPs());
+//					localPlanSearchInfo.setPs(detailDtos.get(0).getPs());
+					if ((!StringUtil.equals(DictCodeListExt3.交易方向_正回购.getValue(), detailDtos.get(0).getPs())
+							&& !StringUtil.equals(DictCodeListExt3.交易方向_逆回购.getValue(), detailDtos.get(0).getPs()))
+							|| StringUtil.equals(DictCodeList.交易方向_买入.getValue(), detailDtos.get(0).getPs())) {
+						// 交易方向重新设置
+						if (StringUtil.equals(tradeFeatureInformation.getFinprodType2(), DictCodeListExt1.金融产品类型_债券质押式正回购.getValue())) {
+							localPlanSearchInfo.setPs(DictCodeList.回购拆借方向_正回购.getValue());
+						}
+						else if (StringUtil.equals(tradeFeatureInformation.getFinprodType2(), DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue())) {
+							localPlanSearchInfo.setPs(DictCodeList.回购拆借方向_逆回购.getValue());
+						}
+					}
+					else {
+						localPlanSearchInfo.setPs(detailDtos.get(0).getPs());
+					}
 				}
+				// modify by etliu 20220117 end
 			}
 			// modify by etliu 20220104 end
 			
