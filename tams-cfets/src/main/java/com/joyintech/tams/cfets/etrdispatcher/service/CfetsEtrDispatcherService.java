@@ -1167,14 +1167,14 @@ public class CfetsEtrDispatcherService extends BaseService{
                     for(CfetsPledgeBondInfoDto infoDto : detailList) {
                         infoDto.setPledgeRatio(ArithmeticUtil.multiply(infoDto.getPledgeRatio(),new BigDecimal("100")));
                         totalPrinAmt = ArithmeticUtil.doAdd(totalPrinAmt, ArithmeticUtil.multiply(infoDto.getPledgePrin(), infoDto.getPledgeRatio()).divide(new BigDecimal("100")));
-                        infoDto.setPledgePrin(ArithmeticUtil.divide(infoDto.getPledgePrin(),new BigDecimal("10000"),4));
-                        infoDto.setPledStrdPrinAmt(ArithmeticUtil.divide(infoDto.getPledStrdPrinAmt(),new BigDecimal("10000"),4));
+                        infoDto.setPledgePrin(ArithmeticUtil.divide(infoDto.getPledgePrin(),new BigDecimal("10000"),2));
+                        infoDto.setPledStrdPrinAmt(ArithmeticUtil.divide(infoDto.getPledStrdPrinAmt(),new BigDecimal("10000"),2));
                         if(StringUtil.isNoneBlank(infoDto.getRegistOrg())){
                             infoDto.setRepRegistOrg(SysDataUtil.getNameFromDataDict(DictCode.登记托管机构_中债, infoDto.getRegistOrg()));
                         }
                     }
                     CfetsEtrDispatcherInfoResponse totalResult = new CfetsEtrDispatcherInfoResponse();
-                    totalResult.setTotalPrinAmt(ArithmeticUtil.divide(totalPrinAmt,new BigDecimal("10000"),4));
+                    totalResult.setTotalPrinAmt(ArithmeticUtil.divide(totalPrinAmt,new BigDecimal("10000"),2));
                     resultData.put(dtCode+"_datatotal",totalResult);
                 }
                 resultData.put(dtCode+"_datatable",detailList);
