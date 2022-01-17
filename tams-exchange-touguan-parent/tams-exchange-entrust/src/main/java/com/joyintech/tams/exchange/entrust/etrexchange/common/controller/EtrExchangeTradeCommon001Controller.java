@@ -404,6 +404,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			}
 		}
 		initPageParams.put("etrExchange_HqArea_refresh_period", etrExchange_HqArea_refresh_period);
+		initPageParams.put("BOARD_BD04", DictCodeList.上市板_创业板.getValue());
 		return new Message<Map<String, Object>>(initPageParams).success();
 	}
 
@@ -464,17 +465,18 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	 */
 	private void setPriceModelSelectOptions(Map<String, Object> initPageParams) {
 		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.价格模式, null);
-//		List<SelectOptionDto> priceModel_jj = selectDto.getOptions().stream().filter(option -> {
-//			return StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_限价指令.getValue())
-//					|| StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_市价指令.getValue())
-//					|| StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_指定价格.getValue());
-//		}).collect(Collectors.toList());
+		List<SelectOptionDto> priceModelStockCyb = selectDto.getOptions().stream().filter(option -> {
+			return StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_限价指令.getValue())
+					|| StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_市价指令.getValue())
+					|| StringUtil.equals(option.getId(), com.joyintech.background.component.order.exchange.common.constant.DictCodeList.价格模式_收盘价固定价格申报.getValue());
+		}).collect(Collectors.toList());
 
 
 		List<SelectOptionDto> priceModel = selectDto.getOptions().stream().filter(option -> {
 			return StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_限价指令.getValue())
 					|| StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_市价指令.getValue());
 		}).collect(Collectors.toList());
+		initPageParams.put("PRICE_MODEL_JJ_STCOK_CYB", JsonUtils.objectArray2Json(priceModelStockCyb.toArray()));
 		initPageParams.put("PRICE_MODEL_JJ", JsonUtils.objectArray2Json(priceModel.toArray()));
 		initPageParams.put("PRICE_MODEL_DZ", JsonUtils.objectArray2Json(priceModel.toArray()));
 		initPageParams.put("PRICE_MODEL_GD", JsonUtils.objectArray2Json(priceModel.toArray()));
@@ -899,6 +901,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 				dto.setMdate(dto.getEntrustDate());
 				dto.setAcctNo(item.getAcctNo());
 				dto.setSecAcctId(item.getSecAcctId());
+				dto.setStockId(item.getStockId());
 				// ----------add by zhangrui1 20200703 预占功能 start----------
 				if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
 					String finprodType2 = "";
