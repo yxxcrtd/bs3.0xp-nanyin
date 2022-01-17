@@ -1253,8 +1253,10 @@ public class ExchangeTransMatchCommonService extends BaseService {
                 }
                 totalMarchQty = ArithmeticUtil.doAdd(totalMarchQty,commonEntrustDto.getMarchQty());
             }
-
-            if(BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(dto.getRemainNum(),totalMarchQty))>=0) {
+            // GZYHTZJY-1138:修改匹配多条指令完成度 modify by fuyongsheng start
+            // if(BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(dto.getRemainNum(),totalMarchQty))>=0) {
+            if(BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(dto.getRemainNum(),totalMarchQty)) < 0) {
+            // GZYHTZJY-1138:修改匹配多条指令完成度 modify by fuyongsheng end
                 for(ExchangeTransMatchCommonEntrustDto commonEntrustDto : commonEntrustDtoList) {
                     if(StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
                             || StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
