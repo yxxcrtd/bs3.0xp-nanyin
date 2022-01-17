@@ -14,15 +14,18 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.valuation.trademanage.bond.dao.TrdBondTradeMapper;
 import com.joyintech.service.valuation.trademanage.trdlendvaluationtrade.dao.TrdLendValuationTradeMapper;
 import com.joyintech.service.valuation.trademanage.trdlendvaluationtrade.dto.TrdLendValuationTradeDto;
-import com.joyintech.service.valuation.trademanage.trdplanvaluationtrade.dao.TrdPlanValuationTradeMapper;
-import com.joyintech.service.valuation.trademanage.trdplanvaluationtrade.dto.TrdPlanValuationTradeDto;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCommonBatchMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,28 +43,19 @@ public class TrdLendValuationTradeService extends CommonExportService<TrdLendVal
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
 
+    @Autowired
+    private ValCommonBatchMapper valCommonBatchMapper;
+
+    @Autowired
+    private TrdBondTradeMapper trdBondTradeMapper;
 
     /**
      * 产品代码下拉框
-     * @auther: Administrator
-     * @date: 2021/12/29 16:47
-     * @param:
-     * @return:
      */
     public Page<SelectOptionDto> findPortfolioId(int page, int length,Map<String, Object> params) {
         return this.queryForPageForSelectReturn(page, length, ()->trdLendValuationTradeMapper.findPortfolioId(params));
     }
 
-//    /**
-//     * 资产代码下拉框
-//     * @auther: Administrator
-//     * @date: 2021/12/29 16:47
-//     * @param:
-//     * @return:
-//     */
-//    public Page<SelectOptionDto> findFinprodId(int page, int length,Map<String, Object> params) {
-//        return this.queryForPageForSelectReturn(page, length, ()->trdLendValuationTradeMapper.findFinprodId(params));
-//    }
 
 
     /**
@@ -73,13 +67,7 @@ public class TrdLendValuationTradeService extends CommonExportService<TrdLendVal
      * @since 1.0
      */
     public void doComplete(TrdLendValuationTradeDto entity) {
-//        if(StringUtil.equals(entity.getOperateType(), "DELETE")) {
-//            trdPlanRateValuationTradeMapper.deleteByPrimaryKey(entity);
-//        }else if(StringUtil.equals(entity.getOperateType(), "NEW")){
-//            trdPlanRateValuationTradeMapper.insert(entity);
-//        }else{
-//            trdPlanRateValuationTradeMapper.updateByPrimaryKeySelective(entity);
-//        }
+
     }
 
     /**
@@ -93,11 +81,26 @@ public class TrdLendValuationTradeService extends CommonExportService<TrdLendVal
      * @since 1.0
      */
     public Page<TrdLendValuationTradeDto> selectForPage(int page, int length, Map<String, Object> pageParam) throws Exception {
-//        return super.queryForPage(page,length,()-> trdPlanRateValuationTradeMapper.select(pageParam));
-        Page<TrdLendValuationTradeDto> pagelist = new Page<>();
-        List<TrdLendValuationTradeDto> planList = new ArrayList<>();
-        pagelist.setRoot(planList);
-        return pagelist;
+        //产品代码
+        String portfolioId = (String)pageParam.get("portfolioId");
+        String[] portfolioIdArr = null;
+        if(StringUtil.isNotEmpty(portfolioId)){
+            portfolioIdArr = portfolioId.split(",");
+        }
+        pageParam.put("portfolioIdArr", portfolioIdArr);
+
+        // 获取交易方向
+        String ps = (String)pageParam.get("ps");
+        // 交易方向多选，转为数组
+        String[] psArr = null;
+        if (StringUtil.isNotEmpty(ps)) {
+            psArr = ps.split(",");
+        }
+        pageParam.put("psArr", psArr);
+
+
+        return this.queryForPage(page, length,
+                () -> trdLendValuationTradeMapper.selectDeal(pageParam));
     }
 
 
@@ -137,18 +140,72 @@ public class TrdLendValuationTradeService extends CommonExportService<TrdLendVal
         return trdLendValuationTradeMapper.getNextId(sequenceName);
     }
 
+
+    //根据交易编号查询
+    public TrdLendValuationTradeDto queryTradeInfoByTradeId(String tradeId) {
+        return trdLendValuationTradeMapper.queryTradeInfoByTradeId(tradeId);
+    }
+
+
+
+    //删除
+    public int delete(TrdLendValuationTradeDto dto) {
+        int count=0;
+        Map<String, Object> params = new HashMap<>();
+        params.put("booksetId",dto.getPortfolioId());   //产品代码
+        params.put("tradeId",dto.getTradeId());
+
+        List<TrdProductDeal> listDeal = new ArrayList<>();
+        TrdProductDeal entity = new TrdProductDeal();
+        entity.setTradeId(dto.getTradeId());
+        listDeal.add(entity);
+        // 1.估值核算交易扩展表 TRD_PRODUCT_DEAL_ADD
+        count += valCommonBatchMapper.delProductDealExtByTradeId(listDeal);
+        // 2.交易费用明细表 TRD_TRADE_FEE_DETAIL
+        count += valCommonBatchMapper.delTradeFeeDetailByTradeId(listDeal);
+        // 3.入账账务明细表 BOK_DEAL_ACCOUNTING_DETAIL
+        count += valCommonBatchMapper.delDealAccountingDetailByTradeId(listDeal);
+        // 4.入账信息表 BOK_DEAL_ACCOUNTING
+        count += valCommonBatchMapper.delDealAccountingByTradeId(listDeal);
+        // 5.结算指令扩展表 STL_ORDERS_EXT
+        count += valCommonBatchMapper.delOrdersExtByTradeId(listDeal);
+        // 6.结算指令表 STL_ORDERS
+        count += valCommonBatchMapper.delOrdersByTradeId(listDeal);
+        // 7.金融产品交易 TRD_PRODUCT_DEAL
+        count += valCommonBatchMapper.delProductDealByTradeId(listDeal);
+        // 8.金融产品实物交易 TRD_FIN_PRODUCT_BARTER
+        count += valCommonBatchMapper.delTrdFinProductBarterByTradeId(listDeal);
+        // 9.账务明细代码表 BOK_DETAIL_ID
+        count += trdBondTradeMapper.delBokDetailIdByTradeId(params);
+
+        return count;
+    }
+
+
     /**
-     * 根据条件查询所有
      *
-     * @param params
-     * @return
-     * @see
-     * @since 1.0
+     * 获取不分页查询结果（sharesId  dealDateString）
+     * <功能详细描述>
      */
-//    public List<TrdLendValuationTradeDto> findAll(Map<String, Object> params) {
-//        return trdLendValuationTradeMapper.select(params);
-//    }
+    public List<TrdLendValuationTradeDto> queryPageList(Map<String, Object> params)  {
 
+        //产品代码
+        String portfolioId = (String)params.get("portfolioId");
+        String[] portfolioIdArr = null;
+        if(StringUtil.isNotEmpty(portfolioId)){
+            portfolioIdArr = portfolioId.split(",");
+        }
+        params.put("portfolioIdArr", portfolioIdArr);
 
+        // 获取交易方向
+        String ps = (String)params.get("ps");
+        // 交易方向多选，转为数组
+        String[] psArr = null;
+        if (StringUtil.isNotEmpty(ps)) {
+            psArr = ps.split(",");
+        }
+        params.put("psArr", psArr);
 
+        return trdLendValuationTradeMapper.selectDeal(params);
+    }
 }

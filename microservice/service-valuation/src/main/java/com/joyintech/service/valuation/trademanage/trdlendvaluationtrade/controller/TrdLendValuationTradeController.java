@@ -75,7 +75,7 @@ public class TrdLendValuationTradeController extends BaseController {
      *
      * @since 1.0
      */
-    @RequestMapping("/selectForPage/{page}/{length}")
+    @RequestMapping("/findPage/{page}/{length}")
     public Page<TrdLendValuationTradeDto> selectForPage(@RequestBody Map<String, Object> pageParam, @PathVariable("page") int page,
                                                         @PathVariable("length") int length)
             throws Exception {
@@ -93,17 +93,37 @@ public class TrdLendValuationTradeController extends BaseController {
         return trdLendValuationTradeService.createPlanTradeId();
     }
 
+
     /**
-     * 分页数据查询
-     *
-     * @return page
-     * @throws Exception 异常
+     * 根据交易编号查询对象
      * @see
      * @since 1.0
      */
-//    @PostMapping("/findAll")
-//    public List<TrdLendValuationTradeDto> findAll(@RequestBody Map<String, Object> param){
-//        return trdLendValuationTradeService.findAll(param);
-//    }
+    @PostMapping("queryTradeInfoByTradeId")
+    public TrdLendValuationTradeDto queryTradeInfoByTradeId(@RequestBody String  tradeId) {
+        return trdLendValuationTradeService.queryTradeInfoByTradeId(tradeId);
+    }
 
+    /**
+     * 删除
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("delete")
+    public int delete(@RequestBody TrdLendValuationTradeDto dto){
+        return trdLendValuationTradeService.delete(dto);
+    }
+
+
+    /**
+     * 不分页数据查询  导出
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/queryPageList")
+    public List<TrdLendValuationTradeDto> queryPageList(@RequestBody Map<String, Object> param){
+        return trdLendValuationTradeService.queryPageList(param);
+    }
 }
