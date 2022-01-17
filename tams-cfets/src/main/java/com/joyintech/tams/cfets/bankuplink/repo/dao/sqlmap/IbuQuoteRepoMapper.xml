@@ -1626,12 +1626,14 @@
             <include refid="com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepo003Mapper.statusValid_04" />
 
        )
-       where nvl(CREATE_USER,UPDATE_USER) = #{loginUserId}
-       or EXISTS (select 1
-            from SYS_USER_ROLE sur
-            left join SYS_ROLE sr on sur.ROLE_ID = sr.ROLE_ID
-            where sur.USER_ID = #{loginUserId}
-                and sr.ROLE_POS = #{rolePos03})
+       <if test="loginUserId != null and loginUserId != '' ">
+           where nvl(CREATE_USER,UPDATE_USER) = #{loginUserId}
+           or EXISTS (select 1
+                           from SYS_USER_ROLE sur
+                           left join SYS_ROLE sr on sur.ROLE_ID = sr.ROLE_ID
+                           where sur.USER_ID = #{loginUserId}
+                           and sr.ROLE_POS = #{rolePos03})
+       </if>
     </select>
 
     <sql id="listRegFinPledge_sql">
@@ -2595,4 +2597,46 @@
         </if>
     </select>
     <!-- 资产五级分类联动检索-->
+
+    <!--指令是否在流程中-->
+    <select id="countWflEtr" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM (
+        SELECT
+        ENTRUST_ID
+        FROM
+        WFL_REG_FIN_PRODUCT_DEAL
+        <where>
+            <if test="entrustIdList != null and entrustIdList.size() > 0">and ENTRUST_ID in
+                <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="entrustIds != null and entrustIds.size() > 0">
+                        and ENTRUST_ID  in
+                        <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                </where>
+            UNION ALL
+            SELECT
+                ENTRUST_ID
+            FROM
+                WFL_IBU_QUOTE_ETR_RE
+                <where>
+                    <if test="entrustIdList != null and entrustIdList.size() > 0">
+                        and ENTRUST_ID  in
+                        <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="entrustIds != null and entrustIds.size() > 0">
+                        and ENTRUST_ID  in
+                        <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                </where>
+                )
+    </select>
 </mapper>

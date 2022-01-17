@@ -739,12 +739,25 @@ public class IbuQuoteRepoService extends BaseService {
         String loginUserId = LoginUserUtil.getUserName();
         param.put("entrustId", entrustId);
         param.put("rolePos03", DictCodeListExt2.角色岗位_交易处长.getValue());
-        param.put("loginUserId", LoginUserUtil.getUserName());
-        param.put("loginUserId", loginUserId);
         if ("admin".equals(loginUserId)) {
 //            loginUserId = "jp";//TODO 测试写死登录用户 提交代码时修改
         }
         param.put("loginUserId", loginUserId);
+        return cfetsIbuQuoteRepoMapper.listDealTransactionDetails(param);
+    }
+
+    /**
+     * 查询交易执行明细信息
+     *
+     * @param entrustId 指令代码
+     * @return java.util.List<com.joyintech.tams.cfets.bankuplink.repo.dto.DealTransactionDetailsDto>
+     * @author jiangpeng
+     * @date 2021/12/20 14:31
+     */
+    public List<RepoDealTransactionDetailsDto> listDealTransactionDetailsNoUserId(String entrustId) {
+        Map<String, Object> param = new HashMap<>();
+        String loginUserId = LoginUserUtil.getUserName();
+        param.put("entrustId", entrustId);
         return cfetsIbuQuoteRepoMapper.listDealTransactionDetails(param);
     }
 
@@ -2060,14 +2073,14 @@ public class IbuQuoteRepoService extends BaseService {
         if (!StringUtil.isNotEmpty(param.get("remark")) && isremark) {
             errorList.add(new ValidMessage("请输入强制完成原因!"));
         }
-        if (cfetsIbuQuoteBondEtrMapper.countWflEtr(param) > 0) {
+        if (cfetsIbuQuoteRepoMapper.countWflEtr(param) > 0) {
             errorList.add(new ValidMessage("存在流程中交易数据，不可进行强制完成!"));
         }
         List<CfetsRepoDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
         if (CollectionUtils.isNotEmpty(entrustDtos)) {
             entrustDtos.forEach(item -> {
                 if (!StringUtil.equals(item.getEntrustStatus(), BussinessDictCodeList.委托状态_已接收.getValue())) {
-                    errorList.add(new ValidMessage("只可对已接收指令执行退回操作!"));
+                    errorList.add(new ValidMessage("只可对已接收指令执行强制完成操作!"));
                     return;
                 }
                 if (null != item.getTradeFinishPercent() && item.getTradeFinishPercent().compareTo(BigDecimal.ZERO) == 0) {
@@ -2088,7 +2101,9 @@ public class IbuQuoteRepoService extends BaseService {
      * @date 2021/12/20 14:44
      */
     public void doForcedFinish(Map<String, Object> param) {
-        setParam(param, 1);
+        String loginUserId = (String)param.get("loginUserId");
+        this.setParam(param, 1);
+        param.put("loginUserId", loginUserId);
         List<CfetsRepoDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
         if (entrustDtos != null && entrustDtos.size() > 0) {
             List<CfetsEtribBondInfo003Dto> dtolist = new ArrayList<>();
@@ -2137,7 +2152,7 @@ public class IbuQuoteRepoService extends BaseService {
                 }
 
                 //已经有委托完成度的
-                if (!com.joyintech.background.component.common.pack.common.util.StringUtil.isEmptyList(closeEntrustIdList)) {
+                if (!StringUtil.isEmptyList(closeEntrustIdList)) {
                     EntrustCompleteUtil.doComplete(closeEntrustIdList);
                 }
             }

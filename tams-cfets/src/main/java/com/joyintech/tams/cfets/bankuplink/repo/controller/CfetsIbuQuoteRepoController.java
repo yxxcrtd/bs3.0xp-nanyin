@@ -154,6 +154,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         initPageParams.put("PAGE_ID_DIALOG", "CfetsQuoteRepo003");
         // 01: 开启银行间报价 02:关闭银行间报价（事后录入）
         initPageParams.put("ibuFlag_quote_switch", CacheUtil.getSysParam(BussinessConstant.ibuFlag_quote_switch));
+        initPageParams.put("is_sys_support_quote", CacheUtil.getSysParam("is_sys_support_quote"));
         return new Message<>(initPageParams).success();
     }
 
