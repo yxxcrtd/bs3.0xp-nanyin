@@ -2101,7 +2101,7 @@ public class IbuQuoteRepoService extends BaseService {
      * @date 2021/12/20 14:44
      */
     public void doForcedFinish(Map<String, Object> param) {
-        String loginUserId = (String)param.get("loginUserId");
+        String loginUserId = (String) param.get("loginUserId");
         this.setParam(param, 1);
         param.put("loginUserId", loginUserId);
         List<CfetsRepoDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
@@ -2279,10 +2279,10 @@ public class IbuQuoteRepoService extends BaseService {
      * @param param
      * @return
      */
-    public AjaxResult entrustRefuceCheck(Map<String, Object> param) {
+    public AjaxResult entrustRefuceCheck(Map<String, Object> param, boolean isRefuce) {
         AjaxResult ajaxResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
-        if (!StringUtil.isNotEmpty(param.get("remark"))) {
+        if (!StringUtil.isNotEmpty(param.get("remark")) && isRefuce) {
             errorList.add(new ValidMessage("请输入退回原因!"));
         }
         setParam(param, 1);
@@ -2301,9 +2301,6 @@ public class IbuQuoteRepoService extends BaseService {
             });
         }
 
-        /*if(cfetsIbuQuoteBondEtrMapper.countNotDjsEtr(param)>0){
-            errorList.add(new ValidMessage("只可对待分发指令执行退回操作!"));
-        }*/
         ajaxResult.setErrorList(errorList);
         return ajaxResult;
     }
