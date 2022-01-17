@@ -38,6 +38,7 @@ import com.joyintech.system.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
 import com.joyintech.tams.cfets.trdconfirm.dao.CfetsTrdConfirmMapper;
+import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmMatchDto;
 import com.joyintech.tams.cfets.trdquery.dao.CfetsTrdQueryMapper;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdInvestPersonInfoDto;
@@ -4421,6 +4422,36 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
                 return m;
             }
         }
+        return null;
+    }
+    /**
+     * 撤销提交时check检查
+     * @param input
+     * @return
+     */
+    public AjaxResult  checkModifyExecId(CfetsTrdBondInvestTradeDto input) {
+       //判断该成交编号，是否已经被匹配
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("exeId", input.getExecId());
+        boolean flag=cfetsTrdConfirmMapper.isExistMatchInfo(param);
+        if(flag){
+            AjaxResult m = new AjaxResult();
+            m.setErrorList(Arrays.asList(new ValidMessage("成交编号已存在，请重新填写！")));
+            return m;
+        }
+        return null;
+    }
+
+    /**
+     * 修改成交编号
+     * @param input
+     * @return
+     */
+    public AjaxResult  modifyExecIdMethod(CfetsTrdBondInvestTradeDto input) {
+        CfetsTrdConfirmMatchDto dto=new CfetsTrdConfirmMatchDto();
+        dto.setPreTradeId(input.getPreTradeId());
+        dto.setExeId(input.getExecId());
+        cfetsTrdConfirmMapper.updateTrdQutoMatchInfo(dto);
         return null;
     }
 }

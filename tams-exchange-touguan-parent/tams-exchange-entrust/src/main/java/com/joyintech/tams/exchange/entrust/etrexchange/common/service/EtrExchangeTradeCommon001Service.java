@@ -51,6 +51,7 @@ import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
+import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
@@ -191,7 +192,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
 	@Autowired
 	private EtrEntrustDetailMapper etrEntrustDetailMapper;
-
 
 	/**
 	 * {@inheritDoc}
@@ -5289,16 +5289,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		BeanUtil.copyPropertiesIgnoreNull(etrExchangeTrade001Dto,dto);
 		etrExchangeTrade001Dto.setPortfolioId(multiPtl001Dto.getPortfolioId());
 		etrExchangeTrade001Dto.setAcctNo(multiPtl001Dto.getAcctNo());
-		if (StringUtil.isNotEmpty(multiPtl001Dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("portfolioId", multiPtl001Dto.getPortfolioId());
-			map.put("finprodId", dto.getFinprodId());
-			map.put("tradePlat",dto.getTradeMarket());
-			String secAcctId = etrExchangeTradeCommonMapper.qryPortfolioSecAcctId(map);
-			if (StringUtil.isNotEmpty(secAcctId)) {
-				etrExchangeTrade001Dto.setSecAcctId(secAcctId); // 证券账户
-			}
-		}
+		etrExchangeTrade001Dto.setSecAcctId(multiPtl001Dto.getSecAcctId());
 		etrExchangeTrade001Dto.setEntrustAmt(multiPtl001Dto.getEntrustAmt());
 		etrExchangeTrade001Dto.setEntrustNum(multiPtl001Dto.getEntrustNum());
 		etrExchangeTrade001Dto.setAccAvailableCash(multiPtl001Dto.getAccAvailableCash());
@@ -5752,6 +5743,26 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			oprHisReq.setOperType(DictCodeListExt3.操作类型_导出.getValue());
 		}
 		joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
+	}
+
+	/**
+	 * 根据金融产品代码查询dto
+	 * <功能详细描述>
+	 * @param finprodId
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	public FinStockInfoDto selectByFinprodId(String finprodId) {
+		Map<String,Object> param = new HashMap<String,Object>();
+		if(iPlatformDate != null){
+			param.put("sysDate", iPlatformDate.getSysDateStr());
+		}
+		param.put("finprodId", finprodId);
+		//  param.put("CASH_TYPE_2", DictCodeListExt1.现金流二级类型_利息.getValue());
+		//  param.put("FIN_CASH_BUSINESS_TYPE", DictCodeListExt1.金融产品类型_理财产品.getValue());
+		param.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+		return etrExchangeTradeCommonMapper.selectByFinprodId(param);
 	}
 
 

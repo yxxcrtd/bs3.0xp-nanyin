@@ -520,7 +520,8 @@
 				            </choose>
 							else
 				            <if test="loginUserId !=null and loginUserId !=''">
-								(decode(a.UPDATE_USER, #{loginUserId,jdbcType=VARCHAR}, 1, 0) + decode(a.CREATE_USER, #{loginUserId,jdbcType=VARCHAR}, 1, 0)) * 
+								(decode(a.CREATE_USER, #{loginUserId,jdbcType=VARCHAR}, 1, 0)) *
+								<!--(decode(a.UPDATE_USER, #{loginUserId,jdbcType=VARCHAR}, 1, 0) + decode(a.CREATE_USER, #{loginUserId,jdbcType=VARCHAR}, 1, 0)) * -->
 				            </if>
 							<choose>
 								<when test="ouTraderIdList == null or ouTraderIdList.size() == 0">

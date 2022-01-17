@@ -14,8 +14,11 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondRegCheckDetaileRequst;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondRegCheckRequst;
@@ -77,6 +80,9 @@ public class IbuQuoteRepo004Controller extends BaseController {
     @Autowired
     private IPlatformDate iPlatformDate;
 
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
+
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, BussinessDictCode.交易方向, BussinessDictCode.清算速度, DictCode.回购方式, DictCode.价格模式,
@@ -86,23 +92,23 @@ public class IbuQuoteRepo004Controller extends BaseController {
         model.addAttribute("ACCOUNT_SPEED_2", BussinessDictCodeList.清算速度_T加2.getValue());
         model.addAttribute("yesNoFlag_yes", BussinessDictCodeList.是否_是.getValue());
         CfetsRepoDealRegisterQuoteDto cfetsRepoDealRegisterQuoteDto = new CfetsRepoDealRegisterQuoteDto();
-        CfetsRepoDealQuoteCommonDto cfetsRepoDealQuoteCommonDto = new CfetsRepoDealQuoteCommonDto();
         if (StringUtil.equals(this.getParam("workflowStatus"), BussinessDictCodeList.交易流程状态_流程中.getValue())
                 || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(getParam(GlobalConstant.WORKFLOW_ID)))) {
             cfetsRepoDealRegisterQuoteDto = cfetsRepoQuotedPrice004Service.getBussinessEntityByWorkflowId(getParam(GlobalConstant.WORKFLOW_ID));
             model.addAttribute(GlobalConstant.WORKFLOW_ID, getParam(GlobalConstant.WORKFLOW_ID));
-            BeanUtil.copyPropertiesIgnoreNull(cfetsRepoDealQuoteCommonDto, cfetsRepoDealRegisterQuoteDto);
         }
         model.addAttribute("PRICE_MODEL_PRM01", DictCodeListExt2.价格模式_指定价格.getValue());
         model.addAttribute("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
         model.addAttribute("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
         model.addAttribute("quotaPageModel", "new");
-        model.addAttribute("ptlAllocations", cfetsRepoDealQuoteCommonDto.getPtlAllocations());
-        model.addAttribute("repoEntrustPledgeDtos", cfetsRepoDealQuoteCommonDto.getRepoEntrustPledgeDtos());
+        model.addAttribute("ptlAllocations", cfetsRepoDealRegisterQuoteDto.getPtlAllocations());
+        model.addAttribute("repoEntrustPledgeDtos", cfetsRepoDealRegisterQuoteDto.getRepoEntrustPledgeDtos());
         //分配方式
-        model.addAttribute("distribution", cfetsRepoDealQuoteCommonDto.getDistribution());
+        model.addAttribute("distribution", cfetsRepoDealRegisterQuoteDto.getDistribution());
+        //本币导出按钮配置
+        model.addAttribute("EXPORT_SHOW", CacheUtil.getSysParam("EXPORT_SHOW"));
         //卖空模式
-        model.addAttribute(GlobalConstant.ENTITY, cfetsRepoDealQuoteCommonDto);
+        model.addAttribute(GlobalConstant.ENTITY, cfetsRepoDealRegisterQuoteDto);
         return super.init(model);
     }
 
@@ -144,16 +150,27 @@ public class IbuQuoteRepo004Controller extends BaseController {
         params.setElementId(dto.getElementId());
         params.setBusinessType(DictCodeListExt3.共通业务类型_本币业务交易_质押式回购_登记.getValue());
         params.setBusinessCode(cfetsBondDealRegisterQuoteDto.getTotleTradeId());
-        String counterTrader;
-        if (StringUtil.isEmpty(dto.getCounterTrader())) {
-            counterTrader = "-";
-        } else {
-            counterTrader = "天-对手方交易员:" + dto.getCounterTrader()+ "-";
+        String counterTrader = null;
+        if (StringUtil.isNotEmpty(dto.getCounterTrader())
+                && StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"), "01")) {
+            CfetsSearchInfoRequest item = new CfetsSearchInfoRequest();
+            item.setDealType("02");
+            item.setPartyId(dto.getCounterId());
+            item.setSearch(dto.getCounterTrader());
+            List<SelectOptionDto> list = joyinbusinessCommonService.queryMySideTraderOrCountTrader(item);
+            if (CollectionUtils.isNotEmpty(list)) {
+                counterTrader = "-对手方交易员:" + list.get(0).getText() + "-";
+            }
+        }
+        if (StringUtil.isNotEmpty(dto.getCounterTrader())
+                && StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"), "02")) {
+            counterTrader = "-对手方交易员:" + dto.getCounterTrader() + "-";
         }
         DecimalFormat df = new DecimalFormat("#,##0.00");
-        String tradeAmtStr = df.format(ArithmeticUtil.round(dto.getTradeAmt(),2, RoundingMode.HALF_UP));
+        String tradeAmtStr = df.format(ArithmeticUtil.round(dto.getTradeAmt(), 2, RoundingMode.HALF_UP));
+        String finalCounterTrader = StringUtil.isEmpty(counterTrader) ? "-" : counterTrader;
         params.setComment(entity -> "交易日期:" + DateUtil.format(iPlatformDate.getSysDate()) + "-回购期限:"
-                + dto.getRepoTerm() + "天" + counterTrader + "交易金额:" + tradeAmtStr);
+                + dto.getRepoTerm() + "天" + finalCounterTrader + "交易金额:" + tradeAmtStr + "元");
         cfetsBondDealRegisterQuoteDto.setQuoteType(DictCodeListExt3.报价系统区分类型_质押式回购登记报价.getValue());
         processParameter.setWorkFlowParameter(params);
         processParameter.setOperationType(OperationType.NEW);

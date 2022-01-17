@@ -23,6 +23,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
+import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
@@ -103,6 +104,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	private String wsUrl;
 	@Autowired
 	private EtrExchangeTradeCommonMapper etrExchangeTradeCommonMapper;
+
 
 	/**
 	 * 由于交易平台不同，设置不同交易平台对应的委托方向
@@ -537,6 +539,12 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		initPageParams.put("DECLA_TYPE_PRM08", DictCodeListExt3.申报类型_点击成交申报.getValue());
 		initPageParams.put("DECLA_TYPE_PRM09", DictCodeListExt3.申报类型_成交申报.getValue());
 		initPageParams.put("DECLA_TYPE_PRM10", DictCodeListExt3.申报类型_收盘价固定价格申报.getValue());
+		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.价格模式, null);
+		// 固定收益
+		List<SelectOptionDto> declaTypePrm10 = selectDto.getOptions().stream().filter(option -> {
+			return StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_收盘价固定价格申报.getValue());
+		}).collect(Collectors.toList());
+		initPageParams.put("DECLA_TYPE_PRM10_OBJ", declaTypePrm10.get(0));
 		initPageParams.put("DECLA_TYPE_PRM11", DictCodeListExt3.申报类型_日均价固定价格申报.getValue());
 		initPageParams.put("DECLA_TYPE_PRM12", DictCodeListExt3.申报类型_最优价成交申报.getValue());
 		initPageParams.put("DECLA_TYPE_PRM13", DictCodeListExt3.申报类型_可转换成交申报.getValue());
@@ -635,11 +643,10 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@ResponseBody
 	@RequestMapping("/getFinprodId")
 	public List<SelectOptionDto> getFinprodId(@RequestBody FinprodMarketInfoRequest dto){
-
-
 		return etrExchangeTrade001CommonService.getFinprodId(RequestUtil.getPageParam());
-
 	}
+
+
 
 	@ResponseBody
 	@PostMapping("/getFinprodMarketInfo")
@@ -876,6 +883,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			Map<String,List<EtrExchangeTradePortfolioRequest>> groupMap= dto.getPortfolioList().stream().collect(
 					Collectors.groupingBy(item->item.getAcctNo()));			//如果分组Map，key的数量>1,说明是多组合指令，key的数量=1,则为系列户指令
 			if(groupMap.keySet().size() == 1 && dto.getPortfolioList().size()>1) {
+				EtrExchangeTradePortfolioRequest item=dto.getPortfolioList().get(0);
 				//业务编号生成规则参数
 				if (!StringUtil.isNotEmpty(dto.getEntrustId())) {
 					BussinessCodeParameter param = etrExchangeTrade001CommonService.genBussinessCodeParameter(dto);
@@ -889,7 +897,8 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 				dto.setIsMulti(DictCodeList.是否_是.getValue());
 				dto.setVdate(dto.getEntrustDate());
 				dto.setMdate(dto.getEntrustDate());
-				dto.setAcctNo(dto.getAcctNo());
+				dto.setAcctNo(item.getAcctNo());
+				dto.setSecAcctId(item.getSecAcctId());
 				// ----------add by zhangrui1 20200703 预占功能 start----------
 				if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
 					String finprodType2 = "";
@@ -1295,6 +1304,27 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		Map<String,Object> pageParam = RequestUtil.getPageParam();
 		EtrExchangeTradeSaveRequest dto=BeanUtil.mapToObject(pageParam,EtrExchangeTradeSaveRequest.class);
 		return etrExchangeTrade001CommonService.selectEtrPortfolioList(dto);
+	}
+
+	/**
+	 *
+	 * 通过金融产品代码查询dto
+	 * <功能详细描述>
+	 * @param finprodId
+	 * @return
+	 * @throws Exception
+	 * @see
+	 * @since 1.0
+	 */
+	@ResponseBody
+	@PostMapping("selectByFinprodId")
+	public Message<FinStockInfoDto> selectByFinprodId(@RequestParam(value = "finprodId") String finprodId){
+		try{
+			FinStockInfoDto dto=etrExchangeTrade001CommonService.selectByFinprodId(finprodId);
+			return new Message<FinStockInfoDto>().success().setData(dto);
+		}catch (Exception e){
+			return new Message<FinStockInfoDto>().fail().setData(null);
+		}
 	}
 
 

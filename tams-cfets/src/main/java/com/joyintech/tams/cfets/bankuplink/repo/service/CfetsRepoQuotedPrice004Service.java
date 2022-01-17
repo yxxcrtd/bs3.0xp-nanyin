@@ -526,6 +526,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             return;
         }
         if (!type.equals(OperationType.REVOKE) && !type.equals(OperationType.DELETE)) {
+            entity.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
             CfetsRepoDealDbDto cfetsRepoDealDbDto = prepareEntity(entity, type);
             //登录业务流程
             insertWfl(cfetsRepoDealDbDto);
@@ -543,20 +544,20 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         if (!StringUtil.equals("revoke", entity.getOperatorType()) && !StringUtil.equals("delete", entity.getOperatorType())) {
             // 先删除流程中数据
             this.deleteBussFlowData(entity.getWorkflowId());
-            entity.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
             CfetsRepoDealDbDto cfetsRepoDealDbDto = prepareEntity(entity, StringUtil.equals(entity.getOperatorType(), "revoke") ? OperationType.REVOKE : OperationType.NEW);
             //登录业务流程
             insertWfl(cfetsRepoDealDbDto);
             ProcessMark newEntity;
             // 发头寸
-            boolean isSubmit = true;
             if (StringUtil.isNotEmpty(entity.getWorkflowId())) {
+                boolean isSubmit = true;
                 SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
                 if (StringUtil.equals(sysWflBusinessList.getProcessState(), DictCodeList.流程状态_已退回.getValue())) {
                     isSubmit = false;
+                    entity.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+                    sendPositionMethod(entity, cfetsRepoDealDbDto, isSubmit);
                 }
             }
-            sendPositionMethod(entity, cfetsRepoDealDbDto, isSubmit);
             try {
                 newEntity = WorkFlowUtil.getBusinessObjectFromRequest(CfetsBondDealRegisterQuoteDto.class, true);
                 // 工作流ID
@@ -584,7 +585,8 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         this.updateCfetsOprHis(entity.getTotleTradeId(), operationType);
         //头寸
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
-            PositionHttpRequest.sendRevoke(cfetsRepoDealDbDto.getRegFinProductDealTotal().getTotleTradeId(), DictCodeListExt1.子系统代码_交易.getValue(), "REPO001");
+            PositionHttpRequest.dorevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(),entity.getPs());
+
         }
         //处理指令执行进度
         this.insertEtrFinishStatus(cfetsRepoDealDbDto, operationType);
@@ -833,7 +835,6 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         total.setFaceValue(entity.getShareAmt());//质押总券面
         total.setShareAmt(ArithmeticUtil.divide(entity.getShareAmt(), new BigDecimal(100), 2, RoundingMode.HALF_UP));//质押总券面
         total.setDipType(entity.getDistribution());//组合分配方式
-        total.setRate(ArithmeticUtil.divide(entity.getPrice(), new BigDecimal(100),2,RoundingMode.HALF_UP));//回购利率
         total.setDisFaceValue(entity.getConvertAmt());//质押券折算总额
         total.setRepoType(entity.getRepoMethod());//回购方式
         total.setvSettleDate(entity.getSettlementStartDate());//首期结算日

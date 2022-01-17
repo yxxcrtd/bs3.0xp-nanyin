@@ -14,6 +14,8 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
+import com.joyintech.service.bankuplink.calc.service.SecCalRequestQuoteService;
+import com.joyintech.service.bankuplink.calc.service.SecCalUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.AutoAllocationRequest;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CalRequest;
@@ -82,6 +84,9 @@ public class IbuQuoteBondCalService extends BaseService {
 
     @Autowired
     private FinProductMapper finProductMapper;
+
+    @Autowired
+    private SecCalRequestQuoteService secCalRequestQuoteService;
 
     /**
      * 数据联动计算
@@ -673,6 +678,13 @@ public class IbuQuoteBondCalService extends BaseService {
             if(null!=calRespone.getFpriceAmt()&&null!=calRespone.getCpriceAmt()){
                 calRespone.setIntAmt(ArithmeticUtil.subtract(calRespone.getFpriceAmt(),calRespone.getCpriceAmt()));
             }
+            //
+            // 每百元金额
+            calRespone.setParValue(secCalRequestQuoteService.getCurSecAmt(dto.getSettleDate(), dto.getFinprodId()));
+            // 本金额
+            calRespone.setParValueAmt(dto.getShareAmt().multiply(calRespone.getParValue())
+                    .divide(SecCalUtil.ONE_HUNDRED).setScale(SecCalUtil.SCAL_CASH,
+                            RoundingMode.HALF_UP));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -62,7 +62,7 @@ INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) VALUES ('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '05,02', 'remark', '备注', null, 13, '{"colAlign": "left"}', 1, 0, null, null);
 
 --正回购显示
-INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) VALUES ('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '05,02,03', 'totalPrinAmt', '汇总券面总额', null, 1, '{"colAlign": "left","dataType":"amount","precision":"2"}', 1, 0, null, null);
+INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) VALUES ('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '05,02,03', 'totalPrinAmt', '汇总质押券折算总额', null, 1, '{"colAlign": "left","dataType":"amount","precision":"2"}', 1, 0, null, null);
 
 --正回购显示
 delete from CFG_DATATABLE_SHOW where PAGECODE='CfetsEtrDispatcher' and DTCODE='CfetsEtrDispatcherInfo' and SPCDCODE ='05,02,03';

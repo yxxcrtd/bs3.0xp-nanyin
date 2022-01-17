@@ -1,18 +1,15 @@
 package com.joyintech.tams.cfets.bankuplink.repo.controller;
 
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
-import com.joyintech.background.component.uplink.interbank.common.IbuDictCode;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
-import com.joyintech.tams.business.common.dto.CommonSearchInfoRequest;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
@@ -26,7 +23,6 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
-import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonService;
 import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
@@ -44,7 +40,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -159,6 +154,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         initPageParams.put("PAGE_ID_DIALOG", "CfetsQuoteRepo003");
         // 01: 开启银行间报价 02:关闭银行间报价（事后录入）
         initPageParams.put("ibuFlag_quote_switch", CacheUtil.getSysParam(BussinessConstant.ibuFlag_quote_switch));
+        initPageParams.put("is_sys_support_quote", CacheUtil.getSysParam("is_sys_support_quote"));
         return new Message<>(initPageParams).success();
     }
 
@@ -499,12 +495,9 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             AjaxResult result = new AjaxResult();
             List<String> entrustIds = StringUtil.splitToList(",", (String) param.get("entrustIds"));
             entrustIds.forEach(item -> {
-                String flag = ibuQuoteBondService.giveUpEntrust(item);
-                if (StringUtil.equals("1", flag)) {
-                    result.appendMessage(new ValidMessage("已接收且完成度为0指令,才能执行放弃操作！"));
-                    return;
-                } else if (StringUtil.equals("2", flag)) {
-                    result.appendMessage(new ValidMessage("存在流程中的报价，不可放弃！"));
+                String massge = ibuQuoteRepoService.giveUpEntrust(item);
+                if (StringUtil.isNotEmpty(massge)) {
+                    result.appendMessage(new ValidMessage(massge));
                     return;
                 }
             });
@@ -512,6 +505,23 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         } catch (Exception e) {
             logger.error("放弃指令异常", e);
             return new Message<AjaxResult>().fail().setMessage("放弃指令异常");
+        }
+    }
+
+    @ApiOperation(value = "退回校验", notes = "退回校验(批量,key=entrustIds指令代码)")
+    @PostMapping("entrustRefuceCheck")
+    @ResponseBody
+    public Message<AjaxResult> entrustRefuceCheck(@RequestBody Map<String, Object> param) {
+        try {
+            AjaxResult result = new AjaxResult();
+            if (StringUtil.isNotEmpty(param.get("entrustId"))) {
+                param.put("entrustIdList", StringUtil.splitToList(",", (String) param.get("entrustIds")));
+            }
+            result = ibuQuoteRepoService.entrustRefuceCheck(param, false);
+            return new Message<AjaxResult>().success().setData(result);
+        } catch (Exception e) {
+            logger.error("指令退回异常", e);
+            return new Message<AjaxResult>().fail().setMessage("指令退回异常");
         }
     }
 
@@ -524,7 +534,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             if (StringUtil.isNotEmpty(param.get("entrustId"))) {
                 param.put("entrustIdList", StringUtil.splitToList(",", (String) param.get("entrustIds")));
             }
-            result = ibuQuoteRepoService.entrustRefuceCheck(param);
+            result = ibuQuoteRepoService.entrustRefuceCheck(param, true);
             if (CollectionUtils.isNotEmpty(result.getErrorList())) {
                 return new Message<AjaxResult>().success().setData(result);
             }
@@ -657,16 +667,16 @@ public class CfetsIbuQuoteRepoController extends BaseController {
     @ResponseBody
     @PostMapping("/getEntrustDet/{pageCode}/{dtCode}/{spcdCodes}")
     @ApiOperation(value = "只读表单设置及数据查询_指令详情信息", notes = "只读表单设置及数据查询_指令详情信息")
-    public Message<Map<String,Object>> getEntrustDet(@PathVariable("pageCode") String pageCode,
-                                                              @PathVariable("dtCode") String dtCode,
-                                                              @PathVariable("spcdCodes") String spcdCodes,
-                                                              @RequestBody CfetsRepoDealQuoteRequest request) {
-        try{
-            Map<String,Object> resultData = ibuQuoteRepoService.findEntrustDet(pageCode,dtCode,spcdCodes,request);
-            return new Message<Map<String,Object>>().success().setData(resultData);
+    public Message<Map<String, Object>> getEntrustDet(@PathVariable("pageCode") String pageCode,
+                                                      @PathVariable("dtCode") String dtCode,
+                                                      @PathVariable("spcdCodes") String spcdCodes,
+                                                      @RequestBody CfetsRepoDealQuoteRequest request) {
+        try {
+            Map<String, Object> resultData = ibuQuoteRepoService.findEntrustDet(pageCode, dtCode, spcdCodes, request);
+            return new Message<Map<String, Object>>().success().setData(resultData);
         } catch (Exception e) {
             logger.error("查询指令详情信息明细数据异常", e);
-            return new Message<Map<String,Object>>().fail().setMessage("查询指令详情信息明细异常");
+            return new Message<Map<String, Object>>().fail().setMessage("查询指令详情信息明细异常");
         }
     }
 }

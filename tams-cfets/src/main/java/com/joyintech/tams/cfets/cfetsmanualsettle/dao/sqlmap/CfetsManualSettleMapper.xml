@@ -11,7 +11,7 @@
         T1.TOTLE_TRADE_ID tradeId,
         to_char(T1.TRADE_DATE,'yyyy-MM-dd') tradeDate,
         to_char(T1.SETTLE_DATE,'yyyy-MM-dd') settleDate,
-        nvl(T2.FINPROD_MARKET_ID,t1.TERM_TYPE) finprodMarketId,
+        nvl(T2.FINPROD_MARKET_ID,rfpd.TERM_TYPE) finprodMarketId,
         T2.FINPROD_ABBR finprodAbbr,
         T1.FINPROD_TYPE2 finprodType2,
         sdl1.item_value finprodType2Str,
@@ -47,6 +47,8 @@
         LEFT JOIN FIN_PRODUCT  T2 ON T1.FINPROD_ID = T2.FINPROD_ID
         LEFT JOIN TRD_PRODUCT_DEAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
         LEFT JOIN TRD_PRODUCT_DEAL_ADD T4 ON T3.TRADE_ID = T4.TRADE_ID
+        left join FIN_TRADE_PRODUCT rfpd on T3.FINPROD_ID = rfpd.FINPROD_ID
+        left join FIN_PRODUCT_TYPE FIN_PRODUCT_TYPE on FIN_PRODUCT_TYPE.FINPROD_ID=T3.FINPROD_ID
         LEFT JOIN PTL_PORTFOLIO T5 ON T4.PORTFOLIO_ID = T5.PORTFOLIO_ID
         LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.COUNTER_ID
         LEFT JOIN MST_COUNTER_PARTY T61 ON T2.ISSUER = T61.LINK_ID AND T61.P_TYPE_ONE IS NOT NULL
@@ -55,8 +57,8 @@
         LEFT JOIN STL_PAY_ORDERS T9 ON T1.TOTLE_TRADE_ID = T9.TRADE_ID
         LEFT JOIN INF_PAY_ORDERS_STATUS T10 ON T9.ORDER_ID = T10.ORDER_ID
         LEFT JOIN SYS_DATADICT_LIST sdl on sdl.dict_code ='DELIVERY_STATUS' and sdl.item_code = T8.Settle_Status
-        LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='FINPROD_TYPE_TG' and sdl1.item_code = T1.FINPROD_TYPE2
-        LEFT JOIN BUSI_TYPE_MAPPING btm ON T1.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
+        LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='PINAN_ASSET_TYPE' and sdl1.item_code = FIN_PRODUCT_TYPE.TYPE_8
+        LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON FIN_PRODUCT_TYPE.TYPE_8 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
         LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.dict_code ='BUSI_TYPE_POSITION' and sdl2.item_code = btm.busi_type
         LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = T1.PS
         LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
@@ -93,7 +95,7 @@
             AND T1.TOTLE_TRADE_ID= #{tradeId}
         </if>
         <if test="finprodType2 != null and finprodType2!='' ">
-            AND T1.Finprod_Type2= #{finprodType2}
+            AND FIN_PRODUCT_TYPE.TYPE_8= #{finprodType2}
         </if>
         <if test="tgBusiType != null and tgBusiType!='' ">
             AND btm.busi_type = #{tgBusiType}
@@ -113,7 +115,7 @@
             T1.TOTLE_TRADE_ID,
             T1.TRADE_DATE,
             T1.SETTLE_DATE,
-            nvl(T2.FINPROD_MARKET_ID,t1.TERM_TYPE),
+            nvl(T2.FINPROD_MARKET_ID,rfpd.TERM_TYPE),
             T2.FINPROD_ABBR,
             T1.FINPROD_TYPE2,
             sdl1.item_value,
@@ -146,7 +148,7 @@
         T1.TOTLE_TRADE_ID tradeId,
         to_char(T1.TRADE_DATE,'yyyy-MM-dd') tradeDate,
         to_char(T0.SETTLE_DATE,'yyyy-MM-dd') settleDate,
-        T2.FINPROD_MARKET_ID finprodMarketId,
+        nvl(T2.FINPROD_MARKET_ID,rfpd.TERM_TYPE) finprodMarketId,
         T2.FINPROD_ABBR finprodAbbr,
         T1.FINPROD_TYPE2 finprodType2,
         sdl1.item_value finprodType2Str,
@@ -183,6 +185,8 @@
         LEFT JOIN FIN_PRODUCT T2 ON T1.FINPROD_ID = T2.FINPROD_ID
         LEFT JOIN TRD_PRODUCT_DEAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
         LEFT JOIN TRD_PRODUCT_DEAL_ADD T4 ON T3.TRADE_ID = T4.TRADE_ID
+        left join FIN_TRADE_PRODUCT rfpd on T3.FINPROD_ID = rfpd.FINPROD_ID
+        left join FIN_PRODUCT_TYPE FIN_PRODUCT_TYPE on FIN_PRODUCT_TYPE.FINPROD_ID=T3.FINPROD_ID
         LEFT JOIN PTL_PORTFOLIO T5 ON T4.PORTFOLIO_ID = T5.PORTFOLIO_ID
         LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.COUNTER_ID
         LEFT JOIN MST_COUNTER_PARTY T61 ON T2.ISSUER = T61.LINK_ID AND T61.P_TYPE_ONE IS NOT NULL
@@ -190,8 +194,8 @@
         LEFT JOIN STL_PAY_ORDERS T9 ON T1.TOTLE_TRADE_ID = T9.TRADE_ID
         LEFT JOIN INF_PAY_ORDERS_STATUS T10 ON T9.ORDER_ID = T10.ORDER_ID
         LEFT JOIN SYS_DATADICT_LIST sdl on sdl.dict_code ='DELIVERY_STATUS' and sdl.item_code = T0.Settle_Status
-        LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='FINPROD_TYPE_TG' and sdl1.item_code = T1.FINPROD_TYPE2
-        LEFT JOIN BUSI_TYPE_MAPPING btm ON T1.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
+        LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='PINAN_ASSET_TYPE' and sdl1.item_code = FIN_PRODUCT_TYPE.TYPE_8
+        LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON FIN_PRODUCT_TYPE.TYPE_8 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
         LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.dict_code ='BUSI_TYPE_POSITION' and sdl2.item_code = btm.busi_type
         LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = T1.PS
         LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
@@ -227,7 +231,7 @@
             AND T1.TOTLE_TRADE_ID= #{tradeId}
         </if>
         <if test="finprodType2 != null and finprodType2!='' ">
-            AND T1.Finprod_Type2= #{finprodType2}
+            AND FIN_PRODUCT_TYPE.TYPE_8= #{finprodType2}
         </if>
         <if test="tgBusiType != null and tgBusiType!='' ">
             AND btm.busi_type= #{tgBusiType}
@@ -245,7 +249,7 @@
             T1.TOTLE_TRADE_ID,
             T1.TRADE_DATE,
             T0.SETTLE_DATE,
-            T2.FINPROD_MARKET_ID,
+            nvl(T2.FINPROD_MARKET_ID,rfpd.TERM_TYPE),
             T2.FINPROD_ABBR,
             T1.FINPROD_TYPE2,
             sdl.ITEM_VALUE,
@@ -311,6 +315,7 @@
                 OR T.tradePlatStr like '%' || #{search} || '%'
                 OR T.secAcctId like '%' || #{search} || '%'
                 OR T.counterName like '%' || #{search} || '%'
+                OR T.finprodId like '%' || #{search} || '%'
                 )
         </if>
     </sql>
@@ -320,7 +325,7 @@
         SELECT rownum seqNo,t.* from (SELECT
             to_char(T1.SETTLE_TIME,'yyyy-MM-dd') settleDate,
             to_char(T1.Update_Time,'hh24:mi:ss') jiaoShouDate,
-            T2.FINPROD_MARKET_ID finprodMarketId,
+            nvl(T2.FINPROD_MARKET_ID,rfpd.TERM_TYPE) finprodMarketId,
             T2.Finprod_Abbr finprodAbbr,
             T1.SETTLE_NUM settleNum,
             T1.SETTLE_AMT settleAmt,
@@ -329,6 +334,9 @@
         FROM TRD_BANK_MANUAL_SETTLE_INFO T0
         LEFT JOIN TRD_BANK_MANUAL_SETTLE_FLOW T1 ON T0.SETTLE_SEQ_NO = T1.SETTLE_SEQ_NO
         LEFT JOIN FIN_PRODUCT T2 ON T0.FINPROD_ID = T2.FINPROD_ID
+        LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL T4  ON T0.TRADE_ID =T4.TOTLE_TRADE_ID
+        LEFT JOIN TRD_PRODUCT_DEAL T3 ON T4.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
+        left join FIN_TRADE_PRODUCT rfpd on T3.FINPROD_ID = rfpd.FINPROD_ID
         WHERE T0.TRADE_ID = #{tradeId}
         ORDER BY T1.UPDATE_TIME DESC) t
     </select>

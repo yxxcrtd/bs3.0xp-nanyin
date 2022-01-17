@@ -148,14 +148,12 @@
         SELECT *
         FROM (
             SELECT ETR_ENTRUST.ENTRUST_STATUS                                                                 entrustStatus/*指令状态*/
-                , (NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT, 0))                                         finishAmt/*已完成额度(元)*/
-                , (NVL(ETR_ENTRUST.ENTRUST_AMT,0) - NVL(T5.FINISH_AMT, 0)
-                    - NVL(T6.ENT_FINISH_AMT, 0))                                                              avaNum/*剩余指令额度(元)*/
+                , NVL(T6.ENT_FINISH_AMT, 0)                                                                   finishAmt/*已完成额度(元)*/
+                , NVL(ETR_ENTRUST.ENTRUST_AMT,0) - NVL(T6.ENT_FINISH_AMT, 0)                                  avaNum/*剩余指令额度(元)*/
                 , (NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT, 0))                    finishDealAmt/*已成交额度(元)*/
                 , (ETR_ENTRUST.ENTRUST_AMT - NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0))
                     - NVL(T6.FINISH_AMT, 0))                                                                  avaDealAmt/*剩余成交额度(元)*/
-                , trunc(NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT, 0) / (ETR_ENTRUST.ENTRUST_AMT ), 4) *
-                100                                                                                           transactioncom/*执行进度(%)*/
+                , trunc(NVL(T6.ENT_FINISH_AMT, 0)/ (ETR_ENTRUST.ENTRUST_AMT ), 4) * 100                       transactioncom/*执行进度(%)*/
                 , trunc((NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT , 0)) /
                 (ETR_ENTRUST.ENTRUST_AMT), 4) * 100                                                           tradeFinishPercent/* 成交进度(%)*/
                 , ETR_ENTRUST.ENTRUST_AMT                                                                     entrustNum/*指令额度(元)*/
@@ -181,7 +179,7 @@
                 , SU.real_name                                                                                invManagerName/*投资经理名称*/
                 , MCP.COUNTER_ID                                                                              counterId/* 交易对手*/
                 , MCP.COUNTER_NAME                                                                            counterName/* 交易对手名称*/
-                , MST_CFETS_CI.PARTY_ID                                                                       counterPartyId
+                , MCP.PARTY_ID                                                                                counterPartyId
                 , ETR_ENTRUST.ENTRUST_DATE                                                                    ENTRUST_DATE/* 指令日期*/
                 , to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME, 'hh24:mi:ss')                                        TRANSMIT_TIME/* 指令下达时间*/
                 , ETR_ENTRUST.ENTRUST_ID                                                                      entrustId/*指令代码*/
@@ -288,8 +286,6 @@
                 ON MST_CFETS_CT.TRADER_ID = ETR_ENTRUST.COUNTER_TRADER
             LEFT JOIN MST_COUNTER_PARTY MCP
                 ON MCP.COUNTER_ID = ETR_ENTRUST.COUNTER_ID
-            LEFT JOIN MST_CFETS_CUSTOMER_INFO MST_CFETS_CI
-                ON MST_CFETS_CI.PARTY_NAME = MCP.COUNTER_NAME
         <if test="repo_pledge_model != null and repo_pledge_model.equals('02')">
             LEFT JOIN
             (
@@ -459,7 +455,7 @@
                     AND (
                         ETR_ENTRUST.ENTRUST_STATUS like '%' || #{search} || '%' /*指令状态*/
                         OR D.ITEM_VALUE LIKE '%' || #{search} || '%' /*指令状态*/
-                        OR to_char(trunc(NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT , 0) / (ETR_ENTRUST.ENTRUST_AMT ), 4)*100)  = #{search} /*执行进度(%)*/
+                        OR to_char(trunc(NVL(T5.FINISH_AMT, 0) / (ETR_ENTRUST.ENTRUST_AMT ), 4)*100)  = #{search} /*执行进度(%)*/
                         OR to_char(trunc((NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT , 0)) /
                             (ETR_ENTRUST.ENTRUST_AMT ), 4)*100) = #{search}/* 成交进度(%)*/
                         OR to_char(ETR_ENTRUST.ENTRUST_AMT,'FM9999999999999990.90') = #{search} /*指令额度(元)*/
@@ -872,7 +868,11 @@
             sdl.ITEM_VALUE 				    gradeResult,/*债项评级*/
             mbvi.NETPRICE                   firstNetPrice,/*首次净价*/
             FIN_PRODUCT.REGIST_ORG 			repRegistOrg,/*登记托管机构*/
-            NVL(EEP.SCALE, 1)*100 			scale,	/*折算比例*/
+            case when EEP.SCALE is not null then NVL(EEP.SCALE, 1)*100
+                when mbvi.NETPRICE>nvl(prinAmt.prinAmt,100) then round(100/100,4)*100
+                when mbvi.NETPRICE is null then round(nvl(prinAmt.prinAmt,100)/100,4)*100
+                else round(mbvi.NETPRICE/nvl(prinAmt.prinAmt,100),4)*100
+            end as pledgeRatio, /*折算比例*/
             FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,/*市场代码*/
             EEP.PLEDGE_STOCK_ID             pledgeStockId/*债券库代码*/,
             ESS.PLEDGE_STOCK_NAME           pledgeStockName/*债券库名称*/,
@@ -947,6 +947,11 @@
                 AND T1.VALUE_DATE = T2.VALUE_DATE
 		) MST_BOND_VALUATION_INFO/*以上获取债券小于等于平台日的最新估值行情*/
 		    ON FIN_PRODUCT.FINPROD_MARKET_ID = MST_BOND_VALUATION_INFO.SEC_ID
+        left join ( select 100-sum(nvl(PRIN_AMT,0)) prinAmt,FINPROD_ID
+                        from FIN_CASH_PLAN
+                        WHERE MDATE &lt;= to_date(#{platDate},'yyyy-mm-dd')
+                        group by FINPROD_ID) prinAmt
+        on prinAmt.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
 		LEFT JOIN (SELECT RANK() OVER(PARTITION BY O_CODE ORDER BY  GRADE_DATE DESC,CAST(GRADE_RESULT AS DECIMAL) DESC) NUM,
                 O_CODE,
                 GRADE_RESULT
@@ -1619,12 +1624,14 @@
             <include refid="com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepo003Mapper.statusValid_04" />
 
        )
-       where nvl(CREATE_USER,UPDATE_USER) = #{loginUserId}
-       or EXISTS (select 1
-            from SYS_USER_ROLE sur
-            left join SYS_ROLE sr on sur.ROLE_ID = sr.ROLE_ID
-            where sur.USER_ID = #{loginUserId}
-                and sr.ROLE_POS = #{rolePos03})
+       <if test="loginUserId != null and loginUserId != '' ">
+           where nvl(CREATE_USER,UPDATE_USER) = #{loginUserId}
+           or EXISTS (select 1
+                           from SYS_USER_ROLE sur
+                           left join SYS_ROLE sr on sur.ROLE_ID = sr.ROLE_ID
+                           where sur.USER_ID = #{loginUserId}
+                           and sr.ROLE_POS = #{rolePos03})
+       </if>
     </select>
 
     <sql id="listRegFinPledge_sql">
@@ -2130,7 +2137,31 @@
 
     <!--当日登记-->
     <select id="listDayReg" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDayRegDto">
-        select * from (
+        select
+            TT.validStatus,
+            TT.quoteType,
+            TT.tradeAmt,
+            TT.rate*100 rate,
+            TT.repoTerm,
+            TT.ouPartyName,
+            TT.cpPartyName,
+            TT.ouTraderName,
+            TT.cpTraderName,
+            TT.settleSpeed/*清算速度*/,
+            TT.vSettleDate,
+            TT.mSettleDate,
+            TT.tradeDate,
+            TT.statisticalTimes,
+            TT.quoteId,
+            TT.trdId,
+            TT.ps,
+            TT.settleType,
+            TT.deliverytype,
+            TT.mDeliveryType,
+            TT.ccy,
+            TT.settCcy,
+            TT.createUser
+         from (
             <include refid="sql_listDayReg"></include>
         ) TT
         LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'STATUS_VALID')D ON TT.validStatus = D.ITEM_CODE
@@ -2188,12 +2219,12 @@
                     #{item}
                 </foreach>
             </if>
-            <if test="role_pos != null and role_pos != ''" >
+            <if test="rolePos03 != null and rolePos03 != ''" >
                 and ( TT.createUser = #{loginUserId}
                         or exists(
                                     select 1 from SYS_USER_ROLE sur
                                     left join SYS_ROLE sr on sur.ROLE_ID = sr.ROLE_ID
-                                    where sur.USER_ID = #{loginUserId} and sr.ROLE_POS = #{role_pos}))
+                                    where sur.USER_ID = #{loginUserId} and sr.ROLE_POS = #{rolePos03}))
             </if>
             <if test="search != null and search != ''">
                 and (
@@ -2217,7 +2248,7 @@
             TT.validStatus,
             TT.quoteType,
             TT.tradeAmt,
-            TT.rate,
+            TT.rate*100 rate,
             TT.repoTerm,
             TT.ouPartyName,
             TT.cpPartyName,
@@ -2564,4 +2595,46 @@
         </if>
     </select>
     <!-- 资产五级分类联动检索-->
+
+    <!--指令是否在流程中-->
+    <select id="countWflEtr" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM (
+        SELECT
+        ENTRUST_ID
+        FROM
+        WFL_REG_FIN_PRODUCT_DEAL
+        <where>
+            <if test="entrustIdList != null and entrustIdList.size() > 0">and ENTRUST_ID in
+                <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="entrustIds != null and entrustIds.size() > 0">
+                        and ENTRUST_ID  in
+                        <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                </where>
+            UNION ALL
+            SELECT
+                ENTRUST_ID
+            FROM
+                WFL_IBU_QUOTE_ETR_RE
+                <where>
+                    <if test="entrustIdList != null and entrustIdList.size() > 0">
+                        and ENTRUST_ID  in
+                        <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="entrustIds != null and entrustIds.size() > 0">
+                        and ENTRUST_ID  in
+                        <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                </where>
+                )
+    </select>
 </mapper>

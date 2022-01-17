@@ -58,12 +58,11 @@ public class CfetsEntrustStatusService {
             params.put("ENTRUST_STATUS_07", DictCodeList.委托状态_已撤回.getValue());
             List<CfetsEntrustClosePosEtrReqDto> entrustIdList = entrustStatusMapper.selectEntrustIds(params);
           //  entrustIdList.forEach(s -> baseEtrCashPositionCommService.entrustCloseExecute(s));
-            closeDelegatePositionMethod(entrustIdList);
-
             entrustStatusMapper.updateDistributeStatus(params);//add by yangwenjun 20201211 更新委托指令分发表中的接收状态
             entrustStatusMapper.updateEntrustStatus(params);
             //更新指令业务模式(本币交易涉及资产重分类)
             updateBusModel(sysDate);
+            closeDelegatePositionMethod(entrustIdList);
         }
     }
     private void closeDelegatePositionMethod(List<CfetsEntrustClosePosEtrReqDto> dtolist){
@@ -106,6 +105,7 @@ public class CfetsEntrustStatusService {
                 ,BussinessDictCodeList.银行间上行报价状态_撤回中.getValue()
                 ,BussinessDictCodeList.银行间上行报价状态_已成交.getValue()
                 ,BussinessDictCodeList.银行间上行报价状态_待回复.getValue()
+                ,BussinessDictCodeList.银行间上行报价状态_成交中.getValue()
                 ,BussinessDictCodeList.银行间上行报价状态_终止中.getValue()
                 ,BussinessDictCodeList.银行间上行报价状态_已回复.getValue()
                 ,BussinessDictCodeList.银行间上行报价状态_拒绝中.getValue()

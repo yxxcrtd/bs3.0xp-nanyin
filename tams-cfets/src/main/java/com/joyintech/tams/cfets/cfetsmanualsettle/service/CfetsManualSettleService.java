@@ -155,7 +155,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 if(!isInwflFlag && (StringUtil.equals(cfetsDto.getSettleDate(),DateUtil.format(platformDateImpl.getSysDate())))
                     &&(StringUtil.equals(cfetsDto.getSettleStatus(),DictCodeListExt3.交收状态_未交收.getValue())
                         &&(StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue())
-                            ||StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_债券行权交易.getValue())))){
+                            ||StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_债券行权交易.getValue())
+                            || StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_质押式回购首期.getValue())))){
                     returnList.add(cfetsDto);
                 }
             }
@@ -432,7 +433,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             //用户名	当前操作用户
             req.setUserId(SecurityUtil.getLoginUser().getUserName());
             //汇总交易编号	单交易时传交易编号
-            req.setbTotalTradeId(cfetsManualSettleRequest.getTradeId());
+            req.setbTotalTradeId(trdBankManualSettleInfo.getSettleSeqNo());
             //汇总交易编号
             req.setTotalTradeId(trdBankManualSettleInfo.getSettleSeqNo());
             req.setWorkFlowId(trdBankManualSettleInfo.getWorkflowId());
@@ -538,8 +539,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                         if (StringUtil.isNotEmpty(secAcctId)) {
                             secport.setSecAcctId(secAcctId); // 证券账户
                         }
-                        secport.setSecAmount(regFinPledge.getPledgePrin());
-                        secport.setOwnSecAmount(regFinPledge.getPledgePrin());
+                        secport.setSecAmount(ArithmeticUtil.multiply(regFinPledge.getPledgePrin(),new BigDecimal("100")));
+                        secport.setOwnSecAmount(ArithmeticUtil.multiply(regFinPledge.getPledgePrin(),new BigDecimal("100")));
                         secport.setIntegrateSecAmount(BigDecimal.ZERO);
                         ptlSecList.add(secport);
                     }
