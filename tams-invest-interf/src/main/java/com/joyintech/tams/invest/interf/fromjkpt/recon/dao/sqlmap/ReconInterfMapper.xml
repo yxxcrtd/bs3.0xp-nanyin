@@ -1051,6 +1051,9 @@ WHERE
                     #{item.entrustTradeId}
                 </foreach>
             </if>
+            <if test="execDate != null">
+                AND T1.JYRQ = #{execDate,jdbcType=VARCHAR}
+            </if>
         ) tx
         GROUP BY
             CUSTOMER_ID,
@@ -1208,6 +1211,9 @@ WHERE
                 <foreach item="item" index="index" collection="entrustIds" open="(" separator=","  close=")">
                     #{item.entrustTradeId}
                 </foreach>
+            </if>
+            <if test="execDate != null">
+                AND T1.JYRQ = #{execDate,jdbcType=VARCHAR}
             </if>
     </select>
 
