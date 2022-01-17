@@ -411,6 +411,11 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             if(list.get(18) == null || list.get(18).trim().equals("")){
                 flag = false;
                 message.add("理财专业证书不能为空");
+            }else{
+                if(checkSalerCertificateType(this.subDictcodeMultiple(list.get(18), ","))){
+                    flag = false;
+                    message.add("理财专业证书输入格式错误，请严格按照规则输入！");
+                }
             }
             //理财登记培训证书编号（LC+12位数字）
             if(list.get(19) != null && !(list.get(19).trim().equals(""))){
@@ -424,6 +429,11 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             if(list.get(20) == null || list.get(20).trim().equals("")){
                 flag = false;
                 message.add("可销售产品风险等级不能为空");
+            }else{
+                if(checksalerRiskLevel(this.subDictcodeMultiple(list.get(20), ","))){
+                    flag = false;
+                    message.add("可销售产品风险等级输入格式错误，请严格按照规则输入！");
+                }
             }
             //销售资质
             if(list.get(21) == null || list.get(21).trim().equals("")){
@@ -658,6 +668,50 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
         boolean status = false;
         if (!isEmpty(value)) {
             status = value.contains("99");
+        }
+        return status;
+    }
+
+    //校验理财专业证书多选导入
+    public static boolean checkSalerCertificateType(String value){
+        boolean status = true;
+        if (!isEmpty(value)) {
+            if(value.equals("01,02,03,04,05") || value.equals("01,02,03,04") || value.equals("01,02,03,05") || value.equals("01,02,04,05") || value.equals("01,03,04,05") ||
+                    value.equals("01,02,03") || value.equals("01,02,04") || value.equals("01,02,05") || value.equals("01,03,04") || value.equals("01,03,05") || value.equals("01,04,05") ||
+                    value.equals("01,02") || value.equals("01,03") || value.equals("01,04") || value.equals("01,05") || value.equals("01") ||
+                    value.equals("02,03,04,05") || value.equals("02,03,04") || value.equals("02,03,05") || value.equals("02,04,05") ||
+                    value.equals("02,03") || value.equals("02,04") || value.equals("02,05") || value.equals("02") ||
+                    value.equals("03,04,05") || value.equals("03,04") || value.equals("03,05") || value.equals("03") || value.equals("04,05") || value.equals("04") || value.equals("05")){
+                status = false;
+            }
+        }
+        return status;
+    }
+
+    //校验可销售产品风险等级多选导入
+    public static boolean checksalerRiskLevel(String value){
+        boolean status = true;
+        if (!isEmpty(value)) {
+            if(value.equals("01,02,03,04,05,06,07,99") || value.equals("01,02,03,04,05,06,07") || value.equals("01,02,03,04,05,06,99") || value.equals("01,02,03,04,05,06") || value.equals("01,02,03,04,05,07") ||
+                    value.equals("01,02,03,04,05,99") || value.equals("01,02,03,04,05") || value.equals("01,02,03,04,06") || value.equals("01,02,03,04,07") || value.equals("01,02,03,04,99") ||
+                    value.equals("01,02,03,04") || value.equals("01,02,03,05") || value.equals("01,02,03,06") || value.equals("01,02,03,07") || value.equals("01,02,03,99") ||
+                    value.equals("01,02,03") || value.equals("01,02,04") || value.equals("01,02,05") || value.equals("01,02,06") || value.equals("01,02,07") || value.equals("01,02,99") ||
+                    value.equals("01,02") || value.equals("01,03") || value.equals("01,04") || value.equals("01,05") || value.equals("01,06") || value.equals("01,07") || value.equals("01,99") || value.equals("01") ||
+                    value.equals("02,03,04,05,06,07,99") || value.equals("02,03,04,05,06,07") || value.equals("02,03,04,05,06,99") || value.equals("02,03,04,05,06") || value.equals("02,03,04,05,07") ||
+                    value.equals("02,03,04,05,99") || value.equals("02,03,04,05") || value.equals("02,03,04,06") || value.equals("02,03,04,07") || value.equals("02,03,04,99") ||
+                    value.equals("02,03,04") || value.equals("02,03,05") || value.equals("02,03,06") || value.equals("02,03,07") || value.equals("02,03,99") ||
+                    value.equals("02,03") || value.equals("02,04") || value.equals("02,05") || value.equals("02,06") || value.equals("02,07") ||
+                    value.equals("02,99") || value.equals("02") || value.equals("03,04,05,06,07,99") || value.equals("03,04,05,06,07") || value.equals("03,04,05,06,99") ||
+                    value.equals("03,04,05,06") || value.equals("03,04,05,07") || value.equals("03,04,05,99") || value.equals("03,04,05") || value.equals("03,04,06") ||
+                    value.equals("03,04,07") || value.equals("03,04,99") || value.equals("03,04") || value.equals("03,05") || value.equals("03,06") ||
+                    value.equals("03,07") || value.equals("03,99") || value.equals("03") || value.equals("04,05,06,07,99") || value.equals("04,05,06,07") ||
+                    value.equals("04,05,06,99") || value.equals("04,05,06") || value.equals("04,05,07") || value.equals("04,05,99") || value.equals("04,05") ||
+                    value.equals("04,06") || value.equals("04,07") || value.equals("04,99") || value.equals("04") || value.equals("05,06,07,99") ||
+                    value.equals("05,06,07") || value.equals("05,06,99") || value.equals("05,06") || value.equals("05,07") || value.equals("05,99") ||
+                    value.equals("05") || value.equals("06,07,99") || value.equals("06,07") || value.equals("06,99") || value.equals("06") ||
+                    value.equals("07,99") || value.equals("07") || value.equals("99")){
+                status = false;
+            }
         }
         return status;
     }
