@@ -157,7 +157,7 @@
         , {
             field: 'pledgePrinStr',
             width: 150,
-            title: '质押券面额(万元)',
+            title: '质押券面总额(万元)',
             sortable: false,
             type: 'number',
             digit: 2
