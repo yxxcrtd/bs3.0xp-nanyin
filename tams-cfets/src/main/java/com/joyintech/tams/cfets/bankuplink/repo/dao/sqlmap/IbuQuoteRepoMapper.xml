@@ -332,7 +332,7 @@
             LEFT JOIN
             (
                 SELECT ENTRUST_ID
-                , SUM(nvl(SHARE_AMT, 0)) * 100 totalShareAmt
+                , SUM(nvl(FPRICE_AMT, 0))  totalShareAmt
                 FROM IBU_QUOTE_CREP /*质押式回购银行间报价*/
                 WHERE TRADE_STATUS = '07'
                 GROUP BY ENTRUST_ID
@@ -341,7 +341,7 @@
             LEFT JOIN
             (
                 SELECT ENTRUST_ID,
-                nvl(SHARE_AMT, 0) * 100 totalShareAmt
+                nvl(FPRICE_AMT, 0)  totalShareAmt
                 FROM IBU_QUOTE_CREP /*质押式回购银行间报价*/
                 WHERE TRADE_STATUS = '07'
             ) C2 /*质押式回购银行间报价 交易份额，债券数量等*/
