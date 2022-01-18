@@ -1215,8 +1215,6 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 // 提交
                 this.sendNewRepoDealQuote(dto);
             }
-            //处理指令执行进度
-            this.insertEtrFinishStatus(entity, type);
         } else if (StringUtil.equals(entity.getQuotaPageModel(), "edit")) {
             // 修改
             if (StringUtil.equals(entity.getOperatorType(), "save")) {
