@@ -62,7 +62,11 @@ public class ResaleRegAutoDealTask extends BatchBaseService{
         else{
             supDate = new Date();
         }
-        resaleRegAutoDealService.run(supDate);
+        try{
+            resaleRegAutoDealService.run(supDate);
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         result.setStatus(BatchStatus.COMPLETED);
         isRunning=false;
         return result;

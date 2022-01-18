@@ -52,6 +52,7 @@ public class CfetsIbuQuoteBatchCommonController {
         catch (Exception e){
             e.printStackTrace();
             logger.error("回售登记数据自动生成成交数据异常:"+e.getMessage());
+            throw  new Exception(e);
         }
     }
 
@@ -74,6 +75,7 @@ public class CfetsIbuQuoteBatchCommonController {
         catch (Exception e){
             e.printStackTrace();
             logger.error("cstp成交回报自动匹配异常:"+e.getMessage());
+            throw  new Exception(e);
         }
     }
 }
