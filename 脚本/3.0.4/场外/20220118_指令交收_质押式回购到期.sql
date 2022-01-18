@@ -1,0 +1,7 @@
+-- 业务类型映射
+delete from FIN_PRODUCT_TYPE_CONFIG where SEQNO in ('SQ0001000109');
+INSERT INTO FIN_PRODUCT_TYPE_CONFIG (SEQNO, CONFIG_TYPE, INPUT_VALUE_1, INPUT_VALUE_2, INPUT_VALUE_3, INPUT_VALUE_4, INPUT_VALUE_5, OUTPUT_VALUE_1, OUTPUT_VALUE_2, OUTPUT_VALUE_3, OUTPUT_VALUE_4, OUTPUT_VALUE_5, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('SQ0001000109', 'BUSI_TYPE_MAPPING', 'F07', 'T07', null, null, null, '06', null, null, null, null, null, 'system', null, sysdate, 'system', sysdate);
+
+--增加分配方式
+delete from CFG_READONLY_FORM_SHOW where PAGECODE='cfetsManualSettleQuery' and DTCODE='CfetsManualSettleInfo' and SPCDCODE='02,M,P';
+INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) VALUES ('cfetsManualSettleQuery', 'CfetsManualSettleInfo', '02,M,P', 'spanTextOne', '分配方式', 'distriType', 1, '{"colAlign": "left"}', 1, 0, null, null);

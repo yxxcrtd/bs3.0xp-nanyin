@@ -52,11 +52,11 @@
     round(NVL(T5.FINISH_AMT,0)*100/(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
         else  ETR_ENTRUST.ENTRUST_NUM*100 end),2) dealProgress,
     NVL(T5.ent_finish_amt,0)/10000  as execFinishAmt,
-    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then  round((ETR_ENTRUST.entrust_amt-NVL(T5.ent_finish_amt,0))/10000,4) else (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/10000 - NVL(T5.ent_finish_amt,0)/10000) end
+    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then  round((ETR_ENTRUST.entrust_amt-NVL(T5.ent_finish_amt,0))/10000,4) else (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/10000) end
      as execRemainderAmt,
     NVL(T5.FINISH_AMT,0)/10000  as transFinishAmt,
     case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then  round((nvl(ETR_ENTRUST.ENTRUST_amt,0) - NVL(T5.FINISH_AMT,0))/10000,4) else
-    (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/10000 - NVL(T5.FINISH_AMT,0)/10000) end as transRemainderAmt,
+    (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/10000) end as transRemainderAmt,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
     ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField
@@ -237,10 +237,10 @@
         else WFL_ETR_ENTRUST.ENTRUST_NUM*100 end ),2) dealProgress,
         NVL(T5.ent_finish_amt,0)/10000  as execFinishAmt,
         case when WFL_ETR_ENTRUST.ENTRUST_NUM is null or WFL_ETR_ENTRUST.ENTRUST_NUM=0 then round((WFL_ETR_ENTRUST.entrust_amt - NVL(T5.ent_finish_amt,0))/10000) else
-        (NVL(WFL_ETR_ENTRUST.ENTRUST_NUM,0)/10000 - NVL(T5.ent_finish_amt,0)/10000) end as execRemainderAmt,
+        (NVL(WFL_ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/10000) end as execRemainderAmt,
         NVL(T5.FINISH_AMT,0)/10000  as transFinishAmt,
         case when WFL_ETR_ENTRUST.ENTRUST_NUM is null or WFL_ETR_ENTRUST.ENTRUST_NUM=0 then    round((WFL_ETR_ENTRUST.entrust_amt - NVL(T5.FINISH_AMT,0))/10000) else
-        (NVL(WFL_ETR_ENTRUST.ENTRUST_NUM,0)/10000 - NVL(T5.FINISH_AMT,0)/10000) end as transRemainderAmt,
+        (NVL(WFL_ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/10000) end as transRemainderAmt,
         NULL transmitTime,
         NULL transmitTimeSer,
         WFL_ETR_ENTRUST_ADD.CAL_MODE calculateField
