@@ -2262,7 +2262,9 @@
             T1.remark,
             T1.TRADE_DATE as tradeDate,
             nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode,
-            match.pre_trade_id preTradeId
+            match.pre_trade_id preTradeId,
+            match.match_status as matchStatus,
+            T1.trader as trader
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
             inner join (
                 select td.totle_trade_id,sum(td.share_amt) share_amt,
@@ -2279,15 +2281,17 @@
                 group by td.totle_trade_id
             )deal
             on T1.totle_trade_id=deal.totle_trade_id
+            left join trd_product_deal trd_product_deal on T1.totle_trade_id = trd_product_deal.totle_trade_id
             LEFT JOIN FIN_PRODUCT  T2 ON T1.FINPROD_ID = T2.FINPROD_ID
-            left join fin_trade_product T3 on T1.FINPROD_ID=T3.finprod_id
+            left join fin_trade_product T3 on trd_product_deal.FINPROD_ID=T3.finprod_id
+            left join FIN_PRODUCT_TYPE FIN_PRODUCT_TYPE on FIN_PRODUCT_TYPE.FINPROD_ID=trd_product_deal.FINPROD_ID
             LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.counter_id
             LEFT JOIN STL_SEC_ACCT_INFO T7 ON T1.SEC_MANAGE_ACCT_ID = T7.SEC_ACCT_ID
             LEFT JOIN TRD_BANK_MANUAL_SETTLE_INFO T8 ON T1.TOTLE_TRADE_ID = T8.TRADE_ID
             LEFT JOIN STL_PAY_ORDERS T9 ON T1.TOTLE_TRADE_ID = T9.TRADE_ID
             left join trdquto_match_info match on T1.totle_trade_id=match.trd_id
-            LEFT JOIN BUSI_TYPE_MAPPING btm ON T1.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
-            LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='FINPROD_TYPE_TG' and sdl1.item_code = T1.FINPROD_TYPE2
+            LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON FIN_PRODUCT_TYPE.TYPE_8 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
+            LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='PINAN_ASSET_TYPE' and sdl1.item_code = FIN_PRODUCT_TYPE.TYPE_8
             LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.dict_code ='BUSI_TYPE_POSITION' and sdl2.item_code = btm.BUSI_TYPE
             LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = T1.PS
             LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
@@ -2409,7 +2413,7 @@
         t1.finprod_id as finprodId,
         nvl(fp.finprod_market_id,T3.TERM_TYPE) as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
-        t1.ps as ps,
+        tot.ps as ps,
         sdl3.item_value psStr,
         t1.trade_market as tradeMarket,
         sdl4.item_value tradeMarketStr,
@@ -2440,6 +2444,7 @@
         nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode
         from trd_product_deal t1
         left join trd_product_deal_add t2 on t1.trade_id=t2.trade_id
+        left join TRD_FIN_PRODUCT_DEAL_TOTAL tot on tot.TOTLE_TRADE_ID=t1.TOTLE_TRADE_ID
         left  join ptl_portfolio pp on t2.portfolio_id=pp.portfolio_id
         <if test="userId != null and userId != ''">
             inner JOIN  PTL_PORTFOLIO_AUTHORITY PPA
@@ -2448,15 +2453,16 @@
         </if>
         left join fin_product fp on t1.finprod_id=fp.finprod_id
         left join fin_trade_product T3 on T1.FINPROD_ID=T3.finprod_id
+        left join fin_product_type  fin_product_type on fin_product_type.FINPROD_ID=t1.FINPROD_ID
         LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.counter_id
         LEFT JOIN STL_SEC_ACCT_INFO T7 ON T1.SEC_MANAGE_ACCT_ID = T7.SEC_ACCT_ID
         LEFT JOIN TRD_BANK_MANUAL_SETTLE_INFO T8 ON T1.TOTLE_TRADE_ID = T8.TRADE_ID
         LEFT JOIN STL_PAY_ORDERS T9 ON T1.TOTLE_TRADE_ID = T9.TRADE_ID
         left join trdquto_match_info match on T1.totle_trade_id=match.trd_id
-        LEFT JOIN BUSI_TYPE_MAPPING btm ON T1.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
-        LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='FINPROD_TYPE_TG' and sdl1.item_code = T1.FINPROD_TYPE2
+        LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON fin_product_type.TYPE_8 = btm.Finprod_Type_Tg AND tot.PS = btm.ps
+        LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='PINAN_ASSET_TYPE' and sdl1.item_code = fin_product_type.TYPE_8
         LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.dict_code ='BUSI_TYPE_POSITION' and sdl2.item_code = btm.BUSI_TYPE
-        LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = T1.PS
+        LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = tot.PS
         LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
         LEFT JOIN SYS_DATADICT_LIST sdl6 on sdl6.dict_code ='SHARES_TRADE_MARKET' and sdl6.item_code = T1.TRADE_MARKET_MODE
         LEFT JOIN SYS_DATADICT_LIST sdl7 on sdl7.dict_code ='CCY' and sdl7.item_code = T1.ccy
@@ -2510,7 +2516,7 @@
         </if>
 
         <if test="ps != null and ps!='' ">
-            AND T1.PS= #{ps}
+            AND tot.PS= #{ps}
         </if>
         <if test="cleanStatus != null and cleanStatus!='' ">
             AND (case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
@@ -2708,7 +2714,7 @@
         <result column="FPRICE_AMT"       property="fpriceAmt"      jdbcType="DECIMAL" />
         <result column="ouPartyId"       property="ouPartyId"      jdbcType="VARCHAR" />
         <result column="ouTraderId"       property="ouPartyId"      jdbcType="VARCHAR" />
-        <result column="execId"       property="execId"      jdbcType="VARCHAR" />
+        <result column="execid"       property="execid"      jdbcType="VARCHAR" />
         <result column="finprodMarketId"       property="finprodMarketId"      jdbcType="VARCHAR" />
         <result column="settleSpeedStr"       property="settleSpeedStr"      jdbcType="VARCHAR" />
         <result column="deliveryType"       property="deliveryType"      jdbcType="VARCHAR" />
@@ -2761,7 +2767,7 @@
         ,TRD_PRODUCT_DEAL.BUSINESS_MODEL as businessModel
         ,tpda.ou_party_id as ouPartyId
         ,tpd.TRADER as ouTraderId
-        ,match.exe_id as execId
+        ,match.exe_id as execid
         ,fp.Finprod_Market_Id as finprodMarketId
         ,decode(tpd.settle_speed,'0','01','1','02','2','03') as settleSpeedStr
         ,tpd.delivery_type as deliveryType

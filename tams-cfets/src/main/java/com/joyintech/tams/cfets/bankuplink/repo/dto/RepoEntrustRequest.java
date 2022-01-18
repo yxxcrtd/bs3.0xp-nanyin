@@ -85,6 +85,9 @@ public class RepoEntrustRequest {
     @ApiModelProperty(name = "entrustId", value = "委托代码", example = "WTREPO202107082043")
     private String entrustId;
 
+    @ApiModelProperty(name = "cfetsQuoteId", value = "CFETS报价编号")
+    private String cfetsQuoteId;
+
     public PageMode getPageMode() {
         return pageMode;
     }
@@ -268,5 +271,13 @@ public class RepoEntrustRequest {
 
     public void setEntrustId(String entrustId) {
         this.entrustId = entrustId;
+    }
+
+    public String getCfetsQuoteId() {
+        return cfetsQuoteId;
+    }
+
+    public void setCfetsQuoteId(String cfetsQuoteId) {
+        this.cfetsQuoteId = cfetsQuoteId;
     }
 }

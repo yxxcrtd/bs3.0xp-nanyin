@@ -5096,23 +5096,26 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				}).collect(Collectors.toList());
 
 			}else if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
-				selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-					return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
-							|| StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue())
-							|| StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue()) ;
-				}).collect(Collectors.toList());
+				if(StringUtil.equals(othCodeType,DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())) {
+					selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+						return StringUtil.equals(option.getId(), DictCodeListExt2.交易方向_配股.getValue())  ;
+					}).collect(Collectors.toList());
+				}else if(StringUtil.equals(othCodeType,DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue())) {
+					selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+						return StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue()) ;
+					}).collect(Collectors.toList());
+				}else {
+					selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+						return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
+								|| StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue())
+								|| StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue());
+					}).collect(Collectors.toList());
+				}
+
 			}else if(StringUtil.equals(finprodType2,"ZYSHG")) {
 				selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
 					return StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_正回购.getValue())
 							||StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_逆回购.getValue()) ;
-				}).collect(Collectors.toList());
-			}else if(StringUtil.equals(othCodeType,DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())) {
-				selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-					return StringUtil.equals(option.getId(), DictCodeListExt2.交易方向_配股.getValue())  ;
-				}).collect(Collectors.toList());
-			}else if(StringUtil.equals(othCodeType,DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue())) {
-				selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-					return StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue()) ;
 				}).collect(Collectors.toList());
 			}
 		}else 	if(StringUtil.equals(tradePlat,DictCodeList.交易平台_固定收益平台.getValue())){

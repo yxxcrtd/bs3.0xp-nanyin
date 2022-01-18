@@ -1536,6 +1536,7 @@ public class IbuComponentCommonService extends BaseService {
         ibuQuoteBondDto.setDealFeeAmt(cfetsBondDealDialogueQuoteDto.getDealFeeAmt());
         ibuQuoteBondDto.setSettFeeAmt(cfetsBondDealDialogueQuoteDto.getSettFeeAmt());
         ibuQuoteBondDto.setRemark(cfetsBondDealDialogueQuoteDto.getRemark());
+        ibuQuoteBondDto.setDipType(cfetsBondDealDialogueQuoteDto.getDistribution());
         inputBean.setIbuQuoteBondDto(ibuQuoteBondDto);
         User user = this.genUserInfo(cfetsBondDealDialogueQuoteDto);
         //多组合成交关系表  单独处理

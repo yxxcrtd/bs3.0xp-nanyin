@@ -6,6 +6,7 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.bean.bond.StandardBondQryBean;
 import com.joyintech.tams.exchange.common.bean.terminal.RTGSStatusBean;
@@ -612,7 +613,11 @@ public class KCBPTradeApi {
         parameters.put("taroperid", integratedEntrust.getLiaisonTel());//对手方交易员代码
         parameters.put("tarcompany", integratedEntrust.getPropSeatNo());//对手方交易商代码
         parameters.put("tradedate", integratedEntrust.getFirstSettleDate());//初始交易日期
-        parameters.put("tradematchcode", integratedEntrust.getOrigSerialNo());//成交编号
+        if (StringUtil.isNotEmpty(integratedEntrust.getOrigSerialNo())) {
+            parameters.put("tradematchcode", integratedEntrust.getOrigSerialNo());//成交编号
+        } else {
+            parameters.put("tradematchcode", "0");//成交编号
+        }
         parameters.put("quoterefid", integratedEntrust.getContractId());//交易所请求编号
         // F:成交申报、 X:到期续做、 C:解除质押、 H:换券申报、 Z:提前终止
         parameters.put("ordtype", KCBPConverter.getOrdtype(integratedEntrust.getEntrustProp()));//报价申报类型

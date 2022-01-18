@@ -595,6 +595,9 @@ public class IbuMainServiceImpl extends BaseService<IbuQuoteBond> implements Ibu
                     if(ibuQuoteBondDto.getSettFeeAmt()!=null){
                         bondDialogueQuote.getIbuQuoteBondDto().setSettFeeAmt(ibuQuoteBondDto.getSettFeeAmt());
                     }
+                    if(ibuQuoteBondDto.getDipType()!=null){
+                        bondDialogueQuote.getIbuQuoteBondDto().setDipType(ibuQuoteBondDto.getDipType());
+                    }
                     //多组合 关系表数据单独处理
                     if(null!=ibuQuoteEtrRes&&ibuQuoteEtrRes.size()>0){
                         //版本号取值主表

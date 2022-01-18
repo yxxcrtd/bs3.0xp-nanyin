@@ -5,6 +5,8 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.security.User;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
@@ -40,10 +42,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -535,6 +534,10 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		try {
 			Map<String, Object> stringObjectMap = JsonUtils.object2Map(dto);
 			stringObjectMap.put("keywords",dto.getSearch());
+			User user = SecurityUtil.getLoginUser();
+			if(StringUtil.isNotEmpty(user.getIbuTrader())){
+				stringObjectMap.put("mySideTrader", user.getIbuTrader());
+			}
 			List<CfetsBondDayPriceDto> result = cfetsBondDealQuotedPrice001Service.listDayPrice(stringObjectMap);
 			return new Message<List<CfetsBondDayPriceDto>>().success().setData(result);
 		}catch (Exception e) {

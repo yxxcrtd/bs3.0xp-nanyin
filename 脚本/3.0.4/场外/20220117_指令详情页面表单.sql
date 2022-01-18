@@ -1,0 +1,1 @@
+update CFG_READONLY_FORM_SHOW set COLCODE = 'ccyStr' where PAGECODE = 'IbuQuoteRepo' and DTCODE = 'ETRDETINFO' and COLCODE = 'ccy';

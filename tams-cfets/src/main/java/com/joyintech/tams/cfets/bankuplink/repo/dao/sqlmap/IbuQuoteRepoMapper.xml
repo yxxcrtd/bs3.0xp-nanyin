@@ -148,14 +148,12 @@
         SELECT *
         FROM (
             SELECT ETR_ENTRUST.ENTRUST_STATUS                                                                 entrustStatus/*指令状态*/
-                , (NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT, 0))                                         finishAmt/*已完成额度(元)*/
-                , (NVL(ETR_ENTRUST.ENTRUST_AMT,0) - NVL(T5.FINISH_AMT, 0)
-                    - NVL(T6.ENT_FINISH_AMT, 0))                                                              avaNum/*剩余指令额度(元)*/
+                , NVL(T6.ENT_FINISH_AMT, 0)                                                                   finishAmt/*已完成额度(元)*/
+                , NVL(ETR_ENTRUST.ENTRUST_AMT,0) - NVL(T6.ENT_FINISH_AMT, 0)                                  avaNum/*剩余指令额度(元)*/
                 , (NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT, 0))                    finishDealAmt/*已成交额度(元)*/
                 , (ETR_ENTRUST.ENTRUST_AMT - NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0))
                     - NVL(T6.FINISH_AMT, 0))                                                                  avaDealAmt/*剩余成交额度(元)*/
-                , trunc(NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT, 0) / (ETR_ENTRUST.ENTRUST_AMT ), 4) *
-                100                                                                                           transactioncom/*执行进度(%)*/
+                , trunc(NVL(T6.ENT_FINISH_AMT, 0)/ (ETR_ENTRUST.ENTRUST_AMT ), 4) * 100                       transactioncom/*执行进度(%)*/
                 , trunc((NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT , 0)) /
                 (ETR_ENTRUST.ENTRUST_AMT), 4) * 100                                                           tradeFinishPercent/* 成交进度(%)*/
                 , ETR_ENTRUST.ENTRUST_AMT                                                                     entrustNum/*指令额度(元)*/
@@ -299,7 +297,7 @@
                 ON PLEDGE.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
             LEFT JOIN
             (
-            select ENTRUST_ID, fp.FINPROD_MARKET_ID bondCode, fp.FINPROD_ABBR bondAbbrName,PLEDGE_AMT pledgePrin
+            select ENTRUST_ID, fp.FINPROD_MARKET_ID bondCode, fp.FINPROD_ABBR bondAbbrName,PLEDGE_NUMBER*100 pledgePrin
             from ETR_PLEDGE ep
             left join FIN_PRODUCT fp on ep.FINPROD_ID = fp.FINPROD_ID
             ) PLEDGES /*质押式回购银行间报价 按指令代码汇总 交易份额，债券数量等*/
@@ -457,7 +455,7 @@
                     AND (
                         ETR_ENTRUST.ENTRUST_STATUS like '%' || #{search} || '%' /*指令状态*/
                         OR D.ITEM_VALUE LIKE '%' || #{search} || '%' /*指令状态*/
-                        OR to_char(trunc(NVL(T5.FINISH_AMT, 0) + NVL(T6.ENT_FINISH_AMT , 0) / (ETR_ENTRUST.ENTRUST_AMT ), 4)*100)  = #{search} /*执行进度(%)*/
+                        OR to_char(trunc(NVL(T5.FINISH_AMT, 0) / (ETR_ENTRUST.ENTRUST_AMT ), 4)*100)  = #{search} /*执行进度(%)*/
                         OR to_char(trunc((NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT , 0)) /
                             (ETR_ENTRUST.ENTRUST_AMT ), 4)*100) = #{search}/* 成交进度(%)*/
                         OR to_char(ETR_ENTRUST.ENTRUST_AMT,'FM9999999999999990.90') = #{search} /*指令额度(元)*/
@@ -543,7 +541,7 @@
                    ,PLEDGE_FACE_VALUE
                    ,PLEDGE_NUMBER
                    ,PLEDGE_RATIO
-                   ,PLEDGE_AMT
+                   ,PLEDGE_NUMBER*100
             FROM ETR_PLEDGE
             WHERE
                 <if test="entrustIdList != null and entrustIdList.size() > 0">
@@ -558,7 +556,7 @@
                    ,PLEDGE_FACE_VALUE
                    ,PLEDGE_NUMBER
                    ,PLEDGE_RATIO
-                   ,PLEDGE_AMT
+                   ,PLEDGE_NUMBER*100
             FROM WFL_ETR_PLEDGE
             WHERE
                 <if test="entrustIdList != null and entrustIdList.size() > 0">
@@ -870,7 +868,11 @@
             sdl.ITEM_VALUE 				    gradeResult,/*债项评级*/
             mbvi.NETPRICE                   firstNetPrice,/*首次净价*/
             FIN_PRODUCT.REGIST_ORG 			repRegistOrg,/*登记托管机构*/
-            NVL(EEP.SCALE, 1)*100 			scale,	/*折算比例*/
+            case when EEP.SCALE is not null then NVL(EEP.SCALE, 1)*100
+                when mbvi.NETPRICE>nvl(prinAmt.prinAmt,100) then round(100/100,4)*100
+                when mbvi.NETPRICE is null then round(nvl(prinAmt.prinAmt,100)/100,4)*100
+                else round(mbvi.NETPRICE/nvl(prinAmt.prinAmt,100),4)*100
+            end as pledgeRatio, /*折算比例*/
             FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,/*市场代码*/
             EEP.PLEDGE_STOCK_ID             pledgeStockId/*债券库代码*/,
             ESS.PLEDGE_STOCK_NAME           pledgeStockName/*债券库名称*/,
@@ -945,6 +947,11 @@
                 AND T1.VALUE_DATE = T2.VALUE_DATE
 		) MST_BOND_VALUATION_INFO/*以上获取债券小于等于平台日的最新估值行情*/
 		    ON FIN_PRODUCT.FINPROD_MARKET_ID = MST_BOND_VALUATION_INFO.SEC_ID
+        left join ( select 100-sum(nvl(PRIN_AMT,0)) prinAmt,FINPROD_ID
+                        from FIN_CASH_PLAN
+                        WHERE MDATE &lt;= to_date(#{platDate},'yyyy-mm-dd')
+                        group by FINPROD_ID) prinAmt
+        on prinAmt.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
 		LEFT JOIN (SELECT RANK() OVER(PARTITION BY O_CODE ORDER BY  GRADE_DATE DESC,CAST(GRADE_RESULT AS DECIMAL) DESC) NUM,
                 O_CODE,
                 GRADE_RESULT
@@ -954,7 +961,7 @@
 		) MBCR
 		    ON MBCR.O_CODE = FIN_PRODUCT.FINPROD_MARKET_ID
 		    AND MBCR.NUM = 1
-        left join SYS_DATADICT_LIST sdl on sdl.DICT_CODE = 'MODEL_STANDARD_GRADE_RESULT' and sdl.ITEM_CODE = MBCR.GRADE_RESULT
+        left join SYS_DATADICT_LIST sdl on sdl.DICT_CODE = 'SVR_MAIN_GRADE' and sdl.ITEM_CODE = MBCR.GRADE_RESULT
         LEFT JOIN (
             SELECT
                 T2.SEC_ID,
@@ -1185,7 +1192,7 @@
                     PLEDGE_FACE_VALUE,
                     PLEDGE_NUMBER,
                     PLEDGE_RATIO,
-                    PLEDGE_AMT
+                    PLEDGE_NUMBER*100
                 FROM
                     ETR_PLEDGE
                 WHERE
@@ -1202,7 +1209,7 @@
                     PLEDGE_FACE_VALUE,
                     PLEDGE_NUMBER,
                     PLEDGE_RATIO,
-                    PLEDGE_AMT
+                    PLEDGE_NUMBER*100
                 FROM
                     WFL_ETR_PLEDGE
                 WHERE
@@ -1284,7 +1291,7 @@
             ) MBCR
                 ON MBCR.O_CODE = fp.FINPROD_MARKET_ID
                 AND MBCR.NUM = 1
-            left join SYS_DATADICT_LIST sdl on sdl.DICT_CODE = 'MODEL_STANDARD_GRADE_RESULT' and sdl.ITEM_CODE = MBCR.GRADE_RESULT
+            left join SYS_DATADICT_LIST sdl on sdl.DICT_CODE = 'SVR_MAIN_GRADE' and sdl.ITEM_CODE = MBCR.GRADE_RESULT
             LEFT JOIN (
                 SELECT
                     T2.SEC_ID,
@@ -1449,13 +1456,13 @@
                '04'                                                                                       quoteType/*交易类型*/,
                RFPDT.TRADE_DATE                                                                           tradeDate/*成交日期*/,
                RFPDT.ps                                                                                   ps/*本方方向*/,
-               RFPDT.TRADE_STATUS                                                                         tradeStatus/*报价状态*/,
+               null                                                                                       tradeStatus/*报价状态*/,
                null                                                                                       sendStatus/*发送状态*/,
                RFPDT.TRADE_AMT                                                                            tradeAmt/*交易金额*/,
                RFPDT.RATE                                                                                 rate/*回购利率*/,
                RFPDT.REPO_TERM                                                                            repoTerm/*回购期限*/,
                null                                                                                       quoteRoleType/*本方角色*/,
-               MCCI.PARTY_NAME                                                                            ouPartyName/*本方*/,
+               MCCI.PARTY_ABBR                                                                            ouPartyName/*本方*/,
                SU.REAL_NAME                                                                               ouTraderName /*本方交易员*/,
                MCP.COUNTER_NAME                                                                           cpPartyName/*对手方*/,
                CASE WHEN MCCT.TRADER_NAME is not null THEN MCCT.TRADER_NAME ELSE RFPDT.COUNTER_TRADER END cpTraderName/*对手方交易员*/,
@@ -1497,13 +1504,13 @@
                '04'                                                                                       quoteType/*交易类型*/,
                RFPDT.TRADE_DATE                                                                           tradeDate/*成交日期*/,
                RFPDT.ps                                                                                   ps/*本方方向*/,
-               RFPDT.TRADE_STATUS                                                                         tradeStatus/*报价状态*/,
+               null                                                                                       tradeStatus/*报价状态*/,
                null                                                                                       sendStatus/*发送状态*/,
                RFPDT.TRADE_AMT                                                                            tradeAmt/*交易金额*/,
                RFPDT.RATE                                                                                 rate/*回购利率*/,
                RFPDT.REPO_TERM                                                                            repoTerm/*回购期限*/,
                null                                                                                       quoteRoleType/*本方角色*/,
-               MCCI.PARTY_NAME                                                                            ouPartyName/*本方*/,
+               MCCI.PARTY_ABBR                                                                            ouPartyName/*本方*/,
                SU.REAL_NAME                                                                               ouTraderName /*本方交易员*/,
                MCP.COUNTER_NAME                                                                           cpPartyName/*对手方*/,
                CASE WHEN MCCT.TRADER_NAME is not null THEN MCCT.TRADER_NAME ELSE RFPDT.COUNTER_TRADER END cpTraderName/*对手方交易员*/,
@@ -1544,13 +1551,13 @@
                '04'                                                                                        quoteType/*交易类型*/,
                WRFPDT.TRADE_DATE                                                                           tradeDate/*成交日期*/,
                WRFPDT.ps                                                                                   ps/*本方方向*/,
-               WRFPDT.TRADE_STATUS                                                                         tradeStatus/*报价状态*/,
+               null                                                                                        tradeStatus/*报价状态*/,
                null                                                                                        sendStatus/*发送状态*/,
                WRFPDT.TRADE_AMT                                                                            tradeAmt/*交易金额*/,
                WRFPDT.RATE                                                                                 rate/*回购利率*/,
                WRFPDT.REPO_TERM                                                                            repoTerm/*回购期限*/,
                null                                                                                        quoteRoleType/*本方角色*/,
-               MCCI.PARTY_NAME                                                                             ouPartyName/*本方*/,
+               MCCI.PARTY_ABBR                                                                             ouPartyName/*本方*/,
                SU.REAL_NAME                                                                                ouTraderName /*本方交易员*/,
                MCP.COUNTER_NAME                                                                            cpPartyName/*对手方*/,
                CASE WHEN MCCT.TRADER_NAME is not null THEN MCCT.TRADER_NAME ELSE WRFPDT.COUNTER_TRADER END cpTraderName/*对手方交易员*/,
@@ -1617,12 +1624,14 @@
             <include refid="com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepo003Mapper.statusValid_04" />
 
        )
-       where nvl(CREATE_USER,UPDATE_USER) = #{loginUserId}
-       or EXISTS (select 1
-            from SYS_USER_ROLE sur
-            left join SYS_ROLE sr on sur.ROLE_ID = sr.ROLE_ID
-            where sur.USER_ID = #{loginUserId}
-                and sr.ROLE_POS = #{rolePos03})
+       <if test="loginUserId != null and loginUserId != '' ">
+           where nvl(CREATE_USER,UPDATE_USER) = #{loginUserId}
+           or EXISTS (select 1
+                           from SYS_USER_ROLE sur
+                           left join SYS_ROLE sr on sur.ROLE_ID = sr.ROLE_ID
+                           where sur.USER_ID = #{loginUserId}
+                           and sr.ROLE_POS = #{rolePos03})
+       </if>
     </select>
 
     <sql id="listRegFinPledge_sql">
@@ -2012,7 +2021,7 @@
                     RFPDT.TRADE_AMT        tradeAmt,
                     RFPDT.RATE             rate,
                     RFPDT.REPO_TERM        repoTerm,
-                    MCCI2.PARTY_NAME       ouPartyName,
+                    MCCI2.PARTY_ABBR       ouPartyName,
                     MSCP.COUNTER_NAME      cpPartyName,
                     SU.REAL_NAME           ouTraderName,
                     MCCT.TRADER_NAME       cpTraderName,
@@ -2072,7 +2081,7 @@
                 RFPDT.TRADE_AMT        tradeAmt,
                 RFPDT.RATE             rate,
                 RFPDT.REPO_TERM        repoTerm,
-                MCCI2.PARTY_NAME       ouPartyName,
+                MCCI2.PARTY_ABBR       ouPartyName,
                 MSCP.COUNTER_NAME      cpPartyName,
                 SU.REAL_NAME           ouTraderName,
                 MCCT.TRADER_NAME       cpTraderName,
@@ -2210,12 +2219,12 @@
                     #{item}
                 </foreach>
             </if>
-            <if test="role_pos != null and role_pos != ''" >
+            <if test="rolePos03 != null and rolePos03 != ''" >
                 and ( TT.createUser = #{loginUserId}
                         or exists(
                                     select 1 from SYS_USER_ROLE sur
                                     left join SYS_ROLE sr on sur.ROLE_ID = sr.ROLE_ID
-                                    where sur.USER_ID = #{loginUserId} and sr.ROLE_POS = #{role_pos}))
+                                    where sur.USER_ID = #{loginUserId} and sr.ROLE_POS = #{rolePos03}))
             </if>
             <if test="search != null and search != ''">
                 and (
@@ -2586,4 +2595,46 @@
         </if>
     </select>
     <!-- 资产五级分类联动检索-->
+
+    <!--指令是否在流程中-->
+    <select id="countWflEtr" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM (
+        SELECT
+        ENTRUST_ID
+        FROM
+        WFL_REG_FIN_PRODUCT_DEAL
+        <where>
+            <if test="entrustIdList != null and entrustIdList.size() > 0">and ENTRUST_ID in
+                <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="entrustIds != null and entrustIds.size() > 0">
+                        and ENTRUST_ID  in
+                        <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                </where>
+            UNION ALL
+            SELECT
+                ENTRUST_ID
+            FROM
+                WFL_IBU_QUOTE_ETR_RE
+                <where>
+                    <if test="entrustIdList != null and entrustIdList.size() > 0">
+                        and ENTRUST_ID  in
+                        <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="entrustIds != null and entrustIds.size() > 0">
+                        and ENTRUST_ID  in
+                        <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                </where>
+                )
+    </select>
 </mapper>

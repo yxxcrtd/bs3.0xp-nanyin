@@ -1121,6 +1121,10 @@ public class CfetsQuotedCommonService extends BaseService {
                             ptlAllocatio.setLendinShareAmt(ArithmeticUtil.multiply(ptlAllocatio.getLendinShareAmt(),new BigDecimal(10000)));
                         }
                     }
+                    if(StringUtil.equals(sellPara,"03")){
+                        ptlAllocatio.setOurShareAmt(shareAmt);
+                        ptlAllocatio.setLendinShareAmt(BigDecimal.ZERO);
+                    }
                 }
                 result.put(ptlAllocatio.getEntrustId(),ptlAllocatio);
             }

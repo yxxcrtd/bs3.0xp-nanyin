@@ -182,9 +182,6 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
 
             sendPositionMethod(trdBondDurationDto.getTrdBondDurDbInertDto().getTrdFinProductDealTotal());
         }
-
-        //回购自动处理
-        //cfetsRepoAutoDurDealGenerateProcessorService.execute(batchDate);
     }
 
     /**

@@ -526,6 +526,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             return;
         }
         if (!type.equals(OperationType.REVOKE) && !type.equals(OperationType.DELETE)) {
+            entity.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
             CfetsRepoDealDbDto cfetsRepoDealDbDto = prepareEntity(entity, type);
             //登录业务流程
             insertWfl(cfetsRepoDealDbDto);
@@ -543,20 +544,23 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         if (!StringUtil.equals("revoke", entity.getOperatorType()) && !StringUtil.equals("delete", entity.getOperatorType())) {
             // 先删除流程中数据
             this.deleteBussFlowData(entity.getWorkflowId());
-            entity.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
             CfetsRepoDealDbDto cfetsRepoDealDbDto = prepareEntity(entity, StringUtil.equals(entity.getOperatorType(), "revoke") ? OperationType.REVOKE : OperationType.NEW);
             //登录业务流程
             insertWfl(cfetsRepoDealDbDto);
             ProcessMark newEntity;
             // 发头寸
-            boolean isSubmit = true;
             if (StringUtil.isNotEmpty(entity.getWorkflowId())) {
+                boolean isSubmit = true;
                 SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
                 if (StringUtil.equals(sysWflBusinessList.getProcessState(), DictCodeList.流程状态_已退回.getValue())) {
                     isSubmit = false;
+                    entity.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+                    sendPositionMethod(entity, cfetsRepoDealDbDto, isSubmit);
+                } else {
+                    entity.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+                    sendPositionMethod(entity, cfetsRepoDealDbDto, isSubmit);
                 }
             }
-            sendPositionMethod(entity, cfetsRepoDealDbDto, isSubmit);
             try {
                 newEntity = WorkFlowUtil.getBusinessObjectFromRequest(CfetsBondDealRegisterQuoteDto.class, true);
                 // 工作流ID
@@ -584,7 +588,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         this.updateCfetsOprHis(entity.getTotleTradeId(), operationType);
         //头寸
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
-            PositionHttpRequest.dorevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(),entity.getPs());
+            PositionHttpRequest.dorevoke(entity.getTotleTradeId(), DictCodeListExt1.子系统代码_交易.getValue(), DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), entity.getPs());
 
         }
         //处理指令执行进度
@@ -594,9 +598,14 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
 
     @Override
     public void doDelete(String workflowId) {
-        deleteBussFlowData(workflowId);
+        SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(workflowId);
         CfetsRepoDealRegisterQuoteDto entity = getBussinessEntityByWorkflowId(workflowId);
-        PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(),DictCodeListExt1.子系统代码_交易.getValue(),DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(),entity.getPs());
+        this.deleteBussFlowData(workflowId);
+        if (StringUtil.isNotEmpty(sysWflBusinessList)
+                && StringUtil.equals(sysWflBusinessList.getProcessState(), DictCodeList.流程状态_已退回.getValue())) {
+            PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(), DictCodeListExt1.子系统代码_交易.getValue(),
+                    DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), entity.getPs());
+        }
     }
 
     /**

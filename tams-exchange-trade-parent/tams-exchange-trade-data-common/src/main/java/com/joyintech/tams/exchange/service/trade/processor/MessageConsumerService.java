@@ -85,7 +85,7 @@ public class MessageConsumerService {
             if (Objects.nonNull(pledgeList))
                 pledgeList.forEach(instructionPledge -> instructionPledgeIdSet.add(instructionPledge.getEntrustId()));
             // 处理指令信息，并清除过期指令下的抵押券信息
-            processInstructions(instructionEtrEntrustList, instructionPledgeIdSet);
+//            processInstructions(instructionEtrEntrustList, instructionPledgeIdSet);
             // 处理抵押券信息
             processInstructionPledges(pledgeList, instructionPledgeIdSet);
         } catch (Exception e) {
@@ -93,7 +93,7 @@ public class MessageConsumerService {
         }
     }
 
-    public void processInstructions(List<Instruction> instructionEtrEntrustList, Set<String> instructionPledgeIdSet) {
+    public void processInstructions(List<Instruction> instructionEtrEntrustList, Set<String> instructionPledgeIdSet, Set<String> instructionDetailIdSet) {
         List<Instruction> instructionList = new ArrayList<>();
         Set<String> removeInstructionIdSet = new HashSet<>();
         List<Instruction> removeInstructionList = new ArrayList<>();
@@ -168,6 +168,8 @@ public class MessageConsumerService {
                     logger.info("investSystemDate {} > instruction mDate {}", JsonUtils.getJsonFromObject(investSystemDate), JsonUtils.getJsonFromObject(instruction.getMdate()));
                     // 清除对应指令的抵押券信息
                     instructionPledgeIdSet.remove(instruction.getEntrustId());
+                    // 清除对应指令的组合信息
+                    instructionDetailIdSet.remove(instruction.getEntrustId());
                     // 清除之前缓存的数据
                     if (Objects.nonNull(instructionFormCache)) {
                         removeInstructionList.add(instructionFormCache);
@@ -175,6 +177,9 @@ public class MessageConsumerService {
                     List<InstructionPledge> instructionPledges = instructionPledgeService.queryInstructionPledgesByInstructionId(instruction.getEntrustId());
                     if (Objects.nonNull(instructionPledges))
                         removeInstructionIdSet.add(instruction.getEntrustId());
+                    List<InstructionDetail> instructionDetails = instructionDetailService.queryInstructionDetailsByInstructionId(instruction.getEntrustId());
+                    if (Objects.nonNull(instructionDetails))
+                    	instructionDetailIdSet.add(instruction.getEntrustId());
                 }
             });
             if (removeInstructionList.size() > 0) {
