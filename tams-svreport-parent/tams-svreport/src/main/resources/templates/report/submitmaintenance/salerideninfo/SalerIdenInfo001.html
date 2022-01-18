@@ -56,6 +56,17 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable">所属总部或分支机构</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="salerOrgCode" name="salerOrgCode"
+                               class="layui-input form-input input-lenovoselect" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                               data-th-data-url="@{/report/submitmaintenance/salerideninfo/SalerIdenInfo001/getSalerOrgCode}"
+                               data-idfield="code" data-parentIds="salerOrgCode"
+                               data-th-data-effectivefieldsalias='|{"code":"总部或分支机构编码","shortName":"总部或分支机构名称"}|'
+                        />
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md4">
                     <label class="layui-form-label form-lable">数据状态</label>
                     <div class="layui-input-inline input-inline">
                         <select id="status" class="input-select" name="status"

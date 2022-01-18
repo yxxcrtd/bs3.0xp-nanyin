@@ -78,7 +78,7 @@
         null                         as salerOtherCredentName,
         null                         as salerCredentNo,
         null                         as salerAreaType,
-        null                         as salerOrgCode,
+        erro.SALER_ORG_CODE          as salerOrgCode,
         null                         as salerDept,
         null                         as salerPosition,
         null                         as salerEduLevel,
@@ -112,6 +112,9 @@
         </if>
         <if test="salerCredentType != null and salerCredentType != ''">
             and erro.SALER_CREDENT_TYPE = #{salerCredentType,jdbcType=VARCHAR}
+        </if>
+        <if test="salerOrgCode != null and salerOrgCode != ''">
+            and erro.SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
         </if>
 
         UNION ALL
@@ -162,6 +165,9 @@
         </if>
         <if test="salerCredentType != null and salerCredentType != ''">
             and info.SALER_CREDENT_TYPE = #{salerCredentType,jdbcType=VARCHAR}
+        </if>
+        <if test="salerOrgCode != null and salerOrgCode != ''">
+            and info.SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
         </if>
         ) ORDER BY status DESC
     </select>
@@ -240,6 +246,22 @@
             </if>
         </where>
         )
+    </select>
+
+    <!--    总部或分支机构编码联想框-->
+    <select id="getSalerOrgCode" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT
+        distinct(SALER_ORG_CODE)  code,
+        SALER_ORG_NAME  name,
+        SALER_ORG_NAME  shortName,
+        SALER_ORG_CODE  hidCode
+        FROM CHB_SALER_INST_INFO
+        <where>
+            <if test="salerOrgCode != null and salerOrgCode != ''">
+                AND	(SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
+                OR SALER_INST_NAME  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%')))
+            </if>
+        </where>
     </select>
 
 <!--    根据主键删除-->

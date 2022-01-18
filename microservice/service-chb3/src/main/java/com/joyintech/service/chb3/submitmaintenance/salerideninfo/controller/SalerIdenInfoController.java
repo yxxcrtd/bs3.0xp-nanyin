@@ -157,4 +157,12 @@ public class SalerIdenInfoController {
     public String selectIssuePartyId(@RequestBody String orgCode){
         return  salerIdenInfo002Service.selectIssuePartyId(orgCode);
     }
+
+    /**
+     * 总部或分支机构编码联想框
+     */
+    @PostMapping("getSalerOrgCode")
+    public List<SuggestDto> getSalerOrgCode(@RequestBody Map<String, Object> map) {
+        return salerIdenInfo001Service.getSalerOrgCode(map);
+    }
 }
