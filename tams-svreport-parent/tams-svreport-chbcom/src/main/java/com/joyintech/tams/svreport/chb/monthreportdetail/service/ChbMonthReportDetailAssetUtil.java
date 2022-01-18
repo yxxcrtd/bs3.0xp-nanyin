@@ -232,7 +232,7 @@ public class ChbMonthReportDetailAssetUtil {
         paraMap.put("customerList", oDto.stream().map(item->item.getCol()).collect(Collectors.toList()));
 
         //展示资产对应主体（没有主体的找交易对手）在市场机构中的行业一级分类
-        List<MstCustomerInfoDetail> customerList = chbMonthReportDetailAssetMapper.getCustomerList(paraMap);
+        List<MstCustomerInfoDetail> customerList = chbMonthReportDetailAssetMapper.getCustomerList(null);
         Map<String,MstCustomerInfoAdd> customerMap = customerList.stream().collect(Collectors.toMap(MstCustomerInfoDetail::getCustomerId,a -> a, (k1, k2) -> k1));
         Map<String,MstCustomerInfoAdd> customerNameMap = customerList.stream().collect(Collectors.toMap(MstCustomerInfoDetail::getCustomerName,a -> a, (k1, k2) -> k1));
 

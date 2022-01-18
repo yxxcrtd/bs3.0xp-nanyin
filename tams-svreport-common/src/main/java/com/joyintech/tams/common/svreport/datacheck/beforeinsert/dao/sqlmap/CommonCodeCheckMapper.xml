@@ -105,7 +105,8 @@
              A.RAISE_PSTRDATE raisePstrdate,
              A.RAISE_PENDDATE raisePenddate,
              A.OPERATE_MODE operateMode,
-             A.SALE_AREA saleArea
+             A.SALE_AREA saleArea,
+             A.IVSTORIENTATION  ivstorientation
       from
             CHB_PRD_DECLARE_SUB A
          LEFT JOIN CHB_PRDRESIST_CODE B
