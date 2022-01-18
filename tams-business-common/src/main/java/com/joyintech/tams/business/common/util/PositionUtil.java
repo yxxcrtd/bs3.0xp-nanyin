@@ -144,6 +144,7 @@ public class PositionUtil {
         BaseMap tamsReq = JsonUtils.json2Object(JsonUtils.object2Json(req), BaseMap.class);
 
         Map responseMap_data = (Map) msgMap.get("data");
+        Date CDATE = iPlatformDate.getSysDate();
         if (responseMap_data != null){
             List checkResults = (List) responseMap_data.get("checkResults");
             List newcheckResults = new ArrayList();
@@ -152,10 +153,10 @@ public class PositionUtil {
                     BaseMap flow = BaseMap.newMap((Map) checkResults.get(i));
                     String HODING_TYPE = flow.getString("HODING_TYPE");
                     String PORTFOLIO_ID = flow.getString("PORTFOLIO_ID");
-                    Date CDATE = flow.getDate("CDATE");
-                    if (CDATE == null){
-                        CDATE=iPlatformDate.getSysDate();
-                    }
+//                    Date CDATE = flow.getDate("CDATE");
+//                    if (CDATE == null){
+//                        CDATE=iPlatformDate.getSysDate();
+//                    }
                     logger.info("CDATE平台日期：" + CDATE);
                     logger.info("CDATE平台日期：" + DateUtil.format(CDATE));
                     if (StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_托管户可用资金.getValue())
