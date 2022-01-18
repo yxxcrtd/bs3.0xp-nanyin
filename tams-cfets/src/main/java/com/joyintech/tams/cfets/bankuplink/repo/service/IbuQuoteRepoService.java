@@ -779,7 +779,7 @@ public class IbuQuoteRepoService extends BaseService {
         setParam(param, 2);
         // 质押券信息
         List<RepoEntrustPledgeDto> repoEntrustPledgeDtos = cfetsIbuQuoteRepoMapper.listRepoEntrustPledgeDtos(param);
-
+        cfetsRepoDealQuoteCommonDto.setLoginUserId(cfetsRepoDealQuoteCommonDto.getMySideTrader());//登记 本方交易员取值
         cfetsRepoDealQuoteCommonDto.setRepoEntrustPledgeDtos(repoEntrustPledgeDtos);
         cfetsRepoDealQuoteCommonDto.setPtlAllocations(ptlAllocations);
 
