@@ -108,7 +108,7 @@ public class ChbMonthReportDetailAssetUtil {
             if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getOptionFlag())){
                 chbMonthAssetPositiondetail.setOpenplan(chbAssetInfo.getExerciseDate());
             }
-            chbMonthAssetPositiondetail.setSubjectName(SubjectName(chbAssetInfo,chbMonthAssetPositiondetail.getOrgAssetType2(),chbMonthAssetPositiondetail.getOrgAssetType1()));
+            chbMonthAssetPositiondetail.setSubjectName(doSubjectName(chbAssetInfo,chbMonthAssetPositiondetail.getOrgAssetType2(),chbMonthAssetPositiondetail.getOrgAssetType1()));
             if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecPrefer())){
                 chbMonthAssetPositiondetail.setIsYhbcgj(DictCodeListExt3.中债月度明细_银行资本补充工具_优先股.getValue());
             }
@@ -169,7 +169,7 @@ public class ChbMonthReportDetailAssetUtil {
      * @param assetType
      * @return
      */
-    public static String SubjectName(ChbAssetInfo assetInfo,String assetType2,String assetType){
+    public static String doSubjectName(ChbAssetInfo assetInfo,String assetType2,String assetType){
         String  SubjectName = null;
         if(DictCodeListStl.资产二级分类_资产支持证券.getValue().equals(assetType2)){
             SubjectName = assetInfo.getChbIssuerId();
