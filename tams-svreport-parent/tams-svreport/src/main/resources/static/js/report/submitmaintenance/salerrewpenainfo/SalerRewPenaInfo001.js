@@ -43,7 +43,7 @@
         },
         cols:[
              {field:'erroOrInfo', title:'来自erro还是info',visible:false}
-            ,{field:'statusStr', title: '数据状态', width:'150',sortField:'status'}
+            ,{field:'status', title: '数据状态',visible:false,sortField:'status'}
             ,{field:'salerRewPenaNo', title:'奖惩编号',visible:false}
             ,{field:'statusStr', title: '数据状态', width:'150',sortField:'status'}
             ,{field:'salerInstCode', title: '销售机构代码', width:'150',sortField:'salerInstCode'}

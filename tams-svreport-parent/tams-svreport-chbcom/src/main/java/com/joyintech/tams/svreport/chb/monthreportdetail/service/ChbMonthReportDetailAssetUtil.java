@@ -228,8 +228,11 @@ public class ChbMonthReportDetailAssetUtil {
         //展示产品购买资产首次买入交易的交易对手名称
         List<SelectOptionDto> oDto = chbMonthReportDetailAssetMapper.getCounterList(paraMap);
         Map<String,String> CounterMap = oDto.stream().collect(JoyinCollectors.toMap(x -> x.getId(), x -> x.getText()));
+        Map<String,String> CounterTypeMap = oDto.stream().collect(JoyinCollectors.toMap(x -> x.getId(), x -> x.getParentId()));
+        paraMap.put("customerList", oDto.stream().map(item->item.getCol()).collect(Collectors.toList()));
+
         //展示资产对应主体（没有主体的找交易对手）在市场机构中的行业一级分类
-        List<MstCustomerInfoDetail> customerList = chbMonthReportDetailAssetMapper.getCustomerList(null);
+        List<MstCustomerInfoDetail> customerList = chbMonthReportDetailAssetMapper.getCustomerList(paraMap);
         Map<String,MstCustomerInfoAdd> customerMap = customerList.stream().collect(Collectors.toMap(MstCustomerInfoDetail::getCustomerId,a -> a, (k1, k2) -> k1));
         Map<String,MstCustomerInfoAdd> customerNameMap = customerList.stream().collect(Collectors.toMap(MstCustomerInfoDetail::getCustomerName,a -> a, (k1, k2) -> k1));
 
@@ -241,7 +244,7 @@ public class ChbMonthReportDetailAssetUtil {
 
             //先赋值行业  先用编码.再用code最后用交易对手
             MstCustomerInfoAdd info = null != customerMap.get(dto.getSubjectName()) ? customerMap.get(dto.getSubjectName()) :
-                    null != customerNameMap.get(dto.getSubjectName()) ? customerNameMap.get(dto.getSubjectName()) : customerMap.get(dto.getRivalParty());
+                    null != customerNameMap.get(dto.getSubjectName()) ? customerNameMap.get(dto.getSubjectName()) : customerMap.get(CounterTypeMap.get(dto.getCounterListCode()));
             //展示资产对应主体（没有主体的找交易对手）在市场机构中的行业一级分类
             if (null != info) {
                 dto.setIndustry1(info.getIndustry());

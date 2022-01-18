@@ -62,6 +62,7 @@ values ('TrdFixIncomeValuationTrade002', 'TrdFixIncomeValuationTrade001_btn_dele
 
 
 /*固收类交易-4位数的交易编号，序列*/
+DROP SEQUENCE FIXINCOMETRADEID_SEQUENCE;
 -- Create sequence
 create sequence FIXINCOMETRADEID_SEQUENCE
 minvalue 1

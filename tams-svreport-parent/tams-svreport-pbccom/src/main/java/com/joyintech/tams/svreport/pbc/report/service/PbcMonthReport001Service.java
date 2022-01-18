@@ -614,7 +614,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 			}
 			PbcMonthReport pbcReport = (PbcMonthReport) data.get("report");
 			//生成文件
-			String fileName = DateUtil.format(pbcReport.getEnddate())+"-"+f2.format(count)+"-"+pbcReport.getSocialCreditCode()+"-"+pbcReport.getReportOrgName() +".xls";
+			String fileName = DateUtil.format(pbcReport.getEnddate(),DateUtil.DEFAULT_OTHER_FORMAT)+"-"+f2.format(count)+"-"+pbcReport.getSocialCreditCode()+"-"+pbcReport.getReportOrgName() +".xls";
 //			String fileName = DateUtil.format(DateUtil.getLastDay(new Date()), "yyyyMMdd")+"-"+f2.format(count)+"-"+pbcReport.getSocialCreditCode()+"-"+pbcReport.getReportOrgName() +".xls";
 //			File depositfile = PbcExcelUtil.createFile(data, "PbcReport", fileName);
 			File depositfile = TisUtil.createFile(PbcExcelUtil.convertMapKey2String(data), "pbc/PbcReport", fileName);

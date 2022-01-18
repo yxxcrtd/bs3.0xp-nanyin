@@ -677,6 +677,7 @@ public class BusinessHomeService {
 				vdto.setCells(cells);
 				vdtolist.add(vdto);
 			}
+
 			if(InterfDefine.监管区域客户组别接口数据.getCode().equals(homedto.getInterfFileType())){
 				vdto.setReportCode(InterfDefine.监管区域客户组别接口数据.getName());
 				List<HomeCellDto> cells = new ArrayList<>();
@@ -697,6 +698,71 @@ public class BusinessHomeService {
 				vdto.setCells(cells);
 				vdtolist.add(vdto);
 			}
+			if(InterfDefine.总部或分支机构信息接口数据.getCode().equals(homedto.getInterfFileType())){
+				vdto.setReportCode(InterfDefine.总部或分支机构信息接口数据.getName());
+				List<HomeCellDto> cells = new ArrayList<>();
+				HomeCellDto cell1= dealCellDto("debt-info-link",homedto.getAccessFilenum(),"ReportUpInterfMonitor001","REPORT_004007","svreport/system/upinterfmonitor/ReportUpInterfMonitor001/init","1",DictCodeListExt2.上游接口文件类型_总部或分支机构信息.getValue(),"1");
+				cells.add(cell1);
+				HomeCellDto cell2= dealCellDto("debt-info-link",homedto.getExceptionnum(),"ReportUpInterfMonitor001","REPORT_004007","svreport/system/upinterfmonitor/ReportUpInterfMonitor001/init","2",DictCodeListExt2.上游接口文件类型_总部或分支机构信息.getValue(),"1");
+				cells.add(cell2);
+				HomeCellDto cell3= dealCellDto("debt-info-link",homedto.getNormalnum(),"ReportUpInterfMonitor001","REPORT_004007","svreport/system/upinterfmonitor/ReportUpInterfMonitor001/init","3",DictCodeListExt2.上游接口文件类型_总部或分支机构信息.getValue(),"1");
+				cells.add(cell3);
+				HomeCellDto cell4= dealCellDto("debt-info-link",homedto.getDatanum(),"ReportUpInterfMonitor001","REPORT_004007","svreport/system/upinterfmonitor/ReportUpInterfMonitor001/init","4",DictCodeListExt2.上游接口文件类型_总部或分支机构信息.getValue(),"1");
+				cells.add(cell4);
+				HomeCellDto cell5= dealCellDto("debt-link-disabled",homedto.getCheckSuccessnum(),"ReportUpInterfMonitor001","REPORT_004007","svreport/system/upinterfmonitor/ReportUpInterfMonitor001/init","5","1","1");
+				cells.add(cell5);
+				HomeCellDto cell6= dealCellDto("debt-info-link",homedto.getCheckfailnum(),"ErrorMessage001","REPORT_002004","chb/errormessage/ErrorMessage001/init","6",InterfDefine.总部或分支机构信息接口数据.getCode(),"1");
+				cells.add(cell6);
+				HomeCellDto cell7= dealCellDto("debt-info-link",homedto.getProcessednum(),"SvrOperationalInfo001","REPORT_001005","common/infomanagement/SvrOperationalInfo001/init","7",InterfDefine.总部或分支机构信息接口数据.getCode(),"1");
+				cells.add(cell7);
+				vdto.setCells(cells);
+				vdtolist.add(vdto);
+			}
+
+			if(InterfDefine.销售人员身份信息接口数据.getCode().equals(homedto.getInterfFileType())){
+				vdto.setReportCode(InterfDefine.销售人员身份信息接口数据.getName());
+				List<HomeCellDto> cells = new ArrayList<>();
+				HomeCellDto cell1= dealCellDto("debt-info-link",homedto.getAccessFilenum(),"ReportUpInterfMonitor001","REPORT_004007","svreport/system/upinterfmonitor/ReportUpInterfMonitor001/init","1",DictCodeListExt2.上游接口文件类型_销售人员身份信息.getValue(),"1");
+				cells.add(cell1);
+				HomeCellDto cell2= dealCellDto("debt-info-link",homedto.getExceptionnum(),"ReportUpInterfMonitor001","REPORT_004007","svreport/system/upinterfmonitor/ReportUpInterfMonitor001/init","2",DictCodeListExt2.上游接口文件类型_销售人员身份信息.getValue(),"1");
+				cells.add(cell2);
+				HomeCellDto cell3= dealCellDto("debt-info-link",homedto.getNormalnum(),"ReportUpInterfMonitor001","REPORT_004007","svreport/system/upinterfmonitor/ReportUpInterfMonitor001/init","3",DictCodeListExt2.上游接口文件类型_销售人员身份信息.getValue(),"1");
+				cells.add(cell3);
+				HomeCellDto cell4= dealCellDto("debt-info-link",homedto.getDatanum(),"ReportUpInterfMonitor001","REPORT_004007","svreport/system/upinterfmonitor/ReportUpInterfMonitor001/init","4",DictCodeListExt2.上游接口文件类型_销售人员身份信息.getValue(),"1");
+				cells.add(cell4);
+				HomeCellDto cell5= dealCellDto("debt-link-disabled",homedto.getCheckSuccessnum(),"ReportUpInterfMonitor001","REPORT_004007","svreport/system/upinterfmonitor/ReportUpInterfMonitor001/init","5","1","1");
+				cells.add(cell5);
+				HomeCellDto cell6= dealCellDto("debt-info-link",homedto.getCheckfailnum(),"ErrorMessage001","REPORT_002004","chb/errormessage/ErrorMessage001/init","6",InterfDefine.销售人员身份信息接口数据.getCode(),"1");
+				cells.add(cell6);
+				HomeCellDto cell7= dealCellDto("debt-info-link",homedto.getProcessednum(),"SvrOperationalInfo001","REPORT_001005","common/infomanagement/SvrOperationalInfo001/init","7",InterfDefine.销售人员身份信息接口数据.getCode(),"1");
+				cells.add(cell7);
+				vdto.setCells(cells);
+				vdtolist.add(vdto);
+			}
+			if(InterfDefine.销售人员奖惩投诉记录信息接口数据.getCode().equals(homedto.getInterfFileType())){
+				vdto.setReportCode(InterfDefine.销售人员奖惩投诉记录信息接口数据.getName());
+				List<HomeCellDto> cells = new ArrayList<>();
+				HomeCellDto cell1= dealCellDto("debt-info-link",homedto.getAccessFilenum(),"ReportUpInterfMonitor001","REPORT_004007","svreport/system/upinterfmonitor/ReportUpInterfMonitor001/init","1",DictCodeListExt2.上游接口文件类型_销售人员奖惩投诉记录信息.getValue(),"1");
+				cells.add(cell1);
+				HomeCellDto cell2= dealCellDto("debt-info-link",homedto.getExceptionnum(),"ReportUpInterfMonitor001","REPORT_004007","svreport/system/upinterfmonitor/ReportUpInterfMonitor001/init","2",DictCodeListExt2.上游接口文件类型_销售人员奖惩投诉记录信息.getValue(),"1");
+				cells.add(cell2);
+				HomeCellDto cell3= dealCellDto("debt-info-link",homedto.getNormalnum(),"ReportUpInterfMonitor001","REPORT_004007","svreport/system/upinterfmonitor/ReportUpInterfMonitor001/init","3",DictCodeListExt2.上游接口文件类型_销售人员奖惩投诉记录信息.getValue(),"1");
+				cells.add(cell3);
+				HomeCellDto cell4= dealCellDto("debt-info-link",homedto.getDatanum(),"ReportUpInterfMonitor001","REPORT_004007","svreport/system/upinterfmonitor/ReportUpInterfMonitor001/init","4",DictCodeListExt2.上游接口文件类型_销售人员奖惩投诉记录信息.getValue(),"1");
+				cells.add(cell4);
+				HomeCellDto cell5= dealCellDto("debt-link-disabled",homedto.getCheckSuccessnum(),"ReportUpInterfMonitor001","REPORT_004007","svreport/system/upinterfmonitor/ReportUpInterfMonitor001/init","5","1","1");
+				cells.add(cell5);
+				HomeCellDto cell6= dealCellDto("debt-info-link",homedto.getCheckfailnum(),"ErrorMessage001","REPORT_002004","chb/errormessage/ErrorMessage001/init","6",InterfDefine.销售人员奖惩投诉记录信息接口数据.getCode(),"1");
+				cells.add(cell6);
+				HomeCellDto cell7= dealCellDto("debt-info-link",homedto.getProcessednum(),"SvrOperationalInfo001","REPORT_001005","common/infomanagement/SvrOperationalInfo001/init","7",InterfDefine.销售人员奖惩投诉记录信息接口数据.getCode(),"1");
+				cells.add(cell7);
+				vdto.setCells(cells);
+				vdtolist.add(vdto);
+			}
+
+
+
+
 		}
 		return vdtolist;
 	}

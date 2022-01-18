@@ -11,6 +11,7 @@
            //记录分类change事件
            function salerRewPenaTyepOnChange(){
                var salerRewPenaTyep = $('#salerRewPenaTyep').val();
+               var salerRewPenaInst = $('#salerRewPenaInst').val();
                if (salerRewPenaTyep === '03'){
                     $('#salerRewPenaName').prop("disabled",true);
                     $("#salerRewPenaName").val('').trigger('change');
@@ -40,6 +41,10 @@
                        $("#salerComplainResult").val('').trigger('change');
                        $('#salerComplainDate').prop("disabled",true);
                        $("#salerComplainDate").val('').trigger('change');
+                       if(salerRewPenaInst === '01' || salerRewPenaInst === '02'){
+                         $('#salerRewPenaInstName').prop("disabled",true);
+                         $("#salerRewPenaInstName").val('').trigger('change');
+                       }
                }
             }
 

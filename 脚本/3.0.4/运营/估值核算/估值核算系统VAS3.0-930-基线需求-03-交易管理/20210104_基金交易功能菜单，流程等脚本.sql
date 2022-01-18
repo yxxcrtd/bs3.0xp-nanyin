@@ -89,6 +89,7 @@ values ('TrdFundValuationTrade002', 'TrdFundValuationTrade001_btn_delete', 'oneA
 
 
 /*基金交易-4位数的交易编号，序列*/
+DROP SEQUENCE FUNDTRADEID_SEQUENCE;
 -- Create sequence
 create sequence FUNDTRADEID_SEQUENCE
 minvalue 1
