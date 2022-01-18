@@ -506,6 +506,7 @@ public class CfetsTrdConfirmService extends BaseService{
             deal.setFeeAmtPay(getDeatil费用金额(regFeeDetailList, DictCodeList.是否_是.getValue()));
             deal.setFeeAmtUnpay(getDeatil费用金额(regFeeDetailList, DictCodeList.是否_否.getValue()));
             deal.setTotleTradeId(entity.getTotleTradeId());
+            deal.setTrader(entity.getTrader());
             deals.add(deal);
 
             // 金融产品交易附属表Entity 构造开始----------------------------------------------------------
@@ -815,7 +816,7 @@ public class CfetsTrdConfirmService extends BaseService{
            // map.put("portfolioId", regDeal.getPortfolioId());
             map.put("entrustId", regDeal.getEntrustId());
             deal.setInvAim(getInvAim(map));
-
+            deal.setTrader(entity.getTrader());
             deals.add(deal);
 
             // 金融产品交易附属表Entity 构造开始----------------------------------------------------------

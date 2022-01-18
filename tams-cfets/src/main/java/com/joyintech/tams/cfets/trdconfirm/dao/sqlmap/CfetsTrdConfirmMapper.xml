@@ -33,7 +33,7 @@
         decode(reg.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
         reg.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdName,
-        reg.face_value/10000 as faceValue,
+        decode(reg.finprod_type2,'F01',reg.face_value/10000,null)   as faceValue,
         case when reg.finprod_type2='F01'
         then decode(regAdd.CAL_MODE,'01',TO_CHAR(ROUND(reg.unit_cprice,4),'FM990.0000'),
                                     '02',TO_CHAR(ROUND(reg.yield*100,4),'FM990.0000') ||'%',
