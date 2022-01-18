@@ -291,11 +291,12 @@
         and  ibd.trade_status='07'
         left join fin_product fp
         on ib.finprod_id=fp.finprod_id
-        left join(
+        inner join(
         select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
         from ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
+        where 1=1
         <if test="portfolioIdList != null and portfolioIdList.size() > 0">
             AND pp.portfolio_id in
             <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
@@ -411,11 +412,12 @@
         group by I.quote_id
         )icpledge
         on  ic.quote_id=icpledge.quote_id
-        left join(
+        inner join(
         select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
         from ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
+        where 1=1
         <if test="portfolioIdList != null and portfolioIdList.size() > 0">
             AND pp.portfolio_id in
             <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
