@@ -223,7 +223,7 @@ insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER
 values ('TrdFxForwardValuationTrade002', 'TrdFxForwardValuationTrade002_btn_save', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-values ('TrdFxForwardValuationTrade002', 'TrdFxForwardValuationTrade002_btn_sbumit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+values ('TrdFxForwardValuationTrade002', 'TrdFxForwardValuationTrade002_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
 values ('TrdFxForwardValuationTrade002', 'TrdFxForwardValuationTrade001_btn_delete', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
