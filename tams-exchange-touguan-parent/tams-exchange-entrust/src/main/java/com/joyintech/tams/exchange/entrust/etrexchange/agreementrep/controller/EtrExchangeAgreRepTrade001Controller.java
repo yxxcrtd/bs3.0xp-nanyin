@@ -338,7 +338,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
             return new Message<AjaxResult>().success().setData(ajax);
     }
         //正回购、质押券出库
-        if (DictCodeListExt3.交易方向_正回购.getValue().equals(dto.getPs())) {
+        if (DictCodeListExt3.交易方向_首期.getValue().equals(dto.getPs()) && StringUtil.equals(dto.getRepPs(),DictCodeList.回购拆借方向_正回购.getValue())) {
             Map<String, Object> param = new HashMap<String, Object>();
             param.put("portfolioId", dto.getPortfolioId());
             param.put("finprodId", dto.getFinprodId());
@@ -386,7 +386,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
             }
         }
         // 逆回购
-        if (DictCodeListExt3.交易方向_逆回购.getValue().equals(dto.getPs())) {
+        if (DictCodeListExt3.交易方向_首期.getValue().equals(dto.getPs()) && StringUtil.equals(dto.getRepPs(),DictCodeList.回购拆借方向_逆回购.getValue())) {
             Map<String,Object> cashAmountMap =  etrExchangeAgreRepTradeService.getCashAmount(dto.getPortfolioId(),dto.getAcctNo(),dto.getVdate());
             BigDecimal accAvailableCash = (BigDecimal)cashAmountMap.get("cashUse");
             if (StringUtil.isNotEmpty(accAvailableCash) && StringUtil.isNotEmpty(dto.getTradeAmt())) {
