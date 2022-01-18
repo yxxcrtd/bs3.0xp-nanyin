@@ -491,4 +491,12 @@ public class EtrExchangeAgreRepTrade001Dto extends BaseEntity implements Process
 	public void setAssetType2(String assetType2) {
 		this.assetType2 = assetType2;
 	}
+
+	public String getPledgeUnit() {
+		return pledgeUnit;
+	}
+
+	public void setPledgeUnit(String pledgeUnit) {
+		this.pledgeUnit = pledgeUnit;
+	}
 }

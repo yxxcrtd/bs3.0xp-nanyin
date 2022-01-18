@@ -662,10 +662,12 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         if (!StringUtil.isNotEmpty(entity.getRepoTerm())) {
             errorList.add(new ValidMessage("请输入回购期限"));
         }
-        if (!StringUtil.isNotEmpty(entity.getPrice())) {
+        if (!StringUtil.isNotEmpty(entity.getPrice())
+                || BigDecimal.ZERO.compareTo(entity.getPrice()) == 0) {
             errorList.add(new ValidMessage("请输入回购利率"));
         }
-        if (!StringUtil.isNotEmpty(entity.getTradeAmt())) {
+        if (!StringUtil.isNotEmpty(entity.getTradeAmt())
+                || BigDecimal.ZERO.compareTo(entity.getTradeAmt()) == 0) {
             errorList.add(new ValidMessage("请输入交易金额"));
         }
         if (!StringUtil.isNotEmpty(entity.getShareAmt())) {
@@ -876,7 +878,6 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         if ("save".equals(entity.getOperatorType()) || StringUtil.equals(entity.getOperatorType(), "revoke")) {
             return;
         }
-        entity.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
         insertWflRepoDealQuote(entity);
         // 发头寸
         String systemAct = this.handSystemAct(entity);
@@ -899,7 +900,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             // 发头寸
             if (StringUtil.isNotEmpty(entity.getWorkflowId())) {
                 SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
-                String systemAct = this.handSystemAct(entity);
+                String systemAct = DictCodeListExt3.系统动作_修改.getValue();
                 if (StringUtil.equals(sysWflBusinessList.getProcessState(), DictCodeList.流程状态_已退回.getValue())) {
                     sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), DictCodeListExt3.系统动作_修改.getValue(), systemAct);
                 }
@@ -952,8 +953,6 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             cfetsRepoDealQuotedPrice001Dto.setIsDzh(entity.getIsDzh());
             cfetsRepoDealQuotedPrice001Dto.setIsKtg(entity.getIsKtg());
         }
-        String systemAct = this.handSystemAct(entity);
-        sendPositionMethod(entity, DictCodeListExt3.流程节点_流程退回.getValue(), systemAct, systemAct);
     }
 
     /**
@@ -1216,8 +1215,6 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 // 提交
                 this.sendNewRepoDealQuote(dto);
             }
-            //处理指令执行进度
-            this.insertEtrFinishStatus(entity, type);
         } else if (StringUtil.equals(entity.getQuotaPageModel(), "edit")) {
             // 修改
             if (StringUtil.equals(entity.getOperatorType(), "save")) {

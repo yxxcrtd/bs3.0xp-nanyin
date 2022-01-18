@@ -71,9 +71,13 @@ public class CfetsEntrustStatusService {
         for(CfetsEntrustClosePosEtrReqDto t: dtolist){
             CfetsEntrustClosePosEtrReqDto closeItem=new CfetsEntrustClosePosEtrReqDto();
             String busiTypePosition=DictCodeListExt3.头寸业务类型_现券交易.getValue();
-            if(StringUtil.isNotEmpty(t.getPs())
-                    && StringUtil.equals(t.getPs(), BussinessDictCodeList.交易方向_行权回售.getValue())){
-                busiTypePosition=DictCodeListExt3.头寸业务类型_债券行权交易.getValue(); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
+            if(StringUtil.equals(t.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
+                if(StringUtil.isNotEmpty(t.getPs())
+                        && StringUtil.equals(t.getPs(), BussinessDictCodeList.交易方向_行权回售.getValue())){
+                    busiTypePosition=DictCodeListExt3.头寸业务类型_债券行权交易.getValue(); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
+                }
+            }else{
+                busiTypePosition =DictCodeListExt3.头寸业务类型_质押式回购首期.getValue();
             }
 
             closeItem.setBusiType(busiTypePosition);

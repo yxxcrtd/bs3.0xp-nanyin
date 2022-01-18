@@ -2,6 +2,11 @@ package com.joyintech.tams.exchange.common.constant;
 
 import cn.hutool.core.util.StrUtil;
 
+/**
+ * 交易方向-交易方向名称-买卖方向-委托属性 关系映射表
+ *
+ * 根据交易方向ps，获取买卖方向entrustBs和委托属性entrustProp
+ */
 public enum EntrustBsProp {
     /**
      * 竞价交易

@@ -187,9 +187,11 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         paTrdFinProductDealTotal.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
         if (DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(entity.getFinprodType2())) {
             trdFinProductDealTotal.setTgBusiType(DictCodeListExt1.平安业务类型_正回购到期.getValue());
+            trdFinProductDealTotal.setPs(DictCodeListExt3.交易方向_正回购.getValue());
             paTrdFinProductDealTotal.setPaBussType(DictCodeListExt1.平安业务类型_正回购到期.getValue());
         } else if (DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(entity.getFinprodType2())) {
             trdFinProductDealTotal.setTgBusiType(DictCodeListExt1.平安业务类型_逆回购到期.getValue());
+            trdFinProductDealTotal.setPs(DictCodeListExt3.交易方向_逆回购.getValue());
             paTrdFinProductDealTotal.setPaBussType(DictCodeListExt1.平安业务类型_逆回购到期.getValue());
         }
         paTrdFinProductDealTotal.setRate(ArithmeticUtil.divide(entity.getIntRate(), 100, 5));
@@ -199,12 +201,12 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         paTrdFinProductDealTotal.setWorkflowId(entity.getWorkflowId());
         //交易明细
         List<TrdProductDeal> trdProductDeals = new ArrayList<>();
-        List<FinCashPlan> 现金流 = restTemplate.postForList(
+        /*List<FinCashPlan> 现金流 = restTemplate.postForList(
                 ServiceApplication.PERIOD_SERVICE_NAME + "/TrdRepoDuration/findFinCashInfo", entity.getFinprodId(),
-                FinCashPlan.class);
+                FinCashPlan.class);*/
         BussinessCodeParameter parameter = new BussinessCodeParameter();
         parameter.setCommonBusinessType(DictCodeList.共通业务类型_资产存续期交易);
-        现金流.forEach(finCashPlan -> {
+        /*现金流.forEach(finCashPlan -> {
             TrdProductDeal deal = new TrdProductDeal();
             deal.setTradeId(autoPeriodCommonService.buildBussinessCode(parameter));
             deal.setBusiType(DictCodeList.共通业务类型_质押式回购存续期.getValue());
@@ -283,13 +285,24 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
             // 通道交易新增 end
             deal.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
             trdProductDeals.add(deal);
-        });
+        })*/;
         //划款指令
         // 自动生成划款指令用deal
         TrdProductDeal trdProductDeal = AutoPeriodRepoCommonService.getTrdProductDeal(entity);
+        trdProductDeal.setTradeId(autoPeriodCommonService.buildBussinessCode(parameter));
+        trdProductDeal.setTotleTradeId(entity.getBusiCode());
         trdProductDeal.setTradeAmt(entity.getTradeAmt());
         trdProductDeal.setSettleDate(DateUtil.parse(entity.getSettleDate()));
-
+        trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+        trdProductDeal.setIsCancel(DictCodeList.是否_否.getValue());
+        trdProductDeals.add(trdProductDeal);
+        //交易明细附属表
+        List<TrdProductDealAdd> trdProductDealAdds = new ArrayList<>();
+        TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
+        trdProductDealAdd.setTradeId(trdProductDeal.getTradeId());
+        trdProductDealAdd.setPortfolioId(entity.getPortfolioId());
+        trdProductDealAdd.setEntrustId(entity.getPortfolioId());
+        trdProductDealAdds.add(trdProductDealAdd);
         BatchBussSettleOrderParameterDto parameterDto = new BatchBussSettleOrderParameterDto();
         parameterDto.setIsTotalTrade(DictCodeList.是否_是.getValue());
         parameterDto.setBankLendingType(null);
@@ -309,6 +322,7 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         trdBondDurDbInertDto.setTrdFinProductDealTotal(trdFinProductDealTotal);
         trdBondDurDbInertDto.setPaTrdFinProductDealTotal(paTrdFinProductDealTotal);
         trdBondDurDbInertDto.setTrdProductDealList(trdProductDeals);
+        trdBondDurDbInertDto.setTrdProductDealAdds(trdProductDealAdds);
         return trdBondDurDbInertDto;
     }
 

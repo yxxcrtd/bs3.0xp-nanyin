@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.systemtools.util.SysDatadictUtil;
 
@@ -139,6 +140,22 @@ public class EtrExchangeOnWayRep002Dto extends BaseEntity {
      * 质押券名称
      */
     private String stockName;
+
+    /**
+     * 是否到期
+     */
+    private String isExpire;
+
+    /**
+     * 质押券单位
+     */
+    private String pledgeUnit;
+
+    /**
+     * 剩余日期
+     */
+    @JsonSerialize(using = BigDecimalSerializer.class)
+    private BigDecimal remainDays;
 
     public String getPortfolioId() {
         return portfolioId;
@@ -322,5 +339,37 @@ public class EtrExchangeOnWayRep002Dto extends BaseEntity {
 
     public void setStockName(String stockName) {
         this.stockName = stockName;
+    }
+
+    public String getIsExpire() {
+        return isExpire;
+    }
+
+    public void setIsExpire(String isExpire) {
+        this.isExpire = isExpire;
+    }
+
+    public String getIsExpireStr() {
+        return SysDatadictUtil.getNameFromDataDict(DictCode.是否,this.isExpire);
+    }
+
+    public String getPledgeUnit() {
+        return pledgeUnit;
+    }
+
+    public void setPledgeUnit(String pledgeUnit) {
+        this.pledgeUnit = pledgeUnit;
+    }
+
+    public String getPledgeUnitStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.交易单位,getPledgeUnit());
+    }
+
+    public BigDecimal getRemainDays() {
+        return remainDays;
+    }
+
+    public void setRemainDays(BigDecimal remainDays) {
+        this.remainDays = remainDays;
     }
 }

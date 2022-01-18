@@ -354,8 +354,13 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,type);
             //登录业务流程
             insertWfl(cfetsBondDealDbDto);
-            //头寸
-            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,DictCodeListExt3.系统动作_新建.getValue(),DictCodeListExt3.系统动作_新建.getValue(),type));
+            try{
+                //头寸
+                PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,DictCodeListExt3.系统动作_新建.getValue(),DictCodeListExt3.系统动作_新建.getValue(),type));
+            }catch(PositionException e){
+                e.printStackTrace(); Message message = PositionUtil.ajaxErrorReturn(e);
+                throw new BusinessException("MSG:"+message.getMessage());
+            }
         }
 
     }

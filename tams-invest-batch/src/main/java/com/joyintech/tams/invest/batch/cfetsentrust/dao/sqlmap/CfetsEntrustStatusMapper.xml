@@ -3,13 +3,14 @@
 <mapper namespace="com.joyintech.tams.invest.batch.cfetsentrust.dao.CfetsEntrustStatusMapper">
 
 	<select id="selectEntrustIds" resultType="com.joyintech.tams.invest.batch.cfetsentrust.dto.CfetsEntrustClosePosEtrReqDto">
-		SELECT ENTRUST_ID  as closeId,ps as ps
+		SELECT ENTRUST_ID  as closeId,ps as ps,finprod_type2 as finprodType2
 		FROM ETR_ENTRUST
 		WHERE
 		ENTRUST_ID IN ( SELECT ENTRUST_ID FROM ETR_ENTRUST WHERE ENTRUST_STATUS IN ( #{ENTRUST_STATUS_01}, #{ENTRUST_STATUS_02}, #{ENTRUST_STATUS_03}, #{ENTRUST_STATUS_05},#{ENTRUST_STATUS_08},#{ENTRUST_STATUS_07} )
 		<if test="sysDate != null and sysDate != ''">
 			<![CDATA[AND MDATE <= TO_DATE(#{sysDate},'YYYY-MM-DD')]]>
 		</if>
+		and finprod_type2 in ('F01','F02','F03')
 		)
 	</select>
 
@@ -21,6 +22,7 @@
 		<if test="sysDate != null and sysDate != ''">
 			<![CDATA[AND MDATE <= TO_DATE(#{sysDate},'YYYY-MM-DD')]]>
 		</if>
+		and finprod_type2 in ('F01','F02','F03')
 		)
 	</update>
 	<update id="updateDistributeStatus">
@@ -31,6 +33,7 @@
 		<if test="sysDate != null and sysDate != ''">
 			<![CDATA[AND MDATE <= TO_DATE(#{sysDate},'YYYY-MM-DD')]]>
 		</if>
+		and finprod_type2 in ('F01','F02','F03')
 		)
 	</update>
 

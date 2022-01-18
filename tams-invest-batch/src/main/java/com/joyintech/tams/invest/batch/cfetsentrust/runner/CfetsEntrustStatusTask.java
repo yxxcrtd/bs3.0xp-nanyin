@@ -72,9 +72,9 @@ public class CfetsEntrustStatusTask extends BatchBaseService{
              result.setStatus(BatchStatus.COMPLETED);
          }
          catch (Exception e) {
-             //logger.error(e.getMessage());
-             e.printStackTrace();
-             throw new RuntimeException(e);
+             logger.error(e.getMessage());
+             //e.printStackTrace();
+             // throw new RuntimeException(e);
          }
          isRunning=false;
          return result;

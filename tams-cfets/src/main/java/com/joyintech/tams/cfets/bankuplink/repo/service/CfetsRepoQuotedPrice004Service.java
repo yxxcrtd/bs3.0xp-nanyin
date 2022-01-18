@@ -397,10 +397,12 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         if (!StringUtil.isNotEmpty(entity.getRepoTerm())) {
             errorList.add(new ValidMessage("请输入回购期限"));
         }
-        if (!StringUtil.isNotEmpty(entity.getPrice())) {
+        if (!StringUtil.isNotEmpty(entity.getPrice())
+                || BigDecimal.ZERO.compareTo(entity.getPrice()) == 0) {
             errorList.add(new ValidMessage("请输入回购利率"));
         }
-        if (!StringUtil.isNotEmpty(entity.getTradeAmt())) {
+        if (!StringUtil.isNotEmpty(entity.getTradeAmt())
+                || BigDecimal.ZERO.compareTo(entity.getTradeAmt()) == 0) {
             errorList.add(new ValidMessage("请输入交易金额"));
         }
         if (!StringUtil.isNotEmpty(entity.getShareAmt())) {

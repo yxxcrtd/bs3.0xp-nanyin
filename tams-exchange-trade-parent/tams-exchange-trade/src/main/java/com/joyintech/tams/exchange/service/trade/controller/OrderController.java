@@ -1,10 +1,8 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
-import com.joyintech.tams.exchange.common.bean.AlgorithmPlaceBean;
-import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
-import com.joyintech.tams.exchange.common.bean.ReviewDto;
-import com.joyintech.tams.exchange.common.bean.TrdExchangeDto;
+import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.constant.EntrustBsProp;
+import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.db.domain.Algorithm;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
@@ -18,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController("OrderController_dtx")
 @RequestMapping("/trade/joyin")
@@ -54,15 +54,21 @@ public class OrderController {
     @ApiOperation(value = "普通下单（竞价下单）", notes = "普通下单（竞价下单）")
     @RequestMapping(value = "/order", method = RequestMethod.POST)
     public Message<OrderPlaceBean> sendOrder(@RequestBody OrderPlaceBean order) {
-        logger.info("普通下单（竞价下单）：order entrustBs is [{}]", order.getEntrustBs());
-        order.setEntrustBs(EntrustBsProp.getEntrustBs(order.getEntrustBs()));
 
         Instruction instruction = instructionService.findById(order.getInstructionId());
+        if (Objects.isNull(instruction)) {
+            return new Message<>(ResultBean.error(ErrorCode.INSTRUCTIONS_NOT_EXIST, order));
+        }
+
+        String entrustBs = EntrustBsProp.getEntrustBs(instruction.getPs());
+        logger.debug("普通下单（竞价下单）买卖方向（entrustBs）转换：{} ==> {}, ", order.getEntrustBs(), entrustBs);
+        order.setEntrustBs(entrustBs);
+
         String entrustProp = EntrustPropUtils.getEntrustProp(instruction, order.getEntrustProp());
-        logger.info("普通下单（竞价下单）：order entrustProp is [{}]", entrustProp);
+        logger.debug("普通下单（竞价下单）委托属性（entrustProp）转换：{} ==> {}, ", order.getEntrustProp(), entrustProp);
         order.setEntrustProp(entrustProp);
 
-        return new Message<OrderPlaceBean>(orderManagement.sendOrder(order.getUserId(), order));
+        return new Message<>(orderManagement.sendOrder(order.getUserId(), order));
     }
 
     /**

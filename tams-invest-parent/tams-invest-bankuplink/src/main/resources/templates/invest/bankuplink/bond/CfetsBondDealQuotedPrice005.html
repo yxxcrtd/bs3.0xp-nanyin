@@ -6,20 +6,20 @@
 </head>
 <body>
 <div layout:fragment="content">
-	<style type="text/css">
+    <style type="text/css">
         .form-inline-wrap {
-		    display: inline-block;
-		    float: left;
-		    width: 32%;
-		    padding-top: 10px;
-		}
-		.layui-form-radio {
-		    line-height: 28px;
-		    margin: 0 0 0 0;
-		    padding-right: 0px;
-		    cursor: pointer;
-		    font-size: 0;
-		}
+            display: inline-block;
+            float: left;
+            width: 32%;
+            padding-top: 10px;
+        }
+        .layui-form-radio {
+            line-height: 28px;
+            margin: 0 0 0 0;
+            padding-right: 0px;
+            cursor: pointer;
+            font-size: 0;
+        }
     </style>
     <div class="pro-module-container" style="margin-bottom: 20px;">
         <form class="layui-form joyin-form-wrap pro-module-form" id="submitForm">
@@ -33,11 +33,11 @@
             <input type="hidden" name="tradeStatus" th:value="${initTradeStatus}" />
             <input type="hidden" id="CfetsBondDealQuotedPrice005_hidden_entrustAmt" name="entrustAmt" th:value="${entity?.entrustNum}" />
             <div class="pro-module-wrapper pro-module-base" th:title="#{CfetsBondDealQuotedPrice003.baseinfo}">
-            <input type="hidden" name="workflowId" th:value="${entity?.workflowId}" />
+                <input type="hidden" name="workflowId" th:value="${entity?.workflowId}" />
                 <div class="pro-module-wrap">
                     <div class="pro-module">
                         <h3 class="pro-module-title">
-                        <span class="title-des" th:text="#{CfetsBondDealQuotedPrice003.baseinfo}">基本信息</span><i class="iconfont icon-arrow-down pro-down-icon"></i></h3>
+                            <span class="title-des" th:text="#{CfetsBondDealQuotedPrice003.baseinfo}">基本信息</span><i class="iconfont icon-arrow-down pro-down-icon"></i></h3>
                         <div class="pro-module-item">
                             <!-- <div class="layui-form-item">
                                 <div class="form-inline-wrap">
@@ -72,28 +72,28 @@
                                     </div>
                                 </div>
                                 </div> -->
-                                <div class="layui-form-item">
+                            <div class="layui-form-item">
                                 <div class="form-inline-wrap">
-                                <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice003.my}">本方</label>
-                                <div class="layui-input-inline input-inline">
-                                    <select required th:disabled="${isRevert } eq ${YES_OR_NO_Y}" type="text" id="CfetsBondDealQuotedPrice005_mySide" name="mySide"
-                                            class="layui-input form-input input-select" placeholder="请输入内容"
-                                            th:placeholder="#{SysCommon.placeholder}" parentIds="CfetsBondDealQuotedPrice005_portfolioName"
-                                            th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryMySideList}" allowClear="true"
-                                            formatoption="true"
-                                            th:initValue="${entity?.mySide}"></select>
-                                </div>
+                                    <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice003.my}">本方</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <select required th:disabled="${isRevert } eq ${YES_OR_NO_Y}" type="text" id="CfetsBondDealQuotedPrice005_mySide" name="mySide"
+                                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                                th:placeholder="#{SysCommon.placeholder}" parentIds="CfetsBondDealQuotedPrice005_portfolioName"
+                                                th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryMySideList}" allowClear="true"
+                                                formatoption="true"
+                                                th:initValue="${entity?.mySide}"></select>
+                                    </div>
                                 </div>
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap"
                                            th:text="#{CfetsBondDealQuotedPrice003.myTradeId}">本方交易员</label>
                                     <div class="layui-input-inline input-inline">
                                         <select required th:disabled="${isRevert } eq ${YES_OR_NO_Y}" type="text" id="CfetsBondDealQuotedPrice005_mySideTrader" name="mySideTrader"
-                                            class="layui-input form-input input-select" placeholder="请输入内容"
-                                            th:placeholder="#{SysCommon.placeholder}" parentIds="CfetsBondDealQuotedPrice005_mySide" 
-                                            th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryMySideTraderList}" allowClear="true"
-                                            formatoption="true"
-                                            th:initValue="${entity?.mySideTrader}"></select>
+                                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                                th:placeholder="#{SysCommon.placeholder}" parentIds="CfetsBondDealQuotedPrice005_mySide"
+                                                th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryMySideTraderList}" allowClear="true"
+                                                formatoption="true"
+                                                th:initValue="${entity?.mySideTrader}"></select>
                                     </div>
                                 </div>
                             </div>
@@ -110,23 +110,23 @@
                                 <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice003.ps}">交易方向</label>
                                 <div class="layui-input-inline input-inline">
                                     <select required th:disabled="${isRevert } eq ${YES_OR_NO_Y}" type="text" id="CfetsBondDealQuotedPrice005_ps" name="ps"
-                                           class="layui-input form-input input-select"
-                                           placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
-                                           th:data-result='${PS}' allowClear="true" formatoption="true"
-                                           th:initValue="${entity?.ps}"></select>
+                                            class="layui-input form-input input-select"
+                                            placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
+                                            th:data-result='${PS}' allowClear="true" formatoption="true"
+                                            th:initValue="${entity?.ps}"></select>
                                 </div>
                             </div>
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice003.effDate}">有效时间</label>
                                 <div class="layui-input-inline input-inline">
-                                        <!-- <input disabled type="text" id="effDate" name="effDate"
-                                               class="layui-input form-input input-dateSelect" placeholder="请输入内容"
-                                               th:placeholder="#{SysCommon.placeholder}"
-                                               th:value="${entity?.effDate==null ? ibuVar_quoteEffTime : #dates.format(entity?.effDate,'HH:mm')}"> -->
-                                              <input disabled type="text" id="CfetsBondDealQuotedPrice005_effDate" name="effDate"
-                                               class="layui-input form-input" placeholder="请输入内容"
-                                               th:placeholder="#{SysCommon.placeholder}"
-                                               th:value="${entity?.effDate ==null ? effTime : entity?.effDate}">
+                                    <!-- <input disabled type="text" id="effDate" name="effDate"
+                                           class="layui-input form-input input-dateSelect" placeholder="请输入内容"
+                                           th:placeholder="#{SysCommon.placeholder}"
+                                           th:value="${entity?.effDate==null ? ibuVar_quoteEffTime : #dates.format(entity?.effDate,'HH:mm')}"> -->
+                                    <input disabled type="text" id="CfetsBondDealQuotedPrice005_effDate" name="effDate"
+                                           class="layui-input form-input" placeholder="请输入内容"
+                                           th:placeholder="#{SysCommon.placeholder}"
+                                           th:value="${entity?.effDate ==null ? effTime : entity?.effDate}">
                                 </div>
                             </div>
                             <div class="form-inline-wrap">
@@ -141,37 +141,37 @@
                         </div>
                         <div class="layui-form-item">
                             <div class="form-inline-wrap">
-	                            <label class="layui-form-label form-label-wrap" data-th-text="#{CfetsBondDealQuotedPrice003.bond}" >债券</label>
-	                            <div class="layui-input-inline input-inline buss-inline-wrap" style="width: 30%!important;display: inline-block;">
-		                            <select required th:disabled="${isRevert } eq ${YES_OR_NO_Y}" type="text" id="CfetsBondDealQuotedPrice005_finprodName" name="finprodName"
-                                             class="layui-input form-input input-select" allowClear="true"
-                                             placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                             data-th-data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryFinprodIdPage}"
-                                             data-th-initvalue="${entity?.finprodMarketId}">
-                                     </select>
-		                        </div>
-		                        <div class="layui-input-inline input-inline buss-inline-wrap" style="width: 30%!important;display: inline-block;">
-		                            <input disabled type="text" id="CfetsBondDealQuotedPrice005_finprodMarketId"
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{CfetsBondDealQuotedPrice003.bond}" >债券</label>
+                                <div class="layui-input-inline input-inline buss-inline-wrap" style="width: 30%!important;display: inline-block;">
+                                    <select required th:disabled="${isRevert } eq ${YES_OR_NO_Y}" type="text" id="CfetsBondDealQuotedPrice005_finprodName" name="finprodName"
+                                            class="layui-input form-input input-select" allowClear="true"
+                                            placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                            data-th-data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryFinprodIdPage}"
+                                            data-th-initvalue="${entity?.finprodMarketId}">
+                                    </select>
+                                </div>
+                                <div class="layui-input-inline input-inline buss-inline-wrap" style="width: 30%!important;display: inline-block;">
+                                    <input disabled type="text" id="CfetsBondDealQuotedPrice005_finprodMarketId"
                                            class="layui-input form-input" placeholder="请输入内容"
                                            th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.finprodMarketId}">
-		                        </div>
-	                        </div>
+                                </div>
+                            </div>
                             <div class="form-inline-wrap">
-	                            <label class="layui-form-label form-label-wrap" data-th-text="#{CfetsBondDealQuotedPrice003.settleSpeed}" >清算速度</label>
-	                            <div class="layui-input-inline input-inline buss-inline-wrap" style="width: 30%!important;display: inline-block;">
-		                            <select required th:disabled="${isRevert } eq ${YES_OR_NO_Y}" type="text" id="CfetsBondDealQuotedPrice005_settleSpreed" name="settleSpreed"
-                                           class="layui-input form-input input-select"
-                                           placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
-                                           th:data-result='${ACCOUNT_SPEED}' allowClear="true" formatoption="true"
-                                           th:initValue="${entity?.settleSpreed}"></select>
-		                        </div>
-		                        <div class="layui-input-inline input-inline buss-inline-wrap" style="width: 30%!important;display: inline-block;">
-		                            <input disabled type="text" id="CfetsBondDealQuotedPrice005_settleDate" name="settleDate"
-                                               class="layui-input form-input input-dateSelect" placeholder="请输入内容"
-                                               th:placeholder="#{SysCommon.placeholder}"
-                                               th:value="${#dates.format(entity?.settleDate,'yyyy-MM-dd')}">
-		                        </div>
-	                        </div>
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{CfetsBondDealQuotedPrice003.settleSpeed}" >清算速度</label>
+                                <div class="layui-input-inline input-inline buss-inline-wrap" style="width: 30%!important;display: inline-block;">
+                                    <select required th:disabled="${isRevert } eq ${YES_OR_NO_Y}" type="text" id="CfetsBondDealQuotedPrice005_settleSpreed" name="settleSpreed"
+                                            class="layui-input form-input input-select"
+                                            placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
+                                            th:data-result='${ACCOUNT_SPEED}' allowClear="true" formatoption="true"
+                                            th:initValue="${entity?.settleSpreed}"></select>
+                                </div>
+                                <div class="layui-input-inline input-inline buss-inline-wrap" style="width: 30%!important;display: inline-block;">
+                                    <input disabled type="text" id="CfetsBondDealQuotedPrice005_settleDate" name="settleDate"
+                                           class="layui-input form-input input-dateSelect" placeholder="请输入内容"
+                                           th:placeholder="#{SysCommon.placeholder}"
+                                           th:value="${#dates.format(entity?.settleDate,'yyyy-MM-dd')}">
+                                </div>
+                            </div>
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice003.bondPrinamt}">券面总额</label>
                                 <div class="layui-input-inline input-inline">
@@ -182,26 +182,26 @@
                                     <span class="input-right-show">万元</span>
                                 </div>
                             </div>
-                            </div>
-                            <div class="layui-form-item">
+                        </div>
+                        <div class="layui-form-item">
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice003.settleMethod}">结算方式</label>
                                 <div class="layui-input-inline input-inline">
                                     <select required th:disabled="${isRevert } eq ${YES_OR_NO_Y}" type="text" id="CfetsBondDealQuotedPrice005_settleMethod" name="settleMethod"
-                                           class="layui-input form-input input-select"
-                                           placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
-                                           th:data-result='${SETT_MODE}' allowClear="true" formatoption="true"
-                                           th:initValue="${entity?.settleMethod}"></select>
+                                            class="layui-input form-input input-select"
+                                            placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
+                                            th:data-result='${SETT_MODE}' allowClear="true" formatoption="true"
+                                            th:initValue="${entity?.settleMethod}"></select>
                                 </div>
                             </div>
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice003.settleType}">清算类型</label>
                                 <div class="layui-input-inline input-inline">
                                     <select required th:disabled="${isRevert } eq ${YES_OR_NO_Y}" type="text" id="CfetsBondDealQuotedPrice005_settleType" name="settleType"
-                                           class="layui-input form-input input-select"
-                                           placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
-                                           th:data-result='${CLEAR_TYPE}' allowClear="true" formatoption="true"
-                                           th:initValue="${entity?.settleType}"></select>
+                                            class="layui-input form-input input-select"
+                                            placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
+                                            th:data-result='${CLEAR_TYPE}' allowClear="true" formatoption="true"
+                                            th:initValue="${entity?.settleType}"></select>
                                 </div>
                             </div>
                         </div>
@@ -213,50 +213,50 @@
                     <h3 class="pro-module-title"><span class="title-des" th:text="#{CfetsBondDealQuotedPrice003.selectOrg}">可选机构</span><i class="iconfont icon-arrow-down pro-down-icon"></i></h3>
                     <div class="pro-module-item">
                         <div class="layui-form-item" th:if="${entity?.quotaPageModel}  neq 'response'">
-                        	<div class="form-inline-wrap">
-                        		<label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice003.orgType}">选择机构</label>
-                        		<div class="layui-input-inline input-inline">
-		                            <select type="text" id="CfetsBondDealQuotedPrice005_orgType" name="orgType"
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice003.orgType}">选择机构</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select type="text" id="CfetsBondDealQuotedPrice005_orgType" name="orgType"
                                             class="layui-input form-input input-select" placeholder="请输入内容"
                                             th:placeholder="#{SysCommon.placeholder}"
                                             th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryMySideList}" allowClear="true"
                                             formatoption="true"
-                                            ></select>
+                                    ></select>
                                 </div>
-                        	</div>
-                            <div class="form-inline-wrap">
-                               <a id="CfetsBondDealQuotedPrice005_btn_add" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.add}">添加</a>
-                                
                             </div>
-                    </div>
-                    <div>
-                           <table class="layui-table" id="CfetsBondDealQuotedPrice005_orgTable"></table>
+                            <div class="form-inline-wrap">
+                                <a id="CfetsBondDealQuotedPrice005_btn_add" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.add}">添加</a>
+
+                            </div>
+                        </div>
+                        <div>
+                            <table class="layui-table" id="CfetsBondDealQuotedPrice005_orgTable"></table>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- 组合分配信息 -->
-            <div class="page-component" th:data-path="@{/invest/bankuplink/common/CfetsQuotedCommon001/init}" id="cfetsQuotedCommon_div"
-                 th:data-params="|{entityName: 'bussTrdTransferOrder', pageFrom: 'submitForm', entity:'${cfetsBondDealRequestQuoteDtoList}',distribution:'${entity?.distribution}', bizCode:'${tradeId}', quoteType: '02'}|">
-            </div>
-            
-            <div class="pro-module-wrap">
-                <div class="pro-module">
-                    <h3 class="pro-module-title"><span class="title-des" th:text="#{CfetsBondDealQuotedPrice003.remark}">备注</span><i
-                            class="iconfont icon-arrow-down pro-down-icon"></i></h3>
-                    <div class="pro-module-item">
-                        <div class="layui-form-item">
+
+                <!-- 组合分配信息 -->
+                <div class="page-component" th:data-path="@{/invest/bankuplink/common/CfetsQuotedCommon001/init}" id="cfetsQuotedCommon_div"
+                     th:data-params="|{entityName: 'bussTrdTransferOrder', pageFrom: 'submitForm', entity:'${cfetsBondDealRequestQuoteDtoList}', bizCode:'${tradeId}', quoteType: '02'}|">
+                </div>
+
+                <div class="pro-module-wrap">
+                    <div class="pro-module">
+                        <h3 class="pro-module-title"><span class="title-des" th:text="#{CfetsBondDealQuotedPrice003.remark}">备注</span><i
+                                class="iconfont icon-arrow-down pro-down-icon"></i></h3>
+                        <div class="pro-module-item">
                             <div class="layui-form-item">
-                                <div class="layui-input-inline input-inline" style="margin:0 10px;width: 98%!important;">
+                                <div class="layui-form-item">
+                                    <div class="layui-input-inline input-inline" style="margin:0 10px;width: 98%!important;">
                                     <textarea id="CfetsBondDealQuotedPrice005_remark" name="remark" maxlength="200" th:text="${entity?.remark}"
                                               class="layui-textarea" placeholder="请输入内容"
                                               th:placeholder="#{SysCommon.placeholder}"></textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
         </form>
         <div class="row text-center" style="margin: 20px 0;">
@@ -270,19 +270,19 @@
 </div>
 <div layout:fragment="script">
     <script data-th-inline="javascript" type="text/javascript">
-    	var ACCOUNT_SPEED_1 = /*[[${ACCOUNT_SPEED_1}]]*/'';
-    	var ACCOUNT_SPEED_0 = /*[[${ACCOUNT_SPEED_0}]]*/'';
-    	var CNY = /*[[${CNY}]]*/'';
-    	var SETT_MODE_03 = /*[[${SETT_MODE_03}]]*/'';
-    	var CLEAR_TYPE_02 = /*[[${CLEAR_TYPE_02}]]*/'';
-    	var entity = /*[[${entity}]]*/'';
-    	var isRevert = /*[[${isRevert}]]*/'';
-    	var YES_OR_NO_Y = /*[[${YES_OR_NO_Y}]]*/'';
-    	var ouTraderIdCanEditFlag = /*[[${ouTraderIdCanEditFlag}]]*/'';
-    	var tradeStatus12 = /*[[${tradeStatus12}]]*/'';// 已回复
-    	var mySideInit = /*[[${entity?.mySide}]]*/'';
-    	var mySideTraderInit = /*[[${entity?.mySideTrader}]]*/'';
-    	var counterInfoList = /*[[${entity?.counterInfoList}]]*/'';
+        var ACCOUNT_SPEED_1 = /*[[${ACCOUNT_SPEED_1}]]*/'';
+        var ACCOUNT_SPEED_0 = /*[[${ACCOUNT_SPEED_0}]]*/'';
+        var CNY = /*[[${CNY}]]*/'';
+        var SETT_MODE_03 = /*[[${SETT_MODE_03}]]*/'';
+        var CLEAR_TYPE_02 = /*[[${CLEAR_TYPE_02}]]*/'';
+        var entity = /*[[${entity}]]*/'';
+        var isRevert = /*[[${isRevert}]]*/'';
+        var YES_OR_NO_Y = /*[[${YES_OR_NO_Y}]]*/'';
+        var ouTraderIdCanEditFlag = /*[[${ouTraderIdCanEditFlag}]]*/'';
+        var tradeStatus12 = /*[[${tradeStatus12}]]*/'';// 已回复
+        var mySideInit = /*[[${entity?.mySide}]]*/'';
+        var mySideTraderInit = /*[[${entity?.mySideTrader}]]*/'';
+        var counterInfoList = /*[[${entity?.counterInfoList}]]*/'';
         var busWorkflowId = /*[[${busWorkflowId}]]*/'';
         var assetIsRight = /*[[${assetIsRight}]]*/'';
         var quotaPageModel = /*[[${quotaPageModel}]]*/'';

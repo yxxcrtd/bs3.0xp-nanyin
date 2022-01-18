@@ -55,7 +55,7 @@ import java.util.*;
 
 @Controller
 @PageId("EtrExchangeAgreRepTrade001")
-@RequestMapping("/invest/entrust/etragrereptrade/EtrExchangeAgreRepTrade001Controller")
+@RequestMapping("/etrexchange/agreementrep/EtrExchangeAgreRepTrade001Controller")
 @Api(tags = "场内质押式协议回购指令下单")
 public class EtrExchangeAgreRepTrade001Controller extends BaseController {
 
@@ -208,10 +208,10 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      */
     @ApiOperation(value = "查询本方交易员", notes = "查询本方交易员")
     @ResponseBody
-    @RequestMapping("/selectTrader")
-    public List<SuggestDto> selectTrader() {
-        Map<String, Object> pageParam = RequestUtil.getPageParam();
-        return etrExchangeAgreRepTradeService.selectTrader(pageParam);
+    @PostMapping("/selectTrader")
+    public Message<List<SelectOptionDto>> selectTrader(@RequestBody  Map<String, Object> pageParam) {
+//        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        return new Message<List<SelectOptionDto>>().success().setData(etrExchangeAgreRepTradeService.selectTrader(pageParam));
     }
 
     /**
@@ -221,10 +221,10 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      */
     @ApiOperation(value = "查询对手方交易员", notes = "查询对手方交易员")
     @ResponseBody
-    @RequestMapping("/selectCounterTrader")
-    public List<SuggestDto> selectCounterTrader() {
-        Map<String, Object> pageParam = RequestUtil.getPageParam();
-        return etrExchangeAgreRepTradeService.selectCounterTrader(pageParam);
+    @PostMapping("/selectCounterTrader")
+    public Message<List<SelectOptionDto>> selectCounterTrader(@RequestBody  Map<String, Object> pageParam) {
+//        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        return new Message<List<SelectOptionDto>>().success().setData(etrExchangeAgreRepTradeService.selectCounterTrader(pageParam));
     }
 
     /**
@@ -234,9 +234,9 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      */
     @ApiOperation(value = "获取到期结算日", notes = "获取到期结算日")
     @ResponseBody
-    @RequestMapping("/addDate")
-    public Message<Map<String,Object>> addDate() {
-        Map<String, Object> pageParam = RequestUtil.getPageParam();
+    @PostMapping("/addDate")
+    public Message<Map<String,Object>> addDate(@RequestBody  Map<String, Object> pageParam) {
+//        Map<String, Object> pageParam = RequestUtil.getPageParam();
         return new Message<Map<String,Object>>().success().setData(etrExchangeAgreRepTradeService.addDate(pageParam));
     }
 
@@ -247,10 +247,10 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      */
     @ApiOperation(value = "获取到期结算日", notes = "获取到期结算日")
     @ResponseBody
-    @RequestMapping("/getFaceValue")
-    public Message<String> getFaceValue() {
-        String repSecId = getParam("repSecId");
-        String iPlatformDate = getParam("iPlatformDate");
+    @PostMapping("/getFaceValue")
+    public Message<String> getFaceValue(@RequestBody  Map<String, Object> pageParam) {
+        String repSecId = (String)pageParam.get("repSecId");
+        String iPlatformDate = (String)pageParam.get("iPlatformDate");
         BigDecimal price =  trdCommonBaseService.getFaceValue(repSecId,DateUtil.parse(iPlatformDate));
         return new Message<String>().success().setData(price!=null?price.toString():"");
     }
@@ -262,7 +262,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      */
     @ApiOperation(value = "查询首期成交信息(成交编号)", notes = "查询首期成交信息(成交编号)")
     @ResponseBody
-    @RequestMapping("/getFirstRepEntrustInfo/{tradeId}")
+    @PostMapping("/getFirstRepEntrustInfo/{tradeId}")
     public Message<EtrExchangeAgreRepTrade001Dto> getEntrustInfoByTradeId(@ApiParam(value = "成交编号", required = false)@PathVariable String tradeId) {
         //成交编号
         Map<String, Object> pageParam = new HashMap<>();
@@ -277,7 +277,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      */
     @ApiOperation(value = "查询首期成交信息(委托编号)", notes = "查询首期成交信息(委托编号)")
     @ResponseBody
-    @RequestMapping("/getEntrustInfoByEntrustId/{entrustId}")
+    @PostMapping("/getEntrustInfoByEntrustId/{entrustId}")
     public Message<EtrExchangeAgreRepTrade001Dto> getEntrustInfoByEntrustId(@ApiParam(value = "委托编号", required = false)@PathVariable String entrustId) {
         //委托编号
         Map<String, Object> pageParam = new HashMap<>();
@@ -290,7 +290,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      * 获取可用可取资金
      */
     @ResponseBody
-    @RequestMapping("/getCashAmount/{portfolioId}/{acctNo}/{sysDate}")
+    @GetMapping("/getCashAmount/{portfolioId}/{acctNo}/{sysDate}")
     public Message<Map<String,Object>> getCashAmount(@ApiParam(value = "组合代码", required = false)@PathVariable String portfolioId,
                                             @ApiParam(value = "资金账户", required = false)@PathVariable String acctNo,
                                             @ApiParam(value = "系统时间", required = false)@PathVariable String sysDate) {
@@ -311,7 +311,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      */
     @ApiOperation(value = "协议回购保存提交check", notes = "协议回购保存提交check")
     @ResponseBody
-    @RequestMapping("check")
+    @PostMapping("check")
     public Message<AjaxResult> check(@RequestBody @Validated() EtrExchangeAgreRepTrade001Dto dto,
                             BindingResult result) throws Exception{
         if (result != null && result.hasErrors()) {
@@ -422,7 +422,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
     @ApiOperation(value = "协议回购保存提交方法", notes = "协议回购保存提交方法")
     @SuppressWarnings("deprecation")
     @ResponseBody
-    @RequestMapping("save")
+    @PostMapping("save")
     public Message<AjaxResult> save(@RequestBody EtrExchangeAgreRepTrade001Dto dto, BindingResult br) throws Exception {
         if (br.hasErrors()) {
             return new Message<AjaxResult>().success().setData(new AjaxResult(br));
@@ -546,7 +546,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      */
     @ApiOperation(value = "查询持仓", notes = "查询持仓")
     @ResponseBody
-    @RequestMapping("findPositionsPage")
+    @PostMapping("findPositionsPage")
     public Message<Page<EtrExchangeAgreRepTrade002Dto>> findPositionsPage(@RequestBody EtrExchangeTradePositionsCommonRequest request){
 
         try {
@@ -566,7 +566,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      */
     @ApiOperation(value = "查询债券质押持仓", notes = "查询债券质押持仓")
     @ResponseBody
-    @RequestMapping("findZqzyPositionsPage")
+    @PostMapping("findZqzyPositionsPage")
     public Message<Page<EtrExchangeTradePositionsCommonResponse>> findZqzyPositionsPage(@RequestBody EtrExchangeTradePositionsCommonRequest request){
         return new Message<Page<EtrExchangeTradePositionsCommonResponse>>().success().setData(etrExchangeTradeCommon002Service.findZqzyPositionsPage(request));
     }
@@ -580,7 +580,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      * @since 1.0
      */
     @ApiOperation(value = "查询证券代码联想框文本框选项", notes = "查询证券代码联想框文本框选项")
-    @RequestMapping("getSecAcctId")
+    @PostMapping("getSecAcctId")
     @ResponseBody
     public Message<Page<SelectOptionDto>> getSecAcctId(@RequestBody SelectOptionRequestDto request) {
         Page<SelectOptionDto> tempList = etrExchangeTradeCommon002Service.getSecAcctId(request);
@@ -596,7 +596,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      * @since 1.0
      */
     @ApiOperation(value = "查询上交所和深交所标准券数量", notes = "查询上交所和深交所标准券数量")
-    @RequestMapping("loadSecNum")
+    @PostMapping("loadSecNum")
     @ResponseBody
     public Message<Map<String, String>> loadSecNum(@RequestBody SelectOptionRequestDto request) {
         Map<String, String> map = etrExchangeTradeCommon002Service.loadSecNum(request);
@@ -611,7 +611,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      */
     @ApiOperation(value = "查询在途回购", notes = "查询在途回购")
     @ResponseBody
-    @RequestMapping("findOnWayRepPage")
+    @PostMapping("findOnWayRepPage")
     public Message<Page<EtrExchangeOnWayRep002Dto>> findOnWayRepPage(@RequestBody EtrExchangeOnWayRepRequestDto request){
         return new Message<Page<EtrExchangeOnWayRep002Dto>>().success().setData(etrExchangeAgreRepTradeService.findOnWayRepPage(request));
     }
@@ -622,7 +622,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      */
     @ApiOperation(value = "查询非公开行情列表", notes = "查询非公开行情列表")
     @ResponseBody
-    @RequestMapping("findUnOpenQuotaPage")
+    @PostMapping("findUnOpenQuotaPage")
     public Message<Page<EtrExchangeUnOpenQuota002Dto>> findUnOpenQuotaPage(@RequestBody EtrExchangeUnOpenQuotaRequestDto request){
 
         return new Message<Page<EtrExchangeUnOpenQuota002Dto>>(etrExchangeAgreRepTradeService.findUnOpenQuotaPage(request));
@@ -634,7 +634,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      */
     @ApiOperation(value = "查询委托列表", notes = "查询委托列表")
     @ResponseBody
-    @RequestMapping("selectEtrEntrust")
+    @PostMapping("selectEtrEntrust")
     public Message<Page<EtrExchangeAgreRepTrade003Dto>> selectEtrEntrust(@RequestBody EtrExchangeAgreRepTrade003RequestDto request){
         Page<EtrExchangeAgreRepTrade003Dto>  result = etrExchangeAgreRepTradeService.selectEtrEntrust(request);
         return new Message<Page<EtrExchangeAgreRepTrade003Dto>>().setData(result);
@@ -649,7 +649,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      */
     @ApiOperation(value = "关闭指令check", notes = "关闭指令check")
     @ResponseBody
-    @RequestMapping("closeCheck")
+    @PostMapping("closeCheck")
     public Message<AjaxResult> closeCheck(@RequestBody EtrExchangeAgreRepTrade003Dto dto, BindingResult result) {
         AjaxResult webResult = new AjaxResult();
         if (result.hasErrors()) {
@@ -681,7 +681,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      */
     @ApiOperation(value = "撤回指令check", notes = "撤回指令check")
     @ResponseBody
-    @RequestMapping("revokeCheck")
+    @PostMapping("revokeCheck")
     public Message<AjaxResult> revokeCheck(@RequestBody @Validated({ ValidateGroupEdit.class }) EtrExchangeAgreRepTrade003Dto dto,
                                   BindingResult result) {
         AjaxResult webResult = new AjaxResult();
@@ -708,7 +708,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      * @throws Exception
      */
     @ResponseBody
-    @RequestMapping("entrustClose")
+    @PostMapping("entrustClose")
     public Message<AjaxResult> close(@RequestBody EtrExchangeAgreRepTrade003Dto dto) throws Exception {
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errList = new ArrayList<>();
@@ -754,8 +754,8 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      * @throws Exception
      */
     @ResponseBody
-    @RequestMapping("entrustRevoke")
-    public AjaxResult revoke(@RequestBody EtrExchangeAgreRepTrade003Dto dto) throws Exception {
+    @PostMapping("entrustRevoke")
+    public Message<AjaxResult> revoke(@RequestBody EtrExchangeAgreRepTrade003Dto dto) throws Exception {
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errList = new ArrayList<>();
 
@@ -773,7 +773,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
             if (null != validMessage) {
                 errList.add(validMessage);
                 webResult.setErrorList(errList);
-                return webResult;
+                return new Message<AjaxResult>().success().setData(webResult);
             }
         }
 
@@ -796,8 +796,30 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
             // 释放风险接口释放
             EntrustRdsCommonAop.doPreOccupy(item, BussinessDictCodeListRds.接口系统ID_预占释放接口.getValue(),DictCodeList.平安资产类型_质押式回购.getValue());
         }
-        return new AjaxResult(this.getMessage("撤回成功"));
+        return new Message<AjaxResult>().success().setData(new AjaxResult(this.getMessage("撤回成功")));
     }
 
+    /**
+     * 质押券查询下拉框
+     * @param dto
+     * @return
+     */
+    @ApiOperation(value = "质押券查询下拉框", notes = "质押券查询下拉框")
+    @ResponseBody
+    @PostMapping("selectPledgeInfo")
+    public Message<Page<SelectOptionDto>> selectPledgeInfo(@RequestBody SelectOptionRequestDto dto) {
+        return new Message<Page<SelectOptionDto>>().success().setData(etrExchangeAgreRepTradeService.selectPledgeInfo(dto));
+    }
 
+    /**
+     * 交易编号下拉框
+     * @param dto
+     * @return
+     */
+    @ApiOperation(value = "交易编号下拉框", notes = "交易编号下拉框")
+    @ResponseBody
+    @PostMapping("selectTradeId")
+    public Message<Page<SelectOptionDto>> selectTradeId(@RequestBody SelectOptionRequestDto dto) {
+        return new Message<Page<SelectOptionDto>>().success().setData(etrExchangeAgreRepTradeService.selectTradeId(dto));
+    }
 }

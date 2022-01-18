@@ -10,44 +10,12 @@
  
 package com.joyintech.service.bankuplink.bond.controller;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import com.joyintech.service.bankuplink.cstp.dto.CstpSelectDto;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.joyintech.background.component.common.pack.common.security.User;
 import com.joyintech.background.component.common.pack.common.util.IDGenerator;
-import com.joyintech.background.component.uplink.interbank.business.dto.BondDialogueQuoteDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.BondRequestQuoteDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteBondDetDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteBondDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.QuoteResultBatDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.QuoteResultDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.ResultBaseDto;
+import com.joyintech.background.component.uplink.interbank.business.dto.*;
 import com.joyintech.background.component.uplink.interbank.common.CommonUtils;
 import com.joyintech.background.component.uplink.interbank.common.DictCodeList;
 import com.joyintech.framework.annotation.DTXTransaction;
@@ -58,20 +26,29 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.service.bankuplink.bond.dto.BondQuoteImportPreviewDto;
-import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
-import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealEntrustOrderDto;
-import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
-import com.joyintech.service.bankuplink.bond.dto.QuoteBatchResult;
+import com.joyintech.service.bankuplink.bond.dto.*;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
+import com.joyintech.service.bankuplink.calc.service.SecCalRequestQuoteService;
+import com.joyintech.service.bankuplink.cstp.dto.CstpSelectDto;
 import com.joyintech.service.bankuplink.ibu.dto.BondQuoteInfoDto;
 import com.joyintech.service.bankuplink.ibu.service.IbuComponentReceiveService;
-import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * CFETS现券买卖报价
@@ -109,6 +86,9 @@ public class CfetsBondDealQuotedPriceController {
      */
     @Autowired
     private IbuComponentReceiveService ibuComponentReceiveService;
+
+    @Autowired
+    private SecCalRequestQuoteService secCalRequestQuoteService;
 
     /**
      * 委托指令查询
@@ -1142,6 +1122,11 @@ public class CfetsBondDealQuotedPriceController {
     @PostMapping("queryEntrustDealedAmt2")
     public BigDecimal queryEntrustDealedAmt2(@RequestBody Map<String, Object> map){
         return cfetsBondDealQuotedPriceService.queryEntrustDealedAmt2(map);
+    }
+
+    @PostMapping("getCurSecAmt")
+    public BigDecimal getCurSecAmt(@RequestBody Map<String, Object> map){
+        return secCalRequestQuoteService.getCurSecAmt(DateUtil.parse((String)map.get("settleDate")),(String)map.get("finprodId"));
     }
 
 }
