@@ -2046,7 +2046,8 @@
                     MCCI2.PARTY_ABBR       ouPartyName,
                     MSCP.COUNTER_NAME      cpPartyName,
                     SU.REAL_NAME           ouTraderName,
-                    MCCT.TRADER_NAME       cpTraderName,
+                    case when MCCT.TRADER_NAME is not null then MCCT.TRADER_NAME
+                      else RFPDT.COUNTER_TRADER  end  cpTraderName,
                     RFPDT.SETTLE_SPEED     settleSpeed/*清算速度*/,
                     RFPDT.V_SETTLE_DATE    vSettleDate,
                     RFPDT.M_SETTLE_DATE    mSettleDate,
@@ -2106,7 +2107,8 @@
                 MCCI2.PARTY_ABBR       ouPartyName,
                 MSCP.COUNTER_NAME      cpPartyName,
                 SU.REAL_NAME           ouTraderName,
-                MCCT.TRADER_NAME       cpTraderName,
+                case when MCCT.TRADER_NAME is not null then MCCT.TRADER_NAME
+                    else RFPDT.COUNTER_TRADER  end  cpTraderName,
                 RFPDT.SETTLE_SPEED     settleSpeed/*清算速度*/,
                 RFPDT.V_SETTLE_DATE    vSettleDate,
                 RFPDT.M_SETTLE_DATE    mSettleDate,
