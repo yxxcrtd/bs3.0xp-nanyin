@@ -106,7 +106,7 @@ public class CfetsTrdQueryTradeInfoListResponse {
     private BigDecimal faceValue;
 
     @ApiModelProperty(name="tradeYield",value="成交价",example="1")
-    private BigDecimal tradeYield;
+    private String tradeYield;
 
     @ApiModelProperty(name="termDays",value="期限（天）",example="1")
     private BigDecimal termDays;
@@ -152,6 +152,13 @@ public class CfetsTrdQueryTradeInfoListResponse {
     @ApiModelProperty(name="tradeDate",value="成交日期",example="admin")
     private Date  tradeDate;
 
+    @ApiModelProperty(name="preTradeId",value="前置成交编号",example="1")
+    private String preTradeId;
+
+    @ApiModelProperty(name="calMode",value="计算方式",example="计算方式供前台判断使用")
+    private String calMode;
+
+
     public String getCalMode() {
         return calMode;
     }
@@ -159,9 +166,6 @@ public class CfetsTrdQueryTradeInfoListResponse {
     public void setCalMode(String calMode) {
         this.calMode = calMode;
     }
-
-    @ApiModelProperty(name="calMode",value="计算方式",example="计算方式供前台判断使用")
-    private String calMode;
 
     public String getEffectiveStatus() {
         return effectiveStatus;
@@ -363,11 +367,11 @@ public class CfetsTrdQueryTradeInfoListResponse {
         this.faceValue = faceValue;
     }
 
-    public BigDecimal getTradeYield() {
+    public String getTradeYield() {
         return tradeYield;
     }
 
-    public void setTradeYield(BigDecimal tradeYield) {
+    public void setTradeYield(String tradeYield) {
         this.tradeYield = tradeYield;
     }
 
@@ -489,5 +493,13 @@ public class CfetsTrdQueryTradeInfoListResponse {
 
     public void setTradeDate(Date tradeDate) {
         this.tradeDate = tradeDate;
+    }
+
+    public String getPreTradeId() {
+        return preTradeId;
+    }
+
+    public void setPreTradeId(String preTradeId) {
+        this.preTradeId = preTradeId;
     }
 }

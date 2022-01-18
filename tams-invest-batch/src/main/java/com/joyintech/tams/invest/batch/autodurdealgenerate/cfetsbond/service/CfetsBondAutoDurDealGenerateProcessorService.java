@@ -184,7 +184,7 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         }
 
         //回购自动处理
-        cfetsRepoAutoDurDealGenerateProcessorService.execute(batchDate);
+        //cfetsRepoAutoDurDealGenerateProcessorService.execute(batchDate);
     }
 
     /**
@@ -268,6 +268,7 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         req.setPs(trdFinProductDealTotal.getPs());
         //新建 修改 关闭
         req.setSystemAct("01");
+        req.setDecisionAct("01");
         req.setCdate(trdFinProductDealTotal.getTradeDate());
         req.setCcy(trdFinProductDealTotal.getCcy());
         req.setFinprodId(trdFinProductDealTotal.getFinprodId());
@@ -516,6 +517,7 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         req.setBusiAct(DictCodeListExt3.业务动作_成交确认.getValue());
         req.setPs(trdTotle.getPs());
         req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+        req.setDecisionAct(DictCodeListExt3.系统动作_新建.getValue());
         req.setCdate(trdTotle.getTradeDate());
         req.setCcy(trdTotle.getCcy());
         req.setFinprodId(trdTotle.getFinprodId());

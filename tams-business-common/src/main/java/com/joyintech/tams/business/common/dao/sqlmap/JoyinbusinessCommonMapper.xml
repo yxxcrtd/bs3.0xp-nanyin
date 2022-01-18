@@ -380,6 +380,21 @@
             or MST_CFETS_CUSTOMER_TRADER.TRADER_NAME like concat('%',concat(#{search},'%')))
         </if>
     </select>
+
+    <select id="queryMySideTraderListByCounterId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select mcct.TRADER_ID id, mcct.TRADER_NAME text, mcct.MPARTY_ID parentId
+        from MST_CFETS_CUSTOMER_TRADER mcct
+        left join MST_COUNTER_PARTY mcp on mcct.PARTY_ID = mcp.PARTY_ID
+        <where>
+            <if test="partyId != null and !partyId.equals('')">
+                AND mcp.COUNTER_ID = #{partyId}
+            </if>
+            <if test="search != null and !search.equals('')">
+                AND	(mcct.TRADER_ID like concat('%',concat(#{search},'%'))
+                or mcct.TRADER_NAME like concat('%',concat(#{search},'%')))
+            </if>
+        </where>
+    </select>
     <select id="queryUserIdList" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT distinct
         t1.user_name id,

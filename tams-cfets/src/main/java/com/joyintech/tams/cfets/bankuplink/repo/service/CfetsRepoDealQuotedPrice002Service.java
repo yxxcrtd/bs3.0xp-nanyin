@@ -931,7 +931,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         CfetsRepoDealQuotedPrice001Dto entity = getBussinessEntityByWorkflowId(workflowId);
         WFlowCommonService.doCompleteFlow(entity.getWorkflowId());
         //发送头寸
-        PositionHttpRequest.deleteMethod(entity.getQuoteId(), DictCodeListExt1.子系统代码_交易.getValue(), "REPO001");
+        PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(),DictCodeListExt1.子系统代码_交易.getValue(),DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(),entity.getPs());
     }
 
     /**
@@ -1210,7 +1210,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         doDeleteWflDataForRepo(entity.getWorkflowId());
         //头寸
         if (type.equals(OperationType.REVOKE) || type.equals(OperationType.DELETE)) {
-            PositionHttpRequest.sendRevoke(entity.getQuoteId(), DictCodeListExt1.子系统代码_交易.getValue(), "REPO001");
+            PositionHttpRequest.dorevoke(entity.getQuoteId(),DictCodeListExt1.子系统代码_交易.getValue(),DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(),entity.getPs());
         }
 //        if (StringUtil.isNotEmpty(type)) {
 //            throw new RuntimeException("cs by jp");
@@ -1872,8 +1872,8 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         req.setUserId(SecurityUtil.getLoginUser().getUserName());
         req.setTotalTradeId(entity.getQuoteId());
         req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
-
         req.setModelType(DictCodeListExt1.子系统代码_交易.getValue());
+        req.setWorkFlowId(entity.getWorkflowId());
         req.setRepoPledgeModel(CacheUtil.getSysParam("repo_pledge_model"));
         String balanceCheck = DictCodeList.是否_是.getValue();
         if (StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(), "Y")) {

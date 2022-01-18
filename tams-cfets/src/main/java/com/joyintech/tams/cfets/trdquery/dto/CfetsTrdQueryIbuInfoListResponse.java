@@ -120,7 +120,7 @@ public class CfetsTrdQueryIbuInfoListResponse {
     private BigDecimal faceValue;
 
     @ApiModelProperty(name="tradeYield",value="成交价",example="1")
-    private BigDecimal tradeYield;
+    private String tradeYield;
 
     @ApiModelProperty(name="termDays",value="期限（天）",example="1")
     private BigDecimal termDays;
@@ -477,11 +477,11 @@ public class CfetsTrdQueryIbuInfoListResponse {
         this.faceValue = faceValue;
     }
 
-    public BigDecimal getTradeYield() {
+    public String getTradeYield() {
         return tradeYield;
     }
 
-    public void setTradeYield(BigDecimal tradeYield) {
+    public void setTradeYield(String tradeYield) {
         this.tradeYield = tradeYield;
     }
 
@@ -711,7 +711,7 @@ public class CfetsTrdQueryIbuInfoListResponse {
     }
 
     public String getSecCcyStr() {
-        return secCcyStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.币种, this.getSecCcy());
     }
 
     public void setSecCcyStr(String secCcyStr) {

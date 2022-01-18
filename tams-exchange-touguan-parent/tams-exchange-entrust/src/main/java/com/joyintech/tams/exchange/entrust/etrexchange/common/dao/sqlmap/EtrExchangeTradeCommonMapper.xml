@@ -113,6 +113,11 @@
         <if test="endDate != null and !endDate.equals('')">
             AND T1.ENTRUST_DATE &lt;=to_date(#{endDate},'yyyy-MM-dd')
         </if>
+        <if test="entrustTypeList != null and entrustTypeList.size()>0">
+            <foreach collection="entrustTypeList" open="AND T1.ENTRUST_TYPE in(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+        </if>
         union all
         SELECT
         T1.ENTRUST_ID
@@ -218,6 +223,11 @@
         </if>
         <if test="finprodType2 != null and finprodType2 !=''">
             AND T1.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+        </if>
+        <if test="entrustTypeList != null and entrustTypeList.size()>0">
+            <foreach collection="entrustTypeList" open="AND T1.ENTRUST_TYPE in(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
         </if>
         ORDER BY T1.CREATE_TIME DESC
     </select>
@@ -1382,4 +1392,60 @@
         where
             T1.ENTRUST_ID=#{entrustId}
     </select>
+
+    <select id="selectByFinprodId" resultType="com.joyintech.tams.component.business.common.dto.FinStockInfoDto">
+        SELECT
+        FIN_PRODUCT.FINPROD_ID as finprodId,
+        FIN_PRODUCT.FINPROD_MARKET_ID as finprodMarketId,
+        FIN_PRODUCT_ADD.BOARD as board,
+        FIN_PRODUCT.ISSUER as issuer,
+        FIN_PRODUCT.CALENDAR_ID as calendarId,
+        MST_CUSTOMER_INFO.CUSTOMER_NAME as customerName,
+        FIN_PRODUCT.FINPROD_ABBR as finprodAbbr,
+        FIN_PRODUCT.TRADE_MARKET as tradeMarket,
+        C.S_SHARES as sShares,
+        C.C_SHARES as cShares,
+        FIN_PRODUCT.MDATE as mDate,
+        FIN_PRODUCT.VDATE as vDate,
+        FIN_PRODUCT.CCY as ccy,
+        FIN_PRODUCT_ADD.SH_OR_ZH as shOrZh,
+        FIN_PRODUCT_ADD.MIN_SALE_UNIT as minSaleUnit,
+        FIN_PRODUCT_ADD.IS_MARGIN_FINPROD as isMarginFinprod,
+        FIN_PRODUCT.REMARK as remark
+        FROM
+        FIN_PRODUCT
+        LEFT JOIN
+        MST_CUSTOMER_INFO
+        ON
+        FIN_PRODUCT.ISSUER = MST_CUSTOMER_INFO.CUSTOMER_ID
+        LEFT JOIN
+        FIN_PRODUCT_ADD
+        ON FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+        LEFT JOIN
+        ( SELECT *
+        FROM
+        MST_SHARE_PRICE A
+        WHERE
+        DEAL_DATE IN (
+        SELECT
+        MAX (DEAL_DATE)
+        FROM
+        MST_SHARE_PRICE b
+        WHERE
+        A .SHARES_ID = b.SHARES_ID
+        AND DEAL_DATE <![CDATA[<]]> TO_DATE(#{sysDate,jdbcType=VARCHAR},'YYYY-MM-DD')
+        GROUP BY
+        SHARES_ID
+        )
+        ORDER BY SHARES_ID
+        ) C
+        ON C.SHARES_ID = FIN_PRODUCT.FINPROD_MARKET_ID
+        <where>
+            <if test="finprodId != null and finprodId != ''">
+                AND FIN_PRODUCT.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            </if>
+            and FIN_PRODUCT.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F10,jdbcType=VARCHAR}
+        </where>
+    </select>
+
 </mapper>
