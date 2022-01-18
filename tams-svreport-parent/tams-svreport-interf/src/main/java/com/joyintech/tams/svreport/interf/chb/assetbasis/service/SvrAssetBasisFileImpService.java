@@ -150,72 +150,75 @@ public class SvrAssetBasisFileImpService extends FileImpService{
     	 if("02".equals(isChlBtm)&&"02".equals(isChlBtmPbc)){
 			return "success";
 		 }
+		// 接口配置增量方式
 		if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
-		//增量
-			 mergeData(assetList); 
-			
-		}else if(listData.size() <= 100000){
-			//增量插入 小于100000正常入库 超过100000条使用sqlldr进行入库
-			try{
+			 mergeData(assetList);
+		}
+		// 接口配置全量方式
+		else{
+			// 全量插入 小于100000正常入库 超过100000条使用sqlldr进行入库
+			if(listData.size() <= 100000){
+				try{
+					chbAssetBasisInterfMapper.deleteByUpdateTime();
+					insertBasisData(assetList);
+					success = true;
+				}catch(Exception e){
+					logger.error(e.getMessage(),e);
+					success = false;
+				}
+			}else{
 				chbAssetBasisInterfMapper.deleteByUpdateTime();
-				insertBasisData(assetList);
-				success = true;
-			}catch(Exception e){
-				logger.error(e.getMessage(),e);
-				success = false;
-			}
-		}else{
-			chbAssetBasisInterfMapper.deleteByUpdateTime();
-			// 创建表
-			ImpTable table = new ImpTable(ASSETBASISDATATABLENAME_2);
-			table.setColumns(ImportGenerator.createImpTableColumns(ASSETBASISDATATABLENAME_2));
-			success = excuteAssetBasisDataByStep(assetList, type, tmpPath, table);
-			Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/CHB_ASSET_INDEX/"), new String[] { "tmp" }, false);
-			List<String> content = new ArrayList<>(listData.size());
-			String result = "";
-			for (File f : files) {
-				if (f.getName().startsWith(AssetBasisDataTableName)) {
-					try {
-						content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-						logger.debug("查找sqlloder文件" + f);
-					} catch (IOException e) {
-						logger.debug("查找sqlloder文件异常");
-						logger.error(e.getMessage(), e);
-						result = "fail";
-					} finally {
-						f.delete();
+				// 创建表
+				ImpTable table = new ImpTable(ASSETBASISDATATABLENAME_2);
+				table.setColumns(ImportGenerator.createImpTableColumns(ASSETBASISDATATABLENAME_2));
+				success = excuteAssetBasisDataByStep(assetList, type, tmpPath, table);
+				Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/CHB_ASSET_INDEX/"), new String[] { "tmp" }, false);
+				List<String> content = new ArrayList<>(listData.size());
+				String result = "";
+				for (File f : files) {
+					if (f.getName().startsWith(AssetBasisDataTableName)) {
+						try {
+							content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
+							logger.debug("查找sqlloder文件" + f);
+						} catch (IOException e) {
+							logger.debug("查找sqlloder文件异常");
+							logger.error(e.getMessage(), e);
+							result = "fail";
+						} finally {
+							f.delete();
+						}
 					}
 				}
-			}
-			if ("fail".equals(result)) {
-				return result;
-			}
-			// 系统是否使用的db2数据库
-			boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-			if (isDB2DataBase) {
-				// db2数据库处理
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_ASSET_INDEX/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						Thread.currentThread().interrupt();
-						return success?"success":"fail";
-					}
+				if ("fail".equals(result)) {
+					return result;
 				}
-			} else {
-				// oracle原逻辑
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_ASSET_INDEX/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						Thread.currentThread().interrupt();
-						return success?"success":"fail";
+				// 系统是否使用的db2数据库
+				boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+				if (isDB2DataBase) {
+					// db2数据库处理
+					if (CollectionUtils.isNotEmpty(content)) {
+						try {
+							success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_ASSET_INDEX/", content,
+									reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
+									reportSqlldrDatabaseName);
+						} catch (IOException | InterruptedException e) {
+							logger.error(e.getMessage(), e);
+							Thread.currentThread().interrupt();
+							return success?"success":"fail";
+						}
+					}
+				} else {
+					// oracle原逻辑
+					if (CollectionUtils.isNotEmpty(content)) {
+						try {
+							success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_ASSET_INDEX/", content,
+									reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
+									reportSqlldrDatabaseName);
+						} catch (IOException | InterruptedException e) {
+							logger.error(e.getMessage(), e);
+							Thread.currentThread().interrupt();
+							return success?"success":"fail";
+						}
 					}
 				}
 			}
@@ -227,7 +230,7 @@ public class SvrAssetBasisFileImpService extends FileImpService{
 		 SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
 			try {
 					 	int count = 0;
-			            logger.debug("产品费用交易插入开始--------------" + new Date());
+			            logger.debug("资产基础指标插入开始--------------" + new Date());
 			            ChbAssetBasisInterfMapper batchMapper = session.getMapper(ChbAssetBasisInterfMapper.class);
 			            int batchCount = reportInsertLongCount==0?50:reportInsertLongCount;//每批commit的个数
 			            int batchLastIndex = batchCount;//每批最后一个的下标

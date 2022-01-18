@@ -101,8 +101,6 @@ public class TrdFundValuationTrade002Controller extends BaseController {
             entity.setCommissionFee(new BigDecimal("0.00"));//其他费用
             entity.setTodayArriveFlag(DictCodeList.是否_否.getValue()); //初始默认否
             entity.setCcy(DictCodeList.币种_人民币_CNY.getValue());
-            //新建初始化交易编号
-            entity.setTradeId(trdFundValuationTrade002Service.createFundTradeId());
             model.addAttribute("entity", entity);
         }
 

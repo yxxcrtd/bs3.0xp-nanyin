@@ -37,6 +37,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1901,7 +1903,24 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
      */
     @Override
     public void setCellValue(String beanName, Cell cell, String propName, Object value) {
-        if(StringUtil.startsWith(propName, "equityQuit")||StringUtil.startsWith(propName, "firstExerciseDate")) {
+		//add by tuqirong 2022-01-18 start 导出单元格格式被覆盖问题修改
+    	if (cell.getRow().getRowNum() > 2) {
+			CellStyle cStyle = cell.getRow().getSheet().getWorkbook().createCellStyle();
+			int index = cell.getRow().getSheet().getRow(1).getPhysicalNumberOfCells();
+			for (int i = 0; i < index; i++) {
+				cStyle.cloneStyleFrom(cell.getRow().getSheet().getRow(2).getCell(cell.getColumnIndex()).getCellStyle());
+				if (i == cell.getColumnIndex()) {
+					cell.setCellStyle(cStyle);
+				}else {
+					if (!StringUtil.isNotEmpty(cell.getRow().getCell(i))) {
+						cell.getRow().createCell(i).setCellStyle(cStyle);
+					}
+				}
+			}
+
+		}
+		//add by tuqirong 2022-01-18 end  导出单元格格式被覆盖问题修改
+    	if(StringUtil.startsWith(propName, "equityQuit")||StringUtil.startsWith(propName, "firstExerciseDate")) {
         	if(value instanceof Long){
 				Date cellValue = new Date((long) value);
 				cell.setCellValue(DateUtil.format(cellValue,"yyyyMMdd"));
