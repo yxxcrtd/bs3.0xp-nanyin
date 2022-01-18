@@ -104,7 +104,7 @@ public class DisRepProdInvestAdjustService extends FileImpService {
         dto.setInvestRange(data.get("INVEST_RANGE"));//投资范围
         dto.setInvestType(data.get("INVEST_TYPE"));//投资种类
         dto.setAdjustDate(DateUtil.parse(data.get("ADJUST_DATE")));//调整日期
-        dto.setRaiseMax(DisInterfDecimalUtil.str2BigDecimal(data.get("RAISE_AMT_MAX")));//募集金额上限
+        dto.setRaiseMax(DisInterfDecimalUtil.str2BigDecimal(data.get("RAISE_MAX")));//募集金额上限
         dto.setStatus(data.get("STATUS"));//状态
         
         dto.setInputType("");//导入方法
