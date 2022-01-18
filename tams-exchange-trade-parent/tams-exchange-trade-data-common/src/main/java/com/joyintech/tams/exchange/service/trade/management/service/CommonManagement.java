@@ -238,7 +238,7 @@ public class CommonManagement extends BaseService {
             return new ResultBean(ErrorCode.SUCCESS, filterInstrumentByKeyword(instrumentList, keyword));
         }
         instrumentList = instrumentService.findAll();
-        return new ResultBean(ErrorCode.REQ_PARAMETER_ERROR, filterInstrumentByKeyword(instrumentList, keyword));
+        return new ResultBean(ErrorCode.SUCCESS, filterInstrumentByKeyword(instrumentList, keyword));
     }
 
     private List<Instrument> filterInstrumentByKeyword(List<Instrument> instrumentList, String keyword) {
