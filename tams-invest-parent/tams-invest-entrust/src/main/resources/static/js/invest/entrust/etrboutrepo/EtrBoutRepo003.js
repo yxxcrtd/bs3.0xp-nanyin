@@ -441,6 +441,7 @@
             var temp = objects[index];
             temp.operateType = operateType;
             temp.pageModel = pageModel;
+            temp.riskTrialRetDto = object.riskTrialRetDto;
             if (operateType === 'submit') {
                 temp.elementId = 'EtrBoutRepo002_btn_submit';
             }
