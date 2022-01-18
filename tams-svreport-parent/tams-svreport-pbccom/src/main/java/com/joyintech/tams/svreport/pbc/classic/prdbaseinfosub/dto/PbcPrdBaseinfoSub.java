@@ -1462,5 +1462,17 @@ public class PbcPrdBaseinfoSub extends BaseEntity{
 	public void setIssuePartyName(String issuePartyName) {
 		this.issuePartyName = issuePartyName;
 	}
-	
+
+    /**
+     * 产品期次（导出人行excel用）
+     */
+    private String prodStageToString;
+
+    public String getProdStageToString() {
+        return prodStageToString;
+    }
+
+    public void setProdStageToString(String prodStageToString) {
+        this.prodStageToString = prodStageToString;
+    }
 }
