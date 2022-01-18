@@ -153,6 +153,7 @@ alter table CHB_SALER_IDEN_INFO
 drop table CHB_SALER_IDEN_ERRODATA;
 create table CHB_SALER_IDEN_ERRODATA(
    SALER_INS_NO	VARCHAR2(30)
+  ,SALER_ORG_CODE 	VARCHAR2(32)
   ,SALER_NAME	VARCHAR2(200)
   ,SALER_SEX	VARCHAR2(2)
   ,SALER_CREDENT_TYPE	VARCHAR2(2)
@@ -170,6 +171,7 @@ create table CHB_SALER_IDEN_ERRODATA(
 );
 comment on table CHB_SALER_IDEN_ERRODATA is '销售人员身份错误信息表';
 comment on column CHB_SALER_IDEN_ERRODATA.SALER_INS_NO is '内部编号';
+comment on column CHB_SALER_IDEN_ERRODATA.SALER_ORG_CODE is '所属总部或分支机构编码';
 comment on column CHB_SALER_IDEN_ERRODATA.SALER_NAME is '姓名 ';
 comment on column CHB_SALER_IDEN_ERRODATA.SALER_SEX is '性别 ';
 comment on column CHB_SALER_IDEN_ERRODATA.SALER_CREDENT_TYPE is '证件类别 ';

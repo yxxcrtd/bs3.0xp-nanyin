@@ -615,6 +615,13 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
         return chbSalerIdenInfoMapper.getSalerName(map);
     }
 
+    /**
+     * 总部或分支机构编码联想框
+     */
+    public List<SuggestDto> getSalerOrgCode(Map<String, Object> map) {
+        return chbSalerIdenInfoMapper.getSalerOrgCode(map);
+    }
+
     public static String subDictcode(String value, String sign) {
         if (!isEmpty(value)) {
             int i = value.indexOf(sign);
