@@ -458,6 +458,8 @@ public class PbcInitProdRaisingSub extends BaseEntity {
         return pbcSubmitDeadline;
     }
 
+
+
     /**
      * 人行报送截止日
      * @param pbcSubmitDeadline 人行报送截止日
@@ -675,7 +677,11 @@ public class PbcInitProdRaisingSub extends BaseEntity {
     public String getVdateStr() {
         return DateUtil.format(this.getVdate());
     }
-	public String getSendStatusStr(){
+    public String getPbcSubmitDeadlineStr() {
+        return  DateUtil.format(this.getPbcSubmitDeadline());
+    }
+
+    public String getSendStatusStr(){
 		return SvrDataUtil.getNameFromDataDict(DictCode.报送状态, this.getSendStatus());
 	}
 		

@@ -13,7 +13,7 @@
 				B.raise_type raiseType,
 				B.IVSTORIENTATION,
 				P.CCY ccy,
-				P.PAYSTATUS,
+				NVL(P.PAYSTATUS,'01') PAYSTATUS,
 				B.MANAGE_TYPE manageType,
 				B.fiduciary_duty fiduciaryDuty,
 				P.OPERATE_MODE operateMode,
