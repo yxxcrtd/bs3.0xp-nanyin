@@ -655,8 +655,8 @@ public class CfetsEtrDispatcherService extends BaseService{
                 if (!CollectionUtils.isEmpty(detailList)) {
                     StringBuffer sb = new StringBuffer("");
                     for (CfetsPledgeBondInfoDto infoDto : detailList) {
-                        infoDto.setPledgePrin(ArithmeticUtil.divide(infoDto.getPledgePrin(), new BigDecimal("10000"), 4));
-                        infoDto.setPledStrdPrinAmt(ArithmeticUtil.divide(infoDto.getPledStrdPrinAmt(), new BigDecimal("10000"), 4));
+                        infoDto.setPledgePrin(ArithmeticUtil.divide(infoDto.getPledgePrin(), new BigDecimal("10000"), 2));
+                        infoDto.setPledStrdPrinAmt(ArithmeticUtil.divide(infoDto.getPledStrdPrinAmt(), new BigDecimal("10000"), 2));
                         sb.append(infoDto.getFinprodAbbr()).append(",");
                     }
                     String finprodAbbr = sb.substring(0, sb.length() - 1);
