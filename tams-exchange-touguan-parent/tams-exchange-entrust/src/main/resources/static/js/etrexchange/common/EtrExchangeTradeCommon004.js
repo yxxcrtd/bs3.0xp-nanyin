@@ -3059,6 +3059,12 @@
              $("#businessModelDiv_jj").hide();
              $("#businessModelDiv_gd").hide();
              $("#businessModelDiv_dz").hide();
+            var finprodType2 = $("#finprodType2_" + currentTab).val();
+            var ps = $("#ps_" + currentTab).val();
+
+             if(finprodType2==FINPROD_TYPE_TG_F10&&(ps==PS_T04||ps==PS_T46)){
+                 $("#dateTableDiv").hide();
+             }
 
             initFlag = true;
             hideLeftTopPanel();

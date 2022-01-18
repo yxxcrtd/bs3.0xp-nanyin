@@ -464,6 +464,24 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	 * @param initPageParams initPageParams
 	 */
 	private void setPriceModelSelectOptions(Map<String, Object> initPageParams) {
+		SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.价格模式, null);
+		List<SelectOptionDto> priceMode1 = selectDto1.getOptions().stream().filter(option -> {
+			return StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_指定价格.getValue());
+		}).collect(Collectors.toList());
+		initPageParams.put("PRICE_MODEL_JJ_1", JsonUtils.objectArray2Json(priceMode1.toArray()));
+
+		SelectDto selectDto12 = this.getSelectDataFromDataDic(DictCode.价格模式, null);
+		List<SelectOptionDto> priceMode12 = selectDto12.getOptions().stream().filter(option -> {
+			return StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_指定价格.getValue())
+					|| StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_限价指令.getValue());		}).collect(Collectors.toList());
+		initPageParams.put("PRICE_MODEL_JJ_12", JsonUtils.objectArray2Json(priceMode12.toArray()));
+
+		SelectDto selectDto23 = this.getSelectDataFromDataDic(DictCode.价格模式, null);
+		List<SelectOptionDto> priceMode23 = selectDto23.getOptions().stream().filter(option -> {
+			return StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_限价指令.getValue())
+					|| StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_市价指令.getValue());		}).collect(Collectors.toList());
+		initPageParams.put("PRICE_MODEL_JJ_23", JsonUtils.objectArray2Json(priceMode23.toArray()));
+
 		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.价格模式, null);
 		List<SelectOptionDto> priceModelStockCyb = selectDto.getOptions().stream().filter(option -> {
 			return StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_限价指令.getValue())
@@ -1329,6 +1347,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			return new Message<FinStockInfoDto>().fail().setData(null);
 		}
 	}
+
 
 
 }
