@@ -101,6 +101,11 @@ public class ChbPrdPeriodYield extends BaseEntity{
      * 币种
      */
     private String ccy;
+
+    /**
+     * 累计万份收益
+     */
+    private BigDecimal tdyUnitValueSum;
     
     public String getCcy() {
 		return ccy;
@@ -373,5 +378,21 @@ public class ChbPrdPeriodYield extends BaseEntity{
      */
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    /**
+     * 累计万份收益
+     * @return
+     */
+    public BigDecimal getTdyUnitValueSum() {
+        return tdyUnitValueSum;
+    }
+
+    /**
+     * 累计万份收益
+     * @param tdyUnitValueSum
+     */
+    public void setTdyUnitValueSum(BigDecimal tdyUnitValueSum) {
+        this.tdyUnitValueSum = tdyUnitValueSum;
     }
 }
