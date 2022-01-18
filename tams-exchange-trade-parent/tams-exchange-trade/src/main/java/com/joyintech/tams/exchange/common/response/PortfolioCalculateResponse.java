@@ -1,6 +1,9 @@
 package com.joyintech.tams.exchange.common.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCode;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -30,6 +33,9 @@ public class PortfolioCalculateResponse {
 
     @JsonProperty("priceMode")
     private String priceMode;
+
+    @JsonProperty("priceModeStr")
+    private String priceModeStr;
 
     @JsonProperty("instructionId")
     private String instructionId;
@@ -198,6 +204,23 @@ public class PortfolioCalculateResponse {
 
     public void setPriceMode(String priceMode) {
         this.priceMode = priceMode;
+    }
+
+    /**
+     * 价格模式含义
+     *
+     * @return priceModeStr
+     */
+    @ApiModelProperty(required = true, value = "价格模式含义")
+    public String getPriceModeStr() {
+        if (StringUtil.isEmpty(priceMode)) {
+            return null;
+        }
+        return DictCodeListExt2.from(DictCode.价格模式, priceMode).getCodeName();
+    }
+
+    public void setPriceModeStr(String priceModeStr) {
+        this.priceModeStr = priceModeStr;
     }
 
     public PortfolioCalculateResponse instructionId(String instructionId) {

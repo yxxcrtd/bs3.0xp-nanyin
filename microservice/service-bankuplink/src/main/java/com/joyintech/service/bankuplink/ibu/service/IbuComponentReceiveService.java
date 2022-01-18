@@ -677,7 +677,7 @@ public class IbuComponentReceiveService extends BaseService{
             // 对手方对话报价新增(我方作为回复方)，需要制定交易员推送
             cfetsQuotedCommonService.publishMQCommonHandle(quoteResultDto, true);
             // 8、头寸处理
-            updateRepoDialoguePosition(quoteResultDto);
+//            updateRepoDialoguePosition(quoteResultDto);
             // 成交后风险处理
             ibuComponentRiskService.excuteRiskHandle(quoteResultDto);
         }

@@ -148,14 +148,16 @@
         SELECT *
         FROM (
             SELECT ETR_ENTRUST.ENTRUST_STATUS                                                                 entrustStatus/*指令状态*/
-                , NVL(T6.ENT_FINISH_AMT, 0)                                                                   finishAmt/*已完成额度(元)*/
-                , NVL(ETR_ENTRUST.ENTRUST_AMT,0) - NVL(T6.ENT_FINISH_AMT, 0)                                  avaNum/*剩余指令额度(元)*/
-                , (NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT, 0))                    finishDealAmt/*已成交额度(元)*/
-                , (ETR_ENTRUST.ENTRUST_AMT - NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0))
-                    - NVL(T6.FINISH_AMT, 0))                                                                  avaDealAmt/*剩余成交额度(元)*/
-                , trunc(NVL(T6.ENT_FINISH_AMT, 0)/ (ETR_ENTRUST.ENTRUST_AMT ), 4) * 100                       transactioncom/*执行进度(%)*/
-                , trunc((NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT , 0)) /
-                (ETR_ENTRUST.ENTRUST_AMT), 4) * 100                                                           tradeFinishPercent/* 成交进度(%)*/
+                , (NVL(T5.FINISH_AMT,0)+NVL(T7.ENT_FINISH_AMT,0))                                             finishAmt/*已完成额度(元)*/
+                , NVL(ETR_ENTRUST.ENTRUST_AMT, 0)
+                    - NVL(T5.FINISH_AMT,0) - NVL(T7.ENT_FINISH_AMT,0)                                         avaNum/*剩余指令额度(元)*/
+                , ROUND(NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT,0))                    finishDealAmt/*已成交额度(元)*/
+                , NVL(ETR_ENTRUST.ENTRUST_AMT, 0) -
+                        ROUND(NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT,0))              avaDealAmt/*剩余成交额度(元)*/
+                , trunc(nvl(NVL(T5.FINISH_AMT, 0)+
+                                       NVL(T7.ENT_FINISH_AMT, 0),0)/(ETR_ENTRUST.ENTRUST_AMT),4)*100          transactioncom/*执行进度(%)*/
+                , trunc((NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT,0))
+                                                                /(ETR_ENTRUST.ENTRUST_AMT),4)*100             tradeFinishPercent/* 成交进度(%)*/
                 , ETR_ENTRUST.ENTRUST_AMT                                                                     entrustNum/*指令额度(元)*/
                 , ETR_ENTRUST.PORTFOLIO_ID                                                                    portfolioId/*组合代码*/
                 , PTL_PORTFOLIO.PORTFOLIO_NAME                                                                portfolioName/*组合名称*/
@@ -253,23 +255,44 @@
                             and NVL(ssai.sec_acct_type, 'SEC') = 'SEC'
                             and TRADE_PLACE = '01'
                      ) SECACCT2 ON ETR_ENTRUST.PORTFOLIO_ID = SECACCT2.PORTFOLIO_ID
+
             LEFT JOIN
             (
-                SELECT ENTRUST_ID
-                , SUM(FINISH_AMT) AS FINISH_AMT
-                FROM ETR_QUOTE_FINISH_STATUS /*报价完成状况表*/
-                GROUP BY ENTRUST_ID
-            ) T5
+                SELECT
+                    ENTRUST_ID,
+                    SUM(FINISH_AMT) AS FINISH_AMT
+                FROM
+                    ETR_QUOTE_FINISH_STATUS
+                GROUP BY
+                    ENTRUST_ID) T5
             ON ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
-            LEFT JOIN
-            (
-                SELECT ENTRUST_ID
-                , SUM(FINISH_AMT)     AS FINISH_AMT
-                , SUM(ENT_FINISH_AMT) AS ENT_FINISH_AMT
-                FROM ETR_FINISH_STATUS/*委托完成状况表*/
-                GROUP BY ENTRUST_ID
-            ) T6
-                ON ETR_ENTRUST.ENTRUST_ID = T6.ENTRUST_ID
+            LEFT JOIN(
+                SELECT
+                    ENTRUST_ID,
+                    SUM(FINISH_AMT) AS FINISH_AMT
+                FROM
+                ETR_FINISH_STATUS
+                <!--登记与报价分开统计-->
+                INNER JOIN (SELECT
+                            DISTINCT T3.TRADE_ID
+                        FROM
+                            TRDQUTO_MATCH_INFO T1
+                        INNER JOIN REG_FIN_PRODUCT_DEAL_TOTAL T2 ON T1.PRE_TRADE_ID = T2.TOTLE_TRADE_ID
+                        INNER JOIN TRD_PRODUCT_DEAL T3 ON T3.TOTLE_TRADE_ID = T1.TRD_ID
+                        WHERE
+                            TRD_CONF_STATUS = '1')	REG
+                        ON REG.TRADE_ID = ETR_FINISH_STATUS.TRADE_ID
+                GROUP BY ENTRUST_ID) T6
+            ON ETR_ENTRUST.ENTRUST_ID = T6.ENTRUST_ID
+            LEFT JOIN(
+                    SELECT
+                        ENTRUST_ID,
+                        SUM(ENT_FINISH_AMT) AS ENT_FINISH_AMT
+                    FROM
+                        ETR_FINISH_STATUS
+                    GROUP BY
+                    ENTRUST_ID) T7 ON
+            ETR_ENTRUST.ENTRUST_ID = T7.ENTRUST_ID
             LEFT JOIN IBU_PORTFOLIO_ACCT_RELA IPAR
                 ON ETR_ENTRUST.PORTFOLIO_ID = IPAR.PORTFOLIO_ID AND IPAR.CFETS_ACCT_TYPE = '01'
             LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI
@@ -455,9 +478,8 @@
                     AND (
                         ETR_ENTRUST.ENTRUST_STATUS like '%' || #{search} || '%' /*指令状态*/
                         OR D.ITEM_VALUE LIKE '%' || #{search} || '%' /*指令状态*/
-                        OR to_char(trunc(NVL(T5.FINISH_AMT, 0) / (ETR_ENTRUST.ENTRUST_AMT ), 4)*100)  = #{search} /*执行进度(%)*/
-                        OR to_char(trunc((NVL(C.totalShareAmt, nvl(C2.totalShareAmt, 0)) + NVL(T6.FINISH_AMT , 0)) /
-                            (ETR_ENTRUST.ENTRUST_AMT ), 4)*100) = #{search}/* 成交进度(%)*/
+                        OR to_char(trunc(nvl(NVL(T5.FINISH_AMT, 0)+NVL(T7.ENT_FINISH_AMT, 0),0)/(ETR_ENTRUST.ENTRUST_AMT),4)*100)  = #{search} /*执行进度(%)*/
+                        OR to_char(trunc((NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT,0))/(ETR_ENTRUST.ENTRUST_AMT),4)*100) = #{search}/* 成交进度(%)*/
                         OR to_char(ETR_ENTRUST.ENTRUST_AMT,'FM9999999999999990.90') = #{search} /*指令额度(元)*/
                         OR ETR_ENTRUST.PORTFOLIO_ID LIKE '%' || #{search} || '%' /*组合代码*/
                         OR PTL_PORTFOLIO.PORTFOLIO_NAME LIKE '%' || #{search} || '%' /*组合名称*/
