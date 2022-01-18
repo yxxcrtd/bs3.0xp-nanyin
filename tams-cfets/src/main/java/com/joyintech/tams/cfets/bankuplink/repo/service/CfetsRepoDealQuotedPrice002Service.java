@@ -930,7 +930,12 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         CfetsRepoDealQuotedPrice001Dto entity = getBussinessEntityByWorkflowId(workflowId);
         WFlowCommonService.doCompleteFlow(entity.getWorkflowId());
         //发送头寸
-        PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(), DictCodeListExt1.子系统代码_交易.getValue(), DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), entity.getPs());
+        SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(workflowId);
+        if (StringUtil.isNotEmpty(sysWflBusinessList)
+                && StringUtil.equals(sysWflBusinessList.getProcessState(), DictCodeList.流程状态_已退回.getValue())) {
+            PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(), DictCodeListExt1.子系统代码_交易.getValue(),
+                    DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), entity.getPs());
+        }
     }
 
     /**
