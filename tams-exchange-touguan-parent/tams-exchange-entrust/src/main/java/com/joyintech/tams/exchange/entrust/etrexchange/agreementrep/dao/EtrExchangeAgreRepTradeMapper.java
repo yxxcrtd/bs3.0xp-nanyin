@@ -42,7 +42,7 @@ public interface EtrExchangeAgreRepTradeMapper {
      * @param map 检索参数
      * @return 联想文本框
      */
-    List<SuggestDto> selectCounterTrader(Map<String, Object> map);
+    List<SelectOptionDto> selectCounterTrader(Map<String, Object> map);
 
     /**
      * 本方交易员联想文本框初始化。
@@ -50,7 +50,7 @@ public interface EtrExchangeAgreRepTradeMapper {
      * @param map 检索参数
      * @return 联想文本框
      */
-    List<SuggestDto> selectTrader(Map<String, Object> map);
+    List<SelectOptionDto> selectTrader(Map<String, Object> map);
 
     List<EtrExchangeOnWayRep002Dto> findOnWayRepPage(Map<String, Object> pageParam);
 
@@ -82,4 +82,18 @@ public interface EtrExchangeAgreRepTradeMapper {
     Date selectSecPositionMaxCdate(Map<String, Object> map);
 
     BigDecimal selectAvailablePositionAmount(Map<String, Object> param);
+
+    /**
+     * 质押券查询下拉框
+     * @param map
+     * @return
+     */
+    List<SelectOptionDto> selectPledgeInfo(Map<String, Object> map);
+
+    /**
+     * 交易编号下拉框
+     * @param map
+     * @return
+     */
+    List<SelectOptionDto> selectTradeId(Map<String, Object> map);
 }

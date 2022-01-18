@@ -148,6 +148,11 @@ public class EtrExchangeAgreRepTrade003Dto extends EtrEntrust{
     private String assetType2;
 
     private String busiPs;
+
+    /**
+     * 质押券单位
+     */
+    private String pledgeUnit;
     /**
      * 获取 implementPercent
      * @return implementPercent.
@@ -561,5 +566,17 @@ public class EtrExchangeAgreRepTrade003Dto extends EtrEntrust{
 
     public void setNextUser(String nextUser) {
         this.nextUser = nextUser;
+    }
+
+    public String getPledgeUnit() {
+        return pledgeUnit;
+    }
+
+    public void setPledgeUnit(String pledgeUnit) {
+        this.pledgeUnit = pledgeUnit;
+    }
+
+    public String getPledgeUnitStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.交易单位,getPledgeUnit());
     }
 }

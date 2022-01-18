@@ -34,13 +34,50 @@ import java.util.Date;
 @ApiModel(value="在途回购查询请求参数",description="在途回购查询请求参数")
 public class EtrExchangeOnWayRepRequestDto{
 
+    @ApiModelProperty(name="search",value="关键字",example="A1")
+    private String search;
+
     @ApiModelProperty(name="tradeId",value="交易编号",example="A1")
     private String tradeId;
 
     @ApiModelProperty(name="pageMode",value="分页对象")
     private PageMode pageMode;
 
+    /**
+     * 用户Id
+     */
+    @ApiModelProperty(name="userId",value="交易编号",example="admin")
     private String userId;
+
+    /**
+     * 组合代码
+     */
+    @ApiModelProperty(name="userId",value="交易编号",example="A1")
+    private String portfolioId;
+
+    /**
+     * 交易场所
+     */
+    @ApiModelProperty(name="userId",value="交易编号",example="03")
+    private String tradeMarket;
+
+    /**
+     * 证券账户
+     */
+    @ApiModelProperty(name="userId",value="交易编号",example="A1")
+    private String secAcctId;
+
+    /**
+     * 回购方向
+     */
+    @ApiModelProperty(name="userId",value="交易编号",example="03")
+    private String repPs;
+
+    /**
+     * 质押券id
+     */
+    @ApiModelProperty(name="pledgeFinprodId",value="交易编号",example="A1")
+    private String pledgeFinprodId;
 
     public String getTradeId() {
         return tradeId;
@@ -64,5 +101,53 @@ public class EtrExchangeOnWayRepRequestDto{
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getPortfolioId() {
+        return portfolioId;
+    }
+
+    public void setPortfolioId(String portfolioId) {
+        this.portfolioId = portfolioId;
+    }
+
+    public String getTradeMarket() {
+        return tradeMarket;
+    }
+
+    public void setTradeMarket(String tradeMarket) {
+        this.tradeMarket = tradeMarket;
+    }
+
+    public String getSecAcctId() {
+        return secAcctId;
+    }
+
+    public void setSecAcctId(String secAcctId) {
+        this.secAcctId = secAcctId;
+    }
+
+    public String getRepPs() {
+        return repPs;
+    }
+
+    public void setRepPs(String repPs) {
+        this.repPs = repPs;
+    }
+
+    public String getPledgeFinprodId() {
+        return pledgeFinprodId;
+    }
+
+    public void setPledgeFinprodId(String pledgeFinprodId) {
+        this.pledgeFinprodId = pledgeFinprodId;
+    }
+
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
     }
 }

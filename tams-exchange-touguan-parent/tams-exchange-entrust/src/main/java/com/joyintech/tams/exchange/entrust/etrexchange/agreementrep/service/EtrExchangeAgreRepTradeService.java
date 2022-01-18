@@ -31,6 +31,7 @@ import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDisp
 import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.FinDealPledgeMapper;
+import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
@@ -42,6 +43,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dao.EtrExchangeAgreRepTradeMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SelectOptionRequestDto;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -128,6 +130,12 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
     private EtrCommandDispatcherService etrCommandDispatcherService;
 
     /**
+     * 交易类金融产品表
+     */
+    @Autowired
+    private FinTradeProductMapper finTradeProductMapper;
+
+    /**
      * 日期计算
      */
     @Autowired
@@ -162,19 +170,20 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
      * @param map 检索参数
      * @return 联想文本框
      */
-    public List<SuggestDto> selectCounterTrader(Map<String, Object> map) {
+    public List<SelectOptionDto> selectCounterTrader(Map<String, Object> map) {
         map.put("counterTraderId",map.get("param"));
         if (StringUtil.isNotEmpty(map.get("homeTrader"))){
             map.put("counterId",map.get("homeTrader"));
         }
         Object object = restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME + "/InterfSysTrdConfig/selectCounterTraderId",
                 map, Object.class);
-        List<SuggestDto> resultList = new ArrayList<>();
+        List<SelectOptionDto> resultList = new ArrayList<>();
         if (object instanceof List<?>){
             List<Map<String,Object>> mapList = (List<Map<String,Object>>)object;
             mapList.forEach(item ->{
-                SuggestDto dto = new SuggestDto();
-                dto.setCode(item.get("counterTraderId").toString());
+                SelectOptionDto dto = new SelectOptionDto();
+                dto.setId(item.get("counterTraderId").toString());
+                dto.setText(item.get("counterTraderId").toString());
                 dto.setObject(item);
                 resultList.add(dto);
             });
@@ -188,8 +197,8 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
      * @param map 检索参数
      * @return 联想文本框
      */
-    public List<SuggestDto> selectTrader(Map<String, Object> map) {
-        List<SuggestDto> suggestDtos = etrExchangeAgreRepTradeMapper.selectTrader(map);
+    public List<SelectOptionDto> selectTrader(Map<String, Object> map) {
+        List<SelectOptionDto> suggestDtos = etrExchangeAgreRepTradeMapper.selectTrader(map);
         return suggestDtos;
     }
     /**
@@ -199,6 +208,9 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
      * @return 联想文本框
      */
     public EtrExchangeAgreRepTrade001Dto getEntrustInfoByTradeId(Map<String, Object> map) {
+        map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        map.put("UNIT_01", DictCodeListExt3.交易单位_张.getValue());
+        map.put("UNIT_04", DictCodeListExt3.交易单位_手.getValue());
         List<EtrExchangeAgreRepTrade001Dto> result = etrExchangeAgreRepTradeMapper.getEntrustInfoByTradeId(map);
         if(StringUtil.isEmptyList(result)){
             return null;
@@ -212,6 +224,9 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
      * @return 联想文本框
      */
     public EtrExchangeAgreRepTrade001Dto getEntrustInfoByEntrustId(Map<String, Object> map) {
+        map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        map.put("UNIT_01", DictCodeListExt3.交易单位_张.getValue());
+        map.put("UNIT_04", DictCodeListExt3.交易单位_手.getValue());
         List<EtrExchangeAgreRepTrade001Dto> result = etrExchangeAgreRepTradeMapper.getEntrustInfoByEntrustId(map);
         if(StringUtil.isEmptyList(result)){
             return null;
@@ -318,6 +333,12 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
         Map<String,Object> pageParam = new HashMap<>();
         pageParam.put("userId",SecurityUtil.getLoginUser().getUserName());
         pageParam.put("tradeId",request.getTradeId());
+        pageParam.put("sysDate", iPlatformDate.getSysDate());
+        pageParam.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+        pageParam.put("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
+        pageParam.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        pageParam.put("UNIT_01", DictCodeListExt3.交易单位_张.getValue());
+        pageParam.put("UNIT_04", DictCodeListExt3.交易单位_手.getValue());
 
         Page<EtrExchangeOnWayRep002Dto> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeAgreRepTradeMapper.findOnWayRepPage(pageParam));
         return result;
@@ -1029,7 +1050,7 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
      * @throws IllegalAccessException
      * @throws InvocationTargetException
      */
-    public void doComplete(EtrExchangeAgreRepTrade001Dto entity, String operationType) throws IllegalAccessException, InvocationTargetException {
+    public void doHandleComplete(EtrExchangeAgreRepTrade001Dto entity, String operationType) throws Exception{
 
         EtrEntrust etrEntrust = new EtrEntrust();
         EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
@@ -1041,7 +1062,7 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
 
         // 构造单组合单资产DTO
         EtrSinglePortfolioDto etrSinglePortfolioDto = getEtrSinglePortfolio(entity);
-        
+
         //待分发逻辑处理
         List<EtrDistribute> etrDistributeList = new ArrayList<>();
         if (busiAutoEtrDispService != null) {
@@ -1056,12 +1077,12 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             	etrDistributeList = busiAutoEtrDispService.selectTrader(etrEntrust, etrEntrustAdd);
                 isPushMsg = DictCodeList.是否_是.getValue();
             }
-            
+
         }
         if(StringUtil.isEmptyList(etrDistributeList)){//无分发人员
         	etrSinglePortfolioDto.setEntrustStatus(DictCodeListExt3.委托状态_待分发.getValue());// 指令状态
         }
-        
+
         //协议回购首期指令
     	AgreRepFristIssueDto agreRepFristIssueDto = new AgreRepFristIssueDto();
     	//协议回购提前购回指令
@@ -1076,7 +1097,7 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
     	AgreRepOpenSecDto agreRepOpenSecDto = new AgreRepOpenSecDto();
 
         if (DictCodeListExt3.上农商_指令业务类型_协议回购首期指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
-            
+
             BeanUtil.copyProperties(agreRepFristIssueDto, etrSinglePortfolioDto);
             // 首次交收日
             if(StringUtil.isNotEmpty(entity.getFristSettleDate())){
@@ -1094,12 +1115,12 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             if(entity.getOccupyDays()!=null){
             	agreRepFristIssueDto.setCapDays(BigDecimal.valueOf(entity.getOccupyDays()));
             }
-            
+
             // 请求号
             agreRepFristIssueDto.setRequestId(entity.getReqOnId());
             // 质押面值
             agreRepFristIssueDto.setPledgeFaceValue(entity.getPledgeFaceValue());
-            
+
             // 质押数量
             agreRepFristIssueDto.setPledgeNumber(entity.getRepSecNum());
             // 质押率
@@ -1109,7 +1130,7 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             // 期限天数，到期日-起息日
             if(entity.getTerm()!=null){
                 agreRepFristIssueDto.setTermDays(Long.valueOf(entity.getTerm()));
-            }      
+            }
             // 交易对手
             agreRepFristIssueDto.setCounterId(entity.getCounterId());
             // 对手方交易员
@@ -1130,14 +1151,14 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             }else if(DictCodeList.回购拆借方向_逆回购.getValue().equals(entity.getRepPs())){
             	agreRepFristIssueDto.setAssetType10("H04");
             }
-            
+
             // 质押券代码
             agreRepFristIssueDto.setRepSecId(entity.getRepSecId());
             BeanUtil.copyPropertiesIgnoreNull(etrEntrust, agreRepFristIssueDto);
             BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, agreRepFristIssueDto);
 
         } else if (DictCodeListExt3.上农商_指令业务类型_协议回购提前购回指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
-        	
+
             BeanUtil.copyProperties(agreRepAdvBuyDto, etrSinglePortfolioDto);
             // 首次交收日
             if(StringUtil.isNotEmpty(entity.getFristSettleDate())){
@@ -1155,12 +1176,12 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             if(entity.getOccupyDays()!=null){
             	agreRepAdvBuyDto.setCapDays(BigDecimal.valueOf(entity.getOccupyDays()));
             }
-            
+
             // 请求号
             agreRepAdvBuyDto.setRequestId(entity.getReqOnId());
             // 质押面值
             agreRepAdvBuyDto.setPledgeFaceValue(entity.getPledgeFaceValue());
-            
+
             // 质押数量
             agreRepAdvBuyDto.setPledgeNumber(entity.getRepSecNum());
             // 质押率
@@ -1170,7 +1191,7 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             // 期限天数，到期日-起息日
             if(entity.getTerm()!=null){
             	agreRepAdvBuyDto.setTermDays(Long.valueOf(entity.getTerm()));
-            }      
+            }
             // 交易对手
             agreRepAdvBuyDto.setCounterId(entity.getCounterId());
             // 对手方交易员
@@ -1202,9 +1223,9 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             }
             BeanUtil.copyPropertiesIgnoreNull(etrEntrust, agreRepAdvBuyDto);
             BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, agreRepAdvBuyDto);
-    
+
         }else if (DictCodeListExt3.上农商_指令业务类型_协议回购到期购回指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
-        	
+
             BeanUtil.copyProperties(agreRepExpireDto, etrSinglePortfolioDto);
             // 首次交收日
             if(StringUtil.isNotEmpty(entity.getFristSettleDate())){
@@ -1222,12 +1243,12 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             if(entity.getOccupyDays()!=null){
             	agreRepExpireDto.setCapDays(BigDecimal.valueOf(entity.getOccupyDays()));
             }
-            
+
             // 请求号
             agreRepExpireDto.setRequestId(entity.getReqOnId());
             // 质押面值
             agreRepExpireDto.setPledgeFaceValue(entity.getPledgeFaceValue());
-            
+
             // 质押数量
             agreRepExpireDto.setPledgeNumber(entity.getRepSecNum());
             // 质押率
@@ -1237,7 +1258,7 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             // 期限天数，到期日-起息日
             if(entity.getTerm()!=null){
             	agreRepExpireDto.setTermDays(Long.valueOf(entity.getTerm()));
-            }      
+            }
             // 交易对手
             agreRepExpireDto.setCounterId(entity.getCounterId());
             // 对手方交易员
@@ -1270,7 +1291,7 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             BeanUtil.copyPropertiesIgnoreNull(etrEntrust, agreRepExpireDto);
             BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, agreRepExpireDto);
         }else if (DictCodeListExt3.上农商_指令业务类型_协议回购到期续做指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
-        	
+
             BeanUtil.copyProperties(agreRepExpireUnBuyDto, etrSinglePortfolioDto);
             // 首次交收日
             if(StringUtil.isNotEmpty(entity.getFristSettleDate())){
@@ -1288,12 +1309,12 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             if(entity.getOccupyDays()!=null){
             	agreRepExpireUnBuyDto.setCapDays(BigDecimal.valueOf(entity.getOccupyDays()));
             }
-            
+
             // 请求号
             agreRepExpireUnBuyDto.setRequestId(entity.getReqOnId());
             // 质押面值
             agreRepExpireUnBuyDto.setPledgeFaceValue(entity.getPledgeFaceValue());
-            
+
             // 质押数量
             agreRepExpireUnBuyDto.setPledgeNumber(entity.getRepSecNum());
             // 质押率
@@ -1303,7 +1324,7 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             // 期限天数，到期日-起息日
             if(entity.getTerm()!=null){
             	agreRepExpireUnBuyDto.setTermDays(Long.valueOf(entity.getTerm()));
-            }      
+            }
             // 交易对手
             agreRepExpireUnBuyDto.setCounterId(entity.getCounterId());
             // 对手方交易员
@@ -1338,22 +1359,22 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             etrEntrustAdd.setRedoType(entity.getRedoType());
             agreRepExpireUnBuyDto.setRedoType(entity.getRedoType());
         } else if (DictCodeListExt3.上农商_指令业务类型_协议回购中途换券指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
-        	
-            BeanUtil.copyProperties(agreRepHwayChgSecDto, etrSinglePortfolioDto);  
-            
+
+            BeanUtil.copyProperties(agreRepHwayChgSecDto, etrSinglePortfolioDto);
+
             // 请求号
             agreRepHwayChgSecDto.setRequestId(entity.getReqOnId());
             // 质押面值
             agreRepHwayChgSecDto.setPledgeFaceValue(entity.getNewpledgeFaceValue());
             //质押率
             agreRepHwayChgSecDto.setPledgeRatio(ArithmeticUtil.divide(entity.getNewConRatio(),new BigDecimal(100),10));
-            
+
             // 质押数量
             agreRepHwayChgSecDto.setPledgeNumber(entity.getNewRepSecNum());
-  
+
             // 质押金额
             agreRepHwayChgSecDto.setPledgeAmt(entity.getTradeAmt());
-   
+
             // 交易对手
             agreRepHwayChgSecDto.setCounterId(entity.getCounterId());
             // 对手方交易员
@@ -1423,15 +1444,15 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             BeanUtil.copyPropertiesIgnoreNull(etrEntrust, agreRepHwayChgSecDto);
             BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, agreRepHwayChgSecDto);
         }else if (DictCodeListExt3.上农商_指令业务类型_协议回购解除质押指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
-        	
-            BeanUtil.copyProperties(agreRepOpenSecDto, etrSinglePortfolioDto);  
-            
+
+            BeanUtil.copyProperties(agreRepOpenSecDto, etrSinglePortfolioDto);
+
             // 请求号
             agreRepOpenSecDto.setRequestId(entity.getReqOnId());
-            
+
             // 质押数量
             agreRepOpenSecDto.setPledgeNumber(entity.getRepSecNum());
-  
+
             // 交易对手
             agreRepOpenSecDto.setCounterId(entity.getCounterId());
             // 对手方交易员
@@ -1520,7 +1541,7 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
         }
 
         String optType = ENTRUST_RECORD_NEW;
-        
+
 		if (null != entity.getEntrustId() && null != etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId())) {
 			optType = ENTRUST_RECORD_MODIFY;
 		}
@@ -1541,7 +1562,7 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             	EtrComponentFactory.getComponentService(AgreRepExpireUnBuyDto.class).entrustNew(agreRepExpireUnBuyDto);
             } else if (DictCodeListExt3.上农商_指令业务类型_协议回购中途换券指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
             	EtrComponentFactory.getComponentService(AgreRepHwayChgSecDto.class).updateSettings(paraDto);
-            	EtrComponentFactory.getComponentService(AgreRepHwayChgSecDto.class).entrustNew(agreRepHwayChgSecDto);         
+            	EtrComponentFactory.getComponentService(AgreRepHwayChgSecDto.class).entrustNew(agreRepHwayChgSecDto);
             }else if (DictCodeListExt3.上农商_指令业务类型_协议回购解除质押指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
             	EtrComponentFactory.getComponentService(AgreRepOpenSecDto.class).updateSettings(paraDto);
             	EtrComponentFactory.getComponentService(AgreRepOpenSecDto.class).entrustNew(agreRepOpenSecDto);
@@ -1572,7 +1593,7 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
                     agreRepHwayChgSecDto.setOldFinprodId(oldEtrEntrust.getFinprodId());
                 }
                 EtrComponentFactory.getComponentService(AgreRepHwayChgSecDto.class).updateSettings(paraDto);
-           	    EtrComponentFactory.getComponentService(AgreRepHwayChgSecDto.class).entrustEdit(agreRepHwayChgSecDto);         
+           	    EtrComponentFactory.getComponentService(AgreRepHwayChgSecDto.class).entrustEdit(agreRepHwayChgSecDto);
            }else if (DictCodeListExt3.上农商_指令业务类型_协议回购解除质押指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
            	    EtrComponentFactory.getComponentService(AgreRepOpenSecDto.class).updateSettings(paraDto);
            	    EtrComponentFactory.getComponentService(AgreRepOpenSecDto.class).entrustEdit(agreRepOpenSecDto);
@@ -1611,6 +1632,40 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
         user.setDeptCode(LoginUserUtil.getDeptCode());
         paraDto.setUser(user);
     }
+
+    /**
+     * 质押券下拉框
+     * @param dto
+     * @return
+     */
+    public Page<SelectOptionDto> selectPledgeInfo(SelectOptionRequestDto dto) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        map.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+        map.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        map.put("sysDate", iPlatformDate.getSysDate());
+        map.put("search",dto.getSearch());
+        return super.queryForPageForSelectReturn(dto.getPageMode().getPageNo(),dto.getPageMode().getPageSize(),()->etrExchangeAgreRepTradeMapper.selectPledgeInfo(map));
+    }
+
+    /**
+     * 交易编号下拉框下拉框
+     * @param dto
+     * @return
+     */
+    public Page<SelectOptionDto> selectTradeId(SelectOptionRequestDto dto) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        map.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+        map.put("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+        map.put("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+        map.put("ps_T01", DictCodeList.交易方向_买入.getValue());
+        map.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+        map.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
+        map.put("search",dto.getSearch());
+        return super.queryForPageForSelectReturn(dto.getPageMode().getPageNo(),dto.getPageMode().getPageSize(),()->etrExchangeAgreRepTradeMapper.selectTradeId(map));
+    }
+
     /**
      * 保存check
      * @param entity
@@ -2065,6 +2120,9 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
         param.put("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
         param.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
         param.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
+        param.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        param.put("UNIT_01", DictCodeListExt3.交易单位_张.getValue());
+        param.put("UNIT_04", DictCodeListExt3.交易单位_手.getValue());
         Page<EtrExchangeAgreRepTrade003Dto> page =  super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeAgreRepTradeMapper.selectEtrEntrust(param));
 
         List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
@@ -2119,27 +2177,40 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
 
     @Override
     public void doComplete(EtrExchangeAgreRepTrade001Dto etrExchangeAgreRepTrade001Dto, OperationType operationType) {
-
+        preEntity(etrExchangeAgreRepTrade001Dto);
+        try {
+            this.doHandleComplete(etrExchangeAgreRepTrade001Dto,etrExchangeAgreRepTrade001Dto.getOperateType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        doDeleteWflEntity(etrExchangeAgreRepTrade001Dto.getWorkflowId());
     }
 
     @Override
     public void doInsert(EtrExchangeAgreRepTrade001Dto entity, OperationType type) {
-
+        if ("save".equals(entity.getOperateType())) {
+            return;
+        }
+        doInsertWflEntity(entity);
     }
 
     @Override
     public void doUpdate(EtrExchangeAgreRepTrade001Dto entity) {
-
+        if (!StringUtil.equals("save", entity.getOperateType()) && !StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
+            doInsertWflEntity(entity);
+        }
     }
 
     @Override
     public void doDelete(String workflowId) {
-
+        doDeleteWflEntity(workflowId);
     }
 
     @Override
     public void doBack(EtrExchangeAgreRepTrade001Dto entity) {
-
+        doDeleteWflEntity(entity.getWorkflowId());
+        // 释放指令头寸
+        revokeOrCloseEntrust(entity);
     }
 
     @Override
@@ -2202,5 +2273,133 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             }
         }
         return null;
+    }
+
+
+
+    /**
+     * 代办提交修改操作类型
+     * @param dto
+     * @return
+     */
+    public EtrExchangeAgreRepTrade001Dto preEntity(EtrExchangeAgreRepTrade001Dto dto) {
+        if(!StringUtil.isNotEmpty(dto.getEntrustBussType())) {
+            if(DictCodeListExt3.交易方向_提前购回.getValue().equals(dto.getPs())){
+                dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_协议回购提前购回指令.getValue());
+                dto.setBusinessTypeName(DictCodeListExt3.上农商_指令业务类型_协议回购提前购回指令.getValue());
+            }else if(DictCodeListExt3.交易方向_到期购回.getValue().equals(dto.getPs())){
+                dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_协议回购到期购回指令.getValue());
+                dto.setBusinessTypeName(DictCodeListExt3.上农商_指令业务类型_协议回购到期购回指令.getValue());
+            }else if(DictCodeListExt3.交易方向_中途换券.getValue().equals(dto.getPs())){
+                dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_协议回购中途换券指令.getValue());
+                dto.setBusinessTypeName(DictCodeListExt3.上农商_指令业务类型_协议回购中途换券指令.getValue());
+            }else if(DictCodeListExt3.交易方向_解除质押.getValue().equals(dto.getPs())){
+                dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_协议回购解除质押指令.getValue());
+                dto.setBusinessTypeName(DictCodeListExt3.上农商_指令业务类型_协议回购解除质押指令.getValue());
+            }else if(DictCodeListExt3.交易方向_到期续做.getValue().equals(dto.getPs())){
+                dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_协议回购到期续做指令.getValue());
+                dto.setBusinessTypeName(DictCodeListExt3.上农商_指令业务类型_协议回购到期续做指令.getValue());
+            }else{
+                dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_协议回购首期指令.getValue());
+                dto.setBusinessTypeName(DictCodeListExt3.上农商_指令业务类型_协议回购首期指令.getValue());
+            }
+
+            if(!StringUtil.isNotEmpty(dto.getFromEtrExchange())) {
+                dto.setFromEtrExchange("Y");
+            }
+            if(!StringUtil.isNotEmpty(dto.getBusiPs())) {
+                dto.setBusiPs(dto.getRepPs());
+            }
+
+            if(!StringUtil.isNotEmpty(dto.getAssetType2())) {
+                dto.setAssetType2(DictCodeList.回购类型_质押式协议回购.getValue());
+            }
+
+            if(!StringUtil.isNotEmpty(dto.getFinprodType2())) {
+                if(StringUtil.equals(dto.getRepPs(),DictCodeList.回购拆借方向_正回购.getValue())) {
+                    dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+                }
+                else {
+                    dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+                }
+
+            }
+        }
+        return dto;
+    }
+
+    private void doInsertWflEntity(EtrExchangeAgreRepTrade001Dto dto) {
+        preEntity(dto);
+        BaseEtrInvestInfoDto entity = restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrAgreRepTrade/buildWflEntity", dto,
+                BaseEtrInvestInfoDto.class);
+        entity.getEtrEntrust().setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
+        entity.setWorkFlowId(dto.getWorkflowId());
+        // 设置指令创建来源
+        entity.getEtrEntrustAdd().setEntrustCreateSource(DictCodeListExt3.指令创建来源_场内实时.getValue());
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doInsertEtrFlow", entity,
+                Boolean.class);
+        // 新增交易对手交易员
+        if (StringUtil.isNotEmpty(dto.getCounterId()) && StringUtil.isNotEmpty(dto.getCounterTrader())){
+            Map<String,Object> map = new HashMap<>();
+            map.put("counterId",dto.getCounterId());
+            map.put("counterTraderId",dto.getCounterTrader());
+            restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME + "/InterfSysTrdConfig/insertCounterTraderId", map,
+                    Object.class);
+        }
+        // 新增本方交易员
+        if (StringUtil.isNotEmpty(dto.getTrader())){
+            Map<String,Object> map = new HashMap<>();
+            map.put("counterId","homeTrader");
+            map.put("counterTraderId",dto.getTrader());
+            restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME + "/InterfSysTrdConfig/insertCounterTraderId", map,
+                    Object.class);
+        }
+        // 指令持仓流水、现金流水处理
+        PostionParameter parameter = new PostionParameter();
+        parameter.setPs(dto.getPs());
+        parameter.setTradeMarket(dto.getTradeMarket());
+        parameter.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
+        parameter.setOperationType("NEW");
+        parameter.setTradeType("01");
+        if(DictCodeList.回购拆借方向_正回购.getValue().equals(dto.getRepPs())){
+            String businessType = DictCodeList.回购类型_质押式协议回购.getValue().concat(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+            parameter.setBusinessType(businessType);
+        }else{
+            parameter.setBusinessType(DictCodeList.回购类型_质押式协议回购.getValue().concat(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()));
+        }
+        // 查询首期交易类金融产品数据
+        FinTradeProductKey finTradeProductKey = new FinTradeProductKey();
+        finTradeProductKey.setFinprodId(dto.getTradeId());
+        finTradeProductKey.setBranch(0L);
+        FinTradeProduct firstFinTradeProduct = finTradeProductMapper.selectByPrimaryKey(finTradeProductKey);
+        if (firstFinTradeProduct != null){
+            dto.setFirstFinTradeProduct(firstFinTradeProduct);
+        }
+        if (StringUtil.equals(dto.getPs(),DictCodeListExt3.交易方向_到期续做.getValue()) && DictCodeList.回购拆借方向_逆回购.getValue().equals(dto.getRepPs())){
+            // 三方续做
+            if (StringUtil.equals(dto.getRedoType(),"1") || firstFinTradeProduct == null){
+                parameter.setPs(dto.getPs()+"_1");
+            }else {
+                // 非三方续做
+                parameter.setPs(dto.getPs()+"_0");
+            }
+        }
+        dto.setTradeDate(DateUtil.parse(dto.getVdate()));
+        parameter.setCustom(dto);
+        try {
+            logger.info("持仓请求报文:" + JsonUtils.object2Json(parameter));
+            commonPositionService.process(parameter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void doDeleteWflEntity(String workflowId) {
+        Map<String,Object> param = new HashMap<>();
+        param.put("workflowId",workflowId);
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doDeleteEtrFlow", param,
+                Boolean.class);
     }
 }

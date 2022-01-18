@@ -3,9 +3,10 @@
 <mapper namespace="com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dao.EtrExchangeAgreRepTradeMapper_mysql">
 
     <!-- 检索对手方交易员 -->
-    <select id="selectCounterTrader" resultType="com.joyintech.framework.select.SuggestDto">
+    <select id="selectCounterTrader" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
-        t.COUNTER_TRADER code
+        t.COUNTER_TRADER id,
+        t.COUNTER_TRADER text
         FROM
         (
         SELECT DISTINCT
@@ -28,9 +29,10 @@
         </where>
     </select>
     <!-- 检索本方交易员 -->
-    <select id="selectTrader" resultType="com.joyintech.framework.select.SuggestDto">
+    <select id="selectTrader" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
-        t.TRADER code
+        t.TRADER id,
+        t.TRADER text
         FROM
         (
         SELECT DISTINCT
@@ -53,7 +55,12 @@
             t1.FINPROD_ID tradeId,
             t1.FINPROD_ID intiTradeId,
             t4.FINPROD_MARKET_ID origRepSecId,
-            t2.PLEDGE_NUMBER origRepSecNum,
+            case
+            when etr_entrust.trade_market = #{TRADE_PLACE_03} then
+                    t2.PLEDGE_NUMBER/10
+            else
+                    t2.PLEDGE_NUMBER
+            end as origRepSecNum,
             t2.PLEDGE_NUMBER* t2.PLEDGE_FACE_VALUE origPrintAmt,
             t2.PLEDGE_RATIO * 100 origConRatio,
             t6.PORTFOLIO_ID portfolioId,
@@ -75,6 +82,12 @@
             t8.BUSI_PS repPs,
             t7.REMARK addCla,
             t3.type_7 ps,
+            case
+                when etr_entrust.trade_market = #{TRADE_PLACE_03} then
+                #{UNIT_04}
+            else
+                #{UNIT_01}
+            end as pledgeUnit, /** 质押券单位  **/
             t8.COUNTER_CON_NO agreeOnId
         FROM FIN_TRADE_PRODUCT t1
                  INNER JOIN FIN_PRODUCT_TYPE t3
@@ -106,15 +119,30 @@
             t8.trade_id tradeId,
             t8.trade_id intiTradeId,
             t4.FINPROD_MARKET_ID origRepSecId,
-            t2.PLEDGE_NUMBER origRepSecNum,
+            case
+            when etr_entrust.trade_market = #{TRADE_PLACE_03} then
+                    t2.PLEDGE_NUMBER/10
+            else
+                    t2.PLEDGE_NUMBER
+            end as origRepSecNum,
             t2.PLEDGE_NUMBER* t2.PLEDGE_FACE_VALUE origPrintAmt,
             t2.PLEDGE_RATIO*100 origConRatio,
             t10.FINPROD_MARKET_ID newRepSecId,
-            t9.PLEDGE_NUMBER newRepSecNum,
+            case
+            when etr_entrust.trade_market = #{TRADE_PLACE_03} then
+                    t9.PLEDGE_NUMBER/10
+            else
+                    t9.PLEDGE_NUMBER
+            end as newRepSecNum,
             t9.PLEDGE_NUMBER* t2.PLEDGE_FACE_VALUE newPrintAmt,
             t9.PLEDGE_RATIO*100 newConRatio,
             t10.FINPROD_MARKET_ID repSecId,
-            t9.PLEDGE_NUMBER repSecNum,
+            case
+                when etr_entrust.trade_market = #{TRADE_PLACE_03} then
+                    t9.PLEDGE_NUMBER/10
+            else
+                    t9.PLEDGE_NUMBER
+            end as repSecNum,
             t9.PLEDGE_NUMBER* t2.PLEDGE_FACE_VALUE printAmt,
             t9.PLEDGE_RATIO*100 conRatio,
             t7.PORTFOLIO_ID portfolioId,
@@ -138,6 +166,12 @@
             t7.ENTRUST_ID entrustId,
             t7.PS ps,
             t8.request_id reqOnId,
+            case
+            when etr_entrust.trade_market = #{TRADE_PLACE_03} then
+                #{UNIT_04}
+            else
+                #{UNIT_01}
+            end as pledgeUnit, /** 质押券单位  **/
             t8.COUNTER_CON_NO agreeOnId
         FROM ETR_ENTRUST t7
                  INNER JOIN ETR_ENTRUST_ADD t8
@@ -453,6 +487,12 @@
         else
         '未购回'
         end as purStatus, /** 购回状态  **/
+        case
+        when fin_trade_product.Mdate<![CDATA[<=]]> #{sysdate} then
+            #{YES_OR_NO_Y}
+        else
+            #{YES_OR_NO_N}
+        end as isExpire, /** 是否到期  **/
         <!--case
         when TPD1.trade_id is not null then
         '已交收'
@@ -466,12 +506,29 @@
         ifnull(fp.FINPROD_NAME,fp.FINPROD_ABBR) stockName,
         ifnull(fp.FINPROD_MARKET_ID,fin_deal_pledge.pledge_finprod_id) stockCode,
         fin_deal_pledge.Pledge_Ratio * 100 discountRate, /** 折算率 **/
-        fin_deal_pledge.Pledge_Number repSecNum, /** 质押券数量 **/
+        case
+        when fin_trade_product.Trade_Market = #{TRADE_PLACE_03} then
+        fin_deal_pledge.Pledge_Number/10
+        else
+        fin_deal_pledge.Pledge_Number
+        end as repSecNum, /** 质押券数量  **/
+        case
+        when fin_trade_product.Trade_Market = #{TRADE_PLACE_03} then
+        #{UNIT_04}
+        else
+        #{UNIT_01}
+        end as pledgeUnit, /** 质押券单位  **/
         fin_deal_pledge.Pledge_Face_Value * fin_deal_pledge.Pledge_Number pledStrdPrinAmt, /** 质押券面总额 **/
         fin_trade_product.Prin tradeAmt, /** 回购金额 **/
         fin_trade_product.INT_RATE * 100 yield, /** 回购利率 **/
         fin_trade_product.vpay_date fristSettleDate, /** 首次结算日 **/
         fin_trade_product.mpay_date expireSettleDate, /** 到期结算日 **/
+        case
+        when fin_trade_product.mpay_date<![CDATA[<=]]> #{sysdate} then
+        0
+        else
+        fin_trade_product.mpay_date -  #{sysdate}
+        end as remainDays, /** 剩余日期  **/
         fin_trade_product.act_cap_days occupyDays, /** 实际占款天数 **/
         fin_trade_product.m_int_amt mIntAmt, /** 回购利息 **/
         fin_trade_product.m_Trade_Amt expireSettleAmt, /** 到期结算金额 **/
@@ -509,6 +566,21 @@
         <if test="userId != null and userId != ''">
             AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
         </if>
+        <if test="portfolioId != null and portfolioId != ''">
+            AND trd_product_deal_add.portfolio_id = #{portfolioId}
+        </if>
+        <if test="tradeMarket != null and tradeMarket != ''">
+            AND fin_trade_product.Trade_Market = #{tradeMarket}
+        </if>
+        <if test="secAcctId != null and secAcctId != ''">
+            AND trd_product_deal_2.sec_manage_acct_id = #{secAcctId}
+        </if>
+        <if test="repPs != null and repPs != ''">
+            AND FIN_PRODUCT_TYPE.TYPE_7 = #{repPs}
+        </if>
+        <if test="pledgeFinprodId != null and pledgeFinprodId != ''">
+            AND fin_deal_pledge.pledge_finprod_id = #{pledgeFinprodId}
+        </if>
     </select>
     <select id="selectEtrEntrust" parameterType="Map" resultType="com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangeAgreRepTrade003Dto">
         select distinct * from (
@@ -541,7 +613,6 @@
         PTL_PORTFOLIO.Portfolio_Id portfolioId, /** 组合代码 **/
         PTL_PORTFOLIO.Portfolio_Name portfolioName, /** 组合名称 **/
         SCI.ACCT_NAME dealCurAcct, /** 资金账户 **/
-
         etr_entrust.trade_market tradeMarket, /** 市场 **/
         etr_entrust.Trade_Plat tradePlat, /** 交易平台 **/
         etr_entrust.Ps ps, /** 交易方向 **/
@@ -557,7 +628,18 @@
         fin_product.Finprod_Market_Id finprodMarketId, /** 质押代码 **/
         fin_product.finprod_abbr finprodAbbr, /** 质押券名称 **/
         etr_pledge.Pledge_Ratio * 100 conRatio, /** 折算率 **/
-        etr_pledge.PLEDGE_NUMBER  repSecNum,/** 质押数量 **/
+        case
+        when etr_entrust.trade_market = #{TRADE_PLACE_03} then
+            etr_pledge.PLEDGE_NUMBER/10
+        else
+            etr_pledge.PLEDGE_NUMBER
+        end as repSecNum, /** 质押数量  **/
+        case
+        when etr_entrust.trade_market = #{TRADE_PLACE_03} then
+            #{UNIT_04}
+        else
+            #{UNIT_01}
+        end as pledgeUnit, /** 质押券单位  **/
         etr_pledge.PLEDGE_NUMBER * etr_pledge.Pledge_Face_Value printAmt, /** 质押面额 **/
         etr_entrust_add.Sec_Acct_Id secAcctId, /** 证券账户 ※隐藏 **/
         etr_entrust.counter_id counterId, /** 交易对手 **/
