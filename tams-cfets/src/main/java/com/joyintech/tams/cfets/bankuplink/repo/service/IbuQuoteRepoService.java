@@ -1250,15 +1250,20 @@ public class IbuQuoteRepoService extends BaseService {
             }
             for (FinExercisePlan finExercisePlan : finExercisePlans) {
                 for (RepoEntrustPledgeDto repoEntrustPledgeDto : request.getRepoEntrustPledgeDtos()) {
+                    if (StringUtil.isNotEmpty(request.getSettlementEndDate())
+                            && DateUtil.compareTo(request.getSettlementEndDate(), repoEntrustPledgeDto.getMdate()) < 0) {
+                        result.setMessage("所选质押券" + repoEntrustPledgeDto.getBondCode() +
+                                repoEntrustPledgeDto.getBondAbbrName() + "到期日为" + repoEntrustPledgeDto.getMdate() + "，不可小于等于回购到期结算日", MessageType.错误消息);
+                        return result;
+                    }
                     if (DateUtil.compareTo(finExercisePlan.getExerciseDate(), repoEntrustPledgeDto.getMdate()) < 0) {
                         result.setMessage("债券" + repoEntrustPledgeDto.getBondCode() +
                                 repoEntrustPledgeDto.getBondAbbrName() + "已做赎回登记，是否确认继续质押", MessageType.确认消息);
-                        return result;
                     } else {
                         result.setMessage("债券" + repoEntrustPledgeDto.getBondCode() +
                                 repoEntrustPledgeDto.getBondAbbrName() + "已赎回登记，且到期结算日大于等于理论行权日，不可质押", MessageType.错误消息);
-                        return result;
                     }
+                    return result;
                 }
             }
         }
@@ -2290,7 +2295,7 @@ public class IbuQuoteRepoService extends BaseService {
         boolean statusFlag = false;
         boolean flowFlag = false;
         if (CollectionUtils.isNotEmpty(cfetsBondDealEntrustOrderDtos)) {
-            for(CfetsRepoDealEntrustOrderDto item :cfetsBondDealEntrustOrderDtos){
+            for (CfetsRepoDealEntrustOrderDto item : cfetsBondDealEntrustOrderDtos) {
                 if (!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已接收)
                         || item.getTransactioncom().compareTo(BigDecimal.ZERO) != 0) {
                     statusFlag = true;
@@ -2301,10 +2306,10 @@ public class IbuQuoteRepoService extends BaseService {
                 }
             }
         }
-        if(statusFlag) {
+        if (statusFlag) {
             errorList.add(new ValidMessage("只可对待分发或者已接收执行进度为0%的指令执行退回操作!"));
         }
-        if(flowFlag) {
+        if (flowFlag) {
             errorList.add(new ValidMessage("存在流程中的交易数据，不可退回!"));
         }
 
