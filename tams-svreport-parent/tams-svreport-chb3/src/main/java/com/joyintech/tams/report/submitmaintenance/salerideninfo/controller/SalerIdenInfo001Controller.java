@@ -225,4 +225,17 @@ public class SalerIdenInfo001Controller extends BaseController {
         List<SuggestDto> temp = salerIdenInfoService.getSalerName(map);
         return temp;
     }
+
+    /**
+     * 总部或分支机构编码联想框
+     */
+    @ResponseBody
+    @RequestMapping("/getSalerOrgCode")
+    public List<SuggestDto> getSalerOrgCode()
+            throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("salerOrgCode", RequestUtil.getPageParam().get("salerOrgCode"));
+        List<SuggestDto> temp = salerIdenInfoService.getSalerOrgCode(map);
+        return temp;
+    }
 }
