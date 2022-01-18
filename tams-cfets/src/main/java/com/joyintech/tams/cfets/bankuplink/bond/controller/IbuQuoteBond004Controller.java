@@ -57,7 +57,7 @@ import java.util.List;
 import static com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service.getBussinessCodeParameter;
 
 /**
- * 现券买卖(登记)
+ * 本币交易登记
  */
 @Controller
 @PageId("IbuQuoteBond004")
