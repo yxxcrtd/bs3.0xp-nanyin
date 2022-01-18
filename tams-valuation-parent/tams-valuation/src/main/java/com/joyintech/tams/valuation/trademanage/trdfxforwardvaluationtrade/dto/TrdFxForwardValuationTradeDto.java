@@ -31,9 +31,9 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @Description:外汇即期交易
+ * @Description:外汇远期交易
  * @auther: yuzj
- * @date: 2022/1/11
+ * @date: 2022/1/17
  * @param:
  * @return:
  */

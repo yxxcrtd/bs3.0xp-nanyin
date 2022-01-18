@@ -206,7 +206,7 @@ values ('TrdFxForwardValuationTrade001', '999999', 'CYY_PAIR', 'EUR/GBP', null, 
 
 
 /*外汇远期交易-新建页面-清算模式下拉框*/
-delete from  sys_page_dictlist where page_id='TrdFxForwardValuationTrade002' and DICT_ID='CYY_PAIR';
+delete from  sys_page_dictlist where page_id='TrdFxForwardValuationTrade002' and DICT_ID='SETT_MODE';
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('TrdFxForwardValuationTrade002', '999999', 'SETT_MODE', 'BIL-SETT', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
