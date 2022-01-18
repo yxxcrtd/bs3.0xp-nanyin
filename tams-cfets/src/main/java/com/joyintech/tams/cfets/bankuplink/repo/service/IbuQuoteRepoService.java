@@ -2287,18 +2287,25 @@ public class IbuQuoteRepoService extends BaseService {
         }
         setParam(param, 1);
         List<CfetsRepoDealEntrustOrderDto> cfetsBondDealEntrustOrderDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
+        boolean statusFlag = false;
+        boolean flowFlag = false;
         if (CollectionUtils.isNotEmpty(cfetsBondDealEntrustOrderDtos)) {
-            cfetsBondDealEntrustOrderDtos.forEach(item -> {
-                if (StringUtil.equals(item.getEntrustStatus(), com.joyintech.tams.constant.DictCodeList.委托状态_待接收)
-                        || (StringUtil.equals(item.getEntrustStatus(), com.joyintech.tams.constant.DictCodeList.委托状态_待接收)
-                        && item.getTransactioncom().compareTo(BigDecimal.ZERO) != 0)) {
-                    errorList.add(new ValidMessage("只可对待分发或者已接收执行进度为0%的指令执行退回操作!"));
+            for(CfetsRepoDealEntrustOrderDto item :cfetsBondDealEntrustOrderDtos){
+                if (!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已接收)
+                        || item.getTransactioncom().compareTo(BigDecimal.ZERO) != 0) {
+                    statusFlag = true;
                 }
                 param.put("entrustId", item.getEntrustId());
                 if (cfetsIbuQuoteBondEtrMapper.checkDataStatus(param) > 0) {
-                    errorList.add(new ValidMessage("存在流程中的交易数据，不可退回!"));
+                    flowFlag = true;
                 }
-            });
+            }
+        }
+        if(statusFlag) {
+            errorList.add(new ValidMessage("只可对待分发或者已接收执行进度为0%的指令执行退回操作!"));
+        }
+        if(flowFlag) {
+            errorList.add(new ValidMessage("存在流程中的交易数据，不可退回!"));
         }
 
         ajaxResult.setErrorList(errorList);
