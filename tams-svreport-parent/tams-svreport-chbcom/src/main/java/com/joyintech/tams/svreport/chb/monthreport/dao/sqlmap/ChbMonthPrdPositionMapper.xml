@@ -463,27 +463,29 @@
 	    ,nvl(val.prod_value,1) prod_value
       	,nvl(val.CCY,'CNY') prod_value_ccy
       <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 start -->
-      ,case when info.PRODTYPE = 'M' then rpi.UNIT_VALUE_T
-      when info.PRODTYPE = 'R' then rpi.YIELD_E
-      when info.PRODTYPE = 'N' then
-      case when val.CHANGE_DATE >= #{startdate, jdbcType=DATE} and val2.CHANGE_DATE >= #{startdate, jdbcType=DATE}
-      <!-- （月末最近公布累计净值-月末次近公布累计净值）/月末次近公布累计净值*计息基础/区间天数*100%；区间天数=两个净值日的差 -->
-      then (nvl(val.UNIT_VALUE_TOTAL, 1) - nvl(val2.UNIT_VALUE_TOTAL, 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1) / nvl(val2.UNIT_VALUE_TOTAL, 1) / to_number(val.CHANGE_DATE - val2.CHANGE_DATE) * 100
-      when val.CHANGE_DATE >= #{startdate, jdbcType=DATE}
-      then (nvl(val.UNIT_VALUE_TOTAL, 1) - 1) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1) / to_number(val.CHANGE_DATE - info.RAISE_PENDDATE) * 100
-      else
-      rpi.RATE_BENCHMARK
-      end
+      ,case when info.PRODTYPE = 'M' then (nvl(val3.TDY_UNIT_VALUE_SUM, 1) - nvl(val4.TDY_UNIT_VALUE_SUM, 1)) / (val4.TDY_UNIT_VALUE_SUM * to_number(#{enddate, jdbcType=DATE} - #{startdate, jdbcType=DATE} + 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1)
+      when info.PRODTYPE = 'N' then (nvl(val.UNIT_VALUE_TOTAL, 1) - nvl(val2.UNIT_VALUE_TOTAL, 1)) / (val2.UNIT_VALUE_TOTAL * to_number(#{enddate, jdbcType=DATE} - #{startdate, jdbcType=DATE} + 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1)
+      when info.PRODTYPE = 'R' then
+          case when info.OPERATE_MODE in ('01', '02') then info.EXP_AVG_YIELD
+          when info.OPERATE_MODE in ('03', '04') then cpr.PROD_YIELD end
       else 0
       end as YIELD_E
       <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 end -->
 	    from chb_prd_baseinfo info
+        left join
+        (
+            select prod_id, prod_yield, change_date from (
+            select rank() over(partition by prod_id order by change_date desc)
+            my_rank,prod_id, prod_yield, change_date from chb_prd_rate
+            where change_date <![CDATA[<=]]> #{enddate,jdbcType=DATE}
+            ) where my_rank = 1
+        ) cpr on nvl (info.fprod_id,info.prod_id)=cpr.prod_id
 	    left join
 	    (
 	        select prod_id,ccy,prod_value,CHANGE_DATE,UNIT_VALUE_TOTAL from (
 	        select rank() over(partition by prod_id order by change_date desc)
 	        my_rank,prod_id,ccy,prod_value,CHANGE_DATE,UNIT_VALUE_TOTAL from CHB_PRD_PERIODYIELD
-	        where CHANGE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE} and CHANG_TYPE='01'
+	        where CHANGE_DATE<![CDATA[=]]>#{enddate,jdbcType=DATE} and CHANG_TYPE='01'
 	        AND STATUS IN ('E','M')
 	        ) where my_rank=1
 	    )val
@@ -496,11 +498,33 @@
         select rank() over(partition by prod_id order by change_date desc) my_rank,
         prod_id,ccy,prod_value,CHANGE_DATE,UNIT_VALUE_TOTAL
         from CHB_PRD_PERIODYIELD
-        where CHANGE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+        where CHANGE_DATE<![CDATA[=]]>#{startdate,jdbcType=DATE}-1
         and CHANG_TYPE='01'
-        ) where my_rank = 2
+        ) where my_rank = 1
         )val2
         on info.PROD_ID=val2.PROD_ID
+	left join
+        (
+        select PROD_ID,CCY,CHANGE_DATE,TDY_UNIT_VALUE_SUM
+        from (
+        select rank() over(partition by prod_id order by change_date desc) my_rank,
+        prod_id,ccy,CHANGE_DATE,TDY_UNIT_VALUE_SUM
+        from CHB_PRD_PERIODYIELD
+        where CHANGE_DATE<![CDATA[=]]>#{enddate,jdbcType=DATE}
+        and CHANG_TYPE='01'
+        ) where my_rank = 1
+        )val3 on info.PROD_ID=val3.PROD_ID
+    left join
+        (
+        select PROD_ID,CCY,CHANGE_DATE,TDY_UNIT_VALUE_SUM
+        from (
+        select rank() over(partition by prod_id order by change_date desc) my_rank,
+        prod_id,ccy,CHANGE_DATE,TDY_UNIT_VALUE_SUM
+        from CHB_PRD_PERIODYIELD
+        where CHANGE_DATE<![CDATA[=]]>#{startdate,jdbcType=DATE}-1
+        and CHANG_TYPE='01'
+        ) where my_rank = 1
+        )val4 on info.PROD_ID=val4.PROD_ID
     left join REP_PROD_INDEX rpi
     on rpi.PROD_ID = info.PROD_ID
     and rpi.VALUE_DATE = #{enddate,jdbcType=DATE}
