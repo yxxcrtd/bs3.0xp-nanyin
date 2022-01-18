@@ -515,7 +515,8 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         try {
             AjaxResult result = new AjaxResult();
             if (StringUtil.isNotEmpty(param.get("entrustId"))) {
-                param.put("entrustIdList", StringUtil.splitToList(",", (String) param.get("entrustIds")));
+                param.put("entrustIdList", StringUtil.splitToList(",", (String) param.get("entrustId")));
+                param.remove("entrustId");
             }
             result = ibuQuoteRepoService.entrustRefuceCheck(param, false);
             return new Message<AjaxResult>().success().setData(result);
@@ -532,7 +533,8 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         try {
             AjaxResult result = new AjaxResult();
             if (StringUtil.isNotEmpty(param.get("entrustId"))) {
-                param.put("entrustIdList", StringUtil.splitToList(",", (String) param.get("entrustIds")));
+                param.put("entrustIdList", StringUtil.splitToList(",", (String) param.get("entrustId")));
+                param.remove("entrustId");
             }
             result = ibuQuoteRepoService.entrustRefuceCheck(param, true);
             if (CollectionUtils.isNotEmpty(result.getErrorList())) {
