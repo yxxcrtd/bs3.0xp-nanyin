@@ -201,12 +201,12 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         paTrdFinProductDealTotal.setWorkflowId(entity.getWorkflowId());
         //交易明细
         List<TrdProductDeal> trdProductDeals = new ArrayList<>();
-        List<FinCashPlan> 现金流 = restTemplate.postForList(
+        /*List<FinCashPlan> 现金流 = restTemplate.postForList(
                 ServiceApplication.PERIOD_SERVICE_NAME + "/TrdRepoDuration/findFinCashInfo", entity.getFinprodId(),
-                FinCashPlan.class);
+                FinCashPlan.class);*/
         BussinessCodeParameter parameter = new BussinessCodeParameter();
         parameter.setCommonBusinessType(DictCodeList.共通业务类型_资产存续期交易);
-        现金流.forEach(finCashPlan -> {
+        /*现金流.forEach(finCashPlan -> {
             TrdProductDeal deal = new TrdProductDeal();
             deal.setTradeId(autoPeriodCommonService.buildBussinessCode(parameter));
             deal.setBusiType(DictCodeList.共通业务类型_质押式回购存续期.getValue());
@@ -285,7 +285,7 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
             // 通道交易新增 end
             deal.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
             trdProductDeals.add(deal);
-        });
+        })*/;
         //划款指令
         // 自动生成划款指令用deal
         TrdProductDeal trdProductDeal = AutoPeriodRepoCommonService.getTrdProductDeal(entity);
