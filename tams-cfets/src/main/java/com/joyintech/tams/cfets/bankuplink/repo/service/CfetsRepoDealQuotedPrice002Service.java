@@ -663,11 +663,11 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             errorList.add(new ValidMessage("请输入回购期限"));
         }
         if (!StringUtil.isNotEmpty(entity.getPrice())
-                || BigDecimal.ZERO.compareTo(entity.getPrice()) <= 0) {
+                || BigDecimal.ZERO.compareTo(entity.getPrice()) == 0) {
             errorList.add(new ValidMessage("请输入回购利率"));
         }
         if (!StringUtil.isNotEmpty(entity.getTradeAmt())
-                || BigDecimal.ZERO.compareTo(entity.getTradeAmt()) <= 0) {
+                || BigDecimal.ZERO.compareTo(entity.getTradeAmt()) == 0) {
             errorList.add(new ValidMessage("请输入交易金额"));
         }
         if (!StringUtil.isNotEmpty(entity.getShareAmt())) {
