@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -79,16 +81,21 @@ public class AccountMaintFeeBookProcessorService {
      */
     @Autowired
     private DBUtil dBUtil;
-    
+
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     /**
      * process 数据处理
-     * 
+     *
      * @param params 参数
      * @return BookGenerateResult
      */
     @SuppressWarnings("unchecked")
-    public BookGenerateResult execute(Map<String, Object> params) {
-    	// 获取reader返回值
+    public BookGenerateResult execute(Map<String, Object> params) throws Exception {
+        // 获取reader返回值
         AccountMaintFeeBookResult acctEntity = (AccountMaintFeeBookResult)params.get(GlobalConstant.READER_RESULT);
 
         // 若reader传递的参数为空，不进行后续处理
@@ -122,10 +129,10 @@ public class AccountMaintFeeBookProcessorService {
             // 获取第一条即可
             calType = listBooksetExt.get(0).getParamValue();
             if(!StringUtil.isNotEmpty(calType)){
-            	calType = DictCodeList.计提方式_每日新增.getValue();
+                calType = DictCodeList.计提方式_每日新增.getValue();
             }
         }else{
-        	calType = DictCodeList.计提方式_每日新增.getValue();
+            calType = DictCodeList.计提方式_每日新增.getValue();
         }
 
         List<AccountMaintFeeBookDto> listAccountMaintFeeBookDto = acctEntity.getListAccountMaintFeeBookReaderDto();
@@ -134,175 +141,183 @@ public class AccountMaintFeeBookProcessorService {
         }
 
         for (AccountMaintFeeBookDto dto : listAccountMaintFeeBookDto) {
-            //2、调用系统共通方法
-            // 2.1 交易类标的信息查询
-            TradeInfoDto dealInfoForTarget = this.getTargetInfo(dto.getBusiId(),DictCodeListExt1.金融产品类型_预提费用.getValue(),0L);
-            // 上述返回结果为空
-            if (dealInfoForTarget == null || dealInfoForTarget.getVdate().after(acctEntity.getHappenDate())
-                    || dealInfoForTarget.getMdate().before(acctEntity.getHappenDate())) {
-                continue;
-            }
-            String jichukemuxingzhi = "";
-            if("01".equals(dealInfoForTarget.getRegistOrg()))jichukemuxingzhi="ZZYTFY";
-            if("02".equals(dealInfoForTarget.getRegistOrg()))jichukemuxingzhi="SQYTFY";
-            //2.2 变量.预提费用余额
-            //调用共通设计->【详细设计-账务类共通方法设计.xlsx】->科目余额查询-期待方向SHEET
-            SubjectBalance subjectBalance = this.getSubjectBalance(booksetIdNow,
-                    acctEntity.getBokDetailId(), happenDateNow, bookDateNow,
-                    DictCodeList.余额方向_贷方.getValue(),jichukemuxingzhi, null, dto.getTaskPri());
-            //定义 变量.预提费用本币余额 = 预提费用DTO.本币余额
-            BigDecimal ytfyBalance_BCcy = StringUtil.isNotEmpty(subjectBalance.getbAmt()) ? subjectBalance.getbAmt() : BigDecimal.ZERO;
-            //定义 变量.预提费用余额 = 预提费用DTO.科目余额
-            BigDecimal ytfyBalance = StringUtil.isNotEmpty(subjectBalance.getBalance()) ? subjectBalance.getBalance() : BigDecimal.ZERO;
-            //名义本金
-            BigDecimal prin = dealInfoForTarget.getPrin();
-
-
-            //2.3 调用共通
-            // 变量.昨日统计分析账务明细汇总信息 = 调用共通方法[账务类共通方法设计 - 统计分析账务明细汇总查询]
-            BokStatDetPosiiton bokSummaryTableYestdy = accountingCommonService.getCountAnalysis(
-	            DateUtil.addDay(acctEntity.getHappenDate(), -1),
-	            DateUtil.addDay(acctEntity.getHappenDate(), -1), acctEntity.getBookDate(),
-	            acctEntity.getBooksetId(), acctEntity.getBokDetailId(), null, null);
-            if(bokSummaryTableYestdy == null){
-                bokSummaryTableYestdy = new BokStatDetPosiiton();
-            }
-
-            //3、计算当日预提费用
-            //变量.当日预提费用
-            BigDecimal ytFeeAmt = BigDecimal.ZERO;
-            //变量.当日预提费用_本币
-            BigDecimal ytFeeAmt_BCcy = BigDecimal.ZERO;
-            //DTO.入账日-标的信息.起息日）
-            BigDecimal A =new BigDecimal(DateUtil.getBetweenDayNumber(dealInfoForTarget.getVdate(), bookDateNow) + 1);
-            //(标的信息.到期日-标的信息.起息日+1）
-            BigDecimal B = new BigDecimal(DateUtil.getBetweenDayNumber(dealInfoForTarget.getVdate(), dealInfoForTarget.getMdate()));
-            // if 变量.计提方式 = 【数据字典】.计提方式."区间倒减"
-            if (DictCodeList.计提方式_区间倒减.getValue().equals(calType)) {
-            	//变量.累计预提额 = 标的信息.名义本金*（DTO.入账日-标的信息.起息日+1）/(标的信息.到期日-标的信息.起息日+1） 调用金额共通方法设置2位有效小数位
-                BigDecimal addMoney = ArithmeticUtil.divide(ArithmeticUtil.multiply(prin, A), B, NumberEnum.MONEY.getCode());
-                //变量.当日预提费用 = 变量.累计预提额 - 变量.预提费用累计
-                ytFeeAmt = ArithmeticUtil.subtract(addMoney, ytfyBalance);
-                //变量.当日预提费用_本币 = 变量.当日预提费用
-                ytFeeAmt_BCcy = ytFeeAmt;
-            } else {
-                //if(DTO.入账日 = 标的信息.到期日)
-                if(DateUtil.compareDate(DateUtil.format(bookDateNow, "yyyy-MM-dd"), 
-                		DateUtil.format(DateUtil.addDay(dealInfoForTarget.getMdate(), -1),"yyyy-MM-dd")) == 0){
-                    //变量.当日待摊费用 = 变量.待摊费用余额
-                	//变量.当日预提费用 = 标的信息.名义本金 - 变量.预提费用余额
-                	ytFeeAmt = ArithmeticUtil.subtract(prin, ytfyBalance);;
-                    //变量.当日预提费用_本币 = 变量.当日预提费用
-                	ytFeeAmt_BCcy = ytFeeAmt;
-                } else {
-                	//变量.当日预提费用 = 标的信息.名义本金/(标的信息.到期日-标的信息.起息日+1） 调用金额共通方法设置2位有效小数位
-                	ytFeeAmt = ArithmeticUtil.divide(prin, B, NumberEnum.MONEY.getCode());
-                	//变量.当日预提费用_本币 = 变量.当日预提费用 调用金额共通方法设置2位有效小数位
-                	ytFeeAmt_BCcy = ytFeeAmt;
+            // add by weipeng on 20220114 增加批处理报错时相关明细日志打印 start
+            try{
+                //2、调用系统共通方法
+                // 2.1 交易类标的信息查询
+                TradeInfoDto dealInfoForTarget = this.getTargetInfo(dto.getBusiId(),DictCodeListExt1.金融产品类型_预提费用.getValue(),0L);
+                // 上述返回结果为空
+                if (dealInfoForTarget == null || dealInfoForTarget.getVdate().after(acctEntity.getHappenDate())
+                        || dealInfoForTarget.getMdate().before(acctEntity.getHappenDate())) {
+                    continue;
                 }
+                String jichukemuxingzhi = "";
+                if("01".equals(dealInfoForTarget.getRegistOrg()))jichukemuxingzhi="ZZYTFY";
+                if("02".equals(dealInfoForTarget.getRegistOrg()))jichukemuxingzhi="SQYTFY";
+                //2.2 变量.预提费用余额
+                //调用共通设计->【详细设计-账务类共通方法设计.xlsx】->科目余额查询-期待方向SHEET
+                SubjectBalance subjectBalance = this.getSubjectBalance(booksetIdNow,
+                        acctEntity.getBokDetailId(), happenDateNow, bookDateNow,
+                        DictCodeList.余额方向_贷方.getValue(),jichukemuxingzhi, null, dto.getTaskPri());
+                //定义 变量.预提费用本币余额 = 预提费用DTO.本币余额
+                BigDecimal ytfyBalance_BCcy = StringUtil.isNotEmpty(subjectBalance.getbAmt()) ? subjectBalance.getbAmt() : BigDecimal.ZERO;
+                //定义 变量.预提费用余额 = 预提费用DTO.科目余额
+                BigDecimal ytfyBalance = StringUtil.isNotEmpty(subjectBalance.getBalance()) ? subjectBalance.getBalance() : BigDecimal.ZERO;
+                //名义本金
+                BigDecimal prin = dealInfoForTarget.getPrin();
+
+
+                //2.3 调用共通
+                // 变量.昨日统计分析账务明细汇总信息 = 调用共通方法[账务类共通方法设计 - 统计分析账务明细汇总查询]
+                BokStatDetPosiiton bokSummaryTableYestdy = accountingCommonService.getCountAnalysis(
+                        DateUtil.addDay(acctEntity.getHappenDate(), -1),
+                        DateUtil.addDay(acctEntity.getHappenDate(), -1), acctEntity.getBookDate(),
+                        acctEntity.getBooksetId(), acctEntity.getBokDetailId(), null, null);
+                if(bokSummaryTableYestdy == null){
+                    bokSummaryTableYestdy = new BokStatDetPosiiton();
+                }
+
+                //3、计算当日预提费用
+                //变量.当日预提费用
+                BigDecimal ytFeeAmt = BigDecimal.ZERO;
+                //变量.当日预提费用_本币
+                BigDecimal ytFeeAmt_BCcy = BigDecimal.ZERO;
+                //DTO.入账日-标的信息.起息日）
+                BigDecimal A =new BigDecimal(DateUtil.getBetweenDayNumber(dealInfoForTarget.getVdate(), bookDateNow) + 1);
+                //(标的信息.到期日-标的信息.起息日+1）
+                BigDecimal B = new BigDecimal(DateUtil.getBetweenDayNumber(dealInfoForTarget.getVdate(), dealInfoForTarget.getMdate()));
+                // if 变量.计提方式 = 【数据字典】.计提方式."区间倒减"
+                if (DictCodeList.计提方式_区间倒减.getValue().equals(calType)) {
+                    //变量.累计预提额 = 标的信息.名义本金*（DTO.入账日-标的信息.起息日+1）/(标的信息.到期日-标的信息.起息日+1） 调用金额共通方法设置2位有效小数位
+                    BigDecimal addMoney = ArithmeticUtil.divide(ArithmeticUtil.multiply(prin, A), B, NumberEnum.MONEY.getCode());
+                    //变量.当日预提费用 = 变量.累计预提额 - 变量.预提费用累计
+                    ytFeeAmt = ArithmeticUtil.subtract(addMoney, ytfyBalance);
+                    //变量.当日预提费用_本币 = 变量.当日预提费用
+                    ytFeeAmt_BCcy = ytFeeAmt;
+                } else {
+                    //if(DTO.入账日 = 标的信息.到期日)
+                    if(DateUtil.compareDate(DateUtil.format(bookDateNow, "yyyy-MM-dd"),
+                            DateUtil.format(DateUtil.addDay(dealInfoForTarget.getMdate(), -1),"yyyy-MM-dd")) == 0){
+                        //变量.当日待摊费用 = 变量.待摊费用余额
+                        //变量.当日预提费用 = 标的信息.名义本金 - 变量.预提费用余额
+                        ytFeeAmt = ArithmeticUtil.subtract(prin, ytfyBalance);;
+                        //变量.当日预提费用_本币 = 变量.当日预提费用
+                        ytFeeAmt_BCcy = ytFeeAmt;
+                    } else {
+                        //变量.当日预提费用 = 标的信息.名义本金/(标的信息.到期日-标的信息.起息日+1） 调用金额共通方法设置2位有效小数位
+                        ytFeeAmt = ArithmeticUtil.divide(prin, B, NumberEnum.MONEY.getCode());
+                        //变量.当日预提费用_本币 = 变量.当日预提费用 调用金额共通方法设置2位有效小数位
+                        ytFeeAmt_BCcy = ytFeeAmt;
+                    }
+                }
+
+                //4、生成记账凭证
+                AccountDriver ad = new AccountDriver();
+                // 初始化定义 - 存放该笔记账的场景要素 map定义
+                Map<String, Object> accountSceneMap = new HashMap<>();
+                // 初始化定义 - 存放该笔记账的相关金额要素 map定义
+                Map<String, BigDecimal> accountAmountMap = new HashMap<>();
+                // 初始化定义 - 存放交易金额对应的币种 map定义
+                Map<String, Object> accountCurrencyMap = new HashMap<>();
+
+                ad.setTreeNode(bookSetTreeNodeNow);// 塞入记账场景树节点 = 会计场景
+                //tableId = 变量.待摊费用计提.场景代码
+                ad.setTableId(DictCodeListTableId.会计场景代码_费用预提.getValue());
+
+                //accountAmountMap设置如下：
+                // 调用共通场景元素赋值-计提类场景元素
+                DrawBaseInfoSelectComResult dbiscResult = new DrawBaseInfoSelectComResult();
+                BeanUtil.copyPropertiesIgnoreNull(dbiscResult, acctEntity);
+                DrawBaseInfoSelectComDTO dbiscDto = new DrawBaseInfoSelectComDTO();
+                BeanUtil.copyPropertiesIgnoreNull(dbiscDto, dto);
+                dbiscDto.setoCcy("CNY");
+                dbiscDto.setStandardCcy("CNY");//本位币
+                accountSceneMap = bookCommonLogic.accrualElementAssign(dbiscResult, dbiscDto);
+                //登记托管机构 DTO.登记托管机构
+                accountSceneMap.put(BookConstant.REGIST_ORG, dealInfoForTarget.getRegistOrg());
+                //TYPE_1 <- 标的信息.TYPE_1
+                accountSceneMap.put(BookConstant.TYPE_1, dealInfoForTarget.getType1());
+                //备注  DictCodeList.from(DictCode.会计场景代码, tableId).getCodeName()
+                accountSceneMap.put(BookConstant.BOOK_REMARK, "费用预提");
+
+                //待摊费用  <- 变量.当日预提费用
+                accountAmountMap.put(BookConstant.YTFEEAMT, ytFeeAmt);
+                //待摊费用_本位币  <- 变量.当日预提费用_本位币
+                accountAmountMap.put(BookConstant.YTFEEAMT, ytFeeAmt_BCcy);
+
+                //accountCurrencyMap设置如下：
+                // 因为与记账金额元素map的key及数量一致，故采用循环
+                for (String keyNow : accountAmountMap.keySet()) {
+                    accountCurrencyMap.put(keyNow, dbiscDto.getoCcy());// 币种 - 交易明细.交易币种
+                }
+                // 本位币设置
+                accountCurrencyMap.put(BookConstant.B_CCY, dbiscDto.getStandardCcy());
+
+                ad.setAccountSceneMap(accountSceneMap);
+                ad.setAccountAmountMap(accountAmountMap);
+                ad.setAccountCurrencyMap(accountCurrencyMap);
+                // 记账凭证生成 : 调用记账引擎公共记账方法，生成记账凭证
+                BookGenerateResult bookGenerateResult = bookLogic.genAccount(ad, batchExecInfo);
+                returnResult.getValBokBookdetailBatch().addAll(bookGenerateResult.getValBokBookdetailBatch());
+
+                //5. 统计分析账务明细汇总信息赋值
+                // 定义当日统计分析账务明细汇总信息
+                BokStatDetPosiiton bokSummaryTableNew = new BokStatDetPosiiton();
+                //变量.当日统计分析账务明细汇总信息.当前持仓 =  标的信息.名义本金 - 变量.预提费用余额 - 变量.当日预提费用
+                bokSummaryTableNew.setPosAmt(ArithmeticUtil.subtract(prin, ytFeeAmt.add(ytfyBalance)));
+                //变量.当日统计分析账务明细汇总信息.当日发生应计利息 = 变量.当日预提费用
+                bokSummaryTableNew.setTdyIntincexpAdd(ytFeeAmt);
+                //变量.当日统计分析账务明细汇总信息.当日累计应计利息余额 = 变量.昨日统计分析账务明细汇总信息.当日累计应计利息余额 + 变量.当日预提费用
+                BigDecimal tdyintincexpNow = ArithmeticUtil.doAdd(bokSummaryTableYestdy.getTdyIntincexp(), ytFeeAmt);
+                bokSummaryTableNew.setTdyIntincexp(tdyintincexpNow);
+                //变量.当日统计分析账务明细汇总信息.当日份额 =  标的信息.名义本金 - 变量.预提费用余额 - 变量.当日预提费用
+                bokSummaryTableNew.setTdyPosition(ArithmeticUtil.subtract(prin, ytFeeAmt.add(ytfyBalance)));
+                //变量.当日统计分析账务明细汇总信息.当日成本 = 标的信息.名义本金 - 变量.预提费用余额 - 变量.当日预提费用
+                bokSummaryTableNew.setTdyCostAmt(ArithmeticUtil.subtract(prin, ytFeeAmt.add(ytfyBalance)));
+                //变量.当日统计分析账务明细汇总信息.起息日 = 变量.标的信息.起息日
+                bokSummaryTableNew.setVdate(dealInfoForTarget.getVdate());
+                //变量.当日统计分析账务明细汇总信息.到期日 = 变量.标的信息.实际到期日
+                bokSummaryTableNew.setMdate(dealInfoForTarget.getMdate());
+                //变量.当日统计分析账务明细汇总信息.金融产品类型 = 计提明细.业务明细类型
+                bokSummaryTableNew.setFinprodType(DictCodeListExt1.金融产品类型_预提费用.getValue());
+                //变量.当日统计分析账务明细汇总信息.剩余期限 = 0
+                bokSummaryTableNew.setEndDays1(BigDecimal.ZERO);
+                //变量.当日统计分析账务明细汇总信息.剩余存续期 = 0
+                bokSummaryTableNew.setEndDays2(BigDecimal.ZERO);
+                //变量.当日统计分析账务明细汇总信息.业务明细代码 = 计提明细.业务明细代码
+                bokSummaryTableNew.setBusiId(dto.getBusiId());
+                //变量.当日统计分析账务明细汇总信息.币种= 计提类账务处理结果.原币币种
+                bokSummaryTableNew.setCcy(dbiscDto.getoCcy());
+                //变量.当日统计分析账务明细汇总信息.当日发生应计利息_本位币 = 变量.当日预提费用_本币
+                bokSummaryTableNew.setTdyIntincexpAddB(subjectBalance.getbAmt());
+                //变量.当日统计分析账务明细汇总信息.当日累计应计利息余额_本位币 =变量.昨日统计分析账务明细汇总信息.当日累计应计利息余额_本位币 + 变量.当日预提费_本币
+                bokSummaryTableNew.setTdyIntincexpB(ArithmeticUtil.doAdd(bokSummaryTableYestdy.getTdyIntincexpB(),ytFeeAmt_BCcy));
+                //变量.当日统计分析账务明细汇总信息.当日成本_本位币= 变量.预提费用本币余额 - 变量.当日预提费用_本币
+                bokSummaryTableNew.setTdyCostAmtB(ArithmeticUtil.subtract(ytfyBalance_BCcy, ytFeeAmt_BCcy));
+                //变量.当日统计分析账务明细汇总信息.本位币= 计提类账务处理结果.本位币币种
+                bokSummaryTableNew.setbCcy(dbiscDto.getStandardCcy());
+
+                // 账套代码
+                bokSummaryTableNew.setBooksetId(acctEntity.getBooksetId());
+                // 发生日期
+                bokSummaryTableNew.setHappenDate(acctEntity.getHappenDate());
+                // 入账日期
+                bokSummaryTableNew.setBookDate(acctEntity.getBookDate());
+                // 账务明细代码
+                bokSummaryTableNew.setBokDetailId(acctEntity.getBokDetailId());
+                // 账套日期
+                bokSummaryTableNew.setBooksetDate(dto.getBooksetDate());
+                // 处理序列
+                bokSummaryTableNew.setBookSummaryOrder(
+                        new BigDecimal(dBUtil.getSequenceIndex(DataIndexSequenceType.账务汇总表_处理序列)));
+
+                returnResult.getValBokStatDetPosiitonBatch().add(bokSummaryTableNew);
             }
-
-            //4、生成记账凭证
-            AccountDriver ad = new AccountDriver();
-            // 初始化定义 - 存放该笔记账的场景要素 map定义
-            Map<String, Object> accountSceneMap = new HashMap<>();
-            // 初始化定义 - 存放该笔记账的相关金额要素 map定义
-            Map<String, BigDecimal> accountAmountMap = new HashMap<>();
-            // 初始化定义 - 存放交易金额对应的币种 map定义
-            Map<String, Object> accountCurrencyMap = new HashMap<>();
-            
-            ad.setTreeNode(bookSetTreeNodeNow);// 塞入记账场景树节点 = 会计场景
-            //tableId = 变量.待摊费用计提.场景代码
-            ad.setTableId(DictCodeListTableId.会计场景代码_费用预提.getValue());
-            
-            //accountAmountMap设置如下：
-            // 调用共通场景元素赋值-计提类场景元素
-            DrawBaseInfoSelectComResult dbiscResult = new DrawBaseInfoSelectComResult();
-            BeanUtil.copyPropertiesIgnoreNull(dbiscResult, acctEntity);
-            DrawBaseInfoSelectComDTO dbiscDto = new DrawBaseInfoSelectComDTO();
-            BeanUtil.copyPropertiesIgnoreNull(dbiscDto, dto);
-            dbiscDto.setoCcy("CNY");
-            dbiscDto.setStandardCcy("CNY");//本位币
-            accountSceneMap = bookCommonLogic.accrualElementAssign(dbiscResult, dbiscDto);
-            //登记托管机构 DTO.登记托管机构
-            accountSceneMap.put(BookConstant.REGIST_ORG, dealInfoForTarget.getRegistOrg());
-            //TYPE_1 <- 标的信息.TYPE_1
-            accountSceneMap.put(BookConstant.TYPE_1, dealInfoForTarget.getType1());
-            //备注  DictCodeList.from(DictCode.会计场景代码, tableId).getCodeName()
-            accountSceneMap.put(BookConstant.BOOK_REMARK, "费用预提");
-            
-            //待摊费用  <- 变量.当日预提费用
-            accountAmountMap.put(BookConstant.YTFEEAMT, ytFeeAmt);
-            //待摊费用_本位币  <- 变量.当日预提费用_本位币
-            accountAmountMap.put(BookConstant.YTFEEAMT, ytFeeAmt_BCcy);
-
-            //accountCurrencyMap设置如下：
-            // 因为与记账金额元素map的key及数量一致，故采用循环
-            for (String keyNow : accountAmountMap.keySet()) {
-                accountCurrencyMap.put(keyNow, dbiscDto.getoCcy());// 币种 - 交易明细.交易币种
+            catch (Exception e){
+                logger.error("《费用预提每日计提批处理》报错相关信息： 账套信息【"+dto.getBooksetId()+"】；金融产品代码【"+dto.getBusiId()+"】",e);
+                throw new Exception(e);
             }
-            // 本位币设置
-            accountCurrencyMap.put(BookConstant.B_CCY, dbiscDto.getStandardCcy());
-            
-            ad.setAccountSceneMap(accountSceneMap);
-            ad.setAccountAmountMap(accountAmountMap);
-            ad.setAccountCurrencyMap(accountCurrencyMap);
-            // 记账凭证生成 : 调用记账引擎公共记账方法，生成记账凭证
-            BookGenerateResult bookGenerateResult = bookLogic.genAccount(ad, batchExecInfo);
-            returnResult.getValBokBookdetailBatch().addAll(bookGenerateResult.getValBokBookdetailBatch());
-
-            //5. 统计分析账务明细汇总信息赋值
-            // 定义当日统计分析账务明细汇总信息
-            BokStatDetPosiiton bokSummaryTableNew = new BokStatDetPosiiton();
-            //变量.当日统计分析账务明细汇总信息.当前持仓 =  标的信息.名义本金 - 变量.预提费用余额 - 变量.当日预提费用
-            bokSummaryTableNew.setPosAmt(ArithmeticUtil.subtract(prin, ytFeeAmt.add(ytfyBalance)));
-            //变量.当日统计分析账务明细汇总信息.当日发生应计利息 = 变量.当日预提费用
-            bokSummaryTableNew.setTdyIntincexpAdd(ytFeeAmt);
-            //变量.当日统计分析账务明细汇总信息.当日累计应计利息余额 = 变量.昨日统计分析账务明细汇总信息.当日累计应计利息余额 + 变量.当日预提费用
-            BigDecimal tdyintincexpNow = ArithmeticUtil.doAdd(bokSummaryTableYestdy.getTdyIntincexp(), ytFeeAmt);
-            bokSummaryTableNew.setTdyIntincexp(tdyintincexpNow);
-            //变量.当日统计分析账务明细汇总信息.当日份额 =  标的信息.名义本金 - 变量.预提费用余额 - 变量.当日预提费用
-            bokSummaryTableNew.setTdyPosition(ArithmeticUtil.subtract(prin, ytFeeAmt.add(ytfyBalance)));
-            //变量.当日统计分析账务明细汇总信息.当日成本 = 标的信息.名义本金 - 变量.预提费用余额 - 变量.当日预提费用
-            bokSummaryTableNew.setTdyCostAmt(ArithmeticUtil.subtract(prin, ytFeeAmt.add(ytfyBalance)));
-            //变量.当日统计分析账务明细汇总信息.起息日 = 变量.标的信息.起息日
-            bokSummaryTableNew.setVdate(dealInfoForTarget.getVdate());
-            //变量.当日统计分析账务明细汇总信息.到期日 = 变量.标的信息.实际到期日
-            bokSummaryTableNew.setMdate(dealInfoForTarget.getMdate());
-            //变量.当日统计分析账务明细汇总信息.金融产品类型 = 计提明细.业务明细类型
-            bokSummaryTableNew.setFinprodType(DictCodeListExt1.金融产品类型_预提费用.getValue());
-            //变量.当日统计分析账务明细汇总信息.剩余期限 = 0
-            bokSummaryTableNew.setEndDays1(BigDecimal.ZERO);
-            //变量.当日统计分析账务明细汇总信息.剩余存续期 = 0
-            bokSummaryTableNew.setEndDays2(BigDecimal.ZERO);
-            //变量.当日统计分析账务明细汇总信息.业务明细代码 = 计提明细.业务明细代码
-            bokSummaryTableNew.setBusiId(dto.getBusiId());
-            //变量.当日统计分析账务明细汇总信息.币种= 计提类账务处理结果.原币币种
-            bokSummaryTableNew.setCcy(dbiscDto.getoCcy());
-            //变量.当日统计分析账务明细汇总信息.当日发生应计利息_本位币 = 变量.当日预提费用_本币
-            bokSummaryTableNew.setTdyIntincexpAddB(subjectBalance.getbAmt());
-            //变量.当日统计分析账务明细汇总信息.当日累计应计利息余额_本位币 =变量.昨日统计分析账务明细汇总信息.当日累计应计利息余额_本位币 + 变量.当日预提费_本币
-            bokSummaryTableNew.setTdyIntincexpB(ArithmeticUtil.doAdd(bokSummaryTableYestdy.getTdyIntincexpB(),ytFeeAmt_BCcy));
-            //变量.当日统计分析账务明细汇总信息.当日成本_本位币= 变量.预提费用本币余额 - 变量.当日预提费用_本币
-            bokSummaryTableNew.setTdyCostAmtB(ArithmeticUtil.subtract(ytfyBalance_BCcy, ytFeeAmt_BCcy));
-            //变量.当日统计分析账务明细汇总信息.本位币= 计提类账务处理结果.本位币币种
-            bokSummaryTableNew.setbCcy(dbiscDto.getStandardCcy());
-            
-            // 账套代码
-            bokSummaryTableNew.setBooksetId(acctEntity.getBooksetId());
-            // 发生日期
-            bokSummaryTableNew.setHappenDate(acctEntity.getHappenDate());
-            // 入账日期
-            bokSummaryTableNew.setBookDate(acctEntity.getBookDate());
-            // 账务明细代码
-            bokSummaryTableNew.setBokDetailId(acctEntity.getBokDetailId());
-            // 账套日期
-            bokSummaryTableNew.setBooksetDate(dto.getBooksetDate());
-            // 处理序列
-            bokSummaryTableNew.setBookSummaryOrder(
-                new BigDecimal(dBUtil.getSequenceIndex(DataIndexSequenceType.账务汇总表_处理序列)));
-            
-            returnResult.getValBokStatDetPosiitonBatch().add(bokSummaryTableNew);
+            // add by weipeng on 20220114 增加批处理报错时相关明细日志打印 end
         }
 
         return returnResult;
@@ -310,7 +325,7 @@ public class AccountMaintFeeBookProcessorService {
 
     /**
      * 调用共通方法：[标的类共通方法-查询交易信息]，获取标的交易信息
-     * 
+     *
      * @param finprodId 金融产品代码【必输项】
      * @param finprodType 金融产品类型【必输项】
      * @param branch 分支序号
@@ -333,10 +348,10 @@ public class AccountMaintFeeBookProcessorService {
 
         return tradeInfoDtoForReturn;
     }
-    
+
     /**
      * 调用公用方法：【科目余额查询 - 期待方向】，获取科目余额信息中的科目余额数据
-     * 
+     *
      * @param booksetIdNow 账套代码
      * @param bokDetailId 账务明细代码
      * @param happenDateNow 发生日
@@ -362,7 +377,7 @@ public class AccountMaintFeeBookProcessorService {
             baseSubjectNatureList = new ArrayList<String>();
             baseSubjectNatureList.add(baseSubjectNature);
         }
-        
+
         //设值科目余额查询参数Dto
         SubjectBalanceSearchDto searchDto = new SubjectBalanceSearchDto();
         searchDto.setBooksetId(booksetId);
@@ -373,7 +388,7 @@ public class AccountMaintFeeBookProcessorService {
         searchDto.setBaseSubjectNatureList(baseSubjectNatureList);
         // 调用公用方法：【科目余额查询-期待方向 】,获取科目余额信息
         List<SubjectBalance> subjectBalanceList = accountingCommonService.getSubjectBalanceExpectDirection(
-            searchDto, expBalanceDirect);
+                searchDto, expBalanceDirect);
 
         // 获取科目余额
         if (subjectBalanceList != null && subjectBalanceList.size() > 0) {
@@ -382,5 +397,5 @@ public class AccountMaintFeeBookProcessorService {
 
         return balance;
     }
-    
+
 }

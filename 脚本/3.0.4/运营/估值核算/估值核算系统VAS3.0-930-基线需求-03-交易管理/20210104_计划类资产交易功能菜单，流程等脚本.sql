@@ -62,6 +62,7 @@ insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER
 values ('TrdPlanValuationTrade002', 'TrdPlanValuationTrade001_btn_delete', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 /*计划类资产交易-4位数的交易编号，序列*/
+DROP SEQUENCE PLANTRADEID_SEQUENCE;
 -- Create sequence
 create sequence PLANTRADEID_SEQUENCE
 minvalue 1

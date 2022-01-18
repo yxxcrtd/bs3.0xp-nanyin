@@ -235,6 +235,7 @@ insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER
 values ('TrdFxSpotValuationTrade002', 'TrdFxSpotValuationTrade001_btn_delete', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 /*外汇即期交易-4位数的交易编号，序列*/
+DROP SEQUENCE FXSPOTTRADEID_SEQUENCE;
 -- Create sequence
 create sequence FXSPOTTRADEID_SEQUENCE
 minvalue 1

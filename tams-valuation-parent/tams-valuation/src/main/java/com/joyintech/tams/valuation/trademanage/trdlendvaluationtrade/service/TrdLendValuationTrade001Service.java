@@ -21,13 +21,16 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.tams.valuation.trademanage.trdlendvaluationtrade.dto.TrdLendValuationTradeDto;
 import com.joyintech.tams.valuation.trademanage.trdplanvaluationtrade.dto.TrdPlanValuationTradeDto;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Service
-public class TrdLendValuationTrade001Service extends CommonExportService<TrdLendValuationTradeDto> {
+public class TrdLendValuationTrade001Service extends CommonExportService<TrdLendValuationTradeDto> implements BaseProcessService<TrdLendValuationTradeDto> {
 
 
     /**
@@ -36,110 +39,34 @@ public class TrdLendValuationTrade001Service extends CommonExportService<TrdLend
      * @return Page类
      * @throws Exception 异常信息
      */
-    public Page<TrdLendValuationTradeDto> selectForPage(Map<String, Object> pageParam){
+    public Page<TrdLendValuationTradeDto> findPage(Map<String, Object> pageParam){
         return restTemplate.postForPage(
-                ServiceApplication.VALUATION_SERVICE_NAME + "/TrdLendValuationTrade/selectForPage",
+                ServiceApplication.VALUATION_SERVICE_NAME + "/TrdLendValuationTrade/findPage",
                 pageParam, TrdLendValuationTradeDto.class);
     }
 
+    /**
+     * 工作流（留痕处理进行的操作）
+     */
+    @Override
+    public void doComplete(TrdLendValuationTradeDto entity, OperationType type) {
+        String action = "delete";
+        restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/TrdLendValuationTrade/" + action, entity, Integer.class);
+    }
 
     /**
-     * 检索拆借投资交易信息
+     * 不分页  导出
      *
-     * @param pageParam 查询参数
+     * @param params
      * @return
-     * @see
-     * @since 1.0
      */
-//    public Page<TrdLendInvestTradeDto> findPage(Map<String, Object> pageParam) {
-//        // 多选下拉框值处理
-//        // 组合代码
-//        Object portfolioIdObj = pageParam.get("portfolioId");
-//        if (portfolioIdObj != null) {
-//            pageParam.put("portfolioIdList",
-//                StringUtil.splitToList(GlobalConstant.COMMA, (String)portfolioIdObj));
-//        }
-//        else {
-//            pageParam.put("portfolioIdList", new ArrayList<>());
-//        }
-//
-//        pageParam.put("BRANCH_0", CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
-//        pageParam.put("loginUserName", LoginUserUtil.getUserName());
-//
-//        return simpleRestTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME + "/TrdLendInvestTrade/findPage",
-//                pageParam, TrdLendInvestTradeDto.class);
-//    }
-//
-//    @Override
-//    protected void buildExportParam(ExportParam exportParam) {
-//        exportParam.config(
-//            "/com/joyintech/tams/invest/trade/lend/conf/export_conf.xml").dataSource(
-//                DataSourceType.MASERT);
-//    }
-//
-//    /**
-//     * {@inheritDoc}
-//     */
-//    @Override
-//    public Page<TrdLendInvestTradeDto> selectPageData(Map<String, Object> selectParam) {
-//        return findPage(selectParam);
-//    }
-//
-//    /**
-//     * 根据交易编号查询流程中数据是否存在
-//     *
-//     * @param tradeId 交易编号
-//     * @return 流程中数据是否存在
-//     * @see
-//     * @since 1.0
-//     */
-//    public Boolean isInFlowDataExisted(String tradeId) {
-//        return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME
-//                                          + "/TrdLendInvestTrade/isInFlowDataExisted/" + tradeId,
-//            null, Boolean.class);
-//    }
-//
-//    // 存在存续期交易存在时不能撤销check增加 add by renping 20191017 start
-//    /**
-//     * 根据交易编号查询存续期数据条数
-//     *
-//     * @param tradeId 交易编号
-//     * @return 存续期数据是否存在
-//     * @see
-//     * @since 1.0
-//     */
-//    public Boolean selectDurationDataCount(String tradeId) {
-//        return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME
-//            + "/TrdLendInvestTrade/selectDurationDataCount/" + tradeId,
-//            null, Boolean.class);
-//    }
-//    // 存在存续期交易存在时不能撤销check增加 add by renping 20191017 end
-//
-//    /**
-//     * 根据交易编号查询该交易是否已被撤销
-//     *
-//     * @param tradeId 交易编号
-//     * @return 该交易是否已被撤销
-//     * @see
-//     * @since 1.0
-//     */
-//    public Boolean isRevokeDataExisted(String tradeId) {
-//        return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME
-//                                          + "/TrdLendInvestTrade/isAlreadyRevoked/" + tradeId,
-//            null, Boolean.class);
-//    }
-//
-//    /**
-//     * 根据交易编号查询该交易是否已做流出资金核对
-//     *
-//     * @param tradeId 交易编号
-//     * @return 该交易是否已做流出资金核对
-//     * @see
-//     * @since 1.0
-//     */
-//    public Boolean isAlreadyLqdPipedTrade(String tradeId) {
-//        return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME
-//                                          + "/TrdLendInvestTrade/isAlreadyLqdPipedTrade/" + tradeId,
-//            null, Boolean.class);
-//    }
+    public List<TrdLendValuationTradeDto> queryPageList(Map<String, Object> params) {
+        return restTemplate.postForList(
+                ServiceApplication.VALUATION_SERVICE_NAME + "/TrdLendValuationTrade/queryPageList", params,
+                TrdLendValuationTradeDto.class);
+    }
+
+
+
+
 }
