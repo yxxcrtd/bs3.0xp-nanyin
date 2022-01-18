@@ -139,6 +139,9 @@ public class InstrumentServiceImpl extends AsyncServiceImpl<String, Instrument> 
 
     @Override
     public MinTrdUnitLimit getMinTrdUnitLimit(String tradePlat, String market, Instrument instrument, String instructionPs) {
+        if (instrument == null) {
+            return null;
+        }
         String key = createKey(tradePlat, market, instrument, 0, instructionPs);
         for (int i = 1; i <= 3; i++) {
             MinTrdUnitLimit minTrdUnitLimit = minTrdUnitLimitMap.get(key);
