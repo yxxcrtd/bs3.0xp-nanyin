@@ -859,7 +859,7 @@
 	SUBMIT_DEADLINE,
 	CHB_SUBMIT_DEADLINE,
 	asset_code
-	FROM  CHB_BOT_AST_POS_SUB
+	FROM  CHB_ASSET_INFO_SUB
 	WHERE 1=1
 	<if test="createDeptList != null and createDeptList.size>0">
 		<foreach collection="createDeptList" item = "item" open="and CREATE_DEPT in(" separator="," close=")">
@@ -947,7 +947,7 @@
 	SUBMIT_DEADLINE,
 	CHB_SUBMIT_DEADLINE,
 	asset_code
-	FROM  CHB_BOT_AST_POS_SUB
+	FROM  CHB_AST_VAL_SUB
 	WHERE 1=1
 	<if test="createDeptList != null and createDeptList.size>0">
 		<foreach collection="createDeptList" item = "item" open="and CREATE_DEPT in(" separator="," close=")">

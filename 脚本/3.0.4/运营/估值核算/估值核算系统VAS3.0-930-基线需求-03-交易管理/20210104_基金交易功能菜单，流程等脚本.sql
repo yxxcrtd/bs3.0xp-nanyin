@@ -80,7 +80,7 @@ insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER
 values ('TrdFundValuationTrade002', 'TrdFundValuationTrade002_btn_save', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-values ('TrdFundValuationTrade002', 'TrdFundValuationTrade002_btn_sbumit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+values ('TrdFundValuationTrade002', 'TrdFundValuationTrade002_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
 values ('TrdFundValuationTrade002', 'TrdFundValuationTrade001_btn_delete', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
@@ -89,6 +89,7 @@ values ('TrdFundValuationTrade002', 'TrdFundValuationTrade001_btn_delete', 'oneA
 
 
 /*基金交易-4位数的交易编号，序列*/
+DROP SEQUENCE FUNDTRADEID_SEQUENCE;
 -- Create sequence
 create sequence FUNDTRADEID_SEQUENCE
 minvalue 1

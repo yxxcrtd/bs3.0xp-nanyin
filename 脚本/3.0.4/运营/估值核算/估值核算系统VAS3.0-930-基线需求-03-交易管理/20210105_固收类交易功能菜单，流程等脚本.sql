@@ -53,7 +53,7 @@ insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER
 values ('TrdFixIncomeValuationTrade002', 'TrdFixIncomeValuationTrade002_btn_save', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-values ('TrdFixIncomeValuationTrade002', 'TrdFixIncomeValuationTrade002_btn_sbumit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+values ('TrdFixIncomeValuationTrade002', 'TrdFixIncomeValuationTrade002_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
 values ('TrdFixIncomeValuationTrade002', 'TrdFixIncomeValuationTrade001_btn_delete', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
@@ -62,6 +62,7 @@ values ('TrdFixIncomeValuationTrade002', 'TrdFixIncomeValuationTrade001_btn_dele
 
 
 /*固收类交易-4位数的交易编号，序列*/
+DROP SEQUENCE FIXINCOMETRADEID_SEQUENCE;
 -- Create sequence
 create sequence FIXINCOMETRADEID_SEQUENCE
 minvalue 1
