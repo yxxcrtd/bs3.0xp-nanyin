@@ -211,4 +211,13 @@ public class SalerIdenInfoService extends CommonExportService<SalerIdenInfoDto> 
         dtoList = chbSalerIdenInfoMapper.selectSalerOrgCode(map);
         return dtoList;
     }
+
+    /**
+     * 总部或分支机构编码联想框
+     */
+    public List<SuggestDto> getSalerOrgCode(Map<String, Object> map) {
+        return restTemplate.postForList(
+                SvrServiceApplication.CHB3_SERVICE_NAME + "/SalerIdenInfo/getSalerOrgCode",
+                map, SuggestDto.class);
+    }
 }

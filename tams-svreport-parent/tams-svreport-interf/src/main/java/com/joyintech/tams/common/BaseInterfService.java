@@ -50,6 +50,9 @@ public class BaseInterfService extends BaseService  {
 			logger.error(e.getMessage(), "下游数据发布-"+getFileName()+"获取业务Entity异常-------------------");
 		}
 		try{
+
+			//所有数据不可包含updateTime.否则下游所有的删除当日数据逻辑均可能失效
+			list.stream().forEach(dto2-> dto2.setUpdateTime(null));
 			// 生成xml文件
 			logger.info("下游数据发布-"+getFileName()+"生成文件开始-------------------------");
 			writeEntityToXmlFile(list, path, date);

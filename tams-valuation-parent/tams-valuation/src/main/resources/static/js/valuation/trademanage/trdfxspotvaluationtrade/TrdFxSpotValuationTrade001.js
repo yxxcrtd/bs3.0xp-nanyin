@@ -62,18 +62,24 @@ $(function(){
             ,{field:'outTradeId', width:150, title: '外部成交编号'}
             ,{field:'portfolioId', width:150, title: '产品代码'}
             ,{field:'portfolioName', width:150, title: '产品名称'}
-            ,{field:'finprodId', width:150, title: '资产代码'}
-            ,{field:'finprodName', width:150, title: '资产名称'}
             ,{field:'psStr', width:150, title: '交易类型',sortField:'ps'}
+            ,{field:'curPair', width:150, title: '货币对',sortField:'curPair'}
             ,{field:'tradeDate', type:'date' ,width:150, title: '交易日', visible: false}
             ,{field:'tradeDateStr',width:150, title: '交易日'}
-            ,{field:'settleDate', width:150, title: '交割日'}
-            ,{field:'invAimStr', width:150, title: '会计分类'}
-            ,{field:'tradeAmt', width:150, title: '本金金额',type:'number'}
-            ,{field:'fpriceAmt', width:150, title: '全价金额',type:'number'}
-            ,{field:'intAmt', width:150, title: '应收利息总额',type:'number'}
-            ,{field:'ccy', width:150, title: '币种',sortField:'ccy'}
-            ,{field:'assetAccount', width:150, title: '资金账户'}
+            ,{field:'settleDate', width:150, title: '交割日', visible: false}
+            ,{field:'settleDateStr',width:150, title: '交割日'}
+            ,{field:'unitCprice', width:150, title: '即期汇率',type:'number'}
+            ,{field:'dealCur', width:150, title: '交易货币'}
+            ,{field:'dealCurAmt', width:150, title: '交易货币金额',type:'number'}
+            ,{field:'corCcy', width:150, title: '对应货币'}
+            ,{field:'corCcyAmt', width:150, title: '对应货币金额',type:'number'}
+            ,{field:'usdAmt', width:150, title: '折美元金额',type:'number'}
+            ,{field:'procedureAmt', width:150, title: '交易手续费',type:'number'}
+            ,{field:'settleServiceAmt', width:150, title: '结算服务费',type:'number'}
+            ,{field:'feeAmtQT', width:150, title: '其他费用',type:'number'}
+            ,{field:'mdateSettleAmt', width:150, title: '结算金额',type:'number'}
+            ,{field:'trdAcctId', width:150, title: '资金账户'}
+
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]
     });

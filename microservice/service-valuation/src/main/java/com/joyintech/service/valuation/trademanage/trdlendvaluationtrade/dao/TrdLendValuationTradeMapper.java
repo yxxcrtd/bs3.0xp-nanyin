@@ -54,4 +54,12 @@ public interface TrdLendValuationTradeMapper {
 
 
 
+	/**
+	 * 检索交易列表
+	 */
+	List<TrdLendValuationTradeDto> selectDeal(Map<String, Object> paraMap);
+
+
+	//根据交易编号查询数据
+    TrdLendValuationTradeDto queryTradeInfoByTradeId(String tradeId);
 }

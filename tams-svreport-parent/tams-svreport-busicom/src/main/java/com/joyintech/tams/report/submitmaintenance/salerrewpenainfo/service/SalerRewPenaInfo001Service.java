@@ -244,12 +244,14 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
             //奖惩单位具体名称
             if(list.get(2) != null && !(list.get(2).trim().equals(""))) {
                 if(list.get(5) != null && !(list.get(5).trim().equals(""))) {
-                    if(!(this.subDictcode(list.get(2)," ").equals("03"))
+                    if(((this.subDictcode(list.get(2)," ").equals("01")) || (this.subDictcode(list.get(2)," ").equals("02")))
                       && this.subDictcode(list.get(5)," ").equals("99")){
                         if (list.get(6) == null || list.get(6).trim().equals("")) {
                             flag = false;
                             message.add("记录分类选择奖励或惩处时且奖惩单位选择其他时，奖惩单位具体名称不能为空");
-                        }else{
+                        }
+                    }else{
+                        if(list.get(6) != null && !list.get(6).trim().equals("")) {
                             flag = false;
                             message.add("奖惩单位具体名称不可填");
                         }
@@ -287,6 +289,12 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
                     }else if(!checkDate(list.get(8))){
                         flag = false;
                         message.add("奖惩结束日期格式不正确");
+                    }else{
+                        Integer datecheck = list.get(7).compareTo(list.get(8));
+                        if(datecheck > 0){
+                            flag = false;
+                            message.add("奖惩结束日期不可小于奖惩开始日期。");
+                        }
                     }
                 }
             }

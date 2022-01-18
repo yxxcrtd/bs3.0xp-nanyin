@@ -859,7 +859,7 @@
 	SUBMIT_DEADLINE,
 	CHB_SUBMIT_DEADLINE,
 	asset_code
-	FROM  CHB_BOT_AST_POS_SUB
+	FROM  CHB_ASSET_INFO_SUB
 	WHERE 1=1
 	<if test="createDeptList != null and createDeptList.size>0">
 		<foreach collection="createDeptList" item = "item" open="and CREATE_DEPT in(" separator="," close=")">
@@ -947,7 +947,7 @@
 	SUBMIT_DEADLINE,
 	CHB_SUBMIT_DEADLINE,
 	asset_code
-	FROM  CHB_BOT_AST_POS_SUB
+	FROM  CHB_AST_VAL_SUB
 	WHERE 1=1
 	<if test="createDeptList != null and createDeptList.size>0">
 		<foreach collection="createDeptList" item = "item" open="and CREATE_DEPT in(" separator="," close=")">
@@ -1933,4 +1933,116 @@
 	</choose>
 	)
 </select>
+	<select id="selectChbInst" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+		WITH prd_tmp AS (
+		SELECT
+		<include refid="sendStatusFlag" />
+		SUBMIT_DEADLINE,
+		CHB_SUBMIT_DEADLINE
+		FROM  CHB_SALER_INST_SUB
+		WHERE 1=1
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" open=" and ORG_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		)
+		<include refid="belongInstitutionCode" />
+		SELECT
+		SUM(DECODE(SEND_STATUS,'01',1,0)) as delaynum, /*已延期*/
+		min(DECODE(SEND_STATUS,'02',to_char(SUBMIT_DEADLINE, 'yyyy-mm-dd'),null)) as mindate,
+		max(DECODE(SEND_STATUS,'02',to_char(CHB_SUBMIT_DEADLINE, 'yyyy-mm-dd'),null)) as maxdate,
+		SUM(DECODE(SEND_STATUS,'02',1,0)) as delayingnum, /*即将延期*/
+		SUM(DECODE(SEND_STATUS,'03',1,0)) as sendnum, /*将报送*/
+		SUM(DECODE(SEND_STATUS,'04',1,0)) as manualnum, /*手工处理*/
+		SUM(DECODE(SEND_STATUS,'05',1,0)) as interfPassnum, /*接口通过*/
+		SUM(DECODE(SEND_STATUS,'06',1,0)) as interfBacknum, /*接口退回*/
+		null as deletenum, /*删除模版*/
+		null as countType,
+		'42' as reporttype /*机构分支信息*/
+		FROM prd_tmp P
+		<include refid="belongInstitutionCode_1" />
+
+	</select>
+
+	<select id="selectChbIder" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+		WITH prd_tmp AS (
+		SELECT
+		<include refid="sendStatusFlag" />
+		SUBMIT_DEADLINE,
+		CHB_SUBMIT_DEADLINE
+		FROM  CHB_SALER_IDEN_SUB
+		WHERE 1=1
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" open=" and ORG_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		)
+		<include refid="belongInstitutionCode" />
+		SELECT
+		SUM(DECODE(SEND_STATUS,'01',1,0)) as delaynum, /*已延期*/
+		min(DECODE(SEND_STATUS,'02',to_char(SUBMIT_DEADLINE, 'yyyy-mm-dd'),null)) as mindate,
+		max(DECODE(SEND_STATUS,'02',to_char(CHB_SUBMIT_DEADLINE, 'yyyy-mm-dd'),null)) as maxdate,
+		SUM(DECODE(SEND_STATUS,'02',1,0)) as delayingnum, /*即将延期*/
+		SUM(DECODE(SEND_STATUS,'03',1,0)) as sendnum, /*将报送*/
+		SUM(DECODE(SEND_STATUS,'04',1,0)) as manualnum, /*手工处理*/
+		SUM(DECODE(SEND_STATUS,'05',1,0)) as interfPassnum, /*接口通过*/
+		SUM(DECODE(SEND_STATUS,'06',1,0)) as interfBacknum, /*接口退回*/
+		null as deletenum, /*删除模版*/
+		null as countType,
+		'43' as reporttype /*销售人员信息*/
+		FROM prd_tmp P
+		<include refid="belongInstitutionCode_1" />
+
+	</select>
+
+	<select id="selectChbIrew" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+		WITH prd_tmp AS (
+		SELECT
+		<include refid="sendStatusFlag" />
+		SUBMIT_DEADLINE,
+		CHB_SUBMIT_DEADLINE
+		FROM  CHB_SALER_REW_PENA_SUB
+		WHERE 1=1
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" open=" and ORG_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		)
+		<include refid="belongInstitutionCode" />
+		SELECT
+		SUM(DECODE(SEND_STATUS,'01',1,0)) as delaynum, /*已延期*/
+		min(DECODE(SEND_STATUS,'02',to_char(SUBMIT_DEADLINE, 'yyyy-mm-dd'),null)) as mindate,
+		max(DECODE(SEND_STATUS,'02',to_char(CHB_SUBMIT_DEADLINE, 'yyyy-mm-dd'),null)) as maxdate,
+		SUM(DECODE(SEND_STATUS,'02',1,0)) as delayingnum, /*即将延期*/
+		SUM(DECODE(SEND_STATUS,'03',1,0)) as sendnum, /*将报送*/
+		SUM(DECODE(SEND_STATUS,'04',1,0)) as manualnum, /*手工处理*/
+		SUM(DECODE(SEND_STATUS,'05',1,0)) as interfPassnum, /*接口通过*/
+		SUM(DECODE(SEND_STATUS,'06',1,0)) as interfBacknum, /*接口退回*/
+		null as deletenum, /*删除模版*/
+		null as countType,
+		'44' as reporttype /*销售奖罚信息*/
+		FROM prd_tmp P
+		<include refid="belongInstitutionCode_1" />
+
+	</select>
+
+
 </mapper>

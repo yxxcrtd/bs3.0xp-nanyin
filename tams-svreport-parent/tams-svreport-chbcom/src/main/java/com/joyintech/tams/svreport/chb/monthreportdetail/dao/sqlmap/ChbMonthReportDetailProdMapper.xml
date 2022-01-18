@@ -58,7 +58,7 @@
 			  P.termtype,
 			  b.is_transfer isTransfer,
 			  decode(b.profit_type,'03','02','01') isBreakeven,
-			  b.is_fhxgcp isFhxgcp,
+			  nvl(b.is_fhxgcp,'01') isFhxgcp,
 			  B.exc_fin_sector excFinSector,
 			  B.IS_YLLCCP isYllccp,
 			  p.dirtyamtsum,

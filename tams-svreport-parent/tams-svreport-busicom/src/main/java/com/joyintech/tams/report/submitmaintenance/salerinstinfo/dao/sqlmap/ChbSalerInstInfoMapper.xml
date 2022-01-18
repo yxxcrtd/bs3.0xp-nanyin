@@ -228,7 +228,8 @@
         FROM CHB_SALER_INST_INFO
         <where>
             <if test="salerOrgCode != null and salerOrgCode != ''">
-                AND	SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
+                AND	(SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
+                    OR SALER_ORG_NAME  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%')))
             </if>
         </where>
 
@@ -242,7 +243,8 @@
         FROM CHB_SALER_INST_ERRODATA
         <where>
             <if test="salerOrgCode != null and salerOrgCode != ''">
-                AND	SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
+                AND	(SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
+                OR SALER_ORG_NAME  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%')))
             </if>
         </where>
         )

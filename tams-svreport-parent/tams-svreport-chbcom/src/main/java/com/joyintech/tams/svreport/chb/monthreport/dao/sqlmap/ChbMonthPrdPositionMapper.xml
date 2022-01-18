@@ -168,12 +168,9 @@
       <if test="vdate != null" >
         VDATE,
       </if>
-        <if test="cashamt != null" >
-            CASHAMT,
-        </if>
-        <if test="yieldE != null" >
-            YIELD_E,
-        </if>
+      <if test="yieldE != null" >
+          YIELD_E,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="posuuid != null" >
@@ -845,7 +842,7 @@
     and  (deal.ord_identified=pm2.ord_identified 
     or (deal.ord_identified is null and pm2.ord_identified is null)
     )
-    left join rate on prod.prod_value_ccy=rate.ccyOriginal
+    left join rate on pm.ccy=rate.ccyOriginal
     left join di on deal.prodid=di.prodid and deal.ccy=di.ccy 
     and  (deal.ord_identified=di.ord_identified 
     or (deal.ord_identified is null and di.ord_identified is null)
@@ -920,7 +917,7 @@
       		and  (PM.ord_identified=pos1.ord_identified 
     		or (PM.ord_identified is null and pos1.ord_identified is null)
     		)
-			left join rate on pi.prod_value_ccy=rate.ccyOriginal
+			left join rate on pm.ccy=rate.ccyOriginal
             where 1=1 
             and ADD_MONTHS(pos1.STARTDATE, 1) = #{startdate,jdbcType=DATE}
             and prod.status in ('E','M')

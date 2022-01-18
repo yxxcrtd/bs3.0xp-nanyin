@@ -28,6 +28,7 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -146,6 +147,7 @@ public class TrdLendValuationTradeDto extends BaseEntity implements ProcessEntit
      */
     private String trdAcctId;
 
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     @NotEmpty(fieldName = "TrdLendValuationTrade002.tradeId", groups = {ValidateGroupEdit.class})
     public String getTradeId() {
         return tradeId;
@@ -325,11 +327,6 @@ public class TrdLendValuationTradeDto extends BaseEntity implements ProcessEntit
 
 
 
-    /**
-     * 拆借类型
-     */
-    @NotEmpty(fieldName = "TrdLendInvestTrade002.paBussType")
-    private String paBussType;
 
 
 
@@ -395,6 +392,32 @@ public class TrdLendValuationTradeDto extends BaseEntity implements ProcessEntit
         this.operateType = operateType;
     }
 
+    /**
+     * elementId
+     */
+    private String elementId;
+
+    public String getElementId() {
+        return elementId;
+    }
+
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
+    }
+
+
+    /**
+     * 信用拆借交易实体类
+     */
+    private List<TrdLendValuationTradeDto> selectedItem;
+
+    public List<TrdLendValuationTradeDto> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<TrdLendValuationTradeDto> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
 
 
     /**
@@ -404,6 +427,13 @@ public class TrdLendValuationTradeDto extends BaseEntity implements ProcessEntit
      */
     @NotEmpty(fieldName = "TrdLendValuationTrade002.busiPs", groups = {ValidateGroupEdit.class})
     public String getBusiPs() {
+        String busiPs="";
+        if(getPs() != null && getPs().equals("T01")){
+            busiPs="拆入";
+        }
+        if(getPs() != null && getPs().equals("T02")){
+            busiPs="拆出";
+        }
         return busiPs;
     }
 
@@ -416,6 +446,90 @@ public class TrdLendValuationTradeDto extends BaseEntity implements ProcessEntit
         this.busiPs = busiPs;
     }
 
+    /**
+     * 产品类型
+     */
+    private String finprodType;
 
+    public String getFinprodType() {
+        return finprodType;
+    }
+
+    public void setFinprodType(String finprodType) {
+        this.finprodType = finprodType;
+    }
+
+
+    /**
+     * 交易方向
+     */
+    private String ps;
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
+    }
+
+
+    /**
+     * 取得 币种Fmt
+     *
+     * @return 币种
+     */
+    public String getCcyFmt() {
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.币种, ccy))?
+                SysDataUtil.getNameFromDataDict(DictCode.币种, ccy):ccy;
+    }
+    //导出转化交易日
+    private  String tradeDateStr;
+
+    public String getTradeDateStr() {
+        String tradeDateStr=" ";
+        if(getTradeDate() !=null){
+            tradeDateStr=DateUtil.format(getTradeDate());
+        }
+        return tradeDateStr;
+    }
+
+    //导出转化交割日
+    private String settDateStr;
+    public String getSettDateStr(){
+        String settDateStr=" ";
+        if(getSettDate() !=null){
+            settDateStr=DateUtil.format(getSettDate());
+        }
+        return settDateStr;
+    }
+
+    //导出保留小数位
+
+    //本金金额  2位
+    public String getPrinAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getPrinAmt()==null?"0.00":decimalFormat.format(this.getPrinAmt().setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
+
+
+
+    //应计利息 2位
+    public String getIntAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getIntAmt()==null?"0.00":decimalFormat.format(this.getIntAmt().setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
+
+    //结算金额 2位
+    public String getSettleAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getSettleAmt()==null?"0.00":decimalFormat.format(this.getSettleAmt().setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
+
+    //本币交易金额 2位
+    public String getDealAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getDealAmt()==null?"0.00":decimalFormat.format(this.getDealAmt().setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
 
 }

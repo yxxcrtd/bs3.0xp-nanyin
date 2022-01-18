@@ -32,6 +32,8 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -979,4 +981,14 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
 		}
 		return checkResult;
 	}
+
+    @Override
+    public void setCellValue(String beanName, Cell cell, String propName, Object value) {
+        if (cell.getColumnIndex()==5) {
+            CellStyle cStyle = cell.getRow().getSheet().getWorkbook().createCellStyle();
+            cStyle.cloneStyleFrom(cell.getRow().getSheet().getRow(1).getCell(4).getCellStyle());
+            cell.setCellStyle(cStyle);
+        }
+
+    }
 }

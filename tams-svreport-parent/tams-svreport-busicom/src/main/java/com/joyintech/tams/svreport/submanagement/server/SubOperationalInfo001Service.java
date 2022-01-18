@@ -1877,14 +1877,14 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 									"登记人员类别"));
 						}
 					}else if (CHB_ASSET_INFO_LIST.contains(tableName)){
-						String TARGETTYPE = strList.get(15) ;
+						String TARGETTYPE = strList.get(13) ;
 						//产品销售区域多选校验
 						if(!BaseCheckLib.inDatadict3(TARGETTYPE,DictCode.标的类别.getValue(),true,true)){
 							checkResult.add(new ExcelValidDto(strList.get(0), String.valueOf(i + 2), "结构性存款挂钩标的类别不在值域范围内并且多选选项不可重复。"
 									+ "["+TARGETTYPE+"]",
 									"结构性存款挂钩标的类别"));
 						}
-						String TARGETTYPE3 = strList.get(130) ;
+						String TARGETTYPE3 = strList.get(128) ;
 						//投资者风险偏好多选校验
 						if(!BaseCheckLib.inDatadict3(TARGETTYPE3,DictCode.标的类别.getValue(),true,true)){
 							checkResult.add(new ExcelValidDto(strList.get(0), String.valueOf(i + 2), "标的类别不在值域范围内并且标的类别的多选选项不可重复。"
@@ -1892,7 +1892,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 									"标的类别"));
 						}
 
-						String CHBSECTYPE03 = strList.get(19) ;
+						String CHBSECTYPE03 = strList.get(17) ;
 						//具体类别校验
 						if(!BaseCheckLib.inDatadict3(CHBSECTYPE03,DictCode.具体类别.getValue(),true,false)){
 							checkResult.add(new ExcelValidDto(strList.get(0), String.valueOf(i + 2), "具体类别不在值域范围内并且具体类别的不可多选。"

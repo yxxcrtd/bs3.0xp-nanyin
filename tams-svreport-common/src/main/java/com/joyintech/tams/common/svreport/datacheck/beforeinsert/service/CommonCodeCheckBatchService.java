@@ -805,6 +805,8 @@ public class CommonCodeCheckBatchService {
         String prodId = dataMap.get("PROD_ID");
         // 募集起始日期
         String raiseVdate = dataMap.get("RAISE_VDATE");
+        //分级比例
+        String  graduation=dataMap.get("GRAD_PROPORTION");
 
         // 产品登记编码报文内不可重复。
         if (StringUtil.isNotEmpty(prodRegistCode) && prodRegistCodeList.contains(prodRegistCode)){
@@ -847,6 +849,34 @@ public class CommonCodeCheckBatchService {
                         		DateUtil.isDateStr(raiseVdate,"yyyy-MM-dd")&&DateUtil.parse(raiseVdate).compareTo(chbPrdDeclareSubList.get(0).getRaisePenddate()) > 0)){
                     errMsg +="募集起始日期应落在申报登记要素中募集起始日期（从）/（到）的区间内[RAISE_VDATE="+raiseVdate+"];";
                 }
+
+                //产品投资性质选择01，并且分级比例不为空时，不得填写小于等于0或大于3的数字
+                if(StringUtil.equals("01",chbPrdDeclareSubList.get(0).getIvstorientation())&&
+                        StringUtil.isNotEmpty(graduation)){
+                    if(new BigDecimal(graduation).compareTo(BigDecimal.ZERO)<=0||
+                            new BigDecimal(graduation).compareTo(new BigDecimal(3))>0){
+                        errMsg +="产品投资性质选择01 固定收益类时，分级比例不得填写小于等于0或大于3的数字[GRAD_PROPORTION="+graduation+"];";
+                    }
+                }
+                //产品投资性质选择02，并且分级比例不为空时，不得填写小于等于0或大于等于1的数字
+                if(StringUtil.equals("02",chbPrdDeclareSubList.get(0).getIvstorientation())&&
+                        StringUtil.isNotEmpty(graduation)){
+                    if(new BigDecimal(graduation).compareTo(BigDecimal.ZERO)<=0||
+                            new BigDecimal(graduation).compareTo(new BigDecimal(1))>0){
+                        errMsg +="产品投资性质选择02 收益类时，分级比例不得填写小于等于0或大于1的数字[GRAD_PROPORTION="+graduation+"];";
+                    }
+                }
+
+                //产品投资性质选择03，04,时候并且分级比例不为空时，不得填写小于等于0或大于等于1的数字
+                if((StringUtil.equals("03",chbPrdDeclareSubList.get(0).getIvstorientation())||
+                        StringUtil.equals("04",chbPrdDeclareSubList.get(0).getIvstorientation())) &&
+                        StringUtil.isNotEmpty(graduation)){
+                    if(new BigDecimal(graduation).compareTo(BigDecimal.ZERO)<=0||
+                            new BigDecimal(graduation).compareTo(new BigDecimal(2))>0){
+                        errMsg +="产品投资性质选择03商品及金融衍生品类、04混合类时，分级比例不得填写小于等于0或大于2的数字[GRAD_PROPORTION="+graduation+"];";
+                    }
+                }
+
             }
         }
         // 产品运作模式选择“封闭式净值型”和“封闭式非净值型”的产品,开放模式不能有值；
