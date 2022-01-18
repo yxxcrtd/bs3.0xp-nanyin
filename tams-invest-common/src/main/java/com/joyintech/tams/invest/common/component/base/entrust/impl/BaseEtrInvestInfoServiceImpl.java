@@ -1321,11 +1321,11 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
              * 此处，流程启动时，检查指令有效表，发现有数据，正常情况为已退回或已撤回状态的数据，转移至备份表
              */
             // 有效数据转移
-            etrEntrustMapper.deleteByPrimaryKey(dto.getEtrEntrust().getEntrustId());
-            etrEntrustAddMapper.deleteByPrimaryKey(dto.getEtrEntrustAdd().getEntrustId());
             // 转移至废弃表
             etrEntrustBackupMapper.insertFromQuery(dto.getEtrEntrust().getEntrustId());
             etrEntrustBackupMapper.insertAddFromQuery(dto.getEtrEntrust().getEntrustId());
+            etrEntrustMapper.deleteByPrimaryKey(dto.getEtrEntrust().getEntrustId());
+            etrEntrustAddMapper.deleteByPrimaryKey(dto.getEtrEntrustAdd().getEntrustId());
             // 使用退回或撤回状态
             dto.getEtrEntrust().setEntrustStatus(etr.getEntrustStatus());
         }else{
