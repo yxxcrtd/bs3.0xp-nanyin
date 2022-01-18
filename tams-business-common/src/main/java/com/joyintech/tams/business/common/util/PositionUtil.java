@@ -1,7 +1,10 @@
 package com.joyintech.tams.business.common.util;
 
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.business.common.constant.PositionDictCodeListExt;
 import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
 import com.joyintech.tams.business.common.pojo.BaseMap;
@@ -35,7 +38,7 @@ public class PositionUtil {
      * 平台日期
      */
     private static IPlatformDate iPlatformDate;
-    
+
     /**
      * 初始化头寸通用信息
      * @param totalTradeId
@@ -130,12 +133,6 @@ public class PositionUtil {
         return new Message().fail().setMessage("无返回信息，未知异常").setData(null);
     }
 
-    public static void main(String[] args) {
-        String req = "{\"code\":\"FL0007\",\"message\":\"余额不足:{组合:【xq-cpA】托管户可\n" +
-                "用资金,余额:0.00;}\",\"data\":{\"flowid\":null,\"cashControlType\":2,\"secControlType\":1,\"checkResults\":[{\"CDATE\":1625673600000,\"PS\":\"T01\",\"WORK_FLOW_ID\":\"00000000000000000000000000030873\",\"CREATE_USER\":\"xq2\",\"CHECKBALANCE\":0.0,\"ACCT_ID\":\"123123:xq-A111\",\"ENTRUST_ID\":\"WTBOND202107082400\",\"CASCADEUPDATE\":1,\"OPERATIONTYPE\":\"02\",\"SYSTEM_ACT\":\"01\",\"DATE_TYPE\":0,\"BUSI_ACT\":\"02\",\"BUSI_TYPE\":\"02\",\"SEQNO\":\"1027897264\",\"AMOUNT\":-50024.334,\"PORTFOLIO_ID\":\"xq-cpA\",\"CCY\":\"CNY\",\"ACCOUNTID\":-604480255,\"HODING_TYPE\":\"C_02\",\"CREATE_TIME\":1642488787350,\"UPBLSTM\":0,\"TRADE_ID\":\"JYBOND202107083795\",\"TOTAL_TRADE_ID\":\"JYBOND202107083794\",\"CONTROL\":false}]}}";
-        Map m = JsonUtils.json2Object(req, Map.class);
-        checkForFL0007(req, m);
-    }
     /**
      * 头寸C_02、 C_03、 C_04不足需要再校验
      * @param req
@@ -143,8 +140,8 @@ public class PositionUtil {
      * @return
      */
     public static boolean checkForFL0007(Object req, Map msgMap) {
-        BaseMap tamsReq = BaseMap.newMap(JsonUtils.json2Object(req+"", Map.class));
-        
+        BaseMap tamsReq = JsonUtils.json2Object(JsonUtils.object2Json(req), BaseMap.class);
+
         Map responseMap_data = (Map) msgMap.get("data");
         if (responseMap_data != null){
             List checkResults = (List) responseMap_data.get("checkResults");
@@ -161,7 +158,7 @@ public class PositionUtil {
                     if (StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_托管户可用资金.getValue())
                             || StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_证券户可取资金.getValue())
                             || StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_证券户可用资金.getValue())
-                        ){
+                    ){
                         // 需要校验投管现金
                         // 校验仍不足时add
                         BaseMap paramMap = BaseMap.newMap()
