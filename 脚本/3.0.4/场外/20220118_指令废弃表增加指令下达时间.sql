@@ -1,0 +1,2 @@
+alter table ETR_ENTRUST_ADD_BACKUP add transmit_Time TIMESTAMP;
+COMMENT ON COLUMN ETR_ENTRUST_ADD_BACKUP.transmit_Time IS '指令下达时间';

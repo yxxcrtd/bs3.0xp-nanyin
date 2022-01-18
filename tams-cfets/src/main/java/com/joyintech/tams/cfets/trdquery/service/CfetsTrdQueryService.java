@@ -918,7 +918,7 @@ public class CfetsTrdQueryService extends BaseService{
         //组合
         spcdCode = spcdCode+",P";
 
-        List<CfgReadonlyFormShow> infoFormp = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
+        //List<CfgReadonlyFormShow> infoFormp = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
         List<CfgDataTableShow> infoForm2;
         //获取登录用户的ID
         String userId = SecurityUtil.getLoginUser().getUserName();
@@ -931,7 +931,7 @@ public class CfetsTrdQueryService extends BaseService{
         resultData.put(dtCode+"_form",infoForm);
         resultData.put(dtCode+"_form1",infoForm1);
         resultData.put(dtCode+"_form2",infoForm2);
-        resultData.put(dtCode+"_formp",infoFormp);
+       // resultData.put(dtCode+"_formp",infoFormp);
 
 
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
@@ -946,13 +946,13 @@ public class CfetsTrdQueryService extends BaseService{
             CfetsManualSettleInfoRespond cfetsManualSettleInfoRespond = cfetsManualSettleMapper.findManualSettleInfo(pageParam);
             resultData.put(dtCode+"_data",cfetsManualSettleInfoRespond);
             resultData.put(dtCode+"_data1",cfetsManualSettleInfoRespond);
-            resultData.put(dtCode+"_datap",cfetsManualSettleInfoRespond);
+            //resultData.put(dtCode+"_datap",cfetsManualSettleInfoRespond);
         }else{
             //现券买卖 或回售
             CfetsManualSettleInfoOtherListRespond cfetsManualSettleInfoOtherListRespond = cfetsTrdQueryMapper.findManualSettleInfoOther(pageParam);
             resultData.put(dtCode+"_data",cfetsManualSettleInfoOtherListRespond);
             resultData.put(dtCode+"_data1",cfetsManualSettleInfoOtherListRespond);
-            resultData.put(dtCode+"_datap",cfetsManualSettleInfoOtherListRespond);
+           // resultData.put(dtCode+"_datap",cfetsManualSettleInfoOtherListRespond);
         }
 
         //组合分配信息
@@ -968,7 +968,7 @@ public class CfetsTrdQueryService extends BaseService{
         pageParam.put("CASH_TYPE_2_C02", DictCodeListExt1.现金流二级类型_利息.getValue());
         List<PortIntFenPeiInfoDto> portIntFenPeiInfoDtoList =  cfetsTrdQueryMapper.findPortIntFenPeiInfoList(pageParam);
 
-        resultData.put(dtCode+"_datap",portIntFenPeiInfoDtoList);
+        //resultData.put(dtCode+"_datap",portIntFenPeiInfoDtoList);
         resultData.put(dtCode+"_data2",portIntFenPeiInfoDtoList);
 
         return resultData;

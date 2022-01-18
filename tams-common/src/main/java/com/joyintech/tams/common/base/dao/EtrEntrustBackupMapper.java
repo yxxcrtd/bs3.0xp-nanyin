@@ -14,4 +14,19 @@ public interface EtrEntrustBackupMapper {
     int insertFromQuery(String entrustId);
 
     int insertAddFromQuery(String entrustId);
+    /**
+     * 作废时转移至指令表
+     * @param entrustId
+     * @return
+     */
+    int insertEtrFromQuery(String entrustId);
+
+    int insertEtrAddFromQuery(String entrustId);
+    /**
+     * 删除废弃表
+     */
+    int deleteByPrimaryKey(String entrustId);
+
+    int deleteAddByPrimaryKey(String entrustId);
+
 }

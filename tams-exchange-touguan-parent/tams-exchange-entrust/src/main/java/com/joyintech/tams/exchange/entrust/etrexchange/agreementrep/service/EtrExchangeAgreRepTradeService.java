@@ -551,7 +551,7 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
      * @param
      * @return
      */
-    public BaseEtrInvestInfoDto buildWflEntity(EtrExchangeAgreRepTrade001Dto entity) throws IllegalAccessException, InvocationTargetException {
+    public BaseEtrInvestInfoDto buildWflEntity(EtrExchangeAgreRepTrade001Dto entity) throws InvocationTargetException, IllegalAccessException {
     	BaseEtrInvestInfoDto dto = new BaseEtrInvestInfoDto();
     	EtrEntrust etrEntrust = new EtrEntrust();
         EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
@@ -597,9 +597,15 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             agreRepFristIssueDto.setRequestId(entity.getReqOnId());
             // 质押面值
             agreRepFristIssueDto.setPledgeFaceValue(entity.getPledgeFaceValue());
-            
+
             // 质押数量
-            agreRepFristIssueDto.setPledgeNumber(entity.getRepSecNum());
+            if(StringUtil.equals(DictCodeListExt3.交易单位_手,entity.getPledgeUnit())) {
+                agreRepFristIssueDto.setPledgeNumber(ArithmeticUtil.multiply(entity.getRepSecNum(),new BigDecimal(10)));
+            }
+            else {
+                agreRepFristIssueDto.setPledgeNumber(entity.getRepSecNum());
+            }
+
             // 质押率
             agreRepFristIssueDto.setPledgeRatio(ArithmeticUtil.divide(entity.getConRatio(),new BigDecimal(100),10));
             // 质押金额
@@ -858,10 +864,15 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             agreRepHwayChgSecDto.setPledgeFaceValue(entity.getNewpledgeFaceValue());
             //质押率
             agreRepHwayChgSecDto.setPledgeRatio(ArithmeticUtil.divide(entity.getNewConRatio(),new BigDecimal(100),10));
-            
+
             // 质押数量
-            agreRepHwayChgSecDto.setPledgeNumber(entity.getNewRepSecNum());
-  
+            if(StringUtil.equals(DictCodeListExt3.交易单位_手,entity.getPledgeUnit())) {
+                agreRepHwayChgSecDto.setPledgeNumber(ArithmeticUtil.multiply(entity.getNewRepSecNum(),new BigDecimal(10)));
+            }
+            else {
+                agreRepHwayChgSecDto.setPledgeNumber(entity.getNewRepSecNum());
+            }
+
             // 质押金额
             agreRepHwayChgSecDto.setPledgeAmt(entity.getTradeAmt());
    
@@ -942,9 +953,14 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             
             // 请求号
             agreRepOpenSecDto.setRequestId(entity.getReqOnId());
-            
+
             // 质押数量
-            agreRepOpenSecDto.setPledgeNumber(entity.getRepSecNum());
+            if(StringUtil.equals(DictCodeListExt3.交易单位_手,entity.getPledgeUnit())) {
+                agreRepOpenSecDto.setPledgeNumber(ArithmeticUtil.multiply(entity.getRepSecNum(),new BigDecimal(10)));
+            }
+            else {
+                agreRepOpenSecDto.setPledgeNumber(entity.getRepSecNum());
+            }
   
             // 交易对手
             agreRepOpenSecDto.setCounterId(entity.getCounterId());
@@ -1122,7 +1138,12 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             agreRepFristIssueDto.setPledgeFaceValue(entity.getPledgeFaceValue());
 
             // 质押数量
-            agreRepFristIssueDto.setPledgeNumber(entity.getRepSecNum());
+            if(StringUtil.equals(DictCodeListExt3.交易单位_手,entity.getPledgeUnit())) {
+                agreRepFristIssueDto.setPledgeNumber(ArithmeticUtil.multiply(entity.getRepSecNum(),new BigDecimal(10)));
+            }
+            else {
+                agreRepFristIssueDto.setPledgeNumber(entity.getRepSecNum());
+            }
             // 质押率
             agreRepFristIssueDto.setPledgeRatio(ArithmeticUtil.divide(entity.getConRatio(),new BigDecimal(100),10));
             // 质押金额
@@ -1370,7 +1391,12 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             agreRepHwayChgSecDto.setPledgeRatio(ArithmeticUtil.divide(entity.getNewConRatio(),new BigDecimal(100),10));
 
             // 质押数量
-            agreRepHwayChgSecDto.setPledgeNumber(entity.getNewRepSecNum());
+            if(StringUtil.equals(DictCodeListExt3.交易单位_手,entity.getPledgeUnit())) {
+                agreRepHwayChgSecDto.setPledgeNumber(ArithmeticUtil.multiply(entity.getNewRepSecNum(),new BigDecimal(10)));
+            }
+            else {
+                agreRepHwayChgSecDto.setPledgeNumber(entity.getNewRepSecNum());
+            }
 
             // 质押金额
             agreRepHwayChgSecDto.setPledgeAmt(entity.getTradeAmt());
@@ -1451,7 +1477,12 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             agreRepOpenSecDto.setRequestId(entity.getReqOnId());
 
             // 质押数量
-            agreRepOpenSecDto.setPledgeNumber(entity.getRepSecNum());
+            if(StringUtil.equals(DictCodeListExt3.交易单位_手,entity.getPledgeUnit())) {
+                agreRepOpenSecDto.setPledgeNumber(ArithmeticUtil.multiply(entity.getRepSecNum(),new BigDecimal(10)));
+            }
+            else {
+                agreRepOpenSecDto.setPledgeNumber(entity.getRepSecNum());
+            }
 
             // 交易对手
             agreRepOpenSecDto.setCounterId(entity.getCounterId());
@@ -1705,9 +1736,14 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             agreRepFristIssueDto.setRequestId(entity.getReqOnId());
             // 质押面值
             agreRepFristIssueDto.setPledgeFaceValue(entity.getPledgeFaceValue());
-            
+
             // 质押数量
-            agreRepFristIssueDto.setPledgeNumber(entity.getRepSecNum());
+            if(StringUtil.equals(DictCodeListExt3.交易单位_手,entity.getPledgeUnit())) {
+                agreRepFristIssueDto.setPledgeNumber(ArithmeticUtil.multiply(entity.getRepSecNum(),new BigDecimal(10)));
+            }
+            else {
+                agreRepFristIssueDto.setPledgeNumber(entity.getRepSecNum());
+            }
             // 质押率
             if(StringUtil.isNotEmpty(entity.getConRatio())) {
                 agreRepFristIssueDto.setPledgeRatio(ArithmeticUtil.divide(entity.getConRatio(),new BigDecimal(100),10));
@@ -1940,8 +1976,14 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             agreRepHwayChgSecDto.setPledgeFaceValue(entity.getNewpledgeFaceValue());
             // 质押率
             agreRepHwayChgSecDto.setPledgeRatio(ArithmeticUtil.divide(entity.getNewConRatio(),new BigDecimal(100),10));
+
             // 质押数量
-            agreRepHwayChgSecDto.setPledgeNumber(entity.getNewRepSecNum());
+            if(StringUtil.equals(DictCodeListExt3.交易单位_手,entity.getPledgeUnit())) {
+                agreRepHwayChgSecDto.setPledgeNumber(ArithmeticUtil.multiply(entity.getNewRepSecNum(),new BigDecimal(10)));
+            }
+            else {
+                agreRepHwayChgSecDto.setPledgeNumber(entity.getNewRepSecNum());
+            }
   
             // 质押金额
             agreRepHwayChgSecDto.setPledgeAmt(entity.getTradeAmt());
@@ -1979,9 +2021,14 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
             
             // 请求号
             agreRepOpenSecDto.setRequestId(entity.getReqOnId());
-            
+
             // 质押数量
-            agreRepOpenSecDto.setPledgeNumber(entity.getRepSecNum());
+            if(StringUtil.equals(DictCodeListExt3.交易单位_手,entity.getPledgeUnit())) {
+                agreRepOpenSecDto.setPledgeNumber(ArithmeticUtil.multiply(entity.getRepSecNum(),new BigDecimal(10)));
+            }
+            else {
+                agreRepOpenSecDto.setPledgeNumber(entity.getRepSecNum());
+            }
   
             // 交易对手
             agreRepOpenSecDto.setCounterId(entity.getCounterId());
@@ -2191,13 +2238,21 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
         if ("save".equals(entity.getOperateType())) {
             return;
         }
-        doInsertWflEntity(entity);
+        try {
+            doInsertWflEntity(entity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void doUpdate(EtrExchangeAgreRepTrade001Dto entity) {
         if (!StringUtil.equals("save", entity.getOperateType()) && !StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
-            doInsertWflEntity(entity);
+            try {
+                doInsertWflEntity(entity);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -2222,9 +2277,18 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
         //交易方向
         String ps = "";
         //逆回购和正回购按正常交易金额和交易方向授权
-        if(StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_正回购.getValue())
-                || StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_逆回购.getValue())) {
-            ps = dto.getPs();
+//        if(StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_正回购.getValue())
+//                || StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_逆回购.getValue())) {
+//            ps = dto.getPs();
+//            amount = dto.getTradeAmt();
+//        }
+        if(StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_首期.getValue())) {
+            if(StringUtil.equals(dto.getRepPs(),DictCodeList.回购拆借方向_正回购.getValue())) {
+                ps = DictCodeListExt3.交易方向_正回购.getValue();
+            }
+            else {
+                ps = DictCodeListExt3.交易方向_逆回购.getValue();
+            }
             amount = dto.getTradeAmt();
         }
         //提前购回、到期购回、中途换券、解除质押根据原始回购的交易方向和回购金额进行授权判断
@@ -2328,10 +2392,9 @@ public class EtrExchangeAgreRepTradeService extends BaseService implements BaseP
         return dto;
     }
 
-    private void doInsertWflEntity(EtrExchangeAgreRepTrade001Dto dto) {
+    private void doInsertWflEntity(EtrExchangeAgreRepTrade001Dto dto) throws Exception{
         preEntity(dto);
-        BaseEtrInvestInfoDto entity = restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrAgreRepTrade/buildWflEntity", dto,
-                BaseEtrInvestInfoDto.class);
+        BaseEtrInvestInfoDto entity = this.buildWflEntity(dto);
         entity.getEtrEntrust().setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
         entity.setWorkFlowId(dto.getWorkflowId());
         // 设置指令创建来源

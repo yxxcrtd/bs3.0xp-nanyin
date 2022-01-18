@@ -56,6 +56,7 @@ import com.joyintech.tams.component.business.common.service.CommonBusinessServic
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.FinProductOthCodeDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationResponse;
 import com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry;
@@ -92,6 +93,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -5064,6 +5066,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 */
 	public List<SelectOptionDto> getPsSelectOptions(PsOptionsRequest dto,SelectDto selectDto) {
 		List<SelectOptionDto> selectOptionDtos=new ArrayList<>();
+		Map<String,Object> params= JsonUtils.object2Map(dto);
 		String tradePlat=dto.getTradePlat();
 		String finprodType2=dto.getFinprodType2();
 		String othCodeType=dto.getOthCodeType();
@@ -5100,9 +5103,12 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 					selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
 						return StringUtil.equals(option.getId(), DictCodeListExt2.交易方向_配股.getValue())  ;
 					}).collect(Collectors.toList());
-				}else if(StringUtil.equals(othCodeType,DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue())) {
+					return selectOptionDtos;
+				}
+				//新股申购
+				else if(StringUtil.equals(DictCodeList.是否_是.getValue(),isXinGuShenGou(params))) {
 					selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-						return StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue()) ;
+						return StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue());
 					}).collect(Collectors.toList());
 				}else {
 					selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
@@ -5768,7 +5774,37 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		return etrExchangeTradeCommonMapper.selectByFinprodId(param);
 	}
 
+	// add by etliu 20211013 start
+	// TISHKS-5 bug修复：在场内下指令时，资产选了万科之后，出现申购选项，但理论上不应该出现(万科很早就上市了)，我在申报信息维护中也没有看到万科的新股申报
+	/**
+	 * 当前选中股票是否处在新股申购期
+	 *
+	 * @param params 画面参数
+	 * @return 当前选中股票是否存在新股申购期
+	 * @see
+	 * @since 1.0
+	 */
+	public String isXinGuShenGou(Map<String, Object> params) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("finprodId", params.get("finprodId"));//金融产品代码
+		List<String> othTypeList = new ArrayList<String>();
+		othTypeList.add(DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
+		paramMap.put("othTypeList", othTypeList);
 
+		List<FinProductOthCodeDto> codeDtos = this.getFinprodOthCodeInfo(paramMap);
 
+		if (StringUtil.isEmptyList(codeDtos)) {
+			return DictCodeList.是否_否.getValue();
+		}
+
+		Date sysdate = DateUtil.parse(DateUtil.getSysDate());
+		boolean isXinGuShenGou = codeDtos.stream().filter(x -> DateUtil.compareDate(x.getDeclaredStartDate(), sysdate) <= 0
+				&& DateUtil.compareDate(x.getDeclaredEndDate(), sysdate) >= 0).findFirst().isPresent();
+		if (isXinGuShenGou) {
+			return DictCodeList.是否_是.getValue();
+		}
+
+		return DictCodeList.是否_否.getValue();
+	}
 
 }

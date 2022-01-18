@@ -25,6 +25,7 @@ import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
 import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtribBondInfo003Service;
 import com.joyintech.tams.cfets.etrib.repo.dto.*;
+import com.joyintech.tams.common.base.dao.EtrEntrustBackupMapper;
 import com.joyintech.tams.common.base.entity.EtrDistribute;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
@@ -118,7 +119,11 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
 
     @Autowired
     private SysWflBusinessListMapper sysWflBusinessListMapper;
-
+    /**
+     * 指令废弃表
+     */
+    @Autowired
+    private EtrEntrustBackupMapper etrEntrustBackupMapper;
 
 
     /**
@@ -372,6 +377,16 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
     public void doDelete(String workflowId) {
         CfetsEtribRepoInfo003Dto entity = getBussinessEntityByWorkflowId(workflowId);
         WFlowCommonService.doCompleteFlow(entity.getWorkflowId());
+        if (CollectionUtils.isNotEmpty(entity.getEtrInvestRepoInfoDtos())) {
+            for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
+                //从废弃表中获取，转移到指令表
+                etrEntrustBackupMapper.insertEtrFromQuery(dto.getEntrustId());
+                etrEntrustBackupMapper.insertAddFromQuery(dto.getEntrustId());
+                // 删除废弃表
+                etrEntrustBackupMapper.deleteByPrimaryKey(dto.getEntrustId());
+                etrEntrustBackupMapper.deleteAddByPrimaryKey(dto.getEntrustId());
+            }
+        }
         //发送头寸
         PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(),DictCodeListExt1.子系统代码_委托.getValue(),DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(),entity.getPs());
     }

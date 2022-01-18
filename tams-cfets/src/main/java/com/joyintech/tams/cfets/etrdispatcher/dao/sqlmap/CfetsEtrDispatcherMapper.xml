@@ -47,16 +47,16 @@
     DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
     round(decode(btm.busi_type,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,#{busiTypePosition05},ETR_ENTRUST.PRICE*100,''),4) etrPrice,
-    TRUNC(NVL(T5.ent_finish_amt,0)*100/(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
+    TRUNC(case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then NVL(T5.ent_finish_amt,0)*100 else NVL(T5.ent_finish_amt,0)*10000 end /(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
         else ETR_ENTRUST.ENTRUST_NUM*100 end),2) exeProgress,
-    TRUNC(NVL(T5.FINISH_AMT,0)*100/(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
+    TRUNC(case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then NVL(T5.FINISH_AMT,0)*100 else NVL(T5.FINISH_AMT,0)*10000 end /(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
         else  ETR_ENTRUST.ENTRUST_NUM*100 end),2) dealProgress,
-    NVL(T5.ent_finish_amt,0)/10000  as execFinishAmt,
+    case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then NVL(T5.ent_finish_amt,0)/10000 else NVL(T5.ent_finish_amt,0)/100 end  as execFinishAmt,
     case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round((ETR_ENTRUST.entrust_amt- NVL(T5.ent_finish_amt,0))/10000,4) else
-    (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/10000) end as execRemainderAmt,
-    NVL(T5.FINISH_AMT,0)/10000  as transFinishAmt,
-    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round((ETR_ENTRUST.entrust_amt - NVL(T5.FINISH_AMT,0))/10000 ,4) else
-    (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/10000) end as transRemainderAmt,
+    (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end) end as execRemainderAmt,
+    case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then NVL(T5.FINISH_AMT,0)/10000 else NVL(T5.FINISH_AMT,0)/100 end as transFinishAmt,
+    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round((ETR_ENTRUST.entrust_amt - NVL(T5.FINISH_AMT,0))/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end ,4) else
+    (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end ) end as transRemainderAmt,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
     ETR_ENTRUST_ADD.CALCULATE_FIELD
@@ -228,16 +228,16 @@
     DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
     round(decode(btm.busi_type,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,#{busiTypePosition05},ETR_ENTRUST.PRICE*100,''),4) etrPrice,
-    TRUNC(NVL(T5.ent_finish_amt,0)*100/(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
+    TRUNC(NVL(T5.ent_finish_amt,0)* case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 100 else 10000 end/(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
     else ETR_ENTRUST.ENTRUST_NUM*100 end),2) exeProgress,
-    TRUNC(NVL(T5.FINISH_AMT,0)*100/(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
+    TRUNC(NVL(T5.FINISH_AMT,0)* case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 100 else 10000 end/(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
     else  ETR_ENTRUST.ENTRUST_NUM*100 end),2) dealProgress,
-    NVL(T5.ent_finish_amt,0)/10000  as execFinishAmt,
-    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round((ETR_ENTRUST.entrust_amt - NVL(T5.ent_finish_amt,0))/10000,4) else
-    (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/10000)  end as execRemainderAmt,
-    NVL(T5.FINISH_AMT,0)/10000  as transFinishAmt,
-    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round((ETR_ENTRUST.entrust_amt-NVL(T5.FINISH_AMT,0))/10000)  else
-    (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/10000) end as transRemainderAmt,
+    NVL(T5.ent_finish_amt,0)/ case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end  as execFinishAmt,
+    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round((ETR_ENTRUST.entrust_amt - NVL(T5.ent_finish_amt,0))/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end,4) else
+    (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end)  end as execRemainderAmt,
+    NVL(T5.FINISH_AMT,0)/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end  as transFinishAmt,
+    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round((ETR_ENTRUST.entrust_amt-NVL(T5.FINISH_AMT,0))/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end)  else
+    (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end) end as transRemainderAmt,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
     ETR_ENTRUST_ADD.CALCULATE_FIELD

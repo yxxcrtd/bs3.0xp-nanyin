@@ -554,7 +554,7 @@ public class CfetsTrdConfirmService extends BaseService{
 
 
         // =====================划款指令信息=====================
-        List<BussTrdTransferOrderDto> bussTrdTransferOrder = new ArrayList<>();
+        List<BussTrdTransferOrderDto>  bussTrdTransferOrder = new ArrayList<>();
         BussSettleOrderParameterDto bussSettleOrderParameterDto = new BussSettleOrderParameterDto();
         bussSettleOrderParameterDto.setIsTotalTrade(BussinessDictCodeList.是否_是.getValue());
         bussSettleOrderParameterDto.setBankLendingType(null);
@@ -571,6 +571,10 @@ public class CfetsTrdConfirmService extends BaseService{
         deal.setTradePlat(entity.getTradePlat());
         deal.setSecManageAcctId(dtoReg.getSecManageAcctId());
         deal.setTradeMarketMode(dtoReg.getTradeMarketMode());
+        if(!StringUtil.isEmptyList(regDealList)){
+            //多组合时，必须同托管账户
+            bussSettleOrderParameterDto.setPortfolioId(regDealList.get(0).getPortfolioId());//暂存，后面删除，目的是为了查询出账户
+        }
         bussSettleOrderParameterDto.setDeal(deal);
         BussTrdTransferOrderDto bussTrdTransferOrderDto = bussTrdTransferOrderService.generateOrder(bussSettleOrderParameterDto);
         bussTrdTransferOrderDto.setPayAcctNoList(null);
@@ -587,6 +591,8 @@ public class CfetsTrdConfirmService extends BaseService{
         }
         bussTrdTransferOrderDto.setTradeId(entity.getTotleTradeId());
         bussTrdTransferOrderDto.setOrderRetStatus(DictCodeList.指令处理状态_处理成功.getValue());
+        bussTrdTransferOrderDto.setPortfolioId(null);//可能是多组合，此时该字段为空
+        bussTrdTransferOrderDto.setPortfolioName(null);
         bussTrdTransferOrder.add(bussTrdTransferOrderDto);
         entity.setBussTrdTransferOrder(bussTrdTransferOrderService.save(bussTrdTransferOrder));
         // =====================划款指令信息=====================
