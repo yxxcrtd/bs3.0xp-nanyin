@@ -158,6 +158,15 @@ public class EtrDispatcherInfoResponse extends EtrDispatcherBaseInfo {
     @ApiModelProperty(name = "oldFinprodMarketId", value = "原质押券", example = "字符串1")
     private String oldFinprodMarketId;
 
+    @ApiModelProperty(name = "otherBusiModel", value = "业务模式", example = "字符串1")
+    private String otherBusiModel;
+    @ApiModelProperty(name = "otherTradeMarket", value = "交易场所", example = "上海证券交易所")
+    private String otherTradeMarket;
+    @ApiModelProperty(name = "otherCcy", value = "币种", example = "人民币")
+    private String otherCcy;
+    @ApiModelProperty(name = "otherPs", value = "交易方向", example = "买入")
+    private String otherPs;
+
     public BigDecimal getPledgeStandardNumber() {
         return pledgeStandardNumber;
     }
@@ -496,25 +505,44 @@ public class EtrDispatcherInfoResponse extends EtrDispatcherBaseInfo {
         this.repoPledgeModel = repoPledgeModel;
     }
 
-    public String getOtherBusiModel() {
-        return super.getBusiModel();
+    public void setOtherSettleSpeed(String otherSettleSpeed) {
+        this.otherSettleSpeed = otherSettleSpeed;
     }
 
-    /**
-     * 获取 otherTradeMarket
-     *
-     * @return otherTradeMarket.
-     */
+    public void setOtherPriceModel(String otherPriceModel) {
+        this.otherPriceModel = otherPriceModel;
+    }
+
+    public String getOtherBusiModel() {
+        return otherBusiModel;
+    }
+
+    public void setOtherBusiModel(String otherBusiModel) {
+        this.otherBusiModel = otherBusiModel;
+    }
+
     public String getOtherTradeMarket() {
-        return super.getTradeMarket();
+        return otherTradeMarket;
+    }
+
+    public void setOtherTradeMarket(String otherTradeMarket) {
+        this.otherTradeMarket = otherTradeMarket;
     }
 
     public String getOtherCcy() {
-        return super.getCcy();
+        return otherCcy;
+    }
+
+    public void setOtherCcy(String otherCcy) {
+        this.otherCcy = otherCcy;
     }
 
     public String getOtherPs() {
-        return super.getPs();
+        return otherPs;
+    }
+
+    public void setOtherPs(String otherPs) {
+        this.otherPs = otherPs;
     }
 
     public String getEtrBidDate() {
