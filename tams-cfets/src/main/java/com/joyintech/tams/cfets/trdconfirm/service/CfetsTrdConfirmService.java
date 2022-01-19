@@ -381,7 +381,7 @@ public class CfetsTrdConfirmService extends BaseService{
         Long branchLong = Long.parseLong(branch);
         entity.setBranch(branchLong);
         entity.setFinprodType(BussinessDictCodeList.金融产品类型_投管用_债券.getValue());
-
+        entity.setbTradeId(totleTradeId);
        /* entity.setPs(dtoReg.getPs());
         entity.setFinprodId(dtoReg.getFinprodId());
         entity.setFinprodType2(dtoReg.getFinprodType2());
@@ -663,6 +663,7 @@ public class CfetsTrdConfirmService extends BaseService{
        // bondTradeDto.setInterfTradSecdeal(interfCstpSecdeal);
         CfetsTrdBondInvestTradeDto entity=new CfetsTrdBondInvestTradeDto();
         entity.setRegIbuId(totleTradeId);
+        entity.setfTradeId(oritradeId);
         BeanUtil.copyPropertiesIgnoreNull(entity,dtoReg);
         if (baseGetBusinessId != null) {
             BussinessCodeParameter codeParameter = getBussinessCodeParameter(dtoReg.getPs());
@@ -679,7 +680,7 @@ public class CfetsTrdConfirmService extends BaseService{
         Long branchLong = Long.parseLong(branch);
         entity.setBranch(branchLong);
         entity.setFinprodType(BussinessDictCodeList.金融产品类型_投管用_债券.getValue());
-
+        entity.setbTradeId(totleTradeId);
         entity.setPs(dtoReg.getPs());
         entity.setFinprodId(dtoReg.getFinprodId());
         entity.setFinprodType2(dtoReg.getFinprodType2());
@@ -944,7 +945,7 @@ public class CfetsTrdConfirmService extends BaseService{
         Long branchLong = Long.parseLong(branch);
         entity.setBranch(branchLong);
         entity.setFinprodType(dtoReg.getFinprodType2());
-
+        entity.setbTradeId(totleTradeId);
         if(StringUtil.isNotEmpty(dtoReg.getSettleSpeed())){
             entity.setSettleSpeed(new Long(dtoReg.getSettleSpeed()));
         }
@@ -1343,7 +1344,7 @@ public class CfetsTrdConfirmService extends BaseService{
         Long branchLong = Long.parseLong(branch);
         entity.setBranch(branchLong);
         entity.setFinprodType(entity.getFinprodType2());
-
+        entity.setbTradeId(totleTradeId);
         if(StringUtil.isNotEmpty(dtoReg.getSettleSpeed())){
             entity.setSettleSpeed(new Long(dtoReg.getSettleSpeed()));
         }
@@ -2381,6 +2382,7 @@ public class CfetsTrdConfirmService extends BaseService{
                     entity.getCfetsTrdConfirmMatchDto().setMatchType(DictCodeListExt3.下行交易匹配类型_手动匹配.getValue());
                     entity.getCfetsTrdConfirmMatchDto().setMatchStatus(BussinessDictCodeList.匹配状态_已匹配.getValue());
                 }
+                entity.setOprType(DictCodeListExt3.操作类型_手工匹配确认.getValue());
                 cfetsTrdConfirm001Service.doCompleteMethod(entity,OperationType.NEW);
             }else{
                 //对dto进行封装
@@ -2392,6 +2394,7 @@ public class CfetsTrdConfirmService extends BaseService{
                     entity.getCfetsTrdConfirmMatchDto().setMatchType(DictCodeListExt3.下行交易匹配类型_手动匹配.getValue());
                     entity.getCfetsTrdConfirmMatchDto().setMatchStatus(BussinessDictCodeList.匹配状态_已匹配.getValue());
                 }
+                entity.setOprType(DictCodeListExt3.操作类型_手工匹配确认.getValue());
                 //成交确认提交方法
                 cfetsTrdConfirm001Service.doCompleteRepoMethod(entity,OperationType.NEW);
             }
@@ -2604,6 +2607,7 @@ public class CfetsTrdConfirmService extends BaseService{
                     matchDto.setTrdId(oldMatchDto.getTrdId());
                     matchDto.setTrdConfStatus(oldMatchDto.getTrdConfStatus());
                     entity.setCfetsTrdConfirmMatchDto(matchDto);
+                    entity.setOprType(DictCodeListExt3.操作类型_自动匹配确认.getValue());
                     cfetsTrdConfirm001Service.doCompleteMethod(entity,OperationType.NEW);
                 }else{
                     //对dto进行封装
@@ -2612,6 +2616,7 @@ public class CfetsTrdConfirmService extends BaseService{
                     matchDto.setTrdId(oldMatchDto.getTrdId());
                     matchDto.setTrdConfStatus(oldMatchDto.getTrdConfStatus());
                     entity.setCfetsTrdConfirmMatchDto(matchDto);
+                    entity.setOprType(DictCodeListExt3.操作类型_自动匹配确认.getValue());
                     //成交确认提交方法
                     cfetsTrdConfirm001Service.doCompleteRepoMethod(entity,OperationType.NEW);
                 }

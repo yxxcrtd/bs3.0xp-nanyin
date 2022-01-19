@@ -4,7 +4,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.compress.utils.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +65,19 @@ public class UpdateTraderService {
     	//查询在交易对手中不存在的银行间机构
     	BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
         bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_交易对手管理);
-    	List<MstCfetsCustomerInfo> mstCfetsCustomerInfos = updateTraderMapper.selectCustomerNew(date);
+    	List<MstCfetsCustomerInfo> mstCfetsCustomerList = updateTraderMapper.selectCustomerNew(date);
+        List<MstCfetsCustomerInfo> mstCfetsCustomerInfos = Lists.newArrayList();
+
+    	//过滤已经匹配的21位机构码
+        List<String> partyIdList = updateTraderMapper.getAllPartyIdIsNotNull().stream()
+                .filter(string -> !StringUtil.isBlank(string)).collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(partyIdList)) {
+            mstCfetsCustomerInfos = mstCfetsCustomerList.stream()
+                    .filter(s -> !partyIdList.contains(s.getPartyId())).collect(Collectors.toList());
+        }else {
+            mstCfetsCustomerInfos.addAll(mstCfetsCustomerList);
+        }
+
     	if(!StringUtil.isEmptyList(mstCfetsCustomerInfos)) {
     		for(MstCfetsCustomerInfo mstCfetsCustomerInfo:mstCfetsCustomerInfos) {
     			/*update by chenjiaxing 银行间交易对手信息录入之后需要生成对应的交易对手信息，如果是非法人机构默认为资管产品；
@@ -139,8 +154,7 @@ public class UpdateTraderService {
                             linkId = updateTraderMapper.checkCustomerName(map);
                         }
                         if(StringUtil.isNotEmpty(linkId)){
-                            mstCounterParty.setLinkId(linkId);
-                            mstCounterParty.setManagerId(mpartyId);
+                            mstCounterParty.setManagerId(linkId);
                         }
                         mstCounterPartyMapper.insertSelective(mstCounterParty);
                     }

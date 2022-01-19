@@ -423,6 +423,10 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
     private String settleIsPayWithTrade;
 
     private String exchangeIsPayWithTrade;
+    /**
+     * 操作类型
+     */
+    private String oprType;
 
     private List<CfetsTrdBondInvestTradeDto> dtoList;
 
@@ -2446,5 +2450,13 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
 
     public void setDtoList(List<CfetsTrdBondInvestTradeDto> dtoList) {
         this.dtoList = dtoList;
+    }
+
+    public String getOprType() {
+        return oprType;
+    }
+
+    public void setOprType(String oprType) {
+        this.oprType = oprType;
     }
 }

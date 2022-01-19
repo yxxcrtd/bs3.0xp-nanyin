@@ -118,6 +118,12 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
 
     @ApiModelProperty(name="limitDnAmt",value="价格下限（跌停价格）",example="12")
     private BigDecimal limitDnAmt;
+
+    @ApiModelProperty(name="repPs",value="回购类型",example="03")
+    private String repPs;
+
+    @ApiModelProperty(name="assetType2",value="资产类型2",example="H01")
+    private String assetType2;
     /**
      * 约定号
      */
@@ -660,4 +666,19 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
         return  SysDataUtil.getNameFromDataDict(DictCode.申报类型, getDeclaType());
     }
 
+    public String getRepPs() {
+        return repPs;
+    }
+
+    public void setRepPs(String repPs) {
+        this.repPs = repPs;
+    }
+
+    public String getAssetType2() {
+        return assetType2;
+    }
+
+    public void setAssetType2(String assetType2) {
+        this.assetType2 = assetType2;
+    }
 }

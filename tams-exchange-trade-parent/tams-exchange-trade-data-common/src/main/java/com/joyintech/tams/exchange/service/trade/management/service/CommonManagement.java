@@ -9,6 +9,7 @@ import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.security.User;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -18,6 +19,9 @@ import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.SysParamBean;
 import com.joyintech.tams.exchange.common.bean.investment.PtlAuthInfo;
 import com.joyintech.tams.exchange.common.bean.investment.TradeTimeBean;
+import com.joyintech.tams.exchange.common.bean.request.DeviationDegreeRequest;
+import com.joyintech.tams.exchange.common.bean.request.EtrDispatcherInfoRequest;
+import com.joyintech.tams.exchange.common.bean.response.EtrDispatcherInfoResponse;
 import com.joyintech.tams.exchange.common.bean.response.ExchangeContextResponse;
 import com.joyintech.tams.exchange.common.cache.TradeTimeService;
 import com.joyintech.tams.exchange.common.cache.config.DataServiceConfig;
@@ -26,6 +30,7 @@ import com.joyintech.tams.exchange.common.constant.ExchangeConstant;
 import com.joyintech.tams.exchange.common.db.domain.FuturesInstrument;
 import com.joyintech.tams.exchange.common.db.domain.Instrument;
 import com.joyintech.tams.exchange.common.db.domain.ServiceNode;
+import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.microservice.ServiceApplication;
 import com.joyintech.tams.exchange.common.microservice.TradeServiceURL;
 import com.joyintech.tams.exchange.common.utils.InvestmentUtils;
@@ -53,7 +58,9 @@ import java.util.stream.Collectors;
 @Component
 public class CommonManagement extends BaseService {
     private static final Logger logger = LoggerFactory.getLogger(CommonManagement.class);
-
+    @Autowired(required = false)
+    @Qualifier("simpleRestTemplate")
+    protected JoyinRestTemplate simpleRestTemplate;
     @Autowired
     private InstrumentService instrumentService;
     @Autowired
@@ -75,11 +82,6 @@ public class CommonManagement extends BaseService {
      */
     @Value("${application.micorservice.contextPath.single:false}")
     private boolean isSingle;
-
-    @Autowired(required = false)
-    @Qualifier("simpleRestTemplate")
-    protected JoyinRestTemplate simpleRestTemplate;
-
     private String fairCode = ExchangeConstant.TRUE_IN_PARA;
 
     private String platDateStr = DateUtil.getSysDate();
@@ -95,6 +97,8 @@ public class CommonManagement extends BaseService {
     private String fairModeWithUnacceptInstruction = ExchangeConstant.TRUE_IN_PARA;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    @Autowired
+    private SysParaSet001Service sysParaSet001Service;
 
     public String getFairCode() {
         return fairCode;
@@ -116,6 +120,11 @@ public class CommonManagement extends BaseService {
         return platDateStr;
     }
 
+    public void setPlatDateStr(String platDateStr) {
+        this.platDateStr = platDateStr;
+        this.tradingDay = this.platDateStr.replace("-", "");
+    }
+
     public Date getPlatDate() {
         try {
             if (StringUtil.isEmpty(platDateStr)) {
@@ -127,11 +136,6 @@ public class CommonManagement extends BaseService {
             logger.error("convertDateFormat error: {}", e.getMessage());
             return null;
         }
-    }
-
-    public void setPlatDateStr(String platDateStr) {
-        this.platDateStr = platDateStr;
-        this.tradingDay =  this.platDateStr.replace("-", "");
     }
 
     public String getTradingDay() {
@@ -162,9 +166,6 @@ public class CommonManagement extends BaseService {
         this.fairModeWithUnacceptInstruction = fairModeWithUnacceptInstruction;
     }
 
-    @Autowired
-    private SysParaSet001Service sysParaSet001Service;
-
     public String queryFairTradeParam() {
         return CacheUtil.getSysParam(ExchangeConstant.FAIR_CODE_IN_PARA);
     }
@@ -177,8 +178,8 @@ public class CommonManagement extends BaseService {
         response.setUserName(Objects.isNull(user) ? "zzz1" : user.getRealName());
 
         response.setPlatDate(DateUtil.platDateFromCache());
-        response.setShTradingDay(checkTradeDate("3",DateUtil.getSysDate()));
-        response.setSzTradingDay(checkTradeDate("4",DateUtil.getSysDate()));
+        response.setShTradingDay(checkTradeDate("3", DateUtil.getSysDate()));
+        response.setSzTradingDay(checkTradeDate("4", DateUtil.getSysDate()));
 
         response.setFairMode(CacheUtil.getSysParam(ExchangeConstant.FAIR_CODE_IN_PARA));
         response.setFairModeWithUnacceptInstruction(CacheUtil.getSysParam(ExchangeConstant.FAIR_MODE_WITH_UNACCEPT_INSTRUCTION_IN_PARA));
@@ -192,7 +193,7 @@ public class CommonManagement extends BaseService {
      * 查询输入日期是否交易日
      *
      * @param tradeCalendarType 交易日历类型  3-上交所; 4-深交所
-     * @param CDATE 日期 格式：yyyyMMdd，如20200512
+     * @param CDATE             日期 格式：yyyyMMdd，如20200512
      * @return 是否交易日 0-是；1-否
      */
     public String checkTradeDate(String tradeCalendarType, String CDATE) {
@@ -433,5 +434,41 @@ public class CommonManagement extends BaseService {
             logger.error("getPtlAuthInfo error:", e);
         }
         return null;
+    }
+
+    public Message<EtrDispatcherInfoResponse> getEtrDispatcherInfo(EtrDispatcherInfoRequest request) {
+        try {
+            String url = ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.getEtrDispatcherInfo;
+            if (request.getBusiTypePosition() == null) {
+                request.setBusiTypePosition(StrUtil.EMPTY);
+            }
+            Message<EtrDispatcherInfoResponse> response = null;
+            if (isSingle) {
+                response = simpleRestTemplate.postForObject(url, request, Message.class);
+            } else {
+                response = restTemplate.postForObject(url, request, Message.class);
+            }
+            return response;
+        } catch (Exception e) {
+            logger.error("调用指令明细信息查询接口失败，" + e.getMessage(), e);
+            return new Message<>(ResultBean.error(ErrorCode.API_RETURN_ERROR));
+        }
+    }
+
+    public Message<String> getDeviationDegree(DeviationDegreeRequest request) {
+        try {
+            String url = ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.getDeviationDegree;
+            Map<String, Object> pageParam = BeanUtil.object2Map(request);
+            Message<String> result = null;
+            if (isSingle) {
+                result = simpleRestTemplate.postForObject(url, pageParam, Message.class);
+            } else {
+                result = restTemplate.postForObject(url, pageParam, Message.class);
+            }
+            return result;
+        } catch (Exception e) {
+            logger.error("调用偏离度查询接口失败，" + e.getMessage(), e);
+            return new Message<>(ResultBean.error(ErrorCode.API_RETURN_ERROR));
+        }
     }
 }
