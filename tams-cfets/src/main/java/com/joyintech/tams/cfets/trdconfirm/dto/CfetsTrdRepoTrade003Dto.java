@@ -499,6 +499,10 @@ public class CfetsTrdRepoTrade003Dto extends TrdProductDeal implements ProcessEn
 
     private List<FinTradeProductDto> finTradeProducts;
     private List<FinTradeProductAdd> finTradeProductAdds;
+    /**
+     * 操作类型
+     */
+    private String oprType;
 
 
     public String getZhilingtype() {
@@ -1748,5 +1752,13 @@ public class CfetsTrdRepoTrade003Dto extends TrdProductDeal implements ProcessEn
 
     public void setRate(BigDecimal rate) {
         this.rate = rate;
+    }
+
+    public String getOprType() {
+        return oprType;
+    }
+
+    public void setOprType(String oprType) {
+        this.oprType = oprType;
     }
 }
