@@ -800,8 +800,8 @@
         <foreach collection="equityInfoRegistList" item="equityRegist" index="index" separator=";" >
             update CHB_EQU_SUB sub
             <set>
-                <if test="sendStatus != null and sendStatus != ''">
-                    sub.SEND_STATUS = #{sendStatus},
+                <if test="submitStatus != null and submitStatus != ''">
+                    sub.SUBMIT_STATUS = #{submitStatus},
                 </if>
                 <if test="equityRegist.sumitSeq != null and equityRegist.sumitSeq != ''">
                     sub.SUMIT_SEQ = #{equityRegist.sumitSeq},
