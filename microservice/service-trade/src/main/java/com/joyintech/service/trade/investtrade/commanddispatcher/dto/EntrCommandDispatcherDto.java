@@ -1182,13 +1182,13 @@ public class EntrCommandDispatcherDto extends BaseEntity{
 		this.derivativeOcFlag = derivativeOcFlag;
 	}
 
-	private String entrustBussType;
+	private String busiTypeTg;
 
-    public String getEntrustBussType() {
-        return entrustBussType;
+    public String getBusiTypeTg() {
+        return busiTypeTg;
     }
 
-    public void setEntrustBussType(String entrustBussType) {
-        this.entrustBussType = entrustBussType;
+    public void setBusiTypeTg(String busiTypeTg) {
+        this.busiTypeTg = busiTypeTg;
     }
 }
