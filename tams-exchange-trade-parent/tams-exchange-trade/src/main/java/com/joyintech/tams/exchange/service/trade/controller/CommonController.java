@@ -6,19 +6,19 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.exchange.common.ResponseResultBody;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.SysParamBean;
+import com.joyintech.tams.exchange.common.bean.request.DeviationDegreeRequest;
+import com.joyintech.tams.exchange.common.bean.request.EtrDispatcherInfoRequest;
+import com.joyintech.tams.exchange.common.bean.response.EtrDispatcherInfoResponse;
+import com.joyintech.tams.exchange.common.bean.response.ExchangeContextResponse;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.db.domain.Instrument;
 import com.joyintech.tams.exchange.common.domain.Message;
-import com.joyintech.tams.exchange.common.bean.response.ExchangeContextResponse;
 import com.joyintech.tams.exchange.service.trade.management.service.CommonManagement;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -190,5 +190,17 @@ public class CommonController {
     @RequestMapping(value = "/common/trade/time/flush", method = RequestMethod.POST)
     public ResultBean tradeTimeCacheFlush() {
         return commonManagement.tradeTimeCache();
+    }
+
+    @ApiOperation(value = "查询指令明细信息", notes = "根据指令代码查询指令明细信息")
+    @RequestMapping(value = "/common/etrDispatcher/info", method = RequestMethod.POST)
+    public Message<EtrDispatcherInfoResponse> getEtrDispatcherInfo(@RequestBody EtrDispatcherInfoRequest request) {
+        return commonManagement.getEtrDispatcherInfo(request);
+    }
+
+    @ApiOperation(value = "查询偏离度", notes = "根据资产代码和净价，计算偏离度")
+    @RequestMapping(value = "/common/deviationDegree", method = RequestMethod.POST)
+    public Message<String> getDeviationDegree(@RequestBody DeviationDegreeRequest request) {
+        return commonManagement.getDeviationDegree(request);
     }
 }
