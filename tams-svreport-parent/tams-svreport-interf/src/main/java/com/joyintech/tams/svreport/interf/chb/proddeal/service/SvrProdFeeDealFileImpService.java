@@ -127,17 +127,23 @@ public class SvrProdFeeDealFileImpService extends FileImpService{
 //		List<ChbPrdFeeDeal> listNA = new ArrayList<ChbPrdFeeDeal>();
 		// 定义新增数据list-验证通过数据
 		List<ChbPrdFeeDeal> listNE = new ArrayList<ChbPrdFeeDeal>();
-		Date paydate=null;
-		for (Map<String, String> map : baseinfoList) {
-			ChbPrdFeeDeal feedeal =  dataConversionEntity(map);
-			if(paydate==null&&feedeal.getPayDate()!=null){
-				paydate=feedeal.getPayDate();
-			}
-			feedeal.setDataSource(dateSource);
-			
-			listNE.add(feedeal);
-		}
-
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
+		listNE = (List<ChbPrdFeeDeal>) convertMapToEntity(baseinfoList,ChbPrdFeeDeal.class);
+		listNE.stream().forEach(dto->{
+			dto.setSeqno(IDGenerator.generate(36));
+			dto.setDataSource("12");
+		});
+//		Date paydate=null;
+//		for (Map<String, String> map : baseinfoList) {
+//			ChbPrdFeeDeal feedeal =  dataConversionEntity(map);
+//			if(paydate==null&&feedeal.getPayDate()!=null){
+//				paydate=feedeal.getPayDate();
+//			}
+//			feedeal.setDataSource(dateSource);
+//
+//			listNE.add(feedeal);
+//		}
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 		if (listNE != null && listNE.size() > 0) {
 			// 如果是增量文件则不需要删除
 //			if (tmpPath == null) {

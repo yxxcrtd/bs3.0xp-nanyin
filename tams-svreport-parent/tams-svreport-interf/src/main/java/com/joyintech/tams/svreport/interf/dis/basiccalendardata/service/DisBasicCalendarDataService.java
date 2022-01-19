@@ -54,17 +54,20 @@ public  class DisBasicCalendarDataService extends FileImpService {
         // 解析文件数据到dto
         DisBasicCalendarData dto = null;
         List<DisBasicCalendarData> dtoList = new ArrayList<DisBasicCalendarData>();
-        for(Map<String, String> data : listData){
-            //将map转换为dto
-        	try{
-        	    dto = dataConversionEntity(data);
-                dtoList.add(dto);
-        	}
-        	catch(Exception e){
-				logger.error("解析数据错误：",e.getMessage(),e);
-           		return  "fail";
-			}
-        }
+        // modify by convertMapToEntity yangxianjiu 2022-01-19 start
+        dtoList = (List<DisBasicCalendarData>) convertMapToEntity(listData,DisBasicCalendarData.class);
+        // modify by convertMapToEntity yangxianjiu 2022-01-19 end
+//        for(Map<String, String> data : listData){
+//            //将map转换为dto
+//        	try{
+//        	    dto = dataConversionEntity(data);
+//                dtoList.add(dto);
+//        	}
+//        	catch(Exception e){
+//				logger.error("解析数据错误：",e.getMessage(),e);
+//           		return  "fail";
+//			}
+//        }
         //存表
         int success = this.mergeRepProdInfoByPart(dtoList);
         
