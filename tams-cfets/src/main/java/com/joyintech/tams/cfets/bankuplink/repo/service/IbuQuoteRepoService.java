@@ -491,12 +491,13 @@ public class IbuQuoteRepoService extends BaseService {
         for (RepoEntrustPledgeDto pledgeDto : ptlAllocationAddRequest.getRepoEntrustPledgeDtos()) {
             for (RegFinPledge pledge : regFinPledges) {
                 if (StringUtil.equals(pledge.getPortfolioId(), pledgeDto.getPortfolioId())
-                        && StringUtil.equals(pledge.getPortfolioId(), pledgeDto.getPortfolioId())
+                        && StringUtil.equals(pledge.getPledgeFinprodId(), pledgeDto.getFinprodId())
                         && StringUtil.equals(pledge.getEntrustId(), ptlAllocationAddRequest.getDelEtrId())) {
                     if (StringUtil.isNotEmpty(pledgeDto.getPledgePrinStr())) {
                         pledgeDto.setPledgePrin(ArithmeticUtil.multiply(new BigDecimal(pledgeDto.getPledgePrinStr()), new BigDecimal(10000)));
                     }
-                    pledgeDto.setPledgePrin(ArithmeticUtil.subtract(pledgeDto.getPledgePrin(), pledge.getPledgeNumber()));
+                    pledgeDto.setPledgePrin(ArithmeticUtil.subtract(pledgeDto.getPledgePrin(),
+                            ArithmeticUtil.multiply(pledge.getPledgeNumber(), new BigDecimal(100))));
                 }
             }
             if (BigDecimal.ZERO.compareTo(pledgeDto.getPledgePrin()) != 0) {
