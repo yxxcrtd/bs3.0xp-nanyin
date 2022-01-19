@@ -1925,10 +1925,14 @@
 	where PARENT_MENU_ID in (select MENU_ID from sys_menu where
 	<choose>
 		<when test="svrFlag != null and svrFlag eq '01'">
-			PARENT_MENU_ID = #{svrFirstMenuId,jdbcType=VARCHAR}
+			<if test="svrFirstMenuIdList != null and svrFirstMenuIdList.size() > 0">
+				<foreach collection="svrFirstMenuIdList" item="svrFirstMenuId" open="PARENT_MENU_ID IN (" close=")" separator=",">
+					#{svrFirstMenuId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
 		</when>
 		<otherwise>
-			PARENT_MENU_ID = 'REPORT_001'
+			PARENT_MENU_ID in ('REPORT_MAINTAIN_001','REPORT_CHECK_001','REPORT_REGIST_001','REPORT_MANAGE_001')
 		</otherwise>
 	</choose>
 	)
