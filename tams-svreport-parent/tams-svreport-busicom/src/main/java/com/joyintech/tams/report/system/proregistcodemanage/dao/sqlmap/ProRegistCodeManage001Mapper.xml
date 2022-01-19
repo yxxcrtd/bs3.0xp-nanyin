@@ -338,6 +338,7 @@
 		from chb_prd_baseinfo
 		<!--left join FIN_PRODUCT on FIN_PRODUCT.FINPROD_MARKET_ID = chb_prd_baseinfo.PROD_ID-->
         where chb_prd_baseinfo.PROD_ID = #{prodId}
+		and chb_prd_baseinfo.status IN ('E','M') and chb_prd_baseinfo.fprod_id is null
       <!--  and FIN_PRODUCT.FINPROD_TYPE = 'F16' and FIN_PRODUCT.FINPROD_TYPE2 = 'F16'-->
     </select>
     
