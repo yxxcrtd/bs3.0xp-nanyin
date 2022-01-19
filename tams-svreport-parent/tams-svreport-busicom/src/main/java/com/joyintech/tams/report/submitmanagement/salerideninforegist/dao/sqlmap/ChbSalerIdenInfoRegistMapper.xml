@@ -47,7 +47,7 @@
         CHB_SALER_IDEN_SUB
         where 1=1
         <if test="salerName != null and salerName != ''">
-            and SALER_NAME like concat('%',concat(#{salerName,jdbcType=VARCHAR},'%')
+            and SALER_NAME like concat('%',concat(#{salerName,jdbcType=VARCHAR},'%'))
         </if>
         <if test="salerSex != null and salerSex != ''">
             and SALER_SEX = #{salerSex,jdbcType=VARCHAR}
@@ -127,7 +127,7 @@
         CHB_SALER_IDEN_SUB
         <where>
             <if test="salerName != null and salerName != ''">
-                and SALER_NAME like concat('%',concat(#{salerName,jdbcType=VARCHAR},'%')
+                and SALER_NAME like concat('%',concat(#{salerName,jdbcType=VARCHAR},'%'))
             </if>
             <if test="salerSex != null and salerSex != ''">
                 and SALER_SEX = #{salerSex,jdbcType=VARCHAR}
@@ -361,7 +361,7 @@
         CHB_SALER_IDEN_SUB
         where 1=1
         <if test="salerName != null and salerName != ''">
-            and SALER_NAME like concat('%',concat(#{salerName,jdbcType=VARCHAR},'%')
+            and SALER_NAME like concat('%',concat(#{salerName,jdbcType=VARCHAR},'%'))
         </if>
         <if test="salerSex != null and salerSex != ''">
             and SALER_SEX = #{salerSex,jdbcType=VARCHAR}
