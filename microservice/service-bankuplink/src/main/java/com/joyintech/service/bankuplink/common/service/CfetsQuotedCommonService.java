@@ -10,20 +10,44 @@
 
 package com.joyintech.service.bankuplink.common.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Table;
 import com.joyintech.background.component.uplink.interbank.business.dto.*;
-import com.joyintech.background.component.uplink.interbank.database.dao.IbuMainMapper;
+import com.joyintech.background.component.uplink.interbank.business.service.IbuMainService;
+import com.joyintech.background.component.uplink.interbank.common.DictCodeList;
 import com.joyintech.background.component.uplink.interbank.database.dao.IbuQuoteMapper;
+import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBond;
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.security.User;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
+import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
+import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
+import com.joyintech.service.bankuplink.common.dao.CfetsQuotedCommonMapper;
+import com.joyintech.service.bankuplink.ibu.dto.BondQuoteInfoDto;
+import com.joyintech.service.bankuplink.ibu.dto.RepoQuoteInfoDto;
+import com.joyintech.service.bankuplink.ibu.service.BankUplinkPublishService;
+import com.joyintech.service.bankuplink.ibu.service.IbuComponentCommonService;
 import com.joyintech.service.bankuplink.repo.dao.CfetsRepoDealQuotedPrice001Mapper;
+import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto;
+import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto;
+import com.joyintech.service.bankuplink.repo.service.CfetsRepoDealQuotedPrice001Service;
 import com.joyintech.system.base.entity.SysUserAdd;
-import com.netflix.discovery.converters.Auto;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
+import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -33,50 +57,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Table;
-import com.joyintech.background.component.uplink.interbank.business.service.IbuMainService;
-import com.joyintech.background.component.uplink.interbank.common.DictCodeList;
-import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBond;
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.security.User;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
-import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
-import com.joyintech.service.bankuplink.common.dao.CfetsQuotedCommonMapper;
-import com.joyintech.service.bankuplink.ibu.dto.BondQuoteInfoDto;
-import com.joyintech.service.bankuplink.ibu.dto.RepoQuoteInfoDto;
-import com.joyintech.service.bankuplink.ibu.service.BankUplinkPublishService;
-import com.joyintech.service.bankuplink.ibu.service.IbuComponentCommonService;
-import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto;
-import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto;
-import com.joyintech.service.bankuplink.repo.service.CfetsRepoDealQuotedPrice001Service;
-import com.joyintech.tams.common.base.dao.EtrDistributeInterfTmpMapper;
-import com.joyintech.tams.common.base.dao.EtrDistributeMapper;
-import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
-import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
-import com.joyintech.tams.common.base.dao.EtrQuoteFinishStatusMapper;
-import com.joyintech.tams.common.base.entity.EtrDistribute;
-import com.joyintech.tams.common.base.entity.EtrDistributeInterfTmp;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
-import com.joyintech.tams.common.base.entity.EtrFinishStatus;
-import com.joyintech.tams.common.base.entity.EtrFinishStatusKey;
-import com.joyintech.tams.common.base.entity.EtrQuoteFinishStatus;
-import com.joyintech.tams.common.base.entity.EtrQuoteFinishStatusKey;
-import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
-import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
-import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 银行间上行共通Service
@@ -185,6 +169,9 @@ public class CfetsQuotedCommonService extends BaseService {
 
     @Autowired
     private CfetsRepoDealQuotedPrice001Mapper cfetsRepoDealQuotedPrice001Mapper;
+
+    @Autowired
+    private IPlatformDate iPlatformDate;
 
     /**
      * 委托放弃处理
@@ -1304,5 +1291,131 @@ public class CfetsQuotedCommonService extends BaseService {
 
     public List<CfetsRepoDealQuotedPrice003Dto> listIbuQuoteEntCrepPledge(String quoteId){
         return cfetsRepoDealQuotedPrice001Mapper.listIbuQuoteEntCrepPledge(quoteId);
+    }
+
+
+    /**
+     * 处理头寸组装(对话)
+     * @param entity
+     * @param flowStatus
+     * @return
+     */
+    public Map<String,Object> prepareDialoguePosition(CfetsBondDealDialogueQuoteDto entity,String flowStatus,String decisionAct,String systemAct){
+        final Date settleDate =iPlatformDate.getSysDate();
+        Map<String,Object> result = new HashMap<>();
+        String ps = entity.getPs();
+        result.put("interfaceType","Bond001");
+        result.put("userId", SecurityUtil.getLoginUser().getUserName());
+        result.put("totalTradeId",entity.getQuoteId());
+        result.put("flowStatus",flowStatus);
+        result.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
+        result.put("balanceCheck","Y");
+        if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){
+            result.put("busiType", DictCodeListExt3.头寸业务类型_债券行权交易.getValue());
+        }else{
+            result.put("busiType", DictCodeListExt3.头寸业务类型_现券交易.getValue());
+        }
+        result.put("busiAct","11");
+        result.put("ps",ps);
+        result.put("settleSpeed",entity.getSettleSpreed());
+        result.put("tradePlace",BussinessDictCodeList.交易场所_银行间.getValue());
+        result.put("systemAct",systemAct);
+        result.put("decisionAct",decisionAct);
+        result.put("cdate", DateUtil.format(settleDate));
+        result.put("ccy",entity.getCcy());
+        result.put("finprodId",entity.getFinprodId());
+        result.put("bTotalTradeId",entity.getQuoteId());
+        if(CollectionUtils.isNotEmpty(entity.getCfetsBondDealDialogueQuoteDtoList())){
+            List<Map<String,Object>> ptlList = new ArrayList<>();
+            for (com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto : entity.getCfetsBondDealDialogueQuoteDtoList()) {
+                Map<String,Object> pltMap = new HashMap<>();
+                String portfolioId = cfetsBondDealDialogueQuoteDto.getPortfolioId();
+                pltMap.put("portfolioId", portfolioId);
+                pltMap.put("tradeId",entity.getQuoteId());
+                pltMap.put("etrId",cfetsBondDealDialogueQuoteDto.getEntrustId());
+                pltMap.put("cashAcctId",cfetsQuotedCommonMapper.getACCTNO(portfolioId,BussinessDictCodeList.资金账户类型_托管账户.getValue()));
+                pltMap.put("secAcctId",cfetsQuotedCommonMapper.getSecAcctId(portfolioId,entity.getFinprodId(),entity.getTradeMarket()));
+                pltMap.put("secAmount", ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(),new BigDecimal(10000))); //券面总额
+                pltMap.put("cashAmount",cfetsBondDealDialogueQuoteDto.getFpriceAmt().setScale(4, RoundingMode.DOWN));
+                if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_卖出.getValue())||StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){
+                    pltMap.put("integrateSecAmount",cfetsBondDealDialogueQuoteDto.getLendinShareAmt());
+                    pltMap.put("ownSecAmount",cfetsBondDealDialogueQuoteDto.getOurShareAmt());
+                }
+                pltMap.put("etrSecAmount",ArithmeticUtil.multiply(etrEntrustMapper.selectByPrimaryKey(cfetsBondDealDialogueQuoteDto.getEntrustId()).getEntrustNum(),new BigDecimal(100)));
+                ptlList.add(pltMap);
+            }
+            result.put("ptlList",ptlList);
+        }
+        return result;
+    }
+
+    /**
+     * 处理头寸组装
+     * @param entity
+     * @param flowStatus
+     * @return
+     */
+    public Map<String,Object> prepareRequestPosition(CfetsBondDealRequestQuoteDto entity, String flowStatus, String decisionAct, String systemAct){
+        final Date settleDate =iPlatformDate.getSysDate();
+        Map<String,Object> result = new HashMap<>();
+        String ps = entity.getPs();
+        result.put("interfaceType","Bond001");
+        result.put("userId", SecurityUtil.getLoginUser().getUserName());
+        result.put("totalTradeId",entity.getQuoteId());
+        result.put("flowStatus",flowStatus);
+        result.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
+        result.put("balanceCheck","Y");
+        if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){
+            result.put("busiType",DictCodeListExt3.头寸业务类型_债券行权交易.getValue());
+        }else{
+            result.put("busiType", DictCodeListExt3.头寸业务类型_现券交易.getValue());
+        }
+        result.put("busiAct","12");
+        result.put("ps",ps);
+        result.put("settleSpeed",entity.getSettleSpreed());
+        result.put("tradePlace",BussinessDictCodeList.交易场所_银行间.getValue());
+        result.put("systemAct",systemAct);
+        result.put("decisionAct",decisionAct);
+        result.put("cdate",DateUtil.format(settleDate));
+        result.put("ccy",entity.getCcy());
+        result.put("finprodId",entity.getFinprodId());
+        result.put("bTotalTradeId",entity.getQuoteId());
+        if(CollectionUtils.isNotEmpty(entity.getCfetsBondDealRequestQuoteDtoList())){
+            //成交按回复方的价格计算现金
+            if(CollectionUtils.isNotEmpty(entity.getCounterInfoList())){
+                com.joyintech.service.bankuplink.bond.dto.CounterInfoDto counterInfoDto = entity.getCounterInfoList().get(0);
+                if(null!=counterInfoDto.getUnitFprice()&&counterInfoDto.getUnitFprice().compareTo(BigDecimal.ZERO)!=0){
+                    entity.setUnitFprice(counterInfoDto.getUnitFprice());
+                }
+            }
+            List<Map<String,Object>> ptlList = new ArrayList<>();
+            for (com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto cfetsBondDealDialogueQuoteDto : entity.getCfetsBondDealRequestQuoteDtoList()) {
+                Map<String,Object> pltMap = new HashMap<>();
+                String portfolioId = cfetsBondDealDialogueQuoteDto.getPortfolioId();
+                pltMap.put("portfolioId", portfolioId);
+                pltMap.put("tradeId",entity.getQuoteId());
+                pltMap.put("etrId",cfetsBondDealDialogueQuoteDto.getEntrustId());
+                pltMap.put("cashAcctId",cfetsQuotedCommonMapper.getACCTNO(portfolioId,BussinessDictCodeList.资金账户类型_托管账户.getValue()));
+                pltMap.put("secAcctId",cfetsQuotedCommonMapper.getSecAcctId(portfolioId,entity.getFinprodId(),entity.getTradeMarket()));
+                pltMap.put("secAmount",ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(),new BigDecimal(10000))); //券面总额
+                if(null!=cfetsBondDealDialogueQuoteDto.getFpriceAmt()&&BigDecimal.ZERO.compareTo(cfetsBondDealDialogueQuoteDto.getFpriceAmt())!=0){
+                    pltMap.put("cashAmount",cfetsBondDealDialogueQuoteDto.getFpriceAmt().setScale(4,RoundingMode.DOWN));//全价总额
+                }else{
+                    if(null!=entity.getUnitFprice()&&BigDecimal.ZERO.compareTo(entity.getUnitFprice())!=0){
+                        pltMap.put("cashAmount",ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(),entity.getUnitFprice(),new BigDecimal(100)).setScale(4,RoundingMode.DOWN));
+                    }else{
+                        pltMap.put("cashAmount",ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(),new BigDecimal(10000)).setScale(4,RoundingMode.DOWN));
+                    }
+                }
+                if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_卖出.getValue())||StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){
+                    pltMap.put("integrateSecAmount",cfetsBondDealDialogueQuoteDto.getLendinShareAmt());
+                    pltMap.put("ownSecAmount",cfetsBondDealDialogueQuoteDto.getOurShareAmt());
+                }
+                pltMap.put("etrSecAmount",ArithmeticUtil.multiply(etrEntrustMapper.selectByPrimaryKey(cfetsBondDealDialogueQuoteDto.getEntrustId()).getEntrustNum(),new BigDecimal(100)));
+                ptlList.add(pltMap);
+            }
+            result.put("ptlList",ptlList);
+        }
+        return result;
     }
 }

@@ -146,6 +146,16 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto {
 
     private BigDecimal ourShareAmt;
 
+    private BigDecimal unitFprice;
+
+    public BigDecimal getUnitFprice() {
+        return unitFprice;
+    }
+
+    public void setUnitFprice(BigDecimal unitFprice) {
+        this.unitFprice = unitFprice;
+    }
+
     public BigDecimal getLendinShareAmt() {
         return lendinShareAmt;
     }

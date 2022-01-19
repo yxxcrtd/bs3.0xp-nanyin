@@ -957,7 +957,7 @@ public class CfetsQuotedCommonService extends BaseService {
     public AjaxResult radioPartyIdCheck(CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto){
         AjaxResult ajaxResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
-        if(StringUtil.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())){
+        if(StringUtil.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())&&StringUtil.equals(cfetsBondDealQuoteCommonDto.getTradeMarket(),DictCodeListExt1.交易场所_银行间.getValue())){
             cfetsBondDealQuoteCommonDto.getPtlAllocatios().forEach(item ->{
                 AjaxResult ar = checkpartyId(item.getEntrustId(), item.getPortfolioId(), cfetsBondDealQuoteCommonDto.getQuoteType());
                 if(StringUtil.isNotEmpty(ar.getMessage())){

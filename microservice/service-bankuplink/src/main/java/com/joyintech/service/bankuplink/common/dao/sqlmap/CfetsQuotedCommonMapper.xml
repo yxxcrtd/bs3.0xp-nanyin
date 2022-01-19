@@ -421,4 +421,29 @@
 			</if>
 		</where>
 	</select>
+
+	<select id="getACCTNO" resultType="java.lang.String">
+		SELECT P.ACCT_NO
+		FROM
+		PTL_CAPACCT_INFO P
+		LEFT JOIN
+		STL_CAPACCT_INFO S
+		ON
+		P.ACCT_NO = S.ACCT_NO
+		where P.PORTFOLIO_ID = #{portfolioId}
+		AND P.ACCT_TYPE = #{acctType}
+		and rownum=1
+	</select>
+
+	<select id="getSecAcctId" resultType="java.lang.String">
+        SELECT V.SEC_ACCT_ID
+          FROM PTL_SEC_ACCT PSA, STL_SEC_ACCT_INFO V
+          LEFT JOIN FIN_PRODUCT R
+		ON R.REGIST_ORG = V.REGIST_ORG
+	 WHERE PSA.ACCT_NO = V.SEC_ACCT_ID
+	   AND V.SEC_ACCT_TYPE = 'SEC'
+	   AND V.TRADE_PLACE = #{tradeMarket}
+	   AND PSA.PORTFOLIO_ID = #{portfolioId}
+	   AND R.FINPROD_ID = #{finprodId}
+    </select>
 </mapper>
