@@ -1844,7 +1844,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 									+ "[RISK_TYPE="+rskType+"]",
 									"投资者风险偏好"));
 						}
-						String creditType = strList.get(58) ;
+						String creditType = strList.get(59) ;
 						//产品增信机构类型多选校验
 						if(!BaseCheckLib.inDatadict3(creditType,DictCode.产品增信机构类型.getValue(),true,true)){
 							checkResult.add(new ExcelValidDto(strList.get(1)+"|"+strList.get(61), String.valueOf(i + 1), "产品增信机构类型不在值域范围内并且多选选项不可重复。"
