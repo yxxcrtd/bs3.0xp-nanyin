@@ -1584,6 +1584,9 @@ public class CfetsTrdConfirm001Service extends BaseService{
         if(StringUtil.isNotEmpty(entity.getPs())
                 && StringUtil.equals(entity.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
             req.setBusiType(DictCodeListExt3.头寸业务类型_债券行权交易.getValue()); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
+            req.setCdate(entity.getSettleDate());
+        }else{
+            req.setCdate(entity.getTradeDate());
         }
         req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
         if(null!=entity.getSettleSpeed()){
@@ -1600,7 +1603,6 @@ public class CfetsTrdConfirm001Service extends BaseService{
         req.setPs(entity.getPs());
         req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
         req.setDecisionAct(DictCodeListExt3.系统动作_新建.getValue());
-        req.setCdate(entity.getTradeDate());
         req.setCcy(entity.getCcy());
         req.setFinprodId(entity.getFinprodId());
         req.setPtlList(ptlList);
