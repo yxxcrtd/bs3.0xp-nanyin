@@ -404,7 +404,7 @@ public class PortfolioManager extends BaseService {
             calculateResponse.setInstructionLeftNum(isVolume ? instruction.getEntrustNum() - instruction.getEntrustLeftAmt().longValue() - instruction.getFrozenQuantity().longValue() : 0L);
             calculateResponse.setInstructionTotalAmt(instruction.getEntrustAmt());
             calculateResponse.setInstructionTotalNum(instruction.getEntrustNum());
-            calculateResponse.setFullPrice(Objects.nonNull(instruction.getFullPrice()) ? instruction.getFullPrice().toString() : BigDecimal.ZERO.toString());
+            calculateResponse.setFullPrice(bean.getFullPrice().toString());
             calculateResponse.setPriceMode(instruction.getPriceMode());
             calculateResponse.setAcctNo(instruction.getAcctName());
 
