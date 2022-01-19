@@ -1280,6 +1280,12 @@ public class IbuQuoteBondService extends BaseService {
             if(item.getStatisticalTimes()!=0){
                 quoteIds.add(item.getQuoteId());
             }
+            if(StringUtil.isEmpty(item.getFinprodMarketId())||StringUtil.isEmpty(item.getFinprodName())||StringUtil.isEmpty(item.getPsStr())||StringUtil.isEmpty(item.getOuPartyName())
+            ||StringUtil.isEmpty(item.getCpPartyName())||StringUtil.isEmpty(item.getCpTraderName())||null==item.getShareAmt()||null==item.getPrice()||null==item.getMatureYield()||StringUtil.isEmpty(item.getSettleTypeStr())
+            ||StringUtil.isEmpty(item.getSettleMethodStr())||StringUtil.isEmpty(item.getSettleTypeStr())){
+                result.put("messagesoft","存在必填项为空值");
+                break;
+            }
         }
         result.put("message",message);
         if(CollectionUtils.isNotEmpty(quoteIds)){

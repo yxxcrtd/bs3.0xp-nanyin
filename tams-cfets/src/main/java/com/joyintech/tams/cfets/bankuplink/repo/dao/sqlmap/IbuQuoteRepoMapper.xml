@@ -1421,30 +1421,33 @@
         group by ENTRUST_ID, FINPROD_ID
     </select>
 
-    <select id="findEtrLastNumByEtrId" resultType="java.math.BigDecimal">
-        select sum(ENTRUST_AMT) amt
+    <select id="findEtrLastNumByEtrId" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealEntrustOrderDto">
+        select sum(T.ENTRUST_AMT) avaNum ,IPAR.PARTY_ID
         from (
-                 select ENTRUST_AMT
+                 select ENTRUST_AMT,PORTFOLIO_ID
                  from ETR_ENTRUST
                  where ENTRUST_ID = #{etrId}
                  union
-                 select -1*TRADE_AMT ENTRUST_AMT
+                 select -1*TRADE_AMT ENTRUST_AMT,PORTFOLIO_ID
                  from REG_FIN_PRODUCT_DEAL
                  where IS_CANCEL = 'N' and TRADE_STATUS !='03' AND ENTRUST_ID = #{etrId}
                  union
-                 select -1*TRADE_AMT ENTRUST_AMT
+                 select -1*TRADE_AMT ENTRUST_AMT,PORTFOLIO_ID
                  from WFL_REG_FIN_PRODUCT_DEAL
                  where ENTRUST_ID = #{etrId}
                  union
-                 select -1*IBQER.FPRICE_AMT ENTRUST_AMT
+                 select -1*IBQER.FPRICE_AMT ENTRUST_AMT,IBQER.PORTFOLIO_ID
                  from IBU_QUOTE_ETR_RE IBQER
                  left join IBU_QUOTE_CREP IQC on IBQER.QUOTE_ID = IQC.QUOTE_ID
-                 where IBQER.ENTRUST_ID = #{etrId} AND IQC.TRADE_STATUS = '01' AND IQC.SEND_STATUS = '01' /*新增中 已发送*/
+                 where IBQER.ENTRUST_ID = #{etrId} AND IQC.SEND_STATUS = '01' /*新增中 已发送*/
                  union
-                 select -1*FPRICE_AMT ENTRUST_AMT
+                 select -1*FPRICE_AMT ENTRUST_AMT,PORTFOLIO_ID
                  from WFL_IBU_QUOTE_ETR_RE
                  where ENTRUST_ID = #{etrId}
-             )
+             ) T
+            LEFT JOIN IBU_PORTFOLIO_ACCT_RELA IPAR
+                ON T.PORTFOLIO_ID = IPAR.PORTFOLIO_ID AND IPAR.CFETS_ACCT_TYPE = '01'
+            group by IPAR.PARTY_ID
     </select>
 
     <!--查询产品质押债券 证券账户-->

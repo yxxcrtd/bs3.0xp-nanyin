@@ -113,6 +113,17 @@
         <if test="mdateEnd != null and !mdateEnd.isEmpty()">
             AND T1.MDATE &lt;= to_date(#{mdateEnd}, 'yyyy-MM-dd')
         </if>
+        <if test="DELIVERY_STATUS_02 != null and !DELIVERY_STATUS_02.isEmpty()">
+            AND NOT EXISTS(
+            SELECT 1 FROM TRD_FIN_PRODUCT_DEAL_TOTAL WHERE TOTLE_TRADE_ID NOT IN (
+            SELECT
+            TRADE_ID
+            FROM
+            TRD_BANK_MANUAL_SETTLE_INFO
+            WHERE
+            SETTLE_STATUS = '02') AND FINPROD_ID = T1.TRADE_ID
+            )
+        </if>
         <!-- add by wangcheng 需求增加到期日筛选条件 2019-09-30 end -->
     </sql>
 

@@ -194,7 +194,7 @@ public class PositionHttpRequest {
         BaseMap bm = BaseMap.newMap()
                 .put("revokeId", revokeId)
                 .put("modelType", modelType)
-                .put("userId", LoginUserUtil.getUserName())
+                .put("userId", StringUtil.isEmpty(LoginUserUtil.getUserName())?"system":LoginUserUtil.getUserName())
                 .put("busiType", busiType)
                 .put("ps", ps)
                 ;
