@@ -396,7 +396,7 @@ public class PortfolioManager extends BaseService {
             calculateResponse.setPortfolioId(instruction.getPortfolioId());
             calculateResponse.setPortfolioName(instruction.getPortfolioName());
             calculateResponse.setFinprodMarketId(instruction.getFinprodMarketId());
-            calculateResponse.setEntrustPrice(price);
+            calculateResponse.setEntrustPrice(bean.getEntrustPrice().compareTo(BigDecimal.ZERO) == 0 ? price : bean.getEntrustPrice());
             calculateResponse.setFinprodName(instruction.getFinprodName());
             calculateResponse.setDisRate(new BigDecimal(detail.getDisRate()));
             calculateResponse.setEntrustProp(entrustProp);
