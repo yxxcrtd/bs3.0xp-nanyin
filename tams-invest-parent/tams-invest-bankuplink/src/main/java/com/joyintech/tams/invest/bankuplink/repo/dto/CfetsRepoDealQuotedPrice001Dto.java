@@ -349,6 +349,10 @@ public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust implements Proces
      * 操作类型
      */
     private String operatorType;
+    /**
+     * 操作类型
+     */
+    private String operateType;
     
     /**
      * 
@@ -1600,5 +1604,13 @@ public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust implements Proces
 
     public void setShareAmtStr(String shareAmtStr) {
         this.shareAmtStr = shareAmtStr;
+    }
+
+    public String getOperateType() {
+        return operateType;
+    }
+
+    public void setOperateType(String operateType) {
+        this.operateType = operateType;
     }
 }

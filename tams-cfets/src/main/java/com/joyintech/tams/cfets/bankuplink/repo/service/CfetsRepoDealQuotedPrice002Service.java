@@ -883,7 +883,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
     @Override
     public void doInsert(CfetsRepoDealQuotedPrice001Dto entity, OperationType type) {
         //历史报价页面撤销  不生成业务流程数据  同交易
-        if ("save".equals(entity.getOperatorType()) || StringUtil.equals(entity.getOperatorType(), "revoke")) {
+        if ("save".equals(entity.getOperateType()) || StringUtil.equals(entity.getOperateType(), "revoke")) {
             return;
         }
         insertWflRepoDealQuote(entity);
@@ -1693,7 +1693,6 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         }
         pageDto.setSecManageAcctId(secAcctId);
         BeanUtil.copyPropertiesIgnoreNull(backDto, pageDto);
-        backDto.setOperatorType(pageDto.getOperateType());
         // 卷面总额合计(万) 转换
         backDto.setPledgePrinTotal(ArithmeticUtil.divide(pageDto.getShareAmt(), new BigDecimal(100), 4, RoundingMode.HALF_UP));
         // 交易金额 转换
@@ -1918,9 +1917,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         req.setPs(entity.getPs());
         req.setDecisionAct(decisionAct);
         req.setSystemAct(systemAct);
-        if (StringUtil.equals(DictCodeListExt3.系统动作_修改.getValue(), decisionAct)) {
-            req.setbTotalTradeId(entity.getQuoteId());
-        }
+        req.setbTotalTradeId(entity.getQuoteId());
         req.setCdate(entity.getTradeDate());
         req.setCcy(DictCodeList.币种_人民币_CNY.getValue());
         req.setPtlCashList(ptlCashList);
