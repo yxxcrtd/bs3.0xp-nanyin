@@ -52,10 +52,10 @@
     TRUNC(case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then NVL(T5.FINISH_AMT,0)*100 else NVL(T5.FINISH_AMT,0)*10000 end /(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
         else  ETR_ENTRUST.ENTRUST_NUM*100 end),2) dealProgress,
     case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then NVL(T5.ent_finish_amt,0)/10000 else NVL(T5.ent_finish_amt,0)/100 end  as execFinishAmt,
-    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round((ETR_ENTRUST.entrust_amt- NVL(T5.ent_finish_amt,0))/10000,4) else
+    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round(ETR_ENTRUST.entrust_amt/10000- NVL(T5.ent_finish_amt,0)/10000,4) else
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end) end as execRemainderAmt,
     case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then NVL(T5.FINISH_AMT,0)/10000 else NVL(T5.FINISH_AMT,0)/100 end as transFinishAmt,
-    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round((ETR_ENTRUST.entrust_amt - NVL(T5.FINISH_AMT,0))/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end ,4) else
+    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round(ETR_ENTRUST.entrust_amt/10000 - NVL(T5.FINISH_AMT,0)/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end ,4) else
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end ) end as transRemainderAmt,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
@@ -233,10 +233,10 @@
     TRUNC(NVL(T5.FINISH_AMT,0)* case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 100 else 10000 end/(case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then ETR_ENTRUST.entrust_amt
     else  ETR_ENTRUST.ENTRUST_NUM*100 end),2) dealProgress,
     NVL(T5.ent_finish_amt,0)/ case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end  as execFinishAmt,
-    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round((ETR_ENTRUST.entrust_amt - NVL(T5.ent_finish_amt,0))/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end,4) else
+    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round(ETR_ENTRUST.entrust_amt/10000 - NVL(T5.ent_finish_amt,0)/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end,4) else
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end)  end as execRemainderAmt,
     NVL(T5.FINISH_AMT,0)/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end  as transFinishAmt,
-    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round((ETR_ENTRUST.entrust_amt-NVL(T5.FINISH_AMT,0))/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end)  else
+    case when ETR_ENTRUST.ENTRUST_NUM is null or  ETR_ENTRUST.ENTRUST_NUM=0 then round(ETR_ENTRUST.entrust_amt/10000 - NVL(T5.FINISH_AMT,0)/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end)  else
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/case when ETR_ENTRUST_ADD.ASSET_TYPE='F07' then 10000 else 100 end) end as transRemainderAmt,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
