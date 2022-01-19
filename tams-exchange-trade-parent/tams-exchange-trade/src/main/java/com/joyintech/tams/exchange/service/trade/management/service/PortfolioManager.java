@@ -375,6 +375,10 @@ public class PortfolioManager extends BaseService {
                 }
             }
         }
+        // 特殊处理 质押式回购交易，将委托价格设置为100
+        if (EntrustUtils.isPledgeRepurchase(instruction)) {
+            price = BigDecimal.valueOf(100L);
+        }
 
         String portfolioId;
         Integer entrustVolume = 0;
@@ -392,7 +396,7 @@ public class PortfolioManager extends BaseService {
             calculateResponse.setPortfolioId(instruction.getPortfolioId());
             calculateResponse.setPortfolioName(instruction.getPortfolioName());
             calculateResponse.setFinprodMarketId(instruction.getFinprodMarketId());
-            calculateResponse.setEntrustPrice(bean.getEntrustPrice());
+            calculateResponse.setEntrustPrice(price);
             calculateResponse.setFinprodName(instruction.getFinprodName());
             calculateResponse.setDisRate(new BigDecimal(detail.getDisRate()));
             calculateResponse.setEntrustProp(entrustProp);
@@ -409,14 +413,14 @@ public class PortfolioManager extends BaseService {
             BigDecimal volume = ArithmeticUtil.multiply(BigDecimal.valueOf(bean.getEntrustVolume()), new BigDecimal(detail.getDisRate()));
             if (volume.compareTo(BigDecimal.valueOf(minNum)) == 0) {
                 entrustVolume = minNum;
-                entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), bean.getEntrustPrice());
+                entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), price);
             } else if (volume.compareTo(BigDecimal.valueOf(minNum)) > 0) {
                 entrustVolume = Integer.valueOf(ArithmeticUtil.divide(volume, BigDecimal.valueOf(minStep), 0, RoundingMode.DOWN).multiply(BigDecimal.valueOf(minStep)).toString());
-                entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), bean.getEntrustPrice());
+                entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), price);
             }
             if ("02".equals(detail.getTargetType())) {
                 entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), price);
-                entrustVolume = Integer.valueOf(ArithmeticUtil.divide(ArithmeticUtil.divide(entrustAmt, bean.getEntrustPrice(), 12), BigDecimal.valueOf(minStep), 0, RoundingMode.DOWN).multiply(BigDecimal.valueOf(minStep)).toString());
+                entrustVolume = Integer.valueOf(ArithmeticUtil.divide(ArithmeticUtil.divide(entrustAmt, price, 12), BigDecimal.valueOf(minStep), 0, RoundingMode.DOWN).multiply(BigDecimal.valueOf(minStep)).toString());
             }
             calculateResponse.setEntrustAmt(entrustAmt);
             calculateResponse.setEntrustNum(Long.valueOf(entrustVolume));
