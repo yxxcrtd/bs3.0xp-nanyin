@@ -187,6 +187,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         entity.getPtlAllocations().forEach(item ->
                 // 记录指令代码
                 entrustIdList.add(item.getEntrustId()));
+        String partyId = null;
         /*************************************************************组合分配********************************************/
         String repo_pledge_model = CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL);
         if (CollectionUtils.isEmpty(entity.getPtlAllocations())) {
@@ -246,9 +247,19 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 settFeeamtTotal = ArithmeticUtil.doAdd(settFeeamtTotal, ptlAllocatio.getSettFeeAmt());
                 //组合分配中交易金额要小于等于（剩余指令额度-已成功发出的未收到外汇交易中心成功反馈报价和流程中的报价-流程中交易登记额度）
                 // 已实现: 剩余指令额度 = 指令额度-生效的交易登记额度-流程中交易登记额度-已成功发出的未收到外汇交易中心成功反馈报价和流程中的报价
-                BigDecimal etrLastNum = cfetsIbuQuoteRepoMapper.findEtrLastNumByEtrId(ptlAllocatio.getEntrustId());
-                if (ACompareToB(ptlAllocatio.getTradeAmt(), etrLastNum, 12) > 0) {
+                CfetsRepoDealEntrustOrderDto dto = cfetsIbuQuoteRepoMapper.findEtrLastNumByEtrId(ptlAllocatio.getEntrustId());
+                if (ACompareToB(ptlAllocatio.getTradeAmt(), dto.getAvaNum(), 12) > 0) {
                     errorList.add(new ValidMessage("组合分配中交易金额要小于等于[" + ptlAllocatio.getEntrustId() + "]剩余的指令额度"));
+                    break;
+                }
+                if (StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"), "02")) {
+                    continue;
+                }
+                if (StringUtil.isEmpty(partyId)) {
+                    partyId = dto.getPartyId();
+                }
+                if (StringUtil.isNotEmpty(partyId) && StringUtil.equals(partyId, dto.getPartyId())) {
+                    errorList.add(new ValidMessage("所选指令交易账户不同"));
                     break;
                 }
             }
