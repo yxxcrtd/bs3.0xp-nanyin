@@ -77,7 +77,11 @@ public class StlDataDealProcessCommonService {
 			DictCodeListStl.业务场景分类明细_债券_收息.getValue(),
 			DictCodeListStl.业务场景分类明细_债券_还本收息.getValue(),
 			DictCodeListStl.业务场景分类明细_债券_到期_到期.getValue(),
-			DictCodeListStl.业务场景分类明细_债券_赎回.getValue()
+			DictCodeListStl.业务场景分类明细_债券_赎回.getValue(),
+			// GZYHTZJY-1156:协议回购到期续作到期无需计算佣金 modify fuyongsheng 20220119 start
+			DictCodeListStl.业务场景分类明细_债券协议逆回购_到期.getValue(),
+			DictCodeListStl.业务场景分类明细_债券协议正回购_到期.getValue()
+			// GZYHTZJY-1156:协议回购到期续作到期无需计算佣金 modify fuyongsheng 20220119 end
 	);
 
 	// 币种取得
