@@ -1061,6 +1061,7 @@ public class IbuQuoteRepoService extends BaseService {
             if (CollectionUtils.isEmpty(ptlList)) {
                 ptlList = new ArrayList<>();
             }
+            ptlAllocationDto.setConvertAmt(null);
             // 添加该笔组合分配数据
             ptlList.add(ptlAllocationDto);
             ptlListMap.put(ptlAllocationDto.getPortfolioId(), ptlList);
@@ -2003,7 +2004,7 @@ public class IbuQuoteRepoService extends BaseService {
                     ArithmeticUtil.multiply(
                             ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), convertAmt), 4, RoundingMode.HALF_UP);
             item.setConvertAmt(convertAmtTemp);
-            convertAmtTailDifference = ArithmeticUtil.subtract(dealFeeAmtTailDifference, item.getDealFeeAmt());
+            convertAmtTailDifference = ArithmeticUtil.subtract(convertAmtTailDifference, item.getConvertAmt());
         }
         handleTailDifference(ptlAllocations, mIntAmtTailDifference, 0);
         handleTailDifference(ptlAllocations, mtradeAmtTailDifference, 1);
