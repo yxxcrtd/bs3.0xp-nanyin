@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 /**
@@ -51,6 +52,12 @@ public class CfetsRepoDayRegDto {
 
     @ApiModelProperty(name = "ouTraderId", value = "本方交易员")
     private String ouTraderId;
+
+    @ApiModelProperty(name = "repoType", value = "回购方式")
+    private String repoType;
+
+    @ApiModelProperty(name = "repoTypeStr", value = "回购方式")
+    private String repoTypeStr;
 
     @ApiModelProperty(name = "ouPartyName", value = "本方名称")
     private String ouPartyName;
@@ -404,7 +411,8 @@ public class CfetsRepoDayRegDto {
 
     public String getPledgePrinStr() {
         if (StringUtil.isNotEmpty(this.getPledgePrin())) {
-            return ArithmeticUtil.divide(this.getPledgePrin(), new BigDecimal(10000), 2, RoundingMode.HALF_UP).toString();
+            DecimalFormat df = new DecimalFormat("###,###.00");
+            return df.format(ArithmeticUtil.divide(this.getPledgePrin(), new BigDecimal(10000), 2, RoundingMode.HALF_UP));
         }
         return null;
     }
@@ -552,6 +560,22 @@ public class CfetsRepoDayRegDto {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getRepoType() {
+        return repoType;
+    }
+
+    public void setRepoType(String repoType) {
+        this.repoType = repoType;
+    }
+
+    public String getRepoTypeStr() {
+        return repoTypeStr;
+    }
+
+    public void setRepoTypeStr(String repoTypeStr) {
+        this.repoTypeStr = repoTypeStr;
     }
 }
 

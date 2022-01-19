@@ -24,6 +24,7 @@ import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.dto.EtrExchangeBlockTradeSaveRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.dto.EtrExchangeTradeQuotationRequest;
@@ -730,8 +731,15 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 			}
 		}
 		if (StringUtil.isNotEmpty(finprodId)){
-			FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(finprodId);
-			if (StringUtil.equals(finProductAdd.getBoard(),DictCodeList.上市板_科创板.getValue())){
+			Map<String,Object> param = new HashMap<String,Object>();
+			if(iPlatformDate != null){
+				param.put("sysDate", iPlatformDate.getSysDateStr());
+			}
+			param.put("finprodId", finprodId);
+			param.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+			FinStockInfoDto finStockInfoDto = etrExchangeTradeCommonMapper.selectByFinprodId(param);
+			if (StringUtil.isNotEmpty(finStockInfoDto) &&
+					StringUtil.equals(finStockInfoDto.getBoard(),DictCodeList.上市板_科创板.getValue())){
 				selectOptionDtos = selectDto.getOptions().stream().filter(option ->
 						!StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_收盘价固定价格申报.getValue()) //10
 				).collect(Collectors.toList());

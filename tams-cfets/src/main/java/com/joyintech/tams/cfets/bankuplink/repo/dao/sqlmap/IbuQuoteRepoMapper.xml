@@ -2045,6 +2045,7 @@
                     RFPDT.QUOTE_TYPE       quoteType,
                     RFPDT.TRADE_AMT        tradeAmt,
                     RFPDT.RATE             rate,
+                    RFPDT.REPO_TYPE        repoType,
                     RFPDT.REPO_TERM        repoTerm,
                     MCCI2.PARTY_ABBR       ouPartyName,
                     MSCP.COUNTER_NAME      cpPartyName,
@@ -2074,11 +2075,15 @@
                 ON MCCT.TRADER_ID = RFPDT.COUNTER_TRADER
             LEFT JOIN SYS_USER SU
                 ON SU.USER_NAME = RFPDT.OU_TRADER_ID
-            LEFT JOIN ETR_ENTRUST_OPER_HIS EEOH
-                ON EEOH.ENTRUST_ID = RFPDT.TOTLE_TRADE_ID
-                    <if test="OPR_TYPE_09 !=null and OPR_TYPE_09 !=''">
-                        AND EEOH.OPER_TYPE = #{OPR_TYPE_09}
-                    </if>
+            LEFT JOIN (SELECT
+            ENTRUST_ID,
+            COUNT(1) STATISTICAL_TIMES
+            FROM
+            ETR_ENTRUST_OPER_HIS
+            WHERE
+            OPER_TYPE = #{OPR_TYPE_09}
+            GROUP BY
+            ENTRUST_ID) EEOH  ON  EEOH.ENTRUST_ID = RFPDT.TOTLE_TRADE_ID
             LEFT JOIN TRDQUTO_MATCH_INFO TMI ON TMI.PRE_TRADE_ID = RFPDT.TOTLE_TRADE_ID
             WHERE RFPDT.FINPROD_TYPE2 in ('F02', 'F03')
               AND ((RFPDT.TRADE_STATUS = '01' and (RFPDT.IS_CANCEL IS NULL OR RFPDT.IS_CANCEL = 'N')) OR
@@ -2106,6 +2111,7 @@
                 RFPDT.QUOTE_TYPE       quoteType,
                 RFPDT.TRADE_AMT        tradeAmt,
                 RFPDT.RATE             rate,
+                RFPDT.REPO_TYPE        repoType,
                 RFPDT.REPO_TERM        repoTerm,
                 MCCI2.PARTY_ABBR       ouPartyName,
                 MSCP.COUNTER_NAME      cpPartyName,
@@ -2135,11 +2141,15 @@
             ON MCCT.TRADER_ID = RFPDT.COUNTER_TRADER
         LEFT JOIN SYS_USER SU
             ON SU.USER_NAME = RFPDT.OU_TRADER_ID
-        LEFT JOIN ETR_ENTRUST_OPER_HIS EEOH
-            ON EEOH.ENTRUST_ID = RFPDT.TOTLE_TRADE_ID
-            <if test="OPR_TYPE_09 !=null and OPR_TYPE_09 !=''">
-                AND EEOH.OPER_TYPE = #{OPR_TYPE_09}
-            </if>
+        LEFT JOIN (SELECT
+        ENTRUST_ID,
+        COUNT(1) STATISTICAL_TIMES
+        FROM
+        ETR_ENTRUST_OPER_HIS
+        WHERE
+        OPER_TYPE = #{OPR_TYPE_09}
+        GROUP BY
+        ENTRUST_ID) EEOH  ON  EEOH.ENTRUST_ID = RFPDT.TOTLE_TRADE_ID
         WHERE RFPDT.FINPROD_TYPE2 in ('F02', 'F03')
             AND ((RFPDT.TRADE_STATUS = '01' and (RFPDT.IS_CANCEL IS NULL OR RFPDT.IS_CANCEL = 'N')) OR
                 RFPDT.IS_CANCEL = 'Y')
@@ -2277,6 +2287,7 @@
             TT.tradeAmt,
             TT.rate*100 rate,
             TT.repoTerm,
+            TT.repoType,
             TT.ouPartyName,
             TT.cpPartyName,
             TT.ouTraderName,

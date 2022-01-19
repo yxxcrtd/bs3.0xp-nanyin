@@ -1015,4 +1015,14 @@ public class EtrTradeSysInterfDto extends BaseEntity{
     public void setOurTrader(String ourTrader) {
         this.ourTrader = ourTrader;
     }
+
+    private String entrustBussType;
+
+    public String getEntrustBussType() {
+        return entrustBussType;
+    }
+
+    public void setEntrustBussType(String entrustBussType) {
+        this.entrustBussType = entrustBussType;
+    }
 }

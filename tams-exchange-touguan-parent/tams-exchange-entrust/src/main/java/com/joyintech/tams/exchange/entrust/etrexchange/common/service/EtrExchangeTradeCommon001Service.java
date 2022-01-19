@@ -4996,12 +4996,13 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	/**
 	 * 1.6计算偏离度
 	 *
-	 * @param param 画面参数
+	 * @param request 画面参数
 	 * @return 偏离度
 	 * @see
 	 * @since 1.0
 	 */
-	public String calcDeviationDegree(Map<String, Object> param) {
+	public String calcDeviationDegree(CalcDeviationDegreeRequest request) {
+		Map<String,Object> param = BeanUtil.object2Map(request);
 		// 平台日
 		param.put("sysDate", DateUtil.format(iPlatformDate.getSysDate()));
 		// 参数.资产代码(市场代码)
