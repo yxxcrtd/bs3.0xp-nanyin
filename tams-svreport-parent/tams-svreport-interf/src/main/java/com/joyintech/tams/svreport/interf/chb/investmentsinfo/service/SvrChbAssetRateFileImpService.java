@@ -9,6 +9,7 @@ import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
 import com.joyintech.tams.common.base.entity.ChbAssetRate;
+import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -59,11 +60,11 @@ import java.util.concurrent.Future;
 @Transactional(rollbackFor = Exception.class)
 public class SvrChbAssetRateFileImpService extends FileImpService {
 
-	 /**
-     * logger
-     */
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-    /**
+	/**
+	 * logger
+	 */
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	/**
 	 * 上游接口文件编码格式
 	 */
 	@Value("${application.reportInterfFileEncoding}")
@@ -73,37 +74,37 @@ public class SvrChbAssetRateFileImpService extends FileImpService {
 	 */
 	@Value("${application.reportInterfSplitCharacter}")
 	private String reportInterfSplitCharacter;
-	
+
 	/**
 	 * 上游接口解析读取文件处理最大线程数
 	 */
 	@Value("${application.interfMaxCorePoolSize}")
 	private int interfMaxCorePoolSize;
-	 /**
-     * 上游接口解析读取文件处理,单次sqlldr处理最大数据条数
-     */
-    @Value("${application.reportInterfOneTimeSqlLdrDataCount}")
-    private int reportInterfOneTimeSqlLdrDataCount;
+	/**
+	 * 上游接口解析读取文件处理,单次sqlldr处理最大数据条数
+	 */
+	@Value("${application.reportInterfOneTimeSqlLdrDataCount}")
+	private int reportInterfOneTimeSqlLdrDataCount;
 
-    /**
-     * 上游接口解析读取文件处理,单次sqlldr处理最大数据条数
-     */
-    @Value("${application.reportInterfOneTimeSqlLdrCommitCount}")
-    private int reportInterfOneTimeSqlLdrCommitCount;
-    /**
-     * sqlldr用数据库连接
-     */
-    @Value("${spring.datasource.reportSqlldrDatabaseName}")
-    private String reportSqlldrDatabaseName;
-    
+	/**
+	 * 上游接口解析读取文件处理,单次sqlldr处理最大数据条数
+	 */
+	@Value("${application.reportInterfOneTimeSqlLdrCommitCount}")
+	private int reportInterfOneTimeSqlLdrCommitCount;
+	/**
+	 * sqlldr用数据库连接
+	 */
+	@Value("${spring.datasource.reportSqlldrDatabaseName}")
+	private String reportSqlldrDatabaseName;
+
 	@Autowired
 	private SqlSessionTemplate template;
-    
-    private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	
+
+	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 	@Autowired
 	private ChbAssetRateInterfMapper chbAssetRateInterfMapper;
-	
+
 	@Override
 	public String importDB(List<Map<String, String>> listData, InterfFile interfFile) {
 		String result = "";
@@ -113,188 +114,143 @@ public class SvrChbAssetRateFileImpService extends FileImpService {
 		if(CollectionUtils.isEmpty(listData)){
 			return "success";
 		}
-        ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.资产利率基本信息接口数据.getCode());
-        if (interfConfig == null){
-            logger.info("CHB_INTERF_CONFIG表中无配置项！");
-            return "fail";
-        }
-        String saveFlag = interfConfig.getContentType();
-        logger.debug("批量入库资产利率基本信息----开始-----:" +  df.format(new Date()));
+		ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.资产利率基本信息接口数据.getCode());
+		if (interfConfig == null){
+			logger.info("CHB_INTERF_CONFIG表中无配置项！");
+			return "fail";
+		}
+		String saveFlag = interfConfig.getContentType();
+		logger.debug("批量入库资产利率基本信息----开始-----:" +  df.format(new Date()));
 		result = saveData(listData,saveFlag,interfFile.getDataSource());
 		logger.debug("批量入库资产利率基本信息----开始-----:" +  df.format(new Date()));
 		// 更新系统配置时间
-        ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.资产利率基本信息接口数据.getCode());
+		ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.资产利率基本信息接口数据.getCode());
 		return result;
 	}
-	
+
 	@Override
 	public String saveData(List<Map<String, String>> chbAssetRateList, String saveFlag,String dateSource) {
-        String tmpPath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+		String tmpPath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		// 解析成功或失败的标识
 		boolean success = true;
-		if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
-			logger.debug("资产利率基本信息map转dto----开始-----:" +  df.format(new Date()));
-			// modify by convertMapToEntity yangxianjiu 2022-01-19 start
-//			List<ChbAssetRate> listNE = convertMapToEntity(chbAssetRateList,dateSource);
-			List<ChbAssetRate> listNE = (List<ChbAssetRate>) convertMapToEntity(chbAssetRateList,ChbAssetRate.class);
-			listNE.stream().forEach(t->{
-				t.setSeqno(IDGenerator.generate(36));//主键
-				// 创建部门
-				t.setCreateDept(CommonUtil.getDeptCode());
-				// 部门代码
-				t.setDeptCode(CommonUtil.getDeptCode());
-				// 机构代码
-				t.setOrgCode(CommonUtil.getOrgCode());
-				// 数据来源
-				t.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源, dateSource));
-			});
-			// modify by convertMapToEntity yangxianjiu 2022-01-19 end
-			logger.debug("资产利率基本信息map转dto----开始-----:" +  df.format(new Date()));
-			if(!CollectionUtils.isEmpty(listNE)){
+
+		logger.debug("资产利率基本信息map转dto----开始-----:" +  df.format(new Date()));
+		List<ChbAssetRate> listNE = (List<ChbAssetRate>) convertMapToEntity(chbAssetRateList, ChbAssetRate.class);
+		listNE.stream().forEach(item->{
+			item.setSeqno(IDGenerator.generate(36));//主键
+		});
+		logger.debug("资产利率基本信息map转dto----结束-----:" +  df.format(new Date()));
+		if(!CollectionUtils.isEmpty(listNE)){
+			if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
 				mergeIntoData(listNE);
-			}
-		}else if (chbAssetRateList.size() <= 1000) {
-			// 数据小于1000直接入库
-			success = excuteChbAssetRateByStep(dateSource,saveFlag,chbAssetRateList, null, null, null, null, null);
-		} else {
-			// 大于1000使用sqlloader入库
-			// 创建表
-			ImpTable table = new ImpTable(InterfDefine.资产利率基本信息接口数据.getCode());
-			table.setColumns(ImportGenerator.createImpTableColumns(InterfDefine.资产利率基本信息接口数据.getCode()));
-			// 创建一个线程池
-			if (interfMaxCorePoolSize < 1) {
-				interfMaxCorePoolSize = 20;
-			}
-			ExecutorService service = new JoyinThreadPoolExecutor(interfMaxCorePoolSize);
-			List<Callable<Boolean>> tasks = new ArrayList<>();
-			if (null != chbAssetRateList) {
-				int start = 0;
-				int end = 0;
-				int size = chbAssetRateList.size();
-				int max = (int) Math.ceil((double) size / 1000);
-				for (int i = 0; i < max; i++) {
-					start = end;
-					end = Math.min(size, 1000 * (i + 1));
-					List<Map<String, String>> subList = chbAssetRateList.subList(start, end);
-					tasks.add(new Callable<Boolean>() {
-						@Override
-						public Boolean call() {
-							return excuteChbAssetRateByStep(dateSource,saveFlag,subList, null, null, tmpPath, table, null);
-						}
-					});
+			}else if (chbAssetRateList.size() <= 1000) {
+				// 全量方式先删后插
+				// 数据小于1000直接入库
+				deleteAllData();
+				insertBatch(listNE);
+			} else {
+				// 大于1000使用sqlloader入库
+				// 创建表
+				ImpTable table = new ImpTable(InterfDefine.资产利率基本信息接口数据.getCode());
+				table.setColumns(ImportGenerator.createImpTableColumns(InterfDefine.资产利率基本信息接口数据.getCode()));
+				// 创建一个线程池
+				if (interfMaxCorePoolSize < 1) {
+					interfMaxCorePoolSize = 20;
 				}
-			}
-			// 为线程池添加任务
-			List<Future<Boolean>> taskResult;
-			try {
-				taskResult = service.invokeAll(tasks);
-			} catch (InterruptedException e) {
-				logger.error(e.getMessage(), e);
-				return "fail";
-			}
-			for (Future<Boolean> res : taskResult) {
+				ExecutorService service = new JoyinThreadPoolExecutor(interfMaxCorePoolSize);
+				List<Callable<Boolean>> tasks = new ArrayList<>();
+				if (null != chbAssetRateList) {
+					int start = 0;
+					int end = 0;
+					int size = chbAssetRateList.size();
+					int max = (int) Math.ceil((double) size / 1000);
+					for (int i = 0; i < max; i++) {
+						start = end;
+						end = Math.min(size, 1000 * (i + 1));
+						List<Map<String, String>> subList = chbAssetRateList.subList(start, end);
+						tasks.add(new Callable<Boolean>() {
+							@Override
+							public Boolean call() {
+								createDataFile(tmpPath + "/CHB_ASSET_RATE/CHB_ASSET_RATE", listNE, table.getColumns());
+								return true;
+							}
+						});
+					}
+				}
+				// 为线程池添加任务
+				List<Future<Boolean>> taskResult;
 				try {
-					success = success && res.get();
-				} catch (InterruptedException | ExecutionException e) {
+					taskResult = service.invokeAll(tasks);
+				} catch (InterruptedException e) {
 					logger.error(e.getMessage(), e);
 					return "fail";
 				}
-			}
-			// 任务结束，停止线程池的所有线程
-			service.shutdown();
-			Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/CHB_ASSET_RATE/"), new String[] { "tmp" }, false);
-			List<String> content = new ArrayList<>(chbAssetRateList.size());
-			String result = "";
-			for (File f : files) {
-				if (f.getName().startsWith(InterfDefine.资产利率基本信息接口数据.getCode())) {
+				for (Future<Boolean> res : taskResult) {
 					try {
-						content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-						logger.debug("查找sqlloder文件"+f);
-					} catch (IOException e) {
-						logger.debug("查找sqlloder文件异常");
-						logger.error(e.getMessage(), e);
-						result = "fail";
-					} finally {
-						f.delete();
-					}
-				}
-			}
-			if("fail".equals(result)){
-				return result;
-			}
-			// 系统是否使用的db2数据库
-			boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-			if (isDB2DataBase) {
-				// db2数据库处理
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_ASSET_RATE/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
+						success = success && res.get();
+					} catch (InterruptedException | ExecutionException e) {
 						logger.error(e.getMessage(), e);
 						return "fail";
 					}
 				}
-			} else {
-				// oracle原逻辑
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_ASSET_RATE/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						return "fail";
+				// 任务结束，停止线程池的所有线程
+				service.shutdown();
+				Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/CHB_ASSET_RATE/"), new String[] { "tmp" }, false);
+				List<String> content = new ArrayList<>(chbAssetRateList.size());
+				String result = "";
+				for (File f : files) {
+					if (f.getName().startsWith(InterfDefine.资产利率基本信息接口数据.getCode())) {
+						try {
+							content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
+							logger.debug("查找sqlloder文件"+f);
+						} catch (IOException e) {
+							logger.debug("查找sqlloder文件异常");
+							logger.error(e.getMessage(), e);
+							result = "fail";
+						} finally {
+							f.delete();
+						}
+					}
+				}
+				if("fail".equals(result)){
+					return result;
+				}
+				// 系统是否使用的db2数据库
+				boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+				if (isDB2DataBase) {
+					// db2数据库处理
+					if (CollectionUtils.isNotEmpty(content)) {
+						try {
+							success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_ASSET_RATE/", content,
+									reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
+									reportSqlldrDatabaseName);
+						} catch (IOException | InterruptedException e) {
+							logger.error(e.getMessage(), e);
+							return "fail";
+						}
+					}
+				} else {
+					// oracle原逻辑
+					if (CollectionUtils.isNotEmpty(content)) {
+						try {
+							success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_ASSET_RATE/", content,
+									reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
+									reportSqlldrDatabaseName);
+						} catch (IOException | InterruptedException e) {
+							logger.error(e.getMessage(), e);
+							return "fail";
+						}
 					}
 				}
 			}
 		}
 		return "success";
 	}
-	
-	/**
-	 * @Description 资产利率基本信息入库方式：新增，日全量（根据updatetime，createtime删除数据）
-	 * @version 1.7 2019年5月20日
-	 */
-	private boolean excuteChbAssetRateByStep(String dateSource,String saveFlag, List<Map<String, String>> chbAssetRateList, String type, String[] result,
-			String tmpPath, ImpTable table, ImpTable subTable) {
-		// 定义新增数据list
-		logger.debug("资产利率基本信息map转dto----开始-----:" +  df.format(new Date()));
-		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
-//			List<ChbAssetRate> listNE = convertMapToEntity(chbAssetRateList,dateSource);
-		List<ChbAssetRate> listNE = (List<ChbAssetRate>) convertMapToEntity(chbAssetRateList,ChbAssetRate.class);
-		listNE.stream().forEach(t->{
-			t.setSeqno(IDGenerator.generate(36));//主键
-			// 创建部门
-			t.setCreateDept(CommonUtil.getDeptCode());
-			// 部门代码
-			t.setDeptCode(CommonUtil.getDeptCode());
-			// 机构代码
-			t.setOrgCode(CommonUtil.getOrgCode());
-			// 数据来源
-			t.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源, dateSource));
-		});
-		// modify by convertMapToEntity yangxianjiu 2022-01-19 end
-		logger.debug("资产利率基本信息map转dto----开始-----:" +  df.format(new Date()));
-		if (listNE != null && listNE.size() > 0) {
-			deleteAllData();
-			if (tmpPath == null) {
-				// 插入资产利率基本数据
-				insertBatch(listNE);
-			} else {
-				createDataFile(tmpPath + "/CHB_ASSET_RATE/CHB_ASSET_RATE", listNE, table.getColumns());
-			}
-		}
-		return (CollectionUtils.isNotEmpty(listNE));
-	}
-	
 
-	
 	private void deleteAllData() {
 		chbAssetRateInterfMapper.deleteTodayData();
 	}
-	
+
 	/**
 	 * 将集合均分成几个大小一致的子集合
 	 * @param 集合
@@ -320,135 +276,48 @@ public class SvrChbAssetRateFileImpService extends FileImpService {
 
 	private void insertBatch(List<ChbAssetRate> chbAssetRatelist) {
 		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
-    	//批量插入mapper
+		//批量插入mapper
 		ChbAssetRateInterfMapper chbAssetRateInterfMapper =  session.getMapper(ChbAssetRateInterfMapper.class);
 		try{
 			int count = 0;
 			for(ChbAssetRate sch : chbAssetRatelist){
 				chbAssetRateInterfMapper.insert(sch);
-        		count++;
-        		if(count % 1000==0){
-            		session.commit();
-            		session.clearCache();
-        		}
-        	}
+				count++;
+				if(count % 1000==0){
+					session.commit();
+					session.clearCache();
+				}
+			}
 			session.commit();
-    		session.clearCache();
+			session.clearCache();
 		} finally {
-    		session.close();
-    	}
+			session.close();
+		}
 	}
-	
+
 	private void mergeIntoData(List<ChbAssetRate> chbAssetRatelist) {
 		logger.debug("批量插入资产利率基本信息----开始-----:" +  df.format(new Date()));
 		int singalCount = Integer.parseInt(null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?
-                "100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));
+				"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));
 		List<List<ChbAssetRate>> bigList = createList(chbAssetRatelist,singalCount);
 		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
-    	//批量插入mapper
+		//批量插入mapper
 		ChbAssetRateInterfMapper chbAssetRateInterfMapper =  session.getMapper(ChbAssetRateInterfMapper.class);
 		try{
 			int count = 0;
 			for(List<ChbAssetRate> sch : bigList){
 				chbAssetRateInterfMapper.mergeChbAssetRateData(sch);
-        		count++;
-        		if(count % 10==0){
-            		session.commit();
-            		session.clearCache();
-        		}
-        	}	
+				count++;
+				if(count % 10==0){
+					session.commit();
+					session.clearCache();
+				}
+			}
 			session.commit();
-    		session.clearCache();
+			session.clearCache();
 		} finally {
-    		session.close();
-    	}
-		logger.debug("批量插入资产利率基本信息----结束-----:" +  df.format(new Date()));		
+			session.close();
+		}
+		logger.debug("批量插入资产利率基本信息----结束-----:" +  df.format(new Date()));
 	}
-	
-	/**
-     * 将map转换为entity格式
-     *
-     * @param infoList 传入的listMap
-     * @param entities 转换后的lis
-     * @param listCloumn 表列名
-     * @param interType 数据来源
-     * @see
-     * @since 1.0
-     */
-    private List<ChbAssetRate> convertMapToEntity(List<Map<String, String>> dataList, String dateSource) {
-        // 获取资产表的列
-    	List<ChbAssetRate> rs = new ArrayList<ChbAssetRate>();
-        for (Map<String, String> map : dataList) {
-        	ChbAssetRate t = new ChbAssetRate();
-        	t.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-            for (String key : map.keySet()) {
-            	if(key==null||key.equals("ERRMSG")){//待处理的数据
-            		t.setStatus(DictCodeListExt1.维护数据状态_待处理.getValue());
-            		continue;
-            	}
-                String value = map.get(key);
-                Field field = ReflectionUtils.findField(ChbAssetRate.class,
-                			subBlank(key.toLowerCase()));
-                if(field==null)
-                	continue;
-                field.setAccessible(true);
-                Type type = field.getGenericType();
-                if("java.lang.String".equals(type.getTypeName())){
-                    try {
-                        field.set(t, value);
-                    } catch ( IllegalAccessException e) {
-                        logger.error(e.getMessage(),e);
-                    }
-                }else if ("java.math.BigDecimal".equals(type.getTypeName())) {
-                        try {
-                            field.set(t,(value == null || "".equals(value)) ? BigDecimal.ZERO : new BigDecimal(value));
-                        } catch ( IllegalAccessException e) {
-                            logger.error(e.getMessage(),e);
-                        }
-                    }
-                    else if ("java.lang.Integer".equals(type.getTypeName())) {
-                        try {
-                            field.set(t,(value == null || "".equals(value)) ? 0 : Integer.valueOf(value));
-                        } catch (IllegalAccessException e) {
-                            logger.error(e.getMessage(),e);
-                        }
-                    }
-                    else if ("java.lang.Short".equals(type.getTypeName())) {
-                        try {
-                            field.set(t, (value == null || "".equals(value)) ? 0 : Short.valueOf(value));
-                        } catch ( IllegalAccessException e) {
-                            logger.error(e.getMessage(),e);
-                        }
-                    } else if ("java.util.Date".equals(type.getTypeName())) {
-                        if (value != null&&""!=value) {
-                            try {
-                                field.set(t, DateUtil.parse(value));
-                            } catch ( IllegalAccessException e) {
-                                logger.error(e.getMessage(),e);
-                            }
-                        }
-                    } else{
-                	try {
-                        field.set(t, value);
-                    } catch ( IllegalAccessException e) {
-                        logger.error(e.getMessage(),e);
-                    }
-                }
-            }
-            t.setSeqno(IDGenerator.generate(36));//主键
-            // 创建人
-            t.setCreateUser(CommonUtil.getUserName());
-            t.setUpdateUser(CommonUtil.getUserName());
-            // 创建部门
-            t.setCreateDept(CommonUtil.getDeptCode());
-            // 部门代码
-            t.setDeptCode(CommonUtil.getDeptCode());
-            // 机构代码
-            t.setOrgCode(CommonUtil.getOrgCode());
-            // 数据来源
-            t.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源, dateSource));
-            rs.add(t);
-        }
-        return rs;
-    }
 }
