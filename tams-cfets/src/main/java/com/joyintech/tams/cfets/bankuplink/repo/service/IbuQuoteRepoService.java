@@ -35,6 +35,8 @@ import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.DateCalService;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -115,6 +117,9 @@ public class IbuQuoteRepoService extends BaseService {
 
     @Autowired
     private BaseEtrInvestInfoServiceImpl etrInvestInfoServiceImpl;
+
+    @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
 
     @Autowired(required = false)
     private BaseEtrInvestInfoServiceImpl etrInvesInfo;
@@ -2090,6 +2095,14 @@ public class IbuQuoteRepoService extends BaseService {
                 }
                 if (null != item.getTradeFinishPercent() && item.getTradeFinishPercent().compareTo(BigDecimal.ZERO) == 0) {
                     errorList.add(new ValidMessage("只可对成交进度>0%的已接收未完成指令进行强制完成操作!"));
+                    return;
+                }
+                WflValidInputParameter wflValidInputParameter  = new WflValidInputParameter();
+                wflValidInputParameter.setPageId("RepoEntrustForcedFinish");
+                wflValidInputParameter.setBusinessDataPk1(item.getEntrustId());
+                if(mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)){
+                    //流程存在情况
+                    errorList.add(new ValidMessage("存在流程中交易数据，不可进行强制完成!"));
                     return;
                 }
             });
