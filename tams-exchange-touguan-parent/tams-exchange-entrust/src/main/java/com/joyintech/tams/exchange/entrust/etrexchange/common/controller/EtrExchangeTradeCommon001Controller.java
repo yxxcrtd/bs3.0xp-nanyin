@@ -806,6 +806,21 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	}
 
 	/**
+	 * 1.6计算偏离度
+	 *
+	 * @param request 画面参数
+	 * @return 偏离度
+	 * @see
+	 * @since 1.0
+	 */
+	@RequestMapping("/calcDeviationDegree")
+	@ResponseBody
+	public Message<String> calcDeviationDegree(@RequestParam CalcDeviationDegreeRequest request) {
+		String deviationDegree = etrExchangeTrade001CommonService.calcDeviationDegree(request);
+		return new Message<String>().success().setData(deviationDegree);
+	}
+
+	/**
 	 * 保存按钮点击时的check
 	 *
 	 * @param  dto
@@ -1233,21 +1248,6 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		return null;
 	}
 
-	//add by chenjiaxing 债券竞价交易计算偏离度 20210907 start
-	/**
-	 * 1.6计算偏离度
-	 *
-	 * @param params 画面参数
-	 * @return 偏离度
-	 * @see
-	 * @since 1.0
-	 */
-	@RequestMapping("calcDeviationDegree")
-	@ResponseBody
-	public String calcDeviationDegree(@RequestParam Map<String, Object> params) {
-		return etrExchangeTrade001CommonService.calcDeviationDegree(params);
-	}
-	//add by chenjiaxing 债券竞价交易计算偏离度 20210907 end
 
 	/***
 	 * 初始化行情
@@ -1347,8 +1347,6 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			return new Message<FinStockInfoDto>().fail().setData(null);
 		}
 	}
-
-
 
 }
 	
