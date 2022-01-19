@@ -70,3 +70,8 @@ maxvalue 9999
 start with 1
 increment by 1
 cache 20;
+
+/*共通业务类型_固收类资产交易*/
+delete  from  sys_datadict_list where DICT_CODE='COMMON_BUSINESS_TYPE' and ITEM_CODE='TRD85';
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('COMMON_BUSINESS_TYPE', 'TRD85', '固收类资产交易', 577, '0', 'system', null, sysdate, 'system', sysdate, null);
