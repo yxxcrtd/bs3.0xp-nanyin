@@ -1439,7 +1439,7 @@
                  select -1*IBQER.FPRICE_AMT ENTRUST_AMT
                  from IBU_QUOTE_ETR_RE IBQER
                  left join IBU_QUOTE_CREP IQC on IBQER.QUOTE_ID = IQC.QUOTE_ID
-                 where IBQER.ENTRUST_ID = #{etrId} AND IQC.TRADE_STATUS = '01' AND IQC.SEND_STATUS = '01' /*新增中 已发送*/
+                 where IBQER.ENTRUST_ID = #{etrId} AND IQC.SEND_STATUS = '01' /*新增中 已发送*/
                  union
                  select -1*FPRICE_AMT ENTRUST_AMT
                  from WFL_IBU_QUOTE_ETR_RE
