@@ -1454,22 +1454,18 @@ public class MonthReportAssetService {
 		BigDecimal terms = null;
 		// 设置期限字段
 		boolean isCalcFlag = true;//后续判定是否需要再计算
-		//公私募基金 15 19  默认为 30
-		if ("15".equals(position.getAssettype()) || "19".equals(position.getAssettype())) {
-			terms = new BigDecimal(30);
+		//公私募基金 15 19 金融衍生品 07 权益类资产 06 无到期日 默认为 1
+		if (("15".equals(position.getAssettype()) || "19".equals(position.getAssettype())
+				|| "06".equals(position.getAssettype()) || "07".equals(position.getAssettype())) && chbAssetInfo.getMdate() == null) {
+			terms = new BigDecimal(1);
 			isCalcFlag = false;//后续判定是否需要再计算
-		}
-		// 06 权益类资产
-		else if("06".equals(position.getAssettype())) {
+
+			//所有资产mdate != null && mdate<月报最后一天（逾期资产）,该字段默认=0
+		}else if(chbAssetInfo.getMdate() != null && DateUtil.getBetweenDayNumber(report.getEnddate(), chbAssetInfo.getMdate()) < 0){
 			terms = BigDecimal.ZERO;
 			isCalcFlag = false;//后续判定是否需要再计算
-		}
-		//所有资产mdate != null && mdate<月报最后一天（逾期资产）,该字段默认=0
-		else if(chbAssetInfo.getMdate() != null && DateUtil.getBetweenDayNumber(report.getEnddate(), chbAssetInfo.getMdate()) < 0) {
-			terms = BigDecimal.ZERO;
-			isCalcFlag = false;//后续判定是否需要再计算
-		}
-		else {
+
+		} else {
 			boolean prdFlag = false;
 			//asset_type in（'12','16'） 取plan_edate
 			if ("12".equals(position.getAssettype()) || "16".equals(position.getAssettype())) {

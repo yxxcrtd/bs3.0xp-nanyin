@@ -439,6 +439,11 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             }
             int flag = 0;
             for (String value : srcValueList) {
+                //如果是产品特殊字段
+                if(StringUtil.equals("PRD_SPEC_PROPERTY",rule.getSrcproperty())&&
+                        value.contains(" ")){
+                    value=value.substring(0,value.indexOf(" "));
+                }
                 String objValue = rule.getObjvalue();
                 DataDict dto = CacheUtil.getDictCode(objValue);
                 if (null != dto) {
