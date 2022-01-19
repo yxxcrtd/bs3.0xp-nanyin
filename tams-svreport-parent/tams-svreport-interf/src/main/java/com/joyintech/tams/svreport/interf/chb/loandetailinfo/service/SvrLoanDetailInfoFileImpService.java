@@ -116,8 +116,15 @@ public class SvrLoanDetailInfoFileImpService extends FileImpService {
                                      ImpTable subTable, String saveFlag, String dataSource) {
 //        List<ChbLoanDetailInfo> loanDetailInfoList = new ArrayList<>(infoList.size());
         List<ChbLoanDetailInfo> loanDetailInfoList;
-        List<String> listColumn = baseMapper.getTableColumnList(InterfDefine.贷款明细信息接口数据.getCode());
-        loanDetailInfoList = this.convertMapToEntity(infoList,dataSource,listColumn);
+        // modify by convertMapToEntity yangnxianjiu 2022-01-19 start
+//        List<String> listColumn = baseMapper.getTableColumnList(InterfDefine.贷款明细信息接口数据.getCode());
+//        loanDetailInfoList = this.convertMapToEntity(infoList,dataSource,listColumn);
+        loanDetailInfoList = (List<ChbLoanDetailInfo>) convertMapToEntity(infoList,ChbLoanDetailInfo.class);
+        loanDetailInfoList.stream().forEach(chbLoanDetailInfo->{
+            chbLoanDetailInfo.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源,dataSource));
+            chbLoanDetailInfo.setAssetUuid(IDGenerator.generate(36));
+        });
+        // modify by convertMapToEntity yangnxianjiu 2022-01-19 end
         if (loanDetailInfoList != null && loanDetailInfoList.size() > 0) {
             insertDataMerge(loanDetailInfoList, saveFlag);
         }

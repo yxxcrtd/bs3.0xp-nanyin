@@ -283,7 +283,7 @@ public class ReportHomeService{
 		List<String> svrFirstMenuIdList = StringUtil.splitToList(GlobalConstant.COMMA, svrFirstMenuId);
 		String svrIsSubSystem = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUB_SYSTEM);
 		param.put("svrFirstMenuIdList", svrFirstMenuIdList);
-		param.put("svrIsSubSystem", svrIsSubSystem);
+		param.put("svrFlag", svrIsSubSystem);
     	List<String> menulist = reportHomeMapper.selectMenulist(param);
     	if(!CollectionUtils.isEmpty(menulist)){
     		for(String menu : menulist){

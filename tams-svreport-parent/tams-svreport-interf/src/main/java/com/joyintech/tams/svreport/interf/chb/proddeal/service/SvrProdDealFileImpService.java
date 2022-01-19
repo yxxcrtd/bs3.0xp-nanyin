@@ -139,8 +139,16 @@ public class SvrProdDealFileImpService extends FileImpService {
 		Date settdateDate = null;
 		HashMap<String, ChbPrdDeal> dlMap = new HashMap<String, ChbPrdDeal>();
 		String key = "";
-		for (Map<String, String> map : baseinfoList) {
-			ChbPrdDeal deal = dataConversionEntity(map);
+		// modify by convertMapToEntity yangxianjiu 2022-01-18 start
+		List<ChbPrdDeal> baseList = (List<ChbPrdDeal>) convertMapToEntity(baseinfoList,ChbPrdDeal.class);
+//		for (Map<String, String> map : baseinfoList) {
+		for (ChbPrdDeal deal : baseList) {
+//			ChbPrdDeal deal = dataConversionEntity(map);
+			if (deal.getRedemptionFee() == null && "".equals(deal.getRedemptionFee())) {
+				deal.setRedemptionFee(BigDecimal.ZERO);
+			}
+			deal.setTradePrince(deal.getTradePrince().subtract(deal.getRedemptionFee()));
+			// modify by convertMapToEntity yangxianjiu 2022-01-18 end
 			if (settdateDate == null && deal.getSettdateDate() != null) {
 				settdateDate = deal.getSettdateDate();
 			}

@@ -29,6 +29,7 @@
         FROM
         MST_HOLIDAY A
         where 1=1
+        AND A.CALENDAR_ID = '01'
         <if test="updatetime != null" >
             and nvl(A.UPDATE_TIME,A.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
         </if>

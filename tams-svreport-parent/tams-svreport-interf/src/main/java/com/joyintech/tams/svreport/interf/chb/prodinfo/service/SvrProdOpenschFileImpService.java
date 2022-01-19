@@ -249,7 +249,21 @@ public class SvrProdOpenschFileImpService extends FileImpService {
 		// 产品list(仅删除用的产品list)
 		List<String> prodlistE = new ArrayList<String>();
 		logger.debug("开放计划数据map转dto----开始-----:" +  df.format(new Date()));
-		listNE = convertMapToEntity(openSchList,dateSource);
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
+//		listNE = convertMapToEntity(openSchList,dateSource);
+		listNE = (List<ChbPrdOpensch>) convertMapToEntity(openSchList,ChbPrdOpensch.class);
+		listNE.stream().forEach(dto->{
+			dto.setSeqno(IDGenerator.generate(36));//主键
+			// 创建部门
+			dto.setCreateDept(CommonUtil.getDeptCode());
+			// 部门代码
+			dto.setDeptCode(CommonUtil.getDeptCode());
+			// 机构代码
+			dto.setOrgCode(CommonUtil.getOrgCode());
+			// 数据来源
+			dto.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源, dateSource));
+		});
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 end
 		logger.debug("开放计划数据map转dto----结束-----:" +  df.format(new Date()));
 		for (ChbPrdOpensch openSch : listNE) {
 			if (!prodlistE.contains(openSch.getProdId())) {

@@ -1,6 +1,8 @@
 package com.joyintech.tams.svreport.interf.chb.baseinfo.dao;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -28,5 +30,5 @@ public interface SvrMstExchangeImpMapper {
 
 	void deleteAllData();
 	
-	int deleteTodayData();
+	int deleteTodayData(Set<Date> dateSet);
 }
