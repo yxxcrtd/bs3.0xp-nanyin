@@ -2330,7 +2330,7 @@ public class IbuQuoteRepoService extends BaseService {
         boolean flowFlag = false;
         if (CollectionUtils.isNotEmpty(cfetsBondDealEntrustOrderDtos)) {
             for (CfetsRepoDealEntrustOrderDto item : cfetsBondDealEntrustOrderDtos) {
-                if (!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已接收)
+                if (!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已接收.getValue())
                         || item.getTransactioncom().compareTo(BigDecimal.ZERO) != 0) {
                     statusFlag = true;
                 }
