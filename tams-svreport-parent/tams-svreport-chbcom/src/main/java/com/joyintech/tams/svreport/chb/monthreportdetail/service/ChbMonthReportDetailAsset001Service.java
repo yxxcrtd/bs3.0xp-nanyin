@@ -100,6 +100,8 @@ public class ChbMonthReportDetailAsset001Service extends CommonExportService<Chb
 
 	public List<ChbMonthReportDetailAsset> selectForExport(Map<String, Object> pageParam) {
 		//将发送状态改为空
+		String iscal= SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ASSETPOSITION_CALWAY);
+		pageParam.put("costFlag",iscal);
 		if(StringUtil.isNotEmpty(pageParam.get("prodId"))){
 			pageParam.put("prodIds",pageParam.get("prodId").toString().split(","));
 		}

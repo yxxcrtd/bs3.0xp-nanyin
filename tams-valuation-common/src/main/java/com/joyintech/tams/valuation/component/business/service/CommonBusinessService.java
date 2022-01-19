@@ -148,4 +148,15 @@ public class CommonBusinessService {
         return resultList;
     }
 
+    /**
+     * @author  殷亚
+     * @description 获取内部科目编码定义
+     * @date 2022-1-12 15:09
+     * @return java.util.List<com.joyintech.framework.select.SelectOptionDto>
+     */
+    public List<SelectOptionDto> getSubjectInteral(Map<String, Object> param) {
+        List<SelectOptionDto> resultList = commonBusinessMapper.getSubjectInteral(param);
+        return resultList;
+    }
+
 }

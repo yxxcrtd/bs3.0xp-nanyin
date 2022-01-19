@@ -1,5 +1,6 @@
 package com.joyintech.tams.report.home.service;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.DateUtil;
@@ -277,8 +278,13 @@ public class ReportHomeService{
     @DataSource(DataSourceType.OTHER)
     public List<String> selectMenulist(){
     	List<String> menulist1 = new ArrayList<String>();
-
-    	List<String> menulist = reportHomeMapper.selectMenulist(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUB_SYSTEM),SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_FIRST_MENU_ID));
+		Map<String, Object> param = new HashMap<String,Object>();
+		String svrFirstMenuId = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_FIRST_MENU_ID);
+		List<String> svrFirstMenuIdList = StringUtil.splitToList(GlobalConstant.COMMA, svrFirstMenuId);
+		String svrIsSubSystem = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUB_SYSTEM);
+		param.put("svrFirstMenuIdList", svrFirstMenuIdList);
+		param.put("svrFlag", svrIsSubSystem);
+    	List<String> menulist = reportHomeMapper.selectMenulist(param);
     	if(!CollectionUtils.isEmpty(menulist)){
     		for(String menu : menulist){
     			switch(menu){
