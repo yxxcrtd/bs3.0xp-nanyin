@@ -112,7 +112,7 @@ public class SvrExchangFileImpService extends FileImpService {
 		List<MstExchargeQuote> listNE = (List<MstExchargeQuote>) convertMapToEntity(listData,MstExchargeQuote.class);
 		// modify by convertMapToEntity yangnxianjiu 2022-01-19 end
 		logger.debug("汇率数据转dto---结束-----:" +  df.format(new Date()));
-		if(!CollectionUtils.isEmpty(listData)){
+		if(!CollectionUtils.isEmpty(listNE)){
 			// 增量模式根据业务主键更新
 			if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
 				mergeExchangeInfo(listNE);
@@ -122,7 +122,7 @@ public class SvrExchangFileImpService extends FileImpService {
 				Map<Date, List<MstExchargeQuote>> mstExchargeQuoteMap = listNE.stream().collect(JoyinCollectors.groupingBy(MstExchargeQuote::getTradeDate));
 				Set<Date> dateSet = mstExchargeQuoteMap.keySet();
 				deleteAllData(dateSet);
-				if (listData.size() <= 1000) {
+				if (listNE.size() <= 1000) {
 					insertExchangeInfo(listNE);
 				} else {// 大于1000使用sqlloader入库
 					// 创建表
@@ -134,19 +134,19 @@ public class SvrExchangFileImpService extends FileImpService {
 					}
 					ExecutorService service = new JoyinThreadPoolExecutor(interfMaxCorePoolSize);
 					List<Callable<Boolean>> tasks = new ArrayList<>();
-					if (null != listData) {
+					if (null != listNE) {
 						int start = 0;
 						int end = 0;
-						int size = listData.size();
+						int size = listNE.size();
 						int max = (int) Math.ceil((double) size / 1000);
 						for (int i = 0; i < max; i++) {
 							start = end;
 							end = Math.min(size, 1000 * (i + 1));
-							List<Map<String, String>> subList = listData.subList(start, end);
+							List<MstExchargeQuote> subList = listNE.subList(start, end);
 							tasks.add(new Callable<Boolean>() {
 								@Override
 								public Boolean call() {
-									createDataFile(tmpPath + "/MST_EXCHARGE_QUOTE/MST_EXCHARGE_QUOTE", listNE, table.getColumns());
+									createDataFile(tmpPath + "/MST_EXCHARGE_QUOTE/MST_EXCHARGE_QUOTE", subList, table.getColumns());
 									return true;
 								}
 							});
@@ -173,7 +173,7 @@ public class SvrExchangFileImpService extends FileImpService {
 					// 任务结束，停止线程池的所有线程
 					service.shutdown();
 					Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/MST_EXCHARGE_QUOTE/"), new String[] { "tmp" }, false);
-					List<String> content = new ArrayList<>(listData.size());
+					List<String> content = new ArrayList<>(listNE.size());
 					String result = "";
 					for (File f : files) {
 						if (f.getName().startsWith(InterfDefine.汇率信息数据.getCode())) {
