@@ -83,14 +83,14 @@
         , {
             field: 'proAvailableCash',
             width: 120,
-            title: '组合T日可用现金',
+            title: '组合T日可用现金(元)',
             sortable: false,
             type: 'number',
             digit: 2
         }, {
             field: 'secManageAvailablePosition',
             width: 120,
-            title: '组合T日可用持仓',
+            title: '组合T日可用持仓(元)',
             sortable: false,
             type: 'number',
             digit: 2,

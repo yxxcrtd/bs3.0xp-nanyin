@@ -9,6 +9,7 @@
  */
 package com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.controller;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
@@ -38,19 +39,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * 大宗交易所指令交易（债券股票回购基金场内指令交易）
- * @author meifaxin
+ * @author wangyang1
  * @version 1.0 2021年12月28日
  * @see EtrExchangeBlockTrade001Controller
  * @since 1.0

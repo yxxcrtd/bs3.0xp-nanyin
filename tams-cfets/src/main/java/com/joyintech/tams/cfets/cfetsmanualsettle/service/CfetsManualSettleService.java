@@ -143,7 +143,10 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                                 || (StringUtil.equals(cfetsDto.getTgBusiType(), DictCodeListExt3.头寸业务类型_现券交易.getValue())
                                          && !StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_买入.getValue()))
                                 || (StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券质押式正回购.getValue())
-                                && StringUtil.equals(cfetsDto.getPs(), DictCodeListExt3.交易方向_正回购.getValue()))))){
+                                && StringUtil.equals(cfetsDto.getPs(), DictCodeListExt3.交易方向_正回购.getValue())
+                                && StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue()))
+                                || (StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue())
+                                && StringUtil.equals(cfetsDto.getPs(), DictCodeListExt3.交易方向_逆回购.getValue()))))){
                     returnList.add(cfetsDto);
                 }
             }
@@ -560,7 +563,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             //余额校验	Y：需校验   N：不需校验
             String balanceCheck="N";
             req.setBalanceCheck(balanceCheck);
-            req.setBusiType(DictCodeListExt3.头寸业务类型_质押式回购首期.getValue());
+            req.setBusiType(cfetsManualSettleRequest.getListTrdBnakSetDetails().get(0).getBusiType());
             req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
             //清算速度
             if(!StringUtil.isEmptyList(listTemp) && StringUtil.isNotEmpty(listTemp.get(0).getSettleSpeed())){

@@ -1826,6 +1826,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 
         return null;
     }
+
     public AjaxResult closeDelegateCheckMethod(CfetsEtribBondInfo003Dto dto){
         if(!StringUtil.isNotEmpty(dto)|| StringUtil.isEmptyList(dto.getSelectedItem())){
             AjaxResult res=new AjaxResult();

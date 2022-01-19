@@ -884,4 +884,9 @@ public class EntrustUtils {
     public static boolean isFailed(ResultBean resultBean) {
         return !isSuccess(resultBean);
     }
+
+    // 是否为竞价指令
+    public static boolean isNormalTrade(Instruction instruction) {
+        return TradePlat.NORMAL.value.equals(instruction.getTradePlat());
+    }
 }

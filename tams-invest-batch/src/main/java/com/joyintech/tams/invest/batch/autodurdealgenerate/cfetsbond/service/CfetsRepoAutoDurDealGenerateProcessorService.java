@@ -53,9 +53,9 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         paramMap1.put("finProdType2", Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()));
         paramMap1.put("updateUser", "system");
         paramMap1.put("batchDate", batchDate);
-        List<String> totalTradeIds = cfetsBondAutoDurDealGenerateMapper.selectTrdFinProductDealTotalData(paramMap1);
-        for(String totalTradeId : totalTradeIds){
-            PositionHttpRequest.sendRevoke(totalTradeId,DictCodeListExt1.子系统代码_交易.getValue(),"REPO001");
+        List<TrdFinProductDealTotal> totalTradeIds = cfetsBondAutoDurDealGenerateMapper.selectTrdFinProductDealTotalData(paramMap1);
+        for(TrdFinProductDealTotal item : totalTradeIds){
+            PositionHttpRequest.dorevoke(item.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),DictCodeListExt3.头寸业务类型_质押式回购到期.getValue(),item.getPs());
         }
         //删除当日数据
         autoPeriodCommonService.deleteActData(DictCodeList.共通业务类型_质押式回购存续期.getValue(),
@@ -101,6 +101,8 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         String mdate = DateUtil.format(batchDate);
         paramMap.put("mdateStart", mdate);
         paramMap.put("mdateEnd", mdate);
+        //去掉已接收成功的数据
+        paramMap.put("DELIVERY_STATUS_02","02");
         List<TrdRepoDurationDto> tradeDataList = restTemplate.postForList(
                 ServiceApplication.PERIOD_SERVICE_NAME + "/TrdRepoDuration/selectAllData", paramMap,
                 TrdRepoDurationDto.class);
@@ -144,9 +146,10 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
             trdFinProductDealTotal.setMdate(DateTime.parse(entity.getmDate()).toDate());
         }
         trdFinProductDealTotal.setSettleDate(DateTime.parse(entity.getSettleDate()).toDate());
-        trdFinProductDealTotal.setShareAmt(entity.getTheoryPrin());
+        trdFinProductDealTotal.setShareAmt(ArithmeticUtil.divide(entity.getTheoryPrin(),new BigDecimal(100),2));
         //实际利息 = 到期结算金额-理论本金
-        trdFinProductDealTotal.setIntAmt(ArithmeticUtil.subtract(entity.getFpriceAmt(), entity.getTheoryPrin()));
+        //trdFinProductDealTotal.setIntAmt(ArithmeticUtil.subtract(entity.getFpriceAmt(), entity.getTheoryPrin()));
+        trdFinProductDealTotal.setIntAmt(entity.getTheoryInt());
 //        利息总额
         trdFinProductDealTotal.setTradeAmt(entity.getTradeAmt());
         trdFinProductDealTotal.setTradeMarket(entity.getTradeMarket());
@@ -172,9 +175,9 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         // 通道交易新增 start
         trdFinProductDealTotal.setChlId(entity.getChlId());
         //期待值：要加上罚息金额
-        if(entity.getPenaltyIntamt()!= null){
+        /*if(entity.getPenaltyIntamt()!= null){
             trdFinProductDealTotal.setIntAmt(ArithmeticUtil.doAdd(entity.getPenaltyIntamt(),trdFinProductDealTotal.getIntAmt()));
-        }
+        }*/
         if(entity.getActTradeFee()!= null){
             trdFinProductDealTotal.setFeeAmt(ArithmeticUtil.doAdd(trdFinProductDealTotal.getFeeAmt()==null?BigDecimal.ZERO:trdFinProductDealTotal.getFeeAmt(),entity.getActTradeFee()));
             trdFinProductDealTotal.setFeeAmtUnpay(
@@ -292,6 +295,7 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         trdProductDeal.setTradeId(autoPeriodCommonService.buildBussinessCode(parameter));
         trdProductDeal.setTotleTradeId(entity.getBusiCode());
         trdProductDeal.setTradeAmt(entity.getTradeAmt());
+        trdProductDeal.setShareAmt(ArithmeticUtil.divide(trdProductDeal.getShareAmt(),new BigDecimal(100),2));
         trdProductDeal.setSettleDate(DateUtil.parse(entity.getSettleDate()));
         trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
         trdProductDeal.setIsCancel(DictCodeList.是否_否.getValue());
@@ -396,7 +400,7 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         req.put("busiType",DictCodeListExt3.头寸业务类型_质押式回购到期.getValue());
         req.put("systemAct",DictCodeListExt3.系统动作_新建.getValue());
         req.put("decisionAct",DictCodeListExt3.系统动作_新建.getValue());
-        req.put("busiAct","22");
+        req.put("busiAct",DictCodeListExt3.业务动作_待交收.getValue());
         if(StringUtil.equals(trdFinProductDealTotal.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())){
             req.put("ps","03");
         }else{

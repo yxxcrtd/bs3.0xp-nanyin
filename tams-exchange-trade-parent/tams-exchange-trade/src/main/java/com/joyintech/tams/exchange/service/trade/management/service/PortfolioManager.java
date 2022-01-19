@@ -17,7 +17,6 @@ import com.joyintech.tams.exchange.common.constant.joyin.DictCodeList;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt1;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.InstructionDetail;
-import com.joyintech.tams.exchange.common.db.domain.Instrument;
 import com.joyintech.tams.exchange.common.dto.PortfolioInstructionContextDto;
 import com.joyintech.tams.exchange.common.microservice.ServiceApplication;
 import com.joyintech.tams.exchange.common.microservice.TradeServiceURL;
@@ -303,7 +302,8 @@ public class PortfolioManager extends BaseService {
             log.warn("未找到指令信息: InstructionId [{}]", instructionId);
             return ResultBean.error(ErrorCode.INSTRUCTIONS_NOT_EXIST);
         }
-
+        // 获取委托属性
+        String entrustProp = EntrustPropUtils.getEntrustProp(instruction, bean.getEntrustProp());
 
         // 获取多组合
         List<InstructionDetail> instructionDetails = instructionDetailService.queryInstructionDetailsByInstructionId(instructionId);
@@ -340,30 +340,32 @@ public class PortfolioManager extends BaseService {
         // 计算结果
         PortfolioCalculateResponse calculateResponse = null;
 
-        Instrument instrument = instrumentService.queryByInnerCode(bean.getStockCode());
-        MinTrdUnitLimit minTrdUnitLimit = instrumentService.getMinTrdUnitLimit(instruction.getTradePlat(), instruction.getTradeMarket(), instrument, instruction.getPs());
         // 最低交易数量：大于等于
         Integer minNum;
         // 最小交易单元：整数倍
         Integer minStep;
         // 最低交易金额：大于等于
         BigDecimal minAmt;
-        if (minTrdUnitLimit == null) {
-            minNum = 100;
-            minStep = 100;
-            minAmt = BigDecimal.ZERO;
-        } else {
-            if (EntrustProp.isMarketPrice(bean.getEntrustProp())) {
+        if (instruction.getMinPriceAndMinTrdUnitLimitBean() != null
+                && instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList() != null
+                && instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList().size() > 0) {
+            MinTrdUnitLimit minTrdUnitLimit = instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList().get(0);
+            if (EntrustProp.isMarketPrice(entrustProp)) {
                 minNum = minTrdUnitLimit.getMinNumMarket();
             } else {
                 minNum = minTrdUnitLimit.getMinNum();
             }
             minStep = minTrdUnitLimit.getMinStep();
             minAmt = minTrdUnitLimit.getMinAmt();
+        } else {
+            minNum = 1;
+            minStep = 1;
+            minAmt = BigDecimal.ZERO;
         }
+
         //市价委托填充反向涨跌停价
         BigDecimal price = bean.getEntrustPrice();
-        if (EntrustProp.isMarketPrice(bean.getEntrustProp())) {
+        if (EntrustProp.isMarketPrice(entrustProp)) {
             QuoteProto.TickBean tick = quoteTickService.getTickFromCache(bean.getStockCode());
             if (Objects.nonNull(tick)) {
                 if (bean.getEntrustBs().equals(EntrustBs.SELL.value)) {
@@ -372,6 +374,10 @@ public class PortfolioManager extends BaseService {
                     price = TradeUtils.getBigDecimal(tick.getUpperLimitPrice(), 4);
                 }
             }
+        }
+        // 特殊处理 质押式回购交易，将委托价格设置为100
+        if (EntrustUtils.isPledgeRepurchase(instruction)) {
+            price = BigDecimal.valueOf(100L);
         }
 
         String portfolioId;
@@ -390,10 +396,10 @@ public class PortfolioManager extends BaseService {
             calculateResponse.setPortfolioId(instruction.getPortfolioId());
             calculateResponse.setPortfolioName(instruction.getPortfolioName());
             calculateResponse.setFinprodMarketId(instruction.getFinprodMarketId());
-            calculateResponse.setEntrustPrice(bean.getEntrustPrice());
+            calculateResponse.setEntrustPrice(bean.getEntrustPrice().compareTo(BigDecimal.ZERO) == 0 ? price : bean.getEntrustPrice());
             calculateResponse.setFinprodName(instruction.getFinprodName());
             calculateResponse.setDisRate(new BigDecimal(detail.getDisRate()));
-            calculateResponse.setEntrustProp(bean.getEntrustProp());
+            calculateResponse.setEntrustProp(entrustProp);
             calculateResponse.setInstructionLeftAmt(isVolume ? BigDecimal.ZERO : ArithmeticUtil.subtract(ArithmeticUtil.subtract(instruction.getEntrustAmt(), instruction.getEntrustLeftAmt()), instruction.getFrozenQuantity()));
             calculateResponse.setInstructionLeftNum(isVolume ? instruction.getEntrustNum() - instruction.getEntrustLeftAmt().longValue() - instruction.getFrozenQuantity().longValue() : 0L);
             calculateResponse.setInstructionTotalAmt(instruction.getEntrustAmt());
@@ -407,14 +413,14 @@ public class PortfolioManager extends BaseService {
             BigDecimal volume = ArithmeticUtil.multiply(BigDecimal.valueOf(bean.getEntrustVolume()), new BigDecimal(detail.getDisRate()));
             if (volume.compareTo(BigDecimal.valueOf(minNum)) == 0) {
                 entrustVolume = minNum;
-                entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), bean.getEntrustPrice());
+                entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), price);
             } else if (volume.compareTo(BigDecimal.valueOf(minNum)) > 0) {
                 entrustVolume = Integer.valueOf(ArithmeticUtil.divide(volume, BigDecimal.valueOf(minStep), 0, RoundingMode.DOWN).multiply(BigDecimal.valueOf(minStep)).toString());
-                entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), bean.getEntrustPrice());
+                entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), price);
             }
             if ("02".equals(detail.getTargetType())) {
                 entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), price);
-                entrustVolume = Integer.valueOf(ArithmeticUtil.divide(ArithmeticUtil.divide(entrustAmt, bean.getEntrustPrice(), 12), BigDecimal.valueOf(minStep), 0, RoundingMode.DOWN).multiply(BigDecimal.valueOf(minStep)).toString());
+                entrustVolume = Integer.valueOf(ArithmeticUtil.divide(ArithmeticUtil.divide(entrustAmt, price, 12), BigDecimal.valueOf(minStep), 0, RoundingMode.DOWN).multiply(BigDecimal.valueOf(minStep)).toString());
             }
             calculateResponse.setEntrustAmt(entrustAmt);
             calculateResponse.setEntrustNum(Long.valueOf(entrustVolume));

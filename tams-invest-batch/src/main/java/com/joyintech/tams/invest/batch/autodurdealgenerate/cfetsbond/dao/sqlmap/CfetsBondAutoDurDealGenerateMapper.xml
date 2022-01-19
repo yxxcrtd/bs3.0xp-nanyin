@@ -631,11 +631,12 @@
         AND R.FINPROD_ID = #{finprodId}
     </select>
 
-    <select id="selectTrdFinProductDealTotalData" resultType="java.lang.String">
-        select tfpft.totle_trade_id from TRD_FIN_PRODUCT_DEAL_TOTAL tfpft
+    <select id="selectTrdFinProductDealTotalData" resultType="com.joyintech.tams.common.base.entity.TrdFinProductDealTotal">
+        select tfpft.totle_trade_id,tfpft.ps from TRD_FIN_PRODUCT_DEAL_TOTAL tfpft
         where tfpft.trade_date =#{batchDate}
         and tfpft.BUSI_TYPE = #{busiType}
         and tfpft.update_user = #{updateUser}
+        and not exists (select 1 from TRD_BANK_MANUAL_SETTLE_INFO  WHERE SETTLE_STATUS = '02' and TRADE_ID = tfpft.TOTLE_TRADE_ID)
         <if test="finProdType2 != null and finProdType2.size() > 0">
             AND tfpft.FINPROD_TYPE2 IN
             <foreach collection="finProdType2" item="item" open="(" close=")" separator=",">

@@ -76,6 +76,7 @@
             and FINPROD_TYPE2 = #{finProdType2}
           </if>
         )
+        and  not exists (select 1 from TRD_BANK_MANUAL_SETTLE_INFO  WHERE SETTLE_STATUS = '02' and TRADE_ID = tfpft.TOTLE_TRADE_ID)
     </delete>
 
     <delete id="deleteTrdFinProductDealTotalData">
@@ -86,6 +87,7 @@
         <if test="finProdType2 != null and finProdType2 != ''">
             and tfpft.FINPROD_TYPE2 = #{finProdType2}
         </if>
+        and  not exists (select 1 from TRD_BANK_MANUAL_SETTLE_INFO  WHERE SETTLE_STATUS = '02' and TRADE_ID = tfpft.TOTLE_TRADE_ID)
     </delete>
 
     <delete id="deleteTrdProductDeal">
@@ -95,6 +97,7 @@
         <if test="finProdType2 != null and finProdType2 != ''">
             and tfpft.FINPROD_TYPE2 = #{finProdType2}
         </if>
+        and  not exists (select 1 from TRD_BANK_MANUAL_SETTLE_INFO  WHERE SETTLE_STATUS = '02' and TRADE_ID = tfpft.TOTLE_TRADE_ID)
     </delete>
 
     <delete id="deleteTrdProductDealAdd">
@@ -107,6 +110,7 @@
                 and FINPROD_TYPE2 = #{finProdType2}
             </if>
         )
+        and not exists (select 1 from trd_product_deal TT where TT.TRADE_ID = tfpft.TRADE_ID AND  exists (select 1 from TRD_BANK_MANUAL_SETTLE_INFO where SETTLE_STATUS = '02' and TRADE_ID = TT.TOTLE_TRADE_ID))
     </delete>
 
     <select id="selectDealCapacctInfo" resultType="java.lang.String">

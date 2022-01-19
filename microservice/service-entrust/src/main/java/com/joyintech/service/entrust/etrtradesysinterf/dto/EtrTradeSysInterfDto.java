@@ -1015,4 +1015,14 @@ public class EtrTradeSysInterfDto extends BaseEntity{
     public void setOurTrader(String ourTrader) {
         this.ourTrader = ourTrader;
     }
+
+    private String busiTypeTg;
+
+    public String getBusiTypeTg() {
+        return busiTypeTg;
+    }
+
+    public void setBusiTypeTg(String busiTypeTg) {
+        this.busiTypeTg = busiTypeTg;
+    }
 }

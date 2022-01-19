@@ -17,6 +17,9 @@ public class CfetsRepoDealQuoteRequest {
     @ApiModelProperty(required = false, name = "quoteId", value = "报价编号")
     private String quoteId;
 
+    @ApiModelProperty(required = false, name = "quoteType", value = "交易类型")
+    private String quoteType;
+
     @ApiModelProperty(required = false, name = "entrustIdList", value = "指令代码列表", example = "['WTREPO202107081619']")
     private List<String> entrustIdList;
 
@@ -45,6 +48,14 @@ public class CfetsRepoDealQuoteRequest {
 
     public void setWorkflowId(String workflowId) {
         this.workflowId = workflowId;
+    }
+
+    public String getQuoteType() {
+        return quoteType;
+    }
+
+    public void setQuoteType(String quoteType) {
+        this.quoteType = quoteType;
     }
 }
 

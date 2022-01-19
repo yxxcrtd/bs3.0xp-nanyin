@@ -1169,7 +1169,7 @@
 		and a.TRADE_DATE = to_date(#{date},'yyyy-MM-dd') - 1
 	</select>
 
-    <select id="getFinprodOthCodeInfo" resultType="com.joyintech.service.entrust.etrexchangetrade.dto.FinProductOthCodeDto">
+    <select id="getFinprodOthCodeInfo" resultType="com.joyintech.tams.exchange.entrust.etrexchange.common.dto.FinProductOthCodeDto">
         select T2.TRADE_MARKET tradeMarket,
         T1.FINPROD_ID,
         T1.OTH_CODE,

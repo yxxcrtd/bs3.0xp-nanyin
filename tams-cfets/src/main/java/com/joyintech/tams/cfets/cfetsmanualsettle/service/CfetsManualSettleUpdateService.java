@@ -352,6 +352,9 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
         req.setPs(cfetsManualSettleUpdateRequest.getPs());
         //新建 修改 关闭
         req.setSystemAct("01");
+        if("05".equals(cfetsManualSettleUpdateRequest.getButtonType())) {
+            req.setDecisionAct("01");
+        }
         req.setCdate(platformDateImpl.getSysDate());
         req.setCcy(cfetsManualSettleUpdateRequest.getCcy());
         req.setFinprodId(cfetsManualSettleUpdateRequest.getFinprodId());

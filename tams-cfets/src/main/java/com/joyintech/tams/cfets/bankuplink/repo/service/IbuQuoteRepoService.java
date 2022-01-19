@@ -35,6 +35,8 @@ import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.DateCalService;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -115,6 +117,9 @@ public class IbuQuoteRepoService extends BaseService {
 
     @Autowired
     private BaseEtrInvestInfoServiceImpl etrInvestInfoServiceImpl;
+
+    @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
 
     @Autowired(required = false)
     private BaseEtrInvestInfoServiceImpl etrInvesInfo;
@@ -293,7 +298,7 @@ public class IbuQuoteRepoService extends BaseService {
                 setParam(param, 1);
                 List<CfetsRepoDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
                 if (!StringUtil.isEmptyList(entrustDtos)) {
-                    ajaxResult = preconditionJudgment(entrustDtos);
+                    ajaxResult = preconditionJudgment(entrustDtos, cfetsRepoDealQuoteRequest.getQuoteType());
                 }
             } catch (Exception e) {
                 ajaxResult.setMessage("交易执行检查异常!");
@@ -1468,7 +1473,7 @@ public class IbuQuoteRepoService extends BaseService {
      * @author jiangpeng
      * @date 2021/12/7 9:11
      */
-    private AjaxResult preconditionJudgment(List<CfetsRepoDealEntrustOrderDto> entrustDtos) {
+    private AjaxResult preconditionJudgment(List<CfetsRepoDealEntrustOrderDto> entrustDtos, String quoteType) {
         // 第一条数据
         CfetsRepoDealEntrustOrderDto one = entrustDtos.get(0);
         // 返回信息
@@ -1481,6 +1486,18 @@ public class IbuQuoteRepoService extends BaseService {
         String ps = one.getPs();
         // 参数：本币交易导出按钮配置是否显示  01 表示显示  02表示不显示
         String exportShow = CacheUtil.getSysParam("EXPORT_SHOW");
+        //系统是否支持报价业务 Y:支持,N:不支持
+        // 设置为支持时，【交易类型】默认选中对话
+        // 设置为不支持时，【交易类型】默认选中登记
+        String is_sys_support_quote = CacheUtil.getSysParam("is_sys_support_quote");
+        boolean isReg = false;
+        if (StringUtil.isNotEmpty(quoteType)
+                && StringUtil.equals(is_sys_support_quote, DictCodeList.是否_否.getValue())) {
+            isReg = true;
+        }
+        if (StringUtil.equals(quoteType, BussinessDictCodeList.报价方式_登记报价.getValue())) {//登记
+            isReg = true;
+        }
         // 返回结果集
         AjaxResult ajaxResult = new AjaxResult();
         // 回购期限判断标识
@@ -1508,8 +1525,17 @@ public class IbuQuoteRepoService extends BaseService {
                 return ajaxResult;
             }
             // 交易账户校验
-            if (StringUtil.isEmpty(item.getPartyId()) && StringUtil.equals(exportShow, "01")) {
-                message = "指令" + item.getEntrustId() + "下组合未关联交易账户，请至[银行间业务参数管理-CFETS关联账户]中维护";
+            // 当参数：本币交易导出按钮配置为显示 OR (系统是否支持报价业务设置为支持时 and 本币交易导出按钮配置为不显示时)
+            if (StringUtil.isEmpty(item.getPartyId()) && (StringUtil.equals(exportShow, "01") ||
+                    (!isReg && StringUtil.equals(exportShow, "02")))) {
+                message = "指令【" + item.getEntrustId() + "】下组合未关联交易账户，请至[银行间业务参数管理-CFETS关联账户]中维护";
+                ajaxResult.setMessage(message);
+                return ajaxResult;
+            }
+            // 当参数：本币交易导出按钮配置为显示 OR (系统是否支持报价业务设置为支持时 and 本币交易导出按钮配置为不显示时)
+            if (!isReg && StringUtil.equals(exportShow, "02")
+                    && !StringUtil.equals(one.getPartyId(), item.getPartyId())) {
+                message = "所选指令交易账户不同";
                 ajaxResult.setMessage(message);
                 return ajaxResult;
             }
@@ -2092,6 +2118,14 @@ public class IbuQuoteRepoService extends BaseService {
                     errorList.add(new ValidMessage("只可对成交进度>0%的已接收未完成指令进行强制完成操作!"));
                     return;
                 }
+                WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
+                wflValidInputParameter.setPageId("RepoEntrustForcedFinish");
+                wflValidInputParameter.setBusinessDataPk1(item.getEntrustId());
+                if (mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {
+                    //流程存在情况
+                    errorList.add(new ValidMessage("存在流程中交易数据，不可进行强制完成!"));
+                    return;
+                }
             });
         }
         ajaxResult.setErrorList(errorList);
@@ -2296,7 +2330,7 @@ public class IbuQuoteRepoService extends BaseService {
         boolean flowFlag = false;
         if (CollectionUtils.isNotEmpty(cfetsBondDealEntrustOrderDtos)) {
             for (CfetsRepoDealEntrustOrderDto item : cfetsBondDealEntrustOrderDtos) {
-                if (!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已接收)
+                if (!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已接收.getValue())
                         || item.getTransactioncom().compareTo(BigDecimal.ZERO) != 0) {
                     statusFlag = true;
                 }
