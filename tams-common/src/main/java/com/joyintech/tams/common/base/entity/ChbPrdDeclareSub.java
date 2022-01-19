@@ -347,6 +347,20 @@ public class ChbPrdDeclareSub extends ChbPrdDeclareSubKey {
      */
     private Date statusDate;
 
+
+    /**
+     * 投资性质
+     */
+    private  String  ivstorientation;
+
+    public String getIvstorientation() {
+        return ivstorientation;
+    }
+
+    public void setIvstorientation(String ivstorientation) {
+        this.ivstorientation = ivstorientation;
+    }
+
     /**
      * 取得 产品名称
      * @return 产品名称

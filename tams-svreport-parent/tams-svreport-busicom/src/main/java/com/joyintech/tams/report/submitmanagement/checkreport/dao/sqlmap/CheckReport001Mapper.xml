@@ -254,17 +254,17 @@
 	<select id="getProdInfo" parameterType="java.lang.String"
 		resultType="com.joyintech.framework.select.SuggestDto">
 		SELECT DISTINCT
-		A.FINPROD_MARKET_ID as code,
-		A.FINPROD_NAME as name,
-		A.FINPROD_NAME as
+		A.PROD_ID as code,
+		A.PROD_NAME as name,
+		A.PROD_NAME as
 		shortName
-		FROM FIN_PRODUCT A
+		FROM CHB_PRD_BASEINFO A
 		<where>
-			A.FINPROD_MARKET_ID like concat(concat('%',#{prodId,
+			A.PROD_ID like concat(concat('%',#{prodId,
 			jdbcType=VARCHAR}),'%')
-			and A.FINPROD_TYPE = 'F16'
+			and A.STATUS='E'
 			<!-- and A.FINPROD_TYPE2 = 'F16' -->
 		</where>
-		order by A.FINPROD_MARKET_ID
+		order by A.PROD_ID
 	</select>
 </mapper>
