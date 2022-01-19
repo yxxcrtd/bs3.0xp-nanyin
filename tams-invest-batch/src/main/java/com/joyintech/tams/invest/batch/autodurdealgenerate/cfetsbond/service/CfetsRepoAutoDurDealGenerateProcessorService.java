@@ -400,7 +400,7 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         req.put("busiType",DictCodeListExt3.头寸业务类型_质押式回购到期.getValue());
         req.put("systemAct",DictCodeListExt3.系统动作_新建.getValue());
         req.put("decisionAct",DictCodeListExt3.系统动作_新建.getValue());
-        req.put("busiAct","22");
+        req.put("busiAct",DictCodeListExt3.业务动作_待交收.getValue());
         if(StringUtil.equals(trdFinProductDealTotal.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())){
             req.put("ps","03");
         }else{
