@@ -115,7 +115,7 @@
         </if>
         <if test="DELIVERY_STATUS_02 != null and !DELIVERY_STATUS_02.isEmpty()">
             AND NOT EXISTS(
-            SELECT 1 FROM TRD_FIN_PRODUCT_DEAL_TOTAL WHERE TOTLE_TRADE_ID NOT IN (
+            SELECT 1 FROM TRD_FIN_PRODUCT_DEAL_TOTAL WHERE TOTLE_TRADE_ID IN (
             SELECT
             TRADE_ID
             FROM
