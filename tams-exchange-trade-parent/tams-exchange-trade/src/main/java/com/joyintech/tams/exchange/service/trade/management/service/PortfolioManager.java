@@ -303,7 +303,8 @@ public class PortfolioManager extends BaseService {
             log.warn("未找到指令信息: InstructionId [{}]", instructionId);
             return ResultBean.error(ErrorCode.INSTRUCTIONS_NOT_EXIST);
         }
-
+        // 获取委托属性
+        String entrustProp = EntrustPropUtils.getEntrustProp(instruction, bean.getEntrustProp());
 
         // 获取多组合
         List<InstructionDetail> instructionDetails = instructionDetailService.queryInstructionDetailsByInstructionId(instructionId);
@@ -353,7 +354,7 @@ public class PortfolioManager extends BaseService {
             minStep = 100;
             minAmt = BigDecimal.ZERO;
         } else {
-            if (EntrustProp.isMarketPrice(bean.getEntrustProp())) {
+            if (EntrustProp.isMarketPrice(entrustProp)) {
                 minNum = minTrdUnitLimit.getMinNumMarket();
             } else {
                 minNum = minTrdUnitLimit.getMinNum();
@@ -363,7 +364,7 @@ public class PortfolioManager extends BaseService {
         }
         //市价委托填充反向涨跌停价
         BigDecimal price = bean.getEntrustPrice();
-        if (EntrustProp.isMarketPrice(bean.getEntrustProp())) {
+        if (EntrustProp.isMarketPrice(entrustProp)) {
             QuoteProto.TickBean tick = quoteTickService.getTickFromCache(bean.getStockCode());
             if (Objects.nonNull(tick)) {
                 if (bean.getEntrustBs().equals(EntrustBs.SELL.value)) {
@@ -393,7 +394,7 @@ public class PortfolioManager extends BaseService {
             calculateResponse.setEntrustPrice(bean.getEntrustPrice());
             calculateResponse.setFinprodName(instruction.getFinprodName());
             calculateResponse.setDisRate(new BigDecimal(detail.getDisRate()));
-            calculateResponse.setEntrustProp(bean.getEntrustProp());
+            calculateResponse.setEntrustProp(entrustProp);
             calculateResponse.setInstructionLeftAmt(isVolume ? BigDecimal.ZERO : ArithmeticUtil.subtract(ArithmeticUtil.subtract(instruction.getEntrustAmt(), instruction.getEntrustLeftAmt()), instruction.getFrozenQuantity()));
             calculateResponse.setInstructionLeftNum(isVolume ? instruction.getEntrustNum() - instruction.getEntrustLeftAmt().longValue() - instruction.getFrozenQuantity().longValue() : 0L);
             calculateResponse.setInstructionTotalAmt(instruction.getEntrustAmt());
