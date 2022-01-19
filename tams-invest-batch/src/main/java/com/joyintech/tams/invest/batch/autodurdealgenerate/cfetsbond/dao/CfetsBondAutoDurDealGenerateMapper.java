@@ -18,6 +18,7 @@ import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dto.CfetsMa
 import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dto.CfetsTrdConfirmMatchDto;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondDurationDto;
+import com.joyintech.tams.invest.common.dto.period.trdrepoduration.TrdRepoDurationDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -71,4 +72,6 @@ public interface CfetsBondAutoDurDealGenerateMapper {
     List<TrdFinProductDealTotal> selectTrdFinProductDealTotalData(Map<String, Object> paramMap);
 
     String getSecAcctId(@Param("portfolioId") String portfolioId,@Param("finprodId") String finprodId,@Param("tradeMarket") String tradeMarket);
+
+    TrdRepoDurationDto findRepoEffectiveData(Map<String, Object> param);
 }

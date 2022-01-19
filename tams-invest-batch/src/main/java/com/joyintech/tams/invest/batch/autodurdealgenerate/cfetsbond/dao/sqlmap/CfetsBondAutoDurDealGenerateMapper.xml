@@ -656,4 +656,85 @@
 	   AND PSA.PORTFOLIO_ID = #{portfolioId}
 	   AND R.FINPROD_ID = #{finprodId}
     </select>
+
+
+    <select id="findRepoEffectiveData" resultType="com.joyintech.tams.invest.common.dto.period.trdrepoduration.TrdRepoDurationDto">
+            SELECT
+            T1.TRADE_ID finprodId,
+            T1.CCY,
+            T4.BASIS,
+            T4.INT_RATE*100 INT_RATE,
+            to_char(T4.MPAY_DATE, 'yyyy-MM-dd') mpayDate,
+            T1.COUNTER_ID,
+            T6.COUNTER_NAME,
+            T1.COUNTER_TRADER,
+            T1.SEC_MANAGE_ACCT_ID,
+            null REMARK,
+            T1.TRADER,
+            T4.FINPROD_ID,
+            T3.PORTFOLIO_ID,
+            SUBT2.PORTFOLIO_ID ACT_PORTFOLIO_ID,
+            SUBT2.PORTFOLIO_NAME,
+            T5.TYPE_6,
+            <!-- 通道交易 新增 强成西 2019/03/26 start -->
+            T1.CHL_ID,
+            <!-- 通道交易 新增 强成西 2019/03/26 end -->
+            T1.FINPROD_TYPE2 ,
+            to_char(T1.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,
+            to_char(T4.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
+            to_char(T4.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+            T4.TERM,/*回购期限*/
+            T1.PRIN_AMT THEORY_PRIN/*理论本金*/,
+            T1.TRADE_MARKET TRADE_MARKET,
+            null SETTLE_DATE,
+            <!-- DEL BY XR 多组合交易时，从付息计划取得数据可能跟首期交易时存有尾差 start
+            FCP.INT_AMT THEORY_INT/*理论利息*/,
+         T1.PRIN_AMT + FCP.INT_AMT THEORY_AMT/*理论本息总额*/,-->
+            T4.M_INT_AMT THEORY_INT/*理论利息*/,
+            T4.M_TRADE_AMT THEORY_AMT,/*理论本息总额*/
+            <!-- DEL BY XR 多组合交易时，从付息计划取得数据可能跟首期交易时存有尾差 end-->
+            null TRADE_AMT
+            ,T1.COUNTER_CONTACT counterContact/*联系方式*/
+            ,T1.PRIN_AMT
+            ,T1.FEE_AMT_UNPAY
+            ,T1.FEE_AMT
+            ,T1.P_TRADE_ID
+            ,T1.IS_CLEAN
+            ,T1.TRADE_PLAT
+            ,T1.TRADE_MARKET_MODE
+            ,T1.DELIVERY_TYPE
+            ,T1.SEC_MANAGE_ACCT_ID
+            ,T1.UNIT_INT
+            FROM TRD_PRODUCT_DEAL T1
+            <!--  一体化对应etliu start -->
+            LEFT JOIN PTL_TRADE T3 ON T1.TRADE_ID = T3.BUSI_NO <!-- AND T1.BUSI_TYPE = T3.BUSI_TYPE -->
+            <!--  一体化对应etliu end -->
+            LEFT JOIN PTL_PORTFOLIO T2 ON T2.PORTFOLIO_ID = T3.PORTFOLIO_ID
+            LEFT JOIN PTL_TRADE T31 ON T1.TRADE_ID = T31.BUSI_NO
+            LEFT JOIN PTL_PORTFOLIO SUBT2 ON SUBT2.PORTFOLIO_ID = T31.PORTFOLIO_ID
+            LEFT JOIN FIN_CASH_INFO FCI ON T1.FINPROD_ID = FCI.FINPROD_ID AND T1.CCY = FCI.CCY AND FCI.CASH_TYPE_2 = #{C02}
+            LEFT JOIN FIN_CASH_PLAN FCP ON FCI.CASH_ID = FCP.CASH_ID
+            LEFT JOIN FIN_TRADE_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
+            LEFT JOIN FIN_PRODUCT_TYPE T5 ON T4.FINPROD_ID = T5.FINPROD_ID
+            LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.COUNTER_ID
+            WHERE T1.BUSI_TYPE = #{COMMON_BUSINESS_TYPETRD08}
+            and t1.TRADE_STATUS = #{TRADE_STATUS01}
+            and t1.IS_CANCEL = #{YES_OR_NO_N}
+            AND T1.PS = #{PS_T01}
+            AND T2.PARENT_PORTFOLIO_ID IS NULL
+            AND SUBT2.INVEST_YESORNO = 'Y'
+            AND NOT EXISTS (
+            SELECT 1 FROM TRD_PRODUCT_DEAL TPD
+            where TPD.FINPROD_ID = T1.FINPROD_ID
+            AND TPD.PS IN (#{PST22}, #{PST23})
+            AND TPD.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TGF02}, #{FINPROD_TYPE_TGF03})
+            and TPD.TRADE_STATUS = #{TRADE_STATUS01}
+            and TPD.IS_CANCEL = #{YES_OR_NO_N}
+            )
+            AND NOT EXISTS (
+            SELECT 1 FROM WFL_TRD_PRODUCT_DEAL TPD
+            where TPD.FINPROD_ID = T1.FINPROD_ID
+            )
+            AND T1.TRADE_ID = #{finprodId}
+    </select>
 </mapper>

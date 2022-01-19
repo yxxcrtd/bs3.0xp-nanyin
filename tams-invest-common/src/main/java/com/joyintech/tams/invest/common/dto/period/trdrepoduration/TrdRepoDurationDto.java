@@ -1,6 +1,8 @@
 package com.joyintech.tams.invest.common.dto.period.trdrepoduration;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.tams.common.base.entity.FinTradeProduct;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 
@@ -274,6 +276,111 @@ public class TrdRepoDurationDto extends BaseEntity {
      * 联系方式
      */
     private String counterContact;
+
+    /**
+     * 交易本金，债券券面等
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal prinAmt;
+
+    /**
+     * 随交易支付费用
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal feeAmtPay;
+
+    /**
+     * 总交易费用
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal feeAmt;
+
+    /**
+     * 是否结清，收息付费时用
+     */
+    private String isClean;
+
+    /**
+     * 交易平台，银行间、上交所固定收益平台、上交所大宗交易平台、深交所大宗平台、深交所综合协议交易平台、其他等
+     */
+    private String tradePlat;
+
+    /**
+     * 交易市场，一级市场、二级市场
+     */
+    private String tradeMarketMode;
+
+    private String deliveryType;
+
+    /**
+     * 单位利息
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal unitInt;
+
+    public BigDecimal getPrinAmt() {
+        return prinAmt;
+    }
+
+    public void setPrinAmt(BigDecimal prinAmt) {
+        this.prinAmt = prinAmt;
+    }
+
+    public BigDecimal getFeeAmtPay() {
+        return feeAmtPay;
+    }
+
+    public void setFeeAmtPay(BigDecimal feeAmtPay) {
+        this.feeAmtPay = feeAmtPay;
+    }
+
+    public BigDecimal getFeeAmt() {
+        return feeAmt;
+    }
+
+    public void setFeeAmt(BigDecimal feeAmt) {
+        this.feeAmt = feeAmt;
+    }
+
+    public String getIsClean() {
+        return isClean;
+    }
+
+    public void setIsClean(String isClean) {
+        this.isClean = isClean;
+    }
+
+    public String getTradePlat() {
+        return tradePlat;
+    }
+
+    public void setTradePlat(String tradePlat) {
+        this.tradePlat = tradePlat;
+    }
+
+    public String getTradeMarketMode() {
+        return tradeMarketMode;
+    }
+
+    public void setTradeMarketMode(String tradeMarketMode) {
+        this.tradeMarketMode = tradeMarketMode;
+    }
+
+    public String getDeliveryType() {
+        return deliveryType;
+    }
+
+    public void setDeliveryType(String deliveryType) {
+        this.deliveryType = deliveryType;
+    }
+
+    public BigDecimal getUnitInt() {
+        return unitInt;
+    }
+
+    public void setUnitInt(BigDecimal unitInt) {
+        this.unitInt = unitInt;
+    }
 
     /**
      * 获取 counterContact

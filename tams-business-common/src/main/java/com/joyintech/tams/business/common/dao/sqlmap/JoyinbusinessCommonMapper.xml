@@ -581,4 +581,11 @@
         where swbm.page_id = #{pageId}
         and swbm.element_id = #{element_id}
     </select>
+
+
+    <select id="gettotleTradeId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT TOTLE_TRADE_ID id FROM  WFL_REG_FIN_PRODUCT_DEAL_TOTAL
+        UNION
+        SELECT TOTLE_TRADE_ID id FROM  REG_FIN_PRODUCT_DEAL_TOTAL rfpdt
+    </select>
 </mapper>

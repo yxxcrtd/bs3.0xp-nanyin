@@ -8,7 +8,6 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
-import com.joyintech.tams.business.common.dto.EntrustIdRequestDto;
 import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
 import com.joyintech.tams.business.common.entity.JoyinDataDictEntity;
 import com.joyintech.tams.business.common.pojo.Message;
@@ -220,6 +219,19 @@ public class JoyinbusinessCommonController extends BaseController {
 		} catch (Exception e) {
 			logger.error("查询功能异常", e);
 			return null;
+		}
+	}
+
+	@PostMapping("/gettotleTradeId")
+	@ApiOperation(value = "交易登记业务编号列表查询", notes = "交易登记业务编号列表查询")
+	@ResponseBody
+	public Message<Page<SelectOptionDto>> gettotleTradeId(@RequestBody CfetsSearchInfoRequest entrustIdRequestDto) {
+		try {
+			Page<SelectOptionDto> tempList = joyinbusinessCommonService.gettotleTradeId(entrustIdRequestDto);
+			return new Message<Page<SelectOptionDto>>().success().setData(tempList);
+		} catch (Exception e) {
+			logger.error("查询功能异常", e);
+			return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
 		}
 	}
 
