@@ -249,7 +249,10 @@ public class SvrExchangFileImpService extends FileImpService {
 		// 定义新增数据list-验证通过数据
 		List<MstExchargeQuote> listNE = new ArrayList<MstExchargeQuote>();
 		logger.debug("汇率数据转dto---开始-----:" +  df.format(new Date()));
-		listNE = convertMapToEntity(exchangeList);
+		// modify by convertMapToEntity yangnxianjiu 2022-01-19 start
+//		listNE = convertMapToEntity(exchangeList);
+		listNE = (List<MstExchargeQuote>) convertMapToEntity(exchangeList,MstExchargeQuote.class);
+		// modify by convertMapToEntity yangnxianjiu 2022-01-19 end
 		logger.debug("汇率数据转dto---结束-----:" +  df.format(new Date()));
 		if (listNE != null && listNE.size() > 0) {
 			deleteAllData();

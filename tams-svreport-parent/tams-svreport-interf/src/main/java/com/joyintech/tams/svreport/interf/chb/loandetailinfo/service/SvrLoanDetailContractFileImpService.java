@@ -252,7 +252,15 @@ public class SvrLoanDetailContractFileImpService extends FileImpService {
 		// 定义新增数据list-验证通过数据
 		List<ChbLoanDetailContractDto> listNE = new ArrayList<ChbLoanDetailContractDto>();
 		logger.debug("评级数据转换dto---开始-----:" +  df.format(new Date()));
-		listNE = convertMapToEntity(datalist,dateSource);
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
+//		listNE = convertMapToEntity(datalist,dateSource);
+		listNE = (List<ChbLoanDetailContractDto>) convertMapToEntity(datalist,ChbLoanDetailContractDto.class);
+		listNE.stream().forEach(t->{
+			// 创建部门
+			t.setCreateDept(CommonUtil.getDeptCode());
+			t.setDataSource(dateSource);
+		});
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 end
 		logger.debug("评级数据转换dto---结束-----:" +  df.format(new Date()));
 		if (listNE != null && listNE.size() > 0) {
 			// 删除评级(当日)
