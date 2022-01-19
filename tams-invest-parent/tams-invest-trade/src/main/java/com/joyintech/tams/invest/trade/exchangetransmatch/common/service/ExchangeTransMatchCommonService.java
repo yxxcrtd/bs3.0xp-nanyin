@@ -1043,9 +1043,13 @@ public class ExchangeTransMatchCommonService extends BaseService {
                         }
                         else {
                             //查询首期交易
+                            // GZYHTZJY-1160:查询首期交易方向是T01 modify fuyongsheng 20220119 start
                             TrdProductDeal trdProductDeal = exchangeTransMatchRepo3Service.getFirstRepoTrade(
-                                    settleTransDataTotal.getfCjbh(),settleTransDataTotal.getVdate(),settleTransDataTotal.getPs(),
+                                    settleTransDataTotal.getfCjbh(),settleTransDataTotal.getVdate(),
+                                    //settleTransDataTotal.getPs(),
+                                    DictCodeList.交易方向_买入.getValue(),
                                     itemList.get(0).getPortfolioId());
+                            // GZYHTZJY-1160:查询首期交易方向是T01 modify fuyongsheng 20220119 end
                             if(StringUtil.isNotEmpty(trdProductDeal)) {
                                 FinDealPledge finDealPledge = new FinDealPledge();
                                 finDealPledge.setFinprodId(trdProductDeal.getTradeId());
