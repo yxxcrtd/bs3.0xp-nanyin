@@ -6,8 +6,8 @@ import com.joyintech.tams.exchange.common.BusinessResultException;
 import com.joyintech.tams.exchange.common.constant.*;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt3;
 import com.joyintech.tams.exchange.common.constant.joyin.InstructionPriceMode;
-import com.joyintech.tams.exchange.common.constant.joyin.InvestmentAssetType1;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
+import com.joyintech.tams.exchange.common.utils.EntrustUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class EntrustPropUtils {
@@ -16,9 +16,8 @@ public class EntrustPropUtils {
         if (null == instruction) {
             return entrustProp;
         }
-        String tradePlat = instruction.getTradePlat();
         //竞价平台
-        if (StrUtil.equals(tradePlat, TradePlat.NORMAL.value)) {
+        if (EntrustUtils.isNormalTrade(instruction)) {
             if (StringUtils.equals(InstructionPriceMode.MARKET.value, instruction.getPriceMode())) {
                 return entrustProp;
             } else {
@@ -27,8 +26,7 @@ public class EntrustPropUtils {
         }
 
         //协议回购
-        if (StringUtils.equals(instruction.getAssetType(), InvestmentAssetType.PLEDGE_REPURCHASE.value) &&
-                StringUtils.equals(instruction.getAssetType1(), InvestmentAssetType1.NEGOTIATED_REPO.value)) {
+        if (EntrustUtils.isPledgegreementRepurchase(instruction)) {
             return decideEntrustProp(instruction.getPs(), instruction.getTradeMarket());
         }
 
@@ -49,15 +47,13 @@ public class EntrustPropUtils {
         if (null == instruction) {
             throw BusinessResultException.create(ErrorCode.INSTRUCTIONS_NOT_EXIST);
         }
-        String tradePlat = instruction.getTradePlat();
         //竞价平台
-        if (StrUtil.equals(tradePlat, TradePlat.NORMAL.value)) {
+        if (EntrustUtils.isNormalTrade(instruction)) {
             return decideEntrustProp(instruction.getPs());
         }
 
         //协议回购
-        if (StringUtils.equals(instruction.getFinprodType2(), InvestmentAssetType.PLEDGE_REPURCHASE.value) &&
-                StringUtils.equals(instruction.getFinprodType2(), InvestmentAssetType1.NEGOTIATED_REPO.value)) {
+        if (EntrustUtils.isPledgegreementRepurchase(instruction)) {
             return decideEntrustProp(instruction.getPs(), instruction.getTradeMarket());
         }
 
