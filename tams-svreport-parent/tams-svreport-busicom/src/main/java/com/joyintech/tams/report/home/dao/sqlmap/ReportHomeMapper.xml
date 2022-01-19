@@ -1926,7 +1926,7 @@
 	<choose>
 		<when test="svrFlag != null and svrFlag eq '01'">
 			<if test="svrFirstMenuIdList != null and svrFirstMenuIdList.size() > 0">
-				<foreach collection="svrFirstMenuIdList" item="svrFirstMenuId" open="AND PARENT_MENU_ID IN (" close=")" separator=",">
+				<foreach collection="svrFirstMenuIdList" item="svrFirstMenuId" open="PARENT_MENU_ID IN (" close=")" separator=",">
 					#{svrFirstMenuId,jdbcType=VARCHAR}
 				</foreach>
 			</if>
