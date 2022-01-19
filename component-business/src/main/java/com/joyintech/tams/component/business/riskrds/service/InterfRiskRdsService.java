@@ -2021,8 +2021,19 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue());
                 infRiskRdsDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
                 infRiskRdsDto.setAssetType2(finDto.getBusiPs());
+
+                //新页面传的字段不一样，判断下当assetType2为空的时取repPs
+                if(!StringUtil.isNotEmpty( infRiskRdsDto.getAssetType2())) {
+                    infRiskRdsDto.setAssetType2(String.valueOf(CommonUtil.findValue(dataMap,"repPs")));
+                }
                 infRiskRdsDto.setAmount(CommonUtil.getBigDecimal(dataMap, "tradeAmt",BigDecimal.ZERO));
                 infRiskRdsDto.setTradeNum(CommonUtil.getBigDecimal(dataMap, "tradeAmt",BigDecimal.ZERO));
+
+                //新页面传的字段不一样，判断下当tradeAmt为空的时取repoAmt
+                if(BigDecimal.ZERO.compareTo(CommonUtil.getBigDecimal(dataMap, "tradeAmt",BigDecimal.ZERO))==0) {
+                    infRiskRdsDto.setAmount(CommonUtil.getBigDecimal(dataMap, "repoAmt",BigDecimal.ZERO));
+                    infRiskRdsDto.setTradeNum(CommonUtil.getBigDecimal(dataMap, "repoAmt",BigDecimal.ZERO));
+                }
                 infRiskRdsDto.setAssetRate(ArithmeticUtil.divide(CommonUtil.getBigDecimal(dataMap, "yield",BigDecimal.ZERO), new BigDecimal(100),4));
                 infRiskRdsDto.setAssetCode(null);
                 infRiskRdsDto.setMarketCode(null);
