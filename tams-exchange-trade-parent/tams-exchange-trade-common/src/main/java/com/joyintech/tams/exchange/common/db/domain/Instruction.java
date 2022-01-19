@@ -372,6 +372,16 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
     @ApiModelProperty(required = false, name = "entrustClass", value = "委托指令类别")
     @Size(max = 50)
     private String entrustClass;
+    
+    /**
+     * 投管业务类型
+     *        
+     * @author yflv
+     * @date 2022/01/19
+     */
+    @ApiModelProperty(required = false, name = "busiTypeTg", value = "投管业务类型")
+    @Size(max = 50)
+    private String busiTypeTg;
 
     @Id
     public String getEntrustId() {
@@ -1036,6 +1046,14 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
 
 	public void setEntrustClass(String entrustClass) {
 		this.entrustClass = entrustClass;
+	}
+
+	public String getBusiTypeTg() {
+		return busiTypeTg;
+	}
+
+	public void setBusiTypeTg(String busiTypeTg) {
+		this.busiTypeTg = busiTypeTg;
 	}
 
 	@Override
