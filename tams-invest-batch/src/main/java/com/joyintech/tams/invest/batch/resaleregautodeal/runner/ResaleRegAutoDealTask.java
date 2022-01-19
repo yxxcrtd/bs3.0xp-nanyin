@@ -64,10 +64,11 @@ public class ResaleRegAutoDealTask extends BatchBaseService{
         }
         try{
             resaleRegAutoDealService.run(supDate);
+            result.setStatus(BatchStatus.COMPLETED);
         }catch (Exception e) {
+            isRunning=false;
             throw new RuntimeException(e);
         }
-        result.setStatus(BatchStatus.COMPLETED);
         isRunning=false;
         return result;
     }
