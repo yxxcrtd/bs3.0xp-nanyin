@@ -37,9 +37,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 交易所指令交易（债券股票回购基金场内指令交易）
+ * 大宗交易所指令交易（债券股票回购基金场内指令交易）
  * 
- * @author meifaxin
+ * @author wangyang1
  * @version 1.0 2021年12月21日
  * @see EtrExchangeBlockTrade001Validator
  * @since 1.0

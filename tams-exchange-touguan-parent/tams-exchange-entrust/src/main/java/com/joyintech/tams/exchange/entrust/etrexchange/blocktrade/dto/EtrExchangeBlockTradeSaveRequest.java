@@ -30,7 +30,7 @@ import java.util.List;
 
 /**
  *  交易信息 （左边下）
- * @author meifaxin
+ * @author wangyang1
  * @version 1.0 2020年7月2日
  * @see EtrExchangeBlockTradeSaveRequest
  * @since 1.0

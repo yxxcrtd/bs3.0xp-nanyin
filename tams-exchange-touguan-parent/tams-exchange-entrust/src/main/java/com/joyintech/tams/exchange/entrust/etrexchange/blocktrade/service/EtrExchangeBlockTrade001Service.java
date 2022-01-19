@@ -48,9 +48,9 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * 交易所指令交易（债券股票回购基金场内指令交易）
+ * 大宗交易所指令交易（债券股票回购基金场内指令交易）
  * 
- * @author meifaxin
+ * @author wangyang1
  * @version 1.0 2021年12月20日
  * @see EtrExchangeBlockTrade001Service
  * @since 1.0
@@ -83,9 +83,12 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 	@Autowired
 	private JoyinbusinessCommonMapper joyinbusinessCommonMapper;
 
+	@Autowired
+	private FinProductAddMapper finProductAddMappers;
+
 	/**
 	 * 查询大宗交易行情信息
-	 * @param request
+	 * @param secId
 	 * @return
 	 */
 	public Page<EtrExchangeTradeQuotationResponse> findTradeQuotationsPage(String secId) {
@@ -151,7 +154,7 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 
 	/**
 	 * 查询大宗盘后行情信息
-	 * @param request
+	 * @param secId
 	 * @return
 	 */
 	public Page<EtrExchangeTradeQuotation001Dto> findAfterHoursPage(String secId) {
@@ -682,6 +685,7 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 
 	public List<SelectOptionDto> getDeclaTypeSelectOptions(SelectOptionsRequest dto, SelectDto selectDto) {
 		List<SelectOptionDto> selectOptionDtos=new ArrayList<>();
+		String finprodId = dto.getFinprodId();
 		String tradePlat=dto.getTradePlat();
 		String finprodType2=dto.getFinprodType2();
 		String othCodeType=dto.getOthCodeType();
@@ -694,7 +698,6 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 						    || StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_收盘价固定价格申报.getValue()) //10
 							|| StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_不指定.getValue()) //5
 				 ).collect(Collectors.toList());
-
 			}
 			else if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_股票.getValue())
 			  || StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_基金.getValue())) {
@@ -723,6 +726,14 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 								|| StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_收盘价固定价格申报.getValue()) //10
 								|| StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_日均价固定价格申报.getValue()) //11
 								|| StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_不指定.getValue()) //5
+				).collect(Collectors.toList());
+			}
+		}
+		if (StringUtil.isNotEmpty(finprodId)){
+			FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(finprodId);
+			if (StringUtil.equals(finProductAdd.getBoard(),DictCodeList.上市板_科创板.getValue())){
+				selectOptionDtos = selectDto.getOptions().stream().filter(option ->
+						!StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_收盘价固定价格申报.getValue()) //10
 				).collect(Collectors.toList());
 			}
 		}

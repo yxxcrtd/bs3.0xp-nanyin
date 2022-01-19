@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  *  行情信息(左上)
  * 〈功能详细描述〉
- * @author meifaxin
+ * @author wangyang1
  * @version 1.0 2021年12月21日
  * @see EtrExchangeTradeQuotationRequest
  * @since 1.0
