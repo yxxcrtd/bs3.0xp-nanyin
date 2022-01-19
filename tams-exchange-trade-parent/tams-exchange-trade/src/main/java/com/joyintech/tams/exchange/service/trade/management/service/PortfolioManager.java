@@ -17,7 +17,6 @@ import com.joyintech.tams.exchange.common.constant.joyin.DictCodeList;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt1;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.InstructionDetail;
-import com.joyintech.tams.exchange.common.db.domain.Instrument;
 import com.joyintech.tams.exchange.common.dto.PortfolioInstructionContextDto;
 import com.joyintech.tams.exchange.common.microservice.ServiceApplication;
 import com.joyintech.tams.exchange.common.microservice.TradeServiceURL;
@@ -341,19 +340,16 @@ public class PortfolioManager extends BaseService {
         // 计算结果
         PortfolioCalculateResponse calculateResponse = null;
 
-        Instrument instrument = instrumentService.queryByInnerCode(bean.getStockCode());
-        MinTrdUnitLimit minTrdUnitLimit = instrumentService.getMinTrdUnitLimit(instruction.getTradePlat(), instruction.getTradeMarket(), instrument, instruction.getPs());
         // 最低交易数量：大于等于
         Integer minNum;
         // 最小交易单元：整数倍
         Integer minStep;
         // 最低交易金额：大于等于
         BigDecimal minAmt;
-        if (minTrdUnitLimit == null) {
-            minNum = 100;
-            minStep = 100;
-            minAmt = BigDecimal.ZERO;
-        } else {
+        if (instruction.getMinPriceAndMinTrdUnitLimitBean() != null
+                && instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList() != null
+                && instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList().size() > 0) {
+            MinTrdUnitLimit minTrdUnitLimit = instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList().get(0);
             if (EntrustProp.isMarketPrice(entrustProp)) {
                 minNum = minTrdUnitLimit.getMinNumMarket();
             } else {
@@ -361,7 +357,12 @@ public class PortfolioManager extends BaseService {
             }
             minStep = minTrdUnitLimit.getMinStep();
             minAmt = minTrdUnitLimit.getMinAmt();
+        } else {
+            minNum = 1;
+            minStep = 1;
+            minAmt = BigDecimal.ZERO;
         }
+
         //市价委托填充反向涨跌停价
         BigDecimal price = bean.getEntrustPrice();
         if (EntrustProp.isMarketPrice(entrustProp)) {
