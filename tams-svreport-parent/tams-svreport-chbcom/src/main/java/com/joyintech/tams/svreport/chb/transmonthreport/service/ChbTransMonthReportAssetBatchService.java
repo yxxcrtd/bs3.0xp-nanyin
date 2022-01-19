@@ -160,40 +160,31 @@ public class ChbTransMonthReportAssetBatchService {
             }
 
             // 1 标准化债权类资产
-            //if ("F01".equals(pos.getSunassettype())) {
+            if ("F01".equals(pos.getSunassettype())) {
+                // 1.1 合 计
+                calcMonthReportSubDetail(AMT1_1, pos, true, false);
                 // 其中 1.1.a 信用债
-                if("1112".equals(pos.getAssettype2()) || "1113".equals(pos.getAssettype2()) || "1114".equals(pos.getAssettype2())
-                    || "1115".equals(pos.getAssettype2()) || "1116".equals(pos.getAssettype2()) || "1117".equals(pos.getAssettype2())){
+                if ("F0101".equals(pos.getSunassettype2()) || "F0102".equals(pos.getSunassettype2())) {
                     calcMonthReportSubDetail(AMT1_1_a, pos, true, false);
                     // 其中 1.1.a.a PPN等低流动性债券 非公开发行：02 公开发行：01
                     //if ("F0101".equals(pos.getSunassettype2()) && "02".equals(pos.getIssueMode())) {
-                    if ("AA".equals(pos.getRating()) || pos.getRating() == null || pos.getRating().isEmpty()) {//不判定是否公开发行
+                    if ("F0101".equals(pos.getSunassettype2())) {//不判定是否公开发行
                         calcMonthReportSubDetail(AMT1_1_a_a, pos, true, false);
                     }
-                    // 1.1 合 计
-                    calcMonthReportSubDetail(AMT1_1, pos, true, false);
-                    // 1.2 加权剩余期限
-                    calcMonthReportSubDetail(AMT1_2, pos, false, true);
                 }
                 // 1.1.b 利率债
-                else if ("1101".equals(pos.getAssettype2()) || "1110".equals(pos.getAssettype2()) || "1109".equals(pos.getAssettype2()) ||
-                        "1102".equals(pos.getAssettype2()) || "1111".equals(pos.getAssettype2())) {
+                else if ("F0103".equals(pos.getSunassettype2())) {
                     calcMonthReportSubDetail(AMT1_1_b, pos, true, false);
-                    // 1.1 合 计
-                    calcMonthReportSubDetail(AMT1_1, pos, true, false);
-                    // 1.2 加权剩余期限
-                    calcMonthReportSubDetail(AMT1_2, pos, false, true);
                 }
                 // 1.1.c 固定收益类公募基金
-                else if ("1106".equals(pos.getAssettype2()) || "2401".equals(pos.getAssettype2())) {
+                else if ("F0104".equals(pos.getSunassettype2())) {
                     calcMonthReportSubDetail(AMT1_1_c, pos, true, false);
-                    // 1.2 加权剩余期限
-                    calcMonthReportSubDetail(AMT1_2, pos, false, true);
                 }
-
-            //}
+                // 1.2 加权剩余期限
+                calcMonthReportSubDetail(AMT1_2, pos, false, true);
+            }
             // 2 非标准化债权类资产
-            if ("F02".equals(pos.getSunassettype())) {
+            else if ("F02".equals(pos.getSunassettype())) {
                 // 2.1 通过信托贷款和信托产品
                 if ("F0201".equals(pos.getSunassettype2())) {
                     calcMonthReportSubDetail(AMT2_1, pos, true, false);
