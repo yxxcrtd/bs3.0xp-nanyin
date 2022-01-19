@@ -258,7 +258,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 if (StringUtil.isEmpty(partyId)) {
                     partyId = dto.getPartyId();
                 }
-                if (StringUtil.isNotEmpty(partyId) && StringUtil.equals(partyId, dto.getPartyId())) {
+                if (StringUtil.isNotEmpty(partyId) && !StringUtil.equals(partyId, dto.getPartyId())) {
                     errorList.add(new ValidMessage("所选指令交易账户不同"));
                     break;
                 }
@@ -409,17 +409,19 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             errorList.add(new ValidMessage("请输入回购期限"));
         }
         if (!StringUtil.isNotEmpty(entity.getPrice())
-                || BigDecimal.ZERO.compareTo(entity.getPrice()) == 0) {
+                || BigDecimal.ZERO.compareTo(entity.getPrice()) >= 0) {
             errorList.add(new ValidMessage("请输入回购利率"));
         }
         if (!StringUtil.isNotEmpty(entity.getTradeAmt())
-                || BigDecimal.ZERO.compareTo(entity.getTradeAmt()) == 0) {
+                || BigDecimal.ZERO.compareTo(entity.getTradeAmt()) >= 0) {
             errorList.add(new ValidMessage("请输入交易金额"));
         }
-        if (!StringUtil.isNotEmpty(entity.getShareAmt())) {
+        if (!StringUtil.isNotEmpty(entity.getShareAmt())
+                || BigDecimal.ZERO.compareTo(entity.getShareAmt()) >= 0) {
             errorList.add(new ValidMessage("请输入券面总额合计"));
         }
-        if (!StringUtil.isNotEmpty(entity.getConvertAmt())) {
+        if (!StringUtil.isNotEmpty(entity.getConvertAmt())
+                || BigDecimal.ZERO.compareTo(entity.getConvertAmt()) >= 0) {
             errorList.add(new ValidMessage("请输入质押券折算总额"));
         }
         if (!StringUtil.isNotEmpty(entity.getDeliverytype())) {
@@ -618,6 +620,9 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 && StringUtil.equals(sysWflBusinessList.getProcessState(), DictCodeList.流程状态_已退回.getValue())) {
             PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(), DictCodeListExt1.子系统代码_交易.getValue(),
                     DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), entity.getPs());
+        }
+        if(StringUtil.isNotEmpty(workflowId)){
+            throw new RuntimeException("jp");
         }
     }
 
@@ -1124,6 +1129,37 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
 
         }
         return regFinPledges;
+    }
+
+    /**
+     * 尾差处理
+     *
+     * @param ptlAllocations 组合分配信息
+     * @param tailDifference 尾差
+     * @author jiangpeng
+     * @date 2021/12/20 14:40
+     */
+    private void handleTailDifference(List<RepoEntrustPledgeDto> repoEntrustPledgeDtos, BigDecimal tailDifference) {
+        //递增维度
+        BigDecimal addDimension = pledgeDimension;
+        int size = repoEntrustPledgeDtos.size();
+        //委托维度 已经完全分配的集合
+        Set<String> set = new HashSet<>();
+        while (tailDifference.compareTo(BigDecimal.ZERO) > 0 && size > 0) {
+            if (tailDifference.compareTo(new BigDecimal("1")) >= 0) {
+                addDimension = ArithmeticUtil.divide(tailDifference, size, 4);
+            }
+            for (RepoEntrustPledgeDto item : repoEntrustPledgeDtos) {
+                if ((tailDifference.compareTo(BigDecimal.ZERO) <= 0)) {
+                    if (set.add(item.getEntrustId())) {
+                        size--;
+                    }
+                } else {
+                    item.setPledgePrin(ArithmeticUtil.doAdd(item.getPledgePrin(), addDimension));
+                    tailDifference = ArithmeticUtil.subtract(tailDifference, addDimension);
+                }
+            }
+        }
     }
 
     private void insert(CfetsRepoDealDbDto entity, OperationType operationType) {
