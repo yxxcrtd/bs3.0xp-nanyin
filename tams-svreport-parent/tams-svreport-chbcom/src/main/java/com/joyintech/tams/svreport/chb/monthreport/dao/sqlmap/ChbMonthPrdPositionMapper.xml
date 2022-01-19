@@ -376,7 +376,7 @@
       left join (      select distinct  di.business_id　finprod_market_id,di.institution_code
       from DATA_AUTH_NOTIFY_INST di where di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
       ) di on di.finprod_market_id = pos.PRODID
-     left join  chb_prd_baseinfo  info on  info.prod_id=pos.PRODID
+     left join  chb_prd_baseinfo  info on  info.prod_id=pos.PRODID and info.status in ('E','M')
       where startdate = #{startdate,jdbcType=DATE}
       and enddate = #{enddate,jdbcType=DATE}
       <if test="prodids !=null and prodids.size()!=0">
