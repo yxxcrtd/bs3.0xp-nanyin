@@ -62,4 +62,10 @@ public interface UpdateTraderMapper {
 	 * @return
 	 */
 	MstCfetsCustomerInfo selectMpartyInfo(@Param("mpartyId") String mpartyId);
+
+	/**
+	 * 获取所有的已匹配的银行间机构21位码
+	 * @return
+	 */
+    List<String> getAllPartyIdIsNotNull();
 }
