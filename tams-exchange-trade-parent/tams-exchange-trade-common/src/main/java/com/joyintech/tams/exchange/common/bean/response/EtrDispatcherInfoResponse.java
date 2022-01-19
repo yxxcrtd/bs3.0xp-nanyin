@@ -267,7 +267,7 @@ public class EtrDispatcherInfoResponse extends EtrDispatcherBaseInfo {
     }
 
     public String getSecType() {
-        return SysDataUtil.getNameFromDataDict(DictCode.行内资产四级分类, this.secType);
+        return secType;
     }
 
     public void setSecType(String secType) {
@@ -499,7 +499,7 @@ public class EtrDispatcherInfoResponse extends EtrDispatcherBaseInfo {
     }
 
     public String getOtherBusiModel() {
-        return SysDataUtil.getNameFromDataDict(DictCode.业务模式, super.getBusiModel());
+        return super.getBusiModel();
     }
 
     /**
@@ -508,15 +508,15 @@ public class EtrDispatcherInfoResponse extends EtrDispatcherBaseInfo {
      * @return otherTradeMarket.
      */
     public String getOtherTradeMarket() {
-        return SysDataUtil.getNameFromDataDict(DictCode.交易场所, super.getTradeMarket());
+        return super.getTradeMarket();
     }
 
     public String getOtherCcy() {
-        return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
+        return super.getCcy();
     }
 
     public String getOtherPs() {
-        return SysDataUtil.getNameFromDataDict(DictCode.交易方向, super.getPs());
+        return super.getPs();
     }
 
     public String getEtrBidDate() {
@@ -528,11 +528,11 @@ public class EtrDispatcherInfoResponse extends EtrDispatcherBaseInfo {
     }
 
     public String getOtherPriceModel() {
-        return SysDataUtil.getNameFromDataDict(DictCode.价格模式, this.getPriceModel());
+        return otherPriceModel;
     }
 
     public String getOtherSettleSpeed() {
-        return SysDataUtil.getNameFromDataDict(DictCode.清算速度, this.getSettleSpeed());
+        return otherSettleSpeed;
     }
 
     public String getIsRight() {
@@ -544,7 +544,7 @@ public class EtrDispatcherInfoResponse extends EtrDispatcherBaseInfo {
     }
 
     public String getBusiTypePositionStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.投管业务类型, this.getBusiTypePosition());
+        return busiTypePositionStr;
     }
 
     public void setBusiTypePositionStr(String busiTypePositionStr) {
