@@ -1,21 +1,20 @@
 package com.joyintech.tams.valuation.batch.common.bookgenerateresult;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.tams.common.base.dao.BokStatBokPositionMapper;
 import com.joyintech.tams.common.base.dao.BokStatFeePosiitonMapper;
 import com.joyintech.tams.common.base.entity.BokStatBokPosition;
-import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
 import com.joyintech.tams.common.base.entity.BokStatFeePosiiton;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.accounting.BookAccountGenLogic;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.entity.BookGenerateResultWithBokStatFeePosition;
-import com.joyintech.tams.valuation.batch.common.accountingmethod.entity.BookGenerateResultWithBokSummary;
+import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 
@@ -88,19 +87,27 @@ public class BookGenerateResultForCurrentCommonWriterWithBokStatFeePosition exte
 		// 数据存在
 		if (bokStatFeePosiitonList != null && !bokStatFeePosiitonList.isEmpty()) {
 			// 循环列表进行插入
-			for (BokStatFeePosiiton vo : bokStatFeePosiitonList) {
-				// 根据主键判断是否存在
-				BokStatFeePosiiton haveVo = bokStatFeePosiitonMapper.selectByPrimaryKey(vo);
-
-				// 已经存在，进行更新操作
-				if (haveVo != null) {
-					sucessNum = sucessNum + bokStatFeePosiitonMapper.updateByPrimaryKey(vo);
-				}
-				// 不存在，进行插入操作
-				else {
-					sucessNum = sucessNum + bokStatFeePosiitonMapper.insert(vo);
+//			for (BokStatFeePosiiton vo : bokStatFeePosiitonList) {
+//				// 根据主键判断是否存在
+//				BokStatFeePosiiton haveVo = bokStatFeePosiitonMapper.selectByPrimaryKey(vo);
+//
+//				// 已经存在，进行更新操作
+//				if (haveVo != null) {
+//					sucessNum = sucessNum + bokStatFeePosiitonMapper.updateByPrimaryKey(vo);
+//				}
+//				// 不存在，进行插入操作
+//				else {
+//					sucessNum = sucessNum + bokStatFeePosiitonMapper.insert(vo);
+//				}
+//			}
+			/****update by yinya on 2021-12-22 批处理性能优化：分批次合并 start ***/
+			List<List<BokStatFeePosiiton>> list = DataHandleUtil.splitList(bokStatFeePosiitonList);
+			for (List<BokStatFeePosiiton> listInsert : list) {
+				if (CollectionUtils.isNotEmpty(listInsert)) {
+					sucessNum=bokStatFeePosiitonMapper.mergeValBokStatFeePosition(listInsert);
 				}
 			}
+			/****update by yinya on 2021-12-22 批处理性能优化：分批次合并 end ***/
 		}
 
 		return sucessNum;

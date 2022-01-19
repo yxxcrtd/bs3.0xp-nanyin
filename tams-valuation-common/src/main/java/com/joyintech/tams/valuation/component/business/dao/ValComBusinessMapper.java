@@ -71,4 +71,13 @@ public interface ValComBusinessMapper {
      */
     List<SelectOptionDto> getTrdAcctId(Map<String, Object> param);
 
+    /**
+     * 内部科目配置
+     * @param param 参数
+     * @return 内部科目配置
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> getSubjectInteral(Map<String, Object> param);
+
 }
