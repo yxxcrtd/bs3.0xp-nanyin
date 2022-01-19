@@ -771,15 +771,17 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             }
 
             //写入回购质押品表（中途换券，先删除旧数据再写入）
-            Map<String, Object> deleteParmas = new HashMap<String, Object>();
-            deleteParmas.put("finprodId",trdTempDto.getFinprodId());
-            deleteParmas.put("branch",0L);
-            entrustMsgbyMQMapper.deleteFinDealPledge(deleteParmas);
-
-            if(StringUtil.equals(trdTempDto.getPs(), DictCodeListExt3.交易方向_中途换券.getValue())
-                    && StringUtil.isNotEmpty(trdTempDto.getFinDealPledge())) {
-                finDealPledgeMapper.insertSelective(trdTempDto.getFinDealPledge());
-            }
+            // GZYHTZJY-1159:日间成交不处理质押券 modify by fuyongsheng start
+//            Map<String, Object> deleteParmas = new HashMap<String, Object>();
+//            deleteParmas.put("finprodId",trdTempDto.getFinprodId());
+//            deleteParmas.put("branch",0L);
+//            entrustMsgbyMQMapper.deleteFinDealPledge(deleteParmas);
+//
+//            if(StringUtil.equals(trdTempDto.getPs(), DictCodeListExt3.交易方向_中途换券.getValue())
+//                    && StringUtil.isNotEmpty(trdTempDto.getFinDealPledge())) {
+//                finDealPledgeMapper.insertSelective(trdTempDto.getFinDealPledge());
+//            }
+            // GZYHTZJY-1159:日间成交不处理质押券 modify by fuyongsheng end
         }
         // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[实际]的组合持仓流水及现金流水
         // 手工交收判断 add by yufei 20201022 start
