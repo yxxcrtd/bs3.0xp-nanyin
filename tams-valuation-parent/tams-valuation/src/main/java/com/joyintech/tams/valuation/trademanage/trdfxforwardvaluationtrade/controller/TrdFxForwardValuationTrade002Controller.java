@@ -22,6 +22,7 @@ import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.valuation.component.business.service.CommonBusinessService;
 import com.joyintech.tams.valuation.trademanage.trdfxforwardvaluationtrade.dto.TrdFxForwardValuationTradeDto;
 import com.joyintech.tams.valuation.trademanage.trdfxforwardvaluationtrade.service.TrdFxForwardValuationTrade002Service;
@@ -44,7 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Description:外汇即期交易新建
+ * @Description:外汇远期交易新建
  * @auther: yuzj
  * @date: 2022/01/11
  * @param:
@@ -56,7 +57,7 @@ import java.util.Map;
 public class TrdFxForwardValuationTrade002Controller extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	/**
-     * 注入计划类service
+     * 注入外汇远期service002
      */
     @Autowired
     private TrdFxForwardValuationTrade002Service trdFxForwardValuationTrade002Service;
@@ -95,8 +96,9 @@ public class TrdFxForwardValuationTrade002Controller extends BaseController {
         }else{
             //初始化值
             TrdFxForwardValuationTradeDto entity = new TrdFxForwardValuationTradeDto();
+            entity.setProcedureAmt(new BigDecimal("0.00"));      //交易手续费
+            entity.setSettleServiceAmt(new BigDecimal("0.00"));  //结算服务费
             entity.setFeeAmtQT(new BigDecimal("0.00"));          //其他费用
-            entity.setCcy(DictCodeList.币种_人民币_CNY.getValue());
             model.addAttribute("entity", entity);
         }
         model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
@@ -219,7 +221,7 @@ public class TrdFxForwardValuationTrade002Controller extends BaseController {
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
         params.setBusinessCode(dto.getTradeId());
-        params.setBusinessType(DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue());
+        params.setBusinessType(DictCodeListExt2.共通业务类型_外汇远期投资交易.getValue());
 
         //设置主键
         if(!StringUtil.isNotEmpty(dto.getTradeId())){

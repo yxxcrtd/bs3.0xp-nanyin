@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * @Description:外汇交易查询
+ * @Description:外汇远期交易查询
  * @auther: yuzj
  * @date: 2022/01/11
  * @param:
@@ -43,7 +43,7 @@ import java.util.*;
 @RequestMapping("/valuation/trademanage/trdfxforwardvaluationtrade/TrdFxForwardValuationTrade001")
 public class TrdFxForwardValuationTrade001Controller extends BaseController {
     /**
-     * 注入计划类（利率型）service1
+     * 注入外汇远期 service001
      */
     @Autowired
     private TrdFxForwardValuationTrade001Service trdFxForwardValuationTrade001Service;
