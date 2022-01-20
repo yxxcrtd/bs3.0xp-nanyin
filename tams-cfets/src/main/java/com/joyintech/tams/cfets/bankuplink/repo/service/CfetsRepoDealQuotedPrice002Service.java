@@ -40,6 +40,7 @@ import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPosPortfolioCashReq
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPosPortfolioSecRequest;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPositionRequest;
 import com.joyintech.tams.common.base.entity.RegFinPledge;
+import com.joyintech.tams.component.base.core.impl.dao.MstWorkflowCommonServiceMapperImpl;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
@@ -146,6 +147,9 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
 
     @Autowired
     private CfetsIbuQuoteRepo003Mapper ibuQuoteRepo003Mapper;
+
+    @Autowired
+    private MstWorkflowCommonServiceMapperImpl mstWorkflowCommonServiceMapperImpl;
 
     /**
      * 报价初始化校验
@@ -883,7 +887,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
     @Override
     public void doInsert(CfetsRepoDealQuotedPrice001Dto entity, OperationType type) {
         //历史报价页面撤销  不生成业务流程数据  同交易
-        if ("save".equals(entity.getOperatorType()) || StringUtil.equals(entity.getOperatorType(), "revoke")) {
+        if ("save".equals(entity.getOperateType()) || StringUtil.equals(entity.getOperateType(), "revoke")) {
             return;
         }
         insertWflRepoDealQuote(entity);
@@ -939,9 +943,9 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         CfetsRepoDealQuotedPrice001Dto entity = getBussinessEntityByWorkflowId(workflowId);
         WFlowCommonService.doCompleteFlow(entity.getWorkflowId());
         //发送头寸
-        SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(workflowId);
-        if (StringUtil.isNotEmpty(sysWflBusinessList)
-                && StringUtil.equals(sysWflBusinessList.getProcessState(), DictCodeList.流程状态_已退回.getValue())) {
+        ProcessMark processMark = mstWorkflowCommonServiceMapperImpl.getBusinessInfo(workflowId);
+        if (StringUtil.isNotEmpty(processMark)
+                && StringUtil.equals(processMark.getStatus(), DictCodeList.数据状态_修改中.getValue())) {
             PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(), DictCodeListExt1.子系统代码_交易.getValue(),
                     DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), entity.getPs());
         }
@@ -1693,7 +1697,6 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         }
         pageDto.setSecManageAcctId(secAcctId);
         BeanUtil.copyPropertiesIgnoreNull(backDto, pageDto);
-        backDto.setOperatorType(pageDto.getOperateType());
         // 卷面总额合计(万) 转换
         backDto.setPledgePrinTotal(ArithmeticUtil.divide(pageDto.getShareAmt(), new BigDecimal(100), 4, RoundingMode.HALF_UP));
         // 交易金额 转换
@@ -1918,9 +1921,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         req.setPs(entity.getPs());
         req.setDecisionAct(decisionAct);
         req.setSystemAct(systemAct);
-        if (StringUtil.equals(DictCodeListExt3.系统动作_修改.getValue(), decisionAct)) {
-            req.setbTotalTradeId(entity.getQuoteId());
-        }
+        req.setbTotalTradeId(entity.getQuoteId());
         req.setCdate(entity.getTradeDate());
         req.setCcy(DictCodeList.币种_人民币_CNY.getValue());
         req.setPtlCashList(ptlCashList);

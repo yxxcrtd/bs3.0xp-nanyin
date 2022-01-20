@@ -513,7 +513,9 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
             result.setWorkflowId(entity.getWorkflowId());
             result.setOperationType(entity.getOperatorType());
-            result.setRegFinProductDealTotal(regFinProductDealTotalMapper.selectByPrimaryKey(entity.getTotleTradeId()));
+            RegFinProductDealTotal regFinProductDealTotal = regFinProductDealTotalMapper.selectByPrimaryKey(entity.getTotleTradeId());
+            regFinProductDealTotal.setRemark(entity.getRemark());
+            result.setRegFinProductDealTotal(regFinProductDealTotal);
             result.setRegFinProductDealTotalAdd(regFinProductDealTotalAddMapper.selectByPrimaryKey(entity.getTotleTradeId()));
             result.setRegTradeFeeTotals(cfetsIbuQuoteBondMapper.listRegTradeFeeTotal(entity.getTotleTradeId()));
             result.setRegFinProductDeals(cfetsIbuQuoteBondMapper.listRegFinProductDeal(entity.getTotleTradeId()));

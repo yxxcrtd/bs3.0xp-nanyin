@@ -1,6 +1,5 @@
 package com.joyintech.tams.business.common.service;
 
-import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
@@ -10,11 +9,9 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
-import com.joyintech.tams.business.common.dto.EntrustIdRequestDto;
 import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -25,7 +22,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 公共方法service
@@ -248,5 +247,10 @@ public class JoyinbusinessCommonService extends BaseService {
         } else {
             return joyinbusinessCommonMapper.queryMySideTraderList(param);
         }
+    }
+
+    public Page<SelectOptionDto> gettotleTradeId(CfetsSearchInfoRequest entrustIdRequestDto) {
+        return super.queryForPage(entrustIdRequestDto.getPageMode().getPageNo(), entrustIdRequestDto.getPageMode().getPageSize(),
+                () ->joyinbusinessCommonMapper.gettotleTradeId());
     }
 }

@@ -209,7 +209,7 @@ public class FieldEtrDispatcherController extends BaseController {
     @ResponseBody
     @PostMapping("/getEtrDispatcherInfo")
     @ApiOperation(value = "指令详情数据查询", notes = "指令详情数据查询")
-    public Message<FieldEtrDispatcherInfoResponse> getEtrDispatcherInfo(CommonSearchInfoRequest dto) {
+    public Message<FieldEtrDispatcherInfoResponse> getEtrDispatcherInfo(@RequestBody CommonSearchInfoRequest dto) {
         try{
             FieldEtrDispatcherInfoResponse resultData =fieldEtrDispatcherService.getEtrDispatcherInfo(dto);
             return new Message<FieldEtrDispatcherInfoResponse>().success().setData(resultData);

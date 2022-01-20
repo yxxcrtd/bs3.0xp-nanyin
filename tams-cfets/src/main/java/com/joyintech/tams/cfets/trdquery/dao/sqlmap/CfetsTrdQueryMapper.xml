@@ -2829,6 +2829,10 @@
         where tmi.trd_id =#{totleTradeId,jdbcType=VARCHAR})
     </update>
 
+    <select id="getTradeId" resultType="java.lang.String">
+        select PRE_TRADE_ID from TRDQUTO_MATCH_INFO  where TRD_ID=#{tradeId,jdbcType=VARCHAR}
+    </select>
+
 </mapper>
 
 
