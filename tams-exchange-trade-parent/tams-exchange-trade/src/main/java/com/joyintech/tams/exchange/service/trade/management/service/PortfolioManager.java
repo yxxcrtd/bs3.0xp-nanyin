@@ -314,9 +314,9 @@ public class PortfolioManager extends BaseService {
             instructionDetail.setEntrustId(instruction.getEntrustId());
             instructionDetail.setPortfolioId(instruction.getPortfolioId());
             instructionDetail.setPortfolioName(instruction.getPortfolioName());
-            instructionDetail.setDisRate("1");
-            instructionDetail.setEntrustAmt(instruction.getEntrustAmt().toString());
-            instructionDetail.setEntrustNum(String.valueOf(instruction.getEntrustNum()));
+            instructionDetail.setDisRate(new BigDecimal("1"));
+            instructionDetail.setEntrustAmt(instruction.getEntrustAmt());
+            instructionDetail.setEntrustNum(new BigDecimal(instruction.getEntrustNum()));
             instructionDetail.setTargetType(instruction.getEntrustNum() == 0 ? "02" : "01");
             instructionDetails.add(instructionDetail);
         }
@@ -398,7 +398,7 @@ public class PortfolioManager extends BaseService {
             calculateResponse.setFinprodMarketId(instruction.getFinprodMarketId());
             calculateResponse.setEntrustPrice(bean.getEntrustPrice().compareTo(BigDecimal.ZERO) == 0 ? price : bean.getEntrustPrice());
             calculateResponse.setFinprodName(instruction.getFinprodName());
-            calculateResponse.setDisRate(new BigDecimal(detail.getDisRate()));
+            calculateResponse.setDisRate(detail.getDisRate());
             calculateResponse.setEntrustProp(entrustProp);
             calculateResponse.setInstructionLeftAmt(isVolume ? BigDecimal.ZERO : ArithmeticUtil.subtract(ArithmeticUtil.subtract(instruction.getEntrustAmt(), instruction.getEntrustLeftAmt()), instruction.getFrozenQuantity()));
             calculateResponse.setInstructionLeftNum(isVolume ? instruction.getEntrustNum() - instruction.getEntrustLeftAmt().longValue() - instruction.getFrozenQuantity().longValue() : 0L);
@@ -410,7 +410,7 @@ public class PortfolioManager extends BaseService {
 
             // - 计算组合委托额度
             // 数量
-            BigDecimal volume = ArithmeticUtil.multiply(BigDecimal.valueOf(bean.getEntrustVolume()), new BigDecimal(detail.getDisRate()));
+            BigDecimal volume = ArithmeticUtil.multiply(BigDecimal.valueOf(bean.getEntrustVolume()), detail.getDisRate());
             if (volume.compareTo(BigDecimal.valueOf(minNum)) == 0) {
                 entrustVolume = minNum;
                 entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), price);
@@ -766,7 +766,7 @@ public class PortfolioManager extends BaseService {
                 BeanUtil.copyProperties(ins, copyInstruction);
                 copyInstruction.setPortfolioId(detail.getPortfolioId());
                 copyInstruction.setPortfolioName(detail.getPortfolioName());
-                copyInstruction.setConPrice(ins.getConPrice().multiply(new BigDecimal(detail.getDisRate())));
+                copyInstruction.setConPrice(ins.getConPrice().multiply(detail.getDisRate()));
 
                 Long realVolume = 0L;
                 if (EntrustUtils.isBond(copyInstruction)) {
