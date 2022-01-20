@@ -18,6 +18,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.constant.*;
@@ -25,6 +26,8 @@ import com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.dto.EtrExchang
 import com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.dto.EtrExchangeTradeQuotationResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.dto.SelectOptionsRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.service.EtrExchangeBlockTrade001Service;
+import com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.service.EtrExchangeBlockTrade001ValidatorService;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon002Service;
@@ -76,6 +79,12 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 
 	@Autowired
 	private EtrExchangeTradeCommon001Service etrExchangeTradeCommon001Service;
+
+	@Autowired
+	private EtrExchangeBlockTrade001ValidatorService etrExchangeBlockTrade001ValidatorService;
+
+	@Autowired
+	private EtrExchangeTradeCommonMapper etrExchangeTradeCommonMapper;
 
 	@ApiOperation(value="查询页面初始化参数", notes = "查询页面初始化参数")
 	@PostMapping("/init")
@@ -281,6 +290,69 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 			etrExchangeBlockTrade001Service.handExportTimes(dataList);
 			return dataList;
 		});
+	}
+
+
+	/**
+	 * 保存按钮点击时的check
+	 *
+	 * @param  dto
+	 * @param  br
+	 * @return check结果
+	 * @see
+	 * @since 1.0
+	 */
+	@ApiOperation(value = "保存提交check", notes = "保存提交check")
+	@PostMapping("checkSaveError")
+	@ResponseBody
+	public Message<AjaxResult> checkSaveError(@RequestBody EtrExchangeTradeSaveRequest dto, BindingResult br)
+			throws Exception {
+		AjaxResult ajax=null;
+		try {
+			if("dbclick".equals(dto.getOptType())){
+				ajax=etrExchangeTradeCommon001Service.dbClickCheck(dto);
+			}
+			List<EtrExchangeTradePortfolioRequest> portfolioList=dto.getPortfolioList();
+			if(!CollectionUtils.isEmpty(portfolioList)) {
+				for (int i = 0; i < portfolioList.size(); i++) {
+					EtrExchangeTradePortfolioRequest item = portfolioList.get(i);
+					dto.setVdate(dto.getEntrustDate());
+					dto.setMdate(dto.getEntrustDate());
+					dto.setPortfolioId(item.getPortfolioId());
+					dto.setAcctNo(item.getAcctNo());
+					dto.setEntrustNum(item.getEntrustNum());
+					dto.setEntrustAmt(item.getEntrustAmt());
+					//默认证券账户
+					if (StringUtil.isNotEmpty(item.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
+						Map<String, Object> map = new HashMap<String, Object>();
+						map.put("portfolioId", item.getPortfolioId());
+						map.put("finprodId", dto.getFinprodId());
+						map.put("tradePlat", dto.getTradeMarket());
+						String secAcctId = etrExchangeTradeCommonMapper.qryPortfolioSecAcctId(map);
+						if (StringUtil.isNotEmpty(secAcctId)) {
+							dto.setSecAcctId(secAcctId); // 证券账户
+							dto.setStockId(secAcctId);
+						}
+					}
+					List<ValidMessage> validList = etrExchangeBlockTrade001ValidatorService.valid(dto);
+					if(validList.size()>0) {
+						ajax.setErrorList(validList);
+					}
+					if (null != ajax) {
+						break;
+					}
+				}
+			}
+			if (null != ajax) {
+				return new Message<AjaxResult>().success().setData(ajax);
+			} else {
+				return new Message<AjaxResult>().success().setMessage("校验通过");
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			logger.error("多组合指令新建保存/提交校验异常",e);
+			return new Message<AjaxResult>().fail().setMessage("校验失败");
+		}
 	}
 
 }

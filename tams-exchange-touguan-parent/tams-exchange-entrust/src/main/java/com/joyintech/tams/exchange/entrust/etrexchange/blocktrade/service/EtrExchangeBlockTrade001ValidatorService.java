@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
-package com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.validator;
+package com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.service;
 
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -29,6 +29,7 @@ import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.SubEqutityDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -41,11 +42,11 @@ import java.util.Map;
  * 
  * @author wangyang1
  * @version 1.0 2021年12月21日
- * @see EtrExchangeBlockTrade001Validator
+ * @see EtrExchangeBlockTrade001ValidatorService
  * @since 1.0
  */
-@Component
-public class EtrExchangeBlockTrade001Validator implements EtrCommonValidator {
+@Service
+public class EtrExchangeBlockTrade001ValidatorService implements EtrCommonValidator {
 
 	@Autowired
 	EtrExchangeTradeCommon001Service etrExchangeTrade001Service;
@@ -64,7 +65,6 @@ public class EtrExchangeBlockTrade001Validator implements EtrCommonValidator {
 	@Override
 	public List<ValidMessage> bussValid(Object value) {
 		List<ValidMessage> errorList = new ArrayList<>();
-		// TODO Auto-generated method stub
 		EtrExchangeTradeSaveRequest dto = (EtrExchangeTradeSaveRequest) value;
 		if (dto.getOperateType().equals("save") || dto.getOperateType().equals("submit")) {
 			Boolean isNonTradingTime = etrExchangeTrade001Service.isNonTradingTime(dto);
