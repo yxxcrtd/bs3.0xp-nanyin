@@ -97,9 +97,11 @@ public class PositionSocketClient {
                             logger.info("当前时间2:" + getCSTString(new Date()));
                             logger.info("头寸时间3:" + dataMap.getDate(CDATE));
                             logger.info("头寸时间str4:" + dataMap.get(CDATE));
+                            logger.info("头寸时间str5:" + new Date(Long.parseLong(dataMap.get(CDATE).toString())));
+                            logger.info("头寸时间6:" + getCSTString(new Date(Long.parseLong(dataMap.get(CDATE).toString()))));
                             
                             // long转换成日期格式
-                            dataMap.put(CDATE, dataMap.getDate(CDATE));
+                            dataMap.put(CDATE, getCSTString(new Date(Long.parseLong(dataMap.get(CDATE).toString()))));
                             
                             webSocketService.insertOrUpdate(dataMap);
 
