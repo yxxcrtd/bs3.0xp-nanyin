@@ -7,6 +7,7 @@ import com.joyintech.tams.common.base.entity.ChbTransMonth;
 import com.joyintech.tams.common.base.entity.ChbTransMonthTemplate;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition;
 import com.joyintech.tams.svreport.chb.transmonthreport.dao.ChbTransMonthReportSubRegistBatchMapper;
@@ -168,7 +169,9 @@ public class ChbTransMonthReportAssetBatchService {
                     calcMonthReportSubDetail(AMT1_1_a, pos, true, false);
                     // 其中 1.1.a.a PPN等低流动性债券 非公开发行：02 公开发行：01
                     //if ("F0101".equals(pos.getSunassettype2()) && "02".equals(pos.getIssueMode())) {
-                    if ("F0101".equals(pos.getSunassettype2())) {//不判定是否公开发行
+                    //其债项评级在AA+（不含）以下或无信用评级 modify by wuhaisen  20220120  start
+                    if (pos.getRating() == null || Integer.parseInt(SvrDataUtil.getCodeFromDataDictByName(DictCode.资产评级, pos.getRating())) > 4) {//不判定是否公开发行
+                    //其债项评级在AA+（不含）以下或无信用评级 modify by wuhaisen  20220120  end
                         calcMonthReportSubDetail(AMT1_1_a_a, pos, true, false);
                     }
                 }
