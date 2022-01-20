@@ -869,6 +869,10 @@ public class IbuQuoteRepoService extends BaseService {
                 message = StringUtil.join("非有效状态,不可导出!业务编号:" + item.getQuoteId());
                 break;
             }
+            if(!StringUtil.equals(item.getQuoteType(),"01")){
+                message = StringUtil.join("报价方式非对话报价,现阶段不可导出!业务编号:"+item.getQuoteId());
+                break;
+            }
             if (item.getStatisticalTimes() != 0) {
                 quoteIds.add(item.getQuoteId());
             }
@@ -2085,6 +2089,7 @@ public class IbuQuoteRepoService extends BaseService {
             dest.setQuoteType(null);
             dest.setUpdateTime(null);
         } else {
+            dest.setQuoteId(org.getQuoteId());
             dest.setFinprodMarketId(org.getFinprodMarketId());
             dest.setFinprodName(org.getFinprodName());
             dest.setPledgePrin(org.getPledgePrin());

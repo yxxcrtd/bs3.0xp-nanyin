@@ -23,12 +23,16 @@ import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.service.DoQuery;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.sl.usermodel.ColorStyle;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -306,14 +310,27 @@ public class ExcelUitl {
 					Workbook workbook = writeSheetHolder.getSheet().getWorkbook();
 					CellStyle cellStyle = workbook.createCellStyle();
 					//单元格边框
-					cellStyle.setBorderBottom(BorderStyle.MEDIUM);
-					cellStyle.setBorderLeft(BorderStyle.MEDIUM);
-					cellStyle.setBorderRight(BorderStyle.MEDIUM);
-					cellStyle.setBorderTop(BorderStyle.MEDIUM);
+					cellStyle.setBorderBottom(BorderStyle.THIN);
+					cellStyle.setBorderLeft(BorderStyle.THIN);
+					cellStyle.setBorderRight(BorderStyle.THIN);
+					cellStyle.setBorderTop(BorderStyle.THIN);
+
+					//背景色
+					cellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+					cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+					//对齐方式
+					cellStyle.setAlignment(HorizontalAlignment.CENTER);
 
 					Font cellFont = workbook.createFont();
+					//加粗
 					cellFont.setBold(true);
+					//字体
+					cellFont.setFontName("微软雅黑");
+					//字体大小
+					cellFont.setFontHeightInPoints((short) 11);
 					cellStyle.setFont(cellFont);
+
 					cell.setCellStyle(cellStyle);
 				}else{
 					Integer width = cfg.getInteger("maxLen"); // 单元格宽度
@@ -325,10 +342,17 @@ public class ExcelUitl {
 					DataFormat df = workbook.createDataFormat();
 
 					//单元格边框
-					cellStyle.setBorderBottom(BorderStyle.MEDIUM);
-					cellStyle.setBorderLeft(BorderStyle.MEDIUM);
-					cellStyle.setBorderRight(BorderStyle.MEDIUM);
-					cellStyle.setBorderTop(BorderStyle.MEDIUM);
+					cellStyle.setBorderBottom(BorderStyle.THIN);
+					cellStyle.setBorderLeft(BorderStyle.THIN);
+					cellStyle.setBorderRight(BorderStyle.THIN);
+					cellStyle.setBorderTop(BorderStyle.THIN);
+
+					Font cellFont = workbook.createFont();
+					//字体
+					cellFont.setFontName("微软雅黑");
+					//字体大小
+					cellFont.setFontHeightInPoints((short) 11);
+					cellStyle.setFont(cellFont);
 
 					if (width != null){
 						// 设置宽度与分辨率比例计算,34倍正好
@@ -374,7 +398,9 @@ public class ExcelUitl {
 					}
 				} else if (StringUtil.equals("amount", dataType)) {
 					// 金额
-					if (StringUtil.equals("2", cfg.getString("precision"))) {
+					if (StringUtil.equals("1", cfg.getString("precision"))) {
+						cellStyle.setDataFormat(df.getFormat("#,##0"));
+					}else if (StringUtil.equals("2", cfg.getString("precision"))) {
 						cellStyle.setDataFormat(df.getFormat("#,##0.00"));
 					} else if (StringUtil.equals("3", cfg.getString("precision"))) {
 						cellStyle.setDataFormat(df.getFormat("#,##0.000"));
