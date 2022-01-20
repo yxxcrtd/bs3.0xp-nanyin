@@ -75,11 +75,11 @@
             info.IS_FHXGCP isFhxgcp,
             position.ASSETTYPE2 assetType2
         from CHB_MONTH_ASSET_POSITION position
-        inner join CHB_PRD_BASEINFO info
+        left join CHB_PRD_BASEINFO info
         on info.PROD_ID = position.PROD_ID
-        inner join CHB_ASSET_INFO asset on asset.ASSET_CODE = position.ASSET_CODE
         and info.STATUS in ('M', 'E')
         and info.PROFIT_TYPE = '03'
+        left join CHB_ASSET_INFO asset on asset.ASSET_CODE = position.ASSET_CODE
         where position.ENDDATE >= #{firstday, jdbcType=DATE}
         and position.ENDDATE <![CDATA[<=]]> #{lastday, jdbcType=DATE}
     </select>
