@@ -28,6 +28,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,7 +101,7 @@ public class CfetsManualSettleController extends BaseController {
         params.setPageId("CfetsManualSettle");
         params.setElementId(dtoList.get(0).getElementId());
         params.setBusinessCode(item -> item.getTradeId());
-        params.setBusinessType(DictCodeListExt3.共通业务类型_手工交收.getValue());
+        params.setBusinessType(DictCodeListExt3.共通业务类型_交收管理.getValue());
 
         String finalOpertType;
 
@@ -113,8 +114,9 @@ public class CfetsManualSettleController extends BaseController {
         }
 
         String finalOpertType1 = finalOpertType;
+        DecimalFormat format = new DecimalFormat("#,###.00");
         params.setComment((entity) -> {
-            String settleArg = getMessage("交收金额") + GlobalConstant.COLON + entity.getSettleAmt();
+            String settleArg = getMessage("交收金额") + format.format(GlobalConstant.COLON + entity.getSettleAmt());
             if(StringUtil.equals(entity.getPs(), BussinessDictCodeList.交易方向_买入.getValue())){
                 settleArg = getMessage("交收数量") + GlobalConstant.COLON + entity.getSettleNum();
             }
@@ -122,7 +124,7 @@ public class CfetsManualSettleController extends BaseController {
                 getMessage("交收日期") + GlobalConstant.COLON + entity.getSettleDate(),
                 getMessage("原业务编号") + GlobalConstant.COLON + entity.getTradeId(),
                 getMessage("业务类型") + GlobalConstant.COLON + entity.getTgBusiTypeStr(),
-                getMessage("资产简称") + GlobalConstant.COLON + entity.getFinprodAbbr(),
+                getMessage("资产简称") + GlobalConstant.COLON + (StringUtil.isNotEmpty(entity.getFinprodAbbr())?entity.getFinprodAbbr():""),
                 getMessage("交收操作") + GlobalConstant.COLON + finalOpertType1,
                 settleArg);
         });
