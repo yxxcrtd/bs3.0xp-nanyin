@@ -3,6 +3,7 @@ package com.joyintech.tams.settle.batch.dealrevoke.service;
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.settle.batch.datagather.service.StlDataGatherService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,17 @@ public class RepoRevokeService implements BaseRevokeService {
             param.put("busiType", DictCodeList.共通业务类型_质押式回购交易.getValue());
             stlDataGatherService.excutePosition(param);
             investDealRevokeService.revokeDealTotal(totalTradeIdList);
+            List<String> tqzzTotalTradeIdList =  totalTradeIdMap.entrySet().stream()
+                    .filter(item-> StringUtil.equals(item.getValue(), DictCodeListExt3.交易方向_投资端_提前终止.getValue())
+                    || StringUtil.equals(item.getValue(), DictCodeList.交易方向_到期续做.getValue())
+                    || StringUtil.equals(item.getValue(), DictCodeList.交易方向_到期.getValue()))
+                    .map(Map.Entry::getKey).collect(Collectors.toList());
+            if(CollectionUtils.isNotEmpty(tqzzTotalTradeIdList)){
+                investDealRevokeService.deletePtlSecPositionFlow(tqzzTotalTradeIdList);
+                investDealRevokeService.deleteEtrSecPositionFlow(tqzzTotalTradeIdList);
+                investDealRevokeService.deleteEtrCashPositionFlow(tqzzTotalTradeIdList);
+                investDealRevokeService.deletePtlCashPositionFlow(tqzzTotalTradeIdList);
+            }
         }
     }
 

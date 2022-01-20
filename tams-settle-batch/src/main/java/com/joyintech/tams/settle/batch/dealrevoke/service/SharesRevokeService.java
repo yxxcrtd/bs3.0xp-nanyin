@@ -86,8 +86,8 @@ public class SharesRevokeService implements BaseRevokeService {
                     .map(item->item.getKey()).collect(Collectors.toList());
             List<String> tradeIds = investDealRevokeService.searchTradeIdsByTotalTradeIds(ssltTotalTradeIdList);
             if(CollectionUtils.isNotEmpty(tradeIds)){
-                investDealRevokeService.deleteSsltSecPositionFlow(tradeIds);
-                investDealRevokeService.deleteSsltEtrSecPositionFlow(tradeIds);
+                investDealRevokeService.deletePtlSecPositionFlow(tradeIds);
+                investDealRevokeService.deleteEtrSecPositionFlow(tradeIds);
             }
             investDealRevokeService.revokeDealTotal(ssltTotalTradeIdList);
         }

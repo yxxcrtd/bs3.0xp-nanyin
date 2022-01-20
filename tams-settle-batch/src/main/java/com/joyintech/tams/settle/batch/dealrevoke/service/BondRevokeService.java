@@ -1,11 +1,8 @@
 package com.joyintech.tams.settle.batch.dealrevoke.service;
 
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
-import com.joyintech.tams.common.base.entity.EtrSecPositionFlow;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.settle.batch.datagather.service.StlDataGatherService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,8 +51,8 @@ public class BondRevokeService implements BaseRevokeService {
                     .map(item->item.getKey()).collect(Collectors.toList());
             List<String> tradeIds = investDealRevokeService.searchTradeIdsByTotalTradeIds(ssltTotalTradeIdList);
             if(CollectionUtils.isNotEmpty(tradeIds)){
-                investDealRevokeService.deleteSsltSecPositionFlow(tradeIds);
-                investDealRevokeService.deleteSsltEtrSecPositionFlow(tradeIds);
+                investDealRevokeService.deletePtlSecPositionFlow(tradeIds);
+                investDealRevokeService.deleteEtrSecPositionFlow(tradeIds);
             }
             investDealRevokeService.revokeDealTotal(ssltTotalTradeIdList);
         }

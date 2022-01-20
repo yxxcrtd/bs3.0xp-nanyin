@@ -152,9 +152,13 @@ public interface InvestDealRevokeMapper {
 
     List<Map<String, String>> selectRepoPsById(Map<String, Object> param);
 
-    void deleteSsltSecPositionFlow(@Param("tradeIds") List<String> tradeIds);
+    void deletePtlSecPositionFlowByTradeIds(@Param("tradeIds") List<String> tradeIds);
 
-    void deleteSsltEtrSecPositionFlow(@Param("tradeIds") List<String> tradeIds);
+    void deleteEtrSecPositionFlowByTradeIds(@Param("tradeIds") List<String> tradeIds);
+
+    void deleteEtrCashPositionFlowByTradeIds(@Param("tradeIds") List<String> tradeIds);
+
+    void deletePtlCashPositionFlowByTradeIds(@Param("tradeIds") List<String> tradeIds);
 
     List<String> searchTradeIdsByTotalTradeIds(@Param("totalTradeIds") List<String> totalTradeIds);
 }
