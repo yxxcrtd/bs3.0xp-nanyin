@@ -1472,8 +1472,7 @@ public class MonthReportAssetService {
 		// 设置期限字段
 		boolean isCalcFlag = true;//后续判定是否需要再计算
 		//公私募基金 15 19 金融衍生品 07 权益类资产 06 无到期日 默认为 1
-		if (("15".equals(position.getAssettype()) || "19".equals(position.getAssettype())
-				|| "06".equals(position.getAssettype()) || "07".equals(position.getAssettype())) && chbAssetInfo.getMdate() == null) {
+		if (!("12".equals(position.getAssettype()) || "16".equals(position.getAssettype())) && chbAssetInfo.getMdate() == null) {
 			terms = new BigDecimal(1);
 			isCalcFlag = false;//后续判定是否需要再计算
 
