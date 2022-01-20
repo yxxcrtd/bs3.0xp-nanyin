@@ -750,7 +750,7 @@ public class IbuComponentReceiveService extends BaseService{
         if (null != quoteResultDto && null != quoteResultDto.getBondDialogueQuote()
                 && null != quoteResultDto.getBondDialogueQuote().getIbuQuoteBondDto()) {
             IbuQuoteBondDto ibuQuoteBondDto = quoteResultDto.getBondDialogueQuote().getIbuQuoteBondDto();
-            if (StringUtil.isEmptyList(quoteResultDto.getBondRequestQuote().getIbuQuoteEtrReDtoList())) {
+            if (StringUtil.isEmptyList(quoteResultDto.getBondDialogueQuote().getIbuQuoteEtrReDtoList())) {
                 return true;
             }
             CfetsBondDealDialogueQuoteDto dto = new CfetsBondDealDialogueQuoteDto();
@@ -764,7 +764,7 @@ public class IbuComponentReceiveService extends BaseService{
             dto.setAvaNum(ibuQuoteBondDto.getShareAmt().multiply(new BigDecimal(100)).divide(new BigDecimal(10000)));
             dto.setPs(ibuQuoteBondDto.getPs());
             List<CfetsBondDealDialogueQuoteDto> cfetsBondDealRequestQuoteDtoList = new ArrayList<>();
-            quoteResultDto.getBondRequestQuote().getIbuQuoteEtrReDtoList().forEach(item ->{
+            quoteResultDto.getBondDialogueQuote().getIbuQuoteEtrReDtoList().forEach(item ->{
                 CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = new CfetsBondDealDialogueQuoteDto();
                 BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto,item);
                 cfetsBondDealDialogueQuoteDto.setAvaNum(ArithmeticUtil.divide(cfetsBondDealDialogueQuoteDto.getAvaNum(),new BigDecimal(100),2));
