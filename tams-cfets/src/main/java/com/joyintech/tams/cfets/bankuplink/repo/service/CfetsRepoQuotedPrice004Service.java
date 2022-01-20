@@ -39,6 +39,7 @@ import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPosPortfolioSecRequ
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPositionRequest;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.base.core.impl.dao.MstWorkflowCommonServiceMapperImpl;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
@@ -161,6 +162,9 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
 
     @Autowired
     private BaseEtrInvestInfoService baseEtrInvestInfoServiceImpl;
+
+    @Autowired
+    private MstWorkflowCommonServiceMapperImpl mstWorkflowCommonServiceMapperImpl;
     /**
      * 利率保留位数
      */
@@ -613,11 +617,11 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
 
     @Override
     public void doDelete(String workflowId) {
-        SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(workflowId);
+        ProcessMark processMark = mstWorkflowCommonServiceMapperImpl.getBusinessInfo(workflowId);
         CfetsRepoDealRegisterQuoteDto entity = getBussinessEntityByWorkflowId(workflowId);
         this.deleteBussFlowData(workflowId);
-        if (StringUtil.isNotEmpty(sysWflBusinessList)
-                && StringUtil.equals(sysWflBusinessList.getProcessState(), DictCodeList.流程状态_已退回.getValue())) {
+        if (StringUtil.isNotEmpty(processMark)
+                && StringUtil.equals(processMark.getStatus(), DictCodeList.数据状态_修改中.getValue())) {
             PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(), DictCodeListExt1.子系统代码_交易.getValue(),
                     DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), entity.getPs());
         }

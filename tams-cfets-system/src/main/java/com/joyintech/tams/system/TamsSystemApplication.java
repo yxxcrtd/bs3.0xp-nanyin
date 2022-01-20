@@ -26,7 +26,17 @@ import java.text.MessageFormat;
  */
 @Configuration
 public class TamsSystemApplication extends WebApplication {
-	
+
+	@Bean
+	public Docket dataEntrustDocket() {
+		return SwaggerConfig.createDocket("场内指令接口", "com.joyintech.tams.exchange.entrust.etrexchange");
+	}
+
+	@Bean
+	public Docket dataFieldetrinfoquerymainDocket() {
+		return SwaggerConfig.createDocket("场内指令分发查询接口", "com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain");
+	}
+
 	@Bean
 	public Docket dataExchangeDocket() {
 		return SwaggerConfig.createDocket("场内交易接口", "com.joyintech.tams.exchange");

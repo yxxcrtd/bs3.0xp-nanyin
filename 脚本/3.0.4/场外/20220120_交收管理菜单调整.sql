@@ -11,4 +11,4 @@ delete from sys_menu where MENU_ID in ('QS_MANAGEMENT_001_010','QS_MANAGEMENT_00
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('QS_MANAGEMENT_001_010', 'STL', '', 'QS_MANAGEMENT_001', '', 8, '01', '交收管理', 'system', '', sysdate, 'system', sysdate);
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('QS_MANAGEMENT_001_010_001', 'STL', '', 'QS_MANAGEMENT_001_008', 'ManualSettleQuery', 1, '01', '交收管理', 'system', '', sysdate, 'system', sysdate);
+values ('QS_MANAGEMENT_001_010_001', 'STL', '', 'QS_MANAGEMENT_001_010', 'ManualSettleQuery', 1, '01', '交收管理', 'system', '', sysdate, 'system', sysdate);

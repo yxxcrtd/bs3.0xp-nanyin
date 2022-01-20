@@ -1165,4 +1165,14 @@ public class EtrCommandDispatcherDto extends BaseEntity{
 	public void setDerivativeOcFlag(String derivativeOcFlag) {
 		this.derivativeOcFlag = derivativeOcFlag;
 	}
+
+    private String busiTypeTg;
+
+    public String getBusiTypeTg() {
+        return busiTypeTg;
+    }
+
+    public void setBusiTypeTg(String busiTypeTg) {
+        this.busiTypeTg = busiTypeTg;
+    }
 }
