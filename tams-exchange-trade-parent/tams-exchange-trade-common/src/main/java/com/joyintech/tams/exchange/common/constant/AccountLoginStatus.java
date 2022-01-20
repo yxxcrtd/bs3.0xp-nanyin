@@ -1,4 +1,4 @@
-package com.joyintech.tams.exchange.service.trade.processor.constants;
+package com.joyintech.tams.exchange.common.constant;
 
 public enum AccountLoginStatus {
 
