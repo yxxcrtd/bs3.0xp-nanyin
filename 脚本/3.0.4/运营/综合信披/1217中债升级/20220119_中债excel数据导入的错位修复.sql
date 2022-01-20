@@ -76,7 +76,7 @@ Insert into CHB_INFOMGR_RESULT_CONFIG (RESULT_ID,MGRTABLE_ID,COLUMN_ID,COLUMN_NA
 
 
 
-update  chb_datacheck_rule  set  remark='产品特殊属性不在值域范围内并且产品特殊属性的多选选项不可重复。' where datatype='CHB_PRD_DECLARE_SUB'  and SRCPROPERTY='PRD_SPEC_PROPERTY'
+update  chb_datacheck_rule  set  remark='产品特殊属性不在值域范围内并且产品特殊属性的多选选项不可重复。' where datatype='CHB_PRD_DECLARE_SUB'  and SRCPROPERTY='PRD_SPEC_PROPERTY';
 
 
 

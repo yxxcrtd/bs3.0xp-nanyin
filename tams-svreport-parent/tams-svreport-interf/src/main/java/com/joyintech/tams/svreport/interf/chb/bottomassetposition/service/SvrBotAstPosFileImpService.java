@@ -119,7 +119,6 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 //		List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) dataMap.get("list");
 		List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) convertMapToEntity(posList,ChbBotAstPosition.class);
 		list.stream().forEach(dto->{
-			dto.setDatasource(dataSource);
 			dto.setPosId(IDGenerator.generate(36));
 		});
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 end
@@ -345,10 +344,9 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 //			List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) dataMap.get("list");
 			List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) convertMapToEntity(posList,ChbBotAstPosition.class);
 			list.stream().forEach(dto->{
-				dto.setDatasource(dataSource);
 				dto.setPosId(IDGenerator.generate(36));
 			});
-			//modify by convertMapToEntity yangxianjiu 2022-01-19 start
+			//modify by convertMapToEntity yangxianjiu 2022-01-19 end
 			mergeData(list);
 		}else if (posList.size() <= reportInterfOneTimeSqlLdrDataCount) {
 			deleteByUpdateTime(new Date());
