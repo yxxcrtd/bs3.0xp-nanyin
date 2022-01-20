@@ -642,14 +642,14 @@ public class CfetsIbuQuoteBondController extends BaseController {
 				List<CfetsBondDayRegDto> cfetsBondDayRegDtos = collect.get(i);
 				String appendString = collect.size()>=1?String.format("%04d", sequenceIndexData):StringUtil.EMPTY;
 				String excelAndSheetName = StringUtil.join(prefix,"_",appendString);
-				ExcelUitl.doExport2(requestDto, response, excelAndSheetName,() -> {
+				ExcelUitl.doExportDeal(requestDto, response, excelAndSheetName,() -> {
 							return cfetsBondDayRegDtos;
 					});
 			}
 		}
 		else{
 			String excelAndSheetName = StringUtil.join(prefix,"_",sequenceIndexData);
-			ExcelUitl.doExport2(requestDto, response, excelAndSheetName,() -> {
+			ExcelUitl.doExportDeal(requestDto, response, excelAndSheetName,() -> {
 				return dataList;
 			});
 		}

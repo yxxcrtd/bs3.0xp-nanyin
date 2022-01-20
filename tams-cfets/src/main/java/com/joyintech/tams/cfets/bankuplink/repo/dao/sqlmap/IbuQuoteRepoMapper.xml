@@ -2049,6 +2049,7 @@
                     RFPDT.REPO_TERM        repoTerm,
                     MCCI2.PARTY_ABBR       ouPartyName,
                     MSCP.COUNTER_NAME      cpPartyName,
+                    MSCP.PARTY_ID          partyId,
                     SU.REAL_NAME           ouTraderName,
                     case when MCCT.TRADER_NAME is not null then MCCT.TRADER_NAME
                       else RFPDT.COUNTER_TRADER  end  cpTraderName,
@@ -2115,6 +2116,7 @@
                 RFPDT.REPO_TERM        repoTerm,
                 MCCI2.PARTY_ABBR       ouPartyName,
                 MSCP.COUNTER_NAME      cpPartyName,
+                MSCP.PARTY_ID          partyId,
                 SU.REAL_NAME           ouTraderName,
                 case when MCCT.TRADER_NAME is not null then MCCT.TRADER_NAME
                     else RFPDT.COUNTER_TRADER  end  cpTraderName,
@@ -2290,6 +2292,7 @@
             TT.repoType,
             TT.ouPartyName,
             TT.cpPartyName,
+            TT.partyId,
             TT.ouTraderName,
             TT.cpTraderName,
             TT.settleSpeed,
@@ -2674,5 +2677,8 @@
                     </if>
                 </where>
                 )
+    </select>
+    <select id="selectAllCustomer"  resultType="java.util.Map">
+        SELECT PARTY_ID , PARTY_NAME FROM MST_CFETS_CUSTOMER_INFO GROUP BY PARTY_ID , PARTY_NAME
     </select>
 </mapper>

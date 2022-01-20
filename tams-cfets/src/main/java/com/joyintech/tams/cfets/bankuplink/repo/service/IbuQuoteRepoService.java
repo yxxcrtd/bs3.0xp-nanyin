@@ -2469,5 +2469,13 @@ public class IbuQuoteRepoService extends BaseService {
         joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
         return null;
     }
+
+    /**
+     * 获取机构信息
+     * @return
+     */
+    public List<Map<String, String>> selectAllCustomer() {
+        return cfetsIbuQuoteRepoMapper.selectAllCustomer();
+    }
 }
 
