@@ -491,12 +491,13 @@ public class IbuQuoteRepoService extends BaseService {
         for (RepoEntrustPledgeDto pledgeDto : ptlAllocationAddRequest.getRepoEntrustPledgeDtos()) {
             for (RegFinPledge pledge : regFinPledges) {
                 if (StringUtil.equals(pledge.getPortfolioId(), pledgeDto.getPortfolioId())
-                        && StringUtil.equals(pledge.getPortfolioId(), pledgeDto.getPortfolioId())
+                        && StringUtil.equals(pledge.getPledgeFinprodId(), pledgeDto.getFinprodId())
                         && StringUtil.equals(pledge.getEntrustId(), ptlAllocationAddRequest.getDelEtrId())) {
                     if (StringUtil.isNotEmpty(pledgeDto.getPledgePrinStr())) {
                         pledgeDto.setPledgePrin(ArithmeticUtil.multiply(new BigDecimal(pledgeDto.getPledgePrinStr()), new BigDecimal(10000)));
                     }
-                    pledgeDto.setPledgePrin(ArithmeticUtil.subtract(pledgeDto.getPledgePrin(), pledge.getPledgeNumber()));
+                    pledgeDto.setPledgePrin(ArithmeticUtil.subtract(pledgeDto.getPledgePrin(),
+                            ArithmeticUtil.multiply(pledge.getPledgeNumber(), new BigDecimal(100))));
                 }
             }
             if (BigDecimal.ZERO.compareTo(pledgeDto.getPledgePrin()) != 0) {
@@ -1060,6 +1061,7 @@ public class IbuQuoteRepoService extends BaseService {
             if (CollectionUtils.isEmpty(ptlList)) {
                 ptlList = new ArrayList<>();
             }
+            ptlAllocationDto.setConvertAmt(null);
             // 添加该笔组合分配数据
             ptlList.add(ptlAllocationDto);
             ptlListMap.put(ptlAllocationDto.getPortfolioId(), ptlList);
@@ -2002,7 +2004,7 @@ public class IbuQuoteRepoService extends BaseService {
                     ArithmeticUtil.multiply(
                             ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), convertAmt), 4, RoundingMode.HALF_UP);
             item.setConvertAmt(convertAmtTemp);
-            convertAmtTailDifference = ArithmeticUtil.subtract(dealFeeAmtTailDifference, item.getDealFeeAmt());
+            convertAmtTailDifference = ArithmeticUtil.subtract(convertAmtTailDifference, item.getConvertAmt());
         }
         handleTailDifference(ptlAllocations, mIntAmtTailDifference, 0);
         handleTailDifference(ptlAllocations, mtradeAmtTailDifference, 1);
