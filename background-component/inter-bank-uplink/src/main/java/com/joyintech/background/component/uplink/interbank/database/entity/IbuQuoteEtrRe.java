@@ -96,6 +96,11 @@ public class IbuQuoteEtrRe extends IbuQuoteEtrReKey {
     private BigDecimal mtradeAmt;
 
     /**
+     * 折算券面(元)
+     */
+    private BigDecimal shareCtAmt;
+
+    /**
      * 取得 组合代码
      * @return 组合代码
      */
@@ -341,5 +346,13 @@ public class IbuQuoteEtrRe extends IbuQuoteEtrReKey {
 
     public void setMtradeAmt(BigDecimal mtradeAmt) {
         this.mtradeAmt = mtradeAmt;
+    }
+
+    public BigDecimal getShareCtAmt() {
+        return shareCtAmt;
+    }
+
+    public void setShareCtAmt(BigDecimal shareCtAmt) {
+        this.shareCtAmt = shareCtAmt;
     }
 }

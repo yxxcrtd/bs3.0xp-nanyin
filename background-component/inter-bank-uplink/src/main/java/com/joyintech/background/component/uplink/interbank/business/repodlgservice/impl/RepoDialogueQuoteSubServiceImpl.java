@@ -199,6 +199,16 @@ public class RepoDialogueQuoteSubServiceImpl extends BaseService<IbuQuoteCrep> i
         return result;
     }
 
+    @Override
+    public RepoDialogueQuoteDto getWflRepoDialogueQuote(String quoteId) {
+        RepoDialogueQuoteDto result = new RepoDialogueQuoteDto();
+        result.setIbuQuoteCrepDto(ibuQuoteMapper.selectWflQuoteCrepByKey(quoteId));
+        result.setIbuQuoteCrepPledgeDtoList(ibuQuoteMapper.selectWflQuoteCrepPledgeByKey(quoteId));
+        result.setIbuQuoteEtrReDtoList(ibuQuoteMapper.selectWflQuoteEtrReDataByQuoteId(quoteId));
+        result.setIbuQuoteEntCrepPledgeDtoList(ibuQuoteMapper.selectWflQuoteEntCrepPledgeDataByQuoteId(quoteId));
+        return result;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -550,6 +560,31 @@ public class RepoDialogueQuoteSubServiceImpl extends BaseService<IbuQuoteCrep> i
 
                 return affectRows;
             }
+        );
+    }
+
+    /**
+     * 根据指定条件将更待更新信息更新入库
+     */
+    @Override
+    public QuoteResultDto updateRepoDialogueQuoteByKeyDeal(RepoDialogueQuoteDto inputBean) {
+        return excuteAndReturnQuoteResult(inputBean, null,
+                x -> {
+                    String quoteId = inputBean.getIbuQuoteCrepDto().getQuoteId();
+
+                    // 向“在线表”更新数据（含前置版本号）
+                    int affectRows = ibuQuoteCrepMapper.updateByPrimaryKeySelective(inputBean.getIbuQuoteCrepDto());
+
+                    //多组合
+                    if (CollectionUtils.isNotEmpty(inputBean.getIbuQuoteEtrReDtoList())) {
+                        affectRows += ibuQuoteMapper.batchInsetIbuQuoteEtrRe(inputBean.getIbuQuoteEtrReDtoList());
+                    }
+                    if (CollectionUtils.isNotEmpty(inputBean.getIbuQuoteEntCrepPledgeDtoList())) {
+                        affectRows += ibuQuoteMapper.batchInsetIbuQuoteEntCrepPledge(inputBean.getIbuQuoteEntCrepPledgeDtoList());
+                    }
+
+                    return affectRows;
+                }
         );
     }
     

@@ -589,7 +589,7 @@ public class IbuQuoteRepoService extends BaseService {
             }
         }
         calOtherForPtlAllocation(ptlAllocationListNeed, request.getPs(), request.getTradeAmt(), request.getmIntAmt(),
-                request.getMtradeAmt(), request.getDealFeeAmt(), request.getSettFeeAmt(), request.getConvertAmt());
+                request.getMtradeAmt(), request.getDealFeeAmt(), request.getSettFeeAmt(), request.getConvertAmt(), request.getShareAmt());
         ptlAllocationListNeed.addAll(ptlAllocationListNoNeed);
         return ptlAllocationListNeed;
     }
@@ -869,8 +869,8 @@ public class IbuQuoteRepoService extends BaseService {
                 message = StringUtil.join("非有效状态,不可导出!业务编号:" + item.getQuoteId());
                 break;
             }
-            if(!StringUtil.equals(item.getQuoteType(),"01")){
-                message = StringUtil.join("报价方式非对话报价,现阶段不可导出!业务编号:"+item.getQuoteId());
+            if (!StringUtil.equals(item.getQuoteType(), "01")) {
+                message = StringUtil.join("报价方式非对话报价,现阶段不可导出!业务编号:" + item.getQuoteId());
                 break;
             }
             if (item.getStatisticalTimes() != 0) {
@@ -1222,6 +1222,7 @@ public class IbuQuoteRepoService extends BaseService {
         request.setPtlAllocations(resultDto.getPtlAllocations());//组合分配信息
         request.setDealFeeAmt(resultDto.getDealFeeAmt());// 交易手续费
         request.setSettFeeAmt(resultDto.getSettFeeAmt());// 结算手续费
+        request.setShareAmt(shareAmt);
         request.setConvertAmt(convertAmt);
         temp = this.autoAllocation(request);
         // 组合分配数据处理
@@ -1538,7 +1539,7 @@ public class IbuQuoteRepoService extends BaseService {
                 ajaxResult.setMessage(message);
                 return ajaxResult;
             }
-            // 当参数：本币交易导出按钮配置为显示 OR (系统是否支持报价业务设置为支持时 and 本币交易导出按钮配置为不显示时)
+            // 当参数：系统是否支持报价业务设置为支持时 and 本币交易导出按钮配置为不显示时
             if (!isReg && StringUtil.equals(exportShow, "02")
                     && !StringUtil.equals(one.getPartyId(), item.getPartyId())) {
                 message = "所选指令交易账户不同";
@@ -1887,7 +1888,7 @@ public class IbuQuoteRepoService extends BaseService {
         }
         handleTailDifference(ptlAllocations, tailDifference);
         calOtherForPtlAllocation(ptlAllocations, request.getPs(), request.getTradeAmt(), request.getmIntAmt(),
-                request.getMtradeAmt(), request.getDealFeeAmt(), request.getSettFeeAmt(), null);
+                request.getMtradeAmt(), request.getDealFeeAmt(), request.getSettFeeAmt(), request.getConvertAmt(), request.getShareAmt());
         return ptlAllocations;
     }
 
@@ -1948,7 +1949,7 @@ public class IbuQuoteRepoService extends BaseService {
         }
         handleTailDifference(ptlAllocations, tailDifference);
         calOtherForPtlAllocation(ptlAllocations, request.getPs(), request.getTradeAmt(), request.getmIntAmt(),
-                request.getMtradeAmt(), request.getDealFeeAmt(), request.getSettFeeAmt(), null);
+                request.getMtradeAmt(), request.getDealFeeAmt(), request.getSettFeeAmt(), request.getConvertAmt(), request.getShareAmt());
         return ptlAllocations;
     }
 
@@ -1968,13 +1969,15 @@ public class IbuQuoteRepoService extends BaseService {
      */
     public void calOtherForPtlAllocation(List<RepoPtlAllocationDto> ptlAllocations, String ps,
                                          BigDecimal tradeAmt, BigDecimal mIntAmt, BigDecimal mtradeAmt,
-                                         BigDecimal dealFeeAmt, BigDecimal settFeeAmt, BigDecimal convertAmt) {
+                                         BigDecimal dealFeeAmt, BigDecimal settFeeAmt, BigDecimal convertAmt,
+                                         BigDecimal shareAmt) {
         //尾差
         BigDecimal mIntAmtTailDifference = mIntAmt;
         BigDecimal mtradeAmtTailDifference = mtradeAmt;
         BigDecimal dealFeeAmtTailDifference = dealFeeAmt;
         BigDecimal settFeeAmtTailDifference = settFeeAmt;
         BigDecimal convertAmtTailDifference = convertAmt;
+        BigDecimal shareAmtTailDifference = shareAmt;
         BigDecimal size = new BigDecimal(ptlAllocations.size());
 
         for (RepoPtlAllocationDto item : ptlAllocations) {
@@ -2001,14 +2004,20 @@ public class IbuQuoteRepoService extends BaseService {
             item.setSettFeeAmt(StringUtil.isNotEmpty(settFeeAmtTemp) ? settFeeAmtTemp : BigDecimal.ZERO);
             settFeeAmtTailDifference = ArithmeticUtil.subtract(settFeeAmtTailDifference, item.getSettFeeAmt());
             //组合分配中交易金额/基本信息中总的折算券面*基本信息中交易手续费
-            if (convertAmt == null) {
-                continue;
+            if (convertAmt != null) {
+                BigDecimal convertAmtTemp = ArithmeticUtil.round(
+                        ArithmeticUtil.multiply(
+                                ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), convertAmt), 4, RoundingMode.HALF_UP);
+                item.setConvertAmt(convertAmtTemp);
+                convertAmtTailDifference = ArithmeticUtil.subtract(convertAmtTailDifference, item.getConvertAmt());
             }
-            BigDecimal convertAmtTemp = ArithmeticUtil.round(
-                    ArithmeticUtil.multiply(
-                            ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), convertAmt), 4, RoundingMode.HALF_UP);
-            item.setConvertAmt(convertAmtTemp);
-            convertAmtTailDifference = ArithmeticUtil.subtract(convertAmtTailDifference, item.getConvertAmt());
+            if (shareAmt != null) {
+                BigDecimal shareAmtTemp = ArithmeticUtil.round(
+                        ArithmeticUtil.multiply(
+                                ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), shareAmt), 4, RoundingMode.HALF_UP);
+                item.setShareAmt(shareAmtTemp);
+                shareAmtTailDifference = ArithmeticUtil.subtract(shareAmtTailDifference, item.getShareAmt());
+            }
         }
         handleTailDifference(ptlAllocations, mIntAmtTailDifference, 0);
         handleTailDifference(ptlAllocations, mtradeAmtTailDifference, 1);
@@ -2016,6 +2025,9 @@ public class IbuQuoteRepoService extends BaseService {
         handleTailDifference(ptlAllocations, settFeeAmtTailDifference, 3);
         if (convertAmt != null) {
             handleTailDifference(ptlAllocations, convertAmtTailDifference, 5);
+        }
+        if (shareAmt != null) {
+            handleTailDifference(ptlAllocations, shareAmtTailDifference, 6);
         }
     }
 
@@ -2060,6 +2072,10 @@ public class IbuQuoteRepoService extends BaseService {
                 //折算质押券
                 if (type == 5) {
                     item.setConvertAmt(ArithmeticUtil.doAdd(item.getConvertAmt(), addDimension));
+                }
+                //质押券面
+                if (type == 6) {
+                    item.setShareAmt(ArithmeticUtil.doAdd(item.getShareAmt(), addDimension));
                 }
                 tailDifference = ArithmeticUtil.subtract(tailDifference, addDimension);
             }

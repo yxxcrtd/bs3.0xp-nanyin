@@ -51,6 +51,9 @@ public class PtlAllocationDto extends EtrEntrust {
     @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal shareAmt;
 
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal shareCtAmt;
+
     /**
      * 交易本金(中债登)
      */
@@ -169,6 +172,14 @@ public class PtlAllocationDto extends EtrEntrust {
 
     public void setShareAmt(BigDecimal shareAmt) {
         this.shareAmt = shareAmt;
+    }
+
+    public BigDecimal getShareCtAmt() {
+        return shareCtAmt;
+    }
+
+    public void setShareCtAmt(BigDecimal shareCtAmt) {
+        this.shareCtAmt = shareCtAmt;
     }
 
     public List<TrdTradeFeeDetail> getTradeFeeList() {

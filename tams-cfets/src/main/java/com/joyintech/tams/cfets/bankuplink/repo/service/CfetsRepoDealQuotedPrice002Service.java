@@ -1247,9 +1247,6 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         if (type.equals(OperationType.REVOKE) || type.equals(OperationType.DELETE)) {
             PositionHttpRequest.dorevoke(entity.getQuoteId(), DictCodeListExt1.子系统代码_交易.getValue(), DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), entity.getPs());
         }
-//        if (StringUtil.isNotEmpty(type)) {
-//            throw new RuntimeException("cs by jp");
-//        }
     }
 
     /**
@@ -1755,7 +1752,9 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             // 回购期限
             ptlDto.setTermDays((long) pageDto.getRepoTerm());
             //折算券面总额
-            ptlDto.setShareAmt(ptlAllocationDto.getConvertAmt());
+            ptlDto.setShareCtAmt(ptlAllocationDto.getConvertAmt());
+            //券面总额
+            ptlDto.setShareAmt(ArithmeticUtil.divide(ptlAllocationDto.getShareAmt(),new BigDecimal(100),2));
             //回购利息
             ptlDto.setIntAmt(ptlAllocationDto.getmIntAmt());
             ptlAllocationList.add(ptlDto);
@@ -1834,10 +1833,12 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 BeanUtil.copyPropertiesIgnoreNull(ptlAllocationDto, ptlDto);
                 // 交易金额
                 ptlAllocationDto.setTradeAmt(ptlDto.getFpriceAmt());
+                //券面总额
+                ptlAllocationDto.setShareAmt(ptlDto.getShareAmt());
                 //折算券面总额
-                ptlAllocationDto.setConvertAmt(ptlDto.getShareAmt());
+                ptlAllocationDto.setConvertAmt(ptlDto.getShareCtAmt());
                 // 到期结算金额
-                ptlAllocationDto.setMtradeAmt(ptlDto.getFpriceAmt());
+                ptlAllocationDto.setMtradeAmt(ptlDto.getMtradeAmt());
                 // 利息
                 ptlAllocationDto.setmIntAmt(ptlDto.getIntAmt());
                 // 回购期限

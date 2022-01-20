@@ -352,6 +352,7 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="DEAL_FEE_AMT" property="dealFeeAmt" jdbcType="DECIMAL" />
         <result column="SETT_FEE_AMT" property="settFeeAmt" jdbcType="DECIMAL" />
+        <result column="SHARE_CT_AMT" property="shareCtAmt" jdbcType="DECIMAL" />
     </resultMap>
 
     <select id="selectWflQuoteEtrReDataByQuoteId" resultMap="QuoteEtrReDataBaseResultMap">
@@ -359,7 +360,7 @@
             QUOTE_ID QUOTE_ID, VERSION VERSION, ENTRUST_ID ENTRUST_ID, PORTFOLIO_ID PORTFOLIO_ID,
             SHARE_AMT SHARE_AMT, FPRICE_AMT FPRICE_AMT,WORKFLOW_ID WORKFLOW_ID, REMARK REMARK, CREATE_USER CREATE_USER,
             CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
-            ,CB_FPRICE_AMT CB_FPRICE_AMT,SC_FPRICE_AMT SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT,DIP_TYPE,CPRICE_AMT,INT_AMT
+            ,CB_FPRICE_AMT CB_FPRICE_AMT,SC_FPRICE_AMT SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT,DIP_TYPE,CPRICE_AMT,INT_AMT,SHARE_CT_AMT
         from WFL_IBU_QUOTE_ETR_RE
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
             and VERSION = (select max(VERSION) from WFL_IBU_QUOTE_ETR_RE where QUOTE_ID = #{quoteId,jdbcType=VARCHAR})

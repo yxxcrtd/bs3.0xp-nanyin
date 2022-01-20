@@ -313,7 +313,7 @@
 
 	<select id="selectEtrReHisListByQuoteId" resultType="com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEtrReDto">
 		select c.QUOTE_ID,  c.VERSION , c.ENTRUST_ID , c.PORTFOLIO_ID , c.SHARE_AMT , c.FPRICE_AMT , c.REMARK  ,c.CREATE_USER ,
-		c.CREATE_TIME, c.CREATE_DEPT , c.UPDATE_USER , c.UPDATE_TIME,c.CB_FPRICE_AMT,c.SC_FPRICE_AMT from IBU_QUOTE_ETR_RE_HIS c
+		c.CREATE_TIME, c.CREATE_DEPT , c.UPDATE_USER , c.UPDATE_TIME,c.CB_FPRICE_AMT,c.SC_FPRICE_AMT,c.SHARE_CT_AMT from IBU_QUOTE_ETR_RE_HIS c
 		where c.QUOTE_ID = #{I_Q_B_QUOTE_ID,jdbcType=VARCHAR} and c.VERSION = #{I_Q_B_VERSION,jdbcType=DECIMAL}
 	</select>
 
@@ -426,7 +426,7 @@
 	select QUOTE_ID QUOTE_ID, VERSION VERSION, ENTRUST_ID ENTRUST_ID, PORTFOLIO_ID PORTFOLIO_ID,
         SHARE_AMT SHARE_AMT, FPRICE_AMT FPRICE_AMT, REMARK REMARK, CREATE_USER CREATE_USER,
         CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
-        ,CB_FPRICE_AMT CB_FPRICE_AMT,SC_FPRICE_AMT SC_FPRICE_AMT
+        ,CB_FPRICE_AMT CB_FPRICE_AMT,SC_FPRICE_AMT SC_FPRICE_AMT,SHARE_CT_AMT SHARE_CT_AMT
         from IBU_QUOTE_ETR_RE where QUOTE_ID = #{I_Q_B_QUOTE_ID, jdbcType=VARCHAR}
           and VERSION = #{I_Q_B_VERSION, jdbcType=DECIMAL}
 	</select>
@@ -924,7 +924,7 @@
 			c.QUOTE_ID QUOTE_ID, c.VERSION VERSION, c.ENTRUST_ID ENTRUST_ID, c.PORTFOLIO_ID PORTFOLIO_ID,
 			c.SHARE_AMT SHARE_AMT, c.FPRICE_AMT FPRICE_AMT, c.REMARK REMARK, c.CREATE_USER CREATE_USER,
 			c.CREATE_TIME CREATE_TIME, c.CREATE_DEPT CREATE_DEPT, c.UPDATE_USER UPDATE_USER, c.UPDATE_TIME UPDATE_TIME
-			,c.CB_FPRICE_AMT CB_FPRICE_AMT,c.SC_FPRICE_AMT SC_FPRICE_AMT
+			,c.CB_FPRICE_AMT CB_FPRICE_AMT,c.SC_FPRICE_AMT SC_FPRICE_AMT,SHARE_CT_AMT SHARE_CT_AMT
 	    from IBU_QUOTE_ETR_RE_HIS c
 	   where c.QUOTE_ID = #{I_Q_C_QUOTE_ID, jdbcType=VARCHAR}
           and c.VERSION = #{I_Q_C_VERSION, jdbcType=DECIMAL}
@@ -953,6 +953,18 @@
         ON C.user_id = fA.user_id
         where a.QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
 	</select>
+
+	<!-- 根据报价编号查询质押式回购报价信息  -->
+	<select id="selectWflQuoteCrepByKey" parameterType="java.lang.String" resultMap="QcDtoResultMap">
+		select
+		<include refid="Iqc_Column_List" />
+		from WFL_IBU_QUOTE_CREP a
+		LEFT JOIN SYS_USER C
+		ON a.OU_TRADER_ID = C.USER_NAME
+		LEFT JOIN SYS_USER_ADD FA
+		ON C.user_id = fA.user_id
+		where a.QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
+	</select>
     <!-- 根据报价编号列表查询质押式回购报价信息列表  -->
 	<select id="selectQuoteCrepByKeys" parameterType="java.util.List" resultMap="QcDtoResultMap">
         select 
@@ -978,6 +990,21 @@
         b.FINPROD_MARKET_ID I_Q_C_P_FINPROD_MARKET_ID,b.FINPROD_ID I_Q_C_P_FINPROD_ID,b.FINPROD_ABBR I_Q_C_P_FINPROD_ABBR,b.REGIST_ORG I_Q_C_P_REGIST_ORG
         ,b.MDATE
         from IBU_QUOTE_CREP_PLEDGE a
+        left join FIN_PRODUCT b
+        on b.FINPROD_ID = a.PLEDGE_FINPROD_ID
+        where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 根据报价编号查询质押式回购报价质押品信息  -->
+	<select id="selectWflQuoteCrepPledgeByKey" parameterType="java.lang.String" resultMap="QcpDtoResultMap">
+        select
+			a.QUOTE_ID IQCP_QUOTE_ID, a.BRANCH I_Q_C_P_BRANCH, a.PLEDGE_FINPROD_ID I_Q_C_P_PLEDGE_FINPROD_ID, a.VERSION I_Q_C_P_VERSION,
+        a.PLEDGE_FACE_VALUE I_Q_C_P_PLEDGE_FACE_VALUE, a.PLEDGE_NUMBER I_Q_C_P_PLEDGE_NUMBER, a.PLEDGE_RATIO I_Q_C_P_PLEDGE_RATIO,
+        a.PLEDGE_AMT I_Q_C_P_PLEDGE_AMT, a.UNIT_CPRICE I_Q_C_P_UNIT_CPRICE, a.CPRICE_DATE I_Q_C_P_CPRICE_DATE, a.CREATE_USER I_Q_C_P_CREATE_USER,
+        a.CREATE_DEPT I_Q_C_P_CREATE_DEPT, a.CREATE_TIME I_Q_C_P_CREATE_TIME, a.UPDATE_USER I_Q_C_P_UPDATE_USER, a.UPDATE_TIME I_Q_C_P_UPDATE_TIME,
+        b.FINPROD_MARKET_ID I_Q_C_P_FINPROD_MARKET_ID,b.FINPROD_ID I_Q_C_P_FINPROD_ID,b.FINPROD_ABBR I_Q_C_P_FINPROD_ABBR,b.REGIST_ORG I_Q_C_P_REGIST_ORG
+        ,b.MDATE
+        from WFL_IBU_QUOTE_CREP_PLEDGE a
         left join FIN_PRODUCT b
         on b.FINPROD_ID = a.PLEDGE_FINPROD_ID
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
@@ -1262,7 +1289,7 @@
 		PORTFOLIO_ID, SHARE_AMT, FPRICE_AMT,
 		REMARK, CREATE_USER, CREATE_TIME,
 		CREATE_DEPT, UPDATE_USER, UPDATE_TIME,CB_FPRICE_AMT,SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT, CPRICE_AMT, INT_AMT,INV_AIM,PRICE_MODEL
-		,OUR_SHARE_AMT,LENDIN_SHARE_AMT,M_TRADE_AMT
+		,OUR_SHARE_AMT,LENDIN_SHARE_AMT,M_TRADE_AMT,SHARE_CT_AMT
 		)
 		<foreach collection="inputList" item="item" separator="from dual union all select" open="select * from (select "
 				 close=" from dual)">
@@ -1273,6 +1300,7 @@
 			#{item.cbFpriceAmt,jdbcType=DECIMAL},#{item.scFpriceAmt,jdbcType=DECIMAL},#{item.dealFeeAmt,jdbcType=DECIMAL},
 			#{item.settFeeAmt,jdbcType=DECIMAL}, #{item.cpriceAmt,jdbcType=DECIMAL}, #{item.intAmt,jdbcType=DECIMAL}, #{item.invAim,jdbcType=VARCHAR}
 			, #{item.priceModel,jdbcType=VARCHAR}, #{item.ourShareAmt,jdbcType=DECIMAL},#{item.lendinShareAmt,jdbcType=DECIMAL},#{item.mtradeAmt,jdbcType=DECIMAL}
+			,#{item.shareCtAmt,jdbcType=DECIMAL}
 		</foreach>
 	</insert>
 	<insert id="batchInsetIbuQuoteEntCrepPledge">
@@ -1297,7 +1325,7 @@
 		PORTFOLIO_ID, SHARE_AMT, FPRICE_AMT,
 		REMARK, CREATE_USER, CREATE_TIME,
 		CREATE_DEPT, UPDATE_USER, UPDATE_TIME,CB_FPRICE_AMT,SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT, CPRICE_AMT, INT_AMT
-		,INV_AIM,OUR_SHARE_AMT,LENDIN_SHARE_AMT,PRICE_MODEL,M_TRADE_AMT
+		,INV_AIM,OUR_SHARE_AMT,LENDIN_SHARE_AMT,PRICE_MODEL,M_TRADE_AMT,SHARE_CT_AMT
 		)
 		<foreach close=")" collection="inputList" index="index" item="dto" open="(" separator=" union all ">
 			select
@@ -1307,7 +1335,8 @@
 			#{dto.createDept,jdbcType=VARCHAR}, #{dto.updateUser,jdbcType=VARCHAR}, #{dto.updateTime,jdbcType=TIMESTAMP}
 			, #{dto.cbFpriceAmt,jdbcType=DECIMAL}, #{dto.scFpriceAmt,jdbcType=DECIMAL},#{dto.dealFeeAmt,jdbcType=DECIMAL},
 			#{dto.settFeeAmt,jdbcType=DECIMAL}, #{dto.cpriceAmt,jdbcType=DECIMAL}, #{dto.intAmt,jdbcType=DECIMAL}
-			,#{dto.invAim,jdbcType=VARCHAR}, #{dto.ourShareAmt,jdbcType=DECIMAL},#{dto.lendinShareAmt,jdbcType=DECIMAL},#{dto.priceModel,jdbcType=VARCHAR},#{dto.mtradeAmt,jdbcType=VARCHAR}
+			,#{dto.invAim,jdbcType=VARCHAR}, #{dto.ourShareAmt,jdbcType=DECIMAL},#{dto.lendinShareAmt,jdbcType=DECIMAL}
+			,#{dto.priceModel,jdbcType=VARCHAR},#{dto.mtradeAmt,jdbcType=VARCHAR},#{dto.shareCtAmt,jdbcType=VARCHAR}
 			from dual
 		</foreach>
 	</insert>
@@ -1334,7 +1363,7 @@
 		PORTFOLIO_ID, SHARE_AMT, FPRICE_AMT,WORKFLOW_ID,
 		REMARK, CREATE_USER, CREATE_TIME,
 		CREATE_DEPT, UPDATE_USER, UPDATE_TIME,CB_FPRICE_AMT,SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT,CPRICE_AMT,INT_AMT,PRICE_MODEL
-		,INV_AIM,OUR_SHARE_AMT,LENDIN_SHARE_AMT,M_TRADE_AMT
+		,INV_AIM,OUR_SHARE_AMT,LENDIN_SHARE_AMT,M_TRADE_AMT,SHARE_CT_AMT
 		)
 		<foreach collection="inputList" item="item" separator="from dual union all select" open="select * from (select "
 				 close=" from dual)">
@@ -1345,6 +1374,7 @@
 			, #{item.cbFpriceAmt,jdbcType=DECIMAL}, #{item.scFpriceAmt,jdbcType=DECIMAL},#{item.dealFeeAmt,jdbcType=DECIMAL},
 			#{item.settFeeAmt,jdbcType=DECIMAL}, #{item.cpriceAmt,jdbcType=DECIMAL}, #{item.intAmt,jdbcType=DECIMAL}, #{item.priceModel,jdbcType=VARCHAR}
 			,#{item.invAim,jdbcType=VARCHAR}, #{item.ourShareAmt,jdbcType=DECIMAL},#{item.lendinShareAmt,jdbcType=DECIMAL},#{item.mtradeAmt,jdbcType=DECIMAL}
+			,#{item.shareCtAmt,jdbcType=DECIMAL}
 		</foreach>
 	</insert>
 	<insert id="batchInsetWflIbuQuoteEntCrepPledge" parameterType="java.util.List">
@@ -1386,6 +1416,7 @@
 		<result column="SETT_FEE_AMT" property="settFeeAmt" jdbcType="DECIMAL" />
 		<result column="OUR_SHARE_AMT" property="ourShareAmt" jdbcType="DECIMAL" />
 		<result column="LENDIN_SHARE_AMT" property="lendinShareAmt" jdbcType="DECIMAL" />
+		<result column="SHARE_CT_AMT" property="shareCtAmt" jdbcType="DECIMAL" />
     </resultMap>
 	<select id="selectQuoteEtrReDataByQuoteId" resultMap="QuoteEtrReDataBaseResultMap">
         select 
@@ -1393,17 +1424,17 @@
 	        SHARE_AMT SHARE_AMT, FPRICE_AMT FPRICE_AMT, REMARK REMARK, CREATE_USER CREATE_USER, 
 	        CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
 	        ,CB_FPRICE_AMT CB_FPRICE_AMT,SC_FPRICE_AMT SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT,DIP_TYPE,CPRICE_AMT,INT_AMT,PRICE_MODEL
-			,OUR_SHARE_AMT ,LENDIN_SHARE_AMT,M_TRADE_AMT
+			,OUR_SHARE_AMT ,LENDIN_SHARE_AMT,M_TRADE_AMT,SHARE_CT_AMT
         from IBU_QUOTE_ETR_RE
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
             and VERSION = (select max(VERSION) from IBU_QUOTE_ETR_RE where QUOTE_ID = #{quoteId,jdbcType=VARCHAR})
 	</select>
     <select id="selectWflQuoteEtrReDataByQuoteId" resultMap="QuoteEtrReDataBaseResultMap">
         select 
-            QUOTE_ID QUOTE_ID, VERSION VERSION, ENTRUST_ID ENTRUST_ID, PORTFOLIO_ID PORTFOLIO_ID, 
-            SHARE_AMT SHARE_AMT, FPRICE_AMT FPRICE_AMT,WORKFLOW_ID WORKFLOW_ID, REMARK REMARK, CREATE_USER CREATE_USER,
-            CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
-            ,CB_FPRICE_AMT CB_FPRICE_AMT,SC_FPRICE_AMT SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT,PRICE_MODEL,M_TRADE_AMT
+            QUOTE_ID, VERSION, ENTRUST_ID, PORTFOLIO_ID, SHARE_AMT, FPRICE_AMT, WORKFLOW_ID,
+		   	REMARK, CREATE_USER, CREATE_TIME, CREATE_DEPT, UPDATE_USER, UPDATE_TIME, CB_FPRICE_AMT,
+		   	SC_FPRICE_AMT, DEAL_FEE_AMT, SETT_FEE_AMT, DIP_TYPE, CPRICE_AMT, INT_AMT, INV_AIM, OUR_SHARE_AMT,
+		   	LENDIN_SHARE_AMT, PRICE_MODEL, M_TRADE_AMT, SHARE_CT_AMT
         from WFL_IBU_QUOTE_ETR_RE
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
             and VERSION = (select max(VERSION) from WFL_IBU_QUOTE_ETR_RE where QUOTE_ID = #{quoteId,jdbcType=VARCHAR})
@@ -1432,6 +1463,33 @@
 			T2.FINPROD_MARKET_ID bondCode
 		FROM
 			IBU_QUOTE_ENT_CREP_PLEDGE T1
+		LEFT JOIN FIN_PRODUCT T2 ON
+			T2.FINPROD_ID = T1.PLEDGE_FINPROD_ID
+		 where T1.QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectWflQuoteEntCrepPledgeDataByQuoteId" resultType="com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEntCrepPledgeDto">
+		SELECT
+			T1.QUOTE_ID QUOTE_ID,
+			T1.VERSION VERSION,
+			T1.ENTRUST_ID ENTRUST_ID,
+			T1.BRANCH BRANCH,
+			T1.PLEDGE_FINPROD_ID PLEDGE_FINPROD_ID,
+			T1.PORTFOLIO_ID PORTFOLIO_ID,
+			T1.PLEDGE_FACE_VALUE PLEDGE_FACE_VALUE,
+			T1.PLEDGE_NUMBER PLEDGE_NUMBER,
+			T1.PLEDGE_RATIO PLEDGE_RATIO,
+			T1.PLEDGE_AMT PLEDGE_AMT,
+			T1.UNIT_CPRICE UNIT_CPRICE,
+			T1.CPRICE_DATE CPRICE_DATE,
+			T1.CREATE_USER CREATE_USER,
+			T1.CREATE_DEPT CREATE_DEPT,
+			T1.CREATE_TIME CREATE_TIME,
+			T1.UPDATE_USER UPDATE_USER,
+			T1.UPDATE_TIME UPDATE_TIME,
+			T2.FINPROD_MARKET_ID bondCode
+		FROM
+			WFL_IBU_QUOTE_ENT_CREP_PLEDGE T1
 		LEFT JOIN FIN_PRODUCT T2 ON
 			T2.FINPROD_ID = T1.PLEDGE_FINPROD_ID
 		 where T1.QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
