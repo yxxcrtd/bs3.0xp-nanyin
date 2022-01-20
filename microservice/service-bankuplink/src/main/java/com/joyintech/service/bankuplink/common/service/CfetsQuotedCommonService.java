@@ -1305,7 +1305,7 @@ public class CfetsQuotedCommonService extends BaseService {
         Map<String,Object> result = new HashMap<>();
         String ps = entity.getPs();
         result.put("interfaceType","Bond001");
-        result.put("userId", SecurityUtil.getLoginUser().getUserName());
+        result.put("userId", null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"system");
         result.put("totalTradeId",entity.getQuoteId());
         result.put("flowStatus",flowStatus);
         result.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
@@ -1360,7 +1360,7 @@ public class CfetsQuotedCommonService extends BaseService {
         Map<String,Object> result = new HashMap<>();
         String ps = entity.getPs();
         result.put("interfaceType","Bond001");
-        result.put("userId", SecurityUtil.getLoginUser().getUserName());
+        result.put("userId", null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"system");
         result.put("totalTradeId",entity.getQuoteId());
         result.put("flowStatus",flowStatus);
         result.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
