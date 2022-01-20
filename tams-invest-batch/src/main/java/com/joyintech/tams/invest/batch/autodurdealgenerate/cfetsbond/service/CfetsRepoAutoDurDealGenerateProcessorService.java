@@ -197,6 +197,7 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         trdFinProductDealTotal.setTradeMarketMode(entity.getTradeMarketMode());
         trdFinProductDealTotal.setDeliveryType(entity.getDeliveryType());
         trdFinProductDealTotal.setUnitInt(entity.getUnitInt());
+        trdFinProductDealTotal.setSettleSpeed(entity.getSettleSpeed());
         //汇总扩展
         PaTrdFinProductDealTotal paTrdFinProductDealTotal = new PaTrdFinProductDealTotal();
         paTrdFinProductDealTotal.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
@@ -397,7 +398,9 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
                     }
                     ptlSec.put("tradeId",dto.getTradeId());
                     ptlSec.put("etrId",dto.getEntrustId());
-                    ptlSec.put("secAmount",repoInfo.getPledgeNumber());
+                    ptlSec.put("secAmount",ArithmeticUtil.multiply(repoInfo.getPledgeNumber(),new BigDecimal(100)));
+                    ptlSec.put("ownSecAmount",ArithmeticUtil.multiply(repoInfo.getPledgeNumber(),new BigDecimal(100)));
+                    ptlSec.put("integrateSecAmount",BigDecimal.ZERO);
                     ptlSecList.add(ptlSec);
                 }
             }
@@ -417,6 +420,14 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
             req.put("ps","03");
         }else{
             req.put("ps","04");
+        }
+        if(null!=trdFinProductDealTotal.getSettleSpeed()){
+            if(trdFinProductDealTotal.getSettleSpeed() == 0L){
+                req.put("settleSpeed","01");
+            }
+            if(trdFinProductDealTotal.getSettleSpeed() == 1L){
+                req.put("settleSpeed","02");
+            }
         }
         req.put("tradePlace",BussinessDictCodeList.交易场所_银行间.getValue());
         req.put("cdate",trdFinProductDealTotal.getTradeDate());

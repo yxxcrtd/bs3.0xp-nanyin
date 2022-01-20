@@ -705,6 +705,7 @@
             ,T1.DELIVERY_TYPE
             ,T1.SEC_MANAGE_ACCT_ID
             ,T1.UNIT_INT
+            ,T1.SETTLE_SPEED
             FROM TRD_PRODUCT_DEAL T1
             <!--  一体化对应etliu start -->
             LEFT JOIN PTL_TRADE T3 ON T1.TRADE_ID = T3.BUSI_NO <!-- AND T1.BUSI_TYPE = T3.BUSI_TYPE -->

@@ -318,6 +318,20 @@ public class TrdRepoDurationDto extends BaseEntity {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal unitInt;
 
+    /**
+     * 清算速度
+     */
+    private Long settleSpeed;
+
+
+    public Long getSettleSpeed() {
+        return settleSpeed;
+    }
+
+    public void setSettleSpeed(Long settleSpeed) {
+        this.settleSpeed = settleSpeed;
+    }
+
     public BigDecimal getPrinAmt() {
         return prinAmt;
     }
