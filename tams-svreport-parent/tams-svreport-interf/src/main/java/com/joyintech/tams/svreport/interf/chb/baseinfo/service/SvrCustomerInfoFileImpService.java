@@ -143,10 +143,6 @@ public class SvrCustomerInfoFileImpService extends FileImpService {
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //		listNE = dataConversionEntity(list);
 		listNE = (List<MstCustomerInfoAddWithBLOBs>) convertMapToEntity(list,MstCustomerInfoAddWithBLOBs.class);
-		listNE.stream().forEach(baseEntity->{
-            // 创建人
-            baseEntity.setCreateDept(CommonUtil.getDeptCode());
-        });
         // modify by convertMapToEntity yangxianjiu 2022-01-19 end
 		logger.debug("市场机构数据add表转dto---结束-----:" +  df.format(new Date()));
 		if (listNE != null && listNE.size() > 0) {

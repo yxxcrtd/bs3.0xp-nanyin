@@ -121,7 +121,6 @@ public class SvrLoanDetailInfoFileImpService extends FileImpService {
 //        loanDetailInfoList = this.convertMapToEntity(infoList,dataSource,listColumn);
         loanDetailInfoList = (List<ChbLoanDetailInfo>) convertMapToEntity(infoList,ChbLoanDetailInfo.class);
         loanDetailInfoList.stream().forEach(chbLoanDetailInfo->{
-            chbLoanDetailInfo.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源,dataSource));
             chbLoanDetailInfo.setAssetUuid(IDGenerator.generate(36));
         });
         // modify by convertMapToEntity yangnxianjiu 2022-01-19 end
