@@ -47,4 +47,7 @@
         FROM MST_CFETS_CUSTOMER_INFO A
         WHERE A.PARTY_ID = #{mpartyId,jdbcType=VARCHAR}
     </select>
+    <select id="getAllPartyIdIsNotNull" resultType="java.lang.String">
+        SELECT PARTY_ID FROM  MST_COUNTER_PARTY WHERE PARTY_ID IS NOT NULL
+    </select>
 </mapper>

@@ -1,14 +1,6 @@
 /**新增序列 用于质押式回购当日登记-本币交易导出自增序号 add by chenkang 20220119 */
-BEGIN
-
-EXECUTE IMMEDIATE 'DROP SEQUENCE DAYREGEXPORT_REPO_SEQUENCE';
-
-EXCEPTION WHEN OTHERS THEN NULL;
-
-END;
-
+DROP SEQUENCE DAYREGEXPORT_REPO_SEQUENCE;
 create sequence DAYREGEXPORT_REPO_SEQUENCE minvalue 1 maxvalue 9999 order cycle nocache;
-
 
 /**本币交易导出 质押式回购 add by chenkang 20220119  */
 DELETE FROM  CFG_DATATABLE_SHOW WHERE PAGECODE  = 'IbuQuoteRepo' AND DTCODE = 'DAYREGQUOTAIEXPORT' ;
@@ -22,7 +14,7 @@ insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DIC
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('IbuQuoteRepo', 'DAYREGQUOTAIEXPORT','999999', 'tradeAmt', '交易金额(元)', '','8', '0', '0', '0','100','{"colAlign": "right","dataType":"amount","precision":"2","supportSearch":"精确"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('IbuQuoteRepo', 'DAYREGQUOTAIEXPORT','999999', 'finprodMarketId', '债券代码', '','9', '0', '0', '0','100','{}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('IbuQuoteRepo', 'DAYREGQUOTAIEXPORT','999999', 'finprodName', '债券简称', '','10', '0', '0', '0','100','{}','0','COMM','1','0','','','0');
-insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('IbuQuoteRepo', 'DAYREGQUOTAIEXPORT','999999', 'pledgePrinStr', '券面总额(万)', '','11', '0', '0', '0','100','{"colAlign": "right","dataType":"amount","precision":"2","supportSearch":"精确"}','0','COMM','1','0','','','0');
+insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('IbuQuoteRepo', 'DAYREGQUOTAIEXPORT','999999', 'pledgePrinStr', '券面总额(万)', '','11', '0', '0', '0','100','{"colAlign": "right","dataType":"amount","precision":"1","supportSearch":"精确"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('IbuQuoteRepo', 'DAYREGQUOTAIEXPORT','999999', 'pledgeRatio', '折算比例(%)', '','12', '0', '0', '0','100','{"colAlign": "right","dataType":"rate","precision":"2","supportSearch":"精确"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('IbuQuoteRepo', 'DAYREGQUOTAIEXPORT','999999', 'settleSpeedName', '清算速度*', 'settleSpeed','13', '0', '0', '0','100','{}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('IbuQuoteRepo', 'DAYREGQUOTAIEXPORT','999999', 'settleTypeStr', '清算类型*', 'settleType','14', '0', '0', '0','100','{}','0','COMM','1','0','','','0');

@@ -813,9 +813,9 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	 * @see
 	 * @since 1.0
 	 */
-	@RequestMapping("/calcDeviationDegree")
+	@PostMapping("/calcDeviationDegree")
 	@ResponseBody
-	public Message<String> calcDeviationDegree(@RequestParam CalcDeviationDegreeRequest request) {
+	public Message<String> calcDeviationDegree(@RequestBody CalcDeviationDegreeRequest request) {
 		String deviationDegree = etrExchangeTrade001CommonService.calcDeviationDegree(request);
 		return new Message<String>().success().setData(deviationDegree);
 	}

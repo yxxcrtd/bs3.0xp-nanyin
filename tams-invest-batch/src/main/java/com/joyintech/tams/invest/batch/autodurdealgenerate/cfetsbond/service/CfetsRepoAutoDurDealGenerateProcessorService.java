@@ -115,9 +115,11 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
      * @return
      */
     public TrdRepoDurationDto getTrdRepoDuration(Map<String,Object> param){
-        return restTemplate.postForObject(
+        setParams(param);
+        return cfetsBondAutoDurDealGenerateMapper.findRepoEffectiveData(param);
+        /*return restTemplate.postForObject(
                 ServiceApplication.PERIOD_SERVICE_NAME + "/TrdRepoDuration/findEffectiveData",
-                param, TrdRepoDurationDto.class);
+                param, TrdRepoDurationDto.class);*/
     }
 
 
@@ -185,6 +187,17 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         }
         trdFinProductDealTotal.setFpriceAmt(entity.getTheoryAmt());
         trdFinProductDealTotal.setRemark(entity.getRemark());
+        trdFinProductDealTotal.setPrinAmt(entity.getPrinAmt());
+        trdFinProductDealTotal.setFeeAmtPay(entity.getFeeAmtPay());
+        trdFinProductDealTotal.setFeeAmt(entity.getFeeAmt());
+        trdFinProductDealTotal.setpTradeId(entity.getpTradeId());
+        trdFinProductDealTotal.setIsClean(entity.getIsClean());
+        trdFinProductDealTotal.setSecManageAcctId(entity.getSecManageAcctId());
+        trdFinProductDealTotal.setTradePlat(entity.getTradePlat());
+        trdFinProductDealTotal.setTradeMarketMode(entity.getTradeMarketMode());
+        trdFinProductDealTotal.setDeliveryType(entity.getDeliveryType());
+        trdFinProductDealTotal.setUnitInt(entity.getUnitInt());
+        trdFinProductDealTotal.setSettleSpeed(entity.getSettleSpeed());
         //汇总扩展
         PaTrdFinProductDealTotal paTrdFinProductDealTotal = new PaTrdFinProductDealTotal();
         paTrdFinProductDealTotal.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
@@ -385,7 +398,9 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
                     }
                     ptlSec.put("tradeId",dto.getTradeId());
                     ptlSec.put("etrId",dto.getEntrustId());
-                    ptlSec.put("secAmount",repoInfo.getPledgeNumber());
+                    ptlSec.put("secAmount",ArithmeticUtil.multiply(repoInfo.getPledgeNumber(),new BigDecimal(100)));
+                    ptlSec.put("ownSecAmount",ArithmeticUtil.multiply(repoInfo.getPledgeNumber(),new BigDecimal(100)));
+                    ptlSec.put("integrateSecAmount",BigDecimal.ZERO);
                     ptlSecList.add(ptlSec);
                 }
             }
@@ -406,6 +421,14 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         }else{
             req.put("ps","04");
         }
+        if(null!=trdFinProductDealTotal.getSettleSpeed()){
+            if(trdFinProductDealTotal.getSettleSpeed() == 0L){
+                req.put("settleSpeed","01");
+            }
+            if(trdFinProductDealTotal.getSettleSpeed() == 1L){
+                req.put("settleSpeed","02");
+            }
+        }
         req.put("tradePlace",BussinessDictCodeList.交易场所_银行间.getValue());
         req.put("cdate",trdFinProductDealTotal.getTradeDate());
         req.put("ccy",trdFinProductDealTotal.getCcy());
@@ -413,6 +436,46 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         req.put("ptlCashList",ptlCashList);
         req.put("ptlSecList",ptlSecList);
         PositionHttpRequest.send(req);
+    }
+
+    private void setParams(Map<String, Object> param) {
+        param.put("PAGE_DATE_STATUS01", DictCodeListExt1.画面数据状态_待处理.getValue());
+        param.put("PAGE_DATE_STATUS03", DictCodeListExt1.画面数据状态_流程中.getValue());
+        param.put("PAGE_DATE_STATUS05", DictCodeListExt1.画面数据状态_有效.getValue());
+        param.put("PAGE_DATE_STATUS06", DictCodeListExt1.画面数据状态_撤销.getValue());
+        param.put("COMMON_BUSINESS_TYPETRD16", DictCodeList.共通业务类型_质押式回购存续期.getValue());
+        // 一体化对应etliu start
+//        param.put("COMMON_BUSINESS_TYPETRD08", DictCodeList.共通业务类型_质押式回购交易.getValue());
+        param.put("COMMON_BUSINESS_TYPETRD08", DictCodeList.业务类型_债券质押式回购交易.getValue());
+        // 一体化对应etliu end
+        param.put("FINPROD_TYPE_TGF03", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+        param.put("FINPROD_TYPE_TGF02", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+        param.put("PS_T01", DictCodeList.交易方向_买入.getValue());
+        param.put("PS_T07", DictCodeList.交易方向_还本到账.getValue());
+        param.put("TRADE_STATUS01", DictCodeListExt1.交易状态_初始.getValue());
+        param.put("TRADE_STATUS03", DictCodeListExt1.交易状态_撤销.getValue());
+        param.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+        param.put("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
+        param.put("C02", DictCodeListExt1.现金流二级类型_利息.getValue());
+        param.put("PST07", DictCodeList.交易方向_到期.getValue());
+        param.put("PST56", DictCodeList.交易方向_到期续做.getValue());
+//        增加提前终止 与逾期贩售 start
+        param.put("PS_TQZZ", DictCodeListExt3.交易方向_投资端_提前终止.getValue());
+        param.put("PS_YQFS", DictCodeListExt3.交易方向_投资端_逾期返售.getValue());
+//        增加提前终止 与逾期贩售 end
+        param.put("PST22", DictCodeList.交易方向_收息到账.getValue());
+        param.put("PST23", DictCodeList.交易方向_还本到账.getValue());
+        param.put("PST93", DictCodeListExt3.交易方向_解除质押.getValue());
+        param.put("PST94", DictCodeListExt3.交易方向_中途换券.getValue());
+        param.put("PST95", DictCodeListExt3.交易方向_到期购回.getValue());
+        param.put("PST96", DictCodeListExt3.交易方向_提前购回.getValue());
+        param.put("FEE_TYPE_JSF", DictCodeListExt1.一次性费用类型_结算费.getValue());
+        param.put("TRADE_MARKET_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        param.put("TRADE_MARKET_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+        param.put("TARGET_BACK_TYPE_H01", DictCodeList.回购类型_质押式协议回购.getValue());
+        //有回购类型查询条件是 不显示银行间的数据
+        param.put("TRADE_PLACE_01",DictCodeListExt1.交易场所_银行间.getValue());
+
     }
 }
 

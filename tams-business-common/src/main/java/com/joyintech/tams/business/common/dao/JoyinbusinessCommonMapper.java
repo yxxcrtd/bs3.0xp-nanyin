@@ -194,4 +194,6 @@ public interface JoyinbusinessCommonMapper {
     void mergeCfetsOprHis(@Param("list") List<CfetsOprHisInfoRequest> list);
 
     String isNeedWorkflow(Map<String, String> param);
+
+    List<SelectOptionDto>  gettotleTradeId();
 }

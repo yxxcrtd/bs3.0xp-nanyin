@@ -2631,7 +2631,8 @@ public class IbuComponentCommonService extends BaseService {
     */
     private IbuQuoteCrepDto handleStatus(CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto){
         IbuQuoteCrepDto ibuQuoteCrepDto = new IbuQuoteCrepDto();
-        DictCodeList tradeStatusDict = DictCodeList.from(IbuDictCode.银行间上行报价状态, StringUtil.isNotEmpty(cfetsRepoDealQuotedPrice001Dto.getTradeStatus())?cfetsRepoDealQuotedPrice001Dto.getTradeStatus():DictCodeList.银行间上行报价状态_新增中.getValue());
+        DictCodeList tradeStatusDict = DictCodeList.from(IbuDictCode.银行间上行报价状态, StringUtil.isNotEmpty(cfetsRepoDealQuotedPrice001Dto.getTradeStatus())
+                ? cfetsRepoDealQuotedPrice001Dto.getTradeStatus() : DictCodeList.银行间上行报价状态_新增中.getValue());
         //回复方
         if(StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getQuoteRoleType(),BussinessDictCodeList.银行间上行本方角色_回复方.getValue())) {
             if(StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getQuotaPageModel(), QuotaPageModelUtil.MODEL_EDIT)){

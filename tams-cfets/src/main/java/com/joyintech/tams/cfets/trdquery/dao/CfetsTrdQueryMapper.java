@@ -167,4 +167,13 @@ public interface CfetsTrdQueryMapper {
      * @return
      */
     void updateIbuByPrimaryKeySelective(Map<String, Object> paramMap);
+
+    /**
+     * 获取交易id
+     *
+     * @date 2022/1/19
+     * @param tradeId
+     * @return java.lang.String
+     */
+    String getTradeId(@Param("tradeId") String tradeId);
 }

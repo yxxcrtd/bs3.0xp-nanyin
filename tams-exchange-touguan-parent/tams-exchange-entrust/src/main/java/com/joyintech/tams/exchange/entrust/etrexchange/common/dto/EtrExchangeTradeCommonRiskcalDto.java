@@ -105,6 +105,12 @@ public class EtrExchangeTradeCommonRiskcalDto {
     @ApiModelProperty(name="fromEtrExchange",value="是否场内指令",example="02")
     private String fromEtrExchange;
 
+    @ApiModelProperty(name="repPs",value="回购类型",example="03")
+    private String repPs;
+
+    @ApiModelProperty(name="assetType2",value="资产类型2",example="H01")
+    private String assetType2;
+
     public String getFinprodId() {
         return finprodId;
     }
@@ -352,5 +358,21 @@ public class EtrExchangeTradeCommonRiskcalDto {
 
     public void setFromEtrExchange(String fromEtrExchange) {
         this.fromEtrExchange = fromEtrExchange;
+    }
+
+    public String getRepPs() {
+        return repPs;
+    }
+
+    public void setRepPs(String repPs) {
+        this.repPs = repPs;
+    }
+
+    public String getAssetType2() {
+        return assetType2;
+    }
+
+    public void setAssetType2(String assetType2) {
+        this.assetType2 = assetType2;
     }
 }
