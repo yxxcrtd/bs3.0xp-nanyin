@@ -59,10 +59,10 @@ $(function(){
             ,{field: 'submitFeedbackStatusStr', title: "反馈状态", width:100,sortField:'submitFeedbackStatus'}
             ,{field: 'salerInstCode', title: '销售机构代码', width:120,sortField:'salerInstCode'}
             ,{field: 'salerInsNo', title: '内部编码', width:100,sortField:'salerInsNo'}
-            ,{field: 'salerRewPenaTyepStr', title: '记录分类', width:100,sortField:'salerRewPenaTyep'}
+            ,{field: 'salerRewPenaTyep', title: '记录分类', width:100,sortField:'salerRewPenaTyep'}
             ,{field: 'salerRewPenaName', title: '奖惩名称', width:100,sortField:'salerRewPenaName'}
             ,{field: 'salerRewPenaComments', title: '奖惩说明', width:100,sortField:'salerRewPenaComments'}
-            ,{field: 'salerRewPenaInstStr', title: '奖惩单位', width:150,sortField:'salerRewPenaInst'}
+            ,{field: 'salerRewPenaInst', title: '奖惩单位', width:150,sortField:'salerRewPenaInst'}
             ,{field: 'salerRewPenaInstName', title: '奖惩单位具体名称', width:120,sortField:'salerRewPenaInstName'}
             ,{field: 'salerRewPenaStart', title: '奖惩起始日期',type:'date', width:100,sortField:'salerRewPenaStart'}
             ,{field: 'salerRewPenaEnd', title: '奖惩结束日期', type:'date',width:100,sortField:'salerRewPenaEnd'}
