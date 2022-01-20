@@ -1,15 +1,30 @@
 package com.joyintech.tams.business.common.util;
 
+import java.io.*;
+import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.converters.Converter;
+import com.alibaba.excel.converters.DefaultConverterLoader;
+import com.alibaba.excel.converters.ReadConverterContext;
+import com.alibaba.excel.converters.WriteConverterContext;
+import com.alibaba.excel.enums.CellDataTypeEnum;
 import com.alibaba.excel.metadata.GlobalConfiguration;
 import com.alibaba.excel.metadata.Head;
+import com.alibaba.excel.metadata.data.CellData;
 import com.alibaba.excel.metadata.data.ReadCellData;
 import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.metadata.property.ExcelContentProperty;
 import com.alibaba.excel.write.handler.CellWriteHandler;
 import com.alibaba.excel.write.metadata.WriteSheet;
+
 import com.alibaba.excel.write.metadata.holder.WriteSheetHolder;
 import com.alibaba.excel.write.metadata.holder.WriteTableHolder;
 import com.joyintech.framework.util.BeanUtil;
@@ -23,38 +38,12 @@ import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.service.DoQuery;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.sl.usermodel.ColorStyle;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DataFormat;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.orm.jpa.vendor.OpenJpaDialect;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 
 public class ExcelUitl {
 
@@ -67,15 +56,15 @@ public class ExcelUitl {
 			List mapList = new ArrayList();
 			dataList = doQuery.query();
 			if (dataList != null && !dataList.isEmpty()){
-                dataList.forEach(e -> {
-                    if (e instanceof BaseMap) {
-                        mapList.add(e);
-                    } else {
-                        mapList.add(BeanUtil.object2Map(e));
-                    }
-                });
+				dataList.forEach(e -> {
+					if (e instanceof BaseMap) {
+						mapList.add(e);
+					} else {
+						mapList.add(BeanUtil.object2Map(e));
+					}
+				});
 			}
-			doExport(excelAndSheetName, header, mapList, response);
+			doExport(excelAndSheetName+DateUtil.format(DateUtil.platDateFromCache()), header, mapList, response);
 		}else {
 			List<BaseMap> dataResultList = requestDto.getData();
 			try{
@@ -99,7 +88,7 @@ public class ExcelUitl {
 			}catch (Exception e){
 				logger.error("导出格式化日期异常");
 			}
-			doExport(excelAndSheetName, header, dataResultList, response);
+			doExport(excelAndSheetName+DateUtil.format(DateUtil.platDateFromCache()), header, dataResultList, response);
 		}
 	}
 
@@ -187,13 +176,13 @@ public class ExcelUitl {
 		}
 	}
 
-    public static void doExport(BaseExportRequest requestDto, HttpServletResponse response, String excelAndSheetName, DoQuery doQuery) {
-        List<BaseMap> header = requestDto.getHeader();
-        List<BaseMap> dataList = requestDto.getData();
-        if (dataList == null || dataList.isEmpty()) {
-            List mapList = new ArrayList();
-            dataList = doQuery.query();
-            if (dataList != null && !dataList.isEmpty()) {
+	public static void doExport(BaseExportRequest requestDto, HttpServletResponse response, String excelAndSheetName, DoQuery doQuery) {
+		List<BaseMap> header = requestDto.getHeader();
+		List<BaseMap> dataList = requestDto.getData();
+		if (dataList == null || dataList.isEmpty()) {
+			List mapList = new ArrayList();
+			dataList = doQuery.query();
+			if (dataList != null && !dataList.isEmpty()) {
 				for (Object e : dataList) {
 					if (e instanceof BaseMap) {
 						mapList.add(e);
@@ -202,45 +191,45 @@ public class ExcelUitl {
 					}
 				}
 			}
-            doExport(excelAndSheetName, header, mapList, response);
-        } else {
-            try {
-                Set<String> dateSet = new HashSet<String>();
-                header.forEach(item -> {
-                    String colCode = (String) item.get("colCode");
-                    if (item.containsKey("extendCfg")) {
-                        Map<String, Object> extendCfgMap = (Map) JsonUtils.json2Object((String) item.get("extendCfg"), Map.class);
-                        if (extendCfgMap.containsKey("dataType") && StringUtil.equals((String) extendCfgMap.get("dataType"), "date")) {
-                            dateSet.add(colCode);
-                        }
-                    }
-                });
-                dataList.forEach(item -> {
-                    for (Map.Entry<String, Object> m : item.entrySet()) {
-                        if (dateSet.contains(m.getKey()) && null != m.getValue()) {
-                            item.put(m.getKey(), new Date((Long) m.getValue()));
-                        }
-                    }
-                });
-            } catch (Exception e) {
-                logger.error("导出格式化日期异常");
-            }
-            doExport(excelAndSheetName, header, dataList, response);
-        }
-    }
+			doExport(excelAndSheetName, header, mapList, response);
+		} else {
+			try {
+				Set<String> dateSet = new HashSet<String>();
+				header.forEach(item -> {
+					String colCode = (String) item.get("colCode");
+					if (item.containsKey("extendCfg")) {
+						Map<String, Object> extendCfgMap = (Map) JsonUtils.json2Object((String) item.get("extendCfg"), Map.class);
+						if (extendCfgMap.containsKey("dataType") && StringUtil.equals((String) extendCfgMap.get("dataType"), "date")) {
+							dateSet.add(colCode);
+						}
+					}
+				});
+				dataList.forEach(item -> {
+					for (Map.Entry<String, Object> m : item.entrySet()) {
+						if (dateSet.contains(m.getKey()) && null != m.getValue()) {
+							item.put(m.getKey(), new Date((Long) m.getValue()));
+						}
+					}
+				});
+			} catch (Exception e) {
+				logger.error("导出格式化日期异常");
+			}
+			doExport(excelAndSheetName, header, dataList, response);
+		}
+	}
 
-    private static void doExport(String fileName, List<BaseMap> heads, List dataList, HttpServletResponse response) {
-        OutputStream os = null;
-        File excelFile = null;
-        String dir = UUID.randomUUID().toString();
-        File path = null;
-        try {
-            os = response.getOutputStream();
-            response.setContentType("text/vnd.ms-excel;charset=UTF-8");
-            response.setCharacterEncoding("UTF-8");
-            response.setHeader("Pragma", "public");
-            response.setHeader("Cache-Control", "max-age=30");
-            response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(fileName + ".xlsx", "UTF-8"));
+	private static void doExport(String fileName, List<BaseMap> heads, List dataList, HttpServletResponse response) {
+		OutputStream os = null;
+		File excelFile = null;
+		String dir = UUID.randomUUID().toString();
+		File path = null;
+		try {
+			os = response.getOutputStream();
+			response.setContentType("text/vnd.ms-excel;charset=UTF-8");
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Pragma", "public");
+			response.setHeader("Cache-Control", "max-age=30");
+			response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(fileName + ".xlsx", "UTF-8"));
 
 			/**
 			 * 设置格式配置信息，后面监听并加入到excel中
@@ -309,50 +298,14 @@ public class ExcelUitl {
 					// 表头信息
 					Workbook workbook = writeSheetHolder.getSheet().getWorkbook();
 					CellStyle cellStyle = workbook.createCellStyle();
-					//单元格边框
-					cellStyle.setBorderBottom(BorderStyle.THIN);
-					cellStyle.setBorderLeft(BorderStyle.THIN);
-					cellStyle.setBorderRight(BorderStyle.THIN);
-					cellStyle.setBorderTop(BorderStyle.THIN);
-
-					//背景色
-					cellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-					cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-
-					//对齐方式
-					cellStyle.setAlignment(HorizontalAlignment.CENTER);
-
 					Font cellFont = workbook.createFont();
-					//加粗
 					cellFont.setBold(true);
-					//字体
-					cellFont.setFontName("微软雅黑");
-					//字体大小
-					cellFont.setFontHeightInPoints((short) 11);
 					cellStyle.setFont(cellFont);
-
 					cell.setCellStyle(cellStyle);
 				}else{
 					Integer width = cfg.getInteger("maxLen"); // 单元格宽度
 					String dataType = cfg.getString("dataType"); // 设置数据类型
 					String cloAlign = cfg.getString("colAlign"); // 水平对齐方式
-
-					Workbook workbook = writeSheetHolder.getSheet().getWorkbook();
-					CellStyle cellStyle = workbook.createCellStyle();
-					DataFormat df = workbook.createDataFormat();
-
-					//单元格边框
-					cellStyle.setBorderBottom(BorderStyle.THIN);
-					cellStyle.setBorderLeft(BorderStyle.THIN);
-					cellStyle.setBorderRight(BorderStyle.THIN);
-					cellStyle.setBorderTop(BorderStyle.THIN);
-
-					Font cellFont = workbook.createFont();
-					//字体
-					cellFont.setFontName("微软雅黑");
-					//字体大小
-					cellFont.setFontHeightInPoints((short) 11);
-					cellStyle.setFont(cellFont);
 
 					if (width != null){
 						// 设置宽度与分辨率比例计算,34倍正好
@@ -363,9 +316,8 @@ public class ExcelUitl {
 						// 自定义设置单元格格式
 						// 数据类型设置 rate、amount、date
 						// 水平对齐方式设置
-						cellStyle = setCellStyleSelf(cfg, dataType, cloAlign, cellStyle, df);
+						setCellStyleSelf(writeSheetHolder, cfg, cell, dataType, cloAlign);
 					}
-					cell.setCellStyle(cellStyle);
 				}
 				CellWriteHandler.super.afterCellDataConverted(writeSheetHolder, writeTableHolder, cellData, cell, head, relativeRowIndex, isHead);
 			}
@@ -379,37 +331,39 @@ public class ExcelUitl {
 	 * format: "yyyy-MM-dd|yyyy-MM-dd HH:mm:ss|...", // 日期格式
 	 * unit: "1|2|3", //金额类型：1 - 元, 2 - 万元, 3 - 亿元
 	 * precision: 2|3|4... // 利率型保留小数位，整数
+	 * @param writeSheetHolder
 	 * @param cfg
 	 */
-	private static CellStyle setCellStyleSelf(BaseMap cfg, String dataType, String cloAlign, CellStyle cellStyle, DataFormat df) {
+	private static void setCellStyleSelf(WriteSheetHolder writeSheetHolder, BaseMap cfg, Cell cell, String dataType, String cloAlign) {
 		try {
+			Workbook workbook = writeSheetHolder.getSheet().getWorkbook();
+			CellStyle cellStyle = workbook.createCellStyle();
+			DataFormat df = workbook.createDataFormat();
 
-			if (StringUtil.isNotEmpty(dataType)) {
-				if (StringUtil.equals("rate", dataType)) {
+			if (StringUtil.isNotEmpty(dataType)){
+				if (StringUtil.equals("rate", dataType)){
 					// 利率型
-					if (StringUtil.equals("2", cfg.getString("precision"))) {
+					if (StringUtil.equals("2", cfg.getString("precision"))){
 						cellStyle.setDataFormat(df.getFormat("0.00"));
-					} else if (StringUtil.equals("3", cfg.getString("precision"))) {
+					}else if (StringUtil.equals("3", cfg.getString("precision"))){
 						cellStyle.setDataFormat(df.getFormat("0.000"));
-					} else if (StringUtil.equals("4", cfg.getString("precision"))) {
+					}else if (StringUtil.equals("4", cfg.getString("precision"))){
 						cellStyle.setDataFormat(df.getFormat("0.0000"));
-					} else { // 默认保留两位
+					}else{ // 默认保留两位
 						cellStyle.setDataFormat(df.getFormat("0.00"));
 					}
-				} else if (StringUtil.equals("amount", dataType)) {
+				} else if (StringUtil.equals("amount", dataType)){
 					// 金额
-					if (StringUtil.equals("1", cfg.getString("precision"))) {
-						cellStyle.setDataFormat(df.getFormat("#,##0"));
-					}else if (StringUtil.equals("2", cfg.getString("precision"))) {
+					if (StringUtil.equals("2", cfg.getString("precision"))){
 						cellStyle.setDataFormat(df.getFormat("#,##0.00"));
-					} else if (StringUtil.equals("3", cfg.getString("precision"))) {
+					}else if (StringUtil.equals("3", cfg.getString("precision"))){
 						cellStyle.setDataFormat(df.getFormat("#,##0.000"));
-					} else if (StringUtil.equals("4", cfg.getString("precision"))) {
+					}else if (StringUtil.equals("4", cfg.getString("precision"))){
 						cellStyle.setDataFormat(df.getFormat("#,##0.0000"));
-					} else { // 默认保留两位
+					}else{ // 默认保留两位
 						cellStyle.setDataFormat(df.getFormat("#,##0.00"));
 					}
-				} else if (StringUtil.equals("date", dataType)) {
+				}else if (StringUtil.equals("date", dataType)){
 					// 日期
 					cellStyle.setDataFormat(df.getFormat(cfg.getString("format")));
 				}
@@ -417,23 +371,22 @@ public class ExcelUitl {
 
 			// 设置对齐方式
 			if (StringUtil.isNotEmpty(cloAlign)) {
-				if (StringUtil.equals("left", cloAlign)) {
+				if (StringUtil.equals("left", cloAlign)){
 					HorizontalAlignment align = HorizontalAlignment.LEFT;
 					cellStyle.setAlignment(align);
-				} else if (StringUtil.equals("right", cloAlign)) {
+				}else if (StringUtil.equals("right", cloAlign)){
 					HorizontalAlignment align = HorizontalAlignment.RIGHT;
 					cellStyle.setAlignment(align);
-				} else if (StringUtil.equals("center", cloAlign)) {
+				}else if (StringUtil.equals("center", cloAlign)){
 					HorizontalAlignment align = HorizontalAlignment.CENTER;
 					cellStyle.setAlignment(align);
 				}
 			}
 
-		} catch (Exception e) {
+			cell.setCellStyle(cellStyle);
+		}catch (Exception e){
 			logger.error(e.getMessage());
 		}
-
-		return cellStyle;
 	}
 
 	public static <T> void exportAllData(File excelFile,String sheetName,List<ExcelColumn> columns,List<T> data, Map<String, BaseMap> styleMap) {
