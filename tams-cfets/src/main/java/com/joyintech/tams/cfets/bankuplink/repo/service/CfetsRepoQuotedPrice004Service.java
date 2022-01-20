@@ -258,7 +258,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 if (StringUtil.isEmpty(partyId)) {
                     partyId = dto.getPartyId();
                 }
-                if (StringUtil.isNotEmpty(partyId) && StringUtil.equals(partyId, dto.getPartyId())) {
+                if (StringUtil.isNotEmpty(partyId) && !StringUtil.equals(partyId, dto.getPartyId())) {
                     errorList.add(new ValidMessage("所选指令交易账户不同"));
                     break;
                 }
