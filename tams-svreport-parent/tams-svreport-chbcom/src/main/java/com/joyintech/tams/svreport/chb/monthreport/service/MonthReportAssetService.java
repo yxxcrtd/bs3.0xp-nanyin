@@ -380,7 +380,7 @@ public class MonthReportAssetService {
 				if ("REMAININGCASH".equals(position.getAssetCode())) {
 					// 资产代码为REMAININGCASH的特殊资产，该字段默认=0
 					//position.setTerms(BigDecimal.ONE);
-					position.setTerms(BigDecimal.ZERO);
+					position.setTerms(BigDecimal.ONE);
 					// 资产代码为REMAININGCASH的特殊资产，该字段默认=F06
 					position.setSunassettype("F06");
 					// 资产代码为REMAININGCASH的特殊资产，该字段默认=F0602

@@ -80,7 +80,6 @@ public class DisRepProdInvestAdjustService extends FileImpService {
             t.setInputType("");//导入方法
             t.setInputUser("");//导入用户
             t.setAdapterId("0");//适配器ID
-            t.setCreateDept("");
         });
         // modify by convertMapToEntity yangxianjiu 2022-01-19 end
 //        for(Map<String, String> data : listData){

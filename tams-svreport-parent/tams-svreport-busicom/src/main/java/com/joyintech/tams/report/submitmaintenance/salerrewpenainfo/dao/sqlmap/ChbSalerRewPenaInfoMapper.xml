@@ -202,11 +202,12 @@
     <select id="selectSalerInsNo" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
         SALER_INS_NO id,
-        SALER_INS_NO text
+        SALER_NAME text
         from CHB_SALER_IDEN_INFO
         where 1=1
             <if test="search != null and search != ''">
-                and SALER_INS_NO like concat(concat('%', #{search}),'%')
+                and (SALER_INS_NO like concat(concat('%', #{search}),'%')
+                    or SALER_NAME like concat(concat('%', #{search}),'%'))
             </if>
     </select>
 

@@ -142,14 +142,6 @@ public class SvrProdPeriodyieldFileImpService extends FileImpService {
 			List<ChbPrdPeriodYield> listNE = (List<ChbPrdPeriodYield>) convertMapToEntity(periodyieldList,ChbPrdPeriodYield.class);
 			listNE.stream().forEach(dto->{
 				dto.setSeqno(IDGenerator.generate(36));
-				// 创建部门
-				dto.setCreateDept(CommonUtil.getDeptCode());
-				// 部门代码
-				dto.setDeptCode(CommonUtil.getDeptCode());
-				// 机构代码
-				dto.setOrgCode(CommonUtil.getOrgCode());
-				// 数据来源
-				dto.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源, dateSource));
 			});
 			// modify by convertMapToEntity yangxianjiu 2022-01-19 end
 			logger.debug("报价信息map转dto----开始-----:" +  df.format(new Date()));
