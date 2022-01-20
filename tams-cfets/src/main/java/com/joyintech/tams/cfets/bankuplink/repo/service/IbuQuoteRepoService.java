@@ -487,7 +487,7 @@ public class IbuQuoteRepoService extends BaseService {
     public List<RepoEntrustPledgeDto> ptlAllocationDel(RepoAutoAllocationRequest ptlAllocationAddRequest) {
         List<RepoEntrustPledgeDto> pledgeDtos = new ArrayList<>();
         List<RegFinPledge> regFinPledges = cfetsRepoQuotedPrice004Service.dealWithPledgeList(
-                ptlAllocationAddRequest.getRepoEntrustPledgeDtos(), ptlAllocationAddRequest.getEntrustIdList(), null, null);
+                ptlAllocationAddRequest.getRepoEntrustPledgeDtos(), ptlAllocationAddRequest.getEntrustIdList(), null, null, null);
         for (RepoEntrustPledgeDto pledgeDto : ptlAllocationAddRequest.getRepoEntrustPledgeDtos()) {
             for (RegFinPledge pledge : regFinPledges) {
                 if (StringUtil.equals(pledge.getPortfolioId(), pledgeDto.getPortfolioId())
