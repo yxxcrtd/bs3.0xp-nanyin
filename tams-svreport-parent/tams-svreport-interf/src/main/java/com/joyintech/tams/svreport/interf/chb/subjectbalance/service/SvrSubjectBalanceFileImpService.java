@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -95,11 +96,8 @@ public class SvrSubjectBalanceFileImpService extends FileImpService{
 		boolean success = true;
 		String type = "";
 		String tmpPath =  SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-		
-		List<BokBalance> bokBalanceList = new ArrayList<BokBalance>();
 		//转换实体类
-		convertMapToEntity(listData, bokBalanceList, "01");
-
+		List<BokBalance> bokBalanceList = (List<BokBalance>)convertMapToEntity(listData, BokBalance.class);
 		
 		if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
 			//增量

@@ -134,7 +134,21 @@ public class SvrChbPrdRateFileImpService extends FileImpService {
 		boolean success = true;
 		if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
 			logger.debug("产品利率基本信息map转dto----开始-----:" +  df.format(new Date()));
-			List<ChbPrdRate> listNE = convertMapToEntity(chbPrdRateList,dateSource);
+			// modify by convertMapToEntity yangxianjiu 2022-01-19 start
+//			List<ChbPrdRate> listNE = convertMapToEntity(chbPrdRateList,dateSource);
+			List<ChbPrdRate> listNE = (List<ChbPrdRate>) convertMapToEntity(chbPrdRateList,ChbPrdRate.class);
+			listNE.stream().forEach(t->{
+				t.setSeqno(IDGenerator.generate(36));//主键
+				// 创建部门
+				t.setCreateDept(CommonUtil.getDeptCode());
+				// 部门代码
+				t.setDeptCode(CommonUtil.getDeptCode());
+				// 机构代码
+				t.setOrgCode(CommonUtil.getOrgCode());
+				// 数据来源
+				t.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源, dateSource));
+			});
+			// modify by convertMapToEntity yangxianjiu 2022-01-19 end
 			logger.debug("产品利率基本信息map转dto----开始-----:" +  df.format(new Date()));
 			if(!CollectionUtils.isEmpty(listNE)){
 				mergeIntoData(listNE);
@@ -247,7 +261,21 @@ public class SvrChbPrdRateFileImpService extends FileImpService {
 			String tmpPath, ImpTable table, ImpTable subTable) {
 		// 定义新增数据list
 		logger.debug("产品利率基本信息map转dto----开始-----:" +  df.format(new Date()));
-		List<ChbPrdRate> listNE = convertMapToEntity(chbPrdRateList,dateSource);
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
+//			List<ChbPrdRate> listNE = convertMapToEntity(chbPrdRateList,dateSource);
+		List<ChbPrdRate> listNE = (List<ChbPrdRate>) convertMapToEntity(chbPrdRateList,ChbPrdRate.class);
+		listNE.stream().forEach(t->{
+			t.setSeqno(IDGenerator.generate(36));//主键
+			// 创建部门
+			t.setCreateDept(CommonUtil.getDeptCode());
+			// 部门代码
+			t.setDeptCode(CommonUtil.getDeptCode());
+			// 机构代码
+			t.setOrgCode(CommonUtil.getOrgCode());
+			// 数据来源
+			t.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源, dateSource));
+		});
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 end
 		logger.debug("产品利率基本信息map转dto----开始-----:" +  df.format(new Date()));
 		if (listNE != null && listNE.size() > 0) {
 			deleteAllData();

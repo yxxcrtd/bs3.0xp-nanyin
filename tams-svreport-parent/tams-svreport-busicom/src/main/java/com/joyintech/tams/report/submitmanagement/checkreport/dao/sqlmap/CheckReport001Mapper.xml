@@ -262,7 +262,8 @@
 		<where>
 			A.PROD_ID like concat(concat('%',#{prodId,
 			jdbcType=VARCHAR}),'%')
-			and A.STATUS='E'
+			and A.STATUS IN ('E','M')
+			and A.FPROD_ID IS NULL
 			<!-- and A.FINPROD_TYPE2 = 'F16' -->
 		</where>
 		order by A.PROD_ID

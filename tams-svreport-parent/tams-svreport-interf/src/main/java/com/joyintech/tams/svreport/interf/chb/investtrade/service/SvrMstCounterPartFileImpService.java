@@ -247,7 +247,14 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
         String tmpPath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
         List<ChbMstCounterParty> mstCounterPartyList = new ArrayList<>();
         // 转换成dto对象
-        convertMapToEntity(listData, mstCounterPartyList);
+        // modify by convertMapToEntity yangxianjiu 2022-01-19 start
+//        convertMapToEntity(listData, mstCounterPartyList);
+        mstCounterPartyList = (List<ChbMstCounterParty>) convertMapToEntity(listData,ChbMstCounterParty.class);
+        mstCounterPartyList.stream().forEach(dto->{
+            // 设置uuid
+            dto.setUuid(UUID.randomUUID().toString());
+        });
+        // modify by convertMapToEntity yangxianjiu 2022-01-19 end
         List<ChbMstCounterParty> insertList = new LinkedList<>();
         List<ChbMstCounterParty> updateList = new LinkedList<>();
         separatorList(mstCounterPartyList,insertList,updateList);

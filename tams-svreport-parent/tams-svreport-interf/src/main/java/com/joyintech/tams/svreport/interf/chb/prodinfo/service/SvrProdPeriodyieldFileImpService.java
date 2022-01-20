@@ -137,7 +137,21 @@ public class SvrProdPeriodyieldFileImpService extends FileImpService {
 		boolean success = true;
 		if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
 			logger.debug("报价信息map转dto----开始-----:" +  df.format(new Date()));
-			List<ChbPrdPeriodYield> listNE = convertMapToEntity(periodyieldList,dateSource);
+			// modify by convertMapToEntity yangxianjiu 2022-01-19 start
+//			List<ChbPrdPeriodYield> listNE = convertMapToEntity(periodyieldList,dateSource);
+			List<ChbPrdPeriodYield> listNE = (List<ChbPrdPeriodYield>) convertMapToEntity(periodyieldList,ChbPrdPeriodYield.class);
+			listNE.stream().forEach(dto->{
+				dto.setSeqno(IDGenerator.generate(36));
+				// 创建部门
+				dto.setCreateDept(CommonUtil.getDeptCode());
+				// 部门代码
+				dto.setDeptCode(CommonUtil.getDeptCode());
+				// 机构代码
+				dto.setOrgCode(CommonUtil.getOrgCode());
+				// 数据来源
+				dto.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源, dateSource));
+			});
+			// modify by convertMapToEntity yangxianjiu 2022-01-19 end
 			logger.debug("报价信息map转dto----开始-----:" +  df.format(new Date()));
 			if(!CollectionUtils.isEmpty(listNE)){
 				mergeIntoData(listNE);
@@ -250,7 +264,21 @@ public class SvrProdPeriodyieldFileImpService extends FileImpService {
 			String tmpPath, ImpTable table, ImpTable subTable) {
 		// 定义新增数据list
 		logger.debug("报价信息map转dto----开始-----:" +  df.format(new Date()));
-		List<ChbPrdPeriodYield> listNE = convertMapToEntity(periodyieldList,dateSource);
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
+//		List<ChbPrdPeriodYield> listNE = convertMapToEntity(periodyieldList,dateSource);
+		List<ChbPrdPeriodYield> listNE = (List<ChbPrdPeriodYield>) convertMapToEntity(periodyieldList,ChbPrdPeriodYield.class);
+		listNE.stream().forEach(dto->{
+			dto.setSeqno(IDGenerator.generate(36));
+			// 创建部门
+			dto.setCreateDept(CommonUtil.getDeptCode());
+			// 部门代码
+			dto.setDeptCode(CommonUtil.getDeptCode());
+			// 机构代码
+			dto.setOrgCode(CommonUtil.getOrgCode());
+			// 数据来源
+			dto.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源, dateSource));
+		});
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 end
 		logger.debug("报价信息map转dto----开始-----:" +  df.format(new Date()));
 		if (listNE != null && listNE.size() > 0) {
 			deleteAllData();
