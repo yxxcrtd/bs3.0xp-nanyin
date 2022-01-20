@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 @Component
 @EnableScheduling
-@ConditionalOnProperty(value = "agent.active", matchIfMissing = true, havingValue = "true")
+@ConditionalOnProperty(value = "agent.active", matchIfMissing = false, havingValue = "true")
 public class AgentLoginJob implements LoginJob {
     private static final Logger logger = LoggerFactory.getLogger(AgentLoginJob.class);
 
