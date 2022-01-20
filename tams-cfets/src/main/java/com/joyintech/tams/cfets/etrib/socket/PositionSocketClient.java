@@ -1,5 +1,6 @@
 package com.joyintech.tams.cfets.etrib.socket;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.util.PositionUtil;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -87,6 +89,9 @@ public class PositionSocketClient {
                             if (dataMap == null){
                                 return;
                             }
+                            logger.info("当前时间:" + DateUtil.format(new Date()));
+                            logger.info("头寸时间:" + dataMap.getDate(CDATE));
+                            logger.info("头寸时间str:" + dataMap.get(CDATE));
                             // long转换成日期格式
                             dataMap.put(CDATE, dataMap.getDate(CDATE));
                             
