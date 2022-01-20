@@ -269,6 +269,7 @@ public class InvestmentManagement extends BaseService {
             }
             bean.setEtr_entrust_list(instructionUserList);
             bean.setEtr_pledge_list(pledgeList);
+            bean.setEtr_entrust_detail_list(detailList);
         } else {
             if (isSingle) {
                 bean = simpleRestTemplate.postForObject(ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.queryInstructions, pageParam, InstructionPage.class);
