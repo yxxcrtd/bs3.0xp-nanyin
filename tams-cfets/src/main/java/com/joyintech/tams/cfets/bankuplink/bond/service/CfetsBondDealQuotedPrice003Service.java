@@ -616,6 +616,9 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
 	 */
 	@Override
 	public void doComplete(CfetsBondDealRequestQuoteDto entity, OperationType type) {
+        if(cfetsQuotedCommonServicevue.checkQuoteStatusChange(entity.getQuoteId(),entity.getTradeStatus())){
+            throw new BusinessException("MSG:报价状态已变更,无法审批!");
+        }
 		// 历史报价撤销
         this.handOurAndLendinShareAmt(entity);
         com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = preparEntity(entity);

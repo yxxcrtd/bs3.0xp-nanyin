@@ -10,6 +10,8 @@
 
 package com.joyintech.tams.cfets.bankuplink.bond.service;
 
+import com.joyintech.background.component.uplink.interbank.database.dao.IbuQuoteBondMapper;
+import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBond;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -106,6 +108,9 @@ public class CfetsQuotedCommonService extends BaseService {
 
     @Autowired
     private SppiImportDataMapper sppiImportDataMapper;
+
+    @Autowired
+    private IbuQuoteBondMapper ibuQuoteBondMapper;
     /**
      * 委托放弃处理
      * 
@@ -563,11 +568,11 @@ public class CfetsQuotedCommonService extends BaseService {
                                            CfetsBondDealEntrustOrderDto cfetsBondDealEntrustOrderDto) {
         boolean flag = false;
         if (StringUtil.equals(cfetsBondDealEntrustOrderDto.getQuoteRoleType(),
-            bondQuoteInfoDto.getQuoteRoleType())
-            && StringUtil.equals(
+                bondQuoteInfoDto.getQuoteRoleType())
+                && StringUtil.equals(
                 StringUtil.defaultString(cfetsBondDealEntrustOrderDto.getSendStatus(), ""),
                 StringUtil.defaultString(bondQuoteInfoDto.getSendStatus(), ""))
-            && StringUtil.equals(
+                && StringUtil.equals(
                 StringUtil.defaultString(cfetsBondDealEntrustOrderDto.getTradeStatus(), ""),
                 StringUtil.defaultString(bondQuoteInfoDto.getTradeStatus(), ""))) {
             flag = true;
@@ -575,6 +580,25 @@ public class CfetsQuotedCommonService extends BaseService {
 
         return flag;
     }
+
+
+    /**
+     * 审批环节状态check
+     * @param quoteId
+     * @param tradeStatus
+     * @return
+     */
+    public  boolean checkQuoteStatusChange(String quoteId,String tradeStatus) {
+        boolean flag = false;
+        IbuQuoteBond ibuQuoteBond = ibuQuoteBondMapper.selectByPrimaryKey(quoteId);
+        if(null!=ibuQuoteBond &&!StringUtil.isEmpty(tradeStatus) && !StringUtil.equals(ibuQuoteBond.getTradeStatus(),tradeStatus)){
+            return true;
+        }
+        return flag;
+    }
+
+
+
 
     /**
      * 根据报价编号查询错误信息

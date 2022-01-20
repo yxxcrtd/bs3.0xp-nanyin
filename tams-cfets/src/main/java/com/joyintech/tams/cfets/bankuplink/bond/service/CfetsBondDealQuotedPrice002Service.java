@@ -1030,9 +1030,10 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
      */
     @Override
 	public void doComplete(CfetsBondDealDialogueQuoteDto entity, OperationType type) {
-        // add by etliu 20210309 银行间上下行多组合 start
+        if(cfetsQuotedCommonServicevue.checkQuoteStatusChange(entity.getQuoteId(),entity.getTradeStatus())){
+            throw new BusinessException("MSG:报价状态已变更,无法审批!");
+        }
         this.calcListFpriceAmt(entity);
-        // add by etliu 20210309 银行间上下行多组合 end
         this.handOurAndLendinShareAmt(entity);
         BondQuoteInfoDto bondQuoteInfoDto = new BondQuoteInfoDto();
         BeanUtil.copyPropertiesIgnoreNull(bondQuoteInfoDto,entity);
