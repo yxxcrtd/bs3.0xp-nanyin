@@ -4,6 +4,9 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.util.ExcelUitl;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeExportCommonRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeFjyywzlZqzyDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeZqzyRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.service.EtrExchangeTradeFjyywzl001Service;
@@ -18,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -72,5 +77,26 @@ public class EtrExchangeTradeFjyywzl001Controller {
             logger.error("查询上交所和深交所标准券数量",e);
             return new Message<Map<String,String>>().fail().setMessage("查询上交所和深交所标准券数量");
         }
+    }
+
+    /**
+     * 导出信息excel
+     *
+     * @return excel
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("export")
+    @ResponseBody
+    @ApiOperation(value = "债券质押列表导出", notes = "债券质押列表导出")
+    public void exportPosition(@RequestBody EtrExchangeTradeExportCommonRequest requestDto, HttpServletResponse response) {
+        // 导出
+        ExcelUitl.doExport(requestDto, response, "债券质押列表", () -> {
+            EtrExchangeTradeZqzyRequest dto = requestDto.getDto(EtrExchangeTradeZqzyRequest.class);
+            Map<String, Object> map = BeanUtil.object2Map(dto);
+            List dataList = etrExchangeTradeFjyywzl001Service.findZqzyPositionsPage(map).getRoot();
+            return dataList;
+        });
     }
 }
