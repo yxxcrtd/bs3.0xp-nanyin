@@ -12,7 +12,7 @@ delete from SYS_PAGE where PAGE_ID='TrdRepoValuationTrade001';
 
 INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('TrdRepoValuationTrade001', 'VAL', '/valuation/trademanage/trdrepovaluationtrade/TrdRepoValuationTrade001', 'valuation/trademanage/trdrepovaluationtrade/TrdRepoValuationTrade001', 'DEAL_001_001_020', NULL, NULL, '02', '01', '质押式回购交易查询', 'system', NULL, TO_TIMESTAMP('2019-05-24 00:00:00.000000', 'SYYYY-MM-DD HH24:MI:SS:FF6'), 'system', TO_TIMESTAMP('2019-05-24 00:00:00.000000', 'SYYYY-MM-DD HH24:MI:SS:FF6'));
 
---存款类资产交易新建页面
+--质押式回购交易新建页面
 delete from SYS_PAGE where PAGE_ID='TrdRepoValuationTrade002';
 
 INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('TrdRepoValuationTrade002', 'VAL', '/valuation/trademanage/trdrepovaluationtrade/TrdRepoValuationTrade002', 'valuation/trademanage/trdrepovaluationtrade/TrdRepoValuationTrade002', NULL, NULL, NULL, '02', '01', '质押式回购交易新建', 'system', NULL, TO_TIMESTAMP('2019-05-24 00:00:00.000000', 'SYYYY-MM-DD HH24:MI:SS:FF6'), 'system', TO_TIMESTAMP('2019-05-24 00:00:00.000000', 'SYYYY-MM-DD HH24:MI:SS:FF6'));
