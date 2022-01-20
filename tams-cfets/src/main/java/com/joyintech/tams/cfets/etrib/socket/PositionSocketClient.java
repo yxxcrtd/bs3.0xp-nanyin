@@ -1,5 +1,6 @@
 package com.joyintech.tams.cfets.etrib.socket;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.util.PositionUtil;
@@ -15,8 +16,13 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -87,8 +93,15 @@ public class PositionSocketClient {
                             if (dataMap == null){
                                 return;
                             }
+                            logger.info("当前时间1:" + DateUtil.format(new Date()));
+                            logger.info("当前时间2:" + getCSTString(new Date()));
+                            logger.info("头寸时间3:" + dataMap.getDate(CDATE));
+                            logger.info("头寸时间str4:" + dataMap.get(CDATE));
+                            logger.info("头寸时间str5:" + new Date(Long.parseLong(dataMap.get(CDATE).toString())));
+                            logger.info("头寸时间6:" + getCSTString(new Date(Long.parseLong(dataMap.get(CDATE).toString()))));
+                            
                             // long转换成日期格式
-                            dataMap.put(CDATE, dataMap.getDate(CDATE));
+                            dataMap.put(CDATE, getCSTString(new Date(Long.parseLong(dataMap.get(CDATE).toString()))));
                             
                             webSocketService.insertOrUpdate(dataMap);
 
@@ -215,5 +228,11 @@ public class PositionSocketClient {
         // [{"table":"ETR_CASH_POSITION_RULE", "hodingTypes":[]},{"table":"ETR_SEC_POSITION_RULE", "hodingTypes":[]},{"table":"PTL_CASH_POSITION_RULE", "hodingTypes":[]},{"table":"PTL_SEC_POSITION_RULE", "hodingTypes":[]}]
         util.send(webSocketKey);
         logger.info("头寸服务发送成功。。。");
+    }
+
+    public static String getCSTString(Date date) {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        df.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai")); // modify Time Zone.
+        return (df.format(date));
     }
 }
