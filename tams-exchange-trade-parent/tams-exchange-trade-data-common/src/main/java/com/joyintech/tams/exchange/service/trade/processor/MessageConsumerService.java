@@ -80,12 +80,16 @@ public class MessageConsumerService {
             logger.info("receive MQ massage query from redis json  is  {}", jsonObject.toString());
             List<Instruction> instructionEtrEntrustList = JsonUtils.getObjectListFromJson(jsonObject.getString("etr_entrust_list"), Instruction.class);
             List<InstructionPledge> pledgeList = JsonUtils.getObjectListFromJson(jsonObject.getString("etr_pledge_list"), InstructionPledge.class);
+            List<InstructionDetail> detailList = JsonUtils.getObjectListFromJson(jsonObject.getString("etr_detail_list"), InstructionDetail.class);
             // 存储抵押券信息
             Set<String> instructionPledgeIdSet = new HashSet<>();
+            Set<String> instructionDetailIdSet = new HashSet<>();
             if (Objects.nonNull(pledgeList))
                 pledgeList.forEach(instructionPledge -> instructionPledgeIdSet.add(instructionPledge.getEntrustId()));
+            if (Objects.nonNull(detailList))
+            	detailList.forEach(instructionDetail -> instructionDetailIdSet.add(instructionDetail.getEntrustId()));
             // 处理指令信息，并清除过期指令下的抵押券信息
-//            processInstructions(instructionEtrEntrustList, instructionPledgeIdSet);
+            processInstructions(instructionEtrEntrustList, instructionPledgeIdSet,instructionDetailIdSet);
             // 处理抵押券信息
             processInstructionPledges(pledgeList, instructionPledgeIdSet);
         } catch (Exception e) {
@@ -93,7 +97,7 @@ public class MessageConsumerService {
         }
     }
 
-    public void processInstructions(List<Instruction> instructionEtrEntrustList, Set<String> instructionPledgeIdSet, Set<String> instructionDetailIdSet) {
+    public void processInstructions(List<Instruction> instructionEtrEntrustList, Set<String> instructionPledgeIdSet,Set<String> instructionDetailIdSet) {
         List<Instruction> instructionList = new ArrayList<>();
         Set<String> removeInstructionIdSet = new HashSet<>();
         List<Instruction> removeInstructionList = new ArrayList<>();
@@ -168,7 +172,7 @@ public class MessageConsumerService {
                     logger.info("investSystemDate {} > instruction mDate {}", JsonUtils.getJsonFromObject(investSystemDate), JsonUtils.getJsonFromObject(instruction.getMdate()));
                     // 清除对应指令的抵押券信息
                     instructionPledgeIdSet.remove(instruction.getEntrustId());
-                    // 清除对应指令的组合信息
+                    // 清除对应指令的组合明细信息
                     instructionDetailIdSet.remove(instruction.getEntrustId());
                     // 清除之前缓存的数据
                     if (Objects.nonNull(instructionFormCache)) {

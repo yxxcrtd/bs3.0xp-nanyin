@@ -5,6 +5,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
@@ -55,6 +56,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -433,7 +436,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             param.put("quoteIds", quoteIds);
         }
         //目前只导出对话登记
-        param.put("quoteTypes", Arrays.asList("01"));
+        //param.put("quoteTypes", Arrays.asList("01"));
         List<CfetsRepoDayRegDto> dataList = ibuQuoteRepoService.listDayReg(param);
         return new Message<Map<String, Object>>().success().setData(ibuQuoteRepoService.exportDayRegCheck(dataList));
     }
@@ -482,6 +485,13 @@ public class CfetsIbuQuoteRepoController extends BaseController {
                 if (item.getRepoType() != null) {
                     item.setRepoTypeStr(DictCodeListExt3.from(DictCode.回购方式, item.getRepoType()).getCodeName());
                 }
+                //折算比例
+                if (item.getPledgeRatio() != null) {
+                    item.setPledgeRatio(ArithmeticUtil.multiply(new BigDecimal(100),item.getPledgeRatio()));
+                }
+
+                //报价编号
+                item.setQuoteId(null);
             });
         }
         if (StringUtil.isNotEmpty(ibuExportCountMax) && CollectionUtils.isNotEmpty(dataList)) {

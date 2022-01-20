@@ -36,8 +36,6 @@ import java.util.List;
  * @since 1.0
  */
 @PageId("EtrExchangeBlockTrade001")
-@ValidLogic(targetClass = EtrExchangeTradeJj001Validator.class , groups = {ValidateGroupEdit.class,
-    ValidateGroupDelete.class})
 @ApiModel(value="竞价指令下单表单",description="竞价指令下单表单")
 public class EtrExchangeBlockTradeSaveRequest extends EtrEntrust implements ProcessEntity{
 

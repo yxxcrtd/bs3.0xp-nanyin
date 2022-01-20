@@ -411,7 +411,7 @@ public class CfetsRepoDayRegDto {
 
     public String getPledgePrinStr() {
         if (StringUtil.isNotEmpty(this.getPledgePrin())) {
-            DecimalFormat df = new DecimalFormat("###,###.00");
+            DecimalFormat df = new DecimalFormat("###,###");
             return df.format(ArithmeticUtil.divide(this.getPledgePrin(), new BigDecimal(10000), 2, RoundingMode.HALF_UP));
         }
         return null;
