@@ -57,7 +57,7 @@ public class PbcMonthReportDetailAssetUtil {
             PbcReportProperycode.AMT_761000_DKSYQ,  PbcReportProperycode.AMT_763000_YSZKSYQ, PbcReportProperycode.AMT_764000_QTZQSYQ,PbcReportProperycode.AMT_771000_GP,
             PbcReportProperycode.AMT_767000_WQZCSYQ,PbcReportProperycode.AMT_766000_QTGQSYQ,PbcReportProperycode.AMT_765000_GPSYQ,PbcReportProperycode.AMT_764000_QTZQSYQ,
             PbcReportProperycode.AMT_763000_YSZKSYQ,PbcReportProperycode.AMT_762000_ZWZQSYQ,PbcReportProperycode.AMT_761000_DKSYQ,PbcReportProperycode.AMT_811200_HGHCJ,
-            PbcReportProperycode.AMT_811000_DK);
+            PbcReportProperycode.AMT_811000_DK,PbcReportProperycode.AMT_773000_QTGQ);
 
 
     private static final Map<String, String> ENTERPRISE_SCALE_MAP = new HashMap<String, String>(1 << 4);
