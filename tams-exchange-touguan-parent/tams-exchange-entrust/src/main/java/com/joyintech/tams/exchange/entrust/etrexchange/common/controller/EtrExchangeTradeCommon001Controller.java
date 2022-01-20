@@ -935,6 +935,11 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 				dto.setAcctNo(item.getAcctNo());
 				dto.setSecAcctId(item.getSecAcctId());
 				dto.setStockId(item.getStockId());
+				dto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
+				dto.setCreateUser(LoginUserUtil.getUserName());// 用户名
+				dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
+				dto.setCreateTime(new Date());// 创建时间
+				dto.setPortfolioId(item.getPortfolioId()); //让指令分发能查出来
 				// ----------add by zhangrui1 20200703 预占功能 start----------
 				if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
 					String finprodType2 = "";
