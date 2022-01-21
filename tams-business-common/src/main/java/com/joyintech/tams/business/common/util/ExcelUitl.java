@@ -1,30 +1,15 @@
 package com.joyintech.tams.business.common.util;
 
-import java.io.*;
-import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.converters.Converter;
-import com.alibaba.excel.converters.DefaultConverterLoader;
-import com.alibaba.excel.converters.ReadConverterContext;
-import com.alibaba.excel.converters.WriteConverterContext;
-import com.alibaba.excel.enums.CellDataTypeEnum;
 import com.alibaba.excel.metadata.GlobalConfiguration;
 import com.alibaba.excel.metadata.Head;
-import com.alibaba.excel.metadata.data.CellData;
 import com.alibaba.excel.metadata.data.ReadCellData;
 import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.metadata.property.ExcelContentProperty;
 import com.alibaba.excel.write.handler.CellWriteHandler;
 import com.alibaba.excel.write.metadata.WriteSheet;
-
 import com.alibaba.excel.write.metadata.holder.WriteSheetHolder;
 import com.alibaba.excel.write.metadata.holder.WriteTableHolder;
 import com.joyintech.framework.util.BeanUtil;
@@ -41,9 +26,12 @@ import io.swagger.annotations.ApiModelProperty;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.orm.jpa.vendor.OpenJpaDialect;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.util.*;
 
 public class ExcelUitl {
 
@@ -271,6 +259,30 @@ public class ExcelUitl {
 		} finally {
 			try {os.close();} catch (IOException e) {e.printStackTrace();}
 			excelFile.delete();
+			path.delete();
+		}
+	}
+
+	public static void downFile(HttpServletResponse response,File file) {
+		OutputStream os = null;
+		File path = null;
+		try {
+			os = response.getOutputStream();
+			response.setContentType("text/vnd.ms-excel;charset=UTF-8");
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Pragma", "public");
+			response.setHeader("Cache-Control", "max-age=30");
+			response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(file.getName(), "UTF-8"));
+
+			// 写出响应
+			os.write(File2byte(file));
+			os.flush();
+		} catch (Exception e) {
+			logger.error("doExport错误...", e);
+			throw new RuntimeException(e.getMessage());
+		} finally {
+			try {os.close();} catch (IOException e) {e.printStackTrace();}
+			file.delete();
 			path.delete();
 		}
 	}
