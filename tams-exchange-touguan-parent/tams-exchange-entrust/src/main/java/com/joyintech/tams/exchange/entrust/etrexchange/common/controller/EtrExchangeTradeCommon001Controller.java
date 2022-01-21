@@ -598,7 +598,6 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		initPageParams.put("SHARES_TRADE_PLATFORM_03", DictCodeList.交易平台_固定收益平台.getValue());
 		initPageParams.put("SHARES_TRADE_PLATFORM_04", DictCodeList.交易平台_大宗交易平台.getValue());
 		initPageParams.put("SHARES_TRADE_PLATFORM_05", DictCodeList.交易平台_综合协议交易平台.getValue());
-		initPageParams.put("SHARES_TRADE_PLATFORM_021", DictCodeListExt3.交易平台_新竞价撮合平台.getValue());
 		// 金融产品其他代码类型
 		initPageParams.put("FINPROD_OTH_CODE_TYPE_06", DictCodeListExt3.金融产品其他代码类型_配股代码.getValue());
 		initPageParams.put("FINPROD_OTH_CODE_TYPE_05", DictCodeListExt3.金融产品其他代码类型_配债代码.getValue());
@@ -928,6 +927,19 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 				}
 				BigDecimal totalEntrustAmt = dto.getPortfolioList().stream().map(EtrExchangeTradePortfolioRequest::getEntrustAmt).reduce(BigDecimal::add).get();
 				BigDecimal totalEntrustNum = dto.getPortfolioList().stream().map(EtrExchangeTradePortfolioRequest::getEntrustNum).reduce(BigDecimal::add).get();
+				//算比例
+				BigDecimal tempSumDisRate=BigDecimal.ZERO;
+				for(int i=0;i<dto.getPortfolioList().size();i++){
+					EtrExchangeTradePortfolioRequest tempItem=dto.getPortfolioList().get(i);
+					BigDecimal disRate=BigDecimal.ZERO;
+					if(i<dto.getPortfolioList().size()-1) {
+						disRate=ArithmeticUtil.divide(tempItem.getEntrustNum(),totalEntrustNum,2);
+						tempSumDisRate=tempSumDisRate.add(disRate);
+					}else {
+						disRate=ArithmeticUtil.subtract(new BigDecimal("1"),tempSumDisRate);
+					}
+					tempItem.setDisRate(disRate);
+				}
 				dto.setEntrustAmt(totalEntrustAmt);
 				dto.setEntrustNum(totalEntrustNum);
 				dto.setIsMulti(DictCodeList.是否_是.getValue());

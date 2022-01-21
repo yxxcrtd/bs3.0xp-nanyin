@@ -1030,8 +1030,8 @@ from
         T1.INV_AIM as busiModel,
         T1.PRICE unitPrice,
         T7.FULL_PRICE allPrice,
-        T7.MATURE_YIELD matureYield,
-        T7.EXER_YIELD exerYield,
+        T7.MATURE_YIELD*100 matureYield,
+        T7.EXER_YIELD*100 exerYield,
         T7.SETTLE_SPREED settleSpreed,
         TO_CHAR(T1.entrust_date, 'yyyy-MM-dd')  as etrDate,
         null as approver,
@@ -1183,8 +1183,8 @@ from
         T1.INV_AIM as busiModel,
         T1.PRICE unitPrice,
         T7.FULL_PRICE allPrice,
-        T7.MATURE_YIELD matureYield,
-        T7.EXER_YIELD exerYield,
+        T7.MATURE_YIELD*100 matureYield,
+        T7.EXER_YIELD*100 exerYield,
         T7.SETTLE_SPREED as settleSpreed,
         TO_CHAR(T1.ENTRUST_DATE, 'yyyy-MM-dd') as etrDate,
         nextApp.nowUserId as approver,
@@ -1311,8 +1311,8 @@ from
                 or to_char(aaa.shareNum,'FM9999999999999990.99')=#{search} or to_char(aaa.shareNum)=#{search}
                 or to_char(aaa.unitPrice,'FM99990.9990')=#{search} or  aaa.unitPrice||'' =#{search}
                 or to_char(aaa.allPrice,'FM99990.9990')=#{search} or  aaa.allPrice||'' =#{search}
-                or to_char(aaa.matureYield*100,'FM99990.9990')=#{search} or  aaa.matureYield||'' =#{search}
-                or to_char(aaa.exerYield*100,'FM99990.9990')=#{search} or  aaa.exerYield||'' =#{search}
+                or to_char(aaa.matureYield,'FM99990.9990')=#{search} or  aaa.matureYield||'' =#{search}
+                or to_char(aaa.exerYield,'FM99990.9990')=#{search} or  aaa.exerYield||'' =#{search}
                 or to_char(aaa.execProcess,'FM99990.9990')=#{search} or  aaa.execProcess||'' =#{search}
                 or to_char(aaa.transProcess,'FM99990.9990')=#{search} or  aaa.transProcess||'' =#{search}
                 or  aaa.etrDate||'' =#{search}
