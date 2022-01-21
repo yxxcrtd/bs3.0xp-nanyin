@@ -879,4 +879,28 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         oprHisReq.setBusiDes("报价登记");
         joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
     }
+
+    /**
+     * 撤销，共外部调用
+     * @param totleTradeId
+     */
+    public void dorevoke(String totleTradeId){
+        CfetsBondDealRegisterQuoteDto entity = new CfetsBondDealRegisterQuoteDto();
+        entity.setTotleTradeId(totleTradeId);
+        CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,OperationType.REVOKE);
+        insert(cfetsBondDealDbDto,OperationType.REVOKE);
+        try{
+            String busiType = StringUtil.EMPTY;
+            String ps = cfetsBondDealDbDto.getRegFinProductDealTotal().getPs();
+            if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){
+                busiType = DictCodeListExt3.头寸业务类型_债券行权交易.getValue();
+            }else{
+                busiType = DictCodeListExt3.头寸业务类型_现券交易.getValue();
+            }
+            PositionHttpRequest.dorevoke(cfetsBondDealDbDto.getRegFinProductDealTotal().getpTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),busiType,ps);
+        }catch(PositionException e){
+            e.printStackTrace(); Message message = PositionUtil.ajaxErrorReturn(e);
+            throw new BusinessException("MSG:"+message.getMessage());
+        }
+    }
 }
