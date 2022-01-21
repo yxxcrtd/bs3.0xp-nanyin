@@ -355,8 +355,6 @@ public class MonthReportAssetService {
                 }
             }
         }
-		// 重复数据集合
-		List<ChbMonthAssetPosition> positionList1=new ArrayList<ChbMonthAssetPosition>();
 		// add by dubaojun 2020-06-06 新增理财子公司月报资产头寸字段设置 start
 		if (CollectionUtils.isNotEmpty(positionList)) {
 			// 存储资产对应的期限和子公司资产分类，防止多次计算
@@ -462,16 +460,12 @@ public class MonthReportAssetService {
 						key1 = null;
 					}
 					// 如果一条数据符合多个规则，则重复计算
-					if(key1 == null){
-						ChbMonthAssetPosition position1 = new ChbMonthAssetPosition();
-						BeanUtil.copyPropertiesIgnoreNull(position1, position);
+					if(key1 == null && (key5 != null || key6 != null || key7 != null || key8 != null || key9 != null)){
 						ChbTypeMappingEx mapping1 = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
 								key1, key2, key3, key4, key5, key6, key7, key8, key9);
 						if (mapping1 != null) {
-							position1.setPosuuid(IDGenerator.generate(36));
-							position1.setSunassettype(mapping1.getObjfield1());
-							position1.setSunassettype2(mapping1.getObjfield2());
-							positionList1.add(position1);
+							position.setSunassettype(position.getSunassettype()+","+mapping1.getObjfield1());
+							position.setSunassettype2(position.getSunassettype2()+","+mapping1.getObjfield2());
 						}
 					}
 
@@ -482,15 +476,13 @@ public class MonthReportAssetService {
 					mapping = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
 							key1, key2, key3, key4, key5, key6, key7, key8, key9);
 					if (mapping != null) {
-						position.setSunassettype(mapping.getObjfield1());
-						position.setSunassettype2(mapping.getObjfield2());
+						position.setSunassettype(position.getSunassettype()+","+mapping.getObjfield1());
+						position.setSunassettype2(position.getSunassettype2()+","+mapping.getObjfield2());
 					}
 					assetMap.put(assetKey, position);
 				}
 			}
 		}
-		// 将重复数据加入集合
-		positionList.addAll(positionList1);
 		// add by dubaojun 2020-06-06 新增理财子公司月报资产头寸字段设置 end
 		cmapMap.clear();
 		cmapMap =null;
