@@ -43,7 +43,10 @@ import com.joyintech.tams.component.base.core.impl.dao.MstWorkflowCommonServiceM
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
-import com.joyintech.tams.constant.*;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -1724,6 +1727,17 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      */
     public String findTraderByPartyId(String partyId) {
         return cfetsIbuQuoteRepo004Mapper.findTraderByPartyId(partyId);
+    }
+
+    /**
+     * 撤销，供外部调用
+     *
+     * @param totleTradeId
+     * @param remark
+     * @author jiangpeng
+     * @date 2022/1/21 17:05
+     */
+    public void revokeForOut(String totleTradeId, String remark) {
     }
 
 }
