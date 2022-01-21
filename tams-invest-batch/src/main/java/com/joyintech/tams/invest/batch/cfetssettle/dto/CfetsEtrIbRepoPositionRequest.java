@@ -62,6 +62,9 @@ public class CfetsEtrIbRepoPositionRequest {
     @ApiModelProperty(name="bTotalTradeId",value="前次交易编号",example="1")
     private String bTotalTradeId;
 
+	@ApiModelProperty(name="decisionAct",value="决策动作",example="01")
+	private String decisionAct;
+
     @ApiModelProperty(name="ptlCashList",value="组合现金集合",example="[字符串1,字符串2,...]")
     private List<CfetsEtrIbRepoPosPortfolioCashRequest> ptlCashList;
 
@@ -218,5 +221,13 @@ public class CfetsEtrIbRepoPositionRequest {
 
 	public void setRepoPledgeModel(String repoPledgeModel) {
 		this.repoPledgeModel = repoPledgeModel;
+	}
+
+	public String getDecisionAct() {
+		return decisionAct;
+	}
+
+	public void setDecisionAct(String decisionAct) {
+		this.decisionAct = decisionAct;
 	}
 }
