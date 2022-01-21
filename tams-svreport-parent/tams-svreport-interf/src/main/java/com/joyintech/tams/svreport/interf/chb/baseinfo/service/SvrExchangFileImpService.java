@@ -7,17 +7,15 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.tams.report.interf.common.constant.InterfConstants;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -108,107 +106,126 @@ public class SvrExchangFileImpService extends FileImpService {
 		// 解析成功或失败的标识
 		boolean success = true;
         String tmpPath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-		// 数据小于1000直接入库
-		if (listData.size() <= 1000) {
-			success = excuteProdExchangeByStep(saveFlag, listData, null, null, null, null, null);
-		} else {// 大于1000使用sqlloader入库
-			// 创建表
-			ImpTable table = new ImpTable("MST_EXCHARGE_QUOTE");
-			table.setColumns(ImportGenerator.createImpTableColumns("MST_EXCHARGE_QUOTE"));
-			// 创建一个线程池
-			if (interfMaxCorePoolSize < 1) {
-				interfMaxCorePoolSize = 20;
+		logger.debug("汇率数据转dto---开始-----:" +  df.format(new Date()));
+		// modify by convertMapToEntity yangnxianjiu 2022-01-19 start
+//		listNE = convertMapToEntity(exchangeList);
+		List<MstExchargeQuote> listNE = (List<MstExchargeQuote>) convertMapToEntity(listData,MstExchargeQuote.class);
+		// modify by convertMapToEntity yangnxianjiu 2022-01-19 end
+		logger.debug("汇率数据转dto---结束-----:" +  df.format(new Date()));
+		if(!CollectionUtils.isEmpty(listNE)){
+			// 增量模式根据业务主键更新
+			if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
+				mergeExchangeInfo(listNE);
 			}
-			ExecutorService service = new JoyinThreadPoolExecutor(interfMaxCorePoolSize);
-			List<Callable<Boolean>> tasks = new ArrayList<>();
-			if (null != listData) {
-				int start = 0;
-				int end = 0;
-				int size = listData.size();
-				int max = (int) Math.ceil((double) size / 1000);
-				for (int i = 0; i < max; i++) {
-					start = end;
-					end = Math.min(size, 1000 * (i + 1));
-					List<Map<String, String>> subList = listData.subList(start, end);
-					tasks.add(new Callable<Boolean>() {
-						@Override
-						public Boolean call() {
-							return excuteProdExchangeByStep(saveFlag, subList, null, null, tmpPath, table, null);
+			// 全量模式。根据日期全删全插
+			else{
+				Map<Date, List<MstExchargeQuote>> mstExchargeQuoteMap = listNE.stream().collect(JoyinCollectors.groupingBy(MstExchargeQuote::getTradeDate));
+				Set<Date> dateSet = mstExchargeQuoteMap.keySet();
+				deleteAllData(dateSet);
+				if (listNE.size() <= 1000) {
+					insertExchangeInfo(listNE);
+				} else {// 大于1000使用sqlloader入库
+					// 创建表
+					ImpTable table = new ImpTable("MST_EXCHARGE_QUOTE");
+					table.setColumns(ImportGenerator.createImpTableColumns("MST_EXCHARGE_QUOTE"));
+					// 创建一个线程池
+					if (interfMaxCorePoolSize < 1) {
+						interfMaxCorePoolSize = 20;
+					}
+					ExecutorService service = new JoyinThreadPoolExecutor(interfMaxCorePoolSize);
+					List<Callable<Boolean>> tasks = new ArrayList<>();
+					if (null != listNE) {
+						int start = 0;
+						int end = 0;
+						int size = listNE.size();
+						int max = (int) Math.ceil((double) size / 1000);
+						for (int i = 0; i < max; i++) {
+							start = end;
+							end = Math.min(size, 1000 * (i + 1));
+							List<MstExchargeQuote> subList = listNE.subList(start, end);
+							tasks.add(new Callable<Boolean>() {
+								@Override
+								public Boolean call() {
+									createDataFile(tmpPath + "/MST_EXCHARGE_QUOTE/MST_EXCHARGE_QUOTE", subList, table.getColumns());
+									return true;
+								}
+							});
 						}
-					});
-				}
-			}
-			// 为线程池添加任务
-			List<Future<Boolean>> taskResult;
-			try {
-				taskResult = service.invokeAll(tasks);
-			} catch (InterruptedException e) {
-				logger.error(e.getMessage(), e);
-				 Thread.currentThread().interrupt();
-				return "fail";
-			}
-			for (Future<Boolean> res : taskResult) {
-				try {
-					success = success && res.get();
-				} catch (InterruptedException | ExecutionException e) {
-					logger.error(e.getMessage(), e);
-					Thread.currentThread().interrupt();
-					return "fail";
-				}
-			}
-			// 任务结束，停止线程池的所有线程
-			service.shutdown();
-			Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/MST_EXCHARGE_QUOTE/"), new String[] { "tmp" }, false);
-			List<String> content = new ArrayList<>(listData.size());
-			String result = "";
-			for (File f : files) {
-				if (f.getName().startsWith(InterfDefine.汇率信息数据.getCode())) {
-					try {
-						content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-						logger.debug("查找sqlloder文件" + f);
-					} catch (IOException e) {
-						logger.debug("查找sqlloder文件异常");
-						logger.error(e.getMessage(), e);
-						result = "fail";
-					} finally {
-						f.delete();
 					}
-				}
-			}
-			if ("fail".equals(result)) {
-				return result;
-			}
-			// 系统是否使用的db2数据库
-			boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-			if (isDB2DataBase) {
-				// db2数据库处理
-				if (CollectionUtils.isNotEmpty(content)) {
+					// 为线程池添加任务
+					List<Future<Boolean>> taskResult;
 					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/MST_EXCHARGE_QUOTE/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
+						taskResult = service.invokeAll(tasks);
+					} catch (InterruptedException e) {
 						logger.error(e.getMessage(), e);
 						Thread.currentThread().interrupt();
 						return "fail";
 					}
-				}
-			} else {
-				// oracle原逻辑
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						logger.debug("sqlloader入库开始");
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/MST_EXCHARGE_QUOTE/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
-								reportSqlldrDatabaseName);
-						logger.debug("sqlloader入库结束");
-					} catch (IOException | InterruptedException e) {
-						logger.debug("sqlloader入库报错");
-						logger.error(e.getMessage(), e);
-						Thread.currentThread().interrupt();
-						return "fail";
+					for (Future<Boolean> res : taskResult) {
+						try {
+							success = success && res.get();
+						} catch (InterruptedException | ExecutionException e) {
+							logger.error(e.getMessage(), e);
+							Thread.currentThread().interrupt();
+							return "fail";
+						}
+					}
+					// 任务结束，停止线程池的所有线程
+					service.shutdown();
+					Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/MST_EXCHARGE_QUOTE/"), new String[] { "tmp" }, false);
+					List<String> content = new ArrayList<>(listNE.size());
+					String result = "";
+					for (File f : files) {
+						if (f.getName().startsWith(InterfDefine.汇率信息数据.getCode())) {
+							try {
+								content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
+								logger.debug("查找sqlloder文件" + f);
+							} catch (IOException e) {
+								logger.debug("查找sqlloder文件异常");
+								logger.error(e.getMessage(), e);
+								result = "fail";
+							} finally {
+								f.delete();
+							}
+						}
+					}
+					if ("fail".equals(result)) {
+						return result;
+					}
+					// 系统是否使用的db2数据库
+					boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+					if (isDB2DataBase) {
+						// db2数据库处理
+						if (CollectionUtils.isNotEmpty(content)) {
+							try {
+								success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/MST_EXCHARGE_QUOTE/", content,
+										reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
+										reportSqlldrDatabaseName);
+							} catch (IOException | InterruptedException e) {
+								logger.error(e.getMessage(), e);
+								Thread.currentThread().interrupt();
+								return "fail";
+							}
+						}
+					} else {
+						// oracle原逻辑
+						if (CollectionUtils.isNotEmpty(content)) {
+							try {
+								logger.debug("sqlloader入库开始");
+								success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/MST_EXCHARGE_QUOTE/", content,
+										reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
+										reportSqlldrDatabaseName);
+								logger.debug("sqlloader入库结束");
+							} catch (IOException | InterruptedException e) {
+								logger.debug("sqlloader入库报错");
+								logger.error(e.getMessage(), e);
+								Thread.currentThread().interrupt();
+								return "fail";
+							}
+						}
 					}
 				}
+
 			}
 		}
 		return "success";
@@ -243,69 +260,15 @@ public class SvrExchangFileImpService extends FileImpService {
 			return "success";
 		}
 	}
-
-	private boolean excuteProdExchangeByStep(String saveFlag, List<Map<String, String>> exchangeList, String type, String[] result,
-			String tmpPath, ImpTable table, ImpTable subTable) {
-		// 定义新增数据list-验证通过数据
-		List<MstExchargeQuote> listNE = new ArrayList<MstExchargeQuote>();
-		logger.debug("汇率数据转dto---开始-----:" +  df.format(new Date()));
-		listNE = convertMapToEntity(exchangeList);
-		logger.debug("汇率数据转dto---结束-----:" +  df.format(new Date()));
-		if (listNE != null && listNE.size() > 0) {
-			deleteAllData();
-			if (tmpPath == null) {
-				insertExchangeInfo(listNE);
-			} else {
-				createDataFile(tmpPath + "/MST_EXCHARGE_QUOTE/MST_EXCHARGE_QUOTE", listNE, table.getColumns());
-			}
-			return (CollectionUtils.isNotEmpty(listNE));
-		}
-		return false;
-	}
 	
-	@SuppressWarnings("unused")
 	private void mergeExchangeInfo(List<MstExchargeQuote> listNE) {
 		chbExchangeImpMapper.mergeExchangeData(listNE);
 	}
 	
-	private void deleteAllData() {
-		chbExchangeImpMapper.deleteTodayData();
+	private void deleteAllData(Set<Date> dateSet) {
+		chbExchangeImpMapper.deleteTodayData(dateSet);
 	}
-	
-	/** map转dto
-	 * @param map
-	 * @return
-	 */
-	@SuppressWarnings("unused")
-	private MstExchargeQuote dataConversionEntity(Map<String, String> map) {
-		MstExchargeQuote dto = new MstExchargeQuote();
-		dto.setExchargeCode(map.get("EXCHARGE_CODE"));//行情代码，一般为货币对
-		dto.setTradeDate(DateUtil.parse(map.get("TRADE_DATE")));//交易日
-		dto.setDatasourceType(map.get("DATASOURCE_TYPE"));//数据来源
-		if(map.get("OPEN_PRICE") != null){
-			dto.setOpenPrice(new BigDecimal(map.get("OPEN_PRICE")));//开盘价
-		}
-		if(map.get("CLOSE_PRICE") != null){
-			dto.setClosePrice(new BigDecimal(map.get("CLOSE_PRICE")));//收盘价
-		}
-		if(map.get("HIGH_PRICE") != null){
-			dto.setHighPrice(new BigDecimal(map.get("HIGH_PRICE")));//最高价
-		}
-		if(map.get("LOW_PRICE") != null){
-			dto.setLowPrice(new BigDecimal(map.get("LOW_PRICE")));//最低价
-		}
-		if(map.get("MID_PRICE") != null){
-			dto.setMidPrice(new BigDecimal(map.get("MID_PRICE")));//中间价
-		}
-		dto.setBasisCyy(map.get("BASIS_CYY"));//基础币种，比如USD/CNY中的USD
-		dto.setQuotCyy(map.get("QUOT_CYY"));//报价币种，比如USD/CNY中的CNY
-		if(map.get("QUOT_UNIT") != null){
-			dto.setQuotUnit(Long.parseLong(map.get("QUOT_UNIT")));//报价单位
-		}
-		dto.setInputType(map.get("INPUT_TYPE"));//录入方式，接口、手工等
-		return dto;
-	}
-	
+
 	@SuppressWarnings("unused")
 	private void deleteExchangeInfo(List<MstExchargeQuote> exchangeInfolist) {
 		int batchCount = Integer.parseInt(null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT) ? "100"

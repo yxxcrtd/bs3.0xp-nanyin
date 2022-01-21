@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TrdRepoValuationTrade002Service extends BaseService<TrdRepoValuationTrade001Dto> implements BaseProcessService<TrdRepoValuationTrade001Dto> {
     @Override
-    public void doComplete(TrdRepoValuationTrade001Dto TrdRepoValuationTrade001Dto, OperationType operationType) {
+    public void doComplete(TrdRepoValuationTrade001Dto trdRepoValuationTrade001Dto, OperationType operationType) {
 
     }
 

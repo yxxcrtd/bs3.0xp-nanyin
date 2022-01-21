@@ -7,8 +7,11 @@ import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.common.listener.UploadListener;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.interf.common.util.TisUtil;
+import com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto;
 import com.joyintech.tams.report.submitmanagement.salerrewpenainforegist.dao.ChbSalerRewPenaInfoRegistMapper;
 import com.joyintech.tams.report.submitmanagement.salerrewpenainforegist.dto.SalerRewPenaInfoRegistDto;
 import org.apache.commons.collections4.CollectionUtils;
@@ -65,6 +68,7 @@ public class SalerRewPenaInfoRegist001Service extends CommonExportService<SalerR
 	    int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
         Page<SalerRewPenaInfoRegistDto> pageList = super.queryForPage(
         		pagenum,legth,()->chbSalerRewPenaInfoRegistMapper.queryForRegistPage(param));
+        this.formatByType(pageList.getRoot());
         return pageList;
     }
 
@@ -250,5 +254,35 @@ public class SalerRewPenaInfoRegist001Service extends CommonExportService<SalerR
         File outFile = null;
         outFile = sourceFiles.get(0);
         return ExportUtil.export(outFile.getName(), outFile, true);
+    }
+
+    public static List<SalerRewPenaInfoRegistDto> formatByType(List<SalerRewPenaInfoRegistDto> dataList) {
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(dataList)) {
+            dataList.forEach(item -> {
+                item.setSalerRewPenaTyep(getDictCodeAndName(DictCode.记录分类, item.getSalerRewPenaTyep()));
+                item.setSalerRewPenaInst(getDictCodeAndName(DictCode.奖惩单位, item.getSalerRewPenaInst()));
+            });
+        }
+        return dataList;
+    }
+
+    /**
+     * 转换成key+value形式
+     * @param dictCode  字典表中数据类型
+     * @param value  需要换换的值
+     * @return  key+value
+     * @see
+     * @since 1.0
+     */
+    public static String getDictCodeAndName(DictCode dictCode,String value){
+        if(com.joyintech.framework.util.StringUtil.isNotEmpty(value)){
+            String tempName = SysDataUtil.getNameFromDataDict(dictCode, value);
+            if (com.joyintech.framework.util.StringUtil.isEmpty(tempName)) {
+                return value;
+            } else {
+                return value + " " + SysDataUtil.getNameFromDataDict(dictCode, value);
+            }
+        }
+        return "";
     }
 }

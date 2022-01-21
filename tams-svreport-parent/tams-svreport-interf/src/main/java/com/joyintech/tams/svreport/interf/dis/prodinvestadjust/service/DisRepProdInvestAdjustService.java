@@ -73,16 +73,25 @@ public class DisRepProdInvestAdjustService extends FileImpService {
         // 解析文件数据到dto
         DisRepProdInvestAdjust dto = null;
         List<DisRepProdInvestAdjust> dtoList = new ArrayList<DisRepProdInvestAdjust>();
-        for(Map<String, String> data : listData){
-            //将map转换为dto
-        	try{
-        		 dto = transMap2Dto(data);
-                 dtoList.add(dto);
-        	}catch(Exception e){
-        		logger.error("解析数据错误：",e.getMessage(),e);
-           		return  "fail";
-        	}
-        }
+        // modify by convertMapToEntity yangxianjiu 2022-01-19 start
+        dtoList = (List<DisRepProdInvestAdjust>) convertMapToEntity(listData,DisRepProdInvestAdjust.class);
+        dtoList.stream().forEach(t->{
+            t.setId(IDGenerator.generate());//ID
+            t.setInputType("");//导入方法
+            t.setInputUser("");//导入用户
+            t.setAdapterId("0");//适配器ID
+        });
+        // modify by convertMapToEntity yangxianjiu 2022-01-19 end
+//        for(Map<String, String> data : listData){
+//            //将map转换为dto
+//        	try{
+//        		 dto = transMap2Dto(data);
+//                 dtoList.add(dto);
+//        	}catch(Exception e){
+//        		logger.error("解析数据错误：",e.getMessage(),e);
+//           		return  "fail";
+//        	}
+//        }
         //存表
         int success = this.deleteAndInsertRepProdInvestAdjustByPart(dtoList);
         logger.info("saveData方法成功存入数据到REP_PROD_INVEST_ADJUST：" + success + "条");
