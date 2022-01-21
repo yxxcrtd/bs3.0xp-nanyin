@@ -51,6 +51,9 @@ public class EtrExchangeTradePortfolioRequest extends EtrEntrust {
     @ApiModelProperty(name="acctNo",value="资金账户",example="submit/save", required = true)
     private String acctNo;
 
+    @JsonSerialize(using = BigDecimalSerializer.class)
+    private BigDecimal disRate; //分配比例
+
     /**
      * 证券账户代码
      */
@@ -619,5 +622,13 @@ public class EtrExchangeTradePortfolioRequest extends EtrEntrust {
 
     public void setSecAcctId(String secAcctId) {
         this.secAcctId = secAcctId;
+    }
+
+    public BigDecimal getDisRate() {
+        return disRate;
+    }
+
+    public void setDisRate(BigDecimal disRate) {
+        this.disRate = disRate;
     }
 }

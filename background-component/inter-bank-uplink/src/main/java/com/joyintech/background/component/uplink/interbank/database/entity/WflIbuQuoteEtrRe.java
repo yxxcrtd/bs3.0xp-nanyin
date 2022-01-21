@@ -16,6 +16,9 @@ public class WflIbuQuoteEtrRe extends WflIbuQuoteEtrReKey {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal shareAmt;
 
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal shareCtAmt;
+
     /**
      * 全价总额
      */
@@ -362,5 +365,13 @@ public class WflIbuQuoteEtrRe extends WflIbuQuoteEtrReKey {
 
     public void setMtradeAmt(BigDecimal mtradeAmt) {
         this.mtradeAmt = mtradeAmt;
+    }
+
+    public BigDecimal getShareCtAmt() {
+        return shareCtAmt;
+    }
+
+    public void setShareCtAmt(BigDecimal shareCtAmt) {
+        this.shareCtAmt = shareCtAmt;
     }
 }

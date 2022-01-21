@@ -71,7 +71,7 @@ import com.joyintech.tams.exchange.common.utils.EntrustUtils;
 import com.joyintech.tams.exchange.common.utils.JsonUtils;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.service.trade.dao.domain.TerminalAgentInfo;
-import com.joyintech.tams.exchange.service.trade.processor.constants.AccountLoginStatus;
+import com.joyintech.tams.exchange.common.constant.AccountLoginStatus;
 import com.joyintech.tams.exchange.service.trade.server.agent.TradeAgentDsp;
 import com.joyintech.tams.exchange.service.trade.server.agent.jsd.resp.header.RespCancelEntrustHeader;
 import com.joyintech.tams.exchange.service.trade.server.agent.jsd.resp.header.RespEntrustHeader;

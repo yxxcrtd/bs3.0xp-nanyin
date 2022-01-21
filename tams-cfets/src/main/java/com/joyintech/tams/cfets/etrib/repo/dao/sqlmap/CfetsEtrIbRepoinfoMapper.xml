@@ -230,6 +230,9 @@
                 #{item}
             </foreach>
         </if>
+        <if test="entrustId != null and entrustId!='' "><!-- 指令编号 -->
+            AND T1.ENTRUST_ID like '%' || #{entrustId} || '%'
+        </if>
         <if test="invManagerIdList != null and invManagerIdList.size() > 0"><!-- 投资经理 -->
             AND T1.INV_MANAGER_ID in
             <foreach collection="invManagerIdList" item="item" open="(" close=")" separator=",">

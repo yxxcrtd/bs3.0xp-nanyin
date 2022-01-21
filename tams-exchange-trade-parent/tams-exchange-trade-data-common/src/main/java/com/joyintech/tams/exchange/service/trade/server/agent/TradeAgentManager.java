@@ -1,6 +1,8 @@
 package com.joyintech.tams.exchange.service.trade.server.agent;
 
 import com.google.common.collect.Maps;
+import com.joyintech.tams.exchange.common.utils.SpringContextUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -10,6 +12,9 @@ import java.util.Objects;
 
 @Component
 public class TradeAgentManager {
+
+    @Value("${agent.active:false}")
+    private boolean agentActive;
 
     // 保存当前使用的终端
     private Map<String, TradeAgent> tradingAgents = Maps.newConcurrentMap();
@@ -37,6 +42,14 @@ public class TradeAgentManager {
         accountIds.forEach(accountId -> accountAgents.remove(accountId));
     }
 
+    public TradeAgent getAccountAgent(String accountId) {
+        return accountAgents.get(accountId);
+    }
+
+    public void removeAccountAgent(String accountId) {
+        accountAgents.remove(accountId);
+    }
+
     public TradeAgent findAgentByAccountId(String accountId) {
         return accountAgents.get(accountId);
     }
@@ -50,9 +63,6 @@ public class TradeAgentManager {
 
     /**
      * 获取交易终端
-     *
-     * @param terminalName
-     * @return
      */
     public TradeAgent getTradeAgent(String terminalName) {
         return tradingAgents.get(terminalName);
@@ -60,11 +70,13 @@ public class TradeAgentManager {
 
     /**
      * 获取登录终端
-     *
-     * @return
      */
     public Map<String, TradeAgent> getTradingAgents() {
-        return tradingAgents;
+        if (!agentActive) {
+            return tradingAgents;
+        }
+
+        return SpringContextUtils.getApplicationContext().getBeansOfType(TradeAgent.class);
     }
 
     public Map<String, TradeAgent> getAccountAgents() {

@@ -115,8 +115,9 @@ public class CfetsManualSettleController extends BaseController {
 
         String finalOpertType1 = finalOpertType;
         DecimalFormat format = new DecimalFormat("#,###.00");
+
         params.setComment((entity) -> {
-            String settleArg = getMessage("交收金额") + format.format(GlobalConstant.COLON + entity.getSettleAmt());
+            String settleArg = getMessage("交收金额") + GlobalConstant.COLON + (entity.getSettleAmt()== null?"":format.format(entity.getSettleAmt()));
             if(StringUtil.equals(entity.getPs(), BussinessDictCodeList.交易方向_买入.getValue())){
                 settleArg = getMessage("交收数量") + GlobalConstant.COLON + entity.getSettleNum();
             }

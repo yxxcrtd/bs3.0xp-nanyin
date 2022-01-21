@@ -110,9 +110,11 @@ public class CstpCommonService{
 
     public List<PtlAllocationDto> 组合分配拆分不跨托管(List<PtlAllocationDto> ptlAllocations,Map<String,Object> map){
         if(!StringUtil.isEmptyList(ptlAllocations)){
+            BigDecimal shareCtAmtTotal = map.containsKey("shareCtAmt")?(BigDecimal)map.get("shareCtAmt"):BigDecimal.ZERO;
             BigDecimal shareAmtTotal = map.containsKey("shareAmt")?(BigDecimal)map.get("shareAmt"):BigDecimal.ZERO;
             BigDecimal fpriceAmtTotal = map.containsKey("fpriceAmt")?(BigDecimal)map.get("fpriceAmt"):BigDecimal.ZERO;
             BigDecimal 交易份额尾差= shareAmtTotal;
+            BigDecimal 折算交易份额尾差= shareCtAmtTotal;
             BigDecimal 全价总额尾差= fpriceAmtTotal;
             String ps = (String) map.get("ps");
             //按比例重新计算交易金额  尾差交给最大金额
@@ -120,17 +122,17 @@ public class CstpCommonService{
             PtlAllocationDto ptlAllocationDtoMax = ptlAllocations.stream().max(Comparator.comparing(PtlAllocationDto::getFpriceAmt)).get();
             //组合分配列表总金额
             BigDecimal shareAmtTotalFP = null;
-            if(StringUtil.equals(ps,BussinessDictCodeList.回购拆借方向_正回购.getValue())) {
-                shareAmtTotalFP = ptlAllocations.stream().map(PtlAllocationDto::getShareAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
-            }
+            BigDecimal shareCtAmtTotalFP = null;
+            shareAmtTotalFP = ptlAllocations.stream().map(PtlAllocationDto::getShareAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+            shareCtAmtTotalFP = ptlAllocations.stream().map(PtlAllocationDto::getShareCtAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
             BigDecimal fpriceAmtTotalFP = ptlAllocations.stream().map(PtlAllocationDto::getFpriceAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
             for(PtlAllocationDto ptlAllocationDto : ptlAllocations){
                 BigDecimal fpriceAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(fpriceAmtTotal,ptlAllocationDto.getFpriceAmt()),fpriceAmtTotalFP,2,RoundingMode.HALF_DOWN);
                 ptlAllocationDto.setFpriceAmt(fpriceAmt);
                 全价总额尾差 = ArithmeticUtil.subtract(全价总额尾差,fpriceAmt);
-                if(!StringUtil.equals(ps,BussinessDictCodeList.回购拆借方向_正回购.getValue())){
-                    continue;
-                }
+                BigDecimal shareCtAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(shareCtAmtTotal,ptlAllocationDto.getShareCtAmt()),shareCtAmtTotalFP,2, RoundingMode.HALF_DOWN);
+                折算交易份额尾差 = ArithmeticUtil.subtract(折算交易份额尾差,shareCtAmt);
+                ptlAllocationDto.setShareAmt(shareCtAmt);
                 BigDecimal shareAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(shareAmtTotal,ptlAllocationDto.getShareAmt()),shareAmtTotalFP,2, RoundingMode.HALF_DOWN);
                 交易份额尾差 = ArithmeticUtil.subtract(交易份额尾差,shareAmt);
                 ptlAllocationDto.setShareAmt(shareAmt);
@@ -140,8 +142,8 @@ public class CstpCommonService{
                 if(全价总额尾差.compareTo(BigDecimal.ZERO)>0&&StringUtil.equals(item.getEntrustId(),ptlAllocationDtoMax.getEntrustId())){
                     item.setFpriceAmt(ArithmeticUtil.doAdd(item.getFpriceAmt(),全价总额尾差));
                 }
-                if(!StringUtil.equals(ps,BussinessDictCodeList.回购拆借方向_正回购.getValue())){
-                    continue;
+                if(折算交易份额尾差.compareTo(BigDecimal.ZERO)>0&&StringUtil.equals(item.getEntrustId(),ptlAllocationDtoMax.getEntrustId())){
+                    item.setShareCtAmt(ArithmeticUtil.doAdd(item.getShareCtAmt(),折算交易份额尾差));
                 }
                 if(交易份额尾差.compareTo(BigDecimal.ZERO)>0&&StringUtil.equals(item.getEntrustId(),ptlAllocationDtoMax.getEntrustId())){
                     item.setShareAmt(ArithmeticUtil.doAdd(item.getShareAmt(),交易份额尾差));

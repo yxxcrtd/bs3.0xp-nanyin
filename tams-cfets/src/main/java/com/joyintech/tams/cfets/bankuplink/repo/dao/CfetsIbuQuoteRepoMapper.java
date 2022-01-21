@@ -215,4 +215,10 @@ public interface CfetsIbuQuoteRepoMapper {
     List<FinProductTypeConfig> getAssetFiveType(FinProductTypeConfig param);
 
     int countWflEtr(Map<String, Object> param);
+
+    /**
+     * 获取机构信息
+     * @return
+     */
+    List<Map<String, String>> selectAllCustomer();
 }

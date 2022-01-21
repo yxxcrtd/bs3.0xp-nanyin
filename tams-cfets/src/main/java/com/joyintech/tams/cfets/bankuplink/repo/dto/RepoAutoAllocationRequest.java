@@ -25,6 +25,9 @@ public class RepoAutoAllocationRequest {
     @ApiModelProperty(required = true, name = "tradeAmt", value = "交易金额(万元)", example = "200")
     private BigDecimal tradeAmt;
 
+    @ApiModelProperty(required = true, name = "shareAmt", value = "质押券总额(元)", example = "1800000")
+    private BigDecimal shareAmt;
+
     @ApiModelProperty(required = true, name = "convertAmt", value = "质押券折算总额(元)", example = "1800000")
     private BigDecimal convertAmt;
 
@@ -212,6 +215,14 @@ public class RepoAutoAllocationRequest {
 
     public void setSettlementEndDate(Date settlementEndDate) {
         this.settlementEndDate = settlementEndDate;
+    }
+
+    public BigDecimal getShareAmt() {
+        return shareAmt;
+    }
+
+    public void setShareAmt(BigDecimal shareAmt) {
+        this.shareAmt = shareAmt;
     }
 }
 

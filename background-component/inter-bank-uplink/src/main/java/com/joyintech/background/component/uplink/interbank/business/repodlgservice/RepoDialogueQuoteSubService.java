@@ -38,6 +38,14 @@ public interface RepoDialogueQuoteSubService {
     RepoDialogueQuoteDto getRepoDialogueQuote(String quoteId);
 
     /**
+     * 质押式回购报价查询<br />
+     * 根据主键查询质押式回购报价信息
+     * @param quoteId String 报价编号
+     * @return RepoDialogueQuoteDto
+     */
+    RepoDialogueQuoteDto getWflRepoDialogueQuote(String quoteId);
+
+    /**
      * 质押式回购报价查询-指定条件<br />
      * 根据传入的不为空的属性进行查询，需支持数据权限
      * @param inputBean RepoQuoteSearchDto 质押式回购报价查询条件
@@ -117,6 +125,13 @@ public interface RepoDialogueQuoteSubService {
      * @return QuoteResultDto
      */
     QuoteResultDto updateRepoDialogueQuoteByKey(RepoDialogueQuoteDto inputBean);
+
+    /**
+     * 根据主键进行质押式回购报价更新<br />
+     * @param inputBean RepoDialogueQuoteDto 质押式回购报价信息
+     * @return QuoteResultDto
+     */
+    QuoteResultDto updateRepoDialogueQuoteByKeyDeal(RepoDialogueQuoteDto inputBean);
 
     /**
      * 根据主键进行质押式回购报价删除<br />

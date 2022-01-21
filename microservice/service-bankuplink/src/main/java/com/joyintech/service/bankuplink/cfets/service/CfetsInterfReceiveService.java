@@ -691,8 +691,10 @@ public class CfetsInterfReceiveService {
                     mapFpriceAmt.put("scfpriceAmt",null!=ibuQuoteCrepDto.getScFpriceAmt()?ibuQuoteCrepDto.getScFpriceAmt():BigDecimal.ZERO);
                 }else{
                     BigDecimal  fpriceAmtTotalBW = null!=ibuQuoteCrepDto.getFpriceAmt()?ibuQuoteCrepDto.getFpriceAmt():BigDecimal.ZERO;
-                    BigDecimal  shareAmtTotalBW = null!=ibuQuoteCrepDto.getShareCtAmt()?ibuQuoteCrepDto.getShareCtAmt():BigDecimal.ZERO;
+                    BigDecimal  shareCtAmtTotalBW = null!=ibuQuoteCrepDto.getShareCtAmt()?ibuQuoteCrepDto.getShareCtAmt():BigDecimal.ZERO;
+                    BigDecimal  shareAmtTotalBW = null!=ibuQuoteCrepDto.getShareAmt()?ibuQuoteCrepDto.getShareAmt():BigDecimal.ZERO;
                     mapFpriceAmt.put("fpriceAmt",fpriceAmtTotalBW);
+                    mapFpriceAmt.put("shareCtAmt",shareCtAmtTotalBW);
                     mapFpriceAmt.put("shareAmt",shareAmtTotalBW);
                 }
                 ptlAllocations = cstpCommonService.组合分配拆分(ptlAllocations,mapFpriceAmt);
@@ -704,6 +706,7 @@ public class CfetsInterfReceiveService {
                     ibuQuoteEtrReDto.setEntrustId(item.getEntrustId());
                     ibuQuoteEtrReDto.setPortfolioId(item.getPortfolioId());
                     ibuQuoteEtrReDto.setShareAmt(item.getShareAmt());
+                    ibuQuoteEtrReDto.setShareCtAmt(item.getShareCtAmt());
                     ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
                     ibuQuoteEtrReDto.setCbFpriceAmt(item.getCbFpriceAmt());
                     ibuQuoteEtrReDto.setScFpriceAmt(item.getScFpriceAmt());
@@ -712,6 +715,7 @@ public class CfetsInterfReceiveService {
                     ibuQuoteEtrReDto.setSettFeeAmt(item.getSettFeeAmt());
                     ibuQuoteEtrReDto.setPriceModel(item.getPriceModel());
                     ibuQuoteEtrReDto.setIntAmt(item.getIntAmt());
+                    ibuQuoteEtrReDto.setMtradeAmt(item.getMtradeAmt());
                     ibuQuoteEtrRes.add(ibuQuoteEtrReDto);
                 }
                 CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = new CfetsRepoDealQuotedPrice001Dto();
