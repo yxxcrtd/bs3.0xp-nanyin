@@ -125,8 +125,8 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		initPageParams.put("cmdsWebSocketUrl", cmdsWebSocketUrl);
 		initPageParams.put("EXPORT_SHOW",CacheUtil.getSysParam("EXPORT_SHOW"));
 		initPageParams.put("PAGE_ID_REGIT","IbuQuoteBond004");
-		initPageParams.put("PAGE_ID_DIALOG","CfetsBondDealQuotedPrice004");
-		initPageParams.put("PAGE_ID_REQUEST","CfetsBondDealQuotedPrice005");
+		initPageParams.put("PAGE_ID_DIALOG","IbuQuoteBond002");
+		initPageParams.put("PAGE_ID_REQUEST","IbuQuoteBond003");
 		//01: 开启银行间报价 02:关闭银行间报价（事后录入）
 		initPageParams.put("ibuFlag_quote_switch",CacheUtil.getSysParam("ibuFlag_quote_switch"));
 		initPageParams.put("is_sys_support_quote",CacheUtil.getSysParam("is_sys_support_quote"));
