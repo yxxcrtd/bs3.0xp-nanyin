@@ -1,0 +1,3 @@
+--债券评级数据接入表增加数据来源字段
+ALTER TABLE MST_BOND_CREDIT_RATING ADD SOURCE VARCHAR(50);
+comment on column MST_BOND_CREDIT_RATING.SOURCE is '数据来源 ';
