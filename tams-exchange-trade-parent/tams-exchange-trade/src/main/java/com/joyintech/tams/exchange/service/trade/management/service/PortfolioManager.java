@@ -341,26 +341,31 @@ public class PortfolioManager extends BaseService {
         PortfolioCalculateResponse calculateResponse = null;
 
         // 最低交易数量：大于等于
-        Integer minNum;
+        Integer minNum = 1;
         // 最小交易单元：整数倍
-        Integer minStep;
+        Integer minStep = 1;
         // 最低交易金额：大于等于
-        BigDecimal minAmt;
+        BigDecimal minAmt = BigDecimal.ZERO;
         if (instruction.getMinPriceAndMinTrdUnitLimitBean() != null
+                && ErrorCode.isSuccess(instruction.getMinPriceAndMinTrdUnitLimitBean().getErrorCode())
                 && instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList() != null
-                && instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList().size() > 0) {
+                && !instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList().isEmpty()) {
             MinTrdUnitLimit minTrdUnitLimit = instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList().get(0);
             if (EntrustProp.isMarketPrice(entrustProp)) {
-                minNum = minTrdUnitLimit.getMinNumMarket();
+                if (Objects.nonNull(minTrdUnitLimit.getMaxNumMarket())) {
+                    minNum = minTrdUnitLimit.getMinNumMarket();
+                }
             } else {
-                minNum = minTrdUnitLimit.getMinNum();
+                if (Objects.nonNull(minTrdUnitLimit.getMinNum())) {
+                    minNum = minTrdUnitLimit.getMinNum();
+                }
             }
-            minStep = minTrdUnitLimit.getMinStep();
-            minAmt = minTrdUnitLimit.getMinAmt();
-        } else {
-            minNum = 1;
-            minStep = 1;
-            minAmt = BigDecimal.ZERO;
+            if (Objects.nonNull(minTrdUnitLimit.getMinStep())) {
+                minStep = minTrdUnitLimit.getMinStep();
+            }
+            if (Objects.nonNull(minTrdUnitLimit.getMinAmt())) {
+                minAmt = minTrdUnitLimit.getMinAmt();
+            }
         }
 
         //市价委托填充反向涨跌停价
