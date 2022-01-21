@@ -43,7 +43,7 @@
     B.realName realName,
     ETR_ENTRUST.REMARK remark,
     btm.busi_type busiTypePosition,
-    nvl(ssa.sec_acct_name,ssai.sec_acct_name) secAcctId,
+    ssa.sec_acct_name secAcctId,
     DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
     round(decode(btm.busi_type,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,#{busiTypePosition05},ETR_ENTRUST.PRICE*100,''),4) etrPrice,
@@ -107,8 +107,6 @@
         ENTRUST_ID) T5
         ON
         ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
-        left join REG_FIN_PRODUCT_DEAL rfpd on rfpd.ENTRUST_ID=ETR_ENTRUST.ENTRUST_ID
-        LEFT JOIN STL_SEC_ACCT_INFO ssai ON rfpd.sec_manage_acct_id = ssai.SEC_ACCT_ID
         left join STL_SEC_ACCT_INFO ssa ON ETR_ENTRUST_ADD.SEC_ACCT_ID = ssa.SEC_ACCT_ID
         LEFT JOIN SYS_USER su1 ON ETR_ENTRUST.INV_MANAGER_ID = su1.USER_NAME
         LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON ETR_ENTRUST_ADD.ASSET_TYPE = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
@@ -227,7 +225,7 @@
         B.realName realName,
         WFL_ETR_ENTRUST.REMARK remark,
         btm.busi_type busiTypePosition,
-        nvl(ssa.sec_acct_name,ssai.sec_acct_name) secAcctId,
+        ssa.sec_acct_name secAcctId,
         DECODE(WFL_ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
         decode(WFL_ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'F10',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'F12',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'F16',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
         round(decode(btm.busi_type,#{busiTypePosition02},decode(WFL_ETR_ENTRUST_ADD.CAL_MODE,'price',WFL_ETR_ENTRUST.PRICE,'exerYield',WFL_ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',WFL_ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},WFL_ETR_ENTRUST.PRICE,#{busiTypePosition05},WFL_ETR_ENTRUST.PRICE*100,''),4) etrPrice,
@@ -292,8 +290,6 @@
         ENTRUST_ID) T5
         ON
         WFL_ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
-        left join WFL_REG_FIN_PRODUCT_DEAL rfpd on rfpd.ENTRUST_ID=WFL_ETR_ENTRUST.ENTRUST_ID
-        LEFT JOIN STL_SEC_ACCT_INFO ssai ON rfpd.SEC_MANAGE_ACCT_ID = ssai.SEC_ACCT_ID
         left join STL_SEC_ACCT_INFO ssa ON WFL_ETR_ENTRUST_ADD.SEC_ACCT_ID = ssa.SEC_ACCT_ID
         LEFT JOIN SYS_USER su1 ON WFL_ETR_ENTRUST.INV_MANAGER_ID = su1.USER_NAME
         <where>

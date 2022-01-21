@@ -16,6 +16,9 @@ public class IbuQuoteEtrReHis extends IbuQuoteEtrReHisKey {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal shareAmt;
 
+    // 折算券面总额
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal shareCtAmt;
     /**
      * 全价总额
      */
@@ -333,5 +336,13 @@ public class IbuQuoteEtrReHis extends IbuQuoteEtrReHisKey {
 
     public void setMtradeAmt(BigDecimal mtradeAmt) {
         this.mtradeAmt = mtradeAmt;
+    }
+
+    public BigDecimal getShareCtAmt() {
+        return shareCtAmt;
+    }
+
+    public void setShareCtAmt(BigDecimal shareCtAmt) {
+        this.shareCtAmt = shareCtAmt;
     }
 }
