@@ -29,7 +29,7 @@ import java.util.List;
  * @see EtrExchangeAgreRepTrade003Dto
  * @since 1.0
  */
-@PageId("EtrAgreRepTrade003Dto")
+@PageId("EtrExchangeAgreRepTrade003Dto")
 public class EtrExchangeAgreRepTrade003Dto extends EtrEntrust{
 
 
