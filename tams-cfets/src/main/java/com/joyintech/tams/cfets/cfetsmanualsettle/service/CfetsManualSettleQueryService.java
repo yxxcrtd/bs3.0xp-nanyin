@@ -338,6 +338,7 @@ public class CfetsManualSettleQueryService extends BaseService{
             resultData.put(dtCode+"_dataform",dataform);
             resultData.put(dtCode+"_datatablep",portIntFenPeiInfoDtoList);
             resultData.put(dtCode+"_datatablepledge",pledgeInfoDtoList);
+
             return resultData;
         }else {
             String spcdCodeTemp = spcdCode;
