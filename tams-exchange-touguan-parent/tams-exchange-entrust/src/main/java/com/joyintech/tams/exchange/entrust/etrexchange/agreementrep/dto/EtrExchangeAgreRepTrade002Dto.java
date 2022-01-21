@@ -28,7 +28,7 @@ import java.math.BigDecimal;
  * @see EtrExchangeAgreRepTrade002Dto
  * @since 1.0
  */
-@PageId("EtrAgreRepTrade002Dto")
+@PageId("EtrExchangeAgreRepTrade002Dto")
 public class EtrExchangeAgreRepTrade002Dto extends BaseEntity {
 
     /**

@@ -151,12 +151,12 @@
                 , (NVL(T5.FINISH_AMT,0)+NVL(T7.ENT_FINISH_AMT,0))                                             finishAmt/*已完成额度(元)*/
                 , NVL(ETR_ENTRUST.ENTRUST_AMT, 0)
                     - NVL(T5.FINISH_AMT,0) - NVL(T7.ENT_FINISH_AMT,0)                                         avaNum/*剩余指令额度(元)*/
-                , ROUND(NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT,0))                    finishDealAmt/*已成交额度(元)*/
+                , ROUND(NVL(C.totalShareAmt,nvl(C2.FPRICE_AMT, 0))+NVL(T6.FINISH_AMT,0))                      finishDealAmt/*已成交额度(元)*/
                 , NVL(ETR_ENTRUST.ENTRUST_AMT, 0) -
-                        ROUND(NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT,0))              avaDealAmt/*剩余成交额度(元)*/
+                        ROUND(NVL(C.totalShareAmt,nvl(C2.FPRICE_AMT, 0))+NVL(T6.FINISH_AMT,0))                avaDealAmt/*剩余成交额度(元)*/
                 , trunc(nvl(NVL(T5.FINISH_AMT, 0)+
                                        NVL(T7.ENT_FINISH_AMT, 0),0)/(ETR_ENTRUST.ENTRUST_AMT),4)*100          transactioncom/*执行进度(%)*/
-                , trunc((NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT,0))
+                , trunc((NVL(C.totalShareAmt,nvl(C2.FPRICE_AMT, 0))+NVL(T6.FINISH_AMT,0))
                                                                 /(ETR_ENTRUST.ENTRUST_AMT),4)*100             tradeFinishPercent/* 成交进度(%)*/
                 , ETR_ENTRUST.ENTRUST_AMT                                                                     entrustNum/*指令额度(元)*/
                 , ETR_ENTRUST.PORTFOLIO_ID                                                                    portfolioId/*组合代码*/
@@ -225,14 +225,11 @@
                 , ETR_ENTRUST_ADD.SEC_ACCT_ID                                                                   secManageAcctId/* 证券账户代码*/
                 , SECACCT1.ACCT_NO                                                                              secManageAcctIdZZ/* 中债登 证券账户代码*/
                 , SECACCT2.ACCT_NO                                                                              secManageAcctIdSQ/* 上清所 证券账户代码*/
-                , PA_PTL_PORTFOLIO.PORTFOLIO_SERIES                                                             portfolioSeries/* 组合系列*/
                 , ETR_ENTRUST_ADD.TERM_TYPE                                                                     termType /*期限品种*/
                 , ETR_ENTRUST.TRADE_MARKET/*交易场所，银行间、上交所、深交所、柜面等*/
             FROM ETR_ENTRUST
             INNER JOIN PTL_PORTFOLIO
                 ON ETR_ENTRUST.PORTFOLIO_ID = PTL_PORTFOLIO.PORTFOLIO_ID
-            LEFT JOIN PA_PTL_PORTFOLIO
-                ON PTL_PORTFOLIO.PORTFOLIO_ID = PA_PTL_PORTFOLIO.PORTFOLIO_ID
             LEFT JOIN ETR_DISTRIBUTE
                 ON ETR_ENTRUST.ENTRUST_ID = ETR_DISTRIBUTE.ENTRUST_ID
             LEFT JOIN ETR_ENTRUST_ADD
@@ -255,7 +252,6 @@
                             and NVL(ssai.sec_acct_type, 'SEC') = 'SEC'
                             and TRADE_PLACE = '01'
                      ) SECACCT2 ON ETR_ENTRUST.PORTFOLIO_ID = SECACCT2.PORTFOLIO_ID
-
             LEFT JOIN
             (
                 SELECT
@@ -299,12 +295,6 @@
                 ON IPAR.PARTY_ID = MCCI.PARTY_ID
             LEFT JOIN SYS_USER SU
                 ON ETR_ENTRUST.INV_MANAGER_ID = SU.USER_NAME
-            LEFT JOIN SYS_USER
-                ON ETR_ENTRUST.CREATE_USER = SYS_USER.USER_NAME
-            LEFT JOIN SYS_USER_ADD
-                ON SYS_USER.USER_ID = SYS_USER_ADD.USER_ID
-            LEFT JOIN MST_CFETS_CUSTOMER_TRADER
-                ON SYS_USER_ADD.IBU_TRADER = MST_CFETS_CUSTOMER_TRADER.TRADER_ID
             LEFT JOIN MST_CFETS_CUSTOMER_TRADER MST_CFETS_CT
                 ON MST_CFETS_CT.TRADER_ID = ETR_ENTRUST.COUNTER_TRADER
             LEFT JOIN MST_COUNTER_PARTY MCP
@@ -338,42 +328,22 @@
                 GROUP BY ENTRUST_ID
             ) C /*质押式回购银行间报价 按指令代码汇总 交易份额，债券数量等*/
                 ON C.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
-            LEFT JOIN
-            (
-                SELECT ENTRUST_ID,
-                nvl(FPRICE_AMT, 0)  totalShareAmt
-                FROM IBU_QUOTE_CREP /*质押式回购银行间报价*/
-                WHERE TRADE_STATUS = '07'
-            ) C2 /*质押式回购银行间报价 交易份额，债券数量等*/
-                ON C2.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
-            LEFT JOIN
-            (
-                SELECT ITEM_CODE
-                , ITEM_VALUE
-                FROM SYS_DATADICT_LIST T
-                WHERE T.DICT_CODE = 'ENTRUST_STATUS'
-            ) D/*指令状态参数字典 模糊查询用*/
-                ON ETR_ENTRUST.ENTRUST_STATUS = D.ITEM_CODE
-            LEFT JOIN
-            (
-                SELECT ITEM_CODE
-                , ITEM_VALUE
-                FROM SYS_DATADICT_LIST T
-                WHERE T.DICT_CODE = 'PS'
-            ) E/*交易方向 模糊查询用*/
-                ON ETR_ENTRUST.PS = E.ITEM_CODE
-            LEFT JOIN
-            (
-                SELECT ITEM_CODE
-                , ITEM_VALUE
-                FROM SYS_DATADICT_LIST T
-                WHERE T.DICT_CODE = 'PRICE_MODEL'
-            ) F/*价格模式 模糊查询用*/
-                ON ETR_ENTRUST.PRICE_MODEL = F.ITEM_CODE
+            LEFT JOIN IBU_QUOTE_CREP C2/*质押式回购银行间报价*/
+                ON C2.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID and C2.TRADE_STATUS = '07'
+            LEFT JOIN SYS_DATADICT_LIST D
+                ON ETR_ENTRUST.ENTRUST_STATUS = D.ITEM_CODE and D.DICT_CODE = 'ENTRUST_STATUS'/*指令状态参数字典 模糊查询用*/
+            LEFT JOIN SYS_DATADICT_LIST E
+                ON ETR_ENTRUST.PS = E.ITEM_CODE and E.DICT_CODE = 'PS'/*交易方向 模糊查询用*/
+            LEFT JOIN SYS_DATADICT_LIST F
+                ON ETR_ENTRUST.PRICE_MODEL = F.ITEM_CODE and F.DICT_CODE = 'PRICE_MODEL'
             WHERE ETR_ENTRUST.FINPROD_TYPE2 in (#{finprodType2_F02},#{finprodType2_F03})
                 AND ETR_ENTRUST.TRADE_MARKET IN (#{tradeMarket01} , #{tradeMarket02})
                 AND ETR_ENTRUST.PS IN (#{ps_03} , #{ps_04} )
                 AND ETR_ENTRUST.ENTRUST_STATUS IN (#{entrustStatusUnAccept}, #{entrustStatusAccept}, #{entrustStatusComple}, #{entrustStatusReturn})
+                <if test="entrustIdSearch != null and entrustIdSearch != ''">
+                    /* 没有 ETR_ENTRUST.ENTRUST_STATUS = '---' or 会出现 [08000][17410] 无法从套接字读取更多的数据 错误 为什么?*/
+                    AND (ETR_ENTRUST.ENTRUST_STATUS = '---' or ETR_ENTRUST.ENTRUST_ID like concat('%',concat(#{entrustIdSearch},'%')))
+                </if>
                 <if test="entrustStatus != null and entrustStatus.size() > 0">
                     /* 查询条件 指令状态*/
                     AND ETR_ENTRUST.ENTRUST_STATUS IN
@@ -478,7 +448,7 @@
                         ETR_ENTRUST.ENTRUST_STATUS like '%' || #{search} || '%' /*指令状态*/
                         OR D.ITEM_VALUE LIKE '%' || #{search} || '%' /*指令状态*/
                         OR to_char(trunc(nvl(NVL(T5.FINISH_AMT, 0)+NVL(T7.ENT_FINISH_AMT, 0),0)/(ETR_ENTRUST.ENTRUST_AMT),4)*100)  = #{search} /*执行进度(%)*/
-                        OR to_char(trunc((NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT,0))/(ETR_ENTRUST.ENTRUST_AMT),4)*100) = #{search}/* 成交进度(%)*/
+                        OR to_char(trunc((NVL(C.totalShareAmt,nvl(C2.FPRICE_AMT, 0))+NVL(T6.FINISH_AMT,0))/(ETR_ENTRUST.ENTRUST_AMT),4)*100) = #{search}/* 成交进度(%)*/
                         OR to_char(ETR_ENTRUST.ENTRUST_AMT,'FM9999999999999990.90') = #{search} /*指令额度(元)*/
                         OR ETR_ENTRUST.PORTFOLIO_ID LIKE '%' || #{search} || '%' /*组合代码*/
                         OR PTL_PORTFOLIO.PORTFOLIO_NAME LIKE '%' || #{search} || '%' /*组合名称*/
