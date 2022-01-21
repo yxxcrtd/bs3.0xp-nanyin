@@ -889,7 +889,7 @@
         IQER.CPRICE_AMT,
         IQER.INT_AMT,
         IQER.PRICE_MODEL,
-        IQER.SHARE_AMT,
+        IQER.SHARE_AMT*100 SHARE_AMT,
         IQER.M_TRADE_AMT mtradeAmt,
         IQER.SHARE_CT_AMT
         FROM
@@ -935,7 +935,7 @@
         IQER.CPRICE_AMT,
         IQER.INT_AMT,
         IQER.PRICE_MODEL,
-        IQER.SHARE_AMT,
+        IQER.SHARE_AMT* 100 SHARE_AMT,
         IQER.M_TRADE_AMT mtradeAmt,
         IQER.SHARE_CT_AMT
         FROM
