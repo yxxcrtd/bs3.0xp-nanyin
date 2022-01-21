@@ -866,7 +866,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 */
 	public Page<SelectOptionDto> getFinprodMarketInfo(Map<String,Object> map) {
 		return restTemplate.postForPage(
-				ServiceApplication.BASICDATA_SERVICE_NAME + "/MstSecuritiesAccountInfo/getFinprodMarketInfo", map,
+				ServiceApplication.BASICDATA_SERVICE_NAME + "/MstSecuritiesAccountInfo/getFinprodMarketInfoNewUi", map,
 				SelectOptionDto.class);
 	}
 

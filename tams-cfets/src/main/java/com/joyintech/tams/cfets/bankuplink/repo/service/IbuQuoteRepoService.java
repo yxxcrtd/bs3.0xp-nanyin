@@ -1089,8 +1089,9 @@ public class IbuQuoteRepoService extends BaseService {
             // 获取组合对应的 指令的剩余指令额度 汇总值
             BigDecimal avaAmtSum = avaAmtMap.get(map.getKey());
             // 没有汇总值,则该组合没有对应的质押券
-            if (!StringUtil.isNotEmpty(convertAmtSum) || !StringUtil.isNotEmpty(avaAmtSum)) {
-                continue;
+            if (StringUtil.isNotEmpty(convertAmtSum) && StringUtil.isNotEmpty(avaAmtSum)) {
+                // 按剩余指令额度比例拆分质押券折算总额
+                handleTailDifference(ptlList, convertAmtSum, 5);
             }
             // 遍历组合分配信息列表
 //            for (RepoPtlAllocationDto ptlAllocationDto : ptlList) {
@@ -1099,8 +1100,6 @@ public class IbuQuoteRepoService extends BaseService {
 //                ptlAllocationDto.setTradeAmt(ArithmeticUtil.divide(
 //                        ArithmeticUtil.multiply(ptlAllocationDto.getAvaNum(), convertAmtSum), avaAmtSum, 4, RoundingMode.HALF_UP));
 //            }
-            // 按剩余指令额度比例拆分质押券折算总额
-            handleTailDifference(ptlList, convertAmtSum, 5);
             for (RepoPtlAllocationDto item : ptlList) {
                 item.setTradeAmt(item.getConvertAmt());
                 if (item.getTradeAmt() != null && item.getAvaNum() != null
@@ -2488,6 +2487,7 @@ public class IbuQuoteRepoService extends BaseService {
 
     /**
      * 获取机构信息
+     *
      * @return
      */
     public List<Map<String, String>> selectAllCustomer() {
