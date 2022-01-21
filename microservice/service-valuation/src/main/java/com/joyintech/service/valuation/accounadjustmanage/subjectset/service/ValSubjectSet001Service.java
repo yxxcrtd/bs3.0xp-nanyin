@@ -42,8 +42,6 @@ public class ValSubjectSet001Service extends CommonExportService<ValBokSubjectDt
      */
     @Autowired
     private ValSubjectSet001Mapper valSubjectSet001Mapper;
-    @Autowired
-    private BokSubjectMapper valBokSubjectMapper;
 
 //    /**
 //     * 查询所有账套
@@ -229,7 +227,7 @@ public class ValSubjectSet001Service extends CommonExportService<ValBokSubjectDt
         }
 
         if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
-            valBokSubjectMapper.updateByPrimaryKey(dto);
+            valSubjectSet001Mapper.updateByPrimaryKey(dto);
             /**删除科目辅助核算信息**/
             ValSubjectHandDto subjectHands = new ValSubjectHandDto();
             subjectHands.setBooksetId(dto.getBooksetId());
@@ -242,7 +240,7 @@ public class ValSubjectSet001Service extends CommonExportService<ValBokSubjectDt
 
 
         } else {
-            valBokSubjectMapper.insert(dto);
+            valSubjectSet001Mapper.insert(dto);
             /**删除科目辅助核算信息**/
             ValSubjectHandDto subjectHands = new ValSubjectHandDto();
             subjectHands.setBooksetId(dto.getBooksetId());

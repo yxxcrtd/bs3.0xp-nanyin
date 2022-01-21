@@ -14,6 +14,8 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.valuation.accounadjustmanage.subjectset.dto.ValBokSubjectDto;
 import com.joyintech.service.valuation.accounadjustmanage.subjectset.dto.ValSubjectHandDto;
+import com.joyintech.tams.common.base.entity.BokSubject;
+import com.joyintech.tams.common.base.entity.BokSubjectKey;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -156,4 +158,8 @@ public interface ValSubjectSet001Mapper {
      * @date 2022-1-19 17:32
      */
     int insertSubjectHands(ValSubjectHandDto dto);
+
+    int insert(ValBokSubjectDto record);
+
+    int updateByPrimaryKey(ValBokSubjectDto record);
 }
