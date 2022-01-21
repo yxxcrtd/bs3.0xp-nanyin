@@ -51,10 +51,12 @@ import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
+import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.FinProductOthCodeDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationResponse;
 import com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry;
@@ -91,6 +93,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -191,7 +194,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
 	@Autowired
 	private EtrEntrustDetailMapper etrEntrustDetailMapper;
-
 
 	/**
 	 * {@inheritDoc}
@@ -864,7 +866,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 */
 	public Page<SelectOptionDto> getFinprodMarketInfo(Map<String,Object> map) {
 		return restTemplate.postForPage(
-				ServiceApplication.BASICDATA_SERVICE_NAME + "/MstSecuritiesAccountInfo/getFinprodMarketInfo", map,
+				ServiceApplication.BASICDATA_SERVICE_NAME + "/MstSecuritiesAccountInfo/getFinprodMarketInfoNewUi", map,
 				SelectOptionDto.class);
 	}
 
@@ -4994,12 +4996,13 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	/**
 	 * 1.6计算偏离度
 	 *
-	 * @param param 画面参数
+	 * @param request 画面参数
 	 * @return 偏离度
 	 * @see
 	 * @since 1.0
 	 */
-	public String calcDeviationDegree(Map<String, Object> param) {
+	public String calcDeviationDegree(CalcDeviationDegreeRequest request) {
+		Map<String,Object> param = BeanUtil.object2Map(request);
 		// 平台日
 		param.put("sysDate", DateUtil.format(iPlatformDate.getSysDate()));
 		// 参数.资产代码(市场代码)
@@ -5064,6 +5067,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 */
 	public List<SelectOptionDto> getPsSelectOptions(PsOptionsRequest dto,SelectDto selectDto) {
 		List<SelectOptionDto> selectOptionDtos=new ArrayList<>();
+		Map<String,Object> params= JsonUtils.object2Map(dto);
 		String tradePlat=dto.getTradePlat();
 		String finprodType2=dto.getFinprodType2();
 		String othCodeType=dto.getOthCodeType();
@@ -5096,23 +5100,29 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				}).collect(Collectors.toList());
 
 			}else if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
-				selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-					return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
-							|| StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue())
-							|| StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue()) ;
-				}).collect(Collectors.toList());
+				if(StringUtil.equals(othCodeType,DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())) {
+					selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+						return StringUtil.equals(option.getId(), DictCodeListExt2.交易方向_配股.getValue())  ;
+					}).collect(Collectors.toList());
+					return selectOptionDtos;
+				}
+				//新股申购
+				else if(StringUtil.equals(DictCodeList.是否_是.getValue(),isXinGuShenGou(params))) {
+					selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+						return StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue());
+					}).collect(Collectors.toList());
+				}else {
+					selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+						return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
+								|| StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue())
+								|| StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue());
+					}).collect(Collectors.toList());
+				}
+
 			}else if(StringUtil.equals(finprodType2,"ZYSHG")) {
 				selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
 					return StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_正回购.getValue())
 							||StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_逆回购.getValue()) ;
-				}).collect(Collectors.toList());
-			}else if(StringUtil.equals(othCodeType,DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())) {
-				selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-					return StringUtil.equals(option.getId(), DictCodeListExt2.交易方向_配股.getValue())  ;
-				}).collect(Collectors.toList());
-			}else if(StringUtil.equals(othCodeType,DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue())) {
-				selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-					return StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue()) ;
 				}).collect(Collectors.toList());
 			}
 		}else 	if(StringUtil.equals(tradePlat,DictCodeList.交易平台_固定收益平台.getValue())){
@@ -5237,6 +5247,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		d.setMdate(dto.getEntrustDate());
 		d.setFromEtrExchange("Y");
 		d.setCcy(dto.getCcy());
+		d.setRepPs(dto.getRepPs());
+		d.setAssetType2(dto.getAssetType2());
 		d.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
 		Map<String, Object> dataMap=BeanUtil.object2Map(d);
 		return dataMap;
@@ -5289,16 +5301,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		BeanUtil.copyPropertiesIgnoreNull(etrExchangeTrade001Dto,dto);
 		etrExchangeTrade001Dto.setPortfolioId(multiPtl001Dto.getPortfolioId());
 		etrExchangeTrade001Dto.setAcctNo(multiPtl001Dto.getAcctNo());
-		if (StringUtil.isNotEmpty(multiPtl001Dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("portfolioId", multiPtl001Dto.getPortfolioId());
-			map.put("finprodId", dto.getFinprodId());
-			map.put("tradePlat",dto.getTradeMarket());
-			String secAcctId = etrExchangeTradeCommonMapper.qryPortfolioSecAcctId(map);
-			if (StringUtil.isNotEmpty(secAcctId)) {
-				etrExchangeTrade001Dto.setSecAcctId(secAcctId); // 证券账户
-			}
-		}
+		etrExchangeTrade001Dto.setSecAcctId(multiPtl001Dto.getSecAcctId());
 		etrExchangeTrade001Dto.setEntrustAmt(multiPtl001Dto.getEntrustAmt());
 		etrExchangeTrade001Dto.setEntrustNum(multiPtl001Dto.getEntrustNum());
 		etrExchangeTrade001Dto.setAccAvailableCash(multiPtl001Dto.getAccAvailableCash());
@@ -5329,7 +5332,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			etrEntrustDetail.setEntrustId(etrEntrust.getEntrustId());
 			etrEntrustDetail.setEntrustAmt(item.getEntrustAmt());
 			etrEntrustDetail.setEntrustNum(item.getEntrustNum());
-//			etrEntrustDetail.setDisRate(ArithmeticUtil.divide(item.getProportion(),new BigDecimal(100),4));
+			etrEntrustDetail.setDisRate(item.getDisRate());
 			etrEntrustDetail.setTargetType(dto.getTargetType());
 			etrEntrustDetailList.add(etrEntrustDetail);
 		}
@@ -5754,7 +5757,57 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
 	}
 
+	/**
+	 * 根据金融产品代码查询dto
+	 * <功能详细描述>
+	 * @param finprodId
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	public FinStockInfoDto selectByFinprodId(String finprodId) {
+		Map<String,Object> param = new HashMap<String,Object>();
+		if(iPlatformDate != null){
+			param.put("sysDate", iPlatformDate.getSysDateStr());
+		}
+		param.put("finprodId", finprodId);
+		//  param.put("CASH_TYPE_2", DictCodeListExt1.现金流二级类型_利息.getValue());
+		//  param.put("FIN_CASH_BUSINESS_TYPE", DictCodeListExt1.金融产品类型_理财产品.getValue());
+		param.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+		return etrExchangeTradeCommonMapper.selectByFinprodId(param);
+	}
 
+	// add by etliu 20211013 start
+	// TISHKS-5 bug修复：在场内下指令时，资产选了万科之后，出现申购选项，但理论上不应该出现(万科很早就上市了)，我在申报信息维护中也没有看到万科的新股申报
+	/**
+	 * 当前选中股票是否处在新股申购期
+	 *
+	 * @param params 画面参数
+	 * @return 当前选中股票是否存在新股申购期
+	 * @see
+	 * @since 1.0
+	 */
+	public String isXinGuShenGou(Map<String, Object> params) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("finprodId", params.get("finprodId"));//金融产品代码
+		List<String> othTypeList = new ArrayList<String>();
+		othTypeList.add(DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
+		paramMap.put("othTypeList", othTypeList);
 
+		List<FinProductOthCodeDto> codeDtos = this.getFinprodOthCodeInfo(paramMap);
+
+		if (StringUtil.isEmptyList(codeDtos)) {
+			return DictCodeList.是否_否.getValue();
+		}
+
+		Date sysdate = DateUtil.parse(DateUtil.getSysDate());
+		boolean isXinGuShenGou = codeDtos.stream().filter(x -> DateUtil.compareDate(x.getDeclaredStartDate(), sysdate) <= 0
+				&& DateUtil.compareDate(x.getDeclaredEndDate(), sysdate) >= 0).findFirst().isPresent();
+		if (isXinGuShenGou) {
+			return DictCodeList.是否_是.getValue();
+		}
+
+		return DictCodeList.是否_否.getValue();
+	}
 
 }

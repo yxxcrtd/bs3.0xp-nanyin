@@ -1030,9 +1030,10 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
      */
     @Override
 	public void doComplete(CfetsBondDealDialogueQuoteDto entity, OperationType type) {
-        // add by etliu 20210309 银行间上下行多组合 start
+        if(cfetsQuotedCommonServicevue.checkQuoteStatusChange(entity.getQuoteId(),entity.getTradeStatus())){
+            throw new BusinessException("MSG:报价状态已变更,无法审批!");
+        }
         this.calcListFpriceAmt(entity);
-        // add by etliu 20210309 银行间上下行多组合 end
         this.handOurAndLendinShareAmt(entity);
         BondQuoteInfoDto bondQuoteInfoDto = new BondQuoteInfoDto();
         BeanUtil.copyPropertiesIgnoreNull(bondQuoteInfoDto,entity);
@@ -1166,8 +1167,13 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
         this.handOurAndLendinShareAmt(entity);
         insertWflBondDialogueQuote(entity);
         String systemAct = handSystemAct(entity);
-        sendPosition(entity,DictCodeListExt3.流程节点_流程提交.getValue(),systemAct, systemAct);
-        //doInsetOrUpdateForPtlPositionHold(entity);
+        try {
+            sendPosition(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct);
+            //doInsetOrUpdateForPtlPositionHold(entity);
+        }catch(PositionException e){
+            e.printStackTrace(); Message message = PositionUtil.ajaxErrorReturn(e);
+            throw new BusinessException("MSG:"+message.getMessage());
+        }
     }
     
 	@Override
@@ -1774,55 +1780,8 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
      * @param flowStatus
      * @return
      */
-    public Map<String,Object> preparePosition(CfetsBondDealDialogueQuoteDto dto,String flowStatus,String decisionAct,String systemAct){
-        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto entity = JsonUtils.json2Object(JsonUtils.object2Json(dto),com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto.class);
-        final Date settleDate =iPlatformDate.getSysDate();
-        Map<String,Object> result = new HashMap<>();
-        String ps = entity.getPs();
-        result.put("interfaceType","Bond001");
-        result.put("userId", SecurityUtil.getLoginUser().getUserName());
-        result.put("totalTradeId",entity.getQuoteId());
-        result.put("flowStatus",flowStatus);
-        result.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
-        result.put("balanceCheck","Y");
-        if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){
-            result.put("busiType",DictCodeListExt3.头寸业务类型_债券行权交易.getValue());
-        }else{
-            result.put("busiType", DictCodeListExt3.头寸业务类型_现券交易.getValue());
-        }
-        result.put("busiAct","11");
-        result.put("ps",ps);
-        result.put("settleSpeed",entity.getSettleSpreed());
-        result.put("tradePlace",BussinessDictCodeList.交易场所_银行间.getValue());
-        result.put("systemAct",systemAct);
-        result.put("decisionAct",decisionAct);
-        result.put("cdate",DateUtil.format(settleDate));
-        result.put("ccy",entity.getCcy());
-        result.put("finprodId",entity.getFinprodId());
-        result.put("bTotalTradeId",entity.getQuoteId());
-        if(CollectionUtils.isNotEmpty(entity.getCfetsBondDealDialogueQuoteDtoList())){
-            List<Map<String,Object>> ptlList = new ArrayList<>();
-            for (com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto : entity.getCfetsBondDealDialogueQuoteDtoList()) {
-                Map<String,Object> pltMap = new HashMap<>();
-                String portfolioId = cfetsBondDealDialogueQuoteDto.getPortfolioId();
-                pltMap.put("portfolioId", portfolioId);
-                pltMap.put("tradeId",entity.getQuoteId());
-                pltMap.put("etrId",cfetsBondDealDialogueQuoteDto.getEntrustId());
-                pltMap.put("cashAcctId",cfetsIbuQuoteBondMapper.getACCTNO(portfolioId,BussinessDictCodeList.资金账户类型_托管账户.getValue()));
-                pltMap.put("secAcctId",cfetsIbuQuoteBondMapper.getSecAcctId(portfolioId,entity.getFinprodId(),entity.getTradeMarket()));
-                pltMap.put("secAmount",ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(),new BigDecimal(10000))); //券面总额
-                pltMap.put("cashAmount",cfetsBondDealDialogueQuoteDto.getFpriceAmt().setScale(4,RoundingMode.DOWN));
-                if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_卖出.getValue())||StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){
-                    pltMap.put("integrateSecAmount",cfetsBondDealDialogueQuoteDto.getLendinShareAmt());
-                    pltMap.put("ownSecAmount",cfetsBondDealDialogueQuoteDto.getOurShareAmt());
-                }
-                pltMap.put("etrSecAmount",ArithmeticUtil.multiply(etrEntrustMapper.selectByPrimaryKey(cfetsBondDealDialogueQuoteDto.getEntrustId()).getEntrustNum(),new BigDecimal(100)));
-                ptlList.add(pltMap);
-            }
-            result.put("ptlList",ptlList);
-        }
-        return result;
+    public Map<String,Object> preparePosition(CfetsBondDealDialogueQuoteDto dto,String flowStatus,String decisionAct,String systemAct) {
+        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto entity = JsonUtils.json2Object(JsonUtils.object2Json(dto), com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto.class);
+        return cfetsQuotedCommonServiceMicro.prepareDialoguePosition(entity,flowStatus,decisionAct,systemAct);
     }
-
-
 }

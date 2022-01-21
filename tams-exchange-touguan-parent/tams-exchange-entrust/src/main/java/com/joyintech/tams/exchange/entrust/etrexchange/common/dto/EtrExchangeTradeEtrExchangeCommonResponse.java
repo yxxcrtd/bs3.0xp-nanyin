@@ -54,6 +54,11 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
      */
     @ApiModelProperty(name="dealPercent",value="成交进度",example="A1")
     private BigDecimal dealPercent;
+    /**
+     * 组合名称
+     */
+    @ApiModelProperty(name="portfolioId",value="组合代码",example="A1")
+    private String portfolioId;
 
     /**
      * 组合名称
@@ -654,6 +659,14 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
 
     public String getEntrustType() {
         return entrustType;
+    }
+
+    public String getPortfolioId() {
+        return portfolioId;
+    }
+
+    public void setPortfolioId(String portfolioId) {
+        this.portfolioId = portfolioId;
     }
 
     public void setEntrustType(String entrustType) {

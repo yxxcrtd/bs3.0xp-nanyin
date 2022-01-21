@@ -269,6 +269,7 @@ public class InvestmentManagement extends BaseService {
             }
             bean.setEtr_entrust_list(instructionUserList);
             bean.setEtr_pledge_list(pledgeList);
+            bean.setEtr_entrust_detail_list(detailList);
         } else {
             if (isSingle) {
                 bean = simpleRestTemplate.postForObject(ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.queryInstructions, pageParam, InstructionPage.class);
@@ -277,6 +278,7 @@ public class InvestmentManagement extends BaseService {
             }
             bean.setEtr_entrust_list(ListConvertUtils.convertList(bean.getEtr_entrust_list(), Instruction.class));
             bean.setEtr_pledge_list(ListConvertUtils.convertList(bean.getEtr_pledge_list(), InstructionPledge.class));
+            bean.setEtr_entrust_detail_list(ListConvertUtils.convertList(bean.getEtr_entrust_detail_list(), InstructionDetail.class));
         }
         return bean;
     }
@@ -833,12 +835,15 @@ public class InvestmentManagement extends BaseService {
             List<Instruction> instructionEtrEntrustList = instructionPage.getEtr_entrust_list();
             List<InstructionPledge> pledgeList = instructionPage.getEtr_pledge_list();
             List<InstructionDetail> detailList = instructionPage.getEtr_entrust_detail_list();
-            Set<String> instructionIdSet = new HashSet<>();
+            Set<String> instructionPledgeIdSet = new HashSet<>();
+            Set<String> instructionDetailIdSet = new HashSet<>();
             if (Objects.nonNull(pledgeList))
-                pledgeList.forEach(instructionPledge -> instructionIdSet.add(instructionPledge.getEntrustId()));
-            messageConsumerService.processInstructions(instructionEtrEntrustList, instructionIdSet);
-            messageConsumerService.processInstructionPledges(pledgeList, instructionIdSet);
-            messageConsumerService.processInstructionDetail(detailList, instructionIdSet);
+                pledgeList.forEach(instructionPledge -> instructionPledgeIdSet.add(instructionPledge.getEntrustId()));
+            if (Objects.nonNull(detailList))
+            	detailList.forEach(instructionDetail -> instructionDetailIdSet.add(instructionDetail.getEntrustId()));
+            messageConsumerService.processInstructions(instructionEtrEntrustList, instructionPledgeIdSet,instructionDetailIdSet);
+            messageConsumerService.processInstructionPledges(pledgeList, instructionPledgeIdSet);
+            messageConsumerService.processInstructionDetail(detailList, instructionDetailIdSet);
             logger.info("appointInstruction {}", JsonUtils.getJsonFromObject(instructionPage));
             return new ResultBean(ErrorCode.SUCCESS);
         } catch (Exception e) {

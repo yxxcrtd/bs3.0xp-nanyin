@@ -3,13 +3,14 @@
 <mapper namespace="com.joyintech.tams.invest.batch.cfetsentrust.dao.CfetsEntrustStatusMapper">
 
 	<select id="selectEntrustIds" resultType="com.joyintech.tams.invest.batch.cfetsentrust.dto.CfetsEntrustClosePosEtrReqDto">
-		SELECT ENTRUST_ID  as closeId,ps as ps
+		SELECT ENTRUST_ID  as closeId,ps as ps,finprod_type2 as finprodType2
 		FROM ETR_ENTRUST
 		WHERE
 		ENTRUST_ID IN ( SELECT ENTRUST_ID FROM ETR_ENTRUST WHERE ENTRUST_STATUS IN ( #{ENTRUST_STATUS_01}, #{ENTRUST_STATUS_02}, #{ENTRUST_STATUS_03}, #{ENTRUST_STATUS_05},#{ENTRUST_STATUS_08},#{ENTRUST_STATUS_07} )
 		<if test="sysDate != null and sysDate != ''">
 			<![CDATA[AND MDATE <= TO_DATE(#{sysDate},'YYYY-MM-DD')]]>
 		</if>
+		and finprod_type2 in ('F01','F02','F03')
 		)
 	</select>
 
@@ -21,6 +22,7 @@
 		<if test="sysDate != null and sysDate != ''">
 			<![CDATA[AND MDATE <= TO_DATE(#{sysDate},'YYYY-MM-DD')]]>
 		</if>
+		and finprod_type2 in ('F01','F02','F03')
 		)
 	</update>
 	<update id="updateDistributeStatus">
@@ -31,16 +33,16 @@
 		<if test="sysDate != null and sysDate != ''">
 			<![CDATA[AND MDATE <= TO_DATE(#{sysDate},'YYYY-MM-DD')]]>
 		</if>
+		and finprod_type2 in ('F01','F02','F03')
 		)
 	</update>
 
 
 	<update id="updateBusModel">
-		UPDATE ETR_ENTRUST SET BUSINESS_MODEL = 'AC' WHERE ENTRUST_ID IN
+		UPDATE ETR_ENTRUST SET BUSINESS_MODEL = 'FVTPL' WHERE ENTRUST_ID IN
 		(
 			SELECT
-			T1.ENTRUST_ID ,
-			T1.INV_AIM businessModel
+			T1.ENTRUST_ID
 			FROM
 			REG_FIN_PRODUCT_DEAL T1
 			WHERE
@@ -55,11 +57,10 @@
 			AND (T2.IS_CANCEL = 'N'
 			OR T2.IS_CANCEL IS NULL)
 			AND T2.TRADE_DATE = TO_DATE(#{sysDate},'YYYY-MM-DD'))
-			AND T1.INV_AIM IS NOT NULL
+			AND T1.INV_AIM = 'FVTPL'
 			UNION ALL
 			SELECT
-			T1.ENTRUST_ID ,
-			T1.INV_AIM businessModel
+			T1.ENTRUST_ID
 			FROM
 			IBU_QUOTE_ETR_RE T1
 			WHERE
@@ -77,7 +78,7 @@
 				</foreach>
 			</if>
 			)
-			AND T1.INV_AIM IS NOT NULL
+			AND T1.INV_AIM  = 'FVTPL'
 		)
 	</update>
 </mapper>

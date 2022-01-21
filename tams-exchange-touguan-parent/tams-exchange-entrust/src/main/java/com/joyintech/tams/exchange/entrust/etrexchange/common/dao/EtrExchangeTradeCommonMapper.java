@@ -10,24 +10,24 @@
  
 package com.joyintech.tams.exchange.entrust.etrexchange.common.dao;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeEtrExchangeCommonResponse;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioResponse;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonResponse;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
-import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.FinProductOthCodeDto;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.SubEqutityDto;
-import org.apache.ibatis.annotations.Param;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeEtrExchangeCommonResponse;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonResponse;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.FinProductOthCodeDto;
+import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.SubEqutityDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  *  场内交易指令Mapper
@@ -298,4 +298,6 @@ public interface EtrExchangeTradeCommonMapper {
 
 
     List<EtrExchangeTradeSaveRequest>	selectEntrustDetail(EtrExchangeTradeSaveRequest dto);
+
+	FinStockInfoDto selectByFinprodId(Map<String, Object> map);
 }

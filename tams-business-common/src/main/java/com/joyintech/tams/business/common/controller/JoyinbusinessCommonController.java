@@ -5,9 +5,9 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
-import com.joyintech.tams.business.common.dto.EntrustIdRequestDto;
 import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
 import com.joyintech.tams.business.common.entity.JoyinDataDictEntity;
 import com.joyintech.tams.business.common.pojo.Message;
@@ -27,9 +27,9 @@ import java.util.Map;
 @RequestMapping("/common/joyinbusinessCommon")
 @Api(tags = "公共方法")
 public class JoyinbusinessCommonController extends BaseController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(JoyinbusinessCommonController.class);
-	
+
 
 	@Autowired
 	private HttpServletRequest request;
@@ -165,5 +165,74 @@ public class JoyinbusinessCommonController extends BaseController {
 		}
 	}
 
+	/**
+	 * 审批页面 根据id查询本方或对手方
+	 *
+	 * @param params
+	 * @return java.util.List<com.joyintech.framework.select.SelectOptionDto>
+	 * @author jiangpeng
+	 * @date 2022/1/14 14:25
+	 */
+	@RequestMapping("queryMySideOrCount")
+	@ResponseBody
+	public List<SelectOptionDto> queryMySideOrCount(@RequestParam Map<String, Object> params) {
+		CfetsSearchInfoRequest item = new CfetsSearchInfoRequest();
+		item.setDealType((String) params.get("dealType"));
+		item.setSearch((String) params.get("initValue"));
+		try {
+			return joyinbusinessCommonService.queryMySideOrCount(item);
+		} catch (Exception e) {
+			logger.error("查询功能异常", e);
+			return null;
+		}
+	}
+
+	/**
+	 * 审批页面 根据id查询本方交易员或对手方交易员
+	 *
+	 * @param params
+	 * @return java.util.List<com.joyintech.framework.select.SelectOptionDto>
+	 * @author jiangpeng
+	 * @date 2022/1/14 14:25
+	 */
+	@RequestMapping("queryMySideTraderOrCountTrader")
+	@ResponseBody
+	public List<SelectOptionDto> queryMySideTraderOrCountTrader(@RequestParam Map<String, Object> params) {
+		CfetsSearchInfoRequest item = new CfetsSearchInfoRequest();
+		String dealType = (String) params.get("dealType");//查询类型
+		String counterId = (String) params.get("counterId");//交易对手方
+		String mySide = (String) params.get("mySide");//本方
+		String initValue = (String) params.get("initValue");//关键字
+		if (StringUtil.isNotEmpty(dealType)) {
+			item.setDealType(dealType);
+		}
+		if (StringUtil.isNotEmpty(counterId)) {
+			item.setPartyId(counterId);
+        } else if (StringUtil.isNotEmpty(mySide)) {
+            item.setPartyId(mySide);
+        }
+		if (StringUtil.isNotEmpty(initValue)) {
+			item.setSearch(initValue);
+		}
+		try {
+			return joyinbusinessCommonService.queryMySideTraderOrCountTrader(item);
+		} catch (Exception e) {
+			logger.error("查询功能异常", e);
+			return null;
+		}
+	}
+
+	@PostMapping("/gettotleTradeId")
+	@ApiOperation(value = "交易登记业务编号列表查询", notes = "交易登记业务编号列表查询")
+	@ResponseBody
+	public Message<Page<SelectOptionDto>> gettotleTradeId(@RequestBody CfetsSearchInfoRequest entrustIdRequestDto) {
+		try {
+			Page<SelectOptionDto> tempList = joyinbusinessCommonService.gettotleTradeId(entrustIdRequestDto);
+			return new Message<Page<SelectOptionDto>>().success().setData(tempList);
+		} catch (Exception e) {
+			logger.error("查询功能异常", e);
+			return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
+		}
+	}
 
 }

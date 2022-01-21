@@ -230,6 +230,9 @@
                 #{item}
             </foreach>
         </if>
+        <if test="entrustId != null and entrustId!='' "><!-- 指令编号 -->
+            AND T1.ENTRUST_ID like '%' || #{entrustId} || '%'
+        </if>
         <if test="invManagerIdList != null and invManagerIdList.size() > 0"><!-- 投资经理 -->
             AND T1.INV_MANAGER_ID in
             <foreach collection="invManagerIdList" item="item" open="(" close=")" separator=",">
@@ -875,7 +878,7 @@
             decode(eea.SETTLE_SPREED,0,'01',1,'02') SETTLE_SPREED,
             ep.FINPROD_ID ,
             ep.PLEDGE_RATIO ,
-            ep.PLEDGE_AMT ,
+            ep.PLEDGE_NUMBER*100 PLEDGE_AMT ,
             espr.pledStrdPrinAmt,
             fp.FINPROD_ABBR,
             MST_BOND_VALUATION_INFO.NETPRICE firstNetPrice,
@@ -962,7 +965,7 @@
             decode(eea.SETTLE_SPREED,0,'01',1,'02') SETTLE_SPREED,
             ep.FINPROD_ID ,
             ep.PLEDGE_RATIO ,
-            ep.PLEDGE_AMT ,
+            ep.PLEDGE_NUMBER*100 PLEDGE_AMT ,
             espr.pledStrdPrinAmt,
             fp.FINPROD_ABBR,
             MST_BOND_VALUATION_INFO.NETPRICE firstNetPrice,

@@ -11,12 +11,15 @@
 package com.joyintech.tams.invest.bankuplink.repo.dto;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -220,6 +223,12 @@ public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust implements Proces
     private BigDecimal pledgePrinTotal;
 
     /**
+     * 卷面总额合计(万)
+     */
+    /*@NotEmpty(fieldName = "CfetsRepoDealQuotedPrice002.total")*/
+    private String shareAmtStr;
+
+    /**
      * 质押券折算总金额
      */
     /*@NotEmpty(fieldName = "CfetsRepoDealQuotedPrice002.shareCtAmt")*/
@@ -340,6 +349,10 @@ public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust implements Proces
      * 操作类型
      */
     private String operatorType;
+    /**
+     * 操作类型
+     */
+    private String operateType;
     
     /**
      * 
@@ -1580,5 +1593,24 @@ public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust implements Proces
 
     public void setSystemAct(String systemAct) {
         this.systemAct = systemAct;
+    }
+
+    public String getShareAmtStr() {
+        if (StringUtil.isNotEmpty(this.getPledgePrinTotal())) {
+            return ArithmeticUtil.divide(this.getPledgePrinTotal(), new BigDecimal(100), 2, RoundingMode.HALF_UP).toPlainString();
+        }
+        return shareAmtStr;
+    }
+
+    public void setShareAmtStr(String shareAmtStr) {
+        this.shareAmtStr = shareAmtStr;
+    }
+
+    public String getOperateType() {
+        return operateType;
+    }
+
+    public void setOperateType(String operateType) {
+        this.operateType = operateType;
     }
 }

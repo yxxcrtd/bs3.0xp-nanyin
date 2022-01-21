@@ -208,4 +208,11 @@ public interface MstSecuritiesAccountMapper {
     String IsBondAsset(Map<String, Object> map);
 
     String QueryForTestStatus(Map<String, Object> map);
+
+    /**
+     * 证券代码查询
+     * @param map
+     * @return
+     */
+    List<SelectOptionDto> getFinprodMarketInfoNewUi(Map<String,Object> map);
 }

@@ -408,6 +408,8 @@ public class EntrCommandDispatcherDto extends BaseEntity{
      */
     private String entrustClass;
 
+
+
     public String getPledgeeType() {
         return pledgeeType;
     }
@@ -1179,4 +1181,14 @@ public class EntrCommandDispatcherDto extends BaseEntity{
 	public void setDerivativeOcFlag(String derivativeOcFlag) {
 		this.derivativeOcFlag = derivativeOcFlag;
 	}
+
+	private String busiTypeTg;
+
+    public String getBusiTypeTg() {
+        return busiTypeTg;
+    }
+
+    public void setBusiTypeTg(String busiTypeTg) {
+        this.busiTypeTg = busiTypeTg;
+    }
 }

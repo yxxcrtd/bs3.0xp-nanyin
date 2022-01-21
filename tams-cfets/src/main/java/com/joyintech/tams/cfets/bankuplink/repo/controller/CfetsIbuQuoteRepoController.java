@@ -1,23 +1,32 @@
 package com.joyintech.tams.cfets.bankuplink.repo.controller;
 
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
-import com.joyintech.background.component.uplink.interbank.common.IbuDictCode;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
-import com.joyintech.tams.business.common.dto.CommonSearchInfoRequest;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.*;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDayPriceDto;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDayRegDto;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealQuoteCommonDto;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealQuoteRequest;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoAutoAllocationRequest;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoCalRequest;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustDto;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustPledgeDto;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustRequest;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoPledgeRequest;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoPtlAllocationAddRequest;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoRiskCalRequest;
 import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoDealQuotedPrice002Service;
 import com.joyintech.tams.cfets.bankuplink.repo.service.IbuQuoteRepoService;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
@@ -26,11 +35,11 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
-import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonService;
 import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.systemtools.dao.TamsBaseMapper;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,11 +49,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -76,6 +94,9 @@ public class CfetsIbuQuoteRepoController extends BaseController {
 
     @Autowired
     private CfetsRepoDealQuotedPrice002Service cfetsRepoDealQuotedPrice002Service;
+
+    @Autowired
+    private TamsBaseMapper tamsBaseMapper;
 
     /**
      * 风险接口组件Controller
@@ -159,6 +180,8 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         initPageParams.put("PAGE_ID_DIALOG", "CfetsQuoteRepo003");
         // 01: 开启银行间报价 02:关闭银行间报价（事后录入）
         initPageParams.put("ibuFlag_quote_switch", CacheUtil.getSysParam(BussinessConstant.ibuFlag_quote_switch));
+        //系统是否支持报价业务 Y:支持,N:不支持
+        initPageParams.put("is_sys_support_quote", CacheUtil.getSysParam("is_sys_support_quote"));
         return new Message<>(initPageParams).success();
     }
 
@@ -413,7 +436,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             param.put("quoteIds", quoteIds);
         }
         //目前只导出对话登记
-        param.put("quoteTypes", Arrays.asList("01"));
+        //param.put("quoteTypes", Arrays.asList("01"));
         List<CfetsRepoDayRegDto> dataList = ibuQuoteRepoService.listDayReg(param);
         return new Message<Map<String, Object>>().success().setData(ibuQuoteRepoService.exportDayRegCheck(dataList));
     }
@@ -421,7 +444,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
     @ApiOperation(value = "当日登记本币交易导出", notes = "当日登记本币交易导出")
     @PostMapping("/exportDayReg")
     @ResponseBody
-    public void exportDayReg(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response) {
+    public Message<Map<String, Object>> exportDayReg(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response) {
         Map<String, Object> param = new HashMap<>();
         List<String> quoteIds = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(requestDto.getData())) {
@@ -438,7 +461,52 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         param.put("quoteTypes", Arrays.asList("01"));
         List<CfetsRepoDayRegDto> dataList = ibuQuoteRepoService.listDayRegExport(param);
         String ibuExportCountMax = CacheUtil.getSysParam("IBU_EXPORT_COUNT_MAX");
+        String issueTypeStr = "质押式回购";
+        String prefix = StringUtil.join("本币交易导出_", iPlatformDate.getSysDateStr());
         requestDto.setData(null);
+        //获取机构信息
+        List<Map<String, String>> customerList = ibuQuoteRepoService.selectAllCustomer();
+        //获取递增序号
+        Map<String, String> sequenceIndex = new HashMap<>();
+        sequenceIndex.put("databaseType", "Oracle");
+        sequenceIndex.put("sequenceName", "DAYREGEXPORT_REPO_SEQUENCE");
+        Long sequenceIndexData = tamsBaseMapper.getSequenceIndexData(sequenceIndex);
+        if (null == sequenceIndexData) {
+            sequenceIndexData = 1L;
+        }
+        //导出数据处理
+        if (CollectionUtils.isNotEmpty(dataList)) {
+            dataList.forEach(item -> {
+                //债券代码不需要后缀
+                item.setFinprodMarketId(item.getFinprodMarketId().substring(0, item.getFinprodMarketId().indexOf(".")));
+                //清算速度不需要显示T，只需要显示+0或+1
+                if (StringUtil.isNotEmpty(item.getSettleSpeedStr())) {
+                    item.setSettleSpeedStr(item.getSettleSpeedStr().substring(item.getSettleSpeedStr().indexOf("+"), item.getSettleSpeedStr().length()));
+                }
+                //回购方式
+                if (item.getRepoType() != null) {
+                    item.setRepoTypeStr(DictCodeListExt3.from(DictCode.回购方式, item.getRepoType()).getCodeName());
+                }
+                //折算比例
+                if (item.getPledgeRatio() != null) {
+                    item.setPledgeRatio(ArithmeticUtil.multiply(new BigDecimal(100),item.getPledgeRatio()));
+                }
+                //对手方
+                item.setCpPartyName(null);
+                if (CollectionUtils.isNotEmpty(customerList) && StringUtil.isNotEmpty(item.getPartyId())) {
+                    String value = null;
+                    for (Map<String, String> customer : customerList) {
+                        if (customer.containsKey(item.getPartyId())) {
+                            value = customer.get(item.getPartyId());
+                        }
+                        item.setCpPartyName(value);
+                    }
+                }
+
+                //报价编号
+                item.setQuoteId(null);
+            });
+        }
         if (StringUtil.isNotEmpty(ibuExportCountMax) && CollectionUtils.isNotEmpty(dataList)) {
             int max = Integer.parseInt(ibuExportCountMax);
             int fileCount = (dataList.size() + max - 1) / max;
@@ -447,10 +515,10 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             ).collect(Collectors.toList());
             for (int i = 0; i < collect.size(); i++) {
                 List<CfetsRepoDayRegDto> sfetsRepoDayRegDtos = collect.get(i);
-                String quoteTypeStr = CollectionUtils.isEmpty(sfetsRepoDayRegDtos) ? "" : sfetsRepoDayRegDtos.get(0).getQuoteTypeStr();
-                String appendString = collect.size() > 1 ? String.format("%04d", i) : StringUtil.EMPTY;
-                String excelAndSheetName = quoteTypeStr + "本币交易导出_" + iPlatformDate.getSysDateStr() + appendString;
-                ExcelUitl.doExport(requestDto, response, excelAndSheetName, () -> {
+                String quoteTypeStr = StringUtil.isNotEmpty(sfetsRepoDayRegDtos.get(0).getQuoteTypeStr()) ? "对话报价" : sfetsRepoDayRegDtos.get(0).getQuoteTypeStr();
+                String appendString = collect.size() >= 1 ? String.format("%04d", sequenceIndexData) : StringUtil.EMPTY;
+                String excelAndSheetName = StringUtil.join(issueTypeStr, quoteTypeStr, prefix, appendString);
+                ExcelUitl.doExportDeal(requestDto, response, excelAndSheetName, () -> {
                     List<BaseMap> baseMapList = new ArrayList<>();
                     for (CfetsRepoDayRegDto dto : sfetsRepoDayRegDtos) {
                         baseMapList.add(BaseMap.newMap(BeanUtil.object2Map(dto)));
@@ -459,9 +527,9 @@ public class CfetsIbuQuoteRepoController extends BaseController {
                 });
             }
         } else {
-            String quoteTypeStr = CollectionUtils.isEmpty(dataList) ? "" : dataList.get(0).getQuoteTypeStr();
-            String excelAndSheetName = quoteTypeStr + "本币交易导出_" + iPlatformDate.getSysDateStr();
-            ExcelUitl.doExport(requestDto, response, excelAndSheetName, () -> {
+            String quoteTypeStr = "对话报价";
+            String excelAndSheetName = StringUtil.join(issueTypeStr, quoteTypeStr, prefix, String.format("%04d", sequenceIndexData));
+            ExcelUitl.doExportDeal(requestDto, response, excelAndSheetName, () -> {
                 List<BaseMap> baseMapList = new ArrayList<>();
                 for (CfetsRepoDayRegDto dto : dataList) {
                     baseMapList.add(BaseMap.newMap(BeanUtil.object2Map(dto)));
@@ -473,6 +541,38 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         if (CollectionUtils.isNotEmpty(dataList)) {
             ibuQuoteRepoService.handExportTimes(dataList);
         }
+
+        //导出数据必填项校验
+        Map<String, Object> result = new HashMap<>();
+        String message = checkExcelNotNull(requestDto, dataList);
+        result.put("message", message);
+        return new Message<Map<String, Object>>().success().setData(result);
+    }
+
+    /**
+     * 导出数据必填项校验
+     * @param requestDto
+     * @param dataList
+     * @return
+     */
+    private String checkExcelNotNull(CfetsExportRequestDto requestDto, List<CfetsRepoDayRegDto> dataList) {
+        String message = StringUtil.EMPTY;
+        List<String> headList =  requestDto.getHeader().stream().filter(head -> head.getString("colName").contains("*"))
+                .map(m -> m.getString("colCode")).collect(Collectors.toList());
+        for(CfetsRepoDayRegDto dto:dataList){
+            //交易方向为空的数据不校验
+            if (StringUtil.isEmpty(dto.getPs())) {
+                break;
+            }
+            BaseMap map  = BaseMap.newMap(BeanUtil.object2Map(dto));
+            for (String head:headList) {
+                if(StringUtil.isEmpty((String)map.get(head))){
+                    return  "导出数据必填项存在空值，请手动添加";
+                }
+            }
+        }
+
+        return message;
     }
 
 
@@ -499,12 +599,9 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             AjaxResult result = new AjaxResult();
             List<String> entrustIds = StringUtil.splitToList(",", (String) param.get("entrustIds"));
             entrustIds.forEach(item -> {
-                String flag = ibuQuoteBondService.giveUpEntrust(item);
-                if (StringUtil.equals("1", flag)) {
-                    result.appendMessage(new ValidMessage("已接收且完成度为0指令,才能执行放弃操作！"));
-                    return;
-                } else if (StringUtil.equals("2", flag)) {
-                    result.appendMessage(new ValidMessage("存在流程中的报价，不可放弃！"));
+                String massge = ibuQuoteRepoService.giveUpEntrust(item);
+                if (StringUtil.isNotEmpty(massge)) {
+                    result.appendMessage(new ValidMessage(massge));
                     return;
                 }
             });
@@ -515,6 +612,24 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         }
     }
 
+    @ApiOperation(value = "退回校验", notes = "退回校验(批量,key=entrustIds指令代码)")
+    @PostMapping("entrustRefuceCheck")
+    @ResponseBody
+    public Message<AjaxResult> entrustRefuceCheck(@RequestBody Map<String, Object> param) {
+        try {
+            AjaxResult result = new AjaxResult();
+            if (StringUtil.isNotEmpty(param.get("entrustId"))) {
+                param.put("entrustIdList", StringUtil.splitToList(",", (String) param.get("entrustId")));
+                param.remove("entrustId");
+            }
+            result = ibuQuoteRepoService.entrustRefuceCheck(param, false);
+            return new Message<AjaxResult>().success().setData(result);
+        } catch (Exception e) {
+            logger.error("指令退回异常", e);
+            return new Message<AjaxResult>().fail().setMessage("指令退回异常");
+        }
+    }
+
     @ApiOperation(value = "指令退回(批量)", notes = "指令退回(批量,key=entrustIds指令代码, key=remark退回原因)")
     @PostMapping("entrustRefuce")
     @ResponseBody
@@ -522,9 +637,10 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         try {
             AjaxResult result = new AjaxResult();
             if (StringUtil.isNotEmpty(param.get("entrustId"))) {
-                param.put("entrustIdList", StringUtil.splitToList(",", (String) param.get("entrustIds")));
+                param.put("entrustIdList", StringUtil.splitToList(",", (String) param.get("entrustId")));
+                param.remove("entrustId");
             }
-            result = ibuQuoteRepoService.entrustRefuceCheck(param);
+            result = ibuQuoteRepoService.entrustRefuceCheck(param, true);
             if (CollectionUtils.isNotEmpty(result.getErrorList())) {
                 return new Message<AjaxResult>().success().setData(result);
             }
@@ -657,16 +773,16 @@ public class CfetsIbuQuoteRepoController extends BaseController {
     @ResponseBody
     @PostMapping("/getEntrustDet/{pageCode}/{dtCode}/{spcdCodes}")
     @ApiOperation(value = "只读表单设置及数据查询_指令详情信息", notes = "只读表单设置及数据查询_指令详情信息")
-    public Message<Map<String,Object>> getEntrustDet(@PathVariable("pageCode") String pageCode,
-                                                              @PathVariable("dtCode") String dtCode,
-                                                              @PathVariable("spcdCodes") String spcdCodes,
-                                                              @RequestBody CfetsRepoDealQuoteRequest request) {
-        try{
-            Map<String,Object> resultData = ibuQuoteRepoService.findEntrustDet(pageCode,dtCode,spcdCodes,request);
-            return new Message<Map<String,Object>>().success().setData(resultData);
+    public Message<Map<String, Object>> getEntrustDet(@PathVariable("pageCode") String pageCode,
+                                                      @PathVariable("dtCode") String dtCode,
+                                                      @PathVariable("spcdCodes") String spcdCodes,
+                                                      @RequestBody CfetsRepoDealQuoteRequest request) {
+        try {
+            Map<String, Object> resultData = ibuQuoteRepoService.findEntrustDet(pageCode, dtCode, spcdCodes, request);
+            return new Message<Map<String, Object>>().success().setData(resultData);
         } catch (Exception e) {
             logger.error("查询指令详情信息明细数据异常", e);
-            return new Message<Map<String,Object>>().fail().setMessage("查询指令详情信息明细异常");
+            return new Message<Map<String, Object>>().fail().setMessage("查询指令详情信息明细异常");
         }
     }
 }

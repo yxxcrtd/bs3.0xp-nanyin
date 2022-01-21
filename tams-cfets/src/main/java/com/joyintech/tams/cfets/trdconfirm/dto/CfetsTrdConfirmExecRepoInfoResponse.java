@@ -135,6 +135,9 @@ public class CfetsTrdConfirmExecRepoInfoResponse {
     @ApiModelProperty(name="remark",value="备注",example="字符串1")
     private String remark;
 
+    @ApiModelProperty(name="totleTradeId",value="登记编号/报价内部编号",example="1")
+    private String totleTradeId;
+
     public String getBusiCode() {
         return busiCode;
     }
@@ -423,5 +426,13 @@ public class CfetsTrdConfirmExecRepoInfoResponse {
 
     public void setCounterIdName(String counterIdName) {
         this.counterIdName = counterIdName;
+    }
+
+    public String getTotleTradeId() {
+        return totleTradeId;
+    }
+
+    public void setTotleTradeId(String totleTradeId) {
+        this.totleTradeId = totleTradeId;
     }
 }

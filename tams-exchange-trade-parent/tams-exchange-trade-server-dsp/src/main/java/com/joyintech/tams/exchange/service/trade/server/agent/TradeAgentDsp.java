@@ -15,6 +15,7 @@ import com.joyintech.tams.exchange.common.bean.ReissueTradeBean;
 import com.joyintech.tams.exchange.common.bean.ReissueTradeQryBean;
 import com.joyintech.tams.exchange.common.bean.TerminalId;
 import com.joyintech.tams.exchange.common.bean.terminal.RTGSStatusBean;
+import com.joyintech.tams.exchange.common.constant.AccountLoginStatus;
 import com.joyintech.tams.exchange.common.db.domain.Account;
 import com.joyintech.tams.exchange.common.db.domain.CancelEntrustBean;
 import com.joyintech.tams.exchange.common.db.domain.Entrust;
@@ -25,7 +26,6 @@ import com.joyintech.tams.exchange.common.db.domain.Trade;
 import com.joyintech.tams.exchange.common.utils.JsonUtils;
 import com.joyintech.tams.exchange.service.trade.processor.TradeHelper;
 import com.joyintech.tams.exchange.service.trade.processor.account.AccountPositionHelper;
-import com.joyintech.tams.exchange.service.trade.processor.constants.AccountLoginStatus;
 import com.joyintech.tams.exchange.service.trade.processor.constants.BrokerReissueStatus;
 import com.joyintech.tams.exchange.service.trade.processor.constants.ServiceReissueStatus;
 import com.joyintech.tams.exchange.service.trade.processor.msg.MsgReceiverManager;
@@ -145,13 +145,6 @@ public abstract class TradeAgentDsp implements TradeAgent {
     public Account getAccount(String accountId) {
         return accountMap.get(accountId);
     }
-
-    /**
-     * 删除账号
-     *
-     * @param accountId 账号id
-     */
-    public abstract void removeAccount(String accountId);
 
     protected String getKey(String accountId, String type) {
         return accountId + "|" + type;

@@ -520,7 +520,8 @@
 				            </choose>
 							else
 				            <if test="loginUserId !=null and loginUserId !=''">
-								(decode(a.UPDATE_USER, #{loginUserId,jdbcType=VARCHAR}, 1, 0) + decode(a.CREATE_USER, #{loginUserId,jdbcType=VARCHAR}, 1, 0)) * 
+								(decode(a.CREATE_USER, #{loginUserId,jdbcType=VARCHAR}, 1, 0)) *
+								<!--(decode(a.UPDATE_USER, #{loginUserId,jdbcType=VARCHAR}, 1, 0) + decode(a.CREATE_USER, #{loginUserId,jdbcType=VARCHAR}, 1, 0)) * -->
 				            </if>
 							<choose>
 								<when test="ouTraderIdList == null or ouTraderIdList.size() == 0">
@@ -1189,7 +1190,7 @@ SELECT T.QUOTE_ID,
                      OR A.EXECID LIKE '%' || #{keywords} || '%')
 	            </if>
 	    </where>
-	    order by decode(a.TRADE_STATUS, '06', 2, '08', 3, '13', 4, '07', 5, 1) asc, a.UPDATE_TIME desc
+	    order by decode(a.TRADE_STATUS, '09', 1, '06', 3, '08', 4, '07', 5, 2) asc, a.UPDATE_TIME desc
         <!-- order by decode(a.TRADE_STATUS, '06', 96, '08', 97, '13', 98,  '07', 99, to_number(a.TRADE_STATUS)) asc, a.UPDATE_TIME desc -->
     </select>
 

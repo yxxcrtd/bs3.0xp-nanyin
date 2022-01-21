@@ -16,12 +16,7 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
@@ -50,11 +45,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 现券买卖-对话报价
@@ -88,6 +79,8 @@ public class CfetsBondDealQuotedPriceSingle001Service extends BaseService<CfetsB
     @Autowired(required = false)
     private MstFileCommonService mstFileCommonService;
 
+    @Autowired
+    private CfetsBondDealQuotedPrice002Service cfetsBondDealQuotedPrice002Service;
     /**
      * 根据委托代码查询委托基本信息
      * 
@@ -260,13 +253,16 @@ public class CfetsBondDealQuotedPriceSingle001Service extends BaseService<CfetsB
         }
         // add by etliu 20210108 end
 
-        if(StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getPrice())) {
+        /*if(StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getPrice())) {
             cfetsBondDealDialogueQuoteDto = restTemplate.postForObject(
                     ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsBondDealQuotedPrice/calcAmt",
                     cfetsBondDealDialogueQuoteDto, CfetsBondDealDialogueQuoteDto.class);
         }
+        ajaxResult.setData(cfetsBondDealDialogueQuoteDto);*/
+        cfetsBondDealDialogueQuoteDto = cfetsBondDealQuotedPrice002Service.calAmt2(cfetsBondDealDialogueQuoteDto);
+        cfetsBondDealDialogueQuoteDto.setMatureYield(ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getMatureYield(),new BigDecimal(100)));
+        cfetsBondDealDialogueQuoteDto.setExerYield(ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getExerYield(),new BigDecimal(100)));
         ajaxResult.setData(cfetsBondDealDialogueQuoteDto);
-
         return ajaxResult;
     }
 

@@ -64,6 +64,13 @@ public interface IbuQuoteMapper {
     IbuQuoteCrepDto selectQuoteCrepByKey(String quoteId);
 
     /**
+     * 根据报价编号查询查询质押式回购对话报价信息
+     * @param quoteId String
+     * @return IbuQuoteCrepDto
+     */
+    IbuQuoteCrepDto selectWflQuoteCrepByKey(String quoteId);
+
+    /**
      * 根据报价编号列表查询质押式回购报价信息列表
      * @param quoteIds List<String>
      * @return List<IbuQuoteCrepDto>
@@ -76,6 +83,13 @@ public interface IbuQuoteMapper {
      * @return IbuQuoteCrepPledgeDto
      */
     List<IbuQuoteCrepPledgeDto> selectQuoteCrepPledgeByKey(String quoteId);
+
+    /**
+     * 根据报价编号查询查询质押式回购报价质押品信息
+     * @param quoteId String
+     * @return IbuQuoteCrepPledgeDto
+     */
+    List<IbuQuoteCrepPledgeDto> selectWflQuoteCrepPledgeByKey(String quoteId);
     
     /**
      * 
@@ -361,7 +375,7 @@ public interface IbuQuoteMapper {
      * @return 银行间报价指令关系业务表数据
      */
     List<IbuQuoteEtrReDto> selectQuoteEtrReDataByQuoteId(@Param("quoteId")String quoteId);
-    
+
     /**
      * 根据报价编号，查询银行间报价指令关系业务表数据(业务流程表数据)
      * @param quoteId 报价编号
@@ -371,6 +385,9 @@ public interface IbuQuoteMapper {
     // add by etliu 20210309 银行间上下行多组合 end
 
     List<IbuQuoteEntCrepPledgeDto> selectQuoteEntCrepPledgeDataByQuoteId(@Param("quoteId")String quoteId);
+    // add by etliu 20210309 银行间上下行多组合 end
+
+    List<IbuQuoteEntCrepPledgeDto> selectWflQuoteEntCrepPledgeDataByQuoteId(@Param("quoteId")String quoteId);
 
     int updateBondQuoteFinalStatusForRevoke(IbuQuoteBond dto);
 

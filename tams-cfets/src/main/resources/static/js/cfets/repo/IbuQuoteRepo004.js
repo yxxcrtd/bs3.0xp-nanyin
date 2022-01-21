@@ -6,31 +6,33 @@
     /**
      * 保存
      */
-    // var saveOrSubmitAction = function (operatorType) {
-    //     var object = $.serializeToObject('#submitForm', true);
-    //     object.operatorType = operatorType;
-    //     object.isDzh = 'Y';
-    //     object.pageId = "IbuQuoteRepo004";
-    //     Joyin.confirm("是否确认提交?",
-    //         function () {
-    //             //保存 走流程
-    //             if (operatorType === 'save') {
-    //                 WorkFlow.doSaveList(basePath + 'cfets/repo/IbuQuoteRepo004/save', object, "IbuQuoteRepo004_btn_save", null,
-    //                     function () {
-    //                         var index = window.parent.layer.getFrameIndex(window.name);
-    //                         window.parent.layer.close(index);
-    //                     })
-    //             }
-    //             //提交 走流程
-    //             else if (operatorType === 'submit') {
-    //                 WorkFlow.doSubmitList(basePath + 'cfets/repo/IbuQuoteRepo004/save', object, "IbuQuoteRepo004_btn_submit", null,
-    //                     function () {
-    //                         var index = window.parent.layer.getFrameIndex(window.name);
-    //                         window.parent.layer.close(index);
-    //                     })
-    //             }
-    //         });
-    // };
+    var saveOrSubmitAction = function (operatorType) {
+        var object = $.serializeToObject('#submitForm', true);
+        object.operatorType = operatorType;
+        object.isDzh = 'Y';
+        object.pageId = "IbuQuoteRepo004";
+        object.ptlAllocations = ptlAllocations;
+        object.repoEntrustPledgeDtos = repoEntrustPledgeDtos;
+        Joyin.confirm("是否确认提交?",
+            function () {
+                //保存 走流程
+                if (operatorType === 'save') {
+                    WorkFlow.doSaveList(basePath + 'cfets/repo/IbuQuoteRepo004/save', object, "IbuQuoteRepo004_btn_save", null,
+                        function () {
+                            var index = window.parent.layer.getFrameIndex(window.name);
+                            window.parent.layer.close(index);
+                        })
+                }
+                //提交 走流程
+                else if (operatorType === 'submit') {
+                    WorkFlow.doSubmitList(basePath + 'cfets/repo/IbuQuoteRepo004/save', object, "IbuQuoteRepo004_btn_submit", null,
+                        function () {
+                            var index = window.parent.layer.getFrameIndex(window.name);
+                            window.parent.layer.close(index);
+                        })
+                }
+            });
+    };
     /**
      * 组合分配
      */
@@ -51,7 +53,7 @@
             width: 150,
             title: '剩余指令金额(元)',
             sortable: false,
-            type: 'number',
+            type: 'money',
             digit: 2
             , disabled: true
         }
@@ -60,7 +62,7 @@
             width: 120,
             title: '交易金额(元)',
             sortable: false,
-            type: 'number',
+            type: 'money',
             digit: 2
             , disabled: true
         }
@@ -69,7 +71,7 @@
             width: 120,
             title: '交易手续费(元)',
             sortable: false,
-            type: 'number',
+            type: 'money',
             digit: 2
             , disabled: true
         }
@@ -78,7 +80,7 @@
             width: 100,
             title: '结算服务费(元)',
             sortable: false,
-            type: 'number',
+            type: 'money',
             digit: 2
             , disabled: true
         }
@@ -87,7 +89,7 @@
             width: 100,
             title: '回购利息(元)',
             sortable: false,
-            type: 'number',
+            type: 'money',
             digit: 2
             , disabled: true
         }
@@ -96,7 +98,7 @@
             width: 150,
             title: '到期结算金额(元)',
             sortable: false,
-            type: 'number',
+            type: 'money',
             digit: 2
             , disabled: true
         }
@@ -104,8 +106,7 @@
             field: 'priceModelStr',
             width: 100,
             title: '价格模式',
-            sortable: false,
-            editOption: {type: 'select', formatoption: true, showField: 'text', result: PRICE_MODEL}
+            sortable: false
         }
         , {
             field: 'price',
@@ -158,7 +159,7 @@
         , {
             field: 'pledgePrinStr',
             width: 150,
-            title: '质押券面额(万元)',
+            title: '质押券面总额(万元)',
             sortable: false,
             type: 'number',
             digit: 2
@@ -169,8 +170,8 @@
             width: 100,
             title: '首次净价(元)',
             sortable: false,
-            type: 'number',
-            digit: 2
+            type: 'money',
+            digit: 4
             , disabled: true
         }
         , {
@@ -207,21 +208,32 @@
         page:false
     });
 
+    var init = function() {
+        if(EXPORT_SHOW==='01'){
+            $("#select_counterTrader_div").show();
+            $("#input_counterTrader_div").hide();
+        }else{
+            $("#select_counterTrader_div").hide();
+            $("#input_counterTrader_div").show();
+        }
+    }
+
 
     $(function () {
+        init();
         /**
          * 保存按钮按下处理
          */
-        // $('#IbuQuoteRepo004_btn_save').click(function () {
-        //     saveOrSubmitAction('save');
-        // });
+        $('#IbuQuoteRepo004_btn_save').click(function () {
+            saveOrSubmitAction('save');
+        });
 
         /**
          * 提交按钮按下处理
          */
-        // $('#IbuQuoteRepo004_btn_submit').click(function () {
-        //     saveOrSubmitAction('submit');
-        // });
+        $('#IbuQuoteRepo004_btn_submit').click(function () {
+            saveOrSubmitAction('submit');
+        });
 
     });
 

@@ -1,0 +1,2 @@
+update SYS_DATADICT_LIST set ITEM_CODE = 'AC' where DICT_CODE = 'BUSINESS_MODEL' and ITEM_VALUE ='收取合同约定的现金流';
+update SYS_DATADICT_LIST set ITEM_CODE = 'FVTPL' where DICT_CODE = 'BUSINESS_MODEL' and ITEM_VALUE ='出售';

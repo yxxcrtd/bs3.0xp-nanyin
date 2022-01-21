@@ -13,10 +13,12 @@ package com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dao;
 import com.joyintech.tams.common.base.entity.RegFinProductDeal;
 import com.joyintech.tams.common.base.entity.RegFinProductDealAdd;
 import com.joyintech.tams.common.base.entity.RegFinProductDealTotal;
+import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
 import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dto.CfetsManualSettleDealInfo;
 import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dto.CfetsTrdConfirmMatchDto;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondDurationDto;
+import com.joyintech.tams.invest.common.dto.period.trdrepoduration.TrdRepoDurationDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -67,7 +69,9 @@ public interface CfetsBondAutoDurDealGenerateMapper {
      */
     List<CfetsManualSettleDealInfo> getDealDetailsByTradeId(@Param("tradeId") String tradeId);
 
-    List<String> selectTrdFinProductDealTotalData(Map<String, Object> paramMap);
+    List<TrdFinProductDealTotal> selectTrdFinProductDealTotalData(Map<String, Object> paramMap);
 
     String getSecAcctId(@Param("portfolioId") String portfolioId,@Param("finprodId") String finprodId,@Param("tradeMarket") String tradeMarket);
+
+    TrdRepoDurationDto findRepoEffectiveData(Map<String, Object> param);
 }

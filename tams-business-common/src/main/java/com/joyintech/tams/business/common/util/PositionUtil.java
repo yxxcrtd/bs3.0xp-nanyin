@@ -1,10 +1,7 @@
 package com.joyintech.tams.business.common.util;
 
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.constant.PositionDictCodeListExt;
 import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
 import com.joyintech.tams.business.common.pojo.BaseMap;
@@ -18,6 +15,8 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +29,8 @@ import java.util.Map;
 @Component
 public class PositionUtil {
 
+    private static Logger logger = LoggerFactory.getLogger(PositionUtil.class);
+    
     private static PtlPortfolioMapper ptlPortfolioMapper;
 
     private static CashPositionService cashPositionService;
@@ -38,7 +39,7 @@ public class PositionUtil {
      * 平台日期
      */
     private static IPlatformDate iPlatformDate;
-    
+
     /**
      * 初始化头寸通用信息
      * @param totalTradeId
@@ -141,8 +142,9 @@ public class PositionUtil {
      */
     public static boolean checkForFL0007(Object req, Map msgMap) {
         BaseMap tamsReq = JsonUtils.json2Object(JsonUtils.object2Json(req), BaseMap.class);
-        
+
         Map responseMap_data = (Map) msgMap.get("data");
+        Date CDATE = iPlatformDate.getSysDate();
         if (responseMap_data != null){
             List checkResults = (List) responseMap_data.get("checkResults");
             List newcheckResults = new ArrayList();
@@ -151,14 +153,16 @@ public class PositionUtil {
                     BaseMap flow = BaseMap.newMap((Map) checkResults.get(i));
                     String HODING_TYPE = flow.getString("HODING_TYPE");
                     String PORTFOLIO_ID = flow.getString("PORTFOLIO_ID");
-                    Date CDATE = flow.getDate("CDATE");
-                    if (CDATE == null){
-                        CDATE=iPlatformDate.getSysDate();
-                    }
+//                    Date CDATE = flow.getDate("CDATE");
+//                    if (CDATE == null){
+//                        CDATE=iPlatformDate.getSysDate();
+//                    }
+                    logger.info("CDATE平台日期：" + CDATE);
+                    logger.info("CDATE平台日期：" + DateUtil.format(CDATE));
                     if (StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_托管户可用资金.getValue())
                             || StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_证券户可取资金.getValue())
                             || StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_证券户可用资金.getValue())
-                        ){
+                    ){
                         // 需要校验投管现金
                         // 校验仍不足时add
                         BaseMap paramMap = BaseMap.newMap()

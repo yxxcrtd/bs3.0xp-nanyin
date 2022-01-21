@@ -40,10 +40,7 @@ import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfo002Mapper;
 import com.joyintech.tams.cfets.etrib.bond.dto.*;
-import com.joyintech.tams.common.base.dao.FinProductAddMapper;
-import com.joyintech.tams.common.base.dao.FinProductMapper;
-import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
-import com.joyintech.tams.common.base.dao.WflEtrEntrustMapper;
+import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
@@ -166,6 +163,11 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
     private WflEtrEntrustMapper wflEtrEntrustMapper;
     @Autowired
     private SysWflBusinessListMapper sysWflBusinessListMapper;
+    /**
+     * 指令废弃表
+     */
+    @Autowired
+    private EtrEntrustBackupMapper etrEntrustBackupMapper;
 
     /**
      * 判断是否含权债
@@ -1122,6 +1124,12 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 Map<String,Object> param = new HashMap<>();
                 param.put("entrustId",dto.getEntrustId());
                 doDeleteEtrFlowMethod(param);
+                //从废弃表中获取，转移到指令表
+                etrEntrustBackupMapper.insertEtrFromQuery(dto.getEntrustId());
+                etrEntrustBackupMapper.insertAddFromQuery(dto.getEntrustId());
+                // 删除废弃表
+                etrEntrustBackupMapper.deleteByPrimaryKey(dto.getEntrustId());
+                etrEntrustBackupMapper.deleteAddByPrimaryKey(dto.getEntrustId());
 
             }
         }

@@ -25,6 +25,12 @@ public class CfetsEntrustClosePosEtrReqDto {
      */
     private String busiAct;
 
+    /**
+     * 金融产品类型
+     * @return
+     */
+    private String finprodType2;
+
     public String getBusiType() {
         return busiType;
     }
@@ -63,5 +69,13 @@ public class CfetsEntrustClosePosEtrReqDto {
 
     public void setCloseId(String closeId) {
         this.closeId = closeId;
+    }
+
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
     }
 }

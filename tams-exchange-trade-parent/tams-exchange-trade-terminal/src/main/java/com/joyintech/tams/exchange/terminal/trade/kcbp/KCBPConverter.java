@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.terminal.trade.kcbp;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.bean.terminal.RTGSStatusBean;
 import com.joyintech.tams.exchange.common.constant.*;
@@ -819,124 +820,180 @@ public class KCBPConverter {
                 String columnName = columnNames.get(j);
                 String value = content.get(j);
                 switch (columnName) {
-                    case "posstr": {
-
+                    case "MsgType": {//消息类型
+                        if ("U026".equals(value)) {
+                            integratedRepurchaseQuoteBean.setExchangeType("1");
+                        } else {
+                            integratedRepurchaseQuoteBean.setExchangeType("0");
+                        }
                         break;
                     }
-                    case "EndSeqNo": {
-
+                    case "ApplReqID": {//查询请求编号
                         break;
                     }
-                    case "QuoteRefID": {
-
+                    case "EndSeqNo": {//结束行情序号
                         break;
                     }
-                    case "OrdType": {
-
+                    case "QuoteRefID": {//交易所报价请求编号
+                        integratedRepurchaseQuoteBean.setCbpconferId(value);
                         break;
                     }
-                    case "SecurityID": {
+                    case "OrdType": {//报价申报类型
+                        /**
+                         * F:成交申报、 X:到期续做、 C:解除质押、 H:换券申报、 Z:提前终止
+                         * BPB	上海协议回购成交申报		正回购
+                         * BPC	上海协议回购到期续做申报		到期续做
+                         * BPD	上海协议回购解除质押		接触质押
+                         * BPE	上海协议回购换券申报		中途换券
+                         * BPF	上海协议回购提前终止申报		提前购回
+                         */
+                        if (StringUtil.equals(value, "F")) {
+                            integratedRepurchaseQuoteBean.setEntrustProp("BPB");
+                        } else if (StringUtil.equals(value, "X")) {
+                            integratedRepurchaseQuoteBean.setEntrustProp("BPC");
+                        } else if (StringUtil.equals(value, "C")) {
+                            integratedRepurchaseQuoteBean.setEntrustProp("BPD");
+                        } else if (StringUtil.equals(value, "H")) {
+                            integratedRepurchaseQuoteBean.setEntrustProp("BPE");
+                        } else if (StringUtil.equals(value, "Z")) {
+                            integratedRepurchaseQuoteBean.setEntrustProp("BPF");
+                        }
+                        break;
+                    }
+                    case "Price": {//回购利率
                         if (!Strings.isNullOrEmpty(value))
-                            integratedRepurchaseQuoteBean.setStockCode(StockCodeUtils.formatStockCode(value, "SH"));//目前仅支持上海协议回购
+                            integratedRepurchaseQuoteBean.setExpireYearRate(Double.parseDouble(value));
                         break;
                     }
-                    case "SecurityIDname": {
-                        integratedRepurchaseQuoteBean.setStockName(value);
-                        break;
-                    }
-                    case "Symbol": {
-
-                        break;
-                    }
-                    case "UAInterestAccrualDays": {
-                        if (!Strings.isNullOrEmpty(value))
-                            integratedRepurchaseQuoteBean.setFundUsedDays(Integer.parseInt(value));
-                        break;
-                    }
-                    case "SettlDate": {
-                        if (!Strings.isNullOrEmpty(value))
-                            integratedRepurchaseQuoteBean.setFirstExchdate(Integer.parseInt(value));
-                        break;
-                    }
-                    case "Side": {
-                        integratedRepurchaseQuoteBean.setEntrustBs(value); //1:正回购，2:逆回购 对应EntrustBs字段，无需转换
-                        break;
-                    }
-                    case "OrderQty": {
-                        if (!Strings.isNullOrEmpty(value))
-                            integratedRepurchaseQuoteBean.setImpawnAmount(Integer.parseInt(value));
-                        break;
-                    }
-                    case "ContractMultiplier": {
-                        if (!Strings.isNullOrEmpty(value))
-                            integratedRepurchaseQuoteBean.setFunderRatio(Double.parseDouble(value));
-                        break;
-                    }
-                    case "RepurchaseTerm": {
+                    case "RepurchaseTerm": {//回购期限
                         if (!Strings.isNullOrEmpty(value))
                             integratedRepurchaseQuoteBean.setRepoTerm(Integer.parseInt(value));
                         break;
                     }
-                    case "MaturityDate": {
+                    case "UAInterestAccrualDays": {//实际占款天数
+                        if (!Strings.isNullOrEmpty(value))
+                            integratedRepurchaseQuoteBean.setFundUsedDays(Integer.parseInt(value));
+                        break;
+                    }
+                    case "SettlDate": {//首次结算日
+                        if (!Strings.isNullOrEmpty(value))
+                            integratedRepurchaseQuoteBean.setFirstExchdate(Integer.parseInt(value));
+                        break;
+                    }
+                    case "MaturityDate": {//回购到期日
                         if (!Strings.isNullOrEmpty(value))
                             integratedRepurchaseQuoteBean.setRepurchaseDate(Integer.parseInt(value));
                         break;
                     }
-                    case "SettlDate2": {
+                    case "SettlDate2": {//到期结算日
                         if (!Strings.isNullOrEmpty(value))
                             integratedRepurchaseQuoteBean.setSettleEndDate(Integer.parseInt(value));
                         break;
                     }
-                    case "UnderlyingSecurityID": {
+                    case "Side": {//买卖方向
+                        integratedRepurchaseQuoteBean.setEntrustBs(value); //1:正回购，2:逆回购 对应EntrustBs字段，无需转换
+                        break;
+                    }
+                    case "SecurityID": {//质押券代码
+                        if (!Strings.isNullOrEmpty(value))
+                            integratedRepurchaseQuoteBean.setStockCode(StockCodeUtils.formatStockCode(value, "SH"));//目前仅支持上海协议回购
+                        break;
+                    }
+                    case "SecurityIDname": {//质押券名称
+                        integratedRepurchaseQuoteBean.setStockName(value);
+                        break;
+                    }
+                    case "UnderlyingSecurityID": {//原质押券代码
                         integratedRepurchaseQuoteBean.setOldImpawnCode(value);
                         break;
                     }
-                    case "CompanyName": {
-                        integratedRepurchaseQuoteBean.setAgencyName(value);
+                    case "OrderQty": {//质押券数量
+                        if (!Strings.isNullOrEmpty(value))
+                            integratedRepurchaseQuoteBean.setImpawnAmount(Integer.parseInt(value));
                         break;
                     }
-                    case "CompanyOper": {
+                    case "ContractMultiplier": {//折算比例
+                        if (!Strings.isNullOrEmpty(value))
+                            integratedRepurchaseQuoteBean.setFunderRatio(Double.parseDouble(value));
                         break;
                     }
-                    case "TotalValueTraded": {
+                    case "TotalValueTraded": {//成交金额
                         if (!Strings.isNullOrEmpty(value))
                             integratedRepurchaseQuoteBean.setImpawnBalance(Double.parseDouble(value));
                         break;
                     }
-                    case "UnderlyingQty": {
+                    case "UnderlyingQty": {//原成交金额
                         if (!Strings.isNullOrEmpty(value))
                             integratedRepurchaseQuoteBean.setPrevImpawnBalance(Double.parseDouble(value));
                         break;
                     }
-                    case "AccruedInterestAmt": {
+                    case "AccruedInterestAmt": {//回购利息
                         if (!Strings.isNullOrEmpty(value))
                             integratedRepurchaseQuoteBean.setProfit(Double.parseDouble(value));
                         break;
                     }
-                    case "SettlCurrAmt": {
+                    case "SettlCurrAmt": {//到期结算金额
                         if (!Strings.isNullOrEmpty(value))
                             integratedRepurchaseQuoteBean.setSettleBalance(Double.parseDouble(value));
                         break;
                     }
-                    case "OrigTradeDate": {
+                    case "LastQty": {//质押券面总额合计
+                        integratedRepurchaseQuoteBean.setAssetNetValue(Double.parseDouble(value));
+                        break;
+                    }
+                    case "OrderRestrictions": {//到期续做类型
+                        integratedRepurchaseQuoteBean.setBprsrcStatus(value);
+                        break;
+                    }
+                    case "OrigTradeDate": {//初始交易日期
                         if (!Strings.isNullOrEmpty(value))
                             integratedRepurchaseQuoteBean.setOrigEntrustDate(Integer.parseInt(value));
                         break;
                     }
-                    case "PartyIDfqya": {
+                    case "ExecRefID": {//成交编号
+                        integratedRepurchaseQuoteBean.setOrigCbpconferId(value);
+                        break;
+                    }
+                    case "PartyIDfqya": {//发起方交易员代码
                         integratedRepurchaseQuoteBean.setTraderId(value);
                         break;
                     }
-                    case "PartyIddsfsb": {
-                        integratedRepurchaseQuoteBean.setOppoAgency(value);
+                    case "PartyIDfqyaname": {//发起方交易员姓名
                         break;
                     }
-                    case "PartyIDdsfyb": {
+                    case "PartyIDfqsa": {//发起方交易商代码
+                        integratedRepurchaseQuoteBean.setAgencyNo(value);
+                        break;
+                    }
+                    case "PartyIDfqname": {//发起方交易商名称
+                        integratedRepurchaseQuoteBean.setAgencyName(value);
+                        break;
+                    }
+                    case "PartyIDdsfyb": {//对手方交易员代码
                         integratedRepurchaseQuoteBean.setOppoTraderId(value);
                         break;
                     }
-                    case "PartyIDname": {
+                    case "Partyiddsfybname": {//对手方交易员姓名
+                        break;
+                    }
+                    case "PartyIddsfsb": {//对手方交易商代码
+                        integratedRepurchaseQuoteBean.setOppoAgency(value);
+                        break;
+                    }
+                    case "PartyIDname": {//对手方交易商名称
                         integratedRepurchaseQuoteBean.setOppoAgencyName(value);
+                        break;
+                    }
+                    case "CompanyName": {//交易商简称
+                        integratedRepurchaseQuoteBean.setAgencyName(value);
+                        break;
+                    }
+                    case "CompanyOper": {//交易员代码
+                        integratedRepurchaseQuoteBean.setTraderId(value);
+                        break;
+                    }
+                    case "Symbol": {//质押债券简称
+                        integratedRepurchaseQuoteBean.setStockName(value);
                         break;
                     }
                     case "Zqrname": {
@@ -947,29 +1004,8 @@ public class KCBPConverter {
                         integratedRepurchaseQuoteBean.setRemark(value);
                         break;
                     }
-                    case "PartyIDfqsa": {
-                        integratedRepurchaseQuoteBean.setAgencyNo(value);
-                        break;
-                    }
-                    case "LastQty": {
-                        integratedRepurchaseQuoteBean.setAssetNetValue(Double.parseDouble(value));
-                        break;
-                    }
-                    case "PartyIDfqname": {
-                        integratedRepurchaseQuoteBean.setAgencyName(value);
-                        break;
-                    }
-                    case "Price": {
-                        if (!Strings.isNullOrEmpty(value))
-                            integratedRepurchaseQuoteBean.setExpireYearRate(Double.parseDouble(value));
-                        break;
-                    }
-                    case "MsgType": {
-                        if ("U026".equals(value)) {
-                            integratedRepurchaseQuoteBean.setExchangeType("1");
-                        } else {
-                            integratedRepurchaseQuoteBean.setExchangeType("0");
-                        }
+                    case "posstr": {
+                        integratedRepurchaseQuoteBean.setPositionStr(value);
                         break;
                     }
                 }

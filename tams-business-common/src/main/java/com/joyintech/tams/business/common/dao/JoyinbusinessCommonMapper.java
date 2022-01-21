@@ -143,6 +143,15 @@ public interface JoyinbusinessCommonMapper {
      * @since 1.0
      */
     List<SelectOptionDto> queryMySideTraderList(Map<String, Object> param);
+    /**
+     * 查询本方交易员列表
+     * <功能详细描述>
+     * @param param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> queryMySideTraderListByCounterId(Map<String, Object> param);
 
     /**
      * 查询系统用户
@@ -185,4 +194,6 @@ public interface JoyinbusinessCommonMapper {
     void mergeCfetsOprHis(@Param("list") List<CfetsOprHisInfoRequest> list);
 
     String isNeedWorkflow(Map<String, String> param);
+
+    List<SelectOptionDto>  gettotleTradeId();
 }

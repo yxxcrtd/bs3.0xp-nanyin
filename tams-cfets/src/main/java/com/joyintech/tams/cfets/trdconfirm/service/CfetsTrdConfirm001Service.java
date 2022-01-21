@@ -319,7 +319,9 @@ public class CfetsTrdConfirm001Service extends BaseService{
                     cfetsTrdConfirmMapper.insertTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
                 }else{
                     //根据登记编号查询下行成交匹配表
-                    boolean flag=cfetsTrdConfirmMapper.isExistMatchInfo(entity.getCfetsTrdConfirmMatchDto().getPreTradeId());
+                    Map<String, Object> param = new HashMap<String, Object>();
+                    param.put("preTradeId", entity.getCfetsTrdConfirmMatchDto().getPreTradeId());
+                    boolean flag=cfetsTrdConfirmMapper.isExistMatchInfo(param);
                     if(flag){
                         //若存在对应的成交匹配数据，则更新下行成交匹配表
                         cfetsTrdConfirmMapper.updateTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
@@ -532,7 +534,9 @@ public class CfetsTrdConfirm001Service extends BaseService{
                 cfetsTrdConfirmMapper.insertTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
             }else{
                 //根据登记编号查询下行成交匹配表
-                boolean flag=cfetsTrdConfirmMapper.isExistMatchInfo(entity.getCfetsTrdConfirmMatchDto().getPreTradeId());
+                Map<String, Object> param = new HashMap<String, Object>();
+                param.put("preTradeId", entity.getCfetsTrdConfirmMatchDto().getPreTradeId());
+                boolean flag=cfetsTrdConfirmMapper.isExistMatchInfo(param);
                 if(flag){
                     //若存在对应的成交匹配数据，则更新下行成交匹配表
                     cfetsTrdConfirmMapper.updateTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
@@ -1580,21 +1584,25 @@ public class CfetsTrdConfirm001Service extends BaseService{
         if(StringUtil.isNotEmpty(entity.getPs())
                 && StringUtil.equals(entity.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
             req.setBusiType(DictCodeListExt3.头寸业务类型_债券行权交易.getValue()); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
+            req.setCdate(entity.getSettleDate());
+        }else{
+            req.setCdate(entity.getTradeDate());
         }
         req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
-        if(entity.getSettleSpeed().compareTo(new Long(0))==0){
-            req.setSettleSpeed("01");
-        }else if(entity.getSettleSpeed().compareTo(new Long(1))==0){
-            req.setSettleSpeed("02");
-        }else if(entity.getSettleSpeed().compareTo(new Long(2))==0){
-            req.setSettleSpeed("03");
+        if(null!=entity.getSettleSpeed()){
+            if(entity.getSettleSpeed().compareTo(new Long(0))==0){
+                req.setSettleSpeed("01");
+            }else if(entity.getSettleSpeed().compareTo(new Long(1))==0){
+                req.setSettleSpeed("02");
+            }else if(entity.getSettleSpeed().compareTo(new Long(2))==0){
+                req.setSettleSpeed("03");
+            }
         }
         req.setBalanceCheck("N");
         req.setBusiAct(DictCodeListExt3.业务动作_成交确认.getValue());
         req.setPs(entity.getPs());
         req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
         req.setDecisionAct(DictCodeListExt3.系统动作_新建.getValue());
-        req.setCdate(entity.getTradeDate());
         req.setCcy(entity.getCcy());
         req.setFinprodId(entity.getFinprodId());
         req.setPtlList(ptlList);

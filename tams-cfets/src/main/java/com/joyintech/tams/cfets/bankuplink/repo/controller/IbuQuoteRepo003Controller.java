@@ -219,7 +219,9 @@ public class IbuQuoteRepo003Controller extends BaseController {
             CfetsRepoDealQuoteCommonDto pageDto = cfetsRepoDealQuotedPrice002Service.back2PageDto(cfetsRepoDealQuotedPrice001Dto);
             if (StringUtil.equals(quotaPageModel, "dialogueResponse")
                     && StringUtil.isEmpty(cfetsRepoDealQuotedPrice001Dto.getDialogueRecord())
-                    && StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue())) {
+                    && StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue())
+                    && StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_待回复.getValue())
+                    && StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getQuoteRoleType(), BussinessDictCodeList.银行间上行本方角色_回复方.getValue())) {
                 List<RepoEntrustPledgeDto> list
                         = JsonUtils.json2List(JsonUtils.object2Json(pageDto.getRepoEntrustPledgeDtos()), RepoEntrustPledgeDto.class);
                 pageDto.getRepoEntrustPledgeDtos().clear();

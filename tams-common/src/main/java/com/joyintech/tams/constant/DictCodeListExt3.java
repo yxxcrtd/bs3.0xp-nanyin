@@ -1707,6 +1707,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     业务动作_指令日终关闭(DictCode.业务动作,"13","指令日终关闭"),
     业务动作_指令手动关闭(DictCode.业务动作,"14","指令手动关闭"),
     业务动作_指令自动完成(DictCode.业务动作,"15","指令自动完成"),
+    业务动作_待交收(DictCode.业务动作,"22","待交收"),
 
 
 
@@ -1820,6 +1821,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     投管业务类型_中途换券(DictCode.投管业务类型,"EX014","中途换券"),
     投管业务类型_解除质押(DictCode.投管业务类型,"EX015","解除质押"),
     投管业务类型_协议现券(DictCode.投管业务类型,"EX016","协议现券"),
+    交易平台_新竞价撮合平台(DictCode.交易平台,"021","新竞价撮合平台"),
     ;
     /**
      * 对应于数据字典code

@@ -1591,14 +1591,17 @@
     <select id="selectIbuRepoFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryIbuInfoListResponse">
         select
         ic.ou_party_id as traderid,
-        ic.ou_trader_id as trader,
+        mccit.PARTY_ABBR as traderidStr,
+        nvl(su1.TRADER_NAME, ic.ou_trader_id) as trader,
         ic.cp_party_id as counterId,
-        ic.cp_trader_id as counterTrader,
+        mccic.PARTY_ABBR as counterIdStr,
+        nvl(su.TRADER_NAME, ic.cp_trader_id) as counterTrader,
         ic.repo_ps as ps,
         ic.quote_type as quoteType,
         to_char(ic.quote_date,'yyyy-MM-dd') as quoteDate,
         ic.term as repoTerm,
         ic.rate*100 as tradeYield,
+        decode(ic.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
         ic.ccy as secCcy,
         ic.sett_ccy settCcy,
         ic.fprice_amt as tradeAmt,
@@ -1626,19 +1629,27 @@
         on ir.portfolio_id=pp.portfolio_id
         group by ir.quote_id)deal
         on ic.quote_id=deal.quote_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON ic.ou_party_id= mccit.party_id
+        left join MST_CFETS_CUSTOMER_TRADER su1 on ic.ou_trader_id=su1.TRADER_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ic.cp_party_id= mccic.party_id
+        left join MST_CFETS_CUSTOMER_TRADER su on ic.cp_trader_id=su.TRADER_ID
+
         where ic.quote_id= #{quoteId,jdbcType=VARCHAR}
         and decode(ic.trade_status,'15',#{STATUS_VALID_03},#{STATUS_VALID_01})= #{effectiveStatus,jdbcType=VARCHAR}
         union all
         select
         ic.ou_party_id as traderid,
-        ic.ou_trader_id as trader,
+        mccit.PARTY_ABBR as traderidStr,
+        nvl(su1.TRADER_NAME, ic.ou_trader_id) as trader,
         ic.cp_party_id as counterId,
-        ic.cp_trader_id as counterTrader,
+        mccic.PARTY_ABBR as counterIdStr,
+        nvl(su.TRADER_NAME, ic.cp_trader_id) as counterTrader,
         ic.repo_ps as ps,
         ic.quote_type as quoteType,
         to_char(ic.quote_date,'yyyy-MM-dd') as quoteDate,
         ic.term as repoTerm,
         ic.rate as tradeYield,
+        decode(ic.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
         ic.ccy as secCcy,
         ic.sett_ccy settCcy,
         ic.fprice_amt as tradeAmt,
@@ -1655,7 +1666,7 @@
         ic.m_trade_amt as mtradeAmt,
         (ic.m_settle_date-ic.v_settle_date) as actRepoTerm,
         ic.term_type as termType,
-        null as distriType,
+        ic.DIP_TYPE as distriType,
         ic.remark
         from wfl_ibu_quote_crep ic
         inner join(
@@ -1666,6 +1677,10 @@
         on ir.portfolio_id=pp.portfolio_id
         group by ir.quote_id)deal
         on ic.quote_id=deal.quote_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON ic.ou_party_id= mccit.party_id
+        left join MST_CFETS_CUSTOMER_TRADER su1 on ic.ou_trader_id=su1.TRADER_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ic.cp_party_id= mccic.party_id
+        left join MST_CFETS_CUSTOMER_TRADER su on ic.cp_trader_id=su.TRADER_ID
         where ic.quote_id= #{quoteId,jdbcType=VARCHAR}   and #{STATUS_VALID_04}= #{effectiveStatus,jdbcType=VARCHAR}
     </select>
     <select id="selectIbuBondTableFenPeiInfoList"
@@ -1675,14 +1690,10 @@
         pp.portfolio_name as portfolioName,
         (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
         ir.share_amt/100 as faceValue,
-        /* ir.DEAL_FEE_AMT as trdFeeAmt,
+        ir.DEAL_FEE_AMT as trdFeeAmt,
         ir.SETT_FEE_AMT as settleFeeAmt,
         ir.cprice_amt as cpriceAmt,
-        ir.int_amt as intAmt,*/
-        ib.DEAL_FEE_AMT as trdFeeAmt,
-        ib.SETT_FEE_AMT as settleFeeAmt,
-        ibd.cprice_amt as cpriceAmt,
-        ibd.int_amt as intAmt,
+        ir.int_amt as intAmt,
         ir.fprice_amt as fpriceAmt,
         EE.PRICE_MODEL as priceModel,
         EE.BUSINESS_MODEL as businessModel,
@@ -1692,7 +1703,7 @@
         ibd.yield*100 as yield,
         ibd.exer_yield*100 as exerYield
         from ibu_quote_etr_re ir
-        inner join ptl_portfolio pp
+        left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
         <if test="userId != null and userId != ''">
             inner JOIN  PTL_PORTFOLIO_AUTHORITY PPA
@@ -1766,22 +1777,17 @@
         )ibd
         on ir.quote_id=ibd.quote_id
         where ir.quote_id=#{quoteId,jdbcType=VARCHAR}
-
+        and decode(ib.trade_status,'15',#{STATUS_VALID_03},#{STATUS_VALID_01})= #{effectiveStatus,jdbcType=VARCHAR}
         union all
-
         select ir.entrust_id as entrustId,
         ir.portfolio_id as portfolioId,
         pp.portfolio_name as portfolioName,
         (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
         ir.share_amt/100 as faceValue,
-        /* ir.DEAL_FEE_AMT as trdFeeAmt,
+        ir.DEAL_FEE_AMT as trdFeeAmt,
         ir.SETT_FEE_AMT as settleFeeAmt,
         ir.cprice_amt as cpriceAmt,
-        ir.int_amt as intAmt,*/
-        ib.DEAL_FEE_AMT as trdFeeAmt,
-        ib.SETT_FEE_AMT as settleFeeAmt,
-        ibd.cprice_amt as cpriceAmt,
-        ibd.int_amt as intAmt,
+        ir.int_amt as intAmt,
         ir.fprice_amt as fpriceAmt,
         EE.PRICE_MODEL as priceModel,
         EE.BUSINESS_MODEL as businessModel,
@@ -1791,7 +1797,7 @@
         ibd.yield*100 as yield,
         ibd.exer_yield*100 as exerYield
         from wfl_ibu_quote_etr_re ir
-        inner join ptl_portfolio pp
+        left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
         <if test="userId != null and userId != ''">
             inner JOIN  PTL_PORTFOLIO_AUTHORITY PPA
@@ -1865,24 +1871,23 @@
         )ibd
         on ir.quote_id=ibd.quote_id
         where ir.quote_id=#{quoteId,jdbcType=VARCHAR}
-
+        and #{STATUS_VALID_04}= #{effectiveStatus,jdbcType=VARCHAR}
     </select>
     <select id="selectIbuRepoTableFenPeiInfoList"
             resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsPortfolioIdFenPeiInfoResponse">
         select ir.entrust_id as entrustId,
         ir.portfolio_id as portfolioId,
         pp.portfolio_name as portfolioName,
-        (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
         ir.fprice_amt as tradeAmt,
-        null as trdFeeAmt,
-        null as settleFeeAmt,
-        null as intAmt,
-        null as mtradeAmt,
-        null as disFaceValue,
+        ir.DEAL_FEE_AMT as trdFeeAmt,
+        ir.SETT_FEE_AMT as settleFeeAmt,
+        ir.int_amt  as intAmt,
+        ir.m_trade_amt as mtradeAmt,
+        ir.share_ct_amt as disFaceValue,
         EE.PRICE_MODEL as priceModel,
-        null tradeYield
+        ic.rate*100 tradeYield
         from ibu_quote_etr_re ir
-        inner join ptl_portfolio pp
+        left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
         <if test="userId != null and userId != ''">
             inner JOIN  PTL_PORTFOLIO_AUTHORITY PPA
@@ -1890,28 +1895,23 @@
             AND PPA.USER_ID = #{userId}
         </if>
         LEFT JOIN ETR_ENTRUST ee ON ir.entrust_id = ee.entrust_id
-        LEFT JOIN (
-        select t.entrust_id, sum(t.ent_finish_amt) as ent_finish_amt
-        from ETR_FINISH_STATUS t
-        group by t.entrust_id
-        )efs ON ee.Entrust_Id = efs.entrust_id
-
+        left join ibu_quote_crep ic on ir.quote_id=ic.quote_id
         where ir.quote_id=#{quoteId,jdbcType=VARCHAR}
+        and decode(ic.trade_status,'15',#{STATUS_VALID_03},#{STATUS_VALID_01})= #{effectiveStatus,jdbcType=VARCHAR}
         union all
         select ir.entrust_id as entrustId,
         ir.portfolio_id as portfolioId,
         pp.portfolio_name as portfolioName,
-        (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
         ir.fprice_amt as tradeAmt,
-        null as trdFeeAmt,
-        null as settleFeeAmt,
-        null as intAmt,
-        null as mtradeAmt,
-        null as disFaceValue,
+        ir.DEAL_FEE_AMT as trdFeeAmt,
+        ir.SETT_FEE_AMT as settleFeeAmt,
+        ir.int_amt  as intAmt,
+        ir.m_trade_amt as mtradeAmt,
+        ir.share_ct_amt as disFaceValue,
         EE.PRICE_MODEL as priceModel,
-        null tradeYield
+        ic.rate*100 tradeYield
         from wfl_ibu_quote_etr_re ir
-        inner join ptl_portfolio pp
+        left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
         <if test="userId != null and userId != ''">
             inner JOIN  PTL_PORTFOLIO_AUTHORITY PPA
@@ -1919,14 +1919,9 @@
             AND PPA.USER_ID = #{userId}
         </if>
         LEFT JOIN ETR_ENTRUST ee ON ir.entrust_id = ee.entrust_id
-        LEFT JOIN (
-        select t.entrust_id, sum(t.ent_finish_amt) as ent_finish_amt
-        from ETR_FINISH_STATUS t
-        group by t.entrust_id
-        )efs ON ee.Entrust_Id = efs.entrust_id
-
+        left join wfl_ibu_quote_crep ic on ir.quote_id=ic.quote_id
         where ir.quote_id=#{quoteId,jdbcType=VARCHAR}
-
+        and #{STATUS_VALID_04}= #{effectiveStatus,jdbcType=VARCHAR}
 
     </select>
     <select id="selectIbuTablePledgeInfoList"
@@ -2266,7 +2261,10 @@
             T6.counter_name counterIdStr,
             T1.remark,
             T1.TRADE_DATE as tradeDate,
-            nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode
+            nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode,
+            match.pre_trade_id preTradeId,
+            match.match_status as matchStatus,
+            T1.trader as trader
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
             inner join (
                 select td.totle_trade_id,sum(td.share_amt) share_amt,
@@ -2283,15 +2281,17 @@
                 group by td.totle_trade_id
             )deal
             on T1.totle_trade_id=deal.totle_trade_id
+            left join trd_product_deal trd_product_deal on T1.totle_trade_id = trd_product_deal.totle_trade_id
             LEFT JOIN FIN_PRODUCT  T2 ON T1.FINPROD_ID = T2.FINPROD_ID
-            left join fin_trade_product T3 on T1.FINPROD_ID=T3.finprod_id
+            left join fin_trade_product T3 on trd_product_deal.FINPROD_ID=T3.finprod_id
+            left join FIN_PRODUCT_TYPE FIN_PRODUCT_TYPE on FIN_PRODUCT_TYPE.FINPROD_ID=trd_product_deal.FINPROD_ID
             LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.counter_id
             LEFT JOIN STL_SEC_ACCT_INFO T7 ON T1.SEC_MANAGE_ACCT_ID = T7.SEC_ACCT_ID
             LEFT JOIN TRD_BANK_MANUAL_SETTLE_INFO T8 ON T1.TOTLE_TRADE_ID = T8.TRADE_ID
             LEFT JOIN STL_PAY_ORDERS T9 ON T1.TOTLE_TRADE_ID = T9.TRADE_ID
             left join trdquto_match_info match on T1.totle_trade_id=match.trd_id
-            LEFT JOIN BUSI_TYPE_MAPPING btm ON T1.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
-            LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='FINPROD_TYPE_TG' and sdl1.item_code = T1.FINPROD_TYPE2
+            LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON FIN_PRODUCT_TYPE.TYPE_8 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
+            LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='PINAN_ASSET_TYPE' and sdl1.item_code = FIN_PRODUCT_TYPE.TYPE_8
             LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.dict_code ='BUSI_TYPE_POSITION' and sdl2.item_code = btm.BUSI_TYPE
             LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = T1.PS
             LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
@@ -2413,7 +2413,7 @@
         t1.finprod_id as finprodId,
         nvl(fp.finprod_market_id,T3.TERM_TYPE) as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
-        t1.ps as ps,
+        tot.ps as ps,
         sdl3.item_value psStr,
         t1.trade_market as tradeMarket,
         sdl4.item_value tradeMarketStr,
@@ -2444,6 +2444,7 @@
         nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode
         from trd_product_deal t1
         left join trd_product_deal_add t2 on t1.trade_id=t2.trade_id
+        left join TRD_FIN_PRODUCT_DEAL_TOTAL tot on tot.TOTLE_TRADE_ID=t1.TOTLE_TRADE_ID
         left  join ptl_portfolio pp on t2.portfolio_id=pp.portfolio_id
         <if test="userId != null and userId != ''">
             inner JOIN  PTL_PORTFOLIO_AUTHORITY PPA
@@ -2452,15 +2453,16 @@
         </if>
         left join fin_product fp on t1.finprod_id=fp.finprod_id
         left join fin_trade_product T3 on T1.FINPROD_ID=T3.finprod_id
+        left join fin_product_type  fin_product_type on fin_product_type.FINPROD_ID=t1.FINPROD_ID
         LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.counter_id
         LEFT JOIN STL_SEC_ACCT_INFO T7 ON T1.SEC_MANAGE_ACCT_ID = T7.SEC_ACCT_ID
         LEFT JOIN TRD_BANK_MANUAL_SETTLE_INFO T8 ON T1.TOTLE_TRADE_ID = T8.TRADE_ID
         LEFT JOIN STL_PAY_ORDERS T9 ON T1.TOTLE_TRADE_ID = T9.TRADE_ID
         left join trdquto_match_info match on T1.totle_trade_id=match.trd_id
-        LEFT JOIN BUSI_TYPE_MAPPING btm ON T1.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
-        LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='FINPROD_TYPE_TG' and sdl1.item_code = T1.FINPROD_TYPE2
+        LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON fin_product_type.TYPE_8 = btm.Finprod_Type_Tg AND tot.PS = btm.ps
+        LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='PINAN_ASSET_TYPE' and sdl1.item_code = fin_product_type.TYPE_8
         LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.dict_code ='BUSI_TYPE_POSITION' and sdl2.item_code = btm.BUSI_TYPE
-        LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = T1.PS
+        LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = tot.PS
         LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
         LEFT JOIN SYS_DATADICT_LIST sdl6 on sdl6.dict_code ='SHARES_TRADE_MARKET' and sdl6.item_code = T1.TRADE_MARKET_MODE
         LEFT JOIN SYS_DATADICT_LIST sdl7 on sdl7.dict_code ='CCY' and sdl7.item_code = T1.ccy
@@ -2514,7 +2516,7 @@
         </if>
 
         <if test="ps != null and ps!='' ">
-            AND T1.PS= #{ps}
+            AND tot.PS= #{ps}
         </if>
         <if test="cleanStatus != null and cleanStatus!='' ">
             AND (case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
@@ -2712,7 +2714,7 @@
         <result column="FPRICE_AMT"       property="fpriceAmt"      jdbcType="DECIMAL" />
         <result column="ouPartyId"       property="ouPartyId"      jdbcType="VARCHAR" />
         <result column="ouTraderId"       property="ouPartyId"      jdbcType="VARCHAR" />
-        <result column="execId"       property="execId"      jdbcType="VARCHAR" />
+        <result column="execid"       property="execid"      jdbcType="VARCHAR" />
         <result column="finprodMarketId"       property="finprodMarketId"      jdbcType="VARCHAR" />
         <result column="settleSpeedStr"       property="settleSpeedStr"      jdbcType="VARCHAR" />
         <result column="deliveryType"       property="deliveryType"      jdbcType="VARCHAR" />
@@ -2765,7 +2767,7 @@
         ,TRD_PRODUCT_DEAL.BUSINESS_MODEL as businessModel
         ,tpda.ou_party_id as ouPartyId
         ,tpd.TRADER as ouTraderId
-        ,match.exe_id as execId
+        ,match.exe_id as execid
         ,fp.Finprod_Market_Id as finprodMarketId
         ,decode(tpd.settle_speed,'0','01','1','02','2','03') as settleSpeedStr
         ,tpd.delivery_type as deliveryType
@@ -2826,6 +2828,10 @@
         from trdquto_match_info tmi
         where tmi.trd_id =#{totleTradeId,jdbcType=VARCHAR})
     </update>
+
+    <select id="getTradeId" resultType="java.lang.String">
+        select PRE_TRADE_ID from TRDQUTO_MATCH_INFO  where TRD_ID=#{tradeId,jdbcType=VARCHAR}
+    </select>
 
 </mapper>
 

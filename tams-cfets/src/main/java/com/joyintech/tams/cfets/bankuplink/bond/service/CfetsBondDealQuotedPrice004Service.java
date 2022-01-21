@@ -148,7 +148,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         AjaxResult ajaxResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
         //模式
-        String sellPara = CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
+        String exportShow = CacheUtil.getSysParam("EXPORT_SHOW");
         String ps = entity.getPs();
         if(StringUtil.isEmpty(ps)){
             errorList.add(new ValidMessage("请输入交易方向"));
@@ -157,7 +157,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             errorList.add(new ValidMessage("请输入资产代码"));
         }
         if(StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())||StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())){
-            if(StringUtil.isEmpty(entity.getMySide())){
+            if(StringUtil.equals(exportShow,"01")&&StringUtil.isEmpty(entity.getMySide())){
                 errorList.add(new ValidMessage("请输入本方"));
             }
             if(StringUtil.isEmpty(entity.getMySideTrader())){
@@ -354,8 +354,13 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,type);
             //登录业务流程
             insertWfl(cfetsBondDealDbDto);
-            //头寸
-            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,DictCodeListExt3.系统动作_新建.getValue(),DictCodeListExt3.系统动作_新建.getValue(),type));
+            try{
+                //头寸
+                PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,DictCodeListExt3.系统动作_新建.getValue(),DictCodeListExt3.系统动作_新建.getValue(),type));
+            }catch(PositionException e){
+                e.printStackTrace(); Message message = PositionUtil.ajaxErrorReturn(e);
+                throw new BusinessException("MSG:"+message.getMessage());
+            }
         }
 
     }
@@ -482,7 +487,14 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
     @Override
     public void doDelete(String workflowId) {
         CfetsBondDealRegisterQuoteDto entity = getBussinessEntityByWorkflowId(workflowId);
-        PositionHttpRequest.sendRevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+        String busiType = StringUtil.EMPTY;
+        if(StringUtil.equals(entity.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
+            busiType = DictCodeListExt3.头寸业务类型_债券行权交易.getValue();
+        }else{
+            busiType = DictCodeListExt3.头寸业务类型_现券交易.getValue();
+        }
+        PositionHttpRequest.doDeleteByWorkFlowId(workflowId,DictCodeListExt1.子系统代码_交易.getValue(),busiType,entity.getPs());
+        //PositionHttpRequest.sendRevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
         deleteBussFlowData(workflowId);
     }
 
@@ -501,7 +513,9 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
             result.setWorkflowId(entity.getWorkflowId());
             result.setOperationType(entity.getOperatorType());
-            result.setRegFinProductDealTotal(regFinProductDealTotalMapper.selectByPrimaryKey(entity.getTotleTradeId()));
+            RegFinProductDealTotal regFinProductDealTotal = regFinProductDealTotalMapper.selectByPrimaryKey(entity.getTotleTradeId());
+            regFinProductDealTotal.setRemark(entity.getRemark());
+            result.setRegFinProductDealTotal(regFinProductDealTotal);
             result.setRegFinProductDealTotalAdd(regFinProductDealTotalAddMapper.selectByPrimaryKey(entity.getTotleTradeId()));
             result.setRegTradeFeeTotals(cfetsIbuQuoteBondMapper.listRegTradeFeeTotal(entity.getTotleTradeId()));
             result.setRegFinProductDeals(cfetsIbuQuoteBondMapper.listRegFinProductDeal(entity.getTotleTradeId()));
@@ -816,6 +830,10 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             result.put("cdate",DateUtil.format(entity.getRegFinProductDealTotal().getTradeDate()));
             result.put("ccy",entity.getRegFinProductDealTotal().getCcy());
             result.put("finprodId",entity.getRegFinProductDealTotal().getFinprodId());
+            result.put("workFlowId",entity.getWorkflowId());
+            if(StringUtil.equals(decisionAct,DictCodeListExt3.系统动作_修改.getValue())){
+                result.put("bTotalTradeId",entity.getRegFinProductDealTotal().getTotleTradeId());
+            }
             if(CollectionUtils.isNotEmpty(entity.getRegFinProductDeals())){
                 List<Map<String,Object>> ptlList = new ArrayList<>();
                 Map<String,List<RegFinProductDealAdd>> regFinProductDealAddMap = new HashMap<>();

@@ -14,6 +14,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -27,6 +28,7 @@ import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegInfoListRequest
 import com.joyintech.tams.cfets.trdquery.dto.*;
 import com.joyintech.tams.cfets.trdquery.service.CfetsTrdBondInvestTrade002Service;
 import com.joyintech.tams.cfets.trdquery.service.CfetsTrdQueryService;
+import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemDealRegisterQuoteDto;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
@@ -137,6 +139,8 @@ public class CfetsTrdQueryController extends BaseController {
 
         //当前平台日
         initPageParams.put("platDate",DateUtil.platDateFromCache());
+        //当前用户
+        initPageParams.put("userId", SecurityUtil.getLoginUser().getUserName());
         return new Message<Map<String, Object>>(initPageParams).success();
     }
     /**
@@ -431,6 +435,7 @@ public class CfetsTrdQueryController extends BaseController {
             if(StringUtil.equals(inputDto.getTradeMarketMode(), DictCodeListExt1.交易市场_一级市场.getValue())){
                 inputDto.setBondFirstSign("01");
             }
+            inputDto.setRevokeReason(input.getRevokeReason());
             inputDto.setTotleTradeId(totleTradeId + "R");
             inputDto.setFinprodType2("F01");
             inputDto.setOperateType(operateType);
@@ -462,6 +467,39 @@ public class CfetsTrdQueryController extends BaseController {
         }
     }
 
+    @ApiOperation(value = "修改成交编号前check", notes = "修改成交编号前check")
+    @PostMapping("checkModifyExecId")
+    @ResponseBody
+    public  Message<AjaxResult> checkModifyExecId(@RequestBody CfetsTrdBondInvestTradeDto inputDto)
+            throws Exception {
+        try {
+            AjaxResult ajax= cfetsTrdBondInvestTrade002Service.checkModifyExecId(inputDto);
+            if(null!=ajax){
+                return new Message<AjaxResult>().success().setData(ajax);
+            }else{
+                return new Message<AjaxResult>().success().setMessage("校验通过");
+            }
+        }catch (Exception e) {
+            logger.error("修改成交编号校验异常",e);
+            return new Message<AjaxResult>().fail().setMessage("校验失败");
+        }
+    }
 
+    @ApiOperation(value = "修改成交编号", notes = "修改成交编号")
+    @PostMapping("/modifyExecId")
+    @ResponseBody
+    public Message<AjaxResult> modifyExecIdMethod(@RequestBody CfetsTrdBondInvestTradeDto input) throws WorkFlowException {
+        try {
+            AjaxResult ajax= cfetsTrdBondInvestTrade002Service.modifyExecIdMethod(input);
+            if(null!=ajax){
+                return new Message<AjaxResult>().success().setData(ajax);
+            }else{
+                return new Message<AjaxResult>().success().setMessage("修改成交编号成功");
+            }
+        }catch (Exception e) {
+            logger.error("修改成交编号成功异常",e);
+            return new Message<AjaxResult>().fail().setMessage("修改成交编号失败");
+        }
+    }
 
 }

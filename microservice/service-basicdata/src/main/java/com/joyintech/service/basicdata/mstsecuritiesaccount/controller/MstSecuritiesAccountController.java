@@ -385,4 +385,16 @@ public class MstSecuritiesAccountController {
         return mstSecuritiesAccountService.IsBondAsset(map);
 
     }
+    /**
+     * 获取证券代码
+     *
+     * @param map
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("getFinprodMarketInfoNewUi/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodMarketInfoNewUi(@RequestBody Map<String, Object> map,
+                                                      @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+        return mstSecuritiesAccountService.getFinprodMarketInfoNewUi(page, length, map);
+    }
 }

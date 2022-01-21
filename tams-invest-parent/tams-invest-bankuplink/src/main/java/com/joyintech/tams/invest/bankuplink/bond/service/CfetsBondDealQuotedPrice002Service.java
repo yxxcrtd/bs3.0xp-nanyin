@@ -10,6 +10,16 @@
 
 package com.joyintech.tams.invest.bankuplink.bond.service;
 
+import com.joyintech.calculation.CalculatorFactory;
+import com.joyintech.calculation.bonds.PaperIrReset;
+import com.joyintech.calculation.bonds.SecIntSchedule;
+import com.joyintech.calculation.bonds.SecPrinSchedule;
+import com.joyintech.calculation.bonds.constant.*;
+import com.joyintech.calculation.shell.AccurIntCalculator;
+import com.joyintech.calculation.shell.PriceByYieldCalculator;
+import com.joyintech.calculation.shell.YieldByPriceCalculator;
+import com.joyintech.calculation.shell.param.*;
+import com.joyintech.calculation.util.BasicUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.entity.ProcessMark;
@@ -20,16 +30,22 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.FinCashCalcRule;
 import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealEntrustOrderDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.SecInfoModelDto;
 import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonService;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.trade.dto.FinCashPlanDto;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -42,6 +58,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 现券买卖-对话报价
@@ -239,12 +256,12 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
         }
         // add by etliu 20210108 end
 
-        if(StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getPrice())){
+        /*if(StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getPrice())){
             cfetsBondDealDialogueQuoteDto = restTemplate.postForObject(
                     ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsBondDealQuotedPrice/calcAmt",
                     cfetsBondDealDialogueQuoteDto, CfetsBondDealDialogueQuoteDto.class);
-        }
-
+        }*/
+        cfetsBondDealDialogueQuoteDto = calAmt2(cfetsBondDealDialogueQuoteDto);
         ajaxResult.setData(cfetsBondDealDialogueQuoteDto);
 
         return ajaxResult;
@@ -1064,5 +1081,449 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
         return restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
                         + "/CfetsBondDealQuotedPrice/queryEntrustDealedAmt2",
                 map, BigDecimal.class);
+    }
+
+
+    /**
+     * 计算净价、到期收益率、行权收益率
+     */
+    public CfetsBondDealDialogueQuoteDto calAmt2(CfetsBondDealDialogueQuoteDto dto) {
+        CfetsBondDealDialogueQuoteDto calRespone = new CfetsBondDealDialogueQuoteDto();
+        BeanUtil.copyPropertiesIgnoreNull(calRespone,dto);
+        final int SCALE = 12;
+        YieldByPriceCalculator yieldByPriceCalculator = new YieldByPriceCalculator();
+        PriceByYieldCalculator priceByYieldCalculator = new PriceByYieldCalculator();
+        YieldPriceInParameter yieldPriceInParameter = null;
+        PriceYieldInParameter priceYieldInParameter = null;
+        YieldPriceOutParameter yieldPriceOutParameter = null;
+        PriceYieldOutParameter priceYieldOutParameter = null;
+        Map<String, Object> tempParamMap = new HashMap<String, Object>();
+        tempParamMap.put("finprodId", dto.getFinprodId());
+        tempParamMap.put("ps", dto.getPs());
+        List<FinCashCalcRule> finCashCalcRuleList = restTemplate.postForList(
+                ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/selectBondsIntResetList",
+                tempParamMap, FinCashCalcRule.class);
+
+        // c.获取债券的付息计划信息
+        List<FinCashPlanDto> finCashPlanList = restTemplate.postForList(
+                ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getFinCashPlan",
+                tempParamMap, FinCashPlanDto.class);
+        List<SecIntSchedule> invScheduleList = new ArrayList<>();
+        List<FinCashPlanDto> intSchList = new ArrayList<FinCashPlanDto>();
+        for (FinCashPlanDto item : finCashPlanList) {
+            if (StringUtil.equals(item.getCashType1(),
+                    DictCodeListExt1.现金流一级类型_利息.getValue())
+                    && item.getVdateUnadjust() != null) {
+                SecIntSchedule schedule = new SecIntSchedule();
+                schedule.setTheoryStartDate(DateUtil.dateToLocal(item.getVdateUnadjust()));
+                schedule.setTheoryCutoffDate(DateUtil.dateToLocal(item.getMdateUnadjust()));
+                schedule.setActualStartDate(DateUtil.dateToLocal(item.getVdate()));
+                schedule.setActualCutoffDate(DateUtil.dateToLocal(item.getMdate()));
+                schedule.setAmount(item.getIntAmt());
+                invScheduleList.add(schedule);
+
+                intSchList.add(item);
+            }
+        }
+
+        // d.获取债券基本资料信息
+        SecInfoModelDto secInfoModelDto = restTemplate.postForObject(
+                ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getSecInfoModel",
+                tempParamMap, SecInfoModelDto.class);
+        SecInfoModel secInfoModel = this.toSecInfoModel(secInfoModelDto);
+        // e.获取债券的还本计划信息
+        List<SecPrinSchedule> secPrinScheduleList = new ArrayList<SecPrinSchedule>();
+        for (FinCashPlanDto item : finCashPlanList) {
+            if (StringUtil.equals(item.getCashType1(),
+                    DictCodeListExt1.现金流一级类型_本金.getValue())) {
+                SecPrinSchedule schedule = new SecPrinSchedule();
+                schedule.setAmount(item.getIntAmt());
+                schedule.setFlag(
+                        StringUtil.equals(item.getIsPayInt(), DictCodeList.是否_是.getValue()));
+                schedule.setPrincipal(item.getPrinAmt());
+                schedule.setInterestEndDate(DateUtil.dateToLocal(item.getMdate()));
+                secPrinScheduleList.add(schedule);
+            }
+        }
+
+        List<PaperIrReset> paperIrResetList = finCashCalcRuleList.stream().map(item -> {
+            PaperIrReset ret = new PaperIrReset();
+            ret.setBaseRateEffDate(BasicUtil.dateToLocal(item.getEffDate()));
+            ret.setParRate(item.getYield());
+            ret.setParRateEffDate(BasicUtil.dateToLocal(item.getEffDate()));
+            return ret;
+        }).collect(Collectors.toList());
+        if (paperIrResetList != null && paperIrResetList.size() > 0) {
+            paperIrResetList.get(0).setBaseRateEffDate(
+                    BasicUtil.dateToLocal(secInfoModelDto.getStartDate()));
+        }
+        if (paperIrResetList != null && paperIrResetList.size() > 1) {
+            //多重利率则计算按浮动利率算
+            secInfoModel.setIntRateType(IntRateType.浮动利率);
+        }
+        yieldPriceInParameter = new YieldPriceInParameter();
+        yieldPriceInParameter.setCalDate(DateUtil.dateToLocal(dto.getSettleDate()));
+        yieldPriceInParameter.setSecInfoModel(secInfoModel);
+        yieldPriceInParameter.setSecIntScheduleList(invScheduleList);
+        yieldPriceInParameter.setSecPrinScheduleList(secPrinScheduleList);
+        yieldPriceInParameter.setPaperIrResetList(paperIrResetList);
+        priceYieldInParameter = new PriceYieldInParameter();
+        priceYieldInParameter.setCalDate(DateUtil.dateToLocal(dto.getSettleDate()));
+        priceYieldInParameter.setSecInfoModel(secInfoModel);
+        priceYieldInParameter.setSecIntScheduleList(invScheduleList);
+        priceYieldInParameter.setSecPrinScheduleList(secPrinScheduleList);
+        priceYieldInParameter.setPaperIrResetList(paperIrResetList);
+        yieldPriceInParameter.setCashScheme(FlowCashScheme.付息计划推算计息年度);
+        priceYieldInParameter.setCashScheme(FlowCashScheme.付息计划推算计息年度);
+        yieldPriceInParameter.setDisScheme(DiscountScheme.以剩余年限为单位);
+        priceYieldInParameter.setDisScheme(DiscountScheme.以剩余年限为单位);
+        if (StringUtil.equals(DictCodeList.息票品种_附息.getValue(), secInfoModelDto.getBondsType())) {
+            if (isNotFomartSec(intSchList, secInfoModelDto)) {
+                yieldPriceInParameter.setCashScheme(FlowCashScheme.理论付息区间);
+                priceYieldInParameter.setCashScheme(FlowCashScheme.理论付息区间);
+                yieldPriceInParameter.setDisScheme(DiscountScheme.以付息区间为单位);
+                priceYieldInParameter.setDisScheme(DiscountScheme.以付息区间为单位);
+            } else {
+                yieldPriceInParameter.setCashScheme(FlowCashScheme.付息计划推算计息年度);
+                priceYieldInParameter.setCashScheme(FlowCashScheme.付息计划推算计息年度);
+                yieldPriceInParameter.setDisScheme(DiscountScheme.以剩余年限为单位);
+                priceYieldInParameter.setDisScheme(DiscountScheme.以剩余年限为单位);
+            }
+        }
+        yieldPriceInParameter.setCalMethod(secInfoModel.getCalMethod());
+        priceYieldInParameter.setCalMethod(secInfoModel.getCalMethod());
+        // 后续区间利息计算方案
+        if (IntRateType.浮动利率.equals(secInfoModel.getIntRateType())) {
+            priceYieldInParameter.setNextIntMethod(NextIntCalMethod.按实际利率重置分段计息计算);
+            yieldPriceInParameter.setNextIntMethod(NextIntCalMethod.按实际利率重置分段计息计算);
+
+            yieldPriceInParameter.setCurrIntMethod(CurrIntCalMethod.按实际利率重置分段计息计算);
+            priceYieldInParameter.setCurrIntMethod(CurrIntCalMethod.按实际利率重置分段计息计算);
+        } else {
+            priceYieldInParameter.setNextIntMethod(NextIntCalMethod.使用计算日最新最新票面计算);
+            yieldPriceInParameter.setNextIntMethod(NextIntCalMethod.使用计算日最新最新票面计算);
+
+            yieldPriceInParameter.setCurrIntMethod(CurrIntCalMethod.使用区间起始日前最新票面利率计算);
+            priceYieldInParameter.setCurrIntMethod(CurrIntCalMethod.使用区间起始日前最新票面利率计算);
+        }
+        // 百元面值应计利息
+        BigDecimal accurInt = BigDecimal.ZERO;
+        // 交易方式为“一级市场”时，单位应计利息=应计利息总额=0
+        // 交易方式为“二级市场”时，单位应计利息 =e取得的百元面值应计利息/100*a取得的当前债券面额
+        Date tempSettleDate = dto.getSettleDate();
+        // a.当前债券面额取得（根据还本计划计算）
+        Map<String, Object> paraMap = new HashMap<String, Object>();
+        paraMap.put("finprodId", dto.getFinprodId());
+        paraMap.put("settleDate", DateUtil.format(tempSettleDate));
+        BigDecimal curSecAmt = restTemplate.postForObject(
+                ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getCurSecAmt",
+                paraMap, BigDecimal.class);
+
+        AccurIntCalInParameter accurIntCalInParameter = new AccurIntCalInParameter();
+        // 计算日
+//            accurIntCalInParameter.setCalDate(this.toLocalDate(dto.getSettleDate()));
+        accurIntCalInParameter.setCalDate(DateUtil.dateToLocal(tempSettleDate));
+        // 债券基本资料
+        accurIntCalInParameter.setSecInfoModel(secInfoModel);
+        // 付息计划
+        accurIntCalInParameter.setSecIntScheduleList(invScheduleList);
+        // 利率重置信息
+        accurIntCalInParameter.setPaperIrResetList(paperIrResetList);
+
+        //交易所债券特殊处理start----------------------------------------------------------------
+        AccurIntCalOutParameter out = null;
+
+        if (out != null) {
+            accurInt = ArithmeticUtil.round(out.getInterest(), SCALE, RoundingMode.HALF_UP);
+        } else {
+            // 从计算工厂中创建应计利息计算器
+            AccurIntCalculator calc = CalculatorFactory.createAccurIntCalculator();
+            // 计算利息
+            AccurIntCalOutParameter accurIntCalOutParameter = calc.calculate(accurIntCalInParameter);
+            accurInt = ArithmeticUtil.round(accurIntCalOutParameter.getInterest(), SCALE, RoundingMode.HALF_UP);
+        }
+
+        // 单位应计利息
+        calRespone.setUnitInt(ArithmeticUtil.divide(ArithmeticUtil.multiply(accurInt, curSecAmt), new BigDecimal(100),
+                Integer.parseInt(StringUtils.isEmpty(CacheUtil.getSysParam(
+                        "SEC_INT_SCALE_BANK")) ? "12" : CacheUtil.getSysParam(
+                        "SEC_INT_SCALE_BANK")), RoundingMode.HALF_UP));
+        try {
+            // 单位净价
+            if (StringUtil.equals(dto.getCalculateField(), "01")) {
+                // 单位全价 = 单位净价 + 单位应计利息
+                calRespone.setUnitFprice(ArithmeticUtil.doAdd(dto.getPrice(), calRespone.getUnitInt()));
+                // 全价总额 = 单位全价 * 券面总额/100
+                calRespone.setFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(calRespone.getUnitFprice(), calRespone.getAvaNum()),
+                        new BigDecimal(100), SCALE));
+                calRespone.setCpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(calRespone.getPrice(), calRespone.getAvaNum()),
+                        new BigDecimal(100), SCALE));
+            }
+            switch (dto.getCalculateField()) {
+                // 单位净价
+                case "01":
+                    // 全价总额==>到期收益率
+                    yieldPriceInParameter.setFullPrice(
+                            calRespone.getUnitFprice()/* dto.getFpriceAmt() */);
+                    yieldPriceOutParameter = yieldByPriceCalculator.calculate(
+                            yieldPriceInParameter);
+                    calRespone.setMatureYield(yieldPriceOutParameter.getMatYield());
+                    if (secInfoModelDto.getNextExeDate() != null) {
+                        // 全价总额==>行权收益率
+                        yieldPriceInParameter.setNextExeDate(
+                                DateUtil.dateToLocal(secInfoModelDto.getNextExeDate()));
+                        yieldPriceInParameter.setNextExePrice(
+                                secInfoModelDto.getNextExercisePrice());
+                        if (yieldPriceInParameter.getNextExePrice() != null) {
+                            yieldPriceOutParameter = yieldByPriceCalculator.calculate(
+                                    yieldPriceInParameter);
+                            calRespone.setExerYield(yieldPriceOutParameter.getExeYield());
+                        } else {
+                            calRespone.setExerYield(null);
+                        }
+                    }
+                    break;
+                // 到期收益率
+                case "02":
+                    // 到期收益率==>全价总额
+                    priceYieldInParameter.setMatYield(dto.getMatureYield());
+                    priceYieldOutParameter = priceByYieldCalculator.calculate(
+                            priceYieldInParameter);
+                    // dto.setFpriceAmt(priceYieldOutParameter.getFullPrice());
+                    calRespone.setUnitFprice(priceYieldOutParameter.getFullPrice());
+                    // 全价总额==>行权收益率
+                    if (secInfoModelDto.getNextExeDate() != null) {
+                        yieldPriceInParameter.setFullPrice(
+                                calRespone.getUnitFprice()/* dto.getFpriceAmt() */);
+                        yieldPriceInParameter.setNextExeDate(
+                                DateUtil.dateToLocal(secInfoModelDto.getNextExeDate()));
+                        yieldPriceInParameter.setNextExePrice(
+                                secInfoModelDto.getNextExercisePrice());
+                        if (yieldPriceInParameter.getNextExePrice() != null) {
+                            yieldPriceOutParameter = yieldByPriceCalculator.calculate(
+                                    yieldPriceInParameter);
+                            // dto.setExerYield(yieldPriceOutParameter.getMatYield());
+                            calRespone.setExerYield(yieldPriceOutParameter.getExeYield());
+                        } else {
+                            calRespone.setExerYield(null);
+                        }
+                    }
+                    break;
+                // 行权收益率
+                case "03":
+                    // 行权收益率==>全价总额
+                    if (secInfoModelDto.getNextExeDate() != null) {
+//                        priceYieldInParameter.setMatYield(dto.getMatureYield());
+                        priceYieldInParameter.setMatYield(dto.getExerYield());//行权收益
+                        yieldPriceInParameter.setNextExeDate(
+                                DateUtil.dateToLocal(secInfoModelDto.getNextExeDate()));
+                        yieldPriceInParameter.setNextExePrice(
+                                secInfoModelDto.getNextExercisePrice());
+                        priceYieldOutParameter = priceByYieldCalculator.calculate(
+                                priceYieldInParameter);
+                        calRespone.setFpriceAmt(priceYieldOutParameter.getFullPrice());
+                        calRespone.setUnitFprice(priceYieldOutParameter.getFullPrice());
+                        // 全价总额==>到期收益率
+                        yieldPriceInParameter.setFullPrice(calRespone.getFpriceAmt());
+                        yieldPriceOutParameter = yieldByPriceCalculator.calculate(
+                                yieldPriceInParameter);
+                        calRespone.setMatureYield(yieldPriceOutParameter.getMatYield());
+                    }
+                    break;
+                default:
+                    break;
+            }
+            // 到期收益率 或 行权收益率
+            if (StringUtil.equals(dto.getCalculateField(), "02")
+                    || StringUtil.equals(dto.getCalculateField(), "03")) {
+                calRespone.setFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(calRespone.getUnitFprice(), calRespone.getAvaNum()),
+                        new BigDecimal(100), SCALE));
+                // 单位净价 = 单位全价 - 单位应计利息
+                calRespone.setPrice(com.joyintech.calculation.util.ArithmeticUtil.doSub(calRespone.getUnitFprice(), calRespone.getUnitInt()));
+                calRespone.setCpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(calRespone.getPrice(), calRespone.getAvaNum()),
+                        new BigDecimal(100), SCALE));
+            }
+            if(null!=calRespone.getFpriceAmt()&&null!=calRespone.getCpriceAmt()){
+                calRespone.setIntAmt(ArithmeticUtil.subtract(calRespone.getFpriceAmt(),calRespone.getCpriceAmt()));
+            }
+            //
+            // 每百元金额
+            calRespone.setParValue(getCurSecAmt(dto.getSettleDate(), dto.getFinprodId()));
+            // 本金额
+            calRespone.setParValueAmt(dto.getAvaNum().multiply(calRespone.getParValue())
+                    .divide(new BigDecimal(100)).setScale(2,
+                            RoundingMode.HALF_UP));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return calRespone;
+    }
+
+    public BigDecimal getCurSecAmt(Date settleDate,String finprodId){
+        Map<String,String> param = new HashMap<>();
+        param.put("settleDate",DateUtil.format(settleDate));
+        param.put("finprodId",finprodId);
+        return restTemplate.postForObject(
+                ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsBondDealQuotedPrice/getCurSecAmt",
+                param, BigDecimal.class);
+    }
+
+
+    private SecInfoModel toSecInfoModel(SecInfoModelDto secInfoModelDto) {
+        SecInfoModel secInfoModel = new SecInfoModel();
+        secInfoModel.setStartDate(DateUtil.dateToLocal(secInfoModelDto.getStartDate()));
+        secInfoModel.setEndDate(DateUtil.dateToLocal(secInfoModelDto.getEndDate()));
+        secInfoModel.setFirstPayDate(DateUtil.dateToLocal(secInfoModelDto.getFirstPayDate()));
+        // 利率类型
+        if (StringUtil.equals(DictCodeList.利率类型_固定利率.getValue(),
+                secInfoModelDto.getIntRateType())) {
+            secInfoModel.setIntRateType(IntRateType.固定利率);
+        }
+        else {
+            secInfoModel.setIntRateType(IntRateType.浮动利率);
+        }
+
+        if (StringUtil.isNotBlank(secInfoModelDto.getBasis())) {
+            String basis = StringUtil.splitToList(GlobalConstant.COMMA, secInfoModelDto.getBasis()).get(0);
+            DictCodeList basisDict = DictCodeList.from(DictCode.计息基础, basis);
+            if (basisDict != null){
+                switch (basisDict) {
+                    case 计息基础_30_360:
+                        secInfoModel.setBasis(Basis._30_360);
+                        break;
+                    case 计息基础_A_360:
+                        secInfoModel.setBasis(Basis.A_360);
+                        break;
+                    case 计息基础_A_365:
+                        secInfoModel.setBasis(Basis.A_365);
+                        break;
+                    case 计息基础_A_365F:
+                        secInfoModel.setBasis(Basis.A_365F);
+                        break;
+                    case 计息基础_A_A:
+                    case 计息基础_A_A_平均分配:
+                    case 计息基础_A_A_按实际天数分配:
+                        secInfoModel.setBasis(Basis.A_A);
+                        break;
+                }
+                if (basisDict.equals(DictCodeList.计息基础_A_A_平均分配)) {
+                    secInfoModel.setAllocationType(AllocationType.平均分配);
+                }
+                else {
+                    secInfoModel.setAllocationType(AllocationType.按实际天数分配);
+                }
+            }else {
+                DictCodeListExt3 basisDict3 = DictCodeListExt3.from(DictCode.计息基础, basis);
+                if (basisDict3 != null){
+                    switch (basisDict3) {
+                        case 计息基础_30U_360:
+                            secInfoModel.setBasis(Basis._30U_360);
+                            break;
+                    }
+
+                }
+            }
+        }
+        DictCodeList bondsTypeDict = DictCodeList.from(DictCode.息票品种,
+                secInfoModelDto.getBondsType());
+        switch (bondsTypeDict) {
+            case 息票品种_零息:
+                secInfoModel.setBondsType(Variety.零息);
+                break;
+            case 息票品种_利随本清:
+                secInfoModel.setBondsType(Variety.利随本清);
+                break;
+            case 息票品种_贴现:
+                secInfoModel.setBondsType(Variety.贴现);
+                break;
+            case 息票品种_附息:
+                secInfoModel.setBondsType(Variety.附息);
+                break;
+        }
+
+        // 一体化对应etliu start
+//        if (StringUtil.equals(DictCodeList.推算方法_起息日向后.getValue(),
+        if (StringUtil.equals(DictCodeList.推算方式_起息日向后.getValue(),
+                secInfoModelDto.getCalMethod())) {
+            secInfoModel.setCalMethod(SecIntSchCalMethod.起息日向后);
+        }
+//        else if (StringUtil.equals(DictCodeList.推算方法_到期日向前.getValue(),
+        else if (StringUtil.equals(DictCodeList.推算方式_到期日向前.getValue(),
+                secInfoModelDto.getCalMethod())) {
+            secInfoModel.setCalMethod(SecIntSchCalMethod.到期日向前);
+        }
+        else {
+            secInfoModel.setCalMethod(SecIntSchCalMethod.首次付息日);
+        }
+
+//        if (StringUtil.equals(DictCodeList.支付频率_付息频率_月付.getValue(),
+        if (StringUtil.equals(DictCodeList.频率_月.getValue(),
+                secInfoModelDto.getYearIntRate())) {
+            secInfoModel.setYearIntRate(IntFrequency.月付);
+        }
+//        else if (StringUtil.equals(DictCodeList.支付频率_付息频率_季付.getValue(),
+        else if (StringUtil.equals(DictCodeList.频率_季.getValue(),
+                secInfoModelDto.getYearIntRate())) {
+            secInfoModel.setYearIntRate(IntFrequency.季付);
+        }
+//        else if (StringUtil.equals(DictCodeList.支付频率_付息频率_半年付.getValue(),
+        else if (StringUtil.equals(DictCodeList.频率_半年.getValue(),
+                // 一体化对应etliu end
+                secInfoModelDto.getYearIntRate())) {
+            secInfoModel.setYearIntRate(IntFrequency.半年付);
+        }
+        else {
+            secInfoModel.setYearIntRate(IntFrequency.年付);
+        }
+
+        secInfoModel.setIssuePrice(secInfoModelDto.getIssuePrice());
+
+        return secInfoModel;
+    }
+
+    public boolean isNotFomartSec(List<FinCashPlanDto> secIntScheduleList, SecInfoModelDto secInfoModelDto) {
+        // 根据【实际起始日】排序付息计划
+        Collections.sort(secIntScheduleList, new Comparator<FinCashPlanDto>() {
+            @Override
+            public int compare(FinCashPlanDto o1, FinCashPlanDto o2) {
+                return o1.getVdateUnadjust().compareTo(o2.getVdateUnadjust());
+            }
+        });
+        if (StringUtil.equals(DictCodeList.频率_月.getValue(),
+                secInfoModelDto.getYearIntRate())) {
+            for (FinCashPlanDto she : secIntScheduleList) {
+                Date mDate = DateUtil.addMonthDate(she.getVdateUnadjust(), 1);
+                if (mDate.compareTo(she.getMdateUnadjust()) != 0) {
+                    return false;
+                }
+            }
+        }
+        else if (StringUtil.equals(DictCodeList.频率_季.getValue(),
+                secInfoModelDto.getYearIntRate())) {
+            for (FinCashPlanDto she : secIntScheduleList) {
+                Date mDate = DateUtil.addMonthDate(she.getVdateUnadjust(), 3);
+                if (mDate.compareTo(she.getMdateUnadjust()) != 0) {
+                    return false;
+                }
+            }
+        }
+        else if (StringUtil.equals(DictCodeList.频率_半年.getValue(),
+                secInfoModelDto.getYearIntRate())) {
+            for (FinCashPlanDto she : secIntScheduleList) {
+                Date mDate = DateUtil.addMonthDate(she.getVdateUnadjust(), 6);
+                if (mDate.compareTo(she.getMdateUnadjust()) != 0) {
+                    return false;
+                }
+            }
+        }
+        else {
+            for (FinCashPlanDto she : secIntScheduleList) {
+                Date mDate = DateUtil.addYear(she.getVdateUnadjust(), 1);
+                if (mDate.compareTo(she.getMdateUnadjust()) != 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBond;
@@ -187,4 +188,20 @@ public interface CfetsQuotedCommonMapper {
 	List<IbuQuoteBond> selectQuoteInfoByExecId(Map<String, Object> param);
 
     List<SelectOptionDto> selectEntrustId(Map<String, Object> map);
+
+    /**
+     * 获取资金账户
+     * @param portfolioId
+     * @param acctType
+     * @return
+     */
+    String getACCTNO(@Param("portfolioId") String portfolioId, @Param("acctType") String acctType);
+
+    /**
+     * 获取证券账户
+     * @param portfolioId
+     * @param finprodId
+     * @return
+     */
+    String getSecAcctId(@Param("portfolioId") String portfolioId,@Param("finprodId") String finprodId,@Param("tradeMarket") String tradeMarket);
 }

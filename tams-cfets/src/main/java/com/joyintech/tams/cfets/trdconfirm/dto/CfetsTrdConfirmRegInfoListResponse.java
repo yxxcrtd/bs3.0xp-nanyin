@@ -83,7 +83,7 @@ public class CfetsTrdConfirmRegInfoListResponse{
     private BigDecimal faceValue;
 
     @ApiModelProperty(name="tradeYield",value="成交价",example="1")
-    private BigDecimal tradeYield;
+    private String tradeYield;
 
     @ApiModelProperty(name="termDays",value="期限（天）",example="1")
     private BigDecimal termDays;
@@ -281,6 +281,8 @@ public class CfetsTrdConfirmRegInfoListResponse{
     private BigDecimal   pledgeRatio;
     @ApiModelProperty(name="pledgeFaceValue",value="质押券面值",example="字符串1")
     private BigDecimal   pledgeFaceValue;
+    @ApiModelProperty(name="calMode",value="计算方式",example="计算方式供前台判断使用")
+    private String calMode;
     @ApiModelProperty(name="selectedItem",value="选中数据",example="字符串1")
     private transient List<CfetsTrdConfirmRegInfoListResponse> selectedItem;
 
@@ -587,11 +589,11 @@ public class CfetsTrdConfirmRegInfoListResponse{
         this.faceValue = faceValue;
     }
 
-    public BigDecimal getTradeYield() {
+    public String getTradeYield() {
         return tradeYield;
     }
 
-    public void setTradeYield(BigDecimal tradeYield) {
+    public void setTradeYield(String tradeYield) {
         this.tradeYield = tradeYield;
     }
 
@@ -1058,5 +1060,13 @@ public class CfetsTrdConfirmRegInfoListResponse{
 
     public void setPledgeFaceValue(BigDecimal pledgeFaceValue) {
         this.pledgeFaceValue = pledgeFaceValue;
+    }
+
+    public String getCalMode() {
+        return calMode;
+    }
+
+    public void setCalMode(String calMode) {
+        this.calMode = calMode;
     }
 }

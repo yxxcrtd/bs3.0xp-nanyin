@@ -93,7 +93,7 @@ public interface CfetsIbuQuoteRepoMapper {
      * @author jiangpeng
      * @date 2021/12/11 16:27
      */
-    BigDecimal findEtrLastNumByEtrId(@Param("etrId") String etrId);
+    CfetsRepoDealEntrustOrderDto findEtrLastNumByEtrId(@Param("etrId") String etrId);
 
     /**
      * 查询产品质押债券 证券账户
@@ -213,4 +213,12 @@ public interface CfetsIbuQuoteRepoMapper {
      * @since 1.0
      */
     List<FinProductTypeConfig> getAssetFiveType(FinProductTypeConfig param);
+
+    int countWflEtr(Map<String, Object> param);
+
+    /**
+     * 获取机构信息
+     * @return
+     */
+    List<Map<String, String>> selectAllCustomer();
 }

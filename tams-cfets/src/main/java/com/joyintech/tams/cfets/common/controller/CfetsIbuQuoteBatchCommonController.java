@@ -1,6 +1,7 @@
 package com.joyintech.tams.cfets.common.controller;
 
 import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.tams.cfets.trdconfirm.service.CfetsTrdConfirm001Service;
 import com.joyintech.tams.cfets.trdconfirm.service.CfetsTrdConfirmService;
 import com.joyintech.tams.common.base.entity.InterfCstpTrade;
 import com.joyintech.tams.common.base.entity.InterfOpicsTradRepo;
@@ -32,6 +33,8 @@ public class CfetsIbuQuoteBatchCommonController {
 
     @Autowired
     private CfetsTrdConfirmService cfetsTrdConfirmService;
+    @Autowired
+    private CfetsTrdConfirm001Service cfetsTrdConfirm001Service;
 
     /**
      * 回溯登记成交确认
@@ -43,12 +46,13 @@ public class CfetsIbuQuoteBatchCommonController {
         List<String> totleTradeIds = (List<String>) parm.get("totleTradeIds");
         try{
             totleTradeIds.forEach(item ->{
-                cfetsTrdConfirmService.doCompleteMethod(cfetsTrdConfirmService.prepareEntity(item, DictCodeListExt1.生成方式_批处理生成.getValue()), OperationType.NEW);
+                cfetsTrdConfirm001Service.doCompleteMethod(cfetsTrdConfirmService.prepareEntity(item, DictCodeListExt1.生成方式_批处理生成.getValue()), OperationType.NEW);
             });
         }
         catch (Exception e){
             e.printStackTrace();
             logger.error("回售登记数据自动生成成交数据异常:"+e.getMessage());
+            throw  new Exception(e);
         }
     }
 
@@ -71,6 +75,7 @@ public class CfetsIbuQuoteBatchCommonController {
         catch (Exception e){
             e.printStackTrace();
             logger.error("cstp成交回报自动匹配异常:"+e.getMessage());
+            throw  new Exception(e);
         }
     }
 }

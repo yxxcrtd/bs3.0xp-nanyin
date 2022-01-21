@@ -12,7 +12,7 @@
                IQC.SEND_STATUS                                                                          sendStatus/*发送状态*/,
                IQC.FPRICE_AMT                                                                            tradeAmt/*交易金额*/,
                IQC.RATE                                                                                 rate/*回购利率*/,
-               IQC.TERM                                                                            repoTerm/*回购期限*/,
+               IQC.TERM                                                                                 repoTerm/*回购期限*/,
                IQC.QUOTE_ROLE_TYPE                                                                      quoteRoleType/*本方角色*/,
                MCCI.PARTY_NAME                                                                          ouPartyName/*本方*/,
                SU.REAL_NAME                                                                             ouTraderName /*本方交易员*/,
@@ -107,7 +107,7 @@
                WIQC.RATE                                                                               rate/*回购利率*/,
                WIQC.TERM                                                                               repoTerm/*回购期限*/,
                WIQC.QUOTE_ROLE_TYPE                                                                    quoteRoleType/*本方角色*/,
-               MCCI.PARTY_NAME                                                                         ouPartyName/*本方*/,
+               MCCI.PARTY_ABBR                                                                         ouPartyName/*本方*/,
                SU.REAL_NAME                                                                            ouTraderName /*本方交易员*/,
                MCP.COUNTER_NAME                                                                        cpPartyName/*对手方*/,
                CASE WHEN MCCT.TRADER_NAME is not null THEN MCCT.TRADER_NAME ELSE WIQC.CP_TRADER_ID END cpTraderName/*对手方交易员*/,
@@ -352,6 +352,7 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="DEAL_FEE_AMT" property="dealFeeAmt" jdbcType="DECIMAL" />
         <result column="SETT_FEE_AMT" property="settFeeAmt" jdbcType="DECIMAL" />
+        <result column="SHARE_CT_AMT" property="shareCtAmt" jdbcType="DECIMAL" />
     </resultMap>
 
     <select id="selectWflQuoteEtrReDataByQuoteId" resultMap="QuoteEtrReDataBaseResultMap">
@@ -359,7 +360,7 @@
             QUOTE_ID QUOTE_ID, VERSION VERSION, ENTRUST_ID ENTRUST_ID, PORTFOLIO_ID PORTFOLIO_ID,
             SHARE_AMT SHARE_AMT, FPRICE_AMT FPRICE_AMT,WORKFLOW_ID WORKFLOW_ID, REMARK REMARK, CREATE_USER CREATE_USER,
             CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
-            ,CB_FPRICE_AMT CB_FPRICE_AMT,SC_FPRICE_AMT SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT,DIP_TYPE,CPRICE_AMT,INT_AMT
+            ,CB_FPRICE_AMT CB_FPRICE_AMT,SC_FPRICE_AMT SC_FPRICE_AMT,DEAL_FEE_AMT,SETT_FEE_AMT,DIP_TYPE,CPRICE_AMT,INT_AMT,SHARE_CT_AMT
         from WFL_IBU_QUOTE_ETR_RE
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
             and VERSION = (select max(VERSION) from WFL_IBU_QUOTE_ETR_RE where QUOTE_ID = #{quoteId,jdbcType=VARCHAR})

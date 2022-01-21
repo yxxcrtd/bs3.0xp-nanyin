@@ -305,15 +305,15 @@
     </select>
     <select id="queryCstpPartyList" resultType="com.joyintech.framework.select.SelectOptionDto">
         select distinct I.Counterinstitutioncode id,
-        I.Institutionchinesefullname text,
+        mstc.PARTY_ABBR text,
         mstc.party_id as object
         from  INTERF_CSTP_TRADE I
-        left join MST_CFETS_CUSTOMER_INFO mstc
+        inner join MST_CFETS_CUSTOMER_INFO mstc
         on mstc.party_customer_id=I.Counterinstitutioncode
         where I.Counterinstitutioncode is not null
             <if test="search != null and !search.equals('')">
                 AND	(I.Counterinstitutioncode like concat('%',concat(#{search},'%'))
-                or I.Institutionchinesefullname like concat('%',concat(#{search},'%')))
+                or  mstc.PARTY_ABBR like concat('%',concat(#{search},'%')))
             </if>
             <if test="sysDate != null and !sysDate.equals('')">
                 AND  to_date(I.Tradedate,'yyyy-MM-dd')= #{sysDate,jdbcType=DATE}
@@ -327,10 +327,10 @@
     </select>
     <select id="queryCstpOuPartyList" resultType="com.joyintech.framework.select.SelectOptionDto">
         select distinct I.OURINSTITUTIONCODE id,
-        I.OURINSTITUTIONCHINESEFULLNAME text,
+        mstc.PARTY_ABBR text,
         mstc.party_id as object
         from  INTERF_CSTP_TRADE I
-        left join MST_CFETS_CUSTOMER_INFO mstc
+        inner join MST_CFETS_CUSTOMER_INFO mstc
         on mstc.party_customer_id=I.OURINSTITUTIONCODE
         where I.OURINSTITUTIONCODE is not null
         <if test="sysDate != null and !sysDate.equals('')">
@@ -338,7 +338,7 @@
         </if>
         <if test="search != null and !search.equals('')">
             AND	(I.OURINSTITUTIONCODE like concat('%',concat(#{search},'%'))
-            or I.OURINSTITUTIONCHINESEFULLNAME like concat('%',concat(#{search},'%')))
+            or  mstc.PARTY_ABBR like concat('%',concat(#{search},'%')))
         </if>
     </select>
     <select id="queryCounterPartyList" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -357,7 +357,7 @@
             </if>
     </select>
     <select id="queryMySideTraderList" resultType="com.joyintech.framework.select.SelectOptionDto">
-        SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_ID   id,
+        SELECT distinct MST_CFETS_CUSTOMER_TRADER.TRADER_ID   id,
         MST_CFETS_CUSTOMER_TRADER.TRADER_NAME text,
         MST_CFETS_CUSTOMER_TRADER.MPARTY_ID   parentId
         FROM (SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_ID,
@@ -379,6 +379,21 @@
             AND	(MST_CFETS_CUSTOMER_TRADER.TRADER_ID like concat('%',concat(#{search},'%'))
             or MST_CFETS_CUSTOMER_TRADER.TRADER_NAME like concat('%',concat(#{search},'%')))
         </if>
+    </select>
+
+    <select id="queryMySideTraderListByCounterId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select mcct.TRADER_ID id, mcct.TRADER_NAME text, mcct.MPARTY_ID parentId
+        from MST_CFETS_CUSTOMER_TRADER mcct
+        left join MST_COUNTER_PARTY mcp on mcct.PARTY_ID = mcp.PARTY_ID
+        <where>
+            <if test="partyId != null and !partyId.equals('')">
+                AND mcp.COUNTER_ID = #{partyId}
+            </if>
+            <if test="search != null and !search.equals('')">
+                AND	(mcct.TRADER_ID like concat('%',concat(#{search},'%'))
+                or mcct.TRADER_NAME like concat('%',concat(#{search},'%')))
+            </if>
+        </where>
     </select>
     <select id="queryUserIdList" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT distinct
@@ -565,5 +580,12 @@
         on sp.page_id = swbm.page_id
         where swbm.page_id = #{pageId}
         and swbm.element_id = #{element_id}
+    </select>
+
+
+    <select id="gettotleTradeId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT TOTLE_TRADE_ID id FROM  WFL_REG_FIN_PRODUCT_DEAL_TOTAL
+        UNION
+        SELECT TOTLE_TRADE_ID id FROM  REG_FIN_PRODUCT_DEAL_TOTAL rfpdt
     </select>
 </mapper>

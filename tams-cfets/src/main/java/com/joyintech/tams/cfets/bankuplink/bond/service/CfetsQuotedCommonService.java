@@ -10,6 +10,8 @@
 
 package com.joyintech.tams.cfets.bankuplink.bond.service;
 
+import com.joyintech.background.component.uplink.interbank.database.dao.IbuQuoteBondMapper;
+import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBond;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -106,6 +108,9 @@ public class CfetsQuotedCommonService extends BaseService {
 
     @Autowired
     private SppiImportDataMapper sppiImportDataMapper;
+
+    @Autowired
+    private IbuQuoteBondMapper ibuQuoteBondMapper;
     /**
      * 委托放弃处理
      * 
@@ -563,11 +568,11 @@ public class CfetsQuotedCommonService extends BaseService {
                                            CfetsBondDealEntrustOrderDto cfetsBondDealEntrustOrderDto) {
         boolean flag = false;
         if (StringUtil.equals(cfetsBondDealEntrustOrderDto.getQuoteRoleType(),
-            bondQuoteInfoDto.getQuoteRoleType())
-            && StringUtil.equals(
+                bondQuoteInfoDto.getQuoteRoleType())
+                && StringUtil.equals(
                 StringUtil.defaultString(cfetsBondDealEntrustOrderDto.getSendStatus(), ""),
                 StringUtil.defaultString(bondQuoteInfoDto.getSendStatus(), ""))
-            && StringUtil.equals(
+                && StringUtil.equals(
                 StringUtil.defaultString(cfetsBondDealEntrustOrderDto.getTradeStatus(), ""),
                 StringUtil.defaultString(bondQuoteInfoDto.getTradeStatus(), ""))) {
             flag = true;
@@ -575,6 +580,25 @@ public class CfetsQuotedCommonService extends BaseService {
 
         return flag;
     }
+
+
+    /**
+     * 审批环节状态check
+     * @param quoteId
+     * @param tradeStatus
+     * @return
+     */
+    public  boolean checkQuoteStatusChange(String quoteId,String tradeStatus) {
+        boolean flag = false;
+        IbuQuoteBond ibuQuoteBond = ibuQuoteBondMapper.selectByPrimaryKey(quoteId);
+        if(null!=ibuQuoteBond &&!StringUtil.isEmpty(tradeStatus) && !StringUtil.equals(ibuQuoteBond.getTradeStatus(),tradeStatus)){
+            return true;
+        }
+        return flag;
+    }
+
+
+
 
     /**
      * 根据报价编号查询错误信息
@@ -957,7 +981,7 @@ public class CfetsQuotedCommonService extends BaseService {
     public AjaxResult radioPartyIdCheck(CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto){
         AjaxResult ajaxResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
-        if(StringUtil.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())){
+        if(StringUtil.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())&&StringUtil.equals(cfetsBondDealQuoteCommonDto.getTradeMarket(),DictCodeListExt1.交易场所_银行间.getValue())){
             cfetsBondDealQuoteCommonDto.getPtlAllocatios().forEach(item ->{
                 AjaxResult ar = checkpartyId(item.getEntrustId(), item.getPortfolioId(), cfetsBondDealQuoteCommonDto.getQuoteType());
                 if(StringUtil.isNotEmpty(ar.getMessage())){
@@ -1120,6 +1144,10 @@ public class CfetsQuotedCommonService extends BaseService {
                             ptlAllocatio.setOurShareAmt(ArithmeticUtil.multiply(ptlAllocatio.getOurShareAmt(),new BigDecimal(10000)));
                             ptlAllocatio.setLendinShareAmt(ArithmeticUtil.multiply(ptlAllocatio.getLendinShareAmt(),new BigDecimal(10000)));
                         }
+                    }
+                    if(StringUtil.equals(sellPara,"03")){
+                        ptlAllocatio.setOurShareAmt(shareAmt);
+                        ptlAllocatio.setLendinShareAmt(BigDecimal.ZERO);
                     }
                 }
                 result.put(ptlAllocatio.getEntrustId(),ptlAllocatio);

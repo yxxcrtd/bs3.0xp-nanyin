@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.bankuplink.repo.dto;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -718,5 +719,19 @@ public class CfetsRepoDealQuotedPrice003Dto extends BaseEntity {
 
     public void setFirstNetPrice(String firstNetPrice) {
         this.firstNetPrice = firstNetPrice;
+    }
+
+    public String getAvaPledgePrinStr() {
+        if (this.getAvaPledgePrin() != null) {
+            return ArithmeticUtil.divide(this.getAvaPledgePrin(), new BigDecimal(10000), 2).toPlainString();
+        }
+        return null;
+    }
+
+    public String getPledgePrinStr() {
+        if (this.getPledgePrin() != null) {
+            return ArithmeticUtil.divide(this.getPledgePrin(), new BigDecimal(10000), 2).toPlainString();
+        }
+        return null;
     }
 }

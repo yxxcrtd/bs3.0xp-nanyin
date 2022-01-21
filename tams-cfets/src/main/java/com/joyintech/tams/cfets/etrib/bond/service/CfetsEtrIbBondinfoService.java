@@ -1231,6 +1231,15 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 xqfangshi = "无";
             }
             dto.setXqFlg(xqfangshi);
+
+            //增加剩余行权期限，到期日-理论行权日
+            if (!"--".equals(dto.getXqdate())) {
+                long days = DateUtil.getBetweenDayNumber(DateUtil.parse(dto.getXqdate()),DateUtil.parse(dto.getMdate()));
+                dto.setLastXQDate(ArithmeticUtil.divide(new BigDecimal(days+""),new BigDecimal("365"),2).toString());
+            }else {
+                dto.setLastXQDate("--");
+            }
+
         }
         return dto;
     }
@@ -1817,6 +1826,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 
         return null;
     }
+
     public AjaxResult closeDelegateCheckMethod(CfetsEtribBondInfo003Dto dto){
         if(!StringUtil.isNotEmpty(dto)|| StringUtil.isEmptyList(dto.getSelectedItem())){
             AjaxResult res=new AjaxResult();

@@ -244,7 +244,7 @@ public class CfetsSettleService extends BaseService{
         //用户名	当前操作用户
         req.setUserId("SYSTEM");
         //汇总交易编号	单交易时传交易编号
-        req.setbTotalTradeId(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo().getTradeId());
+        req.setbTotalTradeId(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo().getSettleSeqNo());
         //汇总交易编号	单交易时传交易编号
         req.setTotalTradeId(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo().getSettleSeqNo());
         //流程状态	流程节点 ，提交 审批通过
@@ -343,7 +343,7 @@ public class CfetsSettleService extends BaseService{
         //指令或交易标识	ETR:指令,TRD:交易
         req.setModelType(DictCodeListExt1.子系统代码_交易.getValue());
         //汇总交易编号	单交易时传交易编号
-        req.setbTotalTradeId(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo().getTradeId());
+        req.setbTotalTradeId(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo().getSettleSeqNo());
         //汇总交易编号	单交易时传交易编号
         req.setTotalTradeId(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo().getSettleSeqNo());
         //流程状态	流程节点 ，提交 审批通过

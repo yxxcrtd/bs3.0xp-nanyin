@@ -23,6 +23,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
+import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
@@ -103,6 +104,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	private String wsUrl;
 	@Autowired
 	private EtrExchangeTradeCommonMapper etrExchangeTradeCommonMapper;
+
 
 	/**
 	 * 由于交易平台不同，设置不同交易平台对应的委托方向
@@ -402,6 +404,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			}
 		}
 		initPageParams.put("etrExchange_HqArea_refresh_period", etrExchange_HqArea_refresh_period);
+		initPageParams.put("BOARD_BD04", DictCodeList.上市板_创业板.getValue());
 		return new Message<Map<String, Object>>(initPageParams).success();
 	}
 
@@ -461,18 +464,37 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	 * @param initPageParams initPageParams
 	 */
 	private void setPriceModelSelectOptions(Map<String, Object> initPageParams) {
+		SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.价格模式, null);
+		List<SelectOptionDto> priceMode1 = selectDto1.getOptions().stream().filter(option -> {
+			return StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_指定价格.getValue());
+		}).collect(Collectors.toList());
+		initPageParams.put("PRICE_MODEL_JJ_1", JsonUtils.objectArray2Json(priceMode1.toArray()));
+
+		SelectDto selectDto12 = this.getSelectDataFromDataDic(DictCode.价格模式, null);
+		List<SelectOptionDto> priceMode12 = selectDto12.getOptions().stream().filter(option -> {
+			return StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_指定价格.getValue())
+					|| StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_限价指令.getValue());		}).collect(Collectors.toList());
+		initPageParams.put("PRICE_MODEL_JJ_12", JsonUtils.objectArray2Json(priceMode12.toArray()));
+
+		SelectDto selectDto23 = this.getSelectDataFromDataDic(DictCode.价格模式, null);
+		List<SelectOptionDto> priceMode23 = selectDto23.getOptions().stream().filter(option -> {
+			return StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_限价指令.getValue())
+					|| StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_市价指令.getValue());		}).collect(Collectors.toList());
+		initPageParams.put("PRICE_MODEL_JJ_23", JsonUtils.objectArray2Json(priceMode23.toArray()));
+
 		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.价格模式, null);
-//		List<SelectOptionDto> priceModel_jj = selectDto.getOptions().stream().filter(option -> {
-//			return StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_限价指令.getValue())
-//					|| StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_市价指令.getValue())
-//					|| StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_指定价格.getValue());
-//		}).collect(Collectors.toList());
+		List<SelectOptionDto> priceModelStockCyb = selectDto.getOptions().stream().filter(option -> {
+			return StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_限价指令.getValue())
+					|| StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_市价指令.getValue())
+					|| StringUtil.equals(option.getId(), com.joyintech.background.component.order.exchange.common.constant.DictCodeList.价格模式_收盘价固定价格申报.getValue());
+		}).collect(Collectors.toList());
 
 
 		List<SelectOptionDto> priceModel = selectDto.getOptions().stream().filter(option -> {
 			return StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_限价指令.getValue())
 					|| StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_市价指令.getValue());
 		}).collect(Collectors.toList());
+		initPageParams.put("PRICE_MODEL_JJ_STCOK_CYB", JsonUtils.objectArray2Json(priceModelStockCyb.toArray()));
 		initPageParams.put("PRICE_MODEL_JJ", JsonUtils.objectArray2Json(priceModel.toArray()));
 		initPageParams.put("PRICE_MODEL_DZ", JsonUtils.objectArray2Json(priceModel.toArray()));
 		initPageParams.put("PRICE_MODEL_GD", JsonUtils.objectArray2Json(priceModel.toArray()));
@@ -537,6 +559,12 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		initPageParams.put("DECLA_TYPE_PRM08", DictCodeListExt3.申报类型_点击成交申报.getValue());
 		initPageParams.put("DECLA_TYPE_PRM09", DictCodeListExt3.申报类型_成交申报.getValue());
 		initPageParams.put("DECLA_TYPE_PRM10", DictCodeListExt3.申报类型_收盘价固定价格申报.getValue());
+		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.价格模式, null);
+		// 固定收益
+		List<SelectOptionDto> declaTypePrm10 = selectDto.getOptions().stream().filter(option -> {
+			return StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_收盘价固定价格申报.getValue());
+		}).collect(Collectors.toList());
+		initPageParams.put("DECLA_TYPE_PRM10_OBJ", declaTypePrm10.get(0));
 		initPageParams.put("DECLA_TYPE_PRM11", DictCodeListExt3.申报类型_日均价固定价格申报.getValue());
 		initPageParams.put("DECLA_TYPE_PRM12", DictCodeListExt3.申报类型_最优价成交申报.getValue());
 		initPageParams.put("DECLA_TYPE_PRM13", DictCodeListExt3.申报类型_可转换成交申报.getValue());
@@ -635,11 +663,10 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@ResponseBody
 	@RequestMapping("/getFinprodId")
 	public List<SelectOptionDto> getFinprodId(@RequestBody FinprodMarketInfoRequest dto){
-
-
 		return etrExchangeTrade001CommonService.getFinprodId(RequestUtil.getPageParam());
-
 	}
+
+
 
 	@ResponseBody
 	@PostMapping("/getFinprodMarketInfo")
@@ -779,6 +806,21 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	}
 
 	/**
+	 * 1.6计算偏离度
+	 *
+	 * @param request 画面参数
+	 * @return 偏离度
+	 * @see
+	 * @since 1.0
+	 */
+	@PostMapping("/calcDeviationDegree")
+	@ResponseBody
+	public Message<String> calcDeviationDegree(@RequestBody CalcDeviationDegreeRequest request) {
+		String deviationDegree = etrExchangeTrade001CommonService.calcDeviationDegree(request);
+		return new Message<String>().success().setData(deviationDegree);
+	}
+
+	/**
 	 * 保存按钮点击时的check
 	 *
 	 * @param  dto
@@ -876,6 +918,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			Map<String,List<EtrExchangeTradePortfolioRequest>> groupMap= dto.getPortfolioList().stream().collect(
 					Collectors.groupingBy(item->item.getAcctNo()));			//如果分组Map，key的数量>1,说明是多组合指令，key的数量=1,则为系列户指令
 			if(groupMap.keySet().size() == 1 && dto.getPortfolioList().size()>1) {
+				EtrExchangeTradePortfolioRequest item=dto.getPortfolioList().get(0);
 				//业务编号生成规则参数
 				if (!StringUtil.isNotEmpty(dto.getEntrustId())) {
 					BussinessCodeParameter param = etrExchangeTrade001CommonService.genBussinessCodeParameter(dto);
@@ -884,12 +927,32 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 				}
 				BigDecimal totalEntrustAmt = dto.getPortfolioList().stream().map(EtrExchangeTradePortfolioRequest::getEntrustAmt).reduce(BigDecimal::add).get();
 				BigDecimal totalEntrustNum = dto.getPortfolioList().stream().map(EtrExchangeTradePortfolioRequest::getEntrustNum).reduce(BigDecimal::add).get();
+				//算比例
+				BigDecimal tempSumDisRate=BigDecimal.ZERO;
+				for(int i=0;i<dto.getPortfolioList().size();i++){
+					EtrExchangeTradePortfolioRequest tempItem=dto.getPortfolioList().get(i);
+					BigDecimal disRate=BigDecimal.ZERO;
+					if(i<dto.getPortfolioList().size()-1) {
+						disRate=ArithmeticUtil.divide(tempItem.getEntrustNum(),totalEntrustNum,2);
+						tempSumDisRate=tempSumDisRate.add(disRate);
+					}else {
+						disRate=ArithmeticUtil.subtract(new BigDecimal("1"),tempSumDisRate);
+					}
+					tempItem.setDisRate(disRate);
+				}
 				dto.setEntrustAmt(totalEntrustAmt);
 				dto.setEntrustNum(totalEntrustNum);
 				dto.setIsMulti(DictCodeList.是否_是.getValue());
 				dto.setVdate(dto.getEntrustDate());
 				dto.setMdate(dto.getEntrustDate());
-				dto.setAcctNo(dto.getAcctNo());
+				dto.setAcctNo(item.getAcctNo());
+				dto.setSecAcctId(item.getSecAcctId());
+				dto.setStockId(item.getStockId());
+				dto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
+				dto.setCreateUser(LoginUserUtil.getUserName());// 用户名
+				dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
+				dto.setCreateTime(new Date());// 创建时间
+				dto.setPortfolioId(item.getPortfolioId()); //让指令分发能查出来
 				// ----------add by zhangrui1 20200703 预占功能 start----------
 				if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
 					String finprodType2 = "";
@@ -1203,21 +1266,6 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		return null;
 	}
 
-	//add by chenjiaxing 债券竞价交易计算偏离度 20210907 start
-	/**
-	 * 1.6计算偏离度
-	 *
-	 * @param params 画面参数
-	 * @return 偏离度
-	 * @see
-	 * @since 1.0
-	 */
-	@RequestMapping("calcDeviationDegree")
-	@ResponseBody
-	public String calcDeviationDegree(@RequestParam Map<String, Object> params) {
-		return etrExchangeTrade001CommonService.calcDeviationDegree(params);
-	}
-	//add by chenjiaxing 债券竞价交易计算偏离度 20210907 end
 
 	/***
 	 * 初始化行情
@@ -1297,6 +1345,26 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		return etrExchangeTrade001CommonService.selectEtrPortfolioList(dto);
 	}
 
+	/**
+	 *
+	 * 通过金融产品代码查询dto
+	 * <功能详细描述>
+	 * @param finprodId
+	 * @return
+	 * @throws Exception
+	 * @see
+	 * @since 1.0
+	 */
+	@ResponseBody
+	@PostMapping("selectByFinprodId")
+	public Message<FinStockInfoDto> selectByFinprodId(@RequestParam(value = "finprodId") String finprodId){
+		try{
+			FinStockInfoDto dto=etrExchangeTrade001CommonService.selectByFinprodId(finprodId);
+			return new Message<FinStockInfoDto>().success().setData(dto);
+		}catch (Exception e){
+			return new Message<FinStockInfoDto>().fail().setData(null);
+		}
+	}
 
 }
 	

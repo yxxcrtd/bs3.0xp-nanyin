@@ -143,7 +143,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                                 || (StringUtil.equals(cfetsDto.getTgBusiType(), DictCodeListExt3.头寸业务类型_现券交易.getValue())
                                          && !StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_买入.getValue()))
                                 || (StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券质押式正回购.getValue())
-                                && StringUtil.equals(cfetsDto.getPs(), DictCodeListExt3.交易方向_正回购.getValue()))))){
+                                && StringUtil.equals(cfetsDto.getPs(), DictCodeListExt3.交易方向_正回购.getValue()))
+                                || (StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue())
+                                && StringUtil.equals(cfetsDto.getPs(), DictCodeListExt3.交易方向_逆回购.getValue()))))){
                     returnList.add(cfetsDto);
                 }
             }
@@ -155,7 +157,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 if(!isInwflFlag && (StringUtil.equals(cfetsDto.getSettleDate(),DateUtil.format(platformDateImpl.getSysDate())))
                     &&(StringUtil.equals(cfetsDto.getSettleStatus(),DictCodeListExt3.交收状态_未交收.getValue())
                         &&(StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue())
-                            ||StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_债券行权交易.getValue())))){
+                            ||StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_债券行权交易.getValue())
+                            || StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_质押式回购首期.getValue())
+                            || StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_质押式回购到期.getValue())))){
                     returnList.add(cfetsDto);
                 }
             }
@@ -432,7 +436,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             //用户名	当前操作用户
             req.setUserId(SecurityUtil.getLoginUser().getUserName());
             //汇总交易编号	单交易时传交易编号
-            req.setbTotalTradeId(cfetsManualSettleRequest.getTradeId());
+            req.setbTotalTradeId(trdBankManualSettleInfo.getSettleSeqNo());
             //汇总交易编号
             req.setTotalTradeId(trdBankManualSettleInfo.getSettleSeqNo());
             req.setWorkFlowId(trdBankManualSettleInfo.getWorkflowId());
@@ -498,13 +502,12 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         List<CfetsEtrIbRepoPosPortfolioSecRequest> ptlSecList = new ArrayList<>();
 
         TrdBankManualSettleInfo trdBankManualSettleInfo = cfetsManualSettleRequest.getTrdBankManualSettleInfo();
-        if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_回溯.getValue())){
-            //调用cancel接口
-            PositionHttpRequest.sendRevoke(trdBankManualSettleInfo.getSettleSeqNo(),DictCodeListExt1.子系统代码_交易.getValue(),"REPO001");
-        }else if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收.getValue())
-                ||StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收修改.getValue())){
-            List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
+        if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_回溯.getValue())
+           ||StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收.getValue())
+           ||StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收修改.getValue())
+           ||StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())){
 
+            List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
             for(CfetsManualSettleDealInfo dto : listTemp){
                 //调用头寸
                 CfetsEtrIbRepoPosPortfolioCashRequest posport = new CfetsEtrIbRepoPosPortfolioCashRequest();
@@ -538,8 +541,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                         if (StringUtil.isNotEmpty(secAcctId)) {
                             secport.setSecAcctId(secAcctId); // 证券账户
                         }
-                        secport.setSecAmount(regFinPledge.getPledgePrin());
-                        secport.setOwnSecAmount(regFinPledge.getPledgePrin());
+                        secport.setSecAmount(ArithmeticUtil.multiply(regFinPledge.getPledgePrin(),new BigDecimal("100")));
+                        secport.setOwnSecAmount(ArithmeticUtil.multiply(regFinPledge.getPledgePrin(),new BigDecimal("100")));
                         secport.setIntegrateSecAmount(BigDecimal.ZERO);
                         ptlSecList.add(secport);
                     }
@@ -558,7 +561,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             //余额校验	Y：需校验   N：不需校验
             String balanceCheck="N";
             req.setBalanceCheck(balanceCheck);
-            req.setBusiType(DictCodeListExt3.头寸业务类型_质押式回购首期.getValue());
+            req.setBusiType(cfetsManualSettleRequest.getListTrdBnakSetDetails().get(0).getBusiType());
             req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
             //清算速度
             if(!StringUtil.isEmptyList(listTemp) && StringUtil.isNotEmpty(listTemp.get(0).getSettleSpeed())){
@@ -575,9 +578,12 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             }
             req.setBusiAct(DictCodeListExt3.业务动作_交收确认.getValue());
             //业务动作BUSI_ACT 09:交收确认 10:交收失败
-//            if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())){
-//                req.setBusiAct("10");
-//            }
+            req.setBusiAct(DictCodeListExt3.业务动作_交收确认.getValue());
+            if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())){
+                req.setBusiAct(DictCodeListExt3.业务动作_交收失败.getValue());
+            }else if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_回溯.getValue())){
+                req.setBusiAct("20");
+            }
             String finprodType2=listTemp.get(0).getFinprodType2();
             if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_债券质押式正回购.getValue())){
                 req.setPs(DictCodeList.回购拆借方向_正回购.getValue());

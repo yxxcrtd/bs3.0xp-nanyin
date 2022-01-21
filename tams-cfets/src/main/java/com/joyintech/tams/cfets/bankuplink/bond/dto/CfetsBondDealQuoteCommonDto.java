@@ -206,6 +206,9 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name="type11",value="资产四级类型")
     private String type11;
 
+    @ApiModelProperty(name="tradeStatus",value="报价状态")
+    private String tradeStatus;
+
     public String getQuoteId() {
         return quoteId;
     }
@@ -708,6 +711,14 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setType11(String type11) {
         this.type11 = type11;
+    }
+
+    public String getTradeStatus() {
+        return tradeStatus;
+    }
+
+    public void setTradeStatus(String tradeStatus) {
+        this.tradeStatus = tradeStatus;
     }
 }
 
