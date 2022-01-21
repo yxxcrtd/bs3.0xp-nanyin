@@ -11,6 +11,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.valuation.accounadjustmanage.assitsaccount.dao.ValAssistAccounting001Mapper;
 import com.joyintech.service.valuation.accounadjustmanage.assitsaccount.dto.ValAssistAccounting001Dto;
+import com.joyintech.service.valuation.accounadjustmanage.assitsaccount.dto.ValAssistHandDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +55,7 @@ public class ValAssistAccounting001Service extends CommonExportService<ValAssist
      * @date 2022-1-12 15:56
      */
     public Page<ValAssistAccounting001Dto> findPage(int page, int length,
-                                                         Map<String, Object> pageParam) {
+                                                    Map<String, Object> pageParam) {
         //账套代码
         String booksetId = (String) pageParam.get("booksetId");
         pageParam.put("booksetId", booksetId);
@@ -65,11 +66,23 @@ public class ValAssistAccounting001Service extends CommonExportService<ValAssist
             codeArr = subjectInternalCode.split(",");
         }
         pageParam.put("subjectInternalCodeArr", codeArr);
-        Page<ValAssistAccounting001Dto> list= this.queryForPage(page, length,
+        Page<ValAssistAccounting001Dto> list = this.queryForPage(page, length,
                 () -> valAssistAccounting001Mapper.findPage(pageParam));
-        list.getRoot().stream().forEach(p-> p.getHands().addAll(valAssistAccounting001Mapper.findHands(p.getBooksetId(),p.getSubjectInternalCode())));
+        list.getRoot().stream().forEach(p -> p.getHands().addAll(valAssistAccounting001Mapper.findHands(p.getBooksetId(), p.getSubjectInternalCode())));
 
         return list;
+    }
+
+    /**
+     * @author  殷亚
+     * @description 根据条件获取辅助核算项
+     * @date 2022-1-19 16:59
+     * @param pageParam:
+     * @return java.util.List<com.joyintech.service.valuation.accounadjustmanage.assitsaccount.dto.ValAssistHandDto>
+     */
+    public List<ValAssistHandDto> findHandsByCondition(Map<String, Object> pageParam) {
+        List<ValAssistHandDto> hands = valAssistAccounting001Mapper.findHandsByCondition(pageParam);
+        return hands;
     }
 
 

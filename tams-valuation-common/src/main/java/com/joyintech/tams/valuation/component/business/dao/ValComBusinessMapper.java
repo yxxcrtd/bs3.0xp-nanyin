@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.component.business.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -79,5 +80,14 @@ public interface ValComBusinessMapper {
      * @since 1.0
      */
     List<SelectOptionDto> getSubjectInteral(Map<String, Object> param);
+
+    /**
+     * @author  殷亚
+     * @description 内部科目模糊搜索组件
+     * @date 2022-1-19 14:13
+     * @param param:
+     * @return java.util.List<com.joyintech.framework.select.SuggestDto>
+     */
+    List<SuggestDto> findSubjectInteral(Map<String, Object> param);
 
 }

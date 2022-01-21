@@ -1,6 +1,9 @@
 package com.joyintech.tams.valuation.accounadjustmanage.assistaccout.dto;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.util.List;
@@ -11,6 +14,7 @@ public class ValAssistAccounting002Dto extends BaseEntity implements ProcessEnti
     /**
      * 账套代码
      */
+    @PrimaryKey(value= PrimaryKey.Field.PK_1)
     private String booksetId;
     /**
      * 账套名称
@@ -19,6 +23,7 @@ public class ValAssistAccounting002Dto extends BaseEntity implements ProcessEnti
     /**
      * 内部科目编码
      */
+    @PrimaryKey(value= PrimaryKey.Field.PK_2)
     private String subjectInternalCode;
     /**
      * 内部科目名称
@@ -32,6 +37,75 @@ public class ValAssistAccounting002Dto extends BaseEntity implements ProcessEnti
 
     List<ValAssistHandDto> hands;
 
+    /**
+     * 辅助核算项集合
+     */
+    private String handjson;
+
+    /**
+     * 科目级别
+     */
+    private String subjectLevel;
+    /**
+     * 科目类型
+     */
+    private String subjectType;
+    /**
+     * 科目类型名称
+     */
+    private String subjectTypeName;
+    /**
+     * 是否核算项
+     */
+    private String accFlag;
+    /**
+     * 是否核算项 名称
+     */
+    private String accFlagName;
+    /**
+     * 底层科目
+     */
+    private String genDetsubRule;
+
+    public String getHandjson() {
+        return handjson;
+    }
+
+    public void setHandjson(String handjson) {
+        this.handjson = handjson;
+    }
+
+    public String getSubjectLevel() {
+        return subjectLevel;
+    }
+
+    public void setSubjectLevel(String subjectLevel) {
+        this.subjectLevel = subjectLevel;
+    }
+
+    public String getSubjectType() {
+        return subjectType;
+    }
+
+    public void setSubjectType(String subjectType) {
+        this.subjectType = subjectType;
+    }
+
+    public String getAccFlag() {
+        return accFlag;
+    }
+
+    public void setAccFlag(String accFlag) {
+        this.accFlag = accFlag;
+    }
+
+    public String getGenDetsubRule() {
+        return genDetsubRule;
+    }
+
+    public void setGenDetsubRule(String genDetsubRule) {
+        this.genDetsubRule = genDetsubRule;
+    }
 
     public String getBooksetId() {
         return booksetId;
@@ -71,5 +145,21 @@ public class ValAssistAccounting002Dto extends BaseEntity implements ProcessEnti
 
     public List<ValAssistHandDto> getHands() {
         return hands;
+    }
+
+    public String getSubjectTypeName() {
+        return SysDataUtil.getNameFromDataDict(DictCode.科目类型,  this.subjectType);
+    }
+
+    public void setSubjectTypeName(String subjectTypeName) {
+        this.subjectTypeName = subjectTypeName;
+    }
+
+    public String getAccFlagName() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否,  this.accFlag);
+    }
+
+    public void setAccFlagName(String accFlagName) {
+        this.accFlagName = accFlagName;
     }
 }

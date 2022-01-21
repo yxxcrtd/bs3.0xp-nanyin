@@ -9,6 +9,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.accounadjustmanage.assitsaccount.dto.ValAssistAccounting001Dto;
+import com.joyintech.service.valuation.accounadjustmanage.assitsaccount.dto.ValAssistHandDto;
 import com.joyintech.service.valuation.accounadjustmanage.assitsaccount.service.ValAssistAccounting001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +59,18 @@ public class ValAssistAccounting001Controller extends BaseController {
 
         return valAssistAccounting001Service.findPage(page, length, param);
     }
+
+    /**
+     * @author  殷亚
+     * @description 根据条件获取辅助核算项
+     * @date 2022-1-19 17:01
+     * @return java.util.List<com.joyintech.tams.valuation.accounadjustmanage.assistaccout.dto.ValAssistHandDto>
+     */
+    @PostMapping("/findHandsByCondition")
+    public List<ValAssistHandDto> findHandsByCondition(@RequestBody Map<String, Object> param) {
+        return valAssistAccounting001Service.findHandsByCondition(param);
+    }
+
 
 
 }

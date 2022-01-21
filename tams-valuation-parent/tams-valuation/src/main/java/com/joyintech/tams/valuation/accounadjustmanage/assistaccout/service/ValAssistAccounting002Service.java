@@ -4,22 +4,12 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.valuation.accounadjustmanage.assistaccout.dto.ValAssistAccounting002Dto;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
-import com.joyintech.tams.valuation.common.interf.base.service.assetdeal.sec.SecVestAssetDealTemplateRecService;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ValAssistAccounting002Service extends CommonExportService<ValAssistAccounting002Dto> implements BaseProcessService<ValAssistAccounting002Dto> {
-
-    @Autowired
-    private SecVestAssetDealTemplateRecService secVestAssetDealTemplateRecService;
-
-    @Autowired
-    private ValAssistAccountingCommonServer trdBondTradeCommonServer;
-
-
 
 
     @Override
@@ -27,10 +17,10 @@ public class ValAssistAccounting002Service extends CommonExportService<ValAssist
         String action = StringUtil.EMPTY;
          if (OperationType.NEW.equals(operationType)) {
             //insert(secDealInfoProcessorResult);
-             action = "insert";
+             action = "update";
         }
         else {
-            action = "update";
+            action = "reset";
         }
         restTemplate.postForObject(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValAssistAccounting002/" + action, valAssistAccounting002Dto,

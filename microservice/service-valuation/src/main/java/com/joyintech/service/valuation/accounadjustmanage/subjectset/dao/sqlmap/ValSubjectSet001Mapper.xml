@@ -13,6 +13,10 @@
 		ACC_INT_FLAG as accIntFlag,
 		OVERDRAWN_FLAG as overdrawnFlag,
 		BASE_SUBJECT_NATURE as baseSubjectNature,
+		GEN_DETSUB_FLAG as genDetsubFlag,
+		CCY as ccy,
+		SUBJECT_INTERNAL_CODE as subjectInternalCode,
+		SUBJECT_HAND_FEL_CODE as subjectHandFelCode,
 		CREATE_USER as createUser,
 		CREATE_DEPT as createDept,
 		CREATE_TIME as createTime,
@@ -74,9 +78,61 @@
 	</select>
 	<select id="selectValBokSubject" resultType="com.joyintech.service.valuation.accounadjustmanage.subjectset.dto.ValBokSubjectDto">
 		SELECT
-			<include refid="BASE_COLUMNS"></include>
-		FROM BOK_SUBJECT
-		WHERE <include refid="PK_FILTER"></include>
+		BS.BOOKSET_ID as booksetId,
+		BS.SUBJECT_NO as subjectNo,
+		BS.SUBJECT_NAME as subjectName,
+		BS.FSUBJECT_ID as fsubjectId,
+		BS.BAL_FLAG as balFlag,
+		BS.SUBJECT_TYPE as subjectType,
+		BS.SUBJECT_LEVEL as subjectLevel,
+		BS.ACC_QUA_FLAG as accQuaFlag,
+		BS.ACC_INT_FLAG as accIntFlag,
+		BS.OVERDRAWN_FLAG as overdrawnFlag,
+		BS.BASE_SUBJECT_NATURE as baseSubjectNature,
+		BS.GEN_DETSUB_FLAG as genDetsubFlag,
+		BS.CCY as ccy,
+		BS.SUBJECT_INTERNAL_CODE as subjectInternalCode,
+		BS.SUBJECT_HAND_FEL_CODE as subjectHandFelCode,
+		BS.CREATE_USER as createUser,
+		BS.CREATE_DEPT as createDept,
+		BS.CREATE_TIME as createTime,
+		BS.UPDATE_USER as updateUser,
+		BS.UPDATE_TIME as updateTime,
+		BOK_BOND_TYPE.HAND_CODE_VALUE as bokBondType,
+		BOK_BOND_TYPE2.HAND_CODE_VALUE as bokBondType2,
+		BOK_TRD_MARKET.HAND_CODE_VALUE as bokTrdMarket,
+		BOK_ISSUE_TYPE.HAND_CODE_VALUE as bokIssueType,
+		BOK_CPY_TYPE.HAND_CODE_VALUE as bokCpyType,
+
+		BOK_ACCOUNT_TYPE.HAND_CODE_VALUE as bokAccountType,
+		BOK_FEE_TYPE.HAND_CODE_VALUE as bokFeeType,
+		BOK_TRD_PROP.HAND_CODE_VALUE as bokTrdProp,
+		BOK_TAX_TYPE.HAND_CODE_VALUE as bokTaxType,
+		BOK_CPY.HAND_CODE_VALUE as bokCpy
+		FROM BOK_SUBJECT BS
+		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_BOND_TYPE
+		on BS.BOOKSET_ID=BOK_BOND_TYPE.BOOKSET_ID and BS.SUBJECT_NO=BOK_BOND_TYPE.SUBJECT_NO and BOK_BOND_TYPE.HAND_CODE='BOK_BOND_TYPE'
+		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_BOND_TYPE2
+		on BS.BOOKSET_ID=BOK_BOND_TYPE2.BOOKSET_ID and BS.SUBJECT_NO=BOK_BOND_TYPE2.SUBJECT_NO and BOK_BOND_TYPE2.HAND_CODE='BOK_BOND_TYPE2'
+		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_TRD_MARKET
+		on BS.BOOKSET_ID=BOK_TRD_MARKET.BOOKSET_ID and BS.SUBJECT_NO=BOK_TRD_MARKET.SUBJECT_NO and BOK_TRD_MARKET.HAND_CODE='BOK_TRD_MARKET'
+		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_ISSUE_TYPE
+		on BS.BOOKSET_ID=BOK_ISSUE_TYPE.BOOKSET_ID and BS.SUBJECT_NO=BOK_ISSUE_TYPE.SUBJECT_NO and BOK_ISSUE_TYPE.HAND_CODE='BOK_ISSUE_TYPE'
+		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_CPY_TYPE
+		on BS.BOOKSET_ID=BOK_CPY_TYPE.BOOKSET_ID and BS.SUBJECT_NO=BOK_CPY_TYPE.SUBJECT_NO and BOK_CPY_TYPE.HAND_CODE='BOK_CPY_TYPE'
+
+		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_ACCOUNT_TYPE
+		on BS.BOOKSET_ID=BOK_ACCOUNT_TYPE.BOOKSET_ID and BS.SUBJECT_NO=BOK_ACCOUNT_TYPE.SUBJECT_NO and BOK_ACCOUNT_TYPE.HAND_CODE='BOK_ACCOUNT_TYPE'
+		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_FEE_TYPE
+		on BS.BOOKSET_ID=BOK_FEE_TYPE.BOOKSET_ID and BS.SUBJECT_NO=BOK_FEE_TYPE.SUBJECT_NO and BOK_FEE_TYPE.HAND_CODE='BOK_FEE_TYPE'
+		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_TRD_PROP
+		on BS.BOOKSET_ID=BOK_TRD_PROP.BOOKSET_ID and BS.SUBJECT_NO=BOK_TRD_PROP.SUBJECT_NO and BOK_TRD_PROP.HAND_CODE='BOK_TRD_PROP'
+		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_TAX_TYPE
+		on BS.BOOKSET_ID=BOK_TAX_TYPE.BOOKSET_ID and BS.SUBJECT_NO=BOK_TAX_TYPE.SUBJECT_NO and BOK_TAX_TYPE.HAND_CODE='BOK_TAX_TYPE'
+		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_CPY
+		on BS.BOOKSET_ID=BOK_CPY.BOOKSET_ID and BS.SUBJECT_NO=BOK_CPY.SUBJECT_NO and BOK_CPY.HAND_CODE='BOK_CPY'
+
+		where BS.BOOKSET_ID = #{booksetId} AND BS.SUBJECT_NO = #{subjectNo}
 	</select>
 	
 	<!-- 账套查询 -->
@@ -194,4 +250,23 @@
         where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
           and SUBJECT_NO like #{subjectNo,jdbcType=VARCHAR} || '%'
     </delete>
+
+	<delete id="deleteSubjectHands" parameterType="com.joyintech.service.valuation.accounadjustmanage.subjectset.dto.ValSubjectHandDto" >
+        delete from BOK_SUBJECT_HAND_VALUE
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+
+    </delete>
+
+
+	<insert id="insertSubjectHands" parameterType="com.joyintech.service.valuation.accounadjustmanage.subjectset.dto.ValSubjectHandDto" >
+        insert into BOK_SUBJECT_HAND_VALUE (BOOKSET_ID, SUBJECT_NO, SUBJECT_INTERNAL_CODE,
+            HAND_CODE, HAND_CODE_VALUE,CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME)
+        values (#{booksetId,jdbcType=VARCHAR}, #{subjectNo,jdbcType=VARCHAR}, #{subjectInternalCode,jdbcType=VARCHAR},
+            #{handCode,jdbcType=VARCHAR}, #{handCodeValue,jdbcType=VARCHAR},  #{createUser,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
 </mapper>

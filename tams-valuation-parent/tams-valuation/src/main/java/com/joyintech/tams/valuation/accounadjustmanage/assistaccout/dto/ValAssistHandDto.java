@@ -7,6 +7,15 @@ package com.joyintech.tams.valuation.accounadjustmanage.assistaccout.dto;
  */
 public class ValAssistHandDto  {
 	/**
+	 * 账套代码
+	 */
+	private String booksetId;
+
+	/**
+	 * 内部科目编码
+	 */
+	private String subjectInternalCode;
+	/**
 	 * 辅助核算项编码
 	 */
 	private String handCode;
@@ -19,7 +28,21 @@ public class ValAssistHandDto  {
 	 */
 	private String status;
 
+	public String getBooksetId() {
+		return booksetId;
+	}
 
+	public void setBooksetId(String booksetId) {
+		this.booksetId = booksetId;
+	}
+
+	public String getSubjectInternalCode() {
+		return subjectInternalCode;
+	}
+
+	public void setSubjectInternalCode(String subjectInternalCode) {
+		this.subjectInternalCode = subjectInternalCode;
+	}
 
 	public String getHandCode() {
 		return handCode;

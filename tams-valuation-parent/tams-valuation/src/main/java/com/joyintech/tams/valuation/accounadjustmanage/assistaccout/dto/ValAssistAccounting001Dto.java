@@ -69,7 +69,7 @@ public class ValAssistAccounting001Dto extends BaseEntity {
 		 * @date 2022-1-18 9:51  
 		 * @return java.lang.String
 		 */
-		if("SUBJECT_INTERNAL_001".equals(booksetId)) {
+		if(DictCode.辅助核算项默认账套.getValue().equals(booksetId)) {
 			status="readonly";
 		}
 		return status;
