@@ -37,6 +37,9 @@ public class CfetsEtrRepoZLCXRequest {
     @ApiModelProperty(name="entrustIdList",value="指令编号",example="['ETRREPO202111290001','ETRREPO202111290001'}")
     private List<String>  entrustIdList;
 
+    @ApiModelProperty(name="entrustId",value="指令编号",example="'ETRREPO202111290001'")
+    private String  entrustId;
+
     @ApiModelProperty(name="invManagerIdList",value="投资经理",example="['wp']")
     private List<String> invManagerIdList;
 
@@ -81,6 +84,14 @@ public class CfetsEtrRepoZLCXRequest {
 
     public void setEntrustIdList(List<String> entrustIdList) {
         this.entrustIdList = entrustIdList;
+    }
+
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
     }
 
     public List<String> getInvManagerIdList() {
