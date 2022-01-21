@@ -153,8 +153,6 @@ public class SvrProdOpenschFileImpService extends FileImpService {
 				prodlistE.add(openSch.getProdId());
 			}
 		}
-
-		deleteData(prodlistE);
 		if(!CollectionUtils.isEmpty(listNE)){
 			logger.debug("开放计划数据删除----开始-----:" +  df.format(new Date()));
 			deleteData(prodlistE);

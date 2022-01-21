@@ -1161,6 +1161,12 @@ public abstract class FileImpService extends InterfService{
             baseEntity.setCreateUser("interf");
             // 更新人
             baseEntity.setUpdateUser("interf");
+            if(baseEntity.getCreateTime() == null){
+                baseEntity.setCreateTime(new Date());
+            }
+            if(baseEntity.getUpdateTime() == null){
+                baseEntity.setUpdateTime(new Date());
+            }
             // 创建人
             baseEntity.setCreateDept(CommonUtil.getDeptCode());
 
