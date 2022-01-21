@@ -1,11 +1,22 @@
 package com.joyintech.service.valuation.accounadjustmanage.assitsaccount.dto;
 
+import com.joyintech.framework.base.BaseEntity;
+
 /**
  * @author  殷亚
  * @description
  * @date 2022-1-12 16:17   
  */
-public class ValAssistHandDto  {
+public class ValAssistHandDto extends BaseEntity {
+	/**
+	 * 账套代码
+	 */
+	private String booksetId;
+
+	/**
+	 * 内部科目编码
+	 */
+	private String subjectInternalCode;
 	/**
 	 * 辅助核算项编码
 	 */
@@ -19,7 +30,21 @@ public class ValAssistHandDto  {
 	 */
 	private String status;
 
+	public String getBooksetId() {
+		return booksetId;
+	}
 
+	public void setBooksetId(String booksetId) {
+		this.booksetId = booksetId;
+	}
+
+	public String getSubjectInternalCode() {
+		return subjectInternalCode;
+	}
+
+	public void setSubjectInternalCode(String subjectInternalCode) {
+		this.subjectInternalCode = subjectInternalCode;
+	}
 
 	public String getHandCode() {
 		return handCode;

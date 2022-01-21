@@ -259,7 +259,7 @@ public class SvrSaleCustSvrreportFileImpService extends FileImpService {
     }
 
     @Override
-    public String importDB(List<Map<String, String>> saleCustSvrreportList, InterfFile interfFile) {
+    public String importDB(List<Map<String, String>> saleCustSvrreportList, InterfFile interfFile, String date) {
         //待入库为空则直接返回
         if (CollectionUtils.isEmpty(saleCustSvrreportList)){
             return "success";

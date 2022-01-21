@@ -841,7 +841,7 @@ public class SvrProdDealFileImpService extends FileImpService {
 	}
 
 	@Override
-	public String importDB(List<Map<String, String>> listData, InterfFile interfFile) {
+	public String importDB(List<Map<String, String>> listData, InterfFile interfFile, String date) {
 		String dealFileType = SvrDataUtil.getSysParam("CHB_PRD_DEAL_FILE_TYPE");
 //		List<Map<String, String>> listEerro;
 		String result="success";

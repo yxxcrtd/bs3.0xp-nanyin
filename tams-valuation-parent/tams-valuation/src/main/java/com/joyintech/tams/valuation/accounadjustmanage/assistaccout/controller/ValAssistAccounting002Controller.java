@@ -52,15 +52,8 @@ public class ValAssistAccounting002Controller extends BaseController {
         String datas = this.getParam("datas");
         if (datas != null) {
             ValAssistAccounting001Dto dto = JsonUtils.json2Object(datas, ValAssistAccounting001Dto.class);
-            model.addAttribute("booksetId", dto.getBooksetId());
-            model.addAttribute("booksetName", dto.getBooksetName());
-            model.addAttribute("subjectInternalCode", dto.getSubjectInternalCode());
-            model.addAttribute("subjectInternalName", dto.getSubjectInternalName());
-            model.addAttribute("subjectLevel", dto.getSubjectLevel());
-            model.addAttribute("accFlagName", dto.getAccFlagName());
-            model.addAttribute("subjectTypeName", dto.getSubjectTypeName());
-            model.addAttribute("genDetsubRule", dto.getGenDetsubRule());
             model.addAttribute("hands", JsonUtils.object2Json(dto.getHands()));
+            model.addAttribute("entity", dto);
         }
         
         
@@ -68,6 +61,7 @@ public class ValAssistAccounting002Controller extends BaseController {
         String workflowId = this.getParam(GlobalConstant.WORKFLOW_ID);
         if (StringUtil.isNotEmpty(workflowId)) {
             ValAssistAccounting002Dto entity = valAssistAccounting002Service.getBussinessEntityByWorkflowId(workflowId);
+            model.addAttribute("hands",entity.getHandjson());
             model.addAttribute("entity", entity);
             model.addAttribute("workflowId", workflowId);
         }
@@ -89,7 +83,7 @@ public class ValAssistAccounting002Controller extends BaseController {
         // 业务代码
         params.setBusinessCode(dto.getBooksetId());
         // 业务类型
-        params.setBusinessType(DictCodeList.共通业务类型_账套日期.getValue());
+        params.setBusinessType(DictCodeList.共通业务类型_辅助核算配置.getValue());
         params.setPageId(this.getPageId());
         params.setElementId(this.getParam(GlobalConstant.ELEMENT_ID));
         //设置流程业务说明, entity即传入的dto

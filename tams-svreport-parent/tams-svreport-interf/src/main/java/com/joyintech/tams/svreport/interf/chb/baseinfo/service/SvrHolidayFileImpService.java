@@ -103,7 +103,7 @@ public class SvrHolidayFileImpService extends FileImpService {
 	}
 
 	@Override
-	public String importDB(List<Map<String, String>> listData,InterfFile interfFile) {
+	public String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date) {
 		String result = "";
 		logger.debug("节假日数据检查---开始-----:" +  df.format(new Date()));
 		@SuppressWarnings("unused")

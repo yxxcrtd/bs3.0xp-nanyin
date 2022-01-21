@@ -143,7 +143,7 @@ public class SvrLoanDetailInfoFileImpService extends FileImpService {
 
 
     @Override
-    public String importDB(List<Map<String, String>> loanDetailInfoList, InterfFile interfFile) {
+    public String importDB(List<Map<String, String>> loanDetailInfoList, InterfFile interfFile, String date) {
         //数据检查
         //添加待处理的数据
         // add by zhangmingming 从CHB_ASSET_INFO中读入人行资产一级分类和人行资产二级分类，用于数据校验 20191224 start

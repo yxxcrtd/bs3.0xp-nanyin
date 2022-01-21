@@ -898,7 +898,7 @@ public abstract class FileImpService extends InterfService{
      * 2、saveData --入库
      * @param fileLists
      */
-    public abstract String importDB(List<Map<String, String>> listData,InterfFile interfFile);
+    public abstract String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date);
     
     public void clearFile(InterfFile interfFile){
         // ftp文件移动
@@ -1161,6 +1161,12 @@ public abstract class FileImpService extends InterfService{
             baseEntity.setCreateUser("interf");
             // 更新人
             baseEntity.setUpdateUser("interf");
+            if(baseEntity.getCreateTime() == null){
+                baseEntity.setCreateTime(new Date());
+            }
+            if(baseEntity.getUpdateTime() == null){
+                baseEntity.setUpdateTime(new Date());
+            }
             // 创建人
             baseEntity.setCreateDept(CommonUtil.getDeptCode());
 

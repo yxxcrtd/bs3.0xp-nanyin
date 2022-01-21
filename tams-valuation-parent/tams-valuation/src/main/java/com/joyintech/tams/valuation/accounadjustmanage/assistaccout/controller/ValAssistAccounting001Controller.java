@@ -15,9 +15,11 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.valuation.accounadjustmanage.assistaccout.dto.ValAssistAccounting001Dto;
+import com.joyintech.tams.valuation.accounadjustmanage.assistaccout.dto.ValAssistHandDto;
 import com.joyintech.tams.valuation.accounadjustmanage.assistaccout.service.ValAssistAccounting001Service;
 import com.joyintech.tams.valuation.component.business.service.CommonBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,11 +95,39 @@ public class ValAssistAccounting001Controller extends BaseController {
     * @date 2022-1-12 15:09
     * @return java.util.List<com.joyintech.framework.select.SelectOptionDto>
     */
-    @RequestMapping("/findSubjectInteral")
+    @RequestMapping("/getSubjectInteral")
     @ResponseBody
-    public List<SelectOptionDto> findSubjectInteral() {
+    public List<SelectOptionDto> getSubjectInteral() {
         Map<String, Object> param = RequestUtil.getPageParam();
         return commonBusinessService.getSubjectInteral(param);
     }
+
+    /**
+     * @author  殷亚
+     * @description 获取内部科目编码定义 模糊搜索
+     * @date 2022-1-12 15:09
+     * @return java.util.List<com.joyintech.framework.select.SelectOptionDto>
+     */
+    @RequestMapping("/findSubjectInteral")
+    @ResponseBody
+    public List<SuggestDto> findSubjectInteral() {
+        Map<String, Object> param = RequestUtil.getPageParam();
+        return commonBusinessService.findSubjectInteral(param);
+    }
+
+    /**
+     * @author  殷亚
+     * @description 根据条件获取辅助核算项
+     * @date 2022-1-19 17:01
+     * @return java.util.List<com.joyintech.tams.valuation.accounadjustmanage.assistaccout.dto.ValAssistHandDto>
+     */
+    @RequestMapping("findHandsByCondition")
+    @ResponseBody
+    public List<ValAssistHandDto> findHandsByCondition() {
+        Map<String, Object> param = RequestUtil.getParameters(getRequest());
+        return valAssistAccounting001Service.findHandsByCondition(param);
+    }
+
+
 
 }

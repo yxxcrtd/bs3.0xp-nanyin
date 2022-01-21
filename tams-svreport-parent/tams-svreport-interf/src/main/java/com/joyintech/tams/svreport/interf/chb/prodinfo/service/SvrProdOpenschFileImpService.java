@@ -108,7 +108,7 @@ public class SvrProdOpenschFileImpService extends FileImpService {
 	private ChbPrdOpenschInterfMapper chbPrdOpenschInterfMapper;
 	
 	@Override
-	public String importDB(List<Map<String, String>> listData,InterfFile interfFile) {
+	public String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date) {
 		String result = "";
 		logger.debug("开放计划数据检查----开始-----:" +  df.format(new Date()));
 		checkData(listData, interfFile.getFilename(), InterfDefine.产品开放计划接口数据.getCode(), InterfDefine.产品开放计划接口数据.getCode(), null,"PROD_ID", "PLAN_TYPE", "OPEN_START", "OPEN_END","OPEN_VDATE");
@@ -153,8 +153,6 @@ public class SvrProdOpenschFileImpService extends FileImpService {
 				prodlistE.add(openSch.getProdId());
 			}
 		}
-
-		deleteData(prodlistE);
 		if(!CollectionUtils.isEmpty(listNE)){
 			logger.debug("开放计划数据删除----开始-----:" +  df.format(new Date()));
 			deleteData(prodlistE);

@@ -57,23 +57,23 @@ $(function(){
             ,{field: 'submitFeedbackStatusStr', title: "反馈状态", width:100,sortField:'submitFeedbackStatus'}
             ,{field: 'salerInstCode', title: '销售机构代码', width:100,sortField:'salerInstCode'}
             ,{field: 'salerName', title: '姓名', width:100,sortField:'salerName'}
-            ,{field: 'salerSexStr', title: '性别', width:100,sortField:'salerSex'}
+            ,{field: 'salerSex', title: '性别', width:100,sortField:'salerSex'}
             ,{field: 'salerBirthday', title: '出生日期', width:100, type:'date',sortField:'salerBirthday'}
-            ,{field: 'salerCredentTypeStr', title: '证件类别', width:150,sortField:'salerCredentType'}
+            ,{field: 'salerCredentType', title: '证件类别', width:150,sortField:'salerCredentType'}
             ,{field: 'salerOtherCredentName', title: "其他证件名称",width:100,sortField:'salerOtherCredentName'}
             ,{field: 'salerCredentNo', title: "证件号码",width:100,sortField:'salerCredentNo'}
             ,{field: 'salerInsNo', title: "内部编号", width:100 ,sortField:'salerInsNo'}
             ,{field: 'salerRegistNo', title: "销售人员登记编码", width:150,sortField:'salerRegistNo'}
-            ,{field: 'salerAreaTypeStr', title: "所属区域",width:100,sortField:'salerAreaType'}
+            ,{field: 'salerAreaType', title: "所属区域",width:100,sortField:'salerAreaType'}
             ,{field: 'salerOrgCode', title: "所属总部或分支机构", width:100,sortField:'salerOrgCode'}
             ,{field: 'salerDept', title: '所属部门', width:100,sortField:'salerDept'}
             ,{field: 'salerPosition', title: '职位', width:100,sortField:'salerPosition'}
-            ,{field: 'salerEduLevelStr', title: '学历', width:100,sortField:'salerEduLevel'}
-            ,{field: 'salerDegreeStr', title: '学位', width:100,sortField:'salerDegree'}
+            ,{field: 'salerEduLevel', title: '学历', width:100,sortField:'salerEduLevel'}
+            ,{field: 'salerDegree', title: '学位', width:100,sortField:'salerDegree'}
             ,{field: 'salerWorkStartYmd', title: '首次参加工作时间', width:100,sortField:'salerWorkStartYmd'}
             ,{field: 'salerFinanceStartYmd', title: "首次从事金融工作时间",width:100,sortField:'salerFinanceStartYmd'}
             ,{field: 'salerStartYmd', title: "首次从事理财销售时间",width:100,sortField:'salerStartYmd'}
-            ,{field: 'salerLevleStr', title: "专业技术职称", width:100 ,sortField:'salerLevle'}
+            ,{field: 'salerLevle', title: "专业技术职称", width:100 ,sortField:'salerLevle'}
             ,{field: 'salerCertificateType', title: "理财专业证书", width:150,sortField:'salerCertificateType'}
             ,{field: 'salerChbTrainNo', title: "理财登记培训证书编号", width:100,sortField:'salerChbTrainNo'}
             ,{field: 'salerRiskLevel', title: "可销售风险等级", width:100,sortField:'salerRiskLevel'}
@@ -81,7 +81,7 @@ $(function(){
             ,{field: 'salerTel', title: '办公电话', width:100,sortField:'salerTel'}
             ,{field: 'salerMobile', title: '移动电话', width:100,sortField:'salerMobile'}
             ,{field: 'salerMail', title: '邮箱', width:100,sortField:'salerMail'}
-            ,{field: 'salerStatusStr', title: '当前状态', width:150,sortField:'salerStatus'}
+            ,{field: 'salerStatus', title: '当前状态', width:150,sortField:'salerStatus'}
             ,{field: 'remark', title: '备注', width:150,sortField:'remark'}
         ],
     });

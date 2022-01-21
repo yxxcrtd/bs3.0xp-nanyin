@@ -9,6 +9,7 @@
         <result column="SHORT_LONG_TERM" property="shortLongTerm" jdbcType="VARCHAR" />
         <result column="GRADE_RESULT" property="gradeResult" jdbcType="VARCHAR" />
         <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="SOURCE" property="source" jdbcType="VARCHAR" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
@@ -22,7 +23,7 @@
     </resultMap>
   <sql id="Base_Column_List">
         O_CODE O_CODE, GRADE_ORG_ID GRADE_ORG_ID, GRADE_DATE GRADE_DATE, O_TYPE O_TYPE, SHORT_LONG_TERM SHORT_LONG_TERM,
-        GRADE_RESULT GRADE_RESULT, INPUT_TYPE INPUT_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
+        GRADE_RESULT GRADE_RESULT, INPUT_TYPE INPUT_TYPE, SOURCE SOURCE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
         CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, IS_RECOMMAND IS_RECOMMAND,
         ISSUER_RATE_TYPE ISSUER_RATE_TYPE, NOTICE_DATE NOTICE_DATE, GRADE_EXPECTATION GRADE_EXPECTATION,
         DIRECTION_CHANGE DIRECTION_CHANGE
@@ -42,6 +43,7 @@
 		#{item.shortLongTerm,jdbcType=VARCHAR} SHORT_LONG_TERM,
 		#{item.gradeResult,jdbcType=VARCHAR} GRADE_RESULT,
 		#{item.inputType,jdbcType=VARCHAR} INPUT_TYPE,
+        #{item.source,jdbcType=VARCHAR} SOURCE,
 		#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
 		#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
 		sysdate CREATE_TIME,
@@ -67,6 +69,7 @@
 	CII.SHORT_LONG_TERM = TEMP.SHORT_LONG_TERM,
 	CII.GRADE_RESULT = TEMP.GRADE_RESULT,
 	CII.INPUT_TYPE = TEMP.INPUT_TYPE,
+    CII.SOURCE = TEMP.SOURCE,
 	CII.CREATE_USER = TEMP.CREATE_USER,
 	CII.CREATE_DEPT = TEMP.CREATE_DEPT,
 	CII.CREATE_TIME = TEMP.CREATE_TIME,
@@ -86,6 +89,7 @@
       SHORT_LONG_TERM,
       GRADE_RESULT,
       INPUT_TYPE,
+      SOURCE,
       CREATE_USER,
       CREATE_DEPT,
       CREATE_TIME,
@@ -104,6 +108,7 @@
       TEMP.SHORT_LONG_TERM,
       TEMP.GRADE_RESULT,
 	  TEMP.INPUT_TYPE,
+      TEMP.SOURCE,
       TEMP.CREATE_USER,
 	  TEMP.CREATE_DEPT,
       TEMP.CREATE_TIME,
@@ -118,7 +123,14 @@
 </insert>
 
     <delete id="deleteTodayData">
-     delete from MST_BOND_CREDIT_RATING where to_char(nvl(UPDATE_TIME,CREATE_TIME),'yyyymmdd')=to_char(sysdate,'yyyymmdd')
+        delete from MST_BOND_CREDIT_RATING where 1=1
+        <if test="collection != null and collection.size()>0">
+            AND GRADE_DATE IN(
+            <foreach item="item" index="index" collection="collection" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
   </delete>
 
     <delete id="deleteAllData">
