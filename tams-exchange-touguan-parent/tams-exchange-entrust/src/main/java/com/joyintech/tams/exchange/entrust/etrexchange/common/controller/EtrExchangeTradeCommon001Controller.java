@@ -928,6 +928,19 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 				}
 				BigDecimal totalEntrustAmt = dto.getPortfolioList().stream().map(EtrExchangeTradePortfolioRequest::getEntrustAmt).reduce(BigDecimal::add).get();
 				BigDecimal totalEntrustNum = dto.getPortfolioList().stream().map(EtrExchangeTradePortfolioRequest::getEntrustNum).reduce(BigDecimal::add).get();
+				//算比例
+				BigDecimal tempSumDisRate=BigDecimal.ZERO;
+				for(int i=0;i<dto.getPortfolioList().size();i++){
+					EtrExchangeTradePortfolioRequest tempItem=dto.getPortfolioList().get(i);
+					BigDecimal disRate=BigDecimal.ZERO;
+					if(i<dto.getPortfolioList().size()-1) {
+						disRate=ArithmeticUtil.divide(tempItem.getEntrustNum(),totalEntrustNum,2);
+						tempSumDisRate=tempSumDisRate.add(disRate);
+					}else {
+						disRate=ArithmeticUtil.subtract(new BigDecimal("1"),tempSumDisRate);
+					}
+					tempItem.setDisRate(disRate);
+				}
 				dto.setEntrustAmt(totalEntrustAmt);
 				dto.setEntrustNum(totalEntrustNum);
 				dto.setIsMulti(DictCodeList.是否_是.getValue());

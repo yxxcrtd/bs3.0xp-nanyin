@@ -5332,7 +5332,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			etrEntrustDetail.setEntrustId(etrEntrust.getEntrustId());
 			etrEntrustDetail.setEntrustAmt(item.getEntrustAmt());
 			etrEntrustDetail.setEntrustNum(item.getEntrustNum());
-//			etrEntrustDetail.setDisRate(ArithmeticUtil.divide(item.getProportion(),new BigDecimal(100),4));
+			etrEntrustDetail.setDisRate(item.getDisRate());
 			etrEntrustDetail.setTargetType(dto.getTargetType());
 			etrEntrustDetailList.add(etrEntrustDetail);
 		}
