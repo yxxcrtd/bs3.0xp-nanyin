@@ -106,7 +106,7 @@ public class SvrChbAssetRateFileImpService extends FileImpService {
 	private ChbAssetRateInterfMapper chbAssetRateInterfMapper;
 
 	@Override
-	public String importDB(List<Map<String, String>> listData, InterfFile interfFile) {
+	public String importDB(List<Map<String, String>> listData, InterfFile interfFile, String date) {
 		String result = "";
 		logger.debug("资产利率基本信息检查----开始-----:" +  df.format(new Date()));
 		checkData(listData, interfFile.getFilename(), InterfDefine.资产利率基本信息接口数据.getCode(),InterfDefine.资产利率基本信息接口数据.getCode(), null,"ASSET_ID", "CHANGE_DATE", "CHANG_TYPE");

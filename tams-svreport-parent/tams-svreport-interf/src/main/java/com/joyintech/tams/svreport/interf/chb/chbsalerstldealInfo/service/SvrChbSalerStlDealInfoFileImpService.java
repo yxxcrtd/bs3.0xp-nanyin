@@ -228,7 +228,7 @@ public class SvrChbSalerStlDealInfoFileImpService extends FileImpService {
     }
 
     @Override
-    public String importDB(List<Map<String, String>> chbSalerStlDealInfoList, InterfFile interfFile) {
+    public String importDB(List<Map<String, String>> chbSalerStlDealInfoList, InterfFile interfFile, String date) {
         //待入库为空则直接返回
         checkDataCodeCheck(chbSalerStlDealInfoList, interfFile.getFilename(), ChbCheckTableInfo.销售结算资金交易信息表INFO);
         if (CollectionUtils.isEmpty(chbSalerStlDealInfoList)){

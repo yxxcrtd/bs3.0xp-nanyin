@@ -94,7 +94,7 @@ public class ProdDealInterfImpService extends AbstractFileImpService{
 			@SuppressWarnings("unchecked")
 			List<Map<String, String>> dataList=(List<Map<String, String>>) value;
 			if(dataList!=null){
-				String oneResult=svrProdDealFileImpService.importDB(dataList, interfile);
+				String oneResult=svrProdDealFileImpService.importDB(dataList, interfile, currentDate);
 				if("fail".equals(oneResult)){
 					result=oneResult;
 				}

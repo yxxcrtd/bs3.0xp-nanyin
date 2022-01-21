@@ -609,7 +609,7 @@ public class SvrProdInfoFileImpService extends FileImpService {
 	}
 
 	// @Override
-	public String importDB(List<Map<String, String>> listData, InterfFile interfFile) {
+	public String importDB(List<Map<String, String>> listData, InterfFile interfFile, String date) {
 //		List<Map<String, String>> listA = 
 		String result="success";
 		checkDataCodeCheck(listData, interfFile.getFilename(), ChbCheckTableInfo.个人发行登记表INFO);

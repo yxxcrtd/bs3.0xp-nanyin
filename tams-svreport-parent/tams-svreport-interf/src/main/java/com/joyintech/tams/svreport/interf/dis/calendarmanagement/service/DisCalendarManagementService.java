@@ -150,7 +150,7 @@ public  class DisCalendarManagementService extends FileImpService {
      * {@inheritDoc}
      */
     @Override
-    public String importDB(List<Map<String, String>> dataList, InterfFile file) {
+    public String importDB(List<Map<String, String>> dataList, InterfFile file, String date) {
         String rs = "success";
         // 对数据list进行处理
         if (!CollectionUtils.isEmpty(dataList)) {

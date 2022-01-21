@@ -85,7 +85,7 @@ public class BotAstPosFileImpService extends AbstractFileImpService {
             }
             @SuppressWarnings("unchecked")
             List<Map<String, String>> dataList = (List<Map<String, String>>) parseResult.get("dataList");
-            success = svrBotAstPosFileImpService.importDB(dataList,interfFile);
+            success = svrBotAstPosFileImpService.importDB(dataList,interfFile, currentDate);
             interfFile.setMoveRemovePath(success);
             svrBotAstPosFileImpService.clearFile(interfFile);
         }

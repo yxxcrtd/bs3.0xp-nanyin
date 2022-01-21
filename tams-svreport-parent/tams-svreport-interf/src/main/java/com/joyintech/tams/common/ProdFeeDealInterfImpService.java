@@ -101,7 +101,7 @@ public class ProdFeeDealInterfImpService extends AbstractFileImpService{
 								@Override
 								public Boolean call() throws ParseException {
 									String success = "success";
-									success  = service.importDB(service.copyDataList(dataList),interfile);
+									success  = service.importDB(service.copyDataList(dataList),interfile, currentDate);
 									return "success".equals(success)?true:false;
 								}
 							});

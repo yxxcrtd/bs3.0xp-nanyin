@@ -105,7 +105,7 @@ public class SvrSaleIderFileImpService extends FileImpService{
 	 * @see FileImpService#(List)
 	 */
     @Override
-    public String importDB(List<Map<String, String>> saleInstList,InterfFile interfFile){
+    public String importDB(List<Map<String, String>> saleInstList,InterfFile interfFile, String date){
         // 数据检查
         checkDataCodeCheck(saleInstList, interfFile.getFilename(), ChbCheckTableInfo.销售人员身份信息表INFO);
         if (CollectionUtils.isEmpty(saleInstList)){

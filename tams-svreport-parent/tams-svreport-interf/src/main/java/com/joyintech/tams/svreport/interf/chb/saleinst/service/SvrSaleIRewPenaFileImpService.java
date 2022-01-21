@@ -105,7 +105,7 @@ public class SvrSaleIRewPenaFileImpService extends FileImpService{
 	 * @see FileImpService#(List)
 	 */
     @Override
-    public String importDB(List<Map<String, String>> saleInstList,InterfFile interfFile){
+    public String importDB(List<Map<String, String>> saleInstList,InterfFile interfFile, String date){
         // 数据检查
         checkDataCodeCheck(saleInstList, interfFile.getFilename(), ChbCheckTableInfo.销售人员奖惩投诉记录信息表INFO);
         if (CollectionUtils.isEmpty(saleInstList)){

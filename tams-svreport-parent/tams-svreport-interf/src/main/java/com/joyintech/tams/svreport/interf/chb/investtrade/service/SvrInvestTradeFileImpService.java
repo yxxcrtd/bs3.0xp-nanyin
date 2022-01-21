@@ -214,7 +214,7 @@ public class SvrInvestTradeFileImpService  extends FileImpService{
 	 * @see com.joyintech.tams.common.FileImpService#importDB(java.util.List)
 	 */
     @Override
-    public String importDB(List<Map<String, String>> investTradeList,InterfFile interfFile) {
+    public String importDB(List<Map<String, String>> investTradeList,InterfFile interfFile, String date) {
         // 数据检查
         // 添加待处理的数据
         checkData(investTradeList, interfFile.getFilename(), 

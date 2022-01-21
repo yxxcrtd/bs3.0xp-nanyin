@@ -232,7 +232,7 @@ public class SvrExchangFileImpService extends FileImpService {
 	}
 
 	@Override
-	public String importDB(List<Map<String, String>> listData,InterfFile fileList) {
+	public String importDB(List<Map<String, String>> listData,InterfFile fileList, String date) {
 		String remoteDir = "";
 		String result = "";
 		

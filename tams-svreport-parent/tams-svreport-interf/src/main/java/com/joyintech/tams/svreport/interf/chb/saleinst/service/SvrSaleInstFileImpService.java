@@ -106,7 +106,7 @@ public class SvrSaleInstFileImpService extends FileImpService{
 	 * @see FileImpService#(List)
 	 */
     @Override
-    public String importDB(List<Map<String, String>> saleInstList,InterfFile interfFile){
+    public String importDB(List<Map<String, String>> saleInstList,InterfFile interfFile, String date){
         // 数据检查
         checkDataCodeCheck(saleInstList, interfFile.getFilename(), ChbCheckTableInfo.总部或分支机构信息表INFO);
         if (CollectionUtils.isEmpty(saleInstList)){

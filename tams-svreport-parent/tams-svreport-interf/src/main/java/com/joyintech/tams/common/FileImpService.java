@@ -898,7 +898,7 @@ public abstract class FileImpService extends InterfService{
      * 2、saveData --入库
      * @param fileLists
      */
-    public abstract String importDB(List<Map<String, String>> listData,InterfFile interfFile);
+    public abstract String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date);
     
     public void clearFile(InterfFile interfFile){
         // ftp文件移动

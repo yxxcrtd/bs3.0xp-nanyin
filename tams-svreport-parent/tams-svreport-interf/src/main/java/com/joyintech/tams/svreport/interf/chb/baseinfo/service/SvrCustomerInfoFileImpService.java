@@ -102,7 +102,7 @@ public class SvrCustomerInfoFileImpService extends FileImpService {
 	
 	@SuppressWarnings("unused")
 	@Override
-	public String importDB(List<Map<String, String>> listData, InterfFile fileList) {
+	public String importDB(List<Map<String, String>> listData, InterfFile fileList, String date) {
 		logger.debug("市场机构数据检查---开始-----:" +  df.format(new Date()));
 		List<Map<String, String>> listErrorInfo = checkData(listData, fileList.getFilename(), InterfDefine.市场机构数据.getCode(),InterfDefine.市场机构数据.getCode(), "CUSTOMER_ID");
 		logger.debug("市场机构数据检查----结束-----:" +  df.format(new Date()));
