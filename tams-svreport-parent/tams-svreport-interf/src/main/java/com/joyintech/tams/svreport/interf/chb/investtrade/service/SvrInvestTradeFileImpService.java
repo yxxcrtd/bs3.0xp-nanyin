@@ -190,7 +190,7 @@ public class SvrInvestTradeFileImpService  extends FileImpService{
                     return "fail";
                 }
                 // 文件处理
-                String saveResult = importDB(investTradeList,interfFile);
+                String saveResult = importDB(investTradeList,interfFile, currentDate);
                 if ("fail".equals(saveResult)){
                     return "fail";
                 }
