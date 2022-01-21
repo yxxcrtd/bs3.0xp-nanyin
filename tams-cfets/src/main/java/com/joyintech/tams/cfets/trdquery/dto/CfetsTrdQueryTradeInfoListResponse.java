@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 银行间交易查询
@@ -164,6 +165,14 @@ public class CfetsTrdQueryTradeInfoListResponse {
     @ApiModelProperty(name="trader",value="交易员",example="trader")
     private String trader;
 
+    @ApiModelProperty(name="selectedItem",value="选择的数据",example="1")
+    private transient List<CfetsTrdQueryTradeInfoListResponse> selectedItem;
+    @ApiModelProperty(name="operateType",value="操作类型",example="1")
+    private String operateType;
+    @ApiModelProperty(name="revokeReason",value="撤销原因",example="1")
+    private String revokeReason;
+    @ApiModelProperty(name="workflowParameter",value="撤销参数",example="1")
+    private String workflowParameter;
     public String getCalMode() {
         return calMode;
     }
@@ -522,5 +531,37 @@ public class CfetsTrdQueryTradeInfoListResponse {
 
     public void setTrader(String trader) {
         this.trader = trader;
+    }
+
+    public List<CfetsTrdQueryTradeInfoListResponse> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<CfetsTrdQueryTradeInfoListResponse> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    public String getOperateType() {
+        return operateType;
+    }
+
+    public void setOperateType(String operateType) {
+        this.operateType = operateType;
+    }
+
+    public String getRevokeReason() {
+        return revokeReason;
+    }
+
+    public void setRevokeReason(String revokeReason) {
+        this.revokeReason = revokeReason;
+    }
+
+    public String getWorkflowParameter() {
+        return workflowParameter;
+    }
+
+    public void setWorkflowParameter(String workflowParameter) {
+        this.workflowParameter = workflowParameter;
     }
 }

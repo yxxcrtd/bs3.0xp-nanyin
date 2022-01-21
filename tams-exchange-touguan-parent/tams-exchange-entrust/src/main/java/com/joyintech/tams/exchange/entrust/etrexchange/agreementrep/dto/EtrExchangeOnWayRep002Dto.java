@@ -29,7 +29,7 @@ import java.util.Date;
  * @see EtrExchangeOnWayRep002Dto
  * @since 1.0
  */
-@PageId("OnWayRep002Dto")
+@PageId("EtrExchangeOnWayRep002Dto")
 public class EtrExchangeOnWayRep002Dto extends BaseEntity {
 
     /**

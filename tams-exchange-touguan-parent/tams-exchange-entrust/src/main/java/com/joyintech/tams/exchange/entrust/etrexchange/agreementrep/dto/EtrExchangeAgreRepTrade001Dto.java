@@ -1,10 +1,12 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.tams.common.base.entity.FinTradeProduct;
+import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.validator.EtrExchangeAgreRepTradeValidator;
 import com.joyintech.tams.invest.entrust.etragrereptrade.validator.EtrAgreRepTradeValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
@@ -12,8 +14,8 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
-@ValidLogic(targetClass = EtrAgreRepTradeValidator.class)
+@PageId("EtrExchangeAgreRepTrade001")
+@ValidLogic(targetClass = EtrExchangeAgreRepTradeValidator.class)
 public class EtrExchangeAgreRepTrade001Dto extends BaseEntity implements ProcessEntity{
 
 	/**

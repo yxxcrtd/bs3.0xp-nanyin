@@ -176,4 +176,17 @@ public interface CfetsTrdQueryMapper {
      * @return java.lang.String
      */
     String getTradeId(@Param("tradeId") String tradeId);
+    /**
+     * 查询汇总编号下的所有交易编号
+     * @param userName
+     * @return
+     */
+    List<String>  selectAllTrdDetailListById(String totleTradeId);
+
+    /**
+     * 查询回购交易基本信息
+     * @param params
+     * @return
+     */
+    CfetsTrdRepoTrade002Dto getTrdRepoInvestTradeDto(Map<String, Object> params);
 }

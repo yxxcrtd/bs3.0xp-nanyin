@@ -92,15 +92,31 @@ public class TradeUtils {
     public static boolean bigThan(BigDecimal d, BigDecimal decimal) {
         if (Objects.nonNull(d) && Objects.nonNull(decimal)) {
             return d.compareTo(decimal) == 1;
-        } else
-            return false;
+        }
+        return false;
+    }
+
+    public static boolean bigThanZero(BigDecimal value) {
+        return bigThan(value, BigDecimal.ZERO);
     }
 
     public static boolean lessThan(BigDecimal d, BigDecimal decimal) {
         if (Objects.nonNull(d) && Objects.nonNull(decimal)) {
             return d.compareTo(decimal) == -1;
-        } else
-            return false;
+        }
+        return false;
+    }
+
+    public static boolean lessThanZero(BigDecimal value) {
+        return lessThan(value, BigDecimal.ZERO);
+    }
+
+    public static BigDecimal subtractMod(BigDecimal value, BigDecimal dividend) {
+        if (Objects.isNull(value) || Objects.isNull(dividend)) {
+            return BigDecimal.ZERO;
+        }
+
+        return value.subtract(value.remainder(dividend));
     }
 
     // 卖出冻结数量

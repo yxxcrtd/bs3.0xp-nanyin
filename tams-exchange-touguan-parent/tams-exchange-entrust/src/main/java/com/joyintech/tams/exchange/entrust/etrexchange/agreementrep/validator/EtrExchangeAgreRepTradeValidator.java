@@ -9,7 +9,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangeAgreRepTrade001Dto;
-import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.service.EtrExchangeAgreRepTradeService;
+import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.service.EtrExchangeAgreRepTrade001Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.invest.entrust.common.validator.EtrCommonValidator;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -32,7 +32,7 @@ public class EtrExchangeAgreRepTradeValidator implements EtrCommonValidator {
     private FinProductMapper finProductMapper;
 
     @Autowired
-    private EtrExchangeAgreRepTradeService etrExchangeAgreRepTradeService;
+    private EtrExchangeAgreRepTrade001Service etrExchangeAgreRepTrade001Service;
 
     @Autowired
     private EtrExchangeTradeCommon001Service etrExchangeTradeCommon001Service;
@@ -78,7 +78,7 @@ public class EtrExchangeAgreRepTradeValidator implements EtrCommonValidator {
             if(StringUtil.equals(dto.getPs(),DictCodeListExt3.交易方向_到期续做.getValue())) {
             Map<String, Object> queryMap = new HashMap<>();
             queryMap.put("tradeId",dto.getTradeId() == null ? dto.getIntiTradeId() : dto.getTradeId());
-                EtrExchangeAgreRepTrade001Dto firstEtrAgreRepTradeDto = etrExchangeAgreRepTradeService.getEntrustInfoByTradeId(queryMap);
+                EtrExchangeAgreRepTrade001Dto firstEtrAgreRepTradeDto = etrExchangeAgreRepTrade001Service.getEntrustInfoByTradeId(queryMap);
                 if(StringUtil.isNotEmpty(firstEtrAgreRepTradeDto)) {
                     if(StringUtil.isNotEmpty(firstEtrAgreRepTradeDto.getTerm()) && firstEtrAgreRepTradeDto.getTerm().compareTo(dto.getTerm())>=0) {
                         errorList.add(new ValidMessage("term", "回购期限必须大于原回购期限！"));

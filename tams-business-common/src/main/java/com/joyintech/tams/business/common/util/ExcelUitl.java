@@ -852,4 +852,28 @@ public class ExcelUitl {
 			this.number = number;
 		}
 	}
+
+	public static void downFile(HttpServletResponse response,File file) {
+		OutputStream os = null;
+		File path = null;
+		try {
+			os = response.getOutputStream();
+			response.setContentType("text/vnd.ms-excel;charset=UTF-8");
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Pragma", "public");
+			response.setHeader("Cache-Control", "max-age=30");
+			response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(file.getName(), "UTF-8"));
+
+			// 写出响应
+			os.write(File2byte(file));
+			os.flush();
+		} catch (Exception e) {
+			logger.error("doExport错误...", e);
+			throw new RuntimeException(e.getMessage());
+		} finally {
+			try {os.close();} catch (IOException e) {e.printStackTrace();}
+			file.delete();
+			path.delete();
+		}
+	}
 }

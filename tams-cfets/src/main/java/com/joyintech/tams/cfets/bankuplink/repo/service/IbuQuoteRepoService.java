@@ -252,6 +252,10 @@ public class IbuQuoteRepoService extends BaseService {
         // 银行间质押式回购质押券模式
         pageParam.put("repo_pledge_model", CacheUtil.getSysParam("repo_pledge_model"));
         setParam(pageParam, 1);
+        if (StringUtil.isNotEmpty(pageParam.get("entrustId"))) {
+            pageParam.put("entrustIdSearch", pageParam.get("entrustId"));
+            pageParam.remove("entrustId");
+        }
         int pageNo = dto.getPageMode() == null ? 1 : dto.getPageMode().getPageNo();
         int pageSize = dto.getPageMode() == null ? 10 : dto.getPageMode().getPageSize();
         return super.queryForPage(pageNo, pageSize, () -> cfetsIbuQuoteRepoMapper.listEntrust(pageParam));

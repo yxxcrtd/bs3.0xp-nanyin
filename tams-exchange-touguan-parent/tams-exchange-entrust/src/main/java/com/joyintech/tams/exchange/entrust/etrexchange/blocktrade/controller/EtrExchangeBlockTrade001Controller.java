@@ -35,6 +35,7 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTradeQuotation001Dto;
+import com.joyintech.tams.systemtools.dto.CommonAjaxResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -165,14 +166,14 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 	@ApiOperation(value="查询盘后行情信息",notes = "查询盘后行情信息")
 	@ResponseBody
 	@PostMapping("findAfterHoursPage")
-	public Message<Page<EtrExchangeTradeQuotation001Dto>> findAfterHoursPage(@RequestBody EtrExchangeTradePositionsCommonRequest request){
+	public Message<Page<EtrExchangeTradeQuotationResponse>> findAfterHoursPage(@RequestBody EtrExchangeTradePositionsCommonRequest request){
 		try {
 			String secId = request.getSecId();
-			Page<EtrExchangeTradeQuotation001Dto> page = etrExchangeBlockTrade001Service.findAfterHoursPage(secId);
-			return new Message<Page<EtrExchangeTradeQuotation001Dto>>().success().setData(page);
+			Page<EtrExchangeTradeQuotationResponse> page = etrExchangeBlockTrade001Service.findAfterHoursPage(secId);
+			return new Message<Page<EtrExchangeTradeQuotationResponse>>().success().setData(page);
 		}catch (Exception e) {
 			logger.error("查询指令管理分页数据异常",e);
-			return new Message<Page<EtrExchangeTradeQuotation001Dto>>().fail().setMessage("查询盘后行情信息数据异常");
+			return new Message<Page<EtrExchangeTradeQuotationResponse>>().fail().setMessage("查询盘后行情信息数据异常");
 		}
 	}
 
@@ -322,6 +323,9 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 					dto.setAcctNo(item.getAcctNo());
 					dto.setEntrustNum(item.getEntrustNum());
 					dto.setEntrustAmt(item.getEntrustAmt());
+					if (StringUtil.isNotEmpty(dto.getFinprodId()) && !StringUtil.isNotEmpty(dto.getStockId())) {
+						dto.setStockId(dto.getFinprodId());
+					}
 					//默认证券账户
 					if (StringUtil.isNotEmpty(item.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
 						Map<String, Object> map = new HashMap<String, Object>();
@@ -334,8 +338,15 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 							dto.setStockId(secAcctId);
 						}
 					}
-					List<ValidMessage> validList = etrExchangeBlockTrade001ValidatorService.valid(dto);
+					ajax= etrExchangeTradeCommon001Service.check(dto, br);
+					if (null != ajax) {
+						break;
+					}
+                    List<ValidMessage> validList = etrExchangeBlockTrade001ValidatorService.valid(dto);
 					if(validList.size()>0) {
+						if (null == ajax) {
+							ajax = new AjaxResult(br);
+						}
 						ajax.setErrorList(validList);
 					}
 					if (null != ajax) {
