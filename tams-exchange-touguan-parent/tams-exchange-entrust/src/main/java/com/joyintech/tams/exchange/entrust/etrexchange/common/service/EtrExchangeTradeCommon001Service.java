@@ -1522,7 +1522,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	}
 
 	/** 查询固定收益行情数据 **/
-	public Page<EtrExchangeTradeQuotation001Dto> findFixedIncomePage(Map<String, Object> map) {
+	public Page<EtrExchangeTradeQuotationResponse> findFixedIncomePage(Map<String, Object> map) {
 		Page<EtrExchangeTradeQuotation001Dto> page = new Page<EtrExchangeTradeQuotation001Dto>();
 		List<EtrExchangeTradeQuotation001Dto> list = new ArrayList<EtrExchangeTradeQuotation001Dto>();
 		String secId= (String)map.get("secId");
@@ -1940,6 +1940,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				etrBlockTradePledgeRepoDto.setCounterSeat(entity.getSeatId());
 				etrBlockTradePledgeRepoDto.setCounterConNo(entity.getAgreeOnId());// 约定号
 				etrBlockTradePledgeRepoDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());// 资产大类
+				etrBlockTradePledgeRepoDto.setPrice(entity.getRepoRate());
 				EtrComponentFactory.getComponentService(EtrBlockTradePledgeRepoDto.class).updateSettings(paraDto);
 				EtrComponentFactory.getComponentService(EtrBlockTradePledgeRepoDto.class).entrustCheck(etrBlockTradePledgeRepoDto, result);
 			}

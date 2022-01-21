@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.dto;
 
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -122,8 +123,14 @@ public class EtrExchangeTradeQuotationResponse {
     @ApiModelProperty(name="market",value="交易场所代码",example="12")
     private String market;
 
-    
-    
+    @ApiModelProperty(name="quotationTypeStr",value="行情类型",example="A1")
+    private String quotationTypeStr;
+
+    @ApiModelProperty(name="entrustPsStr",value="方向(枚举：买；卖)",example="A1")
+    private String entrustPsStr;
+
+
+
     /**
      * 获取 quotationType
      * @return quotationType.
@@ -226,7 +233,7 @@ public class EtrExchangeTradeQuotationResponse {
      * @return entrustPrice.
      */
     public BigDecimal getEntrustPrice() {
-        return entrustPrice;
+        return ArithmeticUtil.round(entrustPrice,4,null);
     }
 
 
@@ -708,4 +715,6 @@ public class EtrExchangeTradeQuotationResponse {
     public void setMarket(String market) {
         this.market = market;
     }
+
+
 }
