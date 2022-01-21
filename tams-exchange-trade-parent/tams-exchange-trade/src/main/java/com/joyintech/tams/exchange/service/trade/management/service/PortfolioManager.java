@@ -2,6 +2,7 @@ package com.joyintech.tams.exchange.service.trade.management.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.joyintech.framework.base.BaseService;
@@ -40,7 +41,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -341,9 +341,9 @@ public class PortfolioManager extends BaseService {
         PortfolioCalculateResponse calculateResponse = null;
 
         // 最低交易数量：大于等于
-        Integer minNum = 1;
+        BigDecimal minNum = BigDecimal.ONE;
         // 最小交易单元：整数倍
-        Integer minStep = 1;
+        BigDecimal minStep = BigDecimal.ONE;
         // 最低交易金额：大于等于
         BigDecimal minAmt = BigDecimal.ZERO;
         if (instruction.getMinPriceAndMinTrdUnitLimitBean() != null
@@ -353,15 +353,15 @@ public class PortfolioManager extends BaseService {
             MinTrdUnitLimit minTrdUnitLimit = instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList().get(0);
             if (EntrustProp.isMarketPrice(entrustProp)) {
                 if (Objects.nonNull(minTrdUnitLimit.getMaxNumMarket())) {
-                    minNum = minTrdUnitLimit.getMinNumMarket();
+                    minNum = BigDecimal.valueOf(minTrdUnitLimit.getMinNumMarket());
                 }
             } else {
                 if (Objects.nonNull(minTrdUnitLimit.getMinNum())) {
-                    minNum = minTrdUnitLimit.getMinNum();
+                    minNum = BigDecimal.valueOf(minTrdUnitLimit.getMinNum());
                 }
             }
             if (Objects.nonNull(minTrdUnitLimit.getMinStep())) {
-                minStep = minTrdUnitLimit.getMinStep();
+                minStep = BigDecimal.valueOf(minTrdUnitLimit.getMinStep());
             }
             if (Objects.nonNull(minTrdUnitLimit.getMinAmt())) {
                 minAmt = minTrdUnitLimit.getMinAmt();
@@ -386,20 +386,22 @@ public class PortfolioManager extends BaseService {
         }
 
         String portfolioId;
-        Integer entrustVolume = 0;
+        BigDecimal entrustVolume = BigDecimal.ZERO;
         BigDecimal entrustAmt = BigDecimal.ZERO;
+        BigDecimal disRate = BigDecimal.ZERO;
 
+        // 订单类型：数量单，指令单
         boolean isVolume = instruction.getEntrustNum() > 0L;
+        // 订单数量
+        BigDecimal orderVolume = BigDecimal.valueOf(bean.getEntrustVolume());
 
         for (InstructionDetail detail : instructionDetails) {
             calculateResponse = new PortfolioCalculateResponse();
 
             portfolioId = detail.getPortfolioId();
-            PortfolioInfoResponse infoResponse = portfolioInfoResponseMap.get(portfolioId);
-            calculateResponse.setPortfolioInfo(infoResponse);
-
-            calculateResponse.setPortfolioId(instruction.getPortfolioId());
-            calculateResponse.setPortfolioName(instruction.getPortfolioName());
+            calculateResponse.setPortfolioInfo(portfolioInfoResponseMap.get(portfolioId));
+            calculateResponse.setPortfolioId(portfolioId);
+            calculateResponse.setPortfolioName(detail.getPortfolioName());
             calculateResponse.setFinprodMarketId(instruction.getFinprodMarketId());
             calculateResponse.setEntrustPrice(bean.getEntrustPrice().compareTo(BigDecimal.ZERO) == 0 ? price : bean.getEntrustPrice());
             calculateResponse.setFinprodName(instruction.getFinprodName());
@@ -414,33 +416,49 @@ public class PortfolioManager extends BaseService {
             calculateResponse.setAcctNo(instruction.getAcctName());
 
             // - 计算组合委托额度
+            disRate = detail.getDisRate();
             // 数量
-            BigDecimal volume = ArithmeticUtil.multiply(BigDecimal.valueOf(bean.getEntrustVolume()), detail.getDisRate());
-            if (volume.compareTo(BigDecimal.valueOf(minNum)) == 0) {
-                entrustVolume = minNum;
-                entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), price);
-            } else if (volume.compareTo(BigDecimal.valueOf(minNum)) > 0) {
-                entrustVolume = Integer.valueOf(ArithmeticUtil.divide(volume, BigDecimal.valueOf(minStep), 0, RoundingMode.DOWN).multiply(BigDecimal.valueOf(minStep)).toString());
-                entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), price);
+            if (TradeUtils.bigThanZero(orderVolume) && TradeUtils.bigThanZero(disRate)) {
+                // 根据比例计算委托数量
+                entrustVolume = NumberUtil.mul(orderVolume, disRate);
+                if (TradeUtils.lessThan(entrustVolume, minStep)) {
+                    // 小于最小交易单位时的处理，置为0
+                    entrustVolume = BigDecimal.ZERO;
+                } else {
+                    // 大于等于最小交易单位时的处理，最小交易单位整数倍
+                    entrustVolume = TradeUtils.subtractMod(entrustVolume, minStep);
+                }
+                entrustAmt = NumberUtil.mul(entrustVolume, price);
             }
-            if ("02".equals(detail.getTargetType())) {
-                entrustAmt = ArithmeticUtil.multiply(BigDecimal.valueOf(entrustVolume), price);
-                entrustVolume = Integer.valueOf(ArithmeticUtil.divide(ArithmeticUtil.divide(entrustAmt, price, 12), BigDecimal.valueOf(minStep), 0, RoundingMode.DOWN).multiply(BigDecimal.valueOf(minStep)).toString());
-            }
+
+            log.debug("根据分配比例计算，组合名称 = [{}]， 组合编号 = [{}]，订单数量 = [{}]， 分配比例 = [{}]， 委托数量 = [{}]，委托金额 = [{}]",
+                    calculateResponse.getPortfolioName(),
+                    calculateResponse.getPortfolioId(),
+                    orderVolume,
+                    disRate,
+                    entrustVolume,
+                    entrustAmt);
+            calculateResponse.setEntrustNum(entrustVolume.longValue());
             calculateResponse.setEntrustAmt(entrustAmt);
-            calculateResponse.setEntrustNum(Long.valueOf(entrustVolume));
 
             list.add(calculateResponse);
         }
 
         // 尾差处理
         PortfolioCalculateResponse maxPortfolioCalculateResponse = list.stream().max(Comparator.comparing(PortfolioCalculateResponse::getDisRate)).get();
-        if ("01".equals(instructionDetails.get(0).getDisRate())) {
-            long sum = list.stream().filter(response -> !StrUtil.equals(response.getPortfolioId(), maxPortfolioCalculateResponse.getPortfolioId()))
-                    .mapToLong(PortfolioCalculateResponse::getEntrustNum)
-                    .sum();
-            maxPortfolioCalculateResponse.setEntrustNum(bean.getEntrustVolume() - sum);
-        }
+        long sum = list.stream().filter(response -> !StrUtil.equals(response.getPortfolioId(), maxPortfolioCalculateResponse.getPortfolioId()))
+                .mapToLong(PortfolioCalculateResponse::getEntrustNum)
+                .sum();
+        Long tailVolume = bean.getEntrustVolume() - sum;
+        BigDecimal tailAmt = NumberUtil.mul(tailVolume, price);
+        log.debug("尾插处理，组合名称 = [{}], 组合编号 = [{}], 原委托数量 = [{}], 现委托数量 = [{}]，现委托金额 = [{}]",
+                maxPortfolioCalculateResponse.getPortfolioName(),
+                maxPortfolioCalculateResponse.getPortfolioId(),
+                maxPortfolioCalculateResponse.getEntrustNum(),
+                tailVolume,
+                tailAmt);
+        maxPortfolioCalculateResponse.setEntrustNum(tailVolume);
+        maxPortfolioCalculateResponse.setEntrustAmt(tailAmt);
 
         if (isVolume && DictCodeListExt3.交易方向_债转股.getValue().equals(instruction.getPs())) {
             long bondPaperValue = 100L;
@@ -449,6 +467,7 @@ public class PortfolioManager extends BaseService {
             }
         }
 
+        log.debug("queryPortfolioCalculate() called with result => 【list = {}】", JSONUtil.toJsonStr(list));
         return ResultBean.success(list);
     }
 
