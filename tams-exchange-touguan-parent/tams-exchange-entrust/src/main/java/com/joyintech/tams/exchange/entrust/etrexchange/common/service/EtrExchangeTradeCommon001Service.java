@@ -1522,7 +1522,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	}
 
 	/** 查询固定收益行情数据 **/
-	public Page<EtrExchangeTradeQuotationResponse> findFixedIncomePage(Map<String, Object> map) {
+	public Page<EtrExchangeTradeQuotation001Dto> findFixedIncomePage(Map<String, Object> map) {
 		Page<EtrExchangeTradeQuotation001Dto> page = new Page<EtrExchangeTradeQuotation001Dto>();
 		List<EtrExchangeTradeQuotation001Dto> list = new ArrayList<EtrExchangeTradeQuotation001Dto>();
 		String secId= (String)map.get("secId");

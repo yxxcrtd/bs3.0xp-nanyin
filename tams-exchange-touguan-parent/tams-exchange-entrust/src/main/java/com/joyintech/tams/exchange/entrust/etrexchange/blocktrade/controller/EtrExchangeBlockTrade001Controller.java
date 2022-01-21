@@ -323,6 +323,9 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 					dto.setAcctNo(item.getAcctNo());
 					dto.setEntrustNum(item.getEntrustNum());
 					dto.setEntrustAmt(item.getEntrustAmt());
+					if (StringUtil.isNotEmpty(dto.getFinprodId()) && !StringUtil.isNotEmpty(dto.getStockId())) {
+						dto.setStockId(dto.getFinprodId());
+					}
 					//默认证券账户
 					if (StringUtil.isNotEmpty(item.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
 						Map<String, Object> map = new HashMap<String, Object>();
