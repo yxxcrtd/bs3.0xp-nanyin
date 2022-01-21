@@ -52,21 +52,21 @@
         where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
           and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
     </delete>
-    <insert id="insert" parameterType="com.joyintech.service.valuation.accounadjustmanage.subjectset.dto.ValBokSubjectDto" >
-        insert into BOK_SUBJECT (BOOKSET_ID, SUBJECT_NO, SUBJECT_NAME, 
-            FSUBJECT_ID, BAL_FLAG, SUBJECT_TYPE, 
-            SUBJECT_LEVEL, ACC_QUA_FLAG, ACC_INT_FLAG, 
-            OVERDRAWN_FLAG, GEN_DETSUB_FLAG, BASE_SUBJECT_NATURE, 
-            INV_AIM, SEC_MANAGE_ACCT_ID, CREATE_USER, 
-            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME,SUBJECT_INTERNAL_CODE,SUBJECT_HAND_FEL_CODE,CCY)
-        values (#{booksetId,jdbcType=VARCHAR}, #{subjectNo,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR}, 
-            #{fsubjectId,jdbcType=VARCHAR}, #{balFlag,jdbcType=VARCHAR}, #{subjectType,jdbcType=VARCHAR}, 
-            #{subjectLevel,jdbcType=DECIMAL}, #{accQuaFlag,jdbcType=VARCHAR}, #{accIntFlag,jdbcType=VARCHAR}, 
-            #{overdrawnFlag,jdbcType=VARCHAR}, #{genDetsubFlag,jdbcType=VARCHAR}, #{baseSubjectNature,jdbcType=VARCHAR}, 
-            #{invAim,jdbcType=VARCHAR}, #{secManageAcctId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
-            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP},#{subjectInternalCode,jdbcType=VARCHAR}, #{subjectHandFelCode,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR} )
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokSubject" >
+        insert into BOK_SUBJECT (BOOKSET_ID, SUBJECT_NO, SUBJECT_NAME,
+            FSUBJECT_ID, BAL_FLAG, SUBJECT_TYPE,
+            SUBJECT_LEVEL, ACC_QUA_FLAG, ACC_INT_FLAG,
+            OVERDRAWN_FLAG, GEN_DETSUB_FLAG, BASE_SUBJECT_NATURE,
+            INV_AIM, SEC_MANAGE_ACCT_ID, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME)
+        values (#{booksetId,jdbcType=VARCHAR}, #{subjectNo,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR},
+            #{fsubjectId,jdbcType=VARCHAR}, #{balFlag,jdbcType=VARCHAR}, #{subjectType,jdbcType=VARCHAR},
+            #{subjectLevel,jdbcType=DECIMAL}, #{accQuaFlag,jdbcType=VARCHAR}, #{accIntFlag,jdbcType=VARCHAR},
+            #{overdrawnFlag,jdbcType=VARCHAR}, #{genDetsubFlag,jdbcType=VARCHAR}, #{baseSubjectNature,jdbcType=VARCHAR},
+            #{invAim,jdbcType=VARCHAR}, #{secManageAcctId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokSubject" >
         insert into BOK_SUBJECT
@@ -190,13 +190,13 @@
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokSubject" >
-        insert into BOK_SUBJECT(BOOKSET_ID, SUBJECT_NO, SUBJECT_NAME, FSUBJECT_ID, BAL_FLAG, 
-        SUBJECT_TYPE, SUBJECT_LEVEL, ACC_QUA_FLAG, ACC_INT_FLAG, OVERDRAWN_FLAG, GEN_DETSUB_FLAG, 
-        BASE_SUBJECT_NATURE, INV_AIM, SEC_MANAGE_ACCT_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        insert into BOK_SUBJECT(BOOKSET_ID, SUBJECT_NO, SUBJECT_NAME, FSUBJECT_ID, BAL_FLAG,
+        SUBJECT_TYPE, SUBJECT_LEVEL, ACC_QUA_FLAG, ACC_INT_FLAG, OVERDRAWN_FLAG, GEN_DETSUB_FLAG,
+        BASE_SUBJECT_NATURE, INV_AIM, SEC_MANAGE_ACCT_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME,
         UPDATE_USER, UPDATE_TIME)
-        select BOOKSET_ID, SUBJECT_NO, SUBJECT_NAME, FSUBJECT_ID, BAL_FLAG, 
-            SUBJECT_TYPE, SUBJECT_LEVEL, ACC_QUA_FLAG, ACC_INT_FLAG, OVERDRAWN_FLAG, GEN_DETSUB_FLAG, 
-            BASE_SUBJECT_NATURE, INV_AIM, SEC_MANAGE_ACCT_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        select BOOKSET_ID, SUBJECT_NO, SUBJECT_NAME, FSUBJECT_ID, BAL_FLAG,
+            SUBJECT_TYPE, SUBJECT_LEVEL, ACC_QUA_FLAG, ACC_INT_FLAG, OVERDRAWN_FLAG, GEN_DETSUB_FLAG,
+            BASE_SUBJECT_NATURE, INV_AIM, SEC_MANAGE_ACCT_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME,
             #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
              from BOK_SUBJECT
              where 1 = 1 and BOOKSET_ID = #{booksetId,jdbcType=VARCHAR} and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
@@ -250,7 +250,7 @@
         where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
           and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.joyintech.service.valuation.accounadjustmanage.subjectset.dto.ValBokSubjectDto" >
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokSubject" >
         update BOK_SUBJECT
         set SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
             FSUBJECT_ID = #{fsubjectId,jdbcType=VARCHAR},
@@ -265,10 +265,7 @@
             INV_AIM = #{invAim,jdbcType=VARCHAR},
             SEC_MANAGE_ACCT_ID = #{secManageAcctId,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            SUBJECT_INTERNAL_CODE=#{subjectInternalCode,jdbcType=VARCHAR},
-            SUBJECT_HAND_FEL_CODE=#{subjectHandFelCode,jdbcType=VARCHAR},
-            CCY=#{ccy,jdbcType=VARCHAR}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
         where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
           and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
     </update>
