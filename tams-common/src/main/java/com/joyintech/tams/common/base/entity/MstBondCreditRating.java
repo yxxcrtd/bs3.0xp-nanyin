@@ -21,6 +21,11 @@ public class MstBondCreditRating extends MstBondCreditRatingKey {
     private String inputType;
 
     /**
+     * 数据来源
+     */
+    private String source;
+
+    /**
      * null
      */
     private String isRecommand;
@@ -91,6 +96,23 @@ public class MstBondCreditRating extends MstBondCreditRatingKey {
      */
     public void setInputType(String inputType) {
         this.inputType = inputType == null ? null : inputType.trim();
+    }
+
+
+    /**
+     * 取得 数据来源
+     * @return 数据来源
+     */
+    public String getSource() {
+        return source;
+    }
+
+    /**
+     * 设置 数据来源
+     * @param source 数据来源
+     */
+    public void setSource(String source) {
+        this.source = source == null ? null : source.trim();
     }
 
     /**
