@@ -164,6 +164,9 @@ public class CfetsRepoDayRegDto {
     @ApiModelProperty(name = "updateTime", value = "最后更新时间")
     private Date updateTime;
 
+    @ApiModelProperty(name = "partyId", value = "银行间机构21位码")
+    private String partyId;
+
     public String getValidStatus() {
         return validStatus;
     }
@@ -576,6 +579,14 @@ public class CfetsRepoDayRegDto {
 
     public void setRepoTypeStr(String repoTypeStr) {
         this.repoTypeStr = repoTypeStr;
+    }
+
+    public String getPartyId() {
+        return partyId;
+    }
+
+    public void setPartyId(String partyId) {
+        this.partyId = partyId;
     }
 }
 

@@ -24,6 +24,9 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value="债券质押持仓数据查询请求参数",description="债券质押持仓数据查询请求参数")
 public class EtrExchangeTradeZqzyRequest {
 
+    @ApiModelProperty(name="search",value="关键字",example="A1")
+    private String search;
+
     @ApiModelProperty(name="portfolioId",value="组合代码",example="A1")
     private String portfolioId;
 
@@ -33,5 +36,35 @@ public class EtrExchangeTradeZqzyRequest {
     @ApiModelProperty(name="finprodId",value="资产代码",example="A1")
     private String finprodId;
 
+    public String getSearch() {
+        return search;
+    }
 
+    public void setSearch(String search) {
+        this.search = search;
+    }
+
+    public String getPortfolioId() {
+        return portfolioId;
+    }
+
+    public void setPortfolioId(String portfolioId) {
+        this.portfolioId = portfolioId;
+    }
+
+    public String getTradeMarket() {
+        return tradeMarket;
+    }
+
+    public void setTradeMarket(String tradeMarket) {
+        this.tradeMarket = tradeMarket;
+    }
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
+    }
 }

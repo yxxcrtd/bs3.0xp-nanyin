@@ -2418,6 +2418,7 @@ public class IbuComponentCommonService extends BaseService {
                 ibuQuoteEtrRe.setEntrustId(item.getEntrustId());
                 ibuQuoteEtrRe.setPortfolioId(item.getPortfolioId());
                 ibuQuoteEtrRe.setShareAmt(item.getShareAmt());
+                ibuQuoteEtrRe.setShareCtAmt(item.getShareCtAmt());
                 ibuQuoteEtrRe.setFpriceAmt(item.getFpriceAmt());
                 ibuQuoteEtrRe.setCbFpriceAmt(item.getCbFpriceAmt());
                 ibuQuoteEtrRe.setScFpriceAmt(item.getScFpriceAmt());
@@ -2506,7 +2507,7 @@ public class IbuComponentCommonService extends BaseService {
         ibuQuoteCrepDto.setTerm(cfetsRepoDealQuotedPrice001Dto.getTerm());// 期限(天)
         // modify by zhangliang 2020-07-18 券面总额存表需要转成份额
 //        ibuQuoteCrepDto.setShareAmt(ArithmeticUtil.multiply(cfetsRepoDealQuotedPrice001Dto.getPledgePrinTotal(), new BigDecimal(10000)));// 交易份额，债券数量等
-        ibuQuoteCrepDto.setShareAmt(ArithmeticUtil.multiply(cfetsRepoDealQuotedPrice001Dto.getPledgePrinTotal(), new BigDecimal(100)));// 交易份额，债券数量等  = 券面 /100 * 单位10000
+        ibuQuoteCrepDto.setShareAmt(cfetsRepoDealQuotedPrice001Dto.getPledgePrinTotal());// 交易份额，债券数量等
         ibuQuoteCrepDto.setShareCtAmt(cfetsRepoDealQuotedPrice001Dto.getShareCtAmt());// 折算券面金额
         ibuQuoteCrepDto.setCbShareCtAmt(cfetsRepoDealQuotedPrice001Dto.getCbShareCtAmt());// 中债折算券面金额
         ibuQuoteCrepDto.setScShareCtAmt(cfetsRepoDealQuotedPrice001Dto.getScShareCtAmt());// 上清折算券面金额
@@ -2596,6 +2597,7 @@ public class IbuComponentCommonService extends BaseService {
                 wflIbuQuoteEtrRe.setEntrustId(item.getEntrustId());
                 wflIbuQuoteEtrRe.setPortfolioId(item.getPortfolioId());
                 wflIbuQuoteEtrRe.setShareAmt(item.getShareAmt());
+                wflIbuQuoteEtrRe.setShareCtAmt(item.getShareCtAmt());
                 wflIbuQuoteEtrRe.setFpriceAmt(item.getFpriceAmt());
                 wflIbuQuoteEtrRe.setWorkflowId(cfetsRepoDealQuotedPrice001Dto.getWorkflowId());
                 wflIbuQuoteEtrRe.setCpriceAmt(item.getcPriceAmt());

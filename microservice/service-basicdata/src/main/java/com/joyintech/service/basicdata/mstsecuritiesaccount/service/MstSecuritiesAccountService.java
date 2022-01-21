@@ -281,6 +281,7 @@ public class MstSecuritiesAccountService extends BaseService<MstSecuritiesAccoun
 	public Page<SelectOptionDto> getFinprodMarketInfo(int page, int length, Map<String, Object> map) throws Exception {
 		// 交易平台
 		map.put("SHARES_TRADE_PLATFORM_02", DictCodeList.交易平台_竞价撮合平台.getValue());
+        map.put("SHARES_TRADE_PLATFORM_021", DictCodeListExt3.交易平台_新竞价撮合平台.getValue());
 		map.put("SHARES_TRADE_PLATFORM_03", DictCodeList.交易平台_固定收益平台.getValue());
 		map.put("SHARES_TRADE_PLATFORM_04", DictCodeList.交易平台_大宗交易平台.getValue());
 		// 交易场所
@@ -364,5 +365,33 @@ public class MstSecuritiesAccountService extends BaseService<MstSecuritiesAccoun
                return "4";
            }
         }
+    }
+
+    /**
+     * 证券代码
+     *
+     * @param map
+     * @return
+     */
+    public Page<SelectOptionDto> getFinprodMarketInfoNewUi(int page, int length, Map<String, Object> map) throws Exception {
+        // 交易平台
+        map.put("SHARES_TRADE_PLATFORM_02", DictCodeList.交易平台_竞价撮合平台.getValue());
+        map.put("SHARES_TRADE_PLATFORM_021", DictCodeListExt3.交易平台_新竞价撮合平台.getValue());
+        map.put("SHARES_TRADE_PLATFORM_03", DictCodeList.交易平台_固定收益平台.getValue());
+        map.put("SHARES_TRADE_PLATFORM_04", DictCodeList.交易平台_大宗交易平台.getValue());
+        // 交易场所
+        map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        map.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+
+        map.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        map.put("FINPROD_TYPE_TG_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+        map.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+        map.put("FINPROD_TYPE_TG_ZYSHG", "ZYSHG");
+        map.put("FINPROD_OTH_CODE_TYPE_05", DictCodeListExt3.金融产品其他代码类型_配债代码.getValue());
+        map.put("FINPROD_OTH_CODE_TYPE_06", DictCodeListExt3.金融产品其他代码类型_配股代码.getValue());
+
+        map.put("FINPROD_TYPE_TG_F01_B14", DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue());
+        return super.queryForPageForSelectReturn(page, length, () -> mstSecuritiesAccountMapper.getFinprodMarketInfoNewUi(map));
+
     }
 }

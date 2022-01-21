@@ -1,6 +1,7 @@
 package com.joyintech.tams.exchange.common.db.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
@@ -34,15 +35,17 @@ public class InstructionDetail implements Serializable, KeyMethodInterface<Strin
 
     @Digits(integer = 30, fraction = 2)
     @JsonSerialize(using = BigDecimalSerializer.class)
-    private String disRate = "";//分配比例
+    private BigDecimal disRate ;//分配比例
 
     @Digits(integer = 30, fraction = 2)
     @JsonSerialize(using = BigDecimalSerializer.class)
-    private String entrustAmt = "";//委托金额
+    private BigDecimal entrustAmt ;//委托金额
     
     @Digits(integer = 30, fraction = 4)
     @JsonSerialize(using = BigDecimalSerializer.class)
-    private String entrustNum = "";//委托数量
+    private BigDecimal entrustNum ;//委托数量
+
+	private Integer count ;//委托数量
     
     @Size(max = 50)
     private String targetType = "";//目标类型
@@ -83,27 +86,27 @@ public class InstructionDetail implements Serializable, KeyMethodInterface<Strin
 		this.portfolioName = portfolioName;
 	}
 
-	public String getDisRate() {
+	public BigDecimal getDisRate() {
 		return disRate;
 	}
 
-	public void setDisRate(String disRate) {
+	public void setDisRate(BigDecimal disRate) {
 		this.disRate = disRate;
 	}
 
-	public String getEntrustAmt() {
+	public BigDecimal getEntrustAmt() {
 		return entrustAmt;
 	}
 
-	public void setEntrustAmt(String entrustAmt) {
+	public void setEntrustAmt(BigDecimal entrustAmt) {
 		this.entrustAmt = entrustAmt;
 	}
 
-	public String getEntrustNum() {
+	public BigDecimal getEntrustNum() {
 		return entrustNum;
 	}
 
-	public void setEntrustNum(String entrustNum) {
+	public void setEntrustNum(BigDecimal entrustNum) {
 		this.entrustNum = entrustNum;
 	}
 
@@ -115,5 +118,11 @@ public class InstructionDetail implements Serializable, KeyMethodInterface<Strin
 		this.targetType = targetType;
 	}
 
-    
+	public Integer getCount() {
+		return count;
+	}
+
+	public void setCount(Integer count) {
+		this.count = count;
+	}
 }

@@ -1326,6 +1326,9 @@ public class CfetsQuotedCommonService extends BaseService {
         result.put("finprodId",entity.getFinprodId());
         result.put("bTotalTradeId",entity.getQuoteId());
         if(CollectionUtils.isNotEmpty(entity.getCfetsBondDealDialogueQuoteDtoList())){
+            if(StringUtil.isEmpty(entity.getTradeMarket())){
+                entity.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
+            }
             List<Map<String,Object>> ptlList = new ArrayList<>();
             for (com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto : entity.getCfetsBondDealDialogueQuoteDtoList()) {
                 Map<String,Object> pltMap = new HashMap<>();
@@ -1381,6 +1384,9 @@ public class CfetsQuotedCommonService extends BaseService {
         result.put("finprodId",entity.getFinprodId());
         result.put("bTotalTradeId",entity.getQuoteId());
         if(CollectionUtils.isNotEmpty(entity.getCfetsBondDealRequestQuoteDtoList())){
+            if(StringUtil.isEmpty(entity.getTradeMarket())){
+                entity.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
+            }
             //成交按回复方的价格计算现金
             if(CollectionUtils.isNotEmpty(entity.getCounterInfoList())){
                 com.joyintech.service.bankuplink.bond.dto.CounterInfoDto counterInfoDto = entity.getCounterInfoList().get(0);

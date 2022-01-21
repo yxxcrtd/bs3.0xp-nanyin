@@ -56,8 +56,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -464,6 +466,8 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         String issueTypeStr = "质押式回购";
         String prefix = StringUtil.join("本币交易导出_", iPlatformDate.getSysDateStr());
         requestDto.setData(null);
+        //获取机构信息
+        List<Map<String, String>> customerList = ibuQuoteRepoService.selectAllCustomer();
         //获取递增序号
         Map<String, String> sequenceIndex = new HashMap<>();
         sequenceIndex.put("databaseType", "Oracle");
@@ -489,11 +493,32 @@ public class CfetsIbuQuoteRepoController extends BaseController {
                 if (item.getPledgeRatio() != null) {
                     item.setPledgeRatio(ArithmeticUtil.multiply(new BigDecimal(100),item.getPledgeRatio()));
                 }
+                //对手方
+                item.setCpPartyName(null);
+                if (CollectionUtils.isNotEmpty(customerList) && StringUtil.isNotEmpty(item.getPartyId())) {
+                    String value = null;
+                    for (Map<String, String> customer : customerList) {
+                        if (customer.containsKey(item.getPartyId())) {
+                            value = customer.get(item.getPartyId());
+                        }
+                        item.setCpPartyName(value);
+                    }
+                }
 
                 //报价编号
                 item.setQuoteId(null);
             });
         }
+
+        //导出数据必填项校验
+        String message = checkExcelNotNull(requestDto, dataList);
+        try {
+            response.addHeader("message", URLEncoder.encode(message, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            logger.error("response.addHeader错误:"+e);
+        }
+
         if (StringUtil.isNotEmpty(ibuExportCountMax) && CollectionUtils.isNotEmpty(dataList)) {
             int max = Integer.parseInt(ibuExportCountMax);
             int fileCount = (dataList.size() + max - 1) / max;
@@ -505,7 +530,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
                 String quoteTypeStr = StringUtil.isNotEmpty(sfetsRepoDayRegDtos.get(0).getQuoteTypeStr()) ? "对话报价" : sfetsRepoDayRegDtos.get(0).getQuoteTypeStr();
                 String appendString = collect.size() >= 1 ? String.format("%04d", sequenceIndexData) : StringUtil.EMPTY;
                 String excelAndSheetName = StringUtil.join(issueTypeStr, quoteTypeStr, prefix, appendString);
-                ExcelUitl.doExport(requestDto, response, excelAndSheetName, () -> {
+                ExcelUitl.doExportDeal(requestDto, response, excelAndSheetName, () -> {
                     List<BaseMap> baseMapList = new ArrayList<>();
                     for (CfetsRepoDayRegDto dto : sfetsRepoDayRegDtos) {
                         baseMapList.add(BaseMap.newMap(BeanUtil.object2Map(dto)));
@@ -516,7 +541,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         } else {
             String quoteTypeStr = "对话报价";
             String excelAndSheetName = StringUtil.join(issueTypeStr, quoteTypeStr, prefix, String.format("%04d", sequenceIndexData));
-            ExcelUitl.doExport(requestDto, response, excelAndSheetName, () -> {
+            ExcelUitl.doExportDeal(requestDto, response, excelAndSheetName, () -> {
                 List<BaseMap> baseMapList = new ArrayList<>();
                 for (CfetsRepoDayRegDto dto : dataList) {
                     baseMapList.add(BaseMap.newMap(BeanUtil.object2Map(dto)));
@@ -528,6 +553,34 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         if (CollectionUtils.isNotEmpty(dataList)) {
             ibuQuoteRepoService.handExportTimes(dataList);
         }
+
+
+    }
+
+    /**
+     * 导出数据必填项校验
+     * @param requestDto
+     * @param dataList
+     * @return
+     */
+    private String checkExcelNotNull(CfetsExportRequestDto requestDto, List<CfetsRepoDayRegDto> dataList) {
+        String message = StringUtil.EMPTY;
+        List<String> headList =  requestDto.getHeader().stream().filter(head -> head.getString("colName").contains("*"))
+                .map(m -> m.getString("colCode")).collect(Collectors.toList());
+        for(CfetsRepoDayRegDto dto:dataList){
+            //交易方向为空的数据不校验
+            if (StringUtil.isEmpty(dto.getPs())) {
+                break;
+            }
+            BaseMap map  = BaseMap.newMap(BeanUtil.object2Map(dto));
+            for (String head:headList) {
+                if(StringUtil.isEmpty((String)map.get(head))){
+                    return  "导出数据必填项存在空值，请手动添加";
+                }
+            }
+        }
+
+        return message;
     }
 
 
