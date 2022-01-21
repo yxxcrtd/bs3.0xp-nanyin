@@ -605,6 +605,9 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
     @Override
     public void doComplete(CfetsRepoDealRegisterQuoteDto entity, OperationType operationType) {
         CfetsRepoDealDbDto cfetsRepoDealDbDto = this.prepareEntity(entity, operationType);
+        CfetsOprHisInfoRequest cfetsOprHisInfoRequest = new CfetsOprHisInfoRequest();
+        cfetsOprHisInfoRequest.setEntrustId(entity.getTotleTradeId());
+        cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_新建.getValue());
         //删除业务流程数据
         this.deleteBussFlowData(entity.getWorkflowId());
         //登录db
@@ -614,10 +617,11 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         //头寸
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
             PositionHttpRequest.dorevoke(entity.getTotleTradeId(), DictCodeListExt1.子系统代码_交易.getValue(), DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), entity.getPs());
-
+            cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_撤回.getValue());
         }
         //处理指令执行进度
         this.insertEtrFinishStatus(cfetsRepoDealDbDto, operationType);
+        joyinbusinessCommonService.updateCfetsOprHis(cfetsOprHisInfoRequest);
     }
 
 
@@ -1364,7 +1368,6 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 }
             });
         }*/
-        // TODO TrdRepoTrade003Service 7.5 7.7 数据入库?
         //更新原登记数据状态
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
             //汇总
@@ -1738,6 +1741,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      * @date 2022/1/21 17:05
      */
     public void revokeForOut(String totleTradeId, String remark) {
+        //TODO 待实现
     }
 
 }
