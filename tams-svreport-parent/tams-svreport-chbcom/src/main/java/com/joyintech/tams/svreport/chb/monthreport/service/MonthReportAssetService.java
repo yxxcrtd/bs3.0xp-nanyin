@@ -469,8 +469,8 @@ public class MonthReportAssetService {
 								key1, key2, key3, key4, key5, key6, key7, key8, key9);
 						if (mapping1 != null) {
 							position1.setPosuuid(IDGenerator.generate(36));
-							position1.setSunassettype(mapping.getObjfield1());
-							position1.setSunassettype2(mapping.getObjfield2());
+							position1.setSunassettype(mapping1.getObjfield1());
+							position1.setSunassettype2(mapping1.getObjfield2());
 							positionList1.add(position1);
 						}
 					}
