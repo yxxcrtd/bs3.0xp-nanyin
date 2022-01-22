@@ -2338,7 +2338,7 @@ public class IbuComponentCommonService extends BaseService {
         ibuQuoteCrepDto.setTerm(cfetsRepoDealQuotedPrice001Dto.getTerm());// 期限(天)
         // modify by zhangliang 2020-07-18 券面总额存表需要转成份额
 //        ibuQuoteCrepDto.setShareAmt(ArithmeticUtil.multiply(cfetsRepoDealQuotedPrice001Dto.getPledgePrinTotal(), new BigDecimal(10000)));// 交易份额，债券数量等
-        ibuQuoteCrepDto.setShareAmt(ArithmeticUtil.multiply(cfetsRepoDealQuotedPrice001Dto.getPledgePrinTotal(), new BigDecimal(100)));// 交易份额，债券数量等  = 券面 /100 * 单位10000
+        ibuQuoteCrepDto.setShareAmt(ArithmeticUtil.divide(cfetsRepoDealQuotedPrice001Dto.getPledgePrinTotal(), new BigDecimal(100),4));// 交易份额，债券数量等
         ibuQuoteCrepDto.setShareCtAmt(cfetsRepoDealQuotedPrice001Dto.getShareCtAmt());// 折算券面金额
         ibuQuoteCrepDto.setCbShareCtAmt(cfetsRepoDealQuotedPrice001Dto.getCbShareCtAmt());// 中债折算券面金额
         ibuQuoteCrepDto.setScShareCtAmt(cfetsRepoDealQuotedPrice001Dto.getScShareCtAmt());// 上清折算券面金额
@@ -2417,7 +2417,7 @@ public class IbuComponentCommonService extends BaseService {
                 ibuQuoteEtrRe.setVersion(-1L);// 版本号
                 ibuQuoteEtrRe.setEntrustId(item.getEntrustId());
                 ibuQuoteEtrRe.setPortfolioId(item.getPortfolioId());
-                ibuQuoteEtrRe.setShareAmt(item.getShareAmt());
+                ibuQuoteEtrRe.setShareAmt(ArithmeticUtil.divide(item.getShareAmt(),new BigDecimal(100),4));
                 ibuQuoteEtrRe.setShareCtAmt(item.getShareCtAmt());
                 ibuQuoteEtrRe.setFpriceAmt(item.getFpriceAmt());
                 ibuQuoteEtrRe.setCbFpriceAmt(item.getCbFpriceAmt());
@@ -2507,7 +2507,7 @@ public class IbuComponentCommonService extends BaseService {
         ibuQuoteCrepDto.setTerm(cfetsRepoDealQuotedPrice001Dto.getTerm());// 期限(天)
         // modify by zhangliang 2020-07-18 券面总额存表需要转成份额
 //        ibuQuoteCrepDto.setShareAmt(ArithmeticUtil.multiply(cfetsRepoDealQuotedPrice001Dto.getPledgePrinTotal(), new BigDecimal(10000)));// 交易份额，债券数量等
-        ibuQuoteCrepDto.setShareAmt(cfetsRepoDealQuotedPrice001Dto.getPledgePrinTotal());// 交易份额，债券数量等
+        ibuQuoteCrepDto.setShareAmt(ArithmeticUtil.divide(cfetsRepoDealQuotedPrice001Dto.getPledgePrinTotal(), new BigDecimal(100),4));// 交易份额，债券数量等
         ibuQuoteCrepDto.setShareCtAmt(cfetsRepoDealQuotedPrice001Dto.getShareCtAmt());// 折算券面金额
         ibuQuoteCrepDto.setCbShareCtAmt(cfetsRepoDealQuotedPrice001Dto.getCbShareCtAmt());// 中债折算券面金额
         ibuQuoteCrepDto.setScShareCtAmt(cfetsRepoDealQuotedPrice001Dto.getScShareCtAmt());// 上清折算券面金额
@@ -2737,7 +2737,7 @@ public class IbuComponentCommonService extends BaseService {
         dto.setTermType(ibuQuoteCrepDto.getTermType());// 期限品种
         // modify by zhangliang 2020-07-18 份额需要转成券面
 //        dto.setPledgePrinTotal(ibuQuoteCrepDto.getShareAmt());// 交易份额，债券数量等
-        dto.setPledgePrinTotal(ArithmeticUtil.multiply(ibuQuoteCrepDto.getShareAmt(), new BigDecimal(100)));// 交易份额，债券数量等
+        dto.setPledgePrinTotal(ArithmeticUtil.multiply(ibuQuoteCrepDto.getShareAmt(), new BigDecimal(100)));// 交易份额，债券数量等 -> 元
         dto.setAvaNum(ArithmeticUtil.divide(ibuQuoteCrepDto.getShareAmt(), new BigDecimal(10000), 2));
         dto.setCbShareCtAmt(ibuQuoteCrepDto.getCbShareCtAmt());// 中债折算券面金额
         dto.setScShareCtAmt(ibuQuoteCrepDto.getScShareCtAmt());// 上清折算券面金额
