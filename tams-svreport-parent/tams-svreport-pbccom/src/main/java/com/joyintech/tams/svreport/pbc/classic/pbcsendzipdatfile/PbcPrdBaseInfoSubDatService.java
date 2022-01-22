@@ -130,6 +130,13 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
         if (StringUtil.isNotEmpty(result.getCreditFlag())){
             result.setCreditFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCreditFlag()));
         }
+        if (StringUtil.isNotEmpty(result.getCrossBorderFlag())){
+            result.setCrossBorderFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCrossBorderFlag()));
+        }
+        if (StringUtil.isNotEmpty(result.getZjxtFlag())){
+            result.setZjxtFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getZjxtFlag()));
+        }
+
         if (StringUtil.isNotEmpty(result.getCreditType())){
             //多个用,切开
             String [] creditModes=result.getCreditType().split(GlobalConstant.COMMA);
@@ -296,6 +303,12 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
         }
         if (!StringUtil.equals(result.getCreditMode(),result.getCreditModePrd())){
             result.setCreditModeDiff(1);
+        }
+        if (!StringUtil.equals(result.getCrossBorderFlag(),result.getCrossBorderFlagPrd())){
+            result.setCrossBorderFlagDiff(1);
+        }
+        if (!StringUtil.equals(result.getZjxtFlag(),result.getZjxtFlagPrd())){
+            result.setZjxtFlagDiff(1);
         }
         ///ZGBSEI-419  【新人行升级】人行报送文件管理（资产管理），dat预览页面，字体颜色显示问题
         if(!(result.getProdStage()==null&&result.getProdStagePrd()==null)){

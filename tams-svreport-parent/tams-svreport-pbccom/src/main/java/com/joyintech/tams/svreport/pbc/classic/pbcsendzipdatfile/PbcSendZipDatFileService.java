@@ -49,7 +49,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 
+ *
  * 功能:人行报送文件管理service
  * @since 1.7.0
  * @version 1.7.0
@@ -91,6 +91,9 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 	private PbcReportAssetIncomeDetailDatService pbcReportAssetIncomeDetailDatService;
 	@Autowired
 	private PbcReportDebtTermDetailDatService pbcReportDebtTermDetailDatService;
+	@Autowired
+	private PbcReportAssetConfigDatService pbcReportAssetConfigDatService;
+
 
 	@Autowired
 	private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
@@ -98,14 +101,14 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 	@Autowired
 	private PbcZipDataFileService pbcZipDataFileService;
 
-    /**
-     * 短sql最大一次最大插入条数
-     */
-    @Value("${application.reportSelectOrDeleteCountForShenFen}")
-    public  int reportSelectOrDeleteCountForShenFen;
-    
-    private Logger logger = LoggerFactory.getLogger(getClass());
-    
+	/**
+	 * 短sql最大一次最大插入条数
+	 */
+	@Value("${application.reportSelectOrDeleteCountForShenFen}")
+	public  int reportSelectOrDeleteCountForShenFen;
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
 
 	/**
 	 * 查询页面数据
@@ -122,18 +125,18 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 		pageParam.put("sendStatus", "");
 		String orgCode = SecurityUtil.getLoginUser().getOrgCode();
 		pageParam.put("orgCode",orgCode);
-        if (pageParam.get(GlobalConstant.PARAM_PAGE) != null
-                && pageParam.get(GlobalConstant.PARAM_LENGTH) != null){
-            int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
-            int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
-            Page<PbcSendZipDatFile> page = queryForPage(
-                    pagenum,legth,()->pbcSendZipDatFileMapper.searchPage(pageParam));
-            return page;
-        } else {
-        	Page<PbcSendZipDatFile> page = queryForPage(PbcSendZipDatFileMapper.class, "searchPage",
-    				pageParam);
-            return page;
-        }
+		if (pageParam.get(GlobalConstant.PARAM_PAGE) != null
+				&& pageParam.get(GlobalConstant.PARAM_LENGTH) != null){
+			int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
+			int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
+			Page<PbcSendZipDatFile> page = queryForPage(
+					pagenum,legth,()->pbcSendZipDatFileMapper.searchPage(pageParam));
+			return page;
+		} else {
+			Page<PbcSendZipDatFile> page = queryForPage(PbcSendZipDatFileMapper.class, "searchPage",
+					pageParam);
+			return page;
+		}
 	}
 
 	public String priview(String pageid,Map<String, Object> selectParam) {
@@ -189,6 +192,8 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 
 		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_资管产品资产负债剩余期限统计.getValue())){
 			message=pbcReportDebtTermDetailDatService.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_资管产品资产配置情况表.getValue())){
+			message=pbcReportAssetConfigDatService.priview(selectParam);
 		}
 
 //		Map<Object,Object> data = createData(selectParam);
@@ -221,7 +226,7 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 				}
 			} catch (IOException e) {
 //				e.printStackTrace();
-	            logger.error(e.getMessage(),e);
+				logger.error(e.getMessage(),e);
 			}
 		} else {
 			// 报送类型
@@ -305,7 +310,7 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 	}
 
 	/**
-			* 创建压缩文件
+	 * 创建压缩文件
 	 * @param param 页面参数
 	 * @return 压缩文件之地
 	 */

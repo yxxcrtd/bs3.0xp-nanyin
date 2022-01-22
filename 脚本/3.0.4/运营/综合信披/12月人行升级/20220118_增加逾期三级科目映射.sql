@@ -1,0 +1,4 @@
+delete from chb_type_mapping_ex where MAPPINGCODE='MAPPINGCODE_YQSUBJECTNO';
+
+insert into chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD)
+values ('D00080B8-487F-2022-8778-9035A09647DB', 'MAPPINGCODE_YQSUBJECTNO', '逾期三级科目', null, null, null, null, null, null, '13040101', null, null, null, 'E', null, null, 'system', sysdate, 'system', sysdate, null, null);
