@@ -186,8 +186,15 @@ public class AssetInfoDetailUtil {
             entity.setAssetType(dict.get(entity.getAssetType2()));
             entity.setTradeMarket(SysDataUtil.getZZDictCodeFromName(DictCode.交易流通场所_中债,
                     list.get(headList.indexOf("*交易流通场所"))));
+            //modify by tuqirong 2022-01-20 start
+            //导入模板中新增资产二级分类要素，由于导入模板中资产二级分类需依据一级分类联动，
+            //在做联动关系处理时，一级分类的值不允许有空格，所以在模板中将一级分类中的空格换成了“_”，后台存值时需处理
             entity.setOrgAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.中债_上游资产一级分类,
-                    list.get(headList.indexOf("*资产一级分类"))));
+                    list.get(headList.indexOf("*资产一级分类")).replace(GlobalConstant.UNDER_LINE," ")));
+            //新增资产二级分类
+            entity.setOrgAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.中债_上游资产二级分类,
+                    list.get(headList.indexOf("*资产二级分类"))));
+            //modify by tuqirong 2022-01-20 end
             entity.setCcy(SysDataUtil.getZZDictCodeFromName(DictCode.币种_中债, list.get(headList.indexOf("*币种"))));
             if (DictCodeListExt2.资产_负债类别_本行_他行存款_大额存单.getValue().equals(entity.getAssetType())){
                 /**维护信息-本行/他行存款||大额存单*/
@@ -197,6 +204,12 @@ public class AssetInfoDetailUtil {
                 }*/
                 headList.clear();
                 getHeadList_01(headList);
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
+                if (dataList.get(1).size() != headList.size()) {
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-存款格式不正确！"));
+                    return resultList;
+                }
+                //add by tuqirong 2022-01-19 end 导入模板存在缺少或多余字段，给予提示
                 //资产名称
                 entity.setAssetName(list.get(headList.indexOf("*名称")));
                 //起息日
@@ -226,6 +239,12 @@ public class AssetInfoDetailUtil {
                 }*/
                 headList.clear();
                 getHeadList_02(headList);
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
+                if (dataList.get(1).size() != headList.size()) {
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-回购格式不正确！"));
+                    return resultList;
+                }
+                //add by tuqirong 2022-01-19 end 导入模板存在缺少或多余字段，给予提示
                 //资产名称
                 entity.setAssetName(list.get(headList.indexOf("*名称")));
                 //起息日
@@ -258,6 +277,12 @@ public class AssetInfoDetailUtil {
                 }*/
                 headList.clear();
                 getHeadList_03(headList);
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
+                if (dataList.get(1).size() != headList.size()) {
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-债券格式不正确！"));
+                    return resultList;
+                }
+                //add by tuqirong 2022-01-19 end 导入模板存在缺少或多余字段，给予提示
                 //资产名称
                 entity.setAssetName(list.get(headList.indexOf("*名称")));
                 //起息日
@@ -287,6 +312,12 @@ public class AssetInfoDetailUtil {
                 }*/
                 headList.clear();
                 getHeadList_04(headList);
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
+                if (dataList.get(1).size() != headList.size()) {
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-非标格式不正确！"));
+                    return resultList;
+                }
+                //add by tuqirong 2022-01-19 end 导入模板存在缺少或多余字段，给予提示
                 //资产名称
                 entity.setAssetName(list.get(headList.indexOf("*名称")));
                //起息日
@@ -316,6 +347,12 @@ public class AssetInfoDetailUtil {
                 }*/
                 headList.clear();
                 getHeadList_05(headList);
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
+                if (dataList.get(1).size() != headList.size()) {
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-票据及其他格式不正确！"));
+                    return resultList;
+                }
+                //add by tuqirong 2022-01-19 end 导入模板存在缺少或多余字段，给予提示
                 //资产名称
                 entity.setAssetName(list.get(headList.indexOf("*名称")));
                 //起息日
@@ -345,6 +382,12 @@ public class AssetInfoDetailUtil {
                 }*/
                 headList.clear();
                 getHeadList_06(headList);
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
+                if (dataList.get(1).size() != headList.size()) {
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-权益类格式不正确！"));
+                    return resultList;
+                }
+                //add by tuqirong 2022-01-19 end 导入模板存在缺少或多余字段，给予提示
                 //资产名称
                 entity.setAssetName(list.get(headList.indexOf(" *股票/企业名称")));
                 //起息日
@@ -374,6 +417,12 @@ public class AssetInfoDetailUtil {
                 }*/
                 headList.clear();
                 getHeadList_07(headList);
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
+                if (dataList.get(1).size() != headList.size()) {
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-金融衍生品格式不正确！"));
+                    return resultList;
+                }
+                //add by tuqirong 2022-01-19 end 导入模板存在缺少或多余字段，给予提示
                 //资产名称
                 entity.setAssetName(list.get(headList.indexOf("*名称")));
                 //起息日
@@ -403,6 +452,12 @@ public class AssetInfoDetailUtil {
                 }*/
                 headList.clear();
                 getHeadList_08(headList);
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
+                if (dataList.get(1).size() != headList.size()) {
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-QDII品格式不正确！"));
+                    return resultList;
+                }
+                //add by tuqirong 2022-01-19 end 导入模板存在缺少或多余字段，给予提示
                 //资产名称
                 entity.setAssetName(list.get(headList.indexOf("*债券名称")));
                 //起息日
@@ -432,6 +487,12 @@ public class AssetInfoDetailUtil {
                 }*/
                 headList.clear();
                 getHeadList_08(headList);
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
+                if (dataList.get(1).size() != headList.size()) {
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-QDII品格式不正确！"));
+                    return resultList;
+                }
+                //add by tuqirong 2022-01-19 end 导入模板存在缺少或多余字段，给予提示
                 //资产名称
                 entity.setAssetName(list.get(headList.indexOf("*名称")));
                 //起息日
@@ -461,6 +522,12 @@ public class AssetInfoDetailUtil {
                 }*/
                 headList.clear();
                 getHeadList_08(headList);
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
+                if (dataList.get(1).size() != headList.size()) {
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-QDII品格式不正确！"));
+                    return resultList;
+                }
+                //add by tuqirong 2022-01-19 end 导入模板存在缺少或多余字段，给予提示
                 //资产名称
                 entity.setAssetName(list.get(headList.indexOf("*股票/基金名称")));
                 //起息日
@@ -490,6 +557,12 @@ public class AssetInfoDetailUtil {
                 }*/
                 headList.clear();
                 getHeadList_08(headList);
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
+                if (dataList.get(1).size() != headList.size()) {
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-QDII品格式不正确！"));
+                    return resultList;
+                }
+                //add by tuqirong 2022-01-19 end 导入模板存在缺少或多余字段，给予提示
                 //资产名称
                 entity.setAssetName(list.get(headList.indexOf("*名称")));
                 //起息日
@@ -519,6 +592,12 @@ public class AssetInfoDetailUtil {
                 }*/
                 headList.clear();
                 getHeadList_12(headList);
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
+                if (dataList.get(1).size() != headList.size()) {
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-资产管理产品格式不正确！"));
+                    return resultList;
+                }
+                //add by tuqirong 2022-01-19 end 导入模板存在缺少或多余字段，给予提示
                 //资产名称
                 entity.setAssetName(list.get(headList.indexOf(" *资管计划名称")));
                 //起息日
@@ -548,6 +627,12 @@ public class AssetInfoDetailUtil {
                 }*/
                 headList.clear();
                 getHeadList_05(headList);
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
+                if (dataList.get(1).size() != headList.size()) {
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-票据及其他格式不正确！"));
+                    return resultList;
+                }
+                //add by tuqirong 2022-01-19 end 导入模板存在缺少或多余字段，给予提示
                 //资产名称
                 entity.setAssetName(list.get(headList.indexOf("*名称")));
                 //起息日
@@ -577,6 +662,12 @@ public class AssetInfoDetailUtil {
                 }*/
                 headList.clear();
                 getHeadList_14(headList);
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
+                if (dataList.get(1).size() != headList.size()) {
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-各类资产其他项格式不正确！"));
+                    return resultList;
+                }
+                //add by tuqirong 2022-01-19 end 导入模板存在缺少或多余字段，给予提示
                 //资产名称
                 entity.setAssetName(list.get(headList.indexOf("*名称")));
                 //起息日
@@ -608,6 +699,12 @@ public class AssetInfoDetailUtil {
                 }*/
                 headList.clear();
                 getHeadList_L01(headList);
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
+                if (dataList.get(1).size() != headList.size()) {
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-基金格式不正确！"));
+                    return resultList;
+                }
+                //add by tuqirong 2022-01-19 end 导入模板存在缺少或多余字段，给予提示
                 //资产名称
                 entity.setAssetName(list.get(headList.indexOf("*基金名称")));
                 //起息日
@@ -637,6 +734,12 @@ public class AssetInfoDetailUtil {
                 }*/
                 headList.clear();
                 getHeadList_05(headList);
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
+                if (dataList.get(1).size() != 61) {
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-票据及其他格式不正确！"));
+                    return resultList;
+                }
+                //add by tuqirong 2022-01-19 end 导入模板存在缺少或多余字段，给予提示
                 //资产名称
                 entity.setAssetName(list.get(headList.indexOf("委外投资协议名称")));
                 //起息日
@@ -666,6 +769,12 @@ public class AssetInfoDetailUtil {
                 }*/
                 headList.clear();
                 getHeadList_05(headList);
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
+                if (dataList.get(1).size() != headList.size()) {
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-票据及其他格式不正确！"));
+                    return resultList;
+                }
+                //add by tuqirong 2022-01-19 end 导入模板存在缺少或多余字段，给予提示
                 //资产名称
                 entity.setAssetName(list.get(headList.indexOf("*名称")));
                 //起息日
@@ -695,6 +804,12 @@ public class AssetInfoDetailUtil {
                 }*/
                 headList.clear();
                 getHeadList_05(headList);
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
+                if (dataList.get(1).size() != headList.size()) {
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-票据及其他格式不正确！"));
+                    return resultList;
+                }
+                //add by tuqirong 2022-01-19 start 导入模板存在缺少或多余字段，给予提示
                 //资产名称
                 entity.setAssetName(list.get(headList.indexOf("*名称")));
                 //起息日
@@ -742,12 +857,12 @@ public class AssetInfoDetailUtil {
             getDtoByPageMessgae(entity);
             if (StringUtil.isNotEmpty(entity.getPbcAssetType1()) && StringUtil.isNotEmpty(entity.getPbcAssetType2())){
                 if (!StringUtil.equals(entity.getPbcAssetType1(),dict.get("pbcAssetType1"+entity.getPbcAssetType2()))){
-                    message.add("所选新人行二级分类值不在所选新人行一级分类下");
+                    message.add("所选*新人行二级分类值不在所选*新人行一级分类下");
                 }
             }
             if (StringUtil.isNotEmpty(entity.getPbcAssetType2()) && StringUtil.isNotEmpty(entity.getPbcAssetType3())){
                 if (!StringUtil.equals(entity.getPbcAssetType2(),dict.get("pbcAssetType2"+entity.getPbcAssetType3()))){
-                    message.add("所选新人行三级分类值不在所选新人行二级分类下");
+                    message.add("所选*新人行三级分类值不在所选*新人行二级分类下");
                 }
             }
             entity.setCreateUser(LoginUserUtil.getUserName());
@@ -792,16 +907,16 @@ public class AssetInfoDetailUtil {
             }
         }
         dto.setRemark(list.get(headList.indexOf("备注")));
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类"))) && list.get(headList.indexOf("新人行一级分类")).length()>2){
-            dto.setPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行一级分类"))) && list.get(headList.indexOf("*新人行一级分类")).length()>2){
+            dto.setPbcAssetType1(list.get(headList.indexOf("*新人行一级分类")).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行二级分类"))) && list.get(headList.indexOf("新人行二级分类")).length()>2){
-            dto.setPbcAssetType2(list.get(headList.indexOf("新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行二级分类"))) && list.get(headList.indexOf("*新人行二级分类")).length()>2){
+            dto.setPbcAssetType2(list.get(headList.indexOf("*新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
-            dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行三级分类"))) && list.get(headList.indexOf("*新人行三级分类")).length()>2){
+            dto.setPbcAssetType3(list.get(headList.indexOf("*新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
         return dto;
     }
@@ -839,16 +954,16 @@ public class AssetInfoDetailUtil {
             }
         }
         dto.setRemark(list.get(headList.indexOf("备注")));
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类"))) && list.get(headList.indexOf("新人行一级分类")).length()>2){
-            dto.setPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行一级分类"))) && list.get(headList.indexOf("*新人行一级分类")).length()>2){
+            dto.setPbcAssetType1(list.get(headList.indexOf("*新人行一级分类")).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行二级分类"))) && list.get(headList.indexOf("新人行二级分类")).length()>2){
-            dto.setPbcAssetType2(list.get(headList.indexOf("新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行二级分类"))) && list.get(headList.indexOf("*新人行二级分类")).length()>2){
+            dto.setPbcAssetType2(list.get(headList.indexOf("*新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
-            dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行三级分类"))) && list.get(headList.indexOf("*新人行三级分类")).length()>2){
+            dto.setPbcAssetType3(list.get(headList.indexOf("*新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
         //新增资产代码字段 add by tuqirong 2021-12-31 start
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("*是否为同业借款")))) {
@@ -941,16 +1056,16 @@ public class AssetInfoDetailUtil {
             }
         }
         dto.setRemark(list.get(headList.indexOf("备注")));
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类"))) && list.get(headList.indexOf("新人行一级分类")).length()>2){
-            dto.setPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行一级分类"))) && list.get(headList.indexOf("*新人行一级分类")).length()>2){
+            dto.setPbcAssetType1(list.get(headList.indexOf("*新人行一级分类")).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行二级分类"))) && list.get(headList.indexOf("新人行二级分类")).length()>2){
-            dto.setPbcAssetType2(list.get(headList.indexOf("新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行二级分类"))) && list.get(headList.indexOf("*新人行二级分类")).length()>2){
+            dto.setPbcAssetType2(list.get(headList.indexOf("*新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
-            dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行三级分类"))) && list.get(headList.indexOf("*新人行三级分类")).length()>2){
+            dto.setPbcAssetType3(list.get(headList.indexOf("*新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
         return dto;
     }
@@ -980,22 +1095,30 @@ public class AssetInfoDetailUtil {
         dto.setFundInvestAsset(list.get(headList.indexOf("*基金投资资产")));
         dto.setRemark(list.get(headList.indexOf("备注")));
         dto.setPrivatefundFlag(list.get(headList.indexOf("是否投向金融资产投资公司或其附属机构发行的私募股权投资基金")));
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类"))) && list.get(headList.indexOf("新人行一级分类")).length()>2){
-            dto.setPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行一级分类"))) && list.get(headList.indexOf("*新人行一级分类")).length()>2){
+            dto.setPbcAssetType1(list.get(headList.indexOf("*新人行一级分类")).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行二级分类"))) && list.get(headList.indexOf("新人行二级分类")).length()>2){
-            dto.setPbcAssetType2(list.get(headList.indexOf("新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行二级分类"))) && list.get(headList.indexOf("*新人行二级分类")).length()>2){
+            dto.setPbcAssetType2(list.get(headList.indexOf("*新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
-            dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行三级分类"))) && list.get(headList.indexOf("*新人行三级分类")).length()>2){
+            dto.setPbcAssetType3(list.get(headList.indexOf("*新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
         //新增是否为固定收益类字段 add by tuqirong 2021-12-31 start
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("是否为固定收益类")))) {
             dto.setProfitFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("是否为固定收益类"))));
         }
         //新增是否为固定收益类字段 add by tuqirong 2021-12-31 end
+        //add by tuqirong 2021-01-21 start 导入模板新增字段处理
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*管理人")))) {
+            dto.setChbManagerId(list.get(headList.indexOf("*管理人")));
+        }
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*是否政府出资产业投资基金")))) {
+            dto.setIsUnlisted(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("*是否政府出资产业投资基金"))));
+        }
+        //add by tuqirong 2021-01-21 end 导入模板新增字段处理
         return dto;
     }
 
@@ -1065,16 +1188,16 @@ public class AssetInfoDetailUtil {
         dto.setGuaTypeRemark(list.get(headList.indexOf("担保情况说明")));
         dto.setDeptEquity(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("是否为债转股"))));
         dto.setRemark(list.get(headList.indexOf("备注")));
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类"))) && list.get(headList.indexOf("新人行一级分类")).length()>2){
-            dto.setPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行一级分类"))) && list.get(headList.indexOf("*新人行一级分类")).length()>2){
+            dto.setPbcAssetType1(list.get(headList.indexOf("*新人行一级分类")).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行二级分类"))) && list.get(headList.indexOf("新人行二级分类")).length()>2){
-            dto.setPbcAssetType2(list.get(headList.indexOf("新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行二级分类"))) && list.get(headList.indexOf("*新人行二级分类")).length()>2){
+            dto.setPbcAssetType2(list.get(headList.indexOf("*新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
-            dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行三级分类"))) && list.get(headList.indexOf("*新人行三级分类")).length()>2){
+            dto.setPbcAssetType3(list.get(headList.indexOf("*新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
         return dto;
     }
@@ -1112,16 +1235,16 @@ public class AssetInfoDetailUtil {
             }
         }
         dto.setRemark(list.get(headList.indexOf("备注")));
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类"))) && list.get(headList.indexOf("新人行一级分类")).length()>2){
-            dto.setPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行一级分类"))) && list.get(headList.indexOf("*新人行一级分类")).length()>2){
+            dto.setPbcAssetType1(list.get(headList.indexOf("*新人行一级分类")).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行二级分类"))) && list.get(headList.indexOf("新人行二级分类")).length()>2){
-            dto.setPbcAssetType2(list.get(headList.indexOf("新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行二级分类"))) && list.get(headList.indexOf("*新人行二级分类")).length()>2){
+            dto.setPbcAssetType2(list.get(headList.indexOf("*新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
-            dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行三级分类"))) && list.get(headList.indexOf("*新人行三级分类")).length()>2){
+            dto.setPbcAssetType3(list.get(headList.indexOf("*新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
         return dto;
     }
@@ -1213,16 +1336,16 @@ public class AssetInfoDetailUtil {
         }
         dto.setRemark(list.get(headList.indexOf("备注")));
         dto.setPrivateprdFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("是否投向金融资产投资公司发行的私募资产管理产品"))));
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类"))) && list.get(headList.indexOf("新人行一级分类")).length()>2){
-            dto.setPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行一级分类"))) && list.get(headList.indexOf("*新人行一级分类")).length()>2){
+            dto.setPbcAssetType1(list.get(headList.indexOf("*新人行一级分类")).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行二级分类"))) && list.get(headList.indexOf("新人行二级分类")).length()>2){
-            dto.setPbcAssetType2(list.get(headList.indexOf("新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行二级分类"))) && list.get(headList.indexOf("*新人行二级分类")).length()>2){
+            dto.setPbcAssetType2(list.get(headList.indexOf("*新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
-            dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行三级分类"))) && list.get(headList.indexOf("*新人行三级分类")).length()>2){
+            dto.setPbcAssetType3(list.get(headList.indexOf("*新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
         //新增是否为银行理财产品和产品登记编码字段 add by tuqirong 2021-12-31 start
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("是否为银行理财产品")))) {
@@ -1315,16 +1438,16 @@ public class AssetInfoDetailUtil {
         }
         dto.setTradeFee(list.get(headList.indexOf("*交易费")));
         dto.setRemark(list.get(headList.indexOf("备注")));
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类"))) && list.get(headList.indexOf("新人行一级分类")).length()>2){
-            dto.setPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行一级分类"))) && list.get(headList.indexOf("*新人行一级分类")).length()>2){
+            dto.setPbcAssetType1(list.get(headList.indexOf("*新人行一级分类")).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行二级分类"))) && list.get(headList.indexOf("新人行二级分类")).length()>2){
-            dto.setPbcAssetType2(list.get(headList.indexOf("新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行二级分类"))) && list.get(headList.indexOf("*新人行二级分类")).length()>2){
+            dto.setPbcAssetType2(list.get(headList.indexOf("*新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
-            dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行三级分类"))) && list.get(headList.indexOf("*新人行三级分类")).length()>2){
+            dto.setPbcAssetType3(list.get(headList.indexOf("*新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
         return dto;
     }
@@ -1352,16 +1475,16 @@ public class AssetInfoDetailUtil {
         dto.setIndustryShares2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(headList.indexOf("*行业"))));
         dto.setIndustryShares(dict.get("industry"+dto.getIndustryShares2()));
         dto.setRemark(list.get(headList.indexOf("备注")));
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类"))) && list.get(headList.indexOf("新人行一级分类")).length()>2){
-            dto.setPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行一级分类"))) && list.get(headList.indexOf("*新人行一级分类")).length()>2){
+            dto.setPbcAssetType1(list.get(headList.indexOf("*新人行一级分类")).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行二级分类"))) && list.get(headList.indexOf("新人行二级分类")).length()>2){
-            dto.setPbcAssetType2(list.get(headList.indexOf("新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行二级分类"))) && list.get(headList.indexOf("*新人行二级分类")).length()>2){
+            dto.setPbcAssetType2(list.get(headList.indexOf("*新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
-            dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行三级分类"))) && list.get(headList.indexOf("*新人行三级分类")).length()>2){
+            dto.setPbcAssetType3(list.get(headList.indexOf("*新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
         return dto;
     }
@@ -1391,16 +1514,16 @@ public class AssetInfoDetailUtil {
         }
         dto.setBasis(SysDataUtil.getZZDictCodeFromName(DictCode.计息基础_中债, list.get(headList.indexOf("*计息基础"))));
         dto.setRemark(list.get(headList.indexOf("备注")));
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类"))) && list.get(headList.indexOf("新人行一级分类")).length()>2){
-            dto.setPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行一级分类"))) && list.get(headList.indexOf("*新人行一级分类")).length()>2){
+            dto.setPbcAssetType1(list.get(headList.indexOf("*新人行一级分类")).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行二级分类"))) && list.get(headList.indexOf("新人行二级分类")).length()>2){
-            dto.setPbcAssetType2(list.get(headList.indexOf("新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行二级分类"))) && list.get(headList.indexOf("*新人行二级分类")).length()>2){
+            dto.setPbcAssetType2(list.get(headList.indexOf("*新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
-            dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行三级分类"))) && list.get(headList.indexOf("*新人行三级分类")).length()>2){
+            dto.setPbcAssetType3(list.get(headList.indexOf("*新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
         return dto;
     }
@@ -1448,16 +1571,16 @@ public class AssetInfoDetailUtil {
         dto.setGuaTypeRemark(list.get(headList.indexOf("*担保情况说明")));
         dto.setSpecialCmt(list.get(headList.indexOf("*是否含权等特殊条款情况说明")));
         dto.setRemark(list.get(headList.indexOf("备注")));
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类"))) && list.get(headList.indexOf("新人行一级分类")).length()>2){
-            dto.setPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行一级分类"))) && list.get(headList.indexOf("*新人行一级分类")).length()>2){
+            dto.setPbcAssetType1(list.get(headList.indexOf("*新人行一级分类")).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行二级分类"))) && list.get(headList.indexOf("新人行二级分类")).length()>2){
-            dto.setPbcAssetType2(list.get(headList.indexOf("新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行二级分类"))) && list.get(headList.indexOf("*新人行二级分类")).length()>2){
+            dto.setPbcAssetType2(list.get(headList.indexOf("*新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
-            dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行三级分类"))) && list.get(headList.indexOf("*新人行三级分类")).length()>2){
+            dto.setPbcAssetType3(list.get(headList.indexOf("*新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
         return dto;
     }
@@ -1487,16 +1610,16 @@ public class AssetInfoDetailUtil {
         }
         dto.setHoldPurpose(SysDataUtil.getZZDictCodeFromName(DictCode.持有目的, list.get(headList.indexOf("*持有目的"))));
         dto.setRemark(list.get(headList.indexOf("备注")));
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类"))) && list.get(headList.indexOf("新人行一级分类")).length()>2){
-            dto.setPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行一级分类"))) && list.get(headList.indexOf("*新人行一级分类")).length()>2){
+            dto.setPbcAssetType1(list.get(headList.indexOf("*新人行一级分类")).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行二级分类"))) && list.get(headList.indexOf("新人行二级分类")).length()>2){
-            dto.setPbcAssetType2(list.get(headList.indexOf("新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行二级分类"))) && list.get(headList.indexOf("*新人行二级分类")).length()>2){
+            dto.setPbcAssetType2(list.get(headList.indexOf("*新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
-            dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行三级分类"))) && list.get(headList.indexOf("*新人行三级分类")).length()>2){
+            dto.setPbcAssetType3(list.get(headList.indexOf("*新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
         return dto;
     }
@@ -1531,16 +1654,16 @@ public class AssetInfoDetailUtil {
         dto.setBankSecPrefer(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("是否商业银行优先股"))));
         dto.setIsGovernFund(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("是否创业投资基金"))));
         dto.setIsunlisted(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("是否政府出资产业投资基金"))));
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类"))) && list.get(headList.indexOf("新人行一级分类")).length()>2){
-            dto.setPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行一级分类"))) && list.get(headList.indexOf("*新人行一级分类")).length()>2){
+            dto.setPbcAssetType1(list.get(headList.indexOf("*新人行一级分类")).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行二级分类"))) && list.get(headList.indexOf("新人行二级分类")).length()>2){
-            dto.setPbcAssetType2(list.get(headList.indexOf("新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行二级分类"))) && list.get(headList.indexOf("*新人行二级分类")).length()>2){
+            dto.setPbcAssetType2(list.get(headList.indexOf("*新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
-            dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行三级分类"))) && list.get(headList.indexOf("*新人行三级分类")).length()>2){
+            dto.setPbcAssetType3(list.get(headList.indexOf("*新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
         return dto;
     }
@@ -1610,16 +1733,16 @@ public class AssetInfoDetailUtil {
         dto.setPrivateFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("投向地方政府融资平台的部分"))));
         dto.setIsBzhpj(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("是否为标准化票据"))));
         dto.setRemark(list.get(headList.indexOf("备注")));
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类"))) && list.get(headList.indexOf("新人行一级分类")).length()>2){
-            dto.setPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行一级分类"))) && list.get(headList.indexOf("*新人行一级分类")).length()>2){
+            dto.setPbcAssetType1(list.get(headList.indexOf("*新人行一级分类")).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行二级分类"))) && list.get(headList.indexOf("新人行二级分类")).length()>2){
-            dto.setPbcAssetType2(list.get(headList.indexOf("新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行二级分类"))) && list.get(headList.indexOf("*新人行二级分类")).length()>2){
+            dto.setPbcAssetType2(list.get(headList.indexOf("*新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
-            dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行三级分类"))) && list.get(headList.indexOf("*新人行三级分类")).length()>2){
+            dto.setPbcAssetType3(list.get(headList.indexOf("*新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
         //新增票据代码字段 add by tuqirong 2021-12-31 start
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("票据代码")))) {
@@ -1850,22 +1973,36 @@ public class AssetInfoDetailUtil {
         dto.setRepPrivateprdFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("地方政府融资平台"))));
         dto.setPppflag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("公共PPP"))));
         dto.setBondtostockFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("是否投向市场化债转股相关产品的部分"))));
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类"))) && list.get(headList.indexOf("新人行一级分类")).length()>2){
-            dto.setPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行一级分类"))) && list.get(headList.indexOf("*新人行一级分类")).length()>2){
+            dto.setPbcAssetType1(list.get(headList.indexOf("*新人行一级分类")).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行二级分类"))) && list.get(headList.indexOf("新人行二级分类")).length()>2){
-            dto.setPbcAssetType2(list.get(headList.indexOf("新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行二级分类"))) && list.get(headList.indexOf("*新人行二级分类")).length()>2){
+            dto.setPbcAssetType2(list.get(headList.indexOf("*新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(77)) && list.get(77).length()>2){
-            dto.setPbcAssetType3(list.get(77).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行三级分类"))) && list.get(headList.indexOf("*新人行三级分类")).length()>2){
+            dto.setPbcAssetType3(list.get(headList.indexOf("*新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
         //新增资产代码字段 add by tuqirong 2021-12-31 start
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("资产代码")))) {
             dto.setRepCreditAssetCode(list.get(headList.indexOf("资产代码")));
         }
         //新增资产代码字段 add by tuqirong 2021-12-31 end
+        //add by tuqirong 2022-01-21 start  导入模板新增字段处理
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*是否资产四级分类为“北金所债权”")))) {
+            dto.setIsBjszq(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("*是否资产四级分类为“北金所债权”"))));
+        }
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*结构化业务类型")))) {
+            dto.setConstracteBusiType(SysDataUtil.getZZDictCodeFromName(DictCode.结构化业务类型, list.get(headList.indexOf("*结构化业务类型"))));
+        }
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*结构化层级")))) {
+            dto.setConstracteGrade(SysDataUtil.getZZDictCodeFromName(DictCode.结构化层级, list.get(headList.indexOf("*结构化层级"))));
+        }
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*结构化杠杆倍数")))) {
+            dto.setConstracteHeaverTimes(new BigDecimal(list.get(headList.indexOf("*结构化杠杆倍数"))));
+        }
+        //add by tuqirong 2022-01-21 end  导入模板新增字段处理
         return dto;
     }
 
@@ -1924,19 +2061,19 @@ public class AssetInfoDetailUtil {
         }
         dto.setRepTarget(list.get(headList.indexOf("结构性存款挂钩标的")));
         dto.setRepRemark(list.get(headList.indexOf("备注")));
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类")))
-                && list.get(headList.indexOf("新人行一级分类")).length()>2){
-            dto.setRepPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行一级分类")))
+                && list.get(headList.indexOf("*新人行一级分类")).length()>2){
+            dto.setRepPbcAssetType1(list.get(headList.indexOf("*新人行一级分类")).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行二级分类")))
-                && list.get(headList.indexOf("新人行二级分类")).length()>2){
-            dto.setRepPbcAssetType2(list.get(headList.indexOf("新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行二级分类")))
+                && list.get(headList.indexOf("*新人行二级分类")).length()>2){
+            dto.setRepPbcAssetType2(list.get(headList.indexOf("*新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类")))
-                && list.get(headList.indexOf("新人行三级分类")).length()>2){
-            dto.setRepPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行三级分类")))
+                && list.get(headList.indexOf("*新人行三级分类")).length()>2){
+            dto.setRepPbcAssetType3(list.get(headList.indexOf("*新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
         //新增字段存款账号 add by tuqirong 2021-12-31 start
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("*存款账号")))) {
@@ -1991,19 +2128,19 @@ public class AssetInfoDetailUtil {
         }
         dto.setRemark(list.get(headList.indexOf("备注")));
         dto.setCheckCode(list.get(headList.indexOf("对应资管计划代码")));
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类")))
-                && list.get(headList.indexOf("新人行一级分类")).length()>2){
-            dto.setPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行一级分类")))
+                && list.get(headList.indexOf("*新人行一级分类")).length()>2){
+            dto.setPbcAssetType1(list.get(headList.indexOf("*新人行一级分类")).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行二级分类")))
-                && list.get(headList.indexOf("新人行二级分类")).length()>2){
-            dto.setPbcAssetType2(list.get(headList.indexOf("新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行二级分类")))
+                && list.get(headList.indexOf("*新人行二级分类")).length()>2){
+            dto.setPbcAssetType2(list.get(headList.indexOf("*新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类")))
-                && list.get(headList.indexOf("新人行三级分类")).length()>2){
-            dto.setPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行三级分类")))
+                && list.get(headList.indexOf("*新人行三级分类")).length()>2){
+            dto.setPbcAssetType3(list.get(headList.indexOf("*新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
         return dto;
@@ -2037,17 +2174,37 @@ public class AssetInfoDetailUtil {
         dto.setRepBankSecCapital(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("是否商业银行二级资本债"))));
         dto.setRepBankSecPerpetual(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("是否商业银行永续债"))));
         dto.setIsPerpetual(SysDataUtil.getZZDictCodeFromName(DictCode.永续债属性, list.get(headList.indexOf("永续债属性"))));
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行一级分类"))) && list.get(headList.indexOf("新人行一级分类")).length()>2){
-            dto.setRepPbcAssetType1(list.get(headList.indexOf("新人行一级分类")).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行一级分类"))) && list.get(headList.indexOf("*新人行一级分类")).length()>2){
+            dto.setRepPbcAssetType1(list.get(headList.indexOf("*新人行一级分类")).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行二级分类"))) && list.get(headList.indexOf("新人行二级分类")).length()>2){
-            dto.setRepPbcAssetType2(list.get(headList.indexOf("新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行二级分类"))) && list.get(headList.indexOf("*新人行二级分类")).length()>2){
+            dto.setRepPbcAssetType2(list.get(headList.indexOf("*新人行二级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("新人行三级分类"))) && list.get(headList.indexOf("新人行三级分类")).length()>2){
-            dto.setRepPbcAssetType3(list.get(headList.indexOf("新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*新人行三级分类"))) && list.get(headList.indexOf("*新人行三级分类")).length()>2){
+            dto.setRepPbcAssetType3(list.get(headList.indexOf("*新人行三级分类")).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
+        //add by tuqirong 2022-01-21 start 导入模板新增字段处理
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*票面利率%")))) {
+            dto.setAssetYield(new BigDecimal(list.get(headList.indexOf("*票面利率%"))));
+        }
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*发行人")))) {
+            dto.setChbIssuerId(list.get(headList.indexOf("*发行人")));
+        }
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*是否含权债")))) {
+            dto.setOptionFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("*是否含权债"))));
+        }
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*结构化业务类型")))) {
+            dto.setConstracteBusiType(SysDataUtil.getZZDictCodeFromName(DictCode.结构化业务类型, list.get(headList.indexOf("*结构化业务类型"))));
+        }
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*结构化层级")))) {
+            dto.setConstracteGrade(SysDataUtil.getZZDictCodeFromName(DictCode.结构化层级, list.get(headList.indexOf("*结构化业务类型"))));
+        }
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*结构化杠杆倍数")))) {
+            dto.setConstracteHeaverTimes(new BigDecimal(list.get(headList.indexOf("*结构化杠杆倍数"))));
+        }
+        //add by tuqirong 2022-01-21 end 导入模板新增字段处理
         return dto;
     }
 
@@ -2101,9 +2258,14 @@ public class AssetInfoDetailUtil {
         }
         if (excelHeadList.size() < headList.size()) {
             // Excel中列数少于要求列数
+            tempCheckResult.get(0).setErrorInfo("Excel中列数少于要求列数！");
             return tempCheckResult;
         }
-
+        if (excelHeadList.size() > headList.size()) {
+            // Excel中列数多于要求列数
+            tempCheckResult.get(0).setErrorInfo("Excel中列数多于要求列数！");
+            return tempCheckResult;
+        }
         for (int i = 0; i < headList.size(); i++ ) {
             if (!excelHeadList.get(i).contains(headList.get(i))) {
                 // Excel中列不一致
@@ -2120,6 +2282,7 @@ public class AssetInfoDetailUtil {
         headList.add("*交易流通场所");
         headList.add("*币种");
         headList.add("*资产一级分类");
+        headList.add("*资产二级分类");
     }
 
     private void getHeadList_01(List<String> headList){
@@ -2129,6 +2292,7 @@ public class AssetInfoDetailUtil {
         headList.add("*交易流通场所");
         headList.add("*币种");
         headList.add("*资产一级分类");
+        headList.add("*资产二级分类");
         headList.add("资金存入银行");
         headList.add("*存款账号");
         headList.add("*存款金额");
@@ -2141,9 +2305,9 @@ public class AssetInfoDetailUtil {
         headList.add("结构性存款挂钩标的类别");
         headList.add("结构性存款挂钩标的");
         headList.add("备注");
-        headList.add("新人行一级分类");
-        headList.add("新人行二级分类");
-        headList.add("新人行三级分类");
+        headList.add("*新人行一级分类");
+        headList.add("*新人行二级分类");
+        headList.add("*新人行三级分类");
     }
 
     private void getHeadList_02(List<String> headList){
@@ -2153,6 +2317,7 @@ public class AssetInfoDetailUtil {
         headList.add("*交易流通场所");
         headList.add("*币种");
         headList.add("*资产一级分类");
+        headList.add("*资产二级分类");
         headList.add("*名称");
         headList.add("*起息日");
         headList.add("*到期日");
@@ -2164,9 +2329,9 @@ public class AssetInfoDetailUtil {
         headList.add("回购标的金额");
         headList.add("备注");
         headList.add("对应资管计划代码");
-        headList.add("新人行一级分类");
-        headList.add("新人行二级分类");
-        headList.add("新人行三级分类");
+        headList.add("*新人行一级分类");
+        headList.add("*新人行二级分类");
+        headList.add("*新人行三级分类");
     }
 
     private void getHeadList_03(List<String> headList){
@@ -2176,6 +2341,7 @@ public class AssetInfoDetailUtil {
         headList.add("*交易流通场所");
         headList.add("*币种");
         headList.add("*资产一级分类");
+        headList.add("*资产二级分类");
         headList.add("*代码");
         headList.add("*名称");
         headList.add("具体类别");
@@ -2195,9 +2361,15 @@ public class AssetInfoDetailUtil {
         headList.add("是否商业银行二级资本债");
         headList.add("是否商业银行永续债");
         headList.add("永续债属性");
-        headList.add("新人行一级分类");
-        headList.add("新人行二级分类");
-        headList.add("新人行三级分类");
+        headList.add("*票面利率%");
+        headList.add("*发行人");
+        headList.add("*是否含权债");
+        headList.add("*结构化业务类型");
+        headList.add("*结构化层级");
+        headList.add("*结构化杠杆倍数");
+        headList.add("*新人行一级分类");
+        headList.add("*新人行二级分类");
+        headList.add("*新人行三级分类");
     }
 
     private void getHeadList_04(List<String> headList){
@@ -2207,6 +2379,7 @@ public class AssetInfoDetailUtil {
         headList.add("*交易流通场所");
         headList.add("*币种");
         headList.add("*资产一级分类");
+        headList.add("*资产二级分类");
         headList.add("收/受益权类型");
         headList.add("*是否属于买入返售");
         headList.add("*名称");
@@ -2278,9 +2451,13 @@ public class AssetInfoDetailUtil {
         headList.add("地方政府融资平台");
         headList.add("公共PPP");
         headList.add("是否投向市场化债转股相关产品的部分");
-        headList.add("新人行一级分类");
-        headList.add("新人行二级分类");
-        headList.add("新人行三级分类");
+        headList.add("*是否资产四级分类为“北金所债权”");
+        headList.add("*结构化业务类型");
+        headList.add("*结构化层级");
+        headList.add("*结构化杠杆倍数");
+        headList.add("*新人行一级分类");
+        headList.add("*新人行二级分类");
+        headList.add("*新人行三级分类");
     }
 
     private void getHeadList_05(List<String> headList){
@@ -2290,6 +2467,7 @@ public class AssetInfoDetailUtil {
         headList.add("*交易流通场所");
         headList.add("*币种");
         headList.add("*资产一级分类");
+        headList.add("*资产二级分类");
         headList.add("*是否为收/受益权");
         headList.add("*是否属于买入返售");
         headList.add("*类型");
@@ -2341,9 +2519,9 @@ public class AssetInfoDetailUtil {
         headList.add("*起息日");
         headList.add("*到期日");
         headList.add("备注");
-        headList.add("新人行一级分类");
-        headList.add("新人行二级分类");
-        headList.add("新人行三级分类");
+        headList.add("*新人行一级分类");
+        headList.add("*新人行二级分类");
+        headList.add("*新人行三级分类");
     }
 
     private void getHeadList_06(List<String> headList){
@@ -2353,6 +2531,7 @@ public class AssetInfoDetailUtil {
         headList.add("*交易流通场所");
         headList.add("*币种");
         headList.add("*资产一级分类");
+        headList.add("*资产二级分类");
         headList.add("股票代码");
         headList.add(" *股票/企业名称");
         headList.add("股票类型");
@@ -2370,9 +2549,9 @@ public class AssetInfoDetailUtil {
         headList.add("*到期日");
         headList.add("是否创业投资基金");
         headList.add("是否政府出资产业投资基金");
-        headList.add("新人行一级分类");
-        headList.add("新人行二级分类");
-        headList.add("新人行三级分类");
+        headList.add("*新人行一级分类");
+        headList.add("*新人行二级分类");
+        headList.add("*新人行三级分类");
     }
 
     private void getHeadList_07(List<String> headList){
@@ -2382,6 +2561,7 @@ public class AssetInfoDetailUtil {
         headList.add("*交易流通场所");
         headList.add("*币种");
         headList.add("*资产一级分类");
+        headList.add("*资产二级分类");
         headList.add("*名称");
         headList.add("*名义本金");
         headList.add("*标的类别");
@@ -2389,9 +2569,9 @@ public class AssetInfoDetailUtil {
         headList.add("备注");
         headList.add("*起息日");
         headList.add("*到期日");
-        headList.add("新人行一级分类");
-        headList.add("新人行二级分类");
-        headList.add("新人行三级分类");
+        headList.add("*新人行一级分类");
+        headList.add("*新人行二级分类");
+        headList.add("*新人行三级分类");
     }
 
     private void getHeadList_08(List<String> headList){
@@ -2401,6 +2581,7 @@ public class AssetInfoDetailUtil {
         headList.add("*交易流通场所");
         headList.add("*币种");
         headList.add("*资产一级分类");
+        headList.add("*资产二级分类");
         headList.add("*所属国家或地区");
         headList.add("*债券名称");
         headList.add("*债券代码");
@@ -2441,9 +2622,9 @@ public class AssetInfoDetailUtil {
         headList.add("*起息日");
         headList.add("*到期日");
         headList.add("备注");
-        headList.add("新人行一级分类");
-        headList.add("新人行二级分类");
-        headList.add("新人行三级分类");
+        headList.add("*新人行一级分类");
+        headList.add("*新人行二级分类");
+        headList.add("*新人行三级分类");
     }
 
     private void getHeadList_12(List<String> headList){
@@ -2453,6 +2634,7 @@ public class AssetInfoDetailUtil {
         headList.add("*交易流通场所");
         headList.add("*币种");
         headList.add("*资产一级分类");
+        headList.add("*资产二级分类");
         headList.add(" *资管计划名称");
         headList.add("是否为银行理财产品");
         headList.add("产品登记编码");
@@ -2481,9 +2663,9 @@ public class AssetInfoDetailUtil {
         headList.add(" *其他合计费率%");
         headList.add("备注");
         headList.add("是否投向金融资产投资公司发行的私募资产管理产品");
-        headList.add("新人行一级分类");
-        headList.add("新人行二级分类");
-        headList.add("新人行三级分类");
+        headList.add("*新人行一级分类");
+        headList.add("*新人行二级分类");
+        headList.add("*新人行三级分类");
     }
 
     private void getHeadList_14(List<String> headList){
@@ -2493,6 +2675,7 @@ public class AssetInfoDetailUtil {
         headList.add("*交易流通场所");
         headList.add("*币种");
         headList.add("*资产一级分类");
+        headList.add("*资产二级分类");
         headList.add("*名称");
         headList.add("*行内资产类别");
         headList.add("行内资产类别说明");
@@ -2524,9 +2707,9 @@ public class AssetInfoDetailUtil {
         headList.add("担保情况说明");
         headList.add("是否为债转股");
         headList.add("备注");
-        headList.add("新人行一级分类");
-        headList.add("新人行二级分类");
-        headList.add("新人行三级分类");
+        headList.add("*新人行一级分类");
+        headList.add("*新人行二级分类");
+        headList.add("*新人行三级分类");
     }
 
     private void getHeadList_L01(List<String> headList){
@@ -2536,6 +2719,7 @@ public class AssetInfoDetailUtil {
         headList.add("*交易流通场所");
         headList.add("*币种");
         headList.add("*资产一级分类");
+        headList.add("*资产二级分类");
         headList.add("*基金代码");
         headList.add("*基金名称");
         headList.add("*起息日");
@@ -2556,8 +2740,10 @@ public class AssetInfoDetailUtil {
         headList.add("*基金投资资产");
         headList.add("备注");
         headList.add("是否投向金融资产投资公司或其附属机构发行的私募股权投资基金");
-        headList.add("新人行一级分类");
-        headList.add("新人行二级分类");
-        headList.add("新人行三级分类");
+        headList.add("*管理人");
+        headList.add("*是否政府出资产业投资基金");
+        headList.add("*新人行一级分类");
+        headList.add("*新人行二级分类");
+        headList.add("*新人行三级分类");
     }
 }
