@@ -605,9 +605,6 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
     @Override
     public void doComplete(CfetsRepoDealRegisterQuoteDto entity, OperationType operationType) {
         CfetsRepoDealDbDto cfetsRepoDealDbDto = this.prepareEntity(entity, operationType);
-        CfetsOprHisInfoRequest cfetsOprHisInfoRequest = new CfetsOprHisInfoRequest();
-        cfetsOprHisInfoRequest.setEntrustId(entity.getTotleTradeId());
-        cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_新建.getValue());
         //删除业务流程数据
         this.deleteBussFlowData(entity.getWorkflowId());
         //登录db
@@ -617,11 +614,9 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         //头寸
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
             PositionHttpRequest.dorevoke(entity.getTotleTradeId(), DictCodeListExt1.子系统代码_交易.getValue(), DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), entity.getPs());
-            cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_撤回.getValue());
         }
         //处理指令执行进度
         this.insertEtrFinishStatus(cfetsRepoDealDbDto, operationType);
-        joyinbusinessCommonService.updateCfetsOprHis(cfetsOprHisInfoRequest);
     }
 
 
@@ -1274,12 +1269,14 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             regFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
         }
         regFinProductDealTotalMapper.insert(regFinProductDealTotal);
-        if (StringUtil.isNotEmpty(entity.getRegFinProductDealTotalAdd())) {
+        if (StringUtil.isNotEmpty(entity.getRegFinProductDealTotalAdd())
+                && !(operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE))) {
             entity.getRegFinProductDealTotalAdd().setTotleTradeId(regFinProductDealTotal.getTotleTradeId());
             regFinProductDealTotalAddMapper.insert(entity.getRegFinProductDealTotalAdd());
         }
         List<RegTradeFeeTotal> regTradeFeeTotals = entity.getRegTradeFeeTotals();
-        if (CollectionUtils.isNotEmpty(regTradeFeeTotals)) {
+        if (CollectionUtils.isNotEmpty(regTradeFeeTotals)
+                && !(operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE))) {
             regTradeFeeTotals.forEach(item -> {
                 item.setTradeId(regFinProductDealTotal.getTotleTradeId());
                 regTradeFeeTotalMapper.insert(item);
@@ -1741,7 +1738,23 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      * @date 2022/1/21 17:05
      */
     public void revokeForOut(String totleTradeId, String remark) {
-        //TODO 待实现
+        CfetsRepoDealDbDto result = new CfetsRepoDealDbDto();
+        RegFinProductDealTotal total = regFinProductDealTotalMapper.selectByPrimaryKey(totleTradeId);
+        total.setRemark(remark);
+        result.setRegFinProductDealTotal(total);
+        result.setRegFinProductDealTotalAdd(regFinProductDealTotalAddMapper.selectByPrimaryKey(totleTradeId));
+        result.setRegTradeFeeTotals(cfetsIbuQuoteBondMapper.listRegTradeFeeTotal(totleTradeId));
+        result.setRegFinProductDeals(cfetsIbuQuoteBondMapper.listRegFinProductDeal(totleTradeId));
+        result.setRegFinProductDealAdds(cfetsIbuQuoteBondMapper.listRegFinProductDealAdd(totleTradeId));
+        result.setRegTradeFees(cfetsIbuQuoteBondMapper.listRegTradeFee(totleTradeId));
+        result.setRegFinPledges(cfetsIbuQuoteRepoMapper.listRegFinPledge(totleTradeId));
+        //登录db
+        this.insert(result, OperationType.REVOKE);
+        //履历表
+        this.updateCfetsOprHis(totleTradeId, OperationType.REVOKE);
+        //头寸
+        PositionHttpRequest.dorevoke(totleTradeId, DictCodeListExt1.子系统代码_交易.getValue(),
+                DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), result.getRegFinProductDealTotal().getPs());
     }
 
 }
