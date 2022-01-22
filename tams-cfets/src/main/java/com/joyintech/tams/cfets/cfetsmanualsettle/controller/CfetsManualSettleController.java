@@ -125,7 +125,7 @@ public class CfetsManualSettleController extends BaseController {
                 getMessage("交收日期") + GlobalConstant.COLON + entity.getSettleDate(),
                 getMessage("原业务编号") + GlobalConstant.COLON + entity.getTradeId(),
                 getMessage("业务类型") + GlobalConstant.COLON + entity.getTgBusiTypeStr(),
-                getMessage("资产简称") + GlobalConstant.COLON + (StringUtil.isNotEmpty(entity.getFinprodAbbr())?entity.getFinprodAbbr():""),
+                StringUtil.isNotEmpty(entity.getFinprodAbbr()) ? (getMessage("资产简称") + GlobalConstant.COLON + entity.getFinprodAbbr()):"",
                 getMessage("交收操作") + GlobalConstant.COLON + finalOpertType1,
                 settleArg);
         });
