@@ -444,7 +444,7 @@
         BALANCE.O_CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
         FROM BOK_BALANCE BALANCE
         LEFT JOIN CHB_PRD_BASEINFO PRODINFO /*产品要素信息*/
-        on prodinfo.PROD_ID = balance.BOOKSET_ID
+        on prodinfo.PROD_ID = replace(balance.BOOKSET_ID, 'F16_')
         WHERE 1 =1
         AND to_char(BALANCE.BALANCE_DATE,'yyyy-MM-dd') = to_char(#{cdate,jdbcType=DATE},'yyyy-MM-dd')
         and prodinfo.PROFIT_TYPE = '03'/*只取非保本理财产品 */
