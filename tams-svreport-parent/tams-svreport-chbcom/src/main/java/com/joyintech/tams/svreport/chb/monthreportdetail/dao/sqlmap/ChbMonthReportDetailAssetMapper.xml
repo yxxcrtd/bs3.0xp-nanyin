@@ -140,9 +140,7 @@
             IA.ASSET_NAME oldAssetName,
             NVL(I.VDATE, I.PLAN_SDATE) VDATE,
             NVL(I.MDATE, I.PLAN_EDATE) MDATE,
-            CASE WHEN MP1.Counter_Name is not null then MP1.Counter_Name
-            when MC.CUSTOMER_NAME  is not null then MC.CUSTOMER_NAME
-            else  P.SUBJECT_NAME end   subjectName,
+            NVL(MC.CUSTOMER_NAME, nvl(mp1.COUNTER_NAME,P.SUBJECT_NAME)) subjectName,
             I.asset_yield RATE,
             NVL(P.CCY,'CNY') CCY,
             AP.POS_AMT delayPayAmt,
