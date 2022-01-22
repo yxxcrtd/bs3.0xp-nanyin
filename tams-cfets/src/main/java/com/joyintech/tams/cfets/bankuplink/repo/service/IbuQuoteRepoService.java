@@ -626,8 +626,9 @@ public class IbuQuoteRepoService extends BaseService {
         }
         // 到期结算日=首次结算日+回购期限，遇银行间节假日调整到下一工作日
         if (StringUtil.isNotEmpty(cfetsRepoDealQuoteCommonDto.getSettlementStartDate())) {
+            cfetsRepoDealQuoteCommonDto.setSettlementEndDate(DateUtil.addDay(cfetsRepoDealQuoteCommonDto.getSettlementStartDate(), repoTerm - 1));
             cfetsRepoDealQuoteCommonDto.setSettlementEndDate(
-                    dateCalService.calculationTradingDay(cfetsRepoDealQuoteCommonDto.getSettlementStartDate(), repoTerm, holidayList, "1"));
+                    dateCalService.calculationTradingDay(cfetsRepoDealQuoteCommonDto.getSettlementEndDate(), 1, holidayList, "1"));
         }
         // 实际占款天数=到期结算日-首次结算日
         cfetsRepoDealQuoteCommonDto.setActCapDays(
