@@ -920,11 +920,13 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             // 发头寸
             if (StringUtil.isNotEmpty(entity.getWorkflowId())) {
                 SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
-                String systemAct = DictCodeListExt3.系统动作_修改.getValue();
+                String systemAct = DictCodeListExt3.系统动作_新建.getValue();
                 if (StringUtil.equals(sysWflBusinessList.getProcessState(), DictCodeList.流程状态_已退回.getValue())) {
-                    sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), DictCodeListExt3.系统动作_修改.getValue(), systemAct);
+                    systemAct = DictCodeListExt3.系统动作_修改.getValue();
+                    sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct);
+                }else {
+                    sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct);
                 }
-                sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct);
             }
             ProcessMark newEntity;
             try {
