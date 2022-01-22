@@ -31,6 +31,8 @@ update sys_datadict_list a set a.item_value='境外' where a.dict_code='SVR_PBC_
 
 update sys_datadict_list a set a.item_value='境外' where a.dict_code='SVR_PBC_ASSET_TYPE_3' and a.item_code='T04';
 
+delete  from sys_datadict_list where DICT_CODE ='SVR_PBC_ASSET_TYPE_3' and ITEM_CODE in('Y01', 'Y02', 'Y03');
+
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('SVR_PBC_ASSET_TYPE_3', 'Y01', '企业债券', 38, '0', 'system', null, sysdate, 'system', sysdate);
 
