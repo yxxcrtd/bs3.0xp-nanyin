@@ -684,6 +684,11 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      */
     private  String zjxtFlag;
 
+    /**
+     * 货币市场基金标识（01 是、02 否）
+     */
+    private String isMarketFund;
+
 
     public String getPrdSpecProperty() {
         return prdSpecProperty;
@@ -2752,5 +2757,13 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
 
     public void setZjxtFlag(String zjxtFlag) {
         this.zjxtFlag = zjxtFlag;
+    }
+
+    public String getIsMarketFund() {
+        return isMarketFund;
+    }
+
+    public void setIsMarketFund(String isMarketFund) {
+        this.isMarketFund = isMarketFund;
     }
 }
