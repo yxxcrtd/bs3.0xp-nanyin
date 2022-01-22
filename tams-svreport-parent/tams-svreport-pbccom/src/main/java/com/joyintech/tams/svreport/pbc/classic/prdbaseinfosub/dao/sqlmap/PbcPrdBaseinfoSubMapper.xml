@@ -839,7 +839,7 @@
 		info.UPDATE_USER,
 		info.ORG_CODE,
 		info.DEPT_CODE CREATE_DEPT,
-		DECODE(info.IS_MARKET_FUND,01,1,2) IS_MARKET_FUND,
+		DECODE(info.CASH_MANA_CATE,01,1,2) IS_MARKET_FUND,
 		case when instr(info.PRD_SPEC_PROPERTY,'02')>0 or instr(info.PRD_SPEC_PROPERTY,'03')>0 then '1'
 		else '2'
 		end as CROSS_BORDER_FLAG,
