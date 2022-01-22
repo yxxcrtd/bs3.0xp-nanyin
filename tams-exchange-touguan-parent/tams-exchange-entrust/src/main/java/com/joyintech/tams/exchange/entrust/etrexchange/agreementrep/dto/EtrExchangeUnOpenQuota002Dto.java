@@ -25,7 +25,7 @@ import java.math.BigDecimal;
  * @see EtrExchangeUnOpenQuota002Dto
  * @since 1.0
  */
-@PageId("UnOpenQuota002Dto")
+@PageId("EtrExchangeUnOpenQuota002Dto")
 public class EtrExchangeUnOpenQuota002Dto extends BaseEntity {
 
     /**

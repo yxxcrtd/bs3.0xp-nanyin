@@ -16,6 +16,7 @@ import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
+import com.joyintech.tams.business.common.util.ExcelZipUitl;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
 import com.joyintech.tams.cfets.bankuplink.bond.service.*;
@@ -41,8 +42,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -120,8 +125,8 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		initPageParams.put("cmdsWebSocketUrl", cmdsWebSocketUrl);
 		initPageParams.put("EXPORT_SHOW",CacheUtil.getSysParam("EXPORT_SHOW"));
 		initPageParams.put("PAGE_ID_REGIT","IbuQuoteBond004");
-		initPageParams.put("PAGE_ID_DIALOG","CfetsBondDealQuotedPrice004");
-		initPageParams.put("PAGE_ID_REQUEST","CfetsBondDealQuotedPrice005");
+		initPageParams.put("PAGE_ID_DIALOG","IbuQuoteBond002");
+		initPageParams.put("PAGE_ID_REQUEST","IbuQuoteBond003");
 		//01: 开启银行间报价 02:关闭银行间报价（事后录入）
 		initPageParams.put("ibuFlag_quote_switch",CacheUtil.getSysParam("ibuFlag_quote_switch"));
 		initPageParams.put("is_sys_support_quote",CacheUtil.getSysParam("is_sys_support_quote"));
@@ -203,9 +208,9 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	public Message<AjaxResult> entrustRefuce(@RequestBody Map<String,Object> param){
 		try{
 			AjaxResult result = new AjaxResult();
-            if(com.joyintech.framework.util.StringUtil.isNotEmpty(param.get("entrustId"))){
-                param.put("entrustIdList", com.joyintech.framework.util.StringUtil.splitToList(",",(String)param.get("entrustIds")));
-            }
+			if(com.joyintech.framework.util.StringUtil.isNotEmpty(param.get("entrustId"))){
+				param.put("entrustIdList", com.joyintech.framework.util.StringUtil.splitToList(",",(String)param.get("entrustIds")));
+			}
 			result = ibuQuoteBondService.entrustRefuceCheck(param);
 			if(CollectionUtils.isNotEmpty(result.getErrorList())){
 				return new Message<AjaxResult>().success().setData(result);
@@ -518,12 +523,12 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@ResponseBody
 	@RequestMapping("exportEntrust")
 	public void export(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response){
-			// 导出
-			ExcelUitl.doExport(requestDto, response, "指令列表", () -> {
-				EntrustRequest  entrustRequest = requestDto.getDto(EntrustRequest.class);
-				List dataList = ibuQuoteBondService.pageEntrust(entrustRequest).getRoot();
-				return dataList;
-			});
+		// 导出
+		ExcelUitl.doExport(requestDto, response, "指令列表", () -> {
+			EntrustRequest  entrustRequest = requestDto.getDto(EntrustRequest.class);
+			List dataList = ibuQuoteBondService.pageEntrust(entrustRequest).getRoot();
+			return dataList;
+		});
 	}
 
 
@@ -592,7 +597,8 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@ApiOperation(value = "当日登记导出", notes = "当日登记导出")
 	@PostMapping("/exportDayReg")
 	@ResponseBody
-	public void exportDayReg(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response){
+	public Message<List<Map<String,String>>> exportDayReg(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response){
+		List<Map<String,String>> result = new ArrayList<>();
 		Map<String,Object> param = new HashMap<>();
 		List<String> quoteIds = new ArrayList<>();
 		if(CollectionUtils.isNotEmpty(requestDto.getData())){
@@ -611,27 +617,22 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		String ibuExportCountMax = CacheUtil.getSysParam("IBU_EXPORT_COUNT_MAX");
 		String prefix = StringUtil.join("债券对话报价本币交易导出_",iPlatformDate.getSysDateStr());
 		requestDto.setData(null);
-		//获取递增序号
-		Map<String,String> sequenceIndex = new HashMap<>();
-		sequenceIndex.put("databaseType","Oracle");
-		sequenceIndex.put("sequenceName","DAYREGEXPORT_SEQUENCE");
-		Long sequenceIndexData = tamsBaseMapper.getSequenceIndexData(sequenceIndex);
-		if(null==sequenceIndexData){sequenceIndexData = 1L;}
 		//净价、到期收益率、行权收益率，只需导出对应锚定值数据，其他数据应为空
 		if(CollectionUtils.isNotEmpty(dataList)){
 			dataList.forEach(item ->{
-                //债券代码不需要后缀
-                item.setFinprodMarketId(item.getFinprodMarketId().substring(0,item.getFinprodMarketId().indexOf(".")));
-			    //清算速度不需要显示T，只需要显示+0或+1
-                if(StringUtil.isNotEmpty(item.getSettleSpeedStr())){
-                    item.setSettleSpeedStr(item.getSettleSpeedStr().substring(item.getSettleSpeedStr().indexOf("+"),item.getSettleSpeedStr().length()));
-                }
-                item.setSettCcyStr(item.getSettCcy());
+				//债券代码不需要后缀
+				item.setFinprodMarketId(item.getFinprodMarketId().substring(0,item.getFinprodMarketId().indexOf(".")));
+				//清算速度不需要显示T，只需要显示+0或+1
+				if(StringUtil.isNotEmpty(item.getSettleSpeedStr())){
+					item.setSettleSpeedStr(item.getSettleSpeedStr().substring(item.getSettleSpeedStr().indexOf("+"),item.getSettleSpeedStr().length()));
+				}
+				item.setSettCcyStr(item.getSettCcy());
 				if(StringUtil.equals(item.getCalMode(),"01")){item.setMatureYield(null);item.setExerYield(null);}
 				if(StringUtil.equals(item.getCalMode(),"02")){item.setMatureYield(ArithmeticUtil.multiply(item.getMatureYield(),new BigDecimal(100)));item.setPrice(null);item.setExerYield(null);}
 				if(StringUtil.equals(item.getCalMode(),"03")){item.setExerYield(ArithmeticUtil.multiply(item.getExerYield(),new BigDecimal(100)));item.setPrice(null);item.setMatureYield(null);}
 			});
 		}
+		List<File> files = new ArrayList<>();
 		if(StringUtil.isNotEmpty(ibuExportCountMax)&&CollectionUtils.isNotEmpty(dataList)){
 			int max = Integer.parseInt(ibuExportCountMax);
 			int fileCount = (dataList.size()+max-1)/ max;
@@ -640,23 +641,56 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			).collect(Collectors.toList());
 			for(int i=0;i<collect.size();i++){
 				List<CfetsBondDayRegDto> cfetsBondDayRegDtos = collect.get(i);
+				//获取递增序号
+				Map<String,String> sequenceIndex = new HashMap<>();
+				sequenceIndex.put("databaseType","Oracle");
+				sequenceIndex.put("sequenceName","DAYREGEXPORT_SEQUENCE");
+				Long sequenceIndexData = tamsBaseMapper.getSequenceIndexData(sequenceIndex);
+				if(null==sequenceIndexData){sequenceIndexData = 1L;}
 				String appendString = collect.size()>=1?String.format("%04d", sequenceIndexData):StringUtil.EMPTY;
 				String excelAndSheetName = StringUtil.join(prefix,"_",appendString);
-				ExcelUitl.doExportDeal(requestDto, response, excelAndSheetName,() -> {
+				files.add(ExcelZipUitl.createFile(requestDto, excelAndSheetName,() -> {
+					return cfetsBondDayRegDtos;
+				}));
+				/*ExcelZipUitl.doExport2(requestDto, response, excelAndSheetName,() -> {
 							return cfetsBondDayRegDtos;
-					});
+					});*/
 			}
+			//ExcelZipUitl.doExport(response,files);
 		}
 		else{
+			//获取递增序号
+			Map<String,String> sequenceIndex = new HashMap<>();
+			sequenceIndex.put("databaseType","Oracle");
+			sequenceIndex.put("sequenceName","DAYREGEXPORT_SEQUENCE");
+			Long sequenceIndexData = tamsBaseMapper.getSequenceIndexData(sequenceIndex);
+			if(null==sequenceIndexData){sequenceIndexData = 1L;}
 			String excelAndSheetName = StringUtil.join(prefix,"_",sequenceIndexData);
-			ExcelUitl.doExportDeal(requestDto, response, excelAndSheetName,() -> {
+			files.add(ExcelZipUitl.createFile(requestDto, excelAndSheetName,() -> {
 				return dataList;
-			});
+			}));
+           /* ExcelUitl.doExport2(requestDto, response, excelAndSheetName,() -> {
+				return dataList;
+			});*/
+		}
+		for (File file : files) {
+			Map<String,String> map = new HashMap<>();
+			map.put("fileName",file.getName());
+			map.put("filePath",file.getAbsolutePath());
+			result.add(map);
 		}
 		//处理导出次数
 		if(CollectionUtils.isNotEmpty(dataList)){
 			ibuQuoteBondService.handExportTimes(dataList);
 		}
+		return new Message<List<Map<String,String>>>().success().setData(result);
+	}
+
+	@ApiOperation(value = "当日登记文件下载", notes = "当日登记文件下载")
+	@PostMapping("/downDayReg")
+	@ResponseBody
+	public void downDayReg(@RequestBody Map<String,String> param, HttpServletResponse response){
+		ExcelUitl.downFile(response,new File(param.get("filePath")));
 	}
 
 	@ApiOperation(value = "计算偏离度", notes = "计算偏离度(参数资产代码finprodId和净价unitCprice)")

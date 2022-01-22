@@ -133,6 +133,7 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 						if (flag) {
 							dto.setEntrustPs(DictCodeListExt3.交易方向_逆回购.getValue());
 						}
+
 					}
 					//数量
 					if((Integer)tmp.get("entrustVolume") !=null) {
@@ -140,7 +141,7 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 					}
 					//价格（净价） / 回购利率
 					if((Double)tmp.get("entrustPrice") !=null) {
-						dto.setEntrustPrice(new BigDecimal((Double)tmp.get("entrustPrice")));
+						dto.setEntrustPrice(ArithmeticUtil.round(new BigDecimal((Double)tmp.get("entrustPrice")),4,null));
 					}
 					//对手方交易席位
 					dto.setOppositeSeat((String)tmp.get("propSeatNo"));
@@ -150,7 +151,7 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 					dto.setContacts((String)tmp.get("liaisonName"));
 					//对手方交易员联系方式
 					dto.setContactNumber((String)tmp.get("liaisonTel"));
-					//list.add(dto);
+					list.add(dto);
 				});
 			}
 		}
@@ -163,9 +164,9 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 	 * @param secId
 	 * @return
 	 */
-	public Page<EtrExchangeTradeQuotation001Dto> findAfterHoursPage(String secId) {
-		Page<EtrExchangeTradeQuotation001Dto> page = new Page<EtrExchangeTradeQuotation001Dto>();
-		List<EtrExchangeTradeQuotation001Dto> list = new ArrayList<EtrExchangeTradeQuotation001Dto>();
+	public Page<EtrExchangeTradeQuotationResponse> findAfterHoursPage(String secId) {
+		Page<EtrExchangeTradeQuotationResponse> page = new Page<EtrExchangeTradeQuotationResponse>();
+		List<EtrExchangeTradeQuotationResponse> list = new ArrayList<EtrExchangeTradeQuotationResponse>();
 //		Map<String, Object> map = BeanUtil.object2Map(request);
 //        String secId= (String)map.get("secId");
 		String param = "?quote_type=2&stock_code="+secId;
@@ -174,17 +175,17 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 			List<Map<String, Object>> quoteList = (List<Map<String, Object>>) quoteMap.get("data");
 			if(!StringUtil.isEmptyList(quoteList)) {
 				quoteList.forEach(tmp -> {
-					EtrExchangeTradeQuotation001Dto dto =new EtrExchangeTradeQuotation001Dto();
+					EtrExchangeTradeQuotationResponse dto =new EtrExchangeTradeQuotationResponse();
 					dto.setSecId((String)tmp.get("stockCode"));
 					dto.setSecName((String)tmp.get("stockName"));
                     dto.setMarket((String)tmp.get("market"));
 					//收盘价
 					if(tmp.get("entrustPrice") !=null) {
-						dto.setClosingPrice(new BigDecimal((Double)tmp.get("entrustPrice")));
+						dto.setClosingPrice(ArithmeticUtil.round(new BigDecimal((Double)tmp.get("entrustPrice")),4,null));
 					}
 					//日均价
 					if(tmp.get("fullPrice") !=null) {
-						dto.setDailyAvgPrice(new BigDecimal((Double)tmp.get("fullPrice")));
+						dto.setDailyAvgPrice(ArithmeticUtil.round(new BigDecimal((Double)tmp.get("fullPrice")),4,null));
 					}
 					list.add(dto);
 				});
@@ -700,6 +701,7 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 			if(StringUtil.equals(tradeMarket,DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
 				selectOptionDtos = selectDto.getOptions().stream().filter(option ->
 						      StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_意向申报.getValue()) //6
+						    || StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_点击成交申报.getValue()) //8
 							|| StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_成交申报.getValue()) //9
 						    || StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_收盘价固定价格申报.getValue()) //10
 							|| StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_不指定.getValue()) //5
@@ -728,6 +730,7 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 				selectOptionDtos = selectDto.getOptions().stream().filter(option ->
 						StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_意向申报.getValue()) //6
 								|| StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_成交申报.getValue()) //9
+								|| StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_点击成交申报.getValue()) //8
 								|| StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_定价申报.getValue()) //7
 								|| StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_收盘价固定价格申报.getValue()) //10
 								|| StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_日均价固定价格申报.getValue()) //11

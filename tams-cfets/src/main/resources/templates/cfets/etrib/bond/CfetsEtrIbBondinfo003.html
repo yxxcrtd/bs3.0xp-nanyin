@@ -157,6 +157,7 @@
                                                class="layui-input form-input text-number"
                                                data-th-value="${entity?.price}" disabled>
                                         <label class="label-deviation-degree" id="deviationDegree"></label>
+                                        <span class="input-right-show">元</span>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
@@ -165,7 +166,7 @@
                                     </label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="matureYieldShow" name="matureYieldShow" placeholder="请输入内容"
-                                               data-pattern="" data-fixtype="2" data-textrange="6"
+                                               data-pattern="" data-fixtype="2" data-textrange="4"
                                                class="layui-input form-input text-number"
                                                data-th-value="${entity?.matureYield}" disabled>
                                         <span class="input-right-show">%</span>
@@ -179,7 +180,7 @@
                                     </label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="exerYieldShow" name="exerYieldShow" placeholder="请输入内容"
-                                               data-pattern="" data-fixtype="2" data-textrange="6"
+                                               data-pattern="" data-fixtype="2" data-textrange="4"
                                                class="layui-input form-input text-number" disabled
                                                data-th-value="${entity?.exerYield}" >
                                         <span class="input-right-show">%</span>
@@ -266,11 +267,10 @@
                                     </div>
                                 </div>
                               <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
-                                    <label class="layui-form-label form-lable" style="width: 105px;"
-                                           data-th-text="#{CfetsEtribBondInfo003.priceAmt}">净价总额</label>
+                                    <label class="layui-form-label form-lable" style="width: 105px;">交易金额</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="priceAmt" name="priceAmt" placeholder="请输入内容"
-                                               data-pattern="" data-fixtype="2" data-textrange='4'
+                                               data-pattern="" data-fixtype="2" data-textrange='2'
                                                class="layui-input form-input text-number" disabled="disabled"
                                                data-th-value="${entity?.priceAmt}">
                                         <span class="input-right-show">元</span>
@@ -281,7 +281,7 @@
                                            data-th-text="#{CfetsEtribBondInfo003.unitIntAmt}">应计利息总额</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="unitIntAmt" name="unitIntAmt" placeholder="请输入内容"
-                                               data-pattern="" data-fixtype="2" data-textrange='4'
+                                               data-pattern="" data-fixtype="2" data-textrange='2'
                                                class="layui-input form-input text-number" disabled="disabled"
                                                data-th-value="${entity?.unitIntAmt}">
                                         <span class="input-right-show">元</span>
@@ -290,11 +290,10 @@
                             </div>
                           <div class="layui-form-item">
                                 <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
-                                    <label class="layui-form-label form-lable" style="width: 105px;"
-                                           data-th-text="#{CfetsEtribBondInfo003.unitFpriceAmt}">全价总额</label>
+                                    <label class="layui-form-label form-lable" style="width: 105px;">结算金额</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="unitFpriceAmt" name="unitInt" placeholder="请输入内容"
-                                               data-pattern="" data-fixtype="2" data-textrange='4'
+                                               data-pattern="" data-fixtype="2" data-textrange='2'
                                                class="layui-input form-input text-number" disabled="disabled"
                                                data-th-value="${entity?.unitFpriceAmt}">
                                         <span class="input-right-show">元</span>
@@ -305,7 +304,7 @@
                                            data-th-text="#{CfetsEtribBondInfo003.entrustOwnInt}">本方券应计利息总额</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="entrustOwnInt" name="entrustOwnInt" placeholder="请输入内容"
-                                               data-pattern="" data-fixtype="2" data-textrange='4'
+                                               data-pattern="" data-fixtype="2" data-textrange='2'
                                                class="layui-input form-input text-number" disabled="disabled"
                                                data-th-value="${entity?.entrustOwnInt}">
                                         <span class="input-right-show">元</span>
@@ -316,7 +315,7 @@
                                            data-th-text="#{CfetsEtribBondInfo003.entrustOwnUnitFpriceAmt}">本方券全价总额</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="entrustOwnUnitFpriceAmt" name="entrustOwnUnitFpriceAmt" placeholder="请输入内容"
-                                               data-pattern="" data-fixtype="2" data-textrange='4'
+                                               data-pattern="" data-fixtype="2" data-textrange='2'
                                                class="layui-input form-input text-number" disabled="disabled"
                                                data-th-value="${entity?.entrustOwnUnitFpriceAmt}">
                                         <span class="input-right-show">元</span>
@@ -327,7 +326,7 @@
                                            data-th-text="#{CfetsEtribBondInfo003.entrustIntegrateInt}">卖空购回应计利息总额</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="entrustIntegrateInt" name="entrustIntegrateInt" placeholder="请输入内容"
-                                               data-pattern="" data-fixtype="2" data-textrange='4'
+                                               data-pattern="" data-fixtype="2" data-textrange='2'
                                                class="layui-input form-input text-number" disabled="disabled"
                                                data-th-value="${entity?.entrustIntegrateInt}">
                                         <span class="input-right-show">元</span>
@@ -340,7 +339,7 @@
                                            data-th-text="#{CfetsEtribBondInfo003.entrustIntegrateUnitFpriceAmt}">卖空购回全价总额</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="entrustIntegrateUnitFpriceAmt" name="entrustIntegrateUnitFpriceAmt" placeholder="请输入内容"
-                                               data-pattern="" data-fixtype="2" data-textrange='4'
+                                               data-pattern="" data-fixtype="2" data-textrange='2'
                                                class="layui-input form-input text-number" disabled="disabled"
                                                data-th-value="${entity?.entrustIntegrateUnitFpriceAmt}">
                                         <span class="input-right-show">元</span>

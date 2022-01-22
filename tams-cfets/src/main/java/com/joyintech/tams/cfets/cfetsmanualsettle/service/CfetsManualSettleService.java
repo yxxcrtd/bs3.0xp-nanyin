@@ -436,7 +436,11 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             //用户名	当前操作用户
             req.setUserId(SecurityUtil.getLoginUser().getUserName());
             //汇总交易编号	单交易时传交易编号
-            req.setbTotalTradeId(trdBankManualSettleInfo.getSettleSeqNo());
+            if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_回溯.getValue())){
+                req.setbTotalTradeId(trdBankManualSettleInfo.getSettleSeqNo());
+            }else {
+                req.setbTotalTradeId(trdBankManualSettleInfo.getTradeId());
+            }
             //汇总交易编号
             req.setTotalTradeId(trdBankManualSettleInfo.getSettleSeqNo());
             req.setWorkFlowId(trdBankManualSettleInfo.getWorkflowId());
@@ -553,6 +557,11 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             CfetsEtrIbRepoPositionRequest req = new CfetsEtrIbRepoPositionRequest();
             req.setInterfaceType("REPO001");
             req.setUserId(SecurityUtil.getLoginUser().getUserName());
+            if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_回溯.getValue())){
+                req.setbTotalTradeId(trdBankManualSettleInfo.getSettleSeqNo());
+            }else {
+                req.setbTotalTradeId(trdBankManualSettleInfo.getTradeId());
+            }
             req.setTotalTradeId(trdBankManualSettleInfo.getSettleSeqNo());
             req.setWorkFlowId(trdBankManualSettleInfo.getWorkflowId());
             req.setFlowStatus(DictCodeListExt3.流程节点_审批生效.getValue());
@@ -594,7 +603,6 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
             req.setCdate(platformDateImpl.getSysDate());
             req.setCcy(cfetsManualSettleRequest.getCcy());
-            req.setbTotalTradeId(cfetsManualSettleRequest.getTradeId());
             req.setPtlCashList(ptlCashList);
             req.setPtlSecList(ptlSecList);
             PositionHttpRequest.send(req);

@@ -115,7 +115,6 @@ public class IbuQuoteRepo003Controller extends BaseController {
         try {
             CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = cfetsRepoDealQuotedPrice002Service.page2BackDto(pageDto);
             cfetsRepoDealQuotedPrice002Service.reject(cfetsRepoDealQuotedPrice001Dto);
-            ;
             return new Message<AjaxResult>().success().setData(new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS")));
         } catch (Exception e) {
             logger.error("报价拒绝异常", e);

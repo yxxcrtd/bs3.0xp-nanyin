@@ -56,8 +56,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -444,7 +446,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
     @ApiOperation(value = "当日登记本币交易导出", notes = "当日登记本币交易导出")
     @PostMapping("/exportDayReg")
     @ResponseBody
-    public Message<Map<String, Object>> exportDayReg(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response) {
+    public void exportDayReg(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response) {
         Map<String, Object> param = new HashMap<>();
         List<String> quoteIds = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(requestDto.getData())) {
@@ -507,6 +509,16 @@ public class CfetsIbuQuoteRepoController extends BaseController {
                 item.setQuoteId(null);
             });
         }
+
+        //导出数据必填项校验
+        String message = checkExcelNotNull(requestDto, dataList);
+        try {
+            response.addHeader("message", URLEncoder.encode(message, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            logger.error("response.addHeader错误:"+e);
+        }
+
         if (StringUtil.isNotEmpty(ibuExportCountMax) && CollectionUtils.isNotEmpty(dataList)) {
             int max = Integer.parseInt(ibuExportCountMax);
             int fileCount = (dataList.size() + max - 1) / max;
@@ -542,11 +554,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             ibuQuoteRepoService.handExportTimes(dataList);
         }
 
-        //导出数据必填项校验
-        Map<String, Object> result = new HashMap<>();
-        String message = checkExcelNotNull(requestDto, dataList);
-        result.put("message", message);
-        return new Message<Map<String, Object>>().success().setData(result);
+
     }
 
     /**

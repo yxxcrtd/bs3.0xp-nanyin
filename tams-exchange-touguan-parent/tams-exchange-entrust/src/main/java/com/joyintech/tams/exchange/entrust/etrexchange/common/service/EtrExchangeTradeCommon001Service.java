@@ -1940,6 +1940,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				etrBlockTradePledgeRepoDto.setCounterSeat(entity.getSeatId());
 				etrBlockTradePledgeRepoDto.setCounterConNo(entity.getAgreeOnId());// 约定号
 				etrBlockTradePledgeRepoDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());// 资产大类
+				etrBlockTradePledgeRepoDto.setPrice(entity.getRepoRate());
 				EtrComponentFactory.getComponentService(EtrBlockTradePledgeRepoDto.class).updateSettings(paraDto);
 				EtrComponentFactory.getComponentService(EtrBlockTradePledgeRepoDto.class).entrustCheck(etrBlockTradePledgeRepoDto, result);
 			}

@@ -45,6 +45,9 @@ public class CfetsSettlePositionDto extends PositionRuleHead {
     @ApiModelProperty(name="bTotalTradeId",value="前次交易编号",example="1")
     private String bTotalTradeId;
 
+    @ApiModelProperty(name="decisionAct",value="决策动作",example="01")
+    private String decisionAct;
+
     public List<PositionRulePtlData> getPtlList() {
         return ptlList;
     }
@@ -131,5 +134,13 @@ public class CfetsSettlePositionDto extends PositionRuleHead {
 
     public void setbTotalTradeId(String bTotalTradeId) {
         this.bTotalTradeId = bTotalTradeId;
+    }
+
+    public String getDecisionAct() {
+        return decisionAct;
+    }
+
+    public void setDecisionAct(String decisionAct) {
+        this.decisionAct = decisionAct;
     }
 }

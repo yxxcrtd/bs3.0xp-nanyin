@@ -127,10 +127,10 @@ public class JoyinbusinessCommonService extends BaseService {
     public Boolean updateCfetsOprHis(CfetsOprHisInfoRequest dto) {
         dto.setSeqNo(IDGenerator.generate(32));
         dto.setOperDate(DateUtil.platDateFromCache());
-        dto.setUserId(SecurityUtil.getLoginUser().getUserName());
-        dto.setCreateUser(SecurityUtil.getLoginUser().getUserName());
+        dto.setUserId(null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"SYSTEM");
+        dto.setCreateUser(null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"SYSTEM");
         dto.setCreateDept(CommonUtil.getDeptCode());
-        dto.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
+        dto.setUpdateUser(null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"SYSTEM");
         int flag = joyinbusinessCommonMapper.insertCfetsOprHis(dto);
         if (flag>0) {
             return true;

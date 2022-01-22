@@ -1322,6 +1322,8 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
              */
             // 有效数据转移
             // 转移至废弃表
+            etrEntrustBackupMapper.deleteByPrimaryKey(dto.getEtrEntrust().getEntrustId());
+            etrEntrustBackupMapper.deleteAddByPrimaryKey(dto.getEtrEntrust().getEntrustId());
             etrEntrustBackupMapper.insertFromQuery(dto.getEtrEntrust().getEntrustId());
             etrEntrustBackupMapper.insertAddFromQuery(dto.getEtrEntrust().getEntrustId());
             etrEntrustMapper.deleteByPrimaryKey(dto.getEtrEntrust().getEntrustId());

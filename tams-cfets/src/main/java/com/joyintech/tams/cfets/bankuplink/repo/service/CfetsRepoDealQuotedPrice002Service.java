@@ -31,6 +31,8 @@ import com.joyintech.service.bankuplink.repo.service.CfetsRepoDealQuotedPrice001
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.system.base.dao.SysWflBusinessListMapper;
 import com.joyintech.system.base.entity.SysWflBusinessList;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepo003Mapper;
@@ -150,6 +152,9 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
 
     @Autowired
     private MstWorkflowCommonServiceMapperImpl mstWorkflowCommonServiceMapperImpl;
+
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
 
     /**
      * 报价初始化校验
@@ -796,6 +801,9 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         if (!StringUtil.isNotEmpty(repoEntrustPledgeDto.getPledgePrin())) {
             errorList.add(new ValidMessage("请输入质押券信息质押券面总额"));
         }
+        if (BigDecimal.ZERO.compareTo(repoEntrustPledgeDto.getPledgePrin()) >= 0) {
+            errorList.add(new ValidMessage("质押券信息质押券面总额需大于零"));
+        }
         if (!StringUtil.isNotEmpty(repoEntrustPledgeDto.getPledgeRatio())) {
             errorList.add(new ValidMessage("请输入质押券信息折算比例"));
         }
@@ -912,11 +920,13 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             // 发头寸
             if (StringUtil.isNotEmpty(entity.getWorkflowId())) {
                 SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
-                String systemAct = DictCodeListExt3.系统动作_修改.getValue();
+                String systemAct = DictCodeListExt3.系统动作_新建.getValue();
                 if (StringUtil.equals(sysWflBusinessList.getProcessState(), DictCodeList.流程状态_已退回.getValue())) {
-                    sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), DictCodeListExt3.系统动作_修改.getValue(), systemAct);
+                    systemAct = DictCodeListExt3.系统动作_修改.getValue();
+                    sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct);
+                }else {
+                    sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct);
                 }
-                sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct);
             }
             ProcessMark newEntity;
             try {
@@ -1150,6 +1160,10 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             pageParam.put("userName", LoginUserUtil.getUserName());
             pageParam.put("deptCode", LoginUserUtil.getDeptCode());
             ibuComponentCommonService.reject(pageParam);
+            CfetsOprHisInfoRequest cfetsOprHisInfoRequest = new CfetsOprHisInfoRequest();
+            cfetsOprHisInfoRequest.setEntrustId(entity.getQuoteId());
+            cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_拒绝.getValue());
+            joyinbusinessCommonService.updateCfetsOprHis(cfetsOprHisInfoRequest);
         }
         return true;
     }
@@ -1209,14 +1223,19 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto dto
                 = this.investDto2ServiceDto(entity);
         Map<String, Object> pageParam = BeanUtil.object2Map(entity);
+        CfetsOprHisInfoRequest cfetsOprHisInfoRequest = new CfetsOprHisInfoRequest();
+        cfetsOprHisInfoRequest.setEntrustId(entity.getQuoteId());
+        cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_新建.getValue());
         if (StringUtil.equals(entity.getQuotaPageModel(), "dialogueResponse")) {
             // 对话回应
             if (StringUtil.equals(entity.getOperatorType(), "done")) {
                 // 成交
                 this.deal(pageParam);
+                cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_成交.getValue());
             } else if (StringUtil.equals(entity.getOperatorType(), "refuse")) {
                 // 拒绝
                 this.reject(entity);
+                cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_拒绝.getValue());
             }
         } else if (StringUtil.equals(entity.getQuotaPageModel(), "new")) {
             // 新增
@@ -1236,10 +1255,12 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 // 提交
                 this.modify(dto);
             }
+            cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_修改.getValue());
         } else {
             //撤销
             if (StringUtil.equals(entity.getOperatorType(), "revoke")) {
                 this.doHisRevoke(dto);
+                cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_撤回.getValue());
             }
         }
         doDeleteWflDataForRepo(entity.getWorkflowId());
@@ -1247,6 +1268,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         if (type.equals(OperationType.REVOKE) || type.equals(OperationType.DELETE)) {
             PositionHttpRequest.dorevoke(entity.getQuoteId(), DictCodeListExt1.子系统代码_交易.getValue(), DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), entity.getPs());
         }
+        joyinbusinessCommonService.updateCfetsOprHis(cfetsOprHisInfoRequest);
     }
 
     /**
@@ -1754,7 +1776,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             //折算券面总额
             ptlDto.setShareCtAmt(ptlAllocationDto.getConvertAmt());
             //券面总额
-            ptlDto.setShareAmt(ArithmeticUtil.divide(ptlAllocationDto.getShareAmt(),new BigDecimal(100),2));
+            ptlDto.setShareAmt(ArithmeticUtil.divide(ptlAllocationDto.getShareAmt(), new BigDecimal(100), 2));
             //回购利息
             ptlDto.setIntAmt(ptlAllocationDto.getmIntAmt());
             ptlAllocationList.add(ptlDto);

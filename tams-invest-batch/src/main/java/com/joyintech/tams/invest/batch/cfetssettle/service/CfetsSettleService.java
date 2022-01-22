@@ -14,10 +14,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.dto.PositionRulePtlData;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.common.base.dao.TrdBankManualSetDetailMapper;
@@ -244,7 +241,7 @@ public class CfetsSettleService extends BaseService{
         //用户名	当前操作用户
         req.setUserId("SYSTEM");
         //汇总交易编号	单交易时传交易编号
-        req.setbTotalTradeId(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo().getSettleSeqNo());
+        req.setbTotalTradeId(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo().getTradeId());
         //汇总交易编号	单交易时传交易编号
         req.setTotalTradeId(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo().getSettleSeqNo());
         //流程状态	流程节点 ，提交 审批通过
@@ -285,10 +282,13 @@ public class CfetsSettleService extends BaseService{
         req.setPs(cfetsManualSettleInsertDto.getPs());
         //新建 修改 关闭
         req.setSystemAct("01");
+        //决策树
+        req.setDecisionAct(DictCodeListExt3.系统动作_新建.getValue());
         req.setCdate(batchDate);
         req.setCcy(cfetsManualSettleInsertDto.getCcy());
         req.setFinprodId(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo().getFinprodId());
         req.setPtlList(ptlList);
+        logger.info("发送到头寸的报文:{}", JsonUtils.object2Json(req));
         PositionHttpRequest.send(req);
     }
     private void sendRepoPositionMethod(CfetsSettleReaderResult cfetsManualSettleInsertDto,Date batchDate) {
@@ -328,8 +328,8 @@ public class CfetsSettleService extends BaseService{
                     if (StringUtil.isNotEmpty(secAcctId)) {
                         secport.setSecAcctId(secAcctId); // 证券账户
                     }
-                    secport.setSecAmount(regFinPledge.getPledgePrin());
-                    secport.setOwnSecAmount(regFinPledge.getPledgePrin());
+                    secport.setSecAmount(ArithmeticUtil.multiply(regFinPledge.getPledgePrin(),new BigDecimal("100")));
+                    secport.setOwnSecAmount(ArithmeticUtil.multiply(regFinPledge.getPledgePrin(),new BigDecimal("100")));
                     secport.setIntegrateSecAmount(BigDecimal.ZERO);
                     ptlSecList.add(secport);
                 }
@@ -343,7 +343,7 @@ public class CfetsSettleService extends BaseService{
         //指令或交易标识	ETR:指令,TRD:交易
         req.setModelType(DictCodeListExt1.子系统代码_交易.getValue());
         //汇总交易编号	单交易时传交易编号
-        req.setbTotalTradeId(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo().getSettleSeqNo());
+        req.setbTotalTradeId(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo().getTradeId());
         //汇总交易编号	单交易时传交易编号
         req.setTotalTradeId(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo().getSettleSeqNo());
         //流程状态	流程节点 ，提交 审批通过
@@ -380,10 +380,13 @@ public class CfetsSettleService extends BaseService{
         req.setPs(cfetsManualSettleInsertDto.getPs());
         //新建 修改 关闭
         req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+        //决策树
+        req.setDecisionAct(DictCodeListExt3.系统动作_新建.getValue());
         req.setCdate(batchDate);
         req.setCcy(cfetsManualSettleInsertDto.getCcy());
         req.setPtlCashList(ptlCashList);
         req.setPtlSecList(ptlSecList);
+        logger.info("发送到头寸的报文:{}", JsonUtils.object2Json(req));
         PositionHttpRequest.send(req);
     }
     private List<CfetsSettleReaderResult> createTodayTodoSettleData(Map<String, Object> param) {

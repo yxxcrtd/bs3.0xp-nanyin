@@ -45,10 +45,6 @@
             <input type="hidden" id="elementId" name="elementId" th:value="${entity?.elementId}"/>
             <input type="hidden" id="softSkipMode" name="softSkipMode" th:value="${entity?.softSkipMode}"/>
             <input type="hidden" id="tradeDate" name="tradeDate" th:value="${#dates.format(entity?.tradeDate,'yyyy-MM-dd')}"/>
-            <input type="hidden" id="ptlAllocationList" name="ptlAllocationList"
-                   th:value="${entity?.ptlAllocationList}"/>
-            <input type="hidden" id="pledgeBondList" name="pledgeBondList"
-                   th:value="${entity?.pledgeBondList}"/>
             <input type="hidden" id="distribution" name="distribution" th:value="${entity?.distribution}"/>
             <input type="hidden" id="dipType" name="dipType" th:value="${entity?.dipType}"/>
             <input type="hidden" id="secAcctId" name="secAcctId" th:value="${entity?.secAcctId}"/>

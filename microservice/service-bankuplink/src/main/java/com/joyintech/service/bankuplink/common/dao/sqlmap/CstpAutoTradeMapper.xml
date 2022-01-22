@@ -27,7 +27,8 @@
     
     <!--根据成交单编号查询上行报价回购委托信息  -->
     <select id="queryRepoEntrustInfo" resultType="com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt" useCache="false" flushCache="true">
-    	SELECT PORTFOLIO_ID, ENTRUST_ID, OU_PARTY_ID,QUOTE_ID,CB_FPRICE_AMT,SC_FPRICE_AMT,CP_PARTY_ID ,CP_TRADER_ID cpTrader,REPO_PS ps,OU_TRADER_ID ouTrader FROM IBU_QUOTE_CREP WHERE EXECID = #{oritradeId,jdbcType=VARCHAR}
+    	SELECT PORTFOLIO_ID, ENTRUST_ID, OU_PARTY_ID,QUOTE_ID,CB_FPRICE_AMT,SC_FPRICE_AMT,CP_PARTY_ID ,CP_TRADER_ID cpTrader,REPO_PS ps,OU_TRADER_ID ouTrader
+		FROM IBU_QUOTE_CREP WHERE EXECID = #{oritradeId,jdbcType=VARCHAR}  and TRADE_STATUS='07'
     </select>
 
     <!--根据成交单编号查询上行报价债券委托信息  -->
@@ -36,6 +37,8 @@
 		  FROM IBU_QUOTE_BOND, IBU_QUOTE_BOND_DET
 		 WHERE IBU_QUOTE_BOND.QUOTE_ID = IBU_QUOTE_BOND_DET.QUOTE_ID
 		   AND IBU_QUOTE_BOND_DET.EXECID = #{oritradeId,jdbcType=VARCHAR}
+		   and IBU_QUOTE_BOND.TRADE_STATUS='07'
+		   and IBU_QUOTE_BOND_DET.TRADE_STATUS='07'
     </select>
 
 	<!--根据成交编号判断是否存在有效交易-->

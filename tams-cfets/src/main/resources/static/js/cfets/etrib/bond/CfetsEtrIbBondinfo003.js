@@ -306,11 +306,11 @@
 
         }
         var restTradeAmt = query("#tradeAmt").val()==null?0:query("#tradeAmt").val();
-        query("#tradeAmt").val(restTradeAmt/10000).trigger("change");
+        query("#tradeAmt").val(JoyinMath.doDiv(restTradeAmt,10000,2)).trigger("change");
         var restEntrustOwnNum=query("#entrustOwnNum").val()==null?0:query("#entrustOwnNum").val();
-        query("#entrustOwnNum").val(restEntrustOwnNum/10000).trigger("change");
+        query("#entrustOwnNum").val(JoyinMath.doDiv(restEntrustOwnNum,10000,2)).trigger("change");
         var restEntrustIntegrateNum=query("#entrustIntegrateNum").val()==null?0:query("#entrustIntegrateNum").val();
-        query("#entrustIntegrateNum").val(restEntrustIntegrateNum/10000).trigger("change");
+        query("#entrustIntegrateNum").val(JoyinMath.doDiv(restEntrustIntegrateNum,10000,2)).trigger("change");
       /*  if(query("#matureYield").val()){
             query("#matureYield").val(JoyinMath.doMul(query("#matureYield").val(), 100, 4)).trigger("change");
         }

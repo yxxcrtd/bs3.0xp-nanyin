@@ -15,10 +15,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.Message;
@@ -28,6 +25,7 @@ import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegInfoListRequest
 import com.joyintech.tams.cfets.trdquery.dto.*;
 import com.joyintech.tams.cfets.trdquery.service.CfetsTrdBondInvestTrade002Service;
 import com.joyintech.tams.cfets.trdquery.service.CfetsTrdQueryService;
+import com.joyintech.tams.cfets.trdquery.service.CfetsTrdRepoTrade002Service;
 import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemDealRegisterQuoteDto;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
@@ -42,6 +40,7 @@ import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDt
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
 import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeRevokeDto;
+import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade002Dto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -80,6 +79,8 @@ public class CfetsTrdQueryController extends BaseController {
     private MstWorkflowCommonService mstWorkflowCommonService;
     @Autowired
     private CfetsTrdBondInvestTrade002Service cfetsTrdBondInvestTrade002Service;
+    @Autowired
+    private CfetsTrdRepoTrade002Service cfetsTrdRepoTrade002Service;
 
     /**
      * 划款指令组件
@@ -407,56 +408,83 @@ public class CfetsTrdQueryController extends BaseController {
     @ApiOperation(value = "交易撤销", notes = "交易撤销")
     @PostMapping("/doRevoke")
     @ResponseBody
-    public Message<AjaxResult> doRevoke(@RequestBody CfetsTrdBondInvestTradeDto input) throws WorkFlowException {
-        List<CfetsTrdBondInvestTradeDto> list=input.getSelectedItem();
+    public Message<AjaxResult> doRevoke(@RequestBody CfetsTrdQueryTradeInfoListResponse input) throws WorkFlowException {
+        List<CfetsTrdQueryTradeInfoListResponse> list=input.getSelectedItem();
         String msg="";
-        for(CfetsTrdBondInvestTradeDto inputDto:list){
-            String operateType = inputDto.getOperateType();
-            String totleTradeId = inputDto.getTotleTradeId();
-            inputDto = cfetsTrdBondInvestTrade002Service.getTrdBondInvestTradeDto(inputDto.getTotleTradeId());
-            //add by  meifaxin 后面审批用到 start
-            inputDto.setTradeId(totleTradeId);
-            //add by  meifaxin 后面审批用到 end
-            String turnInvAim = cfetsTrdBondInvestTrade002Service.getReverseTradeDtoInvAim(inputDto.getTotleTradeId());
-            if(StringUtil.isNotEmpty(turnInvAim)) {
-                inputDto.setTurnInvAim(turnInvAim);
-            }
-            //划款指令
-            if (inputDto != null && StringUtil.isEmptyList(inputDto.getBussTrdTransferOrder())){
-                List<BussTrdTransferOrderBase> orderDtolist = bussSettleOrderCommService.selectOrdersByBizCode(inputDto.getTotleTradeId()) ;
-                if (!com.joyintech.framework.util.StringUtil.isEmptyList(orderDtolist)){
-                    List<BussTrdTransferOrderDto> bussTrdTransferOrderDtoList = new ArrayList<BussTrdTransferOrderDto>();
-                    BussTrdTransferOrderDto bussTrdTransferOrderDto = new BussTrdTransferOrderDto();
-                    BeanUtil.copyPropertiesIgnoreNull(bussTrdTransferOrderDto, orderDtolist.get(0));
-                    bussTrdTransferOrderDtoList.add(bussTrdTransferOrderDto);
-                    inputDto.setBussTrdTransferOrder(bussTrdTransferOrderDtoList);
+        for(CfetsTrdQueryTradeInfoListResponse item:list){
+            if(StringUtil.equals(item.getFinprodType2(),DictCodeListExt1.金融产品类型_债券.getValue())){
+                //债券
+                String operateType = item.getOperateType();
+                String totleTradeId = item.getTotleTradeId();
+                CfetsTrdBondInvestTradeDto inputDto = cfetsTrdBondInvestTrade002Service.getTrdBondInvestTradeDto(item.getTotleTradeId());
+                inputDto.setWorkflowParameter(item.getWorkflowParameter());
+                //add by  meifaxin 后面审批用到 start
+                inputDto.setTradeId(totleTradeId);
+                //add by  meifaxin 后面审批用到 end
+                String turnInvAim = cfetsTrdBondInvestTrade002Service.getReverseTradeDtoInvAim(inputDto.getTotleTradeId());
+                if(StringUtil.isNotEmpty(turnInvAim)) {
+                    inputDto.setTurnInvAim(turnInvAim);
                 }
+                //划款指令
+                if (inputDto != null && StringUtil.isEmptyList(inputDto.getBussTrdTransferOrder())){
+                    List<BussTrdTransferOrderBase> orderDtolist = bussSettleOrderCommService.selectOrdersByBizCode(inputDto.getTotleTradeId()) ;
+                    if (!com.joyintech.framework.util.StringUtil.isEmptyList(orderDtolist)){
+                        List<BussTrdTransferOrderDto> bussTrdTransferOrderDtoList = new ArrayList<BussTrdTransferOrderDto>();
+                        BussTrdTransferOrderDto bussTrdTransferOrderDto = new BussTrdTransferOrderDto();
+                        BeanUtil.copyPropertiesIgnoreNull(bussTrdTransferOrderDto, orderDtolist.get(0));
+                        bussTrdTransferOrderDtoList.add(bussTrdTransferOrderDto);
+                        inputDto.setBussTrdTransferOrder(bussTrdTransferOrderDtoList);
+                    }
+                }
+                if(StringUtil.equals(inputDto.getTradeMarketMode(), DictCodeListExt1.交易市场_一级市场.getValue())){
+                    inputDto.setBondFirstSign("01");
+                }
+                inputDto.setRevokeReason(input.getRevokeReason());
+                inputDto.setTotleTradeId(totleTradeId + "R");
+                inputDto.setFinprodType2("F01");
+                inputDto.setOperateType(operateType);
+                //判断流程中是否存在,如果流程不存在则说明是生成的反向交易，组装撤销dto yjm end 20191015
+                ProcessParameter<CfetsTrdBondInvestTradeDto> processParameter = new ProcessParameter<>();
+                WorkFlowParameter<CfetsTrdBondInvestTradeDto> workFlowParameter = new WorkFlowParameter<>();
+                processParameter.setWorkFlowParameter(workFlowParameter);
+                processParameter.setPageId("CfetsTrdBondInvestTrade002");
+                processParameter.setOperationType(OperationType.REVOKE);
+
+                workFlowParameter.setPageId("CfetsTrdBondInvestTrade002");
+                workFlowParameter.setElementId(this.getParam("elementId"));
+                workFlowParameter.setBusinessCode((entity) -> entity.getTotleTradeId());
+                workFlowParameter.setBusinessType(DictCodeList.共通业务类型_债券类资产交易.getValue());
+                workFlowParameter.setComment((entity) -> WorkFlowUtil.concatComment(
+                        getMessage("TrdBondInvestTrade002.tradeId") + GlobalConstant.COLON + entity.getTotleTradeId(),
+                        getMessage("TrdBondInvestTrade002.finprodName") + GlobalConstant.COLON + entity.getFinprodName(),
+                        getMessage("TrdBondInvestTrade002.tradeDate") + GlobalConstant.COLON + DateUtil.format(entity.getTradeDate())));
+
+                msg += cfetsTrdBondInvestTrade002Service.start(processParameter, inputDto);
+
+            }else if(StringUtil.equals(item.getFinprodType2(),DictCodeListExt1.金融产品类型_债券质押式正回购.getValue())
+                    || StringUtil.equals(item.getFinprodType2(),DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue())){
+                //质押式回购
+
+                CfetsTrdRepoTrade002Dto inputDto =cfetsTrdRepoTrade002Service.getTrdRepoInvestTradeDto(item.getTotleTradeId());
+                inputDto.setWorkflowParameter(item.getWorkflowParameter());
+
+                ProcessParameter<CfetsTrdRepoTrade002Dto> processParameter = new ProcessParameter<>();
+                WorkFlowParameter<CfetsTrdRepoTrade002Dto> workFlowParameter = new WorkFlowParameter<>();
+                processParameter.setWorkFlowParameter(workFlowParameter);
+                processParameter.setPageId("CfetsTrdRepoTrade002");
+                processParameter.setOperationType(OperationType.REVOKE);
+
+                workFlowParameter.setPageId("CfetsTrdRepoTrade002");
+                workFlowParameter.setElementId(this.getParam("elementId"));
+                workFlowParameter.setBusinessCode((entity) -> entity.getTradeId());
+                workFlowParameter.setBusinessType(DictCodeList.共通业务类型_质押式回购交易.getValue());
+                workFlowParameter.setComment((entity) -> WorkFlowUtil.concatComment(
+                        getMessage("TrdRepoTrade002.tradeId") + GlobalConstant.OPEN_PARENTHESIS + entity.getTradeId() + GlobalConstant.CLOSE_PARENTHESIS,
+                        DictCodeListExt1.交易场所_银行间.getValue().equals(entity.getTradeMarket())?"":getMessage("TrdRepoTrade002.repoType") + GlobalConstant.OPEN_PARENTHESIS + SysDataUtil.getNameFromDataDict(DictCode.回购类型, entity.getRepoType()) + GlobalConstant.CLOSE_PARENTHESIS,
+                        getMessage("TrdRepoTrade002.tradeDate") + GlobalConstant.OPEN_PARENTHESIS + DateUtil.format(entity.getTradeDate()) + GlobalConstant.CLOSE_PARENTHESIS));
+
+                msg += cfetsTrdRepoTrade002Service.start(processParameter, inputDto);
             }
-            if(StringUtil.equals(inputDto.getTradeMarketMode(), DictCodeListExt1.交易市场_一级市场.getValue())){
-                inputDto.setBondFirstSign("01");
-            }
-            inputDto.setRevokeReason(input.getRevokeReason());
-            inputDto.setTotleTradeId(totleTradeId + "R");
-            inputDto.setFinprodType2("F01");
-            inputDto.setOperateType(operateType);
-            //判断流程中是否存在,如果流程不存在则说明是生成的反向交易，组装撤销dto yjm end 20191015
-            ProcessParameter<CfetsTrdBondInvestTradeDto> processParameter = new ProcessParameter<>();
-            WorkFlowParameter<CfetsTrdBondInvestTradeDto> workFlowParameter = new WorkFlowParameter<>();
-            processParameter.setWorkFlowParameter(workFlowParameter);
-            processParameter.setPageId("CfetsTrdBondInvestTrade002");
-            processParameter.setOperationType(OperationType.REVOKE);
-
-            workFlowParameter.setPageId("CfetsTrdBondInvestTrade002");
-            workFlowParameter.setElementId(this.getParam("elementId"));
-            workFlowParameter.setBusinessCode((entity) -> entity.getTotleTradeId());
-            workFlowParameter.setBusinessType(DictCodeList.共通业务类型_债券类资产交易.getValue());
-            workFlowParameter.setComment((entity) -> WorkFlowUtil.concatComment(
-                    getMessage("TrdBondInvestTrade002.tradeId") + GlobalConstant.COLON + entity.getTotleTradeId(),
-                    getMessage("TrdBondInvestTrade002.finprodName") + GlobalConstant.COLON + entity.getFinprodName(),
-                    getMessage("TrdBondInvestTrade002.tradeDate") + GlobalConstant.COLON + DateUtil.format(entity.getTradeDate())));
-
-             msg += cfetsTrdBondInvestTrade002Service.start(processParameter, inputDto);
-
         }
         try {
             AjaxResult m =new AjaxResult(msg);

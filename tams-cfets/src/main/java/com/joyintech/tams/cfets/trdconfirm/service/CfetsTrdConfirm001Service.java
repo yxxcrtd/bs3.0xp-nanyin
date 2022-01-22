@@ -218,6 +218,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
     @Transactional(rollbackFor = Exception.class)
     @DTXTransaction
     public void doCompleteMethod(CfetsTrdBondInvestTradeDto entity, OperationType operationType) {
+        List<String> finishEtrList=new ArrayList<>();
         String tradeId = entity.getTotleTradeId();
         //买入含权债时，自动创建交易对手 add by wangwei5 2020-03-23 Start
         if(operationType.equals(OperationType.NEW)){
@@ -394,8 +395,10 @@ public class CfetsTrdConfirm001Service extends BaseService{
 
                 finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
                 //处理指令完成情况
-                baseTradeCommExecute(finProductTradeDto,"bond");
-
+                List<String> finishList=baseTradeCommExecute(finProductTradeDto,"bond");
+                if(!StringUtil.isEmptyList(finishList)){
+                    finishEtrList.addAll(finishList);
+                }
             }
 
         }
@@ -416,18 +419,31 @@ public class CfetsTrdConfirm001Service extends BaseService{
 
         }
         //更新操作记录日志
-      /*  CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+        CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
         oprHisReq.setEntrustId(entity.getTotleTradeId());
-        oprHisReq.setOperType(DictCodeListExt3.操作类型_撤回.getValue());
+        if(StringUtil.isNotEmpty(entity.getOprType())){
+            oprHisReq.setOperType(entity.getOprType());
+        }else{
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_成交确认.getValue());
+
+        }
         oprHisReq.setBusiDes(entity.getRemark());
-        joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);*/
+        joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
 
         //发送头寸
         sendPositionMethod(entity);
+        //若指令完成需要发送指令完成头寸
+        if(!StringUtil.isEmptyList(finishEtrList)){
+            for(String item:finishEtrList){
+               closeDelegatePositionMethod(item,entity.getPs());
+
+            }
+        }
     }
     @Transactional(rollbackFor = Exception.class)
     @DTXTransaction
     public void doCompleteRepoMethod(CfetsTrdRepoTrade003Dto entity, OperationType operationType) {
+        List<String> finishEtrList=new ArrayList<>();
         TrdFinProductDealTotal trdFinProductDealTotal = new TrdFinProductDealTotal();
         BeanUtil.copyPropertiesIgnoreNull(trdFinProductDealTotal, entity);
         trdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
@@ -520,9 +536,11 @@ public class CfetsTrdConfirm001Service extends BaseService{
                 baseTradeProductDealDto.setfTradeId(trdProductDeal.getfTradeId());
             }
             finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
-
             //处理指令完成情况
-            baseTradeCommExecute(finProductTradeDto,"repo");
+            List<String> finishList=baseTradeCommExecute(finProductTradeDto,"repo");
+            if(!StringUtil.isEmptyList(finishList)){
+                finishEtrList.addAll(finishList);
+            }
 
         }
        // 发送Murex接口处理
@@ -551,9 +569,25 @@ public class CfetsTrdConfirm001Service extends BaseService{
         }
 
         //更新操作记录日志
+        CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+        oprHisReq.setEntrustId(entity.getTotleTradeId());
+        if(StringUtil.isNotEmpty(entity.getOprType())){
+            oprHisReq.setOperType(entity.getOprType());
+        }else{
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_成交确认.getValue());
+
+        }
+        oprHisReq.setBusiDes(entity.getRemark());
+        joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
 
        //发送头寸
         sendRepoPositionMethod(entity);
+        //若指令完成需要发送指令完成头寸
+        if(!StringUtil.isEmptyList(finishEtrList)){
+            for(String item:finishEtrList){
+                closeDelegateRepoPositionMethod(item,entity.getPs());
+            }
+        }
     }
     /**
      * 7.3写入交易信息进交易报送信息表，为中债报送用
@@ -1104,13 +1138,13 @@ public class CfetsTrdConfirm001Service extends BaseService{
         }
         return invAim;
     }
-    public void baseTradeCommExecute(FinProductTradeDto finProductTradeDto,String type) {
+    public List<String>  baseTradeCommExecute(FinProductTradeDto finProductTradeDto,String type) {
         if (finProductTradeDto == null) {
-            return ;
+            return null;
         }
         if (finProductTradeDto.getBaseTradeProductDealDtos() == null
                 || finProductTradeDto.getBaseTradeProductDealDtos().isEmpty()) {
-            return;
+            return null;
         }
         List<EtrFinishStatusDto> baseEtrInvestInfoDtos = new ArrayList<>();
         for (BaseTradeProductDealDto baseTradeProductDealDto : finProductTradeDto.getBaseTradeProductDealDtos()) {
@@ -1145,13 +1179,6 @@ public class CfetsTrdConfirm001Service extends BaseService{
         }
         if (!baseEtrInvestInfoDtos.isEmpty()) {
             List<EtrFinishStatusDto> etrFinishStatusList=baseEtrInvestInfoDtos;
-            String ps=finProductTradeDto.getBaseTradeProductDealDtos().get(0).getTrdProductDeal().getPs();
-            String finprodType2=finProductTradeDto.getBaseTradeProductDealDtos().get(0).getTrdProductDeal().getFinprodType2();
-            if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_债券质押式正回购.getValue())){
-               ps=DictCodeList.回购拆借方向_正回购.getValue();
-            }else if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue())){
-                ps=DictCodeList.回购拆借方向_逆回购.getValue();
-            }
             // 遍历List<委托完成状况表Entity>，保存到“委托完成状况表”
             for (EtrFinishStatusDto etrFinishStatus : etrFinishStatusList) {
                 if(StringUtil.isNotBlank(etrFinishStatus.getCstpTradeId())){
@@ -1172,6 +1199,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
             }
 
             List<BaseEtrFinishAmtDto> etrFinishAmtDtoList = etrInvestInfoServiceImpl.queryDelegateStatus(entrustIdList);
+            List<String> finishEtrList=new ArrayList<>();
             // 判断委托代码的完成额度是否大于等于100
             BigDecimal bigDecimal = new BigDecimal("100.00");
             for (BaseEtrFinishAmtDto etrFinishAmtDto : etrFinishAmtDtoList) {
@@ -1179,21 +1207,14 @@ public class CfetsTrdConfirm001Service extends BaseService{
                         || etrFinishAmtDto.getSumFinishPercent().compareTo(bigDecimal) == 0) {
                     // 如果满足，则调用投资委托组件的更新委托状态接口，将委托状态设置为“已完成”
                     etrInvestInfoServiceImpl.updateDelegateStatus(etrFinishAmtDto.getEntrustId(), DictCodeList.委托状态_已完成.getValue());
-                    //发送头寸
-                    if(StringUtil.isNotEmpty(type) && StringUtil.equals("bond",type)){
-                        closeDelegatePositionMethod(etrFinishAmtDto,ps);
-                    }
-                    if(StringUtil.isNotEmpty(type) && StringUtil.equals("repo",type)){
-
-                        closeDelegateRepoPositionMethod(etrFinishAmtDto,ps);
-                    }
-
+                    finishEtrList.add(etrFinishAmtDto.getEntrustId());
                 }
             }
+           return  finishEtrList;
         }
-        return ;
+        return null;
     }
-    public void closeDelegatePositionMethod(BaseEtrFinishAmtDto etrFinishAmtDto,String ps){
+    public void closeDelegatePositionMethod(String entrustId,String ps){
         CfetsEtrIbClosePositionRequest req=new CfetsEtrIbClosePositionRequest();
         List<CfetsEtrIbClosePosEtrRequest> etrList=new ArrayList<>();
         CfetsEtrIbClosePosEtrRequest closeItem=new CfetsEtrIbClosePosEtrRequest();
@@ -1205,7 +1226,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
 
         closeItem.setBusiType(busiTypePosition);
         closeItem.setPs(ps);
-        closeItem.setCloseId(etrFinishAmtDto.getEntrustId());
+        closeItem.setCloseId(entrustId);
         closeItem.setSystemAct(DictCodeListExt3.系统动作_完成.getValue());
         closeItem.setBusiAct(DictCodeListExt3.业务动作_指令自动完成.getValue());
         etrList.add(closeItem);
@@ -1215,13 +1236,13 @@ public class CfetsTrdConfirm001Service extends BaseService{
         req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
         PositionHttpRequest.batchClose(req);
     }
-    public void closeDelegateRepoPositionMethod(BaseEtrFinishAmtDto etrFinishAmtDto,String ps){
+    public void closeDelegateRepoPositionMethod(String entrustId,String ps){
         CfetsEtrIbClosePositionRequest req=new CfetsEtrIbClosePositionRequest();
         List<CfetsEtrIbClosePosEtrRequest> etrList=new ArrayList<>();
         CfetsEtrIbClosePosEtrRequest closeItem=new CfetsEtrIbClosePosEtrRequest();
         closeItem.setBusiType(DictCodeListExt3.头寸业务类型_质押式回购首期.getValue());
         closeItem.setPs(ps);
-        closeItem.setCloseId(etrFinishAmtDto.getEntrustId());
+        closeItem.setCloseId(entrustId);
         closeItem.setSystemAct(DictCodeListExt3.系统动作_完成.getValue());
         closeItem.setBusiAct(DictCodeListExt3.业务动作_指令自动完成.getValue());
         etrList.add(closeItem);
