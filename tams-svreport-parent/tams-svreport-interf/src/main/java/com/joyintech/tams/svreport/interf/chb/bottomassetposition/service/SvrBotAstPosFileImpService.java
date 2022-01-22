@@ -114,8 +114,14 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 	private boolean excuteProdOpenSchByStep(List<Map<String, String>> posList, String type, 
 			String tmpPath, ImpTable table,String dataSource,String saveFlag) {
 		// 定义新增数据list-验证不通过数据
-		Map<String,Object> dataMap = convertMapToEntity(posList,dataSource,saveFlag);
-		List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) dataMap.get("list");
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
+//		Map<String,Object> dataMap = convertMapToEntity(posList,dataSource,saveFlag);
+//		List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) dataMap.get("list");
+		List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) convertMapToEntity(posList,ChbBotAstPosition.class);
+		list.stream().forEach(dto->{
+			dto.setPosId(IDGenerator.generate(36));
+		});
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 end
 		if (CollectionUtils.isNotEmpty(list)) {
 			// 先删后插,删除当日接入的持仓数据
 			if (tmpPath == null) {
@@ -333,9 +339,15 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 		
 		if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
 			//增量
-			Map<String,Object> dataMap = convertMapToEntity(posList,dataSource,saveFlag);
-			List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) dataMap.get("list");
-			mergeData(list); 
+			//modify by convertMapToEntity yangxianjiu 2022-01-19 start
+//			Map<String,Object> dataMap = convertMapToEntity(posList,dataSource,saveFlag);
+//			List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) dataMap.get("list");
+			List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) convertMapToEntity(posList,ChbBotAstPosition.class);
+			list.stream().forEach(dto->{
+				dto.setPosId(IDGenerator.generate(36));
+			});
+			//modify by convertMapToEntity yangxianjiu 2022-01-19 end
+			mergeData(list);
 		}else if (posList.size() <= reportInterfOneTimeSqlLdrDataCount) {
 			deleteByUpdateTime(new Date());
 			success = excuteProdOpenSchByStep(posList, type, null, null,dataSource,saveFlag);
@@ -477,7 +489,7 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String importDB(List<Map<String, String>> dataList,InterfFile file) {
+	public String importDB(List<Map<String, String>> dataList,InterfFile file, String date) {
 		String rs = "success";
 		// 解析文件
 		if(dataList==null){

@@ -1,5 +1,6 @@
 package com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.service;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
@@ -57,6 +58,13 @@ public class SalerRewPenaInfoService extends CommonExportService<SalerRewPenaInf
      * @return
      */
     public AjaxResult saveAndSubmit(SalerRewPenaInfoDto dto){
+        if(StringUtil.isEmpty(dto.getOrgCode())){
+            dto.setOrgCode(CommonUtil.getOrgCode());
+        }
+        if(StringUtil.isEmpty(dto.getCreateDept())){
+            dto.setCreateDept(CommonUtil.getDeptCode());
+        }
+
         return restTemplate.postForObject(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/SalerRewPenaInfo/saveAndSubmit", dto,
                 SvrAjaxResult.class);
@@ -68,6 +76,13 @@ public class SalerRewPenaInfoService extends CommonExportService<SalerRewPenaInf
      * @return
      */
     public AjaxResult update(SalerRewPenaInfoDto dto){
+        if(StringUtil.isEmpty(dto.getOrgCode())){
+            dto.setOrgCode(CommonUtil.getOrgCode());
+        }
+        if(StringUtil.isEmpty(dto.getCreateDept())){
+            dto.setCreateDept(CommonUtil.getDeptCode());
+        }
+
         return restTemplate.postForObject(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/SalerRewPenaInfo/update", dto,
                 SvrAjaxResult.class);
@@ -143,6 +158,17 @@ public class SalerRewPenaInfoService extends CommonExportService<SalerRewPenaInf
     public String selectIssuePartyId(String orgCode) {
          return  restTemplate.postForObject(
                 SvrServiceApplication.CHB_SERVICE_NAME + "/SalerRewPenaInfo/selectIssuePartyId",orgCode,
+                String.class);
+    }
+
+    /**
+     * 查询姓名
+     * @param salerInsNo
+     * @return
+     */
+    public String getSalerName(String salerInsNo) {
+        return  restTemplate.postForObject(
+                SvrServiceApplication.CHB_SERVICE_NAME + "/SalerRewPenaInfo/getSalerName",salerInsNo,
                 String.class);
     }
 

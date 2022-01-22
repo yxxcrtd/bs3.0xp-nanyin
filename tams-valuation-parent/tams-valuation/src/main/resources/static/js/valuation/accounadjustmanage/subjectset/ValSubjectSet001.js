@@ -34,9 +34,9 @@ $(function () {
 		    ,{field:'accQuaFlagName', width:150, sortField:"accQuaFlag", title: 'ValSubjectSet001.accQuaFlag'}
 		    ,{field:'accIntFlagName', width:100, sortField:"accIntFlag",title: 'ValSubjectSet001.accIntFlag'}
 		    ,{field:'overdrawnFlagName', width:150, sortField:"overdrawnFlag",title: 'ValSubjectSet001.overdrawnFlag'}
-		    ,{field:'genDetsubFlag', width:150,sortField:'genDetsubFlagCode',title: 'ValSubjectSet001.genDetsubFlag'}
+		    ,{field:'genDetsubFlagName', width:150,sortField:'genDetsubFlag',title: 'ValSubjectSet001.genDetsubFlag'}
 		    ,{field:'baseSubjectNature', width:160, title: 'ValSubjectSet001.baseSubjectNature'}
-//		    ,{fixed:'right', title: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;操 作', width:100, align:'center', type:'action', buttons: ['edit']}
+		    ,{field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: [{text: '&#xe642;', clas: 'edit', title: '编辑'}]}
 		]
 	  });
     /**
@@ -44,7 +44,7 @@ $(function () {
      */
     table.bind('click', '.edit', function(data, index) {
         data.pageModel = PAGE_MODEL_EDIT;
-        Joyin.dialog(JoyinUtil.getLabel("SysInstitution002.edit"),
+        Joyin.dialog(JoyinUtil.getLabel("科目信息编辑"),
                 basePath + "valuation/accounadjustmanage/subjectset/ValSubjectSet002/init",
                 "95%", "80%", {pageModel:PAGE_MODEL_EDIT,
                                 booksetId:data.booksetId,
@@ -52,7 +52,7 @@ $(function () {
                                     table.reload();
                                 });
     });
-    
+
     /**
      * 绑定删除事件
      */

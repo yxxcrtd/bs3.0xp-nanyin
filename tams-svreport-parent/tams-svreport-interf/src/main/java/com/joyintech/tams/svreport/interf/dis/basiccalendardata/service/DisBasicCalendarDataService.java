@@ -54,17 +54,20 @@ public  class DisBasicCalendarDataService extends FileImpService {
         // 解析文件数据到dto
         DisBasicCalendarData dto = null;
         List<DisBasicCalendarData> dtoList = new ArrayList<DisBasicCalendarData>();
-        for(Map<String, String> data : listData){
-            //将map转换为dto
-        	try{
-        	    dto = dataConversionEntity(data);
-                dtoList.add(dto);
-        	}
-        	catch(Exception e){
-				logger.error("解析数据错误：",e.getMessage(),e);
-           		return  "fail";
-			}
-        }
+        // modify by convertMapToEntity yangxianjiu 2022-01-19 start
+        dtoList = (List<DisBasicCalendarData>) convertMapToEntity(listData,DisBasicCalendarData.class);
+        // modify by convertMapToEntity yangxianjiu 2022-01-19 end
+//        for(Map<String, String> data : listData){
+//            //将map转换为dto
+//        	try{
+//        	    dto = dataConversionEntity(data);
+//                dtoList.add(dto);
+//        	}
+//        	catch(Exception e){
+//				logger.error("解析数据错误：",e.getMessage(),e);
+//           		return  "fail";
+//			}
+//        }
         //存表
         int success = this.mergeRepProdInfoByPart(dtoList);
         
@@ -143,7 +146,7 @@ public  class DisBasicCalendarDataService extends FileImpService {
      * {@inheritDoc}
      */
     @Override
-    public String importDB(List<Map<String, String>> dataList, InterfFile file) {
+    public String importDB(List<Map<String, String>> dataList, InterfFile file, String date) {
         String rs = "success";
         // 对数据list进行处理
         if (!CollectionUtils.isEmpty(dataList)) {
@@ -152,7 +155,7 @@ public  class DisBasicCalendarDataService extends FileImpService {
             //检查数据类型
             String dataType = InterfDefine.基础日历信息数据.getCode();
             //重复性检查的keys
-            String[] checkEuplicatedKeys = {"TRADE_CALENDAR_ID"};
+            String[] checkEuplicatedKeys = {"TRADE_CALENDAR_ID","CALENDAR_ID"};
             List<Map<String, String>>  listA = super.checkData(dataList, file.getFilename(), inerfType, dataType,null, checkEuplicatedKeys);
 //            dataList.addAll(listA);// listA为错误数据，在checkData时被remove，需要重新放回dataList
             // 数据入库

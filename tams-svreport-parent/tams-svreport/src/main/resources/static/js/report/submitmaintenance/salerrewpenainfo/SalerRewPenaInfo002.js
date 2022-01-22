@@ -11,6 +11,7 @@
            //记录分类change事件
            function salerRewPenaTyepOnChange(){
                var salerRewPenaTyep = $('#salerRewPenaTyep').val();
+               var salerRewPenaInst = $('#salerRewPenaInst').val();
                if (salerRewPenaTyep === '03'){
                     $('#salerRewPenaName').prop("disabled",true);
                     $("#salerRewPenaName").val('').trigger('change');
@@ -40,6 +41,10 @@
                        $("#salerComplainResult").val('').trigger('change');
                        $('#salerComplainDate').prop("disabled",true);
                        $("#salerComplainDate").val('').trigger('change');
+                       if(salerRewPenaInst === '01' || salerRewPenaInst === '02'){
+                         $('#salerRewPenaInstName').prop("disabled",true);
+                         $("#salerRewPenaInstName").val('').trigger('change');
+                       }
                }
             }
 
@@ -53,6 +58,16 @@
                         $("#salerRewPenaInstName").val('').trigger('change');
                    }
             }
+
+                        //内部编号change事件
+                        function salerInsNoOnChange(){
+                           var salerInsNo = $('#salerInsNo').val();
+                               Joyin.ajax(JoyinUtil.getRealPath('report/submitmaintenance/salerrewpenainfo/SalerRewPenaInfo002/getSalerName'), {salerInsNo : salerInsNo}, function(result){
+                                  if (result){
+                                       $('#salerName').val(result);
+                                     }
+                               });
+                        }
 
             //获取机构代码默认值
             function getIssuePartyId(){
@@ -87,8 +102,27 @@
            var init = function(){
            if(pageModel==PAGE_MODEL_EDIT){
                      $('#salerInstCode').prop("disabled",true);
+                     $('#salerName').prop("disabled",true);
+                     var salerRewPenaTyep = $('#salerRewPenaTyep').val();
+                     if(salerRewPenaTyep === '03'){
+                         $('#salerRewPenaName').prop("disabled",true);
+                         $('#salerRewPenaComments').prop("disabled",true);
+                         $('#salerRewPenaInst').prop("disabled",true);
+                         $('#salerRewPenaInstName').prop("disabled",true);
+                         $('#salerRewPenaStart').prop("disabled",true);
+                         $('#salerRewPenaEnd').prop("disabled",true);
+                     }else{
+                         $('#salerComplainDetail').prop("disabled",true);
+                         $('#salerComplainResult').prop("disabled",true);
+                         $('#salerComplainDate').prop("disabled",true);
+                         var salerRewPenaInst = $('#salerRewPenaInst').val();
+                         if(salerRewPenaInst === '01' || salerRewPenaInst === '02'){
+                            $('#salerRewPenaInstName').prop("disabled",true);
+                         }
+                     }
            }
            else{
+                     $('#salerName').prop("disabled",true);
                      $('#salerInstCode').prop("disabled",true);
                      getIssuePartyId();
            }
@@ -100,6 +134,9 @@
             });
             $('#salerRewPenaInst').change(function(){
                 salerRewPenaInstOnChange();
+            });
+            $('#salerInsNo').change(function(){
+                salerInsNoOnChange();
             });
       });
 

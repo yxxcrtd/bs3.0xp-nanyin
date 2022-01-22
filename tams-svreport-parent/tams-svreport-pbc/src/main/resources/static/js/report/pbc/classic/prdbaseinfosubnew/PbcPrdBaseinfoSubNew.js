@@ -38,7 +38,7 @@ $(function () {
             {title: "数据日期", field: 'statusDate', width: 150, type: 'datetime', sortField: 'statusDate'},
             {title: "报送状态", field: 'sendStatusStr', width: 150, sortField: 'sendStatus'},
             {title: '报送日期', field: 'submitTime', width: 150, type: 'datetime', sortField: 'submitTime'},
-            {title: "报送截止日", field: 'pbcSubmitDeadline', width: 150, type: 'datetime', sortField: 'pbcSubmitDeadline'},
+            {title: "报送截止日", field: 'pbcSubmitDeadline', width: 150, type: 'date', sortField: 'pbcSubmitDeadline'},
             {title: "反馈状态", field: 'submitFeedbackStatusStr', width: 150, sortField: 'submitFeedbackStatus'},
             {field: 'pbcProdId', visible: false},
             {field: 'pbcPoolCode', visible: false},
@@ -70,7 +70,7 @@ $(function () {
             {title: "受托职责", field: 'fiduciaryDuty', width: 150, sortField: 'fiduciaryDuty'},
             {title: "分级产品标识", field: 'isConstracte', width: 150, sortField: 'isConstracte'},
             {title: "收益权转让产品标识", field: 'transferType', width: 150, sortField: 'transferType'},
-            {title: "货币市场基金标识", field: 'isMarketFundStr', width: 150, sortField: 'isMarketFund'},
+            {title: "货币市场基金或现金管理类产品", field: 'isMarketFundStr', width: 150, sortField: 'isMarketFund'},
 
             /***未提供字段.暂时使用资产池代码替代.*/
             {title: "其他产品标识1", field: '', width: 150, sortable:false},
@@ -83,6 +83,8 @@ $(function () {
             {title: "兑付收益币种", field: 'cashProfCcy', width: 150, sortField: 'cashProfCcy'},
             {title: "增信机构类型", field: 'creditType', width: 150, sortField: 'creditType'},
             {title: "增信形式", field: 'creditMode', width: 150, sortField: 'creditMode'},
+            {title: "跨境理财通", field: 'crossBorderFlag', width: 150, sortField: 'crossBorderFlag'},
+            {title: "以财产权信托名义开展的资金信托标识", field: 'zjxtFlag', width: 150, sortField: 'zjxtFlag'},
             //
             // {title: "客户类型", field: 'customerType', width: 150, sortField: 'customerType'},
             // {title: "合作模式", field: 'contMode', width: 150, sortField: 'contMode'},

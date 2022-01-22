@@ -101,7 +101,7 @@ public class SvrChbProdDividendDealFileImpService extends FileImpService{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String importDB(List<Map<String, String>> listData,InterfFile interfFile) {
+	public String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date) {
 		// TODO Auto-generated method stub
 		String remoteDir = "success";
 		checkData(listData, interfFile.getFilename(), InterfDefine.产品分红交易接口数据.getCode(),
@@ -140,9 +140,13 @@ public class SvrChbProdDividendDealFileImpService extends FileImpService{
 		
 		List<ChbPrdBonusDeal> assetList = new ArrayList<ChbPrdBonusDeal>();
 		//转换实体类
-		convertMapToEntity(listData, assetList, dataSource);
-		
-
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
+//		convertMapToEntity(listData, assetList, dataSource);
+		assetList = (List<ChbPrdBonusDeal>) convertMapToEntity(listData,ChbPrdBonusDeal.class);
+		assetList.stream().forEach(dto->{
+			dto.setSeqno(IDGenerator.generate(36));
+		});
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 end
 		if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
 		//增量
 			mergeData(assetList); 

@@ -10,12 +10,14 @@
  
 package com.joyintech.tams.svreport.interf.dis.prodcashyield.servcie;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.FileImpService;
+import com.joyintech.tams.common.InterfDefine;
+import com.joyintech.tams.common.InterfFile;
+import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
+import com.joyintech.tams.common.base.entity.RepCashYield;
+import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
+import com.joyintech.tams.svreport.interf.dis.prodcashyield.dao.DisRepCashYieldMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,24 +25,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.tams.common.FileImpService;
-import com.joyintech.tams.common.InterfDefine;
-import com.joyintech.tams.common.InterfFile;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
-import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
-import com.joyintech.tams.svreport.interf.dis.common.DisInterfDecimalUtil;
-import com.joyintech.tams.svreport.interf.dis.prodcashyield.dao.DisRepCashYieldMapper;
-import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 产品费率接口
  *      解析产品费率数据，存入REP_CASH_YIELD
  * @author ZhangYangFei
  * @version 1.0 2019年5月7日
- * @see ProdBaseInfoService
+ * @see DisRepCashYieldService
  * @since 1.0
  */
 @Service
@@ -75,78 +69,70 @@ public class DisRepCashYieldService extends FileImpService{
             return "success";
         }
         logger.info("----产品费率入库，开始-----");
-        // 解析文件数据到dto
-        DisRepCashYield dto = null;
-        List<DisRepCashYield> dtoList = new ArrayList<DisRepCashYield>();
-        for (Map<String, String> data : listData) {
-            // 将map转换为dto
-        	try{
-        		   dto = transMap2Dto(data);
-                   dtoList.add(dto);
-        	}
-        	catch(Exception e){
-				logger.error("解析数据错误：",e.getMessage(),e);
-           		return  "fail";
-			}
+        List<RepCashYield> listNE = null;
+        if(listData!=null&&listData.size()>0){
+            // 解析文件数据到dto
+            listNE = (List<RepCashYield>) convertMapToEntity(listData, RepCashYield.class);
         }
-        // 存表
-        int success = this.deleteAndInsertRepCashYieldByPart(dtoList);
-
+        int success = 0;
+        if (listNE != null && listNE.size() > 0) {
+            success = this.deleteAndInsertRepCashYieldByPart(listNE);
+        }
         logger.info("saveData方法成功存入数据到REP_CASH_YIELD：" + success + "条");
         logger.info("----产品费率入库，结束-----");
         return "success";
     }
 
-    /**
-     * 将map转换为dto
-     * 
-     * @param data
-     * @return
-     * @see
-     * @since 1.0
-     */
-    private DisRepCashYield transMap2Dto(Map<String, String> data) {
-        DisRepCashYield dto = new DisRepCashYield();
-        dto.setBusiId(data.get("PROD_ID"));// 产品代码
-        dto.setCashId(IDGenerator.generate());// 费用代码-现金流代码
-        dto.setCashName(data.get("FEE_NAME"));// 费用名称-现金流名称
-        dto.setCashType(data.get("FEE_TYPE_1"));// 费用类型-现金流类型
-//        dto.setCashType2(data.get("FEE_TYPE_2"));// 费用二级类型-现金流二级类型
-        dto.setCashType2(data.get("CASH_TYPE_2"));// 取【现金流二级类型】  zhangyf 20191123
-        dto.setRate(DisInterfDecimalUtil.str2BigDecimal(data.get("FEE_RATE")));// 费率-费率/收益率
-        dto.setStartDate(DateUtil.parse(data.get("START_DATE")));// 启用日
-        dto.setRemark(data.get("REMARK"));// 备注
-        dto.setStatus(data.get("STATUS"));
-        
-        dto.setInputType("");// 导入方法
-        dto.setInputUser("");// 导入用户
-        dto.setAdapterId("0");// 适配器ID
-        dto.setCreateUser("interf");
-        dto.setCreateDept(data.get(""));
-        dto.setUpdateUser("interf");
-
-        /**add by yinya 新增产品费率信息：银行收取比例（浮动管理费选填） on 20211014 start**/
-        if (StringUtil.isNotEmpty(data.get("CHARGE_RATIO"))) {
-            dto.setChargeRatio(DisInterfDecimalUtil.str2BigDecimal(data.get("CHARGE_RATIO")));//最少追加金额
-        }
-        /**add by yinya 新增产品费率信息：银行收取比例（浮动管理费选填） on 20211014 end**/
-        try {
-            if(StringUtil.isNotEmpty(data.get("CREATE_TIME"))){
-                dto.setCreateTime(DateUtil.parseDate(data.get("CREATE_TIME"),new String[] {DateUtil.DEFAULT_DATETIME_FORMAT_ODS}));
-            }else{
-                dto.setCreateTime(new Date());
-            }
-            if(StringUtil.isNotEmpty(data.get("UPDATE_TIME"))){
-                dto.setUpdateTime(DateUtil.parseDate(data.get("UPDATE_TIME"),new String[] {DateUtil.DEFAULT_DATETIME_FORMAT_ODS}));
-            }else{
-                dto.setUpdateTime(new Date());
-            }
-        } catch (ParseException e) {
-            logger.error("transMap2Dto方法转换CreateTime或UpdateTime异常");
-            logger.error(e.getMessage(),e);
-        }
-        return dto;
-    }
+//    /**
+//     * 将map转换为dto
+//     *
+//     * @param data
+//     * @return
+//     * @see
+//     * @since 1.0
+//     */
+//    private RepCashYield transMap2Dto(Map<String, String> data) {
+//        RepCashYield dto = new RepCashYield();
+//        dto.setBusiId(data.get("PROD_ID"));// 产品代码
+//        dto.setCashId(IDGenerator.generate());// 费用代码-现金流代码
+//        dto.setCashName(data.get("FEE_NAME"));// 费用名称-现金流名称
+//        dto.setCashType(data.get("FEE_TYPE_1"));// 费用类型-现金流类型
+////        dto.setCashType2(data.get("FEE_TYPE_2"));// 费用二级类型-现金流二级类型
+//        dto.setCashType2(data.get("CASH_TYPE_2"));// 取【现金流二级类型】  zhangyf 20191123
+//        dto.setRate(DisInterfDecimalUtil.str2BigDecimal(data.get("FEE_RATE")));// 费率-费率/收益率
+//        dto.setStartDate(DateUtil.parse(data.get("START_DATE")));// 启用日
+//        dto.setRemark(data.get("REMARK"));// 备注
+//        dto.setStatus(data.get("STATUS"));
+//
+//        dto.setInputType("");// 导入方法
+//        dto.setInputUser("");// 导入用户
+//        dto.setAdapterId("0");// 适配器ID
+//        dto.setCreateUser("interf");
+//        dto.setCreateDept(data.get(""));
+//        dto.setUpdateUser("interf");
+//
+//        /**add by yinya 新增产品费率信息：银行收取比例（浮动管理费选填） on 20211014 start**/
+//        if (StringUtil.isNotEmpty(data.get("CHARGE_RATIO"))) {
+//            dto.setChargeRatio(DisInterfDecimalUtil.str2BigDecimal(data.get("CHARGE_RATIO")));//最少追加金额
+//        }
+//        /**add by yinya 新增产品费率信息：银行收取比例（浮动管理费选填） on 20211014 end**/
+//        try {
+//            if(StringUtil.isNotEmpty(data.get("CREATE_TIME"))){
+//                dto.setCreateTime(DateUtil.parseDate(data.get("CREATE_TIME"),new String[] {DateUtil.DEFAULT_DATETIME_FORMAT_ODS}));
+//            }else{
+//                dto.setCreateTime(new Date());
+//            }
+//            if(StringUtil.isNotEmpty(data.get("UPDATE_TIME"))){
+//                dto.setUpdateTime(DateUtil.parseDate(data.get("UPDATE_TIME"),new String[] {DateUtil.DEFAULT_DATETIME_FORMAT_ODS}));
+//            }else{
+//                dto.setUpdateTime(new Date());
+//            }
+//        } catch (ParseException e) {
+//            logger.error("transMap2Dto方法转换CreateTime或UpdateTime异常");
+//            logger.error(e.getMessage(),e);
+//        }
+//        return dto;
+//    }
 
     /**
      * 存表
@@ -156,7 +142,7 @@ public class DisRepCashYieldService extends FileImpService{
      * @see
      * @since 1.0
      */
-    private int deleteAndInsertRepCashYieldByPart(List<DisRepCashYield> dtoList) {
+    private int deleteAndInsertRepCashYieldByPart(List<RepCashYield> dtoList) {
         //删除
 //        int delCount = disRepCashYieldMapper.deleteRepCashYieldByStartDateAndCashType(dtoList.get(0));
 //        logger.info("deleteAndInsertRepCashYieldByPart方法删除REP_CASH_YIELD数据：" + delCount + "条");
@@ -171,7 +157,7 @@ public class DisRepCashYieldService extends FileImpService{
             return dataCount;
         }
         
-        List<DisRepCashYield> newDataList = new ArrayList<DisRepCashYield>();
+        List<RepCashYield> newDataList = new ArrayList<RepCashYield>();
         newDataList.addAll(dtoList);
         
         // 分批存入
@@ -191,7 +177,7 @@ public class DisRepCashYieldService extends FileImpService{
      * {@inheritDoc}
      */
     @Override
-    public String importDB(List<Map<String, String>> dataList, InterfFile interfFile) {
+    public String importDB(List<Map<String, String>> dataList, InterfFile interfFile, String date) {
         String rs = "success";
         // 对数据list进行处理
         if (!CollectionUtils.isEmpty(dataList)) {
@@ -224,7 +210,7 @@ public class DisRepCashYieldService extends FileImpService{
         //检查数据类型
         String dataType = InterfDefine.产品费率数据.getCode();
         //重复性检查的keys
-        String[] checkEuplicatedKeys = {"PROD_ID","CASH_TYPE_2","START_DATE"};
+        String[] checkEuplicatedKeys = {"BUSI_ID","CASH_TYPE2","START_DATE"};
         String filename = interfFile == null ? null : interfFile.getFilename();
         List<Map<String, String>>  listA = super.checkData(dataList, filename, inerfType, dataType,null, checkEuplicatedKeys);
 //        dataList.addAll(listA);// listA为错误数据，在checkData时被remove，需要重新放回dataList

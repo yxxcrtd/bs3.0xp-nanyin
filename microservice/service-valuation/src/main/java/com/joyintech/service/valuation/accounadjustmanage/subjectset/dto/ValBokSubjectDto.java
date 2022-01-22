@@ -10,11 +10,7 @@
 
 package com.joyintech.service.valuation.accounadjustmanage.subjectset.dto;
 
-import java.util.List;
-
 import com.joyintech.framework.export.paginator.domain.ITableRow;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -22,7 +18,8 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.service.valuation.accounadjustmanage.subjectset.validator.ValBokSubjectDtoValidator;
 import com.joyintech.tams.common.base.entity.BokSubject;
-import com.joyintech.tams.constant.DictCode;
+
+import java.util.List;
 
 @ValidLogic(targetClass = ValBokSubjectDtoValidator.class, groups = {ValidateGroupEdit.class,
     ValidateGroupDelete.class})
@@ -32,6 +29,193 @@ public class ValBokSubjectDto extends BokSubject implements ITableRow {
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = -1852967864201289335L;
+    /**
+     * 内部科目编码
+     */
+    private String subjectInternalCode;
+    /**
+     * "辅助核算表达式（存储FEL表达式，如交易场所为银行间，发行方式为封闭式则生成表达式TRADE_MARKET='01'&&ISSUE_TYPE='01'
+     * 如果是记账科目，必填。"
+     */
+    private String subjectHandFelCode;
+    /**
+     * 币种
+     */
+    private String ccy;
+
+
+    /**
+     * 内部科目编码
+     */
+    @NotEmpty(fieldName = "ValSubjectSet001.subjectInternalCode", groups = {ValidateGroupEdit.class})
+    @Length(fieldName = "ValSubjectSet001.subjectInternalCode", max = 32, groups = {
+            ValidateGroupEdit.class})
+
+    public String getSubjectInternalCode() {
+        return subjectInternalCode;
+    }
+
+
+
+    /**
+     * 辅助核算表达式
+     */
+    @NotEmpty(fieldName = "ValSubjectSet001.subjectHandFelCode", groups = {ValidateGroupEdit.class})
+    @Length(fieldName = "ValSubjectSet001.subjectHandFelCode", max = 200, groups = {
+            ValidateGroupEdit.class})
+
+    public String getSubjectHandFelCode() {
+        return subjectHandFelCode;
+    }
+
+
+    /**
+     * 币种
+     */
+    @NotEmpty(fieldName = "ValSubjectSet001.ccy", groups = {ValidateGroupEdit.class})
+    @Length(fieldName = "ValSubjectSet001.ccy", max = 10, groups = {
+            ValidateGroupEdit.class})
+    @Override
+    public String getCcy() {
+        return ccy;
+    }
+
+    @Override
+    public void setSubjectInternalCode(String subjectInternalCode) {
+        this.subjectInternalCode = subjectInternalCode;
+    }
+
+    @Override
+    public void setSubjectHandFelCode(String subjectHandFelCode) {
+        this.subjectHandFelCode = subjectHandFelCode;
+    }
+
+    @Override
+    public void setCcy(String ccy) {
+        this.ccy = ccy;
+    }
+
+
+    /**
+     * 证券大类
+     */
+    private String bokBondType;
+    /**
+     * 证券分类
+     */
+    private String bokBondType2;
+    /**
+     * 交易市场
+     */
+    private String bokTrdMarket;
+    /**
+     * 发行方式
+     */
+    private String bokIssueType;
+    /**
+     * 交易对手类型
+     */
+    private String bokCpyType;
+    /**
+     * 账户类型
+     */
+    private String bokAccountType;
+    /**
+     * 费用类型
+     */
+    private String bokFeeType;
+    /**
+     * 交易属性
+     */
+    private String bokTrdProp;
+    /**
+     * 税费类型
+     */
+    private String bokTaxType;
+    /**
+     * 交易对手
+     */
+    private String bokCpy;
+
+    public String getBokBondType() {
+        return bokBondType;
+    }
+
+    public void setBokBondType(String bokBondType) {
+        this.bokBondType = bokBondType;
+    }
+
+    public String getBokBondType2() {
+        return bokBondType2;
+    }
+
+    public void setBokBondType2(String bokBondType2) {
+        this.bokBondType2 = bokBondType2;
+    }
+
+    public String getBokTrdMarket() {
+        return bokTrdMarket;
+    }
+
+    public void setBokTrdMarket(String bokTrdMarket) {
+        this.bokTrdMarket = bokTrdMarket;
+    }
+
+    public String getBokIssueType() {
+        return bokIssueType;
+    }
+
+    public void setBokIssueType(String bokIssueType) {
+        this.bokIssueType = bokIssueType;
+    }
+
+    public String getBokCpyType() {
+        return bokCpyType;
+    }
+
+    public void setBokCpyType(String bokCpyType) {
+        this.bokCpyType = bokCpyType;
+    }
+
+    public String getBokAccountType() {
+        return bokAccountType;
+    }
+
+    public void setBokAccountType(String bokAccountType) {
+        this.bokAccountType = bokAccountType;
+    }
+
+    public String getBokFeeType() {
+        return bokFeeType;
+    }
+
+    public void setBokFeeType(String bokFeeType) {
+        this.bokFeeType = bokFeeType;
+    }
+
+    public String getBokTrdProp() {
+        return bokTrdProp;
+    }
+
+    public void setBokTrdProp(String bokTrdProp) {
+        this.bokTrdProp = bokTrdProp;
+    }
+
+    public String getBokTaxType() {
+        return bokTaxType;
+    }
+
+    public void setBokTaxType(String bokTaxType) {
+        this.bokTaxType = bokTaxType;
+    }
+
+    public String getBokCpy() {
+        return bokCpy;
+    }
+
+    public void setBokCpy(String bokCpy) {
+        this.bokCpy = bokCpy;
+    }
 
     /**
      * 余额方向
@@ -63,15 +247,11 @@ public class ValBokSubjectDto extends BokSubject implements ITableRow {
     @SuppressWarnings("unused")
     private String overdrawnFlagName;
 
-    /**
-     * 自动生成子科目
-     */
-    private String genDetsubFlag;
-    
+
     /**
      * 自动生成子科目Code
      */
-    private String genDetsubFlagCode;
+    private String genDetsubFlagName;
 
     /**
      * 画面模式
@@ -87,6 +267,31 @@ public class ValBokSubjectDto extends BokSubject implements ITableRow {
      * 选中的数据
      */
     private transient List<ValBokSubjectDto> selectedItem;
+
+    /**
+     * @author  科目辅助项JSON
+     * @description
+     * @date 2022-1-20 11:24
+     */
+    private String handjson;
+
+    public String getHandjson() {
+        return handjson;
+    }
+
+    public void setHandjson(String handjson) {
+        this.handjson = handjson;
+    }
+
+    private List<ValSubjectHandDto> subjectHands;
+
+    public List<ValSubjectHandDto> getSubjectHands() {
+        return subjectHands;
+    }
+
+    public void setSubjectHands(List<ValSubjectHandDto> subjectHands) {
+        this.subjectHands = subjectHands;
+    }
 
     /**
      * 账套代码
@@ -192,36 +397,21 @@ public class ValBokSubjectDto extends BokSubject implements ITableRow {
      * 
      * @return genDetsubFlag.
      */
+    @Length(fieldName = "ValSubjectSet001.genDetsubFlag", max = 10, groups = {
+            ValidateGroupEdit.class})
+    @Override
     public String getGenDetsubFlag() {
-        return this.genDetsubFlag;
+        return super.getGenDetsubFlag();
     }
 
-    /**
-     * 设置 自动生成子科目
-     * 
-     * @param genDetsubFlag genDetsubFlag
-     */
-    public void setGenDetsubFlag(String genDetsubFlag) {
-        this.genDetsubFlag = genDetsubFlag;
+
+
+    public String getGenDetsubFlagName() {
+        return genDetsubFlagName;
     }
 
-    
-    
-    /**
-     * 获取 genDetsubFlagCode
-     * @return genDetsubFlagCode.
-     */
-    public String getGenDetsubFlagCode() {
-        return genDetsubFlagCode;
-    }
-
-    
-    /**
-     * 设置 genDetsubFlagCode
-     * @param genDetsubFlagCode genDetsubFlagCode
-     */
-    public void setGenDetsubFlagCode(String genDetsubFlagCode) {
-        this.genDetsubFlagCode = genDetsubFlagCode;
+    public void setGenDetsubFlagName(String genDetsubFlagName) {
+        this.genDetsubFlagName = genDetsubFlagName;
     }
 
     /**

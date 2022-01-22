@@ -495,6 +495,18 @@ public class PbcPrdBaseinfoSubNew extends BaseEntity{
      *  人行产品代码（页面展示用）
      */
     private String pbcProdIdShow;
+
+    /**
+     * 跨境理财通标识
+     *
+     */
+    private  String crossBorderFlag;
+
+    /**
+     * 以财产权信托名义开展的资金信托标识
+     *
+     */
+    private  String zjxtFlag;
     
     /** 人行代码（外部）
      * @return PBC_CODE 人行代码（外部）
@@ -1439,8 +1451,15 @@ public class PbcPrdBaseinfoSubNew extends BaseEntity{
 	public String getStatusStr(){
 		return SvrDataUtil.getNameFromDataDict(DictCode.报送数据状态, this.getStatus());
 	}
-	
-	public String getSendStatusStr(){
+
+	public String getStatusDateStr(){return null!=this.getStatusDate()?DateUtil.format(this.getStatusDate()):null;}
+
+    public String getSubmitTimeStr(){return null!=this.getSubmitTime()?DateUtil.format(this.getSubmitTime()):null;}
+
+    public String getPbcSubmitDeadlineStr(){return null!=this.getPbcSubmitDeadline()?DateUtil.format(this.getPbcSubmitDeadline()):null;}
+
+
+    public String getSendStatusStr(){
 		return SvrDataUtil.getNameFromDataDict(DictCode.报送状态, this.getSendStatus());
 	}
 	
@@ -1471,5 +1490,21 @@ public class PbcPrdBaseinfoSubNew extends BaseEntity{
 	public void setIssuePartyName(String issuePartyName) {
 		this.issuePartyName = issuePartyName;
 	}
-	
+
+    public String getCrossBorderFlag() {
+        return crossBorderFlag;
+    }
+
+    public void setCrossBorderFlag(String crossBorderFlag) {
+        this.crossBorderFlag = crossBorderFlag;
+    }
+
+
+    public String getZjxtFlag() {
+        return zjxtFlag;
+    }
+
+    public void setZjxtFlag(String zjxtFlag) {
+        this.zjxtFlag = zjxtFlag;
+    }
 }

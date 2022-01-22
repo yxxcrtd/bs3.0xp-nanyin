@@ -129,4 +129,14 @@ public class SalerRewPenaInfoController {
     public String selectIssuePartyId(@RequestBody String orgCode){
         return  salerRewPenaInfo002Service.selectIssuePartyId(orgCode);
     }
+
+    /**
+     * 查询姓名
+     * @param salerInsNo
+     * @return
+     */
+    @PostMapping("getSalerName")
+    public String getSalerName(@RequestBody String salerInsNo){
+        return  salerRewPenaInfo002Service.getSalerName(salerInsNo);
+    }
 }

@@ -32,7 +32,7 @@ public class ChbAssetInfoRate extends BaseEntity{
     /**
      * 变动类型
      */
-    private String changType;
+    private String changeType;
     /**
      * 变动日期
      */
@@ -304,11 +304,11 @@ public class ChbAssetInfoRate extends BaseEntity{
         this.profitType = profitType;
     }
 
-    public String getChangType() {
-        return changType;
+    public String getChangeType() {
+        return changeType;
     }
 
-    public void setChangType(String changType) {
-        this.changType = changType;
+    public void setChangeType(String changeType) {
+        this.changeType = changeType;
     }
 }

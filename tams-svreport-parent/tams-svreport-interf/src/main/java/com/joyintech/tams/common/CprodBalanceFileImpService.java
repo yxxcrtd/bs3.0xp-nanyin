@@ -85,7 +85,7 @@ public class CprodBalanceFileImpService extends AbstractFileImpService {
             }
             @SuppressWarnings("unchecked")
             List<Map<String, String>> dataList = (List<Map<String, String>>) parseResult.get("dataList");
-            success = svrCprodBalanceFileImpService.importDB(dataList,interfFile);
+            success = svrCprodBalanceFileImpService.importDB(dataList,interfFile, currentDate);
             interfFile.setMoveRemovePath(success);
             svrCprodBalanceFileImpService.clearFile(interfFile);
         }

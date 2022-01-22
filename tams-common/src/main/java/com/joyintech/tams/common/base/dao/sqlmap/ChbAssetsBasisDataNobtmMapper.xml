@@ -25,6 +25,7 @@
         <result column="MD5PRIMARYKEY" property="md5primarykey" jdbcType="CHAR" />
         <result column="CCY" property="ccy" jdbcType="VARCHAR" />
         <result column="TDY_INTADJEXP_ADD" property="tdyIntadjexpAdd" jdbcType="DECIMAL" />
+        <result column="TDY_LOSS_AMT" property="tdyLossAmt" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         VAL_ID VAL_ID, PROD_ID PROD_ID, ASSET_ID ASSET_ID, VALUE_DATE VALUE_DATE, MDATE MDATE, 
@@ -32,7 +33,7 @@
         DELAY_PAY_AMT DELAY_PAY_AMT, REMARK REMARK, CREATE_TIME CREATE_TIME, UPDATE_TIME UPDATE_TIME, 
         CREATE_DEPT CREATE_DEPT, ORG_CODE ORG_CODE, DEPT_CODE DEPT_CODE, CREATE_USER CREATE_USER, 
         UPDATE_USER UPDATE_USER, STATUS STATUS, DATA_SOURCE DATA_SOURCE, MD5PRIMARYKEY MD5PRIMARYKEY, 
-        CCY CCY, TDY_INTADJEXP_ADD TDY_INTADJEXP_ADD
+        CCY CCY, TDY_INTADJEXP_ADD TDY_INTADJEXP_ADD, TDY_LOSS_AMT TDY_LOSS_AMT
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -63,7 +64,8 @@
             UPDATE_TIME, CREATE_DEPT, ORG_CODE, 
             DEPT_CODE, CREATE_USER, UPDATE_USER, 
             STATUS, DATA_SOURCE, MD5PRIMARYKEY, 
-            CCY, TDY_INTADJEXP_ADD)
+            CCY, TDY_INTADJEXP_ADD, TDY_LOSS_AMT
+            )
         values (#{valId,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{assetId,jdbcType=VARCHAR}, 
             #{valueDate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{posAmt,jdbcType=DECIMAL}, 
             #{tdyCostAmt,jdbcType=DECIMAL}, #{tdyFloatIngpl,jdbcType=DECIMAL}, #{tdyIntincexp,jdbcType=DECIMAL}, 
@@ -71,7 +73,8 @@
             #{updateTime,jdbcType=DATE}, #{createDept,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
             #{deptCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
             #{status,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{md5primarykey,jdbcType=CHAR}, 
-            #{ccy,jdbcType=VARCHAR}, #{tdyIntadjexpAdd,jdbcType=DECIMAL})
+            #{ccy,jdbcType=VARCHAR}, #{tdyIntadjexpAdd,jdbcType=DECIMAL}, #{tdyLossAmt,jdbcType=DECIMAL}
+            )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbAssetsBasisDataNobtm" >
         insert into CHB_ASSETS_BASIS_DATA_NOBTM
@@ -145,6 +148,9 @@
             <if test="tdyIntadjexpAdd != null" >
                 TDY_INTADJEXP_ADD,
             </if>
+            <if test="tdyLossAmt != null" >
+                TDY_LOSS_AMT,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="valId != null" >
@@ -216,17 +222,20 @@
             <if test="tdyIntadjexpAdd != null" >
                 #{tdyIntadjexpAdd,jdbcType=DECIMAL},
             </if>
+            <if test="tdyLossAmt != null" >
+                #{tdyLossAmt,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbAssetsBasisDataNobtm" >
         insert into CHB_ASSETS_BASIS_DATA_NOBTM(VAL_ID, PROD_ID, ASSET_ID, VALUE_DATE, MDATE, 
         POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, DELAY_PAY_AMT, REMARK, CREATE_TIME, 
         UPDATE_TIME, CREATE_DEPT, ORG_CODE, DEPT_CODE, CREATE_USER, UPDATE_USER, STATUS, 
-        DATA_SOURCE, MD5PRIMARYKEY, CCY, TDY_INTADJEXP_ADD)
+        DATA_SOURCE, MD5PRIMARYKEY, CCY, TDY_INTADJEXP_ADD, TDY_LOSS_AMT)
         select VAL_ID, PROD_ID, ASSET_ID, VALUE_DATE, MDATE, 
             POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, DELAY_PAY_AMT, REMARK, CREATE_TIME, 
             #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT, ORG_CODE, DEPT_CODE, CREATE_USER, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{status,jdbcType=VARCHAR} STATUS, 
-            DATA_SOURCE, MD5PRIMARYKEY, CCY, TDY_INTADJEXP_ADD
+            DATA_SOURCE, MD5PRIMARYKEY, CCY, TDY_INTADJEXP_ADD, TDY_LOSS_AMT
              from CHB_ASSETS_BASIS_DATA_NOBTM
              where STATUS = 'E' and VAL_ID = #{valId,jdbcType=CHAR}
     </insert>
@@ -290,6 +299,9 @@
             <if test="tdyIntadjexpAdd != null" >
                 TDY_INTADJEXP_ADD = #{tdyIntadjexpAdd,jdbcType=DECIMAL},
             </if>
+            <if test="tdyLossAmt != null" >
+                TDY_LOSS_AMT = #{tdyLossAmt,jdbcType=DECIMAL},
+            </if>
         </set>
         where VAL_ID = #{valId,jdbcType=CHAR}
     </update>
@@ -313,7 +325,8 @@
             DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
             MD5PRIMARYKEY = #{md5primarykey,jdbcType=CHAR},
             CCY = #{ccy,jdbcType=VARCHAR},
-            TDY_INTADJEXP_ADD = #{tdyIntadjexpAdd,jdbcType=DECIMAL}
+            TDY_INTADJEXP_ADD = #{tdyIntadjexpAdd,jdbcType=DECIMAL},
+            TDY_LOSS_AMT = #{tdyLossAmt,jdbcType=DECIMAL}
         where VAL_ID = #{valId,jdbcType=CHAR}
     </update>
 </mapper>

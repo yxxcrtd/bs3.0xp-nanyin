@@ -408,10 +408,31 @@ public class PbcPrdBaseinfoSub extends BaseEntity{
      */
     private  String subProdId;
 
+
     /**
      * 定义人行的枚举值
+     * 是否现金管理类
+     *
      */
+    @DictFormat(DictCode.人行是否)
     private String  isMarketFund;
+
+    /**
+     * 以财产权信托名义开展的资金信托标识
+     *
+     */
+    @DictFormat(DictCode.人行是否)
+    private  String zjxtFlag;
+
+    /**
+     * 跨境理财通标识
+     *
+     */
+    @DictFormat(DictCode.人行是否)
+    private  String crossBorderFlag;
+
+    @DictFormat(DictCode.人行是否)
+    private  String cashManaCate;
 
     public String getIsMarketFund() {
         return isMarketFund;
@@ -1462,5 +1483,41 @@ public class PbcPrdBaseinfoSub extends BaseEntity{
 	public void setIssuePartyName(String issuePartyName) {
 		this.issuePartyName = issuePartyName;
 	}
-	
+
+    /**
+     * 产品期次（导出人行excel用）
+     */
+    private String prodStageToString;
+
+    public String getProdStageToString() {
+        return prodStageToString;
+    }
+
+    public void setProdStageToString(String prodStageToString) {
+        this.prodStageToString = prodStageToString;
+    }
+
+    public String getCrossBorderFlag() {
+        return crossBorderFlag;
+    }
+
+    public void setCrossBorderFlag(String crossBorderFlag) {
+        this.crossBorderFlag = crossBorderFlag;
+    }
+
+    public String getZjxtFlag() {
+        return zjxtFlag;
+    }
+
+    public void setZjxtFlag(String zjxtFlag) {
+        this.zjxtFlag = zjxtFlag;
+    }
+
+    public String getCashManaCate() {
+        return cashManaCate;
+    }
+
+    public void setCashManaCate(String cashManaCate) {
+        this.cashManaCate = cashManaCate;
+    }
 }

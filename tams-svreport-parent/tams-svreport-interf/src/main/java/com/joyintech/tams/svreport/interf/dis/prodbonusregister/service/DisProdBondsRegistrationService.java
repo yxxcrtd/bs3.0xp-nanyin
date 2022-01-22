@@ -55,41 +55,50 @@ public  class DisProdBondsRegistrationService extends FileImpService  {
         }
         
         List<DisProdBondsRegistration> dtoList = new ArrayList<DisProdBondsRegistration>();
-        for(Map<String, String> data : listData){
-        	// 解析文件数据到dto
-    		DisProdBondsRegistration dto = new DisProdBondsRegistration();
-            //将map转换为dto
-        	try{
-//        		 dto = dataConversionEntity(data);
-        		dto.setId(IDGenerator.generate(36));//ID主键
-        		dto.setProdId(data.get("PROD_ID"));//产品代码
-        		dto.setBonusRegisterDate(DateUtil.parse(data.get("BONUS_REGISTER_DATE")));//分红登记日
-        		dto.setBonusDealtDate(DateUtil.parse(data.get("BONUS_DEALT_DATE")));//分红下发日
-        		dto.setUnitBonusAmt(new BigDecimal(data.get("UNIT_BONUS_AMT")));//单位分红金额
-        		dto.setInputType("1");//导入方法
-        		dto.setInputUser("interf");//导入用户
-        		dto.setAdapterId("1");//适配器ID
-        		dto.setCreateUser("interf");//创建人
-        		dto.setCreateDept(data.get(""));//创建部门
-//        		dto.setRemark(map.get("REMARK"));//备注
-				if (StringUtil.isNotEmpty(data.get("CREATE_TIME"))) {
-					dto.setCreateTime(DateUtil.parseDate(data.get("CREATE_TIME"),
-							new String[] { DateUtil.DEFAULT_DATETIME_FORMAT_ODS }));
-				} else {
-					dto.setCreateTime(new Date());
-				}
-				if (StringUtil.isNotEmpty(data.get("UPDATE_TIME"))) {
-					dto.setUpdateTime(DateUtil.parseDate(data.get("UPDATE_TIME"),
-							new String[] { DateUtil.DEFAULT_DATETIME_FORMAT_ODS }));
-				} else {
-					dto.setUpdateTime(new Date());
-				}
-                 dtoList.add(dto);
-        	}catch(Exception  e){
-        		logger.error("解析数据错误：",e.getMessage(),e);
-        		return  "fail";
-        	}
-        }
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
+		dtoList = (List<DisProdBondsRegistration>) convertMapToEntity(listData,DisProdBondsRegistration.class);
+		dtoList.stream().forEach(dto->{
+			dto.setId(IDGenerator.generate(36));//ID主键
+			dto.setInputType("1");//导入方法
+			dto.setAdapterId("1");//适配器ID
+		});
+
+//        for(Map<String, String> data : listData){
+//        	// 解析文件数据到dto
+//    		DisProdBondsRegistration dto = new DisProdBondsRegistration();
+//            //将map转换为dto
+//        	try{
+////        		 dto = dataConversionEntity(data);
+//        		dto.setId(IDGenerator.generate(36));//ID主键
+//        		dto.setProdId(data.get("PROD_ID"));//产品代码
+//        		dto.setBonusRegisterDate(DateUtil.parse(data.get("BONUS_REGISTER_DATE")));//分红登记日
+//        		dto.setBonusDealtDate(DateUtil.parse(data.get("BONUS_DEALT_DATE")));//分红下发日
+//        		dto.setUnitBonusAmt(new BigDecimal(data.get("UNIT_BONUS_AMT")));//单位分红金额
+//        		dto.setInputType("1");//导入方法
+//        		dto.setInputUser("interf");//导入用户
+//        		dto.setAdapterId("1");//适配器ID
+//        		dto.setCreateUser("interf");//创建人
+//        		dto.setCreateDept(data.get(""));//创建部门
+////        		dto.setRemark(map.get("REMARK"));//备注
+//				if (StringUtil.isNotEmpty(data.get("CREATE_TIME"))) {
+//					dto.setCreateTime(DateUtil.parseDate(data.get("CREATE_TIME"),
+//							new String[] { DateUtil.DEFAULT_DATETIME_FORMAT_ODS }));
+//				} else {
+//					dto.setCreateTime(new Date());
+//				}
+//				if (StringUtil.isNotEmpty(data.get("UPDATE_TIME"))) {
+//					dto.setUpdateTime(DateUtil.parseDate(data.get("UPDATE_TIME"),
+//							new String[] { DateUtil.DEFAULT_DATETIME_FORMAT_ODS }));
+//				} else {
+//					dto.setUpdateTime(new Date());
+//				}
+//                 dtoList.add(dto);
+//        	}catch(Exception  e){
+//        		logger.error("解析数据错误：",e.getMessage(),e);
+//        		return  "fail";
+//        	}
+//        }
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 end
         //存表
         int success = this.mergeRepProdInfoByPart(dtoList);
         
@@ -172,7 +181,7 @@ public  class DisProdBondsRegistrationService extends FileImpService  {
 	}
 
 	@Override
-	public String importDB(List<Map<String, String>> listData, InterfFile interfFile) {
+	public String importDB(List<Map<String, String>> listData, InterfFile interfFile, String date) {
         String rs = "success";
         // 对数据list进行处理
         if (!CollectionUtils.isEmpty(listData)) {

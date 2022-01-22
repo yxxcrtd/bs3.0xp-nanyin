@@ -44,4 +44,6 @@ public interface AssetTypeSetting001Mapper {
      * @return
      */
     List<AssetTypeSetting001Dto> findExPage (Map<String,Object> params);
+
+    List<AssetTypeSetting001Dto> selectForExport (Map<String,Object> params);
 }

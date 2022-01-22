@@ -777,7 +777,7 @@
         ,sub.INVEST_TRADER_NAME investTraderName
     from CHB_INVEST_TRADE_SUB sub
     left join CHB_PRD_BASEINFO info
-    on sub.prod_id = info.prod_id
+    on sub.prod_id = info.prod_id and info.STATUS='E'
     left join chb_prdresist_code reginfo
     on sub.prod_id = reginfo.prodid
     left join CHB_INVEST_TRADE deal
@@ -885,10 +885,10 @@
     sub.DATA_SOURCE, sub.CREATE_DEPT, sub.DEAL_REGIST_DATE,sub.IS_ASSET_SUB, info.PROD_NAME, sub.PROD_REGIST_CODE,
     deal.INVEST_VARIETY INVEST_VARIETY,deal.dealtype dealtype,sub.ASSET_METHOD,sub.RIVAL_PARTY_TYPE,
     sub.ASSET_METHOD  ASSET_METHOD_NUM ,sub.RIVAL_PARTY_TYPE   RIVAL_PARTY_TYPE_NUM, sub.SUMIT_SEQ
-    ,sub.INVEST_APPROVER_ID investApproverId
-    ,sub.INVEST_APPROVER_NAME investApproverName
-    ,sub.INVEST_TRADER_ID investTraderId
-    ,sub.INVEST_TRADER_NAME investTraderName
+    ,sub.INVEST_APPROVER_ID
+    ,sub.INVEST_APPROVER_NAME
+    ,sub.INVEST_TRADER_ID
+    ,sub.INVEST_TRADER_NAME
     from CHB_INVEST_TRADE_SUB sub
     left join CHB_PRD_BASEINFO info
     on sub.prod_id = info.prod_id

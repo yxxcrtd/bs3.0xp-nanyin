@@ -103,7 +103,7 @@ public class SvrHolidayFileImpService extends FileImpService {
 	}
 
 	@Override
-	public String importDB(List<Map<String, String>> listData,InterfFile interfFile) {
+	public String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date) {
 		String result = "";
 		logger.debug("节假日数据检查---开始-----:" +  df.format(new Date()));
 		@SuppressWarnings("unused")
@@ -134,23 +134,14 @@ public class SvrHolidayFileImpService extends FileImpService {
 			String tmpPath, ImpTable table, ImpTable subTable) {
 		boolean  isSucess=false;
 		// 定义新增数据list-验证通过数据
-		List<MstHoliday> listNE = new ArrayList<MstHoliday>();
+		List<MstHoliday> listNE = null;
 		logger.debug("节假日数据转dto---开始-----:" +  df.format(new Date()));
 		if(holidayList!=null&&holidayList.size()>0){
-			for(Map<String, String> map : holidayList){
-				try{
-					MstHoliday dto = dataConversionEntity(map);
-					listNE.add(dto);
-				}catch(Exception  e){
-					logger.error("读取数据出错:",e.getMessage(),e);
-					isSucess=false;
-				}
-			}
+            listNE = (List<MstHoliday>) convertMapToEntity(holidayList, MstHoliday.class);
 		}
 		logger.debug("节假日数据转dto---结束-----:" +  df.format(new Date()));
 		if (listNE != null && listNE.size() > 0) {
-			// 插入节假日（有就更新没有就插入）
-			isSucess=mergeHoliday(listNE);
+		    isSucess=mergeHoliday(listNE);
 		}
 		return isSucess;
 	}
@@ -246,15 +237,18 @@ public class SvrHolidayFileImpService extends FileImpService {
 	private MstHoliday dataConversionEntity(Map<String, String> map) {
 		MstHoliday dto = new MstHoliday();
 		dto.setCalendarId(map.get("MARKET_CODE"));//日历编号
+		if(dto.getCalendarId() == null){
+			dto.setCalendarId(map.get("CALENDAR_ID"));//日历编号
+		}
 		dto.setCdate(DateUtil.parse(map.get("CDATE")));//日期
 		dto.setCreateDept(map.get("CREATE_DEPT"));//创建部门
 		dto.setCreateTime(DateUtil.parse(map.get("CREATE_TIME")));//创建时间
-		dto.setCreateUser(map.get("CREATE_USER"));//创建人
+		dto.setCreateUser("interf");//创建人
 		if(map.get("IS_HOLIDAY")!=null){
 			dto.setIsHoliday(Long.parseLong(map.get("IS_HOLIDAY")));//是否节假日，0：工作日，1：节假日
 		}
 		dto.setUpdateTime(DateUtil.parse(map.get("UPDATE_TIME")));//更新时间
-		dto.setUpdateUser(map.get("UPDATE_USER"));//更新人
+		dto.setUpdateUser("interf");//更新人
 		return dto;
 	}
 	

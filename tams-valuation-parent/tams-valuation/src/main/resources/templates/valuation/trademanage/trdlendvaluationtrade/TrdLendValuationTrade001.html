@@ -49,10 +49,12 @@
                     <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
                         <label class="layui-form-label form-lable" data-th-text="#{TrdLendValuationTrade001.busiPs}">交易类型</label>
                         <div class="layui-input-inline input-inline">
-                            <select type="text" id="busiPs" name="busiPs" class="layui-input form-input input-select"
+                            <select type="text" id="ps" name="ps" class="layui-input form-input input-select"
                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                data-th-data-result='${BACK_LEND_DIRECTIONS}' allowClear="true" formatoption="true"
-                                data-th-initValue="${entity?.busiPs}"></select>
+                                data-th-data-result='${BACK_LEND_DIRECTIONS}' allowClear="true" formatoption="true" multiple="true"
+                                data-th-initValue="${entity?.ps}">
+
+                            </select>
                         </div>
                     </div>
 

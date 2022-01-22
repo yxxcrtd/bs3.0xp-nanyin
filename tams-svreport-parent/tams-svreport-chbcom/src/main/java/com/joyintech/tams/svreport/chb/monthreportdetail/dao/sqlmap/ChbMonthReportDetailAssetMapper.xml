@@ -130,8 +130,8 @@
             D3.propername reportType3,
             D4.propername reportType4,
             P.PROD_ID prodId,
-            B.PROD_NAME prodName,
-            B.IS_FHXGCP isFhxgcp,
+            PB.PROD_NAME prodName,
+            PB.IS_FHXGCP isFhxgcp,
             P.ASSET_CODE assetCode,
             CASE WHEN P.DETAILNO = 'AMT1_1_1' THEN '现金'
             WHEN B.SUBJECT_NAME IS NULL THEN NVL(I.ASSET_NAME,I.ASSET_CODE)
@@ -140,9 +140,7 @@
             IA.ASSET_NAME oldAssetName,
             NVL(I.VDATE, I.PLAN_SDATE) VDATE,
             NVL(I.MDATE, I.PLAN_EDATE) MDATE,
-            CASE WHEN MP1.Counter_Name is not null then MP1.Counter_Name
-            when MC.CUSTOMER_NAME  is not null then MC.CUSTOMER_NAME
-            else  P.SUBJECT_NAME end   subjectName,
+            NVL(MC.CUSTOMER_NAME, nvl(mp1.COUNTER_NAME,P.SUBJECT_NAME)) subjectName,
             I.asset_yield RATE,
             NVL(P.CCY,'CNY') CCY,
             AP.POS_AMT delayPayAmt,
@@ -189,7 +187,7 @@
             LEFT JOIN CHB_ASSET_INFO I ON P.ASSET_CODE = I.ASSET_CODE
             LEFT JOIN CHB_ASSET_INFO IA ON IA.ASSET_CODE = P.OLD_ASSET_CODE
             LEFT JOIN BOK_SUBJECT B ON B.BOOKSET_ID = '00000000000000000002' AND B.SUBJECT_NO = P.ASSET_CODE
-            LEFT JOIN CHB_PRD_BASEINFO B ON P.PROD_ID = B.PROD_ID
+            LEFT JOIN CHB_PRD_BASEINFO PB ON P.PROD_ID = PB.PROD_ID AND PB.FPROD_ID IS NULL AND PB.STATUS IN ('E','M')
             LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = P.SUBJECT_NAME
             LEFT JOIN CHB_MST_COUNTER_PARTY MP1 ON MP1.COUNTER_ID = P.SUBJECT_NAME
             LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = P.RIVAL_PARTY
@@ -305,9 +303,11 @@
   </delete>
 
     <select id="getCounterList" resultType="com.joyintech.framework.select.SelectOptionDto">
-        SELECT  A.CODE id,A.TRADE_COUNTER text from(
-        SELECT T.PROD_ID||'_'||T.ASSET_CODE CODE,T.DEALDATE,wm_concat(distinct(NVL(MC.CUSTOMER_NAME,nvl(Mp.Counter_Name,T.TRADE_COUNTER)))) TRADE_COUNTER,
-        row_number() over(partition by T.PROD_ID,T.ASSET_CODE order by T.DEALDATE) row_number
+        SELECT  A.CODE id,A.TRADE_COUNTER text,A.COUNTER_ID col,A.LINK_ID parentId from(
+        SELECT T.PROD_ID||'_'||T.ASSET_CODE CODE,
+        DECODE(MP.COUNTER_NAME,NULL,DECODE(MC.CUSTOMER_NAME,NULL,T.TRADE_COUNTER,MC.CUSTOMER_NAME),MP.COUNTER_NAME) TRADE_COUNTER,
+        MP.COUNTER_ID,MP.LINK_ID,
+        row_number() over(partition by T.PROD_ID,T.ASSET_CODE,T.TRADE_COUNTER order by DEALDATE) row_number
         FROM CHB_INVEST_TRADE T
         LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = T.TRADE_COUNTER
         LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = T.TRADE_COUNTER
@@ -320,7 +320,6 @@
                 #{item}
             </foreach>
         </if>
-        group by T.PROD_ID,T.ASSET_CODE,T.DEALDATE
         ) a
         WHERE A.row_number = 1
     </select>
@@ -445,7 +444,7 @@
         BALANCE.O_CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
         FROM BOK_BALANCE BALANCE
         LEFT JOIN CHB_PRD_BASEINFO PRODINFO /*产品要素信息*/
-        on prodinfo.PROD_ID = balance.BOOKSET_ID
+        on prodinfo.PROD_ID = replace(balance.BOOKSET_ID, 'F16_')
         WHERE 1 =1
         AND to_char(BALANCE.BALANCE_DATE,'yyyy-MM-dd') = to_char(#{cdate,jdbcType=DATE},'yyyy-MM-dd')
         and prodinfo.PROFIT_TYPE = '03'/*只取非保本理财产品 */

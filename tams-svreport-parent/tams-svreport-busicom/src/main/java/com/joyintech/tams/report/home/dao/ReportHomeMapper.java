@@ -58,7 +58,7 @@ public interface ReportHomeMapper {
 	 * @return List<String> 
 	 * @version 1.7 2019年5月27日
 	 */
-	List<String> selectMenulist(@Param("svrFlag") String svrFlag,@Param("svrFirstMenuId") String svrFirstMenuId);
+	List<String> selectMenulist(Map<String, Object> param);
 	
 	/**
 	 * @Description 查询投资者身份统计数据
@@ -291,4 +291,34 @@ public interface ReportHomeMapper {
 	 * @version 1.7 2019年6月22日
 	 */
 	List<SubmitInformationRegistrationDto> selectChbG06(Map<String, Object> parmMap);
+
+	/**
+	 * @Description
+	 * @param parmMap
+	 * @return
+	 * @return List<SubmitInformationRegistrationDto>
+	 * @version 1.7 2019年6月22日
+	 */
+	List<SubmitInformationRegistrationDto> selectChbInst(Map<String, Object> parmMap);
+
+	/**
+	 * @Description
+	 * @param parmMap
+	 * @return
+	 * @return List<SubmitInformationRegistrationDto>
+	 * @version 1.7 2019年6月22日
+	 */
+	List<SubmitInformationRegistrationDto> selectChbIder(Map<String, Object> parmMap);
+
+	/**
+	 * @Description
+	 * @param parmMap
+	 * @return
+	 * @return List<SubmitInformationRegistrationDto>
+	 * @version 1.7 2019年6月22日
+	 */
+	List<SubmitInformationRegistrationDto> selectChbIrew(Map<String, Object> parmMap);
+
+
+
 }

@@ -424,7 +424,7 @@ var QueryFunc=function(){
         object.svrBussRepDepositInfoDto.repTargetType = object.svrBussRepDepositInfoDto.repTargetType?object.svrBussRepDepositInfoDto.repTargetType.join(","):'';
         object.svrBussRepDepositInfoDto.repBankName = object.svrBussRepDepositInfoDto.bankName?object.svrBussRepDepositInfoDto.bankName:'';
         object.svrBussRepDepositInfoDto.repBasis = object.svrBussRepDepositInfoDto.basis?object.svrBussRepDepositInfoDto.basis:'';
-
+        object.svrBussRepAssetCreditNonstdInfoDto.repFinancie = $("#svrBussRepAssetCreditNonstdInfoDto_repFinancie").select2('data')[0].text;
         object.pageModel = pageModel;
 
         Joyin.ajaxJson(basePath + 'chb/assetinfodetail/AssetInfoDetail002/check',object,function(result){

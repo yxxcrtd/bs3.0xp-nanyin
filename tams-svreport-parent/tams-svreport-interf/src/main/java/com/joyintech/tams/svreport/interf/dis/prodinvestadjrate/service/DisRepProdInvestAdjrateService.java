@@ -72,17 +72,26 @@ public class DisRepProdInvestAdjrateService extends FileImpService {
         // 解析文件数据到dto
         DisRepProdInvestAdjrate dto = null;
         List<DisRepProdInvestAdjrate> dtoList = new ArrayList<DisRepProdInvestAdjrate>();
-        for(Map<String, String> data : listData){
-            //将map转换为dto
-        	try{
-        		dto = transMap2Dto(data);
-                dtoList.add(dto);
-        	}catch(Exception e){
-        		logger.error("解析数据错误：",e.getMessage(),e);
-           		return  "fail";
-        	}
-            
-        }
+        // modify by convertMapToEntity yangxianjiu 2022-01-19 start
+        dtoList = (List<DisRepProdInvestAdjrate>) convertMapToEntity(listData,DisRepProdInvestAdjrate.class);
+        dtoList.stream().forEach(t->{
+            t.setId(IDGenerator.generate());//ID
+            t.setInputType("");//导入方法
+            t.setInputUser("");//导入用户
+            t.setAdapterId("0");//适配器ID
+        });
+        // modify by convertMapToEntity yangxianjiu 2022-01-19 end
+//        for(Map<String, String> data : listData){
+//            //将map转换为dto
+//        	try{
+//        		dto = transMap2Dto(data);
+//                dtoList.add(dto);
+//        	}catch(Exception e){
+//        		logger.error("解析数据错误：",e.getMessage(),e);
+//           		return  "fail";
+//        	}
+//
+//        }
         //存表
         int success = this.deleteAndInsertRepProdInvestAdjrateByPart(dtoList);
         logger.info("saveData方法成功存入数据到REP_PROD_INVEST_ADJRATE：" + success + "条");
@@ -174,7 +183,7 @@ public class DisRepProdInvestAdjrateService extends FileImpService {
      * {@inheritDoc}
      */
     @Override
-    public String importDB(List<Map<String, String>> dataList, InterfFile interfFile) {
+    public String importDB(List<Map<String, String>> dataList, InterfFile interfFile, String date) {
         String rs = "success";
         // 对数据list进行处理
         if (!CollectionUtils.isEmpty(dataList)) {

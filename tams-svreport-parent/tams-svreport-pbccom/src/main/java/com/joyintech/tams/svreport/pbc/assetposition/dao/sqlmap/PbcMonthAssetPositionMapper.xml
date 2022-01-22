@@ -34,10 +34,12 @@
     <result column="DELAY_PAY_AMT" property="delayPayAmt" jdbcType="DECIMAL" />
     <result column="IS_NEED_REFLECT" property="isNeedReflect" jdbcType="VARCHAR" />
     <result column="PAYDATE" property="payDate" jdbcType="DATE" />
+    <result column="YQ_FLAG" property="yqFlag" jdbcType="VARCHAR" />
+    <result column="RATING" property="rating" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     POSUUID, PRODID, ORG_CODE, POSITION_TYPE, CHL_ID, ASSET_CODE, ASSET_TYPE1, ASSET_TYPE2, 
-    ASSET_TYPE3, STARTDATE, ENDDATE, BOOKDATE, CCY, AMT, INT_AMT, END_DAYS, BAL_FLAG
+    ASSET_TYPE3, STARTDATE, ENDDATE, BOOKDATE, CCY, AMT, INT_AMT, END_DAYS, BAL_FLAG,RATING
   </sql>
   <resultMap id="BaseResultMapAsset" type="com.joyintech.tams.common.base.entity.ChbAssetInfo">
     <id column="ASSET_UUID" jdbcType="CHAR" property="assetUuid" />
@@ -236,13 +238,13 @@
       ASSET_TYPE1, ASSET_TYPE2, ASSET_TYPE3, 
       STARTDATE, ENDDATE, BOOKDATE, 
       CCY, AMT, INT_AMT, END_DAYS, 
-      BAL_FLAG)
+      BAL_FLAG,RATING)
     values (#{posuuid,jdbcType=CHAR}, #{prodid,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
       #{positionType,jdbcType=VARCHAR}, #{chlId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, 
       #{assetType1,jdbcType=VARCHAR}, #{assetType2,jdbcType=VARCHAR}, #{assetType3,jdbcType=VARCHAR}, 
       #{startdate,jdbcType=TIMESTAMP}, #{enddate,jdbcType=TIMESTAMP}, #{bookdate,jdbcType=TIMESTAMP}, 
       #{ccy,jdbcType=VARCHAR}, #{amt,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL}, #{endDays,jdbcType=DECIMAL}, 
-      #{balFlag,jdbcType=VARCHAR})
+      #{balFlag,jdbcType=VARCHAR},#{rating,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto" >
     insert into PBC_MONTH_ASSET_POSITION
@@ -297,6 +299,9 @@
       </if>
       <if test="balFlag != null" >
         BAL_FLAG,
+      </if>
+      <if test="rating != null" >
+        RATING,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -404,6 +409,9 @@
       <if test="balFlag != null" >
         BAL_FLAG = #{balFlag,jdbcType=VARCHAR},
       </if>
+      <if test="rating != null" >
+        RATING = #{rating,jdbcType=VARCHAR},
+      </if>
     </set>
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </update>
@@ -424,7 +432,8 @@
       AMT = #{amt,jdbcType=DECIMAL},
       INT_AMT = #{intAmt,jdbcType=DECIMAL},
       END_DAYS = #{endDays,jdbcType=DECIMAL},
-      BAL_FLAG = #{balFlag,jdbcType=VARCHAR}
+      BAL_FLAG = #{balFlag,jdbcType=VARCHAR},
+      RATING = #{rating,jdbcType=VARCHAR}
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </update>
   
@@ -794,7 +803,7 @@
       balance.BAL_FLAG BAL_FLAG /*余额方向*/
       FROM BOK_BALANCE BALANCE/*科目余额表*/
       LEFT JOIN CHB_PRD_BASEINFO PRODINFO /*产品要素信息*/
-      on prodinfo.PROD_ID = balance.BOOKSET_ID
+      on prodinfo.PROD_ID = replace(balance.BOOKSET_ID,'F16_') and PRODINFO.status in ('E','M')
       LEFT JOIN (
       SELECT
       DISTINCT OPENSCH.OPEN_START OPEN_START,
@@ -843,15 +852,15 @@
         </foreach>
       </if>
     </select>
-    
-    <select id="selectPositionFromValutionSubSystem" parameterType="com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto"
-        resultMap="BaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
+
+  <select id="selectPositionFromValutionSubSystem" parameterType="com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto"
+          resultMap="BaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
         select
         assetinfo.PBC_ASSET_TYPE1 ASSET_TYPE1,
         assetinfo.PBC_ASSET_TYPE2 ASSET_TYPE2,
         assetinfo.PBC_ASSET_TYPE3 ASSET_TYPE3,
         decode(assetinfo.PBC_ASSET_TYPE1,'P05',decode(assetinfo.ASSET_TYPE2,'1901','02','1902','02','01'),
-       '01') POSITION_TYPE,
+        '01') POSITION_TYPE,
         VAL.VALUE_DATE BOOKDATE,/*报表统计日期*/
         VAL.PROD_ID PRODID,/*产品代码*/
         val.ASSET_ID ASSET_CODE,/*资产代码*/
@@ -865,18 +874,57 @@
         assetinfo.rival_party COUNTER_ID,/*交易对手id*/
         nvl(assetinfo.INDUSTRY,assetinfo.INDUSTRY_PBC) INDUSTRY,/*融资人、发行人行业一级类别*/
         assetinfo.PROFIT_TYPE REP_PROFIT_TYPE ,/*项目类收售益权*/
-        '01' IS_NEED_REFLECT/*是否需要映射人行一级二级三级类型*/
+        '01' IS_NEED_REFLECT,/*是否需要映射人行一级二级三级类型*/
+        nvl(bestRatingZx.GRADERESULT,bestRatingZt.GRADERESULT) rating/*债券评级*/
         <if test="isChlBtm ==null or isChlBtm=='01' ">
-		FROM CHB_ASSETS_BASIS_DATA VAL
-		</if>
-		<if test="isChlBtm !=null and isChlBtm=='02' ">
-		FROM CHB_ASSETS_BASIS_DATA_NOBTM VAL
-		</if>
+          FROM CHB_ASSETS_BASIS_DATA VAL
+        </if>
+        <if test="isChlBtm !=null and isChlBtm=='02' ">
+          FROM CHB_ASSETS_BASIS_DATA_NOBTM VAL
+        </if>
         left join chb_asset_info assetinfo
-        on assetinfo.asset_code=VAL.ASSET_ID 
+        on assetinfo.asset_code=VAL.ASSET_ID
         left join chb_prd_baseinfo prodinfo
         on prodinfo.prod_id = val.prod_id
-        where 1 =1 
+        <!--获取债项评级 -->
+        left join (
+        select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
+        SELECT
+        TEMP.GRADERESULT as GRADERESULT,
+        TEMP.OCODE AS OCODE,
+        rank() over (partition by TEMP.OCODE order by rownum) rk
+        FROM (
+        <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper.searchProductRatingSql"/>
+        <!-- add by zhangliang 20210319 start-->
+        AND OTYPE = '02'
+        <!-- add by zhangliang 20210319 end-->
+        )
+        <!--SQL注入 -->
+        <if test="getProductRatingOrderSqlByZx != null and getProductRatingOrderSqlByZx != ''">
+          ${getProductRatingOrderSqlByZx}
+        </if>
+        )t where t.rk = '1'
+        )bestRatingZx on bestRatingZx.OCODE = VAL.asset_id
+        <!--获取主体评级 -->
+        left join(
+        select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
+        SELECT
+        TEMP.GRADERESULT as GRADERESULT,
+        TEMP.OCODE AS OCODE,
+        rank() over (partition by TEMP.OCODE order by rownum) rk
+        FROM(
+        <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper.searchProductRatingSql"/>
+        <!-- add by zhangliang 20210319 start-->
+        AND OTYPE = '01'
+        <!-- add by zhangliang 20210319 end-->
+        )
+        <!--SQL注入 -->
+        <if test="getProductRatingOrderSqlByZt != null and getProductRatingOrderSqlByZt != ''">
+          ${getProductRatingOrderSqlByZt}
+        </if>
+        )t where t.rk = '1'
+        )bestRatingZt on bestRatingZt.OCODE = assetinfo.FINANCIE
+        where 1 =1
         and VAL.VALUE_DATE=#{bookdate,jdbcType=DATE}
         and assetinfo.ASSET_UUID is not null /* 去除头寸表中资产代码匹配不到数据的情况 */
         and prodinfo.PROFIT_TYPE = '03'/*只取非保本理财产品 */
@@ -891,9 +939,9 @@
           </foreach>
         </if>
         <if test="chlId !=null">
-            and VAL.ASSET_ID=#{chlId,jdbcType=VARCHAR}
+          and VAL.ASSET_ID=#{chlId,jdbcType=VARCHAR}
         </if>
-    </select>
+  </select>
     
     <select id="selectPositionFromCashValutionChl" parameterType="com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto"
         resultMap="BaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
@@ -1155,5 +1203,286 @@
 	        </foreach>
         </if>
     </select>
-    
+  <select id="selectJZBalanceByEndDateAndProd" parameterType="java.util.Map"
+          resultMap="BaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
+    WITH TMP AS
+    (SELECT *
+    FROM BOK_SUBJECT A
+    WHERE  A.BOOKSET_ID = '00000000000000000002'
+    <if test='subjectNoList!=null and subjectNoList.size()>0'>
+      <foreach collection="subjectNoList" item="subjectNo" index="index" open="and A.FSUBJECT_ID in (" close=")" separator=",">
+        #{subjectNo,jdbcType=VARCHAR}
+      </foreach>
+    </if>)
+    , yq as(
+    select b.asset_code as asset_code from BOK_BALANCE  BALANCE
+    left join chb_asset_info b
+    on instr(BALANCE.subject_no, b.asset_code) > 0
+    where 1=1
+    <if test='yqSubjectNoList!=null and yqSubjectNoList.size()>0'>
+      <foreach collection="yqSubjectNoList" item="subjectNo" index="index" open="and BALANCE.FSUBJECT_NO in (" close=")" separator=",">
+        #{subjectNo,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    and b.asset_uuid is not null
+    and to_char(balance.BALANCE_DATE,'yyyy-MM-dd') =#{reportEndDate,jdbcType=VARCHAR})
+    SELECT
+    NULL POSUUID,
+    PROD.FINPROD_MARKET_ID PRODID,/*产品代码=科目余额账套id*/
+    NULL ORG_CODE,/*TODO：机构代码取sys_para是否合理*/
+    '03' POSITION_TYPE,/*头寸类型：03科目余额，取配置项*/
+    '999999' CHL_ID ,/*通道代码：无通道默认'999999'*/
+    tmp.fsubject_ID ASSET_CODE,/*资产代码：科目号*/
+    cai.PBC_ASSET_TYPE1 ASSET_TYPE1,/*人行报表资产一级分类根据映射表映射*/
+    cai.PBC_ASSET_TYPE2 ASSET_TYPE2,/*先用资产要素的人行二级分类，后面再根据实际映射赋值*/
+    NULL ASSET_TYPE3,/*人行报表资产三级分类根据映射表映射*/
+    NULL STARTDATE,/*报表开始日*/
+    NULL ENDDATE,/*报表结束日*/
+    NULL BOOKDATE,/*报表统计日期*/
+    BALANCE.B_CCY BCCY,/*本币币种*/
+    BALANCE.B_AMT BAMT,/*本币金额=科目余额.原币余额*/
+    BALANCE.O_CCY OCCY,/*原币币种*/
+    BALANCE.O_AMT OAMT,/*原币金额=科目余额.原币余额*/
+    NULL INT_AMT,/*利息金额*/
+    1 END_DAYS_ONE,/*剩余期限=1*/
+    /*剩余期限=产品剩余期限,封闭式取产品到期日-统计日期，开放式：每日开放1，定期开放=下一开放开始日-统计日期*/
+    decode(decode(proddeclare.REP_OPERATE_MODE,'03','02','04','02','01'),'01',prod.mdate - to_date(#{reportEndDate,jdbcType=VARCHAR},'yyyy-MM-dd'),decode(openrule.OPEN_MODE,'02',1,nvl(OPENPLAN.OPEN_DATE_STR,prod.mdate) - to_date(#{reportEndDate,jdbcType=VARCHAR},'yyyy-MM-dd'))) END_DAYS_PROD,
+    0 END_DAYS_NULL,/*剩余期限=0*/
+    balance.BAL_FLAG BAL_FLAG, /*余额方向*/
+    case when yq.asset_code is null then '01' else '02' end as YQ_FLAG
+    FROM BOK_BALANCE BALANCE/*科目余额表*/
+    LEFT JOIN BOK_BOOKSET BOOKSET /*投资组合关联账套查询相关信息*/
+    ON BOOKSET.BOOKSET_ID = BALANCE.BOOKSET_ID
+    LEFT JOIN FIN_PRODUCT PROD/*标的类金融产品表*/
+    ON PROD.FINPROD_MARKET_ID = BALANCE.BOOKSET_ID
+    LEFT JOIN REP_PROD_DECLARE proddeclare  /*申报表 */
+    ON proddeclare.REP_FINPROD_ID = PROD.Finprod_Id
+    LEFT JOIN FIN_PRODUCT_ADD PRODADD /*产品附属信息表*/
+    ON BALANCE.BOOKSET_ID=PRODADD.PORTFOLIO_ID
+    and prod.finprod_id = PRODADD.Finprod_Id---过滤分档子产品
+    LEFT JOIN FIN_CASH_INFO cashinfo  /* 现金流信息表*/
+    ON cashinfo.FINPROD_ID = prod.FINPROD_ID
+    and cashinfo.cash_type_2 ='C01'
+    AND CASHINFO.FINPROD_TYPE='01'
+    and cashinfo.branch = '0'
+    LEFT JOIN FIN_OPEN_RULE openrule  /* 开放规则表*/
+    ON openrule.CASH_ID = cashinfo.CASH_ID
+    AND OPENRULE.OPEN_TYPE IN ('01','03')/*防止申赎俩条影响*/
+    LEFT JOIN (
+    SELECT
+    OPENSCH.OPEN_DATE_STR OPEN_DATE_STR,
+    OPENSCH.FINPROD_ID FINPROD_ID
+    from (
+    /*下一开放起始日取值逻辑：OPEN_START>报表结束日期，按照OPEN_START升序排序并且去重，取第一个日期，若取不到，则取产品到期日*/
+    SELECT RANK() OVER(PARTITION BY OPLAN.FINPROD_ID ORDER BY OPLAN.FINPROD_ID,OPLAN.OPEN_DATE_STR ASC) RANKNUM,
+    OPLAN.OPEN_DATE_STR OPEN_DATE_STR,
+    oplan.FINPROD_ID FINPROD_ID
+    FROM FIN_OPEN_PLAN OPLAN
+    WHERE OPLAN.BRANCH = 0
+    AND TO_CHAR(OPLAN.OPEN_DATE_STR,'yyyy-MM-dd') &gt; #{reportEndDate,jdbcType=VARCHAR}
+    ) OPENSCH
+    where OPENSCH.ranknum = 1
+    ) OPENPLAN/*开放计划*/
+    ON OPENPLAN.FINPROD_ID = PROD.FINPROD_ID
+    left join CHB_ASSET_INFO cai on instr(BALANCE.subject_no,cai.asset_code) >0
+    inner join tmp
+    on BALANCE.fsubject_no = tmp.subject_no
+    left join yq on cai.asset_code=yq.asset_code
+    WHERE 1 =1
+    /*科目余额.余额日期=报表结束日期*/
+    and to_char(balance.BALANCE_DATE,'yyyy-MM-dd') = #{reportEndDate,jdbcType=VARCHAR}
+    /*标的类金融产品.投管分类=理财产品*/
+    AND PROD.FINPROD_TYPE2 = 'F16'
+    and BOOKSET.ACCT_SUBJECT_TYPE = 'F18'/*取账套表的主体核算类型为F18投资组合*/
+    and prodadd.PROFIT_FLAG = '03'/*只取非保本理财产品 */
+    and prod.p_finprod_id is null---过滤分档子产品
+    AND CAI.ASSET_UUID IS NOT NULL
+    /*科目取初始配置的科目*/
+    <if test='prodList!=null and prodList.size()>0'>
+      and PROD.FINPROD_MARKET_ID in
+      <foreach collection="prodList" item="item" index="index" open="(" separator="," close=")">
+        <if test="(index % 999) == 998">
+          null) OR PROD.FINPROD_MARKET_ID in (
+        </if>
+        #{item}
+      </foreach>
+    </if>
+    union all
+    SELECT
+    NULL POSUUID,
+    PROD.FINPROD_MARKET_ID PRODID,/*产品代码=科目余额账套id*/
+    NULL ORG_CODE,/*TODO：机构代码取sys_para是否合理*/
+    '03' POSITION_TYPE,/*头寸类型：03科目余额，取配置项*/
+    '999999' CHL_ID ,/*通道代码：无通道默认'999999'*/
+    tmp.fsubject_ID ASSET_CODE,/*资产代码：科目号*/
+    cai.PBC_ASSET_TYPE1 ASSET_TYPE1,/*人行报表资产一级分类根据映射表映射*/
+    cai.PBC_ASSET_TYPE2 ASSET_TYPE2,/*人行报表资产二级分类根据映射表映射*/
+    NULL ASSET_TYPE3,/*人行报表资产三级分类根据映射表映射*/
+    NULL STARTDATE,/*报表开始日*/
+    NULL ENDDATE,/*报表结束日*/
+    NULL BOOKDATE,/*报表统计日期*/
+    BALANCE.B_CCY BCCY,/*本币币种*/
+    BALANCE.B_AMT BAMT,/*本币金额=科目余额.原币余额*/
+    BALANCE.O_CCY OCCY,/*原币币种*/
+    BALANCE.O_AMT OAMT,/*原币金额=科目余额.原币余额*/
+    NULL INT_AMT,/*利息金额*/
+    1 END_DAYS_ONE,/*剩余期限=1*/
+    /*剩余期限=产品剩余期限,封闭式取产品到期日-统计日期，开放式：每日开放1，定期开放=下一开放开始日-统计日期*/
+    decode(decode(proddeclare.REP_OPERATE_MODE,'03','02','04','02','01'),'01',prod.mdate - to_date(#{reportEndDate,jdbcType=VARCHAR},'yyyy-MM-dd'),decode(openrule.OPEN_MODE,'02',1,nvl(OPENPLAN.OPEN_DATE_STR,prod.mdate) - to_date(#{reportEndDate,jdbcType=VARCHAR},'yyyy-MM-dd'))) END_DAYS_PROD,
+    0 END_DAYS_NULL,/*剩余期限=0*/
+    balance.BAL_FLAG BAL_FLAG, /*余额方向*/
+    case when yq.asset_code is not null then '01' else '02' end as YQ_FLAG
+    FROM BOK_BALANCE BALANCE/*科目余额表*/
+    LEFT JOIN BOK_BOOKSET BOOKSET /*投资组合关联账套查询相关信息*/
+    ON BOOKSET.BOOKSET_ID = BALANCE.BOOKSET_ID
+    LEFT JOIN FIN_PRODUCT PROD/*标的类金融产品表*/
+    ON PROD.FINPROD_ID = BALANCE.BOOKSET_ID
+    LEFT JOIN REP_PROD_DECLARE proddeclare  /*申报表 */
+    ON proddeclare.REP_FINPROD_ID = PROD.Finprod_Id
+    LEFT JOIN FIN_PRODUCT_ADD PRODADD /*产品附属信息表*/
+    ON BALANCE.BOOKSET_ID=PRODADD.FINPROD_ID
+    and prod.finprod_id = PRODADD.Finprod_Id---过滤分档子产品
+    LEFT JOIN FIN_CASH_INFO cashinfo  /* 现金流信息表*/
+    ON cashinfo.FINPROD_ID = prod.FINPROD_ID
+    and cashinfo.cash_type_2 ='C01'
+    AND CASHINFO.FINPROD_TYPE='01'
+    and cashinfo.branch = '0'
+    LEFT JOIN FIN_OPEN_RULE openrule  /* 开放规则表*/
+    ON openrule.CASH_ID = cashinfo.CASH_ID
+    AND OPENRULE.OPEN_TYPE IN ('01','03')/*防止申赎俩条影响*/
+    LEFT JOIN (
+    SELECT
+    OPENSCH.OPEN_DATE_STR OPEN_DATE_STR,
+    OPENSCH.FINPROD_ID FINPROD_ID
+    from (
+    /*下一开放起始日取值逻辑：OPEN_START>报表结束日期，按照OPEN_START升序排序并且去重，取第一个日期，若取不到，则取产品到期日*/
+    SELECT RANK() OVER(PARTITION BY OPLAN.FINPROD_ID ORDER BY OPLAN.FINPROD_ID,OPLAN.OPEN_DATE_STR ASC) RANKNUM,
+    OPLAN.OPEN_DATE_STR OPEN_DATE_STR,
+    oplan.FINPROD_ID FINPROD_ID
+    FROM FIN_OPEN_PLAN OPLAN
+    WHERE OPLAN.BRANCH = 0
+    AND TO_CHAR(OPLAN.OPEN_DATE_STR,'yyyy-MM-dd') &gt; #{reportEndDate,jdbcType=VARCHAR}
+    ) OPENSCH
+    where OPENSCH.ranknum = 1
+    ) OPENPLAN/*开放计划*/
+    ON OPENPLAN.FINPROD_ID = PROD.FINPROD_ID
+    LEFT JOIN CHB_ASSET_INFO CAI ON INSTR(BALANCE.SUBJECT_NO,CAI.ASSET_CODE) >0
+    inner join tmp
+    on BALANCE.fsubject_no = tmp.subject_no
+    left join yq on cai.asset_code=yq.asset_code
+    WHERE 1 =1
+    /*科目余额.余额日期=报表结束日期*/
+    and to_char(balance.BALANCE_DATE,'yyyy-MM-dd') = #{reportEndDate,jdbcType=VARCHAR}
+    /*标的类金融产品.投管分类=理财产品*/
+    AND PROD.FINPROD_TYPE2 = 'F16'
+    AND BOOKSET.ACCT_SUBJECT_TYPE = 'F16'/*取账套表的主体核算类型为F16净值型产品货币性产品*/
+    and prodadd.PROFIT_FLAG = '03'/*只取非保本理财产品 */
+    and prod.p_finprod_id is null---过滤分档子产品
+    AND CAI.ASSET_UUID IS NOT NULL
+    /*科目取初始配置的科目*/
+    <if test='prodList!=null and prodList.size()>0'>
+      and PROD.FINPROD_MARKET_ID in
+      <foreach collection="prodList" item="item" index="index" open="(" separator="," close=")">
+        <if test="(index % 999) == 998">
+          null) OR PROD.FINPROD_MARKET_ID in (
+        </if>
+        #{item}
+      </foreach>
+    </if>
+  </select>
+  <select id="selectJZBalanceByEndDateAndProdSubSystem" parameterType="java.util.Map"
+          resultMap="BaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
+    WITH TMP AS
+    (SELECT *
+    FROM BOK_SUBJECT A
+    WHERE  A.BOOKSET_ID = '00000000000000000002'
+    <if test='subjectNoList!=null and subjectNoList.size()>0'>
+      <foreach collection="subjectNoList" item="subjectNo" index="index" open="and A.FSUBJECT_ID in (" close=")" separator=",">
+        #{subjectNo,jdbcType=VARCHAR}
+      </foreach>
+    </if>)
+    , yq as(
+    select b.asset_code as asset_code from BOK_BALANCE  BALANCE
+    left join chb_asset_info b
+    on instr(BALANCE.subject_no, b.asset_code) > 0
+    where 1=1
+    <if test='yqSubjectNoList!=null and yqSubjectNoList.size()>0'>
+      <foreach collection="yqSubjectNoList" item="subjectNo" index="index" open="and BALANCE.FSUBJECT_NO in (" close=")" separator=",">
+        #{subjectNo,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    and b.asset_uuid is not null
+    and to_char(balance.BALANCE_DATE,'yyyy-MM-dd') =#{reportEndDate,jdbcType=VARCHAR})
+    SELECT
+    NULL POSUUID,
+    PRODinfo.prod_id PRODID,/*产品代码=科目余额账套id*/
+    NULL ORG_CODE,/*TODO：机构代码取sys_para是否合理*/
+    '03' POSITION_TYPE,/*头寸类型：03科目余额，取配置项*/
+    '999999' CHL_ID ,/*通道代码：无通道默认'999999'*/
+    tmp.fsubject_ID ASSET_CODE,/*资产代码：科目号*/
+    cai.PBC_ASSET_TYPE1 ASSET_TYPE1,/*人行报表资产一级分类根据映射表映射*/
+    cai.PBC_ASSET_TYPE2 ASSET_TYPE2,/*人行报表资产二级分类根据映射表映射*/
+    NULL ASSET_TYPE3,/*人行报表资产三级分类根据映射表映射*/
+    NULL STARTDATE,/*报表开始日*/
+    NULL ENDDATE,/*报表结束日*/
+    NULL BOOKDATE,/*报表统计日期*/
+    BALANCE.B_CCY BCCY,/*本币币种*/
+    BALANCE.B_AMT BAMT,/*本币金额=科目余额.原币余额*/
+    BALANCE.O_CCY OCCY,/*原币币种*/
+    BALANCE.O_AMT OAMT,/*原币金额=科目余额.原币余额*/
+    NULL INT_AMT,/*利息金额*/
+    1 END_DAYS_ONE,/*剩余期限=1*/
+    /*剩余期限=产品剩余期限,01封闭式取产品到期日-统计日期，02开放式：每日开放1，定期开放=下一开放开始日-统计日期*/
+    /*判断每日开放：去开放计划表中找开房计划如果没有找到则为每日开放*/
+    decode(decode(prodinfo.OPERATE_MODE,'01','01','02','01','02'),'01',prodinfo.mdate - to_date(#{reportEndDate,jdbcType=VARCHAR},'yyyy-MM-dd'),decode(nvl(oplan.prod_id,'NOPLAN'),'NOPLAN',1,nvl(OPENPLAN.OPEN_START,prodinfo.mdate) - to_date(#{reportEndDate,jdbcType=VARCHAR},'yyyy-MM-dd'))) END_DAYS_PROD,
+    0 END_DAYS_NULL,/*剩余期限=0*/
+    balance.BAL_FLAG BAL_FLAG, /*余额方向*/
+    case when yq.asset_code is not null then '01' else '02' end as YQ_FLAG
+    FROM BOK_BALANCE BALANCE/*科目余额表*/
+    LEFT JOIN CHB_PRD_BASEINFO PRODINFO /*产品要素信息*/
+    on prodinfo.PROD_ID = balance.BOOKSET_ID
+    LEFT JOIN (
+    SELECT
+    OPENSCH.OPEN_START OPEN_START,
+    OPENSCH.PROD_ID PROD_ID
+    from (
+    /*下一开放起始日取值逻辑：OPEN_START>报表结束日期，按照OPEN_START升序排序并且去重，取第一个日期，若取不到，则取产品到期日*/
+    SELECT RANK() OVER(PARTITION BY OPLAN.PROD_ID ORDER BY OPLAN.OPEN_START ASC) RANKNUM,
+    OPLAN.OPEN_START OPEN_START,
+    oplan.PROD_ID PROD_ID
+    FROM chb_prd_opensch OPLAN
+    WHERE 1 =1
+    AND TO_CHAR(OPLAN.OPEN_START,'yyyy-MM-dd') &gt; #{reportEndDate,jdbcType=VARCHAR}
+    ) OPENSCH
+    where OPENSCH.ranknum = 1
+    ) OPENPLAN/*开放计划*/
+    ON OPENPLAN.PROD_ID = PRODINFO.PROD_ID
+    left join (
+    select prod_id ,
+    rank() over (partition by prod_id order by seqno ) ranknum
+    from chb_prd_opensch
+    )oplan
+    ON oplan.PROD_ID = PRODINFO.PROD_ID
+    and ranknum = 1
+    left join CHB_ASSET_INFO cai on instr(BALANCE.subject_no,cai.asset_code) >0
+    inner join tmp
+    on BALANCE.fsubject_no = tmp.subject_no
+    left join yq on cai.asset_code=yq.asset_code
+    WHERE 1 =1
+    AND CAI.ASSET_UUID IS NOT NULL
+    /*科目余额.余额日期=报表结束日期*/
+    and to_char(balance.BALANCE_DATE,'yyyy-MM-dd') = #{reportEndDate,jdbcType=VARCHAR}
+    and prodinfo.PROFIT_TYPE = '03'/*只取非保本理财产品 */
+    /*科目取初始配置的科目*/
+    <if test='prodList!=null and prodList.size()>0'>
+      and PRODINFO.prod_id in
+      <foreach collection="prodList" item="item" index="index" open="(" separator="," close=")">
+        <if test="(index % 999) == 998">
+          null) OR PRODINFO.prod_id in (
+        </if>
+        #{item}
+      </foreach>
+    </if>
+  </select>
+
 </mapper>

@@ -54,17 +54,20 @@ public  class DisCalendarManagementService extends FileImpService {
         // 解析文件数据到dto
         DisCalendarManagement dto = null;
         List<DisCalendarManagement> dtoList = new ArrayList<DisCalendarManagement>();
-        for(Map<String, String> data : listData){
-            //将map转换为dto
-        	try{
-        		 dto = dataConversionEntity(data);
-                 dtoList.add(dto);
-        	}catch(Exception e){
-				logger.error("解析数据错误：",e.getMessage(),e);
-           		return  "fail";
-			}
-           
-        }
+        // modify by convertMapToEntity yangxianjiu 2022-01-19 start
+        dtoList = (List<DisCalendarManagement>) convertMapToEntity(listData,DisCalendarManagement.class);
+        // modify by convertMapToEntity yangxianjiu 2022-01-19 end
+//        for(Map<String, String> data : listData){
+//            //将map转换为dto
+//        	try{
+//        		 dto = dataConversionEntity(data);
+//                 dtoList.add(dto);
+//        	}catch(Exception e){
+//				logger.error("解析数据错误：",e.getMessage(),e);
+//           		return  "fail";
+//			}
+//
+//        }
         //存表
         int success = this.mergeRepProdInfoByPart(dtoList);
         
@@ -147,7 +150,7 @@ public  class DisCalendarManagementService extends FileImpService {
      * {@inheritDoc}
      */
     @Override
-    public String importDB(List<Map<String, String>> dataList, InterfFile file) {
+    public String importDB(List<Map<String, String>> dataList, InterfFile file, String date) {
         String rs = "success";
         // 对数据list进行处理
         if (!CollectionUtils.isEmpty(dataList)) {

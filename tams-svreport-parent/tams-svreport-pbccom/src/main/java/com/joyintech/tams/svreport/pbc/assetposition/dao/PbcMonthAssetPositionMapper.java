@@ -174,4 +174,14 @@ public interface PbcMonthAssetPositionMapper {
     List<PbcMonthAssetPositionDto> selectPrdfeeByEndDateAndProd(@Param("reportEndDate")String reportEndDate,
     		@Param("prodList")List<String> prodList,@Param("assetList") List<String> assetList,@Param("subjectNoList") List<String> subjectNoList);
 
+	List<PbcMonthAssetPositionDto> selectJZBalanceByEndDateAndProd(@Param("reportEndDate")String reportEndDate,
+																   @Param("prodList")List<String> prodList
+			,@Param("assetList") List<String> assetList,@Param("subjectNoList") List<String> subjectNoList,@Param("yqSubjectNoList") List<String> yqSubjectNoList);
+
+	List<PbcMonthAssetPositionDto> selectJZBalanceByEndDateAndProdSubSystem(@Param("reportEndDate")String reportEndDate,
+																			@Param("prodList")List<String> prodList,@Param("assetList") List<String> assetList
+			,@Param("subjectNoList") List<String> subjectNoList,@Param("yqSubjectNoList") List<String> yqSubjectNoList);
+
+
+
 }

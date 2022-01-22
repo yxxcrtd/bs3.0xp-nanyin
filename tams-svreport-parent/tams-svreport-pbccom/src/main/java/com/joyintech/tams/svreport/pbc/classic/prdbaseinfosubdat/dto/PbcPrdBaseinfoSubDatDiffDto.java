@@ -402,6 +402,22 @@ public class PbcPrdBaseinfoSubDatDiffDto {
      */
     private String datZipCode;
 
+    /**
+     * 跨境理财通标识
+     *
+     */
+    @DictFormat(DictCode.人行是否)
+    private  String crossBorderFlag;
+
+    /**
+     * 以财产权信托名义开展的资金信托标识
+     *
+     */
+    @DictFormat(DictCode.人行是否)
+    private  String zjxtFlag;
+
+
+
     private String pbcProdIdPrd;
 
 
@@ -443,6 +459,9 @@ public class PbcPrdBaseinfoSubDatDiffDto {
     private String 	cashProfCcyPrd;
     private String 	creditTypePrd;
     private String 	creditModePrd;
+    private  String crossBorderFlagPrd;
+    private  String zjxtFlagPrd;
+
 
     private Integer pbcProdIdDiff=0;
     private Integer prodIdDiff=0;
@@ -479,6 +498,8 @@ public class PbcPrdBaseinfoSubDatDiffDto {
     private Integer 	cashProfCcyDiff=0;
     private Integer 	creditTypeDiff=0;
     private Integer 	creditModeDiff=0;
+    private Integer 	crossBorderFlagDiff=0;
+    private Integer 	zjxtFlagDiff=0;
 
 
     public String getProdIdPrd() {
@@ -1585,7 +1606,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setPbcProdIdPrd(String pbcProdIdPrd) {
         this.pbcProdIdPrd = pbcProdIdPrd;
-        
+
     }
 
     public String getIssuePartyIdPrd() {
@@ -1594,7 +1615,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setIssuePartyIdPrd(String issuePartyIdPrd) {
         this.issuePartyIdPrd = issuePartyIdPrd;
-        
+
     }
 
     public String getProdNamePrd() {
@@ -1603,7 +1624,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setProdNamePrd(String prodNamePrd) {
         this.prodNamePrd = prodNamePrd;
-        
+
     }
 
     public String getPbcProdTypePrd() {
@@ -1612,7 +1633,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setPbcProdTypePrd(String pbcProdTypePrd) {
         this.pbcProdTypePrd = pbcProdTypePrd;
-        
+
     }
 
     public String getIvstorientationPrd() {
@@ -1621,7 +1642,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setIvstorientationPrd(String ivstorientationPrd) {
         this.ivstorientationPrd = ivstorientationPrd;
-        
+
     }
 
     public String getProdBrandPrd() {
@@ -1630,7 +1651,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setProdBrandPrd(String prodBrandPrd) {
         this.prodBrandPrd = prodBrandPrd;
-        
+
     }
 
     public BigDecimal getProdStagePrd() {
@@ -1639,7 +1660,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setProdStagePrd(BigDecimal prodStagePrd) {
         this.prodStagePrd = prodStagePrd;
-        
+
     }
 
     public String getProdTypePrd() {
@@ -1648,7 +1669,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setProdTypePrd(String prodTypePrd) {
         this.prodTypePrd = prodTypePrd;
-        
+
     }
 
     public String getRaiseTypePrd() {
@@ -1657,7 +1678,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setRaiseTypePrd(String raiseTypePrd) {
         this.raiseTypePrd = raiseTypePrd;
-        
+
     }
 
     public String getManageTypePrd() {
@@ -1666,7 +1687,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setManageTypePrd(String manageTypePrd) {
         this.manageTypePrd = manageTypePrd;
-        
+
     }
 
     public String getOperateModePrd() {
@@ -1675,7 +1696,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setOperateModePrd(String operateModePrd) {
         this.operateModePrd = operateModePrd;
-        
+
     }
 
     public Date getRaiseVdatePrd() {
@@ -1684,7 +1705,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setRaiseVdatePrd(Date raiseVdatePrd) {
         this.raiseVdatePrd = raiseVdatePrd;
-        
+
     }
 
     public Date getRaiseEnddatePrd() {
@@ -1693,7 +1714,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setRaiseEnddatePrd(Date raiseEnddatePrd) {
         this.raiseEnddatePrd = raiseEnddatePrd;
-        
+
     }
 
     public String getTermRightFlagPrd() {
@@ -1702,7 +1723,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setTermRightFlagPrd(String termRightFlagPrd) {
         this.termRightFlagPrd = termRightFlagPrd;
-        
+
     }
 
     public String getCusRedeemFlagPrd() {
@@ -1711,7 +1732,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setCusRedeemFlagPrd(String cusRedeemFlagPrd) {
         this.cusRedeemFlagPrd = cusRedeemFlagPrd;
-        
+
     }
 
     public String getCreditFlagPrd() {
@@ -1720,7 +1741,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setCreditFlagPrd(String creditFlagPrd) {
         this.creditFlagPrd = creditFlagPrd;
-        
+
     }
 
     public String getInDepCodePrd() {
@@ -1729,7 +1750,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setInDepCodePrd(String inDepCodePrd) {
         this.inDepCodePrd = inDepCodePrd;
-        
+
     }
 
     public String getOutDepCtryPrd() {
@@ -1738,7 +1759,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setOutDepCtryPrd(String outDepCtryPrd) {
         this.outDepCtryPrd = outDepCtryPrd;
-        
+
     }
 
     public String getOutDepNamePrd() {
@@ -1747,7 +1768,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setOutDepNamePrd(String outDepNamePrd) {
         this.outDepNamePrd = outDepNamePrd;
-        
+
     }
 
     public Date getVdatePrd() {
@@ -1756,7 +1777,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setVdatePrd(Date vdatePrd) {
         this.vdatePrd = vdatePrd;
-        
+
     }
 
 
@@ -1774,7 +1795,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setFiduciaryDutyPrd(String fiduciaryDutyPrd) {
         this.fiduciaryDutyPrd = fiduciaryDutyPrd;
-        
+
     }
 
     public String getIsConstractePrd() {
@@ -1783,7 +1804,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setIsConstractePrd(String isConstractePrd) {
         this.isConstractePrd = isConstractePrd;
-        
+
     }
 
     public String getTransferTypePrd() {
@@ -1792,7 +1813,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setTransferTypePrd(String transferTypePrd) {
         this.transferTypePrd = transferTypePrd;
-        
+
     }
 
     public String getTransferType1Prd() {
@@ -1801,7 +1822,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setTransferType1Prd(String transferType1Prd) {
         this.transferType1Prd = transferType1Prd;
-        
+
     }
 
     public String getTransferType2Prd() {
@@ -1810,7 +1831,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setTransferType2Prd(String transferType2Prd) {
         this.transferType2Prd = transferType2Prd;
-        
+
     }
 
     public String getTransferType3Prd() {
@@ -1819,7 +1840,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setTransferType3Prd(String transferType3Prd) {
         this.transferType3Prd = transferType3Prd;
-        
+
     }
 
     public String getRaiseCcyPrd() {
@@ -1828,7 +1849,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setRaiseCcyPrd(String raiseCcyPrd) {
         this.raiseCcyPrd = raiseCcyPrd;
-        
+
     }
 
     public String getCashPrinCcyPrd() {
@@ -1837,7 +1858,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setCashPrinCcyPrd(String cashPrinCcyPrd) {
         this.cashPrinCcyPrd = cashPrinCcyPrd;
-        
+
     }
 
     public String getCashProfCcyPrd() {
@@ -1846,7 +1867,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setCashProfCcyPrd(String cashProfCcyPrd) {
         this.cashProfCcyPrd = cashProfCcyPrd;
-        
+
     }
 
     public String getCreditTypePrd() {
@@ -1855,7 +1876,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setCreditTypePrd(String creditTypePrd) {
         this.creditTypePrd = creditTypePrd;
-        
+
     }
 
     public String getCreditModePrd() {
@@ -1864,7 +1885,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setCreditModePrd(String creditModePrd) {
         this.creditModePrd = creditModePrd;
-        
+
     }
 
     public Integer getPbcProdIdDiff() {
@@ -1873,7 +1894,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setPbcProdIdDiff(Integer pbcProdIdDiff) {
         this.pbcProdIdDiff = pbcProdIdDiff;
-        
+
     }
 
     public Integer getIssuePartyIdDiff() {
@@ -1882,7 +1903,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setIssuePartyIdDiff(Integer issuePartyIdDiff) {
         this.issuePartyIdDiff = issuePartyIdDiff;
-        
+
     }
 
     public Integer getProdNameDiff() {
@@ -1891,7 +1912,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setProdNameDiff(Integer prodNameDiff) {
         this.prodNameDiff = prodNameDiff;
-        
+
     }
 
     public Integer getPbcProdTypeDiff() {
@@ -1900,7 +1921,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setPbcProdTypeDiff(Integer pbcProdTypeDiff) {
         this.pbcProdTypeDiff = pbcProdTypeDiff;
-        
+
     }
 
     public Integer getIvstorientationDiff() {
@@ -1909,7 +1930,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setIvstorientationDiff(Integer ivstorientationDiff) {
         this.ivstorientationDiff = ivstorientationDiff;
-        
+
     }
 
     public Integer getProdBrandDiff() {
@@ -1918,7 +1939,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setProdBrandDiff(Integer prodBrandDiff) {
         this.prodBrandDiff = prodBrandDiff;
-        
+
     }
 
     public Integer getProdStageDiff() {
@@ -1927,7 +1948,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setProdStageDiff(Integer prodStageDiff) {
         this.prodStageDiff = prodStageDiff;
-        
+
     }
 
     public Integer getProdTypeDiff() {
@@ -1936,7 +1957,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setProdTypeDiff(Integer prodTypeDiff) {
         this.prodTypeDiff = prodTypeDiff;
-        
+
     }
 
     public Integer getRaiseTypeDiff() {
@@ -1945,7 +1966,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setRaiseTypeDiff(Integer raiseTypeDiff) {
         this.raiseTypeDiff = raiseTypeDiff;
-        
+
     }
 
     public Integer getManageTypeDiff() {
@@ -1954,7 +1975,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setManageTypeDiff(Integer manageTypeDiff) {
         this.manageTypeDiff = manageTypeDiff;
-        
+
     }
 
     public Integer getOperateModeDiff() {
@@ -1963,7 +1984,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setOperateModeDiff(Integer operateModeDiff) {
         this.operateModeDiff = operateModeDiff;
-        
+
     }
 
     public Integer getRaiseVdate01Diff() {
@@ -1972,7 +1993,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setRaiseVdate01Diff(Integer raiseVdate01Diff) {
         this.raiseVdate01Diff = raiseVdate01Diff;
-        
+
     }
 
     public Integer getRaiseEnddate01Diff() {
@@ -1981,7 +2002,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setRaiseEnddate01Diff(Integer raiseEnddate01Diff) {
         this.raiseEnddate01Diff = raiseEnddate01Diff;
-        
+
     }
 
     public Integer getTermRightFlagDiff() {
@@ -1990,7 +2011,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setTermRightFlagDiff(Integer termRightFlagDiff) {
         this.termRightFlagDiff = termRightFlagDiff;
-        
+
     }
 
     public Integer getCusRedeemFlagDiff() {
@@ -1999,7 +2020,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setCusRedeemFlagDiff(Integer cusRedeemFlagDiff) {
         this.cusRedeemFlagDiff = cusRedeemFlagDiff;
-        
+
     }
 
     public Integer getCreditFlagDiff() {
@@ -2008,7 +2029,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setCreditFlagDiff(Integer creditFlagDiff) {
         this.creditFlagDiff = creditFlagDiff;
-        
+
     }
 
     public Integer getInDepCodeDiff() {
@@ -2017,7 +2038,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setInDepCodeDiff(Integer inDepCodeDiff) {
         this.inDepCodeDiff = inDepCodeDiff;
-        
+
     }
 
     public Integer getOutDepCtryDiff() {
@@ -2026,7 +2047,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setOutDepCtryDiff(Integer outDepCtryDiff) {
         this.outDepCtryDiff = outDepCtryDiff;
-        
+
     }
 
     public Integer getOutDepNameDiff() {
@@ -2035,7 +2056,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setOutDepNameDiff(Integer outDepNameDiff) {
         this.outDepNameDiff = outDepNameDiff;
-        
+
     }
 
     public Integer getVdate01Diff() {
@@ -2044,7 +2065,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setVdate01Diff(Integer vdate01Diff) {
         this.vdate01Diff = vdate01Diff;
-        
+
     }
 
     public Integer getMdate01Diff() {
@@ -2053,7 +2074,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setMdate01Diff(Integer mdate01Diff) {
         this.mdate01Diff = mdate01Diff;
-        
+
     }
 
     public Integer getFiduciaryDutyDiff() {
@@ -2062,7 +2083,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setFiduciaryDutyDiff(Integer fiduciaryDutyDiff) {
         this.fiduciaryDutyDiff = fiduciaryDutyDiff;
-        
+
     }
 
     public Integer getIsConstracteDiff() {
@@ -2071,7 +2092,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setIsConstracteDiff(Integer isConstracteDiff) {
         this.isConstracteDiff = isConstracteDiff;
-        
+
     }
 
     public Integer getTransferTypeDiff() {
@@ -2080,7 +2101,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setTransferTypeDiff(Integer transferTypeDiff) {
         this.transferTypeDiff = transferTypeDiff;
-        
+
     }
 
     public Integer getTransferType1Diff() {
@@ -2089,7 +2110,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setTransferType1Diff(Integer transferType1Diff) {
         this.transferType1Diff = transferType1Diff;
-        
+
     }
 
     public Integer getTransferType2Diff() {
@@ -2098,7 +2119,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setTransferType2Diff(Integer transferType2Diff) {
         this.transferType2Diff = transferType2Diff;
-        
+
     }
 
     public Integer getTransferType3Diff() {
@@ -2107,7 +2128,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setTransferType3Diff(Integer transferType3Diff) {
         this.transferType3Diff = transferType3Diff;
-        
+
     }
 
     public Integer getRaiseCcyDiff() {
@@ -2116,7 +2137,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setRaiseCcyDiff(Integer raiseCcyDiff) {
         this.raiseCcyDiff = raiseCcyDiff;
-        
+
     }
 
     public Integer getCashPrinCcyDiff() {
@@ -2125,7 +2146,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setCashPrinCcyDiff(Integer cashPrinCcyDiff) {
         this.cashPrinCcyDiff = cashPrinCcyDiff;
-        
+
     }
 
     public Integer getCashProfCcyDiff() {
@@ -2134,7 +2155,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setCashProfCcyDiff(Integer cashProfCcyDiff) {
         this.cashProfCcyDiff = cashProfCcyDiff;
-        
+
     }
 
     public Integer getCreditTypeDiff() {
@@ -2143,7 +2164,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setCreditTypeDiff(Integer creditTypeDiff) {
         this.creditTypeDiff = creditTypeDiff;
-        
+
     }
 
     public Integer getCreditModeDiff() {
@@ -2213,5 +2234,53 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setPbcProdIdExternal(String pbcProdIdExternal) {
         this.pbcProdIdExternal = pbcProdIdExternal;
+    }
+
+    public Integer getCrossBorderFlagDiff() {
+        return crossBorderFlagDiff;
+    }
+
+    public void setCrossBorderFlagDiff(Integer crossBorderFlagDiff) {
+        this.crossBorderFlagDiff = crossBorderFlagDiff;
+    }
+
+    public String getCrossBorderFlagPrd() {
+        return crossBorderFlagPrd;
+    }
+
+    public void setCrossBorderFlagPrd(String crossBorderFlagPrd) {
+        this.crossBorderFlagPrd = crossBorderFlagPrd;
+    }
+
+    public String getCrossBorderFlag() {
+        return crossBorderFlag;
+    }
+
+    public void setCrossBorderFlag(String crossBorderFlag) {
+        this.crossBorderFlag = crossBorderFlag;
+    }
+
+    public String getZjxtFlagPrd() {
+        return zjxtFlagPrd;
+    }
+
+    public void setZjxtFlagPrd(String zjxtFlagPrd) {
+        this.zjxtFlagPrd = zjxtFlagPrd;
+    }
+
+    public String getZjxtFlag() {
+        return zjxtFlag;
+    }
+
+    public void setZjxtFlag(String zjxtFlag) {
+        this.zjxtFlag = zjxtFlag;
+    }
+
+    public Integer getZjxtFlagDiff() {
+        return zjxtFlagDiff;
+    }
+
+    public void setZjxtFlagDiff(Integer zjxtFlagDiff) {
+        this.zjxtFlagDiff = zjxtFlagDiff;
     }
 }

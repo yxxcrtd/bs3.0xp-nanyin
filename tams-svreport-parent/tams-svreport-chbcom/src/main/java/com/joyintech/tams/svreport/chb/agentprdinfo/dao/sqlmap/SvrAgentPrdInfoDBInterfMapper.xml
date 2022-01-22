@@ -12,6 +12,8 @@
 		STATUS,
 		DATA_DATE,
 		REMARK,
+		CREATE_DEPT,
+		ORG_CODE,
 		CREATE_USER,
 		CREATE_TIME,
 		UPDATE_USER,
@@ -40,6 +42,8 @@
 		 SUBMIT_FEEDBACK_MSG,
 		 SEND_STATUS,
 		 DATA_DATE,
+		 CREATE_DEPT,
+		 ORG_CODE,
 		 SUBMIT_TIME,
 		 REMARK
 		FROM CHB_AGENT_PRD_SUB
@@ -61,11 +65,11 @@
 	<insert id="insertBatchData" parameterType="com.joyintech.tams.common.base.entity.ChbAgentPrdSub">
 		insert into CHB_AGENT_PRD_SUB(REGIST_SEQNO, AGENT_INSTITUTION_CODE, ISSUE_PARTY_ID, PROD_ID, PROD_NAME,
 		PROD_REGIST_CODE,STATUS,SUMIT_SEQ,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,SEND_STATUS,
-		DATA_DATE,REMARK,CREATE_USER,CREATE_TIME,UPDATE_USER, UPDATE_TIME)
+		CREATE_DEPT,ORG_CODE,DATA_DATE,REMARK,CREATE_USER,CREATE_TIME,UPDATE_USER, UPDATE_TIME)
 		values(
 		#{registSeqno,jdbcType=VARCHAR},#{agentInstitutionCode,jdbcType=VARCHAR},#{issuePartyId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR},#{prodName,jdbcType=VARCHAR},
 		#{prodRegistCode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},#{sumitSeq,jdbcType=VARCHAR},#{chbSubmitDeadline,jdbcType=DATE},#{submitDeadline,jdbcType=DATE},#{sendStatus,jdbcType=VARCHAR},
-		#{dataDate,jdbcType=DATE},#{remark,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},sysdate,#{updateUser,jdbcType=VARCHAR},sysdate)
+		#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},#{dataDate,jdbcType=DATE},#{remark,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},sysdate,#{updateUser,jdbcType=VARCHAR},sysdate)
 	</insert>
 
 </mapper>

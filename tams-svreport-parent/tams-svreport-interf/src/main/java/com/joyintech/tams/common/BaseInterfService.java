@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -40,13 +41,25 @@ public class BaseInterfService extends BaseService  {
 	 * @return
 	 */
 	public String createFileFromEntity(List<String> prodIdlist, String date, String path, String institutionCode) {
-		logger.info("下游数据发布-"+getFileName()+"获取业务Entity开始-------------------");
-		List<? extends BaseEntity> list = getBusEntity(prodIdlist, StringUtil.isEmpty(date) ?new Date(): DateUtil.parse(date), institutionCode, "F");
-		logger.info("下游数据发布-"+getFileName()+"获取业务Entity结束-------------------");
-		// 生成xml文件
-		logger.info("下游数据发布-"+getFileName()+"生成文件开始-------------------------");
-		writeEntityToXmlFile(list, path, date);
-		logger.info("下游数据发布-"+getFileName()+"生成文件结束-------------------------");
+		List<? extends BaseEntity> list = new ArrayList<>();
+		try{
+			logger.info("下游数据发布-"+getFileName()+"获取业务Entity开始-------------------");
+			list = getBusEntity(prodIdlist, StringUtil.isEmpty(date) ?new Date(): DateUtil.parse(date), institutionCode, "F");
+			logger.info("下游数据发布-"+getFileName()+"获取业务Entity结束-------------------");
+		}catch(Exception e){
+			logger.error(e.getMessage(), "下游数据发布-"+getFileName()+"获取业务Entity异常-------------------");
+		}
+		try{
+
+			//所有数据不可包含updateTime.否则下游所有的删除当日数据逻辑均可能失效
+			list.stream().forEach(dto2-> dto2.setUpdateTime(null));
+			// 生成xml文件
+			logger.info("下游数据发布-"+getFileName()+"生成文件开始-------------------------");
+			writeEntityToXmlFile(list, path, date);
+			logger.info("下游数据发布-"+getFileName()+"生成文件结束-------------------------");
+		}catch(Exception e){
+			logger.error(e.getMessage(), "下游数据发布-"+getFileName()+"获取业务Entity异常-------------------");
+		}
 		return "";
 	}
 

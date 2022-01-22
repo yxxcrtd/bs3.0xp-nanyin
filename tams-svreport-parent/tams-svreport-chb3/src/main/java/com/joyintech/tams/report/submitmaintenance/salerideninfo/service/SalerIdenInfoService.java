@@ -4,6 +4,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.dto.SvrAjaxResult;
@@ -56,6 +57,12 @@ public class SalerIdenInfoService extends CommonExportService<SalerIdenInfoDto> 
      * @return
      */
     public AjaxResult saveAndSubmit(SalerIdenInfoDto dto){
+        if(StringUtil.isEmpty(dto.getOrgCode())){
+            dto.setOrgCode(CommonUtil.getOrgCode());
+        }
+        if(StringUtil.isEmpty(dto.getCreateDept())){
+            dto.setCreateDept(CommonUtil.getDeptCode());
+        }
         return restTemplate.postForObject(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/SalerIdenInfo/saveAndSubmit", dto,
                 SvrAjaxResult.class);
@@ -67,6 +74,12 @@ public class SalerIdenInfoService extends CommonExportService<SalerIdenInfoDto> 
      * @return
      */
     public AjaxResult update(SalerIdenInfoDto dto){
+        if(StringUtil.isEmpty(dto.getOrgCode())){
+            dto.setOrgCode(CommonUtil.getOrgCode());
+        }
+        if(StringUtil.isEmpty(dto.getCreateDept())){
+            dto.setCreateDept(CommonUtil.getDeptCode());
+        }
         return restTemplate.postForObject(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/SalerIdenInfo/update", dto,
                 SvrAjaxResult.class);
@@ -197,5 +210,14 @@ public class SalerIdenInfoService extends CommonExportService<SalerIdenInfoDto> 
         List<SelectOptionDto> dtoList = new ArrayList<SelectOptionDto>();
         dtoList = chbSalerIdenInfoMapper.selectSalerOrgCode(map);
         return dtoList;
+    }
+
+    /**
+     * 总部或分支机构编码联想框
+     */
+    public List<SuggestDto> getSalerOrgCode(Map<String, Object> map) {
+        return restTemplate.postForList(
+                SvrServiceApplication.CHB3_SERVICE_NAME + "/SalerIdenInfo/getSalerOrgCode",
+                map, SuggestDto.class);
     }
 }

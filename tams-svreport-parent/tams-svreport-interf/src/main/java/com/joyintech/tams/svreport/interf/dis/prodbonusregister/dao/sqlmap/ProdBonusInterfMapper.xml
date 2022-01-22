@@ -21,15 +21,16 @@
     <select id="select" resultMap="BaseResultMap"  >
         SELECT
         BONUS_PLAN_ID ID,
-        FINPROD_ID PROD_ID,
+        F.FINPROD_MARKET_ID PROD_ID,
         REG_DATE BONUS_REGISTER_DATE,
         BONUS_DATE BONUS_DEALT_DATE,
-        UNIT_BONUS_VLU UNIT_BONUS_AMT
-        FROM
-        PRD_BONUS_PLAN_N
+        DECODE(N.BONU_SCALC_FLAG,'02',N.TOTAL_AMT,N.UNIT_BONUS_VLU) UNIT_BONUS_AMT
+        FROM PRD_BONUS_PLAN_N N
+        LEFT JOIN FIN_PRODUCT F ON N.FINPROD_ID=F.FINPROD_ID
         WHERE 1=1
+        AND BONU_SCALC_FLAG = '01'
         <if test="updatetime != null" >
-            and nvl(UPDATE_TIME,CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+            and nvl(N.UPDATE_TIME,N.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
         </if>
     </select>
 

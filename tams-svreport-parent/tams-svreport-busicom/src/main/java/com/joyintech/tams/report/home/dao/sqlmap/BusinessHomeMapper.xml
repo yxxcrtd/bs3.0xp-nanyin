@@ -22,7 +22,11 @@
 	union all select '16' reportcode,'MST_BOND_CREDIT_RATING' htmlindex from dual
 	union all select '17' reportcode,'MST_CUSTOMER_INFO' htmlindex from dual
 	union all select '18' reportcode,'CHB_CPROD_BALANCE' htmlindex from dual
-	union all select '19' reportcode,'SALE_CUST_SVRREPORT' htmlindex from dual)
+	union all select '19' reportcode,'SALE_CUST_SVRREPORT' htmlindex from dual
+	union all select '42' reportcode,'CHB_SALER_INST_INFO' htmlindex from dual
+	union all select '43' reportcode,'CHB_SALER_IDEN_INFO' htmlindex from dual
+	union all select '44' reportcode,'CHB_SALER_REW_PENA_INFO' htmlindex from dual
+	)
 	<!-- 添加投资者明细信息 -->
 	<!-- union all select '27' reportcode,'CHB_EQUDET' htmlindex from dual) -->
 	select c.htmlindex as interfFileType,
@@ -246,6 +250,9 @@ select count(1) from CHB_INVESTHOLD_INFO
 		union all select '09' reportcode,'CHB_INVEST_TRADE_SUB' htmlindex from dual
 		union all select '10' reportcode,'CHB_BOT_AST_POS_SUB' htmlindex from dual
 		union all select '11' reportcode,'CHB_AST_VAL_SUB' htmlindex from dual
+		union all select '42' reportcode,'CHB_SALER_INST_SUB' htmlindex from dual
+		union all select '43' reportcode,'CHB_SALER_IDEN_SUB' htmlindex from dual
+		union all select '44' reportcode,'CHB_SALER_REW_PENA_SUB' htmlindex from dual
 		<!-- 添加投资者明细信息 -->
 		union all select '29' reportcode,'CHB_EQUDET' htmlindex from dual)
 		select c.htmlindex as interfFileType,

@@ -38,7 +38,7 @@ $(function(){
 				{ title: "数据日期", field: 'statusDate',width:150,type:'datetime',sortField:'statusDate'},
 				{ title: "报送状态", field: 'sendStatusStr',width:150,sortField:'sendStatus'},
 				{ title: '报送日期',field:'submitTime',width:150,type:'datetime',sortField:'submitTime'},
-				{ title: "报送截止日", field: 'pbcSubmitDeadline',width:150, type:'datetime',sortField:'pbcSubmitDeadline'},
+				{ title: "报送截止日", field: 'pbcSubmitDeadline',width:150, type:'date',sortField:'pbcSubmitDeadline'},
 				{ title: "反馈状态", field: 'submitFeedbackStatusStr',width:150,sortField:'submitFeedbackStatus'},
 				{ field: 'pbcProdId',visible:false},
 				{field: 'pbcPoolCode', visible: false},
@@ -86,6 +86,9 @@ $(function(){
 				{ title: "分级产品标识", field: 'isConstracte',width:150,sortField:'isConstracte'},
 				{ title: "收益权转让产品标识", field: 'transferType',width:150,sortField:'transferType'},
 				{ title: "理财产品发起机构标识", field: 'identiFlag',width:150,sortField:'identiFlag'},
+				{ title: "是否现金管理类", field: 'cashManaCate',width:150,sortField:'cashManaCate'},
+                { title: "跨境理财通标识", field: 'crossBorderFlag',width:150,sortField:'crossBorderFlag'},
+                { title: "以财产权信托名义开展的资金信托标识", field: 'zjxtFlag',width:150,sortField:'zjxtFlag'},
 			    {field:'sendStatus', visible:false},
               {field:'status', visible:false},
               {field:'submitFeedbackStatus', visible:false}

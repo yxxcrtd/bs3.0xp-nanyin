@@ -102,7 +102,7 @@ public class SvrCustomerInfoFileImpService extends FileImpService {
 	
 	@SuppressWarnings("unused")
 	@Override
-	public String importDB(List<Map<String, String>> listData, InterfFile fileList) {
+	public String importDB(List<Map<String, String>> listData, InterfFile fileList, String date) {
 		logger.debug("市场机构数据检查---开始-----:" +  df.format(new Date()));
 		List<Map<String, String>> listErrorInfo = checkData(listData, fileList.getFilename(), InterfDefine.市场机构数据.getCode(),InterfDefine.市场机构数据.getCode(), "CUSTOMER_ID");
 		logger.debug("市场机构数据检查----结束-----:" +  df.format(new Date()));
@@ -140,7 +140,10 @@ public class SvrCustomerInfoFileImpService extends FileImpService {
 		// 定义新增数据list-验证通过数据
 		List<MstCustomerInfoAddWithBLOBs> listNE = new ArrayList<MstCustomerInfoAddWithBLOBs >();
 		logger.debug("市场机构数据add表转dto---开始-----:" +  df.format(new Date()));
-		listNE = dataConversionEntity(list);
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
+//		listNE = dataConversionEntity(list);
+		listNE = (List<MstCustomerInfoAddWithBLOBs>) convertMapToEntity(list,MstCustomerInfoAddWithBLOBs.class);
+        // modify by convertMapToEntity yangxianjiu 2022-01-19 end
 		logger.debug("市场机构数据add表转dto---结束-----:" +  df.format(new Date()));
 		if (listNE != null && listNE.size() > 0) {
 			mergeAddData(listNE);
@@ -197,7 +200,12 @@ public class SvrCustomerInfoFileImpService extends FileImpService {
 		// 定义新增数据list
 		List<MstCustomerInfo> listInfoE = new ArrayList<MstCustomerInfo>();
 		logger.debug("市场机构数据info表转dto---开始-----:" +  df.format(new Date()));
-		listInfoE = dataConversionEntityInfo(list);
+//		listInfoE = dataConversionEntityInfo(list);
+        listInfoE = (List<MstCustomerInfo>) convertMapToEntity(list,MstCustomerInfo.class);
+        for(MstCustomerInfo mstCustomerInfo:listInfoE){
+            // 法人
+            mstCustomerInfo.setCustomerType("01");
+        }
 		logger.debug("市场机构数据info表转dto---结束-----:" +  df.format(new Date()));
 		if (listInfoE != null && listInfoE.size() > 0) {
 			mergeInfoData(listInfoE);

@@ -96,8 +96,15 @@ public class ChbProdDeclareFileImpService extends FileImpService{
 	private boolean excuteProdDeclareInfoByStep(List<Map<String, String>> posList, String type, 
 			String tmpPath, ImpTable table,String dataSource,String saveFlag) {
 		// 定义新增数据list-验证不通过数据
-		Map<String,Object> dataMap = convertMapToEntity(posList,dataSource,saveFlag);
-		List<ChbPrdDeclareInfoDto> list = (List<ChbPrdDeclareInfoDto>) dataMap.get("list");
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
+//		Map<String,Object> dataMap = convertMapToEntity(posList,dataSource,saveFlag);
+//		List<ChbPrdDeclareInfoDto> list = (List<ChbPrdDeclareInfoDto>) dataMap.get("list");
+		List<ChbPrdDeclareInfoDto> list = (List<ChbPrdDeclareInfoDto>) convertMapToEntity(posList,ChbPrdDeclareInfoDto.class);
+		list.stream().forEach(dto->{
+//			dto.setDatasource(dataSource);
+			dto.setDeclareUuid(IDGenerator.generate(36));
+		});
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 		if (CollectionUtils.isNotEmpty(list)) {
 			// 先删后插,删除当日接入的持仓数据
 			if (tmpPath == null) {
@@ -111,7 +118,7 @@ public class ChbProdDeclareFileImpService extends FileImpService{
 		return CollectionUtils.isNotEmpty(list);
 	}
 	
-	
+
     /**
      * 将map转换为entity格式
      *
@@ -132,7 +139,7 @@ public class ChbProdDeclareFileImpService extends FileImpService{
 //        	}
         	ChbPrdDeclareInfoDto t = new ChbPrdDeclareInfoDto();
         	t.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-        	
+
             for (String key : map.keySet()) {
             	if(key==null)
             		continue;
@@ -262,7 +269,7 @@ public class ChbProdDeclareFileImpService extends FileImpService{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public String importDB(List<Map<String, String>> dataList,InterfFile file) {
+	public String importDB(List<Map<String, String>> dataList,InterfFile file, String date) {
 		String rs = "success";
 		// 解析文件
 		if(dataList==null){

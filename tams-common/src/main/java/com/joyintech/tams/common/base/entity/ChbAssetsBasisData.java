@@ -106,6 +106,12 @@ public class ChbAssetsBasisData extends BaseEntity {
     private String chlId;
 
     /**
+     * 减值
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal tdyLossAmt;
+
+    /**
      * 取得 主键
      * @return 主键
      */
@@ -393,5 +399,21 @@ public class ChbAssetsBasisData extends BaseEntity {
      */
     public void setChlId(String chlId) {
         this.chlId = chlId == null ? null : chlId.trim();
+    }
+
+    /**
+     * 取得 减值
+     * @return 减值
+     */
+    public BigDecimal getTdyLossAmt() {
+        return tdyLossAmt;
+    }
+
+    /**
+     * 设置 减值
+     * @param tdyLossAmt 减值
+     */
+    public void setTdyLossAmt(BigDecimal tdyLossAmt) {
+        this.tdyLossAmt = tdyLossAmt;
     }
 }

@@ -81,6 +81,8 @@ public class NewPbcMonthReportService {
 
     private final static String SHEET_3_3 = "表3-3资产负债剩余期限";
 
+    private final static String SHEET_4_1 = "表4-1资管产品资产配置情况";
+
     static {
         sheetNames.add(SHEET_1_1);
         sheetNames.add(SHEET_1_2);
@@ -96,6 +98,7 @@ public class NewPbcMonthReportService {
         sheetNames.add(SHEET_3_1);
         sheetNames.add(SHEET_3_2);
         sheetNames.add(SHEET_3_3);
+        sheetNames.add(SHEET_4_1);
     }
 
     @Autowired
@@ -246,7 +249,7 @@ public class NewPbcMonthReportService {
             if(CollectionUtil.isNotEmpty(pbcSendZipDatFiles)){
                 for (PbcSendZipDatFile pbcSendZipDatFile : pbcSendZipDatFiles) {
                     if(pbcSendZipDatFile.getZipSendStatus().equals(DictCodeListExt2.报送状态_接口报送.getValue())
-                     || pbcSendZipDatFile.getZipSendStatus().equals(DictCodeListExt2.报送状态_手工处理.getValue())){
+                            || pbcSendZipDatFile.getZipSendStatus().equals(DictCodeListExt2.报送状态_手工处理.getValue())){
                         noUpdateReport.add(getSheetName(pbcSendZipDatFile.getDatZipDatType()));
                     }
                     map.put(getSheetName(pbcSendZipDatFile.getDatZipDatType()),pbcSendZipDatFile);

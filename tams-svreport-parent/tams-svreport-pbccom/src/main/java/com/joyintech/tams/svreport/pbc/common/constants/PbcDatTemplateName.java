@@ -9,7 +9,7 @@ package com.joyintech.tams.svreport.pbc.common.constants;
  * @修改记录：
  */
 public class PbcDatTemplateName {
-	/**
+    /**
      * 产品基本信息表
      */
     public static final String PBC_DAT_REPORT_PIB= "PIB";
@@ -151,5 +151,13 @@ public class PbcDatTemplateName {
      */
     public static final String PBC_DAT_REPORT_ONEPRD_ASSET_DEBT = "PbcDatReport_OneprdAssetDebt";
 
+    /**
+     * 4-1资管产品资产配置情况
+     */
+    public static final String PBC_DAT_REPORT_4_1 = "PbcDatReport_4_1";
 
+    /**
+     * 4-1资管产品资产配置情况
+     */
+    public static final String PBC_DAT_REPORT_4_1_NAME = "资管产品资产配置情况";
 }

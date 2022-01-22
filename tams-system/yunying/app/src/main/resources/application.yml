@@ -15,7 +15,7 @@ spring:
   thymeleaf:
     cache: false
   profiles:
-    active: allinoneLY
+    active: allinone
   application:
     name: tamsyy-server
     dfstype: 2
@@ -189,7 +189,6 @@ application:
     isExceptionWhenSendTimeout: 01  #中债报送文件发送超时的时候，是否抛出异常
   cache:
     file: classpath:ehcache_app.xml
-  remindPage: report/system/remindMain
   menuType: hover
   sysCode: TAMS
   menuPosition: top
@@ -198,7 +197,7 @@ application:
   minLogo: /image/logos/min-logo.png #系统图标，框架中会根据分辨率自动适配
   leftMenuLogo: /image/logos/left-logo.png #系统图标，框架中会根据分辨率自动适配
   topMenuLogo: /image/logos/top-logo.png #系统图标，框架中会根据分辨率自动适配
-  sessionTimeout: 1800000
+  sessionTimeout: -1
   joyinsso: false
   interfMaxCorePoolSize: 20  #上游接口解析读取文件处理最大线程数
   maxDataCountOneTimeForInvestholdInfo: 50  #上游接口解析读取文件处理中持有信息批量查询单次最大查询主键数（江苏银行50）
@@ -346,16 +345,16 @@ spring:
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.142:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
-    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
+    username: CVR303INIT_TEST1209
+    password: CVR303INIT_TEST1209
+    reportSqlldrDatabaseName: 192.168.60.142:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.60.142:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: CVR30INIT_TEST
-  sqldirpassword: CVR30INIT_TEST
+  sqldiruserName: CVR303INIT_TEST1209
+  sqldirpassword: CVR303INIT_TEST1209
 valinterf:
   hostname: localhost
   port: 28080
@@ -375,37 +374,37 @@ shiro:
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.142:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: CVR303INIT_TEST1209
+    password: CVR303INIT_TEST1209
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.142:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: CVR303INIT_TEST1209
+    password: CVR303INIT_TEST1209
   hostname: localhost
   port: 28080
   contextPath: /interf
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.142:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: CVR303INIT_TEST1209
+    password: CVR303INIT_TEST1209
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.142:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: CVR303INIT_TEST1209
+    password: CVR303INIT_TEST1209
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.142:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: CVR303INIT_TEST1209
+    password: CVR303INIT_TEST1209
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -653,7 +652,7 @@ spring:
     driverClassName: oracle.jdbc.driver.OracleDriver
     username: CVR30INIT_TEST
     password: CVR30INIT_TEST
-    reportSqlldrDatabaseName: 192.168.90.5:1521/orcl
+    reportSqlldrDatabaseName: 192.168.60.142:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
@@ -802,7 +801,7 @@ spring:
     driverClassName: oracle.jdbc.driver.OracleDriver
     username: CVR30INIT_TEST
     password: CVR30INIT_TEST
-    reportSqlldrDatabaseName: 192.168.90.5:1521/orcl
+    reportSqlldrDatabaseName: 192.168.60.142:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver

@@ -168,7 +168,7 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
                     return "fail";
                 }
                 // 文件处理
-                String saveResult = importDB(assetInfoList,interfFile);
+                String saveResult = importDB(assetInfoList,interfFile, currentDate);
                 if ("fail".equals(saveResult)){
                     return "fail";
                 }
@@ -192,7 +192,7 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
 	 * @see com.joyintech.tams.common.FileImpService#saveDataBySteps(java.util.List)
 	 */
     @Override
-    public String importDB(List<Map<String, String>> assetInfoList,InterfFile interfFile){
+    public String importDB(List<Map<String, String>> assetInfoList,InterfFile interfFile, String date){
         // 数据检查
         // 添加待处理的数据
         checkDataCodeCheck(assetInfoList, interfFile.getFilename(), ChbCheckTableInfo.资产要素登记表INFO);
@@ -397,9 +397,9 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
 //            // 资产外部评级
 //            chbAssetInfo.setOutGrade(SysDataUtil.getNameFromDataDict(DictCode.资产评级,chbAssetInfo.getOutGrade()));
             // 创建人
-            chbAssetInfo.setCreateUser(CommonUtil.getUserName());
+            chbAssetInfo.setCreateUser("interf");
 			//更新人
-			chbAssetInfo.setUpdateUser(CommonUtil.getUserName());
+			chbAssetInfo.setUpdateUser("interf");
             // 创建部门
             chbAssetInfo.setCreateDept(CommonUtil.getDeptCode());
             // 部门代码

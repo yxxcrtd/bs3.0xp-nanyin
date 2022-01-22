@@ -142,6 +142,13 @@
         ORG_CODE = #{orgCode,jdbcType=VARCHAR}
     </select>
 
+    <!--	根据内部编号查询姓名-->
+    <select id="getSalerName" parameterType="string" resultType="string">
+        select SALER_NAME from CHB_SALER_IDEN_INFO
+        where
+        SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+    </select>
+
     <!--    删除erro表-->
     <delete id="deleteErroByPrimaryKey" parameterType="java.lang.String" >
         delete from CHB_SALER_REW_PENA_ERRODATA
@@ -161,21 +168,24 @@
     <select id="selectDetail" resultType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto">
         select
         'info'                    as erroOrInfo,
-        SALER_REW_PENA_NO         as salerRewPenaNo,
-        SALER_INST_CODE           as salerInstCode,
-        SALER_INS_NO              as salerInsNo,
-        SALER_REW_PENA_TYEP       as salerRewPenaTyep,
-        SALER_REW_PENA_NAME       as salerRewPenaName,
-        SALER_REW_PENA_COMMENTS   as salerRewPenaComments,
-        SALER_REW_PENA_INST       as salerRewPenaInst,
-        SALER_REW_PENA_INST_NAME  as salerRewPenaInstName,
-        SALER_REW_PENA_START      as salerRewPenaStart,
-        SALER_REW_PENA_END        as salerRewPenaEnd,
-        SALER_COMPLAIN_DETAIL     as salerComplainDetail,
-        SALER_COMPLAIN_RESULT     as salerComplainResult,
-        SALER_COMPLAIN_DATE       as salerComplainDate,
-        STATUS                    as status
-        from CHB_SALER_REW_PENA_INFO
+        A.SALER_REW_PENA_NO         as salerRewPenaNo,
+        A.SALER_INST_CODE           as salerInstCode,
+        A.SALER_INS_NO              as salerInsNo,
+        B.SALER_NAME                as salerName,
+        A.SALER_REW_PENA_TYEP       as salerRewPenaTyep,
+        A.SALER_REW_PENA_NAME       as salerRewPenaName,
+        A.SALER_REW_PENA_COMMENTS   as salerRewPenaComments,
+        A.SALER_REW_PENA_INST       as salerRewPenaInst,
+        A.SALER_REW_PENA_INST_NAME  as salerRewPenaInstName,
+        A.SALER_REW_PENA_START      as salerRewPenaStart,
+        A.SALER_REW_PENA_END        as salerRewPenaEnd,
+        A.SALER_COMPLAIN_DETAIL     as salerComplainDetail,
+        A.SALER_COMPLAIN_RESULT     as salerComplainResult,
+        A.SALER_COMPLAIN_DATE       as salerComplainDate,
+        A.STATUS                    as status
+        from CHB_SALER_REW_PENA_INFO A
+        left join CHB_SALER_IDEN_INFO B
+        on A.SALER_INS_NO = B.SALER_INS_NO
         where
         SALER_REW_PENA_NO = #{salerRewPenaNo,jdbcType=VARCHAR}
     </select>
@@ -206,7 +216,8 @@
         from CHB_SALER_IDEN_INFO
         where 1=1
             <if test="search != null and search != ''">
-                and SALER_INS_NO like concat(concat('%', #{search}),'%')
+                and (SALER_INS_NO like concat(concat('%', #{search}),'%')
+                    or SALER_NAME like concat(concat('%', #{search}),'%'))
             </if>
     </select>
 
@@ -234,7 +245,7 @@
             SALER_REW_PENA_INST, SALER_REW_PENA_INST_NAME, 
             SALER_REW_PENA_START, SALER_REW_PENA_END, SALER_COMPLAIN_DETAIL, 
             SALER_COMPLAIN_RESULT, SALER_COMPLAIN_DATE, 
-            STATUS, DATA_DATE,
+            STATUS, DATA_DATE,CREATE_DEPT,ORG_CODE,
             CREATE_USER, CREATE_TIME, UPDATE_USER, 
             UPDATE_TIME)
         values (#{salerRewPenaNo,jdbcType=VARCHAR}, #{salerInsNo,jdbcType=VARCHAR}, #{salerInstCode,jdbcType=VARCHAR}, 
@@ -242,7 +253,7 @@
             #{salerRewPenaInst,jdbcType=VARCHAR}, #{salerRewPenaInstName,jdbcType=VARCHAR}, 
             #{salerRewPenaStart,jdbcType=DATE}, #{salerRewPenaEnd,jdbcType=DATE}, #{salerComplainDetail,jdbcType=VARCHAR}, 
             #{salerComplainResult,jdbcType=VARCHAR}, #{salerComplainDate,jdbcType=DATE}, 
-            #{status,jdbcType=VARCHAR}, sysdate,
+            #{status,jdbcType=VARCHAR}, sysdate,#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
             #{createUser,jdbcType=VARCHAR}, sysdate, #{updateUser,jdbcType=VARCHAR},
             sysdate)
     </insert>

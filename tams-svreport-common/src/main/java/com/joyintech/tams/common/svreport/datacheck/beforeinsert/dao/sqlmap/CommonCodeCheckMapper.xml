@@ -105,7 +105,8 @@
              A.RAISE_PSTRDATE raisePstrdate,
              A.RAISE_PENDDATE raisePenddate,
              A.OPERATE_MODE operateMode,
-             A.SALE_AREA saleArea
+             A.SALE_AREA saleArea,
+             A.IVSTORIENTATION  ivstorientation
       from
             CHB_PRD_DECLARE_SUB A
          LEFT JOIN CHB_PRDRESIST_CODE B
@@ -202,5 +203,17 @@
 
     <delete id="deleteChbSalerStlDeaErrorDataByTradeNo">
         delete from CHB_SALER_STL_DEA_ERRODATA where TRADE_NO = #{tradeNo}
+    </delete>
+
+    <delete id="deleteChbSalerIdenErrorDataByTradeNo">
+        delete from CHB_SALER_IDEN_ERRODATA where SALER_INS_NO = #{salerInsNo}
+    </delete>
+
+    <delete id="deleteChbSalerInstErrorDataByTradeNo">
+        delete from CHB_SALER_INST_ERRODATA where SALER_ORG_CODE = #{salerOrgCode}
+    </delete>
+
+    <delete id="deleteChbSalerRewErrorDataByTradeNo">
+        delete from CHB_SALER_REW_PENA_ERRODATA where SALER_REW_PENA_NO = #{salerRewPenaNo}
     </delete>
 </mapper>

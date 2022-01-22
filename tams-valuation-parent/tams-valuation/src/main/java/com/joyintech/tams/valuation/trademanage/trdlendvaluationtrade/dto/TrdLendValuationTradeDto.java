@@ -28,6 +28,7 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -146,6 +147,7 @@ public class TrdLendValuationTradeDto extends BaseEntity implements ProcessEntit
      */
     private String trdAcctId;
 
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     @NotEmpty(fieldName = "TrdLendValuationTrade002.tradeId", groups = {ValidateGroupEdit.class})
     public String getTradeId() {
         return tradeId;
@@ -325,247 +327,14 @@ public class TrdLendValuationTradeDto extends BaseEntity implements ProcessEntit
 
 
 
-    /**
-     * 拆借类型
-     */
-    @NotEmpty(fieldName = "TrdLendInvestTrade002.paBussType")
-    private String paBussType;
 
-    /**
-     * 拆借类型
-     */
-    private String paBussTypeText;
 
-    /**
-     * 回购拆借方向
-     */
-    private String busiPsText;
-
-    /**
-     * 币种
-     */
-    private String ccyText;
-
-    /**
-     * 交易日期(文本，导出用)
-     */
-    private String tradeDateText;
-
-    /**
-     * 是否保本
-     */
-    private String isGuarantee;
 
     /**
      * 操作类型
      */
     private String operateType;
 
-    /**
-     * 画面模式
-     */
-    private String pageModel;
-
-    /**
-     * 工作流状态
-     */
-    private String workflowStatus;
-
-    /**
-     * 金融产品交易附属
-     */
-    private TrdProductDealAdd trdProductDealAdd;
-
-    /**
-     * 组合交易
-     */
-    private PtlTrade ptlTrade;
-
-    /**
-     * 金融产品交易扩展
-     */
-    private PaTrdProductDeal paTrdProductDeal;
-
-    /**
-     * 金融产品交易业务流程其他信息
-     */
-    private WflTrdProductDealOth wflTrdProductDealOth;
-
-    /**
-     * 金融产品分类
-     */
-    private FinProductType finProductType;
-
-    /**
-     * 交易类金融产品
-     */
-//    @Valid
-//    private FinTradeProductDto finTradeProduct;
-//
-//    /**
-//     * 划款指令
-//     */
-//    private List<BussTrdTransferOrderDto> bussTrdTransferOrder;
-//
-//    /**
-//     * 人员信息
-//     */
-//    @Valid
-//    private TrdInvestPersonInfo002Dto trdInvestPersonInfo;
-
-    /**
-     * 附件上传
-     */
-    private List<UploadFile> fileArray;
-
-    /**
-     * 委托金额
-     */
-    private BigDecimal entrustNum;
-
-    /**
-     * 委托所输利率
-     */
-    private BigDecimal entrustIntRate;
-
-    /**
-     * 撤销说明
-     */
-    private String revokeReason;
-
-    /**
-     * 组合T日可用现金
-     */
-    private BigDecimal avalibleCash;
-
-
-//    /**
-//     * 风险试算实体类
-//     */
-//    private List<RiskTrialRetDto> riskTrialRetDto;
-//
-//    /**
-//     * 获取 riskTrialRetDto
-//     * @return riskTrialRetDto.
-//     */
-//    public List<RiskTrialRetDto> getRiskTrialRetDto() {
-//        return riskTrialRetDto;
-//    }
-    
-//    /**
-//     * 设置 riskTrialRetDto
-//     * @param riskTrialRetDto riskTrialRetDto
-//     */
-//    public void setRiskTrialRetDto(List<RiskTrialRetDto> riskTrialRetDto) {
-//        this.riskTrialRetDto = riskTrialRetDto;
-//    }
-//    /**
-//     * 取得 交易日期
-//     *
-//     * @return 交易日期
-//     */
-//    @NotEmpty(fieldName = "TrdLendInvestTrade002.tradeDate")
-//    @Override
-//    public Date getTradeDate() {
-//        return super.getTradeDate();
-//    }
-//
-//    /**
-//     * 获取 bussTrdTransferOrder
-//     *
-//     * @return bussTrdTransferOrder
-//     */
-//    public List<BussTrdTransferOrderDto> getBussTrdTransferOrder() {
-//        return bussTrdTransferOrder;
-//    }
-
-//    /**
-//     * 设置 bussTrdTransferOrder
-//     *
-//     * @param bussTrdTransferOrder bussTrdTransferOrder
-//     */
-//    public void setBussTrdTransferOrder(List<BussTrdTransferOrderDto> bussTrdTransferOrder) {
-//        this.bussTrdTransferOrder = bussTrdTransferOrder;
-//    }
-//
-//    /**
-//     * 获取 trdInvestPersonInfo
-//     *
-//     * @return trdInvestPersonInfo
-//     */
-//    public TrdInvestPersonInfo002Dto getTrdInvestPersonInfo() {
-//        return trdInvestPersonInfo;
-//    }
-//
-//    /**
-//     * 设置 trdInvestPersonInfo
-//     *
-//     * @param trdInvestPersonInfo trdInvestPersonInfo
-//     */
-//    public void setTrdInvestPersonInfo(TrdInvestPersonInfo002Dto trdInvestPersonInfo) {
-//        this.trdInvestPersonInfo = trdInvestPersonInfo;
-//    }
-
-    /**
-     * 获取 isExercise
-     *
-     * @return isExercise
-     */
-    public String getIsExercise() {
-        return isExercise;
-    }
-
-    /**
-     * 设置 isExercise
-     *
-     * @param isExercise isExercise
-     */
-    public void setIsExercise(String isExercise) {
-        this.isExercise = isExercise;
-    }
-
-    /**
-     * 是否行权
-     */
-    private String isExercise;
-
-    /**
-     * 获取 validStatus
-     *
-     * @return validStatus
-     */
-    public String getValidStatus() {
-        return validStatus;
-    }
-
-    /**
-     * 设置 validStatus
-     *
-     * @param validStatus validStatus
-     */
-    public void setValidStatus(String validStatus) {
-        this.validStatus = validStatus;
-    }
-
-    /**
-     * 获取 entrustId
-     *
-     * @return entrustId
-     */
-    //huwenbin 指令接收交易录单验证数据已存在流程中
-    @PrimaryKey(PrimaryKey.Field.PK_3)
-    public String getEntrustId() {
-        return entrustId;
-    }
-
-    /**
-     * 设置 entrustId
-     *
-     * @param entrustId entrustId
-     */
-    public void setEntrustId(String entrustId) {
-        this.entrustId = entrustId;
-    }
 
     /**
      * 获取 portfolioId
@@ -624,374 +393,32 @@ public class TrdLendValuationTradeDto extends BaseEntity implements ProcessEntit
     }
 
     /**
-     * 获取 pageModel
-     *
-     * @return pageModel
+     * elementId
      */
-    public String getPageModel() {
-        return pageModel;
+    private String elementId;
+
+    public String getElementId() {
+        return elementId;
     }
 
-    /**
-     * 设置 pageModel
-     *
-     * @param pageModel pageModel
-     */
-    public void setPageModel(String pageModel) {
-        this.pageModel = pageModel;
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
     }
 
+
     /**
-     * 获取 trdProductDealAdd
-     *
-     * @return trdProductDealAdd
+     * 信用拆借交易实体类
      */
-    public TrdProductDealAdd getTrdProductDealAdd() {
-        return trdProductDealAdd;
+    private List<TrdLendValuationTradeDto> selectedItem;
+
+    public List<TrdLendValuationTradeDto> getSelectedItem() {
+        return selectedItem;
     }
 
-    /**
-     * 设置 trdProductDealAdd
-     *
-     * @param trdProductDealAdd trdProductDealAdd
-     */
-    public void setTrdProductDealAdd(TrdProductDealAdd trdProductDealAdd) {
-        this.trdProductDealAdd = trdProductDealAdd;
+    public void setSelectedItem(List<TrdLendValuationTradeDto> selectedItem) {
+        this.selectedItem = selectedItem;
     }
 
-    /**
-     * 获取 ptlTrade
-     *
-     * @return ptlTrade
-     */
-    public PtlTrade getPtlTrade() {
-        return ptlTrade;
-    }
-
-    /**
-     * 设置 ptlTrade
-     *
-     * @param ptlTrade ptlTrade
-     */
-    public void setPtlTrade(PtlTrade ptlTrade) {
-        this.ptlTrade = ptlTrade;
-    }
-
-    /**
-     * 获取 paTrdProductDeal
-     *
-     * @return paTrdProductDeal
-     */
-    public PaTrdProductDeal getPaTrdProductDeal() {
-        return paTrdProductDeal;
-    }
-
-    /**
-     * 设置 paTrdProductDeal
-     *
-     * @param paTrdProductDeal paTrdProductDeal
-     */
-    public void setPaTrdProductDeal(PaTrdProductDeal paTrdProductDeal) {
-        this.paTrdProductDeal = paTrdProductDeal;
-    }
-
-    /**
-     * 获取 paBussType
-     *
-     * @return paBussType
-     */
-    public String getPaBussType() {
-        return paBussType;
-    }
-
-    /**
-     * 设置 paBussType
-     *
-     * @param paBussType paBussType
-     */
-    public void setPaBussType(String paBussType) {
-        this.paBussType = paBussType;
-    }
-
-//    /**
-//     * 获取 finTradeProduct
-//     *
-//     * @return finTradeProduct
-//     */
-//    public FinTradeProductDto getFinTradeProduct() {
-//        return finTradeProduct;
-//    }
-//
-//    /**
-//     * 设置 finTradeProduct
-//     *
-//     * @param finTradeProduct finTradeProduct
-//     */
-//    public void setFinTradeProduct(FinTradeProductDto finTradeProduct) {
-//        this.finTradeProduct = finTradeProduct;
-//    }
-
-    /**
-     * 获取 paBussTypeText
-     *
-     * @return paBussTypeText
-     */
-    public String getPaBussTypeText() {
-        paBussTypeText = SysDataUtil.getNameFromDataDict(DictCode.拆借类型, paBussType);
-        return paBussTypeText;
-    }
-
-//    /**
-//     * 获取 busiPsText
-//     *
-//     * @return busiPsText
-//     */
-//    public String getBusiPsText() {
-//        if (StringUtil.isNotBlank(this.getFinprodType2())) {
-//            busiPsText = SysDataUtil.getNameFromDataDict(DictCode.金融产品类型_投管用,
-//                this.getFinprodType2());
-//        }
-//        // busiPsText = finTradeProduct != null ? SysDataUtil.getNameFromDataDict(
-//        // DictCode.回购拆借方向, finTradeProduct.getBusiPs()) : null;
-//        return busiPsText;
-//    }
-
-    /**
-     * 获取 ccyText
-     *
-     * @return ccyText
-     */
-    public String getCcyText() {
-        ccyText = SysDataUtil.getNameFromDataDict(DictCode.币种, getCcy());
-        return ccyText;
-    }
-
-    /**
-     * 获取 ccyText
-     *
-     * @return validStatusText
-     */
-    public String getValidStatusText() {
-        validStatusText = SysDataUtil.getNameFromDataDict(DictCode.交易流程状态, validStatus);
-        return validStatusText;
-    }
-
-    /**
-     * 获取 isGuarantee
-     *
-     * @return isGuarantee
-     */
-    public String getIsGuarantee() {
-        return isGuarantee;
-    }
-
-    /**
-     * 设置 isGuarantee
-     *
-     * @param isGuarantee isGuarantee
-     */
-    public void setIsGuarantee(String isGuarantee) {
-        this.isGuarantee = isGuarantee;
-    }
-
-    /**
-     * 获取 finProductType
-     *
-     * @return finProductType
-     */
-    public FinProductType getFinProductType() {
-        return finProductType;
-    }
-
-    /**
-     * 设置 finProductType
-     *
-     * @param finProductType finProductType
-     */
-    public void setFinProductType(FinProductType finProductType) {
-        this.finProductType = finProductType;
-    }
-
-    /**
-     * 获取 tradeDateText
-     *
-     * @return tradeDateText.
-     */
-//    public String getTradeDateText() {
-//        tradeDateText = DateUtil.format(getTradeDate());
-//        return tradeDateText;
-//    }
-
-    /**
-     * 设置 validStatusText
-     *
-     * @param validStatusText validStatusText
-     */
-    public void setValidStatusText(String validStatusText) {
-        this.validStatusText = validStatusText;
-    }
-
-    /**
-     * 设置 paBussTypeText
-     *
-     * @param paBussTypeText paBussTypeText
-     */
-    public void setPaBussTypeText(String paBussTypeText) {
-        this.paBussTypeText = paBussTypeText;
-    }
-
-    /**
-     * 设置 busiPsText
-     *
-     * @param busiPsText busiPsText
-     */
-    public void setBusiPsText(String busiPsText) {
-        this.busiPsText = busiPsText;
-    }
-
-    /**
-     * 设置 ccyText
-     *
-     * @param ccyText ccyText
-     */
-    public void setCcyText(String ccyText) {
-        this.ccyText = ccyText;
-    }
-
-    /**
-     * 设置 tradeDateText
-     *
-     * @param tradeDateText tradeDateText
-     */
-    public void setTradeDateText(String tradeDateText) {
-        this.tradeDateText = tradeDateText;
-    }
-
-    /**
-     * 获取 workflowStatus
-     *
-     * @return workflowStatus.
-     */
-    public String getWorkflowStatus() {
-        return workflowStatus;
-    }
-
-    /**
-     * 设置 workflowStatus
-     *
-     * @param workflowStatus workflowStatus
-     */
-    public void setWorkflowStatus(String workflowStatus) {
-        this.workflowStatus = workflowStatus;
-    }
-
-    /**
-     * 获取 wflTrdProductDealOth
-     *
-     * @return wflTrdProductDealOth.
-     */
-    public WflTrdProductDealOth getWflTrdProductDealOth() {
-        return wflTrdProductDealOth;
-    }
-
-    /**
-     * 设置 wflTrdProductDealOth
-     *
-     * @param wflTrdProductDealOth wflTrdProductDealOth
-     */
-    public void setWflTrdProductDealOth(WflTrdProductDealOth wflTrdProductDealOth) {
-        this.wflTrdProductDealOth = wflTrdProductDealOth;
-    }
-
-    /**
-     * 获取 fileArray
-     *
-     * @return fileArray.
-     */
-    public List<UploadFile> getFileArray() {
-        return fileArray;
-    }
-
-    /**
-     * 设置 fileArray
-     *
-     * @param fileArray fileArray
-     */
-    public void setFileArray(List<UploadFile> fileArray) {
-        this.fileArray = fileArray;
-    }
-
-    /**
-     * 获取 entrustNum
-     *
-     * @return entrustNum.
-     */
-    public BigDecimal getEntrustNum() {
-        return entrustNum;
-    }
-
-    /**
-     * 设置 entrustNum
-     *
-     * @param entrustNum entrustNum
-     */
-    public void setEntrustNum(BigDecimal entrustNum) {
-        this.entrustNum = entrustNum;
-    }
-
-    /**
-     * 获取 entrustIntRate
-     *
-     * @return entrustIntRate.
-     */
-    public BigDecimal getEntrustIntRate() {
-        return entrustIntRate;
-    }
-
-    /**
-     * 设置 entrustIntRate
-     *
-     * @param entrustIntRate entrustIntRate
-     */
-    public void setEntrustIntRate(BigDecimal entrustIntRate) {
-        this.entrustIntRate = entrustIntRate;
-    }
-
-    /**
-     * 获取 revokeReason
-     *
-     * @return revokeReason.
-     */
-    public String getRevokeReason() {
-        return revokeReason;
-    }
-
-    /**
-     * 设置 revokeReason
-     *
-     * @param revokeReason revokeReason
-     */
-    public void setRevokeReason(String revokeReason) {
-        this.revokeReason = revokeReason;
-    }
-
-    /**
-     * 获取 avalibleCash
-     *
-     * @return avalibleCash.
-     */
-    public BigDecimal getAvalibleCash() {
-        return avalibleCash;
-    }
-
-    /**
-     * 设置 avalibleCash
-     *
-     * @param avalibleCash avalibleCash
-     */
-    public void setAvalibleCash(BigDecimal avalibleCash) {
-        this.avalibleCash = avalibleCash;
-    }
 
     /**
      * 获取 busiPs
@@ -1000,6 +427,13 @@ public class TrdLendValuationTradeDto extends BaseEntity implements ProcessEntit
      */
     @NotEmpty(fieldName = "TrdLendValuationTrade002.busiPs", groups = {ValidateGroupEdit.class})
     public String getBusiPs() {
+        String busiPs="";
+        if(getPs() != null && getPs().equals("T01")){
+            busiPs="拆入";
+        }
+        if(getPs() != null && getPs().equals("T02")){
+            busiPs="拆出";
+        }
         return busiPs;
     }
 
@@ -1013,20 +447,89 @@ public class TrdLendValuationTradeDto extends BaseEntity implements ProcessEntit
     }
 
     /**
-     * 获取 actPortfolioId
-     *
-     * @return actPortfolioId
+     * 产品类型
      */
-    public String getActPortfolioId() {
-        return actPortfolioId;
+    private String finprodType;
+
+    public String getFinprodType() {
+        return finprodType;
     }
 
-    /**
-     * 设置 actPortfolioId
-     *
-     * @param actPortfolioId actPortfolioId
-     */
-    public void setActPortfolioId(String actPortfolioId) {
-        this.actPortfolioId = actPortfolioId;
+    public void setFinprodType(String finprodType) {
+        this.finprodType = finprodType;
     }
+
+
+    /**
+     * 交易方向
+     */
+    private String ps;
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
+    }
+
+
+    /**
+     * 取得 币种Fmt
+     *
+     * @return 币种
+     */
+    public String getCcyFmt() {
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.币种, ccy))?
+                SysDataUtil.getNameFromDataDict(DictCode.币种, ccy):ccy;
+    }
+    //导出转化交易日
+    private  String tradeDateStr;
+
+    public String getTradeDateStr() {
+        String tradeDateStr=" ";
+        if(getTradeDate() !=null){
+            tradeDateStr=DateUtil.format(getTradeDate());
+        }
+        return tradeDateStr;
+    }
+
+    //导出转化交割日
+    private String settDateStr;
+    public String getSettDateStr(){
+        String settDateStr=" ";
+        if(getSettDate() !=null){
+            settDateStr=DateUtil.format(getSettDate());
+        }
+        return settDateStr;
+    }
+
+    //导出保留小数位
+
+    //本金金额  2位
+    public String getPrinAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getPrinAmt()==null?"0.00":decimalFormat.format(this.getPrinAmt().setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
+
+
+
+    //应计利息 2位
+    public String getIntAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getIntAmt()==null?"0.00":decimalFormat.format(this.getIntAmt().setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
+
+    //结算金额 2位
+    public String getSettleAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getSettleAmt()==null?"0.00":decimalFormat.format(this.getSettleAmt().setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
+
+    //本币交易金额 2位
+    public String getDealAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getDealAmt()==null?"0.00":decimalFormat.format(this.getDealAmt().setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
+
 }

@@ -9,6 +9,7 @@
         <result column="SHORT_LONG_TERM" property="shortLongTerm" jdbcType="VARCHAR" />
         <result column="GRADE_RESULT" property="gradeResult" jdbcType="VARCHAR" />
         <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="SOURCE" property="source" jdbcType="VARCHAR" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
@@ -23,15 +24,16 @@
 
     <select id="select" resultMap="BaseResultMap"  >
         SELECT
-        A.O_CODE SEC_ID,
-        A.GRADE_ORG_ID RATINGORG,
-        A.GRADE_DATE PUBDATE,
-        A.O_TYPE RATINGTYPE,
-        A.SHORT_LONG_TERM RATINGSUBTYPE,
-        A.GRADE_RESULT RATING,
+        A.O_CODE O_CODE,
+        A.GRADE_ORG_ID GRADE_ORG_ID,
+        A.GRADE_DATE GRADE_DATE,
+        A.O_TYPE O_TYPE,
+        A.SHORT_LONG_TERM SHORT_LONG_TERM,
+        A.GRADE_RESULT GRADE_RESULT,
         'wind' SOURCE ,
         B.IS_RECOMMAND,
         'interf' CREATE_USER,
+        'wind' SOURCE,
         A.CREATE_DEPT,
         A.CREATE_TIME,
         'interf' UPDATE_USER,

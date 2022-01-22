@@ -78,7 +78,7 @@
         null                         as salerOtherCredentName,
         null                         as salerCredentNo,
         null                         as salerAreaType,
-        null                         as salerOrgCode,
+        erro.SALER_ORG_CODE          as salerOrgCode,
         null                         as salerDept,
         null                         as salerPosition,
         null                         as salerEduLevel,
@@ -112,6 +112,9 @@
         </if>
         <if test="salerCredentType != null and salerCredentType != ''">
             and erro.SALER_CREDENT_TYPE = #{salerCredentType,jdbcType=VARCHAR}
+        </if>
+        <if test="salerOrgCode != null and salerOrgCode != ''">
+            and erro.SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
         </if>
 
         UNION ALL
@@ -162,6 +165,9 @@
         </if>
         <if test="salerCredentType != null and salerCredentType != ''">
             and info.SALER_CREDENT_TYPE = #{salerCredentType,jdbcType=VARCHAR}
+        </if>
+        <if test="salerOrgCode != null and salerOrgCode != ''">
+            and info.SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
         </if>
         ) ORDER BY status DESC
     </select>
@@ -242,6 +248,22 @@
         )
     </select>
 
+    <!--    总部或分支机构编码联想框-->
+    <select id="getSalerOrgCode" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT
+        distinct(SALER_ORG_CODE)  code,
+        SALER_ORG_NAME  name,
+        SALER_ORG_NAME  shortName,
+        SALER_ORG_CODE  hidCode
+        FROM CHB_SALER_INST_INFO
+        <where>
+            <if test="salerOrgCode != null and salerOrgCode != ''">
+                AND	(SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
+                OR SALER_INST_NAME  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%')))
+            </if>
+        </where>
+    </select>
+
 <!--    根据主键删除-->
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
         delete from CHB_SALER_IDEN_INFO
@@ -265,7 +287,7 @@
             SALER_START_YMD, SALER_LEVLE, SALER_CERTIFICATE_TYPE, 
             SALER_CHB_TRAIN_NO, SALER_RISK_LEVEL, SALER_QUALIFICATION, 
             SALER_TEL, SALER_MOBILE, SALER_MAIL, 
-            SALER_STATUS, REMARK, STATUS, 
+            SALER_STATUS, REMARK, STATUS, CREATE_DEPT,ORG_CODE,
             DATA_DATE, CREATE_USER, CREATE_TIME, 
             UPDATE_USER, UPDATE_TIME)
         values (#{salerInsNo,jdbcType=VARCHAR}, #{salerRegistNo,jdbcType=VARCHAR}, #{salerInstCode,jdbcType=VARCHAR}, 
@@ -277,7 +299,7 @@
             #{salerStartYmd,jdbcType=VARCHAR}, #{salerLevle,jdbcType=VARCHAR}, #{salerCertificateType,jdbcType=VARCHAR}, 
             #{salerChbTrainNo,jdbcType=VARCHAR}, #{salerRiskLevel,jdbcType=VARCHAR}, #{salerQualification,jdbcType=VARCHAR}, 
             #{salerTel,jdbcType=VARCHAR}, #{salerMobile,jdbcType=VARCHAR}, #{salerMail,jdbcType=VARCHAR}, 
-            #{salerStatus,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+            #{salerStatus,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
             sysdate, #{createUser,jdbcType=VARCHAR}, sysdate,
             #{updateUser,jdbcType=VARCHAR}, sysdate)
     </insert>
