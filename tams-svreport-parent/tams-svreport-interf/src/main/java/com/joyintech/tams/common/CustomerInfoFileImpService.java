@@ -79,7 +79,7 @@ public class CustomerInfoFileImpService extends AbstractFileImpService {
 			@SuppressWarnings("unchecked")
 			List<Map<String, String>> dataList = (List<Map<String, String>>) parseResult.get("dataList");
 			// 移除文件
-			success = svrCustomerInfoFileImpService.importDB(dataList, interfFile);
+			success = svrCustomerInfoFileImpService.importDB(dataList, interfFile, currentDate);
 			interfFile.setMoveRemovePath(success);
 			svrCustomerInfoFileImpService.clearFile(interfFile);
 		}

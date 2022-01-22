@@ -244,7 +244,7 @@ public class SvrMstExchangeQuoteFileImpService extends FileImpService {
     }
 
     @Override
-    public String importDB(List<Map<String, String>> mstExchargeQuoteList, InterfFile interfFile) {
+    public String importDB(List<Map<String, String>> mstExchargeQuoteList, InterfFile interfFile, String date) {
 
         //待入库为空则直接返回
         if (CollectionUtils.isEmpty(mstExchargeQuoteList)){

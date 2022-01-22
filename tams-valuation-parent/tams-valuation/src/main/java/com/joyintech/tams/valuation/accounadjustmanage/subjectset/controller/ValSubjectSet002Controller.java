@@ -10,6 +10,17 @@
 
 package com.joyintech.tams.valuation.accounadjustmanage.subjectset.controller;
 
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.valuation.accounadjustmanage.assistaccout.dto.ValAssistHandDto;
+import com.joyintech.tams.valuation.accounadjustmanage.assistaccout.service.ValAssistAccounting001Service;
+import com.joyintech.tams.valuation.accounadjustmanage.subjectset.dto.ValBokSubjectDto;
+import com.joyintech.tams.valuation.accounadjustmanage.subjectset.service.ValSubjectSet001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,15 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.common.base.dao.BokSubjectMapper;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.valuation.accounadjustmanage.subjectset.dto.ValBokSubjectDto;
-import com.joyintech.tams.valuation.accounadjustmanage.subjectset.service.ValSubjectSet001Service;
+import java.util.List;
 
 /**
  * 模板示例<br>
@@ -47,7 +50,8 @@ public class ValSubjectSet002Controller extends BaseController {
      */
     @Autowired
     private ValSubjectSet001Service valSubjectSet001Service;
-
+    @Autowired
+    private ValAssistAccounting001Service valAssistAccounting001Service;
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
@@ -55,12 +59,26 @@ public class ValSubjectSet002Controller extends BaseController {
 //    private BokSubjectMapper valBokSubjectMapper;
     @Override
     public String init(Model model) {
-        this.setSelectOptionToModel(model, DictCode.余额方向, DictCode.是否, DictCode.科目类型);
+        this.setSelectOptionToModel(model, DictCode.余额方向, DictCode.是否, DictCode.科目类型,DictCode.币种,
+                DictCode.辅助核算_证券大类,DictCode.辅助核算_证券分类,DictCode.辅助核算_交易市场,DictCode.辅助核算_发行方式,DictCode.辅助核算_交易对手类型,
+                DictCode.辅助核算_账户类型,DictCode.辅助核算_费用类型,DictCode.辅助核算_交易属性,DictCode.辅助核算_税费类型
+        );
         String booksetId = getParam("booksetId");
         String subjectNo = getParam("subjectNo");
         if (StringUtil.isNotEmpty(booksetId) && StringUtil.isNotEmpty(subjectNo)) {
             ValBokSubjectDto valBokSubjectDto = valSubjectSet001Service.selectValBokSubject(
                 booksetId, subjectNo);
+//            ValAssistHandDto dto=new ValAssistHandDto();
+//            dto.setBooksetId(valBokSubjectDto.getBooksetId());
+//            dto.setSubjectInternalCode(valBokSubjectDto.getSubjectInternalCode());
+//            dto.setStatus("Y");
+//            List<ValAssistHandDto> hands=valAssistAccounting001Service.findHandsByCondition(dto);
+//            String handstr="";
+//            hands.forEach(i->{
+//                handstr=handstr+i.getHandCode();
+//            });
+//            valBokSubjectDto.setHands(handstr);
+
             model.addAttribute("entity", valBokSubjectDto);
         }
         return super.init(model);
@@ -95,7 +113,9 @@ public class ValSubjectSet002Controller extends BaseController {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
-        
+        //处理辅助核算项
+
+
         valSubjectSet001Service.save(dto);
 //        if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
 //            valBokSubjectMapper.updateByPrimaryKey(dto);
@@ -104,5 +124,11 @@ public class ValSubjectSet002Controller extends BaseController {
 //            valBokSubjectMapper.insert(dto);
 //        }
         return new AjaxResult(getMessage("COMMON_I_0011"));
+    }
+
+    @ResponseBody
+    @RequestMapping("findHandsByCondition")
+    public List<ValAssistHandDto> findHandsByCondition() {
+        return valAssistAccounting001Service.findHandsByCondition(RequestUtil.getPageParam());
     }
 }

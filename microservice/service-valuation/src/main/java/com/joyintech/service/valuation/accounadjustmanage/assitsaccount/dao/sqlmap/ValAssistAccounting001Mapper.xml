@@ -60,28 +60,66 @@
             order by BSIH.HAND_CODE
     </select>
 
-    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.service.valuation.accounadjustmanage.assitsaccount.dto.ValAssistAccounting002Dto" >
-        update BOK_SUBJECT_INTERNAL_HAND
-        <set >
-            <if test="status != null" >
-                STATUS = #{status,jdbcType=VARCHAR},
-            </if>
-            <if test="updateUser != null" >
-                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            </if>
-            <if test="updateTime != null" >
-                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            </if>
-        </set>
-        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
-        and SUBJECT_INTERNAL_CODE=#{subjectInternalCode,jdbcType=VARCHAR}
-        <if test="handcodeArr != null and handcodeArr.length > 0">
-            and HAND_CODE IN
-            <foreach collection="handcodeArr" item="handcode" open="( " close=" )" separator=",">
-                #{handCode}
-            </foreach>
+    <select id="findHandsByCondition"
+            resultType="com.joyintech.service.valuation.accounadjustmanage.assitsaccount.dto.ValAssistHandDto">
+
+        SELECT BSIH.HAND_CODE, SD.DICT_CNNAME AS HAND_NAME,BSIH.STATUS
+        FROM BOK_SUBJECT_INTERNAL_HAND BSIH
+        LEFT JOIN SYS_DATADICT SD
+        ON BSIH.HAND_CODE = SD.DICT_CODE
+        where 1=1
+        <if test="booksetId != null and booksetId != ''">
+            AND BSIH.BOOKSET_ID=#{booksetId}
         </if>
-    </update>
+        <if test="subjectInternalCode != null and subjectInternalCode != ''">
+            AND BSIH.SUBJECT_INTERNAL_CODE=#{subjectInternalCode}
+        </if>
+        <if test="status != null and status != ''">
+            AND BSIH.STATUS=#{status}
+        </if>
+        order by BSIH.HAND_CODE
+    </select>
+
+    <insert id="mergeSubjectHands" parameterType="com.joyintech.service.valuation.accounadjustmanage.assitsaccount.dto.ValAssistHandDto" >
+        MERGE INTO BOK_SUBJECT_INTERNAL_HAND bbd using (
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+                 close="from dual)">
+            #{item.booksetId,jdbcType=VARCHAR} BOOKSET_ID,
+            #{item.subjectInternalCode,jdbcType=VARCHAR} SUBJECT_INTERNAL_CODE,
+            #{item.handCode,jdbcType=VARCHAR} HAND_CODE,
+            #{item.status,jdbcType=VARCHAR} STATUS,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+        </foreach>
+        ) datas on (bbd.BOOKSET_ID = datas.BOOKSET_ID and bbd.SUBJECT_INTERNAL_CODE = datas.SUBJECT_INTERNAL_CODE AND bbd.HAND_CODE=datas.HAND_CODE)
+        WHEN MATCHED THEN
+        UPDATE set bbd.UPDATE_TIME = SYSDATE,bbd.UPDATE_USER = datas.UPDATE_USER,bbd.STATUS=datas.STATUS
+        WHEN NOT MATCHED THEN
+        INSERT (
+        BOOKSET_ID,
+        SUBJECT_INTERNAL_CODE,
+        HAND_CODE,
+        STATUS,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME)
+        VALUES (
+        datas.BOOKSET_ID,
+        datas.SUBJECT_INTERNAL_CODE,
+        datas.HAND_CODE,
+        datas.STATUS,
+        datas.CREATE_USER,
+        datas.CREATE_DEPT,
+        datas.CREATE_TIME,
+        datas.UPDATE_USER,
+        datas.UPDATE_TIME
+        )
+    </insert>
 
 
     <insert id="mergeSubjectRule"  parameterType="com.joyintech.service.valuation.accounadjustmanage.assitsaccount.dto.ValAssistAccounting002Dto">
@@ -92,7 +130,7 @@
             #{booksetId,jdbcType=VARCHAR} BOOKSET_ID,
             #{subjectInternalCode,jdbcType=VARCHAR} SUBJECT_INTERNAL_CODE,
             #{genDetsubRule,jdbcType=VARCHAR} GEN_DETSUB_RULE,
-            #{autoLevel,jdbcType=VARCHAR} AUTO_LEVEL,
+            #{subjectLevel,jdbcType=VARCHAR} AUTO_LEVEL,
             #{createUser,jdbcType=VARCHAR} CREATE_USER,
             sysdate CREATE_TIME,
             #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
@@ -102,7 +140,7 @@
 
         ) TEMP
         <!-- 业务主键匹配 -->
-        ON (CII.BOOKSET_ID = TEMP.BOOKSET_ID AND CII.GEN_DETSUB_RULE = TEMP.GEN_DETSUB_RULE )
+        ON (CII.BOOKSET_ID = TEMP.BOOKSET_ID AND CII.SUBJECT_INTERNAL_CODE = TEMP.SUBJECT_INTERNAL_CODE )
         <!-- 匹配到则更新 -->
         WHEN MATCHED THEN
         UPDATE

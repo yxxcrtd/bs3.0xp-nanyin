@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSalerRewPenaErrodataMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbSalerRewPenaErrodata" >
+        <result column="SALER_REW_PENA_NO" property="salerRewPenaNo" jdbcType="VARCHAR" />
+        <result column="SALER_INS_NO" property="salerInsNo" jdbcType="VARCHAR" />
+        <result column="SALER_REW_PENA_TYEP" property="salerRewPenaTyep" jdbcType="VARCHAR" />
+        <result column="SALER_REW_PENA_INST" property="salerRewPenaInst" jdbcType="VARCHAR" />
+        <result column="SALER_REW_PENA_START" property="salerRewPenaStart" jdbcType="DATE" />
+        <result column="SALER_COMPLAIN_DATE" property="salerComplainDate" jdbcType="DATE" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="DATA_DATE" property="dataDate" jdbcType="DATE" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.ChbSalerRewPenaErrodataWithBLOBs" extends="BaseResultMap" >
+        <result column="ORG_DATA" property="orgData" jdbcType="CLOB" />
+        <result column="ERR_MSG" property="errMsg" jdbcType="CLOB" />
+    </resultMap>
+    <sql id="Blob_Column_List" >
+        ORG_DATA, ERR_MSG
+    </sql>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_SALER_REW_PENA_ERRODATA
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into CHB_SALER_REW_PENA_ERRODATA(SALER_REW_PENA_NO, SALER_INS_NO, SALER_REW_PENA_TYEP, 
+        SALER_REW_PENA_INST, SALER_REW_PENA_START, SALER_COMPLAIN_DATE, STATUS, DATA_DATE, 
+        WORKFLOW_ID, CREATE_DEPT, ORG_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        ORG_DATA, ERR_MSG)
+        select SALER_REW_PENA_NO, SALER_INS_NO, SALER_REW_PENA_TYEP, 
+            SALER_REW_PENA_INST, SALER_REW_PENA_START, SALER_COMPLAIN_DATE, #{status,jdbcType=VARCHAR} STATUS, DATA_DATE, 
+            #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_DEPT, ORG_CODE, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            ORG_DATA, ERR_MSG
+             from CHB_SALER_REW_PENA_ERRODATA
+             where STATUS = 'E' and WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSalerRewPenaErrodataWithBLOBs" >
+        update CHB_SALER_REW_PENA_ERRODATA
+        <set >
+            <if test="salerRewPenaNo != null" >
+                SALER_REW_PENA_NO = #{salerRewPenaNo,jdbcType=VARCHAR},
+            </if>
+            <if test="salerInsNo != null" >
+                SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRewPenaTyep != null" >
+                SALER_REW_PENA_TYEP = #{salerRewPenaTyep,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRewPenaInst != null" >
+                SALER_REW_PENA_INST = #{salerRewPenaInst,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRewPenaStart != null" >
+                SALER_REW_PENA_START = #{salerRewPenaStart,jdbcType=DATE},
+            </if>
+            <if test="salerComplainDate != null" >
+                SALER_COMPLAIN_DATE = #{salerComplainDate,jdbcType=DATE},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="dataDate != null" >
+                DATA_DATE = #{dataDate,jdbcType=DATE},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgData != null" >
+                ORG_DATA = #{orgData,jdbcType=CLOB},
+            </if>
+            <if test="errMsg != null" >
+                ERR_MSG = #{errMsg,jdbcType=CLOB},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbSalerRewPenaErrodataWithBLOBs" >
+        update CHB_SALER_REW_PENA_ERRODATA
+        set 
+        SALER_REW_PENA_NO = #{salerRewPenaNo,jdbcType=VARCHAR},
+        SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR},
+        SALER_REW_PENA_TYEP = #{salerRewPenaTyep,jdbcType=VARCHAR},
+        SALER_REW_PENA_INST = #{salerRewPenaInst,jdbcType=VARCHAR},
+        SALER_REW_PENA_START = #{salerRewPenaStart,jdbcType=DATE},
+        SALER_COMPLAIN_DATE = #{salerComplainDate,jdbcType=DATE},
+        STATUS = #{status,jdbcType=VARCHAR},
+        DATA_DATE = #{dataDate,jdbcType=DATE},
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        ORG_DATA = #{orgData,jdbcType=CLOB},
+        ERR_MSG = #{errMsg,jdbcType=CLOB}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbSalerRewPenaErrodataWithBLOBs" >
+        insert into CHB_SALER_REW_PENA_ERRODATA (SALER_REW_PENA_NO, SALER_INS_NO, SALER_REW_PENA_TYEP, 
+            SALER_REW_PENA_INST, SALER_REW_PENA_START, SALER_COMPLAIN_DATE, 
+            STATUS, DATA_DATE, WORKFLOW_ID, 
+            CREATE_DEPT, ORG_CODE, CREATE_USER, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            ORG_DATA, ERR_MSG)
+        values (#{salerRewPenaNo,jdbcType=VARCHAR}, #{salerInsNo,jdbcType=VARCHAR}, #{salerRewPenaTyep,jdbcType=VARCHAR}, 
+            #{salerRewPenaInst,jdbcType=VARCHAR}, #{salerRewPenaStart,jdbcType=DATE}, #{salerComplainDate,jdbcType=DATE}, 
+            #{status,jdbcType=VARCHAR}, #{dataDate,jdbcType=DATE}, #{workflowId,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{orgData,jdbcType=CLOB}, #{errMsg,jdbcType=CLOB})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSalerRewPenaErrodataWithBLOBs" >
+        insert into CHB_SALER_REW_PENA_ERRODATA
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="salerRewPenaNo != null" >
+                SALER_REW_PENA_NO,
+            </if>
+            <if test="salerInsNo != null" >
+                SALER_INS_NO,
+            </if>
+            <if test="salerRewPenaTyep != null" >
+                SALER_REW_PENA_TYEP,
+            </if>
+            <if test="salerRewPenaInst != null" >
+                SALER_REW_PENA_INST,
+            </if>
+            <if test="salerRewPenaStart != null" >
+                SALER_REW_PENA_START,
+            </if>
+            <if test="salerComplainDate != null" >
+                SALER_COMPLAIN_DATE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="dataDate != null" >
+                DATA_DATE,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="orgData != null" >
+                ORG_DATA,
+            </if>
+            <if test="errMsg != null" >
+                ERR_MSG,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="salerRewPenaNo != null" >
+                #{salerRewPenaNo,jdbcType=VARCHAR},
+            </if>
+            <if test="salerInsNo != null" >
+                #{salerInsNo,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRewPenaTyep != null" >
+                #{salerRewPenaTyep,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRewPenaInst != null" >
+                #{salerRewPenaInst,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRewPenaStart != null" >
+                #{salerRewPenaStart,jdbcType=DATE},
+            </if>
+            <if test="salerComplainDate != null" >
+                #{salerComplainDate,jdbcType=DATE},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="dataDate != null" >
+                #{dataDate,jdbcType=DATE},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgData != null" >
+                #{orgData,jdbcType=CLOB},
+            </if>
+            <if test="errMsg != null" >
+                #{errMsg,jdbcType=CLOB},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSalerRewPenaErrodataWithBLOBs" >
+        insert into CHB_SALER_REW_PENA_ERRODATA(SALER_REW_PENA_NO, SALER_INS_NO, SALER_REW_PENA_TYEP, 
+        SALER_REW_PENA_INST, SALER_REW_PENA_START, SALER_COMPLAIN_DATE, STATUS, DATA_DATE, 
+        WORKFLOW_ID, CREATE_DEPT, ORG_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        ORG_DATA, ERR_MSG)
+        select SALER_REW_PENA_NO, SALER_INS_NO, SALER_REW_PENA_TYEP, 
+            SALER_REW_PENA_INST, SALER_REW_PENA_START, SALER_COMPLAIN_DATE, #{status,jdbcType=VARCHAR} STATUS, DATA_DATE, 
+            #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_DEPT, ORG_CODE, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            ORG_DATA, ERR_MSG
+             from CHB_SALER_REW_PENA_ERRODATA
+             where STATUS = 'E'
+    </insert>
+</mapper>

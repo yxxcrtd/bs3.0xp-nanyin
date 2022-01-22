@@ -2,6 +2,7 @@ package com.joyintech.tams.valuation.component.business.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
@@ -156,6 +157,17 @@ public class CommonBusinessService {
      */
     public List<SelectOptionDto> getSubjectInteral(Map<String, Object> param) {
         List<SelectOptionDto> resultList = commonBusinessMapper.getSubjectInteral(param);
+        return resultList;
+    }
+
+    /**
+     * @author  殷亚
+     * @description 获取内部科目编码定义 模糊查询
+     * @date 2022-1-12 15:09
+     * @return java.util.List<com.joyintech.framework.select.SelectOptionDto>
+     */
+    public List<SuggestDto> findSubjectInteral(Map<String, Object> param) {
+        List<SuggestDto> resultList = commonBusinessMapper.findSubjectInteral(param);
         return resultList;
     }
 

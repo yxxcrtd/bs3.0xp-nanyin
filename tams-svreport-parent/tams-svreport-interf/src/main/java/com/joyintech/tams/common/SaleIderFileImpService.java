@@ -97,7 +97,7 @@ public class SaleIderFileImpService extends AbstractFileImpService {
 					@Override
 					public Boolean call() throws ParseException {
 						String success = "success";
-						success  = service.importDB(service.copyDataList(dataList),interfFile);
+						success  = service.importDB(service.copyDataList(dataList),interfFile, currentDate);
 						return "success".equals(success)?true:false;
 					}
 				});

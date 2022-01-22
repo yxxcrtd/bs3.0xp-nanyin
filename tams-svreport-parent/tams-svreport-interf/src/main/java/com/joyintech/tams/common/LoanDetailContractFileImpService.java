@@ -75,7 +75,7 @@ public class LoanDetailContractFileImpService extends AbstractFileImpService {
 			@SuppressWarnings("unchecked")
 			List<Map<String, String>> dataList = (List<Map<String, String>>) parseResult.get("dataList");
 			// 移除文件
-			success = svrLoanDetailContractFileImpService.importDB(dataList, interfFile);
+			success = svrLoanDetailContractFileImpService.importDB(dataList, interfFile, currentDate);
 			interfFile.setMoveRemovePath(success);
 			svrLoanDetailContractFileImpService.clearFile(interfFile);
 		}

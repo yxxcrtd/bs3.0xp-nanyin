@@ -323,7 +323,7 @@ public class ProdDealInterfService extends BaseInterfService {
 		mapdate.put("checkDate",DateUtil.format(batchTime));
 		listData.add(mapdate);
 		if(!listData.isEmpty()){
-        	result = svrProdDealFileImpService.importDB(listData, interfile);
+        	result = svrProdDealFileImpService.importDB(listData, interfile, DateUtil.format(batchTime));
         }
         logger.debug("上游产品存续期交易批处理结束:----结束------" +  df.format(new Date()));
         

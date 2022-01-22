@@ -100,7 +100,7 @@ public class DisFileInterfCommonService {
                 	 @SuppressWarnings("unchecked")
                      List<Map<String, String>> dataList = (List<Map<String, String>>) parseResult.get("dataList");
                      // 3.数据入库
-                     impDbResult = fileImpService.importDB(dataList,interfFile);
+                     impDbResult = fileImpService.importDB(dataList,interfFile, currentDate);
                      success = impDbResult;
                 }
                 // 移除文件

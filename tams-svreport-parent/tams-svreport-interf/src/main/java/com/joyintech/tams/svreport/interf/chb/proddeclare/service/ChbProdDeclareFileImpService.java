@@ -269,7 +269,7 @@ public class ChbProdDeclareFileImpService extends FileImpService{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public String importDB(List<Map<String, String>> dataList,InterfFile file) {
+	public String importDB(List<Map<String, String>> dataList,InterfFile file, String date) {
 		String rs = "success";
 		// 解析文件
 		if(dataList==null){

@@ -24,6 +24,13 @@ public interface ChbSalerRewPenaInfoMapper {
      */
     String selectIssuePartyId(@Param("orgCode")String orgCode);
 
+    /**
+     * 根据内部编号查询姓名
+     * @param salerInsNo
+     * @return
+     */
+    String getSalerName(@Param("salerInsNo")String salerInsNo);
+
     //查询已维护的销售人员内部编码
     List<SalerRewPenaInfoDto> checkSalerInsNoImport();
 
