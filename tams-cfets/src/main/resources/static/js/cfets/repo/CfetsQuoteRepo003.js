@@ -11,6 +11,8 @@
         object.operatorType = operatorType;
         object.isDzh = 'Y';
         object.pageId = "CfetsQuoteRepo003";
+        object.ptlAllocationList = ptlAllocations;
+        object.countPledgeBondList = repoEntrustPledgeDtos;
         Joyin.confirm("是否确认提交?",
             function () {
                 //保存 走流程
