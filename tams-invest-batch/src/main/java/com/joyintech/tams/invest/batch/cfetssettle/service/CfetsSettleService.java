@@ -355,7 +355,7 @@ public class CfetsSettleService extends BaseService{
 
         // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
         req.setBusiType(DictCodeListExt3.头寸业务类型_质押式回购首期.getValue());
-        if(StringUtil.equals(cfetsManualSettleInsertDto.getPs(),BussinessDictCodeList.交易方向_到期.getValue())){
+        if(StringUtil.equals(cfetsManualSettleInsertDto.getPs(),"04")){
             req.setBusiType(DictCodeListExt3.头寸业务类型_质押式回购到期.getValue());
         }
 

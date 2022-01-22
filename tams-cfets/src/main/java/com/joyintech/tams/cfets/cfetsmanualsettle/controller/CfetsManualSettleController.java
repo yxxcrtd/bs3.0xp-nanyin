@@ -117,17 +117,26 @@ public class CfetsManualSettleController extends BaseController {
         DecimalFormat format = new DecimalFormat("#,###.00");
 
         params.setComment((entity) -> {
-            String settleArg = getMessage("交收金额") + GlobalConstant.COLON + (entity.getSettleAmt()== null?"":format.format(entity.getSettleAmt()));
+            String settleArg = getMessage("交收金额") + GlobalConstant.COLON + (entity.getSettleAmt()== null?"":format.format(entity.getSettleAmt())) + "元";
             if(StringUtil.equals(entity.getPs(), BussinessDictCodeList.交易方向_买入.getValue())){
                 settleArg = getMessage("交收数量") + GlobalConstant.COLON + entity.getSettleNum();
             }
-            return WorkFlowUtil.concatComment(
-                getMessage("交收日期") + GlobalConstant.COLON + entity.getSettleDate(),
-                getMessage("原业务编号") + GlobalConstant.COLON + entity.getTradeId(),
-                getMessage("业务类型") + GlobalConstant.COLON + entity.getTgBusiTypeStr(),
-                StringUtil.isNotEmpty(entity.getFinprodAbbr()) ? (getMessage("资产简称") + GlobalConstant.COLON + entity.getFinprodAbbr()):"",
-                getMessage("交收操作") + GlobalConstant.COLON + finalOpertType1,
-                settleArg);
+            if(StringUtil.isNotEmpty(entity.getFinprodAbbr())) {
+                return WorkFlowUtil.concatComment(
+                        getMessage("交收日期") + GlobalConstant.COLON + entity.getSettleDate(),
+                        getMessage("原业务编号") + GlobalConstant.COLON + entity.getTradeId(),
+                        getMessage("业务类型") + GlobalConstant.COLON + entity.getTgBusiTypeStr(),
+                        (getMessage("资产简称") + GlobalConstant.COLON + entity.getFinprodAbbr()),
+                        getMessage("交收操作") + GlobalConstant.COLON + finalOpertType1,
+                        settleArg);
+            }else {
+                return WorkFlowUtil.concatComment(
+                        getMessage("交收日期") + GlobalConstant.COLON + entity.getSettleDate(),
+                        getMessage("原业务编号") + GlobalConstant.COLON + entity.getTradeId(),
+                        getMessage("业务类型") + GlobalConstant.COLON + entity.getTgBusiTypeStr(),
+                        getMessage("交收操作") + GlobalConstant.COLON + finalOpertType1,
+                        settleArg);
+            }
         });
         processParameter.setWorkFlowParameter(params);
         try{
