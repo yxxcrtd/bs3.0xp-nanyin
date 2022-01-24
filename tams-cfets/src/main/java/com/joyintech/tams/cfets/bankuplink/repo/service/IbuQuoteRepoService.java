@@ -884,7 +884,7 @@ public class IbuQuoteRepoService extends BaseService {
         }
         result.put("message", message);
         if (CollectionUtils.isNotEmpty(quoteIds)) {
-            result.put("quoteIds", quoteIds);
+            result.put("quoteIds", quoteIds.stream().distinct().collect(Collectors.toList()));
         }
         return result;
 

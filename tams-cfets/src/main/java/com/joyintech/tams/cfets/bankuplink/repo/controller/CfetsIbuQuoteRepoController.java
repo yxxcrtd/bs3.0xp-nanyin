@@ -505,8 +505,6 @@ public class CfetsIbuQuoteRepoController extends BaseController {
                     }
                 }
 
-                //报价编号
-                item.setQuoteId(null);
             });
         }
 
@@ -553,7 +551,6 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         if (CollectionUtils.isNotEmpty(dataList)) {
             ibuQuoteRepoService.handExportTimes(dataList);
         }
-
 
     }
 
