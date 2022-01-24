@@ -37,8 +37,8 @@ public class SubjectBalanceFileImpService extends AbstractFileImpService{
 	
 	@Autowired
 	private SvrSubjectBalanceFileImpService svrSubjectBalanceFileImpService;
-	@Autowired
-	private BokBalanceInterfService bokBalanceInterfService;
+//	@Autowired
+//	private BokBalanceInterfService bokBalanceInterfService;
 	/**
 	 * 日志
 	 */
@@ -57,12 +57,12 @@ public class SubjectBalanceFileImpService extends AbstractFileImpService{
 	    // 读取开关设置是否跑中债接口和信批接口三个数字 前面俩个数字只要有一个是1就跑中债接口第三个数字为1才跑信批接口
         ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.科目余额数据.getCode());
 		List<FileImpService> serviceList = new ArrayList<FileImpService>();
-//        if(interfConfig.getSysScope() != null && interfConfig.getSysScope().length()==3 && interfConfig.getSysScope().substring(0,2).contains("1")){
-//            serviceList.add(svrSubjectBalanceFileImpService);
-//        }
-        if(interfConfig.getSysScope() != null && interfConfig.getSysScope().length()==3 && "1".equals(interfConfig.getSysScope().substring(2))){
-            serviceList.add(bokBalanceInterfService);
+        if(interfConfig.getSysScope() != null && interfConfig.getSysScope().length()==3 && interfConfig.getSysScope().substring(0,2).contains("1")){
+            serviceList.add(svrSubjectBalanceFileImpService);
         }
+//        if(interfConfig.getSysScope() != null && interfConfig.getSysScope().length()==3 && "1".equals(interfConfig.getSysScope().substring(2))){
+//            serviceList.add(bokBalanceInterfService);
+//        }
         String result = "success";
 		for (InterfFile interfFile : fileLists) {
 			Map<String, Object> parseResult;
@@ -100,7 +100,7 @@ public class SubjectBalanceFileImpService extends AbstractFileImpService{
 					@Override
 					public Boolean call() throws ParseException {
 						Boolean res = true;
-						if ("fail".equals(service.importDB(service.copyDataList(dataList),interfFile))) {
+						if ("fail".equals(service.importDB(service.copyDataList(dataList),interfFile, currentDate))) {
 							res = false;
 						}
 						return res;

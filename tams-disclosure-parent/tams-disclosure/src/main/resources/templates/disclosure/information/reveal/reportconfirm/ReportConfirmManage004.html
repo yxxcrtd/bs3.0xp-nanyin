@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>报表人工上传</title>
+<style>.layui-upload-drag {padding-top: 0px;}div#uploadReport {height: 75px !important;}label#uploadReportLabel {margin-left: 12.5px;}</style>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -100,7 +101,7 @@
                 <div class="layui-form-item">
                 	<div class="layui-inline layui-col-md1">&nbsp;</div>
                 	<div class="layui-inline layui-col-md4">
-                		<label class="layui-form-label form-lable">
+                		<label id="uploadReportLabel" class="layui-form-label form-lable">
                 		<i class="iconfont must" style="display: inline;">*</i>
                                                                                     报表上传</label>
                         <div class="layui-inline" >

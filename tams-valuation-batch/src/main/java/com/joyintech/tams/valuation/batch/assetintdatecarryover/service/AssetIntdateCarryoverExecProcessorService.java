@@ -30,6 +30,8 @@ import com.joyintech.tams.valuation.common.constants.BookConstant;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -66,6 +68,14 @@ public class AssetIntdateCarryoverExecProcessorService {
 
     @Autowired
     private InterfCommonService interfCommonService;
+
+    // add by weipeng on 20220114 增加批处理报错时相关明细日志打印 start
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(getClass());
+    // add by weipeng on 20220114 增加批处理报错时相关明细日志打印 end
+
     /**
      * process 数据处理
      * @param param1 传递参数
@@ -73,7 +83,7 @@ public class AssetIntdateCarryoverExecProcessorService {
      * @see
      * @since 1.0
      */
-    public AssetIntdateCarryoverResult execute(Map<String, Object> param1) {
+    public AssetIntdateCarryoverResult execute(Map<String, Object> param1) throws Exception {
         // 获取reader返回值
         AssetIntdateCarryoverExecReaderResult acctEntity = (AssetIntdateCarryoverExecReaderResult) param1.get(GlobalConstant.READER_RESULT);
         // 若reader传递的参数或计提基础信息列表为空，不进行后续处理
@@ -88,101 +98,109 @@ public class AssetIntdateCarryoverExecProcessorService {
 
         // 循环生成数据
         for (AssetIntdateCarryoverExecReaderDetail detail : acctEntity.getAssetIntdateCarryoverExecReaderDetailList()) {
-            //1.判断是否生成交易类标的
-            //定义 变量.行权分支序号=调用共通标的【当前计划对应分支序号查询（DTO.金融产品代码，DTO.金融产品类型，数据字典：现金流一级类型.行权，DTO.调整后的计算结束日）】
-            Long 行权分支序号 = finProductCommonService.queryValFinProductDealBranchNow(
-                    acctEntity.getFinprodId(), acctEntity.getFinprodType(),
-                    DictCodeListExt3.分支类型_行权.getValue(), detail.getExerciseDate());
-            //2.根据账套生成行权赎回结转交易
-            //3.1 判断交易是否已存在
-            Map<String, Object> map = new HashMap<>();
-            map.put("busiTable", DictCodeList.业务表_金融产品表.getValue());
-            map.put("booksetId", detail.getBooksetId());
-            map.put("finprodId", detail.getFinprodId());
-            map.put("finprodType", detail.getFinprodType());
-            map.put("exerciseDate", detail.getExerciseDate());
-            map.put("ps", DictCodeListExt3.交易方向_行权赎回结转.getValue());
-            Integer num = assetIntdateCarryoverMapper.selectExecTradeCount(map);
-            //if（数量>0 ） return;
-            if(num != null  && num > 0) {
-                break;
-            }
-            //3.2.成本查询
-            //调用共通【基础科目性质查询】
-            //参数:
-            //分组代码=成本类对应科目查询 对应的枚举CODE
-            //定义 变量.基础科目性质List = 上述返回
-            List<String> subjectNatureListForJc = accountingCommonService.getValSubjectNatureListWithAcctStandardId(
-                    DictCodeListNatureGroup.分组代码_成本类对应科目查询.getValue(), DictCodeListExt2.会计准则_企业准则.getValue());
-            // 设值科目余额查询参数Dto
-            SubjectBalanceSearchDto searchDto = new SubjectBalanceSearchDto();
-            searchDto.setHappenDate(detail.getBooksetDate());//发生日 = DTO.账套日期
-            searchDto.setBookDate(detail.getBooksetDate());// 入账日 = DTO.账套日期
-            searchDto.setBooksetId(detail.getBooksetId());// 账套代码 = 变量.账套明细.账套代码
-            searchDto.setBaseSubjectNatureList(subjectNatureListForJc);//基础科目性质 = 变量.基础科目性质List
-            searchDto.setBusiId(detail.getFinprodId());//业务明细代码 = DTO.金融产品代码
-            //定义 变量.科目余额信息list = 上述返回值
-            List<SubjectBalance> subjectList = accountingCommonService.getSubjectBalanceExpectDirection(searchDto,
-                    DictCodeList.余额方向_借方.getValue());
-            if (CollectionUtils.isNotEmpty(subjectList)) {
-                //3.3 根据行权计划生成交易
-                //定义 变量.是否生成交易类金融产品 = true;
-                boolean 是否生成交易类金融产品 = true;
-                //LOOP: 变量.科目余额信息list -> 变量.科目余额信息
-                for(SubjectBalance balance : subjectList) {
-                    //定义 变量.业务类型 = 数据字典：业务类型.债券交易预处理
-                    String busiType = DictCodeList.业务类型_债券交易预处理.getValue();
-                    //定义 变量.交易方向 = 数据字典：交易方向.行权-赎回结转
-                    String ps = DictCodeListExt3.交易方向_行权赎回结转.getValue();
-                    //定义 变量.账务明细代码信息 = 调用共通标的【账务明细代码信息查询（变量.科目余额信息.账务明细代码，变量.账套明细.账套代码）】
-                    List<BokDetailId> listValBokBookdetail = finProductCommonService.bookdetailInforQuery(
-                            detail.getBooksetId(), balance.getBokDetailId());
-                    BokDetailId valBokBookdetail = new BokDetailId();
-                    if (listValBokBookdetail != null && listValBokBookdetail.size() > 0) {
-                        valBokBookdetail = listValBokBookdetail.get(0);
+            // add by weipeng on 20220114 增加批处理报错时相关明细日志打印 start
+            try{
+                //1.判断是否生成交易类标的
+                //定义 变量.行权分支序号=调用共通标的【当前计划对应分支序号查询（DTO.金融产品代码，DTO.金融产品类型，数据字典：现金流一级类型.行权，DTO.调整后的计算结束日）】
+                Long 行权分支序号 = finProductCommonService.queryValFinProductDealBranchNow(
+                        acctEntity.getFinprodId(), acctEntity.getFinprodType(),
+                        DictCodeListExt3.分支类型_行权.getValue(), detail.getExerciseDate());
+                //2.根据账套生成行权赎回结转交易
+                //3.1 判断交易是否已存在
+                Map<String, Object> map = new HashMap<>();
+                map.put("busiTable", DictCodeList.业务表_金融产品表.getValue());
+                map.put("booksetId", detail.getBooksetId());
+                map.put("finprodId", detail.getFinprodId());
+                map.put("finprodType", detail.getFinprodType());
+                map.put("exerciseDate", detail.getExerciseDate());
+                map.put("ps", DictCodeListExt3.交易方向_行权赎回结转.getValue());
+                Integer num = assetIntdateCarryoverMapper.selectExecTradeCount(map);
+                //if（数量>0 ） return;
+                if(num != null  && num > 0) {
+                    break;
+                }
+                //3.2.成本查询
+                //调用共通【基础科目性质查询】
+                //参数:
+                //分组代码=成本类对应科目查询 对应的枚举CODE
+                //定义 变量.基础科目性质List = 上述返回
+                List<String> subjectNatureListForJc = accountingCommonService.getValSubjectNatureListWithAcctStandardId(
+                        DictCodeListNatureGroup.分组代码_成本类对应科目查询.getValue(), DictCodeListExt2.会计准则_企业准则.getValue());
+                // 设值科目余额查询参数Dto
+                SubjectBalanceSearchDto searchDto = new SubjectBalanceSearchDto();
+                searchDto.setHappenDate(detail.getBooksetDate());//发生日 = DTO.账套日期
+                searchDto.setBookDate(detail.getBooksetDate());// 入账日 = DTO.账套日期
+                searchDto.setBooksetId(detail.getBooksetId());// 账套代码 = 变量.账套明细.账套代码
+                searchDto.setBaseSubjectNatureList(subjectNatureListForJc);//基础科目性质 = 变量.基础科目性质List
+                searchDto.setBusiId(detail.getFinprodId());//业务明细代码 = DTO.金融产品代码
+                //定义 变量.科目余额信息list = 上述返回值
+                List<SubjectBalance> subjectList = accountingCommonService.getSubjectBalanceExpectDirection(searchDto,
+                        DictCodeList.余额方向_借方.getValue());
+                if (CollectionUtils.isNotEmpty(subjectList)) {
+                    //3.3 根据行权计划生成交易
+                    //定义 变量.是否生成交易类金融产品 = true;
+                    boolean 是否生成交易类金融产品 = true;
+                    //LOOP: 变量.科目余额信息list -> 变量.科目余额信息
+                    for(SubjectBalance balance : subjectList) {
+                        //定义 变量.业务类型 = 数据字典：业务类型.债券交易预处理
+                        String busiType = DictCodeList.业务类型_债券交易预处理.getValue();
+                        //定义 变量.交易方向 = 数据字典：交易方向.行权-赎回结转
+                        String ps = DictCodeListExt3.交易方向_行权赎回结转.getValue();
+                        //定义 变量.账务明细代码信息 = 调用共通标的【账务明细代码信息查询（变量.科目余额信息.账务明细代码，变量.账套明细.账套代码）】
+                        List<BokDetailId> listValBokBookdetail = finProductCommonService.bookdetailInforQuery(
+                                detail.getBooksetId(), balance.getBokDetailId());
+                        BokDetailId valBokBookdetail = new BokDetailId();
+                        if (listValBokBookdetail != null && listValBokBookdetail.size() > 0) {
+                            valBokBookdetail = listValBokBookdetail.get(0);
+                        }
+                        //定义 变量.当日计算成本科目余额 = 变量.科目余额信息.科目余额
+                        BigDecimal 当日计算成本科目余额 = balance.getBalance();
+                        //调用账务共通设计-> 【债券实际成本数量查询】
+                        //参数名					【债券实际成本数量查询】
+                        //账套代码					DTO.账套代码
+                        //入账日					DTO.入账日
+                        //发生日					DTO.发生日
+                        //交易场所					DTO.交易场所
+                        //账务明细代码					变量.科目余额信息.账务明细代码
+                        //投资目的					变量.科目余额信息.投资目的
+                        //任务优先级					批处理参数.任务优先级
+                        //返回值：					变量.成本科目数量
+                        //变量.当日计算成本科目余额 = 上述返回值
+                        BigDecimal 当日计算成本科目数量 = accountingCommonService.findBondActualCostNum(detail.getBooksetId(), detail.getBooksetDate(),
+                                detail.getBooksetDate(), balance.getBokDetailId(), detail.getTradeMarket(),
+                                balance.getInvAim(), batchTask.getTaskPri());
+                        //if(变量.当日计算成本科目余额 = 0)
+                        if(当日计算成本科目数量 == null || 当日计算成本科目数量.compareTo(BigDecimal.ZERO) == 0) {
+                            continue;
+                        }
+                        BigDecimal faceValue = finProductCommonService.getFaceValue(detail.getFinprodId(),
+                                DateUtil.addDay(detail.getBooksetDate(), -1));
+                        //if（变量.行权分支序号 = null）
+                        if(行权分支序号 == null) {
+                            //变量.最大分支序号 =  （DTO.调整后的计算结束日 （'YYYYMMDD'）|| 03）转成数值型
+                            行权分支序号 = new Long(DateUtil.format(detail.getExerciseDate(),"yyyyMMdd") +  "03");
+                            //创建交易信息("行权"，0，变量.业务类型，变量.账务明细代码信息，变量.最大分支序号，变量.交易方向，DTO,变量.是否生成交易类金融产品)
+                            //注：变量.是否生成交易类金融产品 false :不生成交易类金融产品  true : 生成交易类金融产品
+                            是否生成交易类金融产品 = true;
+                        }
+                        //else
+                        else {
+                            //创建交易信息("行权"，0，变量.业务类型，变量.账务明细代码信息，变量.行权分支序号，变量.交易方向，DTO)
+                            //注：不生成交易类金融产品
+                            是否生成交易类金融产品 = false;
+                        }
+                        AssetIntdateCarryoverDeal assetIntdateCarryoverDeal = this.createExecDeal(busiType, ps, 行权分支序号, 当日计算成本科目余额,
+                                当日计算成本科目数量, faceValue, valBokBookdetail, detail, assetIntdateCarryoverResult,是否生成交易类金融产品);
+                        assetIntdateCarryoverResult.getAssetIntdateCarryoverDealList().add(
+                                assetIntdateCarryoverDeal);
                     }
-                    //定义 变量.当日计算成本科目余额 = 变量.科目余额信息.科目余额
-                    BigDecimal 当日计算成本科目余额 = balance.getBalance();
-                    //调用账务共通设计-> 【债券实际成本数量查询】
-                    //参数名					【债券实际成本数量查询】
-                    //账套代码					DTO.账套代码
-                    //入账日					DTO.入账日
-                    //发生日					DTO.发生日
-                    //交易场所					DTO.交易场所
-                    //账务明细代码					变量.科目余额信息.账务明细代码
-                    //投资目的					变量.科目余额信息.投资目的
-                    //任务优先级					批处理参数.任务优先级
-                    //返回值：					变量.成本科目数量
-                    //变量.当日计算成本科目余额 = 上述返回值
-                    BigDecimal 当日计算成本科目数量 = accountingCommonService.findBondActualCostNum(detail.getBooksetId(), detail.getBooksetDate(),
-                            detail.getBooksetDate(), balance.getBokDetailId(), detail.getTradeMarket(),
-                            balance.getInvAim(), batchTask.getTaskPri());
-                    //if(变量.当日计算成本科目余额 = 0)
-                    if(当日计算成本科目数量 == null || 当日计算成本科目数量.compareTo(BigDecimal.ZERO) == 0) {
-                        continue;
-                    }
-                    BigDecimal faceValue = finProductCommonService.getFaceValue(detail.getFinprodId(),
-                            DateUtil.addDay(detail.getBooksetDate(), -1));
-                    //if（变量.行权分支序号 = null）
-                    if(行权分支序号 == null) {
-                        //变量.最大分支序号 =  （DTO.调整后的计算结束日 （'YYYYMMDD'）|| 03）转成数值型
-                        行权分支序号 = new Long(DateUtil.format(detail.getExerciseDate(),"yyyyMMdd") +  "03");
-                        //创建交易信息("行权"，0，变量.业务类型，变量.账务明细代码信息，变量.最大分支序号，变量.交易方向，DTO,变量.是否生成交易类金融产品)
-                        //注：变量.是否生成交易类金融产品 false :不生成交易类金融产品  true : 生成交易类金融产品
-                        是否生成交易类金融产品 = true;
-                    }
-                    //else
-                    else {
-                        //创建交易信息("行权"，0，变量.业务类型，变量.账务明细代码信息，变量.行权分支序号，变量.交易方向，DTO)
-                        //注：不生成交易类金融产品
-                        是否生成交易类金融产品 = false;
-                    }
-                    AssetIntdateCarryoverDeal assetIntdateCarryoverDeal = this.createExecDeal(busiType, ps, 行权分支序号, 当日计算成本科目余额,
-                            当日计算成本科目数量, faceValue, valBokBookdetail, detail, assetIntdateCarryoverResult,是否生成交易类金融产品);
-                    assetIntdateCarryoverResult.getAssetIntdateCarryoverDealList().add(
-                            assetIntdateCarryoverDeal);
                 }
             }
+            catch (Exception e){
+                logger.error("《资产理论结息日结转批处理-标的类》--自动行权处理 报错相关信息： 账套信息【"+detail.getBooksetId()+"】；金融产品代码【"+detail.getFinprodId()+"】",e);
+                throw new Exception(e);
+            }
+            // add by weipeng on 20220114 增加批处理报错时相关明细日志打印 end
         }
         return assetIntdateCarryoverResult;
 

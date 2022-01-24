@@ -128,6 +128,15 @@ public class SalerRewPenaInfoValid implements BeanValidator {
                     }
                 }
             }
+            //奖惩结束日期与奖惩开始日期校验
+            if(dto.getSalerRewPenaTyep() != null && dto.getSalerRewPenaTyep() != "" ) {
+                if(!dto.getSalerRewPenaTyep().equals("03")) {
+                    Integer i = dto.getSalerRewPenaStart().compareTo(dto.getSalerRewPenaEnd());
+                    if (i > 0) {
+                        errorList.add(new ValidMessage("salerRewPenaEnd", "奖惩结束日期不可小于奖惩开始日期。"));
+                    }
+                }
+            }
             //投诉详情
             if(dto.getSalerRewPenaTyep() != null && dto.getSalerRewPenaTyep() != "") {
                 if (dto.getSalerRewPenaTyep().equals("03")){

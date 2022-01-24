@@ -75,7 +75,7 @@ public class SecRatingFileImpService extends AbstractFileImpService {
 			@SuppressWarnings("unchecked")
 			List<Map<String, String>> dataList = (List<Map<String, String>>) parseResult.get("dataList");
 			// 移除文件
-			success = svrSecRatingFileImpService.importDB(dataList, interfFile);
+			success = svrSecRatingFileImpService.importDB(dataList, interfFile, currentDate);
 			interfFile.setMoveRemovePath(success);
 			svrSecRatingFileImpService.clearFile(interfFile);
 		}

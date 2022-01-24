@@ -13,6 +13,8 @@
 		ENCLOSURE_CHANGE_FLAG,
 		FILE_NO,
 		DATA_DATE,
+		CREATE_DEPT,
+		ORG_CODE,
 		CREATE_USER,
 		CREATE_TIME,
 		UPDATE_USER,
@@ -45,6 +47,8 @@
 		 ENCLOSURE_CHANGE_FLAG,
 		 DATA_DATE,
 		 REMARK,
+		 CREATE_DEPT,
+		 ORG_CODE,
 		 CREATE_USER,
 		 CREATE_TIME,
 		 UPDATE_USER,
@@ -68,13 +72,13 @@
 		insert into CHB_AGENT_INSTITUTION_SUB(
 		REGIST_SEQNO, AGENT_INSTITUTION_CODE, AGENT_INSTITUTION_NAME, ISSUE_PARTY_ID,
 		STATUS,SUMIT_SEQ, CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE, SEND_STATUS,FILE_NO,
-		ENCLOSURE_NUM,ENCLOSURE_ADDRESS,DATA_DATE,REMARK,
+		ENCLOSURE_NUM,ENCLOSURE_ADDRESS,DATA_DATE,REMARK,CREATE_DEPT,ORG_CODE,
 		CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 		values(
 		#{registSeqno,jdbcType=VARCHAR},#{agentInstitutionCode,jdbcType=VARCHAR},#{agentInstitutionName,jdbcType=VARCHAR},
 		#{issuePartyId,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{sumitSeq,jdbcType=VARCHAR}, #{chbSubmitDeadline,jdbcType=DATE},
 		#{submitDeadline,jdbcType=DATE}, #{sendStatus,jdbcType=VARCHAR},#{fileNo,jdbcType=VARCHAR},#{enclosureNum,jdbcType=VARCHAR},
-		#{enclosureAddress,jdbcType=VARCHAR},#{dataDate,jdbcType=DATE},#{remark,jdbcType=VARCHAR},
+		#{enclosureAddress,jdbcType=VARCHAR},#{dataDate,jdbcType=DATE},#{remark,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
 		#{createUser,jdbcType=VARCHAR},sysdate,#{updateUser,jdbcType=VARCHAR},sysdate)
 	</insert>
 

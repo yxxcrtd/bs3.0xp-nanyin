@@ -94,7 +94,7 @@ public class ChbAssetRateFileImpService extends AbstractFileImpService {
 					@Override
 					public Boolean call() throws ParseException {
 						Boolean res = true;
-						if ("fail".equals(service.importDB(service.copyDataList(dataList),interfFile))) {
+						if ("fail".equals(service.importDB(service.copyDataList(dataList),interfFile, currentDate))) {
 							res = false;
 						}
 						return res;

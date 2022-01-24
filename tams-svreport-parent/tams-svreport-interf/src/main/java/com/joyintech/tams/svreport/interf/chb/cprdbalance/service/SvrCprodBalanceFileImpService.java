@@ -107,8 +107,14 @@ public class SvrCprodBalanceFileImpService extends FileImpService{
 	private boolean excuteProdOpenSchByStep(List<Map<String, String>> posList, String type, 
 			String tmpPath, ImpTable table,String dataSource,String saveFlag) {
 		// 定义新增数据list-验证不通过数据
-		Map<String,Object> dataMap = convertMapToEntity(posList,dataSource,saveFlag);
-		List<ChbCprodBalanceDto> list = (List<ChbCprodBalanceDto>) dataMap.get("list");
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
+//		Map<String,Object> dataMap = convertMapToEntity(posList,dataSource,saveFlag);
+//		List<ChbCprodBalanceDto> list = (List<ChbCprodBalanceDto>) dataMap.get("list");
+		List<ChbCprodBalanceDto> list = (List<ChbCprodBalanceDto>) convertMapToEntity(posList,ChbCprodBalanceDto.class);
+		list.stream().forEach(t->{
+			t.setBalId(IDGenerator.generate(36));
+		});
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 end
 		if (CollectionUtils.isNotEmpty(list)) {
 			// 先删后插,删除当日接入的持仓数据
 			if (tmpPath == null) {
@@ -372,7 +378,7 @@ public class SvrCprodBalanceFileImpService extends FileImpService{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String importDB(List<Map<String, String>> dataList,InterfFile file) {
+	public String importDB(List<Map<String, String>> dataList,InterfFile file, String date) {
 		String rs = "success";
 		// 解析文件
 		if(dataList==null){

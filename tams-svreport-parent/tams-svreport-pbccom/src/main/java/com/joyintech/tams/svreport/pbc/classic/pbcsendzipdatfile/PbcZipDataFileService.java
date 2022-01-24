@@ -742,7 +742,7 @@ public class PbcZipDataFileService {
 			if(CollectionUtils.isNotEmpty(pbcProdAssetpoolCodes)){
 				Optional<PbcProdAssetpoolCode> first = pbcProdAssetpoolCodes.stream().filter(pbcProdAssetpoolCode ->
 						pbcPrdBaseinfoSubDat.getProdId().equals(pbcProdAssetpoolCode.getInsideProdId())).findFirst();
-				if(first.isPresent()){
+				if(first.isPresent()&&StrUtil.isNotEmpty(first.get().getPbcCode())){
 					innerProdIdsNew.add(pbcPrdBaseinfoSubDat.getProdId());
 					pbcPrdBaseinfoSubDatsNew.add(pbcPrdBaseinfoSubDat);
 					innerProdIdMapping.put(pbcPrdBaseinfoSubDat.getProdId(),first.get().getPbcCode());

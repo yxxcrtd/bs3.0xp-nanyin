@@ -353,7 +353,9 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
             if (result.getLowYieldIssue() != null && BigDecimal.ZERO.compareTo(result.getLowYieldIssue()) != 0) {
             	result.setLowYieldIssueToString(df.format(result.getLowYieldIssue()));
             }
-            
+            if (result.getProdStage() != null) {
+            	result.setProdStageToString(result.getProdStage().toString());
+			}
            /* //日期转String，用于excel数据填充
             if (StringUtil.isNotEmpty(result.getRaiseEnddate())){
             	String date= dateString(result.getRaiseEnddate());

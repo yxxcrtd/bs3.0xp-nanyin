@@ -279,4 +279,70 @@
           and FEE_TYPE = #{feeType,jdbcType=VARCHAR}
           and LAYERING_ID = #{layeringId,jdbcType=VARCHAR}
     </update>
+
+
+    <insert id="mergeValBokStatFeePosition" parameterType="list">
+        MERGE INTO BOK_STAT_FEE_POSIITON bbd using (
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+                 close="from dual)">
+            #{item.booksetId,jdbcType=VARCHAR} BOOKSET_ID,
+            #{item.happenDate,jdbcType=DATE} HAPPEN_DATE,
+            #{item.bookDate,jdbcType=DATE} BOOK_DATE,
+            #{item.feeType,jdbcType=VARCHAR} FEE_TYPE ,
+            #{item.layeringId,jdbcType=VARCHAR} LAYERING_ID,
+            #{item.booksetDate,jdbcType=DATE} BOOKSET_DATE,
+            #{item.tdyPosition,jdbcType=DECIMAL} TDY_POSITION,
+            #{item.tdyFeeRate,jdbcType=DECIMAL} TDY_FEE_RATE,
+            #{item.tdyIntincexpAdd,jdbcType=DECIMAL} TDY_INTINCEXP_ADD,
+            #{item.finprodId,jdbcType=VARCHAR} FINPROD_ID,
+            #{item.finprodType,jdbcType=VARCHAR} FINPROD_TYPE,
+            #{item.branch,jdbcType=DECIMAL} BRANCH,
+            #{item.ccy,jdbcType=VARCHAR} CCY,
+            #{item.bCcy,jdbcType=VARCHAR} B_CCY,
+            #{item.tdyIntincexpAddB,jdbcType=DECIMAL} TDY_INTINCEXP_ADD_B,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+        </foreach>
+        ) datas on (bbd.BOOKSET_ID = datas.BOOKSET_ID
+        and bbd.HAPPEN_DATE = datas.HAPPEN_DATE
+        and bbd.BOOK_DATE=datas.BOOK_DATE
+        and bbd.FEE_TYPE=datas.FEE_TYPE
+        and bbd.LAYERING_ID=datas.LAYERING_ID
+        )
+        WHEN MATCHED THEN
+        UPDATE set
+        bbd.BOOKSET_DATE = datas.BOOKSET_DATE,
+        bbd.TDY_POSITION=datas.TDY_POSITION,
+        bbd.TDY_FEE_RATE=datas.TDY_FEE_RATE,
+        bbd.TDY_INTINCEXP_ADD=datas.TDY_INTINCEXP_ADD,
+        bbd.FINPROD_ID=datas.FINPROD_ID,
+        bbd.FINPROD_TYPE=datas.FINPROD_TYPE,
+        bbd.BRANCH=datas.BRANCH,
+        bbd.CCY=datas.CCY,
+        bbd.B_CCY=datas.B_CCY,
+        bbd.TDY_INTINCEXP_ADD_B=datas.TDY_INTINCEXP_ADD_B,
+        bbd.UPDATE_USER=datas.UPDATE_USER,
+        bbd.UPDATE_TIME=datas.UPDATE_TIME
+        WHEN NOT MATCHED THEN
+        INSERT (
+        BOOKSET_ID, HAPPEN_DATE, BOOK_DATE,
+        FEE_TYPE, LAYERING_ID, BOOKSET_DATE,
+        TDY_POSITION, TDY_FEE_RATE, TDY_INTINCEXP_ADD,
+        FINPROD_ID, FINPROD_TYPE, BRANCH,
+        CCY, B_CCY, TDY_INTINCEXP_ADD_B,
+        CREATE_USER, CREATE_DEPT, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME)
+        VALUES (
+        datas.BOOKSET_ID, datas.HAPPEN_DATE, datas.BOOK_DATE,
+        datas.FEE_TYPE, datas.LAYERING_ID, datas.BOOKSET_DATE,
+        datas.TDY_POSITION, datas.TDY_FEE_RATE, datas.TDY_INTINCEXP_ADD,
+        datas.FINPROD_ID, datas.FINPROD_TYPE, datas.BRANCH,
+        datas.CCY, datas.B_CCY, datas.TDY_INTINCEXP_ADD_B,
+        datas.CREATE_USER, datas.CREATE_DEPT, datas.CREATE_TIME,
+        datas.UPDATE_USER, datas.UPDATE_TIME
+        )
+    </insert>
 </mapper>

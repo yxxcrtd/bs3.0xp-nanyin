@@ -124,8 +124,11 @@ public class SvrSaleCustSvrreportFileImpService extends FileImpService {
                                      ImpTable subTable, String saveFlag, String dataSource) {
         //监管客户组别区域报送数据
         List<SaleCustSvrreport> saleCustSvrreportList;
-        List<String> listColumn = baseMapper.getTableColumnList(InterfDefine.监管区域客户组别接口数据.getCode());
-        saleCustSvrreportList = this.convertMapToEntity(infoList,dataSource,listColumn);
+        // modify by convertMapToEntity yangxianjiu 2022-01-19 start
+//        List<String> listColumn = baseMapper.getTableColumnList(InterfDefine.监管区域客户组别接口数据.getCode());
+//        saleCustSvrreportList = this.convertMapToEntity(infoList,dataSource,listColumn);
+        saleCustSvrreportList = (List<SaleCustSvrreport>) convertMapToEntity(infoList,SaleCustSvrreport.class);
+        // modify by convertMapToEntity yangxianjiu 2022-01-19 end
         if (saleCustSvrreportList != null && saleCustSvrreportList.size() > 0) {
             insertDataMerge(saleCustSvrreportList, saveFlag);
         }
@@ -256,7 +259,7 @@ public class SvrSaleCustSvrreportFileImpService extends FileImpService {
     }
 
     @Override
-    public String importDB(List<Map<String, String>> saleCustSvrreportList, InterfFile interfFile) {
+    public String importDB(List<Map<String, String>> saleCustSvrreportList, InterfFile interfFile, String date) {
         //待入库为空则直接返回
         if (CollectionUtils.isEmpty(saleCustSvrreportList)){
             return "success";

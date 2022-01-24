@@ -12,6 +12,7 @@
         <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
         <result column="INPUT_USER" property="inputUser" jdbcType="VARCHAR" />
         <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="FEE_RATE" property="rate" jdbcType="VARCHAR" />
         <result column="ADAPTER_ID" property="adapterId" jdbcType="VARCHAR" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
@@ -25,7 +26,7 @@
 
     <select id="select" resultMap="BaseResultMap"  >
         SELECT
-        FIN_PRODUCT.FINPROD_ID       BUSI_ID,--业务代码
+        FIN_PRODUCT.FINPROD_MARKET_ID      BUSI_ID,--业务代码
         FIN_CASH_CALC_RULE.CASH_ID   CASH_ID,--现金流代码
         sys_datadict_list.ITEM_VALUE CASH_NAME,--现金流名称
         FIN_CASH_INFO.CASH_TYPE_1    CASH_TYPE,--现金流类型

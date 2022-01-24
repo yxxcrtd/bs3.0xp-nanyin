@@ -152,6 +152,11 @@ public class ChbSalerIdenInfo extends BaseEntity {
     private Date dataDate;
 
     /**
+     * 机构代码
+     */
+    private String orgCode;
+
+    /**
      * 取得 内部编号
      * @return 内部编号
      */
@@ -615,5 +620,21 @@ public class ChbSalerIdenInfo extends BaseEntity {
     @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setDataDate(Date dataDate) {
         this.dataDate = dataDate;
+    }
+
+    /**
+     * 取得 机构代码
+     * @return 机构代码
+     */
+    public String getOrgCode() {
+        return orgCode;
+    }
+
+    /**
+     * 设置 机构代码
+     * @param orgCode 机构代码
+     */
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode == null ? null : orgCode.trim();
     }
 }

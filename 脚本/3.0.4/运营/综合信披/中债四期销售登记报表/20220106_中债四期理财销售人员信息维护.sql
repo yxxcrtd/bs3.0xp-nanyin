@@ -9,6 +9,8 @@ create table CHB_SALER_INST_INFO(
   ,STATUS	VARCHAR2(2)
   ,DATA_DATE	DATE
   ,REMARK	VARCHAR2(200)
+  ,CREATE_DEPT	VARCHAR2(20)
+  ,ORG_CODE	VARCHAR2(20)
   ,CREATE_USER	VARCHAR2(20)
   ,CREATE_TIME	TIMESTAMP(6)
   ,UPDATE_USER	VARCHAR2(32)
@@ -22,6 +24,8 @@ comment on column CHB_SALER_INST_INFO.SALER_ORG_NAME is '总部或分支机构�
 comment on column CHB_SALER_INST_INFO.SALER_ORG_LEVEL is '机构层级 ';
 comment on column CHB_SALER_INST_INFO.STATUS is '数据状态';
 comment on column CHB_SALER_INST_INFO.DATA_DATE is '数据日期 ';
+comment on column CHB_SALER_INST_INFO.CREATE_DEPT is '创建部门 ';
+comment on column CHB_SALER_INST_INFO.ORG_CODE is '机构代码 ';
 comment on column CHB_SALER_INST_INFO.CREATE_USER is '创建人 ';
 comment on column CHB_SALER_INST_INFO.CREATE_TIME is '创建时间 ';
 comment on column CHB_SALER_INST_INFO.UPDATE_USER is '更新人 ';
@@ -41,6 +45,8 @@ create table CHB_SALER_INST_ERRODATA(
   ,ORG_DATA     CLOB
   ,ERR_MSG      CLOB
   ,WORKFLOW_ID  VARCHAR2(20)
+  ,CREATE_DEPT	VARCHAR2(20)
+  ,ORG_CODE	VARCHAR2(20)
   ,CREATE_USER	VARCHAR2(20)
   ,CREATE_TIME	TIMESTAMP(6)
   ,UPDATE_USER	VARCHAR2(32)
@@ -56,6 +62,8 @@ comment on column CHB_SALER_INST_ERRODATA.DATA_DATE is '数据日期 ';
 comment on column CHB_SALER_INST_ERRODATA.ORG_DATA is '原始数据 ';
 comment on column CHB_SALER_INST_ERRODATA.ERR_MSG is '错误信息 ';
 comment on column CHB_SALER_INST_ERRODATA.WORKFLOW_ID is '工作流代码 ';
+comment on column CHB_SALER_INST_ERRODATA.CREATE_DEPT is '创建部门 ';
+comment on column CHB_SALER_INST_ERRODATA.ORG_CODE is '机构代码 ';
 comment on column CHB_SALER_INST_ERRODATA.CREATE_USER is '创建人 ';
 comment on column CHB_SALER_INST_ERRODATA.CREATE_TIME is '创建时间 ';
 comment on column CHB_SALER_INST_ERRODATA.UPDATE_USER is '更新人 ';
@@ -94,6 +102,8 @@ create table CHB_SALER_IDEN_INFO(
   ,REMARK VARCHAR2(256)
   ,STATUS VARCHAR2(2)
   ,DATA_DATE DATE
+  ,CREATE_DEPT	VARCHAR2(20)
+  ,ORG_CODE	    VARCHAR2(20)
   ,CREATE_USER	VARCHAR2(20)
   ,CREATE_TIME	TIMESTAMP(6)
   ,UPDATE_USER	VARCHAR2(32)
@@ -130,6 +140,8 @@ comment on column CHB_SALER_IDEN_INFO.SALER_STATUS is '当前状态 ';
 comment on column CHB_SALER_IDEN_INFO.STATUS is '数据状态';
 comment on column CHB_SALER_IDEN_INFO.DATA_DATE is '数据日期 ';
 comment on column CHB_SALER_IDEN_INFO.REMARK is '备注 ';
+comment on column CHB_SALER_IDEN_INFO.CREATE_DEPT is '创建部门 ';
+comment on column CHB_SALER_IDEN_INFO.ORG_CODE is '机构代码 ';
 comment on column CHB_SALER_IDEN_INFO.CREATE_USER is '创建人 ';
 comment on column CHB_SALER_IDEN_INFO.CREATE_TIME is '创建时间 ';
 comment on column CHB_SALER_IDEN_INFO.UPDATE_USER is '更新人 ';
@@ -141,6 +153,7 @@ alter table CHB_SALER_IDEN_INFO
 drop table CHB_SALER_IDEN_ERRODATA;
 create table CHB_SALER_IDEN_ERRODATA(
    SALER_INS_NO	VARCHAR2(30)
+  ,SALER_ORG_CODE 	VARCHAR2(32)
   ,SALER_NAME	VARCHAR2(200)
   ,SALER_SEX	VARCHAR2(2)
   ,SALER_CREDENT_TYPE	VARCHAR2(2)
@@ -149,6 +162,8 @@ create table CHB_SALER_IDEN_ERRODATA(
   ,ORG_DATA     CLOB
   ,ERR_MSG      CLOB
   ,WORKFLOW_ID  VARCHAR2(20)
+  ,CREATE_DEPT	VARCHAR2(20)
+  ,ORG_CODE	VARCHAR2(20)
   ,CREATE_USER	VARCHAR2(20)
   ,CREATE_TIME	TIMESTAMP(6)
   ,UPDATE_USER	VARCHAR2(32)
@@ -156,6 +171,7 @@ create table CHB_SALER_IDEN_ERRODATA(
 );
 comment on table CHB_SALER_IDEN_ERRODATA is '销售人员身份错误信息表';
 comment on column CHB_SALER_IDEN_ERRODATA.SALER_INS_NO is '内部编号';
+comment on column CHB_SALER_IDEN_ERRODATA.SALER_ORG_CODE is '所属总部或分支机构编码';
 comment on column CHB_SALER_IDEN_ERRODATA.SALER_NAME is '姓名 ';
 comment on column CHB_SALER_IDEN_ERRODATA.SALER_SEX is '性别 ';
 comment on column CHB_SALER_IDEN_ERRODATA.SALER_CREDENT_TYPE is '证件类别 ';
@@ -164,6 +180,8 @@ comment on column CHB_SALER_IDEN_ERRODATA.DATA_DATE is '数据日期 ';
 comment on column CHB_SALER_IDEN_ERRODATA.ORG_DATA is '原始数据 ';
 comment on column CHB_SALER_IDEN_ERRODATA.ERR_MSG is '错误信息 ';
 comment on column CHB_SALER_IDEN_ERRODATA.WORKFLOW_ID is '工作流代码 ';
+comment on column CHB_SALER_IDEN_ERRODATA.CREATE_DEPT is '创建部门 ';
+comment on column CHB_SALER_IDEN_ERRODATA.ORG_CODE is '机构代码 ';
 comment on column CHB_SALER_IDEN_ERRODATA.CREATE_USER is '创建人 ';
 comment on column CHB_SALER_IDEN_ERRODATA.CREATE_TIME is '创建时间 ';
 comment on column CHB_SALER_IDEN_ERRODATA.UPDATE_USER is '更新人 ';
@@ -189,6 +207,8 @@ create table CHB_SALER_REW_PENA_INFO(
   ,STATUS	VARCHAR2(2)
   ,DATA_DATE	DATE
   ,REMARK	VARCHAR2(200)
+  ,CREATE_DEPT	VARCHAR2(20)
+  ,ORG_CODE	VARCHAR2(20)
   ,CREATE_USER	VARCHAR2(20)
   ,CREATE_TIME	TIMESTAMP(6)
   ,UPDATE_USER	VARCHAR2(32)
@@ -210,6 +230,8 @@ comment on column CHB_SALER_REW_PENA_INFO.SALER_COMPLAIN_RESULT is '投诉处理
 comment on column CHB_SALER_REW_PENA_INFO.SALER_COMPLAIN_DATE is '投诉日期 ';
 comment on column CHB_SALER_REW_PENA_INFO.STATUS is '数据状态';
 comment on column CHB_SALER_REW_PENA_INFO.DATA_DATE is '数据日期 ';
+comment on column CHB_SALER_REW_PENA_INFO.CREATE_DEPT is '创建部门 ';
+comment on column CHB_SALER_REW_PENA_INFO.ORG_CODE is '机构代码 ';
 comment on column CHB_SALER_REW_PENA_INFO.CREATE_USER is '创建人 ';
 comment on column CHB_SALER_REW_PENA_INFO.CREATE_TIME is '创建时间 ';
 comment on column CHB_SALER_REW_PENA_INFO.UPDATE_USER is '更新人 ';
@@ -231,6 +253,8 @@ create table CHB_SALER_REW_PENA_ERRODATA(
   ,ORG_DATA     CLOB
   ,ERR_MSG      CLOB
   ,WORKFLOW_ID  VARCHAR2(20)
+  ,CREATE_DEPT	VARCHAR2(20)
+  ,ORG_CODE	VARCHAR2(20)
   ,CREATE_USER	VARCHAR2(20)
   ,CREATE_TIME	TIMESTAMP(6)
   ,UPDATE_USER	VARCHAR2(32)
@@ -247,6 +271,8 @@ comment on column CHB_SALER_REW_PENA_ERRODATA.STATUS is '数据状态';
 comment on column CHB_SALER_REW_PENA_ERRODATA.DATA_DATE is '数据日期 ';
 comment on column CHB_SALER_REW_PENA_ERRODATA.ORG_DATA is '原始数据 ';
 comment on column CHB_SALER_REW_PENA_ERRODATA.ERR_MSG is '错误信息 ';
+comment on column CHB_SALER_REW_PENA_ERRODATA.CREATE_DEPT is '创建部门 ';
+comment on column CHB_SALER_REW_PENA_ERRODATA.ORG_CODE is '机构代码 ';
 comment on column CHB_SALER_REW_PENA_ERRODATA.CREATE_USER is '创建人 ';
 comment on column CHB_SALER_REW_PENA_ERRODATA.CREATE_TIME is '创建时间 ';
 comment on column CHB_SALER_REW_PENA_ERRODATA.UPDATE_USER is '更新人 ';

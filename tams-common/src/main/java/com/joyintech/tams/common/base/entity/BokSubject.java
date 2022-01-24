@@ -65,21 +65,39 @@ public class BokSubject extends BokSubjectKey {
      * 内部科目编码
      */
     private String subjectInternalCode;
-
     /**
-     * 辅助核算表达式
+     * "辅助核算表达式（存储FEL表达式，如交易场所为银行间，发行方式为封闭式则生成表达式TRADE_MARKET='01'&&ISSUE_TYPE='01'
+     * 如果是记账科目，必填。"
      */
     private String subjectHandFelCode;
-
     /**
      * 币种
      */
     private String ccy;
 
-    /**
-     * 是否底层科目
-     */
-    private String isBottom;
+    public String getSubjectInternalCode() {
+        return subjectInternalCode;
+    }
+
+    public void setSubjectInternalCode(String subjectInternalCode) {
+        this.subjectInternalCode = subjectInternalCode;
+    }
+
+    public String getSubjectHandFelCode() {
+        return subjectHandFelCode;
+    }
+
+    public void setSubjectHandFelCode(String subjectHandFelCode) {
+        this.subjectHandFelCode = subjectHandFelCode;
+    }
+
+    public String getCcy() {
+        return ccy;
+    }
+
+    public void setCcy(String ccy) {
+        this.ccy = ccy;
+    }
 
     /**
      * 取得 科目名称
@@ -271,69 +289,5 @@ public class BokSubject extends BokSubjectKey {
      */
     public void setSecManageAcctId(String secManageAcctId) {
         this.secManageAcctId = secManageAcctId == null ? null : secManageAcctId.trim();
-    }
-
-    /**
-     * 取得 内部科目编码
-     * @return 内部科目编码
-     */
-    public String getSubjectInternalCode() {
-        return subjectInternalCode;
-    }
-
-    /**
-     * 设置 内部科目编码
-     * @param subjectInternalCode 内部科目编码
-     */
-    public void setSubjectInternalCode(String subjectInternalCode) {
-        this.subjectInternalCode = subjectInternalCode == null ? null : subjectInternalCode.trim();
-    }
-
-    /**
-     * 取得 辅助核算表达式
-     * @return 辅助核算表达式
-     */
-    public String getSubjectHandFelCode() {
-        return subjectHandFelCode;
-    }
-
-    /**
-     * 设置 辅助核算表达式
-     * @param subjectHandFelCode 辅助核算表达式
-     */
-    public void setSubjectHandFelCode(String subjectHandFelCode) {
-        this.subjectHandFelCode = subjectHandFelCode == null ? null : subjectHandFelCode.trim();
-    }
-
-    /**
-     * 取得 币种
-     * @return 币种
-     */
-    public String getCcy() {
-        return ccy;
-    }
-
-    /**
-     * 设置 币种
-     * @param ccy 币种
-     */
-    public void setCcy(String ccy) {
-        this.ccy = ccy == null ? null : ccy.trim();
-    }
-
-    /**
-     * 取得 是否底层科目
-     * @return 是否底层科目
-     */
-    public String getIsBottom() {
-        return isBottom;
-    }
-
-    /**
-     * 设置 是否底层科目
-     * @param isBottom 是否底层科目
-     */
-    public void setIsBottom(String isBottom) {
-        this.isBottom = isBottom == null ? null : isBottom.trim();
     }
 }

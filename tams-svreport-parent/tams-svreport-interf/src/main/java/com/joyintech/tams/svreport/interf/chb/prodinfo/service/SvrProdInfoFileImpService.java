@@ -128,15 +128,29 @@ public class SvrProdInfoFileImpService extends FileImpService {
 //		Map<String, String> prdRegistMap = new HashMap<String, String>();
 //		prdRegistMap = chbPrdBaseinfoInterfMapper.getAllRegistProdCodeSet().stream()
 //				.collect(JoyinCollectors.toMap(x -> x.get("PRODID"), x -> x.get("REG_CODE")));
-		for (Map<String, String> map : baseinfoList) {
-			ChbPrdBaseinfo info = dataConversionEntity(map);
-			if (map.get("ERRMSG") != null && !"".equals(map.get("ERRMSG"))) {
-				info.setStatus(DictCodeListExt1.维护数据状态_待处理.getValue());
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
+		listNE = (List<ChbPrdBaseinfo>) convertMapToEntity(baseinfoList,ChbPrdBaseinfo.class);
+		listNE.stream().forEach(dto->{
+			dto.setProduuid(IDGenerator.generate(36));
+			dto.setDataSource(dataSource);
+			if (dto.getRegCode() == null && "".equals(dto.getRegCode())){
+				ChbPrdresistCodeKey key = new ChbPrdresistCodeKey();
+				key.setProdid(dto.getProdId());
+				key.setFlag("2");
+				ChbPrdresistCode chbPrdresistCode = chbPrdresistCodeMapper.selectByPrimaryKey(key);
+				dto.setRegCode(chbPrdresistCode == null ? "" : chbPrdresistCode.getRegCode());// 产品登记编码
 			}
-			info.setDataSource(dataSource);
-			listNE.add(info);
-		}
-
+			dto.setDurationflag("03");
+		});
+//		for (Map<String, String> map : baseinfoList) {
+//			ChbPrdBaseinfo info = dataConversionEntity(map);
+//			if (map.get("ERRMSG") != null && !"".equals(map.get("ERRMSG"))) {
+//				info.setStatus(DictCodeListExt1.维护数据状态_待处理.getValue());
+//			}
+//			info.setDataSource(dataSource);
+//			listNE.add(info);
+//		}
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 end
 		if (listNE != null && listNE.size() > 0) {
 //			if (tmpPath == null) {
 //				if(saveFlag.equals(com.joyintech.tams.report.interf.common.constant.InterfConstants.SAVEFLAG_ALL)){
@@ -240,7 +254,7 @@ public class SvrProdInfoFileImpService extends FileImpService {
 
 	/**
 	 * map转换成实体类
-	 * 
+	 *
 	 * @param map
 	 * @return
 	 */
@@ -595,7 +609,7 @@ public class SvrProdInfoFileImpService extends FileImpService {
 	}
 
 	// @Override
-	public String importDB(List<Map<String, String>> listData, InterfFile interfFile) {
+	public String importDB(List<Map<String, String>> listData, InterfFile interfFile, String date) {
 //		List<Map<String, String>> listA = 
 		String result="success";
 		checkDataCodeCheck(listData, interfFile.getFilename(), ChbCheckTableInfo.个人发行登记表INFO);

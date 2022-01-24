@@ -72,7 +72,7 @@ $(function () {
             {title: "数据日期", field: 'statusDate', width: 200, type: 'datetime', sortable: false},
             {title: "报送状态", field: 'sendStatusStr', width: 100, sortable: false},
             {title: "报送日期", field: 'submitTime', width: 200, type: 'datetime', sortable: false},
-            {title: "报送截止日", field: 'chbSubmitDeadline', width: 200, type: 'datetime', sortable: false},
+            {title: "报送截止日", field: 'chbSubmitDeadline', width: 200, type: 'date', sortable: false},
             {title: "反馈状态", field: 'submitFeedbackStatusStr', width: 100, sortable: false},
             {title: '报表名称', field: 'reportname', width: 350, sortable: false},
             {title: '报告期', field: 'termname', width: 150, sortable: false},

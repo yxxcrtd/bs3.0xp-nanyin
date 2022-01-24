@@ -194,12 +194,12 @@
     <insert id="insert" parameterType="com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto.SalerInstInfoDto" >
         insert into CHB_SALER_INST_INFO (SALER_ORG_CODE, SALER_INST_CODE, SALER_INST_NAME, 
             SALER_ORG_NAME, SALER_ORG_LEVEL, STATUS, 
-            DATA_DATE, REMARK, CREATE_USER, 
+            DATA_DATE, REMARK, CREATE_USER, CREATE_DEPT,ORG_CODE,
             CREATE_TIME, UPDATE_USER, UPDATE_TIME
             )
         values (#{salerOrgCode,jdbcType=VARCHAR}, #{salerInstCode,jdbcType=VARCHAR}, #{salerInstName,jdbcType=VARCHAR}, 
             #{salerOrgName,jdbcType=VARCHAR}, #{salerOrgLevel,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
-            sysdate, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+            sysdate, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
             sysdate, #{updateUser,jdbcType=VARCHAR}, sysdate
             )
     </insert>
@@ -228,7 +228,8 @@
         FROM CHB_SALER_INST_INFO
         <where>
             <if test="salerOrgCode != null and salerOrgCode != ''">
-                AND	SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
+                AND	(SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
+                    OR SALER_ORG_NAME  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%')))
             </if>
         </where>
 
@@ -242,7 +243,8 @@
         FROM CHB_SALER_INST_ERRODATA
         <where>
             <if test="salerOrgCode != null and salerOrgCode != ''">
-                AND	SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
+                AND	(SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
+                OR SALER_ORG_NAME  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%')))
             </if>
         </where>
         )

@@ -299,6 +299,11 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                         flag = false;
                         message.add("证件类别为其他时，其他证件名称不能为空");
                     }
+                }else {
+                    if(list.get(5) != null && !(list.get(5).trim().equals(""))){
+                        flag = false;
+                        message.add("证件类别为非其他时，其他证件名称不能填写");
+                    }
                 }
             }
             //证件号码
@@ -406,6 +411,11 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             if(list.get(18) == null || list.get(18).trim().equals("")){
                 flag = false;
                 message.add("理财专业证书不能为空");
+            }else{
+                if(checkSalerCertificateType(this.subDictcodeMultiple(list.get(18), ","))){
+                    flag = false;
+                    message.add("理财专业证书输入格式错误，请严格按照规则输入！");
+                }
             }
             //理财登记培训证书编号（LC+12位数字）
             if(list.get(19) != null && !(list.get(19).trim().equals(""))){
@@ -419,6 +429,11 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             if(list.get(20) == null || list.get(20).trim().equals("")){
                 flag = false;
                 message.add("可销售产品风险等级不能为空");
+            }else{
+                if(checksalerRiskLevel(this.subDictcodeMultiple(list.get(20), ","))){
+                    flag = false;
+                    message.add("可销售产品风险等级输入格式错误，请严格按照规则输入！");
+                }
             }
             //销售资质
             if(list.get(21) == null || list.get(21).trim().equals("")){
@@ -553,7 +568,7 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             salerIdenInfoDto.setSalerLevle(this.subDictcode(list.get(17), " "));
 
             //理财专业证书
-            salerIdenInfoDto.setSalerCertificateType(list.get(18));
+            salerIdenInfoDto.setSalerCertificateType(this.subDictcodeMultiple(list.get(18), ","));
 
             //理财登记培训证书编号
             if(list.get(19) != null && list.get(19) != "") {
@@ -561,7 +576,7 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             }
 
             //可销售产品风险等级
-            salerIdenInfoDto.setSalerRiskLevel(this.subDictcode(list.get(20), " "));
+            salerIdenInfoDto.setSalerRiskLevel(this.subDictcodeMultiple(list.get(20), ","));
 
             //销售资质
             salerIdenInfoDto.setSalerQualification(list.get(21));
@@ -585,6 +600,8 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
 
             //数据状态
             salerIdenInfoDto.setStatus("E");
+            salerIdenInfoDto.setOrgCode(CommonUtil.getOrgCode());
+            salerIdenInfoDto.setCreateDept(CommonUtil.getDeptCode());
             returnInfoList.add(salerIdenInfoDto);
         }
         return returnInfoList;
@@ -598,11 +615,46 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
         return chbSalerIdenInfoMapper.getSalerName(map);
     }
 
+    /**
+     * 总部或分支机构编码联想框
+     */
+    public List<SuggestDto> getSalerOrgCode(Map<String, Object> map) {
+        return chbSalerIdenInfoMapper.getSalerOrgCode(map);
+    }
+
     public static String subDictcode(String value, String sign) {
         if (!isEmpty(value)) {
             int i = value.indexOf(sign);
             if (i > -1) {
                 value = value.substring(0, i);
+            }
+        }
+        return value;
+    }
+
+    public static String subDictcodeMultiple(String value, String sign) {
+        if (!isEmpty(value)) {
+            //value含有sign的个数
+            int i = ciShu(value,sign);
+            if(i == 0){
+                return subDictcode(value, " ");
+            }
+            else {
+                String Str = value;
+                String Str1 = "null";
+                int k = Str.indexOf(sign);
+                for (int j = 0; j <= i; j++) {
+                    if (Str1.equals("null")) {
+                        Str1 = subDictcode(value, " ");
+                    } else {
+                        int index = Str.indexOf(",", k + j -1);
+                        if (index > -1) {
+                            value = Str.substring(index+1, index+3);
+                        }
+                        Str1 = Str1 + "," + value;
+                    }
+                }
+                return Str1;
             }
         }
         return value;
@@ -623,6 +675,50 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
         boolean status = false;
         if (!isEmpty(value)) {
             status = value.contains("99");
+        }
+        return status;
+    }
+
+    //校验理财专业证书多选导入
+    public static boolean checkSalerCertificateType(String value){
+        boolean status = true;
+        if (!isEmpty(value)) {
+            if(value.equals("01,02,03,04,05") || value.equals("01,02,03,04") || value.equals("01,02,03,05") || value.equals("01,02,04,05") || value.equals("01,03,04,05") ||
+                    value.equals("01,02,03") || value.equals("01,02,04") || value.equals("01,02,05") || value.equals("01,03,04") || value.equals("01,03,05") || value.equals("01,04,05") ||
+                    value.equals("01,02") || value.equals("01,03") || value.equals("01,04") || value.equals("01,05") || value.equals("01") ||
+                    value.equals("02,03,04,05") || value.equals("02,03,04") || value.equals("02,03,05") || value.equals("02,04,05") ||
+                    value.equals("02,03") || value.equals("02,04") || value.equals("02,05") || value.equals("02") ||
+                    value.equals("03,04,05") || value.equals("03,04") || value.equals("03,05") || value.equals("03") || value.equals("04,05") || value.equals("04") || value.equals("05")){
+                status = false;
+            }
+        }
+        return status;
+    }
+
+    //校验可销售产品风险等级多选导入
+    public static boolean checksalerRiskLevel(String value){
+        boolean status = true;
+        if (!isEmpty(value)) {
+            if(value.equals("01,02,03,04,05,06,07,99") || value.equals("01,02,03,04,05,06,07") || value.equals("01,02,03,04,05,06,99") || value.equals("01,02,03,04,05,06") || value.equals("01,02,03,04,05,07") ||
+                    value.equals("01,02,03,04,05,99") || value.equals("01,02,03,04,05") || value.equals("01,02,03,04,06") || value.equals("01,02,03,04,07") || value.equals("01,02,03,04,99") ||
+                    value.equals("01,02,03,04") || value.equals("01,02,03,05") || value.equals("01,02,03,06") || value.equals("01,02,03,07") || value.equals("01,02,03,99") ||
+                    value.equals("01,02,03") || value.equals("01,02,04") || value.equals("01,02,05") || value.equals("01,02,06") || value.equals("01,02,07") || value.equals("01,02,99") ||
+                    value.equals("01,02") || value.equals("01,03") || value.equals("01,04") || value.equals("01,05") || value.equals("01,06") || value.equals("01,07") || value.equals("01,99") || value.equals("01") ||
+                    value.equals("02,03,04,05,06,07,99") || value.equals("02,03,04,05,06,07") || value.equals("02,03,04,05,06,99") || value.equals("02,03,04,05,06") || value.equals("02,03,04,05,07") ||
+                    value.equals("02,03,04,05,99") || value.equals("02,03,04,05") || value.equals("02,03,04,06") || value.equals("02,03,04,07") || value.equals("02,03,04,99") ||
+                    value.equals("02,03,04") || value.equals("02,03,05") || value.equals("02,03,06") || value.equals("02,03,07") || value.equals("02,03,99") ||
+                    value.equals("02,03") || value.equals("02,04") || value.equals("02,05") || value.equals("02,06") || value.equals("02,07") ||
+                    value.equals("02,99") || value.equals("02") || value.equals("03,04,05,06,07,99") || value.equals("03,04,05,06,07") || value.equals("03,04,05,06,99") ||
+                    value.equals("03,04,05,06") || value.equals("03,04,05,07") || value.equals("03,04,05,99") || value.equals("03,04,05") || value.equals("03,04,06") ||
+                    value.equals("03,04,07") || value.equals("03,04,99") || value.equals("03,04") || value.equals("03,05") || value.equals("03,06") ||
+                    value.equals("03,07") || value.equals("03,99") || value.equals("03") || value.equals("04,05,06,07,99") || value.equals("04,05,06,07") ||
+                    value.equals("04,05,06,99") || value.equals("04,05,06") || value.equals("04,05,07") || value.equals("04,05,99") || value.equals("04,05") ||
+                    value.equals("04,06") || value.equals("04,07") || value.equals("04,99") || value.equals("04") || value.equals("05,06,07,99") ||
+                    value.equals("05,06,07") || value.equals("05,06,99") || value.equals("05,06") || value.equals("05,07") || value.equals("05,99") ||
+                    value.equals("05") || value.equals("06,07,99") || value.equals("06,07") || value.equals("06,99") || value.equals("06") ||
+                    value.equals("07,99") || value.equals("07") || value.equals("99")){
+                status = false;
+            }
         }
         return status;
     }
@@ -819,5 +915,22 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             returnInfoList.add(salerIdenInfoDto);
         }
         return returnInfoList;
+    }
+
+    /**
+     * 判断str1中包含str2的个数
+     * @param str1
+     * @param str2
+     * @return counter
+     */
+    public static int ciShu(String str1,String str2){
+        int counter = 0;
+        for(int i = 0;i < str1.length() ;i++) {
+            int index = str1.indexOf(str2, i);
+            if (i == index) {
+                counter++;
+            }
+        }
+        return counter;
     }
 }

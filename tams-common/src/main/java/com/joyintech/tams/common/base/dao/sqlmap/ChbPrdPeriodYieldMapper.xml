@@ -18,11 +18,12 @@
     <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
     <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
     <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="TDY_UNIT_VALUE_SUM" property="tdyUnitValueSum" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
     SEQNO, FPROD_ID, PROD_ID, CHANGE_DATE, CHANG_TYPE, PROD_VALUE, ORG_CODE, DEPT_CODE, 
     STATUS, REV_DATE, DATA_SOURCE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, 
-    REMARK
+    REMARK, TDY_UNIT_VALUE_SUM
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -40,13 +41,13 @@
       ORG_CODE, DEPT_CODE, STATUS, 
       REV_DATE, DATA_SOURCE, UPDATE_USER, 
       UPDATE_TIME, CREATE_USER, CREATE_TIME, 
-      REMARK)
+      REMARK, TDY_UNIT_VALUE_SUM)
     values (#{seqno,jdbcType=CHAR}, #{fprodId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, 
       #{changeDate,jdbcType=TIMESTAMP}, #{changType,jdbcType=VARCHAR}, #{prodValue,jdbcType=DECIMAL}, 
       #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
       #{revDate,jdbcType=TIMESTAMP}, #{dataSource,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{remark,jdbcType=VARCHAR})
+      #{remark,jdbcType=VARCHAR}, #{tdyUnitValueSum,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield" >
     insert into CHB_PRD_PERIODYIELD
@@ -99,6 +100,9 @@
       <if test="remark != null" >
         REMARK,
       </if>
+      <if test="tdyUnitValueSum != null" >
+        TDY_UNIT_VALUE_SUM,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="seqno != null" >
@@ -148,6 +152,9 @@
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="tdyUnitValueSum != null" >
+        #{tdyUnitValueSum,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -199,6 +206,9 @@
       <if test="remark != null" >
         REMARK = #{remark,jdbcType=VARCHAR},
       </if>
+      <if test="tdyUnitValueSum != null" >
+        TDY_UNIT_VALUE_SUM = #{tdyUnitValueSum,jdbcType=DECIMAL},
+      </if>
     </set>
     where SEQNO = #{seqno,jdbcType=CHAR}
   </update>
@@ -218,7 +228,8 @@
       UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
       CREATE_USER = #{createUser,jdbcType=VARCHAR},
       CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
-      REMARK = #{remark,jdbcType=VARCHAR}
+      REMARK = #{remark,jdbcType=VARCHAR},
+      TDY_UNIT_VALUE_SUM = #{tdyUnitValueSum,jdbcType=DECIMAL}
     where SEQNO = #{seqno,jdbcType=CHAR}
   </update>
 </mapper>

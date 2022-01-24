@@ -10,15 +10,17 @@
  
 package com.joyintech.service.valuation.accounadjustmanage.subjectset.dao;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
-
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.valuation.accounadjustmanage.subjectset.dto.ValBokSubjectDto;
+import com.joyintech.service.valuation.accounadjustmanage.subjectset.dto.ValSubjectHandDto;
+import com.joyintech.tams.common.base.entity.BokSubject;
+import com.joyintech.tams.common.base.entity.BokSubjectKey;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 科目设置Mapper
@@ -141,4 +143,23 @@ public interface ValSubjectSet001Mapper {
      * @since 1.0
      */
     void deleteByFSubjectId(ValBokSubjectDto item);
+
+    /**
+     * @author  殷亚
+     * @description
+     * @date 2022-1-19 17:32
+     */
+    int deleteSubjectHands(ValSubjectHandDto dto);
+
+
+    /**
+     * @author  殷亚
+     * @description
+     * @date 2022-1-19 17:32
+     */
+    int insertSubjectHands(ValSubjectHandDto dto);
+
+    int insert(ValBokSubjectDto record);
+
+    int updateByPrimaryKey(ValBokSubjectDto record);
 }

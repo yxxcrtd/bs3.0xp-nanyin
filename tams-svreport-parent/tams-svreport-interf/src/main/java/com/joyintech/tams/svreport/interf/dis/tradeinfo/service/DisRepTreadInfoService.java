@@ -189,7 +189,7 @@ public class DisRepTreadInfoService extends FileImpService {
      * {@inheritDoc}
      */
     @Override
-    public String importDB(List<Map<String, String>> dataList, InterfFile interfFile) {
+    public String importDB(List<Map<String, String>> dataList, InterfFile interfFile, String date) {
         String rs = "success";
         // 对数据list进行处理
         if (!CollectionUtils.isEmpty(dataList)) {

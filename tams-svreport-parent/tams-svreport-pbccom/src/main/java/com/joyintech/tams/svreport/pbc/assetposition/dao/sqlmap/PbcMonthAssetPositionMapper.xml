@@ -794,7 +794,7 @@
       balance.BAL_FLAG BAL_FLAG /*余额方向*/
       FROM BOK_BALANCE BALANCE/*科目余额表*/
       LEFT JOIN CHB_PRD_BASEINFO PRODINFO /*产品要素信息*/
-      on prodinfo.PROD_ID = balance.BOOKSET_ID
+      on prodinfo.PROD_ID = balance.BOOKSET_ID and PRODINFO.status in ('E','M')
       LEFT JOIN (
       SELECT
       DISTINCT OPENSCH.OPEN_START OPEN_START,
@@ -861,6 +861,7 @@
         nvl(VAL.TDY_INTINCEXP,0) int_amt,/*利息 组合资产估值.当日应计利息+组合资产估值.其他应收款（本金）+组合资产估值.其他应收款（收益）*/
         NVL(VAL.DELAY_PAY_AMT,0) DELAY_PAY_AMT,/*待清算款*/
         val.MDATE MDATE,/*到期日*/
+        assetinfo.MDATE assetMdate,/*到期日*/
         assetinfo.BLN_AREA BLN_AREA,/*境内、境外*/
         assetinfo.rival_party COUNTER_ID,/*交易对手id*/
         nvl(assetinfo.INDUSTRY,assetinfo.INDUSTRY_PBC) INDUSTRY,/*融资人、发行人行业一级类别*/
@@ -873,9 +874,9 @@
 		FROM CHB_ASSETS_BASIS_DATA_NOBTM VAL
 		</if>
         left join chb_asset_info assetinfo
-        on assetinfo.asset_code=VAL.ASSET_ID 
+        on assetinfo.asset_code=VAL.ASSET_ID AND ASSETINFO.STATUS IN ('E','M')
         left join chb_prd_baseinfo prodinfo
-        on prodinfo.prod_id = val.prod_id
+        on prodinfo.prod_id = val.prod_id AND prodinfo.status in ('E','M')
         where 1 =1 
         and VAL.VALUE_DATE=#{bookdate,jdbcType=DATE}
         and assetinfo.ASSET_UUID is not null /* 去除头寸表中资产代码匹配不到数据的情况 */

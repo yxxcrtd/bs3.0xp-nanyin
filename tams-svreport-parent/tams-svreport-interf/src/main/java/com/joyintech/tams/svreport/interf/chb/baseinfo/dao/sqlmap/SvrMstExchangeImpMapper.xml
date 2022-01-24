@@ -277,10 +277,10 @@
 	<!-- 业务主键匹配 -->
 	ON(CII.EXCHARGE_CODE = TEMP.EXCHARGE_CODE
 	AND CII.TRADE_DATE = TEMP.TRADE_DATE
+    AND CII.DATASOURCE_TYPE = TEMP.DATASOURCE_TYPE
 	)
 	<!-- 匹配到则更新 -->
 	WHEN MATCHED THEN UPDATE SET
-	DATASOURCE_TYPE = TEMP.DATASOURCE_TYPE,
       OPEN_PRICE = TEMP.OPEN_PRICE,
       CLOSE_PRICE = TEMP.CLOSE_PRICE,
       HIGH_PRICE = TEMP.HIGH_PRICE,
@@ -316,7 +316,14 @@
 </delete>
 
 
-<delete id="deleteTodayData">
-  delete from MST_EXCHARGE_QUOTE where to_char(nvl(UPDATE_TIME,CREATE_TIME),'yyyymmdd')=to_char(sysdate,'yyyymmdd')
+  <delete id="deleteTodayData">
+    delete from MST_EXCHARGE_QUOTE where 1=1
+    <if test="collection != null and collection.size()>0">
+      AND TRADE_DATE IN(
+      <foreach item="item" index="index" collection="collection" separator=",">
+        #{item}
+      </foreach>
+      )
+    </if>
   </delete>
 </mapper>

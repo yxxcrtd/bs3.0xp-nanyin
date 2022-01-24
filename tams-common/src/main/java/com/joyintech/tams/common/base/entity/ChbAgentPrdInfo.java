@@ -47,6 +47,11 @@ public class ChbAgentPrdInfo extends BaseEntity {
     private String remark;
 
     /**
+     * 机构代码
+     */
+    private String orgCode;
+
+    /**
      * 取得 代销机构代码 
      * @return 代销机构代码 
      */
@@ -173,5 +178,21 @@ public class ChbAgentPrdInfo extends BaseEntity {
      */
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    /**
+     * 取得 机构代码
+     * @return 机构代码
+     */
+    public String getOrgCode() {
+        return orgCode;
+    }
+
+    /**
+     * 设置 机构代码
+     * @param orgCode 机构代码
+     */
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode == null ? null : orgCode.trim();
     }
 }

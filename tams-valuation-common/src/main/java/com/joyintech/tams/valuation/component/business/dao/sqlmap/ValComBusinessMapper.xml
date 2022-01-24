@@ -113,4 +113,40 @@
 			</if>
 		</where>
 	</select>
+
+	<!--内部科目定义下拉框-->
+	<select id="getSubjectInteral" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select bsi.SUBJECT_INTERNAL_CODE as id,bsi.SUBJECT_INTERNAL_NAME as text
+		from BOK_SUBJECT_INTERNAL bsi
+		<where>
+			<if test="subjectLevel != null and subjectLevel != ''">
+				AND bsi.SUBJECT_LEVEL =#{subjectLevel}
+			</if>
+			<if test="accFlag != null and accFlag != '' ">
+				AND bsi.ACC_FLAG = #{accFlag}
+			</if>
+			<if test="subjectType != null and subjectType != '' ">
+				AND bsi.SUBJECT_TYPE = #{subjectType}
+			</if>
+			<if test="search !=null and search != ''">
+				AND	(SUBJECT_INTERNAL_CODE like concat('%',concat(#{search},'%'))
+				OR SUBJECT_INTERNAL_NAME like concat('%',concat(#{search},'%')))
+			</if>
+
+		</where>
+	</select>
+
+
+	<!--内部科目定义下拉框-->
+	<select id="findSubjectInteral" resultType="com.joyintech.framework.select.SuggestDto">
+		SELECT DISTINCT A.SUBJECT_INTERNAL_CODE code,A.SUBJECT_INTERNAL_NAME name,A.SUBJECT_INTERNAL_NAME shortName,A.SUBJECT_INTERNAL_CODE hidCode,A.SUBJECT_INTERNAL_NAME linkValue
+		FROM BOK_SUBJECT_INTERNAL A
+		WHERE 1=1
+		<if test="param !=null and  param !='' ">
+			AND (A.SUBJECT_INTERNAL_CODE like '%' || #{param} || '%'
+			OR A.SUBJECT_INTERNAL_NAME like '%' || #{param} || '%')
+		</if>
+	</select>
+
+
 </mapper>

@@ -285,7 +285,7 @@ $(function() {
     });
 
     table.bind('click', '.fileView', function(data, index) {
-        var height = '600px';
+        var height = '500px';
         var btns = {};
         var keyList = [];
         var dialogIndex = -1;

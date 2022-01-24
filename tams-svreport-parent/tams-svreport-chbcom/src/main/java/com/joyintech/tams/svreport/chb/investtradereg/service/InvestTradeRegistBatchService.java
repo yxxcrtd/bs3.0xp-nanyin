@@ -380,31 +380,6 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
 					}
 				}
 
-				//根据数据源规范要求，新增的交易员与交易审批人身份证号字段后6位数据需脱敏为“******”  add by tuqirong 20211223 start
-				if (StringUtil.isNotEmpty(dto.getInvestApproverId()) && dto.getInvestApproverId().length() > 6) {
-					dto.setInvestApproverId(dto.getInvestApproverId().substring(0, dto.getInvestApproverId().length()-6) + "******");
-				}else if (StringUtil.isEmpty(dto.getInvestApproverId())
-						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_资产买入.getValue())
-						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_资产卖出或到期.getValue())
-						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_存入银行存款.getValue())
-						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_银行存款到期.getValue())
-						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_拆放同业和买入返售首期.getValue())
-						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_同业拆入和卖出回购首期.getValue())) {
-					dto.setInvestApproverId("000000");
-				}
-				if (StringUtil.isNotEmpty(dto.getInvestTraderId()) && dto.getInvestTraderId().length() > 6) {
-					dto.setInvestTraderId(dto.getInvestTraderId().substring(0,dto.getInvestTraderId().length()-6) + "******");
-				}else if (StringUtil.isEmpty(dto.getInvestTraderId())
-						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_资产买入.getValue())
-						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_资产卖出或到期.getValue())
-						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_存入银行存款.getValue())
-						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_银行存款到期.getValue())
-						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_拆放同业和买入返售首期.getValue())
-						&&!StringUtil.equals(dto.getCurAssetType(), DictCodeListExt2.资金流动类型_同业拆入和卖出回购首期.getValue())) {
-					dto.setInvestTraderId("000000");
-				}
-				//根据数据源规范要求，新增的交易员与交易审批人身份证号字段后6位数据需脱敏为“******”  add by tuqirong 20211223 end
-
 				// add by zhangliang 20201109 数据流向处理 ===================================start
 				Map<String, InvestTradeRegist001Dto> handleDataMap = handleDataStatus(dto, tradeRegMap.get(dto.getTradeCode()));
 				if (handleDataMap.containsKey(SvrDataStatusUtil.INSERT_DATA)) {
@@ -478,6 +453,33 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
 		// add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
         insertDataList = chbCommonCheckService.checkData(insertDataList, ChbCheckTableInfo.投资交易表登记SUB);
         // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
+		//add by tuqirong 2022-01-12 start  数据校验之后再进行脱敏
+		insertDataList.forEach(entity -> {
+			//根据数据源规范要求，新增的交易员与交易审批人身份证号字段后6位数据需脱敏为“******”  add by tuqirong 20211223 start
+			if (StringUtil.isNotEmpty(entity.getInvestApproverId()) && entity.getInvestApproverId().length() > 6) {
+				entity.setInvestApproverId(entity.getInvestApproverId().substring(0, entity.getInvestApproverId().length()-6) + "******");
+			}else if (StringUtil.isEmpty(entity.getInvestApproverId())
+					&&!StringUtil.equals(entity.getCurAssetType(), DictCodeListExt2.资金流动类型_资产买入.getValue())
+					&&!StringUtil.equals(entity.getCurAssetType(), DictCodeListExt2.资金流动类型_资产卖出或到期.getValue())
+					&&!StringUtil.equals(entity.getCurAssetType(), DictCodeListExt2.资金流动类型_银行存款到期.getValue())
+					&&!StringUtil.equals(entity.getCurAssetType(), DictCodeListExt2.资金流动类型_拆放同业和买入返售首期.getValue())
+					&&!StringUtil.equals(entity.getCurAssetType(), DictCodeListExt2.资金流动类型_同业拆入和卖出回购首期.getValue())) {
+				entity.setInvestApproverId("000000");
+			}
+			if (StringUtil.isNotEmpty(entity.getInvestTraderId()) && entity.getInvestTraderId().length() > 6) {
+				entity.setInvestTraderId(entity.getInvestTraderId().substring(0,entity.getInvestTraderId().length()-6) + "******");
+			}else if (StringUtil.isEmpty(entity.getInvestTraderId())
+					&&!StringUtil.equals(entity.getCurAssetType(), DictCodeListExt2.资金流动类型_资产买入.getValue())
+					&&!StringUtil.equals(entity.getCurAssetType(), DictCodeListExt2.资金流动类型_资产卖出或到期.getValue())
+					&&!StringUtil.equals(entity.getCurAssetType(), DictCodeListExt2.资金流动类型_存入银行存款.getValue())
+					&&!StringUtil.equals(entity.getCurAssetType(), DictCodeListExt2.资金流动类型_银行存款到期.getValue())
+					&&!StringUtil.equals(entity.getCurAssetType(), DictCodeListExt2.资金流动类型_拆放同业和买入返售首期.getValue())
+					&&!StringUtil.equals(entity.getCurAssetType(), DictCodeListExt2.资金流动类型_同业拆入和卖出回购首期.getValue())) {
+				entity.setInvestTraderId("000000");
+			}
+			//根据数据源规范要求，新增的交易员与交易审批人身份证号字段后6位数据需脱敏为“******”  add by tuqirong 20211223 end
+		});
+		//add by tuqirong 2022-01-12 end  数据校验之后再进行脱敏
 		insertDB(deleteDataList,insertDataList);
 		// 记录日志批处理结束
 		logInfoBatchEnd();

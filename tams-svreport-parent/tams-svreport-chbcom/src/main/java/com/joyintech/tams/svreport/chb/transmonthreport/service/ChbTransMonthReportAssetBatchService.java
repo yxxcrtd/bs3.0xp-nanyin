@@ -7,6 +7,7 @@ import com.joyintech.tams.common.base.entity.ChbTransMonth;
 import com.joyintech.tams.common.base.entity.ChbTransMonthTemplate;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition;
 import com.joyintech.tams.svreport.chb.transmonthreport.dao.ChbTransMonthReportSubRegistBatchMapper;
@@ -119,6 +120,7 @@ public class ChbTransMonthReportAssetBatchService {
         ChbTransMonthReportSubDetailDto AMT1_1_b = result.get(ChbTransMonthReportConstants.AMT1_1_b); // 1.1.b 利率债
         ChbTransMonthReportSubDetailDto AMT1_1_c = result.get(ChbTransMonthReportConstants.AMT1_1_c); // 1.1.c 固定收益类公募基金
         ChbTransMonthReportSubDetailDto AMT1_2 = result.get(ChbTransMonthReportConstants.AMT1_2); // 1.2 加权剩余期限
+        ChbTransMonthReportSubDetailDto AMT1_1_ex0 = new ChbTransMonthReportSubDetailDto(); // 除去期限为零的1.1合计
         // 2 非标准化债权类资产
         ChbTransMonthReportSubDetailDto AMT2_1 = result.get(ChbTransMonthReportConstants.AMT2_1); // 2.1 通过信托贷款和信托产品
         ChbTransMonthReportSubDetailDto AMT2_2 = result.get(ChbTransMonthReportConstants.AMT2_2); // 2.2 通过证券期货经营机构资管产品
@@ -129,6 +131,7 @@ public class ChbTransMonthReportAssetBatchService {
         ChbTransMonthReportSubDetailDto AMT2_7 = result.get(ChbTransMonthReportConstants.AMT2_7); // 2.7 直接投资
         ChbTransMonthReportSubDetailDto AMT2_8 = result.get(ChbTransMonthReportConstants.AMT2_8); // 2.8 合 计
         ChbTransMonthReportSubDetailDto AMT2_9 = result.get(ChbTransMonthReportConstants.AMT2_9); // 2.9 加权剩余期限
+        ChbTransMonthReportSubDetailDto AMT2_8_ex0 = new ChbTransMonthReportSubDetailDto(); // 除去期限为零的2.8合计
         // 3 股票类资产
         ChbTransMonthReportSubDetailDto AMT3_1 = result.get(ChbTransMonthReportConstants.AMT3_1); // 3.1 合 计
         // 4 未上市企业股权
@@ -136,6 +139,7 @@ public class ChbTransMonthReportAssetBatchService {
         ChbTransMonthReportSubDetailDto AMT4_1_a = result.get(ChbTransMonthReportConstants.AMT4_1_a); // 其中 4.1.a 政府出资产业投资基金
         ChbTransMonthReportSubDetailDto AMT4_1_b = result.get(ChbTransMonthReportConstants.AMT4_1_b); // 4.1.b 创业投资基金
         ChbTransMonthReportSubDetailDto AMT4_2 = result.get(ChbTransMonthReportConstants.AMT4_2); // 4.2 加权剩余期限
+        ChbTransMonthReportSubDetailDto AMT4_1_ex0 = new ChbTransMonthReportSubDetailDto(); // 除去期限为零的4.1合计
         // 5 银行资本补充工具
         ChbTransMonthReportSubDetailDto AMT5_1 = result.get(ChbTransMonthReportConstants.AMT5_1); // 5.1 合 计
         ChbTransMonthReportSubDetailDto AMT5_1_a = result.get(ChbTransMonthReportConstants.AMT5_1_a); // 其中 5.1.a 优先股
@@ -143,6 +147,7 @@ public class ChbTransMonthReportAssetBatchService {
         ChbTransMonthReportSubDetailDto AMT5_1_c = result.get(ChbTransMonthReportConstants.AMT5_1_c); // 5.1.c 永续债（股性）
         ChbTransMonthReportSubDetailDto AMT5_1_d = result.get(ChbTransMonthReportConstants.AMT5_1_d); // 5.1.d 二级资本债
         ChbTransMonthReportSubDetailDto AMT5_2 = result.get(ChbTransMonthReportConstants.AMT5_2); // 5.2 加权剩余期限
+        ChbTransMonthReportSubDetailDto AMT5_1_ex0 = new ChbTransMonthReportSubDetailDto(); // 除去期限为零的5.1合计
         // 6 其他资产
         ChbTransMonthReportSubDetailDto AMT6_1 = result.get(ChbTransMonthReportConstants.AMT6_1); // 6.1 合 计
         ChbTransMonthReportSubDetailDto AMT6_1_a = result.get(ChbTransMonthReportConstants.AMT6_1_a); // 其中 6.1.a 拆放同业及买入返售
@@ -151,6 +156,7 @@ public class ChbTransMonthReportAssetBatchService {
         ChbTransMonthReportSubDetailDto AMT6_1_d = result.get(ChbTransMonthReportConstants.AMT6_1_d); // 6.1.d 商品及金融衍生产品
         ChbTransMonthReportSubDetailDto AMT6_1_e = result.get(ChbTransMonthReportConstants.AMT6_1_e); // 6.1.e QDII
         ChbTransMonthReportSubDetailDto AMT6_2 = result.get(ChbTransMonthReportConstants.AMT6_2); // 6.2 加权剩余期限
+        ChbTransMonthReportSubDetailDto AMT6_1_ex0 = new ChbTransMonthReportSubDetailDto(); // 除去期限为零的6.1合计
         // 7 合计
         ChbTransMonthReportSubDetailDto AMT7 = result.get(ChbTransMonthReportConstants.AMT7); // 7 合计
 
@@ -163,12 +169,20 @@ public class ChbTransMonthReportAssetBatchService {
             if ("F01".equals(pos.getSunassettype())) {
                 // 1.1 合 计
                 calcMonthReportSubDetail(AMT1_1, pos, true, false);
+                // 计算剩余加权期限使用剩余期限不等于零的合计 modify by wuhaisen 20220120 start
+                if(!BigDecimal.ZERO.equals(pos.getTerms())){
+                    // 1.1 除去期限等于零合 计
+                    calcMonthReportSubDetail(AMT1_1_ex0, pos, true, false);
+                }
+                // 计算剩余加权期限使用剩余期限不等于零的合计 modify by wuhaisen 20220120 end
                 // 其中 1.1.a 信用债
                 if ("F0101".equals(pos.getSunassettype2()) || "F0102".equals(pos.getSunassettype2())) {
                     calcMonthReportSubDetail(AMT1_1_a, pos, true, false);
                     // 其中 1.1.a.a PPN等低流动性债券 非公开发行：02 公开发行：01
                     //if ("F0101".equals(pos.getSunassettype2()) && "02".equals(pos.getIssueMode())) {
-                    if ("F0101".equals(pos.getSunassettype2())) {//不判定是否公开发行
+                    //其债项评级在AA+（不含）以下或无信用评级 modify by wuhaisen  20220120  start
+                    if (pos.getRating() == null || Integer.parseInt(SvrDataUtil.getCodeFromDataDictByName(DictCode.资产评级, pos.getRating())) > 4) {//不判定是否公开发行
+                    //其债项评级在AA+（不含）以下或无信用评级 modify by wuhaisen  20220120  end
                         calcMonthReportSubDetail(AMT1_1_a_a, pos, true, false);
                     }
                 }
@@ -215,6 +229,12 @@ public class ChbTransMonthReportAssetBatchService {
                 }
                 // 2.8 合 计
                 calcMonthReportSubDetail(AMT2_8, pos, true, false);
+                // 计算剩余加权期限使用剩余期限不等于零的合计 modify by wuhaisen 20220120 start
+                if(!BigDecimal.ZERO.equals(pos.getTerms())){
+                    // 2.8 除去期限等于零合 计
+                    calcMonthReportSubDetail(AMT2_8_ex0, pos, true, false);
+                }
+                // 计算剩余加权期限使用剩余期限不等于零的合计 modify by wuhaisen 20220120 end
                 // 2.9 加权剩余期限
                 calcMonthReportSubDetail(AMT2_9, pos, false, true);
             }
@@ -227,6 +247,12 @@ public class ChbTransMonthReportAssetBatchService {
             else if ("F04".equals(pos.getSunassettype())) {
                 // 4.1 合 计
                 calcMonthReportSubDetail(AMT4_1, pos, true, false);
+                // 计算剩余加权期限使用剩余期限不等于零的合计 modify by wuhaisen 20220120 start
+                if(!BigDecimal.ZERO.equals(pos.getTerms())){
+                    // 4.1 除去期限等于零的合计
+                    calcMonthReportSubDetail(AMT4_1_ex0, pos, true, false);
+                }
+                // 计算剩余加权期限使用剩余期限不等于零的合计 modify by wuhaisen 20220120 end
                 // 其中 4.1.a 政府出资产业投资基金
                 if ("F0401".equals(pos.getSunassettype2())) {
                     calcMonthReportSubDetail(AMT4_1_a, pos, true, false);
@@ -242,6 +268,12 @@ public class ChbTransMonthReportAssetBatchService {
             else if ("F05".equals(pos.getSunassettype())) {
                 // 5.1 合 计
                 calcMonthReportSubDetail(AMT5_1, pos, true, false);
+                // 计算剩余加权期限使用剩余期限不等于零的合计 modify by wuhaisen 20220120 start
+                if(!BigDecimal.ZERO.equals(pos.getTerms())){
+                    // 5.1 除去期限等于零的合计
+                    calcMonthReportSubDetail(AMT5_1_ex0, pos, true, false);
+                }
+                // 计算剩余加权期限使用剩余期限不等于零的合计 modify by wuhaisen 20220120 end
                 // 其中 5.1.a 优先股
                 if ("F0501".equals(pos.getSunassettype2())) {
                     calcMonthReportSubDetail(AMT5_1_a, pos, true, false);
@@ -265,6 +297,12 @@ public class ChbTransMonthReportAssetBatchService {
             else if ("F06".equals(pos.getSunassettype())) {
                 // 6.1 合 计
                 calcMonthReportSubDetail(AMT6_1, pos, true, false);
+                // 计算剩余加权期限使用剩余期限不等于零的合计 modify by wuhaisen 20220120 start
+                 if(!BigDecimal.ZERO.equals(pos.getTerms())){
+                    // 6.1 除去期限等于零的合计
+                    calcMonthReportSubDetail(AMT6_1_ex0, pos, true, false);
+                }
+                // 计算剩余加权期限使用剩余期限不等于零的合计 modify by wuhaisen 20220120 end
                 // 其中 6.1.a 拆放同业及买入返售
                 if ("F0601".equals(pos.getSunassettype2())) {
                     calcMonthReportSubDetail(AMT6_1_a, pos, true, false);
@@ -293,18 +331,19 @@ public class ChbTransMonthReportAssetBatchService {
         // 7 合计
         calcSumLine(AMT7, AMT1_1, AMT2_8, AMT3_1, AMT4_1, AMT5_1, AMT6_1);
 
+        // 计算剩余加权期限使用剩余期限不等于零的合计 modify by wuhaisen 20220120 start
         // 计算加权期限
         // 1.2 加权剩余期限
-        calcTerms(AMT1_1, AMT1_2);
+        calcTerms(AMT1_1_ex0, AMT1_2);
         // 2.9 加权剩余期限
-        calcTerms(AMT2_8, AMT2_9);
+        calcTerms(AMT2_8_ex0, AMT2_9);
         // 4.2 加权剩余期限
-        calcTerms(AMT4_1, AMT4_2);
+        calcTerms(AMT4_1_ex0, AMT4_2);
         // 5.2 加权剩余期限
-        calcTerms(AMT5_1, AMT5_2);
+        calcTerms(AMT5_1_ex0, AMT5_2);
         // 6.2 加权剩余期限
-        calcTerms(AMT6_1, AMT6_2);
-
+        calcTerms(AMT6_1_ex0, AMT6_2);
+        // 计算剩余加权期限使用剩余期限不等于零的合计 modify by wuhaisen 20220120 end
         // 遍历result，插入全部的数据
         // 删除时上一次已报送数据不能删除
         if (StringUtil.isNotEmpty(report.getWbsreportuuid())) {

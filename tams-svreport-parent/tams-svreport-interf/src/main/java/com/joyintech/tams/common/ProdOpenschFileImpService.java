@@ -87,7 +87,7 @@ public class ProdOpenschFileImpService extends AbstractFileImpService {
 //					@Override
 //					public Boolean call() {
 //						Boolean res = true;
-//						if ("fail".equals(service.importDB(service.copyDataList(dataList),interfFile))) {
+//						if ("fail".equals(service.importDB(service.copyDataList(dataList),interfFile, currentDate))) {
 //							res = false;
 //						}
 //						return res;
@@ -123,7 +123,7 @@ public class ProdOpenschFileImpService extends AbstractFileImpService {
 //			}
 //			// 任务结束，停止线程池的所有线程
 //			taskpool.shutdown();
-			success = svrProdOpenschFileImpService.importDB(dataList,interfFile);
+			success = svrProdOpenschFileImpService.importDB(dataList,interfFile, currentDate);
 			// 移除文件
 			interfFile.setMoveRemovePath(success);
 			svrProdOpenschFileImpService.clearFile(interfFile);

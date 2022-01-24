@@ -42,6 +42,11 @@ public interface ChbSalerIdenInfoMapper {
      */
     List<SuggestDto> getSalerName(Map<String, Object> map);
 
+    /**
+     * 总部或分支机构编码联想框
+     */
+    List<SuggestDto> getSalerOrgCode(Map<String, Object> map);
+
     int deleteByPrimaryKey(String salerInsNo);
 
     int deleteErroByPrimaryKey(String salerInsNo);

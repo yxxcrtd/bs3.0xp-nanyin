@@ -171,7 +171,7 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
                     return "fail";
                 }
                 // 文件处理
-                String saveResult = importDB(counterPartyInfoList,interfFile);
+                String saveResult = importDB(counterPartyInfoList,interfFile, currentDate);
                 if ("fail".equals(saveResult)){
                     return "fail";
                 }
@@ -199,7 +199,7 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
 	 * @see com.joyintech.tams.common.FileImpService#saveDataBySteps(java.util.List)
 	 */
 	@Override
-	public String importDB(List<Map<String, String>> listData,InterfFile interfFile) {
+	public String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date) {
 	    String remoteDir = "success";
 		// 添加待处理的数据
 		List<Map<String,String>> listError = checkData(listData, interfFile.getFilename(),
@@ -247,7 +247,14 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
         String tmpPath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
         List<ChbMstCounterParty> mstCounterPartyList = new ArrayList<>();
         // 转换成dto对象
-        convertMapToEntity(listData, mstCounterPartyList);
+        // modify by convertMapToEntity yangxianjiu 2022-01-19 start
+//        convertMapToEntity(listData, mstCounterPartyList);
+        mstCounterPartyList = (List<ChbMstCounterParty>) convertMapToEntity(listData,ChbMstCounterParty.class);
+        mstCounterPartyList.stream().forEach(dto->{
+            // 设置uuid
+            dto.setUuid(UUID.randomUUID().toString());
+        });
+        // modify by convertMapToEntity yangxianjiu 2022-01-19 end
         List<ChbMstCounterParty> insertList = new LinkedList<>();
         List<ChbMstCounterParty> updateList = new LinkedList<>();
         separatorList(mstCounterPartyList,insertList,updateList);

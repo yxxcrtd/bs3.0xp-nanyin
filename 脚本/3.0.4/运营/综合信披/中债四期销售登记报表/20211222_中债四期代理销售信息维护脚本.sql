@@ -11,6 +11,8 @@ create table CHB_AGENT_INSTITUTION_INFO(
   ,FILE_NO VARCHAR2(600)
   ,DATA_DATE	DATE
   ,REMARK	VARCHAR2(200)
+  ,CREATE_DEPT	VARCHAR2(20)
+  ,ORG_CODE	VARCHAR2(20)
   ,CREATE_USER	VARCHAR2(20)
   ,CREATE_TIME	TIMESTAMP(6)
   ,UPDATE_USER	VARCHAR2(32)
@@ -27,6 +29,8 @@ comment on column CHB_AGENT_INSTITUTION_INFO.ENCLOSURE_CHANGE_FLAG is '附件修
 comment on column CHB_AGENT_INSTITUTION_INFO.FILE_NO is '附件代码';
 comment on column CHB_AGENT_INSTITUTION_INFO.DATA_DATE is '数据日期 ';
 comment on column CHB_AGENT_INSTITUTION_INFO.REMARK is '备注 ';
+comment on column CHB_AGENT_INSTITUTION_INFO.CREATE_DEPT is '创建部门 ';
+comment on column CHB_AGENT_INSTITUTION_INFO.ORG_CODE is '机构代码 ';
 comment on column CHB_AGENT_INSTITUTION_INFO.CREATE_USER is '创建人 ';
 comment on column CHB_AGENT_INSTITUTION_INFO.CREATE_TIME is '创建时间 ';
 comment on column CHB_AGENT_INSTITUTION_INFO.UPDATE_USER is '更新人 ';
@@ -45,6 +49,8 @@ create table CHB_AGENT_PRD_INFO(
   ,STATUS	VARCHAR2(2)
   ,DATA_DATE	DATE
   ,REMARK	VARCHAR2(200)
+  ,CREATE_DEPT	VARCHAR2(20)
+  ,ORG_CODE	VARCHAR2(20)
   ,CREATE_USER	VARCHAR2(20)
   ,CREATE_TIME	TIMESTAMP(6)
   ,UPDATE_USER	VARCHAR2(32)
@@ -59,6 +65,8 @@ comment on column CHB_AGENT_PRD_INFO.PROD_REGIST_CODE is '产品登记编码 ';
 comment on column CHB_AGENT_PRD_INFO.STATUS is '数据状态';
 comment on column CHB_AGENT_PRD_INFO.DATA_DATE is '数据日期 ';
 comment on column CHB_AGENT_PRD_INFO.REMARK is '备注 ';
+comment on column CHB_AGENT_PRD_INFO.CREATE_DEPT is '创建部门 ';
+comment on column CHB_AGENT_PRD_INFO.ORG_CODE is '机构代码 ';
 comment on column CHB_AGENT_PRD_INFO.CREATE_USER is '创建人 ';
 comment on column CHB_AGENT_PRD_INFO.CREATE_TIME is '创建时间 ';
 comment on column CHB_AGENT_PRD_INFO.UPDATE_USER is '更新人 ';

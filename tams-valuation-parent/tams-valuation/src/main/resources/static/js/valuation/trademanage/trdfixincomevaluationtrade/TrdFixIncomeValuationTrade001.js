@@ -67,13 +67,14 @@ $(function(){
             ,{field:'psStr', width:150, title: '交易类型',sortField:'ps'}
             ,{field:'tradeDate', type:'date' ,width:150, title: '交易日', visible: false}
             ,{field:'tradeDateStr',width:150, title: '交易日'}
-            ,{field:'settleDate', width:150, title: '交割日'}
+            ,{field:'settleDate', width:150, title: '交割日', visible: false}
+            ,{field:'settleDateStr',width:150, title: '交割日'}
             ,{field:'invAimStr', width:150, title: '会计分类'}
             ,{field:'tradeAmt', width:150, title: '本金金额',type:'number'}
             ,{field:'fpriceAmt', width:150, title: '全价金额',type:'number'}
             ,{field:'intAmt', width:150, title: '应收利息总额',type:'number'}
             ,{field:'ccy', width:150, title: '币种',sortField:'ccy'}
-            ,{field:'assetAccount', width:150, title: '资金账户'}
+            ,{field:'trdAcctId', width:150, title: '资金账户'}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]
     });

@@ -237,7 +237,9 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
 
 
 
-    public String getDelayPayAmtStr(){ return null!=this.getDelayPayAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getDelayPayAmt()):null; }
+    public String getDelayPayAmtStr(){
+        return null!=this.getDelayPayAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getDelayPayAmt()):null;
+    }
 
     public String getCostAmtStr(){
         //人行月报资产端成本已经是包含了利息调整了，需求把利息调整又单独列出来，然后余额写的是成本+利息调整，这样的话利息调整会统计重复？  成本直接减去利息调整进行展示
@@ -264,7 +266,12 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
     public String getAssetvalueAStr(){ return null!=this.getAssetvalueA()? BigDecimalConverterUtil.getMonthDetailString(this.getAssetvalueA()):null; }
     public String getAssetvalueBStr(){ return null!=this.getAssetvalueB()? BigDecimalConverterUtil.getMonthDetailString(this.getAssetvalueB()):null; }
 
-
+    public BigDecimal getDelayPayAmtDv(){
+        return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getDelayPayAmt()); }
+    public BigDecimal getCostAmtDv(){
+        return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getCostAmt()); }
+    public BigDecimal getCostAmtBDv(){
+        return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getCostAmtB()); }
     public BigDecimal getFloatIngplDv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getFloatIngpl()); }
     public BigDecimal getIntincexpDv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getIntincexp()); }
     public BigDecimal getIntadjexpAddDv(){ return BigDecimalConverterUtil.BigDecimalDivTenTh(this.getIntadjexpAdd()); }

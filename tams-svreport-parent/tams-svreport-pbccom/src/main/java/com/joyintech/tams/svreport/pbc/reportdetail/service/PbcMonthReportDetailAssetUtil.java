@@ -326,8 +326,14 @@ public class PbcMonthReportDetailAssetUtil {
         }else if(DictCodeListExt3.中债_上游资产一级分类_股票.getValue().equals(assetType)){
             SubjectName = assetInfo.getAssetName();
         }else if(DictCodeListExt3.中债_上游资产一级分类_质押式回购.getValue().equals(assetType)
-            ||DictCodeListExt3.中债_上游资产一级分类_买断式回购.getValue().equals(assetType)
-            ||DictCodeListExt3.中债_上游资产一级分类_金融衍生品.getValue().equals(assetType)){
+                ||DictCodeListExt3.中债_上游资产一级分类_买断式回购.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_外汇即期.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_外汇远期.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_外汇掉期.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_利率互换.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_债券借贷.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_拆借.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_金融衍生品.getValue().equals(assetType)){
             SubjectName = assetInfo.getRivalParty();
         }
         return SubjectName;

@@ -47,10 +47,9 @@ public class ChbDeadlineUtil {
                                                  Map<String,List<Date>> map,Date reportDate) {
         // 获取当前日期
         Date date;
-        if(DictCodeListExt2.报送数据状态_新建.getValue().equals(type)){
+        if(DictCodeListExt2.报送数据状态_新建.getValue().equals(type)||DictCodeListExt2.数据状态_有效.getValue().equals(type)){
             date = reportDate;
-        }
-        else{
+        }else{
             date = DateUtil.now();
         }
         String key = DateUtil.format(date)+ "|" + reportCode ;
@@ -81,7 +80,7 @@ public class ChbDeadlineUtil {
                                                  Map<String,List<Date>> map,Date reportDate) {
         // 获取当前日期
         Date date;
-        if(DictCodeListExt2.报送数据状态_新建.getValue().equals(type)){
+        if(DictCodeListExt2.报送数据状态_新建.getValue().equals(type)||DictCodeListExt2.数据状态_有效.getValue().equals(type)){
             date = reportDate;
         }
         else{

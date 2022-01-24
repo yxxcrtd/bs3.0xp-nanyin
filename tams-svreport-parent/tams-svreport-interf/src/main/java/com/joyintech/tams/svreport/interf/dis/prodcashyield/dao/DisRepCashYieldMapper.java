@@ -1,18 +1,17 @@
 package com.joyintech.tams.svreport.interf.dis.prodcashyield.dao;
 
-import java.util.List;
-
+import com.joyintech.tams.common.base.entity.RepCashYield;
 import org.springframework.stereotype.Repository;
 
-import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
+import java.util.List;
 
 @Repository
 public interface DisRepCashYieldMapper {
-    int insert(DisRepCashYield record);
+    int insert(RepCashYield record);
 
-    int insertSelective(DisRepCashYield record);
+    int insertSelective(RepCashYield record);
 
-    int insertBasicByBasicInfo(DisRepCashYield record);
+    int insertBasicByBasicInfo(RepCashYield record);
 
     /**
      * 根据启用日和现金流类型删除产品费率
@@ -21,7 +20,7 @@ public interface DisRepCashYieldMapper {
      * @see
      * @since 1.0
      */
-    int deleteRepCashYieldByStartDateAndCashType(DisRepCashYield disRepCashYield);
+    int deleteRepCashYieldByStartDateAndCashType(RepCashYield disRepCashYield);
 
     /**
      * 批量存入产品费率
@@ -30,12 +29,12 @@ public interface DisRepCashYieldMapper {
      * @see
      * @since 1.0
      */
-    int insertRepCashYieldList(List<DisRepCashYield> dtoList);
+    int insertRepCashYieldList(List<RepCashYield> dtoList);
     
     /**
      * 
      * @param dtoList
      * @return
      */
-    int mergeRepCashYield(List<DisRepCashYield> dtoList);
+    int mergeRepCashYield(List<RepCashYield> dtoList);
 }

@@ -42,6 +42,11 @@ public class ChbSalerInstInfo extends BaseEntity {
     private String remark;
 
     /**
+     * 机构代码
+     */
+    private String orgCode;
+
+    /**
      * 取得 总部或分支机构编码 
      * @return 总部或分支机构编码 
      */
@@ -152,5 +157,21 @@ public class ChbSalerInstInfo extends BaseEntity {
      */
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    /**
+     * 取得 机构代码
+     * @return 机构代码
+     */
+    public String getOrgCode() {
+        return orgCode;
+    }
+
+    /**
+     * 设置 机构代码
+     * @param orgCode 机构代码
+     */
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode == null ? null : orgCode.trim();
     }
 }
