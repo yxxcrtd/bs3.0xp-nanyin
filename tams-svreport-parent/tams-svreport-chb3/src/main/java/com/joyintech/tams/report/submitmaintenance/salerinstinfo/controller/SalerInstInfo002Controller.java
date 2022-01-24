@@ -45,8 +45,9 @@ public class SalerInstInfo002Controller extends BaseController {
        super.setSelectOptionToModel(model, DictCode.机构层级);
        String salerOrgCode = getParam("salerOrgCode");
        String erroOrInfo = getParam("erroOrInfo");
-       if(WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(salerOrgCode) && StringUtil.isNotEmpty(erroOrInfo)) {
-           SalerInstInfoDto entity = salerInstInfoService.selectDetail(salerOrgCode,erroOrInfo);
+       String workflowId = getParam("workflowId");
+       if(WorkFlowUtil.isNotFromToDoList()) {
+           SalerInstInfoDto entity = salerInstInfoService.selectDetail(salerOrgCode,erroOrInfo,workflowId);
                // 设置到model中
                model.addAttribute("entity", entity);
        }

@@ -75,7 +75,7 @@ public interface ChbSalerIdenInfoMapper {
      * 双击查看详细信息查询，修改信息查询 <功能详细描述>erro
      *
      */
-    List<SalerIdenInfoDto> selectErroDetail(Map<String, Object> param);
+    SalerIdenInfoDto selectErroDetail(Map<String, Object> param);
 
     /**
      * 查询有效已维护的奖惩信息

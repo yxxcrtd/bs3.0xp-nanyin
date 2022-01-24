@@ -20,7 +20,7 @@ import java.util.Map;
 
 
 /**
- * 信用拆借交易
+ * 存款类存续期
  * @see TrdDepoValuationDuration001Mapper
  * @since 1.0
  */
