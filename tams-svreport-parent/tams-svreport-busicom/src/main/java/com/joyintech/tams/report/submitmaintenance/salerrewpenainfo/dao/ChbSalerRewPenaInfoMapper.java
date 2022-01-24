@@ -59,7 +59,7 @@ public interface ChbSalerRewPenaInfoMapper {
      * 双击查看详细信息查询，修改信息查询 <功能详细描述>erro
      *
      */
-    List<SalerRewPenaInfoDto> selectErroDetail(Map<String, Object> param);
+    SalerRewPenaInfoDto selectErroDetail(Map<String, Object> param);
 
     //内部编号下拉框
     List<SelectOptionDto> selectSalerInsNo(Map<String, Object> pageParam);

@@ -42,10 +42,11 @@ public class SalerIdenInfoService extends CommonExportService<SalerIdenInfoDto> 
      * 双击查看或编辑info
      * selectDetail
      */
-    public SalerIdenInfoDto selectDetail(String salerInsNo,String erroOrInfo) {
+    public SalerIdenInfoDto selectDetail(String salerInsNo,String erroOrInfo,String workflowId) {
         Map<String,Object> param = new HashMap<String,Object>();
         param.put("salerInsNo",salerInsNo);
         param.put("erroOrInfo",erroOrInfo);
+        param.put("workflowId",workflowId);
         return restTemplate.postForObject(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/SalerIdenInfo/selectDetail", param,
                 SalerIdenInfoDto.class);
