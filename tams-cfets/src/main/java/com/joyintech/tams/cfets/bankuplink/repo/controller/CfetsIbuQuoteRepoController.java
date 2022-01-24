@@ -477,7 +477,9 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         if (CollectionUtils.isNotEmpty(dataList)) {
             dataList.forEach(item -> {
                 //债券代码不需要后缀
-                item.setFinprodMarketId(item.getFinprodMarketId().substring(0, item.getFinprodMarketId().indexOf(".")));
+                if (StringUtil.isNotEmpty(item.getFinprodMarketId())) {
+                    item.setFinprodMarketId(item.getFinprodMarketId().substring(0, item.getFinprodMarketId().indexOf(".")));
+                }
                 //清算速度不需要显示T，只需要显示+0或+1
                 if (StringUtil.isNotEmpty(item.getSettleSpeedStr())) {
                     item.setSettleSpeedStr(item.getSettleSpeedStr().substring(item.getSettleSpeedStr().indexOf("+"), item.getSettleSpeedStr().length()));
@@ -559,7 +561,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             }
             BaseMap map  = BaseMap.newMap(BeanUtil.object2Map(dto));
             for (String head:headList) {
-                if(StringUtil.isEmpty(map.get(head).toString())){
+                if(map.get(head) == null || StringUtil.isEmpty(map.get(head).toString())){
                     return  "导出数据必填项存在空值，请手动添加";
                 }
             }
