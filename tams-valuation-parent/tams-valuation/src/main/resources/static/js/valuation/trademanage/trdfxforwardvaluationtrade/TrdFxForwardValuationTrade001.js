@@ -51,7 +51,7 @@ $(function(){
         },
         dblclick:function(table, data) {
             Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-                    basePath + "valuation/trademanage/trdFxForwardvaluationtrade/TrdFxForwardValuationTrade002/init",
+                    basePath + "valuation/trademanage/trdfxforwardvaluationtrade/TrdFxForwardValuationTrade002/init",
                     "98%", "98%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
                     portfolioId:data.portfolioId,
                     finprodId:data.finprodId,
@@ -129,7 +129,7 @@ $(function(){
         var object = {selectedItem: [data], operateType:"delete"};
         Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
             WorkFlow.doDeleteList(
-                basePath + 'valuation/trademanage/trdFxForwardvaluationtrade/TrdFxForwardValuationTrade001/delete',
+                basePath + 'valuation/trademanage/trdfxforwardvaluationtrade/TrdFxForwardValuationTrade001/delete',
                 object,
                 "TrdFxForwardValuationTrade001_btn_delete",
                 "TrdFxForwardValuationTrade002",
