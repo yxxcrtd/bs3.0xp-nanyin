@@ -596,7 +596,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                    entrustReclas = cfetsQuotedCommonService.isEntrustReclas(entity.getFinprodId(), entity.getPrice(), entity.getTradeDate());
                 }
                 //处理本方券、融入券
-                Map<String, PtlAllocationDto> ptlAllocatioMap = cfetsQuotedCommonService.handOurAndLendinShareAmt(ptlAllocatios, entity.getWorkflowId(), ps);
+                Map<String, PtlAllocationDto> ptlAllocatioMap = cfetsQuotedCommonService.handOurAndLendinShareAmt(ptlAllocatios, entity.getWorkflowId(), ps,entity.getTotleTradeId());
                 for (PtlAllocationDto ptlAllocatio : ptlAllocatios){
                     RegFinProductDeal regFinProductDeal = new RegFinProductDeal();
                     BeanUtil.copyPropertiesIgnoreNull(regFinProductDeal,regFinProductDealTotal);

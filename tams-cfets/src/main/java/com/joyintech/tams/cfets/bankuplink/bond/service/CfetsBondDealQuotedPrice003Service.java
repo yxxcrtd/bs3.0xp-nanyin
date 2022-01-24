@@ -1068,7 +1068,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
                 ptlAllocationDto.setEntrustId(item.getEntrustId());
                 ptlAllocations.add(ptlAllocationDto);
             });
-            Map<String, PtlAllocationDto> stringPtlAllocationDtoMap = cfetsQuotedCommonServicevue.handOurAndLendinShareAmt(ptlAllocations, entity.getWorkflowId(), entity.getPs());
+            Map<String, PtlAllocationDto> stringPtlAllocationDtoMap = cfetsQuotedCommonServicevue.handOurAndLendinShareAmt(ptlAllocations, entity.getWorkflowId(), entity.getPs(),entity.getQuoteId());
             entity.getCfetsBondDealRequestQuoteDtoList().forEach(item ->{
                 if(stringPtlAllocationDtoMap.containsKey(item.getEntrustId())){
                     item.setOurShareAmt(stringPtlAllocationDtoMap.get(item.getEntrustId()).getOurShareAmt());
