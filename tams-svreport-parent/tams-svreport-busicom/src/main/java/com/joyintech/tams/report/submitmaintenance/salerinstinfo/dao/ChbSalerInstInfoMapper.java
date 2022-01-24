@@ -70,10 +70,10 @@ public interface ChbSalerInstInfoMapper {
 
     /**
      * 根据主键删除erro表中数据
-     * @param salerOrgCode
+     * @param workflowId
      * @return
      */
-    int deleteErroByPrimaryKey(String salerOrgCode);
+    int deleteErroByPrimaryKey(String workflowId);
 
     /**
      * 根据主键逻辑删除info表中数据
@@ -120,7 +120,7 @@ public interface ChbSalerInstInfoMapper {
      * 双击查看详细信息查询，修改信息查询 <功能详细描述>erro
      *
      */
-    List<SalerInstInfoDto> selectErroDetail(Map<String, Object> param);
+    SalerInstInfoDto selectErroDetail(Map<String, Object> param);
 
     //总部或分支机构编码重复校验
     int checkSalerOrgCode(String salerOrgCode);
