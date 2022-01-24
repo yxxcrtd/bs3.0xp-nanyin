@@ -98,6 +98,9 @@ public class CfetsRepoDayRegDto {
     @ApiModelProperty(name = "quoteId", value = "业务编号")
     private String quoteId;
 
+    @ApiModelProperty(name = "quoteIdStr", value = "业务编号")
+    private String quoteIdStr;
+
     @ApiModelProperty(name = "exeId", value = "成交编号")
     private String trdId;
     //本币导出
@@ -587,6 +590,14 @@ public class CfetsRepoDayRegDto {
 
     public void setPartyId(String partyId) {
         this.partyId = partyId;
+    }
+
+    public String getQuoteIdStr() {
+        return quoteIdStr;
+    }
+
+    public void setQuoteIdStr(String quoteIdStr) {
+        this.quoteIdStr = quoteIdStr;
     }
 }
 

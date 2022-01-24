@@ -4,41 +4,35 @@
 
     <!--有效-->
     <sql id="statusValid_01">
-        select '01'                                                                                     statusValid/*有效*/,
+        select case when IQC.TRADE_STATUS = '15' then '03' else '01'  end                               statusValid/*有效*/,
                '01'                                                                                     quoteType/*交易类型*/,
                IQC.QUOTE_DATE                                                                           tradeDate/*成交日期*/,
-               IQC.REPO_PS                                                                                   ps/*本方方向*/,
+               IQC.REPO_PS                                                                              ps/*本方方向*/,
                IQC.TRADE_STATUS                                                                         tradeStatus/*报价状态*/,
                IQC.SEND_STATUS                                                                          sendStatus/*发送状态*/,
-               IQC.FPRICE_AMT                                                                            tradeAmt/*交易金额*/,
+               IQC.FPRICE_AMT                                                                           tradeAmt/*交易金额*/,
                IQC.RATE                                                                                 rate/*回购利率*/,
                IQC.TERM                                                                                 repoTerm/*回购期限*/,
                IQC.QUOTE_ROLE_TYPE                                                                      quoteRoleType/*本方角色*/,
                MCCI.PARTY_NAME                                                                          ouPartyName/*本方*/,
-               SU.REAL_NAME                                                                             ouTraderName /*本方交易员*/,
+               MCCT1.TRADER_NAME                                                                        ouTraderName /*本方交易员*/,
                MCP.COUNTER_NAME                                                                         cpPartyName/*对手方*/,
-               CASE WHEN MCCT.TRADER_NAME is not null THEN MCCT.TRADER_NAME ELSE IQC.CP_TRADER_ID END cpTraderName/*对手方交易员*/,
+               CASE WHEN MCCT.TRADER_NAME is not null THEN MCCT.TRADER_NAME ELSE IQC.CP_TRADER_ID END   cpTraderName/*对手方交易员*/,
                DECODE(IQC.SETTLE_SPEED, 0, '01', 1, '02')                                               settleSpeed/*清算速度*/,
                IQC.V_SETTLE_DATE                                                                        vSettleDate/*首次结算日*/,
                IQC.M_SETTLE_DATE                                                                        mSettleDate/*到期结算日*/,
-               IQC.QUOTE_ID                                                                       quoteId/*业务编号*/,
+               IQC.QUOTE_ID                                                                             quoteId/*业务编号*/,
                TMI.TRD_ID                                                                               trdId/*成交编号*/,
                IQC.remark                                                                               remark/*备注*/,
                IQC.CREATE_USER,
                IQC.UPDATE_USER
         from IBU_QUOTE_CREP IQC
-                 LEFT JOIN TRDQUTO_MATCH_INFO TMI
-                           ON TMI.PRE_TRADE_ID = IQC.QUOTE_ID
-                 LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT
-                           ON TFPDT.TOTLE_TRADE_ID = TMI.TRD_ID
-                 LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI
-                           ON MCCI.PARTY_ID = IQC.OU_PARTY_ID
-                 LEFT JOIN MST_CFETS_CUSTOMER_TRADER MCCT
-                           ON MCCT.TRADER_ID = IQC.CP_TRADER_ID
-                 LEFT JOIN MST_COUNTER_PARTY MCP
-                           ON MCP.PARTY_ID = IQC.CP_PARTY_ID
-                 LEFT JOIN SYS_USER SU
-                           ON SU.USER_NAME = IQC.OU_TRADER_ID
+        LEFT JOIN TRDQUTO_MATCH_INFO TMI ON TMI.PRE_TRADE_ID = IQC.QUOTE_ID
+        LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT ON TFPDT.TOTLE_TRADE_ID = TMI.TRD_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI ON MCCI.PARTY_ID = IQC.OU_PARTY_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER MCCT ON MCCT.TRADER_ID = IQC.CP_TRADER_ID
+        LEFT JOIN MST_COUNTER_PARTY MCP ON MCP.PARTY_ID = IQC.CP_PARTY_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER MCCT1 ON MCCT1.TRADER_ID = IQC.OU_TRADER_ID
         where EXISTS (
             SELECT 1
             FROM IBU_QUOTE_ETR_RE T
@@ -47,53 +41,6 @@
                     AND T.ENTRUST_ID= #{entrustId}
                 </if>
             )
-    </sql>
-    <!--撤销-->
-    <sql id="statusValid_03">
-        select '03'                                                                                       statusValid/*有效*/,
-        '01'                                                                                       quoteType/*交易类型*/,
-        RFPDT.TRADE_DATE                                                                           tradeDate/*成交日期*/,
-        RFPDT.ps                                                                                   ps/*本方方向*/,
-        RFPDT.TRADE_STATUS                                                                         tradeStatus/*报价状态*/,
-        null                                                                                       sendStatus/*发送状态*/,
-        RFPDT.TRADE_AMT                                                                            tradeAmt/*交易金额*/,
-        RFPDT.RATE                                                                                 rate/*回购利率*/,
-        RFPDT.REPO_TERM                                                                            repoTerm/*回购期限*/,
-        null                                                                                       quoteRoleType/*本方角色*/,
-        MCCI.PARTY_NAME                                                                            ouPartyName/*本方*/,
-        SU.REAL_NAME                                                                               ouTraderName /*本方交易员*/,
-        MCP.COUNTER_NAME                                                                           cpPartyName/*对手方*/,
-        CASE WHEN MCCT.TRADER_NAME is not null THEN MCCT.TRADER_NAME ELSE RFPDT.COUNTER_TRADER END cpTraderName/*对手方交易员*/,
-        DECODE(RFPDT.SETTLE_SPEED, 0, '01', 1, '02')                                               settleSpeed/*清算速度*/,
-        RFPDT.V_SETTLE_DATE                                                                        vSettleDate/*首次结算日*/,
-        RFPDT.M_SETTLE_DATE                                                                        mSettleDate/*到期结算日*/,
-        RFPDT.TOTLE_TRADE_ID                                                                       quoteId/*业务编号*/,
-        TMI.TRD_ID                                                                                 trdId/*成交编号*/,
-        RFPDT.remark                                                                               remark/*备注*/,
-        RFPDT.CREATE_USER,RFPDT.UPDATE_USER
-        from REG_FIN_PRODUCT_DEAL_TOTAL RFPDT
-        LEFT JOIN TRDQUTO_MATCH_INFO TMI
-        ON TMI.PRE_TRADE_ID = RFPDT.TOTLE_TRADE_ID
-        LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT
-        ON TFPDT.TOTLE_TRADE_ID = TMI.TRD_ID
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI
-        ON MCCI.PARTY_ID = RFPDT.OU_PARTY_ID
-        LEFT JOIN MST_CFETS_CUSTOMER_TRADER MCCT
-        ON MCCT.TRADER_ID = RFPDT.COUNTER_TRADER
-        LEFT JOIN MST_COUNTER_PARTY MCP
-        ON MCP.COUNTER_ID = RFPDT.COUNTER_ID
-        LEFT JOIN SYS_USER SU
-        ON SU.USER_NAME = RFPDT.OU_TRADER_ID
-        where RFPDT.IS_CANCEL = 'Y'
-        and RFPDT.FINPROD_TYPE2 in ('F02', 'F03')
-        AND EXISTS (
-        SELECT  1
-        FROM REG_FIN_PRODUCT_DEAL T
-        WHERE T.TOTLE_TRADE_ID = RFPDT.TOTLE_TRADE_ID
-        <if test="entrustId!=null and entrustId!='' ">
-            AND T.ENTRUST_ID= #{entrustId}
-        </if>
-        )
     </sql>
     <!--流程中-->
     <sql id="statusValid_04">
@@ -108,7 +55,7 @@
                WIQC.TERM                                                                               repoTerm/*回购期限*/,
                WIQC.QUOTE_ROLE_TYPE                                                                    quoteRoleType/*本方角色*/,
                MCCI.PARTY_ABBR                                                                         ouPartyName/*本方*/,
-               SU.REAL_NAME                                                                            ouTraderName /*本方交易员*/,
+               MCCT1.TRADER_NAME                                                                        ouTraderName /*本方交易员*/,
                MCP.COUNTER_NAME                                                                        cpPartyName/*对手方*/,
                CASE WHEN MCCT.TRADER_NAME is not null THEN MCCT.TRADER_NAME ELSE WIQC.CP_TRADER_ID END cpTraderName/*对手方交易员*/,
                DECODE(WIQC.SETTLE_SPEED, 0, '01', 1, '02')                                             settleSpeed/*清算速度*/,
@@ -120,18 +67,12 @@
                WIQC.CREATE_USER,
                WIQC.UPDATE_USER
         from WFL_IBU_QUOTE_CREP WIQC
-                 LEFT JOIN TRDQUTO_MATCH_INFO TMI
-                           ON TMI.PRE_TRADE_ID = WIQC.QUOTE_ID
-                 LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT
-                           ON TFPDT.TOTLE_TRADE_ID = TMI.TRD_ID
-                 LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI
-                           ON MCCI.PARTY_ID = WIQC.OU_PARTY_ID
-                 LEFT JOIN MST_CFETS_CUSTOMER_TRADER MCCT
-                           ON MCCT.TRADER_ID = WIQC.CP_TRADER_ID
-                 LEFT JOIN MST_COUNTER_PARTY MCP
-                           ON MCP.PARTY_ID = WIQC.CP_PARTY_ID
-                 LEFT JOIN SYS_USER SU
-                           ON SU.USER_NAME = WIQC.OU_TRADER_ID
+        LEFT JOIN TRDQUTO_MATCH_INFO TMI ON TMI.PRE_TRADE_ID = WIQC.QUOTE_ID
+        LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT ON TFPDT.TOTLE_TRADE_ID = TMI.TRD_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI ON MCCI.PARTY_ID = WIQC.OU_PARTY_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER MCCT ON MCCT.TRADER_ID = WIQC.CP_TRADER_ID
+        LEFT JOIN MST_COUNTER_PARTY MCP ON MCP.PARTY_ID = WIQC.CP_PARTY_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER MCCT1 ON MCCT1.TRADER_ID = WIQC.OU_TRADER_ID
         where EXISTS(
                       SELECT 1
                       FROM IBU_QUOTE_ETR_RE T

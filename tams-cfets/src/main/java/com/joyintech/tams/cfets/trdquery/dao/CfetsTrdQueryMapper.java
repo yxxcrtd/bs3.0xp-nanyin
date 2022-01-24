@@ -116,6 +116,13 @@ public interface CfetsTrdQueryMapper {
      */
     CfetsTrdQueryCstpInfoListResponse selectCstpRepoFormDataByKey(Map<String, Object> pageParam);
     /**
+     * 成交数据中质押券信息List
+     *
+     * @param pageParam 参数
+     * @return List<PortIntFenPeiInfoDto>
+     */
+    List<CfetsPledgeInfoResponse> selectCstpTablePledgeInfoList(Map<String, Object> pageParam);
+    /**
      * 交易列表分页查询
      * @param pageParam 参数
      * @return List<CfetsManualSettleTraderListRespond>
@@ -176,6 +183,8 @@ public interface CfetsTrdQueryMapper {
      * @return java.lang.String
      */
     String getTradeId(@Param("tradeId") String tradeId);
+
+    Integer getCountByReg(@Param("tradeId") String tradeId);
     /**
      * 查询汇总编号下的所有交易编号
      * @param userName

@@ -1045,7 +1045,7 @@ public class CfetsQuotedCommonService extends BaseService {
      * @param workflowId
      * @param ps
      */
-    public Map<String,PtlAllocationDto> handOurAndLendinShareAmt(List<PtlAllocationDto> ptlAllocatios,String workflowId,String ps){
+    public Map<String,PtlAllocationDto> handOurAndLendinShareAmt(List<PtlAllocationDto> ptlAllocatios,String workflowId,String ps,String quoteId){
         Map<String, PtlAllocationDto> result  = new HashMap<>();
         if(CollectionUtils.isNotEmpty(ptlAllocatios)){
             //模式
@@ -1059,6 +1059,8 @@ public class CfetsQuotedCommonService extends BaseService {
             ptlAllocatios.forEach(item ->{entrustIds.add(item.getEntrustId());});
             param.put("entrustIds",entrustIds);
             param.put("workflowId",workflowId);
+            //去除当前该笔报价的占用额度
+            param.put("quoteId",quoteId);
             List<EntrustAvaShareAmtDto> entrustAvaShareAmtDtos = cfetsQuotedCommonService.listAvaShareAmt(param);
             Map<String, List<EntrustAvaShareAmtDto>> entrustAvaShareAmtGroup = entrustAvaShareAmtDtos.stream().collect(Collectors.groupingBy(EntrustAvaShareAmtDto::getEntrustId));
             for (PtlAllocationDto ptlAllocatio : ptlAllocatios){
