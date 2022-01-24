@@ -300,4 +300,18 @@ public interface EtrExchangeTradeCommonMapper {
     List<EtrExchangeTradeSaveRequest>	selectEntrustDetail(EtrExchangeTradeSaveRequest dto);
 
 	FinStockInfoDto selectByFinprodId(Map<String, Object> map);
+
+	// add by etliu 20211207 start
+	// 交易所债券非交易类业务迁移
+	/**
+	 *
+	 * @Description //查询行权回售数据
+	 * @Param [map]
+	 * @return 行权回售数据
+	 * @version 1.0
+	 * @see
+	 **/
+	List<FinExercisePlan> selectFinExercisePlanData(Map<String, Object> map);
+	// add by etliu 20211207 end
+
 }
