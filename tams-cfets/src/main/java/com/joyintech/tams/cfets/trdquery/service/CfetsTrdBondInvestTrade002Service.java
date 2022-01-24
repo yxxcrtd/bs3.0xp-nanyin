@@ -1170,10 +1170,10 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
             }else{
                 remark=settleRemark+"交易撤销：" + bizCode;
             }
-           // regTotal.setRemark(remark);
-           // regTotal.setTradeStatus(DictCodeListExt1.有效状态_撤销.getValue());
-           // cfetsTrdQueryMapper.updateRegTotalByPrimaryKeySelective(regTotal);
+            regTotal.setRemark(remark);
             cfetsBondDealQuotedPrice004Service.dorevoke(regTotal.getTotleTradeId(),remark);
+            //若是备注撤销内容不为空，则需要更新原登记数据的备注内容
+            cfetsTrdQueryMapper.updateRegTotalByPrimaryKeySelective(regTotal);
         }
         cfetsTrdConfirmMapper.deleteByTrdId(bizCode);
 
