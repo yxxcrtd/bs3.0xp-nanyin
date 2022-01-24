@@ -173,6 +173,55 @@ public class CfetsTrdRepoTrade002Dto extends TrdProductDeal implements ProcessEn
      * 父页面的parentPageId，用于区分字典值控制字段
      */
     private String parentPageId;
+    /**
+     * 回购利率
+     */
+    private BigDecimal rate;
+
+    /**
+     *结算币种
+     * @return
+     */
+    private String settCcy;
+
+    /**
+     * 质押券折算总额
+     * @return
+     */
+    private BigDecimal  disFaceValue;
+    /**
+     * 到期结算方式
+     */
+    private String mdeliveryType;
+    /**
+     * 首次结算日
+     */
+    private Date vsettleDate;
+
+    /**
+     * 到期结算日
+     * @return
+     */
+    private Date msettleDate;
+    /**
+     * 回购利息
+     */
+    private BigDecimal  mIntAmt;
+    /**
+     * 到期结算金额
+     */
+    private BigDecimal  mtradeAmt;
+
+    /**
+     * 实际占款天数
+     * @return
+     */
+    private Long actRepoTerm;
+    /**
+     * 期限品种
+     */
+    private String  termType;
+
 
     public String getParentPageId() {
         return parentPageId;
@@ -227,8 +276,8 @@ public class CfetsTrdRepoTrade002Dto extends TrdProductDeal implements ProcessEn
      */
     @Override
     @PrimaryKey(PrimaryKey.Field.PK_1)
-    public String getTradeId() {
-        return super.getTradeId();
+    public String getTotleTradeId() {
+        return super.getTotleTradeId();
     }
 
     /**
@@ -1975,5 +2024,85 @@ public class CfetsTrdRepoTrade002Dto extends TrdProductDeal implements ProcessEn
 
     public void setClearType(String clearType) {
         this.clearType = clearType;
+    }
+
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
+
+    public String getSettCcy() {
+        return settCcy;
+    }
+
+    public void setSettCcy(String settCcy) {
+        this.settCcy = settCcy;
+    }
+
+    public BigDecimal getDisFaceValue() {
+        return disFaceValue;
+    }
+
+    public void setDisFaceValue(BigDecimal disFaceValue) {
+        this.disFaceValue = disFaceValue;
+    }
+
+    public String getMdeliveryType() {
+        return mdeliveryType;
+    }
+
+    public void setMdeliveryType(String mdeliveryType) {
+        this.mdeliveryType = mdeliveryType;
+    }
+
+    public Date getVsettleDate() {
+        return vsettleDate;
+    }
+
+    public void setVsettleDate(Date vsettleDate) {
+        this.vsettleDate = vsettleDate;
+    }
+
+    public Date getMsettleDate() {
+        return msettleDate;
+    }
+
+    public void setMsettleDate(Date msettleDate) {
+        this.msettleDate = msettleDate;
+    }
+
+    public BigDecimal getmIntAmt() {
+        return mIntAmt;
+    }
+
+    public void setmIntAmt(BigDecimal mIntAmt) {
+        this.mIntAmt = mIntAmt;
+    }
+
+    public BigDecimal getMtradeAmt() {
+        return mtradeAmt;
+    }
+
+    public void setMtradeAmt(BigDecimal mtradeAmt) {
+        this.mtradeAmt = mtradeAmt;
+    }
+
+    public Long getActRepoTerm() {
+        return actRepoTerm;
+    }
+
+    public void setActRepoTerm(Long actRepoTerm) {
+        this.actRepoTerm = actRepoTerm;
+    }
+
+    public String getTermType() {
+        return termType;
+    }
+
+    public void setTermType(String termType) {
+        this.termType = termType;
     }
 }

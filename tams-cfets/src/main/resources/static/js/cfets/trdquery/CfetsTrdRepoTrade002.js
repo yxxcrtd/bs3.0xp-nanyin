@@ -1,6 +1,6 @@
 (function () {
     function query(ele){
-        return $("#CfetsTrdBondInvestTrade002_bodydiv " + ele);
+        return $("#CfetsTrdRepoTrade002_bodydiv " + ele);
     }
 
     var riskResultdata;
@@ -14,15 +14,16 @@
 
 
 
-    CfetsTrdBondInvestTrade002 = {
+    CfetsTrdRepoTrade002 = {
 
     }
     function getSearchParams() {
-
+ debugger;
         var object = $.serializeToObject("#searchForm");
         return object;
     }
     function getBussCombDistribtTableParams() {
+     debugger;
        var entityBussCombDistritList=entity_BussCombDistribtList||[];
 
        return entityBussCombDistritList;
@@ -122,7 +123,7 @@
     });
 
     var init = function () {
-
+       debugger;
     }
     init();
 
