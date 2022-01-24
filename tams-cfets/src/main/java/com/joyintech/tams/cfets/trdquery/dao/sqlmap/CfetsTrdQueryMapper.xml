@@ -2854,6 +2854,13 @@
     <select id="getTradeId" resultType="java.lang.String">
         select PRE_TRADE_ID from TRDQUTO_MATCH_INFO  where TRD_ID=#{tradeId,jdbcType=VARCHAR}
     </select>
+    <select id="getCountByReg" resultType="java.lang.Integer">
+       select sum(t.qty) from (
+           select count(*) qty from wfl_reg_fin_product_deal_total  where TOTLE_TRADE_ID=#{tradeId,jdbcType=VARCHAR}
+           union all
+           select count(*) qty from reg_fin_product_deal_total  where TOTLE_TRADE_ID=#{tradeId,jdbcType=VARCHAR}
+       ) t
+    </select>
     <resultMap id="trdRepoInvestTradeFullResultMap" type="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdRepoTrade002Dto"
                extends="com.joyintech.tams.common.base.dao.TrdProductDealMapper.BaseResultMap">
         <result column="fee_amt"    property="channelFee"   jdbcType="DECIMAL"/>

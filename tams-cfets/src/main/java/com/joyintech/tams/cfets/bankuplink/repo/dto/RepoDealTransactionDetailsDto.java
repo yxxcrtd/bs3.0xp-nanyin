@@ -270,8 +270,10 @@ public class RepoDealTransactionDetailsDto {
             return BussinessDictCodeList.有效状态_流程中.getCodeName();
         } else if (StringUtils.equals(this.getValidStatus(), BussinessDictCodeList.有效状态_有效.getValue())) {
             return BussinessDictCodeList.有效状态_有效.getCodeName();
-        } else {
+        } else if (StringUtils.equals(this.getValidStatus(), BussinessDictCodeList.有效状态_撤销.getValue())) {
             return BussinessDictCodeList.有效状态_撤销.getCodeName();
+        }else{
+            return this.getValidStatus();
         }
     }
 
