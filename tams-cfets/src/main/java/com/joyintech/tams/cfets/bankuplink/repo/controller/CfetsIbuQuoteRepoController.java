@@ -5,7 +5,6 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
@@ -57,8 +56,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -467,7 +464,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         String prefix = StringUtil.join("本币交易导出_", iPlatformDate.getSysDateStr());
         requestDto.setData(null);
         //获取机构信息
-        List<Map<String, String>> customerList = ibuQuoteRepoService.selectAllCustomer();
+        Map<String, String> customerMap = ibuQuoteRepoService.selectAllCustomer();
         //获取递增序号
         Map<String, String> sequenceIndex = new HashMap<>();
         sequenceIndex.put("databaseType", "Oracle");
@@ -489,20 +486,11 @@ public class CfetsIbuQuoteRepoController extends BaseController {
                 if (item.getRepoType() != null) {
                     item.setRepoTypeStr(DictCodeListExt3.from(DictCode.回购方式, item.getRepoType()).getCodeName());
                 }
-                //折算比例
-                if (item.getPledgeRatio() != null) {
-                    item.setPledgeRatio(ArithmeticUtil.multiply(new BigDecimal(100),item.getPledgeRatio()));
-                }
+
                 //对手方
                 item.setCpPartyName(null);
-                if (CollectionUtils.isNotEmpty(customerList) && StringUtil.isNotEmpty(item.getPartyId())) {
-                    String value = null;
-                    for (Map<String, String> customer : customerList) {
-                        if (customer.containsKey(item.getPartyId())) {
-                            value = customer.get(item.getPartyId());
-                        }
-                        item.setCpPartyName(value);
-                    }
+                if (!customerMap.isEmpty() && StringUtil.isNotEmpty(item.getPartyId())) {
+                    item.setCpPartyName(customerMap.get(item.getPartyId()));
                 }
 
             });
@@ -571,7 +559,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             }
             BaseMap map  = BaseMap.newMap(BeanUtil.object2Map(dto));
             for (String head:headList) {
-                if(StringUtil.isEmpty((String)map.get(head))){
+                if(StringUtil.isEmpty(map.get(head).toString())){
                     return  "导出数据必填项存在空值，请手动添加";
                 }
             }
