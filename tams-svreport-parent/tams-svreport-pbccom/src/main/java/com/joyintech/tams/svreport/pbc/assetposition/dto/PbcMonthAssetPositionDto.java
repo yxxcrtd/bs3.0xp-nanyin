@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.tams.busicommon.productRating.dto.CommonProductRatingDto;
 
 /**
  * 描述:PBC_MONTH_ASSET_POSITION表的实体类
@@ -12,7 +13,7 @@ import com.joyintech.framework.constant.GlobalConstant;
  * @author:  Administrator
  * @创建时间: 2019-03-11
  */
-public class PbcMonthAssetPositionDto implements Cloneable{
+public class PbcMonthAssetPositionDto extends CommonProductRatingDto implements Cloneable{
     /**
      * 主键uuid
      */
@@ -177,9 +178,63 @@ public class PbcMonthAssetPositionDto implements Cloneable{
      * 下一付费日
      */
     private Date payDate;
-    
-    
-    
+
+    /**
+     * 逾期标识 01 逾期，02 未逾期
+     */
+    private String yqFlag;
+
+    /**
+     * 评级选择设置(01:推荐评级 02:最大评级 03:最小评级)
+     */
+    private String sysflag;
+
+    /**
+     * 主体评级维度
+     */
+    private String principalRatingDimension;
+
+    /**
+     * 调用共通评级接口需要的债项排序sql
+     */
+    private String getProductRatingOrderSqlByZx;
+
+    /**
+     * 调用共通评级接口需要的主体排序sql
+     */
+    private String getProductRatingOrderSqlByZt;
+
+    /**
+     * 评级日期结束
+     */
+    private String gradeDateEnd;
+
+    /**
+     * 评级
+     */
+    private String rating;
+
+    /**
+     * 商业银行优先股
+     */
+    private  String  bankSecPrefer;
+
+    /**
+     * 商业银行永续债
+     */
+    private  String   bankSecPerpetual;
+
+    /**
+     * 商业银行二级资本债
+     */
+    private  String  bankSecCapital;
+
+    /**
+     * 债券性质 01 债性 	02 股性
+     */
+    private  String  isPerpetual;
+
+
     public Date getPayDate() {
 		return payDate;
 	}
@@ -684,5 +739,92 @@ public class PbcMonthAssetPositionDto implements Cloneable{
 	public void setOamt(BigDecimal oamt) {
 		this.oamt = oamt;
 	}
-    
+
+    public String getYqFlag() {
+        return yqFlag;
+    }
+
+    public void setYqFlag(String yqFlag) {
+        this.yqFlag = yqFlag;
+    }
+
+    public String getPrincipalRatingDimension() {
+        return principalRatingDimension;
+    }
+
+    public void setPrincipalRatingDimension(String principalRatingDimension) {
+        this.principalRatingDimension = principalRatingDimension;
+    }
+
+    public String getSysflag() {
+        return sysflag;
+    }
+
+    public void setSysflag(String sysflag) {
+        this.sysflag = sysflag;
+    }
+
+    public String getGetProductRatingOrderSqlByZx() {
+        return getProductRatingOrderSqlByZx;
+    }
+
+    public void setGetProductRatingOrderSqlByZx(String getProductRatingOrderSqlByZx) {
+        this.getProductRatingOrderSqlByZx = getProductRatingOrderSqlByZx;
+    }
+
+    public String getGetProductRatingOrderSqlByZt() {
+        return getProductRatingOrderSqlByZt;
+    }
+
+    public void setGetProductRatingOrderSqlByZt(String getProductRatingOrderSqlByZt) {
+        this.getProductRatingOrderSqlByZt = getProductRatingOrderSqlByZt;
+    }
+
+    public String getGradeDateEnd() {
+        return gradeDateEnd;
+    }
+
+    public void setGradeDateEnd(String gradeDateEnd) {
+        this.gradeDateEnd = gradeDateEnd;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
+    public String getBankSecPrefer() {
+        return bankSecPrefer;
+    }
+
+    public void setBankSecPrefer(String bankSecPrefer) {
+        this.bankSecPrefer = bankSecPrefer;
+    }
+
+    public String getBankSecPerpetual() {
+        return bankSecPerpetual;
+    }
+
+    public void setBankSecPerpetual(String bankSecPerpetual) {
+        this.bankSecPerpetual = bankSecPerpetual;
+    }
+
+    public String getBankSecCapital() {
+        return bankSecCapital;
+    }
+
+    public void setBankSecCapital(String bankSecCapital) {
+        this.bankSecCapital = bankSecCapital;
+    }
+
+    public String getIsPerpetual() {
+        return isPerpetual;
+    }
+
+    public void setIsPerpetual(String isPerpetual) {
+        this.isPerpetual = isPerpetual;
+    }
 }

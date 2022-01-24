@@ -100,7 +100,7 @@
 		</foreach>
 		) TEMP
 		<!-- 业务主键匹配 -->
-		ON(CAR.ASSET_ID = TEMP.PROD_ID
+		ON(CAR.ASSET_ID = TEMP.ASSET_ID
 		AND to_char(CAR.CHANGE_DATE,'yyyy-mm-dd') = to_char(TEMP.CHANGE_DATE,'yyyy-mm-dd')
 		AND CAR.CHANGE_TYPE = TEMP.CHANGE_TYPE
 		)

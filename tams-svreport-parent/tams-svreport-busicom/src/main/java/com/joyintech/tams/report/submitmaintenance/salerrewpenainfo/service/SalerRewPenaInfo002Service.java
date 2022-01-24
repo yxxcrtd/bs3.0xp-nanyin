@@ -83,4 +83,13 @@ public class SalerRewPenaInfo002Service extends BaseService{
     public String selectIssuePartyId(String orgCode){
         return  chbSalerRewPenaInfoMapper.selectIssuePartyId(orgCode);
     }
+
+    /**
+     * 查询姓名
+     * @param salerInsNo
+     * @return
+     */
+    public String getSalerName(String salerInsNo){
+        return  chbSalerRewPenaInfoMapper.getSalerName(salerInsNo);
+    }
 }

@@ -35,6 +35,8 @@ public class AssetTypeSetting001Service extends CommonExportService<AssetTypeSet
     @Autowired
     private ChbAssetTypeMappingExMapper chbAssetTypeMappingExMapper;
 
+    private String elementId = "AssetTypeSetting001_export";
+
     /**
      * 分页查询
      * @param param
@@ -205,11 +207,30 @@ public class AssetTypeSetting001Service extends CommonExportService<AssetTypeSet
         return dtoList;
     }
 
+    @Override
+    protected void beforeCreateExcel(List<AssetTypeSetting001Dto> contents) {
+        if (StringUtil.endsWith(elementId, "_btn_exportCheck")) {
+            Map<String, Object> param = new HashMap<>();
+            param.put("list",contents);
+            List<AssetTypeSetting001Dto> result = assetTypeSetting001Mapper.selectForExport(param);
+            contents.clear();
+            contents.addAll(result);
+        }
+    }
+
+    public Page<AssetTypeSetting001Dto> selectForExport(Map<String, Object> param) {
+        List<AssetTypeSetting001Dto> list = assetTypeSetting001Mapper.selectForPage(param);
+        param.put("list",list);
+        Page<AssetTypeSetting001Dto> page = queryForPage(AssetTypeSetting001Mapper.class,"selectForExport",param);;
+        return page;
+    }
+
     /**
      * 导出
      */
     @Override
     protected void buildExportParam(ExportParam exportParam) {
+        elementId = exportParam.getSelectParam().get("elementId").toString();
         exportParam.config(
                 "/com/joyintech/tams/svreport/chb/assettypesetting/conf/export_conf.xml").dataSource(DataSourceType.MASERT);
     }
@@ -218,7 +239,8 @@ public class AssetTypeSetting001Service extends CommonExportService<AssetTypeSet
      */
     @Override
     public Page<AssetTypeSetting001Dto> selectPageData(Map<String, Object> selectParam) {
-        return selectForPage(selectParam);
+//        return selectForPage(selectParam);
+        return selectForExport(selectParam);
     }
 
 }

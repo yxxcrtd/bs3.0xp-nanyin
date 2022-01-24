@@ -30,11 +30,6 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     private String transferType;
     
     /**
-     * 货币市场基金标识（01 是、02 否）
-     */
-    private String isMarketFund;
-    
-    /**
      * 主键，自动生成
      */
     private String produuid;
@@ -683,6 +678,16 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      * 分级比例
      */
     private  BigDecimal gradProportion;
+
+    /**
+     * 以财产权信托名义开展的资金信托标识
+     */
+    private  String zjxtFlag;
+
+    /**
+     * 货币市场基金标识（01 是、02 否）
+     */
+    private String isMarketFund;
 
 
     public String getPrdSpecProperty() {
@@ -2615,13 +2620,6 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
 		this.transferType = transferType;
 	}
 
-	public String getIsMarketFund() {
-		return isMarketFund;
-	}
-
-	public void setIsMarketFund(String isMarketFund) {
-		this.isMarketFund = isMarketFund;
-	}
 
 	public String getExcFinSector() {
 		return excFinSector;
@@ -2752,5 +2750,20 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     public void setAcctName(String acctName) {
         this.acctName = acctName == null ? null : acctName.trim();
     }
-	
+
+    public String getZjxtFlag() {
+        return zjxtFlag;
+    }
+
+    public void setZjxtFlag(String zjxtFlag) {
+        this.zjxtFlag = zjxtFlag;
+    }
+
+    public String getIsMarketFund() {
+        return isMarketFund;
+    }
+
+    public void setIsMarketFund(String isMarketFund) {
+        this.isMarketFund = isMarketFund;
+    }
 }

@@ -32,6 +32,11 @@ public class SalerRewPenaInfoDto extends ChbSalerRewPenaInfo implements ProcessE
     private String errMsg;
 
     /**
+     * 姓名
+     */
+    private String salerName;
+
+    /**
      * 选中的数据
      */
     private transient List<SalerRewPenaInfoDto> selectedItem;
@@ -122,5 +127,13 @@ public class SalerRewPenaInfoDto extends ChbSalerRewPenaInfo implements ProcessE
 
     public String getSalerComplainDateStr() {
         return DateUtil.format(this.getSalerComplainDate());
+    }
+
+    public String getSalerName() {
+        return salerName;
+    }
+
+    public void setSalerName(String salerName) {
+        this.salerName = salerName;
     }
 }

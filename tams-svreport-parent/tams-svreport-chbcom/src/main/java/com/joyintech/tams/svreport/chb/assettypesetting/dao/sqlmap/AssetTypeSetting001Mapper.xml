@@ -96,4 +96,26 @@
         WHERE B.MAPPING_UUID = #{typeuuid,jdbcType=VARCHAR}
     </select>
 
+    <select id="selectForExport" parameterType="java.util.Map" resultType="com.joyintech.tams.svreport.chb.assettypesetting.dto.AssetTypeSetting001Dto">
+        <foreach collection="list" open="SELECT * FROM (" close=")" item="item" separator="UNION ALL">
+            SELECT
+                #{item.typeuuid} typeuuid,
+                #{item.assetType1,jdbcType=VARCHAR} assetType1,
+                #{item.assetType2,jdbcType=VARCHAR} assetType2,
+                #{item.assetType3,jdbcType=VARCHAR} assetType3,
+                null chbAssetType,
+                null chbAssetType2
+            FROM DUAL
+            UNION ALL
+            SELECT
+                null typeuuid,
+                null assetType1,
+                null assetType2,
+                null assetType3,
+                CHB.CHB_ASSET_TYPE chbAssetType,
+                CHB.CHB_ASSET_TYPE2 chbAssetType2
+            FROM CHB_ASSET_TYPE_MAPPING_EX CHB
+            WHERE CHB.MAPPING_UUID = #{item.typeuuid}
+        </foreach>
+    </select>
 </mapper>

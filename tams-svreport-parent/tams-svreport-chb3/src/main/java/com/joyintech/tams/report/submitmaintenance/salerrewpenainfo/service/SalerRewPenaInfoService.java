@@ -162,6 +162,17 @@ public class SalerRewPenaInfoService extends CommonExportService<SalerRewPenaInf
     }
 
     /**
+     * 查询姓名
+     * @param salerInsNo
+     * @return
+     */
+    public String getSalerName(String salerInsNo) {
+        return  restTemplate.postForObject(
+                SvrServiceApplication.CHB_SERVICE_NAME + "/SalerRewPenaInfo/getSalerName",salerInsNo,
+                String.class);
+    }
+
+    /**
      * 内部编号联想框
      */
     public List<SuggestDto> getSalerInsNo(Map<String, Object> map) {

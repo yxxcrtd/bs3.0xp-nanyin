@@ -736,7 +736,7 @@
 	        info.org_code,
 	        info.is_constracte,/*是否分级产品*/
 	        info.prodtype,/*产品标识*/
-	        info.is_market_fund,/*货币市场基金*/
+	        info.CASH_MANA_CATE,/*货币市场基金*/
 	        info.transfer_type,/*转让类型*/
 	        info.operate_mode,/*运行方式*/
 	        info.raise_type,/*募集方式*/
@@ -878,7 +878,7 @@
 	        when info.dealcounts=0 and info.Issuing_Status='01' then '01'
             else '03'
 	    END durationflag,/*存续状态*/
-	    info.is_market_fund    ismarketfund,/*货币市场基金*/
+	    info.CASH_MANA_CATE    ismarketfund,/*货币市场基金*/
 	    info.vdate,/*起息日*/
 	    case 
 	        when info.terminatecounts>0 then

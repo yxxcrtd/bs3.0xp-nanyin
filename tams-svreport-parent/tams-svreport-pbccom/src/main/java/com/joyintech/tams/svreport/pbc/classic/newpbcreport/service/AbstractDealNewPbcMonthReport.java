@@ -47,6 +47,8 @@ public abstract class AbstractDealNewPbcMonthReport implements IDealNewPbcMonthR
     public final static String SHEET_3_2 = "表3-2新发产品分期限募集金额";
 
     public final static String SHEET_3_3 = "表3-3资产负债剩余期限";
+
+    public final static String SHEET_4_1 = "表4-1资管产品资产配置情况";
     /**
      * 发行机构代码
      */

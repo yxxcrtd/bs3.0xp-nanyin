@@ -57,7 +57,8 @@ public class PbcMonthReportDetailAssetUtil {
             PbcReportProperycode.AMT_761000_DKSYQ,  PbcReportProperycode.AMT_763000_YSZKSYQ, PbcReportProperycode.AMT_764000_QTZQSYQ,PbcReportProperycode.AMT_771000_GP,
             PbcReportProperycode.AMT_767000_WQZCSYQ,PbcReportProperycode.AMT_766000_QTGQSYQ,PbcReportProperycode.AMT_765000_GPSYQ,PbcReportProperycode.AMT_764000_QTZQSYQ,
             PbcReportProperycode.AMT_763000_YSZKSYQ,PbcReportProperycode.AMT_762000_ZWZQSYQ,PbcReportProperycode.AMT_761000_DKSYQ,PbcReportProperycode.AMT_811200_HGHCJ,
-            PbcReportProperycode.AMT_811000_DK);
+            PbcReportProperycode.AMT_811000_DK,PbcReportProperycode.AMT_773000_QTGQ,PbcReportProperycode.AMT_811270_TDMDZT,PbcReportProperycode.AMT_752700_TDMDZT,
+            PbcReportProperycode.AMT_811260_FYXYJRJG);
 
 
     private static final Map<String, String> ENTERPRISE_SCALE_MAP = new HashMap<String, String>(1 << 4);
@@ -442,7 +443,6 @@ public class PbcMonthReportDetailAssetUtil {
         //展示产品购买资产首次买入交易的交易对手名称
         List<SelectOptionDto> oDto = pbcMonthReportDetailAssetMapper.getCounterList(paraMap);
         Map<String,String> CounterMap = oDto.stream().collect(JoyinCollectors.toMap(x -> x.getId(), x -> x.getText()));
-
 
         String source = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE_PBC);
         Map<String, BigDecimal> rateMap = new HashMap<String, BigDecimal>();

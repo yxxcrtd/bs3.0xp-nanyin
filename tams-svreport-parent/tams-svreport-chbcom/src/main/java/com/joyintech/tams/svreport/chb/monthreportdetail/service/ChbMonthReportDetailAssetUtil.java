@@ -297,7 +297,7 @@ public class ChbMonthReportDetailAssetUtil {
                     //转换为AMT1_5_16_b
                     dto.setDetailno("AMT1_5_16_c");
                     BigDecimal assetValueA = dto.getAssetvalueA();
-                    BigDecimal assetValueB = dto.getAssetvalueA();
+                    BigDecimal assetValueB = dto.getAssetvalueB();
 
                     //如果包含专项债券
                     if (null != detail1001.get(dto.getCounterListCode() + "_AMT1_5_16_a")) {

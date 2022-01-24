@@ -230,6 +230,18 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
             if (StringUtil.isNotEmpty(result.getIdentiFlag())){
                 result.setIdentiFlag( SysDataUtil.getNameFromDataDict(DictCode.人行理财产品发起机构标识,result.getIdentiFlag()));
             }
+			//是否现金管理类
+			if (StringUtil.isNotEmpty(result.getCashManaCate())){
+				result.setCashManaCate( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCashManaCate()));
+			}
+			//跨境理财通标识
+			if (StringUtil.isNotEmpty(result.getCrossBorderFlag())){
+				result.setCrossBorderFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCrossBorderFlag()));
+			}
+			//以财产权信托名义开展的资金信托标识
+			if (StringUtil.isNotEmpty(result.getZjxtFlag())){
+				result.setZjxtFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getZjxtFlag()));
+			}
             if(result.getOutDepCtry()!=null){
 				List<String> outDepCtrys=StringUtil.splitToList(GlobalConstant.COMMA, result.getOutDepCtry());
 				result.setOutDepCtry("");
@@ -353,6 +365,18 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
             if (result.getLowYieldIssue() != null && BigDecimal.ZERO.compareTo(result.getLowYieldIssue()) != 0) {
             	result.setLowYieldIssueToString(df.format(result.getLowYieldIssue()));
             }
+			//是否现金管理类
+			if (StringUtil.isNotEmpty(result.getCashManaCate())){
+				result.setCashManaCate( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCashManaCate()));
+			}
+			//跨境理财通标识
+			if (StringUtil.isNotEmpty(result.getCrossBorderFlag())){
+				result.setCrossBorderFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCrossBorderFlag()));
+			}
+			//以财产权信托名义开展的资金信托标识
+			if (StringUtil.isNotEmpty(result.getZjxtFlag())){
+				result.setZjxtFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getZjxtFlag()));
+			}
             if (result.getProdStage() != null) {
             	result.setProdStageToString(result.getProdStage().toString());
 			}

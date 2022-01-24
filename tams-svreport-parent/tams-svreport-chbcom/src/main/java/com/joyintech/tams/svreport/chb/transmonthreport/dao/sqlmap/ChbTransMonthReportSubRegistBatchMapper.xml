@@ -66,6 +66,7 @@
     <select id="selectAssetPositionsByMonthDate" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition">
         select
             position.PROD_ID prodId,
+            position.ASSETVALUE_A assetvalueA,
             position.ASSETVALUE_B assetvalueB,
             position.TERMS terms,
             position.SUNASSETTYPE sunassettype,

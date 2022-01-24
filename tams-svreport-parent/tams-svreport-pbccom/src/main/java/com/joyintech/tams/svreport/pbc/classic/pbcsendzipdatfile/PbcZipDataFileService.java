@@ -124,6 +124,9 @@ public class PbcZipDataFileService {
 	@Autowired
 	private PbcMonthReport001Service pbcMonthReport001Service;
 
+	@Autowired
+	private PbcReportAssetConfigDatMapper pbcReportAssetConfigDatMapper;
+
 	public final static String PBC_PROD_BASEINFO_SEQCODE = "PBCPRDBASEINFO";
 
 	/**
@@ -223,6 +226,12 @@ public class PbcZipDataFileService {
 					if(StringUtil.isNotEmpty(datZipCodePath)){
 						rst.add(datZipCodePath);
 					}
+				}else if(DictCodeListExt2.人行报送明细类型_资管产品资产配置情况表.getValue().equals(datType)){
+					//2_3
+					datZipCodePath = genReport4_1FileDat(pbcSendZipDatFile, datType);
+					if(StringUtil.isNotEmpty(datZipCodePath)){
+						rst.add(datZipCodePath);
+					}
 				}
 				//添加生成更新表状态的list
 				if(CollectionUtil.isEmpty(errorList)){
@@ -304,6 +313,46 @@ public class PbcZipDataFileService {
 		List<LinkedHashMap<String,String>> dataList =new ArrayList<>();
 		List<ChbTypeMappingEx> exList=getReportRowAndColumnNum(datType);
 		for(PbcReportAreaDatDetailDto sub :subList){  //循环报表数据
+			String propertycode=sub.getPropertycode();
+			//查询属性对应的匹配关系数据
+			List<ChbTypeMappingEx> propertyCodeFiledList=exList.stream().filter(
+					propertyCodeEx -> propertycode.equals(propertyCodeEx.getSrcfield())).collect(Collectors.toList());
+			for(ChbTypeMappingEx ex:propertyCodeFiledList) {
+				Object   filedValue=null;
+				String fieldName = "";
+				//get[源属性1]()   取得报表的对应单元的数值
+				try {
+					Field field = sub.getClass().getDeclaredField(ex.getSrcfield1());
+					fieldName = field.getName();
+					//设置对象的访问权限，保证对private的属性的访问
+					field.setAccessible(true);
+					filedValue= field.get(sub);
+				} catch (Exception e) {
+					return null;
+				}
+				//数值当为空、或者0的情况下
+				if(null==filedValue||filedValue.equals("0")){
+					continue;
+				}
+				//组装数据
+				LinkedHashMap<String, String> data = new LinkedHashMap<String, String>();
+				data.put("date", DateUtil.getLastDayOfThisMonth(pbcSendZipDatFile.getStatusVdate()));
+				data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
+				data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
+				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
+				data.put("filedValue", dealDataBaseForDat(filedValue,fieldName,datType));
+				dataList.add(data);
+			}
+		}
+		return PbcZipDataFileHelper.genFile(pbcSendZipDatFile,datType,dataList);
+	}
+
+	private String genReport4_1FileDat(PbcSendZipDatFile pbcSendZipDatFile, String datType) {
+		List<PbcReportAssetConfigDatDto> subList = pbcReportAssetConfigDatMapper
+				.selectByDatZipCode(pbcSendZipDatFile.getDatZipCode(), datType);
+		List<LinkedHashMap<String,String>> dataList =new ArrayList<>();
+		List<ChbTypeMappingEx> exList=getReportRowAndColumnNum(datType);
+		for(PbcReportAssetConfigDatDto sub :subList){  //循环报表数据
 			String propertycode=sub.getPropertycode();
 			//查询属性对应的匹配关系数据
 			List<ChbTypeMappingEx> propertyCodeFiledList=exList.stream().filter(
@@ -589,6 +638,10 @@ public class PbcZipDataFileService {
 			data.put("other2","");
 			//其他产品标识3
 			data.put("other3","");
+			//跨境理财通标识
+			data.put("crossBorderFlag",subDat.getCrossBorderFlag());
+			//以财产权信托名义开展的资金信托标识
+			data.put("zjxtFlag",subDat.getZjxtFlag());
 			dataList.add(data);
 		}
 		for (PbcPrdBaseinfoSubDat subDat : pbcPrdBaseinfoSubDatsNew) {
