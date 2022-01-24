@@ -70,10 +70,10 @@ public interface ChbSalerInstInfoMapper {
 
     /**
      * 根据主键删除erro表中数据
-     * @param salerOrgCode
+     * @param workflowId
      * @return
      */
-    int deleteErroByPrimaryKey(String salerOrgCode);
+    int deleteErroByPrimaryKey(String workflowId);
 
     /**
      * 根据主键逻辑删除info表中数据
