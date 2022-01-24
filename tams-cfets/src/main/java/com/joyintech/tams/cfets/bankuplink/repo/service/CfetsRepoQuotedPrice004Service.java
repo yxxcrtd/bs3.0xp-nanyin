@@ -447,6 +447,12 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             errorList.add(new ValidMessage("请输入结算服务费"));
         }
         /**************************************************************基本信息********************************************/
+        if (StringUtil.isNotEmpty(entity.getCounterId())) {
+            String trader = this.findTraderByCounterId(entity.getCounterId());
+            if (!StringUtil.isNotEmpty(trader)) {
+                errorList.add(new ValidMessage("选择的对手方未与银行间机构关联，请先去关联"));
+            }
+        }
     }
 
     /**
