@@ -958,7 +958,7 @@
         decode(ic.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
         ic.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
-        ic.share_amt/100 as faceValue,
+        null as faceValue,
         TO_CHAR(ROUND(ic.rate*100,4),'FM990.0000') ||'%' as tradeYield,
         ic.term as termDays,
         ic.fprice_amt as tradeAmt,
@@ -1240,7 +1240,7 @@
         ic.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
 
-        ic.share_amt/100 as faceValue,
+        null as faceValue,
         TO_CHAR(ROUND(ic.rate*100,4),'FM990.0000') ||'%' as tradeYield,
         ic.term as termDays,
         ic.fprice_amt as tradeAmt,
@@ -2126,12 +2126,12 @@
         ts.SECID as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
         ts.price_8 as unitCprice,
-        I.yield2 as yield,
-        ts.Strikeyield as exerYield,
+        I.yield2*100 as yield,
+        ts.Strikeyield*100 as exerYield,
         to_char(ts.settdate,'yyyy-MM-dd') as settleDate,
         ts.prinamt as faceValue,
         decode(I.Clearingmethod,'13','01','6','02') as clearType,
-        I.Deliverytype as deliveryType,
+        decode(I.deliveryType,'0','03','5','02','4','01') as deliveryType,
         ts.dealtext as remark,
         ts.dirtyprice as unitFprice,
         ts.settamt as tradeAmt,
@@ -2166,7 +2166,6 @@
         where  I.execid = #{execId,jdbcType=VARCHAR}
     </select>
     <select id="selectCstpRepoFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryCstpInfoListResponse">
-
         select to_char(total.trade_date,'yyyy-MM-dd')  as tradeDate,
         I.execid as execid,
         I.Ourinstitutioncode as rbRepo,
@@ -2174,23 +2173,23 @@
         I.Counterinstitutioncode as rsRepo,
         I.Institutionchinesefullname as rsRepoStr,
         tr.term as repoTerm,
-        I.Price as tradeYield,
+        I.Price*100 as tradeYield,
         I.Tradecashamt as tradeAmt,
         I.Settlcurramt2 as mtradeAmt,
         tr.facetotalamt as faceValue,
         tr.repointamt as intAmt,
-        null as repoType,
+        '1' as repoType,
         decode(I.Clearingmethod,'13','01','6','02') as clearType,
         to_date(I.Settldate,'yyyy-MM-dd') as vsettleDate,
         to_date(I.Settldate2,'yyyy-MM-dd') as msettleDate,
         I.Cashholdingdays as actRepoTerm,
         tr.term_type as termType,
-        I.Deliverytype as deliveryType,
-        I.Deliverytype2 as mdeliveryType,
+        decode(I.deliveryType,'0','03','5','02','4','01') as deliveryType,
+        decode(I.Deliverytype2,'0','03','5','02','4','01') as mdeliveryType,
         tr.dealtext as remark,
         I.Ourinstitutioncode as institutionb,
         I.Ourinstitutionchinesefullname as institutionbStr,
-        I.Ourtradername as traderb,
+        nvl(I.Ourtraderchinesename,I.Ourtradername) as traderb,
         I.ourcapitalaccountname as capitalacctNameb,
         I.Ourcapitalaccountnumber as capitalacctNumberb,
         I.Ourdepositaccountname as depositAcctNameb,
@@ -2198,7 +2197,7 @@
         I.Ourdepositinstitution as depositAcctOrgb,
         I.Ourinstitutioncode as institutions,
         I.Ourinstitutionchinesefullname as institutionsStr,
-        I.Countertradername as traders,
+        nvl(I.Countertraderchinesename,I.Countertradername) as traders,
         I.Countercapitalaccountname as capitalacctNames,
         I.Countercapitalaccountnumber as capitalacctNumbers,
         I.Counterdepositaccountname depositAcctNames,
@@ -2213,6 +2212,23 @@
         on match.trd_id=total.totle_trade_id
         where I.execid= #{execId,jdbcType=VARCHAR}
 
+    </select>
+    <select id="selectCstpTablePledgeInfoList"
+            resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsPledgeInfoResponse">
+        select distinct
+        fprepo.finprod_id as pledgeFinprodId,
+        fprepo.finprod_market_id as finprodMarketId,
+        fprepo.finprod_abbr as finprodAbbr,
+        itr.FACETOTALAMT/10000 as pledgeFaceValue,
+        itr.CONVRATE as pledgeRate
+        from interf_opics_trad_repo repo
+        inner join INTERF_TRAD_REPOASST itr
+        on repo.oritradeid=itr.tradeid
+        inner  join fin_product fprepo
+        on fprepo.finprod_market_id= itr.SECID|| '.' || repo.MARKET
+        and fprepo.finprod_type='F01'
+        where itr.tradeid=#{execId,jdbcType=VARCHAR}
+        order by fprepo.finprod_id
     </select>
     <select id="queryAllTradeInfoList"
             resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryTradeInfoListResponse">
@@ -2242,7 +2258,7 @@
             'T+'||T1.settle_speed as settleSpeedStr,
             T1.SEC_MANAGE_ACCT_ID as secManageAcctId,
             T7.SEC_ACCT_NAME secManageAcctIdStr,
-            deal.share_amt/100 as faceValue,
+            decode(T1.finprod_type2,'F01',deal.share_amt/100,null)as faceValue,
             case when T1.finprod_type2='F01'
             then decode(nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD),'01',TO_CHAR(ROUND(T1.unit_cprice,4),'FM990.0000'),
             '02',TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%',
@@ -2250,7 +2266,7 @@
             TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%')
             when T1.finprod_type2 in ('F02','F03') then  TO_CHAR(ROUND(T1.rate*100,4),'FM990.0000') ||'%'
             else null end as tradeYield,
-            T1.repo_term as termDays,
+            T3.term as termDays,
             deal.trade_Amt tradeAmt,
             T1.ccy as ccy,
             sdl7.item_value as ccyStr,
@@ -2423,7 +2439,7 @@
         'T+'||t1.settle_speed as settleSpeedStr,
         t1.sec_manage_acct_id as secManageAcctId,
         T7.SEC_ACCT_NAME  as secManageAcctIdStr,
-        t1.share_amt/100 as faceValue,
+        decode(T1.finprod_type2,'F01',t1.share_amt/100,null) as faceValue,
         case when T1.finprod_type2='F01'
         then decode(nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD),'01',TO_CHAR(ROUND(T1.unit_cprice,4),'FM990.0000'),
              '02',TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%',
@@ -2431,7 +2447,7 @@
               TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%')
         when T1.finprod_type2 in ('F02','F03') then  TO_CHAR(ROUND(T1.unit_int*100,4),'FM990.0000') ||'%'
         else null end as tradeYield,
-        (t1.mdate-t1.vdate) as termDays,
+        T3.term as termDays,
         t1.trade_amt as tradeAmt,
         t1.ccy as ccy,
         sdl7.item_value as ccyStr,

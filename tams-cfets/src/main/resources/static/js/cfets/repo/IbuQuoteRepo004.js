@@ -218,9 +218,18 @@
         }
     }
 
+    //流程中数据不可编辑
+    hideRepoPage = function () {
+        if (workflowId) {
+            $('#submitForm').find('input,text,textarea,select').attr('disabled', 'disabled');
+        }
+
+    }
 
     $(function () {
         init();
+
+        hideRepoPage();
         /**
          * 保存按钮按下处理
          */

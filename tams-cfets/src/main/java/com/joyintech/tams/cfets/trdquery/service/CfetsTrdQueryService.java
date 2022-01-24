@@ -654,7 +654,7 @@ public class CfetsTrdQueryService extends BaseService{
             dataform=cfetsTrdQueryMapper.selectCstpRepoFormDataByKey(pageParam);
         }
         //表格质押券data
-        List<CfetsPledgeInfoResponse> pledgeInfoDtoList =  cfetsTrdQueryMapper.selectIbuTablePledgeInfoList(pageParam);
+        List<CfetsPledgeInfoResponse> pledgeInfoDtoList =  cfetsTrdQueryMapper.selectCstpTablePledgeInfoList(pageParam);
 
         resultData.put(dtCode+"_dataform",dataform);
         resultData.put(dtCode+"_datatablepledge",pledgeInfoDtoList);

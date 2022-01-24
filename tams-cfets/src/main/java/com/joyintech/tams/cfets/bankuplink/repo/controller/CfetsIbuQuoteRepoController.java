@@ -387,8 +387,8 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             result.put("root", ibuQuoteRepoService.listDealTransactionDetails(entrustId));
             return new Message<Map<String, Object>>().success().setData(result);
         } catch (Exception e) {
-            logger.error("查询交易成交信息异常", e);
-            return new Message<Map<String, Object>>().fail().setMessage("查询交易成交信息异常");
+            logger.error("查询交易执行明细信息异常", e);
+            return new Message<Map<String, Object>>().fail().setMessage("查询交易执行明细信息异常");
         }
     }
 

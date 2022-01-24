@@ -40,6 +40,8 @@ public class CfetsBondDealDbDto {
 
     private String softSkipMode;
 
+    private String remark;
+
     public String getWorkflowId() {
         return workflowId;
     }
@@ -118,6 +120,14 @@ public class CfetsBondDealDbDto {
 
     public void setSoftSkipMode(String softSkipMode) {
         this.softSkipMode = softSkipMode;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }
 
