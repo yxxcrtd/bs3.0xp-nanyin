@@ -8,10 +8,13 @@ import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.common.listener.UploadListener;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.report.submitmanagement.salerinstinforegist.dao.ChbSalerInstInfoRegistMapper;
 import com.joyintech.tams.report.submitmanagement.salerinstinforegist.dto.SalerInstInfoRegistDto;
+import com.joyintech.tams.report.submitmanagement.salerrewpenainforegist.dto.SalerRewPenaInfoRegistDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +69,7 @@ public class SalerInstInfoRegist001Service extends CommonExportService<SalerInst
 	    int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
         Page<SalerInstInfoRegistDto> pageList = super.queryForPage(
         		pagenum,legth,()->chbSalerInstInfoRegistMapper.queryForRegistPage(param));
+        this.formatByType(pageList.getRoot());
         return pageList;
     }
 
@@ -278,5 +282,34 @@ public class SalerInstInfoRegist001Service extends CommonExportService<SalerInst
      */
     public List<SuggestDto> getSalerOrgName(Map<String, Object> map) {
         return chbSalerInstInfoRegistMapper.getSalerOrgName(map);
+    }
+
+    public static List<SalerInstInfoRegistDto> formatByType(List<SalerInstInfoRegistDto> dataList) {
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(dataList)) {
+            dataList.forEach(item -> {
+                item.setSalerOrgLevel(getDictCodeAndName(DictCode.机构层级, item.getSalerOrgLevel()));
+            });
+        }
+        return dataList;
+    }
+
+    /**
+     * 转换成key+value形式
+     * @param dictCode  字典表中数据类型
+     * @param value  需要换换的值
+     * @return  key+value
+     * @see
+     * @since 1.0
+     */
+    public static String getDictCodeAndName(DictCode dictCode,String value){
+        if(com.joyintech.framework.util.StringUtil.isNotEmpty(value)){
+            String tempName = SysDataUtil.getNameFromDataDict(dictCode, value);
+            if (com.joyintech.framework.util.StringUtil.isEmpty(tempName)) {
+                return value;
+            } else {
+                return value + " " + SysDataUtil.getNameFromDataDict(dictCode, value);
+            }
+        }
+        return "";
     }
 }

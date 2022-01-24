@@ -4,6 +4,7 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.valuation.accounadjustmanage.assistaccout.dto.ValAssistAccounting001Dto;
+import com.joyintech.tams.valuation.accounadjustmanage.assistaccout.dto.ValAssistHandDto;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +51,17 @@ public class ValAssistAccounting001Service extends CommonExportService<ValAssist
         return restTemplate.postForList(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValAssistAccounting001/queryPageList", params,
                 ValAssistAccounting001Dto.class);
+    }
+    /**
+     * @author  殷亚
+     * @description 根据条件获取辅助核算项
+     * @date 2022-1-19 17:04
+     * @param params:
+     * @return java.util.List<com.joyintech.tams.valuation.accounadjustmanage.assistaccout.dto.ValAssistHandDto>
+     */
+    public List<ValAssistHandDto> findHandsByCondition(Map<String, Object> params) {
+        return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME
+                + "/ValAssistAccounting001/findHandsByCondition",params, ValAssistHandDto.class);
     }
 
 

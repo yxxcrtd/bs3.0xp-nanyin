@@ -3,7 +3,7 @@
       layout:decorator="~{layout/default}">
 <head>
     <meta charset="UTF-8">
-    <title>辅助核算配置</title>
+    <title data-th-text="#{ValAssistAccounting001}">辅助核算配置</title>
 </head>
 
 <body>
@@ -31,13 +31,21 @@
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md6">
-                    <label class="layui-form-label form-lable2">内部科目名称</label>
+                    <label class="layui-form-label form-lable2" >内部科目名称</label>
                     <div class="layui-input-inline input-inline">
                         <select id="subjectInternalCode" name="subjectInternalCode"
                                 class="layui-input form-input input-select"
-                                data-th-data-url="@{/valuation/accounadjustmanage/assistaccount/ValAssistAccounting001/findSubjectInteral}"
+                                data-th-data-url="@{/valuation/accounadjustmanage/assistaccount/ValAssistAccounting001/getSubjectInteral}"
                                 multiple="true" allowClear="true" placeholder="请输入内容">
                         </select>
+
+<!--                        <input type="text" id="subjectInternalCode" name="subjectInternalCode"-->
+<!--                               class="layui-input form-input input-lenovoselect" placeholder="请输入内容"-->
+<!--                               data-th-placeholder="#{SysCommon.placeholder}"-->
+<!--                               data-th-data-url="@{/valuation/accounadjustmanage/assistaccount/ValAssistAccounting001/findSubjectInteral}"-->
+<!--                               data-linkedids="subjectInternalName" data-idfield="code" data-keyfield="code"-->
+<!--                               data-th-value="${entity?.subjectInternalCode}"-->
+<!--                               data-th-data-effectivefieldsalias='|{"code":"内部科目代码","shortName":"内部科目名称"}|'>-->
                     </div>
                 </div>
             </div>

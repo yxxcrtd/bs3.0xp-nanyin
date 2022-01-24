@@ -557,6 +557,18 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                         dto.setCreditMode(PbcDictCodeEnums.getCodeByName(creditMode));
                     }
                 }
+                //跨境理财通标识
+                String crossBorderFlag = rowsData.get(row++);
+                if(checkIsNotEmpty(crossBorderFlag,rowNumber,"跨境理财通标识",errorMessage)){
+                    dto.setCrossBorderFlag(PbcDictCodeEnums.getCodeByName(crossBorderFlag));
+                }
+
+                //以财产权信托名义开展的资金信托标识
+                String zjxtFlag = rowsData.get(row++);
+                if(checkIsNotEmpty(zjxtFlag,rowNumber,"以财产权信托名义开展的资金信托标识",errorMessage)){
+                    dto.setZjxtFlag(PbcDictCodeEnums.getCodeByName(zjxtFlag));
+                }
+
                 if(CollectionUtil.isNotEmpty(errorMessage)){
                     checkResult.addAll(errorMessage);
                 }else{

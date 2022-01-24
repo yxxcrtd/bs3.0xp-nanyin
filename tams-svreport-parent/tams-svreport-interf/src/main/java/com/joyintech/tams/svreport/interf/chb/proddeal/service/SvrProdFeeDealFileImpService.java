@@ -131,7 +131,6 @@ public class SvrProdFeeDealFileImpService extends FileImpService{
 		listNE = (List<ChbPrdFeeDeal>) convertMapToEntity(baseinfoList,ChbPrdFeeDeal.class);
 		listNE.stream().forEach(dto->{
 			dto.setSeqno(IDGenerator.generate(36));
-			dto.setDataSource("12");
 		});
 //		Date paydate=null;
 //		for (Map<String, String> map : baseinfoList) {
@@ -143,7 +142,7 @@ public class SvrProdFeeDealFileImpService extends FileImpService{
 //
 //			listNE.add(feedeal);
 //		}
-		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
+		// modify by convertMapToEntity yangxianjiu 2022-01-19 end
 		if (listNE != null && listNE.size() > 0) {
 			// 如果是增量文件则不需要删除
 //			if (tmpPath == null) {
@@ -359,7 +358,7 @@ public class SvrProdFeeDealFileImpService extends FileImpService{
 	return "fail";
 	}
 	@Override
-	public String importDB(List<Map<String, String>> listData,InterfFile interfFile) {
+	public String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date) {
 		String result="success";
 //		 	List<Map<String, String>> listEerro = 
 		 			checkData(listData,interfFile.getFilename(),InterfDefine.产品费用交易接口数据.getCode(),InterfDefine.产品费用交易接口数据.getCode(),BUSINESSKEY_CHB_PRD_FEEDEAL,BUSINESSKEY_CHB_PRD_FEEDEAL);

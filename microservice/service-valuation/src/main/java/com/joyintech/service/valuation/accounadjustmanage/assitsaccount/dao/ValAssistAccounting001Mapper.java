@@ -46,14 +46,23 @@ public interface ValAssistAccounting001Mapper {
      */
     List<ValAssistHandDto> findHands(@Param(value = "booksetId") String booksetId,
                                      @Param(value = "subjectInternalCode") String subjectInternalCode);
+
+    /**
+     * @author  殷亚
+     * @description 根据条件获取辅助核算项
+     * @date 2022-1-19 16:53
+     * @param param:
+     * @return java.util.List<com.joyintech.service.valuation.accounadjustmanage.assitsaccount.dto.ValAssistHandDto>
+     */
+    List<ValAssistHandDto> findHandsByCondition(Map<String, Object> param);
     /**
      * @author  殷亚
      * @description 根据条件修改辅助核算配置
      * @date 2022-1-17 15:14
-     * @param entity:
+     * @param list:
      * @return int
      */
-    int updateByPrimaryKeySelective (ValAssistAccounting002Dto entity);
+    int mergeSubjectHands (List<ValAssistHandDto> list);
 
     /**
      * @author  殷亚

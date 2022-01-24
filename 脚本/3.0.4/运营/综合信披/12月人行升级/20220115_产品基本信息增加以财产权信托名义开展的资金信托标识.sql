@@ -1,0 +1,18 @@
+--以财产权信托名义开展的资金信托标识
+/**表结构*/
+ALTER TABLE  CHB_PRD_BASEINFO ADD ZJXT_FLAG  VARCHAR2(32);
+COMMENT ON COLUMN "CHB_PRD_BASEINFO"."ZJXT_FLAG" IS '以财产权信托名义开展的资金信托标识';
+
+delete  from   CHB_DATACHECK_RULE  where  CHECKRULEID in('de164A49-6813-5A9E-2022-007F01006A01','de164A49-6813-5A9E-2022-007F01006A02');
+
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('de164A49-6813-5A9E-2022-007F01006A01', 'CHB_PRD_BASEINFO', 'com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib', 'inDatadict', 'ZJXT_FLAG', '==', 'YES_NO', 'Y', '是否金融同业专属不在值域范围内。', 'E');
+
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('de164A49-6813-5A9E-2022-007F01006A02', 'CHB_PRD_BASEINFO', 'com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib', 'isNotEmpty', 'ZJXT_FLAG', null, null, 'N', '是否金融同业专属要素不可为空。', 'E');
+
+/**统一数据维护*/
+delete from  chb_infomgr_result_config  where  RESULT_ID='AFC15D27-AE5D-9140-2022-9C5AA8C0AC06';
+Insert into chb_infomgr_result_config (RESULT_ID,MGRTABLE_ID,COLUMN_ID,COLUMN_NAME,DICTCODE,ORDER_NO,SHOWFLAG,REAL_COLUMN_ID)
+values ('AFC15D27-AE5D-9140-2022-9C5AA8C0AC06','CHB_PRD_BASEINFO','ZJXT_FLAG','以财产权信托名义开展的资金信托标识','ZJXT_FLAG',66,'Y',null);
+UPDATE  chb_infomgr_result_config  SET  ORDER_NO=ORDER_NO+1  where MGRTABLE_ID='CHB_PRD_BASEINFO' AND( ORDER_NO>=67  OR COLUMN_ID='REMARK');

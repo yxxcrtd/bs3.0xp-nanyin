@@ -191,6 +191,11 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
      * 结构化杠杆倍数
      */
     private BigDecimal constracteHeaverTimes;
+
+    /**
+     * 票面利率
+     */
+    private BigDecimal assetYield;
         
 
     public String getAssetType2() {
@@ -475,6 +480,13 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
 	
 	public void setConstracteHeaverTimes(BigDecimal constracteHeaverTimes) {
 		this.constracteHeaverTimes = constracteHeaverTimes;
-	}   
-    
+	}
+
+    public BigDecimal getAssetYield() {
+        return assetYield;
+    }
+
+    public void setAssetYield(BigDecimal assetYield) {
+        this.assetYield = assetYield;
+    }
 }

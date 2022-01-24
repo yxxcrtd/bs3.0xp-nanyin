@@ -132,7 +132,7 @@
                             th:initValue="${entity?.repIndustryLevel2}"
                             data-th-data-result="${INSTITUTION_INDUSTRY_SECOND_LEVEL}"
                             class="layui-input form-input input-select" placeholder="请输入内容"
-                            data-th-placeholder="#{SysCommon.placeholder}" required>
+                            data-th-placeholder="#{SysCommon.placeholder}">
                     </select>
                 </div>
                 <!--  <div class="layui-input-inline input-inline">
@@ -161,7 +161,7 @@
 <!--                           data-th-placeholder="#{SysCommon.placeholder}" >-->
                     <select th:id="|${entityName}_chbIssuerId|"
                             th:name="|${entityName}.chbIssuerId|"
-                            th:value="${entity?.chbIssuerId}"
+                            th:value="${entity?.chbIssuerId}" required
                             class="layui-input form-input input-select" placeholder="请输入内容"
                             data-th-placeholder="#{SysCommon.placeholder}" 
                             data-th-data-url="@{/common/select/getIssuerId}">
@@ -187,6 +187,15 @@
                 <div class="layui-input-inline input-inline">
                     <input th:id="|${entityName}_assetId|" th:name="|${entityName}.assetId|"
                            th:value="${entity?.assetId}"
+                           class="layui-input form-input" placeholder="请输入内容"
+                           data-th-placeholder="#{SysCommon.placeholder}" required>
+                </div>
+            </div>
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussQDIIBondRepInfo.assetYield}">票面利率%</label>
+                <div class="layui-input-inline input-inline">
+                    <input th:id="|${entityName}_assetYield|" th:name="|${entityName}.assetYield|"
+                           th:value="${entity?.assetYield}"
                            class="layui-input form-input" placeholder="请输入内容"
                            data-th-placeholder="#{SysCommon.placeholder}" required>
                 </div>
@@ -271,8 +280,8 @@
                 <div class="layui-input-inline input-inline">
                     <select th:id="|${entityName}_constracteBusiType|" th:name="|${entityName}.constracteBusiType|"
                             class="layui-input form-input input-select" placeholder="请输入内容"
-                            th:initValue="${entity?.constracteBusiType}"
-                            data-th-placeholder="#{SysCommon.placeholder}" 
+                            th:initValue="${entity?.constracteBusiType}" required
+                            data-th-placeholder="#{SysCommon.placeholder}"
                             data-th-data-result="${SVR_CONSTRACTE_BUSI_TYPE}">
                     </select>
                 </div>
@@ -283,7 +292,7 @@
                 <div class="layui-input-inline input-inline">
                     <select th:id="|${entityName}_constracteGrade|" th:name="|${entityName}.constracteGrade|"
                             class="layui-input form-input input-select" placeholder="请输入内容"
-                            th:initValue="${entity?.constracteGrade}"
+                            th:initValue="${entity?.constracteGrade}" required
                             data-th-placeholder="#{SysCommon.placeholder}" 
                             data-th-data-result="${SVR_CONSTRACTE_GRADE}">
                     </select>
@@ -294,7 +303,7 @@
                 <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussFinBondRepInfo.constracteHeaverTimes}" >结构化杠杆倍数</label>
                 <div class="layui-input-inline input-inline">                   
                     <input type="text" th:id="|${entityName}_constracteHeaverTimes|" th:name="|${entityName}.constracteHeaverTimes|"                               
-                               th:value="${entity?.constracteHeaverTimes}" data-textrange="2" maxlength="6"
+                               th:value="${entity?.constracteHeaverTimes}" data-textrange="2" maxlength="6" required
                                class="layui-input form-input text-number"/>       
                 </div>
             </div>
@@ -306,7 +315,7 @@
                 <div class="layui-input-inline input-inline">
                     <select th:id="|${entityName}_optionFlag|" th:name="|${entityName}.optionFlag|"
                             class="layui-input form-input input-select" placeholder="请输入内容"
-                            th:initValue="${entity?.optionFlag}"
+                            th:initValue="${entity?.optionFlag}" required
                             data-th-placeholder="#{SysCommon.placeholder}" 
                             data-th-data-result="${SVR_YES_OR_NO}">
                     </select>

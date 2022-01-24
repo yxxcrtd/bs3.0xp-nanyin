@@ -460,8 +460,14 @@
 	    ,nvl(val.prod_value,1) prod_value
       	,nvl(val.CCY,'CNY') prod_value_ccy
       <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 start -->
-      ,case when info.PRODTYPE = 'M' then (nvl(val3.TDY_UNIT_VALUE_SUM, 1) - nvl(val4.TDY_UNIT_VALUE_SUM, 1)) / (val4.TDY_UNIT_VALUE_SUM * to_number(#{enddate, jdbcType=DATE} - #{startdate, jdbcType=DATE} + 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1)
-      when info.PRODTYPE = 'N' then (nvl(val.UNIT_VALUE_TOTAL, 1) - nvl(val2.UNIT_VALUE_TOTAL, 1)) / (val2.UNIT_VALUE_TOTAL * to_number(#{enddate, jdbcType=DATE} - #{startdate, jdbcType=DATE} + 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1)
+      ,case when info.PRODTYPE = 'M' then
+            case when substr(to_char(info.VDATE, 'yyyy-MM-dd'), 6, 2) = substr(to_char(#{statusDate, jdbcType=DATE}, 'yyyy-MM-dd'), 6, 2)
+              then (nvl(val3.TDY_UNIT_VALUE_SUM, 1) - nvl(val4.TDY_UNIT_VALUE_SUM, 1)) / (val4.TDY_UNIT_VALUE_SUM * to_number(#{statusDate, jdbcType=DATE} - info.VDATE)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1)
+            else (nvl(val3.TDY_UNIT_VALUE_SUM, 1) - nvl(val4.TDY_UNIT_VALUE_SUM, 1)) / (val4.TDY_UNIT_VALUE_SUM * to_number(#{enddate, jdbcType=DATE} - #{startdate, jdbcType=DATE} + 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1) end
+      when info.PRODTYPE = 'N' then
+            case when substr(to_char(info.VDATE, 'yyyy-MM-dd'), 6, 2) = substr(to_char(#{statusDate, jdbcType=DATE}, 'yyyy-MM-dd'), 6, 2)
+                then (nvl(val.UNIT_VALUE_TOTAL, 1) - nvl(val2.UNIT_VALUE_TOTAL, 1)) / (val2.UNIT_VALUE_TOTAL * to_number(#{statusDate, jdbcType=DATE} - info.VDATE)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1)
+            else (nvl(val.UNIT_VALUE_TOTAL, 1) - nvl(val2.UNIT_VALUE_TOTAL, 1)) / (val2.UNIT_VALUE_TOTAL * to_number(#{enddate, jdbcType=DATE} - #{startdate, jdbcType=DATE} + 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1) end
       when info.PRODTYPE = 'R' then
           case when info.OPERATE_MODE in ('01', '02') then info.EXP_AVG_YIELD
           when info.OPERATE_MODE in ('03', '04') then cpr.PROD_YIELD end

@@ -181,7 +181,7 @@ public  class DisProdBondsRegistrationService extends FileImpService  {
 	}
 
 	@Override
-	public String importDB(List<Map<String, String>> listData, InterfFile interfFile) {
+	public String importDB(List<Map<String, String>> listData, InterfFile interfFile, String date) {
         String rs = "success";
         // 对数据list进行处理
         if (!CollectionUtils.isEmpty(listData)) {

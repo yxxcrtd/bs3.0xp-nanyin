@@ -146,7 +146,7 @@ public  class DisBasicCalendarDataService extends FileImpService {
      * {@inheritDoc}
      */
     @Override
-    public String importDB(List<Map<String, String>> dataList, InterfFile file) {
+    public String importDB(List<Map<String, String>> dataList, InterfFile file, String date) {
         String rs = "success";
         // 对数据list进行处理
         if (!CollectionUtils.isEmpty(dataList)) {
@@ -155,7 +155,7 @@ public  class DisBasicCalendarDataService extends FileImpService {
             //检查数据类型
             String dataType = InterfDefine.基础日历信息数据.getCode();
             //重复性检查的keys
-            String[] checkEuplicatedKeys = {"TRADE_CALENDAR_ID"};
+            String[] checkEuplicatedKeys = {"TRADE_CALENDAR_ID","CALENDAR_ID"};
             List<Map<String, String>>  listA = super.checkData(dataList, file.getFilename(), inerfType, dataType,null, checkEuplicatedKeys);
 //            dataList.addAll(listA);// listA为错误数据，在checkData时被remove，需要重新放回dataList
             // 数据入库

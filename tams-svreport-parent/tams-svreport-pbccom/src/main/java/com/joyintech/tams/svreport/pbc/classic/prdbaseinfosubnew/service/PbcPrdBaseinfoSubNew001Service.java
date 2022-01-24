@@ -243,6 +243,12 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
             if(result.getInDepName()!=null){
                 result.setInDepName(result.getInDepName().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.境内托管机构名称, result.getInDepName()));
             }
+			if (StringUtil.isNotEmpty(result.getCrossBorderFlag())){
+				result.setCrossBorderFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCrossBorderFlag()));
+			}
+			if (StringUtil.isNotEmpty(result.getZjxtFlag())){
+				result.setZjxtFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getZjxtFlag()));
+			}
 		}
 	}
 
@@ -300,7 +306,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 						SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getPrinGuaranIdent()));
             }
 			if (StringUtil.isNotEmpty(result.getIsMarketFund())){
-				result.setBusiModel( result.getIsMarketFund() + "-" +
+				result.setIsMarketFund( result.getIsMarketFund() + "-" +
 						SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getIsMarketFund()));
 			}
             if (StringUtil.isNotEmpty(result.getTermRightFlag())){
@@ -410,6 +416,12 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
             	String date= DateUtil.format(result.getVdate());
             	result.setVdate01(date);
             }
+			if (StringUtil.isNotEmpty(result.getCrossBorderFlag())){
+				result.setCrossBorderFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCrossBorderFlag()));
+			}
+			if (StringUtil.isNotEmpty(result.getZjxtFlag())){
+				result.setZjxtFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getZjxtFlag()));
+			}
 		}
 	}
 

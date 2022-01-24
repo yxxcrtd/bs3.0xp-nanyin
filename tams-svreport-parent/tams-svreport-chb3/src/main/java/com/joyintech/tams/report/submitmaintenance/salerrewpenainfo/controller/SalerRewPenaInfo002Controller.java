@@ -107,6 +107,16 @@ public class SalerRewPenaInfo002Controller extends BaseController {
     }
 
     /**
+     * 获取姓名
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("getSalerName")
+    public String getSalerName(String salerInsNo) {
+        return salerRewPenaInfoService.getSalerName(salerInsNo);
+    }
+
+    /**
      * 内部编号下拉框
      * @param
      * @return

@@ -89,5 +89,10 @@ public interface CommonCodeCheckMapper {
 
     int deleteChbSalerStlDeaErrorDataByTradeNo(@Param("tradeNo") String tradeNo);
 
+    int deleteChbSalerIdenErrorDataByTradeNo(@Param("salerInsNo") String salerInsNo);
+
+    int deleteChbSalerInstErrorDataByTradeNo(@Param("salerOrgCode") String salerOrgCode);
+
+    int deleteChbSalerRewErrorDataByTradeNo(@Param("salerRewPenaNo") String salerRewPenaNo);
 
 }

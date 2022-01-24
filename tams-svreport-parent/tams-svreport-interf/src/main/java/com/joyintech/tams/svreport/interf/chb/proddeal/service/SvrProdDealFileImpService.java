@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.interf.chb.proddeal.service;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -144,10 +145,13 @@ public class SvrProdDealFileImpService extends FileImpService {
 //		for (Map<String, String> map : baseinfoList) {
 		for (ChbPrdDeal deal : baseList) {
 //			ChbPrdDeal deal = dataConversionEntity(map);
-			if (deal.getRedemptionFee() == null && "".equals(deal.getRedemptionFee())) {
-				deal.setRedemptionFee(BigDecimal.ZERO);
-			}
-			deal.setTradePrince(deal.getTradePrince().subtract(deal.getRedemptionFee()));
+			deal.setRedemptionFee(deal.getRedemptionFee()==null?BigDecimal.ZERO:deal.getRedemptionFee());
+			deal.setTradeQty(deal.getTradeQty()==null?BigDecimal.ZERO:deal.getTradeQty());
+			deal.setTradeCost(deal.getTradeCost()==null?BigDecimal.ZERO:deal.getTradeCost());
+			deal.setIntAmt(deal.getIntAmt()==null?BigDecimal.ZERO:deal.getIntAmt());
+			deal.setCustCounts(deal.getCustCounts()==null?BigDecimal.ZERO:deal.getCustCounts());
+
+			deal.setTradePrince(deal.getTradePrince()==null?BigDecimal.ZERO:deal.getTradePrince().subtract(deal.getRedemptionFee()));
 			// modify by convertMapToEntity yangxianjiu 2022-01-18 end
 			if (settdateDate == null && deal.getSettdateDate() != null) {
 				settdateDate = deal.getSettdateDate();
@@ -837,7 +841,7 @@ public class SvrProdDealFileImpService extends FileImpService {
 	}
 
 	@Override
-	public String importDB(List<Map<String, String>> listData, InterfFile interfFile) {
+	public String importDB(List<Map<String, String>> listData, InterfFile interfFile, String date) {
 		String dealFileType = SvrDataUtil.getSysParam("CHB_PRD_DEAL_FILE_TYPE");
 //		List<Map<String, String>> listEerro;
 		String result="success";

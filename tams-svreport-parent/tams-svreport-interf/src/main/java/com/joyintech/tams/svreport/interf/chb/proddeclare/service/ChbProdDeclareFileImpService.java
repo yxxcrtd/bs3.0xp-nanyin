@@ -101,7 +101,7 @@ public class ChbProdDeclareFileImpService extends FileImpService{
 //		List<ChbPrdDeclareInfoDto> list = (List<ChbPrdDeclareInfoDto>) dataMap.get("list");
 		List<ChbPrdDeclareInfoDto> list = (List<ChbPrdDeclareInfoDto>) convertMapToEntity(posList,ChbPrdDeclareInfoDto.class);
 		list.stream().forEach(dto->{
-			dto.setDatasource(dataSource);
+//			dto.setDatasource(dataSource);
 			dto.setDeclareUuid(IDGenerator.generate(36));
 		});
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
@@ -269,7 +269,7 @@ public class ChbProdDeclareFileImpService extends FileImpService{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public String importDB(List<Map<String, String>> dataList,InterfFile file) {
+	public String importDB(List<Map<String, String>> dataList,InterfFile file, String date) {
 		String rs = "success";
 		// 解析文件
 		if(dataList==null){

@@ -7,6 +7,7 @@ import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.dao.BaseMapper;
 import com.joyintech.tams.common.base.entity.ChbSalerStlDealInfo;
+import com.joyintech.tams.common.base.entity.MstExchargeQuote;
 import com.joyintech.tams.common.base.entity.SaleCustSvrreport;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
@@ -91,7 +92,14 @@ public class SvrChbSalerStlDealInfoFileImpService extends FileImpService {
         //销售结算资金交易信息表数据
         List<ChbSalerStlDealInfo> chbSalerStlDealInfoList;
         List<String> listColumn = baseMapper.getTableColumnList(InterfDefine.销售结算资金交易信息表报送数据接入.getCode());
-        chbSalerStlDealInfoList = this.convertMapToEntity(infoList,dataSource,listColumn);
+        //mod by wangyaning 20220122 start
+//        chbSalerStlDealInfoList = this.convertMapToEntity(infoList,dataSource,listColumn);
+        chbSalerStlDealInfoList = (List<ChbSalerStlDealInfo>) convertMapToEntity(infoList,ChbSalerStlDealInfo.class);
+        for(ChbSalerStlDealInfo info:chbSalerStlDealInfoList){
+            info.setRegistSeqno(IDGenerator.generate(36));
+            info.setStatus("E");
+        }
+        //mod by wangyaning 20220122 end
         if (chbSalerStlDealInfoList != null && chbSalerStlDealInfoList.size() > 0) {
             insertDataMerge(chbSalerStlDealInfoList, saveFlag);
         }
@@ -204,9 +212,9 @@ public class SvrChbSalerStlDealInfoFileImpService extends FileImpService {
                 }
             }
             //创建人
-            chbSalerStlDealInfo.setCreateUser(CommonUtil.getUserName());
+            chbSalerStlDealInfo.setCreateUser("interf");
             //更新人
-            chbSalerStlDealInfo.setUpdateUser(CommonUtil.getUserName());
+            chbSalerStlDealInfo.setUpdateUser("interf");
 
             chbSalerStlDealInfo.setRegistSeqno(IDGenerator.generate(36));
 
@@ -228,7 +236,7 @@ public class SvrChbSalerStlDealInfoFileImpService extends FileImpService {
     }
 
     @Override
-    public String importDB(List<Map<String, String>> chbSalerStlDealInfoList, InterfFile interfFile) {
+    public String importDB(List<Map<String, String>> chbSalerStlDealInfoList, InterfFile interfFile, String date) {
         //待入库为空则直接返回
         checkDataCodeCheck(chbSalerStlDealInfoList, interfFile.getFilename(), ChbCheckTableInfo.销售结算资金交易信息表INFO);
         if (CollectionUtils.isEmpty(chbSalerStlDealInfoList)){

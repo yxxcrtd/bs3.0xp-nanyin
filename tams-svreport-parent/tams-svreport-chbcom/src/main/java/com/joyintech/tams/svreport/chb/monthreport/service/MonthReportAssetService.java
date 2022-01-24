@@ -378,7 +378,7 @@ public class MonthReportAssetService {
 				if ("REMAININGCASH".equals(position.getAssetCode())) {
 					// 资产代码为REMAININGCASH的特殊资产，该字段默认=0
 					//position.setTerms(BigDecimal.ONE);
-					position.setTerms(BigDecimal.ZERO);
+					position.setTerms(BigDecimal.ONE);
 					// 资产代码为REMAININGCASH的特殊资产，该字段默认=F06
 					position.setSunassettype("F06");
 					// 资产代码为REMAININGCASH的特殊资产，该字段默认=F0602
@@ -426,6 +426,12 @@ public class MonthReportAssetService {
 					String key7 = null;//主键7
 					String key8 = null;//主键8
 					String key9 = null;//主键9
+					ChbTypeMappingEx mapping = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
+							key1, key2, key3, key4, key5, key6, key7, key8, key9);
+					if (mapping != null) {
+						position.setSunassettype(mapping.getObjfield1());
+						position.setSunassettype2(mapping.getObjfield2());
+					}
 					//特殊处理：银行资本补充工具、是否PPN等低流动性债券、是否商业银行优先股、创业投资基金、是否未上市企业-政府出资产业投资基金
 					//银行资本补充工具 排除05其他银行资本工具
 					if(StringUtil.isNotEmpty(chbAssetInfo.getBankCapital()) &&
@@ -453,11 +459,14 @@ public class MonthReportAssetService {
 						key9 = chbAssetInfo.getIsunlisted();
 						key1 = null;
 					}
-					ChbTypeMappingEx mapping = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
-							key1, key2, key3, key4, key5, key6, key7, key8, key9);
-					if (mapping != null) {
-						position.setSunassettype(mapping.getObjfield1());
-						position.setSunassettype2(mapping.getObjfield2());
+					// 如果一条数据符合多个规则，则重复计算
+					if(key1 == null && (key5 != null || key6 != null || key7 != null || key8 != null || key9 != null)){
+						ChbTypeMappingEx mapping1 = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
+								key1, key2, key3, key4, key5, key6, key7, key8, key9);
+						if (mapping1 != null) {
+							position.setSunassettype(position.getSunassettype()+","+mapping1.getObjfield1());
+							position.setSunassettype2(position.getSunassettype2()+","+mapping1.getObjfield2());
+						}
 					}
 
 					if(supAssetInfo != null){
@@ -467,8 +476,8 @@ public class MonthReportAssetService {
 					mapping = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
 							key1, key2, key3, key4, key5, key6, key7, key8, key9);
 					if (mapping != null) {
-						position.setSunassettype(mapping.getObjfield1());
-						position.setSunassettype2(mapping.getObjfield2());
+						position.setSunassettype(position.getSunassettype()+","+mapping.getObjfield1());
+						position.setSunassettype2(position.getSunassettype2()+","+mapping.getObjfield2());
 					}
 					assetMap.put(assetKey, position);
 				}
@@ -1455,8 +1464,7 @@ public class MonthReportAssetService {
 		// 设置期限字段
 		boolean isCalcFlag = true;//后续判定是否需要再计算
 		//公私募基金 15 19 金融衍生品 07 权益类资产 06 无到期日 默认为 1
-		if (("15".equals(position.getAssettype()) || "19".equals(position.getAssettype())
-				|| "06".equals(position.getAssettype()) || "07".equals(position.getAssettype())) && chbAssetInfo.getMdate() == null) {
+		if (!("12".equals(position.getAssettype()) || "16".equals(position.getAssettype())) && chbAssetInfo.getMdate() == null) {
 			terms = new BigDecimal(1);
 			isCalcFlag = false;//后续判定是否需要再计算
 

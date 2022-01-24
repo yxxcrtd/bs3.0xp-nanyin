@@ -105,7 +105,7 @@ public class SvrChbPrdRateFileImpService extends FileImpService {
 	private ChbPrdRateInterfMapper chbPrdRateInterfMapper;
 	
 	@Override
-	public String importDB(List<Map<String, String>> listData, InterfFile interfFile) {
+	public String importDB(List<Map<String, String>> listData, InterfFile interfFile, String date) {
 		String result = "";
 		logger.debug("产品利率基本信息检查----开始-----:" +  df.format(new Date()));
 		checkData(listData, interfFile.getFilename(), InterfDefine.产品利率基本信息接口数据.getCode(),InterfDefine.产品利率基本信息接口数据.getCode(), null,"FPROD_ID","PROD_ID", "CHANGE_DATE", "CHANG_TYPE");
@@ -139,14 +139,6 @@ public class SvrChbPrdRateFileImpService extends FileImpService {
 			List<ChbPrdRate> listNE = (List<ChbPrdRate>) convertMapToEntity(chbPrdRateList,ChbPrdRate.class);
 			listNE.stream().forEach(t->{
 				t.setSeqno(IDGenerator.generate(36));//主键
-				// 创建部门
-				t.setCreateDept(CommonUtil.getDeptCode());
-				// 部门代码
-				t.setDeptCode(CommonUtil.getDeptCode());
-				// 机构代码
-				t.setOrgCode(CommonUtil.getOrgCode());
-				// 数据来源
-				t.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源, dateSource));
 			});
 			// modify by convertMapToEntity yangxianjiu 2022-01-19 end
 			logger.debug("产品利率基本信息map转dto----开始-----:" +  df.format(new Date()));
@@ -266,14 +258,6 @@ public class SvrChbPrdRateFileImpService extends FileImpService {
 		List<ChbPrdRate> listNE = (List<ChbPrdRate>) convertMapToEntity(chbPrdRateList,ChbPrdRate.class);
 		listNE.stream().forEach(t->{
 			t.setSeqno(IDGenerator.generate(36));//主键
-			// 创建部门
-			t.setCreateDept(CommonUtil.getDeptCode());
-			// 部门代码
-			t.setDeptCode(CommonUtil.getDeptCode());
-			// 机构代码
-			t.setOrgCode(CommonUtil.getOrgCode());
-			// 数据来源
-			t.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源, dateSource));
 		});
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 end
 		logger.debug("产品利率基本信息map转dto----开始-----:" +  df.format(new Date()));

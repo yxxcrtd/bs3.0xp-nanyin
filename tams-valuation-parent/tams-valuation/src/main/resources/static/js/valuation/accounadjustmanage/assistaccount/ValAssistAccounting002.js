@@ -1,8 +1,7 @@
-
 /**
  * 辅助核算新建
  */
-(function() {
+(function () {
 
     /**
      * 保存或提交
@@ -13,8 +12,8 @@
         /**
          * 获取列表参数
          */
+        var jsonData = getHansJson();
         var object = $.serializeToObject('#submitForm', false);
-        console.log(object);
         object.pageModel = pageModel;
         object.operateType = operateType;
         object.pageId = pageId;
@@ -33,12 +32,47 @@
     /**
      * 画面加载完成
      */
-    $(function() {
+    $(function () {
+        //加载辅助核算项
+        setHands();
+        // 绑定按钮事件 重置
+        $('#ValAssistAccounting002_btn_save').click(function () {
+            //saveOrSubmit('save');
+            reset();
+        });
+        $('#ValAssistAccounting002_btn_submit').click(function () {
+            saveOrSubmit('submit');
+
+        });
+
+
+    });
+
+    /**
+     * 组装辅助核算项JSON
+     */
+    function getHansJson() {
+        var checkbox = [];
+        var str="";
+        $("input[name='handList']").each(function (i) {
+            if ($(this).prop("checked") == true) {
+                str='{"handCode" :"' + $(this).val() + '","handName" :"' + $(this).attr('title') + '","status" : "Y"}';
+            }else{
+                str='{"handCode" :"' + $(this).val() + '","handName" :"' + $(this).attr('title') + '","status" : "N"}';
+            }
+
+            checkbox.push(str);
+        });
+        $('#handjson').val('['+checkbox+']');
+    }
+
+    function setHands() {
         var hands = JSON.parse($('#handstr').val());
+        console.log(hands);
         var str = "";
-        for(var i=0,l=hands.length;i<l;i++){
+        for (var i = 0, l = hands.length; i < l; i++) {
             if ('Y' == hands[i].status) {
-                str = str + '<input type="checkbox"  name="handList"  value="' + hands[i].handCode + '"  title="' + hands[i].handName + '"  lay-skin="primary" checked   > '+"\n";
+                str = str + '<input type="checkbox"  name="handList"  value="' + hands[i].handCode + '"  title="' + hands[i].handName + '"  lay-skin="primary" checked   > ' + "\n";
             } else {
                 str = str + '<input type="checkbox"  name="handList"  value="' + hands[i].handCode + '"  title="' + hands[i].handName + '"  lay-skin="primary" > ' + "\n";
             }
@@ -48,16 +82,19 @@
         $('#hands').html(str);
         layui.form.render();
 
-        // 绑定按钮事件
-        $('#ValAssistAccounting002_btn_save').click(function() {
-            saveOrSubmit('save');
-        });
-        $('#ValAssistAccounting002_btn_submit').click(function() {
-            saveOrSubmit('submit');
-        });
+    }
 
+    /**
+     * 表单重置
+     */
+    function reset() {
+        setHands();
+        var genDetsubRule1=$("#genDetsubRule1").val();
+        console.log(genDetsubRule1);
+        $("#genDetsubRule").val(genDetsubRule1).trigger("change");
+        //layui.form.render();
 
-    });
+    }
 
 
 }());

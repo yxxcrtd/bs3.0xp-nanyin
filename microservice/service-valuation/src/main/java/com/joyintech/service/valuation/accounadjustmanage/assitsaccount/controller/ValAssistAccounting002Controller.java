@@ -29,7 +29,7 @@ import javax.validation.Valid;
  */
 //@RestController(value="servicevalAssistAccounting002Controller")
 @RestController("valAssistAccounting002Ctl_dtx")
-@RequestMapping("valAssistAccounting002")
+@RequestMapping("ValAssistAccounting002")
 public class ValAssistAccounting002Controller extends BaseController {
     
     /**

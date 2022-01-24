@@ -113,6 +113,12 @@ public class PbcPrdBaseinfoSubDatDto {
     //增信形式
     @ExcelCellNumber(cellNumber = 33)
     private String creditMode;
+    //跨境理财通标识
+    @ExcelCellNumber(cellNumber = 34)
+    private String crossBorderFlag;
+    //以财产权信托名义开展的资金信托标识
+    @ExcelCellNumber(cellNumber = 35)
+    private String zjxtFlag;
 
     public String getPbcProdId() {
         return pbcProdId;
@@ -384,5 +390,21 @@ public class PbcPrdBaseinfoSubDatDto {
 
     public void setCreditMode(String creditMode) {
         this.creditMode = creditMode;
+    }
+
+    public String getCrossBorderFlag() {
+        return crossBorderFlag;
+    }
+
+    public void setCrossBorderFlag(String crossBorderFlag) {
+        this.crossBorderFlag = crossBorderFlag;
+    }
+
+    public String getZjxtFlag() {
+        return zjxtFlag;
+    }
+
+    public void setZjxtFlag(String zjxtFlag) {
+        this.zjxtFlag = zjxtFlag;
     }
 }

@@ -62,6 +62,44 @@ public class BokSubject extends BokSubjectKey {
     private String secManageAcctId;
 
     /**
+     * 内部科目编码
+     */
+    private String subjectInternalCode;
+    /**
+     * "辅助核算表达式（存储FEL表达式，如交易场所为银行间，发行方式为封闭式则生成表达式TRADE_MARKET='01'&&ISSUE_TYPE='01'
+     * 如果是记账科目，必填。"
+     */
+    private String subjectHandFelCode;
+    /**
+     * 币种
+     */
+    private String ccy;
+
+    public String getSubjectInternalCode() {
+        return subjectInternalCode;
+    }
+
+    public void setSubjectInternalCode(String subjectInternalCode) {
+        this.subjectInternalCode = subjectInternalCode;
+    }
+
+    public String getSubjectHandFelCode() {
+        return subjectHandFelCode;
+    }
+
+    public void setSubjectHandFelCode(String subjectHandFelCode) {
+        this.subjectHandFelCode = subjectHandFelCode;
+    }
+
+    public String getCcy() {
+        return ccy;
+    }
+
+    public void setCcy(String ccy) {
+        this.ccy = ccy;
+    }
+
+    /**
      * 取得 科目名称
      * @return 科目名称
      */

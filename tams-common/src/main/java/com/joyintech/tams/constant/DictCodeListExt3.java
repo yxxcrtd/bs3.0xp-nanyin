@@ -1767,6 +1767,9 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     操作类型_接收(DictCode.操作类型,"07","接收"),
     操作类型_放弃(DictCode.操作类型,"08","放弃"),
     操作类型_导出(DictCode.操作类型,"09","导出"),
+
+    债券性质_债性(DictCode.债券性质, "01", "债性"),
+    债券性质_股性(DictCode.债券性质, "02", "股性"),
     ;
     /**
      * 对应于数据字典code
