@@ -1691,6 +1691,7 @@ public class CommonCodeCheckBatchService {
             logger.debug("销售人员数据信息表错误信息数据插入开始--------------" + new Date());
             ChbSalerIdenErrodataMapper batchMapper = session.getMapper(ChbSalerIdenErrodataMapper.class);
             for(ChbSalerIdenErrodataWithBLOBs single: erroList){
+                single.setWorkflowId(IDGenerator.generate(20));
                 batchMapper.insert(single);
                 count ++;
                 // 每20次提交
@@ -1726,6 +1727,7 @@ public class CommonCodeCheckBatchService {
             logger.debug("总部分支机构信息表错误信息数据插入开始--------------" + new Date());
             ChbSalerInstErrodataMapper batchMapper = session.getMapper(ChbSalerInstErrodataMapper.class);
             for(ChbSalerInstErrodataWithBLOBs single: erroList){
+                single.setWorkflowId(IDGenerator.generate(20));
                 batchMapper.insert(single);
                 count ++;
                 // 每20次提交
@@ -1760,6 +1762,7 @@ public class CommonCodeCheckBatchService {
             logger.debug("销售人员奖惩错误信息数据插入开始--------------" + new Date());
             ChbSalerRewPenaErrodataMapper batchMapper = session.getMapper(ChbSalerRewPenaErrodataMapper.class);
             for(ChbSalerRewPenaErrodataWithBLOBs single: erroList){
+                single.setSalerRewPenaNo(IDGenerator.generate(32));
                 batchMapper.insert(single);
                 count ++;
                 // 每20次提交

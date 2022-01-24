@@ -20,6 +20,7 @@ public class SalerInstInfoDto extends ChbSalerInstInfo implements ProcessEntity 
     private String disabledThing;//置灰控制
     private String erroOrInfo;//来自erro还是info
     private String salerInsNo;//销售人员的内部编号
+    private String workflowId;//错误信息工作流代码
     /**
      * 原始数据
      */
@@ -112,5 +113,15 @@ public class SalerInstInfoDto extends ChbSalerInstInfo implements ProcessEntity 
 
     public void setErrMsg(String errMsg) {
         this.errMsg = errMsg;
+    }
+
+    @Override
+    public String getWorkflowId() {
+        return workflowId;
+    }
+
+    @Override
+    public void setWorkflowId(String workflowId) {
+        this.workflowId = workflowId;
     }
 }
