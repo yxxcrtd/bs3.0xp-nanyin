@@ -326,6 +326,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             trdBankManualSettleInfo.setSettleSeqNo(cfetsManualSettleDto.getSettleSeqNo());
             trdBankManualSettleInfo.setFinprodId(cfetsManualSettleDto.getFinprodId());
             trdBankManualSettleInfo.setSettleAmt(cfetsManualSettleDto.getSettleAmt());
+            trdBankManualSettleInfo.setTradeId(cfetsManualSettleDto.getTradeId());
             //交收状态
             trdBankManualSettleInfo.setSettleStatus(DictCodeListExt3.交收状态_未交收.getValue());
             if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收.getValue())

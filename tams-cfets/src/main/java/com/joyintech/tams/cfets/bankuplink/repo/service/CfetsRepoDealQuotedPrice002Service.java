@@ -1717,7 +1717,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         pageDto.setSecManageAcctId(secAcctId);
         BeanUtil.copyPropertiesIgnoreNull(backDto, pageDto);
         // 卷面总额合计(万) 转换
-        backDto.setPledgePrinTotal(ArithmeticUtil.divide(pageDto.getShareAmt(), new BigDecimal(100), 4, RoundingMode.HALF_UP));
+        backDto.setPledgePrinTotal(pageDto.getShareAmt());
         // 交易金额 转换
         backDto.setDealAmt(pageDto.getTradeAmt());
         // 到期结算金额 转换
@@ -1776,7 +1776,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             //折算券面总额
             ptlDto.setShareCtAmt(ptlAllocationDto.getConvertAmt());
             //券面总额
-            ptlDto.setShareAmt(ArithmeticUtil.divide(ptlAllocationDto.getShareAmt(), new BigDecimal(100), 2));
+            ptlDto.setShareAmt(ptlAllocationDto.getShareAmt());
             //回购利息
             ptlDto.setIntAmt(ptlAllocationDto.getmIntAmt());
             ptlAllocationList.add(ptlDto);
@@ -1797,8 +1797,8 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         CfetsRepoDealQuoteCommonDto pageDto = new CfetsRepoDealQuoteCommonDto();
         BeanUtil.copyPropertiesIgnoreNull(pageDto, backDto);
         pageDto.setOperateType(backDto.getOperatorType());
-        // 卷面总额合计(万) 转换
-        pageDto.setShareAmt(ArithmeticUtil.multiply(backDto.getPledgePrinTotal(), new BigDecimal(100)));
+        // 卷面总额合计(万) 转换 元->万元
+        pageDto.setShareAmt(backDto.getPledgePrinTotal());
         // 交易金额 转换
         pageDto.setTradeAmt(backDto.getDealAmt());
         // 到期结算金额 转换
@@ -1840,7 +1840,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 pledgeDto.setPledgeRatio(pledgeBondDto.getPledgeRate());
                 // 可质押券总额
                 pledgeDto.setAvaPledgePrin(pledgeBondDto.getAvaPledgePrin());
-                // 质押券总额
+                // 质押券总额 元->万元
                 pledgeDto.setPledgePrin(ArithmeticUtil.multiply(pledgeBondDto.getPledgePrin(), new BigDecimal(10000)));
                 pageDto.setQuoteId(pledgeBondDto.getQuoteId());
                 repoEntrustPledgeDtos.add(pledgeDto);
@@ -2267,9 +2267,6 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         param.put("quoteId", quoteId);
         param.put("platDate", iPlatformDate.getSysDateStr());
         CfetsRepoDealQuotedPrice001Dto dto = this.queryEntrustInfoByQuoteId(param);
-        if (dto.getPledgePrinTotal() != null) {
-            dto.setPledgePrinTotal(dto.getPledgePrinTotal().divide(new BigDecimal(10000)));// 券面总额合计处理
-        }
         return dto;
     }
 
