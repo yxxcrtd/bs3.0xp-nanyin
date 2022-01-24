@@ -116,6 +116,13 @@ public interface CfetsTrdQueryMapper {
      */
     CfetsTrdQueryCstpInfoListResponse selectCstpRepoFormDataByKey(Map<String, Object> pageParam);
     /**
+     * 成交数据中质押券信息List
+     *
+     * @param pageParam 参数
+     * @return List<PortIntFenPeiInfoDto>
+     */
+    List<CfetsPledgeInfoResponse> selectCstpTablePledgeInfoList(Map<String, Object> pageParam);
+    /**
      * 交易列表分页查询
      * @param pageParam 参数
      * @return List<CfetsManualSettleTraderListRespond>

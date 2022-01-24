@@ -36,6 +36,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.base.dao.SysUploadFileInfoMapper;
 import com.joyintech.system.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice004Service;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
 import com.joyintech.tams.cfets.trdconfirm.dao.CfetsTrdConfirmMapper;
 import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmMatchDto;
@@ -341,6 +342,8 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
      */
     @Autowired
     private MstWorkflowCommonService mstWorkflowCommonService;
+    @Autowired
+    private CfetsBondDealQuotedPrice004Service cfetsBondDealQuotedPrice004Service;
 
     // 交易份额小数保留位数
     private int decimalPlaces_4 = 4;
@@ -1167,9 +1170,10 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
             }else{
                 remark=settleRemark+"交易撤销：" + bizCode;
             }
-            regTotal.setRemark(remark);
-            regTotal.setTradeStatus(DictCodeListExt1.有效状态_撤销.getValue());
-            cfetsTrdQueryMapper.updateRegTotalByPrimaryKeySelective(regTotal);
+           // regTotal.setRemark(remark);
+           // regTotal.setTradeStatus(DictCodeListExt1.有效状态_撤销.getValue());
+           // cfetsTrdQueryMapper.updateRegTotalByPrimaryKeySelective(regTotal);
+            cfetsBondDealQuotedPrice004Service.dorevoke(regTotal.getTotleTradeId(),remark);
         }
         cfetsTrdConfirmMapper.deleteByTrdId(bizCode);
 

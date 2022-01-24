@@ -44,6 +44,8 @@ public class CfetsPledgeInfoResponse {
     @ApiModelProperty(name="repRegistOrgStr",value="登记托管机构Str",example="ZC名")
     private String repRegistOrgStr;
 
+    @ApiModelProperty(name="pledgeFaceValue",value="券面总额（万元）",example="11")
+    private BigDecimal  pledgeFaceValue;
 
     public String getPortfolioId() {
         return portfolioId;
@@ -131,5 +133,13 @@ public class CfetsPledgeInfoResponse {
 
     public void setRepRegistOrgStr(String repRegistOrgStr) {
         this.repRegistOrgStr = repRegistOrgStr;
+    }
+
+    public BigDecimal getPledgeFaceValue() {
+        return pledgeFaceValue;
+    }
+
+    public void setPledgeFaceValue(BigDecimal pledgeFaceValue) {
+        this.pledgeFaceValue = pledgeFaceValue;
     }
 }

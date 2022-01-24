@@ -658,6 +658,9 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             regFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
             regFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
             regFinProductDealTotal.setpTradeId(totleTradeId);
+            if(StringUtil.isNotEmpty(entity.getRemark())){
+                regFinProductDealTotal.setRemark(entity.getRemark());
+            }
         }else{
             regFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
             regFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
@@ -884,10 +887,11 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
      * 撤销，共外部调用
      * @param totleTradeId
      */
-    public void dorevoke(String totleTradeId){
+    public void dorevoke(String totleTradeId,String remark){
         CfetsBondDealRegisterQuoteDto entity = new CfetsBondDealRegisterQuoteDto();
         entity.setTotleTradeId(totleTradeId);
         CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,OperationType.REVOKE);
+        cfetsBondDealDbDto.setRemark(remark);
         insert(cfetsBondDealDbDto,OperationType.REVOKE);
         try{
             String busiType = StringUtil.EMPTY;
