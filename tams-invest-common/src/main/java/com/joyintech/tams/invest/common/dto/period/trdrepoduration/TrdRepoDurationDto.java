@@ -102,6 +102,16 @@ public class TrdRepoDurationDto extends BaseEntity {
      */
     private String chlFinprodId;
 
+    private BigDecimal shareAmt;
+
+    public BigDecimal getShareAmt() {
+        return shareAmt;
+    }
+
+    public void setShareAmt(BigDecimal shareAmt) {
+        this.shareAmt = shareAmt;
+    }
+
     public String getChlFinprodId() {
         return chlFinprodId;
     }

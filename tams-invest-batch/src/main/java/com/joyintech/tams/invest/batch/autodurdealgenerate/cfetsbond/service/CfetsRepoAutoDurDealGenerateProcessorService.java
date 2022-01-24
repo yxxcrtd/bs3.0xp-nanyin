@@ -148,7 +148,8 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
             trdFinProductDealTotal.setMdate(DateTime.parse(entity.getmDate()).toDate());
         }
         trdFinProductDealTotal.setSettleDate(DateTime.parse(entity.getSettleDate()).toDate());
-        trdFinProductDealTotal.setShareAmt(ArithmeticUtil.divide(entity.getTheoryPrin(),new BigDecimal(100),2));
+        //trdFinProductDealTotal.setShareAmt(ArithmeticUtil.divide(entity.getTheoryPrin(),new BigDecimal(100),2));
+        trdFinProductDealTotal.setShareAmt(entity.getShareAmt());
         //实际利息 = 到期结算金额-理论本金
         //trdFinProductDealTotal.setIntAmt(ArithmeticUtil.subtract(entity.getFpriceAmt(), entity.getTheoryPrin()));
         trdFinProductDealTotal.setIntAmt(entity.getTheoryInt());
@@ -308,7 +309,8 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         trdProductDeal.setTradeId(autoPeriodCommonService.buildBussinessCode(parameter));
         trdProductDeal.setTotleTradeId(entity.getBusiCode());
         trdProductDeal.setTradeAmt(entity.getTradeAmt());
-        trdProductDeal.setShareAmt(ArithmeticUtil.divide(trdProductDeal.getShareAmt(),new BigDecimal(100),2));
+       //trdProductDeal.setShareAmt(ArithmeticUtil.divide(trdProductDeal.getShareAmt(),new BigDecimal(100),2));
+        trdProductDeal.setShareAmt(entity.getShareAmt());
         trdProductDeal.setSettleDate(DateUtil.parse(entity.getSettleDate()));
         trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
         trdProductDeal.setIsCancel(DictCodeList.是否_否.getValue());
