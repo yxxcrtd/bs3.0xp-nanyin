@@ -58,7 +58,7 @@ public class PbcMonthReportDetailAssetUtil {
             PbcReportProperycode.AMT_767000_WQZCSYQ,PbcReportProperycode.AMT_766000_QTGQSYQ,PbcReportProperycode.AMT_765000_GPSYQ,PbcReportProperycode.AMT_764000_QTZQSYQ,
             PbcReportProperycode.AMT_763000_YSZKSYQ,PbcReportProperycode.AMT_762000_ZWZQSYQ,PbcReportProperycode.AMT_761000_DKSYQ,PbcReportProperycode.AMT_811200_HGHCJ,
             PbcReportProperycode.AMT_811000_DK,PbcReportProperycode.AMT_773000_QTGQ,PbcReportProperycode.AMT_811270_TDMDZT,PbcReportProperycode.AMT_752700_TDMDZT,
-            PbcReportProperycode.AMT_811260_FYXYJRJG);
+            PbcReportProperycode.AMT_811260_FYXYJRJG,PbcReportProperycode.AMT_721000_JNCK,PbcReportProperycode.AMT_722000_JWCK,PbcReportProperycode.AMT_745000_QYZQ);
 
 
     private static final Map<String, String> ENTERPRISE_SCALE_MAP = new HashMap<String, String>(1 << 4);
@@ -322,7 +322,8 @@ public class PbcMonthReportDetailAssetUtil {
             SubjectName = assetInfo.getChbFinancierId();
         }else if(DictCodeListExt3.中债_上游资产一级分类_计划类利率型.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_计划类净值型.getValue().equals(assetType)
-                ||DictCodeListExt3.中债_上游资产一级分类_计划类货币型.getValue().equals(assetType)){
+                ||DictCodeListExt3.中债_上游资产一级分类_计划类货币型.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_债券借贷.getValue().equals(assetType)){
             SubjectName = assetInfo.getChbManagerId();
         }else if(DictCodeListExt3.中债_上游资产一级分类_股票.getValue().equals(assetType)){
             SubjectName = assetInfo.getAssetName();
@@ -332,7 +333,6 @@ public class PbcMonthReportDetailAssetUtil {
                 ||DictCodeListExt3.中债_上游资产一级分类_外汇远期.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_外汇掉期.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_利率互换.getValue().equals(assetType)
-                ||DictCodeListExt3.中债_上游资产一级分类_债券借贷.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_拆借.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_金融衍生品.getValue().equals(assetType)){
             SubjectName = assetInfo.getRivalParty();

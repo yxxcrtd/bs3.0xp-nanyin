@@ -80,8 +80,9 @@ public class SalerInstInfo001Service extends CommonExportService<SalerInstInfoDt
                 String salerOrgCode = dtolist.get(i).getSalerOrgCode();
                 String erroOrInfo = dtolist.get(i).getErroOrInfo();
                 if(erroOrInfo.equals("erro")){
+                    String workflowId = dtolist.get(i).getWorkflowId();
                     //erro表的直接物理删除
-                    chbSalerInstInfoMapper.deleteErroByPrimaryKey(salerOrgCode);
+                    chbSalerInstInfoMapper.deleteErroByPrimaryKey(workflowId);
                 }else{
                     if(idenInfoMap.get(salerOrgCode) != null){
                         chbSalerInstInfoMapper.deleteIdenInfo(salerOrgCode);
