@@ -664,7 +664,7 @@ public class CfetsInterfReceiveService {
                 ibuQuoteCrepPledgeDtoList.add(pledgeDto);
             }
         }
-        ibuQuoteCrepDto.setShareAmt(ArithmeticUtil.multiply(shareAmt,new BigDecimal(100))); // 交易份额
+        ibuQuoteCrepDto.setShareAmt(shareAmt); // 交易份额
         ibuQuoteCrepDto.setShareCtAmt(shareCtAmt); // 折算券面金额
         String isKtg = "N";
         if (cbShareCtAmt != null && scShareCtAmt != null) {
@@ -754,7 +754,6 @@ public class CfetsInterfReceiveService {
                         CfetsRepoDealQuotedPrice003Dto cfetsRepoDealQuotedPrice003Dto = new CfetsRepoDealQuotedPrice003Dto();
                         BeanUtil.copyPropertiesIgnoreNull(cfetsRepoDealQuotedPrice003Dto,item);
                         cfetsRepoDealQuotedPrice003Dto.setFinprodId(item.getPledgeFinprodId());
-                        cfetsRepoDealQuotedPrice003Dto.setPledgePrin(ArithmeticUtil.multiply(item.getPledgeNumber(),new BigDecimal("100")));
                         cfetsRepoDealQuotedPrice003Dto.setPledgePrin(ArithmeticUtil.multiply(item.getPledgeNumber(),new BigDecimal("100")));
                         cfetsRepoDealQuotedPrice003Dto.setPledgeRate(ArithmeticUtil.multiply(item.getPledgeRatio(), BigDecimal.valueOf(100)));
                         pledgeBondList.add(cfetsRepoDealQuotedPrice003Dto);

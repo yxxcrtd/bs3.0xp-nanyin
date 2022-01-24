@@ -1597,7 +1597,7 @@ public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust implements Proces
 
     public String getShareAmtStr() {
         if (StringUtil.isNotEmpty(this.getPledgePrinTotal())) {
-            return ArithmeticUtil.divide(this.getPledgePrinTotal(), new BigDecimal(100), 2, RoundingMode.HALF_UP).toPlainString();
+            return ArithmeticUtil.divide(this.getPledgePrinTotal(), new BigDecimal(10000), 2, RoundingMode.HALF_UP).toPlainString();
         }
         return shareAmtStr;
     }

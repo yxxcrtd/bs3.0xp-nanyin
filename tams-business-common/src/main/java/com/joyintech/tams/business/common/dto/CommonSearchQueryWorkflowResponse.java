@@ -42,6 +42,8 @@ public class CommonSearchQueryWorkflowResponse {
     @ApiModelProperty(name="opinions",value="处理意见",example="A1",required = true)
     private String opinions;
 
+    private byte []msg;
+
     @ApiModelProperty(name="tradeStatus",value="流程状态",example="A1",required = true)
     private String tradeStatus;
 
@@ -102,6 +104,9 @@ public class CommonSearchQueryWorkflowResponse {
     }
 
     public String getOpinions() {
+        if(this.msg != null) {
+            return new String(this.msg);
+        }
         return opinions;
     }
 
@@ -124,5 +129,7 @@ public class CommonSearchQueryWorkflowResponse {
     public void setNodeId(String nodeId) {
         this.nodeId = nodeId;
     }
+
+
 }
 
