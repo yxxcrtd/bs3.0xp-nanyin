@@ -17,10 +17,10 @@ public class SalerInstInfoDto extends ChbSalerInstInfo implements ProcessEntity 
     private String operateType;//操作类型
     private String elementId;//页面元素
     private String pageModel;//页面模型
+    private String dataStatus;//数据状态
     private String disabledThing;//置灰控制
     private String erroOrInfo;//来自erro还是info
     private String salerInsNo;//销售人员的内部编号
-    private String workflowId;//错误信息工作流代码
     /**
      * 原始数据
      */
@@ -51,8 +51,8 @@ public class SalerInstInfoDto extends ChbSalerInstInfo implements ProcessEntity 
         this.selectedItem = selectedItem;
     }
 
-    public String getStatusStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getStatus());
+    public String getDataStatusStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getDataStatus());
     }
 
     public String getSalerOrgLevelStr() {
@@ -115,13 +115,11 @@ public class SalerInstInfoDto extends ChbSalerInstInfo implements ProcessEntity 
         this.errMsg = errMsg;
     }
 
-    @Override
-    public String getWorkflowId() {
-        return workflowId;
+    public String getDataStatus() {
+        return dataStatus;
     }
 
-    @Override
-    public void setWorkflowId(String workflowId) {
-        this.workflowId = workflowId;
+    public void setDataStatus(String dataStatus) {
+        this.dataStatus = dataStatus;
     }
 }

@@ -40,7 +40,7 @@
         cols:[
              {field:'erroOrInfo', title:'来自erro还是info',visible:false}
             ,{field:'workflowId', title:'错误表的workflowId',visible:false}
-            ,{field:'statusStr', title: '数据状态', width:'200',sortField:'status'}
+            ,{field:'dataStatusStr', title: '数据状态', width:'200',sortField:'dataStatus'}
             ,{field:'salerInstCode', title: '销售机构代码', width:'200',sortField:'salerInstCode'}
             ,{field:'salerOrgCode', title: '总部或分支机构编码', width:'200',sortField:'salerOrgCode'}
             ,{field:'salerOrgName', title: '总部或分支机构名称', width:'200',sortField:'salerOrgName'}
@@ -100,7 +100,7 @@
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-                    if(data.status !="E"){
+                    if(data.dataStatus !="E"){
                         return Joyin.error("只能删除有效数据，请重新选择");
                     }
         var object = {selectedItem: [data], operateType:"delete"};
@@ -169,7 +169,7 @@
                 return;
             }
             for(var i=0;i<selArr.length;i++){
-                if(selArr[i].status !="E"){
+                if(selArr[i].dataStatus !="E"){
                    return Joyin.error("只能删除有效数据，请重新选择");
                 }
             }
