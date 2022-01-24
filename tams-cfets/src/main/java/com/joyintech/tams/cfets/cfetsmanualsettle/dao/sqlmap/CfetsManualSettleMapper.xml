@@ -163,7 +163,7 @@
         case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
              when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
              when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
-        ELSE case when btm.busi_type='06' then #{cleanStatus01} else null end END cleanStatus,
+        ELSE case when btm.busi_type='06' and T1.PS='03' then #{cleanStatus01} else null end END cleanStatus,
         T1.TRADE_MARKET tradeMarket,
         sdl4.item_value tradeMarketStr,
         T1.TRADE_PLAT tradePlat,
