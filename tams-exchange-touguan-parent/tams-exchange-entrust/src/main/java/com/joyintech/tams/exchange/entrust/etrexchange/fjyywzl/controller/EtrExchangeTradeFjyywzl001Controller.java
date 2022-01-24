@@ -1,12 +1,17 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.controller;
 
 import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectDto;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeExportCommonRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PsOptionsRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeFjyywzlZqzyDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeZqzyRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.service.EtrExchangeTradeFjyywzl001Service;
@@ -29,7 +34,7 @@ import java.util.Map;
 @PageId("EtrExchangeTradeFjyywzl001")
 @RequestMapping("/etrexchange/fjyywzl/etrExchangeTradeFjyywzl001")
 @Api(tags = "非交易业务指令")
-public class EtrExchangeTradeFjyywzl001Controller {
+public class EtrExchangeTradeFjyywzl001Controller extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -99,4 +104,26 @@ public class EtrExchangeTradeFjyywzl001Controller {
             return dataList;
         });
     }
+
+//    EtrExchangeTrade001/selectExtPs
+
+    /**
+     * 由于交易平台不同，设置不同交易平台对应的委托方向
+     * @param psOptionsRequest psOptionsRequest
+     */
+    @ApiOperation(value = "获取交易方向", notes = "获取交易方向")
+    @PostMapping("/getPsSelectOptions")
+    @ResponseBody
+    public Message<List<SelectOptionDto>> getPsSelectOptions(@RequestBody PsOptionsRequest psOptionsRequest) {
+        try {
+            SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.交易方向, null);
+            List<SelectOptionDto> tempList = etrExchangeTradeFjyywzl001Service.getPsSelectOptions(psOptionsRequest,selectDto);
+            return new Message<List<SelectOptionDto>>().success().setData(tempList);
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return new Message<List<SelectOptionDto>>().fail().setMessage("查询异常");
+        }
+    }
+
+
 }

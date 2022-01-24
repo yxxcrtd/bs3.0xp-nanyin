@@ -3,17 +3,46 @@ package com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.service;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.select.SelectDto;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
+import com.joyintech.tams.common.base.entity.FinExercisePlan;
+import com.joyintech.tams.common.base.entity.FinProductConvertible;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PsOptionsRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeFjyywzlZqzyDto;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdOthCodeInfoDto;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrExchangeTradeFjyywzlZqzyDto> {
+
+    @Autowired
+    private EtrExchangeTradeCommon001Service etrExchangeTradeCommon001Service;
+
+    @Autowired
+    private EtrExchangeTradeCommonMapper etrExchangeTradeCommonMapper;
+
+    @Autowired
+    private FinProductConvertibleMapper finProductConvertibleMapper;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -48,4 +77,191 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
         return map;
     }
 
+    /**
+     * 获取交易方向
+     *
+     * @param  request 画面参数 SelectDto selectDto
+     * @return 偏离度
+     * @see
+     * @since 1.0
+     */
+    public List<SelectOptionDto> getPsSelectOptions(PsOptionsRequest request,SelectDto selectDto) {
+//        List<SelectOptionDto> selectOptionDtos=new ArrayList<>();
+//        Map<String,Object> params= JsonUtils.object2Map(dto);
+//        String tradePlat=dto.getTradePlat();
+//        String finprodType2=dto.getFinprodType2();
+//        String othCodeType=dto.getOthCodeType();
+//        if(StringUtil.equals(tradePlat,DictCodeList.交易平台_竞价撮合平台.getValue())){
+//            if(StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+//                //债券默认买入、卖出
+//                selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+//                    return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
+//                            || StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue()) ;
+//                }).collect(Collectors.toList());
+//                Map<String, Object> map = BeanUtil.object2Map(dto);
+//                Map<String, Object> returnMap=setPsExt(map) ;
+//                for(String key: returnMap.keySet()){
+//                    if (StringUtil.equals(key,DictCodeList.交易方向_申购.getValue())) {
+//                        selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+//                            return StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue());
+//                        }).collect(Collectors.toList());
+//                        break;
+//                    } else {
+//                        List<SelectOptionDto> tempList = selectDto.getOptions().stream().filter(option -> {
+//                            return StringUtil.equals(option.getId(), key);
+//                        }).collect(Collectors.toList());
+//                        selectOptionDtos.addAll(tempList)   ;
+//                    }
+//                }
+//            }else if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
+//                selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+//                    return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
+//                            || StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue()) ;
+//                }).collect(Collectors.toList());
+//
+//            }else if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
+//                if(StringUtil.equals(othCodeType,DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())) {
+//                    selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+//                        return StringUtil.equals(option.getId(), DictCodeListExt2.交易方向_配股.getValue())  ;
+//                    }).collect(Collectors.toList());
+//                    return selectOptionDtos;
+//                }
+//                //新股申购
+//                else if(StringUtil.equals(DictCodeList.是否_是.getValue(),isXinGuShenGou(params))) {
+//                    selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+//                        return StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue());
+//                    }).collect(Collectors.toList());
+//                }else {
+//                    selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+//                        return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
+//                                || StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue())
+//                                || StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue());
+//                    }).collect(Collectors.toList());
+//                }
+//
+//            }else if(StringUtil.equals(finprodType2,"ZYSHG")) {
+//                selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+//                    return StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_正回购.getValue())
+//                            ||StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_逆回购.getValue()) ;
+//                }).collect(Collectors.toList());
+//            }
+//        }else 	if(StringUtil.equals(tradePlat,DictCodeList.交易平台_固定收益平台.getValue())){
+//            // 固定收益
+//            return  selectDto.getOptions().stream().filter(option -> {
+//                return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
+//                        || StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue());
+//            }).collect(Collectors.toList());
+//        }
+        Map<String,Object> param= JsonUtils.object2Map(request);
+        List<SelectOptionDto> selectOptionDtos=new ArrayList<>();
+        Map<String, Object> map = new HashMap<String, Object>();
+        Date sysDate = DateUtil.platDateFromCache();
+        param.put("date", DateUtil.format(sysDate));
+        List<TrdOthCodeInfoDto> list = etrExchangeTradeCommon001Service.getTrdOthCodeInfos(param);
+        if (null != list && list.size() > 0) {
+            for (TrdOthCodeInfoDto dto : list) {
+                SelectOptionDto selectOptionDto= new SelectOptionDto();
+                if (!StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())
+                        && !StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
+                    // 只能选择申购，其他委托方向不可选
+                    String ps = OthTypeMapToPs(dto.getOthCodeType());
+                    if (StringUtils.equals(ps, DictCodeList.交易方向_申购.getValue())) {
+                        map.clear();
+                        map.put(ps, dto.getDeclaredPrice());
+                        selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+                            return StringUtil.equals(option.getId(),ps) ;
+                        }).collect(Collectors.toList());
+                        return selectOptionDtos;
+                    } else if (StringUtils.equals(ps, DictCodeListExt3.交易方向_质押券入库.getValue())) {
+                        String converseRatio = etrExchangeTradeCommon001Service.selectStdsecConverseRatio(param);
+                        if (StringUtil.isNotEmpty(converseRatio)) {
+                            map.put(DictCodeListExt3.交易方向_质押券入库.getValue(), converseRatio);
+                            map.put(DictCodeListExt3.交易方向_质押券出库.getValue(), converseRatio);
+                        }
+                    } else {
+                        map.put(ps, dto.getDeclaredPrice());
+                    }
+                }
+            }
+        }
+
+        // add by etliu 20211207 start
+        // 交易所债券非交易类业务迁移
+        if (!map.containsKey(DictCodeListExt3.交易方向_质押券入库.getValue())) {
+            String converseRatio = etrExchangeTradeCommon001Service.selectStdsecConverseRatio(param);
+            if (StringUtil.isNotEmpty(converseRatio)) {
+                map.put(DictCodeListExt3.交易方向_质押券入库.getValue(), converseRatio);
+                map.put(DictCodeListExt3.交易方向_质押券出库.getValue(), converseRatio);
+            }
+        }
+
+        String finprodId = (String) param.get("finprodId");
+        if (!map.containsKey(DictCodeList.交易方向_行权_回售.getValue())) {
+            List<FinExercisePlan> exercisePlanList = this.selectFinExercisePlanData(finprodId, sysDate);
+            if (!StringUtil.isEmptyList(exercisePlanList)) {
+                map.put(DictCodeList.交易方向_行权_回售.getValue(), exercisePlanList.get(0).getExercisePrice());
+            }
+        }
+        if (!map.containsKey(DictCodeListExt1.交易方向_债转股.getValue())) {
+            FinProductConvertible finProductConvertible = this.selectConverseShareData(finprodId, sysDate);
+            if (finProductConvertible != null) {
+                map.put(DictCodeListExt1.交易方向_债转股.getValue(), finProductConvertible.getConPrice());
+            }
+        }
+        selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+                return map.containsKey(option.getId());
+        }).collect(Collectors.toList());
+        return selectOptionDtos;
+    }
+
+    /**
+     * 申报类型-》交易方向的映射
+     * @param othCodeType
+     * @return
+     */
+    private String OthTypeMapToPs(String othCodeType) {
+        if (org.apache.commons.lang.StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getValue())) {
+            return DictCodeList.交易方向_申购.getValue();
+        }else if(org.apache.commons.lang.StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_回售代码.getValue())){
+            return DictCodeList.交易方向_行权_回售.getValue();
+        }else if(org.apache.commons.lang.StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_可转债转股代码.getValue())){
+            return DictCodeListExt1.交易方向_债转股.getValue();
+        }else if(org.apache.commons.lang.StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_质押代码.getValue())){
+            return DictCodeListExt3.交易方向_质押券入库.getValue();
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @Description //查询行权回售数据
+     * @Param [map]
+     * @return 行权回售数据
+     * @version 1.0
+     * @see
+     **/
+    public List<FinExercisePlan> selectFinExercisePlanData(String finprodId, Date paramDate){
+        Map<String, Object> map = new HashMap<>();
+        map.put("finprodId", finprodId);
+        map.put("sysDate", paramDate);
+        map.put("exerciseType", DictCodeList.行权方式_回售.getValue());
+        return etrExchangeTradeCommonMapper.selectFinExercisePlanData(map);
+    }
+
+    /**
+     * 查询转股信息
+     * @param finprodId finprodId
+     * @param paramDate paramDate
+     * @return 转股信息
+     */
+    public FinProductConvertible selectConverseShareData(String finprodId, Date paramDate) {
+        if (StringUtils.isNotEmpty(finprodId)) {
+            FinProductConvertible finProductConvertible = finProductConvertibleMapper.selectByPrimaryKey(finprodId);
+            if (finProductConvertible != null && finProductConvertible.getConVdate() != null
+                    && DateUtil.compareDate(finProductConvertible.getConVdate(), paramDate) <= 0) {
+                return finProductConvertible;
+            }
+        }
+        return null;
+    }
 }

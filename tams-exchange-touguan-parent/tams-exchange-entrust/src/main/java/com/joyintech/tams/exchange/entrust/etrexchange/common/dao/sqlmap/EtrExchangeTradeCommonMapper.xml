@@ -1448,4 +1448,17 @@
         </where>
     </select>
 
+    <!--add by etliu 20211207 交易所债券非交易类业务迁移 start-->
+    <select id="selectFinExercisePlanData" resultType="com.joyintech.tams.common.base.entity.FinExercisePlan">
+        select
+            FINPROD_ID, EXERCISE_DATE, EXERCISE_PRICE
+        from
+            FIN_EXERCISE_PLAN
+        where
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and EXERCISE_TYPE = #{exerciseType,jdbcType=VARCHAR}
+          and VDATE &lt;= #{sysDate,jdbcType=DATE}
+          and MDATE &gt;= #{sysDate,jdbcType=DATE}
+    </select>
+    <!--add by etliu 20211207 end-->
 </mapper>
