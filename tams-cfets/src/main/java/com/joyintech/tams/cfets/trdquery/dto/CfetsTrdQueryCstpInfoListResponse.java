@@ -222,6 +222,9 @@ public class CfetsTrdQueryCstpInfoListResponse {
     @ApiModelProperty(name="repoType",value="回购方式",example="字符串1")
     private String repoType;
 
+    @ApiModelProperty(name="repoTypeStr",value="回购方式Str",example="字符串1")
+    private String repoTypeStr;
+
     @ApiModelProperty(name="vSettleDate",value="首次结算日",example="字符串1")
     private String   vsettleDate;
 
@@ -813,5 +816,13 @@ public class CfetsTrdQueryCstpInfoListResponse {
 
     public void setMdeliveryType(String mdeliveryType) {
         this.mdeliveryType = mdeliveryType;
+    }
+
+    public String getRepoTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.回购方式, this.getRepoType());
+    }
+
+    public void setRepoTypeStr(String repoTypeStr) {
+        this.repoTypeStr = repoTypeStr;
     }
 }

@@ -243,6 +243,9 @@
                 IBU_QUOTE_BOND T2
                 WHERE
                 T2.QUOTE_ID = T1.QUOTE_ID
+                <if test="quoteId != null and !quoteId.equals('')">
+                   and  T2.QUOTE_ID != #{quoteId}
+                </if>
                 <if test="QUOTE_STUTAS_IBUS != null and QUOTE_STUTAS_IBUS.size() > 0">
                     and T2.TRADE_STATUS in
                     <foreach collection="QUOTE_STUTAS_IBUS" item="item" open="(" close=")" separator=",">

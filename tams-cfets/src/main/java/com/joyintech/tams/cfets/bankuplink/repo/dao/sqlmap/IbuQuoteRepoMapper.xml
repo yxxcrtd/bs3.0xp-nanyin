@@ -164,9 +164,9 @@
             <if test="repo_pledge_model != null and repo_pledge_model.equals('02')">
                 ,PLEDGE.finprodIds /*质押债券*/
                 ,PLEDGE.finprodMarketNames /*质押债券*/
-                ,PLEDGES.bondCode
-                ,PLEDGES.bondAbbrName
-                ,PLEDGES.pledgePrin
+                ,fp.FINPROD_MARKET_ID                                                                          bondCode
+                ,fp.FINPROD_ABBR                                                                               bondAbbrName
+                ,PLEDGES.PLEDGE_NUMBER * 100                                                                   pledgePrin
             </if>
             <if test="repo_pledge_model != null and repo_pledge_model.equals('03')">
                 ,ETR_ENTRUST_ADD.PLEDGE_STOCK_ID                                                              pledgeStockId/*质押券库*/
@@ -308,28 +308,21 @@
                 group by ENTRUST_ID
             ) PLEDGE /*质押式回购银行间报价 按指令代码汇总 交易份额，债券数量等*/
                 ON PLEDGE.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
-            LEFT JOIN
-            (
-            select ENTRUST_ID, fp.FINPROD_MARKET_ID bondCode, fp.FINPROD_ABBR bondAbbrName,PLEDGE_NUMBER*100 pledgePrin
-            from ETR_PLEDGE ep
-            left join FIN_PRODUCT fp on ep.FINPROD_ID = fp.FINPROD_ID
-            ) PLEDGES /*质押式回购银行间报价 按指令代码汇总 交易份额，债券数量等*/
-            ON PLEDGES.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+            LEFT JOIN ETR_PLEDGE PLEDGES on PLEDGES.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+            left join FIN_PRODUCT fp on PLEDGES.FINPROD_ID = fp.FINPROD_ID/*质押式回购银行间报价 按指令代码汇总 交易份额，债券数量等*/
         </if>
         <if test="repo_pledge_model != null and repo_pledge_model.equals('03')">
             LEFT JOIN ETR_SEC_STOCK ON ETR_SEC_STOCK.PLEDGE_STOCK_ID = ETR_ENTRUST_ADD.PLEDGE_STOCK_ID
         </if>
-            LEFT JOIN
-            (
-                SELECT ENTRUST_ID
-                , SUM(nvl(FPRICE_AMT, 0))  totalShareAmt
-                FROM IBU_QUOTE_CREP /*质押式回购银行间报价*/
-                WHERE TRADE_STATUS = '07'
-                GROUP BY ENTRUST_ID
-            ) C /*质押式回购银行间报价 按指令代码汇总 交易份额，债券数量等*/
+            LEFT JOIN (SELECT iqer.ENTRUST_ID, SUM(nvl(iqer.FPRICE_AMT, 0)) totalShareAmt
+                          FROM IBU_QUOTE_ETR_RE iqer /*质押式回购银行间报价*/
+                          where QUOTE_ID in (select QUOTE_ID from IBU_QUOTE_CREP where TRADE_STATUS = '07')
+                          GROUP BY iqer.ENTRUST_ID) C /*质押式回购银行间报价 按指令代码汇总 交易份额，债券数量等*/
                 ON C.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
-            LEFT JOIN IBU_QUOTE_CREP C2/*质押式回购银行间报价*/
-                ON C2.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID and C2.TRADE_STATUS = '07'
+            LEFT JOIN (SELECT iqer.ENTRUST_ID, iqer.FPRICE_AMT
+                      FROM IBU_QUOTE_ETR_RE iqer /*质押式回购银行间报价*/
+                      where QUOTE_ID in (select QUOTE_ID from IBU_QUOTE_CREP where TRADE_STATUS = '07')) C2/*质押式回购银行间报价*/
+                ON C2.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
             LEFT JOIN SYS_DATADICT_LIST D
                 ON ETR_ENTRUST.ENTRUST_STATUS = D.ITEM_CODE and D.DICT_CODE = 'ENTRUST_STATUS'/*指令状态参数字典 模糊查询用*/
             LEFT JOIN SYS_DATADICT_LIST E
@@ -709,14 +702,13 @@
                         </if>
                     </where>
                      union all
-                     select  ENTRUST_ID
-                           ,PLEDGE_FINPROD_ID FINPROD_ID
-                           ,-1*PLEDGE_NUMBER
-                           ,PLEDGE_RATIO
-                     from REG_FIN_PLEDGE rfp
+                    select rfp.ENTRUST_ID, rfp.PLEDGE_FINPROD_ID FINPROD_ID, -1 * rfp.PLEDGE_NUMBER, rfp.PLEDGE_RATIO
+                    from REG_FIN_PLEDGE rfp
+                    left join REG_FIN_PRODUCT_DEAL rfpd on rfp.TRADE_ID = rfpd.TRADE_ID
                     <where>
+                        and rfpd.IS_CANCEL = 'N'  and rfpd.TRADE_STATUS ='01'
                         <if test="entrustIdList != null and entrustIdList.size() > 0">
-                            rfp.ENTRUST_ID in
+                            and rfp.ENTRUST_ID in
                             <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
                                 #{item}
                             </foreach>
@@ -1376,11 +1368,13 @@
                     </if>
                 </where>
                  union all
-                 select ENTRUST_ID, PLEDGE_FINPROD_ID FINPROD_ID, -1*PLEDGE_NUMBER
-                 from REG_FIN_PLEDGE rfp
+                 select rfp.ENTRUST_ID, rfp.PLEDGE_FINPROD_ID FINPROD_ID, -1*rfp.PLEDGE_NUMBER
+                 from REG_FIN_PLEDGE  rfp
+                 left join REG_FIN_PRODUCT_DEAL rfpd on rfp.TRADE_ID = rfpd.TRADE_ID
                 <where>
+                    and rfpd.IS_CANCEL = 'N'  and rfpd.TRADE_STATUS = '01'
                     <if test="entrustIdList != null and entrustIdList.size() > 0">
-                        rfp.ENTRUST_ID in
+                        and rfp.ENTRUST_ID in
                         <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
                             #{item}
                         </foreach>
@@ -1586,7 +1580,7 @@
 
     <select id="listDealTransactionDetails" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.RepoDealTransactionDetailsDto">
         select distinct
-               statusValid/*有效*/,
+               statusValid validStatus/*有效*/,
                quoteType/*交易类型*/,
                tradeDate/*成交日期*/,
                ps/*本方方向*/,
