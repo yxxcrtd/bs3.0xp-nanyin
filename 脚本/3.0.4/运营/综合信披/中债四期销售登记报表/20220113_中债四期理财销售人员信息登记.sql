@@ -438,9 +438,9 @@ INSERT INTO CHB_REG_TIME_POINTS VALUES('44',null,'44',null,'03','03','02','业�
 
 --登记页面菜单配置
 DELETE FROM SYS_PAGE WHERE PAGE_ID in ('SalesStaffManageRegist','SalerIdenInfoRegist001','SalerInstInfoRegist001','SalerRewPenaInfoRegist001');
-delete from SYS_MENU where MENU_ID = 'REPORT_001_003_020';
-INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_003_020', 'REP', null, 'REPORT_001_003', 'SalesStaffManageRegist', 20, '02', '理财销售人员信息登记', 'system', null, TIMESTAMP '2021-06-30 20:43:03', 'system', TIMESTAMP '2021-06-30 20:43:03');
-INSERT INTO SYS_PAGE VALUES ('SalesStaffManageRegist','REP','/report/submitmanagement/salesstaffmanageregist/SalesStaffManageRegist','report/submitmanagement/salesstaffmanageregist/SalesStaffManageRegist','REPORT_001_003_020',null,null,'02','01','理财销售人员信息登记','system',null,sysdate,'system',sysdate);
+delete from SYS_MENU where MENU_ID = 'REPORT_REGIST_001_002_011';
+INSERT INTO SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)values('REPORT_REGIST_001_002_011','SVR',null,'REPORT_REGIST_001_002','SalesStaffManageRegist',11,02,'理财销售人员信息登记','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_PAGE VALUES ('SalesStaffManageRegist','REP','/report/submitmanagement/salesstaffmanageregist/SalesStaffManageRegist','report/submitmanagement/salesstaffmanageregist/SalesStaffManageRegist','REPORT_REGIST_001_002_011',null,null,'02','01','理财销售人员信息登记','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('SalerIdenInfoRegist001','REP','/report/submitmanagement/salerideninforegist/SalerIdenInfoRegist001','report/submitmanagement/salerideninforegist/SalerIdenInfoRegist001',null,null,null,'02','01','总部或分支机构信息','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('SalerInstInfoRegist001','REP','/report/submitmanagement/salerinstinforegist/SalerInstInfoRegist001','report/submitmanagement/salerinstinforegist/SalerInstInfoRegist001',null,null,null,'02','01','销售人员身份信息','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('SalerRewPenaInfoRegist001','REP','/report/submitmanagement/salerrewpenainforegist/SalerRewPenaInfoRegist001','report/submitmanagement/salerrewpenainforegist/SalerRewPenaInfoRegist001',null,null,null,'02','01','销售人员奖惩投诉记录信息','system',null,sysdate,'system',sysdate);
