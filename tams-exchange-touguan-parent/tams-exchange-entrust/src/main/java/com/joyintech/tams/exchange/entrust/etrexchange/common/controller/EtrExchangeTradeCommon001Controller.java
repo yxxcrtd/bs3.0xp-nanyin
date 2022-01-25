@@ -820,6 +820,30 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		return new Message<String>().success().setData(deviationDegree);
 	}
 
+
+	/**
+	 * 获取最小交易单元
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "获取最小交易单元", notes = "获取最小交易单元")
+	@ResponseBody
+	@PostMapping("/getMinNumStep")
+	public Message<String> getMinNumStep(@RequestBody MinNumStepRequest request){
+		try{
+			Map<String, Object> param = BeanUtil.object2Map(request);
+			BigDecimal minNum = etrExchangeTrade001CommonService.getMinNumStep(param);
+			if(minNum == null) {
+				minNum= BigDecimal.ZERO;
+			}
+			String minNumStr=minNum.setScale(2).toString();
+			return new Message<>(minNumStr);
+		} catch (Exception e) {
+			logger.error("查询功能异常", e);
+			return new Message<String>().fail().setMessage("查询异常");
+		}
+	}
+
 	/**
 	 * 保存按钮点击时的check
 	 *
@@ -1090,17 +1114,6 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	}
 
 	/**
-	 * 获取最小交易单元
-	 * @param param
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping("/getMinNumStep")
-	public Map<String, BigDecimal> getMinNumStep(@RequestBody Map<String, Object> param){
-		return etrExchangeTrade001CommonService.getMinNumStep(param);
-	}
-
-	/**
 	 * 获取1/最小价差的倍数
 	 * @param param
 	 * @return
@@ -1315,7 +1328,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	/**
 	 * 查询指令组合列表
 	 *
-	 * @param entrustId entrustId
+	 * @param dto dto
 	 * @return 处理结果
 	 * @throws Exception
 	 *             异常
