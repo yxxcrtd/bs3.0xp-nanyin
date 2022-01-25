@@ -55,6 +55,8 @@ public class CommonCodeCheckBatchService {
      */
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private Map<String,String>  map=new HashMap<>();
+
     /**
      * 登记的入库前的代码检查
      * 只做校验，不做其他处理
@@ -2354,10 +2356,18 @@ public class CommonCodeCheckBatchService {
         //总部分支机构信息
         String salerOrgCode = dataMap.get("SALER_ORG_CODE");
 
+
+
         //证件号码重复校验
         if (rewPenaType != null && rewPenaType != "") {
             if (rewPenaType.equals("99")) {
                 if (salerOtherCredentName != null && salerOtherCredentName != "") {
+                    String keyset=salerOtherCredentName+salerCredentNo;
+                    if(map.containsKey(keyset)){
+                        errMsg +="当证件类别选择“99”时，“其他证件名称+证件号码”不可同时相同。[SALER_CREDENT_NO="+dataMap.get("SALER_CREDENT_NO")+"];";
+                    }else{
+                        map.put(keyset,keyset);
+                    }
                     if (salerCredentNo != null && salerCredentNo != "") {
                         if (commonCodeCheckMapper.checkSalerCredentNo(null, salerOtherCredentName, salerCredentNo) > 0) {
                             errMsg +="其他证件名称相同时，证件号码不可重复。[SALER_CREDENT_NO="+dataMap.get("SALER_CREDENT_NO")+"];";
@@ -2366,6 +2376,12 @@ public class CommonCodeCheckBatchService {
                 }
             } else {
                 if (salerCredentNo != null && salerCredentNo != "") {
+                    String keyset=rewPenaType+salerCredentNo;
+                    if(map.containsKey(keyset)){
+                        errMsg +="当证件类别选择“01-05”时,“证件类别+证件号码”不可同时相同。[SALER_CREDENT_NO="+dataMap.get("SALER_CREDENT_NO")+"];";
+                    }else{
+                        map.put(keyset,keyset);
+                    }
                     if (commonCodeCheckMapper.checkSalerCredentNo(rewPenaType, null, salerCredentNo) > 0) {
                         errMsg +="证件类别相同时，证件号码不可重复。[SALER_CREDENT_NO="+dataMap.get("SALER_CREDENT_NO")+"];";
                     }
