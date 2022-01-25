@@ -440,6 +440,9 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             if(list.get(21) == null || list.get(21).trim().equals("")){
                 flag = false;
                 message.add("销售资质不能为空");
+            }else if(list.get(21).length() > 400){
+                flag = false;
+                message.add("销售资质输入超长，最长为400字符。");
             }
             //办公电话
             if(list.get(22) == null || list.get(22).trim().equals("")){
