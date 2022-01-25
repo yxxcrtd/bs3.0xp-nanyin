@@ -16,11 +16,14 @@ import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.tams.business.common.dto.CommonSearchInfoRequest;
 import com.joyintech.tams.business.common.dto.FieldExportRequestDto;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.EntrustQueryBean;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListRequest;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListResponse;
+import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.TradeQueryBean;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.service.FieldEtrInfoQueryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,12 +32,10 @@ import org.springframework.stereotype.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.joyintech.tams.business.common.pojo.Message;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,5 +127,52 @@ public class FieldEtrInfoQueryController extends BaseController {
             return dataList;
         });
     }
+
+    /**
+     * 指令执行查询
+     *
+     * @param dto
+     * @return Page<CfetsEtrDispatcherExeListInfoResponse>
+     * @throws Exception Exception
+     * @see
+     * @since 1.0
+     */
+    @ApiOperation(value = "指令执行查询", notes = "指令执行查询")
+    @PostMapping("/getEtrDispatcherExeListInfo")
+    @ResponseBody
+    public Message<Page<EntrustQueryBean>> getEtrDispatcherExeListInfo(@RequestBody CommonSearchInfoRequest dto)
+            throws Exception {
+        try {
+            Page<EntrustQueryBean> returnDto = fieldEtrInfoQueryService.getEtrDispatcherExeListInfo(dto);
+            return new Message<Page<EntrustQueryBean>>().success().setData(returnDto);
+        } catch (Exception e) {
+            logger.error("查询指令管理分页数据异常", e);
+            return new Message<Page<EntrustQueryBean>>().fail().setMessage("查询指令成交异常");
+        }
+    }
+
+    /**
+     * 指令成交查询
+     *
+     * @param dto
+     * @return Page<CfetsEtrDispatcherDealListInfoResponse>
+     * @throws Exception Exception
+     * @see
+     * @since 1.0
+     */
+    @ApiOperation(value = "指令成交查询", notes = "指令成交查询")
+    @PostMapping("/getEtrDispatcherDealListInfo")
+    @ResponseBody
+    public Message<Page<TradeQueryBean>> getEtrDispatcherDealListInfo(@RequestBody CommonSearchInfoRequest dto)
+            throws Exception {
+        try {
+            Page<TradeQueryBean> returnDto = fieldEtrInfoQueryService.getEtrDispatcherDealListInfo(dto);
+            return new Message<Page<TradeQueryBean>>().success().setData(returnDto);
+        } catch (Exception e) {
+            logger.error("查询指令成交异常", e);
+            return new Message<Page<TradeQueryBean>>().fail().setMessage("查询指令成交异常");
+        }
+    }
+
 
 }
