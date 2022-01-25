@@ -220,7 +220,7 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 		File outFile = null;
 		if (sourceFiles.size() > 1) {
 			String exportFilePath = SvrDataUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-			String zipFileName = "人行报送文件" + DateUtil.getCurrentDateTime() + ".zip";
+			String zipFileName = "人行报送文件" + DateUtil.getCurrentDate() + ".zip";
 			zipFileName = zipFileName.replaceAll(":", "-");
 			outFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             // 导出路径不存在则重新生成
