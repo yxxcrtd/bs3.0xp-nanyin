@@ -67,7 +67,7 @@ $(function() {
             }else {
                 result6=result6.split('/')[1];  //取360
             }
-            var result5=JoyinMath.doMul(result4,result6,2);
+            var result5=JoyinMath.doDiv(result4,result6,2);
             $('#intAmt').val(result5);
         }else {
             $('#intAmt').val('');
