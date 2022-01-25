@@ -244,15 +244,24 @@ public class AgentPrdInfoRegist001Service extends CommonExportService<AgentPrdIn
         Map<String,Object> data  = new HashMap<String,Object>();
         List<AgentPrdInfoRegistDto> tempList=new ArrayList<AgentPrdInfoRegistDto>();
         List<AgentPrdInfoRegistDto> dateTempList=new ArrayList<AgentPrdInfoRegistDto>();//本行机构代码
+        AgentPrdInfoRegistDto nullDate = new AgentPrdInfoRegistDto();//没有未报送数据时塞入空model
         if(datas == null){
             tempList = chbAgentPrdSubMapper.setDataList(selectParam);
-            dateTempList.add(tempList.get(0));//获取本行机构代码
+            if(tempList.size() != 0) {
+                dateTempList.add(tempList.get(0));//获取本行机构代码
+            }
         }else{
             tempList= com.joyintech.framework.util.JsonUtils.json2List(datas,AgentPrdInfoRegistDto.class);
             dateTempList.add(tempList.get(0));//获取本行机构代码
         }
-        data.put("dataList1",tempList);
-        data.put("dataList",dateTempList);
+        if(tempList.size() !=0 && dateTempList.size() !=0) {
+            data.put("dataList1", tempList);
+            data.put("dataList", dateTempList);
+        }else{
+            tempList.add(nullDate);
+            data.put("dataList1", tempList);
+            data.put("dataList", tempList);
+        }
         File depositfile = TisUtil.createFile(data,"pbc/" +"AgentPrdInfoRegist_export", "委托销售产品编码信息登记.xls");
         sourceFiles.add(depositfile);
         File outFile = null;

@@ -45,7 +45,7 @@ public class BaseInterfService extends BaseService  {
 		try{
 			logger.info("下游数据发布-"+getFileName()+"获取业务Entity开始-------------------");
 			list = getBusEntity(prodIdlist, StringUtil.isEmpty(date) ?new Date(): DateUtil.parse(date), institutionCode, "F");
-			logger.info("下游数据发布-"+getFileName()+"获取业务Entity结束-------------------");
+			logger.info("下游数据发布-"+getFileName()+"获取业务Entity结束，共获取到:"+list.size()+"条记录-------------------");
 		}catch(Exception e){
 			logger.error(e.getMessage(), "下游数据发布-"+getFileName()+"获取业务Entity异常-------------------");
 		}
@@ -56,7 +56,7 @@ public class BaseInterfService extends BaseService  {
 			// 生成xml文件
 			logger.info("下游数据发布-"+getFileName()+"生成文件开始-------------------------");
 			writeEntityToXmlFile(list, path, date);
-			logger.info("下游数据发布-"+getFileName()+"生成文件结束-------------------------");
+			logger.info("下游数据发布-"+getFileName()+"生成文件结束，文件路径为:"+path+File.separator+getFileName()+ "_"+date+".xml"+"-------------------------");
 		}catch(Exception e){
 			logger.error(e.getMessage(), "下游数据发布-"+getFileName()+"获取业务Entity异常-------------------");
 		}
