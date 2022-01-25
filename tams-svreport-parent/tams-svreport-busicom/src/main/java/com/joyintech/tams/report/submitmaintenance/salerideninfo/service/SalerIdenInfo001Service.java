@@ -493,7 +493,7 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             }
 
             if (CollectionUtils.isNotEmpty(message)) {
-                checkResult.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
+                checkResult.add(new ExcelValidDto(list.get(7), String.valueOf(i+2),
                         StringUtil.joinString(message, GlobalConstant.SEMICOLON)));
             }
         }
@@ -680,8 +680,8 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
         return status;
     }
 
-    //校验理财专业证书多选导入
-    public static boolean checkSalerCertificateType(String value){
+    //校验可销售产品风险等级多选导入
+    public static boolean checksalerRiskLevel(String value){
         boolean status = true;
         if (!isEmpty(value)) {
             if(value.equals("01,02,03,04,05") || value.equals("01,02,03,04") || value.equals("01,02,03,05") || value.equals("01,02,04,05") || value.equals("01,03,04,05") ||
@@ -696,8 +696,8 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
         return status;
     }
 
-    //校验可销售产品风险等级多选导入
-    public static boolean checksalerRiskLevel(String value){
+    //校验理财专业证书多选导入
+    public static boolean checkSalerCertificateType(String value){
         boolean status = true;
         if (!isEmpty(value)) {
             if(value.equals("01,02,03,04,05,06,07,99") || value.equals("01,02,03,04,05,06,07") || value.equals("01,02,03,04,05,06,99") || value.equals("01,02,03,04,05,06") || value.equals("01,02,03,04,05,07") ||
