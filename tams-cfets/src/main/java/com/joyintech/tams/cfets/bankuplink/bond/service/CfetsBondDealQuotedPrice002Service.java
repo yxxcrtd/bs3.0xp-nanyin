@@ -1033,7 +1033,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
         if(cfetsQuotedCommonServicevue.checkQuoteStatusChange(entity.getQuoteId(),entity.getTradeStatus())){
             throw new BusinessException("MSG:报价状态已变更,无法审批!");
         }
-        this.calcListFpriceAmt(entity);
+        //this.calcListFpriceAmt(entity);
         this.handOurAndLendinShareAmt(entity);
         BondQuoteInfoDto bondQuoteInfoDto = new BondQuoteInfoDto();
         BeanUtil.copyPropertiesIgnoreNull(bondQuoteInfoDto,entity);
@@ -1161,7 +1161,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
         entity.setWorkflowId(entity.getWorkflowId());
         
      // add by etliu 20210309 银行间上下行多组合 start
-        this.calcListFpriceAmt(entity);
+     //   this.calcListFpriceAmt(entity);
      // add by etliu 20210309 银行间上下行多组合 end
         //处理本方券、融入券
         this.handOurAndLendinShareAmt(entity);
@@ -1181,7 +1181,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
         Map<String,Object> map = new HashMap<>();
         if (!StringUtil.equals("revoke", entity.getOperatorType()) && !StringUtil.equals("delete", entity.getOperatorType())) {
             // add by etliu 20210309 银行间上下行多组合 start
-            this.calcListFpriceAmt(entity);
+            //this.calcListFpriceAmt(entity);
             // add by etliu 20210309 银行间上下行多组合 end
             this.handOurAndLendinShareAmt(entity);
             // 重新insert
