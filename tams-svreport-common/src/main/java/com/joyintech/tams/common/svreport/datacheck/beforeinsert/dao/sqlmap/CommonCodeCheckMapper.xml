@@ -216,4 +216,32 @@
     <delete id="deleteChbSalerRewErrorDataByTradeNo">
         delete from CHB_SALER_REW_PENA_ERRODATA where SALER_REW_PENA_NO = #{salerRewPenaNo}
     </delete>
+
+    <select id="checkSalerCredentNo" resultType="integer" parameterType="java.lang.String" >
+        select
+        count(*)
+        from
+        CHB_SALER_IDEN_INFO
+        where
+        STATUS = 'E'
+        <if test="salerCredentType != null and salerCredentType != ''">
+            and SALER_CREDENT_TYPE = #{salerCredentType,jdbcType=VARCHAR}
+        </if>
+        <if test="salerOtherCredentName != null and salerOtherCredentName != ''">
+            and SALER_OTHER_CREDENT_NAME = #{salerOtherCredentName,jdbcType=VARCHAR}
+        </if>
+        <if test="salerCredentNo != null and salerCredentNo != ''">
+            and SALER_CREDENT_NO = #{salerCredentNo,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <!--    check所属总部或分支机构校验有效性-->
+    <select id="checkSalerOrgCode" resultType="integer" parameterType="java.lang.String" >
+        select
+        count(*)
+        from CHB_SALER_INST_INFO
+        where
+        STATUS = 'E'
+        and SALER_ORG_CODE = #{salerOrgCode,jdbcType=VARCHAR}
+    </select>
 </mapper>
