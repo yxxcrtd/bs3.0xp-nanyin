@@ -6,9 +6,9 @@
     /**
      * 保存
      */
-    var saveOrSubmitAction = function (operatorType) {
+    var saveOrSubmitAction = function (operateType) {
         var object = $.serializeToObject('#submitForm', true);
-        object.operatorType = operatorType;
+        object.operateType = operateType;
         object.isDzh = 'Y';
         object.pageId = "CfetsQuoteRepo003";
         object.ptlAllocationList = ptlAllocations;
@@ -16,7 +16,7 @@
         Joyin.confirm("是否确认提交?",
             function () {
                 //保存 走流程
-                if (operatorType === 'save') {
+                if (operateType === 'save') {
                     WorkFlow.doSaveList(basePath + 'cfets/bankuplink/repo/IbuQuoteRepo003/save', object, "CfetsQuoteRepo003_btn_save", null,
                         function () {
                             var index = window.parent.layer.getFrameIndex(window.name);
@@ -24,7 +24,7 @@
                         })
                 }
                 //提交 走流程
-                else if (operatorType === 'submit') {
+                else if (operateType === 'submit') {
                     WorkFlow.doSubmitList(basePath + 'cfets/bankuplink/repo/IbuQuoteRepo003/save', object, "CfetsQuoteRepo003_btn_submit", null,
                         function () {
                             var index = window.parent.layer.getFrameIndex(window.name);
@@ -209,7 +209,16 @@
     });
 
 
+    //流程中数据不可编辑
+    hideRepoPage = function () {
+        if (workflowId) {
+            $('#submitForm').find('input,text,textarea,select').attr('disabled', 'disabled');
+        }
+
+    }
+
     $(function () {
+        hideRepoPage();
         /**
          * 保存按钮按下处理
          */

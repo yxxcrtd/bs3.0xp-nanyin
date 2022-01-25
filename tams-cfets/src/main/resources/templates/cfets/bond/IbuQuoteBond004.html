@@ -382,11 +382,14 @@
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap">净价</label>
                                 <div class="layui-input-inline input-inline">
-                                <input required disabled type="text" id="CfetsBondDealQuotedPrice004_unitCprice2" name="price2" data-th-value="${entity?.price}" class="layui-input form-input text-number" placeholder="请输入">
+                                <input required disabled type="text" id="CfetsBondDealQuotedPrice004_unitCprice2" name="price2" data-th-value="${entity?.price}"
+                                       data-textrange="4"
+                                       class="layui-input form-input text-number" placeholder="请输入">
+                                <span class="input-right-show">元</span>
                                 </div>
                             </div>
                             <div class="form-inline-wrap">
-                                <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice002.cpriceAmt}">净价总额</label>
+                                <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice002.cpriceAmt}">交易金额</label>
                                 <div class="layui-input-inline input-inline">
                                     <input required disabled type="text" id="CfetsBondDealQuotedPrice004_cpriceAmt" name="cpriceAmt" data-th-value="${entity?.cpriceAmt}" class="layui-input form-input text-number" placeholder="请输入">
                                     <span class="input-right-show">元</span>
@@ -416,7 +419,7 @@
                                 </div>
                             </div>
                             <div class="form-inline-wrap">
-                                <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice002.fprinceAmt}">全价总额</label>
+                                <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice002.fprinceAmt}">结算金额</label>
                                 <div class="layui-input-inline input-inline">
                                     <input required disabled type="text" id="CfetsBondDealQuotedPrice004_fpriceAmt" name="fpriceAmt" data-th-value="${entity?.fpriceAmt}" class="layui-input form-input text-number" placeholder="请输入">
                                     <span class="input-right-show">元</span>

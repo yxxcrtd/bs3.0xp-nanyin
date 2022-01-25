@@ -10,7 +10,10 @@
  
 package com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dao;
 
+import com.joyintech.framework.grid.Page;
+import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.EntrustQueryBean;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListResponse;
+import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.TradeQueryBean;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,4 +38,8 @@ public interface FieldEtrInfoQueryMapper {
 
     //查询登录用户是否是领导、交易处长岗位
     int queryRolePosByLoginUser(Map<String, Object> map);
+
+    List<EntrustQueryBean> queryEntrust2Touguan(Map<String, Object> pageParam);
+
+    List<TradeQueryBean> queryTrade2Touguan(Map<String, Object> pageParam);
 }

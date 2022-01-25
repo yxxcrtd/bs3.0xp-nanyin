@@ -4623,7 +4623,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @param param
 	 * @return
 	 */
-	public Map<String, BigDecimal> getMinNumStep(Map<String, Object> param) {
+	public BigDecimal getMinNumStep(Map<String, Object> param) {
 		String ps = param.get("ps") == null ? null : param.get("ps").toString();
 		String currentTab = param.get("currentTab") == null ? null : param.get("currentTab").toString();
 		String finprodId = (String) param.get("finprodId");
@@ -4634,9 +4634,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		if(null != minTrdUnitLimitDto && null != minTrdUnitLimitDto.getMinStep()){
 			minNum = minTrdUnitLimitDto.getMinStep();
 		}
-		Map<String, BigDecimal> resultMap = new HashMap<>();
-		resultMap.put("minNum",minNum);
-		return resultMap;
+		return minNum;
 	}
 
 	/**

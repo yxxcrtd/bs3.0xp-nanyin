@@ -385,7 +385,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
                 //从废弃表中获取，转移到指令表
                 etrEntrustBackupMapper.insertEtrFromQuery(dto.getEntrustId());
-                etrEntrustBackupMapper.insertAddFromQuery(dto.getEntrustId());
+                etrEntrustBackupMapper.insertEtrAddFromQuery(dto.getEntrustId());
                 // 删除废弃表
                 etrEntrustBackupMapper.deleteByPrimaryKey(dto.getEntrustId());
                 etrEntrustBackupMapper.deleteAddByPrimaryKey(dto.getEntrustId());

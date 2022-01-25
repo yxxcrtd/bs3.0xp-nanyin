@@ -16,10 +16,14 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 
+import com.joyintech.tams.business.common.dto.CommonSearchInfoRequest;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dao.FieldEtrInfoQueryMapper;
+import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.EntrustQueryBean;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListRequest;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListResponse;
+import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.TradeQueryBean;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -140,5 +144,19 @@ public class FieldEtrInfoQueryService extends BaseService{
             return pageLimit;
         }
         return pageLimit;
+    }
+
+    public Page<EntrustQueryBean> getEtrDispatcherExeListInfo(CommonSearchInfoRequest dto) {
+        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
+        pageParam.put("instructionId",dto.getEntrustId());
+        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
+                () -> fieldEtrInfoQueryMapper.queryEntrust2Touguan(pageParam));
+    }
+
+    public Page<TradeQueryBean> getEtrDispatcherDealListInfo(CommonSearchInfoRequest dto) {
+        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
+        pageParam.put("instructionId",dto.getEntrustId());
+        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
+                () -> fieldEtrInfoQueryMapper.queryTrade2Touguan(pageParam));
     }
 }
