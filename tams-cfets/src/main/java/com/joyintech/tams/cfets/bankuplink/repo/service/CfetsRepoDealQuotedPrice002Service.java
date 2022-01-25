@@ -1300,20 +1300,16 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
      * @date 2021/12/28 20:42
      */
     public boolean reject(CfetsRepoDealQuotedPrice001Dto entity) {
-        for (PtlAllocationDto ptl : entity.getPtlAllocationList()) {
-            Map<String, Object> pageParam = new HashMap<>();
-            pageParam.put("quoteId", entity.getQuoteId());
-            pageParam.put("entrustId", ptl.getEntrustId());
-            pageParam.put("portfolioId", ptl.getPortfolioId());
-            pageParam.put("isDzh", DictCodeList.是否_是.getValue());
-            pageParam.put("userName", LoginUserUtil.getUserName());
-            pageParam.put("deptCode", LoginUserUtil.getDeptCode());
-            ibuComponentCommonService.reject(pageParam);
-            CfetsOprHisInfoRequest cfetsOprHisInfoRequest = new CfetsOprHisInfoRequest();
-            cfetsOprHisInfoRequest.setEntrustId(entity.getQuoteId());
-            cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_拒绝.getValue());
-            joyinbusinessCommonService.updateCfetsOprHis(cfetsOprHisInfoRequest);
-        }
+        Map<String, Object> pageParam = new HashMap<>();
+        pageParam.put("quoteId", entity.getQuoteId());
+        pageParam.put("isDzh", DictCodeList.是否_是.getValue());
+        pageParam.put("userName", LoginUserUtil.getUserName());
+        pageParam.put("deptCode", LoginUserUtil.getDeptCode());
+        ibuComponentCommonService.reject(pageParam);
+        CfetsOprHisInfoRequest cfetsOprHisInfoRequest = new CfetsOprHisInfoRequest();
+        cfetsOprHisInfoRequest.setEntrustId(entity.getQuoteId());
+        cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_拒绝.getValue());
+        joyinbusinessCommonService.updateCfetsOprHis(cfetsOprHisInfoRequest);
         return true;
     }
 
@@ -1970,6 +1966,8 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         pageDto.setRepoTerm((int) backDto.getTerm());
         // 质押券折算总金额
         pageDto.setConvertAmt(backDto.getShareCtAmt());
+        // 证券账户
+        pageDto.setSecManageAcctId(backDto.getSecAcctId());
         String trader = cfetsRepoQuotedPrice004Service.findTraderByCounterId(backDto.getCounterId());
         // 对手方
         if (StringUtil.isEmpty(trader)) {
