@@ -73,8 +73,9 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                 String salerInsNo = dtolist.get(i).getSalerInsNo();
                 String erroOrInfo = dtolist.get(i).getErroOrInfo();
                 if(erroOrInfo.equals("erro")){
+                    String workflowId = dtolist.get(i).getWorkflowId();
                     //erro表的直接物理删除
-                    chbSalerIdenInfoMapper.deleteErroByPrimaryKey(salerInsNo);
+                    chbSalerIdenInfoMapper.deleteErroByPrimaryKey(workflowId);
                 }else{
                     if(rewPenaInfoMap.get(salerInsNo) != null){
                             chbSalerIdenInfoMapper.deleteRewPenaInfo(salerInsNo);

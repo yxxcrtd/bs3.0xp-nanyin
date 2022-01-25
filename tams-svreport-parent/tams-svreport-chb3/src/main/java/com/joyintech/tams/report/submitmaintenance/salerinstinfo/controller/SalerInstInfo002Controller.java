@@ -5,10 +5,13 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto.SalerInstInfoDto;
 import com.joyintech.tams.report.submitmaintenance.salerinstinfo.service.SalerInstInfoService;
+import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 @Controller
 @PageId("SalerInstInfo002")
@@ -40,8 +45,9 @@ public class SalerInstInfo002Controller extends BaseController {
        super.setSelectOptionToModel(model, DictCode.机构层级);
        String salerOrgCode = getParam("salerOrgCode");
        String erroOrInfo = getParam("erroOrInfo");
-       if(WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(salerOrgCode) && StringUtil.isNotEmpty(erroOrInfo)) {
-           SalerInstInfoDto entity = salerInstInfoService.selectDetail(salerOrgCode,erroOrInfo);
+       String workflowId = getParam("workflowId");
+       if(WorkFlowUtil.isNotFromToDoList()) {
+           SalerInstInfoDto entity = salerInstInfoService.selectDetail(salerOrgCode,erroOrInfo,workflowId);
                // 设置到model中
                model.addAttribute("entity", entity);
        }
@@ -99,5 +105,20 @@ public class SalerInstInfo002Controller extends BaseController {
         //获取本行中债机构代码
         String orgCode = CommonUtil.getOrgCode();
         return salerInstInfoService.selectIssuePartyId(orgCode);
+    }
+
+    /**
+     * 修改校验
+     */
+    @ResponseBody
+    @RequestMapping("editCheck")
+    public AjaxResult check(@RequestBody SalerInstInfoDto salerInstInfoDto) {
+        AjaxResult ar =new AjaxResult();
+        List<ValidMessage> errorList = ar.getErrorList();
+        if (StringUtil.equals(salerInstInfoDto.getStatus(), DictCodeListExt1.维护数据状态_删除.getValue())) {
+            errorList.add(new ValidMessage("数据状态为删除的数据不允许修改！"));
+            ar.setErrorList(errorList);
+        }
+        return ar;
     }
 }

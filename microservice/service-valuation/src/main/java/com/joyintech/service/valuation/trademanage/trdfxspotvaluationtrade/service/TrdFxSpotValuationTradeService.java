@@ -174,11 +174,11 @@ public class TrdFxSpotValuationTradeService extends CommonExportService<TrdFxSpo
         String tradeId = null;
         while (true) {
             // 获取自增数
-            String nextId = this.getNextId("PLANTRADEID_SEQUENCE");
+            String nextId = this.getNextId("FXSPOTTRADEID_SEQUENCE");
             //平台日
             String dateStr= DateUtil.format(iPlatformDate.getSysDate(),DateUtil.DEFAULT_OTHER_FORMAT);//yyyyMMdd
             // 拼接
-            tradeId = "JY"+"PLAN"+dateStr+ nextId;
+            tradeId = "JY"+"FXSPOT"+dateStr+ nextId;
             // 查询是否重复
             int num = trdFxSpotValuationTradeMapper.selectCountByTradeId(tradeId);
             // 如果自增的策略代码不存在，则跳出循环

@@ -29,12 +29,12 @@ public class SalerInstInfo002Service extends BaseService{
         } else {
             //来自erro表
             SalerInstInfoDto infoDto = new SalerInstInfoDto();
-            List<SalerInstInfoDto> listSalerErrordata = chbSalerInstInfoMapper.selectErroDetail(param);
-            if (listSalerErrordata != null && listSalerErrordata.size() > 0) {
-                InstiInfoErrdataConvertUtil.errdataAssetInfoConvert(infoDto, listSalerErrordata.get(0));
-                infoDto.setErroOrInfo("erro");
-            }
-            return infoDto;
+            SalerInstInfoDto listSalerErrordata = chbSalerInstInfoMapper.selectErroDetail(param);
+//            if (listSalerErrordata != null && listSalerErrordata.size() > 0) {
+//                InstiInfoErrdataConvertUtil.errdataAssetInfoConvert(infoDto, listSalerErrordata.get(0));
+//                infoDto.setErroOrInfo("erro");
+//            }
+            return listSalerErrordata;
         }
     }
 
@@ -71,7 +71,7 @@ public class SalerInstInfo002Service extends BaseService{
         }
         //来自erro表的先删除erro表数据再插入info表
         else{
-            chbSalerInstInfoMapper.deleteErroByPrimaryKey(dto.getSalerOrgCode());
+            chbSalerInstInfoMapper.deleteErroByPrimaryKey(dto.getWorkflowId());
             this.saveAndSubmit(dto);
         }
     }

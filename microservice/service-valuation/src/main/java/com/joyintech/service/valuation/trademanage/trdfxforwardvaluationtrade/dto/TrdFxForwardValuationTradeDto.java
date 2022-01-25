@@ -14,8 +14,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.framework.validation.annotation.NotEmpty;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;

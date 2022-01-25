@@ -19,6 +19,7 @@ import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.submitmaintenance.salerinstinfo.dao.ChbSalerInstInfoMapper;
 import com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto.SalerInstInfoDto;
 import com.joyintech.tams.report.submitmaintenance.salerinstinfo.service.SalerInstInfoService;
+import com.joyintech.tams.report.submitmanagement.salerinstinforegist.dto.SalerInstInfoRegistDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,8 @@ public class SalerInstInfo001Controller extends BaseController {
     @RequestMapping(value = "findPage")
     public Page<SalerInstInfoDto> findPage() {
         Map<String, Object> param = RequestUtil.getPageParam();
-        return salerInstInfoService.searchForPage(param);
+        Page<SalerInstInfoDto> pageList=salerInstInfoService.searchForPage(param);
+        return pageList;
     }
 
     /**
