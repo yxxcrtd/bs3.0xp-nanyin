@@ -39,14 +39,15 @@
         },
         cols:[
              {field:'erroOrInfo', title:'来自erro还是info',visible:false}
-            ,{field:'statusStr', title: '数据状态', width:'200',sortField:'status'}
+            ,{field:'workflowId', title:'错误表的workflowId',visible:false}
+            ,{field:'dataStatusStr', title: '数据状态', width:'200',sortField:'dataStatus'}
             ,{field:'salerInstCode', title: '销售机构代码', width:'200',sortField:'salerInstCode'}
             ,{field:'salerOrgCode', title: '总部或分支机构编码', width:'200',sortField:'salerOrgCode'}
             ,{field:'salerOrgName', title: '总部或分支机构名称', width:'200',sortField:'salerOrgName'}
             ,{field:'salerOrgLevelStr', title: '机构层级', width:'200',sortField:'salerOrgLevel'}
             ,{field:'errMsg', title: '错误信息', width:'200',sortField:'errMsg'}
             ,{field:'remark', title: '备注', width:'200',sortField:'remark'}
-            ,{field:'action', title: '操作' , type:'action',buttons: ['edit', 'delt'] , width:'150'}
+            ,{ field: 'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ],
     });
 /**
@@ -67,23 +68,39 @@
         }
     };
 
-        /**
-         * 绑定编辑事件
-         */
-        table.bind('click', '.edit', function(data, index) {
-            data.operateType = "edit";
-            data.pageModel=PAGE_MODEL_EDIT;
-            Joyin.dialog(JoyinUtil.getLabel("总部或分支机构信息编辑"),
-                    JoyinUtil.getRealPath("report/submitmaintenance/salerinstinfo/SalerInstInfo002/init"),
-                    "98%", "95%", data,
-               function(){table.reload();});
+//        /**
+//         * 绑定编辑事件
+//         */
+//        table.bind('click', '.edit', function(data, index) {
+//            data.operateType = "edit";
+//            data.pageModel=PAGE_MODEL_EDIT;
+//            Joyin.dialog(JoyinUtil.getLabel("总部或分支机构信息编辑"),
+//                    JoyinUtil.getRealPath("report/submitmaintenance/salerinstinfo/SalerInstInfo002/init"),
+//                    "98%", "95%", data,
+//               function(){table.reload();});
+//        });
+
+
+    /**
+     * 绑定编辑事件
+     */
+    table.bind('click', '.edit', function(data, index) {
+        data.operateType = "edit";
+        data.pageModel=PAGE_MODEL_EDIT;
+        Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo002/editCheck', data, function(result) {
+            Joyin.dialog(JoyinUtil.getLabel("销售结算资金交易信息维护编辑"),
+                JoyinUtil.getRealPath("report/submitmaintenance/salerinstinfo/SalerInstInfo002/init"),
+                "98%", "95%", data,
+           function(){table.reload();});
         });
+
+    });
 
     /**
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-                    if(data.status !="E"){
+                    if(data.dataStatus !="E"){
                         return Joyin.error("只能删除有效数据，请重新选择");
                     }
         var object = {selectedItem: [data], operateType:"delete"};
@@ -152,7 +169,7 @@
                 return;
             }
             for(var i=0;i<selArr.length;i++){
-                if(selArr[i].status !="E"){
+                if(selArr[i].dataStatus !="E"){
                    return Joyin.error("只能删除有效数据，请重新选择");
                 }
             }

@@ -1295,7 +1295,7 @@ $(function() {
 //		}
 		var expArr = table.getAllCheckedRows();
 		var param = {};
-		if ((!expArr || expArr.length == 0)&& (assetTypes==null || assetTypes=='' )) {
+		if (!expArr || expArr.length == 0) {
 			param = getSearchParams();
             param.flag = flag;
             if(flag=="0"){

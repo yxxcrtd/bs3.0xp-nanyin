@@ -80,7 +80,7 @@
 <!--                               maxlength="100"/>-->
                         <select th:id="|${entityName}_managerId|"
                                 th:name="|${entityName}.managerId|"
-                                th:value="${entity?.managerId}"
+                                th:initValue="${entity?.managerId}"
                                 class="layui-input form-input input-select"
                                 required="required"
                                 data-th-data-url="@{/common/select/getManagerId}">
@@ -97,7 +97,7 @@
 <!--                               maxlength="100"/>-->
                         <select th:id="|${entityName}_trusteeId|"
                                 th:name="|${entityName}.trusteeId|"
-                                th:value="${entity?.trusteeId}"
+                                th:initValue="${entity?.trusteeId}"
                                 class="layui-input form-input input-select"
                                 required="required"
                                 data-th-data-url="@{/common/select/getTrusterId}">
@@ -355,7 +355,7 @@
 <!--							   data-fixtype="2" class="layui-input form-input"/>-->
                         <select th:id="|${entityName}_chbManagerId|"
                                 th:name="|${entityName}.chbManagerId|"
-                                th:value="${entity?.chbManagerId}"
+                                th:initValue="${entity?.chbManagerId}"
                                 class="layui-input form-input input-select"
                                 data-th-data-url="@{/common/select/getManagerId}">
                         </select>
@@ -421,7 +421,7 @@
             <div class="layui-form-item">
                 <div class="form-inline-wrap" style="width: 100% !important;">
                     <label class="layui-form-label form-label-wrap" data-th-utext="#{SvrBussRepAssetMngProdInfo.remark}"
-                           style="width: 12%;">备注</label>
+                           style="width: 12.55%;">备注</label>
                     <div class="layui-input-inline input-inline" style="width: 86%!important">
                         <input th:id="|${entityName}_remark|" th:name="|${entityName}.remark|"
                                th:value="${entity?.remark}" class="layui-input form-input" placeholder="请输入内容"

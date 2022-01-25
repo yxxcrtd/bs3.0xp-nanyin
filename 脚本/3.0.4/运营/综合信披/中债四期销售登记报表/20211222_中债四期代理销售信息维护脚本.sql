@@ -76,9 +76,9 @@ alter table CHB_AGENT_PRD_INFO
   
   --菜单配置
 DELETE FROM SYS_PAGE WHERE PAGE_ID in ('AgentTabManage001','AgentInstitution001','AgentInstitution002','AgentInstitution003','AgentPrdInfo001','AgentPrdInfo002');
-delete from SYS_MENU where MENU_ID = 'REPORT_001_001_026';
-INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_026', 'REP', null, 'REPORT_001_001', 'AgentTabManage001', 15, '02', '代理销售机构信息维护', 'system', null, TIMESTAMP '2021-06-30 20:43:03', 'system', TIMESTAMP '2021-06-30 20:43:03');
-INSERT INTO SYS_PAGE VALUES ('AgentTabManage001','REP','/report/submitmaintenance/agenttabmanage/AgentTabManage001','report/submitmaintenance/agenttabmanage/AgentTabManage001','REPORT_001_001_026',null,null,'02','01','代理销售机构信息维护','system',null,sysdate,'system',sysdate);
+delete from SYS_MENU where MENU_ID = 'REPORT_MAINTAIN_001_004_008';
+INSERT INTO SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)values('REPORT_MAINTAIN_001_004_008','REP',null,'REPORT_MAINTAIN_001_004','AgentTabManage001',8,02,'代理销售机构信息维护','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_PAGE VALUES ('AgentTabManage001','REP','/report/submitmaintenance/agenttabmanage/AgentTabManage001','report/submitmaintenance/agenttabmanage/AgentTabManage001','REPORT_MAINTAIN_001_004_008',null,null,'02','01','代理销售机构信息维护','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('AgentInstitution001','REP','/report/submitmaintenance/agentinstitution/AgentInstitution001','report/submitmaintenance/agentinstitution/AgentInstitution001',null,null,null,'02','01','代理销售机构信息','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('AgentInstitution002','REP','/report/submitmaintenance/agentinstitution/AgentInstitution002','report/submitmaintenance/agentinstitution/AgentInstitution002',null,null,null,'02','01','代理销售机构信息新建','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('AgentInstitution003','REP','/report/submitmaintenance/agentinstitution/AgentInstitution003','report/submitmaintenance/agentinstitution/AgentInstitution003',null,null,null,'02','01','附件上传','system',null,sysdate,'system',sysdate);

@@ -303,20 +303,6 @@ public class TrdLendValuationTradeDto extends BaseEntity implements ProcessEntit
 
 
 
-    /**
-     * 有效状态
-     */
-    private String validStatus;
-
-    /**
-     * 有效状态
-     */
-    private String validStatusText;
-
-    /**
-     * 委托代码
-     */
-    private String entrustId;
 
 
 
@@ -420,28 +406,10 @@ public class TrdLendValuationTradeDto extends BaseEntity implements ProcessEntit
     }
 
 
-    /**
-     * 获取 busiPs
-     *
-     * @return busiPs.
-     */
-    @NotEmpty(fieldName = "TrdLendValuationTrade002.busiPs", groups = {ValidateGroupEdit.class})
     public String getBusiPs() {
-        String busiPs="";
-        if(getPs() != null && getPs().equals("T01")){
-            busiPs="拆入";
-        }
-        if(getPs() != null && getPs().equals("T02")){
-            busiPs="拆出";
-        }
         return busiPs;
     }
 
-    /**
-     * 设置 busiPs
-     *
-     * @param busiPs busiPs
-     */
     public void setBusiPs(String busiPs) {
         this.busiPs = busiPs;
     }
@@ -463,6 +431,7 @@ public class TrdLendValuationTradeDto extends BaseEntity implements ProcessEntit
     /**
      * 交易方向
      */
+    @NotEmpty(fieldName = "TrdLendValuationTrade002.ps", groups = {ValidateGroupEdit.class})
     private String ps;
 
     public String getPs() {
@@ -473,6 +442,26 @@ public class TrdLendValuationTradeDto extends BaseEntity implements ProcessEntit
         this.ps = ps;
     }
 
+    /**
+     * 取得 交易方向str
+     *
+     * @return 交易方向
+     */
+    public String getPsStr() {
+        String psName="";
+        if(StringUtil.isNotEmpty(ps)){
+            if(ps.equals("01")){
+                psName = "拆入";
+            }else if(ps.equals("02")){
+                psName = "拆出";
+            }else if(ps.equals("03")){
+                psName = "拆入到期";
+            }else if(ps.equals("04")){
+                psName = "拆出到期";
+            }
+        }
+        return psName;
+    }
 
     /**
      * 取得 币种Fmt

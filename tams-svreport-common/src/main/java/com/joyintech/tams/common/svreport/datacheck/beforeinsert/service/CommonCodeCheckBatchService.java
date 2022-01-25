@@ -117,6 +117,8 @@ public class CommonCodeCheckBatchService {
                 case 终止登记TMP:
                     checkProdEndSubTmp(map,prodRegistCodeList);
                     break;
+                case 销售人员奖惩投诉记录信息表INFO:
+                    checkRewPenaInfo(map);
                 default:
                     break;
             }
@@ -1691,6 +1693,8 @@ public class CommonCodeCheckBatchService {
             logger.debug("销售人员数据信息表错误信息数据插入开始--------------" + new Date());
             ChbSalerIdenErrodataMapper batchMapper = session.getMapper(ChbSalerIdenErrodataMapper.class);
             for(ChbSalerIdenErrodataWithBLOBs single: erroList){
+                single.setStatus("A");
+                single.setWorkflowId(IDGenerator.generate(20));
                 batchMapper.insert(single);
                 count ++;
                 // 每20次提交
@@ -1726,6 +1730,8 @@ public class CommonCodeCheckBatchService {
             logger.debug("总部分支机构信息表错误信息数据插入开始--------------" + new Date());
             ChbSalerInstErrodataMapper batchMapper = session.getMapper(ChbSalerInstErrodataMapper.class);
             for(ChbSalerInstErrodataWithBLOBs single: erroList){
+                single.setStatus("A");
+                single.setWorkflowId(IDGenerator.generate(20));
                 batchMapper.insert(single);
                 count ++;
                 // 每20次提交
@@ -1760,6 +1766,8 @@ public class CommonCodeCheckBatchService {
             logger.debug("销售人员奖惩错误信息数据插入开始--------------" + new Date());
             ChbSalerRewPenaErrodataMapper batchMapper = session.getMapper(ChbSalerRewPenaErrodataMapper.class);
             for(ChbSalerRewPenaErrodataWithBLOBs single: erroList){
+                single.setSalerRewPenaNo(IDGenerator.generate(32));
+                single.setStatus("A");
                 batchMapper.insert(single);
                 count ++;
                 // 每20次提交
@@ -2282,5 +2290,36 @@ public class CommonCodeCheckBatchService {
         chbAssetInfoErrodata.setUpdateTime(new Date());
 
         return chbAssetInfoErrodata;
+    }
+
+
+    /***
+     * 检查销售奖惩信息
+     * @param dataMap
+     */
+    public    void  checkRewPenaInfo(Map<String, String> dataMap){
+        String  errMsg = dataMap.getOrDefault("ERRMSG", "");
+        // 记录分类
+        String rewPenaType = dataMap.get("SALER_REW_PENA_TYEP");
+        //奖惩单位
+        String rewPenaInst = dataMap.get("SALER_REW_PENA_INST");
+        //奖惩单位具体名称
+        String rewPenaInstName = dataMap.get("SALER_REW_PENA_INST_NAME");
+        //记录分类选择“01 奖励”或“02 惩处”，且“奖惩单位”选择“99 其他”时必填；
+        if((StringUtil.equals(DictCodeListExt2.记录分类_奖励.getValue(),rewPenaType)||
+                StringUtil.equals(DictCodeListExt2.记录分类_惩处.getValue(),rewPenaType))&&
+                        StringUtil.equals(DictCodeListExt2.记录分类_其他.getValue(),rewPenaInst)){
+            if(StringUtil.isEmpty(rewPenaInstName)){
+                errMsg +="当记录分类选择“01 奖励”或“02 惩处”，且“奖惩单位”选择“99 其他”时，奖惩单位具体名称必填[SALER_REW_PENA_INST_NAME="+dataMap.get("SALER_REW_PENA_INST_NAME")+"];";
+            }
+        }else if(StringUtil.equals(DictCodeListExt2.记录分类_投诉.getValue(),rewPenaType)||
+                StringUtil.equals(DictCodeListExt2.记录分类_金融管理部门.getValue(),rewPenaInst)||
+                StringUtil.equals(DictCodeListExt2.记录分类_本机构.getValue(),rewPenaInst)){
+              //否则不可填
+            if(!StringUtil.isEmpty(rewPenaInstName)){
+                errMsg +="奖惩单位具体名称不可填[SALER_REW_PENA_INST_NAME="+dataMap.get("SALER_REW_PENA_INST_NAME")+"];";
+            }
+        }
+        dataMap.put("ERRMSG", errMsg);
     }
 }

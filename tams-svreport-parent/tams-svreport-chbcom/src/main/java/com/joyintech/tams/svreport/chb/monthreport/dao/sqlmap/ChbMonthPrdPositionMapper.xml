@@ -461,13 +461,21 @@
       	,nvl(val.CCY,'CNY') prod_value_ccy
       <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 start -->
       ,case when info.PRODTYPE = 'M' then
-            case when substr(to_char(info.VDATE, 'yyyy-MM-dd'), 6, 2) = substr(to_char(#{statusDate, jdbcType=DATE}, 'yyyy-MM-dd'), 6, 2)
-              then (nvl(val3.TDY_UNIT_VALUE_SUM, 1) - nvl(val4.TDY_UNIT_VALUE_SUM, 1)) / (val4.TDY_UNIT_VALUE_SUM * to_number(#{statusDate, jdbcType=DATE} - info.VDATE)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1)
-            else (nvl(val3.TDY_UNIT_VALUE_SUM, 1) - nvl(val4.TDY_UNIT_VALUE_SUM, 1)) / (val4.TDY_UNIT_VALUE_SUM * to_number(#{enddate, jdbcType=DATE} - #{startdate, jdbcType=DATE} + 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1) end
+            case when substr(to_char(info.VDATE, 'yyyy-MM-dd'), 0, 7) = substr(to_char(#{enddate, jdbcType=DATE}, 'yyyy-MM-dd'), 0, 7) and substr(to_char(#{enddate, jdbcType=DATE}, 'yyyy-MM-dd'), 0, 7) != substr(to_char(info.MDATE, 'yyyy-MM-dd'), 0, 7)
+              then (nvl(val4.TDY_UNIT_VALUE_SUM, 1) - nvl(val5.TDY_UNIT_VALUE_SUM, 1)) / (nvl(val5.TDY_UNIT_VALUE_SUM, 1) * to_number(#{statusDate, jdbcType=DATE} - info.VDATE)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1)
+            when substr(to_char(info.VDATE, 'yyyy-MM-dd'), 0, 7) = substr(to_char(#{enddate, jdbcType=DATE}, 'yyyy-MM-dd'), 0, 7) and substr(to_char(#{enddate, jdbcType=DATE}, 'yyyy-MM-dd'), 0, 7) = substr(to_char(info.MDATE, 'yyyy-MM-dd'), 0, 7)
+                then (nvl(val3.TDY_UNIT_VALUE_SUM, 1) - nvl(val5.TDY_UNIT_VALUE_SUM, 1)) / (nvl(val5.TDY_UNIT_VALUE_SUM, 1) * to_number(info.MDATE - info.VDATE)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1)
+            when substr(to_char(info.VDATE, 'yyyy-MM-dd'), 0, 7) = substr(to_char(#{startdate,jdbcType=DATE}-1, 'yyyy-MM-dd'), 0, 7) and substr(to_char(#{enddate, jdbcType=DATE}, 'yyyy-MM-dd'), 0, 7) = substr(to_char(info.MDATE, 'yyyy-MM-dd'), 0, 7)
+                then (nvl(val3.TDY_UNIT_VALUE_SUM, 1) - nvl(val2.TDY_UNIT_VALUE_SUM, 1)) / (nvl(val2.TDY_UNIT_VALUE_SUM, 1) * to_number(info.MDATE - #{startdate, jdbcType=DATE} + 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1)
+            else (nvl(val.TDY_UNIT_VALUE_SUM, 1) - nvl(val2.TDY_UNIT_VALUE_SUM, 1)) / (nvl(val2.TDY_UNIT_VALUE_SUM, 1) * to_number(#{enddate, jdbcType=DATE} - #{startdate, jdbcType=DATE} + 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1) end
       when info.PRODTYPE = 'N' then
-            case when substr(to_char(info.VDATE, 'yyyy-MM-dd'), 6, 2) = substr(to_char(#{statusDate, jdbcType=DATE}, 'yyyy-MM-dd'), 6, 2)
-                then (nvl(val.UNIT_VALUE_TOTAL, 1) - nvl(val2.UNIT_VALUE_TOTAL, 1)) / (val2.UNIT_VALUE_TOTAL * to_number(#{statusDate, jdbcType=DATE} - info.VDATE)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1)
-            else (nvl(val.UNIT_VALUE_TOTAL, 1) - nvl(val2.UNIT_VALUE_TOTAL, 1)) / (val2.UNIT_VALUE_TOTAL * to_number(#{enddate, jdbcType=DATE} - #{startdate, jdbcType=DATE} + 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1) end
+            case when substr(to_char(info.VDATE, 'yyyy-MM-dd'), 0, 7) = substr(to_char(#{enddate, jdbcType=DATE}, 'yyyy-MM-dd'), 0, 7) and substr(to_char(#{enddate, jdbcType=DATE}, 'yyyy-MM-dd'), 0, 7) != substr(to_char(info.MDATE, 'yyyy-MM-dd'), 0, 7)
+            then (nvl(val4.UNIT_VALUE_TOTAL, 1) - nvl(val5.UNIT_VALUE_TOTAL, 1)) / (nvl(val5.UNIT_VALUE_TOTAL, 1) * to_number(#{statusDate, jdbcType=DATE} - info.VDATE)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1)
+            when substr(to_char(info.VDATE, 'yyyy-MM-dd'), 0, 7) = substr(to_char(#{enddate, jdbcType=DATE}, 'yyyy-MM-dd'), 0, 7) and substr(to_char(#{enddate, jdbcType=DATE}, 'yyyy-MM-dd'), 0, 7) = substr(to_char(info.MDATE, 'yyyy-MM-dd'), 0, 7)
+            then (nvl(val3.UNIT_VALUE_TOTAL, 1) - nvl(val5.UNIT_VALUE_TOTAL, 1)) / (nvl(val5.UNIT_VALUE_TOTAL, 1) * to_number(info.MDATE - info.VDATE)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1)
+            when substr(to_char(info.VDATE, 'yyyy-MM-dd'), 0, 7) = substr(to_char(#{startdate,jdbcType=DATE}-1, 'yyyy-MM-dd'), 0, 7) and substr(to_char(#{enddate, jdbcType=DATE}, 'yyyy-MM-dd'), 0, 7) = substr(to_char(info.MDATE, 'yyyy-MM-dd'), 0, 7)
+            then (nvl(val3.UNIT_VALUE_TOTAL, 1) - nvl(val2.UNIT_VALUE_TOTAL, 1)) / (nvl(val2.UNIT_VALUE_TOTAL, 1) * to_number(info.MDATE - #{startdate, jdbcType=DATE} + 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1)
+            else (nvl(val.UNIT_VALUE_TOTAL, 1) - nvl(val2.UNIT_VALUE_TOTAL, 1)) / (nvl(val2.UNIT_VALUE_TOTAL, 1) * to_number(#{enddate, jdbcType=DATE} - #{startdate, jdbcType=DATE} + 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1) end
       when info.PRODTYPE = 'R' then
           case when info.OPERATE_MODE in ('01', '02') then info.EXP_AVG_YIELD
           when info.OPERATE_MODE in ('03', '04') then cpr.PROD_YIELD end
@@ -485,10 +493,10 @@
         ) cpr on nvl (info.fprod_id,info.prod_id)=cpr.prod_id
 	    left join
 	    (
-	        select prod_id,ccy,prod_value,CHANGE_DATE,UNIT_VALUE_TOTAL from (
+	        select prod_id,ccy,prod_value,CHANGE_DATE,UNIT_VALUE_TOTAL,TDY_UNIT_VALUE_SUM from (
 	        select rank() over(partition by prod_id order by change_date desc)
-	        my_rank,prod_id,ccy,prod_value,CHANGE_DATE,UNIT_VALUE_TOTAL from CHB_PRD_PERIODYIELD
-	        where CHANGE_DATE<![CDATA[=]]>#{enddate,jdbcType=DATE} and CHANG_TYPE='01'
+	        my_rank,prod_id,ccy,prod_value,CHANGE_DATE,UNIT_VALUE_TOTAL,TDY_UNIT_VALUE_SUM from CHB_PRD_PERIODYIELD
+	        where CHANGE_DATE <![CDATA[=]]>#{enddate,jdbcType=DATE} and CHANG_TYPE='01'
 	        AND STATUS IN ('E','M')
 	        ) where my_rank=1
 	    )val
@@ -496,38 +504,50 @@
         <!-- add by dubaojun 2020-06-06 增加理财子公司所需字段的入库 start -->
     left join
         (
-        select PROD_ID,CCY,PROD_VALUE,CHANGE_DATE,UNIT_VALUE_TOTAL
+        select PROD_ID,CCY,PROD_VALUE,CHANGE_DATE,UNIT_VALUE_TOTAL,TDY_UNIT_VALUE_SUM
         from (
         select rank() over(partition by prod_id order by change_date desc) my_rank,
-        prod_id,ccy,prod_value,CHANGE_DATE,UNIT_VALUE_TOTAL
+        prod_id,ccy,prod_value,CHANGE_DATE,UNIT_VALUE_TOTAL,TDY_UNIT_VALUE_SUM
         from CHB_PRD_PERIODYIELD
-        where CHANGE_DATE<![CDATA[=]]>#{startdate,jdbcType=DATE}-1
-        and CHANG_TYPE='01'
+        where CHANGE_DATE <![CDATA[=]]>#{startdate,jdbcType=DATE}-1
+        and CHANG_TYPE='01' AND STATUS IN ('E','M')
         ) where my_rank = 1
         )val2
         on info.PROD_ID=val2.PROD_ID
-	left join
-        (
-        select PROD_ID,CCY,CHANGE_DATE,TDY_UNIT_VALUE_SUM
-        from (
-        select rank() over(partition by prod_id order by change_date desc) my_rank,
-        prod_id,ccy,CHANGE_DATE,TDY_UNIT_VALUE_SUM
-        from CHB_PRD_PERIODYIELD
-        where CHANGE_DATE<![CDATA[=]]>#{enddate,jdbcType=DATE}
-        and CHANG_TYPE='01'
-        ) where my_rank = 1
-        )val3 on info.PROD_ID=val3.PROD_ID
     left join
         (
-        select PROD_ID,CCY,CHANGE_DATE,TDY_UNIT_VALUE_SUM
+        select PROD_ID,CCY,PROD_VALUE,CHANGE_DATE,UNIT_VALUE_TOTAL,TDY_UNIT_VALUE_SUM
         from (
         select rank() over(partition by prod_id order by change_date desc) my_rank,
-        prod_id,ccy,CHANGE_DATE,TDY_UNIT_VALUE_SUM
+        prod_id,ccy,prod_value,CHANGE_DATE,UNIT_VALUE_TOTAL,TDY_UNIT_VALUE_SUM
         from CHB_PRD_PERIODYIELD
-        where CHANGE_DATE<![CDATA[=]]>#{startdate,jdbcType=DATE}-1
-        and CHANG_TYPE='01'
+        where CHANG_TYPE='01' AND STATUS IN ('E','M')
         ) where my_rank = 1
-        )val4 on info.PROD_ID=val4.PROD_ID
+        )val3
+        on info.PROD_ID=val3.PROD_ID and val3.CHANGE_DATE <![CDATA[=]]> info.MDATE
+    left join
+        (
+        select PROD_ID,CCY,PROD_VALUE,CHANGE_DATE,UNIT_VALUE_TOTAL,TDY_UNIT_VALUE_SUM
+        from (
+        select rank() over(partition by prod_id order by change_date desc) my_rank,
+        prod_id,ccy,prod_value,CHANGE_DATE,UNIT_VALUE_TOTAL,TDY_UNIT_VALUE_SUM
+        from CHB_PRD_PERIODYIELD
+        where CHANGE_DATE <![CDATA[=]]> #{statusDate, jdbcType=DATE}
+        and CHANG_TYPE='01' AND STATUS IN ('E','M')
+        ) where my_rank = 1
+        )val4
+        on info.PROD_ID=val4.PROD_ID
+    left join
+        (
+        select PROD_ID,CCY,PROD_VALUE,CHANGE_DATE,UNIT_VALUE_TOTAL,TDY_UNIT_VALUE_SUM
+        from (
+        select rank() over(partition by prod_id order by change_date desc) my_rank,
+        prod_id,ccy,prod_value,CHANGE_DATE,UNIT_VALUE_TOTAL,TDY_UNIT_VALUE_SUM
+        from CHB_PRD_PERIODYIELD
+        where  CHANG_TYPE='01' AND STATUS IN ('E','M')
+        ) where my_rank = 1
+        )val5
+        on info.PROD_ID=val5.PROD_ID and val5.CHANGE_DATE <![CDATA[=]]> info.vdate
     left join REP_PROD_INDEX rpi
     on rpi.PROD_ID = info.PROD_ID
     and rpi.VALUE_DATE = #{enddate,jdbcType=DATE}

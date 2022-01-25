@@ -43,8 +43,9 @@
         erro.SALER_ORG_CODE       as salerOrgCode,
         erro.SALER_ORG_NAME       as salerOrgName,
         erro.SALER_ORG_LEVEL      as salerOrgLevel,
-        'A'                       as status,
+        'A'                       as dataStatus,
         erro.DATA_DATE            as dataDate,
+        erro.WORKFLOW_ID          as workflowId,
         null                      as remark,
         to_char(erro.ERR_MSG)     as errMsg
         from CHB_SALER_INST_ERRODATA erro
@@ -68,8 +69,9 @@
         info.SALER_ORG_CODE       as salerOrgCode,
         info.SALER_ORG_NAME       as salerOrgName,
         info.SALER_ORG_LEVEL      as salerOrgLevel,
-        info.STATUS               as status,
+        info.STATUS               as dataStatus,
         info.DATA_DATE            as dataDate,
+        null                      as workflowId,
         info.REMARK               as remark,
         null                      as errMsg
         from CHB_SALER_INST_INFO info
@@ -83,7 +85,7 @@
         <if test="status != null and status != ''">
             and info.STATUS = #{status,jdbcType=VARCHAR}
         </if>
-        ) ORDER BY status DESC
+        ) ORDER BY dataStatus DESC
     </select>
 
     <!--    删除检查-->
@@ -160,7 +162,7 @@
 <!--    删除erro表-->
     <delete id="deleteErroByPrimaryKey" parameterType="java.lang.String" >
         delete from CHB_SALER_INST_ERRODATA
-        where SALER_ORG_CODE = #{salerOrgCode,jdbcType=VARCHAR}
+        where WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
     </delete>
 
     <!--	根据主键删除info-->
@@ -272,12 +274,13 @@
         SALER_ORG_CODE salerOrgCode,
         SALER_ORG_NAME salerOrgName,
         SALER_ORG_LEVEL salerOrgLevel,
+        WORKFLOW_ID     workflowId,
         ORG_DATA        orgData,
         ERR_MSG         errMsg,
-        REMARK remark
+        null remark
         from CHB_SALER_INST_ERRODATA
         where
-        SALER_ORG_CODE = #{salerOrgCode,jdbcType=VARCHAR}
+        WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
     </select>
 
     <!--    总部或分支机构编码重复校验-->

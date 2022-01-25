@@ -176,11 +176,11 @@ public class TrdFixIncomeValuationTradeService extends CommonExportService<TrdFi
         String tradeId = null;
         while (true) {
             // 获取自增数
-            String nextId = this.getNextId("PLANTRADEID_SEQUENCE");
+            String nextId = this.getNextId("FIXINCOMETRADEID_SEQUENCE");
             //平台日
             String dateStr= DateUtil.format(iPlatformDate.getSysDate(),DateUtil.DEFAULT_OTHER_FORMAT);//yyyyMMdd
             // 拼接
-            tradeId = "JY"+"PLAN"+dateStr+ nextId;
+            tradeId = "JY"+"FICC"+dateStr+ nextId;
             // 查询是否重复
             int num = trdFixIncomeValuationTradeMapper.selectCountByTradeId(tradeId);
             // 如果自增的策略代码不存在，则跳出循环

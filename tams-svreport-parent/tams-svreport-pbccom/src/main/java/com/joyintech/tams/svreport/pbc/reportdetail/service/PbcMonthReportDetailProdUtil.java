@@ -60,13 +60,14 @@ public class PbcMonthReportDetailProdUtil {
      * 数据赋值
      * @param prdPosition
      * @param info
-     * @param flagCode
+     * @param
      * @return
      */
     public static PbcMonthReportDetailProd buildProdDetail(PbcMonthPrdPostionDto prdPosition, ChbPrdBaseinfo info, String termid){
         PbcMonthReportDetailProd pbcMonthPrdPositiondetail = new PbcMonthReportDetailProd();
         //相同内容字段直接赋值
         BeanUtil.copyPropertiesIgnoreNull(pbcMonthPrdPositiondetail,info);
+        pbcMonthPrdPositiondetail.setIsMarketFund(info.getCashManaCate());
         //先基本信息,再头寸信息,避免错误覆盖
         BeanUtil.copyPropertiesIgnoreNull(pbcMonthPrdPositiondetail,prdPosition);
 

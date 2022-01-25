@@ -27,6 +27,15 @@
                 t1.CUSTOMER_ABBR LIKE CONCAT('%', CONCAT(#{param}, '%'))
                 )
             </if>
+            <if test="initValue != null and initValue != ''">
+                (
+                t1.CUSTOMER_ID=#{initValue}
+                OR
+                t1.CUSTOMER_NAME=#{initValue}
+                OR
+                t1.CUSTOMER_ABBR=#{initValue}
+                )
+            </if>
             <!-- 管理人 -->
             <if test="IS_ASSTE_MANAGER != null and IS_ASSTE_MANAGER != ''">
                 AND t1.IS_ASSTE_MANAGER = #{IS_ASSTE_MANAGER}

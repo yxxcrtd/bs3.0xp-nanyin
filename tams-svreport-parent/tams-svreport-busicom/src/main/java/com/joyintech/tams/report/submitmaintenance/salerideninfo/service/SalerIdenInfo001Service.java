@@ -73,8 +73,9 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                 String salerInsNo = dtolist.get(i).getSalerInsNo();
                 String erroOrInfo = dtolist.get(i).getErroOrInfo();
                 if(erroOrInfo.equals("erro")){
+                    String workflowId = dtolist.get(i).getWorkflowId();
                     //erro表的直接物理删除
-                    chbSalerIdenInfoMapper.deleteErroByPrimaryKey(salerInsNo);
+                    chbSalerIdenInfoMapper.deleteErroByPrimaryKey(workflowId);
                 }else{
                     if(rewPenaInfoMap.get(salerInsNo) != null){
                             chbSalerIdenInfoMapper.deleteRewPenaInfo(salerInsNo);
@@ -439,6 +440,9 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             if(list.get(21) == null || list.get(21).trim().equals("")){
                 flag = false;
                 message.add("销售资质不能为空");
+            }else if(list.get(21).length() > 400){
+                flag = false;
+                message.add("销售资质输入超长，最长为400字符。");
             }
             //办公电话
             if(list.get(22) == null || list.get(22).trim().equals("")){
@@ -492,7 +496,7 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             }
 
             if (CollectionUtils.isNotEmpty(message)) {
-                checkResult.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
+                checkResult.add(new ExcelValidDto(list.get(7), String.valueOf(i+2),
                         StringUtil.joinString(message, GlobalConstant.SEMICOLON)));
             }
         }
@@ -679,8 +683,8 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
         return status;
     }
 
-    //校验理财专业证书多选导入
-    public static boolean checkSalerCertificateType(String value){
+    //校验可销售产品风险等级多选导入
+    public static boolean checksalerRiskLevel(String value){
         boolean status = true;
         if (!isEmpty(value)) {
             if(value.equals("01,02,03,04,05") || value.equals("01,02,03,04") || value.equals("01,02,03,05") || value.equals("01,02,04,05") || value.equals("01,03,04,05") ||
@@ -695,8 +699,8 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
         return status;
     }
 
-    //校验可销售产品风险等级多选导入
-    public static boolean checksalerRiskLevel(String value){
+    //校验理财专业证书多选导入
+    public static boolean checkSalerCertificateType(String value){
         boolean status = true;
         if (!isEmpty(value)) {
             if(value.equals("01,02,03,04,05,06,07,99") || value.equals("01,02,03,04,05,06,07") || value.equals("01,02,03,04,05,06,99") || value.equals("01,02,03,04,05,06") || value.equals("01,02,03,04,05,07") ||

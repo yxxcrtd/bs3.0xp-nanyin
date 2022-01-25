@@ -22,6 +22,7 @@ import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.component.business.service.CommonBusinessService;
 import com.joyintech.tams.valuation.trademanage.trdfixincomevaluationtrade.dto.TrdFixIncomeValuationTradeDto;
 import com.joyintech.tams.valuation.trademanage.trdfixincomevaluationtrade.service.TrdFixIncomeValuationTrade002Service;
@@ -218,7 +219,7 @@ public class TrdFixIncomeValuationTrade002Controller extends BaseController {
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
         params.setBusinessCode(dto.getTradeId());
-        params.setBusinessType(DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue());
+        params.setBusinessType(DictCodeListExt3.共通业务类型_固收类资产交易.getValue());
 
         //设置主键
         if(!StringUtil.isNotEmpty(dto.getTradeId())){

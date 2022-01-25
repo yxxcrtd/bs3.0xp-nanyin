@@ -45,8 +45,9 @@ public class SalerIdenInfo002Controller extends BaseController {
        ,DictCode.销售人员专业技术职称,DictCode.销售人员理财专业证书,DictCode.可销售产品风险等级,DictCode.销售人员当前状态);
        String salerInsNo = getParam("salerInsNo");
        String erroOrInfo = getParam("erroOrInfo");
-       if(WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(salerInsNo) && StringUtil.isNotEmpty(erroOrInfo)) {
-           SalerIdenInfoDto entity = salerIdenInfoService.selectDetail(salerInsNo,erroOrInfo);
+       String workflowId = getParam("workflowId");
+       if(WorkFlowUtil.isNotFromToDoList() && ((salerInsNo != null && erroOrInfo != null) || workflowId != null)) {
+           SalerIdenInfoDto entity = salerIdenInfoService.selectDetail(salerInsNo,erroOrInfo,workflowId);
                // 设置到model中
                model.addAttribute("entity", entity);
        }

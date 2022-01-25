@@ -47,7 +47,7 @@
         SALER_START_YMD SALER_START_YMD, SALER_LEVLE SALER_LEVLE, SALER_CERTIFICATE_TYPE SALER_CERTIFICATE_TYPE, 
         SALER_CHB_TRAIN_NO SALER_CHB_TRAIN_NO, SALER_RISK_LEVEL SALER_RISK_LEVEL, SALER_QUALIFICATION SALER_QUALIFICATION, 
         SALER_TEL SALER_TEL, SALER_MOBILE SALER_MOBILE, SALER_MAIL SALER_MAIL, SALER_STATUS SALER_STATUS, 
-        REMARK REMARK, STATUS STATUS, DATA_DATE DATA_DATE, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, 
+        REMARK REMARK, STATUS STATUS,DATA_DATE DATA_DATE, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME,
         UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
     </sql>
     <sql id="Sql_All_Data" >
@@ -68,6 +68,7 @@
         FROM (
         select
         'erro'                       as erroOrInfo,
+        erro.WORKFLOW_ID             as workflowId,
         erro.SALER_INS_NO            as salerInsNo,
         null                         as salerRegistNo,
         null                         as salerInstCode,
@@ -97,7 +98,7 @@
         null                         as salerStatus,
         erro.DATA_DATE               as dataDate,
         null                         as remark,
-        'A'                          as status,
+        'A'                          as dataStatus,
         to_char(erro.ERR_MSG)        as errMsg
         from CHB_SALER_IDEN_ERRODATA erro
         where 1=1
@@ -121,6 +122,7 @@
 
         select
         'info'                       as erroOrInfo,
+        null                         as workflowId,
         info.SALER_INS_NO            as salerInsNo,
         info.SALER_REGIST_NO         as salerRegistNo,
         info.SALER_INST_CODE         as salerInstCode,
@@ -150,7 +152,7 @@
         info.SALER_STATUS            as salerStatus,
         info.DATA_DATE               as dataDate,
         info.REMARK                  as remark,
-        info.STATUS                  as status,
+        info.STATUS                  as dataStatus,
         null                         as errMsg
         from CHB_SALER_IDEN_INFO info
         where 1=1
@@ -169,7 +171,7 @@
         <if test="salerOrgCode != null and salerOrgCode != ''">
             and info.SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
         </if>
-        ) ORDER BY status DESC
+        ) ORDER BY dataStatus DESC
     </select>
 
 <!--    该机构是否已维护过奖惩投诉记录信息-->
@@ -273,7 +275,7 @@
     <!--    根据主键删除erro表-->
     <delete id="deleteErroByPrimaryKey" parameterType="java.lang.String" >
         delete from CHB_SALER_IDEN_ERRODATA
-        where SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+        where WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
     </delete>
 
 <!--    新建，导入插入-->
@@ -509,12 +511,13 @@
         SALER_SEX               as salerSex,
         SALER_CREDENT_TYPE      as salerCredentType,
         DATA_DATE               as dataDate,
-        'A'                     as status,
+        WORKFLOW_ID             as workflowId,
+        'A'                     as dataStatus,
         ORG_DATA                as orgData,
         ERR_MSG                 as errMsg
         from CHB_SALER_IDEN_ERRODATA
         where
-        SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+        WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
     </select>
 
     <!--    查询奖惩记录-->
