@@ -155,13 +155,13 @@ public class PbcMonthPrdPositiondetail extends BaseEntity {
      * 当期到期本金
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal redcost;
+    private BigDecimal redCost;
 
     /**
      * 剩余成本
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal endcost;
+    private BigDecimal endCost;
 
     /**
      * 是否现金管理类
@@ -648,36 +648,20 @@ public class PbcMonthPrdPositiondetail extends BaseEntity {
         this.redqty = redqty;
     }
 
-    /**
-     * 取得 当期到期本金
-     * @return 当期到期本金
-     */
-    public BigDecimal getRedcost() {
-        return redcost;
+    public BigDecimal getRedCost() {
+        return redCost;
     }
 
-    /**
-     * 设置 当期到期本金
-     * @param redcost 当期到期本金
-     */
-    public void setRedcost(BigDecimal redcost) {
-        this.redcost = redcost;
+    public void setRedCost(BigDecimal redCost) {
+        this.redCost = redCost;
     }
 
-    /**
-     * 取得 剩余成本
-     * @return 剩余成本
-     */
-    public BigDecimal getEndcost() {
-        return endcost;
+    public BigDecimal getEndCost() {
+        return endCost;
     }
 
-    /**
-     * 设置 剩余成本
-     * @param endcost 剩余成本
-     */
-    public void setEndcost(BigDecimal endcost) {
-        this.endcost = endcost;
+    public void setEndCost(BigDecimal endCost) {
+        this.endCost = endCost;
     }
 
     /**

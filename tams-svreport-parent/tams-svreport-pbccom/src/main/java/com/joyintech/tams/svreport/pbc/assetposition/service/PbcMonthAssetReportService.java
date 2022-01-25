@@ -8481,11 +8481,15 @@ public class PbcMonthAssetReportService  extends BaseService{
 
             //汇总数据计算
             setAssetConfigurationDetailValue(pos,(PbcReportAssetConfigurationDto)dto.get(code), rateMap,source);
+            if(PbcMonthReportDetailAssetUtil.isAssetDate3(code)&&PbcReportType.PBC_REPORT_4_1.equals(rep_code)){
+                assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail3(pos,dto.get(code),code,hxl));
+            }
             //部门数据计算
             if(null!=deptDto&&null!=deptDto.get(code)){
 
                 setAssetConfigurationDetailValue(pos,(PbcReportAssetConfigurationDto)deptDto.get(code), rateMap,source);
             }
+
         }
 
     }
