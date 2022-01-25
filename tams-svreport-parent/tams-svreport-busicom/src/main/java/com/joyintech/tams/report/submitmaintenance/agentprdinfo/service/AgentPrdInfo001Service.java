@@ -218,7 +218,7 @@ public class AgentPrdInfo001Service extends CommonExportService<AgentPrdInfoDto>
                 }
             }
             //代理销售机构代码相同时，产品登记编码不可重复
-            if((list.get(1) == null || list.get(1).trim().equals("")) && (list.get(2) == null || list.get(2).trim().equals(""))){
+            if((list.get(1) != null && !list.get(1).trim().equals("")) && (list.get(2) != null && !list.get(2).trim().equals(""))){
                 String key = list.get(1) + list.get(2);
                 if(ProdRegistCodeImportMap.get(key) != null){
                     flag = false;
@@ -226,7 +226,7 @@ public class AgentPrdInfo001Service extends CommonExportService<AgentPrdInfoDto>
                 }
             }
             if (CollectionUtils.isNotEmpty(message)) {
-                checkResult.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
+                checkResult.add(new ExcelValidDto(list.get(2), String.valueOf(i+2),
                         StringUtil.joinString(message, GlobalConstant.SEMICOLON)));
             }
         }

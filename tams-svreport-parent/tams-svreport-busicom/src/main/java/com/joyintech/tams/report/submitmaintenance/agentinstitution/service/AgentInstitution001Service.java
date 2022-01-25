@@ -228,7 +228,7 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
                 message.add("代理销售机构名称已存在");
             }
             if (CollectionUtils.isNotEmpty(message)) {
-                checkResult.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
+                checkResult.add(new ExcelValidDto(list.get(1), String.valueOf(i+2),
                         StringUtil.joinString(message, GlobalConstant.SEMICOLON)));
             }
         }
@@ -338,14 +338,23 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
      */
     public AjaxResult FileUploadBatch(List<Map<String, Object>> fileList) throws ZipException, IOException{
         StringBuffer fileCheckMsg = new StringBuffer();
+        StringBuffer fileCheckMsg1 = new StringBuffer();
         for(Map<String, Object> map:fileList){
             String srcName=(String) map.get("srcName");
             String fileNo=(String) map.get("fileNo");
-            String fileAgentInstitutionCode=srcName.substring(0, srcName.lastIndexOf("."));
+            String fileAgentInstitutionCode = "1";
+            if(srcName != null && srcName != "") {
+                if (srcName.contains("+")) {
+                    fileAgentInstitutionCode = srcName.substring(0, srcName.lastIndexOf("+"));
+                } else {
+                    fileCheckMsg1.append("文件名" + srcName + "命名不规范！");
+                    fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
+                }
+            }
+
             String targetFileSTR=(String) map.get("targetFileSTR");
             List<String> agentInstitutionCodeList=(List<String>) map.get("agentInstitutionCodeList");
             File file=new File(targetFileSTR);
-            StringBuffer fileCheckMsg1 = new StringBuffer();
             //校验文件名与所选产品代码是否匹配
             Boolean flag=false;
             for(String agentInstitutionCode :agentInstitutionCodeList){
@@ -354,7 +363,7 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
                 }
             }
             if(!flag){
-                fileCheckMsg1.append("文件名"+srcName+"与所选产品代码不匹配！");
+                fileCheckMsg1.append("文件名"+srcName+"与所选代销机构代码不匹配！");
                 fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
             }
             int fileNum=0;
@@ -388,7 +397,7 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
         for(Map<String, Object> filemap:fileList){
             String srcName=(String) filemap.get("srcName");
             String fileNo=(String) filemap.get("fileNo");
-            String fileProdId=srcName.substring(0, srcName.lastIndexOf("."));
+            String fileProdId=srcName.substring(0, srcName.lastIndexOf("+"));
             String targetFileSTR=(String) filemap.get("targetFileSTR");
             int fileNum=0;
             try (
