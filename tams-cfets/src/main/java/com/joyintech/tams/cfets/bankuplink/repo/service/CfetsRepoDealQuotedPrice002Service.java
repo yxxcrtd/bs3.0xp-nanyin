@@ -16,6 +16,7 @@ import com.joyintech.background.component.uplink.interbank.business.repodlgservi
 import com.joyintech.background.component.uplink.interbank.business.routeconfigservice.RouteConfigSubService;
 import com.joyintech.background.component.uplink.interbank.business.routeintfservice.RouteIntfSubService;
 import com.joyintech.background.component.uplink.interbank.business.service.IbuMainService;
+import com.joyintech.background.component.uplink.interbank.database.dao.IbuQuoteMapper;
 import com.joyintech.background.component.uplink.interbank.database.entity.IbuIntfScheme;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
@@ -171,6 +172,9 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
 
     @Autowired
     private JoyinbusinessCommonService joyinbusinessCommonService;
+
+    @Autowired
+    IbuQuoteMapper ibuQuoteMapper;
 
     /**
      * 报价初始化校验
@@ -1213,6 +1217,12 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         QuoteResultDto result = new QuoteResultDto(true);
         IbuQuoteCrepDto ibuQuoteCrepDto = inputbean.getIbuQuoteCrepDto();
         String quoteId = ibuQuoteCrepDto.getQuoteId();
+        IbuQuoteCrepDto ibuQuoteCrepDtoTemp = ibuQuoteMapper.selectQuoteCrepByKey(quoteId);
+        Long Version = ibuQuoteCrepDtoTemp.getVersion() + 1;
+        inputbean.getIbuQuoteCrepPledgeDtoList().forEach(ibuQuoteCrepPledgeDto -> ibuQuoteCrepPledgeDto.setVersion(Version));
+        inputbean.getIbuQuoteEtrReDtoList().forEach(ibuQuoteEtrReDto -> ibuQuoteEtrReDto.setVersion(Version));
+        inputbean.getIbuQuoteEntCrepPledgeDtoList().forEach(ibuQuoteEntCrepPledgeDto -> ibuQuoteEntCrepPledgeDto.setVersion(Version));
+        ibuQuoteCrepDto.setVersion(Version);
 
         // 对话报价查询
         boolean flag = StringUtil.equals(exeTypeIBU, com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行操作类型_本方回复成交.getValue())
