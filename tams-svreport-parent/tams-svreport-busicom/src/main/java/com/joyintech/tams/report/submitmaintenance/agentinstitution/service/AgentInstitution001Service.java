@@ -228,7 +228,7 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
                 message.add("代理销售机构名称已存在");
             }
             if (CollectionUtils.isNotEmpty(message)) {
-                checkResult.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
+                checkResult.add(new ExcelValidDto(list.get(1), String.valueOf(i+2),
                         StringUtil.joinString(message, GlobalConstant.SEMICOLON)));
             }
         }
