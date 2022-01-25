@@ -29,6 +29,7 @@ import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.trdconfirm.dao.CfetsTrdConfirmMapper;
 import com.joyintech.tams.cfets.trdquery.dao.CfetsTrdQueryMapper;
+import com.joyintech.tams.cfets.trdquery.dto.CfetsPledgeInfoResponse;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdRepoTrade002Dto;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
@@ -43,6 +44,7 @@ import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.CommonResult;
 import com.joyintech.tams.invest.common.component.base.trade.BaseTradeProductDealService;
 import com.joyintech.tams.invest.common.component.business.basicdata.BaseTradeFeeCommService;
@@ -1132,7 +1134,9 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
 
         //发送头寸
         if(isNeedDealPosition){
-            PositionHttpRequest.deleteMethod(bizCode,DictCodeListExt1.子系统代码_交易.getValue(),"Repo001");
+            PositionHttpRequest.dorevoke(bizCode, DictCodeListExt1.子系统代码_交易.getValue(), DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), input.getPs());
+
+            //PositionHttpRequest.deleteMethod(bizCode,DictCodeListExt1.子系统代码_交易.getValue(),"REPO001");
         }else{
             Map<String, Object> paramMap = new HashMap<>();
             paramMap.put("totleTradeId", bizCode);
@@ -2514,14 +2518,14 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
 
     @Override
     public void doBack(CfetsTrdRepoTrade002Dto entity) {
-        uodateCstpMessage(entity.getWorkflowId());
-        AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTradeId());
+        //uodateCstpMessage(entity.getWorkflowId());
+        //AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTradeId());
         
         //删除授信占用
-        if (null != entity.getTradeId() && !StringUtil.isNotEmpty(entity.getRevokeReason())){
-            riskCreditListCommonValidatorService.deleteCredit(entity.getTradeId());
+        if (null != entity.getTotleTradeId() && !StringUtil.isNotEmpty(entity.getRevokeReason())){
+            riskCreditListCommonValidatorService.deleteCredit(entity.getTotleTradeId());
         }
-        doBackUpdateEtrPosition(entity);
+       // doBackUpdateEtrPosition(entity);
     }
 
     @Override
@@ -3260,33 +3264,14 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
             List<PortIntFenPeiInfoDto> fenPeiList=cfetsTrdQueryMapper.findPortIntFenPeiInfoList(pageParam);
             resultDto.setCfetsBussCombDistribtList(fenPeiList);
 
-          /*  if (resultDto.getSettleSpeed() != null) {
-                resultDto.setSettleSpeedStr(String.valueOf(resultDto.getSettleSpeed()));
-            }
-            else if(resultDto.getSettleSpeed() == 1L){
-                resultDto.setSettleSpeedStr("1");
-            }else if(resultDto.getSettleSpeed() == 2L){
-                resultDto.setSettleSpeedStr("2");
-            }else{
-                resultDto.setSettleSpeedStr(resultDto.getSettleSpeed().toString());
-            }*/
-           /* if(StringUtil.isNotEmpty(resultDto.getSettleSpeed())) {
-                if (resultDto.getSettleSpeed() == 0L) {
-                    resultDto.setSettleSpeedStr("01");
-                } else if (resultDto.getSettleSpeed() == 1L) {
-                    resultDto.setSettleSpeedStr("02");
-                } else if (resultDto.getSettleSpeed() == 2L) {
-                    resultDto.setSettleSpeedStr("03");
-                }
-            }*/
-            // 到期收益率
-            if (resultDto.getYield() != null) {
-                resultDto.setYield(ArithmeticUtil.multiply(resultDto.getYield(), BigDecimal.valueOf(100)));
-            }
-            // 行权收益率
-            if (resultDto.getExerYield() != null) {
-                resultDto.setExerYield(ArithmeticUtil.multiply(resultDto.getExerYield(), BigDecimal.valueOf(100)));
-            }
+            //待办事项中显示质押券
+            pageParam.put("TRADEPLACE01", DictCodeListExt1.交易场所_银行间.getValue());
+            pageParam.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+            pageParam.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+            pageParam.put("platDate", iPlatformDate.getSysDateStr());
+            List<CfetsPledgeInfoResponse> cfetsPledgeInfoList=cfetsTrdQueryMapper.findPledgeInfoList(pageParam);
+            resultDto.setCfetsPledgeInfoList(cfetsPledgeInfoList);
+
 
             // 交易手续费
             TrdTradeFeeTotalKey trdTradeFeeTotalKey = new TrdTradeFeeTotalKey();

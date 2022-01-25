@@ -128,6 +128,7 @@ public class CfetsTrdRepoTrade002Controller extends BaseController {
                 || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
             dto = cfetsTrdRepoTrade002Service.getBussinessEntityByWorkflowId(
                     workflowId);
+            dto.setRate(ArithmeticUtil.multiply(dto.getRate(),new BigDecimal(100)));
             model.addAttribute("riskTrialRetDto", StringUtil.isEmptyList(dto.getRiskTrialRetDto()) ? null : JsonUtils.object2Json(dto.getRiskTrialRetDto()));
             model.addAttribute("workflowId", workflowId);
             if (StringUtil.isBlank(dto.getTradeId())) {
@@ -135,6 +136,7 @@ public class CfetsTrdRepoTrade002Controller extends BaseController {
                 dto.setTradeId(cfetsTrdRepoTrade002Service.selectTradeIdByWorkflowId(workflowId));
             }
             model.addAttribute("entity_BussCombDistribtList",  JsonUtils.object2Json(dto.getCfetsBussCombDistribtList()));
+            model.addAttribute("entity_CfetsPledgeList",  JsonUtils.object2Json(dto.getCfetsPledgeInfoList()));
 
             // add by yeming 20210914 银行间场内场外拆分 start
             model.addAttribute("parentPageId", dto.getParentPageId());
@@ -224,7 +226,8 @@ public class CfetsTrdRepoTrade002Controller extends BaseController {
      * @param model model
      */
     private void setSelectOptions(Model model) {
-        this.setSelectOptionToModel(model, DictCode.回购拆借方向, DictCode.回购类型,
+        this.setSelectOptionToModel(model, DictCode.回购拆借方向, DictCode.回购类型,DictCode.回购方式,
+                DictCode.清算类型,DictCode.结算方式,
                 /* 添加五级分类数据字典、zhuyongkang 2019/8/8  start*/
                 DictCode.行内资产二级分类,
                 DictCode.行内资产三级分类,

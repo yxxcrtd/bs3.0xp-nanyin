@@ -206,7 +206,7 @@ public class CfetsTrdRepoTrade002Dto extends TrdProductDeal implements ProcessEn
     /**
      * 回购利息
      */
-    private BigDecimal  mIntAmt;
+    private BigDecimal  mintAmt;
     /**
      * 到期结算金额
      */
@@ -221,6 +221,10 @@ public class CfetsTrdRepoTrade002Dto extends TrdProductDeal implements ProcessEn
      * 期限品种
      */
     private String  termType;
+    /**
+     * 质押券信息
+     */
+    List<CfetsPledgeInfoResponse> cfetsPledgeInfoList;
 
 
     public String getParentPageId() {
@@ -2074,12 +2078,12 @@ public class CfetsTrdRepoTrade002Dto extends TrdProductDeal implements ProcessEn
         this.msettleDate = msettleDate;
     }
 
-    public BigDecimal getmIntAmt() {
-        return mIntAmt;
+    public BigDecimal getMintAmt() {
+        return mintAmt;
     }
 
-    public void setmIntAmt(BigDecimal mIntAmt) {
-        this.mIntAmt = mIntAmt;
+    public void setMintAmt(BigDecimal mintAmt) {
+        this.mintAmt = mintAmt;
     }
 
     public BigDecimal getMtradeAmt() {
@@ -2104,5 +2108,13 @@ public class CfetsTrdRepoTrade002Dto extends TrdProductDeal implements ProcessEn
 
     public void setTermType(String termType) {
         this.termType = termType;
+    }
+
+    public List<CfetsPledgeInfoResponse> getCfetsPledgeInfoList() {
+        return cfetsPledgeInfoList;
+    }
+
+    public void setCfetsPledgeInfoList(List<CfetsPledgeInfoResponse> cfetsPledgeInfoList) {
+        this.cfetsPledgeInfoList = cfetsPledgeInfoList;
     }
 }

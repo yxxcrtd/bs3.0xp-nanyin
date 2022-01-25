@@ -72,6 +72,19 @@ public class PortIntFenPeiInfoDto {
     @ApiModelProperty(name="qtydq",value="持有面额（元）",example="A1")
     private BigDecimal qtydq;
 
+    @ApiModelProperty(name="mintAmt",value="回购利息（元）",example="100")
+    private BigDecimal mintAmt;
+
+    @ApiModelProperty(name="mtradeAmt",value="到期结算金额（元）",example="100")
+    private BigDecimal mtradeAmt;
+
+    @ApiModelProperty(name="disFaceValue",value="质押券折算总额（元）",example="100")
+    private BigDecimal disFaceValue;
+
+    @ApiModelProperty(name="rate",value="回购利率",example="100")
+    private BigDecimal rate;
+
+
     public String getPriceModelStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.价格模式, this.getPriceModel());
     }
@@ -246,5 +259,37 @@ public class PortIntFenPeiInfoDto {
 
     public void setQtydq(BigDecimal qtydq) {
         this.qtydq = qtydq;
+    }
+
+    public BigDecimal getMintAmt() {
+        return mintAmt;
+    }
+
+    public void setMintAmt(BigDecimal mintAmt) {
+        this.mintAmt = mintAmt;
+    }
+
+    public BigDecimal getMtradeAmt() {
+        return mtradeAmt;
+    }
+
+    public void setMtradeAmt(BigDecimal mtradeAmt) {
+        this.mtradeAmt = mtradeAmt;
+    }
+
+    public BigDecimal getDisFaceValue() {
+        return disFaceValue;
+    }
+
+    public void setDisFaceValue(BigDecimal disFaceValue) {
+        this.disFaceValue = disFaceValue;
+    }
+
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
     }
 }
