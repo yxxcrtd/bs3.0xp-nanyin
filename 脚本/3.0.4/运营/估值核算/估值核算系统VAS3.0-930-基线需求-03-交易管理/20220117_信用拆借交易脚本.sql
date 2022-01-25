@@ -16,6 +16,11 @@ delete from SYS_PAGE where PAGE_ID='TrdLendValuationTrade002';
 
 INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('TrdLendValuationTrade002', 'VAL', '/valuation/trademanage/trdlendvaluationtrade/TrdLendValuationTrade002', 'valuation/trademanage/trdlendvaluationtrade/TrdLendValuationTrade002', NULL, NULL, NULL, '02', '02', '信用拆借交易新建', 'system', NULL, TO_TIMESTAMP('2019-05-24 00:00:00.000000', 'SYYYY-MM-DD HH24:MI:SS:FF6'), 'system', TO_TIMESTAMP('2019-05-24 00:00:00.000000', 'SYYYY-MM-DD HH24:MI:SS:FF6'));
 
+--信用拆借交易到期确认页面
+delete from SYS_PAGE where PAGE_ID='TrdLendValuationTrade003';
+
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('TrdLendValuationTrade003', 'VAL', '/valuation/trademanage/trdlendvaluationtrade/TrdLendValuationTrade003', 'valuation/trademanage/trdlendvaluationtrade/TrdLendValuationTrade003', null, null, null, '02', '01', '信用拆借交易到期确认', 'system', null, TO_TIMESTAMP('2019-05-24 00:00:00.000000', 'YYYY-MM-DD HH24:MI:SS.FF6'), 'system', TO_TIMESTAMP('2019-05-24 00:00:00.000000', 'YYYY-MM-DD HH24:MI:SS.FF6'));
+
 -- 添加新的拆借类型数据字典
 DELETE FROM SYS_DATADICT WHERE DICT_CODE='BACK_LEND_DIRECTIONS';
 

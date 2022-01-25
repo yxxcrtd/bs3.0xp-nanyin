@@ -64,7 +64,9 @@
             ,{field:'ccyFmt', width:150, title: '币种',sortField:'ccy'}
             ,{field:'ccy', title: '币种',visible:false}
             ,{field:'trdAcctId', title: '资金账户',width:100}
-            ,{field:'action', title: '操作' , type:'action',buttons: ['edit', 'delt'] , width:'10%'}
+            ,{field:'operation', title: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;操 作', fixed:'right',width : 120,
+                align : 'center',type : 'action', buttons : [ 'edit', 'delt' ,
+                    {text: '<i class="iconfont icon-submit"></i>', clas: 'confirm', title: '到期'}]}
         ],
         //loadonce:true
     });
@@ -145,6 +147,24 @@
                     }
                 );
             });
+        });
+
+
+        /**
+         * 绑定确认事件
+         */
+        table.bind('click', '.confirm', function(data, index) {
+            var object = {selectedItem: [data], operateType:"confirm"};//请求参数
+            // Joyin.ajaxJson(basePath + 'valuation/trademanage/trdlendvaluationtrade/TrdLendValuationTrade002/check', object, function(result) {//请求路径，请求参数回调函数
+                Joyin.dialog(JoyinUtil.getLabel("信用拆借交易交易-到期确认"),
+                    basePath + "valuation/trademanage/trdlendvaluationtrade/TrdLendValuationTrade003/init",//打开新界面
+                    "98%", "98%", {//请求的page_model
+                        tradeId:data.tradeId,  //金融产品代码
+                        operateType:"confirm"
+                    },function(){
+                        table.reload();//回调函数，表格刷新
+                    });
+            // });
         });
     });
 }());
