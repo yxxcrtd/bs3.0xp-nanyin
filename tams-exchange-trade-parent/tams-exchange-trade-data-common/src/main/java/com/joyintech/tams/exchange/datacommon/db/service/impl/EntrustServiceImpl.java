@@ -6,6 +6,7 @@ import com.google.common.base.Strings;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.exchange.common.bean.EntrustQueryDto;
 import com.joyintech.tams.exchange.common.bean.risk.EntrustCountBean;
 import com.joyintech.tams.exchange.common.constant.EntrustStatus;
 import com.joyintech.tams.exchange.common.constant.EntrustType;
@@ -80,7 +81,7 @@ public class EntrustServiceImpl extends AsyncServiceImpl<String, Entrust> implem
         Map<String, Entrust> accountEntrustMap = accountIdMap.get(accountId);
         if (Objects.nonNull(accountEntrustMap)) {
             for (Entrust entrust : accountEntrustMap.values()) {
-                if (brokerEntrustId.equals(entrust.getBrokerEntrustId()) && DateUtil.getSysDate().replace("-","").equals(entrust.getTradingDay()))
+                if (brokerEntrustId.equals(entrust.getBrokerEntrustId()) && DateUtil.getSysDate().replace("-", "").equals(entrust.getTradingDay()))
                     return entrust;
             }
         }
@@ -342,9 +343,9 @@ public class EntrustServiceImpl extends AsyncServiceImpl<String, Entrust> implem
         }
         return entrustList;
     }
-    
+
     @Override
-    public List<Entrust> queryEntrust2Touguan(String instructionId){
-    	return entrustMapper.queryEntrust2Touguan(instructionId);
+    public List<EntrustQueryDto> queryEntrust2Touguan(String instructionId) {
+        return entrustMapper.queryEntrust2Touguan(instructionId);
     }
 }

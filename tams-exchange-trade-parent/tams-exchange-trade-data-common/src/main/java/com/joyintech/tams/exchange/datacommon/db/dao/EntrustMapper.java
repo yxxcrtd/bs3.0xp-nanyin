@@ -2,6 +2,8 @@ package com.joyintech.tams.exchange.datacommon.db.dao;
 
 import java.util.List;
 
+import com.joyintech.tams.exchange.common.bean.EntrustQueryBean;
+import com.joyintech.tams.exchange.common.bean.EntrustQueryDto;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.exchange.common.db.domain.Entrust;
@@ -36,5 +38,5 @@ public interface EntrustMapper extends IMybatisMapper<Entrust, String, EntrustEx
 
     int updateByPrimaryKey(Entrust record);
     
-    List<Entrust> queryEntrust2Touguan(String instructionId);
+    List<EntrustQueryDto> queryEntrust2Touguan(String instructionId);
 }
