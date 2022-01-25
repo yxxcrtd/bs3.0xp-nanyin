@@ -63,8 +63,8 @@
 	</select>
 
 	<select id="searchPage" parameterType="map" resultType="com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto">
-		select * from (
 		SELECT
+		REGIST_SEQNO registSeqno,
 		SEND_STATUS sendStatus,
 		SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
 		SUBMIT_TIME submitTime,
@@ -126,7 +126,6 @@
 				and  to_char(SUBMIT_TIME,'yyyy-MM-dd') <![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
 			</if>
 		</where>
-		) ORDER BY STATUSDATE
 	</select>
 
 	<insert id="insertIntoHis" parameterType="java.util.Map">

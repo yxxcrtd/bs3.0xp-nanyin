@@ -91,7 +91,13 @@ $(function(){
 
         //导出中债Excel
         $('#SalesTransactionMaintenanceRegist001_btn_chbexport').click(function() {
+        var rows = table.getAllCheckedRows();
+        if(rows.length === 0){
+            exportExcel("01");
+        }
+        else{
             exportExcel("0");
+        }
         });
 
     //数据检查
@@ -271,7 +277,7 @@ $(function(){
         if(!expArr || expArr.length ==0){
             param = getPageParams();
             param.flag = flag;
-            if(flag=="0"){
+            if(flag=="01"){
                 param.status="01";
                 param.sendStatus="01";
             }
