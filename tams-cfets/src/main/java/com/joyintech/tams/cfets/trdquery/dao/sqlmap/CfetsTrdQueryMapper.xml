@@ -1372,7 +1372,7 @@
         </where>
     </sql>
     <select id="selectIbuBondFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryIbuInfoListResponse">
-        select null as  dialogueRecord,
+        select distinct null as  dialogueRecord,
         ib.ou_party_id as traderid,
         mccit.PARTY_ABBR as traderidStr,
         nvl(su1.TRADER_NAME,ib.ou_trader_id) as trader,
@@ -1481,7 +1481,7 @@
         where ib.quote_id= #{quoteId,jdbcType=VARCHAR}
         and decode(ib.trade_status,'15',#{STATUS_VALID_03},#{STATUS_VALID_01})= #{effectiveStatus,jdbcType=VARCHAR}
         union all
-        select null as  dialogueRecord,
+        select distinct null as  dialogueRecord,
         ib.ou_party_id as traderid,
         mccit.PARTY_ABBR as traderidStr,
         nvl(su1.TRADER_NAME,ib.ou_trader_id) as trader,
@@ -1589,7 +1589,7 @@
         and #{STATUS_VALID_04}= #{effectiveStatus,jdbcType=VARCHAR}
     </select>
     <select id="selectIbuRepoFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryIbuInfoListResponse">
-        select
+        select distinct
         ic.ou_party_id as traderid,
         mccit.PARTY_ABBR as traderidStr,
         nvl(su1.TRADER_NAME, ic.ou_trader_id) as trader,
@@ -1637,7 +1637,7 @@
         where ic.quote_id= #{quoteId,jdbcType=VARCHAR}
         and decode(ic.trade_status,'15',#{STATUS_VALID_03},#{STATUS_VALID_01})= #{effectiveStatus,jdbcType=VARCHAR}
         union all
-        select
+        select distinct
         ic.ou_party_id as traderid,
         mccit.PARTY_ABBR as traderidStr,
         nvl(su1.TRADER_NAME, ic.ou_trader_id) as trader,
@@ -1692,8 +1692,8 @@
         ir.share_amt/100 as faceValue,
         ir.DEAL_FEE_AMT as trdFeeAmt,
         ir.SETT_FEE_AMT as settleFeeAmt,
-        ir.cprice_amt as cpriceAmt,
-        ir.int_amt as intAmt,
+        nvl(ir.cprice_amt,ir.share_amt*ibd.unit_cprice) as cpriceAmt,
+        nvl(ir.int_amt,ir.fprice_amt-(ir.share_amt*ibd.unit_cprice)) as intAmt,
         ir.fprice_amt as fpriceAmt,
         EE.PRICE_MODEL as priceModel,
         EE.BUSINESS_MODEL as businessModel,
@@ -1786,8 +1786,8 @@
         ir.share_amt/100 as faceValue,
         ir.DEAL_FEE_AMT as trdFeeAmt,
         ir.SETT_FEE_AMT as settleFeeAmt,
-        ir.cprice_amt as cpriceAmt,
-        ir.int_amt as intAmt,
+        nvl(ir.cprice_amt,ir.share_amt*ibd.unit_cprice) as cpriceAmt,
+        nvl(ir.int_amt,ir.fprice_amt-(ir.share_amt*ibd.unit_cprice)) as intAmt,
         ir.fprice_amt as fpriceAmt,
         EE.PRICE_MODEL as priceModel,
         EE.BUSINESS_MODEL as businessModel,

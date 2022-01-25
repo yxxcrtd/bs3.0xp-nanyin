@@ -2366,8 +2366,6 @@ public class CfetsTrdConfirmService extends BaseService{
     /**
      * CSTP成交回报-手工匹配
      */
-    @Transactional(rollbackFor = Exception.class)
-    @DTXTransaction
     public AjaxResult cstpManualMatchMethod(CfetsTrdConfirmManualMatchInfoRequest manualMatchDto){
         //判断基础要素是否一致
         CfetsTrdConfirmRegInfoListResponse regInfo = manualMatchDto.getSelectedCfetsTrdConfirmRegInfoList().get(0);
