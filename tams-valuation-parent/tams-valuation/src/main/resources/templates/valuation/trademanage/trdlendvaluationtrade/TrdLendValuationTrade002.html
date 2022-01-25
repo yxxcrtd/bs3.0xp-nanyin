@@ -55,13 +55,27 @@
                                                data-th-value="${entity?.portfolioName}" maxlength="60">
                                     </div>
                                 </div>
-                                <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-lable" data-th-text="#{TrdLendValuationTrade001.busiPs}">交易类型</label>
+<!--                                <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">-->
+<!--                                    <label class="layui-form-label form-lable" data-th-text="#{TrdLendValuationTrade001.busiPs}">交易类型</label>-->
+<!--                                    <div class="layui-input-inline input-inline">-->
+<!--                                        <select type="text" id="busiPs" name="busiPs" class="layui-input form-input input-select"-->
+<!--                                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required="required"-->
+<!--                                                data-th-data-result='${BACK_LEND_DIRECTIONS}' allowClear="true" formatoption="true"-->
+<!--                                                data-th-initValue="${entity?.busiPs}"></select>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+                                <div class="form-inline-wrap">
+                                    <label class="layui-form-label form-lable" >交易类型</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select type="text" id="busiPs" name="busiPs" class="layui-input form-input input-select"
-                                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required="required"
-                                                data-th-data-result='${BACK_LEND_DIRECTIONS}' allowClear="true" formatoption="true"
-                                                data-th-initValue="${entity?.busiPs}"></select>
+                                        <select type="text" id="ps" name="ps" required
+                                                class="layui-input form-input input-select"
+                                                allowClear="true" placeholder="请输入内容"
+                                                data-th-placeholder="#{SysCommon.placeholder}"
+                                                data-th-initValue="${entity?.ps}">
+                                            <option value=""></option>
+                                            <option value="01">拆入</option>
+                                            <option value="02">拆出</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap">

@@ -46,7 +46,7 @@ public class SalerIdenInfo002Controller extends BaseController {
        String salerInsNo = getParam("salerInsNo");
        String erroOrInfo = getParam("erroOrInfo");
        String workflowId = getParam("workflowId");
-       if(WorkFlowUtil.isNotFromToDoList()) {
+       if(WorkFlowUtil.isNotFromToDoList() && ((salerInsNo != null && erroOrInfo != null) || workflowId != null)) {
            SalerIdenInfoDto entity = salerIdenInfoService.selectDetail(salerInsNo,erroOrInfo,workflowId);
                // 设置到model中
                model.addAttribute("entity", entity);
