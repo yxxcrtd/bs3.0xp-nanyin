@@ -875,7 +875,7 @@ public class IbuComponentCommonService extends BaseService {
                		 item.getAvaNum(), new BigDecimal(100)));
 	           	ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
                 ibuQuoteEtrReDto.setDealFeeAmt(item.getDealFeeAmt());
-                ibuQuoteEtrReDto.setSettFeeAmt(item.getDealFeeAmt());
+                ibuQuoteEtrReDto.setSettFeeAmt(item.getSettFeeAmt());
                 ibuQuoteEtrReDto.setCpriceAmt(item.getCpriceAmt());
                 ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
                 ibuQuoteEtrReDto.setIntAmt(item.getIntAmt());
