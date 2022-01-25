@@ -122,7 +122,6 @@
 		<result column="AGENT" jdbcType="VARCHAR" property="agent" />
 		<result column="FIDUCIARY_DUTY" jdbcType="VARCHAR" property="fiduciaryDuty" />
 		<result column="TRANSFER_TYPE" jdbcType="VARCHAR" property="transferType" />
-		<result column="IS_MARKET_FUND" jdbcType="VARCHAR" property="isMarketFund" />
 		<result column="EXC_FIN_SECTOR" property="excFinSector" />
 		<result column="IS_SHORT_TERM" property="isShortTerm" />
 		<result column="SHORT_TERM" property="shortTerm" />
@@ -131,6 +130,7 @@
 		<result column="YIELD" property="yield" />
 		<result column="INVEST_FEE_RATE" property="investFeeRate" />
 		<result column="CUSTOMER_TYPE" jdbcType="VARCHAR" property="customerType" />
+		<result column="ZJXT_FLAG" jdbcType="VARCHAR" property="zjxtFlag" />
 
 	</resultMap>
 	<insert id="insert"
@@ -176,7 +176,7 @@
 		DEPT_CODE, WORKFLOW_ID, DATA_SOURCE,
 		RAISE_TYPE, MANAGE_TYPE, UPDATE_USER,
 		UPDATE_TIME, CREATE_USER, CREATE_TIME,
-		AGENT,FIDUCIARY_DUTY,TRANSFER_TYPE,IS_MARKET_FUND
+		AGENT,FIDUCIARY_DUTY,TRANSFER_TYPE
 		)
 		<foreach collection="list" item="dto" separator="union all">
 			SELECT
@@ -277,8 +277,7 @@
 			sysdate,
 			#{dto.agent,jdbcType=VARCHAR},
 			#{dto.fiduciaryDuty,jdbcType=VARCHAR},
-			#{dto.transferType,jdbcType=VARCHAR},
-			#{dto.isMarketFund,jdbcType=VARCHAR}
+			#{dto.transferType,jdbcType=VARCHAR}
 			FROM DUAL
 		</foreach>
 	</insert>
@@ -343,8 +342,8 @@
 		REMARK, DEPT_CODE, WORKFLOW_ID,
 		DATA_SOURCE, RAISE_TYPE, MANAGE_TYPE,
 		UPDATE_USER, UPDATE_TIME, CREATE_USER,
-		CREATE_TIME, AGENT,FIDUCIARY_DUTY,TRANSFER_TYPE,IS_MARKET_FUND,
-		EXC_FIN_SECTOR,IS_SHORT_TERM,SHORT_TERM,IS_FREE_REDEM,CASH_MANA_CATE,YIELD,INVEST_FEE_RATE,CUSTOMER_TYPE,IS_YLLCCP,IS_FHXGCP
+		CREATE_TIME, AGENT,FIDUCIARY_DUTY,TRANSFER_TYPE,
+		EXC_FIN_SECTOR,IS_SHORT_TERM,SHORT_TERM,IS_FREE_REDEM,CASH_MANA_CATE,YIELD,INVEST_FEE_RATE,CUSTOMER_TYPE,IS_YLLCCP,IS_FHXGCP,ZJXT_FLAG
 		)
 		values (#{produuid,jdbcType=CHAR}, #{fprodId,jdbcType=VARCHAR},
 		#{prodId,jdbcType=VARCHAR},
@@ -409,11 +408,10 @@
 		sysdate, #{agent,jdbcType=VARCHAR},
 		#{fiduciaryDuty,jdbcType=VARCHAR},
 		#{transferType,jdbcType=VARCHAR},
-		#{isMarketFund,jdbcType=VARCHAR},
 		#{excFinSector,jdbcType=VARCHAR},#{isShortTerm,jdbcType=VARCHAR},#{shortTerm,jdbcType=DECIMAL},
 		#{isFreeRedem,jdbcType=VARCHAR}, #{cashManaCate,jdbcType=VARCHAR},
 		#{yield,jdbcType=DECIMAL},#{investFeeRate,jdbcType=DECIMAL},#{customerType,jdbcType=VARCHAR}
-		,#{isYllccp,jdbcType=VARCHAR},#{isFhxgcp,jdbcType=VARCHAR})
+		,#{isYllccp,jdbcType=VARCHAR},#{isFhxgcp,jdbcType=VARCHAR},#{zjxtFlag,jdbcType=VARCHAR})
 	</insert>
 
 	<delete id="deleteBymodel"
@@ -548,7 +546,6 @@
 			#{dto.agent,jdbcType=VARCHAR} AGENT,
 			#{dto.fiduciaryDuty,jdbcType=VARCHAR} FIDUCIARY_DUTY,
 			#{dto.transferType,jdbcType=VARCHAR} TRANSFER_TYPE,
-			#{dto.isMarketFund,jdbcType=VARCHAR} IS_MARKET_FUND,
 			#{dto.excFinSector,jdbcType=VARCHAR} EXC_FIN_SECTOR,
 			#{dto.isShortTerm,jdbcType=VARCHAR} IS_SHORT_TERM,
 			#{dto.shortTerm,jdbcType=DECIMAL} SHORT_TERM,
@@ -569,7 +566,7 @@
 			,#{dto.isYllccp,jdbcType=VARCHAR} IS_YLLCCP
 			,#{dto.gradProportion,jdbcType=DECIMAL} GRAD_PROPORTION
 			,#{dto.prdSpecProperty,jdbcType=VARCHAR} PRD_SPEC_PROPERTY
-
+			,#{dto.zjxtFlag,jdbcType=VARCHAR} ZJXT_FLAG
 			from dual
 		</foreach>
 		) TEMP
@@ -694,7 +691,6 @@
 		CII.AGENT = TEMP.AGENT,
 		CII.FIDUCIARY_DUTY = TEMP.FIDUCIARY_DUTY,
 		CII.TRANSFER_TYPE = TEMP.TRANSFER_TYPE,
-		CII.IS_MARKET_FUND = TEMP.IS_MARKET_FUND,
 		CII.EXC_FIN_SECTOR = TEMP.EXC_FIN_SECTOR,
 		CII.IS_SHORT_TERM = TEMP.IS_SHORT_TERM,
 		CII.SHORT_TERM = TEMP.SHORT_TERM,
@@ -715,7 +711,7 @@
 		,CII.IS_YLLCCP = TEMP.IS_YLLCCP
 		,CII.GRAD_PROPORTION = TEMP.GRAD_PROPORTION
 		,CII.PRD_SPEC_PROPERTY = TEMP.PRD_SPEC_PROPERTY
-
+		,CII.ZJXT_FLAG = TEMP.ZJXT_FLAG
 		<!-- 未匹配到这插入 -->
 		WHEN NOT MATCHED THEN
 		INSERT (PRODUUID, FPROD_ID, PROD_ID,
@@ -757,11 +753,11 @@
 		DEPT_CODE, WORKFLOW_ID, DATA_SOURCE,
 		RAISE_TYPE, MANAGE_TYPE, UPDATE_USER,
 		UPDATE_TIME, CREATE_USER, CREATE_TIME,
-		AGENT,FIDUCIARY_DUTY,TRANSFER_TYPE,IS_MARKET_FUND,
+		AGENT,FIDUCIARY_DUTY,TRANSFER_TYPE,
 		EXC_FIN_SECTOR,IS_SHORT_TERM,SHORT_TERM,IS_FREE_REDEM,
 		CASH_MANA_CATE,YIELD,INVEST_FEE_RATE,CUSTOMER_TYPE,CALENDAR_ID
 		,YIELD_LOW,YIELD_HIGH,YIELD_REMARK,BUSI_ACCT_NO,ACCT_NAME,IS_TRANSFER
-		,IS_FHXGCP,IS_YLLCCP,GRAD_PROPORTION,PRD_SPEC_PROPERTY
+		,IS_FHXGCP,IS_YLLCCP,GRAD_PROPORTION,PRD_SPEC_PROPERTY,ZJXT_FLAG
 		)
 		values(
 		TEMP.PRODUUID, 
@@ -882,7 +878,6 @@
 		TEMP.AGENT,
 		TEMP.FIDUCIARY_DUTY,
 		TEMP.TRANSFER_TYPE,
-		TEMP.IS_MARKET_FUND,
 		TEMP.EXC_FIN_SECTOR,
 		TEMP.IS_SHORT_TERM,
 		TEMP.SHORT_TERM,
@@ -903,6 +898,7 @@
 		,TEMP.IS_YLLCCP
 		,TEMP.GRAD_PROPORTION
 		,TEMP.PRD_SPEC_PROPERTY
+		,TEMP.ZJXT_FLAG
 		)
 	</insert>
 	<select id="getParentCode" parameterType="java.lang.String" resultType="java.lang.String">

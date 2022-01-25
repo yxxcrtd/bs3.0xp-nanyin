@@ -79,6 +79,7 @@
 		<result column="PBC_CODE" property="pbcCode" jdbcType="VARCHAR" />
 		<result column="pbcProdIdShow" property="pbcProdIdShow" jdbcType="VARCHAR" />
 		<result column="IS_MARKET_FUND" property="isMarketFund" jdbcType="VARCHAR" />
+		<result column="CASH_MANA_CATE" property="cashManaCate" jdbcType="VARCHAR" />
 		<result column="CROSS_BORDER_FLAG" property="crossBorderFlag" jdbcType="VARCHAR" />
 		<result column="ZJXT_FLAG" property="zjxtFlag" jdbcType="VARCHAR" />
 
@@ -98,7 +99,7 @@
 		SUMIT_SEQ,IS_MARKET_FUND,
 		STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE,
 		CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-		CASH_MANA_CATE CASH_MANA_CATE,CROSS_BORDER_FLAG CROSS_BORDER_FLAG,ZJXT_FLAG ZJXT_FLAG
+		CASH_MANA_CATE , CROSS_BORDER_FLAG, ZJXT_FLAG
 	</sql>
 	<sql id="Base_Column_List2">
 		HIS_NO, PBC_PROD_ID, ISSUE_PARTY_ID, PBC_PROD_TYPE, PROD_NAME, PROD_BRAND,
@@ -115,7 +116,7 @@
 		SUMIT_SEQ,IS_MARKET_FUND,
 		STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE,
 		CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-		CASH_MANA_CATE CASH_MANA_CATE,CROSS_BORDER_FLAG CROSS_BORDER_FLAG,ZJXT_FLAG ZJXT_FLAG
+		CASH_MANA_CATE ,CROSS_BORDER_FLAG ,ZJXT_FLAG
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
 			parameterType="java.lang.String">
@@ -174,7 +175,7 @@
 		#{transferType,jdbcType=CHAR},
 		#{identiFlag,jdbcType=CHAR}, #{sendStatus,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP},
 		#{submitFeedbackStatus,jdbcType=VARCHAR},
-		#{sumitSeq,jdbcType=VARCHAR}, #{statusDate,jdbcType=TIMESTAMP},,#{isMarketFund,jdbcType=VARCHAR},
+		#{sumitSeq,jdbcType=VARCHAR}, #{statusDate,jdbcType=TIMESTAMP},#{isMarketFund,jdbcType=VARCHAR},
 		#{pbcSubmitDeadline,jdbcType=TIMESTAMP},
 		#{submitDeadline,jdbcType=TIMESTAMP},
 		#{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
@@ -839,7 +840,8 @@
 		info.UPDATE_USER,
 		info.ORG_CODE,
 		info.DEPT_CODE CREATE_DEPT,
-		DECODE(info.IS_MARKET_FUND,01,1,2) IS_MARKET_FUND,
+		DECODE(info.CASH_MANA_CATE,'01','1','2') IS_MARKET_FUND,
+		DECODE(info.CASH_MANA_CATE,'01','1','2') CASH_MANA_CATE,
 		case when instr(info.PRD_SPEC_PROPERTY,'02')>0 or instr(info.PRD_SPEC_PROPERTY,'03')>0 then '1'
 		else '2'
 		end as CROSS_BORDER_FLAG,

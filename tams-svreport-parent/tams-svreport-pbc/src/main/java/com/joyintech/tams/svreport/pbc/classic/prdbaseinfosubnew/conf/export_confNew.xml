@@ -27,7 +27,7 @@
 			<Cell order="22" name="受托职责">fiduciaryDuty</Cell>
 			<Cell order="23" name="分级产品标识">isConstracte</Cell>
 			<Cell order="24" name="收益权转让产品标识">transferType</Cell>
-			<Cell order="25" name="货币市场基金或现金管理类产品">transferType</Cell>
+			<Cell order="25" name="货币市场基金或现金管理类产品">isMarketFund</Cell>
 			<Cell order="26" name="其他产品标识1"></Cell>
 			<Cell order="27" name="其他产品标识2"></Cell>
 			<Cell order="28" name="其他产品标识3"></Cell>

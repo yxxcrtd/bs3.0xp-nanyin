@@ -13,7 +13,7 @@ insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT
 values ('TrdFxForwardValuationTrade002', 'TRD', '/valuation/trademanage/trdfxforwardvaluationtrade/TrdFxForwardValuationTrade002', 'valuation/trademanage/trdfxforwardvaluationtrade/TrdFxForwardValuationTrade002', null, null, null, '02', '01', '外汇远期交易新建', 'system', null, sysdate, 'system', sysdate);
 
 /*外汇远期交易-新建页面-交易类型下拉框*/
-delete from  sys_page_dictlist where page_id='TrdFxForwardValuationTrade002';
+delete from  sys_page_dictlist where page_id='TrdFxForwardValuationTrade002' and DICT_ID='PS';
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('TrdFxForwardValuationTrade002', '999999', 'PS', 'T01', null, null, 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
@@ -21,7 +21,7 @@ values ('TrdFxForwardValuationTrade002', '999999', 'PS', 'T02', null, null, 'sys
 
 
 /*外汇远期交易-查询页面-交易类型下拉框*/
-delete from  sys_page_dictlist where page_id='TrdFxForwardValuationTrade001';
+delete from  sys_page_dictlist where page_id='TrdFxForwardValuationTrade001' and DICT_ID='PS';
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('TrdFxForwardValuationTrade001', '999999', 'PS', 'T01', null, null, 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
@@ -203,6 +203,67 @@ insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DIC
 values ('TrdFxForwardValuationTrade001', '999999', 'CYY_PAIR', 'NZD/USD', null, null, 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('TrdFxForwardValuationTrade001', '999999', 'CYY_PAIR', 'EUR/GBP', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+/*新增 期限 数据字典*/
+delete from sys_datadict where DICT_CODE='TERM_DATE';
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TERM_DATE', 'COM', '期限', null, '02', 'system', null, sysdate, 'system', sysdate);
+
+/*新增 期限 数据字典数据*/
+delete from sys_datadict_list where DICT_CODE='TERM_DATE';
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TERM_DATE', '非标准期限', '非标准期限', 1, '0', 'inter', null,sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TERM_DATE', '1D', '1D', 1, '0', 'inter', null,sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TERM_DATE', '1W', '1W', 2, '0', 'inter', null,sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TERM_DATE', '2W', '2W', 3, '0', 'inter', null,sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TERM_DATE', '3W', '3W', 4, '0', 'inter', null,sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TERM_DATE', '1M', '1M', 5, '0', 'inter', null,sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TERM_DATE', '2M', '2M', 6, '0', 'inter', null,sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TERM_DATE', '3M', '3M', 7, '0', 'inter', null,sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TERM_DATE', '4M', '4M', 8, '0', 'inter', null,sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TERM_DATE', '5M', '5M', 9, '0', 'inter', null,sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TERM_DATE', '6M', '6M', 10, '0', 'inter', null,sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TERM_DATE', '7M', '7M', 11, '0', 'inter', null,sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TERM_DATE', '8M', '8M', 12, '0', 'inter', null,sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TERM_DATE', '9M', '9M', 13, '0', 'inter', null,sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TERM_DATE', '18M', '18M', 14, '0', 'inter', null,sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TERM_DATE', '1Y', '1Y', 15, '0', 'inter', null,sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TERM_DATE', '2Y', '2Y', 16, '0', 'inter', null,sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TERM_DATE', '3Y', '3Y', 17, '0', 'inter', null,sysdate, 'system', sysdate, null);
+
+
+/*新增 差额交割参考汇率 数据字典*/
+delete from sys_datadict where DICT_CODE='DIF_REF_RATE';
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('DIF_REF_RATE', 'COM', '差额交割参考汇率', null, '02', 'system', null, sysdate, 'system', sysdate);
+
+/*新增 差额交割参考汇率 数据字典数据*/
+delete from sys_datadict_list where DICT_CODE='DIF_REF_RATE';
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('DIF_REF_RATE', '11IB-RATE', '11:00参考汇率', 1, '0', 'inter', null,sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('DIF_REF_RATE', '15IB-RATE', '15:00参考汇率', 2, '0', 'inter', null,sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('DIF_REF_RATE', 'MID-RATE', '中间价', 3, '0', 'inter', null,sysdate, 'system', sysdate, null);
+
 
 
 /*外汇远期交易-新建页面-清算模式下拉框*/

@@ -188,7 +188,8 @@ public class ChbMonthReportDetailAssetUtil {
             SubjectName = assetInfo.getChbFinancierId();
         }else if(DictCodeListExt3.中债_上游资产一级分类_计划类利率型.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_计划类净值型.getValue().equals(assetType)
-                ||DictCodeListExt3.中债_上游资产一级分类_计划类货币型.getValue().equals(assetType)){
+                ||DictCodeListExt3.中债_上游资产一级分类_计划类货币型.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_债券借贷.getValue().equals(assetType)){
             SubjectName = assetInfo.getChbManagerId();
         }else if(DictCodeListExt3.中债_上游资产一级分类_股票.getValue().equals(assetType)){
             SubjectName = assetInfo.getAssetName();
@@ -198,7 +199,6 @@ public class ChbMonthReportDetailAssetUtil {
                 ||DictCodeListExt3.中债_上游资产一级分类_外汇远期.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_外汇掉期.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_利率互换.getValue().equals(assetType)
-                ||DictCodeListExt3.中债_上游资产一级分类_债券借贷.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_拆借.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_金融衍生品.getValue().equals(assetType)){
 

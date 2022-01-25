@@ -29,12 +29,12 @@ public class SalerIdenInfo002Service extends BaseService{
         } else {
             //来自erro表
             SalerIdenInfoDto infoDto = new SalerIdenInfoDto();
-            List<SalerIdenInfoDto> listSalerErrordata = chbSalerIdenInfoMapper.selectErroDetail(param);
-            if (listSalerErrordata != null && listSalerErrordata.size() > 0) {
-                IdenInfoErrdataConvertUtil.errdataAssetInfoConvert(infoDto, listSalerErrordata.get(0));
-                infoDto.setErroOrInfo("erro");
-            }
-            return infoDto;
+            SalerIdenInfoDto listSalerErrordata = chbSalerIdenInfoMapper.selectErroDetail(param);
+//            if (listSalerErrordata != null && listSalerErrordata.size() > 0) {
+//                IdenInfoErrdataConvertUtil.errdataAssetInfoConvert(infoDto, listSalerErrordata.get(0));
+//                infoDto.setErroOrInfo("erro");
+//            }
+            return listSalerErrordata;
         }
     }
 
@@ -77,7 +77,7 @@ public class SalerIdenInfo002Service extends BaseService{
         }
         //来自erro表的先删除erro表数据再插入info表
         else{
-            chbSalerIdenInfoMapper.deleteErroByPrimaryKey(dto.getSalerInsNo());
+            chbSalerIdenInfoMapper.deleteErroByPrimaryKey(dto.getWorkflowId());
             this.saveAndSubmit(dto);
         }
     }
