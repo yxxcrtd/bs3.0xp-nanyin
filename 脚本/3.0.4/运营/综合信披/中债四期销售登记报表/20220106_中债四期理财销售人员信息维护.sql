@@ -430,9 +430,9 @@ values ('SALER_STATUS', '04', '离职', 4, '0', 'system', null, SYSDATE, 'system
 
   --菜单配置
 DELETE FROM SYS_PAGE WHERE PAGE_ID in ('SalesStaffManage','SalerIdenInfo001','SalerIdenInfo002','SalerInstInfo001','SalerInstInfo002','SalerRewPenaInfo001','SalerRewPenaInfo002');
-delete from SYS_MENU where MENU_ID = 'REPORT_001_001_027';
-INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_027', 'REP', null, 'REPORT_001_001', 'SalesStaffManage', 15, '02', '理财销售人员信息维护', 'system', null, TIMESTAMP '2021-06-30 20:43:03', 'system', TIMESTAMP '2021-06-30 20:43:03');
-INSERT INTO SYS_PAGE VALUES ('SalesStaffManage','REP','/report/submitmaintenance/salesstaffmanage/SalesStaffManage','report/submitmaintenance/salesstaffmanage/SalesStaffManage','REPORT_001_001_027',null,null,'02','01','理财销售人员信息维护','system',null,sysdate,'system',sysdate);
+delete from SYS_MENU where MENU_ID = 'REPORT_MAINTAIN_001_004_009';
+INSERT INTO SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)values('REPORT_MAINTAIN_001_004_009','REP',null,'REPORT_MAINTAIN_001_004','SalesStaffManage',9,02,'理财销售人员信息维护','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_PAGE VALUES ('SalesStaffManage','REP','/report/submitmaintenance/salesstaffmanage/SalesStaffManage','report/submitmaintenance/salesstaffmanage/SalesStaffManage','REPORT_MAINTAIN_001_004_009',null,null,'02','01','理财销售人员信息维护','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('SalerIdenInfo001','REP','/report/submitmaintenance/salerideninfo/SalerIdenInfo001','report/submitmaintenance/salerideninfo/SalerIdenInfo001',null,null,null,'02','01','总部或分支机构信息','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('SalerIdenInfo002','REP','/report/submitmaintenance/salerideninfo/SalerIdenInfo002','report/submitmaintenance/salerideninfo/SalerIdenInfo002',null,null,null,'02','01','总部或分支机构信息新建','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('SalerInstInfo001','REP','/report/submitmaintenance/salerinstinfo/SalerInstInfo001','report/submitmaintenance/salerinstinfo/SalerInstInfo001',null,null,null,'02','01','销售人员身份信息','system',null,sysdate,'system',sysdate);

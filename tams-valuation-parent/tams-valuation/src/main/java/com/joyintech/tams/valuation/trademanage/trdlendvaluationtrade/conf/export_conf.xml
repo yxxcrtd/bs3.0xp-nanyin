@@ -6,7 +6,7 @@
             <Cell order="2" name="外部成交编号">outTradeId</Cell>
             <Cell order="3" name="产品代码">portfolioId</Cell>
             <Cell order="4" name="产品名称">portfolioName</Cell>
-            <Cell order="5" name="交易类型">busiPs</Cell>
+            <Cell order="5" name="交易类型">psStr</Cell>
             <Cell order="6" name="交易日">tradeDateStr</Cell>
             <Cell order="7" name="交割日">settDateStr</Cell>
             <Cell order="8" name="交易对手">counterId</Cell>
