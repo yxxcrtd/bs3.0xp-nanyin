@@ -184,7 +184,7 @@
 <!--                               data-th-placeholder="#{SysCommon.placeholder}" required>-->
                         <select th:id="|${entityName}_repFinancie|"
                                 th:name="|${entityName}.repFinancie|"
-                                data-th-value="${entity?.repFinancie}"
+                                data-th-initValue="${entity?.repFinancie}"
                                 placeholder="请输入内容"
                                 class="layui-input form-input input-select"
                                 data-th-placeholder="#{SysCommon.placeholder}"
@@ -1006,7 +1006,7 @@
 <!--                           data-th-placeholder="#{SysCommon.placeholder}">-->
                     <select th:id="|${entityName}_chbFinancierId|"
                             th:name="|${entityName}.chbFinancierId|"
-                            th:value="${entity?.chbFinancierId}"
+                            th:initValue="${entity?.chbFinancierId}"
                             class="layui-input form-input input-select" placeholder="请输入内容"
                             data-th-placeholder="#{SysCommon.placeholder}"
                             data-th-data-url="@{/common/select/getFinancierId}">
