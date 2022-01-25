@@ -1941,7 +1941,6 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
     public CfetsRepoDealQuoteCommonDto back2PageDto(CfetsRepoDealQuotedPrice001Dto backDto) {
         CfetsRepoDealQuoteCommonDto pageDto = new CfetsRepoDealQuoteCommonDto();
         BeanUtil.copyPropertiesIgnoreNull(pageDto, backDto);
-        pageDto.setOperateType(backDto.getOperatorType());
         // 卷面总额合计(万) 转换 元->万元
         pageDto.setShareAmt(backDto.getPledgePrinTotal());
         // 交易金额 转换
