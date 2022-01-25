@@ -23,6 +23,8 @@ public class AgentPrdInfoRegistDto extends ChbAgentPrdSub implements ProcessEnti
     @BusinessKey("AGENT_INSTITUTION_CODE")
     public String agentInstitutionCode;//代销机构代码业务主键
 
+    public String agentInstitutionName;//代销机构名称
+
     @BusinessKey("PROD_REGIST_CODE")
     private String prodRegistCode;//产品登记编码业务主键
     //报送状态字符串化
@@ -68,5 +70,13 @@ public class AgentPrdInfoRegistDto extends ChbAgentPrdSub implements ProcessEnti
     @Override
     public void setProdRegistCode(String prodRegistCode) {
         this.prodRegistCode = prodRegistCode;
+    }
+
+    public String getAgentInstitutionName() {
+        return agentInstitutionName;
+    }
+
+    public void setAgentInstitutionName(String agentInstitutionName) {
+        this.agentInstitutionName = agentInstitutionName;
     }
 }

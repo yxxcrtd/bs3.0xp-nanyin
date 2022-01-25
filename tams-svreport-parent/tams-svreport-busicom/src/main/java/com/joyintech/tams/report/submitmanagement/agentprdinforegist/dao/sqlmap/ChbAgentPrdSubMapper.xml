@@ -35,6 +35,7 @@
         a.SUBMIT_DEADLINE submitDeadline,
         a.STATUS status,
         a.AGENT_INSTITUTION_CODE agentInstitutionCode,
+        b.AGENT_INSTITUTION_NAME agentInstitutionName,
         a.ISSUE_PARTY_ID issuePartyId,
         a.PROD_ID prodId,
         a.PROD_NAME prodName,
@@ -45,6 +46,8 @@
         a.UPDATE_TIME
         FROM
         CHB_AGENT_PRD_SUB a
+        left join CHB_AGENT_INSTITUTION_SUB b
+        on a.AGENT_INSTITUTION_CODE = b.AGENT_INSTITUTION_CODE
         where 1=1
         <if test="agentInstitutionCode != null and agentInstitutionCode != ''">
             and a.AGENT_INSTITUTION_CODE = #{agentInstitutionCode}
