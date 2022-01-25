@@ -222,45 +222,58 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         }
 
         if (StringUtil.isNotEmpty(operation)
-                && StringUtil.equals(operation, "revoke")) {
+                && StringUtil.equals(operation, "revoke")) {//删除
             // 删除操作校验
             CfetsRepoDealQuotedPrice001Dto dayOffer = StringUtil.isNotEmpty(quoteId)
                     ? this.queryEntrustInfoByQuoteId(quoteId) : null;
             if (dayOffer == null) {
                 validList.add(new ValidMessage("报价不存在，请检查数据状态！"));
+                ar.setErrorList(validList);
+                return ar;
             }
-            // 发送状态
             String sendStatus = request.getSendStatus();
             if (!StringUtil.isNotEmpty(sendStatus) || !StringUtil.equals(sendStatus, dayOffer.getSendStatus())) {
-                validList.add(new ValidMessage("状态已变更，请重新检查数据状态！"));
+                // 发送状态与当前状态不符
+                validList.add(new ValidMessage("发送状态已变更，请重新检查数据状态！"));
+                ar.setErrorList(validList);
+                return ar;
             }
-            // 发送状态
             if (!StringUtil.equals(BussinessDictCodeList.银行间上行发送状态_待发送.getValue(), dayOffer.getSendStatus())) {
+                // 发送状态不是待发送
                 validList.add(new ValidMessage("报价不满足【发送状态为待发送】的条件，请检查数据状态！"));
+                ar.setErrorList(validList);
+                return ar;
             }
-            ar.setData(this.getMessage("COMMON_C_0001", this.getMessage("SysCommon.save")));
         } else if (StringUtil.isNotEmpty(operation)
-                && StringUtil.equals(operation, "restore")) {
+                && StringUtil.equals(operation, "restore")) {//回退
             // 回退操作校验
             CfetsRepoDealQuotedPrice001Dto dayOffer = StringUtil.isNotEmpty(quoteId)
                     ? this.queryEntrustInfoByQuoteId(quoteId)
                     : null;
             if (dayOffer == null) {
                 validList.add(new ValidMessage("报价不存在，请检查数据状态！"));
+                ar.setErrorList(validList);
+                return ar;
             }
             // 校验交易状态
             String tradeStatus = request.getTradeStatus();
             if (!StringUtil.isNotEmpty(tradeStatus) || !StringUtil.equals(tradeStatus, dayOffer.getTradeStatus())) {
-                validList.add(new ValidMessage("状态已变更，请重新检查数据状态！"));
+                validList.add(new ValidMessage("交易状态已变更，请重新检查数据状态！"));
+                ar.setErrorList(validList);
+                return ar;
             }
             // 发送状态
             String sendStatus = request.getSendStatus();
             if (!StringUtil.isNotEmpty(sendStatus) || !StringUtil.equals(sendStatus, dayOffer.getSendStatus())) {
-                validList.add(new ValidMessage("状态已变更，请重新检查数据状态！"));
+                validList.add(new ValidMessage("发送状态已变更，请重新检查数据状态！"));
+                ar.setErrorList(validList);
+                return ar;
             }
             // 发送状态
             if (!StringUtil.equals(BussinessDictCodeList.银行间上行发送状态_失败.getValue(), dayOffer.getSendStatus())) {
                 validList.add(new ValidMessage("报价不满足【交易状态为新增中或修改中或交谈中或成交中或终止中或撤回中、发送状态为失败】的条件，请检查数据状态！"));
+                ar.setErrorList(validList);
+                return ar;
             } else {
                 if (StringUtil.equals(BussinessDictCodeList.银行间上行本方角色_询价方.getValue(), dayOffer.getQuoteRoleType())) {
                     // 校验交易状态
@@ -271,6 +284,8 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                             && !StringUtil.equals(BussinessDictCodeList.银行间上行报价状态_修改中.getValue(), dayOffer.getTradeStatus())
                             && !StringUtil.equals(BussinessDictCodeList.银行间上行报价状态_交谈中.getValue(), dayOffer.getTradeStatus())) {
                         validList.add(new ValidMessage("报价不满足【交易状态为新增中或修改中或交谈中或成交中或终止中或撤回中、发送状态为失败】的条件，请检查数据状态！"));
+                        ar.setErrorList(validList);
+                        return ar;
                     }
                     /*if (!StringUtil.equals(BussinessDictCodeList.银行间上行报价状态_新增中.getValue(), dayOffer.getTradeStatus())
                             && !StringUtil.equals(BussinessDictCodeList.银行间上行报价状态_成交中.getValue(), dayOffer.getTradeStatus())
@@ -285,14 +300,20 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                             && !StringUtil.equals(BussinessDictCodeList.银行间上行报价状态_撤回中.getValue(), dayOffer.getTradeStatus())
                             && !StringUtil.equals(BussinessDictCodeList.银行间上行报价状态_交谈中.getValue(), dayOffer.getTradeStatus())) {
                         validList.add(new ValidMessage("报价不满足【交易状态为新增中或修改中或交谈中或成交中或终止中或撤回中、发送状态为失败】的条件，请检查数据状态！"));
+                        ar.setErrorList(validList);
+                        return ar;
                     }
                 }
             }
-            ar.setData(this.getMessage("COMMON_C_0001", this.getMessage("SysCommon.save")));
         } else if (StringUtil.isNotEmpty(quoteId) && StringUtil.isNotEmpty(operation)
-                && StringUtil.equals(operation, "revert")) {
+                && StringUtil.equals(operation, "revert")) {//撤回
             // 校验撤回
             CfetsRepoDealQuotedPrice001Dto dayOffer = this.queryEntrustInfoByQuoteId(quoteId);
+            if (dayOffer == null) {
+                validList.add(new ValidMessage("报价不存在，请检查数据状态！"));
+                ar.setErrorList(validList);
+                return ar;
+            }
             // 发送状态
             String sendStatus = request.getSendStatus();
             // 交易状态
@@ -322,46 +343,64 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             }
             if (flag) {
                 validList.add(new ValidMessage("交易状态和发送状态分别为已新增/成功，已修改/成功，已交谈/成功的对话报价，才能执行撤回操作！"));
+                ar.setErrorList(validList);
+                return ar;
             }
-            ar.setData(this.getMessage("COMMON_C_0001", this.getMessage("SysCommon.save")));
         } else if (StringUtil.isNotEmpty(quoteId) && StringUtil.isNotEmpty(operation)
-                && StringUtil.equals(quotaPageModel, "dialogueResponse")) {
+                && StringUtil.equals(quotaPageModel, "dialogueResponse")
+                && StringUtil.equals(operation, "done")) {//成交
             // 当日报价回复校验
             CfetsRepoDealQuotedPrice001Dto dayOffer = this.queryEntrustInfoByQuoteId(quoteId);
+            if (dayOffer == null) {
+                validList.add(new ValidMessage("报价不存在，请检查数据状态！"));
+                ar.setErrorList(validList);
+                return ar;
+            }
             // 交易状态
             String tradeStatus = request.getTradeStatus();
             if (!StringUtil.isNotEmpty(tradeStatus) || !StringUtil.equals(tradeStatus, dayOffer.getTradeStatus())
                     || !StringUtil.equals(tradeStatus, BussinessDictCodeList.银行间上行报价状态_待回复.getValue())) {
-                validList.add(new ValidMessage("状态已变更，请重新检查数据状态！"));
+                validList.add(new ValidMessage("交易状态已变更，请重新检查数据状态！"));
+                ar.setErrorList(validList);
+                return ar;
             }
             // 发送状态
             String sendStatus = request.getSendStatus();
             if (StringUtil.isNotEmpty(sendStatus) || StringUtil.isNotEmpty(dayOffer.getSendStatus())) {
-                validList.add(new ValidMessage("状态已变更，请重新检查数据状态！"));
+                validList.add(new ValidMessage("发送状态已变更，请重新检查数据状态！"));
+                ar.setErrorList(validList);
+                return ar;
             }
-            ar.setData(this.getMessage("COMMON_C_0001", this.getMessage("SysCommon.save")));
         } else if (StringUtil.isNotEmpty(operation)
                 && StringUtil.equals(quotaPageModel, "dialogueResponse")
-                && StringUtil.equals(operation, "reject")) {
+                && StringUtil.equals(operation, "reject")) {//拒绝
             // 回复拒绝操作校验
             if (StringUtil.isNotEmpty(quoteId)) {
                 // 当日报价双击校验
                 CfetsRepoDealQuotedPrice001Dto dayOffer = this.queryEntrustInfoByQuoteId(quoteId);
                 if (dayOffer == null) {
                     validList.add(new ValidMessage("报价不存在，请检查数据状态！"));
+                    ar.setErrorList(validList);
+                    return ar;
                 }
                 // 交易状态
                 String tradeStatus = request.getTradeStatus();
                 if (!StringUtil.isNotEmpty(tradeStatus) || !StringUtil.equals(tradeStatus, dayOffer.getTradeStatus())
                         || !StringUtil.equals(tradeStatus, BussinessDictCodeList.银行间上行报价状态_待回复.getValue())) {
                     validList.add(new ValidMessage("报价不满足【交易状态为待回复】的条件，请检查数据状态！"));
+                    ar.setErrorList(validList);
+                    return ar;
                 }
             }
-            ar.setData(this.getMessage("COMMON_C_0001", this.getMessage("SysCommon.save")));
         } else if (StringUtil.isNotEmpty(operation)
                 && StringUtil.equals(quotaPageModel, "edit")) {
             // 当日报价双击校验
             CfetsRepoDealQuotedPrice001Dto dayOffer = this.queryEntrustInfoByQuoteId(quoteId);
+            if (dayOffer == null) {
+                validList.add(new ValidMessage("报价不存在，请检查数据状态！"));
+                ar.setErrorList(validList);
+                return ar;
+            }
             String sendStatus = request.getSendStatus();
             if ("".equals(sendStatus)) {
                 sendStatus = null;
@@ -384,8 +423,9 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             }
             if (flag) {
                 validList.add(new ValidMessage("交易状态和发送状态分别为已新增/成功，已修改/成功，已交谈/成功，待回复/空的对话报价，才能执行修改操作！"));
+                ar.setErrorList(validList);
+                return ar;
             }
-            ar.setData(this.getMessage("COMMON_C_0001", this.getMessage("SysCommon.save")));
         } else if (StringUtil.isNotEmpty(operation)
                 && StringUtil.equals(quotaPageModel, "new")) {
             // 对话报价新增校验
@@ -394,25 +434,30 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 // 对话报价校验
                 if (dto == null) {
                     validList.add(new ValidMessage("指令代码不存在"));
+                    ar.setErrorList(validList);
+                    return ar;
                 }
                 if (!StringUtil.equals(dto.getEntrustStatus(), BussinessDictCodeList.委托状态_已接收.getValue())) {
                     validList.add(new ValidMessage(this.getMessage("CFETS_COMMON_R_024")));
+                    ar.setErrorList(validList);
+                    return ar;
                 }
                 if (StringUtil.equals(dto.getEntrustStatus(), BussinessDictCodeList.委托状态_已接收.getValue())
                         && dto.getTransactioncom().compareTo(new BigDecimal(100)) >= 0) {
                     validList.add(new ValidMessage(this.getMessage("CFETS_COMMON_R_023")));
+                    ar.setErrorList(validList);
+                    return ar;
                 }
-                /*
-                 * if ((DateUtil.compareDate(dto.getVdate(), iPlatformDate.getSysDate()) == 1)
-                 * || (DateUtil.compareDate(dto.getMdate(), iPlatformDate.getSysDate()) == -1))
-                 * { validList.add(new ValidMessage(this.getMessage("CFETS_COMMON_R_022"))); }
-                 */
             }
-            ar.setData(this.getMessage("COMMON_C_0001", this.getMessage("SysCommon.save")));
         } else if (StringUtil.isNotEmpty(operation)
                 && StringUtil.equals(quotaPageModel, "copy")) {
             // 当日报价复制校验
             CfetsRepoDealQuotedPrice001Dto dayOffer = this.queryEntrustInfoByQuoteId(quoteId);
+            if (dayOffer == null) {
+                validList.add(new ValidMessage("报价不存在，请检查数据状态！"));
+                ar.setErrorList(validList);
+                return ar;
+            }
             if (dayOffer != null) {
                 boolean flag = false;
                 // 校验本方角色
@@ -438,16 +483,12 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
 //					validList.add(new ValidMessage("只能复制交易状态为已新增/已成交/已终止/已撤回/已修改/已交谈的报价数据！"));
                     flag = true;
                 }
-                /*
-                 * if (!StringUtil.equals(BussinessDictCodeList.银行间上行发送状态_成功.getValue(),
-                 * dayOffer.getSendStatus())) { validList.add(new
-                 * ValidMessage("只能复制发送状态为成功的报价数据！")); }
-                 */
                 if (flag) {
                     validList.add(new ValidMessage("本方角色为询价方，交易状态和发送状态分别为已新增/成功，已修改/成功，已交谈/成功，已撤回/成功，已成交/成功，已终止 /成功的对话报价，才能执行复制操作！"));
+                    ar.setErrorList(validList);
+                    return ar;
                 }
             }
-            ar.setData(this.getMessage("COMMON_C_0001", this.getMessage("SysCommon.save")));
         } else {
             ar.setData(this.getMessage("COMMON_C_0001", this.getMessage("SysCommon.save")));
         }
@@ -503,6 +544,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                     errorList.addAll(validMessageList);
 //                    break;
                 }
+
                 // 所有限价指令的回购利率中的最小值 初始化
                 if (minOrMaxYield == null && StringUtil.equals(ptlAllocatio.getPriceModel(), DictCodeListExt2.价格模式_限价指令.getValue())) {
                     minOrMaxYield = com.joyintech.calculation.util.ArithmeticUtil.round(ptlAllocatio.getPrice(), yieldScale, RoundingMode.HALF_UP);
@@ -528,11 +570,11 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                     yieldFlag = false;
                 }
 
-                tradeAmtTotal = com.joyintech.calculation.util.ArithmeticUtil.doAdd(tradeAmtTotal, ptlAllocatio.getTradeAmt());
-                mtradeAmtTotal = com.joyintech.calculation.util.ArithmeticUtil.doAdd(mtradeAmtTotal, ptlAllocatio.getMtradeAmt());
-                mIntAmtTotal = com.joyintech.calculation.util.ArithmeticUtil.doAdd(mIntAmtTotal, ptlAllocatio.getmIntAmt());
-                dealFeeAmtTotal = com.joyintech.calculation.util.ArithmeticUtil.doAdd(dealFeeAmtTotal, ptlAllocatio.getDealFeeAmt());
-                settFeeamtTotal = com.joyintech.calculation.util.ArithmeticUtil.doAdd(settFeeamtTotal, ptlAllocatio.getSettFeeAmt());
+                tradeAmtTotal = ArithmeticUtil.doAdd(tradeAmtTotal, ptlAllocatio.getTradeAmt());
+                mtradeAmtTotal = ArithmeticUtil.doAdd(mtradeAmtTotal, ptlAllocatio.getMtradeAmt());
+                mIntAmtTotal = ArithmeticUtil.doAdd(mIntAmtTotal, ptlAllocatio.getmIntAmt());
+                dealFeeAmtTotal = ArithmeticUtil.doAdd(dealFeeAmtTotal, ptlAllocatio.getDealFeeAmt());
+                settFeeamtTotal = ArithmeticUtil.doAdd(settFeeamtTotal, ptlAllocatio.getSettFeeAmt());
                 // 组合分配中交易金额要小于等于（剩余指令额度-已成功发出的未收到外汇交易中心成功反馈报价和流程中的报价-流程中交易登记额度）
                 // 已实现: 剩余指令额度 = 指令额度-生效的交易登记额度-流程中交易登记额度-已成功发出的未收到外汇交易中心成功反馈报价和流程中的报价
                 CfetsRepoDealEntrustOrderDto dto = cfetsIbuQuoteRepoMapper.findEtrLastNumByEtrId(ptlAllocatio.getEntrustId());
@@ -545,6 +587,14 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 }
                 if (StringUtil.isNotEmpty(partyId) && !StringUtil.equals(partyId, dto.getPartyId())) {
                     errorList.add(new ValidMessage("所选指令交易账户不同"));
+                    break;
+                }
+                if(!StringUtil.equals(entity.getRepoTerm(),dto.getRepoTerm())){
+                    errorList.add(new ValidMessage("指令期限与交易不同"));
+                    break;
+                }
+                if(!StringUtil.equals(entity.getSettleSpreedCode(),dto.getSettleSpreed())){
+                    errorList.add(new ValidMessage("指令清算速度与交易不同"));
                     break;
                 }
             }
@@ -924,7 +974,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 if (StringUtil.equals(sysWflBusinessList.getProcessState(), DictCodeList.流程状态_已退回.getValue())) {
                     systemAct = DictCodeListExt3.系统动作_修改.getValue();
                     sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct);
-                }else {
+                } else {
                     sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct);
                 }
             }

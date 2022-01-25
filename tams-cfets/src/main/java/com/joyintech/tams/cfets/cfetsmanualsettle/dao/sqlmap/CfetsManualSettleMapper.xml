@@ -186,7 +186,7 @@
         LEFT JOIN TRD_PRODUCT_DEAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
         LEFT JOIN TRD_PRODUCT_DEAL_ADD T4 ON T3.TRADE_ID = T4.TRADE_ID
         left join FIN_TRADE_PRODUCT rfpd on T3.FINPROD_ID = rfpd.FINPROD_ID
-        left join FIN_PRODUCT_TYPE FIN_PRODUCT_TYPE on FIN_PRODUCT_TYPE.FINPROD_ID=T3.FINPROD_ID
+        left join FIN_PRODUCT_TYPE FIN_PRODUCT_TYPE on FIN_PRODUCT_TYPE.FINPROD_ID=nvl(T3.FINPROD_ID,T1.FINPROD_ID)
         LEFT JOIN PTL_PORTFOLIO T5 ON T4.PORTFOLIO_ID = T5.PORTFOLIO_ID
         LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.COUNTER_ID
         LEFT JOIN MST_COUNTER_PARTY T61 ON T2.ISSUER = T61.LINK_ID AND T61.P_TYPE_ONE IS NOT NULL
@@ -195,7 +195,7 @@
         LEFT JOIN INF_PAY_ORDERS_STATUS T10 ON T9.ORDER_ID = T10.ORDER_ID
         LEFT JOIN SYS_DATADICT_LIST sdl on sdl.dict_code ='DELIVERY_STATUS' and sdl.item_code = T0.Settle_Status
         LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='PINAN_ASSET_TYPE' and sdl1.item_code = FIN_PRODUCT_TYPE.TYPE_8
-        LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON FIN_PRODUCT_TYPE.TYPE_8 = btm.Finprod_Type_Tg AND T3.Ps = btm.ps
+        LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON FIN_PRODUCT_TYPE.TYPE_8 = btm.Finprod_Type_Tg AND NVL(T3.Ps,T1.ps) = btm.ps
         LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.dict_code ='BUSI_TYPE_POSITION' and sdl2.item_code = btm.busi_type
         LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = T1.PS
         LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
@@ -322,7 +322,7 @@
 
     <select id="findManualSettleFlow"
             resultType="com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleFlowRespond">
-        SELECT rownum seqNo,t.* from (SELECT
+        SELECT rownum seqNo,t.* from (SELECT distinct T1.UPDATE_TIME,
             to_char(T1.SETTLE_TIME,'yyyy-MM-dd') settleDate,
             to_char(T1.Update_Time,'hh24:mi:ss') jiaoShouDate,
             nvl(T2.FINPROD_MARKET_ID,rfpd.TERM_TYPE) finprodMarketId,
