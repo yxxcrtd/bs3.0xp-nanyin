@@ -330,7 +330,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
         //成交编号
         Map<String, Object> pageParam = new HashMap<>();
         pageParam.put("tradeId",tradeId);
-        return new Message<EtrExchangeAgreRepTrade001Dto>().setData(etrExchangeAgreRepTrade001Service.getEntrustInfoByTradeId(pageParam));
+        return new Message<EtrExchangeAgreRepTrade001Dto>().success().setData(etrExchangeAgreRepTrade001Service.getEntrustInfoByTradeId(pageParam));
     }
 
     /**
