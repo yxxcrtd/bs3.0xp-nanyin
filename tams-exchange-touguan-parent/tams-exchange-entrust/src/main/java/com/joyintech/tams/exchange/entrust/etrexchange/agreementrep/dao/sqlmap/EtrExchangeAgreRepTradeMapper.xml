@@ -518,6 +518,7 @@
         else
             #{UNIT_01}
         end as pledgeUnit, /** 质押券单位  **/
+        fin_deal_pledge.Pledge_Face_Value pledgeFaceValue,/** 质押券面值**/
         fin_deal_pledge.Pledge_Face_Value * fin_deal_pledge.Pledge_Number pledStrdPrinAmt, /** 质押券面总额 **/
         fin_trade_product.Prin tradeAmt, /** 回购金额 **/
         fin_trade_product.INT_RATE * 100 yield, /** 回购利率 **/
@@ -527,7 +528,7 @@
         when fin_trade_product.mpay_date<![CDATA[<=]]> #{sysdate} then
             0
         else
-            fin_trade_product.mpay_date -  #{sysdate}
+        TO_NUMBER(fin_trade_product.mpay_date -  #{sysdate})
         end as remainDays, /** 剩余日期  **/
         fin_trade_product.act_cap_days occupyDays, /** 实际占款天数 **/
         fin_trade_product.m_int_amt mIntAmt, /** 回购利息 **/

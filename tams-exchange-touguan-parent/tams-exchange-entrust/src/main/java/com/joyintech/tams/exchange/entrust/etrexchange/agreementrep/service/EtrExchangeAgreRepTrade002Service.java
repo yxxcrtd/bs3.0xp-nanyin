@@ -164,7 +164,7 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         Map<String,Object> pageParam = new HashMap<>();
         pageParam.put("userId",SecurityUtil.getLoginUser().getUserName());
         pageParam.put("tradeId",request.getTradeId());
-        pageParam.put("sysDate", iPlatformDate.getSysDate());
+        pageParam.put("sysdate", iPlatformDate.getSysDate());
         pageParam.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
         pageParam.put("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
         pageParam.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());

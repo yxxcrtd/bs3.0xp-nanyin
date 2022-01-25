@@ -11,9 +11,12 @@
 package com.joyintech.tams.cfets.bankuplink.repo.service;
 
 import com.alibaba.fastjson.JSON;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteErrlogDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.QuoteResultDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.RepoDialogueQuoteDto;
+import com.joyintech.background.component.uplink.interbank.business.dto.*;
+import com.joyintech.background.component.uplink.interbank.business.repodlgservice.RepoDialogueQuoteSubService;
+import com.joyintech.background.component.uplink.interbank.business.routeconfigservice.RouteConfigSubService;
+import com.joyintech.background.component.uplink.interbank.business.routeintfservice.RouteIntfSubService;
+import com.joyintech.background.component.uplink.interbank.business.service.IbuMainService;
+import com.joyintech.background.component.uplink.interbank.database.entity.IbuIntfScheme;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.entity.ProcessMark;
@@ -77,6 +80,7 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,6 +129,18 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
 
     @Autowired
     private IbuComponentCommonService ibuComponentCommonService;
+
+    @Autowired
+    private IbuMainService ibuMainService;
+
+    @Autowired
+    private RepoDialogueQuoteSubService repoDialogueQuoteSubService;
+
+    @Autowired
+    private RouteIntfSubService routeIntfSubService;
+
+    @Autowired
+    private RouteConfigSubService routeConfigSubService;
 
     @Autowired
     private BaseEtrInvestInfoService baseEtrInvestInfoServiceImpl;
@@ -589,11 +605,13 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                     errorList.add(new ValidMessage("所选指令交易账户不同"));
                     break;
                 }
-                if(!StringUtil.equals(entity.getRepoTerm(),dto.getRepoTerm())){
+                if (entity.getRepoTerm() != dto.getRepoTerm()) {
                     errorList.add(new ValidMessage("指令期限与交易不同"));
                     break;
                 }
-                if(!StringUtil.equals(entity.getSettleSpreedCode(),dto.getSettleSpreed())){
+                String settleSpreedCode = StringUtil.equals(dto.getSettleSpreed(), "0") ?
+                        BussinessDictCodeList.清算速度_T加0.getValue() : BussinessDictCodeList.清算速度_T加1.getValue();
+                if (!StringUtil.equals(entity.getSettleSpreedCode(), settleSpreedCode)) {
                     errorList.add(new ValidMessage("指令清算速度与交易不同"));
                     break;
                 }
@@ -1174,9 +1192,90 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
      * @author jiangpeng
      * @date 2021/12/28 20:43
      */
-    public boolean deal(Map<String, Object> param) {
-        ibuComponentCommonService.deal(param);
+    public boolean deal(com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto dto) {
+        RepoDialogueQuoteDto inputBean = ibuComponentCommonService.convertRepoDialogueQuoteDto(dto);
+        com.joyintech.background.component.common.pack.common.security.User userInfo = new com.joyintech.background.component.common.pack.common.security.User();
+        userInfo.setUserName(LoginUserUtil.getUserName());
+        userInfo.setDeptCode(LoginUserUtil.getDeptCode());
+
+        QuoteResultDto quoteResultDto = this.sendRepoDialogueQuote(com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行操作类型_本方回复成交.getValue(),
+                inputBean, null);
+        // 组件调用共通处理
+        ibuComponentCommonService.resCommonHandle(quoteResultDto, userInfo, true);
         return true;
+    }
+
+    /**
+     * 发送质押式回购报价反馈
+     */
+    private QuoteResultDto sendRepoDialogueQuote(String exeTypeIBU, RepoDialogueQuoteDto inputbean,
+                                                 Map<String, String> attrMap) {
+        QuoteResultDto result = new QuoteResultDto(true);
+        IbuQuoteCrepDto ibuQuoteCrepDto = inputbean.getIbuQuoteCrepDto();
+        String quoteId = ibuQuoteCrepDto.getQuoteId();
+
+        // 对话报价查询
+        boolean flag = StringUtil.equals(exeTypeIBU, com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行操作类型_本方回复成交.getValue())
+                ? true : false;
+        if (inputbean.getIbuQuoteCrepDto() != null) {
+            inputbean.setExeTypeIBU(exeTypeIBU);
+            // 现券对话报价必须项校验
+            ResultBaseDto validation = routeIntfSubService.inputRepoDlgCheck(inputbean);
+
+            // 校验不通过
+            if (validation != null && !validation.isStatus()) {
+                result.setStatus(false);
+                result.setErrCode(validation.getErrCode());
+                result.setErrMsg(validation.getErrMsg());
+            } else {
+                // 获取路由配置方案
+                IbuIntfScheme intfScheme = routeConfigSubService.getSchemeForAttr(attrMap);
+
+                // 对话报价状态检验
+                ValidMessageDto validResult =
+                        repoDialogueQuoteSubService.validateRepoDialogueQuoteStatus(inputbean, false);
+
+                //更新bondDialogueQuote对象中的交易状态、操作类型和发送状态
+                repoDialogueQuoteSubService.updateRepoDialogueQuoteStatus(inputbean);
+
+                if (com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行操作类型_本方回复成交.getValue().equals(exeTypeIBU)
+                        || com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行操作类型_本方回复拒绝.getValue().equals(exeTypeIBU)) {
+                    //更新bondDialogueQuote对象中的组合代码和委托代码
+                    if (ibuQuoteCrepDto.getPortfolioId() != null) {
+                        inputbean.getIbuQuoteCrepDto().setPortfolioId(ibuQuoteCrepDto.getPortfolioId());
+                    }
+                    if (ibuQuoteCrepDto.getEntrustId() != null) {
+                        inputbean.getIbuQuoteCrepDto().setEntrustId(ibuQuoteCrepDto.getEntrustId());
+                    }
+                }
+
+                // 校验通过
+                if (validResult == null || StringUtils.isBlank(validResult.getMessage())) {
+                    // 如果是回退操作，则需要回退历史数据
+                    if (com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行操作类型_本方报价回退.getValue().equals(exeTypeIBU)) {
+                        result = repoDialogueQuoteSubService.restoreRepoDialogueQuoteByKey(inputbean);
+                    } else if (flag) {
+                        result = repoDialogueQuoteSubService.updateRepoDialogueQuoteByKeyDeal(inputbean);
+                    } else {
+                        result = repoDialogueQuoteSubService.updateRepoDialogueQuoteByKey(inputbean);
+                    }
+
+                    if (intfScheme != null) {
+                        result.setSendType(intfScheme.getSendType());
+                    }
+                } else {
+                    result.setStatus(false);
+                    result.setErrCode("StatusValidationError");
+                    result.setErrMsg(validResult.getMessageWithId());
+                }
+            }
+        } else {
+            result.setStatus(false);
+            result.setErrCode("BC_IBUPLINK_00018");
+            result.setErrMsg(getMessage("BC_IBUPLINK_00018", quoteId));
+        }
+
+        return result;
     }
 
     /**
@@ -1280,7 +1379,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             // 对话回应
             if (StringUtil.equals(entity.getOperatorType(), "done")) {
                 // 成交
-                this.deal(pageParam);
+                this.deal(dto);
                 cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_成交.getValue());
             } else if (StringUtil.equals(entity.getOperatorType(), "refuse")) {
                 // 拒绝
