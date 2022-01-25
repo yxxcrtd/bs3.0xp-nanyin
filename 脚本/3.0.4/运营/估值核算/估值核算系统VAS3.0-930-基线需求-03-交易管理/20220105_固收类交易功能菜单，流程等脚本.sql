@@ -13,7 +13,7 @@ insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT
 values ('TrdFixIncomeValuationTrade002', 'TRD', '/valuation/trademanage/trdfixincomevaluationtrade/TrdFixIncomeValuationTrade002', 'valuation/trademanage/trdfixincomevaluationtrade/TrdFixIncomeValuationTrade002', null, null, null, '02', '01', '固收类交易新建', 'system', null, sysdate, 'system', sysdate);
 
 /*固收类交易-新建页面-交易类型下拉框*/
-delete from  sys_page_dictlist where page_id='TrdFixIncomeValuationTrade002' and DICT_ID='PS';
+delete from  sys_page_dictlist where page_id='TrdFixIncomeValuationTrade002' and DICT_ID='PS' ;
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('TrdFixIncomeValuationTrade002', '999999', 'PS', 'T01', null, null, 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
@@ -70,3 +70,8 @@ maxvalue 9999
 start with 1
 increment by 1
 cache 20;
+
+/*共通业务类型_固收类资产交易*/
+delete  from  sys_datadict_list where DICT_CODE='COMMON_BUSINESS_TYPE' and ITEM_CODE='TRD85';
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('COMMON_BUSINESS_TYPE', 'TRD85', '固收类资产交易', 577, '0', 'system', null, sysdate, 'system', sysdate, null);

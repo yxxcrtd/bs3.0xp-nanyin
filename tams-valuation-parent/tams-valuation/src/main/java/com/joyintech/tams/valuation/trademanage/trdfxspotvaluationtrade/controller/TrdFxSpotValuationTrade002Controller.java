@@ -95,8 +95,9 @@ public class TrdFxSpotValuationTrade002Controller extends BaseController {
         }else{
             //初始化值
             TrdFxSpotValuationTradeDto entity = new TrdFxSpotValuationTradeDto();
+            entity.setProcedureAmt(new BigDecimal("0.00"));      //交易手续费
+            entity.setSettleServiceAmt(new BigDecimal("0.00"));  //结算服务费
             entity.setFeeAmtQT(new BigDecimal("0.00"));          //其他费用
-            entity.setCcy(DictCodeList.币种_人民币_CNY.getValue());
             model.addAttribute("entity", entity);
         }
         model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());

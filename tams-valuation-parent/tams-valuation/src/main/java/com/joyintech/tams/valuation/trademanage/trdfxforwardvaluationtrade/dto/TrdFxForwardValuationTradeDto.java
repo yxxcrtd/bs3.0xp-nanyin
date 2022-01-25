@@ -1,5 +1,5 @@
 /*
- * 文件名：TrdFxSpotInvestTradeDto.java
+ * 文件名：TrdFxForwardInvestTradeDto.java
  * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
  * 描述：理财资管管理系统V2.0
  * 修改人：fanshuanghu
@@ -21,7 +21,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.valuation.trademanage.trdfxspotvaluationtrade.validate.TrdFxSpotValuationTradeDtoValidator;
+import com.joyintech.tams.valuation.trademanage.trdfxforwardvaluationtrade.validate.TrdFxForwardValuationTradeDtoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -37,8 +37,7 @@ import java.util.List;
  * @param:
  * @return:
  */
-@PageId("TrdFxSpotValuationTrade002")
-@ValidLogic(targetClass = TrdFxSpotValuationTradeDtoValidator.class, groups = {ValidateGroupEdit.class,
+@ValidLogic(targetClass = TrdFxForwardValuationTradeDtoValidator.class, groups = {ValidateGroupEdit.class,
     ValidateGroupDelete.class})
 public class TrdFxForwardValuationTradeDto extends WflTrdProductDeal implements ProcessEntity {
 
@@ -161,7 +160,7 @@ public class TrdFxForwardValuationTradeDto extends WflTrdProductDeal implements 
     @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal unitInt;
 
-    /**
+    /**curPair
      * 远期全价
      */
     @JsonSerialize(using = BigDecimalSerializer.class)
@@ -352,7 +351,6 @@ public class TrdFxForwardValuationTradeDto extends WflTrdProductDeal implements 
      * {@inheritDoc}
      */
     @Override
-    @NotEmpty(fieldName="TrdFxForwardValuationTrade001.ccy",groups = {ValidateGroupEdit.class})
     public String getCcy(){
         return super.getCcy();
     }
@@ -414,7 +412,6 @@ public class TrdFxForwardValuationTradeDto extends WflTrdProductDeal implements 
      * 获取 finprodName
      * @return finprodName.
      */
-    @NotEmpty(fieldName="TrdFxForwardValuationTrade001.finprodName",groups = {ValidateGroupEdit.class})
     public String getFinprodName() {
         return finprodName;
     }
@@ -463,14 +460,12 @@ public class TrdFxForwardValuationTradeDto extends WflTrdProductDeal implements 
     }
     //交易费用
     @Override
-    @NotEmpty(fieldName="TrdFxForwardValuationTrade002.feeAmt",groups = {ValidateGroupEdit.class})
     public BigDecimal getFeeAmt() {
         return super.getFeeAmt();
     }
 
     //资产代码
     @Override
-    @NotEmpty(fieldName="TrdFxForwardValuationTrade001.finprodId",groups = {ValidateGroupEdit.class})
     public String getFinprodId() {
         return super.getFinprodId();
     }
@@ -589,6 +584,7 @@ public class TrdFxForwardValuationTradeDto extends WflTrdProductDeal implements 
         this.unitCprice = unitCprice;
     }
 
+    @NotEmpty(fieldName="TrdFxForwardValuationTrade002.termDate",groups = {ValidateGroupEdit.class})
     public String getTermDate() {
         return termDate;
     }
@@ -621,22 +617,20 @@ public class TrdFxForwardValuationTradeDto extends WflTrdProductDeal implements 
         this.difPs = difPs;
     }
 
-    @Override
+    @NotEmpty(fieldName="TrdFxForwardValuationTrade002.unitInt",groups = {ValidateGroupEdit.class})
     public BigDecimal getUnitInt() {
         return unitInt;
     }
 
-    @Override
     public void setUnitInt(BigDecimal unitInt) {
         this.unitInt = unitInt;
     }
 
-    @Override
+    @NotEmpty(fieldName="TrdFxForwardValuationTrade002.unitFprice",groups = {ValidateGroupEdit.class})
     public BigDecimal getUnitFprice() {
         return unitFprice;
     }
 
-    @Override
     public void setUnitFprice(BigDecimal unitFprice) {
         this.unitFprice = unitFprice;
     }

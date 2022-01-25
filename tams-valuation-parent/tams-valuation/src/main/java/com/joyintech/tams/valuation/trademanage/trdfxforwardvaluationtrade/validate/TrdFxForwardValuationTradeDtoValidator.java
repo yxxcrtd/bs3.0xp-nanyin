@@ -12,7 +12,7 @@ package com.joyintech.tams.valuation.trademanage.trdfxforwardvaluationtrade.vali
 
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.valuation.trademanage.trdfxspotvaluationtrade.dto.TrdFxSpotValuationTradeDto;
+import com.joyintech.tams.valuation.trademanage.trdfxforwardvaluationtrade.dto.TrdFxForwardValuationTradeDto;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Description:计划类投资交易
- * TrdFxSpotValuationTradeDtoValidator
+ * @Description:外汇远期交易
+ * TrdFxForwardValuationTradeDtoValidator
  * @auther: yuzj
- * @date: 2022-1-5
+ * @date: 2022-1-18
  * @param:
  * @return:
  */
@@ -33,7 +33,7 @@ public class TrdFxForwardValuationTradeDtoValidator implements BeanValidator {
 
     public List<ValidMessage> valid(Object value) {
         List<ValidMessage> validMessageList = new ArrayList<ValidMessage>();
-        TrdFxSpotValuationTradeDto dto = (TrdFxSpotValuationTradeDto)value;
+        TrdFxForwardValuationTradeDto dto = (TrdFxForwardValuationTradeDto)value;
 
         return validMessageList;
     }

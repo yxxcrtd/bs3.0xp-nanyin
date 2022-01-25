@@ -417,8 +417,8 @@ public class PbcZipDataFileService {
 				//组装数据
 				LinkedHashMap<String, String> data = new LinkedHashMap<String, String>();
 				data.put("date", DateUtil.getLastDayOfThisMonth(sub.getTermid()));
-				data.put("issuePartyId", sub.getIssuePartyId());
-				data.put("prodVariety", sub.getProdVariety());
+				data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
+				data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
 				data.put("filedValue", dealDataBaseForDat(filedValue,fieldName,datType));
 				dataList.add(data);
@@ -457,8 +457,8 @@ public class PbcZipDataFileService {
 				//组装数据
 				LinkedHashMap<String, String> data = new LinkedHashMap<String, String>();
 				data.put("date", DateUtil.getLastDayOfThisMonth(sub.getTermid()));
-				data.put("issuePartyId", sub.getIssuePartyId());
-				data.put("prodVariety", sub.getProdVariety());
+				data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
+				data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
 				data.put("filedValue", dealDataBaseForDat(filedValue,fieldName,datType));
 				dataList.add(data);
