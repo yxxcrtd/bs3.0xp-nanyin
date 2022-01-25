@@ -1,12 +1,13 @@
 package com.joyintech.tams.exchange.datacommon.db.service;
 
-import java.util.List;
-
 import com.github.pagehelper.PageInfo;
 import com.joyintech.tams.exchange.common.bean.TradeQueryBean;
+import com.joyintech.tams.exchange.common.bean.TradeQueryDto;
 import com.joyintech.tams.exchange.common.db.domain.Trade;
 import com.joyintech.tams.exchange.common.request.PageTradeInfoRequest;
 import com.joyintech.tams.exchange.datacommon.cache.AsyncService;
+
+import java.util.List;
 
 public interface TradeService extends AsyncService<String, Trade> {
     @Deprecated
@@ -32,11 +33,12 @@ public interface TradeService extends AsyncService<String, Trade> {
     void clearSet(String date);
 
 //    void fillPlatDate(String date);
-    
+
     /**
      * 投管用成交查询
-     * @param instructionId
-     * @return
+     *
+     * @param instructionId 指令编号
+     * @return 成交信息
      */
-    List<Trade> queryTrade2Touguan(String instructionId);
+    List<TradeQueryDto> queryTrade2Touguan(String instructionId);
 }

@@ -1,6 +1,8 @@
 package com.joyintech.tams.exchange.datacommon.db.service;
 
 import com.github.pagehelper.PageInfo;
+import com.joyintech.tams.exchange.common.bean.EntrustQueryBean;
+import com.joyintech.tams.exchange.common.bean.EntrustQueryDto;
 import com.joyintech.tams.exchange.common.db.domain.Entrust;
 import com.joyintech.tams.exchange.datacommon.cache.AsyncService;
 
@@ -56,8 +58,8 @@ public interface EntrustService extends AsyncService<String, Entrust> {
     
     /**
      * 投管用委托查询
-     * @param instructionId
-     * @return
+     * @param instructionId 指令编号
+     * @return 委托信息
      */
-    List<Entrust> queryEntrust2Touguan(String instructionId);
+    List<EntrustQueryDto> queryEntrust2Touguan(String instructionId);
 }

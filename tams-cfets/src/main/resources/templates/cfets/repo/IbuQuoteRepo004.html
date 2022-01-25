@@ -44,6 +44,7 @@
             <input type="hidden" id="totleTradeId" name="totleTradeId" th:value="${entity?.totleTradeId}"/>
             <input type="hidden" id="workflowId" name="workflowId" th:value="${entity?.workflowId}"/>
             <input type="hidden" id="quoteType" name="quoteType" th:value="${entity?.quoteType}"/>
+            <input type="hidden" id="quoteStyle" name="quoteStyle" th:value="${entity?.quoteStyle}"/>
             <input type="hidden" id="systemAct" name="systemAct" th:value="${entity?.systemAct}"/>
             <input type="hidden" id="shareAmt" name="shareAmt" th:value="${entity?.shareAmt}"/>
             <input type="hidden" id="counterTrader" name="counterTrader" th:value="${entity?.counterTrader}"/>
@@ -59,11 +60,11 @@
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label">报价方式</label>
                                     <div class="layui-input-block">
-                                        <input type="radio" name="quoteStyle" value="01"
+                                        <input type="radio"
                                                th:checked="'01' eq ${entity?.quoteStyle}" title="对话报价">
-                                        <input type="radio" name="quoteStyle" value="02"
+                                        <input type="radio"
                                                th:checked="'02' eq ${entity?.quoteStyle}" title="请求报价">
-                                        <input type="radio" name="quoteStyle" value="04"
+                                        <input type="radio"
                                                th:checked="'05' eq ${entity?.quoteStyle}" title="X-Repo">
                                     </div>
                                 </div>

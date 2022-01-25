@@ -2422,6 +2422,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @param assetType 资产大类
 	 * @return 获取最小交易单元
 	 */
+
 	@SuppressWarnings({ "unchecked" })
 	public MinTrdUnitLimitDto getInterfSysMinTrdUnit(String finprodId, String tradePlat, String tradeMarket,
 													 String assetType, String ps) {

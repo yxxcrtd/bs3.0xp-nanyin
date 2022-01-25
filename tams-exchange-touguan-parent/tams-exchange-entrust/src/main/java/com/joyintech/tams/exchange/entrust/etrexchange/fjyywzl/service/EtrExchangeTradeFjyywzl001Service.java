@@ -86,72 +86,6 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
      * @since 1.0
      */
     public List<SelectOptionDto> getPsSelectOptions(PsOptionsRequest request,SelectDto selectDto) {
-//        List<SelectOptionDto> selectOptionDtos=new ArrayList<>();
-//        Map<String,Object> params= JsonUtils.object2Map(dto);
-//        String tradePlat=dto.getTradePlat();
-//        String finprodType2=dto.getFinprodType2();
-//        String othCodeType=dto.getOthCodeType();
-//        if(StringUtil.equals(tradePlat,DictCodeList.交易平台_竞价撮合平台.getValue())){
-//            if(StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
-//                //债券默认买入、卖出
-//                selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-//                    return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
-//                            || StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue()) ;
-//                }).collect(Collectors.toList());
-//                Map<String, Object> map = BeanUtil.object2Map(dto);
-//                Map<String, Object> returnMap=setPsExt(map) ;
-//                for(String key: returnMap.keySet()){
-//                    if (StringUtil.equals(key,DictCodeList.交易方向_申购.getValue())) {
-//                        selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-//                            return StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue());
-//                        }).collect(Collectors.toList());
-//                        break;
-//                    } else {
-//                        List<SelectOptionDto> tempList = selectDto.getOptions().stream().filter(option -> {
-//                            return StringUtil.equals(option.getId(), key);
-//                        }).collect(Collectors.toList());
-//                        selectOptionDtos.addAll(tempList)   ;
-//                    }
-//                }
-//            }else if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
-//                selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-//                    return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
-//                            || StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue()) ;
-//                }).collect(Collectors.toList());
-//
-//            }else if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
-//                if(StringUtil.equals(othCodeType,DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())) {
-//                    selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-//                        return StringUtil.equals(option.getId(), DictCodeListExt2.交易方向_配股.getValue())  ;
-//                    }).collect(Collectors.toList());
-//                    return selectOptionDtos;
-//                }
-//                //新股申购
-//                else if(StringUtil.equals(DictCodeList.是否_是.getValue(),isXinGuShenGou(params))) {
-//                    selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-//                        return StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue());
-//                    }).collect(Collectors.toList());
-//                }else {
-//                    selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-//                        return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
-//                                || StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue())
-//                                || StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue());
-//                    }).collect(Collectors.toList());
-//                }
-//
-//            }else if(StringUtil.equals(finprodType2,"ZYSHG")) {
-//                selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-//                    return StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_正回购.getValue())
-//                            ||StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_逆回购.getValue()) ;
-//                }).collect(Collectors.toList());
-//            }
-//        }else 	if(StringUtil.equals(tradePlat,DictCodeList.交易平台_固定收益平台.getValue())){
-//            // 固定收益
-//            return  selectDto.getOptions().stream().filter(option -> {
-//                return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
-//                        || StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue());
-//            }).collect(Collectors.toList());
-//        }
         Map<String,Object> param= JsonUtils.object2Map(request);
         List<SelectOptionDto> selectOptionDtos=new ArrayList<>();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -211,6 +145,9 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
         selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
                 return map.containsKey(option.getId());
         }).collect(Collectors.toList());
+        for (SelectOptionDto option : selectOptionDtos){
+            option.setObject(map.get(option.getId()));
+        }
         return selectOptionDtos;
     }
 

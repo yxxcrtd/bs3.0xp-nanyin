@@ -1385,32 +1385,34 @@
     </select>
 
     <select id="findEtrLastNumByEtrId" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealEntrustOrderDto">
-        select sum(T.ENTRUST_AMT) avaNum ,IPAR.PARTY_ID
+        select sum(T.ENTRUST_AMT) avaNum ,IPAR.PARTY_ID,T.REPO_TERM,T.SETTLE_SPREED
         from (
-                 select ENTRUST_AMT,PORTFOLIO_ID
-                 from ETR_ENTRUST
-                 where ENTRUST_ID = #{etrId}
+                 select ee.ENTRUST_AMT,ee.PORTFOLIO_ID,eea.TERM_DAYS REPO_TERM,eea.SETTLE_SPREED SETTLE_SPREED
+                 from ETR_ENTRUST ee
+                 left join ETR_ENTRUST_ADD eea on ee.ENTRUST_ID = eea.ENTRUST_ID
+                 where ee.ENTRUST_ID = #{etrId}
                  union
-                 select -1*TRADE_AMT ENTRUST_AMT,PORTFOLIO_ID
+                 select -1*TRADE_AMT ENTRUST_AMT,PORTFOLIO_ID,REPO_TERM,SETTLE_SPEED SETTLE_SPREED
                  from REG_FIN_PRODUCT_DEAL
                  where IS_CANCEL = 'N' and TRADE_STATUS !='03' AND ENTRUST_ID = #{etrId}
                  union
-                 select -1*TRADE_AMT ENTRUST_AMT,PORTFOLIO_ID
+                 select -1*TRADE_AMT ENTRUST_AMT,PORTFOLIO_ID,REPO_TERM,SETTLE_SPEED SETTLE_SPREED
                  from WFL_REG_FIN_PRODUCT_DEAL
                  where ENTRUST_ID = #{etrId}
                  union
-                 select -1*IBQER.FPRICE_AMT ENTRUST_AMT,IBQER.PORTFOLIO_ID
+                 select -1*IBQER.FPRICE_AMT ENTRUST_AMT,IBQER.PORTFOLIO_ID,IQC.TERM REPO_TERM,IQC.SETTLE_SPEED SETTLE_SPREED
                  from IBU_QUOTE_ETR_RE IBQER
                  left join IBU_QUOTE_CREP IQC on IBQER.QUOTE_ID = IQC.QUOTE_ID
                  where IBQER.ENTRUST_ID = #{etrId} AND IQC.SEND_STATUS = '01' /*新增中 已发送*/
                  union
-                 select -1*FPRICE_AMT ENTRUST_AMT,PORTFOLIO_ID
-                 from WFL_IBU_QUOTE_ETR_RE
-                 where ENTRUST_ID = #{etrId}
+                 select -1*WIBQER.FPRICE_AMT ENTRUST_AMT,WIBQER.PORTFOLIO_ID,WIQC.TERM REPO_TERM,WIQC.SETTLE_SPEED SETTLE_SPREED
+                 from WFL_IBU_QUOTE_ETR_RE WIBQER
+                 left join WFL_IBU_QUOTE_CREP WIQC on WIBQER.QUOTE_ID = WIQC.QUOTE_ID
+                 where WIBQER.ENTRUST_ID = #{etrId}
              ) T
             LEFT JOIN IBU_PORTFOLIO_ACCT_RELA IPAR
                 ON T.PORTFOLIO_ID = IPAR.PORTFOLIO_ID AND IPAR.CFETS_ACCT_TYPE = '01'
-            group by IPAR.PARTY_ID
+            group by IPAR.PARTY_ID,T.REPO_TERM,T.SETTLE_SPREED
     </select>
 
     <!--查询产品质押债券 证券账户-->

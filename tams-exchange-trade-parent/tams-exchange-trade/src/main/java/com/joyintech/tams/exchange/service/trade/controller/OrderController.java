@@ -81,10 +81,16 @@ public class OrderController {
     @RequestMapping(value = "/order/integratedEntrust", method = RequestMethod.POST)
     public Message<IntegratedEntrust> sendIntegratedEntrust(@RequestBody IntegratedEntrust integratedEntrust) {
         Instruction instruction = instructionService.findById(integratedEntrust.getInstructionId());
-        logger.info("综合业务下单：integratedEntrust entrustBs is [{}]", instruction.getPs());
-        integratedEntrust.setEntrustBs(EntrustBsProp.getEntrustBs(instruction.getPs()));
+        if (Objects.isNull(instruction)) {
+            return new Message<>(ResultBean.error(ErrorCode.INSTRUCTIONS_NOT_EXIST, integratedEntrust));
+        }
+
+        String entrustBs = EntrustBsProp.getEntrustBs(instruction.getPs());
+        logger.info("综合业务下单：买卖方向（entrustBs）转换：{} ==> {}", integratedEntrust.getEntrustBs(), entrustBs);
+        integratedEntrust.setEntrustBs(entrustBs);
+
         String entrustProp = EntrustPropUtils.getEntrustProp(instruction, integratedEntrust.getEntrustProp());
-        logger.info("综合业务下单：order entrustProp is [{}]", entrustProp);
+        logger.info("综合业务下单：委托属性（entrustProp）转换：{} ==> {}", integratedEntrust.getEntrustProp(), entrustProp);
         integratedEntrust.setEntrustProp(entrustProp);
 
         return new Message<IntegratedEntrust>(orderManagement.sendIntegratedEntrust(integratedEntrust.getUserId(), integratedEntrust));

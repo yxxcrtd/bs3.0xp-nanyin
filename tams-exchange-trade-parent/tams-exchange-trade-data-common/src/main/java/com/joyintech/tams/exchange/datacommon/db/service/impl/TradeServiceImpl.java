@@ -8,6 +8,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.exchange.common.bean.EntrustQueryBean;
 import com.joyintech.tams.exchange.common.bean.TradeQryBean;
 import com.joyintech.tams.exchange.common.bean.TradeQueryBean;
+import com.joyintech.tams.exchange.common.bean.TradeQueryDto;
 import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
 import com.joyintech.tams.exchange.common.constant.TradeType;
 import com.joyintech.tams.exchange.common.db.domain.Trade;
@@ -261,7 +262,7 @@ public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements
      * 投管用成交查询
      */
     @Override
-    public List<Trade> queryTrade2Touguan(String instructionId) {
+    public List<TradeQueryDto> queryTrade2Touguan(String instructionId) {
         return tradeMapper.queryTrade2Touguan(instructionId);
     }
 }

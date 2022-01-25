@@ -82,6 +82,48 @@
         <result column="TRADE_PLAT" property="tradePlat" jdbcType="VARCHAR"/>
         <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR"/>
     </resultMap>
+    <resultMap id="TradeResultMap" type="com.joyintech.tams.exchange.common.bean.TradeQueryDto">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="INSTRUCTION_ID" property="instructionId" jdbcType="VARCHAR"/>
+        <result column="PARENT_ORDER_ID" property="parentOrderId" jdbcType="VARCHAR"/>
+        <result column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR"/>
+        <result column="ACCOUNT_ID" property="accountId" jdbcType="VARCHAR"/>
+        <result column="FINANCE_ACCOUNT" property="financeAccount" jdbcType="VARCHAR"/>
+        <result column="ACCOUNT_NAME" property="accountName" jdbcType="VARCHAR"/>
+        <result column="MARKET" property="market" jdbcType="VARCHAR"/>
+        <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR"/>
+        <result column="STOCK_CODE" property="stockCode" jdbcType="VARCHAR"/>
+        <result column="STOCK_NAME" property="stockName" jdbcType="VARCHAR"/>
+        <result column="BUSINESS_FLAG" property="businessFlag" jdbcType="VARCHAR"/>
+        <result column="ENTRUST_TYPE" property="entrustType" jdbcType="VARCHAR"/>
+        <result column="ENTRUST_PROP" property="entrustProp" jdbcType="VARCHAR"/>
+        <result column="ENTRUST_BS" property="entrustBs" jdbcType="VARCHAR"/>
+        <result column="BS_FLAG" property="bsFlag" jdbcType="VARCHAR"/>
+        <result column="TRADE_TYPE" property="tradeType" jdbcType="NUMERIC"/>
+        <result column="TRADED_BALANCE" property="tradedBalance" jdbcType="NUMERIC"/>
+        <result column="TRADED_VOLUME" property="tradedVolume" jdbcType="NUMERIC"/>
+        <result column="TRADED_PRICE" property="tradedPrice" jdbcType="NUMERIC"/>
+        <result column="CLEAR_BALANCE" property="clearBalance" jdbcType="NUMERIC"/>
+        <result column="TRADE_TIME" property="tradeTime" jdbcType="VARCHAR"/>
+        <result column="DISCOUNT" property="discount" jdbcType="NUMERIC"/>
+        <result column="TRANS_CODE" property="transCode" jdbcType="VARCHAR"/>
+        <result column="PROP_SEAT_NO" property="propSeatNo" jdbcType="VARCHAR"/>
+        <result column="TRADING_DAY" property="tradingDay" jdbcType="VARCHAR"/>
+        <result column="LOCAL_ENTRUST_ID" property="localEntrustId" jdbcType="VARCHAR"/>
+        <result column="BROKER_ENTRUST_ID" property="brokerEntrustId" jdbcType="VARCHAR"/>
+        <result column="BROKER_TRADE_ID" property="brokerTradeId" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="REPORT_NO" property="reportNo" jdbcType="VARCHAR"/>
+        <result column="OFFSET_FLAG" property="offsetFlag" jdbcType="VARCHAR"/>
+        <result column="HEDGE_FLAG" property="hedgeFlag" jdbcType="VARCHAR"/>
+        <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR"/>
+        <result column="FULL_PRICE" property="fullPrice" jdbcType="NUMERIC"/>
+        <result column="PORTFOLIO_NAME" property="portfolioName" jdbcType="NUMERIC"/>
+        <result column="SEC_ACCT_ID" property="secAcctId" jdbcType="VARCHAR"/>
+        <result column="TRADE_PLAT" property="tradePlat" jdbcType="VARCHAR"/>
+        <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR"/>
+    </resultMap>
     <sql id="Example_Where_Clause">
         <where>
             <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -727,15 +769,15 @@
         where ID = #{id,jdbcType=VARCHAR}
     </update>
 
-    <select id="queryTrade2Touguan" resultMap="BaseResultMap" parameterType="java.lang.String">
+    <select id="queryTrade2Touguan" resultMap="TradeResultMap" parameterType="java.lang.String">
         select
-        <include refid="Base_Column_List"/>
-        from T_TRADE
-        where INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
+        <include refid="Query_Column_List"/>
+        FROM T_TRADE a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
+        where a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
         UNION ALL
         select
-        <include refid="Base_Column_List"/>
-        from T_TRADEHISTORY
-        where INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
+        <include refid="Query_Column_List"/>
+        FROM T_TRADEHISTORY a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
+        where a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
     </select>
 </mapper>
