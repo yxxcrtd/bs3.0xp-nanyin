@@ -232,6 +232,18 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         CfetsRepoDealQuoteCommonDto cfetsRepoDealQuoteCommonDto = ibuQuoteRepoService.queryEntrustInfoById(cfetsRepoDealQuoteRequest);
         return new Message<CfetsRepoDealQuoteCommonDto>().success().setData(cfetsRepoDealQuoteCommonDto);
     }
+    @ApiOperation(value = "查询质押券", notes = "指定质押券(模式2)时,添加指令后带出质押券信息")
+    @PostMapping("/ptlAllocationAddAfter")
+    @ResponseBody
+    public Message<List<RepoEntrustPledgeDto>> ptlAllocationAddAfter(@RequestBody RepoAutoAllocationRequest autoAllocationRequest) {
+        try {
+            List<RepoEntrustPledgeDto> list = ibuQuoteRepoService.ptlAllocationAddAfter(autoAllocationRequest);
+            return new Message<List<RepoEntrustPledgeDto>>().success().setData(list);
+        } catch (Exception e) {
+            logger.error("查询质押券信息异常", e);
+            return new Message<List<RepoEntrustPledgeDto>>().fail().setMessage("查询质押券信息异常");
+        }
+    }
 
     @ApiOperation(value = "费用计算", notes = "根据交易金额、交易日期、交易方向计算交易手续费和结算服务费")
     @PostMapping("/calFee")

@@ -2277,7 +2277,7 @@ public class IbuComponentCommonService extends BaseService {
      * @see
      * @since 1.0
      */
-    private RepoDialogueQuoteDto convertRepoDialogueQuoteDto(CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto) {
+    public RepoDialogueQuoteDto convertRepoDialogueQuoteDto(CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto) {
         RepoDialogueQuoteDto inputBean = new RepoDialogueQuoteDto();
         // region 银行间报价主信息
         IbuQuoteCrepDto ibuQuoteCrepDto = new IbuQuoteCrepDto();

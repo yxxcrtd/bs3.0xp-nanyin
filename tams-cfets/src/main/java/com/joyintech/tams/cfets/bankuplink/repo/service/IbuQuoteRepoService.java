@@ -404,6 +404,36 @@ public class IbuQuoteRepoService extends BaseService {
     }
 
     /**
+     * 添加指令联动添加质押券
+     *
+     * @param cfetsRepoDealQuoteRequest 查询条件
+     * @return 初始化数据
+     */
+    public List<RepoEntrustPledgeDto> ptlAllocationAddAfter(RepoAutoAllocationRequest request) {
+        List<RepoEntrustPledgeDto> resultList = new ArrayList<>();
+        Map<String, Object> param = new HashMap<>();
+        param.put("entrustIdList",request.getEntrustIdList());
+        setParam(param, 2);
+        // 质押券信息查询
+        List<RepoEntrustPledgeDto> repoEntrustPledgeDtos = cfetsIbuQuoteRepoMapper.selectRepoEntrustPledgesInit(param);
+        for(RepoEntrustPledgeDto newDto : request.getRepoEntrustPledgeDtos()) {
+            boolean flag = false;
+            for (RepoEntrustPledgeDto oldDto : request.getRepoEntrustPledgeDtos()) {
+                if (StringUtil.equals(newDto.getFinprodId(), oldDto.getFinprodId())
+                        && StringUtil.equals(newDto.getPortfolioId(), oldDto.getPortfolioId())) {
+                    oldDto.setPledgePrin(ArithmeticUtil.doAdd(oldDto.getPledgePrin(),newDto.getPledgePrin()));
+                    oldDto.setAvaPledgePrin(ArithmeticUtil.doAdd(oldDto.getAvaPledgePrin(),newDto.getAvaPledgePrin()));
+                    oldDto.setConvertAmt(ArithmeticUtil.multiply(oldDto.getPledgePrin(),ArithmeticUtil.divide(oldDto.getPledgeRatio(),new BigDecimal(100),6)));
+                    flag = true;
+                }
+            }
+            resultList.add(newDto);
+        }
+        resultList.addAll(request.getRepoEntrustPledgeDtos());
+        return resultList;
+    }
+
+    /**
      * 质押式回购计算费用 根据[交易方向][交易金额][证券账户][期限品种]计算 [交易手续费][结算手续费]
      *
      * @param dto ps [交易方向] tradeAmt [交易金额] secManageAcctId[证券账户] termType[期限品种]
