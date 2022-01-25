@@ -700,7 +700,7 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 			if(StringUtil.equals(tradeMarket,DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
 				selectOptionDtos = selectDto.getOptions().stream().filter(option ->
 						      StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_意向申报.getValue()) //6
-						    || StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_点击成交申报.getValue()) //8
+					//	    || StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_点击成交申报.getValue()) //8
 							|| StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_成交申报.getValue()) //9
 						    || StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_收盘价固定价格申报.getValue()) //10
 							|| StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_不指定.getValue()) //5
