@@ -48,7 +48,7 @@ public class TrdLendValuationTrade003Controller extends BaseController {
 
 
     public String init(Model model) {
-        this.setSelectOptionToModel(model, DictCode.拆借方向, DictCode.拆借类型,
+        this.setSelectOptionToModel(model, DictCode.回购拆借方向, DictCode.拆借类型,
             DictCode.有效状态, DictCode.币种, DictCode.计息基础);// 新增资产二、三、四级分类 王贵奇 2019/8/1
         // 一体化对应etliu start
         model.addAttribute("PS_T01", DictCodeList.交易方向_买入.getValue());

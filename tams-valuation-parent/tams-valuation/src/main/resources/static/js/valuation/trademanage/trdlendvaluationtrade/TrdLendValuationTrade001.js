@@ -51,7 +51,8 @@
             ,{field:'outTradeId', width:150, sortField:'outTradeId',title: '外部交易编号'}
             ,{field:'portfolioId', width:150, title: '产品代码',sortField:'portfolioId'}
             ,{field:'portfolioName', width:150, title: '产品名称',sortField:'portfolioName'}
-            ,{field:'busiPs', width:150, title: '交易类型',sortField:'ps'}
+            ,{field:'psStr', title: '交易类型',sortField:"ps",width:150}
+            ,{field:'ps', title: '交易类型',visible:false}
             ,{field:'tradeDateStr', width:150,  title: '交易日',sortField:'tradeDate'}
             ,{field:'tradeDate',title: '交易日',visible:false}
             ,{field:'settDateStr', width:150,  title: '交割日',sortField:'settDate'}
