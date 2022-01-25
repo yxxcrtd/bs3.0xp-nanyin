@@ -152,6 +152,11 @@ public class EtrExchangeOnWayRep002Dto extends BaseEntity {
     private String pledgeUnit;
 
     /**
+     * 质押券面值
+     */
+    private String pledgeFaceValue;
+
+    /**
      * 剩余日期
      */
     @JsonSerialize(using = BigDecimalSerializer.class)
@@ -371,5 +376,13 @@ public class EtrExchangeOnWayRep002Dto extends BaseEntity {
 
     public void setRemainDays(BigDecimal remainDays) {
         this.remainDays = remainDays;
+    }
+
+    public String getPledgeFaceValue() {
+        return pledgeFaceValue;
+    }
+
+    public void setPledgeFaceValue(String pledgeFaceValue) {
+        this.pledgeFaceValue = pledgeFaceValue;
     }
 }
