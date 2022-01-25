@@ -2273,56 +2273,13 @@
             TT.settCcy,
             fp.FINPROD_MARKET_ID finprodMarketId,
             fp.FINPROD_ABBR finprodName,
-            pledge.pledgePrin pledgePrin,
-            pledge.pledgeRatio pledgeRatio
+            pledge.PLEDGE_NUMBER * 100 pledgePrin,
+            pledge.PLEDGE_RATIO pledgeRatio
         from (
             <include refid="sql_listDayReg"></include>
         ) TT
-        left join (
-            select
-                T1.trade_id,
-                T2.TOTLE_TRADE_ID,
-                T1.portfolio_id portfolioId,
-                T1.pledge_finprod_id finprodId,
-                SUM(T1.pledge_number*100) pledgePrin,
-                T1.pledge_ratio pledgeRatio
-            from (
-                SELECT
-                    trade_id,
-                    entrust_id,
-                    portfolio_id,
-                    pledge_finprod_id,
-                    pledge_face_value,
-                    pledge_number,
-                    pledge_ratio
-                FROM
-                REG_FIN_PLEDGE
-                union all
-                SELECT
-                    trade_id,
-                    entrust_id,
-                    portfolio_id,
-                    pledge_finprod_id,
-                    pledge_face_value,
-                    pledge_number,
-                    pledge_ratio
-                FROM
-                WFL_REG_FIN_PLEDGE
-            ) T1
-            left join (
-                SELECT
-                    trade_id,
-                    TOTLE_TRADE_ID
-                FROM REG_FIN_PRODUCT_DEAL
-                union all
-                SELECT
-                    trade_id,
-                    TOTLE_TRADE_ID
-                FROM WFL_REG_FIN_PRODUCT_DEAL
-            ) T2 on T1.trade_id = T2.trade_id
-            group by T1.trade_id,T2.TOTLE_TRADE_ID,T1.portfolio_id,T1.pledge_finprod_id,T1.pledge_ratio
-        ) pledge on pledge.TOTLE_TRADE_ID = TT.quoteId OR pledge.trade_id = TT.quoteId
-        left join FIN_PRODUCT fp on fp.FINPROD_ID = pledge.finprodId
+        left join REG_FIN_TOTAL_PLEDGE pledge on pledge.TOTLE_TRADE_ID = TT.quoteId
+        left join FIN_PRODUCT fp on fp.FINPROD_ID = pledge.PLEDGE_FINPROD_ID
         order by TT.quoteId
     </select>
 

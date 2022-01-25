@@ -967,7 +967,7 @@ public class IbuQuoteRepoService extends BaseService {
      * 2.金额信息计算 根据[清算速度][交易金额][回购利率][回购期限]计算[首次结算日][到期结算日][实际占款天数][回购利息][到期结算金额]
      * 3.自动分配 根据[分配模式][组合分配信息][质押券信息]计算 组合分配中[交易金额][回购利息][到期结算金额][交易手续费]
      *
-     * @param autoAllocationRequest
+     * @param
      * @return com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealQuoteCommonDto
      * @author jiangpeng
      * @date 2021/12/20 14:33
@@ -2495,8 +2495,12 @@ public class IbuQuoteRepoService extends BaseService {
      *
      * @return
      */
-    public List<Map<String, String>> selectAllCustomer() {
-        return cfetsIbuQuoteRepoMapper.selectAllCustomer();
+    public Map<String, String> selectAllCustomer() {
+        Map<String, String> map = new HashMap<>();
+        cfetsIbuQuoteRepoMapper.selectAllCustomer().stream().forEach(x -> {
+            map.put(x.get("PARTY_ID"), x.get("PARTY_NAME"));
+        });
+        return map;
     }
 }
 

@@ -52,31 +52,31 @@ public class EtrExchangeOnWayRepRequestDto{
     /**
      * 组合代码
      */
-    @ApiModelProperty(name="userId",value="交易编号",example="A1")
+    @ApiModelProperty(name="portfolioId",value="组合代码",example="A1")
     private String portfolioId;
 
     /**
      * 交易场所
      */
-    @ApiModelProperty(name="userId",value="交易编号",example="03")
+    @ApiModelProperty(name="tradeMarket",value="交易场所",example="03")
     private String tradeMarket;
 
     /**
      * 证券账户
      */
-    @ApiModelProperty(name="userId",value="交易编号",example="A1")
+    @ApiModelProperty(name="secAcctId",value="证券账户",example="A1")
     private String secAcctId;
 
     /**
      * 回购方向
      */
-    @ApiModelProperty(name="userId",value="交易编号",example="03")
+    @ApiModelProperty(name="repPs",value="回购方向",example="03")
     private String repPs;
 
     /**
      * 质押券id
      */
-    @ApiModelProperty(name="pledgeFinprodId",value="交易编号",example="A1")
+    @ApiModelProperty(name="pledgeFinprodId",value="质押券id",example="A1")
     private String pledgeFinprodId;
 
     public String getTradeId() {
