@@ -575,8 +575,7 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 			}else if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
 				selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
 					return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
-							|| StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue())
-							|| StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue()) ;
+							|| StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue()) ;
 				}).collect(Collectors.toList());
 			}else if(StringUtil.equals(finprodType2,"ZYSHG")) {
 				selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
