@@ -20,6 +20,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
 import com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -244,6 +245,7 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 			param.put("portfolioIdList",
 					StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
 		}
+		param.put("search_isNumberFlag", BaseMap.isNumeric(request.getSearch()));
 		return super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeTradeCommonMapper.selectEtrExchange(param));
 //		return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectEtrExchange",
 //				param, EtrExchangeTrade003Dto.class);

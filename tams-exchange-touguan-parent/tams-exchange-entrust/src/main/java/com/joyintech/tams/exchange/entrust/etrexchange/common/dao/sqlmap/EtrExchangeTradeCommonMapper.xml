@@ -5,18 +5,18 @@
     <!--场内交易委托列表查询-->
     <select id="selectEtrExchange" resultType="com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeEtrExchangeCommonResponse">
         select * from (SELECT
-        T1.ENTRUST_ID
-        ,T1.ENTRUST_STATUS
+        T1.ENTRUST_ID entrustId
+        ,T1.ENTRUST_STATUS entrustStatus
         ,case when T2.TARGET_TYPE = '01' then ROUND(T4.ORDER_FINISH_AMT/T1.ENTRUST_NUM,4)
         else ROUND(T4.ORDER_FINISH_AMT/T1.ENTRUST_AMT,4) end as implementPercent
         ,case when T2.TARGET_TYPE = '01' then ROUND(T4.ENT_FINISH_AMT/T1.ENTRUST_NUM,4)
         else ROUND(T4.ENT_FINISH_AMT/T1.ENTRUST_AMT,4) end as dealPercent
-        ,T5.PORTFOLIO_ID
-        ,T5.PORTFOLIO_NAME
-        ,T1.FINPROD_ID
+        ,T5.PORTFOLIO_ID portfolioId
+        ,T5.PORTFOLIO_NAME  portfolioName
+        ,T1.FINPROD_ID finprodId
         ,T7.FINPROD_MARKET_ID
-        ,CASE WHEN T1.PS IN ('03','04') THEN T1.FINPROD_ID ELSE T7.FINPROD_ABBR END AS FINPROD_ABBR
-        ,T1.FINPROD_TYPE2
+        ,CASE WHEN T1.PS IN ('03','04') THEN T1.FINPROD_ID ELSE T7.FINPROD_ABBR END AS finprodAbbr
+        ,T1.FINPROD_TYPE2 finprodType2
         ,T1.TRADE_MARKET
         ,T1.TRADE_PLAT
         ,T1.PS
@@ -24,13 +24,13 @@
         ,SSAI.SEC_ACCT_NAME
         ,T2.DEAL_CUR_ACCT as dealCurAcct
         ,c1.acctName as dealCurAcctName
-        ,T1.PRICE_MODEL
+        ,T1.PRICE_MODEL priceModel
         ,T2.DEAL_MODE as declaType
         ,CASE WHEN T1.PS IN (#{PS_T68}, #{PS_T69}, #{PS_03}, #{PS_04}) THEN T1.PRICE * 100 ELSE
         T1.PRICE END price
         /* ,T1.ENTRUST_AMT*NVL(T1.PRICE,1) ENTRUST_AMT*/
-        ,T1.ENTRUST_AMT ENTRUST_AMT
-        ,T1.ENTRUST_NUM ENTRUST_NUM
+        ,T1.ENTRUST_AMT entrustAmt
+        ,T1.ENTRUST_NUM entrustNum
         ,T1.VDATE
         ,T1.MDATE
         ,T2.FULL_PRICE as fprice
@@ -48,7 +48,7 @@
         ,T2.TRADER
         ,T2.COUNTER_ORG
         ,T1.COUNTER_TRADER
-        ,T2.ASSET_TYPE
+        ,T2.ASSET_TYPE assetType
         ,T1.CREATE_TIME
         ,T1.ENTRUST_DATE
         ,T1.INV_AIM
@@ -120,18 +120,18 @@
         </if>
         union all
         SELECT
-        T1.ENTRUST_ID
-        ,T1.ENTRUST_STATUS
+        T1.ENTRUST_ID entrustId
+        ,T1.ENTRUST_STATUS entrustStatus
         ,case when T2.TARGET_TYPE = '01' then ROUND(T4.ORDER_FINISH_AMT/T1.ENTRUST_NUM,4)
         else ROUND(T4.ORDER_FINISH_AMT/T1.ENTRUST_AMT,4) end as implementPercent
         ,case when T2.TARGET_TYPE = '01' then ROUND(T4.ENT_FINISH_AMT/T1.ENTRUST_NUM,4)
         else ROUND(T4.ENT_FINISH_AMT/T1.ENTRUST_AMT,4) end as dealPercent
-        ,T5.PORTFOLIO_ID
-        ,T5.PORTFOLIO_NAME
-        ,T1.FINPROD_ID
+        ,T5.PORTFOLIO_ID portfolioId
+        ,T5.PORTFOLIO_NAME  portfolioName
+        ,T1.FINPROD_ID finprodId
         ,T7.FINPROD_MARKET_ID
-        ,CASE WHEN T1.PS IN ('03','04') THEN T1.FINPROD_ID ELSE T7.FINPROD_ABBR END AS FINPROD_ABBR
-        ,T1.FINPROD_TYPE2
+        ,CASE WHEN T1.PS IN ('03','04') THEN T1.FINPROD_ID ELSE T7.FINPROD_ABBR END AS finprodAbbr
+        ,T1.FINPROD_TYPE2 finprodType2
         ,T1.TRADE_MARKET
         ,T1.TRADE_PLAT
         ,T1.PS
@@ -139,12 +139,12 @@
         ,SSAI.SEC_ACCT_NAME
         ,T2.DEAL_CUR_ACCT
         ,c1.acctName as dealCurAcctName
-        ,T1.PRICE_MODEL
+        ,T1.PRICE_MODEL priceModel
         ,T2.DEAL_MODE as declaType
         ,CASE WHEN T1.PS IN (#{PS_T68}, #{PS_T69}, #{PS_03}, #{PS_04}) THEN T1.PRICE * 100 ELSE T1.PRICE END price
         /* ,T1.ENTRUST_AMT*NVL(T1.PRICE,1) ENTRUST_AMT*/
-        ,T1.ENTRUST_AMT ENTRUST_AMT
-        ,T1.ENTRUST_NUM ENTRUST_NUM
+        ,T1.ENTRUST_AMT entrustAmt
+        ,T1.ENTRUST_NUM entrustNum
         ,T1.VDATE
         ,T1.MDATE
         ,T2.FULL_PRICE as fprice
@@ -162,7 +162,7 @@
         ,T2.TRADER
         ,T2.COUNTER_ORG
         ,T1.COUNTER_TRADER
-        ,T2.ASSET_TYPE
+        ,T2.ASSET_TYPE assetType
         ,T1.CREATE_TIME
         ,T1.ENTRUST_DATE
         ,T1.INV_AIM
@@ -229,7 +229,16 @@
                 #{item}
             </foreach>
         </if>
-        ORDER BY T1.CREATE_TIME DESC
+        <!-- 关键字模糊查询 -->
+        <include refid="etrExchangeQueryAnd"/>
+        <!--前端传入排序字段-->
+        <if test="sort != null and sort != '' and direction != null and direction != ''">
+            order by ${sort}  ${direction}
+        </if>
+        <if test="sort == null or sort == '' or direction == null or direction == ''">
+            ORDER BY T1.CREATE_TIME DESC
+        </if>
+
     </select>
     <!-- 场内交易持仓查询 -->
     <select id="findPositionsPage" parameterType="Map"
@@ -1461,4 +1470,20 @@
           and MDATE &gt;= #{sysDate,jdbcType=DATE}
     </select>
     <!--add by etliu 20211207 end-->
+    <sql id="etrExchangeQueryAnd">
+        <if test="search != null and search != ''">
+            and (
+            entrustId|| '|' ||entrustStatus|| '|' ||portfolioId|| '|' ||portfolioName|| '|' ||finprodId|| '|' ||
+            finprodAbbr|| '|' ||assetType|| '|' ||ps|| '|' || priceModel
+            like '%' || #{search} || '%'
+            )
+            <if test="search_isNumberFlag != null and search_isNumberFlag == true">
+                or (implementPercent = #{search})
+                or (dealPercent = #{search})
+                or (price = #{search})
+                or (entrustAmt = #{search})
+                or (entrustNum = #{search})
+            </if>
+        </if>
+    </sql>
 </mapper>

@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.exchange.entrust.etrexchange.common.dto;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.dto.PageMode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -60,6 +61,9 @@ public class EtrExchangeTradeEtrExchangeCommonRequest {
 
     @ApiModelProperty(name="entrustTypeList",value="指令类型",example="A1")
     private List<String> entrustTypeList;
+
+    @ApiModelProperty(name="search",value="模糊查询使用",example="xxx")
+    private String search;
 
     public PageMode getPageMode() {
         return pageMode;
@@ -148,5 +152,26 @@ public class EtrExchangeTradeEtrExchangeCommonRequest {
 
     public void setEntrustTypeList(List<String> entrustTypeList) {
         this.entrustTypeList = entrustTypeList;
+    }
+
+    /**
+     * 从pageMode中获取排序规则
+     * @return
+     */
+    @ApiModelProperty(name="从pageMode获取",value="从pageMode获取")
+    public String getSort() {
+        return pageMode.getSort();
+    }
+    @ApiModelProperty(name="从pageMode获取",value="从pageMode获取")
+    public String getDirection() {
+        return pageMode.getDirection();
+    }
+
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
     }
 }
