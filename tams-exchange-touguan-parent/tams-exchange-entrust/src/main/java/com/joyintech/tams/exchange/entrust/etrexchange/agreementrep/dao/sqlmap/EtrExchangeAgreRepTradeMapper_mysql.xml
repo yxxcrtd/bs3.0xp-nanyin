@@ -527,7 +527,7 @@
         when fin_trade_product.mpay_date<![CDATA[<=]]> #{sysdate} then
         0
         else
-        fin_trade_product.mpay_date -  #{sysdate}
+        timestampdiff(day,#{sysdate}, mpay_date)
         end as remainDays, /** 剩余日期  **/
         fin_trade_product.act_cap_days occupyDays, /** 实际占款天数 **/
         fin_trade_product.m_int_amt mIntAmt, /** 回购利息 **/
