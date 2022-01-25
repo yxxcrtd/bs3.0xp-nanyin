@@ -130,7 +130,7 @@
             NVL(MC.CUSTOMER_NAME, nvl(mp1.COUNTER_NAME,P.SUBJECT_NAME)) subjectName,
             P.INDUSTRY INDUSTRY,
             P.borrower_city buyPlace,
-            I.ASSET_YIELD RATE,
+            NVL(I.ASSET_YIELD,RATE.ASSET_RATE) RATE,
             P.CCY,
             AP.POS_AMT  delayPayAmt,
             AP.TDY_COST_AMT  costAmt,
@@ -163,6 +163,12 @@
             LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P2 ON P2.PROPERTYCODE = P3.CODEPARENT AND P2.PROPLEVEL = '2' AND P2.STATUS='E'
             LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P1 ON P1.PROPERTYCODE = P2.CODEPARENT AND P1.PROPLEVEL = '1' AND P1.STATUS='E'
             LEFT JOIN CHB_TYPE_MAPPING_EX EX ON EX.SRCFIELD1 = P.ASSET_CODE AND EX.MAPPINGCODE = 'MAPPINGCODE_SUBJECTNO' AND EX.OBJFIELD3 = 'C01'
+            LEFT JOIN (SELECT ASSET_ID,ASSET_RATE,change_date,
+            row_number() over(partition by ASSET_ID order by change_date desc) row_number
+            FROM CHB_ASSET_RATE
+            WHERE asset_rate is not null
+            AND CHANGE_DATE &lt;= ADD_MONTHS(TO_DATE(#{enddate,jdbcType=VARCHAR}||'01','yyyyMMdd'),1)-1day) RATE ON RATE.ASSET_ID = P.ASSET_CODE AND RATE.row_number = 1
+
             WHERE P.AMT IS NOT NULL AND P.AMT !=0
 
             <if test="enddate != null and enddate != ''">

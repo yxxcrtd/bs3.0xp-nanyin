@@ -272,7 +272,15 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		List<SelectOptionDto> resultOpt= assetInfoDetailMapper.getAssetTye2(resultMap);
 		return  resultOpt;
 	}
-
+	/**
+	 * 获取交易对手列表
+	 * @param resultMap
+	 * @return
+	 */
+	public List<SelectOptionDto> selectCounterId(Map<String,Object> resultMap){
+		List<SelectOptionDto> resultOpt= assetInfoDetailMapper.selectCounterId(resultMap);
+		return  resultOpt;
+	}
 
 
 
