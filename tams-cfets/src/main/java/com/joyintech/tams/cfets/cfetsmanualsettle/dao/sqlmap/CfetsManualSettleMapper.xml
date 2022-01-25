@@ -322,7 +322,7 @@
 
     <select id="findManualSettleFlow"
             resultType="com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleFlowRespond">
-        SELECT rownum seqNo,t.* from (SELECT
+        SELECT rownum seqNo,t.* from (SELECT distinct T1.UPDATE_TIME,
             to_char(T1.SETTLE_TIME,'yyyy-MM-dd') settleDate,
             to_char(T1.Update_Time,'hh24:mi:ss') jiaoShouDate,
             nvl(T2.FINPROD_MARKET_ID,rfpd.TERM_TYPE) finprodMarketId,
