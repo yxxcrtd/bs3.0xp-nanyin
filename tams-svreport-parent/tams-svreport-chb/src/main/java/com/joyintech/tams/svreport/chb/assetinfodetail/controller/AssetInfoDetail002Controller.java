@@ -195,4 +195,18 @@ public class AssetInfoDetail002Controller extends BaseController {
         }
         return list;
     }
+
+
+    /**
+     * 根据界面选择获取二级资产类型
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("selectCounterId")
+    public List<SelectOptionDto> selectCounterId(){
+        List<SelectOptionDto> list = new ArrayList<>();
+        Map<String, Object> params = RequestUtil.getPageParam();
+        list = assetInfoDetailMService.selectCounterId(params);
+        return list;
+    }
 }
