@@ -8,6 +8,7 @@
 		a.SEND_STATUS sendStatus,
 		a.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
 		a.SUBMIT_TIME submitTime,
+		a.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
 		a.SUBMIT_DEADLINE submitDeadline,
 		a.DATA_STATUS dataStatus,
 		a.INSTITUTION_CODE institutionCode,
