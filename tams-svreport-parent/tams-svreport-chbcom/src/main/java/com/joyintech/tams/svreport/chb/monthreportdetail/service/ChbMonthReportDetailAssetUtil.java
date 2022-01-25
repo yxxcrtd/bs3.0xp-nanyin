@@ -49,7 +49,8 @@ public class ChbMonthReportDetailAssetUtil {
 
     @Autowired
     private ChbMonthReportDetailAssetMapper chbMonthReportDetailAssetMapper;
-
+    //信用债
+    private static String xyz="1112,1113,1114,1115,1116,1117";
 
     /**
      * 映射配置mapper
@@ -120,6 +121,11 @@ public class ChbMonthReportDetailAssetUtil {
             }
             if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecKzzq())){
                 chbMonthAssetPositiondetail.setIsYhbcgj((null!=chbMonthAssetPositiondetail.getIsYhbcgj()?chbMonthAssetPositiondetail.getIsYhbcgj()+",":"")+DictCodeListExt3.中债月度明细_银行资本补充工具_可转债.getValue());
+            }
+
+            //非信用债屏蔽评级结果数据
+            if(!xyz.contains(position.getAssettype2())){
+                chbMonthAssetPositiondetail.setRating(null);
             }
         }
 

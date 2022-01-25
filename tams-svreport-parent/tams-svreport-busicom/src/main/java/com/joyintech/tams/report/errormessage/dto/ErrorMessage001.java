@@ -2,6 +2,7 @@ package com.joyintech.tams.report.errormessage.dto;
 
 import java.util.Date;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.util.DateUtil;
 
 public class ErrorMessage001 implements ITableRow {
   private String dataid;
@@ -152,5 +153,9 @@ public class ErrorMessage001 implements ITableRow {
 
   public void setCheckResult(String checkResult) {
     this.checkResult = checkResult == null ? null : checkResult.trim();
+  }
+
+  public String getCreateTimeStr() {
+    return DateUtil.format(createTime);
   }
 }

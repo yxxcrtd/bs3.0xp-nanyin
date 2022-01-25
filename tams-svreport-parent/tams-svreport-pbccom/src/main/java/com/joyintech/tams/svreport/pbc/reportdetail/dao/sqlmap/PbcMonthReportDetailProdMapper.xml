@@ -33,7 +33,7 @@
 				REDAMT,
 				DECODE(PAYSTATUS,'02',REDCOST) REDCOST01,
 				DECODE(PAYSTATUS,'03',REDCOST) REDCOST02,
-				ENDCOST,
+				DECODE(PAYSTATUS,'04',ENDCOST) ENDCOST,
 				CASE WHEN BUY_PLACE IN ('210200','330200','350200','370200','440300') THEN '01' ELSE '02' END PLACE_FLAG
 				FROM PBC_MONTH_PRD_POSITIONDETAIL P
 				LEFT JOIN CHB_PRD_BASEINFO B ON P.PRODID= b.Prod_Id AND B.FPROD_ID IS NULL AND B.STATUS IN ('E','M')
@@ -762,8 +762,8 @@
 			#{item.paystatus,jdbcType=VARCHAR}, #{item.term,jdbcType=VARCHAR}, #{item.ccy,jdbcType=VARCHAR},
 			#{item.customerType2,jdbcType=VARCHAR}, #{item.endamtsumOth,jdbcType=DECIMAL}, #{item.dirtyamtsum,jdbcType=DECIMAL},
 			#{item.redamt,jdbcType=DECIMAL}, #{item.endDays,jdbcType=DECIMAL}, #{item.endqtysum,jdbcType=DECIMAL},
-			#{item.dirtyqty,jdbcType=DECIMAL}, #{item.redqty,jdbcType=DECIMAL}, #{item.redcost,jdbcType=DECIMAL},
-			#{item.endcost,jdbcType=DECIMAL}, #{item.cashManaCate,jdbcType=VARCHAR}, #{item.isNewPrd,jdbcType=VARCHAR},
+			#{item.dirtyqty,jdbcType=DECIMAL}, #{item.redqty,jdbcType=DECIMAL}, #{item.redCost,jdbcType=DECIMAL},
+			#{item.endCost,jdbcType=DECIMAL}, #{item.cashManaCate,jdbcType=VARCHAR}, #{item.isNewPrd,jdbcType=VARCHAR},
 			#{item.termtype,jdbcType=VARCHAR}, #{item.termdays,jdbcType=DECIMAL}, #{item.openType,jdbcType=VARCHAR},
 			#{item.profitType,jdbcType=VARCHAR}, #{item.saleTarget,jdbcType=VARCHAR}, #{item.isTransfer,jdbcType=VARCHAR},
 			#{item.isFhxgcp,jdbcType=VARCHAR}, #{item.isYllccp,jdbcType=VARCHAR}

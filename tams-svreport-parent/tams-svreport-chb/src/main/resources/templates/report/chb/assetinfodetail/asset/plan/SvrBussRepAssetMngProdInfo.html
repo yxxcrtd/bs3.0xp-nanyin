@@ -80,7 +80,7 @@
 <!--                               maxlength="100"/>-->
                         <select th:id="|${entityName}_managerId|"
                                 th:name="|${entityName}.managerId|"
-                                th:value="${entity?.managerId}"
+                                th:initValue="${entity?.managerId}"
                                 class="layui-input form-input input-select"
                                 required="required"
                                 data-th-data-url="@{/common/select/getManagerId}">
@@ -97,7 +97,7 @@
 <!--                               maxlength="100"/>-->
                         <select th:id="|${entityName}_trusteeId|"
                                 th:name="|${entityName}.trusteeId|"
-                                th:value="${entity?.trusteeId}"
+                                th:initValue="${entity?.trusteeId}"
                                 class="layui-input form-input input-select"
                                 required="required"
                                 data-th-data-url="@{/common/select/getTrusterId}">
@@ -355,7 +355,7 @@
 <!--							   data-fixtype="2" class="layui-input form-input"/>-->
                         <select th:id="|${entityName}_chbManagerId|"
                                 th:name="|${entityName}.chbManagerId|"
-                                th:value="${entity?.chbManagerId}"
+                                th:initValue="${entity?.chbManagerId}"
                                 class="layui-input form-input input-select"
                                 data-th-data-url="@{/common/select/getManagerId}">
                         </select>

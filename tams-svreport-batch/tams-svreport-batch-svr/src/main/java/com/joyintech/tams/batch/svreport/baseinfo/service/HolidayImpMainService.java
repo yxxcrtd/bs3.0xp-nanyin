@@ -65,7 +65,7 @@ public class HolidayImpMainService extends AutoSendCBBaseService{
 				logger.error("CHB_INTERF_CONFIG表中内容来源配置无效！");
 			}
 		} catch (Exception e) {
-			logger.error("节假日信息接口批处理Error",e);
+			logger.error("节假日信息接口批处理Error",e.getMessage());
 			throw new BusinessException(e);
 		}
 		logInfoBatchEnd();
