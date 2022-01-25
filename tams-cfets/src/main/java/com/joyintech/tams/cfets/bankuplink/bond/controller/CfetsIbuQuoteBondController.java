@@ -576,7 +576,20 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		}
 	}
 
-	@ApiOperation(value = "当日登记导出检查", notes = "当日登记导出检查")
+
+	@ApiOperation(value = "当日登记导出", notes = "当日登记导出")
+	@ResponseBody
+	@RequestMapping("exportDayRegDeal")
+	public void exportDayRegDeal(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response){
+		// 导出
+		ExcelUitl.doExport(requestDto, response, "当日登记", () -> {
+			Map<String,Object>  param = requestDto.getDto(Map.class);
+			List dataList = ibuQuoteBondService.listDayReg(param);
+			return dataList;
+		});
+	}
+
+	@ApiOperation(value = "本币交易导出检查", notes = "本币交易导出检查")
 	@PostMapping("/exportDayRegCheck")
 	@ResponseBody
 	public Message<Map<String,Object>> exportDayRegCheck(@RequestBody CfetsExportRequestDto requestDto){
@@ -594,7 +607,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		return new Message<Map<String,Object>>().success().setData(ibuQuoteBondService.exportDayRegCheck(dataList));
 	}
 
-	@ApiOperation(value = "当日登记导出", notes = "当日登记导出")
+	@ApiOperation(value = "本币交易导出", notes = "本币交易导出")
 	@PostMapping("/exportDayReg")
 	@ResponseBody
 	public Message<List<Map<String,String>>> exportDayReg(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response){
