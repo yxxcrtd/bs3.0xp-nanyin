@@ -23,10 +23,10 @@
         CHB_SALER_INST_SUB
         where 1=1
         <if test="salerInstCode != null and salerInstCode != ''">
-            and SALER_INST_CODE like concat('%',concat(#{salerInstCode,jdbcType=VARCHAR},'%')
+            and SALER_INST_CODE like concat('%',concat(#{salerInstCode,jdbcType=VARCHAR},'%'))
         </if>
         <if test="salerOrgName != null and salerOrgName != ''">
-            and SALER_ORG_NAME like concat('%',concat(#{salerOrgName,jdbcType=VARCHAR},'%')
+            and SALER_ORG_NAME like concat('%',concat(#{salerOrgName,jdbcType=VARCHAR},'%'))
         </if>
         <if test="submitFeedbackStatus != null and submitFeedbackStatus != ''">
             and SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus}
@@ -282,10 +282,10 @@
             and  to_char(SUBMIT_TIME,'yyyy-MM-dd') <![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
         </if>
         <if test="salerInstCode != null and salerInstCode != ''">
-            and  SALER_INST_CODE like concat('%',concat(#{salerInstCode,jdbcType=VARCHAR},'%')
+            and  SALER_INST_CODE like concat('%',concat(#{salerInstCode,jdbcType=VARCHAR},'%'))
         </if>
         <if test="salerOrgName != null and salerOrgName != ''">
-            and  SALER_ORG_NAME like concat('%',concat(#{salerOrgName,jdbcType=VARCHAR},'%')
+            and  SALER_ORG_NAME like concat('%',concat(#{salerOrgName,jdbcType=VARCHAR},'%'))
         </if>
     </select>
 

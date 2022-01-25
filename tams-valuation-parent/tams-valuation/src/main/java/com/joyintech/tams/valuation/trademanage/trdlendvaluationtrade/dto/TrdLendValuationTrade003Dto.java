@@ -321,8 +321,6 @@ public class TrdLendValuationTrade003Dto extends BaseEntity implements ProcessEn
 
 
 
-
-
     /**
      * 操作类型
      */
@@ -413,31 +411,7 @@ public class TrdLendValuationTrade003Dto extends BaseEntity implements ProcessEn
     }
 
 
-    /**
-     * 获取 busiPs
-     *
-     * @return busiPs.
-     */
-    @NotEmpty(fieldName = "TrdLendValuationTrade002.busiPs", groups = {ValidateGroupEdit.class})
-    public String getBusiPs() {
-        String busiPs="";
-        if(getPs() != null && getPs().equals("T01")){
-            busiPs="拆入";
-        }
-        if(getPs() != null && getPs().equals("T02")){
-            busiPs="拆出";
-        }
-        return busiPs;
-    }
 
-    /**
-     * 设置 busiPs
-     *
-     * @param busiPs busiPs
-     */
-    public void setBusiPs(String busiPs) {
-        this.busiPs = busiPs;
-    }
 
     /**
      * 产品类型

@@ -687,6 +687,9 @@ public class PbcClassicsDataFileNewService {
         	data1.put("is_constracte", sub.getIsConstracte());
         	data1.put("transfer_type", sub.getTransferType());
         	data1.put("identi_flag", sub.getIdentiFlag());
+			data1.put("cash_mana_cate", sub.getCashManaCate());
+			data1.put("cross_border_flag", sub.getCrossBorderFlag());
+			data1.put("zjxt_flag", sub.getZjxtFlag());
         	dataList.add(data1);
         	//2-币种信息
         	if(sub.getRaiseCcy()!=null){
