@@ -209,9 +209,9 @@ comment on column CHB_AGENT_PRD_SUB_HIS.UPDATE_TIME is '更新时间 ';
 
   --菜单配置
 DELETE FROM SYS_PAGE WHERE PAGE_ID in ('AgentTabManageRegist001','AgentInstitutionRegist001','AgentPrdInfoRegist001');
-delete from SYS_MENU where MENU_ID = 'REPORT_001_003_019';
-INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_003_019', 'REP', null, 'REPORT_001_003', 'AgentTabManageRegist001', 19, '02', '代理销售信息登记', 'system', null, TIMESTAMP '2021-06-30 20:43:03', 'system', TIMESTAMP '2021-06-30 20:43:03');
-INSERT INTO SYS_PAGE VALUES ('AgentTabManageRegist001','REP','/report/submitmanagement/agenttabmanageregist/AgentTabManageRegist001','report/submitmanagement/agenttabmanageregist/AgentTabManageRegist001','REPORT_001_001_026',null,null,'02','01','代理销售信息登记','system',null,sysdate,'system',sysdate);
+delete from SYS_MENU where MENU_ID = 'REPORT_REGIST_001_002_010';
+INSERT INTO SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)values('REPORT_REGIST_001_002_010','REP',null,'REPORT_REGIST_001_002','AgentTabManageRegist001',10,02,'代理销售信息登记','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_PAGE VALUES ('AgentTabManageRegist001','REP','/report/submitmanagement/agenttabmanageregist/AgentTabManageRegist001','report/submitmanagement/agenttabmanageregist/AgentTabManageRegist001','REPORT_REGIST_001_002_010',null,null,'02','01','代理销售信息登记','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('AgentInstitutionRegist001','REP','/report/submitmanagement/agentinstitutionregist/AgentInstitutionRegist001','report/submitmanagement/agentinstitutionregist/AgentInstitutionRegist001',null,null,null,'02','01','代理销售机构信息登记','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('AgentPrdInfoRegist001','REP','/report/submitmanagement/agentprdinforegist/AgentPrdInfoRegist001','report/submitmanagement/agentprdinforegist/AgentPrdInfoRegist001',null,null,null,'02','01','委托销售产品编码登记','system',null,sysdate,'system',sysdate);
 
