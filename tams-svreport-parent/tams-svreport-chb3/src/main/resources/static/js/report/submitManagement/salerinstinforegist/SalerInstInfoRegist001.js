@@ -50,7 +50,7 @@ $(function(){
             ,{field: 'sendStatus', title: "报送状态",visible:false,sortField:'sendStatus'}
             ,{field: 'sendStatusStr', title: "报送状态", width:100 ,sortField:'sendStatus'}
             ,{field: 'submitTimeStr', title: "报送日期", width:150,sortField:'submitTime'}
-            ,{field: 'submitDeadline', title: "报送截止日", type:'date', width:100,sortField:'submitDeadline'}
+            ,{field: 'chbSubmitDeadline', title: "报送截止日", type:'date', width:100,sortField:'chbSubmitDeadline'}
             ,{field: 'submitFeedbackStatusStr', title: "反馈状态", width:100,sortField:'submitFeedbackStatus'}
             ,{field: 'salerInstCode', title: '销售机构代码', width:200,sortField:'salerInstCode'}
             ,{field: 'salerOrgCode', title: '总部或分支机构编码', width:200,sortField:'salerOrgCode'}
