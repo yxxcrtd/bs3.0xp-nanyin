@@ -26,6 +26,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.util.DateUtil.DurationType;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.trdconfirm.dao.CfetsTrdConfirmMapper;
 import com.joyintech.tams.cfets.trdquery.dao.CfetsTrdQueryMapper;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdRepoTrade002Dto;
@@ -267,6 +268,13 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
     private CfetsTrdQueryMapper cfetsTrdQueryMapper;
     @Autowired
     private TrdTradeFeeTotalMapper trdTradeFeeTotalMapper;
+    /**
+     * 设置流程业务说明
+     */
+    @Override
+    public String generateTitle(CfetsTrdRepoTrade002Dto entity, OperationType type) {
+        return  "交易编号："+entity.getTotleTradeId()+"-"+"交易日期"+ ":" + DateUtil.format(entity.getTradeDate());
+    }
 	
     /**
      * 交易及存续期交易，保存进待办，点批量审批时候需要报错。
@@ -1005,15 +1013,6 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
                     ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/selectTradeInfo?tradeId="
                             + entity.getTradeId(),
                     BaseTradeProductDealDto.class);
-
-            // 提前查询判断  是否  撤销 并且是 有转仓交易 并且转仓交易方向ps为买入
-            String reverseTradeId = "";
-
-            TrdProductDeal reverseTrdProductDeal = trdCommonBaseService.selectZCDealByTid(entity.getTradeId(),false);
-            if (reverseTrdProductDeal != null && StringUtil.equals(DictCodeList.交易方向_买入.getValue(), reverseTrdProductDeal.getPs())) {
-                reverseTradeId = reverseTrdProductDeal.getTradeId();
-            }
-
             FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
             if (!StringUtil.isEmptyList(baseTradeProductDealDtoList)) {
                 for (BaseTradeProductDealDto baseDto : baseTradeProductDealDtoList) {
@@ -1021,7 +1020,7 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
                     baseDto.getTrdProductDeal().setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
                     baseDto.getTrdProductDeal().setCancelRemark(entity.getRevokeReason());
                     baseDto.setEntrustId(entity.getEntrustId());
-                    if (bussCommonMapperDelegateService != null) {
+                   /* if (bussCommonMapperDelegateService != null) {
                         PaTrdProductDeal paTrdProductDeal = bussCommonMapperDelegateService.selectBySinglePrimaryKey(
                                 PaTrdProductDealMapper.class, baseDto.getTrdProductDeal().getTradeId(),
                                 PaTrdProductDeal.class);
@@ -1030,8 +1029,6 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
                         paTrdProductDeal.setCreateTime(new Date());
                         paTrdProductDeal.setUpdateUser(paTrdProductDeal.getCreateUser());
                         paTrdProductDeal.setUpdateTime(paTrdProductDeal.getCreateTime());
-//                    bussCommonMapperDelegateService.insertBatch(PaTrdProductDealMapper.class,
-//                            paTrdProductDeal);
                         paTrdProductDealMapper.insertSelective(paTrdProductDeal);
 
                         PtlTrade ptlTrade = new PtlTrade();
@@ -1041,37 +1038,12 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
                         ptlTrade = bussCommonMapperDelegateService.selectByMultiPrimaryKey(PtlTradeMapper.class, ptlTrade, PtlTrade.class);
                         ptlTrade.setBusiNo(ptlTrade.getBusiNo() + BussinessConstant.TRADE_REVOKE_TRADE_ID_SPLIT_STR);
                         ptlTradeMapper.insertSelective(ptlTrade);
-//                    bussCommonMapperDelegateService.insertSelective(PtlTradeMapper.class, ptlTrade);
-                        PtlTrade actPtlTrade = new PtlTrade();
-                        BeanUtil.copyPropertiesIgnoreNull(actPtlTrade,ptlTrade);
-                        if (StringUtil.isNotEmpty(entity.getActPortfolioId()) && !entity.getActPortfolioId().equals(entity.getPortfolioId())) {
-                            actPtlTrade.setPortfolioId(entity.getActPortfolioId());
-                            actPtlTrade.setBusiNo(baseDto.getTrdProductDeal().getTradeId());
-                            actPtlTrade = bussCommonMapperDelegateService.selectByMultiPrimaryKey(PtlTradeMapper.class, actPtlTrade, PtlTrade.class);
-                            actPtlTrade.setBusiNo(ptlTrade.getBusiNo());
-//                        bussCommonMapperDelegateService.insertSelective(PtlTradeMapper.class, ptlTrade);
-                            ptlTradeMapper.insertSelective(actPtlTrade);
-                        }
-                    }
-                    String isExecute =restTemplate.getForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
-                            + "/CfetsQuotedCommon/checkExecIdHasQuote?execId="
-                            + entity.getfTradeId(),String.class);
-                    if(StringUtil.equals(isExecute, DictCodeList.是否_是.getValue())){
-                        //存在上行报价时，生效时，反冲可用流水
-                       //cstpCommonService.excuteQuotePositionData(entity.getEntrustId(), entity.getfTradeId(), true, entity.getTradeId());
-                    }
-
+                    }*/
                 }
                 finProductTradeDto.setAssetType2(entity.getRepoType());
                 finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_撤销.getValue());
                 finProductTradeDto.setBaseTradeProductDealDtos(baseTradeProductDealDtoList);
 
-                // 撤销时，子组合需要调估值共通
-               /* if (entity.getActPortfolioId() != null && !entity.getActPortfolioId().equals(entity.getPortfolioId())) {
-                    finProductTradeDto.getBaseTradeProductDealDtos().forEach(finProductTrade -> {
-                        finProductTrade.setActPortfolioId(entity.getActPortfolioId());
-                    });
-                }*/
                 // 查询质押券信息
                 if(entity.getBussRepoSec()!=null) {
                     finProductTradeDto.setBussRepoSec(entity.getBussRepoSec());
@@ -1083,65 +1055,16 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
                     initSearchParam.put("SEC_ACCT_ID", entity.getSecAcctId() != null ? entity.getSecAcctId() : entity.getChlId());
                     finProductTradeDto.setBussRepoSec(bussRepoSecService.selectBussRepoSec(initSearchParam));
                 }
-                // 调用业务组件.【金融产品交易共通.交易产品接口】, insert
-                // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[实际]的组合持仓流水及现金流水
-              //  baseTradeProductDealCommService.execute(finProductTradeDto);
                 cfetsTrdBondInvestTrade002Service.baseTradeCommExecute(finProductTradeDto);
-                /*if(!StringUtil.isNotEmpty(entity.getActPortfolioId())) {
-                    entity.setActPortfolioId(entity.getPortfolioId());
-                    entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(entity.getPortfolioId()));
-                }*/
-                /*if (StringUtil.isNotEmpty(entity.getActPortfolioId()) && !entity.getActPortfolioId().equals(entity.getPortfolioId())) {
-                    finProductTradeDto.getBaseTradeProductDealDtos().forEach(
-                            baseTradeProductDealDto1 -> baseTradeProductDealDto1.getTrdProductDealAdd().setPortfolioId(entity.getActPortfolioId()));
-                    baseTradeProductDealCommService.insertPosition(finProductTradeDto);
-                    finProductTradeDto.getBaseTradeProductDealDtos().forEach(
-                            baseTradeProductDealDto1 -> baseTradeProductDealDto1.getTrdProductDealAdd().setPortfolioId(entity.getPortfolioId()));
-                }*/
-            }
-            for (BaseTradeProductDealDto baseTradeProductDealDto : baseTradeProductDealDtoList) {
-                TrdProductDeal trdProductDeal = baseTradeProductDealDto.getTrdProductDeal();
-                //查询是否存在预交易
-                if (StringUtils.isNotEmpty(trdProductDeal.getfTradeId())) {
-                    Map<String, Object> paramPre = new HashMap<String, Object>();
-                    paramPre.put("CSTP_TRADE_ID", trdProductDeal.getfTradeId());
-                    // 获预交易编号
-                    List<TrdMatchInfo> preTradeIdList = restTemplate.postForList(
-                            ServiceApplication.TRADE_SERVICE_NAME + "/TrdRepoTrade/selectPreTradeId", paramPre,
-                            TrdMatchInfo.class);
-                    if (preTradeIdList != null && preTradeIdList.size() > 0) {
-                        for (TrdMatchInfo trdMatchInfo : preTradeIdList) {
-                            TrdProductDealPreKey key = new TrdProductDealPreKey();
-                            key.setTradeId(trdMatchInfo.getPreTradeId());
-                            key.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
-                            TrdProductDealPre trdProductDealPre = trdProductDealPreMapper.selectByPrimaryKey(key);
-                         /*   if (trdProductDealPre != null) {
-                                // 处理组合及指令头寸
-                                PreTrdCommonDto preTrdCommonDto = new PreTrdCommonDto();
-                                List<TrdProductDealPre> listTrdProductDealPre = new ArrayList<TrdProductDealPre>();
-                                listTrdProductDealPre.add(trdProductDealPre);
-                                List<TrdProductDealAddPre> listTrdProductDealAddPre = new ArrayList<TrdProductDealAddPre>();
-                                TrdProductDealAddPre trdProductDealAddPre = trdProductDealAddPreMapper
-                                        .selectByPrimaryKey(trdMatchInfo.getPreTradeId());
-                                listTrdProductDealAddPre.add(trdProductDealAddPre);
-                                preTrdCommonDto.setTrdProductDealPreList(listTrdProductDealPre);
-                                preTrdCommonDto.setTrdProductDealAddPreList(listTrdProductDealAddPre);
-                                preTrdCommonBaseService.excutePosition(preTrdCommonDto, false);
-                            }*/
-                        }
-                    }
-                }
             }
 //        // 撤销委托/回购交易时，删除回购质押品信息
-            // 转仓卖出无抵押品
-            entity.getBussRepoSec().setPageFrom("TrdRepoTrade003");
-            if(!"T02".equals(entity.getPs()) && Objects.nonNull(entity.getBussRepoSec())){
-                bussRepoSecService.deletePledgeBond(entity.getTradeId(), entity.getBussRepoSec().getPageFrom());
+            if(StringUtil.isNotEmpty(entity.getBussRepoSec())){
+                entity.getBussRepoSec().setPageFrom("TrdRepoTrade003");
+                if(!"T02".equals(entity.getPs()) && Objects.nonNull(entity.getBussRepoSec())){
+                    bussRepoSecService.deletePledgeBond(entity.getTradeId(), entity.getBussRepoSec().getPageFrom());
+                }
+                bussRepoSecService.insert(entity.getBussRepoSec(), entity.getTradeId()+ BussinessConstant.TRADE_REVOKE_TRADE_ID_SPLIT_STR);
             }
-            bussRepoSecService.insert(entity.getBussRepoSec(), entity.getTradeId()+ BussinessConstant.TRADE_REVOKE_TRADE_ID_SPLIT_STR);
-
-            // 写入质押品的组合持仓流水
-         //   this.ptlSecPositionFlowLogic(entity, true);
 
             //basRiskMathCommService.insert(entity.getRiskTrialRetDto(), entity.getTradeId() + BussinessConstant.TRADE_REVOKE_TRADE_ID_SPLIT_STR);
 
@@ -1159,7 +1082,7 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
                     Arrays.asList(entity.getTradeId()), Boolean.class);
 
 
-//        // 一体化对应etliu end
+
             for (BaseTradeProductDealDto baseTradeProductDealDto : baseTradeProductDealDtoList) {
                 // 调用投管接口 add by wm 20190218 start
                 InvestInterfCommDto investInterfCommDto = new InvestInterfCommDto();
@@ -1171,22 +1094,12 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
                 investInterfCommDto.setFinTradeProduct(entity.getFinTradeProduct());
 //     		investInterfCommDto.setStlPayOrders(entity.getStlPayOrders());
                 investInterfCommService.doInvestInterf(investInterfCommDto);
-                // 调用投管接口 add by wm 20190218 end
             }
 
             //删除授信占用
-            if (null != entity.getTradeId()){
+           /* if (null != entity.getTradeId()){
                 riskCreditListCommonValidatorService.deleteCredit(entity.getTradeId());
-            }
-
-            if(StringUtil.isNotEmpty(reverseTradeId)){
-
-                TrdProductDeal trdProductDeal = new TrdProductDeal();
-                trdProductDeal.setTradeId(reverseTradeId);
-                trdProductDeal.setCancelRemark(entity.getCancelRemark());
-                commonBusinessService.revokeReverseTrade(trdProductDeal,false);
-
-            }
+            }*/
 
         }
 

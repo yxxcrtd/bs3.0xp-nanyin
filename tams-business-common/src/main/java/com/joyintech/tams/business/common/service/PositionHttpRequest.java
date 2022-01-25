@@ -44,7 +44,8 @@ public class PositionHttpRequest {
      * @throws PositionException
      */
     public static void send(Object req) throws PositionException{
-        // 
+        //
+        logger.info("发送头寸报文:"+JsonUtils.object2Json(req));
         String res = sendPrivate(req);
         logger.info("头寸返回数据:"+res);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
@@ -95,6 +96,7 @@ public class PositionHttpRequest {
             throw new PositionException("头寸更新异常：" + message);
         } else{
             String jsonStr = JsonUtils.object2Json(req);
+            logger.info("发送头寸报文:"+jsonStr);
             BaseMap reqMap = JsonUtils.json2Object(jsonStr, BaseMap.class);
             String errorMsg = message != null?message.get("message") + "":"头寸返回数据为空";
             revoke(reqMap.getString("totalTradeId"), reqMap.getString("modelType"), errorMsg);
@@ -112,6 +114,7 @@ public class PositionHttpRequest {
                 .put("modelType", modelType)
                 .put("userId", LoginUserUtil.getUserName())
                 .put("interfaceType", interfaceType);
+        logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
         String msg = cancel(bm);
         Map message = JsonUtils.json2Object(msg, Map.class);
         if (message == null) {
@@ -138,6 +141,7 @@ public class PositionHttpRequest {
                 .put("modelType", modelType)
                 .put("userId", LoginUserUtil.getUserName())
                 .put("interfaceType", "Bond001");
+        logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
         cancel(bm);
         throw new PositionException(e.getMessage());
     }
@@ -148,6 +152,7 @@ public class PositionHttpRequest {
                 .put("modelType", modelType)
                 .put("userId", LoginUserUtil.getUserName())
                 .put("interfaceType", "Bond001");
+        logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
         try {
             cancel(bm);
         } catch (Exception e) {
@@ -163,6 +168,7 @@ public class PositionHttpRequest {
                 .put("modelType", modelType)
                 .put("userId", LoginUserUtil.getUserName())
                 .put("interfaceType", interfaceType);//"Bond001"
+        logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
         String res = cancel(bm);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){
@@ -182,6 +188,7 @@ public class PositionHttpRequest {
                 .put("busiType", busiType)
                 .put("ps", ps)
                 ;
+        logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
         String res = delete(bm);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){
@@ -198,6 +205,7 @@ public class PositionHttpRequest {
                 .put("busiType", busiType)
                 .put("ps", ps)
                 ;
+        logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
         String res = revoke(bm);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){
@@ -259,6 +267,7 @@ public class PositionHttpRequest {
      */
     public static void batchClose(Object req) throws PositionException{
         //
+        logger.info("发送头寸报文:"+JsonUtils.object2Json(req));
         String res = batchClosePrivate(req);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){

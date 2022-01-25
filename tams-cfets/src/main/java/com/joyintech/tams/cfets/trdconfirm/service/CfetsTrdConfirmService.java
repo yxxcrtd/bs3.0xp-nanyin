@@ -1385,6 +1385,8 @@ public class CfetsTrdConfirmService extends BaseService{
         // 对手方交易员
         entity.setCounterTrader(dtoReg.getCounterTrader());
 
+        entity.setTradeMarketMode(BussinessDictCodeList.交易市场_二级市场.getValue());
+
         if(StringUtil.equals(dtoReg.getTradeMarket(),DictCodeListExt1.交易场所_银行间.getValue())){
             entity.setTradePlat(DictCodeList.交易平台_外汇交易中心.getValue());
         }else{
@@ -2364,8 +2366,6 @@ public class CfetsTrdConfirmService extends BaseService{
     /**
      * CSTP成交回报-手工匹配
      */
-    @Transactional(rollbackFor = Exception.class)
-    @DTXTransaction
     public AjaxResult cstpManualMatchMethod(CfetsTrdConfirmManualMatchInfoRequest manualMatchDto){
         //判断基础要素是否一致
         CfetsTrdConfirmRegInfoListResponse regInfo = manualMatchDto.getSelectedCfetsTrdConfirmRegInfoList().get(0);

@@ -630,7 +630,6 @@
         ic.FPRICE_AMT  as tradeAmt,
         ic.ou_trader_id as trader,
         ic.quote_date as tradeDate,
-        ic.cp_party_id as counterId,
         ic.quote_type as quoteType,
         ic.remark as remark,
         ic.QUOTE_ID as totleTradeId,
@@ -651,7 +650,8 @@
         ic.basis basis,
         ic.m_int_amt as mintAmt,
         ic.V_SETTLE_DATE as vsettleDate,
-        ic.M_SETTLE_DATE as msettleDate
+        ic.M_SETTLE_DATE as msettleDate,
+        ic.share_amt as shareAmt
         from IBU_QUOTE_CREP ic
         left join trdquto_match_info match
         on ic.QUOTE_ID=match.pre_trade_id

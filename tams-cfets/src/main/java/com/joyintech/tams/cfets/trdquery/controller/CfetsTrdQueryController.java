@@ -466,6 +466,7 @@ public class CfetsTrdQueryController extends BaseController {
                 //质押式回购
 
                 CfetsTrdRepoTrade002Dto inputDto =cfetsTrdRepoTrade002Service.getTrdRepoInvestTradeDto(item.getTotleTradeId());
+                item.setWorkflowParameter("revoke|xf||1|CfetsTrdRepoTrade002|CfetsTrdRepoTrade002_btn_revoke|false");
                 inputDto.setWorkflowParameter(item.getWorkflowParameter());
 
                 ProcessParameter<CfetsTrdRepoTrade002Dto> processParameter = new ProcessParameter<>();

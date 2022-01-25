@@ -1372,7 +1372,7 @@
         </where>
     </sql>
     <select id="selectIbuBondFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryIbuInfoListResponse">
-        select null as  dialogueRecord,
+        select distinct null as  dialogueRecord,
         ib.ou_party_id as traderid,
         mccit.PARTY_ABBR as traderidStr,
         nvl(su1.TRADER_NAME,ib.ou_trader_id) as trader,
@@ -1481,7 +1481,7 @@
         where ib.quote_id= #{quoteId,jdbcType=VARCHAR}
         and decode(ib.trade_status,'15',#{STATUS_VALID_03},#{STATUS_VALID_01})= #{effectiveStatus,jdbcType=VARCHAR}
         union all
-        select null as  dialogueRecord,
+        select distinct null as  dialogueRecord,
         ib.ou_party_id as traderid,
         mccit.PARTY_ABBR as traderidStr,
         nvl(su1.TRADER_NAME,ib.ou_trader_id) as trader,
@@ -1589,7 +1589,7 @@
         and #{STATUS_VALID_04}= #{effectiveStatus,jdbcType=VARCHAR}
     </select>
     <select id="selectIbuRepoFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryIbuInfoListResponse">
-        select
+        select distinct
         ic.ou_party_id as traderid,
         mccit.PARTY_ABBR as traderidStr,
         nvl(su1.TRADER_NAME, ic.ou_trader_id) as trader,
@@ -1637,7 +1637,7 @@
         where ic.quote_id= #{quoteId,jdbcType=VARCHAR}
         and decode(ic.trade_status,'15',#{STATUS_VALID_03},#{STATUS_VALID_01})= #{effectiveStatus,jdbcType=VARCHAR}
         union all
-        select
+        select distinct
         ic.ou_party_id as traderid,
         mccit.PARTY_ABBR as traderidStr,
         nvl(su1.TRADER_NAME, ic.ou_trader_id) as trader,
@@ -1692,8 +1692,8 @@
         ir.share_amt/100 as faceValue,
         ir.DEAL_FEE_AMT as trdFeeAmt,
         ir.SETT_FEE_AMT as settleFeeAmt,
-        ir.cprice_amt as cpriceAmt,
-        ir.int_amt as intAmt,
+        nvl(ir.cprice_amt,ir.share_amt*ibd.unit_cprice) as cpriceAmt,
+        nvl(ir.int_amt,ir.fprice_amt-(ir.share_amt*ibd.unit_cprice)) as intAmt,
         ir.fprice_amt as fpriceAmt,
         EE.PRICE_MODEL as priceModel,
         EE.BUSINESS_MODEL as businessModel,
@@ -1786,8 +1786,8 @@
         ir.share_amt/100 as faceValue,
         ir.DEAL_FEE_AMT as trdFeeAmt,
         ir.SETT_FEE_AMT as settleFeeAmt,
-        ir.cprice_amt as cpriceAmt,
-        ir.int_amt as intAmt,
+        nvl(ir.cprice_amt,ir.share_amt*ibd.unit_cprice) as cpriceAmt,
+        nvl(ir.int_amt,ir.fprice_amt-(ir.share_amt*ibd.unit_cprice)) as intAmt,
         ir.fprice_amt as fpriceAmt,
         EE.PRICE_MODEL as priceModel,
         EE.BUSINESS_MODEL as businessModel,
@@ -2893,12 +2893,6 @@
         <result column="ouTraderIdStr"       property="ouTraderIdStr"      jdbcType="VARCHAR" />
         <result column="counterIdStr"       property="counterIdStr"      jdbcType="VARCHAR" />
         <result column="counterTraderStr"       property="counterTraderStr"      jdbcType="VARCHAR" />
-        <association property="trdInvestPersonInfo" javaType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdInvestPersonInfoDto">
-            <result column="TRADER"             property="trader"           jdbcType="VARCHAR" />
-            <result column="COUNTER_ID"         property="counterId"        jdbcType="VARCHAR" />
-            <result column="COUNTER_TRADER"     property="counterTrader"    jdbcType="VARCHAR" />
-            <result column="COUNTER_CONTACT"    property="contactInfo"   jdbcType="VARCHAR" />
-        </association>
     </resultMap>
 
     <select id="getTrdRepoInvestTradeDto" resultMap="trdRepoInvestTradeFullResultMap">
@@ -2944,6 +2938,19 @@
         ,nvl(t3.real_name,tpd.TRADER) as ouTraderIdStr
         ,nvl(t1.counter_name,tpd.COUNTER_ID) as counterIdStr
         ,nvl(t4.TRADER_NAME,tpd.COUNTER_TRADER) as counterTraderStr
+        , '1' as repoType
+        ,ftp.term as term
+        ,tpd.rate as rate
+        ,null as settCcy
+        ,null as disFaceValue
+        ,null as mdeliveryType
+        ,null as vsettleDate
+        ,null as msettleDate
+        ,null as mIntAmt
+        ,null as mtradeAmt
+        ,null as actRepoTerm
+        ,null as termType
+        ,null as basis
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL tpd
         LEFT JOIN TRD_DEAL_TOTAL_ADD tpda ON tpda.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
         LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL ptpd ON ptpd.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
@@ -2952,6 +2959,7 @@
         and det.IS_PAY_WITH_TRADE=#{Y}
         LEFT JOIN PTL_PORTFOLIO PP ON tpd.PORTFOLIO_ID = PP.PORTFOLIO_ID
         left join trd_product_deal on TRD_PRODUCT_DEAL.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
+        left join fin_trade_product ftp on trd_product_deal.trade_id=ftp.finprod_id
         left join trdquto_match_info match on tpd.TOTLE_TRADE_ID=match.trd_id
         LEFT JOIN TRD_TRADE_FEE_TOTAL ttft ON tpd.TOTLE_TRADE_ID = ttft.TOTLE_TRADE_ID AND ttft.fee_type ='B06'
         LEFT JOIN TRD_TRADE_FEE_TOTAL ttft1 ON tpd.TOTLE_TRADE_ID = ttft1.TOTLE_TRADE_ID AND ttft1.fee_type = 'B08'
@@ -2959,7 +2967,7 @@
         left join MST_CFETS_CUSTOMER_INFO t2 on t2.PARTY_ID= tpda.ou_party_id
         left join sys_user t3 on t3.user_name=tpd.TRADER
         left join MST_CFETS_CUSTOMER_TRADER t4 on t4.TRADER_ID=tpd.COUNTER_TRADER
-        WHERE tpd.TOTLE_TRADE_ID = #{tradeId}
+        WHERE tpd.TOTLE_TRADE_ID = #{totleTradeId}
     </select>
 </mapper>
 

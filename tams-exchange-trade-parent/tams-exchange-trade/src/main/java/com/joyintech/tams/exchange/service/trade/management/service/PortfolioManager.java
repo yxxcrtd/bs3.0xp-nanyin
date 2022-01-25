@@ -815,7 +815,15 @@ public class PortfolioManager extends BaseService {
             Instruction maxInstruction = singleList.stream().max(Comparator.comparing(Instruction::getConPrice)).get();
             long totalExceptMaxVolume = singleList.stream().filter(item -> !item.getEntrustId().equals(maxInstruction.getEntrustId()))
                     .mapToLong(item -> item.getConNum().longValue()).sum();
-            maxInstruction.setConNum(BigDecimal.valueOf(ins.getEntrustNum() - totalExceptMaxVolume));
+            Long tailVolume = ins.getTermDays().longValue() - totalExceptMaxVolume;
+            BigDecimal tailAmt = NumberUtil.mul(tailVolume, result.getPrice());
+            log.debug("尾插处理，组合名称 = [{}], 组合编号 = [{}], 原委托数量 = [{}], 现委托数量 = [{}]，现委托金额 = [{}]",
+                    maxInstruction.getPortfolioName(),
+                    maxInstruction.getPortfolioId(),
+                    maxInstruction.getConNum(),
+                    tailVolume,
+                    tailAmt);
+            maxInstruction.setConNum(BigDecimal.valueOf(tailVolume));
             // 重新计算占比；赋值委托数量，委托金额
             for (Instruction item : singleList) {
                 item.setConPrice(ArithmeticUtil.divide(item.getConNum(), BigDecimal.valueOf(result.getTotalEntrustVolume()), 4));
