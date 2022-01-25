@@ -293,7 +293,6 @@
         left join STL_SEC_ACCT_INFO ssa ON WFL_ETR_ENTRUST_ADD.SEC_ACCT_ID = ssa.SEC_ACCT_ID
         LEFT JOIN SYS_USER su1 ON WFL_ETR_ENTRUST.INV_MANAGER_ID = su1.USER_NAME
         <where>
-            AND WFL_ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustInwfl})
             <if test="entrustStatusList != null and entrustStatusList.size() > 0">
                 AND WFL_ETR_ENTRUST.ENTRUST_STATUS IN
                 <foreach collection="entrustStatusList" item="item" open="(" close=")" separator=",">
