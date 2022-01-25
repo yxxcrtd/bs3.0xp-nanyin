@@ -858,7 +858,6 @@ public class ExcelUitl {
 
 	public static void downFile(HttpServletResponse response,File file) {
 		OutputStream os = null;
-		File path = null;
 		try {
 			os = response.getOutputStream();
 			response.setContentType("text/vnd.ms-excel;charset=UTF-8");
@@ -876,7 +875,6 @@ public class ExcelUitl {
 		} finally {
 			try {os.close();} catch (IOException e) {e.printStackTrace();}
 			file.delete();
-			path.delete();
 		}
 	}
 }
