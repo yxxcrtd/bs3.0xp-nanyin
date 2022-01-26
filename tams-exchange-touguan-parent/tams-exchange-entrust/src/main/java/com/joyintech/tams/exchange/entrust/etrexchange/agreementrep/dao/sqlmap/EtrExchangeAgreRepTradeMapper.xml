@@ -506,18 +506,7 @@
         nvl(fp.FINPROD_NAME,fp.FINPROD_ABBR) stockName,
         nvl(fp.FINPROD_MARKET_ID,fin_deal_pledge.pledge_finprod_id) stockCode,
         fin_deal_pledge.Pledge_Ratio * 100 discountRate, /** 折算率 **/
-        case
-        when fin_trade_product.Trade_Market = #{TRADE_PLACE_03} then
-            fin_deal_pledge.Pledge_Number/10
-        else
-            fin_deal_pledge.Pledge_Number
-        end as repSecNum, /** 质押券数量  **/
-        case
-        when fin_trade_product.Trade_Market = #{TRADE_PLACE_03} then
-            #{UNIT_04}
-        else
-            #{UNIT_01}
-        end as pledgeUnit, /** 质押券单位  **/
+        fin_deal_pledge.Pledge_Number repSecNum, /** 质押券数量  **/
         fin_deal_pledge.Pledge_Face_Value pledgeFaceValue,/** 质押券面值**/
         fin_deal_pledge.Pledge_Face_Value * fin_deal_pledge.Pledge_Number pledStrdPrinAmt, /** 质押券面总额 **/
         fin_trade_product.Prin tradeAmt, /** 回购金额 **/
