@@ -255,4 +255,10 @@
         STATUS = 'E'
         and SALER_ORG_NAME = #{salerOrgName,jdbcType=VARCHAR}
     </select>
+
+    <select id="checkSalerInsNoImport" resultType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto">
+        select  SALER_INS_NO  salerInsNo
+        from CHB_SALER_IDEN_INFO
+        where status = 'E'
+    </select>
 </mapper>
