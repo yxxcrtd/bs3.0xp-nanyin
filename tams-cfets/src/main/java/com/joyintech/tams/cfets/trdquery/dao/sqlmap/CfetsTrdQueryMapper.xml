@@ -2456,7 +2456,7 @@
         match.exe_id as execid,
         t1.counter_id as counterId,
         T6.counter_name counterIdStr,
-        t1.remark,
+        tot.remark,
         nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode
         from trd_product_deal t1
         left join trd_product_deal_add t2 on t1.trade_id=t2.trade_id
