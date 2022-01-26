@@ -466,10 +466,11 @@ public class CfetsTrdQueryController extends BaseController {
             }else if(StringUtil.equals(item.getFinprodType2(),DictCodeListExt1.金融产品类型_债券质押式正回购.getValue())
                     || StringUtil.equals(item.getFinprodType2(),DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue())){
                 //质押式回购
-
+                String totleTradeId = item.getTotleTradeId();
                 CfetsTrdRepoTrade002Dto inputDto =cfetsTrdRepoTrade002Service.getTrdRepoInvestTradeDto(item.getTotleTradeId());
+                inputDto.setRevokeReason(input.getRevokeReason());
                 inputDto.setWorkflowParameter(item.getWorkflowParameter());
-
+                inputDto.setTotleTradeId(totleTradeId + "R");
                 ProcessParameter<CfetsTrdRepoTrade002Dto> processParameter = new ProcessParameter<>();
                 WorkFlowParameter<CfetsTrdRepoTrade002Dto> workFlowParameter = new WorkFlowParameter<>();
                 processParameter.setWorkFlowParameter(workFlowParameter);

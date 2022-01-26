@@ -2678,8 +2678,8 @@
         TPD.UNIT_CPRICE unitPrice,
         ftp.m_int_amt as mintAmt,
         ftp.m_trade_amt as mtradeAmt,
-        null as disFaceValue,
-        ftp.int_rate as rate
+        pledges.disFaceValue as disFaceValue,
+        ftp.int_rate*100 as rate
         FROM TRD_PRODUCT_DEAL TPD
         INNER JOIN TRD_PRODUCT_DEAL_ADD TPDA on TPD.TRADE_ID = TPDA.TRADE_ID
         <if test="userName != null and userName != ''">
@@ -2694,6 +2694,9 @@
         LEFT JOIN ETR_FINISH_STATUS efs ON ee.Entrust_Id = efs.entrust_id AND TPD.TRADE_ID = efs.trade_id
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpd.sec_manage_acct_id = ssai.SEC_ACCT_ID
         left join fin_trade_product ftp on ftp.finprod_id=TPD.TRADE_ID
+        left join (select pledge.finprod_id,sum(pledge.pledge_number*100) as disFaceValue
+                    from FIN_DEAL_PLEDGE pledge group by pledge.finprod_id)pledges
+        on ftp.finprod_id=pledges.finprod_id
         where TPD.TOTLE_TRADE_ID = #{totleTradeId} and  TPD.Trade_Status='01'
         <if test="busiCode != null and busiCode != ''">
             and TPD.TRADE_ID=#{busiCode}
@@ -2922,7 +2925,7 @@
         nvl(tpd.INV_AIM,trd_product_deal.INV_AIM) INV_AIM,
         tpd.F_TRADE_ID,
         tpd.SEC_MANAGE_ACCT_ID, nvl(tpd.CCY,trd_product_deal.CCY) CCY,
-        tpd.SHARE_AMT * 100 as TRADE_AMT,
+        tpd.TRADE_AMT as TRADE_AMT,
         nvl(tpda.OUR_SHARE_AMT, tpd.SHARE_AMT) * 100 ownTradeAmt,
         tpd.UNIT_CPRICE,
         tpd.UNIT_INT, tpd.UNIT_FPRICE,
@@ -2994,8 +2997,8 @@
         select rp.pledge_finprod_id as finprodId,
         fp.finprod_market_id as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
-        null as portfolioId,
-        null as portfolioName,
+        tpda.portfolio_id as portfolioId,
+        pp.portfolio_name as portfolioName,
         sum(rp.pledge_number)/100 as pledgePrin,
         rp.pledge_ratio*100 as pledgeRate,
         mbvi.NETPRICE as firstNetPrice,
@@ -3003,8 +3006,9 @@
         from FIN_DEAL_PLEDGE rp
         left join trd_product_deal deal
         on rp.finprod_id=deal.trade_id
-        left join fin_product fp
-        on fp.finprod_id=rp.pledge_finprod_id
+        left join fin_product fp on fp.finprod_id=rp.pledge_finprod_id
+        left join trd_product_deal_add tpda on tpda.trade_id=rp.finprod_id
+        LEFT JOIN PTL_PORTFOLIO PP ON tpda.PORTFOLIO_ID = PP.PORTFOLIO_ID
         LEFT JOIN (
         SELECT
         T2.SEC_ID,
@@ -3036,6 +3040,8 @@
         group by rp.pledge_finprod_id,
         fp.finprod_market_id,
         fp.finprod_abbr,
+        tpda.portfolio_id,
+        pp.portfolio_name,
         rp.pledge_ratio,
         mbvi.NETPRICE,
         fp.REGIST_ORG

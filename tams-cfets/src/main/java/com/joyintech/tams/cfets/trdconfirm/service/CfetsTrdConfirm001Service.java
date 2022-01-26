@@ -466,7 +466,12 @@ public class CfetsTrdConfirm001Service extends BaseService{
 
         entity.getTradeFeeList().forEach(
                 trdTradeFeeDetail -> trdTradeFeeDetailMapper.insertSelective(trdTradeFeeDetail));
-
+        //改造保存结算费经手费
+        for(TrdTradeFeeTotal trdTradeFeeDetail:entity.getTrdTradeFeeTotals()){
+            if(!BigDecimal.ZERO.equals(trdTradeFeeDetail.getFeeAmt())){
+                trdTradeFeeTotalMapper.insertSelective(trdTradeFeeDetail);
+            }
+        }
         // 7.1登录各业务表，包括金融产品交易、金融产品附属、划款指令及附件信息
         StlPayOrders stlPayOrders = new StlPayOrders();
         for (BussTrdTransferOrderDto dto : entity.getBussTrdTransferOrder()) {
