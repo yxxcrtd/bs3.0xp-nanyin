@@ -198,4 +198,11 @@ public interface CfetsTrdQueryMapper {
      * @return
      */
     CfetsTrdRepoTrade002Dto getTrdRepoInvestTradeDto(Map<String, Object> params);
+    /**
+     * 查询交易质押券
+     *
+     * @param pageParam 参数
+     * @return List<CfetsPledgeInfoResponse>
+     */
+    List<CfetsPledgeInfoResponse> findPledgeInfoList(Map<String, Object> pageParam);
 }

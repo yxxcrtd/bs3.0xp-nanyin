@@ -38,13 +38,7 @@
             ,disabled:true
         }
         ,{
-            field: 'unFinshAmt', width: 100, title: '剩余指令额度（万元）',  sortable: false
-            ,disabled:true
-            ,type: 'number'
-            ,digit: 2
-        }
-        ,{
-            field: 'qtyd', width: 100, title: '券面总额（万元）',  sortable: false
+            field: 'tradeAmt', width: 100, title: '交易金额（元）',  sortable: false
             ,disabled:true
             ,type: 'number'
             ,digit: 2
@@ -62,19 +56,19 @@
             ,digit: 2
         }
         ,{
-            field: 'cpriceAmt', width: 100, title: '净价总额（元）',  sortable: false
+            field: 'mintAmt', width: 100, title: '回购利息（元）',  sortable: false
             ,disabled:true
             ,type: 'number'
             ,digit: 2
         }
         ,{
-            field: 'intAmt', width: 100, title: '应计利息总额（元）',  sortable: false
+            field: 'mtradeAmt', width: 100, title: '到期结算金额（元）',  sortable: false
             ,disabled:true
             ,type: 'number'
             ,digit: 2
         }
         ,{
-            field: 'fpriceAmt', width: 100, title: '全价总额（元）',  sortable: false
+            field: 'disFaceValue', width: 100, title: '质押券折算总额（元）',  sortable: false
             ,disabled:true
             ,type: 'number'
             ,digit: 2
@@ -84,34 +78,13 @@
             ,disabled:true
         }
         ,{
-            field: 'busiTypePositionStr', width: 100, title: '业务模式',  sortable: false
-            ,disabled:true
-        }
-        ,{
-            field: 'secAcctId', width: 100, title: '证券账户',  sortable: false
-            ,disabled:true
-        }
-        ,{
-            field: 'unitPrice', width: 100, title: '净价（元）',  sortable: false
-            ,disabled:true
-            ,type: 'number'
-            ,digit: 2
-        }
-        ,{
-            field: 'matureYield', width: 100, title: '到期收益率（%）',  sortable: false
-            ,disabled:true
-            ,type: 'number'
-            ,digit: 2
-        }
-        ,{
-            field: 'exeYield', width: 100, title: '行权收益率（%）',  sortable: false
+            field: 'rate', width: 100, title: '回购利率（%）',  sortable: false
             ,disabled:true
             ,type: 'number'
             ,digit: 2
         }
 
     ]
-
     var table = query("#bussCombDistribtTable").joyintable({
         data:getBussCombDistribtTableParams(),
         cols: colsCombDistribt,
@@ -121,7 +94,59 @@
         checkbox: false,
         height: 290
     });
-
+    function getBussCombPledgeTableParams() {
+       var entityBussCombPledgeList=entity_CfetsPledgeList||[];
+       return entityBussCombPledgeList;
+    }
+    var colsCombPledge = [
+        {
+            field: 'finprodMarketId', width: 100, title: '债券代码',  sortable: false
+            ,disabled:true
+        }
+        ,{
+            field: 'finprodAbbr', width: 100, title: '债券简称',  sortable: false
+            ,disabled:true
+        }
+        ,{
+            field: 'portfolioId', width: 100, title: '组合代码',  sortable: false
+             ,disabled:true
+         }
+         ,{
+             field: 'portfolioName', width: 100, title: '组合名称',  sortable: false
+             ,disabled:true
+         }
+        ,{
+            field: 'pledgePrin', width: 100, title: '质押券面总额（万元）',  sortable: false
+            ,disabled:true
+            ,type: 'number'
+            ,digit: 2
+        }
+        ,{
+            field: 'firstNetPrice', width: 100, title: '首次净价（元）',  sortable: false
+            ,disabled:true
+            ,type: 'number'
+            ,digit: 2
+        }
+        ,{
+            field: 'pledgeRate', width: 100, title: '折算比例（%）',  sortable: false
+            ,disabled:true
+            ,type: 'number'
+            ,digit: 2
+        }
+        ,{
+            field: 'repRegistOrgStr', width: 100, title: '登记托管机构',  sortable: false
+            ,disabled:true
+        }
+    ]
+    var table = query("#bussCombPledgeTable").joyintable({
+        data:getBussCombPledgeTableParams(),
+        cols: colsCombPledge,
+        page: true,
+        addToLast: true,
+        searchOnInit: true,
+        checkbox: false,
+        height: 290
+    });
     var init = function () {
        debugger;
     }

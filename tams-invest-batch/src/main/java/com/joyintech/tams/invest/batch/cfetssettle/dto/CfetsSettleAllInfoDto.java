@@ -56,6 +56,8 @@ public class CfetsSettleAllInfoDto {
     private String tgBusiType;
     //币种
     private String ccy;
+    //业务类型
+    private String busiType;
 
     @Valid
     private List<CfetsSettleDetailInfoDto> cfetsSettleDetailInfoDtoList;
@@ -194,5 +196,13 @@ public class CfetsSettleAllInfoDto {
 
     public void setCcy(String ccy) {
         this.ccy = ccy;
+    }
+
+    public String getBusiType() {
+        return busiType;
+    }
+
+    public void setBusiType(String busiType) {
+        this.busiType = busiType;
     }
 }

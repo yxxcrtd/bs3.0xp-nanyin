@@ -311,7 +311,6 @@ public class CfetsTrdConfirm001Service extends BaseService{
             this.assetDebtCbReportLogic_7_4(entity);
 
             //basRiskMathCommService.insert(entity.getRiskTrialRetDto(), entity.getTotleTradeId());
-
             //无下行时，插入下行成交匹配关系.有下行时，手工匹配或自动匹配插入下行成交匹配表
             String support_cstp_flag_bond=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_BOND");
 
@@ -566,6 +565,21 @@ public class CfetsTrdConfirm001Service extends BaseService{
                     cfetsTrdConfirmMapper.insertTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
                 }
             }
+        }
+        // 选择的成交编号存在对应的报价，则不影响风险
+        if (!StringUtil.isEmptyList(entity.getDtoList()) && !StringUtil.isNotBlank(entity.getfTradeId())) {
+            try {
+                for (CfetsTrdRepoTrade003Dto item : entity.getDtoList()) {
+                    TrdRepoTrade002Dto repoDto=new  TrdRepoTrade002Dto();
+                    BeanUtil.copyPropertiesIgnoreNull(repoDto, item);
+                    interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
+                            BussinessDictCodeListRds.接口系统ID_实占接口.getValue(), DictCodeList.平安资产类型_质押式回购.getValue(),
+                            (en) -> interfRiskRdsService.sendRiskRdsData(repoDto, en));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
         //更新操作记录日志

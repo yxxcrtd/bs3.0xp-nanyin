@@ -105,6 +105,9 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                         selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
                             return StringUtil.equals(option.getId(),ps) ;
                         }).collect(Collectors.toList());
+                        for (SelectOptionDto option : selectOptionDtos){
+                            option.setObject(map.get(option.getId()));
+                        }
                         return selectOptionDtos;
                     } else if (StringUtils.equals(ps, DictCodeListExt3.交易方向_质押券入库.getValue())) {
                         String converseRatio = etrExchangeTradeCommon001Service.selectStdsecConverseRatio(param);
@@ -114,6 +117,13 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                         }
                     } else {
                         map.put(ps, dto.getDeclaredPrice());
+                    }
+                }else{
+                    if (StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())){
+                        map.put(DictCodeListExt2.交易方向_配股.getValue(), dto.getDeclaredPrice());
+                    }
+                    if (StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
+                        map.put(DictCodeListExt3.交易方向_配债.getValue(), dto.getDeclaredPrice());
                     }
                 }
             }

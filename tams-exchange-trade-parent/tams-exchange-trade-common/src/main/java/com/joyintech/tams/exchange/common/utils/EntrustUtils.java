@@ -7,6 +7,7 @@ import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.constant.*;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
+import com.joyintech.tams.exchange.common.constant.joyin.InstructionPriceMode;
 import com.joyintech.tams.exchange.common.constant.joyin.InvestmentAssetType1;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.Instrument;
@@ -595,6 +596,11 @@ public class EntrustUtils {
     public static boolean isPledgegreementRepurchase(Instruction instruction) {
         return InvestmentAssetType.PLEDGE_REPURCHASE.value.equals(instruction.getAssetType())
                 && InvestmentAssetType1.NEGOTIATED_REPO.value.equals(instruction.getAssetType1());
+    }
+
+    // 是否为市价指令
+    public static boolean isMarketPrice(Instruction instruction) {
+        return InstructionPriceMode.MARKET.value.equals(instruction.getPriceMode());
     }
 
     // 判断是否为需要进行自成交检测的业务

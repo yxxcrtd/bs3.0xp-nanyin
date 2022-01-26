@@ -67,7 +67,8 @@
         reg.unit_cprice as unitCprice,
         reg.yield*100 as yield,
         reg.exer_yield*100 as exerYield,
-        reg.rate*100 as rate
+        reg.rate*100 as rate,
+        reg.m_trade_amt as mtradeAmt
         from reg_fin_product_deal_total reg
         left join reg_fin_product_deal_total_add regAdd
         on reg.totle_trade_id=regAdd.Totle_Trade_Id
@@ -284,7 +285,8 @@
         ibd.unit_cprice as unitCprice,
         ibd.yield*100 as yield,
         ibd.exer_yield*100 as exerYield,
-        null as rate
+        null as rate,
+        null as mtradeAmt
         from ibu_quote_bond ib
         inner join ibu_quote_bond_det ibd
         on ib.quote_id=ibd.quote_id
@@ -401,7 +403,8 @@
         null as unitCprice,
         null as yield,
         null as exerYield,
-        ic.rate as rate
+        ic.rate*100 as rate,
+        ic.M_TRADE_AMT as mtradeAmt
         from ibu_quote_crep ic
         left join (
         select I.quote_id,
@@ -913,7 +916,8 @@
         nvl(ts.settdate,tr.dealdate) as settleDate,
         icpledge.pledgeFinprodId as pledgeFinprodIds,
         icpledge.pledgeRatio as pledgeRatios,
-        icpledge.pledgeFaceValue as pledgeFaceValues
+        icpledge.pledgeFaceValue as pledgeFaceValues,
+        tr.MDEALAMT as mtradeAmt
         from INTERF_CSTP_TRADE I
         INNER JOIN (SELECT EXECID ,MAX(UPDATETIME) UPDATETIME FROM  INTERF_CSTP_TRADE GROUP BY EXECID)	II ON  II.EXECID = I.EXECID AND II.UPDATETIME = I.UPDATETIME
         left join INTERF_OPICS_TRAD_REPO tr on tr.oritradeid = I.EXECID
@@ -946,7 +950,8 @@
         on  tr.oritradeid=icpledge.tradeid
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_customer_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON I.Counterinstitutioncode= mccic.party_customer_id
-        where I.BUSINESSTYPE in ('BOND','REPO') and   nvl(ts.dealdate,tr.dealdate)= #{sysDate,jdbcType=DATE}
+        where ((I.BUSINESSTYPE='BOND' and 'Y'= #{bondSupportFlag,jdbcType=VARCHAR}) or (I.BUSINESSTYPE ='REPO' and 'Y'= #{repoSupportFlag,jdbcType=VARCHAR}))
+        and   nvl(ts.dealdate,tr.dealdate)= #{sysDate,jdbcType=DATE}
         AND NOT EXISTS (SELECT 1 FROM trdquto_match_info match where I.EXECID=match.exe_id)
         <if test="regAssetType != null  and regAssetType!=''">
             AND I.BUSINESSTYPE = #{regAssetType}

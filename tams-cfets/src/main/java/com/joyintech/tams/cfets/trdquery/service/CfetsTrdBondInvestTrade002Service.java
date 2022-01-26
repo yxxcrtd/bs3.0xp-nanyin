@@ -43,6 +43,8 @@ import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmMatchDto;
 import com.joyintech.tams.cfets.trdquery.dao.CfetsTrdQueryMapper;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdInvestPersonInfoDto;
+import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryTradeInfoListResponse;
+import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdRepoTrade002Dto;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
@@ -344,6 +346,8 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
     private MstWorkflowCommonService mstWorkflowCommonService;
     @Autowired
     private CfetsBondDealQuotedPrice004Service cfetsBondDealQuotedPrice004Service;
+    @Autowired
+    private CfetsTrdRepoTrade002Service cfetsTrdRepoTrade002Service;
 
     // 交易份额小数保留位数
     private int decimalPlaces_4 = 4;
@@ -1179,7 +1183,16 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
 
        //发送头寸
         if(isNeedDealPosition){
-            PositionHttpRequest.deleteMethod(bizCode,DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+            String ps = entity.getPs();
+            String busiType = StringUtil.EMPTY;
+            if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){
+                busiType = DictCodeListExt3.头寸业务类型_债券行权交易.getValue();
+            }else{
+                busiType = DictCodeListExt3.头寸业务类型_现券交易.getValue();
+            }
+            PositionHttpRequest.dorevoke(bizCode,DictCodeListExt1.子系统代码_交易.getValue(),busiType,ps);
+
+            // PositionHttpRequest.deleteMethod(bizCode,DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
         }else{
             Map<String, Object> paramMap = new HashMap<>();
             paramMap.put("totleTradeId", bizCode);
@@ -3211,7 +3224,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         // 对Cstp交易处理
         uodateCstpMessage(entity.getWorkflowId());
         // 根据交易编号，删除可用，质押，融入，融出，在途FLOW持仓
-        AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTotleTradeId());
+    //    AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTotleTradeId());
         // 卖出是提交最后审核通过后才入庫，所以这里退回不做额度占用处理
 //        if (entity.getPs().equals(DictCodeList.交易方向_买入.getValue()) || entity.getPs().equals(DictCodeList.交易方向_申购.getValue())) {
 //            // 交易方向为买入时，退回动作后 释放原占用的额度 Add by xkni 20190830
@@ -4389,11 +4402,16 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
      * @param input
      * @return
      */
-    public AjaxResult  checkRevoke(CfetsTrdBondInvestTradeDto input) {
-        List<CfetsTrdBondInvestTradeDto> list=input.getSelectedItem();
-        for(CfetsTrdBondInvestTradeDto inputDto:list){
+    public AjaxResult  checkRevoke(CfetsTrdQueryTradeInfoListResponse input) {
+        List<CfetsTrdQueryTradeInfoListResponse> list=input.getSelectedItem();
+        for(CfetsTrdQueryTradeInfoListResponse inputDto:list){
             WflValidInputParameter parameter = new WflValidInputParameter();
-            parameter.setPageId("CfetsTrdBondInvestTrade002");
+            if(StringUtil.equals(inputDto.getFinprodType2(),DictCodeListExt1.金融产品类型_债券.getValue())){
+                parameter.setPageId("CfetsTrdBondInvestTrade002");
+            }else if(StringUtil.equals(inputDto.getFinprodType2(),DictCodeListExt1.金融产品类型_债券质押式正回购.getValue())
+                    || StringUtil.equals(inputDto.getFinprodType2(),DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue())){
+                parameter.setPageId("CfetsTrdRepoTrade002");
+            }
             parameter.setBusinessDataPk1(inputDto.getTotleTradeId() + "R");
             //parameter.setBusinessDataPk2("F01");
             if (mstWorkflowCommonService.isInWflProcess(parameter)) {
@@ -4406,10 +4424,10 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
                 m.setErrorList(Arrays.asList(new ValidMessage("只可在交易生效日进行撤销操作")));
                 return m;
             }
-           if(StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_卖出.getValue())
-                || StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_行权_回售.getValue())
-                   || StringUtil.equals(inputDto.getPs(),DictCodeList.回购拆借方向_正回购.getValue())
-           ){
+            if(StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_卖出.getValue())
+                    || StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_行权_回售.getValue())
+                    || StringUtil.equals(inputDto.getPs(),DictCodeList.回购拆借方向_正回购.getValue())
+            ){
                 if(!StringUtil.equals(inputDto.getSettleStatus(),DictCodeListExt3.交收状态_未交收.getValue())){
                     AjaxResult m = new AjaxResult();
                     m.setErrorList(Arrays.asList(new ValidMessage("已完成交收,不可撤销")));
@@ -4418,6 +4436,12 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
             }
             CfetsTrdBondInvestTradeDto dto = this.getTrdBondInvestTradeDto(inputDto.getTotleTradeId() + "R");
             if(StringUtil.isNotEmpty(dto)){
+                AjaxResult m = new AjaxResult();
+                m.setErrorList(Arrays.asList(new ValidMessage("已撤销的交易不允许撤销")));
+                return m;
+            }
+            CfetsTrdRepoTrade002Dto dtoRepo =cfetsTrdRepoTrade002Service.getTrdRepoInvestTradeDto(inputDto.getTotleTradeId() + "R");
+            if(StringUtil.isNotEmpty(dtoRepo)){
                 AjaxResult m = new AjaxResult();
                 m.setErrorList(Arrays.asList(new ValidMessage("已撤销的交易不允许撤销")));
                 return m;

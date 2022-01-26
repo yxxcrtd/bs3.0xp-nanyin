@@ -49,6 +49,8 @@ public class CfetsSettleReaderResult extends NeedOperateEntity{
 
     //资产类型
     private String finprodType2;
+    //业务类型
+    private String busiType;
 
     public TrdBankManualSettleInfo getTrdBankManualSettleInfo() {
         return trdBankManualSettleInfo;
@@ -104,5 +106,13 @@ public class CfetsSettleReaderResult extends NeedOperateEntity{
 
     public void setFinprodType2(String finprodType2) {
         this.finprodType2 = finprodType2;
+    }
+
+    public String getBusiType() {
+        return busiType;
+    }
+
+    public void setBusiType(String busiType) {
+        this.busiType = busiType;
     }
 }
