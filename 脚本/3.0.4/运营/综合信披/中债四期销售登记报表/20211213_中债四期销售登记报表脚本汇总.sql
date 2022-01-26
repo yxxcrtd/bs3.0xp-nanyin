@@ -84,8 +84,6 @@ comment on column CHB_SALER_STL_DEAL_INFO.CREATE_DEPT is '创建部门 ';
 comment on column CHB_SALER_STL_DEAL_INFO.CREATE_TIME is '创建时间 ';
 comment on column CHB_SALER_STL_DEAL_INFO.UPDATE_USER is '更新人 ';
 comment on column CHB_SALER_STL_DEAL_INFO.UPDATE_TIME is '更新时间 ';
-alter table CHB_SALER_STL_DEAL_INFO
-  add primary key (INSTITUTION_CODE,TRADE_NO);
   
 DROP TABLE CHB_SALER_STL_DEA_ERRODATA;
 create table CHB_SALER_STL_DEA_ERRODATA(
