@@ -25,6 +25,7 @@ import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
+import com.joyintech.tams.cfets.bankuplink.bond.controller.CfetsIbuQuoteBondController;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealDbDto;
@@ -48,6 +49,8 @@ import com.joyintech.workflow.engine.constant.ProcessState;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,6 +69,8 @@ import static com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002
  */
 @Service("vueCfetsBondDealQuotedPrice004Service")
 public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDealRegisterQuoteDto> implements BaseProcessService<CfetsBondDealRegisterQuoteDto> {
+
+    private static final Logger logger = LoggerFactory.getLogger(CfetsBondDealQuotedPrice004Service.class);
 
     @Autowired
     private IPlatformDate iPlatformDate;
@@ -493,7 +498,13 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         }else{
             busiType = DictCodeListExt3.头寸业务类型_现券交易.getValue();
         }
-        PositionHttpRequest.doDeleteByWorkFlowId(workflowId,DictCodeListExt1.子系统代码_交易.getValue(),busiType,entity.getPs());
+        try{
+            PositionHttpRequest.doDeleteByWorkFlowId(workflowId,DictCodeListExt1.子系统代码_交易.getValue(),busiType,entity.getPs());
+        }catch(PositionException e){
+            Message message = PositionUtil.ajaxErrorReturn(e);
+            logger.error(workflowId+":"+message.getMessage());
+            throw new BusinessException("MSG:头寸处理异常!");
+        }
         //PositionHttpRequest.sendRevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
         deleteBussFlowData(workflowId);
     }
