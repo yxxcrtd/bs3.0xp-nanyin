@@ -345,8 +345,9 @@ public class MstTradeOpponentController {
      * @param map
      * @return
      */
-    @PostMapping("/selectPartyId")
-    public List<SuggestDto> selectPartyId(@RequestBody Map<String,Object> map) {
-        return mstTradeOpponent001Service.selectPartyId(map);
+    @PostMapping("selectPartyId/{page}/{length}")
+    public Page<SelectOptionDto> selectPartyId(@RequestBody Map<String, Object> map,
+                                             @PathVariable("page") int page, @PathVariable("length") int length){
+        return mstTradeOpponent001Service.selectPartyId(map, page, length);
     }
 }
