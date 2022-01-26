@@ -1129,9 +1129,9 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
         if(null!=regTotal){
             String remark=StringUtil.isEmpty(regTotal.getRemark()) ? "" : regTotal.getRemark();
             if(StringUtil.isNotBlank(remark)){
-                remark=remark+settleRemark+"\n"+"交易撤销：" + input.getRevokeReason();
+                remark=remark+(settleRemark==null?"":settleRemark)+"交易撤销：" + input.getRevokeReason();
             }else{
-                remark=settleRemark+"交易撤销：" + input.getRevokeReason();
+                remark=(settleRemark==null?"":settleRemark)+"交易撤销：" + input.getRevokeReason();
             }
             regTotal.setRemark(remark);
             //regTotal.setTradeStatus(DictCodeListExt1.有效状态_撤销.getValue());

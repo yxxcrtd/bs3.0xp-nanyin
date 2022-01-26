@@ -1174,9 +1174,9 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         if(null!=regTotal){
             String remark=StringUtil.isEmpty(regTotal.getRemark()) ? "" : regTotal.getRemark();
             if(StringUtil.isNotBlank(remark)){
-                remark=remark+settleRemark+"\n"+"交易撤销：" + entity.getRevokeReason();
+                remark=remark+(settleRemark==null?"":settleRemark)+"\n"+"交易撤销：" + entity.getRevokeReason();
             }else{
-                remark=settleRemark+"交易撤销：" + entity.getRevokeReason();
+                remark=(settleRemark==null?"":settleRemark)+"交易撤销：" + entity.getRevokeReason();
             }
             regTotal.setRemark(remark);
             cfetsBondDealQuotedPrice004Service.dorevoke(regTotal.getTotleTradeId(),remark);

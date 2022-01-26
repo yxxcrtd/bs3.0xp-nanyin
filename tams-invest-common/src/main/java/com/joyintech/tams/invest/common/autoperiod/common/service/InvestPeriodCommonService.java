@@ -250,7 +250,7 @@ public class InvestPeriodCommonService {
                 trdFinProductDealTotal.setUpdateTime(updateTime);
                 trdFinProductDealTotal.setUpdateUser(updateUser);
                 if(StringUtil.isNotEmpty(revokeReason)){
-                    trdFinProductDealTotal.setRemark(trdFinProductDealTotal.getRemark()+revokeReason);
+                    trdFinProductDealTotal.setRemark((trdFinProductDealTotal.getRemark()==null?"":trdFinProductDealTotal.getRemark())+revokeReason);
                 }
                 trdFinProductDealTotalMapper.updateByPrimaryKeySelective(trdFinProductDealTotal);
                 // 撤销交易状态为撤销
