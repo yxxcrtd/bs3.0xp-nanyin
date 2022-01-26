@@ -1174,6 +1174,10 @@ public class IbuQuoteRepoService extends BaseService {
         CfetsRepoDealQuoteCommonDto temp = new CfetsRepoDealQuoteCommonDto();
         // copy赋值
         BeanUtil.copyPropertiesIgnoreNull(resultDto, request);
+        // 回复不处理计算
+        if (StringUtil.equals("dialogueResponse", request.getQuotaPageModel())) {
+            return resultDto;
+        }
         if (CollectionUtils.isEmpty(request.getRepoEntrustPledgeDtos())
                 && StringUtil.equals(request.getPs(), DictCodeListExt3.交易方向_正回购.getValue())) {
             return resultDto;
