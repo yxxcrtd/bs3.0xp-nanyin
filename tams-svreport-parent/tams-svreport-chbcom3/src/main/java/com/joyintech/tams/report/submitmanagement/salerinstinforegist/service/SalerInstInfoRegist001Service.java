@@ -257,12 +257,18 @@ public class SalerInstInfoRegist001Service extends CommonExportService<SalerInst
         List<File> sourceFiles = new ArrayList<>();
         Map<String,Object> data  = new HashMap<String,Object>();
         List<SalerInstInfoRegistDto> tempList=new ArrayList<SalerInstInfoRegistDto>();
+        SalerInstInfoRegistDto nullDate = new SalerInstInfoRegistDto();
         if(datas == null){
             tempList = chbSalerInstInfoRegistMapper.setDataList(selectParam);
         }else{
             tempList= JsonUtils.json2List(datas,SalerInstInfoRegistDto.class);
         }
-        data.put("dataList",tempList);
+        if(tempList.size() != 0) {
+            data.put("dataList", tempList);
+        }else{
+            tempList.add(nullDate);
+            data.put("dataList", tempList);
+        }
         File depositfile = TisUtil.createFile(data,"pbc/" +"SalerInstInfoRegist_export", "总部或分支机构信息登记.xls");
         sourceFiles.add(depositfile);
         File outFile = null;

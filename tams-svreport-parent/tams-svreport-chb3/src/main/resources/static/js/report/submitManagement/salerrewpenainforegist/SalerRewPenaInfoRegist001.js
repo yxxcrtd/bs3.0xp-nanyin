@@ -79,7 +79,12 @@ $(function(){
 
         //导出中债Excel
         $('#SalerRewPenaInfoRegist001_btn_chbexport').click(function() {
-            exportExcel("0");
+            var rows = table.getAllCheckedRows();
+            if(rows.length === 0){
+                exportExcel("01");
+            }else{
+                exportExcel("0");
+            }
         });
 
         /**
@@ -209,8 +214,20 @@ $(function(){
         if(!expArr || expArr.length ==0){
             param = getPageParams();
             param.flag = flag;
+            if(flag=="01"){
+               param.status="01";
+               param.sendStatus="01";
+            }
             param.exportflag = 'export';
             Joyin.exportExcel("download",param);
+            Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
+                   //页面添加滚动条
+                   layui.layer.open({type:3});
+                   Joyin.ajaxJson('doManual', param, function() {
+                      table.load();
+                      layui.layer.closeAll();
+                   });
+            });
         }
         else{
         	if(flag=="0")

@@ -266,13 +266,19 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
         List<File> sourceFiles = new ArrayList<>();
         Map<String,Object> data  = new HashMap<String,Object>();
         List<SalerIdenInfoRegistDto> tempList=new ArrayList<SalerIdenInfoRegistDto>();
+        SalerIdenInfoRegistDto nullDate = new SalerIdenInfoRegistDto();
         if(datas == null){
             dealSearchParam(selectParam);
             tempList = chbSalerIdenInfoRegistMapper.setDataList(selectParam);
         }else{
             tempList= JsonUtils.json2List(datas,SalerIdenInfoRegistDto.class);
         }
-        data.put("dataList",tempList);
+        if(tempList.size() != 0) {
+            data.put("dataList", tempList);
+        }else{
+            tempList.add(nullDate);
+            data.put("dataList", tempList);
+        }
         File depositfile = TisUtil.createFile(data,"pbc/" +"SalerIdenInfoRegist_export", "销售人员身份信息登记.xls");
         sourceFiles.add(depositfile);
         File outFile = null;
