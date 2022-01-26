@@ -412,22 +412,24 @@ public class IbuQuoteRepoService extends BaseService {
     public List<RepoEntrustPledgeDto> ptlAllocationAddAfter(RepoAutoAllocationRequest request) {
         List<RepoEntrustPledgeDto> resultList = new ArrayList<>();
         Map<String, Object> param = new HashMap<>();
-        param.put("entrustIdList",request.getEntrustIdList());
+        param.put("entrustIdList", request.getEntrustIdList());
         setParam(param, 2);
         // 质押券信息查询
         List<RepoEntrustPledgeDto> repoEntrustPledgeDtos = cfetsIbuQuoteRepoMapper.selectRepoEntrustPledgesInit(param);
-        for(RepoEntrustPledgeDto newDto : request.getRepoEntrustPledgeDtos()) {
+        for (RepoEntrustPledgeDto newDto : request.getRepoEntrustPledgeDtos()) {
             boolean flag = false;
             for (RepoEntrustPledgeDto oldDto : request.getRepoEntrustPledgeDtos()) {
                 if (StringUtil.equals(newDto.getFinprodId(), oldDto.getFinprodId())
                         && StringUtil.equals(newDto.getPortfolioId(), oldDto.getPortfolioId())) {
-                    oldDto.setPledgePrin(ArithmeticUtil.doAdd(oldDto.getPledgePrin(),newDto.getPledgePrin()));
-                    oldDto.setAvaPledgePrin(ArithmeticUtil.doAdd(oldDto.getAvaPledgePrin(),newDto.getAvaPledgePrin()));
-                    oldDto.setConvertAmt(ArithmeticUtil.multiply(oldDto.getPledgePrin(),ArithmeticUtil.divide(oldDto.getPledgeRatio(),new BigDecimal(100),6)));
+                    oldDto.setPledgePrin(ArithmeticUtil.doAdd(oldDto.getPledgePrin(), newDto.getPledgePrin()));
+                    oldDto.setAvaPledgePrin(ArithmeticUtil.doAdd(oldDto.getAvaPledgePrin(), newDto.getAvaPledgePrin()));
+                    oldDto.setConvertAmt(ArithmeticUtil.multiply(oldDto.getPledgePrin(), ArithmeticUtil.divide(oldDto.getPledgeRatio(), new BigDecimal(100), 6)));
                     flag = true;
                 }
             }
-            resultList.add(newDto);
+            if (!flag) {
+                resultList.add(newDto);
+            }
         }
         resultList.addAll(request.getRepoEntrustPledgeDtos());
         return resultList;

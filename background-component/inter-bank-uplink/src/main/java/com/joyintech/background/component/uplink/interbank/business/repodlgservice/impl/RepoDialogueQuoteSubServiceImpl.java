@@ -568,13 +568,23 @@ public class RepoDialogueQuoteSubServiceImpl extends BaseService<IbuQuoteCrep> i
      */
     @Override
     public QuoteResultDto updateRepoDialogueQuoteByKeyDeal(RepoDialogueQuoteDto inputBean) {
+        String quoteId = inputBean.getIbuQuoteCrepDto().getQuoteId();
+        ibuQuoteMapper.deleteQuoteEtrReByQuoteId(quoteId);
+        ibuQuoteMapper.deleteQuoteEntPledgeByQuoteId(quoteId);
         return excuteAndReturnQuoteResult(inputBean, null,
                 x -> {
-                    String quoteId = inputBean.getIbuQuoteCrepDto().getQuoteId();
-
+                    // 向历史表写入数据
+                    int affectRows = insertHistoryData(inputBean);
+                    if(StringUtils.isNotEmpty(quoteId)){
+                        affectRows += wflIbuQuoteCrepMapper.deleteByPrimaryKey(quoteId);
+                        affectRows += ibuQuoteMapper.deleteWflPledgeListByKey(quoteId);
+                        //多组合
+                        affectRows += ibuQuoteMapper.deleteWflIbuQuoteEtrReByQuoteId(quoteId);
+                        affectRows += ibuQuoteMapper.deleteWflIbuQuoteEntCrepPledgeByQuoteId(quoteId);
+                        //多组合
+                    }
                     // 向“在线表”更新数据（含前置版本号）
-                    int affectRows = ibuQuoteCrepMapper.updateByPrimaryKeySelective(inputBean.getIbuQuoteCrepDto());
-
+                    affectRows += ibuQuoteCrepMapper.updateByPrimaryKeySelective(inputBean.getIbuQuoteCrepDto());
                     //多组合
                     if (CollectionUtils.isNotEmpty(inputBean.getIbuQuoteEtrReDtoList())) {
                         affectRows += ibuQuoteMapper.batchInsetIbuQuoteEtrRe(inputBean.getIbuQuoteEtrReDtoList());

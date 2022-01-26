@@ -25,6 +25,7 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.util.DateUtil.DurationType;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoQuotedPrice004Service;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.trdconfirm.dao.CfetsTrdConfirmMapper;
@@ -259,6 +260,8 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
 
     @Autowired
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
+    @Autowired
+    private CfetsRepoQuotedPrice004Service cfetsRepoQuotedPrice004Service;
 	
     private final static String SJXY = "SJXY";//深交所协议回购期限品种
 
@@ -1127,7 +1130,8 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
                 remark=settleRemark+"交易撤销：" + bizCode;
             }
             regTotal.setRemark(remark);
-            regTotal.setTradeStatus(DictCodeListExt1.有效状态_撤销.getValue());
+            //regTotal.setTradeStatus(DictCodeListExt1.有效状态_撤销.getValue());
+            cfetsRepoQuotedPrice004Service.revokeForOut(regTotal.getTotleTradeId(),remark);
             cfetsTrdQueryMapper.updateRegTotalByPrimaryKeySelective(regTotal);
         }
         cfetsTrdConfirmMapper.deleteByTrdId(bizCode);

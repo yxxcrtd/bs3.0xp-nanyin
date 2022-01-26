@@ -36,6 +36,7 @@ import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.system.base.dao.SysWflBusinessListMapper;
 import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.exception.PositionException;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
@@ -973,7 +974,11 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         insertWflRepoDealQuote(entity);
         // 发头寸
         String systemAct = this.handSystemAct(entity);
-        sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct);
+        try {
+            sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct);
+        }catch (PositionException e){
+
+        }
 //        if (StringUtil.isNotEmpty(type)) {
 //            throw new RuntimeException("cs by jp");
 //        }
@@ -1216,13 +1221,9 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                                                  Map<String, String> attrMap) {
         QuoteResultDto result = new QuoteResultDto(true);
         IbuQuoteCrepDto ibuQuoteCrepDto = inputbean.getIbuQuoteCrepDto();
-        String quoteId = ibuQuoteCrepDto.getQuoteId();
-        IbuQuoteCrepDto ibuQuoteCrepDtoTemp = ibuQuoteMapper.selectQuoteCrepByKey(quoteId);
-        Long Version = ibuQuoteCrepDtoTemp.getVersion() + 1;
-        inputbean.getIbuQuoteCrepPledgeDtoList().forEach(ibuQuoteCrepPledgeDto -> ibuQuoteCrepPledgeDto.setVersion(Version));
-        inputbean.getIbuQuoteEtrReDtoList().forEach(ibuQuoteEtrReDto -> ibuQuoteEtrReDto.setVersion(Version));
-        inputbean.getIbuQuoteEntCrepPledgeDtoList().forEach(ibuQuoteEntCrepPledgeDto -> ibuQuoteEntCrepPledgeDto.setVersion(Version));
-        ibuQuoteCrepDto.setVersion(Version);
+        Long version = ibuQuoteCrepDto.getVersion();
+        Long bVersion = ibuQuoteCrepDto.getbVersion();
+        inputbean.setVersion(version,bVersion);
 
         // 对话报价查询
         boolean flag = StringUtil.equals(exeTypeIBU, com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行操作类型_本方回复成交.getValue())
@@ -1282,7 +1283,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         } else {
             result.setStatus(false);
             result.setErrCode("BC_IBUPLINK_00018");
-            result.setErrMsg(getMessage("BC_IBUPLINK_00018", quoteId));
+            result.setErrMsg(getMessage("BC_IBUPLINK_00018", ibuQuoteCrepDto.getQuoteId()));
         }
 
         return result;
