@@ -327,6 +327,8 @@ public class SvrAgentInstitutionDBInterf extends BaseService{
 		tmpDto.setIssuePartyId(null==dto.getIssuePartyId()?"":dto.getIssuePartyId());
 		tmpDto.setRemark(null==dto.getRemark()?"":dto.getRemark());
 		tmpDto.setFileNo(null==dto.getFileNo()?"":dto.getFileNo());
+		tmpDto.setUpdateTime(null);
+		tmpDto.setCreateTime(null);
 		return tmpDto;
 	}
     

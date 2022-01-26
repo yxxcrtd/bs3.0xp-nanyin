@@ -328,6 +328,8 @@ public class SvrAgentPrdInfoDBInterf extends BaseService{
 		tmpDto.setAgentInstitutionCode(null==dto.getAgentInstitutionCode()?"":dto.getAgentInstitutionCode());
 		tmpDto.setIssuePartyId(null==dto.getIssuePartyId()?"":dto.getIssuePartyId());
 		tmpDto.setProdRegistCode(null==dto.getProdRegistCode()?"":dto.getProdRegistCode());
+		tmpDto.setUpdateTime(null);
+		tmpDto.setCreateTime(null);
 		return tmpDto;
 	}
     

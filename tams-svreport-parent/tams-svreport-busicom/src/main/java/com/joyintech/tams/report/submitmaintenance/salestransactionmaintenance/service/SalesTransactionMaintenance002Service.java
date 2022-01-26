@@ -89,6 +89,8 @@ public class SalesTransactionMaintenance002Service extends BaseService{
         dto.setUpdateUser(CommonUtil.getUserName());
         dto.setRegistSeqno(UUID.randomUUID().toString().replace("-", "").toUpperCase());
         dto.setDataStatus("E");
+        //如果有已删除状态的重复数据就先删
+        salestransactionmaintenanceMapper.deleteInfoByPrimaryKey(dto);
         salestransactionmaintenanceMapper.insert(dto);
     }
 

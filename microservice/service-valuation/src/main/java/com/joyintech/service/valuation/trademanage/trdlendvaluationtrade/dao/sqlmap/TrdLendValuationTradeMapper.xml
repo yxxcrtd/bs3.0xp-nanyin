@@ -113,10 +113,16 @@
 		<if test="tradeDateEnd !=null and tradeDateEnd !='' ">
 			and t.TRADE_DATE <![CDATA[<=]]> to_date(#{tradeDateEnd},'yyyy-mm-dd')
 		</if>
-		<if test="psArr != null and psArr.length > 0">
+		<if test="psArr01 != null and psArr01.length > 0">
 			AND t.PS IN
-			<foreach collection="psArr" item="ps" open="( " close=" )" separator=",">
-				#{ps}
+			<foreach collection="psArr01" item="ps01" open="( " close=" )" separator=",">
+				#{ps01}
+			</foreach>
+		</if>
+		<if test="finprodTypeArr != null and finprodTypeArr.length > 0">
+			AND t.FINPROD_TYPE IN
+			<foreach collection="finprodTypeArr" item="finprodType" open="( " close=" )" separator=",">
+				#{finprodType}
 			</foreach>
 		</if>
 		order by t.TRADE_ID desc
