@@ -118,41 +118,12 @@ public class AgentPrdInfoRegist001Service extends CommonExportService<AgentPrdIn
         if (StringUtil.isEmptyList(investList)) {
             return;
         }
-        int maxDataCountOneTime = reportSelectOrDeleteCountForShenFen;
-        int dataCount = investList.size();
-        if (dataCount <= maxDataCountOneTime) {
             //已报送数据进留痕表
             chbAgentPrdSubMapper.insertIntoHis(investList);
             //删除正式表已报送数据
             chbAgentPrdSubMapper.deleteLastSubmitRegist(investList);
             chbAgentPrdSubMapper.updateInterfSubmitAndSeqBatch(sendStatus, investList);
             return;
-        }
-        List<AgentPrdInfoRegistDto> newDataList = new ArrayList<AgentPrdInfoRegistDto>();
-        newDataList.addAll(investList);
-        // 分批处理
-        int part = dataCount / maxDataCountOneTime; // 分批数
-        for (int i = 0; i < part; i++) {
-            logger.info("单次更新登记表start===");
-            //已报送数据进留痕表
-            chbAgentPrdSubMapper.insertIntoHis(investList);
-            //删除正式表已报送数据
-            chbAgentPrdSubMapper.deleteLastSubmitRegist(investList);
-            chbAgentPrdSubMapper.updateInterfSubmitAndSeqBatch(sendStatus,
-                    newDataList.subList(0, maxDataCountOneTime));
-            newDataList.subList(0, maxDataCountOneTime).clear();
-            logger.info("单次更新登记表end===");
-        }
-        // 最后剩下的数据
-        if (CollectionUtils.isNotEmpty(newDataList)) {
-            logger.info("单次更新登记表start===");
-            //已报送数据进留痕表
-            chbAgentPrdSubMapper.insertIntoHis(investList);
-            //删除正式表已报送数据
-            chbAgentPrdSubMapper.deleteLastSubmitRegist(investList);
-            chbAgentPrdSubMapper.updateInterfSubmitAndSeqBatch(sendStatus, newDataList);
-            logger.info("单次更新登记表end===");
-        }
     }
     /**
      * 已手工处理的数据将报送状态改为未报送

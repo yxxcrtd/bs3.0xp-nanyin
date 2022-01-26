@@ -69,7 +69,7 @@
 		values(
 		#{registSeqno,jdbcType=VARCHAR},#{agentInstitutionCode,jdbcType=VARCHAR},#{issuePartyId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR},#{prodName,jdbcType=VARCHAR},
 		#{prodRegistCode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},#{sumitSeq,jdbcType=VARCHAR},#{chbSubmitDeadline,jdbcType=DATE},#{submitDeadline,jdbcType=DATE},#{sendStatus,jdbcType=VARCHAR},
-		#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},#{dataDate,jdbcType=DATE},#{remark,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},sysdate,#{updateUser,jdbcType=VARCHAR},sysdate)
+		#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},#{dataDate,jdbcType=DATE},#{remark,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=DATE},#{updateUser,jdbcType=VARCHAR},#{updateTime,jdbcType=DATE})
 	</insert>
 
 </mapper>
