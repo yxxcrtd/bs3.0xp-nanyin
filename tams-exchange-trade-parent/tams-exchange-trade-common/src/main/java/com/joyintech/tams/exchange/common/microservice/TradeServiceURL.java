@@ -157,7 +157,7 @@ public class TradeServiceURL {
     public static String getPortfolioPosition = "/invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/getAssetAvailablePosition";//组合可用持仓查询
 
     public static String getDeviationDegree = "/etrexchange/common/etrExchangeTrade001/calcDeviationDegree";//偏离度查询
-    public static String getEtrDispatcherInfo = "/exchange/entrust/fieldetrinfoquerymain/fieldetrdispatcher/getEtrDispatcherInfo";//指令信息查询
+    public static String getEtrDispatcherInfo = "/exchange/entrust/fieldetrinfoquerymain/fieldetrdispatcher/getReadonlyFormEtrInfo/FieldEtrDispatcher/FieldEtrDispatcherInfo/EX001";//指令信息查询
 
 
 }
