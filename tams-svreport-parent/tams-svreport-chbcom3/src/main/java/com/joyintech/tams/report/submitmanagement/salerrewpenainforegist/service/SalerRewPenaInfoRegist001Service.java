@@ -12,6 +12,8 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto;
+import com.joyintech.tams.report.submitmanagement.salerinstinforegist.dao.ChbSalerInstInfoRegistMapper;
+import com.joyintech.tams.report.submitmanagement.salerinstinforegist.dto.SalerInstInfoRegistDto;
 import com.joyintech.tams.report.submitmanagement.salerrewpenainforegist.dao.ChbSalerRewPenaInfoRegistMapper;
 import com.joyintech.tams.report.submitmanagement.salerrewpenainforegist.dto.SalerRewPenaInfoRegistDto;
 import org.apache.commons.collections4.CollectionUtils;
@@ -64,12 +66,18 @@ public class SalerRewPenaInfoRegist001Service extends CommonExportService<SalerR
      * @since 1.0
      */
     public Page<SalerRewPenaInfoRegistDto> searchForPage(Map<String, Object> param){
-        int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
-	    int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
-        Page<SalerRewPenaInfoRegistDto> pageList = super.queryForPage(
-        		pagenum,legth,()->chbSalerRewPenaInfoRegistMapper.queryForRegistPage(param));
-        this.formatByType(pageList.getRoot());
-        return pageList;
+        if (null != param.get(GlobalConstant.PARAM_PAGE)
+                && null != param.get(GlobalConstant.PARAM_LENGTH)) {
+            int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
+            int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
+            Page<SalerRewPenaInfoRegistDto> pageList = super.queryForPage(
+                    pagenum, legth, () -> chbSalerRewPenaInfoRegistMapper.queryForRegistPage(param));
+            this.formatByType(pageList.getRoot());
+            return pageList;
+        }else{
+            Page<SalerRewPenaInfoRegistDto> page = queryForPage(ChbSalerRewPenaInfoRegistMapper.class,"queryForRegistPage",param);
+            return page;
+        }
     }
 
     /**

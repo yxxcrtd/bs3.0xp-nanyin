@@ -11,6 +11,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.interf.common.util.TisUtil;
+import com.joyintech.tams.report.submitmanagement.agentinstitutionregist.dao.ChbAgentInstitutionSubMapper;
 import com.joyintech.tams.report.submitmanagement.agentinstitutionregist.dto.AgentInstitutionRegistDto;
 import com.joyintech.tams.report.submitmanagement.agentprdinforegist.dao.ChbAgentPrdSubMapper;
 import com.joyintech.tams.report.submitmanagement.agentprdinforegist.dto.AgentPrdInfoRegistDto;
@@ -63,11 +64,17 @@ public class AgentPrdInfoRegist001Service extends CommonExportService<AgentPrdIn
      * @since 1.0
      */
     public Page<AgentPrdInfoRegistDto> searchForPage(Map<String, Object> param){
-        int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
-	    int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
-        Page<AgentPrdInfoRegistDto> pageList = super.queryForPage(
-        		pagenum,legth,()->chbAgentPrdSubMapper.queryForRegistPage(param));
-        return pageList;
+        if (null != param.get(GlobalConstant.PARAM_PAGE)
+                && null != param.get(GlobalConstant.PARAM_LENGTH)) {
+            int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
+            int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
+            Page<AgentPrdInfoRegistDto> pageList = super.queryForPage(
+                    pagenum, legth, () -> chbAgentPrdSubMapper.queryForRegistPage(param));
+            return pageList;
+        }else{
+            Page<AgentPrdInfoRegistDto> page = queryForPage(ChbAgentPrdSubMapper.class,"queryForRegistPage",param);
+            return page;
+        }
     }
 
     /**
