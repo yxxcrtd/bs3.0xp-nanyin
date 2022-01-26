@@ -106,4 +106,7 @@ public interface CommonCodeCheckMapper {
 
     //总部或分支机构名称重复校验（新建）
     int checkSalerOrgName(String salerOrgName);
+
+    int checkSalerInsNo (String salerInsNo);
+
 }

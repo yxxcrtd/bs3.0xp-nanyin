@@ -6,6 +6,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbSalerRewPenaInfo;
 import com.joyintech.tams.common.base.entity.ChbSalerRewPenaSub;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
@@ -65,15 +66,15 @@ public class SvrSalerRewPenaDBInterf extends BaseService{
     		return;
     	}
 
-//		// 调用check逻辑
-//		logger.debug("销售人员奖惩投诉记录登记数据检查开始------检查前数据个数：" + list.size());
-//		list = chbCommonCheckService.checkData(list, ChbCheckTableInfo.销售人员奖惩投诉记录登记表SUB);
-//		logger.debug("销售人员奖惩投诉记录登记数据检查结束------检查后数据个数：" + list.size());
-//
-//		if(StringUtil.isEmptyList(list)){
-//			logger.info("检查后的数据全部不合规，批处理结束");
-//			return;
-//		}
+		// 调用check逻辑
+		logger.debug("销售人员奖惩投诉记录登记数据检查开始------检查前数据个数：" + list.size());
+		list = chbCommonCheckService.checkData(list, ChbCheckTableInfo.销售人员奖惩投诉记录登记表SUB);
+		logger.debug("销售人员奖惩投诉记录登记数据检查结束------检查后数据个数：" + list.size());
+
+		if(StringUtil.isEmptyList(list)){
+			logger.info("检查后的数据全部不合规，批处理结束");
+			return;
+		}
     	//2、查询已登记的信息
     	List<ChbSalerRewPenaSub> regList = svrSalerRewPenaDBInterfMapper.selectRegSalerRewPenaData();
     	//将已存在报送中的数据放入map中
@@ -334,6 +335,8 @@ public class SvrSalerRewPenaDBInterf extends BaseService{
 		tmpDto.setSalerComplainDetail(null==dto.getSalerComplainDetail()?"":dto.getSalerComplainDetail());
 		tmpDto.setSalerComplainResult(null==dto.getSalerComplainResult()?"":dto.getSalerComplainResult());
 		tmpDto.setSalerComplainDate(null==dto.getSalerComplainDate()?new Date():dto.getSalerComplainDate());
+		tmpDto.setUpdateTime(null);
+		tmpDto.setCreateTime(null);
 		return tmpDto;
 	}
     

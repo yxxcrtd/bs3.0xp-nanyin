@@ -11,6 +11,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.interf.common.util.TisUtil;
+import com.joyintech.tams.report.submitmanagement.agentinstitutionregist.dao.ChbAgentInstitutionSubMapper;
 import com.joyintech.tams.report.submitmanagement.agentinstitutionregist.dto.AgentInstitutionRegistDto;
 import com.joyintech.tams.report.submitmanagement.agentprdinforegist.dao.ChbAgentPrdSubMapper;
 import com.joyintech.tams.report.submitmanagement.agentprdinforegist.dto.AgentPrdInfoRegistDto;
@@ -63,11 +64,17 @@ public class AgentPrdInfoRegist001Service extends CommonExportService<AgentPrdIn
      * @since 1.0
      */
     public Page<AgentPrdInfoRegistDto> searchForPage(Map<String, Object> param){
-        int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
-	    int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
-        Page<AgentPrdInfoRegistDto> pageList = super.queryForPage(
-        		pagenum,legth,()->chbAgentPrdSubMapper.queryForRegistPage(param));
-        return pageList;
+        if (null != param.get(GlobalConstant.PARAM_PAGE)
+                && null != param.get(GlobalConstant.PARAM_LENGTH)) {
+            int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
+            int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
+            Page<AgentPrdInfoRegistDto> pageList = super.queryForPage(
+                    pagenum, legth, () -> chbAgentPrdSubMapper.queryForRegistPage(param));
+            return pageList;
+        }else{
+            Page<AgentPrdInfoRegistDto> page = queryForPage(ChbAgentPrdSubMapper.class,"queryForRegistPage",param);
+            return page;
+        }
     }
 
     /**
@@ -118,41 +125,12 @@ public class AgentPrdInfoRegist001Service extends CommonExportService<AgentPrdIn
         if (StringUtil.isEmptyList(investList)) {
             return;
         }
-        int maxDataCountOneTime = reportSelectOrDeleteCountForShenFen;
-        int dataCount = investList.size();
-        if (dataCount <= maxDataCountOneTime) {
             //已报送数据进留痕表
             chbAgentPrdSubMapper.insertIntoHis(investList);
             //删除正式表已报送数据
             chbAgentPrdSubMapper.deleteLastSubmitRegist(investList);
             chbAgentPrdSubMapper.updateInterfSubmitAndSeqBatch(sendStatus, investList);
             return;
-        }
-        List<AgentPrdInfoRegistDto> newDataList = new ArrayList<AgentPrdInfoRegistDto>();
-        newDataList.addAll(investList);
-        // 分批处理
-        int part = dataCount / maxDataCountOneTime; // 分批数
-        for (int i = 0; i < part; i++) {
-            logger.info("单次更新登记表start===");
-            //已报送数据进留痕表
-            chbAgentPrdSubMapper.insertIntoHis(investList);
-            //删除正式表已报送数据
-            chbAgentPrdSubMapper.deleteLastSubmitRegist(investList);
-            chbAgentPrdSubMapper.updateInterfSubmitAndSeqBatch(sendStatus,
-                    newDataList.subList(0, maxDataCountOneTime));
-            newDataList.subList(0, maxDataCountOneTime).clear();
-            logger.info("单次更新登记表end===");
-        }
-        // 最后剩下的数据
-        if (CollectionUtils.isNotEmpty(newDataList)) {
-            logger.info("单次更新登记表start===");
-            //已报送数据进留痕表
-            chbAgentPrdSubMapper.insertIntoHis(investList);
-            //删除正式表已报送数据
-            chbAgentPrdSubMapper.deleteLastSubmitRegist(investList);
-            chbAgentPrdSubMapper.updateInterfSubmitAndSeqBatch(sendStatus, newDataList);
-            logger.info("单次更新登记表end===");
-        }
     }
     /**
      * 已手工处理的数据将报送状态改为未报送

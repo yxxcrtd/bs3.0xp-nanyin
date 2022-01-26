@@ -79,7 +79,7 @@
 		#{issuePartyId,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{sumitSeq,jdbcType=VARCHAR}, #{chbSubmitDeadline,jdbcType=DATE},
 		#{submitDeadline,jdbcType=DATE}, #{sendStatus,jdbcType=VARCHAR},#{fileNo,jdbcType=VARCHAR},#{enclosureNum,jdbcType=VARCHAR},
 		#{enclosureAddress,jdbcType=VARCHAR},#{dataDate,jdbcType=DATE},#{remark,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
-		#{createUser,jdbcType=VARCHAR},sysdate,#{updateUser,jdbcType=VARCHAR},sysdate)
+		#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=DATE},#{updateUser,jdbcType=VARCHAR},#{updateTime,jdbcType=DATE})
 	</insert>
 
 </mapper>

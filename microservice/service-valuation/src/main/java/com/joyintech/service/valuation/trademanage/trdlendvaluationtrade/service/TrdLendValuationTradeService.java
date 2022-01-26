@@ -96,9 +96,29 @@ public class TrdLendValuationTradeService extends CommonExportService<TrdLendVal
         if (StringUtil.isNotEmpty(ps)) {
             psArr = ps.split(",");
         }
-        pageParam.put("psArr", psArr);
+//        pageParam.put("psArr", psArr);
 
-
+        List<String> finprodTypeList  = new ArrayList();
+        List<String> psArr01List  = new ArrayList();
+        for (String psStr : psArr) {
+            if(StringUtil.equals(psStr,"01")){
+                finprodTypeList.add("F01");
+                psArr01List.add("T01");
+            }else if(StringUtil.equals(psStr,"02")){
+                finprodTypeList.add("F01");
+                psArr01List.add("T02");
+            }else if(StringUtil.equals(psStr,"03")){
+                finprodTypeList.add("F08");
+                psArr01List.add("T07");
+            }else{
+                finprodTypeList.add("F09");
+                psArr01List.add("T07");
+            }
+        }
+        String[] finprodTypeArr=finprodTypeList.toArray(new String[finprodTypeList.size()]);
+        String[] psArr01=psArr01List.toArray(new String[psArr01List.size()]);
+        pageParam.put("finprodTypeArr", finprodTypeArr);
+        pageParam.put("psArr01", psArr01);
         return this.queryForPage(page, length,
                 () -> trdLendValuationTradeMapper.selectDeal(pageParam));
     }

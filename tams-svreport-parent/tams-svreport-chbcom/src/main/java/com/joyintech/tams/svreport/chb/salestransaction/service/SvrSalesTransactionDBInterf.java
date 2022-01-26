@@ -366,6 +366,8 @@ public class SvrSalesTransactionDBInterf extends BaseService{
 		tmpDto.setTradeVdate(dto.getTradeVdate());
 		tmpDto.setTradeTime(null==dto.getTradeTime()?"":dto.getTradeTime());
 		tmpDto.setPostscript(null==dto.getPostscript()?"":dto.getPostscript());
+		tmpDto.setUpdateTime(null);
+		tmpDto.setCreateTime(null);
 		return tmpDto;
 	}
     

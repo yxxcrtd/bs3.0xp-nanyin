@@ -12,6 +12,9 @@ import com.joyintech.framework.util.StringUtil;
  * @since 2020-10-13
  */
 public enum ChbCheckTableInfo {
+    总部或分支机构信息登记表SUB("CHB_SALER_INST_SUB", true, "", new String[] {"SALER_ORG_CODE","SALER_ORG_NAME"}, ""),
+    销售人员身份信息登记表SUB("CHB_SALER_IDEN_SUB", true, "", new String[] {"SALER_INS_NO"}, ""),
+    销售人员奖惩投诉记录登记表SUB("CHB_SALER_REW_PENA_SUB", true, "", new String[] {"SALER_REW_PENA_NO"}, ""),
     销售结算资金交易登记表SUB("CHB_SALER_STL_DEAL_SUB", true, "", new String[] {"INSTITUTION_CODE","TRADE_NO"}, ""),
 	从业人员登记表SUB("CHB_EMPLOYEE_INFO_SUB", true, "", new String[] {"EMPLOYEE_TYPE","IDENTIFY_NUMBER"}, ""),
     个人发行登记表SUB("CHB_PRD_ISSUE_SUB", true, "PROD_ID", new String[] {"PROD_ID"}, ""),
