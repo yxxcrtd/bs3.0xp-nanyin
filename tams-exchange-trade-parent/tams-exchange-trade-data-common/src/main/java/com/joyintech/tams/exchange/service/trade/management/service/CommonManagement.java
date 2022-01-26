@@ -436,13 +436,13 @@ public class CommonManagement extends BaseService {
         return null;
     }
 
-    public Message<EtrDispatcherInfoResponse> getEtrDispatcherInfo(EtrDispatcherInfoRequest request) {
+    public Message<Map<String,Object>> getEtrDispatcherInfo(EtrDispatcherInfoRequest request) {
         try {
             String url = ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.getEtrDispatcherInfo;
             if (request.getBusiTypePosition() == null) {
                 request.setBusiTypePosition(StrUtil.EMPTY);
             }
-            Message<EtrDispatcherInfoResponse> response = null;
+            Message<Map<String,Object>> response = null;
             if (isSingle) {
                 response = simpleRestTemplate.postForObject(url, request, Message.class);
             } else {

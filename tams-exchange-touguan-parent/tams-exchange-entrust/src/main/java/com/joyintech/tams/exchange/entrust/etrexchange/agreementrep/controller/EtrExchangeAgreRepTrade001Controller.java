@@ -330,7 +330,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
         //成交编号
         Map<String, Object> pageParam = new HashMap<>();
         pageParam.put("tradeId",tradeId);
-        return new Message<EtrExchangeAgreRepTrade001Dto>().setData(etrExchangeAgreRepTrade001Service.getEntrustInfoByTradeId(pageParam));
+        return new Message<EtrExchangeAgreRepTrade001Dto>().success().setData(etrExchangeAgreRepTrade001Service.getEntrustInfoByTradeId(pageParam));
     }
 
     /**
@@ -776,7 +776,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
     @PostMapping("selectEtrEntrust")
     public Message<Page<EtrExchangeAgreRepTrade003Dto>> selectEtrEntrust(@RequestBody EtrExchangeAgreRepTrade003RequestDto request){
         Page<EtrExchangeAgreRepTrade003Dto>  result = etrExchangeAgreRepTrade002Service.selectEtrEntrust(request);
-        return new Message<Page<EtrExchangeAgreRepTrade003Dto>>().setData(result);
+        return new Message<Page<EtrExchangeAgreRepTrade003Dto>>().success().setData(result);
     }
 
 
@@ -808,7 +808,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
             webResult.setErrorList(errList);
             return new Message<AjaxResult>().setData(webResult);
         }
-        return new Message<AjaxResult>().setData(webResult);
+        return new Message<AjaxResult>().success().setData(webResult);
     }
 
 
@@ -836,7 +836,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
             webResult.setErrorList(errList);
             return new Message<AjaxResult>().setData(webResult);
         }
-        return new Message<AjaxResult>().setData(webResult);
+        return new Message<AjaxResult>().success().setData(webResult);
     }
 
 

@@ -2585,9 +2585,11 @@ public class CfetsTrdConfirmService extends BaseService{
     public AjaxResult cstpAutoMatchMethod(InterfTradSecdeal interfTradSecdeal,
                                               InterfOpicsTradRepo interfOpicsTradRepo,InterfCstpTrade iCstpTrade){
         CfetsTrdConfirmMatchDto matchDto=new CfetsTrdConfirmMatchDto();
-        if(null!=interfTradSecdeal){
+        String support_cstp_flag_bond=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_BOND");
+        String support_cstp_flag_repo=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_REPO");
+        if(null!=interfTradSecdeal && StringUtil.equals(support_cstp_flag_bond,DictCodeList.是否_是.getValue())){
             matchDto =cstpSecTradeAutoMatch(interfTradSecdeal,iCstpTrade);
-        }else if(null!=interfOpicsTradRepo){
+        }else if(null!=interfOpicsTradRepo && StringUtil.equals(support_cstp_flag_repo,DictCodeList.是否_是.getValue())){
             matchDto =cstpRepoTradeAutoMatch(interfOpicsTradRepo,iCstpTrade);
         }
         if(!StringUtil.isNotEmpty(matchDto)){

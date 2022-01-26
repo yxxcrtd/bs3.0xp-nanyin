@@ -813,9 +813,9 @@ public class PortfolioManager extends BaseService {
 
             // 尾插处理
             Instruction maxInstruction = singleList.stream().max(Comparator.comparing(Instruction::getConPrice)).get();
-            long totalExceptMaxVolume = singleList.stream().filter(item -> !item.getEntrustId().equals(maxInstruction.getEntrustId()))
+            long totalExceptMaxVolume = singleList.stream().filter(item -> !item.getPortfolioId().equals(maxInstruction.getPortfolioId()))
                     .mapToLong(item -> item.getConNum().longValue()).sum();
-            Long tailVolume = ins.getTermDays().longValue() - totalExceptMaxVolume;
+            Long tailVolume = ins.getConNum().longValue() - totalExceptMaxVolume;
             BigDecimal tailAmt = NumberUtil.mul(tailVolume, result.getPrice());
             log.debug("尾插处理，组合名称 = [{}], 组合编号 = [{}], 原委托数量 = [{}], 现委托数量 = [{}]，现委托金额 = [{}]",
                     maxInstruction.getPortfolioName(),

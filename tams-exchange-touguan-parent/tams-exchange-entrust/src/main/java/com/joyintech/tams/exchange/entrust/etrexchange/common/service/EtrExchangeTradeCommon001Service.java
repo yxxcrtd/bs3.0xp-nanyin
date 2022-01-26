@@ -5143,6 +5143,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		if (null != list && list.size() > 0) {
 			for (TrdOthCodeInfoDto dto : list) {
 				if (!StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())
+						&& !StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getValue())
 						&& !StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
 					// 只能选择申购，其他委托方向不可选
 					String ps = OthTypeMapToPs(dto.getOthCodeType());
