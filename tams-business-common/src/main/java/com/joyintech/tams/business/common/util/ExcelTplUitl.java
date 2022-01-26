@@ -24,6 +24,8 @@ import io.swagger.annotations.ApiModelProperty;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -534,6 +536,17 @@ public class ExcelTplUitl {
     public static void main(String[] args) {
         String temp = "兆尹/n科技";
         System.out.println(temp);
+    }
+
+    public static String getTplFile(String templateFile) {
+        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+
+        try {
+            Resource[] res = resolver.getResources("classpath*:tpl/" + templateFile);
+            return res[0].getURL().getFile();
+        } catch (IOException var3) {
+            return null;
+        }
     }
 }
 
