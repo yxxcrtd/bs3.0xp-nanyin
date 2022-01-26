@@ -56,7 +56,7 @@
           t1.FINPROD_ID intiTradeId,
           t4.FINPROD_MARKET_ID origRepSecId,
           case
-            when etr_entrust.trade_market = #{TRADE_PLACE_03} then
+            when t7.trade_market = #{TRADE_PLACE_03} then
                 t2.PLEDGE_NUMBER/10
           else
                 t2.PLEDGE_NUMBER
@@ -83,7 +83,7 @@
           t7.REMARK addCla,
           t3.type_7 ps,
           case
-            when etr_entrust.trade_market = #{TRADE_PLACE_03} then
+            when t7.trade_market = #{TRADE_PLACE_03} then
             #{UNIT_04}
           else
             #{UNIT_01}
@@ -533,8 +533,10 @@
         fin_trade_product.act_cap_days occupyDays, /** 实际占款天数 **/
         fin_trade_product.m_int_amt mIntAmt, /** 回购利息 **/
         fin_trade_product.m_Trade_Amt expireSettleAmt, /** 到期结算金额 **/
-        decode(fin_trade_product.TRADE_MARKET,'03',trd_product_deal_2.f_trade_id,'04','') tradeId, /** 成交编号 **/
-        decode(fin_trade_product.TRADE_MARKET,'03','','04',trd_product_deal_2.f_trade_id) intiTradeId /** 初始交易编号 **/
+        <!--decode(fin_trade_product.TRADE_MARKET,'03',trd_product_deal_2.f_trade_id,'04','') tradeId, /** 成交编号 **/
+        decode(fin_trade_product.TRADE_MARKET,'03','','04',trd_product_deal_2.f_trade_id) intiTradeId /** 初始交易编号 **/-->
+        trd_product_deal_2.f_trade_id tradeId,
+        trd_product_deal_2.f_trade_id intiTradeId
         from fin_trade_product /** 交易类金融产品 **/
         inner join FIN_PRODUCT_TYPE /** 金融产品分类表 **/
         on fin_trade_product.finprod_id = FIN_PRODUCT_TYPE.Finprod_Id
