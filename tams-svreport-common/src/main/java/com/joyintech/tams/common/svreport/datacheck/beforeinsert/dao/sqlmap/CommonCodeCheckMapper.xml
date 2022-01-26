@@ -256,9 +256,9 @@
         and SALER_ORG_NAME = #{salerOrgName,jdbcType=VARCHAR}
     </select>
 
-    <select id="checkSalerInsNoImport" resultType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto">
-        select  SALER_INS_NO  salerInsNo
-        from CHB_SALER_IDEN_INFO
-        where status = 'E'
+    <select id="checkSalerInsNo" resultType="integer">
+        select count(SALER_INS_NO) from CHB_SALER_IDEN_INFO
+        where SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+        and STATUS = 'E'
     </select>
 </mapper>
