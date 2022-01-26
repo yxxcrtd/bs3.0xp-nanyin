@@ -60,7 +60,8 @@
 			  decode(b.profit_type,'03','02','01') isBreakeven,
 			  nvl(b.is_fhxgcp,'01') isFhxgcp,
 			  B.exc_fin_sector excFinSector,
-			  B.IS_YLLCCP isYllccp,
+	          case when instr(cpdi.prd_spec_property ,'01')>0 then '01'
+	          else '02' end  isYllccp ,
 			  p.dirtyamtsum,
 			  p.cleanamtsum,
 			  CASE WHEN TO_CHAR(B.VDATE,'yyyyMM') = P.TERM then '01' else '02' end isThisTrem,
@@ -81,6 +82,7 @@
 
 			  FROM CHB_MONTH_PRD_POSITIONDETAIL P
 			  LEFT JOIN CHB_PRD_BASEINFO B ON P.PRODID= b.Prod_Id AND B.FPROD_ID IS NULL AND B.STATUS IN ('E','M')
+	          LEFT JOIN CHB_PRD_DECLARE_INFO CPDI ON P.PRODID= CPDI.PROD_INS_ID AND CPDI.STATUS IN ('E','M')
 			  WHERE 1=1
 			  <if test="enddate != null and enddate != ''">
 				  and P.TERM =  #{enddate,jdbcType=VARCHAR}
