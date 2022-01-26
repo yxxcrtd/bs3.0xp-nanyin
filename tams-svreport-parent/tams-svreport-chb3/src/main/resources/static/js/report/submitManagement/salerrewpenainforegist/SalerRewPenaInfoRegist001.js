@@ -218,8 +218,16 @@ $(function(){
                param.status="01";
                param.sendStatus="01";
             }
+             var isHaveData = true;
+                         Joyin.ajaxSync('searchPage',param, function(result){
+                             if (!result || result.root.length == 0){
+                                  isHaveData = false;
+                                  return;
+                              }
+                         })
             param.exportflag = 'export';
             Joyin.exportExcel("download",param);
+             if(isHaveData){
             Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
                    //页面添加滚动条
                    layui.layer.open({type:3});
@@ -228,6 +236,7 @@ $(function(){
                       layui.layer.closeAll();
                    });
             });
+            }
         }
         else{
         	if(flag=="0")

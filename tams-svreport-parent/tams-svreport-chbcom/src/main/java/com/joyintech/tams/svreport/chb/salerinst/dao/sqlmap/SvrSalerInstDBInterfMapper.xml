@@ -70,7 +70,7 @@
 		#{salerOrgCode,jdbcType=VARCHAR},#{salerOrgName,jdbcType=VARCHAR},#{salerOrgLevel,jdbcType=VARCHAR},
 		#{status,jdbcType=VARCHAR}, #{sumitSeq,jdbcType=VARCHAR}, #{chbSubmitDeadline,jdbcType=DATE},
 		#{submitDeadline,jdbcType=DATE}, #{sendStatus,jdbcType=VARCHAR},#{dataDate,jdbcType=DATE},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
-		#{createUser,jdbcType=VARCHAR},sysdate,#{updateUser,jdbcType=VARCHAR},sysdate)
+		#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=DATE},#{updateUser,jdbcType=VARCHAR},#{updateTime,jdbcType=DATE})
 	</insert>
 
 </mapper>
