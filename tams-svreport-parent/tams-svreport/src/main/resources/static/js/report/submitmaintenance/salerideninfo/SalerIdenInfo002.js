@@ -88,6 +88,9 @@
            else{
                      $('#salerInstCode').prop("disabled",true);
                      getIssuePartyId();
+                     if(salerCredentType != '99'){
+                                           $('#salerOtherCredentName').prop("disabled",true);
+                                          }
            }
            }
 
