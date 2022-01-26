@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Workbook filePath="trademanage/trdfxforwardvaluationtrade/TrdFxForwardValuationTrade001.xlsx" name="外汇远期期交易导出">
+<Workbook filePath="trademanage/trdfxforwardvaluationtrade/TrdFxForwardValuationTrade001.xlsx" name="外汇远期交易导出">
 	<Worksheet javaBean="com.joyintech.tams.valuation.trademanage.trdfxforwardvaluationtrade.dto.TrdFxForwardValuationTradeDto">
 		<Row>
 			<Cell order="1" name="交易编号">tradeId</Cell>

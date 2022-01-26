@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Description:固收类交易service
+ * @Description:外汇掉期交易service
  * @auther: yuzj
- * @date: 2022/1/5
+ * @date: 2022/1/25
  * @param:
  * @return:
  */

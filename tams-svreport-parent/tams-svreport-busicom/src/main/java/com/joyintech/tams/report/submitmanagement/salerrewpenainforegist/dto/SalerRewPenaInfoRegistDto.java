@@ -50,30 +50,33 @@ public class SalerRewPenaInfoRegistDto extends ChbSalerRewPenaSub implements Pro
     //奖惩起始日期字符串化
     public String getSalerRewPenaStartStr() {
         if(StringUtil.isNotEmpty(this.getSalerRewPenaStart())){
-            return DateUtil.formatDateTime(this.getSalerRewPenaStart());
+            String time = DateUtil.formatDateTime(this.getSalerRewPenaStart());
+            return time.substring(0,10);
         }
         return null;
     }
     //奖惩结束日期字符串化
     public String getSalerRewPenaEndStr() {
         if(StringUtil.isNotEmpty(this.getSalerRewPenaEnd())){
-            return DateUtil.formatDateTime(this.getSalerRewPenaEnd());
+            String time = DateUtil.formatDateTime(this.getSalerRewPenaEnd());
+            return time.substring(0,10);
         }
         return null;
     }
     //投诉日期字符串化
     public String getSalerComplainDateStr() {
         if(StringUtil.isNotEmpty(this.getSalerComplainDate())){
-            return DateUtil.formatDateTime(this.getSalerComplainDate());
+            String time = DateUtil.formatDateTime(this.getSalerComplainDate());
+            return time.substring(0,10);
         }
         return null;
     }
     //记录分类字符串化
     public String getSalerRewPenaTyepStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.记录分类, this.getSalerRewPenaTyep());
+        return this.getSalerRewPenaTyep();
     }
     //奖惩单位字符串化
     public String getSalerRewPenaInstStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.奖惩单位, this.getSalerRewPenaInst());
+        return this.getSalerRewPenaInst();
     }
 }

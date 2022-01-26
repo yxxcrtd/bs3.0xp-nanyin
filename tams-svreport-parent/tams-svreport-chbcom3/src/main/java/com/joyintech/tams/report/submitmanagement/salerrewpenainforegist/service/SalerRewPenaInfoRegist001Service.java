@@ -243,12 +243,18 @@ public class SalerRewPenaInfoRegist001Service extends CommonExportService<SalerR
         List<File> sourceFiles = new ArrayList<>();
         Map<String,Object> data  = new HashMap<String,Object>();
         List<SalerRewPenaInfoRegistDto> tempList=new ArrayList<SalerRewPenaInfoRegistDto>();
+        SalerRewPenaInfoRegistDto nullDate = new SalerRewPenaInfoRegistDto();
         if(datas == null){
             tempList = chbSalerRewPenaInfoRegistMapper.setDataList(selectParam);
         }else{
             tempList= JsonUtils.json2List(datas,SalerRewPenaInfoRegistDto.class);
         }
-        data.put("dataList",tempList);
+        if(tempList.size() != 0) {
+            data.put("dataList", tempList);
+        }else{
+            tempList.add(nullDate);
+            data.put("dataList", tempList);
+        }
         File depositfile = TisUtil.createFile(data,"pbc/" +"SalerRewPenaInfoRegist_export", "销售人员奖惩投诉记录信息登记.xls");
         sourceFiles.add(depositfile);
         File outFile = null;

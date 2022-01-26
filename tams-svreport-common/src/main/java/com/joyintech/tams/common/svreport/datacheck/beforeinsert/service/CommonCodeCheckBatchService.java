@@ -123,6 +123,8 @@ public class CommonCodeCheckBatchService {
                     checkRewPenaInfo(map);
                 case 销售人员身份信息表INFO:
                     checkSalerIdenInfo(map);
+                case  总部或分支机构信息表INFO:
+                    checkSaleInstInfo(map);
                 default:
                     break;
             }
@@ -2309,6 +2311,10 @@ public class CommonCodeCheckBatchService {
         String rewPenaInst = dataMap.get("SALER_REW_PENA_INST");
         //奖惩单位具体名称
         String rewPenaInstName = dataMap.get("SALER_REW_PENA_INST_NAME");
+        //内部编号
+        String salerInsNo = dataMap.get("SALER_INS_NO");
+
+
         //记录分类选择“01 奖励”或“02 惩处”，且“奖惩单位”选择“99 其他”时必填；
         if((StringUtil.equals(DictCodeListExt2.记录分类_奖励.getValue(),rewPenaType)||
                 StringUtil.equals(DictCodeListExt2.记录分类_惩处.getValue(),rewPenaType))&&
@@ -2324,8 +2330,38 @@ public class CommonCodeCheckBatchService {
                 errMsg +="奖惩单位具体名称不可填[SALER_REW_PENA_INST_NAME="+dataMap.get("SALER_REW_PENA_INST_NAME")+"];";
             }
         }
+        //内部编号
+        if(salerInsNo != null && salerInsNo != ""){
+            if(commonCodeCheckMapper.checkSalerInsNo(salerInsNo) == 0) {
+                errMsg +="内部编号未被维护。[SALER_INS_NO="+dataMap.get("SALER_INS_NO")+"];";
+
+            }
+        }
         dataMap.put("ERRMSG", errMsg);
     }
+    /***
+     * 检查总部机构信息
+     * @param dataMap
+     */
+    public    void  checkSaleInstInfo(Map<String, String> dataMap){
+        String  errMsg = dataMap.getOrDefault("ERRMSG", "");
+        // 总部或分支机构名称
+        String salerOrgName = dataMap.get("SALER_ORG_NAME");
+        //销售机构代码
+        String rewPenaInst = dataMap.get("SALER_INST_CODE");
+        if(salerOrgName != null && salerOrgName != ""){
+            if(commonCodeCheckMapper.checkSalerOrgName(salerOrgName) > 0) {
+                errMsg +="总部或分支机构名称已存在。[SALER_ORG_NAME="+dataMap.get("SALER_ORG_NAME")+"];";
+            }
+        }
+        // 银行模式才判断发行机构代码，联社模式不判断
+        if(!StringUtil.equals(CommonUtil.selectBankCode(), rewPenaInst)
+                && StringUtil.equals(SvrDataUtil.getSysParam("AUTHORITY_TYPE"), "01")){
+            errMsg +="销售机构代码必须与中债登记机构代码相同[SALER_INST_CODE="+rewPenaInst+"];";
+        }
+        dataMap.put("ERRMSG", errMsg);
+    }
+
 
     /***
      * 检查销售人员信息

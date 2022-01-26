@@ -18,7 +18,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.valuation.trademanage.trdfxforwardvaluationtrade.validate.TrdFxForwardValuationTradeDtoValidator;
+import com.joyintech.tams.valuation.trademanage.trdfxswapvaluationtrade.validate.TrdFxSwapValuationTradeDtoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -34,7 +34,7 @@ import java.util.List;
  * @param:
  * @return:
  */
-@ValidLogic(targetClass = TrdFxForwardValuationTradeDtoValidator.class, groups = {ValidateGroupEdit.class,
+@ValidLogic(targetClass = TrdFxSwapValuationTradeDtoValidator.class, groups = {ValidateGroupEdit.class,
     ValidateGroupDelete.class})
 public class TrdFxSwapValuationTradeDto extends WflTrdProductDeal implements ProcessEntity {
 
@@ -293,7 +293,6 @@ public class TrdFxSwapValuationTradeDto extends WflTrdProductDeal implements Pro
      */
     @Override
     @PrimaryKey(Field.PK_1)
-    @NotEmpty(fieldName="TrdFxSwapValuationTrade002.tradeId",groups = {ValidateGroupEdit.class})
     public String getTradeId(){
         return super.getTradeId();
     }
@@ -466,7 +465,6 @@ public class TrdFxSwapValuationTradeDto extends WflTrdProductDeal implements Pro
 
     //交易金额
     @Override
-    @NotEmpty(fieldName="TrdFxSwapValuationTrade002.tradeAmt",groups = {ValidateGroupEdit.class})
     public BigDecimal getTradeAmt() {
         return super.getTradeAmt();
     }
