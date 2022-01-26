@@ -73,7 +73,7 @@ public class TrdFxSwapValuationTrade002Controller extends BaseController {
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.交易方向,
                 DictCode.是否, DictCode.币种,DictCode.货币对,DictCode.期限,DictCode.借贷方向_表外,
-                DictCode.外汇交易模式,DictCode.结算方式,DictCode.我方角色);
+                DictCode.外汇交易模式,DictCode.结算方式,DictCode.我方角色,DictCode.外汇掉期期限类型);
 
         // 一体化对应etliu start
         model.addAttribute("PS_T01", DictCodeList.交易方向_买入.getValue());
