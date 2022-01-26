@@ -265,6 +265,8 @@ public class CfetsTrdQueryService extends BaseService{
         pageParam.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
         pageParam.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
         pageParam.put("platDate", iPlatformDate.getSysDateStr());
+        pageParam.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
+        pageParam.put("sysDate",iPlatformDate.getSysDateStr());
         List<CfetsPledgeInfoResponse> pledgeInfoDtoList =  cfetsTrdQueryMapper.selectRegTablePledgeInfoList(pageParam);
 
 
@@ -988,6 +990,8 @@ public class CfetsTrdQueryService extends BaseService{
             pageParam.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
             pageParam.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
             pageParam.put("platDate", iPlatformDate.getSysDateStr());
+            pageParam.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
+            pageParam.put("sysDate",iPlatformDate.getSysDateStr());
             List<CfetsPledgeInfoResponse> pledgeInfoDtoList =  cfetsTrdQueryMapper.selectRegTablePledgeInfoList(pageParam);
 
 
