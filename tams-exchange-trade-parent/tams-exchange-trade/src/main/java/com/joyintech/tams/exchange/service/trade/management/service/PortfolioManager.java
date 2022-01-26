@@ -601,7 +601,7 @@ public class PortfolioManager extends BaseService {
 
         // 委托价格为0的指令（市价指令），将涨跌停价填充到委托价格
         for (Instruction ins : tempList) {
-            if (EntrustProp.isMarketPrice(entrustProp) && BigDecimal.ZERO.compareTo(ins.getEntrustPrice()) == 0) {
+            if (EntrustUtils.isMarketPrice(ins) && BigDecimal.ZERO.compareTo(ins.getEntrustPrice()) == 0) {
                 if (EntrustBs.BUY.value.equals(entrustBs)) {
                     ins.setEntrustPrice(TradeUtils.getBigDecimal(tick.getUpperLimitPrice(), 4));
                 } else {

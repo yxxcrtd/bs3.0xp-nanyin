@@ -1243,7 +1243,7 @@ public class CfetsTrdConfirmService extends BaseService{
             bussRepoSecs.add(bussRepoSec);
 
             //风险数据
-          /*  if(StringUtil.equals(genType,DictCodeListExt1.生成方式_画面录入.getValue())){
+            if(StringUtil.equals(genType,DictCodeListExt1.生成方式_画面录入.getValue())){
                 CfetsTrdRepoTrade003Dto dto=new CfetsTrdRepoTrade003Dto();
                 BeanUtil.copyPropertiesIgnoreNull(dto,regDeal);
                 dto.setPortfolioId(regDeal.getPortfolioId());
@@ -1254,7 +1254,7 @@ public class CfetsTrdConfirmService extends BaseService{
                 dto.setCpriceAmt(regDeal.getCpriceAmt());
                 dto.setMdate(regDeal.getmSettleDate());
                 dtoList.add(dto);
-            }*/
+            }
 
         }
         entity.setBussRepoSecs(bussRepoSecs);
@@ -2074,26 +2074,10 @@ public class CfetsTrdConfirmService extends BaseService{
      */
     public Page<CfetsTrdConfirmCstpInfoListResponse> findAllCstpInfoList(CfetsTrdConfirmCstpInfoListRequest dto) {
         Map<String, Object> pageParam = BeanUtil.object2Map(dto);
-     /*   String regAssetType= (String)pageParam.get("regAssetType");
-        if(StringUtil.isNotEmpty(regAssetType)){
-            if(StringUtil.equals(regAssetType,"01")){
-                pageParam.put("regAssetType", "BOND");
-            }else{
-                pageParam.put("regAssetType","REPO");
-            }
-        }*/
         String finprodId = (String)pageParam.get("finprodId");
         if(StringUtil.isNotEmpty(finprodId)){
             pageParam.put("finprodIdList", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));
         }
-      /*  if (StringUtil.equals(dto.getSettleSpeed(),
-                DictCodeList.清算速度_T_0.getValue())) {
-            pageParam.put("settleSpeed","0");
-        }
-        if (StringUtil.equals(dto.getSettleSpeed(),
-                DictCodeList.清算速度_T_1.getValue())) {
-            pageParam.put("settleSpeed","1");
-        }*/
         String acctNo=(String)pageParam.get("acctNo");
         if(StringUtil.isNotEmpty(acctNo)){
             pageParam.put("acctNoList", StringUtil.splitToList(GlobalConstant.COMMA,acctNo));
@@ -2165,6 +2149,9 @@ public class CfetsTrdConfirmService extends BaseService{
                 }
             }
         }
+        //分品种区别是否支持CSTP下行接口
+        pageParam.put("bondSupportFlag",CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_BOND"));
+        pageParam.put("repoSupportFlag",CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_REPO"));
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsTrdConfirmMapper.findAllCstpInfoList(pageParam));
     }
     /**
@@ -2598,9 +2585,11 @@ public class CfetsTrdConfirmService extends BaseService{
     public AjaxResult cstpAutoMatchMethod(InterfTradSecdeal interfTradSecdeal,
                                               InterfOpicsTradRepo interfOpicsTradRepo,InterfCstpTrade iCstpTrade){
         CfetsTrdConfirmMatchDto matchDto=new CfetsTrdConfirmMatchDto();
-        if(null!=interfTradSecdeal){
+        String support_cstp_flag_bond=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_BOND");
+        String support_cstp_flag_repo=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_REPO");
+        if(null!=interfTradSecdeal && StringUtil.equals(support_cstp_flag_bond,DictCodeList.是否_是.getValue())){
             matchDto =cstpSecTradeAutoMatch(interfTradSecdeal,iCstpTrade);
-        }else if(null!=interfOpicsTradRepo){
+        }else if(null!=interfOpicsTradRepo && StringUtil.equals(support_cstp_flag_repo,DictCodeList.是否_是.getValue())){
             matchDto =cstpRepoTradeAutoMatch(interfOpicsTradRepo,iCstpTrade);
         }
         if(!StringUtil.isNotEmpty(matchDto)){

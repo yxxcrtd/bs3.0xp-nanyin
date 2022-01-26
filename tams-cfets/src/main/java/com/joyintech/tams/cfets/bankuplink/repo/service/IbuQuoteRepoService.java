@@ -416,7 +416,7 @@ public class IbuQuoteRepoService extends BaseService {
         setParam(param, 2);
         // 质押券信息查询
         List<RepoEntrustPledgeDto> repoEntrustPledgeDtos = cfetsIbuQuoteRepoMapper.selectRepoEntrustPledgesInit(param);
-        for (RepoEntrustPledgeDto newDto : request.getRepoEntrustPledgeDtos()) {
+        for (RepoEntrustPledgeDto newDto : repoEntrustPledgeDtos) {
             boolean flag = false;
             for (RepoEntrustPledgeDto oldDto : request.getRepoEntrustPledgeDtos()) {
                 if (StringUtil.equals(newDto.getFinprodId(), oldDto.getFinprodId())
