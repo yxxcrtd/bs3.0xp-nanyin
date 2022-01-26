@@ -1,0 +1,1 @@
+update cfg_datatable_show set extendcfg='{"colAlign": "right","dataType":"amount","precision":"4","supportSearch":"精确"}' where pagecode='CfetsTrdQuery' and dtcode in ('CfetsTrdQueryRegPInfo','CfetsTrdQueryIbuPInfo') and colcode='unitCprice';
