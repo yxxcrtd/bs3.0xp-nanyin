@@ -45,7 +45,7 @@ import java.math.BigDecimal;
 //import com.joyintech.tams.invest.trade.lend.service.TrdLendInvestTrade002Service;
 
 /**
- * 拆借投资交易新建
+ * 质押式回购交易新建
  */
 @Controller
 @PageId("TrdRepoValuationTrade002")

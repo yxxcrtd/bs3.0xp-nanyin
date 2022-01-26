@@ -12,9 +12,10 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.interf.common.util.TisUtil;
+import com.joyintech.tams.report.submitmanagement.agentprdinforegist.dao.ChbAgentPrdSubMapper;
+import com.joyintech.tams.report.submitmanagement.agentprdinforegist.dto.AgentPrdInfoRegistDto;
 import com.joyintech.tams.report.submitmanagement.salerideninforegist.dao.ChbSalerIdenInfoRegistMapper;
 import com.joyintech.tams.report.submitmanagement.salerideninforegist.dto.SalerIdenInfoRegistDto;
-import com.joyintech.tams.report.submitmanagement.salerrewpenainforegist.dto.SalerRewPenaInfoRegistDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,12 +67,18 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
      */
     public Page<SalerIdenInfoRegistDto> searchForPage(Map<String, Object> param){
         dealSearchParam(param);
-        int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
-	    int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
-        Page<SalerIdenInfoRegistDto> pageList = super.queryForPage(
-        		pagenum,legth,()->chbSalerIdenInfoRegistMapper.queryForRegistPage(param));
-        this.formatByType(pageList.getRoot());
-        return pageList;
+        if (null != param.get(GlobalConstant.PARAM_PAGE)
+                && null != param.get(GlobalConstant.PARAM_LENGTH)) {
+            int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
+            int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
+            Page<SalerIdenInfoRegistDto> pageList = super.queryForPage(
+                    pagenum, legth, () -> chbSalerIdenInfoRegistMapper.queryForRegistPage(param));
+            this.formatByType(pageList.getRoot());
+            return pageList;
+        }else{
+            Page<SalerIdenInfoRegistDto> page = queryForPage(ChbSalerIdenInfoRegistMapper.class,"queryForRegistPage",param);
+            return page;
+        }
     }
 
     /**
@@ -123,41 +130,12 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
         if (StringUtil.isEmptyList(investList)) {
             return;
         }
-        int maxDataCountOneTime = reportSelectOrDeleteCountForShenFen;
-        int dataCount = investList.size();
-        if (dataCount <= maxDataCountOneTime) {
             //已报送数据进留痕表
             chbSalerIdenInfoRegistMapper.insertIntoHis(investList);
             //删除正式表已报送数据
             chbSalerIdenInfoRegistMapper.deleteLastSubmitRegist(investList);
             chbSalerIdenInfoRegistMapper.updateInterfSubmitAndSeqBatch(sendStatus, investList);
             return;
-        }
-        List<SalerIdenInfoRegistDto> newDataList = new ArrayList<SalerIdenInfoRegistDto>();
-        newDataList.addAll(investList);
-        // 分批处理
-        int part = dataCount / maxDataCountOneTime; // 分批数
-        for (int i = 0; i < part; i++) {
-            logger.info("单次更新登记表start===");
-            //已报送数据进留痕表
-            chbSalerIdenInfoRegistMapper.insertIntoHis(investList);
-            //删除正式表已报送数据
-            chbSalerIdenInfoRegistMapper.deleteLastSubmitRegist(investList);
-            chbSalerIdenInfoRegistMapper.updateInterfSubmitAndSeqBatch(sendStatus,
-                    newDataList.subList(0, maxDataCountOneTime));
-            newDataList.subList(0, maxDataCountOneTime).clear();
-            logger.info("单次更新登记表end===");
-        }
-        // 最后剩下的数据
-        if (CollectionUtils.isNotEmpty(newDataList)) {
-            logger.info("单次更新登记表start===");
-            //已报送数据进留痕表
-            chbSalerIdenInfoRegistMapper.insertIntoHis(investList);
-            //删除正式表已报送数据
-            chbSalerIdenInfoRegistMapper.deleteLastSubmitRegist(investList);
-            chbSalerIdenInfoRegistMapper.updateInterfSubmitAndSeqBatch(sendStatus, newDataList);
-            logger.info("单次更新登记表end===");
-        }
     }
     /**
      * 已手工处理的数据将报送状态改为未报送

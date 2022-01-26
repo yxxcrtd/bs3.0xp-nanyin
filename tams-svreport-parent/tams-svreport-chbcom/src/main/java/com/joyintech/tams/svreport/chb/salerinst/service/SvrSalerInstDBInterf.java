@@ -6,6 +6,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbSalerInstInfo;
 import com.joyintech.tams.common.base.entity.ChbSalerInstSub;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
@@ -65,15 +66,15 @@ public class SvrSalerInstDBInterf extends BaseService{
     		return;
     	}
 
-//		// 调用check逻辑
-//		logger.debug("总部或分支机构信息登记数据检查开始------检查前数据个数：" + list.size());
-//		list = chbCommonCheckService.checkData(list, ChbCheckTableInfo.总部或分支机构信息登记表SUB);
-//		logger.debug("总部或分支机构信息登记数据检查结束------检查后数据个数：" + list.size());
-//
-//		if(StringUtil.isEmptyList(list)){
-//			logger.info("检查后的数据全部不合规，批处理结束");
-//			return;
-//		}
+		// 调用check逻辑
+		logger.debug("总部或分支机构信息登记数据检查开始------检查前数据个数：" + list.size());
+		list = chbCommonCheckService.checkData(list, ChbCheckTableInfo.总部或分支机构信息登记表SUB);
+		logger.debug("总部或分支机构信息登记数据检查结束------检查后数据个数：" + list.size());
+
+		if(StringUtil.isEmptyList(list)){
+			logger.info("检查后的数据全部不合规，批处理结束");
+			return;
+		}
     	//2、查询已登记的信息
     	List<ChbSalerInstSub> regList = svrSalerInstDBInterfMapper.selectRegSalerInstData();
     	//将已存在报送中的数据放入map中
@@ -326,6 +327,8 @@ public class SvrSalerInstDBInterf extends BaseService{
 		tmpDto.setSalerOrgCode(null==dto.getSalerOrgCode()?"":dto.getSalerOrgCode());
 		tmpDto.setSalerOrgName(null==dto.getSalerOrgName()?"":dto.getSalerOrgName());
 		tmpDto.setSalerOrgLevel(null==dto.getSalerOrgLevel()?"":dto.getSalerOrgLevel());
+		tmpDto.setUpdateTime(null);
+		tmpDto.setCreateTime(null);
 		return tmpDto;
 	}
     

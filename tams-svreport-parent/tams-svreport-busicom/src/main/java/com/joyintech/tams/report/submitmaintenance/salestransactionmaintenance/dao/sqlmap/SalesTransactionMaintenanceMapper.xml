@@ -155,6 +155,21 @@
 		TRADE_NO=#{tradeNo}
 	</delete>
 
+	<!--	根据主键删除-->
+	<delete id="deleteInfoByPrimaryKey" parameterType="java.lang.String" >
+		delete from CHB_SALER_STL_DEAL_INFO
+		where
+		INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR}
+		and
+		TRADE_NO=#{tradeNo}
+		and
+		ACCOUNT_NO = #{accountNo}
+		and
+		PRD_REGIST_CODE = #{prdRegistCode}
+		and
+		DATA_STATUS = 'D'
+	</delete>
+
 	<!--	根据主键删除info-->
 	<update id="deleteInfo" parameterType="java.lang.String">
 		UPDATE CHB_SALER_STL_DEAL_INFO
@@ -352,7 +367,8 @@
 	<select id="selectTradeNo" resultType="java.lang.Integer">
 		SELECT count(*) from CHB_SALER_STL_DEAL_INFO
 		where
-		INSTITUTION_CODE=#{institutionCode,jdbcType=VARCHAR}
+		DATA_STATUS = 'E'
+		and INSTITUTION_CODE=#{institutionCode,jdbcType=VARCHAR}
 		and PRD_REGIST_CODE=#{prdRegistCode,jdbcType=VARCHAR}
 		and ACCOUNT_NO=#{accountNo,jdbcType=VARCHAR}
 		and TRADE_NO=#{tradeNo,jdbcType=VARCHAR}

@@ -255,4 +255,10 @@
         STATUS = 'E'
         and SALER_ORG_NAME = #{salerOrgName,jdbcType=VARCHAR}
     </select>
+
+    <select id="checkSalerInsNo" resultType="integer">
+        select count(SALER_INS_NO) from CHB_SALER_IDEN_INFO
+        where SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+        and STATUS = 'E'
+    </select>
 </mapper>

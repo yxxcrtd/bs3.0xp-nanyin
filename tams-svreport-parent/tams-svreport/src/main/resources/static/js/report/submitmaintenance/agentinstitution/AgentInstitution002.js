@@ -32,7 +32,6 @@
                     function getIssuePartyId(){
                        var agentInstitutionCode = $('#agentInstitutionCode').val();
                        Joyin.ajax(JoyinUtil.getRealPath('report/submitmaintenance/agentprdinfo/AgentPrdInfo002/getIssuePartyId'),{agentInstitutionCode : agentInstitutionCode},function(result){
-                                 debugger;
                                  if (result){
                                    $('#issuePartyId').val(result);
                                  }

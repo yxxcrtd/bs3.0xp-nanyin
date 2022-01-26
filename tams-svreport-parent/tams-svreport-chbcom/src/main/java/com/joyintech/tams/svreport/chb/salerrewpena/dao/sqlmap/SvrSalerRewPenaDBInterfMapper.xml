@@ -93,7 +93,7 @@
 		#{salerComplainResult,jdbcType=VARCHAR}, #{salerComplainDate,jdbcType=DATE},#{status,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
 		#{sumitSeq,jdbcType=VARCHAR}, #{chbSubmitDeadline,jdbcType=DATE},
 		#{submitDeadline,jdbcType=DATE}, #{sendStatus,jdbcType=VARCHAR},#{dataDate,jdbcType=DATE},
-		#{createUser,jdbcType=VARCHAR},sysdate,#{updateUser,jdbcType=VARCHAR},sysdate)
+		#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=DATE},#{updateUser,jdbcType=VARCHAR},#{updateTime,jdbcType=DATE})
 	</insert>
 
 </mapper>
