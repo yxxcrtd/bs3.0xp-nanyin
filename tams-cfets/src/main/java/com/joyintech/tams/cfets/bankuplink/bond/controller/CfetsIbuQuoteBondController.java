@@ -645,7 +645,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 				if(StringUtil.equals(item.getCalMode(),"03")){item.setExerYield(ArithmeticUtil.multiply(item.getExerYield(),new BigDecimal(100)));item.setPrice(null);item.setMatureYield(null);}
 			});
 		}
-		File tplfile = new File(this.getClass().getClassLoader().getResource("tpl/DAYREGEXPORTTPL.xlsx").getPath());
+		File tplfile = new File(ExcelTplUitl.getTplFile("DAYREGEXPORTTPL.xlsx"));
 		List<File> files = new ArrayList<>();
 		if(StringUtil.isNotEmpty(ibuExportCountMax)&&CollectionUtils.isNotEmpty(dataList)){
 			int max = Integer.parseInt(ibuExportCountMax);

@@ -1174,10 +1174,6 @@ public class IbuQuoteRepoService extends BaseService {
         CfetsRepoDealQuoteCommonDto temp = new CfetsRepoDealQuoteCommonDto();
         // copy赋值
         BeanUtil.copyPropertiesIgnoreNull(resultDto, request);
-        // 回复不处理计算
-        if (StringUtil.equals("dialogueResponse", request.getQuotaPageModel())) {
-            return resultDto;
-        }
         if (CollectionUtils.isEmpty(request.getRepoEntrustPledgeDtos())
                 && StringUtil.equals(request.getPs(), DictCodeListExt3.交易方向_正回购.getValue())) {
             return resultDto;
@@ -1194,7 +1190,8 @@ public class IbuQuoteRepoService extends BaseService {
             resultDto.setRepoEntrustPledgeDtos(this.ptlAllocationDel(request));
             request.setRepoEntrustPledgeDtos(resultDto.getRepoEntrustPledgeDtos());
         }
-        if (StringUtil.equals(request.getPs(), DictCodeListExt3.交易方向_正回购.getValue())) {
+        if (StringUtil.equals(request.getPs(), DictCodeListExt3.交易方向_正回购.getValue())
+                && !StringUtil.equals("dialogueResponse", request.getQuotaPageModel())) {
             // 组合分配(正回购)添加质押券后联动 计算组合分配中交易金额,并汇总基本信息中交易金额
             temp = this.pledgesAddPtl(request);
             // 交易金额汇总
@@ -1249,10 +1246,12 @@ public class IbuQuoteRepoService extends BaseService {
         resultDto.setmIntAmt(temp.getmIntAmt());
         // 到期结算金额 本金金额+回购利息
         resultDto.setMtradeAmt(temp.getMtradeAmt());
-        // 质押券折算总额
-        resultDto.setConvertAmt(convertAmt);
-        // 质押券面总额合计
-        resultDto.setShareAmt(shareAmt);
+        if(!StringUtil.equals("dialogueResponse", request.getQuotaPageModel())) {
+            // 质押券折算总额
+            resultDto.setConvertAmt(convertAmt);
+            // 质押券面总额合计
+            resultDto.setShareAmt(shareAmt);
+        }
         // 组合分配
         request.setTradeAmt(resultDto.getTradeAmt());//交易金额
         request.setmIntAmt(resultDto.getmIntAmt());//回购利息

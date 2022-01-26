@@ -742,7 +742,7 @@
         to_char(tpdp.trade_date,'yyyy-MM-dd') exeDate,
         to_char(tpdp.settle_date,'yyyy-MM-dd') tradeDate,
         #{quoteType} busiType,
-        tpdp.portfolio_id portfolioId,
+        pp.portfolio_id portfolioId,
         pp.portfolio_name portfolioName,
         fp.finprod_market_id finprodMarketId,
         fp.finprod_abbr finprodAbbr,
@@ -790,7 +790,7 @@
         to_char(tpdp.quote_date, 'yyyy-MM-dd') exeDate,
         to_char(tpdp.quote_date, 'yyyy-MM-dd') tradeDate,
         tpdp.quote_type busiType,
-        tpdp.portfolio_id portfolioId,
+        pp.portfolio_id portfolioId,
         pp.portfolio_name portfolioName,
         fp.finprod_market_id finprodMarketId,
         fp.finprod_abbr finprodAbbr,
@@ -869,12 +869,13 @@
         <include refid="etrDispatcherExeListInfo1"/>
         FROM IBU_QUOTE_BOND tpdp
         LEFT JOIN IBU_QUOTE_BOND_DET tpdpa ON tpdp.QUOTE_ID = tpdpa.QUOTE_ID
-        LEFT JOIN PTL_PORTFOLIO pp ON tpdp.portfolio_id = pp.portfolio_id
+        LEFT JOIN IBU_QUOTE_ETR_RE iqe	 ON  iqe.QUOTE_ID = tpdp.QUOTE_ID
+        LEFT JOIN PTL_PORTFOLIO pp ON iqe.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcp ON tpdpa.cp_party_id = mcp.party_id
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON tpdpa.CP_TRADER= mcct.trader_id
         LEFT JOIN FIN_EXERCISE_PLAN T6 ON tpdp.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02'
-        WHERE tpdp.entrust_id = #{entrustId}
+        WHERE iqe.entrust_id = #{entrustId}
 
         union all
 
@@ -882,12 +883,13 @@
         <include refid="etrDispatcherExeListInfo1"/>
         FROM WFL_IBU_QUOTE_BOND2 tpdp
         LEFT JOIN WFL_IBU_QUOTE_BOND_DET tpdpa ON tpdp.QUOTE_ID = tpdpa.QUOTE_ID
-        LEFT JOIN PTL_PORTFOLIO pp ON tpdp.portfolio_id = pp.portfolio_id
+        LEFT JOIN WFL_IBU_QUOTE_ETR_RE wiqe	 ON  wiqe.QUOTE_ID = tpdp.QUOTE_ID
+        LEFT JOIN PTL_PORTFOLIO pp ON wiqe.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcp ON tpdpa.cp_party_id = mcp.party_id
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON tpdpa.CP_TRADER= mcct.trader_id
         LEFT JOIN FIN_EXERCISE_PLAN T6 ON tpdp.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02'
-        WHERE tpdp.entrust_id = #{entrustId}
+        WHERE wiqe.entrust_id = #{entrustId}
     </select>
 
     <!-- 根据用户名得到真实姓名 -->

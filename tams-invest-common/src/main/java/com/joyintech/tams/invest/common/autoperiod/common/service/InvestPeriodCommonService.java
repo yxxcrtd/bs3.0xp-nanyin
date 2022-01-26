@@ -249,6 +249,9 @@ public class InvestPeriodCommonService {
                 //多级法人改造 add by xr  20200711
                 trdFinProductDealTotal.setUpdateTime(updateTime);
                 trdFinProductDealTotal.setUpdateUser(updateUser);
+                if(StringUtil.isNotEmpty(revokeReason)){
+                    trdFinProductDealTotal.setRemark((trdFinProductDealTotal.getRemark()==null?"":trdFinProductDealTotal.getRemark())+revokeReason);
+                }
                 trdFinProductDealTotalMapper.updateByPrimaryKeySelective(trdFinProductDealTotal);
                 // 撤销交易状态为撤销
                 trdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());

@@ -644,6 +644,7 @@
         ic.deal_fee_amt as trdFeeAmt,
         ic.sett_fee_amt as settleFeeAmt,
         ic.V_DELIVERY_TYPE as deliveryType,
+        ic.M_DELIVERY_TYPE as mdeliveryType,
         ic.sett_type as clearType,
         ic.TERM_TYPE as termType,
         ic.act_Days as actRepoTerm,
