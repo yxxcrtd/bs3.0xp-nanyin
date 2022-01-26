@@ -130,41 +130,12 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
         if (StringUtil.isEmptyList(investList)) {
             return;
         }
-        int maxDataCountOneTime = reportSelectOrDeleteCountForShenFen;
-        int dataCount = investList.size();
-        if (dataCount <= maxDataCountOneTime) {
             //已报送数据进留痕表
             salesTransactionMaintenanceRegist001Mapper.insertIntoHis(investList);
             //删除正式表已报送数据
             salesTransactionMaintenanceRegist001Mapper.deleteLastSubmitRegist(investList);
             salesTransactionMaintenanceRegist001Mapper.updateInterfSubmitAndSeqBatch(sendStatus, investList);
             return;
-        }
-        List<SalesTransactionMaintenanceRegist001Dto> newDataList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-        newDataList.addAll(investList);
-        // 分批处理
-        int part = dataCount / maxDataCountOneTime; // 分批数
-        for (int i = 0; i < part; i++) {
-            logger.info("单次更新登记表start===");
-            //已报送数据进留痕表
-            salesTransactionMaintenanceRegist001Mapper.insertIntoHis(investList);
-            //删除正式表已报送数据
-            salesTransactionMaintenanceRegist001Mapper.deleteLastSubmitRegist(investList);
-            salesTransactionMaintenanceRegist001Mapper.updateInterfSubmitAndSeqBatch(sendStatus,
-                    newDataList.subList(0, maxDataCountOneTime));
-            newDataList.subList(0, maxDataCountOneTime).clear();
-            logger.info("单次更新登记表end===");
-        }
-        // 最后剩下的数据
-        if (CollectionUtils.isNotEmpty(newDataList)) {
-            logger.info("单次更新登记表start===");
-            //已报送数据进留痕表
-            salesTransactionMaintenanceRegist001Mapper.insertIntoHis(investList);
-            //删除正式表已报送数据
-            salesTransactionMaintenanceRegist001Mapper.deleteLastSubmitRegist(investList);
-            salesTransactionMaintenanceRegist001Mapper.updateInterfSubmitAndSeqBatch(sendStatus, newDataList);
-            logger.info("单次更新登记表end===");
-        }
     }
     /**
      * 已手工处理的数据将报送状态改为未报送
