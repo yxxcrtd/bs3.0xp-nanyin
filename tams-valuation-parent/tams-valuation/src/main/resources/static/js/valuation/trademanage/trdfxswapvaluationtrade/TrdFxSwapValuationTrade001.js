@@ -14,13 +14,9 @@ $(function(){
         if(portfolioIdTemp != null){
             portfolioId = portfolioIdTemp.join(",");
         }
+        var curPair = $('#curPair').val();
+        var tradeDate = $('#tradeDate').val();
 
-        //资产代码  多选择
-        var finprodIdTemp = $('#finprodId').val();
-        var finprodId = null;
-        if(finprodIdTemp != null){
-            finprodId = finprodIdTemp.join(",");
-        }
 
         //交易类型  多选择
         var psTemp = $('#ps').val();
@@ -32,8 +28,9 @@ $(function(){
             tradeId:$('#tradeId').val(),
             portfolioId:portfolioId,
             finprodType:$('#finprodType').val(),
-            finprodId:finprodId,
             ps:ps,
+            curPair:curPair,
+            tradeDate:tradeDate,
             createUser:createUser
         };
     };
@@ -64,6 +61,7 @@ $(function(){
             ,{field:'portfolioName', width:150, title: '产品名称'}
             ,{field:'curPair', width:150, title: '货币对',sortField:'curPair'}
             ,{field:'psStr', width:150, title: '交易类型',sortField:'ps'}
+            ,{field:'termType', width:150, title: '期限类型',sortField:'termType'}
             ,{field:'tradeDate', type:'date' ,width:150, title: '交易日', visible: false}
             ,{field:'tradeDateStr',width:150, title: '交易日'}
             ,{field:'unitCprice', width:150, title: '即期汇率',type:'number'}
@@ -112,7 +110,7 @@ $(function(){
     table.bind('click', '.edit', function(data, index) {
         data.pageModel = PAGE_MODEL_EDIT;
         var object = {selectedItem: [data], operateType:"edit"};//请求参数
-        Joyin.dialog(JoyinUtil.getLabel("固收类交易-修改"),
+        Joyin.dialog(JoyinUtil.getLabel("外汇掉期交易-修改"),
             basePath + "valuation/trademanage/trdfxswapvaluationtrade/TrdFxSwapValuationTrade002/init",//打开新界面
             "98%", "98%", {pageModel:PAGE_MODEL_EDIT,//请求的page_model
                 tradeId:data.tradeId  //金融产品代码

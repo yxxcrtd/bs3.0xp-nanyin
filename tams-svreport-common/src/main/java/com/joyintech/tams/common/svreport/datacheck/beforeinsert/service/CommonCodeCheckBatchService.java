@@ -55,6 +55,8 @@ public class CommonCodeCheckBatchService {
      */
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private Map<String,String>  map=new HashMap<>();
+
     /**
      * 登记的入库前的代码检查
      * 只做校验，不做其他处理
@@ -121,6 +123,8 @@ public class CommonCodeCheckBatchService {
                     checkRewPenaInfo(map);
                 case 销售人员身份信息表INFO:
                     checkSalerIdenInfo(map);
+                case  总部或分支机构信息表INFO:
+                    checkSaleInstInfo(map);
                 default:
                     break;
             }
@@ -2324,6 +2328,29 @@ public class CommonCodeCheckBatchService {
         }
         dataMap.put("ERRMSG", errMsg);
     }
+    /***
+     * 检查总部机构信息
+     * @param dataMap
+     */
+    public    void  checkSaleInstInfo(Map<String, String> dataMap){
+        String  errMsg = dataMap.getOrDefault("ERRMSG", "");
+        // 总部或分支机构名称
+        String salerOrgName = dataMap.get("SALER_ORG_NAME");
+        //销售机构代码
+        String rewPenaInst = dataMap.get("SALER_INST_CODE");
+        if(salerOrgName != null && salerOrgName != ""){
+            if(commonCodeCheckMapper.checkSalerOrgName(salerOrgName) > 0) {
+                errMsg +="总部或分支机构名称已存在。[SALER_ORG_NAME="+dataMap.get("SALER_ORG_NAME")+"];";
+            }
+        }
+        // 银行模式才判断发行机构代码，联社模式不判断
+        if(!StringUtil.equals(CommonUtil.selectBankCode(), rewPenaInst)
+                && StringUtil.equals(SvrDataUtil.getSysParam("AUTHORITY_TYPE"), "01")){
+            errMsg +="销售机构代码必须与银行代码相同[SALER_INST_CODE="+rewPenaInst+"];";
+        }
+        dataMap.put("ERRMSG", errMsg);
+    }
+
 
     /***
      * 检查销售人员信息
@@ -2354,10 +2381,18 @@ public class CommonCodeCheckBatchService {
         //总部分支机构信息
         String salerOrgCode = dataMap.get("SALER_ORG_CODE");
 
+
+
         //证件号码重复校验
         if (rewPenaType != null && rewPenaType != "") {
             if (rewPenaType.equals("99")) {
                 if (salerOtherCredentName != null && salerOtherCredentName != "") {
+                    String keyset=salerOtherCredentName+salerCredentNo;
+                    if(map.containsKey(keyset)){
+                        errMsg +="当证件类别选择“99”时，“其他证件名称+证件号码”不可同时相同。[SALER_CREDENT_NO="+dataMap.get("SALER_CREDENT_NO")+"];";
+                    }else{
+                        map.put(keyset,keyset);
+                    }
                     if (salerCredentNo != null && salerCredentNo != "") {
                         if (commonCodeCheckMapper.checkSalerCredentNo(null, salerOtherCredentName, salerCredentNo) > 0) {
                             errMsg +="其他证件名称相同时，证件号码不可重复。[SALER_CREDENT_NO="+dataMap.get("SALER_CREDENT_NO")+"];";
@@ -2366,6 +2401,12 @@ public class CommonCodeCheckBatchService {
                 }
             } else {
                 if (salerCredentNo != null && salerCredentNo != "") {
+                    String keyset=rewPenaType+salerCredentNo;
+                    if(map.containsKey(keyset)){
+                        errMsg +="当证件类别选择“01-05”时,“证件类别+证件号码”不可同时相同。[SALER_CREDENT_NO="+dataMap.get("SALER_CREDENT_NO")+"];";
+                    }else{
+                        map.put(keyset,keyset);
+                    }
                     if (commonCodeCheckMapper.checkSalerCredentNo(rewPenaType, null, salerCredentNo) > 0) {
                         errMsg +="证件类别相同时，证件号码不可重复。[SALER_CREDENT_NO="+dataMap.get("SALER_CREDENT_NO")+"];";
                     }

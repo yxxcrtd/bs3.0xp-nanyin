@@ -259,12 +259,18 @@ public class AgentInstitutionRegist001Service extends CommonExportService<AgentI
         List<File> sourceFiles = new ArrayList<>();
         Map<String,Object> data  = new HashMap<String,Object>();
         List<AgentInstitutionRegistDto> tempList=new ArrayList<AgentInstitutionRegistDto>();
+        AgentInstitutionRegistDto nullDate = new AgentInstitutionRegistDto();
         if(datas == null){
             tempList = chbAgentInstitutionSubMapper.setDataList(selectParam);
         }else{
             tempList= com.joyintech.framework.util.JsonUtils.json2List(datas,AgentInstitutionRegistDto.class);
         }
-        data.put("dataList",tempList);
+        if(tempList.size() != 0) {
+            data.put("dataList", tempList);
+        }else{
+            tempList.add(nullDate);
+            data.put("dataList", tempList);
+        }
         File depositfile = TisUtil.createFile(data,"pbc/" +"AgentInstitutionRegist_export", "代理销售机构信息登记.xls");
         sourceFiles.add(depositfile);
         File outFile = null;

@@ -244,4 +244,15 @@
         STATUS = 'E'
         and SALER_ORG_CODE = #{salerOrgCode,jdbcType=VARCHAR}
     </select>
+
+    <!--    总部或分支机构名称重复校验-->
+    <select id="checkSalerOrgName" resultType="integer" parameterType="java.lang.String" >
+        select
+        count(*)
+        from
+        CHB_SALER_INST_INFO
+        where
+        STATUS = 'E'
+        and SALER_ORG_NAME = #{salerOrgName,jdbcType=VARCHAR}
+    </select>
 </mapper>

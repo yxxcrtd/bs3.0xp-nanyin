@@ -50,6 +50,6 @@ public class SalerInstInfoRegistDto extends ChbSalerInstSub implements ProcessEn
 
     //机构层级字符串化
     public String getSalerOrgLevelStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.机构层级, this.getSalerOrgLevel());
+        return this.getSalerOrgLevel();
     }
 }

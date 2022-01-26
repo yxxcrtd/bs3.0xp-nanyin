@@ -26,59 +26,71 @@
     });
 
 
-    $('#ps').change(function(){
-        if($('#ps').val() && $('#ps').val() != null && $('#ps').val() != ''){
-            var psStr = $('#ps').val();
-            var sqps = "T01,T02,T52,T04";//申请信息  --买入 T01、卖出T02、认购 T52、申购 T04
-            var qrps = "T18,T05,T19";    //确认信息  --认购确认 T18、申购确认T05、赎回确认 T19
-            var dzps = "T24";               //到账信息  --赎回到账 T24
-            if(sqps.indexOf(psStr) >-1){
-                $('#value_div_sq').show();
-                $('#value_div_qr').hide();
-                $('#value_div_dz').hide();
-                $('#confirmTradeAmt').val('');
-                $('#settleAmt').val('');
-            }else if(qrps.indexOf(psStr) >-1){
-                $('#value_div_sq').hide();
-                $('#value_div_qr').show();
-                $('#value_div_dz').hide();
-                $('#tradeAmt').val('');
-                $('#settleAmt').val('');
-            }else if(dzps.indexOf(psStr) >-1){
-                $('#value_div_sq').hide();
-                $('#value_div_qr').hide();
-                $('#value_div_dz').show();
-                $('#tradeAmt').val('')
-                $('#confirmTradeAmt').val('')
-            }else{
-                $('#value_div_sq').show();
-                $('#value_div_qr').show();
-                $('#value_div_dz').show();
-                $('#tradeAmt').val('');
-                $('#confirmTradeAmt').val('');
-                $('#settleAmt').val('');
-            }
 
+    /**
+     * 货币对 联动
+     */
+    $('#curPair').change(function(){
+        if($('#curPair').val() == ""){
+            $("#dealCur").val("");
+            $("#corCcy").val("");
         }
+        corCcyDeal();
+    });
+
+    /**
+     * 交易货币、对应货币联动
+     */
+    $('#dealCur').change(function(){
+        if($('#curPair').val() == ""){
+            $("#corCcy").val("");
+            return;
+        }
+        corCcyDeal();
 
     });
+
+    /**
+     * 对应货币联动展示
+     */
+    var corCcyDeal = function(){
+        var index=document.getElementById("dealCur").selectedIndex;
+        var length=document.getElementById("dealCur").length;
+        var dealCur=$('#dealCur').val();
+        if(dealCur == ""){
+            $("#corCcy").empty();
+        }
+        var total=length;
+        if(index != 0){
+            $("#corCcy").empty();
+            if(length > 2){
+                var option = document.createElement("option");
+                $(option).val(document.getElementById("dealCur").options[total-index].value);
+                $(option).text(document.getElementById("dealCur").options[total-index].text);
+                $('#corCcy').append(option);
+                $("#corCcy option[value="+document.getElementById("dealCur").options[total-index].value+"]").prop("selected",true);
+            }
+        }
+    }
+
+
 
     //即期汇率 联动
-    $('#unitCprice').change(function(){
-        unitFpriceCalculate();
-    });
+    // $('#unitCprice').change(function(){
+    //     unitFpriceCalculate();
+    // });
 
     //远期点 联动
-    $('#unitInt').change(function(){
-        unitFpriceCalculate();
-    });
+    // $('#unitInt').change(function(){
+    //     unitFpriceCalculate();
+    // });
 
     /**
      * 远期全价 = 即期汇率+远期点
      */
-    var unitFpriceCalculate = function(){
-        $('#unitFprice').val(JoyinMath.doAdd($('#unitCprice').val(), $('#unitInt').val(), 2));
-    }
+    // var unitFpriceCalculate = function(){
+    //     $('#unitFprice').val(JoyinMath.doAdd($('#unitCprice').val(), $('#unitInt').val(), 2));
+    // }
 
 
     /**
@@ -88,40 +100,40 @@
      * 交易货币金额 dealCurAmt
      * 当清算模式（settMode）选择差额清算时允许编辑，差额收付金额=|远期价格-定价日即期汇率|*交易货币金额
      */
-    $('#settMode').change(function(){
-        if($('#settMode') && $('#settMode').val()=='DIF-SETT'){
-            var price  = Math.abs(JoyinMath.doMinus($('#unitFprice').val(),$('#pricedDateRate').val(),2));
-            $('#difPayAmt').val(JoyinMath.doMul(price,$('#dealCurAmt').val(),2));
-        }
-    });
+    // $('#settMode').change(function(){
+    //     if($('#settMode') && $('#settMode').val()=='DIF-SETT'){
+    //         var price  = Math.abs(JoyinMath.doMinus($('#unitFprice').val(),$('#pricedDateRate').val(),2));
+    //         $('#difPayAmt').val(JoyinMath.doMul(price,$('#dealCurAmt').val(),2));
+    //     }
+    // });
 
     //远期点 联动
-    $('#dealCurAmt').change(function(){
-        corCcyAmtAmtCalculate();
-    });
+    // $('#dealCurAmt').change(function(){
+    //     corCcyAmtAmtCalculate();
+    // });
     //远期点 联动
-    $('#unitFprice').change(function(){
-        corCcyAmtAmtCalculate();
-    });
+    // $('#unitFprice').change(function(){
+    //     corCcyAmtAmtCalculate();
+    // });
     /**
      * 对应货币金额  计算  = 交易货币金额*远期全价
      *                     dealCurAmt  unitFprice
      */
-    var corCcyAmtAmtCalculate = function(){
-        //结算金额=全价总额+其他费用
-        var mdateSettleAmt=JoyinMath.doMinus($('#dealCurAmt').val(), $('#unitFprice').val(), 2);
-        $('#mdateSettleAmt').val(mdateSettleAmt);
-    }
+    // var corCcyAmtAmtCalculate = function(){
+    //     //结算金额=全价总额+其他费用
+    //     var mdateSettleAmt=JoyinMath.doMinus($('#dealCurAmt').val(), $('#unitFprice').val(), 2);
+    //     $('#mdateSettleAmt').val(mdateSettleAmt);
+    // }
 
 
     /**
      * 结算金额  计算
      */
-    var mdateSettleAmtCalculate = function(){
-        //结算金额=全价总额+其他费用
-        var mdateSettleAmt=JoyinMath.doAdd($('#fpriceAmt').val(), $('#feeAmtQT').val(), 2);
-        $('#mdateSettleAmt').val(mdateSettleAmt);
-    }
+    // var mdateSettleAmtCalculate = function(){
+    //     //结算金额=全价总额+其他费用
+    //     var mdateSettleAmt=JoyinMath.doAdd($('#fpriceAmt').val(), $('#feeAmtQT').val(), 2);
+    //     $('#mdateSettleAmt').val(mdateSettleAmt);
+    // }
 
     /**
      * 保存或提交

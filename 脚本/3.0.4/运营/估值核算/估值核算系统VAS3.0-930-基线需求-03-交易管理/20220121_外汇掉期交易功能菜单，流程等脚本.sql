@@ -200,26 +200,6 @@ values ('TrdFxSwapValuationTrade001', '999999', 'CYY_PAIR', 'NZD/USD', null, nul
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('TrdFxSwapValuationTrade001', '999999', 'CYY_PAIR', 'EUR/GBP', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
-/*新增 期限类型 数据字典*/
-select * from  sys_datadict where DICT_CODE='SWAP_TERM_TYPE';
-insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SWAP_TERM_TYPE', 'COM', '期限类型', null, '02', 'system', null, sysdate, 'system', sysdate);
-
-/*新增 期限类型 数据字典数据*/
-delete from sys_datadict_list where DICT_CODE='SWAP_TERM_TYPE';
-
-insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('SWAP_TERM_TYPE', '01', '即期对远期', 1, '0', 'inter', null,sysdate, 'system', sysdate, null);
-insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('SWAP_TERM_TYPE', '02', '远期对远期', 2, '0', 'inter', null,sysdate, 'system', sysdate, null);
-insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('SWAP_TERM_TYPE', '03', 'Overnight', 3, '0', 'inter', null,sysdate, 'system', sysdate, null);
-insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('SWAP_TERM_TYPE', '04', 'Tom-Next', 4, '0', 'inter', null,sysdate, 'system', sysdate, null);
-insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('TERM_DATE', '05', 'Spot-Next', 5, '0', 'inter', null,sysdate, 'system', sysdate, null);
-
-
 /*外汇掉期交易-新建页面-交易模式下拉框*/
 delete from  sys_page_dictlist where page_id='TrdFxSwapValuationTrade002' and DICT_ID='DEAL_MODE';
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
