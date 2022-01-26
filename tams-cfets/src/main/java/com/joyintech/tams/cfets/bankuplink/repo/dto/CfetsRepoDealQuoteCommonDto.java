@@ -170,6 +170,16 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
      */
     private String systemAct;
 
+    /**
+     * 版本号
+     */
+    private Long version;
+
+    /**
+     * 前置版本号
+     */
+    private Long bVersion;
+
     public String getQuoteId() {
         return quoteId;
     }
@@ -576,6 +586,22 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setSystemAct(String systemAct) {
         this.systemAct = systemAct;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    public Long getbVersion() {
+        return bVersion;
+    }
+
+    public void setbVersion(Long bVersion) {
+        this.bVersion = bVersion;
     }
 }
 
