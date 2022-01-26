@@ -58,7 +58,7 @@ public class TrdFxSwapValuationTrade001Controller extends BaseController {
      */
     @Override
     public String init(Model model) {
-        this.setSelectOptionToModel(model, DictCode.交易方向);
+        this.setSelectOptionToModel(model, DictCode.交易方向,DictCode.货币对);
         model.addAttribute("TRADE_STATUS", DictCodeListExt1.交易流程状态_有效.getValue());
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE")==null?"01": CacheUtil.getSysParam("IS_SHOW_TYPE"));
         return super.init(model);
