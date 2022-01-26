@@ -184,6 +184,8 @@ public interface CfetsTrdQueryMapper {
      */
     String getTradeId(@Param("tradeId") String tradeId);
 
+    String getTotalTradeId(@Param("tradeId") String tradeId);
+
     Integer getCountByReg(@Param("tradeId") String tradeId);
     /**
      * 查询汇总编号下的所有交易编号

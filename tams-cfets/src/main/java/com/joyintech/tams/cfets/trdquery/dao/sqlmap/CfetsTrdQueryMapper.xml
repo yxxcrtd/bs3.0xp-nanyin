@@ -634,9 +634,11 @@
         sum(rp.pledge_number)/100 as pledgePrin,
         rp.pledge_ratio*100 as pledgeRate,
         mbvi.NETPRICE as firstNetPrice,
-        fp.REGIST_ORG as repRegistOrg
+        fp.REGIST_ORG as repRegistOrg,
+        T8.DIS_FACE_VALUE as disFaceValue
         from REG_FIN_PLEDGE rp
         left join reg_fin_product_deal regdeal
+        LEFT JOIN wfl_REG_FIN_PRODUCT_DEAL_TOTAL T8 ON T8.TOTLE_TRADE_ID = regdeal.TOTLE_TRADE_ID
         on rp.trade_id=decode(regdeal.finprod_type2,'F02',regdeal.trade_id,'F03',regdeal.totle_trade_id)
         left join ptl_portfolio pp
         on pp.portfolio_id=rp.portfolio_id
@@ -648,30 +650,30 @@
         left join fin_product fp
         on fp.finprod_id=rp.pledge_finprod_id
         LEFT JOIN (
-            SELECT
-            T2.SEC_ID,
-            T2.PRICE,
-            T2.NETPRICE
-            FROM (
-                SELECT
-                tmp1.SEC_ID,
-                tmp1.value_source,
-                MAX(tmp1.value_date) AS value_date
-                FROM MST_BOND_VALUATION_INFO tmp1
-                LEFT JOIN FIN_PRODUCT tmp2
-                ON tmp1.sec_id = tmp2.finprod_market_id
-                WHERE 1 = 1
-                AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
-                AND tmp1.value_source = (
-                CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN 'CSD'
-                ELSE 'CBC'
-                END)
-                GROUP BY tmp1.sec_id, tmp1.value_source
-                ) T1
-                LEFT JOIN MST_BOND_VALUATION_INFO T2
-                ON T1.SEC_ID = T2.SEC_ID
-                AND T1.value_source = T2.value_source
-                AND T1.VALUE_DATE = T2.VALUE_DATE
+        SELECT
+        T2.SEC_ID,
+        T2.PRICE,
+        T2.NETPRICE
+        FROM (
+        SELECT
+        tmp1.SEC_ID,
+        tmp1.value_source,
+        MAX(tmp1.value_date) AS value_date
+        FROM MST_BOND_VALUATION_INFO tmp1
+        LEFT JOIN FIN_PRODUCT tmp2
+        ON tmp1.sec_id = tmp2.finprod_market_id
+        WHERE 1 = 1
+        AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+        AND tmp1.value_source = (
+        CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN 'CSD'
+        ELSE 'CBC'
+        END)
+        GROUP BY tmp1.sec_id, tmp1.value_source
+        ) T1
+        LEFT JOIN MST_BOND_VALUATION_INFO T2
+        ON T1.SEC_ID = T2.SEC_ID
+        AND T1.value_source = T2.value_source
+        AND T1.VALUE_DATE = T2.VALUE_DATE
         ) mbvi/*以上获取债券小于等于平台日的最新估值行情*/
         ON fp.FINPROD_MARKET_ID = mbvi.SEC_ID
         where regdeal.totle_trade_id=#{totleTradeId,jdbcType=VARCHAR}
@@ -683,7 +685,8 @@
         pp.portfolio_name,
         rp.pledge_ratio,
         mbvi.NETPRICE,
-        fp.REGIST_ORG
+        fp.REGIST_ORG,
+        T8.DIS_FACE_VALUE
         union all
         select rp.pledge_finprod_id as finprodId,
         fp.finprod_market_id as finprodMarketId,
@@ -693,10 +696,12 @@
         sum(rp.pledge_number)/100 as pledgePrin,
         rp.pledge_ratio*100 as pledgeRate,
         mbvi.NETPRICE as firstNetPrice,
-        fp.REGIST_ORG as repRegistOrg
+        fp.REGIST_ORG as repRegistOrg,
+        T8.DIS_FACE_VALUE as disFaceValue
         from wfl_REG_FIN_PLEDGE rp
         left join wfl_reg_fin_product_deal regdeal
         on rp.trade_id=decode(regdeal.finprod_type2,'F02',regdeal.trade_id,'F03',regdeal.totle_trade_id)
+        LEFT JOIN wfl_REG_FIN_PRODUCT_DEAL_TOTAL T8 ON T8.TOTLE_TRADE_ID = regdeal.TOTLE_TRADE_ID
         left join ptl_portfolio pp
         on pp.portfolio_id=rp.portfolio_id
         <if test="userId != null and userId != ''">
@@ -742,7 +747,9 @@
         pp.portfolio_name,
         rp.pledge_ratio,
         mbvi.NETPRICE,
-        fp.REGIST_ORG
+        fp.REGIST_ORG,
+        T8.DIS_FACE_VALUE
+
     </select>
     <!-- 报价管理查询 -->
     <select id="queryAllIbuInfoList" parameterType="Map"

@@ -1,7 +1,9 @@
 package com.joyintech.tams.cfets.cfetsmanualsettle.dao;
 
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto;
+import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdSettleInfoResponse;
 import com.joyintech.tams.common.base.entity.TrdBankManualSetDetail;
 import com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo;
 import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
@@ -158,4 +160,14 @@ public interface CfetsManualSettleMapper {
      */
     List<PledgeBondInfoDto> getPledgeListByTradeId(@Param("tradeId") String tradeId);
 
+    /**
+     * 查询质押式回购交易基本信息
+     *
+     * @date 2022/1/26
+     * @param params
+     * @return void
+     */
+    CfetsTrdSettleInfoResponse findManualSettleInfoRepo(Map<String,Object> params);
+
+    List<PortIntFenPeiInfoDto> findManualSettleFenPei(Map<String,Object> params);
 }
