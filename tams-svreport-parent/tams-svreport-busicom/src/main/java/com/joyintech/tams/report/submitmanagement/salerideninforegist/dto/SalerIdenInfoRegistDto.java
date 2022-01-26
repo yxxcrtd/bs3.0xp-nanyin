@@ -51,33 +51,97 @@ public class SalerIdenInfoRegistDto extends ChbSalerIdenSub implements ProcessEn
     //出生日期字符串化
     public String getSalerBirthdayStr() {
         if(StringUtil.isNotEmpty(this.getSalerBirthday())){
-            return DateUtil.formatDateTime(this.getSalerBirthday());
+            String time = DateUtil.formatDateTime(this.getSalerBirthday());
+            return time.substring(0,10);
         }
         return null;
     }
 
     //销售人员证件类型字符串化
     public String getSalerCredentTypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.销售人员证件类型, this.getSalerCredentType());
+        return this.getSalerCredentType();
     }
     //所属地区字符串化
     public String getSalerAreaTypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.销售区域_中债, this.getSalerAreaType());
+        return this.getSalerAreaType();
     }
     //销售人员学历字符串化
-    public String getSalerEduLevelStr() { return SysDataUtil.getNameFromDataDict(DictCode.销售人员学历, this.getSalerEduLevel()); }
+    public String getSalerEduLevelStr() { return this.getSalerEduLevel(); }
 
     //性别字符串化
     public String getSalerSexStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.性别_中债, this.getSalerSex());
+        return this.getSalerSex();
     }
 
     //销售人员学位字符串化
-    public String getSalerDegreeStr() { return SysDataUtil.getNameFromDataDict(DictCode.销售人员学位, this.getSalerDegree()); }
+    public String getSalerDegreeStr() { return this.getSalerDegree(); }
 
     //专业技术职称字符串化
-    public String getSalerLevleStr() { return SysDataUtil.getNameFromDataDict(DictCode.销售人员专业技术职称, this.getSalerLevle()); }
+    public String getSalerLevleStr() { return this.getSalerLevle(); }
 
     //当前状态字符串化
-    public String getSalerStatusStr() { return SysDataUtil.getNameFromDataDict(DictCode.销售人员当前状态, this.getSalerStatus()); }
+    public String getSalerStatusStr() { return this.getSalerStatus(); }
+
+    //销售人员理财专业证书字符串化
+    public String getSalerCertificateTypeStr() {
+        if(this.getSalerCertificateType() != null && this.getSalerCertificateType() != ""){
+            int SalerCertificateTypeNum = ciShu(this.getSalerCertificateType(),",");
+            if(SalerCertificateTypeNum == 0){
+                return this.getSalerCertificateType() + " " +  SysDataUtil.getNameFromDataDict(DictCode.销售人员理财专业证书, this.getSalerCertificateType());
+            }else{
+                String SalerCertificateTypeSr = this.getSalerCertificateType().replace(",","");
+                String SalerCertificateType = "无";
+                for(int i = 0;i < (SalerCertificateTypeNum + 1);i++){
+                    int j = (i+1) * 2;
+                    if(SalerCertificateType.equals("无")){
+                        SalerCertificateType =SalerCertificateTypeSr.substring(j-2,j) + " " + SysDataUtil.getNameFromDataDict(DictCode.销售人员理财专业证书, SalerCertificateTypeSr.substring(j-2,j));
+                    }else{
+                        SalerCertificateType = SalerCertificateType + "," + SalerCertificateTypeSr.substring(j-2,j) + " " + SysDataUtil.getNameFromDataDict(DictCode.销售人员理财专业证书, SalerCertificateTypeSr.substring(j-2,j));
+                    }
+                }
+                return SalerCertificateType;
+            }
+        }
+        return null;
+    }
+
+    //可销售产品风险等级字符串化
+    public String getSalerRiskLevelStr() {
+        if(this.getSalerRiskLevel() != null && this.getSalerRiskLevel() != ""){
+            int SalerRiskLevelNum = ciShu(this.getSalerRiskLevel(),",");
+            if(SalerRiskLevelNum == 0){
+                return this.getSalerRiskLevel() + " " +  SysDataUtil.getNameFromDataDict(DictCode.可销售产品风险等级, this.getSalerRiskLevel());
+            }else{
+                String SalerRiskLevelSr = this.getSalerRiskLevel().replace(",","");
+                String SalerRiskLevel = "无";
+                for(int i = 0;i < (SalerRiskLevelNum + 1);i++){
+                    int j = (i+1) * 2;
+                    if(SalerRiskLevel.equals("无")){
+                        SalerRiskLevel =SalerRiskLevelSr.substring(j-2,j) + " " + SysDataUtil.getNameFromDataDict(DictCode.可销售产品风险等级, SalerRiskLevelSr.substring(j-2,j));
+                    }else{
+                        SalerRiskLevel = SalerRiskLevel + "," + SalerRiskLevelSr.substring(j-2,j) + " " + SysDataUtil.getNameFromDataDict(DictCode.可销售产品风险等级, SalerRiskLevelSr.substring(j-2,j));
+                    }
+                }
+                return SalerRiskLevel;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 判断str1中包含str2的个数
+     * @param str1
+     * @param str2
+     * @return counter
+     */
+    public static int ciShu(String str1,String str2){
+        int counter = 0;
+        for(int i = 0;i < str1.length() ;i++) {
+            int index = str1.indexOf(str2, i);
+            if (i == index) {
+                counter++;
+            }
+        }
+        return counter;
+    }
 }

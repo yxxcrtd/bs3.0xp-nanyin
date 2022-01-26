@@ -105,7 +105,7 @@
 										<div class="layui-input-inline input-inline">
 											<select type="text" id="termType" name="termType" required="required"
 													class="layui-input form-input input-select" allowClear="true"
-													placeholder="请输入内容" data-th-data-result='${SWAP_TERM_TYPE}'
+													placeholder="请输入内容" data-th-data-result='${EXC_FXS_TERM_TYPE}'
 													data-th-initvalue="${entity?.termType}"
 													data-th-placeholder="#{SysCommon.placeholder}">
 											</select>
@@ -163,13 +163,16 @@
 
 								<div class="layui-form-item">
 									<div class="form-inline-wrap">
-										<label class="layui-form-label form-label-wrap" data-th-text="#{TrdFxSwapValuationTrade002.corCcy}">对应货币</label>
+										<label class="layui-form-label form-lable" data-th-text="#{TrdFxSwapValuationTrade002.corCcy}">对应货币</label>
 										<div class="layui-input-inline input-inline">
-											<select type="text" id="corCcy" name="corCcy" required="required"
-													parentIds="curPair" disabled
-													class="layui-input form-input input-select" placeholder="请输入内容"
-													th:placeholder="#{SysCommon.placeholder}" th:data-result='${CCY}'
-													allowClear="true" formatoption="true" th:initValue="${entity?.corCcy}"></select>
+											<select type="text" id="corCcy" name="corCcy"
+													class="layui-input form-input input-select"
+													allowClear="true"
+													data-th-placeholder="#{SysCommon.placeholder}"
+													th:initValue="${entity?.corCcy}"
+													data-th-data-result='${CCY}'
+													disabled="disabled">
+											</select>
 										</div>
 									</div>
 

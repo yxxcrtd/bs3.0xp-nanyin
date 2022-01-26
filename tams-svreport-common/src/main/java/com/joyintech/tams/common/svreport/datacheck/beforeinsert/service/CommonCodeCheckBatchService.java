@@ -4,9 +4,9 @@ import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dao.CommonCodeCheckMapper;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
@@ -54,6 +54,8 @@ public class CommonCodeCheckBatchService {
      * 日志
      */
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private Map<String,String>  map=new HashMap<>();
 
     /**
      * 登记的入库前的代码检查
@@ -119,6 +121,10 @@ public class CommonCodeCheckBatchService {
                     break;
                 case 销售人员奖惩投诉记录信息表INFO:
                     checkRewPenaInfo(map);
+                case 销售人员身份信息表INFO:
+                    checkSalerIdenInfo(map);
+                case  总部或分支机构信息表INFO:
+                    checkSaleInstInfo(map);
                 default:
                     break;
             }
@@ -2321,5 +2327,137 @@ public class CommonCodeCheckBatchService {
             }
         }
         dataMap.put("ERRMSG", errMsg);
+    }
+    /***
+     * 检查总部机构信息
+     * @param dataMap
+     */
+    public    void  checkSaleInstInfo(Map<String, String> dataMap){
+        String  errMsg = dataMap.getOrDefault("ERRMSG", "");
+        // 总部或分支机构名称
+        String salerOrgName = dataMap.get("SALER_ORG_NAME");
+        //销售机构代码
+        String rewPenaInst = dataMap.get("SALER_INST_CODE");
+        if(salerOrgName != null && salerOrgName != ""){
+            if(commonCodeCheckMapper.checkSalerOrgName(salerOrgName) > 0) {
+                errMsg +="总部或分支机构名称已存在。[SALER_ORG_NAME="+dataMap.get("SALER_ORG_NAME")+"];";
+            }
+        }
+        // 银行模式才判断发行机构代码，联社模式不判断
+        if(!StringUtil.equals(CommonUtil.selectBankCode(), rewPenaInst)
+                && StringUtil.equals(SvrDataUtil.getSysParam("AUTHORITY_TYPE"), "01")){
+            errMsg +="销售机构代码必须与银行代码相同[SALER_INST_CODE="+rewPenaInst+"];";
+        }
+        dataMap.put("ERRMSG", errMsg);
+    }
+
+
+    /***
+     * 检查销售人员信息
+     * @param dataMap
+     */
+    public    void  checkSalerIdenInfo(Map<String, String> dataMap){
+        String  errMsg = dataMap.getOrDefault("ERRMSG", "");
+        // 证件类别
+        String rewPenaType = dataMap.get("SALER_CREDENT_TYPE");
+        //证件号码
+        String salerCredentNo = dataMap.get("SALER_CREDENT_NO");
+        //证件名称
+        String salerOtherCredentName = dataMap.get("SALER_OTHER_CREDENT_NAME");
+        //理财培训证书
+        String salerChbTrainNo = dataMap.get("SALER_CHB_TRAIN_NO");
+        //所属区域
+        String salerAreaType = dataMap.get("SALER_AREA_TYPE");
+        //学位
+        String salerDegree = dataMap.get("SALER_DEGREE");
+        //学历
+        String salerEduLevel = dataMap.get("SALER_EDU_LEVEL");
+        //专业技术职称
+        String salerLevel = dataMap.get("SALER_LEVLE");
+        //理财专业证书
+        String salerCertificateType = dataMap.get("SALER_CERTIFICATE_TYPE");
+        //备注
+        String remark = dataMap.get("REMARK");
+        //总部分支机构信息
+        String salerOrgCode = dataMap.get("SALER_ORG_CODE");
+
+
+
+        //证件号码重复校验
+        if (rewPenaType != null && rewPenaType != "") {
+            if (rewPenaType.equals("99")) {
+                if (salerOtherCredentName != null && salerOtherCredentName != "") {
+                    String keyset=salerOtherCredentName+salerCredentNo;
+                    if(map.containsKey(keyset)){
+                        errMsg +="当证件类别选择“99”时，“其他证件名称+证件号码”不可同时相同。[SALER_CREDENT_NO="+dataMap.get("SALER_CREDENT_NO")+"];";
+                    }else{
+                        map.put(keyset,keyset);
+                    }
+                    if (salerCredentNo != null && salerCredentNo != "") {
+                        if (commonCodeCheckMapper.checkSalerCredentNo(null, salerOtherCredentName, salerCredentNo) > 0) {
+                            errMsg +="其他证件名称相同时，证件号码不可重复。[SALER_CREDENT_NO="+dataMap.get("SALER_CREDENT_NO")+"];";
+                        }
+                    }
+                }
+            } else {
+                if (salerCredentNo != null && salerCredentNo != "") {
+                    String keyset=rewPenaType+salerCredentNo;
+                    if(map.containsKey(keyset)){
+                        errMsg +="当证件类别选择“01-05”时,“证件类别+证件号码”不可同时相同。[SALER_CREDENT_NO="+dataMap.get("SALER_CREDENT_NO")+"];";
+                    }else{
+                        map.put(keyset,keyset);
+                    }
+                    if (commonCodeCheckMapper.checkSalerCredentNo(rewPenaType, null, salerCredentNo) > 0) {
+                        errMsg +="证件类别相同时，证件号码不可重复。[SALER_CREDENT_NO="+dataMap.get("SALER_CREDENT_NO")+"];";
+                    }
+                }
+            }
+        }
+        //理财登记培训证书编号格式校验
+        if(salerChbTrainNo != null && salerChbTrainNo != ""){
+            String regex = "^([L][C][0-9]{12})$";
+            if(!salerChbTrainNo.matches(regex)){
+                errMsg +="理财登记培训证书编号格式不对。[SALER_CHB_TRAIN_NO="+dataMap.get("SALER_CHB_TRAIN_NO")+"];";
+
+            }
+        }
+        //备注非空校验(所属区域，学位，学历，专业技术职称，理财专业证书为“其他”时备注必填)
+        if((salerAreaType != null && salerAreaType != "") || (salerDegree != null && salerDegree != "")
+                || (salerEduLevel != null &&salerEduLevel != "") || (salerLevel != null && salerLevel != "")
+                ||(salerCertificateType != null && salerCertificateType != "")){
+            if (salerAreaType.equals("900000") || salerDegree.equals("99")
+                    || salerEduLevel.equals("99") || salerLevel.equals("99")
+                    || this.inclodeNine(salerCertificateType)) {
+                if (remark.isEmpty()) {
+                    errMsg +="所属区域，学位，学历，专业技术职称或理财专业证书选择其他时，备注不能为空。[REMARK="+dataMap.get("REMARK")+"];";
+                }
+            }
+        }
+        //所属总部或分支机构校验有效性
+        if(salerOrgCode != null && salerOrgCode != ""){
+            if(commonCodeCheckMapper.checkSalerOrgCode(salerOrgCode) == 0){
+                errMsg +="所属总部或分支机构已被删除请重新选择。[SALER_ORG_CODE="+dataMap.get("SALER_ORG_CODE")+"];";
+
+            }
+        }
+        dataMap.put("ERRMSG", errMsg);
+    }
+
+    public static boolean inclodeNine(String value){
+        boolean status = false;
+        if (!isEmpty(value)) {
+            status = value.contains("99");
+        }
+        return status;
+    }
+    public static boolean isEmpty(String value) {
+        boolean flag = false;
+        if(StringUtil.isEmpty(value)){
+            flag = true;
+        }
+        else if(StringUtil.isEmpty(value.trim())){
+            flag = true;
+        }
+        return flag;
     }
 }
