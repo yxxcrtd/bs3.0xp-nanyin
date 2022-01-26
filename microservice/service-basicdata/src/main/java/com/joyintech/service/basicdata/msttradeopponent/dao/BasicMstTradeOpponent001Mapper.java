@@ -210,7 +210,7 @@ public interface    BasicMstTradeOpponent001Mapper {
      * @param param
      * @return
      */
-    List<SuggestDto> selectPartyId(Map<String, Object> param);
+    List<SelectOptionDto> selectPartyId(Map<String, Object> param);
 
     /**
      * 获取所有的已匹配的银行间机构21位码
