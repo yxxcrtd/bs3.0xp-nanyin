@@ -136,7 +136,9 @@ public class CfetsTrdQueryController extends BaseController {
 
 
         //pageId
-        initPageParams.put("pageId", "CfetsTrdBondInvestTrade002");
+        initPageParams.put("bondPageId", "CfetsTrdBondInvestTrade002");
+        initPageParams.put("repoPageId", "CfetsTrdRepoTrade002");
+
 
         //当前平台日
         initPageParams.put("platDate",DateUtil.platDateFromCache());
@@ -382,7 +384,7 @@ public class CfetsTrdQueryController extends BaseController {
     @ApiOperation(value = "交易撤销前check", notes = "交易撤销前check")
     @PostMapping("checkRevoke")
     @ResponseBody
-    public  Message<AjaxResult> checkRevoke(@RequestBody CfetsTrdBondInvestTradeDto inputDto)
+    public  Message<AjaxResult> checkRevoke(@RequestBody CfetsTrdQueryTradeInfoListResponse inputDto)
           throws Exception {
             try {
                 AjaxResult ajax= cfetsTrdBondInvestTrade002Service.checkRevoke(inputDto);
@@ -466,7 +468,6 @@ public class CfetsTrdQueryController extends BaseController {
                 //质押式回购
 
                 CfetsTrdRepoTrade002Dto inputDto =cfetsTrdRepoTrade002Service.getTrdRepoInvestTradeDto(item.getTotleTradeId());
-                item.setWorkflowParameter("revoke|xf||1|CfetsTrdRepoTrade002|CfetsTrdRepoTrade002_btn_revoke|false");
                 inputDto.setWorkflowParameter(item.getWorkflowParameter());
 
                 ProcessParameter<CfetsTrdRepoTrade002Dto> processParameter = new ProcessParameter<>();
@@ -477,7 +478,7 @@ public class CfetsTrdQueryController extends BaseController {
 
                 workFlowParameter.setPageId("CfetsTrdRepoTrade002");
                 workFlowParameter.setElementId(this.getParam("elementId"));
-                workFlowParameter.setBusinessCode((entity) -> entity.getTradeId());
+                workFlowParameter.setBusinessCode((entity) -> entity.getTotleTradeId());
                 workFlowParameter.setBusinessType(DictCodeList.共通业务类型_质押式回购交易.getValue());
                 workFlowParameter.setComment((entity) -> WorkFlowUtil.concatComment(
                         getMessage("TrdRepoTrade002.tradeId") + GlobalConstant.OPEN_PARENTHESIS + entity.getTradeId() + GlobalConstant.CLOSE_PARENTHESIS,

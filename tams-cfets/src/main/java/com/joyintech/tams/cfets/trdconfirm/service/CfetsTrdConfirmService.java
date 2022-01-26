@@ -1016,6 +1016,7 @@ public class CfetsTrdConfirmService extends BaseService{
         entity.setTradeFeeList(trdTradeFeeDetails);
         //设置质押券信息
         List<BussRepoSecDto> bussRepoSecs=new ArrayList<>();
+        List<CfetsTrdRepoTrade003Dto> dtoList=new ArrayList();
 
         //根据交易编号查询所有登记明细
         List<CfetsRegFinProductDealDto>  regDealList=cfetsTrdConfirmMapper.findAllRegDealList(dtoReg.getTotleTradeId());
@@ -1241,8 +1242,23 @@ public class CfetsTrdConfirmService extends BaseService{
             bussRepoSec.setFinprodId(deal.getTradeId());
             bussRepoSecs.add(bussRepoSec);
 
+            //风险数据
+          /*  if(StringUtil.equals(genType,DictCodeListExt1.生成方式_画面录入.getValue())){
+                CfetsTrdRepoTrade003Dto dto=new CfetsTrdRepoTrade003Dto();
+                BeanUtil.copyPropertiesIgnoreNull(dto,regDeal);
+                dto.setPortfolioId(regDeal.getPortfolioId());
+                dto.setPrinAmt(regDeal.getTradeAmt());
+                dto.setTermTypeReback(dtoReg.getTermType());
+                dto.setRebackPrice(ArithmeticUtil.multiply(regDeal.getRate(),new BigDecimal(100)));
+                dto.setTradeAmt(regDeal.getTradeAmt());
+                dto.setCpriceAmt(regDeal.getCpriceAmt());
+                dto.setMdate(regDeal.getmSettleDate());
+                dtoList.add(dto);
+            }*/
+
         }
         entity.setBussRepoSecs(bussRepoSecs);
+        entity.setDtoList(dtoList);
 
         // =====================划款指令信息=====================
         List<BussTrdTransferOrderDto> bussTrdTransferOrder = new ArrayList<>();
@@ -2252,7 +2268,7 @@ public class CfetsTrdConfirmService extends BaseService{
             } else {
                 //质押式回购首期
                 //判断基础要素是否一致
-                if (StringUtil.isNotEmpty(cstpInfo.getBusinesstype()) && StringUtil.equals(cstpInfo.getBusinesstype(), "BOND")) {
+                if (StringUtil.isNotEmpty(cstpInfo.getBusinesstype()) && StringUtil.equals(cstpInfo.getBusinesstype(), "REPO")) {
                     StringBuilder str = new StringBuilder();
                     if (StringUtil.isNotEmpty(regInfo.getTradeDate()) && StringUtil.isNotEmpty(cstpInfo.getTradeDate())
                             && regInfo.getTradeDate().compareTo(cstpInfo.getTradeDate())!=0) {
@@ -2343,8 +2359,8 @@ public class CfetsTrdConfirmService extends BaseService{
                     }
                     //判断可选要素是否一致
                     StringBuilder validateStr = new StringBuilder();
-                    //TODO hxy 到期结算金额cstp没有查数据
-                    if (!StringUtil.equals(regInfo.getMtradeAmt(), cstpInfo.getMtradeAmt())) {
+                    if(StringUtil.isNotEmpty(regInfo.getMtradeAmt()) && StringUtil.isNotEmpty(cstpInfo.getMtradeAmt())
+                            && regInfo.getMtradeAmt().compareTo(cstpInfo.getMtradeAmt())!=0){
                         validateStr.append("到期结算金额要素不一致（到期结算金额：CSTP成交数据为" + cstpInfo.getMtradeAmt()
                                 + ",交易执行数据为" + regInfo.getMtradeAmt() + ", 将以接口数据数据为准）,");
                     }
@@ -2352,12 +2368,16 @@ public class CfetsTrdConfirmService extends BaseService{
                         validateStr.append("对手方要素不一致（对手方：CSTP成交数据为" + cstpInfo.getCounterTrader()
                                 + ",交易执行数据为" + regInfo.getCounterTrader() + ", 将以系统数据为准）,");
                     }
-                    if (StringUtil.isNotEmpty(validateStr) && validateStr.length() > 0) {
+                 /*   if (StringUtil.isNotEmpty(validateStr) && validateStr.length() > 0) {
                         validateStr.append("是否确认匹配？");
                         AjaxResult m = new AjaxResult();
                         m.setMessage(validateStr.toString(), MessageType.确认消息);
                         return m;
-                    }
+                    }*/
+                    str.append("要素不一致，无法匹配，请重新选择数据！");
+                    mes.setErrorList(Arrays.asList(new ValidMessage(str.toString().substring(1))));
+                    return mes;
+
                 }
             }
         }

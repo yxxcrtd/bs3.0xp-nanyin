@@ -190,9 +190,16 @@ public class PositionHttpRequest {
                 ;
         logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
         String res = delete(bm);
-        Map msgMap = JsonUtils.json2Object(res, Map.class);
-        if(msgMap == null){
+        Map message = JsonUtils.json2Object(res, Map.class);
+        if(message == null){
             throw new PositionException("头寸返回数据为空！");
+        }
+        if (!StringUtil.equals("success", message.get("code"))){
+            if(StringUtil.equals("FL0007", message.get("code"))){
+                throw new PositionException(CODE_BUSI_RK + "|" + message.get("message"));
+            }else {
+                throw new PositionException(message.get("message") + "");
+            }
         }
     }
 
@@ -272,6 +279,8 @@ public class PositionHttpRequest {
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){
             throw new PositionException("头寸返回数据为空！");
+        }else if(!StringUtil.equals("success", msgMap.get("code") + "")){
+            throw new PositionException(JsonUtils.object2Json(msgMap));
         }
 
      /*   if (!StringUtil.equals("success", msgMap.get("code") + "")){

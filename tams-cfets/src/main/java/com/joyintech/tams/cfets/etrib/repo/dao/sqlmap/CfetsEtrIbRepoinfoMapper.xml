@@ -131,8 +131,8 @@
          (NVL(T1.ENTRUST_AMT,0) - NVL(T5.ENT_FINISH_AMT,0) - NVL(T4.FINISH_AMT,0)) as execRemainderAmt,
          NVL(T5.FINISH_AMT,0)  as transFinishAmt,
          (NVL(T1.ENTRUST_AMT,0) - NVL(T5.FINISH_AMT,0)) as transRemainderAmt,
-        T1.REMARK,
-         nextApp.nowUserId as approver,
+         T1.REMARK,
+         T9.REAL_NAME as approver,
          TO_CHAR(T1.ENTRUST_DATE, 'yyyy-MM-dd') as entrustDateStr,
          T1.ENTRUST_DATE  entrustDate,
          T1.COUNTER_ID counterId,
@@ -188,6 +188,7 @@
          on T1.Workflow_Id=nextApp.workFlowId
         LEFT JOIN WFL_ETR_ENTRUST_ADD T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID
         LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
+        LEFT JOIN SYS_USER T9 ON nextApp.nowUserId = T9.USER_NAME
         where
         T1.FINPROD_TYPE2 in (#{FINPROD_TYPE2_Z},#{FINPROD_TYPE2_N})
         and T1.TRADE_MARKET = #{TRADE_PLACE_01}

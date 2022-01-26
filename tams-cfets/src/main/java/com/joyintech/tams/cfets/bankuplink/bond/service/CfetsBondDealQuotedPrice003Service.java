@@ -901,7 +901,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
      */
     @Override
     public void doDelete(String workflowId) {
-    	doDeletePtlPositionHold(workflowId);
+    	//doDeletePtlPositionHold(workflowId);
         doDeleteWflBondDialogueQuote(workflowId);
     }
     

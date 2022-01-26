@@ -504,6 +504,7 @@ public class CfetsTrdRepoTrade003Dto extends TrdProductDeal implements ProcessEn
      */
     private String oprType;
 
+    private List<CfetsTrdRepoTrade003Dto> dtoList;
 
     public String getZhilingtype() {
         return zhilingtype;
@@ -1760,5 +1761,13 @@ public class CfetsTrdRepoTrade003Dto extends TrdProductDeal implements ProcessEn
 
     public void setOprType(String oprType) {
         this.oprType = oprType;
+    }
+
+    public List<CfetsTrdRepoTrade003Dto> getDtoList() {
+        return dtoList;
+    }
+
+    public void setDtoList(List<CfetsTrdRepoTrade003Dto> dtoList) {
+        this.dtoList = dtoList;
     }
 }
