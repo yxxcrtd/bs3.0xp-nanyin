@@ -4,7 +4,11 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.apache.shiro.crypto.hash.Hash;
+
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 银行间手工交收
@@ -243,6 +247,20 @@ public class CfetsManualSettleTradeListRespond {
     }
 
     public String getPortfolioId() {
+        if(portfolioId !=null && portfolioId.contains(",")) {
+            String [] arr = portfolioId.split(",");
+            Set<String> set = new HashSet();
+            for(String a : arr) {
+                if(a != null) {
+                    set.add(a);
+                }
+            }
+            StringBuffer str = new StringBuffer();
+            for(String s : set) {
+                str.append(s).append(",");
+            }
+            return str.substring(0,str.length()-1);
+        }
         return portfolioId;
     }
 
@@ -251,6 +269,20 @@ public class CfetsManualSettleTradeListRespond {
     }
 
     public String getPortfolioName() {
+        if(portfolioName !=null && portfolioName.contains(",")) {
+            String [] arr = portfolioName.split(",");
+            Set<String> set = new HashSet();
+            for(String a : arr) {
+                if(a != null) {
+                    set.add(a);
+                }
+            }
+            StringBuffer str = new StringBuffer();
+            for(String s : set) {
+                str.append(s).append(",");
+            }
+            return str.substring(0,str.length()-1);
+        }
         return portfolioName;
     }
 
