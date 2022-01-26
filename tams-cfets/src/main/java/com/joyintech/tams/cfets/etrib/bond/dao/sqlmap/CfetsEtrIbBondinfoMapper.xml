@@ -1187,7 +1187,7 @@ from
         T7.EXER_YIELD*100 exerYield,
         T7.SETTLE_SPREED as settleSpreed,
         TO_CHAR(T1.ENTRUST_DATE, 'yyyy-MM-dd') as etrDate,
-        T9.REAL_NAME as approver,
+        nextUser.userName as approver,
         T1.REMARK as remark,
         trunc((NVL(T6.FINISH_AMT,0)+NVL(T5.ENT_FINISH_AMT*100,0))/(T1.ENTRUST_NUM*100),4)*100 execProcess,
         trunc(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transProcess,
@@ -1234,7 +1234,13 @@ from
         LEFT JOIN WFL_ETR_ENTRUST_ADD T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID
         LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
         LEFT JOIN FIN_PRODUCT_TYPE T4 ON T4.FINPROD_ID = T1.FINPROD_ID
-        left join (
+        left join
+        (select
+        nextApp.workFlowId,
+        (select listagg(SYS_USER.REAL_NAME, ',') within group(order by SYS_USER.USER_NAME) from SYS_USER where
+        instr(','||nextApp.nowUserId||',' , ','||SYS_USER.USER_NAME||',') > 0) userName
+        from
+        (
         SELECT distinct case when T.PROCESS_STATE = 'END' then  null else T.NEXT_USER end AS nowUserId,
         sdpm.Workflow_Id as workFlowId
         FROM SYS_WFL_BUSINESS_LIST T
@@ -1249,8 +1255,8 @@ from
                 AND T.SEQ_NO = A.SEQ_NO)
                 AND T.PROCESS_STATE in ('ING')
                 and T.BUSINESS_TYPE='ETR52') nextApp
-        on T1.Workflow_Id=nextApp.workFlowId
-        LEFT JOIN SYS_USER T9 ON nextApp.nowUserId = T9.USER_NAME
+        ) nextUser
+        on T1.Workflow_Id=nextUser.workFlowId
         where T1.ENTRUST_NUM!=0 and
         T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
         and T1.TRADE_MARKET in ( #{TRADE_MARKET_01},#{TRADE_MARKET_02})
