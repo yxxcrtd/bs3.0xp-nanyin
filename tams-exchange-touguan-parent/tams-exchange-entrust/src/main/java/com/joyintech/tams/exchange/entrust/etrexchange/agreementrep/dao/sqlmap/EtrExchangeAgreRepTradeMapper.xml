@@ -720,7 +720,18 @@
             fin_product.Finprod_Market_Id finprodMarketId, /** 质押代码 **/
             fin_product.finprod_abbr finprodAbbr, /** 质押券名称 **/
             wfl_etr_pledge.Pledge_Ratio * 100 conRatio, /** 折算率 **/
-            wfl_etr_pledge.PLEDGE_NUMBER  repSecNum,/** 质押数量 **/
+            case
+            when wfl_etr_entrust.trade_market = #{TRADE_PLACE_03} then
+            wfl_etr_pledge.PLEDGE_NUMBER/10
+            else
+            wfl_etr_pledge.PLEDGE_NUMBER
+            end as repSecNum, /** 质押数量  **/
+            case
+            when wfl_etr_entrust.trade_market = #{TRADE_PLACE_03} then
+            #{UNIT_04}
+            else
+            #{UNIT_01}
+            end as pledgeUnit, /** 质押券单位  **/
             wfl_etr_pledge.PLEDGE_NUMBER * wfl_etr_pledge.Pledge_Face_Value printAmt, /** 质押面额 **/
             wfl_etr_entrust_add.Sec_Acct_Id secAcctId, /** 证券账户 ※隐藏 **/
             wfl_etr_entrust.counter_id counterId, /** 交易对手 **/
