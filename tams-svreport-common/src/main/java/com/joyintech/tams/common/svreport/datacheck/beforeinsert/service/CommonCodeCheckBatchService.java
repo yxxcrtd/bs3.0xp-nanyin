@@ -123,6 +123,8 @@ public class CommonCodeCheckBatchService {
                     checkRewPenaInfo(map);
                 case 销售人员身份信息表INFO:
                     checkSalerIdenInfo(map);
+                case  总部或分支机构信息表INFO:
+                    checkSaleInstInfo(map);
                 default:
                     break;
             }
@@ -2326,6 +2328,29 @@ public class CommonCodeCheckBatchService {
         }
         dataMap.put("ERRMSG", errMsg);
     }
+    /***
+     * 检查总部机构信息
+     * @param dataMap
+     */
+    public    void  checkSaleInstInfo(Map<String, String> dataMap){
+        String  errMsg = dataMap.getOrDefault("ERRMSG", "");
+        // 总部或分支机构名称
+        String salerOrgName = dataMap.get("SALER_ORG_NAME");
+        //销售机构代码
+        String rewPenaInst = dataMap.get("SALER_INST_CODE");
+        if(salerOrgName != null && salerOrgName != ""){
+            if(commonCodeCheckMapper.checkSalerOrgName(salerOrgName) > 0) {
+                errMsg +="总部或分支机构名称已存在。[SALER_ORG_NAME="+dataMap.get("SALER_ORG_NAME")+"];";
+            }
+        }
+        // 银行模式才判断发行机构代码，联社模式不判断
+        if(!StringUtil.equals(CommonUtil.selectBankCode(), rewPenaInst)
+                && StringUtil.equals(SvrDataUtil.getSysParam("AUTHORITY_TYPE"), "01")){
+            errMsg +="销售机构代码必须与银行代码相同[SALER_INST_CODE="+rewPenaInst+"];";
+        }
+        dataMap.put("ERRMSG", errMsg);
+    }
+
 
     /***
      * 检查销售人员信息
