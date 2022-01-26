@@ -620,7 +620,9 @@ public class AutoPeriodCommonService extends BaseService {
         autoPeriodCommonMapper.deleteTrdFinProductDealTotalData(paramMap);
         autoPeriodCommonMapper.deleteTrdProductDeal(paramMap);
         autoPeriodCommonMapper.deleteTrdProductDealAdd(paramMap);
-        autoPeriodCommonMapper.deleteStlPayOrdersData(paramMap);
+        if(StringUtil.equals(finProdType2,DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
+            autoPeriodCommonMapper.deleteStlPayOrdersData(paramMap);
+        }
     }
 
     /**
