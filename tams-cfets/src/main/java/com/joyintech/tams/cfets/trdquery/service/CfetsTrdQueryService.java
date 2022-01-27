@@ -476,6 +476,11 @@ public class CfetsTrdQueryService extends BaseService{
             portIntFenPeiInfoDtoList =  cfetsTrdQueryMapper.selectIbuRepoTableFenPeiInfoList(pageParam);
         }
         //表格质押券data
+        pageParam.put("TRADEPLACE01", DictCodeListExt1.交易场所_银行间.getValue());
+        pageParam.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        pageParam.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+        pageParam.put("platDate", iPlatformDate.getSysDateStr());
+        //表格质押券data
         List<CfetsPledgeInfoResponse> pledgeInfoDtoList =  cfetsTrdQueryMapper.selectIbuTablePledgeInfoList(pageParam);
 
 

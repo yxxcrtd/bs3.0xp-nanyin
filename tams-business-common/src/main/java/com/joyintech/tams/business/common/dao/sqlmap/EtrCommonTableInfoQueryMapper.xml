@@ -54,10 +54,10 @@
 
     <select id="queryAllWorkFlowInfoList" resultMap="queryAllWorkFlowInfoListMap">
         select rownum as seqNo,
-               T2.ASSIGNEE_ as hiUser,
+                su.real_name as hiUser,
                 T2.TASK_DEF_KEY_ as nodeId,
                 T2.NAME_ as nodeName,
-                NVL(T2.END_TIME_, T2.CLAIM_TIME_) as operTime,
+                to_char(NVL(T2.END_TIME_, T2.CLAIM_TIME_),'hh24:mi:ss') as operTime,
                 NVL(T2.END_TIME_, T2.CLAIM_TIME_) as operDate,
                 d1.ITEM_VALUE as tradeStatus,
                 T3.FULL_MSG_ as opinions,
@@ -67,6 +67,7 @@
         left join ACT_HI_TASKINST T2 on T1.workflow_id=T2.PROC_INST_ID_
         left join ACT_HI_COMMENT T3 ON T3.TASK_ID_ = T2.ID_ AND T3.PROC_INST_ID_ = T2.PROC_INST_ID_ AND T3.USER_ID_ = T2.ASSIGNEE_
         left join SYS_DATADICT_LIST d1 on T1.PROCESS_STATE=d1.ITEM_CODE and d1.DICT_CODE='PROCESS_STATE'
+        left join sys_user su on T2.ASSIGNEE_=su.user_name
         where T1.TRADE_ID= #{busiCode,jdbcType=VARCHAR} order by NVL(T2.END_TIME_, T2.CLAIM_TIME_) desc
     </select>
 </mapper>

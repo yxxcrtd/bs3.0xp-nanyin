@@ -1936,16 +1936,52 @@
         select ip.pledge_finprod_id as finprodId,
         fp.finprod_market_id as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
-        null as portfolioId,
-        null as portfolioName,
-        ip.pledge_face_value as pledgePrin,
-        ip.unit_cprice as firstNetPrice,
-        ip.pledge_ratio as pledgeRate,
-        null as repRegistOrg
-        from ibu_quote_crep_pledge ip
+        ip.PORTFOLIO_ID as portfolioId,
+        pp.portfolio_name as portfolioName,
+        sum(ip.PLEDGE_NUMBER*100) as pledgePrin,
+        mbvi.NETPRICE as firstNetPrice,
+        ip.pledge_ratio*100 as pledgeRate,
+        fp.REGIST_ORG as repRegistOrg
+        from ibu_quote_ent_crep_pledge ip
         left join fin_product fp
         on fp.finprod_id=ip.pledge_finprod_id
+        left join ptl_portfolio pp on ip.portfolio_id=pp.portfolio_id
+        LEFT JOIN (
+            SELECT
+            T2.SEC_ID,
+            T2.PRICE,
+            T2.NETPRICE
+            FROM (
+            SELECT
+            tmp1.SEC_ID,
+            tmp1.value_source,
+            MAX(tmp1.value_date) AS value_date
+            FROM MST_BOND_VALUATION_INFO tmp1
+            LEFT JOIN FIN_PRODUCT tmp2
+            ON tmp1.sec_id = tmp2.finprod_market_id
+            WHERE 1 = 1
+            AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+            AND tmp1.value_source = (
+            CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN 'CSD'
+            ELSE 'CBC'
+            END)
+            GROUP BY tmp1.sec_id, tmp1.value_source
+            ) T1
+            LEFT JOIN MST_BOND_VALUATION_INFO T2
+            ON T1.SEC_ID = T2.SEC_ID
+            AND T1.value_source = T2.value_source
+            AND T1.VALUE_DATE = T2.VALUE_DATE
+            ) mbvi/*以上获取债券小于等于平台日的最新估值行情*/
+        ON fp.FINPROD_MARKET_ID = mbvi.SEC_ID
         where ip.quote_id=#{quoteId,jdbcType=VARCHAR}
+        group by ip.pledge_finprod_id,
+        fp.finprod_market_id,
+        fp.finprod_abbr,
+        ip.PORTFOLIO_ID,
+        pp.portfolio_name,
+        mbvi.NETPRICE,
+        ip.pledge_ratio,
+        fp.REGIST_ORG
     </select>
     <!-- 成交回报管理查询 -->
     <select id="queryAllCstpInfoList" parameterType="Map"
@@ -2227,7 +2263,7 @@
         fprepo.finprod_market_id as finprodMarketId,
         fprepo.finprod_abbr as finprodAbbr,
         itr.FACETOTALAMT/10000 as pledgeFaceValue,
-        itr.CONVRATE as pledgeRate
+        itr.CONVRATE*100 as pledgeRate
         from interf_opics_trad_repo repo
         inner join INTERF_TRAD_REPOASST itr
         on repo.oritradeid=itr.tradeid
