@@ -271,15 +271,7 @@ public class MstTradeOpponent001Service extends BaseService<MstTradeOpponentDto>
      * @param param
      * @return
      */
-    public List<SuggestDto> selectPartyId(Map<String, Object> param) {
-        //获取所有的已匹配的银行间机构21位码
-        List<String> partyIdList = basicMstTradeOpponent001Mapper.getAllPartyIdIsNotNull().stream()
-                .filter(string -> !StringUtil.isBlank(string)).collect(Collectors.toList());
-        if (CollectionUtils.isNotEmpty(partyIdList)) {
-            return basicMstTradeOpponent001Mapper.selectPartyId(param).stream()
-                    .filter(s -> !partyIdList.contains(s.getCode())).collect(Collectors.toList());
-        }
-        return basicMstTradeOpponent001Mapper.selectPartyId(param);
-
+    public Page<SelectOptionDto> selectPartyId(Map<String, Object> param, int page, int length) {
+        return this.queryForPageForSelectReturn(page, length,()->basicMstTradeOpponent001Mapper.selectPartyId(param));
     }
 }

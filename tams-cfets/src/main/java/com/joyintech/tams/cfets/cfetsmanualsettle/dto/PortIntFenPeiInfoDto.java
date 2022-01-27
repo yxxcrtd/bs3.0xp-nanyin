@@ -84,6 +84,10 @@ public class PortIntFenPeiInfoDto {
     @ApiModelProperty(name="rate",value="回购利率",example="100")
     private BigDecimal rate;
 
+    private BigDecimal tradeYield;
+
+
+
 
     public String getPriceModelStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.价格模式, this.getPriceModel());
@@ -291,5 +295,13 @@ public class PortIntFenPeiInfoDto {
 
     public void setRate(BigDecimal rate) {
         this.rate = rate;
+    }
+
+    public BigDecimal getTradeYield() {
+        return tradeYield;
+    }
+
+    public void setTradeYield(BigDecimal tradeYield) {
+        this.tradeYield = tradeYield;
     }
 }

@@ -505,6 +505,19 @@ public class CfetsTrdRepoTrade003Dto extends TrdProductDeal implements ProcessEn
     private String oprType;
 
     private List<CfetsTrdRepoTrade003Dto> dtoList;
+    /**
+     * 清算类型
+     */
+    private String clearType;
+    /**
+     * 到期结算方式
+     */
+    private String mDeliveryType;
+    /**
+     * 期限品种
+     */
+    private String termType;
+
 
     public String getZhilingtype() {
         return zhilingtype;
@@ -1769,5 +1782,29 @@ public class CfetsTrdRepoTrade003Dto extends TrdProductDeal implements ProcessEn
 
     public void setDtoList(List<CfetsTrdRepoTrade003Dto> dtoList) {
         this.dtoList = dtoList;
+    }
+
+    public String getClearType() {
+        return clearType;
+    }
+
+    public void setClearType(String clearType) {
+        this.clearType = clearType;
+    }
+
+    public String getmDeliveryType() {
+        return mDeliveryType;
+    }
+
+    public void setmDeliveryType(String mDeliveryType) {
+        this.mDeliveryType = mDeliveryType;
+    }
+
+    public String getTermType() {
+        return termType;
+    }
+
+    public void setTermType(String termType) {
+        this.termType = termType;
     }
 }

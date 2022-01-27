@@ -692,6 +692,13 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             result.setRegFinProductDealAdds(cfetsIbuQuoteBondMapper.listRegFinProductDealAdd(entity.getTotleTradeId()));
             result.setRegTradeFees(cfetsIbuQuoteBondMapper.listRegTradeFee(entity.getTotleTradeId()));
             result.setRegFinPledges(cfetsIbuQuoteRepoMapper.listRegFinPledge(entity.getTotleTradeId()));
+
+            //备注信息
+            if (StringUtil.isNotEmpty(entity.getRemark())) {
+                if (result.getRegFinProductDealTotal() != null) {
+                    result.getRegFinProductDealTotal().setRemark(entity.getRemark());
+                }
+            }
         } else {
             entity.setOuPartyId(entity.getMySide());
             entity.setOuTraderId(entity.getMySideTrader());
@@ -1373,10 +1380,20 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         }*/
         //更新原登记数据状态
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+
             //汇总
-            cfetsIbuQuoteBondMapper.updateRegFinProductDealTotal(totleTradeId);
+            RegFinProductDealTotal regFinProduct = new RegFinProductDealTotal();
+            regFinProduct.setTotleTradeId(totleTradeId);
+            regFinProduct.setRemark(regFinProductDealTotal.getRemark());
+            regFinProduct.setIsCancel("Y");
+            regFinProductDealTotalMapper.updateByPrimaryKeySelective(regFinProduct);
+
             //明细
-            cfetsIbuQuoteBondMapper.updateRegFinProductDeal(totleTradeId);
+            RegFinProductDeal regFinProductDeal = new RegFinProductDeal();
+            regFinProductDeal.setTotleTradeId(totleTradeId);
+            regFinProductDeal.setRemark(regFinProductDealTotal.getRemark());
+            regFinProductDeal.setIsCancel("Y");
+            regFinProductDealMapper.updateByPrimaryKeySelective(regFinProductDeal);
         }
     }
 

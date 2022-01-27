@@ -96,10 +96,15 @@
                                     <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
                                         <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice002.counterTradeId}">对手方交易员</label>
                                         <div class="layui-input-inline input-inline">
-                                            <select required type="text" id="counterTraderStr" name="counterTraderStr"
+                                            <!--<select required type="text" id="counterTraderStr" name="counterTraderStr"
                                                     class="layui-input form-input input-select"
                                                     th:placeholder="#{SysCommon.placeholder}" placeholder="请输入内容"
-                                                    th:initValue="${entity?.counterTraderStr}"></select>
+                                                    th:initValue="${entity?.counterTraderStr}"></select>-->
+                                            <input type="text" id="counterTraderStr" name="counterTraderStr"
+                                                   class="layui-input form-input"
+                                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                                   required="required"
+                                                   data-th-value="${entity?.counterTraderStr}" disabled="disabled">
                                         </div>
                                     </div>
                                 </div>
