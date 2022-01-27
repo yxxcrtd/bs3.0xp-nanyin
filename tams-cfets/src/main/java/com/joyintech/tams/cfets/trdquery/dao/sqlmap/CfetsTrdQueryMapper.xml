@@ -3125,8 +3125,8 @@
         nvl(T1.CCY,T.CCY) secCcy,
         nvl(T8.SETT_CCY,ic.SETT_CCY) as settCcy,
         T.Trade_Amt tradeAmt,
-        null as faceValue,
-        null as disFaceValue,
+        pledges.faceValue as faceValue,
+        pledges.disFaceValue as disFaceValue,
         T1.clear_type clearType,
         T1.Delivery_Type deliveryType,
         T1.m_delivery_type as mdeliveryType,
@@ -3154,6 +3154,10 @@
         LEFT JOIN MST_COUNTER_PARTY T11 ON T11.COUNTER_ID = T1.COUNTER_ID
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER T12 ON T12.trader_id = T1.COUNTER_TRADER
         LEFT JOIN ibu_quote_crep ic ON ic.quote_id = nvl(T7.PRE_TRADE_ID,T1.B_TRADE_ID)
+        left join (select pledge.finprod_id,sum(pledge.pledge_number/100) as faceValue,
+        sum(pledge.pledge_number*pledge.pledge_ratio*100) as disFaceValue
+        from FIN_DEAL_PLEDGE pledge group by pledge.finprod_id)pledges
+        on T.trade_id=pledges.finprod_id
         WHERE T1.TOTLE_TRADE_ID = #{totleTradeId} and T.trade_id=#{busiCode}
         AND T1.TRADE_STATUS = #{TRADE_STATUS01}
     </select>
