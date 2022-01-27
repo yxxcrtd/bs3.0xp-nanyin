@@ -99,7 +99,6 @@
      * 提交
      */
     var submitAction = function(){
-        debugger;
         var object = $.serializeToObject('#submitForm', true);
         if(!object.finprodId){
             object.finprodId = $("#CfetsBondDealQuotedPrice005_hidden_finprodId").val();
@@ -119,18 +118,18 @@
         if(object.cfetsBondDealDialogueQuoteDtoList){
             object.cfetsBondDealRequestQuoteDtoList = object.cfetsBondDealDialogueQuoteDtoList;
         }
-        Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice005/check', object, function(result) {
-            if (result.data){
+        /*Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice005/check', object, function(result) {
+            if (result.data){*/
                 var param = result.data;
-                Joyin.confirm(param, function() {
+                Joyin.confirm("请确认是否要提交?", function() {
                     WorkFlow.doSubmitList(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice005/save', object, "CfetsBondDealQuotedPrice005_btn_submit", null,
                         function() {
                             var index = window.parent.layer.getFrameIndex(window.name);
                             window.parent.layer.close(index);
                         })
                 })
-            }
-        });
+         /*   }
+        });*/
     };
     /**
      * 撤回
