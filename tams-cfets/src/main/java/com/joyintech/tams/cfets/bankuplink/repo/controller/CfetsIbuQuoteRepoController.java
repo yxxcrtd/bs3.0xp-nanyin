@@ -411,6 +411,13 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         return new Message<CfetsRepoDealQuoteCommonDto>().success().setData(cfetsRepoDealQuoteCommonDto);
     }
 
+    @ApiOperation(value = "当日登记文件下载", notes = "当日登记文件下载")
+    @PostMapping("/downDayReg")
+    @ResponseBody
+    public void downDayReg(@RequestBody Map<String,String> param, HttpServletResponse response){
+        ExcelUitl.downFile(response,new File(param.get("filePath")));
+    }
+
     @ApiOperation(value = "查询当日登记列表分页数据", notes = "查询当日登记列表分页数据")
     @PostMapping("/pageDayReg")
     @ResponseBody
