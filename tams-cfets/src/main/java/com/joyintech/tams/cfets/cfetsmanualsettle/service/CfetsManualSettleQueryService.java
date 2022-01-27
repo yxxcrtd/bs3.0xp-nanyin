@@ -24,6 +24,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -337,8 +338,12 @@ public class CfetsManualSettleQueryService extends BaseService{
             pageParam.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
             pageParam.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
             pageParam.put("platDate", iPlatformDate.getSysDateStr());
-            pageParam.put("totleTradeId",cfetsTrdQueryMapper.getTradeId(settleDto.getTradeId()));
-            List<CfetsPledgeInfoResponse> pledgeInfoDtoList = cfetsTrdQueryMapper.selectRegTablePledgeInfoList(pageParam);
+            pageParam.put("totleTradeId",settleDto.getTradeId());
+            List<CfetsPledgeInfoResponse> pledgeInfoDtoList = cfetsTrdQueryMapper.findRepoPledgeInfo(pageParam);
+            if(CollectionUtils.isEmpty(pledgeInfoDtoList)) {
+                pageParam.put("totleTradeId",cfetsTrdQueryMapper.getTradeId(settleDto.getTradeId()));
+                pledgeInfoDtoList =  cfetsTrdQueryMapper.selectRegTablePledgeInfoList(pageParam);
+            }
 
             resultData.put("CfetsTrdQueryRegInfo_dataform", dataform);
             resultData.put("CfetsTrdQueryRegInfo_datatablep", portIntFenPeiInfoDtoList);
