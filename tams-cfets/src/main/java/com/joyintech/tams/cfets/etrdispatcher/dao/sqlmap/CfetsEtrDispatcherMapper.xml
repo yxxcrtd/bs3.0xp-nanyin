@@ -934,6 +934,55 @@
         null mTradeAmt,
         null mdeliveryType
     </sql>
+
+    <sql id="etrDispatcherExeListInfo2">
+           #{busiTypePosition}                                   busiTypePosition,
+           iqc.QUOTE_ID                                          tradeId,
+           to_char(iqc.QUOTE_DATE, 'yyyy-MM-dd')                 exeDate,
+           to_char(iqc.QUOTE_DATE, 'yyyy-MM-dd')                 tradeDate,
+           iqc.QUOTE_TYPE                                        busiType,
+           pp.portfolio_id                                       portfolioId,
+           pp.portfolio_name                                     portfolioName,
+           null                                                  finprodMarketId,
+           null                                                  finprodAbbr,
+           iqc.REPO_PS                                           ps,
+           iqc.SEC_MANAGE_ACCT_ID                                secAcctId,
+           DECODE(iqc.settle_speed, 0, '01', 1, '02', '2', '03') settleSpeed,
+           to_char(iqc.QUOTE_DATE, 'yyyy-MM-dd')                 settleDate,
+           null                                                  unitPrice,
+           null                                                  matureYield,
+           null                                                  exerYield,
+           iqc.share_amt / 100                                   shareNum,
+           null                                                  unitInt,
+           null                                                  allPrice,
+           null                                                  cpriceAmt,
+           iqc.M_INT_AMT                                         intAmt,
+           iqc.fprice_amt                                        fpriceAmt,
+           iqc.DEAL_FEE_AMT                                      jyFeeAmt,
+           iqc.SETT_FEE_AMT                                      jsFeeAmt,
+           iqc.ccy                                               ccy,
+           iqc.SETT_TYPE                                         settleType,
+           iqc.CP_PARTY_ID                                       counterId,
+           mcp.PARTY_ABBR                                        counterName,
+           nvl(mcct.trader_name,iqc.CP_TRADER_ID)                counterTrader,
+           iqc.remark                                            remark,
+           iqc.M_DELIVERY_TYPE                                   deliveryType,
+           null                                                  exerciseDate,
+           null                                                  actExerciseDate,
+           iqc.QUOTE_ID                                          totalTradeId,
+           case when iqc.REPO_PS ='03' then 'F02' else 'F03' end FINPROD_TYPE2,
+           iqc.TERM_TYPE                                         termType,
+           iqc.TERM                                              repoTerm,
+           to_char(iqc.V_SETTLE_DATE, 'yyyy-MM-dd')              vpayDate,
+           to_char(iqc.M_SETTLE_DATE, 'yyyy-MM-dd')              mpayDate,
+           iqc.ACT_DAYS                                          actCapDays,
+           iqc.RATE*100                                          rebackPrice,
+           iqc.FPRICE_AMT                                        tradeAmt,
+           iqc.M_INT_AMT                                         mIntAmt,
+           iqc.M_TRADE_AMT                                       mTradeAmt,
+           iqc.M_DELIVERY_TYPE                                   mdeliveryType
+    </sql>
+
     <select id="getEtrDispatcherExeListInfo"
             resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherExeListInfoResponse">
         SELECT
@@ -993,6 +1042,26 @@
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON tpdpa.CP_TRADER= mcct.trader_id
         LEFT JOIN FIN_EXERCISE_PLAN T6 ON tpdp.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02'
         WHERE wiqe.entrust_id = #{entrustId}
+        union all
+        select
+        #{TRADE_FLOW_STATUS02} effectFlag,
+        <include refid="etrDispatcherExeListInfo2"/>
+        from IBU_QUOTE_CREP iqc
+             LEFT JOIN IBU_QUOTE_ETR_RE iqer ON iqer.QUOTE_ID = iqc.QUOTE_ID
+             LEFT JOIN PTL_PORTFOLIO pp ON iqer.portfolio_id = pp.portfolio_id
+             LEFT JOIN MST_CFETS_CUSTOMER_INFO mcp ON iqc.cp_party_id = mcp.party_id
+             LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON iqc.CP_TRADER_ID = mcct.trader_id
+        WHERE iqer.entrust_id = #{entrustId}
+        union all
+        select
+        #{TRADE_FLOW_STATUS02} effectFlag,
+        <include refid="etrDispatcherExeListInfo2"/>
+        from WFL_IBU_QUOTE_CREP iqc
+        LEFT JOIN WFL_IBU_QUOTE_ETR_RE iqer ON iqer.QUOTE_ID = iqc.QUOTE_ID
+        LEFT JOIN PTL_PORTFOLIO pp ON iqer.portfolio_id = pp.portfolio_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcp ON iqc.cp_party_id = mcp.party_id
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON iqc.CP_TRADER_ID = mcct.trader_id
+        WHERE iqer.entrust_id = #{entrustId}
     </select>
 
     <!-- 根据用户名得到真实姓名 -->
