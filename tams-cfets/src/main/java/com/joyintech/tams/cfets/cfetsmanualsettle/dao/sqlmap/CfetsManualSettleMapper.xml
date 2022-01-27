@@ -525,6 +525,7 @@
         ON TPD.TOTLE_TRADE_ID = TDTA.TOTLE_TRADE_ID
         WHERE
         TPD.TOTLE_TRADE_ID = #{tradeId}
+        AND TPD.TRADE_STATUS ='01'
     </select>
 
     <select id="qryPortfolioCashAcctId" resultType="java.lang.String">

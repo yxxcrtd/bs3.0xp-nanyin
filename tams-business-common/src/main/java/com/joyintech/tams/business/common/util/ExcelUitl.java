@@ -873,8 +873,13 @@ public class ExcelUitl {
 			logger.error("doExport错误...", e);
 			throw new RuntimeException(e.getMessage());
 		} finally {
-			try {os.close();} catch (IOException e) {e.printStackTrace();}
-			file.delete();
+			try {os.close();
+				file.delete();
+				File path = new File(file.getParent());
+				if(path.exists()){
+					path.delete();
+				}
+			} catch (IOException e) {e.printStackTrace();}
 		}
 	}
 }

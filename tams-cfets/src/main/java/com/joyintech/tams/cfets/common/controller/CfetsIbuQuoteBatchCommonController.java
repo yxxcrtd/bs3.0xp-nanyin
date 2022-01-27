@@ -62,6 +62,7 @@ public class CfetsIbuQuoteBatchCommonController {
     @PostMapping("cstpAutoTrade")
     public void cstpAutoTrade(@RequestBody Map<String,Object> parm) throws Exception {
         try{
+            logger.info("-----------银行间自动匹配处理业务数据线程开启-------------");
             InterfCstpTrade interfCstpTrade = JsonUtils.json2Object(JsonUtils.object2Json(parm.get("interfCstpTrade")), InterfCstpTrade.class);
             if(parm.containsKey("interfTradSecdeal")){
                 InterfTradSecdeal interfTradSecdeal = JsonUtils.json2Object(JsonUtils.object2Json(parm.get("interfTradSecdeal")), InterfTradSecdeal.class);
