@@ -95,6 +95,7 @@ public class IbuQuoteRepo003Controller extends BaseController {
         model.addAttribute("quotaPageModel", "new");
         model.addAttribute("ptlAllocations", cfetsRepoDealQuotedPrice001Dto.getPtlAllocationList());
         model.addAttribute("repoEntrustPledgeDtos", cfetsRepoDealQuotedPrice001Dto.getPledgeBondList());
+        model.addAttribute("ps", cfetsRepoDealQuotedPrice001Dto.getPs());
         //分配方式
         model.addAttribute("distribution", cfetsRepoDealQuotedPrice001Dto.getDistribution());
         return super.init(model);

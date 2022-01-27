@@ -139,6 +139,7 @@
             title: '组合代码',
             sortable: false
             , disabled: true
+            , visible: ps === '03'
         }
         , {
             field: 'portfolioName',
@@ -146,6 +147,7 @@
             title: '组合名称',
             sortable: false
             , disabled: true
+            , visible: ps === '03'
         }
         , {
             field: 'avaPledgePrinStr',
