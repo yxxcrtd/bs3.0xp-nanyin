@@ -245,6 +245,14 @@ public interface CfetsTrdQueryMapper {
      */
     List<CfetsPledgeInfoResponse> findRepoPledgeInfoList(Map<String, Object> pageParam);
 
+    /**
+     * 查询交易质押券,针对交易明细回购
+     *
+     * @param pageParam 参数
+     * @return List<CfetsPledgeInfoResponse>
+     */
+    List<CfetsPledgeInfoResponse> findRepoPledgeInfo(Map<String, Object> pageParam);
+
 
 
 }
