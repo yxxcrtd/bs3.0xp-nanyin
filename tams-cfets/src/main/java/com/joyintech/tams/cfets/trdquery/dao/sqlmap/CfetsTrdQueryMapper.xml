@@ -1938,7 +1938,7 @@
         fp.finprod_abbr as finprodAbbr,
         ip.PORTFOLIO_ID as portfolioId,
         pp.portfolio_name as portfolioName,
-        sum(ip.PLEDGE_NUMBER*100) as pledgePrin,
+        sum(ip.PLEDGE_NUMBER/100) as pledgePrin,
         mbvi.NETPRICE as firstNetPrice,
         ip.pledge_ratio*100 as pledgeRate,
         fp.REGIST_ORG as repRegistOrg
@@ -3110,7 +3110,7 @@
                  resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdSettleInfoResponse">
         SELECT
         distinct
-        NVL(T9.PARTY_NAME,tpda.ou_party_id) traderidStr ,
+        NVL(T9.party_abbr,tpda.ou_party_id) traderidStr,
         NVL(T10.REAL_NAME,T1.TRADER) trader,
         NVL(T11.COUNTER_NAME,T1.COUNTER_ID) counterIdStr,
         NVL(T12.TRADER_NAME,T1.COUNTER_TRADER) counterTrader,
@@ -3130,10 +3130,10 @@
         T1.clear_type clearType,
         T1.Delivery_Type deliveryType,
         T1.m_delivery_type as mdeliveryType,
-        ttft.fee_amt jyFeeAmt,
-        ttft1.fee_amt jsFeeAmt,
-        nvl(T8.V_SETTLE_DATE,ic.V_SETTLE_DATE) as vsettleDate,
-        nvl(T8.M_SETTLE_DATE,ic.M_SETTLE_DATE) as msettleDate,
+        ttft.fee_amt trdFeeAmt,
+        ttft1.fee_amt settleFeeAmt,
+        to_char(nvl(T8.V_SETTLE_DATE,ic.V_SETTLE_DATE),'yyyy-MM-dd')as vsettleDate,
+        to_char(nvl(T8.M_SETTLE_DATE,ic.M_SETTLE_DATE),'yyyy-MM-dd') as msettleDate,
         ftp.m_int_amt as intAmt,
         ftp.m_trade_amt as mtradeAmt,
         ftp.ACT_CAP_DAYS as actRepoTerm,
@@ -3172,7 +3172,9 @@
         ttft1.fee_amt jsFeeAmt,
         ftp.m_int_amt as mintAmt,
         ftp.m_trade_amt as fpriceAmt,
-        pledges.disFaceValue as disFaceValue
+        pledges.disFaceValue as disFaceValue,
+        EE.PRICE_MODEL as priceModel,
+        ftp.int_rate*100 as tradeYield
         FROM TRD_PRODUCT_DEAL TPD
         INNER JOIN TRD_PRODUCT_DEAL_ADD TPDA on TPD.TRADE_ID = TPDA.TRADE_ID
         <if test="userName != null and userName != ''">
