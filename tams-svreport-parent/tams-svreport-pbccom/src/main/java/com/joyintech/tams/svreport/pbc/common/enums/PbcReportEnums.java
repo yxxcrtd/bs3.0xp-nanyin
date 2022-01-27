@@ -16,33 +16,33 @@ public enum PbcReportEnums {
      * 1-1资管产品募集余额统计模板
      */
     MJYE_AMT_100000_CPMJYEZJ(6, PbcMonthReportGroupConstants.PBC_REPORT_1_1_1, PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_100000_CPMJYEZJ),  //产品募集余额总计
-//    MJYE_AMT_110000_KHLX(7,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_110000_KHLX),  //客户类型
+    //    MJYE_AMT_110000_KHLX(7,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_110000_KHLX),  //客户类型
     MJYE_AMT_111000_ZH(8,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_111000_ZH),  //住户
     MJYE_AMT_112000_GYZF(9,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_112000_GYZF),  //广义政府
     MJYE_AMT_113000_FJRQY(10,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_113000_FJRQY),  //非金融企业
     MJYE_AMT_114000_JRJGST(11,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_114000_JRJGST),  //金融机构（实体）
     MJYE_AMT_115000_TDMDZT(12,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_115000_TDMDZT),  //特定目的载体
     MJYE_AMT_116000_JW(13,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_116000_JW),  //境外
-//    MJYE_AMT_120000_YXFS(14,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_120000_YXFS),  //运行方式
+    //    MJYE_AMT_120000_YXFS(14,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_120000_YXFS),  //运行方式
     MJYE_AMT_121000_KFSJZX(15,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_121000_KFSJZX),  //开放式净值型
     MJYE_AMT_122000_KFSFJZX(16,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_122000_KFSFJZX),  //开放式非净值型
     MJYE_AMT_123000_FBSJZX(17,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_123000_FBSJZX),  //封闭式净值型
     MJYE_AMT_124000_FBSFJZX(18,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_124000_FBSFJZX),  //封闭式非净值型
-//    MJYE_AMT_130000_MJFS(19,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_130000_MJFS),  //募集方式
+    //    MJYE_AMT_130000_MJFS(19,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_130000_MJFS),  //募集方式
     MJYE_AMT_131000_GKMJ(20,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_131000_GKMJ),  //公开募集
     MJYE_AMT_132000_FGKMJ(21,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_132000_FGKMJ),  //非公开募集
-//    MJYE_AMT_140000_GLFS(22,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_140000_GLFS),  //管理方式
+    //    MJYE_AMT_140000_GLFS(22,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_140000_GLFS),  //管理方式
     MJYE_AMT_141000_JHGL(23,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_141000_JHGL),  //集合管理
     MJYE_AMT_142000_DDGL(24,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_142000_DDGL),  //单独管理
-//    MJYE_AMT_150000_STZZ(25,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_150000_STZZ),  //受托职责
+    //    MJYE_AMT_150000_STZZ(25,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_150000_STZZ),  //受托职责
     MJYE_AMT_151000_ZDGL(26,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_151000_ZDGL),  //主动管理
     MJYE_AMT_152000_BDGL(27,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_152000_BDGL),  //被动管理
-//    MJYE_AMT_160000_CPLX(28,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_160000_CPLX),  //产品类型
+    //    MJYE_AMT_160000_CPLX(28,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_160000_CPLX),  //产品类型
     MJYE_AMT_161000_GDSYL(29,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_161000_GDSYL),  //固定收益类
     MJYE_AMT_162000_QYL(30,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_162000_QYL),  //权益类
     MJYE_AMT_163000_SPJJRYSPL(31,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_163000_SPJJRYSPL),  //商品及金融衍生品类
     MJYE_AMT_164000_HHL(32,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_164000_HHL),  //混合类
-//    MJYE_AMT_190000_F(33,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_190000_F),  //附:
+    //    MJYE_AMT_190000_F(33,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_190000_F),  //附:
     MJYE_AMT_191000_QZFJCP(34,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_191000_QZFJCP),  //其中：分级产品
     MJYE_AMT_192000_QZSYQZRCP(35,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_192000_QZSYQZRCP),  //其中：收益权转让产品
     MJYE_AMT_193000_QZHBSCJJ(36,PbcMonthReportGroupConstants.PBC_REPORT_1_1_1,PbcReportType.PBC_REPORT_1_1,PbcReportProperycode.MJYE_AMT_193000_QZHBSCJJ),  //其中：货币市场基金
@@ -51,65 +51,65 @@ public enum PbcReportEnums {
      * 1-2募集及兑付发生额
      */
     MJDF_DQMJ_AMT_200000_ZJ(7,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_200000_ZJ"),  //总计
-//    MJDF_DQMJ_AMT_210000_KHLX(8,1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_210000_KHLX"),  //客户类型
+    //    MJDF_DQMJ_AMT_210000_KHLX(8,1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_210000_KHLX"),  //客户类型
     MJDF_DQMJ_AMT_211000_ZH(9,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_211000_ZH"),  //住户
     MJDF_DQMJ_AMT_212000_GYZF(10,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_212000_GYZF"),  //广义政府
     MJDF_DQMJ_AMT_213000_FJRQY(11,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_213000_FJRQY"),  //非金融企业
     MJDF_DQMJ_AMT_214000_JRJGST(12,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_214000_JRJGST"),  //金融机构（实体）
     MJDF_DQMJ_AMT_215000_TDMDZT(13,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_215000_TDMDZT"),  //特定目的载体
     MJDF_DQMJ_AMT_216000_JW(14,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_216000_JW"),  //境外
-//    MJDF_DQMJ_AMT_220000_YXFS(15,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_220000_YXFS"),  //运行方式
+    //    MJDF_DQMJ_AMT_220000_YXFS(15,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_220000_YXFS"),  //运行方式
     MJDF_DQMJ_AMT_221000_KFSJZX(16,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_221000_KFSJZX"),  //开放式净值型
     MJDF_DQMJ_AMT_222000_KFSFJZX(17,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_222000_KFSFJZX"),  //开放式非净值型
     MJDF_DQMJ_AMT_223000_FBSJZX(18,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_223000_FBSJZX"),  //封闭式净值型
     MJDF_DQMJ_AMT_224000_FBSFJZX(19,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_224000_FBSFJZX"),  //封闭式非净值型
-//    MJDF_DQMJ_AMT_230000_MJFS(20,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_230000_MJFS"),  //募集方式
+    //    MJDF_DQMJ_AMT_230000_MJFS(20,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_230000_MJFS"),  //募集方式
     MJDF_DQMJ_AMT_231000_GKMJ(21,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_231000_GKMJ"),  //公开募集
     MJDF_DQMJ_AMT_232000_FGKMJ(22,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_232000_FGKMJ"),  //非公开募集
-//    MJDF_DQMJ_AMT_240000_GLFS(23,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_240000_GLFS"),  //管理方式
+    //    MJDF_DQMJ_AMT_240000_GLFS(23,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_240000_GLFS"),  //管理方式
     MJDF_DQMJ_AMT_241000_JHGL(24,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_241000_JHGL"),  //集合管理
     MJDF_DQMJ_AMT_242000_DDGL(25,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_242000_DDGL"),  //单独管理
-//    MJDF_DQMJ_AMT_250000_STZZ(26,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_250000_STZZ"),  //受托职责
+    //    MJDF_DQMJ_AMT_250000_STZZ(26,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_250000_STZZ"),  //受托职责
     MJDF_DQMJ_AMT_251000_ZDGL(27,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_251000_ZDGL"),  //主动管理
     MJDF_DQMJ_AMT_252000_BDGL(28,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_252000_BDGL"),  //被动管理
-//    MJDF_DQMJ_AMT_260000_CPLX(29,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_260000_CPLX"),  //产品类型
+    //    MJDF_DQMJ_AMT_260000_CPLX(29,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_260000_CPLX"),  //产品类型
     MJDF_DQMJ_AMT_261000_GDSYL(30,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_261000_GDSYL"),  //固定收益类
     MJDF_DQMJ_AMT_262000_QYL(31,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_262000_QYL"),  //权益类
     MJDF_DQMJ_AMT_263000_SPJJRYSPL(32,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_263000_SPJJRYSPL"),  //商品及金融衍生品类
     MJDF_DQMJ_AMT_264000_HHL(33,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_264000_HHL"),  //混合类
-//    MJDF_DQMJ_AMT_290000_F(34,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_290000_F"),  //附:
+    //    MJDF_DQMJ_AMT_290000_F(34,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_290000_F"),  //附:
     MJDF_DQMJ_AMT_291000_QZFJCP(35,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_291000_QZFJCP"),  // 其中：分级产品
     MJDF_DQMJ_AMT_292000_QZSYQZRCP(36,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_292000_QZSYQZRCP"),  // 其中：收益权转让产品
     MJDF_DQMJ_AMT_293000_QZHBSCJJ(37,PbcMonthReportGroupConstants.PBC_REPORT_1_2_1,PbcReportType.PBC_REPORT_1_2,"MJDF_DQMJ_AMT_293000_QZHBSCJJ"),  //其中：货币市场基金
 
     MJDF_DQDF_AMT_200000_ZJ(7,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_200000_ZJ"),  //总计
-//    MJDF_DQDF_AMT_210000_KHLX(8,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_210000_KHLX"),  //客户类型
+    //    MJDF_DQDF_AMT_210000_KHLX(8,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_210000_KHLX"),  //客户类型
     MJDF_DQDF_AMT_211000_ZH(9,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_211000_ZH"),  //住户
     MJDF_DQDF_AMT_212000_GYZF(10,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_212000_GYZF"),  //广义政府
     MJDF_DQDF_AMT_213000_FJRQY(11,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_213000_FJRQY"),  //非金融企业
     MJDF_DQDF_AMT_214000_JRJGST(12,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_214000_JRJGST"),  //金融机构（实体）
     MJDF_DQDF_AMT_215000_TDMDZT(13,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_215000_TDMDZT"),  //特定目的载体
     MJDF_DQDF_AMT_216000_JW(14,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_216000_JW"),  //境外
-//    MJDF_DQDF_AMT_220000_YXFS(15,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_220000_YXFS"),  //运行方式
+    //    MJDF_DQDF_AMT_220000_YXFS(15,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_220000_YXFS"),  //运行方式
     MJDF_DQDF_AMT_221000_KFSJZX(16,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_221000_KFSJZX"),  //开放式净值型
     MJDF_DQDF_AMT_222000_KFSFJZX(17,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_222000_KFSFJZX"),  //开放式非净值型
     MJDF_DQDF_AMT_223000_FBSJZX(18,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_223000_FBSJZX"),  //封闭式净值型
     MJDF_DQDF_AMT_224000_FBSFJZX(19,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_224000_FBSFJZX"),  //封闭式非净值型
-//    MJDF_DQDF_AMT_230000_MJFS(20,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_230000_MJFS"),  //募集方式
+    //    MJDF_DQDF_AMT_230000_MJFS(20,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_230000_MJFS"),  //募集方式
     MJDF_DQDF_AMT_231000_GKMJ(21,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_231000_GKMJ"),  //公开募集
     MJDF_DQDF_AMT_232000_FGKMJ(22,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_232000_FGKMJ"),  //非公开募集
-//    MJDF_DQDF_AMT_240000_GLFS(23,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_240000_GLFS"),  //管理方式
+    //    MJDF_DQDF_AMT_240000_GLFS(23,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_240000_GLFS"),  //管理方式
     MJDF_DQDF_AMT_241000_JHGL(24,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_241000_JHGL"),  //集合管理
     MJDF_DQDF_AMT_242000_DDGL(25,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_242000_DDGL"),  //单独管理
-//    MJDF_DQDF_AMT_250000_STZZ(26,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_250000_STZZ"),  //受托职责
+    //    MJDF_DQDF_AMT_250000_STZZ(26,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_250000_STZZ"),  //受托职责
     MJDF_DQDF_AMT_251000_ZDGL(27,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_251000_ZDGL"),  //主动管理
     MJDF_DQDF_AMT_252000_BDGL(28,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_252000_BDGL"),  //被动管理
-//    MJDF_DQDF_AMT_260000_CPLX(29,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_260000_CPLX"),  //产品类型
+    //    MJDF_DQDF_AMT_260000_CPLX(29,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_260000_CPLX"),  //产品类型
     MJDF_DQDF_AMT_261000_GDSYL(30,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_261000_GDSYL"),  //固定收益类
     MJDF_DQDF_AMT_262000_QYL(31,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_262000_QYL"),  //权益类
     MJDF_DQDF_AMT_263000_SPJJRYSPL(32,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_263000_SPJJRYSPL"),  //商品及金融衍生品类
     MJDF_DQDF_AMT_264000_HHL(33,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_264000_HHL"),  //混合类
-//    MJDF_DQDF_AMT_290000_F(34,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_290000_F"),  //附:
+    //    MJDF_DQDF_AMT_290000_F(34,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_290000_F"),  //附:
     MJDF_DQDF_AMT_291000_QZFJCP(35,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_291000_QZFJCP"),  // 其中：分级产品
     MJDF_DQDF_AMT_292000_QZSYQZRCP(36,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_292000_QZSYQZRCP"),  // 其中：收益权转让产品
     MJDF_DQDF_AMT_293000_QZHBSCJJ(37,PbcMonthReportGroupConstants.PBC_REPORT_1_2_2,PbcReportType.PBC_REPORT_1_2,"MJDF_DQDF_AMT_293000_QZHBSCJJ"),  //其中：货币市场基金
@@ -130,21 +130,21 @@ public enum PbcReportEnums {
     ZSQK_QMCX_AMT_322000_KFSFJZX(10,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_322000_KFSFJZX"),  //开放式非净值型
     ZSQK_QMCX_AMT_323000_FBSJZX(11,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_323000_FBSJZX"),  //封闭式净值型
     ZSQK_QMCX_AMT_324000_FBSFJZX(12,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_324000_FBSFJZX"),  //封闭式非净值型
-//    ZSQK_QMCX_AMT_330000_MJFS(13,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_330000_MJFS"),  //募集方式
+    //    ZSQK_QMCX_AMT_330000_MJFS(13,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_330000_MJFS"),  //募集方式
     ZSQK_QMCX_AMT_331000_GKMJ(14,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_331000_GKMJ"),  //公开募集
     ZSQK_QMCX_AMT_332000_FGKMJ(15,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_332000_FGKMJ"),  //非公开募集
-//    ZSQK_QMCX_AMT_340000_GLFS(16,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_340000_GLFS"),  //管理方式
+    //    ZSQK_QMCX_AMT_340000_GLFS(16,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_340000_GLFS"),  //管理方式
     ZSQK_QMCX_AMT_341000_JHGL(17,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_341000_JHGL"),  //集合管理
     ZSQK_QMCX_AMT_342000_DDGL(18,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_342000_DDGL"),  //单独管理
-//    ZSQK_QMCX_AMT_350000_STZZ(19,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_350000_STZZ"),  //受托职责
+    //    ZSQK_QMCX_AMT_350000_STZZ(19,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_350000_STZZ"),  //受托职责
     ZSQK_QMCX_AMT_351000_ZDGL(20,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_351000_ZDGL"),  //主动管理
     ZSQK_QMCX_AMT_352000_BDGL(21,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_352000_BDGL"),  //被动管理
-//    ZSQK_QMCX_AMT_360000_CPLX(22,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_360000_CPLX"),  //产品类型
+    //    ZSQK_QMCX_AMT_360000_CPLX(22,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_360000_CPLX"),  //产品类型
     ZSQK_QMCX_AMT_361000_GDSYL(23,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_361000_GDSYL"),  //固定收益类
     ZSQK_QMCX_AMT_362000_QYL(24,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_362000_QYL"),  //权益类
     ZSQK_QMCX_AMT_363000_SPJJRYSPL(25,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_363000_SPJJRYSPL"),  //商品及金融衍生品类
     ZSQK_QMCX_AMT_364000_HHL(26,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_364000_HHL"),  //混合类
-//    ZSQK_QMCX_AMT_390000_F(27,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_390000_F"),  //附:
+    //    ZSQK_QMCX_AMT_390000_F(27,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_390000_F"),  //附:
     ZSQK_QMCX_AMT_391000_QZFJCP(28,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_391000_QZFJCP"),  // 其中：分级产品
     ZSQK_QMCX_AMT_392000_QZSYQZRCP(29,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_392000_QZSYQZRCP"),  // 其中：收益权转让产品
     ZSQK_QMCX_AMT_393000_QZHBSCJJ(30,PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,PbcReportType.PBC_REPORT_1_3,"ZSQK_QMCX_AMT_393000_QZHBSCJJ"),  //其中：货币市场基金
@@ -162,53 +162,53 @@ public enum PbcReportEnums {
     ZSQK_DQXF_AMT_322000_KFSFJZX(10,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_322000_KFSFJZX"),  //开放式非净值型
     ZSQK_DQXF_AMT_323000_FBSJZX(11,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_323000_FBSJZX"),  //封闭式净值型
     ZSQK_DQXF_AMT_324000_FBSFJZX(12,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_324000_FBSFJZX"),  //封闭式非净值型
-//    ZSQK_DQXF_AMT_330000_MJFS(13,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_330000_MJFS"),  //募集方式
+    //    ZSQK_DQXF_AMT_330000_MJFS(13,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_330000_MJFS"),  //募集方式
     ZSQK_DQXF_AMT_331000_GKMJ(14,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_331000_GKMJ"),  //公开募集
     ZSQK_DQXF_AMT_332000_FGKMJ(15,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_332000_FGKMJ"),  //非公开募集
-//    ZSQK_DQXF_AMT_340000_GLFS(16,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_340000_GLFS"),  //管理方式
+    //    ZSQK_DQXF_AMT_340000_GLFS(16,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_340000_GLFS"),  //管理方式
     ZSQK_DQXF_AMT_341000_JHGL(17,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_341000_JHGL"),  //集合管理
     ZSQK_DQXF_AMT_342000_DDGL(18,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_342000_DDGL"),  //单独管理
-//    ZSQK_DQXF_AMT_350000_STZZ(19,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_350000_STZZ"),  //受托职责
+    //    ZSQK_DQXF_AMT_350000_STZZ(19,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_350000_STZZ"),  //受托职责
     ZSQK_DQXF_AMT_351000_ZDGL(20,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_351000_ZDGL"),  //主动管理
     ZSQK_DQXF_AMT_352000_BDGL(21,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_352000_BDGL"),  //被动管理
-//    ZSQK_DQXF_AMT_360000_CPLX(22,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_360000_CPLX"),  //产品类型
+    //    ZSQK_DQXF_AMT_360000_CPLX(22,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_360000_CPLX"),  //产品类型
     ZSQK_DQXF_AMT_361000_GDSYL(23,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_361000_GDSYL"),  //固定收益类
     ZSQK_DQXF_AMT_362000_QYL(24,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_362000_QYL"),  //权益类
     ZSQK_DQXF_AMT_363000_SPJJRYSPL(25,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_363000_SPJJRYSPL"),  //商品及金融衍生品类
     ZSQK_DQXF_AMT_364000_HHL(26,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_364000_HHL"),  //混合类
-//    ZSQK_DQXF_AMT_390000_F(27,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_390000_F"),  //附:
+    //    ZSQK_DQXF_AMT_390000_F(27,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_390000_F"),  //附:
     ZSQK_DQXF_AMT_391000_QZFJCP(28,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_391000_QZFJCP"),  // 其中：分级产品
     ZSQK_DQXF_AMT_392000_QZSYQZRCP(29,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_392000_QZSYQZRCP"),  // 其中：收益权转让产品
     ZSQK_DQXF_AMT_393000_QZHBSCJJ(30,PbcMonthReportGroupConstants.PBC_REPORT_1_3_2,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQXF_AMT_393000_QZHBSCJJ"),  //其中：货币市场基金
 
     ZSQK_DQZZ_AMT_300000_ZJ(7,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_300000_ZJ"),  //总计
-   /* ZSQK_DQZZ_AMT_310000_KHLX(PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_310000_KHLX"),  //客户类型
-    ZSQK_DQZZ_AMT_311000_ZH(PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_311000_ZH"),  //住户
-    ZSQK_DQZZ_AMT_312000_GYZF(PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_312000_GYZF"),  //广义政府
-    ZSQK_DQZZ_AMT_313000_FJRQY(PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_313000_FJRQY"),  //非金融企业
-    ZSQK_DQZZ_AMT_314000_JRJGST(PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_314000_JRJGST"),  //金融机构（实体）
-    ZSQK_DQZZ_AMT_315000_TDMDZT(PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_315000_TDMDZT"),  //特定目的载体
-    ZSQK_DQZZ_AMT_316000_JW(PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_316000_JW"),  //境外*/
+    /* ZSQK_DQZZ_AMT_310000_KHLX(PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_310000_KHLX"),  //客户类型
+     ZSQK_DQZZ_AMT_311000_ZH(PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_311000_ZH"),  //住户
+     ZSQK_DQZZ_AMT_312000_GYZF(PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_312000_GYZF"),  //广义政府
+     ZSQK_DQZZ_AMT_313000_FJRQY(PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_313000_FJRQY"),  //非金融企业
+     ZSQK_DQZZ_AMT_314000_JRJGST(PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_314000_JRJGST"),  //金融机构（实体）
+     ZSQK_DQZZ_AMT_315000_TDMDZT(PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_315000_TDMDZT"),  //特定目的载体
+     ZSQK_DQZZ_AMT_316000_JW(PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_316000_JW"),  //境外*/
 //    ZSQK_DQZZ_AMT_320000_YXFS(8,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_320000_YXFS"),  //运行方式
     ZSQK_DQZZ_AMT_321000_KFSJZX(9,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_321000_KFSJZX"),  //开放式净值型
     ZSQK_DQZZ_AMT_322000_KFSFJZX(10,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_322000_KFSFJZX"),  //开放式非净值型
     ZSQK_DQZZ_AMT_323000_FBSJZX(11,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_323000_FBSJZX"),  //封闭式净值型
     ZSQK_DQZZ_AMT_324000_FBSFJZX(12,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_324000_FBSFJZX"),  //封闭式非净值型
-//    ZSQK_DQZZ_AMT_330000_MJFS(13,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_330000_MJFS"),  //募集方式
+    //    ZSQK_DQZZ_AMT_330000_MJFS(13,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_330000_MJFS"),  //募集方式
     ZSQK_DQZZ_AMT_331000_GKMJ(14,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_331000_GKMJ"),  //公开募集
     ZSQK_DQZZ_AMT_332000_FGKMJ(15,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_332000_FGKMJ"),  //非公开募集
-//    ZSQK_DQZZ_AMT_340000_GLFS(16,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_340000_GLFS"),  //管理方式
+    //    ZSQK_DQZZ_AMT_340000_GLFS(16,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_340000_GLFS"),  //管理方式
     ZSQK_DQZZ_AMT_341000_JHGL(17,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_341000_JHGL"),  //集合管理
     ZSQK_DQZZ_AMT_342000_DDGL(18,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_342000_DDGL"),  //单独管理
-//    ZSQK_DQZZ_AMT_350000_STZZ(19,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_350000_STZZ"),  //受托职责
+    //    ZSQK_DQZZ_AMT_350000_STZZ(19,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_350000_STZZ"),  //受托职责
     ZSQK_DQZZ_AMT_351000_ZDGL(20,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_351000_ZDGL"),  //主动管理
     ZSQK_DQZZ_AMT_352000_BDGL(21,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_352000_BDGL"),  //被动管理
-//    ZSQK_DQZZ_AMT_360000_CPLX(22,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_360000_CPLX"),  //产品类型
+    //    ZSQK_DQZZ_AMT_360000_CPLX(22,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_360000_CPLX"),  //产品类型
     ZSQK_DQZZ_AMT_361000_GDSYL(23,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_361000_GDSYL"),  //固定收益类
     ZSQK_DQZZ_AMT_362000_QYL(24,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_362000_QYL"),  //权益类
     ZSQK_DQZZ_AMT_363000_SPJJRYSPL(25,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_363000_SPJJRYSPL"),  //商品及金融衍生品类
     ZSQK_DQZZ_AMT_364000_HHL(26,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_364000_HHL"),  //混合类
-//    ZSQK_DQZZ_AMT_390000_F(27,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_390000_F"),  //附:
+    //    ZSQK_DQZZ_AMT_390000_F(27,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_390000_F"),  //附:
     ZSQK_DQZZ_AMT_391000_QZFJCP(28,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_391000_QZFJCP"),  // 其中：分级产品
     ZSQK_DQZZ_AMT_392000_QZSYQZRCP(29,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_392000_QZSYQZRCP"),  // 其中：收益权转让产品
     ZSQK_DQZZ_AMT_393000_QZHBSCJJ(30,PbcMonthReportGroupConstants.PBC_REPORT_1_3_3,PbcReportType.PBC_REPORT_1_3,"ZSQK_DQZZ_AMT_393000_QZHBSCJJ"),  //其中：货币市场基金
@@ -258,65 +258,65 @@ public enum PbcReportEnums {
      * 1-5提前及延期兑付
      */
     TQJYQDF_TQDF_AMT_500000_ZJ(8,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_500000_ZJ"),  //总计
-//    TQJYQDF_TQDF_AMT_510000_KHLX(9,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_510000_KHLX"),  //客户类型
+    //    TQJYQDF_TQDF_AMT_510000_KHLX(9,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_510000_KHLX"),  //客户类型
     TQJYQDF_TQDF_AMT_511000_ZH(10,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_511000_ZH"),  //住户
     TQJYQDF_TQDF_AMT_512000_GYZF(11,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_512000_GYZF"),  //广义政府
     TQJYQDF_TQDF_AMT_513000_FJRQY(12,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_513000_FJRQY"),  //非金融企业
     TQJYQDF_TQDF_AMT_514000_JRJGST(13,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_514000_JRJGST"),  //金融机构（实体）
     TQJYQDF_TQDF_AMT_515000_TDMDZT(14,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_515000_TDMDZT"),  //特定目的载体
     TQJYQDF_TQDF_AMT_516000_JW(15,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_516000_JW"),  //境外
-//    TQJYQDF_TQDF_AMT_520000_YXFS(16,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_520000_YXFS"),  //运行方式
+    //    TQJYQDF_TQDF_AMT_520000_YXFS(16,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_520000_YXFS"),  //运行方式
     TQJYQDF_TQDF_AMT_521000_KFSJZX(17,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_521000_KFSJZX"),  //开放式净值型
     TQJYQDF_TQDF_AMT_522000_KFSFJZX(18,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_522000_KFSFJZX"),  //开放式非净值型
     TQJYQDF_TQDF_AMT_523000_FBSJZX(19,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_523000_FBSJZX"),  //封闭式净值型
     TQJYQDF_TQDF_AMT_524000_FBSFJZX(20,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_524000_FBSFJZX"),  //封闭式非净值型
-//    TQJYQDF_TQDF_AMT_530000_MJFS(21,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_530000_MJFS"),  //募集方式
+    //    TQJYQDF_TQDF_AMT_530000_MJFS(21,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_530000_MJFS"),  //募集方式
     TQJYQDF_TQDF_AMT_531000_GKMJ(22,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_531000_GKMJ"),  //公开募集
     TQJYQDF_TQDF_AMT_532000_FGKMJ(23,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_532000_FGKMJ"),  //非公开募集
-//    TQJYQDF_TQDF_AMT_540000_GLFS(24,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_540000_GLFS"),  //管理方式
+    //    TQJYQDF_TQDF_AMT_540000_GLFS(24,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_540000_GLFS"),  //管理方式
     TQJYQDF_TQDF_AMT_541000_JHGL(25,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_541000_JHGL"),  //集合管理
     TQJYQDF_TQDF_AMT_542000_DDGL(26,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_542000_DDGL"),  //单独管理
-//    TQJYQDF_TQDF_AMT_550000_STZZ(27,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_550000_STZZ"),  //受托职责
+    //    TQJYQDF_TQDF_AMT_550000_STZZ(27,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_550000_STZZ"),  //受托职责
     TQJYQDF_TQDF_AMT_551000_ZDGL(28,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_551000_ZDGL"),  //主动管理
     TQJYQDF_TQDF_AMT_552000_BDGL(29,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_552000_BDGL"),  //被动管理
-//    TQJYQDF_TQDF_AMT_560000_CPLX(30,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_560000_CPLX"),  //产品类型
+    //    TQJYQDF_TQDF_AMT_560000_CPLX(30,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_560000_CPLX"),  //产品类型
     TQJYQDF_TQDF_AMT_561000_GDSYL(31,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_561000_GDSYL"),  //固定收益类
     TQJYQDF_TQDF_AMT_562000_QYL(32,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_562000_QYL"),  //权益类
     TQJYQDF_TQDF_AMT_563000_SPJJRYSPL(33,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_563000_SPJJRYSPL"),  //商品及金融衍生品类
     TQJYQDF_TQDF_AMT_564000_HHL(34,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_564000_HHL"),  //混合类
-//    TQJYQDF_TQDF_AMT_590000_F(35,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_590000_F"),  //附:
+    //    TQJYQDF_TQDF_AMT_590000_F(35,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_590000_F"),  //附:
     TQJYQDF_TQDF_AMT_591000_QZFJCP(36,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_591000_QZFJCP"),  // 其中：分级产品
     TQJYQDF_TQDF_AMT_592000_QZSYQZRCP(37,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_592000_QZSYQZRCP"),  // 其中：收益权转让产品
     TQJYQDF_TQDF_AMT_593000_QZHBSCJJ(38,PbcMonthReportGroupConstants.PBC_REPORT_1_5_1,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_TQDF_AMT_593000_QZHBSCJJ"),  //其中：货币市场基金
 
     TQJYQDF_YQDF_AMT_500000_ZJ(8,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_500000_ZJ"),  //总计
-//    TQJYQDF_YQDF_AMT_510000_KHLX(9,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_510000_KHLX"),  //客户类型
+    //    TQJYQDF_YQDF_AMT_510000_KHLX(9,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_510000_KHLX"),  //客户类型
     TQJYQDF_YQDF_AMT_511000_ZH(10,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_511000_ZH"),  //住户
     TQJYQDF_YQDF_AMT_512000_GYZF(11,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_512000_GYZF"),  //广义政府
     TQJYQDF_YQDF_AMT_513000_FJRQY(12,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_513000_FJRQY"),  //非金融企业
     TQJYQDF_YQDF_AMT_514000_JRJGST(13,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_514000_JRJGST"),  //金融机构（实体）
     TQJYQDF_YQDF_AMT_515000_TDMDZT(14,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_515000_TDMDZT"),  //特定目的载体
     TQJYQDF_YQDF_AMT_516000_JW(15,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_516000_JW"),  //境外
-//    TQJYQDF_YQDF_AMT_520000_YXFS(16,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_520000_YXFS"),  //运行方式
+    //    TQJYQDF_YQDF_AMT_520000_YXFS(16,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_520000_YXFS"),  //运行方式
     TQJYQDF_YQDF_AMT_521000_KFSJZX(17,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_521000_KFSJZX"),  //开放式净值型
     TQJYQDF_YQDF_AMT_522000_KFSFJZX(18,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_522000_KFSFJZX"),  //开放式非净值型
     TQJYQDF_YQDF_AMT_523000_FBSJZX(19,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_523000_FBSJZX"),  //封闭式净值型
     TQJYQDF_YQDF_AMT_524000_FBSFJZX(20,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_524000_FBSFJZX"),  //封闭式非净值型
-//    TQJYQDF_YQDF_AMT_530000_MJFS(21,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_530000_MJFS"),  //募集方式
+    //    TQJYQDF_YQDF_AMT_530000_MJFS(21,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_530000_MJFS"),  //募集方式
     TQJYQDF_YQDF_AMT_531000_GKMJ(22,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_531000_GKMJ"),  //公开募集
     TQJYQDF_YQDF_AMT_532000_FGKMJ(23,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_532000_FGKMJ"),  //非公开募集
-//    TQJYQDF_YQDF_AMT_540000_GLFS(24,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_540000_GLFS"),  //管理方式
+    //    TQJYQDF_YQDF_AMT_540000_GLFS(24,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_540000_GLFS"),  //管理方式
     TQJYQDF_YQDF_AMT_541000_JHGL(25,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_541000_JHGL"),  //集合管理
     TQJYQDF_YQDF_AMT_542000_DDGL(26,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_542000_DDGL"),  //单独管理
-//    TQJYQDF_YQDF_AMT_550000_STZZ(27,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_550000_STZZ"),  //受托职责
+    //    TQJYQDF_YQDF_AMT_550000_STZZ(27,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_550000_STZZ"),  //受托职责
     TQJYQDF_YQDF_AMT_551000_ZDGL(28,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_551000_ZDGL"),  //主动管理
     TQJYQDF_YQDF_AMT_552000_BDGL(29,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_552000_BDGL"),  //被动管理
-//    TQJYQDF_YQDF_AMT_560000_CPLX(30,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_560000_CPLX"),  //产品类型
+    //    TQJYQDF_YQDF_AMT_560000_CPLX(30,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_560000_CPLX"),  //产品类型
     TQJYQDF_YQDF_AMT_561000_GDSYL(31,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_561000_GDSYL"),  //固定收益类
     TQJYQDF_YQDF_AMT_562000_QYL(32,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_562000_QYL"),  //权益类
     TQJYQDF_YQDF_AMT_563000_SPJJRYSPL(33,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_563000_SPJJRYSPL"),  //商品及金融衍生品类
     TQJYQDF_YQDF_AMT_564000_HHL(34,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_564000_HHL"),  //混合类
-//    TQJYQDF_YQDF_AMT_590000_F(35,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_590000_F"),  //附:
+    //    TQJYQDF_YQDF_AMT_590000_F(35,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_590000_F"),  //附:
     TQJYQDF_YQDF_AMT_591000_QZFJCP(36,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_591000_QZFJCP"),  // 其中：分级产品
     TQJYQDF_YQDF_AMT_592000_QZSYQZRCP(37,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_592000_QZSYQZRCP"),  // 其中：收益权转让产品
     TQJYQDF_YQDF_AMT_593000_QZHBSCJJ(38,PbcMonthReportGroupConstants.PBC_REPORT_1_5_2,PbcReportType.PBC_REPORT_1_5,"TQJYQDF_YQDF_AMT_593000_QZHBSCJJ"),  //其中：货币市场基金
@@ -325,33 +325,33 @@ public enum PbcReportEnums {
      * 1-6 到期未兑付
      */
     DQWDF_AMT_600000_ZJ(8,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_600000_ZJ"),  //总计
-//    DQWDF_AMT_610000_KHLX(9,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_5610000_KHLX"),  //客户类型
+    //    DQWDF_AMT_610000_KHLX(9,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_5610000_KHLX"),  //客户类型
     DQWDF_AMT_611000_ZH(10,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_611000_ZH"),  //住户
     DQWDF_AMT_612000_GYZF(11,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_612000_GYZF"),  //广义政府
     DQWDF_AMT_613000_FJRQY(12,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_613000_FJRQY"),  //非金融企业
     DQWDF_AMT_614000_JRJGST(13,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_614000_JRJGST"),  //金融机构（实体）
     DQWDF_AMT_615000_TDMDZT(14,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_615000_TDMDZT"),  //特定目的载体
     DQWDF_AMT_616000_JW(15,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_616000_JW"),  //境外
-//    DQWDF_AMT_620000_YXFS(16,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_620000_YXFS"),  //运行方式
+    //    DQWDF_AMT_620000_YXFS(16,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_620000_YXFS"),  //运行方式
     DQWDF_AMT_621000_KFSJZX(17,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_621000_KFSJZX"),  //开放式净值型
     DQWDF_AMT_622000_KFSFJZX(18,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_622000_KFSFJZX"),  //开放式非净值型
     DQWDF_AMT_623000_FBSJZX(19,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_623000_FBSJZX"),  //封闭式净值型
     DQWDF_AMT_624000_FBSFJZX(20,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_624000_FBSFJZX"),  //封闭式非净值型
-//    DQWDF_AMT_630000_MJFS(21,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_630000_MJFS"),  //募集方式
+    //    DQWDF_AMT_630000_MJFS(21,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_630000_MJFS"),  //募集方式
     DQWDF_AMT_631000_GKMJ(22,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_631000_GKMJ"),  //公开募集
     DQWDF_AMT_632000_FGKMJ(23,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_632000_FGKMJ"),  //非公开募集
-//    DQWDF_AMT_640000_GLFS(24,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_640000_GLFS"),  //管理方式
+    //    DQWDF_AMT_640000_GLFS(24,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_640000_GLFS"),  //管理方式
     DQWDF_AMT_641000_JHGL(25,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_641000_JHGL"),  //集合管理
     DQWDF_AMT_642000_DDGL(26,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_642000_DDGL"),  //单独管理
-//    DQWDF_AMT_650000_STZZ(27,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_650000_STZZ"),  //受托职责
+    //    DQWDF_AMT_650000_STZZ(27,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_650000_STZZ"),  //受托职责
     DQWDF_AMT_651000_ZDGL(28,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_651000_ZDGL"),  //主动管理
     DQWDF_AMT_652000_BDGL(29,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_652000_BDGL"),  //被动管理
-//    DQWDF_AMT_660000_CPLX(30,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_660000_CPLX"),  //产品类型
+    //    DQWDF_AMT_660000_CPLX(30,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_660000_CPLX"),  //产品类型
     DQWDF_AMT_661000_GDSYL(31,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_661000_GDSYL"),  //固定收益类
     DQWDF_AMT_662000_QYL(32,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_662000_QYL"),  //权益类
     DQWDF_AMT_663000_SPJJRYSPL(33,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_663000_SPJJRYSPL"),  //商品及金融衍生品类
     DQWDF_AMT_664000_HHL(34,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_664000_HHL"),  //混合类
-//    DQWDF_AMT_690000_F(35,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_690000_F"),  //附:
+    //    DQWDF_AMT_690000_F(35,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_690000_F"),  //附:
     DQWDF_AMT_691000_QZFJCP(36,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_691000_QZFJCP"),  // 其中：分级产品
     DQWDF_AMT_692000_QZSYQZRCP(37,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_692000_QZSYQZRCP"),  // 其中：收益权转让产品
     DQWDF_AMT_693000_QZHBSCJJ(38,PbcMonthReportGroupConstants.PBC_REPORT_1_6_1,PbcReportType.PBC_REPORT_1_6,"DQWDF_AMT_693000_QZHBSCJJ"),  //其中：货币市场基金
@@ -359,78 +359,85 @@ public enum PbcReportEnums {
     /**
      * 2-1资管产品资产负债统计
      */
-    AMT_700000_ZCHJ (6,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_700000_ZCHJ"),//资产合计
-    AMT_710000_XJ (7,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_710000_XJ"),//现金
-    AMT_720000_CK (8,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_720000_CK"),//存款
-    AMT_721000_JNCK (9,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_721000_JNCK"),//境内存款
-    AMT_722000_JWCK (10,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_722000_JWCK"),//境外存款
-    AMT_730000_KZRCD (11,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_730000_KZRCD"),//可转让存单
-    AMT_731000_TYCD (12,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_731000_TYCD"),//同业存单
-    AMT_732000_DECD (13,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_732000_DECD"),//大额存单
-    AMT_740000_ZWZQ (14,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_740000_ZWZQ"),//债务证券
-    AMT_741000_ZFZQ (15,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_741000_ZFZQ"),//政府债券
-    AMT_742000_ZYYXZQ (16,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_742000_ZYYXZQ"),//中央银行债券
-    AMT_743000_ZCXJRZQ (17,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_743000_ZCXJRZQ"),//政策性金融债券
-    AMT_744000_QTJRZQ (18,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_744000_QTJRZQ"),//其他金融债券
-    AMT_745000_QYZQ (19,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_745000_QYZQ"),//企业债券
-    AMT_746000_PJ (20,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_746000_PJ"),//票据
-    AMT_747000_ZCZCZQ (21,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_747000_ZCZCZQ"),//资产支持证券
-    AMT_748000_JWZQ (22,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_748000_JWZQ"),//境外债券
-    AMT_750000_DK (23,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_750000_DK"),//贷款
-    AMT_751000_CHGHCJWDK (24,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_751000_CHGHCJWDK"),//除回购和拆借外贷款
-    AMT_752000_HGHCJ (25,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752000_HGHCJ"),//回购和拆借
-    AMT_752100_ZH (26,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752100_ZH"),//住户
-    AMT_752200_GYZF (27,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752200_GYZF"),//广义政府
-    AMT_752300_FJRQY (28,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752300_FJRQY"),//非金融企业
-    AMT_752400_YXYCKLJRJG (29,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752400_YXYCKLJRJG"),//银行业存款类金融机构
-    AMT_752500_YXYFCKLJRJG (30,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752500_YXYFCKLJRJG"),//银行业非存款类金融机构
-    AMT_752600_FYXYJRJG (31,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752600_FYXYJRJG"),//非银行业金融机构
-    AMT_752610_QZZYJYDSF (32,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752610_QZZYJYDSF"),//其中：中央交易对手方
-    AMT_752700_TDMDZT (33,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752700_TDMDZT"),//特定目的载体
-    AMT_752710_YXFBBLC (34,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752710_YXFBBLC"),//银行非保本理财
-    AMT_752720_XTGSZGCP (35,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752720_XTGSZGCP"),//信托公司资管产品
-    AMT_752730_ZQGSJQZGSZGCP (36,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752730_ZQGSJQZGSZGCP"),//证券公司及其子公司资管产品
-    AMT_752740_JJGLGSJQZGSZH (37,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752740_JJGLGSJQZGSZH"),//基金管理公司及其子公司专户
-    AMT_752750_QHGSJQZGSZGCP (38,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752750_QHGSJQZGSZGCP"),//期货公司及其子公司资管产品
-    AMT_752760_BXZGCP (39,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752760_BXZGCP"),//保险资管产品
-    AMT_752770_JRZCTZGSZGCP (40,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752770_JRZCTZGSZGCP"),//金融资产投资公司资管产品
-    AMT_752780_GMJJ (41,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752780_GMJJ"),//公募基金
-    AMT_752790_SMJGSMJJ (42,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752790_SMJGSMJJ"),//私募机构私募基金
-    AMT_7527A0_QTTDMDZT (43,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_7527a0_QTTDMDZT"),//其他特定目的载体
-    AMT_752800_JW (44,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752800_JW"),//       境外
-    AMT_760000_ZCSYQ (45,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_760000_ZCSYQ"),//资产收益权
-    AMT_761000_DKSYQ (46,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_761000_DKSYQ"),//贷款收益权
-    AMT_762000_ZWZQSYQ (47,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_762000_ZWZQSYQ"),//债务证券收益权
-    AMT_763000_YSZKSYQ (48,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_763000_YSZKSYQ"),//应收账款收益权
-    AMT_764000_QTZQSYQ (49,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_764000_QTZQSYQ"),//其他债权收益权
-    AMT_765000_GPSYQ (50,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_765000_GPSYQ"),//股票收益权
-    AMT_766000_QTGQSYQ (51,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_766000_QTGQSYQ"),//其他股权收益权
-    AMT_767000_WQZCSYQ (52,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_767000_WQZCSYQ"),//物权资产收益权
-    AMT_770000_GQJTDMDZTFE (53,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_770000_GQJTDMDZTFE"),//股权及特定目的载体份额
-    AMT_771000_GP (54,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_771000_GP"),//股票
-    AMT_771100_FJRQYGP (55,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_771100_FJRQYGP"),//非金融企业股票
-    AMT_771200_JRJGGP (56,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_771200_JRJGGP"),//金融机构股票
-    AMT_772000_TDMDZTFE (57,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772000_TDMDZTFE"),//特定目的载体份额
-    AMT_772100_YXFBBLC (58,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772100_YXFBBLC"),//银行非保本理财
-    AMT_772200_XTGSZGCP (59,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772200_XTGSZGCP"),//信托公司资管产品
-    AMT_772300_ZQGSJQZGSZGCP (60,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772300_ZQGSJQZGSZGCP"),//证券公司及其子公司资管产品
-    AMT_772400_JJGLGSJQZGSZH (61,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772400_JJGLGSJQZGSZH"),//基金管理公司及其子公司专户
-    AMT_772500_QHGSJQZGSZGCP (62,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772500_QHGSJQZGSZGCP"),//期货公司及其子公司资管产品
-    AMT_772600_BXZGCP (63,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772600_BXZGCP"),//保险资管产品
-    AMT_772700_JRZCTZGSZGCP (64,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772700_JRZCTZGSZGCP"),//金融资产投资公司资管产品
-    AMT_772800_GMJJ (65,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772800_GMJJ"),//公募基金
-    AMT_772900_SMJGSMJJ (66,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772900_SMJGSMJJ"),//私募机构私募基金
-    AMT_772A00_QTTDMDZT (67,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772a00_QTTDMDZT"),//其他特定目的载体
-    AMT_773000_QTGQ (68,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_773000_QTGQ"),//其他股权
-    AMT_773100_FJRQYGQ (69,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_773100_FJRQYGQ"),//非金融企业股权
-    AMT_773200_JRJGGQ (70,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_773200_JRJGGQ"),//金融机构股权
-    AMT_774000_JWGQ (71,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_774000_JWGQ"),//境外股权
-    AMT_780000_JRYSP (72,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_780000_JRYSP"),//金融衍生品
-    AMT_781000_JN (73,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_781000_JN"),//境内
-    AMT_782000_JW (74,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_782000_JW"),//境外
-    AMT_790000_YSZK (75,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_790000_YSZK"),//应收账款
-    AMT_7A0000_HJ (76,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_7a0000_HJ"),//黄金
-    AMT_7B0000_FJRZC (77,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_7b0000_FJRZC"),//非金融资产
+    AMT_700000_ZCHJ(6,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_700000_ZCHJ"),//资产合计
+    AMT_710000_XJ(7,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_710000_XJ"),//现金
+    AMT_720000_CK(8,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_720000_CK"),//存款
+    AMT_721000_JNCK(9,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_721000_JNCK"),//境内存款
+    AMT_721100_HQCK(10,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_721100_HQCK"),//活期存款
+    AMT_721200_DQHQTCK(11,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_721200_DQHQTCK"),//定期和其他存款
+    AMT_722000_JWCK(12,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_722000_JWCK"),//境外存款
+    AMT_722100_HQCK(13,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_722100_HQCK"),//活期存款
+    AMT_722200_DQHQTCK(14,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_722200_DQHQTCK"),//定期和其他存款
+    AMT_730000_KZRCD(15,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_730000_KZRCD"),//可转让存单
+    AMT_731000_TYCD(16,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_731000_TYCD"),//同业存单
+    AMT_732000_DECD(17,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_732000_DECD"),//大额存单
+    AMT_740000_ZWZQ(18,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_740000_ZWZQ"),//债务证券
+    AMT_741000_ZFZQ(19,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_741000_ZFZQ"),//政府债券
+    AMT_742000_ZYYXZQ(20,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_742000_ZYYXZQ"),//中央银行债券
+    AMT_743000_ZCXJRZQ(21,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_743000_ZCXJRZQ"),//政策性金融债券
+    AMT_744000_QTJRZQ(22,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_744000_QTJRZQ"),//其他金融债券
+    AMT_745000_QYZQ(23,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_745000_QYZQ"),//企业债券
+    AMT_746000_PJ(24,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_746000_PJ"),//票据
+    AMT_747000_ZCZCZQ(25,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_747000_ZCZCZQ"),//资产支持证券
+    AMT_748000_JWZQ(26,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_748000_JWZQ"),//境外债券
+    AMT_750000_DK(27,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_750000_DK"),//贷款
+    AMT_751000_CHGHCJWDK(28,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_751000_CHGHCJWDK"),//除回购和拆借外贷款
+    AMT_752000_HGHCJ(29,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752000_HGHCJ"),//回购和拆借
+    AMT_752100_ZH(30,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752100_ZH"),//住户
+    AMT_752200_GYZF(31,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752200_GYZF"),//广义政府
+    AMT_752300_FJRQY(32,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752300_FJRQY"),//非金融企业
+    AMT_752400_YXYCKLJRJG(33,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752400_YXYCKLJRJG"),//银行业存款类金融机构
+    AMT_752500_YXYFCKLJRJG(34,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752500_YXYFCKLJRJG"),//银行业非存款类金融机构
+    AMT_752600_FYXYJRJG(35,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752600_FYXYJRJG"),//非银行业金融机构
+    AMT_752610_QZZYJYDSF(36,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752610_QZZYJYDSF"),//其中：中央交易对手方
+    AMT_752700_TDMDZT(37,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752700_TDMDZT"),//特定目的载体
+    AMT_752710_YXFBBLC(38,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752710_YXFBBLC"),//银行非保本理财
+    AMT_752720_XTGSZGCP(39,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752720_XTGSZGCP"),//信托公司资管产品
+    AMT_752730_ZQGSJQZGSZGCP(40,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752730_ZQGSJQZGSZGCP"),//证券公司及其子公司资管产品
+    AMT_752740_JJGLGSJQZGSZH(41,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752740_JJGLGSJQZGSZH"),//基金管理公司及其子公司专户
+    AMT_752750_QHGSJQZGSZGCP(42,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752750_QHGSJQZGSZGCP"),//期货公司及其子公司资管产品
+    AMT_752760_BXZGCP(43,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752760_BXZGCP"),//保险资管产品
+    AMT_752770_JRZCTZGSZGCP(44,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752770_JRZCTZGSZGCP"),//金融资产投资公司资管产品
+    AMT_752780_GMJJ(45,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752780_GMJJ"),//公募基金
+    AMT_752790_SMJGSMJJ(46,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752790_SMJGSMJJ"),//私募机构私募基金
+    AMT_7527A0_QTTDMDZT(47,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_7527a0_QTTDMDZT"),//其他特定目的载体
+    AMT_752800_JW(48,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_752800_JW"),//       境外
+    AMT_760000_ZCSYQ(49,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_760000_ZCSYQ"),//资产收益权
+    AMT_761000_DKSYQ(50,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_761000_DKSYQ"),//贷款收益权
+    AMT_762000_ZWZQSYQ(51,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_762000_ZWZQSYQ"),//债务证券收益权
+    AMT_763000_YSZKSYQ(52,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_763000_YSZKSYQ"),//应收账款收益权
+    AMT_764000_QTZQSYQ(53,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_764000_QTZQSYQ"),//其他债权收益权
+    AMT_765000_GPSYQ(54,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_765000_GPSYQ"),//股票收益权
+    AMT_766000_QTGQSYQ(55,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_766000_QTGQSYQ"),//其他股权收益权
+    AMT_767000_WQZCSYQ(56,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_767000_WQZCSYQ"),//物权资产收益权
+    AMT_770000_GQJTDMDZTFE(57,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_770000_GQJTDMDZTFE"),//股权及特定目的载体份额
+    AMT_771000_GP(58,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_771000_GP"),//股票
+    AMT_771100_FJRQYGP(59,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_771100_FJRQYGP"),//非金融企业股票
+    AMT_771200_JRJGGP(60,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_771200_JRJGGP"),//金融机构股票
+    AMT_772000_TDMDZTFE(61,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772000_TDMDZTFE"),//特定目的载体份额
+    AMT_772100_YXFBBLC(62,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772100_YXFBBLC"),//银行非保本理财
+    AMT_772200_XTGSZGCP(63,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772200_XTGSZGCP"),//信托公司资管产品
+    AMT_772300_ZQGSJQZGSZGCP(64,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772300_ZQGSJQZGSZGCP"),//证券公司及其子公司资管产品
+    AMT_772400_JJGLGSJQZGSZH(65,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772400_JJGLGSJQZGSZH"),//基金管理公司及其子公司专户
+    AMT_772500_QHGSJQZGSZGCP(66,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772500_QHGSJQZGSZGCP"),//期货公司及其子公司资管产品
+    AMT_772600_BXZGCP(67,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772600_BXZGCP"),//保险资管产品
+    AMT_772700_JRZCTZGSZGCP(68,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772700_JRZCTZGSZGCP"),//金融资产投资公司资管产品
+    AMT_772800_GMJJ(69,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772800_GMJJ"),//公募基金
+    AMT_772900_SMJGSMJJ(70,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772900_SMJGSMJJ"),//私募机构私募基金
+    AMT_772A00_QTTDMDZT(71,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_772a00_QTTDMDZT"),//其他特定目的载体
+    AMT_773000_QTGQ(72,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_773000_QTGQ"),//其他股权
+    AMT_773100_FJRQYGQ(73,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_773100_FJRQYGQ"),//非金融企业股权
+    AMT_773200_JRJGGQ(74,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_773200_JRJGGQ"),//金融机构股权
+    AMT_774000_JWGQ(75,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_774000_JWGQ"),//境外股权
+    AMT_780000_JRYSP(76,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_780000_JRYSP"),//金融衍生品
+    AMT_781000_JN(77,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_781000_JN"),//境内
+    AMT_782000_JW(78,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_782000_JW"),//境外
+    AMT_790000_YSZK(79,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_790000_YSZK"),//应收账款
+    AMT_7A0000_HJ(80,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_7a0000_HJ"),//黄金
+    AMT_7B0000_FJRZC(81,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_7b0000_FJRZC"),//非金融资产
+    AMT_7K0000_ZCJZZB(82,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_7c0000_ZCJZZB"),//资产减值准备
+
+
 
     AMT_800000_FZJQYHJ (6,PbcMonthReportGroupConstants.PBC_REPORT_2_1_2,PbcReportType.PBC_REPORT_2_1, "AMT_800000_FZJQYHJ"),//负债及权益合计
     AMT_810000_FZHJ (7,PbcMonthReportGroupConstants.PBC_REPORT_2_1_2,PbcReportType.PBC_REPORT_2_1, "AMT_810000_FZHJ"),//负债合计
@@ -502,8 +509,8 @@ public enum PbcReportEnums {
     AMT_821279_SMJGSMJJ (73,PbcMonthReportGroupConstants.PBC_REPORT_2_1_2,PbcReportType.PBC_REPORT_2_1, "AMT_821279_SMJGSMJJ"),//私募机构私募基金
     AMT_82127A_QTTDMDZT (74,PbcMonthReportGroupConstants.PBC_REPORT_2_1_2,PbcReportType.PBC_REPORT_2_1, "AMT_82127a_QTTDMDZT"),//其他特定目的载体
     AMT_821280_JW (75,PbcMonthReportGroupConstants.PBC_REPORT_2_1_2,PbcReportType.PBC_REPORT_2_1, "AMT_821280_JW"),//境外
-    AMT_822000_ZBGJ (76,PbcMonthReportGroupConstants.PBC_REPORT_2_1_2,PbcReportType.PBC_REPORT_2_1, "AMT_822000_ZBGJ"),//资本公积
-    AMT_823000_WFPLR (77,PbcMonthReportGroupConstants.PBC_REPORT_2_1_2,PbcReportType.PBC_REPORT_2_1, "AMT_823000_WFPLR"),//未分配利润
+    AMT_823000_WFPLR (76,PbcMonthReportGroupConstants.PBC_REPORT_2_1_2,PbcReportType.PBC_REPORT_2_1, "AMT_823000_WFPLR"),//未分配利润
+    AMT_824000_QTZHSY (77,PbcMonthReportGroupConstants.PBC_REPORT_2_1_2,PbcReportType.PBC_REPORT_2_1, "AMT_824000_QTZHSY"),//其他综合收益
 
     AMT_000001_FFXRBNZCYEBWBHJ (83,PbcMonthReportGroupConstants.PBC_REPORT_2_1_3,PbcReportType.PBC_REPORT_2_1, "AMT_000001_FFXRBNZCYEBWBHJ"),//附：发行人表内资产余额（本外币合计）
     AMT_000002_FXRBNJRZCYEBWBHJ (84,PbcMonthReportGroupConstants.PBC_REPORT_2_1_3,PbcReportType.PBC_REPORT_2_1, "AMT_000002_FXRBNJRZCYEBWBHJ"),//发行人表内金融资产余额（本外币合计）
@@ -715,6 +722,67 @@ public enum PbcReportEnums {
     DEBT_G60000(13,PbcMonthReportGroupConstants.PBC_REPORT_3_3_2,PbcReportType.PBC_REPORT_3_3,"debt_g60000"),  //2-3年（含）
     DEBT_G70000(14,PbcMonthReportGroupConstants.PBC_REPORT_3_3_2,PbcReportType.PBC_REPORT_3_3,"debt_g70000"),  // 3年以上
     DEBT_G80000(15,PbcMonthReportGroupConstants.PBC_REPORT_3_3_2,PbcReportType.PBC_REPORT_3_3,"debt_g80000"),  // 无固定期限
+
+
+    /**
+     * 4_1  资管产品资产配置情况
+     */
+    AMT_H11000_ZCXJRZQ(7,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h11000_ZCXJRZQ"),//政策性金融债券
+    AMT_H11100_AAJYS(8,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h11100_AAJYS"),//AA+（含）以上
+    AMT_H11200_AAJYX(9,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h11200_AAJYX"),//AA+以下
+    AMT_H11300_WPJ(10,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h11300_WPJ"),//无评级
+    AMT_H12000_QTJRZQ(11,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h12000_QTJRZQ"),//其他金融债券
+    AMT_H12100_AAJYS(12,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h12100_AAJYS"),//AA+（含）以上
+    AMT_H12200_AAJYX(13,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h12200_AAJYX"),//AA+以下
+    AMT_H12300_WPJ(14,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h12300_WPJ"),//无评级
+    AMT_H13000_QYZQ(15,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h13000_QYZQ"),//企业债券
+    AMT_H13100_AAJYS(16,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h13100_AAJYS"),//AA+（含）以上
+    AMT_H13200_AAJYX(17,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h13200_AAJYX"),//AA+以下
+    AMT_H13300_WPJ(18,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h13300_WPJ"),//无评级
+    AMT_H14000_ZCZCZQ(19,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h14000_ZCZCZQ"),//资产支持证券
+    AMT_H14100_AAJYS(20,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h14100_AAJYS"),//AA+（含）以上
+    AMT_H14200_AAJYX(21,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h14200_AAJYX"),//AA+以下
+    AMT_H14300_WPJ(22,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h14300_WPJ"),//无评级
+    AMT_H21000_QZQYZ(24,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h21000_QZQYZ"),//其中：企业债
+    AMT_H22000_GSZ(25,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h22000_GSZ"),//公司债
+    AMT_H23000_FJRQYZW(26,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h23000_FJRQYZW"),//非金融企业债务融资工具
+    AMT_H30000_YHZBBCGJ(27,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h30000_YHZBBCGJ"),//三、银行资本补充工具合计
+    AMT_H31000_QZYXG(28,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h31000_QZYXG"),//其中：优先股
+    AMT_H32000_YXZZX(29,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h32000_YXZZX"),//永续债（债性）
+    AMT_H33000_YXZGX(30,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h33000_YXZGX"),//永续债（股性）
+    AMT_H34000_EJZBZ(31,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h34000_EJZBZ"),//二级资本债
+    AMT_H40000_ZQNHGHTYCJ(32,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h40000_ZQNHGHTYCJ"),//债券逆回购和同业拆借
+    AMT_H41000_ZH(33,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h41000_ZH"),//住户
+    AMT_H42000_GYZF(34,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h42000_GYZF"),//广义政府
+    AMT_H43000_FJRQY(35,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h43000_FJRQY"),//非金融企业
+    AMT_H44000_YHYCKLJRJG(36,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h44000_YHYCKLJRJG"),//银行业存款类金融机构
+    AMT_H45000_YHYFCKLJRJG(37,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h45000_YHYFCKLJRJG"),//银行业非存款类金融机构
+    AMT_H46000_FYHYJRJG(38,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h46000_FYHYJRJG"),//非银行业金融机构
+    AMT_H46100_QZZYJYDSF(39,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h46100_QZZYJYDSF"),//其中：中央交易对手方
+    AMT_H47000_TDMDZT(40,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h47000_TDMDZT"),//特定目的载体
+    AMT_H47100_YHFBBLC(41,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h47100_YHFBBLC"),//银行非保本理财
+    AMT_H47200_XTGSZGCP(42,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h47200_XTGSZGCP"),//信托公司资管产品
+    AMT_H47300_ZQGSJQZGS(43,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h47300_ZQGSJQZGS"),//证券公司及其子公司资管产品
+    AMT_H47400_JJGLGSJQZGS(44,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h47400_JJGLGSJQZGS"),//基金管理公司及其子公司专户
+    AMT_H47500_QHGLGSJQZGS(45,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h47500_QHGLGSJQZGS"),//期货公司及其子公司资管产品
+    AMT_H47600_BXZGCP(46,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h47600_BXZGCP"),//保险资管产品
+    AMT_H47700_JRZCTZGSJQZGS(47,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h47700_JRZCTZGSJQZGS"),//金融资产投资公司资管产品
+    AMT_H47800_GMJJ(48,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h47800_GMJJ"),//公募基金
+    AMT_H47900_SMJGSMJJ(49,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h47900_SMJGSMJJ"),//私募机构私募基金
+    AMT_H47A00_QTTDMDZT(50,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h47a00_QTTDMDZT"),//其他特定目的载体
+    AMT_H48000_JW(51,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h48000_JW"),//境外
+    AMT_H50000_ZCJZZB(52,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h50000_ZCJZZB"),//五、资产减值准备
+    AMT_H51000_CK(53,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h51000_CK"),//存款
+    AMT_H52000_KZRCD(54,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h52000_KZRCD"),//可转让存单
+    AMT_H53000_ZWZQ(55,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h53000_ZWZQ"),//债务证券
+    AMT_H54000_CHGHCJWDK(56,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h54000_CHGHCJWDK"),//除回购和拆借外贷款
+    AMT_H55000_HGHCJ(57,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h55000_HGHCJ"),//回购和拆借
+    AMT_H56000_ZCSYQ(58,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h56000_ZCSYQ"),//资产收益权
+    AMT_H57000_GQJTDMDDZTFE(59,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h57000_GQJTDMDDZTFE"),//股权及特定目的载体份额
+    AMT_H58000_JRYSP(60,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h58000_JRYSP"),//金融衍生品
+    AMT_H59000_YSZK(61,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h59000_YSZK"),//应收账款
+    AMT_H5A000_QT(62,PbcMonthReportGroupConstants.PBC_REPORT_4_1_1,PbcReportType.PBC_REPORT_4_1, "AMT_h5a000_QT"),//其他
+
     ;
 
     private int rowNumber;

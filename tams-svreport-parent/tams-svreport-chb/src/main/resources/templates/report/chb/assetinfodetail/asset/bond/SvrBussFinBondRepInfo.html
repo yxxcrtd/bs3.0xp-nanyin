@@ -281,7 +281,7 @@
                 <div class="layui-input-inline input-inline">
                     <select th:id="|${entityName}_constracteBusiType|" th:name="|${entityName}.constracteBusiType|"
                             class="layui-input form-input input-select" placeholder="请输入内容"
-                            th:initValue="${entity?.constracteBusiType}" required
+                            th:initValue="${entity?.constracteBusiType}"
                             data-th-placeholder="#{SysCommon.placeholder}"
                             data-th-data-result="${SVR_CONSTRACTE_BUSI_TYPE}">
                     </select>
@@ -293,7 +293,7 @@
                 <div class="layui-input-inline input-inline">
                     <select th:id="|${entityName}_constracteGrade|" th:name="|${entityName}.constracteGrade|"
                             class="layui-input form-input input-select" placeholder="请输入内容"
-                            th:initValue="${entity?.constracteGrade}" required
+                            th:initValue="${entity?.constracteGrade}"
                             data-th-placeholder="#{SysCommon.placeholder}" 
                             data-th-data-result="${SVR_CONSTRACTE_GRADE}">
                     </select>
@@ -304,7 +304,7 @@
                 <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussFinBondRepInfo.constracteHeaverTimes}" >结构化杠杆倍数</label>
                 <div class="layui-input-inline input-inline">                   
                     <input type="text" th:id="|${entityName}_constracteHeaverTimes|" th:name="|${entityName}.constracteHeaverTimes|"                               
-                               th:value="${entity?.constracteHeaverTimes}" data-textrange="2" maxlength="6" required
+                               th:value="${entity?.constracteHeaverTimes}" data-textrange="2" maxlength="6"
                                class="layui-input form-input text-number"/>       
                 </div>
             </div>

@@ -12,6 +12,8 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.interf.common.util.TisUtil;
+import com.joyintech.tams.report.submitmanagement.agentprdinforegist.dao.ChbAgentPrdSubMapper;
+import com.joyintech.tams.report.submitmanagement.agentprdinforegist.dto.AgentPrdInfoRegistDto;
 import com.joyintech.tams.report.submitmanagement.salerideninforegist.dao.ChbSalerIdenInfoRegistMapper;
 import com.joyintech.tams.report.submitmanagement.salerideninforegist.dto.SalerIdenInfoRegistDto;
 import org.apache.commons.collections4.CollectionUtils;
@@ -65,12 +67,18 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
      */
     public Page<SalerIdenInfoRegistDto> searchForPage(Map<String, Object> param){
         dealSearchParam(param);
-        int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
-	    int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
-        Page<SalerIdenInfoRegistDto> pageList = super.queryForPage(
-        		pagenum,legth,()->chbSalerIdenInfoRegistMapper.queryForRegistPage(param));
-        this.formatByType(pageList.getRoot());
-        return pageList;
+        if (null != param.get(GlobalConstant.PARAM_PAGE)
+                && null != param.get(GlobalConstant.PARAM_LENGTH)) {
+            int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
+            int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
+            Page<SalerIdenInfoRegistDto> pageList = super.queryForPage(
+                    pagenum, legth, () -> chbSalerIdenInfoRegistMapper.queryForRegistPage(param));
+            this.formatByType(pageList.getRoot());
+            return pageList;
+        }else{
+            Page<SalerIdenInfoRegistDto> page = queryForPage(ChbSalerIdenInfoRegistMapper.class,"queryForRegistPage",param);
+            return page;
+        }
     }
 
     /**

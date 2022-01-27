@@ -1410,9 +1410,11 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 						}
 					}
 					// 统计文件个数
-					if(entry.getName().substring(entry.getName().lastIndexOf("/")+1).length()>0){
+					//修改为统计压缩包中文件夹个数  add by tuqirong 2022-01-26 start
+					if(entry.getName().substring(entry.getName().lastIndexOf("/")+1).length()==0){
 						fileNum++;
 					}
+					//修改为统计压缩包中文件夹个数  add by tuqirong 2022-01-26 end
 				}
 				for (String folderNo : folderNoList1){
 					if (!fileExistsMap1.containsKey(folderNo) || StringUtil.isEmptyList(fileExistsMap1.get(folderNo))){

@@ -443,8 +443,12 @@ public class ChbTransMonthReportAssetBatchService {
                 }
 
             }else{
-                // 老产品余额
-                detailDto.setOldBalance(ArithmeticUtil.doAdd(detailDto.getOldBalance(), pos.getAssetvalueB()));
+                if("F0207".equals(isGetAssetvalueA)){
+                    detailDto.setOldBalance(ArithmeticUtil.doAdd(detailDto.getOldBalance(), pos.getAssetvalueA()));
+                }else {
+                    // 老产品余额
+                    detailDto.setOldBalance(ArithmeticUtil.doAdd(detailDto.getOldBalance(), pos.getAssetvalueB()));
+                }
             }
         }
         if (isCalcTerms) {
@@ -457,8 +461,12 @@ public class ChbTransMonthReportAssetBatchService {
                     detailDto.setNewTerms(ArithmeticUtil.doAdd(detailDto.getNewTerms(), ArithmeticUtil.multiply(pos.getAssetvalueB(), pos.getTerms())));
                 }
             }else{
-                // 老产品剩余期限
-                detailDto.setOldTerms(ArithmeticUtil.doAdd(detailDto.getOldTerms(), ArithmeticUtil.multiply(pos.getAssetvalueB(), pos.getTerms())));
+                if("F0207".equals(isGetAssetvalueA)){
+                    detailDto.setOldTerms(ArithmeticUtil.doAdd(detailDto.getOldTerms(), ArithmeticUtil.multiply(pos.getAssetvalueA(), pos.getTerms())));
+                }else {
+                    // 老产品剩余期限
+                    detailDto.setOldTerms(ArithmeticUtil.doAdd(detailDto.getOldTerms(), ArithmeticUtil.multiply(pos.getAssetvalueB(), pos.getTerms())));
+                }
             }
         }
     }

@@ -68,11 +68,17 @@ public class AgentInstitutionRegist001Service extends CommonExportService<AgentI
      * @since 1.0
      */
     public Page<AgentInstitutionRegistDto> searchForPage(Map<String, Object> param){
+        if (null != param.get(GlobalConstant.PARAM_PAGE)
+                && null != param.get(GlobalConstant.PARAM_LENGTH)) {
         int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
 	    int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
         Page<AgentInstitutionRegistDto> pageList = super.queryForPage(
         		pagenum,legth,()->chbAgentInstitutionSubMapper.queryForRegistPage(param));
         return pageList;
+        }else{
+            Page<AgentInstitutionRegistDto> page = queryForPage(ChbAgentInstitutionSubMapper.class,"queryForRegistPage",param);
+            return page;
+        }
     }
 
     /**

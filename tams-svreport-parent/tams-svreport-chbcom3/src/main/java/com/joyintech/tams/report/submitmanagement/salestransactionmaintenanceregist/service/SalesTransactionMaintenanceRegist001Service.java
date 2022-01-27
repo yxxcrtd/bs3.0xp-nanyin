@@ -9,6 +9,8 @@ import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
+import com.joyintech.tams.report.submitmanagement.salerrewpenainforegist.dao.ChbSalerRewPenaInfoRegistMapper;
+import com.joyintech.tams.report.submitmanagement.salerrewpenainforegist.dto.SalerRewPenaInfoRegistDto;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dao.SalesTransactionMaintenanceRegist001Mapper;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto;
 import org.apache.commons.collections4.CollectionUtils;
@@ -74,12 +76,18 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
      * @since 1.0
      */
     public Page<SalesTransactionMaintenanceRegist001Dto> searchForPage(Map<String, Object> param){
-        int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
-	    int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
-        Page<SalesTransactionMaintenanceRegist001Dto> pageList = super.queryForPage(
-        		pagenum,legth,()->salesTransactionMaintenanceRegist001Mapper.queryForRegistPage(param));
-        dealDataList(pageList.getRoot());
-        return pageList;
+        if (null != param.get(GlobalConstant.PARAM_PAGE)
+                && null != param.get(GlobalConstant.PARAM_LENGTH)) {
+            int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
+            int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
+            Page<SalesTransactionMaintenanceRegist001Dto> pageList = super.queryForPage(
+                    pagenum, legth, () -> salesTransactionMaintenanceRegist001Mapper.queryForRegistPage(param));
+            dealDataList(pageList.getRoot());
+            return pageList;
+        }else{
+            Page<SalesTransactionMaintenanceRegist001Dto> page = queryForPage(SalesTransactionMaintenanceRegist001Mapper.class,"queryForRegistPage",param);
+            return page;
+        }
     }
 
     /**
