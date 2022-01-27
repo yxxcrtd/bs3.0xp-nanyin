@@ -1023,7 +1023,7 @@ public class IbuQuoteBondService extends BaseService {
             cfetsEtrIbBondinfoService.closeDelegatePositionMethod(dtolist, com.joyintech.tams.constant.DictCodeList.平安资产类型_债券.getValue());
             //更新操作日志
             dtolist.forEach(item ->{
-                cfetsEtrIbBondinfoService.closeDelegatOprHisMethod(item);
+                cfetsEtrIbBondinfoService.forcedFinishOprHisMethod(item);
             });
         }
     }
