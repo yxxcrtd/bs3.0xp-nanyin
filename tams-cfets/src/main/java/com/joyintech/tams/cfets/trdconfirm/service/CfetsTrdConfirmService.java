@@ -2304,7 +2304,7 @@ public class CfetsTrdConfirmService extends BaseService{
                     StringBuilder zyMes=new StringBuilder();
                     //查询登记或报价的质押券信息
                     List<CfetsTrdConfirmRegInfoListResponse>
-                            regAndIbuPledges=cfetsTrdConfirmMapper.findAllRegAndIbuPledgesList(regInfo.getBusiCode());
+                            regAndIbuPledges=cfetsTrdConfirmMapper.findAllRegAndIbuPledgesList(regInfo.getTotleTradeId());
                     //查询cstp数据的质押券信息
                     List<CfetsTrdConfirmCstpInfoListResponse>
                             cstpPledges=cfetsTrdConfirmMapper.findAllCstpPledgesList(cstpInfo.getExecid());
@@ -2362,15 +2362,12 @@ public class CfetsTrdConfirmService extends BaseService{
                         validateStr.append("对手方要素不一致（对手方：CSTP成交数据为" + cstpInfo.getCounterTrader()
                                 + ",交易执行数据为" + regInfo.getCounterTrader() + ", 将以系统数据为准）,");
                     }
-                 /*   if (StringUtil.isNotEmpty(validateStr) && validateStr.length() > 0) {
+                   if (StringUtil.isNotEmpty(validateStr) && validateStr.length() > 0) {
                         validateStr.append("是否确认匹配？");
                         AjaxResult m = new AjaxResult();
                         m.setMessage(validateStr.toString(), MessageType.确认消息);
                         return m;
-                    }*/
-                    str.append("要素不一致，无法匹配，请重新选择数据！");
-                    mes.setErrorList(Arrays.asList(new ValidMessage(str.toString().substring(1))));
-                    return mes;
+                    }
 
                 }
             }
