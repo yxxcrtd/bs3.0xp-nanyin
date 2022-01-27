@@ -970,7 +970,7 @@
            null                                                  exerciseDate,
            null                                                  actExerciseDate,
            iqc.QUOTE_ID                                          totalTradeId,
-           null                                                  FINPROD_TYPE2,
+           case when iqc.REPO_PS ='03' then 'F02' else 'F03' end FINPROD_TYPE2,
            iqc.TERM_TYPE                                         termType,
            iqc.TERM                                              repoTerm,
            to_char(iqc.V_SETTLE_DATE, 'yyyy-MM-dd')              vpayDate,
