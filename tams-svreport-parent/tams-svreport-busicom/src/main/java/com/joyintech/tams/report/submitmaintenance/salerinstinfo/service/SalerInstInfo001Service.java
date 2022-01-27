@@ -259,6 +259,13 @@ public class SalerInstInfo001Service extends CommonExportService<SalerInstInfoDt
                 flag = false;
                 message.add("机构层级不能为空");
             }
+            //备注
+            if(list.get(4) != null || !list.get(4).trim().equals("")){
+                if(getWordCount(list.get(4)) > 300){
+                    flag = false;
+                    message.add("导入时备注不能超过300字节");
+                }
+            }
 
             if (CollectionUtils.isNotEmpty(message)) {
                 checkResult.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
