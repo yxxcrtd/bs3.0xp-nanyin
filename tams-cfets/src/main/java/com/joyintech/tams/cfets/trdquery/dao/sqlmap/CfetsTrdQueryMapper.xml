@@ -3046,7 +3046,7 @@
         fp.finprod_abbr as finprodAbbr,
         tpda.portfolio_id as portfolioId,
         pp.portfolio_name as portfolioName,
-        sum(rp.pledge_number)/100 as pledgePrin,
+        sum(rp.pledge_number*rp.pledge_ratio)/100 as pledgePrin,
         rp.pledge_ratio*100 as pledgeRate,
         mbvi.NETPRICE as firstNetPrice,
         fp.REGIST_ORG as repRegistOrg
