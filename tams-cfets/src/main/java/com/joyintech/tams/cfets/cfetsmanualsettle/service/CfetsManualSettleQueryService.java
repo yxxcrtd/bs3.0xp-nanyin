@@ -366,6 +366,7 @@ public class CfetsManualSettleQueryService extends BaseService{
             pageParam.put("spcdCode", spcdCode);
             pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
             pageParam.put("feeType08", BussinessDictCodeList.费用类型_结算手续费.getValue());
+            pageParam.put("psT39", BussinessDictCodeList.交易方向_行权赎回.getValue());
 
             resultData.put(dtCode + "_form", infoForm);
             resultData.put(dtCode + "_form1", infoForm1);

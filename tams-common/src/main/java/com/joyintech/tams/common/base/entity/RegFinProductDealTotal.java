@@ -303,6 +303,10 @@ public class RegFinProductDealTotal extends BaseEntity {
      * 赎回比例
      */
     private BigDecimal redeemRate;
+    /**
+     * 实际行权日期
+     */
+    private Date actExerciseDate;
 
 
     /**
@@ -1187,5 +1191,13 @@ public class RegFinProductDealTotal extends BaseEntity {
 
     public void setRedeemRate(BigDecimal redeemRate) {
         this.redeemRate = redeemRate;
+    }
+
+    public Date getActExerciseDate() {
+        return actExerciseDate;
+    }
+
+    public void setActExerciseDate(Date actExerciseDate) {
+        this.actExerciseDate = actExerciseDate;
     }
 }

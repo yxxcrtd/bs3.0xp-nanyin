@@ -170,4 +170,6 @@ public interface CfetsManualSettleMapper {
     CfetsTrdSettleInfoResponse findManualSettleInfoRepo(Map<String,Object> params);
 
     List<PortIntFenPeiInfoDto> findManualSettleFenPei(Map<String,Object> params);
+
+    int countWflEtr(Map<String, Object> param);
 }
