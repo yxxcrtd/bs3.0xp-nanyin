@@ -24,6 +24,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
@@ -31,6 +32,9 @@ import org.apache.http.util.EntityUtils;
 public class HttpUtil {
     //private static Logger logger = Logger.getLogger(HttpUtil.class);
 
+    private static Integer maxTotal = 100;      // 连接池最大并发连接数
+    private static Integer maxPerRoute = 20;    // 单域名下最大连接数
+    
     /**
      * get请求
      * @return
@@ -65,7 +69,12 @@ public class HttpUtil {
      */
     public static String doPost(String url, String params) {
 
-        CloseableHttpClient httpclient = HttpClients.createDefault();
+        PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+        cm.setMaxTotal(maxTotal);//连接池最大并发连接数
+        cm.setDefaultMaxPerRoute(maxPerRoute);//单域名下最大连接数
+        CloseableHttpClient httpclient = HttpClients.custom().setConnectionManager(cm).build();
+        
+//        CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);// 创建httpPost   
         httpPost.setHeader("Accept", "application/json");
         httpPost.setHeader("Content-Type", "application/json");
@@ -78,8 +87,8 @@ public class HttpUtil {
             response = httpclient.execute(httpPost);
             StatusLine status = response.getStatusLine();
             int state = status.getStatusCode();
+            HttpEntity responseEntity = response.getEntity();
             if (state == HttpStatus.SC_OK) {
-                HttpEntity responseEntity = response.getEntity();
                 String jsonString = EntityUtils.toString(responseEntity);
                 return jsonString;
             } else{
@@ -90,10 +99,12 @@ public class HttpUtil {
         } finally {
             if (response != null) {
                 try {
-                    response.close();
+                    final HttpEntity enty = response.getEntity();
+                    EntityUtils.consume(enty);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                try {response.close();} catch (IOException e) {e.printStackTrace();}
             }
             try {
                 httpclient.close();

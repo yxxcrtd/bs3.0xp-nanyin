@@ -5,6 +5,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.constant.Market;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCode;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeList;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt1;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
 import io.swagger.annotations.ApiModel;
@@ -567,7 +568,7 @@ public class TradeQueryBean implements Serializable {
         if(StringUtil.isEmpty(finprodType2)){
             return null;
         }
-        return DictCodeList.from(DictCode.平安资产类型, finprodType2).getCodeName();
+        return DictCodeListExt1.from(DictCode.金融产品类型, finprodType2).getCodeName();
     }
 
     public void setFinprodType2Str(String finprodType2Str) {
