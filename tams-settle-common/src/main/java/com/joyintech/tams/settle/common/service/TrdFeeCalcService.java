@@ -468,6 +468,21 @@ public class TrdFeeCalcService {
 				localPlanSearchInfo.setCapitalAccountNo(stlDownDataDealAccountInfoDto.getAcctNo());
 			}
 		}
+
+		// add by etliu 20220126 start
+		// TISHKS-780: 交易所费用设置了费用，清算时无法计算出费用
+		if (StringUtil.equals(tradeType, DictCodeList.平安资产类型_债券.getValue())){
+			if (StringUtil.isNotBlank(localPlanSearchInfo.getAssetClassify2())
+					&& !StringUtil.startsWith(localPlanSearchInfo.getAssetClassify2(), "B0")) {
+				localPlanSearchInfo.setAssetClassify2("B0" + localPlanSearchInfo.getAssetClassify2());
+			}
+		}
+		else if (StringUtil.equals(tradeType, DictCodeListExt2.平安资产类型_股票.getValue())){
+			localPlanSearchInfo.setAssetClassify1(DictCodeListExt2.平安资产类型_股票.getValue());
+			localPlanSearchInfo.setAssetClassify2(DictCodeListExt2.平安资产类型_股票.getValue());
+		}
+		// add by etliu 20220126 end
+
         // 查询费用方案
 		FeePlan feePlan = getFeePlan(localPlanSearchInfo, dealDate);
 
