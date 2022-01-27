@@ -1821,6 +1821,7 @@
         reg.settle_speed as settleSpeed,
         reg.sec_manage_acct_id as secManageAcctId,
         reg.yield as tradeYield,
+        reg.yield as yield,
         reg.face_value as faceValue,
         reg.settle_date as settleDate,
         reg.delivery_type as deliveryType,
