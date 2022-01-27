@@ -238,6 +238,7 @@ public class SalerInstInfoRegist001Service extends CommonExportService<SalerInst
         SalerInstInfoRegistDto nullDate = new SalerInstInfoRegistDto();
         if(datas == null){
             tempList = chbSalerInstInfoRegistMapper.setDataList(selectParam);
+            this.formatByType(tempList);
         }else{
             tempList= JsonUtils.json2List(datas,SalerInstInfoRegistDto.class);
         }
