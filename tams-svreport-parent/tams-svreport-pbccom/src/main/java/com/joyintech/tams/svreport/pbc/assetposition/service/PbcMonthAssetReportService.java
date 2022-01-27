@@ -307,47 +307,47 @@ public class PbcMonthAssetReportService  extends BaseService{
                 //政策性金融债券 统计人行资产二级分类为“政策性金融债券”的资产
                 setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H11000_ZCXJRZQ, reportType, rateMap, source, null, massageMap);
 
-                if(DictCodeListExt2.资产评级_AAAPLUS.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_AAA.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_AAADAWN.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_AAPLUS.getValue().equals(pos.getRating())
-                ){
-                    //h11100	    AA+（含）以上	统计“政策性金融债券”中评级结果为AAA+、AAA-、AAA、AA+的债券
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H11100_AAJYS, reportType, rateMap, source, null, massageMap);
-                }else if(DictCodeListExt2.资产评级_AA.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_AADAWN.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_APLUS.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_A.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_ADAWN.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_ADAWN1.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_ADAWN2.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_ADAWN3.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_BBBPLUS.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_BBB.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_BBBDAWN.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_BBPLUS.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_BB.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_BBDAWN.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_BPLUS.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_B.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_BDAWN.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_CCCPLUS.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_CCC.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_CCCDAWN.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_CCPLUS.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_CC.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_CCDAWN.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_CPLUS.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_C.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_CDAWN.getValue().equals(pos.getRating())
-                        ||DictCodeListExt2.资产评级_D.getValue().equals(pos.getRating())
-                ){
-                    //h11200	    AA+以下	统计“政策性金融债券”中评级结果为AA、AA-、A+、A、A-、BBB+、BBB、BBB-、BB+、BB、BB-、B+、B、B-、CCC+、CCC、CCC-、CC+、CC、CC-、C+、C、C-、D的债券
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H11200_AAJYX, reportType, rateMap, source, null, massageMap);
-                }else{
+//                if(DictCodeListExt2.资产评级_AAAPLUS.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_AAA.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_AAADAWN.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_AAPLUS.getValue().equals(pos.getRating())
+//                ){
+//                    //h11100	    AA+（含）以上	统计“政策性金融债券”中评级结果为AAA+、AAA-、AAA、AA+的债券
+//                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H11100_AAJYS, reportType, rateMap, source, null, massageMap);
+//                }else if(DictCodeListExt2.资产评级_AA.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_AADAWN.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_APLUS.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_A.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_ADAWN.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_ADAWN1.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_ADAWN2.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_ADAWN3.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_BBBPLUS.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_BBB.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_BBBDAWN.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_BBPLUS.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_BB.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_BBDAWN.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_BPLUS.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_B.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_BDAWN.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_CCCPLUS.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_CCC.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_CCCDAWN.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_CCPLUS.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_CC.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_CCDAWN.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_CPLUS.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_C.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_CDAWN.getValue().equals(pos.getRating())
+//                        ||DictCodeListExt2.资产评级_D.getValue().equals(pos.getRating())
+//                ){
+//                    //h11200	    AA+以下	统计“政策性金融债券”中评级结果为AA、AA-、A+、A、A-、BBB+、BBB、BBB-、BB+、BB、BB-、B+、B、B-、CCC+、CCC、CCC-、CC+、CC、CC-、C+、C、C-、D的债券
+//                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H11200_AAJYX, reportType, rateMap, source, null, massageMap);
+//                }else{
                     //h11300	    无评级	统计“政策性金融债券”中没有评级的债券
                     setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H11300_WPJ, reportType, rateMap, source, null, massageMap);
-                }
+//                }
             }
 
             if(PbcMonthReportConstants.PBC_ASSETTYPE2_S04.equals(pos.getAssetType2())){
@@ -7105,7 +7105,7 @@ public class PbcMonthAssetReportService  extends BaseService{
      * @version 1.6.0
      * @author：yuluan 2019年3月12日
      * @param
-     * void
+     *
      */
     public void generateMonthAssetReportInCome(List<PbcMonthAssetPositionDto> posAssetList,Date generateDate,
             Map<String,ChbAssetInfo> assetMap,boolean isEdit){
@@ -7237,7 +7237,7 @@ public class PbcMonthAssetReportService  extends BaseService{
      * @version 1.6.0
      * @author：yuluan 2019年3月12日
      * @param
-     * void
+     *
      */
     public void generateMonthAssetReportInComeEx(List<PbcMonthAssetPositionDto> posAssetList,Date generateDate,
     		Map<String, ChbLoanDetailInfo> chbLoandMap,boolean isEdit){
@@ -7378,7 +7378,7 @@ public class PbcMonthAssetReportService  extends BaseService{
      * @version 1.6.0
      * @author：yuluan 2019年3月12日
      * @param
-     * void
+     *
      */
     public void generateMonthReportCompanyBond(List<PbcMonthAssetPositionDto> posAssetList,Date generateDate,
             Map<String,ChbAssetInfo> assetMap,boolean isEdit){
@@ -7542,7 +7542,7 @@ public class PbcMonthAssetReportService  extends BaseService{
      * @version 1.6.0
      * @author：yuluan 2019年3月12日
      * @param
-     * void
+     * 
      */
     public void generateMonthReportDebtterm(List<PbcMonthAssetPositionDto> posAssetList,List<PbcMonthPrdPostionDto> posProdList
             ,Date generateDate,Map<String,BigDecimal> qtfz,boolean isEdit) {
