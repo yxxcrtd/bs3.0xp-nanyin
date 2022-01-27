@@ -841,7 +841,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		if (map.containsKey("search")){
 			map.put("counterId",map.get("search"));
 		}
-		if (map.containsKey("initValue")){
+		if (map.containsKey("initValue")&&StringUtil.isNotEmpty(map.get("initValue"))){
 			map.put("counterId",map.get("initValue"));
 		}
 		Object object = restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME + "/InterfSysTrdConfig/selectMstCounterParty",
@@ -944,20 +944,17 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @param map 检索参数
 	 * @return 联想文本框
 	 */
-	public List<SuggestDto> selectCounterTrader(Map<String, Object> map) {
+	public List<SelectOptionDto> selectCounterTrader(Map<String, Object> map) {
 		map.put("counterTraderId",map.get("param"));
-		Object object = restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME + "/InterfSysTrdConfig/selectCounterTraderId",
-				map, Object.class);
-		List<SuggestDto> resultList = new ArrayList<>();
-		if (object instanceof List<?>){
-			List<Map<String,Object>> mapList = (List<Map<String,Object>>)object;
-			mapList.forEach(item ->{
-				SuggestDto dto = new SuggestDto();
-				dto.setCode(item.get("counterTraderId").toString());
-				dto.setObject(item);
-				resultList.add(dto);
-			});
-		}
+		List<Map<String,Object>> returnList = etrExchangeTradeCommonMapper.selectCounterTraderId(map);
+		List<SelectOptionDto> resultList = new ArrayList<>();
+		returnList.forEach(item ->{
+			SelectOptionDto selectOptionDto = new SelectOptionDto();
+			selectOptionDto.setId(item.get("counterTraderId").toString());
+			selectOptionDto.setText(item.get("counterTraderId").toString());
+			selectOptionDto.setObject(item);
+			resultList.add(selectOptionDto);
+		});
 		return resultList;
 	}
 
@@ -967,10 +964,18 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @param map 检索参数
 	 * @return 联想文本框
 	 */
-	public List<SuggestDto> selectTrader(Map<String, Object> map) {
+	public List<SelectOptionDto> selectTrader(Map<String, Object> map) {
 		map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
 		List<SuggestDto> suggestDtos = etrExchangeTradeCommonMapper.selectTrader(map);
-		return suggestDtos;
+		List<SelectOptionDto> resultList = new ArrayList<>();
+		suggestDtos.forEach(item ->{
+			SelectOptionDto selectOptionDto = new SelectOptionDto();
+			selectOptionDto.setId(item.getCode());
+			selectOptionDto.setText(item.getCode());
+			selectOptionDto.setObject(item);
+			resultList.add(selectOptionDto);
+		});
+		return resultList;
 //        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectTrader",
 //                map, SuggestDto.class);
 	}

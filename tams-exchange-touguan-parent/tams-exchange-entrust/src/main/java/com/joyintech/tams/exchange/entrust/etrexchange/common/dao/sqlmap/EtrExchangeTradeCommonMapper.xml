@@ -210,6 +210,9 @@
         </if>
         ) T1
         where 1=1
+        <if test="tradePlat != null and tradePlat != ''">
+            AND T1.TRADE_PLAT = #{tradePlat}
+        </if>
         <if test="portfolioIdList != null and portfolioIdList.size()>0">
             <foreach collection="portfolioIdList" open="AND T1.PORTFOLIO_ID IN (" item="portfolioId" separator="," close=")">
                 #{portfolioId,jdbcType=VARCHAR}
@@ -907,7 +910,7 @@
                 ETR_ENTRUST etr
             ON etr.ENTRUST_ID = etr_add.ENTRUST_ID
             <where>
-                etr.TRADE_MARKET = #{TRADE_PLACE_03}
+                etr.TRADE_MARKET = #{TRADE_PLACE_03}  and etr_add.TRADER is  not  null
             </where>
             ) t
         <where>
@@ -1486,4 +1489,27 @@
             </if>
         </if>
     </sql>
+    <select id="selectCounterTraderId" resultType="java.util.Map">
+        SELECT
+        T.COUNTER_ID "counterId",
+        T1.LINK_ID "linkId",
+        T1.COUNTER_TYPE "counterType",
+        T1.COUNTER_NAME "counterName",
+        T.COUNTER_TRADER_ID "counterTraderId"
+        FROM MST_COUNTER_PARTY_INFO T
+        LEFT JOIN MST_COUNTER_PARTY T1
+        ON T.COUNTER_ID = T1.COUNTER_ID
+        <where>
+            T.COUNTER_TRADER_ID IS NOT NULL
+            <if test="counterId != null and counterId != ''">
+                AND T.COUNTER_ID = #{counterId}
+            </if>
+            <if test="counterId == null or counterId == ''">
+                AND T.COUNTER_ID != 'homeTrader'
+            </if>
+            <if test="counterTraderId != null and counterTraderId != ''">
+                AND T.COUNTER_TRADER_ID like concat('%',concat(#{counterTraderId,jdbcType=VARCHAR},'%'))
+            </if>
+        </where>
+    </select>
 </mapper>

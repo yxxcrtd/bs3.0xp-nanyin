@@ -313,5 +313,11 @@ public interface EtrExchangeTradeCommonMapper {
 	 **/
 	List<FinExercisePlan> selectFinExercisePlanData(Map<String, Object> map);
 	// add by etliu 20211207 end
+	/**
+	 * 根据交易对手代码和对手方交易员代码模糊查询对手方交易员
+	 * @param params
+	 * @return
+	 */
+	List<Map<String, Object>> selectCounterTraderId(Map<String, Object> params);
 
 }
