@@ -282,12 +282,18 @@ public class CfetsManualSettleQueryService extends BaseService{
             } else {
                 pledgeTable = cfgDataTableMapper.getByPageCode(pageCode, dtCode, "05", EFFERANGE_IS, userId);
             }
+            //逆回购剔除组合代码和名称
+            List<CfgDataTableShow> pledgeTable04 = new ArrayList<>();
+            for(CfgDataTableShow show : pledgeTable) {
+                if(settleDto.getPs().equals("04") && ("portfolioId".equals(show.getColCode()) || "portfolioName".equals(show.getColCode())))continue;
+                pledgeTable04.add(show);
+            }
             resultData.put("CfetsTrdQueryRegInfo_formb", baseForm);
             resultData.put("CfetsTrdQueryRegInfo_formm", amtForm);
             resultData.put("CfetsTrdQueryRegInfo_formp", fForm);
             resultData.put("CfetsTrdQueryRegInfo_formo", infoFormo);
             resultData.put("CfetsTrdQueryRegInfo_tablep", zhTable);
-            resultData.put("CfetsTrdQueryRegInfo_tablepledge", pledgeTable);
+            resultData.put("CfetsTrdQueryRegInfo_tablepledge", pledgeTable04);
 
             Map<String, Object> pageParam = new HashMap<>();
 
