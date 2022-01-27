@@ -1425,7 +1425,7 @@
 			and SEND_STATUS=#{NO_SUBMIT}
 			then '01'
 			when to_char(CHB_SUBMIT_DEADLINE, 'yyyy-mm-dd') >= to_char(#{searchDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd')
-			and to_char(SUBMIT_DEADLINE, 'yyyy-mm-dd') <= to_char(#{searchDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd')
+			and to_char(CHB_SUBMIT_DEADLINE, 'yyyy-mm-dd') <= to_char(#{searchDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd')
 			and SEND_STATUS=#{NO_SUBMIT}
 			then '02'
 			when to_char(CHB_SUBMIT_DEADLINE, 'yyyy-mm-dd') > to_char(#{searchDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd')
