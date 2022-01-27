@@ -362,7 +362,7 @@
         </where>
     </sql>-->
     <select id="selectRegFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryRegInfoListResponse">
-        select
+        select distinct
         reg.ou_party_id as traderid,
         m1.PARTY_ABBR as traderidStr,
         nvl(su.real_name,reg.ou_trader_id) as trader,
