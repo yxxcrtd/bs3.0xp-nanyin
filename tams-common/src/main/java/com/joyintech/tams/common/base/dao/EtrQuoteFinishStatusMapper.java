@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 public interface EtrQuoteFinishStatusMapper {
     int deleteByPrimaryKey(EtrQuoteFinishStatusKey key);
 
+    int deleteByQuoteId(EtrQuoteFinishStatusKey key);
+
     int insert(EtrQuoteFinishStatus record);
 
     int insertSelective(EtrQuoteFinishStatus record);
