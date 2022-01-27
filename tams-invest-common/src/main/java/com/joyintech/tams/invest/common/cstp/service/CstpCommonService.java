@@ -132,7 +132,7 @@ public class CstpCommonService{
                 全价总额尾差 = ArithmeticUtil.subtract(全价总额尾差,fpriceAmt);
                 BigDecimal shareCtAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(shareCtAmtTotal,ptlAllocationDto.getShareCtAmt()),shareCtAmtTotalFP,2, RoundingMode.HALF_DOWN);
                 折算交易份额尾差 = ArithmeticUtil.subtract(折算交易份额尾差,shareCtAmt);
-                ptlAllocationDto.setShareAmt(shareCtAmt);
+                ptlAllocationDto.setShareCtAmt(shareCtAmt);
                 BigDecimal shareAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(shareAmtTotal,ptlAllocationDto.getShareAmt()),shareAmtTotalFP,2, RoundingMode.HALF_DOWN);
                 交易份额尾差 = ArithmeticUtil.subtract(交易份额尾差,shareAmt);
                 ptlAllocationDto.setShareAmt(shareAmt);

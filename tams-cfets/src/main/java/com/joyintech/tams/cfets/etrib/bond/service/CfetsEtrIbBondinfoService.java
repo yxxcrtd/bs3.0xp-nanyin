@@ -2019,18 +2019,12 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     }
 
     public void forcedFinishOprHisMethod(CfetsEtribBondInfo003Dto dto){
-        List<CfetsEtribBondInfo003Dto> dtolist = dto.getSelectedItem();
-        if(dtolist != null && dtolist.size()>0) {
-            for (CfetsEtribBondInfo003Dto entity : dtolist) {
-                //更新操作记录日志
-                CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
-                oprHisReq.setEntrustId(entity.getEntrustId());
-                oprHisReq.setOperType(DictCodeListExt3.操作类型_强制完成.getValue());
-                oprHisReq.setBusiDes(dto.getRemark());
-                joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
-            }
-        }
-
+            //更新操作记录日志
+            CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+            oprHisReq.setEntrustId(dto.getEntrustId());
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_强制完成.getValue());
+            oprHisReq.setBusiDes(dto.getRemark());
+            joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
     }
 
     public void recallDelegateOprHisMethod(EtrInvestBondInfoDto dto){
