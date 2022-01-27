@@ -4,6 +4,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.business.common.dto.CashPositionFlowDto;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.dto.PtlCashPositionFlowDto;
+import com.joyintech.tams.business.common.dto.SecInfoModelDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -196,4 +197,6 @@ public interface JoyinbusinessCommonMapper {
     String isNeedWorkflow(Map<String, String> param);
 
     List<SelectOptionDto>  gettotleTradeId();
+
+    SecInfoModelDto getSecInfoModel(Map<String, Object> param);
 }

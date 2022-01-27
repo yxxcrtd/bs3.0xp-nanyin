@@ -1113,6 +1113,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         map.put("REGIST_ORG_02", DictCodeList.登记托管机构_上海清算所.getValue());
         map.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         CfetsEtrFinProductDto dto = cfetsetrIbBondinfoMapper.getEtrFinProductInfo(map);
+        dto.setLastqx(joyinbusinessCommonService.calPendingPeriod(secId));
         if (dto != null) {
             map.put("marketId",dto.getMarketId());
             //            获取信用评级结果
@@ -1181,10 +1182,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }else {
                 dto.setXqFlg("无");
             }
-            //剩余期限（待偿期）
-            if (dto.getLastqx().equals("年")) {
-                dto.setLastqx(" ");
-            }
 
             //付息频率
             if (dto.getPayCycle().equals("月")||dto.getPayCycle().equals("季")||dto.getPayCycle().equals("年")||dto.getPayCycle().equals("半年")) {
@@ -1197,10 +1194,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }
             if (dto.getPriceTj().equals("元")) {
                 dto.setPriceTj("--");
-            }
-            //如果剩余期限为空，显示--
-            if (dto.getLastqx().equals("年")) {
-                dto.setLastqx("--");
             }
             //下一行权日若无，则显示为“—”  计划行权日>交易日取最小
             if (dto.getXqdate() != null || !StringUtil.isEmpty(dto.getXqdate())) {

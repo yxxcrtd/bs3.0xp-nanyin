@@ -5,13 +5,11 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
+import com.joyintech.tams.business.common.dto.SecInfoModelDto;
 import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -19,12 +17,14 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tools.ant.util.DateUtils;
+import org.jasypt.commons.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.*;
 
 /**
  * 公共方法service
@@ -253,4 +253,149 @@ public class JoyinbusinessCommonService extends BaseService {
         return super.queryForPage(entrustIdRequestDto.getPageMode().getPageNo(), entrustIdRequestDto.getPageMode().getPageSize(),
                 () ->joyinbusinessCommonMapper.gettotleTradeId());
     }
+
+    /**
+     * 计算存续期
+     * @param secId
+     * @return
+     */
+    public String calPendingPeriod(String secId) {
+        Date cDate = DateUtil.platDateFromCache();
+        Map map = new HashMap();
+        map.put("finprodId",secId);
+        SecInfoModelDto dto = getSecInfoModel(map);
+        // tDate默认取到期日
+        Date tDate = dto.getEndDate();
+        Date startDate = dto.getStartDate();
+        // 计算结果
+        List<Date[]> result = new ArrayList<>();
+        // 下一行权日
+        Date nextExeDate = dto.getNextExeDate();
+        // 含权标识
+        String isRight = dto.getIsRight();
+        String pendingPeriodStr1 = "";
+        String pendingPeriodStr2 = "";
+        // 到期展示--
+        if (cDate.compareTo(tDate) >= 1){
+            return "--";
+        //
+        }else{
+            result = calcDayInYear(startDate, cDate, 1);
+            // 含权债TDTAE取值时，如当前计算日以后存在回售或赎回行权计划的且理论行权日不为到期日的，
+            // 则TDATE取2个值计算2个结果，即TDATE分别为最近一个理论行权日、到期日，否则取到期日计算1个结果；
+            if(DictCodeList.是否_是.getValue().equals(isRight) && DateUtil.compareDate(nextExeDate, tDate)!=1){
+                pendingPeriodStr1=getPendingPeriod(result,cDate,nextExeDate);
+            }
+            pendingPeriodStr2=getPendingPeriod(result,cDate,tDate);
+            if(CommonUtils.isNotEmpty(pendingPeriodStr1)){
+                return pendingPeriodStr1+"+"+pendingPeriodStr2;
+            }else{
+                return pendingPeriodStr2;
+            }
+        }
+    }
+
+
+    /**
+     * 查询债券基本信息
+     *
+     * @param map 参数
+     * @return 债券基本信息
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    public SecInfoModelDto getSecInfoModel(Map<String, Object> map) {
+        map.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        map.put("cashType1", DictCodeListExt1.现金流一级类型_利息.getValue());
+        map.put("finprodType", DictCodeListExt1.现金流业务类型_金融产品.getValue());
+        map.put("sysDate", iPlatformDate.getSysDate());
+        map.put("YES_NO_Y", DictCodeList.是否_是.getValue());
+        map.put("EXEC_MODE02", DictCodeList.行权方式_回售.getValue());
+        map.put("EXEC_MODE01", DictCodeList.行权方式_赎回.getValue());
+        map.put("psT03", DictCodeList.交易方向_行权_回售.getValue());
+        map.put("psT39", DictCodeList.交易方向_行权_赎回.getValue());
+
+        return joyinbusinessCommonMapper.getSecInfoModel(map);
+    }
+
+    /**
+     * 计算calDate所在的计息年度结束日
+     * @param startDate 开始日
+     * @param calDate 计算日
+     * @param flag 向前向后推算标识（1:向后，-1：向前）
+     * @return 计息年度结束日
+     */
+    private List<Date[]> calcDayInYear(Date startDate, Date calDate, int flag) {
+        List<Date[]> dateList = new ArrayList<>();
+        // 计息年度开始日
+        Date start = null;
+        // 计息年度结束日
+        Date end = startDate;
+        int index = 0;
+        do {
+            index ++;
+            start = end;
+            end = calcOneYearDate(startDate, flag * index);
+            if(start != null && (DateUtil.compareDate(start, end)<=1)) {
+                dateList.addAll(Collections.singleton(new Date[]{end, start}));
+            }
+            dateList.addAll(Collections.singleton(new Date[]{start, end}));
+        } while((flag > 0 && (DateUtil.compareDate(calDate, end)>=1))
+                || (flag < 0 && (DateUtil.compareDate(calDate, end)<=1)));
+        return dateList;
+    }
+
+    /**
+     * 计算从开始日过amount个年度的时间结束日
+     * @param startDate 开始日期
+     * @param amount 向前向后标识
+     * @return 结束日
+     */
+    private Date calcOneYearDate(Date startDate, int amount) {
+        if(null != startDate) {
+            return DateUtil.addYear(startDate,amount);
+        }
+        return startDate;
+    }
+
+
+    private String getPendingPeriod(List<Date[]> result,Date cDate, Date tDate){
+        Date yearStartDate = null;
+        Date yearEndDate = null;
+        String pendingPeriodStr = "";
+        BigDecimal pendingPeriod = BigDecimal.ZERO;
+        for(int i = 0; i < result.size(); i++ ){
+            Date maxStartDate = null;
+            Date minEndDate = null;
+            // 判断计息年度是否计算成功
+            if(null != result && result.get(i).length == 2) {
+                yearStartDate=result.get(i)[0];
+                yearEndDate=result.get(i)[1];
+            }
+            // 比较计算日和计息年度开始日，取最大
+            if(DateUtil.compareDate(cDate, yearStartDate)>=1){
+                maxStartDate = cDate;
+            }else{
+                maxStartDate = yearStartDate;
+            }
+            // 比较计算日和计息年度截止日日，取最小
+            if(DateUtil.compareDate(tDate, yearEndDate)<1){
+                minEndDate = tDate;
+            }else{
+                minEndDate = yearEndDate;
+            }
+            if(i==result.size()-1 && DateUtil.compareDate(cDate, yearStartDate) >=1){
+                pendingPeriod=BigDecimal.valueOf(DateUtil.getBetweenDayNumber(minEndDate,maxStartDate));
+                pendingPeriodStr = pendingPeriod+"D";
+            }else{
+                pendingPeriod = ArithmeticUtil.doAdd(pendingPeriod,
+                        ArithmeticUtil.divide(BigDecimal.valueOf(DateUtil.getBetweenDayNumber(minEndDate,maxStartDate)),
+                                BigDecimal.valueOf(DateUtil.getBetweenDayNumber(yearEndDate,yearStartDate)), 2));
+                pendingPeriodStr = pendingPeriod+"Y";
+            }
+        }
+        return pendingPeriodStr;
+    }
+
 }
