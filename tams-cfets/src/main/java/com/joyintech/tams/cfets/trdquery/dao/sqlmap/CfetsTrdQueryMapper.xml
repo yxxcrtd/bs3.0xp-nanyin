@@ -2668,7 +2668,7 @@
         T1.TRADE_MARKET_MODE tradeMarketMode,
         T1.TRADE_PLAT tradePlat,
         T7.exe_id tradeId,
-        NVL(T9.PARTY_NAME,tpda.ou_party_id) ouPartyId ,
+        NVL(T9.PARTY_abbr,tpda.ou_party_id) ouPartyId ,
         NVL(T10.REAL_NAME,T1.TRADER) ouTraderId,
         NVL(T11.COUNTER_NAME,T1.COUNTER_ID) counterId,
         NVL(T12.TRADER_NAME,T1.COUNTER_TRADER) counterTrade,
