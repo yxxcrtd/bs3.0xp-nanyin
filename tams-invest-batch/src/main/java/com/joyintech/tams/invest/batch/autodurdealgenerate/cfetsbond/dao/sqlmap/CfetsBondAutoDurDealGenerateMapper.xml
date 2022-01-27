@@ -432,7 +432,8 @@
         t1.trade_market as tradeMarket,t1.trade_market_mode as tradeMarketMode,
         t1.tg_busi_type as tgBusiType,
         t2.exercise_price as exercisePrice,t2.redeem_rate as redeemRate,
-        fcp.int_amt*(#{PLATEFORM_DATE,jdbcType=DATE}-fcp.vdate) as intAmt
+        fcp.int_amt*(#{PLATEFORM_DATE,jdbcType=DATE}-fcp.vdate) as intAmt,
+        fep.ACT_EXERCISE_DATE as actExerciseDate
         from REG_FIN_PRODUCT_DEAL_TOTAL T1
         left join reg_fin_product_deal_total_add t2
         on t1.totle_trade_id=t2.totle_trade_id
@@ -452,6 +453,10 @@
         and fcp.cash_type in ('01','04')
         and fcp.vdate<![CDATA[<=]]>#{PLATEFORM_DATE,jdbcType=DATE}
         and fcp.mdate>#{PLATEFORM_DATE,jdbcType=DATE}
+        left join FIN_EXERCISE_PLAN fep
+        on fep.finprod_id=t1.finprod_id
+        and fep.exercise_date=T1.settle_date
+        and fep.exercise_type='01'
         WHERE T1.PS = #{psT39} and t3.faceValue!=0
         AND T1.settle_date = #{PLATEFORM_DATE,jdbcType=DATE}
         AND T1.TRADE_STATUS = #{TRADE_STATUS01}
