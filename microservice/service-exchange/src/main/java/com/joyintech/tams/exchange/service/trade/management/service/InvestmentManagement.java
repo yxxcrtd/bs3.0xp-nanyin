@@ -292,7 +292,7 @@ public class InvestmentManagement extends BaseService {
                                 instruction.setEntrustStatus(InstructionStatus.ALREADY_RECEIVE.value);
                                 instruction.setTradeId(entrustOpeBean.getTrader());
                                 if (isSingle) {
-                                    instruction.setTraderName(simpleRestTemplate.postForObject(ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.getRealNameByUser, entrustOpeBean.getTrader(), String.class));
+                                   // instruction.setTraderName(simpleRestTemplate.postForObject(ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.getRealNameByUser, entrustOpeBean.getTrader(), String.class));
                                 } else {
                                     instruction.setTraderName(restTemplate.postForObject(ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.acceptOrRefuse, entrustOpeBean.getTrader(), String.class));
                                 }

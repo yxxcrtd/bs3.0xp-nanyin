@@ -107,6 +107,7 @@ public class IbuQuoteRepo004Controller extends BaseController {
         model.addAttribute("distribution", cfetsRepoDealRegisterQuoteDto.getDistribution());
         //本币导出按钮配置
         model.addAttribute("EXPORT_SHOW", CacheUtil.getSysParam("EXPORT_SHOW"));
+        model.addAttribute("ps", cfetsRepoDealRegisterQuoteDto.getPs());
         //卖空模式
         model.addAttribute(GlobalConstant.ENTITY, cfetsRepoDealRegisterQuoteDto);
         return super.init(model);
