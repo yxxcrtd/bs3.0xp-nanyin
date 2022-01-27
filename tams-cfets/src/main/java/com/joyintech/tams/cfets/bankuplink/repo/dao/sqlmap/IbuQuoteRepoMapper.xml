@@ -1366,28 +1366,28 @@
     <select id="findEtrLastNumByEtrId" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealEntrustOrderDto">
         select sum(T.ENTRUST_AMT) avaNum ,IPAR.PARTY_ID,T.REPO_TERM,T.SETTLE_SPREED
         from (
-                 select ee.ENTRUST_AMT,ee.PORTFOLIO_ID,eea.TERM_DAYS REPO_TERM,eea.SETTLE_SPREED SETTLE_SPREED
-                 from ETR_ENTRUST ee
+                 select nvl(ee.ENTRUST_AMT - nvl(rfpd.ENTRUST_AMT, 0) - nvl(wrfpd.TRADE_AMT, 0) - nvl(IBQER.ENTRUST_AMT, 0) -
+                       nvl(wiqer.FPRICE_AMT, 0),0) ENTRUST_AMT,
+                       ee.PORTFOLIO_ID,
+                       eea.TERM_DAYS            REPO_TERM,
+                       eea.SETTLE_SPREED        SETTLE_SPREED
+                from ETR_ENTRUST ee
                  left join ETR_ENTRUST_ADD eea on ee.ENTRUST_ID = eea.ENTRUST_ID
+                 left join (select t.TRADE_AMT ENTRUST_AMT, t.ENTRUST_ID
+                                    from REG_FIN_PRODUCT_DEAL t
+                                             left join reg_FIN_PRODUCT_DEAL_TOTAL rfpdt on rfpdt.TOTLE_TRADE_ID = t.TOTLE_TRADE_ID
+                                    where rfpdt.IS_CANCEL = 'N'
+                                      and rfpdt.TRADE_STATUS = '01'
+                ) rfpd on rfpd.ENTRUST_ID = ee.ENTRUST_ID
+                 left join WFL_REG_FIN_PRODUCT_DEAL wrfpd on wrfpd.ENTRUST_ID = ee.ENTRUST_ID
+                 left join (
+                    select t.FPRICE_AMT ENTRUST_AMT, t.ENTRUST_ID
+                    from IBU_QUOTE_ETR_RE t
+                             left join IBU_QUOTE_CREP IQC on t.QUOTE_ID = IQC.QUOTE_ID
+                    where IQC.SEND_STATUS = '01'
+                ) IBQER on rfpd.ENTRUST_ID = ee.ENTRUST_ID
+                 left join WFL_IBU_QUOTE_ETR_RE wiqer on wiqer.ENTRUST_ID = ee.ENTRUST_ID
                  where ee.ENTRUST_ID = #{etrId}
-                 union
-                 select -1*TRADE_AMT ENTRUST_AMT,PORTFOLIO_ID,REPO_TERM,SETTLE_SPEED SETTLE_SPREED
-                 from REG_FIN_PRODUCT_DEAL
-                 where IS_CANCEL = 'N' and TRADE_STATUS ='01' AND ENTRUST_ID = #{etrId}
-                 union
-                 select -1*TRADE_AMT ENTRUST_AMT,PORTFOLIO_ID,REPO_TERM,SETTLE_SPEED SETTLE_SPREED
-                 from WFL_REG_FIN_PRODUCT_DEAL
-                 where ENTRUST_ID = #{etrId}
-                 union
-                 select -1*IBQER.FPRICE_AMT ENTRUST_AMT,IBQER.PORTFOLIO_ID,IQC.TERM REPO_TERM,IQC.SETTLE_SPEED SETTLE_SPREED
-                 from IBU_QUOTE_ETR_RE IBQER
-                 left join IBU_QUOTE_CREP IQC on IBQER.QUOTE_ID = IQC.QUOTE_ID
-                 where IBQER.ENTRUST_ID = #{etrId} AND IQC.SEND_STATUS = '01' /*新增中 已发送*/
-                 union
-                 select -1*WIBQER.FPRICE_AMT ENTRUST_AMT,WIBQER.PORTFOLIO_ID,WIQC.TERM REPO_TERM,WIQC.SETTLE_SPEED SETTLE_SPREED
-                 from WFL_IBU_QUOTE_ETR_RE WIBQER
-                 left join WFL_IBU_QUOTE_CREP WIQC on WIBQER.QUOTE_ID = WIQC.QUOTE_ID
-                 where WIBQER.ENTRUST_ID = #{etrId}
              ) T
             LEFT JOIN IBU_PORTFOLIO_ACCT_RELA IPAR
                 ON T.PORTFOLIO_ID = IPAR.PORTFOLIO_ID AND IPAR.CFETS_ACCT_TYPE = '01'
