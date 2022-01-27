@@ -663,7 +663,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 				if(null==sequenceIndexData){sequenceIndexData = 1L;}
 				String appendString = collect.size()>=1?String.format("%04d", sequenceIndexData):StringUtil.EMPTY;
 				String excelAndSheetName = StringUtil.join(prefix,"_",appendString);
-				files.add(ExcelTplUitl.createFile(requestDto, excelAndSheetName,"本币交易",null,() -> {
+				files.add(ExcelTplUitl.createFile(requestDto, excelAndSheetName,"本币交易",tplfile,() -> {
 					return cfetsBondDayRegDtos;
 				}));
 			}
