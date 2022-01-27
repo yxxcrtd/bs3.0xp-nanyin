@@ -39,7 +39,7 @@ public class ExcelTplUitl {
 
     private static final Logger logger = LoggerFactory.getLogger(ExcelUitl.class);
 
-    public static File createFile(CfetsExportRequestDto requestDto,String excelName,String sheetName,File tplfile, DoQuery doQuery){
+    public static File createFile(CfetsExportRequestDto requestDto,String excelName,String sheetName,String  tplfilename, DoQuery doQuery){
         File excelFile = null;
         List<BaseMap> header = requestDto.getHeader();
         List dataList = requestDto.getData();
@@ -55,7 +55,7 @@ public class ExcelTplUitl {
                     }
                 });
             }
-            excelFile = createFile2(excelName,sheetName, header, mapList,tplfile);
+            excelFile = createFile2(excelName,sheetName, header, mapList,tplfilename);
         }else {
             List<BaseMap> dataResultList = requestDto.getData();
             try{
@@ -79,13 +79,13 @@ public class ExcelTplUitl {
             }catch (Exception e){
                 logger.error("导出格式化日期异常");
             }
-            excelFile = createFile2(excelName,sheetName, header, dataResultList,tplfile);
+            excelFile = createFile2(excelName,sheetName, header, dataResultList,tplfilename);
         }
         return excelFile;
     }
 
 
-    public static File createFile2(String fileName,String sheetName, List<BaseMap> heads, List dataList,File tplfile){
+    public static File createFile2(String fileName,String sheetName, List<BaseMap> heads, List dataList,String  tplfilename){
         File excelFile = null;
         String dir = UUID.randomUUID().toString();
         File path = null;
@@ -117,8 +117,8 @@ public class ExcelTplUitl {
         }
         excelFile = new File(dir + File.separator + fileName +".xlsx");
         //copy一份模板,服务器上easyexcel找不到jar的文件(FileUtils.openInputStream 报文件不存在)
-        File copytplfile = new File(dir + File.separator+tplfile.getName());
-        copyFileUsingFileStreams(tplfile,copytplfile);
+        File copytplfile = new File(dir + File.separator+tplfilename);
+        copyFileUsingFileStreams(tplfilename,copytplfile);
         exportAllData(excelFile, sheetName , columns, dataList, styleMap,copytplfile);
         if(copytplfile.exists()){
             copytplfile.delete();
@@ -525,11 +525,11 @@ public class ExcelTplUitl {
         }
     }
 
-    private static void copyFileUsingFileStreams(File source, File dest){
+    private static void copyFileUsingFileStreams(String sourceName, File dest){
         InputStream input = null;
         OutputStream output = null;
         try {
-            input = new FileInputStream(source);
+            input = new FileInputStream(new File(ExcelTplUitl.getTplFile(sourceName)));
             output = new FileOutputStream(dest);
             byte[] buf = new byte[1024];
             int bytesRead;
