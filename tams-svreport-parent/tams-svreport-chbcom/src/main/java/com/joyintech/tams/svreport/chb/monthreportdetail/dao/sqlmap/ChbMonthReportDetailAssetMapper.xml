@@ -123,6 +123,8 @@
     </resultMap>
 
     <select id="selectDetailList" resultType="com.joyintech.tams.svreport.chb.monthreportdetail.dto.ChbMonthReportDetailAsset">
+        select *
+        from (
         SELECT
             P.POSUUID,
             D1.propername reportType1,
@@ -237,7 +239,7 @@
                 </foreach>
 
             </if>
-        ORDER BY D4.ORDERNO
+        ORDER BY D4.ORDERNO)
     </select>
 
     <select id="getAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">
