@@ -68,6 +68,23 @@
         left join ACT_HI_COMMENT T3 ON T3.TASK_ID_ = T2.ID_ AND T3.PROC_INST_ID_ = T2.PROC_INST_ID_ AND T3.USER_ID_ = T2.ASSIGNEE_
         left join SYS_DATADICT_LIST d1 on T1.PROCESS_STATE=d1.ITEM_CODE and d1.DICT_CODE='PROCESS_STATE'
         left join sys_user su on T2.ASSIGNEE_=su.user_name
-        where T1.TRADE_ID= #{busiCode,jdbcType=VARCHAR} order by NVL(T2.END_TIME_, T2.CLAIM_TIME_) desc
+        where 1=1
+        <choose>
+            <when test="totalEntrustIdList!=null and totalEntrustIdList.size() > 0 ">
+                AND T1.TRADE_ID in
+                <foreach collection="totalEntrustIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </when>
+            <otherwise>
+                AND T1.TRADE_ID= #{busiCode,jdbcType=VARCHAR}
+            </otherwise>
+        </choose>
+        order by NVL(T2.END_TIME_, T2.CLAIM_TIME_) desc
+    </select>
+
+    <select id="queryTotalEntrustIdList" resultType="java.lang.String">
+        select distinct TOTAL_ENTRUST_ID from ETR_ENTRUST_RE
+        where ENTRUST_ID =  #{busiCode,jdbcType=VARCHAR}
     </select>
 </mapper>

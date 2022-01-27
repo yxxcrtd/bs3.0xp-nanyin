@@ -413,6 +413,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
     	if ("submit".equals(entity.getOperateType())) {
     		if (CollectionUtils.isNotEmpty(entity.getEtrInvestRepoInfoDtos())) {
                 for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
+                    WFlowCommonService.insertEtrEntrustRe(dto.getEntrustId(),entity.getTotalEtrustId());
                     dto.setWorkflowId(entity.getWorkflowId());
                     doInsertFlow(dto);
                 }

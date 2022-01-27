@@ -1,10 +1,9 @@
 package com.joyintech.service.entrust.common.service;
 
-import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.common.base.dao.EtrEntrustReMapper;
+import com.joyintech.tams.common.base.entity.EtrEntrustRe;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
@@ -25,6 +24,8 @@ public class WFlowCommonService {
     private static BaseEtrInvestInfoServiceImpl baseEtrInvestInfoServiceImpl; // 流程数据相关修改
     private static BaseEtrCashPositionCommService baseEtrCashPositionCommService; // 持仓处理
     private static EtrEntrustMapper etrEntrustMapper; // 指令
+
+    private static EtrEntrustReMapper etrEntrustReMapper; // 指令
 
     /**
      * 操作类型为submit时执行新增流程数据 & 持仓处理
@@ -121,6 +122,11 @@ public class WFlowCommonService {
         WFlowCommonService.etrEntrustMapper=etrEntrustMapper;
     }
 
+    @Autowired
+    public void setEtrEntrustReMapper(EtrEntrustReMapper etrEntrustReMapper){
+        WFlowCommonService.etrEntrustReMapper=etrEntrustReMapper;
+    }
+
     /**
      * 修改状态为已退回 & 持仓关闭 & 不删除流程
      * @param workflowId
@@ -130,6 +136,20 @@ public class WFlowCommonService {
         if (baseEtrCashPositionCommService != null) {
             // 持仓关闭
             baseEtrCashPositionCommService.entrustCloseExecute(entrustId);
+        }
+    }
+
+    /**
+     * 修改状态为已退回 & 持仓关闭 & 不删除流程
+     * @param entrustId
+     * @param totalEntrustId
+     */
+    public static void insertEtrEntrustRe(String entrustId, String totalEntrustId){
+        if(StringUtil.isNotEmpty(entrustId)){
+            EtrEntrustRe etrEntrustRe = new EtrEntrustRe();
+            etrEntrustRe.setEntrustId(entrustId);
+            etrEntrustRe.setTotalEntrustId(totalEntrustId);
+            etrEntrustReMapper.insert(etrEntrustRe);
         }
     }
 
