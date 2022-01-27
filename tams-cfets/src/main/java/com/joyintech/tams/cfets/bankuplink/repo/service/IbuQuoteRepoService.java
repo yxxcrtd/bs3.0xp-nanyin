@@ -2555,7 +2555,7 @@ public class IbuQuoteRepoService extends BaseService {
     public Map<String, String> selectAllCustomer() {
         Map<String, String> map = new HashMap<>();
         cfetsIbuQuoteRepoMapper.selectAllCustomer().stream().forEach(x -> {
-            map.put(x.get("PARTY_ID"), x.get("PARTY_NAME"));
+            map.put(x.get("PARTY_ID"), x.get("PARTY_ABBR"));
         });
         return map;
     }
