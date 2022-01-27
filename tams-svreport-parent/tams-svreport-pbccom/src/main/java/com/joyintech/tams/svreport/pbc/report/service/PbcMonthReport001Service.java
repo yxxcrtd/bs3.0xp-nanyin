@@ -196,7 +196,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 	 * @since 1.0
 	 */
 	public Page<PbcMonthReport> searchPage(Map<String, Object> pageParam) {
-		dealSearchParam(pageParam);
+		dealPageSearchParam(pageParam);
 		//将发送状态改为空
 
         if (pageParam.get(GlobalConstant.PARAM_PAGE) != null
@@ -321,6 +321,73 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 			} catch (IOException e) {
 //				logger.error(e.getMessage(),e);
 	            logger.error(e.getMessage(),e);
+			}
+		} else {
+			// 查询参数条件
+			// 数据状态
+			String status = (String) pageParam.get("status");
+			String reporttypes = (String) pageParam.get("reporttypes");
+			// 报送状态
+			String sendStatus = (String) pageParam.get("sendStatus");
+			// 反馈状态
+			String submitFeedbackStatus = (String) pageParam.get("submitFeedbackStatus");
+
+			// 将数据状态当做多选下拉框处理
+			if (StringUtil.isNotBlank(status)) {
+				pageParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
+			}
+			if (StringUtil.isNotBlank(reporttypes)) {
+				pageParam.put("reporttypeList", StringUtil.splitToList(GlobalConstant.COMMA, reporttypes));
+			}
+			// 将报送状态当做多选下拉框处理
+			if (StringUtil.isNotBlank(sendStatus)) {
+				pageParam.put("sendStatusList", StringUtil.splitToList(GlobalConstant.COMMA, sendStatus));
+			}
+			// 将反馈状态当做多选下拉框处理
+			if (StringUtil.isNotBlank(submitFeedbackStatus)) {
+				pageParam.put("submitFeedbackStatusList",
+						StringUtil.splitToList(GlobalConstant.COMMA, submitFeedbackStatus));
+			}
+
+		}
+	}
+
+	/**
+	 * 处理查询前的参数 <功能详细描述>
+	 *
+	 * @param pageParam
+	 * @see
+	 * @since 1.0
+	 */
+	public void dealPageSearchParam(Map<String, Object> pageParam) {
+
+		String submitDateStart = (String) pageParam.get("submitDateStart");
+		if (!StringUtil.isEmpty(submitDateStart)
+				&& submitDateStart.length() >= 7){
+			submitDateStart = submitDateStart.substring(0,4)+submitDateStart.substring(5,7);
+			pageParam.put("submitDateStart", submitDateStart);
+		}
+		String submitDateEnd = (String) pageParam.get("submitDateEnd");
+		if (!StringUtil.isEmpty(submitDateEnd)
+				&& submitDateEnd.length() >= 7){
+			submitDateEnd = submitDateEnd.substring(0,4)+submitDateEnd.substring(5,7);
+			pageParam.put("submitDateEnd", submitDateEnd);
+		}
+
+
+		// 选择行数据时
+		if (pageParam.containsKey("keyList")) {
+			String keyList = pageParam.get("keyList").toString();
+			try {
+				List<PbcMonthReport> astValueList = JsonUtils.json2List(keyList,
+						PbcMonthReport.class);
+				pageParam.put("reportList", astValueList);
+				if (!CollectionUtils.isEmpty(astValueList)){
+					pageParam.put("reportuuid", astValueList.get(0).getReportuuid());
+				}
+			} catch (IOException e) {
+//				logger.error(e.getMessage(),e);
+				logger.error(e.getMessage(),e);
 			}
 		} else {
 			// 查询参数条件
