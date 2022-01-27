@@ -144,7 +144,6 @@ public class SalerInstInfo001Service extends CommonExportService<SalerInstInfoDt
             headList.add("总部或分支机构编码");
             headList.add("总部或分支机构名称");
             headList.add("机构层级");
-            headList.add("备注");
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
             if (!StringUtil.isEmptyList(tempCheckResult)) {
                 return tempCheckResult;
@@ -259,13 +258,6 @@ public class SalerInstInfo001Service extends CommonExportService<SalerInstInfoDt
                 flag = false;
                 message.add("机构层级不能为空");
             }
-            //备注
-            if(list.get(4) != null || !list.get(4).trim().equals("")){
-                if(getWordCount(list.get(4)) > 300){
-                    flag = false;
-                    message.add("导入时备注不能超过300字节");
-                }
-            }
 
             if (CollectionUtils.isNotEmpty(message)) {
                 checkResult.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
@@ -299,11 +291,6 @@ public class SalerInstInfo001Service extends CommonExportService<SalerInstInfoDt
 
             //机构层级
             SalerInstInfoDto.setSalerOrgLevel(this.subDictcode(list.get(3), " "));
-
-            //备注
-            if(list.get(4) != null && list.get(4) != "") {
-                SalerInstInfoDto.setRemark(list.get(4));
-            }
 
             //数据状态
             SalerInstInfoDto.setStatus("E");
