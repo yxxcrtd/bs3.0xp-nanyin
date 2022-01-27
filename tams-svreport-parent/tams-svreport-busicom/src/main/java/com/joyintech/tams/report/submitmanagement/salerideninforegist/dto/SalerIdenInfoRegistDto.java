@@ -52,7 +52,7 @@ public class SalerIdenInfoRegistDto extends ChbSalerIdenSub implements ProcessEn
     public String getSalerBirthdayStr() {
         if(StringUtil.isNotEmpty(this.getSalerBirthday())){
             String time = DateUtil.formatDateTime(this.getSalerBirthday());
-            return time.substring(0,10);
+            return time.substring(0,10).replace("-", "").replace("/", "");
         }
         return null;
     }
