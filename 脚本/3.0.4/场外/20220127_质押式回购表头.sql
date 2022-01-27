@@ -1,1 +1,0 @@
-update cfg_datatable_show set COLCODE = 'periodStr',SPCDCODE ='Y' where PAGECODE = 'IbuQuoteRepo' and DTCODE = 'PLEDGEADDAVA' and COLNAME = '待偿期';
