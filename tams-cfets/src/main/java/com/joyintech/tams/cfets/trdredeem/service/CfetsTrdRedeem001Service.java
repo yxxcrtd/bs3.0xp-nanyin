@@ -527,9 +527,9 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
         //更新原登记数据状态
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
             //汇总
-            cfetsIbuQuoteBondMapper.updateRegFinProductDealTotal(totleTradeId);
+            cfetsIbuQuoteBondMapper.updateRegFinProductDealTotal(totleTradeId,entity.getRemark());
             //明细
-            cfetsIbuQuoteBondMapper.updateRegFinProductDeal(totleTradeId);
+            cfetsIbuQuoteBondMapper.updateRegFinProductDeal(totleTradeId,entity.getRemark());
         }
     }
     /**
