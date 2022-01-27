@@ -207,4 +207,19 @@ public interface CfetsTrdQueryMapper {
      * @return List<CfetsPledgeInfoResponse>
      */
     List<CfetsPledgeInfoResponse> findPledgeInfoList(Map<String, Object> pageParam);
+
+
+    /**
+     * 根据
+     * @param bizCode
+     * @return
+     */
+    String seleteByTrdId(@Param("bizCode") String bizCode);
+
+    /**
+     * 更新债券交易信息接口表备注
+     *
+     * @param paramMap 参数
+     */
+    void updateInterfTradSecdealByTradeId(Map<String, Object> paramMap);
 }

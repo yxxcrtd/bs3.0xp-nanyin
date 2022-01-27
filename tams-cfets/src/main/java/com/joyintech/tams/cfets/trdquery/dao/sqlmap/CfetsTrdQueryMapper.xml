@@ -3093,6 +3093,19 @@
         mbvi.NETPRICE,
         fp.REGIST_ORG
     </select>
+
+    <update id="updateInterfTradSecdealByTradeId">
+        update interf_trad_secdeal t
+        set t.dealtext = decode(t.dealtext, '-', '', t.dealtext) || #{remark}
+        where t.fedealno = #{exeId,jdbcType=VARCHAR}
+    </update>
+
+    <select id="seleteByTrdId"
+            resultType="java.lang.String">
+        select exe_id exeId
+         from trdquto_match_info
+         where trd_id =#{bizCode,jdbcType=VARCHAR}
+    </select>
 </mapper>
 
 
