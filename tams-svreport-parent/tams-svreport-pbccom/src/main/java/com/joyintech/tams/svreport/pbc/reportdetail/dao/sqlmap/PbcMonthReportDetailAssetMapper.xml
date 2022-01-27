@@ -106,6 +106,8 @@
     <select id="selectDetailList" resultType="com.joyintech.tams.svreport.pbc.reportdetail.dto.PbcMonthReportDetailAsset">
         select *
         from (
+        select *
+        from (
             SELECT
             P1.PROPERNAME reportType1,
             P2.PROPERNAME reportType2,
@@ -197,7 +199,7 @@
                 #{item}
             </foreach>
         </if>
-        ORDER BY A.DETAILNO
+        ORDER BY A.DETAILNO)
     </select>
 
     <select id="getAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">

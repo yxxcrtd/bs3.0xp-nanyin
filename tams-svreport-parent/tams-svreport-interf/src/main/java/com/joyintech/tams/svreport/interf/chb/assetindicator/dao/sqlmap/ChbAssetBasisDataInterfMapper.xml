@@ -61,7 +61,7 @@
 			#{item.valId,jdbcType=VARCHAR} VAL_ID,
 			#{item.prodId,jdbcType=VARCHAR} PROD_ID,
 			#{item.assetId,jdbcType=VARCHAR} ASSET_ID,
-			#{item.pAssetId,jdbcType=VARCHAR} P_ASSET_ID
+			#{item.pAssetId,jdbcType=VARCHAR} P_ASSET_ID,
 			#{item.valueDate,jdbcType=DATE} VALUE_DATE,
 			#{item.mdate,jdbcType=DATE} MDATE,
 			#{item.posAmt,jdbcType=DECIMAL} POS_AMT,
@@ -92,7 +92,7 @@
 		<!-- 匹配到则更新 -->
 		WHEN MATCHED THEN UPDATE 
 		SET  CII.VAL_ID = TEMP.VAL_ID,
-		     CII.P_ASSET_ID=TEMP.P_ASSET_ID
+		     CII.P_ASSET_ID=TEMP.P_ASSET_ID,
 			 CII.MDATE = TEMP.MDATE,
 			 CII.POS_AMT = TEMP.POS_AMT,
 			 CII.TDY_COST_AMT = TEMP.TDY_COST_AMT,

@@ -194,9 +194,6 @@
 
         /****add by leipeng 20200628 添加多法人模式查询所属机构 START**/
 
-        <if test="model_type == null">
-            D.REP_ISSUE_PARTY_ID REG_CODE  ,  <!--  产品登记编码   -->
-        </if>
         <if test="model_type != null">
             COD.REGIST_BANK_CODE REG_CODE  ,  <!--  产品登记编码   -->
         </if>
