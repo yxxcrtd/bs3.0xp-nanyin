@@ -574,13 +574,13 @@ create table PBC_MONTH_ASSET_POSITIONDETAIL
   org_asset_type1         VARCHAR2(50),
   org_asset_type2         VARCHAR2(50),
   org_asset_type3         VARCHAR2(50),
-    buy_place       VARCHAR2(50),
-     borrower_type                  VARCHAR2(10),
-     industry_info                  VARCHAR2(10),
-     enterprise_scale               VARCHAR2(40),
-     borrower_city                  VARCHAR2(50),
-     assets_invest                  VARCHAR2(50),
-     each_proportion                VARCHAR2(50)
+  buy_place       VARCHAR2(50),
+  borrower_type                  VARCHAR2(10),
+  industry_info                  VARCHAR2(10),
+  enterprise_scale               VARCHAR2(40),
+  borrower_city                  VARCHAR2(50),
+  assets_invest                  VARCHAR2(50),
+  each_proportion                VARCHAR2(50)
 );
 -- Add comments to the table
 comment on table PBC_MONTH_ASSET_POSITIONDETAIL
@@ -663,5 +663,4 @@ comment on column PBC_MONTH_ASSET_POSITIONDETAIL.borrower_city
 comment on column PBC_MONTH_ASSET_POSITIONDETAIL.enterprise_scale
   is '贷款-企业规模';
 -- Create/Recreate primary, unique and foreign key constraints
-alter table PBC_MONTH_ASSET_POSITIONDETAIL
-  add constraint PBC_MONTH_ASSET_POSIDETAIL_PK primary key (POSUUID);
+alter table PBC_MONTH_ASSET_POSITIONDETAIL add constraint PBC_MONTH_ASSET_POSIDETAIL_PK primary key (POSUUID);
