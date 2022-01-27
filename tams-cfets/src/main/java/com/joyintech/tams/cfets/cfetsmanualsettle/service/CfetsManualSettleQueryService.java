@@ -340,10 +340,10 @@ public class CfetsManualSettleQueryService extends BaseService{
             pageParam.put("platDate", iPlatformDate.getSysDateStr());
             pageParam.put("totleTradeId",settleDto.getTradeId());
             List<CfetsPledgeInfoResponse> pledgeInfoDtoList = cfetsTrdQueryMapper.findRepoPledgeInfo(pageParam);
-            if(CollectionUtils.isEmpty(pledgeInfoDtoList)) {
-                pageParam.put("totleTradeId",cfetsTrdQueryMapper.getTradeId(settleDto.getTradeId()));
-                pledgeInfoDtoList =  cfetsTrdQueryMapper.selectRegTablePledgeInfoList(pageParam);
-            }
+//            if(CollectionUtils.isEmpty(pledgeInfoDtoList)) {
+//                pageParam.put("totleTradeId",cfetsTrdQueryMapper.getTradeId(settleDto.getTradeId()));
+//                pledgeInfoDtoList =  cfetsTrdQueryMapper.selectRegTablePledgeInfoList(pageParam);
+//            }
 
             resultData.put("CfetsTrdQueryRegInfo_dataform", dataform);
             resultData.put("CfetsTrdQueryRegInfo_datatablep", portIntFenPeiInfoDtoList);
