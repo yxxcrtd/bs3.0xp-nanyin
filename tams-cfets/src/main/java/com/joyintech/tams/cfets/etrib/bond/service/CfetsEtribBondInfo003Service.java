@@ -295,6 +295,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             if (CollectionUtils.isNotEmpty(entity.getEtrInvestBondInfoDtos())) {
                // List<CfetsEtrIbPosPortfolioRequest> ptlList=new ArrayList<>();
                 for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
+                    WFlowCommonService.insertEtrEntrustRe(dto.getEntrustId(),entity.getTotalEtrustId());
                     dto.setWorkflowId(entity.getWorkflowId());
                     doInsertFlowMethod(entity.getOperateType(), initBaseEtrInvestInfoDto(dto));
                 }

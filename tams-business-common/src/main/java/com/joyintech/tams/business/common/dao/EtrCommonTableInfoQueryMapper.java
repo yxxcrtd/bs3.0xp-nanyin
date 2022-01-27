@@ -56,4 +56,6 @@ public interface EtrCommonTableInfoQueryMapper {
      * @return List<CfetsManualSettleTraderListRespond>
      */
     List<CommonSearchQueryWorkflowResponse> queryAllWorkFlowInfoList(Map<String, Object> pageParam);
+
+    List<String> queryTotalEntrustIdList(Map<String, Object> pageParam);
 }

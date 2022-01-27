@@ -78,6 +78,8 @@ public class EtrCommonTableService extends BaseService {
      */
     public Page<CommonSearchQueryWorkflowResponse> queryAllWorkFlowInfoList(CommonSearchQueryWorkflowRequest dto) {
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
+        List<String> totalEntrustIdList=etrCommonTableInfoQueryMapper.queryTotalEntrustIdList(pageParam);
+        pageParam.put("totalEntrustIdList",totalEntrustIdList);
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
                 () -> etrCommonTableInfoQueryMapper.queryAllWorkFlowInfoList(pageParam));
     }
