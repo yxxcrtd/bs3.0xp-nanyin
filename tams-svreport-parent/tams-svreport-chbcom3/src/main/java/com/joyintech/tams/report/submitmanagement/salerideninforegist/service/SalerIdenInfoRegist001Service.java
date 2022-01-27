@@ -248,6 +248,7 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
         if(datas == null){
             dealSearchParam(selectParam);
             tempList = chbSalerIdenInfoRegistMapper.setDataList(selectParam);
+            this.formatByType(tempList);
         }else{
             tempList= JsonUtils.json2List(datas,SalerIdenInfoRegistDto.class);
         }
