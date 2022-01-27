@@ -115,6 +115,7 @@ public class CfetsPositionPriceService extends BaseService{
             Iterator<CfetsUnitCostDto> it = map.values().iterator();
             while (it.hasNext()){
                 CfetsUnitCostDto next = it.next();
+                cfetsPositionPriceMapper.delete(next); // could reInsert
                 cfetsPositionPriceMapper.insert(next);
                 count++;
                 if(count % 1000==0){

@@ -54,4 +54,9 @@
           #{shareAmt,jdbcType=DECIMAL}, #{buyCostAmt,jdbcType=DECIMAL}, #{unitCost,jdbcType=DECIMAL}, 
           'admin', '', sysdate, 'admin', sysdate)
     </insert>
+
+    <delete id="delete">
+        DELETE FROM PTL_SEC_UNITCOST 
+        WHERE CDATE = #{cdate} and PORTFOLIO_ID=#{portfolioId,jdbcType=VARCHAR} and FINPROD_ID=#{finprodId,jdbcType=VARCHAR}
+    </delete>
 </mapper>

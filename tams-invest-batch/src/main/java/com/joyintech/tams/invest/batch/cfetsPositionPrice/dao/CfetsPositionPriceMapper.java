@@ -43,4 +43,6 @@ public interface CfetsPositionPriceMapper {
     List<BaseMap> selectCurrTrdData(BaseMap baseMap);
     
     void insert(CfetsUnitCostDto dto);
+
+    void delete(CfetsUnitCostDto dto);
 }
