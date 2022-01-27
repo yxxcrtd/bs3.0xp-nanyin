@@ -2282,7 +2282,7 @@
                  when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
                  when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
                   ELSE NULL END cleanStatus,
-            nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01}) settleStatus,
+            decode(T1.finprod_type2,'F03',null,nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})) settleStatus,
             T1.TOTLE_TRADE_ID totleTradeId,
             T1.FINPROD_TYPE2 finprodType2,
             sdl1.item_value finprodType2Str,
@@ -2459,7 +2459,7 @@
         when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
         when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
         ELSE NULL END cleanStatus,
-        nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01}) settleStatus,
+        decode(tot.finprod_type2,'F03',null,nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})) settleStatus,
         t1.totle_trade_id as totleTradeId,
         t1.trade_id as busiCode,
         t2.entrust_id as entrustId,
@@ -2904,6 +2904,10 @@
     </select>
     <select id="getTradeId" resultType="java.lang.String">
         select PRE_TRADE_ID from TRDQUTO_MATCH_INFO  where TRD_ID=#{tradeId,jdbcType=VARCHAR}
+    </select>
+    <select id="getTotalTradeId" resultType="java.lang.String">
+        select  TOTLE_TRADE_ID from TRD_PRODUCT_DEAL where TRADE_ID=(
+            select FINPROD_ID from TRD_PRODUCT_DEAL where TOTLE_TRADE_ID=#{tradeId})
     </select>
     <select id="getCountByReg" resultType="java.lang.Integer">
        select sum(t.qty) from (

@@ -14,6 +14,8 @@ import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -40,6 +42,8 @@ public class CfetsEntrustStatusService {
 
     @Autowired
     private CfetsEntrustStatusMapper entrustStatusMapper;
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
 
 
    /* @Autowired
@@ -62,6 +66,8 @@ public class CfetsEntrustStatusService {
             entrustStatusMapper.updateEntrustStatus(params);
             //更新指令业务模式(本币交易涉及资产重分类)
             updateBusModel(sysDate);
+            //操作记录表
+            closeDelegatOprHisMethod(entrustIdList);
             closeDelegatePositionMethod(entrustIdList);
         }
     }
@@ -93,7 +99,17 @@ public class CfetsEntrustStatusService {
         req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
         PositionHttpRequest.batchClose(req);
     }
-
+    private void closeDelegatOprHisMethod(List<CfetsEntrustClosePosEtrReqDto> entrustIdList){
+        if(entrustIdList != null && entrustIdList.size()>0) {
+            for (CfetsEntrustClosePosEtrReqDto entity : entrustIdList) {
+                //更新操作记录日志
+                CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+                oprHisReq.setEntrustId(entity.getCloseId());
+                oprHisReq.setOperType(DictCodeListExt3.操作类型_关闭.getValue());
+                joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
+            }
+        }
+    }
 
     /**
      * 更新业务模式

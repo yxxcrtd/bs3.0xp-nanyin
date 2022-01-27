@@ -1774,7 +1774,6 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     投管业务类型_中途换券(DictCode.投管业务类型,"EX014","中途换券"),
     投管业务类型_解除质押(DictCode.投管业务类型,"EX015","解除质押"),
     投管业务类型_协议现券(DictCode.投管业务类型,"EX016","协议现券"),
-    交易平台_新竞价撮合平台(DictCode.交易平台,"021","新竞价撮合平台"),
     ;
     /**
      * 对应于数据字典code

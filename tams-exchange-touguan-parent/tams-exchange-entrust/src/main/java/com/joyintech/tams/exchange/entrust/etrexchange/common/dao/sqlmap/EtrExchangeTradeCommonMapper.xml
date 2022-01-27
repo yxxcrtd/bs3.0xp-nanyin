@@ -17,7 +17,7 @@
         ,T7.FINPROD_MARKET_ID
         ,CASE WHEN T1.PS IN ('03','04') THEN T1.FINPROD_ID ELSE T7.FINPROD_ABBR END AS finprodAbbr
         ,T1.FINPROD_TYPE2 finprodType2
-        ,T1.TRADE_MARKET
+        ,T1.TRADE_MARKET tradeMarket
         ,T1.TRADE_PLAT
         ,T1.PS
         ,T2.SEC_ACCT_ID
@@ -132,7 +132,7 @@
         ,T7.FINPROD_MARKET_ID
         ,CASE WHEN T1.PS IN ('03','04') THEN T1.FINPROD_ID ELSE T7.FINPROD_ABBR END AS finprodAbbr
         ,T1.FINPROD_TYPE2 finprodType2
-        ,T1.TRADE_MARKET
+        ,T1.TRADE_MARKET tradeMarket
         ,T1.TRADE_PLAT
         ,T1.PS
         ,T2.SEC_ACCT_ID
