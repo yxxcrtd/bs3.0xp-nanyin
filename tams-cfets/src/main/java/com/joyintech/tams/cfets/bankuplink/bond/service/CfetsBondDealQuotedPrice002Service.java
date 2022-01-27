@@ -476,7 +476,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
                 }
             }*/
 
-            if(StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getFinprodId())&&null!=cfetsBondDealDialogueQuoteDto.getSettleDate()){
+            /*if(StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getFinprodId())&&null!=cfetsBondDealDialogueQuoteDto.getSettleDate()){
                 Map<String,Object> param = new HashMap<>();
                 param.put("finprodId",cfetsBondDealDialogueQuoteDto.getFinprodId());
                 param.put("tradeDate", DateUtil.format(cfetsBondDealDialogueQuoteDto.getSettleDate()));
@@ -485,7 +485,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
                     validList.add(new ValidMessage("exerYield", this.getMessage("FW_E_0006",
                             this.getMessage("CfetsBondDealQuotedPrice002.exec"))));
                 }
-            }
+            }*/
 
             if (!StringUtil.equals(CacheUtil.getSysParam("ibuFlag_bondOverEntrustAvaAmt"), "02")){
                 if(StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getEntrustId())){
