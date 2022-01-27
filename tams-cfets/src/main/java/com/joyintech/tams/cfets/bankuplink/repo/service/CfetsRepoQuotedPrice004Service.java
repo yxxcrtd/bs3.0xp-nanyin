@@ -1636,13 +1636,14 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             if (StringUtil.isEmpty(confirmOk)
                     && StringUtil.equals(PositionHttpRequest.CODE_BUSI_RK, code)) {
 //                WorkFlowUtil.showMessage(messageStr, MessageType.确认消息);
-                throw new MessageException(messageStr, MessageType.确认消息);
+//                throw new MessageException(messageStr, MessageType.确认消息);
             }
             if (StringUtil.isEmpty(confirmOk)
                     && StringUtil.equals(PositionHttpRequest.CODE_BUSI_YK, code)) {
 //                WorkFlowUtil.showMessage(messageStr, MessageType.错误消息);
-                throw new MessageException(messageStr, MessageType.错误消息);
+//                throw new MessageException(messageStr, MessageType.错误消息);
             }
+            throw new RuntimeException(messageStr);
         }
     }
 
