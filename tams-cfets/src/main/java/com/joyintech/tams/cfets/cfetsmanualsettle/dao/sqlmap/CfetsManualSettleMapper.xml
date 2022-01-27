@@ -1155,8 +1155,7 @@
                 #{item}
             </foreach>
         </if>
-        WHERE T1.TRADE_STATUS = '01' and
-        NOT EXISTS (
+        WHERE NOT EXISTS (
         SELECT
         1
         FROM
