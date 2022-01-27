@@ -33,6 +33,9 @@ public class RepoEntrustPledgeDto {
     @ApiModelProperty(required = false, name = "period", value = "代偿期", example = "1.23")
     private BigDecimal period;
 
+    @ApiModelProperty(required = false, name = "periodStr", value = "代偿期", example = "1.23Y")
+    private String periodStr;
+
     @ApiModelProperty(required = false, name = "pledgeStockName", value = "债券库名称", example = "债券库01")
     private String pledgeStockName;
 
@@ -270,5 +273,13 @@ public class RepoEntrustPledgeDto {
 
     public void setConvertAmt(BigDecimal convertAmt) {
         this.convertAmt = convertAmt;
+    }
+
+    public String getPeriodStr() {
+        return periodStr;
+    }
+
+    public void setPeriodStr(String periodStr) {
+        this.periodStr = periodStr;
     }
 }
