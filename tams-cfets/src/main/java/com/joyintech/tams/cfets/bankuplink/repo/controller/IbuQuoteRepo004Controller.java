@@ -211,7 +211,7 @@ public class IbuQuoteRepo004Controller extends BaseController {
             ProcessMark processMark = cfetsRepoQuotedPrice004Service.getBusinessInfoByPageIdAndPk(wflValidInputParameter);
             CfetsRepoDealRegisterQuoteDto cfetsBondDealRegisterQuoteDto = cfetsRepoQuotedPrice004Service.getBussinessEntity(processMark);
             cfetsBondDealRegisterQuoteDto.setTotleTradeId(cfetsBondRegCheckDetaileRequst.getQuoteId());
-            cfetsBondDealRegisterQuoteDto.setRemark(String.join("交易登记撤销原因：",cfetsBondRegCheckRequst.getRemark()));
+            cfetsBondDealRegisterQuoteDto.setRemark(StringUtil.join("交易登记撤销原因：",cfetsBondRegCheckRequst.getRemark()));
             cfetsBondDealRegisterQuoteDto.setOperatorType("revoke");
             cfetsRepoDealRegisterQuoteDtos.add(cfetsBondDealRegisterQuoteDto);
         }
