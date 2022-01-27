@@ -7440,7 +7440,7 @@ public class PbcMonthAssetReportService  extends BaseService{
         // 汇率取值开关
         String source = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE_PBC);
         for(PbcMonthAssetPositionDto pos :posAssetList){
-        	if(pos.getAssetType3()!=null&&PbcMonthReportConstants.PBC_ASSETTYPE3_S05.equals(pos.getAssetType3())){//企业债券才统计
+        	if(pos.getAssetType3()!=null&&PbcMonthReportConstants.PBC_ASSETTYPE2_S05.equals(pos.getAssetType2())){//企业债券才统计
         		
         		
 					// add by leipeng 20200319 获取所有部门对应信息,并列出单独的表结构
