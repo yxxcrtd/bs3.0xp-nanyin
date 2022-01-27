@@ -2592,7 +2592,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_大宗债券指令.getValue());
 		}
 		// add start
-		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())) {
+		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_非交易业务指令平台.getValue())) {
 			if (org.apache.commons.lang.StringUtils.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())) {
 				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_债券回售指令.getValue());
 			} else if (org.apache.commons.lang.StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_配债.getValue())) {

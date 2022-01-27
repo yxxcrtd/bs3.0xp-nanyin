@@ -507,6 +507,8 @@ public class CfetsTrdConfirmService extends BaseService{
             deal.setFeeAmtUnpay(getDeatil费用金额(regFeeDetailList, DictCodeList.是否_否.getValue()));
             deal.setTotleTradeId(entity.getTotleTradeId());
             deal.setTrader(entity.getTrader());
+            deal.setCounterId(entity.getCounterId());
+            deal.setCounterTrader(entity.getCounterTrader());
             deals.add(deal);
 
             // 金融产品交易附属表Entity 构造开始----------------------------------------------------------
@@ -824,6 +826,8 @@ public class CfetsTrdConfirmService extends BaseService{
             map.put("entrustId", regDeal.getEntrustId());
             deal.setInvAim(getInvAim(map));
             deal.setTrader(entity.getTrader());
+            deal.setCounterId(entity.getCounterId());
+            deal.setCounterTrader(entity.getCounterTrader());
             deals.add(deal);
 
             // 金融产品交易附属表Entity 构造开始----------------------------------------------------------
@@ -2591,9 +2595,9 @@ public class CfetsTrdConfirmService extends BaseService{
         CfetsTrdConfirmMatchDto matchDto=new CfetsTrdConfirmMatchDto();
         String support_cstp_flag_bond=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_BOND");
         String support_cstp_flag_repo=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_REPO");
-        if(null!=interfTradSecdeal && StringUtil.equals(support_cstp_flag_bond,DictCodeList.是否_是.getValue())){
+        if(StringUtil.isNotEmpty(interfTradSecdeal) && StringUtil.equals(support_cstp_flag_bond,DictCodeList.是否_是.getValue())){
             matchDto =cstpSecTradeAutoMatch(interfTradSecdeal,iCstpTrade);
-        }else if(null!=interfOpicsTradRepo && StringUtil.equals(support_cstp_flag_repo,DictCodeList.是否_是.getValue())){
+        }else if(StringUtil.isNotEmpty(interfOpicsTradRepo) && StringUtil.equals(support_cstp_flag_repo,DictCodeList.是否_是.getValue())){
             matchDto =cstpRepoTradeAutoMatch(interfOpicsTradRepo,iCstpTrade);
         }
         if(!StringUtil.isNotEmpty(matchDto)){
@@ -2607,10 +2611,10 @@ public class CfetsTrdConfirmService extends BaseService{
             return null;
         }else if(StringUtil.isNotEmpty(matchDto.getDealType()) && StringUtil.equals(matchDto.getDealType(),BussinessDictCodeList.报价方式_登记报价.getValue())){
             //针对登记数据，仅仅匹配
-            logger.info("-----------匹配的登记数据成交确认-------------");
+            logger.info("-----------自动匹配的登记数据成交确认-------------");
             cfetsTrdConfirmMapper.insertTrdQutoMatchInfo(matchDto);
         }else{
-            logger.info("-----------匹配的报价数据成交确认-------------");
+            logger.info("-----------自动匹配的报价数据成交确认-------------");
             //报价数据，会自动成交
             CfetsTrdConfirmRegInfoListResponse regInfo =new CfetsTrdConfirmRegInfoListResponse();
             regInfo.setDealType(matchDto.getDealType());
@@ -2679,6 +2683,7 @@ public class CfetsTrdConfirmService extends BaseService{
                 isContinue=false;
                 isUpdate=true;
                 dealType="999999";
+                logger.info("-----------自动匹配查询到已成交的数据-------------");
             }
         }
         //2.CSTP下行成交回报数据中的报价编号匹配报价数据的业务编号（报价编号）
@@ -2691,6 +2696,7 @@ public class CfetsTrdConfirmService extends BaseService{
                 isContinue=false;
                 isInsert=true;
                 dealType=confirmDto.getQuoteType();//报价
+                logger.info("-----------自动匹配查询到报价数据-------------");
             }
         }
         //3.CSTP下行成交回报数据再与已生成的银行间交易品种（默认债券买卖和质押式回购首期）交易登记数据进行匹配,查询所有的符合条件登记信息
@@ -2724,11 +2730,12 @@ public class CfetsTrdConfirmService extends BaseService{
                 confirmDto=confirmDtoList.get(0);
                 isInsert=true;
                 dealType=BussinessDictCodeList.报价方式_登记报价.getValue();
+                logger.info("-----------自动匹配查询到登记数据-------------");
             }
         }
         //将CSTP数据和已有的登记或报价数据进行比较
         //债券
-        if( null==confirmDto || !StringUtil.isNotEmpty(confirmDto.getTradeYield())
+        if(!StringUtil.isNotEmpty(confirmDto) || !StringUtil.isNotEmpty(confirmDto.getTradeYield())
                 || !StringUtil.isNotEmpty(confirmDto.getFaceValue())
                 || !StringUtil.isNotEmpty(confirmDto.getSettleDate())
                 || !StringUtil.isNotEmpty(confirmDto.getTradeDate())
