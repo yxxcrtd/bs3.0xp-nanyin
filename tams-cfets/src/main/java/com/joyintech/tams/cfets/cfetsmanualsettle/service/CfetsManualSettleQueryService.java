@@ -282,12 +282,18 @@ public class CfetsManualSettleQueryService extends BaseService{
             } else {
                 pledgeTable = cfgDataTableMapper.getByPageCode(pageCode, dtCode, "05", EFFERANGE_IS, userId);
             }
+            //逆回购剔除组合代码和名称
+            List<CfgDataTableShow> pledgeTable04 = new ArrayList<>();
+            for(CfgDataTableShow show : pledgeTable) {
+                if(settleDto.getPs().equals("04") && ("portfolioId".equals(show.getColCode()) || "portfolioName".equals(show.getColCode())))continue;
+                pledgeTable04.add(show);
+            }
             resultData.put("CfetsTrdQueryRegInfo_formb", baseForm);
             resultData.put("CfetsTrdQueryRegInfo_formm", amtForm);
             resultData.put("CfetsTrdQueryRegInfo_formp", fForm);
             resultData.put("CfetsTrdQueryRegInfo_formo", infoFormo);
             resultData.put("CfetsTrdQueryRegInfo_tablep", zhTable);
-            resultData.put("CfetsTrdQueryRegInfo_tablepledge", pledgeTable);
+            resultData.put("CfetsTrdQueryRegInfo_tablepledge", pledgeTable04);
 
             Map<String, Object> pageParam = new HashMap<>();
 
@@ -366,6 +372,7 @@ public class CfetsManualSettleQueryService extends BaseService{
             pageParam.put("spcdCode", spcdCode);
             pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
             pageParam.put("feeType08", BussinessDictCodeList.费用类型_结算手续费.getValue());
+            pageParam.put("psT39", BussinessDictCodeList.交易方向_行权赎回.getValue());
 
             resultData.put(dtCode + "_form", infoForm);
             resultData.put(dtCode + "_form1", infoForm1);

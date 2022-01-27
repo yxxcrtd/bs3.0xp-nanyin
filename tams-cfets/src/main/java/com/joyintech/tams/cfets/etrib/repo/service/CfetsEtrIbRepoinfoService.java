@@ -270,8 +270,12 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         List<EtrSecStockConfig> etrSecStockConfigList = cfetsEtrIbRepoinfoMapper.getAssetDetailBySeqno(pageParam);
     	Map<String,CfetsEtrSecStockConfig> map = new HashMap<>();
     	for(EtrSecStockConfig etrSecStockConfig:etrSecStockConfigList){
-            String key =etrSecStockConfig.getIsPpb()+etrSecStockConfig.getIsRight()+etrSecStockConfig.getIsSecBond();
+            String key =etrSecStockConfig.getIsPpb()+etrSecStockConfig.getIsRight()+etrSecStockConfig.getIsSecBond()
+                    +etrSecStockConfig.getmGradeResult()+etrSecStockConfig.getSecGradeResult();
             CfetsEtrSecStockConfig cfetsEtrSecStockConfig = null;
+            if(!StringUtil.isNotEmpty(etrSecStockConfig.getWindtypeone())&&!StringUtil.isNotEmpty(etrSecStockConfig.getWindtypetwo())){
+                key = key+etrSecStockConfig.getWindtypeone();//二级分类与一级分类都为空时，单独处理  多一个null；
+            }
             if(map.containsKey(key)){
                  cfetsEtrSecStockConfig = map.get(key);
 //                cfetsEtrSecStockConfig.

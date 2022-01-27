@@ -655,16 +655,24 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 if(StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())){
                     CfetsTrdBondInvestTradeDto revokeEntity = this.getTrdBondInvestTradeDto(entity.getTradeId());
                     String settleRemark =DictCodeListExt3.交收状态_交收失败.getCodeName();
+                    revokeEntity.setTgBusiType(entity.getTgBusiType());
                     cfetsTrdBondInvestTrade002Service.doCompleteRevoke(revokeEntity,settleRemark,false);
                     //关闭对应指令
                     List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(entity.getTradeId());
-                    for(CfetsManualSettleDealInfo dealInfo : listTemp){
-                        this.closeDelegateMethod(dealInfo.getEntrustId(),"","交收失败");
-                    }
-                    try {
-                        this.closeDelegate(listTemp,entity.getRemark());
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    List<String> entrustIdList = listTemp.stream().map(
+                            CfetsManualSettleDealInfo::getEntrustId).collect(Collectors.toList());
+                    Map<String,Object> param = new HashMap<String,Object>();
+                    param.put("entrustIds",entrustIdList);
+                    if(cfetsManualSettleMapper.countWflEtr(param)<= 0){
+                        for(CfetsManualSettleDealInfo dealInfo : listTemp){
+                            this.closeDelegateMethod(dealInfo.getEntrustId(),"","交收失败");
+                        }
+
+                        try {
+                            this.closeDelegate(listTemp,entity.getRemark());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }

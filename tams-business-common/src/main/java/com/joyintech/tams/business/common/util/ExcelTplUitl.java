@@ -84,6 +84,51 @@ public class ExcelTplUitl {
         return excelFile;
     }
 
+    public static File createFileRepo(CfetsExportRequestDto requestDto,String excelName,String sheetName, DoQuery doQuery){
+        File excelFile = null;
+        List<BaseMap> header = requestDto.getHeader();
+        List dataList = requestDto.getData();
+        if (dataList == null || dataList.isEmpty()){
+            List mapList = new ArrayList();
+            dataList = doQuery.query();
+            if (dataList != null && !dataList.isEmpty()){
+                dataList.forEach(e -> {
+                    if (e instanceof BaseMap) {
+                        mapList.add(e);
+                    } else {
+                        mapList.add(BeanUtil.object2Map(e));
+                    }
+                });
+            }
+            excelFile = createFileNpTpl(excelName,sheetName, header, mapList);
+        }else {
+            List<BaseMap> dataResultList = requestDto.getData();
+            try{
+                Set<String> dateSet = new HashSet<String>();
+                header.forEach(item ->{
+                    String colCode = (String)item.get("colCode");
+                    if(item.containsKey("extendCfg")){
+                        Map<String, Object> extendCfgMap = (Map)JsonUtils.json2Object((String)item.get("extendCfg"),Map.class);
+                        if(extendCfgMap.containsKey("dataType")&&StringUtil.equals((String)extendCfgMap.get("dataType"),"date")){
+                            dateSet.add(colCode);
+                        }
+                    }
+                });
+                dataResultList.forEach(item -> {
+                    for (Map.Entry<String, Object> m : item.entrySet()) {
+                        if(dateSet.contains(m.getKey())&&null!=m.getValue()){
+                            item.put(m.getKey(),new Date((Long)m.getValue()));
+                        }
+                    }
+                });
+            }catch (Exception e){
+                logger.error("导出格式化日期异常");
+            }
+            excelFile = createFileNpTpl(excelName,sheetName, header, dataResultList);
+        }
+        return excelFile;
+    }
+
 
     public static File createFile2(String fileName,String sheetName, List<BaseMap> heads, List dataList,String  tplfilename){
         File excelFile = null;
@@ -123,6 +168,42 @@ public class ExcelTplUitl {
         if(copytplfile.exists()){
             copytplfile.delete();
         }
+        return excelFile;
+    }
+
+    public static File createFileNpTpl(String fileName,String sheetName, List<BaseMap> heads, List dataList){
+        File excelFile = null;
+        String dir = UUID.randomUUID().toString();
+        File path = null;
+        /**
+         * 设置格式配置信息，后面监听并加入到excel中
+         */
+        Map<String, BaseMap> styleMap = new HashMap<>();
+        Iterator<BaseMap> it = heads.iterator();
+        while (it.hasNext()){
+            BaseMap one = it.next();
+            String extendCfg = one.getString("extendCfg");
+            Map oneMap = JsonUtils.json2Object(extendCfg, Map.class);
+            oneMap.put("maxLen", one.getString("maxLen"));
+            styleMap.put("{." + one.getString("colCode") + "}", BaseMap.newMap(oneMap));
+        }
+
+        StringBuffer buf = new StringBuffer();
+        List<ExcelColumn> columns = new ArrayList<ExcelColumn>();
+        for (Map lineMap : heads) {
+            columns.add(new ExcelColumn(lineMap.get("colCode")+"", lineMap.get("colName")+""));
+        }
+
+        /**
+         * 需要使用当前目录，防止生产时目录找不到导出报错
+         */
+        path = new File(dir);
+        if (!path.exists()){
+            path.mkdir();
+        }
+        excelFile = new File(dir + File.separator + fileName +".xlsx");
+        long s = System.currentTimeMillis();
+        exportAllData(excelFile, sheetName , columns, dataList, styleMap, null);
         return excelFile;
     }
 

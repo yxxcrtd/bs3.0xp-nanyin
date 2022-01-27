@@ -344,10 +344,6 @@
                         #{item}
                     </foreach>
                 </if>
-                <if test="platDate != null">
-                    /* 查询条件 当前平台日 处于委托日期区间内*/
-                    AND ETR_ENTRUST.ENTRUST_DATE = to_date(#{platDate}, 'yyyy-MM-dd')
-                </if>
                 <if test="entrustDateStart != null">
                     /* 查询条件 指令日期区间开始日 处于委托日期区间内*/
                     AND ETR_ENTRUST.ENTRUST_DATE <![CDATA[ >= ]]> to_date(#{entrustDateStart}, 'yyyy-MM-dd')
@@ -831,7 +827,7 @@
             sdl.ITEM_VALUE 				    gradeResult,/*债项评级*/
             mbvi.NETPRICE                   firstNetPrice,/*首次净价*/
             FIN_PRODUCT.REGIST_ORG 			repRegistOrg,/*登记托管机构*/
-            case when EEP.SCALE is not null then NVL(EEP.SCALE, 1)*100
+            case when EEP.SCALE is not null then round(nvl(EEP.SCALE,100)/100,4)*100
                 when mbvi.NETPRICE>nvl(prinAmt.prinAmt,100) then round(100/100,4)*100
                 when mbvi.NETPRICE is null then round(nvl(prinAmt.prinAmt,100)/100,4)*100
                 else round(mbvi.NETPRICE/nvl(prinAmt.prinAmt,100),4)*100

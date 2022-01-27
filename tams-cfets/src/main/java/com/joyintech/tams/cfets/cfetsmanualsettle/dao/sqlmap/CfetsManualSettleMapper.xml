@@ -833,7 +833,7 @@
         TO_CHAR(T61.EXERCISE_DATE,'yyyy-MM-dd') exerciseDate1,
         TO_CHAR(T61.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate1,
         T1.SHARE_AMT/100 qty,
-        T1.unit_cprice unitPrice,
+        decode(T1.PS,#{psT39},T81.EXERCISE_PRICE,T1.unit_cprice) unitPrice,
         T1.cprice_amt cpriceAmt,
         T1.int_amt intAmt,
         ttft.fee_amt jyFeeAmt,
@@ -855,7 +855,8 @@
         sdl.item_value spanTextOne,
         T4.IS_RIGHT isRight,
         T1.Delivery_Type deliveryType,
-        T1.clear_type clearType
+        T1.clear_type clearType,
+        T81.REDEEM_RATE shRate
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
         LEFT JOIN FIN_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
@@ -866,6 +867,7 @@
         LEFT JOIN TRD_DEAL_TOTAL_ADD T5 ON T1.TOTLE_TRADE_ID = T5.TOTLE_TRADE_ID
         LEFT JOIN TRDQUTO_MATCH_INFO T7 ON T7.Trd_Id = T1.TOTLE_TRADE_ID
         LEFT JOIN REG_FIN_PRODUCT_DEAL_TOTAL T8 ON T8.TOTLE_TRADE_ID = nvl(T7.PRE_TRADE_ID,T1.B_TRADE_ID)
+        LEFT JOIN REG_FIN_PRODUCT_DEAL_TOTAL_ADD T81 ON T81.TOTLE_TRADE_ID = T8.TOTLE_TRADE_ID
         LEFT JOIN MST_CFETS_CUSTOMER_INFO T9 ON T9.PARTY_ID = T5.OU_PARTY_ID
         LEFT JOIN SYS_USER T10 ON T10.USER_NAME = T1.TRADER
         LEFT JOIN MST_COUNTER_PARTY T11 ON T11.COUNTER_ID = T1.COUNTER_ID
@@ -909,8 +911,8 @@
             T4.BASIS as basis,
             T8.act_repo_term as actRepoTerm,
             T8.TERM_TYPE as termType,
-            T8.M_SETTLE_DATE as msettleDate,
-            T8.V_SETTLE_DATE as vsettleDate,
+            TO_CHAR(T8.M_SETTLE_DATE,'yyyy-MM-dd') as msettleDate,
+            TO_CHAR(T8.V_SETTLE_DATE,'yyyy-MM-dd') as vsettleDate,
             T8.M_DELIVERY_TYPE as mdeliveryType,
             T8.DELIVERY_TYPE as deliveryType,
             T8.dip_type as distriType,
@@ -1065,5 +1067,102 @@
         reg.PLEDGE_NUMBER as pledgePrin
         from FIN_DEAL_PLEDGE reg
         where reg.finprod_id =#{tradeId,jdbcType=VARCHAR}
+    </select>
+
+    <!--指令是否在流程中-->
+    <select id="countWflEtr" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM (
+        SELECT
+        ENTRUST_ID
+        FROM
+        WFL_REG_FIN_PRODUCT_DEAL
+        <where>
+            <if test="entrustIdList != null and entrustIdList.size() > 0">
+                and ENTRUST_ID  in
+                <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="entrustIds != null and entrustIds.size() > 0">
+                and ENTRUST_ID  in
+                <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        UNION ALL
+        SELECT
+        ENTRUST_ID
+        FROM
+        WFL_IBU_QUOTE_ETR_RE
+        <where>
+            <if test="entrustIdList != null and entrustIdList.size() > 0">
+                and ENTRUST_ID  in
+                <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="entrustIds != null and entrustIds.size() > 0">
+                and ENTRUST_ID  in
+                <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        UNION ALL
+        SELECT
+        T2.ENTRUST_ID
+        FROM
+        REG_FIN_PRODUCT_DEAL_TOTAL T1
+        INNER JOIN REG_FIN_PRODUCT_DEAL T2 ON
+        T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
+        <if test="entrustIdList != null and entrustIdList.size() > 0">
+            and T2.ENTRUST_ID  in
+            <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="entrustIds != null and entrustIds.size() > 0">
+            and T2.ENTRUST_ID  in
+            <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        WHERE T1.TRADE_STATUS = '01' AND (T1.IS_CANCEL IS NULL OR T1.IS_CANCEL = 'N')
+        and NOT EXISTS (
+        SELECT
+        1
+        FROM
+        TRDQUTO_MATCH_INFO T3
+        WHERE
+        T3.PRE_TRADE_ID = T1.TOTLE_TRADE_ID)
+        UNION ALL
+        SELECT
+        T2.ENTRUST_ID
+        FROM
+        IBU_QUOTE_BOND T1
+        INNER JOIN IBU_QUOTE_ETR_RE T2 ON
+        T1.QUOTE_ID = T2.QUOTE_ID
+        <if test="entrustIdList != null and entrustIdList.size() > 0">
+            and T2.ENTRUST_ID  in
+            <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="entrustIds != null and entrustIds.size() > 0">
+            and T2.ENTRUST_ID  in
+            <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        WHERE T1.TRADE_STATUS = '01' and
+        NOT EXISTS (
+        SELECT
+        1
+        FROM
+        TRDQUTO_MATCH_INFO T3
+        WHERE
+        T3.PRE_TRADE_ID = T1.QUOTE_ID))
+
     </select>
 </mapper>

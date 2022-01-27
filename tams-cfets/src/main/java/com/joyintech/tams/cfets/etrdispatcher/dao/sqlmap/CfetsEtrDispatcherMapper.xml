@@ -805,7 +805,7 @@
             DISTINCT
             su.USER_NAME userName,
             su.REAL_NAME realName,
-            to_char(NVL(a.totalWork,0),'fm999990.009') as totalWork,
+            to_char(NVL(a.totalWork,0)+nvl(b.unfinishedWork,0),'fm999990.009') as totalWork,
             to_char(NVL(b.unfinishedWork,0),'fm999990.009') as unfinishedWork
         FROM
             SYS_USER su

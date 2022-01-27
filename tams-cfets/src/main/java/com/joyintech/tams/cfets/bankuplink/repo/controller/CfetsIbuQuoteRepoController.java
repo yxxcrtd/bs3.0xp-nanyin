@@ -411,6 +411,13 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         return new Message<CfetsRepoDealQuoteCommonDto>().success().setData(cfetsRepoDealQuoteCommonDto);
     }
 
+    @ApiOperation(value = "当日登记文件下载", notes = "当日登记文件下载")
+    @PostMapping("/downDayReg")
+    @ResponseBody
+    public void downDayReg(@RequestBody Map<String,String> param, HttpServletResponse response){
+        ExcelUitl.downFile(response,new File(param.get("filePath")));
+    }
+
     @ApiOperation(value = "查询当日登记列表分页数据", notes = "查询当日登记列表分页数据")
     @PostMapping("/pageDayReg")
     @ResponseBody
@@ -535,7 +542,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
                 String quoteTypeStr = StringUtil.isNotEmpty(sfetsRepoDayRegDtos.get(0).getQuoteTypeStr()) ? "对话报价" : sfetsRepoDayRegDtos.get(0).getQuoteTypeStr();
                 String appendString = collect.size() >= 1 ? String.format("%04d", sequenceIndexData) : StringUtil.EMPTY;
                 String excelAndSheetName = StringUtil.join(issueTypeStr, quoteTypeStr, prefix, appendString);
-                files.add(ExcelTplUitl.createFile(requestDto, excelAndSheetName, "本币交易", null, () -> {
+                files.add(ExcelTplUitl.createFileRepo(requestDto, excelAndSheetName, "本币交易", () -> {
                     return sfetsRepoDayRegDtos;
                 }));
             }
@@ -550,7 +557,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
                 sequenceIndexData = 1L;
             }
             String excelAndSheetName = StringUtil.join(issueTypeStr, quoteTypeStr, prefix, String.format("%04d", sequenceIndexData));
-            files.add(ExcelTplUitl.createFile(requestDto, excelAndSheetName, "本币交易", null, () -> {
+            files.add(ExcelTplUitl.createFileRepo(requestDto, excelAndSheetName, "本币交易", () -> {
                 return dataList;
             }));
         }
