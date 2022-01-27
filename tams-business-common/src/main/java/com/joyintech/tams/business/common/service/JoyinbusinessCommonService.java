@@ -260,7 +260,7 @@ public class JoyinbusinessCommonService extends BaseService {
      * @return
      */
     public String calPendingPeriod(String secId) {
-        Date cDate = DateUtil.platDateFromCache();
+        Date cDate = iPlatformDate.getSysDate();
         Map map = new HashMap();
         map.put("finprodId",secId);
         SecInfoModelDto dto = getSecInfoModel(map);
