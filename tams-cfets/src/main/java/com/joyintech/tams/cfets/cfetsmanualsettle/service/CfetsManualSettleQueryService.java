@@ -330,8 +330,8 @@ public class CfetsManualSettleQueryService extends BaseService{
             //表单data
             CfetsTrdSettleInfoResponse dataform = cfetsManualSettleMapper.findManualSettleInfoRepo(pageParam);
             //表格组合分配data
-            pageParam.put("tradeId", settleDto.getTradeId());
-            List<PortIntFenPeiInfoDto> portIntFenPeiInfoDtoList = cfetsManualSettleMapper.findManualSettleFenPei(pageParam);
+            pageParam.put("totleTradeId", settleDto.getTradeId());
+            List<PortIntFenPeiInfoDto> portIntFenPeiInfoDtoList = cfetsTrdQueryMapper.findRepoPortIntFenPeiInfoList(pageParam);
 
             //表格质押券data
             pageParam.put("TRADEPLACE01", DictCodeListExt1.交易场所_银行间.getValue());
