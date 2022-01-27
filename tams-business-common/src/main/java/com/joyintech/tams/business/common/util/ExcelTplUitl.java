@@ -610,7 +610,13 @@ public class ExcelTplUitl {
         InputStream input = null;
         OutputStream output = null;
         try {
-            input = new FileInputStream(new File(ExcelTplUitl.getTplFile(sourceName)));
+            File file = new File(ExcelTplUitl.getTplFile(sourceName));
+           if(file.exists()){
+                input = new FileInputStream(file);
+            }
+            else{
+                input = ExcelTplUitl.class.getResourceAsStream("/tpl/" + sourceName);
+            }
             output = new FileOutputStream(dest);
             byte[] buf = new byte[1024];
             int bytesRead;
