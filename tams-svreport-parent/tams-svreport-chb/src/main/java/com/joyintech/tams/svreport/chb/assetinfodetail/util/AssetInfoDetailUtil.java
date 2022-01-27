@@ -1990,17 +1990,17 @@ public class AssetInfoDetailUtil {
         }
         //新增资产代码字段 add by tuqirong 2021-12-31 end
         //add by tuqirong 2022-01-21 start  导入模板新增字段处理
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*是否资产四级分类为“北金所债权”")))) {
-            dto.setIsBjszq(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("*是否资产四级分类为“北金所债权”"))));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("是否资产四级分类为“北金所债权”")))) {
+            dto.setIsBjszq(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("是否资产四级分类为“北金所债权”"))));
         }
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*结构化业务类型")))) {
-            dto.setConstracteBusiType(SysDataUtil.getZZDictCodeFromName(DictCode.结构化业务类型, list.get(headList.indexOf("*结构化业务类型"))));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("结构化业务类型")))) {
+            dto.setConstracteBusiType(SysDataUtil.getZZDictCodeFromName(DictCode.结构化业务类型, list.get(headList.indexOf("结构化业务类型"))));
         }
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*结构化层级")))) {
-            dto.setConstracteGrade(SysDataUtil.getZZDictCodeFromName(DictCode.结构化层级, list.get(headList.indexOf("*结构化层级"))));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("结构化层级")))) {
+            dto.setConstracteGrade(SysDataUtil.getZZDictCodeFromName(DictCode.结构化层级, list.get(headList.indexOf("结构化层级"))));
         }
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*结构化杠杆倍数")))) {
-            dto.setConstracteHeaverTimes(new BigDecimal(list.get(headList.indexOf("*结构化杠杆倍数"))));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("结构化杠杆倍数")))) {
+            dto.setConstracteHeaverTimes(new BigDecimal(list.get(headList.indexOf("结构化杠杆倍数"))));
         }
         //add by tuqirong 2022-01-21 end  导入模板新增字段处理
         return dto;
@@ -2195,14 +2195,14 @@ public class AssetInfoDetailUtil {
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("*是否含权债")))) {
             dto.setOptionFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("*是否含权债"))));
         }
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*结构化业务类型")))) {
-            dto.setConstracteBusiType(SysDataUtil.getZZDictCodeFromName(DictCode.结构化业务类型, list.get(headList.indexOf("*结构化业务类型"))));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("结构化业务类型")))) {
+            dto.setConstracteBusiType(SysDataUtil.getZZDictCodeFromName(DictCode.结构化业务类型, list.get(headList.indexOf("结构化业务类型"))));
         }
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*结构化层级")))) {
-            dto.setConstracteGrade(SysDataUtil.getZZDictCodeFromName(DictCode.结构化层级, list.get(headList.indexOf("*结构化业务类型"))));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("结构化层级")))) {
+            dto.setConstracteGrade(SysDataUtil.getZZDictCodeFromName(DictCode.结构化层级, list.get(headList.indexOf("结构化业务类型"))));
         }
-        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*结构化杠杆倍数")))) {
-            dto.setConstracteHeaverTimes(new BigDecimal(list.get(headList.indexOf("*结构化杠杆倍数"))));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("结构化杠杆倍数")))) {
+            dto.setConstracteHeaverTimes(new BigDecimal(list.get(headList.indexOf("结构化杠杆倍数"))));
         }
         //add by tuqirong 2022-01-21 end 导入模板新增字段处理
         return dto;
@@ -2364,9 +2364,9 @@ public class AssetInfoDetailUtil {
         headList.add("*票面利率%");
         headList.add("*发行人");
         headList.add("*是否含权债");
-        headList.add("*结构化业务类型");
-        headList.add("*结构化层级");
-        headList.add("*结构化杠杆倍数");
+        headList.add("结构化业务类型");
+        headList.add("结构化层级");
+        headList.add("结构化杠杆倍数");
         headList.add("*新人行一级分类");
         headList.add("*新人行二级分类");
         headList.add("*新人行三级分类");
@@ -2451,10 +2451,10 @@ public class AssetInfoDetailUtil {
         headList.add("地方政府融资平台");
         headList.add("公共PPP");
         headList.add("是否投向市场化债转股相关产品的部分");
-        headList.add("*是否资产四级分类为“北金所债权”");
-        headList.add("*结构化业务类型");
-        headList.add("*结构化层级");
-        headList.add("*结构化杠杆倍数");
+        headList.add("是否资产四级分类为“北金所债权”");
+        headList.add("结构化业务类型");
+        headList.add("结构化层级");
+        headList.add("结构化杠杆倍数");
         headList.add("*新人行一级分类");
         headList.add("*新人行二级分类");
         headList.add("*新人行三级分类");
