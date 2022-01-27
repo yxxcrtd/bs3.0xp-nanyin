@@ -4896,6 +4896,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		paramMap1.put("portfolioId",map.get("portfolioId"));
 		paramMap1.put("secAcctId",map.get("secAcctId"));
 		paramMap1.put("cDate",map.get("cDate"));
+//		paramMap1.put("cDate",StringUtil.isNotEmpty(map.get("cDate"))?DateUtil.parse(map.get("cDate").toString()):null);
 		if (DictCodeList.交易方向_申购.getValue().equals(ps) && DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finprodType2)){
 
 			List<String> othTypeList = new ArrayList<String>();
