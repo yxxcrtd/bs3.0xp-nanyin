@@ -10,12 +10,7 @@
 
 package com.joyintech.tams.disclosure.information.reveal.reportconfirm.service;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
@@ -155,6 +150,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
         String zipFileName = FileNameUtil.createFileName("zip");
         File zipFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
         ZipOutputStream zipOut = null;
+        OutputStream toClient=null;
         if (StringUtil.isNotEmpty(reportList)) {
             String basePath = CacheUtil.getSysParam(KEY_REPORT_DOWNLOAD_PATH);
             // 需要层级。01：是，02：否
@@ -165,6 +161,8 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                 try {
                     fos = new FileOutputStream(zipFile);
                     zipOut = new ZipOutputStream(fos);
+                    toClient = new BufferedOutputStream(fos);
+
                     // 设置UTF8编码
                     zipOut.setEncoding(StandardCharsets.UTF_8.displayName());
                     for (RepReveal report : reportList) {
@@ -315,7 +313,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                                 }
                             }
                         }
-                        ZipFileUtil.compressZip(zipFile,false,firstFile);
+                        compressFile(zipOut, firstFile, firstFile.getName());
                         //zipOut.setEncoding("gbk");
                         //zipOut.setEncoding(System.getProperty("file.encoding"));
                         deleteFile(firstFile);
@@ -341,6 +339,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                 try {
                     fos = new FileOutputStream(zipFile);
                     zipOut = new ZipOutputStream(fos);
+                    toClient = new BufferedOutputStream(fos);
                     // 设置UTF8编码
                     zipOut.setEncoding(StandardCharsets.UTF_8.displayName());
                     for (RepReveal report : reportList) {
@@ -494,7 +493,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                                 }
                             }
                         }
-                        ZipFileUtil.compressZip(zipFile,false,baseFile);
+                        compressFile2(zipOut, baseFile, baseFile.getName());
                         // zipOut.setEncoding("gbk");
                         // zipOut.setEncoding(System.getProperty("file.encoding"));
                         deleteFile(baseFile);
@@ -613,6 +612,121 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
         return restTemplate.getForObject(
             ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/getFormate?sysFilepath=" + sysFilepath,
             String.class);
+    }
+
+
+
+    /**
+     * 压缩报表信息
+     *
+     * @param
+     * @param
+     * @param
+     * @throws IOException
+     */
+    private void compressFile(ZipOutputStream out, File sourcefile, String basedir)
+            throws IOException {
+        if (sourcefile.isDirectory()) {
+            File[] files = sourcefile.listFiles();
+
+            if (files == null || files.length == 0) {
+                out.putNextEntry(new ZipEntry(basedir + File.separator));
+            }
+            else {
+                for (int i = 0; i < files.length; i++ ) {
+                    compressFile(out, files[i], basedir + File.separator + files[i].getName());
+                }
+            }
+        }
+        else {
+            out.putNextEntry(new ZipEntry(basedir));
+
+            FileInputStream fos =null;
+            BufferedInputStream bis =null;
+            try {
+                fos = new FileInputStream(sourcefile);
+                bis = new BufferedInputStream(fos);
+                int len;
+                byte[] buf = new byte[1024];
+                while ((len = bis.read(buf, 0, 1024)) != -1) {
+                    out.write(buf, 0, len);
+                }
+            }catch (Exception e)
+            {
+                logger.error(e.getMessage(),e);
+            }finally {
+                if(bis!=null)
+                {
+                    bis.close();
+
+                }
+
+                if(fos!=null)
+                {
+                    fos.close();
+
+                }
+            }
+
+
+
+        }
+    }
+
+    /**
+     * 压缩报表信息
+     *
+     * @param
+     * @param
+     * @param
+     * @throws IOException
+     */
+    private void compressFile2(ZipOutputStream out, File sourcefile, String basedir)
+            throws IOException {
+        if (sourcefile.isDirectory()) {
+            File[] files = sourcefile.listFiles();
+
+            if (files == null || files.length == 0) {
+                out.putNextEntry(new ZipEntry(basedir + File.separator));
+            }
+            else {
+                for (int i = 0; i < files.length; i++ ) {
+                    compressFile2(out, files[i], files[i].getName());
+                }
+            }
+        }
+        else {
+            out.putNextEntry(new ZipEntry(basedir));
+
+            FileInputStream fos = null;
+            BufferedInputStream bis = null;
+            try {
+                fos = new FileInputStream(sourcefile);
+                bis = new BufferedInputStream(fos);
+                int len;
+                byte[] buf = new byte[1024];
+                while ((len = bis.read(buf, 0, 1024)) != -1) {
+                    out.write(buf, 0, len);
+                }
+            }catch (Exception e)
+            {
+                logger.error(e.getMessage(),e);
+            }finally {
+                if(bis!=null)
+                {
+                    bis.close();
+
+                }
+                if(fos!=null)
+                {
+                    fos.close();
+
+                }
+            }
+
+
+
+        }
     }
 
 }
