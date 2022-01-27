@@ -120,10 +120,13 @@ public class CommonCodeCheckBatchService {
                     checkProdEndSubTmp(map,prodRegistCodeList);
                     break;
                 case 销售人员奖惩投诉记录信息表INFO:
+                case 销售人员奖惩投诉记录登记表SUB:
                     checkRewPenaInfo(map);
                 case 销售人员身份信息表INFO:
+                case 销售人员身份信息登记表SUB:
                     checkSalerIdenInfo(map);
                 case  总部或分支机构信息表INFO:
+                case 总部或分支机构信息登记表SUB:
                     checkSaleInstInfo(map);
                 default:
                     break;
