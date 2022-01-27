@@ -100,7 +100,7 @@ public class CfetsEtrIbRepoLibAvaPledgeBondResponse extends BaseEntity {
      * 分支序号
      */
     @ApiModelProperty(name="waitPeriod",value="待偿期")
-    private BigDecimal waitPeriod;
+    private String waitPeriod;
 
     public String getPortfolioId() {
         return portfolioId;
@@ -209,11 +209,11 @@ public class CfetsEtrIbRepoLibAvaPledgeBondResponse extends BaseEntity {
         this.branch = branch;
     }
 
-    public BigDecimal getWaitPeriod() {
+    public String getWaitPeriod() {
         return waitPeriod;
     }
 
-    public void setWaitPeriod(BigDecimal waitPeriod) {
+    public void setWaitPeriod(String waitPeriod) {
         this.waitPeriod = waitPeriod;
     }
 

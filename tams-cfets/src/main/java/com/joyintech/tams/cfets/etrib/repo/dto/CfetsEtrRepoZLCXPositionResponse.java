@@ -114,6 +114,9 @@ public class CfetsEtrRepoZLCXPositionResponse {
      */
     @ApiModelProperty(name="finprodMarketId",value="市场代码")
     private String finprodMarketId;
+
+    @ApiModelProperty(name="waitPeriod",value="待偿期")
+    private String waitPeriod;
     
     
     private String issuer;
@@ -291,5 +294,13 @@ public class CfetsEtrRepoZLCXPositionResponse {
 
     public void setMdateStr(String mdateStr) {
         this.mdateStr = mdateStr;
+    }
+
+    public String getWaitPeriod() {
+        return waitPeriod;
+    }
+
+    public void setWaitPeriod(String waitPeriod) {
+        this.waitPeriod = waitPeriod;
     }
 }
