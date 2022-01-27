@@ -420,7 +420,7 @@
                ttft1.fee_amt jsFeeAmt,
                TPD.TRADE_AMT tradeAmt,
                TPDA.Entrust_Id entrustId,
-               EE.PRICE_MODEL priceModel,
+               nvl(nvl(T10.INV_AIM,e.INV_AIM),ee.PRICE_MODEL) priceModel,
                (nvl(ee.entrust_num,0) - nvl(efs.finish_amt,0))/100 unFinshAmt,
                ssai.sec_acct_name secAcctId,
                TPD.YIELD*100 matureYield,
@@ -441,7 +441,9 @@
          LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpd.sec_manage_acct_id = ssai.SEC_ACCT_ID
          LEFT JOIN TRDQUTO_MATCH_INFO T7 ON T7.Trd_Id = TPD.TOTLE_TRADE_ID
          LEFT JOIN REG_FIN_PRODUCT_DEAL_TOTAL T8 ON T8.TOTLE_TRADE_ID = nvl(T7.PRE_TRADE_ID,TPD.B_TRADE_ID)
+         left join REG_FIN_PRODUCT_DEAL T10 on T10.TOTLE_TRADE_ID=T8.TOTLE_TRADE_ID
          left join TRD_FIN_PRODUCT_DEAL_TOTAL T9 on T9.TOTLE_TRADE_ID=TPD.TOTLE_TRADE_ID
+         left join IBU_QUOTE_ETR_RE e on e.ENTRUST_ID=ee.ENTRUST_ID
         where TPD.TOTLE_TRADE_ID = #{tradeId} and TPD.Trade_Status='01'
     </select>
 
