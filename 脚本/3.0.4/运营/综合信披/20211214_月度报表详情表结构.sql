@@ -581,7 +581,6 @@ create table PBC_MONTH_ASSET_POSITIONDETAIL
      borrower_city                  VARCHAR2(50),
      assets_invest                  VARCHAR2(50),
      each_proportion                VARCHAR2(50)
-
 );
 -- Add comments to the table
 comment on table PBC_MONTH_ASSET_POSITIONDETAIL

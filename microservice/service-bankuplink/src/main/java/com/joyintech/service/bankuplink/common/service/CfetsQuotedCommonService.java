@@ -752,13 +752,15 @@ public class CfetsQuotedCommonService extends BaseService {
                         // 主表 全价总额
                         if(!StringUtil.isEmptyList(dto.getIbuQuoteEtrReDtoList())){
                             // 多组合报价处理
+                            BaseQuoteDto baseQuoteDtoDeleteInfo = new BaseQuoteDto();
+                            baseQuoteDtoDeleteInfo.setQuoteId(baseDto.getQuoteId());
+                            deleteFinishStatus(baseQuoteDtoDeleteInfo);
                             List<IbuQuoteEtrReDto>  ibuQuoteEtrRes = repoDialogueQuote.getIbuQuoteEtrReDtoList();
                             ibuQuoteEtrRes.stream().forEach(item -> {
                                 BaseQuoteDto baseQuoteDto = new BaseQuoteDto();
                                 baseQuoteDto.setQuoteId(baseDto.getQuoteId());
                                 baseQuoteDto.setEntrustId(item.getEntrustId());
                                 BigDecimal priceAmt = item.getFpriceAmt();
-                                deleteFinishStatus(baseQuoteDto);
                                 QuoteResultDto quoteResultDto = new QuoteResultDto();
                                 BeanUtil.copyPropertiesIgnoreNull(quoteResultDto,dto);
                                 quoteResultDto.getBaseQuoteDto().setEntrustId(item.getEntrustId());
@@ -779,12 +781,13 @@ public class CfetsQuotedCommonService extends BaseService {
                         }
                         else {
                             // 多组合报价处理
-                            for (IbuQuoteEtrReDto ibuQuoteEtrReDto : dto.getIbuQuoteEtrReDtoList()) {
+//                            for (IbuQuoteEtrReDto ibuQuoteEtrReDto : dto.getIbuQuoteEtrReDtoList()) {
                                 BaseQuoteDto tempBaseDto = dto.getBaseQuoteDto();
-                                BeanUtil.copyPropertiesIgnoreNull(tempBaseDto, baseDto);
-                                tempBaseDto.setEntrustId(ibuQuoteEtrReDto.getEntrustId());
+                                tempBaseDto.setQuoteId(baseDto.getQuoteId());
+//                                BeanUtil.copyPropertiesIgnoreNull(tempBaseDto, baseDto);
+//                                tempBaseDto.setEntrustId(ibuQuoteEtrReDto.getEntrustId());
                                 deleteFinishStatus(tempBaseDto);
-                            }
+//                            }
                         }
                     }
                  // modify by etliu 20210316 银行间上下行多组合 end

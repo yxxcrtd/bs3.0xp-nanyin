@@ -92,6 +92,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -1202,6 +1203,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
      * @date 2021/12/28 20:43
      */
     public boolean deal(com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto dto) {
+        long startTime = System.currentTimeMillis();    //获取开始时间
         RepoDialogueQuoteDto inputBean = ibuComponentCommonService.convertRepoDialogueQuoteDto(dto);
         com.joyintech.background.component.common.pack.common.security.User userInfo = new com.joyintech.background.component.common.pack.common.security.User();
         userInfo.setUserName(LoginUserUtil.getUserName());
@@ -1211,6 +1213,15 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 inputBean, null);
         // 组件调用共通处理
         ibuComponentCommonService.resCommonHandle(quoteResultDto, userInfo, true);
+
+        long endTime = System.currentTimeMillis();
+        Date startDate = new Date();
+        startDate.setTime(startTime);
+        Date endDate = new Date();
+        endDate.setTime(endTime);
+        logger.info("deal程序运行开始时间：" + new SimpleDateFormat().format(startDate));
+        logger.info("deal程序运行结束时间：" + new SimpleDateFormat().format(endDate)); //程序运行结束时间
+        logger.info("deal程序运行时间：" + (endTime - startTime) + "ms");    //输出程序运行时间
         return true;
     }
 
@@ -1391,7 +1402,6 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             } else if (StringUtil.equals(entity.getOperatorType(), "refuse")) {
                 // 拒绝
                 this.reject(entity);
-                cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_拒绝.getValue());
             }
         } else if (StringUtil.equals(entity.getQuotaPageModel(), "new")) {
             // 新增
@@ -1908,7 +1918,6 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         if (StringUtil.isNotEmpty(pageDto.getCounterPartyId())) {
             backDto.setCounterId(pageDto.getCounterPartyId());
         }
-        //TODO 质押券转换
         List<CfetsRepoDealQuotedPrice003Dto> pledgeBondLists = new ArrayList<>();
         for (RepoEntrustPledgeDto pledgeDto : pageDto.getRepoEntrustPledgeDtos()) {
             CfetsRepoDealQuotedPrice003Dto pledgeBondDto = new CfetsRepoDealQuotedPrice003Dto();
@@ -1919,7 +1928,6 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             pledgeBondLists.add(pledgeBondDto);
         }
         backDto.setPledgeBondList(pledgeBondLists);
-        //TODO 组合分配转换
         List<PtlAllocationDto> ptlAllocationList = new ArrayList<>();
         for (RepoPtlAllocationDto ptlAllocationDto : pageDto.getPtlAllocations()) {
             PtlAllocationDto ptlDto = new PtlAllocationDto();
@@ -1987,7 +1995,6 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         }
         // 分配方式
         pageDto.setDistribution(backDto.getDipType());
-        //TODO 质押券转换
         List<RepoEntrustPledgeDto> repoEntrustPledgeDtos = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(backDto.getPledgeBondList())) {
             for (CfetsRepoDealQuotedPrice003Dto pledgeBondDto : backDto.getPledgeBondList()) {
@@ -2004,7 +2011,6 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             }
         }
         pageDto.setRepoEntrustPledgeDtos(repoEntrustPledgeDtos);
-        //TODO 组合分配转换
         List<RepoPtlAllocationDto> ptlAllocationList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(backDto.getPtlAllocationList())) {
             for (PtlAllocationDto ptlDto : backDto.getPtlAllocationList()) {
