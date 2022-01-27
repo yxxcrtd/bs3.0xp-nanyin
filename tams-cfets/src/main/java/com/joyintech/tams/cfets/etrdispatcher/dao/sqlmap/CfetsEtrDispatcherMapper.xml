@@ -898,7 +898,7 @@
         fp.finprod_market_id finprodMarketId,
         fp.finprod_abbr finprodAbbr,
         tpdp.ps ps,
-        tpdp.sec_manage_acct_id secAcctId,
+        ssai.sec_acct_name secAcctId,
         DECODE(tpdp.settle_speed,0,'01',1,'02','2','03') settleSpeed,
         to_char(tpdp.settle_date, 'yyyy-MM-dd') settleDate,
         tpdpa.unit_cprice unitPrice,
@@ -946,7 +946,7 @@
            null                                                  finprodMarketId,
            null                                                  finprodAbbr,
            iqc.REPO_PS                                           ps,
-           iqc.SEC_MANAGE_ACCT_ID                                secAcctId,
+           ssai.sec_acct_name                                secAcctId,
            DECODE(iqc.settle_speed, 0, '01', 1, '02', '2', '03') settleSpeed,
            to_char(iqc.QUOTE_DATE, 'yyyy-MM-dd')                 settleDate,
            null                                                  unitPrice,
@@ -1021,6 +1021,7 @@
         <include refid="etrDispatcherExeListInfo1"/>
         FROM IBU_QUOTE_BOND tpdp
         LEFT JOIN IBU_QUOTE_BOND_DET tpdpa ON tpdp.QUOTE_ID = tpdpa.QUOTE_ID
+        LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpdp.SEC_MANAGE_ACCT_ID = ssai.SEC_ACCT_ID
         LEFT JOIN IBU_QUOTE_ETR_RE iqe	 ON  iqe.QUOTE_ID = tpdp.QUOTE_ID
         LEFT JOIN PTL_PORTFOLIO pp ON iqe.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id
@@ -1048,7 +1049,8 @@
         <include refid="etrDispatcherExeListInfo2"/>
         from IBU_QUOTE_CREP iqc
              LEFT JOIN IBU_QUOTE_ETR_RE iqer ON iqer.QUOTE_ID = iqc.QUOTE_ID
-             LEFT JOIN PTL_PORTFOLIO pp ON iqer.portfolio_id = pp.portfolio_id
+             LEFT JOIN STL_SEC_ACCT_INFO ssai ON iqc.SEC_MANAGE_ACCT_ID = ssai.SEC_ACCT_ID
+            LEFT JOIN PTL_PORTFOLIO pp ON iqer.portfolio_id = pp.portfolio_id
              LEFT JOIN MST_CFETS_CUSTOMER_INFO mcp ON iqc.cp_party_id = mcp.party_id
              LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON iqc.CP_TRADER_ID = mcct.trader_id
         WHERE iqer.entrust_id = #{entrustId}
@@ -1058,6 +1060,7 @@
         <include refid="etrDispatcherExeListInfo2"/>
         from WFL_IBU_QUOTE_CREP iqc
         LEFT JOIN WFL_IBU_QUOTE_ETR_RE iqer ON iqer.QUOTE_ID = iqc.QUOTE_ID
+        LEFT JOIN STL_SEC_ACCT_INFO ssai ON iqc.SEC_MANAGE_ACCT_ID = ssai.SEC_ACCT_ID
         LEFT JOIN PTL_PORTFOLIO pp ON iqer.portfolio_id = pp.portfolio_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcp ON iqc.cp_party_id = mcp.party_id
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON iqc.CP_TRADER_ID = mcct.trader_id
