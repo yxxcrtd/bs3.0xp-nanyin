@@ -823,7 +823,7 @@
                 FROM
                     ETR_DISTRIBUTE edi
                         LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
-                where een.ENTRUST_STATUS in ('02','03','04') and een.ENTRUST_DATE=to_date(#{sysDate},'yyyy-mm-dd')
+                where een.ENTRUST_STATUS in ('04') and een.ENTRUST_DATE=to_date(#{sysDate},'yyyy-mm-dd')
                 GROUP BY edi.TRADER  ) a
             ON su.USER_NAME = a.TRADER
                 LEFT JOIN
