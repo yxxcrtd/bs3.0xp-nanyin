@@ -2587,6 +2587,7 @@ public class CfetsTrdConfirmService extends BaseService{
     @DTXTransaction
     public AjaxResult cstpAutoMatchMethod(InterfTradSecdeal interfTradSecdeal,
                                               InterfOpicsTradRepo interfOpicsTradRepo,InterfCstpTrade iCstpTrade){
+        logger.info("-----------银行间CSTP成交回报-自动匹配Start-------------");
         CfetsTrdConfirmMatchDto matchDto=new CfetsTrdConfirmMatchDto();
         String support_cstp_flag_bond=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_BOND");
         String support_cstp_flag_repo=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_REPO");
@@ -2596,16 +2597,20 @@ public class CfetsTrdConfirmService extends BaseService{
             matchDto =cstpRepoTradeAutoMatch(interfOpicsTradRepo,iCstpTrade);
         }
         if(!StringUtil.isNotEmpty(matchDto)){
+            logger.info("-----------无可匹配的交易End-------------");
             return null;
         }
         if(StringUtil.isNotEmpty(matchDto.getDealType()) && StringUtil.equals(matchDto.getDealType(),"999999")){
             //针对下行回来数据，上行或登记数据已经进行成交确认，此时更新匹配关系表
+            logger.info("-----------已存在数据更新匹配关系表-------------");
             cfetsTrdConfirmMapper.updateTrdQutoMatchInfo(matchDto);
             return null;
         }else if(StringUtil.isNotEmpty(matchDto.getDealType()) && StringUtil.equals(matchDto.getDealType(),BussinessDictCodeList.报价方式_登记报价.getValue())){
             //针对登记数据，仅仅匹配
+            logger.info("-----------匹配的登记数据成交确认-------------");
             cfetsTrdConfirmMapper.insertTrdQutoMatchInfo(matchDto);
         }else{
+            logger.info("-----------匹配的报价数据成交确认-------------");
             //报价数据，会自动成交
             CfetsTrdConfirmRegInfoListResponse regInfo =new CfetsTrdConfirmRegInfoListResponse();
             regInfo.setDealType(matchDto.getDealType());
@@ -2641,6 +2646,7 @@ public class CfetsTrdConfirmService extends BaseService{
                     messages.add(new ValidMessage("业务编号："+regInfo.getTotleTradeId()+"自动匹配确认失败。"));
                 }
                 e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             if(!StringUtil.isEmptyList(messages) && messages.size()>0){
                 AjaxResult res=new AjaxResult();

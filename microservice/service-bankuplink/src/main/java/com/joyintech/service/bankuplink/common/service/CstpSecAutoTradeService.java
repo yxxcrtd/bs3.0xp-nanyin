@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.mchange.v2.log.MLog.getLogger;
+
 /**
  * 银行间债券下行自动录单service
  */
@@ -244,6 +246,7 @@ public class CstpSecAutoTradeService extends BaseService<TrdBondInvestTradeDto> 
 			if(null!=entrustInfo){
 				String isDzh = cstpMapper.getIsDzh(entrustInfo.getQuoteId());
 				if(StringUtil.equals(isDzh,"Y")||(StringUtil.equals(isDzh,"N")&&StringUtil.isNotEmpty(entrustInfo.getPortfolioId()))){
+					logger.info("查询到上行报价信息");
 					break;
 				}
 			}

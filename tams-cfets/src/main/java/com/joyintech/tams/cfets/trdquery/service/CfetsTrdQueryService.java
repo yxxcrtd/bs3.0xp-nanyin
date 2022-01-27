@@ -916,57 +916,44 @@ public class CfetsTrdQueryService extends BaseService{
         if(StringUtil.isBlank(spcdCode)){
             return resultData;
         }
-        if("05".equals(spcdCode) || "06".equals(spcdCode)) {//质押式回购
-            String spcdCodeTemp ="03";
-            pageCode = "CfetsTrdQuery";
-            dtCode = "CfetsTrdQueryRegInfo";
-            //基本信息表单
-            spcdCode = spcdCodeTemp+",B";
-            List<CfgReadonlyFormShow> infoFormb = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
+        if("05".equals(spcdCode)) {//质押式回购
+            String spcdCodeTemp =spcdCode;
+            //基础信息表单
+            List<CfgReadonlyFormShow> baseForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
             //金额信息表单
-            spcdCode = spcdCodeTemp+",M";
-            List<CfgReadonlyFormShow> infoFormm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
-            //组合表单
-            spcdCode = spcdCodeTemp+",P";
-            List<CfgReadonlyFormShow> infoFormp = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
-            //其它表单
-            spcdCode = spcdCodeTemp+",O";
-            List<CfgReadonlyFormShow> infoFormo = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
-
-            //组合表格
-            String dtCodeTemp ="CfetsTrdQueryRegPInfo";
-            List<CfgDataTableShow> infoTableP;
-            //获取登录用户的ID
+            spcdCode=spcdCodeTemp+",M";
+            List<CfgReadonlyFormShow> amtForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
+            //金额信息05,P
+            spcdCode=spcdCodeTemp+",P";
+            List<CfgReadonlyFormShow> fForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
+            //备注05,O
+            spcdCode=spcdCodeTemp+",O";
+            List<CfgReadonlyFormShow> infoFormo = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
+            //组合信息05,M,P
+            spcdCode=spcdCodeTemp+",M,P";
             String userId = SecurityUtil.getLoginUser().getUserName();
-            if(StringUtil.isBlank(userId)){
-                return resultData;
-            }
-            CfgDataTableShowFlag flagP = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCodeTemp,spcdCodeTemp, userId);
-            if (null == flagP) {
-                infoTableP = cfgDataTableMapper.getByPageCode(pageCode, dtCodeTemp,spcdCodeTemp, EFFERANGE_NO, USER_ID);
+            CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode, spcdCode, userId);
+            List<CfgDataTableShow> zhTable = null;
+            if (null == flag) {
+                zhTable = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode, EFFERANGE_NO, USER_ID);
             } else {
-                infoTableP = cfgDataTableMapper.getByPageCode(pageCode, dtCodeTemp,spcdCodeTemp, EFFERANGE_IS, userId);;
+                zhTable = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode, EFFERANGE_IS, userId);
             }
-            //质押券表格
-            dtCodeTemp ="CfetsTrdQueryRegPledgeInfo";
-            List<CfgDataTableShow> infoTablePledge;
-            //获取登录用户的ID
-            CfgDataTableShowFlag flagPledge = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCodeTemp,spcdCodeTemp, userId);
-            if (null == flagPledge) {
-                infoTablePledge = cfgDataTableMapper.getByPageCode(pageCode, dtCodeTemp,spcdCodeTemp, EFFERANGE_NO, USER_ID);
+            //质押券信息05
+            flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode, spcdCode, userId);
+            List<CfgDataTableShow> pledgeTable = null;
+            if (null == flag) {
+                pledgeTable = cfgDataTableMapper.getByPageCode(pageCode, dtCode,"05", EFFERANGE_NO, USER_ID);
             } else {
-                infoTablePledge = cfgDataTableMapper.getByPageCode(pageCode, dtCodeTemp,spcdCodeTemp, EFFERANGE_IS, userId);;
+                pledgeTable = cfgDataTableMapper.getByPageCode(pageCode, dtCode, "05", EFFERANGE_IS, userId);
             }
-            resultData.put(dtCode+"_formb",infoFormb);
-            resultData.put(dtCode+"_formm",infoFormm);
-            resultData.put(dtCode+"_formp",infoFormp);
-            resultData.put(dtCode+"_formo",infoFormo);
-            resultData.put(dtCode+"_tablep",infoTableP);
-            resultData.put(dtCode+"_tablepledge",infoTablePledge);
-
-            Map<String, Object> pageParam = new HashMap<>();
-
-            pageParam.put("totleTradeId",cfetsTrdQueryMapper.getTradeId(dto.getTotleTradeId()));
+            resultData.put("CfetsTrdQueryRegInfo_formb", baseForm);
+            resultData.put("CfetsTrdQueryRegInfo_formm", amtForm);
+            resultData.put("CfetsTrdQueryRegInfo_formp", fForm);
+            resultData.put("CfetsTrdQueryRegInfo_formo", infoFormo);
+            resultData.put("CfetsTrdQueryRegInfo_tablep", zhTable);
+            resultData.put("CfetsTrdQueryRegInfo_tablepledge", pledgeTable);
+            Map<String, Object> pageParam = BeanUtil.object2Map(dto);
             //判断角色配置
             List<String> roleList = cfetsTrdQueryMapper.selectSysRoleById(userId);
             if(roleList.contains(DictCodeList.角色岗位_领导.getValue())
@@ -979,17 +966,22 @@ public class CfetsTrdQueryService extends BaseService{
                 pageParam.put("submitUserId", SecurityUtil.getLoginUser().getUserName());
             }else if(roleList.contains(DictCodeList.角色岗位_投资经理.getValue())){
                 //投资经理
-                pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+                pageParam.put("userName", SecurityUtil.getLoginUser().getUserName());
             }
             pageParam.put("effectiveStatus",DictCodeListExt1.有效状态_有效.getValue());
             pageParam.put("STATUS_VALID_01", DictCodeListExt1.有效状态_有效.getValue());
             pageParam.put("STATUS_VALID_03", DictCodeListExt1.有效状态_撤销.getValue());
             pageParam.put("STATUS_VALID_04", DictCodeListExt1.有效状态_流程中.getValue());
-
+            pageParam.put("TRADE_STATUS01", DictCodeListExt1.交易状态_初始.getValue());
+            pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
+            pageParam.put("feeType08", BussinessDictCodeList.费用类型_结算手续费.getValue());
             //表单data
-            CfetsTrdQueryRegInfoListResponse dataform= cfetsTrdQueryMapper.selectRegFormDataByKey(pageParam);
+            CfetsTrdSettleInfoResponse dataform= cfetsTrdQueryMapper.findRepoManualSettleInfoOther(pageParam);
+
+            pageParam.put("CASH_TYPE_1_02", DictCodeListExt1.现金流一级类型_利息.getValue());
+            pageParam.put("CASH_TYPE_2_C02", DictCodeListExt1.现金流二级类型_利息.getValue());
             //表格组合分配data
-            List<CfetsPortfolioIdFenPeiInfoResponse> portIntFenPeiInfoDtoList =  cfetsTrdQueryMapper.selectRegTableFenPeiInfoList(pageParam);
+            List<PortIntFenPeiInfoDto> portIntFenPeiInfoDtoList = cfetsTrdQueryMapper.findRepoPortIntFenPeiInfoList(pageParam);
             //表格质押券data
             pageParam.put("TRADEPLACE01", DictCodeListExt1.交易场所_银行间.getValue());
             pageParam.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
@@ -997,9 +989,7 @@ public class CfetsTrdQueryService extends BaseService{
             pageParam.put("platDate", iPlatformDate.getSysDateStr());
             pageParam.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
             pageParam.put("sysDate",iPlatformDate.getSysDateStr());
-            List<CfetsPledgeInfoResponse> pledgeInfoDtoList =  cfetsTrdQueryMapper.selectRegTablePledgeInfoList(pageParam);
-
-
+            List<CfetsPledgeInfoResponse> pledgeInfoDtoList =  cfetsTrdQueryMapper.findRepoPledgeInfoList(pageParam);
             resultData.put(dtCode+"_dataform",dataform);
             resultData.put(dtCode+"_datatablep",portIntFenPeiInfoDtoList);
             resultData.put(dtCode+"_datatablepledge",pledgeInfoDtoList);
@@ -1023,7 +1013,6 @@ public class CfetsTrdQueryService extends BaseService{
                 infoForm2 = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode, EFFERANGE_NO, USER_ID);
             } else {
                 infoForm2 = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode, EFFERANGE_IS, userId);
-                ;
             }
             resultData.put(dtCode + "_form", infoForm);
             resultData.put(dtCode + "_form1", infoForm1);
@@ -1039,18 +1028,11 @@ public class CfetsTrdQueryService extends BaseService{
             pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
             pageParam.put("feeType08", BussinessDictCodeList.费用类型_结算手续费.getValue());
 
-            if (StringUtil.equals(spcdCodeTemp, "04")) {
-                CfetsManualSettleInfoRespond cfetsManualSettleInfoRespond = cfetsManualSettleMapper.findManualSettleInfo(pageParam);
-                resultData.put(dtCode + "_data", cfetsManualSettleInfoRespond);
-                resultData.put(dtCode + "_data1", cfetsManualSettleInfoRespond);
-                //resultData.put(dtCode+"_datap",cfetsManualSettleInfoRespond);
-            } else {
-                //现券买卖 或回售
-                CfetsManualSettleInfoOtherListRespond cfetsManualSettleInfoOtherListRespond = cfetsTrdQueryMapper.findManualSettleInfoOther(pageParam);
-                resultData.put(dtCode + "_data", cfetsManualSettleInfoOtherListRespond);
-                resultData.put(dtCode + "_data1", cfetsManualSettleInfoOtherListRespond);
-                // resultData.put(dtCode+"_datap",cfetsManualSettleInfoOtherListRespond);
-            }
+            //现券买卖 或回售
+            CfetsManualSettleInfoOtherListRespond cfetsManualSettleInfoOtherListRespond = cfetsTrdQueryMapper.findManualSettleInfoOther(pageParam);
+            resultData.put(dtCode + "_data", cfetsManualSettleInfoOtherListRespond);
+            resultData.put(dtCode + "_data1", cfetsManualSettleInfoOtherListRespond);
+            // resultData.put(dtCode+"_datap",cfetsManualSettleInfoOtherListRespond);
 
             //组合分配信息
             if (StringUtils.isNotEmpty(userId)) {

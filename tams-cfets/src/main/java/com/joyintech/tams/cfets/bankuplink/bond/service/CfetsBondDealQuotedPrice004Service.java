@@ -919,7 +919,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
      * 撤销，共外部调用
      * @param totleTradeId
      */
-    public void dorevoke(String totleTradeId,String remark){
+    public void dorevoke(String totleTradeId,String remark,Boolean isNeedDealPosition){
         CfetsBondDealRegisterQuoteDto entity = new CfetsBondDealRegisterQuoteDto();
         entity.setTotleTradeId(totleTradeId);
         CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,OperationType.REVOKE);
@@ -933,7 +933,9 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             }else{
                 busiType = DictCodeListExt3.头寸业务类型_现券交易.getValue();
             }
-            PositionHttpRequest.dorevoke(cfetsBondDealDbDto.getRegFinProductDealTotal().getpTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),busiType,ps);
+            if(isNeedDealPosition){
+                PositionHttpRequest.dorevoke(cfetsBondDealDbDto.getRegFinProductDealTotal().getpTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),busiType,ps);
+            }
         }catch(PositionException e){
             e.printStackTrace(); Message message = PositionUtil.ajaxErrorReturn(e);
             throw new BusinessException("MSG:"+message.getMessage());

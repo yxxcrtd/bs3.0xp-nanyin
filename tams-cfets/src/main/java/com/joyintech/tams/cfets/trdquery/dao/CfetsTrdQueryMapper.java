@@ -222,4 +222,29 @@ public interface CfetsTrdQueryMapper {
      * @param paramMap 参数
      */
     void updateInterfTradSecdealByTradeId(Map<String, Object> paramMap);
+    /**
+     * 交易明细回购表单内容
+     *
+     * @param pageParam 参数
+     * @return CfetsManualSettleInfoF32Respond
+     */
+    CfetsTrdSettleInfoResponse findRepoManualSettleInfoOther(Map<String, Object> pageParam);
+
+    /**
+     * 组合分配信息List,针对交易明细回购
+     *
+     * @param pageParam 参数
+     * @return List<PortIntFenPeiInfoDto>
+     */
+    List<PortIntFenPeiInfoDto> findRepoPortIntFenPeiInfoList(Map<String, Object> pageParam);
+    /**
+     * 查询交易质押券,针对交易明细回购
+     *
+     * @param pageParam 参数
+     * @return List<CfetsPledgeInfoResponse>
+     */
+    List<CfetsPledgeInfoResponse> findRepoPledgeInfoList(Map<String, Object> pageParam);
+
+
+
 }
