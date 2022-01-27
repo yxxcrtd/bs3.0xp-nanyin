@@ -2768,8 +2768,8 @@ public class CfetsTrdConfirmService extends BaseService{
                 && StringUtil.equals(confirmDto.getPs(), interfTradSecdeal.getPs())
                 && StringUtil.equals(confirmDto.getSettleSpeed(), interfTradSecdeal.getSettleSpeed())
                 && StringUtil.equals(confirmDto.getSecManageAcctId(), interfTradSecdeal.getOurdepositaccountnumber())
-                && confirmDto.getYield().compareTo(interfTradSecdeal.getYield8())==0
-                && confirmDto.getFaceValue().compareTo(interfTradSecdeal.getPrinamt())==0
+                && cfetsRepoQuotedPrice004Service.ACompareToB(confirmDto.getYield(),interfTradSecdeal.getYield8(),4)==0
+                && cfetsRepoQuotedPrice004Service.ACompareToB(confirmDto.getFaceValue(),interfTradSecdeal.getPrinamt(),2)==0
                 && confirmDto.getSettleDate().compareTo(interfTradSecdeal.getSettdate())==0
                 && StringUtil.equals(confirmDto.getDeliveryType(), iCstpTrade.getDeliverytype())
         ) {
@@ -2960,10 +2960,10 @@ public class CfetsTrdConfirmService extends BaseService{
                && StringUtil.equals(confirmDto.getPs(), interfOpicsTradRepo.getPs())
                && StringUtil.equals(confirmDto.getSettleSpeed(), interfOpicsTradRepo.getSettleSpeed())
                && StringUtil.equals(confirmDto.getSecManageAcctId(), interfOpicsTradRepo.getOurdepositaccountnumber())
-               && confirmDto.getRate().compareTo(iCstpTrade.getPrice()) == 0
+               &&  cfetsRepoQuotedPrice004Service.ACompareToB(confirmDto.getRate(),iCstpTrade.getPrice(),4) == 0
                && StringUtil.equals(sdf.format(confirmDto.getVsettleDate()), iCstpTrade.getSettldate())
                && StringUtil.equals(sdf.format(confirmDto.getMsettleDate()), iCstpTrade.getSettldate2())
-               && confirmDto.getTradeAmt().compareTo(iCstpTrade.getTradecashamt()) == 0
+               && cfetsRepoQuotedPrice004Service.ACompareToB(confirmDto.getTradeAmt(),iCstpTrade.getTradecashamt(),2) == 0
        ) {
            //更新下行匹配关系表
            if (isUpdate) {

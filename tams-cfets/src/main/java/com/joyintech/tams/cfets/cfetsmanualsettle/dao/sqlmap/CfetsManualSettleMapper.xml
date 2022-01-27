@@ -850,7 +850,7 @@
         T1.TRADE_MARKET_MODE tradeMarketMode,
         T1.TRADE_PLAT tradePlat,
         T7.EXE_ID tradeId,
-        NVL(T9.PARTY_NAME,T5.OU_PARTY_ID) ouPartyId ,
+        NVL(T9.PARTY_ABBR ,T5.OU_PARTY_ID) ouPartyId ,
         NVL(T10.REAL_NAME,T1.TRADER) ouTraderId,
         NVL(T11.COUNTER_NAME,T1.COUNTER_ID) counterId,
         NVL(T12.TRADER_NAME,T1.COUNTER_TRADER) counterTrade,
@@ -900,7 +900,7 @@
             T1.TRADE_MARKET_MODE tradeMarketMode,
             T1.TRADE_PLAT tradePlat,
             T7.EXE_ID tradeId,
-            NVL(T9.PARTY_NAME,T5.OU_PARTY_ID) traderidStr ,
+            NVL(T9.PARTY_ABBR,T5.OU_PARTY_ID) traderidStr ,
             NVL(T10.REAL_NAME,T1.TRADER) trader,
             NVL(T11.COUNTER_NAME,T1.COUNTER_ID) counterIdStr,
             NVL(T12.TRADER_NAME,T1.COUNTER_TRADER) counterTrader,
@@ -1183,7 +1183,7 @@
                 #{item}
             </foreach>
         </if>
-        WHERE T1.TRADE_STATUS = '01' and
+        WHERE
         NOT EXISTS (
         SELECT
         1
