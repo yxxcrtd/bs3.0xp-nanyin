@@ -2905,6 +2905,10 @@
     <select id="getTradeId" resultType="java.lang.String">
         select PRE_TRADE_ID from TRDQUTO_MATCH_INFO  where TRD_ID=#{tradeId,jdbcType=VARCHAR}
     </select>
+    <select id="getTotalTradeId" resultType="java.lang.String">
+        select  TOTLE_TRADE_ID from TRD_PRODUCT_DEAL where TRADE_ID=(
+            select FINPROD_ID from TRD_PRODUCT_DEAL where TOTLE_TRADE_ID=#{tradeId})
+    </select>
     <select id="getCountByReg" resultType="java.lang.Integer">
        select sum(t.qty) from (
            select count(*) qty from wfl_reg_fin_product_deal_total  where TOTLE_TRADE_ID=#{tradeId,jdbcType=VARCHAR}
