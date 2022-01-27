@@ -1072,8 +1072,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         List<String> totleIdList1 = Arrays.asList(entity.getTotleTradeId());
         List<String> totleIdList = new ArrayList(totleIdList1);
 
-        List<BaseTradeProductDealDto> baseTradeProductDealDtos = baseTradeProductDealService.selectTotalDeal(
-                totleIdList);
+        List<BaseTradeProductDealDto> baseTradeProductDealDtos = baseTradeProductDealService.selectTotalDeal(totleIdList);
 
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
         for (BaseTradeProductDealDto baseTradeProductDealDto : baseTradeProductDealDtos) {
@@ -1160,14 +1159,12 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         }else if(StringUtil.isNotEmpty(entity.getRevokeReason())){
             params.put("revokeReason", "交易撤销:"+ entity.getRevokeReason());
         }
-        restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/doRevokeComplete?", params,
-            String.class);
+        restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/doRevokeComplete?", params,String.class);
 
         //basRiskMathCommService.insert(entity.getRiskTrialRetDto(), entity.getTotleTradeId());
 
         // 调用基础组件.【交易报送组件】删除交易报送信息
-        restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/deleteRepTrade",
-            Arrays.asList(entity.getTotleTradeId()), Boolean.class);
+        restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/deleteRepTrade",Arrays.asList(entity.getTotleTradeId()), Boolean.class);
 
         //撤销数据为登记时，将登记数据置为已撤销。删除下行匹配关系表数据
         RegFinProductDealTotal regTotal = cfetsTrdQueryMapper.selectRegTotalInfoById(bizCode);
@@ -1177,10 +1174,10 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
                 //remark=remark+(settleRemark==null?"":settleRemark)+"\n"+"交易撤销：" + entity.getRevokeReason();
                 remark=remark+"\n"+"交易撤销：" + entity.getRevokeReason()+settleRemark==null?"":settleRemark;
             }else{
-                remark= "交易撤销：" + entity.getRevokeReason()+settleRemark==null?"":settleRemark;
+                remark= "交易撤销：" + entity.getRevokeReason() + settleRemark == null ? "" : settleRemark;
             }
             regTotal.setRemark(remark);
-            cfetsBondDealQuotedPrice004Service.dorevoke(regTotal.getTotleTradeId(),remark,isNeedDealPosition);
+            cfetsBondDealQuotedPrice004Service.dorevoke(regTotal.getTotleTradeId(),remark,isNeedDealPosition,entity.getTgBusiType());
             //若是备注撤销内容不为空，则需要更新原登记数据的备注内容
             cfetsTrdQueryMapper.updateRegTotalByPrimaryKeySelective(regTotal);
         }
@@ -1188,12 +1185,14 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         cfetsTrdConfirmMapper.deleteByTrdId(bizCode);
 
        //发送头寸
-        if(isNeedDealPosition){
+        if(isNeedDealPosition) {
             String ps = entity.getPs();
             String busiType = StringUtil.EMPTY;
             if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){
                 busiType = DictCodeListExt3.头寸业务类型_债券行权交易.getValue();
-            }else{
+            }else if(StringUtil.equals(DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(),entity.getTgBusiType()) || StringUtil.equals(DictCodeListExt3.头寸业务类型_质押式回购到期.getValue(),entity.getTgBusiType())){
+                busiType = entity.getTgBusiType();
+            }else {
                 busiType = DictCodeListExt3.头寸业务类型_现券交易.getValue();
             }
             PositionHttpRequest.dorevoke(bizCode,DictCodeListExt1.子系统代码_交易.getValue(),busiType,ps);
