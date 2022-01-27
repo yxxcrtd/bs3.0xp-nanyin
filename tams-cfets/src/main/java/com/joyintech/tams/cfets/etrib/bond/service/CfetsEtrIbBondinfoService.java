@@ -595,7 +595,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     
                     if (dto != null){
                         // 5.持仓成本=（交易可用券面总额+交易在途券面总额）* 持仓成本价（元）
-                        r.setPositionsAmt(ArithmeticUtil.multiply(doAdd, r.getUnitCost()));
+                        r.setPositionsAmt(ArithmeticUtil.multiply(doAdd, r.getUnitCost()).divide(BigDecimal.valueOf(100)));
                     }
 
                     if (r.getPositionsAmt() != null){

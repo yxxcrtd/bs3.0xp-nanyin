@@ -658,13 +658,20 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                     cfetsTrdBondInvestTrade002Service.doCompleteRevoke(revokeEntity,settleRemark,false);
                     //关闭对应指令
                     List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(entity.getTradeId());
-                    for(CfetsManualSettleDealInfo dealInfo : listTemp){
-                        this.closeDelegateMethod(dealInfo.getEntrustId(),"","交收失败");
-                    }
-                    try {
-                        this.closeDelegate(listTemp,entity.getRemark());
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    List<String> entrustIdList = listTemp.stream().map(
+                            CfetsManualSettleDealInfo::getEntrustId).collect(Collectors.toList());
+                    Map<String,Object> param = new HashMap<String,Object>();
+                    param.put("entrustIds",entrustIdList);
+                    if(cfetsManualSettleMapper.countWflEtr(param)<= 0){
+                        for(CfetsManualSettleDealInfo dealInfo : listTemp){
+                            this.closeDelegateMethod(dealInfo.getEntrustId(),"","交收失败");
+                        }
+
+                        try {
+                            this.closeDelegate(listTemp,entity.getRemark());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
