@@ -45,7 +45,7 @@
 				and a.DATA_STATUS = #{dataStatus}
 			</if>
 		    <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
-			    and a.SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+			    and a.CHB_SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
 	    	</if>
 		    <if test="searchStatusDateStart != null and searchStatusDateStart != ''">
 			    and  to_char(a.STATUS_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{searchStatusDateStart,jdbcType=VARCHAR}
@@ -111,7 +111,7 @@
 				</foreach>
 			</if>
 			<if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
-				and SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+				and CHB_SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
 			</if>
 			<if test="searchStatusDateStart != null and searchStatusDateStart != ''">
 				and  to_char(STATUS_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{searchStatusDateStart,jdbcType=VARCHAR}
@@ -410,7 +410,7 @@
 			and a.DATA_STATUS = #{dataStatus}
 		</if>
 		<if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
-			and a.SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+			and a.CHB_SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
 		</if>
 		<if test="searchStatusDateStart != null and searchStatusDateStart != ''">
 			and  to_char(a.STATUS_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{searchStatusDateStart,jdbcType=VARCHAR}
