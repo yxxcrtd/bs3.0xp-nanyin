@@ -142,7 +142,7 @@ values ('CHB_AGENT_PRD_INFO-2021-1119-005','AgentPrdInfo002','lessThanCharLength
 --批处理配置
 DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3061';
 insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
-values ('3061', 'VAL', '代理销售信息登记报送', null, 'SvrAgentManageTaskService', 3040, 'system', null, sysdate, 'system', sysdate, null);
+values ('3061', 'VAL', '代理销售信息登记报表生成', null, 'SvrAgentManageTaskService', 3200, 'system', null, sysdate, 'system', sysdate, null);
 
 --代理销售信息登记获取报送截止日配置
 DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_REPORT_CODE' and ITEM_CODE = '40';
