@@ -1987,7 +1987,7 @@
     <select id="queryAllCstpInfoList" parameterType="Map"
             resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryCstpInfoListResponse">
         select * from (select aaa.* from (
-        select
+        select distinct
         case when match.match_status is null or match.match_status!='01' then '01'
         when match.match_status ='01' and (match.trd_conf_status is null or match.trd_conf_status='0') then '02'
         when match.trd_conf_status='1' then '03' end as matchStatus,
