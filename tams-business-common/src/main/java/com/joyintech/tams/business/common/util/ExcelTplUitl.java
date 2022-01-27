@@ -116,8 +116,13 @@ public class ExcelTplUitl {
             path.mkdir();
         }
         excelFile = new File(dir + File.separator + fileName +".xlsx");
-        long s = System.currentTimeMillis();
-        exportAllData(excelFile, sheetName , columns, dataList, styleMap,tplfile);
+        //copy一份模板,服务器上easyexcel找不到jar的文件(FileUtils.openInputStream 报文件不存在)
+        File copytplfile = new File(dir + File.separator+tplfile.getName());
+        copyFileUsingFileStreams(tplfile,copytplfile);
+        exportAllData(excelFile, sheetName , columns, dataList, styleMap,copytplfile);
+        if(copytplfile.exists()){
+            copytplfile.delete();
+        }
         return excelFile;
     }
 
@@ -465,38 +470,6 @@ public class ExcelTplUitl {
         }
         return buffer;
     }
-//	public static void main(String[] args) {
-//		//导出所有数据
-//		List<Data> data = new ArrayList<Data>();
-//		data.add(new Data(1L, "名称1", new BigDecimal(3.11), new Date()));
-//		data.add(new Data(2L, "名称2", new BigDecimal(3.12), new Date()));
-//		data.add(new Data(3L, "名称3", new BigDecimal(3.13), new Date()));
-//		data.add(new Data(4L, "名称4", new BigDecimal(3.14), new Date()));
-//		data.add(new Data(5L, "名称5", new BigDecimal(3.15), new Date()));
-//		data.add(new Data(6L, "名称6", new BigDecimal(3.16), new Date()));
-//
-//		List<ExcelColumn> columns = new ArrayList<ExcelColumn>();
-//		columns.add(new ExcelColumn("id", "ID"));
-//		columns.add(new ExcelColumn("name", "名称"));
-//		columns.add(new ExcelColumn("number", "数字"));
-//		columns.add(new ExcelColumn("createTime", "创建日期"));
-//
-//		File excelFile = new File("D://1.xlsx");
-//		String sheetName = "债券交易-持仓信息";
-//		long s = System.currentTimeMillis();
-//		exportAllData(excelFile, sheetName , columns, data);
-//		System.out.println(System.currentTimeMillis()-s);
-//
-//		//分页追加
-//		excelFile = new File("D://2.xlsx");
-//		File excelTemplateFile = new File(excelFile.getParentFile(),Thread.currentThread().getName()+excelFile.getName());
-//		createExcelTemplate(excelTemplateFile, sheetName, columns);
-//		DataAppendUtil<Data> u = new DataAppendUtil<>(excelTemplateFile, excelFile, sheetName);
-//		u.append(data);
-//		u.append(data);
-//		u.append(data);
-//		u.close();
-//	}
 
     public static class Data{
         private long id;
@@ -551,6 +524,27 @@ public class ExcelTplUitl {
             return null;
         }
     }
+
+    private static void copyFileUsingFileStreams(File source, File dest){
+        InputStream input = null;
+        OutputStream output = null;
+        try {
+            input = new FileInputStream(source);
+            output = new FileOutputStream(dest);
+            byte[] buf = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = input.read(buf)) > 0) {
+                output.write(buf, 0, bytesRead);
+            }
+        } catch (IOException e){}
+        finally {
+            try{input.close();
+                output.close();
+            }
+            catch (IOException e){}
+        }
+    }
 }
+
 
 
