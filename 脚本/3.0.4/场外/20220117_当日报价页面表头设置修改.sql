@@ -1,1 +1,0 @@
-update cfg_datatable_show set DISPLAYED = '1' where PAGECODE = 'IbuQuoteRepo' and DTCODE = 'DAYDIALOGINFO' and COLCODE ='execId';
