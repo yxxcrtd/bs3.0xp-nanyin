@@ -646,7 +646,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 
 	@ResponseBody
 	@PostMapping("/selectCounterIdByCounterType")
-	public Message<List<SelectOptionDto>> selectCounterIdByCounterType(SelectOptionRequestDto dto){
+	public Message<List<SelectOptionDto>> selectCounterIdByCounterType(@RequestBody  SelectOptionRequestDto dto){
 		try {
 			List<SelectOptionDto> selectOptionDtos = etrExchangeTrade001CommonService.selectCounterIdByCounterType(dto);
 			return new Message<List<SelectOptionDto>>().success().setData(selectOptionDtos);
@@ -723,10 +723,17 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("/selectCounterTrader")
-	public List<SuggestDto> selectCounterTrader() {
-		Map<String, Object> pageParam = RequestUtil.getPageParam();
-		return etrExchangeTrade001CommonService.selectCounterTrader(pageParam);
+	public Message<List<SelectOptionDto>> selectCounterTrader(@RequestBody  SelectOptionRequestDto dto){
+		try {
+			Map<String, Object> pageParam = RequestUtil.getPageParam();
+			List<SelectOptionDto> selectOptionDtos = etrExchangeTrade001CommonService.selectCounterTrader(pageParam);
+			return new Message<List<SelectOptionDto>>().success().setData(selectOptionDtos);
+		} catch (Exception e) {
+			logger.error("查询功能异常", e);
+			return new Message<List<SelectOptionDto>>().fail().setMessage("查询异常");
+		}
 	}
+
 
 	/**
 	 * 本方交易员联想文本框初始化。
@@ -735,9 +742,15 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("/selectTrader")
-	public List<SuggestDto> selectTrader() {
-		Map<String, Object> pageParam = RequestUtil.getPageParam();
-		return etrExchangeTrade001CommonService.selectTrader(pageParam);
+	public Message<List<SelectOptionDto>> selectTrader(@RequestBody  SelectOptionRequestDto dto){
+		try {
+			Map<String, Object> pageParam = RequestUtil.getPageParam();
+			List<SelectOptionDto> selectOptionDtos = etrExchangeTrade001CommonService.selectTrader(pageParam);
+			return new Message<List<SelectOptionDto>>().success().setData(selectOptionDtos);
+		} catch (Exception e) {
+			logger.error("查询功能异常", e);
+			return new Message<List<SelectOptionDto>>().fail().setMessage("查询异常");
+		}
 	}
 
 	/**
