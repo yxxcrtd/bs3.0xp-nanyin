@@ -367,7 +367,7 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 	}
 
 	/**
-	 * 查询最大申请数量
+	 * 查询配股权益数量
 	 * <一句话功能简述>
 	 * @return
 	 * @see
@@ -386,8 +386,8 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 			String entrustNumStr=entrustNum.setScale(2).toString();
 			return new Message<String>(entrustNumStr);
 		}catch (Exception e) {
-			logger.error("查询最大申请数量异常",e);
-			return new Message<String>().fail().setMessage("查询最大申请数量异常");
+			logger.error("查询配股权益数量异常",e);
+			return new Message<String>().fail().setMessage("查询配股权益数量异常");
 		}
 	}
 
