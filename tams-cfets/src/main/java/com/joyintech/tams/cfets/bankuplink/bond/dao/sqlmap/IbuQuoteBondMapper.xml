@@ -1831,6 +1831,7 @@
             ,T1.SHARE_AMT*100 shareAmt
             ,T1.UNIT_INT unitInt
             ,T1.INT_AMT intAmt
+            ,T1.REMARK remark
             ,T2.OUR_SHARE_AMT*100
             ,T2.OUR_FPRICE_AMT
             ,T2.OUR_CPRICE_AMT
