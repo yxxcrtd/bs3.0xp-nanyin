@@ -2,7 +2,6 @@ DROP TABLE PBC_REPORT_TEMPLATEDETAIL;
 /***包含2-1  2-4**/
 create table PBC_REPORT_TEMPLATEDETAIL
 (
-
   propertycode VARCHAR2(50),
   propername   VARCHAR2(100),
   orderno      NUMBER,
