@@ -419,8 +419,25 @@ public class IbuQuoteRepoService extends BaseService {
         for (RepoEntrustPledgeDto newDto : repoEntrustPledgeDtos) {
             boolean flag = false;
             for (RepoEntrustPledgeDto oldDto : request.getRepoEntrustPledgeDtos()) {
+                if ((StringUtil.equals("dialogueResponse", request.getQuotaPageModel())
+                        || StringUtil.equals("edit", request.getQuotaPageModel()))
+                        && StringUtil.equals(DictCodeListExt3.交易方向_逆回购.getValue(), request.getPs())) {
+                    flag = true;
+                    continue;
+                }
+                // 正回购
                 if (StringUtil.equals(newDto.getFinprodId(), oldDto.getFinprodId())
                         && StringUtil.equals(newDto.getPortfolioId(), oldDto.getPortfolioId())) {
+                    oldDto.setPledgePrin(ArithmeticUtil.doAdd(oldDto.getPledgePrin(), newDto.getPledgePrin()));
+                    oldDto.setAvaPledgePrin(ArithmeticUtil.doAdd(oldDto.getAvaPledgePrin(), newDto.getAvaPledgePrin()));
+                    oldDto.setConvertAmt(ArithmeticUtil.multiply(oldDto.getPledgePrin(), ArithmeticUtil.divide(oldDto.getPledgeRatio(), new BigDecimal(100), 6)));
+                    flag = true;
+                }
+                // 逆回购
+                if (StringUtil.equals(newDto.getFinprodId(), oldDto.getFinprodId())
+                        && !StringUtil.equals("dialogueResponse", request.getQuotaPageModel())
+                        && !StringUtil.equals("edit", request.getQuotaPageModel())
+                        && StringUtil.equals(DictCodeListExt3.交易方向_逆回购.getValue(), request.getPs())) {
                     oldDto.setPledgePrin(ArithmeticUtil.doAdd(oldDto.getPledgePrin(), newDto.getPledgePrin()));
                     oldDto.setAvaPledgePrin(ArithmeticUtil.doAdd(oldDto.getAvaPledgePrin(), newDto.getAvaPledgePrin()));
                     oldDto.setConvertAmt(ArithmeticUtil.multiply(oldDto.getPledgePrin(), ArithmeticUtil.divide(oldDto.getPledgeRatio(), new BigDecimal(100), 6)));
@@ -624,7 +641,7 @@ public class IbuQuoteRepoService extends BaseService {
                 ptlAllocationListNoNeed.add(ptlAllocation);
             }
         }
-        if(StringUtil.equals("dialogueResponse", request.getQuotaPageModel())) {
+        if (StringUtil.equals("dialogueResponse", request.getQuotaPageModel())) {
             // 过滤没有质押券的组合
             BigDecimal tradeAmt = request.getTradeAmt();
             //降序
@@ -2555,7 +2572,7 @@ public class IbuQuoteRepoService extends BaseService {
     public Map<String, String> selectAllCustomer() {
         Map<String, String> map = new HashMap<>();
         cfetsIbuQuoteRepoMapper.selectAllCustomer().stream().forEach(x -> {
-            map.put(x.get("PARTY_ID"), x.get("PARTY_NAME"));
+            map.put(x.get("PARTY_ID"), x.get("PARTY_ABBR"));
         });
         return map;
     }
