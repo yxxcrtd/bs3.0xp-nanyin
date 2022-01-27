@@ -17,6 +17,7 @@ import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.system.base.dao.SysWflBusinessListMapper;
 import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
@@ -34,6 +35,7 @@ import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealRegisterQuoteDt
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.base.core.impl.dao.MstWorkflowCommonServiceMapperImpl;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -144,6 +146,9 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
 
     @Autowired
     private com.joyintech.tams.cfets.bankuplink.bond.service.CfetsQuotedCommonService cfetsQuotedCommonServicevue;
+
+    @Autowired
+    private MstWorkflowCommonServiceMapperImpl mstWorkflowCommonServiceMapperImpl;
     /**
      * 提交保存check 必填项
      * @param entity
@@ -499,7 +504,13 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             busiType = DictCodeListExt3.头寸业务类型_现券交易.getValue();
         }
         try{
-            PositionHttpRequest.doDeleteByWorkFlowId(workflowId,DictCodeListExt1.子系统代码_交易.getValue(),busiType,entity.getPs());
+            WFlowCommonService.doCompleteFlow(entity.getWorkflowId());
+            //发送头寸
+            ProcessMark processMark = mstWorkflowCommonServiceMapperImpl.getBusinessInfo(workflowId);
+            if (StringUtil.isNotEmpty(processMark)
+                    && StringUtil.equals(processMark.getStatus(), DictCodeList.数据状态_修改中.getValue())) {
+                PositionHttpRequest.doDeleteByWorkFlowId(workflowId,DictCodeListExt1.子系统代码_交易.getValue(),busiType,entity.getPs());
+            }
         }catch(PositionException e){
             Message message = PositionUtil.ajaxErrorReturn(e);
             logger.error(workflowId+":"+message.getMessage());
