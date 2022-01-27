@@ -55,6 +55,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -492,6 +493,7 @@ public class IbuComponentCommonService extends BaseService {
     @Transactional
     public boolean resCommonHandle(QuoteResultDto quoteResultDto, User user,
                                    boolean isSendGateWay) {
+        long startTime = System.currentTimeMillis();    //获取开始时间
         // 是否调用上行接口
         String isUpLinkSend =  CacheUtil.getSysParam("IS_NEED_UPLINK");
         if(StringUtil.equals(DictCodeList.是否_否.getValue(),isUpLinkSend)){
@@ -564,6 +566,14 @@ public class IbuComponentCommonService extends BaseService {
                 cfetsQuotedCommonService.updateQuoteCompletion(quoteResultDtoN);
             }
         }
+        long endTime = System.currentTimeMillis();
+        Date startDate = new Date();
+        startDate.setTime(startTime);
+        Date endDate = new Date();
+        endDate.setTime(endTime);
+        logger.info("resCommonHandle程序运行开始时间：" + new SimpleDateFormat().format(startDate));
+        logger.info("resCommonHandle程序运行结束时间：" + new SimpleDateFormat().format(endDate)); //程序运行结束时间
+        logger.info("resCommonHandle程序运行时间：" + (endTime - startTime) + "ms");    //输出程序运行时间
 
         return true;
     }
@@ -3100,6 +3110,7 @@ public class IbuComponentCommonService extends BaseService {
      */
     @Transactional
     public void reject(Map<String, Object> param) {
+        long startTime = System.currentTimeMillis();    //获取开始时间
         String quoteId = (String)param.get("quoteId");
         String entrustId = (String)param.get("entrustId");
         String portfolioId = (String)param.get("portfolioId");
@@ -3119,6 +3130,15 @@ public class IbuComponentCommonService extends BaseService {
             userInfo);
         // 组件调用共通处理
         this.resCommonHandle(quoteResultDto, userInfo, true);
+
+        long endTime = System.currentTimeMillis();
+        Date startDate = new Date();
+        startDate.setTime(startTime);
+        Date endDate = new Date();
+        endDate.setTime(endTime);
+        System.out.println("reject程序运行开始时间：" + new SimpleDateFormat().format(startDate)); //程序运行开始时间
+        System.out.println("reject程序运行结束时间：" + new SimpleDateFormat().format(endDate)); //程序运行结束时间
+        System.out.println("reject程序运行时间：" + (endTime - startTime) + "ms");    //输出程序运行时间
     }
 
     /**

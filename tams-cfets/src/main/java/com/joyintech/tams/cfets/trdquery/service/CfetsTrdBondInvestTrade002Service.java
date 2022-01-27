@@ -1180,10 +1180,11 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
                 remark= "交易撤销：" + entity.getRevokeReason()+settleRemark==null?"":settleRemark;
             }
             regTotal.setRemark(remark);
-            cfetsBondDealQuotedPrice004Service.dorevoke(regTotal.getTotleTradeId(),remark);
+            cfetsBondDealQuotedPrice004Service.dorevoke(regTotal.getTotleTradeId(),remark,isNeedDealPosition);
             //若是备注撤销内容不为空，则需要更新原登记数据的备注内容
             cfetsTrdQueryMapper.updateRegTotalByPrimaryKeySelective(regTotal);
         }
+        String exeId = cfetsTrdQueryMapper.seleteByTrdId(bizCode);
         cfetsTrdConfirmMapper.deleteByTrdId(bizCode);
 
        //发送头寸
@@ -1203,6 +1204,9 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
             paramMap.put("totleTradeId", bizCode);
             paramMap.put("tradeStatus", BussinessDictCodeList.银行间上行报价状态_已撤销.getValue());
             cfetsTrdQueryMapper.updateIbuByPrimaryKeySelective(paramMap);
+            paramMap.put("exeId", exeId);
+            paramMap.put("remark", DictCodeListExt3.交收状态_交收失败.getCodeName());
+            cfetsTrdQueryMapper.updateInterfTradSecdealByTradeId(paramMap);
         }
     }
 
