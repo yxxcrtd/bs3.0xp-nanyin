@@ -1860,7 +1860,7 @@
             and reg.sec_manage_acct_id = #{secManageAcctId,jdbcType=VARCHAR}
         </if>
         <if test="yield != null">
-            and reg.yield=#{yield}
+            and to_char(reg.yield,'FM990.9999')=to_char(#{yield},'FM990.9999')
         </if>
         <if test="faceValue != null">
             and reg.face_value=#{faceValue}
@@ -1875,7 +1875,7 @@
             and reg.repo_term = #{termDays}
         </if>
         <if test="rate != null">
-            and reg.rate=#{rate}
+            and to_char(reg.rate,'FM990.9999')=to_char(#{rate},'FM990.9999')
         </if>
         <if test="vsettleDate != null and vsettleDate != ''">
             and to_char(reg.v_settle_date,'yyyyMMdd') = #{vsettleDate,jdbcType=VARCHAR}
