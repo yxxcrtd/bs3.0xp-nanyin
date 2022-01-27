@@ -81,7 +81,7 @@
             field: 'rate', width: 100, title: '回购利率（%）',  sortable: false
             ,disabled:true
             ,type: 'number'
-            ,digit: 2
+            ,digit: 4
         }
 
     ]
@@ -125,7 +125,7 @@
             field: 'firstNetPrice', width: 100, title: '首次净价（元）',  sortable: false
             ,disabled:true
             ,type: 'number'
-            ,digit: 2
+            ,digit: 4
         }
         ,{
             field: 'pledgeRate', width: 100, title: '折算比例（%）',  sortable: false

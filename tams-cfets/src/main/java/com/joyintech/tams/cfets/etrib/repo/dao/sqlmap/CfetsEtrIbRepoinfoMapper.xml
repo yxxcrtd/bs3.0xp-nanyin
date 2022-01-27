@@ -132,7 +132,7 @@
          NVL(T5.FINISH_AMT,0)  as transFinishAmt,
          (NVL(T1.ENTRUST_AMT,0) - NVL(T5.FINISH_AMT,0)) as transRemainderAmt,
          T1.REMARK,
-         T9.REAL_NAME as approver,
+         nextUser.userName as approver,
          TO_CHAR(T1.ENTRUST_DATE, 'yyyy-MM-dd') as entrustDateStr,
          T1.ENTRUST_DATE  entrustDate,
          T1.COUNTER_ID counterId,
@@ -147,8 +147,8 @@
         <if test="userId != null and userId != ''">
             AND PPA.USER_ID = #{userId}
         </if>
-        INNER JOIN PTL_PORTFOLIO T2 ON T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
-        LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
+         INNER JOIN PTL_PORTFOLIO T2 ON T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
+         LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
          LEFT JOIN
          (
          SELECT
@@ -158,7 +158,7 @@
          ETR_QUOTE_FINISH_STATUS
          GROUP BY
          ENTRUST_ID) T4
-         ON  T1.ENTRUST_ID = T4.ENTRUST_ID
+         ON T1.ENTRUST_ID = T4.ENTRUST_ID
          LEFT JOIN
          (
          SELECT
@@ -170,8 +170,15 @@
          GROUP BY
          ENTRUST_ID) T5
          ON T1.ENTRUST_ID = T5.ENTRUST_ID
-        left join (
-         SELECT case when T.PROCESS_STATE = 'END' then  null else T.NEXT_USER end AS nowUserId,
+         left join
+         (
+         select
+         nextApp.workFlowId,
+         (select listagg(SYS_USER.REAL_NAME, ',') within group(order by SYS_USER.USER_NAME) from SYS_USER where
+         instr(','||nextApp.nowUserId||',' , ','||SYS_USER.USER_NAME||',') > 0) userName
+         from
+         (
+         SELECT case when T.PROCESS_STATE = 'END' then null else T.NEXT_USER end AS nowUserId,
          sdpm.Workflow_Id as workFlowId
          FROM SYS_WFL_BUSINESS_LIST T
          inner join SYS_DATA_PROCESS_MARK sdpm
@@ -185,14 +192,14 @@
          AND T.SEQ_NO = A.SEQ_NO)
          AND T.PROCESS_STATE in ('ING')
          and T.BUSINESS_TYPE='ETR53') nextApp
-         on T1.Workflow_Id=nextApp.workFlowId
-        LEFT JOIN WFL_ETR_ENTRUST_ADD T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID
-        LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
-        LEFT JOIN SYS_USER T9 ON nextApp.nowUserId = T9.USER_NAME
-        where
-        T1.FINPROD_TYPE2 in (#{FINPROD_TYPE2_Z},#{FINPROD_TYPE2_N})
-        and T1.TRADE_MARKET = #{TRADE_PLACE_01}
-        <include refid="commonWhere"></include>
+         ) nextUser
+         on T1.Workflow_Id=nextUser.workFlowId
+         LEFT JOIN WFL_ETR_ENTRUST_ADD T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID
+         LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
+         where
+         T1.FINPROD_TYPE2 in (#{FINPROD_TYPE2_Z},#{FINPROD_TYPE2_N})
+         and T1.TRADE_MARKET = #{TRADE_PLACE_01}
+         <include refid="commonWhere"></include>
      </sql>
     <sql id="commonWhere">
     	<if test="portfolioIdList != null and portfolioIdList.size() > 0"><!-- 组合信息 -->

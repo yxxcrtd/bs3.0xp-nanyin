@@ -104,16 +104,18 @@ public class IbuQuoteBondCalService extends BaseService {
         if (null != calRespone.getFpriceAmt()) {
             calRequest.setFpriceAmt(calRespone.getFpriceAmt());
         }
-        List<TrdTradeFeeDetail> trdTradeFeeDetails = calFee(calRequest);
-        if (CollectionUtils.isNotEmpty(trdTradeFeeDetails)) {
-            for (TrdTradeFeeDetail item : trdTradeFeeDetails) {
-                if (StringUtil.equals(item.getFeeType(), BussinessDictCodeList.费用类型_交易手续费.getValue())) {
-                    calRespone.setDealFeeAmt(item.getFeeAmt());
-                    continue;
-                }
-                if (StringUtil.equals(item.getFeeType(), BussinessDictCodeList.费用类型_结算手续费.getValue())) {
-                    calRespone.setSettFeeAmt(item.getFeeAmt());
-                    continue;
+        if(StringUtil.isNotEmpty(calRequest.getSecManageAcctId())){
+            List<TrdTradeFeeDetail> trdTradeFeeDetails = calFee(calRequest);
+            if (CollectionUtils.isNotEmpty(trdTradeFeeDetails)) {
+                for (TrdTradeFeeDetail item : trdTradeFeeDetails) {
+                    if (StringUtil.equals(item.getFeeType(), BussinessDictCodeList.费用类型_交易手续费.getValue())) {
+                        calRespone.setDealFeeAmt(item.getFeeAmt());
+                        continue;
+                    }
+                    if (StringUtil.equals(item.getFeeType(), BussinessDictCodeList.费用类型_结算手续费.getValue())) {
+                        calRespone.setSettFeeAmt(item.getFeeAmt());
+                        continue;
+                    }
                 }
             }
         }
@@ -376,8 +378,8 @@ public class IbuQuoteBondCalService extends BaseService {
         //模式
         //String sellPara = CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
         //String ps = request.getPs();
-        BigDecimal tailDifferenceFpriceAmt = request.getFpriceAmt();
-        BigDecimal tailDifferenceCpriceAmt = request.getCpriceAmt();
+        BigDecimal tailDifferenceFpriceAmt = request.getFpriceAmt().setScale(2,RoundingMode.HALF_UP);
+        BigDecimal tailDifferenceCpriceAmt = request.getCpriceAmt().setScale(2,RoundingMode.HALF_UP);;
         for (PtlAllocationDto item : ptlAllocations) {
             BigDecimal shareAmt = ArithmeticUtil.multiply(item.getShareAmt(), new BigDecimal(10000));
             item.setShareAmt(shareAmt);

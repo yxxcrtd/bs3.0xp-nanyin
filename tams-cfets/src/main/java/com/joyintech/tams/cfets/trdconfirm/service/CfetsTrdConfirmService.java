@@ -975,6 +975,8 @@ public class CfetsTrdConfirmService extends BaseService{
         }else{
             entity.setTradePlat(DictCodeList.交易平台_其它.getValue());
         }
+        //到期结算方式
+        entity.setmDeliveryType(dtoReg.getMdeliveryType());
 
         // 汇总扩展表
         PaTrdFinProductDealTotal productDealTotal = new PaTrdFinProductDealTotal();
@@ -1409,6 +1411,7 @@ public class CfetsTrdConfirmService extends BaseService{
             entity.setTradePlat(DictCodeList.交易平台_其它.getValue());
         }
         entity.setTgBusiType(getPaBussType(dtoReg.getPs()));
+        entity.setmDeliveryType(dtoReg.getMdeliveryType());
 
         // 汇总扩展表
         PaTrdFinProductDealTotal productDealTotal = new PaTrdFinProductDealTotal();

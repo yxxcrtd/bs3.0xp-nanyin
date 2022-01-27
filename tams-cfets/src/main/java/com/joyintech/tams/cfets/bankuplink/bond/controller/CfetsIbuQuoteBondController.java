@@ -15,8 +15,8 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.util.ExcelTplUitl;
 import com.joyintech.tams.business.common.util.ExcelUitl;
-import com.joyintech.tams.business.common.util.ExcelZipUitl;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
 import com.joyintech.tams.cfets.bankuplink.bond.service.*;
@@ -645,6 +645,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 				if(StringUtil.equals(item.getCalMode(),"03")){item.setExerYield(ArithmeticUtil.multiply(item.getExerYield(),new BigDecimal(100)));item.setPrice(null);item.setMatureYield(null);}
 			});
 		}
+		File tplfile = new File(ExcelTplUitl.getTplFile("DAYREGEXPORTTPL.xlsx"));
 		List<File> files = new ArrayList<>();
 		if(StringUtil.isNotEmpty(ibuExportCountMax)&&CollectionUtils.isNotEmpty(dataList)){
 			int max = Integer.parseInt(ibuExportCountMax);
@@ -662,14 +663,10 @@ public class CfetsIbuQuoteBondController extends BaseController {
 				if(null==sequenceIndexData){sequenceIndexData = 1L;}
 				String appendString = collect.size()>=1?String.format("%04d", sequenceIndexData):StringUtil.EMPTY;
 				String excelAndSheetName = StringUtil.join(prefix,"_",appendString);
-				files.add(ExcelZipUitl.createFile(requestDto, excelAndSheetName,() -> {
+				files.add(ExcelTplUitl.createFile(requestDto, excelAndSheetName,"本币交易",tplfile,() -> {
 					return cfetsBondDayRegDtos;
 				}));
-				/*ExcelZipUitl.doExport2(requestDto, response, excelAndSheetName,() -> {
-							return cfetsBondDayRegDtos;
-					});*/
 			}
-			//ExcelZipUitl.doExport(response,files);
 		}
 		else{
 			//获取递增序号
@@ -679,12 +676,9 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			Long sequenceIndexData = tamsBaseMapper.getSequenceIndexData(sequenceIndex);
 			if(null==sequenceIndexData){sequenceIndexData = 1L;}
 			String excelAndSheetName = StringUtil.join(prefix,"_",sequenceIndexData);
-			files.add(ExcelZipUitl.createFile(requestDto, excelAndSheetName,() -> {
+			files.add(ExcelTplUitl.createFile(requestDto, excelAndSheetName,"本币交易",tplfile,() -> {
 				return dataList;
 			}));
-           /* ExcelUitl.doExport2(requestDto, response, excelAndSheetName,() -> {
-				return dataList;
-			});*/
 		}
 		for (File file : files) {
 			Map<String,String> map = new HashMap<>();

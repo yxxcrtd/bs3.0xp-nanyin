@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -194,7 +195,7 @@ public class CommonController {
 
     @ApiOperation(value = "查询指令明细信息", notes = "根据指令代码查询指令明细信息")
     @RequestMapping(value = "/common/etrDispatcher/info", method = RequestMethod.POST)
-    public Message<EtrDispatcherInfoResponse> getEtrDispatcherInfo(@RequestBody EtrDispatcherInfoRequest request) {
+    public Message<Map<String,Object>> getEtrDispatcherInfo(@RequestBody EtrDispatcherInfoRequest request) {
         return commonManagement.getEtrDispatcherInfo(request);
     }
 

@@ -24,6 +24,8 @@ import io.swagger.annotations.ApiModelProperty;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -33,11 +35,11 @@ import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class ExcelZipUitl {
+public class ExcelTplUitl {
 
     private static final Logger logger = LoggerFactory.getLogger(ExcelUitl.class);
 
-    public static File createFile(CfetsExportRequestDto requestDto,String excelAndSheetName, DoQuery doQuery){
+    public static File createFile(CfetsExportRequestDto requestDto,String excelName,String sheetName,File tplfile, DoQuery doQuery){
         File excelFile = null;
         List<BaseMap> header = requestDto.getHeader();
         List dataList = requestDto.getData();
@@ -53,7 +55,7 @@ public class ExcelZipUitl {
                     }
                 });
             }
-            excelFile = createFile2(excelAndSheetName, header, mapList);
+            excelFile = createFile2(excelName,sheetName, header, mapList,tplfile);
         }else {
             List<BaseMap> dataResultList = requestDto.getData();
             try{
@@ -77,13 +79,13 @@ public class ExcelZipUitl {
             }catch (Exception e){
                 logger.error("导出格式化日期异常");
             }
-            excelFile = createFile2(excelAndSheetName, header, dataResultList);
+            excelFile = createFile2(excelName,sheetName, header, dataResultList,tplfile);
         }
         return excelFile;
     }
 
 
-    public static File createFile2(String fileName, List<BaseMap> heads, List dataList){
+    public static File createFile2(String fileName,String sheetName, List<BaseMap> heads, List dataList,File tplfile){
         File excelFile = null;
         String dir = UUID.randomUUID().toString();
         File path = null;
@@ -115,7 +117,7 @@ public class ExcelZipUitl {
         }
         excelFile = new File(dir + File.separator + fileName +".xlsx");
         long s = System.currentTimeMillis();
-        exportAllData(excelFile, fileName , columns, dataList, styleMap);
+        exportAllData(excelFile, sheetName , columns, dataList, styleMap,tplfile);
         return excelFile;
     }
 
@@ -308,12 +310,14 @@ public class ExcelZipUitl {
         return cellStyle;
     }
 
-    public static <T> void exportAllData(File excelFile,String sheetName,List<ExcelColumn> columns,List<T> data, Map<String, BaseMap> styleMap) {
-        File excelTemplateFile = new File(excelFile.getParentFile(),Thread.currentThread().getName()+excelFile.getName());
-        if(StringUtil.isNotEmpty(sheetName)&&sheetName.length()>31){
-            sheetName = sheetName.substring(0,30);
+    public static <T> void exportAllData(File excelFile,String sheetName,List<ExcelColumn> columns,List<T> data, Map<String, BaseMap> styleMap,File excelTemplateFile) {
+        if(null==excelTemplateFile){
+            excelTemplateFile = new File(excelFile.getParentFile(),Thread.currentThread().getName()+excelFile.getName());
+            if(StringUtil.isNotEmpty(sheetName)&&sheetName.length()>31){
+                sheetName = sheetName.substring(0,30);
+            }
+            createExcelTemplate(excelTemplateFile, sheetName, columns, styleMap);
         }
-        createExcelTemplate(excelTemplateFile, sheetName, columns, styleMap);
         EasyExcel.write(excelFile).withTemplate(excelTemplateFile).sheet(sheetName)
                 .registerConverter(new Converter<Date>() {
                     @Override
@@ -331,7 +335,6 @@ public class ExcelZipUitl {
                         return new WriteCellData<>(DateUtil.format(value));
                     }
                 }).doFill(data);
-        excelTemplateFile.delete();
     }
 
     public static class DataAppendUtil<T> {
@@ -529,4 +532,22 @@ public class ExcelZipUitl {
             this.number = number;
         }
     }
+
+    public static void main(String[] args) {
+        String temp = "兆尹/n科技";
+        System.out.println(temp);
+    }
+
+    public static String getTplFile(String templateFile) {
+        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+
+        try {
+            Resource[] res = resolver.getResources("classpath*:tpl/" + templateFile);
+            return res[0].getURL().getFile();
+        } catch (IOException var3) {
+            return null;
+        }
+    }
 }
+
+

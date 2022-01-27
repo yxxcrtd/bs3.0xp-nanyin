@@ -265,9 +265,6 @@ with ZYSHG as
                 and ((va.TRADE_PLAT like concat('%',concat(#{tradePlat},'%')) and v.finprod_type2 = 'F01') or v.finprod_type2 != 'F01')
               where t.branch = 0
                and t.oth_type in (#{FINPROD_OTH_CODE_TYPE_05}, #{FINPROD_OTH_CODE_TYPE_06})
-                <if test="tradePlat != null and tradePlat != '' and tradePlat==SHARES_TRADE_PLATFORM_021">
-                    and  t.oth_type in (#{FINPROD_OTH_CODE_TYPE_06})
-                </if>
             union
         </if>
         select a.finprod_market_id,

@@ -320,22 +320,26 @@ FROM
 			</if>
 		</where>
 	</select>
-	<select id="selectPartyId" resultType="com.joyintech.framework.select.SuggestDto">
+	<select id="selectPartyId" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT DISTINCT
-		mcci.PARTY_ID code,
-		mcci.PARTY_ID hidCode,
-		mcci.PARTY_ABBR name,
-		mcci.PARTY_ABBR shortName
+		mcci.PARTY_ID id,
+		mcci.PARTY_ABBR text
 		FROM
 		MST_CFETS_CUSTOMER_INFO mcci
-		<where>
-			<if test="param != null and param != ''">
-				mcci.PARTY_ID LIKE CONCAT('%', CONCAT(#{param}, '%'))
-				OR mcci.PARTY_CUSTOMER_ID LIKE CONCAT('%', CONCAT(#{param}, '%'))
-				OR mcci.PARTY_ABBR LIKE CONCAT('%', CONCAT(#{param}, '%'))
-				OR mcci.PARTY_NAME LIKE CONCAT('%', CONCAT(#{param}, '%'))
+		WHERE mcci.PARTY_ID NOT IN (SELECT PARTY_ID FROM  MST_COUNTER_PARTY WHERE PARTY_ID IS NOT NULL)
+			<if test="search != null and search != ''">
+				AND (mcci.PARTY_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				OR mcci.PARTY_CUSTOMER_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				OR mcci.PARTY_ABBR LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				OR mcci.PARTY_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				)
 			</if>
-		</where>
+			<if test="initValue != null and initValue != ''">
+				OR mcci.PARTY_ID = #{initValue,jdbcType=VARCHAR}
+			</if>
+			<if test="partyId != null and partyId != ''">
+				OR mcci.PARTY_ID = #{partyId,jdbcType=VARCHAR}
+			</if>
 	</select>
 	<select id="getAllPartyIdIsNotNull" resultType="java.lang.String">
 		SELECT PARTY_ID FROM  MST_COUNTER_PARTY WHERE PARTY_ID IS NOT NULL

@@ -329,6 +329,8 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		//母页面的pageModel
 		String parentPageModel = getParam(GlobalConstant.DETAIL_PAGE_MODEL_KEY);
 		initPageParams.put("parentPageModel", parentPageModel);
+		initPageParams.put("PAGE_MODEL_NEW", GlobalConstant.DETAIL_PAGE_MODEL_NEW);
+		initPageParams.put("PAGE_MODEL_EDIT", GlobalConstant.DETAIL_PAGE_MODEL_EDIT);
 		//是否_是
 		initPageParams.put("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
 
@@ -1018,9 +1020,11 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 					} else if (dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue())) {
 						etrExchangeTrade001Dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
 					}
-					BussinessCodeParameter param = etrExchangeTrade001CommonService.genBussinessCodeParameter(dto);
-					String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
-					etrExchangeTrade001Dto.setEntrustId(code);
+					if (!StringUtil.isNotEmpty(etrExchangeTrade001Dto.getEntrustId())) {
+						BussinessCodeParameter param = etrExchangeTrade001CommonService.genBussinessCodeParameter(dto);
+						String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
+						etrExchangeTrade001Dto.setEntrustId(code);
+					}
 					etrExchangeTrade001Dto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
 					etrExchangeTrade001Dto.setCreateUser(LoginUserUtil.getUserName());// 用户名
 					etrExchangeTrade001Dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门

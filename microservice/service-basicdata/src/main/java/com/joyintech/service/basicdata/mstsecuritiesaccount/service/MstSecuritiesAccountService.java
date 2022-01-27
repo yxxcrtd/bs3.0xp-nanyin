@@ -281,7 +281,6 @@ public class MstSecuritiesAccountService extends BaseService<MstSecuritiesAccoun
 	public Page<SelectOptionDto> getFinprodMarketInfo(int page, int length, Map<String, Object> map) throws Exception {
 		// 交易平台
 		map.put("SHARES_TRADE_PLATFORM_02", DictCodeList.交易平台_竞价撮合平台.getValue());
-        map.put("SHARES_TRADE_PLATFORM_021", DictCodeListExt3.交易平台_新竞价撮合平台.getValue());
 		map.put("SHARES_TRADE_PLATFORM_03", DictCodeList.交易平台_固定收益平台.getValue());
 		map.put("SHARES_TRADE_PLATFORM_04", DictCodeList.交易平台_大宗交易平台.getValue());
 		// 交易场所
@@ -376,7 +375,6 @@ public class MstSecuritiesAccountService extends BaseService<MstSecuritiesAccoun
     public Page<SelectOptionDto> getFinprodMarketInfoNewUi(int page, int length, Map<String, Object> map) throws Exception {
         // 交易平台
         map.put("SHARES_TRADE_PLATFORM_02", DictCodeList.交易平台_竞价撮合平台.getValue());
-        map.put("SHARES_TRADE_PLATFORM_021", DictCodeListExt3.交易平台_新竞价撮合平台.getValue());
         map.put("SHARES_TRADE_PLATFORM_03", DictCodeList.交易平台_固定收益平台.getValue());
         map.put("SHARES_TRADE_PLATFORM_04", DictCodeList.交易平台_大宗交易平台.getValue());
         // 交易场所

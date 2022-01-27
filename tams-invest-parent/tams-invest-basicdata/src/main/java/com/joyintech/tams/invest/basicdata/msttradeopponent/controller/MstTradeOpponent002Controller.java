@@ -281,7 +281,7 @@ public class MstTradeOpponent002Controller extends BaseController {
      */
     @RequestMapping("/selectPartyId")
     @ResponseBody
-    public List<SuggestDto> selectPartyId(){
+    public Page<SelectOptionDto> selectPartyId(){
         return mstTradeOpponent001Service.selectPartyId(RequestUtil.getPageParam());
     }
 

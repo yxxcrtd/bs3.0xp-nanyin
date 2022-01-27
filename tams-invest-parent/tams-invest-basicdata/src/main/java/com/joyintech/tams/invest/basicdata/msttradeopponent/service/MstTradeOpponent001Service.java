@@ -382,8 +382,9 @@ public class MstTradeOpponent001Service extends CommonExportService<MstTradeOppo
      * @param param
      * @return
      */
-    public List<SuggestDto> selectPartyId(Map<String, Object> param) {
-        return restTemplate.postForList(
-                ServiceApplication.BASICDATA_SERVICE_NAME + "/MstTradeOpponent/selectPartyId", param, SuggestDto.class);
-    }
+    public Page<SelectOptionDto> selectPartyId(Map<String, Object> param) {
+        return restTemplate.postForPage(ServiceApplication.BASICDATA_SERVICE_NAME +
+                "/MstTradeOpponent/selectPartyId",param, SelectOptionDto.class);
+   }
+
 }

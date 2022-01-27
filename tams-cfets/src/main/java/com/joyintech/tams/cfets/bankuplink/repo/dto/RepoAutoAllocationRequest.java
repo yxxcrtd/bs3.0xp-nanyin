@@ -73,6 +73,9 @@ public class RepoAutoAllocationRequest {
     @ApiModelProperty(name = "settlementEndDate", value = "到期结算日", example = "2021-07-15")
     private Date settlementEndDate;
 
+    @ApiModelProperty(name = "quotaPageModel", value = "页面模式", example = "回复:dialogueResponse,新增:new,修改:edit")
+    private String quotaPageModel;
+
     public String getDistribution() {
         return distribution;
     }
@@ -223,6 +226,14 @@ public class RepoAutoAllocationRequest {
 
     public void setShareAmt(BigDecimal shareAmt) {
         this.shareAmt = shareAmt;
+    }
+
+    public String getQuotaPageModel() {
+        return quotaPageModel;
+    }
+
+    public void setQuotaPageModel(String quotaPageModel) {
+        this.quotaPageModel = quotaPageModel;
     }
 }
 

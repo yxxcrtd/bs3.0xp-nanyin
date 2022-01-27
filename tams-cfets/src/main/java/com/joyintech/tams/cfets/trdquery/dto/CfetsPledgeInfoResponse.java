@@ -47,6 +47,10 @@ public class CfetsPledgeInfoResponse {
     @ApiModelProperty(name="pledgeFaceValue",value="券面总额（万元）",example="11")
     private BigDecimal  pledgeFaceValue;
 
+    @ApiModelProperty(name="disFaceValue",value="可质押券面（万元）",example="11")
+    private BigDecimal disFaceValue;
+
+
     public String getPortfolioId() {
         return portfolioId;
     }
@@ -141,5 +145,13 @@ public class CfetsPledgeInfoResponse {
 
     public void setPledgeFaceValue(BigDecimal pledgeFaceValue) {
         this.pledgeFaceValue = pledgeFaceValue;
+    }
+
+    public BigDecimal getDisFaceValue() {
+        return disFaceValue;
+    }
+
+    public void setDisFaceValue(BigDecimal disFaceValue) {
+        this.disFaceValue = disFaceValue;
     }
 }

@@ -1155,7 +1155,11 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         }
         params.put("bizCode", bizCode);
         params.put("updateUser", SecurityUtil.getLoginUser().getUserName());
-        params.put("revokeReason", entity.getRevokeReason()==null?settleRemark : entity.getRevokeReason()+settleRemark);
+        if(StringUtil.isNotEmpty(settleRemark)){
+            params.put("revokeReason", entity.getRevokeReason()==null?settleRemark :"交易撤销:"+ entity.getRevokeReason()+settleRemark);
+        }else if(StringUtil.isNotEmpty(entity.getRevokeReason())){
+            params.put("revokeReason", "交易撤销:"+ entity.getRevokeReason());
+        }
         restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/doRevokeComplete?", params,
             String.class);
 
@@ -1170,9 +1174,10 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         if(null!=regTotal){
             String remark=StringUtil.isEmpty(regTotal.getRemark()) ? "" : regTotal.getRemark();
             if(StringUtil.isNotBlank(remark)){
-                remark=remark+settleRemark+"\n"+"交易撤销：" + bizCode;
+                //remark=remark+(settleRemark==null?"":settleRemark)+"\n"+"交易撤销：" + entity.getRevokeReason();
+                remark=remark+"\n"+"交易撤销：" + entity.getRevokeReason()+settleRemark==null?"":settleRemark;
             }else{
-                remark=settleRemark+"交易撤销：" + bizCode;
+                remark= "交易撤销：" + entity.getRevokeReason()+settleRemark==null?"":settleRemark;
             }
             regTotal.setRemark(remark);
             cfetsBondDealQuotedPrice004Service.dorevoke(regTotal.getTotleTradeId(),remark);

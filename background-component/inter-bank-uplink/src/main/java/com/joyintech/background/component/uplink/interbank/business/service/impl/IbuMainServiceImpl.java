@@ -1538,7 +1538,8 @@ public class IbuMainServiceImpl extends BaseService<IbuQuoteBond> implements Ibu
             }
             //多组合改造  成交的关系表数据  从前台带出
             List<IbuQuoteEtrReDto> ibuQuoteEtrRes = new ArrayList<>();
-            if (StringUtils.equals(exeTypeIBU, DictCodeList.银行间上行操作类型_本方回复成交.getValue())) {
+            if (StringUtils.equals(exeTypeIBU, DictCodeList.银行间上行操作类型_本方回复成交.getValue())
+            ||StringUtils.equals(exeTypeIBU, DictCodeList.银行间上行操作类型_本方请求回复成交.getValue())) {
                 ibuQuoteEtrRes = inputBean.getIbuQuoteEtrReDtoList();
             }
             // 现券请求报价必须项校验
