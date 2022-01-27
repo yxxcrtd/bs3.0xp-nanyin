@@ -221,6 +221,9 @@ public class ExcelTplUitl {
                     cellStyle.setBorderRight(BorderStyle.THIN);
                     cellStyle.setBorderTop(BorderStyle.THIN);
 
+                    //对齐方式
+                    cellStyle.setAlignment(HorizontalAlignment.CENTER);
+
                     Font cellFont = workbook.createFont();
                     //字体
                     cellFont.setFontName("微软雅黑");

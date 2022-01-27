@@ -12,6 +12,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.util.ExcelTplUitl;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
 import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDayPriceDto;
@@ -55,6 +56,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -455,7 +457,8 @@ public class CfetsIbuQuoteRepoController extends BaseController {
     @ApiOperation(value = "当日登记本币交易导出", notes = "当日登记本币交易导出")
     @PostMapping("/exportDayReg")
     @ResponseBody
-    public void exportDayReg(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response) {
+    public Message<List<Map<String, String>>> exportDayReg(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response) {
+        List<Map<String, String>> result = new ArrayList<>();
         Map<String, Object> param = new HashMap<>();
         List<String> quoteIds = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(requestDto.getData())) {
@@ -473,18 +476,11 @@ public class CfetsIbuQuoteRepoController extends BaseController {
         List<CfetsRepoDayRegDto> dataList = ibuQuoteRepoService.listDayRegExport(param);
         String ibuExportCountMax = CacheUtil.getSysParam("IBU_EXPORT_COUNT_MAX");
         String issueTypeStr = "质押式回购";
-        String prefix = StringUtil.join("本币交易导出_", iPlatformDate.getSysDateStr());
+        String prefix = StringUtil.join("本币交易导出_", iPlatformDate.getSysDateStr(), "_");
         requestDto.setData(null);
         //获取机构信息
         Map<String, String> customerMap = ibuQuoteRepoService.selectAllCustomer();
-        //获取递增序号
-        Map<String, String> sequenceIndex = new HashMap<>();
-        sequenceIndex.put("databaseType", "Oracle");
-        sequenceIndex.put("sequenceName", "DAYREGEXPORT_REPO_SEQUENCE");
-        Long sequenceIndexData = tamsBaseMapper.getSequenceIndexData(sequenceIndex);
-        if (null == sequenceIndexData) {
-            sequenceIndexData = 1L;
-        }
+
         //导出数据处理
         if (CollectionUtils.isNotEmpty(dataList)) {
             dataList.forEach(item -> {
@@ -516,9 +512,10 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             response.addHeader("message", URLEncoder.encode(message, "UTF-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            logger.error("response.addHeader错误:"+e);
+            logger.error("response.addHeader错误:" + e);
         }
 
+        List<File> files = new ArrayList<>();
         if (StringUtil.isNotEmpty(ibuExportCountMax) && CollectionUtils.isNotEmpty(dataList)) {
             int max = Integer.parseInt(ibuExportCountMax);
             int fileCount = (dataList.size() + max - 1) / max;
@@ -527,32 +524,48 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             ).collect(Collectors.toList());
             for (int i = 0; i < collect.size(); i++) {
                 List<CfetsRepoDayRegDto> sfetsRepoDayRegDtos = collect.get(i);
+                //获取递增序号
+                Map<String, String> sequenceIndex = new HashMap<>();
+                sequenceIndex.put("databaseType", "Oracle");
+                sequenceIndex.put("sequenceName", "DAYREGEXPORT_REPO_SEQUENCE");
+                Long sequenceIndexData = tamsBaseMapper.getSequenceIndexData(sequenceIndex);
+                if (null == sequenceIndexData) {
+                    sequenceIndexData = 1L;
+                }
                 String quoteTypeStr = StringUtil.isNotEmpty(sfetsRepoDayRegDtos.get(0).getQuoteTypeStr()) ? "对话报价" : sfetsRepoDayRegDtos.get(0).getQuoteTypeStr();
                 String appendString = collect.size() >= 1 ? String.format("%04d", sequenceIndexData) : StringUtil.EMPTY;
                 String excelAndSheetName = StringUtil.join(issueTypeStr, quoteTypeStr, prefix, appendString);
-                ExcelUitl.doExportDeal(requestDto, response, excelAndSheetName, () -> {
-                    List<BaseMap> baseMapList = new ArrayList<>();
-                    for (CfetsRepoDayRegDto dto : sfetsRepoDayRegDtos) {
-                        baseMapList.add(BaseMap.newMap(BeanUtil.object2Map(dto)));
-                    }
-                    return baseMapList;
-                });
+                files.add(ExcelTplUitl.createFile(requestDto, excelAndSheetName, "本币交易", null, () -> {
+                    return sfetsRepoDayRegDtos;
+                }));
             }
         } else {
             String quoteTypeStr = "对话报价";
+            //获取递增序号
+            Map<String, String> sequenceIndex = new HashMap<>();
+            sequenceIndex.put("databaseType", "Oracle");
+            sequenceIndex.put("sequenceName", "DAYREGEXPORT_REPO_SEQUENCE");
+            Long sequenceIndexData = tamsBaseMapper.getSequenceIndexData(sequenceIndex);
+            if (null == sequenceIndexData) {
+                sequenceIndexData = 1L;
+            }
             String excelAndSheetName = StringUtil.join(issueTypeStr, quoteTypeStr, prefix, String.format("%04d", sequenceIndexData));
-            ExcelUitl.doExportDeal(requestDto, response, excelAndSheetName, () -> {
-                List<BaseMap> baseMapList = new ArrayList<>();
-                for (CfetsRepoDayRegDto dto : dataList) {
-                    baseMapList.add(BaseMap.newMap(BeanUtil.object2Map(dto)));
-                }
-                return baseMapList;
-            });
+            files.add(ExcelTplUitl.createFile(requestDto, excelAndSheetName, "本币交易", null, () -> {
+                return dataList;
+            }));
         }
         //处理导出次数
         if (CollectionUtils.isNotEmpty(dataList)) {
             ibuQuoteRepoService.handExportTimes(dataList);
         }
+
+        for (File file : files) {
+            Map<String, String> map = new HashMap<>();
+            map.put("fileName", file.getName());
+            map.put("filePath", file.getAbsolutePath());
+            result.add(map);
+        }
+        return new Message<List<Map<String, String>>>().success().setData(result);
 
     }
 
