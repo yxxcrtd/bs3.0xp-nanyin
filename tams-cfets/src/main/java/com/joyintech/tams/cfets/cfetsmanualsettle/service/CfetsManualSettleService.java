@@ -669,7 +669,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                         }
 
                         try {
-                            this.closeDelegate(listTemp,entity.getRemark());
+                            this.closeDelegate(listTemp,entity.getRemark(),entity.getTgBusiType());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -775,7 +775,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
      * @see
      * @since 1.0
      */
-    private void closeDelegate(List<CfetsManualSettleDealInfo> listTemp,String remark) throws Exception {
+    private void closeDelegate(List<CfetsManualSettleDealInfo> listTemp,String remark,String tgBusiType) throws Exception {
         List<String> entrustIdList = listTemp.stream().map(
                 CfetsManualSettleDealInfo::getEntrustId).collect(Collectors.toList());
         // ZGZGST-2330:委托关闭判断是否有完成额度，分情况处理 fuyongsheng 20210919 edit start
@@ -811,7 +811,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         }
 
         //发送头寸，批量关闭
-        this.closeDelegatePositionMethod(listTemp);
+        this.closeDelegatePositionMethod(listTemp,tgBusiType);
         //更新操作日志
         this.closeDelegatOprHisMethod(listTemp,remark);
     }
@@ -836,7 +836,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         }
     }
 
-    public void closeDelegatePositionMethod(List<CfetsManualSettleDealInfo> dtolist){
+    public void closeDelegatePositionMethod(List<CfetsManualSettleDealInfo> dtolist,String tgBusiType){
         CfetsEtrIbClosePositionRequest req=new CfetsEtrIbClosePositionRequest();
         List<CfetsEtrIbClosePosEtrRequest> etrList=new ArrayList<>();
         for(CfetsManualSettleDealInfo t: dtolist){
@@ -845,6 +845,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             if(StringUtil.isNotEmpty(t.getPs())
                     && StringUtil.equals(t.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
                 busiTypePosition=DictCodeListExt3.头寸业务类型_债券行权交易.getValue(); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
+            }else if(StringUtil.isNotEmpty(tgBusiType) && StringUtil.equals(tgBusiType,"05") || StringUtil.equals(tgBusiType,"06")) {
+                busiTypePosition = tgBusiType;
             }
 
             closeItem.setBusiType(busiTypePosition);

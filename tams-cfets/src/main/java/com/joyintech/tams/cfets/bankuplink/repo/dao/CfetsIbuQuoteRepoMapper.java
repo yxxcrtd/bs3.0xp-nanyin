@@ -1,7 +1,9 @@
 package com.joyintech.tams.cfets.bankuplink.repo.dao;
 
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.tams.cfets.bankuplink.repo.dto.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -221,4 +223,14 @@ public interface CfetsIbuQuoteRepoMapper {
      * @return
      */
     List<Map<String, String>> selectAllCustomer();
+
+    /**
+     * 根据工作流代码获取entity
+     * <功能详细描述>
+     * @param wflValidInputParameter
+     * @return
+     * @see
+     * @since 1.0
+     */
+    ProcessMark getBusinessInfoByPageIdAndPk(WflValidInputParameter wflValidInputParameter);
 }

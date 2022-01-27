@@ -607,7 +607,7 @@
         H.EXERCISE_DATE nextExeDate,
         H.EXERCISE_PRICE nextExercisePrice,
         A.TRADE_MARKET tradeMarket,
-        A.IS_RIGHT idRight
+        A.IS_RIGHT isRight
         FROM FIN_PRODUCT A
         LEFT JOIN FIN_CASH_INFO B
         ON A.FINPROD_ID = B.FINPROD_ID

@@ -13,6 +13,7 @@ package com.joyintech.tams.cfets.bankuplink.repo.controller;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
@@ -25,6 +26,7 @@ import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondRegCheckRequst;
 import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealRegisterQuoteDto;
 import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoQuotedPrice004Service;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -203,7 +205,11 @@ public class IbuQuoteRepo004Controller extends BaseController {
         }
         List<CfetsRepoDealRegisterQuoteDto> cfetsRepoDealRegisterQuoteDtos = new ArrayList<>();
         for (CfetsBondRegCheckDetaileRequst cfetsBondRegCheckDetaileRequst : cfetsBondRegCheckRequst.getCfetsBondRegCheckDetaileRequsts()) {
-            CfetsRepoDealRegisterQuoteDto cfetsBondDealRegisterQuoteDto = new CfetsRepoDealRegisterQuoteDto();
+            WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
+            wflValidInputParameter.setPageId("IbuQuoteRepo004");
+            wflValidInputParameter.setBusinessDataPk1(cfetsBondRegCheckDetaileRequst.getQuoteId());
+            ProcessMark processMark = cfetsRepoQuotedPrice004Service.getBusinessInfoByPageIdAndPk(wflValidInputParameter);
+            CfetsRepoDealRegisterQuoteDto cfetsBondDealRegisterQuoteDto = cfetsRepoQuotedPrice004Service.getBussinessEntity(processMark);
             cfetsBondDealRegisterQuoteDto.setTotleTradeId(cfetsBondRegCheckDetaileRequst.getQuoteId());
             cfetsBondDealRegisterQuoteDto.setRemark(cfetsBondRegCheckRequst.getRemark());
             cfetsBondDealRegisterQuoteDto.setOperatorType("revoke");

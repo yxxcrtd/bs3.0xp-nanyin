@@ -1155,6 +1155,32 @@
                 #{item}
             </foreach>
         </if>
+        WHERE NOT EXISTS (
+        SELECT
+        1
+        FROM
+        TRDQUTO_MATCH_INFO T3
+        WHERE
+        T3.PRE_TRADE_ID = T1.QUOTE_ID)
+        union all
+        SELECT
+        T2.ENTRUST_ID
+        FROM
+        IBU_QUOTE_CREP T1
+        INNER JOIN IBU_QUOTE_ETR_RE T2 ON
+        T1.QUOTE_ID = T2.QUOTE_ID
+        <if test="entrustIdList != null and entrustIdList.size() > 0">
+            and T2.ENTRUST_ID  in
+            <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="entrustIds != null and entrustIds.size() > 0">
+            and T2.ENTRUST_ID  in
+            <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
         WHERE T1.TRADE_STATUS = '01' and
         NOT EXISTS (
         SELECT
@@ -1163,6 +1189,5 @@
         TRDQUTO_MATCH_INFO T3
         WHERE
         T3.PRE_TRADE_ID = T1.QUOTE_ID))
-
     </select>
 </mapper>

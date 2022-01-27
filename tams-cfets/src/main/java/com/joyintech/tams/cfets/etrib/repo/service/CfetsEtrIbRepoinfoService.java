@@ -24,6 +24,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper;
 import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoLib001Mapper;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoinfoMapper;
@@ -86,6 +87,10 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
     @Autowired
     private JoyinbusinessCommonMapper joyinbusinessCommonMapper;
 
+
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
+
     /**
      * 指令管理查询
      *
@@ -128,7 +133,14 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         this.setParam(pageParam);
         pageParam.put("sort",dto.getPageMode().getSort());
         pageParam.put("direction",dto.getPageMode().getDirection());
-        return super.queryForPage(dto.getPageMode().getPageNo(),dto.getPageMode().getPageSize(),() ->cfetsEtrIbRepoLib001Mapper.selectAvaPledgeBondList(pageParam));
+        Page<CfetsEtrIbRepoLibAvaPledgeBondResponse> result = super.queryForPage(dto.getPageMode().getPageNo(),dto.getPageMode().getPageSize(),() ->cfetsEtrIbRepoLib001Mapper.selectAvaPledgeBondList(pageParam));
+        for (CfetsEtrIbRepoLibAvaPledgeBondResponse response : result.getRoot()) {
+            String pendingPeriodStr = joyinbusinessCommonService.calPendingPeriod(response.getFinprodId());
+            String period = pendingPeriodStr.substring(0, pendingPeriodStr.length() - 1);
+            String periodUnit = pendingPeriodStr.substring(pendingPeriodStr.length() - 1, pendingPeriodStr.length());
+            response.setWaitPeriod(pendingPeriodStr);
+        }
+        return result;
     }
     /**
      * 检索参数设置：
@@ -262,6 +274,12 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         pageParam.put("sort",cfetsEtrRepoZLCXPositionRequest.getPageMode().getSort());
         pageParam.put("direction",cfetsEtrRepoZLCXPositionRequest.getPageMode().getDirection());
         Page<CfetsEtrRepoZLCXPositionResponse> result = super.queryForPage(cfetsEtrRepoZLCXPositionRequest.getPageMode().getPageNo(), cfetsEtrRepoZLCXPositionRequest.getPageMode().getPageSize(), () -> cfetsEtrIbRepoinfoMapper.findZlglPositionPage(pageParam));
+        for (CfetsEtrRepoZLCXPositionResponse dto : result.getRoot()) {
+            String pendingPeriodStr = joyinbusinessCommonService.calPendingPeriod(dto.getFinprodId());
+            String period = pendingPeriodStr.substring(0, pendingPeriodStr.length() - 1);
+            String periodUnit = pendingPeriodStr.substring(pendingPeriodStr.length() - 1, pendingPeriodStr.length());
+            dto.setWaitPeriod(pendingPeriodStr);
+        }
         return result;
     }
     

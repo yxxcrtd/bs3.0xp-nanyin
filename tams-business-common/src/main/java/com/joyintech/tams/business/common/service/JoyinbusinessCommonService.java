@@ -260,7 +260,7 @@ public class JoyinbusinessCommonService extends BaseService {
      * @return
      */
     public String calPendingPeriod(String secId) {
-        Date cDate = DateUtil.platDateFromCache();
+        Date cDate = iPlatformDate.getSysDate();
         Map map = new HashMap();
         map.put("finprodId",secId);
         SecInfoModelDto dto = getSecInfoModel(map);
@@ -276,16 +276,17 @@ public class JoyinbusinessCommonService extends BaseService {
         String pendingPeriodStr1 = "";
         String pendingPeriodStr2 = "";
         // 到期展示--
-        if (cDate.compareTo(tDate) >= 1){
+        if (cDate.compareTo(tDate) == 1){
             return "--";
-        //
         }else{
-            result = calcDayInYear(startDate, cDate, 1);
             // 含权债TDTAE取值时，如当前计算日以后存在回售或赎回行权计划的且理论行权日不为到期日的，
             // 则TDATE取2个值计算2个结果，即TDATE分别为最近一个理论行权日、到期日，否则取到期日计算1个结果；
-            if(DictCodeList.是否_是.getValue().equals(isRight) && DateUtil.compareDate(nextExeDate, tDate)!=1){
+            if(DictCodeList.是否_是.getValue().equals(isRight) && null!=nextExeDate
+                    && DateUtil.compareDate(nextExeDate, tDate)!=0){
+                result = calcDayInYear(startDate,cDate, nextExeDate, 1);
                 pendingPeriodStr1=getPendingPeriod(result,cDate,nextExeDate);
             }
+            result = calcDayInYear(startDate,cDate, tDate, 1);
             pendingPeriodStr2=getPendingPeriod(result,cDate,tDate);
             if(CommonUtils.isNotEmpty(pendingPeriodStr1)){
                 return pendingPeriodStr1+"+"+pendingPeriodStr2;
@@ -326,7 +327,7 @@ public class JoyinbusinessCommonService extends BaseService {
      * @param flag 向前向后推算标识（1:向后，-1：向前）
      * @return 计息年度结束日
      */
-    private List<Date[]> calcDayInYear(Date startDate, Date calDate, int flag) {
+    private List<Date[]> calcDayInYear(Date startDate, Date calDate, Date endDate,int flag) {
         List<Date[]> dateList = new ArrayList<>();
         // 计息年度开始日
         Date start = null;
@@ -337,12 +338,17 @@ public class JoyinbusinessCommonService extends BaseService {
             index ++;
             start = end;
             end = calcOneYearDate(startDate, flag * index);
-            if(start != null && (DateUtil.compareDate(start, end)<=1)) {
-                dateList.addAll(Collections.singleton(new Date[]{end, start}));
+            if(flag > 0 ){
+                if(start != null && (DateUtil.compareDate(end,calDate)>=0)) {
+                    dateList.addAll(Collections.singleton(new Date[]{start,end}));
+                }
+            }else{
+                if(start != null && (DateUtil.compareDate(calDate,start)>=0)) {
+                    dateList.addAll(Collections.singleton(new Date[]{start,end}));
+                }
             }
-            dateList.addAll(Collections.singleton(new Date[]{start, end}));
-        } while((flag > 0 && (DateUtil.compareDate(calDate, end)>=1))
-                || (flag < 0 && (DateUtil.compareDate(calDate, end)<=1)));
+        } while((flag > 0 && (DateUtil.compareDate(endDate,end)>=0))
+                || (flag < 0 && (DateUtil.compareDate(end,endDate)>=0)));
         return dateList;
     }
 
@@ -363,39 +369,37 @@ public class JoyinbusinessCommonService extends BaseService {
     private String getPendingPeriod(List<Date[]> result,Date cDate, Date tDate){
         Date yearStartDate = null;
         Date yearEndDate = null;
-        String pendingPeriodStr = "";
         BigDecimal pendingPeriod = BigDecimal.ZERO;
-        for(int i = 0; i < result.size(); i++ ){
-            Date maxStartDate = null;
-            Date minEndDate = null;
-            // 判断计息年度是否计算成功
-            if(null != result && result.get(i).length == 2) {
-                yearStartDate=result.get(i)[0];
-                yearEndDate=result.get(i)[1];
-            }
-            // 比较计算日和计息年度开始日，取最大
-            if(DateUtil.compareDate(cDate, yearStartDate)>=1){
-                maxStartDate = cDate;
-            }else{
-                maxStartDate = yearStartDate;
-            }
-            // 比较计算日和计息年度截止日日，取最小
-            if(DateUtil.compareDate(tDate, yearEndDate)<1){
-                minEndDate = tDate;
-            }else{
-                minEndDate = yearEndDate;
-            }
-            if(i==result.size()-1 && DateUtil.compareDate(cDate, yearStartDate) >=1){
-                pendingPeriod=BigDecimal.valueOf(DateUtil.getBetweenDayNumber(minEndDate,maxStartDate));
-                pendingPeriodStr = pendingPeriod+"D";
-            }else{
+        if((int)DateUtil.getBetweenDayNumber(cDate,tDate)<365){
+            pendingPeriod=BigDecimal.valueOf(DateUtil.getBetweenDayNumber(cDate,tDate));
+            return pendingPeriod+"D";
+        }else{
+            for(int i = 0; i < result.size(); i++ ){
+                Date maxStartDate = null;
+                Date minEndDate = null;
+                // 判断计息年度是否计算成功
+                if(null != result && result.get(i).length == 2) {
+                    yearStartDate=result.get(i)[0];
+                    yearEndDate=result.get(i)[1];
+                }
+                // 比较计算日和计息年度开始日，取最大
+                if(DateUtil.compareDate(cDate, yearStartDate)>=0){
+                    maxStartDate = cDate;
+                }else{
+                    maxStartDate = yearStartDate;
+                }
+                // 比较计算日和计息年度截止日日，取最小
+                if(DateUtil.compareDate(tDate, yearEndDate)==-1){
+                    minEndDate = tDate;
+                }else{
+                    minEndDate = yearEndDate;
+                }
                 pendingPeriod = ArithmeticUtil.doAdd(pendingPeriod,
-                        ArithmeticUtil.divide(BigDecimal.valueOf(DateUtil.getBetweenDayNumber(minEndDate,maxStartDate)),
-                                BigDecimal.valueOf(DateUtil.getBetweenDayNumber(yearEndDate,yearStartDate)), 2));
-                pendingPeriodStr = pendingPeriod+"Y";
+                        ArithmeticUtil.divide(BigDecimal.valueOf(DateUtil.getBetweenDayNumber(maxStartDate,minEndDate)),
+                                BigDecimal.valueOf(DateUtil.getBetweenDayNumber(yearStartDate,yearEndDate)), 2));
             }
         }
-        return pendingPeriodStr;
+        return pendingPeriod+"Y";
     }
 
 }
