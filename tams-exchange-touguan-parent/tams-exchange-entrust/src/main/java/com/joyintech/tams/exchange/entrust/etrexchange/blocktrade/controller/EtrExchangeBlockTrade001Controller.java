@@ -15,6 +15,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
@@ -30,12 +31,10 @@ import com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.service.EtrExc
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon002Service;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTradeQuotation001Dto;
-import com.joyintech.tams.systemtools.dto.CommonAjaxResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -53,6 +52,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -363,6 +363,31 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 			e.printStackTrace();
 			logger.error("多组合指令新建保存/提交校验异常",e);
 			return new Message<AjaxResult>().fail().setMessage("校验失败");
+		}
+	}
+
+	/**
+	 * 查询配股权益数量
+	 * <一句话功能简述>
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@ApiOperation(value="查询配股权益数量",notes = "查询配股权益数量")
+	@ResponseBody
+	@PostMapping("getQutoEntrustNum")
+	public Message<String> getFinProductQutoInfo(@RequestBody EtrExchangeTradeCommonRequest request) {
+		try {
+			Map<String,Object> param = BeanUtil.object2Map(request);
+			BigDecimal entrustNum = etrExchangeTradeCommon001Service.getEntrustNum(param);
+			if(entrustNum == null) {
+				entrustNum= BigDecimal.ZERO;
+			}
+			String entrustNumStr=entrustNum.setScale(2).toString();
+			return new Message<String>(entrustNumStr);
+		}catch (Exception e) {
+			logger.error("查询配股权益数量异常",e);
+			return new Message<String>().fail().setMessage("查询配股权益数量异常");
 		}
 	}
 

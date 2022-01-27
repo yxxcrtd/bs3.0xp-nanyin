@@ -48,7 +48,7 @@ public class EtrExchangeTradeCommonRequest {
      * 交易时间
      */
     @ApiModelProperty(name="cDate",value="交易日期")
-    private Date cDate;
+    private String cDate;
 
     public String getFinprodId() {
         return finprodId;
@@ -74,11 +74,11 @@ public class EtrExchangeTradeCommonRequest {
         this.secAcctId = secAcctId;
     }
 
-    public Date getcDate() {
+    public String getcDate() {
         return cDate;
     }
 
-    public void setcDate(Date cDate) {
+    public void setcDate(String cDate) {
         this.cDate = cDate;
     }
 

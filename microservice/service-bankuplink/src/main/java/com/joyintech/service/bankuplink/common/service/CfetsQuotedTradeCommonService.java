@@ -150,7 +150,7 @@ public class CfetsQuotedTradeCommonService{
                 if (StringUtil.equals(flagAutoTrade, "01")) {
                     //secAutoTradeService.secAutoTrade(iCstpTrade,interfTradSecdeal,resultBaseDto);
                 }else{
-                    resultBaseDto.setErrMsg("银行间下行自动匹配(债券)录单开关关闭!");
+                    //resultBaseDto.setErrMsg("银行间下行自动匹配(债券)录单开关关闭!");
                 }
             }else if(StringUtil.equals(entity.getMarketIndicator(),MarketIndicatorUtil.MARKETINDICATOR_REPO)){
                 // 插入或更新回购交易表
@@ -160,7 +160,7 @@ public class CfetsQuotedTradeCommonService{
                 if (StringUtil.equals(flagAutoTrade, "01")) {
                     //repoAutoTradeService.repoAutoTrade(iCstpTrade,interfOpicsTradRepo,resultBaseDto);
                 }else{
-                    resultBaseDto.setErrMsg("银行间下行自动匹配(债券)录单开关关闭!");
+                    //resultBaseDto.setErrMsg("银行间下行自动匹配(债券)录单开关关闭!");
                 }
             }
            // if (StringUtil.equals(flagAutoTrade, "01")) {

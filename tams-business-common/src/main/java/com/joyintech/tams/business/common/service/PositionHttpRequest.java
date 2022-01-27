@@ -179,6 +179,13 @@ public class PositionHttpRequest {
         return httpPostRequest(positionUrl + "/position/endpoint/updatePosition", param);
     }
 
+    public static void main(String[] args) {
+        String url = "http://192.168.10.115:1667/dsp/position/endpoint/updatePosition";
+        BaseMap param = BaseMap.newMap();
+        param.put("test","test");
+        HttpUtil.doPost(url, JsonUtils.object2Json(param));
+    }
+    
     public static void doDeleteByWorkFlowId(String revokeId, String modelType,String busiType,String ps) throws PositionException{
         //
         BaseMap bm = BaseMap.newMap()

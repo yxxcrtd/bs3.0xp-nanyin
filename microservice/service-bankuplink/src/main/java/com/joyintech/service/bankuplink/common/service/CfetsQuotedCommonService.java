@@ -752,9 +752,7 @@ public class CfetsQuotedCommonService extends BaseService {
                         // 主表 全价总额
                         if(!StringUtil.isEmptyList(dto.getIbuQuoteEtrReDtoList())){
                             // 多组合报价处理
-                            BaseQuoteDto baseQuoteDtoDeleteInfo = new BaseQuoteDto();
-                            baseQuoteDtoDeleteInfo.setQuoteId(baseDto.getQuoteId());
-                            deleteFinishStatus(baseQuoteDtoDeleteInfo);
+                            deleteByQuoteId(baseDto);
                             List<IbuQuoteEtrReDto>  ibuQuoteEtrRes = repoDialogueQuote.getIbuQuoteEtrReDtoList();
                             ibuQuoteEtrRes.stream().forEach(item -> {
                                 BaseQuoteDto baseQuoteDto = new BaseQuoteDto();
@@ -782,11 +780,9 @@ public class CfetsQuotedCommonService extends BaseService {
                         else {
                             // 多组合报价处理
 //                            for (IbuQuoteEtrReDto ibuQuoteEtrReDto : dto.getIbuQuoteEtrReDtoList()) {
-                                BaseQuoteDto tempBaseDto = dto.getBaseQuoteDto();
-                                tempBaseDto.setQuoteId(baseDto.getQuoteId());
 //                                BeanUtil.copyPropertiesIgnoreNull(tempBaseDto, baseDto);
 //                                tempBaseDto.setEntrustId(ibuQuoteEtrReDto.getEntrustId());
-                                deleteFinishStatus(tempBaseDto);
+                                deleteByQuoteId(baseDto);
 //                            }
                         }
                     }
@@ -819,12 +815,26 @@ public class CfetsQuotedCommonService extends BaseService {
      * @since 1.0
      */
     private void deleteFinishStatus(BaseQuoteDto baseDto) {
+        log.info("删除报价指令完成度 QuoteId:" + baseDto.getQuoteId() + ",EntrustId:" + baseDto.getEntrustId());
         EtrQuoteFinishStatusKey key = new EtrQuoteFinishStatusKey();
         key.setEntrustId(baseDto.getEntrustId());
         key.setQuoteId(baseDto.getQuoteId());
         etrQuoteFinishStatusMapper.deleteByPrimaryKey(key);
     }
 
+    /**
+     * 删除报价完成状况表中的一条数据
+     *
+     * @param baseDto
+     * @see
+     * @since 1.0
+     */
+    private void deleteByQuoteId(BaseQuoteDto baseDto) {
+        log.info("删除报价指令完成度 QuoteId:" + baseDto.getQuoteId());
+        EtrQuoteFinishStatusKey key = new EtrQuoteFinishStatusKey();
+        key.setQuoteId(baseDto.getQuoteId());
+        etrQuoteFinishStatusMapper.deleteByQuoteId(key);
+    }
     /**
      * 向报价完成状况表插入一条数据
      * 

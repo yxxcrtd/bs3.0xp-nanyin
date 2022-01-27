@@ -667,7 +667,6 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
                 entity.getBusinessTypeName()) + ")-"
                 + "平台日" + "(" + DateUtil.format(iPlatformDate.getSysDate()) + ")");
         processParameter.setWorkFlowParameter(params);
-
         dto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
         dto.setCreateUser(LoginUserUtil.getUserName());// 用户名
         dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
@@ -792,7 +791,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
     public Message<AjaxResult> closeCheck(@RequestBody EtrExchangeAgreRepTrade003Dto dto, BindingResult result) {
         AjaxResult webResult = new AjaxResult();
         if (result.hasErrors()) {
-            return new Message<AjaxResult>().setData(new AjaxResult(result));
+            return new Message<AjaxResult>().success().setData(new AjaxResult(result));
         }
         List<ValidMessage> errList = new ArrayList<>();
         List<EtrExchangeAgreRepTrade003Dto>  EtrExchangeAgreRepTrade003Dto = dto.getSelectedItem();
@@ -806,7 +805,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
         }
         if(null!=errList&&errList.size()>0){
             webResult.setErrorList(errList);
-            return new Message<AjaxResult>().setData(webResult);
+            return new Message<AjaxResult>().success().setData(webResult);
         }
         return new Message<AjaxResult>().success().setData(webResult);
     }
@@ -834,7 +833,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
         }
         if(null!=errList&&errList.size()>0){
             webResult.setErrorList(errList);
-            return new Message<AjaxResult>().setData(webResult);
+            return new Message<AjaxResult>().success().setData(webResult);
         }
         return new Message<AjaxResult>().success().setData(webResult);
     }

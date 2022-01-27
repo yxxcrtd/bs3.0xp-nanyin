@@ -2601,6 +2601,6 @@
                 )
     </select>
     <select id="selectAllCustomer"  resultType="java.util.Map">
-        SELECT PARTY_ID , PARTY_NAME FROM MST_CFETS_CUSTOMER_INFO GROUP BY PARTY_ID , PARTY_NAME
+        SELECT PARTY_ID , PARTY_ABBR FROM MST_CFETS_CUSTOMER_INFO GROUP BY PARTY_ID , PARTY_ABBR
     </select>
 </mapper>

@@ -352,6 +352,7 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 			if(null!=entrust){
 				String isDzh = cstpMapper.getIsDzh(entrust.getQuoteId());
 				if(StringUtil.equals(isDzh,"Y")||(StringUtil.equals(isDzh,"N")&&StringUtil.isNotEmpty(entrust.getPortfolioId()))){
+					logger.info("查询到上行报价信息");
 					break;
 				}
 			}
