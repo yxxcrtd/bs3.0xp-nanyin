@@ -225,6 +225,7 @@ public class SalerRewPenaInfoRegist001Service extends CommonExportService<SalerR
         SalerRewPenaInfoRegistDto nullDate = new SalerRewPenaInfoRegistDto();
         if(datas == null){
             tempList = chbSalerRewPenaInfoRegistMapper.setDataList(selectParam);
+            this.formatByType(tempList);
         }else{
             tempList= JsonUtils.json2List(datas,SalerRewPenaInfoRegistDto.class);
         }

@@ -51,7 +51,7 @@ public class SalerRewPenaInfoRegistDto extends ChbSalerRewPenaSub implements Pro
     public String getSalerRewPenaStartStr() {
         if(StringUtil.isNotEmpty(this.getSalerRewPenaStart())){
             String time = DateUtil.formatDateTime(this.getSalerRewPenaStart());
-            return time.substring(0,10);
+            return time.substring(0,10).replace("-", "").replace("/", "");
         }
         return null;
     }
@@ -59,7 +59,7 @@ public class SalerRewPenaInfoRegistDto extends ChbSalerRewPenaSub implements Pro
     public String getSalerRewPenaEndStr() {
         if(StringUtil.isNotEmpty(this.getSalerRewPenaEnd())){
             String time = DateUtil.formatDateTime(this.getSalerRewPenaEnd());
-            return time.substring(0,10);
+            return time.substring(0,10).replace("-", "").replace("/", "");
         }
         return null;
     }
@@ -67,7 +67,7 @@ public class SalerRewPenaInfoRegistDto extends ChbSalerRewPenaSub implements Pro
     public String getSalerComplainDateStr() {
         if(StringUtil.isNotEmpty(this.getSalerComplainDate())){
             String time = DateUtil.formatDateTime(this.getSalerComplainDate());
-            return time.substring(0,10);
+            return time.substring(0,10).replace("-", "").replace("/", "");
         }
         return null;
     }

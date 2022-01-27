@@ -68,7 +68,7 @@
             and a.STATUS = #{status}
         </if>
         <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
-            and a.SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+            and a.CHB_SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
         </if>
         <if test="searchDataDateStart != null and searchDataDateStart != ''">
             and  to_char(a.DATA_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
@@ -143,7 +143,7 @@
                 </foreach>
             </if>
             <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
-                and SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+                and CHB_SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
             </if>
             <if test="searchDataDateStart != null and searchDataDateStart != ''">
                 and  to_char(DATA_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
