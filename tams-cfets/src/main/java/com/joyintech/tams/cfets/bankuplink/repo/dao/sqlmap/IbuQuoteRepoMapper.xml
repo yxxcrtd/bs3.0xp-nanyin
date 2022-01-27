@@ -344,10 +344,6 @@
                         #{item}
                     </foreach>
                 </if>
-                <if test="platDate != null">
-                    /* 查询条件 当前平台日 处于委托日期区间内*/
-                    AND ETR_ENTRUST.ENTRUST_DATE = to_date(#{platDate}, 'yyyy-MM-dd')
-                </if>
                 <if test="entrustDateStart != null">
                     /* 查询条件 指令日期区间开始日 处于委托日期区间内*/
                     AND ETR_ENTRUST.ENTRUST_DATE <![CDATA[ >= ]]> to_date(#{entrustDateStart}, 'yyyy-MM-dd')
