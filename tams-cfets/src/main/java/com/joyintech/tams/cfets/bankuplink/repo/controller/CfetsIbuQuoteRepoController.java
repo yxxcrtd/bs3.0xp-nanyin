@@ -515,12 +515,6 @@ public class CfetsIbuQuoteRepoController extends BaseController {
 
         //导出数据必填项校验
         String message = checkExcelNotNull(requestDto, dataList);
-        try {
-            response.addHeader("message", URLEncoder.encode(message, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            logger.error("response.addHeader错误:" + e);
-        }
 
         List<File> files = new ArrayList<>();
         if (StringUtil.isNotEmpty(ibuExportCountMax) && CollectionUtils.isNotEmpty(dataList)) {
@@ -572,7 +566,7 @@ public class CfetsIbuQuoteRepoController extends BaseController {
             map.put("filePath", file.getAbsolutePath());
             result.add(map);
         }
-        return new Message<List<Map<String, String>>>().success().setData(result);
+        return new Message<List<Map<String, String>>>().success().setMessage(message).setData(result);
 
     }
 
