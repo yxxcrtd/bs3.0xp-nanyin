@@ -1379,5 +1379,34 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		}
 	}
 
+
+
+	/**
+	 * 查询最大申请数量
+	 * <一句话功能简述>
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@ApiOperation(value="查询最大申请数量",notes = "查询最大申请数量")
+	@ResponseBody
+	@PostMapping("getMaxEntrustNum")
+	public Message<String> getEntrustNum(@RequestBody EtrExchangeTradeCommonRequest request) {
+		try {
+			Map<String,Object> param = BeanUtil.object2Map(request);
+			BigDecimal entrustNum = etrExchangeTrade001CommonService.getEntrustNum(param);
+			if(entrustNum == null) {
+				entrustNum= BigDecimal.ZERO;
+			}
+			String entrustNumStr=entrustNum.setScale(2).toString();
+			return new Message<String>(entrustNumStr);
+		}catch (Exception e) {
+			logger.error("查询最大申请数量异常",e);
+			return new Message<String>().fail().setMessage("查询最大申请数量异常");
+		}
+	}
+
+
+
 }
 	
