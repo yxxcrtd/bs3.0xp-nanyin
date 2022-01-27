@@ -541,7 +541,7 @@ $(function() {
             var holdDateStart=$('#holdDate').startDate();
 //            if(sendStatus!='01'){
             if (!(sendStatus && sendStatus.length == 1 && sendStatus[0] == '01')) {
-                Joyin.error(JoyinUtil.getMessage("REPORT_EXPORT_0004") + ",请在查询条件[报送状态]中选择[未报送]");
+                Joyin.error("请选择筛选条件 报送状态为未报送，数据状态为新建和修改 再进行数据检查！");
                 return;
             }
 //            else if(status && status!='03'){
