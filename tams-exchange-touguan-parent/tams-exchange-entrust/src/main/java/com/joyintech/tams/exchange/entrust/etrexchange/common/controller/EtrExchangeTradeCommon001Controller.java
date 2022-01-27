@@ -1409,8 +1409,5 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			return new Message<String>().fail().setMessage("查询最大申请数量异常");
 		}
 	}
-
-
-
 }
 	
