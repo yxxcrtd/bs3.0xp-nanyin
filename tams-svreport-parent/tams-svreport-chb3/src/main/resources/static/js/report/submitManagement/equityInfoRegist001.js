@@ -373,7 +373,7 @@ $(function(){
             var status = $('#status').val();
 //            if(submitStatus!='01'){
             if (!(submitStatus && submitStatus.length == 1 && submitStatus[0] == '01')) {
-                Joyin.error("只能对报送状态为未报送，数据状态为新建和修改的数据进行数据检查！");
+                Joyin.error("请选择筛选条件 报送状态为未报送，数据状态为新建和修改 再进行数据检查！");
                 return;
             }
 //            else if(status && status.includes('03')){
