@@ -639,7 +639,7 @@
         from REG_FIN_PLEDGE rp
         left join reg_fin_product_deal regdeal
         LEFT JOIN wfl_REG_FIN_PRODUCT_DEAL_TOTAL T8 ON T8.TOTLE_TRADE_ID = regdeal.TOTLE_TRADE_ID
-        on rp.trade_id=decode(regdeal.finprod_type2,'F02',regdeal.trade_id,'F03',regdeal.totle_trade_id)
+        on rp.trade_id=regdeal.trade_id
         left join ptl_portfolio pp
         on pp.portfolio_id=rp.portfolio_id
         <if test="userId != null and userId != ''">
