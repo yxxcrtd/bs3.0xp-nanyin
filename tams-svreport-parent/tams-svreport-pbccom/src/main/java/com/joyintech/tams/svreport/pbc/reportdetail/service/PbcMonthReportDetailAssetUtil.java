@@ -619,6 +619,13 @@ public class PbcMonthReportDetailAssetUtil {
         if (CollectionUtils.isNotEmpty(newDataList)) {
             insertCount += pbcMonthReportDetailAssetMapper.insertBatch(newDataList);
         }
+
+
+        prodInfoMap=null;
+        assetInfoMap=null;
         return insertCount;
+
+
+
     }
 }
