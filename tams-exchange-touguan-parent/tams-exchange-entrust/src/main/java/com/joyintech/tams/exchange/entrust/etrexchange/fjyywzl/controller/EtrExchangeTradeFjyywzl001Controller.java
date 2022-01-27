@@ -6,12 +6,15 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeCommonRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeExportCommonRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PsOptionsRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeFjyywzlZqzyDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeZqzyRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.service.EtrExchangeTradeFjyywzl001Service;
@@ -27,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +45,9 @@ public class EtrExchangeTradeFjyywzl001Controller extends BaseController {
 
     @Autowired
     private EtrExchangeTradeFjyywzl001Service etrExchangeTradeFjyywzl001Service;
+
+    @Autowired
+    private EtrExchangeTradeCommon001Service etrExchangeTradeCommon001Service;
 
     /**
      * 检索产品债券质押持仓分页数据。
@@ -126,4 +134,27 @@ public class EtrExchangeTradeFjyywzl001Controller extends BaseController {
     }
 
 
+    /**
+     * 获取标准券持仓
+     * @param request request
+     */
+    @ApiOperation(value = "获取标准券持仓", notes = "获取标准券持仓")
+    @PostMapping("/queryStandandTicketCanUse")
+    @ResponseBody
+    public Message<String> queryStandandTicketCanUse(@RequestBody EtrExchangeTradeCommonRequest request) {
+        try {
+            Map<String,Object> param = BeanUtil.object2Map(request);
+            Date sysDate = DateUtil.platDateFromCache();
+            param.put("sysDate", DateUtil.format(sysDate));
+            BigDecimal entrustNum = etrExchangeTradeCommon001Service.queryStandandTicketCanUse(param);
+            if(entrustNum == null) {
+                entrustNum= BigDecimal.ZERO;
+            }
+            String entrustNumStr=entrustNum.setScale(2).toString();
+            return new Message<String>(entrustNumStr);
+        }catch (Exception e) {
+            logger.error("获取标准券持仓异常",e);
+            return new Message<String>().fail().setMessage("获取标准券持仓异常");
+        }
+    }
 }

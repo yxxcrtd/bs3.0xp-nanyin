@@ -316,6 +316,9 @@ public class CfetsTrdConfirm001Service extends BaseService{
 
             if(null!=entity.getCfetsTrdConfirmMatchDto()){
                 if(StringUtil.equals(support_cstp_flag_bond,DictCodeList.是否_否.getValue())){
+                    entity.getCfetsTrdConfirmMatchDto().setSeqno(IDGenerator.generate());
+                    entity.getCfetsTrdConfirmMatchDto().setCreateUser(null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"SYSTEM");
+                    entity.getCfetsTrdConfirmMatchDto().setCreateDept(CommonUtil.getDeptCode());
                     cfetsTrdConfirmMapper.insertTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
                 }else{
                     //根据登记编号查询下行成交匹配表
@@ -553,6 +556,9 @@ public class CfetsTrdConfirm001Service extends BaseService{
         String support_cstp_flag_repo=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_REPO");
         if(null!=entity.getCfetsTrdConfirmMatchDto()){
             if(StringUtil.equals(support_cstp_flag_repo,DictCodeList.是否_否.getValue())){
+                entity.getCfetsTrdConfirmMatchDto().setSeqno(IDGenerator.generate());
+                entity.getCfetsTrdConfirmMatchDto().setCreateUser(null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"SYSTEM");
+                entity.getCfetsTrdConfirmMatchDto().setCreateDept(CommonUtil.getDeptCode());
                 cfetsTrdConfirmMapper.insertTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
             }else{
                 //根据登记编号查询下行成交匹配表
