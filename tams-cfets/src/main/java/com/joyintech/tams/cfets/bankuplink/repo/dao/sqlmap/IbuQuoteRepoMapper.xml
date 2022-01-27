@@ -674,41 +674,21 @@
         (
             select ENTRUST_ID bussId, FINPROD_ID pledgeId,PLEDGE_RATIO, sum(PLEDGE_NUMBER) PLEDGE_NUMBER
             from (
-                     select ENTRUST_ID
-                           ,FINPROD_ID
-                           ,PLEDGE_NUMBER
-                           ,PLEDGE_RATIO
+                     select ep.ENTRUST_ID
+                           ,ep.FINPROD_ID
+                           ,( ep.PLEDGE_NUMBER - wrfp.PLEDGE_NUMBER - rfp.PLEDGE_NUMBER) PLEDGE_NUMBER
+                           ,ep.PLEDGE_RATIO
                      from ETR_PLEDGE ep
+                     left join WFL_REG_FIN_PLEDGE wrfp
+                            on wrfp.PLEDGE_FINPROD_ID = ep.FINPROD_ID and ep.ENTRUST_ID = wrfp.ENTRUST_ID
+                     left join ( select t.ENTRUST_ID, t.PLEDGE_FINPROD_ID, t.PLEDGE_NUMBER
+                                 from REG_FIN_PLEDGE t
+                                 left join REG_FIN_PRODUCT_DEAL rfpd on t.TRADE_ID = rfpd.TRADE_ID
+                                 where rfpd.IS_CANCEL = 'N'  and rfpd.TRADE_STATUS ='01'
+                                 ) rfp on rfp.PLEDGE_FINPROD_ID = ep.FINPROD_ID and ep.ENTRUST_ID = rfp.ENTRUST_ID
                     <where>
                         <if test="entrustIdList != null and entrustIdList.size() > 0">
                             ep.ENTRUST_ID in
-                            <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
-                                #{item}
-                            </foreach>
-                        </if>
-                    </where>
-                     union all
-                     select ENTRUST_ID
-                           ,PLEDGE_FINPROD_ID FINPROD_ID
-                           ,-1*PLEDGE_NUMBER
-                           ,PLEDGE_RATIO
-                     from WFL_REG_FIN_PLEDGE wrfp
-                    <where>
-                        <if test="entrustIdList != null and entrustIdList.size() > 0">
-                            wrfp.ENTRUST_ID in
-                            <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
-                                #{item}
-                            </foreach>
-                        </if>
-                    </where>
-                     union all
-                    select rfp.ENTRUST_ID, rfp.PLEDGE_FINPROD_ID FINPROD_ID, -1 * rfp.PLEDGE_NUMBER, rfp.PLEDGE_RATIO
-                    from REG_FIN_PLEDGE rfp
-                    left join REG_FIN_PRODUCT_DEAL rfpd on rfp.TRADE_ID = rfpd.TRADE_ID
-                    <where>
-                        and rfpd.IS_CANCEL = 'N'  and rfpd.TRADE_STATUS ='01'
-                        <if test="entrustIdList != null and entrustIdList.size() > 0">
-                            and rfp.ENTRUST_ID in
                             <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
                                 #{item}
                             </foreach>
