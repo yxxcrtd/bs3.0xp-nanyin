@@ -1793,6 +1793,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     操作类型_手工匹配确认(DictCode.操作类型,"13","手工匹配确认"),
     操作类型_自动匹配确认(DictCode.操作类型,"14","自动匹配确认"),
     操作类型_业务模式变更确认(DictCode.操作类型,"15","业务模式变更确认"),
+    操作类型_强制完成(DictCode.操作类型,"15","强制完成"),
 
     共通业务类型_赎回登记(DictCode.共通业务类型,"TRD91","赎回登记"),
     回购方式_双边回购(DictCode.回购方式,"1","双边回购"),
