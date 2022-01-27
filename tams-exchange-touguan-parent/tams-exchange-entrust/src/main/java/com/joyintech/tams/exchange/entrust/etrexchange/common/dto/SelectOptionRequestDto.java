@@ -94,4 +94,20 @@ public class SelectOptionRequestDto {
     public void setInitValue(String initValue) {
         this.initValue = initValue;
     }
+
+    public String getCounterId() {
+        return counterId;
+    }
+
+    public void setCounterId(String counterId) {
+        this.counterId = counterId;
+    }
+
+    public String getParam() {
+        return param;
+    }
+
+    public void setParam(String param) {
+        this.param = param;
+    }
 }

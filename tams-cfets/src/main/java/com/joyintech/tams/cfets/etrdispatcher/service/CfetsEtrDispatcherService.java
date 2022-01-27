@@ -693,6 +693,7 @@ public class CfetsEtrDispatcherService extends BaseService{
      * @return
      */
     public List<CfetsEtrDispatcherTraderListRequest> getEtrTraderAndWorkloadList(Map<String, Object> pageParam) {
+        pageParam.put("sysDate",iPlatformDate.getSysDateStr());
         List<CfetsEtrDispatcherTraderListRequest> list = cfetsEtrDispatcherMapper.getEtrTraderAndWorkloadList(pageParam);
         return list;
     }

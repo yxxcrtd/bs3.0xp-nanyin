@@ -253,6 +253,8 @@ public class CfetsTrdSettleInfoResponse {
 
     private String basis;
 
+    private String tradeDate;
+
 
     public String getEffectiveStatus() {
         return effectiveStatus;
@@ -858,5 +860,13 @@ public class CfetsTrdSettleInfoResponse {
 
     public void setBasis(String basis) {
         this.basis = basis;
+    }
+
+    public String getTradeDate() {
+        return tradeDate;
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
     }
 }

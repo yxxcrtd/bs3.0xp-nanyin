@@ -512,6 +512,7 @@
                     OR TO_CHAR(t.entrustDate,'yyyy-MM-dd') ||''= #{year}||'-'||#{search}
                     OR replace(TO_CHAR(t.entrustDate,'yyyy-MM-dd'),'-','/')=#{search}
                     OR replace(TO_CHAR(t.entrustDate,'yyyy-MM-dd'),'-','/')=#{year}||'/'||#{search}
+                    OR t.transmitTime = #{search}
                     OR t.transmitTimeSer = #{search}
                 )
             </where>
@@ -801,45 +802,41 @@
     <!-- 交易员与工作量列表查询 -->
     <select id="getEtrTraderAndWorkloadList" resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTraderListRequest">
         SELECT
-        DISTINCT
-        su.USER_NAME userName,
-        su.REAL_NAME realName,
-        to_char(NVL(a.totalWork,0),'fm999990.009') as totalWork,
-        to_char(NVL(b.unfinishedWork,0),'fm999990.009') as unfinishedWork
+            DISTINCT
+            su.USER_NAME userName,
+            su.REAL_NAME realName,
+            to_char(NVL(a.totalWork,0),'fm999990.009') as totalWork,
+            to_char(NVL(b.unfinishedWork,0),'fm999990.009') as unfinishedWork
         FROM
-        SYS_USER su
-        INNER JOIN
-        SYS_USER_ROLE sur
-        ON 	su.USER_NAME = sur.USER_ID
-        INNER JOIN SYS_ROLE sr
-        ON sur.ROLE_ID = sr.ROLE_ID AND sr.ROLE_POS in (06)
-        LEFT JOIN ETR_DISTRIBUTE ed ON ed.TRADER=su.USER_NAME
-        LEFT JOIN
-        (
-        SELECT
-            edi.TRADER as TRADER,
-            round(COUNT(edi.TRADER),2) AS totalWork
-        FROM
-            ETR_DISTRIBUTE edi
-        LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
-        where een.ENTRUST_STATUS in ('02','03','04')
-        GROUP BY
-            edi.TRADER) a
-        ON
-            su.USER_NAME = a.TRADER
-        LEFT JOIN
-        (
-        SELECT
-            edi.TRADER as TRADER,
-            round(COUNT(edi.TRADER),2) AS unfinishedWork
-        FROM
-            ETR_DISTRIBUTE edi
-        LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
-        where een.ENTRUST_STATUS in ('02','03')
-        GROUP BY
-            edi.TRADER) b
-        ON
-            b.TRADER=su.USER_NAME
+            SYS_USER su
+                INNER JOIN
+            SYS_USER_ROLE sur
+            ON 	su.USER_NAME = sur.USER_ID
+                INNER JOIN SYS_ROLE sr
+                           ON sur.ROLE_ID = sr.ROLE_ID AND sr.ROLE_POS in (06)
+                LEFT JOIN ETR_DISTRIBUTE ed ON ed.TRADER=su.USER_NAME
+                LEFT JOIN
+            (
+                SELECT
+                    edi.TRADER as TRADER,
+                    COUNT(edi.TRADER) AS totalWork
+                FROM
+                    ETR_DISTRIBUTE edi
+                        LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
+                where een.ENTRUST_STATUS in ('02','03','04') and een.ENTRUST_DATE=to_date(#{sysDate},'yyyy-mm-dd')
+                GROUP BY edi.TRADER  ) a
+            ON su.USER_NAME = a.TRADER
+                LEFT JOIN
+            (
+                SELECT
+                    edi.TRADER as TRADER,
+                    COUNT(edi.TRADER) AS unfinishedWork
+                FROM
+                    ETR_DISTRIBUTE edi
+                        LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
+                where een.ENTRUST_STATUS in ('02','03')
+                GROUP BY edi.TRADER) b
+            ON  b.TRADER=su.USER_NAME
     </select>
 
     <sql id="etrDispatcherExeListInfo">

@@ -157,6 +157,7 @@
             type: 'number',
             digit: 2
             , disabled: true
+            , visible: ps === '03'
         }
         , {
             field: 'pledgePrinStr',

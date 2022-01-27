@@ -520,6 +520,7 @@
                     OR TO_CHAR(t.entrustDate,'yyyy-MM-dd') ||''= #{year}||'-'||#{search}
                     OR replace(TO_CHAR(t.entrustDate,'yyyy-MM-dd'),'-','/')=#{search}
                     OR replace(TO_CHAR(t.entrustDate,'yyyy-MM-dd'),'-','/')=#{year}||'/'||#{search}
+                    OR t.transmitTime = #{search}
                     OR t.transmitTimeSer = #{search}
                 )
             </where>
