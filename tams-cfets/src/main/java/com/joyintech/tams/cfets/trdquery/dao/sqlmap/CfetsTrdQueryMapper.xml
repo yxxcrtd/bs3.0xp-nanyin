@@ -47,7 +47,7 @@
         </if>
     </select>
     <sql id="onlyRegInfo">
-        select  decode(reg.is_cancel,'Y','撤销','N','有效') as effectiveStatusStr,
+        select  distinct decode(reg.is_cancel,'Y','撤销','N','有效') as effectiveStatusStr,
         decode(reg.finprod_type2,'F01','01','F02','02','F03','02') as finprodType2,
         reg.finprod_id as finprodId,
         nvl(fp.finprod_market_id,reg.term_type) as finprodMarketId,
@@ -191,7 +191,7 @@
         </if>
     </sql>
     <sql id="onlyWflRegInfo">
-        select  '流程中' as effectiveStatusStr,
+        select distinct '流程中' as effectiveStatusStr,
         decode(reg.finprod_type2,'F01','01','F02','02','F03','02') as finprodType2,
         reg.finprod_id as finprodId,
         nvl(fp.finprod_market_id,reg.term_type) as finprodMarketId,
