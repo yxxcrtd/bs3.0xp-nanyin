@@ -2159,7 +2159,8 @@
     </sql>
     <select id="selectCstpBondFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryCstpInfoListResponse">
 
-        select to_char(total.trade_date,'yyyy-MM-dd') as tradeDate,
+        select distinct
+        to_char(total.trade_date,'yyyy-MM-dd') as tradeDate,
         I.execid as execid,
         I.Ourinstitutioncode as buyId,
         I.Ourinstitutionchinesefullname as buyIdStr,
@@ -2209,7 +2210,7 @@
         where  I.execid = #{execId,jdbcType=VARCHAR}
     </select>
     <select id="selectCstpRepoFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryCstpInfoListResponse">
-        select to_char(total.trade_date,'yyyy-MM-dd')  as tradeDate,
+        select distinct to_char(total.trade_date,'yyyy-MM-dd')  as tradeDate,
         I.execid as execid,
         I.Ourinstitutioncode as rbRepo,
         I.Ourinstitutionchinesefullname as rbRepoStr,
