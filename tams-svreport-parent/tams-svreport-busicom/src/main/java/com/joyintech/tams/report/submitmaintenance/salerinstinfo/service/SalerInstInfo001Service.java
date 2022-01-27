@@ -224,16 +224,31 @@ public class SalerInstInfo001Service extends CommonExportService<SalerInstInfoDt
                 flag = false;
                 message.add("总部或分支机构编码不能为空");
             }else{
-                   if(salerOrgCodeMap.get(list.get(1)) != null){
-                      flag = false;
-                      message.add("总部或分支机构编码已存在");
-                   }
+                String regex = "^[a-z0-9A-Z]+$";
+                if (!list.get(1).matches(regex)) {
+                    flag = false;
+                    message.add("总部或分支机构编码只能填写字母或数字");
+                }else {
+                        if(list.get(1).length() > 20){
+                            flag = false;
+                            message.add("总部或分支机构编码不能超过20字符");
+                        } else {
+                            if (salerOrgCodeMap.get(list.get(1)) != null) {
+                                flag = false;
+                                message.add("总部或分支机构编码已存在");
+                            }
+                        }
+                    }
             }
             //总部或分支机构名称
             if(list.get(2) == null || list.get(2).trim().equals("")){
                 flag = false;
                 message.add("总部或分支机构名称不能为空");
             }else{
+                if(getWordCount(list.get(2)) > 200){
+                    flag = false;
+                    message.add("总部或分支机构名称不能超过200字节");
+                }
                 if(salerOrgNameMap.get(list.get(2)) != null){
                     flag = false;
                     message.add("总部或分支机构名称已存在");
@@ -320,6 +335,23 @@ public class SalerInstInfo001Service extends CommonExportService<SalerInstInfoDt
             flag = true;
         }
         return flag;
+    }
+
+    //UTF-8获取字符串字节长度
+    public int getWordCount(String s)
+    {
+        int length = 0;
+        for(int i = 0; i < s.length(); i++)
+        {
+            int ascii = Character.codePointAt(s, i);
+            if(ascii >= 0 && ascii <=255)
+                length++;
+            else
+                length += 2;
+
+        }
+        return length;
+
     }
 
 }

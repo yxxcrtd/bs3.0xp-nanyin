@@ -210,6 +210,9 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
                     if (list.get(3) == null || list.get(3).trim().equals("")) {
                         flag = false;
                         message.add("记录分类选择奖励或惩处时，奖惩名称不能为空");
+                    }else if(getWordCount(list.get(3)) > 100){
+                        flag = false;
+                        message.add("奖惩名称不能超过100字节");
                     }
                 }
             }
@@ -224,6 +227,9 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
                     if (list.get(4) == null || list.get(4).trim().equals("")) {
                         flag = false;
                         message.add("记录分类选择奖励或惩处时，奖惩说明不能为空");
+                    }else if(getWordCount(list.get(4)) > 400){
+                        flag = false;
+                        message.add("奖惩说明不能超过400字节");
                     }
                 }
             }
@@ -249,6 +255,9 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
                         if (list.get(6) == null || list.get(6).trim().equals("")) {
                             flag = false;
                             message.add("记录分类选择奖励或惩处时且奖惩单位选择其他时，奖惩单位具体名称不能为空");
+                        }else if(getWordCount(list.get(6)) > 200){
+                            flag = false;
+                            message.add("奖惩单位具体名称不能超过200字节");
                         }
                     }else{
                         if(list.get(6) != null && !list.get(6).trim().equals("")) {
@@ -304,6 +313,9 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
                     if (list.get(9) == null || list.get(9).trim().equals("")) {
                         flag = false;
                         message.add("记录分类选择投诉时，投诉详情不可为空");
+                    }else if(getWordCount(list.get(9)) > 400){
+                        flag = false;
+                        message.add("投诉详情不能超过400字节");
                     }
                 }else {
                     if (list.get(9) != null && !(list.get(9).trim().equals(""))) {
@@ -318,6 +330,9 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
                     if (list.get(10) == null || list.get(10).trim().equals("")) {
                         flag = false;
                         message.add("记录分类选择投诉时，投诉处理结果不可为空");
+                    }else if(getWordCount(list.get(10)) > 400){
+                        flag = false;
+                        message.add("投诉处理结果不能超过400字节");
                     }
                 }else {
                     if (list.get(10) != null && !(list.get(10).trim().equals(""))) {
@@ -502,5 +517,21 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
             }
         }
         return flag;
+    }
+    //UTF-8获取字符串字节长度
+    public int getWordCount(String s)
+    {
+        int length = 0;
+        for(int i = 0; i < s.length(); i++)
+        {
+            int ascii = Character.codePointAt(s, i);
+            if(ascii >= 0 && ascii <=255)
+                length++;
+            else
+                length += 2;
+
+        }
+        return length;
+
     }
 }

@@ -11,7 +11,7 @@ DELETE  FROM  chb_datacheck_rule  WHERE DATATYPE='CHB_SALER_IDEN_INFO';
 Insert into chb_datacheck_rule (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS)
 values ('DDY_SALER_IDEN_INFO-2021-1119-001','CHB_SALER_IDEN_INFO','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','SALER_INS_NO',null,null,'N','内部编号不可为空。','E');
 Insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS)
-values ('DDY_SALER_IDEN_INFO-2021-1119-002','CHB_SALER_IDEN_INFO','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','SALER_INS_NO',null,'31','Y','内部编号不能超过30字符。','E');
+values ('DDY_SALER_IDEN_INFO-2021-1119-002','CHB_SALER_IDEN_INFO','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','SALER_INS_NO',null,'61','Y','内部编号不能超过60字符。','E');
 Insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS)
 values ('DDY_SALER_IDEN_INFO-2021-1119-003','CHB_SALER_IDEN_INFO','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','SALER_INST_CODE',null,null,'N','销售机构代码不可为空。','E');
 Insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS)
