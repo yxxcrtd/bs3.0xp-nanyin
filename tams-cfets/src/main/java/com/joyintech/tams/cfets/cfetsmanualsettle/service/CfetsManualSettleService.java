@@ -655,6 +655,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 if(StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())){
                     CfetsTrdBondInvestTradeDto revokeEntity = this.getTrdBondInvestTradeDto(entity.getTradeId());
                     String settleRemark =DictCodeListExt3.交收状态_交收失败.getCodeName();
+                    revokeEntity.setTgBusiType(entity.getTgBusiType());
                     cfetsTrdBondInvestTrade002Service.doCompleteRevoke(revokeEntity,settleRemark,false);
                     //关闭对应指令
                     List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(entity.getTradeId());

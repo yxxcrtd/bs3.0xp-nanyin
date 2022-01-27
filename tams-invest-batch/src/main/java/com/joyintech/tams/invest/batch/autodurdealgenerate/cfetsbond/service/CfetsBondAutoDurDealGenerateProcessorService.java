@@ -322,6 +322,7 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         trdFinProductDealTotal.setSettleDate(regFinProductDealTotal.getActExerciseDate());
         trdFinProductDealTotal.setShareAmt(regFinProductDealTotal.getShareAmt());
        // trdFinProductDealTotal.setPortfolioId(entity.getPortfolioId());
+        trdFinProductDealTotal.setCpriceAmt(cpriceAmt);
         trdFinProductDealTotal.setPrinAmt(cpriceAmt);
         trdFinProductDealTotal.setIntAmt(intAmt);
         //trdFinProductDealTotal.setWorkflowId(entity.getWorkflowId());
