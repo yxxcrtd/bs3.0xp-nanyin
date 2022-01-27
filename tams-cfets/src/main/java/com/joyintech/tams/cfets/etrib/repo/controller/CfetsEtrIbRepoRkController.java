@@ -165,7 +165,7 @@ public class CfetsEtrIbRepoRkController extends BaseController {
 //            String generatedId = IDGenerator.generate();
             List<EtrSecStockConfig> etrSecStockConfigList = new ArrayList<>();
             for(CfetsEtrSecStockConfig cfetsEtrSecStockConfig:RepoInfoDto.getCfetsEtrSecStockConfig()){
-                for(int i = 0; i < cfetsEtrSecStockConfig.getWindtype().size(); i++){
+                if(StringUtil.isEmptyList(cfetsEtrSecStockConfig.getWindtype())){
                     EtrSecStockConfig etrSecStockConfig = new EtrSecStockConfig();
                     etrSecStockConfig.setPledgeStockId(RepoInfoDto.getPledgeStockId());
                     etrSecStockConfig.setConfigId(IDGenerator.generate());
@@ -174,10 +174,25 @@ public class CfetsEtrIbRepoRkController extends BaseController {
                     etrSecStockConfig.setIsRight(cfetsEtrSecStockConfig.getIsRight());
                     etrSecStockConfig.setmGradeResult(cfetsEtrSecStockConfig.getmGradeResult());
                     etrSecStockConfig.setSecGradeResult(cfetsEtrSecStockConfig.getSecGradeResult());
-                    etrSecStockConfig.setWindtypeone(cfetsEtrSecStockConfig.getWindtype().get(i).get(0));
-                    etrSecStockConfig.setWindtypetwo(cfetsEtrSecStockConfig.getWindtype().get(i).get(1));
+                    etrSecStockConfig.setWindtypeone(null);
+                    etrSecStockConfig.setWindtypetwo(null);
                     etrSecStockConfigList.add(etrSecStockConfig);
+                }else{
+                    for(int i = 0; i < cfetsEtrSecStockConfig.getWindtype().size(); i++){
+                        EtrSecStockConfig etrSecStockConfig = new EtrSecStockConfig();
+                        etrSecStockConfig.setPledgeStockId(RepoInfoDto.getPledgeStockId());
+                        etrSecStockConfig.setConfigId(IDGenerator.generate());
+                        etrSecStockConfig.setIsSecBond(cfetsEtrSecStockConfig.getIsSecBond());
+                        etrSecStockConfig.setIsPpb(cfetsEtrSecStockConfig.getIsPpb());
+                        etrSecStockConfig.setIsRight(cfetsEtrSecStockConfig.getIsRight());
+                        etrSecStockConfig.setmGradeResult(cfetsEtrSecStockConfig.getmGradeResult());
+                        etrSecStockConfig.setSecGradeResult(cfetsEtrSecStockConfig.getSecGradeResult());
+                        etrSecStockConfig.setWindtypeone(cfetsEtrSecStockConfig.getWindtype().get(i).get(0));
+                        etrSecStockConfig.setWindtypetwo(cfetsEtrSecStockConfig.getWindtype().get(i).get(1));
+                        etrSecStockConfigList.add(etrSecStockConfig);
+                    }
                 }
+
             }
             RepoInfoDto.setEtrSecStockConfig(etrSecStockConfigList);
 //            for (int i = 0; i < RepoInfoDto.getEtrSecStockConfig().size(); i++) {

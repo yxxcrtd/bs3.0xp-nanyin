@@ -12,20 +12,23 @@ package com.joyintech.tams.cfets.bankuplink.repo.service;
 
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.exception.MessageException;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.base.dao.SysWflBusinessListMapper;
 import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.exception.PositionException;
+import com.joyintech.tams.business.common.pojo.BaseMap;
+import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealRegisterQuoteDto;
@@ -562,7 +565,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             //登录业务流程
             insertWfl(cfetsRepoDealDbDto);
             //头寸
-            sendPositionMethod(entity, cfetsRepoDealDbDto, true);
+            sendPositionMethod(entity, cfetsRepoDealDbDto, true, RequestUtil.getParam("confirmOk"));
         }
 //        if (StringUtil.isNotEmpty(type)) {
 //            throw new RuntimeException("cs by jp");
@@ -578,6 +581,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             CfetsRepoDealDbDto cfetsRepoDealDbDto = prepareEntity(entity, StringUtil.equals(entity.getOperatorType(), "revoke") ? OperationType.REVOKE : OperationType.NEW);
             //登录业务流程
             insertWfl(cfetsRepoDealDbDto);
+            String confirmOk = RequestUtil.getParam("confirmOk");
             ProcessMark newEntity;
             // 发头寸
             if (StringUtil.isNotEmpty(entity.getWorkflowId())) {
@@ -586,10 +590,10 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 if (StringUtil.equals(sysWflBusinessList.getProcessState(), DictCodeList.流程状态_已退回.getValue())) {
                     isSubmit = false;
                     entity.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
-                    sendPositionMethod(entity, cfetsRepoDealDbDto, isSubmit);
+                    sendPositionMethod(entity, cfetsRepoDealDbDto, isSubmit, confirmOk);
                 } else {
                     entity.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
-                    sendPositionMethod(entity, cfetsRepoDealDbDto, isSubmit);
+                    sendPositionMethod(entity, cfetsRepoDealDbDto, isSubmit, confirmOk);
                 }
             }
             try {
@@ -1543,7 +1547,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      * @author jiangpeng
      * @date 2021/12/24 10:12
      */
-    private void sendPositionMethod(CfetsRepoDealRegisterQuoteDto entity, CfetsRepoDealDbDto cfetsRepoDealDbDto, boolean isSubmit) {
+    private void sendPositionMethod(CfetsRepoDealRegisterQuoteDto entity, CfetsRepoDealDbDto cfetsRepoDealDbDto, boolean isSubmit, String confirmOk) {
         List<CfetsEtrIbRepoPosPortfolioCashRequest> ptlCashList = new ArrayList<>();
         List<CfetsEtrIbRepoPosPortfolioSecRequest> ptlSecList = new ArrayList<>();
         RegFinProductDealTotal dealTotal = cfetsRepoDealDbDto.getRegFinProductDealTotal();
@@ -1597,9 +1601,11 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
         req.setModelType(DictCodeListExt1.子系统代码_交易.getValue());
         req.setWorkFlowId(entity.getWorkflowId());
-        String balanceCheck = "Y";
-        if (StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(), "Y")) {
-            balanceCheck = "N";
+        String balanceCheck = DictCodeList.是否_是.getValue();
+        if ((StringUtil.isNotEmpty(entity.getSoftSkipMode())
+                && StringUtil.equals(entity.getSoftSkipMode(), DictCodeList.是否_是.getValue()))
+                || StringUtil.isNotEmpty(confirmOk)) {
+            balanceCheck = DictCodeList.是否_否.getValue();
         }
         req.setRepoPledgeModel(CacheUtil.getSysParam("repo_pledge_model"));
         req.setBalanceCheck(balanceCheck);
@@ -1620,7 +1626,25 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         req.setCcy(DictCodeList.币种_人民币_CNY.getValue());
         req.setPtlCashList(ptlCashList);
         req.setPtlSecList(ptlSecList);
-        PositionHttpRequest.send(req);
+        try {
+            PositionHttpRequest.send(req);
+        } catch (PositionException e) {
+            Message message = PositionUtil.ajaxErrorReturn(e);
+            BaseMap bm = (BaseMap) message.getData();
+            String code = (String) bm.get("code");
+            String messageStr = JsonUtils.json2Object((String) bm.get("message").toString(), String.class);
+            if (StringUtil.isEmpty(confirmOk)
+                    && StringUtil.equals(PositionHttpRequest.CODE_BUSI_RK, code)) {
+//                WorkFlowUtil.showMessage(messageStr, MessageType.确认消息);
+//                throw new MessageException(messageStr, MessageType.确认消息);
+            }
+            if (StringUtil.isEmpty(confirmOk)
+                    && StringUtil.equals(PositionHttpRequest.CODE_BUSI_YK, code)) {
+//                WorkFlowUtil.showMessage(messageStr, MessageType.错误消息);
+//                throw new MessageException(messageStr, MessageType.错误消息);
+            }
+            throw new RuntimeException(messageStr);
+        }
     }
 
     /**
@@ -1778,6 +1802,20 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         //头寸
         PositionHttpRequest.dorevoke(totleTradeId, DictCodeListExt1.子系统代码_交易.getValue(),
                 DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), result.getRegFinProductDealTotal().getPs());
+    }
+
+
+
+    /**
+     * 根据工作流代码获取entity
+     * <功能详细描述>
+     * @param wflValidInputParameter
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public ProcessMark getBusinessInfoByPageIdAndPk(WflValidInputParameter wflValidInputParameter){
+        return cfetsIbuQuoteRepoMapper.getBusinessInfoByPageIdAndPk(wflValidInputParameter);
     }
 
 }

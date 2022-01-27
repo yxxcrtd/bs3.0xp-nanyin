@@ -1134,6 +1134,7 @@ public class CfetsEtrDispatcherService extends BaseService{
                     spcdCode = spcdCode.concat(",").concat(dto.getPs());
                     infoTable = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode,null,null);
                     totalInfo = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
+                    infoForm.addAll(totalInfo);
             }else {
                 infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
                 if (StringUtil.equals(CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"), "02")) {
