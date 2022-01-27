@@ -821,6 +821,7 @@
             FIN_PRODUCT.FINPROD_ABBR     	bondAbbrName,/*金融产品简称*/
             NVL(TABLE01.pledgeAmount,0)     prin,/*券面总额*/
             NVL(TABLE01.pledStrdPrinAmt,0)  avaPledgePrin,/*可质押券面总额*/
+            NVL(TABLE01.pledgePrin,0)       pledgePrin,/*质押券面总额*/
             FIN_PRODUCT.TRADE_MARKET 		tradePlace,/*交易场所*/
             FIN_PRODUCT.MDATE   			mdate,/*到期日*/
             MST_BOND_VALUATION_INFO.LAST_PERIOD lastPeriod,/*剩余期限*/
@@ -850,7 +851,8 @@
                      TEMP.FINPROD_ID,
                      /*分支序号*/
                      SUM(TEMP.pledStrdPrinAmt) pledStrdPrinAmt, /*可质押券面总额*/
-                     SUM(TEMP.pledgeAmount) pledgeAmount /*已质押质押券面总额*/
+                     SUM(TEMP.pledgeAmount) pledgeAmount, /*已质押质押券面总额*/
+                     SUM(TEMP.pledgePrin) pledgePrin /*质押券面总额*/
                  FROM (
                      SELECT
                          espr.PORTFOLIO_ID, pp.PORTFOLIO_NAME,
@@ -858,7 +860,8 @@
                          CASE WHEN ppc.S_HOLDINGTYPE = #{S_002} THEN espr.AMOUNT*nvl(ppc.CAL_FLAG,1) ELSE 0 END
                          AS pledStrdPrinAmt, /*可质押券面总额*/
                          CASE WHEN espr.HODING_TYPE=#{A_012} THEN espr.AMOUNT*nvl(ppc.CAL_FLAG,1) ELSE 0 END
-                         AS pledgeAmount /*已质押质押券面总额*/
+                         AS pledgeAmount, /*已质押质押券面总额*/
+                         CASE WHEN espr.HODING_TYPE=#{A_001} THEN espr.AMOUNT ELSE 0 END pledgePrin
                      FROM
                         PTL_SEC_POSITION_RULE espr
                      INNER JOIN PTL_PORTFOLIO pp ON
@@ -867,7 +870,7 @@
                         espr.HODING_TYPE =ppc.HOLDINGTYPE AND ppc.S_HOLDINGTYPE =#{S_002}
                      WHERE 1 = 1
                          AND espr.CDATE = to_date(#{platDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
-                         AND espr.DATE_TYPE =0 AND ( ppc.S_HOLDINGTYPE =#{S_002} or espr.HODING_TYPE=#{A_012})
+                         AND espr.DATE_TYPE =0 AND ( ppc.S_HOLDINGTYPE =#{S_002} or espr.HODING_TYPE=#{A_012} or espr.HODING_TYPE=#{A_001})
                  ) TEMP
                  GROUP BY
                      TEMP.PORTFOLIO_ID, TEMP.PORTFOLIO_NAME,
@@ -1370,7 +1373,7 @@
                  union
                  select -1*TRADE_AMT ENTRUST_AMT,PORTFOLIO_ID,REPO_TERM,SETTLE_SPEED SETTLE_SPREED
                  from REG_FIN_PRODUCT_DEAL
-                 where IS_CANCEL = 'N' and TRADE_STATUS !='03' AND ENTRUST_ID = #{etrId}
+                 where IS_CANCEL = 'N' and TRADE_STATUS ='01' AND ENTRUST_ID = #{etrId}
                  union
                  select -1*TRADE_AMT ENTRUST_AMT,PORTFOLIO_ID,REPO_TERM,SETTLE_SPEED SETTLE_SPREED
                  from WFL_REG_FIN_PRODUCT_DEAL
