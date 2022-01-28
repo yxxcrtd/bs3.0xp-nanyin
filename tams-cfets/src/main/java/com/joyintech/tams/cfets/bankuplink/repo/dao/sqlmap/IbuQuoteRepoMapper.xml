@@ -344,10 +344,6 @@
                         #{item}
                     </foreach>
                 </if>
-                <if test="platDate != null">
-                    /* 查询条件 当前平台日 处于委托日期区间内*/
-                    AND ETR_ENTRUST.ENTRUST_DATE = to_date(#{platDate}, 'yyyy-MM-dd')
-                </if>
                 <if test="entrustDateStart != null">
                     /* 查询条件 指令日期区间开始日 处于委托日期区间内*/
                     AND ETR_ENTRUST.ENTRUST_DATE <![CDATA[ >= ]]> to_date(#{entrustDateStart}, 'yyyy-MM-dd')
@@ -825,13 +821,14 @@
             FIN_PRODUCT.FINPROD_ABBR     	bondAbbrName,/*金融产品简称*/
             NVL(TABLE01.pledgeAmount,0)     prin,/*券面总额*/
             NVL(TABLE01.pledStrdPrinAmt,0)  avaPledgePrin,/*可质押券面总额*/
+            NVL(TABLE01.pledgePrin,0)       pledgePrin,/*质押券面总额*/
             FIN_PRODUCT.TRADE_MARKET 		tradePlace,/*交易场所*/
             FIN_PRODUCT.MDATE   			mdate,/*到期日*/
             MST_BOND_VALUATION_INFO.LAST_PERIOD lastPeriod,/*剩余期限*/
             sdl.ITEM_VALUE 				    gradeResult,/*债项评级*/
             mbvi.NETPRICE                   firstNetPrice,/*首次净价*/
             FIN_PRODUCT.REGIST_ORG 			repRegistOrg,/*登记托管机构*/
-            case when EEP.SCALE is not null then NVL(EEP.SCALE, 1)*100
+            case when EEP.SCALE is not null then round(nvl(EEP.SCALE,100)/100,4)*100
                 when mbvi.NETPRICE>nvl(prinAmt.prinAmt,100) then round(100/100,4)*100
                 when mbvi.NETPRICE is null then round(nvl(prinAmt.prinAmt,100)/100,4)*100
                 else round(mbvi.NETPRICE/nvl(prinAmt.prinAmt,100),4)*100
@@ -854,7 +851,8 @@
                      TEMP.FINPROD_ID,
                      /*分支序号*/
                      SUM(TEMP.pledStrdPrinAmt) pledStrdPrinAmt, /*可质押券面总额*/
-                     SUM(TEMP.pledgeAmount) pledgeAmount /*已质押质押券面总额*/
+                     SUM(TEMP.pledgeAmount) pledgeAmount, /*已质押质押券面总额*/
+                     SUM(TEMP.pledgePrin) pledgePrin /*质押券面总额*/
                  FROM (
                      SELECT
                          espr.PORTFOLIO_ID, pp.PORTFOLIO_NAME,
@@ -862,7 +860,8 @@
                          CASE WHEN ppc.S_HOLDINGTYPE = #{S_002} THEN espr.AMOUNT*nvl(ppc.CAL_FLAG,1) ELSE 0 END
                          AS pledStrdPrinAmt, /*可质押券面总额*/
                          CASE WHEN espr.HODING_TYPE=#{A_012} THEN espr.AMOUNT*nvl(ppc.CAL_FLAG,1) ELSE 0 END
-                         AS pledgeAmount /*已质押质押券面总额*/
+                         AS pledgeAmount, /*已质押质押券面总额*/
+                         CASE WHEN espr.HODING_TYPE=#{A_001} THEN espr.AMOUNT ELSE 0 END pledgePrin
                      FROM
                         PTL_SEC_POSITION_RULE espr
                      INNER JOIN PTL_PORTFOLIO pp ON
@@ -871,7 +870,7 @@
                         espr.HODING_TYPE =ppc.HOLDINGTYPE AND ppc.S_HOLDINGTYPE =#{S_002}
                      WHERE 1 = 1
                          AND espr.CDATE = to_date(#{platDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
-                         AND espr.DATE_TYPE =0 AND ( ppc.S_HOLDINGTYPE =#{S_002} or espr.HODING_TYPE=#{A_012})
+                         AND espr.DATE_TYPE =0 AND ( ppc.S_HOLDINGTYPE =#{S_002} or espr.HODING_TYPE=#{A_012} or espr.HODING_TYPE=#{A_001})
                  ) TEMP
                  GROUP BY
                      TEMP.PORTFOLIO_ID, TEMP.PORTFOLIO_NAME,
@@ -1367,28 +1366,28 @@
     <select id="findEtrLastNumByEtrId" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealEntrustOrderDto">
         select sum(T.ENTRUST_AMT) avaNum ,IPAR.PARTY_ID,T.REPO_TERM,T.SETTLE_SPREED
         from (
-                 select ee.ENTRUST_AMT,ee.PORTFOLIO_ID,eea.TERM_DAYS REPO_TERM,eea.SETTLE_SPREED SETTLE_SPREED
-                 from ETR_ENTRUST ee
+                 select nvl(ee.ENTRUST_AMT - nvl(rfpd.ENTRUST_AMT, 0) - nvl(wrfpd.TRADE_AMT, 0) - nvl(IBQER.ENTRUST_AMT, 0) -
+                       nvl(wiqer.FPRICE_AMT, 0),0) ENTRUST_AMT,
+                       ee.PORTFOLIO_ID,
+                       eea.TERM_DAYS            REPO_TERM,
+                       eea.SETTLE_SPREED        SETTLE_SPREED
+                from ETR_ENTRUST ee
                  left join ETR_ENTRUST_ADD eea on ee.ENTRUST_ID = eea.ENTRUST_ID
+                 left join (select t.TRADE_AMT ENTRUST_AMT, t.ENTRUST_ID
+                                    from REG_FIN_PRODUCT_DEAL t
+                                             left join reg_FIN_PRODUCT_DEAL_TOTAL rfpdt on rfpdt.TOTLE_TRADE_ID = t.TOTLE_TRADE_ID
+                                    where rfpdt.IS_CANCEL = 'N'
+                                      and rfpdt.TRADE_STATUS = '01'
+                ) rfpd on rfpd.ENTRUST_ID = ee.ENTRUST_ID
+                 left join WFL_REG_FIN_PRODUCT_DEAL wrfpd on wrfpd.ENTRUST_ID = ee.ENTRUST_ID
+                 left join (
+                    select t.FPRICE_AMT ENTRUST_AMT, t.ENTRUST_ID
+                    from IBU_QUOTE_ETR_RE t
+                             left join IBU_QUOTE_CREP IQC on t.QUOTE_ID = IQC.QUOTE_ID
+                    where IQC.SEND_STATUS = '01'
+                ) IBQER on rfpd.ENTRUST_ID = ee.ENTRUST_ID
+                 left join WFL_IBU_QUOTE_ETR_RE wiqer on wiqer.ENTRUST_ID = ee.ENTRUST_ID
                  where ee.ENTRUST_ID = #{etrId}
-                 union
-                 select -1*TRADE_AMT ENTRUST_AMT,PORTFOLIO_ID,REPO_TERM,SETTLE_SPEED SETTLE_SPREED
-                 from REG_FIN_PRODUCT_DEAL
-                 where IS_CANCEL = 'N' and TRADE_STATUS !='03' AND ENTRUST_ID = #{etrId}
-                 union
-                 select -1*TRADE_AMT ENTRUST_AMT,PORTFOLIO_ID,REPO_TERM,SETTLE_SPEED SETTLE_SPREED
-                 from WFL_REG_FIN_PRODUCT_DEAL
-                 where ENTRUST_ID = #{etrId}
-                 union
-                 select -1*IBQER.FPRICE_AMT ENTRUST_AMT,IBQER.PORTFOLIO_ID,IQC.TERM REPO_TERM,IQC.SETTLE_SPEED SETTLE_SPREED
-                 from IBU_QUOTE_ETR_RE IBQER
-                 left join IBU_QUOTE_CREP IQC on IBQER.QUOTE_ID = IQC.QUOTE_ID
-                 where IBQER.ENTRUST_ID = #{etrId} AND IQC.SEND_STATUS = '01' /*新增中 已发送*/
-                 union
-                 select -1*WIBQER.FPRICE_AMT ENTRUST_AMT,WIBQER.PORTFOLIO_ID,WIQC.TERM REPO_TERM,WIQC.SETTLE_SPEED SETTLE_SPREED
-                 from WFL_IBU_QUOTE_ETR_RE WIBQER
-                 left join WFL_IBU_QUOTE_CREP WIQC on WIBQER.QUOTE_ID = WIQC.QUOTE_ID
-                 where WIBQER.ENTRUST_ID = #{etrId}
              ) T
             LEFT JOIN IBU_PORTFOLIO_ACCT_RELA IPAR
                 ON T.PORTFOLIO_ID = IPAR.PORTFOLIO_ID AND IPAR.CFETS_ACCT_TYPE = '01'
@@ -2582,5 +2581,81 @@
     </select>
     <select id="selectAllCustomer"  resultType="java.util.Map">
         SELECT PARTY_ID , PARTY_ABBR FROM MST_CFETS_CUSTOMER_INFO GROUP BY PARTY_ID , PARTY_ABBR
+    </select>
+
+    <sql id="getMaxHisNo">
+        select
+        max(HIS_NO)	       HIS_NO,
+        WORKFLOW_ID
+        from SYS_DATA_PROCESS_MARK
+        <where>
+            <if test="pageId != null and pageId !=''">
+                PAGE_ID = #{pageId}
+            </if>
+            <if test="pageIdList != null and pageIdList.size() > 0">
+                PAGE_ID in
+                <foreach collection="pageIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        group by  WORKFLOW_ID
+    </sql>
+
+    <select id="getBusinessInfoByPageIdAndPk" parameterType="com.joyintech.tams.component.business.core.dto.WflValidInputParameter"
+            resultType="com.joyintech.framework.base.entity.ProcessMark">
+        select pm.*
+        from SYS_DATA_PROCESS_MARK pm
+        inner join (<include refid="getMaxHisNo"/>) tempHis on  pm.HIS_NO = tempHis.HIS_NO and pm.WORKFLOW_ID = tempHis.WORKFLOW_ID
+        <where>
+            ROWNUM =1
+            <if test="seachMode != null and seachMode !='' and seachMode == '01'.toString()">
+                and pm.status in ('A','U','P')
+            </if>
+            <if test="pageId != null and pageId !=''">
+                and pm.PAGE_ID = #{pageId}
+            </if>
+            <if test="pageIdList != null and pageIdList.size() > 0">
+                and pm.PAGE_ID in
+                <foreach collection="pageIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="businessDataPk1 != null and businessDataPk1 !=''">
+                and pm.BUSINESS_DATA_PK1 = #{businessDataPk1}
+            </if>
+            <if test="businessDataPk2 != null and businessDataPk2 !=''">
+                and pm.BUSINESS_DATA_PK2 = #{businessDataPk2}
+            </if>
+            <if test="businessDataPk3 != null and businessDataPk3 !=''">
+                and pm.BUSINESS_DATA_PK3 = #{businessDataPk3}
+            </if>
+            <if test="businessDataPk4 != null and businessDataPk4 !=''">
+                and pm.BUSINESS_DATA_PK4 = #{businessDataPk4}
+            </if>
+            <if test="businessDataPk5 != null and businessDataPk5 !=''">
+                and pm.BUSINESS_DATA_PK5 = #{businessDataPk5}
+            </if>
+            <if test="businessDataPk6 != null and businessDataPk6 !=''">
+                and pm.BUSINESS_DATA_PK6 = #{businessDataPk6}
+            </if>
+            <if test="businessDataPk7 != null and businessDataPk7 !=''">
+                and pm.BUSINESS_DATA_PK7 = #{businessDataPk7}
+            </if>
+            <if test="businessDataPk8 != null and businessDataPk8 !=''">
+                and pm.BUSINESS_DATA_PK8 = #{businessDataPk8}
+            </if>
+            <if test="businessDataPk9 != null and businessDataPk9 !=''">
+                and pm.BUSINESS_DATA_PK9 = #{businessDataPk9}
+            </if>
+            <if test="businessDataPk10 != null and businessDataPk10 !=''">
+                and pm.BUSINESS_DATA_PK10 = #{businessDataPk10}
+            </if>
+            <if test="workflowId != null and workflowId !=''">
+                and pm.WORKFLOW_ID != #{workflowId}
+            </if>
+        </where>
+        <!-- 根据创建时间排序 （降序）-->
+        order by pm.update_time desc
     </select>
 </mapper>

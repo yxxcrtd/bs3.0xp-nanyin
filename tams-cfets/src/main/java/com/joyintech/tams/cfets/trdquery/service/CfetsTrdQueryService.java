@@ -267,7 +267,8 @@ public class CfetsTrdQueryService extends BaseService{
         pageParam.put("platDate", iPlatformDate.getSysDateStr());
         pageParam.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
         pageParam.put("sysDate",iPlatformDate.getSysDateStr());
-        List<CfetsPledgeInfoResponse> pledgeInfoDtoList =  cfetsTrdQueryMapper.selectRegTablePledgeInfoList(pageParam);
+        pageParam.put("totleTradeId",dto.getBusiCode());
+        List<CfetsPledgeInfoResponse> pledgeInfoDtoList = cfetsTrdQueryMapper.findRepoPledgeInfo(pageParam);
 
 
         resultData.put(dtCode+"_dataform",dataform);
@@ -947,12 +948,12 @@ public class CfetsTrdQueryService extends BaseService{
             } else {
                 pledgeTable = cfgDataTableMapper.getByPageCode(pageCode, dtCode, "05", EFFERANGE_IS, userId);
             }
-            resultData.put("CfetsTrdQueryRegInfo_formb", baseForm);
-            resultData.put("CfetsTrdQueryRegInfo_formm", amtForm);
-            resultData.put("CfetsTrdQueryRegInfo_formp", fForm);
-            resultData.put("CfetsTrdQueryRegInfo_formo", infoFormo);
-            resultData.put("CfetsTrdQueryRegInfo_tablep", zhTable);
-            resultData.put("CfetsTrdQueryRegInfo_tablepledge", pledgeTable);
+            resultData.put(dtCode+"_formb", baseForm);
+            resultData.put(dtCode+"_formm", amtForm);
+            resultData.put(dtCode+"_formp", fForm);
+            resultData.put(dtCode+"_formo", infoFormo);
+            resultData.put(dtCode+"_tablep", zhTable);
+            resultData.put(dtCode+"_tablepledge", pledgeTable);
             Map<String, Object> pageParam = BeanUtil.object2Map(dto);
             //判断角色配置
             List<String> roleList = cfetsTrdQueryMapper.selectSysRoleById(userId);

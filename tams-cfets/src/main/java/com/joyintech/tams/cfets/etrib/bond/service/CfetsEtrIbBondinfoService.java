@@ -595,7 +595,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     
                     if (dto != null){
                         // 5.持仓成本=（交易可用券面总额+交易在途券面总额）* 持仓成本价（元）
-                        r.setPositionsAmt(ArithmeticUtil.multiply(doAdd, r.getUnitCost()));
+                        r.setPositionsAmt(ArithmeticUtil.multiply(doAdd, r.getUnitCost()).divide(BigDecimal.valueOf(100)));
                     }
 
                     if (r.getPositionsAmt() != null){
@@ -1113,6 +1113,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         map.put("REGIST_ORG_02", DictCodeList.登记托管机构_上海清算所.getValue());
         map.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         CfetsEtrFinProductDto dto = cfetsetrIbBondinfoMapper.getEtrFinProductInfo(map);
+        dto.setLastqx(joyinbusinessCommonService.calPendingPeriod(secId));
         if (dto != null) {
             map.put("marketId",dto.getMarketId());
             //            获取信用评级结果
@@ -1181,10 +1182,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }else {
                 dto.setXqFlg("无");
             }
-            //剩余期限（待偿期）
-            if (dto.getLastqx().equals("年")) {
-                dto.setLastqx(" ");
-            }
 
             //付息频率
             if (dto.getPayCycle().equals("月")||dto.getPayCycle().equals("季")||dto.getPayCycle().equals("年")||dto.getPayCycle().equals("半年")) {
@@ -1197,10 +1194,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }
             if (dto.getPriceTj().equals("元")) {
                 dto.setPriceTj("--");
-            }
-            //如果剩余期限为空，显示--
-            if (dto.getLastqx().equals("年")) {
-                dto.setLastqx("--");
             }
             //下一行权日若无，则显示为“—”  计划行权日>交易日取最小
             if (dto.getXqdate() != null || !StringUtil.isEmpty(dto.getXqdate())) {
@@ -2024,6 +2017,16 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
 
     }
+
+    public void forcedFinishOprHisMethod(CfetsEtribBondInfo003Dto dto){
+            //更新操作记录日志
+            CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+            oprHisReq.setEntrustId(dto.getEntrustId());
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_强制完成.getValue());
+            oprHisReq.setBusiDes(dto.getRemark());
+            joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
+    }
+
     public void recallDelegateOprHisMethod(EtrInvestBondInfoDto dto){
         List<EtrInvestBondInfoDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0) {

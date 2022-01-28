@@ -1851,7 +1851,14 @@
             case when T1.PS = 'T03' THEN T1.SETTLE_DATE
             ELSE NULL END theoreticalExerciseDate,
             case when T1.PS = 'T03' THEN T2.ACT_SETTE_DATE
-            ELSE NULL END actSetteDate
+            ELSE NULL END actSetteDate,
+            T7.COUNTER_NAME,
+            T1.DELIVERY_TYPE settleMethod,
+            T1.CLEAR_TYPE settleType,
+            T1.DELIVERY_TYPE settleMethod,
+            T1.CLEAR_TYPE settleType,
+            T8.PARTY_NAME mySideAbbr,
+            T9.TRADER_NAME counterTraderName
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN REG_FIN_PRODUCT_DEAL_TOTAL_ADD T2 ON
@@ -1860,6 +1867,9 @@
         LEFT JOIN REG_TRADE_FEE_TOTAL T4 ON T4.TRADE_ID  = T1.TOTLE_TRADE_ID AND T4.FEE_TYPE  = 'B06'
         LEFT JOIN REG_TRADE_FEE_TOTAL T5 ON T5.TRADE_ID  = T1.TOTLE_TRADE_ID AND T5.FEE_TYPE  = 'B08'
         LEFT JOIN SYS_USER T6 ON T6.USER_NAME = T1.OU_TRADER_ID
+        LEFT JOIN MST_COUNTER_PARTY T7 ON T7.COUNTER_ID = T1.COUNTER_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO T8 ON T8.PARTY_ID = T1.OU_PARTY_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER T9 ON T9.TRADER_ID = T1.COUNTER_TRADER
         WHERE T1.TOTLE_TRADE_ID = #{quoteId}
     </select>
 
@@ -1909,7 +1919,12 @@
             case when T1.PS = 'T03' THEN T1.SETTLE_DATE
             ELSE NULL END theoreticalExerciseDate,
             case when T1.PS = 'T03' THEN T2.ACT_SETTE_DATE
-            ELSE NULL END actSetteDate
+            ELSE NULL END actSetteDate,
+            T7.COUNTER_NAME,
+            T1.DELIVERY_TYPE settleMethod,
+            T1.CLEAR_TYPE settleType,
+            T8.PARTY_NAME mySideAbbr,
+            T9.TRADER_NAME counterTraderName
         FROM
             WFL_REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN WFL_REG_FIN_PRO_DEAL_TOTAL_ADD T2 ON
@@ -1918,6 +1933,9 @@
         LEFT JOIN WFL_REG_TRADE_FEE_TOTAL T4 ON T4.TRADE_ID  = T1.TOTLE_TRADE_ID AND T4.FEE_TYPE  = 'B06'
         LEFT JOIN WFL_REG_TRADE_FEE_TOTAL T5 ON T5.TRADE_ID  = T1.TOTLE_TRADE_ID AND T5.FEE_TYPE  = 'B08'
         LEFT JOIN SYS_USER T6 ON T6.USER_NAME = T1.OU_TRADER_ID
+        LEFT JOIN MST_COUNTER_PARTY T7 ON T7.COUNTER_ID = T1.COUNTER_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO T8 ON T8.PARTY_ID = T1.OU_PARTY_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER T9 ON T9.TRADER_ID = T1.COUNTER_TRADER
         WHERE T1.TOTLE_TRADE_ID = #{quoteId}
     </select>
 

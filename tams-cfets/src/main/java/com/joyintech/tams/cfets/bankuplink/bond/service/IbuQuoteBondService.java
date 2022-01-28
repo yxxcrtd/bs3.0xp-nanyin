@@ -1023,7 +1023,7 @@ public class IbuQuoteBondService extends BaseService {
             cfetsEtrIbBondinfoService.closeDelegatePositionMethod(dtolist, com.joyintech.tams.constant.DictCodeList.平安资产类型_债券.getValue());
             //更新操作日志
             dtolist.forEach(item ->{
-                cfetsEtrIbBondinfoService.closeDelegatOprHisMethod(item);
+                cfetsEtrIbBondinfoService.forcedFinishOprHisMethod(item);
             });
         }
     }
@@ -1145,6 +1145,9 @@ public class IbuQuoteBondService extends BaseService {
      */
     public boolean doReCall(BondQuoteInfoDto bondQuoteInfoDto) {
 
+        CfetsOprHisInfoRequest cfetsOprHisInfoRequest = new CfetsOprHisInfoRequest();
+        cfetsOprHisInfoRequest.setEntrustId(bondQuoteInfoDto.getQuoteId());
+        cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_撤回.getValue());
         if (StringUtil.equals(bondQuoteInfoDto.getQuoteRoleType(),
                 BussinessDictCodeList.银行间上行本方角色_询价方.getValue())) {
             CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = new CfetsBondDealDialogueQuoteDto();
@@ -1178,6 +1181,7 @@ public class IbuQuoteBondService extends BaseService {
                     bondQuoteInfoDto, boolean.class);*/
             //处理头寸
         }
+        joyinbusinessCommonService.updateCfetsOprHis(cfetsOprHisInfoRequest);
         return false;
     }
 

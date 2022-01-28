@@ -1,6 +1,7 @@
 package com.joyintech.tams.cfets.bankuplink.bond.service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.EntrustForcedFinishDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -30,7 +31,7 @@ public class EntrustForcedFinishService extends BaseService<EntrustForcedFinishD
         try{
             ibuQuoteBondService.doForcedFinish(param);
         }catch (Exception e){
-            e.printStackTrace();
+            throw new BusinessException("MSG:指令强制完成审批异常!");
         }
     }
 }

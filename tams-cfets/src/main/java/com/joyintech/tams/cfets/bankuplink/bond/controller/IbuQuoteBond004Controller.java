@@ -172,10 +172,10 @@ public class IbuQuoteBond004Controller extends BaseController {
             cfetsBondDealQuoteCommonDto.setQuoteId(cfetsBondRegCheckDetaileRequst.getQuoteId());
             cfetsBondDealQuoteCommonDto.setValidStatus(BussinessDictCodeList.有效状态_有效.getValue());
             cfetsBondDealQuoteCommonDto = cfetsBondDealQuotedPrice004Service.initReg(cfetsBondDealQuoteCommonDto);
-            BeanUtil.copyPropertiesIgnoreNull(cfetsBondRegCheckDetaileRequst,cfetsBondDealQuoteCommonDto);
             CfetsBondDealRegisterQuoteDto cfetsBondDealRegisterQuoteDto = new CfetsBondDealRegisterQuoteDto();
+            BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRegisterQuoteDto,cfetsBondDealQuoteCommonDto);
             cfetsBondDealRegisterQuoteDto.setTotleTradeId(cfetsBondRegCheckDetaileRequst.getQuoteId());
-            cfetsBondDealRegisterQuoteDto.setRemark(cfetsBondRegCheckRequst.getRemark());
+            cfetsBondDealRegisterQuoteDto.setRemark(StringUtil.join("交易登记撤销原因：",cfetsBondRegCheckRequst.getRemark()));
             cfetsBondDealRegisterQuoteDto.setOperatorType("revoke");
             CfetsBondDealRegisterQuoteDtos.add(cfetsBondDealRegisterQuoteDto);
         }

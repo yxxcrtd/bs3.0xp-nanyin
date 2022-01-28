@@ -331,6 +331,7 @@ public class IbuQuoteRepoService extends BaseService {
      * @return 质押券信息
      */
     public Page<RepoEntrustPledgeDto> pledgesAdd(RepoPledgeRequest request) {
+        Page<RepoEntrustPledgeDto> page = new Page<>();
         Map<String, Object> pageParam = BeanUtil.object2Map(request);
         String repo_pledge_model = CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL);
         List<RepoEntrustPledgeDto> list = new ArrayList<>();
@@ -344,11 +345,18 @@ public class IbuQuoteRepoService extends BaseService {
         int pageSize = request.getPageMode() == null ? 10 : request.getPageMode().getPageSize();
         if (StringUtil.equals(repo_pledge_model, "02")) {//指定质押券
             setParam(pageParam, 2);
-            return super.queryForPage(pageNo, pageSize, () -> cfetsIbuQuoteRepoMapper.selectUsableEntrustPledges(pageParam));
+            page = super.queryForPage(pageNo, pageSize, () -> cfetsIbuQuoteRepoMapper.selectUsableEntrustPledges(pageParam));
         } else {
             setParam(pageParam, 3);
-            return super.queryForPage(pageNo, pageSize, () -> cfetsIbuQuoteRepoMapper.selectUsablePledges(pageParam));
+            page = super.queryForPage(pageNo, pageSize, () -> cfetsIbuQuoteRepoMapper.selectUsablePledges(pageParam));
         }
+        for (RepoEntrustPledgeDto dto : page.getRoot()) {
+            String pendingPeriodStr = joyinbusinessCommonService.calPendingPeriod(dto.getFinprodId());
+            String period = pendingPeriodStr.substring(0, pendingPeriodStr.length() - 1);
+            String periodUnit = pendingPeriodStr.substring(pendingPeriodStr.length() - 1, pendingPeriodStr.length());
+            dto.setPeriodStr(pendingPeriodStr);
+        }
+        return page;
     }
 
     /**
@@ -1535,9 +1543,11 @@ public class IbuQuoteRepoService extends BaseService {
             param.put("POSITION_TYPE_05", DictCodeList.持仓类型_融入.getValue());
             param.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
             param.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+            param.put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue());
             param.put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue());
             param.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
         } else {
+            param.put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue());
             param.put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue());
             param.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
             param.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());

@@ -244,45 +244,43 @@
         object.operatorType = operatorType;
         object.isDzh = 'Y';
         object.pageId = "CfetsBondDealQuotedPrice003";
-        Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice004/check', object,
-            function(result) {
-                if (result.data) {
-                    Joyin.confirm(result.data,
-                        function() {
-                            //保存 走流程
-                            if (operatorType === 'save') {
-                                WorkFlow.doSaveList(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice004/save', object, "CfetsBondDealQuotedPrice004_btn_save", null,
-                                    function() {
-                                        var index = window.parent.layer.getFrameIndex(window.name);
-                                        window.parent.layer.close(index);
-                                    })
-                            }
-                            //成交 走流程
-                            else if (operatorType === 'done') {
-                                WorkFlow.doSubmitList(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice004/save', object, "CfetsBondDealQuotedPrice004_btn_done", null,
-                                    function() {
-                                        var index = window.parent.layer.getFrameIndex(window.name);
-                                        window.parent.layer.close(index);
-                                    })
-                            }
-                            //提交 走流程
-                            else if (operatorType === 'submit') {
-                                WorkFlow.doSubmitList(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice004/save', object, "CfetsBondDealQuotedPrice004_btn_submit", null,
-                                    function() {
-                                        var index = window.parent.layer.getFrameIndex(window.name);
-                                        window.parent.layer.close(index);
-                                    })
-                            }
-                            //拒绝 不走流程
-                            else if (operatorType === 'refuse'){
-                                Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice004/saveData', object, function(result){
+        /*Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice004/check', object,
+            function(result) {*/
+                Joyin.confirm("请确认是否要提交?",
+                    function() {
+                        //保存 走流程
+                        if (operatorType === 'save') {
+                            WorkFlow.doSaveList(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice004/save', object, "CfetsBondDealQuotedPrice004_btn_save", null,
+                                function() {
                                     var index = window.parent.layer.getFrameIndex(window.name);
                                     window.parent.layer.close(index);
                                 })
-                            }
-                        })
-                }
-            });
+                        }
+                        //成交 走流程
+                        else if (operatorType === 'done') {
+                            WorkFlow.doSubmitList(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice004/save', object, "CfetsBondDealQuotedPrice004_btn_done", null,
+                                function() {
+                                    var index = window.parent.layer.getFrameIndex(window.name);
+                                    window.parent.layer.close(index);
+                                })
+                        }
+                        //提交 走流程
+                        else if (operatorType === 'submit') {
+                            WorkFlow.doSubmitList(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice004/save', object, "CfetsBondDealQuotedPrice004_btn_submit", null,
+                                function() {
+                                    var index = window.parent.layer.getFrameIndex(window.name);
+                                    window.parent.layer.close(index);
+                                })
+                        }
+                        //拒绝 不走流程
+                        else if (operatorType === 'refuse'){
+                            Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice004/saveData', object, function(result){
+                                var index = window.parent.layer.getFrameIndex(window.name);
+                                window.parent.layer.close(index);
+                            })
+                        }
+                    })
+           /* });*/
     };
     /**
      * 计算金额相关

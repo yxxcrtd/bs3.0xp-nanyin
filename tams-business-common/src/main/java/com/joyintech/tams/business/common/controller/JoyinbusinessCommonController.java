@@ -235,4 +235,17 @@ public class JoyinbusinessCommonController extends BaseController {
 		}
 	}
 
+	@PostMapping("/calPendingPeriod/{secId:.+}")
+	@ApiOperation(value = "计算待偿期", notes = "计算待偿期")
+	@ResponseBody
+	public Message<String> calPendingPeriod(@PathVariable String secId) {
+		try {
+			String pendingPeriod = joyinbusinessCommonService.calPendingPeriod(secId);
+			return new Message<String>().success().setData(pendingPeriod);
+		} catch (Exception e) {
+			logger.error("计算功能异常", e);
+			return new Message<String>().fail().setMessage("计算查询异常");
+		}
+	}
+
 }

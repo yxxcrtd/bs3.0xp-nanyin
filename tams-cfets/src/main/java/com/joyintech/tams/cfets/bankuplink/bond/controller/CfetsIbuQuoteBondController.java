@@ -645,7 +645,6 @@ public class CfetsIbuQuoteBondController extends BaseController {
 				if(StringUtil.equals(item.getCalMode(),"03")){item.setExerYield(ArithmeticUtil.multiply(item.getExerYield(),new BigDecimal(100)));item.setPrice(null);item.setMatureYield(null);}
 			});
 		}
-		File tplfile = new File(ExcelTplUitl.getTplFile("DAYREGEXPORTTPL.xlsx"));
 		List<File> files = new ArrayList<>();
 		if(StringUtil.isNotEmpty(ibuExportCountMax)&&CollectionUtils.isNotEmpty(dataList)){
 			int max = Integer.parseInt(ibuExportCountMax);
@@ -663,7 +662,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 				if(null==sequenceIndexData){sequenceIndexData = 1L;}
 				String appendString = collect.size()>=1?String.format("%04d", sequenceIndexData):StringUtil.EMPTY;
 				String excelAndSheetName = StringUtil.join(prefix,"_",appendString);
-				files.add(ExcelTplUitl.createFile(requestDto, excelAndSheetName,"本币交易",tplfile,() -> {
+				files.add(ExcelTplUitl.createFile(requestDto, excelAndSheetName,"本币交易","DAYREGEXPORTTPL.xlsx",() -> {
 					return cfetsBondDayRegDtos;
 				}));
 			}
@@ -676,7 +675,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			Long sequenceIndexData = tamsBaseMapper.getSequenceIndexData(sequenceIndex);
 			if(null==sequenceIndexData){sequenceIndexData = 1L;}
 			String excelAndSheetName = StringUtil.join(prefix,"_",sequenceIndexData);
-			files.add(ExcelTplUitl.createFile(requestDto, excelAndSheetName,"本币交易",tplfile,() -> {
+			files.add(ExcelTplUitl.createFile(requestDto, excelAndSheetName,"本币交易","DAYREGEXPORTTPL.xlsx",() -> {
 				return dataList;
 			}));
 		}

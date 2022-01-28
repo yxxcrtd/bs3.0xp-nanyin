@@ -47,7 +47,7 @@
         </if>
     </select>
     <sql id="onlyRegInfo">
-        select  decode(reg.is_cancel,'Y','撤销','N','有效') as effectiveStatusStr,
+        select  distinct decode(reg.is_cancel,'Y','撤销','N','有效') as effectiveStatusStr,
         decode(reg.finprod_type2,'F01','01','F02','02','F03','02') as finprodType2,
         reg.finprod_id as finprodId,
         nvl(fp.finprod_market_id,reg.term_type) as finprodMarketId,
@@ -191,7 +191,7 @@
         </if>
     </sql>
     <sql id="onlyWflRegInfo">
-        select  '流程中' as effectiveStatusStr,
+        select distinct '流程中' as effectiveStatusStr,
         decode(reg.finprod_type2,'F01','01','F02','02','F03','02') as finprodType2,
         reg.finprod_id as finprodId,
         nvl(fp.finprod_market_id,reg.term_type) as finprodMarketId,
@@ -362,7 +362,7 @@
         </where>
     </sql>-->
     <select id="selectRegFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryRegInfoListResponse">
-        select
+        select distinct
         reg.ou_party_id as traderid,
         m1.PARTY_ABBR as traderidStr,
         nvl(su.real_name,reg.ou_trader_id) as trader,
@@ -639,7 +639,7 @@
         from REG_FIN_PLEDGE rp
         left join reg_fin_product_deal regdeal
         LEFT JOIN wfl_REG_FIN_PRODUCT_DEAL_TOTAL T8 ON T8.TOTLE_TRADE_ID = regdeal.TOTLE_TRADE_ID
-        on rp.trade_id=decode(regdeal.finprod_type2,'F02',regdeal.trade_id,'F03',regdeal.totle_trade_id)
+        on rp.trade_id=regdeal.trade_id
         left join ptl_portfolio pp
         on pp.portfolio_id=rp.portfolio_id
         <if test="userId != null and userId != ''">
@@ -1938,7 +1938,7 @@
         fp.finprod_abbr as finprodAbbr,
         ip.PORTFOLIO_ID as portfolioId,
         pp.portfolio_name as portfolioName,
-        sum(ip.PLEDGE_NUMBER*100) as pledgePrin,
+        sum(ip.PLEDGE_NUMBER/100) as pledgePrin,
         mbvi.NETPRICE as firstNetPrice,
         ip.pledge_ratio*100 as pledgeRate,
         fp.REGIST_ORG as repRegistOrg
@@ -1987,7 +1987,7 @@
     <select id="queryAllCstpInfoList" parameterType="Map"
             resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryCstpInfoListResponse">
         select * from (select aaa.* from (
-        select
+        select distinct
         case when match.match_status is null or match.match_status!='01' then '01'
         when match.match_status ='01' and (match.trd_conf_status is null or match.trd_conf_status='0') then '02'
         when match.trd_conf_status='1' then '03' end as matchStatus,
@@ -2159,7 +2159,8 @@
     </sql>
     <select id="selectCstpBondFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryCstpInfoListResponse">
 
-        select to_char(total.trade_date,'yyyy-MM-dd') as tradeDate,
+        select distinct
+        to_char(total.trade_date,'yyyy-MM-dd') as tradeDate,
         I.execid as execid,
         I.Ourinstitutioncode as buyId,
         I.Ourinstitutionchinesefullname as buyIdStr,
@@ -2209,7 +2210,7 @@
         where  I.execid = #{execId,jdbcType=VARCHAR}
     </select>
     <select id="selectCstpRepoFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryCstpInfoListResponse">
-        select to_char(total.trade_date,'yyyy-MM-dd')  as tradeDate,
+        select distinct to_char(total.trade_date,'yyyy-MM-dd')  as tradeDate,
         I.execid as execid,
         I.Ourinstitutioncode as rbRepo,
         I.Ourinstitutionchinesefullname as rbRepoStr,
@@ -2667,7 +2668,7 @@
         T1.TRADE_MARKET_MODE tradeMarketMode,
         T1.TRADE_PLAT tradePlat,
         T7.exe_id tradeId,
-        NVL(T9.PARTY_NAME,tpda.ou_party_id) ouPartyId ,
+        NVL(T9.PARTY_abbr,tpda.ou_party_id) ouPartyId ,
         NVL(T10.REAL_NAME,T1.TRADER) ouTraderId,
         NVL(T11.COUNTER_NAME,T1.COUNTER_ID) counterId,
         NVL(T12.TRADER_NAME,T1.COUNTER_TRADER) counterTrade,
@@ -3110,7 +3111,7 @@
                  resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdSettleInfoResponse">
         SELECT
         distinct
-        NVL(T9.PARTY_NAME,tpda.ou_party_id) traderidStr ,
+        NVL(T9.party_abbr,tpda.ou_party_id) traderidStr,
         NVL(T10.REAL_NAME,T1.TRADER) trader,
         NVL(T11.COUNTER_NAME,T1.COUNTER_ID) counterIdStr,
         NVL(T12.TRADER_NAME,T1.COUNTER_TRADER) counterTrader,
@@ -3125,15 +3126,15 @@
         nvl(T1.CCY,T.CCY) secCcy,
         nvl(T8.SETT_CCY,ic.SETT_CCY) as settCcy,
         T.Trade_Amt tradeAmt,
-        null as faceValue,
-        null as disFaceValue,
+        pledges.faceValue as faceValue,
+        pledges.disFaceValue as disFaceValue,
         T1.clear_type clearType,
         T1.Delivery_Type deliveryType,
         T1.m_delivery_type as mdeliveryType,
-        ttft.fee_amt jyFeeAmt,
-        ttft1.fee_amt jsFeeAmt,
-        nvl(T8.V_SETTLE_DATE,ic.V_SETTLE_DATE) as vsettleDate,
-        nvl(T8.M_SETTLE_DATE,ic.M_SETTLE_DATE) as msettleDate,
+        ttft.fee_amt trdFeeAmt,
+        ttft1.fee_amt settleFeeAmt,
+        to_char(nvl(T8.V_SETTLE_DATE,ic.V_SETTLE_DATE),'yyyy-MM-dd')as vsettleDate,
+        to_char(nvl(T8.M_SETTLE_DATE,ic.M_SETTLE_DATE),'yyyy-MM-dd') as msettleDate,
         ftp.m_int_amt as intAmt,
         ftp.m_trade_amt as mtradeAmt,
         ftp.ACT_CAP_DAYS as actRepoTerm,
@@ -3154,6 +3155,10 @@
         LEFT JOIN MST_COUNTER_PARTY T11 ON T11.COUNTER_ID = T1.COUNTER_ID
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER T12 ON T12.trader_id = T1.COUNTER_TRADER
         LEFT JOIN ibu_quote_crep ic ON ic.quote_id = nvl(T7.PRE_TRADE_ID,T1.B_TRADE_ID)
+        left join (select pledge.finprod_id,sum(pledge.pledge_number/100) as faceValue,
+        sum(pledge.pledge_number*pledge.pledge_ratio*100) as disFaceValue
+        from FIN_DEAL_PLEDGE pledge group by pledge.finprod_id)pledges
+        on T.trade_id=pledges.finprod_id
         WHERE T1.TOTLE_TRADE_ID = #{totleTradeId} and T.trade_id=#{busiCode}
         AND T1.TRADE_STATUS = #{TRADE_STATUS01}
     </select>
@@ -3168,7 +3173,9 @@
         ttft1.fee_amt jsFeeAmt,
         ftp.m_int_amt as mintAmt,
         ftp.m_trade_amt as fpriceAmt,
-        pledges.disFaceValue as disFaceValue
+        pledges.disFaceValue as disFaceValue,
+        EE.PRICE_MODEL as priceModel,
+        ftp.int_rate*100 as tradeYield
         FROM TRD_PRODUCT_DEAL TPD
         INNER JOIN TRD_PRODUCT_DEAL_ADD TPDA on TPD.TRADE_ID = TPDA.TRADE_ID
         <if test="userName != null and userName != ''">
@@ -3242,6 +3249,61 @@
         rp.pledge_ratio,
         mbvi.NETPRICE,
         fp.REGIST_ORG
+    </select>
+
+    <select id="findRepoPledgeInfo"
+            resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsPledgeInfoResponse">
+        select rp.pledge_finprod_id as finprodId,
+               fp.finprod_market_id as finprodMarketId,
+               fp.finprod_abbr as finprodAbbr,
+               tpda.portfolio_id as portfolioId,
+               pp.portfolio_name as portfolioName,
+               sum(rp.pledge_number*rp.pledge_ratio)/100 as pledgePrin,
+               rp.pledge_ratio*100 as pledgeRate,
+               mbvi.NETPRICE as firstNetPrice,
+               fp.REGIST_ORG as repRegistOrg
+        from FIN_DEAL_PLEDGE rp
+                 left join trd_product_deal deal
+                           on rp.finprod_id=deal.trade_id
+                 left join fin_product fp on fp.finprod_id=rp.pledge_finprod_id
+                 left join trd_product_deal_add tpda on tpda.trade_id=rp.finprod_id
+                 LEFT JOIN PTL_PORTFOLIO PP ON tpda.PORTFOLIO_ID = PP.PORTFOLIO_ID
+                 LEFT JOIN (
+            SELECT
+                T2.SEC_ID,
+                T2.PRICE,
+                T2.NETPRICE
+            FROM (
+                     SELECT
+                         tmp1.SEC_ID,
+                         tmp1.value_source,
+                         MAX(tmp1.value_date) AS value_date
+                     FROM MST_BOND_VALUATION_INFO tmp1
+                              LEFT JOIN FIN_PRODUCT tmp2
+                                        ON tmp1.sec_id = tmp2.finprod_market_id
+                     WHERE 1 = 1
+                       AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+                       AND tmp1.value_source = (
+                         CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN 'CSD'
+                              ELSE 'CBC'
+                             END)
+                     GROUP BY tmp1.sec_id, tmp1.value_source
+                 ) T1
+                     LEFT JOIN MST_BOND_VALUATION_INFO T2
+                               ON T1.SEC_ID = T2.SEC_ID
+                                   AND T1.value_source = T2.value_source
+                                   AND T1.VALUE_DATE = T2.VALUE_DATE
+        ) mbvi/*以上获取债券小于等于平台日的最新估值行情*/
+                           ON fp.FINPROD_MARKET_ID = mbvi.SEC_ID
+        where deal.TOTLE_TRADE_ID=#{totleTradeId,jdbcType=VARCHAR}
+        group by rp.pledge_finprod_id,
+                 fp.finprod_market_id,
+                 fp.finprod_abbr,
+                 tpda.portfolio_id,
+                 pp.portfolio_name,
+                 rp.pledge_ratio,
+                 mbvi.NETPRICE,
+                 fp.REGIST_ORG
     </select>
 </mapper>
 
