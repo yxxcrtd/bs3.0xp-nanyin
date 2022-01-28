@@ -435,7 +435,7 @@ public enum PbcReportEnums {
     AMT_790000_YSZK(79,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_790000_YSZK"),//应收账款
     AMT_7A0000_HJ(80,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_7a0000_HJ"),//黄金
     AMT_7B0000_FJRZC(81,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_7b0000_FJRZC"),//非金融资产
-    AMT_7K0000_ZCJZZB(82,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_7c0000_ZCJZZB"),//资产减值准备
+    AMT_7K0000_ZCJZZB(82,PbcMonthReportGroupConstants.PBC_REPORT_2_1_1,PbcReportType.PBC_REPORT_2_1, "AMT_7K0000_ZCJZZB"),//资产减值准备
 
 
 
