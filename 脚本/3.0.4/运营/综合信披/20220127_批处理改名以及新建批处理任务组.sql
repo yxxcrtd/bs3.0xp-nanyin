@@ -74,6 +74,8 @@ update SYS_BATCH_TASK set TASK_NAME = '产品募集总量登记报表生成TMP' 
 update SYS_BATCH_TASK set TASK_NAME = '产品终止登记报表生成TMP' where TASK_ID = '3086';
 update SYS_BATCH_TASK set TASK_NAME = '资产估值信息登记报表生成TMP' where TASK_ID = '3089';
 update SYS_BATCH_TASK set TASK_NAME = '资产要素登记报表生成TMP' where TASK_ID = '3087';
+
+delete from SYS_BATCH_TASK where TASK_ID = '3111';
 INSERT INTO SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('3111', 'SVR', '底层持仓登记直联报送批处理TMP', null, 'svrInBottomAstPositionTaskService', 3100, 'system', null, TIMESTAMP '2021-06-30 20:41:17', 'system', TIMESTAMP '2021-06-30 20:41:17');
 
 update SYS_BATCH_TASK set TASK_NAME = '报表数据检查批处理' where TASK_ID = '3041';
