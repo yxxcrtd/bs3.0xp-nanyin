@@ -2566,7 +2566,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		if (br.hasErrors()) {
 			return new AjaxResult(br);
 		}
-		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())) {
+		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_非交易业务指令平台.getValue())) {
 			// add  start
 			if (org.apache.commons.lang.StringUtils.equals(dto.getPs(), DictCodeListExt2.交易方向_配股.getValue())) {
 				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_配股指令.getValue());
@@ -4679,15 +4679,12 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @return
 	 */
 	public BigDecimal queryStandandTicketCanUse(Map<String, Object> pageParam) {
-//		return restTemplate.postForObject(
-//				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/queryStandandTicketCanUse", pageParam,
-//				BigDecimal.class);
 		pageParam.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
 		pageParam.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
 		pageParam.put("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
 		pageParam.put("BROKER", DictCodeListExt3.所有_所有.getValue());
 		String ticketCanUse = etrExchangeTradeCommonMapper.queryStandandTicketCanUse(pageParam);
-		return new BigDecimal(ticketCanUse);
+		return StringUtil.isNotEmpty(ticketCanUse)?new BigDecimal(ticketCanUse):BigDecimal.ZERO;
 	}
 
 	/**
