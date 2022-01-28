@@ -1249,7 +1249,7 @@
     decode(decode(proddeclare.REP_OPERATE_MODE,'03','02','04','02','01'),'01',prod.mdate - to_date(#{reportEndDate,jdbcType=VARCHAR},'yyyy-MM-dd'),decode(openrule.OPEN_MODE,'02',1,nvl(OPENPLAN.OPEN_DATE_STR,prod.mdate) - to_date(#{reportEndDate,jdbcType=VARCHAR},'yyyy-MM-dd'))) END_DAYS_PROD,
     0 END_DAYS_NULL,/*剩余期限=0*/
     balance.BAL_FLAG BAL_FLAG, /*余额方向*/
-    case when yq.asset_code is null then '01' else '02' end as YQ_FLAG
+    case when yq.asset_code is not null then '01' else '02' end as YQ_FLAG
     FROM BOK_BALANCE BALANCE/*科目余额表*/
     LEFT JOIN BOK_BOOKSET BOOKSET /*投资组合关联账套查询相关信息*/
     ON BOOKSET.BOOKSET_ID = BALANCE.BOOKSET_ID
