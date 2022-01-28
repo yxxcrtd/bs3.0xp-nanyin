@@ -610,6 +610,7 @@
         etr_entrust.trade_market tradeMarket, /** 市场 **/
         etr_entrust.Trade_Plat tradePlat, /** 交易平台 **/
         etr_entrust.Ps ps, /** 交易方向 **/
+        etr_entrust_add.BUSI_PS repPs,/**委托方向**/
         etr_entrust_add.Term_Days term,/** 回购期限 **/
         etr_entrust.entrust_amt entrustAmt, /** 回购金额 **/
         etr_entrust.Price price, /** 回购利率 **/
@@ -708,6 +709,7 @@
             wfl_etr_entrust.trade_market tradeMarket, /** 市场 **/
             wfl_etr_entrust.Trade_Plat tradePlat, /** 交易平台 **/
             wfl_etr_entrust.Ps ps, /** 交易方向 **/
+            wfl_etr_entrust_add.BUSI_PS repPs,/**委托方向**/
             wfl_etr_entrust_add.Term_Days term,/** 回购期限 **/
             wfl_etr_entrust.entrust_amt entrustAmt, /** 回购金额 **/
             wfl_etr_entrust.Price price, /** 回购利率 **/
