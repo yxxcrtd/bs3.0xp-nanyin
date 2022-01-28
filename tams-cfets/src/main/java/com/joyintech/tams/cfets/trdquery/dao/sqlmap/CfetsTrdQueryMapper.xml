@@ -47,7 +47,7 @@
         </if>
     </select>
     <sql id="onlyRegInfo">
-        select  decode(reg.is_cancel,'Y','撤销','N','有效') as effectiveStatusStr,
+        select  distinct decode(reg.is_cancel,'Y','撤销','N','有效') as effectiveStatusStr,
         decode(reg.finprod_type2,'F01','01','F02','02','F03','02') as finprodType2,
         reg.finprod_id as finprodId,
         nvl(fp.finprod_market_id,reg.term_type) as finprodMarketId,
@@ -191,7 +191,7 @@
         </if>
     </sql>
     <sql id="onlyWflRegInfo">
-        select  '流程中' as effectiveStatusStr,
+        select distinct '流程中' as effectiveStatusStr,
         decode(reg.finprod_type2,'F01','01','F02','02','F03','02') as finprodType2,
         reg.finprod_id as finprodId,
         nvl(fp.finprod_market_id,reg.term_type) as finprodMarketId,
@@ -362,7 +362,7 @@
         </where>
     </sql>-->
     <select id="selectRegFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryRegInfoListResponse">
-        select
+        select distinct
         reg.ou_party_id as traderid,
         m1.PARTY_ABBR as traderidStr,
         nvl(su.real_name,reg.ou_trader_id) as trader,
@@ -1987,7 +1987,7 @@
     <select id="queryAllCstpInfoList" parameterType="Map"
             resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryCstpInfoListResponse">
         select * from (select aaa.* from (
-        select
+        select distinct
         case when match.match_status is null or match.match_status!='01' then '01'
         when match.match_status ='01' and (match.trd_conf_status is null or match.trd_conf_status='0') then '02'
         when match.trd_conf_status='1' then '03' end as matchStatus,
@@ -2159,7 +2159,8 @@
     </sql>
     <select id="selectCstpBondFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryCstpInfoListResponse">
 
-        select to_char(total.trade_date,'yyyy-MM-dd') as tradeDate,
+        select distinct
+        to_char(total.trade_date,'yyyy-MM-dd') as tradeDate,
         I.execid as execid,
         I.Ourinstitutioncode as buyId,
         I.Ourinstitutionchinesefullname as buyIdStr,
@@ -2209,7 +2210,7 @@
         where  I.execid = #{execId,jdbcType=VARCHAR}
     </select>
     <select id="selectCstpRepoFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryCstpInfoListResponse">
-        select to_char(total.trade_date,'yyyy-MM-dd')  as tradeDate,
+        select distinct to_char(total.trade_date,'yyyy-MM-dd')  as tradeDate,
         I.execid as execid,
         I.Ourinstitutioncode as rbRepo,
         I.Ourinstitutionchinesefullname as rbRepoStr,
@@ -2667,7 +2668,7 @@
         T1.TRADE_MARKET_MODE tradeMarketMode,
         T1.TRADE_PLAT tradePlat,
         T7.exe_id tradeId,
-        NVL(T9.PARTY_NAME,tpda.ou_party_id) ouPartyId ,
+        NVL(T9.PARTY_abbr,tpda.ou_party_id) ouPartyId ,
         NVL(T10.REAL_NAME,T1.TRADER) ouTraderId,
         NVL(T11.COUNTER_NAME,T1.COUNTER_ID) counterId,
         NVL(T12.TRADER_NAME,T1.COUNTER_TRADER) counterTrade,
