@@ -172,7 +172,8 @@ $(function () {
                 textStyle: {
                     color: function (param) {
                         return param == xAxisData[curSelectedIndex] ? "#0e86fe" : "black";
-                    }
+                    },
+                    fontSize:'9.5'
                 }
             },
             position: 'bottom', triggerEvent: true
@@ -500,7 +501,7 @@ $(function () {
     };
     var pieDivs = $("[pie-type='CHB']");
     var pie1 = echarts.init(pieDivs[0])
-    pie1.setOption(option, true); 
+    pie1.setOption(option, true);
     var pie2 = echarts.init(pieDivs[1]);
     pie2.setOption(option1, true);
 //    $(".tab-pane").hide();
