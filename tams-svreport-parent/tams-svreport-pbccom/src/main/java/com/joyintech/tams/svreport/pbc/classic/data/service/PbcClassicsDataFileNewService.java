@@ -285,7 +285,7 @@ public class PbcClassicsDataFileNewService {
         String finalZipFile = "";
         /*手工生成的文件再次压缩  add by gaojia 2019-06-18 begin*/
         if (manualFlag) {
-        	finalZipFile = genFinalCompressFile(zipFileName);
+			finalZipFile = genFinalCompressFile(zipFileName, param.get("index").toString());
         }
         /*手工生成的文件再次压缩  add by gaojia 2019-06-18 end*/
         return finalZipFile;
@@ -2573,7 +2573,7 @@ public class PbcClassicsDataFileNewService {
      * @param zipFileName 手工生成的文件路径列表
      * @return 最终文件路径
      */
-    private String genFinalCompressFile(List<String> zipFileName) {
+    private String genFinalCompressFile(List<String> zipFileName, String index) {
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String dateStr = sdf.format(new Date());
         int size = zipFileName.size();
@@ -2583,7 +2583,7 @@ public class PbcClassicsDataFileNewService {
         }
         File[] allFiles = new SafelyFile[size];
         // 最终文件路径
-    	String finalZipPath = SvrDataUtil.getSysParam("SVR_PBC_DAT_FILEPATH") + "temporary" + File.separator + "手工生成人行数据文件" + dateStr + ".zip";
+		String finalZipPath = SvrDataUtil.getSysParam("SVR_PBC_DAT_FILEPATH") + "temporary" + File.separator + "手工生成人行数据文件" + dateStr+"_"+index + ".zip";
     	File outFile =  new SafelyFile(finalZipPath);
     	for (int i = 0; i < size; i ++) {
     		allFiles[i] = new SafelyFile(zipFileName.get(i));
