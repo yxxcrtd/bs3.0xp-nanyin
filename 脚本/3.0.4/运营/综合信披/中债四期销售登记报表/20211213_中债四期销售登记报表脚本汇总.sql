@@ -769,6 +769,71 @@ values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-031', 'Sal
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
 values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-032', 'SalesTransactionMaintenance002', 'isCustomizedStringForWhitelist', 'institutionCode', null, '^([CZ][0-9]{5})$', 'Y','提供销售结算资金服务机构代码填写错误。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 
+--销售结算资金交易信息登记check脚本
+DELETE FROM CHB_DATACHECK_RULE WHERE DATATYPE = 'CHB_SALER_STL_DEAL_SUB';
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000001','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','INSTITUTION_CODE','','','N','提供销售结算资金服务机构代码要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000002','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','INSTITUTION_CODE','','7','Y','提供销售结算资金服务机构代码不能超过6字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000003','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','PRD_REGIST_CODE','','','N','产品登记编码要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000004','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','PRD_REGIST_CODE','','16','Y','产品登记编码不能超过15字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000005','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','ACCOUNT_NO','','','N','销售结算资金账号要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000006','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','ACCOUNT_NO','','61','Y','销售结算资金账号不能超过60字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000007','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','ACCOUNT_NAME','','','N','销售结算资金账户名称要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000008','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','ACCOUNT_NAME','','201','Y','销售结算资金账户名称不能超过200字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000009','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_NO','','','N','销售结算资金交易流水号要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000010','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','TRADE_NO','','61','Y','销售结算资金交易流水号不能超过60字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000011','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_PS','','','N','销售结算资金流动方向要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000012','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','inDatadict','TRADE_PS','==','TRADE_PS','Y','销售结算资金流动方向不再值域范围内','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000013','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_COUNTER_ACC_NO','','','N','销售结算资金交易对手方账号要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000014','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','TRADE_COUNTER_ACC_NO','','61','Y','销售结算资金交易对手方账号不能超过60字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000015','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_COUNTER_ACC_NAME','','','N','销售结算资金交易对手方账户名称要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000016','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','TRADE_COUNTER_ACC_NAME','','201','Y','销售结算资金交易对手方账户名称不能超过200字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000017','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_COUNTER_ACC_BANK_NAME','','','N','销售结算资金交易对手方开户行名称要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000018','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','TRADE_COUNTER_ACC_BANK_NAME','','201','Y','销售结算资金交易对手方开户行名称不能超过200字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000019','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_COUNTER_ACC_BANK_NO','','','N','销售结算资金交易对手方账户开户行号要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000020','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','TRADE_COUNTER_ACC_BANK_NO','','13','Y','销售结算资金交易对手方账户开户行号不能超过12字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000021','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_CCY','','','N','销售结算资金交易币种要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000022','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','inDatadict','TRADE_CCY','==','CURRENCY_CHB','Y','销售结算资金交易币种不在值域范围内','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000023','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_AMT','','','N','销售结算资金交易金额要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000025','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','compareValueAsNumber','TRADE_AMT','>','0','Y','销售结算资金交易金额必须大于0','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000026','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_VDATE','','','N','销售结算资金交易日期要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000027','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isValidDate2','TRADE_VDATE','==','yyyy-MM-dd','Y','销售结算资金交易日期必须为日期格式（YYYY-MM-DD）。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000028','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_TIME','','','N','销售结算资金交易时间要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000029','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isValidDate2','TRADE_TIME','','HHmmss','Y','销售结算资金交易时间必须是正常时间','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000030','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','POSTSCRIPT','','201','Y','销售结算资金交易附言不能超过200字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000031','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','REMARK','','201','Y','备注不能超过200字符','E');
+DELETE FROM CHB_DATACHECK_RULE WHERE CHECKRULEID in ('CHB_SALER_STL_DEAL_SUB-0000000010004','CHB_SALER_STL_DEAL_SUB-0000000010005');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000010004', 'CHB_SALER_STL_DEAL_SUB', 'com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib', 'isCustomizedStringForWhitelist', 'PRD_REGIST_CODE', null, '^([CZ][0-9]{7}[A]?[0-9]{6})$', 'Y', '产品登记编码要素格式不对。正确的格式：6 位金融机构代码；2 位年度码；1 位标识码(可为空);6 位顺序码。', 'E');
 
 --更改投资者明细与投资者信息到中债三四期菜单
 delete from SYS_MENU where PAGE_ID = 'EquityInfo001';
