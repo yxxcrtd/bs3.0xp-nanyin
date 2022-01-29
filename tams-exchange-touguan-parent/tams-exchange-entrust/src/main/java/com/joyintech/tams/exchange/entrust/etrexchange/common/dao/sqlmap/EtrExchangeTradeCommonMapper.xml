@@ -280,7 +280,8 @@
             END AS floatingPL, -->
             FP.FINPROD_TYPE2                          AS finprodType2,
             FP.TRADE_MARKET                           AS tradeMarket,
-            SSAI.TRD_ACCT_ID                          AS acctNo
+            SSAI.TRD_ACCT_ID                          AS acctNo,
+            TEMP.invAim invAim
         FROM
             (
             SELECT
@@ -289,6 +290,7 @@
                 PSP.SEC_ACCT_ID  AS SEC_ACCT_ID ,
                 PSP.FINPROD_ID   AS FINPROD_ID,
                 PSP.BRANCH       AS BRANCH,
+                PSP.INV_AIM invAim,
                 SUM(CASE WHEN PSP.HODING_TYPE IN (#{POSITION_TYPE_03}, #{POSITION_TYPE_05}) THEN NVL(PSP.AMOUNT,0)
                     ELSE -1* NVL(PSP.AMOUNT,0)
                 END) AS AMOUNT
@@ -314,6 +316,7 @@
                 PSP.PORTFOLIO_ID ,
                 PSP.SEC_ACCT_ID,
                 PSP.FINPROD_ID,
+                PSP.INV_AIM,
                 PSP.BRANCH 
         )TEMP
         LEFT JOIN
