@@ -4804,7 +4804,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			if (null != dto.getFprice()) {
 				etrCashPositionFlowDtoUnit.setAmount(dto.getEntrustNum().multiply(dto.getFprice()).multiply(new BigDecimal(-1)));
 			} else {
-				etrCashPositionFlowDtoUnit.setAmount(etrSinglePortfolioDto.getEntrustAmt().multiply(new BigDecimal(-1)));// 数量
+				if (StringUtil.isNotEmpty(etrSinglePortfolioDto.getEntrustAmt())) {
+					etrCashPositionFlowDtoUnit.setAmount(etrSinglePortfolioDto.getEntrustAmt().multiply(new BigDecimal(-1)));// 数量
+				}
 			}
 			etrCashPositionFlowDtoUnit.setOrderId(etrSinglePortfolioDto.getEntrustId());// 业务编号
 			etrCashPositionFlowDtoUnit.setChlFinprodId(null);// 通道金融产品代码

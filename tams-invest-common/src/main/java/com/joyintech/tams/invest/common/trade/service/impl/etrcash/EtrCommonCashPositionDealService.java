@@ -1047,12 +1047,14 @@ public class EtrCommonCashPositionDealService extends BaseService {
         String cDate = DateUtil.format(positionFlowDto.getCdate());
         // 2.2.3 上面检索出的最大日期 <> 输入参数.日期，将输入参数.日期到2.2.2检索出来的最大日期的数据全部更新
         if (maxCdate != null && !maxCdate.equals(cDate)) {
-            String minDate = maxCdate.compareTo(cDate) > 0 ? DateUtil.addDay(cDate, 1) : maxCdate;
-            String maxDate = maxCdate.compareTo(cDate) < 0 ? DateUtil.addDay(cDate, -1) : maxCdate;
-            Map<String, Object> params = BeanUtil.object2Map(positionFlowDto);
-            params.put("minDate", minDate);
-            params.put("maxDate", maxDate);
-            etrCommonCashPositionMapper.updatePosition(params);
+            if (StringUtil.isNotEmpty(positionFlowDto.getAmount())) {
+                String minDate = maxCdate.compareTo(cDate) > 0 ? DateUtil.addDay(cDate, 1) : maxCdate;
+                String maxDate = maxCdate.compareTo(cDate) < 0 ? DateUtil.addDay(cDate, -1) : maxCdate;
+                Map<String, Object> params = BeanUtil.object2Map(positionFlowDto);
+                params.put("minDate", minDate);
+                params.put("maxDate", maxDate);
+                etrCommonCashPositionMapper.updatePosition(params);
+            }
         }
         // //流水号
         // //dto.setSeqno(getSeqNo());
