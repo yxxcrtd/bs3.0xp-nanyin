@@ -302,7 +302,11 @@
         <if test="repo_pledge_model != null and repo_pledge_model.equals('02')">
             LEFT JOIN
             (
-                select ENTRUST_ID, wm_concat(fp.FINPROD_ID) finprodIds, wm_concat(fp.FINPROD_ABBR) finprodMarketNames
+                select ENTRUST_ID,
+                <!-- wm_concat(fp.FINPROD_ID) finprodIds,
+                 wm_concat(fp.FINPROD_ABBR) finprodMarketNames-->
+                listagg(fp.FINPROD_ID, ',')within group(order by ENTRUST_ID) AS finprodIds,
+                listagg(fp.FINPROD_ABBR, ',')within group(order by ENTRUST_ID) AS finprodMarketNames
                 from ETR_PLEDGE ep
                 left join FIN_PRODUCT fp on ep.FINPROD_ID = fp.FINPROD_ID
                 group by ENTRUST_ID
