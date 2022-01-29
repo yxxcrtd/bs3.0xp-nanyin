@@ -741,23 +741,23 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         //更新原登记数据状态
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
             //汇总
-            RegFinProductDealTotal regFinProduct = new RegFinProductDealTotal();
+            /*RegFinProductDealTotal regFinProduct = new RegFinProductDealTotal();
             regFinProduct.setTotleTradeId(totleTradeId);
             regFinProduct.setRemark(regFinProductDealTotal.getRemark());
             regFinProduct.setIsCancel("Y");
-            regFinProductDealTotalMapper.updateByPrimaryKeySelective(regFinProduct);
+            regFinProductDealTotalMapper.updateByPrimaryKeySelective(regFinProduct);*/
 
             //明细
-            RegFinProductDeal regFinProductDeal = new RegFinProductDeal();
+            /*RegFinProductDeal regFinProductDeal = new RegFinProductDeal();
             regFinProductDeal.setTotleTradeId(totleTradeId);
             regFinProductDeal.setRemark(regFinProductDealTotal.getRemark());
             regFinProductDeal.setIsCancel("Y");
-            regFinProductDealMapper.updateByPrimaryKeySelective(regFinProductDeal);
+            regFinProductDealMapper.updateByPrimaryKeySelective(regFinProductDeal);*/
 
- /*           //汇总
-            cfetsIbuQuoteBondMapper.updateRegFinProductDealTotal(totleTradeId);
+            //汇总
+            cfetsIbuQuoteBondMapper.updateRegFinProductDealTotal(totleTradeId,regFinProductDealTotal.getRemark());
             //明细
-            cfetsIbuQuoteBondMapper.updateRegFinProductDeal(totleTradeId);*/
+            cfetsIbuQuoteBondMapper.updateRegFinProductDeal(totleTradeId,regFinProductDealTotal.getRemark());
         }
     }
     /**

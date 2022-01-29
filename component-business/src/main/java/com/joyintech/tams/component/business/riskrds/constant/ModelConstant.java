@@ -274,7 +274,7 @@ public final class ModelConstant {
             DictCodeList.平安资产类型_拆借.getValue());
         // 股票
         ASSETTYPE.put(DictCodeListExt1.金融产品类型_投管用_股票.getValue(),
-            DictCodeList.平安资产类型_债券.getValue());
+            DictCodeListExt2.平安资产类型_股票.getValue());
         // 即期
         ASSETTYPE.put(DictCodeListExt1.金融产品类型_投管用_即期.getValue(),
             DictCodeListExt2.平安资产类型_外汇即期.getValue());

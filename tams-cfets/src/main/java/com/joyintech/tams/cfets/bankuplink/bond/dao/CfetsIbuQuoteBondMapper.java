@@ -58,9 +58,9 @@ public interface CfetsIbuQuoteBondMapper {
      */
     List<CfetsBondDayRegDto> listDayReg(Map<String, Object> param);
 
-    int  updateRegFinProductDealTotal(@Param("totleTradeId") String totleTradeId);
+    int  updateRegFinProductDealTotal(@Param("totleTradeId") String totleTradeId,@Param("remark") String remark);
 
-    int  updateRegFinProductDeal(@Param("totleTradeId") String totleTradeId);
+    int  updateRegFinProductDeal(@Param("totleTradeId") String totleTradeId,@Param("remark") String remark);
 
     List<RegTradeFeeTotal> listRegTradeFeeTotal(@Param("totleTradeId") String totleTradeId);
 

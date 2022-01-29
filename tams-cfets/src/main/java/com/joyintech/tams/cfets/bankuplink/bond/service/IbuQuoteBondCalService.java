@@ -697,7 +697,9 @@ public class IbuQuoteBondCalService extends BaseService {
         SecInfoModel secInfoModel = new SecInfoModel();
         secInfoModel.setStartDate(DateUtil.dateToLocal(secInfoModelDto.getStartDate()));
         secInfoModel.setEndDate(DateUtil.dateToLocal(secInfoModelDto.getEndDate()));
-        secInfoModel.setFirstPayDate(DateUtil.dateToLocal(secInfoModelDto.getFirstPayDate()));
+        if(null!=secInfoModelDto.getFirstPayDate()){
+            secInfoModel.setFirstPayDate(DateUtil.dateToLocal(secInfoModelDto.getFirstPayDate()));
+        }
         // 利率类型
         if (StringUtil.equals(DictCodeList.利率类型_固定利率.getValue(),
                 secInfoModelDto.getIntRateType())) {
