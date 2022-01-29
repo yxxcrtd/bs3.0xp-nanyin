@@ -715,7 +715,7 @@
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
         </set>
-        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RegFinProductDeal" >
         update REG_FIN_PRODUCT_DEAL
