@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@ApiModel(value = "综合业务下单请求报文", description = "综合业务下单请求报文")
+@ApiModel(value = "综合业务下单响应报文", description = "综合业务下单响应报文")
 public class IntegratedEntrust extends BaseEntity implements Serializable, EntrustInterface, KeyMethodInterface<String> {
     private static final long serialVersionUID = -7278292640597594312L;
 
