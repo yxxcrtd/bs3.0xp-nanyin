@@ -14,7 +14,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
@@ -74,16 +76,18 @@ public class OrderController {
     /**
      * 综合业务下单
      *
-     * @param integratedEntrust 综合订单信息
+     * @param orderPlaceBean 综合订单信息
      * @return Message
      */
     @ApiOperation(value = "综合业务下单", notes = "综合业务下单")
     @RequestMapping(value = "/order/integratedEntrust", method = RequestMethod.POST)
-    public Message<IntegratedEntrust> sendIntegratedEntrust(@RequestBody IntegratedEntrust integratedEntrust) {
-        Instruction instruction = instructionService.findById(integratedEntrust.getInstructionId());
+    public Message<IntegratedEntrust> sendIntegratedEntrust(@RequestBody @Validated IntegratedOrderPlaceBean orderPlaceBean) {
+        Instruction instruction = instructionService.findById(orderPlaceBean.getInstructionId());
         if (Objects.isNull(instruction)) {
-            return new Message<>(ResultBean.error(ErrorCode.INSTRUCTIONS_NOT_EXIST, integratedEntrust));
+            return new Message<>(ResultBean.error(ErrorCode.INSTRUCTIONS_NOT_EXIST, orderPlaceBean));
         }
+        IntegratedEntrust integratedEntrust = new IntegratedEntrust();
+        BeanUtils.copyProperties(orderPlaceBean, integratedEntrust);
 
         String entrustBs = EntrustBsProp.getEntrustBs(instruction.getPs());
         logger.info("综合业务下单：买卖方向（entrustBs）转换：{} ==> {}", integratedEntrust.getEntrustBs(), entrustBs);
