@@ -4780,7 +4780,12 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			etrSecPositionFlowDtoUnit.setCdate(iPlatformDate.getSysDate());// 日期
 			etrSecPositionFlowDtoUnit.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
 			if (DictCodeListExt3.交易方向_质押券出库.getValue().equals(etrSinglePortfolioDto.getPs())) {
-				etrSecPositionFlowDtoUnit.setAmount(etrSinglePortfolioDto.getEntrustAmt().multiply(new BigDecimal(-1)));// 标准券数量
+//				etrSecPositionFlowDtoUnit.setAmount(etrSinglePortfolioDto.getEntrustAmt().multiply(new BigDecimal(-1)));// 标准券数量
+				if (StringUtil.isNotEmpty(etrSinglePortfolioDto.getEntrustAmt())) {
+					etrSecPositionFlowDtoUnit.setAmount(etrSinglePortfolioDto.getEntrustAmt().multiply(new BigDecimal(-1)));// 标准券数量
+				}else {
+					etrSecPositionFlowDtoUnit.setAmount(BigDecimal.ZERO);// 标准券数量
+				}
 			} else {
 				etrSecPositionFlowDtoUnit.setAmount(etrSinglePortfolioDto.getEntrustNum().multiply(new BigDecimal(-1)));// 数量
 			}
