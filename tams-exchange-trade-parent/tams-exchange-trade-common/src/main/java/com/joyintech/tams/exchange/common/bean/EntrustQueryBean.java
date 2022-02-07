@@ -11,7 +11,6 @@ import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -278,8 +277,10 @@ public class EntrustQueryBean implements Serializable {
         this.tradedPrice = new BigDecimal("0.00");
     }
 
-    @Id
     public String getId() {
+        if (StringUtil.isNotEmpty(entrustId)) {
+            return entrustId;
+        }
         return id;
     }
 
@@ -824,7 +825,7 @@ public class EntrustQueryBean implements Serializable {
     }
 
     public String getMarketStr() {
-        if(StringUtil.isEmpty(market)){
+        if (StringUtil.isEmpty(market)) {
             return null;
         }
         return Market.getMarketName(market);
@@ -835,7 +836,7 @@ public class EntrustQueryBean implements Serializable {
     }
 
     public String getTradePlatStr() {
-        if(StringUtil.isEmpty(tradePlat)){
+        if (StringUtil.isEmpty(tradePlat)) {
             return null;
         }
         return DictCodeList.from(DictCode.交易平台, tradePlat).getCodeName();
@@ -846,7 +847,7 @@ public class EntrustQueryBean implements Serializable {
     }
 
     public String getFinprodType2Str() {
-        if(StringUtil.isEmpty(finprodType2)){
+        if (StringUtil.isEmpty(finprodType2)) {
             return null;
         }
         return DictCodeListExt1.from(DictCode.金融产品类型, finprodType2).getCodeName();
@@ -857,7 +858,7 @@ public class EntrustQueryBean implements Serializable {
     }
 
     public String getEntrustBsStr() {
-        if(StringUtil.isEmpty(entrustBs)){
+        if (StringUtil.isEmpty(entrustBs)) {
             return null;
         }
         return DictCodeListExt2.from(DictCode.交易方向, entrustBs).getCodeName();

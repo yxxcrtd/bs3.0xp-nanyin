@@ -199,7 +199,7 @@
     IP_MAC, REMARK, CREATE_TIME, UPDATE_TIME, ENTRUST_STATUS, ORIG_ENTRUST_ID, INTEGRATED_ENTRUST_ID, REPORT_NO, OPERATE_USER
     </sql>
 
-    <sql id="Query_Column_List">
+    <sql id="QueryIntegratedEntrustHistory">
         a.ID, a.PARENT_ORDER_ID, a.INSTRUCTION_ID, a.PORTFOLIO_ID,a.USER_ID, a.USERNAME,a.ACCOUNT_ID,
     a.FINANCE_ACCOUNT, a.ACCOUNT_NAME, a.ASSET_TYPE, a.MARKET, a.STOCK_CODE, a.STOCK_NAME, a.ENTRUST_TYPE,
     a.ENTRUST_PROP, a.BS_FLAG, a.ENTRUST_VOLUME, a.ENTRUST_PRICE, a.FULL_PRICE, a.ENTRUST_BALANCE,
@@ -238,7 +238,7 @@
     <select id="selectEntrustHistoryByPage" resultMap="QueryResultMap"
             parameterType="com.joyintech.tams.exchange.common.bean.EntrustQryBean">
         select
-        <include refid="Query_Column_List"/>
+        <include refid="QueryIntegratedEntrustHistory"/>
         from T_INTEGRATED_ENTRUSTHISTORY a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
         <include refid="queryCondition2"/>
     </select>
@@ -382,7 +382,7 @@
         <include refid="queryCondition2"/>
         UNION ALL
         SELECT
-        <include refid="Query_Column_List"/>
+        <include refid="QueryIntegratedEntrustHistory"/>
         FROM T_INTEGRATED_ENTRUSTHISTORY a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
         <include refid="queryCondition2"/>
     </select>
