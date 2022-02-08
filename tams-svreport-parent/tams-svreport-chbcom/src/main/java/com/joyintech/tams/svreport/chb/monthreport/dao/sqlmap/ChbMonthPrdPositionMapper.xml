@@ -598,7 +598,22 @@
 				where t.BASIS_CYY = info.BASIS_CYY
 				and t.QUOT_CYY = info.QUOT_CYY
 				and t.DATASOURCE_TYPE = 'SAFE'
-				and t.TRADE_DATE <![CDATA[<=]]>#{enddate,jdbcType=DATE}) 
+                <if test="status == 01">
+                  and t.OPEN_PRICE is not null
+                </if>
+                <if test="status == 02">
+                  and t.CLOSE_PRICE is not null
+                </if>
+                <if test="status == 03">
+                  and t.HIGH_PRICE is not null
+                </if>
+                <if test="status == 04">
+                  and t.LOW_PRICE is not null
+                </if>
+                <if test="status == 05">
+                  and t.MID_PRICE is not null
+                </if>
+				and t.TRADE_DATE <![CDATA[<=]]>#{enddate,jdbcType=DATE})
       ) 
 	/*交易明细表，将产品交易表进行拆分成：本金交易，利息交易*/
 	,dd as (

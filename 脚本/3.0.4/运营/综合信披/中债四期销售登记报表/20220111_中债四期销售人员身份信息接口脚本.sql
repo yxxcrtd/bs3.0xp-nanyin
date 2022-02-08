@@ -1,6 +1,6 @@
 delete from sys_batch_task  where task_id='3092';
 Insert into sys_batch_task (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TASK_PRI,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,IS_BATCH_START_TARGET) 
-values ('3092','VAL','销售人员身份信息接入',null,'svrSaleIderInterfTaskService',3050,'system',null,sysdate,'system',sysdate,null);
+values ('3092','SVR','销售人员身份信息接入',null,'svrSaleIderInterfTaskService',3050,'system',null,sysdate,'system',sysdate,null);
 
 delete  from  CHB_INTERF_CONFIG  where  INTERF_ID='CHB_SALER_IDEN_INFO';
 Insert into CHB_INTERF_CONFIG (INTERF_ID,LAST_UPDATETIME,REMARK,INTERF_NAME,CONTENT_TYPE,CONTENT_SRC,REF_REPORT,SYS_SCOPE,STATUS) 
@@ -11,7 +11,7 @@ DELETE  FROM  chb_datacheck_rule  WHERE DATATYPE='CHB_SALER_IDEN_INFO';
 Insert into chb_datacheck_rule (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS)
 values ('DDY_SALER_IDEN_INFO-2021-1119-001','CHB_SALER_IDEN_INFO','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','SALER_INS_NO',null,null,'N','内部编号不可为空。','E');
 Insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS)
-values ('DDY_SALER_IDEN_INFO-2021-1119-002','CHB_SALER_IDEN_INFO','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','SALER_INS_NO',null,'31','Y','内部编号不能超过30字符。','E');
+values ('DDY_SALER_IDEN_INFO-2021-1119-002','CHB_SALER_IDEN_INFO','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','SALER_INS_NO',null,'61','Y','内部编号不能超过60字符。','E');
 Insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS)
 values ('DDY_SALER_IDEN_INFO-2021-1119-003','CHB_SALER_IDEN_INFO','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','SALER_INST_CODE',null,null,'N','销售机构代码不可为空。','E');
 Insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS)

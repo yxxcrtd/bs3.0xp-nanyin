@@ -44,9 +44,8 @@
             ,{field:'salerInstCode', title: '销售机构代码', width:'200',sortField:'salerInstCode'}
             ,{field:'salerOrgCode', title: '总部或分支机构编码', width:'200',sortField:'salerOrgCode'}
             ,{field:'salerOrgName', title: '总部或分支机构名称', width:'200',sortField:'salerOrgName'}
-            ,{field:'salerOrgLevelStr', title: '机构层级', width:'200',sortField:'salerOrgLevel'}
+            ,{field:'salerOrgLevel', title: '机构层级', width:'200',sortField:'salerOrgLevel'}
             ,{field:'errMsg', title: '错误信息', width:'200',sortField:'errMsg'}
-            ,{field:'remark', title: '备注', width:'200',sortField:'remark'}
             ,{ field: 'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ],
     });

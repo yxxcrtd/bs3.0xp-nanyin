@@ -319,6 +319,19 @@ public interface ReportHomeMapper {
 	 */
 	List<SubmitInformationRegistrationDto> selectChbIrew(Map<String, Object> parmMap);
 
+	/**
+	 * @Description
+	 * @param parmMap
+	 * @return
+	 * @return List<SubmitInformationRegistrationDto>
+	 */
+	List<SubmitInformationRegistrationDto> selectChbAgentInstitution(Map<String, Object> parmMap);
 
-
+	/**
+	 * @Description
+	 * @param parmMap
+	 * @return
+	 * @return List<SubmitInformationRegistrationDto>
+	 */
+	List<SubmitInformationRegistrationDto> selectChbAgentPrd(Map<String, Object> parmMap);
 }

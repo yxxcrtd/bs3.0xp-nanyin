@@ -200,11 +200,14 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 			logger.error(e.getMessage(),e);
 		}
 		List<File> sourceFiles = new ArrayList<File>(16);
+		int index = 0;
 		for (PbcDataFile pbcDataFile : pbcDataFileList) {
 			File file;
 			if(PbcClassicsDataFileHelper.DATAFILE_TYPE_PPI.equals(pbcDataFile.getFilecode())){
 				Map<String,Object> map = new HashMap<>();
+				index ++;
 				//碰到PPI类型文件重新组装
+				map.put("index",String.valueOf(index));
 				pbcClassicsDataFileHelper.setSysSeqService(SpringContextUtil.getBean(SysSeqService.class));
 				file = new SafelyFile(pbcClassicsDataFileNewService.genDataFile(PbcClassicsDataFileHelper.DATAFILE_TYPE_PPI,pbcDataFile.getFileid(),new Date(),map));
 			}else{
