@@ -35,6 +35,7 @@ import com.joyintech.tams.exchange.service.trade.processor.others.TerminalHelper
 import com.joyintech.tams.exchange.service.trade.service.TerminalAgentInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -413,11 +414,6 @@ public abstract class TradeAgentDsp implements TradeAgent {
         }
     }
 
-    /**
-     * 报价查询、成交查询
-     */
-    public abstract void queryNextTrade();
-
     protected CancelEntrustBean getCancelEntrustBean(EntrustInterface entrust, EntrustInterface cancelEntrust) {
         CancelEntrustBean cancelEntrustBean = new CancelEntrustBean();
         cancelEntrustBean.setId(entrust.getId());
@@ -505,7 +501,14 @@ public abstract class TradeAgentDsp implements TradeAgent {
                         onRtnEntrust(entrust);
                     }
                 } else {
-                    IntegratedEntrust integratedEntrust = (IntegratedEntrust) entrustInterfaceMap.get(s);
+                    EntrustInterface entrustInterface = entrustInterfaceMap.get(s);
+                    IntegratedEntrust integratedEntrust;
+                    if (entrustInterface instanceof Entrust) {
+                        integratedEntrust = new IntegratedEntrust();
+                        BeanUtils.copyProperties(entrustInterface, integratedEntrust);
+                    } else {
+                        integratedEntrust = (IntegratedEntrust) entrustInterfaceMap.get(s);
+                    }
                     if (Objects.nonNull(integratedEntrust) && integratedEntrust.getEntrustStatus() != reissueEntrustBean.getEntrustStatus()) {
                         onRtnIntegratedEntrust(integratedEntrust);
                     }
