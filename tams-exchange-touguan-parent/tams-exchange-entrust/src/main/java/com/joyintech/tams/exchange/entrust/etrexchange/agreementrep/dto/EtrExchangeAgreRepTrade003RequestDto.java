@@ -35,22 +35,77 @@ import java.util.List;
 @ApiModel(value="质押式协议回购指令查询请求参数",description="质押式协议回购指令查询请求参数")
 public class EtrExchangeAgreRepTrade003RequestDto{
 
-    @ApiModelProperty(name="entrustStatus",value="指令状态")
-    private String entrustStatus;
+//    @ApiModelProperty(name="entrustStatus",value="指令状态")
+//    private String entrustStatus;
 
-    @ApiModelProperty(name="entrustId",value="指令代码")
-    private String entrustId;
-
-    @ApiModelProperty(name="pageMode",value="分页对象")
+    @ApiModelProperty(name="pageMode",value="分页对象",example="{pageSize: 10,pageNo: 1, sort: 'name', direction: 'asc'}")
     private PageMode pageMode;
 
-    public String getEntrustStatus() {
-        return entrustStatus;
+    @ApiModelProperty(name="portfolioName",value="组合名称",example="A1")
+    private String portfolioName;
+
+    @ApiModelProperty(name="finprodId",value="质押券",example="A1")
+    private String finprodId;
+
+    @ApiModelProperty(name="bussType",value="业务类型",example="A1")
+    private String bussType;
+
+    @ApiModelProperty(name="entrustId",value="指令编号",example="A1")
+    private String entrustId;
+
+    @ApiModelProperty(name="manager",value="投资经理",example="A1")
+    private String manager;
+
+    @ApiModelProperty(name="date",value="指令日期",example="A1")
+    private String date;
+
+    public String getDate() {
+        return date;
     }
 
-    public void setEntrustStatus(String entrustStatus) {
-        this.entrustStatus = entrustStatus;
+    public void setDate(String date) {
+        this.date = date;
     }
+
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
+    }
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
+    }
+
+    public String getBussType() {
+        return bussType;
+    }
+
+    public void setBussType(String bussType) {
+        this.bussType = bussType;
+    }
+
+    public String getManager() {
+        return manager;
+    }
+
+    public void setManager(String manager) {
+        this.manager = manager;
+    }
+
+    //    public String getEntrustStatus() {
+//        return entrustStatus;
+//    }
+//
+//    public void setEntrustStatus(String entrustStatus) {
+//        this.entrustStatus = entrustStatus;
+//    }
 
     public String getEntrustId() {
         return entrustId;

@@ -320,4 +320,14 @@ public interface EtrExchangeTradeCommonMapper {
 	 */
 	List<Map<String, Object>> selectCounterTraderId(Map<String, Object> params);
 
+	/**
+	 * 查询指令编号联想框文本框
+	 *
+	 * @param param 画面参数
+	 * @return 证券代码联想框文本框
+	 * @see
+	 * @since 1.0
+	 */
+	List<SelectOptionDto> getId(Map<String, Object> param);
+
 }

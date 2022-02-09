@@ -275,4 +275,18 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 		});
 		joyinbusinessCommonMapper.mergeCfetsOprHis(result);
 	}
+
+	/**
+	 * 查询指令编号联想框文本框
+	 *
+	 * @param request 画面参数
+	 * @return 证券代码联想框文本框
+	 * @see
+	 * @since 1.0
+	 */
+	public Page<SelectOptionDto> getId(SelectOptionRequestDto request) {
+		Map<String, Object> param = BeanUtil.object2Map(request);
+		Page<SelectOptionDto> tempList = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeTradeCommonMapper.getId(param));
+		return tempList;
+	}
 }

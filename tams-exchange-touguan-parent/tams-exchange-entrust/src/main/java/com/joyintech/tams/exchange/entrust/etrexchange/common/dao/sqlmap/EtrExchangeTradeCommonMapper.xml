@@ -1515,4 +1515,23 @@
             </if>
         </where>
     </select>
+
+    <select id="getId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select DISTINCT entrust_id id,null text from (
+        select etr_entrust.entrust_id entrust_id from etr_entrust
+        union all
+        select wfl_etr_entrust.entrust_id entrust_id from wfl_etr_entrust ) A
+        <where>
+            1 = 1
+            <if test="search != null and search != ''">
+                AND
+                (
+                A.entrust_id LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                )
+            </if>
+            <if test="initValue != null and initValue != ''">
+                AND A.entrust_id = #{initValue}
+            </if>
+        </where>
+    </select>
 </mapper>

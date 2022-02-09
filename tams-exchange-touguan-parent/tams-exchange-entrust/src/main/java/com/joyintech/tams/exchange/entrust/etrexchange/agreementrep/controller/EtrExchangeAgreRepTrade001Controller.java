@@ -13,19 +13,19 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.business.common.dto.PageMode;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.common.base.entity.EtrDistribute;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.service.EtrExchangeAgreRepTrade001Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.service.EtrExchangeAgreRepTrade002Service;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeOperateRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonResponse;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SelectOptionRequestDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon002Service;
+import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeZqzyRequest;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
@@ -52,6 +52,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -997,5 +998,85 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
             return PS_SZ;
         }
         return selectDto.getOptions();
+    }
+
+    /**
+     * 导出信息excel
+     *
+     * @return excel
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("export")
+    @ResponseBody
+    @ApiOperation(value = "持仓列表导出", notes = "持仓列表导出")
+    public void exportPosition(@RequestBody EtrExchangeTradeExportCommonRequest requestDto, HttpServletResponse response) {
+        // 导出
+        ExcelUitl.doExport(requestDto, response, "持仓列表导出", () -> {
+            EtrExchangeTradePositionsCommonRequest dto = requestDto.getDto(EtrExchangeTradePositionsCommonRequest.class);
+            List dataList = etrExchangeAgreRepTrade002Service.findPositionsPage(dto).getRoot();
+            return dataList;
+        });
+    }
+
+    @PostMapping("export1")
+    @ResponseBody
+    @ApiOperation(value = "非公开行情列表导出", notes = "非公开行情列表导出")
+    public void exportPosition1(@RequestBody EtrExchangeTradeExportCommonRequest requestDto, HttpServletResponse response) {
+        // 导出
+        ExcelUitl.doExport(requestDto, response, "非公开行情列表导出", () -> {
+            EtrExchangeUnOpenQuotaRequestDto dto = requestDto.getDto(EtrExchangeUnOpenQuotaRequestDto.class);
+            List dataList = etrExchangeAgreRepTrade002Service.findUnOpenQuotaPage(dto).getRoot();
+            return dataList;
+        });
+    }
+
+    @PostMapping("export2")
+    @ResponseBody
+    @ApiOperation(value = "在途回购列表导出", notes = "在途回购列表导出")
+    public void exportPosition2(@RequestBody EtrExchangeTradeExportCommonRequest requestDto, HttpServletResponse response) {
+        // 导出
+        ExcelUitl.doExport(requestDto, response, "在途回购列表导出", () -> {
+            EtrExchangeOnWayRepRequestDto dto = requestDto.getDto(EtrExchangeOnWayRepRequestDto.class);
+            List dataList = etrExchangeAgreRepTrade002Service.findOnWayRepPage(dto).getRoot();
+            return dataList;
+        });
+    }
+
+    /**
+     * 导出信息excel
+     *
+     * @return excel
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("export3")
+    @ResponseBody
+    @ApiOperation(value = "指令列表导出", notes = "指令列表导出")
+    public void exportPosition3(@RequestBody EtrExchangeTradeExportCommonRequest requestDto, HttpServletResponse response) {
+        // 导出
+        ExcelUitl.doExport(requestDto, response, "指令列表导出", () -> {
+            EtrExchangeAgreRepTrade003RequestDto dto = requestDto.getDto(EtrExchangeAgreRepTrade003RequestDto.class);
+            List dataList = etrExchangeAgreRepTrade002Service.selectEtrEntrust(dto).getRoot();
+            return dataList;
+        });
+    }
+
+    /**
+     * 查询证券代码联想框文本框
+     *
+     * @param request 画面参数
+     * @return 证券代码联想框文本框
+     * @see
+     * @since 1.0
+     */
+    @ApiOperation(value = "查询指令编号联想框文本框选项", notes = "查询指令编号联想框文本框选项")
+    @PostMapping("getId")
+    @ResponseBody
+    public Message<Page<SelectOptionDto>> getId(@RequestBody SelectOptionRequestDto request) {
+        Page<SelectOptionDto> tempList = etrExchangeTradeCommon002Service.getId(request);
+        return new Message<Page<SelectOptionDto>>().success().setData(tempList);
     }
 }

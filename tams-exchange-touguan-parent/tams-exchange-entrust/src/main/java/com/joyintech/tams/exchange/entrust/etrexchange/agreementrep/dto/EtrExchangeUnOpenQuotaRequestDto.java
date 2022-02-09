@@ -30,8 +30,42 @@ import java.math.BigDecimal;
  */
 @ApiModel(value="非公开行情查询请求参数",description="非公开行情查询请求参数")
 public class EtrExchangeUnOpenQuotaRequestDto {
-    @ApiModelProperty(name="pageMode",value="分页对象")
+
+    @ApiModelProperty(name="pageMode",value="分页对象",example="{pageSize: 10,pageNo: 1, sort: 'name', direction: 'asc'}")
     private PageMode pageMode;
+
+    @ApiModelProperty(name="requestId",value="请求编号",example="A1")
+    private String requestId;
+
+    @ApiModelProperty(name="bussType",value="业务类型",example="A1")
+    private String bussType;
+
+    @ApiModelProperty(name="finprodName",value="资产名称",example="A1")
+    private String finprodName;
+
+    public String getBussType() {
+        return bussType;
+    }
+
+    public void setBussType(String bussType) {
+        this.bussType = bussType;
+    }
+
+    public String getFinprodName() {
+        return finprodName;
+    }
+
+    public void setFinprodName(String finprodName) {
+        this.finprodName = finprodName;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
 
     public PageMode getPageMode() {
         return pageMode;
