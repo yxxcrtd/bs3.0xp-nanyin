@@ -192,6 +192,8 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
             // 反馈状态
             String submitFeedbackStatus = (String) pageParam.get("submitFeedbackStatus");
 
+            String status = (String) pageParam.get("status");
+
             // 将姓名当做多选下拉框处理
             if (StringUtil.isNotBlank(salerName)) {
                 pageParam.put("salerNameList", StringUtil.splitToList(GlobalConstant.COMMA, salerName));
@@ -212,6 +214,10 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
             if (StringUtil.isNotBlank(submitFeedbackStatus)) {
                 pageParam.put("submitFeedbackStatusList",
                         StringUtil.splitToList(GlobalConstant.COMMA, submitFeedbackStatus));
+            }
+            // 将数据状态当做多选下拉框处理
+            if (StringUtil.isNotBlank(status)) {
+                pageParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
             }
         }
     }
@@ -247,6 +253,8 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
         SalerIdenInfoRegistDto nullDate = new SalerIdenInfoRegistDto();
         if(datas == null){
             dealSearchParam(selectParam);
+            String status = selectParam.get("status").toString();
+            selectParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
             tempList = chbSalerIdenInfoRegistMapper.setDataList(selectParam);
             this.formatByType(tempList);
         }else{

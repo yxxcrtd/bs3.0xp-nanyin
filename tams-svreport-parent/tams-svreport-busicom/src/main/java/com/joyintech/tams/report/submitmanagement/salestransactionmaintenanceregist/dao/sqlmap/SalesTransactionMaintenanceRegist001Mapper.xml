@@ -41,9 +41,11 @@
 			<if test="sendStatus != null and sendStatus != ''">
 				and a.SEND_STATUS = #{sendStatus}
 			</if>
-			<if test="dataStatus != null and dataStatus != ''">
-				and a.DATA_STATUS = #{dataStatus}
-			</if>
+		    <if test="dataStatusList != null and dataStatusList.size() > 0">
+			    <foreach collection="dataStatusList" item="dataStatus" open=" AND a.DATA_STATUS IN (" close=")" separator=",">
+				    #{dataStatus}
+			    </foreach>
+		    </if>
 		    <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
 			    and a.CHB_SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
 	    	</if>
@@ -406,8 +408,10 @@
 		<if test="sendStatus != null and sendStatus != ''">
 			and a.SEND_STATUS = #{sendStatus}
 		</if>
-		<if test="dataStatus != null and dataStatus != ''">
-			and a.DATA_STATUS = #{dataStatus}
+		<if test="dataStatusList != null and dataStatusList.size() > 0">
+			<foreach collection="dataStatusList" item="dataStatus" open=" AND a.DATA_STATUS IN (" close=")" separator=",">
+				#{dataStatus}
+			</foreach>
 		</if>
 		<if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
 			and a.CHB_SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')

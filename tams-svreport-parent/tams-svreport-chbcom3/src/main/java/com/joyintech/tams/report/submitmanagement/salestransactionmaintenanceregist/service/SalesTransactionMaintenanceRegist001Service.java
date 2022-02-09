@@ -76,6 +76,7 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
      * @since 1.0
      */
     public Page<SalesTransactionMaintenanceRegist001Dto> searchForPage(Map<String, Object> param){
+        dealSearchParam(param);
         if (null != param.get(GlobalConstant.PARAM_PAGE)
                 && null != param.get(GlobalConstant.PARAM_LENGTH)) {
             int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
@@ -272,6 +273,10 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
                 return null;
             }
         } else {
+            if(StringUtil.isNotBlank((String)param.get("dataStatus"))) {
+                String dataStatus = param.get("dataStatus").toString();
+                param.put("dataStatusList", StringUtil.splitToList(GlobalConstant.COMMA, dataStatus));
+            }
             resultList = salesTransactionMaintenanceRegist001Mapper.setDataList(param);
         }
         dealDataList(resultList);
