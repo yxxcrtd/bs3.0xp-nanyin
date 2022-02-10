@@ -63,7 +63,7 @@ public class MemoryCacheController {
     @ApiImplicitParams({
             @ApiImplicitParam(required = true, name = "userId", value = "用户编号", paramType = "query"),
     })
-    @RequestMapping(value = "/cache/quote")
+    @PostMapping(value = "/cache/quote")
     public ResultBean recoverCacheQuoteFromRedis(@RequestParam @NotBlank(message = "用户编号不可为空") String userId) {
         return memoryCacheManagement.recoverQuoteData();
     }
