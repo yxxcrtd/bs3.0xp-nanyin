@@ -42,15 +42,15 @@ public class EntrustController {
     private InstructionService instructionService;
 
     @ApiOperation(value = "查询委托信息", notes = "查询委托信息")
-    @RequestMapping(value = {"/entrust"}, method = RequestMethod.POST)
+    @PostMapping(value = {"/entrust"})
     public Message<OrderAndEntrustQryResult> queryAll(@RequestBody @Validated EntrustQueryRequest entrustQueryRequest) {
-        return new Message<OrderAndEntrustQryResult>(entrustManagement.queryEntrust(entrustQueryRequest.getUserId(), entrustQueryRequest.getInstructionId(), entrustQueryRequest.getAccountId(), entrustQueryRequest.getOrderId()));
+        return new Message<>(entrustManagement.queryEntrust(entrustQueryRequest.getUserId(), entrustQueryRequest.getInstructionId(), entrustQueryRequest.getAccountId(), entrustQueryRequest.getOrderId()));
     }
 
     @ApiOperation(value = "查询综合业务信息", notes = "查询综合业务信息")
-    @RequestMapping(value = {"/entrust/integrated"}, method = RequestMethod.POST)
+    @PostMapping(value = {"/entrust/integrated"})
     public Message<List<IntegratedEntrust>> queryIntegratedEntrustAll(@RequestBody @Validated EntrustQueryRequest request) {
-        return new Message<List<IntegratedEntrust>>(entrustManagement.queryIntegratedEntrust(request.getUserId(), request.getInstructionId(), request.getAccountId(), request.getOrderId()));
+        return new Message<>(entrustManagement.queryIntegratedEntrust(request.getUserId(), request.getInstructionId(), request.getAccountId(), request.getOrderId()));
     }
 
     /**
@@ -61,10 +61,10 @@ public class EntrustController {
      * @return Message
      */
     @ApiOperation(value = "撤销委托", notes = "撤销委托")
-    @RequestMapping(value = "/entrust/cancel", method = RequestMethod.POST)
+    @PostMapping(value = "/entrust/cancel")
     public Message<Object> cancelEntrust(@RequestParam String userId,
                                          @RequestParam String entrustId) {
-        return new Message<Object>(entrustManagement.cancelEntrust(userId, entrustId));
+        return new Message<>(entrustManagement.cancelEntrust(userId, entrustId));
     }
 
     /**
@@ -74,7 +74,7 @@ public class EntrustController {
      * @param dto    委托单号
      * @return ResultBean
      */
-    @RequestMapping(value = "/entrust/cancel/revoke", method = RequestMethod.POST)
+    @PostMapping(value = "/entrust/cancel/revoke")
     public ResultBean cancelEntrustWithRevoke(String userId, @RequestBody RevokeDto dto) {
         return entrustManagement.cancelEntrustWithRevoke(userId, dto);
     }
@@ -91,7 +91,7 @@ public class EntrustController {
 //     * @param accountId     账户Id
 //     * @return ResultBean
 //     */
-//    @RequestMapping(value = "/entrust/enable", method = RequestMethod.GET)
+//    @PostMapping(value = "/entrust/enable", method = RequestMethod.GET)
 //    public ResultBean queryEnable(@RequestParam(value = "user_id") String userId,
 //                                  @RequestParam(value = "stock_code") String stockCode,
 //                                  @RequestParam(value = "entrust_prop") String entrustProp,
@@ -107,7 +107,7 @@ public class EntrustController {
      * @param enableQryBean 查询参数
      * @return ResultBean
      */
-    @RequestMapping(value = "/entrust/enable", method = RequestMethod.POST)
+    @PostMapping(value = "/entrust/enable")
     public ResultBean queryEnable(@RequestBody @Validated EnableQryBean enableQryBean) {
         Instruction instruction = instructionService.findById(enableQryBean.getInstructionId());
         enableQryBean.setEntrustProp(EntrustPropUtils.getEntrustProp(instruction, enableQryBean.getEntrustProp()));
@@ -128,7 +128,7 @@ public class EntrustController {
      * @Author: MAXX
      * @Date: 2020/6/5 
      */
-    @RequestMapping(value = "/entrust/getOthCode", method = RequestMethod.POST)
+    @PostMapping(value = "/entrust/getOthCode")
     public ResultBean getOthCode(@RequestParam(value = "finprod_id", required = false) String finprodId,
                                  @RequestParam(value = "oth_code_type", required = false) String othCodeType) {
 
@@ -163,7 +163,7 @@ public class EntrustController {
                                                                  @RequestParam(required = false) List<String> entrustStatusList) {
         String entrustStatus = "1,3,4";
         if (CollUtil.isNotEmpty(entrustStatusList)) {
-            entrustStatus = CollUtil.join(entrustStatusList.iterator(), GlobalConstant.COMMA);
+            entrustStatus = CollUtil.join(entrustStatusList, GlobalConstant.COMMA);
         }
         return new Message<>(entrustManagement.queryEntrustByStatus(userId, entrustStatus));
     }
