@@ -704,6 +704,12 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         
         //设置数据结构的转化规则字段内容
         EquityInfoCheckUtil.replaceByExchangeRule(allRuleObjList,spzMap,equityList);
+        for(EquityInfo001Dto equityInfo001Dto : equityList){
+            if(equityInfo001Dto.getTempMap() != null){
+                //投资者姓名转换
+                equityInfo001Dto.setHolderName(equityInfo001Dto.getTempMap().get("holderName"));
+            }
+        }
 
         // add by yangxianjiu 2021-12-23 end
         // equityInfo001Mapper.getEquityInfo001DtoByKey(equityInfo001Dto); 优化导入
