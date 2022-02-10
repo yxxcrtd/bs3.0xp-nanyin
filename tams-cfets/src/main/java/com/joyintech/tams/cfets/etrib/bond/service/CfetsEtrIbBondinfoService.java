@@ -2119,6 +2119,12 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         return cfetsetrIbBondinfoMapper.queryAssetIsRight(param);
     }
 
+    public Message<AjaxResult> recallCheckDelegate( CfetsEtribBondInfo003Dto dto) throws Exception {
+        //对选择的数据进行check
+        AjaxResult ajaxResult = recallDelegateCheckMethod(dto);
+        return new Message<AjaxResult>().success().setData(ajaxResult);
+    }
+
     @Transactional
     public Message<AjaxResult> recallDelegate( CfetsEtribBondInfo003Dto dto) throws Exception {
         //对选择的数据进行check
@@ -2147,13 +2153,15 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         return new Message<AjaxResult>().success().setData(new AjaxResult(this.getMessage("ETR_X_002")));
     }
 
-    @Transactional
-    public Message<AjaxResult> closeDelegate( CfetsEtribBondInfo003Dto dto) throws Exception{
+    public Message<AjaxResult> closeCheckDelegate( CfetsEtribBondInfo003Dto dto){
         //对选择的数据进行check
         AjaxResult ajaxResult = closeDelegateCheckMethod(dto);
-        if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
-            return new Message<AjaxResult>().success().setData(ajaxResult);
-        }
+        return new Message<AjaxResult>().success().setData(ajaxResult);
+    }
+
+    @Transactional
+    public Message<AjaxResult> closeDelegate( CfetsEtribBondInfo003Dto dto) throws Exception{
+
         List<CfetsEtribBondInfo003Dto> dtolist = dto.getSelectedItem();
 
         if(dtolist != null && dtolist.size()>0){
