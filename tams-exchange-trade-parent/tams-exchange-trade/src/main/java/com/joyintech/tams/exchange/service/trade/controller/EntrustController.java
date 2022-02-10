@@ -156,11 +156,11 @@ public class EntrustController {
     @ApiOperation(value = "查询异常委托", notes = "查询异常委托")
     @ApiImplicitParams({
             @ApiImplicitParam(required = true, name = "userId", value = "用户编号", paramType = "query"),
-            @ApiImplicitParam(required = false, name = "entrustStatus", value = "委托状态列表", paramType = "query")
+            @ApiImplicitParam(required = false, name = "entrustStatusList", value = "委托状态列表", paramType = "body")
     })
     @PostMapping(value = "/entrust/exception")
     public Message<List<EntrustInterface>> queryExceptionEntrust(@RequestParam @NotBlank(message = "用户编号不可为空") String userId,
-                                                                 @RequestParam(required = false) List<String> entrustStatusList) {
+                                                                 @RequestBody(required = false) List<String> entrustStatusList) {
         String entrustStatus = "1,3,4";
         if (CollUtil.isNotEmpty(entrustStatusList)) {
             entrustStatus = CollUtil.join(entrustStatusList, GlobalConstant.COMMA);
