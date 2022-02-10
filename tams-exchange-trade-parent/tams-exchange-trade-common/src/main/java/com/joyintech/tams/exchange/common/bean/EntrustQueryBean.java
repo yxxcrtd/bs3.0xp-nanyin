@@ -9,6 +9,7 @@ import com.joyintech.tams.exchange.common.constant.joyin.DictCodeList;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt1;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
+import com.joyintech.tams.exchange.common.utils.EntrustUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -869,7 +870,7 @@ public class EntrustQueryBean implements Serializable {
     }
 
     public String getEntrustPropStr() {
-        return entrustPropStr;
+        return EntrustUtils.getEntrustPropStr(entrustProp);
     }
 
     public void setEntrustPropStr(String entrustPropStr) {

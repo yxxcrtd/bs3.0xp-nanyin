@@ -11,8 +11,10 @@
         else ROUND(T4.ORDER_FINISH_AMT/T1.ENTRUST_AMT,4) end as implementPercent
         ,case when T2.TARGET_TYPE = '01' then ROUND(T4.ENT_FINISH_AMT/T1.ENTRUST_NUM,4)
         else ROUND(T4.ENT_FINISH_AMT/T1.ENTRUST_AMT,4) end as dealPercent
-        ,T5.PORTFOLIO_ID portfolioId
-        ,T5.PORTFOLIO_NAME  portfolioName
+        ,case when T1.ENTRUST_CLASS = '01' then T5.PORTFOLIO_ID
+        else '' end as portfolioId
+        ,case when T1.ENTRUST_CLASS = '01' then T5.PORTFOLIO_NAME
+        else '' end as portfolioName
         ,T1.FINPROD_ID finprodId
         ,T7.FINPROD_MARKET_ID
         ,CASE WHEN T1.PS IN ('03','04') THEN T1.FINPROD_ID ELSE T7.FINPROD_ABBR END AS finprodAbbr

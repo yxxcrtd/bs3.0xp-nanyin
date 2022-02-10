@@ -21,7 +21,7 @@ public interface InstructionDetailMapper extends IMybatisMapper<InstructionDetai
 
     int insertSelective(InstructionDetail record);
     
-    int updateOrInsertSelective(InstructionPledge record);
+    int updateOrInsertSelective(InstructionDetail record);
 
     int insertBasicByBasicInfo(InstructionDetail record);
 

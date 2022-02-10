@@ -124,7 +124,11 @@
         <result column="ORIG_ENTRUST_ID" property="origEntrustId" jdbcType="VARCHAR"/>
         <result column="INTEGRATED_ENTRUST_ID" property="entrustId" jdbcType="VARCHAR"/>
         <result column="REPORT_NO" property="reportNo" jdbcType="VARCHAR"/>
-        <result column="OPERATE_USER" property="operateUser" jdbcType="VARCHAR"/>
+        <result column="PORTFOLIO_NAME" property="portfolioName" jdbcType="VARCHAR"/>
+        <result column="SEC_ACCT_ID" property="secAcctId" jdbcType="VARCHAR"/>
+        <result column="TRADE_PLAT" property="tradePlat" jdbcType="VARCHAR"/>
+        <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR"/>
+        <result column="INV_MANAGER_ID" property="invManagerId" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Example_Where_Clause">
@@ -378,12 +382,12 @@
             parameterType="com.joyintech.tams.exchange.common.bean.EntrustQryBean">
         SELECT
         <include refid="QueryEntrustHistory"/>
-        FROM T_ENTRUSTHISTORY a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
+        FROM T_ENTRUSTHISTORY a left join T_INSTRUCTION_HISTORY b on a.INSTRUCTION_ID =b.ENTRUST_ID
         <include refid="queryCondition2"/>
         UNION ALL
         SELECT
         <include refid="QueryIntegratedEntrustHistory"/>
-        FROM T_INTEGRATED_ENTRUSTHISTORY a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
+        FROM T_INTEGRATED_ENTRUSTHISTORY a left join T_INSTRUCTION_HISTORY b on a.INSTRUCTION_ID =b.ENTRUST_ID
         <include refid="queryCondition2"/>
     </select>
 
