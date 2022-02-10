@@ -351,7 +351,7 @@ public class InvestmentManagement extends BaseService {
                                 if (isSingle) {
                                     instruction.setTraderName(simpleRestTemplate.postForObject(ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.getRealNameByUser, entrustOpeBean.getTrader(), String.class));
                                 } else {
-                                    instruction.setTraderName(restTemplate.postForObject(ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.acceptOrRefuse, entrustOpeBean.getTrader(), String.class));
+                                    instruction.setTraderName(restTemplate.postForObject(ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.getRealNameByUser, entrustOpeBean.getTrader(), String.class));
                                 }
                                 // 接收后，删除其他trader下的未接收指令
                                 List<String> traderSet = JsonUtils.getObjectListFromJson(instruction.getTradersInfo(), String.class);
