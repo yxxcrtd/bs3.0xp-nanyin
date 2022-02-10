@@ -153,6 +153,14 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
         return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
     }
 
+    /**
+     * 获取 priceModel
+     * @return priceModel.
+     */
+    public String getPriceModel() {
+        return SysDataUtil.getNameFromDataDict(DictCode.价格模式, super.getPriceModel());
+    }
+
     public String getPortfolioName() {
         return portfolioName;
     }
