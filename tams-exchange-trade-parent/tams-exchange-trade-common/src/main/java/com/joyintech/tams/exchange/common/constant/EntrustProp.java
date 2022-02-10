@@ -192,4 +192,12 @@ public enum EntrustProp {
                 || EntrustProp.SH_REPURCHASE_RENEWAL_CONFIRM.value.equals(entrustProp)
                 || EntrustProp.SH_REPURCHASE_RENEWAL_REFUSE.value.equals(entrustProp);
     }
+
+    public String getValue() {
+        return value;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
