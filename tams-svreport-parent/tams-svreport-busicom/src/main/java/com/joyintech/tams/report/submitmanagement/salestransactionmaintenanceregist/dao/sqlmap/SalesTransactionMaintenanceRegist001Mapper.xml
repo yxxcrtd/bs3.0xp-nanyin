@@ -267,6 +267,22 @@
 			</if>
 		</where> ) maxtime
 		on his.CREATE_TIME=maxtime.CREATE_TIME
+		<where>
+			<if test="registList !=null and registList.size()>0">
+				INSTITUTION_CODE
+				IN
+				<foreach collection="registList" item="regist" open="(" separator=","  close=")">
+					#{regist.institutionCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="registList !=null and registList.size()>0">
+				and TRADE_NO
+				IN
+				<foreach collection="registList" item="regist" open="(" separator=","  close=")">
+					#{regist.tradeNo,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
 	</insert>
 
 	<delete id="deleteReportDataHis" parameterType="java.util.Map">

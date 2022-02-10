@@ -252,6 +252,15 @@
             </if>
         </where> ) maxtime
         on his.CREATE_TIME=maxtime.CREATE_TIME
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                AGENT_INSTITUTION_CODE
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.agentInstitutionCode,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
     </insert>
 
     <delete id="deleteReportDataHis" parameterType="java.util.Map">
