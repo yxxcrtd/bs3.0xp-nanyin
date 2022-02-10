@@ -1,6 +1,8 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import com.github.pagehelper.PageInfo;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.exchange.common.ResponseResultBody;
 import com.joyintech.tams.exchange.common.bean.*;
@@ -16,8 +18,11 @@ import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
 import com.joyintech.tams.exchange.service.trade.management.service.EntrustManagement;
 import com.joyintech.tams.exchange.util.EntrustPropUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -60,22 +65,6 @@ public class EntrustController {
     public Message<Object> cancelEntrust(@RequestParam String userId,
                                          @RequestParam String entrustId) {
         return new Message<Object>(entrustManagement.cancelEntrust(userId, entrustId));
-    }
-
-    /**
-     * 强制撤销对应entrust
-     *
-     * @param userId    用户Id
-     * @param userName  用户名称
-     * @param entrustId 委托单号
-     * @return Message
-     */
-    @ApiOperation(value = "撤销异常委托", notes = "撤销异常委托")
-    @RequestMapping(value = "/entrust/exception/cancel", method = RequestMethod.POST)
-    public Message<Object> cancelExceptionEntrust(@RequestParam String userId,
-                                                  @RequestParam String userName,
-                                                  @RequestParam String entrustId) {
-        return new Message<Object>(entrustManagement.cancelExceptionEntrust(userId, userName, entrustId));
     }
 
     /**
@@ -158,26 +147,42 @@ public class EntrustController {
         return entrustManagement.queryIntegratedEntrustForPage(request);
     }
 
-    @PostMapping(value = "/entrust/export")
-    @ResponseBody
     @ApiOperation(value = "导出委托信息列表", notes = "导出委托信息列表")
+    @PostMapping(value = "/entrust/export")
     public void exportEntrust(@RequestBody EntrustExportRequest request, HttpServletResponse response) {
         ExcelUitl.doExport(request, response, "委托列表", () -> entrustManagement.queryAllEntrustForPage(request.getDto(PageEntrustInfoRequest.class)).getData().getList());
     }
 
     @ApiOperation(value = "查询异常委托", notes = "查询异常委托")
-    @RequestMapping(value = "/entrust/exception", method = RequestMethod.POST)
-    public Message<List<EntrustInterface>> queryExceptionEntrust(@RequestParam String userId,
-                                                                 @RequestParam(required = false) String entrustStatus) {
-        if (StringUtils.isEmpty(entrustStatus)) {
-            entrustStatus = "1,3,4";
+    @ApiImplicitParams({
+            @ApiImplicitParam(required = true, name = "userId", value = "用户编号", paramType = "query"),
+            @ApiImplicitParam(required = false, name = "entrustStatus", value = "委托状态列表", paramType = "query")
+    })
+    @PostMapping(value = "/entrust/exception")
+    public Message<List<EntrustInterface>> queryExceptionEntrust(@RequestParam @NotBlank(message = "用户编号不可为空") String userId,
+                                                                 @RequestParam(required = false) List<String> entrustStatusList) {
+        String entrustStatus = "1,3,4";
+        if (CollUtil.isNotEmpty(entrustStatusList)) {
+            entrustStatus = CollUtil.join(entrustStatusList.iterator(), GlobalConstant.COMMA);
         }
-        return new Message<List<EntrustInterface>>(entrustManagement.queryEntrustByStatus(userId, entrustStatus));
+        return new Message<>(entrustManagement.queryEntrustByStatus(userId, entrustStatus));
     }
 
-//    @PostMapping(value = "/entrust/exception/export")
-//    @ResponseBody
+    @ApiOperation(value = "撤销异常委托", notes = "撤销异常委托")
+    @ApiImplicitParams({
+            @ApiImplicitParam(required = true, name = "userId", value = "用户编号", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "userName", value = "用户名称", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "entrustId", value = "委托编号", paramType = "query"),
+    })
+    @PostMapping(value = "/entrust/exception/cancel")
+    public Message<Object> cancelExceptionEntrust(@RequestParam @NotBlank(message = "用户编号不可为空") String userId,
+                                                  @RequestParam @NotBlank(message = "用户名称不可为空") String userName,
+                                                  @RequestParam @NotBlank(message = "委托编号不可为空") String entrustId) {
+        return new Message<>(entrustManagement.cancelExceptionEntrust(userId, userName, entrustId));
+    }
+
 //    @ApiOperation(value = "导出异常委托信息列表", notes = "导出异常委托信息列表")
+//    @PostMapping(value = "/entrust/exception/export")
 //    public void exportExceptionEntrust(@RequestBody EntrustExportRequest request, HttpServletResponse response) {
 //        ExcelUitl.doExport(request, response, "异常委托列表", () -> entrustManagement.queryEntrustByStatus(request.getDto(PageEntrustInfoRequest.class)).getData().getList());
 //    }
