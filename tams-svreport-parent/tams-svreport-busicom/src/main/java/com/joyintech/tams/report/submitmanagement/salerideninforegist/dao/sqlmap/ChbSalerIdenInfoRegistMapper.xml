@@ -314,6 +314,13 @@
                 </foreach>
             </if>
         </where> )
+        <if test="registList !=null and registList.size()>0">
+            and SALER_INS_NO
+            IN
+            <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                #{regist.salerInsNo,jdbcType=VARCHAR}
+            </foreach>
+        </if>
     </delete>
 
     <select id="setDataList" resultType="com.joyintech.tams.report.submitmanagement.salerideninforegist.dto.SalerIdenInfoRegistDto">

@@ -309,6 +309,20 @@
                 </foreach>
             </if>
         </where> )
+        <if test="registList !=null and registList.size()>0">
+            and AGENT_INSTITUTION_CODE
+            IN
+            <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                #{regist.agentInstitutionCode,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="registList !=null and registList.size()>0">
+            and PROD_REGIST_CODE
+            IN
+            <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                #{regist.prodRegistCode,jdbcType=VARCHAR}
+            </foreach>
+        </if>
     </delete>
 
     <select id="setDataList" resultType="com.joyintech.tams.report.submitmanagement.agentprdinforegist.dto.AgentPrdInfoRegistDto">

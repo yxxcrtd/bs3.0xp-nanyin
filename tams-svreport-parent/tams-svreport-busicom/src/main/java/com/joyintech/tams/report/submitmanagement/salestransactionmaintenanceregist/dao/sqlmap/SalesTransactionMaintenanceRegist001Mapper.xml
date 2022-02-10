@@ -290,6 +290,20 @@
 				</foreach>
 			</if>
 		</where> )
+		<if test="registList !=null and registList.size()>0">
+			and INSTITUTION_CODE
+			IN
+			<foreach collection="registList" item="regist" open="(" separator=","  close=")">
+				#{regist.institutionCode,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="registList !=null and registList.size()>0">
+			and TRADE_NO
+			IN
+			<foreach collection="registList" item="regist" open="(" separator=","  close=")">
+				#{regist.tradeNo,jdbcType=VARCHAR}
+			</foreach>
+		</if>
 	</delete>
 
 	<select id="queryExportListByKeys" resultType="com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto">
