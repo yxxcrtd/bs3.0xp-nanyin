@@ -642,9 +642,12 @@ public class TrdBondInvestTrade002Controller extends BaseController {
             p);
         if (!StringUtil.isEmptyList(planList)) {
             for (FinExercisePlan planDto : planList) {
-                if (planDto.getActExerciseDate().compareTo(inputDto.getSettleDate()) == 0) {
-                    ajaxResult.setData(DateUtil.format(planDto.getActExerciseDate()));;
+                if (planDto.getActExerciseDate() != null && inputDto.getSettleDate() != null) {
+                    if (planDto.getActExerciseDate().compareTo(inputDto.getSettleDate()) == 0) {
+                        ajaxResult.setData(DateUtil.format(planDto.getActExerciseDate()));
+                    }
                 }
+
             }
         }
         return ajaxResult;
