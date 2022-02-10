@@ -8,8 +8,12 @@ import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.common.listener.UploadListener;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.interf.common.util.TisUtil;
+import com.joyintech.tams.report.submitmanagement.agentprdinforegist.dao.ChbAgentPrdSubMapper;
+import com.joyintech.tams.report.submitmanagement.agentprdinforegist.dto.AgentPrdInfoRegistDto;
 import com.joyintech.tams.report.submitmanagement.salerideninforegist.dao.ChbSalerIdenInfoRegistMapper;
 import com.joyintech.tams.report.submitmanagement.salerideninforegist.dto.SalerIdenInfoRegistDto;
 import org.apache.commons.collections4.CollectionUtils;
@@ -63,11 +67,18 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
      */
     public Page<SalerIdenInfoRegistDto> searchForPage(Map<String, Object> param){
         dealSearchParam(param);
-        int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
-	    int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
-        Page<SalerIdenInfoRegistDto> pageList = super.queryForPage(
-        		pagenum,legth,()->chbSalerIdenInfoRegistMapper.queryForRegistPage(param));
-        return pageList;
+        if (null != param.get(GlobalConstant.PARAM_PAGE)
+                && null != param.get(GlobalConstant.PARAM_LENGTH)) {
+            int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
+            int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
+            Page<SalerIdenInfoRegistDto> pageList = super.queryForPage(
+                    pagenum, legth, () -> chbSalerIdenInfoRegistMapper.queryForRegistPage(param));
+            this.formatByType(pageList.getRoot());
+            return pageList;
+        }else{
+            Page<SalerIdenInfoRegistDto> page = queryForPage(ChbSalerIdenInfoRegistMapper.class,"queryForRegistPage",param);
+            return page;
+        }
     }
 
     /**
@@ -119,41 +130,12 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
         if (StringUtil.isEmptyList(investList)) {
             return;
         }
-        int maxDataCountOneTime = reportSelectOrDeleteCountForShenFen;
-        int dataCount = investList.size();
-        if (dataCount <= maxDataCountOneTime) {
             //已报送数据进留痕表
             chbSalerIdenInfoRegistMapper.insertIntoHis(investList);
             //删除正式表已报送数据
             chbSalerIdenInfoRegistMapper.deleteLastSubmitRegist(investList);
             chbSalerIdenInfoRegistMapper.updateInterfSubmitAndSeqBatch(sendStatus, investList);
             return;
-        }
-        List<SalerIdenInfoRegistDto> newDataList = new ArrayList<SalerIdenInfoRegistDto>();
-        newDataList.addAll(investList);
-        // 分批处理
-        int part = dataCount / maxDataCountOneTime; // 分批数
-        for (int i = 0; i < part; i++) {
-            logger.info("单次更新登记表start===");
-            //已报送数据进留痕表
-            chbSalerIdenInfoRegistMapper.insertIntoHis(investList);
-            //删除正式表已报送数据
-            chbSalerIdenInfoRegistMapper.deleteLastSubmitRegist(investList);
-            chbSalerIdenInfoRegistMapper.updateInterfSubmitAndSeqBatch(sendStatus,
-                    newDataList.subList(0, maxDataCountOneTime));
-            newDataList.subList(0, maxDataCountOneTime).clear();
-            logger.info("单次更新登记表end===");
-        }
-        // 最后剩下的数据
-        if (CollectionUtils.isNotEmpty(newDataList)) {
-            logger.info("单次更新登记表start===");
-            //已报送数据进留痕表
-            chbSalerIdenInfoRegistMapper.insertIntoHis(investList);
-            //删除正式表已报送数据
-            chbSalerIdenInfoRegistMapper.deleteLastSubmitRegist(investList);
-            chbSalerIdenInfoRegistMapper.updateInterfSubmitAndSeqBatch(sendStatus, newDataList);
-            logger.info("单次更新登记表end===");
-        }
     }
     /**
      * 已手工处理的数据将报送状态改为未报送
@@ -210,6 +192,8 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
             // 反馈状态
             String submitFeedbackStatus = (String) pageParam.get("submitFeedbackStatus");
 
+            String status = (String) pageParam.get("status");
+
             // 将姓名当做多选下拉框处理
             if (StringUtil.isNotBlank(salerName)) {
                 pageParam.put("salerNameList", StringUtil.splitToList(GlobalConstant.COMMA, salerName));
@@ -230,6 +214,10 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
             if (StringUtil.isNotBlank(submitFeedbackStatus)) {
                 pageParam.put("submitFeedbackStatusList",
                         StringUtil.splitToList(GlobalConstant.COMMA, submitFeedbackStatus));
+            }
+            // 将数据状态当做多选下拉框处理
+            if (StringUtil.isNotBlank(status)) {
+                pageParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
             }
         }
     }
@@ -262,13 +250,22 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
         List<File> sourceFiles = new ArrayList<>();
         Map<String,Object> data  = new HashMap<String,Object>();
         List<SalerIdenInfoRegistDto> tempList=new ArrayList<SalerIdenInfoRegistDto>();
+        SalerIdenInfoRegistDto nullDate = new SalerIdenInfoRegistDto();
         if(datas == null){
             dealSearchParam(selectParam);
+            String status = selectParam.get("status").toString();
+            selectParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
             tempList = chbSalerIdenInfoRegistMapper.setDataList(selectParam);
+            this.formatByType(tempList);
         }else{
             tempList= JsonUtils.json2List(datas,SalerIdenInfoRegistDto.class);
         }
-        data.put("dataList",tempList);
+        if(tempList.size() != 0) {
+            data.put("dataList", tempList);
+        }else{
+            tempList.add(nullDate);
+            data.put("dataList", tempList);
+        }
         File depositfile = TisUtil.createFile(data,"pbc/" +"SalerIdenInfoRegist_export", "销售人员身份信息登记.xls");
         sourceFiles.add(depositfile);
         File outFile = null;
@@ -281,5 +278,40 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
      */
     public List<SuggestDto> getSalerName(Map<String, Object> map) {
         return chbSalerIdenInfoRegistMapper.getSalerName(map);
+    }
+
+    public static List<SalerIdenInfoRegistDto> formatByType(List<SalerIdenInfoRegistDto> dataList) {
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(dataList)) {
+            dataList.forEach(item -> {
+                item.setSalerSex(getDictCodeAndName(DictCode.性别_中债, item.getSalerSex()));
+                item.setSalerCredentType(getDictCodeAndName(DictCode.销售人员证件类型, item.getSalerCredentType()));
+                item.setSalerAreaType(getDictCodeAndName(DictCode.销售区域_中债, item.getSalerAreaType()));
+                item.setSalerEduLevel(getDictCodeAndName(DictCode.销售人员学历, item.getSalerEduLevel()));
+                item.setSalerStatus(getDictCodeAndName(DictCode.销售人员当前状态, item.getSalerStatus()));
+                item.setSalerDegree(getDictCodeAndName(DictCode.销售人员学位, item.getSalerDegree()));
+                item.setSalerLevle(getDictCodeAndName(DictCode.销售人员专业技术职称, item.getSalerLevle()));
+            });
+        }
+        return dataList;
+    }
+
+    /**
+     * 转换成key+value形式
+     * @param dictCode  字典表中数据类型
+     * @param value  需要换换的值
+     * @return  key+value
+     * @see
+     * @since 1.0
+     */
+    public static String getDictCodeAndName(DictCode dictCode,String value){
+        if(com.joyintech.framework.util.StringUtil.isNotEmpty(value)){
+            String tempName = SysDataUtil.getNameFromDataDict(dictCode, value);
+            if (com.joyintech.framework.util.StringUtil.isEmpty(tempName)) {
+                return value;
+            } else {
+                return value + " " + SysDataUtil.getNameFromDataDict(dictCode, value);
+            }
+        }
+        return "";
     }
 }

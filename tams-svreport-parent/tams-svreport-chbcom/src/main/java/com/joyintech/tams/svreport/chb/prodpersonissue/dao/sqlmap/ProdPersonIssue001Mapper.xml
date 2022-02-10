@@ -101,6 +101,7 @@
 			sub.YIELD_REMARK YIELDREMARK,
 			sub.BUSI_ACCT_NO BUSIACCTNO,
 			sub.ACCT_NAME ACCTNAME,
+            sub.GRAD_PROPORTION,
 			sub.SUMIT_SEQ sumitSeq
 			from CHB_PRD_ISSUE_SUB sub
 		    left join chb_prdresist_code reginfo

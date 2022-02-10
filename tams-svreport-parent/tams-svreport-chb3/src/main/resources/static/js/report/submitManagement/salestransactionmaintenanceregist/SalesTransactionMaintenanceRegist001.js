@@ -57,7 +57,7 @@ $(function(){
             ,{field: 'sendStatus', title: "报送状态",visible:false,sortField:'sendStatus'}
             ,{field: 'sendStatusName', title: "报送状态", width:100 ,sortField:'sendStatus'}
             ,{field: 'submitTimeStr', title: "报送日期", width:150,sortField:'submitTime'}
-            ,{field: 'submitDeadline', title: "报送截止日", type:"date",width:150,sortField:'submitDeadline'}
+            ,{field: 'chbSubmitDeadline', title: "报送截止日", type:"date",width:150,sortField:'chbSubmitDeadline'}
             ,{field: 'submitFeedbackStatusStr', title: "反馈状态", width:100,sortField:'submitFeedbackStatus'}
             ,{field:'institutionCode', title: '提供销售结算资金服务机构代码', width:'150',sortField:'institutionCode'}
             ,{field:'prdRegistCode', title: '产品登记编码', width:'150',sortField:'prdRegistCode'}
@@ -91,7 +91,13 @@ $(function(){
 
         //导出中债Excel
         $('#SalesTransactionMaintenanceRegist001_btn_chbexport').click(function() {
+        var rows = table.getAllCheckedRows();
+        if(rows.length === 0){
+            exportExcel("01");
+        }
+        else{
             exportExcel("0");
+        }
         });
 
     //数据检查
@@ -271,13 +277,21 @@ $(function(){
         if(!expArr || expArr.length ==0){
             param = getPageParams();
             param.flag = flag;
-            if(flag=="0"){
-                param.status="01";
+            if(flag=="01"){
+                param.dataStatus="01,02";
                 param.sendStatus="01";
             }
+             var isHaveData = true;
+                         Joyin.ajaxSync('searchPage',param, function(result){
+                             if (!result || result.root.length == 0){
+                                  isHaveData = false;
+                                  return;
+                              }
+                         })
             param.exportflag = 'export';
             Joyin.exportExcel("export",param);
-            Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
+             if(isHaveData){
+            Joyin.confirm("导出成功，是否自动标识新建未报送数据的报送状态为“手工处理”？", function() {
                 //页面添加滚动条
                 layui.layer.open({type:3});
                 Joyin.ajaxJson('doManual', param, function() {
@@ -285,6 +299,7 @@ $(function(){
                     layui.layer.closeAll();
                 });
             });
+            }
         }
         else{
         	if(flag=="0")

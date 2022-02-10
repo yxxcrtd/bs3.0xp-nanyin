@@ -24,6 +24,7 @@
     <div layout:fragment="content">
             <form class="layui-form joyin-form-wrap pro-module-form" id="informationForm">
                 <input hidden type="text" id="erroOrInfo" name ="erroOrInfo" data-th-value="${entity?.erroOrInfo}" style="display:none;">
+                <input hidden type="text" id="workflowId" name ="workflowId" data-th-value="${entity?.workflowId}" style="display:none;">
                                 <div class="layui-form-item">
                                     <div class="layui-inline layui-col-md6">
                                         <label class="layui-form-label form-lable">销售机构代码</label>
@@ -67,14 +68,10 @@
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
-                                    <div>
-                                        <label class="layui-form-label form-lable" style='width: 11.9%;'>备注</label>
-                                        <div class="layui-input-inline input-inline" style="width: 85%!important;">
-                                            <textarea id="remark" name="remark" placeholder="请输入内容" maxlength="200"
-                                                      data-th-placeholder="#{SysCommon.placeholder}" class="layui-textarea mst-textarea"
-                                                      data-th-text="${entity?.remark}"></textarea>
-                                        </div>
-                                    </div>
+
+
+
+
                                 </div>
                     <div class="text-center">
                         <a id="SalerInstInfo002_btn_submit" class="layui-btn layui-btn-sm  btn-submit"

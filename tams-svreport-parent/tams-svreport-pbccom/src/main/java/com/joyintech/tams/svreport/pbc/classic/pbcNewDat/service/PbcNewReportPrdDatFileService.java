@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.svreport.pbc.classic.pbcNewDat.service;
 
 import com.joyintech.framework.util.BeanUtil;
@@ -67,16 +67,19 @@ public class PbcNewReportPrdDatFileService {
 	@Autowired
 	private PbcReportDebtTermDatDetailMapper pbcReportDebtTermDatDetailMapper;
 
+	@Autowired
+	private PbcReportAssetConfigDatMapper pbcReportAssetConfigDatMapper;
 
-    /**
-     * 生成数据文件
-     * @param reportType，报表类型，如果为空，则生成所有
-     * @param listProds，产品列表，如果为空，则生成所有
-     * @param genDate，生成日期，如果为空，则为当前平台时间
-     * @see
-     * @since 1.0
-     */
-    public void genDataFile(String reportType,  List<String> listProds,Date genDate, Map<String, Object> param,String OrgCode) throws UnsupportedEncodingException {
+
+	/**
+	 * 生成数据文件
+	 * @param reportType，报表类型，如果为空，则生成所有
+	 * @param listProds，产品列表，如果为空，则生成所有
+	 * @param genDate，生成日期，如果为空，则为当前平台时间
+	 * @see
+	 * @since 1.0
+	 */
+	public void genDataFile(String reportType,  List<String> listProds,Date genDate, Map<String, Object> param,String OrgCode) throws UnsupportedEncodingException {
 		String sendStatus = DictCodeListExt2.报送状态_未报送.getValue();
 
 		//设置产品端字符
@@ -88,7 +91,8 @@ public class PbcNewReportPrdDatFileService {
 
 		List<String> pbcList = new ArrayList<>(Arrays.asList(DictCodeListExt2.人行报送明细类型_资管产品资产负债统计.getValue(),DictCodeListExt2.人行报送明细类型_除回购和拆借外贷款分行业企业规模统计.getValue(),
 				DictCodeListExt2.人行报送明细类型_除回购和拆借外贷款分地区统计表.getValue(),DictCodeListExt2.人行报送明细类型_资产收益权按基础资产投向分类统计报表.getValue(),
-				DictCodeListExt2.人行报送明细类型_企业债券分行业企业规模统计.getValue(),DictCodeListExt2.人行报送明细类型_资管产品资产负债剩余期限统计.getValue()));
+				DictCodeListExt2.人行报送明细类型_企业债券分行业企业规模统计.getValue(),DictCodeListExt2.人行报送明细类型_资管产品资产负债剩余期限统计.getValue(),
+				DictCodeListExt2.人行报送明细类型_资管产品资产配置情况表.getValue()));
 
 
 		pbcList.addAll(prodList);
@@ -132,7 +136,7 @@ public class PbcNewReportPrdDatFileService {
 				}
 				num++;
 				//2.1、zip包名获取  每个法人获取各自的数据
-				 zipCode = PbcDatUtil.genZipCode(DictCodeListExt2.人行报送类型_统计模板数据.getValue(),genDate,num,relOrgCode);
+				zipCode = PbcDatUtil.genZipCode(DictCodeListExt2.人行报送类型_统计模板数据.getValue(),genDate,num,relOrgCode);
 				/***由于联社模式的生成方式问题.无数据将无法生成对应的人行文件,但是dat需要生成,进行修改*/
 				Map<String,PbcMonthReport> pbcCodeList = trimMap.getValue().stream().collect(Collectors.toMap(PbcMonthReport::getReporttype, a -> a,(k1, k2)->k1));
 				//2.2、资管产品统计模板表数据处理
@@ -201,6 +205,11 @@ public class PbcNewReportPrdDatFileService {
 						pbcReportDebtTermDatDetailMapper.deleteByReportUUid(report.getReportuuid());
 						//重新导入报表uuid中的数据
 						pbcReportDebtTermDatDetailMapper.insertDataBySelect(report.getReportuuid());
+					}else if(DictCodeListExt2.人行报送明细类型_资管产品资产配置情况表.getValue().equals(report.getReporttype())){
+						//根据报表uuid进行删除
+						pbcReportAssetConfigDatMapper.deleteByReportUUid(report.getReportuuid());
+						//重新导入报表uuid中的数据
+						pbcReportAssetConfigDatMapper.insertDataBySelect(report.getReportuuid());
 					}
 				}
 			}
@@ -215,7 +224,7 @@ public class PbcNewReportPrdDatFileService {
 			pbcNewPrdDatFileMapper.insertBatchZipData(zipFileList);
 		}
 
-    }
+	}
 
 
 

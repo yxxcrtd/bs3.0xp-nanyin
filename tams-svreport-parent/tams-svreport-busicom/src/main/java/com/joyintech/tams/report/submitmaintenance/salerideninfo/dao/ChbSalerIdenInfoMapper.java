@@ -49,7 +49,7 @@ public interface ChbSalerIdenInfoMapper {
 
     int deleteByPrimaryKey(String salerInsNo);
 
-    int deleteErroByPrimaryKey(String salerInsNo);
+    int deleteErroByPrimaryKey(String workflowId);
 
     int insert(ChbSalerIdenInfo record);
 

@@ -179,7 +179,7 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
      * 产品预计终止日期
      */
     private String mdate01;
-    
+
     /**
      * 发行机构提前终止权标识，1-有，2-无
      */
@@ -334,9 +334,9 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
      * 更新时间
      */
     private Date updateTime;
-    
+
     private List<String> prodList;
-    
+
     /**
      * 募集起始日期
      */
@@ -346,13 +346,13 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
      * 募集结束日期
      */
     private Date raiseEnddate;
-    
+
     /**
      *  内部产品代码
      */
     private String insideProdId;
-    
-    
+
+
     /**
      * 募集起始日期
      */
@@ -372,8 +372,8 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
      * 产品预计终止日期
      */
     private String mdate02;
-    
-    
+
+
     /**
      * 预计客户最高年收益率（导出人行excel用）
      */
@@ -383,11 +383,11 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
      * 预计客户最低年收益率（导出人行excel用）
      */
     private String lowYieldIssueToString;
-    
-    
+
+
     /**
      * 报送产品代码
-     * 
+     *
      */
     private  String subProdId;
 
@@ -399,6 +399,20 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
      * 压缩包编码
      */
     private String datZipCode;
+
+    /**
+     * 跨境理财通标识
+     *
+     */
+    @DictFormat(DictCode.人行是否)
+    private  String crossBorderFlag;
+
+    /**
+     * 以财产权信托名义开展的资金信托标识
+     *
+     */
+    @DictFormat(DictCode.人行是否)
+    private  String zjxtFlag;
 
     public String getDatZipCode() {
         return datZipCode;
@@ -417,115 +431,115 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
     }
 
     public String getSubProdId() {
-		return subProdId;
-	}
+        return subProdId;
+    }
 
-	public void setSubProdId(String subProdId) {
-		this.subProdId = subProdId;
-	}
-    
+    public void setSubProdId(String subProdId) {
+        this.subProdId = subProdId;
+    }
+
     public String getHighYieldIssueToString() {
-		return highYieldIssueToString;
-	}
+        return highYieldIssueToString;
+    }
 
-	public void setHighYieldIssueToString(String highYieldIssueToString) {
-		this.highYieldIssueToString = highYieldIssueToString;
-	}
+    public void setHighYieldIssueToString(String highYieldIssueToString) {
+        this.highYieldIssueToString = highYieldIssueToString;
+    }
 
-	public String getLowYieldIssueToString() {
-		return lowYieldIssueToString;
-	}
+    public String getLowYieldIssueToString() {
+        return lowYieldIssueToString;
+    }
 
-	public void setLowYieldIssueToString(String lowYieldIssueToString) {
-		this.lowYieldIssueToString = lowYieldIssueToString;
-	}
+    public void setLowYieldIssueToString(String lowYieldIssueToString) {
+        this.lowYieldIssueToString = lowYieldIssueToString;
+    }
 
-	public String getRaiseVdate02() {
-		return DateUtil.format(raiseVdate,"yyyy-MM-dd");
-	}
+    public String getRaiseVdate02() {
+        return DateUtil.format(raiseVdate,"yyyy-MM-dd");
+    }
 
-	public void setRaiseVdate02(String raiseVdate02) {
-		this.raiseVdate02 = raiseVdate02;
-	}
+    public void setRaiseVdate02(String raiseVdate02) {
+        this.raiseVdate02 = raiseVdate02;
+    }
 
-	public String getRaiseEnddate02() {
-		return DateUtil.format(raiseEnddate,"yyyy-MM-dd");
-	}
+    public String getRaiseEnddate02() {
+        return DateUtil.format(raiseEnddate,"yyyy-MM-dd");
+    }
 
-	public void setRaiseEnddate02(String raiseEnddate02) {
-		this.raiseEnddate02 = raiseEnddate02;
-	}
+    public void setRaiseEnddate02(String raiseEnddate02) {
+        this.raiseEnddate02 = raiseEnddate02;
+    }
 
-	public String getVdate02() {
-		return DateUtil.format(vdate,"yyyy-MM-dd");
-	}
+    public String getVdate02() {
+        return DateUtil.format(vdate,"yyyy-MM-dd");
+    }
 
-	public void setVdate02(String vdate02) {
-		this.vdate02 = vdate02;
-	}
+    public void setVdate02(String vdate02) {
+        this.vdate02 = vdate02;
+    }
 
-	public String getMdate02() {
-		return DateUtil.format(mdate,"yyyy-MM-dd");
-	}
+    public String getMdate02() {
+        return DateUtil.format(mdate,"yyyy-MM-dd");
+    }
 
-	public void setMdate02(String mdate02) {
-		this.mdate02 = mdate02;
-	}
+    public void setMdate02(String mdate02) {
+        this.mdate02 = mdate02;
+    }
 
-	/**
+    /**
      *  人行代码（外部）
      */
     private String pbcCode;
-    
+
     /**
      *  人行产品代码（页面展示用）
      */
     private String pbcProdIdShow;
-    
+
     /** 人行代码（外部）
      * @return PBC_CODE 人行代码（外部）
      */
     public String getPbcCode() {
-		return pbcCode;
-	}
+        return pbcCode;
+    }
 
-	/**
-	 * @param pbcCode
-	 */
-	public void setPbcCode(String pbcCode) {
-		this.pbcCode = pbcCode;
-	}
-    
-    
+    /**
+     * @param pbcCode
+     */
+    public void setPbcCode(String pbcCode) {
+        this.pbcCode = pbcCode;
+    }
+
+
     /** 人行产品代码（页面展示用）
      * @return PBC_PROD_ID
      */
     public String getPbcProdIdShow() {
-    	return pbcProdIdShow;
+        return pbcProdIdShow;
     }
-    
-    /** 
+
+    /**
      * @param pbcProdIdShow
      */
     public void setPbcProdIdShow(String pbcProdIdShow) {
-    	this.pbcProdIdShow = pbcProdIdShow;
+        this.pbcProdIdShow = pbcProdIdShow;
     }
-    
+
     /** 内部产品代码
      * @return INSIDE_PROD_ID 内部产品代码
      */
     public String getInsideProdId() {
-		return insideProdId;
-	}
+        return insideProdId;
+    }
 
-	/**
-	 * @param insideProdId
-	 */
-	public void setInsideProdId(String insideProdId) {
-		this.insideProdId = insideProdId;
-	}
+    /**
+     * @param insideProdId
+     */
+    public void setInsideProdId(String insideProdId) {
+        this.insideProdId = insideProdId;
+    }
 
-	/**
+    /**
      * 主键uuid
      * @return REGIST_SEQNO 主键uuid
      */
@@ -901,7 +915,7 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
         return raiseVdate;
     }
     public String getRaiseVdate01() {
-    	return DateUtil.format(raiseVdate,"yyyyMMdd");
+        return DateUtil.format(raiseVdate,"yyyyMMdd");
     }
     /**
      * 募集起始日期
@@ -910,7 +924,7 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
     public void setRaiseVdate(Date raiseVdate) {
         this.raiseVdate = raiseVdate;
     }
-    
+
 
     /**
      * 募集结束日期
@@ -919,7 +933,7 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
     public Date getRaiseEnddate() {
         return raiseEnddate;
     }
-   
+
     /**
      * 募集结束日期
      * @param raiseEnddate 募集结束日期
@@ -928,7 +942,7 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
         this.raiseEnddate = raiseEnddate;
     }
     public String getRaiseEnddate01() {
-    	return DateUtil.format(raiseEnddate,"yyyyMMdd");
+        return DateUtil.format(raiseEnddate,"yyyyMMdd");
     }
     /**
      * 发行机构提前终止权标识，1-有，2-无
@@ -1100,7 +1114,7 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
     public Date getMdate() {
         return mdate;
     }
-    
+
     public String getMdate01() {
         return DateUtil.format(mdate,"yyyyMMdd");
     }
@@ -1250,7 +1264,7 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
         return statusDate;
     }
     public String getStatusDate01() {
-    	return DateUtil.format(statusDate,"yyyyMMdd");
+        return DateUtil.format(statusDate,"yyyyMMdd");
     }
     /**
      * 数据日期
@@ -1268,7 +1282,7 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
         return pbcSubmitDeadline;
     }
     public String getPbcSubmitDeadline01() {
-    	return DateUtil.format(pbcSubmitDeadline,"yyyyMMdd");
+        return DateUtil.format(pbcSubmitDeadline,"yyyyMMdd");
     }
 
     /**
@@ -1407,56 +1421,56 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
         this.updateTime = updateTime;
     }
 
-	public List<String> getProdList() {
-		return prodList;
-	}
+    public List<String> getProdList() {
+        return prodList;
+    }
 
-	public void setProdList(List<String> prodList) {
-		this.prodList = prodList;
-	}
+    public void setProdList(List<String> prodList) {
+        this.prodList = prodList;
+    }
 
-	public String getProfitType() {
-		return profitType;
-	}
+    public String getProfitType() {
+        return profitType;
+    }
 
-	public void setProfitType(String profitType) {
-		this.profitType = profitType;
-	}
-	public String getStatusStr(){
-		return SvrDataUtil.getNameFromDataDict(DictCode.报送数据状态, this.getStatus());
-	}
-	
-	public String getSendStatusStr(){
-		return SvrDataUtil.getNameFromDataDict(DictCode.报送状态, this.getSendStatus());
-	}
-	
-	public String getSubmitFeedbackStatusStr(){
-		return SvrDataUtil.getNameFromDataDict(DictCode.人行报送反馈状态, this.getSubmitFeedbackStatus());
-	}
+    public void setProfitType(String profitType) {
+        this.profitType = profitType;
+    }
+    public String getStatusStr(){
+        return SvrDataUtil.getNameFromDataDict(DictCode.报送数据状态, this.getStatus());
+    }
 
-	public void setRaiseVdate01(String raiseVdate) {
-		this.raiseVdate01 = raiseVdate;
-	}
+    public String getSendStatusStr(){
+        return SvrDataUtil.getNameFromDataDict(DictCode.报送状态, this.getSendStatus());
+    }
 
-	public void setRaiseEnddate01(String raiseEnddate) {
-		this.raiseEnddate01 = raiseEnddate;
-	}
+    public String getSubmitFeedbackStatusStr(){
+        return SvrDataUtil.getNameFromDataDict(DictCode.人行报送反馈状态, this.getSubmitFeedbackStatus());
+    }
 
-	public void setVdate01(String vdate) {
-		this.vdate01 = vdate;
-	}
+    public void setRaiseVdate01(String raiseVdate) {
+        this.raiseVdate01 = raiseVdate;
+    }
 
-	public void setMdate01(String mdate) {
-		this.mdate01 = mdate;
-	}
+    public void setRaiseEnddate01(String raiseEnddate) {
+        this.raiseEnddate01 = raiseEnddate;
+    }
 
-	public String getIssuePartyName() {
-		return issuePartyName;
-	}
+    public void setVdate01(String vdate) {
+        this.vdate01 = vdate;
+    }
 
-	public void setIssuePartyName(String issuePartyName) {
-		this.issuePartyName = issuePartyName;
-	}
+    public void setMdate01(String mdate) {
+        this.mdate01 = mdate;
+    }
+
+    public String getIssuePartyName() {
+        return issuePartyName;
+    }
+
+    public void setIssuePartyName(String issuePartyName) {
+        this.issuePartyName = issuePartyName;
+    }
 
 
     /***
@@ -1464,9 +1478,9 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
      * @param split
      * @return
      */
-	public String toPbcString(String split){
-	    if(null==split){
-	        split = "";
+    public String toPbcString(String split){
+        if(null==split){
+            split = "";
         }
         StringBuffer sb = new StringBuffer();
         sb.append(this.getPbcProdId());  //产品代码
@@ -1520,5 +1534,20 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
 
         return sb.toString();
     }
-	
+
+    public String getCrossBorderFlag() {
+        return crossBorderFlag;
+    }
+
+    public void setCrossBorderFlag(String crossBorderFlag) {
+        this.crossBorderFlag = crossBorderFlag;
+    }
+
+    public String getZjxtFlag() {
+        return zjxtFlag;
+    }
+
+    public void setZjxtFlag(String zjxtFlag) {
+        this.zjxtFlag = zjxtFlag;
+    }
 }

@@ -76,7 +76,11 @@
 		zc.FINPROD_MARKET_ID  finprodMarketId, /**资产代码**/
 		zc.FINPROD_ABBR  finprodName,/**资产名称**/
 		t.FINPROD_TYPE finprodType,  /**金融产品类型**/
-		t.PS ps,/**交易方向**/
+		case
+		when t.PS = 'T01' and t.FINPROD_TYPE = 'F01' THEN '01'
+		when t.PS = 'T02' and t.FINPROD_TYPE = 'F01' THEN '02'
+		when t.PS = 'T07' and t.FINPROD_TYPE = 'F08' THEN '03'
+		ELSE '04' END AS ps,/**交易方向**/
 		t.TRADE_DATE tradeDate,/**交易日**/
 		t.SETTLE_DATE settDate,/**交割日期**/
 		mst.COUNTER_NAME counterId,  /**交易对手**/
@@ -109,14 +113,21 @@
 		<if test="tradeDateEnd !=null and tradeDateEnd !='' ">
 			and t.TRADE_DATE <![CDATA[<=]]> to_date(#{tradeDateEnd},'yyyy-mm-dd')
 		</if>
-		<if test="psArr != null and psArr.length > 0">
+		<if test="psArr01 != null and psArr01.length > 0">
 			AND t.PS IN
-			<foreach collection="psArr" item="ps" open="( " close=" )" separator=",">
-				#{ps}
+			<foreach collection="psArr01" item="ps01" open="( " close=" )" separator=",">
+				#{ps01}
+			</foreach>
+		</if>
+		<if test="finprodTypeArr != null and finprodTypeArr.length > 0">
+			AND t.FINPROD_TYPE IN
+			<foreach collection="finprodTypeArr" item="finprodType" open="( " close=" )" separator=",">
+				#{finprodType}
 			</foreach>
 		</if>
 		order by t.TRADE_ID desc
 	</select>
+
 	<select id="queryTradeInfoByTradeId" resultType="com.joyintech.service.valuation.trademanage.trdlendvaluationtrade.dto.TrdLendValuationTradeDto">
 		SELECT
 		t.TRADE_ID tradeId,/**交易编号**/
@@ -126,7 +137,11 @@
 		zc.FINPROD_MARKET_ID  finprodMarketId, /**资产代码**/
 		zc.FINPROD_ABBR  finprodName,/**资产名称**/
 		t.FINPROD_TYPE finprodType,  /**金融产品类型**/
-		t.PS ps,/**交易方向**/
+		case
+		when t.PS = 'T01' and t.FINPROD_TYPE = 'F01' THEN '01'
+		when t.PS = 'T02' and t.FINPROD_TYPE = 'F01' THEN '02'
+		when t.PS = 'T07' and t.FINPROD_TYPE = 'F08' THEN '03'
+		ELSE '04' END AS ps,/**交易方向**/
 		t.TRADE_DATE tradeDate,/**交易日**/
 		t.SETTLE_DATE settDate,/**交割日期**/
 		zc.VDATE vdate,/**起息日**/

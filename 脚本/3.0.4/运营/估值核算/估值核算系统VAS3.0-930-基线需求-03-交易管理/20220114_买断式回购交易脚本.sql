@@ -15,6 +15,11 @@ delete from SYS_PAGE where PAGE_ID='TrdOutRightRepoValuationTrade002';
 
 INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('TrdOutRightRepoValuationTrade002', 'VAL', '/valuation/trademanage/trdbuyoutrepovaluation/TrdOutRightRepoValuationTrade002', 'valuation/trademanage/trdbuyoutrepovaluation/TrdOutRightRepoValuationTrade002', NULL, NULL, NULL, '02', '01', '买断式回购交易新建', 'system', NULL, TO_TIMESTAMP('2019-05-24 00:00:00.000000', 'SYYYY-MM-DD HH24:MI:SS:FF6'), 'system', TO_TIMESTAMP('2019-05-24 00:00:00.000000', 'SYYYY-MM-DD HH24:MI:SS:FF6'));
 
+--买断式回购交易到期确认页面
+delete from SYS_PAGE where PAGE_ID='TrdOutRightRepoValuationTrade003';
+
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('TrdOutRightRepoValuationTrade003', 'VAL', '/valuation/trademanage/trdbuyoutrepovaluation/TrdOutRightRepoValuationTrade003', 'valuation/trademanage/trdbuyoutrepovaluation/TrdOutRightRepoValuationTrade003', null, null, null, '02', '01', '买断式回购交易到期确认', 'system', null, TO_TIMESTAMP('2019-05-24 00:00:00.000000', 'YYYY-MM-DD HH24:MI:SS.FF6'), 'system', TO_TIMESTAMP('2019-05-24 00:00:00.000000', 'YYYY-MM-DD HH24:MI:SS.FF6'));
+
 --交易类型  查询页面数据字典添加
 delete from SYS_PAGE_DICTLIST where PAGE_ID='TrdOutRightRepoValuationTrade001' and DICT_ID='PS';
 

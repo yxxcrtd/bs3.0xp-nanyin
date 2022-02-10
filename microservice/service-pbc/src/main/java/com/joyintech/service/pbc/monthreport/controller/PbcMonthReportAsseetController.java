@@ -4,6 +4,7 @@ package com.joyintech.service.pbc.monthreport.controller;
 
 import java.util.Map;
 
+import com.joyintech.tams.svreport.pbc.assetdebt.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,12 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.joyintech.framework.grid.Page;
-import com.joyintech.tams.svreport.pbc.assetdebt.service.PbcReportAreaService;
-import com.joyintech.tams.svreport.pbc.assetdebt.service.PbcReportAssetDebtService;
-import com.joyintech.tams.svreport.pbc.assetdebt.service.PbcReportAssetIncomeDetailService;
-import com.joyintech.tams.svreport.pbc.assetdebt.service.PbcReportCompanyBondService;
-import com.joyintech.tams.svreport.pbc.assetdebt.service.PbcReportCompanyService;
-import com.joyintech.tams.svreport.pbc.assetdebt.service.PbcReportDebtTermDetailService;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
 
 
@@ -31,22 +26,26 @@ import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
 @RestController
 @RequestMapping("/PbcMonthReportAsset")
 public class PbcMonthReportAsseetController{
-    /**
-     * service
-     */
-    @Autowired
-    private PbcReportAssetDebtService pbcReportAssetDebtService;
-    @Autowired
-    private PbcReportCompanyService pbcReportCompanyService;
-    @Autowired
-    private PbcReportAreaService pbcReportAreaService;
-    @Autowired
-    private PbcReportAssetIncomeDetailService pbcReportAssetIncomeDetailService;
-    @Autowired
-    private PbcReportCompanyBondService pbcReportCompanyBondService;
-    @Autowired
-    private PbcReportDebtTermDetailService PbcReportDebtTermDetailService;
-    
+	/**
+	 * service
+	 */
+	@Autowired
+	private PbcReportAssetDebtService pbcReportAssetDebtService;
+	@Autowired
+	private PbcReportCompanyService pbcReportCompanyService;
+	@Autowired
+	private PbcReportAreaService pbcReportAreaService;
+	@Autowired
+	private PbcReportAssetIncomeDetailService pbcReportAssetIncomeDetailService;
+	@Autowired
+	private PbcReportCompanyBondService pbcReportCompanyBondService;
+	@Autowired
+	private PbcReportDebtTermDetailService PbcReportDebtTermDetailService;
+	@Autowired
+	private PbcReportAssetConfigurationService pbcReportAssetConfigurationService;
+
+
+
 
 	@PostMapping("createDataAssetDebt")
 	public Map<Object, Object> createDataAssetDebt(@RequestBody Map<String,Object> param){
@@ -57,25 +56,30 @@ public class PbcMonthReportAsseetController{
 	public Map<Object, Object> createDataCompany(@RequestBody Map<String,Object> param){
 		return pbcReportCompanyService.createData(param);
 	}
-	
+
 	@PostMapping("createDataArea")
 	public Map<Object, Object> createDataArea(@RequestBody Map<String,Object> param){
 		return pbcReportAreaService.createData(param);
 	}
-	
+
 	@PostMapping("createDataAssetIncomeDetail")
 	public Map<Object, Object> createDataAssetIncomeDetail(@RequestBody Map<String,Object> param){
 		return pbcReportAssetIncomeDetailService.createData(param);
 	}
-	
+
 	@PostMapping("createDataCompanyBond")
 	public Map<Object, Object> createDataCompanyBond(@RequestBody Map<String,Object> param){
 		return pbcReportCompanyBondService.createData(param);
 	}
-	
+
 	@PostMapping("createDataDebtTermDetail")
 	public Map<Object, Object> createDataDebtTermDetail(@RequestBody Map<String,Object> param){
 		return PbcReportDebtTermDetailService.createData(param);
+	}
+
+	@PostMapping("createDataAssetConfiguration")
+	public Map<Object, Object> createDataAssetConfiguration(@RequestBody Map<String,Object> param){
+		return pbcReportAssetConfigurationService.createData(param);
 	}
 
 }

@@ -200,7 +200,12 @@ public class SvrCustomerInfoFileImpService extends FileImpService {
 		// 定义新增数据list
 		List<MstCustomerInfo> listInfoE = new ArrayList<MstCustomerInfo>();
 		logger.debug("市场机构数据info表转dto---开始-----:" +  df.format(new Date()));
-		listInfoE = dataConversionEntityInfo(list);
+//		listInfoE = dataConversionEntityInfo(list);
+        listInfoE = (List<MstCustomerInfo>) convertMapToEntity(list,MstCustomerInfo.class);
+        for(MstCustomerInfo mstCustomerInfo:listInfoE){
+            // 法人
+            mstCustomerInfo.setCustomerType("01");
+        }
 		logger.debug("市场机构数据info表转dto---结束-----:" +  df.format(new Date()));
 		if (listInfoE != null && listInfoE.size() > 0) {
 			mergeInfoData(listInfoE);

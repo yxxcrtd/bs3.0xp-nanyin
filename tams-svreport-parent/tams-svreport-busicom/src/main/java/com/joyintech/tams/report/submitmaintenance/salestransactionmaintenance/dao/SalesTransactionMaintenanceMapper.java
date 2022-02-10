@@ -44,6 +44,8 @@ public interface SalesTransactionMaintenanceMapper {
      */
     int deleteByPrimaryKey(@Param("institutionCode") String institutionCode, @Param("tradeNo") String tradeNo);
 
+    int deleteInfoByPrimaryKey(SalesTransactionMaintenanceDto dto);
+
     /**
      * 根据主键删除info
      * @param

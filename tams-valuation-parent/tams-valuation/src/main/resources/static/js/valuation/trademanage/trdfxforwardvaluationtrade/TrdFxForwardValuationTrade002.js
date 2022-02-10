@@ -63,62 +63,55 @@
 
     });
 
-    //净价总额 联动
-    $('#cpriceAmt').change(function(){
-        netPriceCalculate();
+    //即期汇率 联动
+    $('#unitCprice').change(function(){
+        unitFpriceCalculate();
     });
 
-    //本金金额 联动
-    $('#tradeAmt').change(function(){
-        netPriceCalculate();
-    });
-
-    /**
-     * 净价计算 净价总额/本金金额
-     */
-    var netPriceCalculate = function(){
-        if($('#cpriceAmt').val() && $('#cpriceAmt').val() !==null && $('#cpriceAmt').val() !=''
-        &&  $('#tradeAmt').val() && $('#tradeAmt').val() !=null && $('#tradeAmt').val() !='' && $('#tradeAmt').val()!=0){
-            var netPrice = JoyinMath.doDiv($('#cpriceAmt').val(),$('#tradeAmt').val(),2);
-            $('#netPrice').val(netPrice);
-        }else{
-            $('#netPrice').val('');
-        }
-
-    }
-
-    //全价总额 联动
-    $('#fpriceAmt').change(function(){
-        cpriceAmtCalculate();
-    });
-
-    //应收利息总额 联动
-    $('#intAmt').change(function(){
-        cpriceAmtCalculate();
+    //远期点 联动
+    $('#unitInt').change(function(){
+        unitFpriceCalculate();
     });
 
     /**
-     * 净价总额计算
+     * 远期全价 = 即期汇率+远期点
      */
-    var cpriceAmtCalculate = function(){
-        if($('#fpriceAmt').val() && $('#fpriceAmt').val() != null && $('#fpriceAmt').val() != ''
-                && $('#intAmt').val() && $('#intAmt').val() != null && $('#intAmt').val() != '' ){
-            var cpriceAmt = JoyinMath.doMinus($('#fpriceAmt').val(), $('#intAmt').val(), 2);
-            $('#cpriceAmt').val(cpriceAmt)
-        }else{
-            $('#cpriceAmt').val('')
-        }
+    var unitFpriceCalculate = function(){
+        $('#unitFprice').val(JoyinMath.doAdd($('#unitCprice').val(), $('#unitInt').val(), 2));
     }
 
-    //全价总额 联动
-    $('#fpriceAmt').change(function(){
-        mdateSettleAmtCalculate();
+
+    /**
+     * 差额收付金额 difPayAmt
+     * 远期价格 unitFprice
+     * 定价日即期汇率 pricedDateRate
+     * 交易货币金额 dealCurAmt
+     * 当清算模式（settMode）选择差额清算时允许编辑，差额收付金额=|远期价格-定价日即期汇率|*交易货币金额
+     */
+    $('#settMode').change(function(){
+        if($('#settMode') && $('#settMode').val()=='DIF-SETT'){
+            var price  = Math.abs(JoyinMath.doMinus($('#unitFprice').val(),$('#pricedDateRate').val(),2));
+            $('#difPayAmt').val(JoyinMath.doMul(price,$('#dealCurAmt').val(),2));
+        }
     });
 
-    //其他费用 联动
-    $('#feeAmtQT').change(function(){
-        mdateSettleAmtCalculate();
+    //远期点 联动
+    $('#dealCurAmt').change(function(){
+        corCcyAmtAmtCalculate();
     });
+    //远期点 联动
+    $('#unitFprice').change(function(){
+        corCcyAmtAmtCalculate();
+    });
+    /**
+     * 对应货币金额  计算  = 交易货币金额*远期全价
+     *                     dealCurAmt  unitFprice
+     */
+    var corCcyAmtAmtCalculate = function(){
+        //结算金额=全价总额+其他费用
+        var mdateSettleAmt=JoyinMath.doMinus($('#dealCurAmt').val(), $('#unitFprice').val(), 2);
+        $('#mdateSettleAmt').val(mdateSettleAmt);
+    }
 
 
     /**

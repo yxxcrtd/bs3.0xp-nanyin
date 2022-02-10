@@ -8,8 +8,10 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.submitmaintenance.salerideninfo.dao.ChbSalerIdenInfoMapper;
 import com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -42,7 +44,9 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
      */
     public Page<SalerIdenInfoDto> selectForPage(int page, int length, Map<String, Object> pageParam)
     {
-        return super.queryForPage(page,length,() -> chbSalerIdenInfoMapper.selectForPage(pageParam));
+        Page<SalerIdenInfoDto> pageList = super.queryForPage(page,length,() -> chbSalerIdenInfoMapper.selectForPage(pageParam));
+        this.formatByType(pageList.getRoot());
+        return pageList;
     }
 
     /**
@@ -73,8 +77,9 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                 String salerInsNo = dtolist.get(i).getSalerInsNo();
                 String erroOrInfo = dtolist.get(i).getErroOrInfo();
                 if(erroOrInfo.equals("erro")){
+                    String workflowId = dtolist.get(i).getWorkflowId();
                     //erro表的直接物理删除
-                    chbSalerIdenInfoMapper.deleteErroByPrimaryKey(salerInsNo);
+                    chbSalerIdenInfoMapper.deleteErroByPrimaryKey(workflowId);
                 }else{
                     if(rewPenaInfoMap.get(salerInsNo) != null){
                             chbSalerIdenInfoMapper.deleteRewPenaInfo(salerInsNo);
@@ -271,6 +276,9 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             if(list.get(1) == null || list.get(1).trim().equals("")){
                 flag = false;
                 message.add("姓名不能为空");
+            }else if(getWordCount(list.get(1)) > 200){
+                flag = false;
+                message.add("姓名不能超过200字节");
             }
             //性别
             if(list.get(2) == null || list.get(2).trim().equals("")){
@@ -298,6 +306,9 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                     if(list.get(5) == null || list.get(5).trim().equals("")){
                         flag = false;
                         message.add("证件类别为其他时，其他证件名称不能为空");
+                    }else if(getWordCount(list.get(5)) > 60){
+                        flag = false;
+                        message.add("其他证件名称不能超过60字节");
                     }
                 }else {
                     if(list.get(5) != null && !(list.get(5).trim().equals(""))){
@@ -311,19 +322,24 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                 flag = false;
                 message.add("证件号码不能为空");
             }else{
-                if(this.subDictcode(list.get(4)," ").equals("99")){
-                    if(list.get(5) != null || !(list.get(5).trim().equals(""))) {
-                        String salerOtherCredentNameFlag = this.subDictcode(list.get(5), " ") + " " + list.get(6);
-                        if (salerOtherCredentNameMap.get(salerOtherCredentNameFlag) != null) {
-                            flag = false;
-                            message.add("其他证件名称相同时，证件号码不能相同");
+                if(getWordCount(list.get(6)) > 30){
+                    flag = false;
+                    message.add("证件号码不能超过30字节");
+                }else {
+                    if (this.subDictcode(list.get(4), " ").equals("99")) {
+                        if (list.get(5) != null || !(list.get(5).trim().equals(""))) {
+                            String salerOtherCredentNameFlag = this.subDictcode(list.get(5), " ") + " " + list.get(6);
+                            if (salerOtherCredentNameMap.get(salerOtherCredentNameFlag) != null) {
+                                flag = false;
+                                message.add("其他证件名称相同时，证件号码不能相同");
+                            }
                         }
-                    }
-                }else{
-                    String salerCredentTypeFlag = this.subDictcode(list.get(4)," ") + " " + list.get(6);
-                    if(salerCredentTypeMap.get(salerCredentTypeFlag) != null){
-                        flag = false;
-                        message.add("证件类别相同时，证件号码不能相同");
+                    } else {
+                        String salerCredentTypeFlag = this.subDictcode(list.get(4), " ") + " " + list.get(6);
+                        if (salerCredentTypeMap.get(salerCredentTypeFlag) != null) {
+                            flag = false;
+                            message.add("证件类别相同时，证件号码不能相同");
+                        }
                     }
                 }
             }
@@ -332,9 +348,14 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                 flag = false;
                 message.add("内部编号不能为空");
             }else{
-                if(salerInsNoMap.get(list.get(7)) != null){
+                if(getWordCount(list.get(7)) > 60){
                     flag = false;
-                    message.add("内部编号已存在，不能重复");
+                    message.add("内部编号不能超过60字节");
+                }else {
+                    if (salerInsNoMap.get(list.get(7)) != null) {
+                        flag = false;
+                        message.add("内部编号已存在，不能重复");
+                    }
                 }
             }
             //所属区域
@@ -356,11 +377,17 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             if(list.get(10) == null || list.get(10).trim().equals("")){
                 flag = false;
                 message.add("所属部门不能为空");
+            }else if(getWordCount(list.get(10)) > 40){
+                flag = false;
+                message.add("所属部门不能超过40字节");
             }
             //职位
             if(list.get(11) == null || list.get(11).trim().equals("")){
                 flag = false;
                 message.add("职位不能为空");
+            }else if(getWordCount(list.get(11)) > 40){
+                flag = false;
+                message.add("职位不能超过40字节");
             }
             //学历
             if(list.get(12) == null || list.get(12).trim().equals("")){
@@ -439,6 +466,9 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             if(list.get(21) == null || list.get(21).trim().equals("")){
                 flag = false;
                 message.add("销售资质不能为空");
+            }else if(getWordCount(list.get(21)) > 400){
+                flag = false;
+                message.add("销售资质不能超过400字节");
             }
             //办公电话
             if(list.get(22) == null || list.get(22).trim().equals("")){
@@ -487,12 +517,22 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                     if (list.get(26) == null || list.get(26).trim().equals("")) {
                         flag = false;
                         message.add("所属区域，学位，学历，专业技术职称或理财专业证书选择其他时，备注不能为空");
+                    }else if(getWordCount(list.get(26)) > 256){
+                        flag = false;
+                        message.add("备注不能超过256字节");
                     }
+                }
+            }
+            //备注
+            if(list.get(26) != null && !(list.get(26).trim().equals(""))) {
+                if (getWordCount(list.get(26)) > 256) {
+                    flag = false;
+                    message.add("备注不能超过256字节");
                 }
             }
 
             if (CollectionUtils.isNotEmpty(message)) {
-                checkResult.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
+                checkResult.add(new ExcelValidDto(list.get(7), String.valueOf(i+2),
                         StringUtil.joinString(message, GlobalConstant.SEMICOLON)));
             }
         }
@@ -679,8 +719,8 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
         return status;
     }
 
-    //校验理财专业证书多选导入
-    public static boolean checkSalerCertificateType(String value){
+    //校验可销售产品风险等级多选导入
+    public static boolean checksalerRiskLevel(String value){
         boolean status = true;
         if (!isEmpty(value)) {
             if(value.equals("01,02,03,04,05") || value.equals("01,02,03,04") || value.equals("01,02,03,05") || value.equals("01,02,04,05") || value.equals("01,03,04,05") ||
@@ -695,8 +735,8 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
         return status;
     }
 
-    //校验可销售产品风险等级多选导入
-    public static boolean checksalerRiskLevel(String value){
+    //校验理财专业证书多选导入
+    public static boolean checkSalerCertificateType(String value){
         boolean status = true;
         if (!isEmpty(value)) {
             if(value.equals("01,02,03,04,05,06,07,99") || value.equals("01,02,03,04,05,06,07") || value.equals("01,02,03,04,05,06,99") || value.equals("01,02,03,04,05,06") || value.equals("01,02,03,04,05,07") ||
@@ -932,5 +972,57 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             }
         }
         return counter;
+    }
+
+    //UTF-8获取字符串字节长度
+    public int getWordCount(String s)
+    {
+        int length = 0;
+        for(int i = 0; i < s.length(); i++)
+        {
+            int ascii = Character.codePointAt(s, i);
+            if(ascii >= 0 && ascii <=255)
+                length++;
+            else
+                length += 2;
+
+        }
+        return length;
+
+    }
+
+    public static List<SalerIdenInfoDto> formatByType(List<SalerIdenInfoDto> dataList) {
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(dataList)) {
+            dataList.forEach(item -> {
+                item.setSalerSex(getDictCodeAndName(DictCode.性别_中债, item.getSalerSex()));
+                item.setSalerCredentType(getDictCodeAndName(DictCode.销售人员证件类型, item.getSalerCredentType()));
+                item.setSalerAreaType(getDictCodeAndName(DictCode.销售区域_中债, item.getSalerAreaType()));
+                item.setSalerEduLevel(getDictCodeAndName(DictCode.销售人员学历, item.getSalerEduLevel()));
+                item.setSalerStatus(getDictCodeAndName(DictCode.销售人员当前状态, item.getSalerStatus()));
+                item.setSalerDegree(getDictCodeAndName(DictCode.销售人员学位, item.getSalerDegree()));
+                item.setSalerLevle(getDictCodeAndName(DictCode.销售人员专业技术职称, item.getSalerLevle()));
+            });
+        }
+        return dataList;
+    }
+
+    /**
+     * 转换成key+value形式
+     * @param dictCode  字典表中数据类型
+     * @param value  需要换换的值
+     * @return  key+value
+     * @see
+     * @since 1.0
+     */
+    public static String getDictCodeAndName(DictCode dictCode,String value){
+        if(com.joyintech.framework.util.StringUtil.isNotEmpty(value)){
+            String tempName = SysDataUtil.getNameFromDataDict(dictCode, value);
+            if (com.joyintech.framework.util.StringUtil.isEmpty(tempName)) {
+                return value;
+            } else {
+                return value + " " + SysDataUtil.getNameFromDataDict(dictCode, value);
+            }
+        }
+        return "";
     }
 }

@@ -386,7 +386,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 				List<String> prdSpecPropertys=StringUtil.splitToList(GlobalConstant.COMMA, item.getPrdSpecProperty());
 				item.setPrdSpecProperty("");
 				for(String prdSpecProperty : prdSpecPropertys){
-					item.setPrdSpecProperty(item.getPrdSpecProperty()+","+prdSpecProperty+" "+SvrDataUtil.getNameFromDataDict(DictCode.产品特殊属性, prdSpecProperty));
+					item.setPrdSpecProperty(item.getPrdSpecProperty()+";"+prdSpecProperty+" "+SvrDataUtil.getNameFromDataDict(DictCode.产品特殊属性, prdSpecProperty));
 				}
 				item.setPrdSpecProperty(item.getPrdSpecProperty().substring(1));
 			}
@@ -1410,9 +1410,11 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 						}
 					}
 					// 统计文件个数
-					if(entry.getName().substring(entry.getName().lastIndexOf("/")+1).length()>0){
+					//修改为统计压缩包中文件夹个数  add by tuqirong 2022-01-26 start
+					if(entry.getName().substring(entry.getName().lastIndexOf("/")+1).length()==0){
 						fileNum++;
 					}
+					//修改为统计压缩包中文件夹个数  add by tuqirong 2022-01-26 end
 				}
 				for (String folderNo : folderNoList1){
 					if (!fileExistsMap1.containsKey(folderNo) || StringUtil.isEmptyList(fileExistsMap1.get(folderNo))){

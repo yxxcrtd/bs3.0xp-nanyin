@@ -84,8 +84,6 @@ comment on column CHB_SALER_STL_DEAL_INFO.CREATE_DEPT is '创建部门 ';
 comment on column CHB_SALER_STL_DEAL_INFO.CREATE_TIME is '创建时间 ';
 comment on column CHB_SALER_STL_DEAL_INFO.UPDATE_USER is '更新人 ';
 comment on column CHB_SALER_STL_DEAL_INFO.UPDATE_TIME is '更新时间 ';
-alter table CHB_SALER_STL_DEAL_INFO
-  add primary key (INSTITUTION_CODE,TRADE_NO);
   
 DROP TABLE CHB_SALER_STL_DEA_ERRODATA;
 create table CHB_SALER_STL_DEA_ERRODATA(
@@ -107,7 +105,6 @@ create table CHB_SALER_STL_DEA_ERRODATA(
 	,CREATE_USER	VARCHAR2(32)
 	,UPDATE_TIME	TIMESTAMP(6)
 	,CREATE_TIME	TIMESTAMP(6)
-
 );
 
 comment on table CHB_SALER_STL_DEA_ERRODATA is '销售结算资金交易信息错误信息表';
@@ -496,7 +493,7 @@ values ('CHB_SALER_STL_DEAL_INFO', DATE '2021-01-01', '销售结算资金交易�
 
 DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3053';
 insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
-values ('3053', 'VAL', '销售结算资金交易信息表报送数据接入', null, 'svrChbSalerStlDealInfoInterfTastService', 3100, 'system', null, sysdate, 'system', sysdate, null);
+values ('3053', 'SVR', '销售结算资金交易信息表报送接口数据接入', null, 'svrChbSalerStlDealInfoInterfTastService', 3000, 'system', null, sysdate, 'system', sysdate, null);
 
 --销售结算资金流动方向枚举值
 DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'TRADE_PS';
@@ -511,7 +508,7 @@ values ('TRADE_PS', '02', '流入', 2, '0', 'system', null, SYSDATE, 'system', S
 --批处理配置
 DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3054';
 insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
-values ('3054', 'VAL', '销售结算资金交易登记报送', null, 'svrSalesTransactionInterfTaskService', 3040, 'system', null, sysdate, 'system', sysdate, null);
+values ('3054', 'SVR', '销售结算资金交易登记报表生成', null, 'svrSalesTransactionInterfTaskService', 3200, 'system', null, sysdate, 'system', sysdate, null);
 
 --销售结算资金交易信息登记获取报送截止日配置
 DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_REPORT_CODE' and ITEM_CODE = '34';
@@ -524,11 +521,9 @@ INSERT INTO CHB_REG_TIME_POINTS VALUES('34',null,'34',null,'03','03','02','业�
 --销售结算资金交易信息维护菜单配置
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'SalesTransactionMaintenance001';
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'SalesTransactionMaintenance002';
-delete from SYS_MENU where MENU_ID = 'REPORT_001_001_025';
-delete from SYS_MENU_SPLIT where MENU_ID = 'REPORT_001_001_025';
-INSERT INTO SYS_MENU_SPLIT (MENU_ID, SPLIT_ORDER_NO, SPLIT_MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_025', 8, '中债四期', 'admin', null, TIMESTAMP '2021-09-13 15:26:47', 'admin', TIMESTAMP '2021-09-13 15:26:47');
-INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_025', 'REP', null, 'REPORT_001_001', 'SalesTransactionMaintenance001', 15, '02', '销售结算资金交易信息维护', 'system', null, TIMESTAMP '2021-06-30 20:43:03', 'system', TIMESTAMP '2021-06-30 20:43:03');
-INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenance001','REP','/report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','REPORT_001_001_025',null,null,'02','01','销售结算资金交易信息维护','system',null,sysdate,'system',sysdate);
+delete from SYS_MENU where MENU_ID = 'REPORT_MAINTAIN_001_004_010';
+INSERT INTO SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)values('REPORT_MAINTAIN_001_004_010','REP',null,'REPORT_MAINTAIN_001_004','SalesTransactionMaintenance001',10,02,'销售结算资金交易信息维护','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenance001','REP','/report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','REPORT_MAINTAIN_001_004_010',null,null,'02','01','销售结算资金交易信息维护','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenance002','REP','/report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance002','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance002',null,null,null,'02','01','销售结算资金交易信息维护新建','system',null,sysdate,'system',sysdate);
 
 --销售结算资金交易信息维护按钮配置
@@ -546,13 +541,11 @@ INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('SalesTransactionMaintenance001','Sa
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('SalesTransactionMaintenance002','SalesTransactionMaintenance001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
 
 --销售结算资金交易信息登记菜单配置
-delete from SYS_MENU where MENU_ID = 'REPORT_001_003_017';
+delete from SYS_MENU where MENU_ID = 'REPORT_REGIST_001_002_012';
 delete from SYS_PAGE where PAGE_ID = 'SalesTransactionMaintenanceRegist001';
 delete from SYS_PAGE where PAGE_ID = 'SalesTransactionMaintenanceRegist002';
-delete from SYS_MENU_SPLIT where MENU_ID = 'REPORT_001_003_017';
-INSERT INTO SYS_MENU_SPLIT (MENU_ID, SPLIT_ORDER_NO, SPLIT_MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_003_017', 3, '中债四期', 'admin', null, TIMESTAMP '2021-09-13 15:26:47', 'admin', TIMESTAMP '2021-09-13 15:26:47');
-INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_003_017', 'SVR', null, 'REPORT_001_003', 'SalesTransactionMaintenanceRegist001', 17, '02', '销售结算资金交易登记', 'system', null, TIMESTAMP '2019-09-12 00:00:00', 'system', TIMESTAMP '2019-09-12 00:00:00');
-INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenanceRegist001','REP','/report/submitmanagement/salestransactionmaintenanceregist/SalesTransactionMaintenanceRegist001','report/submitmanagement/salestransactionmaintenanceregist/SalesTransactionMaintenanceRegist001','REPORT_001_003_017',null,null,'02','02','销售结算资金交易登记','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)values('REPORT_REGIST_001_002_012','SVR',null,'REPORT_REGIST_001_002','SalesTransactionMaintenanceRegist001',12,02,'销售结算资金交易登记','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenanceRegist001','REP','/report/submitmanagement/salestransactionmaintenanceregist/SalesTransactionMaintenanceRegist001','report/submitmanagement/salestransactionmaintenanceregist/SalesTransactionMaintenanceRegist001','REPORT_REGIST_001_002_012',null,null,'02','02','销售结算资金交易登记','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenanceRegist002','REP','/report/submitmanagement/salestransactionmaintenanceregist/SalesTransactionMaintenanceRegist002','report/submitmanagement/salestransactionmaintenanceregist/SalesTransactionMaintenanceRegist002',null,null,null,'02','02','销售结算资金交易登记','system',null,sysdate,'system',sysdate);
 
 --销售结算资金交易信息登记按钮配置
@@ -564,12 +557,12 @@ INSERT INTO SYS_PAGE_ELEMENT VALUES('SalesTransactionMaintenanceRegist001','Sale
 --销售月报每日明细汇总批处理配置
 DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3058';
 insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
-values ('3058', 'VAL', '销售月报每日明细汇总批处理', null, 'svrDayCollectInterfTaskService', 3030, 'system', null, sysdate, 'system', sysdate, null);
+values ('3058', 'SVR', '理财业务销售数据月度统计表日头寸批处理', null, 'svrDayCollectInterfTaskService', 3150, 'system', null, sysdate, 'system', sysdate, null);
 
 --销售身份信息其他信息修复批处理配置
 DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3059';
 insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
-values ('3059', 'VAL', '销售身份信息其他信息修复批处理', null, 'svrIdentityRepairInterfTaskService', 3020, 'system', null, sysdate, 'system', sysdate, null);
+values ('3059', 'SVR', '理财业务销售数据月度统计表身份信息修复批处理', null, 'svrIdentityRepairInterfTaskService', 3100, 'system', null, sysdate, 'system', sysdate, null);
 
 --投资者分类枚举值
 DELETE from SYS_DATADICT WHERE DICT_CODE =  'HOLDER_CLASSIFY';
@@ -581,13 +574,13 @@ INSERT INTO SYS_DATADICT_LIST VALUES ('HOLDER_CLASSIFY','02','合格投资者','
 --销售信息月度统计表生成批处理配置
 DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3060';
 insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
-values ('3060', 'VAL', '销售信息月度统计表生成', null, 'svrMonthCollectInterfTaskService', 3300, 'system', null, sysdate, 'system', sysdate, null);
+values ('3060', 'SVR', '理财业务销售数据月度统计表报表生成', null, 'svrMonthCollectInterfTaskService', 3200, 'system', null, sysdate, 'system', sysdate, null);
 
 --理财业务销售数据月度统计表菜单配置
 delete from SYS_PAGE where PAGE_ID = 'SellMonthReport001';
-delete from SYS_MENU where MENU_ID = 'REPORT_001_003_018';
-INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_003_018', 'SVR', null, 'REPORT_001_003', 'SellMonthReport001', 18, '02', '理财业务销售数据月度统计表', 'system', null, TIMESTAMP '2019-09-12 00:00:00', 'system', TIMESTAMP '2019-09-12 00:00:00');
-INSERT INTO SYS_PAGE VALUES ('SellMonthReport001','REP','/chb/monthreport/SellMonthReport001','report/chb/monthreport/SellMonthReport001','REPORT_001_003_018',null,null,'01','01','理财业务销售数据月度统计表','system',null,sysdate,'system',sysdate);
+delete from SYS_MENU where MENU_ID = 'REPORT_REGIST_001_002_013';
+INSERT INTO SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)values('REPORT_REGIST_001_002_013','SVR',null,'REPORT_REGIST_001_002','SellMonthReport001',13,02,'理财业务销售数据月度统计表','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_PAGE VALUES ('SellMonthReport001','REP','/chb/monthreport/SellMonthReport001','report/chb/monthreport/SellMonthReport001','REPORT_REGIST_001_002_013',null,null,'01','01','理财业务销售数据月度统计表','system',null,sysdate,'system',sysdate);
 
 --理财业务销售数据月度统计表按钮配置
 DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID = 'SellMonthReport001';
@@ -775,21 +768,77 @@ values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-031', 'Sal
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
 values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-032', 'SalesTransactionMaintenance002', 'isCustomizedStringForWhitelist', 'institutionCode', null, '^([CZ][0-9]{5})$', 'Y','提供销售结算资金服务机构代码填写错误。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 
+--销售结算资金交易信息登记check脚本
+DELETE FROM CHB_DATACHECK_RULE WHERE DATATYPE = 'CHB_SALER_STL_DEAL_SUB';
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000001','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','INSTITUTION_CODE','','','N','提供销售结算资金服务机构代码要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000002','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','INSTITUTION_CODE','','7','Y','提供销售结算资金服务机构代码不能超过6字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000003','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','PRD_REGIST_CODE','','','N','产品登记编码要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000004','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','PRD_REGIST_CODE','','16','Y','产品登记编码不能超过15字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000005','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','ACCOUNT_NO','','','N','销售结算资金账号要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000006','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','ACCOUNT_NO','','61','Y','销售结算资金账号不能超过60字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000007','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','ACCOUNT_NAME','','','N','销售结算资金账户名称要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000008','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','ACCOUNT_NAME','','201','Y','销售结算资金账户名称不能超过200字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000009','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_NO','','','N','销售结算资金交易流水号要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000010','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','TRADE_NO','','61','Y','销售结算资金交易流水号不能超过60字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000011','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_PS','','','N','销售结算资金流动方向要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000012','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','inDatadict','TRADE_PS','==','TRADE_PS','Y','销售结算资金流动方向不再值域范围内','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000013','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_COUNTER_ACC_NO','','','N','销售结算资金交易对手方账号要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000014','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','TRADE_COUNTER_ACC_NO','','61','Y','销售结算资金交易对手方账号不能超过60字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000015','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_COUNTER_ACC_NAME','','','N','销售结算资金交易对手方账户名称要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000016','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','TRADE_COUNTER_ACC_NAME','','201','Y','销售结算资金交易对手方账户名称不能超过200字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000017','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_COUNTER_ACC_BANK_NAME','','','N','销售结算资金交易对手方开户行名称要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000018','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','TRADE_COUNTER_ACC_BANK_NAME','','201','Y','销售结算资金交易对手方开户行名称不能超过200字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000019','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_COUNTER_ACC_BANK_NO','','','N','销售结算资金交易对手方账户开户行号要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000020','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','TRADE_COUNTER_ACC_BANK_NO','','13','Y','销售结算资金交易对手方账户开户行号不能超过12字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000021','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_CCY','','','N','销售结算资金交易币种要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000022','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','inDatadict','TRADE_CCY','==','CURRENCY_CHB','Y','销售结算资金交易币种不在值域范围内','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000023','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_AMT','','','N','销售结算资金交易金额要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000025','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','compareValueAsNumber','TRADE_AMT','>','0','Y','销售结算资金交易金额必须大于0','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000026','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_VDATE','','','N','销售结算资金交易日期要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000027','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isValidDate2','TRADE_VDATE','==','yyyy-MM-dd','Y','销售结算资金交易日期必须为日期格式（YYYY-MM-DD）。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000028','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_TIME','','','N','销售结算资金交易时间要素不可为空。','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000029','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isValidDate2','TRADE_TIME','','HHmmss','Y','销售结算资金交易时间必须是正常时间','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000030','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','POSTSCRIPT','','201','Y','销售结算资金交易附言不能超过200字符','E');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000000031','CHB_SALER_STL_DEAL_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','REMARK','','201','Y','备注不能超过200字符','E');
+DELETE FROM CHB_DATACHECK_RULE WHERE CHECKRULEID in ('CHB_SALER_STL_DEAL_SUB-0000000010004','CHB_SALER_STL_DEAL_SUB-0000000010005');
+insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
+values ('CHB_SALER_STL_DEAL_SUB-0000000010004', 'CHB_SALER_STL_DEAL_SUB', 'com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib', 'isCustomizedStringForWhitelist', 'PRD_REGIST_CODE', null, '^([CZ][0-9]{7}[A]?[0-9]{6})$', 'Y', '产品登记编码要素格式不对。正确的格式：6 位金融机构代码；2 位年度码；1 位标识码(可为空);6 位顺序码。', 'E');
 
 --更改投资者明细与投资者信息到中债三四期菜单
-DELETE FROM SYS_MENU_SPLIT where MENU_ID = 'REPORT_001_001_018';
-INSERT INTO SYS_MENU_SPLIT (MENU_ID, SPLIT_ORDER_NO, SPLIT_MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_018', 7, '中债三四期', 'admin', null, TIMESTAMP '2021-09-13 15:26:47', 'admin', TIMESTAMP '2021-09-13 15:26:47');
 delete from SYS_MENU where PAGE_ID = 'EquityInfo001';
 delete from SYS_MENU where PAGE_ID = 'SvrEquityBusinessDetails001';
-INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_018', 'REP', null, 'REPORT_001_001', 'EquityInfo001', 16, '02', '投资者身份信息', 'system', null, TIMESTAMP '2021-06-30 20:38:58', 'system', TIMESTAMP '2021-06-30 20:38:58');
-INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_019', 'SVR', null, 'REPORT_001_001', 'SvrEquityBusinessDetails001', 17, null, '投资者明细信息', 'system', null, TIMESTAMP '2021-06-30 20:38:58', 'system', TIMESTAMP '2021-06-30 20:38:58');
-
-
---业务首页展示问题
-DELETE FROM SYS_PARA WHERE PARA_CODE = 'SVR_FIRST_MENU_ID';
-insert into SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
-values ('SVR', 'SVR_FIRST_MENU_ID', 'REPORT_001', '02', NULL,'模块的 menu_id 类似于 REPORT_001 各项目配置不一样', 'system', null, SYSDATE, 'system', SYSDATE, null, '01');
-
+INSERT INTO SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)values('REPORT_MAINTAIN_001_003_009','REP',null,'REPORT_MAINTAIN_001_003','EquityInfo001',9,02,'投资者身份信息','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)values('REPORT_MAINTAIN_001_003_010','SVR',null,'REPORT_MAINTAIN_001_003','SvrEquityBusinessDetails001',10,02,'投资者明细信息','system',null,sysdate,'system',sysdate);
 
 --20211129_中债四期相关维护脚本
 delete FROM SYS_PARA WHERE PARA_CODE = 'COLOR_CONFIG_mid_list';
@@ -799,12 +848,5 @@ values ('SVR', 'COLOR_CONFIG_mid_list', '69,72,73,18,75,76,77,78,79,80,80,80,40,
 delete FROM SYS_PARA WHERE PARA_CODE = 'COLOR_CONFIG_top_list';
 insert into SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
 values ('SVR', 'COLOR_CONFIG_top_list', '81,82,83,84,85,86,87,88,89,90,90,90,65,95,95', '01', null, '延迟报送检查画面的配置参数(tops)', 'system', null, SYSDATE, 'admin',SYSDATE, null, '01');
-
-
---20211214——投资者持有信息、识别标识合并、变形转换规则应放在中债三期导航栏下
-delete from SYS_MENU_SPLIT where MENU_ID = 'REPORT_001_001_006' and SPLIT_MEMO = '中债三期';
-delete from SYS_MENU_SPLIT where MENU_ID = 'REPORT_001_001_007' and SPLIT_MEMO = '中债三期';
-INSERT INTO SYS_MENU_SPLIT (MENU_ID, SPLIT_ORDER_NO, SPLIT_MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_007', 3, '中债三期', 'admin', null, TIMESTAMP '2021-09-13 15:26:54', 'admin', TIMESTAMP '2021-09-13 15:26:54');
-
 
 

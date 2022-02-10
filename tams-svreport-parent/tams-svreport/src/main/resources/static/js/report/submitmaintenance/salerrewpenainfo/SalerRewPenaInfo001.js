@@ -43,15 +43,14 @@
         },
         cols:[
              {field:'erroOrInfo', title:'来自erro还是info',visible:false}
-            ,{field:'status', title: '数据状态',visible:false,sortField:'status'}
             ,{field:'salerRewPenaNo', title:'奖惩编号',visible:false}
-            ,{field:'statusStr', title: '数据状态', width:'150',sortField:'status'}
+            ,{field:'dataStatusStr', title: '数据状态', width:'150',sortField:'dataStatus'}
             ,{field:'salerInstCode', title: '销售机构代码', width:'150',sortField:'salerInstCode'}
             ,{field:'salerInsNo', title: '内部编号', width:'150',sortField:'salerInsNo'}
-            ,{field:'salerRewPenaTyepStr', title: '记录分类', width:'150',sortField:'salerRewPenaTyep'}
+            ,{field:'salerRewPenaTyep', title: '记录分类', width:'150',sortField:'salerRewPenaTyep'}
             ,{field:'salerRewPenaName', title: '奖惩名称', width:'150',sortField:'salerRewPenaName'}
             ,{field:'salerRewPenaComments', title: '奖惩说明', width:'150',sortField:'salerRewPenaComments'}
-            ,{field:'salerRewPenaInstStr', title: '奖惩单位', width:'150',sortField:'salerRewPenaInst'}
+            ,{field:'salerRewPenaInst', title: '奖惩单位', width:'150',sortField:'salerRewPenaInst'}
             ,{field:'salerRewPenaInstName', title: '奖惩单位具体名称', width:'150',sortField:'salerRewPenaInstName'}
             ,{field:'salerRewPenaStart', title: '奖惩起始日期', width:'150',sortField:'salerRewPenaStart',type:'date'}
             ,{field:'salerRewPenaEnd', title: '奖惩结束日期', width:'150',sortField:'salerRewPenaEnd',type:'date'}
@@ -96,7 +95,7 @@
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-                    if(data.status !="E"){
+                    if(data.dataStatus !="E"){
                         return Joyin.error("只能删除有效数据，请重新选择");
                     }
         var object = {selectedItem: [data], operateType:"delete"};
@@ -159,7 +158,7 @@
                 return;
             }
             for(var i=0;i<selArr.length;i++){
-                if(selArr[i].status !="E"){
+                if(selArr[i].dataStatus !="E"){
                    return Joyin.error("只能删除有效数据，请重新选择");
                 }
             }

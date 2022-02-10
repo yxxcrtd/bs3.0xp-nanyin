@@ -77,7 +77,7 @@ public class SalerIdenInfo002Service extends BaseService{
         }
         //来自erro表的先删除erro表数据再插入info表
         else{
-            chbSalerIdenInfoMapper.deleteErroByPrimaryKey(dto.getSalerInsNo());
+            chbSalerIdenInfoMapper.deleteErroByPrimaryKey(dto.getWorkflowId());
             this.saveAndSubmit(dto);
         }
     }

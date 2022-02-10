@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.tams.svreport.pbc.assetdebt.service.*;
 import com.joyintech.tams.svreport.pbc.classic.pbcNewDat.service.PbcNewReportPrdDatFileService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
@@ -67,12 +68,6 @@ import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
-import com.joyintech.tams.svreport.pbc.assetdebt.service.PbcReportAreaService;
-import com.joyintech.tams.svreport.pbc.assetdebt.service.PbcReportAssetDebtService;
-import com.joyintech.tams.svreport.pbc.assetdebt.service.PbcReportAssetIncomeDetailService;
-import com.joyintech.tams.svreport.pbc.assetdebt.service.PbcReportCompanyBondService;
-import com.joyintech.tams.svreport.pbc.assetdebt.service.PbcReportCompanyService;
-import com.joyintech.tams.svreport.pbc.assetdebt.service.PbcReportDebtTermDetailService;
 import com.joyintech.tams.svreport.pbc.assetposition.service.PbcMonthAssetPositionService;
 import com.joyintech.tams.svreport.pbc.assetposition.service.PbcMonthAssetReportService;
 import com.joyintech.tams.svreport.pbc.common.constants.PbcReportType;
@@ -148,7 +143,8 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 	private PbcBeforeSubCheck pbcBeforeSubCheck;
 	@Autowired
 	private PbcNewReportPrdDatFileService pbcNewReportPrdDatFileService;
-
+	@Autowired
+	private PbcReportAssetConfigurationService pbcReportAssetConfigurationService;
     /**
      * 短sql最大一次最大插入条数
      */
@@ -187,6 +183,8 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
     private final static String SHEET_3_2 = "表3-2新发产品分期限募集金额";
     
     private final static String SHEET_3_3 = "表3-3资产负债剩余期限";
+
+	private final static String SHEET_4_1 = "表4-1资管产品资产配置情况";
     
 	/**
 	 * 查询页面数据
@@ -198,7 +196,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 	 * @since 1.0
 	 */
 	public Page<PbcMonthReport> searchPage(Map<String, Object> pageParam) {
-		dealSearchParam(pageParam);
+		dealPageSearchParam(pageParam);
 		//将发送状态改为空
 
         if (pageParam.get(GlobalConstant.PARAM_PAGE) != null
@@ -323,6 +321,73 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 			} catch (IOException e) {
 //				logger.error(e.getMessage(),e);
 	            logger.error(e.getMessage(),e);
+			}
+		} else {
+			// 查询参数条件
+			// 数据状态
+			String status = (String) pageParam.get("status");
+			String reporttypes = (String) pageParam.get("reporttypes");
+			// 报送状态
+			String sendStatus = (String) pageParam.get("sendStatus");
+			// 反馈状态
+			String submitFeedbackStatus = (String) pageParam.get("submitFeedbackStatus");
+
+			// 将数据状态当做多选下拉框处理
+			if (StringUtil.isNotBlank(status)) {
+				pageParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
+			}
+			if (StringUtil.isNotBlank(reporttypes)) {
+				pageParam.put("reporttypeList", StringUtil.splitToList(GlobalConstant.COMMA, reporttypes));
+			}
+			// 将报送状态当做多选下拉框处理
+			if (StringUtil.isNotBlank(sendStatus)) {
+				pageParam.put("sendStatusList", StringUtil.splitToList(GlobalConstant.COMMA, sendStatus));
+			}
+			// 将反馈状态当做多选下拉框处理
+			if (StringUtil.isNotBlank(submitFeedbackStatus)) {
+				pageParam.put("submitFeedbackStatusList",
+						StringUtil.splitToList(GlobalConstant.COMMA, submitFeedbackStatus));
+			}
+
+		}
+	}
+
+	/**
+	 * 处理查询前的参数 <功能详细描述>
+	 *
+	 * @param pageParam
+	 * @see
+	 * @since 1.0
+	 */
+	public void dealPageSearchParam(Map<String, Object> pageParam) {
+
+		String submitDateStart = (String) pageParam.get("submitDateStart");
+		if (!StringUtil.isEmpty(submitDateStart)
+				&& submitDateStart.length() >= 7){
+			submitDateStart = submitDateStart.substring(0,4)+submitDateStart.substring(5,7);
+			pageParam.put("submitDateStart", submitDateStart);
+		}
+		String submitDateEnd = (String) pageParam.get("submitDateEnd");
+		if (!StringUtil.isEmpty(submitDateEnd)
+				&& submitDateEnd.length() >= 7){
+			submitDateEnd = submitDateEnd.substring(0,4)+submitDateEnd.substring(5,7);
+			pageParam.put("submitDateEnd", submitDateEnd);
+		}
+
+
+		// 选择行数据时
+		if (pageParam.containsKey("keyList")) {
+			String keyList = pageParam.get("keyList").toString();
+			try {
+				List<PbcMonthReport> astValueList = JsonUtils.json2List(keyList,
+						PbcMonthReport.class);
+				pageParam.put("reportList", astValueList);
+				if (!CollectionUtils.isEmpty(astValueList)){
+					pageParam.put("reportuuid", astValueList.get(0).getReportuuid());
+				}
+			} catch (IOException e) {
+//				logger.error(e.getMessage(),e);
+				logger.error(e.getMessage(),e);
 			}
 		} else {
 			// 查询参数条件
@@ -610,6 +675,9 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 				}else if(reporttype.equals(PbcReportType.PBC_REPORT_3_3)){
 					pbcReportDebtTermDetailService.createDataForExp(param,data);
 					sheetList.remove(SHEET_3_3);
+				}else if(reporttype.equals(PbcReportType.PBC_REPORT_4_1)){
+					//pbcReportAssetConfigurationService.createDataForExp(param,data);
+					sheetList.remove(SHEET_4_1);
 				}
 			}
 			PbcMonthReport pbcReport = (PbcMonthReport) data.get("report");
@@ -676,6 +744,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
     	sheetList.add(SHEET_3_1);
     	sheetList.add(SHEET_3_2);
     	sheetList.add(SHEET_3_3);
+		sheetList.add(SHEET_4_1);
 		return sheetList;
 	}
     
@@ -752,7 +821,10 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 			message=pbcReportProd003Sub002Service.priview(selectParam);
 		}else if(reporttype.equals(PbcReportType.PBC_REPORT_3_3)){
 			message=pbcReportDebtTermDetailService.priview(selectParam);
-		}else if(reporttype.equals(PbcReportType.PBC_REPORT_ONEPRD_ASSETDEBT)){
+		}else if(reporttype.equals(PbcReportType.PBC_REPORT_4_1)){
+			message=pbcReportAssetConfigurationService.priview(selectParam);
+		}
+		else if(reporttype.equals(PbcReportType.PBC_REPORT_ONEPRD_ASSETDEBT)){
 			 // 设置table预览大小
 		    selectParam.put("tableWidth", 200);
 		    selectParam.put("templateChange", PbcTemplateName.PBC_REPORT_ONEPRD_ASSET_DEBT);
@@ -909,6 +981,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
             reporttypeAssetList.add(DictCodeListExt2.人行报表名称_资产收益权按基础资产投向分类统计表.getValue());
             reporttypeAssetList.add(DictCodeListExt2.人行报表名称_资管产品只数情况统计表.getValue());
             reporttypeAssetList.add(DictCodeListExt2.人行报表名称_资管产品资产负债剩余期限统计表.getValue());
+			reporttypeAssetList.add(DictCodeListExt2.人行报表名称_资管产品资产配置情况表.getValue());
             String msgAsset = pbcMonthProdPositionService.checkSendStatus(batchDate,reporttypeAssetList,CommonUtil.getOrgCode());
             if(msgAsset != null&&!StringUtil.isEmpty(msgAsset)){
                 return msgAsset;

@@ -2,8 +2,8 @@ package com.joyintech.tams.svreport.pbc.common.constants;
 
 public class PbcReportProperycode {
 	/**
-     * 1-1资管产品募集余额统计模板
-     */
+	 * 1-1资管产品募集余额统计模板
+	 */
 	public final static String MJYE_AMT_100000_CPMJYEZJ="MJYE_AMT_100000_CPMJYEZJ";  //产品募集余额总计
 	public final static String MJYE_AMT_110000_KHLX="MJYE_AMT_110000_KHLX";  //客户类型
 	public final static String MJYE_AMT_111000_ZH="MJYE_AMT_111000_ZH";  //住户
@@ -37,8 +37,8 @@ public class PbcReportProperycode {
 	public final static String MJYE_AMT_193000_QZHBSCJJ="MJYE_AMT_193000_QZHBSCJJ";  //其中：货币市场基金
 
 	/**
-     * 1-2募集及兑付发生额
-     */
+	 * 1-2募集及兑付发生额
+	 */
 	public final static String MJDF_DQMJ_AMT_200000_ZJ="MJDF_DQMJ_AMT_200000_ZJ";  //总计
 	public final static String MJDF_DQMJ_AMT_210000_KHLX="MJDF_DQMJ_AMT_210000_KHLX";  //客户类型
 	public final static String MJDF_DQMJ_AMT_211000_ZH="MJDF_DQMJ_AMT_211000_ZH";  //住户
@@ -70,7 +70,7 @@ public class PbcReportProperycode {
 	public final static String MJDF_DQMJ_AMT_291000_QZFJCP="MJDF_DQMJ_AMT_291000_QZFJCP";  // 其中：分级产品
 	public final static String MJDF_DQMJ_AMT_292000_QZSYQZRCP="MJDF_DQMJ_AMT_292000_QZSYQZRCP";  // 其中：收益权转让产品
 	public final static String MJDF_DQMJ_AMT_293000_QZHBSCJJ="MJDF_DQMJ_AMT_293000_QZHBSCJJ";  //其中：货币市场基金
-	
+
 	public final static String MJDF_DQDF_AMT_200000_ZJ="MJDF_DQDF_AMT_200000_ZJ";  //总计
 	public final static String MJDF_DQDF_AMT_210000_KHLX="MJDF_DQDF_AMT_210000_KHLX";  //客户类型
 	public final static String MJDF_DQDF_AMT_211000_ZH="MJDF_DQDF_AMT_211000_ZH";  //住户
@@ -104,8 +104,8 @@ public class PbcReportProperycode {
 	public final static String MJDF_DQDF_AMT_293000_QZHBSCJJ="MJDF_DQDF_AMT_293000_QZHBSCJJ";  //其中：货币市场基金
 
 	/**
-     * 1-3 产品只数情况
-     */
+	 * 1-3 产品只数情况
+	 */
 	public final static String ZSQK_QMCX_AMT_300000_ZJ="ZSQK_QMCX_AMT_300000_ZJ";  //总计
 	public final static String ZSQK_QMCX_AMT_310000_KHLX="ZSQK_QMCX_AMT_310000_KHLX";  //客户类型
 	public final static String ZSQK_QMCX_AMT_311000_ZH="ZSQK_QMCX_AMT_311000_ZH";  //住户
@@ -137,7 +137,7 @@ public class PbcReportProperycode {
 	public final static String ZSQK_QMCX_AMT_391000_QZFJCP="ZSQK_QMCX_AMT_391000_QZFJCP";  // 其中：分级产品
 	public final static String ZSQK_QMCX_AMT_392000_QZSYQZRCP="ZSQK_QMCX_AMT_392000_QZSYQZRCP";  // 其中：收益权转让产品
 	public final static String ZSQK_QMCX_AMT_393000_QZHBSCJJ="ZSQK_QMCX_AMT_393000_QZHBSCJJ";  //其中：货币市场基金
-	
+
 	public final static String ZSQK_DQXF_AMT_300000_ZJ="ZSQK_DQXF_AMT_300000_ZJ";  //总计
 	public final static String ZSQK_DQXF_AMT_310000_KHLX="ZSQK_DQXF_AMT_310000_KHLX";  //客户类型
 	public final static String ZSQK_DQXF_AMT_311000_ZH="ZSQK_DQXF_AMT_311000_ZH";  //住户
@@ -169,7 +169,7 @@ public class PbcReportProperycode {
 	public final static String ZSQK_DQXF_AMT_391000_QZFJCP="ZSQK_DQXF_AMT_391000_QZFJCP";  // 其中：分级产品
 	public final static String ZSQK_DQXF_AMT_392000_QZSYQZRCP="ZSQK_DQXF_AMT_392000_QZSYQZRCP";  // 其中：收益权转让产品
 	public final static String ZSQK_DQXF_AMT_393000_QZHBSCJJ="ZSQK_DQXF_AMT_393000_QZHBSCJJ";  //其中：货币市场基金
-	
+
 	public final static String ZSQK_DQZZ_AMT_300000_ZJ="ZSQK_DQZZ_AMT_300000_ZJ";  //总计
 	public final static String ZSQK_DQZZ_AMT_310000_KHLX="ZSQK_DQZZ_AMT_310000_KHLX";  //客户类型
 	public final static String ZSQK_DQZZ_AMT_311000_ZH="ZSQK_DQZZ_AMT_311000_ZH";  //住户
@@ -203,8 +203,8 @@ public class PbcReportProperycode {
 	public final static String ZSQK_DQZZ_AMT_393000_QZHBSCJJ="ZSQK_DQZZ_AMT_393000_QZHBSCJJ";  //其中：货币市场基金
 
 	/**
-     * 1-4 产品只数情况
-     */
+	 * 1-4 产品只数情况
+	 */
 	public final static String MJYEFDQ_AMT_400000_JNMJYEZJ="MJYEFDQ_AMT_400000_JNMJYEZJ";  //境内募集余额总计
 	public final static String MJYEFDQ_AMT_401000_BJ="MJYEFDQ_AMT_401000_BJ";  //北京
 	public final static String MJYEFDQ_AMT_402000_TJ="MJYEFDQ_AMT_402000_TJ";  //天津
@@ -244,8 +244,8 @@ public class PbcReportProperycode {
 	public final static String MJYEFDQ_AMT_431000_XJ="MJYEFDQ_AMT_431000_XJ";  //新疆
 
 	/**
-     * 1-5提前及延期兑付
-     */
+	 * 1-5提前及延期兑付
+	 */
 	public final static String TQJYQDF_TQDF_AMT_500000_ZJ="TQJYQDF_TQDF_AMT_500000_ZJ";  //总计
 	public final static String TQJYQDF_TQDF_AMT_510000_KHLX="TQJYQDF_TQDF_AMT_510000_KHLX";  //客户类型
 	public final static String TQJYQDF_TQDF_AMT_511000_ZH="TQJYQDF_TQDF_AMT_511000_ZH";  //住户
@@ -277,7 +277,7 @@ public class PbcReportProperycode {
 	public final static String TQJYQDF_TQDF_AMT_591000_QZFJCP="TQJYQDF_TQDF_AMT_591000_QZFJCP";  // 其中：分级产品
 	public final static String TQJYQDF_TQDF_AMT_592000_QZSYQZRCP="TQJYQDF_TQDF_AMT_592000_QZSYQZRCP";  // 其中：收益权转让产品
 	public final static String TQJYQDF_TQDF_AMT_593000_QZHBSCJJ="TQJYQDF_TQDF_AMT_593000_QZHBSCJJ";  //其中：货币市场基金
-	
+
 	public final static String TQJYQDF_YQDF_AMT_500000_ZJ="TQJYQDF_YQDF_AMT_500000_ZJ";  //总计
 	public final static String TQJYQDF_YQDF_AMT_510000_KHLX="TQJYQDF_YQDF_AMT_510000_KHLX";  //客户类型
 	public final static String TQJYQDF_YQDF_AMT_511000_ZH="TQJYQDF_YQDF_AMT_511000_ZH";  //住户
@@ -309,10 +309,10 @@ public class PbcReportProperycode {
 	public final static String TQJYQDF_YQDF_AMT_591000_QZFJCP="TQJYQDF_YQDF_AMT_591000_QZFJCP";  // 其中：分级产品
 	public final static String TQJYQDF_YQDF_AMT_592000_QZSYQZRCP="TQJYQDF_YQDF_AMT_592000_QZSYQZRCP";  // 其中：收益权转让产品
 	public final static String TQJYQDF_YQDF_AMT_593000_QZHBSCJJ="TQJYQDF_YQDF_AMT_593000_QZHBSCJJ";  //其中：货币市场基金
-	
+
 	/**
-     * 1-6 到期未兑付
-     */
+	 * 1-6 到期未兑付
+	 */
 	public final static String DQWDF_AMT_600000_ZJ="DQWDF_AMT_600000_ZJ";  //总计
 	public final static String DQWDF_AMT_610000_KHLX="DQWDF_AMT_5610000_KHLX";  //客户类型
 	public final static String DQWDF_AMT_611000_ZH="DQWDF_AMT_611000_ZH";  //住户
@@ -345,14 +345,18 @@ public class PbcReportProperycode {
 	public final static String DQWDF_AMT_692000_QZSYQZRCP="DQWDF_AMT_692000_QZSYQZRCP";  // 其中：收益权转让产品
 	public final static String DQWDF_AMT_693000_QZHBSCJJ="DQWDF_AMT_693000_QZHBSCJJ";  //其中：货币市场基金
 
-    /**
-     * 2-1资管产品资产负债统计
-     */
+	/**
+	 * 2-1资管产品资产负债统计
+	 */
 	public final static String AMT_700000_ZCHJ = "AMT_700000_ZCHJ";//资产合计
 	public final static String AMT_710000_XJ = "AMT_710000_XJ";//现金
 	public final static String AMT_720000_CK = "AMT_720000_CK";//存款
 	public final static String AMT_721000_JNCK = "AMT_721000_JNCK";//境内存款
+	public final static String AMT_721100_HQCK = "AMT_721100_HQCK";//活期存款
+	public final static String AMT_721200_DQHQTCK = "AMT_721200_DQHQTCK";//定期和其他存款
 	public final static String AMT_722000_JWCK = "AMT_722000_JWCK";//境外存款
+	public final static String AMT_722100_HQCK = "AMT_722100_HQCK";//活期存款
+	public final static String AMT_722200_DQHQTCK = "AMT_722200_DQHQTCK";//定期和其他存款
 	public final static String AMT_730000_KZRCD = "AMT_730000_KZRCD";//可转让存单
 	public final static String AMT_731000_TYCD = "AMT_731000_TYCD";//同业存单
 	public final static String AMT_732000_DECD = "AMT_732000_DECD";//大额存单
@@ -420,6 +424,7 @@ public class PbcReportProperycode {
 	public final static String AMT_790000_YSZK = "AMT_790000_YSZK";//应收账款
 	public final static String AMT_7A0000_HJ = "AMT_7a0000_HJ";//黄金
 	public final static String AMT_7B0000_FJRZC = "AMT_7b0000_FJRZC";//非金融资产
+	public final static String AMT_7K0000_ZCJZZB = "AMT_7K0000_ZCJZZB";//资产减值准备
 	public final static String AMT_800000_FZJQYHJ = "AMT_800000_FZJQYHJ";//负债及权益合计
 	public final static String AMT_810000_FZHJ = "AMT_810000_FZHJ";//负债合计
 	public final static String AMT_811000_DK = "AMT_811000_DK";//贷款
@@ -492,9 +497,10 @@ public class PbcReportProperycode {
 	public final static String AMT_821280_JW = "AMT_821280_JW";//境外
 	public final static String AMT_822000_ZBGJ = "AMT_822000_ZBGJ";//资本公积
 	public final static String AMT_823000_WFPLR = "AMT_823000_WFPLR";//未分配利润
+	public final static String AMT_824000_QTZHSY = "AMT_824000_QTZHSY";//其他综合收益
 	public final static String AMT_000001_FFXRBNZCYEBWBHJ = "AMT_000001_FFXRBNZCYEBWBHJ";//附：发行人表内资产余额（本外币合计）
 	public final static String AMT_000002_FXRBNJRZCYEBWBHJ = "AMT_000002_FXRBNJRZCYEBWBHJ";//发行人表内金融资产余额（本外币合计）
-	
+
 	/**
 	 * 2-2 除回购和拆借外贷款分行业、企业规模统计表
 	 */
@@ -522,7 +528,7 @@ public class PbcReportProperycode {
 	public final static String AMT_9m0000_JNGR = "AMT_9m0000_JNGR";//    境内个人
 	public final static String AMT_9n0000_JW = "AMT_9n0000_JW";//  境外
 
-	
+
 	/**
 	 * 表2-3除回购和拆借外贷款分地区
 	 */
@@ -564,9 +570,9 @@ public class PbcReportProperycode {
 	public final static String AMT_a30000_NX = "AMT_a30000_NX";//宁夏
 	public final static String AMT_a31000_XJ = "AMT_a31000_XJ";//新疆
 
-	 /**
-     * 2-4资产收益权按基础资产投向分类统计表
-     */
+	/**
+	 * 2-4资产收益权按基础资产投向分类统计表
+	 */
 	public final static String AMT_B00000_ZJ = "AMT_b00000_ZJ";//总计
 	public final static String AMT_B10000_ZH = "AMT_b10000_ZH";//住户
 	public final static String AMT_B20000_GYZF="AMT_b20000_GYZF";//	广义政府
@@ -600,8 +606,8 @@ public class PbcReportProperycode {
 
 
 	/**
-     * 3-1存续产品分期限募集余额
-     */
+	 * 3-1存续产品分期限募集余额
+	 */
 	public final static String AMT_E00000_CXCPMJYEZJ="AMT_e00000_CXCPMJYEZJ";  //存续产品募集余额总计
 	public final static String AMT_E10000_KFSJZXZJ="AMT_e10000_KFSJZXZJ";  //开放式净值型总计
 	public final static String AMT_E11000_1GYHYX="AMT_e11000_1GYHYX"; //  1个月（含）以下
@@ -639,7 +645,7 @@ public class PbcReportProperycode {
 	public final static String AMT_E46000_23NH="AMT_e46000_23NH";  //    2-3年（含）
 	public final static String AMT_E47000_3NYS="AMT_e47000_3NYS";  //    3年以上
 	public final static String AMT_E48000_WGDQX="AMT_e48000_WGDQX";  //    无固定期限
-	
+
 	/**
 	 * 3-2新发产品分期限募集金额
 	 */
@@ -692,7 +698,7 @@ public class PbcReportProperycode {
 	public final static String ASSET_G60000="asset_g60000";  //2-3年（含）
 	public final static String ASSET_G70000="asset_g70000";  // 3年以上
 	public final static String ASSET_G80000="asset_g80000";  // 无固定期限
-	
+
 	public final static String DEBT_G00000="debt_g00000";  //总计
 	public final static String DEBT_G10000="debt_g10000";  // 1个月（含）以下
 	public final static String DEBT_G20000="debt_g20000";  // 1-3个月（含）
@@ -702,4 +708,63 @@ public class PbcReportProperycode {
 	public final static String DEBT_G60000="debt_g60000";  //2-3年（含）
 	public final static String DEBT_G70000="debt_g70000";  // 3年以上
 	public final static String DEBT_G80000="debt_g80000";  // 无固定期限
+
+	/**
+	 * 表4-1 资管产品资产配置情况
+	 */
+	public final static String AMT_H11000_ZCXJRZQ = "AMT_h11000_ZCXJRZQ"; //政策性金融债券
+	public final static String AMT_H11100_AAJYS = "AMT_h11100_AAJYS"; //AA+（含）以上
+	public final static String AMT_H11200_AAJYX = "AMT_h11200_AAJYX"; //AA+以下
+	public final static String AMT_H11300_WPJ = "AMT_h11300_WPJ"; //无评级
+	public final static String AMT_H12000_QTJRZQ = "AMT_h12000_QTJRZQ"; //其他金融债券
+	public final static String AMT_H12100_AAJYS = "AMT_h12100_AAJYS"; //AA+（含）以上
+	public final static String AMT_H12200_AAJYX = "AMT_h12200_AAJYX"; //AA+以下
+	public final static String AMT_H12300_WPJ = "AMT_h12300_WPJ"; //无评级
+	public final static String AMT_H13000_QYZQ = "AMT_h13000_QYZQ"; //企业债券
+	public final static String AMT_H13100_AAJYS = "AMT_h13100_AAJYS"; //AA+（含）以上
+	public final static String AMT_H13200_AAJYX = "AMT_h13200_AAJYX"; //AA+以下
+	public final static String AMT_H13300_WPJ = "AMT_h13300_WPJ"; //无评级
+	public final static String AMT_H14000_ZCZCZQ = "AMT_h14000_ZCZCZQ"; //资产支持证券
+	public final static String AMT_H14100_AAJYS = "AMT_h14100_AAJYS"; //AA+（含）以上
+	public final static String AMT_H14200_AAJYX = "AMT_h14200_AAJYX"; //AA+以下
+	public final static String AMT_H14300_WPJ = "AMT_h14300_WPJ"; //无评级
+	public final static String AMT_H21000_QZQYZ = "AMT_h21000_QZQYZ"; //其中：企业债
+	public final static String AMT_H22000_GSZ = "AMT_h22000_GSZ"; //公司债
+	public final static String AMT_H23000_FJRQYZW = "AMT_h23000_FJRQYZW"; //非金融企业债务融资工具
+	public final static String AMT_H30000_YHZBBCGJ = "AMT_h30000_YHZBBCGJ"; //三、银行资本补充工具合计
+	public final static String AMT_H31000_QZYXG = "AMT_h31000_QZYXG"; //其中：优先股
+	public final static String AMT_H32000_YXZZX = "AMT_h32000_YXZZX"; //永续债（债性）
+	public final static String AMT_H33000_YXZGX = "AMT_h33000_YXZGX"; //永续债（股性）
+	public final static String AMT_H34000_EJZBZ = "AMT_h34000_EJZBZ"; //二级资本债
+	public final static String AMT_H40000_ZQNHGHTYCJ = "AMT_h40000_ZQNHGHTYCJ"; //债券逆回购和同业拆借
+	public final static String AMT_H41000_ZH = "AMT_h41000_ZH"; //住户
+	public final static String AMT_H42000_GYZF = "AMT_h42000_GYZF"; //广义政府
+	public final static String AMT_H43000_FJRQY = "AMT_h43000_FJRQY"; //非金融企业
+	public final static String AMT_H44000_YHYCKLJRJG = "AMT_h44000_YHYCKLJRJG"; //银行业存款类金融机构
+	public final static String AMT_H45000_YHYFCKLJRJG = "AMT_h45000_YHYFCKLJRJG"; //银行业非存款类金融机构
+	public final static String AMT_H46000_FYHYJRJG = "AMT_h46000_FYHYJRJG"; //非银行业金融机构
+	public final static String AMT_H46100_QZZYJYDSF = "AMT_h46100_QZZYJYDSF"; //其中：中央交易对手方
+	public final static String AMT_H47000_TDMDZT = "AMT_h47000_TDMDZT"; //特定目的载体
+	public final static String AMT_H47100_YHFBBLC = "AMT_h47100_YHFBBLC"; //银行非保本理财
+	public final static String AMT_H47200_XTGSZGCP = "AMT_h47200_XTGSZGCP"; //信托公司资管产品
+	public final static String AMT_H47300_ZQGSJQZGS = "AMT_h47300_ZQGSJQZGS"; //证券公司及其子公司资管产品
+	public final static String AMT_H47400_JJGLGSJQZGS = "AMT_h47400_JJGLGSJQZGS"; //基金管理公司及其子公司专户
+	public final static String AMT_H47500_QHGLGSJQZGS = "AMT_h47500_QHGLGSJQZGS"; //期货公司及其子公司资管产品
+	public final static String AMT_H47600_BXZGCP = "AMT_h47600_BXZGCP"; //保险资管产品
+	public final static String AMT_H47700_JRZCTZGSJQZGS = "AMT_h47700_JRZCTZGSJQZGS"; //金融资产投资公司资管产品
+	public final static String AMT_H47800_GMJJ = "AMT_h47800_GMJJ"; //公募基金
+	public final static String AMT_H47900_SMJGSMJJ = "AMT_h47900_SMJGSMJJ"; //私募机构私募基金
+	public final static String AMT_H47A00_QTTDMDZT = "AMT_h47a00_QTTDMDZT"; //其他特定目的载体
+	public final static String AMT_H48000_JW = "AMT_h48000_JW"; //境外
+	public final static String AMT_H50000_ZCJZZB = "AMT_h50000_ZCJZZB"; //五、资产减值准备
+	public final static String AMT_H51000_CK = "AMT_h51000_CK"; //存款
+	public final static String AMT_H52000_KZRCD = "AMT_h52000_KZRCD"; //可转让存单
+	public final static String AMT_H53000_ZWZQ = "AMT_h53000_ZWZQ"; //债务证券
+	public final static String AMT_H54000_CHGHCJWDK = "AMT_h54000_CHGHCJWDK"; //除回购和拆借外贷款
+	public final static String AMT_H55000_HGHCJ = "AMT_h55000_HGHCJ"; //回购和拆借
+	public final static String AMT_H56000_ZCSYQ = "AMT_h56000_ZCSYQ"; //资产收益权
+	public final static String AMT_H57000_GQJTDMDDZTFE = "AMT_h57000_GQJTDMDDZTFE"; //股权及特定目的载体份额
+	public final static String AMT_H58000_JRYSP = "AMT_h58000_JRYSP"; //金融衍生品
+	public final static String AMT_H59000_YSZK = "AMT_h59000_YSZK"; //应收账款
+	public final static String AMT_H5A000_QT = "AMT_h5a000_QT"; //其他
 }

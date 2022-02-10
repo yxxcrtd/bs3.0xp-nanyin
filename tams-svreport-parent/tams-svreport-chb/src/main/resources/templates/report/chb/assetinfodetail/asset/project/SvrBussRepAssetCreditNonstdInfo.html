@@ -184,7 +184,7 @@
 <!--                               data-th-placeholder="#{SysCommon.placeholder}" required>-->
                         <select th:id="|${entityName}_repFinancie|"
                                 th:name="|${entityName}.repFinancie|"
-                                data-th-value="${entity?.repFinancie}"
+                                data-th-initValue="${entity?.repFinancie}"
                                 placeholder="请输入内容"
                                 class="layui-input form-input input-select"
                                 data-th-placeholder="#{SysCommon.placeholder}"
@@ -1006,7 +1006,7 @@
 <!--                           data-th-placeholder="#{SysCommon.placeholder}">-->
                     <select th:id="|${entityName}_chbFinancierId|"
                             th:name="|${entityName}.chbFinancierId|"
-                            th:value="${entity?.chbFinancierId}"
+                            th:initValue="${entity?.chbFinancierId}"
                             class="layui-input form-input input-select" placeholder="请输入内容"
                             data-th-placeholder="#{SysCommon.placeholder}"
                             data-th-data-url="@{/common/select/getFinancierId}">
@@ -1034,7 +1034,7 @@
                     <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType1}" >新人行一级分类</label>
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_pbcAssetType1|" th:name="|${entityName}.pbcAssetType1|" th:initValue="${entity?.pbcAssetType1}"
-                                th:childrenIds="|${entityName}_pbcAssetType2|"
+                                th:childrenIds="|${entityName}_pbcAssetType2|" required
                                 class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-result="${SVR_PBC_ASSET_TYPE_1}">
                         </select>
                     </div>
@@ -1044,7 +1044,7 @@
                     <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType2}" >新人行二级分类</label>
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_pbcAssetType2|" th:name="|${entityName}.pbcAssetType2|" th:initValue="${entity?.pbcAssetType2}"
-                                th:childrenIds="|${entityName}_pbcAssetType3|" th:parentIds="|${entityName}_pbcAssetType1|"
+                                th:childrenIds="|${entityName}_pbcAssetType3|" th:parentIds="|${entityName}_pbcAssetType1|" required
                                 class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-result="${SVR_PBC_ASSET_TYPE_2}">
                         </select>
                     </div>
@@ -1054,7 +1054,7 @@
                     <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType3}" >新人行三级分类</label>
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_pbcAssetType3|" th:name="|${entityName}.pbcAssetType3|" th:initValue="${entity?.pbcAssetType3}"
-                                th:parentIds="|${entityName}_pbcAssetType2|"
+                                th:parentIds="|${entityName}_pbcAssetType2|" required
                                 class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-result="${SVR_PBC_ASSET_TYPE_3}">
                         </select>
                     </div>
@@ -1066,7 +1066,7 @@
             <div class="layui-form-item">
                 <div class="form-inline-wrap" style="width:100%;">
                     <label class="layui-form-label form-label-wrap"
-                           data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repRemark}" style=" width: 11.9%;">备注</label>
+                           data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repRemark}" style=" width: 12.55%;">备注</label>
                     <div class="layui-input-inline input-inline" style="width:81%!important;">
                         <input th:id="|${entityName}_repRemark|" th:name="|${entityName}.repRemark|"
                                th:value="${entity?.repRemark}" class="layui-input form-input" placeholder="请输入内容"

@@ -1153,6 +1153,68 @@
             </foreach>
         </if>
     </where>
+    union all
+    <!-- 19.代理销售机构信息登记 -->
+    select
+    count(temp.SEND_STATUS) as total,
+    nvl(sum(temp.lateNums),0) as unSubmitNum,
+    '19' as pageType
+    from(
+    select
+    case when ces.SEND_STATUS != #{nosubmit}
+    and ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+    when ces.SEND_STATUS = #{nosubmit}
+    and ces.CHB_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+    else 0 end lateNums,  <!-- 统计延时数据 -->
+    ces.SEND_STATUS
+    from CHB_AGENT_INSTITUTION_SUB ces
+    where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+    union all
+    <!-- 履历表数据 -->
+    select
+    case when ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+    else 0 end lateNums, <!-- 统计延时数据 -->
+    ces.SEND_STATUS
+    from CHB_AGENT_INSTITUTION_SUB_HIS ces
+    where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+    )temp
+    <where>
+        <if test="isNotCount !=null and isNotCount=='01'">
+            <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+            temp.SEND_STATUS != #{manualSub}
+        </if>
+    </where>
+    union all
+    <!-- 20.委托销售产品编码信息登记 -->
+    select
+    count(temp.SEND_STATUS) as total,
+    nvl(sum(temp.lateNums),0) as unSubmitNum,
+    '20' as pageType
+    from(
+    select
+    case when ces.SEND_STATUS != #{nosubmit}
+    and ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+    when ces.SEND_STATUS = #{nosubmit}
+    and ces.CHB_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+    else 0 end lateNums,  <!-- 统计延时数据 -->
+    ces.SEND_STATUS
+    from CHB_AGENT_PRD_SUB ces
+    where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+    union all
+    <!-- 履历表数据 -->
+    select
+    case when ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+    else 0 end lateNums, <!-- 统计延时数据 -->
+    ces.SEND_STATUS
+    from CHB_AGENT_PRD_SUB_HIS ces
+    where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+    )temp
+    <where>
+        <if test="isNotCount !=null and isNotCount=='01'">
+            <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+            temp.SEND_STATUS != #{manualSub}
+        </if>
+    </where>
         )
 </select>
 
@@ -2026,7 +2088,14 @@ SELECT
                         '机构代码 ' || info.ORG_CODE || ',内部编号 ' || info.SALER_INS_NO as code,
                         info.SEND_STATUS as submitStatus,
                     </when>
-
+                    <when test="tableId !=null and tableId=='CHB_AGENT_INSTITUTION_SUB'">
+                        '代销机构代码 ' || info.AGENT_INSTITUTION_CODE as code,
+                        info.SEND_STATUS as submitStatus,
+                    </when>
+                    <when test="tableId !=null and tableId=='CHB_AGENT_PRD_SUB'">
+                        '产品登记编码 ' || info.PROD_REGIST_CODE || ',代销机构代码 ' || info.AGENT_INSTITUTION_CODE as code,
+                        info.SEND_STATUS as submitStatus,
+                    </when>
                 </choose>
                 <!-- sdl2.ITEM_VALUE as submitStatus, -->
                 <!-- <choose>
@@ -2039,10 +2108,29 @@ SELECT
                 </choose> -->
                 info.SUBMIT_TIME as submitTime,
                 info.CHB_SUBMIT_DEADLINE as submitDeadline,
-                info.ORG_CODE,
-                info.CREATE_DEPT,
+                <choose>
+                    <when test="tableId != null and tableId == 'CHB_AGENT_INSTITUTION_SUB'">
+                        null ORG_CODE,
+                    </when>
+                    <when test="tableId != null and tableId == 'CHB_AGENT_PRD_SUB'">
+                        null ORG_CODE,
+                    </when>
+                    <otherwise>
+                        info.ORG_CODE,
+                    </otherwise>
+                </choose>
+                <choose>
+                    <when test="tableId != null and tableId == 'CHB_AGENT_INSTITUTION_SUB'">
+                        null createDept,
+                    </when>
+                    <when test="tableId != null and tableId == 'CHB_AGENT_PRD_SUB'">
+                        null createDept,
+                    </when>
+                    <otherwise>
+                        info.CREATE_DEPT createDept,
+                    </otherwise>
+                </choose>
                 info.CREATE_USER AS createUser,
-                info.CREATE_DEPT AS createDept,
 
                 <choose>
                     <!-- 11. 销售结算资金登记 -->

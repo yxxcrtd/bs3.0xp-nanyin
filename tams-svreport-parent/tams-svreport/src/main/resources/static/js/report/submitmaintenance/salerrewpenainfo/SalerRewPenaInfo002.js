@@ -59,6 +59,16 @@
                    }
             }
 
+                        //内部编号change事件
+                        function salerInsNoOnChange(){
+                           var salerInsNo = $('#salerInsNo').val();
+                               Joyin.ajax(JoyinUtil.getRealPath('report/submitmaintenance/salerrewpenainfo/SalerRewPenaInfo002/getSalerName'), {salerInsNo : salerInsNo}, function(result){
+                                  if (result){
+                                       $('#salerName').val(result);
+                                     }
+                               });
+                        }
+
             //获取机构代码默认值
             function getIssuePartyId(){
                var salerInstCode = $('#salerInstCode').val();
@@ -90,8 +100,10 @@
 
           //控制编辑时的输入框置灰
            var init = function(){
+           var erroOrInfo = $('#erroOrInfo').val();
            if(pageModel==PAGE_MODEL_EDIT){
                      $('#salerInstCode').prop("disabled",true);
+                     $('#salerName').prop("disabled",true);
                      var salerRewPenaTyep = $('#salerRewPenaTyep').val();
                      if(salerRewPenaTyep === '03'){
                          $('#salerRewPenaName').prop("disabled",true);
@@ -111,6 +123,7 @@
                      }
            }
            else{
+                     $('#salerName').prop("disabled",true);
                      $('#salerInstCode').prop("disabled",true);
                      getIssuePartyId();
            }
@@ -122,6 +135,9 @@
             });
             $('#salerRewPenaInst').change(function(){
                 salerRewPenaInstOnChange();
+            });
+            $('#salerInsNo').change(function(){
+                salerInsNoOnChange();
             });
       });
 

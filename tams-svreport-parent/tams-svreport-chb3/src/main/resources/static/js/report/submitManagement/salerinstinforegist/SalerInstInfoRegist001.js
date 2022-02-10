@@ -50,12 +50,12 @@ $(function(){
             ,{field: 'sendStatus', title: "报送状态",visible:false,sortField:'sendStatus'}
             ,{field: 'sendStatusStr', title: "报送状态", width:100 ,sortField:'sendStatus'}
             ,{field: 'submitTimeStr', title: "报送日期", width:150,sortField:'submitTime'}
-            ,{field: 'submitDeadline', title: "报送截止日", type:'date', width:100,sortField:'submitDeadline'}
+            ,{field: 'chbSubmitDeadline', title: "报送截止日", type:'date', width:100,sortField:'chbSubmitDeadline'}
             ,{field: 'submitFeedbackStatusStr', title: "反馈状态", width:100,sortField:'submitFeedbackStatus'}
             ,{field: 'salerInstCode', title: '销售机构代码', width:200,sortField:'salerInstCode'}
             ,{field: 'salerOrgCode', title: '总部或分支机构编码', width:200,sortField:'salerOrgCode'}
             ,{field: 'salerOrgName', title: '总部或分支机构名称', width:200,sortField:'salerOrgName'}
-            ,{field: 'salerOrgLevelStr', title: '机构层级', width:200,sortField:'salerOrgLevel'}
+            ,{field: 'salerOrgLevel', title: '机构层级', width:200,sortField:'salerOrgLevel'}
         ],
     });
 
@@ -66,9 +66,13 @@ $(function(){
 
         //导出中债Excel
         $('#SalerInstInfoRegist001_btn_chbexport').click(function() {
-            exportExcel("0");
-        });
-
+         var rows = table.getAllCheckedRows();
+         if(rows.length === 0){
+             exportExcel("01");
+         }else{
+               exportExcel("0");
+              }
+         });
         /**
          * 手工处理
          */
@@ -196,15 +200,36 @@ $(function(){
         if(!expArr || expArr.length ==0){
             param = getPageParams();
             param.flag = flag;
+            if(flag=="01"){
+                 param.status="01,02";
+                 param.sendStatus="01";
+            }
+            var isHaveData = true;
+            Joyin.ajaxSync('searchPage',param, function(result){
+              if (!result || result.root.length == 0){
+                   isHaveData = false;
+                   return;
+              }
+            })
             param.exportflag = 'export';
             Joyin.exportExcel("download",param);
+          if(isHaveData){
+            Joyin.confirm("导出成功，是否自动标识新建未报送数据的报送状态为“手工处理”？", function() {
+               //页面添加滚动条
+               layui.layer.open({type:3});
+               Joyin.ajaxJson('doManual', param, function() {
+                table.load();
+                layui.layer.closeAll();
+               });
+            });
+          }
         }
         else{
         	if(flag=="0")
         		{
         	for(var i=0;i<expArr.length;i++){
         		if(expArr[i].status=="03"){
-        			Joyin.error("只能导出新建或修改状态的数据，请重新选择");
+        			Joyin.error("只能导出新建或修改未报送状态的数据，请重新选择");
         			return;
         			}
         		}

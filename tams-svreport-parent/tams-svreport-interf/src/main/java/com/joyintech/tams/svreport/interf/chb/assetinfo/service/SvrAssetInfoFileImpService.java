@@ -397,9 +397,9 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
 //            // 资产外部评级
 //            chbAssetInfo.setOutGrade(SysDataUtil.getNameFromDataDict(DictCode.资产评级,chbAssetInfo.getOutGrade()));
             // 创建人
-            chbAssetInfo.setCreateUser(CommonUtil.getUserName());
+            chbAssetInfo.setCreateUser("interf");
 			//更新人
-			chbAssetInfo.setUpdateUser(CommonUtil.getUserName());
+			chbAssetInfo.setUpdateUser("interf");
             // 创建部门
             chbAssetInfo.setCreateDept(CommonUtil.getDeptCode());
             // 部门代码

@@ -8,6 +8,7 @@
 		a.SEND_STATUS sendStatus,
 		a.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
 		a.SUBMIT_TIME submitTime,
+		a.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
 		a.SUBMIT_DEADLINE submitDeadline,
 		a.DATA_STATUS dataStatus,
 		a.INSTITUTION_CODE institutionCode,
@@ -40,11 +41,13 @@
 			<if test="sendStatus != null and sendStatus != ''">
 				and a.SEND_STATUS = #{sendStatus}
 			</if>
-			<if test="dataStatus != null and dataStatus != ''">
-				and a.DATA_STATUS = #{dataStatus}
-			</if>
+		    <if test="dataStatusList != null and dataStatusList.size() > 0">
+			    <foreach collection="dataStatusList" item="dataStatus" open=" AND a.DATA_STATUS IN (" close=")" separator=",">
+				    #{dataStatus}
+			    </foreach>
+		    </if>
 		    <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
-			    and a.SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+			    and a.CHB_SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
 	    	</if>
 		    <if test="searchStatusDateStart != null and searchStatusDateStart != ''">
 			    and  to_char(a.STATUS_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{searchStatusDateStart,jdbcType=VARCHAR}
@@ -62,8 +65,8 @@
 	</select>
 
 	<select id="searchPage" parameterType="map" resultType="com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto">
-		select * from (
 		SELECT
+		REGIST_SEQNO registSeqno,
 		SEND_STATUS sendStatus,
 		SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
 		SUBMIT_TIME submitTime,
@@ -110,7 +113,7 @@
 				</foreach>
 			</if>
 			<if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
-				and SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+				and CHB_SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
 			</if>
 			<if test="searchStatusDateStart != null and searchStatusDateStart != ''">
 				and  to_char(STATUS_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{searchStatusDateStart,jdbcType=VARCHAR}
@@ -125,7 +128,6 @@
 				and  to_char(SUBMIT_TIME,'yyyy-MM-dd') <![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
 			</if>
 		</where>
-		) ORDER BY STATUSDATE
 	</select>
 
 	<insert id="insertIntoHis" parameterType="java.util.Map">
@@ -406,11 +408,13 @@
 		<if test="sendStatus != null and sendStatus != ''">
 			and a.SEND_STATUS = #{sendStatus}
 		</if>
-		<if test="dataStatus != null and dataStatus != ''">
-			and a.DATA_STATUS = #{dataStatus}
+		<if test="dataStatusList != null and dataStatusList.size() > 0">
+			<foreach collection="dataStatusList" item="dataStatus" open=" AND a.DATA_STATUS IN (" close=")" separator=",">
+				#{dataStatus}
+			</foreach>
 		</if>
 		<if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
-			and a.SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+			and a.CHB_SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
 		</if>
 		<if test="searchStatusDateStart != null and searchStatusDateStart != ''">
 			and  to_char(a.STATUS_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{searchStatusDateStart,jdbcType=VARCHAR}

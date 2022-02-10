@@ -2205,6 +2205,34 @@
     </select>
 
 
+
+    <select id="selectCounterId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT DISTINCT
+        COUNTER_ID id,
+        COUNTER_NAME text
+        from (
+        SELECT
+        COUNTER_ID,COUNTER_NAME
+        FROM CHB_MST_COUNTER_PARTY PARTY
+        <where>
+            1=1
+            and PARTY.STATUS IN ('E','M')
+            <if test="search != null and search != ''">
+                and PARTY.COUNTER_ID like concat(concat('%', #{search}),'%') or PARTY.COUNTER_NAME like concat(concat('%', #{search}),'%')
+            </if>
+            <if test="orgCodeList !=null and orgCodeList.size()>0">
+                <!-- 机构代码不为空时 -->
+                <foreach collection="orgCodeList" item="orgCode" open="and A.ORG_CODE in (" close=")" separator=",">
+                    #{orgCode,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        )
+        ORDER BY COUNTER_NAME
+
+    </select>
+
+
     <select id="getAssetInfoDetail"  resultMap="BaseResultMap">
           SELECT '02' dataStatus,a.*
           FROM CHB_ASSET_INFO a

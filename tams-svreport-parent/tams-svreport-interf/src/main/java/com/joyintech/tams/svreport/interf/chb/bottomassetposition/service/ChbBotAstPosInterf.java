@@ -108,9 +108,7 @@ public class ChbBotAstPosInterf extends BaseInterfService {
 		for(Date date :isUpdated){
 			//查询信息
 			//List<ChbBotAstPosition> listChbBotAstPosition = chbBotAstPosInterf2.getDataFromInterf(date);
-
-			listChbBotAstPosition = getBotDataFromRsk(date);//估值表升级
-
+			listChbBotAstPosition.addAll(getBotDataFromRsk(date));//估值表升级
 //	        	if("02".equals(isChlBtm)){
 //					//  用到了PTL_CASH_POSITION和bok_balance和BOK_BOOKSET_RE
 //	        		List<ChbBotAstPosition> listBotAstPosition = chbBotAstPosInterf2.getChlBtmDataFromInterf(date, source);
@@ -212,6 +210,9 @@ public class ChbBotAstPosInterf extends BaseInterfService {
 			}
 			if (null != position.getUpdateTime() && position.getUpdateTime().compareTo(lastUpdatetime) > 0)
 				lastUpdatetime = position.getUpdateTime();
+		}
+		if(lastUpdatetime!=null){
+			ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.底层持仓信息接口.getInterId(), lastUpdatetime);;
 		}
 		return listChbBotAstPosition;
 	}

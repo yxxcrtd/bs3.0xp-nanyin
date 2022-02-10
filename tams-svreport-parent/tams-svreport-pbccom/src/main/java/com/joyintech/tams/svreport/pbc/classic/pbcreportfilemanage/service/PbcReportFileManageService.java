@@ -200,11 +200,14 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 			logger.error(e.getMessage(),e);
 		}
 		List<File> sourceFiles = new ArrayList<File>(16);
+		int index = 0;
 		for (PbcDataFile pbcDataFile : pbcDataFileList) {
 			File file;
 			if(PbcClassicsDataFileHelper.DATAFILE_TYPE_PPI.equals(pbcDataFile.getFilecode())){
 				Map<String,Object> map = new HashMap<>();
+				index ++;
 				//碰到PPI类型文件重新组装
+				map.put("index",String.valueOf(index));
 				pbcClassicsDataFileHelper.setSysSeqService(SpringContextUtil.getBean(SysSeqService.class));
 				file = new SafelyFile(pbcClassicsDataFileNewService.genDataFile(PbcClassicsDataFileHelper.DATAFILE_TYPE_PPI,pbcDataFile.getFileid(),new Date(),map));
 			}else{
@@ -220,7 +223,7 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 		File outFile = null;
 		if (sourceFiles.size() > 1) {
 			String exportFilePath = SvrDataUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-			String zipFileName = "人行报送文件" + DateUtil.getCurrentDateTime() + ".zip";
+			String zipFileName = "人行报送文件" + DateUtil.getCurrentDate() + ".zip";
 			zipFileName = zipFileName.replaceAll(":", "-");
 			outFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             // 导出路径不存在则重新生成

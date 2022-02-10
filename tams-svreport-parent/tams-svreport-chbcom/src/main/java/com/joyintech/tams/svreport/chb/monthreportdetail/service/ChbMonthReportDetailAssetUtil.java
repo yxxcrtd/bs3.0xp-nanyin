@@ -49,7 +49,8 @@ public class ChbMonthReportDetailAssetUtil {
 
     @Autowired
     private ChbMonthReportDetailAssetMapper chbMonthReportDetailAssetMapper;
-
+    //信用债
+    private static String xyz="1112,1113,1114,1115,1116,1117";
 
     /**
      * 映射配置mapper
@@ -121,6 +122,11 @@ public class ChbMonthReportDetailAssetUtil {
             if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecKzzq())){
                 chbMonthAssetPositiondetail.setIsYhbcgj((null!=chbMonthAssetPositiondetail.getIsYhbcgj()?chbMonthAssetPositiondetail.getIsYhbcgj()+",":"")+DictCodeListExt3.中债月度明细_银行资本补充工具_可转债.getValue());
             }
+
+            //非信用债屏蔽评级结果数据
+            if(!xyz.contains(position.getAssettype2())){
+                chbMonthAssetPositiondetail.setRating(null);
+            }
         }
 
         //非标转标字段塞值
@@ -188,7 +194,8 @@ public class ChbMonthReportDetailAssetUtil {
             SubjectName = assetInfo.getChbFinancierId();
         }else if(DictCodeListExt3.中债_上游资产一级分类_计划类利率型.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_计划类净值型.getValue().equals(assetType)
-                ||DictCodeListExt3.中债_上游资产一级分类_计划类货币型.getValue().equals(assetType)){
+                ||DictCodeListExt3.中债_上游资产一级分类_计划类货币型.getValue().equals(assetType)
+                ||DictCodeListExt3.中债_上游资产一级分类_债券借贷.getValue().equals(assetType)){
             SubjectName = assetInfo.getChbManagerId();
         }else if(DictCodeListExt3.中债_上游资产一级分类_股票.getValue().equals(assetType)){
             SubjectName = assetInfo.getAssetName();
@@ -198,7 +205,6 @@ public class ChbMonthReportDetailAssetUtil {
                 ||DictCodeListExt3.中债_上游资产一级分类_外汇远期.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_外汇掉期.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_利率互换.getValue().equals(assetType)
-                ||DictCodeListExt3.中债_上游资产一级分类_债券借贷.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_拆借.getValue().equals(assetType)
                 ||DictCodeListExt3.中债_上游资产一级分类_金融衍生品.getValue().equals(assetType)){
 
@@ -297,7 +303,7 @@ public class ChbMonthReportDetailAssetUtil {
                     //转换为AMT1_5_16_b
                     dto.setDetailno("AMT1_5_16_c");
                     BigDecimal assetValueA = dto.getAssetvalueA();
-                    BigDecimal assetValueB = dto.getAssetvalueA();
+                    BigDecimal assetValueB = dto.getAssetvalueB();
 
                     //如果包含专项债券
                     if (null != detail1001.get(dto.getCounterListCode() + "_AMT1_5_16_a")) {

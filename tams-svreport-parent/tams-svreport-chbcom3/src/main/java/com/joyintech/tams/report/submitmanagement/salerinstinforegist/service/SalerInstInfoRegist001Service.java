@@ -8,8 +8,12 @@ import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.common.listener.UploadListener;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.interf.common.util.TisUtil;
+import com.joyintech.tams.report.submitmanagement.salerideninforegist.dao.ChbSalerIdenInfoRegistMapper;
+import com.joyintech.tams.report.submitmanagement.salerideninforegist.dto.SalerIdenInfoRegistDto;
 import com.joyintech.tams.report.submitmanagement.salerinstinforegist.dao.ChbSalerInstInfoRegistMapper;
 import com.joyintech.tams.report.submitmanagement.salerinstinforegist.dto.SalerInstInfoRegistDto;
 import org.apache.commons.collections4.CollectionUtils;
@@ -62,11 +66,22 @@ public class SalerInstInfoRegist001Service extends CommonExportService<SalerInst
      * @since 1.0
      */
     public Page<SalerInstInfoRegistDto> searchForPage(Map<String, Object> param){
-        int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
-	    int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
-        Page<SalerInstInfoRegistDto> pageList = super.queryForPage(
-        		pagenum,legth,()->chbSalerInstInfoRegistMapper.queryForRegistPage(param));
-        return pageList;
+        if(StringUtil.isNotBlank((String)param.get("status"))) {
+            String status = param.get("status").toString();
+            param.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
+        }
+        if (null != param.get(GlobalConstant.PARAM_PAGE)
+                && null != param.get(GlobalConstant.PARAM_LENGTH)) {
+            int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
+            int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
+            Page<SalerInstInfoRegistDto> pageList = super.queryForPage(
+                    pagenum, legth, () -> chbSalerInstInfoRegistMapper.queryForRegistPage(param));
+            this.formatByType(pageList.getRoot());
+            return pageList;
+        }else{
+            Page<SalerInstInfoRegistDto> page = queryForPage(ChbSalerInstInfoRegistMapper.class,"queryForRegistPage",param);
+            return page;
+        }
     }
 
     /**
@@ -117,41 +132,12 @@ public class SalerInstInfoRegist001Service extends CommonExportService<SalerInst
         if (StringUtil.isEmptyList(investList)) {
             return;
         }
-        int maxDataCountOneTime = reportSelectOrDeleteCountForShenFen;
-        int dataCount = investList.size();
-        if (dataCount <= maxDataCountOneTime) {
             //已报送数据进留痕表
             chbSalerInstInfoRegistMapper.insertIntoHis(investList);
             //删除正式表已报送数据
             chbSalerInstInfoRegistMapper.deleteLastSubmitRegist(investList);
             chbSalerInstInfoRegistMapper.updateInterfSubmitAndSeqBatch(sendStatus, investList);
             return;
-        }
-        List<SalerInstInfoRegistDto> newDataList = new ArrayList<SalerInstInfoRegistDto>();
-        newDataList.addAll(investList);
-        // 分批处理
-        int part = dataCount / maxDataCountOneTime; // 分批数
-        for (int i = 0; i < part; i++) {
-            logger.info("单次更新登记表start===");
-            //已报送数据进留痕表
-            chbSalerInstInfoRegistMapper.insertIntoHis(investList);
-            //删除正式表已报送数据
-            chbSalerInstInfoRegistMapper.deleteLastSubmitRegist(investList);
-            chbSalerInstInfoRegistMapper.updateInterfSubmitAndSeqBatch(sendStatus,
-                    newDataList.subList(0, maxDataCountOneTime));
-            newDataList.subList(0, maxDataCountOneTime).clear();
-            logger.info("单次更新登记表end===");
-        }
-        // 最后剩下的数据
-        if (CollectionUtils.isNotEmpty(newDataList)) {
-            logger.info("单次更新登记表start===");
-            //已报送数据进留痕表
-            chbSalerInstInfoRegistMapper.insertIntoHis(investList);
-            //删除正式表已报送数据
-            chbSalerInstInfoRegistMapper.deleteLastSubmitRegist(investList);
-            chbSalerInstInfoRegistMapper.updateInterfSubmitAndSeqBatch(sendStatus, newDataList);
-            logger.info("单次更新登记表end===");
-        }
     }
     /**
      * 已手工处理的数据将报送状态改为未报送
@@ -206,6 +192,13 @@ public class SalerInstInfoRegist001Service extends CommonExportService<SalerInst
             // 反馈状态
             String submitFeedbackStatus = (String) pageParam.get("submitFeedbackStatus");
 
+            String status = (String) pageParam.get("status");
+
+            // 将数据状态当做多选下拉框处理
+            if (StringUtil.isNotBlank(status)) {
+                pageParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
+            }
+
             // 将总部或分支机构名称当做多选下拉框处理
             if (StringUtil.isNotBlank(salerOrgName)) {
                 pageParam.put("salerOrgNameList", StringUtil.splitToList(GlobalConstant.COMMA, salerOrgName));
@@ -253,12 +246,21 @@ public class SalerInstInfoRegist001Service extends CommonExportService<SalerInst
         List<File> sourceFiles = new ArrayList<>();
         Map<String,Object> data  = new HashMap<String,Object>();
         List<SalerInstInfoRegistDto> tempList=new ArrayList<SalerInstInfoRegistDto>();
+        SalerInstInfoRegistDto nullDate = new SalerInstInfoRegistDto();
         if(datas == null){
+            String status = selectParam.get("status").toString();
+            selectParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
             tempList = chbSalerInstInfoRegistMapper.setDataList(selectParam);
+            this.formatByType(tempList);
         }else{
             tempList= JsonUtils.json2List(datas,SalerInstInfoRegistDto.class);
         }
-        data.put("dataList",tempList);
+        if(tempList.size() != 0) {
+            data.put("dataList", tempList);
+        }else{
+            tempList.add(nullDate);
+            data.put("dataList", tempList);
+        }
         File depositfile = TisUtil.createFile(data,"pbc/" +"SalerInstInfoRegist_export", "总部或分支机构信息登记.xls");
         sourceFiles.add(depositfile);
         File outFile = null;
@@ -278,5 +280,34 @@ public class SalerInstInfoRegist001Service extends CommonExportService<SalerInst
      */
     public List<SuggestDto> getSalerOrgName(Map<String, Object> map) {
         return chbSalerInstInfoRegistMapper.getSalerOrgName(map);
+    }
+
+    public static List<SalerInstInfoRegistDto> formatByType(List<SalerInstInfoRegistDto> dataList) {
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(dataList)) {
+            dataList.forEach(item -> {
+                item.setSalerOrgLevel(getDictCodeAndName(DictCode.机构层级, item.getSalerOrgLevel()));
+            });
+        }
+        return dataList;
+    }
+
+    /**
+     * 转换成key+value形式
+     * @param dictCode  字典表中数据类型
+     * @param value  需要换换的值
+     * @return  key+value
+     * @see
+     * @since 1.0
+     */
+    public static String getDictCodeAndName(DictCode dictCode,String value){
+        if(com.joyintech.framework.util.StringUtil.isNotEmpty(value)){
+            String tempName = SysDataUtil.getNameFromDataDict(dictCode, value);
+            if (com.joyintech.framework.util.StringUtil.isEmpty(tempName)) {
+                return value;
+            } else {
+                return value + " " + SysDataUtil.getNameFromDataDict(dictCode, value);
+            }
+        }
+        return "";
     }
 }

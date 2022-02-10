@@ -156,7 +156,7 @@ $(function () {
     var xAxisData = ["产品申\n报登记", "产品发\n行登记","产品募集期\n总量登记",
                      "产品存续\n期登记", "产品终\n止登记", "资产要\n素登记", "交易信\n息登记", "资产估\n值登记",
                      "资管计划底\n层持仓登记",  "银行月度\n统计表登记" ,"销售结算资金\n交易信息表","理财业务销售\n数据月度统计表","投资者持有\n信息登记","投资者\n信息登记","投资者明细\n信息登记",
-                     "总部或分支机构\n信息登记", "销售人员身份\n信息登记","销售人员奖惩\n投诉信息登记"
+                     "总部或分支机构\n信息登记", "销售人员身份\n信息登记","销售人员奖惩\n投诉信息登记","代理销售\n机构信息登记","委托销售产品\n编码信息登记"
                     ];
     var option = {
         tooltip: {
@@ -172,7 +172,8 @@ $(function () {
                 textStyle: {
                     color: function (param) {
                         return param == xAxisData[curSelectedIndex] ? "#0e86fe" : "black";
-                    }
+                    },
+                    fontSize:'9.5'
                 }
             },
             position: 'bottom', triggerEvent: true
@@ -242,7 +243,7 @@ $(function () {
                        {value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0},
                        {value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0},
                        {value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0},{value: 0, num: 0}
-                    , {value: 0, num: 0}, {value: 0, num: 0}
+                    , {value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0},{value: 0, num: 0}
                 ]
             }
         ]
@@ -255,7 +256,7 @@ $(function () {
             }
         },
         xAxis: [{
-            data: ['','','','','','','','','','','','','','',''],
+            data: ['','','','','','','','','','','','','','','','','','','',''],
             axisLabel: {
                 interval: 0,
                 textStyle: {
@@ -500,7 +501,7 @@ $(function () {
     };
     var pieDivs = $("[pie-type='CHB']");
     var pie1 = echarts.init(pieDivs[0])
-    pie1.setOption(option, true); 
+    pie1.setOption(option, true);
     var pie2 = echarts.init(pieDivs[1]);
     pie2.setOption(option1, true);
 //    $(".tab-pane").hide();

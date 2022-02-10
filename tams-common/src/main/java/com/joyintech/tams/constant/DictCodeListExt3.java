@@ -1770,6 +1770,10 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     资产类型_融入券卖空待购回持仓(DictCode.头寸资产类型,"S_003","融入券卖空待购回持仓"),
     资产类型_汇总可用现金(DictCode.头寸资产类型,"S_004","汇总可用现金"),
     资产类型_交易汇总可用持仓(DictCode.头寸资产类型,"S_005","交易汇总可用持仓"),
+
+    //共通业务类型-固收类资产交易
+    共通业务类型_固收类资产交易(DictCode.共通业务类型,"TRD85","固收类资产交易"),
+
     /**
      * 操作类型
      */
@@ -1788,6 +1792,9 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     操作类型_手工匹配确认(DictCode.操作类型,"13","手工匹配确认"),
     操作类型_自动匹配确认(DictCode.操作类型,"14","自动匹配确认"),
     操作类型_业务模式变更确认(DictCode.操作类型,"15","业务模式变更确认"),
+
+    债券性质_债性(DictCode.债券性质, "01", "债性"),
+    债券性质_股性(DictCode.债券性质, "02", "股性"),
 
     共通业务类型_赎回登记(DictCode.共通业务类型,"TRD91","赎回登记"),
     回购方式_双边回购(DictCode.回购方式,"1","双边回购"),

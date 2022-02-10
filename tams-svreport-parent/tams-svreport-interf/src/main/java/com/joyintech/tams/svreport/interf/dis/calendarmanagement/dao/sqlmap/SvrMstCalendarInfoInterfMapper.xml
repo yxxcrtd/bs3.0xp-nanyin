@@ -18,6 +18,7 @@
         SELECT
         A.CALENDAR_ID,
         A.CALENDAR_NAME,
+        A.OTHER_ID,
         A.IS_TRADE_CALENDAR,
         A.CREATE_TIME,
         A.UPDATE_TIME

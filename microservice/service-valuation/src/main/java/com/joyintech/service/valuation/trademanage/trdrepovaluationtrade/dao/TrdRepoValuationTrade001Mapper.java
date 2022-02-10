@@ -12,6 +12,7 @@ package com.joyintech.service.valuation.trademanage.trdrepovaluationtrade.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.trademanage.trdrepovaluationtrade.dto.TrdRepoValuationTrade001Dto;
+import com.joyintech.service.valuation.trademanage.trdrepovaluationtrade.dto.TrdRepoValuationTrade003Dto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -64,8 +65,12 @@ public interface TrdRepoValuationTrade001Mapper {
 	List<TrdRepoValuationTrade001Dto> selectDeal(Map<String, Object> paraMap);
 
 
-	//根据交易编号查询数据
+	//根据交易编号查询数据  修改
 	TrdRepoValuationTrade001Dto queryTradeInfoByTradeId(String tradeId);
+
+
+	//根据交易编号查询数据  存续期交易
+	TrdRepoValuationTrade003Dto queryTradeInfoByTradeId01(String tradeId);
 
 
 }

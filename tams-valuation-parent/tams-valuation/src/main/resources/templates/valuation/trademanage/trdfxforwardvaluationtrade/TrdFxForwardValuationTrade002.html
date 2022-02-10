@@ -65,10 +65,9 @@
 										<label class="layui-form-label form-label-wrap"
 											   data-th-text="#{TrdFxForwardValuationTrade002.curPair}">货币对</label>
 										<div class="layui-input-inline input-inline">
-											<select type="text" id="curPair"
-													name="curPair"
+											<select type="text" id="curPair" name="curPair"
 													class="layui-input form-input input-select"
-													data-th-data-result="${CYY_PAIR}"
+													data-th-data-result="${CYY_PAIR}" required
 													allowClear="true"  placeholder="请输入内容"
 													data-th-placeholder="#{SysCommon.placeholder}"
 													data-th-initValue="${entity?.curPair}">
@@ -137,7 +136,7 @@
 									<div class="form-inline-wrap">
 										<label class="layui-form-label form-label-wrap" data-th-text="#{TrdFxForwardValuationTrade002.pricedDate}">定价日</label>
 										<div class="layui-input-inline input-inline">
-											<input id="pricedDate" name="pricedDate" required
+											<input id="pricedDate" name="pricedDate"
 												   class="layui-input form-input input-dateSelect hidden"
 												   data-th-value='${#dates.format(entity?.pricedDate,"yyyy-MM-dd")}'>
 										</div>
@@ -146,7 +145,7 @@
 									<div class="form-inline-wrap">
 										<label class="layui-form-label form-label-wrap" data-th-text="#{TrdFxForwardValuationTrade002.refRate}">差额交割参考汇率</label>
 										<div class="layui-input-inline input-inline">
-											<select type="text" id="refRate" name="refRate"  required
+											<select type="text" id="refRate" name="refRate"
 													class="layui-input form-input input-select"
 													placeholder="请输入内容" data-th-data-result='${DIF_REF_RATE}'
 													data-th-initvalue="${entity?.refRate}"
@@ -160,7 +159,7 @@
 									<div class="form-inline-wrap">
 										<label class="layui-form-label form-label-wrap" data-th-text="#{TrdFxForwardValuationTrade002.difPs}">差额收付方向</label>
 										<div class="layui-input-inline input-inline">
-											<select type="text" id="difPs" name="difPs"  required
+											<select type="text" id="difPs" name="difPs"
 													class="layui-input form-input input-select"
 													placeholder="请输入内容" data-th-data-result='${CD_FLAG_OFF}'
 													data-th-initvalue="${entity?.difPs}"
@@ -199,7 +198,7 @@
 									<div class="form-inline-wrap">
 										<label class="layui-form-label form-label-wrap" data-th-text="#{TrdFxForwardValuationTrade002.unitFprice}">远期全价</label>
 										<div class="layui-input-inline input-inline">
-											<input type="text" th:id="unitFprice" name="unitFprice" maxLength="16" required
+											<input type="text" th:id="unitFprice" name="unitFprice" maxLength="16" required disabled
 												   th:value="${entity?.unitFprice}" class="layui-input form-input text-number rateCal"
 												   data-textrange="4" data-fixtype="4" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"/>
 										</div>
@@ -232,7 +231,7 @@
 										<label class="layui-form-label form-label-wrap" data-th-text="#{TrdFxForwardValuationTrade002.corCcy}">对应货币</label>
 										<div class="layui-input-inline input-inline">
 											<select type="text" id="corCcy" name="corCcy" required="required"
-													parentIds="curPair"
+													parentIds="curPair" disabled
 													class="layui-input form-input input-select" placeholder="请输入内容"
 													th:placeholder="#{SysCommon.placeholder}" th:data-result='${CCY}'
 													allowClear="true" formatoption="true" th:initValue="${entity?.corCcy}"></select>
@@ -245,7 +244,7 @@
 									<div class="form-inline-wrap">
 										<label class="layui-form-label form-label-wrap" data-th-text="#{TrdFxForwardValuationTrade002.corCcyAmt}">对应货币金额</label>
 										<div class="layui-input-inline input-inline">
-											<input type="text" th:id="corCcyAmt" name="corCcyAmt" maxLength="16" required
+											<input type="text" th:id="corCcyAmt" name="corCcyAmt" maxLength="16" required disabled
 												   th:value="${entity?.corCcyAmt}" class="layui-input form-input text-number rateCal"
 												   data-textrange="2" data-fixtype="2" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"/>
 										</div>
@@ -254,7 +253,7 @@
 									<div class="form-inline-wrap">
 										<label class="layui-form-label form-label-wrap" data-th-text="#{TrdFxForwardValuationTrade002.pricedDateRate}">定价日即期汇率</label>
 										<div class="layui-input-inline input-inline">
-											<input type="text" th:id="pricedDateRate" name="pricedDateRate" maxLength="16" disabled
+											<input type="text" th:id="pricedDateRate" name="pricedDateRate" maxLength="16"
 												   th:value="${entity?.pricedDateRate}" class="layui-input form-input text-number rateCal"
 												   data-textrange="4" data-fixtype="4" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"/>
 										</div>
@@ -262,7 +261,7 @@
 									<div class="form-inline-wrap">
 										<label class="layui-form-label form-label-wrap" data-th-text="#{TrdFxForwardValuationTrade002.usdAmt}">折美元金额</label>
 										<div class="layui-input-inline input-inline">
-											<input type="text" th:id="usdAmt" name="usdAmt" maxLength="16" disabled
+											<input type="text" th:id="usdAmt" name="usdAmt" maxLength="16" required
 												   th:value="${entity?.usdAmt}" class="layui-input form-input text-number rateCal"
 												   data-textrange="2" data-fixtype="2" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"/>
 										</div>

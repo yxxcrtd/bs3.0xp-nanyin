@@ -89,5 +89,24 @@ public interface CommonCodeCheckMapper {
 
     int deleteChbSalerStlDeaErrorDataByTradeNo(@Param("tradeNo") String tradeNo);
 
+    int deleteChbSalerIdenErrorDataByTradeNo(@Param("salerInsNo") String salerInsNo);
+
+    int deleteChbSalerInstErrorDataByTradeNo(@Param("salerOrgCode") String salerOrgCode);
+
+    int deleteChbSalerRewErrorDataByTradeNo(@Param("salerRewPenaNo") String salerRewPenaNo);
+    //证件号码重复校验(修改)
+    int checkSalerCredentNo(@Param("salerCredentType") String salerCredentType,@Param("salerOtherCredentName") String salerOtherCredentName,@Param("salerCredentNo") String salerCredentNo);
+
+    /**
+     * check所属总部或分支机构校验有效性
+     * @param
+     * @return
+     */
+    int checkSalerOrgCode(@Param("salerOrgCode") String salerOrgCode);
+
+    //总部或分支机构名称重复校验（新建）
+    int checkSalerOrgName(String salerOrgName);
+
+    int checkSalerInsNo (String salerInsNo);
 
 }

@@ -35,6 +35,7 @@
         a.SUBMIT_DEADLINE submitDeadline,
         a.STATUS status,
         a.AGENT_INSTITUTION_CODE agentInstitutionCode,
+        b.AGENT_INSTITUTION_NAME agentInstitutionName,
         a.ISSUE_PARTY_ID issuePartyId,
         a.PROD_ID prodId,
         a.PROD_NAME prodName,
@@ -45,6 +46,8 @@
         a.UPDATE_TIME
         FROM
         CHB_AGENT_PRD_SUB a
+        left join CHB_AGENT_INSTITUTION_SUB b
+        on a.AGENT_INSTITUTION_CODE = b.AGENT_INSTITUTION_CODE
         where 1=1
         <if test="agentInstitutionCode != null and agentInstitutionCode != ''">
             and a.AGENT_INSTITUTION_CODE = #{agentInstitutionCode}
@@ -61,11 +64,13 @@
         <if test="sendStatus != null and sendStatus != ''">
             and a.SEND_STATUS = #{sendStatus}
         </if>
-        <if test="status != null and status != ''">
-            and a.STATUS = #{status}
+        <if test="statusList != null and statusList.size() > 0">
+            <foreach collection="statusList" item="status" open=" AND a.STATUS IN (" close=")" separator=",">
+                #{status}
+            </foreach>
         </if>
         <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
-            and a.SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+            and a.CHB_SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
         </if>
         <if test="searchDataDateStart != null and searchDataDateStart != ''">
             and  to_char(a.DATA_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
@@ -140,7 +145,7 @@
                 </foreach>
             </if>
             <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
-                and SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+                and CHB_SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
             </if>
             <if test="searchDataDateStart != null and searchDataDateStart != ''">
                 and  to_char(DATA_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
@@ -343,8 +348,10 @@
         <if test="sendStatus != null and sendStatus != ''">
             and a.SEND_STATUS = #{sendStatus}
         </if>
-        <if test="status != null and status != ''">
-            and a.STATUS = #{status}
+        <if test="statusList != null and statusList.size() > 0">
+            <foreach collection="statusList" item="status" open=" AND a.STATUS IN (" close=")" separator=",">
+                #{status}
+            </foreach>
         </if>
         <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
             and a.SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')

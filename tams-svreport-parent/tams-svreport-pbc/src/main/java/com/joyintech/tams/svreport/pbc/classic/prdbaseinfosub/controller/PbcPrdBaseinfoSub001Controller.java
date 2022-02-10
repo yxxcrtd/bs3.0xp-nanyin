@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.controller;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.service.PbcPrdBase
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.service.PbcPrdBaseinfoSubService001;
 
 /**
- * 
+ *
  * <p>人行报送信息登记-产品基本信息信息Controller</p>
  * @author liuyu
  * @创建时间 2019年6月4日 下午4:57:28
@@ -43,7 +44,7 @@ public class PbcPrdBaseinfoSub001Controller extends BaseController {
 	 */
 	@Autowired
 	private PbcPrdBaseinfoSubService001 pbcPrdRaiseSubService001;
-	
+
 	/**
 	 * 微服务service
 	 */
@@ -53,24 +54,24 @@ public class PbcPrdBaseinfoSub001Controller extends BaseController {
 	/**
 	 * 页面初始化
 	 */
-    @Override
-    public String init(Model model) {
-    	Map<String, Object> map = RequestUtil.getPageParam();
+	@Override
+	public String init(Model model) {
+		Map<String, Object> map = RequestUtil.getPageParam();
 		if (StringUtil.isNotEmpty(map.get("submitStatus"))) {
 			model.addAttribute("submitStatus", map.get("submitStatus").toString().trim());
 			if (StringUtil.isNotEmpty(map.get("status"))) {
 				model.addAttribute("status", map.get("status").toString().trim());
 			}
 			if(StringUtil.isNotEmpty(map.get("submitFeedbackStatus"))){
-            	model.addAttribute("submitFeedbackStatus", map.get("submitFeedbackStatus").toString().trim());
-            }
+				model.addAttribute("submitFeedbackStatus", map.get("submitFeedbackStatus").toString().trim());
+			}
 			model.addAttribute("searchDataStart", map.get("searchDataStart"));
 			model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
 			model.addAttribute("isMain", "01");
 		}
-    	super.setSelectOptionToModel(model,	DictCode.报送数据状态,DictCode.报送状态,DictCode.人行报送反馈状态,DictCode.人行产品类型,DictCode.人行产品运作模式);
-        return super.init(model);
-    }
+		super.setSelectOptionToModel(model,	DictCode.报送数据状态,DictCode.报送状态,DictCode.人行报送反馈状态,DictCode.人行产品类型,DictCode.人行产品运作模式);
+		return super.init(model);
+	}
 
 
 	/**
@@ -83,33 +84,32 @@ public class PbcPrdBaseinfoSub001Controller extends BaseController {
 		Map<String, Object> param = RequestUtil.getPageParam();
 		return pbcPrdBaseinfoSubMService.getPbcProdId(param);
 	}
-    
-    /**
-     * 产品基本信息信息查询
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping("searchPage")
-    public Page<PbcPrdBaseinfoSub> searchPage(){
-    	Map<String,Object> searchParam = RequestUtil.getPageParam();
-    	
-    	Page<PbcPrdBaseinfoSub> page = pbcPrdBaseinfoSubMService.searchPage(searchParam);;
+
+	/**
+	 * 产品基本信息信息查询
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("searchPage")
+	public Page<PbcPrdBaseinfoSub> searchPage(){
+		Map<String,Object> searchParam = RequestUtil.getPageParam();
+		Page<PbcPrdBaseinfoSub> page = pbcPrdBaseinfoSubMService.searchPage(searchParam);;
 		return page;
-    	
-    }
-    /**
-     * 数据检查
-     * @param map 查询条件
-     * @return 检查结果
-     * @see
-     * @since 1.0
-     */
-    @ResponseBody
-    @RequestMapping("reportCheck")
-    public List<ExcelValidDto> reportCheck() {
-        return pbcPrdBaseinfoSubMService.reportCheck(RequestUtil.getPageParam());
-    }
-    /**
+
+	}
+	/**
+	 * 数据检查
+	 * @param map 查询条件
+	 * @return 检查结果
+	 * @see
+	 * @since 1.0
+	 */
+	@ResponseBody
+	@RequestMapping("reportCheck")
+	public List<ExcelValidDto> reportCheck() {
+		return pbcPrdBaseinfoSubMService.reportCheck(RequestUtil.getPageParam());
+	}
+	/**
 	 *
 	 * 业务画面导出事件
 	 *
@@ -122,7 +122,7 @@ public class PbcPrdBaseinfoSub001Controller extends BaseController {
 	public ResponseEntity<byte[]> export() {
 		return pbcPrdRaiseSubService001.export(this.getPageId(), RequestUtil.getPageParam());
 	}
-	
+
 	/**
 	 * 手工处理
 	 * @param updateList
@@ -143,7 +143,7 @@ public class PbcPrdBaseinfoSub001Controller extends BaseController {
 		}
 
 
-	    pbcPrdBaseinfoSubMService.updateSumStaus(map);
+		pbcPrdBaseinfoSubMService.updateSumStaus(map);
 		return new AjaxResult(this.getMessage("REPORT_COMMON_I_0008"));
 	}
 	/**
@@ -162,13 +162,13 @@ public class PbcPrdBaseinfoSub001Controller extends BaseController {
 		}
 		return new AjaxResult(this.getMessage("REPORT_COMMON_I_0008"));
 	}
-	
-	
+
+
 	/**
 	 * 	导出人行Excel
-	 * 
+	 *
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@ResponseBody
 	@RequestMapping("download")

@@ -464,7 +464,7 @@ $(function() {
 									sortField:'riskLevel'
 								},
 								{
-									title : '发型机构提前终止权标识',
+									title : '发行机构提前终止权标识',
 									field : 'termRightFlag',
 									width : 200, 
 									sortField:'termRightFlag'
@@ -605,7 +605,7 @@ $(function() {
             
 			Joyin.exportExcel("export", param);
 			if (isHaveData){
-				Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
+				Joyin.confirm("导出成功，是否自动标识新建未报送数据的报送状态为“手工处理”？", function() {
         		//页面添加滚动条
         		layui.layer.open({type:3});
 	            Joyin.ajaxJson('doManual', param, function() {

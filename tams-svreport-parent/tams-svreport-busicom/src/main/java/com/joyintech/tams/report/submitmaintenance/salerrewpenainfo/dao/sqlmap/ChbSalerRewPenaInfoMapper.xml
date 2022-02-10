@@ -64,7 +64,7 @@
         null                     as salerComplainDetail,
         null                     as salerComplainResult,
         SALER_COMPLAIN_DATE       as salerComplainDate,
-        'A'                       as status,
+        'A'                       as dataStatus,
         to_char(ERR_MSG)          as errMsg
         from CHB_SALER_REW_PENA_ERRODATA
         where 1=1
@@ -107,7 +107,7 @@
         SALER_COMPLAIN_DETAIL     as salerComplainDetail,
         SALER_COMPLAIN_RESULT     as salerComplainResult,
         SALER_COMPLAIN_DATE       as salerComplainDate,
-        STATUS                    as status,
+        STATUS                    as dataStatus,
         null                     as errMsg
         from CHB_SALER_REW_PENA_INFO
         where 1=1
@@ -132,7 +132,7 @@
         <if test="searchSalerComplainDateEnd != null and searchSalerComplainDateEnd != ''">
             and  to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd') <![CDATA[<=]]> #{searchSalerComplainDateEnd,jdbcType=VARCHAR}
         </if>
-        ) ORDER BY status DESC
+        ) ORDER BY dataStatus DESC
     </select>
 
     <!--	查询中债银行机构代码-->
@@ -140,6 +140,13 @@
         select REGIST_BANK_CODE from CHB_ORG_REGIST_BANK_CODE
         where
         ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+    </select>
+
+    <!--	根据内部编号查询姓名-->
+    <select id="getSalerName" parameterType="string" resultType="string">
+        select SALER_NAME from CHB_SALER_IDEN_INFO
+        where
+        SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
     </select>
 
     <!--    删除erro表-->
@@ -161,21 +168,24 @@
     <select id="selectDetail" resultType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto">
         select
         'info'                    as erroOrInfo,
-        SALER_REW_PENA_NO         as salerRewPenaNo,
-        SALER_INST_CODE           as salerInstCode,
-        SALER_INS_NO              as salerInsNo,
-        SALER_REW_PENA_TYEP       as salerRewPenaTyep,
-        SALER_REW_PENA_NAME       as salerRewPenaName,
-        SALER_REW_PENA_COMMENTS   as salerRewPenaComments,
-        SALER_REW_PENA_INST       as salerRewPenaInst,
-        SALER_REW_PENA_INST_NAME  as salerRewPenaInstName,
-        SALER_REW_PENA_START      as salerRewPenaStart,
-        SALER_REW_PENA_END        as salerRewPenaEnd,
-        SALER_COMPLAIN_DETAIL     as salerComplainDetail,
-        SALER_COMPLAIN_RESULT     as salerComplainResult,
-        SALER_COMPLAIN_DATE       as salerComplainDate,
-        STATUS                    as status
-        from CHB_SALER_REW_PENA_INFO
+        A.SALER_REW_PENA_NO         as salerRewPenaNo,
+        A.SALER_INST_CODE           as salerInstCode,
+        A.SALER_INS_NO              as salerInsNo,
+        B.SALER_NAME                as salerName,
+        A.SALER_REW_PENA_TYEP       as salerRewPenaTyep,
+        A.SALER_REW_PENA_NAME       as salerRewPenaName,
+        A.SALER_REW_PENA_COMMENTS   as salerRewPenaComments,
+        A.SALER_REW_PENA_INST       as salerRewPenaInst,
+        A.SALER_REW_PENA_INST_NAME  as salerRewPenaInstName,
+        A.SALER_REW_PENA_START      as salerRewPenaStart,
+        A.SALER_REW_PENA_END        as salerRewPenaEnd,
+        A.SALER_COMPLAIN_DETAIL     as salerComplainDetail,
+        A.SALER_COMPLAIN_RESULT     as salerComplainResult,
+        A.SALER_COMPLAIN_DATE       as salerComplainDate,
+        A.STATUS                    as dataStatus
+        from CHB_SALER_REW_PENA_INFO A
+        left join CHB_SALER_IDEN_INFO B
+        on A.SALER_INS_NO = B.SALER_INS_NO
         where
         SALER_REW_PENA_NO = #{salerRewPenaNo,jdbcType=VARCHAR}
     </select>
@@ -190,7 +200,7 @@
         SALER_REW_PENA_INST       as salerRewPenaInst,
         SALER_REW_PENA_START      as salerRewPenaStart,
         SALER_COMPLAIN_DATE       as salerComplainDate,
-        'A'                       as status,
+        'A'                       as dataStatus,
         ORG_DATA                  as orgData,
         ERR_MSG                   as errMsg
         from CHB_SALER_REW_PENA_ERRODATA
@@ -202,7 +212,7 @@
     <select id="selectSalerInsNo" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
         SALER_INS_NO id,
-        SALER_NAME text
+        SALER_INS_NO text
         from CHB_SALER_IDEN_INFO
         where 1=1
             <if test="search != null and search != ''">

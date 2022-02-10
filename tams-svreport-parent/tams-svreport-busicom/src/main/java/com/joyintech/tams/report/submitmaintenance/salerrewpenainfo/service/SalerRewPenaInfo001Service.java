@@ -8,8 +8,11 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto;
 import com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dao.ChbSalerRewPenaInfoMapper;
 import com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -42,7 +45,9 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
      */
     public Page<SalerRewPenaInfoDto> selectForPage(int page, int length, Map<String, Object> pageParam)
     {
-        return super.queryForPage(page,length,() -> chbSalerRewPenaInfoMapper.selectForPage(pageParam));
+        Page<SalerRewPenaInfoDto> pageList = super.queryForPage(page,length,() -> chbSalerRewPenaInfoMapper.selectForPage(pageParam));
+        this.formatByType(pageList.getRoot());
+        return pageList;
     }
 
     /**
@@ -210,6 +215,9 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
                     if (list.get(3) == null || list.get(3).trim().equals("")) {
                         flag = false;
                         message.add("记录分类选择奖励或惩处时，奖惩名称不能为空");
+                    }else if(getWordCount(list.get(3)) > 100){
+                        flag = false;
+                        message.add("奖惩名称不能超过100字节");
                     }
                 }
             }
@@ -224,6 +232,9 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
                     if (list.get(4) == null || list.get(4).trim().equals("")) {
                         flag = false;
                         message.add("记录分类选择奖励或惩处时，奖惩说明不能为空");
+                    }else if(getWordCount(list.get(4)) > 400){
+                        flag = false;
+                        message.add("奖惩说明不能超过400字节");
                     }
                 }
             }
@@ -249,6 +260,9 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
                         if (list.get(6) == null || list.get(6).trim().equals("")) {
                             flag = false;
                             message.add("记录分类选择奖励或惩处时且奖惩单位选择其他时，奖惩单位具体名称不能为空");
+                        }else if(getWordCount(list.get(6)) > 200){
+                            flag = false;
+                            message.add("奖惩单位具体名称不能超过200字节");
                         }
                     }else{
                         if(list.get(6) != null && !list.get(6).trim().equals("")) {
@@ -304,6 +318,9 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
                     if (list.get(9) == null || list.get(9).trim().equals("")) {
                         flag = false;
                         message.add("记录分类选择投诉时，投诉详情不可为空");
+                    }else if(getWordCount(list.get(9)) > 400){
+                        flag = false;
+                        message.add("投诉详情不能超过400字节");
                     }
                 }else {
                     if (list.get(9) != null && !(list.get(9).trim().equals(""))) {
@@ -318,6 +335,9 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
                     if (list.get(10) == null || list.get(10).trim().equals("")) {
                         flag = false;
                         message.add("记录分类选择投诉时，投诉处理结果不可为空");
+                    }else if(getWordCount(list.get(10)) > 400){
+                        flag = false;
+                        message.add("投诉处理结果不能超过400字节");
                     }
                 }else {
                     if (list.get(10) != null && !(list.get(10).trim().equals(""))) {
@@ -502,5 +522,51 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
             }
         }
         return flag;
+    }
+    //UTF-8获取字符串字节长度
+    public int getWordCount(String s)
+    {
+        int length = 0;
+        for(int i = 0; i < s.length(); i++)
+        {
+            int ascii = Character.codePointAt(s, i);
+            if(ascii >= 0 && ascii <=255)
+                length++;
+            else
+                length += 2;
+
+        }
+        return length;
+
+    }
+
+    public static List<SalerRewPenaInfoDto> formatByType(List<SalerRewPenaInfoDto> dataList) {
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(dataList)) {
+            dataList.forEach(item -> {
+                item.setSalerRewPenaTyep(getDictCodeAndName(DictCode.记录分类, item.getSalerRewPenaTyep()));
+                item.setSalerRewPenaInst(getDictCodeAndName(DictCode.奖惩单位, item.getSalerRewPenaInst()));
+            });
+        }
+        return dataList;
+    }
+
+    /**
+     * 转换成key+value形式
+     * @param dictCode  字典表中数据类型
+     * @param value  需要换换的值
+     * @return  key+value
+     * @see
+     * @since 1.0
+     */
+    public static String getDictCodeAndName(DictCode dictCode,String value){
+        if(com.joyintech.framework.util.StringUtil.isNotEmpty(value)){
+            String tempName = SysDataUtil.getNameFromDataDict(dictCode, value);
+            if (com.joyintech.framework.util.StringUtil.isEmpty(tempName)) {
+                return value;
+            } else {
+                return value + " " + SysDataUtil.getNameFromDataDict(dictCode, value);
+            }
+        }
+        return "";
     }
 }

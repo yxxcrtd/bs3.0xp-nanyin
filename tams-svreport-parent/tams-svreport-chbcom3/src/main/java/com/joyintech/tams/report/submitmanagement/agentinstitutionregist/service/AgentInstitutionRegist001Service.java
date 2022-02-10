@@ -68,11 +68,18 @@ public class AgentInstitutionRegist001Service extends CommonExportService<AgentI
      * @since 1.0
      */
     public Page<AgentInstitutionRegistDto> searchForPage(Map<String, Object> param){
+        dealSearchParam(param);
+        if (null != param.get(GlobalConstant.PARAM_PAGE)
+                && null != param.get(GlobalConstant.PARAM_LENGTH)) {
         int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
 	    int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
         Page<AgentInstitutionRegistDto> pageList = super.queryForPage(
         		pagenum,legth,()->chbAgentInstitutionSubMapper.queryForRegistPage(param));
         return pageList;
+        }else{
+            Page<AgentInstitutionRegistDto> page = queryForPage(ChbAgentInstitutionSubMapper.class,"queryForRegistPage",param);
+            return page;
+        }
     }
 
     /**
@@ -123,41 +130,12 @@ public class AgentInstitutionRegist001Service extends CommonExportService<AgentI
         if (StringUtil.isEmptyList(investList)) {
             return;
         }
-        int maxDataCountOneTime = reportSelectOrDeleteCountForShenFen;
-        int dataCount = investList.size();
-        if (dataCount <= maxDataCountOneTime) {
             //已报送数据进留痕表
             chbAgentInstitutionSubMapper.insertIntoHis(investList);
             //删除正式表已报送数据
             chbAgentInstitutionSubMapper.deleteLastSubmitRegist(investList);
             chbAgentInstitutionSubMapper.updateInterfSubmitAndSeqBatch(sendStatus, investList);
             return;
-        }
-        List<AgentInstitutionRegistDto> newDataList = new ArrayList<AgentInstitutionRegistDto>();
-        newDataList.addAll(investList);
-        // 分批处理
-        int part = dataCount / maxDataCountOneTime; // 分批数
-        for (int i = 0; i < part; i++) {
-            logger.info("单次更新登记表start===");
-            //已报送数据进留痕表
-            chbAgentInstitutionSubMapper.insertIntoHis(investList);
-            //删除正式表已报送数据
-            chbAgentInstitutionSubMapper.deleteLastSubmitRegist(investList);
-            chbAgentInstitutionSubMapper.updateInterfSubmitAndSeqBatch(sendStatus,
-                    newDataList.subList(0, maxDataCountOneTime));
-            newDataList.subList(0, maxDataCountOneTime).clear();
-            logger.info("单次更新登记表end===");
-        }
-        // 最后剩下的数据
-        if (CollectionUtils.isNotEmpty(newDataList)) {
-            logger.info("单次更新登记表start===");
-            //已报送数据进留痕表
-            chbAgentInstitutionSubMapper.insertIntoHis(investList);
-            //删除正式表已报送数据
-            chbAgentInstitutionSubMapper.deleteLastSubmitRegist(investList);
-            chbAgentInstitutionSubMapper.updateInterfSubmitAndSeqBatch(sendStatus, newDataList);
-            logger.info("单次更新登记表end===");
-        }
     }
     /**
      * 已手工处理的数据将报送状态改为未报送
@@ -259,12 +237,20 @@ public class AgentInstitutionRegist001Service extends CommonExportService<AgentI
         List<File> sourceFiles = new ArrayList<>();
         Map<String,Object> data  = new HashMap<String,Object>();
         List<AgentInstitutionRegistDto> tempList=new ArrayList<AgentInstitutionRegistDto>();
+        AgentInstitutionRegistDto nullDate = new AgentInstitutionRegistDto();
         if(datas == null){
+            String status = selectParam.get("status").toString();
+            selectParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
             tempList = chbAgentInstitutionSubMapper.setDataList(selectParam);
         }else{
             tempList= com.joyintech.framework.util.JsonUtils.json2List(datas,AgentInstitutionRegistDto.class);
         }
-        data.put("dataList",tempList);
+        if(tempList.size() != 0) {
+            data.put("dataList", tempList);
+        }else{
+            tempList.add(nullDate);
+            data.put("dataList", tempList);
+        }
         File depositfile = TisUtil.createFile(data,"pbc/" +"AgentInstitutionRegist_export", "代理销售机构信息登记.xls");
         sourceFiles.add(depositfile);
         File outFile = null;

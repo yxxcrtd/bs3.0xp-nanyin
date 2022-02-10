@@ -11,6 +11,8 @@ import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.svreport.pbc.assetdebt.dao.PbcReportCompanyDetailMapper;
 import com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcReportCompanyDetailDto;
+import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportCompanyDatDetailMapper;
+import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportCompanyDatDetailDto;
 import com.joyintech.tams.svreport.pbc.common.annotation.TemplateName;
 import com.joyintech.tams.svreport.pbc.common.constants.PbcDatTemplateName;
 import com.joyintech.tams.svreport.pbc.common.enums.PbcDictCodeEnums;
@@ -43,7 +45,7 @@ public class PbcReportCompanyBondDatService extends PbcDatPriviewService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
-	private PbcReportCompanyDetailMapper pbcReportCompanyDetailMapper;
+	private PbcReportCompanyDatDetailMapper pbcReportCompanyDatDetailMapper;
 	@Autowired
 	private PbcMonthReportMapper pbcMonthReportMapper;
 	@Autowired
@@ -68,9 +70,9 @@ public class PbcReportCompanyBondDatService extends PbcDatPriviewService {
 		data.put("report", JsonUtils.object2Map(pbcReport));
 		// 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
         String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
-		List<PbcReportCompanyDetailDto> listDetail = pbcReportCompanyDetailMapper.selectByReportuuid(reportuuid);
+		List<PbcReportCompanyDatDetailDto> listDetail = pbcReportCompanyDatDetailMapper.selectByReportuuid(reportuuid);
 		if (!CollectionUtils.isEmpty(listDetail)) {
-			for (PbcReportCompanyDetailDto detail : listDetail) {
+			for (PbcReportCompanyDatDetailDto detail : listDetail) {
 				// 处理数据
 				dealCompanyDateListForExport(detail);
 				dealProdData(detail, isShowZero);
@@ -86,11 +88,11 @@ public class PbcReportCompanyBondDatService extends PbcDatPriviewService {
      * 
      * @author liuyu
      * @time 2019年7月4日 下午4:22:09
-     * @param detail
+     * @param
      * @param isShowZero
      *            01:显示为0, 02:显示为空
      */
-	private void dealProdData(PbcReportCompanyDetailDto model, String isShowZero) {
+	private void dealProdData(PbcReportCompanyDatDetailDto model, String isShowZero) {
         // 显示成零
         if("01".equals(isShowZero)){
             if(model.getLargeCompanyAmt()==null){
@@ -139,7 +141,7 @@ public class PbcReportCompanyBondDatService extends PbcDatPriviewService {
 		return createData(param);
 	}
 
-	public void dealCompanyDateListForExport(PbcReportCompanyDetailDto detail) {
+	public void dealCompanyDateListForExport(PbcReportCompanyDatDetailDto detail) {
 		BigDecimal tenthousand = new BigDecimal(10000);
 		// 大型企业
 		if (detail.getLargeCompanyAmt() != null) {
@@ -180,9 +182,9 @@ public class PbcReportCompanyBondDatService extends PbcDatPriviewService {
 		data.put("report", pbcReport);
 		// 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
         String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
-		List<PbcReportCompanyDetailDto> listDetail = pbcReportCompanyDetailMapper.selectByReportuuid(reportuuid);
+		List<PbcReportCompanyDatDetailDto> listDetail = pbcReportCompanyDatDetailMapper.selectByReportuuid(reportuuid);
 		if (!CollectionUtils.isEmpty(listDetail)) {
-			for (PbcReportCompanyDetailDto detail : listDetail) {
+			for (PbcReportCompanyDatDetailDto detail : listDetail) {
 				// 处理数据
 				dealCompanyDateListForExport(detail);
 				dealProdData(detail, isShowZero);

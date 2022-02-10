@@ -7,8 +7,7 @@
 			<Cell order="3" name="代理销售机构代码">agentInstitutionCode</Cell>
 			<Cell order="4" name="代理销售机构名称">agentInstitutionName</Cell>
 			<Cell order="5" name="附件个数">enclosureNum</Cell>
-			<Cell order="6" name="附件目录">enclosureAddress</Cell>
-			<Cell order="7" name="备注">remark</Cell>
+			<Cell order="6" name="备注">remark</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

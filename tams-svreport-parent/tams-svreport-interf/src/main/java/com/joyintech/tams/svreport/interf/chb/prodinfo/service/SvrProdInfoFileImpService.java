@@ -448,7 +448,6 @@ public class SvrProdInfoFileImpService extends FileImpService {
 		info.setAgent(map.get("AGENT"));
 		info.setFiduciaryDuty(map.get("FIDUCIARY_DUTY"));
 		info.setTransferType(map.get("TRANSFER_TYPE"));
-		info.setIsMarketFund(map.get("IS_MARKET_FUND"));
 		info.setExcFinSector(map.get("EXC_FIN_SECTOR"));
 		info.setIsShortTerm(map.get("IS_SHORT_TERM"));
 		if (map.get("SHORT_TERM") != null && !"".equals(map.get("SHORT_TERM"))) {

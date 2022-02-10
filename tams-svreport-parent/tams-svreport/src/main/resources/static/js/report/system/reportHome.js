@@ -515,10 +515,11 @@ var getHoldInfoSourceInfoUrl = basePath + "system/reportHome/getHoldInfoSourceIn
                     searchDataStart=searchDate;
                 }
                 //当前记录的最大的报送截止日
-                searchDataEnd=a.attr("data-maxdate");
-                if(searchDataEnd==null){
-                    searchDataEnd=searchDate;
-                }
+//                searchDataEnd=a.attr("data-maxdate");
+//                if(searchDataEnd==null){
+//                    searchDataEnd=searchDate;
+//                }
+                searchDataEnd=searchDate;
                 data.submitStatus="01";
             }
              // 将报送
@@ -599,10 +600,15 @@ var getHoldInfoSourceInfoUrl = basePath + "system/reportHome/getHoldInfoSourceIn
             data.type=type;
             data.searchDataStart=searchDataStart;
             data.searchDataEnd=searchDataEnd;
+            data.pageType=a.attr("data-pagetype");
             var tableobj=document.getElementById("subInfoTable");
             var titlestr="";
             if(type=="4"||type=="5"){
             	titlestr="报送前检查";
+            }else if (num==27||num==28||num==29) {
+                titlestr="理财销售人员信息登记"
+            }else if (num==30||num==31) {
+                titlestr="代理销售信息登记";
             }else{
             	titlestr=tableobj.rows[num].cells[0].innerText.replace(/[\r\n]/g,"");
             }

@@ -134,6 +134,7 @@ public class PbcZipDataFileHelper {
 			DATATYPEMAP.put("3_1", "MIT3-1");
 			DATATYPEMAP.put("3_2", "MIT3-2");
 			DATATYPEMAP.put("3_3", "MIT3-3");
+			DATATYPEMAP.put("4_1", "MIT4-1");
 		}
 	}
 

@@ -106,6 +106,8 @@
     <select id="selectDetailList" resultType="com.joyintech.tams.svreport.pbc.reportdetail.dto.PbcMonthReportDetailAsset">
         select *
         from (
+        select *
+        from (
             SELECT
             P1.PROPERNAME reportType1,
             P2.PROPERNAME reportType2,
@@ -127,10 +129,10 @@
             I.MDATE,
             /**企业债,取资产基本信息(2-5逻辑)其余取贷款的信息(2-2~2-4逻辑)**/
             P.party_Type1 partyType1,
-            NVL(MC.CUSTOMER_NAME, P.SUBJECT_NAME) subjectName,
+            NVL(MC.CUSTOMER_NAME, nvl(mp1.COUNTER_NAME,P.SUBJECT_NAME)) subjectName,
             P.INDUSTRY INDUSTRY,
             P.borrower_city buyPlace,
-            I.ASSET_YIELD RATE,
+            NVL(I.ASSET_YIELD,RATE.ASSET_RATE) RATE,
             P.CCY,
             AP.POS_AMT  delayPayAmt,
             AP.TDY_COST_AMT  costAmt,
@@ -153,6 +155,7 @@
             LEFT JOIN CHB_ASSET_INFO I ON I.ASSET_CODE = P.ASSET_CODE
             LEFT JOIN BOK_SUBJECT B ON B.BOOKSET_ID = '00000000000000000002' AND B.SUBJECT_NO = P.ASSET_CODE
             LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = P.SUBJECT_NAME
+            LEFT JOIN CHB_MST_COUNTER_PARTY MP1 ON MP1.COUNTER_ID = P.SUBJECT_NAME
             LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = P.RIVAL_PARTY
             LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PRODID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)
             LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P6 ON P6.PROPERTYCODE = P.DETAILNO AND P6.PROPLEVEL = '6' AND P6.STATUS='E'
@@ -162,6 +165,12 @@
             LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P2 ON P2.PROPERTYCODE = P3.CODEPARENT AND P2.PROPLEVEL = '2' AND P2.STATUS='E'
             LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P1 ON P1.PROPERTYCODE = P2.CODEPARENT AND P1.PROPLEVEL = '1' AND P1.STATUS='E'
             LEFT JOIN CHB_TYPE_MAPPING_EX EX ON EX.SRCFIELD1 = P.ASSET_CODE AND EX.MAPPINGCODE = 'MAPPINGCODE_SUBJECTNO' AND EX.OBJFIELD3 = 'C01'
+            LEFT JOIN (SELECT ASSET_ID,nvl(ASSET_RATE,0)*100 ASSET_RATE,change_date,
+            row_number() over(partition by ASSET_ID order by change_date desc) row_number
+            FROM CHB_ASSET_RATE
+            WHERE asset_rate is not null
+            AND CHANGE_DATE &lt;= #{enddateDate,jdbcType=DATE}) RATE ON RATE.ASSET_ID = P.ASSET_CODE AND RATE.row_number = 1
+
             WHERE P.AMT IS NOT NULL AND P.AMT !=0
 
             <if test="enddate != null and enddate != ''">
@@ -190,7 +199,7 @@
                 #{item}
             </foreach>
         </if>
-        ORDER BY A.DETAILNO
+        ORDER BY A.DETAILNO)
     </select>
 
     <select id="getAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -276,9 +285,11 @@
     </select>
 
     <select id="getCounterList" resultType="com.joyintech.framework.select.SelectOptionDto">
-        SELECT  A.CODE id,A.TRADE_COUNTER text from(
-        SELECT T.PROD_ID||'_'||T.ASSET_CODE CODE,T.DEALDATE,wm_concat(distinct(NVL(MC.CUSTOMER_NAME,nvl(Mp.Counter_Name,T.TRADE_COUNTER)))) TRADE_COUNTER,
-        row_number() over(partition by T.PROD_ID,T.ASSET_CODE order by T.DEALDATE) row_number
+        SELECT  A.CODE id,A.TRADE_COUNTER text,A.COUNTER_ID col,A.LINK_ID parentId from(
+        SELECT T.PROD_ID||'_'||T.ASSET_CODE CODE,
+        DECODE(MP.COUNTER_NAME,NULL,DECODE(MC.CUSTOMER_NAME,NULL,T.TRADE_COUNTER,MC.CUSTOMER_NAME),MP.COUNTER_NAME) TRADE_COUNTER,
+        MP.COUNTER_ID,MP.LINK_ID,
+        row_number() over(partition by T.PROD_ID,T.ASSET_CODE order by DEALDATE) row_number
         FROM CHB_INVEST_TRADE T
         LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = T.TRADE_COUNTER
         LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = T.TRADE_COUNTER
@@ -291,7 +302,6 @@
                 #{item}
             </foreach>
         </if>
-        group by T.PROD_ID,T.ASSET_CODE,T.DEALDATE
         ) a
         WHERE A.row_number = 1
     </select>

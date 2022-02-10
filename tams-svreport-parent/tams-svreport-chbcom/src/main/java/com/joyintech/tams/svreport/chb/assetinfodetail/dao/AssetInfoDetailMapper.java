@@ -70,4 +70,6 @@ public interface AssetInfoDetailMapper {
 	int deleteErrorMsg(String assetCode);
 
 
+	List<SelectOptionDto> selectCounterId(Map<String, Object> pageParam);
+
 }

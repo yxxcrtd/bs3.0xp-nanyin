@@ -251,6 +251,20 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
      */
     private BigDecimal terms;
 
+
+    /**
+     * 资管计划科目
+     */
+    private String subCode;
+
+    public String getSubCode() {
+        return subCode;
+    }
+
+    public void setSubCode(String subCode) {
+        this.subCode = subCode;
+    }
+
     public String getIsFbzb() {
         return isFbzb;
     }
