@@ -382,12 +382,12 @@
             parameterType="com.joyintech.tams.exchange.common.bean.EntrustQryBean">
         SELECT
         <include refid="QueryEntrustHistory"/>
-        FROM T_ENTRUSTHISTORY a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
+        FROM T_ENTRUSTHISTORY a left join T_INSTRUCTION_HISTORY b on a.INSTRUCTION_ID =b.ENTRUST_ID
         <include refid="queryCondition2"/>
         UNION ALL
         SELECT
         <include refid="QueryIntegratedEntrustHistory"/>
-        FROM T_INTEGRATED_ENTRUSTHISTORY a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
+        FROM T_INTEGRATED_ENTRUSTHISTORY a left join T_INSTRUCTION_HISTORY b on a.INSTRUCTION_ID =b.ENTRUST_ID
         <include refid="queryCondition2"/>
     </select>
 

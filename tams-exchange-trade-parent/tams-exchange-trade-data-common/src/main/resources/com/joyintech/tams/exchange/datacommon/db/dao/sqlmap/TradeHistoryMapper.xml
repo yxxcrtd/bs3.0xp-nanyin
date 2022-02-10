@@ -220,7 +220,7 @@
             parameterType="com.joyintech.tams.exchange.common.bean.TradeQryBean">
         select
         <include refid="Query_Column_List"/>
-        from T_TRADEHISTORY a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
+        from T_TRADEHISTORY a left join T_INSTRUCTION_HISTORY b on a.INSTRUCTION_ID =b.ENTRUST_ID
         <include refid="queryCondition2"/>
     </select>
 
