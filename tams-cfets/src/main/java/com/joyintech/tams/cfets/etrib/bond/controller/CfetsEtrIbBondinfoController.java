@@ -492,4 +492,16 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             return new Message<Boolean>().fail().setMessage("查询异常");
         }
     }
+    @ApiOperation(value = "查询资产是否进行了赎回登记", notes = "查询资产是否进行了赎回登记")
+    @PostMapping("/queryAssetIsShReg/{secId:.+}")
+    @ResponseBody
+    public Message<Boolean> queryAssetIsShReg(@PathVariable String secId) {
+        try {
+            Boolean flag = cfetsEtrIbBondinfoService.queryAssetIsShReg(secId);
+            return new Message<Boolean>().success().setData(flag);
+        } catch (Exception e) {
+            logger.error("查询该资产是否进行了赎回登记异常", e);
+            return new Message<Boolean>().fail().setMessage("查询异常");
+        }
+    }
 }

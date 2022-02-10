@@ -2222,5 +2222,17 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         return new Message<AjaxResult>().success().setData(new AjaxResult(this.getMessage("ETR_X_004")));
     }
 
-
+    /**
+     * 查询资产是否行权债
+     * @return
+     */
+    public Boolean queryAssetIsShReg(String secId) {
+        if(!StringUtil.isNotEmpty(secId)){
+            return false;
+        }
+        Map<String, Object> param =new HashMap<>();
+        param.put("finprodId",secId);
+        param.put("platDate",DateUtil.platDateFromCache());
+        return cfetsetrIbBondinfoMapper.queryAssetIsShReg(param);
+    }
 }
