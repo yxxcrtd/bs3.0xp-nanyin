@@ -2005,6 +2005,7 @@
                     RFPDT.V_SETTLE_DATE    vSettleDate,
                     RFPDT.M_SETTLE_DATE    mSettleDate,
                     RFPDT.TRADE_DATE       tradeDate,
+                    TFPDT.TRADE_DATE       dealDate,
                     EEOH.STATISTICAL_TIMES statisticalTimes,
                     RFPDT.TOTLE_TRADE_ID   quoteId,
                     TMI.TRD_ID             trdId,
@@ -2034,6 +2035,7 @@
             GROUP BY
             ENTRUST_ID) EEOH  ON  EEOH.ENTRUST_ID = RFPDT.TOTLE_TRADE_ID
             LEFT JOIN TRDQUTO_MATCH_INFO TMI ON TMI.PRE_TRADE_ID = RFPDT.TOTLE_TRADE_ID
+            LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT ON TMI.TRD_ID = TFPDT.TOTLE_TRADE_ID
             WHERE RFPDT.FINPROD_TYPE2 in ('F02', 'F03')
               AND ((RFPDT.TRADE_STATUS = '01' and (RFPDT.IS_CANCEL IS NULL OR RFPDT.IS_CANCEL = 'N')) OR
                    RFPDT.IS_CANCEL = 'Y')
@@ -2072,6 +2074,7 @@
                 RFPDT.V_SETTLE_DATE    vSettleDate,
                 RFPDT.M_SETTLE_DATE    mSettleDate,
                 RFPDT.TRADE_DATE       tradeDate,
+                null                   dealDate,
                 EEOH.STATISTICAL_TIMES statisticalTimes,
                 RFPDT.TOTLE_TRADE_ID   quoteId,
                 NULL                   trdId,
@@ -2138,6 +2141,7 @@
             TT.vSettleDate,
             TT.mSettleDate,
             TT.tradeDate,
+            TT.dealDate,
             TT.statisticalTimes,
             TT.quoteId,
             TT.trdId,
