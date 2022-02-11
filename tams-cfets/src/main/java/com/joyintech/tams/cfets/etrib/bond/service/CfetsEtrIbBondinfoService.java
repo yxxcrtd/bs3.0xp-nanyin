@@ -1014,13 +1014,13 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         resp.add(BaseMap.newMap()
                 .put("field", T1KYXJ)
                 .put("name", "T+1日可用现金（元）")
-                .put("amount", bm.get(T0KYXJ))
+                .put("amount", bm.get(T1KYXJ))
                 .put("type", "xj"));
         /*账户现金*/
         resp.add(BaseMap.newMap()
                 .put("field", ZHXJ)
                 .put("name", "账户现金（元）")
-                .put("amount", bm.get(T0KYXJ))
+                .put("amount", bm.get(ZHXJ))
                 .put("type", "xj"));
 
         if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "02")){
