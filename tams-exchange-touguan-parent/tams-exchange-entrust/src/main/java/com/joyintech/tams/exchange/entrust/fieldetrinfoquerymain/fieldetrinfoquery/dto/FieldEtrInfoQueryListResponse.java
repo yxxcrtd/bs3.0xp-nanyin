@@ -157,7 +157,7 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
      * 获取 priceModel
      * @return priceModel.
      */
-    public String getPriceModel() {
+    public String getOtherPriceModel() {
         return SysDataUtil.getNameFromDataDict(DictCode.价格模式, super.getPriceModel());
     }
 

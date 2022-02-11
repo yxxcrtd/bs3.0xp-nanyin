@@ -558,4 +558,12 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
     public void setBusiTypePositionStr(String busiTypePositionStr) {
         this.busiTypePositionStr = busiTypePositionStr;
     }
+
+    public String getOtherAssetType() {
+        return SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, super.getAssetType());
+    }
+
+    public String getOtherTargetType() {
+        return SysDataUtil.getNameFromDataDict(DictCode.目标类型, super.getTargetType());
+    }
 }
