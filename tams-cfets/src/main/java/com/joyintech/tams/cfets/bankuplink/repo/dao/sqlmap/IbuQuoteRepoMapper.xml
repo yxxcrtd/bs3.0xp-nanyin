@@ -2227,6 +2227,7 @@
                 or to_char(TT.vSettleDate,'yyyy-MM-dd')=#{search}
                 or to_char(TT.mSettleDate,'yyyy-MM-dd')=#{search}
                 or to_char(TT.tradeDate,'yyyy-MM-dd')=#{search}
+                or to_char(TT.dealDate,'yyyy-MM-dd')=#{search}
                 or TT.statisticalTimes||'' =#{search}
                 )
             </if>
