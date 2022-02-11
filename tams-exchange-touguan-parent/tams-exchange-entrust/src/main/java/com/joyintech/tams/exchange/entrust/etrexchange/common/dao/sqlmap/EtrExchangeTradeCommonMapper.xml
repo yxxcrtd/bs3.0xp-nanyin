@@ -120,6 +120,9 @@
                 #{item}
             </foreach>
         </if>
+        <if test="tradePlat != null and !tradePlat.equals('')">
+            and T1.TRADE_PLAT = #{tradePlat}
+        </if>
         union all
         SELECT
         T1.ENTRUST_ID entrustId
@@ -209,6 +212,9 @@
         </if>
         <if test="endDate != null and !endDate.equals('')">
             AND T1.ENTRUST_DATE &lt;=to_date(#{endDate},'yyyy-MM-dd')
+        </if>
+        <if test="tradePlat != null and !tradePlat.equals('')">
+            and T1.TRADE_PLAT = #{tradePlat}
         </if>
         ) T1
         where 1=1

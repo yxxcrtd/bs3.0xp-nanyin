@@ -246,6 +246,7 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 					StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
 		}
 		param.put("search_isNumberFlag", BaseMap.isNumeric(request.getSearch()));
+		param.put("tradePlat",request.getTradePlat());
 		return super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeTradeCommonMapper.selectEtrExchange(param));
 //		return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectEtrExchange",
 //				param, EtrExchangeTrade003Dto.class);
