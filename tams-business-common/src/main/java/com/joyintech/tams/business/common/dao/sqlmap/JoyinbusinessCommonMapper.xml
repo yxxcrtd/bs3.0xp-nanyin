@@ -109,7 +109,7 @@
     <sql id="getfinprodIdForAddWhere">
         <where>
             T1.CCY = 'CNY'
-            T1.FINPROD_TYPE2 = #{assestType}
+            AND T1.FINPROD_TYPE2 = #{assestType}
             AND T1.TRADE_MARKET in(#{TRADE_PLACE_01},#{TRADE_PLACE_02})
             <if test="initValue != null and !initValue.equals('')">
                 and T1.FINPROD_MARKET_ID = #{initValue}
