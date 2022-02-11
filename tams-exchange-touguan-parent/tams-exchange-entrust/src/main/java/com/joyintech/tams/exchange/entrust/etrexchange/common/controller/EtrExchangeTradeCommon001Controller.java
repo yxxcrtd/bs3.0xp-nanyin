@@ -1431,5 +1431,11 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			return new Message<String>().fail().setMessage("查询最大申请数量异常");
 		}
 	}
+	@ApiOperation(value = "获取服务器时间", notes = "获取服务器时间")
+	@ResponseBody
+	@RequestMapping(value = "queryLocalTime", method = RequestMethod.POST)
+	public Message<Date> queryLocalTime() {
+		return new Message<Date>(DateUtil.now());
+	}
 }
 	
