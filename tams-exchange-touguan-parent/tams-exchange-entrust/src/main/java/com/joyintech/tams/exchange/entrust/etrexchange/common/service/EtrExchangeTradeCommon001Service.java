@@ -570,7 +570,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		doDeleteFlow(dto.getWorkflowId());
 		//插入指令明细表
 		BaseEtrInvestInfoDto baseEtrInvestInfoDto = this.buildMultiEtrFlow(dto);
+
 		if(!StringUtil.isEmptyList(baseEtrInvestInfoDto.getEtrEntrustDetailList())) {
+			etrEntrustDetailMapper.deleteByEntrustId(baseEtrInvestInfoDto.getEtrEntrustDetailList().get(0).getEntrustId());
 			for (EtrEntrustDetail etrEntrustDetail:baseEtrInvestInfoDto.getEtrEntrustDetailList()) {
 				etrEntrustDetailMapper.insertSelective(etrEntrustDetail);
 			}
