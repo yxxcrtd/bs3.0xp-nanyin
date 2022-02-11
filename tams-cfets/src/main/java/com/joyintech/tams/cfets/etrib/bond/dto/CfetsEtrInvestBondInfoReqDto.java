@@ -32,11 +32,17 @@ public class CfetsEtrInvestBondInfoReqDto {
     @ApiModelProperty(name="entrustId",value="委托代码",example="01")
     private String entrustId;
 
- /*   @ApiModelProperty(name="closeWay",value="委托关闭方式",example="01")
-    private String closeWay;*/
+   @ApiModelProperty(name="ps",value="交易方向",example="01")
+    private String ps;
+
+    @ApiModelProperty(name="remark",value="备注",example="01")
+    private String remark;
 
     @ApiModelProperty(name="entrustStatus",value="委托状态",example="01")
     private String entrustStatus;
+
+    @ApiModelProperty(name="assetType",value="资产类型",example="F01")
+    private String assetType;
 
     public List<CfetsEtrInvestBondInfoReqDto> getSelectedItem() {
         return selectedItem;
@@ -70,8 +76,27 @@ public class CfetsEtrInvestBondInfoReqDto {
         this.entrustStatus = entrustStatus;
     }
 
+    public String getPs() {
+        return ps;
+    }
 
+    public void setPs(String ps) {
+        this.ps = ps;
+    }
 
+    public String getRemark() {
+        return remark;
+    }
 
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
+    public String getAssetType() {
+        return assetType;
+    }
+
+    public void setAssetType(String assetType) {
+        this.assetType = assetType;
+    }
 }

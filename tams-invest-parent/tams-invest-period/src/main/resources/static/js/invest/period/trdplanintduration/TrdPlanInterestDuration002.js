@@ -19,7 +19,6 @@
                 , {field: 'amount', width: "200", title: '持有本金', type: 'money', sortable:false}
                 , {field: 'returnAmount', width: "200", title: '还本金额', type: 'money', sortable:false}
                 , {field: 'calcRuleString', width: "200", title: '付息周期', sortable:false}
-                , {field: 'invAim', width: "200", title: '投资目的', sortable:false,editOption:{type:'select',formatoption:true,result: INV_AIM},edit:true ,visible: SHOW_INVAIM_OR_BUSSINSSMODEL=='01'?true:false}
                 , {field: 'vDate', width: "200", title: '计息开始日', sortable:false}
                 , {field: 'mDate', width: "200", title: '计息结束日', sortable:false}
                 , {field: 'yield', width: "200", title: '计提利率(%)', type: 'money', sortable:false}
@@ -52,9 +51,6 @@
                 }
             },
             beforeEditCell:function(value, field, data){
-          	   if(field == 'invAim'){
-          		   return false;
-          	   }
           	   return true;
              },
             data: []
@@ -257,7 +253,6 @@
                     'isTotalTrade': YES_OR_NO_Y
                     , 'bankLendingType': null
                     , 'portfolioId': finAssetIntInfos[i].portfolioId
-                    , 'invAim': finAssetIntInfos[i].invAim
                     , 'deal': {
                         finprodType2: F17,
                         ps: ps,
@@ -267,8 +262,7 @@
                         tradeAmt: finAssetIntInfos[i].fpriceAmt,
                         // modify by renping 2019-10-25 添加通道费 end
                         ccy: $("#finAssetInfo_ccy").val(),
-                        finprodId: $("#finprodId").val(),
-                        invAim: finAssetIntInfos[i].invAim
+                        finprodId: $("#finprodId").val()
                     }
                 })
             }

@@ -89,5 +89,17 @@ public class PtlFundAcctPosiController {
     {
         return ptlFundAcctPosiService.getPortfolioId(pageParam,page,length);
     }
-    
+    /**
+     * 获得托管机构信息
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("getOriginalInterestHolder/{page}/{length}")
+    public Page<SelectOptionDto> getOriginalInterestHolder(@PathVariable("page") int page,
+                                                           @PathVariable("length") int length,
+                                                           @RequestBody Map<String, Object> paramMap) {
+        return ptlFundAcctPosiService.getOriginalInterestHolder(page, length, paramMap);
+    }
 }

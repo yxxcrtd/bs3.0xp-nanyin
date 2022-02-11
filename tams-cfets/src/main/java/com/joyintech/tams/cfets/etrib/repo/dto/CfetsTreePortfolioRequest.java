@@ -10,10 +10,10 @@
 
 package com.joyintech.tams.cfets.etrib.repo.dto;
 
-import java.util.List;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.util.List;
 
 @ApiModel(value="组合树查询",description="组合树查询")
 public class CfetsTreePortfolioRequest{
@@ -33,32 +33,28 @@ public class CfetsTreePortfolioRequest{
     /**
      * 收益类型
      */
-	@ApiModelProperty(name="profitType",value="收益类型")
-    private String profitType;
+	@ApiModelProperty(name="profitTypeList",value="收益类型")
+    private List<String> profitTypeList;
 
     /**
      * 开发类型
      */
-	@ApiModelProperty(name="openType",value="开发类型")
-    private String openType;
+	@ApiModelProperty(name="openTypeList",value="开发类型")
+    private List<String> openTypeList;
 
     /**
      * 募集方式
      */
-	@ApiModelProperty(name="raiseType",value="募集方式")
-    private String raiseType;
+	@ApiModelProperty(name="raiseTypeList",value="募集方式")
+    private List<String> raiseTypeList;
     
     /**
      * 投资性质
      */
-	@ApiModelProperty(name="investNature",value="投资性质")
-    private String investNature;
+	@ApiModelProperty(name="investNatureList",value="投资性质")
+    private List<String> investNatureList;
     
-    /**
-     * 用户
-     */
-	@ApiModelProperty(name="username",value="用户")
-    private String username;
+
 
 	public String getPledgeStockId() {
 		return pledgeStockId;
@@ -76,45 +72,35 @@ public class CfetsTreePortfolioRequest{
 		this.portfolioIdList = portfolioIdList;
 	}
 
-	public String getProfitType() {
-		return profitType;
+	public List<String> getProfitTypeList() {
+		return profitTypeList;
 	}
 
-	public void setProfitType(String profitType) {
-		this.profitType = profitType;
+	public void setProfitTypeList(List<String> profitTypeList) {
+		this.profitTypeList = profitTypeList;
 	}
 
-	public String getOpenType() {
-		return openType;
+	public List<String> getOpenTypeList() {
+		return openTypeList;
 	}
 
-	public void setOpenType(String openType) {
-		this.openType = openType;
+	public void setOpenTypeList(List<String> openTypeList) {
+		this.openTypeList = openTypeList;
 	}
 
-	public String getRaiseType() {
-		return raiseType;
+	public List<String> getRaiseTypeList() {
+		return raiseTypeList;
 	}
 
-	public void setRaiseType(String raiseType) {
-		this.raiseType = raiseType;
+	public void setRaiseTypeList(List<String> raiseTypeList) {
+		this.raiseTypeList = raiseTypeList;
 	}
 
-	public String getInvestNature() {
-		return investNature;
+	public List<String> getInvestNatureList() {
+		return investNatureList;
 	}
 
-	public void setInvestNature(String investNature) {
-		this.investNature = investNature;
+	public void setInvestNatureList(List<String> investNatureList) {
+		this.investNatureList = investNatureList;
 	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-    
-    
 }

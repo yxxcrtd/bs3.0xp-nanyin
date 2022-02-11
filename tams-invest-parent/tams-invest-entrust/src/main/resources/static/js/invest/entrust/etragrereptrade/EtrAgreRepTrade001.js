@@ -865,7 +865,7 @@
                 $("#tradeMarket").attr("disabled", false);
                 //委托方向
                 $("#ps").attr("disabled", false);
-            }else if(tradeMarket == '03'){
+            } else if(tradeMarket == '03' || tradeMarket == '04'){
                 if(ps == '03'){
                     //组合名称
                     $("#portfolioId").attr("disabled", false);
@@ -938,7 +938,6 @@
                     //补充协议
                     $("#addCla_div").show();
                     $("#addCla").attr("disabled", false);
-
 
                 }else if(ps == '04') {
                     //组合名称
@@ -1770,303 +1769,304 @@
                         $("#addCla").attr("disabled", false);
                     }
                 }
-            }else if(tradeMarket == '04'){
-                if(ps == '03' || ps == '04'){
-                    //组合名称
-                    $("#portfolioId").attr("disabled", false);
-                    //资金账号
-                    $("#acctNo").attr("disabled", false);
-                    //交易场所
-                    $("#tradeMarket").attr("disabled", false);
-                    //委托方向
-                    $("#ps").attr("disabled", false);
-                    //回购期限
-                    $("#term").attr("disabled", false);
-                    //回购金额
-                    $("#tradeAmt").attr("disabled", false);
-                    //回购利率
-                    $("#yield").attr("disabled", false);
-                    if(init){
-                        //首期结算日
-                        $("#fristSettleDate").attr("disabled", true);
-                    }else{
-                        //首期结算日
-                        $("#fristSettleDate").val(iPlatformDate).attr("disabled", true).trigger('change');
-                    }
-                    //到期结算日
-                    $("#expireSettleDate").attr("disabled", true);
-                    //占款天数
-                    $("#occupyDays").attr("disabled", true);
-                    //回购利息
-                    $("#intAmt").attr("disabled", true);
-                    //到期结算金额
-                    $("#expireSettleAmt").attr("disabled", true);
-                    //质押券
-                    $("#repSecId").attr("disabled", false);
-                    //折算比例
-                    $("#conRatio").attr("disabled", false);
-                    //质押数量
-                    $("#repSecNum").attr("disabled", false);
-                    //券面金额
-                    $("#printAmt").attr("disabled", true);
-
-                    //交易对手
-                    $("#counterId").attr("disabled", false);
-                    //本方交易员
-                    $("#trader_div").hide();
-                    //对手交易员
-                    $("#counterTrader_div").hide();
-                    //新质押券
-                    $("#newRepSecId_div").hide();
-                    //新折算比例
-                    $("#newConRatio_div").hide();
-                    //新质押数量
-                    $("#newRepSecNum_div").hide();
-                    //新券面金额
-                    $("#newPrintAmt_div").hide();
-                    //原质押券
-                    $("#origRepSecId_div").hide();
-                    //原折算比例
-                    $("#origConRatio_div").hide();
-                    //原质押数量
-                    $("#origRepSecNum_div").hide();
-                    //原券面金额
-                    $("#origPrintAmt_div").hide();
-                    //成交编号
-                    $("#tradeId_div").hide();
-                    //请求号
-                    $("#reqOnId_div").hide();
-                    //对手席位
-                    $("#seatId_div").show();
-                    $("#seatId").attr("disabled", false);
-                    //约定号
-                    $("#agreeOnId_div").show();
-                    //初始交易编号
-                    $("#intiTradeId_div").hide();
-                    //补充协议
-                    $("#addCla_div").hide();
-                }else if(ps == 'T96'){
-                    //组合名称
-                    $("#portfolioId").attr("disabled", true);
-                    //资金账号
-                    $("#acctNo").attr("disabled", true);
-                    //交易场所
-                    $("#tradeMarket").attr("disabled", true);
-                    //委托方向
-                    $("#ps").attr("disabled", false);
-                    //回购期限
-                    $("#term").attr("disabled", true);
-                    //回购金额
-                    $("#tradeAmt").attr("disabled", true);
-                    //回购利率
-                    $("#yield").attr("disabled", false);
-                    //首期结算日
-                    $("#fristSettleDate").attr("disabled", true);
-                    if(init){
-                        //首期结算日
-                        $("#expireSettleDate").attr("disabled", true);
-                    }else{
-                        //到期结算日
-                        $("#expireSettleDate").val(iPlatformDate).attr("disabled", true).trigger('change');
-                    }
-                    //占款天数
-                    $("#occupyDays").attr("disabled", true);
-                    //回购利息
-                    $("#intAmt").attr("disabled", true);
-                    //到期结算金额
-                    $("#expireSettleAmt").attr("disabled", true);
-                    //质押券
-                    $("#repSecId").attr("disabled", true);
-                    //折算比例
-                    $("#conRatio").attr("disabled", true);
-                    //质押数量
-                    $("#repSecNum").attr("disabled", true);
-                    //券面金额
-                    $("#printAmt").attr("disabled", true);
-
-                    //交易对手
-                    $("#counterId").attr("disabled", true);
-                    //本方交易员
-                    $("#trader_div").hide();
-                    //对手交易员
-                    $("#counterTrader_div").hide();
-                    //新质押券
-                    $("#newRepSecId_div").hide();
-                    //新折算比例
-                    $("#newConRatio_div").hide();
-                    //新质押数量
-                    $("#newRepSecNum_div").hide();
-                    //新券面金额
-                    $("#newPrintAmt_div").hide();
-                    //原质押券
-                    $("#origRepSecId_div").hide();
-                    //原折算比例
-                    $("#origConRatio_div").hide();
-                    //原质押数量
-                    $("#origRepSecNum_div").hide();
-                    //原券面金额
-                    $("#origPrintAmt_div").hide();
-                    //成交编号
-                    $("#tradeId_div").hide();
-                    //请求号
-                    $("#reqOnId_div").hide();
-                    //对手席位
-                    $("#seatId_div").show();
-                    $("#seatId").attr("disabled", true);
-                    //约定号
-                    $("#agreeOnId_div").show();
-                    //初始交易编号
-                    $("#intiTradeId_div").show();
-                    $("#intiTradeId").attr("disabled", true);
-                    //补充协议
-                    $("#addCla_div").hide();
-                }else if(ps == 'T95'){
-                    //组合名称
-                    $("#portfolioId").attr("disabled", true);
-                    //资金账号
-                    $("#acctNo").attr("disabled", true);
-                    //交易场所
-                    $("#tradeMarket").attr("disabled", true);
-                    //委托方向
-                    $("#ps").attr("disabled", false);
-                    //回购期限
-                    $("#term").attr("disabled", true);
-                    //回购金额
-                    $("#tradeAmt").attr("disabled", true);
-                    //回购利率
-                    $("#yield").attr("disabled", false);
-                    //首期结算日
-                    $("#fristSettleDate").attr("disabled", true);
-                    if(init){
-                        //首期结算日
-                        $("#expireSettleDate").attr("disabled", true);
-                    }else{
-                        //到期结算日
-                        $("#expireSettleDate").val(etrData.expireSettleDate).attr("disabled", true).trigger('change');
-                    }
-                    //占款天数
-                    $("#occupyDays").attr("disabled", true);
-                    //回购利息
-                    $("#intAmt").attr("disabled", true);
-                    //到期结算金额
-                    $("#expireSettleAmt").attr("disabled", true);
-                    //质押券
-                    $("#repSecId").attr("disabled", true);
-                    //折算比例
-                    $("#conRatio").attr("disabled", true);
-                    //质押数量
-                    $("#repSecNum").attr("disabled", true);
-                    //券面金额
-                    $("#printAmt").attr("disabled", true);
-
-                    //交易对手
-                    $("#counterId").attr("disabled", true);
-                    //本方交易员
-                    $("#trader_div").hide();
-                    //对手交易员
-                    $("#counterTrader_div").hide();
-                    //新质押券
-                    $("#newRepSecId_div").hide();
-                    //新折算比例
-                    $("#newConRatio_div").hide();
-                    //新质押数量
-                    $("#newRepSecNum_div").hide();
-                    //新券面金额
-                    $("#newPrintAmt_div").hide();
-                    //原质押券
-                    $("#origRepSecId_div").hide();
-                    //原折算比例
-                    $("#origConRatio_div").hide();
-                    //原质押数量
-                    $("#origRepSecNum_div").hide();
-                    //原券面金额
-                    $("#origPrintAmt_div").hide();
-                    //成交编号
-                    $("#tradeId_div").hide();
-                    //请求号
-                    $("#reqOnId_div").hide();
-                    //对手席位
-                    $("#seatId_div").show();
-                    $("#seatId").attr("disabled", true);
-                    //约定号
-                    $("#agreeOnId_div").show();
-                    //初始交易编号
-                    $("#intiTradeId_div").show();
-                    $("#intiTradeId").attr("disabled", true);
-                    //补充协议
-                    $("#addCla_div").hide();
-                }else if(ps == 'T56'){
-                    //组合名称
-                    $("#portfolioId").attr("disabled", true);
-                    //资金账号
-                    $("#acctNo").attr("disabled", true);
-                    //交易场所
-                    $("#tradeMarket").attr("disabled", true);
-                    //委托方向
-                    $("#ps").attr("disabled", false);
-                    //回购期限
-                    $("#term").attr("disabled", false);
-                    //回购金额
-                    $("#tradeAmt").attr("disabled", true);
-                    //回购利率
-                    $("#yield").attr("disabled", false);
-                    //首期结算日
-                    $("#fristSettleDate").attr("disabled", true);
-                    //到期结算日
-                    $("#expireSettleDate").attr("disabled", true);
-                    //占款天数
-                    $("#occupyDays").attr("disabled", true);
-                    //回购利息
-                    $("#intAmt").attr("disabled", true);
-                    //到期结算金额
-                    $("#expireSettleAmt").attr("disabled", true);
-                    //质押券
-                    $("#repSecId").attr("disabled", true);
-                    //折算比例
-                    $("#conRatio").attr("disabled", true);
-                    //质押数量
-                    $("#repSecNum").attr("disabled", true);
-                    //券面金额
-                    $("#printAmt").attr("disabled", true);
-
-                    //交易对手
-                    $("#counterId").attr("disabled", true);
-                    //本方交易员
-                    $("#trader_div").hide();
-                    //对手交易员
-                    $("#counterTrader_div").hide();
-                    //新质押券
-                    $("#newRepSecId_div").hide();
-                    //新折算比例
-                    $("#newConRatio_div").hide();
-                    //新质押数量
-                    $("#newRepSecNum_div").hide();
-                    //新券面金额
-                    $("#newPrintAmt_div").hide();
-                    //原质押券
-                    $("#origRepSecId_div").hide();
-                    //原折算比例
-                    $("#origConRatio_div").hide();
-                    //原质押数量
-                    $("#origRepSecNum_div").hide();
-                    //原券面金额
-                    $("#origPrintAmt_div").hide();
-                    //成交编号
-                    $("#tradeId_div").hide();
-                    //请求号
-                    $("#reqOnId_div").hide();
-                    //对手席位
-                    $("#seatId_div").show();
-                    $("#seatId").attr("disabled", true);
-                    //约定号
-                    $("#agreeOnId_div").show();
-                    //初始交易编号
-                    $("#intiTradeId_div").show();
-                    $("#intiTradeId").attr("disabled", true);
-                    //补充协议
-                    $("#addCla_div").hide();
-                }
             }
+            // else if(tradeMarket == '04'){
+            //     if(ps == '03' || ps == '04'){
+            //         //组合名称
+            //         $("#portfolioId").attr("disabled", false);
+            //         //资金账号
+            //         $("#acctNo").attr("disabled", false);
+            //         //交易场所
+            //         $("#tradeMarket").attr("disabled", false);
+            //         //委托方向
+            //         $("#ps").attr("disabled", false);
+            //         //回购期限
+            //         $("#term").attr("disabled", false);
+            //         //回购金额
+            //         $("#tradeAmt").attr("disabled", false);
+            //         //回购利率
+            //         $("#yield").attr("disabled", false);
+            //         if(init){
+            //             //首期结算日
+            //             $("#fristSettleDate").attr("disabled", true);
+            //         }else{
+            //             //首期结算日
+            //             $("#fristSettleDate").val(iPlatformDate).attr("disabled", true).trigger('change');
+            //         }
+            //         //到期结算日
+            //         $("#expireSettleDate").attr("disabled", true);
+            //         //占款天数
+            //         $("#occupyDays").attr("disabled", true);
+            //         //回购利息
+            //         $("#intAmt").attr("disabled", true);
+            //         //到期结算金额
+            //         $("#expireSettleAmt").attr("disabled", true);
+            //         //质押券
+            //         $("#repSecId").attr("disabled", false);
+            //         //折算比例
+            //         $("#conRatio").attr("disabled", false);
+            //         //质押数量
+            //         $("#repSecNum").attr("disabled", false);
+            //         //券面金额
+            //         $("#printAmt").attr("disabled", true);
+            //
+            //         //交易对手
+            //         $("#counterId").attr("disabled", false);
+            //         //本方交易员
+            //         $("#trader_div").hide();
+            //         //对手交易员
+            //         $("#counterTrader_div").hide();
+            //         //新质押券
+            //         $("#newRepSecId_div").hide();
+            //         //新折算比例
+            //         $("#newConRatio_div").hide();
+            //         //新质押数量
+            //         $("#newRepSecNum_div").hide();
+            //         //新券面金额
+            //         $("#newPrintAmt_div").hide();
+            //         //原质押券
+            //         $("#origRepSecId_div").hide();
+            //         //原折算比例
+            //         $("#origConRatio_div").hide();
+            //         //原质押数量
+            //         $("#origRepSecNum_div").hide();
+            //         //原券面金额
+            //         $("#origPrintAmt_div").hide();
+            //         //成交编号
+            //         $("#tradeId_div").hide();
+            //         //请求号
+            //         $("#reqOnId_div").hide();
+            //         //对手席位
+            //         $("#seatId_div").show();
+            //         $("#seatId").attr("disabled", false);
+            //         //约定号
+            //         $("#agreeOnId_div").show();
+            //         //初始交易编号
+            //         $("#intiTradeId_div").hide();
+            //         //补充协议
+            //         $("#addCla_div").hide();
+            //     }else if(ps == 'T96'){
+            //         //组合名称
+            //         $("#portfolioId").attr("disabled", true);
+            //         //资金账号
+            //         $("#acctNo").attr("disabled", true);
+            //         //交易场所
+            //         $("#tradeMarket").attr("disabled", true);
+            //         //委托方向
+            //         $("#ps").attr("disabled", false);
+            //         //回购期限
+            //         $("#term").attr("disabled", true);
+            //         //回购金额
+            //         $("#tradeAmt").attr("disabled", true);
+            //         //回购利率
+            //         $("#yield").attr("disabled", false);
+            //         //首期结算日
+            //         $("#fristSettleDate").attr("disabled", true);
+            //         if(init){
+            //             //首期结算日
+            //             $("#expireSettleDate").attr("disabled", true);
+            //         }else{
+            //             //到期结算日
+            //             $("#expireSettleDate").val(iPlatformDate).attr("disabled", true).trigger('change');
+            //         }
+            //         //占款天数
+            //         $("#occupyDays").attr("disabled", true);
+            //         //回购利息
+            //         $("#intAmt").attr("disabled", true);
+            //         //到期结算金额
+            //         $("#expireSettleAmt").attr("disabled", true);
+            //         //质押券
+            //         $("#repSecId").attr("disabled", true);
+            //         //折算比例
+            //         $("#conRatio").attr("disabled", true);
+            //         //质押数量
+            //         $("#repSecNum").attr("disabled", true);
+            //         //券面金额
+            //         $("#printAmt").attr("disabled", true);
+            //
+            //         //交易对手
+            //         $("#counterId").attr("disabled", true);
+            //         //本方交易员
+            //         $("#trader_div").hide();
+            //         //对手交易员
+            //         $("#counterTrader_div").hide();
+            //         //新质押券
+            //         $("#newRepSecId_div").hide();
+            //         //新折算比例
+            //         $("#newConRatio_div").hide();
+            //         //新质押数量
+            //         $("#newRepSecNum_div").hide();
+            //         //新券面金额
+            //         $("#newPrintAmt_div").hide();
+            //         //原质押券
+            //         $("#origRepSecId_div").hide();
+            //         //原折算比例
+            //         $("#origConRatio_div").hide();
+            //         //原质押数量
+            //         $("#origRepSecNum_div").hide();
+            //         //原券面金额
+            //         $("#origPrintAmt_div").hide();
+            //         //成交编号
+            //         $("#tradeId_div").hide();
+            //         //请求号
+            //         $("#reqOnId_div").hide();
+            //         //对手席位
+            //         $("#seatId_div").hide();
+            //         $("#seatId").attr("disabled", true);
+            //         //约定号
+            //         $("#agreeOnId_div").hide();
+            //         //初始交易编号
+            //         $("#intiTradeId_div").show();
+            //         $("#intiTradeId").attr("disabled", true);
+            //         //补充协议
+            //         $("#addCla_div").hide();
+            //     }else if(ps == 'T95'){
+            //         //组合名称
+            //         $("#portfolioId").attr("disabled", true);
+            //         //资金账号
+            //         $("#acctNo").attr("disabled", true);
+            //         //交易场所
+            //         $("#tradeMarket").attr("disabled", true);
+            //         //委托方向
+            //         $("#ps").attr("disabled", false);
+            //         //回购期限
+            //         $("#term").attr("disabled", true);
+            //         //回购金额
+            //         $("#tradeAmt").attr("disabled", true);
+            //         //回购利率
+            //         $("#yield").attr("disabled", false);
+            //         //首期结算日
+            //         $("#fristSettleDate").attr("disabled", true);
+            //         if(init){
+            //             //首期结算日
+            //             $("#expireSettleDate").attr("disabled", true);
+            //         }else{
+            //             //到期结算日
+            //             $("#expireSettleDate").val(etrData.expireSettleDate).attr("disabled", true).trigger('change');
+            //         }
+            //         //占款天数
+            //         $("#occupyDays").attr("disabled", true);
+            //         //回购利息
+            //         $("#intAmt").attr("disabled", true);
+            //         //到期结算金额
+            //         $("#expireSettleAmt").attr("disabled", true);
+            //         //质押券
+            //         $("#repSecId").attr("disabled", true);
+            //         //折算比例
+            //         $("#conRatio").attr("disabled", true);
+            //         //质押数量
+            //         $("#repSecNum").attr("disabled", true);
+            //         //券面金额
+            //         $("#printAmt").attr("disabled", true);
+            //
+            //         //交易对手
+            //         $("#counterId").attr("disabled", true);
+            //         //本方交易员
+            //         $("#trader_div").hide();
+            //         //对手交易员
+            //         $("#counterTrader_div").hide();
+            //         //新质押券
+            //         $("#newRepSecId_div").hide();
+            //         //新折算比例
+            //         $("#newConRatio_div").hide();
+            //         //新质押数量
+            //         $("#newRepSecNum_div").hide();
+            //         //新券面金额
+            //         $("#newPrintAmt_div").hide();
+            //         //原质押券
+            //         $("#origRepSecId_div").hide();
+            //         //原折算比例
+            //         $("#origConRatio_div").hide();
+            //         //原质押数量
+            //         $("#origRepSecNum_div").hide();
+            //         //原券面金额
+            //         $("#origPrintAmt_div").hide();
+            //         //成交编号
+            //         $("#tradeId_div").hide();
+            //         //请求号
+            //         $("#reqOnId_div").hide();
+            //         //对手席位
+            //         $("#seatId_div").hide();
+            //         $("#seatId").attr("disabled", true);
+            //         //约定号
+            //         $("#agreeOnId_div").hide();
+            //         //初始交易编号
+            //         $("#intiTradeId_div").show();
+            //         $("#intiTradeId").attr("disabled", true);
+            //         //补充协议
+            //         $("#addCla_div").hide();
+            //     }else if(ps == 'T56'){
+            //         //组合名称
+            //         $("#portfolioId").attr("disabled", true);
+            //         //资金账号
+            //         $("#acctNo").attr("disabled", true);
+            //         //交易场所
+            //         $("#tradeMarket").attr("disabled", true);
+            //         //委托方向
+            //         $("#ps").attr("disabled", false);
+            //         //回购期限
+            //         $("#term").attr("disabled", false);
+            //         //回购金额
+            //         $("#tradeAmt").attr("disabled", true);
+            //         //回购利率
+            //         $("#yield").attr("disabled", false);
+            //         //首期结算日
+            //         $("#fristSettleDate").attr("disabled", true);
+            //         //到期结算日
+            //         $("#expireSettleDate").attr("disabled", true);
+            //         //占款天数
+            //         $("#occupyDays").attr("disabled", true);
+            //         //回购利息
+            //         $("#intAmt").attr("disabled", true);
+            //         //到期结算金额
+            //         $("#expireSettleAmt").attr("disabled", true);
+            //         //质押券
+            //         $("#repSecId").attr("disabled", true);
+            //         //折算比例
+            //         $("#conRatio").attr("disabled", true);
+            //         //质押数量
+            //         $("#repSecNum").attr("disabled", true);
+            //         //券面金额
+            //         $("#printAmt").attr("disabled", true);
+            //
+            //         //交易对手
+            //         $("#counterId").attr("disabled", true);
+            //         //本方交易员
+            //         $("#trader_div").hide();
+            //         //对手交易员
+            //         $("#counterTrader_div").hide();
+            //         //新质押券
+            //         $("#newRepSecId_div").hide();
+            //         //新折算比例
+            //         $("#newConRatio_div").hide();
+            //         //新质押数量
+            //         $("#newRepSecNum_div").hide();
+            //         //新券面金额
+            //         $("#newPrintAmt_div").hide();
+            //         //原质押券
+            //         $("#origRepSecId_div").hide();
+            //         //原折算比例
+            //         $("#origConRatio_div").hide();
+            //         //原质押数量
+            //         $("#origRepSecNum_div").hide();
+            //         //原券面金额
+            //         $("#origPrintAmt_div").hide();
+            //         //成交编号
+            //         $("#tradeId_div").hide();
+            //         //请求号
+            //         $("#reqOnId_div").hide();
+            //         //对手席位
+            //         $("#seatId_div").hide();
+            //         $("#seatId").attr("disabled", true);
+            //         //约定号
+            //         $("#agreeOnId_div").hide();
+            //         //初始交易编号
+            //         $("#intiTradeId_div").show();
+            //         $("#intiTradeId").attr("disabled", true);
+            //         //补充协议
+            //         $("#addCla_div").hide();
+            //     }
+            // }
             // // 存续期交易： 委托方向 = 正回购 、逆回购以外的 【存续期交易：本方交易员、对手交易员可修改】
             // if(ps != '03' && ps != '04'){
             //     //本方交易员

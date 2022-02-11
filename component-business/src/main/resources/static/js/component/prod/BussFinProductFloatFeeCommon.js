@@ -66,7 +66,6 @@
     	if (feeId && feeId != ''){
 			Joyin.ajax(JoyinUtil.getRealPath('component/prod/BussFinProductFloatFeeCommon/queryMstFeeinfoByFeeId'), {feeId : feeId}, function(result){
 				if (result){
-					debugger;
 					// /** ADD BY YANYA ON 20190920 增加是否修改时初始化值判定，为初始化值时，不进行联动（防止选择的值被替换）**/
 					// var selectedValueProfitType = $('#' + parentProfitType).val();
 					// if(selectedValueProfitType != PROFIT_TYPE_01 || (getElementById('basicBill').val() == '')){

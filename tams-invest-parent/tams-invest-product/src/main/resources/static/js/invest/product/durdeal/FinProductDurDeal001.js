@@ -138,8 +138,6 @@
             var profitType = data.profitType;
             var dealType = data.dealType;
 
-            debugger;
-
             if(profitType=='01' || profitType=='03'){
             	if(profitType=='01'){
             		if(dealType=='C8'){

@@ -62,8 +62,8 @@ var showDetailByFinprodId=function(finprodId,finprodType2){
 		    finprodId:finprodId
 		});//回购标的信息查看
 	}else if(finprodType2 == PINAN_ASSET_TYPE_F07){
-		label='';
-	    pagePath = "";
+		label='FinBondTargetAsset002.title';
+		pagePath = "invest/asset/bond/FinBondTargetAsset002/init";
 		Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
 		    "95%", "90%",{
 		    pageModel:PAGE_MODEL_REFERENCE,
@@ -415,11 +415,15 @@ $(function(){
         		field:'finprodMarketId', 
         		title: 'TrdCommandDispatcher001.finprodId',
         		render : function(data, type, row, meta) {
-        		if(row.finprodType2 != "F07"){
-        			if(row.finprodMarketId !=undefined){
-        				return "<a onclick=\"showDetailByFinprodId('"+row.finprodId+"','"+row.finprodType2+"')\" + style='cursor: pointer;'>"+row.finprodMarketId+"</a>";
-        			}
-        		  }
+					if(row.finprodType2 != "F07"){
+						if(row.finprodMarketId !=undefined){
+							return "<a onclick=\"showDetailByFinprodId('"+row.finprodId+"','"+row.finprodType2+"')\" + style='cursor: pointer;'>"+row.finprodMarketId+"</a>";
+						}
+					}else{
+						if(row.finprodMarketId !=undefined && row.xyFlag == '01') {
+							 return "<a onclick=\"showDetailByFinprodId('"+row.finprodId+"','"+row.finprodType2+"')\" + style='cursor: pointer;'>"+row.finprodMarketId+"</a>";
+						 }
+					}
                 },
                 width:180
         	}
@@ -501,7 +505,7 @@ $(function(){
         	//分发的check
         	Joyin.ajaxJson(JoyinUtil.getRealPath('invest/trade/investtrade/commanddispatcher/TrdCommandDispatcher001/check'), {entrustId:entrustIds,entrustStatus:entrustStatus,operateType:'distribute'},function(result) {
         		Joyin.dialog(JoyinUtil.getLabel("TrdCommandDispatcher001.selectUser"),
-                		JoyinUtil.getRealPath("invest/trade/investtrade/commanddispatcher/TrdCommandDispatcher002/init"), 
+                		JoyinUtil.getRealPath("invest/trade/investtrade/commanddispatcher/TrdCommandDispatcher002/init"),
                 				'45%', '65%',object,function(){table.reload();});
             });
         	

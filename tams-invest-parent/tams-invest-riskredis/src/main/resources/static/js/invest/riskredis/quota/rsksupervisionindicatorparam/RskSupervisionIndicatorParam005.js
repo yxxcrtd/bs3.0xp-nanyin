@@ -492,7 +492,6 @@ $(function() {
     	}
     }*/
     var dateChange = function(id){
-    	debugger;
     	var value = $("#"+id).val();
     	if(value.indexOf(".")!=-1){
     		value = value.substring(0,value.indexOf("."));

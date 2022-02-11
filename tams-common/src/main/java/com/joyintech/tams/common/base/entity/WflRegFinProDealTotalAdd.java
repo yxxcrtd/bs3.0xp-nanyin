@@ -63,14 +63,31 @@ public class WflRegFinProDealTotalAdd extends BaseEntity {
     private BigDecimal lendinIntAmt;
 
     /**
-     * 理论行权日
-     */
-    private Date theSetteDate;
-
-    /**
      * 工作流代码
      */
     private String workflowId;
+
+    /**
+     * 计算方式，净价，全价，到期收益率
+     */
+    private String calMode;
+
+    /**
+     * 行权价
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal exercisePrice;
+
+    /**
+     * 赎回比例
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal redeemRate;
+
+    /**
+     * 实际行权日
+     */
+    private Date actSetteDate;
 
     /**
      * 取得 汇总登记编号
@@ -217,23 +234,6 @@ public class WflRegFinProDealTotalAdd extends BaseEntity {
     }
 
     /**
-     * 取得 理论行权日
-     * @return 理论行权日
-     */
-    public Date getTheSetteDate() {
-        return theSetteDate;
-    }
-
-    /**
-     * 设置 理论行权日
-     * @param theSetteDate 理论行权日
-     */
-    @JsonDeserialize(using = CustomDateDeserialize.class)
-    public void setTheSetteDate(Date theSetteDate) {
-        this.theSetteDate = theSetteDate;
-    }
-
-    /**
      * 取得 工作流代码
      * @return 工作流代码
      */
@@ -247,5 +247,70 @@ public class WflRegFinProDealTotalAdd extends BaseEntity {
      */
     public void setWorkflowId(String workflowId) {
         this.workflowId = workflowId == null ? null : workflowId.trim();
+    }
+
+    /**
+     * 取得 计算方式，净价，全价，到期收益率
+     * @return 计算方式，净价，全价，到期收益率
+     */
+    public String getCalMode() {
+        return calMode;
+    }
+
+    /**
+     * 设置 计算方式，净价，全价，到期收益率
+     * @param calMode 计算方式，净价，全价，到期收益率
+     */
+    public void setCalMode(String calMode) {
+        this.calMode = calMode == null ? null : calMode.trim();
+    }
+
+    /**
+     * 取得 行权价
+     * @return 行权价
+     */
+    public BigDecimal getExercisePrice() {
+        return exercisePrice;
+    }
+
+    /**
+     * 设置 行权价
+     * @param exercisePrice 行权价
+     */
+    public void setExercisePrice(BigDecimal exercisePrice) {
+        this.exercisePrice = exercisePrice;
+    }
+
+    /**
+     * 取得 赎回比例
+     * @return 赎回比例
+     */
+    public BigDecimal getRedeemRate() {
+        return redeemRate;
+    }
+
+    /**
+     * 设置 赎回比例
+     * @param redeemRate 赎回比例
+     */
+    public void setRedeemRate(BigDecimal redeemRate) {
+        this.redeemRate = redeemRate;
+    }
+
+    /**
+     * 取得 实际行权日
+     * @return 实际行权日
+     */
+    public Date getActSetteDate() {
+        return actSetteDate;
+    }
+
+    /**
+     * 设置 实际行权日
+     * @param actSetteDate 实际行权日
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setActSetteDate(Date actSetteDate) {
+        this.actSetteDate = actSetteDate;
     }
 }

@@ -186,7 +186,6 @@
 //        	非最后一个
         	else {
 //        		计算占比
-                debugger;
         		// var prop = JoyinMath.doDiv(finAssetIntInfos[i].amount, sumAmount, 12, JoyinMath.ROUND_HALF_UP);
 //        		根据占比处理所有的钱
         		$.each(itemArr,function(index,val){

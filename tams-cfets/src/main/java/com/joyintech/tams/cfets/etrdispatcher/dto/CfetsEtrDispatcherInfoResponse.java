@@ -90,8 +90,31 @@ public class CfetsEtrDispatcherInfoResponse extends CfetsEtrDispatcherBaseInfo{
     private List<PledgeBondInfoDto> pledgeBondList;
 
     //回购 start
+
+    @ApiModelProperty(name="bondCode",value="债券代码")
+    private String bondCode;
+
+    @ApiModelProperty(name="bondAbbrName",value="债券简称")
+    private String bondAbbrName;
+
+    @ApiModelProperty(name="avaPledgePrin",value="可质押券面总额")
+    private BigDecimal avaPledgePrin;
+
+    @ApiModelProperty(name="underlyingQty",value="质押券券面总额(万元)")
+    private BigDecimal underlyingQty;
+
+    @ApiModelProperty(name="repRegistOrg",value="登记托管机构")
+    private String repRegistOrg;
+
+    @ApiModelProperty(name="pledgeRatio",value="折算比例%")
+    private BigDecimal pledgeRatio;
+
+
     @ApiModelProperty(name="repoTerm",value="回购期限",example="A1")
     private String repoTerm;
+
+    @ApiModelProperty(name="rate",value="回购利率",example="20.1%")
+    private String rate;
 
     @ApiModelProperty(name="pledgeStockName",value="质押券库",example="A1")
     private String pledgeStockName;
@@ -393,5 +416,61 @@ public class CfetsEtrDispatcherInfoResponse extends CfetsEtrDispatcherBaseInfo{
 
     public void setIsRight(String isRight) {
         this.isRight = isRight;
+    }
+
+    public String getRate() {
+        return rate;
+    }
+
+    public void setRate(String rate) {
+        this.rate = rate;
+    }
+
+    public String getBondCode() {
+        return bondCode;
+    }
+
+    public void setBondCode(String bondCode) {
+        this.bondCode = bondCode;
+    }
+
+    public String getBondAbbrName() {
+        return bondAbbrName;
+    }
+
+    public void setBondAbbrName(String bondAbbrName) {
+        this.bondAbbrName = bondAbbrName;
+    }
+
+    public BigDecimal getAvaPledgePrin() {
+        return avaPledgePrin;
+    }
+
+    public void setAvaPledgePrin(BigDecimal avaPledgePrin) {
+        this.avaPledgePrin = avaPledgePrin;
+    }
+
+    public String getRepRegistOrg() {
+        return repRegistOrg;
+    }
+
+    public void setRepRegistOrg(String repRegistOrg) {
+        this.repRegistOrg = repRegistOrg;
+    }
+
+    public BigDecimal getUnderlyingQty() {
+        return underlyingQty;
+    }
+
+    public void setUnderlyingQty(BigDecimal underlyingQty) {
+        this.underlyingQty = underlyingQty;
+    }
+
+    public BigDecimal getPledgeRatio() {
+        return pledgeRatio;
+    }
+
+    public void setPledgeRatio(BigDecimal pledgeRatio) {
+        this.pledgeRatio = pledgeRatio;
     }
 }

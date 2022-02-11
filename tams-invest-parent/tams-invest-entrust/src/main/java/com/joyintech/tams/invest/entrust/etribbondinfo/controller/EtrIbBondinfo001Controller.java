@@ -53,16 +53,12 @@ import java.util.Map;
 @RequestMapping("/invest/entrust/etribbondinfo/EtrIbBondinfo001")
 public class EtrIbBondinfo001Controller extends BaseController{
 
+
     /**
-     * 市场行情接口地址
+     * 外汇交易中心CMDS现券行情接口地址
      */
-   /* @Value("${MarketInfoInterf.BaseUrl}")
-    private String MarketInfoInterf_BaseUrl;*/
-    /**
-     * 外汇交易中心行情接口地址
-     */
-    @Value("${MarketInfoInterf.cmdsUrl}")
-    private String MarketInfoInterf_cmdsUrl;
+    @Value("${cmdsWebSocketUrl}")
+    private String cmdsWebSocketUrl;
 
     /**
      * 债券持仓查询
@@ -144,7 +140,7 @@ public class EtrIbBondinfo001Controller extends BaseController{
      */
     @RequestMapping(value = "/initHq")
     public String initHq(Model model){
-        model.addAttribute("MarketInfoInterf_BaseUrl", MarketInfoInterf_cmdsUrl);
+        model.addAttribute("cmdsWebSocketUrl", cmdsWebSocketUrl);
         return "invest/entrust/etribbondinfo/EtrIbBondinfoHq";
     }
 

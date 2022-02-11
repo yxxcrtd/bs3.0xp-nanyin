@@ -237,7 +237,7 @@
             
             <!-- 组合分配信息 -->
             <div class="page-component" th:data-path="@{/invest/bankuplink/common/CfetsQuotedCommon001/init}" id="cfetsQuotedCommon_div"
-                 th:data-params="|{entityName: 'bussTrdTransferOrder', pageFrom: 'submitForm', entity:'${cfetsBondDealRequestQuoteDtoList}', bizCode:'${tradeId}', quoteType: '02'}|">
+                 th:data-params="|{entityName: 'bussTrdTransferOrder', pageFrom: 'submitForm', entity:'${cfetsBondDealRequestQuoteDtoList}',distribution:'${entity?.distribution}', bizCode:'${tradeId}', quoteType: '02'}|">
             </div>
             
             <div class="pro-module-wrap">

@@ -24,6 +24,7 @@ import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
 import com.joyintech.tams.business.common.dto.PositionRulePtlData;
 import com.joyintech.tams.business.common.pojo.BaseMap;
+import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
@@ -43,14 +44,18 @@ import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInves
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -65,6 +70,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 银行间债券指令
@@ -401,9 +407,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     /**
      * 指令信息查询
      *
-     * @param page int
-     * @param length int
-     * @param pageParam int
      * @return
      * @see
      * @since 1.0
@@ -427,16 +430,29 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if(StringUtil.isNotEmpty(finprodId)){
             pageParam.put("finprodIdList", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));
         }
-        if (StringUtil.equals(dto.getSettleSpeed(),
+       /* if (StringUtil.equals(dto.getSettleSpeed(),
                 DictCodeList.清算速度_T_0.getValue())) {
             pageParam.put("settleSpeed","0");
         }
         if (StringUtil.equals(dto.getSettleSpeed(),
                 DictCodeList.清算速度_T_1.getValue())) {
             pageParam.put("settleSpeed","1");
+        }*/
+        String settleSpeed=(String)pageParam.get("settleSpeed");
+        if(StringUtil.isNotEmpty(settleSpeed)){
+            pageParam.put("settleSpeedList", StringUtil.splitToList(GlobalConstant.COMMA,settleSpeed));
         }
+        String ps = (String)pageParam.get("ps");
+        if(StringUtil.isNotEmpty(ps)){
+            pageParam.put("psList", StringUtil.splitToList(GlobalConstant.COMMA,ps));
+        }
+        String repManager = (String)pageParam.get("repManager");
+        if(StringUtil.isNotEmpty(repManager)){
+            pageParam.put("repManagerList", StringUtil.splitToList(GlobalConstant.COMMA,repManager));
+        }
+
         Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(DateUtil.parse(DateUtil.getSysDate()));
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
         pageParam.put("sort",dto.getPageMode().getSort());
@@ -516,8 +532,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 
     /**
      * 持仓列表查询
-     * @param page
-     * @param length
      * @param requestDto
      * @return
      */
@@ -555,8 +569,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             pages.getRoot().forEach( r->{
                 CfetsUnitCostDto dto = unitCostMap.get(r.getPortfolioId() + r.getFinprodId());
                 if (dto != null){
-                    // 1.持仓成本（万元）
-                    r.setPositionsAmt(ArithmeticUtil.divide(dto.getBuyCostAmt(), BigDecimal.valueOf(10000), 2));
+                    // 1.持仓成本（元）
+                    r.setPositionsAmt(dto.getBuyCostAmt());
                     // 2.持仓成本价（元） 取单位成本
                     r.setUnitCost(dto.getUnitCost());
                 }
@@ -566,18 +580,21 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 if (price != null) {
                     r.setPrice(price);
                 }else{
-                    // 取标的可用面值
-                    price = etrInvestBondInfoService.getAvailableNum(BaseMap.newMap().put("finprodId", r.getFinprodId()).put("sysdate", platDate));
-                    r.setPrice(price);
+                    if (r.getPrice() == null) {
+                        // 取标的可用面值
+                        price = etrInvestBondInfoService.getAvailableNum(BaseMap.newMap().put("finprodId", r.getFinprodId()).put("sysdate", platDate));
+                        r.setPrice(price);
+                    }
                 }
 
                 if (r.getPrice() != null){
-                    // 4.持仓市值（万元）=（交易可用券面总额+交易在途券面总额）* 最新净价 / 单位面值
-                    BigDecimal doAdd = ArithmeticUtil.doAdd(r.getTrdAvaShareAmt(), r.getTrdIntransShareAmt());
+                    // 4.持仓市值（元）=（交易可用券面总额+交易在途券面总额）* 最新净价 / 单位面值
+                    BigDecimal doAdd = ArithmeticUtil.multiply(ArithmeticUtil.doAdd(r.getTrdAvaShareAmt(), r.getTrdIntransShareAmt()), 
+                            BigDecimal.valueOf(10000L));
                     r.setPositionsPrice(ArithmeticUtil.multiply(doAdd, r.getPrice()).divide(BigDecimal.valueOf(100)));
 
                     if (r.getPositionsAmt() != null){
-                        // 5.浮动盈亏（万元） = 持仓市值（万元） - 持仓成本（万元）
+                        // 5.浮动盈亏（元） = 持仓市值（元） - 持仓成本（元）
                         r.setFloatingPl(ArithmeticUtil.subtract(r.getPositionsPrice(), r.getPositionsAmt()));
                     }
                 }
@@ -638,7 +655,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     }
 
     /**
-     * @param requestDto
      * @return
      */
     private Map<String, CfetsUnitCostDto> calcEachCostAmtMap(Date cdate, List<String> portfolioIdList, List<String> finprodIdList, String secType1) {
@@ -714,7 +730,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * 查询前一日持仓指标
      * @param cdate 交易日期
      * @param portfolioIdList 组合代码
-     * @param finprodId 资产代码
      * @param secType1 债券一级分类
      */
     public List<BaseMap> selectLastCostAmt(Date cdate, List<String> portfolioIdList, List<String> finprodIdList, String secType1){
@@ -741,7 +756,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * 当日交易数据查询
      * @param cdate 交易日期
      * @param portfolioIdList 组合代码
-     * @param finprodId 资产代码
      * @param secType1 债券一级分类
      */
     public List<BaseMap> selectCurrTrdData(Date cdate, List<String> portfolioIdList, List<String> finprodIdList, String secType1){
@@ -770,7 +784,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     
     /**
      * 银行间指令，头寸信息
-     * @param pageParam
      * @return
      */
     public List<BaseMap> queryPositionInfo(CfetsEtrIbBondPosiInfoRequestDto requestDto) {
@@ -962,13 +975,13 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             map.put(T0KYXJ, "0");
             map.put(T1KYXJ, "0");
             map.put(ZHXJ, "0");
-            map.put(RRQMKDGHCC, "0");
-            map.put(ZCTRKYCC, "0");
-            map.put(ZCT1RKYCC, "0");
-            map.put(BFQTRKYCC, "0");
-            map.put(BFQT1RKYCC, "0");
-            map.put(RRQTRKYCC, "0");
-            map.put(RRQT1RKYCC, "0");
+//            map.put(RRQMKDGHCC, "0");
+//            map.put(ZCTRKYCC, "0");
+//            map.put(ZCT1RKYCC, "0");
+//            map.put(BFQTRKYCC, "0");
+//            map.put(BFQT1RKYCC, "0");
+//            map.put(RRQTRKYCC, "0");
+//            map.put(RRQT1RKYCC, "0");
         }
         // 初始化返回集合
         List<BaseMap> resp = new ArrayList<>();
@@ -990,19 +1003,19 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         resp.add(BaseMap.newMap()
                 .put("field", T0KYXJ)
                 .put("name", "T日可用现金（元）")
-                .put("amount", bm.getBigDecimalStr(T0KYXJ, "0.00"))
+                .put("amount", bm.get(T0KYXJ))
                 .put("type", "xj"));
         /*T+1日可用现金*/
         resp.add(BaseMap.newMap()
                 .put("field", T1KYXJ)
                 .put("name", "T+1日可用现金（元）")
-                .put("amount", bm.getBigDecimalStr(T1KYXJ, "0.00"))
+                .put("amount", bm.get(T0KYXJ))
                 .put("type", "xj"));
         /*账户现金*/
         resp.add(BaseMap.newMap()
                 .put("field", ZHXJ)
                 .put("name", "账户现金（元）")
-                .put("amount", bm.getBigDecimalStr(ZHXJ, "0.00"))
+                .put("amount", bm.get(T0KYXJ))
                 .put("type", "xj"));
 
         if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "02")){
@@ -1011,7 +1024,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             resp.add(BaseMap.newMap()
                     .put("field", RRQMKDGHCC)
                     .put("name", "融入券卖空待购回持仓（元）")
-                    .put("amount", bm.getBigDecimalStr(RRQMKDGHCC, "0.00"))
+                    .put("amount", decimalToStr(bm.getBigDecimal(RRQMKDGHCC), "0.00"))
                     .put("type", "cc"));
         }
 
@@ -1021,7 +1034,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             resp.add(BaseMap.newMap()
                     .put("field", ZCTRKYCC)
                     .put("name", "资产T日可用持仓（元）")
-                    .put("amount", bm.getBigDecimalStr(ZCTRKYCC, "0.00"))
+                    .put("amount", decimalToStr(bm.getBigDecimal(ZCTRKYCC), "0.00"))
                     .put("type", "cc"));
         }
 
@@ -1031,7 +1044,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             resp.add(BaseMap.newMap()
                     .put("field", ZCT1RKYCC)
                     .put("name", "资产T+1日可用持仓（元）")
-                    .put("amount", bm.getBigDecimalStr(ZCT1RKYCC, "0.00"))
+                    .put("amount", decimalToStr(bm.getBigDecimal(ZCT1RKYCC), "0.00"))
                     .put("type", "cc"));
         }
 
@@ -1041,7 +1054,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             resp.add(BaseMap.newMap()
                     .put("field", BFQTRKYCC)
                     .put("name", "本方券T日可用持仓（元）")
-                    .put("amount", bm.getBigDecimalStr(BFQTRKYCC, "0.00"))
+                    .put("amount", decimalToStr(bm.getBigDecimal(BFQTRKYCC), "0.00"))
                     .put("type", "cc"));
         }
 
@@ -1051,7 +1064,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             resp.add(BaseMap.newMap()
                     .put("field", BFQT1RKYCC)
                     .put("name", "本方券T+1日可用持仓（元）")
-                    .put("amount", bm.getBigDecimalStr(BFQT1RKYCC, "0.00"))
+                    .put("amount", decimalToStr(bm.getBigDecimal(BFQT1RKYCC), "0.00"))
                     .put("type", "cc"));
         }
 
@@ -1061,7 +1074,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             resp.add(BaseMap.newMap()
                     .put("field", RRQTRKYCC)
                     .put("name", "融入券T日可用持仓（元）")
-                    .put("amount", bm.getBigDecimalStr(RRQTRKYCC, "0.00"))
+                    .put("amount", decimalToStr(bm.getBigDecimal(RRQTRKYCC), "0.00"))
                     .put("type", "cc"));
         }
 
@@ -1071,7 +1084,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             resp.add(BaseMap.newMap()
                     .put("field", RRQT1RKYCC)
                     .put("name", "融入券T+1日可用持仓（元）")
-                    .put("amount", bm.getBigDecimalStr(RRQT1RKYCC, "0.00"))
+                    .put("amount", decimalToStr(bm.getBigDecimal(RRQT1RKYCC), "0.00"))
                     .put("type", "cc"));
         }
         return resp;
@@ -1218,6 +1231,15 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 xqfangshi = "无";
             }
             dto.setXqFlg(xqfangshi);
+
+            //增加剩余行权期限，到期日-理论行权日
+            if (!"--".equals(dto.getXqdate())) {
+                long days = DateUtil.getBetweenDayNumber(DateUtil.parse(dto.getXqdate()),DateUtil.parse(dto.getMdate()));
+                dto.setLastXQDate(ArithmeticUtil.divide(new BigDecimal(days+""),new BigDecimal("365"),2).toString());
+            }else {
+                dto.setLastXQDate("--");
+            }
+
         }
         return dto;
     }
@@ -1225,9 +1247,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     /**
      * 指令信息查询
      *
-     * @param page int
-     * @param length int
-     * @param pageParam int
      * @return
      * @see
      * @since 1.0
@@ -1253,6 +1272,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             dto.setEntrustDate(entrustDate);
             dto.setFinvdate(fp.getVdate());
             dto.setFinmdate(fp.getMdate());
+            dto.setFinprodAbbr(fp.getFinprodAbbr());
         }
         dto.setInvManagerId(SecurityUtil.getLoginUser().getUserName());
         dto.setEntrustNum(cfetsDto.getTradeAmt());
@@ -1303,13 +1323,23 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 }
                 if(StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_买入.getValue())){
                     BigDecimal integrateSecAmount=rrqmkdghAmt;
-                    dd.setEntrustIntegrateNum(integrateSecAmount);
-                    dd.setEntrustOwnNum(ArithmeticUtil.subtract(item.getEntrustNum(),integrateSecAmount));
+                    if(integrateSecAmount.compareTo(item.getEntrustNum())>0){
+                        dd.setEntrustIntegrateNum(item.getEntrustNum());
+                        dd.setEntrustOwnNum(BigDecimal.ZERO);
+                    }else{
+                        dd.setEntrustIntegrateNum(integrateSecAmount);
+                        dd.setEntrustOwnNum(ArithmeticUtil.subtract(item.getEntrustNum(),integrateSecAmount));
+                    }
                 }else if(StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_卖出.getValue())){
                     //查询系统本方券可用持仓
                     BigDecimal ownSecAmount=bfqtrkyccAmt;
-                    dd.setEntrustOwnNum(ownSecAmount);
-                    dd.setEntrustIntegrateNum(ArithmeticUtil.subtract(item.getEntrustNum(),ownSecAmount));
+                    if(ownSecAmount.compareTo(item.getEntrustNum())>0){
+                        dd.setEntrustOwnNum(item.getEntrustNum());
+                        dd.setEntrustIntegrateNum(BigDecimal.ZERO);
+                    }else{
+                        dd.setEntrustOwnNum(ownSecAmount);
+                        dd.setEntrustIntegrateNum(ArithmeticUtil.subtract(item.getEntrustNum(),ownSecAmount));
+                    }
                 }else if(StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_行权_回售.getValue())){
                     dd.setEntrustOwnNum(item.getEntrustNum());
                     dd.setEntrustIntegrateNum(BigDecimal.ZERO);
@@ -1317,10 +1347,20 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
                 rrqmkdghSAmt=ArithmeticUtil.doAdd(rrqmkdghSAmt,dd.getEntrustIntegrateNum());
             }else if(StringUtil.equals(shortSellingSupported,"02")){
-                dd.setEntrustOwnNum(item.getEntrustOwnNum()==null?BigDecimal.ZERO:item.getEntrustOwnNum());
-                dd.setEntrustIntegrateNum(item.getEntrustIntegrateNum()==null?BigDecimal.ZERO:item.getEntrustIntegrateNum());
-                bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
-                rrqmkdghSAmt=ArithmeticUtil.doAdd(rrqmkdghSAmt,dd.getEntrustIntegrateNum());
+                if(StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_买入.getValue())
+                || StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_卖出.getValue())){
+                    dd.setEntrustOwnNum(item.getEntrustOwnNum()==null?BigDecimal.ZERO:item.getEntrustOwnNum());
+                    dd.setEntrustIntegrateNum(item.getEntrustIntegrateNum()==null?BigDecimal.ZERO:item.getEntrustIntegrateNum());
+                    bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
+                    rrqmkdghSAmt=ArithmeticUtil.doAdd(rrqmkdghSAmt,dd.getEntrustIntegrateNum());
+                }
+                if(StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_行权_回售.getValue())){
+                    dd.setEntrustOwnNum(item.getEntrustNum());
+                    dd.setEntrustIntegrateNum(BigDecimal.ZERO);
+                    bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
+                    rrqmkdghSAmt=BigDecimal.ZERO;
+                }
+
             }else if(StringUtil.equals(shortSellingSupported,"03")){
                 dd.setEntrustOwnNum(item.getEntrustNum());
                 dd.setEntrustIntegrateNum(BigDecimal.ZERO);
@@ -1426,6 +1466,11 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     dd.setTransmitTime(transmitTimeDto.getTransmitTime());
                     dto.setTransmitTime(transmitTimeDto.getTransmitTime());
                 }
+                dd.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+                dto.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+            }else{
+                dd.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+                dto.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
             }
             etrInvestBondInfoDtosList.add(dd);
         }
@@ -1471,21 +1516,21 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @return
      */
     public AjaxResult  checkSaveErrorMethod(CfetsEtribSaveRequest allDto, BindingResult br) {
-        List<String> messages = new ArrayList<>();
+        List<ValidMessage> messages = new ArrayList<>();
         if(!StringUtil.isNotEmpty(allDto.getFinprodId())){
-            messages.add("请输入资产代码。");
+            messages.add(new ValidMessage("请输入资产代码。"));
         }
         if(!StringUtil.isNotEmpty(allDto.getPs())){
-            messages.add("请输入交易方向。");
+            messages.add(new ValidMessage("请输入交易方向。"));
         }
         if(StringUtil.isNotEmpty(allDto.getPs())
                 && !StringUtil.equals(allDto.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())
                 && !StringUtil.isNotEmpty(allDto.getSettleSpeed())
         ){
-           messages.add("请输入清算速度！");
+            messages.add(new ValidMessage("请输入清算速度。"));
         }
         if(!StringUtil.isNotEmpty(allDto.getPriceModel())){
-            messages.add("请输入价格模式！");
+            messages.add(new ValidMessage("请输入价格模式。"));
         }
         // 价格模式check
         if (StringUtil.isNotEmpty(allDto.getPriceModel()) &&
@@ -1493,26 +1538,29 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                         || StringUtil.equals(allDto.getPriceModel(), DictCodeListExt2.价格模式_限价指令.getValue()))) {
             // 价格模式选择限价指令，净价必填
             if (allDto.getPrice() == null ) {
-                messages.add("请输入净价。");
+                messages.add(new ValidMessage("请输入净价。"));
             }
         }
         if(StringUtil.isNotEmpty(allDto.getPrice()) && allDto.getPrice().compareTo(BigDecimal.ZERO)<=0){
-            messages.add("净价不允许小于等于0。");
+            messages.add(new ValidMessage("净价不允许小于等于0。"));
+
         }
         if(StringUtil.isNotEmpty(allDto.getTradeAmt())&& allDto.getTradeAmt().compareTo(BigDecimal.ZERO)<=0){
-            messages.add("基本信息中“券面总额”不允许小于等于0。");
+            messages.add(new ValidMessage("基本信息中“券面总额”不允许小于等于0。"));
+
         }
         String shortSellingSupported=CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
         if(StringUtil.equals(shortSellingSupported,"02")){
             if(StringUtil.isNotEmpty(allDto.getEntrustOwnNum())&& allDto.getEntrustOwnNum().compareTo(BigDecimal.ZERO)<0){
-                messages.add("基本信息中“本方券券面总额”不允许小于0。");
+                messages.add(new ValidMessage("基本信息中“本方券券面总额”不允许小于0。"));
+
             }
             if(StringUtil.isNotEmpty(allDto.getEntrustIntegrateNum())&& allDto.getEntrustIntegrateNum().compareTo(BigDecimal.ZERO)<0){
                 if(StringUtil.isNotEmpty(allDto.getPs()) && StringUtil.equals(allDto.getPs(),DictCodeList.交易方向_买入.getValue())){
-                    messages.add("基本信息中“卖空购回券面总额”不允许小于0。");
+                    messages.add(new ValidMessage("基本信息中“卖空购回券面总额”不允许小于0。"));
 
                 }else{
-                    messages.add("基本信息中“融入券券面总额”不允许小于0。");
+                    messages.add(new ValidMessage("基本信息中“融入券券面总额”不允许小于0。"));
                 }
             }
         }
@@ -1529,24 +1577,25 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         for(int i = 0; i< dtoList.size(); i++) {
             CfetsBussCombDistribtDto distrib=dtoList.get(i);
             if(!StringUtil.isNotEmpty(dtoList.get(i).getPortfolioId()))
-                messages.add("请输入组合代码(第"+(i+1)+"行)。");
+                messages.add(new ValidMessage("请输入组合代码(第"+(i+1)+"行)。"));
             if(!StringUtil.isNotEmpty(dtoList.get(i).getEntrustNum()))
-                messages.add("请输入券面总额(第"+(i+1)+"行)。");
+               messages.add(new ValidMessage("请输入券面总额(第"+(i+1)+"行)。"));
             if(!StringUtil.isNotEmpty(dtoList.get(i).getBusinessModel()))
-                messages.add("请输入业务模式(第"+(i+1)+"行)。");
+               messages.add(new ValidMessage("请输入业务模式(第"+(i+1)+"行)。"));
             if(StringUtil.isNotEmpty(distrib.getEntrustNum())&& distrib.getEntrustNum().compareTo(BigDecimal.ZERO)<=0){
-                messages.add("组合分配处“券面总额”不允许小于等于0。");
+                messages.add(new ValidMessage("组合分配处“券面总额”不允许小于等于0。"));
+
             }
             if(StringUtil.equals(shortSellingSupported,"02")){
                 if(StringUtil.isNotEmpty(distrib.getEntrustOwnNum())&& distrib.getEntrustOwnNum().compareTo(BigDecimal.ZERO)<0){
-                    messages.add("组合分配处“本方券券面总额”不允许小于0。");
+                    messages.add(new ValidMessage("组合分配处“本方券券面总额”不允许小于0。"));
+
                 }
                 if(StringUtil.isNotEmpty(distrib.getEntrustIntegrateNum())&& distrib.getEntrustIntegrateNum().compareTo(BigDecimal.ZERO)<0){
                     if(StringUtil.isNotEmpty(allDto.getPs()) && StringUtil.equals(allDto.getPs(),DictCodeList.交易方向_买入.getValue())){
-                        messages.add("组合分配处“卖空购回券面总额”不允许小于0。");
-
+                        messages.add(new ValidMessage("组合分配处“卖空购回券面总额”不允许小于0。"));
                     }else{
-                        messages.add("组合分配处“融入券券面总额”不允许小于0。");
+                        messages.add(new ValidMessage("组合分配处“融入券券面总额”不允许小于0。"));
                     }
                 }
             }
@@ -1563,12 +1612,13 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 Map<String, Object> pageParam=new HashMap<>();
                 pageParam.put("finprodId",allDto.getFinprodId());
                 pageParam.put("portfolioId",distrib.getPortfolioId());
-                List<String> busmodelList=cfetsetrIbBondinfoMapper.selectAllBusModelListByInfo(pageParam);
+                pageParam.put("cdate",DateUtil.format(allDto.getEtrDate(),"yyyy-MM-dd"));
+                List<CfetsBussCombDistribtDto> busmodelList=cfetsetrIbBondinfoMapper.selectAllBusModelListByInfo(pageParam);
                 if(!StringUtil.isEmptyList(busmodelList)){
-                    for(String bus:busmodelList){
-                         if(!StringUtil.equals(bus,distrib.getBusinessModel())){
-                            /* messages.add("组合【"+distrib.getPortfolioId()+"】、资产【"+ allDto.getFinprodMarketId()+"】存在多个业务模式，不允许下指令，请先做资产重分类");
-                             break;*/
+                    for(CfetsBussCombDistribtDto bus:busmodelList){
+                         if(!StringUtil.equals(bus.getBusinessModel(),distrib.getBusinessModel())){
+                             messages.add(new ValidMessage("组合【"+bus.getPortfolioName()+"】存在多个业务模式，请先做资产重分类"));
+                             break;
                          }
                     }
                 }
@@ -1576,21 +1626,24 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 
         }
         if(StringUtil.isNotEmpty(allDto.getTradeAmt()) && allDto.getTradeAmt().compareTo(entrustNum)!=0){
-            messages.add("组合分配中各组合券面总额之和必须等于基本信息中券面总额。");
+            messages.add(new ValidMessage("组合分配中各组合券面总额之和必须等于基本信息中券面总额。"));
+
         }
         //根据卖空模式对本方券和融入券/卖空购回券面总额进行赋值
         if(StringUtil.equals(shortSellingSupported,"02")){
             if(StringUtil.isNotEmpty(allDto.getEntrustOwnNum()) && allDto.getEntrustOwnNum().compareTo(entrustOwnNum)!=0){
-                messages.add("组合分配中各组合本方券券面总额之和必须等于基本信息中本方券券面总额。");
+                messages.add(new ValidMessage("组合分配中各组合本方券券面总额之和必须等于基本信息中本方券券面总额。"));
+
             }
             if(StringUtil.isNotEmpty(allDto.getEntrustIntegrateNum()) && allDto.getEntrustIntegrateNum().compareTo(entrustIntegrateNum)!=0){
-                messages.add("组合分配中各组合卖空购回券面总额之和必须等于基本信息中卖空购回券面总额。");
+                messages.add(new ValidMessage("组合分配中各组合卖空购回券面总额之和必须等于基本信息中卖空购回券面总额。"));
+
             }
             if(StringUtil.isNotEmpty(allDto.getEntrustOwnNum()) && StringUtil.isNotEmpty(allDto.getEntrustIntegrateNum())
                &&  StringUtil.isNotEmpty(allDto.getTradeAmt())
             ){
                 if(allDto.getTradeAmt().compareTo(ArithmeticUtil.doAdd(allDto.getEntrustOwnNum(),allDto.getEntrustIntegrateNum()))!=0){
-                    messages.add("基本信息中券面总额必须等于基本信息中本方券券面总额和卖空购回券面总额之和。");
+                    messages.add(new ValidMessage("基本信息中券面总额必须等于基本信息中本方券券面总额和卖空购回券面总额之和。"));
                 }
             }
         }
@@ -1598,7 +1651,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if(StringUtil.isNotEmpty(fp)){
             String isHoliday = cfetsetrIbBondinfoMapper.getIsHoliday(allDto.getEtrDate(), fp.getCalendarId());
             if(StringUtil.isNotEmpty(isHoliday) && !StringUtil.equals(isHoliday,"0")){
-                messages.add("指令日期必须为交易日。");
+                messages.add(new ValidMessage("指令日期必须为交易日。"));
+
             }
         }
         boolean isAuthorizationSoftcontrol = Boolean.parseBoolean(CacheUtil.getSysParam("IS_AUTHORIZATION_SOFTCONTROL"));
@@ -1609,7 +1663,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 /*if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETRLIMIT_SWITCH_IS_TOTAL), "Y")){*/
                     String mess=getEtrLimitSwitch(allDto);
                     if(StringUtil.isNotEmpty(mess)){
-                        messages.add(mess);
+                        messages.add(new ValidMessage(mess));
+
                     }
               /*  }else{
                     List<CfetsBussCombDistribtDto> etribComDistribtDtoList =allDto.getBussCombDistribtList();
@@ -1631,10 +1686,9 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }
         }
         if(messages.size()>0) {
-            AjaxResult m=new AjaxResult();
-            m.setStatuCode(220);
-            m.setMessage(StringUtil.joinString(messages,  GlobalConstant.VERTICAL_LINE));
-            return m;
+            AjaxResult errorRs = new AjaxResult();
+            errorRs.setErrorList(messages);
+            return errorRs;
         }
         return null;
     }
@@ -1772,7 +1826,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 
         return null;
     }
-    public AjaxResult closeDelegateCheckMethod(EtrInvestBondInfoDto dto){
+    public AjaxResult closeDelegateCheckMethod(CfetsEtribBondInfo003Dto dto){
         if(!StringUtil.isNotEmpty(dto)|| StringUtil.isEmptyList(dto.getSelectedItem())){
             AjaxResult res=new AjaxResult();
             ValidMessage  validMessage= new ValidMessage();
@@ -1780,17 +1834,31 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             res.setErrorList(Arrays.asList(validMessage));
             return res;
         }
-        List<EtrInvestBondInfoDto> selectedItem = dto.getSelectedItem();
+        List<CfetsEtribBondInfo003Dto> selectedItem = dto.getSelectedItem();
         AjaxResult ajaxResult=new AjaxResult();
         if(StringUtil.isNotEmpty(selectedItem)){
             List<String> entrustIds = new ArrayList<>();
-            for(EtrInvestBondInfoDto Item:selectedItem){
+            for(CfetsEtribBondInfo003Dto Item:selectedItem){
                 if(StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托状态_流程中.getValue())){
                     AjaxResult res=new AjaxResult();
                     ValidMessage  validMessage= new ValidMessage();
                     validMessage.setMessage("流程中的数据不允许关闭");
                     res.setErrorList(Arrays.asList(validMessage));
                     return res;
+                }
+                if(StringUtil.isNotEmpty(Item.getEntrustId()))
+                {
+                    WflEtrEntrustKey wflEtrEntrustKey = new WflEtrEntrustKey();
+                    wflEtrEntrustKey.setEntrustId(Item.getEntrustId());
+                    wflEtrEntrustKey.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                    WflEtrEntrust wflEtrEntrust = wflEtrEntrustMapper.selectByPrimaryKey(wflEtrEntrustKey);
+                    if(wflEtrEntrust!=null){
+                        AjaxResult res=new AjaxResult();
+                        ValidMessage  validMessage= new ValidMessage();
+                        validMessage.setMessage("存在流程中数据，无法关闭。");
+                        res.setErrorList(Arrays.asList(validMessage));
+                        return res;
+                    }
                 }
                 entrustIds.add(Item.getEntrustId());
             }
@@ -1804,7 +1872,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         ajaxResult.setErrorList(Arrays.asList(validMessage));
         return ajaxResult;
     }
-    public AjaxResult recallDelegateCheckMethod(EtrInvestBondInfoDto dto){
+    public AjaxResult recallDelegateCheckMethod(CfetsEtribBondInfo003Dto dto){
         if(!StringUtil.isNotEmpty(dto)|| StringUtil.isEmptyList(dto.getSelectedItem())){
             AjaxResult res=new AjaxResult();
             ValidMessage  validMessage= new ValidMessage();
@@ -1812,10 +1880,10 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             res.setErrorList(Arrays.asList(validMessage));
             return res;
         }
-        List<EtrInvestBondInfoDto> selectedItem = dto.getSelectedItem();
+        List<CfetsEtribBondInfo003Dto> selectedItem = dto.getSelectedItem();
         AjaxResult ajaxResult=new AjaxResult();
         if(StringUtil.isNotEmpty(selectedItem)){
-            for(EtrInvestBondInfoDto Item:selectedItem){
+            for(CfetsEtribBondInfo003Dto Item:selectedItem){
                 if(!StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托接收状态_待接收.getValue())
                         && !StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托状态_待分发.getValue())
                 ){
@@ -1861,7 +1929,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
         return new AjaxResult();
     }
-    public boolean recallDelegateMethod(EtrInvestBondInfoDto dto)
+    public boolean recallDelegateMethod(CfetsEtribBondInfo003Dto dto)
             throws InvocationTargetException, IllegalAccessException {
         BaseEtrInvestInfoDto entity=recallDelegatePackageEquity(dto);
         // 将传来dto中的委托指令的委托状态改为"已撤回"
@@ -1880,7 +1948,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
         return false;
     }
-    public BaseEtrInvestInfoDto recallDelegatePackageEquity(EtrInvestBondInfoDto dto)
+    public BaseEtrInvestInfoDto recallDelegatePackageEquity(CfetsEtribBondInfo003Dto dto)
             throws IllegalAccessException, InvocationTargetException {
         BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
         EtrEntrust etrEntrust = new EtrEntrust();
@@ -1896,7 +1964,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         entity.setEtrDistributeList(etrDistributeList);
         return entity;
     }
-    public boolean closeDelegateMethod(String entrustId,String closeWay){
+    public boolean closeDelegateMethod(String entrustId){
         EtrEntrust ee = etrEntrustMapper.selectByPrimaryKey(entrustId);
         if (ee != null) {
             // 调用投资委托组件的更新委托状态接口，将委托状态设置为“已关闭”
@@ -1909,17 +1977,20 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
         return false;
     }
-    public void closeDelegatePositionMethod(List<EtrInvestBondInfoDto> dtolist){
+    public void closeDelegatePositionMethod(List<CfetsEtribBondInfo003Dto> dtolist,String assetType){
         CfetsEtrIbClosePositionRequest req=new CfetsEtrIbClosePositionRequest();
         List<CfetsEtrIbClosePosEtrRequest> etrList=new ArrayList<>();
-        for(EtrInvestBondInfoDto t: dtolist){
+        for(CfetsEtribBondInfo003Dto t: dtolist){
             CfetsEtrIbClosePosEtrRequest closeItem=new CfetsEtrIbClosePosEtrRequest();
             String busiTypePosition=DictCodeListExt3.头寸业务类型_现券交易.getValue();
-            if(StringUtil.isNotEmpty(t.getPs())
-                    && StringUtil.equals(t.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
-                busiTypePosition=DictCodeListExt3.头寸业务类型_债券行权交易.getValue(); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
+            if(StringUtil.equals(assetType,DictCodeList.平安资产类型_质押式回购.getValue())){
+                busiTypePosition =DictCodeListExt3.头寸业务类型_质押式回购首期.getValue();
+            }else{
+                if(StringUtil.isNotEmpty(t.getPs())
+                        && StringUtil.equals(t.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
+                    busiTypePosition=DictCodeListExt3.头寸业务类型_债券行权交易.getValue(); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
+                }
             }
-
             closeItem.setBusiType(busiTypePosition);
             closeItem.setPs(t.getPs());
             closeItem.setCloseId(t.getEntrustId());
@@ -1933,10 +2004,10 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
         PositionHttpRequest.batchClose(req);
     }
-    public void closeDelegatOprHisMethod(EtrInvestBondInfoDto dto){
-        List<EtrInvestBondInfoDto> dtolist = dto.getSelectedItem();
+    public void closeDelegatOprHisMethod(CfetsEtribBondInfo003Dto dto){
+        List<CfetsEtribBondInfo003Dto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0) {
-            for (EtrInvestBondInfoDto entity : dtolist) {
+            for (CfetsEtribBondInfo003Dto entity : dtolist) {
                 //更新操作记录日志
                 CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
                 oprHisReq.setEntrustId(entity.getEntrustId());
@@ -1963,7 +2034,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     }
     /**
      *风险试算时，后台数据转换
-     * @param cfetsDto
      * @return
      */
     public  Map<String, Object> doRiskcalPackageEquity(CfetsEtrIbdoRiskcalRequest dto) {
@@ -2007,9 +2077,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     }
     /**
      * 查询该资产对应的组合分配列表
-     * @param page
-     * @param length
-     * @param requestDto
      * @return
      */
     public List<CfetsBussCombDistribtBaseDto> queryCfetsBussCombDisList(String secId) {
@@ -2031,9 +2098,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     }
     /**
      * 查询资产是否行权债
-     * @param page
-     * @param length
-     * @param requestDto
      * @return
      */
     public Boolean queryAssetIsRight(String secId) {
@@ -2045,4 +2109,101 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         param.put("finprodId",secId);
         return cfetsetrIbBondinfoMapper.queryAssetIsRight(param);
     }
+
+    @Transactional
+    public Message<AjaxResult> recallDelegate( CfetsEtribBondInfo003Dto dto) throws Exception {
+        //对选择的数据进行check
+        AjaxResult ajaxResult =recallDelegateCheckMethod(dto);
+        if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+            return new Message<AjaxResult>().success().setData(ajaxResult);
+        }
+        List<CfetsEtribBondInfo003Dto> dtolist = dto.getSelectedItem();
+        if(dtolist != null && dtolist.size()>0){
+            for(CfetsEtribBondInfo003Dto entity : dtolist){
+                recallDelegateMethod(entity);
+            }
+            //更新操作日志
+            // cfetsEtrIbBondinfoService.recallDelegateOprHisMethod(dto);
+            // add by zhangrui1 批量撤销预占 start
+            String assetType = DictCodeList.平安资产类型_债券.getValue();
+            if(StringUtil.equals(dto.getAssetType(),DictCodeList.平安资产类型_质押式回购.getValue())){
+                assetType = DictCodeList.平安资产类型_质押式回购.getValue();
+            }
+            EntrustRdsCommonAop.doListPreOccupy(dtolist, assetType,
+                    BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+            // add by zhangrui1 批量撤销预占 end
+            return new Message<AjaxResult>().success().setData(new AjaxResult(this.getMessage("ETR_X_001")));
+
+        }
+        return new Message<AjaxResult>().success().setData(new AjaxResult(this.getMessage("ETR_X_002")));
+    }
+
+    @Transactional
+    public Message<AjaxResult> closeDelegate( CfetsEtribBondInfo003Dto dto) throws Exception{
+        //对选择的数据进行check
+        AjaxResult ajaxResult = closeDelegateCheckMethod(dto);
+        if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+            return new Message<AjaxResult>().success().setData(ajaxResult);
+        }
+        List<CfetsEtribBondInfo003Dto> dtolist = dto.getSelectedItem();
+
+        if(dtolist != null && dtolist.size()>0){
+            for(CfetsEtribBondInfo003Dto entity : dtolist){
+                closeDelegateMethod(entity.getEntrustId());
+            }
+            // add by zhangrui1 批量委托关闭 start
+            // 若预占下没有实占则预占信息清除，否则预占信息保留，撤销交易时可恢复原状态
+            List<String> entrustIdList = dtolist.stream().map(
+                    CfetsEtribBondInfo003Dto::getEntrustId).collect(Collectors.toList());
+            // ZGZGST-2330:委托关闭判断是否有完成额度，分情况处理 fuyongsheng 20210919 edit start
+            if(CollectionUtils.isNotEmpty(entrustIdList)){
+                Map<String, BigDecimal> etrFinishMap = EntrustCompleteUtil.getEtrFinishAmtList(entrustIdList);
+                //委托没有做过交易的，和撤销相同逻辑，删除预占
+                List<CfetsEtribBondInfo003Dto> recallEntrustIdList = new ArrayList<>();
+                //委托已有完成额度，做过交易，走关闭完成的逻辑，更新预占
+                List<String> closeEntrustIdList = new ArrayList<>();
+                for(CfetsEtribBondInfo003Dto etrDto : dtolist) {
+                    if(StringUtil.isNotEmpty(etrFinishMap) && StringUtil.isNotEmpty(etrFinishMap.get(etrDto.getEntrustId()))
+                            && BigDecimal.ZERO.compareTo(etrFinishMap.get(etrDto.getEntrustId()))<0) {
+                        closeEntrustIdList.add(etrDto.getEntrustId());
+                    }
+                    else if(entrustIdList.contains(etrDto.getEntrustId())){
+                        recallEntrustIdList.add(etrDto);
+                    }
+                }
+
+                //没有做过交易，直接关闭的
+                if(!StringUtil.isEmptyList(recallEntrustIdList)) {
+                    if(StringUtil.equals(dto.getAssetType(),DictCodeList.平安资产类型_质押式回购.getValue())){
+                        EntrustRdsCommonAop.doListPreOccupy(
+                                recallEntrustIdList, DictCodeList.平安资产类型_质押式回购.getValue(),
+                                BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(),
+                                false, null);
+                    }else {
+                        // add by yushilong 批量撤销预占 start
+                        EntrustRdsCommonAop.doListPreOccupy(recallEntrustIdList, DictCodeList.平安资产类型_债券.getValue(),
+                                BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+                        // add by yushilong 批量撤销预占 end
+                    }
+                }
+
+                //已经有委托完成度的
+                if(!StringUtil.isEmptyList(closeEntrustIdList)) {
+                    EntrustCompleteUtil.doComplete(closeEntrustIdList);
+                }
+            }
+            // ZGZGST-2330:委托关闭判断是否有完成额度，分情况处理 fuyongsheng 20210919 edit end
+            // add by zhangrui1 批量委托关闭 end
+
+            //发送头寸，批量关闭
+            closeDelegatePositionMethod(dtolist,dto.getAssetType());
+            //更新操作日志
+            closeDelegatOprHisMethod(dto);
+
+            return new Message<AjaxResult>().success().setData(new AjaxResult(this.getMessage("ETR_X_003")));
+        }
+        return new Message<AjaxResult>().success().setData(new AjaxResult(this.getMessage("ETR_X_004")));
+    }
+
+
 }

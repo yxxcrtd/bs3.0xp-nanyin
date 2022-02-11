@@ -1,11 +1,9 @@
 package com.joyintech.tams.invest.common.entrust.dto;
 
 import java.util.Date;
+import java.util.List;
 
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
-import com.joyintech.tams.common.base.entity.EtrEntrustWw;
-import com.joyintech.tams.common.base.entity.EtrEntrustWwDetail;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 
 /**
@@ -36,6 +34,8 @@ public class EntrustCommonDto {
     private EtrEntrustWw etrEntrustWw;
 
     private EtrEntrustWwDetail etrEntrustWwDetail;
+
+    private List<EtrEntrustDetail> etrEntrustDetailList;
 
     public BussRepoSecDto getBussRepoSecDto() {
         return bussRepoSecDto;
@@ -93,4 +93,11 @@ public class EntrustCommonDto {
         this.etrEntrustWwDetail = etrEntrustWwDetail;
     }
 
+    public List<EtrEntrustDetail> getEtrEntrustDetailList() {
+        return etrEntrustDetailList;
+    }
+
+    public void setEtrEntrustDetailList(List<EtrEntrustDetail> etrEntrustDetailList) {
+        this.etrEntrustDetailList = etrEntrustDetailList;
+    }
 }

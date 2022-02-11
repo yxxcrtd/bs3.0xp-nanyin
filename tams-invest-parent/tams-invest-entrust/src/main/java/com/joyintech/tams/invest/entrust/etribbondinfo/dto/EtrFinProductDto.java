@@ -488,7 +488,7 @@ public class EtrFinProductDto {
         if (StringUtil.isEmpty(getSecType())) {
             return null;
         }
-        return SysDataUtil.getNameFromDataDict(DictCode.行内资产二级分类, getSecType());
+        return SysDataUtil.getNameFromDataDict(DictCode.行内资产四级分类, getSecType());
     }
 
     public void setSecTypeName(String secTypeName) {

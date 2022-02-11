@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.bankuplink.repo.dto;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -25,7 +26,7 @@ import java.util.List;
  * 
  * @author yufei
  * @version 1.0 2020年5月14日
- * @see CfetsRepoDealQuotedPriceDto
+ * @see CfetsRepoDealQuotedPrice003Dto
  * @since 1.0
  */
 public class CfetsRepoDealQuotedPrice003Dto extends BaseEntity {
@@ -161,6 +162,11 @@ public class CfetsRepoDealQuotedPrice003Dto extends BaseEntity {
      * 组合名称
      */
     private String portfolioName;
+
+    /*
+     * 首次净价
+     */
+    private String firstNetPrice;
 
     /**
      * 获取 prinSysDate
@@ -705,5 +711,27 @@ public class CfetsRepoDealQuotedPrice003Dto extends BaseEntity {
 
     public void setPortfolioSeries(String portfolioSeries) {
         this.portfolioSeries = portfolioSeries;
+    }
+
+    public String getFirstNetPrice() {
+        return firstNetPrice;
+    }
+
+    public void setFirstNetPrice(String firstNetPrice) {
+        this.firstNetPrice = firstNetPrice;
+    }
+
+    public String getAvaPledgePrinStr() {
+        if (this.getAvaPledgePrin() != null) {
+            return ArithmeticUtil.divide(this.getAvaPledgePrin(), new BigDecimal(10000), 2).toPlainString();
+        }
+        return null;
+    }
+
+    public String getPledgePrinStr() {
+        if (this.getPledgePrin() != null) {
+            return ArithmeticUtil.divide(this.getPledgePrin(), new BigDecimal(10000), 2).toPlainString();
+        }
+        return null;
     }
 }

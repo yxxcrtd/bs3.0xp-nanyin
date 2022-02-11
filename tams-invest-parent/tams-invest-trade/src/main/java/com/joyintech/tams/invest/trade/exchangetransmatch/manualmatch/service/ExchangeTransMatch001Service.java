@@ -129,6 +129,15 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
             map.put("applyNoList",StringUtil.splitToList(GlobalConstant.COMMA, applyNo));
         }
 
+        if(StringUtil.isNotEmpty(map.get("ps"))) {
+            String ps = (String)map.get("ps");
+            if(StringUtil.equals(ps,DictCodeListExt3.交易方向_正回购.getValue())
+            || StringUtil.equals(ps,DictCodeListExt3.交易方向_逆回购.getValue()) ) {
+                map.put("ps",DictCodeList.交易方向_买入.getValue());
+                map.put("finprodType2",StringUtil.equals(ps,DictCodeListExt3.交易方向_正回购.getValue())?DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue():DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+            }
+        }
+
         Page<ExchangeTransMatch002Dto> page = restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME
                 + "/ExchangeTransMatchController/findPage", map, ExchangeTransMatch002Dto.class);
 
@@ -152,6 +161,7 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
             String finprodType2 = (String)map.get("finprodType2");
             map.put("finprodType2List",StringUtil.splitToList(GlobalConstant.COMMA, finprodType2));
         }
+
         Page<ExchangeTransMatch003Dto> page = restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME
                 + "/ExchangeTransMatchController/findEntrustPage", map, ExchangeTransMatch003Dto.class);
         return page;
@@ -174,6 +184,14 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
         if(StringUtil.isNotEmpty(map.get("dealId"))) {
             String dealId = (String)map.get("dealId");
             map.put("dealIdList",StringUtil.splitToList(GlobalConstant.COMMA, dealId));
+        }
+        if(StringUtil.isNotEmpty(map.get("ps"))) {
+            String ps = (String)map.get("ps");
+            if(StringUtil.equals(ps,DictCodeListExt3.交易方向_正回购.getValue())
+                    || StringUtil.equals(ps,DictCodeListExt3.交易方向_逆回购.getValue()) ) {
+                map.put("ps",DictCodeList.交易方向_买入.getValue());
+                map.put("finprodType2_hg",StringUtil.equals(ps,DictCodeListExt3.交易方向_正回购.getValue())?DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue():DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+            }
         }
         Page<ExchangeTransMatch004Dto> page = restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME
                 + "/ExchangeTransMatchController/findTransMatchInfoPage", map, ExchangeTransMatch004Dto.class);
@@ -372,6 +390,7 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                 TrdRepoTrade002Dto trdRepoTrade002Dto =new TrdRepoTrade002Dto();
                 BeanUtil.copyPropertiesIgnoreNull(trdRepoTrade002Dto,settleTransDataTotal);
                 trdRepoTrade002Dto.setDealSqeId(settleTransDataTotal.getSeqId());
+
                 //期限品种
                 trdRepoTrade002Dto.setTermTypeReback(settleTransDataTotal.getTermType());
                 //回购利率
@@ -383,7 +402,7 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                 trdRepoTrade002Dto.setIsOutTrade(DictCodeList.是否_是.getValue());
                 trdRepoTrade002Dto.setTradeAmt(dto.getRemainAmount());
                 trdRepoTrade002Dto.setPrinAmt(dto.getRemainAmount());
-                trdRepoTrade002Dto.setRebackPrice(dto.getUnitCprice());
+                trdRepoTrade002Dto.setRebackPrice(ArithmeticUtil.multiply(dto.getUnitCprice(),new BigDecimal(100)));
                 trdRepoTrade002Dto.setShareAmt(dto.getRemainNum());
                 trdRepoTrade002Dto.setCommissionAmt(dto.getCommissionAmt());
                 trdRepoTrade002Dto.setTradeAmtAndFee(ArithmeticUtil.subtract(trdRepoTrade002Dto.getPrinAmt(),trdRepoTrade002Dto.getCommissionAmt()));
@@ -416,6 +435,9 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                 trdFundInvestTradeDto.setSecManageAcctId(settleTransDataTotal.getSecAcctId());
                 trdFundInvestTradeDto.setDealSqeId(settleTransDataTotal.getSeqId());
                 trdFundInvestTradeDto.setFinprodMarketId(dto.getFinprodMarketId());
+                trdFundInvestTradeDto.setTradeAmt(dto.getRemainAmount());
+                trdFundInvestTradeDto.setShareAmt(dto.getRemainNum());
+                trdFundInvestTradeDto.setCommissionFee(dto.getCommissionAmt());
 
                 if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
                     trdFundInvestTradeDto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);

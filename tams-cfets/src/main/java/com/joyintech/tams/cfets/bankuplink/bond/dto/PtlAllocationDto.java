@@ -39,6 +39,12 @@ public class PtlAllocationDto {
     @ApiModelProperty(name="inSec",value="融入券券面总额(万元)")
     private BigDecimal lendinEntNum;
 
+    @ApiModelProperty(name="lendinShareAmt",value="融入券券面")
+    private BigDecimal lendinShareAmt;
+
+    @ApiModelProperty(name="ourShareAmt",value="本方券券面")
+    private BigDecimal ourShareAmt;
+
     @ApiModelProperty(name="sellRepurchaseSec",value="卖空购回券面总额(万元)")
     private BigDecimal sellAbleNum;
 
@@ -86,6 +92,12 @@ public class PtlAllocationDto {
 
     @ApiModelProperty(name="exerYield",value="行权收益率(%)")
     private BigDecimal exerYield;
+
+    @ApiModelProperty(name="secManageAcctIdStr",value="证券账户名称")
+    private String secManageAcctIdStr;
+
+    @ApiModelProperty(name="partyId",value="交易成员ID，21位编号")
+    private String partyId;
 
     public String getEntrustId() {
         return entrustId;
@@ -277,6 +289,38 @@ public class PtlAllocationDto {
 
     public void setSecAcctName(String secAcctName) {
         this.secAcctName = secAcctName;
+    }
+
+    public String getSecManageAcctIdStr() {
+        return secManageAcctIdStr;
+    }
+
+    public void setSecManageAcctIdStr(String secManageAcctIdStr) {
+        this.secManageAcctIdStr = secManageAcctIdStr;
+    }
+
+    public String getPartyId() {
+        return partyId;
+    }
+
+    public void setPartyId(String partyId) {
+        this.partyId = partyId;
+    }
+
+    public BigDecimal getLendinShareAmt() {
+        return lendinShareAmt;
+    }
+
+    public void setLendinShareAmt(BigDecimal lendinShareAmt) {
+        this.lendinShareAmt = lendinShareAmt;
+    }
+
+    public BigDecimal getOurShareAmt() {
+        return ourShareAmt;
+    }
+
+    public void setOurShareAmt(BigDecimal ourShareAmt) {
+        this.ourShareAmt = ourShareAmt;
     }
 }
 

@@ -204,4 +204,17 @@ public interface    BasicMstTradeOpponent001Mapper {
      * @since 1.0
      */
     int selectFHCounter(@Param("counterId")String counter);
+
+    /**
+     * 获取银行间机构21位码
+     * @param param
+     * @return
+     */
+    List<SuggestDto> selectPartyId(Map<String, Object> param);
+
+    /**
+     * 获取所有的已匹配的银行间机构21位码
+     * @return
+     */
+    List<String> getAllPartyIdIsNotNull();
 }

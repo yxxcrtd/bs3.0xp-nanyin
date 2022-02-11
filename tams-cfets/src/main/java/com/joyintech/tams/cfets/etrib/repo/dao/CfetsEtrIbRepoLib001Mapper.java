@@ -1,6 +1,5 @@
 package com.joyintech.tams.cfets.etrib.repo.dao;
 
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLib001Dto;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLibAvaPledgeBondResponse;
 import com.joyintech.tams.common.base.entity.EtrEntrustPledge;
 import org.springframework.stereotype.Repository;

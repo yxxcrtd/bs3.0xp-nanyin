@@ -685,7 +685,6 @@ $(function () {
                 if (unitCprice && tradeAmt) {
                     $('#shareAmt').val((tradeAmt-getPayWithTradeFee())/ unitCprice).trigger('blur');
                 }
-                debugger;
             }
             
         });

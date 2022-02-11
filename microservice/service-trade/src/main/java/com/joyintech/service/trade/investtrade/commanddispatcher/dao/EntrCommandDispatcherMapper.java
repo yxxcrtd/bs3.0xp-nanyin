@@ -13,6 +13,7 @@ package com.joyintech.service.trade.investtrade.commanddispatcher.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.trade.investtrade.commanddispatcher.dto.EtrEntrustDetailDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -43,5 +44,6 @@ public interface EntrCommandDispatcherMapper {
     
     
     List<EntrTradePledgeDto> queryEtrPledgeListByEtrId(@Param("entrustId") String entrustId);
-   
+
+    List<EtrEntrustDetailDto> selectEtrDetailList(Map<String, Object> param);
 }

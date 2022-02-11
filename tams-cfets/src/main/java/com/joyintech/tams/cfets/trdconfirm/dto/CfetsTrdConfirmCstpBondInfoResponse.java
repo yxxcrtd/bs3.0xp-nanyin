@@ -194,8 +194,7 @@ public class CfetsTrdConfirmCstpBondInfoResponse {
     }
 
     public String getSettleSpeedName() {
-        return "T+" + this.getSettleSpeed();
-        //return SysDataUtil.getNameFromDataDict(DictCode.清算速度, getSettleSpeed());
+        return SysDataUtil.getNameFromDataDict(DictCode.清算速度, getSettleSpeed());
     }
 
     public void setSettleSpeedName(String settleSpeedName) {

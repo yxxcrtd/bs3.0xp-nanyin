@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.valuation.interf.core.exception.InterfException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -27,9 +28,13 @@ import com.joyintech.tams.valuation.common.interf.base.dto.TemplateOrderInfoRead
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
 import com.joyintech.tams.valuation.common.interf.base.service.assetdeal.cleanorder.CleanOrderTemplateRecSerive;
 import com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.assetdeal.cleanorder.dto.CleanOrderProcessorResult;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -64,7 +69,7 @@ public class CleanOrderRecService {
         paramMap.put(InterfCommonConstant.接口模式,(String)acctEntity.getParams().get(InterfCommonConstant.接口模式));
         if(TempConstant.结算指令.equals(acctEntity.getTmpEName())){
         	result = cleanOrderTemplateRecSerive.execute(templateSourceFlgDTO, acctEntity);
-        	paramMap.put("busiType",DictCodeList.业务类型_指令交易.getValue());
+        	paramMap.put("busiType", DictCodeList.业务类型_指令交易.getValue());
 			if(result.getParamMap()!=null){
         		paramMap.put("booksetIds", result.getParamMap().get("booksetIds"));
         	}

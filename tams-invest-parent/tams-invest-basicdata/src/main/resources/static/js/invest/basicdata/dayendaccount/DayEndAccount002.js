@@ -67,6 +67,7 @@ $(function() {
         ,{field: 'stampFeeFlg', type:'money', width: 150, visible: false}
         ,{field: 'settleFeeFlg', type:'money', width: 150, visible: false}
         ,{field: 'ghfAmtFlg', type:'money', width: 150, visible: false}
+        ,{field:'finprodId',sortable: false,width:120, visible: false}
     ];
     var dataDetailTable = $("#dataDetailTable").joyintable({
         ajax: {

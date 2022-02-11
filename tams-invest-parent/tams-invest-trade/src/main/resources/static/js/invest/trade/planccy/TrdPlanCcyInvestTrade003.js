@@ -58,7 +58,6 @@ $(function() {
 	                });
 	            }
 	        }
-	        debugger;
 	        Joyin.ajaxJson(basePath + 'invest/trade/planccy/TrdPlanCcyInvestTrade003/check', object, function(result) {
 	        	Joyin.ajaxJson(basePath + 'invest/trade/planccy/TrdPlanCcyInvestTrade003/checkAuthorization', object, function(result1) {
 	        		Joyin.confirm(result.data, function() {

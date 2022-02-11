@@ -11,7 +11,7 @@
         T1.TOTLE_TRADE_ID tradeId,
         to_char(T1.TRADE_DATE,'yyyy-MM-dd') tradeDate,
         to_char(T1.SETTLE_DATE,'yyyy-MM-dd') settleDate,
-        T2.FINPROD_MARKET_ID finprodMarketId,
+        nvl(T2.FINPROD_MARKET_ID,rfpd.TERM_TYPE) finprodMarketId,
         T2.FINPROD_ABBR finprodAbbr,
         T1.FINPROD_TYPE2 finprodType2,
         sdl1.item_value finprodType2Str,
@@ -19,10 +19,10 @@
         sdl2.item_value tgBusiTypeStr,
         T1.PS ps,
         sdl3.item_value psStr,
-        T1.SHARE_AMT*100 settleNum,
+        T1.SHARE_AMT/100 settleNum,
         T1.TRADE_AMT settleAmt,
-        LISTAGG(T4.PORTFOLIO_ID,';') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID))  portfolioId,
-        LISTAGG(T5.PORTFOLIO_NAME,';') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID)) portfolioName,
+        LISTAGG(T4.PORTFOLIO_ID,',') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID))  portfolioId,
+        LISTAGG(T5.PORTFOLIO_NAME,',') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID)) portfolioName,
         case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
              when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
              when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
@@ -37,31 +37,37 @@
         sdl6.item_value tradeMarketModeStr,
         NULL AS cleanStlStatus,
         NULL AS cleanArgStatus,
-        NULL settleSeqNo,
+        T8.SETTLE_SEQ_NO settleSeqNo,
         T1.FINPROD_ID finprodId,
         T1.CCY ccy,
-        decode(T1.PS,#{PS_T07},'04',#{PS_T08},'04',#{PS_T09},'04',#{PS_T39},'03',#{PS_T03},'01',#{PS_T01},'02',#{PS_T02},'02','02') spcdCode
+        decode(T1.PS,#{PS_T07},'04',#{PS_T08},'04',#{PS_T09},'04',#{PS_T39},'03',#{PS_T03},'01',#{PS_T01},'02',#{PS_T02},'02','02') spcdCode,
+        '' remark,
+        nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN FIN_PRODUCT  T2 ON T1.FINPROD_ID = T2.FINPROD_ID
         LEFT JOIN TRD_PRODUCT_DEAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
         LEFT JOIN TRD_PRODUCT_DEAL_ADD T4 ON T3.TRADE_ID = T4.TRADE_ID
+        left join FIN_TRADE_PRODUCT rfpd on T3.FINPROD_ID = rfpd.FINPROD_ID
+        left join FIN_PRODUCT_TYPE FIN_PRODUCT_TYPE on FIN_PRODUCT_TYPE.FINPROD_ID=T3.FINPROD_ID
         LEFT JOIN PTL_PORTFOLIO T5 ON T4.PORTFOLIO_ID = T5.PORTFOLIO_ID
         LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.COUNTER_ID
-        LEFT JOIN MST_COUNTER_PARTY T61 ON T1.COUNTER_ID = T61.LINK_ID
+        LEFT JOIN MST_COUNTER_PARTY T61 ON T2.ISSUER = T61.LINK_ID AND T61.P_TYPE_ONE IS NOT NULL
         LEFT JOIN STL_SEC_ACCT_INFO T7 ON T1.SEC_MANAGE_ACCT_ID = T7.SEC_ACCT_ID
         LEFT JOIN TRD_BANK_MANUAL_SETTLE_INFO T8 ON T1.TOTLE_TRADE_ID = T8.TRADE_ID
         LEFT JOIN STL_PAY_ORDERS T9 ON T1.TOTLE_TRADE_ID = T9.TRADE_ID
         LEFT JOIN INF_PAY_ORDERS_STATUS T10 ON T9.ORDER_ID = T10.ORDER_ID
         LEFT JOIN SYS_DATADICT_LIST sdl on sdl.dict_code ='DELIVERY_STATUS' and sdl.item_code = T8.Settle_Status
-        LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='FINPROD_TYPE_TG' and sdl1.item_code = T1.FINPROD_TYPE2
-        LEFT JOIN BUSI_TYPE_MAPPING btm ON T1.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
+        LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='PINAN_ASSET_TYPE' and sdl1.item_code = FIN_PRODUCT_TYPE.TYPE_8
+        LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON FIN_PRODUCT_TYPE.TYPE_8 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
         LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.dict_code ='BUSI_TYPE_POSITION' and sdl2.item_code = btm.busi_type
         LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = T1.PS
         LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
         LEFT JOIN SYS_DATADICT_LIST sdl5 on sdl5.dict_code ='SHARES_TRADE_PLATFORM' and sdl5.item_code = T1.TRADE_PLAT
         LEFT JOIN SYS_DATADICT_LIST sdl6 on sdl6.dict_code ='SHARES_TRADE_MARKET' and sdl6.item_code = T1.TRADE_MARKET_MODE
-        WHERE T8.SETTLE_SEQ_NO IS NULL
-<!--            (T8.SETTLE_SEQ_NO IS NULL OR T8.SETTLE_STATUS = #{DELIVERY_STATUS_01})-->
+        left join trdquto_match_info match on T1.totle_trade_id=match.trd_id
+        left join reg_fin_product_deal_total_add regAdd on match.PRE_TRADE_ID=regAdd.totle_trade_id
+        left join ibu_quote_bond_det ibuDet on match.PRE_TRADE_ID=ibuDet.QUOTE_ID and ibuDet.TRADE_STATUS='07'
+        WHERE (T8.SETTLE_SEQ_NO IS NULL OR T8.SETTLE_STATUS = #{DELIVERY_STATUS_01})
         AND T1.TG_BUSI_TYPE IN (#{PINAN_BUSINESS_TYPE_09},#{PINAN_BUSINESS_TYPE_10},#{PINAN_BUSINESS_TYPE_11},
                 #{PINAN_BUSINESS_TYPE_35},#{PINAN_BUSINESS_TYPE_36},#{PINAN_BUSINESS_TYPE_37},
                 #{PINAN_BUSINESS_TYPE_20},#{PINAN_BUSINESS_TYPE_51},#{PINAN_BUSINESS_TYPE_52},
@@ -89,7 +95,7 @@
             AND T1.TOTLE_TRADE_ID= #{tradeId}
         </if>
         <if test="finprodType2 != null and finprodType2!='' ">
-            AND T1.Finprod_Type2= #{finprodType2}
+            AND FIN_PRODUCT_TYPE.TYPE_8= #{finprodType2}
         </if>
         <if test="tgBusiType != null and tgBusiType!='' ">
             AND btm.busi_type = #{tgBusiType}
@@ -97,14 +103,19 @@
         <if test="ps != null and ps!='' ">
             AND T1.PS= #{ps}
         </if>
-        <if test="tradeDate != null and tradeDate!='' ">
-            AND T1.TRADE_DATE= #{tradeDate}
+        <if test="tradeDateStart != null ">
+            <![CDATA[ AND T1.TRADE_DATE >= #{tradeDateStart}]]>
         </if>
+        <if test="tradeDateEnd != null  ">
+            <![CDATA[ AND T1.TRADE_DATE <= #{tradeDateEnd}]]>
+        </if>
+
+
         GROUP BY T8.SETTLE_STATUS,
             T1.TOTLE_TRADE_ID,
             T1.TRADE_DATE,
             T1.SETTLE_DATE,
-            T2.FINPROD_MARKET_ID,
+            nvl(T2.FINPROD_MARKET_ID,rfpd.TERM_TYPE),
             T2.FINPROD_ABBR,
             T1.FINPROD_TYPE2,
             sdl1.item_value,
@@ -126,7 +137,9 @@
             T1.CCY,
             T7.SEC_ACCT_NAME,
             T1.TRADE_MARKET_MODE,
-            sdl6.item_value
+            sdl6.item_value,
+            T8.SETTLE_SEQ_NO,
+            nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD)
         union all
         </if>
 
@@ -135,7 +148,7 @@
         T1.TOTLE_TRADE_ID tradeId,
         to_char(T1.TRADE_DATE,'yyyy-MM-dd') tradeDate,
         to_char(T0.SETTLE_DATE,'yyyy-MM-dd') settleDate,
-        T2.FINPROD_MARKET_ID finprodMarketId,
+        nvl(T2.FINPROD_MARKET_ID,rfpd.TERM_TYPE) finprodMarketId,
         T2.FINPROD_ABBR finprodAbbr,
         T1.FINPROD_TYPE2 finprodType2,
         sdl1.item_value finprodType2Str,
@@ -145,8 +158,8 @@
         sdl3.item_value psStr,
         T0.SETTLE_NUM settleNum,
         T0.SETTLE_AMT settleAmt,
-        LISTAGG(T4.PORTFOLIO_ID,';') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID))  portfolioId,
-        LISTAGG(T5.PORTFOLIO_NAME,';') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID)) portfolioName,
+        LISTAGG(T4.PORTFOLIO_ID,',') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID))  portfolioId,
+        LISTAGG(T5.PORTFOLIO_NAME,',') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID)) portfolioName,
         case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
              when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
              when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
@@ -164,28 +177,34 @@
         T0.SETTLE_SEQ_NO settleSeqNo,
         T0.FINPROD_ID finprodId,
         T1.CCY ccy,
-        decode(T1.PS,#{PS_T07},'04',#{PS_T08},'04',#{PS_T09},'04',#{PS_T39},'03',#{PS_T03},'01',#{PS_T01},'02',#{PS_T02},'02','02') spcdCode
+        decode(T1.PS,#{PS_T07},'04',#{PS_T08},'04',#{PS_T09},'04',#{PS_T39},'03',#{PS_T03},'01',#{PS_T01},'02',#{PS_T02},'02','02') spcdCode,
+        T0.REMARK remark,
+        nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode
         FROM TRD_BANK_MANUAL_SETTLE_INFO T0
         LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL T1  ON T0.TRADE_ID =T1.TOTLE_TRADE_ID
         LEFT JOIN FIN_PRODUCT T2 ON T1.FINPROD_ID = T2.FINPROD_ID
         LEFT JOIN TRD_PRODUCT_DEAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
         LEFT JOIN TRD_PRODUCT_DEAL_ADD T4 ON T3.TRADE_ID = T4.TRADE_ID
+        left join FIN_TRADE_PRODUCT rfpd on T3.FINPROD_ID = rfpd.FINPROD_ID
+        left join FIN_PRODUCT_TYPE FIN_PRODUCT_TYPE on FIN_PRODUCT_TYPE.FINPROD_ID=T3.FINPROD_ID
         LEFT JOIN PTL_PORTFOLIO T5 ON T4.PORTFOLIO_ID = T5.PORTFOLIO_ID
         LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.COUNTER_ID
-        LEFT JOIN MST_COUNTER_PARTY T61 ON T1.COUNTER_ID = T61.LINK_ID
+        LEFT JOIN MST_COUNTER_PARTY T61 ON T2.ISSUER = T61.LINK_ID AND T61.P_TYPE_ONE IS NOT NULL
         LEFT JOIN STL_SEC_ACCT_INFO T7 ON T1.SEC_MANAGE_ACCT_ID = T7.SEC_ACCT_ID
         LEFT JOIN STL_PAY_ORDERS T9 ON T1.TOTLE_TRADE_ID = T9.TRADE_ID
         LEFT JOIN INF_PAY_ORDERS_STATUS T10 ON T9.ORDER_ID = T10.ORDER_ID
         LEFT JOIN SYS_DATADICT_LIST sdl on sdl.dict_code ='DELIVERY_STATUS' and sdl.item_code = T0.Settle_Status
-        LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='FINPROD_TYPE_TG' and sdl1.item_code = T1.FINPROD_TYPE2
-        LEFT JOIN BUSI_TYPE_MAPPING btm ON T1.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
+        LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='PINAN_ASSET_TYPE' and sdl1.item_code = FIN_PRODUCT_TYPE.TYPE_8
+        LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON FIN_PRODUCT_TYPE.TYPE_8 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
         LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.dict_code ='BUSI_TYPE_POSITION' and sdl2.item_code = btm.busi_type
         LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = T1.PS
         LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
         LEFT JOIN SYS_DATADICT_LIST sdl5 on sdl5.dict_code ='SHARES_TRADE_PLATFORM' and sdl5.item_code = T1.TRADE_PLAT
         LEFT JOIN SYS_DATADICT_LIST sdl6 on sdl6.dict_code ='SHARES_TRADE_MARKET' and sdl6.item_code = T1.TRADE_MARKET_MODE
-        WHERE T1.TRADE_STATUS =#{TRADE_STATUS_01}
-        AND T1.Is_Cancel =#{isCalcN}
+        left join trdquto_match_info match on T1.totle_trade_id=match.trd_id
+        left join reg_fin_product_deal_total_add regAdd on match.PRE_TRADE_ID=regAdd.totle_trade_id
+        left join ibu_quote_bond_det ibuDet on match.PRE_TRADE_ID=ibuDet.QUOTE_ID and ibuDet.TRADE_STATUS='07'
+        WHERE T0.SETTLE_STATUS IN (#{DELIVERY_STATUS_02},#{DELIVERY_STATUS_04})
         <![CDATA[ AND T0.SETTLE_DATE >= #{settleDateStart}]]>
         <![CDATA[ AND T0.SETTLE_DATE <= #{settleDateEnd}]]>
         <if test="settleStatusList != null and settleStatusList.size() > 0">
@@ -212,7 +231,7 @@
             AND T1.TOTLE_TRADE_ID= #{tradeId}
         </if>
         <if test="finprodType2 != null and finprodType2!='' ">
-            AND T1.Finprod_Type2= #{finprodType2}
+            AND FIN_PRODUCT_TYPE.TYPE_8= #{finprodType2}
         </if>
         <if test="tgBusiType != null and tgBusiType!='' ">
             AND btm.busi_type= #{tgBusiType}
@@ -220,14 +239,17 @@
         <if test="ps != null and ps!='' ">
             AND T1.PS= #{ps}
         </if>
-        <if test="tradeDate != null and tradeDate!='' ">
-            AND T1.TRADE_DATE= #{tradeDate}
+        <if test="tradeDateStart != null">
+            <![CDATA[ AND T1.TRADE_DATE >= #{tradeDateStart}]]>
+        </if>
+        <if test="tradeDateEnd != null">
+            <![CDATA[ AND T1.TRADE_DATE <= #{tradeDateEnd}]]>
         </if>
         GROUP BY T0.SETTLE_STATUS,
             T1.TOTLE_TRADE_ID,
             T1.TRADE_DATE,
             T0.SETTLE_DATE,
-            T2.FINPROD_MARKET_ID,
+            nvl(T2.FINPROD_MARKET_ID,rfpd.TERM_TYPE),
             T2.FINPROD_ABBR,
             T1.FINPROD_TYPE2,
             sdl.ITEM_VALUE,
@@ -251,8 +273,14 @@
             T1.CCY,
             T7.SEC_ACCT_NAME,
             T1.TRADE_MARKET_MODE,
-            sdl6.item_value)t
+            sdl6.item_value,
+            T0.REMARK,
+            nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD))t
         left join SYS_DATADICT_LIST sdl on sdl.DICT_CODE='SETTLE_STATUS' and t.cleanStatus=sdl.ITEM_CODE
+        where 1=1
+        <if test="cleanStatus != null and cleanStatus!='' ">
+            AND t.cleanStatus= #{cleanStatus}
+        </if>
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryWhere"></include>
         order by t.settleStatus,t.settleDate,t.finprodType2,t.tgBusiType,t.finprodMarketId,t.cleanStatus)
@@ -264,8 +292,7 @@
 
     <sql id="vagueQueryWhere">
         <if test="search != null and search != '' and search !='有效' ">
-            <where>
-                (t.settleStatusStr like '%' || #{search} || '%'
+            AND (t.settleStatusStr like '%' || #{search} || '%'
                 OR t.tradeId like '%' || #{search} || '%'
                 OR t.tradeDate = #{search}
                 OR t.tradeDate= #{year}||'-'||#{search}
@@ -288,8 +315,8 @@
                 OR T.tradePlatStr like '%' || #{search} || '%'
                 OR T.secAcctId like '%' || #{search} || '%'
                 OR T.counterName like '%' || #{search} || '%'
+                OR T.finprodId like '%' || #{search} || '%'
                 )
-            </where>
         </if>
     </sql>
 
@@ -298,7 +325,7 @@
         SELECT rownum seqNo,t.* from (SELECT
             to_char(T1.SETTLE_TIME,'yyyy-MM-dd') settleDate,
             to_char(T1.Update_Time,'hh24:mi:ss') jiaoShouDate,
-            T2.FINPROD_MARKET_ID finprodMarketId,
+            nvl(T2.FINPROD_MARKET_ID,rfpd.TERM_TYPE) finprodMarketId,
             T2.Finprod_Abbr finprodAbbr,
             T1.SETTLE_NUM settleNum,
             T1.SETTLE_AMT settleAmt,
@@ -307,6 +334,9 @@
         FROM TRD_BANK_MANUAL_SETTLE_INFO T0
         LEFT JOIN TRD_BANK_MANUAL_SETTLE_FLOW T1 ON T0.SETTLE_SEQ_NO = T1.SETTLE_SEQ_NO
         LEFT JOIN FIN_PRODUCT T2 ON T0.FINPROD_ID = T2.FINPROD_ID
+        LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL T4  ON T0.TRADE_ID =T4.TOTLE_TRADE_ID
+        LEFT JOIN TRD_PRODUCT_DEAL T3 ON T4.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
+        left join FIN_TRADE_PRODUCT rfpd on T3.FINPROD_ID = rfpd.FINPROD_ID
         WHERE T0.TRADE_ID = #{tradeId}
         ORDER BY T1.UPDATE_TIME DESC) t
     </select>
@@ -346,6 +376,7 @@
         TPDA.PORTFOLIO_ID portfolioId,
         pp.PORTFOLIO_NAME portfolioName,
         TPD.SHARE_AMT/100 QTYD,
+        TPD.SHARE_AMT*100 QTYDQ,
         TPD.PRIN_AMT prinAmtTheoryd,
         TPD.INT_AMT intAmtTheoryd,
         TPD.CPRICE_AMT cpriceAmt,
@@ -356,7 +387,7 @@
         TPD.TRADE_AMT tradeAmt,
         TPDA.Entrust_Id entrustId,
         EE.PRICE_MODEL priceModel,
-        (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
+        (nvl(ee.entrust_num,0) - nvl(efs.finish_amt,0))/100 unFinshAmt,
         ssai.sec_acct_name secAcctId,
         TPD.YIELD*100 matureYield,
         TPD.EXER_YIELD*100 exeYield,
@@ -371,12 +402,6 @@
         LEFT JOIN ETR_FINISH_STATUS efs ON ee.Entrust_Id = efs.entrust_id AND TPD.TRADE_ID = efs.trade_id
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpd.sec_manage_acct_id = ssai.SEC_ACCT_ID
         where TPD.TOTLE_TRADE_ID = #{tradeId}
-        <if test="userName != null and userName != ''">
-        and TPDA.PORTFOLIO_ID
-        IN (SELECT PORTFOLIO_ID
-            FROM PTL_PORTFOLIO_AUTHORITY
-            WHERE USER_ID = #{userName})
-        </if>
     </select>
 
     <select id="getDealDetailsByTradeId" parameterType="java.lang.String"
@@ -478,7 +503,7 @@
         ON R.REGIST_ORG = V.REGIST_ORG
         WHERE PSA.ACCT_NO = V.SEC_ACCT_ID
         AND V.SEC_ACCT_TYPE = 'SEC'
-        AND V.TRADE_PLACE = '01'
+        AND V.TRADE_PLACE in ('01','02')
         AND V.TRADE_PLACE = R.TRADE_MARKET
         AND PSA.PORTFOLIO_ID = #{portfolioId}
         AND R.FINPROD_ID = #{finprodId}
@@ -524,6 +549,9 @@
         <if test="updateUser != null">
             #{updateUser,jdbcType=VARCHAR} updateUser,
         </if>
+        <if test="remark != null">
+            #{remark,jdbcType=VARCHAR} remark,
+        </if>
         <if test="updateTime != null">
             #{updateTime,jdbcType=TIMESTAMP} updateTime
         </if>
@@ -567,6 +595,9 @@
         </if>
         <if test="updateUser != null">
             tbms.UPDATE_USER = TEMP.updateUser,
+        </if>
+        <if test="remark != null">
+            tbms.REMARK = TEMP.remark,
         </if>
         <if test="updateTime != null">
             tbms.UPDATE_TIME = TEMP.updateTime
@@ -613,6 +644,9 @@
         <if test="updateTime != null">
             ,UPDATE_TIME
         </if>
+        <if test="remark != null">
+            ,REMARK
+        </if>
         )
         values(
         <if test="settleSeqNo != null">
@@ -654,6 +688,9 @@
         <if test="updateTime != null">
             ,TEMP.updateTime
         </if>
+        <if test="remark != null">
+            ,TEMP.remark
+        </if>
         )
     </insert>
 
@@ -672,20 +709,22 @@
     </update>
 
     <select id="queryPortSettleinfo" resultType="com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortSettleinfoDto">
-        SELECT TPDA.portfolio_id portfolioId,
+        SELECT TPD.TRADE_ID tradeId,
+            TPDA.ENTRUST_ID entrustId,
+            TPD.CCY ccy,
+            TPD.FINPROD_ID finprodId,
+            TPD.INV_AIM invAim,
+            TPDA.OUR_SHARE_AMT ourShareAmt,
+            TPDA.LENDIN_SHARE_AMT lendinShareAmt,
+            DECODE(TPD.SETTLE_SPEED,0,'01',1,'02','2','03') settleSpeed,
+            TPDA.portfolio_id portfolioId,
             pp.portfolio_name portfolioName,
-            NVL(TPD.SHARE_AMT,TPD.prin_amt) settleNum,
+            NVL(TPD.SHARE_AMT/100,TPD.prin_amt/100) settleNum,
             TPD.trade_amt settleAmt
         FROM TRD_PRODUCT_DEAL TPD
         LEFT JOIN TRD_PRODUCT_DEAL_ADD TPDA ON TPDA.Trade_Id = TPD.Trade_Id
         LEFT JOIN PTL_PORTFOLIO PP ON TPDA.Portfolio_Id = PP.PORTFOLIO_ID
         where TPD.Totle_Trade_Id = #{tradeId}
-        <if test="userName != null and userName != ''">
-            and TPDA.PORTFOLIO_ID
-            IN (SELECT PORTFOLIO_ID
-            FROM PTL_PORTFOLIO_AUTHORITY
-            WHERE USER_ID = #{userName})
-        </if>
     </select>
 
     <select id="queryTrdProductDealsByTotalTradeId" resultMap="com.joyintech.tams.common.base.dao.TrdProductDealAddMapper.BaseResultMap">
@@ -766,11 +805,11 @@
         T1.TRADE_MARKET tradeMarket,
         T1.TRADE_MARKET_MODE tradeMarketMode,
         T1.TRADE_PLAT tradePlat,
-        T1.TOTLE_TRADE_ID tradeId,
-        NVL(T9.PARTY_NAME,T8.OU_PARTY_ID) ouPartyId ,
-        NVL(T10.REAL_NAME,T8.OU_TRADER_ID) ouTraderId,
-        NVL(T11.COUNTER_NAME,T8.COUNTER_ID) counterId,
-        NVL(T12.TRADER_NAME,T8.COUNTER_TRADER) counterTrade,
+        T7.EXE_ID tradeId,
+        NVL(T9.PARTY_NAME,T5.OU_PARTY_ID) ouPartyId ,
+        NVL(T10.REAL_NAME,T1.TRADER) ouTraderId,
+        NVL(T11.COUNTER_NAME,T1.COUNTER_ID) counterId,
+        NVL(T12.TRADER_NAME,T1.COUNTER_TRADER) counterTrade,
         sdl.item_value spanTextOne,
         T4.IS_RIGHT isRight,
         T1.Delivery_Type deliveryType,
@@ -778,22 +817,22 @@
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
         LEFT JOIN FIN_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
-        LEFT JOIN FIN_EXERCISE_PLAN T6 ON T1.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='01'
-        LEFT JOIN FIN_EXERCISE_PLAN T61 ON T1.FINPROD_ID = T61.FINPROD_ID AND T61.EXERCISE_TYPE ='02'
+        LEFT JOIN FIN_EXERCISE_PLAN T6 ON T1.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02' AND T1.SETTLE_DATE = T6.ACT_EXERCISE_DATE
+        LEFT JOIN FIN_EXERCISE_PLAN T61 ON T1.FINPROD_ID = T61.FINPROD_ID AND T61.EXERCISE_TYPE ='01' AND T1.SETTLE_DATE = T61.ACT_EXERCISE_DATE
         LEFT JOIN TRD_TRADE_FEE_TOTAL ttft ON T1.totle_trade_id = ttft.totle_trade_id AND ttft.fee_type =#{feeType06}
         LEFT JOIN TRD_TRADE_FEE_TOTAL ttft1 ON T1.totle_trade_id = ttft1.totle_trade_id AND ttft1.fee_type = #{feeType08}
+        LEFT JOIN TRD_DEAL_TOTAL_ADD T5 ON T1.TOTLE_TRADE_ID = T5.TOTLE_TRADE_ID
         LEFT JOIN TRDQUTO_MATCH_INFO T7 ON T7.Trd_Id = T1.TOTLE_TRADE_ID
         LEFT JOIN REG_FIN_PRODUCT_DEAL_TOTAL T8 ON T8.TOTLE_TRADE_ID = T7.PRE_TRADE_ID
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO T9 ON T9.PARTY_ID = T8.OU_PARTY_ID
-        LEFT JOIN SYS_USER T10 ON T10.USER_NAME = T8.OU_TRADER_ID
-        LEFT JOIN MST_COUNTER_PARTY T11 ON T11.COUNTER_ID = T8.COUNTER_ID
-<!--        LEFT JOIN MST_CFETS_CUSTOMER_TRADER T10 ON T10.TRADER_ID = T8.OU_TRADER_ID-->
-<!--        LEFT JOIN MST_CFETS_CUSTOMER_INFO T11 ON T11.PARTY_NAME = T8.COUNTER_ID-->
-        LEFT JOIN MST_CFETS_CUSTOMER_TRADER T12 ON T12.TRADER_ID = T8.COUNTER_TRADER
-        LEFT JOIN sys_datadict_list sdl ON sdl.dict_code='DISTRIBUTION' and sdl.item_code = T8.DIP_TYPE
-        WHERE T4.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01}
-        AND T1.TOTLE_TRADE_ID = #{tradeId}
-        AND T1.TRADE_STATUS = #{TRADE_STATUS01} AND T1.IS_CANCEL = #{YESNO_N}
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO T9 ON T9.PARTY_ID = T5.OU_PARTY_ID
+        LEFT JOIN SYS_USER T10 ON T10.USER_NAME = T1.TRADER
+        LEFT JOIN MST_COUNTER_PARTY T11 ON T11.COUNTER_ID = T1.COUNTER_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER T12 ON T12.trader_id = T1.COUNTER_TRADER
+        LEFT JOIN IBU_QUOTE_BOND ib ON ib.quote_id = T7.PRE_TRADE_ID
+        LEFT JOIN ibu_quote_crep ic ON ic.quote_id = T7.PRE_TRADE_ID
+        LEFT JOIN sys_datadict_list sdl ON sdl.dict_code='DISTRIBUTION' and sdl.item_code = coalesce(T8.DIP_TYPE,ib.DIP_TYPE,ic.DIP_TYPE)
+        WHERE T1.TOTLE_TRADE_ID = #{tradeId}
+        AND T1.TRADE_STATUS = #{TRADE_STATUS01}
     </select>
 
     <!-- 根据用户名得到真实姓名 -->
@@ -804,5 +843,129 @@
         SYS_USER T1
         where
         T1.USER_NAME = #{userName}
+    </select>
+
+    <sql id="getMaxHisNo">
+        select
+        max(HIS_NO)	       HIS_NO,
+        WORKFLOW_ID
+        from SYS_DATA_PROCESS_MARK
+        <where>
+            <if test="pageId != null and pageId !=''">
+                PAGE_ID = #{pageId}
+            </if>
+        </where>
+        group by  WORKFLOW_ID
+    </sql>
+
+    <select id="getBusinessData" parameterType="com.joyintech.tams.component.business.core.dto.WflValidInputParameter" resultType="java.lang.String">
+        select pm.STATUS status
+        from SYS_DATA_PROCESS_MARK pm
+        inner join (<include refid="getMaxHisNo"/>) tempHis on  pm.HIS_NO = tempHis.HIS_NO and pm.WORKFLOW_ID = tempHis.WORKFLOW_ID
+        <where>
+            <if test="seachMode != null and seachMode !='' and seachMode == '01'.toString()">
+                pm.status in ('A','U','P')
+            </if>
+            <if test="pageId != null and pageId !=''">
+                and pm.PAGE_ID = #{pageId}
+            </if>
+            <if test="businessDataPk1 != null and businessDataPk1 !=''">
+                and pm.BUSINESS_DATA_PK1 = #{businessDataPk1}
+            </if>
+            <if test="businessDataPk2 != null and businessDataPk2 !=''">
+                and pm.BUSINESS_DATA_PK2 = #{businessDataPk2}
+            </if>
+            <if test="workflowId != null and workflowId !=''">
+                and pm.WORKFLOW_ID != #{workflowId}
+            </if>
+        </where>
+        order by pm.create_time desc
+    </select>
+
+    <resultMap id="trdBondInvestTradeFullResultMap" type="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto"
+               extends="com.joyintech.tams.common.base.dao.TrdProductDealMapper.BaseResultMap">
+        <result column="fee_amt"    property="channelFee"   jdbcType="DECIMAL"/>
+        <result column="ENTRUST_ID"         property="entrustId"        jdbcType="VARCHAR" />
+        <result column="PORTFOLIO_ID"       property="portfolioId"      jdbcType="VARCHAR" />
+        <result column="integrateTradeAmt"       property="integrateTradeAmt"      jdbcType="DECIMAL" />
+        <result column="ownTradeAmt"       property="ownTradeAmt"      jdbcType="DECIMAL" />
+        <result column="integrateCpriceAmt"       property="integrateCpriceAmt"      jdbcType="DECIMAL" />
+        <result column="integrateIntAmt"       property="integrateIntAmt"      jdbcType="DECIMAL" />
+        <result column="ownIntAmt"       property="ownIntAmt"      jdbcType="DECIMAL" />
+        <result column="integrateFpriceAmt"       property="integrateFpriceAmt"      jdbcType="DECIMAL" />
+        <result column="ownFpriceAmt"       property="ownFpriceAmt"      jdbcType="DECIMAL" />
+        <result column="PORTFOLIO_NAME"     property="portfolioName"    jdbcType="VARCHAR" />
+        <result column="FINPROD_ID"         property="finprodId"        jdbcType="VARCHAR" />
+        <result column="FINPROD_NAME"       property="finprodName"      jdbcType="VARCHAR" />
+        <result column="CALENDAR_ID"       property="calendarId"      jdbcType="VARCHAR" />
+        <result column="WORKFLOW_ID"       property="workflowId"       jdbcType="VARCHAR" />
+        <result column="WORKFLOW_STATUS"       property="workflowStatus"       jdbcType="VARCHAR" />
+        <result column="ASSET_RECOMMAND_ORG"       property="assetRecommandOrg"       jdbcType="VARCHAR" />
+        <result column="REFUND_RATE"       property="refundRate"      jdbcType="DECIMAL" />
+        <result column="REFUND_AMOUNT"       property="refundAmount"      jdbcType="DECIMAL" />
+        <result column="businessModel"       property="businessModel"      jdbcType="VARCHAR" />
+        <association property="trdInvestPersonInfo" javaType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdInvestPersonInfoDto">
+            <result column="TRADER"             property="trader"           jdbcType="VARCHAR" />
+            <result column="COUNTER_ID"         property="counterId"        jdbcType="VARCHAR" />
+            <result column="COUNTER_TRADER"     property="counterTrader"    jdbcType="VARCHAR" />
+            <result column="COUNTER_CONTACT"    property="contactInfo"   jdbcType="VARCHAR" />
+        </association>
+    </resultMap>
+    <select id="getTrdBondInvestTradeDto" resultMap="trdBondInvestTradeFullResultMap">
+        SELECT DISTINCT
+        tpd.TOTLE_TRADE_ID, tpd.FINPROD_TYPE2, tpda.ENTRUST_ID, PP.PORTFOLIO_ID,
+        tpd.SETTLE_SPEED, tpd.TRADE_DATE, tpd.SETTLE_DATE, tpd.PS,
+        tpd.FINPROD_ID, fp.finprod_abbr FINPROD_NAME,fp.CALENDAR_ID, tpd.TRADE_MARKET,
+        tpd.TRADE_PLAT, tpd.TRADE_MARKET_MODE,
+        nvl(tpd.INV_AIM,trd_product_deal.INV_AIM) INV_AIM,
+        tpd.F_TRADE_ID,
+        tpd.SEC_MANAGE_ACCT_ID, nvl(tpd.CCY,trd_product_deal.CCY) CCY,
+        tpd.SHARE_AMT * 100 as TRADE_AMT,
+        nvl(tpda.LENDIN_SHARE_AMT, 0) * 100 integrateTradeAmt,
+        nvl(tpda.OUR_SHARE_AMT, tpd.SHARE_AMT) * 100 ownTradeAmt,
+        tpd.UNIT_CPRICE,
+        tpd.UNIT_INT, tpd.UNIT_FPRICE,
+        tpd.CPRICE_AMT,
+        nvl(tpda.LENDIN_CPRICE_AMT, 0) integrateCpriceAmt,
+        nvl(tpda.OUR_CPRICE_AMT, tpd.CPRICE_AMT) ownCpriceAmt,
+        tpd.INT_AMT,
+        nvl(tpda.LENDIN_FPRICE_AMT2, 0) integrateIntAmt,
+        nvl(tpda.OUR_FPRICE_AMT2, tpd.INT_AMT) ownIntAmt,
+        tpd.FPRICE_AMT,
+        nvl(tpda.LENDIN_FPRICE_AMT, 0) integrateFpriceAmt,
+        nvl(tpda.OUR_FPRICE_AMT, tpd.FPRICE_AMT) ownFpriceAmt,
+        tpd.YIELD, tpd.EXER_YIELD, tpd.REMARK,
+        tpd.TRADER, tpd.COUNTER_ID, tpd.COUNTER_TRADER, tpd.COUNTER_CONTACT,tpd.CHL_ID
+        <!-- 通道交易 新增 强成西 2019/03/26 start -->
+        ,det.FEE_AMT
+        <!-- 通道交易 新增 强成西 2019/03/26 end -->
+        <!-- 推荐方 新增 zhuyongkang 20191023 start -->
+        ,tpda.ASSET_RECOMMAND_ORG
+        <!-- 推荐方 新增 zhuyongkang 20191023 start -->
+        ,tpd.PRIN_AMT
+        <!-- 撤销时无此字段 空指针 -->
+        ,ptpd.REFUND_RATE*100 as REFUND_RATE
+        ,ptpd.REFUND_AMOUNT as REFUND_AMOUNT
+        ,TRD_PRODUCT_DEAL.BUSINESS_MODEL as businessModel
+        FROM TRD_FIN_PRODUCT_DEAL_TOTAL tpd
+        LEFT JOIN TRD_DEAL_TOTAL_ADD tpda ON tpda.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
+        LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL ptpd ON ptpd.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
+        LEFT JOIN FIN_PRODUCT fp ON fp.FINPROD_ID = tpd.FINPROD_ID
+        <!-- 通道交易 新增 强成西 2019/03/26 start -->
+        left join TRD_TRADE_FEE_DETAIL det ON det.TRADE_ID = tpd.TOTLE_TRADE_ID
+        and det.FEE_TYPE=#{B09}
+        and det.IS_PAY_WITH_TRADE=#{Y}
+        <!-- 通道交易 新增 强成西 2019/03/26 end -->
+        LEFT JOIN PTL_PORTFOLIO PP ON tpd.PORTFOLIO_ID = PP.PORTFOLIO_ID
+        left join trd_product_deal on TRD_PRODUCT_DEAL.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
+        WHERE tpd.TOTLE_TRADE_ID = #{tradeId}
+    </select>
+    <select id="getPledgeListByTradeId" parameterType="java.lang.String"
+            resultType="com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto">
+        select
+        reg.PLEDGE_FINPROD_ID as finprodId,reg.PLEDGE_RATIO as pledgeRatio,
+        reg.PLEDGE_NUMBER as pledgePrin
+        from FIN_DEAL_PLEDGE reg
+        where reg.finprod_id =#{tradeId,jdbcType=VARCHAR}
     </select>
 </mapper>

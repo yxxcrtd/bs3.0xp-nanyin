@@ -52,21 +52,18 @@ public class CfetsTrdConfirmController extends BaseController {
     public Message<Map<String, Object>> getPageParams(){
         Map<String, Object> initPageParams = new HashMap<>();
         //是否支持CSTP下行接口
-        initPageParams.put("IS_SUPPORT_CSTP_FLAG", CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG"));
+        initPageParams.put("IS_SUPPORT_CSTP_FLAG_BOND", CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_BOND"));
+        initPageParams.put("IS_SUPPORT_CSTP_FLAG_REPO", CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_REPO"));
         //银行间债券交易执行是否可手工确认
         initPageParams.put("IS_CFETSSECTRD_MANUALCONFIRM_FLAG", CacheUtil.getSysParam("IS_CFETSSECTRD_MANUALCONFIRM_FLAG"));
         //银行间回购交易执行是否可手工确认
         initPageParams.put("IS_CFETSREPOTRD_MANUALCONFIRM_FLAG", CacheUtil.getSysParam("IS_CFETSREPOTRD_MANUALCONFIRM_FLAG"));
-
         //交易员是否可查看全部CSTP下行成交数据
         initPageParams.put("IS_QUERYALLCSTP_FLAG", CacheUtil.getSysParam("IS_QUERYALLCSTP_FLAG"));
-
         //自动刷新时间
         initPageParams.put("cfetsTrdConfirm_regList_refresh_period", CacheUtil.getSysParam("cfetsTrdConfirm_regList_refresh_period"));
         initPageParams.put("cfetsTrdConfirm_cstpList_refresh_period", CacheUtil.getSysParam("cfetsTrdConfirm_cstpList_refresh_period"));
         initPageParams.put("cfetsTrdConfirm_matchList_refresh_period", CacheUtil.getSysParam("cfetsTrdConfirm_matchList_refresh_period"));
-
-
         //数据字典初始化数据
         initPageParams.put("REG_ASSET_TYPE", this.getSelectDataFromDataDic(DictCode.登记资产类型, null));
         initPageParams.put("PS", this.getSelectDataFromDataDic(DictCode.交易方向, null));
@@ -76,20 +73,10 @@ public class CfetsTrdConfirmController extends BaseController {
         initPageParams.put("TRD_MATCH_TYPE", this.getSelectDataFromDataDic(DictCode.下行交易匹配类型, null));
         initPageParams.put("CSTP_BUSINESS_TYPE", this.getSelectDataFromDataDic(DictCode.CSTP资产类型, null));
         initPageParams.put("QUOTE_STYLE", this.getSelectDataFromDataDic(BussinessDictCode.报价方式_登记, null));
-
-
         //pageId
         initPageParams.put("pageId", "CfetsTrdConfirm");
         return new Message<Map<String, Object>>(initPageParams).success();
     }
-    /**
-     * 交易登记列表分页查询
-     *
-     * @param dto
-     * @return Page<CfetsTrdConfirmRegInfoListResponse>
-     * @throws Exception Exception
-     * @since 1.0
-     */
     @ApiOperation(value = "交易执行列表分页查询", notes = "交易执行列表分页查询")
     @PostMapping("/findAllRegInfoList")
     @ResponseBody
@@ -103,34 +90,27 @@ public class CfetsTrdConfirmController extends BaseController {
             return new Message<Page<CfetsTrdConfirmRegInfoListResponse>>().fail().setMessage("查询交易执行列表分页数据异常");
         }
     }
-    /**
-     * 交易执行-成交确认
-     */
     @ResponseBody
     @ApiOperation(value = "交易执行-成交确认", notes = "交易执行-成交确认")
     @PostMapping("trdConfirmSave")
     public Message<AjaxResult> trdConfirmSave(@RequestBody CfetsTrdConfirmRegInfoListResponse dto) throws Exception {
         //对选择的数据进行check
-        String returnMsg= cfetsTrdConfirmService.trdConfirmSaveCheckMethod(dto);
-        if (StringUtil.isNotBlank(returnMsg)) {
-            return new Message<AjaxResult>().fail().setMessage(returnMsg);
+        AjaxResult ajax= cfetsTrdConfirmService.trdConfirmSaveCheckMethod(dto);
+        if(null!=ajax && !StringUtil.isEmptyList(ajax.getErrorList())){
+            return new Message<AjaxResult>().success().setData(ajax);
         }
         try {
-            cfetsTrdConfirmService.trdConfirmSaveMethod(dto);
-            return new Message<AjaxResult>().success().setData(new AjaxResult("成交确认成功"));
+            AjaxResult ajaxResult = cfetsTrdConfirmService.trdConfirmSaveMethod(dto);
+            if (null!=ajaxResult && !StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+                return new Message<AjaxResult>().success().setData(ajaxResult);
+            }else{
+                return new Message<AjaxResult>().success().setData(new AjaxResult("成交确认成功"));
+            }
         } catch (Exception e) {
             logger.error("交易执行-成交确认数据异常", e);
             return new Message<AjaxResult>().fail().setMessage("成交确认数据异常");
         }
     }
-    /**
-     * 交易登记列表分页查询
-     *
-     * @param dto
-     * @return Page<CfetsTrdConfirmRegInfoListResponse>
-     * @throws Exception Exception
-     * @since 1.0
-     */
     @ApiOperation(value = "CSTP成交回报分页查询", notes = "CSTP成交回报分页查询")
     @PostMapping("/findAllCstpInfoList")
     @ResponseBody
@@ -161,29 +141,22 @@ public class CfetsTrdConfirmController extends BaseController {
             return new Message<AjaxResult>().fail().setMessage("校验失败");
         }
     }
-    /**
-     * CSTP成交回报-手工匹配
-     */
     @ResponseBody
     @ApiOperation(value = "CSTP成交回报-手工匹配", notes = "CSTP成交回报-手工匹配")
     @PostMapping("cstpManualMatch")
     public Message<AjaxResult> cstpManualMatch(@RequestBody CfetsTrdConfirmManualMatchInfoRequest manualMatchDto) throws Exception {
         try {
-            cfetsTrdConfirmService.cstpManualMatchMethod(manualMatchDto);
-            return new Message<AjaxResult>().success().setData(new AjaxResult("手工匹配成功"));
+            AjaxResult ajaxResult = cfetsTrdConfirmService.cstpManualMatchMethod(manualMatchDto);
+            if (null!=ajaxResult && !StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+                return new Message<AjaxResult>().success().setData(ajaxResult);
+            }else{
+                return new Message<AjaxResult>().success().setData(new AjaxResult("手工匹配确定成功"));
+            }
         } catch (Exception e) {
             logger.error("手工匹配数据异常", e);
             return new Message<AjaxResult>().fail().setMessage("手工匹配数据异常");
         }
     }
-    /**
-     * 匹配确认列表分页查询
-     *
-     * @param dto
-     * @return Page<CfetsTrdConfirmRegInfoListResponse>
-     * @throws Exception Exception
-     * @since 1.0
-     */
     @ApiOperation(value = "匹配确认列表分页查询", notes = "匹配确认列表分页查询")
     @PostMapping("/findAllTrdCstpInfoList")
     @ResponseBody
@@ -197,14 +170,6 @@ public class CfetsTrdConfirmController extends BaseController {
             return new Message<Page<CfetsTrdConfirmTrdCstpMatchResponse>>().fail().setMessage("查询匹配确认列表分页数据异常");
         }
     }
-    /**
-     * 匹配确认列表-交易执行债券分页查询
-     *
-     * @param dto
-     * @return Page<CfetsTrdConfirmRegInfoListResponse>
-     * @throws Exception Exception
-     * @since 1.0
-     */
     @ApiOperation(value = "匹配确认列表-交易执行债券数据分页查询", notes = "匹配确认列表-交易执行债券数据分页查询")
     @PostMapping("/findAllTrdBondList")
     @ResponseBody
@@ -218,14 +183,6 @@ public class CfetsTrdConfirmController extends BaseController {
             return new Message<Page<CfetsTrdConfirmExecBondInfoResponse>>().fail().setMessage("查询匹配确认列表分页数据异常");
         }
     }
-    /**
-     * 匹配确认列表-交易执行质押式分页查询
-     *
-     * @param dto
-     * @return Page<CfetsTrdConfirmRegInfoListResponse>
-     * @throws Exception Exception
-     * @since 1.0
-     */
     @ApiOperation(value = "匹配确认列表-交易执行质押式数据分页查询", notes = "匹配确认列表-交易执行质押式数据分页查询")
     @PostMapping("/findAllTrdRepoList")
     @ResponseBody
@@ -239,14 +196,6 @@ public class CfetsTrdConfirmController extends BaseController {
             return new Message<Page<CfetsTrdConfirmExecRepoInfoResponse>>().fail().setMessage("查询匹配确认列表分页数据异常");
         }
     }
-    /**
-     * 匹配确认列表-cstp成交债券分页查询
-     *
-     * @param dto
-     * @return Page<CfetsTrdConfirmRegInfoListResponse>
-     * @throws Exception Exception
-     * @since 1.0
-     */
     @ApiOperation(value = "匹配确认列表-cstp成交债券数据分页查询", notes = "匹配确认列表-cstp成交债券数据分页查询")
     @PostMapping("/findAllCstpBondList")
     @ResponseBody
@@ -260,14 +209,6 @@ public class CfetsTrdConfirmController extends BaseController {
             return new Message<Page<CfetsTrdConfirmCstpBondInfoResponse>>().fail().setMessage("查询匹配确认列表分页数据异常");
         }
     }
-    /**
-     * 匹配确认列表-cstp成交质押式分页查询
-     *
-     * @param dto
-     * @return Page<CfetsTrdConfirmRegInfoListResponse>
-     * @throws Exception Exception
-     * @since 1.0
-     */
     @ApiOperation(value = "匹配确认列表-cstp成交质押式数据分页查询", notes = "匹配确认列表-cstp成交质押式数据分页查询")
     @PostMapping("/findAllCstpRepoList")
     @ResponseBody
@@ -281,9 +222,6 @@ public class CfetsTrdConfirmController extends BaseController {
             return new Message<Page<CfetsTrdConfirmCstpRepoInfoResponse>>().fail().setMessage("查询匹配确认列表分页数据异常");
         }
     }
-    /**
-     * 匹配确认Tab-匹配取消
-     */
     @ResponseBody
     @ApiOperation(value = "匹配取消", notes = "匹配取消")
     @PostMapping("cancelTrdMatchInfo")

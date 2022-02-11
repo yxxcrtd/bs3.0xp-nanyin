@@ -273,6 +273,12 @@ public class CfetsEtrFinProductDto {
      */
     private String lastXQDate;
 
+    /**
+     * 期限
+     */
+    @ApiModelProperty(required = false,name="deadline",value="期限")
+    private String deadline;
+
     public String getType2() {
         return type2;
     }
@@ -735,5 +741,29 @@ public class CfetsEtrFinProductDto {
 
     public void setFinprodAbbr(String finprodAbbr) {
         this.finprodAbbr = finprodAbbr;
+    }
+
+    public String getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
+    }
+
+    public String getSecMarketAmt() {
+        return secMarketAmt;
+    }
+
+    public void setSecMarketAmt(String secMarketAmt) {
+        this.secMarketAmt = secMarketAmt;
+    }
+
+    public String getLastXQDate() {
+        return lastXQDate;
+    }
+
+    public void setLastXQDate(String lastXQDate) {
+        this.lastXQDate = lastXQDate;
     }
 }

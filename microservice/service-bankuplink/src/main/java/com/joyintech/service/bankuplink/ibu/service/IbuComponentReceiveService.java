@@ -11,7 +11,6 @@
 package com.joyintech.service.bankuplink.ibu.service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.joyintech.background.component.common.pack.common.security.User;
 import com.joyintech.background.component.common.pack.common.util.JsonUtils;
@@ -25,22 +24,17 @@ import com.joyintech.background.component.uplink.interbank.database.entity.IbuQu
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
 import com.joyintech.service.bankuplink.cfets.service.CfetsInterfReceiveService;
 import com.joyintech.service.bankuplink.common.service.CfetsQuotedCommonService;
-import com.joyintech.service.bankuplink.ibu.dto.risk.ReqRiskOccupy;
-import com.joyintech.service.bankuplink.ibu.dto.risk.RiskOccupyBean;
-import com.joyintech.service.bankuplink.ibu.dto.risk.RiskOccupyParam;
 import com.joyintech.service.bankuplink.repo.dao.CfetsRepoDealQuotedPrice001Mapper;
 import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto;
 import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto;
 import com.joyintech.service.bankuplink.repo.service.CfetsRepoDealQuotedPrice001Service;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
 import org.apache.commons.collections.CollectionUtils;
@@ -319,6 +313,7 @@ public class IbuComponentReceiveService extends BaseService{
                 //尾差处理  尾差放在指令的交易金额最大的记录
                 for(PtlAllocationDto item : ptlAllocations){
                     IbuQuoteEtrReDto ibuQuoteEtrReDto = new IbuQuoteEtrReDto();
+                    BigDecimal total = ArithmeticUtil.doAdd(item.getOurShareAmt(),item.getLendinShareAmt());
                     if(交易份额尾差.compareTo(BigDecimal.ZERO)>0&&StringUtil.equals(item.getEntrustId(),ptlAllocationDtoMax.getEntrustId())){
                         item.setShareAmt(ArithmeticUtil.doAdd(item.getShareAmt(),交易份额尾差));
                     }
@@ -331,6 +326,19 @@ public class IbuComponentReceiveService extends BaseService{
                     ibuQuoteEtrReDto.setPortfolioId(item.getPortfolioId());
                     ibuQuoteEtrReDto.setShareAmt(item.getShareAmt());
                     ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
+                    ibuQuoteEtrReDto.setDealFeeAmt(item.getDealFeeAmt());
+                    ibuQuoteEtrReDto.setSettFeeAmt(item.getSettFeeAmt());
+                    ibuQuoteEtrReDto.setInvAim(item.getInvAim());
+                    //按比例处理融入券和本方券
+                    if(null!=total&&total.compareTo(BigDecimal.ZERO)!=0){
+                        //万元保留一位小数处理
+                        item.setOurShareAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getOurShareAmt(),item.getShareAmt()),ArithmeticUtil.multiply(total,new BigDecimal(100)),1,RoundingMode.HALF_DOWN),new BigDecimal(100)));
+                        item.setLendinShareAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getLendinShareAmt(),item.getShareAmt()),ArithmeticUtil.multiply(total,new BigDecimal(100)),1,RoundingMode.HALF_DOWN),new BigDecimal(100)));
+                        BigDecimal 剩余券面 = ArithmeticUtil.subtract(item.getShareAmt(),ArithmeticUtil.doAdd(item.getOurShareAmt(),item.getLendinShareAmt()));
+                        item.setOurShareAmt(ArithmeticUtil.doAdd(item.getOurShareAmt(),剩余券面));
+                        ibuQuoteEtrReDto.setOurShareAmt(item.getOurShareAmt());
+                        ibuQuoteEtrReDto.setLendinShareAmt(item.getLendinShareAmt());
+                    }
                     ibuQuoteEtrRes.add(ibuQuoteEtrReDto);
                 }
                 inputBean.setIbuQuoteEtrReDtoList(ibuQuoteEtrRes);
@@ -345,7 +353,7 @@ public class IbuComponentReceiveService extends BaseService{
             // 对手方对话报价新增(我方作为回复方)，需要制定交易员推送
             cfetsQuotedCommonService.publishMQCommonHandle(quoteResultDto, true);
             //头寸处理
-            updateBondDialoguePosition(quoteResultDto);
+            //updateBondDialoguePositionRule(quoteResultDto);
             // 成交后风险处理
             ibuComponentRiskService.excuteRiskHandle(quoteResultDto);
         }
@@ -487,6 +495,7 @@ public class IbuComponentReceiveService extends BaseService{
                 //尾差处理  尾差放在指令的交易金额最大的记录
                 for(PtlAllocationDto item : ptlAllocations){
                     IbuQuoteEtrReDto ibuQuoteEtrReDto = new IbuQuoteEtrReDto();
+                    BigDecimal total = ArithmeticUtil.doAdd(item.getOurShareAmt(),item.getLendinShareAmt());
                     if(交易份额尾差.compareTo(BigDecimal.ZERO)>0&&StringUtil.equals(item.getEntrustId(),ptlAllocationDtoMax.getEntrustId())){
                         item.setShareAmt(ArithmeticUtil.doAdd(item.getShareAmt(),交易份额尾差));
                     }
@@ -499,6 +508,19 @@ public class IbuComponentReceiveService extends BaseService{
                     ibuQuoteEtrReDto.setPortfolioId(item.getPortfolioId());
                     ibuQuoteEtrReDto.setShareAmt(item.getShareAmt());
                     ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
+                    ibuQuoteEtrReDto.setDealFeeAmt(item.getDealFeeAmt());
+                    ibuQuoteEtrReDto.setSettFeeAmt(item.getSettFeeAmt());
+                    ibuQuoteEtrReDto.setInvAim(item.getInvAim());
+                    //按比例处理融入券和本方券
+                    if(null!=total&&total.compareTo(BigDecimal.ZERO)!=0){
+                        //万元保留一位小数处理
+                        item.setOurShareAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getOurShareAmt(),item.getShareAmt()),ArithmeticUtil.multiply(total,new BigDecimal(100)),1,RoundingMode.HALF_DOWN),new BigDecimal(100)));
+                        item.setLendinShareAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getLendinShareAmt(),item.getShareAmt()),ArithmeticUtil.multiply(total,new BigDecimal(100)),1,RoundingMode.HALF_DOWN),new BigDecimal(100)));
+                        BigDecimal 剩余券面 = ArithmeticUtil.subtract(item.getShareAmt(),ArithmeticUtil.doAdd(item.getOurShareAmt(),item.getLendinShareAmt()));
+                        item.setOurShareAmt(ArithmeticUtil.doAdd(item.getOurShareAmt(),剩余券面));
+                        ibuQuoteEtrReDto.setOurShareAmt(item.getOurShareAmt());
+                        ibuQuoteEtrReDto.setLendinShareAmt(item.getLendinShareAmt());
+                    }
                     ibuQuoteEtrRes.add(ibuQuoteEtrReDto);
                 }
                 inputBean.setIbuQuoteEtrReDtoList(ibuQuoteEtrRes);
@@ -514,7 +536,7 @@ public class IbuComponentReceiveService extends BaseService{
             // 7、MQ发布消息前台订阅通过ws控制表格刷新
             cfetsQuotedCommonService.publishMQCommonHandle(quoteResultDto, true);
             // 8、头寸处理
-            updateBondRequestPosition(quoteResultDto);
+            //updateBondRequestPositionRule(quoteResultDto);
             // 成交后风险处理
             ibuComponentRiskService.excuteRiskHandle(quoteResultDto);
         }
@@ -682,7 +704,7 @@ public class IbuComponentReceiveService extends BaseService{
         }
         return yield;
     }
-    
+
 	private boolean updateBondDialoguePosition(QuoteResultDto quoteResultDto) {
 		if (null != quoteResultDto && null != quoteResultDto.getBondDialogueQuote()
 				&& null != quoteResultDto.getBondDialogueQuote().getIbuQuoteBondDto()) {
@@ -716,6 +738,44 @@ public class IbuComponentReceiveService extends BaseService{
 		return true;
 	}
 
+    /**
+     * 头寸引擎处理头寸
+     * @param quoteResultDto
+     * @return
+     */
+	public boolean  updateBondDialoguePositionRule(QuoteResultDto quoteResultDto){
+
+        if (null != quoteResultDto && null != quoteResultDto.getBondDialogueQuote()
+                && null != quoteResultDto.getBondDialogueQuote().getIbuQuoteBondDto()) {
+            IbuQuoteBondDto ibuQuoteBondDto = quoteResultDto.getBondDialogueQuote().getIbuQuoteBondDto();
+            //多组合的ibuQuoteBondDto.getPortfolioId()为空 但是要处理相关头寸  所以这个判断需要优化
+            if (StringUtil.isBlank(ibuQuoteBondDto.getPortfolioId())&&StringUtil.isEmptyList(quoteResultDto.getBondDialogueQuote().getIbuQuoteEtrReDtoList())) {
+                return true;
+            }
+
+            if (StringUtil.equals(ibuQuoteBondDto.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_已撤回.getValue())) {
+                CfetsBondDealDialogueQuoteDto dto = new CfetsBondDealDialogueQuoteDto();
+                BeanUtil.copyPropertiesIgnoreNull(dto, ibuQuoteBondDto);
+                dto.setQuoteId(ibuQuoteBondDto.getQuoteId());
+                dto.setPortfolioId(ibuQuoteBondDto.getPortfolioId());
+                dto.setFinprodId(ibuQuoteBondDto.getFinprodId());
+                dto.setTradeStatus(ibuQuoteBondDto.getTradeStatus());
+                dto.setFpriceAmt(ibuQuoteBondDto.getFpriceAmt());
+                //券面总额【单位：万】
+                dto.setAvaNum(ibuQuoteBondDto.getShareAmt().multiply(new BigDecimal(100)).divide(new BigDecimal(10000)));
+                dto.setPs(ibuQuoteBondDto.getPs());
+                cfetsBondDealQuotedPriceService.doInsetOrUpdateForPtlPositionHold(dto);
+                return true;
+            } else if (StringUtil.equals(ibuQuoteBondDto.getTradeStatus(),
+                    BussinessDictCodeList.银行间上行报价状态_已终止.getValue())
+                    || StringUtil.equals(ibuQuoteBondDto.getTradeStatus(),
+                    BussinessDictCodeList.银行间上行报价状态_已过期.getValue())) {
+                cfetsBondDealQuotedPriceService.doDeletePtlPositionHoldByQuoteId(ibuQuoteBondDto.getQuoteId());
+                return true;
+            }
+        }
+        return true;
+    }
 	private boolean updateBondRequestPosition(QuoteResultDto quoteResultDto) {
 		if (null != quoteResultDto && null != quoteResultDto.getBondRequestQuote()
 				&& null != quoteResultDto.getBondRequestQuote().getIbuQuoteBondDto()) {
@@ -745,6 +805,41 @@ public class IbuComponentReceiveService extends BaseService{
 		}
 		return true;
 	}
+
+    /**
+     * 头寸引擎处理头寸
+     * @param quoteResultDto
+     * @return
+     */
+    private boolean updateBondRequestPositionRule(QuoteResultDto quoteResultDto) {
+        if (null != quoteResultDto && null != quoteResultDto.getBondRequestQuote()
+                && null != quoteResultDto.getBondRequestQuote().getIbuQuoteBondDto()) {
+            IbuQuoteBondDto ibuQuoteBondDto = quoteResultDto.getBondRequestQuote().getIbuQuoteBondDto();
+            if (StringUtil.isBlank(ibuQuoteBondDto.getPortfolioId())&&StringUtil.isEmptyList(quoteResultDto.getBondRequestQuote().getIbuQuoteEtrReDtoList())) {
+                return true;
+            }
+            if (StringUtil.equals(ibuQuoteBondDto.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_已撤回.getValue())) {
+                CfetsBondDealDialogueQuoteDto dto = new CfetsBondDealDialogueQuoteDto();
+                BeanUtil.copyPropertiesIgnoreNull(dto, ibuQuoteBondDto);
+                dto.setQuoteId(ibuQuoteBondDto.getQuoteId());
+                dto.setPortfolioId(ibuQuoteBondDto.getPortfolioId());
+                dto.setFinprodId(ibuQuoteBondDto.getFinprodId());
+                dto.setTradeStatus(ibuQuoteBondDto.getTradeStatus());
+                //券面总额【单位：万】
+                dto.setAvaNum(ibuQuoteBondDto.getShareAmt().multiply(new BigDecimal(100)).divide(new BigDecimal(10000)));
+                dto.setPs(ibuQuoteBondDto.getPs());
+                cfetsBondDealQuotedPriceService.doInsetOrUpdateForPtlPositionHold(dto);
+                return true;
+            } else if (StringUtil.equals(ibuQuoteBondDto.getTradeStatus(),
+                    BussinessDictCodeList.银行间上行报价状态_已终止.getValue())
+                    || StringUtil.equals(ibuQuoteBondDto.getTradeStatus(),
+                    BussinessDictCodeList.银行间上行报价状态_已过期.getValue())) {
+                cfetsBondDealQuotedPriceService.doDeletePtlPositionHoldByQuoteId(ibuQuoteBondDto.getQuoteId());
+                return true;
+            }
+        }
+        return true;
+    }
 
 	private boolean updateRepoDialoguePosition(QuoteResultDto quoteResultDto) {
 		if (null != quoteResultDto && null != quoteResultDto.getRepoDialogueQuote()) {

@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo;
 import com.joyintech.background.component.common.pack.common.base.BaseService;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
@@ -47,6 +48,7 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         baseTradeProductDealDto.setPaTrdProductDeal(this.genPaTrdProductDeal(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
         //生成划款指令
         baseTradeProductDealDto.setStlPayOrdersList(this.generateStlPayOrdersList(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
+
         return baseTradeProductDealDto;
     }
     /**
@@ -351,6 +353,60 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         // 登记托管机构
         feeDetail.setRegistOrg(registOrg);
         return feeDetail;
+    }
+
+    /**
+     * 生成金融产品交易标的
+     * 对于交易方向为‘买入’的数据生成1条数据
+     * @param trdProductDeal
+     * @return
+     */
+    public FinTradeProduct genFinTradeProduct(SettleTransData settleTransData,TrdProductDeal trdProductDeal) {
+        FinTradeProduct finTradeProduct = new FinTradeProduct();
+        finTradeProduct.setFinprodId(trdProductDeal.getFinprodId());
+        finTradeProduct.setBranch(trdProductDeal.getBranch());
+        finTradeProduct.setFinprodType(trdProductDeal.getFinprodType());
+        finTradeProduct.setFinprodType2(trdProductDeal.getFinprodType2());
+        finTradeProduct.setProfitType(DictCodeList.收益类型_收益型.getValue());
+        finTradeProduct.setPrin(trdProductDeal.getPrinAmt());
+        finTradeProduct.setCcy(trdProductDeal.getCcy());
+        finTradeProduct.setVdate(trdProductDeal.getVdate());
+        finTradeProduct.setMdate(trdProductDeal.getMdate());
+        finTradeProduct.setVpayDate(settleTransData.getVpayDate());
+        finTradeProduct.setMpayDate(settleTransData.getMpayDate());
+        if(null != trdProductDeal.getVdate() && null != trdProductDeal.getMdate()){
+            finTradeProduct.setTerm(DateUtil.getBetweenDayNumber(trdProductDeal.getVdate(),trdProductDeal.getMdate()));
+        }
+        finTradeProduct.setIntType(DictCodeList.利率类型_固定利率.getValue());
+        finTradeProduct.setIntRate(settleTransData.getUnitCprice());
+        finTradeProduct.setBasis(DictCodeList.计息基础_A_365.getValue());
+        finTradeProduct.setmDeliveryType("DVP");
+        finTradeProduct.setmPrinAmt(trdProductDeal.getShareAmt());
+        finTradeProduct.setmIntAmt(settleTransData.getmIntAmt());
+        finTradeProduct.setmPrinAmt(settleTransData.getmPrinAmt());
+        finTradeProduct.setTradeMarket(trdProductDeal.getTradeMarket());
+        finTradeProduct.setCalendarId(StringUtil.equals(trdProductDeal.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())?DictCodeList.交易日历_上海交易所日历.getValue():DictCodeList.交易日历_深圳交易所日历.getValue());
+        finTradeProduct.setTermType(settleTransData.getTermType());
+        if(null != finTradeProduct.getVpayDate() && null != finTradeProduct.getMpayDate()){
+            finTradeProduct.setActCapDays(DateUtil.getBetweenDayNumber(finTradeProduct.getVpayDate(),finTradeProduct.getMpayDate()));
+        }
+        return finTradeProduct;
+    }
+
+    public FinProductType genFinProductType(ExchangeTransMatchCommonDto dealDto,TrdProductDeal trdProductDeal) {
+        FinProductType finProductType = new FinProductType();
+        finProductType.setFinprodId(trdProductDeal.getFinprodId());
+        finProductType.setBranch(trdProductDeal.getBranch());
+        finProductType.setType6(dealDto.getSettleTransDataTotalAdd().getRepoType());
+        if(StringUtil.equals(dealDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
+            finProductType.setType7(DictCodeList.回购拆借方向_正回购.getValue());
+        }
+        else {
+            finProductType.setType7(DictCodeList.回购拆借方向_逆回购.getValue());
+        }
+
+        finProductType.setType8(DictCodeList.平安资产类型_质押式回购.getValue());
+        return finProductType;
     }
 
 }

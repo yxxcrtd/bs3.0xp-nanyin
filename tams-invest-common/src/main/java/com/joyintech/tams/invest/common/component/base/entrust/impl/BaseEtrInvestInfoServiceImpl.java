@@ -57,6 +57,9 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
     @Autowired
     private EtrEntrustAddMapper etrEntrustAddMapper;
 
+    @Autowired
+    private WflEtrEntrustDetailMapper wflEtrEntrustDetailMapper;
+
     /**
      * 指令废弃表
      */
@@ -218,12 +221,19 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         // 委托操作类型 = “撤回”并且投资委托信息dto.委托指令Entity.委托状态不是“待接收”
         if (DictCodeListExt1.委托操作类型_撤回.getValue().equals(delegateOperationType)) {
             if (etrInvestInfoDto.getEtrEntrust() != null) {
+                // modify by etliu 20211214 start
+                // ZGZGST-4157:待分发的指令点撤回,提示【 该委托状态不是待接收或待分发，无法撤回。】
+//                if (!(DictCodeList.委托状态_待接收.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus())
+//                		)) {
                 if (!(DictCodeList.委托状态_待接收.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus())
-                		)) {
+                    ) && !(DictCodeListExt3.委托状态_待分发.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus())
+                    )) {
                     errorList.add(new ValidMessage(
                         // “待接收”
-                        this.getMessage("ETR_E_0010", this.getMessage("BaseEtrInvestInfoServiceImpl.toReceiveOrtoReceive"))));
+//                        this.getMessage("ETR_E_0010", this.getMessage("BaseEtrInvestInfoServiceImpl.toReceive"))));
+                            this.getMessage("ETR_E_0010", "待接收或待分发")));
                 }
+                // modify by etliu 20211214 end
             }
         }
         // 委托操作类型 = “分发”并且投资委托信息dto.委托指令Entity.委托状态不是“待接收”
@@ -1069,6 +1079,7 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
                 || etrFinishAmtDto.getSumFinishPercent().compareTo(bigDecimal) == 0) {
                 // 如果满足，则调用投资委托组件的更新委托状态接口，将委托状态设置为“已完成”
                 etrInvestInfoServiceImpl.updateDelegateStatus(etrFinishAmtDto.getEntrustId(), DictCodeList.委托状态_已完成.getValue());
+
             }
         }
         // 判断完成委托是否完成
@@ -1192,6 +1203,16 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
                     wflEtrEntrustBidPriceMapper.insertSelective(wflEtrEntrustBidPrice);
                 }
             }
+            //保存List<委托指令明细>
+            if(!StringUtil.isEmptyList(dto.getEtrEntrustDetailList())){
+                for(EtrEntrustDetail etrEntrustDetail : dto.getEtrEntrustDetailList()) {
+                    WflEtrEntrustDetail wflEtrEntrustDetail = new WflEtrEntrustDetail();
+                    BeanUtil.copyPropertiesIgnoreNull(wflEtrEntrustDetail,etrEntrustDetail);
+                    wflEtrEntrustDetail.setWorkflowId(dto.getWorkFlowId());
+                    wflEtrEntrustDetail.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                    wflEtrEntrustDetailMapper.insertSelective(wflEtrEntrustDetail);
+                }
+            }
             if (mstFileCommonService != null && dto.getMstFileInputParameter() != null) {
                 dto.getMstFileInputParameter().setBussinessId(dto.getWorkFlowId());
                 mstFileCommonService.updateBusinessId(dto.getMstFileInputParameter());
@@ -1277,6 +1298,8 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
             wflEtrPledgeMapper.deleteByWorkflowId(workflowId);
             // 全删委托投标标位表
             wflEtrEntrustBidPriceMapper.deleteByWorkflowId(workflowId);
+            //场内多组合系列户指令需要删除委托指令明细流程表
+            wflEtrEntrustDetailMapper.deleteByWorkflowId(workflowId);
             return true;
         }
         return false;

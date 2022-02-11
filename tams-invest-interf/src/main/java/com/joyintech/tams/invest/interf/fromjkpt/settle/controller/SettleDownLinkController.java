@@ -43,7 +43,10 @@ public class SettleDownLinkController {
             logger.debug("接口平台调用批处理开始");
             String isRecon = CacheUtil.getSysParam("IS_RECON");
             if(StringUtil.equals(isRecon,"01")){
-                param.put("beanNames", Arrays.asList("investDealRevokeTask","stlDownDataDealTask","stlDownDataGatherTask"));
+                // modify by fuyongsheng 20211201 接收清算文件消息后新增批处理 start
+                // param.put("beanNames", Arrays.asList("investDealRevokeTask","stlDownDataDealTask","stlDownDataGatherTask"));
+                param.put("beanNames", Arrays.asList("investDealRevokeTask","stlDownDataDealTask","stlDownDataGatherTask","stlSettleTransDataGatherTask"));
+                // modify by fuyongsheng 20211201 接收清算文件消息后新增批处理 end
                 if(!param.containsKey("execDate")){
                     param.put("execDate", DateUtil.format(iPlatformDate.getSysDate(),"yyyyMMdd"));
                 } else {

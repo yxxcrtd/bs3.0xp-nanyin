@@ -98,7 +98,6 @@ $(function() {
 		var jsonResult={};
 		 //限制型 
 		if($("#indType").val().indexOf("LIMIT_")!=-1){
-			debugger;
 			var comparison = $("#comparison").val();
 			var unit = $("#unit").val();
 			

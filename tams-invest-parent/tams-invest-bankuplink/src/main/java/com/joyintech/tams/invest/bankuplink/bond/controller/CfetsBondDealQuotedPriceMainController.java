@@ -105,10 +105,12 @@ public class CfetsBondDealQuotedPriceMainController extends BaseController {
     private CfetsBondDealQuotedPrice004Service cfetsBondDealQuotedPrice004Service;
 
     /**
-     * 外汇交易中心行情接口地址
+     * 外汇交易中心CMDS现券行情接口地址
      */
-    @Value("${MarketInfoInterf.cmdsUrl}")
-    private String MarketInfoInterf_cmdsUrl;
+    @Value("${cmdsWebSocketUrl}")
+    private String cmdsWebSocketUrl;
+
+    /**
 
     /**
      * {@linkplain}
@@ -184,7 +186,7 @@ public class CfetsBondDealQuotedPriceMainController extends BaseController {
      */
     @RequestMapping(value = "/initHq")
     public String initHq(Model model){
-        model.addAttribute("MarketInfoInterf_BaseUrl", MarketInfoInterf_cmdsUrl);
+        model.addAttribute("cmdsWebSocketUrl", cmdsWebSocketUrl);
         return "invest/bankuplink/bond/CfetsBondDealQuotedPriceHq";
     }
 

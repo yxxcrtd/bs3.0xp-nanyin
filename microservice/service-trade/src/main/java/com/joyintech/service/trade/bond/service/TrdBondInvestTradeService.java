@@ -10,48 +10,39 @@
 
 package com.joyintech.service.trade.bond.service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.framework.util.*;
-import com.joyintech.service.trade.bond.dto.TrdBondInvestTradePdfDto;
-import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt;
-import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.*;
 import com.joyintech.service.trade.bond.dao.TrdBondInvestTradeMapper;
 import com.joyintech.service.trade.bond.dto.SecCpriceInfoDto;
 import com.joyintech.service.trade.bond.dto.TrdBondInvestTradeCSTPDto;
 import com.joyintech.service.trade.bond.dto.TrdBondInvestTradeDto;
+import com.joyintech.service.trade.bond.dto.TrdBondInvestTradePdfDto;
 import com.joyintech.service.trade.cstp.dao.CstpSelectMapper;
-import com.joyintech.tams.common.base.dao.FinProductMapper;
-import com.joyintech.tams.common.base.dao.InterfTradSecdealMapper;
-import com.joyintech.tams.common.base.dao.PtlSecValutionMapper;
-import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
-import com.joyintech.tams.common.base.dao.TrdTradeFeeTotalMapper;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import com.joyintech.tams.invest.common.trade.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
 
 /**
  * 债券交易Service
@@ -354,7 +345,13 @@ public class TrdBondInvestTradeService extends BaseService {
         // 查询上一估值日的净价
         BigDecimal 上一估值日净价 = trdBondInvestTradeMapper.getLastNetPrice(param);
         if (上一估值日净价 == null || BigDecimal.ZERO.compareTo(上一估值日净价) == 0) {
-            return "0%";
+            //估值行情取不到值就需要取当前标的剩余单位面值
+            param.put("CASH_CLASS_TYPE_02",DictCodeList.现金流类型_中间还本.getValue());
+            param.put("CASH_CLASS_TYPE_03",DictCodeList.现金流类型_到期还本.getValue());
+            上一估值日净价 = trdBondInvestTradeMapper.getResidualFace(param);
+            if (上一估值日净价 == null || BigDecimal.ZERO.compareTo(上一估值日净价) == 0) {
+                return "0%";
+            }
         }
 
         try {
@@ -363,7 +360,7 @@ public class TrdBondInvestTradeService extends BaseService {
             // 计算公式：（所输净价-上一估值净价）/上一估值净价*100%
             BigDecimal result = ArithmeticUtil.subtract(所输净价, 上一估值日净价);
             result = ArithmeticUtil.multiply(result, new BigDecimal(100));
-            result = ArithmeticUtil.divide(result, 上一估值日净价, 0);
+            result = ArithmeticUtil.divide(result, 上一估值日净价, 2);
 
             return String.valueOf(result) + "%";
         }

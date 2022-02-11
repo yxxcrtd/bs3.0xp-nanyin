@@ -322,7 +322,7 @@ public class StlDataGatherService {
 
                 PaTrdFinProductDealTotal paProductDealTotal = new PaTrdFinProductDealTotal();
                 paProductDealTotal.setTotleTradeId(totalTrdProductDealDto.getTotleTradeId());
-                paProductDealTotal.setPaBussType(getPaBussType(totalTrdProductDealDto.getPs(), tradeWriteDto.getSecType(), totalTrdProductDealDto.getFinprodId(), fundInfoDtoMap));
+                paProductDealTotal.setPaBussType(getPaBussType(totalTrdProductDealDto,tradeWriteDto.getSecType(), fundInfoDtoMap));
                 paProductDealTotal.setRegDate(totalTrdProductDealDto.getRegDate());
                 if (StringUtil.isNotEmpty(totalTrdProductDealDto.getPayType())) {
                 	paProductDealTotal.setPayType(totalTrdProductDealDto.getPayType());
@@ -330,6 +330,12 @@ public class StlDataGatherService {
                 if (StringUtil.isNotEmpty(totalTrdProductDealDto.getBonusCfmDate())) {
                 	paProductDealTotal.setBonusCfmDate(totalTrdProductDealDto.getBonusCfmDate());
                 }
+                // ZGZGST-4220:解决存续期详情画面字段为空问题 fuyongsheng add start
+                if(DictCodeList.共通业务类型_质押式回购存续期.getValue().equals(totalTrdProductDealDto.getBusiType())){
+                    paProductDealTotal.setTheoryInt(totalTrdProductDealDto.getTheoryInt());
+                    paProductDealTotal.setTheoryPrin(totalTrdProductDealDto.getTheoryprinAmt());
+                }
+                // ZGZGST-4220:解决存续期详情画面字段为空问题 fuyongsheng add end
                 paTrdFinProductDealTotalMapper.insertSelective(paProductDealTotal);
             }
         }
@@ -509,8 +515,10 @@ public class StlDataGatherService {
         }
     }
 
-    private String getPaBussType(String ps, String secType, String finprodId, Map<String, FundInfoDto> fundInfoDtoMap) {
+    private String getPaBussType(TotalTrdProductDealDto totalTrdProductDealDto, String secType,Map<String, FundInfoDto> fundInfoDtoMap) {
         String paBussType = null;
+        String ps = totalTrdProductDealDto.getPs();
+        String finprodId = totalTrdProductDealDto.getFinprodId();
         if(StringUtil.equals(DictCodeListExt1.证券品种_债券.getValue(), secType)) {
             if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), ps)) {
                 paBussType = DictCodeListExt1.平安业务类型_债券类资产买入.getValue();
@@ -526,9 +534,20 @@ public class StlDataGatherService {
         else if(StringUtil.equals(DictCodeListExt1.证券品种_回购.getValue(), secType)) {
             if (DictCodeList.回购拆借方向_正回购.getValue().equals(ps)) {
                 paBussType = DictCodeListExt1.平安业务类型_正回购.getValue();
-            } else {
+            // ZGZGST-4263:回购存续期业务类型赋值有误 fuyongsheng 20211221 modify start
+            // } else {
+            //      paBussType = DictCodeListExt1.平安业务类型_逆回购.getValue();
+            // }
+            } else if(DictCodeList.回购拆借方向_逆回购.getValue().equals(ps)) {
                 paBussType = DictCodeListExt1.平安业务类型_逆回购.getValue();
+            } else if(DictCodeList.交易方向_到期.getValue().equals(ps)){
+                if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(totalTrdProductDealDto.getFinprodType2())){
+                    paBussType = DictCodeListExt1.平安业务类型_正回购到期.getValue();
+                }else{
+                    paBussType = DictCodeListExt1.平安业务类型_逆回购到期.getValue();
+                }
             }
+            // ZGZGST-4263:回购存续期业务类型赋值有误 fuyongsheng 20211221 modify end
         }
         else if(StringUtil.equals(DictCodeListExt1.证券品种_基金.getValue(), secType)) {
             FundInfoDto fundInfoDto = fundInfoDtoMap.get(finprodId);

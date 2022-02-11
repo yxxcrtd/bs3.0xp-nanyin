@@ -1648,7 +1648,8 @@ public class EtrCommonService extends BaseService<ITableRow> {
             BigDecimal amount06 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto);
             BigDecimal assetPositionEntrustAmt = ArithmeticUtil.doAdd(amount03, amount05);
             assetPositionEntrustAmt = ArithmeticUtil.subtract(assetPositionEntrustAmt, amount06);
-            if (finProduct != null && finProduct.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+
+            if (finProduct != null && StringUtil.equals(finProduct.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
                 assetPositionEntrustAmt = ArithmeticUtil.multiply(assetPositionEntrustAmt,BigDecimal.valueOf(100));
             }
 

@@ -38,6 +38,8 @@ public class CfetsBondDealDbDto {
 
     private List<RegTradeFee> regTradeFees;
 
+    private String softSkipMode;
+
     public String getWorkflowId() {
         return workflowId;
     }
@@ -108,6 +110,14 @@ public class CfetsBondDealDbDto {
 
     public void setRegTradeFees(List<RegTradeFee> regTradeFees) {
         this.regTradeFees = regTradeFees;
+    }
+
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
     }
 }
 

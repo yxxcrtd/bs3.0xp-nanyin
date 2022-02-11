@@ -1,6 +1,8 @@
 package com.joyintech.tams.cfets.trdquery.dto;
 
 
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -38,6 +40,10 @@ public class CfetsPledgeInfoResponse {
 
     @ApiModelProperty(name="repRegistOrg",value="登记托管机构",example="ZC名")
     private String repRegistOrg;
+
+    @ApiModelProperty(name="repRegistOrgStr",value="登记托管机构Str",example="ZC名")
+    private String repRegistOrgStr;
+
 
     public String getPortfolioId() {
         return portfolioId;
@@ -117,5 +123,13 @@ public class CfetsPledgeInfoResponse {
 
     public void setRepRegistOrg(String repRegistOrg) {
         this.repRegistOrg = repRegistOrg;
+    }
+
+    public String getRepRegistOrgStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.登记托管机构, getRepRegistOrg());
+    }
+
+    public void setRepRegistOrgStr(String repRegistOrgStr) {
+        this.repRegistOrgStr = repRegistOrgStr;
     }
 }

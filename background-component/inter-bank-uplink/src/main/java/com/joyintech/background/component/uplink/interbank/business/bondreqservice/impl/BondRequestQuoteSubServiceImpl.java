@@ -834,7 +834,11 @@ public class BondRequestQuoteSubServiceImpl extends BaseService<IbuQuoteBond> im
                 // 向“在线表”更新数据（含前置版本号）
                 int affectRows = quoteBondMapper.updateByPrimaryKeySelective(inputBean.getIbuQuoteBondDto());
                 affectRows += ibuQuoteMapper.updateQuoteBondDetList(inputBean.getIbuQuoteBondDetDtoList());
-
+                //针对多组合  先删除后插入
+                if(!StringUtil.isEmptyList(inputBean.getIbuQuoteEtrReDtoList())){
+                    affectRows += ibuQuoteMapper.deleteQuoteEtrReByQuoteId(inputBean.getIbuQuoteBondDto().getQuoteId());
+                    affectRows += ibuQuoteMapper.batchInsetIbuQuoteEtrRe(inputBean.getIbuQuoteEtrReDtoList());
+                }
                 // 删除历史表Version=-1的数据
                 //affectRows += ibuQuoteMapper.deleteQuoteDetHisByQuoteId(quoteId);
                 //affectRows += deleteQuoteBondHisData(quoteId);

@@ -258,6 +258,11 @@ implements BaseProcessService<FinBondTargetAssetDto>{
     		assetCommonService.autoCreateTradeCounter(entity.getIssuer());
     		//新建债券类资产时，自动创建交易对手 add by hxy 20200421 end
             action = "insert";
+            //从待办中进入的无法判断是否新建还是编辑
+            if(selectCountByfinprodId(DictCodeList.平安资产类型_债券.getValue() +
+                    "_" + entity.getFinprodMarketId())>0){
+                action = "update";
+            }
         }
         else {
             action = "update";

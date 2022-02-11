@@ -28,6 +28,10 @@
                     #{item,jdbcType=VARCHAR}
                 </foreach>)
             </if>
+            <if test="entrustId !=null and entrustId != ''">
+                AND T1.ENTRUST_ID = #{entrustId}
+            </if>
+            AND T1.ENTRUST_STATUS = #{ENTRUST_STATUS_03}
         </where>
     </select>
 
@@ -76,6 +80,9 @@
            AND A.FINPROD_TYPE2 = A.FINPROD_TYPE2
         <where>
             B.SEQ_ID = #{seqId,jdbcType=VARCHAR}
+            <if test="tradeIdRaw != null and tradeIdRaw !=''">
+                AND A.CJBH = #{tradeIdRaw,jdbcType=VARCHAR}
+            </if>
         </where>
     </select>
 

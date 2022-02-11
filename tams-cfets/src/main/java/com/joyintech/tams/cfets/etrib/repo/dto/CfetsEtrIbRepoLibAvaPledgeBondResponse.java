@@ -5,9 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @ApiModel(value="可质押债券数据",description="可质押债券数据")
 public class CfetsEtrIbRepoLibAvaPledgeBondResponse extends BaseEntity {
@@ -76,11 +74,33 @@ public class CfetsEtrIbRepoLibAvaPledgeBondResponse extends BaseEntity {
      */
     @ApiModelProperty(name="registOrg",value="登记托管机构")
     private String registOrg ;
+
+    /**
+     * 债项评级
+     */
+    @ApiModelProperty(name="gradeResult",value="债项评级")
+    private String gradeResultStr ;
+    /**
+     * 到期日
+     */
+    @ApiModelProperty(name="mdate",value="到期日")
+    private String mdateStr ;
+    /**
+     * 登记托管机构
+     */
+    @ApiModelProperty(name="registOrg",value="登记托管机构")
+    private String registOrgStr ;
     /**
      * 分支序号
      */
     @ApiModelProperty(name="branch",value="分支序号")
     private Long branch;
+
+    /**
+     * 分支序号
+     */
+    @ApiModelProperty(name="waitPeriod",value="待偿期")
+    private BigDecimal waitPeriod;
 
     public String getPortfolioId() {
         return portfolioId;
@@ -158,6 +178,7 @@ public class CfetsEtrIbRepoLibAvaPledgeBondResponse extends BaseEntity {
         return gradeResult;
     }
 
+
     public void setGradeResult(String gradeResult) {
         this.gradeResult = gradeResult;
     }
@@ -166,6 +187,7 @@ public class CfetsEtrIbRepoLibAvaPledgeBondResponse extends BaseEntity {
         return mdate;
     }
 
+
     public void setMdate(Date mdate) {
         this.mdate = mdate;
     }
@@ -173,6 +195,7 @@ public class CfetsEtrIbRepoLibAvaPledgeBondResponse extends BaseEntity {
     public String getRegistOrg() {
         return registOrg;
     }
+
 
     public void setRegistOrg(String registOrg) {
         this.registOrg = registOrg;
@@ -184,5 +207,37 @@ public class CfetsEtrIbRepoLibAvaPledgeBondResponse extends BaseEntity {
 
     public void setBranch(Long branch) {
         this.branch = branch;
+    }
+
+    public BigDecimal getWaitPeriod() {
+        return waitPeriod;
+    }
+
+    public void setWaitPeriod(BigDecimal waitPeriod) {
+        this.waitPeriod = waitPeriod;
+    }
+
+    public String getGradeResultStr() {
+        return gradeResultStr;
+    }
+
+    public void setGradeResultStr(String gradeResultStr) {
+        this.gradeResultStr = gradeResultStr;
+    }
+
+    public String getMdateStr() {
+        return mdateStr;
+    }
+
+    public void setMdateStr(String mdateStr) {
+        this.mdateStr = mdateStr;
+    }
+
+    public String getRegistOrgStr() {
+        return registOrgStr;
+    }
+
+    public void setRegistOrgStr(String registOrgStr) {
+        this.registOrgStr = registOrgStr;
     }
 }

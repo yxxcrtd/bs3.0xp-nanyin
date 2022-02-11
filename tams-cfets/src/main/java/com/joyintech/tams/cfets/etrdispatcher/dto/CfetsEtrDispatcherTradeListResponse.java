@@ -93,6 +93,9 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
     @ApiModelProperty(name="transmitTime",value="下达时间",example="HH:MM:SS")
     private String transmitTime;
 
+    @ApiModelProperty(name="calculateField",value="计算方式",example="计算方式供前台判断使用")
+    private String calculateField;
+
     /**
      * 获取 otherEntrustStatus
      * @return otherEntrustStatus.
@@ -261,7 +264,10 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
     }
 
     public String getOtherBusiTypePosition() {
-        return SysDataUtil.getNameFromDataDict(DictCode.头寸业务类型, this.getBusiTypePosition());
+        if(this.getBusiTypePosition() == null) return null;
+        return SysDataUtil.getNameFromDataDict(DictCode.头寸业务类型, this.getBusiTypePosition()) == null ?
+                SysDataUtil.getNameFromDataDict(DictCode.投管业务类型, this.getBusiTypePosition()) : 
+                SysDataUtil.getNameFromDataDict(DictCode.头寸业务类型, this.getBusiTypePosition());
     }
 
     public BigDecimal getEtrPrice() {
@@ -310,5 +316,13 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
 
     public void setTransmitTime(String transmitTime) {
         this.transmitTime = transmitTime;
+    }
+
+    public String getCalculateField() {
+        return calculateField;
+    }
+
+    public void setCalculateField(String calculateField) {
+        this.calculateField = calculateField;
     }
 }

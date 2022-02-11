@@ -927,7 +927,10 @@ public class StlDataDealSzdSjsjgProcessService {
         // 申请编号
         settleTransData.setApplyTradeId(szdSjsjg.getJgddbh());
         // 金融产品代码
-        settleTransData.setFinprodId(DictCodeListExt1.金融产品类型_投管用_债券.getValue() + GlobalConstant.UNDER_LINE + szdSjsjg.getJgzqdm2() + ".SZ");
+        // ZGZGST-4212:修改资产代码取值字段 fuyongsheng 20211214 modify start
+        // settleTransData.setFinprodId(DictCodeListExt1.金融产品类型_投管用_债券.getValue() + GlobalConstant.UNDER_LINE + szdSjsjg.getJgzqdm2() + ".SZ");
+        settleTransData.setFinprodId(DictCodeListExt1.金融产品类型_投管用_债券.getValue() + GlobalConstant.UNDER_LINE + szdSjsjg.getJgzqdm() + ".SZ");
+        // ZGZGST-4212:修改资产代码取值字段 fuyongsheng 20211214 modify end
         // 金融产品类型(投管分类)
         settleTransData.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         // 金融产品类型(估值核算)
@@ -937,9 +940,12 @@ public class StlDataDealSzdSjsjgProcessService {
         // 业务类型
         settleTransData.setBusiType(DictCodeListExt3.业务类型_债券交易.getValue());
         // 交易日期
-        ImplCalendar implCalendar = new ImplCalendar();
-        settleTransData.setTradeDate(DateUtil.parse(implCalendar.calcDate(szdSjsjg.getJgqsrq(), 1,
-                BussinessDictCodeListRds.操作符_加.getValue(), BussinessDictCodeListRds.特征值偏移单位_自然日.getValue())));
+        // modify by fuyongsheng 交易日无需+1自然日 start
+        // ImplCalendar implCalendar = new ImplCalendar();
+        // settleTransData.setTradeDate(DateUtil.parse(implCalendar.calcDate(szdSjsjg.getJgqsrq(), 1,
+        //        BussinessDictCodeListRds.操作符_加.getValue(), BussinessDictCodeListRds.特征值偏移单位_自然日.getValue())));
+        settleTransData.setTradeDate(DateUtil.parse(szdSjsjg.getJgqsrq()));
+        // modify by fuyongsheng 交易日无需+1自然日 end
         // 交割日期
         settleTransData.setSettleDate(DateUtil.parse(szdSjsjg.getJgjsrq()));
         // 交易币种
@@ -972,7 +978,10 @@ public class StlDataDealSzdSjsjgProcessService {
         // 临时表流水号
         settleTransData.setSeqNo(szdSjsjg.getSeqno());
         // 交易份额  清算数据Entity.成交数量/100
-        settleTransData.setShareAmt(new BigDecimal(Math.abs(szdSjsjg.getJgcjsl().divide(new BigDecimal(100)).doubleValue())));
+        // ZGZGST-4207:通过工具类处理，防止字段为空 fuyongsheng 20211214 modify start
+        // settleTransData.setShareAmt(new BigDecimal(Math.abs(szdSjsjg.getJgcjsl().divide(new BigDecimal(100)).doubleValue())));
+        settleTransData.setShareAmt(new BigDecimal(Math.abs(ArithmeticUtil.divide(szdSjsjg.getJgcjsl(),new BigDecimal(100),2).doubleValue())));
+        // ZGZGST-4207:通过工具类处理，防止字段为空 fuyongsheng 20211214 modify end
         // 单位面值 调用【当前面值】
         settleTransData.setParValue(stlDataDealProcessCommonService.getUnitPrice(settleTransData.getFinprodId(),
                 settleTransData.getTradeDate()));

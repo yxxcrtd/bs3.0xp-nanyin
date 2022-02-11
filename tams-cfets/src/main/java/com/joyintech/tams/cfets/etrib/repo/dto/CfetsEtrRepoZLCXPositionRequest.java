@@ -25,14 +25,17 @@ public class CfetsEtrRepoZLCXPositionRequest {
     @ApiModelProperty(name="secAcctIdList",value="证券账户",example="['1','2']")
     private List<String> secAcctIdList;
 
-    @ApiModelProperty(name="registOrg",value="登记托管机构",example="CBC")
-    private String registOrg;
+    @ApiModelProperty(name="registOrgList",value="登记托管机构",example="CBC")
+    private List<String> registOrgList;
 
-    @ApiModelProperty(name="finprodAbbr",value="债券简称",example="CBC")
-    private String finprodAbbr;
+    @ApiModelProperty(name="finprodAbbrList",value="债券简称",example="CBC")
+    private List<String> finprodAbbrList;
 
-    @ApiModelProperty(name="finprodType",value="债券分类",example="CBC")
-    private String finprodType;
+    @ApiModelProperty(name="finprodTypeList",value="债券分类",example="CBC")
+    private List<String> finprodTypeList;
+
+    @ApiModelProperty(name="search",value="关键字",example="CBC")
+    private String search;
 
     public PageMode getPageMode() {
         return pageMode;
@@ -66,27 +69,35 @@ public class CfetsEtrRepoZLCXPositionRequest {
         this.secAcctIdList = secAcctIdList;
     }
 
-    public String getRegistOrg() {
-        return registOrg;
+    public List<String> getRegistOrgList() {
+        return registOrgList;
     }
 
-    public void setRegistOrg(String registOrg) {
-        this.registOrg = registOrg;
+    public void setRegistOrgList(List<String> registOrgList) {
+        this.registOrgList = registOrgList;
     }
 
-    public String getFinprodAbbr() {
-        return finprodAbbr;
+    public List<String> getFinprodAbbrList() {
+        return finprodAbbrList;
     }
 
-    public void setFinprodAbbr(String finprodAbbr) {
-        this.finprodAbbr = finprodAbbr;
+    public void setFinprodAbbrList(List<String> finprodAbbrList) {
+        this.finprodAbbrList = finprodAbbrList;
     }
 
-    public String getFinprodType() {
-        return finprodType;
+    public List<String> getFinprodTypeList() {
+        return finprodTypeList;
     }
 
-    public void setFinprodType(String finprodType) {
-        this.finprodType = finprodType;
+    public void setFinprodTypeList(List<String> finprodTypeList) {
+        this.finprodTypeList = finprodTypeList;
+    }
+
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
     }
 }

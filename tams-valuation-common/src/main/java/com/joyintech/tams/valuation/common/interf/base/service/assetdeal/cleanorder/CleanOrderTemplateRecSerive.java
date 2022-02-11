@@ -24,12 +24,17 @@ import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValCleanOrder;
+import org.jasypt.commons.CommonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * 结算指令接口 模板处理Service(VAL_PRD_PERIOD_DEAL_C) 〈功能详细描述〉
@@ -74,7 +79,7 @@ public class CleanOrderTemplateRecSerive {
 
         /**add by wujie on 20210506 start**/
         if(returnResult.isReadFile()){
-            result.getParamMap().put(InterfCommonConstant.读取文件状态,DictCodeList.是否_是.getValue());
+            result.getParamMap().put(InterfCommonConstant.读取文件状态, DictCodeList.是否_是.getValue());
         }
         /**add by wujie on 20210506 end**/
         
@@ -245,7 +250,7 @@ public class CleanOrderTemplateRecSerive {
         stlOrders.setCcy(dto.getCcy());
         /**add 2018/11/14 start**/
         //结算状态 = 接口传入，若未提供默认成功 数据字典：结算状态.结算成功
-        stlOrders.setSettleStatus(dto.getSettleStatus()==null?DictCodeList.成功失败标志_成功.getValue():dto.getSettleStatus());
+        stlOrders.setSettleStatus(dto.getSettleStatus()==null? DictCodeList.成功失败标志_成功.getValue():dto.getSettleStatus());
         //指令状态 = A.数据动作标志 新增 --> 01:初始 撤销 --> 03:撤销
         stlOrders.setOrderStatus(dto.getDataActionSign());
         //关联系统指令编号 = A.指令编号
@@ -271,7 +276,7 @@ public class CleanOrderTemplateRecSerive {
      * @see
      * @since 1.0
      */
-    private StlOrdersExt getValStlOrdersExt(ValCleanOrder dto,StlOrders valOrders) {
+    private StlOrdersExt getValStlOrdersExt(ValCleanOrder dto, StlOrders valOrders) {
         StlOrdersExt stlOrdersExt = new StlOrdersExt();
         //指令编号 = A.指令编号
         stlOrdersExt.setOrderId(valOrders.getOrderId());
@@ -309,7 +314,7 @@ public class CleanOrderTemplateRecSerive {
             bokDetailId.setBusiDetailType(stlFinProductAcct.getAcctType());
         }
         **/
-        BokBooksetCapacctInfo bokBooksetCapacctInfo = 
+        BokBooksetCapacctInfo bokBooksetCapacctInfo =
         		interfCommonService.queryBokBooksetCapacctInfo(bokDetailId.getBooksetId(), dto.getMyAcctNo(),dto.getCcy(),null);
         if(bokBooksetCapacctInfo != null){
         	bokDetailId.setBusiDetailType(bokBooksetCapacctInfo.getAcctType());
@@ -394,7 +399,7 @@ public class CleanOrderTemplateRecSerive {
      * @see
      * @since 1.0
      */
-    private BokDealAccounting getValDealAccounting(ValCleanOrder dto, BokDetailId bokDetailId,StlOrders valOrders) {
+    private BokDealAccounting getValDealAccounting(ValCleanOrder dto, BokDetailId bokDetailId, StlOrders valOrders) {
         BokDealAccounting bokDealAccounting = new BokDealAccounting();
         //账套代码 = T3.账套代码
         bokDealAccounting.setBooksetId(bokDetailId.getBooksetId());
@@ -422,7 +427,7 @@ public class CleanOrderTemplateRecSerive {
     }
 
     private BokDealAccountingDetail getValBokDealAccountingDetail(ValCleanOrder dto,
-                                                                  BokDetailId bokDetailId,StlOrders valOrders) {
+                                                                  BokDetailId bokDetailId, StlOrders valOrders) {
         BokDealAccountingDetail bokDealAccountingDetail = new BokDealAccountingDetail();
         //账套代码 = T3.账套代码
         bokDealAccountingDetail.setBooksetId(bokDetailId.getBooksetId());

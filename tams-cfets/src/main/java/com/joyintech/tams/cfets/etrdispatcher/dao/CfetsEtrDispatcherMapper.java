@@ -81,17 +81,6 @@ public interface CfetsEtrDispatcherMapper {
     CfetsEtrDispatcherInfoResponse getEtrDispatcherInfo(Map<String, Object> pageParam);
 
     /**
-     * 指令风险试算查询
-     *
-     * @param pageParam
-     * @return Page<CfetsEtrDispatcherRskInfoResponse>
-     * @throws Exception Exception
-     * @see
-     * @since 1.0
-     */
-    List<CfetsEtrDispatcherRskInfoResponse> getEtrDispatcherRskInfo(Map<String, Object> pageParam);
-
-    /**
      * 交易员列表模糊查询
      * @param param
      * @return List<TrdCommandDispatcher001Dto>

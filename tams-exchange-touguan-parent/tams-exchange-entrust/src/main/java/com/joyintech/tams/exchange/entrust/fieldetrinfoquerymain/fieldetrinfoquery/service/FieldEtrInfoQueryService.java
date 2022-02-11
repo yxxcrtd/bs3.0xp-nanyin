@@ -1,0 +1,144 @@
+/*
+ * 文件名：FieldEtrInfoQueryService.java
+ * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
+ * 描述：理财资管管理系统V2.0
+ * 修改人：msk
+ * 修改时间：2021年12月22日
+ * 修改内容：新建
+ * 系统名称：理财资管管理系统V2.0
+ */
+
+package com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.service;
+
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.*;
+
+import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dao.FieldEtrInfoQueryMapper;
+import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListRequest;
+import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.*;
+
+
+/**
+ * 场内指令查询
+ * @author sjj
+ * @version 1.0 2021年11月26日
+ * @see FieldEtrInfoQueryService
+ * @since 1.0
+ */
+@Service("FieldEtrInfoQueryService")
+public class FieldEtrInfoQueryService extends BaseService{
+
+    @Autowired
+    private FieldEtrInfoQueryMapper fieldEtrInfoQueryMapper;
+
+    /**
+     * 指令列表分页查询
+     * @param dto 入数
+     * @return Page<FieldEtrInfoQueryListResponse>
+     */
+    public Page<FieldEtrInfoQueryListResponse> findAllData(FieldEtrInfoQueryListRequest dto) {
+
+        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
+        pageParam.put("entrustAwait", DictCodeList.委托状态_待接收.getValue());
+        pageParam.put("entrustDistribute", DictCodeListExt3.委托状态_待分发.getValue());
+        pageParam.put("entrustReceive", DictCodeList.委托状态_已接收.getValue());
+        pageParam.put("entrustUntread", DictCodeList.委托状态_已完成.getValue());
+        pageParam.put("entrustClose", DictCodeList.委托状态_已关闭.getValue());
+        pageParam.put("entrustReturn", DictCodeList.委托状态_已退回.getValue());
+        pageParam.put("entrustRecall", DictCodeList.委托状态_已撤回.getValue());
+        pageParam.put("entrustInwfl", DictCodeListExt3.委托状态_流程中.getValue());
+
+        pageParam.put("busiTypePosition02", DictCodeListExt3.头寸业务类型_现券交易.getValue());
+        pageParam.put("busiTypePosition03", DictCodeListExt3.头寸业务类型_债券行权交易.getValue());
+
+        List<String> listTemp = Arrays.asList(dto.getEntrustStatus());
+        if(!listTemp.contains("all")){
+            pageParam.put("entrustStatusList", listTemp);
+        }
+        String portfolioId = (String)pageParam.get("portfolioId");
+        if(StringUtil.isNotEmpty(pageParam.get("portfolioId"))){
+            List<String> portfolioIdList = StringUtil.splitToList(",",(String)pageParam.get("portfolioId"));
+            pageParam.put("portfolioIdList", portfolioIdList);
+        }
+
+        String finprodMarketId = (String)pageParam.get("finprodMarketId");
+        if(StringUtil.isNotEmpty(pageParam.get("finprodMarketId"))){
+            List<String> finprodMarketIdList = StringUtil.splitToList(",",(String)pageParam.get("finprodMarketId"));
+            pageParam.put("finprodMarketIdList", finprodMarketIdList);
+        }
+
+        String secAcctId = (String)pageParam.get("secAcctId");
+        if(StringUtil.isNotEmpty(pageParam.get("secAcctId"))){
+            List<String> secAcctIdList = StringUtil.splitToList(",",(String)pageParam.get("secAcctId"));
+            pageParam.put("secAcctIdList", secAcctIdList);
+        }
+
+        String invManagerId = (String)pageParam.get("invManagerId");
+        if(StringUtil.isNotEmpty(pageParam.get("invManagerId"))){
+            List<String> invManagerIdList = StringUtil.splitToList(",",(String)pageParam.get("invManagerId"));
+            pageParam.put("invManagerIdList", invManagerIdList);
+        }
+
+        String finprodType2Old = (String)pageParam.get("finprodType2");
+        if (StringUtil.isNotEmpty(finprodType2Old) || StringUtil.isNotEmpty(pageParam.get("ps"))) {
+            if(StringUtil.isNotEmpty((String)pageParam.get("ps"))){
+                pageParam.put("PS_T01", DictCodeList.交易方向_买入.getValue());
+            }
+        }
+        pageParam.put("ASSET_TYPE_07", DictCodeList.平安资产类型_拆借.getValue());
+        pageParam.put("ASSET_TYPE_08", DictCodeList.平安资产类型_质押式回购.getValue());
+        pageParam.put("ASSET_TYPE_10", DictCodeList.平安资产类型_买断式回购.getValue());
+        pageParam.put("ASSET_TYPE_12", DictCodeListExt2.平安资产类型_债券借贷.getValue());
+        pageParam.put("ASSET_TYPE_16", DictCodeListExt2.平安资产类型_利率互换.getValue());
+        pageParam.put("BACK_LEND_DIRECTION", DictCode.回购拆借方向.getValue());
+        pageParam.put("PS", DictCode.交易方向.getValue());
+        pageParam.put("effectFlag",DictCodeListExt1.有效状态_有效.getValue());
+        pageParam.put("effectFlag04",DictCodeListExt1.有效状态_流程中.getValue());
+        pageParam.put("finType_zq", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        pageParam.put("ps_49", DictCodeListExt3.交易方向_债转股.getValue());
+
+        if (StringUtil.equals(dto.getSettleSpeed(),
+                DictCodeList.清算速度_T_0.getValue())) {
+            pageParam.put("settleSpeed","0");
+        }else if (StringUtil.equals(dto.getSettleSpeed(),
+                DictCodeList.清算速度_T_1.getValue())) {
+            pageParam.put("settleSpeed","1");
+        }else if(StringUtil.equals(dto.getSettleSpeed(),
+                DictCodeList.清算速度_T_2.getValue())){
+            pageParam.put("settleSpeed","2");
+        }
+        pageParam.put("sort",dto.getPageMode().getSort());
+        pageParam.put("direction",dto.getPageMode().getDirection());
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        int year = c.get(Calendar.YEAR);
+        pageParam.put("year",year);
+
+        //根据组合权限表添加检索权限
+        Page<FieldEtrInfoQueryListResponse> pageLimit = new Page<FieldEtrInfoQueryListResponse>();
+        if(StringUtil.isNotEmpty(SecurityUtil.getLoginUser())) {
+            //查询登录用户是否是领导、交易处长岗位
+            Map<String,Object> map = new HashMap<>();
+            map.put("rolepos01", DictCodeListExt2.角色岗位_领导.getValue());
+            map.put("rolepos03", DictCodeListExt2.角色岗位_交易处长.getValue());
+            map.put("userName", SecurityUtil.getLoginUser().getUserName());
+            int count = fieldEtrInfoQueryMapper.queryRolePosByLoginUser(map);
+            if(count==0){
+                pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+            }
+            pageLimit = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
+                    () -> fieldEtrInfoQueryMapper.findAllData(pageParam));
+        }else{
+            return pageLimit;
+        }
+        return pageLimit;
+    }
+}

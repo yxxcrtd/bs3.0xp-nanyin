@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -64,6 +66,23 @@ public class CfgDataTableController {
         } catch (Exception e) {
             logger.error("页面设置失败", e);
             return new Message<String>().fail().setMessage(Constant.SET_DATATABLE_ERROR);
+        }
+    }
+
+    @ApiOperation(value = "根据pageCode，dtCode和spcdCode列表 查询页面设置", notes = "根据pageCode，dtCode和spcdCode列表查询页面设置")
+    @PostMapping("/getByPageCodeAndDtCodes/{pageCode}/{dtCode}/{spcdCodes}")
+    public Message<List<CfgDataTableShow>> getByPageCodeAndDtCodes(@PathVariable("pageCode") String pageCode,
+                                                                   @PathVariable("dtCode") String dtCode,
+                                                                   @PathVariable("spcdCodes") String spcdCodes) {
+        List<String> spcdCodeList = new ArrayList<>(Arrays.asList(spcdCodes.split(",")));
+        try {
+            if (StringUtil.isEmpty(pageCode) || StringUtil.isEmpty(dtCode)) {
+                return new Message<List<CfgDataTableShow>>().setMessage(Constant.MESSAGE_PAGECODE_NULL);
+            }
+            return new Message<>(cfgDataTableService.getByPageCodeAndDtCodes(pageCode, dtCode, spcdCodeList));
+        } catch (Exception e) {
+            logger.error("查询页面设置", e);
+            return new Message<List<CfgDataTableShow>>().fail().setMessage(Constant.GET_DATATABLE_ERROR);
         }
     }
 }

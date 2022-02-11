@@ -424,6 +424,8 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
 
     private String exchangeIsPayWithTrade;
 
+    private List<CfetsTrdBondInvestTradeDto> dtoList;
+
     public String getSettleIsPayWithTrade() {
         return settleIsPayWithTrade;
     }
@@ -671,6 +673,18 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
      *投标标位
      */
     private BigDecimal bidPrice;
+
+    /**
+     * 本方
+     * @return
+     */
+    private String ouPartyId;
+
+    /**
+     * 本方交易员
+     * @return
+     */
+    private String ouTraderId;
 
     public BigDecimal getBidPrice() {
         return bidPrice;
@@ -2408,5 +2422,29 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
 
     public void setRegIbuId(String regIbuId) {
         this.regIbuId = regIbuId;
+    }
+
+    public String getOuPartyId() {
+        return ouPartyId;
+    }
+
+    public void setOuPartyId(String ouPartyId) {
+        this.ouPartyId = ouPartyId;
+    }
+
+    public String getOuTraderId() {
+        return ouTraderId;
+    }
+
+    public void setOuTraderId(String ouTraderId) {
+        this.ouTraderId = ouTraderId;
+    }
+
+    public List<CfetsTrdBondInvestTradeDto> getDtoList() {
+        return dtoList;
+    }
+
+    public void setDtoList(List<CfetsTrdBondInvestTradeDto> dtoList) {
+        this.dtoList = dtoList;
     }
 }

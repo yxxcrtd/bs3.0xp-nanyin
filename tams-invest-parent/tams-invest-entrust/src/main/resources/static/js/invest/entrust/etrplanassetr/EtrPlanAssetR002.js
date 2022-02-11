@@ -86,17 +86,10 @@
                 });
             }
         }
-        if(!$('#invAim').val()){
-            Joyin.error("请输入投资目的");
+        if(!$('#businessModel').val()){
+            Joyin.error("请输入业务模式");
             return;
         }
-        // if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
-        //     if(object.businessModel=="Y1"){
-        //         object.invAim = 'AC';
-        //     }else if(object.businessModel=="Y2"){
-        //         object.invAim  = 'FVTPL'
-        //     }
-        // }
 
         //指令暂存，去除校验  add by xxg 20210802
         if (operateType === 'save') {
@@ -118,7 +111,7 @@
                                 message = msg[i];
                                 if(message.field!=null && message.field=='invAim'){
                                     if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
-                                        $('#invAim').textSelect('setValue', "FVTPL");
+                                        $('#businessModel').textSelect('setValue', "FVTPL");
                                         break;
                                     }
                                 }
@@ -130,33 +123,30 @@
         }
     }
     
- // var changeBussnissModelByFinprodId = function(){
- //     if(SHOW_INVAIM_OR_BUSSINSSMODEL!="02"){
- //         return;
- //     }
- //     var finprodId = $('#finprodId').val();
- //     if(finprodId){
- //          var data = {finprodId:finprodId }
- //          Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getAssetInfoBySPPI',data,function(result) {
- //                if(result.data=='0') {
- //                     Joyin.error("当前资产未进行SPPI测试，无法进行指令提交/保存。");
- //                     $('#finprodId').val("").trigger('change');
- //                     $("#businessModel").attr("disabled",false);
- //                     $('#businessModel').val("").trigger('change');
- //                 }else if(result.data=='3'){
- //                     $('#businessModel').val("Y2").trigger('change');
- //                     $("#businessModel").attr("disabled",true);
- //                 }else if(result.data=='2') {
- //                      $("#businessModel").attr("disabled",false);
- //                      $('#businessModel').val("").trigger('change');
- //                 }
- //           });
- //     }else{
- //          $("#businessModel").attr("disabled",false);
- //          $('#businessModel').val("").trigger('change');
- //     }
- //
- // }
+ var changeBussnissModelByFinprodId = function(){
+     var finprodId = $('#finprodId').val();
+     if(finprodId){
+          var data = {finprodId:finprodId }
+          Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getAssetInfoBySPPI',data,function(result) {
+                if(result.data=='0') {
+                     Joyin.error("当前资产未进行SPPI测试，无法进行指令提交/保存。");
+                     $('#finprodId').val("").trigger('change');
+                     $("#businessModel").attr("disabled",false);
+                     $('#businessModel').val("").trigger('change');
+                 }else if(result.data=='3'){
+                     $('#businessModel').val("FVTPL").trigger('change');
+                     $("#businessModel").attr("disabled",true);
+                 }else if(result.data=='2') {
+                      $("#businessModel").attr("disabled",false);
+                      $('#businessModel').val("").trigger('change');
+                 }
+           });
+     }else{
+          $("#businessModel").attr("disabled",false);
+          $('#businessModel').val("").trigger('change');
+     }
+
+ }
 
   // 查询组合可用现金
     var getPtlCashPositionInfo = function(){
@@ -171,7 +161,7 @@
     }  
     // 查询组合可用持仓
     var getPtlSecPositionInfo = function(){
-        var data = {portfolioId:$('#portfolioId').val(),finprodId:$('#finprodIdhid').val(),ccy:$('#ccy').val(), secAcctId:$("#chlId").val()}
+        var data = {portfolioId:$('#portfolioId').val(),finprodId:$('#finprodIdhid').val(),ccy:$('#ccy').val(), secAcctId:$("#chlId").val(),invAim:$("#businessModel").val()}
         Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetR002/getAssetAvailablePosition',data,
                 function(result) {
             $('#assetAvailablePosition').val(result).trigger('blur');;
@@ -233,6 +223,13 @@
         //    $("#invAimDiv").show();
         //    $("#businessModelDiv").hide();
         // }
+
+        $('#businessModel').change(function () {
+            var ps= $('#ps').val();
+            if(ps == T06){ //卖出时选完业务模式更新持仓
+                getPtlSecPositionInfo();
+            }
+        })
 
         /**
 		 * 交易方向
@@ -299,6 +296,7 @@
                 $('#assetType10').val(data.assetType10).trigger('change');
                 $('#assetType11').val(data.assetType11).trigger('change');
                 <!--增加，3,4、zhuyongkang 2019/7/29  end -->
+
             }else {
                 $('#finprodIdhid').val('').trigger('change');
                 $('#finprodName').val('').trigger('change');
@@ -313,8 +311,8 @@
                 <!--、zhuyongkang 2019/7/29  end -->
             }
             //增加业务模式的联动处理
-            // if(pageModel==PAGE_MODEL_NEW||pageModel==PAGE_MODEL_EDIT)
-            //     changeBussnissModelByFinprodId();
+            if(pageModel==PAGE_MODEL_NEW||pageModel==PAGE_MODEL_EDIT)
+                changeBussnissModelByFinprodId();
             //增加业务模式的联动处理
             ChannelAssetCommon.setChannelSelectObject($("#chlId"), data.finprodId, false, function () {
             });

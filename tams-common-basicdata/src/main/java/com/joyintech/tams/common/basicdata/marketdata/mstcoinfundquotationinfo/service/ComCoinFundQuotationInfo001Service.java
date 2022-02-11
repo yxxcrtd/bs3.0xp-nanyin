@@ -106,7 +106,7 @@ public class ComCoinFundQuotationInfo001Service extends CommonExportService<ComC
      * @return SuggestDto
      */
     public List<SelectOptionDto> getManagement(Map<String, Object> map) {
-        map.put("finprodType", DictCodeListExt1.金融产品类型_基金.getValue());
+        map.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
         map.put("yes", DictCodeList.是否_是.getValue());
         return restTemplate.postForList(
             ServiceApplication.CommonBasicDataService + "/ComCoinFundQuotationInfo/getManagement",

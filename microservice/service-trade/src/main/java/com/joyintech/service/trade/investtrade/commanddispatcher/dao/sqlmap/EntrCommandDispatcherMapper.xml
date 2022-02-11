@@ -119,7 +119,8 @@
 		    ELSE ''
 		END pledgeeType,
 		F.DERIVATIVE_BS_DIR derivativeBsDir,
-		F.DERIVATIVE_OC_FLAG derivativeOcFlag
+		F.DERIVATIVE_OC_FLAG derivativeOcFlag,
+		A.ENTRUST_CLASS
 		FROM ETR_ENTRUST A
 		LEFT JOIN PTL_PORTFOLIO B ON A.PORTFOLIO_ID=B.PORTFOLIO_ID
 		LEFT JOIN FIN_PRODUCT C ON A.FINPROD_ID=C.FINPROD_ID
@@ -185,5 +186,17 @@
         LEFT JOIN FIN_PRODUCT C1 ON A1.PLEDGE_FINPROD_ID=C1.FINPROD_ID
 	    WHERE A.ENTRUST_ID = #{entrustId}
    </select>
+
+	<select id="selectEtrDetailList" resultType="com.joyintech.service.trade.investtrade.commanddispatcher.dto.EtrEntrustDetailDto">
+		SELECT
+		A.*,B.PORTFOLIO_NAME
+		FROM ETR_ENTRUST_DETAIL A
+		LEFT JOIN PTL_PORTFOLIO B ON A.PORTFOLIO_ID=B.PORTFOLIO_ID
+		WHERE
+		A.ENTRUST_ID in
+		<foreach collection="entrustId.split(',')" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
    
 </mapper>

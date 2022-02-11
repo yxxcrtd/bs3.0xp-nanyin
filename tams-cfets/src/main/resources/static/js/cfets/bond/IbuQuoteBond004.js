@@ -238,6 +238,21 @@
         object.operatorType = operatorType;
         object.isDzh = 'Y';
         object.pageId = "IbuQuoteBond004";
+        object.shareAmt = JoyinMath.doMul(object.shareAmt,10000);
+        if(object.matureYield){
+            object.matureYield = JoyinMath.doDiv(object.matureYield,100,6);
+        }
+        if(object.exerYield){
+            object.exerYield = JoyinMath.doDiv(object.exerYield,100,6);
+        }
+        if(object.cfetsBondDealDialogueQuoteDtoList){
+            $.each(object.cfetsBondDealDialogueQuoteDtoList,function(index,obj){
+                obj.shareAmt =  JoyinMath.doMul(obj.shareAmt,10000);
+            });
+        }
+        debugger;
+        object.quoteStyle = $("input:radio[name=quoteStyle]:checked").val();
+        debugger;
         Joyin.confirm("是否确认提交?",
             function() {
                 //保存 走流程
@@ -399,6 +414,11 @@
         }
     }
 
+    window.componentLoadCallback = function(isDone, pagePath, params){
+        if(isDone){
+            $('#submitForm').find('input,text,textarea,select').attr('disabled','disabled');
+        }
+    }
     $(function () {
         // 初始化页面
         initPage();

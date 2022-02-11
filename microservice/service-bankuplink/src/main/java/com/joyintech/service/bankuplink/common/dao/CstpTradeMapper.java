@@ -153,7 +153,7 @@ public interface CstpTradeMapper {
     /**
      * 根据成交编号，查询下行成交匹配关系
      */
-    TrdConfirmMatchDto selectMatchDtoByExecId(@Param("quoteid") String quoteid);
+    TrdConfirmMatchDto selectMatchDtoByExecId(@Param("execid") String execid);
     /**
      * 根据登记编号，查询登记信息
      */

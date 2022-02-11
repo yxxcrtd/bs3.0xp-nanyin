@@ -43,6 +43,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
@@ -96,6 +97,8 @@ public class CfetsEtribBondInfo003Controller extends BaseController {
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             entity = cfetsetribBondInfo003Service.getBussinessEntityByWorkflowId(
                     workflowId);
+            entity.setMatureYield(ArithmeticUtil.multiply(entity.getMatureYield(),new BigDecimal(100)));
+            entity.setExerYield(ArithmeticUtil.multiply(entity.getExerYield(),new BigDecimal(100)));
             model.addAttribute(GlobalConstant.ENTITY, entity);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("calculateField",entity.getCalculateField());

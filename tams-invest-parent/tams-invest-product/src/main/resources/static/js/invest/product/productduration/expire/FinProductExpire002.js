@@ -262,7 +262,6 @@
 
     // 检查生成指令参数是否发生变化
     var isCalcConditionChanged = function () {
-    	debugger;
         // 参照模式，不做check
         if (pageModel === PAGE_MODEL_REFERENCE) {
             return false;

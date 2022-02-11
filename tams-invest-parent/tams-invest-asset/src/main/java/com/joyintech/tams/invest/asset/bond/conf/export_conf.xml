@@ -3,7 +3,7 @@
     <Worksheet javaBean="com.joyintech.tams.invest.asset.bond.dto.FinBondTargetAssetDto">
         <Row>
             <Cell order="1" name="资产代码">finprodMarketId</Cell>
-            <Cell order="2" name="资产简称">isIssueAssetStr</Cell>
+            <Cell order="2" name="是否发行标的">isIssueAssetStr</Cell>
             <Cell order="3" name="资产简称">finprodAbbr</Cell>
             <Cell order="4" name="起息日">vdateStr</Cell>
             <Cell order="5" name="到期日">mdateStr</Cell>

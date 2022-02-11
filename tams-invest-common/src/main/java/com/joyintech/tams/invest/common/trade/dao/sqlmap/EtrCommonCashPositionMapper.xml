@@ -1023,13 +1023,41 @@
     </select>
 
     <select id="selectZhiLingChiCang" resultType="java.math.BigDecimal">
-        select sum(AMOUNT) from ETR_SEC_POSITION_FLOW where TRADE_ID = #{entrustId} and FINPROD_ID=#{finprodId}
+        select nvl(sum(AMOUNT),0) from ETR_SEC_POSITION_FLOW where TRADE_ID = #{entrustId} and FINPROD_ID=#{finprodId}
     </select>
 
     <select id="selectJiaoYiChiCang" resultType="java.math.BigDecimal">
-        select sum(PLEDGE_NUMBER) from FIN_DEAL_PLEDGE where FINPROD_ID in (
+        select nvl(sum(PLEDGE_NUMBER),0) from FIN_DEAL_PLEDGE where FINPROD_ID in (
             select TRADE_ID from TRD_PRODUCT_DEAL where TRADE_STATUS = '01' and (IS_CANCEL = 'N' or IS_CANCEL is null)
                                                     and TRADE_ID in (select TRADE_ID from TRD_PRODUCT_DEAL_ADD where ENTRUST_ID = #{entrustId})
-        ) and PLEDGE_FINPROD_ID=#{finprodId};
+        ) and PLEDGE_FINPROD_ID=#{finprodId}
     </select>
+
+
+
+    <select id="getEtrExchangeFinishAmtMuilt" resultType="java.math.BigDecimal">
+        SELECT sum(AMOUNT)
+        from (SELECT sum(T.AMOUNT) AMOUNT
+              FROM PTL_CASH_POSITION_FLOW T
+              WHERE ORDER_ID IN
+                    (SELECT ORDER_ID
+                     FROM stl_pay_temp_orders
+                     WHERE stl_pay_temp_orders.TRADE_ID IN
+                           (SELECT TRADE_ID
+                            FROM ETR_FINISH_STATUS
+                            WHERE ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+                              AND TRADE_ID != #{entrustId,jdbcType=VARCHAR}) )
+        <if test="sumTradeFlag != null and sumTradeFlag != '' and sumTradeFlag == '01'">
+        union all
+        SELECT sum(T.AMOUNT) AMOUNT
+        FROM PTL_CASH_POSITION_FLOW T
+        WHERE ORDER_ID IN
+              (SELECT TRADE_ID
+               FROM ETR_FINISH_STATUS
+               WHERE ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+                 AND TRADE_ID != #{entrustId,jdbcType=VARCHAR})
+        </if>
+         )
+    </select>
+
 </mapper>

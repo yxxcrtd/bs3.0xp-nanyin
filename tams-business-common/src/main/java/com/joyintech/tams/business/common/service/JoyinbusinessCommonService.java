@@ -2,6 +2,7 @@ package com.joyintech.tams.business.common.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -66,9 +67,9 @@ public class JoyinbusinessCommonService extends BaseService {
      * @param entrustIdRequestDto
      * @return List<SelectOptionDto>
      */
-    public Page<SelectOptionDto> getEntrustId(EntrustIdRequestDto entrustIdRequestDto) {
+    public Page<SelectOptionDto> getEntrustId(CfetsSearchInfoRequest entrustIdRequestDto) {
         Map<String,Object> pageParam = new HashMap<String,Object>();
-        pageParam.put("etrId", entrustIdRequestDto.getEtrId());
+        pageParam.put("search", entrustIdRequestDto.getSearch());
         pageParam.put("entrustAwait", DictCodeList.委托状态_待接收.getValue());
         pageParam.put("entrustDistribute", DictCodeListExt3.委托状态_待分发.getValue());
         pageParam.put("entrustReceive", DictCodeList.委托状态_已接收.getValue());
@@ -85,15 +86,20 @@ public class JoyinbusinessCommonService extends BaseService {
         param.put("assestType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         param.put("TRADE_PLACE_01",DictCodeListExt1.交易场所_银行间.getValue());
         param.put("TRADE_PLACE_02",DictCodeListExt1.交易场所_商业银行柜台.getValue());
-        if(StringUtil.isNotEmpty(dto.getPs()) && StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_回售.getValue())){
+        if(StringUtil.isNotEmpty(dto.getDealType()) && StringUtil.equals(dto.getDealType(),"01")){
+            //需要查询债券资产和回购期限
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getfinprodIdOfBondAndRepo(param));
+        }
+        if(StringUtil.isNotEmpty(dto.getPs()) && (StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_回售.getValue())
+                                                   ||StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_赎回.getValue()))){
             param.put("platDate",DateUtil.platDateFromCache());
+            param.put("ps",dto.getPs());
             String userId = SecurityUtil.getLoginUser().getUserName();
-            if (StringUtils.isNotEmpty(userId)) {
+            if (StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_回售.getValue()) && StringUtils.isNotEmpty(userId)) {
                 param.put("userId", SecurityUtil.getLoginUser().getUserName());
-                return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getRightfinprodIdForAdd(param));
-            }else{
-                return null;
             }
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getRightfinprodIdForAdd(param));
+
         }else{
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getfinprodIdForAdd(param));
         }
@@ -101,6 +107,9 @@ public class JoyinbusinessCommonService extends BaseService {
     public Page<SelectOptionDto> selectPortfolioIdList(CfetsSearchInfoRequest dto) {
         Map<String, Object> param =new HashMap<>();
         param.put("search",dto.getSearch());
+        if(StringUtil.isNotEmpty(dto.getPs()) && StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_赎回.getValue())){
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.selectPortfolioIdList(param));
+        }
         String userId = SecurityUtil.getLoginUser().getUserName();
         if (StringUtils.isNotEmpty(userId)) {
             param.put("userId", SecurityUtil.getLoginUser().getUserName());
@@ -133,15 +142,26 @@ public class JoyinbusinessCommonService extends BaseService {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("search", dto.getSearch());
         param.put("sysDate",iPlatformDate.getSysDate());
+        if(StringUtil.isNotEmpty(dto.getDateType()) && StringUtil.equals(dto.getDateType(),"01")){
+            //查询历史数据，不需要当日日期
+            param.remove("sysDate");
+        }
+        String searchs = dto.getSearchs();
+        if(StringUtil.isNotEmpty(searchs)){
+            param.put("searchList", StringUtil.splitToList(GlobalConstant.COMMA,searchs));
+        }
         if(StringUtil.equals(dto.getDealType(),"01")){
-            //系统内的交易对手
+            //系统内的交易对手，即市场机构和资管产品的数据
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryCounterPartyList(param));
         }else if(StringUtil.equals(dto.getDealType(),"02")){
-            //银行间机构关联到系统的交易对手
+            //银行间机构，且必须关联到系统的交易对手
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryMySideAndPartyList(param));
         }else if(StringUtil.equals(dto.getDealType(),"03")){
             //CSTP下行接口对手方
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryCstpPartyList(param));
+        }else if(StringUtil.equals(dto.getDealType(),"04")){
+            //CSTP下行接口本方
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryCstpOuPartyList(param));
         }else{
             //组合关联的银行间机构,此处前端能拿到组合的21位码
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryMySideList(param));
@@ -149,6 +169,84 @@ public class JoyinbusinessCommonService extends BaseService {
     }
     public Page<SelectOptionDto> queryMySideTraderList(CfetsSearchInfoRequest dto) {
         Map<String, Object> param = BeanUtil.object2Map(dto);
-        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryMySideTraderList(param));
+        if(StringUtil.equals(dto.getDealType(),"01")){
+            //系统内的用户
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryUserIdList(param));
+        }else{
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryMySideTraderList(param));
+        }
+    }
+
+    /**
+     * 查询页面、按钮是否走流程
+     * @param param
+     * @return
+     */
+    public String isNeedWorkflow(Map<String, String> param) {
+        param.put("noneApproval", "noneApproval");
+        param.put("yesOrNo01",DictCodeList.是否_中债_是.getValue());
+        param.put("yesOrNo02",DictCodeList.是否_中债_否.getValue());
+        param.put("yesOrNoY",DictCodeList.是否_是.getValue());
+        param.put("yesOrNoN",DictCodeList.是否_否.getValue());
+        return joyinbusinessCommonMapper.isNeedWorkflow(param);
+    }
+
+    /**
+     * 审批页面 根据id查询本方或对手方
+     *
+     * @param dto
+     * @return java.util.List<com.joyintech.framework.select.SelectOptionDto>
+     * @author jiangpeng
+     * @date 2022/1/14 14:37
+     */
+    public List<SelectOptionDto> queryMySideOrCount(CfetsSearchInfoRequest dto) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("search", dto.getSearch());
+        param.put("sysDate", iPlatformDate.getSysDate());
+        if (StringUtil.isNotEmpty(dto.getDateType()) && StringUtil.equals(dto.getDateType(), "01")) {
+            //查询历史数据，不需要当日日期
+            param.remove("sysDate");
+        }
+        String searchs = dto.getSearchs();
+        if (StringUtil.isNotEmpty(searchs)) {
+            param.put("searchList", StringUtil.splitToList(GlobalConstant.COMMA, searchs));
+        }
+        if (StringUtil.equals(dto.getDealType(), "01")) {
+            //系统内的交易对手，即市场机构和资管产品的数据
+            return joyinbusinessCommonMapper.queryCounterPartyList(param);
+        } else if (StringUtil.equals(dto.getDealType(), "02")) {
+            //银行间机构，且必须关联到系统的交易对手
+            return joyinbusinessCommonMapper.queryMySideAndPartyList(param);
+        } else if (StringUtil.equals(dto.getDealType(), "03")) {
+            //CSTP下行接口对手方
+            return joyinbusinessCommonMapper.queryCstpPartyList(param);
+        } else if (StringUtil.equals(dto.getDealType(), "04")) {
+            //CSTP下行接口本方
+            return joyinbusinessCommonMapper.queryCstpOuPartyList(param);
+        } else {
+            //组合关联的银行间机构,此处前端能拿到组合的21位码
+            return joyinbusinessCommonMapper.queryMySideList(param);
+        }
+    }
+
+    /**
+     * 审批页面 根据id查询本方交易员或对手方交易员
+     *
+     * @param dto
+     * @return java.util.List<com.joyintech.framework.select.SelectOptionDto>
+     * @author jiangpeng
+     * @date 2022/1/14 14:42
+     */
+    public List<SelectOptionDto> queryMySideTraderOrCountTrader(CfetsSearchInfoRequest dto) {
+        Map<String, Object> param = BeanUtil.object2Map(dto);
+        if (StringUtil.equals(dto.getDealType(), "01")) {
+            //系统内的用户
+            return joyinbusinessCommonMapper.queryUserIdList(param);
+        } else if (StringUtil.equals(dto.getDealType(), "02")) {
+            // 根据系统内机构查询用户
+            return joyinbusinessCommonMapper.queryMySideTraderListByCounterId(param);
+        } else {
+            return joyinbusinessCommonMapper.queryMySideTraderList(param);
+        }
     }
 }

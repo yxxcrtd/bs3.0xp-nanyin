@@ -53,6 +53,11 @@ public class TrdBankManualSettleInfo extends BaseEntity {
     private String busiType;
 
     /**
+     * 交收失败原因
+     */
+    private String remark;
+
+    /**
      * 交收编号
      * @return SETTLE_SEQ_NO 交收编号
      */
@@ -178,5 +183,13 @@ public class TrdBankManualSettleInfo extends BaseEntity {
      */
     public void setBusiType(String busiType) {
         this.busiType = busiType == null ? null : busiType.trim();
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

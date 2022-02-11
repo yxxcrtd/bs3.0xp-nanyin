@@ -9,7 +9,7 @@
          and SEQ_ID not in
              (
                  select
-                     SEQ_ID
+                     SEQ_NO
                  from
                      SETTLE_TRANS_DATA_TOTAL_STATUS
                  where
@@ -39,7 +39,10 @@
             A.DEAL_DATE = #{dealDate,jdbcType=DATE}
           <!--/*and C.CHECK_RESULT in (#{checkResult1},#{checkResult3})*/-->
           and (E.MATCH_STATUS is null or E.MATCH_STATUS = #{matchStatus})
-          and A.APPLY_TRADE_ID is not null
+          <!--ZGZGST-4261:存续期数据无需登录SETTLE_TRANS_DATA_TOTAL表 fuyongsheng modify 20211221 start-->
+          <!--and A.APPLY_TRADE_ID is not null-->
+          and (A.APPLY_TRADE_ID is not null OR (B.REPO_TYPE = 'H02' AND A.PS= 'T07'))
+          <!--ZGZGST-4261:存续期数据无需登录SETTLE_TRANS_DATA_TOTAL表 fuyongsheng modify 20211221 end-->
           <!--/*AND EXISTS  (
                 SELECT 1 FROM stl_sec_recon_detail ssrd
                 where ssrd.TRADE_ID = A.TRADE_ID)*/-->

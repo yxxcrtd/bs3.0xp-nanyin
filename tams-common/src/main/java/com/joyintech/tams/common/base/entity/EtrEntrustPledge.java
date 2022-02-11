@@ -12,11 +12,6 @@ public class EtrEntrustPledge extends EtrEntrustPledgeKey {
     private BigDecimal scale;
 
     /**
-     * 质押券库代码
-     */
-    private String pledgeStockId;
-
-    /**
      * 取得 折算比例
      * @return 折算比例
      */
@@ -30,21 +25,5 @@ public class EtrEntrustPledge extends EtrEntrustPledgeKey {
      */
     public void setScale(BigDecimal scale) {
         this.scale = scale;
-    }
-
-    /**
-     * 取得 质押券库代码
-     * @return 质押券库代码
-     */
-    public String getPledgeStockId() {
-        return pledgeStockId;
-    }
-
-    /**
-     * 设置 质押券库代码
-     * @param pledgeStockId 质押券库代码
-     */
-    public void setPledgeStockId(String pledgeStockId) {
-        this.pledgeStockId = pledgeStockId == null ? null : pledgeStockId.trim();
     }
 }

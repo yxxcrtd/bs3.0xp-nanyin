@@ -117,7 +117,6 @@ function onSaveOrSubmitAction(operateType) {
 	};
 
 	var init = function() {
-		debugger;
 		if (entity && entity.selectedItem) {
 			setTimeout(function() {
 				table.reload({
@@ -131,7 +130,6 @@ function onSaveOrSubmitAction(operateType) {
 	}
 	
 	function transintRateFoul(assetRate1){
-		debugger;
     	var wg = assetRate1;
     	if(wg!=null&&wg!=''){
     		wg = String((wg*100).toFixed(2));
@@ -142,7 +140,6 @@ function onSaveOrSubmitAction(operateType) {
     }
 	
 	  var init = function(){
-	    	debugger;
 	    	if(entity&&entity.selectedItem){
 	    		setTimeout(function(){
 	    		table.reload({data:entity.selectedItem})

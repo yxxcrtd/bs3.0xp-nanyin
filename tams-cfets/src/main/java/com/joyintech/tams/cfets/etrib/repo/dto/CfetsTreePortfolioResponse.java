@@ -10,8 +10,6 @@
 
 package com.joyintech.tams.cfets.etrib.repo.dto;
 
-import java.util.List;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -22,30 +20,28 @@ public class CfetsTreePortfolioResponse{
      * 组合代码
      */
 	@ApiModelProperty(name="portfolioId",value="组合代码")
-    private List<String> portfolioId;
+    private String portfolioId;
 	
 	/**
      * 组合名称
      */
 	@ApiModelProperty(name="portfolioName",value="组合名称")
-    private List<String> portfolioName;
+    private String portfolioName;
 
-	public List<String> getPortfolioId() {
+
+	public String getPortfolioId() {
 		return portfolioId;
 	}
 
-	public void setPortfolioId(List<String> portfolioId) {
+	public void setPortfolioId(String portfolioId) {
 		this.portfolioId = portfolioId;
 	}
 
-	public List<String> getPortfolioName() {
+	public String getPortfolioName() {
 		return portfolioName;
 	}
 
-	public void setPortfolioName(List<String> portfolioName) {
+	public void setPortfolioName(String portfolioName) {
 		this.portfolioName = portfolioName;
 	}
-
-    
-    
 }

@@ -4,27 +4,36 @@ package com.joyintech.tams.cfets.cfetsmanualsettle.controller;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
 import com.joyintech.tams.cfets.cfetsmanualsettle.service.CfetsManualSettleService;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @PageId("CfetsManualSettle")
-@RequestMapping("/cfets/manualsettle/ManualSettle")
+@RequestMapping("/cfets/manualsettle/CfetsManualSettle")
 @Api(tags = "银行间手工交收")
 public class CfetsManualSettleController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(CfetsManualSettleController.class);
@@ -34,6 +43,26 @@ public class CfetsManualSettleController extends BaseController {
 
     @Autowired
     private IPlatformDate platformDateImpl;
+
+    @Override
+    public String init(Model model) {
+
+        CfetsManualSettleDto entity = null;
+        String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+        // 代办中过来
+        if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
+            entity = cfetsManualSettleService.getBussinessEntityByWorkflowId(
+                    workflowId);
+        }
+        model.addAttribute(GlobalConstant.ENTITY, entity);
+
+        if(entity != null){
+            List<CfetsManualSettleDto> settleinfoList = new ArrayList<>();
+            settleinfoList.add(entity);
+            model.addAttribute("settleinfoList", settleinfoList);
+        }
+        return super.init(model);
+    }
 
     /**
      * 手动交收check
@@ -63,16 +92,44 @@ public class CfetsManualSettleController extends BaseController {
     @PostMapping("doManualSettle")
     public Message<AjaxResult> doManualSettle(@RequestBody CfetsManualSettleRequest cfetsRequest, BindingResult br)
             throws Exception {
+
+        List<CfetsManualSettleDto> dtoList = cfetsRequest.getSelectedItem();
         //保存
-        ProcessParameter<CfetsManualSettleRequest> processParameter = new ProcessParameter<CfetsManualSettleRequest>();
-        WorkFlowParameter<CfetsManualSettleRequest> params = new WorkFlowParameter<CfetsManualSettleRequest>();
+        ProcessParameter<CfetsManualSettleDto> processParameter = new ProcessParameter<CfetsManualSettleDto>();
+        WorkFlowParameter<CfetsManualSettleDto> params = new WorkFlowParameter<CfetsManualSettleDto>();
         params.setPageId("CfetsManualSettle");
-        params.setElementId(cfetsRequest.getElementId());
-        params.setBusinessCode(IDGenerator.generate());
+        params.setElementId(dtoList.get(0).getElementId());
+        params.setBusinessCode(item -> item.getTradeId());
         params.setBusinessType(DictCodeListExt3.共通业务类型_手工交收.getValue());
+
+        String finalOpertType;
+
+        if(dtoList.get(0)!=null && StringUtil.equals(dtoList.get(0).getButtonType(),DictCodeListExt3.交收操作类型_回溯.getValue())){
+            finalOpertType = DictCodeListExt3.交收操作类型_回溯.getCodeName();
+        }else if(dtoList.get(0)!=null && StringUtil.equals(dtoList.get(0).getButtonType(),DictCodeListExt3.交收操作类型_交收.getValue())){
+            finalOpertType = DictCodeListExt3.交收操作类型_交收.getCodeName();
+        }else{
+            finalOpertType = DictCodeListExt3.交收操作类型_交收失败.getCodeName();
+        }
+
+        String finalOpertType1 = finalOpertType;
+        params.setComment((entity) -> {
+            String settleArg = getMessage("交收金额") + GlobalConstant.COLON + entity.getSettleAmt();
+            if(StringUtil.equals(entity.getPs(), BussinessDictCodeList.交易方向_买入.getValue())){
+                settleArg = getMessage("交收数量") + GlobalConstant.COLON + entity.getSettleNum();
+            }
+            return WorkFlowUtil.concatComment(
+                getMessage("交收日期") + GlobalConstant.COLON + entity.getSettleDate(),
+                getMessage("原业务编号") + GlobalConstant.COLON + entity.getTradeId(),
+                getMessage("业务类型") + GlobalConstant.COLON + entity.getTgBusiTypeStr(),
+                getMessage("资产简称") + GlobalConstant.COLON + entity.getFinprodAbbr(),
+                getMessage("交收操作") + GlobalConstant.COLON + finalOpertType1,
+                settleArg);
+        });
         processParameter.setWorkFlowParameter(params);
         try{
-            String msg = cfetsManualSettleService.start(processParameter,cfetsRequest);
+            String msg = cfetsManualSettleService.start(processParameter,
+                    dtoList.toArray(new CfetsManualSettleDto[dtoList.size()]));
             return new Message<AjaxResult>().success().setMessage("处理完成");
         }catch (Exception e) {
             logger.error("交收失败",e);

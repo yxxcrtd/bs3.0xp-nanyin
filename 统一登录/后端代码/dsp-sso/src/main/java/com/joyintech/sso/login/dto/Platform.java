@@ -7,28 +7,37 @@ import io.swagger.annotations.ApiModelProperty;
  * @auther zhangnian
  * @date 2021/5/11
  */
-@ApiModel(value="应用平台信息",description="应用平台信息")
+@ApiModel(value = "应用平台信息", description = "应用平台信息")
 public class Platform {
 
 //    private static final long serialVersionUID = 6356714477516861236L;
 
-    @ApiModelProperty(required=false,name="id",value="平台id",example="")
+    @ApiModelProperty(required = false, name = "id", value = "平台id", example = "")
     private String id;
 
-    @ApiModelProperty(required=true,name="platformName",value="平台名称",example="")
+    @ApiModelProperty(required = true, name = "platformName", value = "平台名称", example = "")
     private String platformName;
 
-    @ApiModelProperty(required=true,name="platformUrl",value="平台地址",example="")
+    @ApiModelProperty(required = true, name = "platformUrl", value = "平台地址", example = "")
     private String platformUrl;
 
-    @ApiModelProperty(required=true,name="weight",value="权重",example="")
+    @ApiModelProperty(required = true, name = "weight", value = "权重", example = "")
     private String weight;
 
-    @ApiModelProperty(required=true,name="icon",value="图标",example="")
+    @ApiModelProperty(required = true, name = "icon", value = "图标", example = "")
     private String icon;
 
-    @ApiModelProperty(required=true,name="cookieKey",value="cookieKey",example="")
+    @ApiModelProperty(required = true, name = "cookieKey", value = "cookieKey", example = "")
     private String cookieKey;
+
+    @ApiModelProperty(required = false, name = "describe", value = "描述", example = "")
+    private String describe;
+
+    @ApiModelProperty(required = true, name = "platformUrl", value = "平台地址", example = "")
+    private String platformHost;
+
+    @ApiModelProperty(required = true, name = "platformIndex", value = "平台主页地址", example = "")
+    private String platformIndex;
 
     public String getId() {
         return id;
@@ -47,7 +56,7 @@ public class Platform {
     }
 
     public String getPlatformUrl() {
-        return platformUrl;
+        return platformHost + platformIndex;
     }
 
     public void setPlatformUrl(String platformUrl) {
@@ -78,6 +87,28 @@ public class Platform {
         this.cookieKey = cookieKey;
     }
 
+    public String getDescribe() {
+        return describe;
+    }
 
+    public void setDescribe(String describe) {
+        this.describe = describe;
+    }
+
+    public String getPlatformHost() {
+        return platformHost;
+    }
+
+    public void setPlatformHost(String platformHost) {
+        this.platformHost = platformHost;
+    }
+
+    public String getPlatformIndex() {
+        return platformIndex;
+    }
+
+    public void setPlatformIndex(String platformIndex) {
+        this.platformIndex = platformIndex;
+    }
 }
 

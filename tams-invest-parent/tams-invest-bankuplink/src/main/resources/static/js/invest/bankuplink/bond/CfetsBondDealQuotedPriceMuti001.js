@@ -104,7 +104,6 @@
         object.isDzh = 'Y';
         Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceMuti001/check', object,
             function(result) {
-                debugger;
                 if (result.data) {
                     Joyin.confirm(result.data,
                         function() {
@@ -281,14 +280,9 @@
         }
         else{
             if (!quotaPageModel || (quotaPageModel != 'dialogueResponse')) {
-<<<<<<< HEAD
-                $('#CfetsBondDealQuotedPriceMuti001_settleSpreed').val('01').trigger('change').attr('disabled', false);
-                // $('#CfetsBondDealQuotedPriceMuti001_mySide').attr('disabled', false);
-=======
                 //$('#CfetsBondDealQuotedPriceMuti001_settleSpreed').val('01').trigger('change').attr('disabled', false);
                 $('#CfetsBondDealQuotedPriceMuti001_settleSpreed').trigger('change').attr('disabled', false);
-                $('#CfetsBondDealQuotedPriceMuti001_mySide').attr('disabled', false);
->>>>>>> gzyh_meger_1203
+                // $('#CfetsBondDealQuotedPriceMuti001_mySide').attr('disabled', false);
                 $('#CfetsBondDealQuotedPriceMuti001_settleDate').attr('disabled', false);
                 $('#CfetsBondDealQuotedPriceMuti001_ps').attr('disabled', false);
                 $('#CfetsBondDealQuotedPriceMuti001_finprodId').attr('disabled', false);

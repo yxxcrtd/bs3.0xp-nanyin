@@ -11,20 +11,24 @@
         <result column="LENDIN_FPRICE_AMT" property="lendinFpriceAmt" jdbcType="DECIMAL" />
         <result column="OUR_INT_AMT" property="ourIntAmt" jdbcType="DECIMAL" />
         <result column="LENDIN_INT_AMT" property="lendinIntAmt" jdbcType="DECIMAL" />
-        <result column="THE_SETTE_DATE" property="theSetteDate" jdbcType="DATE" />
         <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CAL_MODE" property="calMode" jdbcType="VARCHAR" />
+        <result column="EXERCISE_PRICE" property="exercisePrice" jdbcType="DECIMAL" />
+        <result column="REDEEM_RATE" property="redeemRate" jdbcType="DECIMAL" />
+        <result column="ACT_SETTE_DATE" property="actSetteDate" jdbcType="DATE" />
     </resultMap>
     <sql id="Base_Column_List" >
         TOTLE_TRADE_ID TOTLE_TRADE_ID, OUR_SHARE_AMT OUR_SHARE_AMT, LENDIN_SHARE_AMT LENDIN_SHARE_AMT, 
         OUR_CPRICE_AMT OUR_CPRICE_AMT, LENDIN_CPRICE_AMT LENDIN_CPRICE_AMT, OUR_FPRICE_AMT OUR_FPRICE_AMT, 
         LENDIN_FPRICE_AMT LENDIN_FPRICE_AMT, OUR_INT_AMT OUR_INT_AMT, LENDIN_INT_AMT LENDIN_INT_AMT, 
-        THE_SETTE_DATE THE_SETTE_DATE, WORKFLOW_ID WORKFLOW_ID, CREATE_USER CREATE_USER, 
-        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        WORKFLOW_ID WORKFLOW_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CAL_MODE CAL_MODE, EXERCISE_PRICE EXERCISE_PRICE, 
+        REDEEM_RATE REDEEM_RATE, ACT_SETTE_DATE ACT_SETTE_DATE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -53,12 +57,12 @@
     <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
         insert into WFL_REG_FIN_PRO_DEAL_TOTAL_ADD(TOTLE_TRADE_ID, OUR_SHARE_AMT, LENDIN_SHARE_AMT, 
         OUR_CPRICE_AMT, LENDIN_CPRICE_AMT, OUR_FPRICE_AMT, LENDIN_FPRICE_AMT, OUR_INT_AMT, 
-        LENDIN_INT_AMT, THE_SETTE_DATE, WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-        UPDATE_USER, UPDATE_TIME)
+        LENDIN_INT_AMT, WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME, CAL_MODE, EXERCISE_PRICE, REDEEM_RATE, ACT_SETTE_DATE)
         select TOTLE_TRADE_ID, OUR_SHARE_AMT, LENDIN_SHARE_AMT, 
             OUR_CPRICE_AMT, LENDIN_CPRICE_AMT, OUR_FPRICE_AMT, LENDIN_FPRICE_AMT, OUR_INT_AMT, 
-            LENDIN_INT_AMT, THE_SETTE_DATE, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            LENDIN_INT_AMT, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CAL_MODE, EXERCISE_PRICE, REDEEM_RATE, ACT_SETTE_DATE
              from WFL_REG_FIN_PRO_DEAL_TOTAL_ADD
              where WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
     </insert>
@@ -92,14 +96,23 @@
             <if test="lendinIntAmt != null" >
                 LENDIN_INT_AMT = #{lendinIntAmt,jdbcType=DECIMAL},
             </if>
-            <if test="theSetteDate != null" >
-                THE_SETTE_DATE = #{theSetteDate,jdbcType=DATE},
-            </if>
             <if test="updateUser != null" >
                 UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             </if>
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="calMode != null" >
+                CAL_MODE = #{calMode,jdbcType=VARCHAR},
+            </if>
+            <if test="exercisePrice != null" >
+                EXERCISE_PRICE = #{exercisePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="redeemRate != null" >
+                REDEEM_RATE = #{redeemRate,jdbcType=DECIMAL},
+            </if>
+            <if test="actSetteDate != null" >
+                ACT_SETTE_DATE = #{actSetteDate,jdbcType=DATE},
             </if>
         </set>
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
@@ -116,24 +129,29 @@
         LENDIN_FPRICE_AMT = #{lendinFpriceAmt,jdbcType=DECIMAL},
         OUR_INT_AMT = #{ourIntAmt,jdbcType=DECIMAL},
         LENDIN_INT_AMT = #{lendinIntAmt,jdbcType=DECIMAL},
-        THE_SETTE_DATE = #{theSetteDate,jdbcType=DATE},
         UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        CAL_MODE = #{calMode,jdbcType=VARCHAR},
+        EXERCISE_PRICE = #{exercisePrice,jdbcType=DECIMAL},
+        REDEEM_RATE = #{redeemRate,jdbcType=DECIMAL},
+        ACT_SETTE_DATE = #{actSetteDate,jdbcType=DATE}
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProDealTotalAdd" >
         insert into WFL_REG_FIN_PRO_DEAL_TOTAL_ADD (TOTLE_TRADE_ID, OUR_SHARE_AMT, LENDIN_SHARE_AMT, 
             OUR_CPRICE_AMT, LENDIN_CPRICE_AMT, OUR_FPRICE_AMT, 
             LENDIN_FPRICE_AMT, OUR_INT_AMT, LENDIN_INT_AMT, 
-            THE_SETTE_DATE, WORKFLOW_ID, CREATE_USER, 
-            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME)
+            WORKFLOW_ID, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            CAL_MODE, EXERCISE_PRICE, REDEEM_RATE, 
+            ACT_SETTE_DATE)
         values (#{totleTradeId,jdbcType=VARCHAR}, #{ourShareAmt,jdbcType=DECIMAL}, #{lendinShareAmt,jdbcType=DECIMAL}, 
             #{ourCpriceAmt,jdbcType=DECIMAL}, #{lendinCpriceAmt,jdbcType=DECIMAL}, #{ourFpriceAmt,jdbcType=DECIMAL}, 
             #{lendinFpriceAmt,jdbcType=DECIMAL}, #{ourIntAmt,jdbcType=DECIMAL}, #{lendinIntAmt,jdbcType=DECIMAL}, 
-            #{theSetteDate,jdbcType=DATE}, #{workflowId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
-            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP})
+            #{workflowId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{calMode,jdbcType=VARCHAR}, #{exercisePrice,jdbcType=DECIMAL}, #{redeemRate,jdbcType=DECIMAL}, 
+            #{actSetteDate,jdbcType=DATE})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProDealTotalAdd" >
         insert into WFL_REG_FIN_PRO_DEAL_TOTAL_ADD
@@ -165,9 +183,6 @@
             <if test="lendinIntAmt != null" >
                 LENDIN_INT_AMT,
             </if>
-            <if test="theSetteDate != null" >
-                THE_SETTE_DATE,
-            </if>
             <if test="workflowId != null" >
                 WORKFLOW_ID,
             </if>
@@ -185,6 +200,18 @@
             </if>
             <if test="updateTime != null" >
                 UPDATE_TIME,
+            </if>
+            <if test="calMode != null" >
+                CAL_MODE,
+            </if>
+            <if test="exercisePrice != null" >
+                EXERCISE_PRICE,
+            </if>
+            <if test="redeemRate != null" >
+                REDEEM_RATE,
+            </if>
+            <if test="actSetteDate != null" >
+                ACT_SETTE_DATE,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -215,9 +242,6 @@
             <if test="lendinIntAmt != null" >
                 #{lendinIntAmt,jdbcType=DECIMAL},
             </if>
-            <if test="theSetteDate != null" >
-                #{theSetteDate,jdbcType=DATE},
-            </if>
             <if test="workflowId != null" >
                 #{workflowId,jdbcType=VARCHAR},
             </if>
@@ -236,17 +260,29 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="calMode != null" >
+                #{calMode,jdbcType=VARCHAR},
+            </if>
+            <if test="exercisePrice != null" >
+                #{exercisePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="redeemRate != null" >
+                #{redeemRate,jdbcType=DECIMAL},
+            </if>
+            <if test="actSetteDate != null" >
+                #{actSetteDate,jdbcType=DATE},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProDealTotalAdd" >
         insert into WFL_REG_FIN_PRO_DEAL_TOTAL_ADD(TOTLE_TRADE_ID, OUR_SHARE_AMT, LENDIN_SHARE_AMT, 
         OUR_CPRICE_AMT, LENDIN_CPRICE_AMT, OUR_FPRICE_AMT, LENDIN_FPRICE_AMT, OUR_INT_AMT, 
-        LENDIN_INT_AMT, THE_SETTE_DATE, WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-        UPDATE_USER, UPDATE_TIME)
+        LENDIN_INT_AMT, WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME, CAL_MODE, EXERCISE_PRICE, REDEEM_RATE, ACT_SETTE_DATE)
         select TOTLE_TRADE_ID, OUR_SHARE_AMT, LENDIN_SHARE_AMT, 
             OUR_CPRICE_AMT, LENDIN_CPRICE_AMT, OUR_FPRICE_AMT, LENDIN_FPRICE_AMT, OUR_INT_AMT, 
-            LENDIN_INT_AMT, THE_SETTE_DATE, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            LENDIN_INT_AMT, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CAL_MODE, EXERCISE_PRICE, REDEEM_RATE, ACT_SETTE_DATE
              from WFL_REG_FIN_PRO_DEAL_TOTAL_ADD
              where 1 = 1 and TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </insert>
@@ -277,9 +313,6 @@
             <if test="lendinIntAmt != null" >
                 LENDIN_INT_AMT = #{lendinIntAmt,jdbcType=DECIMAL},
             </if>
-            <if test="theSetteDate != null" >
-                THE_SETTE_DATE = #{theSetteDate,jdbcType=DATE},
-            </if>
             <if test="workflowId != null" >
                 WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
             </if>
@@ -288,6 +321,18 @@
             </if>
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="calMode != null" >
+                CAL_MODE = #{calMode,jdbcType=VARCHAR},
+            </if>
+            <if test="exercisePrice != null" >
+                EXERCISE_PRICE = #{exercisePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="redeemRate != null" >
+                REDEEM_RATE = #{redeemRate,jdbcType=DECIMAL},
+            </if>
+            <if test="actSetteDate != null" >
+                ACT_SETTE_DATE = #{actSetteDate,jdbcType=DATE},
             </if>
         </set>
         where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
@@ -302,10 +347,13 @@
             LENDIN_FPRICE_AMT = #{lendinFpriceAmt,jdbcType=DECIMAL},
             OUR_INT_AMT = #{ourIntAmt,jdbcType=DECIMAL},
             LENDIN_INT_AMT = #{lendinIntAmt,jdbcType=DECIMAL},
-            THE_SETTE_DATE = #{theSetteDate,jdbcType=DATE},
             WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            CAL_MODE = #{calMode,jdbcType=VARCHAR},
+            EXERCISE_PRICE = #{exercisePrice,jdbcType=DECIMAL},
+            REDEEM_RATE = #{redeemRate,jdbcType=DECIMAL},
+            ACT_SETTE_DATE = #{actSetteDate,jdbcType=DATE}
         where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </update>
 </mapper>

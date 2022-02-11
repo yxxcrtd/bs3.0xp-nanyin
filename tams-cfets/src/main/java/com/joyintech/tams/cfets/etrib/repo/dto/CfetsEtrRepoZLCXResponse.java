@@ -1,13 +1,12 @@
 package com.joyintech.tams.cfets.etrib.repo.dto;
 
-import com.joyintech.tams.business.common.dto.PageMode;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.systemtools.util.SysDatadictUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  *
@@ -55,19 +54,11 @@ public class CfetsEtrRepoZLCXResponse {
     @ApiModelProperty(name="effectiveStatus",value="有效状态Code")
     private String effectiveStatus;
 
-    @ApiModelProperty(name="effectiveStatusName",value="有效状态")
-    private String effectiveStatusName;
+    @ApiModelProperty(name="effectiveStatusStr",value="有效状态")
+    private String effectiveStatusStr;
 
     @ApiModelProperty(name="entrustStatus",value="指令状态Code")
     private String entrustStatus;
-
-    @ApiModelProperty(name="entrustStatusName",value="指令状态")
-    private String entrustStatusName;
-
-
-
-
-
 
     /**
      * 价格模式
@@ -87,6 +78,18 @@ public class CfetsEtrRepoZLCXResponse {
     @ApiModelProperty(name="entrustDate",value="指令日期")
     private Date entrustDate;
 
+    /**
+     * 指令日期
+     */
+    @ApiModelProperty(name="entrustDate",value="指令日期")
+    private String entrustDateStr;
+
+
+    /**
+     * 指令日期
+     */
+    @ApiModelProperty(name="mdate",value="到期日")
+    private String mdate;
 
     /**
      * 回购利率
@@ -102,7 +105,24 @@ public class CfetsEtrRepoZLCXResponse {
     /**
      * 交易完成度
      */
-    private BigDecimal transactioncom;
+    private BigDecimal transProcess;
+    /**
+     * 交易完成度
+     */
+    private BigDecimal execProcess;
+
+    @ApiModelProperty(name="execFinishAmt",value="已完成指令额度",example="1")
+    private BigDecimal execFinishAmt;
+
+    @ApiModelProperty(name="execRemainderAmt",value="剩余指令额度",example="1")
+    private BigDecimal execRemainderAmt;
+
+    @ApiModelProperty(name="transFinishAmt",value="已成交额度",example="1")
+    private BigDecimal transFinishAmt;
+
+    @ApiModelProperty(name="transRemainderAmt",value="剩余成交额度",example="1")
+    private BigDecimal transRemainderAmt;
+
 
     /**
      * 备注
@@ -124,6 +144,12 @@ public class CfetsEtrRepoZLCXResponse {
      */
     @ApiModelProperty(name="counterId",value="交易对手代码")
     private String counterId;
+
+    /**
+     * 交易对手代码
+     */
+    @ApiModelProperty(name="counterName",value="交易对手")
+    private String counterName;
 
     public String getPortfolioId() {
         return portfolioId;
@@ -157,12 +183,12 @@ public class CfetsEtrRepoZLCXResponse {
         this.effectiveStatus = effectiveStatus;
     }
 
-    public String getEffectiveStatusName() {
-        return effectiveStatusName;
+    public String getEffectiveStatusStr() {
+        return effectiveStatusStr;
     }
 
-    public void setEffectiveStatusName(String effectiveStatusName) {
-        this.effectiveStatusName = effectiveStatusName;
+    public void setEffectiveStatusStr(String effectiveStatusStr) {
+        this.effectiveStatusStr = effectiveStatusStr;
     }
 
     public String getEntrustStatus() {
@@ -171,14 +197,6 @@ public class CfetsEtrRepoZLCXResponse {
 
     public void setEntrustStatus(String entrustStatus) {
         this.entrustStatus = entrustStatus;
-    }
-
-    public String getEntrustStatusName() {
-        return entrustStatusName;
-    }
-
-    public void setEntrustStatusName(String entrustStatusName) {
-        this.entrustStatusName = entrustStatusName;
     }
 
     public String getTermType() {
@@ -253,13 +271,7 @@ public class CfetsEtrRepoZLCXResponse {
         this.finishAmt = finishAmt;
     }
 
-    public BigDecimal getTransactioncom() {
-        return transactioncom;
-    }
 
-    public void setTransactioncom(BigDecimal transactioncom) {
-        this.transactioncom = transactioncom;
-    }
 
     public String getRemark() {
         return remark;
@@ -291,5 +303,93 @@ public class CfetsEtrRepoZLCXResponse {
 
     public void setCounterId(String counterId) {
         this.counterId = counterId;
+    }
+
+    public String getSettleSpreedStr() {
+        return "T+" + this.getSettleSpreed();
+    }
+
+    public String getPriceModelStr() {
+        return SysDatadictUtil.getNameFromDataDict(DictCode.价格模式,this.getPriceModel());
+    }
+
+    public String getPsStr() {
+        return SysDatadictUtil.getNameFromDataDict(DictCode.回购拆借方向,this.getPs());
+    }
+
+    public String getEntrustStatusStr() {
+        return SysDatadictUtil.getNameFromDataDict(DictCode.委托状态,this.getEntrustStatus());
+    }
+
+    public String getEntrustDateStr() {
+        return entrustDateStr;
+    }
+
+    public void setEntrustDateStr(String entrustDateStr) {
+        this.entrustDateStr = entrustDateStr;
+    }
+
+    public BigDecimal getTransProcess() {
+        return transProcess;
+    }
+
+    public void setTransProcess(BigDecimal transProcess) {
+        this.transProcess = transProcess;
+    }
+
+    public BigDecimal getExecProcess() {
+        return execProcess;
+    }
+
+    public void setExecProcess(BigDecimal execProcess) {
+        this.execProcess = execProcess;
+    }
+
+    public BigDecimal getExecFinishAmt() {
+        return execFinishAmt;
+    }
+
+    public void setExecFinishAmt(BigDecimal execFinishAmt) {
+        this.execFinishAmt = execFinishAmt;
+    }
+
+    public BigDecimal getExecRemainderAmt() {
+        return execRemainderAmt;
+    }
+
+    public void setExecRemainderAmt(BigDecimal execRemainderAmt) {
+        this.execRemainderAmt = execRemainderAmt;
+    }
+
+    public BigDecimal getTransFinishAmt() {
+        return transFinishAmt;
+    }
+
+    public void setTransFinishAmt(BigDecimal transFinishAmt) {
+        this.transFinishAmt = transFinishAmt;
+    }
+
+    public BigDecimal getTransRemainderAmt() {
+        return transRemainderAmt;
+    }
+
+    public void setTransRemainderAmt(BigDecimal transRemainderAmt) {
+        this.transRemainderAmt = transRemainderAmt;
+    }
+
+    public String getMdate() {
+        return mdate;
+    }
+
+    public void setMdate(String mdate) {
+        this.mdate = mdate;
+    }
+
+    public String getCounterName() {
+        return counterName;
+    }
+
+    public void setCounterName(String counterName) {
+        this.counterName = counterName;
     }
 }

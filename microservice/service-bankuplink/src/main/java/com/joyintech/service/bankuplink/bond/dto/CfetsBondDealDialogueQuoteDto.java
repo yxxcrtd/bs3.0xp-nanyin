@@ -159,7 +159,37 @@ public class CfetsBondDealDialogueQuoteDto extends CfetsBondDealEntrustOrderDto 
     private BigDecimal settFeeAmt;
 
     private String distribution;
-    
+
+    private String type11;
+
+    private BigDecimal lendinShareAmt;
+
+    private BigDecimal ourShareAmt;
+
+    public BigDecimal getLendinShareAmt() {
+        return lendinShareAmt;
+    }
+
+    public void setLendinShareAmt(BigDecimal lendinShareAmt) {
+        this.lendinShareAmt = lendinShareAmt;
+    }
+
+    public BigDecimal getOurShareAmt() {
+        return ourShareAmt;
+    }
+
+    public void setOurShareAmt(BigDecimal ourShareAmt) {
+        this.ourShareAmt = ourShareAmt;
+    }
+
+    public String getType11() {
+        return type11;
+    }
+
+    public void setType11(String type11) {
+        this.type11 = type11;
+    }
+
     public String getPortfolioId() {
 		return portfolioId;
 	}

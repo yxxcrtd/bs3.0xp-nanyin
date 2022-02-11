@@ -40,7 +40,6 @@ $(function () {
 		}
 		pageParam.booksetId = booksetIds;
 		pageParam.preseqno = preseqno;
-		debugger;
 		return pageParam;
 	};
 

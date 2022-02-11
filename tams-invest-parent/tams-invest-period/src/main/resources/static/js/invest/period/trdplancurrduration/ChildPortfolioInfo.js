@@ -21,7 +21,6 @@
         ],
         editCell:function(value, data, field, cell, column){
         	if(secOver){
-        		debugger;
         		var int =0;
         		var flag = false;//是否联动计算通道费信息
             	if(CHANNEL){//通道存在

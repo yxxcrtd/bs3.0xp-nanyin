@@ -123,6 +123,69 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto {
     private BigDecimal settFeeAmt;
 
     private String distribution;
+
+    /**
+     * 净价总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal cpriceAmt;
+
+    /**
+     * 应计利息总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal intAmt;
+
+    /**
+     * 全价总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal fpriceAmt;
+
+    private BigDecimal lendinShareAmt;
+
+    private BigDecimal ourShareAmt;
+
+    public BigDecimal getLendinShareAmt() {
+        return lendinShareAmt;
+    }
+
+    public void setLendinShareAmt(BigDecimal lendinShareAmt) {
+        this.lendinShareAmt = lendinShareAmt;
+    }
+
+    public BigDecimal getOurShareAmt() {
+        return ourShareAmt;
+    }
+
+    public void setOurShareAmt(BigDecimal ourShareAmt) {
+        this.ourShareAmt = ourShareAmt;
+    }
+
+    public BigDecimal getCpriceAmt() {
+        return cpriceAmt;
+    }
+
+    public void setCpriceAmt(BigDecimal cpriceAmt) {
+        this.cpriceAmt = cpriceAmt;
+    }
+
+    public BigDecimal getIntAmt() {
+        return intAmt;
+    }
+
+    public void setIntAmt(BigDecimal intAmt) {
+        this.intAmt = intAmt;
+    }
+
+    public BigDecimal getFpriceAmt() {
+        return fpriceAmt;
+    }
+
+    public void setFpriceAmt(BigDecimal fpriceAmt) {
+        this.fpriceAmt = fpriceAmt;
+    }
+
     public String getPortfolioId() {
 		return portfolioId;
 	}

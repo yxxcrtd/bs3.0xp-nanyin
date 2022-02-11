@@ -64,6 +64,7 @@ $(function() {
                 {field : 'sellOnePriceFull',type:"money", digit:3,title : '卖一价全价',width:120, sort : true },
                 {field : 'maxPriceFull',type:"money",digit:3,title : '最高价全价',width:120, sort : true },
                 {field : 'minPriceFull',type:"money", digit:3,title : '最低价全价',width:120, sort : true },
+                {field : 'marketAmt',type:"money", digit:3,title : '债券市场余额',width:135, sort : true },
                 {field:'operation', title: '操作' , type:'action',buttons: ['edit', 'delt'] , width:100}
                 //全价和净价分开 modified by lishuping 20191125 end
 //                {fixed : 'right',width : 80, title : '操作', align : 'center',type : 'action', buttons : [ 'edit' ] } 
@@ -91,7 +92,6 @@ $(function() {
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-        debugger;
         var object = {
             finprodId:data.finprodId,
             secId:data.secId,
@@ -120,7 +120,6 @@ $(function() {
      * 删除
      */
     $('#ComBondMarketInfo001_btn_delete').click(function () {
-        debugger;
         if(table!=null && table!=''){
             var selArr = table.getAllCheckedRows();
         }

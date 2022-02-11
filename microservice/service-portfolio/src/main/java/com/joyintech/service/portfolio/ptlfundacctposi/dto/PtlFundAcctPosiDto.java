@@ -251,4 +251,42 @@ public class PtlFundAcctPosiDto extends PtlCashPosition {
 	public void setAcctType(String acctType) {
 		this.acctType = acctType;
 	}
+
+	/**
+	 * 当日流入额
+	 */
+	private BigDecimal quotaIn;
+	/**
+	 * 当日流出额
+	 */
+	private BigDecimal quotaOut;
+	/**
+	 * 登记托管机构
+	 */
+	private String trusteeId;
+
+	public BigDecimal getQuotaIn() {
+		return quotaIn;
+	}
+
+	public void setQuotaIn(BigDecimal quotaIn) {
+		this.quotaIn = quotaIn;
+	}
+
+	public BigDecimal getQuotaOut() {
+		return quotaOut;
+	}
+
+	public void setQuotaOut(BigDecimal quotaOut) {
+		this.quotaOut = quotaOut;
+	}
+
+	public String getTrusteeId() {
+		return trusteeId;
+	}
+
+	public void setTrusteeId(String trusteeId) {
+		this.trusteeId = trusteeId;
+	}
+
 }

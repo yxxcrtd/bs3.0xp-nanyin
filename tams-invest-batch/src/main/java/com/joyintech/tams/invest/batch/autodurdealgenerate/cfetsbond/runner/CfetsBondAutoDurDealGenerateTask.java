@@ -10,13 +10,13 @@
 
 package com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.runner;
 
-import com.joyintech.batch.batchbase.baseclass.*;
+import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
 import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.constant.BatchDictCodeList;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.web.PlatformDate;
-import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.service.CfetsBondAutoDurDealGenerateProcessorService;
+import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.service.CfetsAutoDurDealProcessorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 /**
- * 债券存续期 自动生成债券还本、收息、到期交易
+ * 债券存续期 自动生成债券还本、收息、到期交易。赎回交易
  *
  * @author sjj
  * @version 1.0 2021年11月22日
@@ -51,7 +51,7 @@ public class CfetsBondAutoDurDealGenerateTask extends BatchBaseService {
     private PlatformDate platformDateService;
 
     @Autowired
-    private CfetsBondAutoDurDealGenerateProcessorService cfetsBondAutoDurDealGenerateProcessorService;
+    private CfetsAutoDurDealProcessorService cfetsAutoDurDealProcessorService;
 
     /**
      * {@inheritDoc}
@@ -76,11 +76,13 @@ public class CfetsBondAutoDurDealGenerateTask extends BatchBaseService {
         }
 
         try {
-            cfetsBondAutoDurDealGenerateProcessorService.execute(batchDate, this.getProductIdList());
+            cfetsAutoDurDealProcessorService.execute(batchDate, this.getProductIdList());
             result.setStatus(BatchStatus.COMPLETED);
         }
         catch (Exception e) {
-            logger.error(e.getMessage());
+            e.printStackTrace();
+           // logger.error(e.getMessage());
+            throw new RuntimeException(e);
         }
 
         return result;
