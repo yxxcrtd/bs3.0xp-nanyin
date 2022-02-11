@@ -1,5 +1,6 @@
 package com.joyintech.tams.settle.batch.dealrevoke.service;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.settle.batch.datagather.service.StlDataGatherService;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author 何阳阳
@@ -30,13 +32,15 @@ public class FundRevokeService implements BaseRevokeService {
 
     /**
      * 基金交易撤销
-     * @param tradeIdList 交易编号
-     * @param totalTradeIdList 汇总交易编号
+     * @param tradeIdMap 交易编号 交易方向
+     * @param totalTradeIdMap 汇总交易编号 交易方向
      */
     @Override
-    public void doRevoke(List<String> tradeIdList, List<String> totalTradeIdList) {
+    public void doRevoke(Map<String,String> tradeIdMap, Map<String,String> totalTradeIdMap) {
         // 参考基金交易撤销逻辑，生成已生效的撤销交易数据，同时反向更新头寸信息、持仓信息以及委托完成信息。注意不要调用对外发送逻辑。
-        if(CollectionUtils.isNotEmpty(tradeIdList)) {
+        if(!tradeIdMap.isEmpty() && tradeIdMap.size()>0) {
+            List<String> tradeIdList =  tradeIdMap.entrySet().stream()
+                    .map(item->item.getKey()).collect(Collectors.toList());
             Map<String, Object> param = new HashMap<>();
             param.put("tradeIdList", tradeIdList);
             param.put("status", DictCodeListExt1.交易流程状态_撤销.getValue());
@@ -45,7 +49,9 @@ public class FundRevokeService implements BaseRevokeService {
             investDealRevokeService.revokeDeal(tradeIdList);
         }
         // 参考基金分红交易撤销逻辑，生成已生效的撤销交易数据，同时反向更新头寸信息、持仓信息以及委托完成信息。注意不要调用对外发送逻辑。
-        if(CollectionUtils.isNotEmpty(totalTradeIdList)) {
+        if(!totalTradeIdMap.isEmpty() && totalTradeIdMap.size()>0) {
+            List<String> totalTradeIdList =  totalTradeIdMap.entrySet().stream()
+                    .map(item->item.getKey()).collect(Collectors.toList());
             Map<String, Object> param = new HashMap<>();
             param.put("totalTradeIdList", totalTradeIdList);
             param.put("status", DictCodeListExt1.交易流程状态_撤销.getValue());

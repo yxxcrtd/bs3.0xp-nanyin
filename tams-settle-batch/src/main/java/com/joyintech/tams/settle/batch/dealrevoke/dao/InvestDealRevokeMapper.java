@@ -4,6 +4,7 @@ import com.joyintech.tams.common.base.entity.EtrCashPosition;
 import com.joyintech.tams.common.base.entity.EtrSecPosition;
 import com.joyintech.tams.common.base.entity.PtlCashPosition;
 import com.joyintech.tams.common.base.entity.PtlSecPosition;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,6 +31,13 @@ public interface InvestDealRevokeMapper {
      * @return 汇总交易编号列表
      */
     List<String> selectTotalTradeIdTgM(Map<String, Object> param);
+
+    /**
+     * 关联结算下行映射表查询汇总交易编号
+     * @param param 查询参数
+     * @return 汇总交易编号列表
+     */
+    List<String> selectSsltTotalTradeIdTgM(Map<String, Object> param);
 
     /**
      * 查询交易编号
@@ -137,4 +145,20 @@ public interface InvestDealRevokeMapper {
     int updateEtrCashPosition(EtrCashPosition etrCashPosition);
 
     int updateEtrSecPosition(EtrSecPosition etrSecPosition);
+
+    int updateEtrStatusByTrdId(Map<String, Object> param);
+
+    List<Map<String,String>> selectPsById(Map<String, Object> param);
+
+    List<Map<String, String>> selectRepoPsById(Map<String, Object> param);
+
+    void deletePtlSecPositionFlowByTradeIds(@Param("tradeIds") List<String> tradeIds);
+
+    void deleteEtrSecPositionFlowByTradeIds(@Param("tradeIds") List<String> tradeIds);
+
+    void deleteEtrCashPositionFlowByTradeIds(@Param("tradeIds") List<String> tradeIds);
+
+    void deletePtlCashPositionFlowByTradeIds(@Param("tradeIds") List<String> tradeIds);
+
+    List<String> searchTradeIdsByTotalTradeIds(@Param("totalTradeIds") List<String> totalTradeIds);
 }

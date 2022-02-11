@@ -20,8 +20,8 @@
 					<!-- etliu modify 20210227 end -->
 						else (PTL_FLOW_AMOUNT01 + PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06 - PTL_AMOUNT04 + PTL_AMOUNT08) end as tradePositionAmount,
 					case when type8 in (#{finprodType2_F01},#{finprodType2_F10}) then ETR_FLOW_AMOUNTE01*100 else ETR_FLOW_AMOUNTE01 end as instructionsAmount,
-					case when type8 in (#{finprodType2_F01},#{finprodType2_F10}) then ETR_FLOW_AMOUNT04*100 else ETR_FLOW_AMOUNT04 end as pledgeAmount,
-					case when type8 in (#{finprodType2_F01},#{finprodType2_F10}) then (PTL_AMOUNT04)*100 else (PTL_AMOUNT04) end as preReductionAmount
+					case when type8 in (#{finprodType2_F01},#{finprodType2_F10}) then ETR_FLOW_AMOUNT04*100 else ETR_FLOW_AMOUNT04 end as preReductionAmount,
+					case when type8 in (#{finprodType2_F01},#{finprodType2_F10}) then (PTL_AMOUNT04)*100 else (PTL_AMOUNT04) end as pledgeAmount
 				from
 				(
 					select t.PORTFOLIO_ID portfolioId, pp.PORTFOLIO_NAME portfolioName, nvl(nvl(chl.FINPROD_MARKET_ID, chl1.FINPROD_MARKET_ID), t.SEC_ACCT_ID) secAcctId, nvl(t4.SEC_ACCT_NAME, nvl(chl.FINPROD_ABBR, chl1.FINPROD_ABBR)) secAcctName,

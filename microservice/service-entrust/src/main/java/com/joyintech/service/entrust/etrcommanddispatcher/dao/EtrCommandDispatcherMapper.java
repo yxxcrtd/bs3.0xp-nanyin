@@ -42,5 +42,7 @@ public interface EtrCommandDispatcherMapper {
     
     
     List<EtrTradePledgeDto> queryEtrPledgeListByEtrId(@Param("entrustId") String entrustId);
+
+
    
 }
