@@ -343,6 +343,8 @@
         ON FIN_PRODUCT.FINPROD_ID = TABLE01.FINPROD_ID
         AND FIN_PRODUCT.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
         AND FIN_PRODUCT.CCY = 'CNY'
+        LEFT JOIN MST_BOND_MARKET_INFO mbmi  ON FIN_PRODUCT.FINPROD_MARKET_ID  = mbmi.SEC_ID
+        AND mbmi.VALUE_DATE = to_date(#{sysDate},'yyyy-MM-dd')
         INNER JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
         left join ( select 100-sum(nvl(PRIN_AMT,0)) prinAmt,FINPROD_ID
         from FIN_CASH_PLAN
@@ -378,6 +380,9 @@
         WHERE 1=1
         /*只获取交易场所为：01银行间*/
         AND FIN_PRODUCT.TRADE_MARKET = #{TRADEPLACE01}
+        AND FIN_PRODUCT.VDATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
+        AND FIN_PRODUCT.MDATE <![CDATA[>=]]> to_date(#{sysDate},'yyyy-MM-dd')
+        AND (mbmi.MARKET_AMT > 0 OR mbmi.MARKET_AMT IS NULL )
         <if test="portfolioIdList != null and portfolioIdList.size() > 0">
             AND ETR_ENTRUST_PLEDGE.PORTFOLIO_ID in
             <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
