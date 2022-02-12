@@ -368,7 +368,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
             paramMap1.put("finprodId", dto.getFinprodId());//金融产品代码
             paramMap1.put("secAcctId",dto.getSecAcctId());
             paramMap1.put("cDate",DateUtil.getSysDate());
-            paramMap1.put("portfolioId",dto.getPortfolioId());
+//            paramMap1.put("portfolioId",dto.getPortfolioId());
             List<FinProductOthCodeDto> codeDtos = etrExchangeTrade001Service.getFinprodOthCodeInfo(paramMap);
             if (codeDtos.size() > 0) {
                 othType = codeDtos.get(0).getOthType();
@@ -376,7 +376,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
             }
             List<FinProductQuto> qutos = etrExchangeTrade001Service.getFinProductQutoInfo(paramMap1);
             if (qutos.size() == 0) {
-                confirmMsg = "当前资产无配股配债额度，是否继续？";
+                confirmMsg = "当前资产无配股/配债额度，是否继续？";
             }
 
         }
