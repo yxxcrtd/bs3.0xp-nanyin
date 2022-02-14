@@ -86,6 +86,8 @@ public class PortIntFenPeiInfoDto {
 
     private BigDecimal tradeYield;
 
+    @ApiModelProperty(name="totalAmtTheory",value="理论交收金额",example="A1")
+    private BigDecimal totalAmtTheory;
 
 
 
@@ -303,5 +305,13 @@ public class PortIntFenPeiInfoDto {
 
     public void setTradeYield(BigDecimal tradeYield) {
         this.tradeYield = tradeYield;
+    }
+
+    public BigDecimal getTotalAmtTheory() {
+        return totalAmtTheory;
+    }
+
+    public void setTotalAmtTheory(BigDecimal totalAmtTheory) {
+        this.totalAmtTheory = totalAmtTheory;
     }
 }
