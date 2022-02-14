@@ -750,6 +750,9 @@
         <if test="finprodMarketId != null and finprodMarketId !=''">
             AND FP.FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR}
         </if>
+        <if test="finprodId != null and finprodId !=''">
+            AND TEMP.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        </if>
         )
         where rank = 1
     </select>
