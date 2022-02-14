@@ -736,6 +736,13 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         if (!StringUtil.isNotEmpty(entity.getCounterPartyId())) {
             errorList.add(new ValidMessage("请输入对手方"));
         }
+        if (StringUtil.isNotEmpty(entity.getMySide())
+                &&StringUtil.isNotEmpty(entity.getMySideTrader())) {
+            String userId = joyinbusinessCommonService.findUserByMySideTrader(entity.getMySideTrader(), entity.getMySide());
+            if (!StringUtil.isNotEmpty(userId)) {
+                errorList.add(new ValidMessage("选择的本方交易员未与系统用户关联，请先去【用户管理】关联"));
+            }
+        }
         if (StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"), "01")
                 && !StringUtil.isNotEmpty(entity.getCounterTrader())
                 && StringUtil.equals(entity.getQuoteStyle(), BussinessDictCodeList.报价方式_对话报价.getValue())) {
