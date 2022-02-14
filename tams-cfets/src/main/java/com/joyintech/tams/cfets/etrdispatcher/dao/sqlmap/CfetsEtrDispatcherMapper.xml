@@ -887,7 +887,6 @@
         tpdp.M_DELIVERY_TYPE mdeliveryType
     </sql>
     <sql id="etrDispatcherExeListInfo1">
-        '' effectFlag,
         #{busiTypePosition} busiTypePosition,
         tpdp.quote_id tradeId,
         to_char(tpdp.quote_date, 'yyyy-MM-dd') exeDate,
@@ -1018,6 +1017,7 @@
         union all
 
         SELECT
+        decode(tpdp.trade_status,'15',#{TRADE_FLOW_STATUS03},#{TRADE_FLOW_STATUS02}) as effectFlag,
         <include refid="etrDispatcherExeListInfo1"/>
         FROM IBU_QUOTE_BOND tpdp
         LEFT JOIN IBU_QUOTE_BOND_DET tpdpa ON tpdp.QUOTE_ID = tpdpa.QUOTE_ID
@@ -1033,6 +1033,7 @@
         union all
 
         SELECT
+        #{TRADE_FLOW_STATUS01} effectFlag,
         <include refid="etrDispatcherExeListInfo1"/>
         FROM WFL_IBU_QUOTE_BOND2 tpdp
         LEFT JOIN WFL_IBU_QUOTE_BOND_DET tpdpa ON tpdp.QUOTE_ID = tpdpa.QUOTE_ID
@@ -1046,7 +1047,7 @@
         WHERE wiqe.entrust_id = #{entrustId}
         union all
         select
-        #{TRADE_FLOW_STATUS02} effectFlag,
+        decode(iqc.trade_status,'15',#{TRADE_FLOW_STATUS03},#{TRADE_FLOW_STATUS02}) as effectFlag,
         <include refid="etrDispatcherExeListInfo2"/>
         from IBU_QUOTE_CREP iqc
              LEFT JOIN IBU_QUOTE_ETR_RE iqer ON iqer.QUOTE_ID = iqc.QUOTE_ID
@@ -1057,7 +1058,7 @@
         WHERE iqer.entrust_id = #{entrustId}
         union all
         select
-        #{TRADE_FLOW_STATUS02} effectFlag,
+        #{TRADE_FLOW_STATUS01} effectFlag,
         <include refid="etrDispatcherExeListInfo2"/>
         from WFL_IBU_QUOTE_CREP iqc
         LEFT JOIN WFL_IBU_QUOTE_ETR_RE iqer ON iqer.QUOTE_ID = iqc.QUOTE_ID

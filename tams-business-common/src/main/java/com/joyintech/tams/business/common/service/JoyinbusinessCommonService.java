@@ -85,13 +85,13 @@ public class JoyinbusinessCommonService extends BaseService {
         param.put("assestType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         param.put("TRADE_PLACE_01",DictCodeListExt1.交易场所_银行间.getValue());
         param.put("TRADE_PLACE_02",DictCodeListExt1.交易场所_商业银行柜台.getValue());
+        param.put("platDate",DateUtil.platDateFromCache());
         if(StringUtil.isNotEmpty(dto.getDealType()) && StringUtil.equals(dto.getDealType(),"01")){
             //需要查询债券资产和回购期限
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getfinprodIdOfBondAndRepo(param));
         }
         if(StringUtil.isNotEmpty(dto.getPs()) && (StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_回售.getValue())
                                                    ||StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_赎回.getValue()))){
-            param.put("platDate",DateUtil.platDateFromCache());
             param.put("ps",dto.getPs());
             String userId = SecurityUtil.getLoginUser().getUserName();
             if (StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_回售.getValue()) && StringUtils.isNotEmpty(userId)) {
@@ -106,6 +106,7 @@ public class JoyinbusinessCommonService extends BaseService {
     public Page<SelectOptionDto> selectPortfolioIdList(CfetsSearchInfoRequest dto) {
         Map<String, Object> param =new HashMap<>();
         param.put("search",dto.getSearch());
+        param.put("platDate",DateUtil.platDateFromCache());
         if(StringUtil.isNotEmpty(dto.getPs()) && StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_赎回.getValue())){
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.selectPortfolioIdList(param));
         }

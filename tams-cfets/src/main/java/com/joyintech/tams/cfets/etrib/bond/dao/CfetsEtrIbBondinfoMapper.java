@@ -118,13 +118,13 @@ public interface CfetsEtrIbBondinfoMapper {
 
     List<CfetsBussCombDistribtBaseDto> queryCfetsBussCombDisList(Map pageParam);
 
-    public boolean queryAssetIsRight(Map pageParam);
+     boolean queryAssetIsRight(Map pageParam);
 
     List<CfetsBussCombDistribtDto> selectAllBusModelListByInfo(Map<String, Object> pageParam);
 
     CfetsEtribBondInfo003Dto  selectTransmitTimeByInfo(String entrustId);
 
-
+     boolean queryAssetIsShReg(Map pageParam);
 
 
 

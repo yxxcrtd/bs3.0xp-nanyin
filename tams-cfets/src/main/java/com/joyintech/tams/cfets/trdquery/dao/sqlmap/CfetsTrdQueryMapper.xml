@@ -2003,7 +2003,7 @@
         ts.prinamt/10000 as faceValue,
         decode(I.BUSINESSTYPE, 'BOND', I.yield2*100, 'REPO', I.PRICE*100) tradeYield,
         I.TRADELIMITDAYS as termDays,
-        I.TRADECASHAMT as tradeAmt,
+        decode(I.BUSINESSTYPE, 'BOND', I.SETTLCURRAMT, 'REPO', DECODE(I.MARKETINDICATOR, 9, I.TRADECASHAMT, 10, I.SETTLCURRAMT)) as tradeAmt,
         I.QUOTEID as quoteid,
 
         I.ourinstitutioncode as traderid,

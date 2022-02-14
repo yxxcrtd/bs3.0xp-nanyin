@@ -1471,6 +1471,14 @@ from
         and t1.entrust_status='05'
         and rownum=1
     </select>
-
+    <!--查询资产是否进行了赎回登记-->
+    <select id="queryAssetIsShReg" resultType="Boolean">
+        SELECT count(*)
+        from reg_fin_product_deal_total
+        where ps='T39' and trade_status='01' and is_cancel='N'
+        and finprod_id=#{finprodId,jdbcType=VARCHAR}
+        and trade_date<![CDATA[<=]]>#{platDate}
+        and settle_date>=#{platDate}
+    </select>
 
 </mapper>

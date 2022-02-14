@@ -43,7 +43,6 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.service.EtrInvestBondInfoService;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -319,10 +318,24 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     }
 
     @ResponseBody
+    @ApiOperation(value = "撤回委托Check", notes = "撤回委托Check")
+    @PostMapping("recallCheck")
+    public Message<AjaxResult> recallCheckDelegate(@RequestBody CfetsEtribBondInfo003Dto dto) throws Exception {
+        return cfetsEtrIbBondinfoService.recallCheckDelegate(dto);
+    }
+
+    @ResponseBody
     @ApiOperation(value = "撤回委托", notes = "撤回委托")
     @PostMapping("recall")
     public Message<AjaxResult> recallDelegate(@RequestBody CfetsEtribBondInfo003Dto dto) throws Exception {
         return cfetsEtrIbBondinfoService.recallDelegate(dto);
+    }
+
+    @PostMapping("closeCheck")
+    @ApiOperation(value = "关闭委托check", notes = "关闭委托check")
+    @ResponseBody
+    public Message<AjaxResult> closeDelegateCheck(@RequestBody CfetsEtribBondInfo003Dto dto) throws Exception{
+        return cfetsEtrIbBondinfoService.closeCheckDelegate(dto);
     }
 
     @PostMapping("close")
@@ -476,6 +489,18 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             return new Message<Boolean>().success().setData(flag);
         } catch (Exception e) {
             logger.error("查询该资产是否行权债异常", e);
+            return new Message<Boolean>().fail().setMessage("查询异常");
+        }
+    }
+    @ApiOperation(value = "查询资产是否进行了赎回登记", notes = "查询资产是否进行了赎回登记")
+    @PostMapping("/queryAssetIsShReg/{secId:.+}")
+    @ResponseBody
+    public Message<Boolean> queryAssetIsShReg(@PathVariable String secId) {
+        try {
+            Boolean flag = cfetsEtrIbBondinfoService.queryAssetIsShReg(secId);
+            return new Message<Boolean>().success().setData(flag);
+        } catch (Exception e) {
+            logger.error("查询该资产是否进行了赎回登记异常", e);
             return new Message<Boolean>().fail().setMessage("查询异常");
         }
     }

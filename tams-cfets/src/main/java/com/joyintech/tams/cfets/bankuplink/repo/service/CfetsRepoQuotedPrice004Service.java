@@ -224,6 +224,10 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     errorList.addAll(validMessageList);
 //                    break;
                 }
+                if (this.ACompareToB(ptlAllocatio.getTradeAmt(), ptlAllocatio.getConvertAmt(), 6) > 0
+                        && StringUtil.equals(ps, DictCodeListExt3.交易方向_正回购.getValue())) {
+                    errorList.add(new ValidMessage("组合分配中交易金额要小于等于质押券折算总额"));
+                }
                 // 所有限价指令的回购利率中的最小值 初始化
                 if (minOrMaxYield == null && StringUtil.equals(ptlAllocatio.getPriceModel(), DictCodeListExt2.价格模式_限价指令.getValue())) {
                     minOrMaxYield = ArithmeticUtil.round(ptlAllocatio.getPrice(), yieldScale, RoundingMode.HALF_UP);
@@ -432,6 +436,10 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         if (!StringUtil.isNotEmpty(entity.getConvertAmt())
                 || BigDecimal.ZERO.compareTo(entity.getConvertAmt()) >= 0) {
             errorList.add(new ValidMessage("请输入质押券折算总额"));
+        }
+        if (StringUtil.isNotEmpty(entity.getTradeAmt()) && StringUtil.isNotEmpty(entity.getConvertAmt())
+                && this.ACompareToB(entity.getTradeAmt(), entity.getConvertAmt(), 6) > 0) {
+            errorList.add(new ValidMessage("交易金额需小于等于质押券折算总额"));
         }
         if (!StringUtil.isNotEmpty(entity.getDeliverytype())) {
             errorList.add(new ValidMessage("请输入首次结算方式"));

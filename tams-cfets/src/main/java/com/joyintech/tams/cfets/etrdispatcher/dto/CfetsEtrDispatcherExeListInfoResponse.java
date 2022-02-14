@@ -166,7 +166,7 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
     }
 
     public String getEffectFlagStr() {
-        return effectFlagStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.交易流程状态, this.getEffectFlag());
     }
 
     public void setEffectFlagStr(String effectFlagStr) {

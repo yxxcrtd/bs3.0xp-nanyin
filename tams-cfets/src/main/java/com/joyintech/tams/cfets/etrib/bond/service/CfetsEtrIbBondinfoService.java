@@ -2119,6 +2119,12 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         return cfetsetrIbBondinfoMapper.queryAssetIsRight(param);
     }
 
+    public Message<AjaxResult> recallCheckDelegate( CfetsEtribBondInfo003Dto dto) throws Exception {
+        //对选择的数据进行check
+        AjaxResult ajaxResult = recallDelegateCheckMethod(dto);
+        return new Message<AjaxResult>().success().setData(ajaxResult);
+    }
+
     @Transactional
     public Message<AjaxResult> recallDelegate( CfetsEtribBondInfo003Dto dto) throws Exception {
         //对选择的数据进行check
@@ -2147,13 +2153,15 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         return new Message<AjaxResult>().success().setData(new AjaxResult(this.getMessage("ETR_X_002")));
     }
 
-    @Transactional
-    public Message<AjaxResult> closeDelegate( CfetsEtribBondInfo003Dto dto) throws Exception{
+    public Message<AjaxResult> closeCheckDelegate( CfetsEtribBondInfo003Dto dto){
         //对选择的数据进行check
         AjaxResult ajaxResult = closeDelegateCheckMethod(dto);
-        if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
-            return new Message<AjaxResult>().success().setData(ajaxResult);
-        }
+        return new Message<AjaxResult>().success().setData(ajaxResult);
+    }
+
+    @Transactional
+    public Message<AjaxResult> closeDelegate( CfetsEtribBondInfo003Dto dto) throws Exception{
+
         List<CfetsEtribBondInfo003Dto> dtolist = dto.getSelectedItem();
 
         if(dtolist != null && dtolist.size()>0){
@@ -2214,5 +2222,17 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         return new Message<AjaxResult>().success().setData(new AjaxResult(this.getMessage("ETR_X_004")));
     }
 
-
+    /**
+     * 查询资产是否行权债
+     * @return
+     */
+    public Boolean queryAssetIsShReg(String secId) {
+        if(!StringUtil.isNotEmpty(secId)){
+            return false;
+        }
+        Map<String, Object> param =new HashMap<>();
+        param.put("finprodId",secId);
+        param.put("platDate",DateUtil.platDateFromCache());
+        return cfetsetrIbBondinfoMapper.queryAssetIsShReg(param);
+    }
 }
