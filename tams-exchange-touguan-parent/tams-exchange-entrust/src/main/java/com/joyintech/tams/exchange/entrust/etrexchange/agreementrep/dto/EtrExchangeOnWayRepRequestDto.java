@@ -34,50 +34,40 @@ import java.util.Date;
 @ApiModel(value="在途回购查询请求参数",description="在途回购查询请求参数")
 public class EtrExchangeOnWayRepRequestDto{
 
-    @ApiModelProperty(name="search",value="关键字",example="A1")
-    private String search;
+//    @ApiModelProperty(name="search",value="关键字",example="A1")
+//    private String search;
 
-    @ApiModelProperty(name="tradeId",value="交易编号",example="A1")
-    private String tradeId;
-
-    @ApiModelProperty(name="pageMode",value="分页对象")
+    @ApiModelProperty(name="pageMode",value="分页对象",example="{pageSize: 10,pageNo: 1, sort: 'name', direction: 'asc'}")
     private PageMode pageMode;
 
     /**
      * 用户Id
      */
-    @ApiModelProperty(name="userId",value="交易编号",example="admin")
-    private String userId;
+//    @ApiModelProperty(name="userId",value="交易编号",example="admin")
+//    private String userId;
 
-    /**
-     * 组合代码
-     */
-    @ApiModelProperty(name="portfolioId",value="组合代码",example="A1")
-    private String portfolioId;
+//    @ApiModelProperty(name="portfolioId",value="组合代码",example="A1")
+//    private String portfolioId;
+    @ApiModelProperty(name="portfolioName",value="组合名称",example="A1")
+    private String portfolioName;
 
-    /**
-     * 交易场所
-     */
     @ApiModelProperty(name="tradeMarket",value="交易场所",example="03")
     private String tradeMarket;
 
-    /**
-     * 证券账户
-     */
     @ApiModelProperty(name="secAcctId",value="证券账户",example="A1")
     private String secAcctId;
 
-    /**
-     * 回购方向
-     */
-    @ApiModelProperty(name="repPs",value="回购方向",example="03")
+    @ApiModelProperty(name="tradeId",value="交易编号",example="A1")
+    private String tradeId;
+
+    @ApiModelProperty(name="repPs",value="委托方向",example="A1")
     private String repPs;
 
-    /**
-     * 质押券id
-     */
-    @ApiModelProperty(name="pledgeFinprodId",value="质押券id",example="A1")
-    private String pledgeFinprodId;
+//    @ApiModelProperty(name="pledgeFinprodId",value="质押券id",example="A1")
+//    private String pledgeFinprodId;
+
+    @ApiModelProperty(name="finprodName",value="资产名称",example="A1")
+    private String finprodName;
 
     public String getTradeId() {
         return tradeId;
@@ -95,21 +85,21 @@ public class EtrExchangeOnWayRepRequestDto{
         this.pageMode = pageMode;
     }
 
-    public String getUserId() {
-        return userId;
-    }
+//    public String getUserId() {
+//        return userId;
+//    }
+//
+//    public void setUserId(String userId) {
+//        this.userId = userId;
+//    }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getPortfolioId() {
-        return portfolioId;
-    }
-
-    public void setPortfolioId(String portfolioId) {
-        this.portfolioId = portfolioId;
-    }
+//    public String getPortfolioId() {
+//        return portfolioId;
+//    }
+//
+//    public void setPortfolioId(String portfolioId) {
+//        this.portfolioId = portfolioId;
+//    }
 
     public String getTradeMarket() {
         return tradeMarket;
@@ -135,19 +125,35 @@ public class EtrExchangeOnWayRepRequestDto{
         this.repPs = repPs;
     }
 
-    public String getPledgeFinprodId() {
-        return pledgeFinprodId;
+//    public String getPledgeFinprodId() {
+//        return pledgeFinprodId;
+//    }
+//
+//    public void setPledgeFinprodId(String pledgeFinprodId) {
+//        this.pledgeFinprodId = pledgeFinprodId;
+//    }
+
+//    public String getSearch() {
+//        return search;
+//    }
+//
+//    public void setSearch(String search) {
+//        this.search = search;
+//    }
+
+    public String getPortfolioName() {
+        return portfolioName;
     }
 
-    public void setPledgeFinprodId(String pledgeFinprodId) {
-        this.pledgeFinprodId = pledgeFinprodId;
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
     }
 
-    public String getSearch() {
-        return search;
+    public String getFinprodName() {
+        return finprodName;
     }
 
-    public void setSearch(String search) {
-        this.search = search;
+    public void setFinprodName(String finprodName) {
+        this.finprodName = finprodName;
     }
 }

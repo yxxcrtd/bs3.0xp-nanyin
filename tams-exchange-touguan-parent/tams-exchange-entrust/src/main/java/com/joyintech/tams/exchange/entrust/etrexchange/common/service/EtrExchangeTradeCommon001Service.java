@@ -570,7 +570,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		doDeleteFlow(dto.getWorkflowId());
 		//插入指令明细表
 		BaseEtrInvestInfoDto baseEtrInvestInfoDto = this.buildMultiEtrFlow(dto);
+
 		if(!StringUtil.isEmptyList(baseEtrInvestInfoDto.getEtrEntrustDetailList())) {
+			etrEntrustDetailMapper.deleteByEntrustId(baseEtrInvestInfoDto.getEtrEntrustDetailList().get(0).getEntrustId());
 			for (EtrEntrustDetail etrEntrustDetail:baseEtrInvestInfoDto.getEtrEntrustDetailList()) {
 				etrEntrustDetailMapper.insertSelective(etrEntrustDetail);
 			}
@@ -613,6 +615,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		etrSinglePortfolioDto.setInvAim(dto.getInvAim());// 投资目的
 		etrSinglePortfolioDto.setTradeMarket(dto.getTradeMarket());// 交易场所
 		etrSinglePortfolioDto.setTradePlat(dto.getTradePlat());// 交易平台
+		etrSinglePortfolioDto.setBusinessModel(dto.getBusinessModel());
 		/*
 		 * if 画面.交易平台 = 数据字典.交易平台.大宗交易平台 and 画面.交易场所 = 数据字典.交易场所.深圳证券交易所
 		 * 交易平台 = 数据字典.交易平台.综合协议平台
@@ -4780,7 +4783,12 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			etrSecPositionFlowDtoUnit.setCdate(iPlatformDate.getSysDate());// 日期
 			etrSecPositionFlowDtoUnit.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
 			if (DictCodeListExt3.交易方向_质押券出库.getValue().equals(etrSinglePortfolioDto.getPs())) {
-				etrSecPositionFlowDtoUnit.setAmount(etrSinglePortfolioDto.getEntrustAmt().multiply(new BigDecimal(-1)));// 标准券数量
+//				etrSecPositionFlowDtoUnit.setAmount(etrSinglePortfolioDto.getEntrustAmt().multiply(new BigDecimal(-1)));// 标准券数量
+				if (StringUtil.isNotEmpty(etrSinglePortfolioDto.getEntrustAmt())) {
+					etrSecPositionFlowDtoUnit.setAmount(etrSinglePortfolioDto.getEntrustAmt().multiply(new BigDecimal(-1)));// 标准券数量
+				}else {
+					etrSecPositionFlowDtoUnit.setAmount(BigDecimal.ZERO);// 标准券数量
+				}
 			} else {
 				etrSecPositionFlowDtoUnit.setAmount(etrSinglePortfolioDto.getEntrustNum().multiply(new BigDecimal(-1)));// 数量
 			}

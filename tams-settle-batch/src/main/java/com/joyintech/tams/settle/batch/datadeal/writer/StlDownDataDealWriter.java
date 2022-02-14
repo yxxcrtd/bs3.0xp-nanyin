@@ -38,6 +38,10 @@ public class StlDownDataDealWriter extends BaseWriter<NeedToWriteEntity> {
 	private CommissionCaclProcessMapper commissionCaclProcessMapper;
 	@Autowired
 	private FinProductQutoMapper finProductQutoMapper;
+	@Autowired
+	private ShareBonusRegMapper shareBonusRegMapper;
+	@Autowired
+	private MstFundBonusNoticeMapper mstFundBonusNoticeMapper;
 	
 	@Override
     public void write(List<? extends NeedToWriteEntity> items) throws Exception {
@@ -83,6 +87,18 @@ public class StlDownDataDealWriter extends BaseWriter<NeedToWriteEntity> {
 					if (dealWriteDto.getFinProductQutoList() != null && dealWriteDto.getFinProductQutoList().size() > 0) {
 						for (FinProductQuto finProductQuto : dealWriteDto.getFinProductQutoList()) {
 							finProductQutoMapper.insertSelective(finProductQuto);
+						}
+					}
+					// 送股权益登记
+					if (dealWriteDto.getShareBonusRegList() != null && dealWriteDto.getShareBonusRegList().size() > 0) {
+						for (ShareBonusReg shareBonusReg : dealWriteDto.getShareBonusRegList()) {
+							shareBonusRegMapper.insertSelective(shareBonusReg);
+						}
+					}
+					// 基金分红通告
+					if (dealWriteDto.getMstFundBonusNoticeList() != null && dealWriteDto.getMstFundBonusNoticeList().size() > 0) {
+						for (MstFundBonusNotice mstFundBonusNotice : dealWriteDto.getMstFundBonusNoticeList()) {
+							mstFundBonusNoticeMapper.insertSelective(mstFundBonusNotice);
 						}
 					}
 				}

@@ -2018,8 +2018,6 @@ public enum DictCodeList implements BaseDictCodeList {
 	分配状态_待处理(DictCode.分配状态, "02", "待处理"),
 	分配状态_流程中(DictCode.分配状态, "03", "流程中"),
 	共同业务类型_DVP资金调拨管理(DictCode.共通业务类型, "PTL09", "DVP资金调拨管理"),
-	产品数据来源_母行代销TA(DictCode.产品数据来源, "01", "母行代销TA"),
-	产品数据来源_三方分销TA(DictCode.产品数据来源, "02", "三方分销TA"),
     释放状态_未释放(DictCode.释放状态,"0","未释放"),
     释放状态_已释放(DictCode.释放状态,"1","已释放"),
 	;

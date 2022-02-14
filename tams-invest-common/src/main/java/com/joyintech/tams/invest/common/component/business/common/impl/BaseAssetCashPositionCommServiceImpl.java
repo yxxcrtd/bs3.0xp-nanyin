@@ -1011,7 +1011,11 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                      && (DictCodeList.交易方向_买入.getValue().equals(deal.getPs())
                          || DictCodeListExt2.交易方向_配股.getValue().equals(deal.getPs())
                          || DictCodeListExt2.交易方向_增发.getValue().equals(deal.getPs())
-                         || DictCodeListExt2.交易方向_新股中签.getValue().equals(deal.getPs()))) {
+                         || DictCodeListExt2.交易方向_新股中签.getValue().equals(deal.getPs()))
+                     // GZYHTZJY-1016:股票的申购确认只处理持仓,不处理现金 modify by fuyongsheng 20220104 start
+                         || DictCodeList.交易方向_申购确认.getValue().equals(deal.getPs())
+                     // GZYHTZJY-1016:股票的申购确认只处理持仓,不处理现金 modify by fuyongsheng 20220104 end
+            ) {
                 resultDto.setCdate(deal.getSettleDate());
                 resultDto.setAmount(deal.getShareAmt());
                 result.add(resultDto);
@@ -1431,7 +1435,11 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                 }
                 return result;
             }
-            else if ((DictCodeList.交易方向_申购确认.getValue().equals(deal.getPs())
+            else if (
+                    // GZYHTZJY-1001:债券的申购只处理现金,不处理持仓;申购确认只处理持仓,不处理现金 modify by fuyongsheng 20220104 start
+                    // (DictCodeList.交易方向_申购确认.getValue().equals(deal.getPs())
+                    (DictCodeList.交易方向_申购.getValue().equals(deal.getPs())
+                    // GZYHTZJY-1001:债券的申购只处理现金,不处理持仓;申购确认只处理持仓,不处理现金 modify by fuyongsheng 20220104 end
                       && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(deal.getFinprodType2()))) {
                 resultDto.setCdate(deal.getTradeDate());
                 resultDto.setAmount(ArithmeticUtil.multiply(stlPayOrder.getSettleAmt(), new BigDecimal(-1)));
@@ -1622,7 +1630,10 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                      && (DictCodeList.交易方向_买入.getValue().equals(deal.getPs())
                          || DictCodeListExt2.交易方向_配股.getValue().equals(deal.getPs())
                          || DictCodeListExt2.交易方向_增发.getValue().equals(deal.getPs())
-                         || DictCodeListExt2.交易方向_新股中签.getValue().equals(deal.getPs()))) {
+                         || DictCodeListExt2.交易方向_新股中签.getValue().equals(deal.getPs()))
+                         // GZYHTZJY-1016:股票的申购只处理现金,不处理持仓;申购确认只处理持仓,不处理现金 modify fuyongsheng 20220104 start
+                         || DictCodeList.交易方向_申购.getValue().equals(deal.getPs())) {
+                         // GZYHTZJY-1016:股票的申购只处理现金,不处理持仓;申购确认只处理持仓,不处理现金 modify fuyongsheng 20220104 end
                 resultDto.setCdate(stlPayOrder.getSettleDate());
                 resultDto.setAmount(ArithmeticUtil.multiply(stlPayOrder.getSettleAmt(), new BigDecimal(-1)));
                 resultDto.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());

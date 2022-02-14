@@ -246,6 +246,7 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 					StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
 		}
 		param.put("search_isNumberFlag", BaseMap.isNumeric(request.getSearch()));
+		param.put("tradePlat",request.getTradePlat());
 		return super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeTradeCommonMapper.selectEtrExchange(param));
 //		return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectEtrExchange",
 //				param, EtrExchangeTrade003Dto.class);
@@ -274,5 +275,19 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 			}
 		});
 		joyinbusinessCommonMapper.mergeCfetsOprHis(result);
+	}
+
+	/**
+	 * 查询指令编号联想框文本框
+	 *
+	 * @param request 画面参数
+	 * @return 证券代码联想框文本框
+	 * @see
+	 * @since 1.0
+	 */
+	public Page<SelectOptionDto> getId(SelectOptionRequestDto request) {
+		Map<String, Object> param = BeanUtil.object2Map(request);
+		Page<SelectOptionDto> tempList = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeTradeCommonMapper.getId(param));
+		return tempList;
 	}
 }

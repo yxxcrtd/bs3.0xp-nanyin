@@ -136,8 +136,13 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
             EtrSharesCashPositionDealService.deal股票CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto);
         }
         else if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_债券.getValue())
-                && (StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(),DictCodeList.交易方向_申购确认.getValue())
-                ||StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_债转股.getValue()))) {
+                &&
+                (
+                    (StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(),DictCodeList.交易方向_申购确认.getValue())
+                    && DictCodeListExt2.申购方式_线下申购.getValue().equals(finProductTradeDto.getTrdProductDealAdd().getPurchModle())
+                    )
+                ||
+                    StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_债转股.getValue()))) {
             EtrConBondCashPositionDealService.deal可转债CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto);
         }
         // add by etliu 20210421 权益类资产相关代码合并 start

@@ -70,7 +70,18 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
                 // ZGZGST-4220:解决页面字段为空的问题 fuyongsheng 20211216 modify end
                 totalTrdProductDealDto.setTradeAmt(totalTrdProductDealDto.getFpriceAmt());
                 createTotalDeal(totalTrdProductDealDto,settleTransData);
+                //wangyang1 20220114 start
+                String totalTradeId = settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_逆回购录入);
+                totalTrdProductDealDto.setTotleTradeId(totalTradeId);
+                totalTrdProductDealDto.setFeeAmt(BigDecimal.ZERO);
+                totalTrdProductDealDto.setFeeAmtUnpay(BigDecimal.ZERO);
+                totalTrdProductDealDto.setRemark("数据清算自动处理");
+                totalTrdProductDealDto.setDqprinAmt(settleTransData.getmPrinAmt());
+                totalTrdProductDealDto.setDeliveryType("03");
+                totalTrdProductDealDto.setmDeliveryType("03");
+                //wangyang1 20220114 end
                 finProductDealTotalList.add(totalTrdProductDealDto);
+
                 //投管交易关系
                 List<String> tradeIdList = settleTransData.getTradeIdList();
                 SettleTransTgMapping settleTransTgMapping = new SettleTransTgMapping();
@@ -99,6 +110,10 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
                     trdProductDeal.setTradeAmt(trdProductDealDto.getTradeAmt());
                     trdProductDeal.setTotleTradeId(totalTrdProductDealDto.getTotleTradeId());
                     createDeal(trdProductDeal,settleTransData);
+                    //wangyang1 20220114 start
+                    trdProductDeal.setTradeId(settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_逆回购录入));
+                    trdProductDeal.setPayDate(trdProductDealDto.getSettleDate());
+                    //wangyang1 20220114 end
                     trdProductDeal.setPortfolioId(settleTransData.getPortfolioId());
                     TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
                     trdProductDealAdd.setTradeId(trdProductDeal.getTradeId());
@@ -460,7 +475,9 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
             if(null!=settleTransDataDto.getIntAmt()&&settleTransDataDto.getIntAmt().compareTo(BigDecimal.ZERO)!=0){
                 TrdProductDealDto trdProductDealDto = new TrdProductDealDto();
                 trdProductDealDto.setPs(DictCodeList.交易方向_收息到账.getValue());
-                trdProductDealDto.setShareAmt(settleTransDataDto.getShareNum());
+//                trdProductDealDto.setShareAmt(settleTransDataDto.getShareNum());
+                //还本收息.交易份额
+                trdProductDealDto.setShareAmt(BigDecimal.ZERO);
                 // ZGZGST-4220:存续期交易回购利息赋值有误 fuyongsheng modify 20211218 start
                 // settleTransDataDto.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(settleTransDataDto.getIntAmt(),settleTransDataDto.getShareNum()),settleTransDataDto.getShareAmt(),2));
                 trdProductDealDto.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(settleTransDataDto.getIntAmt(),settleTransDataDto.getShareNum()),settleTransDataDto.getShareAmt(),2));

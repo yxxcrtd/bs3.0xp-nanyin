@@ -11,8 +11,10 @@
         else ROUND(T4.ORDER_FINISH_AMT/T1.ENTRUST_AMT,4) end as implementPercent
         ,case when T2.TARGET_TYPE = '01' then ROUND(T4.ENT_FINISH_AMT/T1.ENTRUST_NUM,4)
         else ROUND(T4.ENT_FINISH_AMT/T1.ENTRUST_AMT,4) end as dealPercent
-        ,T5.PORTFOLIO_ID portfolioId
-        ,T5.PORTFOLIO_NAME  portfolioName
+        ,case when T1.ENTRUST_CLASS = '01' then T5.PORTFOLIO_ID
+        else '' end as portfolioId
+        ,case when T1.ENTRUST_CLASS = '01' then T5.PORTFOLIO_NAME
+        else '' end as portfolioName
         ,T1.FINPROD_ID finprodId
         ,T7.FINPROD_MARKET_ID
         ,CASE WHEN T1.PS IN ('03','04') THEN T1.FINPROD_ID ELSE T7.FINPROD_ABBR END AS finprodAbbr
@@ -118,6 +120,9 @@
                 #{item}
             </foreach>
         </if>
+        <if test="tradePlat != null and !tradePlat.equals('')">
+            and T1.TRADE_PLAT = #{tradePlat}
+        </if>
         union all
         SELECT
         T1.ENTRUST_ID entrustId
@@ -208,6 +213,9 @@
         <if test="endDate != null and !endDate.equals('')">
             AND T1.ENTRUST_DATE &lt;=to_date(#{endDate},'yyyy-MM-dd')
         </if>
+        <if test="tradePlat != null and !tradePlat.equals('')">
+            and T1.TRADE_PLAT = #{tradePlat}
+        </if>
         ) T1
         where 1=1
         <if test="tradePlat != null and tradePlat != ''">
@@ -280,7 +288,8 @@
             END AS floatingPL, -->
             FP.FINPROD_TYPE2                          AS finprodType2,
             FP.TRADE_MARKET                           AS tradeMarket,
-            SSAI.TRD_ACCT_ID                          AS acctNo
+            SSAI.TRD_ACCT_ID                          AS acctNo,
+            TEMP.invAim invAim
         FROM
             (
             SELECT
@@ -289,6 +298,7 @@
                 PSP.SEC_ACCT_ID  AS SEC_ACCT_ID ,
                 PSP.FINPROD_ID   AS FINPROD_ID,
                 PSP.BRANCH       AS BRANCH,
+                PSP.INV_AIM invAim,
                 SUM(CASE WHEN PSP.HODING_TYPE IN (#{POSITION_TYPE_03}, #{POSITION_TYPE_05}) THEN NVL(PSP.AMOUNT,0)
                     ELSE -1* NVL(PSP.AMOUNT,0)
                 END) AS AMOUNT
@@ -314,6 +324,7 @@
                 PSP.PORTFOLIO_ID ,
                 PSP.SEC_ACCT_ID,
                 PSP.FINPROD_ID,
+                PSP.INV_AIM,
                 PSP.BRANCH 
         )TEMP
         LEFT JOIN
@@ -1379,21 +1390,6 @@
              ,T4.PORTFOLIO_ID
              ,T4.PORTFOLIO_NAME
              ,T2.DEAL_CUR_ACCT as acctNo
-              ,T3.ENTRUST_AMT
-             ,T3.ENTRUST_NUM
-        FROM
-            ETR_ENTRUST			T1
-                INNER JOIN    ETR_ENTRUST_ADD T2 ON T2.ENTRUST_ID = T1.ENTRUST_ID
-                INNER JOIN    ETR_ENTRUST_DETAIL T3 ON T3.ENTRUST_ID = T1.ENTRUST_ID
-                LEFT JOIN PTL_PORTFOLIO T4 ON T4.PORTFOLIO_ID = T3.PORTFOLIO_ID
-        where
-            T1.ENTRUST_ID=#{entrustId}
-      union all
-        select
-            T3.ENTRUST_ID
-             ,T4.PORTFOLIO_ID
-             ,T4.PORTFOLIO_NAME
-             ,T2.DEAL_CUR_ACCT as acctNo
              ,T3.ENTRUST_AMT
              ,T3.ENTRUST_NUM
         FROM
@@ -1509,6 +1505,25 @@
             </if>
             <if test="counterTraderId != null and counterTraderId != ''">
                 AND T.COUNTER_TRADER_ID like concat('%',concat(#{counterTraderId,jdbcType=VARCHAR},'%'))
+            </if>
+        </where>
+    </select>
+
+    <select id="getId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select DISTINCT entrust_id id,null text from (
+        select etr_entrust.entrust_id entrust_id from etr_entrust
+        union all
+        select wfl_etr_entrust.entrust_id entrust_id from wfl_etr_entrust ) A
+        <where>
+            1 = 1
+            <if test="search != null and search != ''">
+                AND
+                (
+                A.entrust_id LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                )
+            </if>
+            <if test="initValue != null and initValue != ''">
+                AND A.entrust_id = #{initValue}
             </if>
         </where>
     </select>

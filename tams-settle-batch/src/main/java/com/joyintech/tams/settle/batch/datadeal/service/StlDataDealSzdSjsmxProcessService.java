@@ -113,7 +113,11 @@ public class StlDataDealSzdSjsmxProcessService {
             		String tradeId = stlDownDataDealWriteDto.getStlDownDataDealWriteBaseDtoList().get(index).getSettleTransData().getTradeId();
             		for (SzdSjsmx szdSjsmx : stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getSjsmxList()) {
             			if (StringUtil.equals(szdSjsmx.getMxywlsh(), tradeId)) {
-            				stlDownDataDealWriteDto.getStlDownDataDealWriteBaseDtoList().get(index).getSettleTransData().setTradeAmtRaw(new BigDecimal(Math.abs(szdSjsmx.getMxsfje().doubleValue())));
+                            // modify by etliu 20211225 start
+                            // 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
+//            				stlDownDataDealWriteDto.getStlDownDataDealWriteBaseDtoList().get(index).getSettleTransData().setTradeAmtRaw(new BigDecimal(Math.abs(szdSjsmx.getMxsfje().doubleValue())));
+                            stlDownDataDealWriteDto.getStlDownDataDealWriteBaseDtoList().get(index).getSettleTransData().setTradeAmtRaw(szdSjsmx.getMxsfje().abs());
+                            // modify by etliu 20211225 end
             			}
             		}
             	}
@@ -370,7 +374,7 @@ public class StlDataDealSzdSjsmxProcessService {
 
             StlDownDataDealWriteBaseDto stlDownDataDealWriteBaseDto = new StlDownDataDealWriteBaseDto();
             stlDownDataDealWriteBaseDto.setSettleTransData(settleTransData);
-            if (settleTransDataAdd != null && StringUtil.isNotEmpty(settleTransDataAdd.getTradeId())) {
+            if (settleTransDataAdd != null && StringUtil.isNotEmpty(settleTransData.getTradeId())) {
                 settleTransDataAdd.setTradeId(settleTransData.getTradeId());
             	stlDownDataDealWriteBaseDto.setSettleTransDataAdd(settleTransDataAdd);
             }
@@ -705,11 +709,14 @@ public class StlDataDealSzdSjsmxProcessService {
          *   18-封闭式基金
          *   EF-ETF
          */
-        String gfxz = szdSjsmx.getMxgfxz();
+        // modify by etliu 20220126 start
+//        String gfxz = szdSjsmx.getMxgfxz();
         String zqlb = szdSjsmx.getMxzqlb();
         String ywlb = szdSjsmx.getMxywlb();
-        return StringUtil.equals(StlDataDealProcessConstant.SJSMX_GFXZ_00, gfxz)
-                && (StringUtil.equals(StlDataDealProcessConstant.SJSMX_YWLB_JY00, ywlb) || StringUtil.equals(StlDataDealProcessConstant.SJSMX_YWLB_JY01, ywlb))
+        // GZYHTZJY-609: 【场内对账清结算】：基金深交所竞价交易，在系统中配置了佣金的参数，但是在场内清算数据中没有带出来
+        return /*StringUtil.equals(StlDataDealProcessConstant.SJSMX_GFXZ_00, gfxz)
+                && */(StringUtil.equals(StlDataDealProcessConstant.SJSMX_YWLB_JY00, ywlb) || StringUtil.equals(StlDataDealProcessConstant.SJSMX_YWLB_JY01, ywlb))
                 && LIST_ZQLB_FUNDS.contains(zqlb);
+        // modify by etliu 20220126 end
     }
 }

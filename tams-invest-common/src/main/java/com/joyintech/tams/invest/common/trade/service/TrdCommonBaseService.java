@@ -1212,4 +1212,20 @@ public class TrdCommonBaseService extends BaseService {
 
         return finprodId;
     }
+
+    // add by etliu 20220116 start
+    /**
+     * 根据首期成交编号查询协议回购首期金融产品代码
+     * @param portfolioId 组合代码
+     * @param firstFTradeId 首期成交编号
+     * @return 协议回购首期金融产品代码
+     */
+    public String selectHgsqFinprodId(String portfolioId, String firstFTradeId) {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("portfolioId", portfolioId);
+        paramMap.put("firstFTradeId", firstFTradeId);
+
+        return trdCommonBaseMapper.selectHgsqFinprodId(paramMap);
+    }
+    // add by etliu 20220116 end
 }

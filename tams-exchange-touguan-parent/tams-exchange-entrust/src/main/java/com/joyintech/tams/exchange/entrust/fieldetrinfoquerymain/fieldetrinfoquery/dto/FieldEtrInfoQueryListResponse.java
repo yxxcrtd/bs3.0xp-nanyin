@@ -98,6 +98,9 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
     @ApiModelProperty(name="calculateField",value="计算方式",example="计算方式供前台判断使用")
     private String calculateField;
 
+    @ApiModelProperty(name="trdAcctId",value="资金账户",example="XXX资金账户")
+    private String trdAcctId;
+
     /**
      * 获取 otherEntrustStatus
      * @return otherEntrustStatus.
@@ -151,6 +154,14 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
      */
     public String getOtherCcy() {
         return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
+    }
+
+    /**
+     * 获取 priceModel
+     * @return priceModel.
+     */
+    public String getOtherPriceModel() {
+        return SysDataUtil.getNameFromDataDict(DictCode.价格模式, super.getPriceModel());
     }
 
     public String getPortfolioName() {
@@ -331,5 +342,13 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
 
     public void setCalculateField(String calculateField) {
         this.calculateField = calculateField;
+    }
+
+    public String getTrdAcctId() {
+        return trdAcctId;
+    }
+
+    public void setTrdAcctId(String trdAcctId) {
+        this.trdAcctId = trdAcctId;
     }
 }

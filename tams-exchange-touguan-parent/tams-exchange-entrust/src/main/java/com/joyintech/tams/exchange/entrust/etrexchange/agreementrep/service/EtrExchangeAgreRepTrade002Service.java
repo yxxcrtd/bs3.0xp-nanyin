@@ -123,9 +123,14 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
      */
     public Page<EtrExchangeAgreRepTrade002Dto> findPositionsPage(EtrExchangeTradePositionsCommonRequest request) {
         Map<String,Object> pageParam = new HashMap<>();
-        if (StringUtil.isNotEmpty(request.getPortfolioIdList())) {
-            pageParam.put("portfolioIdList",request.getPortfolioIdList());
-        }
+//        if (StringUtil.isNotEmpty(request.getPortfolioIdList())) {
+//            pageParam.put("portfolioIdList",request.getPortfolioIdList());
+//        }
+        pageParam.put("portfolioName",request.getPortfolioName());
+        pageParam.put("tradeMarket",request.getTradeMarket());
+        pageParam.put("secAcctId",request.getSecAcctId());
+        pageParam.put("finprodName",request.getFinprodName());
+
         pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
         pageParam.put("sysDate", iPlatformDate.getSysDate());
         pageParam.put("POSITION_TYPE_03", BussinessDictCodeList.持仓类型_实际.getValue());
@@ -379,7 +384,7 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
 
     public Page<EtrExchangeAgreRepTrade003Dto> selectEtrEntrust(EtrExchangeAgreRepTrade003RequestDto request){
         Map<String,Object> param = new HashMap<>();
-        param.put("entrustStatus", request.getEntrustStatus());
+//        param.put("entrustStatus", request.getEntrustStatus());
         param.put("entrustId", request.getEntrustId());
         param.put("sysDate",iPlatformDate.getSysDateStr());
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
@@ -395,7 +400,7 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
                 param, SysUser.class);
         for(EtrExchangeAgreRepTrade003Dto dto:page.getRoot()){
-            if(StringUtil.isNotEmpty(dto.getNextUser())){
+            if(StringUtil.isNotEmpty(dto.getNextUser())&&StringUtil.isNotEmpty(userList)){
                 String sysUsers = userList.stream().filter(x-> Arrays.asList(dto.getNextUser().split(",")).contains(x.getUserName()))
                         .map(SysUser::getRealName)
                         .collect(Collectors.joining(",","",""));

@@ -407,6 +407,10 @@ public class EntrCommandDispatcherDto extends BaseEntity{
      * 指令类型
      */
     private String entrustClass;
+    /**
+     *业务模式
+     */
+    private String businessModel;
 
 
 
@@ -1190,5 +1194,13 @@ public class EntrCommandDispatcherDto extends BaseEntity{
 
     public void setBusiTypeTg(String busiTypeTg) {
         this.busiTypeTg = busiTypeTg;
+    }
+
+    public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
     }
 }

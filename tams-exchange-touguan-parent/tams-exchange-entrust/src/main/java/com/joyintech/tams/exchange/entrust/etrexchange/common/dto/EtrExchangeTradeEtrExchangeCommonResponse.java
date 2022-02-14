@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.exchange.entrust.etrexchange.common.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -647,7 +648,7 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
     public void setInvAim(String invAim) {
         this.invAim = invAim;
     }
-
+    @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
     public Date getEntrustDate() {
         return entrustDate;
     }

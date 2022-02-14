@@ -1248,34 +1248,39 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 
 	@RequestMapping(value = "/selectExtPs")
 	@ResponseBody
-	public Map<String, Object> selectExtPs(@RequestBody Map<String, Object> param) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		Date sysDate = DateUtil.platDateFromCache();
-		param.put("date", DateUtil.format(sysDate));
-		List<TrdOthCodeInfoDto> list = etrExchangeTrade001CommonService.getTrdOthCodeInfos(param);
-		if (null != list && list.size() > 0) {
-			for (TrdOthCodeInfoDto dto : list) {
-				if (!StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())
-						&& !StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
-					// 只能选择申购，其他委托方向不可选
-					String ps = OthTypeMapToPs(dto.getOthCodeType());
-					if (StringUtils.equals(ps, DictCodeList.交易方向_申购.getValue())) {
-						map.clear();
-						map.put(ps, dto.getDeclaredPrice());
-						return map;
-					} else if (StringUtils.equals(ps, DictCodeListExt3.交易方向_质押券入库.getValue())) {
-						BigDecimal converseRatio = selectStdsecConverseRatio(param);
-						if (null != converseRatio) {
-							map.put(DictCodeListExt3.交易方向_质押券入库.getValue(), converseRatio);
-							map.put(DictCodeListExt3.交易方向_质押券出库.getValue(), converseRatio);
+	public Message<Map<String, Object>> selectExtPs(@RequestBody PsOptionsRequest psOptionsRequest) throws Exception {
+		try{
+			Map<String, Object> map = new HashMap<String, Object>();
+			Date sysDate = DateUtil.platDateFromCache();
+			Map<String,Object> param= JsonUtils.object2Map(psOptionsRequest);
+			param.put("date", DateUtil.format(sysDate));
+			List<TrdOthCodeInfoDto> list = etrExchangeTrade001CommonService.getTrdOthCodeInfos(param);
+			if (null != list && list.size() > 0) {
+				for (TrdOthCodeInfoDto dto : list) {
+					if (!StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
+						// 只能选择申购，其他委托方向不可选
+						String ps = OthTypeMapToPs(dto.getOthCodeType());
+						if (StringUtils.equals(ps, DictCodeList.交易方向_申购.getValue())) {
+							map.clear();
+							map.put(ps, dto.getDeclaredPrice());
+							return new Message<Map<String, Object>>().success().setData(map);
+						} else if (StringUtils.equals(ps, DictCodeListExt3.交易方向_质押券入库.getValue())) {
+							BigDecimal converseRatio = selectStdsecConverseRatio(param);
+							if (null != converseRatio) {
+								map.put(DictCodeListExt3.交易方向_质押券入库.getValue(), converseRatio);
+								map.put(DictCodeListExt3.交易方向_质押券出库.getValue(), converseRatio);
+							}
+						} else {
+							map.put(ps, dto.getDeclaredPrice());
 						}
-					} else {
-						map.put(ps, dto.getDeclaredPrice());
 					}
 				}
 			}
+			return new Message<Map<String, Object>>().success().setData(map);
+		}catch (Exception e) {
+			logger.error("查询报价维护信息",e);
+			return new Message<Map<String, Object>>().fail().setMessage("查询报价维护信息异常");
 		}
-		return map;
 	}
 
 	/**
@@ -1292,6 +1297,10 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			return DictCodeListExt1.交易方向_债转股.getValue();
 		}else if(StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_质押代码.getValue())){
 			return DictCodeListExt3.交易方向_质押券入库.getValue();
+		}else if(StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())){
+			return DictCodeListExt2.交易方向_配股.getValue();
+		}else if(StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue())){
+			return DictCodeList.交易方向_申购.getValue();
 		}
 		return null;
 	}
@@ -1421,6 +1430,12 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			logger.error("查询最大申请数量异常",e);
 			return new Message<String>().fail().setMessage("查询最大申请数量异常");
 		}
+	}
+	@ApiOperation(value = "获取服务器时间", notes = "获取服务器时间")
+	@ResponseBody
+	@RequestMapping(value = "queryLocalTime", method = RequestMethod.POST)
+	public Message<Date> queryLocalTime() {
+		return new Message<Date>(DateUtil.now());
 	}
 }
 	

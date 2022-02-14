@@ -28,47 +28,64 @@ import java.util.List;
 public class EtrExchangeTradePositionsCommonRequest {
 
 
-    @ApiModelProperty(name="search",value="关键字",example="A1")
-    private String search;
+//    @ApiModelProperty(name="search",value="关键字",example="A1")
+//    private String search;
 
-    @ApiModelProperty(name="portfolioId",value="组合代码",example="A1")
-    private String portfolioId;
+//    @ApiModelProperty(name="portfolioId",value="组合代码",example="A1")
+//    private String portfolioId;
+    @ApiModelProperty(name="portfolioName",value="组合名称",example="A1")
+    private String portfolioName;
 
     @ApiModelProperty(name="pageMode",value="分页对象",example="{pageSize: 10,pageNo: 1, sort: 'name', direction: 'asc'}")
     private PageMode pageMode;
 
-    @ApiModelProperty(name="portfolioIdList",value="组合代码",example="['1','2']")
-    private List<String> portfolioIdList;
+    @ApiModelProperty(name="tradeMarket",value="交易场所",example="A1")
+    private String tradeMarket;
 
     @ApiModelProperty(name="secAcctId",value="证券账户",example="A1")
     private String secAcctId;
 
-    @ApiModelProperty(name="tradeMarket",value="交易场所",example="A1")
-    private String tradeMarket;
+    @ApiModelProperty(name="finprodName",value="资产名称",example="A1")
+    private String finprodName;
 
     @ApiModelProperty(name="secId",value="证券代码",example="A1")
     private String secId;
 
-
-    @ApiModelProperty(name="finprodType2",value="金融产品类型",example="A1")
-    private String finprodType2;
-
-
-    public List<String> getPortfolioIdList() {
-        return portfolioIdList;
+    public String getFinprodName() {
+        return finprodName;
     }
 
-    public void setPortfolioIdList(List<String> portfolioIdList) {
-        this.portfolioIdList = portfolioIdList;
+    public void setFinprodName(String finprodName) {
+        this.finprodName = finprodName;
     }
 
-    public String getPortfolioId() {
-        return portfolioId;
+    public String getPortfolioName() {
+        return portfolioName;
     }
 
-    public void setPortfolioId(String portfolioId) {
-        this.portfolioId = portfolioId;
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
     }
+
+    //    @ApiModelProperty(name="finprodType2",value="金融产品类型",example="A1")
+//    private String finprodType2;
+
+
+//    public List<String> getPortfolioIdList() {
+//        return portfolioIdList;
+//    }
+//
+//    public void setPortfolioIdList(List<String> portfolioIdList) {
+//        this.portfolioIdList = portfolioIdList;
+//    }
+//
+//    public String getPortfolioId() {
+//        return portfolioId;
+//    }
+//
+//    public void setPortfolioId(String portfolioId) {
+//        this.portfolioId = portfolioId;
+//    }
 
     public PageMode getPageMode() {
         return pageMode;
@@ -102,19 +119,19 @@ public class EtrExchangeTradePositionsCommonRequest {
         this.secId = secId;
     }
 
-    public String getSearch() {
-        return search;
-    }
+//    public String getSearch() {
+//        return search;
+//    }
+//
+//    public void setSearch(String search) {
+//        this.search = search;
+//    }
 
-    public void setSearch(String search) {
-        this.search = search;
-    }
-
-    public String getFinprodType2() {
-        return finprodType2;
-    }
-
-    public void setFinprodType2(String finprodType2) {
-        this.finprodType2 = finprodType2;
-    }
+//    public String getFinprodType2() {
+//        return finprodType2;
+//    }
+//
+//    public void setFinprodType2(String finprodType2) {
+//        this.finprodType2 = finprodType2;
+//    }
 }

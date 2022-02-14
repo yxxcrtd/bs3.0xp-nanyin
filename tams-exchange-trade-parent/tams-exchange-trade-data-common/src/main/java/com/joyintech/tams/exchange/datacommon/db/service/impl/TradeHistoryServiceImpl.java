@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.datacommon.db.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.exchange.common.bean.TradeQryBean;
 import com.joyintech.tams.exchange.common.bean.TradeQueryBean;
 import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
@@ -91,8 +92,8 @@ public class TradeHistoryServiceImpl implements TradeHistoryService {
         String market = request.getMarket();
         String stockCode = request.getStockCode();
         String entrustProp = request.getEntrustProp();
-        String startDay = request.getStartDay();
-        String endDay = request.getEndDay();
+        String startDay = DateUtil.formatDate(request.getStartDay());
+        String endDay = DateUtil.formatDate(request.getEndDay());
 
         TradeQryBean tradeQryBean = new TradeQryBean(accountId, market, stockCode, entrustProp, ptlAuthList, startDay, endDay);
         PageHelper.startPage(pageMode.getPageNo(), pageMode.getPageSize());
