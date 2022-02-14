@@ -137,6 +137,13 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
             if(StringUtil.isEmpty(entity.getMySideTrader())){
                 errorList.add(new ValidMessage("请输入本方交易员"));
             }
+            if (StringUtil.isNotEmpty(entity.getMySide())
+                    &&StringUtil.isNotEmpty(entity.getMySideTrader())) {
+                String userId = joyinbusinessCommonService.findUserByMySideTrader(entity.getMySideTrader(), entity.getMySide());
+                if (!StringUtil.isNotEmpty(userId)) {
+                    errorList.add(new ValidMessage("选择的本方交易员未与系统用户关联，请先去【用户管理】关联"));
+                }
+            }
             if(StringUtil.isEmpty(entity.getCounterId())){
                 errorList.add(new ValidMessage("请输入对手方"));
             }

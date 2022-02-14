@@ -667,4 +667,12 @@
         WHERE
         A.FINPROD_ID = #{finprodId}
     </select>
+
+    <select id="findUserByMySideTrader" resultType="java.lang.String">
+        select distinct su.USER_NAME
+        from SYS_USER su
+                 inner join SYS_USER_ADD sua on su.USER_ID = sua.USER_ID
+                 inner join MST_CFETS_CUSTOMER_TRADER mcct on mcct.TRADER_ID = sua.IBU_TRADER
+        where mcct.TRADER_ID = #{mySideTrader} and mcct.PARTY_ID = #{mySide}
+    </select>
 </mapper>

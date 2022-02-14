@@ -403,4 +403,17 @@ public class JoyinbusinessCommonService extends BaseService {
         return pendingPeriod+"Y";
     }
 
+
+    /**
+     * 查询是否已银行间交易员关联的系统内用户
+     *
+     * @param mySideTrader 交易员id
+     * @param mySide 21位机构码
+     * @return java.lang.String
+     * @author jiangpeng
+     * @date 2021/12/31 10:23
+     */
+    public String findUserByMySideTrader(String mySideTrader, String mySide) {
+        return joyinbusinessCommonMapper.findUserByMySideTrader(mySideTrader, mySide);
+    }
 }
