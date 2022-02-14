@@ -1795,6 +1795,9 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     操作类型_业务模式变更确认(DictCode.操作类型,"15","业务模式变更确认"),
     操作类型_强制完成(DictCode.操作类型,"15","强制完成"),
 
+    债券性质_债性(DictCode.债券性质, "01", "债性"),
+    债券性质_股性(DictCode.债券性质, "02", "股性"),
+
     共通业务类型_赎回登记(DictCode.共通业务类型,"TRD91","赎回登记"),
     回购方式_双边回购(DictCode.回购方式,"1","双边回购"),
     共通业务类型_本币业务指令_债券(DictCode.共通业务类型,"ETR52","本币业务指令-债券"),

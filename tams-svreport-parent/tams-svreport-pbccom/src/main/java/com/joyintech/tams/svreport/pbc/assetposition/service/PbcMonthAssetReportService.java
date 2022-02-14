@@ -9098,8 +9098,9 @@ public class PbcMonthAssetReportService  extends BaseService{
             } else {
                 line.setDebtInstrument(cnyIntAmt);
             }
-            if (PbcMonthReportConstants.PBC_ASSETTYPE1_P01.equals(pos.getAssetType1())// 现金
-                    || PbcMonthReportConstants.PBC_ASSETTYPE1_P02.equals(pos.getAssetType1())// 存款
+            if (// PbcMonthReportConstants.PBC_ASSETTYPE1_P01.equals(pos.getAssetType1())// 现金
+                    // ||
+                    PbcMonthReportConstants.PBC_ASSETTYPE1_P02.equals(pos.getAssetType1())// 存款
                     || PbcMonthReportConstants.PBC_ASSETTYPE1_P03.equals(pos.getAssetType1())// 可转让存单
                     || PbcMonthReportConstants.PBC_ASSETTYPE1_P04.equals(pos.getAssetType1())// 债务证券
                     || PbcMonthReportConstants.PBC_ASSETTYPE1_P05.equals(pos.getAssetType1())// 贷款
