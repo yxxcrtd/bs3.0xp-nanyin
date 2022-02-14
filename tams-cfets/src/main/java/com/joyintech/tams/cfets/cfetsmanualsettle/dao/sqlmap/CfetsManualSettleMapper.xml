@@ -361,7 +361,8 @@
             T3.THEORY_PRIN prinAmtTheory,/*理论还本金额*/
             T1.FINPROD_TYPE2 finprodType2,
             TO_CHAR(T1.TRADE_DATE,'yyyy-MM-dd') tradeDate,
-            TO_CHAR(T1.SETTLE_DATE,'yyyy-MM-dd') settleDate
+            TO_CHAR(T1.SETTLE_DATE,'yyyy-MM-dd') settleDate,
+            (T3.THEORY_INT+T3.THEORY_PRIN) AS  totalAmtTheory
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
         LEFT JOIN FIN_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
@@ -392,7 +393,8 @@
         TPD.YIELD*100 matureYield,
         TPD.EXER_YIELD*100 exeYield,
         EE.BUSINESS_MODEL busiTypePosition,
-        TPD.UNIT_CPRICE unitPrice
+        TPD.UNIT_CPRICE unitPrice,
+        (TPD.PRIN_AMT+TPD.INT_AMT) as totalAmtTheory
         FROM TRD_PRODUCT_DEAL TPD
         INNER JOIN TRD_PRODUCT_DEAL_ADD TPDA on TPD.TRADE_ID = TPDA.TRADE_ID
         LEFT JOIN PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = TPDA.PORTFOLIO_ID
