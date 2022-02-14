@@ -1406,6 +1406,8 @@ from
                     LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
                     WHERE 1=1 AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
                     AND a.TRADE_DATE &lt;= #{platDate,jdbcType=DATE}-1
+                    and a.trade_status='01'
+                    and a.is_cancel='N'
                 ) WHERE rn = 1
                union
                 SELECT distinct a.FINPROD_ID, b.PORTFOLIO_ID, a.INV_AIM
@@ -1413,6 +1415,8 @@ from
                 LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
                 WHERE 1=1 AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
                 AND a.TRADE_DATE = #{platDate,jdbcType=DATE}
+                and a.trade_status='01'
+                and a.is_cancel='N'
             ) GROUP BY FINPROD_ID, PORTFOLIO_ID
         ) inva
         on inva.FINPROD_ID=tt.FINPROD_ID and inva.PORTFOLIO_ID=tt.PORTFOLIO_ID
@@ -1447,6 +1451,8 @@ from
             AND b.PORTFOLIO_ID =#{portfolioId,jdbcType=VARCHAR}
             AND a.TRADE_DATE &lt;= to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd') - 1
             and a.INV_AIM is not null
+            and a.trade_status='01'
+            and a.is_cancel='N'
         ) WHERE rn = 1
         UNION
         SELECT distinct a.INV_AIM as businessModel,pp.PORTFOLIO_NAME  portfolioName
@@ -1458,6 +1464,8 @@ from
             AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
             AND b.PORTFOLIO_ID =#{portfolioId,jdbcType=VARCHAR}
             and a.INV_AIM is not null
+            and a.trade_status='01'
+            and a.is_cancel='N'
             AND a.TRADE_DATE = to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd')
     </select>
     <!--该指令退回时，指令初始下达时间-->
@@ -1480,5 +1488,44 @@ from
         and trade_date<![CDATA[<=]]>#{platDate}
         and settle_date>=#{platDate}
     </select>
-
+    <select id="findInvAimInTrd" resultType="string">
+        select distinct businessModel
+        from (
+            SELECT a.INV_AIM as businessModel
+            from TRD_PRODUCT_DEAL a
+            LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
+            WHERE 1=1
+            AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            AND b.PORTFOLIO_ID =#{portfolioId,jdbcType=VARCHAR}
+            and a.INV_AIM is not null
+            AND a.TRADE_DATE <![CDATA[<=]]> #{platDate}
+            and a.trade_status='01'
+            and a.is_cancel='N'
+            order by a.update_time desc)
+        where rownum=1
+    </select>
+    <select id="findInvAimInEtr" resultType="string">
+        select distinct businessModel
+        from (
+        select aaa.businessModel from (
+            SELECT a.INV_AIM as businessModel,a.update_time as updateTime
+            from etr_entrust a
+            WHERE 1=1
+            AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            AND a.PORTFOLIO_ID =#{portfolioId,jdbcType=VARCHAR}
+            and a.INV_AIM is not null
+            AND a.entrust_date <![CDATA[<=]]> #{platDate}
+            union
+            SELECT b.INV_AIM as businessModel,b.update_time as updateTime
+            from wfl_etr_entrust b
+            WHERE 1=1
+            AND b.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            AND b.PORTFOLIO_ID =#{portfolioId,jdbcType=VARCHAR}
+            and b.INV_AIM is not null
+            AND b.entrust_date <![CDATA[<=]]> #{platDate}
+        )aaa
+        order by aaa.updateTime desc
+        )
+        where rownum=1
+    </select>
 </mapper>

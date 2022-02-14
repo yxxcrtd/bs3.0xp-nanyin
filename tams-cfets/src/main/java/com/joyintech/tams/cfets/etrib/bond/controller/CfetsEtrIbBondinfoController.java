@@ -504,4 +504,16 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             return new Message<Boolean>().fail().setMessage("查询异常");
         }
     }
+    @ApiOperation(value = "指令买入时查询业务模式", notes = "指令买入时查询业务模式")
+    @PostMapping("/queryInvaimBySecIdAndPrd/{portfolioId}/{secId:.+}")
+    @ResponseBody
+    public Message<String> findInvAim(@PathVariable("portfolioId") String portfolioId,@PathVariable String secId) {
+        try {
+            String restult = cfetsEtrIbBondinfoService.findInvAim(portfolioId,secId);
+            return new Message<String>().success().setData(restult);
+        } catch (Exception e) {
+            logger.error("查询指令买入时查询业务模式异常", e);
+            return new Message<String>().fail().setMessage("查询异常");
+        }
+    }
 }

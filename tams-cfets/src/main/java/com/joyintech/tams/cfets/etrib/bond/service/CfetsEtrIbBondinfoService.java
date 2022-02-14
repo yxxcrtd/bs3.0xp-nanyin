@@ -23,6 +23,7 @@ import com.joyintech.service.entrust.etrinvestbondinfo.service.EtrInvestBondInfo
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
 import com.joyintech.tams.business.common.dto.PositionRulePtlData;
+import com.joyintech.tams.business.common.dto.SecInfoModelDto;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
@@ -57,6 +58,7 @@ import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfo
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jasypt.commons.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
@@ -2235,4 +2237,21 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         param.put("platDate",DateUtil.platDateFromCache());
         return cfetsetrIbBondinfoMapper.queryAssetIsShReg(param);
     }
+    /**
+     * 查询业务模式
+     * @param secId
+     * @return
+     */
+    public String findInvAim(String portfolioId,String secId) {
+        Map<String, Object> param =new HashMap<>();
+        param.put("finprodId",secId);
+        param.put("portfolioId",portfolioId);
+        param.put("platDate",DateUtil.platDateFromCache());
+        String invAim = cfetsetrIbBondinfoMapper.findInvAimInTrd(param);
+        if (StringUtil.isEmpty(invAim)) {
+            invAim = cfetsetrIbBondinfoMapper.findInvAimInEtr(param);
+        }
+        return invAim;
+    }
+
 }

@@ -126,6 +126,17 @@ public interface CfetsEtrIbBondinfoMapper {
 
      boolean queryAssetIsShReg(Map pageParam);
 
-
+    /**
+     * 通过持仓查询业务模式
+     * @param pageParam
+     * @return
+     */
+    public String findInvAimInTrd(Map pageParam);
+    /**
+     * 通过指令查询业务模式
+     * @param pageParam
+     * @return
+     */
+    public String findInvAimInEtr(Map pageParam);
 
 }
