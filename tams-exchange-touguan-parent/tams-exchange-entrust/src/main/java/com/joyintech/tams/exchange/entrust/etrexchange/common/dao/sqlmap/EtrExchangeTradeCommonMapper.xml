@@ -222,7 +222,7 @@
             AND T1.TRADE_PLAT = #{tradePlat}
         </if>
         <if test="portfolioIdList != null and portfolioIdList.size()>0">
-            <foreach collection="portfolioIdList" open="AND T1.PORTFOLIO_ID IN (" item="portfolioId" separator="," close=")">
+            <foreach collection="portfolioIdList" open="AND T1.PORTFOLIOID IN (" item="portfolioId" separator="," close=")">
                 #{portfolioId,jdbcType=VARCHAR}
             </foreach>
         </if>

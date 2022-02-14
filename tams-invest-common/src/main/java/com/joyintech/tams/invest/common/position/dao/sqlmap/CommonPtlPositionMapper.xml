@@ -108,7 +108,7 @@
         group by  PORTFOLIO_ID,SEC_ACCT_ID,FINPROD_ID,BRANCH,INV_AIM,HODING_TYPE,CDATE,ccy,P_FINPROD_ID,TRADE_ID
     </select>
     <select id="getEtrFinishAmt" resultType="java.math.BigDecimal">
-        SELECT NVL(SUM(ENT_FINISH_AMT),0) FROM ETR_FINISH_STATUS WHERE ENTRUST_ID = #{entrustId}
+        SELECT NVL(SUM(FINISH_AMT),0) FROM ETR_FINISH_STATUS WHERE ENTRUST_ID = #{entrustId} and TRADE_ID != #{entrustId}
     </select>
     <select id="selectPtlCashPositionFlowByTradeId" resultType="com.joyintech.tams.common.base.entity.PtlCashPositionFlow"  >
        select sum(amount) amount,PORTFOLIO_ID,ACCT_ID,HODING_TYPE,CDATE,ccy,order_id,CHL_FINPROD_ID 
@@ -322,4 +322,28 @@
           and CDATE = #{cdate,jdbcType=DATE}
           and CCY = #{ccy,jdbcType=VARCHAR}
     </update>
+
+    <!--add by etliu 20220116 start-->
+    <!--GZYHTZJY-1145: 【场内对账清结算1231】深交所协议回购首期交易，日终头寸更新有误【解决日期：2022-01-14】】-->
+    <select id="selectHoldInvAim" resultType="string" >
+        SELECT
+            MAX(PTL_SEC_POSITION.INV_AIM)
+        FROM
+            PTL_SEC_POSITION
+        WHERE
+            PTL_SEC_POSITION.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          AND PTL_SEC_POSITION.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          AND PTL_SEC_POSITION.HODING_TYPE = '03'
+          AND PTL_SEC_POSITION.CDATE =
+              (
+                  SELECT
+                      MAX(PTL_SEC_POSITION.CDATE)
+                  FROM
+                      PTL_SEC_POSITION
+                  WHERE
+                      PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+                    AND PTL_SEC_POSITION.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+                    AND PTL_SEC_POSITION.HODING_TYPE = '03')
+    </select>
+    <!--add by etliu 20220116 end-->
 </mapper>
