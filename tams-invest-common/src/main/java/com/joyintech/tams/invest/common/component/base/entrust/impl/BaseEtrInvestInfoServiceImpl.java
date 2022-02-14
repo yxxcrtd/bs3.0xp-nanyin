@@ -83,6 +83,11 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
      */
     @Autowired
     private EtrDistributeMapper etrDistributeMapper;
+    /**
+     * 委托指令明细
+     */
+    @Autowired
+    private EtrEntrustDetailMapper etrEntrustDetailMapper;
 
     /**
      * 投资委托信息Mapper
@@ -1338,3 +1343,4 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         return newDelegateFlow(dto);
     }
 }
+

@@ -40,6 +40,8 @@ public class StlDataGatherShares2Reader extends StlDataGatherReader {
 
     @Override
     public List<InvestTradeReaderDto> createList() {
+        List<InvestTradeReaderDto> resultList = new ArrayList<InvestTradeReaderDto>();
+        InvestTradeReaderDto investTradeReaderDto = new InvestTradeReaderDto();
         // 批处理执行信息
         SysBatchExecInfo execInfo = getBatchExecuteInfo();
         // 数据清算参数表
@@ -60,60 +62,30 @@ public class StlDataGatherShares2Reader extends StlDataGatherReader {
         Map<String, Object> searchParam = new HashMap<String, Object>();
         searchParam.put("portfolioIdList", portfolioIdList);
         setSearchParam(searchParam);
-        // 除权交易明细数据
-        searchParam.put("startDate", execInfo.getExecuteDate());
-        searchParam.put("endDate", execInfo.getExecuteDate());
-        searchParam.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+        // 除权交易
+        searchParam.put("dealDate", execInfo.getExecuteDate());
         List<SettleDelDealDetailDto> settleDelDealDetailDtoList = stlDataGatherService.selectSettleDelDealDetail(searchParam);
+        investTradeReaderDto.setSettleTransDataDelDtoList(settleDelDealDetailDtoList);
 
-        if (CollectionUtils.isNotEmpty(settleDelDealDetailDtoList)) {
-            // 公告基本信息按照资产代码分组
-            Map<String, List<SettleDelDealDetailDto>> regMap = settleDelDealDetailDtoList.stream().collect(Collectors.groupingBy(x -> {
-                return x.getFinprodId();
-            }));
-            
-            // 现金分红和送转的相关交易数据
-            searchParam.put("finprodIdList", new ArrayList<>(regMap.keySet()));
-            List<SettleTransDataDto> tempSettleTransDataDtos = stlDataGatherMapper.selectCashBonusSettleTransData(searchParam);
-            if (CollectionUtils.isNotEmpty(tempSettleTransDataDtos)) {
-                // 交易数据根据资产代码分组
-                Map<String, List<SettleTransDataDto>> dataMap = tempSettleTransDataDtos.stream().collect(Collectors.groupingBy(x -> {
-                    return x.getFinprodId();
-                }));
+        //现金分红和送转
+        List<SettleTransDataDto> settleTransDataDtos = stlDataGatherMapper.selectCashBonusSettleTransData(searchParam);
+        investTradeReaderDto.setSettleTransDataList(settleTransDataDtos);
 
-                List<SettleTransDataDto> settleTransDataDtos = new ArrayList<SettleTransDataDto>();
-                for (String key : dataMap.keySet()) {
-                    settleTransDataDtos.addAll(dataMap.get(key).stream().filter(x -> {
-                        return ((StringUtil.equals(x.getPs(), DictCodeList.交易方向_现金分红.getValue())
-                                 && !StringUtil.isEmptyList(regMap.get(key))
-                                 && DateUtil.compareDate(x.getDealDate(), regMap.get(key).get(0).getRegDate()) == 0)// 权益登记日
-                                || (StringUtil.equals(x.getPs(), DictCodeListStl.交易方向_送股.getValue())
-                                    && !StringUtil.isEmptyList(regMap.get(key))
-                                    && DateUtil.compareDate(x.getDealDate(), regMap.get(key).get(0).getDelDate()) == 0));// 除权除息日
-                    }).collect(Collectors.toList()));
-                }
-                
-                if (CollectionUtils.isNotEmpty(settleTransDataDtos)) {
-                    List<InvestTradeReaderDto> resultList = new ArrayList<InvestTradeReaderDto>();
-                    InvestTradeReaderDto investTradeReaderDto = new InvestTradeReaderDto();
-                    investTradeReaderDto.setSettleTransDataList(settleTransDataDtos);
-                    investTradeReaderDto.setSettleTransDataDelDtoList(settleDelDealDetailDtoList);
-                    resultList.add(investTradeReaderDto);
-                    return resultList;
-                }
-            }
-        }
+        //申购确认
+        investTradeReaderDto.setSettleTransDataSgqrList(stlDataGatherMapper.selectCashBonusSettleTransData1(searchParam));
 
-        return null;
+        resultList.add(investTradeReaderDto);
+        return resultList;
     }
 
     @Override
     protected void setSearchParam(Map<String, Object> searchParam) {
-        // 业务类型
-        searchParam.put("busiType", DictCodeList.业务类型_股票交易.getValue());
         // 交易方向列表
         searchParam.put("psList",
-            Arrays.asList(DictCodeList.交易方向_现金分红.getValue(), DictCodeListStl.交易方向_送股.getValue()));
+            Arrays.asList(DictCodeList.交易方向_现金分红.getValue(), DictCodeList.交易方向_红利再投.getValue()
+            //GZYHTZJY-1017:增加申购确认方向 modify by fuyongsheng 20220104 start
+            , DictCodeList.交易方向_申购确认.getValue()));
+        //GZYHTZJY-1017:增加申购确认方向 modify by fuyongsheng 20220104 end
     }
 
     @Override

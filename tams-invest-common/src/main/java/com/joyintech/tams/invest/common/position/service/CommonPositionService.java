@@ -8,6 +8,7 @@ import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
@@ -56,6 +57,8 @@ public class CommonPositionService {
 	private PtlCashPositionFlowMapper ptlCashPositionFlowMapper;
 	@Autowired
 	private EtrEntrustMapper etrEntrustMapper;
+	@Autowired
+	private EtrEntrustAddMapper etrEntrustAddMapper;
 	
 	/**
 	 * 头寸处理入口
@@ -328,7 +331,7 @@ public class CommonPositionService {
 			// 重新插入一条反向流水
 			etrSecPositionFlow.setAmount(etrSecPositionFlow.getAmount().negate());
 			etrSecPositionFlow.setOffsetId(String.valueOf(param.get("entrustId")));
-			etrSecPositionFlow.setInvAim(String.valueOf(param.get("invAim")));
+//			etrSecPositionFlow.setInvAim(String.valueOf(param.get("invAim")));
 			etrSecPositionFlow.setSeqno(IDGenerator.generate());
 			insertEtrSecPositionFlow(etrSecPositionFlow);
 		});
@@ -377,7 +380,7 @@ public class CommonPositionService {
 				// 重新插入一条反向流水
 				etrSecPositionFlow.setAmount(etrSecPositionFlow.getAmount().negate());
 				etrSecPositionFlow.setOffsetId(String.valueOf(param.get("entrustId")));
-				etrSecPositionFlow.setInvAim(String.valueOf(param.get("invAim")));
+//				etrSecPositionFlow.setInvAim(String.valueOf(param.get("invAim")));
 				etrSecPositionFlow.setSeqno(IDGenerator.generate());
 				insertEtrSecPositionFlow(etrSecPositionFlow);
 			});
@@ -419,6 +422,81 @@ public class CommonPositionService {
 
 		return true;
 	}
+
+	// add by etliu 20220116 start
+	// GZYHTZJY-1145: 【场内对账清结算1231】深交所协议回购首期交易，日终头寸更新有误【解决日期：2022-01-14】】
+	/**
+	 * 指令撤回、关闭，交易冲销（指令可用现金冲销）
+	 * @param param
+	 * @return
+	 */
+	public boolean revokeEtrCashPositionFlow(Map<String,Object> param){
+		//已完成额度
+		BigDecimal finishAmt = commonPtlPositionMapper.getEtrFinishAmt(param);
+		// 委托
+		EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(String.valueOf(param.get("entrustId")));
+		// 委托附属表
+		EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(String.valueOf(param.get("entrustId")));
+
+		//委托额度
+		BigDecimal entrustAmt = BigDecimal.ZERO;
+		if (StringUtil.isNotEmpty(etrEntrust)) {
+			entrustAmt = etrEntrust.getEntrustAmt();
+			if (etrEntrustAdd != null && StringUtil.equals(DictCodeListExt3.目标类型_数量.getValue(), etrEntrustAdd.getTargetType())) {
+				entrustAmt = etrEntrust.getEntrustNum();
+			}
+		}
+		// 指令关闭 or 委托完成，冲销指令可用持仓，根据交易持仓重新生成指令可用持仓
+		if (StringUtil.equals(DictCodeList.是否_是.getValue(),param.get("closeFlag")) || entrustAmt.compareTo(finishAmt) <= 0){
+			//查询原指令现金流水，冲销指令可用现金
+			List<EtrCashPositionFlow> etrCashPositionFlows = commonPtlPositionMapper.selectEtrCashPositionFlowByEntrustId(param);
+			etrCashPositionFlows.forEach(etrCashPositionFlow -> {
+				// 原指令冲正标识更新
+				etrCashPositionFlow.setOffsetFlag("02");
+				etrCashPositionFlowMapper.updateByPrimaryKeySelective(etrCashPositionFlow);
+				// 重新插入一条反向流水
+				etrCashPositionFlow.setAmount(etrCashPositionFlow.getAmount().negate());
+				etrCashPositionFlow.setOffsetId(String.valueOf(param.get("entrustId")));
+				etrCashPositionFlow.setSeqno(IDGenerator.generate());
+				insertEtrCashPositionFlow(etrCashPositionFlow);
+			});
+			// 根据交易现金流水重新生成指令可用现金
+			List<PtlCashPositionFlow> ptlCashPositionFlows = commonPtlPositionMapper.selectPtlCashPositionFlowByEntrustId(param);
+			ptlCashPositionFlows.forEach(ptlCashPositionFlow -> {
+				EtrCashPositionFlow etrCashPositionFlow = new EtrCashPositionFlow();
+				BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlow,ptlCashPositionFlow);
+				etrCashPositionFlow.setSeqno(IDGenerator.generate());
+				etrCashPositionFlow.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+				insertEtrCashPositionFlow(etrCashPositionFlow);
+			});
+		}
+
+		return true;
+	}
+
+	/**
+	 * 查询组合持有资产的投资目的
+	 * @param portfolioId 组合代码
+	 * @param finprodId 金融产品代码
+	 * @return 投资目的
+	 */
+	public String selectHoldInvAim(String portfolioId, String finprodId) {
+		if (StringUtil.isBlank(portfolioId) || StringUtil.isBlank(finprodId)) {
+			return null;
+		}
+
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("portfolioId", portfolioId);
+		paramMap.put("finprodId", finprodId);
+
+		String invAim = commonPtlPositionMapper.selectHoldInvAim(paramMap);
+		if (StringUtil.isBlank(invAim)) {
+			invAim = "999999";
+		}
+
+		return invAim;
+	}
+	// add by etliu 20220116 end
 
 	/**
 	 * 入库委托现金流水信息

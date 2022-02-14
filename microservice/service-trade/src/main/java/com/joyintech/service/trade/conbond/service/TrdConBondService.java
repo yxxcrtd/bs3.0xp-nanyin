@@ -505,16 +505,20 @@ public class TrdConBondService extends BaseService {
 
         PaTrdFinProductDealTotal paTrdFinProductDealTotal = paTrdFinProductDealTotalMapper
                 .selectByPrimaryKey(bizCode);
-        paTrdFinProductDealTotal.setTotleTradeId(newTotalTradeId);
-        paTrdFinProductDealTotal.setUpdateTime(updateTime);
-        paTrdFinProductDealTotal.setUpdateUser(updateUser);
-        paTrdFinProductDealTotalMapper.insertSelective(paTrdFinProductDealTotal);
+        if(StringUtil.isNotEmpty(paTrdFinProductDealTotal)) {
+            paTrdFinProductDealTotal.setTotleTradeId(newTotalTradeId);
+            paTrdFinProductDealTotal.setUpdateTime(updateTime);
+            paTrdFinProductDealTotal.setUpdateUser(updateUser);
+            paTrdFinProductDealTotalMapper.insertSelective(paTrdFinProductDealTotal);
+        }
 
         TrdDealTotalAdd trdDealTotalAdd = trdDealTotalAddMapper.selectByPrimaryKey(bizCode);
-        trdDealTotalAdd.setTotleTradeId(newTotalTradeId);
-        trdDealTotalAdd.setUpdateTime(updateTime);
-        trdDealTotalAdd.setUpdateUser(updateUser);
-        trdDealTotalAddMapper.insertSelective(trdDealTotalAdd);
+        if(StringUtil.isNotEmpty(trdDealTotalAdd)) {
+            trdDealTotalAdd.setTotleTradeId(newTotalTradeId);
+            trdDealTotalAdd.setUpdateTime(updateTime);
+            trdDealTotalAdd.setUpdateUser(updateUser);
+            trdDealTotalAddMapper.insertSelective(trdDealTotalAdd);
+        }
 
         // 划款指令
         List<StlPayOrders> ordersTotal = trdConBondMapper.findOrdersByOrderId(bizCode);
@@ -1010,7 +1014,7 @@ public class TrdConBondService extends BaseService {
 			return tradeId;
 		}else{
 			Map<String, Object> map = this.getBusicode(busiCode);
-			if(StringUtil.isNotEmpty(map.get("BUSICODE"))){
+			if(map != null && StringUtil.isNotEmpty(map.get("BUSICODE"))){
 				return (String)map.get("BUSICODE");
 			}
 			return null;

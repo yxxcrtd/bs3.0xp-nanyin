@@ -1,5 +1,14 @@
 package com.joyintech.tams.component.business.trade.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.jdbc.datasource.DataSource;
@@ -9,8 +18,43 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.dao.*;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
+import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
+import com.joyintech.tams.common.base.dao.EtrFinishStatusMapper;
+import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
+import com.joyintech.tams.common.base.dao.InterfOpicsTradRepoMapper;
+import com.joyintech.tams.common.base.dao.InterfTradSecdealMapper;
+import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
+import com.joyintech.tams.common.base.dao.PtlTradeMapper;
+import com.joyintech.tams.common.base.dao.TrdProductDealAddPreMapper;
+import com.joyintech.tams.common.base.dao.TrdProductDealPreMapper;
+import com.joyintech.tams.common.base.dao.TrdTradeFeeDetailMapper;
+import com.joyintech.tams.common.base.dao.WflPaTrdFinDealTotalMapper;
+import com.joyintech.tams.common.base.dao.WflPaTrdProductDealMapper;
+import com.joyintech.tams.common.base.dao.WflStlPayOrdersMapper;
+import com.joyintech.tams.common.base.dao.WflTrdFinProductDealTotalMapper;
+import com.joyintech.tams.common.base.dao.WflTrdProductDealAddMapper;
+import com.joyintech.tams.common.base.dao.WflTrdProductDealMapper;
+import com.joyintech.tams.common.base.dao.WflTrdProductDealOthMapper;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
+import com.joyintech.tams.common.base.entity.EtrFinishStatus;
+import com.joyintech.tams.common.base.entity.EtrFinishStatusKey;
+import com.joyintech.tams.common.base.entity.FinProductAdd;
+import com.joyintech.tams.common.base.entity.FinTradeProduct;
+import com.joyintech.tams.common.base.entity.FinTradeProductKey;
+import com.joyintech.tams.common.base.entity.InterfOpicsTradRepo;
+import com.joyintech.tams.common.base.entity.InterfTradSecdeal;
+import com.joyintech.tams.common.base.entity.PaTrdProductDeal;
+import com.joyintech.tams.common.base.entity.PtlPortfolio;
+import com.joyintech.tams.common.base.entity.PtlTrade;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
+import com.joyintech.tams.common.base.entity.TrdProductDealAddPre;
+import com.joyintech.tams.common.base.entity.TrdProductDealPre;
+import com.joyintech.tams.common.base.entity.TrdProductDealPreKey;
+import com.joyintech.tams.common.base.entity.WflStlPayOrders;
+import com.joyintech.tams.common.base.entity.WflTrdProductDealAdd;
 import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
@@ -26,7 +70,12 @@ import com.joyintech.tams.invest.common.component.business.common.dto.PortfolioC
 import com.joyintech.tams.invest.common.component.business.common.dto.PortfolioPositionsFlowInputDto;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import com.joyintech.tams.invest.common.dto.*;
+import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
+import com.joyintech.tams.invest.common.dto.BaseTradeProductDealRevokeDto;
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.PtlPositionHoldDto;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
@@ -36,14 +85,6 @@ import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMappe
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author : 强成西
@@ -445,7 +486,33 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
 //                status.setFinishAmt(new BigDecimal(baseTradeProductDealDto.getTrdProductDeal().getShareAmt().intValue() * 100));
                 // 完成额度取值判断修改 add by yufei 20200807 start
                 EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(baseTradeProductDealDto.getTrdProductDealAdd().getEntrustId());
-                if(etrEntrustAdd != null && StringUtil.isNotEmpty(etrEntrustAdd.getTargetType())
+                if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdFinProductDealTotal())
+                        && StringUtil.equals(baseTradeProductDealDto.getTrdFinProductDealTotal().getPs(),DictCodeListExt3.交易方向_中途换券.getValue())) {
+                    //中途换券换出交易不更新指令完成度
+                    if(StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(),DictCodeListExt3.质押券置换_置换方向_换出.getValue())) {
+                        continue;
+                    }
+                    status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
+                }
+                else if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdFinProductDealTotal())
+                        &&StringUtil.equals(baseTradeProductDealDto.getTrdFinProductDealTotal().getPs(),DictCodeListExt3.交易方向_解除质押.getValue())) {
+                    status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
+                }
+                else if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdFinProductDealTotal())
+                        &&StringUtil.equals(baseTradeProductDealDto.getTrdFinProductDealTotal().getPs(),DictCodeList.交易方向_到期续做.getValue())) {
+                    //到期续作中，只考虑新做首期，收息到账和还本到账不写入指令完成度
+                    if(!StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(),DictCodeList.交易方向_买入.getValue())) {
+                        continue;
+                    }
+                    status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
+                }
+                // add by etliu 20220116 start
+                // GZYHTZJY-1145: 【场内对账清结算1231】深交所协议回购首期交易，日终头寸更新有误【解决日期：2022-01-14】】
+                else if (etrEntrustAdd != null && StringUtil.equals(DictCodeList.回购类型_质押式协议回购.getValue(), etrEntrustAdd.getAssetType1())) {
+                    status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
+                }
+                // add by etliu 20220116 end
+                else if(etrEntrustAdd != null && StringUtil.isNotEmpty(etrEntrustAdd.getTargetType())
                    && StringUtil.equals(DictCodeListExt3.目标类型_金额.getValue(),etrEntrustAdd.getTargetType())){
                     status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getTradeAmt());
                 }
@@ -642,16 +709,14 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
         if (持仓类型 == null) {
             return false;
         }
-
         boolean 是否处理持仓 = AllTradeCommonUtil.是否处理持仓(finProductTradeDto.getWorkflowId(), LoginUserUtil.getUserName(), 持仓类型);
-
         List<PtlSecPositionFlowDto> ptlSecPositionFlows = new ArrayList<>();
         List<PtlCashPositionFlowDto> ptlCashPositionFlows = new ArrayList<>();
         for (BaseTradeProductDealDto baseTradeProductDealDto : finProductTradeDto.getBaseTradeProductDealDtos()) {
             PortfolioPositionsFlowInputDto inputDto = new PortfolioPositionsFlowInputDto();
             inputDto.setPositionType(持仓类型.getValue());
             inputDto.setTrdProductDeal(baseTradeProductDealDto.getTrdProductDeal());
-//            增加附属表dto
+            // 增加附属表dto
             inputDto.setTrdFinProductBarterList(baseTradeProductDealDto.getTrdFinProductBarterList());
             inputDto.setPortfolioId(baseTradeProductDealDto.getTrdProductDealAdd().getPortfolioId());
             inputDto.setBonusMode(baseTradeProductDealDto.getTrdProductDealAdd().getPayType());
@@ -673,6 +738,16 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
 
                 //买断式回购持仓特殊处理
                 for (PtlSecPositionFlowDto dto : ptlSecPositionFlowDtoss){
+                    // 债券  申购确认  持仓类型为冻结
+                    if (StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
+                            && StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_申购确认.getValue())) {
+                       dto.setHodingType(DictCodeListExt3.持仓类型_场内上市前冻结.getValue());
+                    }
+                    // 股票存续期  申购确认  持仓类型为冻结
+                    if (StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())
+                            && StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_申购确认.getValue())) {
+                        dto.setHodingType(DictCodeListExt3.持仓类型_场内上市前冻结.getValue());
+                    }
                     if (DictCodeListExt1.交易场所_银行间.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getTradeMarket())
                             && DictCodeList.交易方向_买入.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getPs())
                             && (DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2())

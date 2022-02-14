@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
@@ -23,25 +24,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.framework.JoyinRestTemplate;
-import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
-import com.joyintech.tams.common.base.dao.EtrFinishStatusMapper;
-import com.joyintech.tams.common.base.dao.FinDealPledgeMapper;
-import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
-import com.joyintech.tams.common.base.dao.FinTradeProductAddMapper;
-import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
-import com.joyintech.tams.common.base.dao.PaTrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.dao.PaTrdProductDealMapper;
-import com.joyintech.tams.common.base.dao.PtlTradeMapper;
-import com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper;
-import com.joyintech.tams.common.base.dao.StlPayOrdersMapper;
-import com.joyintech.tams.common.base.dao.TrdDealTotalAddMapper;
-import com.joyintech.tams.common.base.dao.TrdFinProductBarterMapper;
-import com.joyintech.tams.common.base.dao.TrdFinProductBarterTotalMapper;
-import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealAddMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealMapper;
-import com.joyintech.tams.common.base.dao.TrdTradeFeeDetailMapper;
-import com.joyintech.tams.common.base.dao.TrdTradeFeeTotalMapper;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -138,7 +120,13 @@ public class StlDataGatherService {
     
     @Autowired
     private SettleTransTgMappingMapper settleTransTgMappingMapper;
-	
+
+    @Autowired
+    private PtlSecPositionFlowMapper ptlSecPositionFlowMapper;
+
+    @Autowired
+    private EtrSecPositionFlowMapper etrSecPositionFlowMapper;
+
 	/**
      * 获取除权交易明细
      * @param paraMap 查询参数
@@ -296,6 +284,16 @@ public class StlDataGatherService {
          */
         List<EtrFinishStatus> etrFinishStatusList = tradeWriteDto.getEtrFinishStatusList();
 
+        /**
+         *  指令持仓流水
+         */
+        List<EtrSecPositionFlow> etrSecPositionFlowList = tradeWriteDto.getEtrSecPositionFlowList();
+
+        /**
+         * 组合持仓流水
+         */
+        List<PtlSecPositionFlow> ptlSecPositionFlowList = tradeWriteDto.getPtlSecPositionFlowList();
+
         // 全量基金信息获取
         Map<String, FundInfoDto> fundInfoDtoMap = settleCommonService.getAllFundInfoDto();
         //
@@ -359,6 +357,10 @@ public class StlDataGatherService {
                         && DictCodeList.交易方向_现金分红.getValue().equals(productDealDto.getPs())) {
                 	trdProductDealAdd.setRegDate(productDealDto.getRegDate());
                 }
+                if ((DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(productDealDto.getFinprodType2()))&&productDealDto.getBonusCfmDate()!=null) {
+                    trdProductDealAdd.setBonusCfmDate(productDealDto.getBonusCfmDate());
+                }
+                trdProductDealAdd.setGenType("03");
                 trdProductDealAddMapper.insertSelective(trdProductDealAdd);
                 // 回购时登录PA_TRD_PRODUCT_DEAL表
                 if (StringUtil.equals(productDealDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue()) ||
@@ -513,6 +515,18 @@ public class StlDataGatherService {
                 settleTransTgMappingMapper.insert(settleTransTgMapping);
             }
         }
+        // 组合持仓流水
+        if (CollectionUtils.isNotEmpty(ptlSecPositionFlowList)){
+            for (PtlSecPositionFlow ptlSecPositionFlow : ptlSecPositionFlowList){
+                ptlSecPositionFlowMapper.insert(ptlSecPositionFlow);
+            }
+        }
+        // 指令持仓流水
+        if (CollectionUtils.isNotEmpty(etrSecPositionFlowList)){
+            for (EtrSecPositionFlow etrSecPositionFlow : etrSecPositionFlowList){
+                etrSecPositionFlowMapper.insert(etrSecPositionFlow);
+            }
+        }
     }
 
     private String getPaBussType(TotalTrdProductDealDto totalTrdProductDealDto, String secType,Map<String, FundInfoDto> fundInfoDtoMap) {
@@ -575,6 +589,9 @@ public class StlDataGatherService {
                     else if (StringUtil.equals(ps, DictCodeList.交易方向_红利再投.getValue())) {
                         paBussType = DictCodeListExt1.平安业务类型_货币基金红利再投.getValue();
                     }
+                    else if (StringUtil.equals(ps, DictCodeList.交易方向_现金分红.getValue())) {
+                        paBussType = DictCodeListExt1.平安业务类型_货币基金现金分红.getValue();
+                    }
                 }
                 else {
                     if (StringUtil.equals(ps, DictCodeList.交易方向_申购.getValue())) {
@@ -598,11 +615,21 @@ public class StlDataGatherService {
                     else if (StringUtil.equals(ps, DictCodeList.交易方向_现金分红.getValue())) {
                         paBussType = DictCodeListExt1.平安业务类型_非货币基金现金分红.getValue();
                     }
+                    else if (StringUtil.equals(ps, DictCodeList.交易方向_红利再投.getValue())) {
+                        paBussType = DictCodeListExt1.平安业务类型_非货币基金红利再投.getValue();
+                    }
+                    else if (StringUtil.equals(ps, DictCodeList.交易方向_除权登记.getValue())) {
+                        paBussType = DictCodeListExt1.平安业务类型_非货币基金分红除权.getValue();
+                    }
                 }
             }
         }
         else if(StringUtil.equals(DictCodeListExt1.证券品种_股票.getValue(), secType)) {
-            paBussType = DictCodeListExt2.平安业务类型_股票交易.getValue();
+            if(StringUtil.equals(ps, DictCodeList.交易方向_除权登记.getValue())){
+                paBussType = DictCodeListExt2.平安业务类型_送转.getValue();
+            }else {
+                paBussType = DictCodeListExt2.平安业务类型_股票交易.getValue();
+            }
         }
         return paBussType;
     }
@@ -975,9 +1002,11 @@ public class StlDataGatherService {
         return 回购利息;
     }
 
-    public void transactionMacthBatch(List<ExchangeTransMatchCommonDto> dtoList) {
+    public void transactionMacthBatch(List<ExchangeTransMatchCommonDto> dtoList,
+                                      List<String> needUpdateStatusEntrustIdList) {
         ExchangeTransMatchCommonParamDto paramDto = new ExchangeTransMatchCommonParamDto();
         paramDto.setParamDataList(dtoList);
+        paramDto.setNeedUpdateStatusEntrustIdList(needUpdateStatusEntrustIdList);
 
         // 调用债券交易计算逻辑
         if(isSingle) {
@@ -995,5 +1024,18 @@ public class StlDataGatherService {
 
     public List<SettleTransDataDto> listRepoSettleTransData(Map<String, Object> paraMap){
         return stlDataGatherMapper.listRepoSettleTransData(paraMap);
+    }
+
+    /**
+     * 查询债券确认列表
+     * @param paraMap
+     * @return
+     */
+    public List<SettleTransDataDto> listBondPurConfirSettleTransData(Map<String, Object> paraMap){
+        return stlDataGatherMapper.listBondPurConfirSettleTransData(paraMap);
+    }
+
+    public List<SettleTransDataDto> listBoundSharesMarketTradeData(Map<String, Object> paraMap) {
+        return stlDataGatherMapper.listBoundSharesMarketTradeData(paraMap);
     }
 }

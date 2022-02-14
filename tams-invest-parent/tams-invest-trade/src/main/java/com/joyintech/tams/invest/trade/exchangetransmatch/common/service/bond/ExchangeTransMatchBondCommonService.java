@@ -11,24 +11,24 @@ import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.TrdProductDealDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
+import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDetailDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto;
 import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
 import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.dao.ExchangeTransMatchCommonMapper;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.dto.ExchangeTransMatchBaseTradeDto;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
@@ -57,30 +57,74 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
      * @param entrustDto
      * @return
      */
-    public BaseTradeProductDealDto genFinProductTradeDto(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto){
-        BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
+    public List<ExchangeTransMatchBaseTradeDto> genFinProductTradeDto(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto){
+        List<ExchangeTransMatchBaseTradeDto> baseTradeProductDealDtoList = new ArrayList<>();
         //生成金融产品汇总交易信息
-        baseTradeProductDealDto.setTrdFinProductDealTotal(this.genTrdFinProductDealTotal(dealDto,entrustDto));
-        //生成金融产品汇总交易附属信息
-        baseTradeProductDealDto.setTrdDealTotalAdd(this.generateDealTotalAdd(dealDto,entrustDto,baseTradeProductDealDto.getTrdFinProductDealTotal()));
-        //生成金融产品费用汇总表数据
-        baseTradeProductDealDto.setTrdTradeFeeTotalList(this.genTrdTradeFeeTotalList(dealDto,entrustDto,baseTradeProductDealDto.getTrdFinProductDealTotal()));
-        //生成金融产品交易信息
-        baseTradeProductDealDto.setTrdProductDeal(this.genTrdProductDeal(dealDto,entrustDto,baseTradeProductDealDto.getTrdFinProductDealTotal()));
-        //生成金融产品交易附属表信息
-        baseTradeProductDealDto.setTrdProductDealAdd(this.genTrdProductDealAdd(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
-        //生成组合交易表数据
-        baseTradeProductDealDto.setPtlTrade(this.generatePtlTrade(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
-        //生成费用信息
-        baseTradeProductDealDto.setTrdTradeFeeDetail(this.genTrdTradeFeeDetail(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
-        //生成费用信息list
-        baseTradeProductDealDto.setTrdTradeFeeDetailList(this.genTrdTradeFeeDetailList(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
-        //生成划款指令
-        baseTradeProductDealDto.setStlPayOrdersList(this.generateStlPayOrdersList(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
-        //金融产品实物交易表
-        baseTradeProductDealDto.setTrdFinProductBarterList(this.generateDealBarterList(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
+        TrdFinProductDealTotal trdFinProductDealTotal = this.genTrdFinProductDealTotal(dealDto,entrustDto);
 
-        return baseTradeProductDealDto;
+        if(StringUtil.equals(entrustDto.getEntrustClass(),DictCodeListExt3.投资指令类型_多组合单资产指令.getValue())) {
+            for (ExchangeTransMatchCommonEntrustDetailDto detailDto:entrustDto.getEntrustDetailDtoList()) {
+                ExchangeTransMatchCommonEntrustDto entrustDtoTmp = new ExchangeTransMatchCommonEntrustDto();
+                BeanUtil.copyPropertiesIgnoreNull(entrustDtoTmp,entrustDto);
+                entrustDtoTmp.setPortfolioId(detailDto.getPortfolioId());
+                entrustDtoTmp.setMarchQty(detailDto.getMarchQty());
+                entrustDtoTmp.setMarchAmt(detailDto.getMarchAmt());
+                entrustDtoTmp.setMarchFeeAmtUnPay(detailDto.getMarchFeeAmtUnPay());
+                entrustDtoTmp.setMarchFeeAmtPay(detailDto.getMarchFeeAmtPay());
+
+                ExchangeTransMatchBaseTradeDto baseTradeProductDealDto = new ExchangeTransMatchBaseTradeDto();
+                //生成金融产品汇总交易信息
+                baseTradeProductDealDto.setTrdFinProductDealTotal(trdFinProductDealTotal);
+                //生成金融产品汇总交易附属信息
+                baseTradeProductDealDto.setTrdDealTotalAdd(this.generateDealTotalAdd(dealDto,entrustDtoTmp,baseTradeProductDealDto.getTrdFinProductDealTotal()));
+				//生成金融产品费用汇总表数据
+	        	baseTradeProductDealDto.setTrdTradeFeeTotalList(this.genTrdTradeFeeTotalList(dealDto,entrustDtoTmp,baseTradeProductDealDto.getTrdFinProductDealTotal()));
+                //生成金融产品交易信息
+                baseTradeProductDealDto.setTrdProductDeal(this.genTrdProductDeal(dealDto,entrustDtoTmp,baseTradeProductDealDto.getTrdFinProductDealTotal()));
+                //生成金融产品交易附属表信息
+                baseTradeProductDealDto.setTrdProductDealAdd(this.genTrdProductDealAdd(dealDto,entrustDtoTmp,baseTradeProductDealDto.getTrdProductDeal()));
+                //生成组合交易表数据
+                baseTradeProductDealDto.setPtlTrade(this.generatePtlTrade(dealDto,entrustDtoTmp,baseTradeProductDealDto.getTrdProductDeal()));
+                //生成费用信息
+                baseTradeProductDealDto.setTrdTradeFeeDetail(this.genTrdTradeFeeDetail(dealDto,entrustDtoTmp,baseTradeProductDealDto.getTrdProductDeal()));
+                //生成费用信息list
+                baseTradeProductDealDto.setTrdTradeFeeDetailList(this.genTrdTradeFeeDetailList(dealDto,entrustDtoTmp,baseTradeProductDealDto.getTrdProductDeal()));
+                //生成划款指令
+                baseTradeProductDealDto.setStlPayOrdersList(this.generateStlPayOrdersList(dealDto,entrustDtoTmp,baseTradeProductDealDto.getTrdProductDeal()));
+                //金融产品实物交易表
+                baseTradeProductDealDto.setTrdFinProductBarterList(this.generateDealBarterList(dealDto,entrustDtoTmp,baseTradeProductDealDto.getTrdProductDeal()));
+
+                baseTradeProductDealDtoList.add(baseTradeProductDealDto);
+            }
+
+        }
+        else {
+            ExchangeTransMatchBaseTradeDto baseTradeProductDealDto = new ExchangeTransMatchBaseTradeDto();
+            //生成金融产品汇总交易信息
+            baseTradeProductDealDto.setTrdFinProductDealTotal(trdFinProductDealTotal);
+            //生成金融产品汇总交易附属信息
+            baseTradeProductDealDto.setTrdDealTotalAdd(this.generateDealTotalAdd(dealDto,entrustDto,baseTradeProductDealDto.getTrdFinProductDealTotal()));
+	        //生成金融产品费用汇总表数据
+	        baseTradeProductDealDto.setTrdTradeFeeTotalList(this.genTrdTradeFeeTotalList(dealDto,entrustDto,baseTradeProductDealDto.getTrdFinProductDealTotal()));
+            //生成金融产品交易信息
+            baseTradeProductDealDto.setTrdProductDeal(this.genTrdProductDeal(dealDto,entrustDto,baseTradeProductDealDto.getTrdFinProductDealTotal()));
+            //生成金融产品交易附属表信息
+            baseTradeProductDealDto.setTrdProductDealAdd(this.genTrdProductDealAdd(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
+            //生成组合交易表数据
+            baseTradeProductDealDto.setPtlTrade(this.generatePtlTrade(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
+            //生成费用信息
+            baseTradeProductDealDto.setTrdTradeFeeDetail(this.genTrdTradeFeeDetail(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
+            //生成费用信息list
+            baseTradeProductDealDto.setTrdTradeFeeDetailList(this.genTrdTradeFeeDetailList(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
+            //生成划款指令
+            baseTradeProductDealDto.setStlPayOrdersList(this.generateStlPayOrdersList(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
+            //金融产品实物交易表
+            baseTradeProductDealDto.setTrdFinProductBarterList(this.generateDealBarterList(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
+            baseTradeProductDealDtoList.add(baseTradeProductDealDto);
+        }
+
+
+        return baseTradeProductDealDtoList;
     }
 
     /**
@@ -96,26 +140,32 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
         if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), entrustDto.getPs())) {
             codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_债券买入);
         }
-        if (StringUtil.equals(DictCodeList.交易方向_卖出.getValue(), entrustDto.getPs())) {
+        else if (StringUtil.equals(DictCodeList.交易方向_卖出.getValue(), entrustDto.getPs())) {
             codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_债券卖出);
         }
-        if (StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), entrustDto.getPs())) {
+        else if (StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), entrustDto.getPs())) {
             codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_债券卖出);
         }
-        if (StringUtil.equals(DictCodeList.交易方向_申购.getValue(), entrustDto.getPs())) {
+        else if (StringUtil.equals(DictCodeList.交易方向_申购.getValue(), entrustDto.getPs())) {
             codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_债券买入);
         }
-        if (StringUtil.equals(DictCodeList.交易方向_申购确认.getValue(), entrustDto.getPs())) {
+        else if (StringUtil.equals(DictCodeList.交易方向_申购确认.getValue(), entrustDto.getPs())) {
             codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_债券买入);
         }
-        if (StringUtil.equals(DictCodeListExt1.交易方向_债转股.getValue(), entrustDto.getPs())) {
+        else if (StringUtil.equals(DictCodeListExt1.交易方向_债转股.getValue(), entrustDto.getPs())) {
             codeParameter.setCommonBusinessType(DictCodeListExt3.共通业务类型_可转债转股交易);
         }
-        if (StringUtil.equals(DictCodeListExt3.交易方向_配债.getValue(), entrustDto.getPs())) {
+        else if (StringUtil.equals(DictCodeListExt3.交易方向_配债.getValue(), entrustDto.getPs())) {
             codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_债券买入);
         }
-        dealTotal.setTotleTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
+        else if (StringUtil.equals(DictCodeListExt3.交易方向_质押券入库.getValue(),entrustDto.getPs())
+                || StringUtil.equals(DictCodeListExt3.交易方向_质押券出库.getValue(),entrustDto.getPs())) {
+            codeParameter.setCommonBusinessType(DictCodeListExt3.共通业务类型_质押券出入库交易);
+        }
 
+        dealTotal.setTotleTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
+        // 交易金额
+        dealTotal.setTradeAmt(ArithmeticUtil.subtract(entrustDto.getMarchAmt(),entrustDto.getMarchFeeAmtPay()));
         // 设置汇总交易信息
         setDealTotal(dealDto, entrustDto ,dealTotal);
         // 金融产品代码
@@ -146,8 +196,6 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
         dealTotal.setShareAmt(entrustDto.getMarchQty());
         // 随交易支付费用
         dealTotal.setFeeAmtPay(entrustDto.getMarchFeeAmtPay());
-        // 交易金额
-        dealTotal.setTradeAmt(ArithmeticUtil.subtract(entrustDto.getMarchAmt(),entrustDto.getMarchFeeAmtPay()));
         // 未随交易支付费用
         dealTotal.setFeeAmtUnpay(entrustDto.getMarchFeeAmtPay());
         // 总交易费用
@@ -155,7 +203,19 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
         // 交易方向
         dealTotal.setPs(entrustDto.getPs());
         // 投资目的
-        dealTotal.setInvAim(entrustDto.getInvAim());
+        if(StringUtil.isNotEmpty(entrustDto.getInvAim())){
+            dealTotal.setInvAim(entrustDto.getInvAim());
+        }else{
+            // 查询持仓的投资目的
+            Map<String,Object> param = new HashMap<>();
+            param.put("dealDate", dealTotal.getTradeDate());
+            param.put("finProductId",dealTotal.getFinprodId());
+            param.put("secManageAcctId",dealDto.getSecAcctId());
+            List<PtlSecPosition> ptlSecPositions = exchangeTransMatchCommonMapper.searchPtlSecPositionList(param);
+            if(CollectionUtils.isNotEmpty(ptlSecPositions)){
+                dealTotal.setInvAim(ptlSecPositions.get(0).getInvAim());
+            }
+        }
         // 交易状态
         dealTotal.setTradeStatus(BussinessDictCodeList.交易状态_初始.getValue());
         // 是否已撤销
@@ -265,7 +325,20 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
         // 净值日期
         trdProductDeal.setCpriceDate(null);
         // 投资目的
-        trdProductDeal.setInvAim(entrustDto.getInvAim());
+        if(StringUtil.isNotEmpty(entrustDto.getInvAim())){
+            trdProductDeal.setInvAim(entrustDto.getInvAim());
+        }else{
+            // 查询持仓的投资目的
+            Map<String,Object> param = new HashMap<>();
+            param.put("dealDate", trdProductDeal.getTradeDate());
+            param.put("finProductId",trdProductDeal.getFinprodId());
+            param.put("secManageAcctId",dealDto.getSecAcctId());
+            List<PtlSecPosition>  ptlSecPositions = exchangeTransMatchCommonMapper.searchPtlSecPositionList(param);
+            if(CollectionUtils.isNotEmpty(ptlSecPositions)){
+                trdProductDeal.setInvAim(ptlSecPositions.get(0).getInvAim());
+            }
+        }
+
         // 交易状态
         trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
         // 是否已撤销
@@ -340,7 +413,11 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
 
         // 申购模式
         if ((DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(trdProductDeal.getFinprodType2()))
-                && DictCodeList.交易方向_申购确认.getValue().equals(trdProductDeal.getPs())) {
+                // GZYHTZJY-1000: 未对申购方向的申购模式进行赋值,导致撤销批处理查询未查到 fuyongsheng modify 20211230 start
+//                && DictCodeList.交易方向_申购确认.getValue().equals(trdProductDeal.getPs())) {
+                && (DictCodeList.交易方向_申购确认.getValue().equals(trdProductDeal.getPs())
+                    || DictCodeList.交易方向_申购.getValue().equals(trdProductDeal.getPs()))) {
+            // GZYHTZJY-1000: 未对申购方向的申购模式进行赋值,导致撤销批处理查询未查到 fuyongsheng modify 20211230 end
             trdProductDealAdd.setPurchModle(DictCodeListExt2.申购方式_网上申购.getValue());
         }
         if(StringUtil.equals(DictCodeListExt3.下行交易匹配类型_自动匹配.getValue(),dealDto.getMatchType())) {
@@ -368,55 +445,72 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
      */
     public List<TrdTradeFeeTotal> genTrdTradeFeeTotalList(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal) {
         List<TrdTradeFeeTotal> trdTradeFeeTotalList = new ArrayList<>();
-        TrdTradeFeeTotal stampFee = new TrdTradeFeeTotal();
-        stampFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
-        stampFee.setFeeType(DictCodeListExt1.一次性费用类型_印花税.getValue());
-        stampFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
-        stampFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getSxfAmt()));
 
-        TrdTradeFeeTotal jsfFee = new TrdTradeFeeTotal();
-        jsfFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
-        jsfFee.setFeeType(DictCodeListExt1.一次性费用类型_经手费.getValue());
-        jsfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
-        jsfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getJsfAmt()));
+        if (dealDto.getSxfAmt() != null && BigDecimal.ZERO.compareTo(dealDto.getSxfAmt()) < 0) {
+            TrdTradeFeeTotal stampFee = new TrdTradeFeeTotal();
+            stampFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
+            stampFee.setFeeType(DictCodeListExt1.一次性费用类型_印花税.getValue());
+            stampFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+            stampFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getSxfAmt()));
+            trdTradeFeeTotalList.add(stampFee);
+        }
 
-        TrdTradeFeeTotal ghfFee = new TrdTradeFeeTotal();
-        ghfFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
-        ghfFee.setFeeType(DictCodeListExt1.一次性费用类型_过户费.getValue());
-        ghfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
-        ghfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getGhfAmt()));
+        if (dealDto.getJsfAmt() != null && BigDecimal.ZERO.compareTo(dealDto.getJsfAmt()) < 0) {
+            TrdTradeFeeTotal jsfFee = new TrdTradeFeeTotal();
+            jsfFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
+            jsfFee.setFeeType(DictCodeListExt1.一次性费用类型_经手费.getValue());
+            jsfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+            jsfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getJsfAmt()));
+            trdTradeFeeTotalList.add(jsfFee);
+        }
 
-        TrdTradeFeeTotal zgfFee = new TrdTradeFeeTotal();
-        zgfFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
-        zgfFee.setFeeType(DictCodeListExt1.一次性费用类型_证管费.getValue());
-        zgfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
-        zgfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getZgfAmt()));
+        if (dealDto.getGhfAmt() != null && BigDecimal.ZERO.compareTo(dealDto.getGhfAmt()) < 0) {
+            TrdTradeFeeTotal ghfFee = new TrdTradeFeeTotal();
+            ghfFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
+            ghfFee.setFeeType(DictCodeListExt1.一次性费用类型_过户费.getValue());
+            ghfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+            ghfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getGhfAmt()));
+            trdTradeFeeTotalList.add(ghfFee);
+        }
 
-        TrdTradeFeeTotal sxfFee = new TrdTradeFeeTotal();
-        sxfFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
-        sxfFee.setFeeType(DictCodeListExt1.一次性费用类型_交易手续费.getValue());
-        sxfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
-        sxfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getSxfAmt()));
+        if (dealDto.getZgfAmt() != null && BigDecimal.ZERO.compareTo(dealDto.getZgfAmt()) < 0) {
+            TrdTradeFeeTotal zgfFee = new TrdTradeFeeTotal();
+            zgfFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
+            zgfFee.setFeeType(DictCodeListExt1.一次性费用类型_证管费.getValue());
+            zgfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+            zgfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getZgfAmt()));
+            trdTradeFeeTotalList.add(zgfFee);
+        }
 
-        TrdTradeFeeTotal settleFee = new TrdTradeFeeTotal();
-        settleFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
-        settleFee.setFeeType(DictCodeListExt1.一次性费用类型_结算费.getValue());
-        settleFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
-        settleFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getSettleFee()));
+        if (dealDto.getSxfAmt() != null && BigDecimal.ZERO.compareTo(dealDto.getSxfAmt()) < 0) {
+            TrdTradeFeeTotal sxfFee = new TrdTradeFeeTotal();
+            sxfFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
+            sxfFee.setFeeType(DictCodeListExt1.一次性费用类型_交易手续费.getValue());
+            sxfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+            sxfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getSxfAmt()));
+            trdTradeFeeTotalList.add(sxfFee);
+        }
 
-        TrdTradeFeeTotal commissionAmt = new TrdTradeFeeTotal();
-        commissionAmt.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
-        commissionAmt.setFeeType(DictCodeListExt1.一次性费用类型_佣金.getValue());
-        commissionAmt.setIsPayWithTrade(dealDto.getIsPayWithTrade());
-        commissionAmt.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getCommissionAmt()));
+        if (dealDto.getSettleFee() != null && BigDecimal.ZERO.compareTo(dealDto.getSettleFee()) < 0) {
+            TrdTradeFeeTotal settleFee = new TrdTradeFeeTotal();
+            settleFee.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
+            settleFee.setFeeType(DictCodeListExt1.一次性费用类型_结算费.getValue());
+            settleFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+            settleFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getSettleFee()));
+            trdTradeFeeTotalList.add(settleFee);
+        }
 
-        trdTradeFeeTotalList.add(stampFee);
-        trdTradeFeeTotalList.add(jsfFee);
-        trdTradeFeeTotalList.add(ghfFee);
-        trdTradeFeeTotalList.add(zgfFee);
-        trdTradeFeeTotalList.add(sxfFee);
-        trdTradeFeeTotalList.add(settleFee);
-        trdTradeFeeTotalList.add(commissionAmt);
+        if (dealDto.getCommissionAmt() != null && BigDecimal.ZERO.compareTo(dealDto.getCommissionAmt()) < 0) {
+            TrdTradeFeeTotal commissionAmt = new TrdTradeFeeTotal();
+            commissionAmt.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
+            commissionAmt.setFeeType(DictCodeListExt1.一次性费用类型_佣金.getValue());
+            commissionAmt.setIsPayWithTrade(dealDto.getIsPayWithTrade());
+            if (StringUtil.isBlank(commissionAmt.getIsPayWithTrade())) {
+                commissionAmt.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+            }
+            commissionAmt.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getCommissionAmt()));
+            trdTradeFeeTotalList.add(commissionAmt);
+        }
         return trdTradeFeeTotalList;
     }
 
@@ -535,7 +629,7 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
         // 本方资金账户
         stlPayOrders.setMyAcctNo(dealDto.getAcctNo());
         // 结算金额
-        stlPayOrders.setSettleAmt(trdProductDeal.getTradeAmt());
+        stlPayOrders.setSettleAmt(null != trdProductDeal.getTradeAmt() ? trdProductDeal.getTradeAmt() : BigDecimal.ZERO);
         // 币种
         stlPayOrders.setCcy(trdProductDeal.getCcy());
         // 是否需要发送

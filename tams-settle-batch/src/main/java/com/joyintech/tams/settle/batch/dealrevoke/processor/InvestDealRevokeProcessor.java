@@ -43,7 +43,7 @@ public class InvestDealRevokeProcessor extends BaseProcessor<NeedOperateEntity, 
         // 交易撤销逻辑
         BaseRevokeService revokeService = (BaseRevokeService)SpringContextUtil.getBean(secType + BaseRevokeService.REVOKE_BEAN_NAME);
         if(CollectionUtils.isNotEmpty(tradeIdList) || CollectionUtils.isNotEmpty(totalTradeIdList)) {
-            revokeService.doRevoke(tradeIdList, totalTradeIdList);
+            revokeService.doRevoke(item.getTradeIdMap(), item.getTotalTradeIdMap());
         }
         List<String> orderIds = new ArrayList<>();
         if (!StringUtil.isEmptyList(tradeIdList)){
@@ -56,6 +56,9 @@ public class InvestDealRevokeProcessor extends BaseProcessor<NeedOperateEntity, 
         investDealRevokeService.deletePositionFlow(item.getTradeDate(), item.getPortfolioIdList(), revokeService.getBusiType(),orderIds);
         // 根据交易编号删除日间指令现金流水（此逻辑添加时因为日间委托现金流水表的orderId存在值是交易编号的记录）
         investDealRevokeService.deleteEtrCashPositionFlowByTrdId(tradeIdList, totalTradeIdList);
+
+        //删除日终交易占用的委托完成度信息前，先更新指令状态-》修改为已接收
+        investDealRevokeService.updateEtrStatusByTrdId(tradeIdList,totalTradeIdList);
         // 删除日终交易占用的委托完成度信息（此逻辑添加时因为日终批处理生成的数据要删除）
         investDealRevokeService.deleteEtrFinishStatusByTrdId(tradeIdList, totalTradeIdList);
         

@@ -503,4 +503,9 @@ public interface BussinessConstant {
      * 修改债券计划是否需要重新生成待交收数据
      */
     String IS_TODO_SETTLE_FLAG = "IS_TODO_SETTLE_FLAG";
+
+	 /**
+     * 场内交易指令是否开启多组合指令
+     */
+    String IS_NEED_EXCHANGE_MULTI_PTL = "IS_NEED_EXCHANGE_MULTI_PTL";
 }

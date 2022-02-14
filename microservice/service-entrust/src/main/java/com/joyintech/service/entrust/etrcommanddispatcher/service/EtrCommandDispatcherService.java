@@ -1,7 +1,6 @@
 package com.joyintech.service.entrust.etrcommanddispatcher.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,15 +11,10 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrcommanddispatcher.dao.EtrCommandDispatcherMapper;
 import com.joyintech.service.entrust.etrcommanddispatcher.dto.EtrCommandDispatcherDto;
 import com.joyintech.service.entrust.etrcommanddispatcher.dto.EtrCommandDispatcherTotalDto;
 import com.joyintech.service.entrust.etrcommanddispatcher.dto.EtrTradePledgeDto;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 
@@ -110,7 +104,8 @@ public class EtrCommandDispatcherService extends BaseService<EtrCommandDispatche
     	}
     	return pledgelist;
     }
-    
+
+
 	@SuppressWarnings("unchecked")
 	public void sendMessageByInf(EtrCommandDispatcherTotalDto dto) {
 		logger.info("调用交易系统指令分发接口【{}】  接口URL：" + ServiceApplication.EXCHANGE_SERVICE_NAME + "/joyin/instruction/distribute");
