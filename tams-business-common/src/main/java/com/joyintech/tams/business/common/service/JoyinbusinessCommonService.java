@@ -106,6 +106,7 @@ public class JoyinbusinessCommonService extends BaseService {
     public Page<SelectOptionDto> selectPortfolioIdList(CfetsSearchInfoRequest dto) {
         Map<String, Object> param =new HashMap<>();
         param.put("search",dto.getSearch());
+        param.put("platDate",DateUtil.platDateFromCache());
         if(StringUtil.isNotEmpty(dto.getPs()) && StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_赎回.getValue())){
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.selectPortfolioIdList(param));
         }
