@@ -35,6 +35,7 @@ import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
+import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoQuotedPrice004Service;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
@@ -117,6 +118,8 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
 
     @Autowired
     private SysWflBusinessListMapper sysWflBusinessListMapper;
+    @Autowired
+    private CfetsRepoQuotedPrice004Service cfetsRepoQuotedPrice004Service;
 
     public AjaxResult checkNotEmpty(CfetsBondDealQuoteCommonDto entity) {
         AjaxResult ajaxResult = new AjaxResult();
@@ -174,6 +177,12 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
             }
             if(null==entity.getSettleType()){
                 errorList.add(new ValidMessage("请输入清算类型"));
+            }
+            if (StringUtil.isNotEmpty(entity.getCounterId())) {
+                String trader = cfetsRepoQuotedPrice004Service.findTraderByPartyId(entity.getCounterId());
+                if (!StringUtil.isNotEmpty(trader)) {
+                    errorList.add(new ValidMessage("选择的对手方未与系统中交易对手关联，请先去关联"));
+                }
             }
         }
         /*if(StringUtil.equals(sellPara,"02")){
