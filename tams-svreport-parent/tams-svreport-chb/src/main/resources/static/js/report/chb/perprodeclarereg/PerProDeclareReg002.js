@@ -14,7 +14,6 @@
     	 * 获取列表参数
     	 */
         var object = $.serializeToObject('#submitForm', false);
-        debugger;
         if (!FileCommon || !FileCommon.getUploadFileInfo() || FileCommon.getUploadFileInfo().length == 0) {
             Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0054"));
             return;

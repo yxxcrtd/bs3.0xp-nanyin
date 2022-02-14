@@ -146,24 +146,28 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                 exchangeTransMatchCommonDto.setSeqId(settleTransDataDto.getTradeId());
 
                 if(StringUtil.isNotEmpty(settleTransDataDto.getEntrustId())){
-                    exchangeTransMatchCommonDto.setEntrustIdList(Arrays.asList(etrEntrustDtos.get(0).getEntrustId()));
+                    // modify by etliu 20211210 start
+                    // ZGZGST-4158: 重新跑清结算的批处理后，结算数据与当天全部的场内指令进行了自动匹配
+//                    exchangeTransMatchCommonDto.setEntrustIdList(Arrays.asList(etrEntrustDtos.get(0).getEntrustId()));
+                    exchangeTransMatchCommonDto.setEntrustIdList(Arrays.asList(settleTransDataDto.getEntrustId()));
+                    // modify by etliu 20211210 end
                 }else{
                     String busiKey = StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(), DateUtil.format(settleTransDataDto.getTradeDate()),settleTransDataDto.getTradePlat(),settleTransDataDto.getPs()),"_");
                     if(etrEntrustMap.containsKey(busiKey)){
-                        List<EtrEntrustDto> etrEntrusts = etrEntrustMap.get(busiKey);
-                        if(null!=etrEntrusts&&!StringUtil.isEmptyList(etrEntrusts)){
-                            if(etrEntrustDtos.size()==1){
-                                exchangeTransMatchCommonDto.setEntrustIdList(Arrays.asList(etrEntrustDtos.get(0).getEntrustId()));
+                        List<EtrEntrustDto> currEtrEntrustList = etrEntrustMap.get(busiKey);
+                        if(null!=currEtrEntrustList&&!StringUtil.isEmptyList(currEtrEntrustList)){
+                            if(currEtrEntrustList.size()==1){
+                                exchangeTransMatchCommonDto.setEntrustIdList(Arrays.asList(currEtrEntrustList.get(0).getEntrustId()));
                             }
-                            if(etrEntrustDtos.size()>1){
-                                List<String> entrustIds = etrEntrustDtos.stream().map(e -> e.getEntrustId()).collect(Collectors.toList());
+                            if(currEtrEntrustList.size()>1){
+                                List<String> entrustIds = currEtrEntrustList.stream().map(e -> e.getEntrustId()).collect(Collectors.toList());
                                 //委托数量汇总
-                                BigDecimal entrustNumTotal = etrEntrusts.stream().map(EtrEntrustDto::getEntrustNum).reduce(BigDecimal.ZERO, BigDecimal::add);
+                                BigDecimal entrustNumTotal = currEtrEntrustList.stream().map(EtrEntrustDto::getEntrustNum).reduce(BigDecimal.ZERO, BigDecimal::add);
                                 if(null!=settleTransDataDto.getShareAmt()&&settleTransDataDto.getShareAmt().compareTo(entrustNumTotal)>=0){
                                     exchangeTransMatchCommonDto.setEntrustIdList(entrustIds);
                                 }else{
                                     //委托金额汇总
-                                    BigDecimal entrustAmtTotal = etrEntrusts.stream().map(EtrEntrustDto::getEntrustAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+                                    BigDecimal entrustAmtTotal = currEtrEntrustList.stream().map(EtrEntrustDto::getEntrustAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
                                     if(null!=settleTransDataDto.getTradeAmt()&&settleTransDataDto.getTradeAmt().compareTo(entrustAmtTotal)>=0){
                                         exchangeTransMatchCommonDto.setEntrustIdList(entrustIds);
                                     }

@@ -17,13 +17,17 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CAL_MODE" property="calMode" jdbcType="VARCHAR" />
+        <result column="EXERCISE_PRICE" property="exercisePrice" jdbcType="DECIMAL" />
+        <result column="REDEEM_RATE" property="redeemRate" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         TOTLE_TRADE_ID TOTLE_TRADE_ID, OUR_SHARE_AMT OUR_SHARE_AMT, LENDIN_SHARE_AMT LENDIN_SHARE_AMT, 
         OUR_CPRICE_AMT OUR_CPRICE_AMT, LENDIN_CPRICE_AMT LENDIN_CPRICE_AMT, OUR_FPRICE_AMT OUR_FPRICE_AMT, 
         LENDIN_FPRICE_AMT LENDIN_FPRICE_AMT, OUR_INT_AMT OUR_INT_AMT, LENDIN_INT_AMT LENDIN_INT_AMT, 
         ACT_SETTE_DATE ACT_SETTE_DATE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
-        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CAL_MODE CAL_MODE, 
+        EXERCISE_PRICE EXERCISE_PRICE, REDEEM_RATE REDEEM_RATE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -50,13 +54,15 @@
             OUR_CPRICE_AMT, LENDIN_CPRICE_AMT, OUR_FPRICE_AMT, 
             LENDIN_FPRICE_AMT, OUR_INT_AMT, LENDIN_INT_AMT, 
             ACT_SETTE_DATE, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            CAL_MODE, EXERCISE_PRICE, REDEEM_RATE
             )
         values (#{totleTradeId,jdbcType=VARCHAR}, #{ourShareAmt,jdbcType=DECIMAL}, #{lendinShareAmt,jdbcType=DECIMAL}, 
             #{ourCpriceAmt,jdbcType=DECIMAL}, #{lendinCpriceAmt,jdbcType=DECIMAL}, #{ourFpriceAmt,jdbcType=DECIMAL}, 
             #{lendinFpriceAmt,jdbcType=DECIMAL}, #{ourIntAmt,jdbcType=DECIMAL}, #{lendinIntAmt,jdbcType=DECIMAL}, 
             #{actSetteDate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
-            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{calMode,jdbcType=VARCHAR}, #{exercisePrice,jdbcType=DECIMAL}, #{redeemRate,jdbcType=DECIMAL}
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RegFinProductDealTotalAdd" >
@@ -107,6 +113,15 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="calMode != null" >
+                CAL_MODE,
+            </if>
+            <if test="exercisePrice != null" >
+                EXERCISE_PRICE,
+            </if>
+            <if test="redeemRate != null" >
+                REDEEM_RATE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="totleTradeId != null" >
@@ -154,17 +169,26 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="calMode != null" >
+                #{calMode,jdbcType=VARCHAR},
+            </if>
+            <if test="exercisePrice != null" >
+                #{exercisePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="redeemRate != null" >
+                #{redeemRate,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RegFinProductDealTotalAdd" >
         insert into REG_FIN_PRODUCT_DEAL_TOTAL_ADD(TOTLE_TRADE_ID, OUR_SHARE_AMT, LENDIN_SHARE_AMT, 
         OUR_CPRICE_AMT, LENDIN_CPRICE_AMT, OUR_FPRICE_AMT, LENDIN_FPRICE_AMT, OUR_INT_AMT, 
         LENDIN_INT_AMT, ACT_SETTE_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-        UPDATE_TIME)
+        UPDATE_TIME, CAL_MODE, EXERCISE_PRICE, REDEEM_RATE)
         select TOTLE_TRADE_ID, OUR_SHARE_AMT, LENDIN_SHARE_AMT, 
             OUR_CPRICE_AMT, LENDIN_CPRICE_AMT, OUR_FPRICE_AMT, LENDIN_FPRICE_AMT, OUR_INT_AMT, 
             LENDIN_INT_AMT, ACT_SETTE_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
-            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CAL_MODE, EXERCISE_PRICE, REDEEM_RATE
              from REG_FIN_PRODUCT_DEAL_TOTAL_ADD
              where 1 = 1 and TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </insert>
@@ -204,6 +228,15 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="calMode != null" >
+                CAL_MODE = #{calMode,jdbcType=VARCHAR},
+            </if>
+            <if test="exercisePrice != null" >
+                EXERCISE_PRICE = #{exercisePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="redeemRate != null" >
+                REDEEM_RATE = #{redeemRate,jdbcType=DECIMAL},
+            </if>
         </set>
         where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </update>
@@ -219,7 +252,10 @@
             LENDIN_INT_AMT = #{lendinIntAmt,jdbcType=DECIMAL},
             ACT_SETTE_DATE = #{actSetteDate,jdbcType=DATE},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            CAL_MODE = #{calMode,jdbcType=VARCHAR},
+            EXERCISE_PRICE = #{exercisePrice,jdbcType=DECIMAL},
+            REDEEM_RATE = #{redeemRate,jdbcType=DECIMAL}
         where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </update>
 </mapper>

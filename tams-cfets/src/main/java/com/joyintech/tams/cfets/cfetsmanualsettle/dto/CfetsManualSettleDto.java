@@ -1,6 +1,8 @@
 package com.joyintech.tams.cfets.cfetsmanualsettle.dto;
 
+import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import com.joyintech.workflow.engine.dto.ProcessEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -16,7 +18,7 @@ import java.math.BigDecimal;
  */
 
 @ApiModel(value="银行间手工交收参数",description="银行间手工交收参数")
-public class CfetsManualSettleDto {
+public class CfetsManualSettleDto extends BaseEntity implements ProcessEntity {
 
     @ApiModelProperty(name="settleStatus",value="交收状态CODE",example="01")
     private String settleStatus;
@@ -24,6 +26,7 @@ public class CfetsManualSettleDto {
     @ApiModelProperty(name="settleStatusStr",value="交收状态",example="未交收")
     private String settleStatusStr;
 
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     @ApiModelProperty(name="tradeId",value="原业务编号",example="A1")
     private String tradeId;
 
@@ -116,6 +119,24 @@ public class CfetsManualSettleDto {
 
     @ApiModelProperty(name="seqNo",value="交收流水序号",example="不展示仅供后台使用")
     private String seqNo;
+
+    @ApiModelProperty(name="tradeMarketMode",value="交易市场",example="01/02")
+    private String tradeMarketMode;
+
+    @ApiModelProperty(name="tradeMarketModeStr",value="交易市场",example="一级/二级市场")
+    private String tradeMarketModeStr;
+
+    // 要素ID
+    private String elementId;
+
+    // 操作类型 保存 提交
+    private String operateType;
+
+    // 按钮类型 交收01、回溯02、交收失败04、修改05
+    private String buttonType;
+
+    @ApiModelProperty(name="remark",value="交收失败原因",example="A1")
+    private String remark;
 
     public String getSettleStatus() {
         return settleStatus;
@@ -379,5 +400,53 @@ public class CfetsManualSettleDto {
 
     public void setSeqNo(String seqNo) {
         this.seqNo = seqNo;
+    }
+
+    public String getElementId() {
+        return elementId;
+    }
+
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
+    }
+
+    public String getOperateType() {
+        return operateType;
+    }
+
+    public void setOperateType(String operateType) {
+        this.operateType = operateType;
+    }
+
+    public String getButtonType() {
+        return buttonType;
+    }
+
+    public void setButtonType(String buttonType) {
+        this.buttonType = buttonType;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getTradeMarketMode() {
+        return tradeMarketMode;
+    }
+
+    public void setTradeMarketMode(String tradeMarketMode) {
+        this.tradeMarketMode = tradeMarketMode;
+    }
+
+    public String getTradeMarketModeStr() {
+        return tradeMarketModeStr;
+    }
+
+    public void setTradeMarketModeStr(String tradeMarketModeStr) {
+        this.tradeMarketModeStr = tradeMarketModeStr;
     }
 }

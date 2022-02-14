@@ -132,7 +132,10 @@ public class ReconInterfController {
     public void execute(@RequestBody Map<String,Object> param) {
         try{
             logger.debug("接口平台调用批处理开始");
-            param.put("beanNames", Arrays.asList("autoReconciliationTask","stlSettleTransDataGatherTask","stlDownDataGatherTask"));
+            // modify by fuyongsheng 20211201 接收对账单文件消息后新增批处理 start
+            // param.put("beanNames", Arrays.asList("autoReconciliationTask","stlSettleTransDataGatherTask","stlDownDataGatherTask"));
+            param.put("beanNames", Arrays.asList("autoReconciliationTask","stlSettleTransDataGatherTask","stlDownDataGatherTask","investDealRevokeTask","stlDownDataDealTask"));
+            // modify by fuyongsheng 20211201 接收对账单文件消息后新增批处理 end
             if(!param.containsKey("execDate")){
                 param.put("execDate", DateUtil.format(iPlatformDate.getSysDate(),"yyyyMMdd"));
             } else {
@@ -192,7 +195,10 @@ public class ReconInterfController {
 
             //----------------------------------------------------------------------------------------------
             logger.debug("接口平台调用对账单处理第四步-调用批处理开始");
-            param.put("beanNames", Arrays.asList("autoReconciliationTask","stlSettleTransDataGatherTask","stlDownDataGatherTask"));
+            // modify by fuyongsheng 20211201 接收对账单文件消息后新增批处理 start
+            // param.put("beanNames", Arrays.asList("autoReconciliationTask","stlSettleTransDataGatherTask","stlDownDataGatherTask"));
+            param.put("beanNames", Arrays.asList("autoReconciliationTask","stlSettleTransDataGatherTask","stlDownDataGatherTask","investDealRevokeTask","stlDownDataDealTask"));
+            // modify by fuyongsheng 20211201 接收对账单文件消息后新增批处理 end
             batchManualExcuteService.execute(param);
             logger.debug("接口平台调用对账单处理第四步-批处理成功");
             //----------------------------------------------------------------------------------------------

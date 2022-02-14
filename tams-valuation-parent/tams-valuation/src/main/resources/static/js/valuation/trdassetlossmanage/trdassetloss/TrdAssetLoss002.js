@@ -194,7 +194,6 @@
                             if (resultObj.tradeMarket) {
                                 $("#tradeMarket").val(resultObj.tradeMarket).trigger('change');
                             }
-                            debugger;
                             if (resultObj.secId) {
                                 $("#secId").val(resultObj.secId).trigger('change');
                             }

@@ -47,25 +47,25 @@
         ORDER BY BS.SCENE_NODE_ID
     </select>
 
-	<update id="deleteConfig">
+    <update id="deleteConfig">
         DELETE FROM BOK_SCENECONFIG
         WHERE SCENE_NODE_ID LIKE concat_ws('',#{sceneNodeId},'%')
     </update>
-	<update id="updateSceneSubjectToD">
+    <update id="updateSceneSubjectToD">
         UPDATE BOK_SCENESUBJECT SET UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}, UPDATE_USER = #{updateUser} 
         WHERE SCENE_NODE_ID LIKE concat_ws('',#{sceneNodeId}, '%')
     </update>
-	<sql id="whereCondition">
+    <sql id="whereCondition">
         WHERE 1 = 1
         AND BS.BOOKSET_ID = #{booksetId}
         <if test="nodeId != null and nodeId != ''">
             AND BS.SCENE_NODE_ID LIKE
             concat_ws(IFNULL((SELECT SCENE_NODE_ID
-                FROM BOK_SCENECONFIG
-                WHERE NODE_ID = #{ACCOUNTEVENTS}
-                AND BOOKSET_ID = #{booksetId}
-                AND NODE_VALUE = #{nodeId})
-                ,'#无该节点内容#'),'%')
+            FROM BOK_SCENECONFIG
+            WHERE NODE_ID = #{ACCOUNTEVENTS}
+            AND BOOKSET_ID = #{booksetId}
+            AND NODE_VALUE = #{nodeId})
+            ,'#无该节点内容#'),'%')
         </if>
     </sql>
 </mapper>

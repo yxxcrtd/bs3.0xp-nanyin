@@ -2,14 +2,12 @@ package com.joyintech.background.component.common.pack.common.json;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -35,7 +33,7 @@ public class CustomDateDeserialize extends JsonDeserializer<Date> {
         }
         catch (NumberFormatException e) {
             try {
-                date = DateUtils.parseDate(text,"yyyy-MM-dd","yyyy-MM-dd HH:mm:ss");
+                date = DateUtils.parseDate(text,"yyyy-MM-dd","yyyy-MM-dd HH:mm:ss","yyyy-MM-dd'T'HH:mm:ss.SSSXXX","yyyy-MM-dd'T'HH:mm:ss.SSSZ");
             } catch (ParseException ex) {
                 ex.printStackTrace();
             }

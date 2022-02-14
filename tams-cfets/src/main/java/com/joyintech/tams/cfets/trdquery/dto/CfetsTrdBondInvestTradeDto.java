@@ -19,6 +19,8 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsBussCombDistribtDto;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.trade.dto.BussTrdAvailableCashQuery;
 import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
@@ -433,7 +435,7 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
      *成交编号
      * @return
      */
-    private String execId;
+    private String execid;
     /**
      *资产代码
      * @return
@@ -450,6 +452,27 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
      * @return
      */
     private BigDecimal qty;
+
+    /**
+     * 本方Str
+     * @return
+     */
+    private String ouPartyIdStr;
+    /**
+     * 本方交易员Str
+     * @return
+     */
+    private String ouTraderIdStr;
+    /**
+     * 对方Str
+     * @return
+     */
+    private String counterIdStr;
+    /**
+     * 对方交易员Str
+     * @return
+     */
+    private String counterTraderStr;
 
     public String getSettleIsPayWithTrade() {
         return settleIsPayWithTrade;
@@ -702,6 +725,10 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
      * 交收状态
      */
     private String settleStatus;
+    /**
+     * 有效状态
+     */
+    private String effectiveStatus;
 
 
 
@@ -2239,6 +2266,10 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
      * 待转让利息
      */
     private BigDecimal assignIntamt;
+    /**
+     * 组合分配
+     */
+    List<PortIntFenPeiInfoDto> cfetsBussCombDistribtList;
 
     public TrdProductDealAdd getTrdProductDealAdd() {
         return trdProductDealAdd;
@@ -2440,12 +2471,12 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
         this.ouTraderId = ouTraderId;
     }
 
-    public String getExecId() {
-        return execId;
+    public String getExecid() {
+        return execid;
     }
 
-    public void setExecId(String execId) {
-        this.execId = execId;
+    public void setExecid(String execid) {
+        this.execid = execid;
     }
 
     public String getFinprodMarketId() {
@@ -2494,5 +2525,53 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
 
     public void setSettleStatus(String settleStatus) {
         this.settleStatus = settleStatus;
+    }
+
+    public String getEffectiveStatus() {
+        return effectiveStatus;
+    }
+
+    public void setEffectiveStatus(String effectiveStatus) {
+        this.effectiveStatus = effectiveStatus;
+    }
+
+    public List<PortIntFenPeiInfoDto> getCfetsBussCombDistribtList() {
+        return cfetsBussCombDistribtList;
+    }
+
+    public void setCfetsBussCombDistribtList(List<PortIntFenPeiInfoDto> cfetsBussCombDistribtList) {
+        this.cfetsBussCombDistribtList = cfetsBussCombDistribtList;
+    }
+
+    public String getOuPartyIdStr() {
+        return ouPartyIdStr;
+    }
+
+    public void setOuPartyIdStr(String ouPartyIdStr) {
+        this.ouPartyIdStr = ouPartyIdStr;
+    }
+
+    public String getOuTraderIdStr() {
+        return ouTraderIdStr;
+    }
+
+    public void setOuTraderIdStr(String ouTraderIdStr) {
+        this.ouTraderIdStr = ouTraderIdStr;
+    }
+
+    public String getCounterIdStr() {
+        return counterIdStr;
+    }
+
+    public void setCounterIdStr(String counterIdStr) {
+        this.counterIdStr = counterIdStr;
+    }
+
+    public String getCounterTraderStr() {
+        return counterTraderStr;
+    }
+
+    public void setCounterTraderStr(String counterTraderStr) {
+        this.counterTraderStr = counterTraderStr;
     }
 }

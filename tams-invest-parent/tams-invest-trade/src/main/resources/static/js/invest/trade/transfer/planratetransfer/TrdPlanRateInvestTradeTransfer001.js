@@ -315,7 +315,6 @@
         });
         //风险试算
         $('#TrdPlanRateInvestTradeTransfer001_btn_risk').click(function(){
-        	debugger;
             var data = table.getAllRows();
             if(data != null && data != ''){
                 var object = $.serializeToObject('#trdPlanRateInvestTransferForm', true);

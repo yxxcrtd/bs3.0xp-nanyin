@@ -1,0 +1,68 @@
+/*
+ * 文件名：EtrExchangeTradeDto002.java
+ * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
+ * 描述：理财资管管理系统V2.0
+ * 修改人：chendijun
+ * 修改时间：2020年7月2日
+ * 修改内容：新建
+ * 系统名称：理财资管管理系统V2.0
+ */
+
+package com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.tams.business.common.dto.PageMode;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.systemtools.util.SysDatadictUtil;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * 〈一句话功能简述〉 〈功能详细描述〉
+ * 
+ * @author chendijun
+ * @version 1.0 2020年7月2日
+ * @see EtrExchangeOnWayRepRequestDto
+ * @since 1.0
+ */
+@ApiModel(value="在途回购查询请求参数",description="在途回购查询请求参数")
+public class EtrExchangeOnWayRepRequestDto{
+
+    @ApiModelProperty(name="tradeId",value="交易编号",example="A1")
+    private String tradeId;
+
+    @ApiModelProperty(name="pageMode",value="分页对象")
+    private PageMode pageMode;
+
+    private String userId;
+
+    public String getTradeId() {
+        return tradeId;
+    }
+
+    public void setTradeId(String tradeId) {
+        this.tradeId = tradeId;
+    }
+
+    public PageMode getPageMode() {
+        return pageMode;
+    }
+
+    public void setPageMode(PageMode pageMode) {
+        this.pageMode = pageMode;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+}

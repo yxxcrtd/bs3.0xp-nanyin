@@ -40,6 +40,9 @@ public class CfetsTrdQueryTradeInfoListRequest {
     @ApiModelProperty(name="finprodId",value="资产代码",example="字符串1,字符串2,...")
     private String finprodId;
 
+    @ApiModelProperty(name="portfolioId",value="组合代码",example="字符串1,字符串2,...")
+    private String portfolioId;
+
     @ApiModelProperty(name="busiType",value="业务类型",example="01")
     private String busiType;
 
@@ -72,6 +75,15 @@ public class CfetsTrdQueryTradeInfoListRequest {
 
     @ApiModelProperty(name="endDate",value="查询结束日期",example="12")
     private Date endDate;
+
+    @ApiModelProperty(name="tradeMarketMode",value="交易市场",example="01")
+    private String tradeMarketMode;
+
+    @ApiModelProperty(name="busiCode",value="业务编号",example="字符串1")
+    private String busiCode;
+
+    @ApiModelProperty(name="entrustId",value="指令代码",example="字符串1")
+    private String entrustId;
 
     public String getEffectiveStatus() {
         return effectiveStatus;
@@ -191,5 +203,37 @@ public class CfetsTrdQueryTradeInfoListRequest {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public String getPortfolioId() {
+        return portfolioId;
+    }
+
+    public void setPortfolioId(String portfolioId) {
+        this.portfolioId = portfolioId;
+    }
+
+    public String getTradeMarketMode() {
+        return tradeMarketMode;
+    }
+
+    public void setTradeMarketMode(String tradeMarketMode) {
+        this.tradeMarketMode = tradeMarketMode;
+    }
+
+    public String getBusiCode() {
+        return busiCode;
+    }
+
+    public void setBusiCode(String busiCode) {
+        this.busiCode = busiCode;
+    }
+
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
     }
 }

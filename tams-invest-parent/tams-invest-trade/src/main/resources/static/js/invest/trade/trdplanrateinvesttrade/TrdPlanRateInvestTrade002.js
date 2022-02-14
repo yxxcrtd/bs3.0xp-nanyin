@@ -136,10 +136,10 @@ var etrAmt = '';
 	            }
 	        }
 	        }
-            if(!$('#invAim').val()){
+            /*if(!$('#invAim').val()){
                 Joyin.error("请输入投资目的");
                 return;
-            }
+            }*/
 	     // 检查生成划款指令参数是否发生变化
 	        if (window.BussTrdTransferOrder['bussTrdTransferOrder'].isCalcConditionChanged()) {
 	            return;
@@ -206,7 +206,7 @@ var etrAmt = '';
 	                    });
 	                }
               },null,function (result) {
-                    var disabledFlag = $('#invAim').attr('disabled');
+                    var disabledFlag = $('#businessModel').attr('disabled');
                     if(disabledFlag) return;
                     var msg = result.errorList;
                     var message ="";
@@ -214,7 +214,7 @@ var etrAmt = '';
                         message = msg[i];
                         if(message.field!=null && message.field=='invAim'){
                             if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
-                                $('#invAim').textSelect('setValue', "FVTPL");
+                                $('#businessModel').textSelect('setValue', "FVTPL");
                                 break;
                             }
                         }
@@ -726,6 +726,9 @@ var etrAmt = '';
         //    $("#businessModelDiv").hide();
         // }
 
+        if($('#businessModel').val()) {
+            $('#businessModel').attr("disabled",true);
+        }
         /**
          * 资产改变
          */

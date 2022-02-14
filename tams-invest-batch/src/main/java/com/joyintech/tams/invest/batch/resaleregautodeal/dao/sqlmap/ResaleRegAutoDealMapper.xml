@@ -3,7 +3,7 @@
 <mapper namespace="com.joyintech.tams.invest.batch.resaleregautodeal.dao.ResaleRegAutoDealMapper">
 
     <!--查询需要处理的回售登记数据-->
-    <select id="listTotleTradeId">
+    <select id="listTotleTradeId" resultType="java.lang.String">
         SELECT
             TOTLE_TRADE_ID
         FROM
@@ -28,7 +28,7 @@
                 TRDQUTO_MATCH_INFO T3
             WHERE
                 T3.PRE_TRADE_ID = T1.TOTLE_TRADE_ID
-                AND MATCH_STATUS = '1')
+                AND TRD_CONF_STATUS = '1')
     </select>
 
 </mapper>

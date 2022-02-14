@@ -97,7 +97,6 @@
                 Joyin.error(JoyinUtil.getMessage("流程中的交易不允许撤销"));
                 return;
             }
-            debugger;
             var checkObj = {};
             checkObj.totleTradeId = selArr[0].totleTradeId;
             checkObj.tradeDate = selArr[0].tradeDate;

@@ -116,11 +116,8 @@ public class EtrPlanAssetNValidator implements EtrCommonValidator {
             BigDecimal proAvailableCash = dto.getProAvailableCash();
             BigDecimal assetAvailablePosition = dto.getAssetAvailablePosition();
             BigDecimal zero = new BigDecimal(0);
-            if (amt == null ) {
-                errorList.add(new ValidMessage("entrustAmt",this.getMessage("EtrComponent.entrustAmt")));
-            }
-            if (num == null) {
-                errorList.add(new ValidMessage("entrustNum",this.getMessage("ETR_ERROR_0065")));
+            if (amt == null && num == null) {
+                errorList.add(new ValidMessage(this.getMessage("ETR_PLANN_001")));
             }
             if (amt != null) {
                 if (!(amt.compareTo(zero) == 1)) {

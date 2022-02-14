@@ -1564,7 +1564,14 @@
                 }
             }, false);
         }
-
+        // add by etliu 20211223 start
+        // TISHKS-570: 【指令管理】【场内指令】【场内交易指令】右下角单组合指令，字段单位错误
+        else {
+            document.getElementById('tgAcctCash_' + currentTab).innerHTML  = '';
+            document.getElementById('secAcctCash_' + currentTab).innerHTML  = '';
+            document.getElementById('t1Cash_' + currentTab).innerHTML  = '';
+        }
+        // add by etliu 20211223 end
     };
 
     /**
@@ -1595,12 +1602,12 @@
                     if(finprodType2 == FINPROD_TYPE_TG_F06){
                         document.getElementById('positionAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.positionAmount, 2, 10000, 2)+'万份';
                         document.getElementById('canSellAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canSellAmount, 2, 10000, 2)+'万份';
-                        document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
+                        document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) + '元';
                     }
                     else if(finprodType2 == FINPROD_TYPE_TG_F10){
                         document.getElementById('positionAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.positionAmount, 2, 1, 2)+'股';
                         document.getElementById('canSellAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canSellAmount, 2, 1, 2)+'股';
-                        document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
+                        document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) + '元';
                     }
                     else{
                         //配债配股,质押券出入库不显示持仓数量，可卖数量，成本价
@@ -1612,13 +1619,30 @@
                         else {
                             document.getElementById('positionAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.positionAmount, 2, 10000, 2)+'万元';
                             document.getElementById('canSellAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canSellAmount, 2, 10000, 2)+'万元';
-                            document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
+                            document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) + '元';
                         }
                     }
                     //add by chenjiaxing 大宗交易指令、固收平台指令创建面板，选择的资产为基金时，“持仓数量、可卖数量、可买数量”单位显示“份” 20210826 end
+
+                    // add by etliu 20211223 start
+                    // TISHKS-570: 【指令管理】【场内指令】【场内交易指令】右下角单组合指令，字段单位错误
+                    if (!finprodType2) {
+                        document.getElementById('positionAmount_' + currentTab).innerHTML = "";
+                        document.getElementById('canSellAmount_' + currentTab).innerHTML = "";
+                        document.getElementById('costPrice_' + currentTab).innerHTML = "";
+                    }
+                    // add by etliu 20211223 end
                 }
             }, false);
         }
+        // add by etliu 20211223 start
+        // TISHKS-570: 【指令管理】【场内指令】【场内交易指令】右下角单组合指令，字段单位错误
+        else {
+            document.getElementById('positionAmount_' + currentTab).innerHTML = "";
+            document.getElementById('canSellAmount_' + currentTab).innerHTML = "";
+            document.getElementById('costPrice_' + currentTab).innerHTML = "";
+        }
+        // add by etliu 20211223 end
 
     };
 
@@ -1690,9 +1714,22 @@
 
                     }
                     //add by chenjiaxing 大宗交易指令、固收平台指令创建面板，选择的资产为基金时，“持仓数量、可卖数量、可买数量”单位显示“份” 20210826 end
+
+                    // add by etliu 20211223 start
+                    // TISHKS-570: 【指令管理】【场内指令】【场内交易指令】右下角单组合指令，字段单位错误
+                    if (!finprodType2) {
+                        document.getElementById('canBuyAmount_' + currentTab).innerHTML ='';
+                    }
+                    // add by etliu 20211223 end
                 }
             }, false);
         }
+        // add by etliu 20211223 start
+        // TISHKS-570: 【指令管理】【场内指令】【场内交易指令】右下角单组合指令，字段单位错误
+        else {
+            document.getElementById('canBuyAmount_' + currentTab).innerHTML ='';
+        }
+        // add by etliu 20211223 end
     }
 
     //add by chenjiaixng 20210907 债券净价交易添加偏离度展示 start
@@ -3418,7 +3455,7 @@
             targetTypeChange();
         });
         // 委托数量
-        $("#entrustNum_jj,#entrustNum_dz,#entrustNum_gd").change(function() {
+        $("#entrustNum_jj,#entrustNum_dz,#entrustNum_gd,#ps_jj").change(function() {
             entrustNumChange();
         });
         // 委托金额
@@ -3439,6 +3476,17 @@
                 calDeviationDegree();
             }
         });
+
+        // add by etliu 20211223 start
+        // TISHKS-570: 【指令管理】【场内指令】【场内交易指令】右下角单组合指令，字段单位错误
+        $("#entrustPrice_jj,#entrustPrice_dz,#entrustPrice_gd,#portfolioId_jj,#portfolioId_dz,#portfolioId_gd").change(function() {
+            if(setPageItemsFlag){
+                return;
+            }
+            calCanBuyAmount();
+        });
+        // add by etliu 20211223 end
+
         // 委托方向变更时
         $("#ps_jj,#ps_dz,#ps_gd").change(function() {
             if (parentPageModel!=PAGE_MODEL_REFERENCE){  //解决场内交易指令流程代办显示为0

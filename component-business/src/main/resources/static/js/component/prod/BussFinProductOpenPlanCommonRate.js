@@ -512,7 +512,6 @@
 	
 	//add by yujiaping 20210312 ZGBS-168 控制开放周期、开放天数、确认天数只能输入整数 start
 	var openCycleChange = function (){
-		debugger;
 		if(getElementById('openCycle').val()){
 		var r =/^\d+$/;
 		var flag=r.test(getElementById('openCycle').val());

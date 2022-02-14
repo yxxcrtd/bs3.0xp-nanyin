@@ -50,11 +50,20 @@ public class CfetsEtrIbRepoPositionRequest {
     @ApiModelProperty(name="systemAct",value="系统动作",example="01")
     private String systemAct;
 
+	@ApiModelProperty(name="decisionAct",value="决策动作",example="01")
+	private String decisionAct;
+
+	@ApiModelProperty(name="workFlowId",value="流程编号",example="01")
+	private String workFlowId;
+
     @ApiModelProperty(name="cdate",value="日期",example="2021-10-10")
     private Date cdate;
 
     @ApiModelProperty(name="ccy",value="币种",example="CNY")
     private String ccy;
+
+	@ApiModelProperty(name="repoPledgeModel",value="质押券模式",example="01")
+	private String repoPledgeModel;
 
     @ApiModelProperty(name="bTotalTradeId",value="前次交易编号",example="1")
     private String bTotalTradeId;
@@ -169,6 +178,22 @@ public class CfetsEtrIbRepoPositionRequest {
 		this.systemAct = systemAct;
 	}
 
+	public String getDecisionAct() {
+		return decisionAct;
+	}
+
+	public void setDecisionAct(String decisionAct) {
+		this.decisionAct = decisionAct;
+	}
+
+	public String getWorkFlowId() {
+		return workFlowId;
+	}
+
+	public void setWorkFlowId(String workFlowId) {
+		this.workFlowId = workFlowId;
+	}
+
 	public Date getCdate() {
 		return cdate;
 	}
@@ -209,5 +234,11 @@ public class CfetsEtrIbRepoPositionRequest {
 		this.ptlSecList = ptlSecList;
 	}
 
-    
+	public String getRepoPledgeModel() {
+		return repoPledgeModel;
+	}
+
+	public void setRepoPledgeModel(String repoPledgeModel) {
+		this.repoPledgeModel = repoPledgeModel;
+	}
 }

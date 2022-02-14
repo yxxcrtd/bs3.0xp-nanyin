@@ -152,22 +152,23 @@ spring:
 #    timeout: 20000
   redis:
     cluster:
-      nodes: 192.168.70.246:6379,192.168.70.246:6380,192.168.70.246:6381,192.168.70.246:6382,192.168.70.246:6383,192.168.70.246:6384
+      nodes: 192.168.90.47:6379,192.168.90.47:6380,192.168.90.47:6381,192.168.90.47:6382,192.168.90.47:6383,192.168.90.47:6384
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
-    reportSqlldrDatabaseName: 192.168.90.5:1521/orcl
+    username: BS303INIT_TEST1008
+    password: BS303INIT_TEST1008
+    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30INIT_XUQIU
-  sqldirpassword: BS30INIT_XUQIU
+  sqldiruserName: BS303INIT_TEST1008
+  sqldirpassword: BS303INIT_TEST1008
   #以下根据实际ip和端口进行修改
+  loadbalance: false
   micorservice:
     contextPath:
       single: true
@@ -198,17 +199,17 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
+    username: BS303INIT_TEST1008
+    password: BS303INIT_TEST1008
 #interf数据源配置
 interf:
    datasource:
-     url: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
+     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
      driverClassName: oracle.jdbc.driver.OracleDriver
-     username: BS30INIT_XUQIU
-     password: BS30INIT_XUQIU
+     username: BS303INIT_TEST1008
+     password: BS303INIT_TEST1008
 #日志路径配置
 log:
   path: /home/tams/logs/touguan/batch
@@ -221,7 +222,7 @@ eureka:
     enabled: false #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
 tx-lcn:
   client:
-    managerAddress: 192.168.70.246:8070
+    managerAddress: 192.168.90.47:8070
 #头寸引擎地址
 positionUrl: http://192.168.70.146:1667/dsp
 ---

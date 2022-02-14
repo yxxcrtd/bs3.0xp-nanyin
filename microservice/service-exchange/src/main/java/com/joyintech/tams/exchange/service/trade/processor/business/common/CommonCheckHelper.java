@@ -1,14 +1,16 @@
 package com.joyintech.tams.exchange.service.trade.processor.business.common;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.base.Strings;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.bean.MinTrdUnitLimit;
-import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
 import com.joyintech.tams.exchange.common.bean.investment.TradeTimeBean;
 import com.joyintech.tams.exchange.common.cache.QuoteTickService;
 import com.joyintech.tams.exchange.common.cache.TradeTimeService;
 import com.joyintech.tams.exchange.common.constant.*;
 import com.joyintech.tams.exchange.common.constant.instrument.SubStockType;
 import com.joyintech.tams.exchange.common.constant.joyin.InstructionPriceMode;
+import com.joyintech.tams.exchange.common.constant.joyin.Switches;
 import com.joyintech.tams.exchange.common.db.domain.*;
 import com.joyintech.tams.exchange.common.proto.QuoteProto;
 import com.joyintech.tams.exchange.common.utils.EntrustUtils;
@@ -16,6 +18,7 @@ import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import com.joyintech.tams.exchange.datacommon.db.service.EntrustService;
 import com.joyintech.tams.exchange.datacommon.db.service.InstrumentService;
 import com.joyintech.tams.exchange.datacommon.db.service.IntegratedEntrustService;
+import com.joyintech.tams.exchange.service.trade.management.service.CommonManagement;
 import com.joyintech.tams.exchange.service.trade.processor.business.price.PriceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,8 +56,85 @@ public class CommonCheckHelper {
     private TradeTimeService tradeTimeService;
     @Autowired
     private PriceHelper priceHelper;
+    @Autowired
+    private CommonManagement commonManagement;
 
+    // modify by swwan TISHKS-263 闭市校验无效 20211216 start
+    /**
+     * 检查是否在交易时间段内
+     * - 开启校验开关，交易时间段存在且当前时间不在交易时间段内，返回 true
+     * - 其他，返回false
+     */
     public boolean checkTradeTime(Instruction instruction, Instrument instrument, OrderInterface orderInterface) {
+
+        if (Objects.isNull(instruction) || Objects.isNull(instrument) || Objects.isNull(orderInterface)) {
+            logger.debug("checkTradeTime() called with parameters => 【instruction = {}】, 【instrument = {}】, 【orderInterface = {}】",
+                    instruction, instrument, orderInterface);
+            return false;
+        }
+        if (Switches.CLOSE.value.equals(commonManagement.getTradeTimeSwitch())) {
+            logger.debug("checkTradeTime system param: {} = {}",
+                    ExchangeConstant.ETR_TRADE_TIME_SWITCH,
+                    commonManagement.getTradeTimeSwitch());
+            return false;
+        }
+
+        TradeTimeBean tradeTimeBean = tradeTimeService.getTradeTimeByInstructionAndEntrustProp(instruction,
+                instrument.getAssetType1(), instrument.getSubStockType(), orderInterface.getEntrustProp());
+
+        if (Objects.isNull(tradeTimeBean)) {
+            logger.warn("获取交易时间段信息失败：instructionId {}", instruction.getEntrustId());
+            return false;
+        }
+        logger.debug("checkTradeTime tradeTimeBean : [{}]", JSON.toJSONString(tradeTimeBean));
+
+        // 早盘
+        String earlyOpenTime = tradeTimeBean.getEarlyOpenTime();
+        String earlyCloseTime = tradeTimeBean.getEarlyCloseTime();
+        // 午盘
+        String noonOpenTime = tradeTimeBean.getNoonOpenTime();
+        String noonCloseTime = tradeTimeBean.getNoonCloseTime();
+        // 晚盘
+        String nightOpenTime = tradeTimeBean.getNightOpenTime();
+        String nightCloseTime = tradeTimeBean.getNightCloseTime();
+
+        LocalTime now = LocalTime.now().withNano(0);
+
+        if (!(isTradeTime(earlyOpenTime, earlyCloseTime, now)
+                || isTradeTime(noonOpenTime, noonCloseTime, now)
+                || isTradeTime(nightOpenTime, nightCloseTime, now))) {
+
+            StringBuilder builder = new StringBuilder();
+            builder.append("当前时间[").append(now).append("]不允许委托,允许委托时间段为：[");
+            if (StringUtil.isNotEmpty(earlyOpenTime) && StringUtil.isNotEmpty(earlyCloseTime)) {
+                builder.append(earlyOpenTime).append("~").append(earlyCloseTime).append(";");
+            }
+            if (StringUtil.isNotEmpty(noonOpenTime) && StringUtil.isNotEmpty(noonCloseTime)) {
+                builder.append(noonOpenTime).append("~").append(noonCloseTime).append(";");
+            }
+            if (StringUtil.isNotEmpty(nightOpenTime) && StringUtil.isNotEmpty(nightCloseTime)) {
+                builder.append(nightOpenTime).append("~").append(nightCloseTime).append(";");
+            }
+            builder.append("]");
+            orderInterface.setErrorMsg(builder.toString());
+            orderInterface.setErrorCode(ErrorCode.INNER_RISK_ERROR.value);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否在交易时间端内
+     */
+    private boolean isTradeTime(String openTime, String closeTime, LocalTime now) {
+        return StringUtil.isNotEmpty(openTime)
+                && StringUtil.isNotEmpty(closeTime)
+                && now.compareTo(LocalTime.parse(openTime)) >= 0
+                && now.compareTo(LocalTime.parse(closeTime)) <= 0;
+    }
+
+
+   /* public boolean checkTradeTime(Instruction instruction, Instrument instrument, OrderInterface orderInterface) {
         TradeTimeBean tradeTimeBean = tradeTimeService.getTradeTimeByInstructionAndEntrustProp(instruction, instrument.getAssetType1(), instrument.getSubStockType(), orderInterface.getEntrustProp());
         if (Objects.nonNull(tradeTimeBean)) {
             String earlyOpenTime = tradeTimeBean.getEarlyOpenTime();
@@ -88,7 +168,8 @@ public class CommonCheckHelper {
             logger.info("获取交易时间段信息失败：instructionId {}", instruction.getEntrustId());
         }
         return false;
-    }
+    }*/
+    // modify by swwan TISHKS-263 闭市校验无效 20211216 end
 
     public String checkApplyEntrust(String entrustProp, String accountId, String stockCode, String instructionId) {
         //申购与配售只能申报一次

@@ -61,9 +61,9 @@ public class CfgDataTableService {
         if (null != dtCodes && dtCodes.size() > 0) {
             dtCodes.stream().forEach(dtCode -> {
                 //先查用户自定义设置，没有再查询默认设置
-                List<CfgDataTableShow> uDataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode,spcdCode, EFFERANGE_IS, userId);
+                List<CfgDataTableShow> uDataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode, EFFERANGE_IS, userId);
                 if (uDataList != null && uDataList.size() < 1) {
-                    List<CfgDataTableShow> dataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode,spcdCode, EFFERANGE_NO, null);
+                    List<CfgDataTableShow> dataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode, EFFERANGE_NO, null);
                     map.put(dtCode, dataList);
                 } else {
                     map.put(dtCode, uDataList);
@@ -80,9 +80,9 @@ public class CfgDataTableService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void setDataTable(List<CfgDataTableShow> dataTableShowList) {
-    	if (null == dataTableShowList || dataTableShowList.size() <= 0) {
-    	    return;
-    	}
+        if (null == dataTableShowList || dataTableShowList.size() <= 0) {
+            return;
+        }
         //获取登录用户的ID
         String userId = SecurityUtil.getLoginUser().getUserName();
         //先判断用户是否自定义过设置
@@ -90,10 +90,10 @@ public class CfgDataTableService {
         String pageCode = dataTableShow.getPageCode();
         String dtCode = dataTableShow.getDtCode();
         String spcdCode = dataTableShow.getSpcdCode();
-        CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode, spcdCode,userId);
+        CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode, spcdCode, userId);
         if (null != flag) {
             //删除用户原有自定义设置
-            cfgDataTableFlagMapper.deleteDataTable(pageCode, dtCode, spcdCode,userId);
+            cfgDataTableFlagMapper.deleteDataTable(pageCode, dtCode, spcdCode, userId);
             //新增用户修改后设置
             for (int i = 0; i < dataTableShowList.size(); i++) {
                 CfgDataTableShow data = dataTableShowList.get(i);
@@ -103,7 +103,7 @@ public class CfgDataTableService {
             }
             cfgDataTableMapper.insertCfgDataTableBatch(dataTableShowList);
             return;
-        } 
+        }
         //新增用户自定义设置
         for (int i = 0; i < dataTableShowList.size(); i++) {
             CfgDataTableShow data = dataTableShowList.get(i);
@@ -134,11 +134,31 @@ public class CfgDataTableService {
         //获取登录用户的ID
         String userId = SecurityUtil.getLoginUser().getUserName();
         //List<CfgDataTableShow> uDataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_IS, userId);
-        CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode,spcdCode, userId);
+        CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode, spcdCode, userId);
         if (null == flag) {
-            list = cfgDataTableMapper.getByPageCode(pageCode, dtCode,spcdCode, EFFERANGE_NO, USER_ID);
+            list = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode, EFFERANGE_NO, USER_ID);
         } else {
-            list = cfgDataTableMapper.getByPageCode(pageCode, dtCode,spcdCode, EFFERANGE_IS, userId);;
+            list = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode, EFFERANGE_IS, userId);
+        }
+        return list;
+    }
+
+    /**
+     * 根据pageCode，dtCode和spcdCode查询页面展示设置
+     *
+     * @param pageCode
+     * @param dtCode
+     * @return
+     */
+    public List<CfgDataTableShow> getByPageCodeAndDtCodes(String pageCode, String dtCode, List<String> spcdCodes) {
+        List<CfgDataTableShow> list;
+        //获取登录用户的ID
+        String userId = SecurityUtil.getLoginUser().getUserName();
+        CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCodes(pageCode, dtCode, spcdCodes, userId);
+        if (null == flag) {
+            list = cfgDataTableMapper.getBySpcdCodes(pageCode, dtCode, spcdCodes, EFFERANGE_NO, USER_ID);
+        } else {
+            list = cfgDataTableMapper.getBySpcdCodes(pageCode, dtCode, spcdCodes, EFFERANGE_IS, userId);
         }
         return list;
     }

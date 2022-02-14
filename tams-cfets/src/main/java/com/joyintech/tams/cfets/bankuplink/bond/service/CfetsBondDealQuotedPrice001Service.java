@@ -60,6 +60,12 @@ public class CfetsBondDealQuotedPrice001Service {
             dayOfferTableList.forEach(item ->{
                 CfetsBondDayPriceDto cfetsBondDayPriceDto = new CfetsBondDayPriceDto();
                 BeanUtil.copyPropertiesIgnoreNull(cfetsBondDayPriceDto,item);
+                cfetsBondDayPriceDto.setOuPartyName(item.getPartyAbbr());
+                cfetsBondDayPriceDto.setCpPartyName(item.getCpPartyName());
+                cfetsBondDayPriceDto.setPrice(item.getUnitCprice());
+                cfetsBondDayPriceDto.setMatureYield(item.getYield());
+                cfetsBondDayPriceDto.setShareAmt(item.getPrinAmtHun());
+                cfetsBondDayPriceDto.setExecid(item.getfTradeId());
                 result.add(cfetsBondDayPriceDto);
             });
         }
@@ -83,11 +89,11 @@ public class CfetsBondDealQuotedPrice001Service {
         //add by zznn 20210730 end
         // 待回复报价是否所有交易员可见（01：不允许，02：允许）
         param.put("unAnswerFlag", CacheUtil.getSysParam("ibuFlag_allTraderCanShowUnAnswerQuote"));
-        String keywords = "";
+        /*String keywords = "";
         if(param.containsKey("keywords")){
             keywords =(String) param.get("keywords");
             param.remove("keywords");
-        }
+        }*/
         List<com.joyintech.service.bankuplink.ibu.dto.BondQuoteInfoDto> res = cfetsBondDealQuotedPriceService.getDayOfferTableList(param);
 
         // 债项评级
@@ -102,9 +108,9 @@ public class CfetsBondDealQuotedPrice001Service {
                 dto.setGrade(zxList.get(0).getGradeResult());
             }
         }
-        if(StringUtil.isNotEmpty(keywords)&&!StringUtil.isEmptyList(res)){
+        /*if(StringUtil.isNotEmpty(keywords)&&!StringUtil.isEmptyList(res)){
             res = (List<com.joyintech.service.bankuplink.ibu.dto.BondQuoteInfoDto>) getKeyWordsList(res,keywords,(String) param.get("keycols"));
-        }
+        }*/
         return res;
     }
 

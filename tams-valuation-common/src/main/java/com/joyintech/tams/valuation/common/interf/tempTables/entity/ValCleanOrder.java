@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -47,7 +48,7 @@ public class ValCleanOrder extends BaseEntity {
     /**
      * 结算金额
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
+    @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal settleAmt;
 
     /**

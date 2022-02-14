@@ -5,6 +5,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
 import com.joyintech.tams.business.common.dto.EntrustIdRequestDto;
@@ -21,14 +22,15 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/common/joyinbusinessCommon")
 @Api(tags = "公共方法")
 public class JoyinbusinessCommonController extends BaseController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(JoyinbusinessCommonController.class);
-	
+
 
 	@Autowired
 	private HttpServletRequest request;
@@ -68,7 +70,7 @@ public class JoyinbusinessCommonController extends BaseController {
 	@PostMapping("/getEntrustId")
 	@ApiOperation(value = "指令代码列表查询", notes = "指令代码列表查询")
 	@ResponseBody
-	public Message<Page<SelectOptionDto>> getEntrustId(@RequestBody EntrustIdRequestDto entrustIdRequestDto) {
+	public Message<Page<SelectOptionDto>> getEntrustId(@RequestBody CfetsSearchInfoRequest entrustIdRequestDto) {
 		try {
 			Page<SelectOptionDto> tempList = joyinbusinessCommonService.getEntrustId(entrustIdRequestDto);
 			return new Message<Page<SelectOptionDto>>().success().setData(tempList);
@@ -150,6 +152,74 @@ public class JoyinbusinessCommonController extends BaseController {
 		} catch (Exception e) {
 			logger.error("查询功能异常", e);
 			return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
+		}
+	}
+
+	@ApiOperation(value = "查询是否走流程", notes = "查询是否走流程Y 走  N 不走  pageId elementId 必传")
+	@PostMapping("/isNeedWorkflow")
+	public Message<String> isNeedWorkflow(@RequestBody Map<String,String> param){
+		try {
+			String needWorkflow = joyinbusinessCommonService.isNeedWorkflow(param);
+			return new Message<String>(needWorkflow).success();
+		} catch (Exception e) {
+			return new Message<String>().fail().setMessage("查询是否走流程失败");
+		}
+	}
+
+	/**
+	 * 审批页面 根据id查询本方或对手方
+	 *
+	 * @param params
+	 * @return java.util.List<com.joyintech.framework.select.SelectOptionDto>
+	 * @author jiangpeng
+	 * @date 2022/1/14 14:25
+	 */
+	@RequestMapping("queryMySideOrCount")
+	@ResponseBody
+	public List<SelectOptionDto> queryMySideOrCount(@RequestParam Map<String, Object> params) {
+		CfetsSearchInfoRequest item = new CfetsSearchInfoRequest();
+		item.setDealType((String) params.get("dealType"));
+		item.setSearch((String) params.get("initValue"));
+		try {
+			return joyinbusinessCommonService.queryMySideOrCount(item);
+		} catch (Exception e) {
+			logger.error("查询功能异常", e);
+			return null;
+		}
+	}
+
+	/**
+	 * 审批页面 根据id查询本方交易员或对手方交易员
+	 *
+	 * @param params
+	 * @return java.util.List<com.joyintech.framework.select.SelectOptionDto>
+	 * @author jiangpeng
+	 * @date 2022/1/14 14:25
+	 */
+	@RequestMapping("queryMySideTraderOrCountTrader")
+	@ResponseBody
+	public List<SelectOptionDto> queryMySideTraderOrCountTrader(@RequestParam Map<String, Object> params) {
+		CfetsSearchInfoRequest item = new CfetsSearchInfoRequest();
+		String dealType = (String) params.get("dealType");//查询类型
+		String counterId = (String) params.get("counterId");//交易对手方
+		String mySide = (String) params.get("mySide");//本方
+		String initValue = (String) params.get("initValue");//关键字
+		if (StringUtil.isNotEmpty(dealType)) {
+			item.setDealType(dealType);
+		}
+		if (StringUtil.isNotEmpty(counterId)) {
+			item.setPartyId(counterId);
+        } else if (StringUtil.isNotEmpty(mySide)) {
+            item.setPartyId(mySide);
+        }
+		if (StringUtil.isNotEmpty(initValue)) {
+			item.setSearch(initValue);
+		}
+		try {
+			return joyinbusinessCommonService.queryMySideTraderOrCountTrader(item);
+		} catch (Exception e) {
+			logger.error("查询功能异常", e);
+			return null;
 		}
 	}
 

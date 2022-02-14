@@ -47,8 +47,8 @@
     	if(object.accountType){
     	    object.accountType = object.accountType.join(",");
     	}
-    	
-    	object.acctNo = object.largePayno + ':' + object.busiAcctNo;
+		object.acctNo = (object.largePayno?object.largePayno:'') + ':' + object.busiAcctNo;
+		// object.acctNo = object.largePayno + ':' + object.busiAcctNo;
         object.remark=$('#remark').val();
         object.operateType = operateType;
         object.pageModel = pageModel;
@@ -264,7 +264,6 @@
         		$('#effectDate_div').toggle(true);
         		$('#basis_div').toggle(true);
         		$('#rateType_div').toggle(true);
-        		debugger;
             	//默认固定利率
             	$('#rateType').val(INT_TYPE_01).trigger('change');
             	//默认计息基础为360/A
@@ -369,7 +368,8 @@
                 param.accountType = param.accountType.join(",");
             }
         	param.pageModel = pageModel;
-        	param.acctNo = param.largePayno + ':' + param.busiAcctNo;
+			param.acctNo = (param.largePayno?param.largePayno:'') + ':' + param.busiAcctNo;
+			// param.acctNo = param.largePayno + ':' + param.busiAcctNo;
         	param.remark=$('#remark').val();
         	param.wflOperType = $("#wfl_operType").val();
             var checkResult = false;

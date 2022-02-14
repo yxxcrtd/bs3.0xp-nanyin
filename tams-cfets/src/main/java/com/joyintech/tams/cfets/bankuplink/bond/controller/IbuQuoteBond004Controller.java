@@ -50,13 +50,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service.getBussinessCodeParameter;
 
 /**
- * 现券买卖(登记)
+ * 本币交易登记
  */
 @Controller
 @PageId("IbuQuoteBond004")
@@ -80,6 +81,10 @@ public class IbuQuoteBond004Controller extends BaseController {
     private IbuQuoteBondService ibuQuoteBondService;
     @Autowired
     private CfetsQuotedCommonService cfetsQuotedCommonService;
+
+    @Autowired
+    private com.joyintech.tams.cfets.bankuplink.bond.service.CfetsQuotedCommonService cfetsQuotedCommonServiceVue;
+
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, BussinessDictCode.交易方向, BussinessDictCode.清算速度,
@@ -162,6 +167,12 @@ public class IbuQuoteBond004Controller extends BaseController {
         }
         List<CfetsBondDealRegisterQuoteDto> CfetsBondDealRegisterQuoteDtos = new ArrayList<>();
         for (CfetsBondRegCheckDetaileRequst cfetsBondRegCheckDetaileRequst : cfetsBondRegCheckRequst.getCfetsBondRegCheckDetaileRequsts()) {
+            //获取初始化的值
+            CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto = new CfetsBondDealQuoteCommonDto();
+            cfetsBondDealQuoteCommonDto.setQuoteId(cfetsBondRegCheckDetaileRequst.getQuoteId());
+            cfetsBondDealQuoteCommonDto.setValidStatus(BussinessDictCodeList.有效状态_有效.getValue());
+            cfetsBondDealQuoteCommonDto = cfetsBondDealQuotedPrice004Service.initReg(cfetsBondDealQuoteCommonDto);
+            BeanUtil.copyPropertiesIgnoreNull(cfetsBondRegCheckDetaileRequst,cfetsBondDealQuoteCommonDto);
             CfetsBondDealRegisterQuoteDto cfetsBondDealRegisterQuoteDto = new CfetsBondDealRegisterQuoteDto();
             cfetsBondDealRegisterQuoteDto.setTotleTradeId(cfetsBondRegCheckDetaileRequst.getQuoteId());
             cfetsBondDealRegisterQuoteDto.setRemark(cfetsBondRegCheckRequst.getRemark());
@@ -173,8 +184,10 @@ public class IbuQuoteBond004Controller extends BaseController {
         workFlowParameter.setPageId("IbuQuoteBond004");
         workFlowParameter.setElementId("IbuQuoteBond004_btn_revoke");
         workFlowParameter.setBusinessCode(item -> item.getTotleTradeId());
-        workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_银行间上行.getValue());
-        workFlowParameter.setComment(entity ->  "登记报价编号(" + entity.getTotleTradeId() + ")");
+        workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_本币业务交易_登记.getValue());
+        DecimalFormat  df = new DecimalFormat("###,###.00");
+        workFlowParameter.setComment(entity -> "登记日期"+ "(" + DateUtil.format(entity.getTradeDate()) + ")-"
+                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"券面总额("+df.format(ArithmeticUtil.divide(entity.getShareAmt(),new BigDecimal(10000),2))+"万元)");
         processParameter.setWorkFlowParameter(workFlowParameter);
         processParameter.setOperationType(OperationType.REVOKE);
         String msg = cfetsBondDealQuotedPrice004Service.start(processParameter,
@@ -189,10 +202,13 @@ public class IbuQuoteBond004Controller extends BaseController {
         //check必填项
         AjaxResult ajaxResult = cfetsBondDealQuotedPrice004Service.checkNotEmpty(cfetsBondDealQuoteCommonDto);
         if(CollectionUtils.isEmpty(ajaxResult.getErrorList())){
-            ajaxResult = cfetsBondDealQuotedPrice004Service.checkcheckAnchoring(cfetsBondDealQuoteCommonDto);
+            ajaxResult = cfetsQuotedCommonServiceVue.checkcheckAnchoring(cfetsBondDealQuoteCommonDto);
         }
         if(CollectionUtils.isEmpty(ajaxResult.getErrorList())){
             ajaxResult = cfetsQuotedCommonService.positionCheck(cfetsBondDealQuoteCommonDto);
+        }
+        if(CollectionUtils.isEmpty(ajaxResult.getErrorList())){
+            ajaxResult= cfetsQuotedCommonService.reclasCheck(cfetsBondDealQuoteCommonDto);
         }
         return new Message<AjaxResult>().success().setData(ajaxResult);
     }
@@ -214,27 +230,31 @@ public class IbuQuoteBond004Controller extends BaseController {
         else {
             cfetsBondDealRegisterQuoteDto.setTotleTradeId(IDGenerator.generate());
         }
+        //登记回售  对手方显示发行人名称
+        if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())&&StringUtil.isEmpty(cfetsBondDealRegisterQuoteDto.getCounterName())){
+            cfetsBondDealRegisterQuoteDto.setCounterName(cfetsQuotedCommonServiceVue.getIssuserName(cfetsBondDealRegisterQuoteDto.getFinprodId()));
+        }
 		ProcessParameter<CfetsBondDealRegisterQuoteDto> processParameter = new ProcessParameter<CfetsBondDealRegisterQuoteDto>();
 		WorkFlowParameter<CfetsBondDealRegisterQuoteDto> params = new WorkFlowParameter<CfetsBondDealRegisterQuoteDto>();
 		params.setPageId("IbuQuoteBond004");
 		params.setElementId(cfetsBondDealRegisterQuoteDto.getElementId());
         params.setElementId("IbuQuoteBond004_btn_submit");
-		params.setBusinessType(DictCodeListExt3.共通业务类型_银行间上行.getValue());
+		params.setBusinessType(DictCodeListExt3.共通业务类型_本币业务交易_登记.getValue());
 		params.setBusinessCode(cfetsBondDealRegisterQuoteDto.getTotleTradeId());
-        params.setComment(entity -> getMessage("登记报价编号") + "(" + entity.getTotleTradeId() + ")-"
-                + "业务类型" + "(现券登记)-" + "平台日" + "("
-                + DateUtil.format(iPlatformDate.getSysDate()) + ")");
+        DecimalFormat  df = new DecimalFormat("###,###.00");
+        params.setComment(entity -> "登记日期"+ "(" + DateUtil.format(entity.getTradeDate()) + ")-"
+                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"券面总额("+df.format(ArithmeticUtil.divide(entity.getShareAmt(),new BigDecimal(10000),2))+"万元)");
         cfetsBondDealRegisterQuoteDto.setQuoteType(DictCodeListExt3.报价系统区分类型_现券登记报价.getValue());
 		processParameter.setWorkFlowParameter(params);
         processParameter.setOperationType(OperationType.NEW);
         String msg = null;
         try{
             msg = cfetsBondDealQuotedPrice004Service.start(processParameter, cfetsBondDealRegisterQuoteDto);
-            return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
-        }
-        catch (Exception e) {
+        }catch (Exception e){
+            e.printStackTrace();
             return PositionUtil.ajaxErrorReturn(e);
         }
+        return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
 	}
 
 

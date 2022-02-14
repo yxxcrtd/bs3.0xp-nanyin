@@ -119,6 +119,13 @@ public class EntrustBankCommonService extends BaseService<ITableRow> {
 		if(i>0){
 			return "2";
 		}
+
+		//是否存在流程中的，或有效的登记数据
+		int j =entrustBankCommonMapper.checkRegDataStatus(param);
+		if(j>0){
+			return "2";
+		}
+
 		return "3";
 	}
 

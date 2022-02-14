@@ -58,4 +58,16 @@ public interface CfgDataTableMapper {
      */
     void updateCfgDataTableBatch(List<CfgDataTableShow> dataList);
 
+    /**
+     * 查询页面数据表格式设置
+     * @param pageCode
+     * @param dtCode
+     * @param effeRange
+     * @param rangeId
+     * @return
+     */
+    List<CfgDataTableShow> getBySpcdCodes(@Param("pageCode") String pageCode, @Param("dtCode") String dtCode,
+                                         @Param("spcdCodes") List<String> spcdCodes,
+                                         @Param("effeRange") Integer effeRange, @Param("rangeId") String rangeId);
+
 }

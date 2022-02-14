@@ -237,7 +237,7 @@ public class ExchangeTransMatch001Controller  extends BaseController {
             logger.error("交易匹配确认失败"+e.getMessage());
             return new AjaxResult("成交匹配失败", MessageType.错误消息);
         }
-        return new AjaxResult("交成交匹配成功",MessageType.提示消息);
+        return new AjaxResult("成交匹配成功",MessageType.提示消息);
     }
 
     /**

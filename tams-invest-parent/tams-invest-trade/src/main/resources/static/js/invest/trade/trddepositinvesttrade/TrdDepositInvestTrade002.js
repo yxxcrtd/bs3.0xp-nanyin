@@ -565,7 +565,6 @@
     };
     var psChange = function(){
         var ps = $('#ps').val();
-        debugger;
         if(ps !== buy){
             $('#Buy1').css('display','none');
             $('#Buy2').css('display','none');

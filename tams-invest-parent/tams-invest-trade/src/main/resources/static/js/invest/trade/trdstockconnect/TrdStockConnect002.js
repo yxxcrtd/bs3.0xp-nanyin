@@ -50,7 +50,7 @@ var table;
         if ($('#trdInvestPersonInfo_counterId').select2('data') && $('#trdInvestPersonInfo_counterId').select2('data')[0]) {
             object.counterType = $('#trdInvestPersonInfo_counterId').select2('data')[0].object;
             object.counterId = $('#trdInvestPersonInfo_counterId').select2('data')[0].id;
-        }debugger;
+        }
         /*Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {*/
 	        Joyin.ajaxJson(basePath + 'invest/trade/trdstockconnect/TrdStockConnect002/check', object, function(result) {
 		          Joyin.confirm(result.data, function() {
@@ -63,7 +63,6 @@ var table;
 		          });
 	        });
         /*});*/
-	        debugger;
     };
     
     /**

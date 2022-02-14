@@ -1183,7 +1183,6 @@
         var checkParam = {};
         checkParam = getriskdata();
         var param = [];
-        debugger
         if (checkParam.data.length > 0) {
             for(var index in checkParam.data){
                 var item = checkParam.data[index];

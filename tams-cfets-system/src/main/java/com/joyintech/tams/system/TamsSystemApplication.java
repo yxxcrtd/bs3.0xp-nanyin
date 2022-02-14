@@ -26,6 +26,11 @@ import java.text.MessageFormat;
  */
 @Configuration
 public class TamsSystemApplication extends WebApplication {
+	
+	@Bean
+	public Docket dataExchangeDocket() {
+		return SwaggerConfig.createDocket("场内交易接口", "com.joyintech.tams.exchange");
+	}
 
 	@Bean
 	public Docket dataCfetsDocket() {
@@ -45,6 +50,11 @@ public class TamsSystemApplication extends WebApplication {
 	@Bean
 	public Docket dataBankuplinkDocket() {
 		return SwaggerConfig.createDocket("本币业务交易", "com.joyintech.tams.cfets.bankuplink.bond.controller");
+	}
+
+	@Bean
+	public Docket dataBankuplinkRepoDocket() {
+		return SwaggerConfig.createDocket("本币业务交易-质押式回购", "com.joyintech.tams.cfets.bankuplink.repo.controller");
 	}
 
 	@Bean
@@ -68,6 +78,10 @@ public class TamsSystemApplication extends WebApplication {
 	@Bean
 	public Docket dataCfetsTrdQuery() {
 		return SwaggerConfig.createDocket("银行间交易查询", "com.joyintech.tams.cfets.trdquery.controller");
+	}
+	@Bean
+	public Docket dataCfetsTrdRedeem() {
+		return SwaggerConfig.createDocket("赎回登记", "com.joyintech.tams.cfets.trdredeem.controller");
 	}
 	public static void main(String[] args) throws Exception {
     	initLog();

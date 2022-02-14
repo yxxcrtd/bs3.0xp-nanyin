@@ -126,7 +126,6 @@
      */
     //传参时增加 发行方式 operationType : $('#' + getElementById('operationTypeElement').val()).val() add by wangcheng 20191101
     bussFinProductAnapleroticInfoTable.bind('click', '.edit', function(data, index) {
-        debugger;
         Joyin.dialog(JoyinUtil.getLabel("FinProductAnapleroticInfo002.update"), JoyinUtil.getRealPath('/invest/product/productelement/anaplerotic/FinProductAnapleroticInfo002/init'),
             "98%", "95%", {pageModel:PAGE_MODEL_EDIT,applyType : 'prod',calendarId : $('#' + getElementById('dealCalIdElement').val()).val(), mdate : $('#' + getElementById('mdateElement').val()).val(), vdate : $('#' + getElementById('vdateElement').val()).val(), operationType : $('#' + getElementById('operationTypeElement').val()).val() , finProductAnapleroticInfoDto : data.finProductAnapleroticInfoDto,dealMode:$('#' + dealModeElement).val(),PROD_STYLE:PROD_STYLE,quickInputAnapleroticFlag:quickFlag},function(result) {
                 if(!result) return;

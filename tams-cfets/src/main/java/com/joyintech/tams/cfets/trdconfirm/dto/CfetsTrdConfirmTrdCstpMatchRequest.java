@@ -27,8 +27,11 @@ public class CfetsTrdConfirmTrdCstpMatchRequest {
     @ApiModelProperty(name="finprodId",value="资产代码",example="字符串1,字符串2,...")
     private String finprodId;
 
-    @ApiModelProperty(name="quoteType",value="交易类型",example="字符串1,字符串2,...")
+    @ApiModelProperty(name="quoteType",value="报价方式",example="字符串1,字符串2,...")
     private String quoteType;
+
+    @ApiModelProperty(name="dealType",value="交易类型",example="字符串1,字符串2,...")
+    private String dealType;
 
     @ApiModelProperty(name="settleSpeed",value="清算速度",example="01")
     private String settleSpeed;
@@ -169,6 +172,14 @@ public class CfetsTrdConfirmTrdCstpMatchRequest {
 
     public void setTrdConfStatus(String trdConfStatus) {
         this.trdConfStatus = trdConfStatus;
+    }
+
+    public String getDealType() {
+        return dealType;
+    }
+
+    public void setDealType(String dealType) {
+        this.dealType = dealType;
     }
 }
 

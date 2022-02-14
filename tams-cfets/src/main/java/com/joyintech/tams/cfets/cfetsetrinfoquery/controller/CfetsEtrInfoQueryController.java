@@ -18,8 +18,6 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.util.ExcelUitl;
-import com.joyintech.tams.cfets.cfetsetrinfoquery.dto.CfetsEtrInfoOperateListRequest;
-import com.joyintech.tams.cfets.cfetsetrinfoquery.dto.CfetsEtrInfoOperateListResponse;
 import com.joyintech.tams.cfets.cfetsetrinfoquery.dto.CfetsEtrInfoQueryListRequest;
 import com.joyintech.tams.cfets.cfetsetrinfoquery.dto.CfetsEtrInfoQueryListResponse;
 import com.joyintech.tams.cfets.cfetsetrinfoquery.service.CfetsEtrInfoQueryService;
@@ -132,28 +130,5 @@ public class CfetsEtrInfoQueryController extends BaseController {
             List dataList = cfetsEtrInfoQueryService.findAllData(req.getDto(CfetsEtrInfoQueryListRequest.class)).getRoot();
             return dataList;
         });
-    }
-
-    /**
-     * 操作记录查询
-     *
-     * @param dto
-     * @return Page<CfetsEtrInfoOperateListResponse>
-     * @throws Exception Exception
-     * @see
-     * @since 1.0
-     */
-    @ApiOperation(value = "操作记录查询", notes = "操作记录查询")
-    @PostMapping("/getEtrInfoQueryOperate")
-    @ResponseBody
-    public Message<Page<CfetsEtrInfoOperateListResponse>> getEtrInfoQueryOperate(@RequestBody CfetsEtrInfoOperateListRequest dto)
-            throws Exception {
-        try {
-            Page<CfetsEtrInfoOperateListResponse> page = cfetsEtrInfoQueryService.getEtrInfoQueryOperate(dto);
-            return new Message<Page<CfetsEtrInfoOperateListResponse>>().success().setData(page);
-        } catch (Exception e) {
-            logger.error("查询操作记录分页数据异常", e);
-            return new Message<Page<CfetsEtrInfoOperateListResponse>>().fail().setMessage("查询操作记录分页数据异常");
-        }
     }
 }

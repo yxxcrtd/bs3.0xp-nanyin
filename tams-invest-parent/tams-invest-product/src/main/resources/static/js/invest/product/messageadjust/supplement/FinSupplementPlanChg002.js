@@ -15,7 +15,6 @@ $(function() {
     };
     
 	$('#splitDate').change(function(){
-	    debugger;
 		if(Date.ofDate($("#splitDate").val())<=Date.ofDate($("#accrStrDate").val())){
    		   Joyin.error(JoyinUtil.getMessage("拆分日期必须大于区间开始日!"));
    		   $("#splitDate").val('');
@@ -34,7 +33,6 @@ $(function() {
 		
   	   Joyin.ajax(basePath + 'invest/product/messageadjust/supplement/FinSupplementPlanChg002/getAccrDate',
   	         getParam(), function(result){
-  	   	debugger;
             	$("#newAccrDate").val(result).trigger("change");
          });
 	}

@@ -5,16 +5,16 @@
 
     <!--头寸信息-->
     <select id="queryEtrPositionInfo1" parameterType="Map" resultType="map">
-        SELECT  ROUND(sum(nvl(summary.t0kyxj,0)),2) AS T0KYXJ, /*T日可用现金*/
-        ROUND(sum(nvl(summary.t1kyxj,0)),2) AS T1KYXJ, /*T+1日可用现金*/
-        ROUND(sum(nvl(summary.AMOUNT,0)),2) AS ZHXJ, /*账户现金*/
-        ROUND(sum(nvl(summary.rrqmkdgh,0)),2) AS RRQMKDGHCC, /*融入券卖空待购回持仓*/
-        ROUND(sum(nvl(summary.zctrkycc,0)),2) AS ZCTRKYCC, /*资产T日可用持仓*/
-        ROUND(sum(nvl(summary.zct1rkycc,0)),2) AS ZCT1RKYCC, /*资产T+1日可用持仓*/
-        ROUND(sum(nvl(summary.bfqtrkycc,0)),2) AS BFQTRKYCC, /*本方券T日可用持仓*/
-        ROUND(sum(nvl(summary.bfqt1rkycc,0)),2) AS BFQT1RKYCC, /*本方券T+1日可用持仓*/
-        ROUND(sum(nvl(summary.rrqtrkycc,0)),2) AS RRQTRKYCC, /*融入券T日可用持仓*/
-        ROUND(sum(nvl(summary.rrqt1rkycc,0)),2) AS RRQT1RKYCC /*融入券T+1日可用持仓*/
+        SELECT  ROUND(sum(summary.t0kyxj),2) AS T0KYXJ, /*T日可用现金*/
+        ROUND(sum(summary.t1kyxj),2) AS T1KYXJ, /*T+1日可用现金*/
+        ROUND(sum(summary.AMOUNT),2) AS ZHXJ, /*账户现金*/
+        ROUND(sum(summary.rrqmkdgh),2) AS RRQMKDGHCC, /*融入券卖空待购回持仓*/
+        ROUND(sum(summary.zctrkycc),2) AS ZCTRKYCC, /*资产T日可用持仓*/
+        ROUND(sum(summary.zct1rkycc),2) AS ZCT1RKYCC, /*资产T+1日可用持仓*/
+        ROUND(sum(summary.bfqtrkycc),2) AS BFQTRKYCC, /*本方券T日可用持仓*/
+        ROUND(sum(summary.bfqt1rkycc),2) AS BFQT1RKYCC, /*本方券T+1日可用持仓*/
+        ROUND(sum(summary.rrqtrkycc),2) AS RRQTRKYCC, /*融入券T日可用持仓*/
+        ROUND(sum(summary.rrqt1rkycc),2) AS RRQT1RKYCC /*融入券T+1日可用持仓*/
         FROM (
         /*多组合，再汇总一遍*/
         SELECT
@@ -24,10 +24,10 @@
         select
         a.PORTFOLIO_ID,
         sum(
-        CASE WHEN b.S_HOLDINGTYPE=#{S_004} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+        CASE WHEN b.S_HOLDINGTYPE=#{S_004} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE NULL END
         ) AS t0kyxj, /*T日可用现金*/
         sum(
-        CASE WHEN b.S_HOLDINGTYPE=#{S_004} AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+        CASE WHEN b.S_HOLDINGTYPE=#{S_004} AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE NULL END
         ) AS t1kyxj /*T+1日可用现金*/
         from ETR_CASH_POSITION_RULE a
         LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_004})
@@ -44,18 +44,18 @@
         select
         a.PORTFOLIO_ID,
         sum(
-        CASE WHEN b.S_HOLDINGTYPE=#{S_003} THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+        CASE WHEN b.S_HOLDINGTYPE=#{S_003} THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE NULL END
         ) AS rrqmkdgh, /*融入券卖空待购回持仓*/
         sum(
-        CASE WHEN b.S_HOLDINGTYPE=#{S_001} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+        CASE WHEN b.S_HOLDINGTYPE=#{S_001} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE NULL END
         ) AS zctrkycc, /*资产T日可用持仓*/
         sum(
-        CASE WHEN b.S_HOLDINGTYPE=#{S_001} AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+        CASE WHEN b.S_HOLDINGTYPE=#{S_001} AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE NULL END
         ) AS zct1rkycc, /*资产T+1日可用持仓*/
-        sum(CASE WHEN a.HODING_TYPE=#{A_004} AND a.DATE_TYPE ='0' THEN AMOUNT ELSE 0 END) AS bfqtrkycc, /*本方券T日可用持仓*/
-        sum(CASE WHEN a.HODING_TYPE=#{A_004} AND a.DATE_TYPE ='1' THEN AMOUNT ELSE 0 END) AS bfqt1rkycc, /*本方券T+1日可用持仓*/
-        sum(CASE WHEN a.HODING_TYPE=#{A_005} AND a.DATE_TYPE ='0' THEN AMOUNT ELSE 0 END) AS rrqtrkycc, /*融入券T日可用持仓*/
-        sum(CASE WHEN a.HODING_TYPE=#{A_005} AND a.DATE_TYPE ='1' THEN AMOUNT ELSE 0 END) AS rrqt1rkycc /*融入券T+1日可用持仓*/
+        sum(CASE WHEN a.HODING_TYPE=#{A_004} AND a.DATE_TYPE ='0' THEN AMOUNT ELSE NULL END) AS bfqtrkycc, /*本方券T日可用持仓*/
+        sum(CASE WHEN a.HODING_TYPE=#{A_004} AND a.DATE_TYPE ='1' THEN AMOUNT ELSE NULL END) AS bfqt1rkycc, /*本方券T+1日可用持仓*/
+        sum(CASE WHEN a.HODING_TYPE=#{A_005} AND a.DATE_TYPE ='0' THEN AMOUNT ELSE NULL END) AS rrqtrkycc, /*融入券T日可用持仓*/
+        sum(CASE WHEN a.HODING_TYPE=#{A_005} AND a.DATE_TYPE ='1' THEN AMOUNT ELSE NULL END) AS rrqt1rkycc /*融入券T+1日可用持仓*/
         from ETR_SEC_POSITION_RULE a
         LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_001},#{S_003})
         where to_char(a.cdate,'yyyy-MM-dd') = #{cdate} and (b.S_HOLDINGTYPE IN (#{S_001},#{S_003}) or a.HODING_TYPE in (#{A_004},#{A_005}))
@@ -74,8 +74,8 @@
         <!--账户现金-->
         SELECT d.PORTFOLIO_ID, sum(d.AMOUNT) AMOUNT
         FROM PTL_CASH_POSITION_RULE d
-        where to_char(d.cdate,'yyyy-MM-dd') = #{cdate} AND d.HODING_TYPE =#{C_01}
-        <if test="acctId != null">
+        where to_char(d.cdate,'yyyy-MM-dd') = #{cdate} AND d.HODING_TYPE =#{C_01} AND d.DATE_TYPE ='0'
+        <if test="acctId != null and acctId !='' ">
             and d.ACCT_ID = #{acctId,jdbcType=VARCHAR}
         </if>
         <if test="portfolioIdList != null">
@@ -90,9 +90,9 @@
     </select>
 
     <select id="queryEtrAvailableCash" parameterType="Map" resultType="map">
-        SELECT  ROUND(sum(nvl(summary.t0kyxj,0)),2) AS T0KYXJ,  /*T日可用现金*/
-        ROUND(sum(nvl(summary.t1kyxj,0)),2) AS T1KYXJ,          /*T+1日可用现金*/
-        ROUND(sum(nvl(summary.AMOUNT,0)),2) AS ZHXJ             /*账户现金*/
+        SELECT  ROUND(sum(summary.t0kyxj),2) AS T0KYXJ,  /*T日可用现金*/
+        ROUND(sum(summary.t1kyxj),2) AS T1KYXJ,          /*T+1日可用现金*/
+        ROUND(sum(summary.AMOUNT),2) AS ZHXJ             /*账户现金*/
         FROM (
             SELECT
             aa.t0kyxj, aa.t1kyxj, cc.AMOUNT
@@ -100,10 +100,10 @@
                 select
                 a.PORTFOLIO_ID,
                 sum(
-                CASE WHEN b.S_HOLDINGTYPE=#{S_004} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+                CASE WHEN b.S_HOLDINGTYPE=#{S_004} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE NULL END
                 ) AS t0kyxj, /*T日可用现金*/
                 sum(
-                CASE WHEN b.S_HOLDINGTYPE=#{S_004} AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+                CASE WHEN b.S_HOLDINGTYPE=#{S_004} AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE NULL END
                 ) AS t1kyxj /*T+1日可用现金*/
                 from ETR_CASH_POSITION_RULE a
                 LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_004})
@@ -121,7 +121,7 @@
                 <!--账户现金-->
                 SELECT d.PORTFOLIO_ID, sum(d.AMOUNT) AMOUNT
                 FROM PTL_CASH_POSITION_RULE d
-                where d.cdate = to_date(#{cdate},'yyyy-MM-dd') AND d.HODING_TYPE =#{C_01}
+                where d.cdate = to_date(#{cdate},'yyyy-MM-dd') AND d.HODING_TYPE =#{C_01} AND d.DATE_TYPE ='0'
                 <if test="acctId != null and acctId != ''">
                     and d.ACCT_ID = #{acctId,jdbcType=VARCHAR}
                 </if>
@@ -138,24 +138,24 @@
 
     <select id="queryTrdAvailableCash" parameterType="Map" resultType="map">
         SELECT
-        ROUND(sum(nvl(aa.T0KYXJ,0)),2) AS T0KYXJ,       /*T日可用现金*/
-        ROUND(sum(nvl(aa.T1KYXJ,0)),2) AS T1KYXJ,       /*T+1日可用现金*/
-        ROUND(sum(nvl(aa.ZHXJ,0)),2) AS ZHXJ          /*账户现金*/
+        ROUND(sum(aa.T0KYXJ),2) AS T0KYXJ,       /*T日可用现金*/
+        ROUND(sum(aa.T1KYXJ),2) AS T1KYXJ,       /*T+1日可用现金*/
+        ROUND(sum(aa.ZHXJ),2) AS ZHXJ          /*账户现金*/
         FROM(
             select
             a.PORTFOLIO_ID,
             sum(
-                CASE WHEN b.S_HOLDINGTYPE=#{S_004} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+                CASE WHEN b.S_HOLDINGTYPE=#{S_004} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE NULL END
             ) AS T0KYXJ, /*T日可用现金*/
             sum(
-                CASE WHEN b.S_HOLDINGTYPE=#{S_004} AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+                CASE WHEN b.S_HOLDINGTYPE=#{S_004} AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE NULL END
             ) AS T1KYXJ, /*T+1日可用现金*/
             sum(
-                CASE WHEN a.HODING_TYPE=#{C_01} THEN a.AMOUNT ELSE 0 END
+                CASE WHEN a.HODING_TYPE=#{C_01} AND a.DATE_TYPE ='0' THEN a.AMOUNT ELSE NULL END
             ) AS ZHXJ   /*账户现金*/
             from PTL_CASH_POSITION_RULE a
-            LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_004})
-            where a.cdate = to_date(#{cdate},'yyyy-MM-dd') and b.S_HOLDINGTYPE IN (#{S_004}, #{C_01})
+            LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE =#{S_004}
+            where a.cdate = to_date(#{cdate},'yyyy-MM-dd') 
             <if test="acctId != null and acctId != ''">
                 and a.ACCT_ID = #{acctId,jdbcType=VARCHAR}
             </if>
@@ -184,24 +184,24 @@
     <!--指令持仓-->
     <select id="queryEtrPosition" parameterType="Map" resultType="map">
         select
-        a.PORTFOLIO_ID,
         sum(
-            CASE WHEN b.S_HOLDINGTYPE=#{S_003} THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+            CASE WHEN b1.S_HOLDINGTYPE=#{S_003} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b1.CAL_FLAG,1) ELSE NULL END
         ) AS RRQMKDGH, /*融入券卖空待购回持仓*/
         sum(
-            CASE WHEN b.S_HOLDINGTYPE=#{S_001} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+            CASE WHEN b.S_HOLDINGTYPE=#{S_001} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE NULL END
         ) AS ZCTRKYCC, /*资产T日可用持仓*/
         sum(
-            CASE WHEN b.S_HOLDINGTYPE=#{S_001} AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+            CASE WHEN b.S_HOLDINGTYPE=#{S_001} AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE NULL END
         ) AS ZCT1RKYCC, /*资产T+1日可用持仓*/
-        sum(CASE WHEN a.HODING_TYPE=#{A_004} AND a.DATE_TYPE ='0' THEN AMOUNT ELSE 0 END) AS BFQTRKYCC, /*本方券T日可用持仓*/
-        sum(CASE WHEN a.HODING_TYPE=#{A_004} AND a.DATE_TYPE ='1' THEN AMOUNT ELSE 0 END) AS BFQT1RKYCC, /*本方券T+1日可用持仓*/
-        sum(CASE WHEN a.HODING_TYPE=#{A_005} AND a.DATE_TYPE ='0' THEN AMOUNT ELSE 0 END) AS RRQTRKYCC, /*融入券T日可用持仓*/
-        sum(CASE WHEN a.HODING_TYPE=#{A_005} AND a.DATE_TYPE ='1' THEN AMOUNT ELSE 0 END) AS RRQT1RKYCC /*融入券T+1日可用持仓*/
-        from ETR_SEC_POSITION_RULE a
-        LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_001},#{S_003})
+        sum(CASE WHEN a.HODING_TYPE=#{A_004} AND a.DATE_TYPE ='0' THEN AMOUNT ELSE NULL END) AS BFQTRKYCC, /*本方券T日可用持仓*/
+        sum(CASE WHEN a.HODING_TYPE=#{A_004} AND a.DATE_TYPE ='1' THEN AMOUNT ELSE NULL END) AS BFQT1RKYCC, /*本方券T+1日可用持仓*/
+        sum(CASE WHEN a.HODING_TYPE=#{A_005} AND a.DATE_TYPE ='0' THEN AMOUNT ELSE NULL END) AS RRQTRKYCC, /*融入券T日可用持仓*/
+        sum(CASE WHEN a.HODING_TYPE=#{A_005} AND a.DATE_TYPE ='1' THEN AMOUNT ELSE NULL END) AS RRQT1RKYCC /*融入券T+1日可用持仓*/
+        from ETR_SEC_POSITION_RULE a 
+        LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE = #{S_001} 
+        LEFT JOIN PTL_POSITION_CFG b1 ON a.HODING_TYPE =b1.HOLDINGTYPE AND b1.S_HOLDINGTYPE = #{S_003} 
         where a.cdate = to_date(#{cdate},'yyyy-MM-dd') and (b.S_HOLDINGTYPE IN (#{S_001},#{S_003}) or a.HODING_TYPE in (#{A_004},#{A_005}))
-        <if test="finprodId != null">
+        <if test="finprodId != null and finprodId !='' ">
             and a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         </if>
         <if test="portfolioIdList != null">
@@ -210,30 +210,29 @@
                 #{item}
             </foreach>
         </if>
-        GROUP BY a.PORTFOLIO_ID
     </select>
 
     <!--交易持仓-->
     <select id="queryTrdPosition" parameterType="Map" resultType="map">
         select
-        a.PORTFOLIO_ID,
         sum(
-        CASE WHEN b.S_HOLDINGTYPE=#{S_003} THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
-        ) AS RRQMKDGH, /*融入券卖空待购回持仓*/
+        CASE WHEN b1.S_HOLDINGTYPE=#{S_003} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b1.CAL_FLAG,1) ELSE NULL END
+        ) AS RRQMKDGHCC, /*融入券卖空待购回持仓*/
         sum(
-        CASE WHEN b.S_HOLDINGTYPE=#{S_005} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+        CASE WHEN b.S_HOLDINGTYPE='S_007' AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE NULL END
         ) AS ZCTRKYCC, /*资产T日可用持仓*/
         sum(
-        CASE WHEN b.S_HOLDINGTYPE=#{S_005} AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+        CASE WHEN b.S_HOLDINGTYPE=#{S_005} AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE NULL END
         ) AS ZCT1RKYCC, /*资产T+1日可用持仓*/
-        sum(CASE WHEN a.HODING_TYPE=#{A_004} AND a.DATE_TYPE ='0' THEN AMOUNT ELSE 0 END) AS BFQTRKYCC, /*本方券T日可用持仓*/
-        sum(CASE WHEN a.HODING_TYPE=#{A_004} AND a.DATE_TYPE ='1' THEN AMOUNT ELSE 0 END) AS BFQT1RKYCC, /*本方券T+1日可用持仓*/
-        sum(CASE WHEN a.HODING_TYPE=#{A_005} AND a.DATE_TYPE ='0' THEN AMOUNT ELSE 0 END) AS RRQTRKYCC, /*融入券T日可用持仓*/
-        sum(CASE WHEN a.HODING_TYPE=#{A_005} AND a.DATE_TYPE ='1' THEN AMOUNT ELSE 0 END) AS RRQT1RKYCC /*融入券T+1日可用持仓*/
+        sum(CASE WHEN a.HODING_TYPE=#{A_004} AND a.DATE_TYPE ='0' THEN AMOUNT ELSE NULL END) AS BFQTRKYCC, /*本方券T日可用持仓*/
+        sum(CASE WHEN a.HODING_TYPE=#{A_004} AND a.DATE_TYPE ='1' THEN AMOUNT ELSE NULL END) AS BFQT1RKYCC, /*本方券T+1日可用持仓*/
+        sum(CASE WHEN a.HODING_TYPE=#{A_005} AND a.DATE_TYPE ='0' THEN AMOUNT ELSE NULL END) AS RRQTRKYCC, /*融入券T日可用持仓*/
+        sum(CASE WHEN a.HODING_TYPE=#{A_005} AND a.DATE_TYPE ='1' THEN AMOUNT ELSE NULL END) AS RRQT1RKYCC /*融入券T+1日可用持仓*/
         from PTL_SEC_POSITION_RULE a
-        LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_005},#{S_003})
-        where a.cdate = to_date(#{cdate},'yyyy-MM-dd') and (b.S_HOLDINGTYPE IN (#{S_005},#{S_003}) or a.HODING_TYPE in (#{A_004},#{A_005}))
-        <if test="finprodId != null">
+        LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE = 'S_007'
+        LEFT JOIN PTL_POSITION_CFG b1 ON a.HODING_TYPE =b1.HOLDINGTYPE AND b1.S_HOLDINGTYPE = #{S_003}
+        where a.cdate = to_date(#{cdate},'yyyy-MM-dd') 
+        <if test="finprodId != null and finprodId !='' ">
             and a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         </if>
         <if test="portfolioIdList != null">
@@ -242,6 +241,5 @@
                 #{item}
             </foreach>
         </if>
-        GROUP BY a.PORTFOLIO_ID
     </select>
 </mapper>

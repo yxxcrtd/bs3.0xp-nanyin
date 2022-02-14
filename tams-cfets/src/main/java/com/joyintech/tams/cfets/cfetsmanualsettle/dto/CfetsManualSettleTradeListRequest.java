@@ -41,7 +41,7 @@ public class CfetsManualSettleTradeListRequest {
     private String cleanStatus;
 
     @ApiModelProperty(name="tradeDate",value="交易日期",example="2021-01-01")
-    private String tradeDate;
+    private String[] tradeDate;
 
     @ApiModelProperty(name="settleDate",value="交收日期",example="2021-01-01",required = true)
     private String[] settleDate;
@@ -122,13 +122,7 @@ public class CfetsManualSettleTradeListRequest {
         this.cleanStatus = cleanStatus;
     }
 
-    public String getTradeDate() {
-        return tradeDate;
-    }
 
-    public void setTradeDate(String tradeDate) {
-        this.tradeDate = tradeDate;
-    }
 
     public String[] getSettleDate() {
         return settleDate;
@@ -170,4 +164,11 @@ public class CfetsManualSettleTradeListRequest {
         this.search = search;
     }
 
+    public String[] getTradeDate() {
+        return tradeDate;
+    }
+
+    public void setTradeDate(String[] tradeDate) {
+        this.tradeDate = tradeDate;
+    }
 }

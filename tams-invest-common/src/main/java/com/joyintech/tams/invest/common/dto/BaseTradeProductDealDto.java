@@ -83,6 +83,11 @@ public class BaseTradeProductDealDto {
     private List<TrdFinProductBarter> trdFinProductBarterList;
 
     /**
+     * 交易汇总费用表
+     */
+    private List<TrdTradeFeeTotal> trdTradeFeeTotalList;
+
+    /**
      * 交易费用明细表
      */
     private List<TrdTradeFeeDetail> trdTradeFeeDetailList;
@@ -324,6 +329,14 @@ public class BaseTradeProductDealDto {
      */
     public void setTrdFinProductBarterList(List<TrdFinProductBarter> trdFinProductBarterList) {
         this.trdFinProductBarterList = trdFinProductBarterList;
+    }
+
+    public List<TrdTradeFeeTotal> getTrdTradeFeeTotalList() {
+        return trdTradeFeeTotalList;
+    }
+
+    public void setTrdTradeFeeTotalList(List<TrdTradeFeeTotal> trdTradeFeeTotalList) {
+        this.trdTradeFeeTotalList = trdTradeFeeTotalList;
     }
 
     /**

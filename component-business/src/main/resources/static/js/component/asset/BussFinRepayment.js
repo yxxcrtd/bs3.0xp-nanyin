@@ -296,7 +296,6 @@
             return true;
         },
         editCell : function(value, data, field, cell, column){
-            debugger;
             //项目类资产还本计划维护
             if(INT_ASSET_TYPE == FINPROD_TYPE_TG_F18&&INT_ASSET_TYPE_REPAY==COMMON_BUSINESS_TYPE_FINPROD10){
                 //还款金额

@@ -403,6 +403,10 @@ public class EntrCommandDispatcherDto extends BaseEntity{
      * 1-第三方
      */
     private String pledgeeType;
+    /**
+     * 指令类型
+     */
+    private String entrustClass;
 
     public String getPledgeeType() {
         return pledgeeType;
@@ -1160,7 +1164,15 @@ public class EntrCommandDispatcherDto extends BaseEntity{
 		this.derivativeBsDir = derivativeBsDir;
 	}
 
-	public String getDerivativeOcFlag() {
+    public String getEntrustClass() {
+        return entrustClass;
+    }
+
+    public void setEntrustClass(String entrustClass) {
+        this.entrustClass = entrustClass;
+    }
+
+    public String getDerivativeOcFlag() {
 		return derivativeOcFlag;
 	}
 

@@ -435,6 +435,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
             if (finProduct != null){
                 cfetsBondDealDialogueQuoteDto.setFinprodMarketId(finProduct.getFinprodMarketId());
                 cfetsBondDealDialogueQuoteDto.setIsRight(finProduct.getIsRight());
+                cfetsBondDealDialogueQuoteDto.setTradeMarket(finProduct.getTradeMarket());
             }
             FinProductTypeKey finProductTypeKey = new FinProductTypeKey();
             finProductTypeKey.setFinprodId(cfetsBondDealDialogueQuoteDto.getFinprodId());
@@ -442,6 +443,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
             FinProductType finProductType = finProductTypeMapper.selectByPrimaryKey(finProductTypeKey);
             if (finProductType != null){
                 cfetsBondDealDialogueQuoteDto.setAssetTypeOne(finProductType.getType4());
+                cfetsBondDealDialogueQuoteDto.setType11(finProductType.getType11());
             }
         }
         
@@ -484,6 +486,8 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
             FinProduct finProduct = finProductMapper.selectByPrimaryKey(cfetsBondDealRequestQuoteDto.getFinprodId());
             if (finProduct != null){
                 cfetsBondDealRequestQuoteDto.setFinprodMarketId(finProduct.getFinprodMarketId());
+                cfetsBondDealRequestQuoteDto.setFinprodAbbr(finProduct.getFinprodAbbr());
+                cfetsBondDealRequestQuoteDto.setTradeMarket(finProduct.getTradeMarket());
             }
         }
         if(!StringUtil.isEmptyList(cfetsBondDealRequestQuoteDto.getCounterInfoList())){
@@ -554,6 +558,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
         bondQuoteInfoDto.setSettleSpeed(bondQuoteExtDto.getSettleSpeed());
         bondQuoteInfoDto.setUnitCprice(bondQuoteExtDto.getIbuQuoteBondDet() != null ? bondQuoteExtDto.getIbuQuoteBondDet().getUnitCprice() : null);
         bondQuoteInfoDto.setYield(bondQuoteExtDto.getIbuQuoteBondDet() != null ? ArithmeticUtil.multiply(bondQuoteExtDto.getIbuQuoteBondDet().getYield(), new BigDecimal(100)) : null);
+        bondQuoteInfoDto.setExerYield(bondQuoteExtDto.getIbuQuoteBondDet() != null ? ArithmeticUtil.multiply(bondQuoteExtDto.getIbuQuoteBondDet().getExerYield(), new BigDecimal(100)) : null);
         bondQuoteInfoDto.setAssetTypeOne(bondQuoteExtDto.getType6());
         bondQuoteInfoDto.setCfetsQuoteId(bondQuoteExtDto.getCfetsQuoteId());
         bondQuoteInfoDto.setfTradeId(bondQuoteExtDto.getIbuQuoteBondDet() != null ? bondQuoteExtDto.getIbuQuoteBondDet().getExecid() : null);

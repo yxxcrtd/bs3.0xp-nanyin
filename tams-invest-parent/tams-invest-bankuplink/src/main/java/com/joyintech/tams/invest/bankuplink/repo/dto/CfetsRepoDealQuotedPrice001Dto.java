@@ -11,12 +11,15 @@
 package com.joyintech.tams.invest.bankuplink.repo.dto;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -220,6 +223,12 @@ public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust implements Proces
     private BigDecimal pledgePrinTotal;
 
     /**
+     * 卷面总额合计(万)
+     */
+    /*@NotEmpty(fieldName = "CfetsRepoDealQuotedPrice002.total")*/
+    private String shareAmtStr;
+
+    /**
      * 质押券折算总金额
      */
     /*@NotEmpty(fieldName = "CfetsRepoDealQuotedPrice002.shareCtAmt")*/
@@ -398,6 +407,29 @@ public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust implements Proces
      * 是否跨托管
      */
     private String isKtg;
+
+    /**
+     * 是否软控
+     */
+    private String softSkipMode;
+
+    /**
+     * 交易手续费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal dealFeeAmt;
+
+    /**
+     * 结算服务费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal settFeeAmt;
+
+    // 分配方式
+    private String dipType;
+
+    //
+    private String systemAct;
 
     public Date getRepoVdate() {
 		return repoVdate;
@@ -1518,4 +1550,55 @@ public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust implements Proces
         this.distribution = distribution;
     }
     //add by chenjiaxing 流程中未展示分配方式字段 end
+
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
+    }
+
+    public BigDecimal getDealFeeAmt() {
+        return dealFeeAmt;
+    }
+
+    public void setDealFeeAmt(BigDecimal dealFeeAmt) {
+        this.dealFeeAmt = dealFeeAmt;
+    }
+
+    public BigDecimal getSettFeeAmt() {
+        return settFeeAmt;
+    }
+
+    public void setSettFeeAmt(BigDecimal settFeeAmt) {
+        this.settFeeAmt = settFeeAmt;
+    }
+
+    public String getDipType() {
+        return dipType;
+    }
+
+    public void setDipType(String dipType) {
+        this.dipType = dipType;
+    }
+
+    public String getSystemAct() {
+        return systemAct;
+    }
+
+    public void setSystemAct(String systemAct) {
+        this.systemAct = systemAct;
+    }
+
+    public String getShareAmtStr() {
+        if (StringUtil.isNotEmpty(this.getPledgePrinTotal())) {
+            return ArithmeticUtil.divide(this.getPledgePrinTotal(), new BigDecimal(100), 2, RoundingMode.HALF_UP).toPlainString();
+        }
+        return shareAmtStr;
+    }
+
+    public void setShareAmtStr(String shareAmtStr) {
+        this.shareAmtStr = shareAmtStr;
+    }
 }

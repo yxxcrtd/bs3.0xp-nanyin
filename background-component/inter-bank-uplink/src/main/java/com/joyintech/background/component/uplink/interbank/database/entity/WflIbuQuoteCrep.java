@@ -255,6 +255,23 @@ public class WflIbuQuoteCrep extends BaseEntity {
     private String remark;
 
     /**
+     * 交易手续费
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal dealFeeAmt;
+
+    /**
+     * 结算服务费
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal settFeeAmt;
+
+    //分配方式
+    private String dipType;
+    //实际占款天数
+    private long actDays;
+
+    /**
      * 取得 报价编号（内部代码）
      * @return 报价编号（内部代码）
      */
@@ -1008,5 +1025,37 @@ public class WflIbuQuoteCrep extends BaseEntity {
      */
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public BigDecimal getDealFeeAmt() {
+        return dealFeeAmt;
+    }
+
+    public void setDealFeeAmt(BigDecimal dealFeeAmt) {
+        this.dealFeeAmt = dealFeeAmt;
+    }
+
+    public BigDecimal getSettFeeAmt() {
+        return settFeeAmt;
+    }
+
+    public void setSettFeeAmt(BigDecimal settFeeAmt) {
+        this.settFeeAmt = settFeeAmt;
+    }
+
+    public String getDipType() {
+        return dipType;
+    }
+
+    public void setDipType(String dipType) {
+        this.dipType = dipType;
+    }
+
+    public long getActDays() {
+        return actDays;
+    }
+
+    public void setActDays(long actDays) {
+        this.actDays = actDays;
     }
 }

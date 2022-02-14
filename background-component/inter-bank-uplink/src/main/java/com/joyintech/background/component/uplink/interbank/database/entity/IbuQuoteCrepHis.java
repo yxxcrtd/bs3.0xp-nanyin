@@ -252,6 +252,24 @@ public class IbuQuoteCrepHis extends IbuQuoteCrepHisKey {
     private BigDecimal sqTotalAmt;
 
     /**
+     * 交易手续费
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal dealFeeAmt;
+
+    /**
+     * 结算服务费
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal settFeeAmt;
+
+    //分配方式
+    private String dipType;
+
+    //实际占款天数
+    private long actDays;
+
+    /**
      * 取得 报价类型，对话报价/请求报价
      * @return 报价类型，对话报价/请求报价
      */
@@ -989,5 +1007,37 @@ public class IbuQuoteCrepHis extends IbuQuoteCrepHisKey {
      */
     public void setSqTotalAmt(BigDecimal sqTotalAmt) {
         this.sqTotalAmt = sqTotalAmt;
+    }
+
+    public BigDecimal getDealFeeAmt() {
+        return dealFeeAmt;
+    }
+
+    public void setDealFeeAmt(BigDecimal dealFeeAmt) {
+        this.dealFeeAmt = dealFeeAmt;
+    }
+
+    public BigDecimal getSettFeeAmt() {
+        return settFeeAmt;
+    }
+
+    public void setSettFeeAmt(BigDecimal settFeeAmt) {
+        this.settFeeAmt = settFeeAmt;
+    }
+
+    public String getDipType() {
+        return dipType;
+    }
+
+    public void setDipType(String dipType) {
+        this.dipType = dipType;
+    }
+
+    public long getActDays() {
+        return actDays;
+    }
+
+    public void setActDays(long actDays) {
+        this.actDays = actDays;
     }
 }

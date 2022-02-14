@@ -331,7 +331,10 @@
             <!-- 通道交易 新增 强成西 2019/03/26 end -->
                   T1.FINPROD_TYPE2 ,
                   T1.SEC_MANAGE_ACCT_ID,
-                  to_char(ptpd.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,
+                  <!--modify by fuyongsheng 数据的交易日期是到期数据的交易日期 start-->
+                  <!--to_char(ptpd.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,-->
+                  to_char(T1.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,
+                  <!--modify by fuyongsheng 数据的交易日期是到期数据的交易日期 end-->
                   to_char(T4.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
                   to_char(T4.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
                   NULL TERM,
@@ -402,7 +405,10 @@
             <!-- 通道交易 新增 强成西 2019/03/26 end -->
               T1.FINPROD_TYPE2 ,
                T1.SEC_MANAGE_ACCT_ID,
-              to_char(ptpd.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,
+              <!--modify by fuyongsheng 交易日期应该取到期数据交易日期 start-->
+              <!--to_char(ptpd.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,-->
+              to_char(T1.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,
+              <!--modify by fuyongsheng 交易日期应该取到期数据交易日期 end-->
               to_char(T4.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
               to_char(T4.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
               NULL TERM,
@@ -468,7 +474,10 @@
                 T1.CHL_ID,
             <!-- 通道交易 新增 强成西 2019/03/26 end -->
                 T1.FINPROD_TYPE2 ,
-                to_char(ptpd.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,
+                <!--modify by fuyongsheng 交易日期取到期的交易日期 start-->
+                <!--to_char(ptpd.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,-->
+                to_char(T1.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,
+                <!--modify by fuyongsheng 交易日期取到期的交易日期 end-->
                 to_char(T4.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
                 to_char(T4.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
                 T7.TERM,/*回购期限*/

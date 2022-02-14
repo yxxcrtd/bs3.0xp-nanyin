@@ -125,7 +125,6 @@
         }
     	searchTreeSingle();
     	if(entity!=null&&entity.rskPortfolioPackageDtlDto!=null&&entity.rskPortfolioPackageDtlDto.rskPortfolioPackageDtlList!=null){
-    		debugger;
     		var treeArray= entity.rskPortfolioPackageDtlDto.rskPortfolioPackageDtlList;
     		for (var i = 0; i < treeArray.length; i++){
         		var trStr = '<li data-id="'+treeArray[i].portfolioId+'"><input type="checkbox" name="zhibao1">'+treeArray[i].portfolioName+'</li>';

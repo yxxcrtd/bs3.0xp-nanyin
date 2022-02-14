@@ -396,6 +396,10 @@ public class TrdProductDeal extends BaseEntity {
      *业务模式
      */
     private String businessModel;
+    /**
+     * 指令编号
+     */
+    private String entrustId;
 
 
     public String getPortfolioId() {
@@ -461,9 +465,10 @@ public class TrdProductDeal extends BaseEntity {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal yesterdayPosition;
 
-
-
-
+    /**
+     * 撤销日期
+     */
+    private Date cancelDate;
 
 
     /**
@@ -1625,5 +1630,21 @@ public class TrdProductDeal extends BaseEntity {
 
     public void setSharePaymentFee(BigDecimal sharePaymentFee) {
         this.sharePaymentFee = sharePaymentFee;
+    }
+
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
+    }
+
+    public Date getCancelDate() {
+        return cancelDate;
+    }
+
+    public void setCancelDate(Date cancelDate) {
+        this.cancelDate = cancelDate;
     }
 }

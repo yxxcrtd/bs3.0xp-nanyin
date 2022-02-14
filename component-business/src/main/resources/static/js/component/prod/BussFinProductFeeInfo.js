@@ -292,7 +292,6 @@
     };
     
     function feeInfoInitAction(input_finprodId){
-    	debugger;
     	finprodFeeFinprodId = input_finprodId;
     	quickFlag = true;
     	bussFinProductFeeInfoTable.table ? bussFinProductFeeInfoTable.reload() : bussFinProductFeeInfoTable.load();

@@ -707,7 +707,7 @@ public class AutoPeriodBondCommonService {
      */
     public void genBondDataForInsertDtoNew(TrdBondDurationDto entity) {
         // 金融产品交易信息DTO.金融产品交易汇总Entity -> 金融产品交易汇总业务流程表
-        WflTrdFinProductDealTotal trdFinProductDealTotal = gen汇总流程表(entity);
+        WflTrdFinProductDealTotal trdFinProductDealTotal = genNew汇总流程表(entity);
 
         // 金融产品交易汇总扩展Entity -> 金融产品交易汇总扩展业务流程表
         WflPaTrdFinDealTotal wflPaTrdFinDealTotal = gen汇总扩展业务流程(entity, trdFinProductDealTotal);
@@ -899,6 +899,49 @@ public class AutoPeriodBondCommonService {
         return wflPaTrdFinDealTotal;
     }
 
+    public WflTrdFinProductDealTotal genNew汇总流程表(TrdBondDurationDto entity) {
+        WflTrdFinProductDealTotal trdFinProductDealTotal = new WflTrdFinProductDealTotal();
+        trdFinProductDealTotal.setTotleTradeId(entity.getBusiCode());
+        trdFinProductDealTotal.setBusiType(DictCodeList.共通业务类型_债券类资产存续期.getValue());
+        trdFinProductDealTotal.setFinprodId(entity.getFinprodId());
+        trdFinProductDealTotal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        if (!entity.isChannel()) {
+            trdFinProductDealTotal.setSecManageAcctId(entity.getSecManageAcctId());
+        }
+        else {
+            trdFinProductDealTotal.setChlId("999999".equals(entity.getSecManageAcctId()) ? null : entity.getSecManageAcctId());
+        }
+        trdFinProductDealTotal.setCcy(entity.getCcy());
+        trdFinProductDealTotal.setPs(AutoPeriodCommonService.change现金流类型To交易方向(entity.getCashType()));
+        trdFinProductDealTotal.setBranch(
+                AutoPeriodCommonService.changePsToBranch(entity.getmDate(), trdFinProductDealTotal.getPs()));
+        trdFinProductDealTotal.setTradeDate(DateUtil.parse(entity.getTradeDate()));
+        trdFinProductDealTotal.setVdate(DateUtil.parse(entity.getvDate()));
+        trdFinProductDealTotal.setMdate(DateUtil.parse(entity.getmDate()));
+        trdFinProductDealTotal.setSettleDate(DateUtil.parse(entity.getPayDate()));
+        trdFinProductDealTotal.setShareAmt(ArithmeticUtil.divide(entity.getQty(), new BigDecimal(100), 2, RoundingMode.HALF_UP));
+        trdFinProductDealTotal.setPortfolioId(entity.getPortfolioId());
+        trdFinProductDealTotal.setPrinAmt(ArithmeticUtil.subtract(entity.getTradeAmt(), entity.getIntAmtTheory()));
+        trdFinProductDealTotal.setIntAmt(entity.getIntAmtTheory());
+        if(StringUtil.equals(trdFinProductDealTotal.getPs(),DictCodeList.交易方向_收息.getValue())){
+            trdFinProductDealTotal.setTradeAmt(trdFinProductDealTotal.getIntAmt());
+        }else{
+            trdFinProductDealTotal.setTradeAmt(entity.getTradeAmt());
+        }
+        trdFinProductDealTotal.setWorkflowId(entity.getWorkflowId());
+        trdFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
+        trdFinProductDealTotal.setWorkflowStatus(DictCodeList.数据状态_新建.getValue());
+        trdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+        trdFinProductDealTotal.setStatus(DictCodeList.数据状态_新建.getValue());
+        trdFinProductDealTotal.setTgBusiType(AutoPeriodCommonService.change交易方向To投管类型(trdFinProductDealTotal.getPs()));
+        trdFinProductDealTotal.setIsClean(DictCodeList.是否_是.getValue());
+        trdFinProductDealTotal.setFpriceAmt(trdFinProductDealTotal.getTradeAmt());
+        trdFinProductDealTotal.setTradeMarket(entity.getTradeMarket());
+        trdFinProductDealTotal.setTradeMarketMode(BussinessDictCodeList.交易市场_二级市场.getValue());
+        trdFinProductDealTotal.setCounterId(entity.getIssuer());
+        return trdFinProductDealTotal;
+    }
+
     private TrdBondDurDbInertDto genNew交易业务流程(TrdBondDurationDto entity) {
 
         TrdBondDurDbInertDto trdBondDurDbInertTemp =new TrdBondDurDbInertDto();
@@ -920,6 +963,9 @@ public class AutoPeriodBondCommonService {
         BigDecimal sumIntAmt = entity.getIntAmtTheory();
         //汇总券面总额
         BigDecimal sumPrimAmt = ArithmeticUtil.subtract(entity.getTradeAmt(), entity.getIntAmtTheory());
+        if(StringUtil.equals(ps,DictCodeList.交易方向_收息.getValue())){
+            sumPrimAmt = BigDecimal.ZERO;
+        }
         //已使用应计利息
         BigDecimal usedIntAmtSum = BigDecimal.ZERO;
         //已占用券面总额
@@ -1049,6 +1095,7 @@ public class AutoPeriodBondCommonService {
         dealadd.setGenType(DictCodeListExt1.生成方式_批处理生成.getValue());
         dealadd.setWorkflowId(deal.getWorkflowId());
         dealadd.setStatus(DictCodeList.数据状态_新建.getValue());
+        dealadd.setOurShareAmt(deal.getShareAmt());
 
         PtlTrade ptlTrade2 = new PtlTrade();
         ptlTrade2.setPortfolioId(dealadd.getPortfolioId());

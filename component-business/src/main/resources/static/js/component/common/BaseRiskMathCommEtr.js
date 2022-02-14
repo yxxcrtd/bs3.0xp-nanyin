@@ -74,7 +74,6 @@
     });
     
     table.bind('click','.showExprDetail', function(row) {
-        debugger
     	var data={};
         data.indId=row.kriCode;
         data.indName =row.kriName;

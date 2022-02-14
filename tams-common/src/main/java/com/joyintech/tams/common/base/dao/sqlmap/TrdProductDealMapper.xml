@@ -407,6 +407,9 @@
             <if test="businessModel != null" >
                 BUSINESS_MODEL,
             </if>
+            <if test="cancelDate != null" >
+                CANCEL_DATE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="tradeId != null" >
@@ -645,6 +648,9 @@
             </if>
             <if test="businessModel != null" >
                 #{businessModel,jdbcType=VARCHAR},
+            </if>
+            <if test="cancelDate != null" >
+                #{cancelDate,jdbcType=DATE},
             </if>
         </trim>
     </insert>
@@ -979,7 +985,8 @@
             TRANSACTION_FEE = #{transactionFee,jdbcType=DECIMAL},
             TRANSACTION_SYSTEM_FEE = #{transactionSystemFee,jdbcType=DECIMAL},
             SHARE_PAYMENT_FEE = #{sharePaymentFee,jdbcType=DECIMAL},
-            YESTERDAY_POSITION = #{yesterdayPosition,jdbcType=DECIMAL}
+            YESTERDAY_POSITION = #{yesterdayPosition,jdbcType=DECIMAL},
+            CANCEL_DATE = #{cancelDate,jdbcType=DATE}
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </update>
     

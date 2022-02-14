@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
+import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondDurationDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -131,4 +133,28 @@ public interface FinBondTargetAssetMapper {
      * @since 1.0
      */
     List<FinRateInfo> getFinRateInfoList(String finprodId);
+
+    /**
+     * 查询行权计划list
+     * @author sjj
+     * @param finprodId
+     * @return FinCashPlan
+     * @see
+     * @since 1.0
+     */
+    List<FinExercisePlan> selectFinExercisePlanByFinprodId(@Param("finprodId") String finprodId);
+
+    int deletePaTrdFinDealTotalData(Map<String, Object> paramMap);
+
+    int deleteTrdFinProductDealTotalData(Map<String, Object> paramMap);
+
+    int deleteTrdProductDeal(Map<String, Object> paramMap);
+
+    int deleteTrdProductDealAdd(Map<String, Object> paramMap);
+
+    int deleteStlPayOrdersData(Map<String, Object> paramMap);
+
+    List<TrdBondDurationDto> findEffectiveData(Map<String, Object> paramMap);
+
+    List<FinAssetIntInfo> findAssetIntInfo(Map<String, Object> params);
 }

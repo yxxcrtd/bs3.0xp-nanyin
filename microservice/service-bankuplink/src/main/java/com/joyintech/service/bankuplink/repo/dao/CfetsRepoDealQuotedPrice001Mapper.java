@@ -128,6 +128,8 @@ public interface CfetsRepoDealQuotedPrice001Mapper {
      * @return
      */
     List<PtlAllocationDto>  selectPortfolioByQuoteIdInit(Map<String,Object> map);
+    
+    List<PtlAllocationDto>  selectWflPortfolioByQuoteIdInit(Map<String,Object> map);
 
     List<PtlAllocationDto> selectEtrReByQuoteId(Map<String,Object> map);
 

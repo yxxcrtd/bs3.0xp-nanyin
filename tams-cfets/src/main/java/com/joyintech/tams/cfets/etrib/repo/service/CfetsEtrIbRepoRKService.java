@@ -1,18 +1,5 @@
 package com.joyintech.tams.cfets.etrib.repo.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-
-import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoinfoMapper;
@@ -26,10 +13,15 @@ import com.joyintech.tams.component.business.basicdata.dto.BusiFinProductRatingD
 import com.joyintech.tams.component.business.basicdata.service.BusiProductRatingService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.workflow.engine.constant.OperationType;
-import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
-public class CfetsEtrIbRepoRKService extends BaseService<CfetsEtrIbRepoRkDto>  implements BaseProcessService<CfetsEtrIbRepoRkDto>{
+public class CfetsEtrIbRepoRKService extends BaseService<CfetsEtrIbRepoRkDto> {
     @Autowired
     private CfetsEtrIbRepoinfoMapper cfetsEtrIbRepoinfoMapper;
 
@@ -76,7 +68,7 @@ public class CfetsEtrIbRepoRKService extends BaseService<CfetsEtrIbRepoRkDto>  i
     public int delete( CfetsEtrIbRepoRkDto dto) {
     	cfetsEtrIbRepoinfoMapper.deleteByPrimaryKey(dto.getPledgeStockId());
     	cfetsEtrIbRepoinfoMapper.delete(dto.getPledgeStockId());
-        return cfetsEtrIbRepoinfoMapper.deleteByPrimaryKey(dto.getPledgeStockId());
+        return etrSecStockMapper.deleteByPrimaryKey(dto.getPledgeStockId());
     }
     
     public int checkIsExistByPledgeStockName( Map<String, Object> map){
@@ -99,9 +91,6 @@ public class CfetsEtrIbRepoRKService extends BaseService<CfetsEtrIbRepoRkDto>  i
      * @see
      * @since 1.0
      */
-    @Transactional
-    @DTXTransaction
-    @PostMapping("inserttotal")
     public void inserttotal( CfetsEtrIbRepoRkDto dto) {
     	//先删
     	List<CfetsEtrRepoZLCXPositionResponse> F01List = new ArrayList<CfetsEtrRepoZLCXPositionResponse>();
@@ -144,6 +133,8 @@ public class CfetsEtrIbRepoRKService extends BaseService<CfetsEtrIbRepoRkDto>  i
 											tempList.addAll(finProductList);
 										}
 									}
+								}else{
+									tempList.addAll(finProductList);
 								}
 							}
 						}
@@ -215,12 +206,11 @@ public class CfetsEtrIbRepoRKService extends BaseService<CfetsEtrIbRepoRkDto>  i
     }
     
     
-    @PostMapping("getName")
     public CfetsEtrIbRepoRkDto getName( String pledgeStockId) {
         return cfetsEtrIbRepoinfoMapper.getName(pledgeStockId);
     }
 
-	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void doComplete(CfetsEtrIbRepoRkDto entity, OperationType type) {
 		if(OperationType.DELETE.equals(type)) {
 			delete(entity);

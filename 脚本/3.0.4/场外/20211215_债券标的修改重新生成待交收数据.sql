@@ -1,0 +1,3 @@
+delete from sys_para where SYSTEM_CODE = 'TRD'and PARA_CODE='IS_TODO_SETTLE_FLAG';
+insert into sys_para (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
+values ('TRD', 'IS_TODO_SETTLE_FLAG', 'N', '01', '', '修改债券计划是否需要重新生成待交收数据,Y:是;N否', 'system', '', sysdate, 'system', sysdate, '', '01');

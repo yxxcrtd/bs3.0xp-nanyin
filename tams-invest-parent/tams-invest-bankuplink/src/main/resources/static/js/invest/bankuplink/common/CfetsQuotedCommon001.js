@@ -22,22 +22,22 @@
         ,{field:'portfolioName', width:160,  title: '组合名称',edit:false,sortable: false,
         }
         ,{field:'avaNum', width:160, title: '剩余额度（万元）',type:'number',sortable: false}
-        ,{field:'shareAmt', width:150, title: '券面总额（万元）',edit:true,sortable: false,type:'number', digit:2}
-        ,{field:'ourEntNum', width:150, title: '本方券券面总额（万元）',edit:true,sortable: false,type:'number', digit:2,visible:sellPara=="02"&&ps!='T03'?true:false}
-        ,{field:'lendinEntNum', width:150, title: '融入券券面总额（万元）',edit:true,sortable: false,type:'number', digit:2,visible:sellPara=="02"&&ps=='T02'?true:false}
-        ,{field:'sellAbleNum', width:150, title: '卖空购回券面总额（万元）',edit:true,sortable: false,type:'number', digit:2,visible:sellPara=="02"&&ps=='T01'?true:false}
-        ,{field:'dealFeeAmt', width:150, title: '交易手续费（元）',edit:true,sortable: false,type:'number', digit:2}
-        ,{field:'settFeeAmt', width:150, title: '结算服务费（元）',edit:true,sortable: false,type:'number', digit:2}
-        ,{field:'cpriceAmt', width:150, title: '净价总额（元）',edit:true,sortable: false,type:'number', digit:2,visible:ps!='T03'?true:false}
-        ,{field:'intAmt', width:150, title: '应计利息总额（元）',edit:true,sortable: false,type:'number', digit:2,visible:ps!='T03'?true:false}
-        ,{field:'fpriceAmt', width:150, title: '全价总额（元）',edit:true,sortable: false,type:'number', digit:2,visible:ps!='T03'?true:false}
-        ,{field:'businessModel', width:100, title: '业务模式', sortable: false, edit:true
+        ,{field:'shareAmt', width:150, title: '券面总额（万元）',sortable: false,type:'number', digit:2}
+        ,{field:'ourEntNum', width:150, title: '本方券券面总额（万元）',sortable: false,type:'number', digit:2,visible:sellPara=="02"&&ps!='T03'?true:false}
+        ,{field:'lendinEntNum', width:150, title: '融入券券面总额（万元）',sortable: false,type:'number', digit:2,visible:sellPara=="02"&&ps=='T02'?true:false}
+        ,{field:'sellAbleNum', width:150, title: '卖空购回券面总额（万元）',sortable: false,type:'number', digit:2,visible:sellPara=="02"&&ps=='T01'?true:false}
+        ,{field:'dealFeeAmt', width:150, title: '交易手续费（元）',sortable: false,type:'number', digit:2}
+        ,{field:'settFeeAmt', width:150, title: '结算服务费（元）',sortable: false,type:'number', digit:2}
+        ,{field:'cpriceAmt', width:150, title: '净价总额（元）',sortable: false,type:'number', digit:2,visible:ps!='T03'?true:false}
+        ,{field:'intAmt', width:150, title: '应计利息总额（元）',sortable: false,type:'number', digit:2,visible:ps!='T03'?true:false}
+        ,{field:'fpriceAmt', width:150, title: '全价总额（元）',sortable: false,type:'number', digit:2,visible:ps!='T03'?true:false}
+        ,{field:'businessModel', width:100, title: '业务模式', sortable: false
             ,editOption:{type:'select',id:"businessModel",formatoption:true,result:BUSINESS_MODEL}
             , visible:SHOW_INVAIM_OR_BUSSINSSMODEL=='02' && ps!='T03'?true:false }
         ,{field:'priceModel', width:100, title: '价格模式', sortable: false, edit:true
             ,editOption:{type:'select',id:"priceModel",formatoption:true,result:BUSINESS_MODEL}
             , visible:SHOW_INVAIM_OR_BUSSINSSMODEL=='02'?true:false }
-        ,{field:'secAcctName', width:150, title: '证券账户',edit:true,sortable: false}
+        ,{field:'secAcctName', width:150, title: '证券账户',sortable: false}
         ,{field:'price', width:120, title: '净价(元)',sortable: false,type:'number', digit:2}
         ,{field:'unitFprice', width:120, title: '全价(元)',sortable: false,type:'number', digit:2,visible:ps=='T03'?true:false}
         ,{field:'matureYield', width:120, title: '到期收益率%',edit:false,sortable: false,visible: true,type:'number', digit:4,visible:ps!='T03'?true:false}
@@ -74,9 +74,9 @@
             , visible:SHOW_INVAIM_OR_BUSSINSSMODEL=='02'?true:false }*/
         ,{field:'entrustAvaNum', width:160, title: '剩余额度（万元）',type:'number',sortable: false}
         ,{field:'avaNum', width:150, title: '券面总额（万元）',edit:true,sortable: false,type:'number', digit:2}
-        ,{field:'price', width:120, title: '净价(元)',sortable: false,type:'number', digit:2}
-        ,{field:'matureYield', width:120, title: '到期收益率%',edit:false,sortable: false,visible: true,type:'number', digit:2}
-        ,{field:'exerYield', width:120, title: '行权收益率%',sortable: false,type:'number', digit:2}
+        ,{field:'price', width:120, title: '净价(元)',sortable: false,type:'number', digit:4}
+        ,{field:'matureYield', width:120, title: '到期收益率%',edit:false,sortable: false,visible: true,type:'number', digit:4}
+        ,{field:'exerYield', width:120, title: '行权收益率%',sortable: false,type:'number', digit:4}
         ,{field:'dealFeeAmt', width:150, title: '交易手续费（元）',edit:true,sortable: false,type:'number', digit:2}
         ,{field:'settFeeAmt', width:150, title: '结算服务费（元）',edit:true,sortable: false,type:'number', digit:2}
         // ,{field:'settleAmt', width:150, title: '结算金额',sortable: false,type:'number', digit:2}
@@ -202,7 +202,6 @@
     var reloadPtlAllocation = function(result){
         for (var i in result) {
             var obj = result[i];
-            debugger;
             if (obj != null && obj !== '') {
                 var datas = {
                     portfolioId:obj.portfolioId,

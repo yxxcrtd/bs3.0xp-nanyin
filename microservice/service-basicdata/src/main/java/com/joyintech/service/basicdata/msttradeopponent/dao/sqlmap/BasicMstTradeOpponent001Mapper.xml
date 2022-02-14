@@ -320,4 +320,24 @@ FROM
 			</if>
 		</where>
 	</select>
+	<select id="selectPartyId" resultType="com.joyintech.framework.select.SuggestDto">
+		SELECT DISTINCT
+		mcci.PARTY_ID code,
+		mcci.PARTY_ID hidCode,
+		mcci.PARTY_ABBR name,
+		mcci.PARTY_ABBR shortName
+		FROM
+		MST_CFETS_CUSTOMER_INFO mcci
+		<where>
+			<if test="param != null and param != ''">
+				mcci.PARTY_ID LIKE CONCAT('%', CONCAT(#{param}, '%'))
+				OR mcci.PARTY_CUSTOMER_ID LIKE CONCAT('%', CONCAT(#{param}, '%'))
+				OR mcci.PARTY_ABBR LIKE CONCAT('%', CONCAT(#{param}, '%'))
+				OR mcci.PARTY_NAME LIKE CONCAT('%', CONCAT(#{param}, '%'))
+			</if>
+		</where>
+	</select>
+	<select id="getAllPartyIdIsNotNull" resultType="java.lang.String">
+		SELECT PARTY_ID FROM  MST_COUNTER_PARTY WHERE PARTY_ID IS NOT NULL
+	</select>
 </mapper>

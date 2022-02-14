@@ -32,7 +32,8 @@
 		a.MAX_PRICE_FULL AS maxPriceFull, /**最高价全价**/
 		a.MIN_PRICE_FULL AS minPriceFull, /**最低价全价**/
 		<!--全价和净价分开 add by lishuping 20191125 end-->
-		wfl.PROCESS_STATE as processState
+		wfl.PROCESS_STATE as processState,
+		a.MARKET_AMT as marketAmt
 		FROM mst_BOND_MARKET_INFO a
 <!-- 		LEFT  JOIN MST_BOND_VALUATION_INFO ON MST_BOND_VALUATION_INFO.SEC_ID = a.SEC_ID -->
 		INNER JOIN FIN_PRODUCT c ON a.SEC_ID=c.FINPROD_MARKET_ID
@@ -83,7 +84,8 @@
 		a.BUY_ONE_PRICE_FULL AS buyOnePriceFull, /**买一价全价**/
 		a.SELL_ONE_PRICE_FULL AS sellOnePriceFull, /**卖一价全价**/
 		a.MAX_PRICE_FULL AS maxPriceFull, /**最高价全价**/
-		a.MIN_PRICE_FULL AS minPriceFull /**最低价全价**/
+		a.MIN_PRICE_FULL AS minPriceFull /**最低价全价**/,
+		a.MARKET_AMT as marketAmt
 		FROM MST_BOND_MARKET_INFO a
 		INNER JOIN FIN_PRODUCT c ON a.SEC_ID=c.FINPROD_MARKET_ID
 		WHERE 1 = 1
@@ -95,10 +97,10 @@
 	<insert id="insert" parameterType="com.joyintech.service.basicdata.marketdata.bondmarketinfo.dto.ComBondMarketInfo001Dto">
 		insert into MST_BOND_MARKET_INFO
 		(SEC_ID,VALUE_DATE,CLOSE_PRICE,AVERAGE_PRICE,BUY_ONE_PRICE,SELL_ONE_PRICE,MAX_PRICE,MIN_PRICE,CLOSE_PRICE_FULL,AVERAGE_PRICE_FULL,
-		BUY_ONE_PRICE_FULL,SELL_ONE_PRICE_FULL,MAX_PRICE_FULL,MIN_PRICE_FULL,CREATE_TIME,UPDATE_TIME,CREATE_USER,UPDATE_USER)
+		BUY_ONE_PRICE_FULL,SELL_ONE_PRICE_FULL,MAX_PRICE_FULL,MIN_PRICE_FULL,CREATE_TIME,UPDATE_TIME,CREATE_USER,UPDATE_USER,MARKET_AMT)
 		values
 		(#{secId},to_date(#{valueDate},'yyyy-MM-dd'),#{cloPrice},#{avgPrice},#{buyOnePrice},#{sellOnePrice},#{maxPrice},#{minPrice},#{cloPriceFull},
-		#{avgPriceFull},#{buyOnePriceFull},#{sellOnePriceFull},#{maxPriceFull},#{minPriceFull},sysdate,sysdate,#{createUser},#{updateUser})
+		#{avgPriceFull},#{buyOnePriceFull},#{sellOnePriceFull},#{maxPriceFull},#{minPriceFull},sysdate,sysdate,#{createUser},#{updateUser},#{marketAmt})
 	</insert>
 
 	<!--	删除操作  zwq by 2021/01/28-->
@@ -124,7 +126,8 @@
 		MAX_PRICE_FULL = #{maxPriceFull},
 		MIN_PRICE_FULL = #{minPriceFull},
 		UPDATE_TIME = sysdate,
-		UPDATE_USER = #{updateUser}
+		UPDATE_USER = #{updateUser},
+		MARKET_AMT= #{marketAmt}
 		where SEC_ID = #{secId}
 		and VALUE_DATE = to_date(#{valueDate},'yyyy-MM-dd')
 	</update>
@@ -181,7 +184,8 @@
             sysdate CREATE_TIME,
             #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
             sysdate UPDATE_TIME,
-            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+			#{item.marketAmt,jdbcType=DECIMAL} MARKET_AMT
             from dual
         </foreach>
         ) TEMP
@@ -209,18 +213,19 @@
         CII.CREATE_TIME = TEMP.CREATE_TIME,
         CII.UPDATE_USER = TEMP.UPDATE_USER,
         CII.UPDATE_TIME = TEMP.UPDATE_TIME,
-        CII.CREATE_DEPT = TEMP.CREATE_DEPT
-        <!-- 未匹配到这插入 -->
+        CII.CREATE_DEPT = TEMP.CREATE_DEPT,
+		CII.MARKET_AMT = TEMP.MARKET_AMT
+			<!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN
         INSERT (SEC_ID,VALUE_DATE,CLOSE_PRICE,AVERAGE_PRICE,BUY_ONE_PRICE,SELL_ONE_PRICE
         ,MAX_PRICE,MIN_PRICE,CLOSE_PRICE_FULL,AVERAGE_PRICE_FULL,BUY_ONE_PRICE_FULL
         ,SELL_ONE_PRICE_FULL,MAX_PRICE_FULL,MIN_PRICE_FULL,CREATE_USER,CREATE_TIME
-        ,UPDATE_USER,UPDATE_TIME,CREATE_DEPT)
+        ,UPDATE_USER,UPDATE_TIME,CREATE_DEPT,MARKET_AMT)
         values(
         TEMP.SEC_ID,TEMP.VALUE_DATE,TEMP.CLOSE_PRICE,TEMP.AVERAGE_PRICE,TEMP.BUY_ONE_PRICE,
         TEMP.SELL_ONE_PRICE,TEMP.MAX_PRICE,TEMP.MIN_PRICE,TEMP.CLOSE_PRICE_FULL,TEMP.AVERAGE_PRICE_FULL,
         TEMP.BUY_ONE_PRICE_FULL,TEMP.SELL_ONE_PRICE_FULL,TEMP.MAX_PRICE_FULL,TEMP.MIN_PRICE_FULL,
-        TEMP.CREATE_USER,TEMP.CREATE_TIME,TEMP.UPDATE_USER,TEMP.UPDATE_TIME,TEMP.CREATE_DEPT
+        TEMP.CREATE_USER,TEMP.CREATE_TIME,TEMP.UPDATE_USER,TEMP.UPDATE_TIME,TEMP.CREATE_DEPT,TEMP.MARKET_AMT
         )
     </insert>
 

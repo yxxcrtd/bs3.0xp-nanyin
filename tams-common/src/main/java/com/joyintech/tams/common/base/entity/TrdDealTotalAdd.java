@@ -210,6 +210,10 @@ public class TrdDealTotalAdd extends BaseEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal clearLossAmt;
+    /**
+     *本方
+     */
+    private String ouPartyId;
 
     /**
      * 取得 汇总交易编号
@@ -788,5 +792,13 @@ public class TrdDealTotalAdd extends BaseEntity {
      */
     public void setClearLossAmt(BigDecimal clearLossAmt) {
         this.clearLossAmt = clearLossAmt;
+    }
+
+    public String getOuPartyId() {
+        return ouPartyId;
+    }
+
+    public void setOuPartyId(String ouPartyId) {
+        this.ouPartyId = ouPartyId;
     }
 }

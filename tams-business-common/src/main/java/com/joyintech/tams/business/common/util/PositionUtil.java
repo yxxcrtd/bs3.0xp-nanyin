@@ -15,6 +15,7 @@ import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
 import com.joyintech.tams.common.base.entity.PtlPortfolio;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +96,7 @@ public class PositionUtil {
                                 strb.append("(");
                                 strb.append(portfolioName);
                                 strb.append(")余额为");
-                                strb.append(CHECKBALANCE);
+                                strb.append(CHECKBALANCE.toPlainString());
                                 strb.append("元【");
                                 strb.append(SysDataUtil.getNameFromDataDict(DictCode.头寸资产类型, HODING_TYPE));
                                 if ((i+1) == checkResults.size()){
@@ -167,7 +168,12 @@ public class PositionUtil {
                                 ;
                         BigDecimal doAdd = BigDecimal.ZERO;
                         // 原投管余额
-                        BigDecimal cashT = cashPositionService.etrQryCommandAvailableCash(paramMap);
+                        BigDecimal cashT = BigDecimal.ZERO;
+                        if (StringUtil.equals(DictCodeListExt1.子系统代码_委托.getValue(), tamsReq.getString("modelType"))){
+                            cashT = cashPositionService.etrQryCommandAvailableCash(paramMap);
+                        }else if (StringUtil.equals(DictCodeListExt1.子系统代码_交易.getValue(), tamsReq.getString("modelType"))){
+                            cashT = cashPositionService.trdQryCommandAvailableCash(paramMap);
+                        }
                         // 头寸余额
                         BigDecimal CHECKBALANCE = flow.getBigDecimal("CHECKBALANCE");
                         // 发生额
@@ -209,6 +215,9 @@ public class PositionUtil {
         BigDecimal rs = BigDecimal.ZERO;
         if (tamsReq != null) {
             List list = (List) tamsReq.get("ptlList");
+            if(StringUtil.isEmptyList(list)){
+                list = (List) tamsReq.get("ptlCashList");
+            }
             if (list != null && !list.isEmpty()){
                 for (int i=0;i<list.size(); i++){
                     BaseMap each = BaseMap.newMap((Map) list.get(i));

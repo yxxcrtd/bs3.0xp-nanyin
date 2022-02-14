@@ -25,7 +25,8 @@ public class MessageCode {
 	public static final MessageCode FAIL_PLATFORM_USERID_EXISTS = new MessageCode("10016","用户授权平台信息已存在");
 	public static final MessageCode FAIL_COOKIEKEY_NULL = new MessageCode("10018","身份标识不能为空");
 	public static final MessageCode FAIL_PLATFORM_CODE_NULL = new MessageCode("10019","平台编码不能为空");
-
+	public static final MessageCode FAIL_PLATFORM_HOST_ERROR = new MessageCode("100203","平台主机不能为空");
+	public static final MessageCode FAIL_PLATFORM_INDEX_ERROR = new MessageCode("10021","主页地址不能为空");
 
 	protected String code;
 	protected String name;

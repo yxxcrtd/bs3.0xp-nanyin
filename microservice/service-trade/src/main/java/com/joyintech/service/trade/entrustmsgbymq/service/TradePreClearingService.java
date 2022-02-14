@@ -3,6 +3,7 @@ package com.joyintech.service.trade.entrustmsgbymq.service;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -55,6 +56,7 @@ import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
+import org.springframework.util.CollectionUtils;
 
 /**
  *
@@ -202,6 +204,8 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
     private FinPledgeDispDetailTempMapper finPledgeDispDetailTempMapper;
     @Autowired
     private IPlatformDate iPlatformDate;
+    @Autowired
+    private EtrEntrustDetailMapper  etrEntrustDetailMapper;
     /**
      * 成交数据预清算
      *
@@ -808,7 +812,85 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
                 baseTradeProductDealCommService.finishEntrust(finProductTradeDto.getBaseTradeProductDealDtos(), false);
             }
         }else {
-            baseTradeProductDealCommService.execute(finProductTradeDto);
+            if(!CollectionUtils.isEmpty(finProductTradeDto.getBaseTradeProductDealDtos())&&StringUtil.isNotEmpty(finProductTradeDto.getBaseTradeProductDealDtos().get(0).getEntrustId())){
+                 EtrEntrust etrEntrust=etrEntrustMapper.selectByPrimaryKey(finProductTradeDto.getBaseTradeProductDealDtos().get(0).getEntrustId());
+                 //系列户,循环掉之前的方法
+                 if(StringUtil.equals(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue(),etrEntrust.getEntrustClass())) {
+                     //系列户按照组合维度构建多个finProductTradeDto,处理头寸开始
+                     List<FinProductTradeDto> finProductTradeDtoList=new ArrayList<>();
+                     List<BaseTradeProductDealDto> baseTradeProductDealDtoList=finProductTradeDto.getBaseTradeProductDealDtos();
+                     baseTradeProductDealDtoList.forEach(item -> {
+                         String entrustId = item.getEntrustId();
+                         if(StringUtil.isNotEmpty(entrustId)){
+                             List<EtrEntrustDetail> etrEntrustDetailList=etrEntrustDetailMapper.selectList(entrustId);
+                             BigDecimal totalEntrustAmt = etrEntrustDetailList.stream().map(EtrEntrustDetail::getEntrustAmt).reduce(BigDecimal::add).get();
+                             BigDecimal tradeAmtSingleSum=BigDecimal.ZERO;
+                             BigDecimal shareAmtSingleSum=BigDecimal.ZERO;
+                             BigDecimal settleAmtSingleSum=BigDecimal.ZERO;
+                             for(int i=0;i<etrEntrustDetailList.size();i++){
+                                 EtrEntrustDetail etrEntrustDetail=etrEntrustDetailList.get(i);
+                                 TrdProductDeal trdProductDealMuilt= item.getTrdProductDeal();
+                                 TrdProductDealAdd trdProductDealAddMuilt=item.getTrdProductDealAdd();
+                                 BigDecimal rate=etrEntrustDetail.getEntrustAmt().divide(totalEntrustAmt,4,BigDecimal.ROUND_HALF_UP);
+                                 BigDecimal tradeAmtSingle=BigDecimal.ZERO; //金额
+                                 BigDecimal  shareAmtSingle=BigDecimal.ZERO; //份额
+                                 //最后一个组合分配的金额=总金额-前几个组合分配的金额之后
+                                 if(i==etrEntrustDetailList.size()-1){
+                                     tradeAmtSingle=ArithmeticUtil.subtract(trdProductDealMuilt.getTradeAmt(),tradeAmtSingleSum);
+                                     shareAmtSingle=ArithmeticUtil.subtract(trdProductDealMuilt.getShareAmt(),shareAmtSingleSum);
+                                 }else{
+                                     //交易金额
+                                     tradeAmtSingle=ArithmeticUtil.round(ArithmeticUtil.multiply(trdProductDealMuilt.getTradeAmt(),rate),2, RoundingMode.HALF_UP);
+                                     tradeAmtSingleSum=tradeAmtSingleSum.add(tradeAmtSingleSum);
+                                     //交易份额
+                                     shareAmtSingle=ArithmeticUtil.round(ArithmeticUtil.multiply(trdProductDealMuilt.getShareAmt(),rate),2, RoundingMode.HALF_UP);
+                                     shareAmtSingleSum=shareAmtSingleSum.add(tradeAmtSingleSum);
+
+                                 }
+                                 trdProductDealMuilt.setTradeAmt(tradeAmtSingle);
+                                 trdProductDealMuilt.setShareAmt(shareAmtSingle);
+                                 trdProductDealAddMuilt.setPortfolioId(etrEntrustDetail.getPortfolioId());
+                                 List<BaseTradeProductDealDto> baseTradeProductDealDtoListMuilt=new ArrayList<>();
+                                 BaseTradeProductDealDto baseTradeProductDealDtoMuilt=new BaseTradeProductDealDto();
+                                 BeanUtil.copyPropertiesIgnoreNull(baseTradeProductDealDtoMuilt,item);
+                                 baseTradeProductDealDtoMuilt.setTrdProductDeal(trdProductDealMuilt);
+                                 baseTradeProductDealDtoMuilt.setTrdProductDealAdd(trdProductDealAddMuilt);
+                                 //划款指令按比例分
+                                 if (!StringUtil.isEmptyList(trdTempDto.getBussTrdTransferOrder())) {
+                                     StlPayOrdersDto stlPayOrdersDtoMuilt = new StlPayOrdersDto();
+                                     BeanUtil.copyPropertiesIgnoreNull(stlPayOrdersDtoMuilt, trdTempDto.getBussTrdTransferOrder().get(0));
+                                     //最后一个组合分配的金额=总金额-前几个组合分配的金额之后
+                                     BigDecimal settleAmtSingle=BigDecimal.ZERO;
+                                     if(i==etrEntrustDetailList.size()-1){
+                                         settleAmtSingle=ArithmeticUtil.subtract(stlPayOrdersDtoMuilt.getSettleAmt(),settleAmtSingleSum);
+                                     }else{
+                                         //结算金额
+                                         settleAmtSingle=ArithmeticUtil.round(ArithmeticUtil.multiply(trdProductDealMuilt.getTradeAmt(),rate),2, RoundingMode.HALF_UP);
+                                         settleAmtSingleSum=tradeAmtSingleSum.add(tradeAmtSingleSum);
+                                     }
+                                     stlPayOrdersDtoMuilt.setSettleAmt(settleAmtSingle);
+                                     stlPayOrdersDtoMuilt.setPortfolioId(etrEntrustDetail.getPortfolioId());
+                                     baseTradeProductDealDtoMuilt.setStlPayOrdersList(Arrays.asList(stlPayOrdersDtoMuilt));
+                                 }
+                                 baseTradeProductDealDtoListMuilt.add(baseTradeProductDealDtoMuilt);
+                                 FinProductTradeDto finProductTradeDtoMuilt=new FinProductTradeDto();
+                                 BeanUtil.copyPropertiesIgnoreNull(finProductTradeDtoMuilt,item);
+                                 finProductTradeDtoMuilt.setBaseTradeProductDealDtos(baseTradeProductDealDtoListMuilt);
+                                 finProductTradeDtoList.add(finProductTradeDtoMuilt);
+                             }
+                         }
+                     });
+                     for(int i=0;i<finProductTradeDtoList.size();i++){
+                         baseTradeProductDealCommService.execute(finProductTradeDtoList.get(i));
+                     }
+                 }else{
+                     baseTradeProductDealCommService.execute(finProductTradeDto);
+                 }
+            }else{
+                baseTradeProductDealCommService.execute(finProductTradeDto);
+            }
+            //系列户按照组合维度构建多个finProductTradeDto,处理头寸结束
+
         }
     }
 

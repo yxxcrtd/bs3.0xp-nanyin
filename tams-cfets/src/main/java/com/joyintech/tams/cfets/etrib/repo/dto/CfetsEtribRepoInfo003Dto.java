@@ -10,24 +10,21 @@
 
 package com.joyintech.tams.cfets.etrib.repo.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
+import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
+import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import com.joyintech.workflow.engine.dto.ProcessEntity;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
-import javax.validation.Valid;
-
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.framework.json.BigDecimalSerializer;
-import com.joyintech.framework.validation.annotation.NotEmpty;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
-import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
-import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
-import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
-import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
-import com.joyintech.tams.invest.entrust.etribrepo.dto.BussCombDistribtDto;
-import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 /**
  * @author 王波
@@ -35,163 +32,197 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  * @see CfetsEtribRepoInfo003Dto
  * @since 1.0
  */
+@ApiModel(value="质押式回购指令提交类",description="质押式回购指令提交类")
 public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntity {
 
     /**
      * 按钮id
      */
+    @ApiModelProperty(name="elementId",value="按钮id")
     private String elementId;
+
+    @ApiModelProperty(name="portfolioName",value="组合名称")
+    private String portfolioName;
 
     /**
      * 操作类型
      */
+    @ApiModelProperty(name="operateType",value="操作类型")
     private String operateType;
-
-    /**
-     * 市场代码
-     */
-    private String finprodMarketId;
-
-    /**
-     * 多指令导入
-     */
-    private boolean importFlow;
 
     /**
      * 劵面总额
      */
+    @ApiModelProperty(name="tradeAmt",value="劵面总额")
     private BigDecimal tradeAmt;
     
     /**
      * 质押券库
      */
+    @ApiModelProperty(name="zyqk",value="质押券库")
     private String zyqk;
+
+    /**
+     * 质押券库
+     */
+    @ApiModelProperty(name="zyqkStr",value="质押券库")
+    private String zyqkStr;
     
     /**
      * 质押券信息列表明细
      */
-    private List<PledgeBondInfoDto> pledgeBondTotalListDetailed;
+    @ApiModelProperty(name="pledgeBondTotalListDetailed",value="质押券信息列表明细")
+    private List<CfetsPledgeBondInfoDto> pledgeBondTotalListDetailed;
     
     /**
      * 添加质押券信息
      */
+    @ApiModelProperty(hidden = true)
     private BussRepoSecDto bussRepoSec;
 
     /**
      * 清算速度
      */
-    private String settleSpeed;
-    
-    /**
-     * 清算速度
-     */
+    @ApiModelProperty(name="settleSpreed",value="清算速度")
     private String settleSpreed;
-    
-    /**
-     * 交割日期
-     */
-    private Date settleDate;
 
-    /**
-     * 全价
-     */
-    private BigDecimal fpriceAmt;
-
-    private BigDecimal matureYield;
-
-    /**
-     * 资产可用持仓
-     */
-    private BigDecimal assetAvailablePosition;
-
-    /**
-     * 资产起息日
-     */
-    private Date finvdate;
-    /**
-     * 资产到期日
-     */
-    private Date finmdate;
-    
     /**
      * 回购期限
      */
+    @ApiModelProperty(name="repoTerm",value="回购期限")
     private BigDecimal repoTerm;
+
+    /**
+     * T日可用现金
+     */
+    @ApiModelProperty(name="availableCashT",value="T日可用现金")
+    private BigDecimal availableCashT;
+
+    /**
+     * T1日可用现金
+     */
+    @ApiModelProperty(name="availableCashT1",value="T1日可用现金")
+    private BigDecimal availableCashT1;
+
+    /**
+     * 账户现金
+     */
+    @ApiModelProperty(name="accountCash",value="账户现金")
+    private BigDecimal accountCash;
+
+
     /**
      * 期限品种
      */
+    @ApiModelProperty(name="termType",value="期限品种")
     private String termType;
 
     /**
      * 证券托管户
      */
+    @ApiModelProperty(hidden = true)
     private String secAcctId;
 
+    @ApiModelProperty(name="etrInvestRepoInfoDtos",value="组合分配")
     List<CfetsEtribRepoInfo003Dto> etrInvestRepoInfoDtos;
     
-    /**
-     * 组合分配
-     */
-    List<BussCombDistribtDto> bussCombDistribtList;
-
-
-
     /**
      * 本方券券面总额
      */
     @JsonSerialize(using= BigDecimalSerializer.class)
+    @ApiModelProperty(name="entrustOwnNum",value="本方券券面总额")
     private BigDecimal entrustOwnNum;
     /**
      * 融入券/卖空购回券面总额
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
+    @ApiModelProperty(name="entrustIntegrateNum",value="融入券/卖空购回券面总额")
     private BigDecimal entrustIntegrateNum;
 
     /**
      * 风险试算实体类
      */
+    @ApiModelProperty(name="riskTrialRetDto",value="风险试算实体类")
     private List<RiskTrialRetDto> riskTrialRetDto;
+
+    private CfetsEtribdoRiskcalResponse cfetsEtribdoRiskcalResponse;
 
     /**
      * 多组合汇总指令ID
      */
+    @ApiModelProperty(name="totalEtrustId",value="多组合汇总指令ID")
     private String totalEtrustId;
 
+
+    @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
+    private String softSkipMode;
+
+
+    private String entrustDateStr;
     /**
-     * 画面文件上传用的ID
+     * 委托关闭方式
      */
-    private String businessId;
+    @ApiModelProperty(hidden = true)
+    private String CloseWay;
 
     /**
-     * 资产二级分类（原资产一级分类，委托页面的债券一级分类，修改：王贵奇，2019/9/27）
+     * 接收状态
      */
+    @ApiModelProperty(hidden = true)
+    private String recStatus;
+
+    /**
+     *
+     */
+    @ApiModelProperty(hidden = true)
     private String assetType1;
 
-//    @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
-    private String softSkipMode;
-    
+
+    /**
+     *
+     */
+    private Date transmitTime;
+
+
+//    /**
+//     *
+//     */
+//    private Boolean submitFlag;
+
+
+    /**
+     *
+     */
+    private String systemAct;
+
+    /**
+     * 投资人员信息DTO
+     */
+    @ApiModelProperty(hidden = true)
+    private BussEtrInvestPersonInfoDto etrInvestPersonInfo;
+
+    private CfetsEtribRepoInfo003Dto cfetsEtribRepoInfo003Dto;
+
+    /**
+     * 本方交易员
+     */
+    @ApiModelProperty(hidden = true)
+    private String trader;
+
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
+    }
+
     /**
      * 获取 repoTerm
      * @return repoTerm.
      */
     public BigDecimal getRepoTerm() {
         return repoTerm;
-    }
-    /**
-     * 获取 settleSpreed
-     * @return settleSpreed.
-     */
-    @NotEmpty(fieldName = "EtrIbRepoinfo002.settleSpreed", groups = {ValidateGroupEdit.class})
-    public String getSettleSpreed() {
-        return settleSpreed;
-    }
-
-    /**
-     * 设置 settleSpreed
-     * @param settleSpreed settleSpreed
-     */
-    public void setSettleSpreed(String settleSpreed) {
-        this.settleSpreed = settleSpreed;
     }
     /**
      * 设置 repoTerm
@@ -217,32 +248,7 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
         this.termType = termType;
     }
 
-    public String getBusinessId() {
-        return businessId;
-    }
-
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
-    }
-
-    public String getAssetType1() {
-        return assetType1;
-    }
-
-    public void setAssetType1(String assetType1) {
-        this.assetType1 = assetType1;
-    }
-
-    public boolean isImportFlow() {
-        return importFlow;
-    }
-
-    public void setImportFlow(boolean importFlow) {
-        this.importFlow = importFlow;
-    }
-
-
-
+    @PrimaryKey(value= PrimaryKey.Field.PK_1)
     public String getTotalEtrustId() {
         return totalEtrustId;
     }
@@ -259,12 +265,12 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
         this.riskTrialRetDto = riskTrialRetDto;
     }
 
-    public Date getSettleDate() {
-        return settleDate;
+    public CfetsEtribdoRiskcalResponse getCfetsEtribdoRiskcalResponse() {
+        return cfetsEtribdoRiskcalResponse;
     }
 
-    public void setSettleDate(Date settleDate) {
-        this.settleDate = settleDate;
+    public void setCfetsEtribdoRiskcalResponse(CfetsEtribdoRiskcalResponse cfetsEtribdoRiskcalResponse) {
+        this.cfetsEtribdoRiskcalResponse = cfetsEtribdoRiskcalResponse;
     }
 
     public String getElementId() {
@@ -307,12 +313,6 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
         this.secAcctId = secAcctId;
     }
 
-    /**
-     * 投资人员信息DTO
-     */
-    @Valid
-    private BussEtrInvestPersonInfoDto etrInvestPersonInfo;
-
     public BussEtrInvestPersonInfoDto getEtrInvestPersonInfo() {
         return etrInvestPersonInfo;
     }
@@ -320,41 +320,6 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
     public void setEtrInvestPersonInfo(BussEtrInvestPersonInfoDto etrInvestPersonInfo) {
         this.etrInvestPersonInfo = etrInvestPersonInfo;
     }
-
-    public Date getFinvdate() {
-        return finvdate;
-    }
-
-    public void setFinvdate(Date finvdate) {
-        this.finvdate = finvdate;
-    }
-
-    public Date getFinmdate() {
-        return finmdate;
-    }
-
-    public void setFinmdate(Date finmdate) {
-        this.finmdate = finmdate;
-    }
-
-    public BigDecimal getAssetAvailablePosition() {
-        return assetAvailablePosition;
-    }
-
-    public void setAssetAvailablePosition(BigDecimal assetAvailablePosition) {
-        this.assetAvailablePosition = assetAvailablePosition;
-    }
-
-    /**
-     * 委托关闭方式
-     */
-    private String CloseWay;
-
-    /**
-     * 接收状态
-     */
-    private String recStatus;
-
     public String getRecStatus() {
         return recStatus;
     }
@@ -384,11 +349,6 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
         this.selectedItem = selectedItem;
     }
 
-    /**
-     * 行权收益率
-     */
-    private BigDecimal exerYield;
-
     public String getOperateType() {
         return operateType;
     }
@@ -397,36 +357,12 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
         this.operateType = operateType;
     }
 
-    public BigDecimal getExerYield() {
-        return exerYield;
+    public String getSettleSpreed() {
+        return settleSpreed;
     }
 
-    public void setExerYield(BigDecimal exerYield) {
-        this.exerYield = exerYield;
-    }
-
-    public BigDecimal getMatureYield() {
-        return matureYield;
-    }
-
-    public void setMatureYield(BigDecimal matureYield) {
-        this.matureYield = matureYield;
-    }
-
-    public BigDecimal getFpriceAmt() {
-        return fpriceAmt;
-    }
-
-    public void setFpriceAmt(BigDecimal fpriceAmt) {
-        this.fpriceAmt = fpriceAmt;
-    }
-
-    public String getSettleSpeed() {
-        return settleSpeed;
-    }
-
-    public void setSettleSpeed(String settleSpeed) {
-        this.settleSpeed = settleSpeed;
+    public void setSettleSpreed(String settleSpreed) {
+        this.settleSpreed = settleSpreed;
     }
 
     public BigDecimal getTradeAmt() {
@@ -437,20 +373,8 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
         this.tradeAmt = tradeAmt;
     }
 
-    public String getFinprodMarketId() {
-        return finprodMarketId;
-    }
-
-    public void setFinprodMarketId(String finprodMarketId) {
-        this.finprodMarketId = finprodMarketId;
-    }
-
-
     //add by chenjiaxing 多组合本方交易员字段未添加 20210914 start
-    /**
-     * 本方交易员
-     */
-    private String trader;
+
 
     public String getTrader() {
         return trader;
@@ -469,11 +393,11 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
 		this.softSkipMode = softSkipMode;
 	}
 
-	public List<PledgeBondInfoDto> getPledgeBondTotalListDetailed() {
+	public List<CfetsPledgeBondInfoDto> getPledgeBondTotalListDetailed() {
 		return pledgeBondTotalListDetailed;
 	}
 
-	public void setPledgeBondTotalListDetailed(List<PledgeBondInfoDto> pledgeBondTotalListDetailed) {
+	public void setPledgeBondTotalListDetailed(List<CfetsPledgeBondInfoDto> pledgeBondTotalListDetailed) {
 		this.pledgeBondTotalListDetailed = pledgeBondTotalListDetailed;
 	}
 
@@ -484,19 +408,92 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
 	public void setBussRepoSec(BussRepoSecDto bussRepoSec) {
 		this.bussRepoSec = bussRepoSec;
 	}
+
 	public String getZyqk() {
 		return zyqk;
 	}
+
 	public void setZyqk(String zyqk) {
 		this.zyqk = zyqk;
 	}
-	public List<BussCombDistribtDto> getBussCombDistribtList() {
-		return bussCombDistribtList;
-	}
-	public void setBussCombDistribtList(List<BussCombDistribtDto> bussCombDistribtList) {
-		this.bussCombDistribtList = bussCombDistribtList;
-	}
-	
-	
-	
+
+    public String getAssetType1() {
+        return assetType1;
+    }
+
+    public void setAssetType1(String assetType1) {
+        this.assetType1 = assetType1;
+    }
+
+    public CfetsEtribRepoInfo003Dto getCfetsEtribRepoInfo003Dto() {
+        return cfetsEtribRepoInfo003Dto;
+    }
+
+    public void setCfetsEtribRepoInfo003Dto(CfetsEtribRepoInfo003Dto cfetsEtribRepoInfo003Dto) {
+        this.cfetsEtribRepoInfo003Dto = cfetsEtribRepoInfo003Dto;
+    }
+
+    public String getEntrustDateStr() {
+        return entrustDateStr;
+    }
+
+    public void setEntrustDateStr(String entrustDateStr) {
+        this.entrustDateStr = entrustDateStr;
+    }
+
+    public String getZyqkStr() {
+        return zyqkStr;
+    }
+
+    public void setZyqkStr(String zyqkStr) {
+        this.zyqkStr = zyqkStr;
+    }
+
+    public BigDecimal getAvailableCashT() {
+        return availableCashT;
+    }
+
+    public void setAvailableCashT(BigDecimal availableCashT) {
+        this.availableCashT = availableCashT;
+    }
+
+    public BigDecimal getAvailableCashT1() {
+        return availableCashT1;
+    }
+
+    public void setAvailableCashT1(BigDecimal availableCashT1) {
+        this.availableCashT1 = availableCashT1;
+    }
+
+    public BigDecimal getAccountCash() {
+        return accountCash;
+    }
+
+    public void setAccountCash(BigDecimal accountCash) {
+        this.accountCash = accountCash;
+    }
+
+    public Date getTransmitTime() {
+        return transmitTime;
+    }
+
+    public void setTransmitTime(Date transmitTime) {
+        this.transmitTime = transmitTime;
+    }
+
+//    public Boolean getSubmitFlag() {
+//        return submitFlag;
+//    }
+//
+//    public void setSubmitFlag(Boolean submitFlag) {
+//        this.submitFlag = submitFlag;
+//    }
+
+    public String getSystemAct() {
+        return systemAct;
+    }
+
+    public void setSystemAct(String systemAct) {
+        this.systemAct = systemAct;
+    }
 }

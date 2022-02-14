@@ -89,7 +89,7 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
             pageParam.put("accountList", new ArrayList<>());
         }
         Object finprodIdObj = pageParam.get("finprodId");
-        if (finprodIdObj != null) {
+        if (StringUtil.isNotEmpty(finprodIdObj) && StringUtil.isNotBlank((String)finprodIdObj)) {
             List<String> finprodMarketIdList = StringUtil.splitToList(GlobalConstant.COMMA, (String)finprodIdObj);
             Map<String, Object> finProdIdParam = new HashMap<>();
             finProdIdParam.put("finprodMarketIdList", finprodMarketIdList);
@@ -359,7 +359,10 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
         DayEndAccount002Dto dto = new DayEndAccount002Dto();
         //获取券商单数据
         String seqNo = (String) param.get("seqNo");
-        StlSecReconDeal stlSecReconDeal = stlSecReconDealMapper.selectByPrimaryKey(seqNo);
+        // ZGZGST-4203:修改查询券商对账单方式 fuyongsheng modify 20211215 start
+        // StlSecReconDeal stlSecReconDeal = stlSecReconDealMapper.selectByPrimaryKey(seqNo);
+        StlSecReconDeal stlSecReconDeal = dayEndAccountMapper.getStlSecReconDeal(seqNo);
+        // ZGZGST-4203:修改查询券商对账单方式 fuyongsheng modify 20211215 end
         List<DayEndAccountDto> reconDealInfoList = new ArrayList<DayEndAccountDto>();
         //费用加减标识
         BigDecimal stampFeeFlg = BigDecimal.ZERO;
@@ -555,6 +558,8 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
         if (listSettleTransData != null && listSettleTransData.size() > 0) {
             for (SettleTransData settleTransData : listSettleTransData) {
                 DayEndAccountDto dealDetail = new DayEndAccountDto();
+                dealDetail.setFinprodType2(settleTransData.getFinprodType2());
+                dealDetail.setFinprodId(settleTransData.getFinprodId());
                 dealDetail.setPs(settleTransData.getPs());
                 dealDetail.setCjbh(settleTransData.getCjbh());
                 dealDetail.setCommissionAmt(settleTransData.getCommissionAmt());

@@ -7,6 +7,8 @@ import com.joyintech.tams.business.common.exception.PositionException;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.util.HttpUtil;
 import com.joyintech.tams.business.common.util.PositionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,11 @@ import java.util.Map;
 @Component
 @Lazy(value=false)
 public class PositionHttpRequest {
+
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(PositionHttpRequest.class);
 
     public final static String CODE_BUSI_RK = "300";    // 返回业务信息拒绝，余额不足，软控，前端确认
     public final static String CODE_BUSI_YK = "310";    // 返回业务信息拒绝，余额不足，硬控，前端提示
@@ -39,6 +46,7 @@ public class PositionHttpRequest {
     public static void send(Object req) throws PositionException{
         // 
         String res = sendPrivate(req);
+        logger.info("头寸返回数据:"+res);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){
             throw new PositionException("头寸返回数据为空！");
@@ -106,11 +114,14 @@ public class PositionHttpRequest {
                 .put("interfaceType", interfaceType);
         String msg = cancel(bm);
         Map message = JsonUtils.json2Object(msg, Map.class);
-        if (message == null || !StringUtil.equals("success", message.get("code"))){
+        if (message == null) {
+            throw new PositionException("头寸返回数据为空！");
+        }
+        if (!StringUtil.equals("success", message.get("code"))){
             if(StringUtil.equals("FL0007", message.get("code"))){
-                throw new PositionException(CODE_BUSI_RK + "|" + (message==null?"":message.get("message")));
+                throw new PositionException(CODE_BUSI_RK + "|" + message.get("message"));
             }else {
-                throw new PositionException("头寸返回数据为空！");
+                throw new PositionException(message.get("message") + "");
             }
         }
     }
@@ -145,13 +156,13 @@ public class PositionHttpRequest {
         // 页面端根据异常信息返回前端
         throw new PositionException(errorMsg);
     }
-    public static void deleteMethod(String totalId, String modelType) throws PositionException{
+    public static void deleteMethod(String totalId, String modelType,String interfaceType) throws PositionException{
         //
         BaseMap bm = BaseMap.newMap()
                 .put("totalTradeId", totalId)
                 .put("modelType", modelType)
                 .put("userId", LoginUserUtil.getUserName())
-                .put("interfaceType", "Bond001");
+                .put("interfaceType", interfaceType);//"Bond001"
         String res = cancel(bm);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){
@@ -162,6 +173,54 @@ public class PositionHttpRequest {
         return httpPostRequest(positionUrl + "/position/endpoint/updatePosition", param);
     }
 
+    public static void doDeleteByWorkFlowId(String revokeId, String modelType,String busiType,String ps) throws PositionException{
+        //
+        BaseMap bm = BaseMap.newMap()
+                .put("workFlowId", revokeId)
+                .put("modelType", modelType)
+                .put("userId", LoginUserUtil.getUserName())
+                .put("busiType", busiType)
+                .put("ps", ps)
+                ;
+        String res = delete(bm);
+        Map msgMap = JsonUtils.json2Object(res, Map.class);
+        if(msgMap == null){
+            throw new PositionException("头寸返回数据为空！");
+        }
+    }
+
+    public static void dorevoke(String revokeId, String modelType,String busiType,String ps) throws PositionException{
+        //
+        BaseMap bm = BaseMap.newMap()
+                .put("revokeId", revokeId)
+                .put("modelType", modelType)
+                .put("userId", LoginUserUtil.getUserName())
+                .put("busiType", busiType)
+                .put("ps", ps)
+                ;
+        String res = revoke(bm);
+        Map msgMap = JsonUtils.json2Object(res, Map.class);
+        if(msgMap == null){
+            throw new PositionException("头寸返回数据为空！");
+        }
+    }
+    /**
+     * 作废
+     * @param param
+     * @return
+     */
+    private static String delete(Object param) {
+        return httpPostRequest(positionUrl + "/position/endpoint/delete", param);
+    }
+
+    /**
+     * 作废
+     * @param param
+     * @return
+     */
+    private static String revoke(Object param) {
+        return httpPostRequest(positionUrl + "/position/endpoint/revoke", param);
+    }
     /**
      * 冲正撤销
      * @param param

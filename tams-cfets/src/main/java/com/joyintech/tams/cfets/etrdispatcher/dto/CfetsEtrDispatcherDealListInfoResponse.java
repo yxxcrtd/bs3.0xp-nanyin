@@ -1,12 +1,14 @@
 package com.joyintech.tams.cfets.etrdispatcher.dto;
 
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.cfets.etrib.repo.dto.CfetsPledgeBondInfoDto;
 import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 场外指令分发
@@ -123,6 +125,12 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
 
     @ApiModelProperty(name="secTotalPrin",value="券面总额（万元）",example="100")
     private BigDecimal secTotalPrin;
+
+    @ApiModelProperty(name="pledgeStockName",value="质押券信息",example="100")
+    private String pledgeStockName;
+
+    @ApiModelProperty(name="detailList",value="质押券明细",example="100")
+    private List<CfetsPledgeBondInfoDto> detailList;
 
     public String getEffectFlag() {
         return effectFlag;
@@ -418,5 +426,21 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
 
     public String getOtherSettleSpeed() {
         return SysDataUtil.getNameFromDataDict(DictCode.清算速度, this.getSettleSpeed());
+    }
+
+    public List<CfetsPledgeBondInfoDto> getDetailList() {
+        return detailList;
+    }
+
+    public void setDetailList(List<CfetsPledgeBondInfoDto> detailList) {
+        this.detailList = detailList;
+    }
+
+    public String getPledgeStockName() {
+        return pledgeStockName;
+    }
+
+    public void setPledgeStockName(String pledgeStockName) {
+        this.pledgeStockName = pledgeStockName;
     }
 }

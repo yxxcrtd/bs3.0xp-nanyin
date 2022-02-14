@@ -58,8 +58,14 @@
                 WFL_REG_FIN_PRODUCT_DEAL
                 <where>
                     <if test="entrustIdList != null and entrustIdList.size() > 0">
-                        ENTRUST_ID  in
+                        and ENTRUST_ID  in
                         <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="entrustIds != null and entrustIds.size() > 0">
+                        and ENTRUST_ID  in
+                        <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
                             #{item}
                         </foreach>
                     </if>
@@ -71,8 +77,14 @@
                 WFL_IBU_QUOTE_ETR_RE
                 <where>
                     <if test="entrustIdList != null and entrustIdList.size() > 0">
-                        ENTRUST_ID  in
+                        and ENTRUST_ID  in
                         <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="entrustIds != null and entrustIds.size() > 0">
+                        and ENTRUST_ID  in
+                        <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
                             #{item}
                         </foreach>
                     </if>
@@ -87,6 +99,12 @@
                 <if test="entrustIdList != null and entrustIdList.size() > 0">
                     and T2.ENTRUST_ID  in
                     <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="entrustIds != null and entrustIds.size() > 0">
+                    and T2.ENTRUST_ID  in
+                    <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
                         #{item}
                     </foreach>
                 </if>
@@ -108,6 +126,12 @@
                 <if test="entrustIdList != null and entrustIdList.size() > 0">
                     and T2.ENTRUST_ID  in
                     <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="entrustIds != null and entrustIds.size() > 0">
+                    and T2.ENTRUST_ID  in
+                    <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
                         #{item}
                     </foreach>
                 </if>
@@ -160,5 +184,107 @@
                 #{item}
             </foreach>
         </if>
+    </select>
+
+    <!--统计指令的可用本方券和融入券-->
+    <select id="listAvaShareAmt" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.EntrustAvaShareAmtDto">
+        SELECT
+            T5.ENTRUST_ID,
+            nvl(T4.OUR_SHARE_AMT,0)*100 usedOurShareAmt,
+            nvl(T4.LENDIN_SHARE_AMT,0)*100 usedLendinShareAmt,
+            nvl(T5.OUR_ENT_NUM,0)*100 ourEntNum,
+            nvl(T5.LENDIN_ENT_NUM,0)*100 lendinEntNum
+        FROM
+        ETR_ENTRUST_ADD T5
+        LEFT JOIN (
+            SELECT
+                T3.ENTRUST_ID,
+                SUM(T3.OUR_SHARE_AMT) OUR_SHARE_AMT,
+                SUM(T3.LENDIN_SHARE_AMT) LENDIN_SHARE_AMT
+            FROM
+                (
+                SELECT
+                    T1.ENTRUST_ID,
+                    T2.OUR_SHARE_AMT,
+                    T2.LENDIN_SHARE_AMT
+                FROM
+                    REG_FIN_PRODUCT_DEAL T1
+                LEFT JOIN REG_FIN_PRODUCT_DEAL_ADD T2 ON
+                    T2.TRADE_ID = T1.TRADE_ID
+                WHERE exists(
+                    SELECT 1 FROM REG_FIN_PRODUCT_DEAL_TOTAL T3 WHERE T3.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID  AND T3.TRADE_STATUS = '01' AND (T3.IS_CANCEL = 'N' OR T3.IS_CANCEL IS NULL)
+                )
+            UNION ALL
+                SELECT
+                    T1.ENTRUST_ID,
+                    T2.OUR_SHARE_AMT,
+                    T2.LENDIN_SHARE_AMT
+                FROM
+                    WFL_REG_FIN_PRODUCT_DEAL T1
+                LEFT JOIN WFL_REG_FIN_PRODUCT_DEAL_ADD T2 ON
+                    T2.TRADE_ID = T1.TRADE_ID
+                 <where>
+                     <if test="workflowId != null and !workflowId.equals('')">
+                         T1.WORKFLOW_ID != #{workflowId}
+                     </if>
+                 </where>
+            union all
+                SELECT
+                ENTRUST_ID,
+                OUR_SHARE_AMT,
+                LENDIN_SHARE_AMT
+                FROM
+                IBU_QUOTE_ETR_RE T1
+                WHERE
+                EXISTS (
+                SELECT
+                1
+                FROM
+                IBU_QUOTE_BOND T2
+                WHERE
+                T2.QUOTE_ID = T1.QUOTE_ID
+                <if test="QUOTE_STUTAS_IBUS != null and QUOTE_STUTAS_IBUS.size() > 0">
+                    and T2.TRADE_STATUS in
+                    <foreach collection="QUOTE_STUTAS_IBUS" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                )
+                AND NOT EXISTS (
+                SELECT
+                1
+                FROM
+                WFL_IBU_QUOTE_BOND2 T3
+                WHERE
+                T3.QUOTE_ID = T1.QUOTE_ID)
+                UNION ALL
+                SELECT
+                ENTRUST_ID,
+                OUR_SHARE_AMT,
+                LENDIN_SHARE_AMT
+                FROM
+                WFL_IBU_QUOTE_ETR_RE T1
+                <where>
+                    <if test="workflowId != null and !workflowId.equals('')">
+                        T1.WORKFLOW_ID != #{workflowId}
+                    </if>
+                </where>
+                ) T3
+            GROUP BY
+                ENTRUST_ID) T4  ON T5.ENTRUST_ID = T4.ENTRUST_ID
+            <where>
+                <if test="entrustIds != null and entrustIds.size() > 0">
+                    and T5.ENTRUST_ID in
+                    <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+    </select>
+
+    <!--获取资金账户-->
+    <select id="getAccNo" resultType="java.lang.String">
+        select ACCT_NO ACCT_NO from PTL_CAPACCT_INFO
+        where PORTFOLIO_ID = #{portfolioId} and CCY = #{ccy} and ACCT_TYPE = #{acctType}
     </select>
 </mapper>

@@ -4,10 +4,12 @@ package com.joyintech.tams.cfets.trdquery.dao;
 
 
 import com.joyintech.service.trade.bond.dto.TrdBondInvestTradeDto;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleInfoOtherListRespond;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleTradeListRespond;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
 import com.joyintech.tams.cfets.trdquery.dto.*;
-import com.joyintech.tams.common.base.entity.InterfHttpLogWithBLOBs;
 import com.joyintech.tams.common.base.entity.RegFinProductDealTotal;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -125,6 +127,20 @@ public interface CfetsTrdQueryMapper {
      * @return List<CfetsManualSettleTraderListRespond>
      */
     List<CfetsTrdQueryTradeInfoListResponse> queryAllTradeDetailInfoList(Map<String, Object> pageParam);
+    /**
+     * 交易明细表单内容
+     *
+     * @param pageParam 参数
+     * @return CfetsManualSettleInfoF32Respond
+     */
+    CfetsManualSettleInfoOtherListRespond findManualSettleInfoOther(Map<String, Object> pageParam);
+    /**
+     * 组合分配信息List,针对交易明细
+     *
+     * @param pageParam 参数
+     * @return List<PortIntFenPeiInfoDto>
+     */
+    List<PortIntFenPeiInfoDto> findPortIntFenPeiInfoList(Map<String, Object> pageParam);
 
     /**
      * 查询债券交易基本信息
@@ -144,4 +160,11 @@ public interface CfetsTrdQueryMapper {
      * @return
      */
     int updateRegTotalByPrimaryKeySelective(RegFinProductDealTotal record);
+
+    /**
+     * 根据更新报价数据
+     * @param paramMap
+     * @return
+     */
+    void updateIbuByPrimaryKeySelective(Map<String, Object> paramMap);
 }

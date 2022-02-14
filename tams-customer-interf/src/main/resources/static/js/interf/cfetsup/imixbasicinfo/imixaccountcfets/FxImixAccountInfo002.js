@@ -57,7 +57,6 @@
                     },
                     success: function (data) {//成功
                         // statuCode: 1, message: "该产品已经存在映射关系
-                        debugger;
                         console.log(data);
                         if(data.statuCode==1){
                             JoyinUtil.showMessage(data.message,'error');

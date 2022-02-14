@@ -14,17 +14,39 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import com.google.common.collect.Maps;
 
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.systemtools.service.SystemToolService;
-import com.joyintech.tams.valuation.common.interf.base.constant.*;
+import com.joyintech.tams.valuation.common.batch.finproduct.entity.InvAimDto;
+import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCommonBatchService;
+import com.joyintech.tams.valuation.common.batch.tradecommon.dto.ValTrdProductDealInfoDto;
+import com.joyintech.tams.valuation.common.batch.tradecommon.service.ValTradeCommonService;
+import com.joyintech.tams.valuation.common.constants.ValDictCode;
+import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValAcctLayeringInfoBatchMapper;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCommonBatchMapper;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinProductAcctBatchMapper;
+import com.joyintech.tams.valuation.common.interf.base.constant.DictCodeInterfList;
+import com.joyintech.tams.valuation.common.interf.base.constant.FinalString;
+import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
+import com.joyintech.tams.valuation.common.interf.base.constant.TempConstant;
+import com.joyintech.tams.valuation.common.interf.base.dao.InterfCommonMapper;
+import com.joyintech.tams.valuation.common.interf.base.dao.ValInterfCommonMapper;
+import com.joyintech.tams.valuation.common.interf.base.dto.*;
 import com.joyintech.tams.valuation.common.interf.base.service.dealcommon.DealCommonService;
+import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
+import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValDlTarget;
+import com.joyintech.tams.valuation.common.interf.val.dao.BokTradeBuildMapper;
+import com.joyintech.tams.valuation.common.interf.val.service.ValSysParaService;
+import com.joyintech.tams.valuation.common.service.BookAccountCommonService;
+import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -33,43 +55,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.Maps;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.InvAimDto;
-import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCommonBatchService;
-import com.joyintech.tams.valuation.common.batch.tradecommon.dto.ValTrdProductDealInfoDto;
-import com.joyintech.tams.valuation.common.batch.tradecommon.service.ValTradeCommonService;
-import com.joyintech.tams.valuation.common.constants.ValDictCode;
-import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValAcctLayeringInfoBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCommonBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinProductAcctBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.dao.InterfCommonMapper;
-import com.joyintech.tams.valuation.common.interf.base.dao.ValInterfCommonMapper;
-import com.joyintech.tams.valuation.common.interf.base.dto.BokBooksetSonDto;
-import com.joyintech.tams.valuation.common.interf.base.dto.BooksetInitResult;
-import com.joyintech.tams.valuation.common.interf.base.dto.ChannelAcctSubjectDto;
-import com.joyintech.tams.valuation.common.interf.base.dto.ChannelFeeInfoDeal;
-import com.joyintech.tams.valuation.common.interf.base.dto.InterfProductDealBookCommonDto;
-import com.joyintech.tams.valuation.common.interf.base.dto.LayerPrdInfo;
-import com.joyintech.tams.valuation.common.interf.base.dto.OtherParamsDto;
-import com.joyintech.tams.valuation.common.interf.base.dto.PrdClawbackCalcRule;
-import com.joyintech.tams.valuation.common.interf.base.dto.ProductDealDto;
-import com.joyintech.tams.valuation.common.interf.base.dto.TargetFinProduct;
-import com.joyintech.tams.valuation.common.interf.base.dto.TemplateCheckReturnResult;
-import com.joyintech.tams.valuation.common.interf.base.dto.ValBooksetInfoDto;
-import com.joyintech.tams.valuation.common.interf.base.dto.ValChannelProdDealDto;
-import com.joyintech.tams.valuation.common.interf.base.dto.ValFinProductExt;
-import com.joyintech.tams.valuation.common.interf.base.dto.SecExecApplyDto;
-import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
-import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValDlTarget;
-import com.joyintech.tams.valuation.common.interf.val.dao.BokTradeBuildMapper;
-import com.joyintech.tams.valuation.common.interf.val.service.ValSysParaService;
-import com.joyintech.tams.valuation.common.service.BookAccountCommonService;
-import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -120,7 +109,7 @@ public class InterfCommonService {
     private BookAccountCommonService bookAccountCommonService;
     
     @Autowired
-    private  BokValSchemeMapper  bokValSchemeMapper;
+    private BokValSchemeMapper bokValSchemeMapper;
     /**
      * 通道共同
      */
@@ -174,7 +163,7 @@ public class InterfCommonService {
      */
     @SuppressWarnings("unchecked")
     public BooksetInitResult booksetInit(FinProduct dto, ValFinProductExt dtoAdd,
-    		OtherParamsDto otherParams) {
+                                         OtherParamsDto otherParams) {
         BooksetInitResult result = new BooksetInitResult();
         String[] queryTypes = new String[] {InterfCommonConstant.账套信息查询_账套信息,
             InterfCommonConstant.账套信息查询_账套日期, InterfCommonConstant.账套信息查询_账套配置};
@@ -523,7 +512,7 @@ public class InterfCommonService {
         }
 
         /**modify by dongjun on 20190428 账套初始化账套配置变更 start**/
-        Map<String,BokBooksetExt> bokBooksetExtMaps = new HashMap<>();
+        Map<String, BokBooksetExt> bokBooksetExtMaps = new HashMap<>();
         resValBokBooksetExt.forEach(i -> bokBooksetExtMaps.put(i.getParamCode(), i));
         Map<String, String> sysParams = otherParams.getSysParams(); 
         for(BokBooksetExt bok : resValBokBooksetExt){
@@ -537,7 +526,7 @@ public class InterfCommonService {
         		bok.setBooksetId(dto.getFinprodId());
         		bok.setParamCode(key);
         		bok.setParamValue(sysParams.get(key));
-        		bok.setParamName(ValDictCodeList.from(ValDictCode.账套配置表参数项, key) == null ? StringUtil.EMPTY : 
+        		bok.setParamName(ValDictCodeList.from(ValDictCode.账套配置表参数项, key) == null ? StringUtil.EMPTY :
         			ValDictCodeList.from(ValDictCode.账套配置表参数项, key).getCodeName());
         		 /**add by wujie on 20210303 start**/
         		bok.setParamType(DictCodeListExt3.账套参数类型_其他类.getValue());
@@ -575,7 +564,7 @@ public class InterfCommonService {
         /**modify by wujie on 20190103 start
         bokAcctLayeringInfo.setLayeringId(dto.getFinprodId());
         **/
-        bokAcctLayeringInfo.setLayeringId(dto.getFinprodId()+FinalString.LAYERING_SPLIT+dto.getFinprodType());
+        bokAcctLayeringInfo.setLayeringId(dto.getFinprodId()+ FinalString.LAYERING_SPLIT+dto.getFinprodType());
         /**modify by wujie on 20190103 end**/
         bokAcctLayeringInfo.setLayeringName(dto.getFinprodName());
         bokAcctLayeringInfo.setfLayeringId(null);
@@ -666,7 +655,7 @@ public class InterfCommonService {
      * @param deal 金融产品交易
      * @param prodId 产品ID
      */
-    public InterfProductDealBookCommonDto  dealAccounting(TrdProductDeal deal, String prodId) {
+    public InterfProductDealBookCommonDto dealAccounting(TrdProductDeal deal, String prodId) {
 
         InterfProductDealBookCommonDto interfProductDealBookCommonDto = new InterfProductDealBookCommonDto();
 
@@ -770,7 +759,7 @@ public class InterfCommonService {
             ccy = deal.getCcy();
         }
         if(StringUtil.equals(DictCodeList.业务类型_产品费用交易.getValue(), deal.getBusiType())
-        		||StringUtil.equals(DictCodeList.业务类型_增值税交易.getValue(), deal.getBusiType())){
+        		|| StringUtil.equals(DictCodeList.业务类型_增值税交易.getValue(), deal.getBusiType())){
         	if(StringUtil.equals(DictCodeListExt1.金融产品类型_通道.getValue(), valBooksetInfoDto.getAcctSubjectType())){
         		bokDetailId = prodId + FinalString.LAYERING_SPLIT + deal.getChlId();
         	} else{
@@ -994,7 +983,7 @@ public class InterfCommonService {
      * @serialData 20180726
      */
 	public StlFinProductAcct queryValFinProductAcct(String finprodId, String finprodType, String acctType,
-			String acctNo, String ccy) {
+                                                    String acctNo, String ccy) {
 		StlFinProductAcct valFinProductAcct1 = mapper.selectValFinProductAcct(finprodId, finprodType, acctType, acctNo,
 				ccy);
 		return valFinProductAcct1;
@@ -1009,7 +998,7 @@ public class InterfCommonService {
      * @author WUJIE
      * @serialData 20181210
      */
-    public BokBooksetCapacctInfo queryBokBooksetCapacctInfo(String booksetId, String acctNo,String ccy,String acctType) {
+    public BokBooksetCapacctInfo queryBokBooksetCapacctInfo(String booksetId, String acctNo, String ccy, String acctType) {
         Map<String, Object> paramsMap = new HashMap<String, Object>();
         paramsMap.put("booksetId", booksetId);
         paramsMap.put("acctNo", acctNo);
@@ -2270,7 +2259,7 @@ public class InterfCommonService {
      * @see
      * @since 1.0
      */
-    public List<BokBooksetCapacctInfo> selectCapAcctType(String acctNo, String prodId,String ccy) {
+    public List<BokBooksetCapacctInfo> selectCapAcctType(String acctNo, String prodId, String ccy) {
         Map<String, Object> params = new HashMap<String, Object>();
 
         // 产品代码、资金账户号查询对应的资金账户类型 查询
@@ -2316,10 +2305,10 @@ public class InterfCommonService {
      * @param trdProductDeal
      * @return
      */
-    public String getBtradeId(TrdProductDeal trdProductDeal,String applyTradeId){
+    public String getBtradeId(TrdProductDeal trdProductDeal, String applyTradeId){
     	Map<String,Object> map = new HashMap<String,Object>();
     	map.put("fTradeId",applyTradeId);
-    	map.put("ps",DictCodeListExt2.交易方向_认购.getValue());
+    	map.put("ps", DictCodeListExt2.交易方向_认购.getValue());
     	map.put("finprodId",trdProductDeal.getFinprodId());
     	map.put("finprodType",trdProductDeal.getFinprodType());
     	map.put("busiType",trdProductDeal.getBusiType());
@@ -2607,7 +2596,7 @@ public class InterfCommonService {
                                            + DictCodeListExt1.现金流二级类型_行权.getValue()));
                                            **/
             info.setCashId(
-                    InterfHelper.getMd5CashId_(secMap.get(key),DictCodeListExt1.金融产品类型_债券.getValue()
+                    InterfHelper.getMd5CashId_(secMap.get(key), DictCodeListExt1.金融产品类型_债券.getValue()
                                                , DictCodeListExt1.现金流二级类型_本金.getValue()));
             /**modify by wujie on 20190121 end**/
             
@@ -2655,7 +2644,7 @@ public class InterfCommonService {
      * modify by wujie on 20181220 remark:增加参数otherParams
      */
     public BooksetInitResult getParStrucProduct(FinProduct finProduct,
-    		ValFinProductExt finProductExt,OtherParamsDto otherParams) {
+                                                ValFinProductExt finProductExt, OtherParamsDto otherParams) {
         // 核算主体信息dto
         BokAcctSubjectInfo acctSubjectInfo = new BokAcctSubjectInfo();
 
@@ -2752,7 +2741,7 @@ public class InterfCommonService {
         /** modify by wujie on 20190103 start
         acctLayeringInfo.setLayeringId(layeringId);
         **/
-        acctLayeringInfo.setLayeringId(layeringId+FinalString.LAYERING_SPLIT+finProduct.getFinprodType());
+        acctLayeringInfo.setLayeringId(layeringId+ FinalString.LAYERING_SPLIT+finProduct.getFinprodType());
         /**modify by wujie on 20190103 end**/
         
         // 分层名称
@@ -2793,7 +2782,7 @@ public class InterfCommonService {
      * @see
      * @since 1.0
      */
-    public List<LayerPrdInfo> querryPfather(String prodId,String finprodType, Map<String, LayerPrdInfo> prdInfoMap) {
+    public List<LayerPrdInfo> querryPfather(String prodId, String finprodType, Map<String, LayerPrdInfo> prdInfoMap) {
         // 父产品集合List
         List<LayerPrdInfo> layerPrdInfoList = new ArrayList<>();
         LayerPrdInfo prdLayerInfoDto = new LayerPrdInfo();
@@ -3156,7 +3145,7 @@ public class InterfCommonService {
             map.put(key, keymap);
         }
 
-        List<BokAcctLayeringInfo> notRoots = (List<BokAcctLayeringInfo>)CollectionUtils.subtract(
+        List<BokAcctLayeringInfo> notRoots = (List<BokAcctLayeringInfo>) CollectionUtils.subtract(
             list, roots);
         while (notRoots != null && notRoots.size() > 0) {
             List<BokAcctLayeringInfo> sz = new ArrayList<BokAcctLayeringInfo>();
@@ -3533,7 +3522,7 @@ public class InterfCommonService {
         List<BokBooksetPlan> listBokBooksetPlan = new ArrayList<BokBooksetPlan>();
         
         /**add by wujie on 20190214 start**/
-        Map<String,FinCashInfo> mapFinCashInfo = new HashMap<String,FinCashInfo>();
+        Map<String, FinCashInfo> mapFinCashInfo = new HashMap<String, FinCashInfo>();
         /**add by wujie on 20190214 end**/
 
         for (BokAcctLayeringInfo layInfo : listBokAcctLayeringInfo) {
@@ -3829,7 +3818,7 @@ public class InterfCommonService {
      * 文件解析业务check
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
-	public TemplateCheckReturnResult resolveBusiCheck(String tmpEName,TemplateCheckReturnResult returnResult){
+	public TemplateCheckReturnResult resolveBusiCheck(String tmpEName, TemplateCheckReturnResult returnResult){
     	TempCheckInfo tempCheckInfo = InterfHelper.checkFinprodDealMap().get(tmpEName);
     	if(tempCheckInfo == null){
     		return returnResult;
@@ -3840,7 +3829,7 @@ public class InterfCommonService {
 			return returnResult;
 		}
     	
-		Map<String,ValInterflog> valInterflogMap = InterfHelper.getMapValInterflog(returnResult.getValInterflog());
+		Map<String, ValInterflog> valInterflogMap = InterfHelper.getMapValInterflog(returnResult.getValInterflog());
     	List rstlist = new ArrayList<>();
     	
     	
@@ -3878,7 +3867,7 @@ public class InterfCommonService {
 			Map<String,Object> params = new HashMap<String,Object>();
 			
 			if(StringUtil.isNotEmpty(chlId)){
-				params.put("finprodId", finprodId + FinalString.LAYERING_SPLIT + chlId); 
+				params.put("finprodId", finprodId + FinalString.LAYERING_SPLIT + chlId);
 			} else{
 	    		params.put("finprodId", finprodId);
 			}
@@ -3926,7 +3915,7 @@ public class InterfCommonService {
             		}
         		}
 
-        		if(TempConstant.净值型产品费用交易表.equals(tmpEName) 
+        		if(TempConstant.净值型产品费用交易表.equals(tmpEName)
         				|| TempConstant.货币型产品费用交易表.equals(tmpEName)
         				|| TempConstant.预期型产品费用交易表.equals(tmpEName)){
 
@@ -4051,7 +4040,7 @@ public class InterfCommonService {
     			/**add by wujie on 20190321 end**/
     			
     			//投资目的check
-        		if(TempConstant.债券买卖交易.equals(tmpEName) 
+        		if(TempConstant.债券买卖交易.equals(tmpEName)
         				|| TempConstant.债券存续期交易.equals(tmpEName)){
         			String assetId_prodName = "assetId";
         			String tradeDate_prodName = "dealDate";
@@ -4125,12 +4114,12 @@ public class InterfCommonService {
         		}
         		**/
         		Map<String,Object> paramsMap = new HashMap<String,Object>();
-        		paramsMap.put("finprodType",DictCodeListExt1.金融产品类型_通道.getValue());
+        		paramsMap.put("finprodType", DictCodeListExt1.金融产品类型_通道.getValue());
         		paramsMap.put("finprodId",chlId);
                 /**modify by wujie on 20190613 start
                  paramsMap.put("acctType",DictCodeList.资金账户类型_通道账户.getValue());
                  **/
-                paramsMap.put("acctType",DictCodeListExt1.资金账户类型_产品托管户.getValue());
+                paramsMap.put("acctType", DictCodeListExt1.资金账户类型_产品托管户.getValue());
                 /**modify by wujie on 20190613 end**/
         		List<StlFinProductAcct> stlFinProductAcctList = this.queryStlFinProductAcctInfo(paramsMap);
         		if(stlFinProductAcctList==null || stlFinProductAcctList.size()==0){
@@ -4145,7 +4134,7 @@ public class InterfCommonService {
     			String cashId = null;
     			String feeId = InterfHelper.getObjectFieldValue(object, "feeId");
     			if(DictCodeListExt1.金融产品类型_理财子产品.getValue().equals(finprodType)){
-    				cashId = InterfHelper.getMd5CashId_(finprodId + branch,feeId);   
+    				cashId = InterfHelper.getMd5CashId_(finprodId + branch,feeId);
     			}else{
     				cashId = InterfHelper.getMd5CashId_(finprodId,feeId);
     			}
@@ -4255,7 +4244,7 @@ public class InterfCommonService {
      * @return
      */
     public Map<String,Object>  instructionGenerate(TrdProductDeal tradeDeal,
-    		String finprodId,String finprodType,Date prodVdate){
+                                                   String finprodId, String finprodType, Date prodVdate){
     	Long branch = null;
         if(finprodType.equals(DictCodeListExt1.金融产品类型_理财子产品.getValue())){
         	branch = Long.valueOf(new SimpleDateFormat("yyyyMMdd").format(prodVdate));
@@ -4271,8 +4260,8 @@ public class InterfCommonService {
      * @param cbranch
      * @return
      */
-    public Map<String,Object>  instructionGenerate_Branch(TrdProductDeal tradeDeal,String finprodId,String finprodType,Long cbranch,
-    		List<PtlTrade> ptlTradeList){
+    public Map<String,Object>  instructionGenerate_Branch(TrdProductDeal tradeDeal, String finprodId, String finprodType, Long cbranch,
+                                                          List<PtlTrade> ptlTradeList){
     	Map<String,Object>  resultMap = new HashMap<String,Object>();
     	// 结算指令
         List<StlOrders> listStlOrders = new ArrayList<StlOrders>();
@@ -4323,7 +4312,7 @@ public class InterfCommonService {
         }
         
         //根据核算主体查询账套信息
-        List<ValBooksetInfoDto> boksetList = this.getBokBooksetByProdId_Layering(finprodId+(branch==null?"":branch)+FinalString.LAYERING_SPLIT+finprodType);
+        List<ValBooksetInfoDto> boksetList = this.getBokBooksetByProdId_Layering(finprodId+(branch==null?"":branch)+ FinalString.LAYERING_SPLIT+finprodType);
         if(boksetList==null || boksetList.size()==0){
         	return resultMap;
         }
@@ -4343,7 +4332,7 @@ public class InterfCommonService {
             }
         }
         /**ADD BY WUJIE ON 20191118 START**/
-        Map<String,ValBooksetInfoDto> qcMap = new HashMap<String,ValBooksetInfoDto>();
+        Map<String, ValBooksetInfoDto> qcMap = new HashMap<String, ValBooksetInfoDto>();
         List<ValBooksetInfoDto> bokSetList = new ArrayList<ValBooksetInfoDto>();
         for(ValBooksetInfoDto dto:boksetList){
         	if(qcMap.get(dto.getBooksetId())==null){
@@ -4407,7 +4396,7 @@ public class InterfCommonService {
         //全价总额
         dto.setFpriceAmt(tradeDeal.getFpriceAmt());
         /**add by yinya 通过接口中是否生成结算指令的字段，控制接入交易的时候，只自动生成随交易支付(IS_BOOK为Y)的结算指令**/
-        if(StringUtil.equals(tradeDeal.getIsOrders(),DictCodeList.是否_否.getValue())){
+        if(StringUtil.equals(tradeDeal.getIsOrders(), DictCodeList.是否_否.getValue())){
             dto.setIsTrade(DictCodeList.是否_是.getValue());
         }
         Map<String,String> paramMap = new HashMap<String,String>();
@@ -4565,7 +4554,7 @@ public class InterfCommonService {
             }
             /** add by lby on 20201225 四级科目尾号集合 start**/
             //定义 变量.四级科目尾号集合
-            Map<String,BokDetailId> detailSubjectNoTailMap= new HashMap<>();
+            Map<String, BokDetailId> detailSubjectNoTailMap= new HashMap<>();
             /** add by lby on 20201225 四级科目尾号集合 end**/
             for (ValBooksetInfoDto bokset : boksetList) {
             	/**
@@ -4702,8 +4691,8 @@ public class InterfCommonService {
      * @see
      * @since 1.0
      */
-    public Map<String,Object>  instructionGenerateByFront(TrdProductDeal tradeDeal,StlOrders frontStlOrdersDto,String finprodId,
-                                                          String finprodType,Long cbranch,List<PtlTrade> ptlTradeList){
+    public Map<String,Object>  instructionGenerateByFront(TrdProductDeal tradeDeal, StlOrders frontStlOrdersDto, String finprodId,
+                                                          String finprodType, Long cbranch, List<PtlTrade> ptlTradeList){
         //1.获取参数
         //1.1 输入参数            
         Map<String,Object>  resultMap = new HashMap<String,Object>();
@@ -4794,7 +4783,7 @@ public class InterfCommonService {
             }
         }
         /**ADD BY WUJIE ON 20191118 START**/
-        Map<String,ValBooksetInfoDto> qcMap = new HashMap<String,ValBooksetInfoDto>();
+        Map<String, ValBooksetInfoDto> qcMap = new HashMap<String, ValBooksetInfoDto>();
         List<ValBooksetInfoDto> bokSetList = new ArrayList<ValBooksetInfoDto>();
         for(ValBooksetInfoDto dto:boksetList){
         	if(qcMap.get(dto.getBooksetId())==null){
@@ -4857,7 +4846,7 @@ public class InterfCommonService {
         //全价总额
         dto.setFpriceAmt(tradeDeal.getFpriceAmt());
         /**add by yinya 通过接口中是否生成结算指令的字段，控制接入交易的时候，只自动生成随交易支付(IS_BOOK为Y)的结算指令**/
-        if(StringUtil.equals(tradeDeal.getIsOrders(),DictCodeList.是否_否.getValue())){
+        if(StringUtil.equals(tradeDeal.getIsOrders(), DictCodeList.是否_否.getValue())){
             dto.setIsTrade(DictCodeList.是否_是.getValue());
         }
         //定义 变量.参数条件Map = null
@@ -5009,7 +4998,7 @@ public class InterfCommonService {
                 	counterAcctNo = counterAcctNoInfo.getAcctNo();
                 }
             }
-            if(DictCodeListExt3.指令类型_债券类资产_申购划款.getValue().equals(stl.getOrderType()) 
+            if(DictCodeListExt3.指令类型_债券类资产_申购划款.getValue().equals(stl.getOrderType())
             		|| DictCodeListExt3.指令类型_债券类资产_申购退款.getValue().equals(stl.getOrderType())
             		/**add by wujie on 20210528 start**/
             		|| DictCodeListExt3.指令类型_债券类资产_申购确认.getValue().equals(stl.getOrderType())
@@ -5065,7 +5054,7 @@ public class InterfCommonService {
             }
             /** add by lby on 20201225 四级科目尾号集合 start**/
             //定义 变量.四级科目尾号集合
-            Map<String,BokDetailId> detailSubjectNoTailMap= new HashMap<>();
+            Map<String, BokDetailId> detailSubjectNoTailMap= new HashMap<>();
             /** add by lby on 20201225 四级科目尾号集合 end**/
             //LOOP 变量.核算主体查询账套信息 BOK
             for (ValBooksetInfoDto bokset : boksetList) {
@@ -5249,7 +5238,7 @@ public class InterfCommonService {
     	List<StlOrdersMapping> rstlist = new ArrayList<StlOrdersMapping>();
     	String channelAsset = DictCodeList.是否_否.getValue();
     	if(StringUtil.equals(productDealDto.getFinprodType(), DictCodeListExt1.金融产品类型_计划类资产.getValue())
-    			&&StringUtil.equals(productDealDto.getBusiType(), DictCodeList.业务类型_货币基金交易_货基_类货基资产交易.getValue())){
+    			&& StringUtil.equals(productDealDto.getBusiType(), DictCodeList.业务类型_货币基金交易_货基_类货基资产交易.getValue())){
     		TargetFinProduct targetFinProduct = getTargetFinProduct(productDealDto.getFinprodId());
     		if(targetFinProduct != null && StringUtil.equals(DictCodeList.是否_是.getValue(), targetFinProduct.getIsChl())){
     			channelAsset = DictCodeList.是否_是.getValue();
@@ -5407,7 +5396,7 @@ public class InterfCommonService {
                 return;
             }
 
-            Map<String,TrdProductDeal> hbMap = new HashMap<String,TrdProductDeal>();
+            Map<String, TrdProductDeal> hbMap = new HashMap<String, TrdProductDeal>();
             for(TrdProductDeal d :dealList_hb){
                 hbMap.put(d.getfTradeId(), d);
             }
@@ -5446,7 +5435,7 @@ public class InterfCommonService {
                 this.deleteFinprodDealByTradeId(unDelDealList);
                 return;
             }
-            Map<String,TrdProductDeal> hbMap = new HashMap<String,TrdProductDeal>();
+            Map<String, TrdProductDeal> hbMap = new HashMap<String, TrdProductDeal>();
             for(TrdProductDeal d :dealhb){
                 hbMap.put(d.getfTradeId(), d);
             }
@@ -5604,21 +5593,21 @@ public class InterfCommonService {
     		return listFinCashInfo;
     	}
     	
-    	Map<String,FinCashInfo> mapFinCashInfo = new HashMap<>();
+    	Map<String, FinCashInfo> mapFinCashInfo = new HashMap<>();
     	
     	for( PrdClawbackCalcRule dto : listPrdClawbackCalcRule){
     		String cashId = null;
     		Long branch = InterfCommonConstant.分支序号_默认;;
             if (StringUtil.equals(dto.getFinprodType(), DictCodeListExt1.金融产品类型_理财子产品.getValue())) {
             	cashId = InterfHelper.getMd5CashId_(dto.getProdId() + new SimpleDateFormat("yyyyMMdd").format(dto.getProdVdate())
-            	    ,DictCodeListExt1.现金流二级类型_回补.getValue());
+            	    , DictCodeListExt1.现金流二级类型_回补.getValue());
             	branch = Long.valueOf(new SimpleDateFormat("yyyyMMdd").format(dto.getProdVdate()));
             }
             else {
-            	cashId = InterfHelper.getMd5CashId_(dto.getProdId(),DictCodeListExt1.现金流二级类型_回补.getValue());
+            	cashId = InterfHelper.getMd5CashId_(dto.getProdId(), DictCodeListExt1.现金流二级类型_回补.getValue());
             }
             
-            FinCashInfo finCashInfo = mapFinCashInfo.get(cashId);  
+            FinCashInfo finCashInfo = mapFinCashInfo.get(cashId);
             if(finCashInfo == null){
             	finCashInfo = new FinCashInfo();
             	finCashInfo.setCashId(cashId);
@@ -5641,7 +5630,7 @@ public class InterfCommonService {
      * @param trustAssetCode 托管资产代码
      * @return
      */
-    public List<BokSchemeAssetConfig> initBokSchemeAssetConfig(String assetId,String trustAssetCode){
+    public List<BokSchemeAssetConfig> initBokSchemeAssetConfig(String assetId, String trustAssetCode){
     	//定义 变量.对账方案资产映射List
     	List<BokSchemeAssetConfig> listBokSchemeAssetConfig = new ArrayList<>();
     	//定义 变量.方案信息List
@@ -5702,7 +5691,7 @@ public class InterfCommonService {
      * @param valModel 接口模式
      * @return
      */
-    public List<ValInterflog> filterValInterflogList(List<ValInterflog> valInterflog,List<String> bookSetIds,String valModel){
+    public List<ValInterflog> filterValInterflogList(List<ValInterflog> valInterflog, List<String> bookSetIds, String valModel){
     	List<ValInterflog> valInterflogList = new ArrayList<>();
     	List<String> booksetLists = new ArrayList<>();
     	bookSetIds.forEach(i -> booksetLists.add("prodId" + "-" + i));
@@ -5733,13 +5722,13 @@ public class InterfCommonService {
      * @param interfDate 接口日期
      * @return resultMap Map<String,Object>
      */
-    public Map<String,Object> initChanneAaccounting(List<ValChannelProdDealDto> trdProductDealList ,Date interfDate){
+    public Map<String,Object> initChanneAaccounting(List<ValChannelProdDealDto> trdProductDealList , Date interfDate){
     	//定义 变量.paramsMap 
     	Map<String,Object> paramsMap=new HashMap<String,Object>();
     	//定义 变量.待初始化核算信息Map
-    	Map<String,ValChannelProdDealDto> initDealMap=new HashMap<String,ValChannelProdDealDto>();
+    	Map<String, ValChannelProdDealDto> initDealMap=new HashMap<String, ValChannelProdDealDto>();
     	//定义 变量.待删除核算信息Map
-    	Map<String,ValChannelProdDealDto> delDealMap=new HashMap<String,ValChannelProdDealDto>();
+    	Map<String, ValChannelProdDealDto> delDealMap=new HashMap<String, ValChannelProdDealDto>();
     	//定义 变量.待初始化通道产品信息List
     	List<ChannelAcctSubjectDto> initChannelList=new ArrayList<ChannelAcctSubjectDto>();
     	//定义 变量.待删除通道核算信息List
@@ -5877,7 +5866,7 @@ public class InterfCommonService {
     	//变量.账套日期Dto
     	BokBooksetDate bokBooksetDate=new BokBooksetDate();
     	//标量。账套配置List
-    	List<BokBooksetExt> listBokBooksetExt = new ArrayList<>();// modify by dongjun on 20190320 通道变更 
+    	List<BokBooksetExt> listBokBooksetExt = new ArrayList<>();// modify by dongjun on 20190320 通道变更
     	//变量.核算主体信息Dto
     	BokAcctSubjectInfo bokAcctSubjectInfo=new BokAcctSubjectInfo();
     	//变量.核算分层信息Dto
@@ -6040,7 +6029,7 @@ public class InterfCommonService {
     	
     	//初始化核算分层信息表
     	//变量.分层代码 =变量.金融产品代码+"_"+数据字典：金融产品类型.通道
-    	String layeringId=finprodId+"_"+DictCodeListExt1.金融产品类型_通道.getValue();
+    	String layeringId=finprodId+"_"+ DictCodeListExt1.金融产品类型_通道.getValue();
     	//变量.账务明细代码
     	String bokDetailId="";
     	BokDetailId bokDetailDto=this.getBokDetailId(finprodId, null, DictCodeListExt1.金融产品类型_通道.getValue(), null, null, null);
@@ -6086,7 +6075,7 @@ public class InterfCommonService {
     		listBokBooksetExt = (List<BokBooksetExt>)booksetInfoMap.get(InterfCommonConstant.账套信息查询_账套配置);
     	}
     	
-    	Map<String,BokBooksetExt> bokBooksetExtMap = new HashMap<>();
+    	Map<String, BokBooksetExt> bokBooksetExtMap = new HashMap<>();
     	
     	if(CollectionUtils.isNotEmpty(listBokBooksetExt)){
     		listBokBooksetExt.forEach(i -> {
@@ -6096,7 +6085,7 @@ public class InterfCommonService {
     	}
     	
     	//定义 变量.活期存款计提配置 = 变量.账套配置Map.get(数据字典：账套配置表参数项.活期存款是否计提)
-    	BokBooksetExt depositAccout = bokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_活期存款是否计提.getValue());   	
+    	BokBooksetExt depositAccout = bokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_活期存款是否计提.getValue());
     	if(depositAccout == null){
     		depositAccout = new BokBooksetExt();
     		depositAccout.setBooksetId(booksetIdSon);
@@ -6116,7 +6105,7 @@ public class InterfCommonService {
     	bokBooksetExtMap.put(ValDictCodeList.账套配置表参数项_活期存款是否计提.getValue(), depositAccout);
     	
     	//定义 变量.本期利润损益结转频率配置 = 变量.账套配置Map.get(数据字典：账套配置表参数项.本期利润损益结转频率)
-    	BokBooksetExt upCarryoverCycle = bokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getValue());   	
+    	BokBooksetExt upCarryoverCycle = bokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getValue());
     	if(upCarryoverCycle == null){
     		upCarryoverCycle = new BokBooksetExt();
     		upCarryoverCycle.setBooksetId(booksetIdSon);
@@ -6130,7 +6119,7 @@ public class InterfCommonService {
     	bokBooksetExtMap.put(ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getValue(), upCarryoverCycle);
     	
     	// 定义 变量.损益平准金结转频率配置 = 变量.账套配置Map.get(数据字典：账套配置表参数项.损益平准金结转频率)
-    	BokBooksetExt palcaCryoverCycle = bokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_损益平准金结转频率.getValue());   	
+    	BokBooksetExt palcaCryoverCycle = bokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_损益平准金结转频率.getValue());
     	if(palcaCryoverCycle == null){
     		palcaCryoverCycle = new BokBooksetExt();
     		palcaCryoverCycle.setBooksetId(booksetIdSon);
@@ -6144,7 +6133,7 @@ public class InterfCommonService {
     	bokBooksetExtMap.put(ValDictCodeList.账套配置表参数项_损益平准金结转频率.getValue(), palcaCryoverCycle);
     	
     	// 定义 变量.收益类型配置 = 变量.账套配置Map.get(DictCode.收益类型.getValue())
-     	BokBooksetExt profitType = bokBooksetExtMap.get(DictCode.收益类型.getValue());   	
+     	BokBooksetExt profitType = bokBooksetExtMap.get(DictCode.收益类型.getValue());
     	if(profitType == null){
     		profitType = new BokBooksetExt();
     		profitType.setBooksetId(booksetIdSon);
@@ -6173,7 +6162,7 @@ public class InterfCommonService {
         }//fixed JSUAT-495 BUG  add by zxp 如果账套信息为货币型账套,账套设置按货币型产品设置配置
     	
     	// 定义 变量.估值表模板配置 = 变量.账套配置Map.get(数据字典：账套配置表参数项.估值表模板)
-     	BokBooksetExt valuationTemplate = bokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_估值表模板.getValue());   	
+     	BokBooksetExt valuationTemplate = bokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_估值表模板.getValue());
     	if(valuationTemplate == null){
     		valuationTemplate = new BokBooksetExt();
     		valuationTemplate.setBooksetId(booksetIdSon);
@@ -6273,7 +6262,7 @@ public class InterfCommonService {
 	    	
 	    	//初始化增值税现金流信息
 	    	FinCashInfo finCashInfoDto=new FinCashInfo();
-	    	String cashId=InterfHelper.getMd5CashId_(finprodId,DictCodeListExt1.金融产品类型_通道.getValue(),DictCodeListExt1.现金流二级类型_税额.getValue());
+	    	String cashId= InterfHelper.getMd5CashId_(finprodId, DictCodeListExt1.金融产品类型_通道.getValue(), DictCodeListExt1.现金流二级类型_税额.getValue());
 	    	finCashInfoDto.setCashId(cashId);
 	    	finCashInfoDto.setCashType1(DictCodeListExt1.现金流一级类型_税额.getValue());
 	    	finCashInfoDto.setCashType2(DictCodeListExt1.现金流二级类型_税额.getValue());
@@ -6344,7 +6333,7 @@ public class InterfCommonService {
     	//初始化通道资金账户信息
     	if(!CollectionUtils.isEmpty(newstlFinProductAcctList)){
     	    //定义 变量.四级科目尾号集合 Map<String,BokDetailId> 20201225 start
-            Map<String,BokDetailId> bokDetailIdMap = new HashMap<>();
+            Map<String, BokDetailId> bokDetailIdMap = new HashMap<>();
             // 20201225 end
             newstlFinProductAcctList.forEach(x ->{
                 String acctType = x.getAcctType();
@@ -6359,7 +6348,7 @@ public class InterfCommonService {
         			stlFinProductAcctList.add(slFinProductAcct);
         			
         			// 初始化待清算账户_账套清算账户表
-        			BokBooksetCapacctInfo  bokBooksetCapacctInfo=new BokBooksetCapacctInfo();
+        			BokBooksetCapacctInfo bokBooksetCapacctInfo=new BokBooksetCapacctInfo();
         			bokBooksetCapacctInfo.setBooksetId(booksetIdSon);
         			bokBooksetCapacctInfo.setAcctNo(InterfCommonConstant.清算款账户号+x.getCcy());
         			bokBooksetCapacctInfo.setCcy(x.getCcy());
@@ -6380,7 +6369,7 @@ public class InterfCommonService {
     			
     			stlFinProductAcctList.add(slFinProductAcct);
     			// 初始化账套清算账户表
-    			BokBooksetCapacctInfo  bokBooksetCapacctInfo=new BokBooksetCapacctInfo();
+    			BokBooksetCapacctInfo bokBooksetCapacctInfo=new BokBooksetCapacctInfo();
     			bokBooksetCapacctInfo.setBooksetId(booksetIdSon);
     			bokBooksetCapacctInfo.setAcctNo(x.getAcctNo());
     			bokBooksetCapacctInfo.setCcy(x.getCcy());
@@ -6472,7 +6461,7 @@ public class InterfCommonService {
      * @param channelList 通道代码集合
      * @return List<SubBokBooksetInfoDto> 子账套信息Dto
      */
-    public List<BokBooksetSonDto> queryBokBooksetSonInfo(String acctSubjectId,String channelId,List<String> channelList){
+    public List<BokBooksetSonDto> queryBokBooksetSonInfo(String acctSubjectId, String channelId, List<String> channelList){
     	Map<String,Object> map=new HashMap<String,Object>();
     	map.put("acctSubjectId", acctSubjectId);
     	map.put("channelId", channelId);
@@ -6687,7 +6676,7 @@ public class InterfCommonService {
      * @return 账套日期：BokBooksetDate
      */
     
-    public Map<String,Object> updateBokBooksetSon(BokBookset bokBookset,BokBooksetDate bokBooksetDate){
+    public Map<String,Object> updateBokBooksetSon(BokBookset bokBookset, BokBooksetDate bokBooksetDate){
     	//变量.母子账套关系List
     	List<BokBooksetSonDto> bokBooksetReList=new ArrayList<BokBooksetSonDto>();
     	//返回resultMap
@@ -6755,14 +6744,14 @@ public class InterfCommonService {
 			   continue;
 		   }
 		   resultMap.clear();
-		   resultMap.put("finprodType",DictCodeListExt1.金融产品类型_通道.getValue());
+		   resultMap.put("finprodType", DictCodeListExt1.金融产品类型_通道.getValue());
 		   resultMap.put("finprodId", key);
 		   initStlFinProductAcctList=this.queryStlFinProductAcctInfo(resultMap);
 		   if(CollectionUtils.isEmpty(initStlFinProductAcctList)){
 			   continue;
 		   }
 		   //定义 变量.四级科目尾号集合 Map<String,BokDetailId>
-           Map<String,BokDetailId> bokDetailIdMap = new HashMap<>();
+           Map<String, BokDetailId> bokDetailIdMap = new HashMap<>();
            for(BokBooksetSonDto b:bokBooksetSonDtoList){
                for(StlFinProductAcct s:initStlFinProductAcctList){
                    String acctType = s.getAcctType();
@@ -6796,7 +6785,7 @@ public class InterfCommonService {
 				   dto.setAcctType(acctType);//modify by dongjun on 20190321 通道变更
 				   stlFinProductAcctList.add(dto);
 				// 初始化账套清算账户表
-	    			BokBooksetCapacctInfo  bokBooksetCapacctInfo=new BokBooksetCapacctInfo();
+	    			BokBooksetCapacctInfo bokBooksetCapacctInfo=new BokBooksetCapacctInfo();
 	    			bokBooksetCapacctInfo.setBooksetId(b.getBooksetIdSon());
 	    			bokBooksetCapacctInfo.setAcctNo(s.getAcctNo());
 	    			bokBooksetCapacctInfo.setCcy(s.getCcy());
@@ -6848,7 +6837,7 @@ public class InterfCommonService {
    /**
     * 通道费用现金流计算规则表更新
     */
-   public List<FinCashCalcRule> updateChannelFinCashCalcRule(Date interfDate,List<String> channelList){
+   public List<FinCashCalcRule> updateChannelFinCashCalcRule(Date interfDate, List<String> channelList){
 	   /*-----------------------------1.定义变量------------------------------*/
 	   //变量.子账套信息List
 	   	List<BokBooksetSonDto> bokBooksetSonDtoList=new ArrayList<BokBooksetSonDto>();
@@ -6871,7 +6860,7 @@ public class InterfCommonService {
 	   //2.2 通道现金流计算规则表数据查询
 	   paramsMap = new HashMap<String,Object>();
 	   paramsMap.put("finprodIds",channelList);
-	   paramsMap.put("finprodType",DictCodeListExt1.金融产品类型_通道.getValue());
+	   paramsMap.put("finprodType", DictCodeListExt1.金融产品类型_通道.getValue());
 	   paramsMap.put("cashType1", DictCodeListExt1.现金流一级类型_费用.getValue());
 	   finCashCalcRuleList = this.queryFinCashCalcRuleList(paramsMap);
 	   if(CollectionUtils.isEmpty(finCashCalcRuleList)){
@@ -6909,7 +6898,7 @@ public class InterfCommonService {
      * @return
      */
     @SuppressWarnings({"unchecked"})
-    public Map<String,Object> assetChlFeeLend(TrdProductDeal trdProductDeal,ChannelFeeInfoDeal channelFeeInfoDeal){
+    public Map<String,Object> assetChlFeeLend(TrdProductDeal trdProductDeal, ChannelFeeInfoDeal channelFeeInfoDeal){
     	Map<String,Object> resultMap = new HashMap<>();
     	// 1.3 定义变量
     	// 定义 变量.金融产品交易Dto
@@ -7038,7 +7027,7 @@ public class InterfCommonService {
      * @param tdList
      * @return
      */
-    public List<FinCashInfo> updateFinCashInfoTd(Date interfDate,List<String> tdList){
+    public List<FinCashInfo> updateFinCashInfoTd(Date interfDate, List<String> tdList){
     	//1.1 定义变量
     	//变量.待更新现金流信息
     	List<FinCashInfo> unFinCashInfo  = new ArrayList<FinCashInfo>();
@@ -7124,19 +7113,19 @@ public class InterfCommonService {
         
         String layeringId = prodId;
         if(StringUtil.isNotEmpty(trdProductDeal.getChlId())){
-        	layeringId = layeringId + FinalString.LAYERING_SPLIT + trdProductDeal.getChlId() + 
+        	layeringId = layeringId + FinalString.LAYERING_SPLIT + trdProductDeal.getChlId() +
         			FinalString.LAYERING_SPLIT + DictCodeListExt1.金融产品类型_通道.getValue();
         } else {
             if(DictCodeListExt1.金融产品类型_理财子产品.getValue().equals(prodFinprodType)){
             	breach = branch; 
             	layeringId =  layeringId+ breach;
             }
-            layeringId = layeringId+FinalString.LAYERING_SPLIT+prodFinprodType;
+            layeringId = layeringId+ FinalString.LAYERING_SPLIT+prodFinprodType;
         }
         valBooksetInfoDtoList = getBokBooksetByProdId_Layering(layeringId);
 
         //IF 数据字典：金融产品类型.投资组合 eq 输入.金融产品类型 and 输入.金融产品交易.通道代码 IS NULL
-        if(DictCodeListExt1.金融产品类型_投资组合.getValue().equals(prodFinprodType) 
+        if(DictCodeListExt1.金融产品类型_投资组合.getValue().equals(prodFinprodType)
                 /** modify by yanya on 20191122 防止chnlI为空字符串**/
                 //&& trdProductDeal.getChlId() == null
                 && StringUtil.isEmpty(trdProductDeal.getChlId())
@@ -7150,7 +7139,7 @@ public class InterfCommonService {
             }
         }
         /**ADD BY WUJIE ON 20191118 START**/
-        Map<String,ValBooksetInfoDto> qcMap = new HashMap<String,ValBooksetInfoDto>();
+        Map<String, ValBooksetInfoDto> qcMap = new HashMap<String, ValBooksetInfoDto>();
         List<ValBooksetInfoDto> bokSetList = new ArrayList<ValBooksetInfoDto>();
         for(ValBooksetInfoDto dto:valBooksetInfoDtoList){
         	if(qcMap.get(dto.getBooksetId())==null){
@@ -7209,9 +7198,9 @@ public class InterfCommonService {
                 ccy = trdProductDeal.getCcy();
             }
             if(StringUtil.equals(DictCodeList.业务类型_产品费用交易.getValue(),trdProductDeal.getBusiType())
-            		||StringUtil.equals(DictCodeList.业务类型_增值税交易.getValue(),trdProductDeal.getBusiType())){
+            		|| StringUtil.equals(DictCodeList.业务类型_增值税交易.getValue(),trdProductDeal.getBusiType())){
             	if(StringUtil.equals(DictCodeListExt1.金融产品类型_通道.getValue(), bokBookset.getAcctSubjectType())){
-            		busiId = prodId +FinalString.LAYERING_SPLIT + trdProductDeal.getChlId();
+            		busiId = prodId + FinalString.LAYERING_SPLIT + trdProductDeal.getChlId();
             	} else{
             		busiId = prodId;
             	}
@@ -7227,7 +7216,7 @@ public class InterfCommonService {
             //预提费用支付
             if(StringUtil.equals(trdProductDeal.getFeeType(), DictCodeListExt3.投资端费用品种类型_账户维护费.getValue())){
             	// 变量.业务明细代码 = 输入.证券账户+产品代码+计提开始日
-            	busiId = trdProductDeal.getSecManageAcctId()+prodId+DateUtil.format(trdProductDeal.getVdate(), "yyyyMMdd");
+            	busiId = trdProductDeal.getSecManageAcctId()+prodId+ DateUtil.format(trdProductDeal.getVdate(), "yyyyMMdd");
                 // 变量.业务明细类型 = 数据字典.金融产品类型.预提费用
                 busiDetailType = DictCodeListExt1.金融产品类型_预提费用.getValue();
                 invAim = null;
@@ -7293,7 +7282,7 @@ public class InterfCommonService {
             // 交易编号 TRADE_ID 输入.金融产品交易.交易编号
             valBokDetailId.setTradeId(trdProductDeal.getTradeId());
             //分支序号
-            valBokDetailId.setBranch(breach==null?InterfCommonConstant.分支序号_默认:breach);
+            valBokDetailId.setBranch(breach==null? InterfCommonConstant.分支序号_默认:breach);
 
             /** modify by yanya on 20200113 金融产品实物交易对应账务明细代码表数据初始化优化 start**/
             //ADD JINMAODONG 债转股交易需要生成股票的账务明细代码 20191214
@@ -7484,7 +7473,7 @@ public class InterfCommonService {
      * @param amt
      * @return isAccountEntry
      */
-    public BigDecimal getSettlementAmount(ProductDealDto dto,String amt){
+    public BigDecimal getSettlementAmount(ProductDealDto dto, String amt){
         // 定义 变量.结算金额字段值
         BigDecimal settleAmt = BigDecimal.ZERO;
         try{
@@ -7506,7 +7495,7 @@ public class InterfCommonService {
      * @param busiType 业务类型
      * @return
      */
-    public BokDetailId settingDetailSubjectNoTaiL(String finprodId, String finprodType, Long branch, String busiType,String booksetId) {
+    public BokDetailId settingDetailSubjectNoTaiL(String finprodId, String finprodType, Long branch, String busiType, String booksetId) {
 
         // 定义 变量.标的信息Dto
         TargetFinProduct targetFinProduct = null;
@@ -7620,7 +7609,7 @@ public class InterfCommonService {
      * @return
      * @throws Exception
      */
-    public List<ValBooksetInfoDto>  getSonPtlPortfolo(String portfolioId,List<PtlTrade> ptlTradeList){
+    public List<ValBooksetInfoDto>  getSonPtlPortfolo(String portfolioId, List<PtlTrade> ptlTradeList){
         // 定义 变量.账套信息List
         List<ValBooksetInfoDto> valBooksetInfoDtoList = new ArrayList<ValBooksetInfoDto>();
         // 定义 变量.组合信息Dto
@@ -7642,7 +7631,7 @@ public class InterfCommonService {
         		continue;
         	}
         	String  hesuanId = null;
-        	FinProduct  finProduct = dealCommonService.queryFinProductByPortfolidId(ptlTrade.getPortfolioId());
+        	FinProduct finProduct = dealCommonService.queryFinProductByPortfolidId(ptlTrade.getPortfolioId());
         	if(finProduct != null && finProduct.getFinprodId() != null){
                 hesuanId = finProduct.getFinprodId();
             }
@@ -7656,7 +7645,7 @@ public class InterfCommonService {
             }
         }
         
-        Map<String,ValBooksetInfoDto> qcMap = new HashMap<String,ValBooksetInfoDto>();
+        Map<String, ValBooksetInfoDto> qcMap = new HashMap<String, ValBooksetInfoDto>();
         List<ValBooksetInfoDto> bokSetList = new ArrayList<ValBooksetInfoDto>();
         for(ValBooksetInfoDto dto:valBooksetInfoDtoList){
         	if(qcMap.get(dto.getBooksetId())==null){
@@ -7680,8 +7669,8 @@ public class InterfCommonService {
      * @param cbranch
      * @return
      */
-    public Map<String,Object>  instructionGenerate_Interf(TrdProductDeal tradeDeal,StlOrders frontStlOrdersDto,String finprodId,
-            String finprodType,Long cbranch){
+    public Map<String,Object>  instructionGenerate_Interf(TrdProductDeal tradeDeal, StlOrders frontStlOrdersDto, String finprodId,
+                                                          String finprodType, Long cbranch){
     	Map<String,Object>  resultMap;
     	if(frontStlOrdersDto==null || frontStlOrdersDto.getMyAcctNo() == null){
     		resultMap = this.instructionGenerate(tradeDeal,finprodId, finprodType,null);

@@ -6,7 +6,7 @@
 			resultType="com.joyintech.service.entrust.etrbondfirstlbidding.dto.EtrBondFirstLBiddingDto">
 		select aaa.* from (
 		<choose>
-			<when test="entrustStatus == ''">
+			<when test="entrustStatus == '' or entrustStatus == null">
 				<!-- 查询全部状态 -->
 				<include refid="onlyWtfEtrEntrust"></include>
 				UNION ALL

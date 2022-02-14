@@ -20,7 +20,9 @@ import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService.getSeqNo;
 
@@ -407,7 +409,13 @@ public class EtrSharesCashPositionDealService extends EtrCashPositionBaseService
         // 委托价格
         BigDecimal 委托价格 = etrEntrust.getPrice();
         // 已完成额度
-        BigDecimal etrFinish = EtrCommonCashPositionDealService.getEtrFinishAmt(etrEntrust.getEntrustId());
+        Map<String,Object> map=new HashMap<>();
+        map.put("sumTradeFlag","01");
+        map.put("entrustClass", etrEntrust.getEntrustClass());
+        map.put("portfolioId",etrEntrust.getPortfolioId());
+        map.put("entrustId",etrEntrust.getEntrustId());
+        BigDecimal etrFinish = EtrCommonCashPositionDealService.getEtrExchangeFinishAmtMuilt(map);
+        //BigDecimal etrFinish = EtrCommonCashPositionDealService.getEtrFinishAmt(etrEntrust.getEntrustId());
         // 委托生成的持仓流水
         EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDtoFromEtr(
             entrustCommonDto);

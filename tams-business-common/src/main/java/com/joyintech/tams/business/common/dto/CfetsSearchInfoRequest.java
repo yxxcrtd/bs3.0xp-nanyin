@@ -16,10 +16,14 @@ public class CfetsSearchInfoRequest {
     private PageMode pageMode;
     @ApiModelProperty(name="ps",value="交易方向",example="T03")
     private String ps;
-    @ApiModelProperty(name="partyId",value="本方/对手方",example="111")
+    @ApiModelProperty(name="partyId",value="本方/对手方的21位码",example="111")
     private String partyId;
     @ApiModelProperty(name="dealType",value="交易类型",example="04")
     private String dealType;
+    @ApiModelProperty(name="searchs",value="模糊查询输入多个值",example="1")
+    private String searchs;
+    @ApiModelProperty(name="dateType",value="时间类型",example="历史：01")
+    private String dateType;
 
 
     public String getSearch() {
@@ -60,5 +64,21 @@ public class CfetsSearchInfoRequest {
 
     public void setPartyId(String partyId) {
         this.partyId = partyId;
+    }
+
+    public String getSearchs() {
+        return searchs;
+    }
+
+    public void setSearchs(String searchs) {
+        this.searchs = searchs;
+    }
+
+    public String getDateType() {
+        return dateType;
+    }
+
+    public void setDateType(String dateType) {
+        this.dateType = dateType;
     }
 }

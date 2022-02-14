@@ -106,7 +106,7 @@ public class CfetsTrdQueryTradeInfoListResponse {
     private BigDecimal faceValue;
 
     @ApiModelProperty(name="tradeYield",value="成交价",example="1")
-    private BigDecimal tradeYield;
+    private String tradeYield;
 
     @ApiModelProperty(name="termDays",value="期限（天）",example="1")
     private BigDecimal termDays;
@@ -120,10 +120,10 @@ public class CfetsTrdQueryTradeInfoListResponse {
     private String ccyStr;
 
     @ApiModelProperty(name="confirmTradeDate",value="成交日期Date",example="admin")
-    private Date confirmTradeDate;
+    private String  confirmTradeDate;
 
     @ApiModelProperty(name="settleDate",value="结算日期",example="字符串1")
-    private Date settleDate;
+    private String settleDate;
 
     @ApiModelProperty(name="execid",value="成交编号",example="1")
     private String execid;
@@ -148,6 +148,29 @@ public class CfetsTrdQueryTradeInfoListResponse {
 
     @ApiModelProperty(name="portfolioName",value="组合名称",example="A1")
     private String portfolioName;
+
+    @ApiModelProperty(name="tradeDate",value="成交日期",example="admin")
+    private Date  tradeDate;
+
+    @ApiModelProperty(name="preTradeId",value="前置成交编号",example="1")
+    private String preTradeId;
+
+    @ApiModelProperty(name="calMode",value="计算方式",example="计算方式供前台判断使用")
+    private String calMode;
+
+    @ApiModelProperty(name="matchStatus",value="匹配状态",example="matchStatus")
+    private String matchStatus;
+
+    @ApiModelProperty(name="trader",value="交易员",example="trader")
+    private String trader;
+
+    public String getCalMode() {
+        return calMode;
+    }
+
+    public void setCalMode(String calMode) {
+        this.calMode = calMode;
+    }
 
     public String getEffectiveStatus() {
         return effectiveStatus;
@@ -349,11 +372,11 @@ public class CfetsTrdQueryTradeInfoListResponse {
         this.faceValue = faceValue;
     }
 
-    public BigDecimal getTradeYield() {
+    public String getTradeYield() {
         return tradeYield;
     }
 
-    public void setTradeYield(BigDecimal tradeYield) {
+    public void setTradeYield(String tradeYield) {
         this.tradeYield = tradeYield;
     }
 
@@ -387,22 +410,6 @@ public class CfetsTrdQueryTradeInfoListResponse {
 
     public void setCcyStr(String ccyStr) {
         this.ccyStr = ccyStr;
-    }
-
-    public Date getConfirmTradeDate() {
-        return confirmTradeDate;
-    }
-
-    public void setConfirmTradeDate(Date confirmTradeDate) {
-        this.confirmTradeDate = confirmTradeDate;
-    }
-
-    public Date getSettleDate() {
-        return settleDate;
-    }
-
-    public void setSettleDate(Date settleDate) {
-        this.settleDate = settleDate;
     }
 
     public String getExecid() {
@@ -467,5 +474,53 @@ public class CfetsTrdQueryTradeInfoListResponse {
 
     public void setCounterId(String counterId) {
         this.counterId = counterId;
+    }
+
+    public String getConfirmTradeDate() {
+        return confirmTradeDate;
+    }
+
+    public void setConfirmTradeDate(String confirmTradeDate) {
+        this.confirmTradeDate = confirmTradeDate;
+    }
+
+    public String getSettleDate() {
+        return settleDate;
+    }
+
+    public void setSettleDate(String settleDate) {
+        this.settleDate = settleDate;
+    }
+
+    public Date getTradeDate() {
+        return tradeDate;
+    }
+
+    public void setTradeDate(Date tradeDate) {
+        this.tradeDate = tradeDate;
+    }
+
+    public String getPreTradeId() {
+        return preTradeId;
+    }
+
+    public void setPreTradeId(String preTradeId) {
+        this.preTradeId = preTradeId;
+    }
+
+    public String getMatchStatus() {
+        return matchStatus;
+    }
+
+    public void setMatchStatus(String matchStatus) {
+        this.matchStatus = matchStatus;
+    }
+
+    public String getTrader() {
+        return trader;
+    }
+
+    public void setTrader(String trader) {
+        this.trader = trader;
     }
 }

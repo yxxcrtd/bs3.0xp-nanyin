@@ -17,23 +17,23 @@
           </el-form-item>
         </el-col>
         <!-- <el-col :span="8" > -->
-          <el-button size="small" type="primary" 
+          <el-button size="small" type="primary"
           style="position: absolute;
                   top: 0;
                   right: 0;"
           @click="pageSsoPlatform" class="onSearch el-button-init" :loading="listLoading" icon="el-icon-search">查询</el-button>
         <!-- </el-col> -->
       </el-row>
-        
+
     </el-form>
 
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
+    <el-card :style="contentStyleObj">
+      <div slot="header">
         <!-- <span> -->
           <el-button class="el-button-init" type="primary" size="mini" @click="add('new')">+新增</el-button>
         <!-- </span> -->
       </div>
-      <div class="text item" ref="tableCot">
+      <div ref="tableCot">
         <el-table
           v-loading="listLoading"
           :data="dataSource"
@@ -41,24 +41,29 @@
           border
           stripe
           style="width: 100%"
-          :height="Height"
           size="mini"
           fit
           highlight-current-row
         >
-          <el-table-column prop="platformcode" label="系统编号" width="200px">
+          <el-table-column prop="platformcode" label="系统编号" min-width="13%">
           </el-table-column>
-          <el-table-column prop="platformname" label="系统名称" >
+          <el-table-column prop="platformname" label="系统名称" min-width="16%">
           </el-table-column>
-          <el-table-column prop="platformurl" label="系统地址" >
+          <el-table-column prop="platformurl" label="系统地址" min-width="43%">
+          </el-table-column>
+          <el-table-column prop="syncFlag" label="是否实时同步" min-width="9%">
+            <template slot-scope="scope">
+              <span v-if="scope.row.syncFlag == 0">否</span>
+              <span v-if="scope.row.syncFlag == 1">是</span>
+            </template>
           </el-table-column>
           <!-- <el-table-column prop="mduser" label="维护人员" >
           </el-table-column>
           <el-table-column prop="mdtime" label="维护时间" >
           </el-table-column> -->
-          <el-table-column prop="status" label="状态" width="100px"> 
+          <el-table-column prop="status" label="状态" min-width="9%">
             <template v-slot="scoped">
-              <!-- <el-switch v-model="scoped.row.status" 
+              <!-- <el-switch v-model="scoped.row.status"
               active-value="1"
               inactive-value="0"
               active-color="#13ce66"></el-switch> -->
@@ -74,7 +79,7 @@
               @change="changeSwitch(scoped.row)"/>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="200px">
+          <el-table-column fixed="right" label="操作" min-width="11%">
             <template slot-scope="scope">
               <el-button @click="handleEdit(scope.row,'edit')"  type="text" size="small">编辑</el-button>
               <el-button type="text" size="small" @click="handleDel(scope.row)">删除</el-button>
@@ -105,40 +110,65 @@
       :before-close="handleClose">
       <div>
         <el-form ref="addForm" :model="addForm" :rules="rules" label-width="120px" class="FormClass" style="">
-          <el-row>
+          <el-row class="input-half">
             <el-col :span="12" required>
               <el-form-item label="系统编号" prop="platformcode">
                 <el-input v-model="addForm.platformcode" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="系统名称" prop="platformname"> 
+              <el-form-item label="系统名称" prop="platformname">
                 <el-input v-model="addForm.platformname" />
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="系统地址" prop="platformurl">
-                <el-input v-model="addForm.platformurl" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="权重" prop="weight">
-                <el-input v-model="addForm.weight" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
+          <el-row class="input-half">
             <el-col :span="12">
               <el-form-item label="身份标志" prop="cookieKey">
                 <el-input v-model="addForm.cookieKey" />
               </el-form-item>
             </el-col>
-            
+            <el-col :span="12">
+              <el-form-item label="权重" prop="weight">
+                <el-input v-model="addForm.weight" placeholder="值变小时排序相应靠前" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row class="input-large">
+            <el-col :span="24">
+              <el-form-item label="应用地址" prop="platformHost">
+                <el-input v-model="addForm.platformHost"  placeholder="例如：http://127.0.0.1:8080/ContextPath" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row class="input-large">
+            <el-col :span="24">
+              <el-form-item label="应用首页" prop="platformIndex">
+                <el-input v-model="addForm.platformIndex"  placeholder="例如：/index.html" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row class="input-switchLabel">
+            <el-col>
+              <el-form-item label="实时同步" prop="syncFlag">
+                <el-switch
+                  class="switchStyle"
+                  v-model="addForm.syncFlag"
+                  :active-value="1"
+                  :inactive-value="0"
+                  active-text="是"
+                  inactive-text="否"
+                  active-color="green"
+                  inactive-color="#B9B9B9"
+                />           
+              </el-form-item>
+              <el-col>
+                <span class="item-label-extra">开启:统一身份认证平台维护用户机构部门信息会实时同步到当前系统。</span>
+              </el-col>
+            </el-col>
           </el-row>
           <el-row>
-            <el-col >
+            <el-col style="margin-top:30px">
               <el-form-item label="描述" prop="describe">
                 <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" v-model="addForm.describe" />
               </el-form-item>
@@ -147,26 +177,32 @@
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false" size="mini">取 消</el-button>
+        <el-button @click="dialogVisible = false;clearForm()" size="mini">取 消</el-button>
         <el-button type="primary" @click="onSubmit" :loading = "submitLoading" size="mini">提 交</el-button>
       </span>
     </el-dialog>
 
     <el-dialog
-      title="提示"
+      title="授权"
       :visible.sync="dialogAuth"
       width="30%"
-      :before-close="handleAuthClose">
-      <el-tree
-        :data="dialogAuthData"
-        show-checkbox
-        ref="tree"
-        node-key="name"
-        :default-expanded-keys="defaultShowKeys"
-        :default-checked-keys="defaultShowKeys"
-        @check-change="handleNodeClick"
-        :props="defaultProps">
-      </el-tree>
+      :before-close="handleAuthClose"
+      class="dialogClass">
+      <el-input class="app-container-input" v-model="filterText" @input="filterTextChange" placeholder="请输入名称" size="mini">
+        <el-button slot="append" icon="el-icon-search" @click="listDeptAndUser"></el-button>
+      </el-input>
+      <div class="tree-container" style ="height:250px;overflow:auto;">
+        <el-tree
+          :data="dialogAuthData"
+          show-checkbox
+          ref="tree"
+          node-key="name"
+          :default-expand-all="false"
+          :default-checked-keys="defaultShowKeys"
+          @check-change="handleNodeClick"
+          :props="defaultProps">
+        </el-tree>
+      </div>
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogAuth = false" size="mini">取 消</el-button>
@@ -177,7 +213,7 @@
   </div>
   </div>
 
-  
+
 </template>
 
 <script>
@@ -198,20 +234,26 @@ export default {
   },
   data() {
     return {
+      contentStyleObj: {
+        height: '',
+        'overflow-y':'scroll',
+        padding: '0 0 100px 0',
+      },
+      filterText: '',
       dataSource: [],
       listLoading: false,
       dialogVisible: false,
       dialogAuth: false,
       value5: 100,
-      Height:300,
+      // Height:300,
       dialogAuthData: [],
       defaultProps: {
         children: 'children',
-        label: 'name'
+        label: 'realname'
       },
       defaultShowKeys: [],
       defaultNodeKeys: [],
-      
+
       form: {
         platformname: '',
         status: '',
@@ -232,18 +274,21 @@ export default {
         platformname: [
           { required: true, message: '请填写系统名称', trigger: 'blur' }
         ],
-        platformurl: [
-          { required: true, message: '请填写系统地址', trigger: 'blur' }
-        ],
+        // platformurl: [
+        //   { required: true, message: '请填写系统地址', trigger: 'blur' }
+        // ],
         weight: [
           { required: true, message: '请填写权重', trigger: 'blur' }
         ],
         cookieKey: [
           { required: true, message: '请填写身份标志', trigger: 'blur' }
         ],
-        // describe: [
-        //   { required: true, message: '请填写描述', trigger: 'blur' }
-        // ],
+        platformHost: [
+          { required: true, message: '请填写平台主机', trigger: 'blur' }
+        ],
+        platformIndex: [
+          { required: true, message: '请填写主页地址', trigger: 'blur' }
+        ],
       },
       // page: {
       //   pageNum: 1,
@@ -251,7 +296,7 @@ export default {
       // },
       pageNum: 1,
       pageSize: 20,
-      
+
       total: 0,
       currentPage: 1,
       submitLoading: false,
@@ -269,23 +314,34 @@ export default {
     // }
   },
   mounted () {
-    const that = this
-    window.onresize = () => {
-      return (() => {
-        let heightStyle = window.screen.height
-        that.Height = heightStyle - 310
-      })()
-    }
+    // const that = this
+    // window.onresize = () => {
+    //   return (() => {
+    //     let heightStyle = window.screen.height
+    //     that.Height = heightStyle - 310
+    //   })()
+    // }
   },
   created() {
-    let that = this
-    let heightStyle = window.screen.height
-    that.Height = heightStyle - 310
-
+    // let that = this
+    // let heightStyle = window.screen.height
+    // that.Height = heightStyle - 310
+    this.getHight()
+    window.addEventListener('resize', this.getHight);
     this.pageSsoPlatform()
+    this.listDeptAndUser()
+    console.log('浏览器高度',document.body.clientWidth)
+    //window.innerHeight
+  },
+  
+  destroyed() {
+    window.removeEventListener('resize', this.getHight)
   },
 
   methods: {
+    getHight(){
+      this.contentStyleObj.height = window.innerHeight  + 'px'
+    },
     handleNodeClick(data, checked, indeterminate) {
       if(!data.children){
         if(checked){
@@ -294,6 +350,20 @@ export default {
           this.defaultNodeKeys.splice(this.defaultNodeKeys.indexOf(data.name),1);
         }
       }
+    },
+
+    filterTextChange(val){
+      this.filterText = val
+    },
+
+    listDeptAndUser(){
+      axios.post('sso/ssouserplatform/listDeptAndUser',{
+        realname: this.filterText
+      }).then((res) =>{
+        if(res.data.code == 'success'){
+          this.dialogAuthData = res.data.data
+        }
+      })
     },
 
     handleAuto(val){
@@ -327,7 +397,7 @@ export default {
         userids: arr,
         platformid: this.platformid
       }
-      
+
       axios.post('sso/ssouserplatform/grantAuthorizationForPlatForm',params).then((res) =>{
         if(res.data.code == 'success'){
           this.$message.success(res.data.message)
@@ -336,14 +406,12 @@ export default {
           this.$message.error(res.data.message)
         }
       })
+      this.filterText = '';
     },
 
     handleAuthClose(done){
-      this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
+      done();
+      this.filterText = '';
     },
 
     changeSwitch(status){
@@ -354,17 +422,15 @@ export default {
         this.$message.success(res.data.message)
         this.pageSsoPlatform()
       })
-      
+
     },
     add(){
       this.dialogVisible = true
     },
     handleClose(done){
-      this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
+      done();
+      this.$refs['addForm'].resetFields();
+      this.clearForm()
     },
      handleSizeChange(val) {
       this.pageSize = val
@@ -406,14 +472,18 @@ export default {
       })
     },
     handleDel(value){
-      axios.post('sso/ssoplatform/delete/'+value.id).then((res) =>{
-        if(res.data.code == 'success'){
-          this.$message.success(res.data.message)
-          this.pageSsoPlatform()
-        }else{
-          this.$message.error(res.data.message)
-        }
-      })
+      this.$confirm('确认删除？')
+        .then(_ => {
+          axios.post('sso/ssoplatform/delete/'+value.id).then((res) =>{
+            if(res.data.code == 'success'){
+              this.$message.success(res.data.message)
+              this.pageSsoPlatform()
+            }else{
+              this.$message.error(res.data.message)
+            }
+          })
+        })
+        .catch(_ => {});
     },
     handleEdit(value, handType){
       this.dialogVisible = true
@@ -423,7 +493,9 @@ export default {
           this.addForm = {
             platformcode: res.data.data.platformcode,
             platformname: res.data.data.platformname,
-            platformurl: res.data.data.platformurl,
+            platformHost: res.data.data.platformHost,
+            platformIndex: res.data.data.platformIndex,
+            syncFlag: res.data.data.syncFlag,
             weight: res.data.data.weight,
             cookieKey: res.data.data.cookiekey,
             describe: res.data.data.describe,
@@ -433,7 +505,7 @@ export default {
           this.$message.error(res.data.message)
         }
       })
-      
+
     },
 
     clearFormAuth(){
@@ -448,7 +520,9 @@ export default {
       this.addForm = {
         platformcode: '',
         platformname: '',
-        platformurl: '',
+        platformHost: '',
+        platformIndex: '',
+        syncFlag: '',
         cookieKey: '',
         describe: ''
       }
@@ -460,9 +534,11 @@ export default {
           this.submitLoading = true
           if(this.handType == 'new'){
             const params = {
-              platformcode: this.addForm.platformcode,
+              platformcode: this.addForm.platformcode, 
               platformname: this.addForm.platformname,
-              platformurl: this.addForm.platformurl,
+              platformHost: this.addForm.platformHost,
+              platformIndex: this.addForm.platformIndex,
+              syncFlag: this.addForm.syncFlag,
               weight: this.addForm.weight,
               cookiekey: this.addForm.cookieKey,
               describe: this.addForm.describe,
@@ -481,7 +557,9 @@ export default {
             const params = {
               platformcode: this.addForm.platformcode,
               platformname: this.addForm.platformname,
-              platformurl: this.addForm.platformurl,
+              platformHost: this.addForm.platformHost,
+              platformIndex: this.addForm.platformIndex,
+              syncFlag: this.addForm.syncFlag,
               weight: this.addForm.weight,
               cookiekey: this.addForm.cookieKey,
               describe: this.addForm.describe,
@@ -502,8 +580,8 @@ export default {
           return false
         }
       })
-      
-      
+
+
     },
   }
 }

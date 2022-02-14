@@ -84,7 +84,28 @@ public class PaActiveRemind002Controller extends BaseController {
         Map<String, Object> param = RequestUtil.getParameters(getRequest());
         param.put("quaryDate", DateUtil.parse((String)param.get("quaryDate")));
         List<PaActiveRemind001Dto> page = paActiveRemind002Service.selRamind(param);
-        return page;
+         // modify 20211209 start
+         // GZYHTZUAT-28 主动提醒-指标违规提醒展示查询结果显示错位；
+         // 框架调整，导致画面显示异常，需要业务代码自行处理
+         if (page != null) {
+             for(PaActiveRemind001Dto resultDto : page) {
+                 if (StringUtil.isNotBlank(resultDto.getWarnCond())) {
+                     resultDto.setWarnCond(StringUtil.replaceAll(resultDto.getWarnCond(), ">", "&gt;"));
+                     resultDto.setWarnCond(StringUtil.replaceAll(resultDto.getWarnCond(), "<", "&lt;"));
+                 }
+                 if (StringUtil.isNotBlank(resultDto.getFoulCond())) {
+                     resultDto.setFoulCond(StringUtil.replaceAll(resultDto.getFoulCond(), ">", "&gt;"));
+                     resultDto.setFoulCond(StringUtil.replaceAll(resultDto.getFoulCond(), "<", "&lt;"));
+                 }
+                 if (StringUtil.isNotBlank(resultDto.getApproveCond())) {
+                     resultDto.setApproveCond(StringUtil.replaceAll(resultDto.getApproveCond(), ">", "&gt;"));
+                     resultDto.setApproveCond(StringUtil.replaceAll(resultDto.getApproveCond(), "<", "&lt;"));
+                 }
+             }
+         }
+         // modify 20211209 end
+
+             return page;
     }
 
     /**

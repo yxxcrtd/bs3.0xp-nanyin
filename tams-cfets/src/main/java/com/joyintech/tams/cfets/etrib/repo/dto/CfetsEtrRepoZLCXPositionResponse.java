@@ -1,12 +1,12 @@
 package com.joyintech.tams.cfets.etrib.repo.dto;
 
-import com.joyintech.tams.business.common.dto.PageMode;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 @ApiModel(value="质押券库查询结果",description="质押券库查询结果")
 public class CfetsEtrRepoZLCXPositionResponse {
@@ -28,6 +28,11 @@ public class CfetsEtrRepoZLCXPositionResponse {
      */
     @ApiModelProperty(name="secAcctId",value="证券账户/通道代码")
     private String secAcctId;
+
+    @ApiModelProperty(name="secAcctIdStr",value="证券账户名称")
+    private String secAcctIdStr;
+
+
     /**
      * 金融产品Id
      */
@@ -68,7 +73,12 @@ public class CfetsEtrRepoZLCXPositionResponse {
      */
     @ApiModelProperty(name="mdate",value="到期日")
     private Date mdate;
-    
+    /**
+     * 到期日
+     */
+    @ApiModelProperty(name="mdate",value="到期日")
+    private String mdateStr;
+
     /**
      * 折算比例
      */
@@ -78,8 +88,8 @@ public class CfetsEtrRepoZLCXPositionResponse {
     /**
      * 首次净价
      */
-    @ApiModelProperty(name="firstPrice",value="首次净价")
-    private BigDecimal firstPrice;
+    @ApiModelProperty(name="firstNetPrice",value="首次净价")
+    private BigDecimal firstNetPrice;
 
     /**
      * 登记托管机构
@@ -183,12 +193,12 @@ public class CfetsEtrRepoZLCXPositionResponse {
         this.scale = scale;
     }
 
-    public BigDecimal getFirstPrice() {
-        return firstPrice;
+    public BigDecimal getFirstNetPrice() {
+        return firstNetPrice;
     }
 
-    public void setFirstPrice(BigDecimal firstPrice) {
-        this.firstPrice = firstPrice;
+    public void setFirstNetPrice(BigDecimal firstNetPrice) {
+        this.firstNetPrice = firstNetPrice;
     }
 
     public String getRegistOrg() {
@@ -254,4 +264,32 @@ public class CfetsEtrRepoZLCXPositionResponse {
 	public void setBranch(long branch) {
 		this.branch = branch;
 	}
+
+    public String getGradeResultStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.评级结果, this.getGradeResult());
+    }
+
+    public String getRegistOrgStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.登记托管机构, this.getRegistOrg());
+    }
+
+    public String getFinProdTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.资产四级分类, this.getFinProdType());
+    }
+
+    public String getSecAcctIdStr() {
+        return secAcctIdStr;
+    }
+
+    public void setSecAcctIdStr(String secAcctIdStr) {
+        this.secAcctIdStr = secAcctIdStr;
+    }
+
+    public String getMdateStr() {
+        return mdateStr;
+    }
+
+    public void setMdateStr(String mdateStr) {
+        this.mdateStr = mdateStr;
+    }
 }

@@ -120,7 +120,7 @@ public interface CfetsEtrIbBondinfoMapper {
 
     public boolean queryAssetIsRight(Map pageParam);
 
-    List<String> selectAllBusModelListByInfo(Map<String, Object> pageParam);
+    List<CfetsBussCombDistribtDto> selectAllBusModelListByInfo(Map<String, Object> pageParam);
 
     CfetsEtribBondInfo003Dto  selectTransmitTimeByInfo(String entrustId);
 

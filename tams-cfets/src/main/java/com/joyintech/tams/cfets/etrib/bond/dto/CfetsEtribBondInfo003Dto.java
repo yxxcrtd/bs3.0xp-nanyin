@@ -112,7 +112,10 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
     private String priceModel;
 
     List<CfetsEtribBondInfo003Dto> etrInvestBondInfoDtos;
-
+    /**
+     * 资产类型
+     */
+    private String assetType;
 
     /**
      * 文件上传dto
@@ -192,6 +195,18 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
 
     @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
     private String softSkipMode;
+
+    /**
+     * 资产简称
+     */
+    private String finprodAbbr;
+
+    /**
+     * 资产简称
+     */
+  //  private Boolean submitFlag;
+
+    private String systemAct;
 
     public String getBusinessId() {
         return businessId;
@@ -640,5 +655,30 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
 
     public void setTransmitTime(Date transmitTime) {
         this.transmitTime = transmitTime;
+    }
+
+    public String getAssetType() {
+        return assetType;
+    }
+
+    public void setAssetType(String assetType) {
+        this.assetType = assetType;
+    }
+
+    public String getFinprodAbbr() {
+        return finprodAbbr;
+    }
+
+    public void setFinprodAbbr(String finprodAbbr) {
+        this.finprodAbbr = finprodAbbr;
+    }
+
+
+    public String getSystemAct() {
+        return systemAct;
+    }
+
+    public void setSystemAct(String systemAct) {
+        this.systemAct = systemAct;
     }
 }

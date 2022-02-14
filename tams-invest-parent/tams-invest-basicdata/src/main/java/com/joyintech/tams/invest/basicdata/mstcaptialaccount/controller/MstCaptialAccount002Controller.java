@@ -240,10 +240,10 @@ public class MstCaptialAccount002Controller extends BaseController{
         WorkFlowParameter<MstCaptialAccountDto> params = new WorkFlowParameter<MstCaptialAccountDto>();
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
-        params.setBusinessCode(item->item.getLargePayno()+item.getBusiAcctNo()+item.getCcy());
+        params.setBusinessCode(item->(StringUtil.isNotEmpty(item.getLargePayno())?item.getLargePayno():"")+item.getBusiAcctNo()+item.getCcy());
         params.setBusinessType(DictCodeList.共通业务类型_资金账户管理.getValue());
 
-        dto.setAcctNo(dto.getLargePayno() + GlobalConstant.COLON + dto.getBusiAcctNo());
+        dto.setAcctNo((StringUtil.isNotEmpty(dto.getLargePayno())?dto.getLargePayno():"") + GlobalConstant.COLON + dto.getBusiAcctNo());
         
         //多级法人改造  增加seqno字段  add by caojin 2020/6/15   start
         dto.setSeqNo(IDGenerator.generate());
@@ -259,7 +259,7 @@ public class MstCaptialAccount002Controller extends BaseController{
         
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
-            entity -> "网点账号"+ "(" + entity.getLargePayno()+entity.getBusiAcctNo()+ ")" 
+            entity -> "网点账号"+ "(" + entity.getAcctNo()+ ")"
                 +  "-" + "账户名称"+ "(" + entity.getAcctName() + ")"  +  "-" + "币种"+ 
                 "(" + SysDataUtil.getNameFromDataDict(DictCode.币种,entity.getCcy()) + ")");
         processParameter.setWorkFlowParameter(params);

@@ -483,6 +483,21 @@ public class WflEtrEntrustAdd extends WflEtrEntrustAddKey {
     private BigDecimal entrustAmtTarget;
 
     /**
+     * 组合系列
+     */
+    private String portfolioSeries;
+
+    /**
+     * null
+     */
+    private String calculateField;
+
+    /**
+     * 质押券库id
+     */
+    private String pledgeStockId;
+
+    /**
      * 指令创建来源
      */
     private String entrustCreateSource;
@@ -1923,6 +1938,54 @@ public class WflEtrEntrustAdd extends WflEtrEntrustAddKey {
     }
 
     /**
+     * 取得 组合系列
+     * @return 组合系列
+     */
+    public String getPortfolioSeries() {
+        return portfolioSeries;
+    }
+
+    /**
+     * 设置 组合系列
+     * @param portfolioSeries 组合系列
+     */
+    public void setPortfolioSeries(String portfolioSeries) {
+        this.portfolioSeries = portfolioSeries == null ? null : portfolioSeries.trim();
+    }
+
+    /**
+     * 取得 null
+     * @return null
+     */
+    public String getCalculateField() {
+        return calculateField;
+    }
+
+    /**
+     * 设置 null
+     * @param calculateField null
+     */
+    public void setCalculateField(String calculateField) {
+        this.calculateField = calculateField == null ? null : calculateField.trim();
+    }
+
+    /**
+     * 取得 质押券库id
+     * @return 质押券库id
+     */
+    public String getPledgeStockId() {
+        return pledgeStockId;
+    }
+
+    /**
+     * 设置 质押券库id
+     * @param pledgeStockId 质押券库id
+     */
+    public void setPledgeStockId(String pledgeStockId) {
+        this.pledgeStockId = pledgeStockId == null ? null : pledgeStockId.trim();
+    }
+
+    /**
      * 取得 指令创建来源
      * @return 指令创建来源
      */
@@ -1932,10 +1995,6 @@ public class WflEtrEntrustAdd extends WflEtrEntrustAddKey {
 
     /**
      * 设置 指令创建来源
-     * 01：场内簿记
-     * 02：场内实时
-     * 03：银行间簿记
-     * 04：银行间实时
      * @param entrustCreateSource 指令创建来源
      */
     public void setEntrustCreateSource(String entrustCreateSource) {

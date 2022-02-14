@@ -187,4 +187,22 @@
     </where>
     order by SEQNO
   </select>
+
+  <select id="getReadonlyForms" parameterType="String"
+          resultType="com.joyintech.tams.business.common.entity.CfgReadonlyFormShow">
+    select
+    <include refid="Base_Column_List" />
+    from CFG_READONLY_FORM_SHOW
+    <where>
+      <if test="pageCode != null  and pageCode != ''">and PAGECODE = #{pageCode}</if>
+      <if test="dtCode != null  and dtCode != ''">and DTCODE = #{dtCode}</if>
+      <if test="spcdCodes != null and spcdCodes.size() > 0 ">
+        AND SPCDCODE IN
+        <foreach collection="spcdCodes" item="item" open="(" close=")" separator=",">
+          #{item}
+        </foreach>
+      </if>
+    </where>
+    order by SEQNO
+  </select>
 </mapper>

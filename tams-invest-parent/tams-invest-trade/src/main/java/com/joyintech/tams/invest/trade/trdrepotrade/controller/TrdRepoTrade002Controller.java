@@ -133,9 +133,6 @@ public class TrdRepoTrade002Controller extends BaseController {
         // add by etliu 20210501 银行间场内场外拆分 end
 
         TrdRepoTrade002Dto dto = new TrdRepoTrade002Dto();
-        if(StringUtil.isNotEmpty(tranRecord)){
-            dto=JsonUtils.json2Object(tranRecord,TrdRepoTrade002Dto.class);
-        }
 
         if (StringUtil.equals(workflowStatus, DictCodeListExt1.交易流程状态_流程中.getValue())
                 || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
@@ -153,7 +150,13 @@ public class TrdRepoTrade002Controller extends BaseController {
             PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, dto.getParentPageId());
             PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.回购类型, dto.getParentPageId());
             // add by yeming 20210914 银行间场内场外拆分 end
-        } else if (StringUtil.isNotEmpty(tradeId)) {
+        }
+        else if(StringUtil.isNotEmpty(tranRecord)){
+            model.addAttribute("isTranRecord", DictCodeList.是否_是.getValue());
+            dto=JsonUtils.json2Object(tranRecord,TrdRepoTrade002Dto.class);
+        }
+
+        else if (StringUtil.isNotEmpty(tradeId)) {
             dto = trdRepoTrade002Service.getTrdRepoTradeDto(tradeId);
 
             if(dto!=null && StringUtil.isNotEmpty(dto.getrTradeId())){

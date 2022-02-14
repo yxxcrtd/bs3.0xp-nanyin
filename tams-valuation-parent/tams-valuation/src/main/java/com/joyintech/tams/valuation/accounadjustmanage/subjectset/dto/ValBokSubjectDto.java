@@ -12,6 +12,7 @@ package com.joyintech.tams.valuation.accounadjustmanage.subjectset.dto;
 
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Length;
@@ -24,6 +25,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.valuation.accounadjustmanage.subjectset.validator.ValBokSubjectDtoValidator;
 import com.joyintech.tams.valuation.common.constants.SubjectConfigCode;
 import com.joyintech.tams.valuation.common.utils.ExpressionUtil;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -144,8 +146,8 @@ public class ValBokSubjectDto extends BokSubject implements ITableRow {
             List<String> explist = ExpressionUtil.split(subjectHandFelCode);
             for (int i=0;i<explist.size();i++) {
                 String str=explist.get(i);
-                if(SubjectConfigCode.get(str)!=null){
-                    String keyCn= SubjectConfigCode.get(str).name();
+                if(CacheUtil.getDictCode(str)!=null){
+                    String keyCn= CacheUtil.getDictCode(str).getDictCnname();
                     if (null != keyCn) {
                         sb.append(keyCn);
                     } else {
@@ -661,13 +663,18 @@ public class ValBokSubjectDto extends BokSubject implements ITableRow {
 
     private static String getDictValue(String key,String value){
         List<? extends DataDictItem > dataDictItemList = SysDataUtil.getDataDictItem(key);
-        return (String)dataDictItemList.stream().filter((item) -> {
-            return StringUtil.equals(item.getItemCode(), value);
-        }).map(DataDictItem::getItemValue).findFirst().orElse((String)null);
+        if(CollectionUtils.isNotEmpty(dataDictItemList)){
+            return (String)dataDictItemList.stream().filter((item) -> {
+                return StringUtil.equals(item.getItemCode(), value);
+            }).map(DataDictItem::getItemValue).findFirst().orElse((String)null);
+        }else{
+            return value;
+        }
+
     }
 
     public static void main(String[] args) {
-        String subjectHandFelCode="TRADE_MARKET=='06' && TYPE_2!='06'";
+        String subjectHandFelCode="TRADE_MARKET=='06' && BONDREP_TYPE!='02'";
 
         if(subjectHandFelCode!=null){
             Map<String, String> map = new HashMap<String, String>();
@@ -679,8 +686,8 @@ public class ValBokSubjectDto extends BokSubject implements ITableRow {
 
             for (int i=0;i<explist.size();i++) {
                 String str=explist.get(i);
-                if(SubjectConfigCode.get(str)!=null){
-                    String keyCn= SubjectConfigCode.get(str).name();
+                if(CacheUtil.getDictCode(str)!=null){
+                    String keyCn= CacheUtil.getDictCode(str).getDictCnname();
                     if (null != keyCn) {
                         sb.append(keyCn);
                     } else {
