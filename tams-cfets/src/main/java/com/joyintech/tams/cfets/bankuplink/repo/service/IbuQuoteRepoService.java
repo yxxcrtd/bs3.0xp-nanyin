@@ -23,6 +23,7 @@ import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
+import com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepo003Mapper;
 import com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepoMapper;
 import com.joyintech.tams.cfets.bankuplink.repo.dto.*;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbClosePosEtrRequest;
@@ -126,6 +127,9 @@ public class IbuQuoteRepoService extends BaseService {
 
     @Autowired
     private CfetsIbuQuoteRepoMapper cfetsIbuQuoteRepoMapper;
+
+    @Autowired
+    private CfetsIbuQuoteRepo003Mapper cfetsIbuQuoteRepo003Mapper;
 
     @Autowired
     private CfetsIbuQuoteBondMapper cfetsIbuQuoteBondMapper;
@@ -530,7 +534,15 @@ public class IbuQuoteRepoService extends BaseService {
         param.put("entrustStatus", Collections.singletonList(DictCodeList.委托状态_已接收.getValue()));
         setParam(param, 1);
         param.put("repo_pledge_model", CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL));
-        List<CfetsRepoDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
+        List<CfetsRepoDealEntrustOrderDto> entrustDtos = new ArrayList<>();
+        if (StringUtil.isEmpty(ptlAllocationAddRequest.getQuoteId())) {
+            entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
+        } else {
+            param.put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+            param.put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue());
+            param.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
+            entrustDtos = cfetsIbuQuoteRepo003Mapper.listEntrust(param);
+        }
         if (!StringUtil.isEmptyList(entrustDtos)) {
             return initPtlAllocation(entrustDtos);
         }
