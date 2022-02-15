@@ -135,7 +135,7 @@ insert into SETTLE_DATA_RULE (SEQNO, TABLE_NAME, DATA_FILE, FINPROD_TYPE, INTERF
 
 
 
-drop table  cascade constraints;
+drop table SHARE_BONUS_REG cascade constraints;
 
 /*==============================================================*/
 /* Table: SHARE_BONUS_REG                                       */
