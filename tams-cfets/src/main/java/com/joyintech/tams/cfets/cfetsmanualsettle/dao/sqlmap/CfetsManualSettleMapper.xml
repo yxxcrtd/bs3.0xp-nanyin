@@ -860,7 +860,8 @@
         T4.IS_RIGHT isRight,
         T1.Delivery_Type deliveryType,
         T1.clear_type clearType,
-        T81.REDEEM_RATE shRate
+        T81.REDEEM_RATE shRate,
+        bb.PTL_BOND_ZHCC as accountPosition
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
         LEFT JOIN FIN_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
@@ -879,6 +880,20 @@
         LEFT JOIN IBU_QUOTE_BOND ib ON ib.quote_id = nvl(T7.PRE_TRADE_ID,T1.B_TRADE_ID)
         LEFT JOIN ibu_quote_crep ic ON ic.quote_id = nvl(T7.PRE_TRADE_ID,T1.B_TRADE_ID)
         LEFT JOIN sys_datadict_list sdl ON sdl.dict_code='DISTRIBUTION' and sdl.item_code = coalesce(T8.DIP_TYPE,ib.DIP_TYPE,ic.DIP_TYPE)
+        left join (
+        select t.totle_trade_id as totleTradeId,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END)/10000 AS PTL_BOND_ZHCC
+        from PTL_SEC_POSITION_RULE a
+        inner join trd_product_deal t
+        on a.finprod_id=t.finprod_id
+        and t.totle_trade_id = #{tradeId}
+        and t.TRADE_STATUS=#{TRADE_STATUS01} and t.is_cancel=#{YESNO_N}
+        inner join trd_product_deal_add ta
+        on t.trade_id=ta.trade_id
+        and a.PORTFOLIO_ID=ta.portfolio_id
+        where a.cdate = #{cdate,jdbcType=DATE}  AND a.DATE_TYPE =#{DATE_TYPE_0}
+        group by t.totle_trade_id
+        )bb
+        on T1.TOTLE_TRADE_ID=bb.totleTradeId
         WHERE T1.TOTLE_TRADE_ID = #{tradeId}
         AND T1.TRADE_STATUS = #{TRADE_STATUS01}
     </select>
