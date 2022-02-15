@@ -6,6 +6,13 @@
 .buss-inline .select2-container{
 width: 90px !important;
 }
+
+.form-inline-wrap-red {
+	padding-top: 0!important;
+	display: inline-block;
+	float: left;
+	width: 33%;
+}
 </style>
 
 
@@ -261,7 +268,7 @@ width: 90px !important;
 							</select>
 						</div>
 					</div>
-					<div class="form-inline-wrap"  style="display:none" >
+					<div class="form-inline-wrap">
 						<label class="layui-form-label form-label-wrap">节假日开放</label>
 						<div class="layui-input-inline input-inline">
 							<input type="checkbox"
@@ -341,7 +348,7 @@ width: 90px !important;
 			<!-- modify by mashukai 20201116 BS-1993,BS-1996 开放计划，赎回计划反显值不对 start -->
 			<div class="pro-module-item">
 				<div class="layui-form-item">
-					<div class="form-inline-wrap">
+					<div class="form-inline-wrap-red">
 						<label class="layui-form-label form-label-wrap"
 							th:text="#{FinProductOpenRule.openMode}">开放模式</label>
 						<div class="layui-input-inline input-inline" >
@@ -357,7 +364,7 @@ width: 90px !important;
 							</select>
 						</div>
 					</div>
-					<div class="form-inline-wrap">
+					<div class="form-inline-wrap-red">
 						<label class="layui-form-label form-label-wrap"
 							th:text="#{FinProductOpenRule.openDaysType}">开放天数类型</label>
 						<div class="layui-input-inline input-inline">
@@ -373,7 +380,7 @@ width: 90px !important;
 							</select>
 						</div>
 					</div>
-					<div class="form-inline-wrap">
+					<div class="form-inline-wrap-red">
 							<label class="layui-form-label form-label-wrap"
 								th:text="#{FinProductOpenRule.openDays}">开放天数</label>
 							<div class="layui-input-inline input-inline">
@@ -387,7 +394,7 @@ width: 90px !important;
 						</div>
 				</div>
 				<div class="layui-form-item">
-					<div class="form-inline-wrap" style="width: 20% !important; margin-left: 8.3%" >
+					<div class="form-inline-wrap-red" style="width: 20% !important; margin-left: 8.3%" >
 							<label class="layui-form-label form-label-wrap"
 								th:text="#{FinProductOpenRule.openCycle}"
 								style="width: auto !important;">开放周期</label>
@@ -410,7 +417,7 @@ width: 90px !important;
 								</div>
 							</div>
 					</div>
-					<div class="form-inline-wrap" style="width: 71% !important;" th:id="|${bussFinProductOpenPlanRedDto}_radioDiv|">	
+					<div class="form-inline-wrap-red" style="width: 71% !important;" th:id="|${bussFinProductOpenPlanRedDto}_radioDiv|">
 						<div class="form-day-wrap" style="width: auto !important;">
 							<label class="layui-form-label form-label-wrap"
 								style="width: auto !important;">周</label>
@@ -498,7 +505,7 @@ width: 90px !important;
 					</div>
 				</div>
 				<div class="layui-form-item">
-					<div class="form-inline-wrap">
+					<div class="form-inline-wrap-red">
 						<label class="layui-form-label form-label-wrap"
 							th:text="#{FinProductOpenRule.calcMethod}">推算方法</label>
 						<div class="layui-input-inline input-inline">
@@ -522,7 +529,7 @@ width: 90px !important;
 							</select>
 						</div>
 					</div>
-					<div class="form-inline-wrap">
+					<div class="form-inline-wrap-red">
 						<label class="layui-form-label form-label-wrap"
 							th:text="#{FinProductOpenRule.firstOpenDate}">首次开放日</label>
 						<div class="layui-input-inline input-inline">
@@ -533,7 +540,7 @@ width: 90px !important;
 								disabled class="layui-input form-input input-dateSelect" />
 						</div>
 					</div>
-					<div class="form-inline-wrap">
+					<div class="form-inline-wrap-red">
 						<label class="layui-form-label form-label-wrap"
 							th:text="#{FinProductOpenRule.tradedayRule}">营业日准则</label>
 						<div class="layui-input-inline input-inline">
@@ -550,7 +557,7 @@ width: 90px !important;
 				</div>
 				<!-- modify by mashukai 20201116 BS-1993,BS-1996 开放计划，赎回计划反显值不对 end -->
 				<div class="layui-form-item"> 
-					<div class="form-inline-wrap">
+					<div class="form-inline-wrap-red">
 						<label class="layui-form-label form-label-wrap"
 							th:text="#{FinProductOpenRule.calcRule}">推算规则</label>
 						<div class="layui-input-inline input-inline">
@@ -570,7 +577,7 @@ width: 90px !important;
 							</select>
 						</div>
 					</div>
-					<div class="form-inline-wrap">
+					<div class="form-inline-wrap-red">
 						<label class="layui-form-label form-label-wrap">节假日开放</label>
 						<div class="layui-input-inline input-inline">
 							<input type="checkbox"
@@ -582,7 +589,7 @@ width: 90px !important;
 								data-th-required="${pageId} eq 'FinProductBuild002'">
 						</div>
 					</div>
-					<div class="form-inline-wrap">
+					<div class="form-inline-wrap-red">
 					  <label class="layui-form-label form-label-wrap"
 							data-th-text="#{FinProductOpenRule.purSpeed}">确认天数</label>
 						<div class="layui-input-inline input-inline text-number">
@@ -596,7 +603,7 @@ width: 90px !important;
 					</div>
 				</div>
 				<div class="layui-form-item">
-					<div class="form-inline-wrap" th:id="|${bussFinProductOpenPlanRedDto}_cpriceRuleDiv|">
+					<div class="form-inline-wrap-red" th:id="|${bussFinProductOpenPlanRedDto}_cpriceRuleDiv|">
 						<label class="layui-form-label form-label-wrap"
 							th:text="#{FinProductOpenRule.cpriceRule}">净值日准则</label>
 						<div class="layui-input-inline input-inline">
