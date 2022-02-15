@@ -597,7 +597,7 @@ public class KCBPTradeApi {
 
     private void processProtocolBack_SH_ChenJiao(IntegratedEntrust integratedEntrust, Map<String, String> parameters) {
         logger.info("start isProtocolBack_SH_ChenJiao {}", integratedEntrust.getBsFlag());
-        parameters.put("funcid", "411024");
+        parameters.put("funcid", KCBP_FUNCTION_CODE_PROTOCOL_BACK_SH_TRADE);
         parameters.put("stkcode", StockCodeUtils.getStockCode(integratedEntrust.getStockCode()));
         parameters.put("orderqty", String.valueOf(integratedEntrust.getEntrustVolume()));//委托数量
         if (EntrustProp.SH_REPURCHASE_RENEWAL_CONFIRM.value.equals(integratedEntrust.getEntrustProp())
@@ -627,7 +627,7 @@ public class KCBPTradeApi {
 
     private void processProtocolBack_SH_BaoJia(IntegratedEntrust integratedEntrust, Map<String, String> parameters) {
         logger.info("start ProtocolBack_SH_BaoJia  {}", integratedEntrust.getBsFlag());
-        parameters.put("funcid", "411032");
+        parameters.put("funcid", KCBP_FUNCTION_CODE_PROTOCOL_BACK_SH_BAOJIA);
         parameters.put("stkcode", StockCodeUtils.getStockCode(integratedEntrust.getStockCode()));
         // 初始交易2C 换券申报2Q 填写
         parameters.put("orderqty", String.valueOf(integratedEntrust.getEntrustVolume()));//委托数量
