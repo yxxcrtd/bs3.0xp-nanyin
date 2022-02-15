@@ -216,12 +216,12 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
                 errorList.add(new ValidMessage("请输入卖空购回券面总额"));
             }
         }*/
-        if(null==entity.getDealFeeAmt()){
+   /*     if(null==entity.getDealFeeAmt()){
             errorList.add(new ValidMessage("请输入交易手续费"));
         }
         if(null==entity.getSettFeeAmt()){
             errorList.add(new ValidMessage("请输入结算服务费"));
-        }
+        }*/
         if(CollectionUtils.isEmpty(entity.getPtlAllocatios())){
             errorList.add(new ValidMessage("组合分配不可为空"));
         }else{
