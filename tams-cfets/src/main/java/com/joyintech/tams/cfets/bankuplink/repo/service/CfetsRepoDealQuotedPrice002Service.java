@@ -790,12 +790,12 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         if (!StringUtil.isNotEmpty(entity.getSettleType())) {
             errorList.add(new ValidMessage("请输入清算类型"));
         }
-        if (!StringUtil.isNotEmpty(entity.getDealFeeAmt())) {
-            errorList.add(new ValidMessage("请输入交易手续费"));
-        }
-        if (!StringUtil.isNotEmpty(entity.getSettFeeAmt())) {
-            errorList.add(new ValidMessage("请输入结算服务费"));
-        }
+//        if (!StringUtil.isNotEmpty(entity.getDealFeeAmt())) {
+//            errorList.add(new ValidMessage("请输入交易手续费"));
+//        }
+//        if (!StringUtil.isNotEmpty(entity.getSettFeeAmt())) {
+//            errorList.add(new ValidMessage("请输入结算服务费"));
+//        }
         /**************************************************************基本信息********************************************/
         if (StringUtil.isNotEmpty(entity.getCounterPartyId())) {
             String trader = cfetsRepoQuotedPrice004Service.findTraderByPartyId(entity.getCounterPartyId());
@@ -845,12 +845,12 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 && StringUtil.equals(ps, DictCodeListExt3.交易方向_正回购)) {
             errorList.add(new ValidMessage("请输入组合分配质押券折算总额"));
         }
-        if (!StringUtil.isNotEmpty(ptlAllocatio.getDealFeeAmt())) {
-            errorList.add(new ValidMessage("请输入组合分配交易手续费"));
-        }
-        if (!StringUtil.isNotEmpty(ptlAllocatio.getSettFeeAmt())) {
-            errorList.add(new ValidMessage("请输入组合分配结算服务费"));
-        }
+//        if (!StringUtil.isNotEmpty(ptlAllocatio.getDealFeeAmt())) {
+//            errorList.add(new ValidMessage("请输入组合分配交易手续费"));
+//        }
+//        if (!StringUtil.isNotEmpty(ptlAllocatio.getSettFeeAmt())) {
+//            errorList.add(new ValidMessage("请输入组合分配结算服务费"));
+//        }
         if (!StringUtil.isNotEmpty(ptlAllocatio.getmIntAmt())) {
             errorList.add(new ValidMessage("请输入组合分配回购利息"));
         }

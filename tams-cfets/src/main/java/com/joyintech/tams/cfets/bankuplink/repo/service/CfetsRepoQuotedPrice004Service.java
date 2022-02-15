@@ -450,14 +450,15 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         if (!StringUtil.isNotEmpty(entity.getSettleType())) {
             errorList.add(new ValidMessage("请输入清算类型"));
         }
-        if (!StringUtil.isNotEmpty(entity.getDealFeeAmt())) {
-            errorList.add(new ValidMessage("请输入交易手续费"));
-        }
-        if (!StringUtil.isNotEmpty(entity.getSettFeeAmt())) {
-            errorList.add(new ValidMessage("请输入结算服务费"));
-        }
+//        if (!StringUtil.isNotEmpty(entity.getDealFeeAmt())) {
+//            errorList.add(new ValidMessage("请输入交易手续费"));
+//        }
+//        if (!StringUtil.isNotEmpty(entity.getSettFeeAmt())) {
+//            errorList.add(new ValidMessage("请输入结算服务费"));
+//        }
         /**************************************************************基本信息********************************************/
-        if (StringUtil.isNotEmpty(entity.getCounterId())) {
+        if (StringUtil.isNotEmpty(entity.getCounterId())
+                && !StringUtil.equals(entity.getQuoteStyle(), "05")) {//X-REPO 交易对手是CCP
             String trader = this.findTraderByCounterId(entity.getCounterId());
             if (!StringUtil.isNotEmpty(trader)) {
                 errorList.add(new ValidMessage("选择的对手方未与银行间机构关联，请先去关联"));
@@ -491,12 +492,12 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 && StringUtil.equals(ps, DictCodeListExt3.交易方向_正回购)) {
             errorList.add(new ValidMessage("请输入组合分配质押券折算总额"));
         }
-        if (!StringUtil.isNotEmpty(ptlAllocatio.getDealFeeAmt())) {
-            errorList.add(new ValidMessage("请输入组合分配交易手续费"));
-        }
-        if (!StringUtil.isNotEmpty(ptlAllocatio.getSettFeeAmt())) {
-            errorList.add(new ValidMessage("请输入组合分配结算服务费"));
-        }
+//        if (!StringUtil.isNotEmpty(ptlAllocatio.getDealFeeAmt())) {
+//            errorList.add(new ValidMessage("请输入组合分配交易手续费"));
+//        }
+//        if (!StringUtil.isNotEmpty(ptlAllocatio.getSettFeeAmt())) {
+//            errorList.add(new ValidMessage("请输入组合分配结算服务费"));
+//        }
         if (!StringUtil.isNotEmpty(ptlAllocatio.getmIntAmt())) {
             errorList.add(new ValidMessage("请输入组合分配回购利息"));
         }
