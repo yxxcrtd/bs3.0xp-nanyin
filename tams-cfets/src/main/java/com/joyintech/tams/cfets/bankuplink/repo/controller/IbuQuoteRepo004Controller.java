@@ -88,7 +88,7 @@ public class IbuQuoteRepo004Controller extends BaseController {
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, BussinessDictCode.交易方向, BussinessDictCode.清算速度, DictCode.回购方式, DictCode.价格模式,
-                BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种, DictCode.期限品种_回购);
+                BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种, DictCode.期限品种_回购,DictCode.登记托管机构);
         model.addAttribute("ACCOUNT_SPEED_0", BussinessDictCodeList.清算速度_T加0.getValue());
         model.addAttribute("ACCOUNT_SPEED_1", BussinessDictCodeList.清算速度_T加1.getValue());
         model.addAttribute("ACCOUNT_SPEED_2", BussinessDictCodeList.清算速度_T加2.getValue());
@@ -110,6 +110,7 @@ public class IbuQuoteRepo004Controller extends BaseController {
         //本币导出按钮配置
         model.addAttribute("EXPORT_SHOW", CacheUtil.getSysParam("EXPORT_SHOW"));
         model.addAttribute("ps", cfetsRepoDealRegisterQuoteDto.getPs());
+        model.addAttribute("quoteStyle", cfetsRepoDealRegisterQuoteDto.getQuoteStyle());
         //卖空模式
         model.addAttribute(GlobalConstant.ENTITY, cfetsRepoDealRegisterQuoteDto);
         return super.init(model);

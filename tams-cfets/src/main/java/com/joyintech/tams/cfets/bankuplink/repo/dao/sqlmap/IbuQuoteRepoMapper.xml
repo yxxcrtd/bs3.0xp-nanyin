@@ -1437,7 +1437,7 @@
                null                                                                                       quoteRoleType/*本方角色*/,
                MCCI.PARTY_ABBR                                                                            ouPartyName/*本方*/,
                SU.REAL_NAME                                                                               ouTraderName /*本方交易员*/,
-               MCP.COUNTER_NAME                                                                           cpPartyName/*对手方*/,
+               case WHEN RFPDT.QUOTE_TYPE = '05' THEN SDL.ITEM_VALUE else MCP.COUNTER_NAME end            cpPartyName/*对手方*/,
                CASE WHEN MCCT.TRADER_NAME is not null THEN MCCT.TRADER_NAME ELSE RFPDT.COUNTER_TRADER END cpTraderName/*对手方交易员*/,
                DECODE(RFPDT.SETTLE_SPEED, 0, '01', 1, '02')                                               settleSpeed/*清算速度*/,
                RFPDT.V_SETTLE_DATE                                                                        vSettleDate/*首次结算日*/,
@@ -1459,6 +1459,8 @@
                            ON MCP.COUNTER_ID = RFPDT.COUNTER_ID
                  LEFT JOIN SYS_USER SU
                            ON SU.USER_NAME = RFPDT.OU_TRADER_ID
+                 LEFT JOIN SYS_DATADICT_LIST SDL
+                           ON RFPDT.COUNTER_ID = SDL.ITEM_CODE AND SDL.DICT_CODE = 'REGIST_ORG'
         where RFPDT.IS_CANCEL = 'N'
           and RFPDT.TRADE_STATUS != '03'
           and RFPDT.FINPROD_TYPE2 in ('F02', 'F03')
@@ -1485,7 +1487,7 @@
                null                                                                                       quoteRoleType/*本方角色*/,
                MCCI.PARTY_ABBR                                                                            ouPartyName/*本方*/,
                SU.REAL_NAME                                                                               ouTraderName /*本方交易员*/,
-               MCP.COUNTER_NAME                                                                           cpPartyName/*对手方*/,
+               case WHEN RFPDT.QUOTE_TYPE = '05' THEN SDL.ITEM_VALUE else MCP.COUNTER_NAME end            cpPartyName/*对手方*/,
                CASE WHEN MCCT.TRADER_NAME is not null THEN MCCT.TRADER_NAME ELSE RFPDT.COUNTER_TRADER END cpTraderName/*对手方交易员*/,
                DECODE(RFPDT.SETTLE_SPEED, 0, '01', 1, '02')                                               settleSpeed/*清算速度*/,
                RFPDT.V_SETTLE_DATE                                                                        vSettleDate/*首次结算日*/,
@@ -1507,6 +1509,8 @@
                            ON MCP.COUNTER_ID = RFPDT.COUNTER_ID
                  LEFT JOIN SYS_USER SU
                            ON SU.USER_NAME = RFPDT.OU_TRADER_ID
+                 LEFT JOIN SYS_DATADICT_LIST SDL
+                           ON RFPDT.COUNTER_ID = SDL.ITEM_CODE AND SDL.DICT_CODE = 'REGIST_ORG'
         where RFPDT.IS_CANCEL = 'Y'
           and RFPDT.FINPROD_TYPE2 in ('F02', 'F03')
           AND EXISTS (
@@ -1532,7 +1536,7 @@
                null                                                                                        quoteRoleType/*本方角色*/,
                MCCI.PARTY_ABBR                                                                             ouPartyName/*本方*/,
                SU.REAL_NAME                                                                                ouTraderName /*本方交易员*/,
-               MCP.COUNTER_NAME                                                                            cpPartyName/*对手方*/,
+               case WHEN WRFPDT.QUOTE_TYPE = '05' THEN SDL.ITEM_VALUE else MCP.COUNTER_NAME end            cpPartyName/*对手方*/,
                CASE WHEN MCCT.TRADER_NAME is not null THEN MCCT.TRADER_NAME ELSE WRFPDT.COUNTER_TRADER END cpTraderName/*对手方交易员*/,
                DECODE(WRFPDT.SETTLE_SPEED, 0, '01', 1, '02')                                               settleSpeed/*清算速度*/,
                WRFPDT.V_SETTLE_DATE                                                                        vSettleDate/*首次结算日*/,
@@ -1550,6 +1554,8 @@
                            ON MCP.COUNTER_ID = WRFPDT.COUNTER_ID
                  LEFT JOIN SYS_USER SU
                            ON SU.USER_NAME = WRFPDT.OU_TRADER_ID
+                 LEFT JOIN SYS_DATADICT_LIST SDL
+                           ON WRFPDT.COUNTER_ID = SDL.ITEM_CODE AND SDL.DICT_CODE = 'REGIST_ORG'
         where WRFPDT.IS_CANCEL = 'N'
           and WRFPDT.TRADE_STATUS != '03'
           and WRFPDT.FINPROD_TYPE2 in ('F02', 'F03')
@@ -1996,7 +2002,7 @@
                     RFPDT.REPO_TYPE        repoType,
                     RFPDT.REPO_TERM        repoTerm,
                     MCCI2.PARTY_ABBR       ouPartyName,
-                    MSCP.COUNTER_NAME      cpPartyName,
+                    case when RFPDT.QUOTE_TYPE = '05' then SDL.ITEM_VALUE else MSCP.COUNTER_NAME end     cpPartyName,
                     MSCP.PARTY_ID          partyId,
                     SU.REAL_NAME           ouTraderName,
                     case when MCCT.TRADER_NAME is not null then MCCT.TRADER_NAME
@@ -2025,6 +2031,7 @@
                 ON MCCT.TRADER_ID = RFPDT.COUNTER_TRADER
             LEFT JOIN SYS_USER SU
                 ON SU.USER_NAME = RFPDT.OU_TRADER_ID
+            LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'REGIST_ORG')SDL ON RFPDT.COUNTER_ID = SDL.ITEM_CODE
             LEFT JOIN (SELECT
             ENTRUST_ID,
             COUNT(1) STATISTICAL_TIMES
@@ -2065,7 +2072,7 @@
                 RFPDT.REPO_TYPE        repoType,
                 RFPDT.REPO_TERM        repoTerm,
                 MCCI2.PARTY_ABBR       ouPartyName,
-                MSCP.COUNTER_NAME      cpPartyName,
+                case when RFPDT.QUOTE_TYPE = '05' then SDL.ITEM_VALUE else MSCP.COUNTER_NAME end     cpPartyName,
                 MSCP.PARTY_ID          partyId,
                 SU.REAL_NAME           ouTraderName,
                 case when MCCT.TRADER_NAME is not null then MCCT.TRADER_NAME
@@ -2094,6 +2101,7 @@
             ON MCCT.TRADER_ID = RFPDT.COUNTER_TRADER
         LEFT JOIN SYS_USER SU
             ON SU.USER_NAME = RFPDT.OU_TRADER_ID
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'REGIST_ORG')SDL ON RFPDT.COUNTER_ID = SDL.ITEM_CODE
         LEFT JOIN (SELECT
         ENTRUST_ID,
         COUNT(1) STATISTICAL_TIMES

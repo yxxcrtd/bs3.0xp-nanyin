@@ -212,12 +212,19 @@
     });
 
     var init = function() {
-        if(EXPORT_SHOW==='01'){
+        if (EXPORT_SHOW === '01') {
             $("#select_counterTrader_div").show();
             $("#input_counterTrader_div").hide();
-        }else{
+        } else {
             $("#select_counterTrader_div").hide();
             $("#input_counterTrader_div").show();
+        }
+        if (quoteStyle === '05') {
+            $("#counterIdCCP_div").show();
+            $("#counterId_div").hide();
+        } else {
+            $("#counterIdCCP_div").hide();
+            $("#counterId_div").show();
         }
     }
 
