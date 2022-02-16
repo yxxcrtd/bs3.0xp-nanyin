@@ -89,7 +89,7 @@ public class OrderController {
         IntegratedEntrust integratedEntrust = new IntegratedEntrust();
         BeanUtils.copyProperties(orderPlaceBean, integratedEntrust);
 
-        String entrustBs = EntrustBsProp.getEntrustBs(instruction.getPs());
+        String entrustBs = EntrustPropUtils.getEntrustBs(instruction);
         logger.info("综合业务下单：买卖方向（entrustBs）转换：{} ==> {}", integratedEntrust.getEntrustBs(), entrustBs);
         integratedEntrust.setEntrustBs(entrustBs);
 
