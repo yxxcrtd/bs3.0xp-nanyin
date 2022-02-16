@@ -248,10 +248,10 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 
 		etrEntrust.setBusinessModel(dto.getBusinessModel());
 		//根据投资目的与业务模式的对应关系入库时赋值
-		if(StringUtil.equals("Y1",dto.getBusinessModel())){
+		if(StringUtil.equals("AC",dto.getBusinessModel())){
 			dto.setInvAim("AC");
 			etrEntrust.setInvAim("AC");
-		}else if(StringUtil.equals("Y2",dto.getBusinessModel())){
+		}else if(StringUtil.equals("FVTPL",dto.getBusinessModel())){
 			dto.setInvAim("FVTPL");
 			etrEntrust.setInvAim("FVTPL");
 		}
