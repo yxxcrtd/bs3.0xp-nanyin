@@ -2004,7 +2004,7 @@
                     MCCI2.PARTY_ABBR       ouPartyName,
                     case when RFPDT.QUOTE_TYPE = '05' then SDL.ITEM_VALUE else MSCP.COUNTER_NAME end     cpPartyName,
                     MSCP.PARTY_ID          partyId,
-                    SU.REAL_NAME           ouTraderName,
+                    NVL(SUA.IBU_TRADER, SU.REAL_NAME) ouTraderName,
                     case when MCCT.TRADER_NAME is not null then MCCT.TRADER_NAME
                       else RFPDT.COUNTER_TRADER  end  cpTraderName,
                     RFPDT.SETTLE_SPEED     settleSpeed/*清算速度*/,
@@ -2031,6 +2031,7 @@
                 ON MCCT.TRADER_ID = RFPDT.COUNTER_TRADER
             LEFT JOIN SYS_USER SU
                 ON SU.USER_NAME = RFPDT.OU_TRADER_ID
+            LEFT JOIN SYS_USER_ADD SUA ON SU.USER_ID = SUA.USER_ID
             LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'REGIST_ORG')SDL ON RFPDT.COUNTER_ID = SDL.ITEM_CODE
             LEFT JOIN (SELECT
             ENTRUST_ID,
@@ -2074,7 +2075,7 @@
                 MCCI2.PARTY_ABBR       ouPartyName,
                 case when RFPDT.QUOTE_TYPE = '05' then SDL.ITEM_VALUE else MSCP.COUNTER_NAME end     cpPartyName,
                 MSCP.PARTY_ID          partyId,
-                SU.REAL_NAME           ouTraderName,
+                NVL(SUA.IBU_TRADER, SU.REAL_NAME) ouTraderName,
                 case when MCCT.TRADER_NAME is not null then MCCT.TRADER_NAME
                     else RFPDT.COUNTER_TRADER  end  cpTraderName,
                 RFPDT.SETTLE_SPEED     settleSpeed/*清算速度*/,
@@ -2101,6 +2102,7 @@
             ON MCCT.TRADER_ID = RFPDT.COUNTER_TRADER
         LEFT JOIN SYS_USER SU
             ON SU.USER_NAME = RFPDT.OU_TRADER_ID
+        LEFT JOIN SYS_USER_ADD SUA ON SU.USER_ID = SUA.USER_ID
         LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'REGIST_ORG')SDL ON RFPDT.COUNTER_ID = SDL.ITEM_CODE
         LEFT JOIN (SELECT
         ENTRUST_ID,
