@@ -189,7 +189,7 @@ public class EtrExchangeBlockTrade001ValidatorService implements EtrCommonValida
 						}
 						if (flag1 && flag2 && !(null == minTrdUnitLimitDto.getMinNum()
 								&& null == minTrdUnitLimitDto.getMinAmt())) {
-							String prompt = "";
+							String prompt = "单个组合，";
 							if (flag1 && null != minTrdUnitLimitDto.getMinNum()) {
 								prompt += "最低交易数量" + etrExchangeTrade001Service.getNumAndUnit(
 										minTrdUnitLimitDto.getMinNum(), minTrdUnitLimitDto.getMinNumUnit());
