@@ -67,7 +67,7 @@
         reg.repo_term as termDays,
         deal.tradeAmt as tradeAmt,
         reg.totle_trade_id as busiCode,
-        nvl(su.real_name,reg.ou_trader_id) as trader,
+        COALESCE ( sua.IBU_TRADER, su.real_name, reg.ou_trader_id ) AS trader,
         to_char(reg.trade_date,'yyyy-MM-dd') as regTradeDate,
         to_char(total.trade_date,'yyyy-MM-dd') as confirmTradeDate,
         reg.counter_id as counterId,
@@ -118,6 +118,7 @@
         on reg.sec_manage_acct_id=stlinfo.sec_acct_id
         LEFT JOIN MST_COUNTER_PARTY mcci ON reg.counter_id= mcci.counter_id
         left join sys_user su on reg.ou_trader_id=su.user_name
+        LEFT JOIN SYS_USER_ADD sua  ON sua.USER_ID = su.USER_ID
         where 1=1 and reg.ps in ('T01','T02','T03','03','04') and reg.trade_status='01'
         <if test="sysDate != null and !sysDate.equals('')">
             AND  reg.trade_date= #{sysDate,jdbcType=DATE}
@@ -365,7 +366,7 @@
         select distinct
         reg.ou_party_id as traderid,
         m1.PARTY_ABBR as traderidStr,
-        nvl(su.real_name,reg.ou_trader_id) as trader,
+        COALESCE (sua.IBU_TRADER, su.real_name, reg.ou_trader_id) AS trader,
         reg.counter_id as counterId,
         m2.counter_name as counterIdStr,
         nvl(su1.TRADER_NAME,reg.counter_trader)  as counterTrader,
@@ -446,6 +447,7 @@
         left join MST_CFETS_CUSTOMER_INFO m1 on reg.ou_party_id=m1.PARTY_ID
         LEFT JOIN MST_COUNTER_PARTY m2 ON reg.counter_id= m2.counter_id
         left join sys_user su on reg.ou_trader_id=su.user_name
+        LEFT JOIN SYS_USER_ADD sua  ON sua.USER_ID = su.USER_ID
         left join MST_CFETS_CUSTOMER_TRADER su1 on reg.counter_trader=su1.TRADER_ID
         where reg.totle_trade_id= #{totleTradeId,jdbcType=VARCHAR}
         and decode(reg.is_cancel,'Y','03','N','01')= #{effectiveStatus,jdbcType=VARCHAR}
