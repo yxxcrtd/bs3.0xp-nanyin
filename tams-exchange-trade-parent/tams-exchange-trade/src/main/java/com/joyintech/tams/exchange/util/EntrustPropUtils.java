@@ -12,6 +12,21 @@ import org.apache.commons.lang3.StringUtils;
 
 public class EntrustPropUtils {
 
+    public static String getEntrustBs(Instruction instruction) {
+        //协议回购
+        String ps = instruction.getPs();
+        if (EntrustUtils.isPledgegreementRepurchase(instruction)) {
+            if (StrUtil.equals(instruction.getFirstRepoPs(), InstructionPs.POSITIVEREPO.value)) {
+                return InstructionPs.POSITIVEREPO.entrustBs;
+            } else {
+                return InstructionPs.REVERSEDREPO.entrustBs;
+            }
+        }
+
+        return EntrustBsProp.getEntrustBs(ps);
+    }
+
+
     public static String getEntrustProp(Instruction instruction, String entrustProp) {
         if (null == instruction) {
             return entrustProp;
