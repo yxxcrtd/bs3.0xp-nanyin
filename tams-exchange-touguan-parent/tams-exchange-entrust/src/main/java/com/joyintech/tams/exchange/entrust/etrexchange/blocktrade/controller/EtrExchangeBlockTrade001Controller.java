@@ -338,10 +338,10 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 							dto.setStockId(secAcctId);
 						}
 					}
-					ajax= etrExchangeTradeCommon001Service.check(dto, br);
-					if (null != ajax) {
-						break;
-					}
+//					ajax= etrExchangeTradeCommon001Service.check(dto, br);
+//					if (null != ajax) {
+//						break;
+//					}
                     List<ValidMessage> validList = etrExchangeBlockTrade001ValidatorService.valid(dto);
 					if(validList.size()>0) {
 						if (null == ajax) {

@@ -673,4 +673,8 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
     public void setEntrustType(String entrustType) {
         this.entrustType = entrustType;
     }
+
+    public String getDeclaTypeStr(){
+        return  SysDataUtil.getNameFromDataDict(DictCode.申报类型, getDeclaType());
+    }
 }
