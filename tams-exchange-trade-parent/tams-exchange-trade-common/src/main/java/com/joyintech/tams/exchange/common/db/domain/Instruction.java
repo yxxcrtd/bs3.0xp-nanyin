@@ -1175,8 +1175,10 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
         Double progress;
         if (getEntrustNum() > 0) {
             progress = TradeUtils.divide(total, getEntrustNum(), 4).doubleValue();
-        } else {
+        } else if (getEntrustAmt() != null && getEntrustAmt().compareTo(BigDecimal.ZERO) > 0) {
             progress = TradeUtils.divide(total, getEntrustAmt(), 4);
+        }else {
+            progress = 0D;
         }
 
         return TradeUtils.percentFormat(progress);
@@ -1189,8 +1191,10 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
         Double progress;
         if (getEntrustNum() > 0) {
             progress = TradeUtils.divide(getEntrustLeftAmt(), getEntrustNum(), 4).doubleValue();
-        } else {
+        } else if (getEntrustAmt() != null && getEntrustAmt().compareTo(BigDecimal.ZERO) > 0) {
             progress = TradeUtils.divide(getEntrustLeftAmt(), getEntrustAmt(), 4);
+        } else {
+            progress = 0D;
         }
 
         return TradeUtils.percentFormat(progress);
