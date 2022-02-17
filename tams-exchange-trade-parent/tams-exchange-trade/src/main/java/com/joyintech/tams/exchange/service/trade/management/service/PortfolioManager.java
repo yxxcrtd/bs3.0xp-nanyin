@@ -41,6 +41,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -758,11 +759,11 @@ public class PortfolioManager extends BaseService {
     }
 
     private Long getEntrustVolume(Long totalLeftVolume, Long orderVolume, Long leftVolume, int unit) {
-        return TradeUtils.formatLong(orderVolume.doubleValue() * leftVolume.doubleValue() / totalLeftVolume.doubleValue(), -unit, BigDecimal.ROUND_UP);
+        return TradeUtils.formatLong(orderVolume.doubleValue() * leftVolume.doubleValue() / totalLeftVolume.doubleValue(), -unit, RoundingMode.UP);
     }
 
     private Long getEntrustVolume(BigDecimal disRate, BigDecimal volume, int unit) {
-        return TradeUtils.formatLong(disRate.doubleValue() * volume.doubleValue(), -unit, BigDecimal.ROUND_UP);
+        return TradeUtils.formatLong(disRate.doubleValue() * volume.doubleValue(), -unit, RoundingMode.UP);
     }
 
 
