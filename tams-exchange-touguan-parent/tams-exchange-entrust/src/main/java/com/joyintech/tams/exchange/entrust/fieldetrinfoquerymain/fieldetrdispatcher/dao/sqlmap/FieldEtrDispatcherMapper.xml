@@ -536,7 +536,7 @@
         LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = ete.FINPROD_ID
         LEFT JOIN FIN_PRODUCT fp ON ete.finprod_id = fp.finprod_id
-        LEFT JOIN ETR_ENTRUST_PLEDGE eep ON ete.portfolio_id = eep.portfolio_id
+<!--        LEFT JOIN ETR_ENTRUST_PLEDGE eep ON ete.portfolio_id = eep.portfolio_id-->
         LEFT JOIN PTL_SEC_STOCK pss ON pss.pledge_stock_id = eted.pledge_stock_id AND ete.portfolio_id = pss.portfolio_id
         LEFT JOIN MST_CUSTOMER_INFO mci ON mci.CUSTOMER_ID = eted.main_consignee AND mci.IS_SALER = #{YESORNO_YES, jdbcType = VARCHAR}
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
@@ -622,7 +622,7 @@
         LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = ete.FINPROD_ID
         LEFT JOIN FIN_PRODUCT fp ON ete.finprod_id = fp.finprod_id
-        LEFT JOIN WFL_ETR_ENTRUST_PLEDGE eep ON ete.portfolio_id = eep.portfolio_id
+<!--        LEFT JOIN WFL_ETR_ENTRUST_PLEDGE eep ON ete.portfolio_id = eep.portfolio_id-->
         LEFT JOIN PTL_SEC_STOCK pss ON pss.pledge_stock_id = eted.pledge_stock_id AND ete.portfolio_id = pss.portfolio_id
         LEFT JOIN MST_CUSTOMER_INFO mci ON mci.CUSTOMER_ID = eted.main_consignee AND mci.IS_SALER = #{YESORNO_YES, jdbcType = VARCHAR}
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
