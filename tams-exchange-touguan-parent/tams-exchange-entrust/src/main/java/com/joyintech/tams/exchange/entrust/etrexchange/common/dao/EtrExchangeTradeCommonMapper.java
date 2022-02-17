@@ -330,4 +330,6 @@ public interface EtrExchangeTradeCommonMapper {
 	 */
 	List<SelectOptionDto> getId(Map<String, Object> param);
 
+	List<EtrExchangeTradeSaveRequest>	selectWflEntrustDetail(EtrExchangeTradeSaveRequest dto);
+
 }

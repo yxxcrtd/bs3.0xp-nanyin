@@ -5824,4 +5824,14 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		return DictCodeList.是否_否.getValue();
 	}
 
+	/**
+	 *  查找组合对应的证券账户
+	 * @author meifaxin
+	 * @date 2021/12/25 0013
+	 * @return
+	 */
+	public List<EtrExchangeTradeSaveRequest> selectWflEtrPortfolioList(EtrExchangeTradeSaveRequest dto){
+		return etrExchangeTradeCommonMapper.selectWflEntrustDetail(dto);
+	}
+
 }

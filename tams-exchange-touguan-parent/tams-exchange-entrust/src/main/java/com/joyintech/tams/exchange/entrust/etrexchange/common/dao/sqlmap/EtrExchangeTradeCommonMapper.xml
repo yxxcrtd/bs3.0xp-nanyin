@@ -1393,9 +1393,9 @@
              ,T3.ENTRUST_AMT
              ,T3.ENTRUST_NUM
         FROM
-            WFL_ETR_ENTRUST			T1
-                INNER JOIN    WFL_ETR_ENTRUST_ADD T2 ON T2.ENTRUST_ID = T1.ENTRUST_ID
-                INNER JOIN    WFL_ETR_ENTRUST_DETAIL T3 ON T3.ENTRUST_ID = T1.ENTRUST_ID
+            ETR_ENTRUST			T1
+                INNER JOIN    ETR_ENTRUST_ADD T2 ON T2.ENTRUST_ID = T1.ENTRUST_ID
+                INNER JOIN    ETR_ENTRUST_DETAIL T3 ON T3.ENTRUST_ID = T1.ENTRUST_ID
                 LEFT JOIN PTL_PORTFOLIO T4 ON T4.PORTFOLIO_ID = T3.PORTFOLIO_ID
         where
             T1.ENTRUST_ID=#{entrustId}
@@ -1526,5 +1526,22 @@
                 AND A.entrust_id = #{initValue}
             </if>
         </where>
+    </select>
+
+    <select id="selectWflEntrustDetail" resultType="com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest">
+        select
+            T3.ENTRUST_ID
+             ,T4.PORTFOLIO_ID
+             ,T4.PORTFOLIO_NAME
+             ,T2.DEAL_CUR_ACCT as acctNo
+             ,T3.ENTRUST_AMT
+             ,T3.ENTRUST_NUM
+        FROM
+            WFL_ETR_ENTRUST			T1
+                INNER JOIN    WFL_ETR_ENTRUST_ADD T2 ON T2.ENTRUST_ID = T1.ENTRUST_ID
+                INNER JOIN    WFL_ETR_ENTRUST_DETAIL T3 ON T3.ENTRUST_ID = T1.ENTRUST_ID
+                LEFT JOIN PTL_PORTFOLIO T4 ON T4.PORTFOLIO_ID = T3.PORTFOLIO_ID
+        where
+            T1.ENTRUST_ID=#{entrustId}
     </select>
 </mapper>
