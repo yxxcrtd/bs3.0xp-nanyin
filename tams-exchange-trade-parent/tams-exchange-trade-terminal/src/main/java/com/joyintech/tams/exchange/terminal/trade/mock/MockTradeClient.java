@@ -645,7 +645,7 @@ public class MockTradeClient implements ITradeRequest {
         } else if (quoteQryBean.getQuoteType() == QuoteType.AFTER_BULK_QUOTE.value) {
             integratedQuotes.addAll(MockQuoteData.makeAfterBulkQuote(quoteQryBean.getStockCode()));
         } else if (quoteQryBean.getQuoteType() == QuoteType.FIXED_INCOME_QUOTE.value) {
-            integratedQuotes.addAll(MockQuoteData.makeFixedIncomeQuote());
+            integratedQuotes.addAll(MockQuoteData.makeFixedIncomeQuote(quoteQryBean.getStockCode()));
         }
         mockTradeResponse.resQueryIntegratedQuotes(integratedQuotes, requestId);
     }
@@ -933,7 +933,7 @@ public class MockTradeClient implements ITradeRequest {
 
     @Override
     public void queryIntegratedFixedIncomeQuote(IntegratedFixedIncomeQuoteQryBean integratedFixedIncomeQuoteQryBean, Long requestId) {
-        List<IntegratedQuote> integratedQuotes = MockQuoteData.makeFixedIncomeQuote();
+        List<IntegratedQuote> integratedQuotes = MockQuoteData.makeFixedIncomeQuote(integratedFixedIncomeQuoteQryBean.getStockCode());
         mockTradeResponse.resQueryIntegratedFixedIncomeQuote(MockConverter.convertIntegratedFixedIncomeQuoteBeans(integratedQuotes), requestId);
     }
 

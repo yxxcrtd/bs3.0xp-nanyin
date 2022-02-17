@@ -129,6 +129,7 @@ public class TradeServiceURL {
 
     public static String acceptOrRefuse = "/EtrTradeSysInterf/handleEntrust";//指令接收|放弃接口
     public static String getRealNameByUser = "/EtrTradeSysInterf/getRealNameByUser";
+    public static String calcPriceAndYield = "/etrexchange/common/etrExchangeTrade001/calcPriceAndYield";//净价、全价、到期收益率计算三合一
     public static String expireIncomeRate = "/TrdBondInvestTrade/calculate03Data";//到期收益率
 
     public static String unitCprice = "/TrdBondInvestTrade/calculate01Data";//净价

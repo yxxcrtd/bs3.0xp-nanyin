@@ -4,21 +4,22 @@ import com.google.common.base.Strings;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.exchange.common.BusinessResultException;
-import com.joyintech.tams.exchange.common.bean.ExpireIncomeRateBean;
-import com.joyintech.tams.exchange.common.bean.InstructionOpBean;
-import com.joyintech.tams.exchange.common.bean.ResultBean;
+import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.bean.investment.EntrustOpeBean;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.constant.ExchangeConstant;
 import com.joyintech.tams.exchange.common.constant.Market;
 import com.joyintech.tams.exchange.common.constant.joyin.BussinessDictCodeList;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
+import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.service.ExchangeInstructionService;
 import com.joyintech.tams.exchange.service.trade.management.service.InvestmentManagement;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -132,6 +133,15 @@ public class ExchangeInstructionController {
         return investmentManagement.acceptOrRefuse(entrustList);
     }
 
+    /**
+     * {"calculateField":"01","finprodId":"F01_113052.SH","fprice":"","price":"113.01","prinAmt":"100","ps":"T01","tradeMarket":"03","yield":""}
+     */
+    @ApiOperation(value = "净价、全价、到期收益率计算三合一", notes = "净价、全价、到期收益率计算三合一")
+    @PostMapping(value = "/instruction/calcPriceAndYield")
+    public Message<CalcPriceAndYieldResponse> calcPriceAndYield(@RequestBody @Validated CalcPriceAndYieldRequest request) {
+        return instructionService.calcPriceAndYield(request);
+    }
+
     /***
      * @Description: 到期收益率
      * @Param: [finprodId, tradeMarket, ps, netPrice, deliverDate]
@@ -139,6 +149,7 @@ public class ExchangeInstructionController {
      * @Author: MAXX
      * @Date: 2020/5/8
      */
+    @Deprecated
     @RequestMapping(value = "/instruction/expireIncomeRate", method = RequestMethod.POST)
     @CrossOrigin
     public ResultBean expireIncomeRate(@RequestBody ExpireIncomeRateBean expireIncomeRateBean, @RequestParam(value = "calculate_type", required = false, defaultValue = "3") int calculateType) {

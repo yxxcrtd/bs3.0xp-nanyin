@@ -1381,7 +1381,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	public List<EtrExchangeTradeSaveRequest> selectEtrPortfolioDetail() {
 		Map<String,Object> pageParam = RequestUtil.getPageParam();
 		EtrExchangeTradeSaveRequest dto=BeanUtil.mapToObject(pageParam,EtrExchangeTradeSaveRequest.class);
-		return etrExchangeTrade001CommonService.selectEtrPortfolioList(dto);
+		return etrExchangeTrade001CommonService.selectWflEtrPortfolioList(dto);
 	}
 
 	/**

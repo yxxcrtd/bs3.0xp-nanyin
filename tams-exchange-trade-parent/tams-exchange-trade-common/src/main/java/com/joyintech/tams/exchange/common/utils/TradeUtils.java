@@ -8,6 +8,7 @@ import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
 import com.joyintech.tams.exchange.common.db.domain.OrderInterface;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Objects;
 
 public class TradeUtils {
@@ -175,7 +176,9 @@ public class TradeUtils {
             return ((IntegratedEntrust) orderInterface).getEntrustBalance();
         }
         //债券按净价冻结 --- 需求新修正为净价 --- > 修正为全价
-        if (InvestmentAssetType.BOND.value.equals(assetType)) {
+        // 债券且是交易类
+        if (InvestmentAssetType.BOND.value.equals(assetType)
+                && EntrustProp.isTrade(orderInterface.getEntrustProp())) {
             return multiply(orderInterface.getFullPrice(), entrustVolume, 2);
         }
         // 质押式竞价回购，金额计算
@@ -197,5 +200,14 @@ public class TradeUtils {
             return new BigDecimal(entrustVolume * 100).setScale(2, BigDecimal.ROUND_HALF_UP);
         }
         return multiply(entrustPrice, entrustVolume, 2);
+    }
+
+    /**
+     * 转为百分比格式
+     */
+    public static String percentFormat(Double d) {
+        NumberFormat percent = NumberFormat.getPercentInstance();
+        percent.setMaximumFractionDigits(2);
+        return percent.format(d);
     }
 }

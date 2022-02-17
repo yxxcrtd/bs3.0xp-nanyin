@@ -1,6 +1,7 @@
 package com.joyintech.tams.exchange.terminal.trade.mock;
 
 import com.google.common.base.Strings;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.bean.IntegratedQuote;
 import com.joyintech.tams.exchange.common.constant.*;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
@@ -86,8 +87,40 @@ public class MockQuoteData {
         return integratedQuotes;
     }
 
-    public static List<IntegratedQuote> makeFixedIncomeQuote() {
+    public static List<IntegratedQuote> makeFixedIncomeQuote(String stockCode) {
         List<IntegratedQuote> integratedQuotes = new ArrayList<>();
+        if (StringUtil.isNotEmpty(stockCode)) {
+            IntegratedQuote buy = new IntegratedQuote();
+            buy.setOrderNo("11111");
+            buy.setMarket(Market.SHSE.value);
+            buy.setQuoteType(QuoteType.FIXED_INCOME_QUOTE.value);
+            buy.setEntrustPrice(100.00);
+            buy.setEntrustVolume(100000);
+            buy.setContractId((contractIds[0] + 1) + "");
+            buy.setStockCode(stockCode);
+            buy.setStockName(stockCode);
+            buy.setFullPrice(101.00);
+            buy.setExpireIncomeRate(0.012);
+            buy.setEntrustBs(EntrustBs.BUY.value);
+            integratedQuotes.add(buy);
+
+            IntegratedQuote sell = new IntegratedQuote();
+            sell.setOrderNo("22222");
+            sell.setMarket(Market.SHSE.value);
+            sell.setQuoteType(QuoteType.FIXED_INCOME_QUOTE.value);
+            sell.setEntrustPrice(100.00);
+            sell.setEntrustVolume(100000);
+            buy.setContractId((contractIds[0] + 2) + "");
+            sell.setStockCode(stockCode);
+            sell.setStockName(stockCode);
+            sell.setFullPrice(102.00);
+            sell.setExpireIncomeRate(0.021);
+            sell.setEntrustBs(EntrustBs.SELL.value);
+            integratedQuotes.add(sell);
+
+            return integratedQuotes;
+        }
+
         for (int i = 1; i < 3; i++) {
             IntegratedQuote integratedQuote = new IntegratedQuote();
             integratedQuote.setMarket(Market.SHSE.value);

@@ -110,14 +110,6 @@ public enum EntrustProp {
     FTDC_OPT_BIDPRICE1PLUSTHREETICKS("买一价浮动上浮3个ticks", "FUF"),
     FTDC_OPT_FIVELEVELPRICE("五档价", "FUG");
 
-    public final String value;
-    public final String name;
-
-    EntrustProp(String name, String value) {
-        this.name = name;
-        this.value = value;
-    }
-
     private static Set<String> marketPriceSet = new HashSet<>();
 
     static {
@@ -143,6 +135,14 @@ public enum EntrustProp {
         marketPriceSet.add(FTDC_OPT_BidPrice1PlusTwoTicks.value);
         marketPriceSet.add(FTDC_OPT_BIDPRICE1PLUSTHREETICKS.value);
         marketPriceSet.add(FTDC_OPT_FIVELEVELPRICE.value);
+    }
+
+    public final String value;
+    public final String name;
+
+    EntrustProp(String name, String value) {
+        this.name = name;
+        this.value = value;
     }
 
     // 是否需要跳过风控
@@ -191,6 +191,36 @@ public enum EntrustProp {
         return EntrustProp.SH_REPURCHASE_RENEWAL.value.equals(entrustProp)
                 || EntrustProp.SH_REPURCHASE_RENEWAL_CONFIRM.value.equals(entrustProp)
                 || EntrustProp.SH_REPURCHASE_RENEWAL_REFUSE.value.equals(entrustProp);
+    }
+
+    public static boolean equalsProp(String prop, EntrustProp entrustProp) {
+        if (prop == null) {
+            return false;
+        }
+
+        return entrustProp.value.equals(prop);
+    }
+
+    /**
+     * 根据价格模式判断是否是非交易类
+     *
+     * @param entrustProp 委托模式
+     * @return true: 非交易类；false: 交易类
+     */
+    public static boolean isUnTrade(String entrustProp) {
+        if (entrustProp == null) {
+            return true;
+        }
+        return equalsProp(entrustProp, EntrustProp.HS)
+                || equalsProp(entrustProp, EntrustProp.ZYCRK)
+                || equalsProp(entrustProp, EntrustProp.CHANGE_TO_STOCK)
+                || equalsProp(entrustProp, EntrustProp.APPLY)
+                || equalsProp(entrustProp, EntrustProp.ALLOTMENT)
+                || equalsProp(entrustProp, EntrustProp.PS);
+    }
+
+    public static boolean isTrade(String entrustProp) {
+        return !isUnTrade(entrustProp);
     }
 
     public String getValue() {

@@ -30,6 +30,8 @@ public class FinprodMarketInfoRequest {
 
     @ApiModelProperty(name="search",value="关键字",example="A1")
     private String search;
+    @ApiModelProperty(name="initValue",value="市场代码id",example="A1")
+    private String initValue;
 
     @ApiModelProperty(name="pageMode",value="分页对象")
     private PageMode pageMode;
@@ -56,5 +58,13 @@ public class FinprodMarketInfoRequest {
 
     public void setTradePlat(String tradePlat) {
         this.tradePlat = tradePlat;
+    }
+
+    public String getInitValue() {
+        return initValue;
+    }
+
+    public void setInitValue(String initValue) {
+        this.initValue = initValue;
     }
 }
