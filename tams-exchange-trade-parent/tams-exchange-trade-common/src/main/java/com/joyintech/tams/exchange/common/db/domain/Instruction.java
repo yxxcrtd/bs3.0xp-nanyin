@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.tams.exchange.common.bean.instrument.MinPriceAndMinTrdUnitLimitBean;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
+import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
@@ -362,20 +363,20 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
     @ApiModelProperty(required = false, name = "deliveryMethod", value = "申赎方式，交割方式")
     @Size(max = 50)
     private String deliveryMethod;
-    
+
     /**
      * 委托指令类别
-     *        
+     *
      * @author yflv
      * @date 2021/12/27
      */
     @ApiModelProperty(required = false, name = "entrustClass", value = "委托指令类别")
     @Size(max = 50)
     private String entrustClass;
-    
+
     /**
      * 投管业务类型
-     *        
+     *
      * @author yflv
      * @date 2022/01/19
      */
@@ -1041,22 +1042,22 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
     }
 
     public String getEntrustClass() {
-		return entrustClass;
-	}
+        return entrustClass;
+    }
 
-	public void setEntrustClass(String entrustClass) {
-		this.entrustClass = entrustClass;
-	}
+    public void setEntrustClass(String entrustClass) {
+        this.entrustClass = entrustClass;
+    }
 
-	public String getBusiTypeTg() {
-		return busiTypeTg;
-	}
+    public String getBusiTypeTg() {
+        return busiTypeTg;
+    }
 
-	public void setBusiTypeTg(String busiTypeTg) {
-		this.busiTypeTg = busiTypeTg;
-	}
+    public void setBusiTypeTg(String busiTypeTg) {
+        this.busiTypeTg = busiTypeTg;
+    }
 
-	@Override
+    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
@@ -1164,5 +1165,54 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
         } catch (CloneNotSupportedException e) {
             return null;
         }
+    }
+
+    /**
+     * 执行进度
+     */
+    public String getProgress() {
+        BigDecimal total = TradeUtils.add(getEntrustLeftAmt(), getFrozenQuantity(), 2);
+        Double progress;
+        if (getEntrustNum() > 0) {
+            progress = TradeUtils.divide(total, getEntrustNum(), 4).doubleValue();
+        } else {
+            progress = TradeUtils.divide(total, getEntrustAmt(), 4);
+        }
+
+        return TradeUtils.percentFormat(progress);
+    }
+
+    /**
+     * 成交进度
+     */
+    public String getDealProgress() {
+        Double progress;
+        if (getEntrustNum() > 0) {
+            progress = TradeUtils.divide(getEntrustLeftAmt(), getEntrustNum(), 4).doubleValue();
+        } else {
+            progress = TradeUtils.divide(getEntrustLeftAmt(), getEntrustAmt(), 4);
+        }
+
+        return TradeUtils.percentFormat(progress);
+    }
+
+    /**
+     * 剩余数量
+     */
+    public long getLeftVolume() {
+        if (getEntrustNum() > 0) {
+            return getEntrustNum() - getEntrustLeftAmt().longValue() - getFrozenQuantity().longValue();
+        }
+        return 0L;
+    }
+
+    /**
+     * 剩余金额
+     */
+    public BigDecimal getLeftAmount() {
+        if (TradeUtils.bigThanZero(getEntrustAmt())) {
+            return TradeUtils.subtract(getEntrustAmt(), getEntrustLeftAmt(), getFrozenQuantity(), 2);
+        }
+        return BigDecimal.ZERO;
     }
 }

@@ -8,6 +8,7 @@ import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
 import com.joyintech.tams.exchange.common.db.domain.OrderInterface;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Objects;
 
 public class TradeUtils {
@@ -197,5 +198,14 @@ public class TradeUtils {
             return new BigDecimal(entrustVolume * 100).setScale(2, BigDecimal.ROUND_HALF_UP);
         }
         return multiply(entrustPrice, entrustVolume, 2);
+    }
+
+    /**
+     * 转为百分比格式
+     */
+    public static String percentFormat(Double d) {
+        NumberFormat percent = NumberFormat.getPercentInstance();
+        percent.setMaximumFractionDigits(2);
+        return percent.format(d);
     }
 }
