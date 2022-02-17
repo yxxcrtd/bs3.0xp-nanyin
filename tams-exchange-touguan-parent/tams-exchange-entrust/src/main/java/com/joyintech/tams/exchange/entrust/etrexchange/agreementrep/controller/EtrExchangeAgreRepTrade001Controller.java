@@ -659,8 +659,8 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
         //dto.setBusinessTypeName(SysDataUtil.getNameFromDataDict(DictCode.共通业务类型, businessType));
         ProcessParameter<EtrExchangeAgreRepTrade001Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<EtrExchangeAgreRepTrade001Dto> params = new WorkFlowParameter<>();
-        params.setPageId("EtrExchangeAgreRepTrade001");
-        params.setElementId(dto.getElementId());
+        params.setPageId("EtrExchangeAgreRepTrade002");
+        params.setElementId("EtrExchangeAgreRepTrade002_btn_submit");
         params.setBusinessType(businessType);
         params.setBusinessCode(dto.getEntrustId());
         params.setComment(entity -> getMessage("EtrExchangeAgreRepTrade001.entrustId") + "(" + entity.getEntrustId() + ")-"

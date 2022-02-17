@@ -459,10 +459,8 @@
         WHERE
         FP.TRADE_MARKET IN (#{TRADE_PLACE_03}, #{TRADE_PLACE_04})
         AND FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
-        <if test="portfolioIdList != null and portfolioIdList.size()>0">
-            <foreach collection="portfolioIdList" open="AND TEMP.PORTFOLIO_ID IN (" item="portfolioId" separator="," close=")">
-                #{portfolioId,jdbcType=VARCHAR}
-            </foreach>
+        <if test="portfolioName != null and portfolioName !=''">
+            AND TEMP.PORTFOLIO_ID = #{portfolioName,jdbcType=VARCHAR}
         </if>
         <if test="tradeMarket != null and tradeMarket !=''">
             AND FP.TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR}
@@ -470,8 +468,8 @@
         <if test="secAcctId != null and secAcctId !=''">
             AND TEMP.SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
         </if>
-        <if test="finprodId != null and finprodId !=''">
-            AND FP.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
+        <if test="finprodName != null and finprodName !=''">
+            AND TEMP.FINPROD_ID = #{finprodName,jdbcType=VARCHAR}
         </if>
         ) TEMP
     </select>
