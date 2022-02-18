@@ -3,9 +3,11 @@ package com.joyintech.tams.business.common.controller;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.system.user.service.UserService;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
 import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
@@ -14,6 +16,7 @@ import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,9 @@ public class JoyinbusinessCommonController extends BaseController {
 
 	@Autowired
 	private JoyinbusinessCommonService joyinbusinessCommonService;
+
+	@Autowired
+	private UserService userService;
 
 	@PostMapping("/getSelectDataFromDataDic")
 	@ApiOperation(value = "数据字典查询功能", notes = "数据字典查询功能")
@@ -245,6 +251,23 @@ public class JoyinbusinessCommonController extends BaseController {
 		} catch (Exception e) {
 			logger.error("计算功能异常", e);
 			return new Message<String>().fail().setMessage("计算查询异常");
+		}
+	}
+	@PostMapping("/getPermissionsByUserId")
+	@ApiOperation(value = "查询用户权限接口", notes = "查询用户权限接口")
+	@ResponseBody
+	public Message<List<String>> getPermissionsByUserId() {
+		try {
+			String userId = SecurityUtil.getLoginUser().getUserName();
+			if (StringUtils.isNotEmpty(userId)) {
+				List<String> list=userService.getPermissions(userId);
+				return new Message<List<String>>().success().setData(list);
+			}else{
+				return null;
+			}
+		} catch (Exception e) {
+			logger.error("查询功能异常", e);
+			return new Message<List<String>>().fail().setMessage("查询异常");
 		}
 	}
 

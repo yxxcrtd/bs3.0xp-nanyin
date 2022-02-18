@@ -487,13 +487,26 @@ public class IbuComponentReceiveService extends BaseService{
                 //组合分配列表总金额
                 BigDecimal shareAmtTotalFP = ptlAllocations.stream().map(PtlAllocationDto::getShareAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
 //                BigDecimal fpriceAmtTotalFP = ptlAllocations.stream().map(PtlAllocationDto::getFpriceAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+                //获取单位全价
+                BigDecimal fprice=null;
+                if (StringUtil.equals(ibuQuoteBondDto.getExeType(), DictCodeList.银行间上行操作类型_本方请求回复成交成功.getValue())) {
+                    List<IbuQuoteBondDetDto> quoteBondDetList = inputBean.getIbuQuoteBondDetDtoList();
+                    IbuQuoteBondDto quoteBond = inputBean.getIbuQuoteBondDto();
+                    String cfetsPartyId = cfetsInterfReceiveService.getCfetsPartyID(param, quoteBond.getOuPartyId());
+                    for(IbuQuoteBondDetDto item:quoteBondDetList){
+                        if(null!=quoteBond && StringUtil.equals(quoteBond.getVersion(),item.getVersion())
+                                && StringUtil.equals(cfetsPartyId,item.getCpPartyId())){
+                                fprice=item.getUnitFprice();
+                        }
+                    }
+                }
                 for(PtlAllocationDto ptlAllocationDto : ptlAllocations){
                     BigDecimal shareAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(shareAmtTotalBW,ptlAllocationDto.getShareAmt()),shareAmtTotalFP,2,RoundingMode.HALF_DOWN);
 //                    BigDecimal fpriceAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(fpriceAmtTotalBW,ptlAllocationDto.getFpriceAmt()),fpriceAmtTotalFP,2,RoundingMode.HALF_DOWN);
                     ptlAllocationDto.setShareAmt(shareAmt);
-                    ptlAllocationDto.setFpriceAmt(shareAmt.multiply(new BigDecimal(100)));
+                    ptlAllocationDto.setFpriceAmt(shareAmt.multiply(fprice==null?new BigDecimal(100):fprice));
                     交易份额尾差 = ArithmeticUtil.subtract(交易份额尾差,shareAmt);
-                    全价总额尾差 = ArithmeticUtil.subtract(全价总额尾差,shareAmt.multiply(new BigDecimal(100)));
+                    全价总额尾差 = ArithmeticUtil.subtract(全价总额尾差,shareAmt.multiply(fprice==null?new BigDecimal(100):fprice));
                 }
                 //尾差处理  尾差放在指令的交易金额最大的记录
                 for(PtlAllocationDto item : ptlAllocations){
@@ -503,7 +516,7 @@ public class IbuComponentReceiveService extends BaseService{
                         item.setShareAmt(ArithmeticUtil.doAdd(item.getShareAmt(),交易份额尾差));
                     }
                     if(全价总额尾差.compareTo(BigDecimal.ZERO)>0&&StringUtil.equals(item.getEntrustId(),ptlAllocationDtoMax.getEntrustId())){
-                        item.setFpriceAmt(ArithmeticUtil.doAdd(item.getShareAmt().divide(new BigDecimal(100)),全价总额尾差));
+                        item.setFpriceAmt(ArithmeticUtil.doAdd(item.getShareAmt().divide(fprice==null?new BigDecimal(100):fprice),全价总额尾差));
                     }
                     ibuQuoteEtrReDto.setQuoteId(quoteId);
                     ibuQuoteEtrReDto.setVersion(ibuQuoteBondDto.getVersion());// 版本号
