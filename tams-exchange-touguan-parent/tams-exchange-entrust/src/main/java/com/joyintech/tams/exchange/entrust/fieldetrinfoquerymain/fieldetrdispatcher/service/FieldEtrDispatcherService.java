@@ -451,8 +451,13 @@ public class FieldEtrDispatcherService extends BaseService{
     public Map<String, Object> getReadonlyFormEtrInfo(String pageCode, String dtCode, String spcdCode, CommonSearchInfoRequest dto) {
         if ("null".equals(spcdCode) && Objects.nonNull(dto) && StringUtil.isNotEmpty(dto.getEntrustId())) {
             String busiTypePosition = fieldEtrDispatcherMapper.getBusiTypePosition(dto.getEntrustId());
-            dto.setBusiTypePosition(busiTypePosition);
-            spcdCode = busiTypePosition;
+            logger.debug("fieldEtrDispatcherMapper getBusiTypePosition with entrustId = [{}], result busiTypePosittion = [{}]", dto.getEntrustId(), busiTypePosition);
+            if (StringUtil.isEmpty(busiTypePosition)) {
+                dto.setBusiTypePosition(StringUtil.EMPTY);
+            } else {
+                dto.setBusiTypePosition(busiTypePosition);
+                spcdCode = busiTypePosition;
+            }
         }
         Map<String, Object> resultData = new HashMap<>();
         List<CfgReadonlyFormShow>  infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
