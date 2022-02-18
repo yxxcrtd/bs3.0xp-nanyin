@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Date;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -66,7 +67,7 @@ public class FairOrderHelper {
     private FuturesInstrumentService futuresInstrumentService;
 
     private int getRealVolume(double totalVolume, double totalOrderVolume, double leftVolume, int unit) {
-        return (int) TradeUtils.formatDouble(totalOrderVolume * leftVolume / totalVolume, -unit, BigDecimal.ROUND_UP);
+        return (int) TradeUtils.formatDouble(totalOrderVolume * leftVolume / totalVolume, -unit, RoundingMode.UP);
     }
 
     private double getFairOrderVolume(Map<String, Instruction> instructionBeanMap, Order order, Map<String, Double> volumeMap) {
