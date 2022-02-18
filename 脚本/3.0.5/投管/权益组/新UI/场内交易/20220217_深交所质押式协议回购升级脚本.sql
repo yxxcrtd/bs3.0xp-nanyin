@@ -27,3 +27,9 @@ values ('EtrExchangeAgreRepTrade001', '999999', 'PS', 'T94', null, null, 'system
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('EtrExchangeAgreRepTrade001', '999999', 'PS', 'T96', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('EtrExchangeAgreRepTrade001', '999999', 'PS', 'T92', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('EtrExchangeAgreRepTrade001', '999999', 'PS', 'T95', null, null, 'system', null, sysdate, 'system', sysdate, null);
