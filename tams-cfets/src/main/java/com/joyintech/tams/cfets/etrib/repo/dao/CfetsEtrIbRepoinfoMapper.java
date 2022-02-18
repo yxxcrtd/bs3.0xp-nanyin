@@ -124,4 +124,10 @@ public interface CfetsEtrIbRepoinfoMapper {
     BigDecimal getPledgeable(Map<String,Object> map);
 
     List<EtrSecStock> selectEtrSecStockByUser(Map<String, Object> param);
+
+    List<CfetsEtrIbRepoRkDto> selectRepoRkInfoAndCofigs(Map<String, Object> param);
+
+    CfetsEtrSecStockConfig selectFinprodInfo(Map<String, Object> param);
+
+    CfetsEtrIbRepoLibDto findSecPosition(Map<String, Object> param);
 }
