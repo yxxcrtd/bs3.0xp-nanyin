@@ -904,7 +904,8 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             }else if(DictCodeList.回购拆借方向_逆回购.getValue().equals(entity.getRepPs())){
             	agreRepFristIssueDto.setAssetType10("H04");
             }
-
+            //委托方向
+            agreRepFristIssueDto.setPs(entity.getRepPs());
             // 质押券代码
             agreRepFristIssueDto.setRepSecId(entity.getRepSecId());
             BeanUtil.copyPropertiesIgnoreNull(etrEntrust, agreRepFristIssueDto);
