@@ -266,12 +266,17 @@ public class EntrustCancelProcessor {
             order.setFrozenBalance(TradeUtils.subtract(order.getFrozenBalance(), entrust.getFrozenBalance(), 2));
             order.setCancelVolume(order.getCancelVolume() + entrust.getCancelVolume());
         }
+        // 指令状态修改——主要针对下单即成交业务（根据冻结数量判断指令状态）
+        if (InstructionStatus.COMPLETE.value.equals(instruction.getEntrustStatus())) {
+            instruction.setEntrustStatus(InstructionStatus.ALREADY_RECEIVE.value);
+        }
         // 未报状态需要调用风控接口， 待审批不用调风控接口
         if (entrust.getEntrustStatus() == EntrustStatus.PENDING_APPROVAL.value
-                || entrust.getEntrustStatus() == EntrustStatus.CREATED.value)
+                || entrust.getEntrustStatus() == EntrustStatus.CREATED.value) {
             unFrozenEntrustAndInstructionAndPosition(entrust, entrust.getEntrustVolume(), entrust.getFrozenBalance(), instruction, false);
-        else
+        } else {
             unFrozenEntrustAndInstructionAndPosition(entrust, entrust.getEntrustVolume(), entrust.getFrozenBalance(), instruction, true);
+        }
         if (abnormalFlag) {
             entrust.setEntrustStatus(EntrustStatus.ABNORMAL_CANCELED.value);
         } else {
