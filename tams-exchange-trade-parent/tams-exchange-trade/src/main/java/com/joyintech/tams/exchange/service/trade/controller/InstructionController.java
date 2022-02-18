@@ -8,10 +8,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.exchange.common.BusinessResultException;
-import com.joyintech.tams.exchange.common.bean.ExpireIncomeRateBean;
-import com.joyintech.tams.exchange.common.bean.ExpireIncomeRateRet;
-import com.joyintech.tams.exchange.common.bean.InstructionOpBean;
-import com.joyintech.tams.exchange.common.bean.InstructionPage;
+import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.bean.investment.EntrustOpeBean;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.constant.ExchangeConstant;
@@ -44,7 +41,7 @@ import java.util.*;
 @RequestMapping("/trade/joyin")
 @Api(tags = "场内交易-指令操作接口")
 public class InstructionController {
-    private final Logger LOGGER = LoggerFactory.getLogger(InstructionController.class);
+    private final Logger logger = LoggerFactory.getLogger(InstructionController.class);
 
     @Autowired
     private InvestmentManagement investmentManagement;
@@ -116,6 +113,20 @@ public class InstructionController {
         return new Message<Object>(investmentManagement.flushInstructionFromInvest());
     }
 
+    /**
+     * {"calculateField":"01","finprodId":"F01_113052.SH","fprice":"","price":"113.01","prinAmt":"100","ps":"T01","tradeMarket":"03","yield":""}
+     */
+    @ApiOperation(value = "净价、全价、到期收益率计算三合一", notes = "净价、全价、到期收益率计算三合一")
+    @PostMapping(value = "/instruction/calcPriceAndYield")
+    public Message<CalcPriceAndYieldResponse> calcPriceAndYield(@RequestBody @Validated CalcPriceAndYieldRequest request) {
+        String url = TradeServiceURL.calcPriceAndYield;
+        url = ServiceApplication.INSTRUCTION_SERVICE + url;
+        Message response = restTemplate.postForObject(url, request, Message.class);
+        logger.info("调用投管接口 【净价、全价、到期收益率计算三合一】 calcPriceAndYield() called with url ==> 【{}】, request = 【{}】, response => 【{}】", url,JSONUtil.toJsonStr(request), JSONUtil.toJsonStr(response));
+        return response;
+    }
+
+    @Deprecated
     @ApiOperation(value = "到期收益率计算", notes = "到期收益率计算")
     @RequestMapping(value = "/instruction/expireIncomeRate", method = RequestMethod.POST)
     @CrossOrigin
@@ -197,9 +208,9 @@ public class InstructionController {
             url = TradeServiceURL.yield;
         }
         url = ServiceApplication.TRADE_SERVICE_NAME + url;
-        LOGGER.debug("调用投管接口：url:{}, param:{}", url, JSONUtil.toJsonStr(pageParam));
+        logger.debug("调用投管接口：url:{}, param:{}", url, JSONUtil.toJsonStr(pageParam));
         ExpireIncomeRateRet expireIncomeRateRet = restTemplate.postForObject(url, pageParam, ExpireIncomeRateRet.class);
-        LOGGER.debug("ExpireIncomeRateRet:{}", JSONObject.toJSONString(expireIncomeRateRet));
+        logger.debug("ExpireIncomeRateRet:{}", JSONObject.toJSONString(expireIncomeRateRet));
         return new Message<ExpireIncomeRateRet>(expireIncomeRateRet);
     }
 }

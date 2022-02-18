@@ -133,15 +133,6 @@ public class ExchangeInstructionController {
         return investmentManagement.acceptOrRefuse(entrustList);
     }
 
-    /**
-     * {"calculateField":"01","finprodId":"F01_113052.SH","fprice":"","price":"113.01","prinAmt":"100","ps":"T01","tradeMarket":"03","yield":""}
-     */
-    @ApiOperation(value = "净价、全价、到期收益率计算三合一", notes = "净价、全价、到期收益率计算三合一")
-    @PostMapping(value = "/instruction/calcPriceAndYield")
-    public Message<CalcPriceAndYieldResponse> calcPriceAndYield(@RequestBody @Validated CalcPriceAndYieldRequest request) {
-        return instructionService.calcPriceAndYield(request);
-    }
-
     /***
      * @Description: 到期收益率
      * @Param: [finprodId, tradeMarket, ps, netPrice, deliverDate]
@@ -149,7 +140,6 @@ public class ExchangeInstructionController {
      * @Author: MAXX
      * @Date: 2020/5/8
      */
-    @Deprecated
     @RequestMapping(value = "/instruction/expireIncomeRate", method = RequestMethod.POST)
     @CrossOrigin
     public ResultBean expireIncomeRate(@RequestBody ExpireIncomeRateBean expireIncomeRateBean, @RequestParam(value = "calculate_type", required = false, defaultValue = "3") int calculateType) {
