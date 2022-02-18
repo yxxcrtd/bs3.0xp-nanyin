@@ -55,6 +55,9 @@ public class EtrExchangeTradeEtrExchangeCommonRequest {
     @ApiModelProperty(name="secId",value="证券代码",example="A1")
     private String secId;
 
+    @ApiModelProperty(name="finprodMarketId",value="资产代码",example="A1")
+    private String finprodMarketId;
+
     @ApiModelProperty(name="finprodType2",value="资产类型",example="A1")
     private String finprodType2;
 
@@ -183,5 +186,13 @@ public class EtrExchangeTradeEtrExchangeCommonRequest {
 
     public void setTradePlat(String tradePlat) {
         this.tradePlat = tradePlat;
+    }
+
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
     }
 }

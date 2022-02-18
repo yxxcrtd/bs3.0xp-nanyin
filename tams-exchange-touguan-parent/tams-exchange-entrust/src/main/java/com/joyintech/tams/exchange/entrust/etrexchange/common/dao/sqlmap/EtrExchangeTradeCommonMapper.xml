@@ -99,7 +99,7 @@
             AND T1.ENTRUST_DATE = to_date(#{sysDate},'yyyy-MM-dd')
         </if>
         <if test="entrustId !=null and !entrustId.equals('')">
-            AND T1.ENTRUST_ID = #{entrustId}
+            AND T1.ENTRUST_ID LIKE CONCAT('%', CONCAT(#{entrustId}, '%'))
         </if>
 <!--        <if test="entrustStatus != null and entrustStatus != ''">-->
 <!--            AND T1.ENTRUST_STATUS = #{entrustStatus}-->
@@ -114,6 +114,12 @@
         </if>
         <if test="endDate != null and !endDate.equals('')">
             AND T1.ENTRUST_DATE &lt;=to_date(#{endDate},'yyyy-MM-dd')
+        </if>
+        <if test="invManagerId != null and !invManagerId.equals('')">
+            AND T1.INV_MANAGER_ID =#{invManagerId}
+        </if>
+        <if test="finprodMarketId != null and !finprodMarketId.equals('')">
+            AND T1.FINPROD_ID =#{finprodMarketId}
         </if>
         <if test="entrustTypeList != null and entrustTypeList.size()>0">
             <foreach collection="entrustTypeList" open="AND T1.ENTRUST_TYPE in(" close=")" separator="," item="item">
@@ -197,7 +203,7 @@
             AND T1.ENTRUST_DATE = to_date(#{sysDate},'yyyy-MM-dd')
         </if>
         <if test="entrustId !=null and !entrustId.equals('')">
-            AND T1.ENTRUST_ID = #{entrustId}
+            AND T1.ENTRUST_ID LIKE CONCAT('%', CONCAT(#{entrustId}, '%'))
         </if>
 <!--        <if test="entrustStatus != null and entrustStatus != ''">-->
 <!--            AND T1.ENTRUST_STATUS = #{entrustStatus}-->
@@ -212,6 +218,12 @@
         </if>
         <if test="endDate != null and !endDate.equals('')">
             AND T1.ENTRUST_DATE &lt;=to_date(#{endDate},'yyyy-MM-dd')
+        </if>
+        <if test="invManagerId != null and !invManagerId.equals('')">
+            AND T1.INV_MANAGER_ID =#{invManagerId}
+        </if>
+        <if test="finprodMarketId != null and !finprodMarketId.equals('')">
+            AND  T1.FINPROD_ID =#{finprodMarketId}
         </if>
         <if test="tradePlat != null and !tradePlat.equals('')">
             and T1.TRADE_PLAT = #{tradePlat}
