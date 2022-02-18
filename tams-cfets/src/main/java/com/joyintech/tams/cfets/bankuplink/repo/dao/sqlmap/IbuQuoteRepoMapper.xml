@@ -2517,7 +2517,7 @@
             from FIN_EXERCISE_PLAN fep
             left join TRD_FIN_PRODUCT_DEAL_TOTAL tfpdt on tfpdt.FINPROD_ID = fep.FINPROD_ID
             where tfpdt.PS = 'T39'
-                and fep.EXERCISE_DATE >= TO_DATE('2021-07-08','yyyy-MM-dd')
+                and fep.EXERCISE_DATE >= TO_DATE(#{platDate},'yyyy-MM-dd')
                 and fep.EXERCISE_TYPE = '02'
                 <if test="finProdIds != null and finProdIds.size()>0 ">
                     AND fep.FINPROD_ID in

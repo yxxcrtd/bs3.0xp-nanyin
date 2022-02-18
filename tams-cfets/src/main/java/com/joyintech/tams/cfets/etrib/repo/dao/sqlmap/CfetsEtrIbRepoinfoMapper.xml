@@ -775,13 +775,18 @@
     
     <select id="getPledgeStockIdByPortfolioId" resultType="com.joyintech.framework.select.SelectOptionDto">
         select distinct
-            t.pledge_stock_id id,
-            t.pledge_stock_name text
-        from PTL_SEC_STOCK t
+            ess.pledge_stock_id id,
+            ess.pledge_stock_name text,
+            ess.IS_DEF_STOCK object
+        from ETR_SEC_STOCK ess
+        left join ETR_SEC_STOCK t on t.PLEDGE_STOCK_ID = ess.PLEDGE_STOCK_ID
         <where>
         	<if test="initValue != null and initValue !='' ">
-        		t.pledge_stock_id = #{initValue, jdbcType=VARCHAR}
+                ess.pledge_stock_id = #{initValue, jdbcType=VARCHAR}
         	</if>
+            <if test="userId != null and userId !='' ">
+                ess.CREATE_USER = #{userId, jdbcType=VARCHAR}
+            </if>
         	<if test="initValue == null or initValue =='' ">
 	        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
 	             t.PORTFOLIO_ID in
@@ -792,9 +797,9 @@
         	<if test="search !=null and search !='' ">
         		AND
 					(
-					t.pledge_stock_id LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    ess.pledge_stock_id LIKE CONCAT('%', CONCAT(#{search}, '%'))
 					OR
-					t.pledge_stock_name LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    ess.pledge_stock_name LIKE CONCAT('%', CONCAT(#{search}, '%'))
 					)
         	</if>
         	<if test="portfolioId !=null and portfolioId !='' ">
@@ -1054,6 +1059,63 @@
                 ) MST_BOND_VALUATION_INFO
                            ON fp.FINPROD_MARKET_ID = MST_BOND_VALUATION_INFO.SEC_ID
         where ee.ENTRUST_ID=#{entrustId}
+    </select>
+
+    <!-- 质押券管理查询画面 -->
+    <select id="getPledgeable" resultType="java.math.BigDecimal">
+        select pledStrdPrinAmt
+            from (
+                     select eep.PORTFOLIO_ID, eep.PLEDGE_STOCK_ID, sum(TABLE01.pledStrdPrinAmt) pledStrdPrinAmt
+                     FROM ETR_ENTRUST_PLEDGE eep
+                              LEFT JOIN (SELECT TEMP.PORTFOLIO_ID, /*组合代码*/
+                                                TEMP.PORTFOLIO_NAME,
+                                                TEMP.SEC_ACCT_ID, /*证券账户/通道代码*/
+                                                TEMP.FINPROD_ID, /*组合起息日*/
+                                                TEMP.VDATE, /*分支序号*/
+                                                SUM(TEMP.pledStrdPrinAmt) pledStrdPrinAmt, /*可质押券面总额*/
+                                                SUM(TEMP.pledgeAmount)    pledgeAmount /*已质押质押券面总额*/
+                                         FROM (SELECT espr.PORTFOLIO_ID,
+                                                      pp.PORTFOLIO_NAME,
+                                                      espr.SEC_ACCT_ID,
+                                                      espr.FINPROD_ID,
+                                                      pp.VDATE,
+                                                      CASE
+                                                          WHEN ppc.S_HOLDINGTYPE = #{S_002}
+                                                              THEN espr.AMOUNT * nvl(ppc.CAL_FLAG, 1)
+                                                          ELSE 0 END AS pledStrdPrinAmt, /*可质押券面总额*/
+                                                      CASE
+                                                          WHEN espr.HODING_TYPE = #{A_012} THEN espr.AMOUNT * nvl(ppc.CAL_FLAG, 1)
+                                                          ELSE 0 END AS pledgeAmount /*已质押质押券面总额*/
+                                               FROM ETR_SEC_POSITION_RULE espr
+                                                        INNER JOIN PTL_PORTFOLIO pp ON espr.PORTFOLIO_ID = pp.PORTFOLIO_ID
+                                                        left JOIN PTL_POSITION_CFG ppc
+                                                                  ON espr.HODING_TYPE = ppc.HOLDINGTYPE AND ppc.S_HOLDINGTYPE = #{S_002}
+                                               WHERE 1 = 1
+                                                 AND espr.CDATE = to_date(#{sysDate}, 'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
+                                                 AND espr.DATE_TYPE = 0
+                                                 AND (ppc.S_HOLDINGTYPE = #{S_002} or espr.HODING_TYPE = #{A_012} )) TEMP
+                                                  LEFT JOIN PTL_PORTFOLIO_AUTHORITY
+                                                            ON TEMP.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+                                         WHERE 1 = 1
+                                           AND TEMP.VDATE <![CDATA[<=]]> to_date(#{sysDate}, 'yyyy-MM-dd')
+                                           AND TEMP.PORTFOLIO_ID NOT IN (SELECT DISTINCT TFP.PORTFOLIO_ID PORTFOLIO_ID
+                                                                         FROM TRD_FIN_PRODUCT_DEAL_TOTAL TFP
+                                                                         WHERE (TFP.PS = 'C5' OR TFP.PS = 'C20')
+                                                                           AND (TFP.IS_CANCEL != 'Y' OR TFP.IS_CANCEL IS NULL))
+                                         GROUP BY TEMP.PORTFOLIO_ID, TEMP.PORTFOLIO_NAME, TEMP.SEC_ACCT_ID, TEMP.FINPROD_ID,
+                                                  TEMP.VDATE
+                                         HAVING SUM(TEMP.pledStrdPrinAmt) > 0 /*只统计可质押券面总额>0*/ ) TABLE01/*以上统计可用持仓*/
+                                        ON eep.PORTFOLIO_ID = TABLE01.PORTFOLIO_ID AND
+                                           eep.FINPROD_ID = TABLE01.FINPROD_ID AND
+                                           eep.SEC_ACCT_ID = TABLE01.SEC_ACCT_ID
+
+                     group by eep.PORTFOLIO_ID, eep.PLEDGE_STOCK_ID) T
+            where T.PORTFOLIO_ID = #{portfolioId}
+              and T.PLEDGE_STOCK_ID = #{pledgeStockId}
+    </select>
+
+    <select id="selectEtrSecStockByUser" resultType="com.joyintech.tams.common.base.entity.EtrSecStock">
+            select * from ETR_SEC_STOCK where CREATE_USER = #{userId}
     </select>
 
 </mapper>

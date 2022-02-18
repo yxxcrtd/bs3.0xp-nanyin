@@ -172,7 +172,7 @@ public class InvestmentManagement extends BaseService {
      * @param request
      * @return
      */
-    public List<Instruction> queryExportPage(InstructionQueryRequest request) {
+    public List<InstructionExportVo> queryExportPage(InstructionQueryRequest request) {
         Map<String, Object> pageParam = JsonUtils.getObjectFromJson(JsonUtils.getJsonFromObject(request), Map.class);
         InstructionPage<Instruction, InstructionPledge,InstructionDetail> page = queryInstructionsFromCache(pageParam);
         List<Instruction> instructionList = page.getEtr_entrust_list();
@@ -182,14 +182,14 @@ public class InvestmentManagement extends BaseService {
     /**
      * 对指令状态、交易平台、委托方向、价格模式、资产类型字典值进行转换
      */
-    private List<Instruction> convertFieldValue(List<Instruction> instructionList) {
+    private List<InstructionExportVo> convertFieldValue(List<Instruction> instructionList) {
         if (Objects.isNull(instructionList) || instructionList.isEmpty()) {
             return Collections.emptyList();
         }
-        List<Instruction> returnList = new ArrayList<>(instructionList.size());
-        Instruction newInstruction = null;
+        List<InstructionExportVo> returnList = new ArrayList<>(instructionList.size());
+        InstructionExportVo newInstruction = null;
         for (Instruction instruction : instructionList) {
-            newInstruction = new Instruction();
+            newInstruction = new InstructionExportVo();
             BeanUtil.copyProperties(instruction, newInstruction);
             if (Objects.nonNull(DictCodeList.from(DictCode.委托状态, newInstruction.getEntrustStatus()))) {
                 newInstruction.setEntrustStatus(DictCodeList.from(DictCode.委托状态, newInstruction.getEntrustStatus()).getCodeName());
