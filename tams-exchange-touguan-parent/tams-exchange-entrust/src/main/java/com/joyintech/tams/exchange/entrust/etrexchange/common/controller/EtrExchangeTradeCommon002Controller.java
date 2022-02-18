@@ -196,6 +196,7 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
     @ResponseBody
     public Message<Page<EtrExchangeTradePositionsCommonResponse>> findPositionsPage(@RequestBody   EtrExchangeTradePositionsCommonRequest request){
         try {
+            request.setSecId(null);
             Page<EtrExchangeTradePositionsCommonResponse> page = etrExchangeTradeCommon002Service.findPositionsPage(request);
             return new Message<Page<EtrExchangeTradePositionsCommonResponse>>().success().setData(page);
         } catch (Exception e) {
