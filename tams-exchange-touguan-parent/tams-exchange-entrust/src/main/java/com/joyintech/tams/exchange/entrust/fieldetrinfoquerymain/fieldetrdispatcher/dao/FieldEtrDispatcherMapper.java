@@ -97,7 +97,7 @@ public interface FieldEtrDispatcherMapper {
     /**
      * 查询业务类型
      */
-    String getBusiTypePosition(String entrustId);
+    String getBusiTypePosition(@Param("entrustId") String entrustId);
 
     /**
      * 交易员与工作量列表查询
