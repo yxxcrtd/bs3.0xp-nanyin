@@ -658,8 +658,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 }
                 // 质押券库自动入库
                 if(StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())) {
-//                    cfetsEtrIbRepoAutoRKService.autoInLibrary(SecurityUtil.getLoginUser().getUserName(),
-//                            cfetsManualSettleInsertDto.getTrdBankManualSettleInfo().getFinprodId(), portfolioIds);
+                    cfetsEtrIbRepoAutoRKService.autoInLibrary(SecurityUtil.getLoginUser().getUserName(),
+                            cfetsManualSettleInsertDto.getTrdBankManualSettleInfo().getFinprodId(), portfolioIds
+                            ,entity.getFinprodType2(),entity.getPs());
                 }
                 //交收失败后，自动撤销原交易、交易登记、行权登记数据，关闭对应指令
                 if(StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())){

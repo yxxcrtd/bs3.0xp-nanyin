@@ -54,7 +54,7 @@ public class CfetsEtrIbRepoRkDto extends EtrSecStock implements ProcessEntity {
      */
     List<PtlSecStock> ptlSecStock;
 
-    List<CfetsEtrSecStockConfig> cfetsEtrSecStockConfig;
+    private List<CfetsEtrSecStockConfig> cfetsEtrSecStockConfig;
 
     @ApiModelProperty(name="defaultStock",value="默认质押券库" ,example = "999999")
     private String defaultStock;

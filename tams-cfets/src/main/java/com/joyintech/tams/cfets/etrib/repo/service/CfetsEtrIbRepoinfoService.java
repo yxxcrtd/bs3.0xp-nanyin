@@ -267,9 +267,6 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
      */
     public Page<CfetsEtrRepoZLCXPositionResponse> findZlglPositionPage(CfetsEtrRepoZLCXPositionRequest cfetsEtrRepoZLCXPositionRequest) {
         String userId = SecurityUtil.getLoginUser().getUserName();
-        if(StringUtil.equals("admin",userId)){
-//            userId = "jp";
-        }
         Map<String, Object> map = new HashMap<>();
         map.put("role_pos", DictCodeListExt2.角色岗位_投资处长.getValue());
         map.put("userId", userId);
