@@ -438,7 +438,7 @@ public class CommonManagement extends BaseService {
 
     public Message<Map<String,Object>> getEtrDispatcherInfo(EtrDispatcherInfoRequest request) {
         try {
-            String url = ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.getEtrDispatcherInfo;
+            String url = ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.getEtrDispatcherInfo + request.getBusiTypePosition();
             if (request.getBusiTypePosition() == null) {
                 request.setBusiTypePosition(StrUtil.EMPTY);
             }
