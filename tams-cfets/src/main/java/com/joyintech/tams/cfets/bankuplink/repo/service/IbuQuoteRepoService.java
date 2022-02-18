@@ -1353,6 +1353,7 @@ public class IbuQuoteRepoService extends BaseService {
         }
         Map<String, Object> param = new HashMap<>();
         param.put("finProdIds", finProdIds);
+        param.put("platDate", iPlatformDate.getSysDateStr());
         if (StringUtil.equals(request.getPs(), DictCodeListExt3.交易方向_正回购.getValue())) {
             List<FinExercisePlan> finExercisePlans = cfetsIbuQuoteRepoMapper.findFinExercisePlan(param);
             if (CollectionUtils.isEmpty(finExercisePlans)) {
@@ -1366,7 +1367,7 @@ public class IbuQuoteRepoService extends BaseService {
                                 repoEntrustPledgeDto.getBondAbbrName() + "到期日为" + repoEntrustPledgeDto.getMdate() + "，不可小于等于回购到期结算日", MessageType.错误消息);
                         return result;
                     }
-                    if (DateUtil.compareTo(finExercisePlan.getExerciseDate(), repoEntrustPledgeDto.getMdate()) < 0) {
+                    if (DateUtil.compareTo(finExercisePlan.getExerciseDate(), request.getSettlementEndDate()) < 0) {
                         result.setMessage("债券" + repoEntrustPledgeDto.getBondCode() +
                                 repoEntrustPledgeDto.getBondAbbrName() + "已做赎回登记，是否确认继续质押", MessageType.确认消息);
                     } else {
