@@ -103,7 +103,7 @@ public class EtrExchangeTradeCommonRiskcalController extends BaseController{
             }
             //质押式回购
             else if (StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())
-                  && StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
+                 || StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
                 resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK002","F07");
             }
             result.setRiskMathFlag("02");

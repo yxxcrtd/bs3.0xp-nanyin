@@ -21,7 +21,7 @@ import com.joyintech.tams.business.common.dto.CommonSearchInfoRequest;
 import com.joyintech.tams.business.common.entity.CfgReadonlyFormShow;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.common.base.dao.*;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.base.entity.User;
 import com.joyintech.tams.component.base.core.impl.dao.MstWorkflowCommonServiceMapperImpl;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrdispatcher.dao.FieldEtrDispatcherMapper;
@@ -449,6 +449,16 @@ public class FieldEtrDispatcherService extends BaseService{
      * @return
      */
     public Map<String, Object> getReadonlyFormEtrInfo(String pageCode, String dtCode, String spcdCode, CommonSearchInfoRequest dto) {
+        if ("null".equals(spcdCode) && Objects.nonNull(dto) && StringUtil.isNotEmpty(dto.getEntrustId())) {
+            String busiTypePosition = fieldEtrDispatcherMapper.getBusiTypePosition(dto.getEntrustId());
+            logger.debug("fieldEtrDispatcherMapper getBusiTypePosition with entrustId = [{}], result busiTypePosittion = [{}]", dto.getEntrustId(), busiTypePosition);
+            if (StringUtil.isEmpty(busiTypePosition)) {
+                dto.setBusiTypePosition(StringUtil.EMPTY);
+            } else {
+                dto.setBusiTypePosition(busiTypePosition);
+                spcdCode = busiTypePosition;
+            }
+        }
         Map<String, Object> resultData = new HashMap<>();
         List<CfgReadonlyFormShow>  infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
         if(StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),dto.getFinprodType2()) &&

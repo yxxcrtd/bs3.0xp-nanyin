@@ -49,11 +49,11 @@
     round(decode(btm.busi_type,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,#{busiTypePosition05},ETR_ENTRUST.PRICE*100,''),4) etrPrice,
 
     case when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01'
-    then trunc(nvl(NVL(T7.FINISH_AMT, 0)+ NVL(T5.ENT_FINISH_AMT*100, 0),0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100
+    then (CASE WHEN ETR_ENTRUST.ENTRUST_NUM != '0' THEN trunc(nvl(NVL(T7.FINISH_AMT, 0)+ NVL(T5.ENT_FINISH_AMT*100, 0),0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100  ELSE 0 END )
     else trunc(nvl(nvl(T7.FINISH_AMT, 0) + nvl(T5.Ent_Finish_Amt, 0), 0) / ETR_ENTRUST.ENTRUST_AMT,4) * 100 end  as exeProgress,
 
     case when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01'
-    then trunc((NVL(CB.totalShareAmt,nvl(C2B.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100
+    then (CASE WHEN ETR_ENTRUST.ENTRUST_NUM != '0' THEN trunc((NVL(CB.totalShareAmt,nvl(C2B.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 ELSE 0 END )
     else trunc((nvl(C.totalShareAmt, nvl(C2.FPRICE_AMT, 0)) + nvl(T6.FINISH_AMT, 0)) /
     ETR_ENTRUST.ENTRUST_AMT, 4) * 100 end             as dealProgress,
 

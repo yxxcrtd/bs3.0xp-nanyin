@@ -958,4 +958,10 @@
         group by er.DISPENSE_RULE, er.VDATE, er.MDATE
     </select>
 
+    <select id="getBusiTypePosition" resultType="java.lang.String">
+        select OUTPUT_VALUE_1 from FIN_PRODUCT_TYPE_CONFIG btm left join ETR_ENTRUST ON (ETR_ENTRUST.FINPROD_TYPE2 =
+        btm.INPUT_VALUE_2 OR btm.INPUT_VALUE_2 is null) AND (ETR_ENTRUST.Ps = btm.INPUT_VALUE_3 OR btm.INPUT_VALUE_3 is
+        null) AND (ETR_ENTRUST.TRADE_PLAT = btm.INPUT_VALUE_1 OR btm.INPUT_VALUE_1 IS NULL) where
+        ETR_ENTRUST.ENTRUST_ID=#{entrustId}
+    </select>
 </mapper>

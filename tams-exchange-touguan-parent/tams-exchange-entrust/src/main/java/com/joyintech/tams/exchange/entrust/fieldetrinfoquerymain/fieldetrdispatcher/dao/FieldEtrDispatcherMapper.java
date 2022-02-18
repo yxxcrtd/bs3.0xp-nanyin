@@ -95,6 +95,11 @@ public interface FieldEtrDispatcherMapper {
     List<FieldEtrDispatcherTraderListRequest> getEtrTraderList(Map<String, Object> param);
 
     /**
+     * 查询业务类型
+     */
+    String getBusiTypePosition(@Param("entrustId") String entrustId);
+
+    /**
      * 交易员与工作量列表查询
      * @param param
      * @return List<FieldEtrDispatcherTraderListRequest>

@@ -180,7 +180,22 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         return result;
     }
 
-
+    private String mathEntrustProp(String prop){
+        switch (prop) {
+            case SB_SHXYHGCJ:
+                return DictCodeListExt3.交易方向_正回购.getValue();
+            case SB_SHXYHGDQXZ:
+                return DictCodeListExt3.交易方向_到期续做.getValue();
+            case SB_SHXYHGJCZY:
+                return DictCodeListExt3.交易方向_解除质押.getValue();
+            case SB_SHXYHGHJSB:
+                return DictCodeListExt3.交易方向_中途换券.getValue();
+            case SB_SHXYHGTQZZSB:
+                return DictCodeListExt3.交易方向_提前购回.getValue();
+            default:
+                return prop;
+        }
+    }
 
     /**
      * 调用非公开行情接口
@@ -203,6 +218,27 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
             }
         }
         //接行情数据 end
+
+        //条件筛选
+        if(StringUtil.isNotEmpty(request.getRequestId())){
+            repurchaseQuotes = repurchaseQuotes
+                    .stream()
+                    .filter(item -> StringUtil.equals(item.get("cbpconferId") == null ? null : item.get("cbpconferId").toString(), request.getRequestId()))
+                    .collect(Collectors.toList());
+        }
+        if(StringUtil.isNotEmpty(request.getBussType())){
+             repurchaseQuotes = repurchaseQuotes
+                    .stream()
+                    .filter(item -> StringUtil.equals(item.get("entrustProp") == null ? null : mathEntrustProp(item.get("entrustProp").toString()), request.getBussType()))
+                    .collect(Collectors.toList());
+        }
+        if(StringUtil.isNotEmpty(request.getFinprodName())){
+            repurchaseQuotes = repurchaseQuotes
+                    .stream()
+                    .filter(item -> StringUtil.equals(item.get("stockCode") == null ? null : item.get("stockCode").toString(), request.getFinprodName()))
+                    .collect(Collectors.toList());
+        }
+
         //去重
         HashSet<String> hSet = new HashSet<>();
         List<Map<String, Object>> newRepurchaseQuotes = new ArrayList<>();

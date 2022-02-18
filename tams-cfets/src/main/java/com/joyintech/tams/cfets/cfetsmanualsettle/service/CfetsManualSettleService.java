@@ -16,6 +16,7 @@ import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbClosePositionRequest;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPosPortfolioCashRequest;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPosPortfolioSecRequest;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPositionRequest;
+import com.joyintech.tams.cfets.etrib.repo.service.CfetsEtrIbRepoAutoRKService;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto;
 import com.joyintech.tams.cfets.trdquery.service.CfetsTrdBondInvestTrade002Service;
 import com.joyintech.tams.common.base.dao.*;
@@ -101,6 +102,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
     @Autowired
     private BaseEtrInvestInfoServiceImpl etrInvestInfoServiceImpl;
 
+    @Autowired
+    private CfetsEtrIbRepoAutoRKService cfetsEtrIbRepoAutoRKService;
     /**
      * 手工交收交收check
      * @param cfetsRequest
@@ -633,9 +636,11 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 cfetsManualSettleMapper.mergeInfo(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo());
                 //新增交收流水
                 trdBankManualSettleFlowMapper.insertSelective(cfetsManualSettleInsertDto.getTrdBankManualSettleFlow());
+                List<String> portfolioIds = new ArrayList<>();
                 //新增交收明细
                 for(TrdBankManualSetDetail trdBankManualSetDetail:cfetsManualSettleInsertDto.getListTrdBnakSetDetails()){
                     trdBankManualSetDetailMapper.insertSelective(trdBankManualSetDetail);
+                    portfolioIds.add(trdBankManualSetDetail.getPortfolioId());
                 }
                 //发送头寸
                 if(StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
@@ -650,6 +655,11 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                        //对回购数据进行处理
                         sendRepoPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
                     }
+                }
+                // 质押券库自动入库
+                if(StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())) {
+//                    cfetsEtrIbRepoAutoRKService.autoInLibrary(SecurityUtil.getLoginUser().getUserName(),
+//                            cfetsManualSettleInsertDto.getTrdBankManualSettleInfo().getFinprodId(), portfolioIds);
                 }
                 //交收失败后，自动撤销原交易、交易登记、行权登记数据，关闭对应指令
                 if(StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())){

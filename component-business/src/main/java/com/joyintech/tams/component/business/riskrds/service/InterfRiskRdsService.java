@@ -2117,10 +2117,14 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 Date vdate = new Date();
                 //试算和提交时Vdate格式不一样
                 try{
-                  if(DateUtil.isDateStr((String)vdateObject))  {
-                      vdate = DateUtil.parse((String)vdateObject);  
+                  if (vdateObject instanceof Date){
+                      String vdateStr = DateUtil.format((Date)vdateObject, DateUtil.DEFAULT_DATE_FORMAT_EN);
+                      vdate = DateUtil.parse(vdateStr);
+                  }else {
+                      if (DateUtil.isDateStr((String) vdateObject)) {
+                          vdate = DateUtil.parse((String) vdateObject);
+                      }
                   }
-                 
                 } catch (Exception e) {
                     vdate =  new Date((long)vdateObject); 
                 }
