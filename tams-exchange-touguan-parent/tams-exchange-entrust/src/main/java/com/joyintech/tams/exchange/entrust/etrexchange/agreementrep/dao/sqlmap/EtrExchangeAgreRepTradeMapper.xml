@@ -120,7 +120,7 @@
           t8.trade_id intiTradeId,
           t4.FINPROD_MARKET_ID origRepSecId,
           case
-            when etr_entrust.trade_market = #{TRADE_PLACE_03} then
+            when t7.trade_market = #{TRADE_PLACE_03} then
                 t2.PLEDGE_NUMBER/10
           else
                 t2.PLEDGE_NUMBER
@@ -129,7 +129,7 @@
           t2.PLEDGE_RATIO*100 origConRatio,
           t10.FINPROD_MARKET_ID newRepSecId,
           case
-            when etr_entrust.trade_market = #{TRADE_PLACE_03} then
+            when t7.trade_market = #{TRADE_PLACE_03} then
                 t9.PLEDGE_NUMBER/10
           else
                 t9.PLEDGE_NUMBER
@@ -138,7 +138,7 @@
           t9.PLEDGE_RATIO*100 newConRatio,
           t10.FINPROD_MARKET_ID repSecId,
           case
-            when etr_entrust.trade_market = #{TRADE_PLACE_03} then
+            when t7.trade_market = #{TRADE_PLACE_03} then
                 t9.PLEDGE_NUMBER/10
           else
                 t9.PLEDGE_NUMBER
@@ -167,7 +167,7 @@
           t7.PS ps,
           t8.request_id reqOnId,
           case
-            when etr_entrust.trade_market = #{TRADE_PLACE_03} then
+            when t7.trade_market = #{TRADE_PLACE_03} then
             #{UNIT_04}
           else
             #{UNIT_01}
