@@ -41,6 +41,8 @@ import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1192,19 +1194,20 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	/**
 	 * 折算率如果取不到值，默认100%
 	 *
-	 * @param param
+	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
 	@ResponseBody
 	@RequestMapping("/selectStdsecConverseRatio")
-	public BigDecimal selectStdsecConverseRatio(@RequestBody Map<String, Object> param) throws Exception {
-		String converseRatio = etrExchangeTrade001CommonService.selectStdsecConverseRatio(param);
-		if (StringUtils.isNotEmpty(converseRatio)) {
-			// 画面上乘以100后展示
-			return ArithmeticUtil.multiply(new BigDecimal(converseRatio), BigDecimal.valueOf(100));
+	public Message<BigDecimal> selectStdsecConverseRatio(@RequestBody StdsecConverseRatioRequest request) throws Exception {
+		try{
+			Map<String, Object> param = BeanUtil.object2Map(request);
+			String converseRatio = etrExchangeTrade001CommonService.selectStdsecConverseRatio(param);
+			return new Message<BigDecimal>().success().setData(new BigDecimal(converseRatio));
+		}catch (Exception e){
+			return new Message<BigDecimal>().fail().setData(null);
 		}
-		return null;
 	}
 
 	@RequestMapping(value = "/selectExercisePriceById")
@@ -1268,7 +1271,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 							map.put(ps, dto.getDeclaredPrice());
 							return new Message<Map<String, Object>>().success().setData(map);
 						} else if (StringUtils.equals(ps, DictCodeListExt3.交易方向_质押券入库.getValue())) {
-							BigDecimal converseRatio = selectStdsecConverseRatio(param);
+							String converseRatio = etrExchangeTrade001CommonService.selectStdsecConverseRatio(param);
 							if (null != converseRatio) {
 								map.put(DictCodeListExt3.交易方向_质押券入库.getValue(), converseRatio);
 								map.put(DictCodeListExt3.交易方向_质押券出库.getValue(), converseRatio);

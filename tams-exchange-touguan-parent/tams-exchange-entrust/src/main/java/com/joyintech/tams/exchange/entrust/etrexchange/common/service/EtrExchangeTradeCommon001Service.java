@@ -4290,7 +4290,15 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 //				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectStdsecConverseRatio", param,
 //				String.class);
 		param.put("date", iPlatformDate.getSysDate());
-		return etrExchangeTradeCommonMapper.selectStdsecConverseRatio(param);
+		String converseRatio = etrExchangeTradeCommonMapper.selectStdsecConverseRatio(param);
+		if (StringUtils.isNotEmpty(converseRatio)) {
+			// 画面上乘以100后展示
+			BigDecimal converseRatios= ArithmeticUtil.multiply(new BigDecimal(converseRatio), BigDecimal.valueOf(100));
+			converseRatio=converseRatios.toString();
+		}else{
+			converseRatio="100";
+		}
+		return converseRatio;
 	}
 	/**
 	 * 转股价
