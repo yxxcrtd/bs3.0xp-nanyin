@@ -223,7 +223,7 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         if(StringUtil.isNotEmpty(request.getRequestId())){
             repurchaseQuotes = repurchaseQuotes
                     .stream()
-                    .filter(item -> StringUtil.equals(item.get("cbpconferId") == null ? null : item.get("cbpconferId").toString(), request.getRequestId()))
+                    .filter(item -> StringUtil.contains(item.get("cbpconferId") == null ? null : item.get("cbpconferId").toString(), request.getRequestId()))
                     .collect(Collectors.toList());
         }
         if(StringUtil.isNotEmpty(request.getBussType())){
