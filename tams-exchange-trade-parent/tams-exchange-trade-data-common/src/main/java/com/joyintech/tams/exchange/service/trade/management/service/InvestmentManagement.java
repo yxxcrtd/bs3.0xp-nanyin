@@ -203,8 +203,8 @@ public class InvestmentManagement extends BaseService {
             if (Objects.nonNull(DictCodeListExt2.from(DictCode.价格模式, newInstruction.getPriceMode()))) {
                 newInstruction.setPriceMode(DictCodeListExt2.from(DictCode.价格模式, newInstruction.getPriceMode()).getCodeName());
             }
-            if (Objects.nonNull(DictCodeList.from(DictCode.平安资产类型, newInstruction.getFinprodType2()))) {
-                newInstruction.setFinprodType2(DictCodeList.from(DictCode.平安资产类型, newInstruction.getFinprodType2()).getCodeName());
+            if (Objects.nonNull(DictCodeListExt1.from(DictCode.金融产品类型_投管用, newInstruction.getFinprodType2()))) {
+                newInstruction.setFinprodType2(DictCodeListExt1.from(DictCode.金融产品类型_投管用, newInstruction.getFinprodType2()).getCodeName());
             }
             newInstruction.setProgress(newInstruction.getProgress());
             newInstruction.setDealProgress(newInstruction.getDealProgress());
