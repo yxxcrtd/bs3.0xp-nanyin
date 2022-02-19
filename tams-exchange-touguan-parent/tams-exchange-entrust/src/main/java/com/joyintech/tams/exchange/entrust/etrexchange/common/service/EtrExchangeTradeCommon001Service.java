@@ -5242,9 +5242,13 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	public  Map<String, Object> doRiskcalPackageEquity(EtrExchangeTradeSaveRequest dto) {
 		//风险试算封装dto
 		EtrExchangeTradeCommonRiskcalDto d=new EtrExchangeTradeCommonRiskcalDto();
+
 		BeanUtil.copyPropertiesIgnoreNull(d,dto);
 		List<Map> bussTrdTransfenpeiDto=new ArrayList<>();
 		for(EtrExchangeTradePortfolioRequest pt:dto.getPortfolioList()){
+			if (pt.getPs().equals(DictCodeListExt2.交易方向_配股.getValue())){
+				pt.setFinprodId(dto.getFinprodId());
+			}
 			Map<String, Object> map = BeanUtil.object2Map(pt);
 			map.entrySet().removeIf(item->!StringUtil.isNotEmpty(item.getValue()));
 			bussTrdTransfenpeiDto.add(map);
