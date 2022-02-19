@@ -120,7 +120,7 @@
           t8.trade_id intiTradeId,
           t4.FINPROD_MARKET_ID origRepSecId,
           case
-            when etr_entrust.trade_market = #{TRADE_PLACE_03} then
+            when t7.trade_market = #{TRADE_PLACE_03} then
                 t2.PLEDGE_NUMBER/10
           else
                 t2.PLEDGE_NUMBER
@@ -129,7 +129,7 @@
           t2.PLEDGE_RATIO*100 origConRatio,
           t10.FINPROD_MARKET_ID newRepSecId,
           case
-            when etr_entrust.trade_market = #{TRADE_PLACE_03} then
+            when t7.trade_market = #{TRADE_PLACE_03} then
                 t9.PLEDGE_NUMBER/10
           else
                 t9.PLEDGE_NUMBER
@@ -138,7 +138,7 @@
           t9.PLEDGE_RATIO*100 newConRatio,
           t10.FINPROD_MARKET_ID repSecId,
           case
-            when etr_entrust.trade_market = #{TRADE_PLACE_03} then
+            when t7.trade_market = #{TRADE_PLACE_03} then
                 t9.PLEDGE_NUMBER/10
           else
                 t9.PLEDGE_NUMBER
@@ -167,7 +167,7 @@
           t7.PS ps,
           t8.request_id reqOnId,
           case
-            when etr_entrust.trade_market = #{TRADE_PLACE_03} then
+            when t7.trade_market = #{TRADE_PLACE_03} then
             #{UNIT_04}
           else
             #{UNIT_01}
@@ -641,7 +641,9 @@
         etr_entrust.vdate vdate,/** 开始日期 **/
         etr_entrust.mdate mdate/** 结束日期 **/
         ,etr_entrust.CREATE_TIME
-        ,'' nextUser
+        ,'' nextUser,
+        etr_entrust.INV_MANAGER_ID invManagerId,
+        etr_entrust.ENTRUST_DATE entrustDate
 
         from etr_entrust                            /** 委托指令 **/
         inner JOIN etr_entrust_add                  /** 委托指令附属 **/
@@ -671,6 +673,21 @@
         </if>
         <if test="userId != null and userId != ''">
             AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+        </if>
+        <if test="portfolioName != null and portfolioName != ''">
+            AND PTL_PORTFOLIO.Portfolio_Id = #{portfolioName}
+        </if>
+        <if test="finprodId != null and finprodId != ''">
+            AND etr_pledge.finprod_id = #{finprodId}
+        </if>
+        <if test="bussType != null and bussType != ''">
+            AND etr_entrust.Ps = #{bussType}
+        </if>
+        <if test="manager != null and manager != ''">
+            AND etr_entrust.INV_MANAGER_ID = #{manager}
+        </if>
+        <if test="date != null and date != ''">
+            AND etr_entrust.ENTRUST_DATE = to_date(#{date},'yyyy-MM-dd')
         </if>
         <if test="entrustStatus ==null or ''.equals(entrustStatus) or '08'.equals(entrustStatus)">
             union all
@@ -740,7 +757,9 @@
             wfl_etr_entrust.vdate vdate,/** 开始日期 **/
             wfl_etr_entrust.mdate mdate/** 结束日期 **/
             ,wfl_etr_entrust.CREATE_TIME
-            ,SWBL.NEXT_USER nextUser
+            ,SWBL.NEXT_USER nextUser,
+            wfl_etr_entrust.INV_MANAGER_ID invManagerId,
+            wfl_etr_entrust.ENTRUST_DATE entrustDate
             from wfl_etr_entrust
             inner JOIN wfl_etr_entrust_add
             ON    wfl_etr_entrust.entrust_id = wfl_etr_entrust_add.entrust_id
@@ -770,6 +789,21 @@
             </if>
             <if test="userId != null and userId != ''">
                 AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+            </if>
+            <if test="portfolioName != null and portfolioName != ''">
+                AND PTL_PORTFOLIO.Portfolio_Id = #{portfolioName}
+            </if>
+            <if test="finprodId != null and finprodId != ''">
+                AND wfl_etr_pledge.finprod_id = #{finprodId}
+            </if>
+            <if test="bussType != null and bussType != ''">
+                AND wfl_etr_entrust.Ps = #{bussType}
+            </if>
+            <if test="manager != null and manager != ''">
+                AND wfl_etr_entrust.INV_MANAGER_ID = #{manager}
+            </if>
+            <if test="date != null and date != ''">
+                AND wfl_etr_entrust.ENTRUST_DATE = to_date(#{date},'yyyy-MM-dd')
             </if>
         </if>
         ) T1

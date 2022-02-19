@@ -223,7 +223,7 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         if(StringUtil.isNotEmpty(request.getRequestId())){
             repurchaseQuotes = repurchaseQuotes
                     .stream()
-                    .filter(item -> StringUtil.equals(item.get("cbpconferId") == null ? null : item.get("cbpconferId").toString(), request.getRequestId()))
+                    .filter(item -> StringUtil.contains(item.get("cbpconferId") == null ? null : item.get("cbpconferId").toString(), request.getRequestId()))
                     .collect(Collectors.toList());
         }
         if(StringUtil.isNotEmpty(request.getBussType())){
@@ -431,6 +431,11 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         param.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
         param.put("UNIT_01", DictCodeListExt3.交易单位_张.getValue());
         param.put("UNIT_04", DictCodeListExt3.交易单位_手.getValue());
+        param.put("portfolioName", request.getPortfolioName());
+        param.put("finprodId", request.getFinprodId());
+        param.put("bussType", request.getBussType());
+        param.put("manager", request.getManager());
+        param.put("date", request.getDate());
         Page<EtrExchangeAgreRepTrade003Dto> page =  super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeAgreRepTradeMapper.selectEtrEntrust(param));
 
         List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
