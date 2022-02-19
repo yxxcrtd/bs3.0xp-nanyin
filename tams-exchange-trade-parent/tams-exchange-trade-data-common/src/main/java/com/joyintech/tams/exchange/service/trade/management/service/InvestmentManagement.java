@@ -182,7 +182,7 @@ public class InvestmentManagement extends BaseService {
     /**
      * 对指令状态、交易平台、委托方向、价格模式、资产类型字典值进行转换
      */
-    private List<InstructionExportVo> convertFieldValue(List<Instruction> instructionList) {
+    public List<InstructionExportVo> convertFieldValue(List<Instruction> instructionList) {
         if (Objects.isNull(instructionList) || instructionList.isEmpty()) {
             return Collections.emptyList();
         }
@@ -206,6 +206,10 @@ public class InvestmentManagement extends BaseService {
             if (Objects.nonNull(DictCodeList.from(DictCode.平安资产类型, newInstruction.getFinprodType2()))) {
                 newInstruction.setFinprodType2(DictCodeList.from(DictCode.平安资产类型, newInstruction.getFinprodType2()).getCodeName());
             }
+            newInstruction.setProgress(newInstruction.getProgress());
+            newInstruction.setDealProgress(newInstruction.getDealProgress());
+            newInstruction.setLeftVolume(newInstruction.getLeftVolume());
+            newInstruction.setLeftAmount(newInstruction.getLeftAmount());
             returnList.add(newInstruction);
         }
         return returnList;
