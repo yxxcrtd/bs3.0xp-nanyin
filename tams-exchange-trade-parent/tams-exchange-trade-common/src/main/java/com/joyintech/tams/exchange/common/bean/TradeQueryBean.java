@@ -583,10 +583,10 @@ public class TradeQueryBean implements Serializable {
     }
 
     public String getEntrustBsStr() {
-        if (StringUtil.isEmpty(entrustBs)) {
+        if (StringUtil.isEmpty(ps)) {
             return null;
         }
-        return DictCodeListExt2.from(DictCode.交易方向, entrustBs).getCodeName();
+        return DictCodeListExt2.from(DictCode.交易方向, ps).getCodeName();
     }
 
     public void setEntrustBsStr(String entrustBsStr) {
