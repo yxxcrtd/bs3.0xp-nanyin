@@ -5246,7 +5246,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		BeanUtil.copyPropertiesIgnoreNull(d,dto);
 		List<Map> bussTrdTransfenpeiDto=new ArrayList<>();
 		for(EtrExchangeTradePortfolioRequest pt:dto.getPortfolioList()){
-			if (pt.getPs().equals(DictCodeListExt2.交易方向_配股.getValue())){
+			if (pt.getPs().equals(DictCodeListExt2.交易方向_配股.getValue())
+			 || pt.getPs().equals(DictCodeListExt3.交易方向_配债.getValue())){
 				pt.setFinprodId(dto.getFinprodId());
 			}
 			Map<String, Object> map = BeanUtil.object2Map(pt);
