@@ -1,11 +1,14 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.exchange.common.BusinessResultException;
 import com.joyintech.tams.exchange.common.bean.*;
@@ -16,6 +19,7 @@ import com.joyintech.tams.exchange.common.constant.Market;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.InstructionDetail;
+import com.joyintech.tams.exchange.common.db.domain.InstructionExportVo;
 import com.joyintech.tams.exchange.common.db.domain.InstructionPledge;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.microservice.ServiceApplication;
@@ -36,19 +40,18 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/trade/joyin")
 @Api(tags = "场内交易-指令操作接口")
 public class InstructionController {
     private final Logger logger = LoggerFactory.getLogger(InstructionController.class);
-
-    @Autowired
-    private InvestmentManagement investmentManagement;
-
     @Autowired(required = false)
     @Qualifier("loadBalancedRestTemplate")
     protected JoyinRestTemplate restTemplate;
+    @Autowired
+    private InvestmentManagement investmentManagement;
 
     @ApiOperation(value = "查询指令列表", notes = "查询指令列表")
     @RequestMapping(value = "/instruction/users", method = RequestMethod.POST)
@@ -77,6 +80,15 @@ public class InstructionController {
     @ResponseBody
     @ApiOperation(value = "导出指令列表", notes = "导出指令列表")
     public void exportInstruction(@RequestBody InstructionExportRequest request, HttpServletResponse response) {
+        if (Objects.nonNull(request.getData())) {
+            List<Instruction> instructionList = request.getData().stream().map(item -> BeanUtil.toBean(item, Instruction.class)).collect(Collectors.toList());
+            List<InstructionExportVo> instructionExportVoList = investmentManagement.convertFieldValue(instructionList);
+
+            List<BaseMap> newList = Lists.newArrayList();
+            newList.addAll(instructionExportVoList.stream().map(item -> BaseMap.newMap(BeanUtil.beanToMap(item))).collect(Collectors.toList()));
+
+            request.setData(newList);
+        }
         ExcelUitl.doExport(request, response, "指令列表", () -> investmentManagement.queryExportPage(request.getDto(InstructionQueryRequest.class)));
     }
 
@@ -122,7 +134,7 @@ public class InstructionController {
         String url = TradeServiceURL.calcPriceAndYield;
         url = ServiceApplication.INSTRUCTION_SERVICE + url;
         Message response = restTemplate.postForObject(url, request, Message.class);
-        logger.info("调用投管接口 【净价、全价、到期收益率计算三合一】 calcPriceAndYield() called with url ==> 【{}】, request = 【{}】, response => 【{}】", url,JSONUtil.toJsonStr(request), JSONUtil.toJsonStr(response));
+        logger.info("调用投管接口 【净价、全价、到期收益率计算三合一】 calcPriceAndYield() called with url ==> 【{}】, request = 【{}】, response => 【{}】", url, JSONUtil.toJsonStr(request), JSONUtil.toJsonStr(response));
         return response;
     }
 

@@ -1,8 +1,8 @@
 package com.joyintech.tams.exchange.common.db.domain;
 
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.tams.exchange.common.bean.instrument.MinPriceAndMinTrdUnitLimitBean;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
 import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import io.swagger.annotations.ApiModel;
@@ -12,15 +12,12 @@ import org.springframework.data.annotation.Id;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
 
 @ApiModel(value = "指令导出信息", description = "指令导出信息")
-public class InstructionExportVo implements Serializable, KeyMethodInterface<String>, Cloneable {
-    private static final long serialVersionUID = -81616163906470229L;
-
+public class InstructionExportVo {
     @ApiModelProperty(required = false, name = "approverFlage", value = "审批标志")
     @Size(max = 50)
     private String approverFlage;
@@ -345,9 +342,6 @@ public class InstructionExportVo implements Serializable, KeyMethodInterface<Str
     @Size(max = 8)
     private String derivativeOcFlag;
 
-    @ApiModelProperty(required = false, name = "minPriceAndMinTrdUnitLimitBean", value = "最小价差、买卖单位及交易上下限控制")
-    private MinPriceAndMinTrdUnitLimitBean minPriceAndMinTrdUnitLimitBean;
-
     @ApiModelProperty(required = false, name = "pledgeeType", value = "质权人类型：协议回购到期续作指令必填 0-非第三方 1-第三方")
     @Size(max = 1)
     private String pledgeeType;
@@ -383,6 +377,14 @@ public class InstructionExportVo implements Serializable, KeyMethodInterface<Str
     @ApiModelProperty(required = false, name = "busiTypeTg", value = "投管业务类型")
     @Size(max = 50)
     private String busiTypeTg;
+
+    private String progress;
+
+    private String dealProgress;
+
+    private long leftVolume;
+
+    private BigDecimal leftAmount;
 
     @Id
     public String getEntrustId() {
@@ -1017,14 +1019,6 @@ public class InstructionExportVo implements Serializable, KeyMethodInterface<Str
         this.pledgeeType = pledgeeType;
     }
 
-    public MinPriceAndMinTrdUnitLimitBean getMinPriceAndMinTrdUnitLimitBean() {
-        return minPriceAndMinTrdUnitLimitBean;
-    }
-
-    public void setMinPriceAndMinTrdUnitLimitBean(MinPriceAndMinTrdUnitLimitBean minPriceAndMinTrdUnitLimitBean) {
-        this.minPriceAndMinTrdUnitLimitBean = minPriceAndMinTrdUnitLimitBean;
-    }
-
     public String getEntrustBussType() {
         return entrustBussType;
     }
@@ -1057,137 +1051,40 @@ public class InstructionExportVo implements Serializable, KeyMethodInterface<Str
         this.busiTypeTg = busiTypeTg;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        InstructionExportVo that = (InstructionExportVo) o;
-        return entrustNum == that.entrustNum &&
-                count == that.count &&
-                Objects.equals(conShareId, that.conShareId) &&
-                Objects.equals(conPrice, that.conPrice) &&
-                Objects.equals(conNum, that.conNum) &&
-                Objects.equals(entrustId, that.entrustId) &&
-                Objects.equals(portfolioId, that.portfolioId) &&
-                Objects.equals(portfolioName, that.portfolioName) &&
-                Objects.equals(finprodId, that.finprodId) &&
-                Objects.equals(finprodAbbr, that.finprodAbbr) &&
-                Objects.equals(finprodName, that.finprodName) &&
-                Objects.equals(finprodType2, that.finprodType2) &&
-                Objects.equals(acctNo, that.acctNo) &&
-                Objects.equals(ccy, that.ccy) &&
-                Objects.equals(busiAcctNo, that.busiAcctNo) &&
-                Objects.equals(acctName, that.acctName) &&
-                Objects.equals(secAcctId, that.secAcctId) &&
-                Objects.equals(secAcctName, that.secAcctName) &&
-                Objects.equals(stockHolderNo, that.stockHolderNo) &&
-                Objects.equals(tradeMarket, that.tradeMarket) &&
-                Objects.equals(tradePlat, that.tradePlat) &&
-                Objects.equals(finprodMarketId, that.finprodMarketId) &&
-                Objects.equals(ps, that.ps) &&
-                Objects.equals(dealMode, that.dealMode) &&
-                Objects.equals(counterId, that.counterId) &&
-                Objects.equals(counterSeat, that.counterSeat) &&
-                Objects.equals(counterTrader, that.counterTrader) &&
-                Objects.equals(counterInfo, that.counterInfo) &&
-                Objects.equals(counterDealerId, that.counterDealerId) &&
-                Objects.equals(appointmentNumber, that.appointmentNumber) &&
-                Objects.equals(dealNo, that.dealNo) &&
-                Objects.equals(trdMatchId, that.trdMatchId) &&
-                Objects.equals(quoterefId, that.quoterefId) &&
-                Objects.equals(tradeDate, that.tradeDate) &&
-                Objects.equals(vdate, that.vdate) &&
-                Objects.equals(mdate, that.mdate) &&
-                Objects.equals(entrustAmt, that.entrustAmt) &&
-                Objects.equals(entrustStatus, that.entrustStatus) &&
-                Objects.equals(entrustPrice, that.entrustPrice) &&
-                Objects.equals(fullPrice, that.fullPrice) &&
-                Objects.equals(priceMode, that.priceMode) &&
-                Objects.equals(entrustLeftAmt, that.entrustLeftAmt) &&
-                Objects.equals(frozenQuantity, that.frozenQuantity) &&
-                Objects.equals(settleSpeed, that.settleSpeed) &&
-                Objects.equals(valueDate, that.valueDate) &&
-                Objects.equals(valueDate2, that.valueDate2) &&
-                Objects.equals(maturityDate, that.maturityDate) &&
-                Objects.equals(maturityDate2, that.maturityDate2) &&
-                Objects.equals(termDays, that.termDays) &&
-                Objects.equals(termDays2, that.termDays2) &&
-                Objects.equals(purchType, that.purchType) &&
-                Objects.equals(saleCode, that.saleCode) &&
-                Objects.equals(minAmt, that.minAmt) &&
-                Objects.equals(tarFinprodId, that.tarFinprodId) &&
-                Objects.equals(tarinprodAbbr, that.tarinprodAbbr) &&
-                Objects.equals(tarinprodMarketId, that.tarinprodMarketId) &&
-                Objects.equals(tradeId, that.tradeId) &&
-                Objects.equals(traderName, that.traderName) &&
-                Objects.equals(invManagerId, that.invManagerId) &&
-                Objects.equals(assetType, that.assetType) &&
-                Objects.equals(assetType1, that.assetType1) &&
-                Objects.equals(assetType10, that.assetType10) &&
-                Objects.equals(assetType11, that.assetType11) &&
-                Objects.equals(invAim, that.invAim) &&
-                Objects.equals(tradersInfo, that.tradersInfo) &&
-                Objects.equals(isAutoReceive, that.isAutoReceive) &&
-                Objects.equals(vPayDate, that.vPayDate) &&
-                Objects.equals(mPayDate, that.mPayDate) &&
-                Objects.equals(capDays, that.capDays) &&
-                Objects.equals(mIntAmt, that.mIntAmt) &&
-                Objects.equals(mTradeAmt, that.mTradeAmt) &&
-                Objects.equals(firstRepoPs, that.firstRepoPs) &&
-                Objects.equals(entrustBussType, that.entrustBussType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(conShareId, conPrice, conNum, entrustId, portfolioId, portfolioName, finprodId, finprodAbbr, finprodName, finprodType2, acctNo, ccy, busiAcctNo,
-                acctName, secAcctId, secAcctName, stockHolderNo, tradeMarket, tradePlat, finprodMarketId, ps, dealMode, counterId, counterSeat, counterTrader, counterInfo,
-                counterDealerId, appointmentNumber, dealNo, trdMatchId, quoterefId, tradeDate, vdate, mdate, entrustAmt, entrustNum, entrustStatus, entrustPrice, fullPrice,
-                priceMode, entrustLeftAmt, frozenQuantity, settleSpeed, valueDate, valueDate2, maturityDate, maturityDate2, termDays, termDays2, purchType, saleCode, minAmt,
-                tarFinprodId, tarinprodAbbr, tarinprodMarketId, tradeId, traderName, invManagerId, assetType, assetType1, assetType10, assetType11, invAim, tradersInfo,
-                isAutoReceive, vPayDate, mPayDate, mIntAmt, mTradeAmt, firstRepoPs, count, entrustBussType);
-    }
-
-    @Override
-    public String getId() {
-        return entrustId;
-    }
-
-    @Override
-    public void setId(String id) {
-        entrustId = id;
-    }
-
-    public InstructionExportVo cloneInstruction() {
-        try {
-            return (InstructionExportVo) this.clone();
-        } catch (CloneNotSupportedException e) {
-            return null;
-        }
-    }
-
     /**
      * 执行进度
      */
     public String getProgress() {
+        if (StrUtil.isNotEmpty(this.progress)) {
+            return this.progress;
+        }
+
         BigDecimal total = TradeUtils.add(getEntrustLeftAmt(), getFrozenQuantity(), 2);
         Double progress;
         if (getEntrustNum() > 0) {
             progress = TradeUtils.divide(total, getEntrustNum(), 4).doubleValue();
         } else if (TradeUtils.bigThanZero(getEntrustAmt())) {
             progress = TradeUtils.divide(total, getEntrustAmt(), 4);
-        }else {
+        } else {
             progress = 0D;
         }
 
         return TradeUtils.percentFormat(progress);
     }
 
+    public void setProgress(String progress) {
+        this.progress = progress;
+    }
+
     /**
      * 成交进度
      */
     public String getDealProgress() {
+
+        if (StrUtil.isNotEmpty(this.dealProgress)) {
+            return this.dealProgress;
+        }
+
         Double progress;
         if (getEntrustNum() > 0) {
             progress = TradeUtils.divide(getEntrustLeftAmt(), getEntrustNum(), 4).doubleValue();
@@ -1200,23 +1097,43 @@ public class InstructionExportVo implements Serializable, KeyMethodInterface<Str
         return TradeUtils.percentFormat(progress);
     }
 
+    public void setDealProgress(String dealProgress) {
+        this.dealProgress = dealProgress;
+    }
+
     /**
      * 剩余数量
      */
     public long getLeftVolume() {
+        if (Objects.nonNull(this.leftVolume)) {
+            return this.leftVolume;
+        }
+
         if (getEntrustNum() > 0) {
             return getEntrustNum() - getEntrustLeftAmt().longValue() - getFrozenQuantity().longValue();
         }
         return 0L;
     }
 
+    public void setLeftVolume(long leftVolume) {
+        this.leftVolume = leftVolume;
+    }
+
     /**
      * 剩余金额
      */
     public BigDecimal getLeftAmount() {
+        if (Objects.nonNull(this.leftAmount)) {
+            return this.leftAmount;
+        }
+
         if (TradeUtils.bigThanZero(getEntrustAmt())) {
             return TradeUtils.subtract(getEntrustAmt(), getEntrustLeftAmt(), getFrozenQuantity(), 2);
         }
         return BigDecimal.ZERO;
+    }
+
+    public void setLeftAmount(BigDecimal leftAmount) {
+        this.leftAmount = leftAmount;
     }
 }

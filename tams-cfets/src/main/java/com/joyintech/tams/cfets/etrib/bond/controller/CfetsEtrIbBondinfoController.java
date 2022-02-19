@@ -510,6 +510,9 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     public Message<String> findInvAim(@PathVariable("portfolioId") String portfolioId,@PathVariable String secId) {
         try {
             String restult = cfetsEtrIbBondinfoService.findInvAim(portfolioId,secId);
+            if(!StringUtil.isNotEmpty(restult)){
+                restult="";
+            }
             return new Message<String>().success().setData(restult);
         } catch (Exception e) {
             logger.error("查询指令买入时查询业务模式异常", e);
