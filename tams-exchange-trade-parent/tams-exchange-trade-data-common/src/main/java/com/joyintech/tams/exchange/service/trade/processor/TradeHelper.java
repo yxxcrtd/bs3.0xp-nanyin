@@ -586,6 +586,7 @@ public class TradeHelper {
         if (!checkInstruction(instruction, order)) {
             return order;
         }
+
         String tradingDay = commonManagement.getTradingDay();
         // 指令检查(包括状态,日期,接收人) 价格限定
         ErrorCode errorCode = commonCheckHelper.instructionCheck(instruction, order, order.getOrderPrice(), tradingDay);
@@ -602,13 +603,23 @@ public class TradeHelper {
         logger.info("指令检查完成，当前指令基本信息： instruction {}, entrustNum:{}, entrustAmt:{}, frozen:{}, finished:{}",
                 instruction.getEntrustId(), instruction.getEntrustNum(), instruction.getEntrustAmt(), instruction.getFrozenQuantity(), instruction.getEntrustLeftAmt());
         // 若账号不存在，直接返回订单
-        if (createOrderByAccount(order, tradingDay, new Date(System.currentTimeMillis())))
+        if (createOrderByAccount(order, tradingDay, new Date(System.currentTimeMillis()))) {
             return order;
+        }
         order.setBusinessFlag(BusinessFlag.NORMAL.value);
         order.setBsFlag(EntrustUtils.getBsFlagForNormal(order.getEntrustProp(),
                 order.getEntrustBs(), order.getAssetType(), instrument, instruction.getDeliveryMethod()));
         order.setEntrustType(EntrustUtils.getEntrustType(order.getBsFlag()));
         order.setOrderBalance(TradeUtils.calculateBalance(order.getEntrustBs(), order.getOrderPrice(), order.getOrderVolume(), order.getAssetType(), order, futuresInstrument));
+
+        order.setPortfolioName(instruction.getPortfolioName());
+        order.setSecAcctId(instruction.getSecAcctId());
+        order.setSecAcctName(instruction.getSecAcctName());
+        order.setTradePlat(instruction.getTradePlat());
+        order.setFinprodType2(instruction.getFinprodType2());
+        order.setInvManagerId(instruction.getInvManagerId());
+        order.setPs(instruction.getPs());
+
         //1.公平下单
         if (fairOrderHelper.createFairOrder(order)) {
             return order;
@@ -924,6 +935,15 @@ public class TradeHelper {
             if (!InvestmentAssetType1.NEGOTIATED_REPO.value.equals(instruction.getAssetType1())) {
                 integratedEntrust.setEntrustBalance(entrustBalance);
             }
+
+            integratedEntrust.setPortfolioName(instruction.getPortfolioName());
+            integratedEntrust.setSecAcctId(instruction.getSecAcctId());
+            integratedEntrust.setSecAcctName(instruction.getSecAcctName());
+            integratedEntrust.setTradePlat(instruction.getTradePlat());
+            integratedEntrust.setFinprodType2(instruction.getFinprodType2());
+            integratedEntrust.setInvManagerId(instruction.getInvManagerId());
+            integratedEntrust.setPs(instruction.getPs());
+
             integratedEntrustService.asyncUpdate(integratedEntrust);
             handleWorkflow(null, integratedEntrust, workflow);
             logger.info("start handle integratedEntrust {}", integratedEntrust.getId());

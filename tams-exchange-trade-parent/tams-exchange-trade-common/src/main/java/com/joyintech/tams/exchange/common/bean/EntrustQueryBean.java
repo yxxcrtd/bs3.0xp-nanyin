@@ -131,6 +131,12 @@ public class EntrustQueryBean implements Serializable {
     @ApiModelProperty(name = "createTime", value = "委托时间")
     private Date createTime;
 
+    @ApiModelProperty(name = "secAcctName", value = "证券账户名称")
+    private String secAcctName;
+
+    @ApiModelProperty(name = "ps", value = "交易方向")
+    private String ps;
+
     /**
      * ////////////////////////////查询无用字段
      */
@@ -883,5 +889,21 @@ public class EntrustQueryBean implements Serializable {
 
     public void setEntrustStatusStr(String entrustStatusStr) {
         this.entrustStatusStr = entrustStatusStr;
+    }
+
+    public String getSecAcctName() {
+        return secAcctName;
+    }
+
+    public void setSecAcctName(String secAcctName) {
+        this.secAcctName = secAcctName;
+    }
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
     }
 }

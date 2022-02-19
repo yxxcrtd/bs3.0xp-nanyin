@@ -92,6 +92,14 @@ public class OrderHistory implements Serializable {
 
     private String hedgeFlag;
 
+    private String portfolioName;
+    private String secAcctId;
+    private String secAcctName;
+    private String tradePlat;
+    private String finprodType2;
+    private String invManagerId;
+    private String ps;
+
     @Id
     public String getId() {
         return id;
@@ -419,5 +427,61 @@ public class OrderHistory implements Serializable {
 
     public void setHedgeFlag(String hedgeFlag) {
         this.hedgeFlag = hedgeFlag;
+    }
+
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
+    }
+
+    public String getSecAcctId() {
+        return secAcctId;
+    }
+
+    public void setSecAcctId(String secAcctId) {
+        this.secAcctId = secAcctId;
+    }
+
+    public String getSecAcctName() {
+        return secAcctName;
+    }
+
+    public void setSecAcctName(String secAcctName) {
+        this.secAcctName = secAcctName;
+    }
+
+    public String getTradePlat() {
+        return tradePlat;
+    }
+
+    public void setTradePlat(String tradePlat) {
+        this.tradePlat = tradePlat;
+    }
+
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
+    }
+
+    public String getInvManagerId() {
+        return invManagerId;
+    }
+
+    public void setInvManagerId(String invManagerId) {
+        this.invManagerId = invManagerId;
+    }
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
     }
 }
