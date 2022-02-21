@@ -56,18 +56,29 @@ public class EtrExchangeAgreRepTrade003RequestDto{
     @ApiModelProperty(name="manager",value="投资经理",example="A1")
     private String manager;
 
-    @ApiModelProperty(name="date",value="指令日期",example="A1")
-    private String date;
+    @ApiModelProperty(name="startDate",value="指令开始日期",example="A1")
+    private String startDate;
+
+    @ApiModelProperty(name="endDate",value="指令结束日期",example="A1")
+    private String endDate;
 
     @ApiModelProperty(name="keywords",value="关键字",example="A1")
     private String keywords;
 
-    public String getDate() {
-        return date;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
     public String getPortfolioName() {

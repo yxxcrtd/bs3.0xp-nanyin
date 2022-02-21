@@ -731,8 +731,9 @@
         <if test="manager != null and manager != ''">
             AND etr_entrust.INV_MANAGER_ID = #{manager}
         </if>
-        <if test="date != null and date != ''">
-            AND etr_entrust.ENTRUST_DATE = to_date(#{date},'yyyy-MM-dd')
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+            <![CDATA[ AND etr_entrust.ENTRUST_DATE >= to_date(#{startDate},'yyyy-mm-dd') ]]>
+            <![CDATA[ AND etr_entrust.ENTRUST_DATE <= to_date(#{endDate},'yyyy-mm-dd') ]]>
         </if>
         <if test="entrustStatus ==null or ''.equals(entrustStatus) or '08'.equals(entrustStatus)">
             union all
@@ -854,8 +855,9 @@
             <if test="manager != null and manager != ''">
                 AND wfl_etr_entrust.INV_MANAGER_ID = #{manager}
             </if>
-            <if test="date != null and date != ''">
-                AND wfl_etr_entrust.ENTRUST_DATE = to_date(#{date},'yyyy-MM-dd')
+            <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+                <![CDATA[ AND wfl_etr_entrust.ENTRUST_DATE >= to_date(#{startDate},'yyyy-mm-dd') ]]>
+                <![CDATA[ AND wfl_etr_entrust.ENTRUST_DATE <= to_date(#{endDate},'yyyy-mm-dd') ]]>
             </if>
         </if>
         ) T1 WHERE 1=1
