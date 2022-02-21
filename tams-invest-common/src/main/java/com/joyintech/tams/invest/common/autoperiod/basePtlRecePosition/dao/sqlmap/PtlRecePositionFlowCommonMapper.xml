@@ -28,7 +28,7 @@
         BRANCH BRANCH, INV_AIM INV_AIM, HODING_TYPE HODING_TYPE, CDATE CDATE, REC_TYPE REC_TYPE,
         PAY_DATE PAY_DATE, CCY CCY, AMOUNT AMOUNT, P_FINPROD_ID P_FINPROD_ID, TRADE_ID TRADE_ID,
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
-        UPDATE_TIME UPDATE_TIME, INPUT_TYPE INPUT_TYPE,is_Exist_New is_Exist_New
+        UPDATE_TIME UPDATE_TIME, INPUT_TYPE INPUT_TYPE
     </sql>
     <select id="selectUnpayPtlRecePosition" parameterType="map" resultType="com.joyintech.tams.common.base.entity.PtlRecePositionFlow">
         select base.BRANCH,
