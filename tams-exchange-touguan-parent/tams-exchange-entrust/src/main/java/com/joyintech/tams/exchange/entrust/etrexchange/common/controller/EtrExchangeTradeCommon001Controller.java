@@ -302,7 +302,8 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@ResponseBody
 	public Message<Map<String, Object>> getPageParams(){
 		Map<String, Object> initPageParams = new HashMap<>();
-		initPageParams.put("PS", this.getSelectDataFromDataDic(DictCode.交易方向, null));
+		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.交易方向, null);
+		initPageParams.put("PS", selectDto);
 		initPageParams.put("TRADE_PLACE", this.getSelectDataFromDataDic(DictCode.交易场所, null));
 		initPageParams.put("TARGET_CLASS", this.getSelectDataFromDataDic(DictCode.目标类型, null));
 		initPageParams.put("DECLA_TYPE", this.getSelectDataFromDataDic(DictCode.申报类型, null));
@@ -412,6 +413,13 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		initPageParams.put("BOARD_BD04", DictCodeList.上市板_创业板.getValue());
 		initPageParams.put("pageRedisFlag", CacheUtil.getSysParam("pageRedisFlag"));
 		initPageParams.put("IS_RISKMATH_SOFTCONTROL", CacheUtil.getSysParam("IS_RISKMATH_SOFTCONTROL"));
+		// 大宗平台
+		List<SelectOptionDto> ps_dz = selectDto.getOptions().stream().filter(option -> {
+			return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
+					|| StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue()
+			);
+		}).collect(Collectors.toList());
+		initPageParams.put("PS_DZ", JsonUtils.objectArray2Json(ps_dz.toArray()));
 		return new Message<Map<String, Object>>(initPageParams).success();
 	}
 
