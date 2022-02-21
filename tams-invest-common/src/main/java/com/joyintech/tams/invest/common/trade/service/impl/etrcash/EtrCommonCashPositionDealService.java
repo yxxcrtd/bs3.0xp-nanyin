@@ -901,6 +901,7 @@ public class EtrCommonCashPositionDealService extends BaseService {
         position.setWorkflowId(positionFlowDto.getWorkflowId());
         position.setCreateUser(positionFlowDto.getCreateUser());
         position.setCreateDept(positionFlowDto.getCreateDept());
+        position.setIsExistNew(positionFlowDto.getIsExistNew());
         return position;
     }
 
