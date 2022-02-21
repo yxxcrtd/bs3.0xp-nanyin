@@ -133,6 +133,8 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
             pageParam.put("tradeMarket",request.getTradeMarket());
         }
 
+        pageParam.put("portfolioName", request.getPortfolioName());
+        pageParam.put("finprodName", request.getFinprodName());
         pageParam.put("search",request.getSearch());
         pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
         pageParam.put("sysDate", iPlatformDate.getSysDate());
