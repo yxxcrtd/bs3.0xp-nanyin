@@ -1,4 +1,8 @@
 
+---删除个性化定制数据
+delete from CFG_DATATABLE_SHOW_FLAG where PAGECODE='TrdExchange001';
+delete from CFG_DATATABLE_SHOW_FLAG where PAGECODE='TrdExchange006';
+
 ---场内交易指令列表
 delete from CFG_DATATABLE_SHOW where PAGECODE='TrdExchange001' and DTCODE='INSTRUCTION_INFO' and SPCDCODE='999999';
 
