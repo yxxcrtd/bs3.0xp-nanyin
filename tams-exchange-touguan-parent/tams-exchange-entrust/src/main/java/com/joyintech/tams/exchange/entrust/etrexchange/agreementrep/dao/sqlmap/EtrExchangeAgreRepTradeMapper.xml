@@ -722,6 +722,9 @@
         <if test="portfolioName != null and portfolioName != ''">
             AND PTL_PORTFOLIO.Portfolio_Id = #{portfolioName}
         </if>
+        <if test="tradeMarket != null and tradeMarket != ''">
+            AND etr_entrust.trade_market = #{tradeMarket}
+        </if>
         <if test="finprodId != null and finprodId != ''">
             AND etr_pledge.finprod_id = #{finprodId}
         </if>
@@ -845,6 +848,9 @@
             </if>
             <if test="portfolioName != null and portfolioName != ''">
                 AND PTL_PORTFOLIO.Portfolio_Id = #{portfolioName}
+            </if>
+            <if test="tradeMarket != null and tradeMarket != ''">
+                AND wfl_etr_entrust.trade_market = #{tradeMarket}
             </if>
             <if test="finprodId != null and finprodId != ''">
                 AND wfl_etr_pledge.finprod_id = #{finprodId}

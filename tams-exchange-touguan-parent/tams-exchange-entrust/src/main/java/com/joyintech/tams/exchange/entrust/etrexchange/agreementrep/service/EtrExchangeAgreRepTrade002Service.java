@@ -481,6 +481,7 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         param.put("UNIT_01", DictCodeListExt3.交易单位_张.getValue());
         param.put("UNIT_04", DictCodeListExt3.交易单位_手.getValue());
         param.put("portfolioName", request.getPortfolioName());
+        param.put("tradeMarket", request.getTradeMarket());
         param.put("finprodId", request.getFinprodId());
         param.put("bussType", request.getBussType());
         param.put("manager", request.getManager());

@@ -44,6 +44,9 @@ public class EtrExchangeAgreRepTrade003RequestDto{
     @ApiModelProperty(name="portfolioName",value="组合名称",example="A1")
     private String portfolioName;
 
+    @ApiModelProperty(name="tradeMarket",value="交易场所",example="A1")
+    private String tradeMarket;
+
     @ApiModelProperty(name="finprodId",value="质押券",example="A1")
     private String finprodId;
 
@@ -87,6 +90,14 @@ public class EtrExchangeAgreRepTrade003RequestDto{
 
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
+    }
+
+    public String getTradeMarket() {
+        return tradeMarket;
+    }
+
+    public void setTradeMarket(String tradeMarket) {
+        this.tradeMarket = tradeMarket;
     }
 
     public String getFinprodId() {
