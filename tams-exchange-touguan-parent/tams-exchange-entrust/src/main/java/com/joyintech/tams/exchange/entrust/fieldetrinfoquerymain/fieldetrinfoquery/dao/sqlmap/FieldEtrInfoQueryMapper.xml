@@ -176,6 +176,9 @@
         <if test="userId != null and userId!='' ">
             AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
         </if>
+        <if test="trdAcctId != null and trdAcctId!='' ">
+            AND ssai.TRD_ACCT_ID = #{trdAcctId}
+        </if>
     </where>
         union all
         SELECT
@@ -348,6 +351,9 @@
             </if>
             <if test="userId != null and userId!='' ">
                 AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+            </if>
+            <if test="trdAcctId != null and trdAcctId!='' ">
+                AND ssai.TRD_ACCT_ID = #{trdAcctId}
             </if>
         </where>
         ) t
