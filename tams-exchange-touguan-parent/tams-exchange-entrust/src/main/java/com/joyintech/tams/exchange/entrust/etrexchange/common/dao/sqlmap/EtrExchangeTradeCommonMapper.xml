@@ -126,9 +126,6 @@
                 #{item}
             </foreach>
         </if>
-        <if test="tradePlat != null and !tradePlat.equals('')">
-            and T1.TRADE_PLAT = #{tradePlat}
-        </if>
         union all
         SELECT
         T1.ENTRUST_ID entrustId
@@ -224,9 +221,6 @@
         </if>
         <if test="finprodMarketId != null and !finprodMarketId.equals('')">
             AND  T1.FINPROD_ID =#{finprodMarketId}
-        </if>
-        <if test="tradePlat != null and !tradePlat.equals('')">
-            and T1.TRADE_PLAT = #{tradePlat}
         </if>
         ) T1
         where 1=1

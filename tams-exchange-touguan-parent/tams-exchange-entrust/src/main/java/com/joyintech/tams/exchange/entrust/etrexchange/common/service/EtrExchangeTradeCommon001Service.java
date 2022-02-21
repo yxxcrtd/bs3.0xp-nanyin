@@ -5712,7 +5712,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_大宗债券指令));
 		}
 		//add start
-		if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())){
+		if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) /*&& dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())*/){
 			if(StringUtils.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())){
 				param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_债券回售指令));
 			}else if(StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_配债.getValue())){
