@@ -411,6 +411,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		initPageParams.put("etrExchange_HqArea_refresh_period", etrExchange_HqArea_refresh_period);
 		initPageParams.put("BOARD_BD04", DictCodeList.上市板_创业板.getValue());
 		initPageParams.put("pageRedisFlag", CacheUtil.getSysParam("pageRedisFlag"));
+		initPageParams.put("IS_RISKMATH_SOFTCONTROL", CacheUtil.getSysParam("IS_RISKMATH_SOFTCONTROL"));
 		return new Message<Map<String, Object>>(initPageParams).success();
 	}
 
