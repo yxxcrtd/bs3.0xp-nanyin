@@ -249,6 +249,25 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 
             }
         }
+
+        //查询新表可用现金
+        PtlCashPositionFlowDto dtoNew = new PtlCashPositionFlowDto();
+        dtoNew.setHodingType(DictCodeListExt3.资产类型_汇总可用现金.getValue());
+        dtoNew.setCdate(dto.getCdate());
+        dtoNew.setPortfolioId((String)param.get("portfolioId"));
+        dtoNew.setCcy((String)param.get("ccy"));
+        dtoNew.setDateType(0);
+        BigDecimal cashT0_new = baseEtrCashPositionCommService.queryEtrAvailableCashNew(dtoNew);
+        BigDecimal cashT= new BigDecimal(result.get("cashT").toString());
+        if(StringUtil.isNotEmpty(cashT0_new)){
+            result.put("cashT",  ArithmeticUtil.doAdd(cashT, cashT0_new));// 组合T日可用
+        }
+        dtoNew.setDateType(1);
+        BigDecimal cashT1_new = baseEtrCashPositionCommService.queryEtrAvailableCashNew(dtoNew);
+        BigDecimal cashT1= new BigDecimal(result.get("cashT1").toString());
+        if(StringUtil.isNotEmpty(cashT1_new)){
+            result.put("cashT1",  ArithmeticUtil.doAdd(cashT1, cashT1_new));// 组合T+1日可用
+        }
         return result;
     }
 
