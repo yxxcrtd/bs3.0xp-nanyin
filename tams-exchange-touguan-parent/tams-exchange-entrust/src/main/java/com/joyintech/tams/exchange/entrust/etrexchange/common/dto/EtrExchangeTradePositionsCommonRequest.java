@@ -31,11 +31,6 @@ public class EtrExchangeTradePositionsCommonRequest {
     @ApiModelProperty(name="search",value="关键字",example="A1")
     private String search;
 
-//    @ApiModelProperty(name="portfolioId",value="组合代码",example="A1")
-//    private String portfolioId;
-    @ApiModelProperty(name="portfolioName",value="组合名称",example="A1")
-    private String portfolioName;
-
     @ApiModelProperty(name="portfolioIdList",value="组合代码",example="A1")
     private List<String> portfolioIdList;
 
@@ -48,26 +43,18 @@ public class EtrExchangeTradePositionsCommonRequest {
     @ApiModelProperty(name="secAcctId",value="证券账户",example="A1")
     private String secAcctId;
 
-    @ApiModelProperty(name="finprodName",value="资产名称",example="A1")
-    private String finprodName;
+    @ApiModelProperty(name="finprodMarketId",value="资产代码",example="A1")
+    private String finprodMarketId;
 
     @ApiModelProperty(name="secId",value="证券代码",example="A1")
     private String secId;
 
-    public String getFinprodName() {
-        return finprodName;
+    public String getFinprodMarketId() {
+        return finprodMarketId;
     }
 
-    public void setFinprodName(String finprodName) {
-        this.finprodName = finprodName;
-    }
-
-    public String getPortfolioName() {
-        return portfolioName;
-    }
-
-    public void setPortfolioName(String portfolioName) {
-        this.portfolioName = portfolioName;
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
     }
 
     public List<String> getPortfolioIdList() {
@@ -79,24 +66,7 @@ public class EtrExchangeTradePositionsCommonRequest {
     }
 
     //    @ApiModelProperty(name="finprodType2",value="金融产品类型",example="A1")
-//    private String finprodType2;
-
-
-//    public List<String> getPortfolioIdList() {
-//        return portfolioIdList;
-//    }
-//
-//    public void setPortfolioIdList(List<String> portfolioIdList) {
-//        this.portfolioIdList = portfolioIdList;
-//    }
-//
-//    public String getPortfolioId() {
-//        return portfolioId;
-//    }
-//
-//    public void setPortfolioId(String portfolioId) {
-//        this.portfolioId = portfolioId;
-//    }
+    //    private String finprodType2;
 
     public PageMode getPageMode() {
         return pageMode;

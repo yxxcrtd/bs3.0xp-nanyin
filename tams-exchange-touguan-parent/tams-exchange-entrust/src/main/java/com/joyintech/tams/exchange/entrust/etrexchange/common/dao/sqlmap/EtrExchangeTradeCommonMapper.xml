@@ -563,6 +563,9 @@
         <if test="finprodType2 != null and finprodType2 !=''">
             AND FP.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
         </if>
+        <if test="finprodMarketId != null and finprodMarketId !=''">
+            AND FP.FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR}
+        </if>
 
         ) M
         where
