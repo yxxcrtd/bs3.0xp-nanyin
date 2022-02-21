@@ -1178,6 +1178,7 @@ public class CfetsEtrDispatcherService extends BaseService{
                     CfetsEtrDispatcherInfoResponse totalResult = new CfetsEtrDispatcherInfoResponse();
                     totalResult.setTotalPrinAmt(ArithmeticUtil.divide(totalPrinAmt,new BigDecimal("10000"),2));
                     resultData.put(dtCode+"_datatotal",totalResult);
+                    detailList.forEach(e->e.setTotalPrinAmt(totalResult.getTotalPrinAmt()));
                 }
                 resultData.put(dtCode+"_datatable",detailList);
             }
