@@ -315,11 +315,16 @@ public class PortfolioManager extends BaseService {
             instructionDetail.setEntrustId(instruction.getEntrustId());
             instructionDetail.setPortfolioId(instruction.getPortfolioId());
             instructionDetail.setPortfolioName(instruction.getPortfolioName());
-            instructionDetail.setDisRate(new BigDecimal("1"));
+            instructionDetail.setDisRate(BigDecimal.valueOf(1.00));
             instructionDetail.setEntrustAmt(instruction.getEntrustAmt());
             instructionDetail.setEntrustNum(new BigDecimal(instruction.getEntrustNum()));
             instructionDetail.setTargetType(instruction.getEntrustNum() == 0 ? "02" : "01");
             instructionDetails.add(instructionDetail);
+        } else if (instructionDetails.size() == 1) {
+            InstructionDetail instructionDetail = instructionDetails.get(0);
+            if (instructionDetail.getDisRate() == null || instructionDetail.getDisRate().compareTo(new BigDecimal("0")) == 0) {
+                instructionDetail.setDisRate(BigDecimal.valueOf(1.00));
+            }
         }
 
         // - 查询组合信息
