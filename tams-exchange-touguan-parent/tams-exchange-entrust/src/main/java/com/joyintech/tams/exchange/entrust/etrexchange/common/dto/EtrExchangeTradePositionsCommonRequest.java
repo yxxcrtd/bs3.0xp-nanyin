@@ -28,13 +28,16 @@ import java.util.List;
 public class EtrExchangeTradePositionsCommonRequest {
 
 
-//    @ApiModelProperty(name="search",value="关键字",example="A1")
-//    private String search;
+    @ApiModelProperty(name="search",value="关键字",example="A1")
+    private String search;
 
 //    @ApiModelProperty(name="portfolioId",value="组合代码",example="A1")
 //    private String portfolioId;
     @ApiModelProperty(name="portfolioName",value="组合名称",example="A1")
     private String portfolioName;
+
+    @ApiModelProperty(name="portfolioIdList",value="组合代码",example="A1")
+    private List<String> portfolioIdList;
 
     @ApiModelProperty(name="pageMode",value="分页对象",example="{pageSize: 10,pageNo: 1, sort: 'name', direction: 'asc'}")
     private PageMode pageMode;
@@ -65,6 +68,14 @@ public class EtrExchangeTradePositionsCommonRequest {
 
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
+    }
+
+    public List<String> getPortfolioIdList() {
+        return portfolioIdList;
+    }
+
+    public void setPortfolioIdList(List<String> portfolioIdList) {
+        this.portfolioIdList = portfolioIdList;
     }
 
     //    @ApiModelProperty(name="finprodType2",value="金融产品类型",example="A1")
@@ -119,13 +130,13 @@ public class EtrExchangeTradePositionsCommonRequest {
         this.secId = secId;
     }
 
-//    public String getSearch() {
-//        return search;
-//    }
-//
-//    public void setSearch(String search) {
-//        this.search = search;
-//    }
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
+    }
 
 //    public String getFinprodType2() {
 //        return finprodType2;

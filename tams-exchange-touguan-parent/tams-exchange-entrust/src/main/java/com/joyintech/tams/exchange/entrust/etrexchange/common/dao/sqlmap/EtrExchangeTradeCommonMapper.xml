@@ -266,6 +266,8 @@
     <!-- 场内交易持仓查询 -->
     <select id="findPositionsPage" parameterType="Map"
             resultType="com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonResponse">
+        select * from (
+
         SELECT
             TEMP.PORTFOLIO_ID  AS portfolioId,
             PP.PORTFOLIO_NAME  AS portfolioName,
@@ -546,6 +548,9 @@
                     #{portfolioId,jdbcType=VARCHAR}
             </foreach> 
         </if>
+        <if test="finprodName != null and finprodName !=''">
+            AND FP.FINPROD_ABBR LIKE CONCAT('%', CONCAT(#{finprodName}, '%'))
+        </if>
         <if test="tradeMarket != null and tradeMarket !=''">
             AND FP.TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR}
         </if>
@@ -558,7 +563,11 @@
         <if test="finprodType2 != null and finprodType2 !=''">
             AND FP.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
         </if>
-        
+
+        ) M
+        where
+        1=1
+        <include refid="etrExchangeBundAnd"/>
     </select>
     <!-- 场内交易债券质押持仓查询 -->
     <select id="findZqzyPositionsPage" parameterType="Map"
@@ -1497,6 +1506,24 @@
             </if>
         </if>
     </sql>
+
+    <sql id="etrExchangeBundAnd">
+        <if test="search != null and search != ''">
+            and (
+            portfolioName|| '|' ||secName|| '|' ||acctNo|| '|' ||finprodType2|| '|' ||
+            portfolioId|| '|' ||finprodMarketId
+            like '%' || #{search} || '%'
+            )
+            <if test="search_isNumberFlag != null and search_isNumberFlag == true">
+                or (positionsNum = #{search})
+                or (sellNum = #{search})
+                or (positionsAmt = #{search})
+                or (price = #{search})
+                or (floatingPL = #{search})
+            </if>
+        </if>
+    </sql>
+
     <select id="selectCounterTraderId" resultType="java.util.Map">
         SELECT
         T.COUNTER_ID "counterId",
