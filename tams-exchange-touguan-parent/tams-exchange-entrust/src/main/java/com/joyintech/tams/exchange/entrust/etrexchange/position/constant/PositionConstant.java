@@ -1,0 +1,41 @@
+/*
+ * 文件名：BussinessConstant.java
+ * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
+ * 描述：理财资管管理系统V2.0
+ * 修改人：xiexinting
+ * 修改时间：2018年8月21日
+ * 修改内容：新建
+ * 系统名称：理财资管管理系统V2.0
+ */
+
+package com.joyintech.tams.exchange.entrust.etrexchange.position.constant;
+
+/**
+ * 〈一句话功能简述〉 〈功能详细描述〉
+ *
+ * @author yflv
+ * @version 1.0 2022年2月16日
+ * @see PositionConstant
+ * @since 1.0
+ */
+public interface PositionConstant {
+	
+	/**
+     * 指令头寸类型
+     */
+    String POSITION_TYPE_ETR = "ETR";
+    /**
+     * 交易头寸类型
+     */
+    String POSITION_TYPE_TRD = "TRD";
+
+    /**
+     * 银行间现券
+     */
+    String INTERF_TYPE_BOND001 = "Bond001";
+    
+    /**
+     * 场内现券
+     */
+    String INTERF_TYPE_BOND002 = "Bond002";
+}

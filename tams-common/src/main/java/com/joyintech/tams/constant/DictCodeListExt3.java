@@ -1882,6 +1882,9 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     
     产品数据来源_母行代销TA(DictCode.产品数据来源, "01", "母行代销TA"),
 	产品数据来源_三方分销TA(DictCode.产品数据来源, "02", "三方分销TA"),
+	结算方式_头寸引擎_净额结算(DictCode.结算方式_头寸引擎, "01", "净额结算"),
+	结算方式_头寸引擎_RTGS(DictCode.结算方式_头寸引擎, "02", "RTGS"),
+	结算方式_头寸引擎_逐笔全额结算(DictCode.结算方式_头寸引擎, "03", "逐笔全额结算"),
     ;
     /**
      * 对应于数据字典code

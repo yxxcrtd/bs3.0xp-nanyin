@@ -124,6 +124,9 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
 
     @ApiModelProperty(name="assetType2",value="资产类型2",example="H01")
     private String assetType2;
+    
+    @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
+    private String softSkipMode;
     /**
      * 约定号
      */
@@ -525,6 +528,14 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
 
 
 
+
+	public String getSoftSkipMode() {
+		return softSkipMode;
+	}
+
+	public void setSoftSkipMode(String softSkipMode) {
+		this.softSkipMode = softSkipMode;
+	}
 
 	public String getEntrustBussType() {
 		return entrustBussType;
