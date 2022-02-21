@@ -302,6 +302,9 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 //发送头寸
                 //sendPositionMethod(entity,entity.getSubmitFlag());
                 sendPositionMethod(entity,StringUtil.equals(entity.getSystemAct(),DictCodeListExt3.系统动作_新建.getValue())?true:false);
+                //向旧表插入头寸
+
+
             }
         }
         //无附件上传，删除

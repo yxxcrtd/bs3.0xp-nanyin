@@ -28,6 +28,11 @@ public class PtlCashPositionFlowDto extends PtlCashPositionFlow {
 
     private String splitType;
 
+    /**
+     * 清算速度
+     */
+    private Integer dateType;
+
     public String getSplitType() {
 		return splitType;
 	}
@@ -103,4 +108,11 @@ public class PtlCashPositionFlowDto extends PtlCashPositionFlow {
         this.isFrozenPositionFlag = isFrozenPositionFlag;
     }
 
+    public Integer getDateType() {
+        return dateType;
+    }
+
+    public void setDateType(Integer dateType) {
+        this.dateType = dateType;
+    }
 }

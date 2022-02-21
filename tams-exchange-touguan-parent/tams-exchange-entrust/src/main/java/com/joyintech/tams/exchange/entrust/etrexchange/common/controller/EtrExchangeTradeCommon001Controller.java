@@ -1086,8 +1086,6 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
 		}catch (Exception e){
 			e.printStackTrace();
-			System.out.println("xxxxxxxxxxxxxxxx保存失败"+e.getMessage());
-			logger.info("xxxxxxxxxxxxxxxx保存失败"+e.getMessage());
 			return new Message<AjaxResult>().fail().setData(new AjaxResult("保存失败"));
 		}
 

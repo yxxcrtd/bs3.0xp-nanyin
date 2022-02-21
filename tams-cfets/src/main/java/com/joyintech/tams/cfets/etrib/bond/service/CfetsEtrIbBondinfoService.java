@@ -997,10 +997,12 @@ public class CfetsEtrIbBondinfoService extends BaseService{
          * 若老投管现金存在需累计
          */
         if (cashT != null){
-            bm.put(T0KYXJ, addToStr(bm.getBigDecimal(T0KYXJ), cashT));
+            //bm.put(T0KYXJ, addToStr(bm.getBigDecimal(T0KYXJ), cashT));
+            bm.put(T0KYXJ, cashT);
         }
         if (cashT1 != null){
-            bm.put(T1KYXJ, addToStr(bm.getBigDecimal(T1KYXJ), cashT1));
+           // bm.put(T1KYXJ, addToStr(bm.getBigDecimal(T1KYXJ), cashT1));
+            bm.put(T1KYXJ, cashT1);
         }
         if (realCash != null){
             bm.put(ZHXJ, addToStr(bm.getBigDecimal(ZHXJ), realCash));
@@ -1415,13 +1417,13 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     .put("acctId", null);
             // 查询头寸信息
             Map map = cfetsetrIbBondinfoMapper.queryPositionInfo(bm);
-            if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("T0KYXJ"))){
+           /* if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("T0KYXJ"))){
                 cashT=ArithmeticUtil.doAdd(new BigDecimal(map.get("T0KYXJ").toString()), cashT);
-            }
+            }*/
             item.setProAvailableCash(cashT);
-            if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("T1KYXJ"))){
+            /*if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("T1KYXJ"))){
                 cashT1=ArithmeticUtil.doAdd(new BigDecimal(map.get("T1KYXJ").toString()), cashT1);
-            }
+            }*/
             item.setProAvailableCash1(cashT1);
             if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("ZHXJ"))){
                 realCash=ArithmeticUtil.doAdd(new BigDecimal(map.get("ZHXJ").toString()), realCash);

@@ -1621,6 +1621,14 @@ public class EtrCommonCashPositionDealService extends BaseService {
         }
         return bigDecimal;
     }
-
+    /**
+     * 查询指令可用现金(新表)
+     *
+     * @param dto
+     * @return
+     */
+    public BigDecimal queryEtrAvailableCashNew(PtlCashPositionFlowDto dto) {
+        return etrCommonCashPositionMapper.queryEtrAvailableCashNew(dto);
+    }
 
 }
