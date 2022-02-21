@@ -5352,7 +5352,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 //		etrEntrustAdd.setMulUnit(dto.getMulTargetUnit());
 
 		List<EtrEntrustDetail> etrEntrustDetailList = new ArrayList<>();
-		baseEtrInvestInfoDto.setEtrEntrustDetailList(etrEntrustDetailList);
 		for(EtrExchangeTradePortfolioRequest item : dto.getPortfolioList()) {
 			EtrEntrustDetail etrEntrustDetail = new EtrEntrustDetail();
 			etrEntrustDetail.setPortfolioId(item.getPortfolioId());
@@ -5363,6 +5362,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			etrEntrustDetail.setTargetType(dto.getTargetType());
 			etrEntrustDetailList.add(etrEntrustDetail);
 		}
+		baseEtrInvestInfoDto.setEtrEntrustDetailList(etrEntrustDetailList);
 		return baseEtrInvestInfoDto;
 	}
 
