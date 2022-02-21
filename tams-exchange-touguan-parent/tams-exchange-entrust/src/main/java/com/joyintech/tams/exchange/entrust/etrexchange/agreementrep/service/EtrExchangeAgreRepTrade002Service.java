@@ -123,13 +123,15 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
      */
     public Page<EtrExchangeAgreRepTrade002Dto> findPositionsPage(EtrExchangeTradePositionsCommonRequest request) {
         Map<String,Object> pageParam = new HashMap<>();
-//        if (StringUtil.isNotEmpty(request.getPortfolioIdList())) {
-//            pageParam.put("portfolioIdList",request.getPortfolioIdList());
-//        }
-        pageParam.put("portfolioName",request.getPortfolioName());
-        pageParam.put("tradeMarket",request.getTradeMarket());
-        pageParam.put("secAcctId",request.getSecAcctId());
-        pageParam.put("finprodName",request.getFinprodName());
+        if (StringUtil.isNotEmpty(request.getPortfolioIdList())) {
+            pageParam.put("portfolioIdList",request.getPortfolioIdList());
+        }
+        if (StringUtil.isNotEmpty(request.getFinprodMarketId())) {
+            pageParam.put("finprodMarketId",request.getFinprodMarketId());
+        }
+        if (StringUtil.isNotEmpty(request.getTradeMarket())) {
+            pageParam.put("tradeMarket",request.getTradeMarket());
+        }
 
         pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
         pageParam.put("sysDate", iPlatformDate.getSysDate());

@@ -173,9 +173,9 @@ public class InstructionController {
         if (Strings.isNullOrEmpty(expireIncomeRateBean.getSettleDate())) {
             throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "交割日不可以为空");
         }
-        if (Strings.isNullOrEmpty(expireIncomeRateBean.getInvAim())) {
-            throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "投资目的不可以为空");
-        }
+//        if (Strings.isNullOrEmpty(expireIncomeRateBean.getInvAim())) {
+//            throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "投资目的不可以为空");
+//        }
 //        if (Strings.isNullOrEmpty(expireIncomeRateBean.getTradeMarketMode())) {
 //            throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "交易市场不可以为空");
 //        }

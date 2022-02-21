@@ -577,5 +577,9 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
             }
         }
     }
+    @Override
+    public BigDecimal queryEtrAvailableCashNew(PtlCashPositionFlowDto ptlCashPositionFlowDto) {
+        return etrCommonCashPositionDealService.queryEtrAvailableCashNew(ptlCashPositionFlowDto);
+    }
 
 }

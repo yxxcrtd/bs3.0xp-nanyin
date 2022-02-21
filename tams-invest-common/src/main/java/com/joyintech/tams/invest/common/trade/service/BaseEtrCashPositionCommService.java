@@ -109,4 +109,12 @@ public interface BaseEtrCashPositionCommService {
      * @return
      */
     CommonResult revokePosition(String tradeId);
+    /**
+     * 查询指令现金(新表)
+     * @param ptlCashPositionFlowDto 指令可用现金查询Dto
+     * @return
+     * @see
+     * @since 1.0
+     */
+    BigDecimal queryEtrAvailableCashNew(PtlCashPositionFlowDto ptlCashPositionFlowDto);
 }

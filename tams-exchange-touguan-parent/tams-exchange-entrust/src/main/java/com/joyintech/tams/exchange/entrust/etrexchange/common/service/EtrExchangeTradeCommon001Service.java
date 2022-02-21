@@ -5352,7 +5352,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 //		etrEntrustAdd.setMulUnit(dto.getMulTargetUnit());
 
 		List<EtrEntrustDetail> etrEntrustDetailList = new ArrayList<>();
-		baseEtrInvestInfoDto.setEtrEntrustDetailList(etrEntrustDetailList);
 		for(EtrExchangeTradePortfolioRequest item : dto.getPortfolioList()) {
 			EtrEntrustDetail etrEntrustDetail = new EtrEntrustDetail();
 			etrEntrustDetail.setPortfolioId(item.getPortfolioId());
@@ -5363,6 +5362,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			etrEntrustDetail.setTargetType(dto.getTargetType());
 			etrEntrustDetailList.add(etrEntrustDetail);
 		}
+		baseEtrInvestInfoDto.setEtrEntrustDetailList(etrEntrustDetailList);
 		return baseEtrInvestInfoDto;
 	}
 
@@ -5641,7 +5641,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			businessType = DictCodeListExt3.共通业务类型_大宗债券指令.getValue();
 		}
 		// add start
-		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())) {
+		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) /*&& dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())*/) {
 			if (StringUtils.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())) {
 				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_债券回售指令.getValue());
 				businessType = DictCodeListExt3.共通业务类型_债券回售指令.getValue();

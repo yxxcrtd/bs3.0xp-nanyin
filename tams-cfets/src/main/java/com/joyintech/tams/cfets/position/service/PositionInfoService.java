@@ -126,8 +126,10 @@ public class PositionInfoService {
                 .put("acctId", acctId);
         Map map = positionInfoMapper.queryEtrAvailableCash(inMap);
         BaseMap outMap = BaseMap.newMap(map);
-        rs.put("cashT", ArithmeticUtil.doAdd(cashT, outMap.getBigDecimal("T0KYXJ")));
-        rs.put("cashT1", ArithmeticUtil.doAdd(cashT1, outMap.getBigDecimal("T1KYXJ")));
+       // rs.put("cashT", ArithmeticUtil.doAdd(cashT, outMap.getBigDecimal("T0KYXJ")));
+       // rs.put("cashT1", ArithmeticUtil.doAdd(cashT1, outMap.getBigDecimal("T1KYXJ")));
+        rs.put("cashT", cashT);
+        rs.put("cashT1", cashT1);
         rs.put("realCash", ArithmeticUtil.doAdd(realCash, outMap.getBigDecimal("ZHXJ")));
         return rs;
     }
