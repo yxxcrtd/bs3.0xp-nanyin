@@ -110,9 +110,9 @@ public class JoyinbusinessCommonService extends BaseService {
         if(StringUtil.isNotEmpty(dto.getPs()) && StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_赎回.getValue())){
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.selectPortfolioIdList(param));
         }
-        String userId = SecurityUtil.getLoginUser().getUserName();
+        String userId = "yao1";//SecurityUtil.getLoginUser().getUserName();
         if (StringUtils.isNotEmpty(userId)) {
-            param.put("userId", SecurityUtil.getLoginUser().getUserName());
+            param.put("userId", "yao1");//SecurityUtil.getLoginUser().getUserName());
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.selectPortfolioIdList(param));
         }else{
             return null;
