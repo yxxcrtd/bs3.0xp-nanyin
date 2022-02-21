@@ -197,6 +197,7 @@
         SSAI.SEC_ACCT_NAME AS secAcctName,
         TEMP.FINPROD_ID    AS finprodId,
         FP.FINPROD_MARKET_ID AS finprodMarketId,
+        FP.FINPROD_NAME AS finpordName,
         CASE WHEN instr(FP.FINPROD_MARKET_ID,'.') > 0 THEN SUBSTR(FP.FINPROD_MARKET_ID,1,instr(FP.FINPROD_MARKET_ID,'.',-1,1)-1)
         ELSE FP.FINPROD_MARKET_ID
         END             AS secId,
@@ -224,7 +225,8 @@
         END AS floatingPL, -->
         FP.FINPROD_TYPE2                          AS finprodType2,
         FP.TRADE_MARKET                           AS tradeMarket,
-        SSAI.TRD_ACCT_ID                          AS acctNo
+        SSAI.TRD_ACCT_ID                          AS acctNo,
+        SDL.ITEM_VALUE AS tradeMarketStr
         FROM
         (
         SELECT
@@ -456,6 +458,7 @@
         STL_SEC_ACCT_INFO SSAI
         ON
         TEMP.SEC_ACCT_ID = SSAI.SEC_ACCT_ID
+        LEFT JOIN SYS_DATADICT_LIST SDL ON SDL.DICT_CODE = 'TRADE_PLACE' AND FP.TRADE_MARKET = SDL.ITEM_CODE
         WHERE
         FP.TRADE_MARKET IN (#{TRADE_PLACE_03}, #{TRADE_PLACE_04})
         AND FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
@@ -471,10 +474,22 @@
         <if test="finprodName != null and finprodName !=''">
             AND TEMP.FINPROD_ID = #{finprodName,jdbcType=VARCHAR}
         </if>
-        ) TEMP
+        ) TEMP WHERE 1=1
+        <!-- 关键字模糊查询 -->
+        <include refid="etrExchangePositionsAnd"/>
     </select>
+    <sql id="etrExchangePositionsAnd">
+        <if test="search != null and search != ''">
+            and (
+            PORTFOLIOID|| '|' || PORTFOLIONAME|| '|' ||  SECACCTID|| '|' ||  SECACCTNAME|| '|' ||
+            TRADEMARKET|| '|' ||  FINPRODID|| '|' ||  FINPORDNAME || '|' || TRADEMARKETSTR
+            like '%' || #{search} || '%'
+            )
+        </if>
+    </sql>
     <!-- 在途回购查询 -->
     <select id="findOnWayRepPage" parameterType="Map" resultType="com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangeOnWayRep002Dto">
+        SELECT * FROM(
         select
         trd_product_deal_add.portfolio_id portfolioId, /** 组合代码 **/
         PTL_PORTFOLIO.PORTFOLIO_NAME portfolioName, /** 组合名称 **/
@@ -484,19 +499,25 @@
         '已购回'
         else
         '未购回'
-        end as purStatus, /** 购回状态  **/
+        end as purStatus, /** 购回状态 **/
         case
-        when fin_trade_product.Mdate<![CDATA[<=]]> #{sysdate} then
-            #{YES_OR_NO_Y}
+        when fin_trade_product.Mdate <![CDATA[<=]]> #{sysdate} then
+        #{YES_OR_NO_Y}
         else
-            #{YES_OR_NO_N}
-        end as isExpire, /** 是否到期  **/
-        <!--case
-        when TPD1.trade_id is not null then
+        #{YES_OR_NO_N}
+        end as isExpire,
+        CASE
+        WHEN fin_trade_product.Mdate <![CDATA[<=]]> #{sysdate} THEN
+        '是'
+        ELSE
+        '否'
+        END AS isExpireStr, /** 是否到期 **/
+        case
+        when trd_product_deal_2.trade_id is not null then
         '已交收'
         else
         '未交收'
-        end as settleStatus, /** 交收状态 **/-->
+        end as settleStatus, /** 交收状态 **/
         fin_trade_product.TERM repDays, /** 回购天数 **/
         fin_trade_product.Mdate backDate, /** 回购到期日 **/
         fin_trade_product.Trade_Market market, /** 市场 **/
@@ -504,7 +525,7 @@
         nvl(fp.FINPROD_NAME,fp.FINPROD_ABBR) stockName,
         nvl(fp.FINPROD_MARKET_ID,fin_deal_pledge.pledge_finprod_id) stockCode,
         fin_deal_pledge.Pledge_Ratio * 100 discountRate, /** 折算率 **/
-        fin_deal_pledge.Pledge_Number repSecNum, /** 质押券数量  **/
+        fin_deal_pledge.Pledge_Number repSecNum, /** 质押券数量 **/
         fin_deal_pledge.Pledge_Face_Value pledgeFaceValue,/** 质押券面值**/
         fin_deal_pledge.Pledge_Face_Value * fin_deal_pledge.Pledge_Number pledStrdPrinAmt, /** 质押券面总额 **/
         fin_trade_product.Prin tradeAmt, /** 回购金额 **/
@@ -512,11 +533,11 @@
         fin_trade_product.vpay_date fristSettleDate, /** 首次结算日 **/
         fin_trade_product.mpay_date expireSettleDate, /** 到期结算日 **/
         case
-        when fin_trade_product.mpay_date<![CDATA[<=]]> #{sysdate} then
-            0
+        when fin_trade_product.mpay_date <![CDATA[<=]]> #{sysdate} then
+        0
         else
-        TO_NUMBER(fin_trade_product.mpay_date -  #{sysdate})
-        end as remainDays, /** 剩余日期  **/
+        TO_NUMBER(fin_trade_product.mpay_date - #{sysdate})
+        end as remainDays, /** 剩余日期 **/
         fin_trade_product.act_cap_days occupyDays, /** 实际占款天数 **/
         fin_trade_product.m_int_amt mIntAmt, /** 回购利息 **/
         fin_trade_product.m_Trade_Amt expireSettleAmt, /** 到期结算金额 **/
@@ -552,7 +573,7 @@
         where fin_trade_product.branch = '0'
         AND fin_trade_product.trade_market IN ('03', '04')
         <if test="tradeId != null and tradeId !=''">
-            AND fin_trade_product.finprod_id  = #{tradeId,jdbcType=VARCHAR}
+            AND fin_trade_product.finprod_id = #{tradeId,jdbcType=VARCHAR}
         </if>
         <if test="userId != null and userId != ''">
             AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
@@ -571,8 +592,25 @@
         </if>
         <if test="pledgeFinprodId != null and pledgeFinprodId != ''">
             AND fin_deal_pledge.pledge_finprod_id = #{pledgeFinprodId}
-        </if>
+        </if>)PRODUCT
+        LEFT JOIN SYS_DATADICT_LIST SDL1 ON SDL1.DICT_CODE ='PS' AND SDL1.ITEM_CODE = PRODUCT.ps
+        LEFT JOIN SYS_DATADICT_LIST SDL2 ON SDL2.DICT_CODE ='TRADE_MARKET' AND SDL2.ITEM_CODE = PRODUCT.market
+        WHERE 1=1
+        <!-- 关键字模糊查询 -->
+        <include refid="etrExchangeOnWayRepAnd"/>
     </select>
+    <sql id="etrExchangeOnWayRepAnd">
+        <if test="search != null and search != ''">
+            and (
+            portfolioId|| '|' || portfolioName|| '|' ||  ps|| '|' ||  SDL1.ITEM_VALUE || '|' ||
+            purStatus|| '|' ||  settleStatus|| '|' ||  isExpire || '|' || isExpireStr|| '|' ||
+            repDays|| '|' ||  backDate|| '|' ||  market || '|' || SDL2.ITEM_VALUE || '|' ||
+            stockName|| '|' ||  stockCode|| '|' ||  fristSettleDate || '|' || expireSettleDate|| '|' ||
+            tradeId|| '|' ||  intiTradeId
+            like '%' || #{search} || '%'
+            )
+        </if>
+    </sql>
     <select id="selectEtrEntrust" parameterType="Map" resultType="com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangeAgreRepTrade003Dto">
         select distinct * from (
         select
@@ -639,12 +677,15 @@
         mst_counter_party.counter_name counterName, /**交易对手名称**/
         etr_entrust.counter_trader counterTrader,/** 对手方交易员 **/
         etr_entrust.vdate vdate,/** 开始日期 **/
-        etr_entrust.mdate mdate/** 结束日期 **/
-        ,etr_entrust.CREATE_TIME
-        ,'' nextUser,
+        etr_entrust.mdate mdate,/** 结束日期 **/
+        etr_entrust.CREATE_TIME,
+        '' nextUser,
         etr_entrust.INV_MANAGER_ID invManagerId,
-        etr_entrust.ENTRUST_DATE entrustDate
-
+        etr_entrust.ENTRUST_DATE entrustDate,
+        SDL1.ITEM_VALUE entrustStatusString,
+        SDL2.ITEM_VALUE tradeMarketString,
+        SDL3.ITEM_VALUE tradePlatString,
+        SDL4.ITEM_VALUE psStr
         from etr_entrust                            /** 委托指令 **/
         inner JOIN etr_entrust_add                  /** 委托指令附属 **/
         ON    etr_entrust.entrust_id = etr_entrust_add.entrust_id
@@ -663,6 +704,10 @@
         ON    etr_entrust.counter_id = mst_counter_party.counter_id
         LEFT JOIN STL_CAPACCT_INFO SCI
         ON etr_entrust_add.Deal_Cur_Acct = SCI.ACCT_NO
+        LEFT JOIN SYS_DATADICT_LIST SDL1 ON SDL1.DICT_CODE ='ENTRUST_STATUS' AND SDL1.ITEM_CODE = etr_entrust.entrust_status
+        LEFT JOIN SYS_DATADICT_LIST SDL2 ON SDL2.DICT_CODE ='TRADE_PLACE' AND SDL2.ITEM_CODE = etr_entrust.trade_market
+        LEFT JOIN SYS_DATADICT_LIST SDL3 ON SDL3.DICT_CODE ='SHARES_TRADE_PLATFORM' AND SDL3.ITEM_CODE = etr_entrust.Trade_Plat
+        LEFT JOIN SYS_DATADICT_LIST SDL4 ON SDL4.DICT_CODE ='PS' AND SDL4.ITEM_CODE = etr_entrust.Ps
         where etr_entrust.TRADE_MARKET IN ('03','04')
         and etr_entrust_add.ASSET_TYPE1 = 'H01'
         <if test="entrustStatus != null and entrustStatus != ''">
@@ -759,7 +804,11 @@
             ,wfl_etr_entrust.CREATE_TIME
             ,SWBL.NEXT_USER nextUser,
             wfl_etr_entrust.INV_MANAGER_ID invManagerId,
-            wfl_etr_entrust.ENTRUST_DATE entrustDate
+            wfl_etr_entrust.ENTRUST_DATE entrustDate,
+            '流程中' entrustStatusString,
+            SDL2.ITEM_VALUE tradeMarketString,
+            SDL3.ITEM_VALUE tradePlatString,
+            SDL4.ITEM_VALUE psStr
             from wfl_etr_entrust
             inner JOIN wfl_etr_entrust_add
             ON    wfl_etr_entrust.entrust_id = wfl_etr_entrust_add.entrust_id
@@ -779,6 +828,9 @@
             LEFT JOIN STL_CAPACCT_INFO SCI
             ON wfl_etr_entrust_add.Deal_Cur_Acct = SCI.ACCT_NO
             LEFT JOIN SYS_WFL_BUSINESS_LIST SWBL ON SWBL.SEQ_NO = wfl_etr_entrust.WORKFLOW_ID and SWBL.PROCESS_STATE != 'END'
+            LEFT JOIN SYS_DATADICT_LIST SDL2 ON SDL2.DICT_CODE ='TRADE_PLACE' AND SDL2.ITEM_CODE = wfl_etr_entrust.trade_market
+            LEFT JOIN SYS_DATADICT_LIST SDL3 ON SDL3.DICT_CODE ='SHARES_TRADE_PLATFORM' AND SDL3.ITEM_CODE = wfl_etr_entrust.Trade_Plat
+            LEFT JOIN SYS_DATADICT_LIST SDL4 ON SDL4.DICT_CODE ='PS' AND SDL4.ITEM_CODE = wfl_etr_entrust.Ps
             where wfl_etr_entrust.TRADE_MARKET IN ('03','04')
             and wfl_etr_entrust_add.ASSET_TYPE1 = 'H01'
             <if test="entrustStatus != null and entrustStatus != ''">
@@ -806,10 +858,24 @@
                 AND wfl_etr_entrust.ENTRUST_DATE = to_date(#{date},'yyyy-MM-dd')
             </if>
         </if>
-        ) T1
+        ) T1 WHERE 1=1
+        <!-- 关键字模糊查询 -->
+        <include refid="etrExchangeEntrustAnd"/>
         ORDER BY T1.CREATE_TIME DESC
 
     </select>
+    <sql id="etrExchangeEntrustAnd">
+        <if test="search != null and search != ''">
+            and (
+            entrustId|| '|' || entrustStatus|| '|' ||  entrustStatusString|| '|' ||  portfolioName|| '|' ||
+            dealCurAcct|| '|' ||  tradeMarketString|| '|' ||  tradePlat || '|' || tradePlatString|| '|' ||
+            ps|| '|' ||  psStr|| '|' ||  fristSettleDate || '|' || expireSettleDate|| '|' ||
+            finprodId|| '|' ||  finprodMarketId|| '|' ||  finprodAbbr || '|' || secAcctId|| '|' ||
+            counterId|| '|' ||  vdate|| '|' ||  mdate || '|' || nextUser
+            like '%' || #{search} || '%'
+            )
+        </if>
+    </sql>
     <select id="getptlAcctNo" parameterType="Map" resultType="com.joyintech.framework.select.SelectOptionDto">
         select
         distinct

@@ -59,6 +59,9 @@ public class EtrExchangeAgreRepTrade003RequestDto{
     @ApiModelProperty(name="date",value="指令日期",example="A1")
     private String date;
 
+    @ApiModelProperty(name="keywords",value="关键字",example="A1")
+    private String keywords;
+
     public String getDate() {
         return date;
     }
@@ -123,4 +126,11 @@ public class EtrExchangeAgreRepTrade003RequestDto{
         this.pageMode = pageMode;
     }
 
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
 }
