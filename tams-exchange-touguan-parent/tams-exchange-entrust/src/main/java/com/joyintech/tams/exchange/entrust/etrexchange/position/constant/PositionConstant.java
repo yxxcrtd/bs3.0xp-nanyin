@@ -18,29 +18,44 @@ package com.joyintech.tams.exchange.entrust.etrexchange.position.constant;
  * @see PositionConstant
  * @since 1.0
  */
-public interface PositionConstant {
-	
-	/**
+public final class PositionConstant {
+
+    private PositionConstant() {
+    }
+
+    /**
      * 指令头寸类型
      */
-    String POSITION_TYPE_ETR = "ETR";
+    public static final String POSITION_TYPE_ETR = "ETR";
     /**
      * 交易头寸类型
      */
-    String POSITION_TYPE_TRD = "TRD";
+    public static final String POSITION_TYPE_TRD = "TRD";
 
     /**
      * 银行间现券
      */
-    String INTERF_TYPE_BOND001 = "Bond001";
+    public static final String INTERF_TYPE_BOND001 = "Bond001";
     
     /**
      * 场内现券
      */
-    String INTERF_TYPE_BOND002 = "Bond002";
+    public static final String INTERF_TYPE_BOND002 = "BOND002";
 
     /**
      * 场内可转债
      */
-    String INTERF_TYPE_BOND003 = "Bond003";
+    public static final String INTERF_TYPE_BOND003 = "BOND003";
+
+    /**
+     * 基金
+     */
+    public static final String INTERF_TYPE_FUND001 = "FUND001";
+
+    /**
+     * 竞价回购
+     */
+    public static final String INTERF_TYPE_REPO001 = "REPO001";
+
+
 }

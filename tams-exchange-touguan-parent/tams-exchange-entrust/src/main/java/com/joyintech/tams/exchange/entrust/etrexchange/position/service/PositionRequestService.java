@@ -1,5 +1,6 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.position.service;
 
+import com.google.common.collect.Lists;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -19,14 +20,18 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.joyintech.tams.constant.DictCodeList.是否_否;
+
 @Service
 public class PositionRequestService {
 
+    public static final String STANDAR_SEC_ID = "XN_PRODID999";
     @Autowired
     private CommonPositionEngineService commonPositionEngineService;
 
@@ -36,18 +41,22 @@ public class PositionRequestService {
      * @param entity
      */
     public void sendEtrExchangeTradeSaveRequest(EtrExchangeTradeSaveRequest entity) {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
+        Map<String, Object> resultMap = new HashMap<>();
         this.setCommonField(entity, resultMap);//设置公共字段，个性化的需要在具体接口中覆盖
         String type6 = commonPositionEngineService.getType6(entity.getFinprodId());
         String finprodType = entity.getFinprodType2();
-        if (StringUtil.equals(type6, DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue())) {
+        if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
             finprodType += "-" + type6;
         }
         String interType = commonPositionEngineService.getPositionInterType(PositionConstant.POSITION_TYPE_ETR, entity.getTradePlat(), finprodType, entity.getPs(), entity.getOptType(), entity.getClass().getName());
-        if (StringUtil.equals(interType, PositionConstant.INTERF_TYPE_BOND002)) {
+        if (PositionConstant.INTERF_TYPE_BOND002.equals(interType)) {
             this.bond002(entity, resultMap);
         } else if (PositionConstant.INTERF_TYPE_BOND003.equals(interType)) {
             this.bond003(entity, resultMap);
+        } else if (PositionConstant.INTERF_TYPE_FUND001.equals(interType)) {
+            this.fund001(entity, resultMap);
+        } else if (PositionConstant.INTERF_TYPE_REPO001.equals(interType)) {
+            this.repo001(entity, resultMap);
         } else {
             //TODO 根据条件判断调用其他接口
         }
@@ -92,7 +101,7 @@ public class PositionRequestService {
             settleSpreed = BussinessDictCodeList.清算速度_T加1.getValue();
         }
         resultMap.put("settleSpeed", settleSpreed);
-        resultMap.put("bidResult", DictCodeList.是否_否.getValue());
+        resultMap.put("bidResult", 是否_否.getValue());
         resultMap.put("purchModle", null);
         resultMap.put("tradePlace", entity.getTradeMarket());
         resultMap.put("sharesTradePlatform", entity.getTradePlat());
@@ -239,6 +248,134 @@ public class PositionRequestService {
                     applyBondSecList.add(BeanUtil.object2Map(bean));
                 }
                 resultMap.put("applyBondSecList", applyBondSecList);
+            }
+        }
+    }
+
+    /**
+     * 基金-指令    fund001
+     *
+     * @param entity
+     * @param resultMap
+     */
+    private void fund001(EtrExchangeTradeSaveRequest entity, Map<String, Object> resultMap) {
+        resultMap.put("interfaceType", PositionConstant.INTERF_TYPE_FUND001);
+        // 业务动作
+        resultMap.put("busiAct", DictCodeListExt3.业务动作_投资指令.getValue());
+
+        /**
+         * 业务类型	见数据字典：头寸业务类型
+         *
+         * IF 指令.交易方向 = 数据字典.交易方向.买入、卖出 THEN  数据字典. BUSI_TYPE_POSITION.基金交易
+         */
+        String ps = entity.getPs();
+        if (BussinessDictCodeList.交易方向_买入.getValue().equals(ps) || BussinessDictCodeList.交易方向_卖出.getValue().equals(ps)) {
+            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_基金交易.getValue());
+        }
+
+        resultMap.put("settleSpeed", null);
+
+        // 结算方式
+        resultMap.put("deliveryType", null);
+
+        // 当日回转
+        resultMap.put("sameDayTurn", 是否_否.getValue());
+
+        // ETF申赎方式
+        resultMap.put("ETFRedemptionMethod", null);
+
+        if (CollectionUtils.isNotEmpty(entity.getPortfolioList())) {
+            PositionRequestBaseBean bean;
+
+            // 组合数据集
+            List<Map<String, Object>> ptlList = new ArrayList<>(4);
+            for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
+                bean = new PositionRequestBaseBean(item);
+                //TODO "IF 指令.指令单位 = 手 THEN 指令.指令数量*10000
+                //IF 指令.指令单位 = 份 THEN 指令.指令数量"
+                bean.setSecAmount(entity.getEntrustNum());
+                ptlList.add(BeanUtil.object2Map(bean));
+            }
+            resultMap.put("ptlList", ptlList);
+
+            // 组合附属数据集 空
+            resultMap.put("ptlSubList", Lists.newArrayList());
+        }
+    }
+
+    /**
+     * 基金-指令    repo001
+     *
+     * @param entity
+     * @param resultMap
+     */
+    private void repo001(EtrExchangeTradeSaveRequest entity, Map<String, Object> resultMap) {
+        resultMap.put("interfaceType", PositionConstant.INTERF_TYPE_REPO001);
+        // 业务动作
+        resultMap.put("busiAct", DictCodeListExt3.业务动作_投资指令.getValue());
+
+        /**
+         * 业务类型	见数据字典：头寸业务类型
+         *
+         * "IF 指令.交易方向 = 数据字典.交易方向.质押券入库 THEN 数据字典. BUSI_TYPE_POSITION.通用回购债券入库
+         * IF 指令.交易方向 = 数据字典.交易方向.质押券入库 THEN 数据字典. BUSI_TYPE_POSITION.通用回购债券出库
+         * IF 指令.交易方向 = 数据字典.交易方向.首期 THEN  数据字典. BUSI_TYPE_POSITION.通用回购首期"
+         */
+        String ps = entity.getPs();
+        if (DictCodeListExt3.交易方向_质押券入库.getValue().equals(ps)) {
+            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_通用回购债券入库.getValue());
+        } else if (DictCodeListExt3.交易方向_质押券出库.getValue().equals(ps)) {
+            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_通用回购债券出库.getValue());
+        } else if (DictCodeListExt3.交易方向_首期.getValue().equals(ps)) {
+            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_通用回购首期.getValue());
+        }
+
+        resultMap.put("settleSpeed", null);
+
+        // 结算方式
+        resultMap.put("deliveryType", null);
+
+        // 交易平台
+        resultMap.put("tradePlace", null);
+
+        if (CollectionUtils.isNotEmpty(entity.getPortfolioList())) {
+            PositionRequestBaseBean bean;
+
+            // 组合数据集
+            List<Map<String, Object>> ptlList = new ArrayList<>(4);
+            for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
+                bean = new PositionRequestBaseBean(item);
+                bean.setSecAmount(null);
+
+                Map<String, Object> map = BeanUtil.object2Map(bean);
+                // 标准券代码
+                map.put("standardSecId", STANDAR_SEC_ID);
+                // 标准券总额  指令.准券总额
+                map.put("standardSecAmount", entity.getStandardBondVolume());
+                // TODO 再折算率	reConversionRate "调用【再折算率查询】参数：资金账户 = 指令资金账户
+                String reConversionRate = null;
+                map.put("reConversionRate", reConversionRate);
+                ptlList.add(map);
+            }
+            resultMap.put("ptlList", ptlList);
+
+            // 质押券数据集	ptlSecList
+            if (DictCodeListExt3.交易方向_质押券入库.getValue().equals(ps) || DictCodeListExt3.交易方向_质押券出库.getValue().equals(ps)) {
+                List<Map<String, Object>> ptlSecList = new ArrayList<>(4);
+                for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
+                    bean = new PositionRequestBaseBean(item);
+                    // 券面总额 指令.指令数量*100
+                    bean.setSecAmount(bean.getSecAmount().multiply(BigDecimal.valueOf(100)));
+
+                    Map<String, Object> map = BeanUtil.object2Map(bean);
+                    //融入券券面总额
+                    map.put("integrateSecAmount", null);
+                    //本方券券面总额 指令对应组合.指令数量*100
+                    map.put("ownSecAmount", null);
+
+                    ptlSecList.add(map);
+                }
+                resultMap.put("ptlSecList", ptlSecList);
             }
         }
     }

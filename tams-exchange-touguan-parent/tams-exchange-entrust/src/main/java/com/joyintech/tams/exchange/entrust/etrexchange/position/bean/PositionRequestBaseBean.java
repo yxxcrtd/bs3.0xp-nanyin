@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.entrust.etrexchange.position.bean;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * @author swwan
@@ -26,6 +27,12 @@ public class PositionRequestBaseBean {
     private String secAcctId;
 
     /**
+     * 资金账号
+     */
+    private String cashAcctId;
+
+
+    /**
      * 业务编号
      */
     private String tradeId;
@@ -36,9 +43,37 @@ public class PositionRequestBaseBean {
     private String etrId;
 
     /**
-     * 数量
+     * 交易数量
      */
     private BigDecimal secAmount;
+
+    /**
+     * 交易金额
+     */
+    private BigDecimal cashAmount;
+
+
+    public PositionRequestBaseBean() {
+    }
+
+    public PositionRequestBaseBean(EtrExchangeTradePortfolioRequest request) {
+        this.portfolioId = request.getPortfolioId();
+        this.finprodId = request.getFinprodId();
+        this.secAcctId = request.getSecAcctId();
+        this.cashAcctId = request.getAcctNo();
+        this.etrId = request.getEntrustId();
+        if (Objects.isNull(request.getDisRate())) {
+            this.secAmount = request.getEntrustNum();
+            this.cashAmount = request.getEntrustAmt();
+        } else {
+            if (Objects.nonNull(request.getEntrustNum())) {
+                this.secAmount = request.getDisRate().multiply(request.getEntrustNum());
+            }
+            if (Objects.nonNull(request.getEntrustAmt())) {
+                this.cashAmount = request.getDisRate().multiply(request.getEntrustAmt());
+            }
+        }
+    }
 
     public String getPortfolioId() {
         return portfolioId;
@@ -62,6 +97,14 @@ public class PositionRequestBaseBean {
 
     public void setSecAcctId(String secAcctId) {
         this.secAcctId = secAcctId;
+    }
+
+    public String getCashAcctId() {
+        return cashAcctId;
+    }
+
+    public void setCashAcctId(String cashAcctId) {
+        this.cashAcctId = cashAcctId;
     }
 
     public String getTradeId() {
@@ -88,13 +131,11 @@ public class PositionRequestBaseBean {
         this.secAmount = secAmount;
     }
 
-    public PositionRequestBaseBean() {
+    public BigDecimal getCashAmount() {
+        return cashAmount;
     }
 
-    public PositionRequestBaseBean(EtrExchangeTradePortfolioRequest request) {
-        this.portfolioId = request.getPortfolioId();
-        this.finprodId = request.getFinprodId();
-        this.secAcctId = request.getSecAcctId();
-        this.etrId = request.getEntrustId();
+    public void setCashAmount(BigDecimal cashAmount) {
+        this.cashAmount = cashAmount;
     }
 }
