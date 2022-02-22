@@ -475,8 +475,12 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
         }
         AjaxResult ajax  = etrExchangeAgreRepTrade001Service.checkSave(dto,result);
         if (ajax != null && !StringUtil.isEmptyList(ajax.getErrorList())) {
+            for(ValidMessage validMessage:ajax.getErrorList()) {
+                errorList.add(new ValidMessage(validMessage.getField(), this.getMessage(validMessage.getMessage())));
+            }
+            ajax.setErrorList(errorList);
             return new Message<AjaxResult>().success().setData(ajax);
-    }
+        }
         //正回购、质押券出库
         if (DictCodeListExt3.交易方向_首期.getValue().equals(dto.getPs()) && StringUtil.equals(dto.getRepPs(),DictCodeList.回购拆借方向_正回购.getValue())) {
             Map<String, Object> param = new HashMap<String, Object>();
