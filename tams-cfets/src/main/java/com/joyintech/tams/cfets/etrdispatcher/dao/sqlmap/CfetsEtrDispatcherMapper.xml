@@ -52,13 +52,13 @@
     then (CASE WHEN ETR_ENTRUST.ENTRUST_NUM != '0' THEN trunc(nvl(NVL(T7.FINISH_AMT, 0)+ NVL(T5.ENT_FINISH_AMT*100, 0),0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100  ELSE 0 END )
     when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' AND ETR_ENTRUST.ENTRUST_NUM = 0 then 0
     when ETR_ENTRUST.ENTRUST_AMT = 0  then 0
-    else trunc(nvl(nvl(T7.FINISH_AMT, 0) + nvl(T5.Ent_Finish_Amt, 0), 0) / ETR_ENTRUST.ENTRUST_AMT,4) * 100 end  as exeProgress,
+    else trunc(nvl(nvl(T7.FINISH_AMT, 0) + nvl(T5.ENT_FINISH_AMT, 0), 0) / ETR_ENTRUST.ENTRUST_AMT,4) * 100 end  as exeProgress,
 
     case when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' AND ETR_ENTRUST.ENTRUST_NUM != 0
-    then (CASE WHEN ETR_ENTRUST.ENTRUST_NUM != '0' THEN trunc((NVL(CB.totalShareAmt,nvl(C2B.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 ELSE 0 END )
+    then (CASE WHEN ETR_ENTRUST.ENTRUST_NUM != '0' THEN trunc((NVL(CB.totalShareAmt,nvl(C2B.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0)+NVL(T5.FINISH_AMT*100,0))/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 ELSE 0 END )
     when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' AND ETR_ENTRUST.ENTRUST_NUM = 0 then 0
     when ETR_ENTRUST.ENTRUST_AMT = 0  then 0
-    else trunc((nvl(C.totalShareAmt, nvl(C2.FPRICE_AMT, 0)) + nvl(T6.FINISH_AMT, 0)) /
+    else trunc((nvl(C.totalShareAmt, nvl(C2.FPRICE_AMT, 0)) + nvl(T6.FINISH_AMT, 0)+NVL(T5.FINISH_AMT,0)) /
     ETR_ENTRUST.ENTRUST_AMT, 4) * 100 end             as dealProgress,
 
     case when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' then (NVL(T7.FINISH_AMT,0)+NVL(T5.ENT_FINISH_AMT*100,0))/10000
@@ -123,7 +123,7 @@
         SUM(FINISH_AMT) as FINISH_AMT,SUM(Ent_Finish_Amt) as Ent_Finish_Amt
         FROM
         ETR_FINISH_STATUS
-        where ENTRUST_ID != TRADE_ID
+        where ENTRUST_ID = TRADE_ID
         GROUP BY
         ENTRUST_ID) T5
         ON ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
@@ -287,13 +287,13 @@
     then trunc(nvl(NVL(T7.FINISH_AMT, 0)+ NVL(T5.ENT_FINISH_AMT*100, 0),0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100
     when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' AND ETR_ENTRUST.ENTRUST_NUM = 0 then 0
     when ETR_ENTRUST.ENTRUST_AMT = 0  then 0
-    else trunc(nvl(nvl(T7.FINISH_AMT, 0) + nvl(T5.Ent_Finish_Amt, 0), 0) / ETR_ENTRUST.ENTRUST_AMT,4) * 100 end  as exeProgress,
+    else trunc(nvl(nvl(T7.FINISH_AMT, 0) + nvl(T5.ENT_FINISH_AMT, 0), 0) / ETR_ENTRUST.ENTRUST_AMT,4) * 100 end  as exeProgress,
 
     case when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' AND ETR_ENTRUST.ENTRUST_NUM != 0
-    then trunc((NVL(CB.totalShareAmt,nvl(C2B.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100
+    then trunc((NVL(CB.totalShareAmt,nvl(C2B.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0)+NVL(T5.FINISH_AMT*100,0))/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100
     when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' AND ETR_ENTRUST.ENTRUST_NUM = 0 then 0
     when ETR_ENTRUST.ENTRUST_AMT = 0  then 0
-    else trunc((nvl(C.totalShareAmt, nvl(C2.FPRICE_AMT, 0)) + nvl(T6.FINISH_AMT, 0)) /
+    else trunc((nvl(C.totalShareAmt, nvl(C2.FPRICE_AMT, 0)) + nvl(T6.FINISH_AMT, 0)+NVL(T5.FINISH_AMT,0)) /
     ETR_ENTRUST.ENTRUST_AMT, 4) * 100 end             as dealProgress,
 
     case when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' then (NVL(T7.FINISH_AMT,0)+NVL(T5.ENT_FINISH_AMT*100,0))/10000
@@ -353,7 +353,7 @@
     SUM(FINISH_AMT) as FINISH_AMT,SUM(Ent_Finish_Amt) as Ent_Finish_Amt
     FROM
     ETR_FINISH_STATUS
-    where ENTRUST_ID != TRADE_ID
+    where ENTRUST_ID = TRADE_ID
     GROUP BY
     ENTRUST_ID) T5
     ON

@@ -101,7 +101,7 @@
         SUM(FINISH_AMT) as FINISH_AMT,SUM(Ent_Finish_Amt) as Ent_Finish_Amt
         FROM
         ETR_FINISH_STATUS
-        where ENTRUST_ID != TRADE_ID
+        where ENTRUST_ID = TRADE_ID
         GROUP BY
         ENTRUST_ID) T5
         ON
@@ -280,7 +280,7 @@
         SUM(FINISH_AMT) as FINISH_AMT,SUM(Ent_Finish_Amt) as Ent_Finish_Amt
         FROM
         ETR_FINISH_STATUS
-        where ENTRUST_ID != TRADE_ID
+        where ENTRUST_ID = TRADE_ID
         GROUP BY
         ENTRUST_ID) T5
         ON

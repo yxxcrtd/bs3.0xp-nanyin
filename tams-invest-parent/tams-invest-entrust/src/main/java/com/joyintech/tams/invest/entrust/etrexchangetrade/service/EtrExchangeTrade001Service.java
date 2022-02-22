@@ -478,7 +478,11 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 	public BigDecimal selectAccAvailableCash(Map<String, Object> param) {
 		Date sysDate = DateUtil.platDateFromCache();
 		param.put("sysDate", DateUtil.format(sysDate));
-		return (BigDecimal) etrCommonService.getProAvailableCash(param).get("cashT");
+		Map<String, Object> map = etrCommonService.getProAvailableCash(param);
+		if (StringUtil.isNotEmpty(map)){
+			return (BigDecimal)map.get("cashT");
+		}
+		return BigDecimal.ZERO;
 	}
 
 	/**
