@@ -1,14 +1,14 @@
 package com.joyintech.tams.constant;
 
+import com.joyintech.framework.base.BaseDictCodeList;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.StringUtil;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.joyintech.framework.base.BaseDictCodeList;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.StringUtil;
 
 /**
  * 数据字典明细枚举
@@ -1697,10 +1697,29 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     头寸业务类型_买断式回购首期(DictCode.头寸业务类型,"10","买断式回购首期"),
     头寸业务类型_质押式回购到期(DictCode.头寸业务类型,"06","质押式回购到期"),
     头寸业务类型_债券借贷首期(DictCode.头寸业务类型,"12","债券借贷首期"),
-
-    头寸业务类型_配债(DictCode.头寸业务类型,"12","配债"),
-    头寸业务类型_债转股(DictCode.头寸业务类型,"12","债转股"),
-    头寸业务类型_上市流通(DictCode.头寸业务类型,"12","上市流通"),
+    头寸业务类型_协议回购首期(DictCode.头寸业务类型, "09", "协议回购首期"),
+    头寸业务类型_协议回购中途换券(DictCode.头寸业务类型, "10", "协议回购中途换券"),
+    头寸业务类型_协议回购提前购回(DictCode.头寸业务类型, "11", "协议回购提前购回"),
+    头寸业务类型_协议回购到期购回(DictCode.头寸业务类型, "12", "协议回购到期购回"),
+    头寸业务类型_协议回购到期续作(DictCode.头寸业务类型, "13", "协议回购到期续作"),
+    头寸业务类型_协议回购解除质押(DictCode.头寸业务类型, "14", "协议回购解除质押"),
+    头寸业务类型_网下申购(DictCode.头寸业务类型, "15", "网下申购"),
+    头寸业务类型_网上申购(DictCode.头寸业务类型, "16", "网上申购"),
+    头寸业务类型_配债(DictCode.头寸业务类型, "17", "配债"),
+    头寸业务类型_债转股(DictCode.头寸业务类型, "18", "债转股"),
+    头寸业务类型_(DictCode.头寸业务类型, "19", "通用回购债券入库"),
+    头寸业务类型_通用回购债券入库(DictCode.头寸业务类型, "20", "通用回购债券出库"),
+    头寸业务类型_通用回购首期(DictCode.头寸业务类型, "21", "通用回购首期"),
+    头寸业务类型_通用回购到期(DictCode.头寸业务类型, "22", "通用回购到期"),
+    头寸业务类型_上市流通(DictCode.头寸业务类型, "23", "上市流通"),
+    头寸业务类型_限售解禁(DictCode.头寸业务类型, "24", "限售解禁"),
+    头寸业务类型_股票交易(DictCode.头寸业务类型, "25", "股票交易"),
+    头寸业务类型_配股(DictCode.头寸业务类型, "26", "配股"),
+    头寸业务类型_股票分红(DictCode.头寸业务类型, "27", "股票分红"),
+    头寸业务类型_股票送股(DictCode.头寸业务类型, "28", "股票送股"),
+    头寸业务类型_红股上市(DictCode.头寸业务类型, "29", "红股上市"),
+    头寸业务类型_基金交易(DictCode.头寸业务类型, "30", "基金交易"),
+    头寸业务类型_基金存续期(DictCode.头寸业务类型, "31", "基金存续期"),
     /**
      * 头寸业务动作
      */
