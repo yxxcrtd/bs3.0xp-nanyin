@@ -586,7 +586,10 @@
     </select>
 
     <update id="updatePosition" parameterType="map">
-        UPDATE ETR_CASH_POSITION SET AMOUNT = AMOUNT + #{amount},is_Exist_New=#{isExistNew}
+        UPDATE ETR_CASH_POSITION SET AMOUNT = AMOUNT + #{amount}
+        <if test="isExistNew != null and isExistNew!=''">
+            ,is_Exist_New=#{isExistNew}
+        </if>
         where CDATE between TO_DATE(#{minDate}, 'yyyy-MM-dd') AND TO_DATE(#{maxDate}, 'yyyy-MM-dd')
         <include refid="whereSql"/>
     </update>
