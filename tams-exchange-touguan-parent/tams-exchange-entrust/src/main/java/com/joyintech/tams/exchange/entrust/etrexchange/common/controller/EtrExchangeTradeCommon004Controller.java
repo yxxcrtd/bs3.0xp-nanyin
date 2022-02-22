@@ -209,6 +209,11 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
         model.addAttribute("useInterfQuoteFlag", useInterfQuoteFlag);
         model.addAttribute("wsUri", wsHost + wsUrl);
 
+        model.addAttribute("currentTab", "jj");
+        if (StringUtil.isNotEmpty(entity.getTradePlat()) &&
+                entity.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())){
+            model.addAttribute("currentTab", "dz");
+        }
         return super.init(model);
     }
     /**
