@@ -60,7 +60,9 @@ public class MockQuoteData {
                 integratedQuote.setContractId((contractIds[i - 1] + i * 2) + "");
                 integratedQuote.setLiaisonName(liaisonName[i - 1]);
                 integratedQuote.setLiaisonTel(liaisonTel[i - 1]);
+                integratedQuote.setOrigCbpconferId((contractIds[i-1] + i * 2) + "");
             } else {
+                integratedQuote.setOrigCbpconferId((contractIds[i-3] + i * 2) + "");
                 integratedQuote.setContractId((contractIds[i - 3] + i * 2) + "");
                 integratedQuote.setLiaisonName(liaisonName[i - 3]);
                 integratedQuote.setLiaisonTel(liaisonTel[i - 3]);
