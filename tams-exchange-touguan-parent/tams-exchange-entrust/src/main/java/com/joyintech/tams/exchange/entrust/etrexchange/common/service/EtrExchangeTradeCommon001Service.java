@@ -2893,13 +2893,13 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	private String getTradePlat(String currentTab, String tradeMarket) {
 		String tradePlat = DictCodeList.交易平台_竞价撮合平台.getValue();
 		if (StringUtils.isNotEmpty(currentTab)) {
-			if ((currentTab.equals("dz") || currentTab.equals(DictCodeList.交易平台_大宗交易平台.getValue()))
+			if (("dz".equals(currentTab) || currentTab.equals(DictCodeList.交易平台_大宗交易平台.getValue()))
 					&& DictCodeListExt1.交易场所_深圳证券交易所.getValue().equals(tradeMarket)) {
 				tradePlat = DictCodeList.交易平台_综合协议交易平台.getValue();
-			} else if ((currentTab.equals("dz") || currentTab.equals(DictCodeList.交易平台_大宗交易平台.getValue()))
+			} else if (("dz".equals(currentTab) || currentTab.equals(DictCodeList.交易平台_大宗交易平台.getValue()))
 					&& DictCodeListExt1.交易场所_上海证券交易所.getValue().equals(tradeMarket)) {
 				tradePlat = DictCodeList.交易平台_大宗交易平台.getValue();
-			} else if (currentTab.equals("gd") || currentTab.equals(DictCodeList.交易平台_固定收益平台.getValue())) {
+			} else if ("gd".equals(currentTab) || currentTab.equals(DictCodeList.交易平台_固定收益平台.getValue())) {
 				tradePlat = DictCodeList.交易平台_固定收益平台.getValue();
 			}
 		}
@@ -2961,7 +2961,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		for(Function<T, String> func:chkFunc){
 			String addMsg=func.apply(t);
 			etrCommonService.spliceMessage(confirmMsg, addMsg);
-			if(!StringUtil.isEmpty(addMsg))break;
+			if(!StringUtil.isEmpty(addMsg)) {
+				break;
+			}
 		};
 		if(StringUtil.isEmpty(confirmMsg)&&null!=callback){
 			callback.accept(t);
@@ -2993,7 +2995,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			},obj-> {
 				return etrCommonService.checkIsBlank(DateUtil.format(dzImportDto.getMdate()), "EtrExchangeTrade001.mdate", lineNo);
 			},obj-> {
-				return etrCommonService.checkIsPlateDate(DateUtil.format(dzImportDto.getVdate()), DateUtil.format(dzImportDto.getMdate()), lineNo);
+				return EtrCommonService.checkIsPlateDate(DateUtil.format(dzImportDto.getVdate()), DateUtil.format(dzImportDto.getMdate()), lineNo);
 			});
 			// 组合为空与组合是否存在
 			checkElement(dzImportDto,promptMsg,null,obj-> {
@@ -3014,8 +3016,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			if(secAcctInfoList!=null&&secAcctInfoList.size()>0&&secAcctInfoList.get(0)!=null){
 				if(!StringUtil.isNotEmpty(dzImportDto.getSecAcctId())){
 					List<LinkedHashMap<String,Object>> secAcctInfoMapList = (ArrayList) secAcctInfoList.get(0).getObject();
-					if(secAcctInfoMapList.get(0)!=null)
+					if(secAcctInfoMapList.get(0)!=null) {
 						dzImportDto.setSecAcctId((String) secAcctInfoMapList.get(0).get("secAcctId"));
+					}
 				}
 			}
 			// 资产代码为空与资产是否存在(债券，基金，股票)

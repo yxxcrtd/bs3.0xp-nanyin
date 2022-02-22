@@ -38,4 +38,9 @@ public interface PositionConstant {
      * 场内现券
      */
     String INTERF_TYPE_BOND002 = "Bond002";
+
+    /**
+     * 场内可转债
+     */
+    String INTERF_TYPE_BOND003 = "Bond003";
 }
