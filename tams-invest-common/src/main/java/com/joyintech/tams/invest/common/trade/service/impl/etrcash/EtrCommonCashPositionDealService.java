@@ -901,6 +901,7 @@ public class EtrCommonCashPositionDealService extends BaseService {
         position.setWorkflowId(positionFlowDto.getWorkflowId());
         position.setCreateUser(positionFlowDto.getCreateUser());
         position.setCreateDept(positionFlowDto.getCreateDept());
+        position.setIsExistNew(positionFlowDto.getIsExistNew());
         return position;
     }
 
@@ -1621,6 +1622,14 @@ public class EtrCommonCashPositionDealService extends BaseService {
         }
         return bigDecimal;
     }
-
+    /**
+     * 查询指令可用现金(新表)
+     *
+     * @param dto
+     * @return
+     */
+    public BigDecimal queryEtrAvailableCashNew(PtlCashPositionFlowDto dto) {
+        return etrCommonCashPositionMapper.queryEtrAvailableCashNew(dto);
+    }
 
 }

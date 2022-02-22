@@ -30,6 +30,7 @@ import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -245,6 +246,9 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 		if (StringUtil.isNotEmpty(portfolioId)) {
 			param.put("portfolioIdList",
 					StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
+		}
+		if(CollectionUtils.isNotEmpty(request.getEntrustTypeList())){
+			param.put("entrustTypeList", request.getEntrustTypeList());
 		}
 		param.put("search_isNumberFlag", BaseMap.isNumeric(request.getSearch()));
 		param.put("tradePlat",request.getTradePlat());

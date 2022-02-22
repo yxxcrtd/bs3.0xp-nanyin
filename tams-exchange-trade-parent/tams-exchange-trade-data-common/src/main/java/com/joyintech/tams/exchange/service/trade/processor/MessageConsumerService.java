@@ -24,10 +24,12 @@ import com.joyintech.redis.core.data.RedisHash;
 import com.joyintech.tams.exchange.common.bean.investment.EntrustOpeBean;
 import com.joyintech.tams.exchange.common.constant.InstructionFlag;
 import com.joyintech.tams.exchange.common.constant.InstructionStatus;
+import com.joyintech.tams.exchange.common.constant.TradePlat;
 import com.joyintech.tams.exchange.common.constant.joyin.AutoReceiveFlag;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.InstructionDetail;
 import com.joyintech.tams.exchange.common.db.domain.InstructionPledge;
+import com.joyintech.tams.exchange.common.enums.EntrustBussTypeEnum;
 import com.joyintech.tams.exchange.common.utils.JsonUtils;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionDetailService;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionPledgeService;
@@ -107,6 +109,17 @@ public class MessageConsumerService {
         Map<String, Set<String>> instructionTraderMap = new HashMap<>();
         List<EntrustOpeBean> entrustList = new ArrayList<>();
         if (instructionEtrEntrustList.size() > 0) {
+        	//非交易业务指令，设置交易平台为 沪深竞价撮合平台
+        	instructionEtrEntrustList.forEach(instruction -> {
+        		String entrustBussType = instruction.getEntrustBussType();
+        		if(EntrustBussTypeEnum.BOND_REPURCHASE.value.equals(entrustBussType) 
+        				|| EntrustBussTypeEnum.ALLOTMENT_DEBT.value.equals(entrustBussType) 
+        				|| EntrustBussTypeEnum.CONVERTIBLE_BOND_SUBSCRIPTION.value.equals(entrustBussType) 
+        				|| EntrustBussTypeEnum.STANDARD_COUPONS_IN_AND_OUT.value.equals(entrustBussType) 
+        				|| EntrustBussTypeEnum.DEBT_TO_EQUITY.value.equals(entrustBussType) ) {
+        			instruction.setTradePlat(TradePlat.NORMAL.value);
+        		}
+        	});
             instructionEtrEntrustList.forEach(instruction -> {
                 // 为指令设置trader
                 Set<String> tradeSet = instructionTraderMap.getOrDefault(instruction.getEntrustId(), new HashSet<>());

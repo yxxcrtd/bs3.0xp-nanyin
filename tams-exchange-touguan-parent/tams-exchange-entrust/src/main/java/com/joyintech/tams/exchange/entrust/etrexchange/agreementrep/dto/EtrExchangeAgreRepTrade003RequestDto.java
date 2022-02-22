@@ -44,6 +44,9 @@ public class EtrExchangeAgreRepTrade003RequestDto{
     @ApiModelProperty(name="portfolioName",value="组合名称",example="A1")
     private String portfolioName;
 
+    @ApiModelProperty(name="tradeMarket",value="交易场所",example="A1")
+    private String tradeMarket;
+
     @ApiModelProperty(name="finprodId",value="质押券",example="A1")
     private String finprodId;
 
@@ -56,15 +59,29 @@ public class EtrExchangeAgreRepTrade003RequestDto{
     @ApiModelProperty(name="manager",value="投资经理",example="A1")
     private String manager;
 
-    @ApiModelProperty(name="date",value="指令日期",example="A1")
-    private String date;
+    @ApiModelProperty(name="startDate",value="指令开始日期",example="A1")
+    private String startDate;
 
-    public String getDate() {
-        return date;
+    @ApiModelProperty(name="endDate",value="指令结束日期",example="A1")
+    private String endDate;
+
+    @ApiModelProperty(name="keywords",value="关键字",example="A1")
+    private String keywords;
+
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
     public String getPortfolioName() {
@@ -73,6 +90,14 @@ public class EtrExchangeAgreRepTrade003RequestDto{
 
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
+    }
+
+    public String getTradeMarket() {
+        return tradeMarket;
+    }
+
+    public void setTradeMarket(String tradeMarket) {
+        this.tradeMarket = tradeMarket;
     }
 
     public String getFinprodId() {
@@ -123,4 +148,11 @@ public class EtrExchangeAgreRepTrade003RequestDto{
         this.pageMode = pageMode;
     }
 
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
 }

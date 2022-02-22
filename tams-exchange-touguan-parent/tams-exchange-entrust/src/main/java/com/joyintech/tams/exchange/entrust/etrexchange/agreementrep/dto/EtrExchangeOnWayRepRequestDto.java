@@ -34,8 +34,8 @@ import java.util.Date;
 @ApiModel(value="在途回购查询请求参数",description="在途回购查询请求参数")
 public class EtrExchangeOnWayRepRequestDto{
 
-//    @ApiModelProperty(name="search",value="关键字",example="A1")
-//    private String search;
+    @ApiModelProperty(name="search",value="关键字",example="A1")
+    private String search;
 
     @ApiModelProperty(name="pageMode",value="分页对象",example="{pageSize: 10,pageNo: 1, sort: 'name', direction: 'asc'}")
     private PageMode pageMode;
@@ -133,13 +133,13 @@ public class EtrExchangeOnWayRepRequestDto{
 //        this.pledgeFinprodId = pledgeFinprodId;
 //    }
 
-//    public String getSearch() {
-//        return search;
-//    }
-//
-//    public void setSearch(String search) {
-//        this.search = search;
-//    }
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
+    }
 
     public String getPortfolioName() {
         return portfolioName;

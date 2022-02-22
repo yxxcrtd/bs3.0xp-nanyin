@@ -123,14 +123,19 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
      */
     public Page<EtrExchangeAgreRepTrade002Dto> findPositionsPage(EtrExchangeTradePositionsCommonRequest request) {
         Map<String,Object> pageParam = new HashMap<>();
-//        if (StringUtil.isNotEmpty(request.getPortfolioIdList())) {
-//            pageParam.put("portfolioIdList",request.getPortfolioIdList());
-//        }
-        pageParam.put("portfolioName",request.getPortfolioName());
-        pageParam.put("tradeMarket",request.getTradeMarket());
-        pageParam.put("secAcctId",request.getSecAcctId());
-        pageParam.put("finprodName",request.getFinprodName());
+        if (StringUtil.isNotEmpty(request.getPortfolioIdList())) {
+            pageParam.put("portfolioIdList",request.getPortfolioIdList());
+        }
+        if (StringUtil.isNotEmpty(request.getFinprodMarketId())) {
+            pageParam.put("finprodMarketId",request.getFinprodMarketId());
+        }
+        if (StringUtil.isNotEmpty(request.getTradeMarket())) {
+            pageParam.put("tradeMarket",request.getTradeMarket());
+        }
 
+        pageParam.put("portfolioName", request.getPortfolioName());
+        pageParam.put("finprodName", request.getFinprodName());
+        pageParam.put("search",request.getSearch());
         pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
         pageParam.put("sysDate", iPlatformDate.getSysDate());
         pageParam.put("POSITION_TYPE_03", BussinessDictCodeList.持仓类型_实际.getValue());
@@ -167,6 +172,7 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
      */
     public Page<EtrExchangeOnWayRep002Dto> findOnWayRepPage(EtrExchangeOnWayRepRequestDto request) {
         Map<String,Object> pageParam = new HashMap<>();
+        pageParam.put("search", request.getSearch());
         pageParam.put("userId",SecurityUtil.getLoginUser().getUserName());
         pageParam.put("tradeId",request.getTradeId());
         pageParam.put("sysdate", iPlatformDate.getSysDate());
@@ -197,6 +203,23 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         }
     }
 
+    private String mathEntrustPropName(String prop){
+        switch (prop) {
+            case SB_SHXYHGCJ:
+                return DictCodeListExt3.交易方向_正回购.getCodeName();
+            case SB_SHXYHGDQXZ:
+                return DictCodeListExt3.交易方向_到期续做.getCodeName();
+            case SB_SHXYHGJCZY:
+                return DictCodeListExt3.交易方向_解除质押.getCodeName();
+            case SB_SHXYHGHJSB:
+                return DictCodeListExt3.交易方向_中途换券.getCodeName();
+            case SB_SHXYHGTQZZSB:
+                return DictCodeListExt3.交易方向_提前购回.getCodeName();
+            default:
+                return prop;
+        }
+    }
+
     /**
      * 调用非公开行情接口
      * @param request
@@ -218,6 +241,31 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
             }
         }
         //接行情数据 end
+
+        //关键字筛选
+        if(StringUtil.isNotEmpty(request.getSearch())){
+            //请求编号
+            repurchaseQuotes = repurchaseQuotes
+                    .stream()
+                    .filter(item -> StringUtil.contains(
+                            (item.get("cbpconferId") == null ? "" : item.get("cbpconferId").toString() + '|')
+                                    + (item.get("entrustProp") == null ? "" : mathEntrustProp(item.get("entrustProp").toString()) + '|')
+                                    + (item.get("entrustProp") == null ? "" : mathEntrustPropName(item.get("entrustProp").toString()) + '|')
+                                    + (item.get("bprsrcStatus") == null ? "" : item.get("bprsrcStatus").toString() + '|')
+                                    + (item.get("stockCode") == null ? "" : item.get("stockCode").toString() + '|')
+                                    + (item.get("stockName") == null ? "" : item.get("stockName").toString() + '|')
+                                    + (item.get("firstExchdate") == null ? "" : item.get("firstExchdate").toString() + '|')
+                                    + (item.get("repurchaseDate") == null ? "" : item.get("repurchaseDate").toString() + '|')
+                                    + (item.get("settleEndDate") == null ? "" : item.get("settleEndDate").toString() + '|')
+                                    + (item.get("oldImpawnCode") == null ? "" : item.get("oldImpawnCode").toString() + '|')
+                                    + (item.get("origCbpconferId") == null ? "" : item.get("origCbpconferId").toString() + '|')
+                                    + (item.get("oppoTraderId") == null ? "" : item.get("oppoTraderId").toString() + '|')
+                                    + (item.get("oppoAgency") == null ? "" : item.get("oppoAgency").toString() + '|')
+                                    + (item.get("traderId") == null ? "" : item.get("traderId").toString() + '|')
+                                    + (item.get("remark") == null ? "" : item.get("remark").toString() + '|')
+                            , request.getSearch()))
+                    .collect(Collectors.toList());
+        }
 
         //条件筛选
         if(StringUtil.isNotEmpty(request.getRequestId())){
@@ -421,6 +469,7 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
     public Page<EtrExchangeAgreRepTrade003Dto> selectEtrEntrust(EtrExchangeAgreRepTrade003RequestDto request){
         Map<String,Object> param = new HashMap<>();
 //        param.put("entrustStatus", request.getEntrustStatus());
+        param.put("search",request.getKeywords());
         param.put("entrustId", request.getEntrustId());
         param.put("sysDate",iPlatformDate.getSysDateStr());
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
@@ -432,10 +481,12 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         param.put("UNIT_01", DictCodeListExt3.交易单位_张.getValue());
         param.put("UNIT_04", DictCodeListExt3.交易单位_手.getValue());
         param.put("portfolioName", request.getPortfolioName());
+        param.put("tradeMarket", request.getTradeMarket());
         param.put("finprodId", request.getFinprodId());
         param.put("bussType", request.getBussType());
         param.put("manager", request.getManager());
-        param.put("date", request.getDate());
+        param.put("startDate", request.getStartDate());
+        param.put("endDate", request.getEndDate());
         Page<EtrExchangeAgreRepTrade003Dto> page =  super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeAgreRepTradeMapper.selectEtrEntrust(param));
 
         List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",

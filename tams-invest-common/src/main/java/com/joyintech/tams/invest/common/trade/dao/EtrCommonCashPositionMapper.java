@@ -390,4 +390,21 @@ public interface EtrCommonCashPositionMapper {
      * @return
      */
     BigDecimal getEtrExchangeFinishAmtMuilt(Map<String, Object> map);
+
+    /**
+     *
+     * 查询指令可用现金(新表)
+     * <功能详细描述>
+     * @param portfolioId
+     * @param acctId
+     * @param chlFinprodId
+     * @param hodingType
+     * @param cdate
+     * @param ccy
+     * @param acctTypes
+     * @return
+     * @see
+     * @since 1.0
+     */
+    BigDecimal queryEtrAvailableCashNew(PtlCashPositionFlowDto dto);
 }

@@ -87,7 +87,7 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
         initPageParams.put("TARGET_CLASS_01", DictCodeListExt3.目标类型_数量.getValue());
         initPageParams.put("PRICE_MODEL_PRM01", DictCodeListExt2.价格模式_指定价格.getValue());
         initPageParams.put("SHARES_TRADE_PLATFORM_02", DictCodeList.交易平台_竞价撮合平台.getValue());
-
+        initPageParams.put("SHARES_TRADE_PLATFORM_04", DictCodeList.交易平台_大宗交易平台.getValue());
         // 场内交易指令画面持仓列表自动刷新时间（毫秒）
         long etrExchange_posTable_refresh_period = 20000;
         String tempSysParaVal = CacheUtil.getSysParam(

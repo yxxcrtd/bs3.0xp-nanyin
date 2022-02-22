@@ -291,6 +291,11 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
             else if(DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(finprodType)){
                 EtrNetCashPositionDealService.deal计划类EntrustStart(entrustCommonDto, etrPositionHoldDto);
             }
+            // 数据是否已入新头寸
+            if(StringUtil.isNotEmpty(entrustCommonDto.getIsExistNew())) {
+                etrPositionHoldDto.getPtlCashPositionFlows().forEach(item->item.setIsExistNew(entrustCommonDto.getIsExistNew()));
+                etrPositionHoldDto.getPtlSecPositionFlows().forEach(item->item.setIsExistNew(entrustCommonDto.getIsExistNew()));
+            }
             // add by etliu 20210421 权益类资产相关代码合并 end
             EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
         }
@@ -576,6 +581,10 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
                 EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
             }
         }
+    }
+    @Override
+    public BigDecimal queryEtrAvailableCashNew(PtlCashPositionFlowDto ptlCashPositionFlowDto) {
+        return etrCommonCashPositionDealService.queryEtrAvailableCashNew(ptlCashPositionFlowDto);
     }
 
 }
