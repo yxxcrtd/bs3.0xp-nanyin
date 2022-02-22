@@ -2,6 +2,7 @@ package com.joyintech.tams.exchange.datacommon.db.service.impl;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import com.joyintech.tams.exchange.common.constant.InstructionStatus;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.InstructionExample;
 import com.joyintech.tams.exchange.common.utils.JsonUtils;
@@ -34,13 +35,22 @@ public class InstructionServiceImpl extends AsyncServiceImpl<String, Instruction
             instructionList.forEach(instruction -> {
                 if (!Strings.isNullOrEmpty(instruction.getTradersInfo())) {
                     List<String> traderSet = JsonUtils.getObjectListFromJson(instruction.getTradersInfo(), String.class);
-                    if (Objects.nonNull(traderSet) && traderSet.size() > 0) {
-                        traderSet.forEach(s -> {
-                            if (!s.equals(instruction.getTradeId())) {
-                                instruction.setTradeId(s);
-                                instructionCache.add(instruction);
-                            }
-                        });
+                    if(InstructionStatus.WAIT_RECEIVE.value.equals(instruction.getEntrustStatus())) {//未接收缓存到每个用户
+                    	if (Objects.nonNull(traderSet) && traderSet.size() > 0) {
+                    		traderSet.forEach(s -> {
+                				instruction.setTradeId(s);
+                				instructionCache.add(instruction);
+                    		});
+                    	}
+                    }else {//接收后的缓存到当前交易员
+                    	if (Objects.nonNull(traderSet) && traderSet.size() > 0) {
+                    		traderSet.forEach(s -> {
+                    			if (s.equals(instruction.getTradeId())) {
+                    				instruction.setTradeId(s);
+                    				instructionCache.add(instruction);
+                    			}
+                    		});
+                    	}
                     }
                 }
             });
