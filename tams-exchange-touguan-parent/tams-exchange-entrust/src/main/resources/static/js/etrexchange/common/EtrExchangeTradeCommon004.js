@@ -10,7 +10,7 @@
     var  initFlag = false;
     var  availableNum = "";
     // 默认画面为“净价交易平台”
-    var currentTab = "jj";
+    // var currentTab = currentTab;
     //试算结果
     var riskResultdata;
     var cluflag = true;
@@ -2950,7 +2950,7 @@
             if(currentTab == 'dz') {
                 /**定时大宗行情*/
                 if($("#secId_" + currentTab).val()) {
-                    parent.EtrExchangeTradeJjHq.loadDzHqTable();
+                    // parent.EtrExchangeTradeJjHq.loadDzHqTable();
                 }
             }
 
@@ -3091,6 +3091,7 @@
             setTimeout(function () {
                 initFlag = false;
             }, 3000 );
+            setCurrentTab(currentTab);
         }
     var addMinPriceStep = function(type,num,input) {
         var $secIdObj = $("#secIdObjRelative_" + currentTab).val();
