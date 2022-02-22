@@ -1256,15 +1256,22 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	public BigDecimal selectConverseSharePrice(@RequestBody Map<String, Object> param) throws Exception {
 		return etrExchangeTrade001CommonService.selectConverseSharePrice(param);
 	}
-
+    //配债、配股
 	@RequestMapping(value = "/selectTrdOthPrice")
 	@ResponseBody
-	public BigDecimal selectOthPrice(@RequestBody Map<String, Object> param) throws Exception {
+	public  Message<BigDecimal> selectOthPrice(@RequestBody TrdOthPriceRequest request)  {
+		try{
+		Map<String,Object> param= JsonUtils.object2Map(request);
 		TrdOthCodeInfoDto dto = etrExchangeTrade001CommonService.getTrdOthCodeInfo(param);
+		BigDecimal declaredPrice=null;
 		if (null != dto && dto.getDeclaredPrice() != null && dto.getDeclaredPrice().compareTo(BigDecimal.ZERO) > 0) {
-			return dto.getDeclaredPrice();
+			declaredPrice=dto.getDeclaredPrice();
 		}
-		return null;
+		return new Message<BigDecimal>().success().setData(declaredPrice);
+	}catch (Exception e) {
+		logger.error("查询配债",e);
+		return new Message<BigDecimal>().fail().setMessage("查询配债、配股异常");
+	}
 	}
 
 	@RequestMapping(value = "/selectExtPs")
