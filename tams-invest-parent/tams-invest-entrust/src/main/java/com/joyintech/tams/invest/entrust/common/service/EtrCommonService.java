@@ -264,9 +264,11 @@ public class EtrCommonService extends BaseService<ITableRow> {
         }
         dtoNew.setDateType(1);
         BigDecimal cashT1_new = baseEtrCashPositionCommService.queryEtrAvailableCashNew(dtoNew);
-        BigDecimal cashT1= new BigDecimal(result.get("cashT1").toString());
-        if(StringUtil.isNotEmpty(cashT1_new)){
-            result.put("cashT1",  ArithmeticUtil.doAdd(cashT1, cashT1_new));// 组合T+1日可用
+        if(null!=result.get("cashT1")){
+            BigDecimal cashT1= new BigDecimal(result.get("cashT1").toString());
+            if(StringUtil.isNotEmpty(cashT1_new)){
+                result.put("cashT1",  ArithmeticUtil.doAdd(cashT1, cashT1_new));// 组合T+1日可用
+            }
         }
         return result;
     }

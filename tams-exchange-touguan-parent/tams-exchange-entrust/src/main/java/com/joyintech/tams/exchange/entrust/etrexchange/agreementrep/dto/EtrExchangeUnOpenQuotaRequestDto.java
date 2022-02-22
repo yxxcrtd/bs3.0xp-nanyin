@@ -43,6 +43,9 @@ public class EtrExchangeUnOpenQuotaRequestDto {
     @ApiModelProperty(name="finprodName",value="资产名称",example="A1")
     private String finprodName;
 
+    @ApiModelProperty(name="search",value="关键字",example="A1")
+    private String search;
+
     public String getBussType() {
         return bussType;
     }
@@ -73,5 +76,13 @@ public class EtrExchangeUnOpenQuotaRequestDto {
 
     public void setPageMode(PageMode pageMode) {
         this.pageMode = pageMode;
+    }
+
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
     }
 }

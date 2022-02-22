@@ -37,6 +37,8 @@ public class EntrustCommonDto {
 
     private List<EtrEntrustDetail> etrEntrustDetailList;
 
+    private String isExistNew;
+
     public BussRepoSecDto getBussRepoSecDto() {
         return bussRepoSecDto;
     }
@@ -99,5 +101,13 @@ public class EntrustCommonDto {
 
     public void setEtrEntrustDetailList(List<EtrEntrustDetail> etrEntrustDetailList) {
         this.etrEntrustDetailList = etrEntrustDetailList;
+    }
+
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
     }
 }

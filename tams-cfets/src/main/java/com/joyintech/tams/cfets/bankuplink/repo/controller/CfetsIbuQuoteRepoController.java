@@ -312,69 +312,69 @@ public class CfetsIbuQuoteRepoController extends BaseController {
     public Message<AjaxResult> doRiskcal(@RequestBody RepoRiskCalRequest riskCalRequest) {
         CfetsEtribdoRiskcalResponse result = new CfetsEtribdoRiskcalResponse();
         try {
-            AjaxResult ajaxResult = ibuQuoteRepoService.riskCheckNotEmpty(riskCalRequest);
-            if (CollectionUtils.isNotEmpty(ajaxResult.getErrorList())) {
-                return new Message<AjaxResult>().success().setData(ajaxResult);
-            }
-            Map<String, Object> dataMap = ibuQuoteRepoService.doRiskcalPackage(riskCalRequest);
-            result.setRiskMathFlag("02");
-            List<String> resultArrList = interfRiskRdsController.doInfBatchData(dataMap, "1", "RSK002", "F07");
-            boolean forbidFlag = false;
-            boolean cluflag = true;
-            //是否全部正常
-            boolean allNormalFlag = true;
-            List<CfetsEtribdoRiskcalResponse> resultList = new ArrayList<>();
-            if (!StringUtil.isEmptyList(resultArrList)) {
-                for (String row : resultArrList) {
-                    ClientData resultArr = JsonUtils.json2Object(row, ClientData.class);
-                    if (StringUtil.isNotEmpty(resultArr) && StringUtil.isNotEmpty(resultArr.getHead())
-                            && StringUtil.isNotEmpty(resultArr.getHead().get("std400msgt"))
-                    ) {
-                        if (StringUtil.equals(resultArr.getHead().get("std400msgt"), "E")) {
-                            return new Message<AjaxResult>().fail().setMessage(resultArr.getHead().get("stdrtninfo").toString());
-                        }
-                    }
-                    if (!StringUtil.isNotEmpty(resultArr) || !StringUtil.isNotEmpty(resultArr.getBody())
-                            || !StringUtil.isNotEmpty(resultArr.getBody().get("RSK_LIST"))
-                            || !StringUtil.isNotEmpty(resultArr.getBody().get("rskStatus"))) {
-                        return new Message<AjaxResult>().success().setMessage("无");
-                    }
-                    List<Map<String, Object>> riskList = (List<Map<String, Object>>) resultArr.getBody().get("RSK_LIST");
-                    for (Map<String, Object> map : riskList) {
-                        if (allNormalFlag && !StringUtil.equals(map.get("kriStatus"), "0")) {
-                            allNormalFlag = false;
-                        }
-                        if (StringUtil.equals(map.get("kriStatus"), "0") && !StringUtil.equals(map.get("kriTrend"), "向好")) {
-                            forbidFlag = true;
-                        }
-                        map.put("kriStatusCn", ibuQuoteRepoService.getKriStatusCnByKriStatus(map.get("kriStatus").toString()));
-                        resultList.add(BeanUtil.mapToObject(map, CfetsEtribdoRiskcalResponse.class));
-                    }
-                    if (!allNormalFlag) {
-                        result.setRiskcalReturnList(resultList);
-                    }
-                    result.setStdrtninfo(resultArr.getHead().get("stdrtninfo").toString());
-                    //当置为不通过时就不再进来了
-                    if (cluflag) {
-                        if (!StringUtil.equals(resultArr.getBody().get("rskStatus"), "3")) {
-                            if (StringUtil.equals(resultArr.getBody().get("rskStatus"), "4") && forbidFlag) {
-                                cluflag = false;
-                                resultArr.getBody().put("rskStatus", "3");
-                                result.setRskStatus("3");
-                            }
-                        } else {
-                            cluflag = false;
-                        }
-                        if (!cluflag) {
-                            result.setRiskTrialSpan("试算不通过");
-                        } else {
-                            result.setRiskTrialSpan("试算通过");
-                        }
-                    }
-
-                }
-
-            }
+//            AjaxResult ajaxResult = ibuQuoteRepoService.riskCheckNotEmpty(riskCalRequest);
+//            if (CollectionUtils.isNotEmpty(ajaxResult.getErrorList())) {
+//                return new Message<AjaxResult>().success().setData(ajaxResult);
+//            }
+//            Map<String, Object> dataMap = ibuQuoteRepoService.doRiskcalPackage(riskCalRequest);
+//            result.setRiskMathFlag("02");
+//            List<String> resultArrList = interfRiskRdsController.doInfBatchData(dataMap, "1", "RSK002", "F07");
+//            boolean forbidFlag = false;
+//            boolean cluflag = true;
+//            //是否全部正常
+//            boolean allNormalFlag = true;
+//            List<CfetsEtribdoRiskcalResponse> resultList = new ArrayList<>();
+//            if (!StringUtil.isEmptyList(resultArrList)) {
+//                for (String row : resultArrList) {
+//                    ClientData resultArr = JsonUtils.json2Object(row, ClientData.class);
+//                    if (StringUtil.isNotEmpty(resultArr) && StringUtil.isNotEmpty(resultArr.getHead())
+//                            && StringUtil.isNotEmpty(resultArr.getHead().get("std400msgt"))
+//                    ) {
+//                        if (StringUtil.equals(resultArr.getHead().get("std400msgt"), "E")) {
+//                            return new Message<AjaxResult>().fail().setMessage(resultArr.getHead().get("stdrtninfo").toString());
+//                        }
+//                    }
+//                    if (!StringUtil.isNotEmpty(resultArr) || !StringUtil.isNotEmpty(resultArr.getBody())
+//                            || !StringUtil.isNotEmpty(resultArr.getBody().get("RSK_LIST"))
+//                            || !StringUtil.isNotEmpty(resultArr.getBody().get("rskStatus"))) {
+//                        return new Message<AjaxResult>().success().setMessage("无");
+//                    }
+//                    List<Map<String, Object>> riskList = (List<Map<String, Object>>) resultArr.getBody().get("RSK_LIST");
+//                    for (Map<String, Object> map : riskList) {
+//                        if (allNormalFlag && !StringUtil.equals(map.get("kriStatus"), "0")) {
+//                            allNormalFlag = false;
+//                        }
+//                        if (StringUtil.equals(map.get("kriStatus"), "0") && !StringUtil.equals(map.get("kriTrend"), "向好")) {
+//                            forbidFlag = true;
+//                        }
+//                        map.put("kriStatusCn", ibuQuoteRepoService.getKriStatusCnByKriStatus(map.get("kriStatus").toString()));
+//                        resultList.add(BeanUtil.mapToObject(map, CfetsEtribdoRiskcalResponse.class));
+//                    }
+//                    if (!allNormalFlag) {
+//                        result.setRiskcalReturnList(resultList);
+//                    }
+//                    result.setStdrtninfo(resultArr.getHead().get("stdrtninfo").toString());
+//                    //当置为不通过时就不再进来了
+//                    if (cluflag) {
+//                        if (!StringUtil.equals(resultArr.getBody().get("rskStatus"), "3")) {
+//                            if (StringUtil.equals(resultArr.getBody().get("rskStatus"), "4") && forbidFlag) {
+//                                cluflag = false;
+//                                resultArr.getBody().put("rskStatus", "3");
+//                                result.setRskStatus("3");
+//                            }
+//                        } else {
+//                            cluflag = false;
+//                        }
+//                        if (!cluflag) {
+//                            result.setRiskTrialSpan("试算不通过");
+//                        } else {
+//                            result.setRiskTrialSpan("试算通过");
+//                        }
+//                    }
+//
+//                }
+//
+//            }
             AjaxResult m = new AjaxResult();
             m.setData(result);
             return new Message<AjaxResult>().success().setData(m);

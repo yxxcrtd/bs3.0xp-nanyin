@@ -978,7 +978,10 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 					String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
 					dto.setEntrustId(code);
 				}
-				BigDecimal totalEntrustAmt = dto.getPortfolioList().stream().map(EtrExchangeTradePortfolioRequest::getEntrustAmt).reduce(BigDecimal::add).get();
+				BigDecimal totalEntrustAmt = null;
+				if(dto.getPortfolioList().get(0).getEntrustAmt()!=null){
+					totalEntrustAmt = dto.getPortfolioList().stream().map(EtrExchangeTradePortfolioRequest::getEntrustAmt).reduce(BigDecimal::add).get();
+				}
 				BigDecimal totalEntrustNum = dto.getPortfolioList().stream().map(EtrExchangeTradePortfolioRequest::getEntrustNum).reduce(BigDecimal::add).get();
 				//算比例
 				BigDecimal tempSumDisRate=BigDecimal.ZERO;
