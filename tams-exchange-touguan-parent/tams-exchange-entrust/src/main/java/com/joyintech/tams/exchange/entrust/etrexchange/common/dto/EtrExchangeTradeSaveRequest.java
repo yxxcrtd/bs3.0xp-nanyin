@@ -241,6 +241,10 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
      * 申报类型
      */
     private String declaTypeStr;
+    /**
+     * 风险预占是否来自场内
+     */
+    private String fromEtrExchange;
     
 
 
@@ -680,5 +684,13 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
 
     public void setAssetType2(String assetType2) {
         this.assetType2 = assetType2;
+    }
+
+    public String getFromEtrExchange() {
+        return fromEtrExchange;
+    }
+
+    public void setFromEtrExchange(String fromEtrExchange) {
+        this.fromEtrExchange = fromEtrExchange;
     }
 }

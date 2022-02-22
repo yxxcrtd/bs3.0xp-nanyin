@@ -1023,6 +1023,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 					}
 					//债转股需要走批量接口
 					String infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+					dto.setFromEtrExchange("Y");//场内指令
 					AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto, infCode, finprodType2);
 					if (StringUtil.isNotEmpty(ar)) {
 						return new Message<AjaxResult>().success().setData(ar);
@@ -1062,11 +1063,13 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 					etrExchangeTrade001Dto.setBusinessTypeName(businessType);//此处存的是类型
 					etrExchangeTrade001Dto.setOptType(ENTRUST_RECORD_NEW);
 					etrExchangeTrade001Dto.setIsMulti(DictCodeList.是否_否.getValue());
+					etrExchangeTrade001Dto.setFromEtrExchange("Y");
 					List<EtrExchangeTradePortfolioRequest> portfolioList=new ArrayList<>();
 					EtrExchangeTradePortfolioRequest portfolioRequest=new EtrExchangeTradePortfolioRequest();
 					BeanUtil.copyPropertiesIgnoreNull(portfolioRequest,etrExchangeTrade001Dto);
 					portfolioList.add(portfolioRequest);
 					etrExchangeTrade001Dto.setPortfolioList(portfolioList);
+
 					etrExchangeTrade001DtoList.add(etrExchangeTrade001Dto);
 				}
 
