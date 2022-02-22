@@ -245,10 +245,17 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
      * 风险预占是否来自场内
      */
     private String fromEtrExchange;
-    
 
 
+    private BigDecimal disRate;
 
+    public BigDecimal getDisRate() {
+        return disRate;
+    }
+
+    public void setDisRate(BigDecimal disRate) {
+        this.disRate = disRate;
+    }
 
     /**
      * 取得 委托代码
