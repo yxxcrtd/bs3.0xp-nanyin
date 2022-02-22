@@ -1070,7 +1070,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 				// ----------预占功能 start----------
 				if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
 					// add by zhangrui1 start
-					AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(getPageId(), etrExchangeTrade001DtoList,
+					AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy("EtrExchangeTradeMulti001", etrExchangeTrade001DtoList,
 							BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue());
 					if (null != ar) {
 						return new Message<AjaxResult>().success().setData(ar);
