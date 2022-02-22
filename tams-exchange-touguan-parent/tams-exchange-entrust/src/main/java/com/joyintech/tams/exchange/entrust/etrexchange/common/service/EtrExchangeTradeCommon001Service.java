@@ -2569,6 +2569,14 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		if (br.hasErrors()) {
 			return new AjaxResult(br);
 		}
+		Boolean isNonTradingTime = isNonTradingTime(dto);
+		AjaxResult webResult = new AjaxResult();
+		List<ValidMessage> errorList = new ArrayList<>();
+		if (isNonTradingTime) {
+			errorList.add(new ValidMessage(this.getMessage("ETR_ERROR_0056")));
+			webResult.setErrorList(errorList);
+			return webResult;
+		}
 		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_非交易业务指令平台.getValue())) {
 			// add  start
 			if (org.apache.commons.lang.StringUtils.equals(dto.getPs(), DictCodeListExt2.交易方向_配股.getValue())) {
@@ -5337,6 +5345,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		etrExchangeTrade001Dto.setTargetType(dto.getTargetType());
 		etrExchangeTrade001Dto.setMdate(dto.getEntrustDate());
 		etrExchangeTrade001Dto.setVdate(dto.getEntrustDate());
+		etrExchangeTrade001Dto.setStockId(dto.getStockId());
 		return etrExchangeTrade001Dto;
 	}
 
