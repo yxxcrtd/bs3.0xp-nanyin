@@ -240,6 +240,9 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
     @ApiModelProperty(name="entrustType",value="指令类型",example="12")
     private String entrustType;
 
+    @ApiModelProperty(name="acctNo",value="资金账户")
+    private String acctNo;
+
     public String getFinprodId() {
         return finprodId;
     }
@@ -676,5 +679,13 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
 
     public String getDeclaTypeStr(){
         return  SysDataUtil.getNameFromDataDict(DictCode.申报类型, getDeclaType());
+    }
+
+    public String getAcctNo() {
+        return acctNo;
+    }
+
+    public void setAcctNo(String acctNo) {
+        this.acctNo = acctNo;
     }
 }
