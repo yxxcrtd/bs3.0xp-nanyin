@@ -61,9 +61,9 @@ public class EtrExchangeTradePositionsCommonResponse {
     @ApiModelProperty(name="finprodId",value="资产代码",example="12")
     private String finprodId;
     
-    @ApiModelProperty(name="finpordName",value="资产名称",example="12")
-    private String finpordName;
-    
+    @ApiModelProperty(name="finprodName",value="资产名称",example="12")
+    private String finprodName;
+
     @ApiModelProperty(name="finprodType2",value="金融产品类型（投管分类）",example="12")
     private String finprodType2;
     
@@ -189,12 +189,12 @@ public class EtrExchangeTradePositionsCommonResponse {
         this.finprodId = finprodId;
     }
 
-    public String getFinpordName() {
-        return finpordName;
+    public String getFinprodName() {
+        return finprodName;
     }
 
-    public void setFinpordName(String finpordName) {
-        this.finpordName = finpordName;
+    public void setFinprodName(String finprodName) {
+        this.finprodName = finprodName;
     }
 
     public String getFinprodType2() {

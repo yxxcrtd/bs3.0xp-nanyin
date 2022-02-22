@@ -269,6 +269,7 @@
             SSAI.SEC_ACCT_NAME AS secAcctName,
             TEMP.FINPROD_ID    AS finprodId,
             FP.FINPROD_MARKET_ID AS finprodMarketId,
+            FP.FINPROD_NAME as finprodName,
             CASE WHEN instr(FP.FINPROD_MARKET_ID,'.') > 0 THEN SUBSTR(FP.FINPROD_MARKET_ID,1,instr(FP.FINPROD_MARKET_ID,'.',-1,1)-1)
                 ELSE FP.FINPROD_MARKET_ID
             END             AS secId,
