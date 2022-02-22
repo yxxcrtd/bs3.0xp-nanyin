@@ -1458,5 +1458,22 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	public Message<Date> queryLocalTime() {
 		return new Message<Date>(DateUtil.now());
 	}
+
+	/**
+	 * 获取1/最小价差的倍数
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/getMinPrice")
+	public Message<List<MinPirceDto>> getMinPrice(@RequestBody MinPriceRequest request) {
+		try{
+			Map<String,Object> param= JsonUtils.object2Map(request);
+			List<MinPirceDto> minPirceList = etrExchangeTrade001CommonService.getInterfSysMinPriceAll(param);
+			return new Message<List<MinPirceDto>>().success().setData(minPirceList);
+		}catch (Exception e){
+			return new Message<List<MinPirceDto>>().fail().setData(null);
+		}
+	}
 }
 	
