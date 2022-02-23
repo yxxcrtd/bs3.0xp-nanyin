@@ -47,8 +47,6 @@ public class InstructionServiceImpl extends AsyncServiceImpl<String, Instruction
                                     logger.info("new cache instruction:{}",com.joyintech.framework.util.JsonUtils.object2Json(i));
                                     logger.info("new cache instructionId:{},tradeId:{}",i.getEntrustId(),i.getTradeId());
                                 }
-                				instruction.setTradeId(s);
-                				instructionCache.add(instruction);
                     		});
                     	}
                     }
