@@ -274,7 +274,7 @@ public class CfetsQuotedTradeCommonService{
             iCstpTrade.setUnderlyingsymbol(entity.getUnderlyingSymbol());
             iCstpTrade.setUnderlyingsecurityid(entity.getSecurityID());
             if(null!=entity.getPrice()){
-                iCstpTrade.setPrice(ArithmeticUtil.divide(entity.getPrice(),new BigDecimal(100),4));
+                iCstpTrade.setPrice(ArithmeticUtil.divide(entity.getPrice(),new BigDecimal(100),6));
             }
             iCstpTrade.setSettldate2(entity.getSettlDate2());
             //处理跨托管交易本金
