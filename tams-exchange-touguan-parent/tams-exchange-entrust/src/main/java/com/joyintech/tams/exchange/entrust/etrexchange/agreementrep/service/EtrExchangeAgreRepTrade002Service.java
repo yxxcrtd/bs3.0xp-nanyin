@@ -365,6 +365,12 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
             // 质押券代码
             if (StringUtil.isNotEmpty(tmp.get("stockCode"))) {
                 dto.setRepSecId(tmp.get("stockCode").toString());
+
+                if (StringUtil.endsWith(tmp.get("stockCode").toString(), "SH")) {
+                    dto.setTradeMarket(DictCodeListExt1.交易场所_上海证券交易所.getValue());
+                } else {
+                    dto.setTradeMarket(DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+                }
             }
             // 质押券名称
             if (StringUtil.isNotEmpty(tmp.get("stockName"))) {
@@ -422,6 +428,8 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
             // 原质押券代码
             if (StringUtil.isNotEmpty(tmp.get("oldImpawnCode"))) {
                 dto.setOrigPledgeStampCode(tmp.get("oldImpawnCode").toString());
+                // todo
+                dto.setOrigPledgeStampName(dto.getOrigPledgeStampCode());
             }
             // 回购利息
             if (StringUtil.isNotEmpty(tmp.get("profit"))) {
