@@ -57,6 +57,8 @@ public class PositionRequestService {
             this.fund001(entity, resultMap);
         } else if (PositionConstant.INTERF_TYPE_REPO001.equals(interType)) {
             this.repo001(entity, resultMap);
+        } else if (PositionConstant.INTERF_TYPE_STOCK001.equals(interType)) {
+            this.stock001(entity, resultMap);
         } else {
             //TODO 根据条件判断调用其他接口
         }
@@ -215,7 +217,8 @@ public class PositionRequestService {
                     bean.setTradeId(null);
                     bean.setEtrId(entity.getEntrustId());
                     bean.setSecAmount(entity.getToShareAvailableNum());
-                    sharesSecList.add(BeanUtil.object2Map(bean));
+                    Map<String, Object> map = BeanUtil.object2Map(bean);
+                    sharesSecList.add(map);
                 }
                 resultMap.put("sharesSecList", sharesSecList);
             }
@@ -245,7 +248,8 @@ public class PositionRequestService {
                     //TODO "IF 指令.单位 = 张 THEN 指令.指令数量*100
                     //IF 指令.单位 = 手 THEN 指令.指令数量*10*100"
                     bean.setSecAmount(entity.getEntrustNum());
-                    applyBondSecList.add(BeanUtil.object2Map(bean));
+                    Map<String, Object> map = BeanUtil.object2Map(bean);
+                    applyBondSecList.add(map);
                 }
                 resultMap.put("applyBondSecList", applyBondSecList);
             }
@@ -294,7 +298,8 @@ public class PositionRequestService {
                 //TODO "IF 指令.指令单位 = 手 THEN 指令.指令数量*10000
                 //IF 指令.指令单位 = 份 THEN 指令.指令数量"
                 bean.setSecAmount(entity.getEntrustNum());
-                ptlList.add(BeanUtil.object2Map(bean));
+                Map<String, Object> map = BeanUtil.object2Map(bean);
+                ptlList.add(map);
             }
             resultMap.put("ptlList", ptlList);
 
@@ -304,7 +309,7 @@ public class PositionRequestService {
     }
 
     /**
-     * 基金-指令    repo001
+     * 质押式通用回购-指令    repo001
      *
      * @param entity
      * @param resultMap
@@ -376,6 +381,69 @@ public class PositionRequestService {
                     ptlSecList.add(map);
                 }
                 resultMap.put("ptlSecList", ptlSecList);
+            }
+        }
+    }
+
+    /**
+     * 股票-指令    stock001
+     *
+     * @param entity
+     * @param resultMap
+     */
+    private void stock001(EtrExchangeTradeSaveRequest entity, Map<String, Object> resultMap) {
+        resultMap.put("interfaceType", PositionConstant.INTERF_TYPE_STOCK001);
+        // 业务动作
+        resultMap.put("busiAct", DictCodeListExt3.业务动作_投资指令.getValue());
+
+        /**
+         * 业务类型	见数据字典：头寸业务类型
+         *
+         * "IF 指令.交易方向 = 数据字典.交易方向.买入、卖出 THEN 数据字典. BUSI_TYPE_POSITION.股票交易
+         * IF 指令.交易方向 = 数据字典.交易方向.配股 THEN 数据字典. BUSI_TYPE_POSITION.配股
+         * IF 指令.交易方向 = 数据字典.交易方向.申购 THEN 数据字典. BUSI_TYPE_POSITION.网上申购"
+         */
+        String ps = entity.getPs();
+        if (BussinessDictCodeList.交易方向_买入.getValue().equals(ps) || BussinessDictCodeList.交易方向_卖出.getValue().equals(ps)) {
+            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_股票交易.getValue());
+        } else if (DictCodeListExt2.交易方向_配股.getValue().equals(ps)) {
+            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_配股.getValue());
+        } else if (DictCodeList.交易方向_申购.getValue().equals(ps)) {
+            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_网上申购.getValue());
+        }
+
+        // 清算速度
+        resultMap.put("settleSpeed", null);
+
+        // 结算方式
+        resultMap.put("deliveryType", null);
+
+        if (CollectionUtils.isNotEmpty(entity.getPortfolioList())) {
+            PositionRequestBaseBean bean;
+
+            // 组合数据集
+            List<Map<String, Object>> ptlList = new ArrayList<>(4);
+            for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
+                bean = new PositionRequestBaseBean(item);
+                bean.setSecAmount(null);
+
+                Map<String, Object> map = BeanUtil.object2Map(bean);
+                ptlList.add(map);
+            }
+            resultMap.put("ptlList", ptlList);
+
+            // 组合配股/新股申购数据集	ptlRoList
+            if (DictCodeListExt2.交易方向_配股.getValue().equals(ps) || DictCodeList.交易方向_申购.getValue().equals(ps)) {
+                List<Map<String, Object>> ptlRoList = new ArrayList<>(4);
+                for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
+                    bean = new PositionRequestBaseBean(item);
+                    // 配股/申购代码 TODO 查询配股/申购代码
+                    bean.setFinprodId(null);
+
+                    Map<String, Object> map = BeanUtil.object2Map(bean);
+                    ptlRoList.add(map);
+                }
+                resultMap.put("ptlRoList", ptlRoList);
             }
         }
     }
