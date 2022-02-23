@@ -51,6 +51,9 @@
         <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR"/>
         <result column="INV_MANAGER_ID" property="invManagerId" jdbcType="VARCHAR"/>
         <result column="PS" property="ps" jdbcType="VARCHAR"/>
+        <result column="BUSI_TYPE_TG" property="busiTypeTg" jdbcType="VARCHAR"/>
+        <result column="EXTEND1" property="extend1" jdbcType="VARCHAR"/>
+        <result column="EXTEND2" property="extend2" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -119,7 +122,7 @@
     ORDER_BALANCE, ENTRUST_VOLUME, ENTRUST_PRICE, FULL_PRICE, FROZEN_BALANCE, FROZEN_VOLUME, TRADED_BALANCE,
     TRADED_VOLUME, TRADED_PRICE, CANCEL_VOLUME, ERROR_CODE, ERROR_MSG, TRADING_DAY, IP_MAC, 
     REMARK, CREATE_TIME, UPDATE_TIME, ORDER_ID,  OFFSET_FLAG, HEDGE_FLAG,
-    PORTFOLIO_NAME,SEC_ACCT_ID,SEC_ACCT_NAME,TRADE_PLAT,FINPROD_TYPE2, INV_MANAGER_ID,PS
+    PORTFOLIO_NAME,SEC_ACCT_ID,SEC_ACCT_NAME,TRADE_PLAT,FINPROD_TYPE2, INV_MANAGER_ID,PS,BUSI_TYPE_TG, EXTEND1, EXTEND2
     </sql>
 
     <select id="queryLastClearDate" resultType="java.lang.String">
@@ -175,7 +178,7 @@
                                     IP_MAC, REMARK, CREATE_TIME,
                                     UPDATE_TIME, ORDER_ID, OFFSET_FLAG, HEDGE_FLAG,
                                     PORTFOLIO_NAME, SEC_ACCT_ID, SEC_ACCT_NAME, TRADE_PLAT,
-                                    FINPROD_TYPE2, INV_MANAGER_ID, PS)
+                                    FINPROD_TYPE2, INV_MANAGER_ID, PS, BUSI_TYPE_TG, EXTEND1, EXTEND2)
     </sql>
     <insert id="insert" parameterType="com.joyintech.tams.exchange.common.db.domain.OrderHistory">
         <include refid="orderHistoryFiled"/>
@@ -196,7 +199,8 @@
         #{offsetFlag,jdbcType=VARCHAR}, #{hedgeFlag,jdbcType=VARCHAR},
         #{portfolioName,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR},
         #{secAcctName,jdbcType=VARCHAR}, #{tradePlat,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR},
-        #{invManagerId,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR})
+        #{invManagerId,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, #{busiTypeTg,jdbcType=VARCHAR},
+        #{extend1,jdbcType=VARCHAR}, #{extend2,jdbcType=VARCHAR})
     </insert>
     <insert id="insertBatch" parameterType="com.joyintech.tams.exchange.common.db.domain.OrderHistory">
         <include refid="orderHistoryFiled"/>
@@ -234,7 +238,10 @@
             #{record.tradePlat,jdbcType=VARCHAR},
             #{record.finprodType2,jdbcType=VARCHAR},
             #{record.invManagerId,jdbcType=VARCHAR},
-            #{record.ps,jdbcType=VARCHAR}
+            #{record.ps,jdbcType=VARCHAR},
+            #{record.busiTypeTg,jdbcType=VARCHAR},
+            #{record.extend1,jdbcType=VARCHAR},
+            #{record.extend2,jdbcType=VARCHAR}
         </foreach>
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.exchange.common.db.domain.OrderHistory">
@@ -356,6 +363,15 @@
             <if test="ps != null">
                 PS,
             </if>
+            <if test="busiTypeTg != null">
+                BUSI_TYPE_TG,
+            </if>
+            <if test="extend1 != null">
+                EXTEND1,
+            </if>
+            <if test="extend2 != null">
+                EXTEND2,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -473,6 +489,15 @@
             </if>
             <if test="ps != null">
                 #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="busiTypeTg != null">
+                #{busiTypeTg,jdbcType=VARCHAR},
+            </if>
+            <if test="extend1 != null">
+                #{extend1,jdbcType=VARCHAR},
+            </if>
+            <if test="extend2 != null">
+                #{extend2,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -630,6 +655,15 @@
             <if test="record.ps != null">
                 PS = #{record.ps,jdbcType=VARCHAR},
             </if>
+            <if test="record.busiTypeTg != null">
+                BUSI_TYPE_TG = #{record.busiTypeTg,jdbcType=VARCHAR},
+            </if>
+            <if test="record.extend1 != null">
+                EXTEND1 = #{record.extend1,jdbcType=VARCHAR},
+            </if>
+            <if test="record.extend2 != null">
+                EXTEND2 = #{record.extend2,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
@@ -684,7 +718,10 @@
         TRADE_PLAT = #{record.tradePlat,jdbcType=VARCHAR},
         FINPROD_TYPE2 = #{record.finprodType2,jdbcType=VARCHAR},
         INV_MANAGER_ID = #{record.invManagerId,jdbcType=VARCHAR},
-        PS = #{record.ps,jdbcType=VARCHAR}
+        PS = #{record.ps,jdbcType=VARCHAR},
+        BUSI_TYPE_TG = #{record.busiTypeTg,jdbcType=VARCHAR},
+        EXTEND1 = #{record.extend1,jdbcType=VARCHAR},
+        EXTEND2 = #{record.extend2,jdbcType=VARCHAR}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
@@ -833,6 +870,15 @@
             <if test="ps != null">
                 PS = #{ps,jdbcType=VARCHAR},
             </if>
+            <if test="busiTypeTg != null">
+                BUSI_TYPE_TG = #{busiTypeTg,jdbcType=VARCHAR},
+            </if>
+            <if test="extend1 != null">
+                EXTEND1 = #{extend1,jdbcType=VARCHAR},
+            </if>
+            <if test="extend2 != null">
+                EXTEND2 = #{extend2,jdbcType=VARCHAR},
+            </if>
         </set>
         where ID = #{id,jdbcType=VARCHAR}
     </update>
@@ -884,7 +930,10 @@
             TRADE_PLAT        = #{tradePlat,jdbcType=VARCHAR},
             FINPROD_TYPE2     = #{finprodType2,jdbcType=VARCHAR},
             INV_MANAGER_ID    = #{invManagerId,jdbcType=VARCHAR},
-            PS                = #{ps,jdbcType=VARCHAR}
+            PS                = #{ps,jdbcType=VARCHAR},
+            BUSI_TYPE_TG      = #{busiTypeTg,jdbcType=VARCHAR},
+            EXTEND1           = #{extend1,jdbcType=VARCHAR},
+            EXTEND2           = #{extend2,jdbcType=VARCHAR}
         where ID = #{id,jdbcType=VARCHAR}
     </update>
 </mapper>

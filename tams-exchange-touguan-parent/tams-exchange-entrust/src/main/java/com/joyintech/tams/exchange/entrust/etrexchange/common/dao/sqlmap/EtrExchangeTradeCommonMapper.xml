@@ -271,7 +271,7 @@
             SSAI.SEC_ACCT_NAME AS secAcctName,
             TEMP.FINPROD_ID    AS finprodId,
             FP.FINPROD_MARKET_ID AS finprodMarketId,
-            FP.FINPROD_NAME as finprodName,
+            FP.FINPROD_ABBR as finprodName,
             CASE WHEN instr(FP.FINPROD_MARKET_ID,'.') > 0 THEN SUBSTR(FP.FINPROD_MARKET_ID,1,instr(FP.FINPROD_MARKET_ID,'.',-1,1)-1)
                 ELSE FP.FINPROD_MARKET_ID
             END             AS secId,
@@ -975,7 +975,8 @@
 			and t.finprod_id = #{finprodId}
 		</if>
 		AND t.VDATE <![CDATA[<=]]> #{date}
-        AND t.MDATE <![CDATA[>=]]> #{date} 
+        AND t.MDATE <![CDATA[>=]]> #{date}
+        order by t.VDATE desc
 	</select>
 	
 	<!-- 自定义二级类型查询 -->
@@ -1417,6 +1418,21 @@
             ETR_ENTRUST			T1
                 INNER JOIN    ETR_ENTRUST_ADD T2 ON T2.ENTRUST_ID = T1.ENTRUST_ID
                 INNER JOIN    ETR_ENTRUST_DETAIL T3 ON T3.ENTRUST_ID = T1.ENTRUST_ID
+                LEFT JOIN PTL_PORTFOLIO T4 ON T4.PORTFOLIO_ID = T3.PORTFOLIO_ID
+        where
+            T1.ENTRUST_ID=#{entrustId}
+        union all
+        select
+            T3.ENTRUST_ID
+             ,T4.PORTFOLIO_ID
+             ,T4.PORTFOLIO_NAME
+             ,T2.DEAL_CUR_ACCT as acctNo
+             ,T3.ENTRUST_AMT
+             ,T3.ENTRUST_NUM
+        FROM
+            WFL_ETR_ENTRUST			T1
+                INNER JOIN    WFL_ETR_ENTRUST_ADD T2 ON T2.ENTRUST_ID = T1.ENTRUST_ID
+                INNER JOIN    WFL_ETR_ENTRUST_DETAIL T3 ON T3.ENTRUST_ID = T1.ENTRUST_ID
                 LEFT JOIN PTL_PORTFOLIO T4 ON T4.PORTFOLIO_ID = T3.PORTFOLIO_ID
         where
             T1.ENTRUST_ID=#{entrustId}

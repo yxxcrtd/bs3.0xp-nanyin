@@ -20,7 +20,7 @@ public class MockConverter {
             integratedBulkQuoteBean.setErrorCode(integratedQuote.getErrorCode());
             integratedBulkQuoteBean.setErrorMsg(integratedQuote.getErrorMsg());
             integratedBulkQuoteBean.setOrderNo(integratedQuote.getOrderNo());
-            integratedBulkQuoteBean.setSeatNo(integratedQuote.getOppositePropSeatNo());
+            integratedBulkQuoteBean.setSeatNo(integratedQuote.getPropSeatNo());
             integratedBulkQuoteBean.setEntrustProp(integratedQuote.getEntrustProp());
             integratedBulkQuoteBean.setEntrustBs(integratedQuote.getEntrustBs());
             integratedBulkQuoteBean.setStockCode(integratedQuote.getStockCode());

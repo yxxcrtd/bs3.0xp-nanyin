@@ -619,6 +619,7 @@ public class TradeHelper {
         order.setFinprodType2(instruction.getFinprodType2());
         order.setInvManagerId(instruction.getInvManagerId());
         order.setPs(instruction.getPs());
+        order.setBusiTypeTg(instruction.getBusiTypeTg());
 
         //1.公平下单
         if (fairOrderHelper.createFairOrder(order)) {
@@ -943,6 +944,7 @@ public class TradeHelper {
             integratedEntrust.setFinprodType2(instruction.getFinprodType2());
             integratedEntrust.setInvManagerId(instruction.getInvManagerId());
             integratedEntrust.setPs(instruction.getPs());
+            integratedEntrust.setBusiTypeTg(instruction.getBusiTypeTg());
 
             integratedEntrustService.asyncUpdate(integratedEntrust);
             handleWorkflow(null, integratedEntrust, workflow);
