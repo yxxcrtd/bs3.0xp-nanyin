@@ -975,7 +975,8 @@
 			and t.finprod_id = #{finprodId}
 		</if>
 		AND t.VDATE <![CDATA[<=]]> #{date}
-        AND t.MDATE <![CDATA[>=]]> #{date} 
+        AND t.MDATE <![CDATA[>=]]> #{date}
+        order by t.VDATE desc
 	</select>
 	
 	<!-- 自定义二级类型查询 -->
