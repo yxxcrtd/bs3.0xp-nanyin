@@ -1,6 +1,7 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.position.service;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -12,19 +13,18 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.position.bean.PositionRequestBaseBean;
 import com.joyintech.tams.exchange.entrust.etrexchange.position.constant.PositionConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdMoreConvrateDto;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.joyintech.tams.constant.DictCodeList.是否_否;
 
@@ -34,6 +34,8 @@ public class PositionRequestService {
     public static final String STANDAR_SEC_ID = "XN_PRODID999";
     @Autowired
     private CommonPositionEngineService commonPositionEngineService;
+    @Autowired
+    private EtrExchangeTradeCommon001Service etrExchangeTradeCommon001Service;
 
     /**
      * EtrExchangeTradeSaveRequest请求对象使用
@@ -357,9 +359,13 @@ public class PositionRequestService {
                 map.put("standardSecId", STANDAR_SEC_ID);
                 // 标准券总额  指令.准券总额
                 map.put("standardSecAmount", entity.getStandardBondVolume());
-                // TODO 再折算率	reConversionRate "调用【再折算率查询】参数：资金账户 = 指令资金账户
-                String reConversionRate = null;
-                map.put("reConversionRate", reConversionRate);
+                // 再折算率	reConversionRate "调用【再折算率查询】参数：资金账户 = 指令资金账户
+                Map<String, Object> param = Maps.newHashMap();
+                param.put("acctNo", entity.getAcctNo());
+                TrdMoreConvrateDto moreConvrate = etrExchangeTradeCommon001Service.getMoreConvrate(param);
+                if (Objects.nonNull(moreConvrate)) {
+                    map.put("reConversionRate", moreConvrate.getMoreConvrate());
+                }
                 ptlList.add(map);
             }
             resultMap.put("ptlList", ptlList);
@@ -437,8 +443,8 @@ public class PositionRequestService {
                 List<Map<String, Object>> ptlRoList = new ArrayList<>(4);
                 for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
                     bean = new PositionRequestBaseBean(item);
-                    // 配股/申购代码 TODO 查询配股/申购代码
-                    bean.setFinprodId(null);
+                    // 配股/申购代码
+                    bean.setFinprodId(item.getStockId());
 
                     Map<String, Object> map = BeanUtil.object2Map(bean);
                     ptlRoList.add(map);
