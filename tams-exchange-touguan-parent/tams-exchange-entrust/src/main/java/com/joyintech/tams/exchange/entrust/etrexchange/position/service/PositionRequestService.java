@@ -42,8 +42,17 @@ public class PositionRequestService {
      *
      * @param entity
      */
-    public void sendEtrExchangeTradeSaveRequest(EtrExchangeTradeSaveRequest entity) {
+    public void sendEtrExchangeTradeSaveRequest(EtrExchangeTradeSaveRequest entity,String decisionAct,String systemAct) {
         Map<String, Object> resultMap = new HashMap<>();
+//		if (StringUtil.equals(entity.getOptType(), "new")) {
+//		    resultMap.put("decisionAct", DictCodeListExt3.系统动作_新建.getValue());
+//		    resultMap.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
+//		} else if (StringUtil.equals(entity.getOptType(), "modify")) {
+//		    resultMap.put("decisionAct", DictCodeListExt3.系统动作_修改.getValue());
+//		    resultMap.put("systemAct", DictCodeListExt3.系统动作_修改.getValue());
+//		}
+		resultMap.put("decisionAct", decisionAct);
+		resultMap.put("systemAct", systemAct);
         this.setCommonField(entity, resultMap);//设置公共字段，个性化的需要在具体接口中覆盖
         String type6 = commonPositionEngineService.getType6(entity.getFinprodId());
         String finprodType = entity.getFinprodType2();
@@ -68,15 +77,57 @@ public class PositionRequestService {
     }
 
     /**
-     * doDelete时使用
-     *
-     * @param workflowId
-     * @param modelType
-     * @param busiType
-     * @param ps
+     * doDelete时使用---作废指令-共通接口
+     * @param entity
      */
-    public void sendDeleteByWorkFlowId(String workflowId, String modelType, String busiType, String ps) {
-        PositionHttpRequest.doDeleteByWorkFlowId(workflowId, modelType, busiType, ps);
+    public void sendDelete(EtrExchangeTradeSaveRequest entity) {
+        PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(), PositionConstant.POSITION_TYPE_ETR, this.getBusiType(entity.getPs()), entity.getPs());
+    }
+    
+    /**
+     *  撤销时使用---撤销指令-共通接口
+     * @param entity
+     */
+    public void sendRevoke(EtrExchangeTradeSaveRequest entity) {
+        PositionHttpRequest.dorevoke(entity.getEntrustId(), PositionConstant.POSITION_TYPE_TRD, this.getBusiType(entity.getPs()), entity.getPs());
+    }
+    
+    /**
+     * 批量关闭时使用---批量关闭-共通接口
+     * @param entity
+     */
+    public void sendBatchClose(EtrExchangeTradeSaveRequest entity) {
+    	Map<String, Object> resultMap = new HashMap<>();
+    	resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());
+    	resultMap.put("totalTradeId", entity.getWorkflowId());
+    	resultMap.put("modelType", PositionConstant.POSITION_TYPE_ETR);
+    	resultMap.put("busiType", this.getBusiType(entity.getPs()));
+    	resultMap.put("ps", entity.getPs());
+    	if (StringUtil.equals(entity.getOptType(), "new")) {
+            resultMap.put("decisionAct", DictCodeListExt3.系统动作_新建.getValue());
+            resultMap.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
+        } else if (StringUtil.equals(entity.getOptType(), "modify")) {
+            resultMap.put("decisionAct", DictCodeListExt3.系统动作_修改.getValue());
+            resultMap.put("systemAct", DictCodeListExt3.系统动作_修改.getValue());
+        }
+    	resultMap.put("closeId", entity.getEntrustId());
+    	PositionHttpRequest.batchClose(resultMap);
+    }
+    
+    private String getBusiType(String ps) {
+    	String busiType = "";
+        if (BussinessDictCodeList.交易方向_行权回售.getValue().equals(ps)) {
+        	busiType = DictCodeListExt3.头寸业务类型_债券行权交易.getValue();
+        } else if (BussinessDictCodeList.交易方向_买入.getValue().equals(ps) || BussinessDictCodeList.交易方向_卖出.getValue().equals(ps)) {
+        	busiType = DictCodeListExt3.头寸业务类型_现券交易.getValue();
+        } else if (DictCodeListExt3.交易方向_配债.getValue().equals(ps)) {
+        	busiType = DictCodeListExt3.头寸业务类型_配债.getValue();
+        } else if (DictCodeListExt3.交易方向_债转股.getValue().equals(ps)) {
+        	busiType = DictCodeListExt3.头寸业务类型_债转股.getValue();
+        } else if (DictCodeList.交易方向_上市流通.getValue().equals(ps)) {
+        	busiType = DictCodeListExt3.头寸业务类型_上市流通.getValue();
+        }
+    	return busiType;
     }
 
     /**
@@ -492,14 +543,6 @@ public class PositionRequestService {
         resultMap.put("balanceCheck", balanceCheck);
         resultMap.put("flowStatus", DictCodeListExt3.流程节点_流程提交.getValue());
         resultMap.put("modelType", DictCodeListExt1.子系统代码_委托.getValue());
-
-        if (StringUtil.equals(entity.getOptType(), "new")) {
-            resultMap.put("decisionAct", DictCodeListExt3.系统动作_新建.getValue());
-            resultMap.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
-        } else if (StringUtil.equals(entity.getOptType(), "modify")) {
-            resultMap.put("decisionAct", DictCodeListExt3.系统动作_修改.getValue());
-            resultMap.put("systemAct", DictCodeListExt3.系统动作_修改.getValue());
-        }
 
         // 结算方式	见数据字典：结算方式
         // 调用【共通:结算方式判断】 返回.结算方式

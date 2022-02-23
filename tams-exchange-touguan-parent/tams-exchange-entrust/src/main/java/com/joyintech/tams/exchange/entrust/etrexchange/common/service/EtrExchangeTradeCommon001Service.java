@@ -113,6 +113,8 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
+import com.joyintech.system.base.dao.SysWflBusinessListMapper;
+import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.common.base.dao.EtrEntrustDetailMapper;
@@ -280,6 +282,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
 	@Autowired
 	private EtrEntrustDetailMapper etrEntrustDetailMapper;
+	@Autowired
+    private SysWflBusinessListMapper sysWflBusinessListMapper;
 
 	/**
 	 * {@inheritDoc}
@@ -778,6 +782,19 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			catch (Exception e) {
 				e.printStackTrace();
 			}
+			//增加调用头寸引擎代码start
+			String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
+			String systemAct = DictCodeListExt3.系统动作_新建.getValue();
+            SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
+            if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
+            	decisionAct = DictCodeListExt3.系统动作_修改.getValue();
+            }
+            if (StringUtil.equals(entity.getOptType(), ENTRUST_RECORD_MODIFY)) {
+            	systemAct = DictCodeListExt3.系统动作_修改.getValue();
+            }
+            entity.setSoftSkipMode("Y");
+            positionRequestService.sendEtrExchangeTradeSaveRequest(entity,decisionAct,systemAct);
+          //增加调用头寸引擎代码end
 		}
 	}
 
@@ -879,13 +896,23 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		doInsertFlow(entity);
 		//插入和修改时，指令持仓流水 、现金流水处理,支持多组合
 		doInsetOrUpdateForEtrPositionHoldMulti(entity);
-		//调用头寸引擎
-		positionRequestService.sendEtrExchangeTradeSaveRequest(entity);
+		//增加调用头寸引擎代码start
+		String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
+		String systemAct = DictCodeListExt3.系统动作_新建.getValue();
+		if (StringUtil.equals(entity.getOptType(), ENTRUST_RECORD_MODIFY)) {
+        	systemAct = DictCodeListExt3.系统动作_修改.getValue();
+        }
+		positionRequestService.sendEtrExchangeTradeSaveRequest(entity,decisionAct,systemAct);
+		//增加调用头寸引擎代码end
 	}
 
 	@Override
 	public void doDelete(String workflowId) {
 		doDeleteFlow(workflowId);
+		//增加调用头寸引擎代码start
+		EtrExchangeTradeSaveRequest entity = getBussinessEntityByWorkflowId(workflowId);
+		positionRequestService.sendDelete(entity);
+		//增加调用头寸引擎代码end
 	}
 
 	private void doDeleteFlow(String workflowId) {
