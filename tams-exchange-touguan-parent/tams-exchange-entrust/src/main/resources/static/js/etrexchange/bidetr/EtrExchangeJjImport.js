@@ -240,6 +240,7 @@
         data.pageModel = PAGE_MODEL_EDIT;
         var object = {};
         object.rowData = JSON.stringify(data);
+        console.log("dataxxxxxxxxxxxxxxxxxxxxx"+JSON.parse(object.rowData))
         object.businessId = data.businessId;
         Joyin.dialog("上传附件",
             JoyinUtil.getRealPath("component/entrust/EtrListUploadFile/init"),

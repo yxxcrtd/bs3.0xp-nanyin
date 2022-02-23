@@ -37,10 +37,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *  交易所指令交易（债券股票回购基金场内指令交易）
@@ -171,6 +168,11 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 				else {
 					pageParam.put("date", iPlatformDate.getSysDate());
 				}
+				if(StringUtil.isNotEmpty((String)pageParam.get("finprodMarketIds"))){
+					pageParam.put("finprodMarketIds",StringUtil.splitToList(GlobalConstant.COMMA, pageParam.get("finprodMarketIds").toString()));
+				}else{
+					pageParam.put("finprodMarketIds", null);
+				}
 				Page<EtrExchangeTradePositionsCommonResponse> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(),
 						() -> etrExchangeTradeCommonMapper.findZqzyPositionsPage(pageParam));
 				return result;
@@ -252,6 +254,11 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 		}
 		param.put("search_isNumberFlag", BaseMap.isNumeric(request.getSearch()));
 		param.put("tradePlat",request.getTradePlat());
+		if(StringUtil.isNotEmpty((String)param.get("finprodMarketIds"))){
+			param.put("finprodMarketIds",StringUtil.splitToList(GlobalConstant.COMMA, param.get("finprodMarketIds").toString()));
+		}else{
+			param.put("finprodMarketIds", null);
+		}
 		return super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeTradeCommonMapper.selectEtrExchange(param));
 //		return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectEtrExchange",
 //				param, EtrExchangeTrade003Dto.class);

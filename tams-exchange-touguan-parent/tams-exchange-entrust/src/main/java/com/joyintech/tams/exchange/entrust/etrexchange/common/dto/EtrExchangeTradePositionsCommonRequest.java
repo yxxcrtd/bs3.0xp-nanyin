@@ -58,6 +58,9 @@ public class EtrExchangeTradePositionsCommonRequest {
     @ApiModelProperty(name="finprodType2",value="资产类型",example="A1")
     private String finprodType2;
 
+    @ApiModelProperty(name="finprodMarketIds",value="多个市场代码",example="A,B")
+    private String finprodMarketIds;
+
     public String getFinprodMarketId() {
         return finprodMarketId;
     }
@@ -139,5 +142,13 @@ public class EtrExchangeTradePositionsCommonRequest {
 
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
+    }
+
+    public String getFinprodMarketIds() {
+        return finprodMarketIds;
+    }
+
+    public void setFinprodMarketIds(String finprodMarketIds) {
+        this.finprodMarketIds = finprodMarketIds;
     }
 }
