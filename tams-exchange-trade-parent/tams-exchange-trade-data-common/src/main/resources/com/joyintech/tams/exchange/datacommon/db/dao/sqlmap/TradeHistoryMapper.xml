@@ -47,6 +47,9 @@
         <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR"/>
         <result column="INV_MANAGER_ID" property="invManagerId" jdbcType="VARCHAR"/>
         <result column="PS" property="ps" jdbcType="VARCHAR"/>
+        <result column="BUSI_TYPE_TG" property="busiTypeTg" jdbcType="VARCHAR"/>
+        <result column="EXTEND1" property="extend1" jdbcType="VARCHAR"/>
+        <result column="EXTEND2" property="extend2" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap id="QueryResultMap" type="com.joyintech.tams.exchange.common.bean.TradeQueryBean">
@@ -95,6 +98,9 @@
         <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR"/>
         <result column="INV_MANAGER_ID" property="invManagerId" jdbcType="VARCHAR"/>
         <result column="PS" property="ps" jdbcType="VARCHAR"/>
+        <result column="BUSI_TYPE_TG" property="busiTypeTg" jdbcType="VARCHAR"/>
+        <result column="EXTEND1" property="extend1" jdbcType="VARCHAR"/>
+        <result column="EXTEND2" property="extend2" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Example_Where_Clause">
@@ -163,7 +169,7 @@
     ENTRUST_PROP, ENTRUST_BS, BS_FLAG, TRADE_TYPE, TRADED_BALANCE, TRADED_VOLUME, TRADED_PRICE,
     CLEAR_BALANCE, TRADE_TIME, DISCOUNT, TRANS_CODE, PROP_SEAT_NO, TRADING_DAY, LOCAL_ENTRUST_ID,
     BROKER_ENTRUST_ID, BROKER_TRADE_ID, REPORT_NO, CREATE_TIME, UPDATE_TIME, OFFSET_FLAG, HEDGE_FLAG, PORTFOLIO_ID, FULL_PRICE,
-    PORTFOLIO_NAME,SEC_ACCT_ID,SEC_ACCT_NAME,TRADE_PLAT,FINPROD_TYPE2, INV_MANAGER_ID,PS
+    PORTFOLIO_NAME,SEC_ACCT_ID,SEC_ACCT_NAME,TRADE_PLAT,FINPROD_TYPE2, INV_MANAGER_ID,PS,BUSI_TYPE_TG, EXTEND1, EXTEND2
     </sql>
 
     <sql id="Query_Column_List">
@@ -173,7 +179,8 @@
     a.CLEAR_BALANCE, a.TRADE_TIME, a.DISCOUNT, a.TRANS_CODE, a.PROP_SEAT_NO, a.TRADING_DAY, a.LOCAL_ENTRUST_ID,
     a.BROKER_ENTRUST_ID, a.BROKER_TRADE_ID, a.REPORT_NO, a.CREATE_TIME, a.UPDATE_TIME, a.OFFSET_FLAG,a. HEDGE_FLAG,
     a.PORTFOLIO_ID, a.FULL_PRICE,a.ENTRUST_BS,
-    a.PORTFOLIO_NAME,a.SEC_ACCT_ID,a.SEC_ACCT_NAME,a.TRADE_PLAT,a.FINPROD_TYPE2,a.INV_MANAGER_ID,a.PS
+    a.PORTFOLIO_NAME,a.SEC_ACCT_ID,a.SEC_ACCT_NAME,a.TRADE_PLAT,a.FINPROD_TYPE2,a.INV_MANAGER_ID,a.PS,
+    a.BUSI_TYPE_TG,a.EXTEND1,a.EXTEND2
     </sql>
     <sql id="queryCondition2">
         <where>
@@ -257,7 +264,7 @@
                                     LOCAL_ENTRUST_ID, BROKER_ENTRUST_ID, BROKER_TRADE_ID, REPORT_NO,
                                     CREATE_TIME, UPDATE_TIME, OFFSET_FLAG, HEDGE_FLAG, PORTFOLIO_ID, FULL_PRICE,
                                     PORTFOLIO_NAME, SEC_ACCT_ID, SEC_ACCT_NAME, TRADE_PLAT, FINPROD_TYPE2,
-                                    INV_MANAGER_ID, PS)
+                                    INV_MANAGER_ID, PS, BUSI_TYPE_TG, EXTEND1, EXTEND2)
     </sql>
     <insert id="insert" parameterType="com.joyintech.tams.exchange.common.db.domain.TradeHistory">
         <include refid="tradeHistoryFiled"/>
@@ -276,7 +283,8 @@
         #{fullPrice,jdbcType=NUMERIC},
         #{portfolioName,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR},
         #{secAcctName,jdbcType=VARCHAR}, #{tradePlat,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR},
-        #{invManagerId,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}
+        #{invManagerId,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, #{busiTypeTg,jdbcType=VARCHAR},
+        #{extend1,jdbcType=VARCHAR}, #{extend2,jdbcType=VARCHAR}
         )
     </insert>
     <insert id="insertBatch">
@@ -312,7 +320,10 @@
             #{record.tradePlat,jdbcType=VARCHAR},
             #{record.finprodType2,jdbcType=VARCHAR},
             #{record.invManagerId,jdbcType=VARCHAR},
-            #{record.ps,jdbcType=VARCHAR}
+            #{record.ps,jdbcType=VARCHAR},
+            #{record.busiTypeTg,jdbcType=VARCHAR},
+            #{record.extend1,jdbcType=VARCHAR},
+            #{record.extend2,jdbcType=VARCHAR}
         </foreach>
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.exchange.common.db.domain.TradeHistory">
@@ -436,6 +447,15 @@
             <if test="ps != null">
                 PS,
             </if>
+            <if test="busiTypeTg != null">
+                BUSI_TYPE_TG,
+            </if>
+            <if test="extend1 != null">
+                EXTEND1,
+            </if>
+            <if test="extend2 != null">
+                EXTEND2,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -555,6 +575,15 @@
             </if>
             <if test="ps != null">
                 #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="busiTypeTg != null">
+                #{busiTypeTg,jdbcType=VARCHAR},
+            </if>
+            <if test="extend1 != null">
+                #{extend1,jdbcType=VARCHAR},
+            </if>
+            <if test="extend2 != null">
+                #{extend2,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -700,6 +729,15 @@
             <if test="record.ps != null">
                 PS = #{record.ps,jdbcType=VARCHAR},
             </if>
+            <if test="record.busiTypeTg != null">
+                BUSI_TYPE_TG = #{record.busiTypeTg,jdbcType=VARCHAR},
+            </if>
+            <if test="record.extend1 != null">
+                EXTEND1 = #{record.extend1,jdbcType=VARCHAR},
+            </if>
+            <if test="record.extend2 != null">
+                EXTEND2 = #{record.extend2,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
@@ -750,7 +788,10 @@
         TRADE_PLAT = #{record.tradePlat,jdbcType=VARCHAR},
         FINPROD_TYPE2 = #{record.finprodType2,jdbcType=VARCHAR},
         INV_MANAGER_ID = #{record.invManagerId,jdbcType=VARCHAR},
-        PS = #{record.ps,jdbcType=VARCHAR}
+        PS = #{record.ps,jdbcType=VARCHAR},
+        BUSI_TYPE_TG = #{record.busiTypeTg,jdbcType=VARCHAR},
+        EXTEND1 = #{record.extend1,jdbcType=VARCHAR},
+        EXTEND2 = #{record.extend2,jdbcType=VARCHAR}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>

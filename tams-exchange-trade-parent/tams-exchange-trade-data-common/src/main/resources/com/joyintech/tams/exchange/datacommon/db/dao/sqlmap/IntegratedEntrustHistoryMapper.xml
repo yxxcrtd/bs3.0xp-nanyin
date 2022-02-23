@@ -70,6 +70,9 @@
         <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR"/>
         <result column="INV_MANAGER_ID" property="invManagerId" jdbcType="VARCHAR"/>
         <result column="PS" property="ps" jdbcType="VARCHAR"/>
+        <result column="BUSI_TYPE_TG" property="busiTypeTg" jdbcType="VARCHAR"/>
+        <result column="EXTEND1" property="extend1" jdbcType="VARCHAR"/>
+        <result column="EXTEND2" property="extend2" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap id="QueryResultMap" type="com.joyintech.tams.exchange.common.bean.EntrustQueryBean">
@@ -140,6 +143,9 @@
         <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR"/>
         <result column="INV_MANAGER_ID" property="invManagerId" jdbcType="VARCHAR"/>
         <result column="PS" property="ps" jdbcType="VARCHAR"/>
+        <result column="BUSI_TYPE_TG" property="busiTypeTg" jdbcType="VARCHAR"/>
+        <result column="EXTEND1" property="extend1" jdbcType="VARCHAR"/>
+        <result column="EXTEND2" property="extend2" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Example_Where_Clause">
@@ -212,7 +218,7 @@
     TRADED_BALANCE, TRADED_VOLUME, TRADED_PRICE, CANCEL_VOLUME, REPORT_TIME, TRADE_TIME, 
     CANCEL_TIME, ERROR_CODE, ERROR_MSG, TRADING_DAY, LOCAL_ENTRUST_ID, BROKER_ENTRUST_ID, 
     IP_MAC, REMARK, CREATE_TIME, UPDATE_TIME, ENTRUST_STATUS, ORIG_ENTRUST_ID, INTEGRATED_ENTRUST_ID, REPORT_NO, OPERATE_USER,
-    PORTFOLIO_NAME,SEC_ACCT_ID,SEC_ACCT_NAME,TRADE_PLAT,FINPROD_TYPE2, INV_MANAGER_ID,PS
+    PORTFOLIO_NAME,SEC_ACCT_ID,SEC_ACCT_NAME,TRADE_PLAT,FINPROD_TYPE2, INV_MANAGER_ID,PS,BUSI_TYPE_TG, EXTEND1, EXTEND2
     </sql>
 
     <sql id="entrustHistory">
@@ -226,7 +232,7 @@
         TRADED_VOLUME, TRADED_PRICE, CANCEL_VOLUME, REPORT_TIME,TRADE_TIME, CANCEL_TIME, ERROR_CODE,
         ERROR_MSG, TRADING_DAY, LOCAL_ENTRUST_ID, BROKER_ENTRUST_ID,IP_MAC, REMARK, CREATE_TIME, UPDATE_TIME,
         ENTRUST_STATUS, ORIG_ENTRUST_ID, ENTRUST_ID AS INTEGRATED_ENTRUST_ID, REPORT_NO, OPERATE_USER,
-        PORTFOLIO_NAME,SEC_ACCT_ID,SEC_ACCT_NAME,TRADE_PLAT,FINPROD_TYPE2, INV_MANAGER_ID,PS
+        PORTFOLIO_NAME,SEC_ACCT_ID,SEC_ACCT_NAME,TRADE_PLAT,FINPROD_TYPE2, INV_MANAGER_ID,PS,BUSI_TYPE_TG, EXTEND1, EXTEND2
     </sql>
 
     <sql id="QueryIntegratedEntrustHistory">
@@ -240,7 +246,8 @@
     a.CANCEL_TIME, a.ERROR_CODE, a.ERROR_MSG, a.TRADING_DAY, a.LOCAL_ENTRUST_ID, a.BROKER_ENTRUST_ID,
     a.IP_MAC, a.REMARK, a.CREATE_TIME,a.UPDATE_TIME, a.ENTRUST_STATUS, a.ORIG_ENTRUST_ID, a.INTEGRATED_ENTRUST_ID,
     a.REPORT_NO, a.OPERATE_USER,a.ENTRUST_BS,
-    a.PORTFOLIO_NAME,a.SEC_ACCT_ID,a.SEC_ACCT_NAME,a.TRADE_PLAT,a.FINPROD_TYPE2,a.INV_MANAGER_ID,a.PS
+    a.PORTFOLIO_NAME,a.SEC_ACCT_ID,a.SEC_ACCT_NAME,a.TRADE_PLAT,a.FINPROD_TYPE2,a.INV_MANAGER_ID,a.PS,a.BUSI_TYPE_TG,
+    a.EXTEND1,a.EXTEND2
     </sql>
 
     <sql id="QueryEntrustHistory">
@@ -254,7 +261,8 @@
         a.TRADED_VOLUME, a.TRADED_PRICE, a.CANCEL_VOLUME,a. REPORT_TIME,a.TRADE_TIME, a.CANCEL_TIME, a.ERROR_CODE,
         a.ERROR_MSG, a.TRADING_DAY, a.LOCAL_ENTRUST_ID, a.BROKER_ENTRUST_ID,a.IP_MAC, a.REMARK, a.CREATE_TIME, a.UPDATE_TIME,
         a.ENTRUST_STATUS, a.ORIG_ENTRUST_ID, a.ENTRUST_ID AS INTEGRATED_ENTRUST_ID, a.REPORT_NO, a.OPERATE_USER, a.ENTRUST_BS,
-        a.PORTFOLIO_NAME,a.SEC_ACCT_ID,a.SEC_ACCT_NAME,a.TRADE_PLAT,a.FINPROD_TYPE2,a.INV_MANAGER_ID,a.PS
+        a.PORTFOLIO_NAME,a.SEC_ACCT_ID,a.SEC_ACCT_NAME,a.TRADE_PLAT,a.FINPROD_TYPE2,a.INV_MANAGER_ID,a.PS,
+        a.BUSI_TYPE_TG,a.EXTEND1,a.EXTEND2
     </sql>
 
     <select id="queryLastClearDate" resultType="java.lang.String">
@@ -444,7 +452,8 @@
                                                  REMARK, CREATE_TIME, UPDATE_TIME,
                                                  ENTRUST_STATUS, ORIG_ENTRUST_ID, INTEGRATED_ENTRUST_ID, REPORT_NO,
                                                  OPERATE_USER, PORTFOLIO_NAME, SEC_ACCT_ID, SEC_ACCT_NAME,
-                                                 TRADE_PLAT, FINPROD_TYPE2, INV_MANAGER_ID, PS)
+                                                 TRADE_PLAT, FINPROD_TYPE2, INV_MANAGER_ID, PS,
+                                                 BUSI_TYPE_TG, EXTEND1, EXTEND2)
     </sql>
 
     <insert id="insert" parameterType="com.joyintech.tams.exchange.common.db.domain.IntegratedEntrustHistory">
@@ -472,7 +481,8 @@
         #{reportNo,jdbcType=VARCHAR}, #{operateUser,jdbcType=VARCHAR},
         #{portfolioName,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR},
         #{secAcctName,jdbcType=VARCHAR}, #{tradePlat,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR},
-        #{invManagerId,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}
+        #{invManagerId,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, #{busiTypeTg,jdbcType=VARCHAR},
+        #{extend1,jdbcType=VARCHAR}, #{extend2,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -526,7 +536,10 @@
             #{record.tradePlat,jdbcType=VARCHAR},
             #{record.finprodType2,jdbcType=VARCHAR},
             #{record.invManagerId,jdbcType=VARCHAR},
-            #{record.ps,jdbcType=VARCHAR}
+            #{record.ps,jdbcType=VARCHAR},
+            #{record.busiTypeTg,jdbcType=VARCHAR},
+            #{record.extend1,jdbcType=VARCHAR},
+            #{record.extend2,jdbcType=VARCHAR}
         </foreach>
     </insert>
 
@@ -700,6 +713,15 @@
             <if test="ps != null">
                 PS,
             </if>
+            <if test="busiTypeTg != null">
+                BUSI_TYPE_TG,
+            </if>
+            <if test="extend1 != null">
+                EXTEND1,
+            </if>
+            <if test="extend2 != null">
+                EXTEND2,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -868,6 +890,15 @@
             </if>
             <if test="ps != null">
                 #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="busiTypeTg != null">
+                #{busiTypeTg,jdbcType=VARCHAR},
+            </if>
+            <if test="extend1 != null">
+                #{extend1,jdbcType=VARCHAR},
+            </if>
+            <if test="extend2 != null">
+                #{extend2,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -1083,6 +1114,15 @@
             <if test="record.ps != null">
                 PS = #{record.ps,jdbcType=VARCHAR},
             </if>
+            <if test="record.busiTypeTg != null">
+                BUSI_TYPE_TG = #{record.busiTypeTg,jdbcType=VARCHAR},
+            </if>
+            <if test="record.extend1 != null">
+                EXTEND1 = #{record.extend1,jdbcType=VARCHAR},
+            </if>
+            <if test="record.extend2 != null">
+                EXTEND2 = #{record.extend2,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
@@ -1156,7 +1196,10 @@
         TRADE_PLAT = #{record.tradePlat,jdbcType=VARCHAR},
         FINPROD_TYPE2 = #{record.finprodType2,jdbcType=VARCHAR},
         INV_MANAGER_ID = #{record.invManagerId,jdbcType=VARCHAR},
-        PS = #{record.ps,jdbcType=VARCHAR}
+        PS = #{record.ps,jdbcType=VARCHAR},
+        BUSI_TYPE_TG = #{record.busiTypeTg,jdbcType=VARCHAR},
+        EXTEND1 = #{record.extend1,jdbcType=VARCHAR},
+        EXTEND2 = #{record.extend2,jdbcType=VARCHAR}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
@@ -1363,6 +1406,15 @@
             <if test="ps != null">
                 PS = #{ps,jdbcType=VARCHAR},
             </if>
+            <if test="busiTypeTg != null">
+                BUSI_TYPE_TG = #{busiTypeTg,jdbcType=VARCHAR},
+            </if>
+            <if test="extend1 != null">
+                EXTEND1 = #{extend1,jdbcType=VARCHAR},
+            </if>
+            <if test="extend2 != null">
+                EXTEND2 = #{extend2,jdbcType=VARCHAR},
+            </if>
         </set>
         where ID = #{id,jdbcType=VARCHAR}
     </update>
@@ -1434,7 +1486,10 @@
             TRADE_PLAT            = #{tradePlat,jdbcType=VARCHAR},
             FINPROD_TYPE2         = #{finprodType2,jdbcType=VARCHAR},
             INV_MANAGER_ID        = #{invManagerId,jdbcType=VARCHAR},
-            PS                    = #{ps,jdbcType=VARCHAR}
+            PS                    = #{ps,jdbcType=VARCHAR},
+            BUSI_TYPE_TG          = #{busiTypeTg,jdbcType=VARCHAR},
+            EXTEND1               = #{extend1,jdbcType=VARCHAR},
+            EXTEND2               = #{extend2,jdbcType=VARCHAR}
         where ID = #{id,jdbcType=VARCHAR}
     </update>
 </mapper>

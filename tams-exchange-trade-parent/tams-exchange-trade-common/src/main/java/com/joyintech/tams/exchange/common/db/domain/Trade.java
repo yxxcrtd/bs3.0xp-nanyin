@@ -216,6 +216,12 @@ public class Trade implements Serializable, KeyMethodInterface<String> {
     private String invManagerId;
     @ApiModelProperty(name = "ps", value = "交易方向", hidden = true)
     private String ps;
+    @ApiModelProperty(name = "busiTypeTg", value = "投管业务类型")
+    private String busiTypeTg;
+    @ApiModelProperty(name = "extend1", value = "扩展信息1")
+    private String extend1;
+    @ApiModelProperty(name = "extend2", value = "扩展信息2")
+    private String extend2;
 
     public Trade() {
         this.tradedBalance = new BigDecimal("0.00");
@@ -602,5 +608,29 @@ public class Trade implements Serializable, KeyMethodInterface<String> {
 
     public void setPs(String ps) {
         this.ps = ps;
+    }
+
+    public String getBusiTypeTg() {
+        return busiTypeTg;
+    }
+
+    public void setBusiTypeTg(String busiTypeTg) {
+        this.busiTypeTg = busiTypeTg;
+    }
+
+    public String getExtend1() {
+        return extend1;
+    }
+
+    public void setExtend1(String extend1) {
+        this.extend1 = extend1;
+    }
+
+    public String getExtend2() {
+        return extend2;
+    }
+
+    public void setExtend2(String extend2) {
+        this.extend2 = extend2;
     }
 }
