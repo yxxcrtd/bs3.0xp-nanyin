@@ -300,7 +300,8 @@
             FP.FINPROD_TYPE2                          AS finprodType2,
             FP.TRADE_MARKET                           AS tradeMarket,
             SSAI.TRD_ACCT_ID                          AS acctNo,
-            TEMP.invAim invAim
+            TEMP.invAim invAim,
+            c1.acctName as dealCurAcctName
         FROM
             (
             SELECT
@@ -538,6 +539,9 @@
             STL_SEC_ACCT_INFO SSAI
         ON
             TEMP.SEC_ACCT_ID = SSAI.SEC_ACCT_ID
+        left join (select distinct ACCT_NO acctNo1, BUSI_ACCT_NO busiAcctNo1, CCY ccy, ACCT_NAME acctName
+        from STL_CAPACCT_INFO) c1
+        on SSAI.TRD_ACCT_ID = c1.acctNo1
         WHERE
             FP.TRADE_MARKET IN (#{TRADE_PLACE_03}, #{TRADE_PLACE_04})
         <if test="portfolioIdList != null and portfolioIdList.size()>0">

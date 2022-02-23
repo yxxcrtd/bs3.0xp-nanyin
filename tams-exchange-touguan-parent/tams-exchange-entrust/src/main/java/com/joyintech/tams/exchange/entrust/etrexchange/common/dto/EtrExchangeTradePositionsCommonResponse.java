@@ -101,6 +101,16 @@ public class EtrExchangeTradePositionsCommonResponse {
     @ApiModelProperty(name="PtlPositionsNum",value="组合持仓.数量",example="12")
     private BigDecimal PtlPositionsNum;
 
+    private String dealCurAcctName;
+
+    public String getDealCurAcctName() {
+        return dealCurAcctName;
+    }
+
+    public void setDealCurAcctName(String dealCurAcctName) {
+        this.dealCurAcctName = dealCurAcctName;
+    }
+
     public BigDecimal getPtlPositionsNum() {
         return PtlPositionsNum;
     }
