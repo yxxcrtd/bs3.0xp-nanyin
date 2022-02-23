@@ -3,6 +3,7 @@ package com.joyintech.tams.report.investormerger.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub;
@@ -16,6 +17,10 @@ import org.springframework.stereotype.Repository;
 public interface ChbInvestholdInfoCheckDtoMapper {
     int insert(ChbInvestholdInfoCheckDto record);
 
+    int insertAfterDeal(@Param("insert") List<ChbInvestholdInfoCheckDto> insert);
+
+    int updataOperateStatus(@Param("dtoAfterDealList") List<ChbInvestholdInfoCheckDto> dtoAfterDealList);
+
     int insertSelective(ChbInvestholdInfoCheckDto record);
     
     /**
@@ -25,6 +30,7 @@ public interface ChbInvestholdInfoCheckDtoMapper {
      */
     List<ChbInvestholdInfoCheckDto> selectBymodel(ChbInvestholdInfoCheckDto record);
     int deleteBymodel(ChbInvestholdInfoCheckDto record);
+    int deleteBymodelAfterDeal(@Param("deleteList") List<ChbInvestholdInfoCheckDto> deleteList);
     int updateMergerIdAndOperatestatus(ChbInvestholdInfoCheckDto record);
     
     /**
@@ -35,6 +41,8 @@ public interface ChbInvestholdInfoCheckDtoMapper {
     List<ChbInvestholdInfoCheckDto> selectByIndentifyMark(@Param("recordlist") List<ChbEquHoldCheckDto> recordlist);
     
     int insertToChbInvestholdInfo(ChbInvestholdInfoCheckDto record);
+
+    int insertToChbInvestholdInfoAfterDeal(@Param("insertToChbInvestholdInfoList") List<ChbInvestholdInfoCheckDto> insertToChbInvestholdInfoList);
     
     int deleteChbInvestholdInfo(ChbEquHoldCheckDto record);
     /**
@@ -117,6 +125,8 @@ public interface ChbInvestholdInfoCheckDtoMapper {
 
 	
 	List<ChbInvestholdInfoCheckDto> selectNeedCheckDtoList(List<Map<String, String>> list);
+
+    List<ChbInvestholdInfoCheckDto> selectNeedDealDtoList(List<ChbInvestholdInfoCheckDto> list);
 
 	
 	List<ChbEquHoldCheckDto> getMergerindentifymark(ChbInvestholdInfoCheckDto dto);

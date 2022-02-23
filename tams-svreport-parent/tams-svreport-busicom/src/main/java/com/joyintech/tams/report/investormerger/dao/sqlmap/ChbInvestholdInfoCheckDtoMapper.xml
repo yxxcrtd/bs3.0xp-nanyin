@@ -109,6 +109,79 @@
       #{agent,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{prodid,jdbcType=VARCHAR}, 
       #{interfCheckResult,jdbcType=VARCHAR})
   </insert>
+
+<insert id="insertAfterDeal" parameterType="java.util.List" >
+    begin
+    <foreach collection="insert" item="item" index="index" separator=";" >
+        INSERT INTO CHB_INVESTHOLD_INFO_CHECK
+        (
+        	REGIST_BANK_CODE, 
+         	INDENTIFY_MARK,
+			MERGER_INDENTIFY_MARK, 
+			PRD_REGIST_CODE,
+         	HOLD_DATE, 
+			CCY, 
+			AMOUNT,
+        	QTY, 
+			CNY_AMT, 
+			REMARK,
+        	DATA_SOURCE, 
+			STATUS, 
+			OPERATE_STATUS,
+			WORKFLOW_ID,
+        	ORG_CODE, 
+        	DEPT_CODE, 
+			UPDATE_USER,
+        	UPDATE_TIME, 
+        	CREATE_USER, 
+			CREATE_TIME,
+        	AGENT, 
+        	CREATE_DEPT, 
+        	PRODID,
+        	INTERF_CHECK_RESULT
+        ) VALUES (
+	        #{item.registBankCode,jdbcType=VARCHAR}, 
+	        #{item.indentifyMark,jdbcType=VARCHAR},
+	        #{item.mergerindentifymark,jdbcType=VARCHAR},
+	        #{item.prdRegistCode,jdbcType=VARCHAR},
+	        #{item.holdDate,jdbcType=TIMESTAMP}, 
+	        #{item.ccy,jdbcType=VARCHAR}, 
+	        #{item.amount,jdbcType=DECIMAL},
+	        #{item.qty,jdbcType=DECIMAL}, 
+	        #{item.cnyAmt,jdbcType=DECIMAL}, 
+	        #{item.remark,jdbcType=VARCHAR},
+	        #{item.dataSource,jdbcType=CHAR}, 
+	        #{item.status,jdbcType=VARCHAR}, 
+	        #{item.operatestatus,jdbcType=VARCHAR}, 
+	        #{item.workflowId,jdbcType=VARCHAR},
+	        #{item.orgCode,jdbcType=VARCHAR}, 
+	        #{item.deptCode,jdbcType=VARCHAR}, 
+	        #{item.updateUser,jdbcType=VARCHAR},
+	        #{item.updateTime,jdbcType=TIMESTAMP}, 
+	        #{item.createUser,jdbcType=VARCHAR}, 
+	        #{item.createTime,jdbcType=TIMESTAMP},
+	        #{item.agent,jdbcType=VARCHAR}, 
+	        #{item.createDept,jdbcType=VARCHAR}, 
+	        #{item.prodid,jdbcType=VARCHAR},
+	        #{item.interfCheckResult,jdbcType=VARCHAR}
+	       )
+    </foreach>
+    ;end;
+</insert>
+
+    <update id="updataOperateStatus" parameterType="java.util.List">
+        begin
+        <foreach collection="dtoAfterDealList" item="item" index="index" separator=";" >
+            UPDATE CHB_INVESTHOLD_INFO_CHECK 
+            <set>
+			  OPERATE_STATUS = '01'			  
+			</set>          	 
+            WHERE
+            	MERGER_INDENTIFY_MARK = #{item.mergerindentifymark,jdbcType=VARCHAR}
+        </foreach>
+        ;end;  
+    </update>
+
   <insert id="insertSelective" parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto" >
     insert into CHB_INVESTHOLD_INFO_CHECK
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -363,7 +436,37 @@
        and INTERF_CHECK_RESULT=#{interfCheckResult,jdbcType=VARCHAR}
       </if>
   </delete>
-  <update id="updateMergerIdAndOperatestatus">
+
+	<delete id="deleteBymodelAfterDeal" parameterType="java.util.List">
+	    begin
+	     <foreach collection="deleteList" item="item" index="index" separator=";">
+	        DELETE FROM CHB_INVESTHOLD_INFO_CHECK
+	        where 1=1
+	        <if test="item.registBankCode != null" >
+	            and REGIST_BANK_CODE = #{item.registBankCode,jdbcType=VARCHAR}
+	        </if>
+	        <if test="item.prodid != null" >
+	            and PRODID = #{item.prodid,jdbcType=VARCHAR}
+	        </if>
+	        <if test="item.prdRegistCode != null" >
+	            and PRD_REGIST_CODE = #{item.prdRegistCode,jdbcType=VARCHAR}
+	        </if>  
+	        <if test="item.indentifyMark != null" >
+	            and INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR}
+	        </if>
+	        <if test="item.ccy != null" >
+	            and CCY = #{item.ccy,jdbcType=VARCHAR}
+	        </if> 
+	        <if test="item.holdDate != null" >
+	            and HOLD_DATE = #{item.holdDate,jdbcType=VARCHAR}
+	        </if> 
+	     </foreach>
+	    ;end;   
+	    
+	</delete>
+
+
+    <update id="updateMergerIdAndOperatestatus">
   	update
 	   CHB_INVESTHOLD_INFO_CHECK
 	   set OPERATE_STATUS='01',
@@ -559,6 +662,143 @@
 		</if>
 	</trim>
 </insert>
+
+<insert id="insertToChbInvestholdInfoAfterDeal" parameterType="java.util.Map">
+    begin
+    <foreach collection="insertToChbInvestholdInfoList" item="item" index="index" separator=";" >
+        insert into CHB_INVESTHOLD_INFO info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="item.registBankCode != null">
+                info.REGIST_BANK_CODE,
+            </if>
+            <if test="item.indentifyMark != null">
+                info.INDENTIFY_MARK,
+            </if>
+            <if test="item.prodid != null">
+                info.PRODID,
+            </if>
+            <if test="item.holdDate != null">
+                info.HOLD_DATE,
+            </if>
+            <if test="item.ccy != null">
+                info.CCY,
+            </if>
+            <if test="item.status != null">
+                info.STATUS,
+            </if>
+            <if test="item.prdRegistCode != null">
+                info.PRD_REGIST_CODE,
+            </if>
+            <if test="item.amount != null">
+                info.AMOUNT,
+            </if>
+            <if test="item.qty != null">
+                info.QTY,
+            </if>
+            <if test="item.cnyAmt != null">
+                info.CNY_AMT,
+            </if>
+            <if test="item.remark != null">
+                info.REMARK,
+            </if>
+            <if test="item.dataSource != null">
+                info.DATA_SOURCE,
+            </if>
+            <if test="item.workflowId != null">
+                info.WORKFLOW_ID,
+            </if>
+            <if test="item.orgCode != null">
+                info.ORG_CODE,
+            </if>
+            <if test="item.deptCode != null">
+                info.DEPT_CODE,
+            </if>
+            <if test="item.updateUser != null">
+                info.UPDATE_USER,
+            </if>
+            info.UPDATE_TIME,
+            <if test="item.createUser != null">
+                info.CREATE_USER,
+            </if>
+            info.CREATE_TIME,
+            <if test="item.agent != null">
+                info.AGENT,
+            </if>
+            <if test="item.createDept != null">
+                info.CREATE_DEPT,
+            </if>
+            <if test="item.interfCheckResult != null">
+                info.INTERF_CHECK_RESULT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="item.registBankCode != null">
+                #{item.registBankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="item.indentifyMark != null">
+                #{item.indentifyMark,jdbcType=VARCHAR},
+            </if>
+            <if test="item.prodid != null">
+                #{item.prodid,jdbcType=VARCHAR},
+            </if>
+            <if test="item.holdDate != null">
+                #{item.holdDate,jdbcType=DATE},
+            </if>
+            <if test="item.ccy != null">
+                #{item.ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="item.status != null">
+                #{item.status,jdbcType=VARCHAR},
+            </if>
+            <if test="item.prdRegistCode != null">
+                #{item.prdRegistCode,jdbcType=VARCHAR},
+            </if>
+            <if test="item.amount != null">
+                #{item.amount,jdbcType=DECIMAL},
+            </if>
+            <if test="item.qty != null">
+                #{item.qty,jdbcType=DECIMAL},
+            </if>
+            <if test="item.cnyAmt != null">
+                #{item.cnyAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="item.remark != null">
+                #{item.remark,jdbcType=VARCHAR},
+            </if>
+            <if test="item.dataSource != null">
+                #{item.dataSource,jdbcType=CHAR},
+            </if>
+            <if test="item.workflowId != null">
+                #{item.workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="item.orgCode != null">
+                #{item.orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="item.deptCode != null">
+                #{item.deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="item.updateUser != null">
+                #{item.updateUser,jdbcType=VARCHAR},
+            </if>
+            sysdate,
+            <if test="item.createUser != null">
+                #{item.createUser,jdbcType=VARCHAR},
+            </if>
+            sysdate,
+            <if test="item.agent != null">
+                #{item.agent,jdbcType=VARCHAR},
+            </if>
+            <if test="item.createDept != null">
+                #{item.createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="item.interfCheckResult != null">
+                #{item.interfCheckResult,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </foreach>
+    ;end;
+</insert>
+
 <delete id="deleteChbInvestholdInfo" parameterType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto">
 	delete from CHB_INVESTHOLD_INFO
 	where INDENTIFY_MARK in
@@ -1180,6 +1420,48 @@
      		   and tmp .PRODID =sub.PRODID
      )
   </select>
+
+    <select id="selectNeedDealDtoList" resultMap="BaseResultMap" parameterType="java.util.List"  >
+        with tmp as (
+        <foreach collection="list" item="item" separator="from dual union all select" open=" select * from (select " close="from dual)">
+            #{item.registBankCode, jdbcType=VARCHAR} REGIST_BANK_CODE,
+            #{item.indentifyMark, jdbcType=VARCHAR} INDENTIFY_MARK,
+            #{item.mergerindentifymark, jdbcType=VARCHAR} MERGER_INDENTIFY_MARK,
+            #{item.ccy,jdbcType=VARCHAR} CCY,
+            #{item.holdDate,jdbcType=DATE} HOLD_DATE,
+            #{item.prodid,jdbcType=VARCHAR} PRODID
+        </foreach>
+        )
+        SELECT
+	        sub.REGIST_BANK_CODE,
+	        sub.INDENTIFY_MARK,
+	        sub.HOLD_DATE,
+	        sub.CCY,	        
+	        sub.PRODID,
+	        sub.AMOUNT,
+	        sub.QTY,
+	        sub.CNY_AMT,
+	        C.MERGER_INDENTIFY_MARK,
+	        '99' AS OPERATE_STATUS,
+	        C.STATUS
+        FROM
+           tmp
+        INNER JOIN
+           CHB_EQU_HOLD_CHECK C
+               on  C.MERGER_INDENTIFY_MARK = tmp.MERGER_INDENTIFY_MARK
+        INNER JOIN
+           CHB_INVESTHOLD_INFO_SUB sub
+               on     tmp.REGIST_BANK_CODE = sub.REGIST_BANK_CODE
+                  and tmp.INDENTIFY_MARK = sub.INDENTIFY_MARK
+                  and tmp.HOLD_DATE = sub.HOLD_DATE
+                  and tmp.CCY = sub.CCY
+                  and tmp.PRODID = sub.PRODID
+                  and sub.SEND_STATUS = '01'
+        LEFT JOIN
+           CHB_INVESTHOLD_INFO_CHECK D
+               on C.MERGER_INDENTIFY_MARK = D.MERGER_INDENTIFY_MARK          
+        WHERE D.INDENTIFY_MARK is null
+    </select>
     
     <select id="getMergerindentifymark" resultType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto"
   parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto">

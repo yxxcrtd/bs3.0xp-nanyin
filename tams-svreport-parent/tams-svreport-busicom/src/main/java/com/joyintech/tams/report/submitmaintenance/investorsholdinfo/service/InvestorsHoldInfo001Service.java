@@ -3011,7 +3011,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			//FIXME  ADD BY 
 			logger.info("checkInvestorsHoldInfolistBack -begin "+sdf.format(new Date()));
 //			investorsHoldInfoDistinctService.checkInvestorsHoldInfolist(equityList,"02");
-			List<ChbInvestholdInfoCheckDto> mergelist = investorsHoldInfoDistinctService.checkInvestorsHoldInfolistBack(equityList,paraDto);
+			List<ChbInvestholdInfoCheckDto> mergelist = investorsHoldInfoDistinctService.checkInvestorsHoldInfolistBackNew(equityList,paraDto);
 			logger.info("checkInvestorsHoldInfolistBack -end "+sdf.format(new Date()));
 			// 投资者持有信息上游接口接入多线程处理，可以事先查询的内容预加载，避免循环中多次处理
 			

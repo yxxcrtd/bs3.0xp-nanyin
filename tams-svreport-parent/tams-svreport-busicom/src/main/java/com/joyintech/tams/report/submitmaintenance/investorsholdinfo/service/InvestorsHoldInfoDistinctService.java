@@ -1,19 +1,24 @@
 package com.joyintech.tams.report.submitmaintenance.investorsholdinfo.service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,13 +30,12 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
 import com.joyintech.tams.report.investormerger.dao.ChbEquHoldCheckDtoMapper;
 import com.joyintech.tams.report.investormerger.dao.ChbInvestholdInfoCheckDtoMapper;
@@ -46,7 +50,8 @@ import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
 import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dao.InvestorsHoldInfoRegist001Mapper;
 import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto;
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
 @Service
 public class InvestorsHoldInfoDistinctService {
@@ -75,6 +80,12 @@ public class InvestorsHoldInfoDistinctService {
      */
     @Value("${application.reportSelectOrDeleteCount}")
     public  String reportSelectOrDeleteCount;
+
+	/**
+	 * 短sql最大一次最大插入条数
+	 */
+	@Value("${application.reportInsertCount}")
+	public  int reportInsertCount;
     
 	boolean doCombineIdentifying(InvestorsHoldInfo001Dto action,List<InvestorsHoldInfo001Dto> listE,Map<String,List<ChbEquHoldCheckDto>> holdTmpMap){
 //		String autoFlag=SvrDataUtil.getSysParam("SVR_EQU_HOLD_MERGER");
@@ -300,7 +311,6 @@ public class InvestorsHoldInfoDistinctService {
 		
 	}
 	 
-	
 	/**
 	 * 
 	 * @param type 只处理普通入库逻辑
@@ -403,6 +413,89 @@ public class InvestorsHoldInfoDistinctService {
 		 return checkDtoList;
 		
 	}
+	
+	
+	/**
+	 * 对三合一的持有信息进行处理
+	 * 20220218处理性能问题 对代码逻辑进行重构
+	 */
+	
+	 @Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = Exception.class)
+	public List<ChbInvestholdInfoCheckDto> checkInvestorsHoldInfolistBackNew( List<Map<String, String>> list,InvestorsHoldInfo001FileReadParaDto paraDto){
+		
+		 //取得参数中传入的，产品代码 -- 产品登记编码的对应关系表
+		 Map<String, String> prdRegistMap = paraDto.getPrdRegistMap();
+		 
+		 //查询出 导入记录中属于三合一数据 && 并且中债反馈状态 ！= 03：中债通过的数据
+		 List<ChbInvestholdInfoCheckDto> checkDtoList= this.selectAllNeedCheckDtoList(list);
+		 
+		//对取得的三合一数据列表进行处理，对相同三合一身份的持有信息，值保留一条数据		 		 
+		 List<ChbInvestholdInfoCheckDto> checkDtoListFormegerId = checkDtoList.stream().collect(
+				 Collectors.collectingAndThen(
+						 Collectors.toCollection(() -> new TreeSet<>(
+								 	Comparator.comparing(
+								 			x -> x.getRegistBankCode() + x.getProdid() + x.getCcy() + x.getHoldDate() + x.getMergerindentifymark()						 
+								 ))), ArrayList::new)
+				 );
+		 
+		 //取得是三合一数据 但是在check表中不存在任何渠道持有信息  但是 在INFO SUB表中存在记录 && 报送状态 = 01：未报送 的数据		 
+		 List<ChbInvestholdInfoCheckDto> dtoList = new ArrayList<ChbInvestholdInfoCheckDto>();	 		 
+		 dtoList= this.selectAllNeedDealDtoList(checkDtoListFormegerId);
+		 
+		 //从SUB表取得的，需要进入持有check表的数据中，去除本次导入列表中存在的记录。获得需要进入持有check表的列表
+		 List<ChbInvestholdInfoCheckDto> afterDealList = new ArrayList<ChbInvestholdInfoCheckDto>();
+		 afterDealList.addAll(checkDtoList);
+		 afterDealList.addAll(dtoList);
+		 afterDealList = afterDealList.stream().collect(
+				 Collectors.collectingAndThen(
+						 Collectors.toCollection(() -> new TreeSet<>(
+								 	Comparator.comparing(
+								 			x -> x.getRegistBankCode() + x.getProdid() + x.getCcy() + x.getHoldDate() + x.getIndentifyMark()						 
+								 ))), ArrayList::new)
+				 );
+		 
+		 //编辑需要入库的数据结构
+		 List<ChbInvestholdInfoCheckDto> insertBatch=new ArrayList<ChbInvestholdInfoCheckDto>();
+ 		 if(afterDealList!=null && !afterDealList.isEmpty()){		    
+	        for (ChbInvestholdInfoCheckDto temp : afterDealList) {
+			    // 根据身份的识别标识合并状态查询设置持有的状态，如果是01的身份，则持有原封不动的插入到info表不做处理。
+			    temp.setWorkflowId(temp.getOperatestatus());
+			    // 默认设置成 需要合并
+		    	temp.setOperatestatus(DictCodeListExt2.处理状态_中债_未合并.getValue());		    	
+			    temp.setPrdRegistCode(prdRegistMap.get(temp.getProdid()) == null ? null : prdRegistMap.get(temp.getProdid()));
+		    	insertBatch.add(temp);
+		    }
+	    }
+ 		 
+ 		 //将文件里的数据插入check，如果有待处理的身份合并，则插入为A状态数据到Info里。
+		 List<ChbInvestholdInfoCheckDto> deleteForInvestHoldCheckTable = new ArrayList<ChbInvestholdInfoCheckDto>();
+		 List<ChbInvestholdInfoCheckDto> insertForInvestholdInfoTable = new ArrayList<ChbInvestholdInfoCheckDto>();
+		 List<ChbInvestholdInfoCheckDto> insertForInvestHoldCheckTable = new ArrayList<ChbInvestholdInfoCheckDto>();
+		 for(ChbInvestholdInfoCheckDto temp:insertBatch){
+				 //考虑重复导入 重复了 先删后插
+				 ChbInvestholdInfoCheckDto qmodel=new ChbInvestholdInfoCheckDto();
+				 qmodel.setRegistBankCode(temp.getRegistBankCode());
+				 qmodel.setIndentifyMark(temp.getIndentifyMark());
+				 qmodel.setHoldDate(temp.getHoldDate());
+				 qmodel.setCcy(temp.getCcy());
+				 qmodel.setPrdRegistCode(temp.getPrdRegistCode());
+				 qmodel.setProdid(temp.getProdid());
+				 deleteForInvestHoldCheckTable.add(qmodel);
+				 if("01".equals(temp.getWorkflowId())){//如果身份是待处理，则直接插入temp表
+					 temp.setWorkflowId(null);
+					 temp.setStatus("A");
+					 insertForInvestholdInfoTable.add(temp);
+				 }
+				 temp.setStatus("E");
+				 insertForInvestHoldCheckTable.add(temp);
+		 }
+		 this.deleteAfterDeal(deleteForInvestHoldCheckTable);
+		 this.insertToChbInvestholdInfoAfterDeal(insertForInvestholdInfoTable);
+		 this.insertAfterDeal(insertForInvestHoldCheckTable);
+		 //更新所有合并前标识相关数据为未合并状态 暂不放开
+//		 this.updataOperateStatus(checkDtoListFormegerId);
+		 return checkDtoList;
+	}
 	/*
 	 * 开启线程池模式查询大数据量，每个线程查100
 	 * */
@@ -447,6 +540,51 @@ public class InvestorsHoldInfoDistinctService {
 	}
 	return result;
     }
+
+	/*
+	 * 开启线程池模式查询大数据量，每个线程查100
+	 * */
+	private List<ChbInvestholdInfoCheckDto> selectAllNeedDealDtoList(List<ChbInvestholdInfoCheckDto> list) {
+
+		List<Callable<Boolean>> tasks = new ArrayList<>();
+
+		List<ChbInvestholdInfoCheckDto> result = Collections.synchronizedList(new ArrayList<ChbInvestholdInfoCheckDto>());
+		if (null != list) {
+			ExecutorService service = new JoyinThreadPoolExecutor(10);
+			int start = 0;
+			int end = 0;
+			int size = list.size();
+			int max = (int) Math.ceil((double) size / 100);
+			// 信号量
+			CountDownLatch countDown = new CountDownLatch(max);
+
+			for (int i = 0; i < max; i++) {
+				start = end;
+				end = Math.min(size, 100 * (i + 1));
+				List<ChbInvestholdInfoCheckDto> subList = list.subList(start, end);
+
+				// 提交任务
+				tasks.add(new Callable<Boolean>() {
+
+					@Override
+					public Boolean call() throws Exception {
+						result.addAll(chbInvestholdInfoCheckDtoMapper.selectNeedDealDtoList(subList));
+						countDown.countDown();// 个数-1
+						return true;
+					}
+				});
+			}
+			// 添加线程等待转换线执行
+			try {
+				service.invokeAll(tasks);
+				countDown.await();
+				service.shutdown();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
 	
 	
 	public void insertListTmp(List<Map<String, String>> list) {
@@ -902,5 +1040,173 @@ public class InvestorsHoldInfoDistinctService {
     	map.put("INDENTIFY_MARK",dto.getIndentifyMark());
 		return map;
 		
+	}
+
+	/**
+	 * deleteAfterDeal
+	 *分批执行
+	 * @param deleteList 数据
+	 * @see
+	 * @since 1.0
+	 */
+	private void deleteAfterDeal(List<ChbInvestholdInfoCheckDto> deleteList) {
+		if (StringUtil.isEmptyList(deleteList)) {
+			return;
+		}
+		int maxDataCountOneTime = reportInsertCount;
+		boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+		if (isDB2DataBase) {
+			maxDataCountOneTime = 1;
+		}
+		int dataCount = deleteList.size();
+		if (dataCount <= maxDataCountOneTime) {
+			logger.info("deleteBymodelAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
+			chbInvestholdInfoCheckDtoMapper.deleteBymodelAfterDeal(deleteList);
+			logger.info("deleteBymodelAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
+			return;
+		}
+		List<ChbInvestholdInfoCheckDto> newDataList = new ArrayList<ChbInvestholdInfoCheckDto>();
+		newDataList.addAll(deleteList);
+
+		// 分批处理
+		int part = dataCount / maxDataCountOneTime; // 分批数
+		for (int i = 0; i < part; i++ ) {
+			logger.info("deleteBymodelAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
+			chbInvestholdInfoCheckDtoMapper.deleteBymodelAfterDeal(newDataList.subList(0, maxDataCountOneTime));;
+			logger.info("deleteBymodelAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
+			newDataList.subList(0, maxDataCountOneTime).clear();
+		}
+		// 最后剩下的数据
+		if (CollectionUtils.isNotEmpty(newDataList)) {
+			logger.info("deleteBymodelAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
+			chbInvestholdInfoCheckDtoMapper.deleteBymodelAfterDeal(newDataList);
+			logger.info("deleteBymodelAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
+		}
+	}
+
+	/**
+	 * deleteAfterDeal
+	 *分批执行
+	 * @param insertToChbInvestholdInfoList 数据
+	 * @see
+	 * @since 1.0
+	 */
+	private void insertToChbInvestholdInfoAfterDeal(List<ChbInvestholdInfoCheckDto> insertToChbInvestholdInfoList) {
+		if (StringUtil.isEmptyList(insertToChbInvestholdInfoList)) {
+			return;
+		}
+		int maxDataCountOneTime = reportInsertCount;
+		boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+		if (isDB2DataBase) {
+			maxDataCountOneTime = 1;
+		}
+		int dataCount = insertToChbInvestholdInfoList.size();
+		if (dataCount <= maxDataCountOneTime) {
+			logger.info("insertToChbInvestholdInfoAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
+			chbInvestholdInfoCheckDtoMapper.insertToChbInvestholdInfoAfterDeal(insertToChbInvestholdInfoList);
+			logger.info("insertToChbInvestholdInfoAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
+			return;
+		}
+		List<ChbInvestholdInfoCheckDto> newDataList = new ArrayList<ChbInvestholdInfoCheckDto>();
+		newDataList.addAll(insertToChbInvestholdInfoList);
+
+		// 分批处理
+		int part = dataCount / maxDataCountOneTime; // 分批数
+		for (int i = 0; i < part; i++ ) {
+			logger.info("insertToChbInvestholdInfoAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
+			chbInvestholdInfoCheckDtoMapper.insertToChbInvestholdInfoAfterDeal(newDataList.subList(0, maxDataCountOneTime));;
+			logger.info("insertToChbInvestholdInfoAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
+			newDataList.subList(0, maxDataCountOneTime).clear();
+		}
+		// 最后剩下的数据
+		if (CollectionUtils.isNotEmpty(newDataList)) {
+			logger.info("insertToChbInvestholdInfoAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
+			chbInvestholdInfoCheckDtoMapper.insertToChbInvestholdInfoAfterDeal(newDataList);
+			logger.info("insertToChbInvestholdInfoAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
+		}
+	}
+
+	/**
+	 * insertAfterDeal
+	 *分批执行
+	 * @param insert 数据
+	 * @see
+	 * @since 1.0
+	 */
+	private void insertAfterDeal(List<ChbInvestholdInfoCheckDto> insert) {
+		if (StringUtil.isEmptyList(insert)) {
+			return;
+		}
+		int maxDataCountOneTime = reportInsertCount;
+		boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+		if (isDB2DataBase) {
+			maxDataCountOneTime = 1;
+		}
+		int dataCount = insert.size();
+		if (dataCount <= maxDataCountOneTime) {
+			logger.info("insertAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
+			chbInvestholdInfoCheckDtoMapper.insertAfterDeal(insert);
+			logger.info("insertAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
+			return;
+		}
+		List<ChbInvestholdInfoCheckDto> newDataList = new ArrayList<ChbInvestholdInfoCheckDto>();
+		newDataList.addAll(insert);
+
+		// 分批处理
+		int part = dataCount / maxDataCountOneTime; // 分批数
+		for (int i = 0; i < part; i++ ) {
+			logger.info("insertAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
+			chbInvestholdInfoCheckDtoMapper.insertAfterDeal(newDataList.subList(0, maxDataCountOneTime));;
+			logger.info("insertAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
+			newDataList.subList(0, maxDataCountOneTime).clear();
+		}
+		// 最后剩下的数据
+		if (CollectionUtils.isNotEmpty(newDataList)) {
+			logger.info("insertAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
+			chbInvestholdInfoCheckDtoMapper.insertAfterDeal(newDataList);
+			logger.info("insertAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
+		}
+	}
+
+	/**
+	 * insertAfterDeal
+	 *分批执行
+	 * @param dtoAfterDealList 数据
+	 * @see
+	 * @since 1.0
+	 */
+	private void updataOperateStatus(List<ChbInvestholdInfoCheckDto> dtoAfterDealList) {
+		if (StringUtil.isEmptyList(dtoAfterDealList)) {
+			return;
+		}
+		int maxDataCountOneTime = reportInsertCount;
+		boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+		if (isDB2DataBase) {
+			maxDataCountOneTime = 1;
+		}
+		int dataCount = dtoAfterDealList.size();
+		if (dataCount <= maxDataCountOneTime) {
+			logger.info("insertAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
+			chbInvestholdInfoCheckDtoMapper.updataOperateStatus(dtoAfterDealList);
+			logger.info("insertAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
+			return;
+		}
+		List<ChbInvestholdInfoCheckDto> newDataList = new ArrayList<ChbInvestholdInfoCheckDto>();
+		newDataList.addAll(dtoAfterDealList);
+
+		// 分批处理
+		int part = dataCount / maxDataCountOneTime; // 分批数
+		for (int i = 0; i < part; i++ ) {
+			logger.info("insertAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
+			chbInvestholdInfoCheckDtoMapper.updataOperateStatus(newDataList.subList(0, maxDataCountOneTime));;
+			logger.info("insertAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
+			newDataList.subList(0, maxDataCountOneTime).clear();
+		}
+		// 最后剩下的数据
+		if (CollectionUtils.isNotEmpty(newDataList)) {
+			logger.info("insertAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
+			chbInvestholdInfoCheckDtoMapper.updataOperateStatus(newDataList);
+			logger.info("insertAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
+		}
 	}
 }
