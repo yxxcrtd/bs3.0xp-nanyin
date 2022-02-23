@@ -21,6 +21,7 @@ import com.joyintech.background.component.uplink.interbank.database.dao.IbuQuote
 import com.joyintech.background.component.uplink.interbank.database.dao.IbuQuoteCrepMapper;
 import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBond;
 import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteCrep;
+import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
@@ -212,7 +213,8 @@ public class IbuComponentReceiveService extends BaseService{
      * @see
      * @since 1.0
      */
-    @Transactional
+    @Transactional(rollbackFor = { Exception.class })
+    @DTXTransaction
     public ResultBaseDto updateBondDialogueQuoteInterfResp(Map<String, Object> param) {
         logger.info("【CFETS接口接收-现券对话报价】IbuComponentReceiveService.updateBondDialogueQuoteInterfResp异步接受交易中心数据：" + param.toString());
         
@@ -372,7 +374,8 @@ public class IbuComponentReceiveService extends BaseService{
      * @see
      * @since 1.0
      */
-    @Transactional
+    @Transactional(rollbackFor = { Exception.class })
+    @DTXTransaction
     public ResultBaseDto updateBondRequestQuoteInterfResp(Map<String, Object> param) {
         ResultBaseDto resultBaseDto = new ResultBaseDto(true);
         
@@ -568,7 +571,8 @@ public class IbuComponentReceiveService extends BaseService{
      * @see
      * @since 1.0
      */
-    @Transactional
+    @Transactional(rollbackFor = { Exception.class })
+    @DTXTransaction
     public ResultBaseDto updateRepoDialogueQuoteInterfResp(Map<String, Object> param) {
         logger.info("【CFETS接口接收-回购对话报价】IbuComponentReceiveService.updateRepoDialogueQuoteInterfResp异步接受交易中心数据：" + param.toString());
         

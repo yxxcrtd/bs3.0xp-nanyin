@@ -1,6 +1,7 @@
 package com.joyintech.service.bankuplink.common.service;
 
 import com.joyintech.background.component.uplink.interbank.business.dto.ResultBaseDto;
+import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.bankuplink.common.dao.CstpTradeMapper;
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -123,6 +125,8 @@ public class CfetsQuotedTradeCommonService{
     /**
      * cstp交易入库
      */
+    @Transactional(rollbackFor = { Exception.class })
+    @DTXTransaction
     public ResultBaseDto insertCstpTrade(CfetsQuotedTradeCommonDto entity) {
         try {
             Thread.sleep(maxWaitTime);
