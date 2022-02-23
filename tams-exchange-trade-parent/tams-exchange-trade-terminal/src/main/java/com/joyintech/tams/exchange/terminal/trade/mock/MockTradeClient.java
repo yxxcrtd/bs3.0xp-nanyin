@@ -846,7 +846,7 @@ public class MockTradeClient implements ITradeRequest {
                     integratedRepurchaseQuoteBean.setPropAccountName("mock");
                     integratedRepurchaseQuoteBean.setPledgeeName("mock");
                     integratedRepurchaseQuoteBean.setRemark(integratedEntrust.getRemark());
-                    list.add(integratedRepurchaseQuoteBean);
+//                    list.add(integratedRepurchaseQuoteBean);
                 }
             });
         }
@@ -926,7 +926,7 @@ public class MockTradeClient implements ITradeRequest {
             integratedRepurchaseQuoteBean.setPropAccountName("ufx0923上海");
             integratedRepurchaseQuoteBean.setPledgeeName("test24");
             integratedRepurchaseQuoteBean.setRemark("自动模拟行情");
-            list.add(integratedRepurchaseQuoteBean);
+//            list.add(integratedRepurchaseQuoteBean);
         }
         mockTradeResponse.resQueryIntegratedRepurchaseQuote(list, requestId);
     }

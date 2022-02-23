@@ -5,7 +5,7 @@ import java.util.Set;
 
 public enum EntrustProp {
     //根据恒生柜台转入可能使用的值
-    NORMAL("限价买卖", "0"),
+    NORMAL("限价", "0"),
     ALLOTMENT("配股", "1"),
     APPLY("申购", "3"),
     REPURCHASE("回购", "4"),
