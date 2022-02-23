@@ -29,7 +29,7 @@ import java.util.*;
 import static com.joyintech.tams.constant.DictCodeList.是否_否;
 
 @Service
-public class PositionRequestService {
+public class PositionRequestServiceEtrExchangeTradeSaveRequest {
 
     public static final String STANDAR_SEC_ID = "XN_PRODID999";
     @Autowired

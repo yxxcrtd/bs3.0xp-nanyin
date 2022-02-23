@@ -159,7 +159,7 @@ import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PsOptionsReque
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SelectOptionRequestDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationResponse;
-import com.joyintech.tams.exchange.entrust.etrexchange.position.service.PositionRequestService;
+import com.joyintech.tams.exchange.entrust.etrexchange.position.service.PositionRequestServiceEtrExchangeTradeSaveRequest;
 import com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.asset.util.AssetCommonUtil;
@@ -260,7 +260,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	private BusiAutoEtrDispService busiAutoEtrDispService;
 	
 	@Autowired
-	private PositionRequestService positionRequestService;
+	private PositionRequestServiceEtrExchangeTradeSaveRequest positionRequestService;
 
 	public static final String ENTRUST_RECORD_MODIFY = "modify";
 
