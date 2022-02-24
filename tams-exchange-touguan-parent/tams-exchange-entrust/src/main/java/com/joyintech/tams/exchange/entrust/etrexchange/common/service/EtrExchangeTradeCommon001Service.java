@@ -255,28 +255,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			dto.setInvAim("FVTPL");
 			etrEntrust.setInvAim("FVTPL");
 		}
-		// 自动分发
-		List<EtrDistribute> etrDistributeList = new ArrayList<>();
-		if (busiAutoEtrDispService != null) {
-			// 检测是否设置交易员
-			if (!busiAutoEtrDispService.checkHaveTrader(etrDistributeList)) {
-				// 跳出自动分发
-				entity.setEtrDistributeList(etrDistributeList);
-				isPushMsg = DictCodeList.是否_是.getValue();
-			} else {
-				// 查询委托指令下达日期，如果在自动分发区间内则改指令需自动分发
-				// 设置指令日期 add by yufei 20200808 start
-				if(etrEntrust.getEntrustDate() == null) {
-					etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
-				}
-				// 设置指令日期 add by yufei 20200808 end
-				if (busiAutoEtrDispService.checkEntrustTime(etrEntrust)) {
-					// 自动分发
-					entity.setEtrDistributeList(busiAutoEtrDispService.selectTrader(etrEntrust, etrEntrustAdd));
-					isPushMsg = DictCodeList.是否_是.getValue();
-				}
-			}
-		}
 		if(StringUtil.isEmptyList(entity.getEtrDistributeList())){//无分发人员
 			baseDto.setEntrustStatus(DictCodeListExt3.委托状态_待分发.getValue());// 指令状态
 			etrSinglePortfolioDto.setEntrustStatus(DictCodeListExt3.委托状态_待分发.getValue());// 指令状态
@@ -420,6 +398,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			etrBondToStockDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
 			etrBondToStockDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
 			etrBondToStockDto.setExpConNum(dto.getToShareAvailableNum());//可转股数量
+			etrEntrust.setEntrustType(etrBondToStockDto.getEntrustType());
 		}
 
 		// 标准券出入库指令
@@ -570,7 +549,28 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		doDeleteFlow(dto.getWorkflowId());
 		//插入指令明细表
 		BaseEtrInvestInfoDto baseEtrInvestInfoDto = this.buildMultiEtrFlow(dto);
-
+        // 自动分发
+		List<EtrDistribute> etrDistributeList = new ArrayList<>();
+		if (busiAutoEtrDispService != null) {
+			// 检测是否设置交易员
+			if (!busiAutoEtrDispService.checkHaveTrader(etrDistributeList)) {
+				// 跳出自动分发
+				entity.setEtrDistributeList(etrDistributeList);
+				isPushMsg = DictCodeList.是否_是.getValue();
+			} else {
+				// 查询委托指令下达日期，如果在自动分发区间内则改指令需自动分发
+				// 设置指令日期 add by yufei 20200808 start
+				if(etrEntrust.getEntrustDate() == null) {
+					etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
+				}
+				// 设置指令日期 add by yufei 20200808 end
+				if (busiAutoEtrDispService.checkEntrustTime(etrEntrust)) {
+					// 自动分发
+					entity.setEtrDistributeList(busiAutoEtrDispService.selectTrader(etrEntrust, etrEntrustAdd));
+					isPushMsg = DictCodeList.是否_是.getValue();
+				}
+			}
+		}
 		if(!StringUtil.isEmptyList(baseEtrInvestInfoDto.getEtrEntrustDetailList())) {
 			etrEntrustDetailMapper.deleteByEntrustId(baseEtrInvestInfoDto.getEtrEntrustDetailList().get(0).getEntrustId());
 			for (EtrEntrustDetail etrEntrustDetail:baseEtrInvestInfoDto.getEtrEntrustDetailList()) {
