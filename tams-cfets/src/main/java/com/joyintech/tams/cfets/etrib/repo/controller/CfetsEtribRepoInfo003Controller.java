@@ -80,8 +80,7 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
         boolean todoList = false;
         // 代办中过来
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
-            entity = cfetsEtrIbRepoinfo003Service.getBussinessEntityByWorkflowId(
-                    workflowId);
+            entity = cfetsEtrIbRepoinfo003Service.getBussinessEntityByWorkflowId(workflowId);
             model.addAttribute(GlobalConstant.ENTITY, entity);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("person_entity", JsonUtils.object2Json(entity.getEtrInvestPersonInfo()));
@@ -89,6 +88,9 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
             model.addAttribute("entity_BussCombDistribtList",  JsonUtils.object2Json(entity.getEtrInvestRepoInfoDtos()));
             model.addAttribute("entity_PledgeBondTotalListDetailed",  JsonUtils.object2Json(entity.getPledgeBondTotalListDetailed()));
             model.addAttribute("entity_RiskTrialRetList",  JsonUtils.object2Json(entity.getRiskTrialRetDto()));
+            model.addAttribute("entity_riskTrialSpan",entity.getCfetsEtribdoRiskcalResponse()== null ? null : entity.getCfetsEtribdoRiskcalResponse().getRiskTrialSpan());
+            model.addAttribute("entity_RiskcalResponse",entity.getCfetsEtribdoRiskcalResponse());
+
             todoList = true;
             model.addAttribute("businessId", entity.getTotalEtrustId());
         } else {
