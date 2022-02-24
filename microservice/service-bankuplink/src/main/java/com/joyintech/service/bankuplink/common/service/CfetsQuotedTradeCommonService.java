@@ -127,7 +127,7 @@ public class CfetsQuotedTradeCommonService{
      */
     @Transactional(rollbackFor = { Exception.class })
     @DTXTransaction
-    public ResultBaseDto insertCstpTrade(CfetsQuotedTradeCommonDto entity) {
+    public ResultBaseDto insertCstpTrade(CfetsQuotedTradeCommonDto entity) throws Exception {
         try {
             Thread.sleep(maxWaitTime);
         }
@@ -192,7 +192,8 @@ public class CfetsQuotedTradeCommonService{
 
         }catch (Exception e){
             resultBaseDto.setErrMsg(e.getMessage());
-            logger.error(e.getMessage());
+            //logger.error(e.getMessage());
+            throw new Exception(e);
         }
         return resultBaseDto;
     }
@@ -379,7 +380,16 @@ public class CfetsQuotedTradeCommonService{
                 }
             });
         }
-        交易员联系方式(iCstpTrade,noPartyId);
+        // mod by chenggaoling 20211223 交易员联系方式，当方向为4时赋值不正确  start
+        if(StringUtil.isNotEmpty(noPartyId.getNoContactInfos())){
+            noPartyId.getNoContactInfos().forEach(item ->{
+                if(StringUtil.equals(item.getContactInfoIDType(),"6")){
+                    iCstpTrade.setOurtelephone(item.getContactInfoID());
+                }
+            });
+        }
+        //交易员联系方式(iCstpTrade,noPartyId);
+        // mod by chenggaoling 20211223 交易员联系方式，当方向为4时赋值不正确  end
     }
 
     private void 对方交易员信息(InterfCstpTrade iCstpTrade, NoPartyID noPartyId){
@@ -432,7 +442,16 @@ public class CfetsQuotedTradeCommonService{
                 }
             });
         }
-        交易员联系方式(iCstpTrade,noPartyId);
+        // mod by chenggaoling 20211223 交易员联系方式，当方向为4时赋值不正确  start
+        if(StringUtil.isNotEmpty(noPartyId.getNoContactInfos())){
+            noPartyId.getNoContactInfos().forEach(item ->{
+                if(StringUtil.equals(item.getContactInfoIDType(),"6")){
+                    iCstpTrade.setCountertelephone(item.getContactInfoID());
+                }
+            });
+        }
+        //交易员联系方式(iCstpTrade,noPartyId);
+        // mod by chenggaoling 20211223 交易员联系方式，当方向为4时赋值不正确  end
     }
 
     private void 交易员联系方式(InterfCstpTrade iCstpTrade, NoPartyID noPartyId){
