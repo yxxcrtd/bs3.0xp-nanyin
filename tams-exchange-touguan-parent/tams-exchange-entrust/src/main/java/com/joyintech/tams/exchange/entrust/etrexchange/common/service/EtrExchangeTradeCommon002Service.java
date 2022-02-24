@@ -101,6 +101,11 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 				param.put("TRADE_PLACE_03", BussinessDictCodeList.交易场所_深圳证券交易所.getValue());
 				param.put("TRADE_PLACE_04", BussinessDictCodeList.交易场所_上海证券交易所.getValue());
 				param.put("search_isNumberFlag", BaseMap.isNumeric(dto.getSearch()));
+				if(StringUtil.isNotEmpty((String)param.get("finprodMarketIds"))){
+					param.put("finprodMarketIds",StringUtil.splitToList(GlobalConstant.COMMA, param.get("finprodMarketIds").toString()));
+				}else{
+					param.put("finprodMarketIds", null);
+				}
 				// 浮动盈亏计算修改 modify by yufei 20200806 start
 				Page<EtrExchangeTradePositionsCommonResponse> result = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> etrExchangeTradeCommonMapper.findPositionsPage(param));
 				if(!StringUtil.isEmptyList(result.getRoot())){
