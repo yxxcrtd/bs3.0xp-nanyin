@@ -1012,7 +1012,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 				dto.setMdate(dto.getEntrustDate());
 				dto.setAcctNo(item.getAcctNo());
 				dto.setSecAcctId(item.getSecAcctId());
-				dto.setStockId(item.getStockId());
+				dto.setStockId(dto.getStockId());
 				dto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
 				dto.setCreateUser(LoginUserUtil.getUserName());// 用户名
 				dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
