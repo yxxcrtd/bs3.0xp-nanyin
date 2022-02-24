@@ -226,7 +226,9 @@
         FP.FINPROD_TYPE2                          AS finprodType2,
         FP.TRADE_MARKET                           AS tradeMarket,
         SSAI.TRD_ACCT_ID                          AS acctNo,
-        SDL.ITEM_VALUE AS tradeMarketStr
+        SCI.ACCT_NAME acctName, /** 资金账户名称 **/
+        SDL.ITEM_VALUE AS tradeMarketStr,
+        TEMP.invAim invAim
         FROM
         (
         SELECT
@@ -235,6 +237,7 @@
         PSP.SEC_ACCT_ID  AS SEC_ACCT_ID ,
         PSP.FINPROD_ID   AS FINPROD_ID,
         PSP.BRANCH       AS BRANCH,
+        PSP.INV_AIM invAim,
         SUM(CASE WHEN PSP.HODING_TYPE IN (#{POSITION_TYPE_03}, #{POSITION_TYPE_05}) THEN NVL(PSP.AMOUNT,0)
         ELSE -1* NVL(PSP.AMOUNT,0)
         END) AS AMOUNT
@@ -260,6 +263,7 @@
         PSP.PORTFOLIO_ID ,
         PSP.SEC_ACCT_ID,
         PSP.FINPROD_ID,
+        PSP.INV_AIM,
         PSP.BRANCH
         )TEMP
         LEFT JOIN
@@ -458,6 +462,8 @@
         STL_SEC_ACCT_INFO SSAI
         ON
         TEMP.SEC_ACCT_ID = SSAI.SEC_ACCT_ID
+        LEFT JOIN STL_CAPACCT_INFO SCI
+        ON SSAI.TRD_ACCT_ID = SCI.ACCT_NO
         LEFT JOIN SYS_DATADICT_LIST SDL ON SDL.DICT_CODE = 'TRADE_PLACE' AND FP.TRADE_MARKET = SDL.ITEM_CODE
         WHERE
         FP.TRADE_MARKET IN (#{TRADE_PLACE_03}, #{TRADE_PLACE_04})
@@ -671,7 +677,7 @@
         else
         #{UNIT_01}
         end as pledgeUnit, /** 质押券单位  **/
-        etr_pledge.PLEDGE_NUMBER * etr_pledge.Pledge_Face_Value printAmt, /** 质押面额 **/
+        etr_pledge.PLEDGE_NUMBER * nvl(etr_pledge.Pledge_Face_Value, 100) printAmt, /** 质押面额 **/
         etr_entrust_add.Sec_Acct_Id secAcctId, /** 证券账户 ※隐藏 **/
         etr_entrust.counter_id counterId, /** 交易对手 **/
         mst_counter_party.counter_name counterName, /**交易对手名称**/
@@ -804,7 +810,7 @@
             else
             #{UNIT_01}
             end as pledgeUnit, /** 质押券单位  **/
-            wfl_etr_pledge.PLEDGE_NUMBER * wfl_etr_pledge.Pledge_Face_Value printAmt, /** 质押面额 **/
+            wfl_etr_pledge.PLEDGE_NUMBER * nvl(wfl_etr_pledge.Pledge_Face_Value, 100) printAmt, /** 质押面额 **/
             wfl_etr_entrust_add.Sec_Acct_Id secAcctId, /** 证券账户 ※隐藏 **/
             wfl_etr_entrust.counter_id counterId, /** 交易对手 **/
             mst_counter_party.counter_name counterName, /**交易对手名称**/

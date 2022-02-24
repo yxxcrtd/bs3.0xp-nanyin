@@ -17,6 +17,7 @@ import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 
@@ -62,6 +63,11 @@ public class EtrExchangeAgreRepTrade002Dto extends BaseEntity {
     private String acctNo;
 
     /**
+     * 资金账户名称
+     */
+    private String acctName;
+
+    /**
      * 证券代码
      */
     private String secId;
@@ -102,6 +108,11 @@ public class EtrExchangeAgreRepTrade002Dto extends BaseEntity {
     private String invAim;
 
     /**
+     * 投资目的
+     */
+    private String invAimStr;
+
+    /**
      * 持仓数量
      */
     @JsonSerialize(using = BigDecimalSerializer.class)
@@ -126,10 +137,13 @@ public class EtrExchangeAgreRepTrade002Dto extends BaseEntity {
     private BigDecimal price;
 
     /**
-     * 浮动盈亏（%）
+     * 浮动盈亏
      */
     @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal floatingPL;
+
+    @ApiModelProperty(name="floatingPLPercent",value="盈亏比例",example="12")
+    private BigDecimal floatingPLPercent;
 
     /**
      * 组合持仓.数量
@@ -558,4 +572,25 @@ public class EtrExchangeAgreRepTrade002Dto extends BaseEntity {
             return "";
         }
     }
+
+    public String getAcctName() {
+        return acctName;
+    }
+
+    public void setAcctName(String acctName) {
+        this.acctName = acctName;
+    }
+
+    public BigDecimal getFloatingPLPercent() {
+        return floatingPLPercent;
+    }
+
+    public void setFloatingPLPercent(BigDecimal floatingPLPercent) {
+        this.floatingPLPercent = floatingPLPercent;
+    }
+
+    public String getInvAimStr() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.投资目的, this.getInvAim());
+    }
+
 }
