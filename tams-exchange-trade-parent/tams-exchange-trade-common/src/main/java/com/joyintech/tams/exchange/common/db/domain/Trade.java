@@ -2,6 +2,7 @@ package com.joyintech.tams.exchange.common.db.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
+import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
@@ -226,6 +227,8 @@ public class Trade implements Serializable, KeyMethodInterface<String> {
     @Digits(integer = 20, fraction = 0)
     @ApiModelProperty(value = "标准券数量")
     private long bondVolume;
+
+    private String tradeDate;
 
     public Trade() {
         this.tradedBalance = new BigDecimal("0.00");
@@ -644,5 +647,13 @@ public class Trade implements Serializable, KeyMethodInterface<String> {
 
     public void setBondVolume(long bondVolume) {
         this.bondVolume = bondVolume;
+    }
+
+    public String getTradeDate() {
+        return TradeUtils.formatDate(tradingDay);
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
     }
 }

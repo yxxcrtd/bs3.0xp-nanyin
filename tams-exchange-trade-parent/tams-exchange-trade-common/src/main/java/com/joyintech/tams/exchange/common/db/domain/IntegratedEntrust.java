@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.common.db.domain;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
+import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
@@ -328,6 +329,8 @@ public class IntegratedEntrust extends BaseEntity implements Serializable, Entru
     private String extend1;
     @ApiModelProperty(name = "extend2", value = "扩展信息2")
     private String extend2;
+
+    private String tradeDate;
 
     public boolean isNoCancelEntrust() {
         return noCancelEntrust;
@@ -942,5 +945,13 @@ public class IntegratedEntrust extends BaseEntity implements Serializable, Entru
 
     public void setExtend2(String extend2) {
         this.extend2 = extend2;
+    }
+
+    public String getTradeDate() {
+        return TradeUtils.formatDate(tradingDay);
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
     }
 }
