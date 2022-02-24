@@ -979,4 +979,15 @@
         </where>
 
     </select>
+
+    <select id="selectFinProductData" parameterType="Map" resultType="com.joyintech.tams.common.base.entity.FinProduct">
+        SELECT
+            FP.FINPROD_MARKET_ID, FP.FINPROD_ABBR
+        FROM
+            FIN_PRODUCT FP
+        WHERE
+            <foreach collection="finprodMarketIdList" open=" FP.finprod_market_id in(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+    </select>
 </mapper>

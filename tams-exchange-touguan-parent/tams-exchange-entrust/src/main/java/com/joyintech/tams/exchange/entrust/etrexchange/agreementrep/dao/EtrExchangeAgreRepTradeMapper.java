@@ -12,6 +12,7 @@ package com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangeAgreRepTrade001Dto;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangeAgreRepTrade002Dto;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangeAgreRepTrade003Dto;
@@ -96,4 +97,11 @@ public interface EtrExchangeAgreRepTradeMapper {
      * @return
      */
     List<SelectOptionDto> selectTradeId(Map<String, Object> map);
+
+    /**
+     * 查询资产信息
+     * @param map 参数
+     * @return 资产信息
+     */
+    List<FinProduct> selectFinProductData(Map<String, Object> map);
 }
