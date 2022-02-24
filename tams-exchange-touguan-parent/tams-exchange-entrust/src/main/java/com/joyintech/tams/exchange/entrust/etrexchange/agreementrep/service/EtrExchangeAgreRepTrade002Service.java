@@ -53,6 +53,7 @@ import com.joyintech.tams.invest.common.position.dto.PostionParameter;
 import com.joyintech.tams.invest.common.position.service.CommonPositionService;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -136,7 +137,10 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         pageParam.put("portfolioName", request.getPortfolioName());
         pageParam.put("finprodName", request.getFinprodName());
         pageParam.put("search",request.getSearch());
-        pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+        if (SecurityUtil.getLoginUser() != null) {
+            pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+        }
+
         pageParam.put("sysDate", iPlatformDate.getSysDate());
         pageParam.put("POSITION_TYPE_03", BussinessDictCodeList.持仓类型_实际.getValue());
         pageParam.put("POSITION_TYPE_04", BussinessDictCodeList.持仓类型_质押.getValue());
@@ -173,7 +177,10 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
     public Page<EtrExchangeOnWayRep002Dto> findOnWayRepPage(EtrExchangeOnWayRepRequestDto request) {
         Map<String,Object> pageParam = new HashMap<>();
         pageParam.put("search", request.getSearch());
-        pageParam.put("userId",SecurityUtil.getLoginUser().getUserName());
+        if (SecurityUtil.getLoginUser() != null) {
+            pageParam.put("userId",SecurityUtil.getLoginUser().getUserName());
+        }
+
         pageParam.put("tradeId",request.getTradeId());
         pageParam.put("sysdate", iPlatformDate.getSysDate());
         pageParam.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
@@ -291,12 +298,17 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         HashSet<String> hSet = new HashSet<>();
         List<Map<String, Object>> newRepurchaseQuotes = new ArrayList<>();
         List<String> stockCodes = new ArrayList<>();
+        List<String> origPledgeList = new ArrayList<>();
         repurchaseQuotes.forEach(temp->{
             if(StringUtil.isNotEmpty(temp.get("cbpconferId"))&&hSet.add(temp.get("cbpconferId").toString())){
                 newRepurchaseQuotes.add(temp);
                 // 质押券代码
                 if (StringUtil.isNotEmpty(temp.get("stockCode"))) {
                     stockCodes.add(temp.get("stockCode").toString());
+                }
+                // 原质押券代码
+                if (StringUtil.isNotEmpty(temp.get("oldImpawnCode"))) {
+                    origPledgeList.add(temp.get("oldImpawnCode").toString());
                 }
             }
         });
@@ -312,6 +324,18 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
                     ServiceApplication.BASICDATA_SERVICE_NAME + "/MstSecuritiesAccountInfo/getFaceValueList", tempPara,
                     List.class));
         }
+        final Map<String, Object> faceValueMap =
+                StringUtil.isEmptyList(faceValues) ? new HashMap<>() : faceValues.stream().collect(JoyinCollectors.toMap(x -> x.get("finprodMarketId").toString(), x -> x.get("faceValue")));
+
+        // 原质押券资产信息
+        List<FinProduct> origPledgeFinProductList = null;
+        if (!StringUtil.isEmptyList(origPledgeList)) {
+            Map<String,Object> paramMap = new HashMap<String, Object>();
+            paramMap.put("finprodMarketIdList", origPledgeList);
+            origPledgeFinProductList = etrExchangeAgreRepTradeMapper.selectFinProductData(paramMap);
+        }
+        final Map<String, String> origPledgeFinProductMap = StringUtil.isEmptyList(origPledgeFinProductList) ? new HashMap<>() :
+                origPledgeFinProductList.stream().collect(JoyinCollectors.toMap(x -> x.getFinprodMarketId(), x -> x.getFinprodAbbr()));
 
         newRepurchaseQuotes.forEach(tmp -> {
             EtrExchangeUnOpenQuota002Dto dto = new EtrExchangeUnOpenQuota002Dto();
@@ -383,12 +407,17 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
             }
             // 质押券面总额合计 = 质押数量 * 最新面值 [FinProductCommonBatchService.getFaceValue(String finprodId, Date happenDate)]
             if (StringUtil.isNotEmpty(dto.getRepSecNum())) {
-                faceValues.forEach(item ->{
-                    if(StringUtil.isNotEmpty(tmp.get("stockCode"))&&StringUtil.isNotEmpty(item.get("finprodMarketId"))&&StringUtil.isNotEmpty(item.get("faceValue"))
-                            &&StringUtil.equals(tmp.get("stockCode").toString(),item.get("finprodMarketId").toString())){
-                        dto.setPledgeStampBalance(dto.getRepSecNum().multiply(new BigDecimal(item.get("faceValue").toString())));
-                    }
-                });
+//                faceValues.forEach(item ->{
+//                    if(StringUtil.isNotEmpty(tmp.get("stockCode"))&&StringUtil.isNotEmpty(item.get("finprodMarketId"))&&StringUtil.isNotEmpty(item.get("faceValue"))
+//                            &&StringUtil.equals(tmp.get("stockCode").toString(),item.get("finprodMarketId").toString())){
+//                        dto.setPledgeStampBalance(dto.getRepSecNum().multiply(new BigDecimal(item.get("faceValue").toString())));
+//                    }
+//                });
+                if (faceValueMap.containsKey(tmp.get("stockCode").toString())) {
+                    dto.setPledgeStampBalance(dto.getRepSecNum().multiply(new BigDecimal(faceValueMap.get(tmp.get("stockCode").toString()).toString())));
+                } else {
+                    dto.setPledgeStampBalance(dto.getRepSecNum().multiply(new BigDecimal(100)));
+                }
             }
             // 折算比例
             if (StringUtil.isNotEmpty(tmp.get("funderRatio"))) {
@@ -428,8 +457,10 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
             // 原质押券代码
             if (StringUtil.isNotEmpty(tmp.get("oldImpawnCode"))) {
                 dto.setOrigPledgeStampCode(tmp.get("oldImpawnCode").toString());
-                // todo
-                dto.setOrigPledgeStampName(dto.getOrigPledgeStampCode());
+                // 原质押券名称
+                if (origPledgeFinProductMap.containsKey(tmp.get("oldImpawnCode").toString())) {
+                    dto.setOrigPledgeStampName(origPledgeFinProductMap.get(tmp.get("oldImpawnCode").toString()));
+                }
             }
             // 回购利息
             if (StringUtil.isNotEmpty(tmp.get("profit"))) {
@@ -480,7 +511,9 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         param.put("search",request.getKeywords());
         param.put("entrustId", request.getEntrustId());
         param.put("sysDate",iPlatformDate.getSysDateStr());
-        param.put("userId", SecurityUtil.getLoginUser().getUserName());
+        if (SecurityUtil.getLoginUser() != null) {
+            param.put("userId", SecurityUtil.getLoginUser().getUserName());
+        }
         param.put("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
         param.put("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
         param.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
