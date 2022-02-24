@@ -550,32 +550,50 @@
         <!--decode(fin_trade_product.TRADE_MARKET,'03',trd_product_deal_2.f_trade_id,'04','') tradeId, /** 成交编号 **/
         decode(fin_trade_product.TRADE_MARKET,'03','','04',trd_product_deal_2.f_trade_id) intiTradeId /** 初始交易编号 **/-->
         trd_product_deal_2.f_trade_id tradeId,
-        trd_product_deal_2.f_trade_id intiTradeId
+        trd_product_deal_2.f_trade_id intiTradeId,
+        SCI.ACCT_NAME AS acctName,
+        fin_trade_product.term as term,
+        mcp.counter_name counterName, /**交易对手名称**/
+        case when trd_product_deal_2.FINPROD_TYPE2 = 'F02' then eea.TRADER
+            else ee.COUNTER_TRADER end as repurTraderId, /**正回购方交易员代码**/
+        case when trd_product_deal_2.FINPROD_TYPE2 = 'F02' then ''
+            else eea.COUNTER_ORG end as repurOrgId, /**正回购方交易商代码**/
+        case when trd_product_deal_2.FINPROD_TYPE2 = 'F03' then eea.TRADER
+            else ee.COUNTER_TRADER end as revRepurTraderId, /**逆回购方交易员代码**/
+        case when trd_product_deal_2.FINPROD_TYPE2 = 'F03' then ''
+        else eea.COUNTER_ORG end as revRepurOrgId /**逆回购方交易商代码**/
         from fin_trade_product /** 交易类金融产品 **/
         inner join FIN_PRODUCT_TYPE /** 金融产品分类表 **/
-        on fin_trade_product.finprod_id = FIN_PRODUCT_TYPE.Finprod_Id
-        and fin_trade_product.BRANCH = FIN_PRODUCT_TYPE.Branch
-        and FIN_PRODUCT_TYPE.Type_6 = 'H01'
-        AND FIN_PRODUCT_TYPE.TYPE_7 in ('03', '04')
+            on fin_trade_product.finprod_id = FIN_PRODUCT_TYPE.Finprod_Id
+            and fin_trade_product.BRANCH = FIN_PRODUCT_TYPE.Branch
+            and FIN_PRODUCT_TYPE.Type_6 = 'H01'
+            AND FIN_PRODUCT_TYPE.TYPE_7 in ('03', '04')
         INNER JOIN trd_product_deal trd_product_deal_2 /** 金融产品临时交易 **/
-        on fin_trade_product.finprod_id = trd_product_deal_2.Finprod_Id
-        and fin_trade_product.branch = trd_product_deal_2.branch
-        and trd_product_deal_2.ps in ('T01')
+            on fin_trade_product.finprod_id = trd_product_deal_2.Finprod_Id
+            and fin_trade_product.branch = trd_product_deal_2.branch
+            and trd_product_deal_2.ps in ('T01')
         LEFT JOIN trd_product_deal_add /** 金融产品临时交易附属表 **/
-        on trd_product_deal_2.trade_id = trd_product_deal_add.trade_id
+            on trd_product_deal_2.trade_id = trd_product_deal_add.trade_id
         left join fin_deal_pledge /** 回购质押品 **/
-        on fin_trade_product.finprod_id = fin_deal_pledge.finprod_id
-        AND fin_trade_product.branch = fin_deal_pledge.branch
+            on fin_trade_product.finprod_id = fin_deal_pledge.finprod_id
+            AND fin_trade_product.branch = fin_deal_pledge.branch
         left join FIN_PRODUCT fp
-        on fp.finprod_id = fin_deal_pledge.pledge_finprod_id
+            on fp.finprod_id = fin_deal_pledge.pledge_finprod_id
         LEFT JOIN PTL_PORTFOLIO /** 组合 **/
-        on trd_product_deal_add.Portfolio_Id = PTL_PORTFOLIO.Portfolio_Id
+            on trd_product_deal_add.Portfolio_Id = PTL_PORTFOLIO.Portfolio_Id
         LEFT JOIN trd_fin_product_deal_total trd_fin_product_deal_total /** 金融产品临时交易1 **/
-        on fin_trade_product.finprod_id = trd_fin_product_deal_total.finprod_id
-        AND fin_trade_product.branch = trd_fin_product_deal_total.branch
-        AND trd_fin_product_deal_total.ps in ('T96', 'T95', 'T93', 'T56')
+            on fin_trade_product.finprod_id = trd_fin_product_deal_total.finprod_id
+            AND fin_trade_product.branch = trd_fin_product_deal_total.branch
+            AND trd_fin_product_deal_total.ps in ('T96', 'T95', 'T93', 'T56')
         LEFT JOIN PTL_PORTFOLIO_AUTHORITY /** 组合权限表 **/
-        ON PTL_PORTFOLIO.Portfolio_Id = PTL_PORTFOLIO_AUTHORITY.Portfolio_Id
+            ON PTL_PORTFOLIO.Portfolio_Id = PTL_PORTFOLIO_AUTHORITY.Portfolio_Id
+        LEFT JOIN STL_SEC_ACCT_INFO SSAI
+            ON trd_product_deal_2.SEC_MANAGE_ACCT_ID = SSAI.SEC_ACCT_ID
+        LEFT JOIN STL_CAPACCT_INFO SCI
+            ON SSAI.TRD_ACCT_ID = SCI.ACCT_NO
+        LEFT JOIN ETR_ENTRUST ee ON trd_product_deal_add.ENTRUST_ID = ee.ENTRUST_ID
+        LEFT JOIN ETR_ENTRUST_ADD eea ON ee.ENTRUST_ID = eea.ENTRUST_ID
+        LEFT JOIN mst_counter_party mcp ON ee.counter_id = mcp.counter_id
         where fin_trade_product.branch = '0'
         AND fin_trade_product.trade_market IN ('03', '04')
         <if test="tradeId != null and tradeId !=''">

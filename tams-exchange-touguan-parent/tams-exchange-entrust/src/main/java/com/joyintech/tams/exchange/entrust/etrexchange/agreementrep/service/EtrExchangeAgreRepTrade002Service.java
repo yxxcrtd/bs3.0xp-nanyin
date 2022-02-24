@@ -166,8 +166,8 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         Page<EtrExchangeAgreRepTrade002Dto> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeAgreRepTradeMapper.findPositionsPage(pageParam));
 
         if(!StringUtil.isEmptyList(result.getRoot())){
-            // 计算浮动盈亏
             for(EtrExchangeAgreRepTrade002Dto entity : result.getRoot()){
+                // 计算浮动盈亏
                 BigDecimal floatPlPercent = ArithmeticUtil.divide(entity.getFloatingPL(), ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum()),2);
                 entity.setFloatingPLPercent(floatPlPercent);
             }
@@ -200,6 +200,16 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         pageParam.put("UNIT_04", DictCodeListExt3.交易单位_手.getValue());
 
         Page<EtrExchangeOnWayRep002Dto> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeAgreRepTradeMapper.findOnWayRepPage(pageParam));
+
+        if(result != null && !StringUtil.isEmptyList(result.getRoot())){
+            Date sysDate = iPlatformDate.getSysDate();
+            for(EtrExchangeOnWayRep002Dto entity : result.getRoot()){
+                // 计算剩余天数
+                // 剩余天数
+                entity.setLeftDay(DateUtil.getBetweenDayNumber(sysDate, entity.getExpireSettleDate()));
+            }
+        }
+
         return result;
     }
 
