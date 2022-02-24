@@ -48,7 +48,7 @@
     B.TRADER trader,
     B.realName realName,
     ETR_ENTRUST.REMARK remark,
-    btm.busi_type busiTypePosition,
+    nvl(btm1.OUTPUT_VALUE_1,btm.busi_type) busiTypePosition,
     ssai.sec_acct_name secAcctId,
     DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
@@ -173,6 +173,9 @@
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
         LEFT JOIN SYS_USER su1 ON ETR_ENTRUST.INV_MANAGER_ID = su1.USER_NAME
         LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON ETR_ENTRUST_ADD.ASSET_TYPE = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
+        LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm1 ON  ( ETR_ENTRUST.FINPROD_TYPE2 = btm1.INPUT_VALUE_2 OR  btm1.INPUT_VALUE_2 IS NULL)
+                                               AND ( ETR_ENTRUST.Ps = btm1.INPUT_VALUE_3 OR  btm1.INPUT_VALUE_3 IS NULL)
+                                               AND ( ETR_ENTRUST.TRADE_PLAT = btm1.INPUT_VALUE_1 OR  btm1.INPUT_VALUE_1 IS NULL)
     <where>
         AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall})
         <if test="entrustStatusList != null and entrustStatusList.size() > 0">
@@ -287,7 +290,7 @@
     B.TRADER trader,
     B.realName realName,
     ETR_ENTRUST.REMARK remark,
-    btm.busi_type busiTypePosition,
+    nvl(btm1.OUTPUT_VALUE_1,btm.busi_type) busiTypePosition,
     ssai.sec_acct_name secAcctId,
     DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
@@ -407,6 +410,9 @@
     LEFT JOIN STL_SEC_ACCT_INFO ssai ON ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
     LEFT JOIN SYS_USER su2 ON ETR_ENTRUST.INV_MANAGER_ID = su2.USER_NAME
     LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON ETR_ENTRUST.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
+    LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm1 ON  ( ETR_ENTRUST.FINPROD_TYPE2 = btm1.INPUT_VALUE_2 OR  btm1.INPUT_VALUE_2 IS NULL)
+                                           AND ( ETR_ENTRUST.Ps = btm1.INPUT_VALUE_3 OR  btm1.INPUT_VALUE_3 IS NULL)
+                                           AND ( ETR_ENTRUST.TRADE_PLAT = btm1.INPUT_VALUE_1 OR  btm1.INPUT_VALUE_1 IS NULL)
     <where>
         AND ETR_ENTRUST.FINPROD_TYPE2 = 'F36'
         AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall})

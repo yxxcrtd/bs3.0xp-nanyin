@@ -322,8 +322,8 @@ public class CfetsEtrDispatcherService extends BaseService{
         //根据组合权限表添加检索权限
         Page<CfetsEtrDispatcherTradeListResponse> pageLimit = new Page<CfetsEtrDispatcherTradeListResponse>();
         if(StringUtil.isNotEmpty(SecurityUtil.getLoginUser())) {
-            pageParam.put("userId", "li02");
-            //pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+//            pageParam.put("userId", "li02");
+            pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
             pageLimit = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
                     () -> cfetsEtrDispatcherMapper.findAllEtrDispatcherCommon(pageParam));
         }else{
