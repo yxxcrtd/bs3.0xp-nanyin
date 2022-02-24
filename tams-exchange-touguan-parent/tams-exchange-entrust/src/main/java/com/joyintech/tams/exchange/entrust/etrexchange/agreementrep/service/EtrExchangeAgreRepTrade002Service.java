@@ -42,6 +42,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dao.EtrExchangeAgreRepTradeMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SelectOptionRequestDto;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
@@ -163,6 +164,15 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         pageParam.put("TRADE_PLACE_03", BussinessDictCodeList.交易场所_深圳证券交易所.getValue());
         pageParam.put("TRADE_PLACE_04", BussinessDictCodeList.交易场所_上海证券交易所.getValue());
         Page<EtrExchangeAgreRepTrade002Dto> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeAgreRepTradeMapper.findPositionsPage(pageParam));
+
+        if(!StringUtil.isEmptyList(result.getRoot())){
+            // 计算浮动盈亏
+            for(EtrExchangeAgreRepTrade002Dto entity : result.getRoot()){
+                BigDecimal floatPlPercent = ArithmeticUtil.divide(entity.getFloatingPL(), ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum()),2);
+                entity.setFloatingPLPercent(floatPlPercent);
+            }
+        }
+
         return result;
     }
 
