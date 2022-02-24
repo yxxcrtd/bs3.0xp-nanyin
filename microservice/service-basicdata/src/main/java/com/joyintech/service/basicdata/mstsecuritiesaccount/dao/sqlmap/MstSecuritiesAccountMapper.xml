@@ -583,7 +583,7 @@ with ZYSHG as
         from (
         <if test="tradePlat != null and tradePlat != '' and tradePlat.equals('02')">
             select t.oth_code  as finprod_market_id,
-            t.oth_code || '|' || v.finprod_abbr || decode(t.oth_type,#{FINPROD_OTH_CODE_TYPE_05},'配债',#{FINPROD_OTH_CODE_TYPE_06},'配股') as finprod_name,
+            t.oth_code || '|' || v.finprod_abbr || decode(t.oth_type,#{FINPROD_OTH_CODE_TYPE_05},'配债',#{FINPROD_OTH_CODE_TYPE_06},'配股',#{FINPROD_OTH_CODE_TYPE_07},'新股申购') as finprod_name,
             t.oth_type oth_code_type,
             v.finprod_type2 finprod_type2,
             v.finprod_id,
