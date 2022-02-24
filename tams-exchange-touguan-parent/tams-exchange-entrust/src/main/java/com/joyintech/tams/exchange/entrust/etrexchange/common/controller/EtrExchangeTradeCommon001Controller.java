@@ -746,6 +746,9 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	public Message<List<SelectOptionDto>> selectCounterTrader(@RequestBody  SelectOptionRequestDto dto){
 		try {
 			Map<String, Object> pageParam = RequestUtil.getPageParam();
+			if(!Objects.isNull(dto.getCounterId())) {
+				pageParam.put("counterId", dto.getCounterId());
+			}
 			List<SelectOptionDto> selectOptionDtos = etrExchangeTrade001CommonService.selectCounterTrader(pageParam);
 			return new Message<List<SelectOptionDto>>().success().setData(selectOptionDtos);
 		} catch (Exception e) {

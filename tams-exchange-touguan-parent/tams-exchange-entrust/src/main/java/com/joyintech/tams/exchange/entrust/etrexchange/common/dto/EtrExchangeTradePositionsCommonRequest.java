@@ -77,9 +77,6 @@ public class EtrExchangeTradePositionsCommonRequest {
         this.portfolioIdList = portfolioIdList;
     }
 
-    //    @ApiModelProperty(name="finprodType2",value="金融产品类型",example="A1")
-    //    private String finprodType2;
-
     public PageMode getPageMode() {
         return pageMode;
     }

@@ -489,7 +489,16 @@
             to_char(eted.payment_date,'yyyy-MM-dd') paymentDate,
             to_char(eted.listing_date,'yyyy-MM-dd')  listingDate,
             ete.entrust_num entrustNum,
-            ete.entrust_amt entrustAmt,
+            <!--ete.entrust_amt entrustAmt,
+            按照列表查询价格修改 -->
+            decode(
+            eted.ASSET_TYPE,
+            'F01',
+            NVL( ete.ENTRUST_NUM * 100, 0 ),
+            'F10',
+            NVL( ete.ENTRUST_NUM * 100, 0 ),
+            NVL( ete.ENTRUST_AMT, ete.ENTRUST_NUM )
+            ) entrustAmt,
             eted.deal_mode dealMode,
             eted.term_type termType,
             to_char(eted.MDATE,'yyyy-MM-dd') || ' - ' || to_char(eted.MDATE2,'yyyy-MM-dd') as dueDate,
@@ -575,7 +584,16 @@
         to_char(eted.payment_date,'yyyy-MM-dd') paymentDate,
         to_char(eted.listing_date,'yyyy-MM-dd')  listingDate,
         ete.entrust_num entrustNum,
-        ete.entrust_amt entrustAmt,
+        <!--ete.entrust_amt entrustAmt,
+           按照列表查询价格修改 -->
+        decode(
+        eted.ASSET_TYPE,
+        'F01',
+        NVL( ete.ENTRUST_NUM * 100, 0 ),
+        'F10',
+        NVL( ete.ENTRUST_NUM * 100, 0 ),
+        NVL( ete.ENTRUST_AMT, ete.ENTRUST_NUM )
+        ) entrustAmt,
         eted.deal_mode dealMode,
         eted.term_type termType,
         to_char(eted.MDATE,'yyyy-MM-dd') || ' - ' || to_char(eted.MDATE2,'yyyy-MM-dd') as dueDate,

@@ -949,6 +949,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 */
 	public List<SelectOptionDto> selectCounterTrader(Map<String, Object> map) {
 		map.put("counterTraderId",map.get("param"));
+		map.put("counterId", map.get("counterId"));
 		List<Map<String,Object>> returnList = etrExchangeTradeCommonMapper.selectCounterTraderId(map);
 		List<SelectOptionDto> resultList = new ArrayList<>();
 		returnList.forEach(item ->{

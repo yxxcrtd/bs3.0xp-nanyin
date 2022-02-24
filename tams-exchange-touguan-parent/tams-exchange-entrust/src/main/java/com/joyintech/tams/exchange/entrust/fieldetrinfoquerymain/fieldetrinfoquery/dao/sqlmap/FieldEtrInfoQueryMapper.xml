@@ -44,7 +44,7 @@
     ssai.sec_acct_name secAcctId,
     DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
-    round(decode(btm.OUTPUT_VALUE_1,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,''),4) etrPrice,
+    round(decode(btm.OUTPUT_VALUE_1,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,NVL(ETR_ENTRUST.PRICE, 0.00)),4) etrPrice,
     DECODE(T5.ent_finish_amt,null,0,
         round(NVL(T5.ent_finish_amt,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100) exeProgress,
     DECODE(T5.FINISH_AMT,null,0,
@@ -56,7 +56,8 @@
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
     ETR_ENTRUST.PRICE_MODEL priceModel,
-    ssai.TRD_ACCT_ID trdAcctId,
+    <!--     修改页面显示 资金账户：TRD_ACCT_ID ->账户名称：SEC_ACCT_NAME -->
+    ssai.SEC_ACCT_NAME trdAcctId,
     ETR_ENTRUST.ENTRUST_NUM entrustNum,
     ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField
     FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
@@ -179,6 +180,10 @@
         <if test="trdAcctId != null and trdAcctId!='' ">
             AND ssai.TRD_ACCT_ID = #{trdAcctId}
         </if>
+        <if test="trdAcctName != null and trdAcctName!='' ">
+            AND ssai.SEC_ACCT_NAME = #{trdAcctName}
+            LIKE concat(concat('%',#{entrustId,jdbcType=VARCHAR}),'%')
+        </if>
     </where>
         union all
         SELECT
@@ -220,7 +225,7 @@
         ssai.sec_acct_name secAcctId,
         DECODE(WFL_ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
         decode(WFL_ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'F10',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'F12',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'F16',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
-        round(decode(btm.OUTPUT_VALUE_1,#{busiTypePosition02},decode(WFL_ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',WFL_ETR_ENTRUST.PRICE,'exerYield',WFL_ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',WFL_ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},WFL_ETR_ENTRUST.PRICE,''),4) etrPrice,
+        round(decode(btm.OUTPUT_VALUE_1,#{busiTypePosition02},decode(WFL_ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',WFL_ETR_ENTRUST.PRICE,'exerYield',WFL_ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',WFL_ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},WFL_ETR_ENTRUST.PRICE,NVL(WFL_ETR_ENTRUST.PRICE, 0.00)),4) etrPrice,
         DECODE(T5.ent_finish_amt,null,0,
             round(NVL(T5.ent_finish_amt,0)*100/(WFL_ETR_ENTRUST.ENTRUST_NUM*100),4)*100) exeProgress,
         DECODE(T5.FINISH_AMT,null,0,
@@ -232,7 +237,7 @@
         NULL transmitTime,
         NULL transmitTimeSer,
         WFL_ETR_ENTRUST.PRICE_MODEL priceModel,
-        ssai.TRD_ACCT_ID trdAcctId,
+        ssai.SEC_ACCT_NAME trdAcctId,
         WFL_ETR_ENTRUST.ENTRUST_NUM entrustNum,
         WFL_ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField
         FROM (SELECT * FROM WFL_ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) WFL_ETR_ENTRUST
@@ -612,9 +617,12 @@
     </resultMap>
 
     <sql id="Query_Column_List">
-        a.ID, a.INSTRUCTION_ID, a.PARENT_ORDER_ID, a.ENTRUST_ID, a.ACCOUNT_ID, a.FINANCE_ACCOUNT, a.ACCOUNT_NAME,
+        a.ID, a.INSTRUCTION_ID, a.PARENT_ORDER_ID, a.ENTRUST_ID, a.ACCOUNT_ID,
+         <!--a.FINANCE_ACCOUNT-->
+        a.ACCOUNT_NAME AS financeAccount,
         a.MARKET, a.ASSET_TYPE, a.STOCK_CODE, a.STOCK_NAME, a.BUSINESS_FLAG, a.ENTRUST_TYPE, a.ENTRUST_PROP,
-        a.BS_FLAG, a.TRADE_TYPE, a.TRADED_BALANCE, a.TRADED_VOLUME, a.TRADED_PRICE, a.CLEAR_BALANCE, a.TRADE_TIME,
+        a.BS_FLAG, a.TRADE_TYPE, a.TRADED_BALANCE, a.TRADED_VOLUME, a.TRADED_PRICE, a.CLEAR_BALANCE,
+        nvl(a.TRADE_TIME,0) AS tradeTime,
         a.DISCOUNT, a.TRANS_CODE, a.PROP_SEAT_NO,  a.TRADING_DAY, a.LOCAL_ENTRUST_ID, a.BROKER_ENTRUST_ID, a.BROKER_TRADE_ID,
         a.REPORT_NO, a.CREATE_TIME, a.UPDATE_TIME, a.OFFSET_FLAG, a.HEDGE_FLAG, a.PORTFOLIO_ID, a.FULL_PRICE,
         b.PORTFOLIO_NAME,b.SEC_ACCT_ID,b.TRADE_PLAT,b.FINPROD_TYPE2,b.PS as ENTRUST_BS
