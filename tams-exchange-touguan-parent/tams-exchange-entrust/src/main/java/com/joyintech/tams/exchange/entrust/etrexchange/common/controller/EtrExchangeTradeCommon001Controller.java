@@ -502,7 +502,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		List<SelectOptionDto> priceModelStockCyb = selectDto.getOptions().stream().filter(option -> {
 			return StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_限价指令.getValue())
 					|| StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_市价指令.getValue())
-					|| StringUtil.equals(option.getId(), com.joyintech.background.component.order.exchange.common.constant.DictCodeList.价格模式_收盘价固定价格申报.getValue());
+					|| StringUtil.equals(option.getId(), com.joyintech.background.component.order.exchange.common.constant.DictCodeList.价格模式_收盘价固定价格.getValue());
 		}).collect(Collectors.toList());
 
 
@@ -514,6 +514,12 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		initPageParams.put("PRICE_MODEL_JJ", JsonUtils.objectArray2Json(priceModel.toArray()));
 		initPageParams.put("PRICE_MODEL_DZ", JsonUtils.objectArray2Json(priceModel.toArray()));
 		initPageParams.put("PRICE_MODEL_GD", JsonUtils.objectArray2Json(priceModel.toArray()));
+
+		SelectDto selectDto10 = this.getSelectDataFromDataDic(DictCode.价格模式, null);
+		List<SelectOptionDto> PRICE_MODEL_PRM10_OBJ = selectDto10.getOptions().stream().filter(option -> {
+			return StringUtil.equals(option.getId(), com.joyintech.background.component.order.exchange.common.constant.DictCodeList.价格模式_收盘价固定价格.getValue());
+		}).collect(Collectors.toList());
+		initPageParams.put("PRICE_MODEL_PRM10_OBJ", PRICE_MODEL_PRM10_OBJ.get(0));
 	}
 
 	/**

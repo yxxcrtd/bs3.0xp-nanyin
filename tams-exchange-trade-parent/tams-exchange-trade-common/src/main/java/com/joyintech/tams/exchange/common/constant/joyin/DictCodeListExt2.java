@@ -1784,8 +1784,8 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
 	价格模式_成交申报(
 			DictCode.价格模式, "PRM09", "成交申报"
 	),
-	价格模式_收盘价固定价格申报(
-			DictCode.价格模式, "PRM10", "收盘价固定价格申报"
+	价格模式_收盘价固定价格(
+			DictCode.价格模式, "PRM10", "收盘价固定价格"
 	),
 	价格模式_日均价固定价格申报(
 			DictCode.价格模式, "PRM11", "日均价固定价格申报"
