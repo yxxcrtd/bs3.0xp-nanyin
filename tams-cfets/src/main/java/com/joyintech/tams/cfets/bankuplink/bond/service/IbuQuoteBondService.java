@@ -1206,6 +1206,11 @@ public class IbuQuoteBondService extends BaseService {
             CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = new CfetsBondDealDialogueQuoteDto();
             BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto,bondQuoteInfoDto);
             ibuComponentCommonService.bondDialogueQuoteRestore(cfetsBondDealDialogueQuoteDto);
+            if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                cfetsBondDealDialogueQuoteDto.setOperateType("Restore");
+                cfetsBondDealDialogueQuoteDto.setIsExistNew(DictCodeList.是否_是.getValue());
+                cfetsBondDealQuotedPriceService.doInsetOrUpdateForPtlPositionHold(cfetsBondDealDialogueQuoteDto);//头寸处理
+            }
             //处理头寸
             cfetsBondDealQuotedPrice002Service.sendPosition(cfetsBondDealQuotedPrice002Service.handpositionByQuoteId(bondQuoteInfoDto.getQuoteId()),DictCodeListExt3.流程节点_流程提交.getValue(),DictCodeListExt3.系统动作_退回.getValue(),DictCodeListExt3.系统动作_退回.getValue());
             return true;
@@ -1219,6 +1224,11 @@ public class IbuQuoteBondService extends BaseService {
             CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = new CfetsBondDealRequestQuoteDto();
             BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDto,bondQuoteInfoDto);
             ibuComponentCommonService.sendBondRequestQuoteRestore(cfetsBondDealRequestQuoteDto);
+            if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                cfetsBondDealRequestQuoteDto.setOperateType("Restore");
+                cfetsBondDealRequestQuoteDto.setIsExistNew(DictCodeList.是否_是.getValue());
+                cfetsBondDealQuotedPriceService.doInsetOrUpdateForPtlPositionHold(cfetsBondDealRequestQuoteDto);//头寸处理
+            }
             //处理头寸
             cfetsBondDealQuotedPrice003Service.sendPosition(cfetsBondDealQuotedPrice003Service.handpositionByQuoteId(bondQuoteInfoDto.getQuoteId()),DictCodeListExt3.流程节点_流程提交.getValue(),DictCodeListExt3.系统动作_退回.getValue(),DictCodeListExt3.系统动作_退回.getValue());
             return true;

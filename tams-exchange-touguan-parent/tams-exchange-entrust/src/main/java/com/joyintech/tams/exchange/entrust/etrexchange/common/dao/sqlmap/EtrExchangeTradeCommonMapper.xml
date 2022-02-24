@@ -122,6 +122,12 @@
         <if test="finprodMarketId != null and !finprodMarketId.equals('')">
             AND T1.FINPROD_ID =#{finprodMarketId}
         </if>
+        <if test="finprodMarketIds != null and finprodMarketIds.size() > 0">
+            AND T7.FINPROD_MARKET_ID in
+            <foreach item="item" index="index" collection="finprodMarketIds" open="(" separator="," close=")">
+                #{item, jdbcType=VARCHAR}
+            </foreach>
+        </if>
         <if test="entrustTypeList != null and entrustTypeList.size()>0">
             <foreach collection="entrustTypeList" open="AND T1.ENTRUST_TYPE in(" close=")" separator="," item="item">
                 #{item}
