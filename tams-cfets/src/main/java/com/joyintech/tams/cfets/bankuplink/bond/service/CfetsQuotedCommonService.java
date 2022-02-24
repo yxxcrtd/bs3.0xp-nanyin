@@ -272,7 +272,7 @@ public class CfetsQuotedCommonService extends BaseService {
                             BussinessDictCodeList.银行间上行发送状态_成功.getValue()))
                         validFlag = true;
                 }
-                msg ="交易状态和发送状态分别为已新增/成功，已修改/成功的对话报价，才能执行撤回操作！";
+                msg ="报价状态和发送状态分别为已新增/成功，已修改/成功的对话报价，才能执行撤回操作！";
             }
             else if (StringUtil.equals(bondQuoteInfoDto.getQuoteRoleType(),
                 BussinessDictCodeList.银行间上行本方角色_做市方.getValue())) {
@@ -288,7 +288,7 @@ public class CfetsQuotedCommonService extends BaseService {
                         validFlag = true;
                     }
                 }
-                msg ="本方角色为做市方，交易状态和发送状态分别为已回复/成功，已修改/空的请求报价，才能执行撤回操作！";
+                msg ="本方角色为做市方，报价状态和发送状态分别为已回复/成功，已修改/空的请求报价，才能执行撤回操作！";
             }
             else if (StringUtil.equals(bondQuoteInfoDto.getQuoteRoleType(),
                 BussinessDictCodeList.银行间上行本方角色_非做市方.getValue())) {
@@ -317,10 +317,10 @@ public class CfetsQuotedCommonService extends BaseService {
                     statusChangeFlag = true;
                     validFlag = true;
                 }
-                msg ="本方角色为非做市方，交易状态和发送状态分别为待回复/成功，已回复/空的请求报价，才能执行撤回操作！";
+                msg ="本方角色为非做市方，报价状态和发送状态分别为待回复/成功，已回复/空的请求报价，才能执行撤回操作！";
             }
             else {
-            	msg ="交易状态和发送状态分别为已新增/成功，已修改/成功的对话报价，才能执行撤回操作！";
+            	msg ="报价状态和发送状态分别为已新增/成功，已修改/成功的对话报价，才能执行撤回操作！";
                 statusChangeFlag = true;
             }
 
@@ -349,7 +349,7 @@ public class CfetsQuotedCommonService extends BaseService {
                             && !StringUtil.isNotEmpty(bondQuoteInfoDto.getSendStatus())))
                         validFlag = true;
                 }
-                msg ="交易状态和发送状态分别为已新增/成功，已修改/成功，已撤回/成功，已成交/空，已终止/空的对话报价，才能执行复制操作！";
+                msg ="报价状态和发送状态分别为已新增/成功，已修改/成功，已撤回/成功，已成交/空，已终止/空的对话报价，才能执行复制操作！";
             }
             else if (StringUtil.equals(bondQuoteInfoDto.getQuoteRoleType(),
                 BussinessDictCodeList.银行间上行本方角色_非做市方.getValue())) {
@@ -373,10 +373,10 @@ public class CfetsQuotedCommonService extends BaseService {
                         validFlag = true;
                     }
                 }
-                msg ="本方角色为非做市方，交易状态和发送状态分别为待回复/成功，已撤回/成功，已终止/空,已过期/空，已成交/成功的请求报价，才能执行复制操作！";
+                msg ="本方角色为非做市方，报价状态和发送状态分别为待回复/成功，已撤回/成功，已终止/空,已过期/空，已成交/成功的请求报价，才能执行复制操作！";
             }
             else {
-            	msg ="交易状态和发送状态分别为已新增/成功，已修改/成功，已撤回/成功，已成交/空，已终止/空的对话报价，才能执行复制操作！";
+            	msg ="报价状态和发送状态分别为已新增/成功，已修改/成功，已撤回/成功，已成交/空，已终止/空的对话报价，才能执行复制操作！";
                 statusChangeFlag = true;
             }
         }
@@ -534,7 +534,7 @@ public class CfetsQuotedCommonService extends BaseService {
                         validFlag = true;
                     }
                 }
-                msg ="交易状态和发送状态分别为已新增/成功，已修改/成功的对话报价，才能执行修改操作！";
+                msg ="报价状态和发送状态分别为已新增/成功，已修改/成功的对话报价，才能执行修改操作！";
             }else{
             	msg ="请求报价非做市方不允许进行修改操作！";
             }

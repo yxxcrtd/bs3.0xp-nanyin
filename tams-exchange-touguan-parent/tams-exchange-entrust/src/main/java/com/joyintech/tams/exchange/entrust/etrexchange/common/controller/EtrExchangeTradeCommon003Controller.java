@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -111,6 +112,9 @@ public class EtrExchangeTradeCommon003Controller extends BaseController{
                 &&!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已退回.getValue())
                         &&!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已撤回.getValue())){
                     errList.add(new ValidMessage(item.getEntrustStatusString()+"的指令不允许关闭!"));
+                }else if(StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已接收.getValue())
+                        && BigDecimal.ZERO.compareTo(item.getDealPercent())<0){
+                    errList.add(new ValidMessage(item.getEntrustStatusString()+"成交进度大于0的指令不允许关闭!"));
                 }
             }
             if(null!=errList&&errList.size()>0){

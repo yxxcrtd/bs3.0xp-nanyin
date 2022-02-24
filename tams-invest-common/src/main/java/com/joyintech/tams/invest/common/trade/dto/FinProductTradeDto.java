@@ -81,7 +81,12 @@ public class FinProductTradeDto extends BaseEntity {
 //     * 是否有报价信息（01：是，02：否,03:撤销）
 //     */
 //    private String isOfferFlag;
-    
+    /**
+     *数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
+
+
     public String getIsDealSettlePosition() {
         return isDealSettlePosition;
     }
@@ -271,7 +276,14 @@ public class FinProductTradeDto extends BaseEntity {
         this.needHandleFinishEntrust = needHandleFinishEntrust;
     }
 
-//	public String getIsOfferFlag() {
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
+    }
+    //	public String getIsOfferFlag() {
 //		return isOfferFlag;
 //	}
 //

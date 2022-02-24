@@ -49,6 +49,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.SecInfoModelDto;
 import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonService;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -1128,6 +1129,11 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
     @Override
 	public void doBack(CfetsBondDealDialogueQuoteDto entity){
     	//doDeletePtlPositionHold(entity.getWorkflowId());
+        if (StringUtil.equals(com.joyintech.tams.constant.DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+            //插入旧头寸
+            //回退释放头寸
+            doDeletePtlPositionHold(entity.getWorkflowId());
+        }
         String systemAct= handSystemAct(entity);
         sendPosition(entity,DictCodeListExt3.流程节点_流程退回.getValue(),systemAct,systemAct);
     }
@@ -1182,6 +1188,11 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
         //处理本方券、融入券
         this.handOurAndLendinShareAmt(entity);
         insertWflBondDialogueQuote(entity);
+        if (StringUtil.equals(com.joyintech.tams.constant.DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+            //插入旧头寸
+            entity.setIsExistNew(DictCodeList.是否_是.getValue());
+            doInsetOrUpdateForPtlPositionHold(entity);
+        }
         String systemAct = handSystemAct(entity);
         try {
             sendPosition(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct);
@@ -1202,6 +1213,11 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
             this.handOurAndLendinShareAmt(entity);
             // 重新insert
         	insertWflBondDialogueQuote(entity);
+            if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                //插入旧头寸
+                entity.setIsExistNew(DictCodeList.是否_是.getValue());
+                doInsetOrUpdateForPtlPositionHold(entity);
+            }
         	try{
                 SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
                 String systemAct= handSystemAct(entity);

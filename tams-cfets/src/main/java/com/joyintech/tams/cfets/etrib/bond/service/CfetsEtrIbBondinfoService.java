@@ -51,6 +51,7 @@ import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
+import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
@@ -138,6 +139,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     private JoyinbusinessCommonService joyinbusinessCommonService;
     @Autowired
     private EtrInvestBondInfoService etrInvestBondInfoService;
+    @Autowired(required = false)
+    private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
     /**
      * 持仓信息查询
      *
@@ -1940,6 +1943,12 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         // 调用投资委托组件的更新委托状态接口，将委托状态设置为"已撤回"
         boolean flag = etrInvestInfoServiceImpl.updateDelegateStatus(entity.getEtrEntrust().getEntrustId(),
                 entity.getEtrEntrust().getEntrustStatus());
+        if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+            //插入旧头寸
+            if (baseEtrCashPositionCommService != null) {
+                baseEtrCashPositionCommService.entrustCloseExecute(entity.getEtrEntrust().getEntrustId(),DictCodeList.是否_是.getValue());
+            }
+        }
         //更新操作记录日志
         CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
         oprHisReq.setEntrustId(dto.getEntrustId());
@@ -1973,6 +1982,12 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             // 调用投资委托组件的更新委托状态接口，将委托状态设置为“已关闭”
             String tempEntrustStatu = ee.getEntrustStatus();// 获取该委托原始状态，防止后续更改成关闭
             boolean flag = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId, DictCodeList.委托状态_已关闭.getValue());
+            if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                //插入旧头寸
+                if (baseEtrCashPositionCommService != null && DictCodeList.委托状态_已接收.getValue().equals(tempEntrustStatu)) {
+                    baseEtrCashPositionCommService.entrustCloseExecute(entrustId,DictCodeList.是否_是.getValue());
+                }
+            }
             // 判断关闭委托是否完成
             if (flag) {
                 return true;

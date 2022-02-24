@@ -26,8 +26,14 @@ public class MockQuoteData {
 
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
 
+    /**
+     * 大宗行情
+     */
     public static List<IntegratedQuote> makeMockDataForBulk(String stockCode) {
         List<IntegratedQuote> integratedQuotes = new ArrayList<>();
+        if (StringUtil.isEmpty(stockCode)) {
+            return integratedQuotes;
+        }
         for (int i = 1; i < 5; i++) {
             IntegratedQuote integratedQuote = new IntegratedQuote();
             integratedQuote.setQuoteType(QuoteType.BULK_QUOTE.value);
@@ -35,51 +41,65 @@ public class MockQuoteData {
             integratedQuote.setStockName(stockCode);
             integratedQuote.setReportTime(simpleDateFormat.format(new Date(System.currentTimeMillis())));
             integratedQuote.setOrderNo(orderNo.incrementAndGet() + "");
-            if (StockCodeUtils.getMarket(stockCode).equals(Market.SHSE.value)) {
+            if (Market.SHSE.value.equals(StockCodeUtils.getMarket(stockCode))) {
                 integratedQuote.setPropSeatNo(propSeatNo[0]);
                 integratedQuote.setMarket(Market.SHSE.value);
             } else {
                 integratedQuote.setPropSeatNo(propSeatNo[1]);
                 integratedQuote.setMarket(Market.SZSE.value);
             }
-            integratedQuote.setEntrustVolume(300000 * i);
-            integratedQuote.setEntrustPrice(10.1 * i);
+            integratedQuote.setEntrustVolume(300000 + i * 100000);
+            integratedQuote.setEntrustPrice(100.1 + i);
             if (i == 1 || i == 2) {
                 integratedQuote.setEntrustProp(EntrustProp.INTENTION.value);
-                integratedQuote.setEntrustBs(EntrustBs.BUY.value);
+                if (i == 1) {
+                    integratedQuote.setEntrustBs(EntrustBs.BUY.value);
+                } else {
+                    integratedQuote.setEntrustBs(EntrustBs.SELL.value);
+                }
                 integratedQuote.setContractId((contractIds[i - 1] + i * 2) + "");
                 integratedQuote.setLiaisonName(liaisonName[i - 1]);
                 integratedQuote.setLiaisonTel(liaisonTel[i - 1]);
+                integratedQuote.setOrigCbpconferId((contractIds[i-1] + i * 2) + "");
             } else {
+                integratedQuote.setOrigCbpconferId((contractIds[i-3] + i * 2) + "");
                 integratedQuote.setContractId((contractIds[i - 3] + i * 2) + "");
                 integratedQuote.setLiaisonName(liaisonName[i - 3]);
                 integratedQuote.setLiaisonTel(liaisonTel[i - 3]);
-                if (StockCodeUtils.getMarket(stockCode).equals(Market.SHSE.value)) {
-                    integratedQuote.setEntrustProp(EntrustProp.INTENTION.value);
+//                if (Market.SHSE.value.equals(StockCodeUtils.getMarket(stockCode))) {
+//                    integratedQuote.setEntrustProp(EntrustProp.INTENTION.value);
+//                } else {
+//                    integratedQuote.setEntrustProp(EntrustProp.SET_PRICE.value);
+//                }
+                integratedQuote.setEntrustProp(EntrustProp.SET_PRICE.value);
+                if (i == 3) {
+                    integratedQuote.setEntrustBs(EntrustBs.BUY.value);
                 } else {
-                    integratedQuote.setEntrustProp(EntrustProp.SET_PRICE.value);
+                    integratedQuote.setEntrustBs(EntrustBs.SELL.value);
                 }
-                integratedQuote.setEntrustBs(EntrustBs.SELL.value);
             }
             integratedQuotes.add(integratedQuote);
         }
         return integratedQuotes;
     }
 
+    /**
+     * 盘后大宗行情
+     */
     public static List<IntegratedQuote> makeAfterBulkQuote(String stockCode) {
         List<IntegratedQuote> integratedQuotes = new ArrayList<>();
         IntegratedQuote integratedQuote = new IntegratedQuote();
         integratedQuote.setStockCode(stockCode);
         integratedQuote.setStockName(stockCode);
         integratedQuote.setQuoteType(QuoteType.AFTER_BULK_QUOTE.value);
-        integratedQuote.setEntrustPrice(12.1);
+        integratedQuote.setEntrustPrice(100.1);
         if (StockCodeUtils.getMarket(stockCode).equals(Market.SHSE.value)) {
             integratedQuote.setMarket(Market.SHSE.value);
         } else {
-            integratedQuote.setFullPrice(11.8);
+            integratedQuote.setFullPrice(101.8);
             integratedQuote.setMarket(Market.SZSE.value);
         }
-        integratedQuote.setEntrustVolume(310000);
+        integratedQuote.setEntrustVolume(300000);
         integratedQuote.setTradeBalance(integratedQuote.getEntrustVolume() * integratedQuote.getEntrustPrice());
         integratedQuote.setBuyRemainQuantity1(1000000);
         integratedQuote.setSellRemainQuantity1(2000000);

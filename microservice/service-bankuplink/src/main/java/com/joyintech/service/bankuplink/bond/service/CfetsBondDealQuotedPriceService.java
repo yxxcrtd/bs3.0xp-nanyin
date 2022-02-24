@@ -1199,6 +1199,12 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
 		ptlPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlows);
 		ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(platDate));
 		ptlPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(settleDate));
+		// 数据是否已入新头寸
+		if(StringUtil.isNotEmpty(dto.getIsExistNew())){
+            ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setIsExistNew(dto.getIsExistNew()));
+            ptlPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setIsExistNew(dto.getIsExistNew()));
+        }
+
 
 		// 插入持仓流水
 		if (ptlPositionHoldDto.getPtlSecPositionFlows().size() > 0) {
@@ -1517,6 +1523,11 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
 		ptlPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlows);
 		ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(platDate));
 		ptlPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(settleDate));
+        // 数据是否已入新头寸
+        if(StringUtil.isNotEmpty(dto.getIsExistNew())){
+            ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setIsExistNew(dto.getIsExistNew()));
+            ptlPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setIsExistNew(dto.getIsExistNew()));
+        }
 
 		// 插入持仓流水
 		if(ptlPositionHoldDto.getPtlSecPositionFlows().size() > 0){

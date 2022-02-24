@@ -108,4 +108,12 @@ public class InstructionQuoteController {
         return integratedQuoteManagement.queryIntegratedQuote(userId, quoteType, stockCode, accountId, oppositeLiaisonTel, liaisonTel, pageSize, posStr);
     }
 
+    /**
+     * 手动增加协议回购mock行情
+     */
+    @ApiOperation(value = "手动增加协议回购mock行情", notes = "手动增加协议回购mock行情", hidden = true)
+    @RequestMapping(value = "/add/integrated/repurchase_quote", method = RequestMethod.POST)
+    public ResultBean addIntegratedRepurchaseQuote(@RequestBody IntegratedRepurchaseQuoteBean repurchaseQuoteBean) {
+        return integratedQuoteManagement.addIntegratedRepurchaseQuote(repurchaseQuoteBean);
+    }
 }

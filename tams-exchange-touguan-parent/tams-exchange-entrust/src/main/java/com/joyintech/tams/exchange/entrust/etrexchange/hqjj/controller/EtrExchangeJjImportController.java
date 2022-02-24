@@ -413,7 +413,7 @@ public AjaxResult save(@RequestBody EtrExchangeTradeJjSaveRequest allDto, Bindin
         // add by zhangrui1 end
 	ProcessParameter<EtrExchangeTradeJjSaveRequest> processParameter = new ProcessParameter<EtrExchangeTradeJjSaveRequest>();
 	WorkFlowParameter<EtrExchangeTradeJjSaveRequest> params = etrExchangeTradeJj001Service.getWorkFlowParameter(allDto);
-	params.setPageId("EtrExchangeTradeMain");
+	params.setPageId("EtrExchangeTradeCommon004");
 	params.setElementId(allDto.getElementId());
 	params.setBusinessType(item->item.getBusinessTypeName());
 	params.setBusinessCode(item->item.getEntrustId());

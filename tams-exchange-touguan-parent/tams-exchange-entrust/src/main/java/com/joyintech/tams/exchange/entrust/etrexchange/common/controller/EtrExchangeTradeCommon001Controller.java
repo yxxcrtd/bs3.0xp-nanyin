@@ -1023,6 +1023,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 					}
 					//债转股需要走批量接口
 					String infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+					dto.setFromEtrExchange("Y");//场内指令
 					AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto, infCode, finprodType2);
 					if (StringUtil.isNotEmpty(ar)) {
 						return new Message<AjaxResult>().success().setData(ar);
@@ -1062,18 +1063,21 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 					etrExchangeTrade001Dto.setBusinessTypeName(businessType);//此处存的是类型
 					etrExchangeTrade001Dto.setOptType(ENTRUST_RECORD_NEW);
 					etrExchangeTrade001Dto.setIsMulti(DictCodeList.是否_否.getValue());
+					etrExchangeTrade001Dto.setFromEtrExchange("Y");
+					etrExchangeTrade001Dto.setDisRate(item.getDisRate());
 					List<EtrExchangeTradePortfolioRequest> portfolioList=new ArrayList<>();
 					EtrExchangeTradePortfolioRequest portfolioRequest=new EtrExchangeTradePortfolioRequest();
 					BeanUtil.copyPropertiesIgnoreNull(portfolioRequest,etrExchangeTrade001Dto);
 					portfolioList.add(portfolioRequest);
 					etrExchangeTrade001Dto.setPortfolioList(portfolioList);
+
 					etrExchangeTrade001DtoList.add(etrExchangeTrade001Dto);
 				}
 
 				// ----------预占功能 start----------
 				if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
 					// add by zhangrui1 start
-					AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(getPageId(), etrExchangeTrade001DtoList,
+					AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy("EtrExchangeTradeMulti001", etrExchangeTrade001DtoList,
 							BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue());
 					if (null != ar) {
 						return new Message<AjaxResult>().success().setData(ar);
@@ -1253,15 +1257,22 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	public BigDecimal selectConverseSharePrice(@RequestBody Map<String, Object> param) throws Exception {
 		return etrExchangeTrade001CommonService.selectConverseSharePrice(param);
 	}
-
+    //配债、配股
 	@RequestMapping(value = "/selectTrdOthPrice")
 	@ResponseBody
-	public BigDecimal selectOthPrice(@RequestBody Map<String, Object> param) throws Exception {
+	public  Message<BigDecimal> selectOthPrice(@RequestBody TrdOthPriceRequest request)  {
+		try{
+		Map<String,Object> param= JsonUtils.object2Map(request);
 		TrdOthCodeInfoDto dto = etrExchangeTrade001CommonService.getTrdOthCodeInfo(param);
+		BigDecimal declaredPrice=null;
 		if (null != dto && dto.getDeclaredPrice() != null && dto.getDeclaredPrice().compareTo(BigDecimal.ZERO) > 0) {
-			return dto.getDeclaredPrice();
+			declaredPrice=dto.getDeclaredPrice();
 		}
-		return null;
+		return new Message<BigDecimal>().success().setData(declaredPrice);
+	}catch (Exception e) {
+		logger.error("查询配债",e);
+		return new Message<BigDecimal>().fail().setMessage("查询配债、配股异常");
+	}
 	}
 
 	@RequestMapping(value = "/selectExtPs")
@@ -1454,6 +1465,23 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@RequestMapping(value = "queryLocalTime", method = RequestMethod.POST)
 	public Message<Date> queryLocalTime() {
 		return new Message<Date>(DateUtil.now());
+	}
+
+	/**
+	 * 获取1/最小价差的倍数
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/getMinPrice")
+	public Message<List<MinPirceDto>> getMinPrice(@RequestBody MinPriceRequest request) {
+		try{
+			Map<String,Object> param= JsonUtils.object2Map(request);
+			List<MinPirceDto> minPirceList = etrExchangeTrade001CommonService.getInterfSysMinPriceAll(param);
+			return new Message<List<MinPirceDto>>().success().setData(minPirceList);
+		}catch (Exception e){
+			return new Message<List<MinPirceDto>>().fail().setData(null);
+		}
 	}
 }
 	

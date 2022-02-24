@@ -147,6 +147,10 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto {
     private BigDecimal ourShareAmt;
 
     private BigDecimal unitFprice;
+    /**
+     *数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
 
     public BigDecimal getUnitFprice() {
         return unitFprice;
@@ -519,5 +523,13 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto {
 
     public void setDistribution(String distribution) {
         this.distribution = distribution;
+    }
+
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
     }
 }

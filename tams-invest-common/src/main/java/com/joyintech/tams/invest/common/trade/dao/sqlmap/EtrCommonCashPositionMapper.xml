@@ -172,7 +172,6 @@
 					 and t1.portfolio_id = #{portfolioId,jdbcType=VARCHAR} 
         		)
         	</if>
-             and (t.is_exist_new is null or  t.is_exist_new!='Y')
     </select>
     
     <!--ͨ指令现金余额数据 2019/10/14 add by yanya-->
@@ -586,7 +585,10 @@
     </select>
 
     <update id="updatePosition" parameterType="map">
-        UPDATE ETR_CASH_POSITION SET AMOUNT = AMOUNT + #{amount},is_Exist_New=#{isExistNew}
+        UPDATE ETR_CASH_POSITION SET AMOUNT = AMOUNT + #{amount}
+        <if test="isExistNew != null and isExistNew!=''">
+            ,is_Exist_New=#{isExistNew}
+        </if>
         where CDATE between TO_DATE(#{minDate}, 'yyyy-MM-dd') AND TO_DATE(#{maxDate}, 'yyyy-MM-dd')
         <include refid="whereSql"/>
     </update>
@@ -1078,6 +1080,33 @@
         and a.ccy = #{ccy,jdbcType=VARCHAR}
         AND a.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
         and a.DATE_TYPE=#{dateType,jdbcType=INTEGER}
+    </select>
+    <select id="selectCommandAvailableCashFlowSum" parameterType="com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto" resultType="java.math.BigDecimal">
+        select
+        sum(t.amount) as amount
+        from etr_cash_position_flow t
+        where
+        t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+        <if test="acctId != null and acctId != '' ">
+            and t.acct_id = #{acctId,jdbcType=VARCHAR}
+        </if>
+        <if test="chlFinprodId != null and chlFinprodId != '' ">
+            and t.chl_finprod_id = #{chlFinprodId,jdbcType=VARCHAR}
+        </if>
+        and t.hoding_type = #{hodingType,jdbcType=VARCHAR}
+        and t.cdate <![CDATA[<=]]> #{cdate,jdbcType=DATE}
+        and t.ccy = #{ccy,jdbcType=VARCHAR}
+        <if test="acctType != null and acctType.size() > 0 ">
+            and t.acct_id in (
+            select t1.acct_no from ptl_capacct_info t1
+            where t1.acct_type in
+            <foreach collection="acctType" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+            and t1.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+            )
+        </if>
+        and (t.is_exist_new is null or  t.is_exist_new!='Y')
     </select>
 
 </mapper>

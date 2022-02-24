@@ -78,6 +78,7 @@ import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
@@ -1014,8 +1015,11 @@ public class CfetsEtrDispatcherService extends BaseService{
                     entity.setRecStatus(DictCodeList.委托状态_已退回.getValue());
                     etrDistributeMapper.updateByPrimaryKeySelective(entity);
                 }
-                if (baseEtrCashPositionCommService != null) {
-                    baseEtrCashPositionCommService.entrustCloseExecute(entrustId);
+                if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                    //插入旧头寸
+                    if (baseEtrCashPositionCommService != null) {
+                        baseEtrCashPositionCommService.entrustCloseExecute(entrustId,BussinessDictCodeListRds.是否_是.getValue());
+                    }
                 }
 
                 //更新操作记录日志

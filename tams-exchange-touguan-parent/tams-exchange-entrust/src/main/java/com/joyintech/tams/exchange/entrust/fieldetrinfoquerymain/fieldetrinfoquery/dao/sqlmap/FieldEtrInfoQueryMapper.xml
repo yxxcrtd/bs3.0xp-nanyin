@@ -101,7 +101,7 @@
         SUM(FINISH_AMT) as FINISH_AMT,SUM(Ent_Finish_Amt) as Ent_Finish_Amt
         FROM
         ETR_FINISH_STATUS
-        where ENTRUST_ID != TRADE_ID
+        where ENTRUST_ID = TRADE_ID
         GROUP BY
         ENTRUST_ID) T5
         ON
@@ -175,6 +175,9 @@
         </if>
         <if test="userId != null and userId!='' ">
             AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+        </if>
+        <if test="trdAcctId != null and trdAcctId!='' ">
+            AND ssai.TRD_ACCT_ID = #{trdAcctId}
         </if>
     </where>
         union all
@@ -277,7 +280,7 @@
         SUM(FINISH_AMT) as FINISH_AMT,SUM(Ent_Finish_Amt) as Ent_Finish_Amt
         FROM
         ETR_FINISH_STATUS
-        where ENTRUST_ID != TRADE_ID
+        where ENTRUST_ID = TRADE_ID
         GROUP BY
         ENTRUST_ID) T5
         ON
@@ -348,6 +351,9 @@
             </if>
             <if test="userId != null and userId!='' ">
                 AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+            </if>
+            <if test="trdAcctId != null and trdAcctId!='' ">
+                AND ssai.TRD_ACCT_ID = #{trdAcctId}
             </if>
         </where>
         ) t

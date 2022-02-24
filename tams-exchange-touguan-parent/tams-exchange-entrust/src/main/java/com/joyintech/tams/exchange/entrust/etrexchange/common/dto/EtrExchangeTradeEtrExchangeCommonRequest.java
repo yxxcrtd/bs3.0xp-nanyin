@@ -70,6 +70,9 @@ public class EtrExchangeTradeEtrExchangeCommonRequest {
     @ApiModelProperty(name="search",value="模糊查询使用",example="xxx")
     private String search;
 
+    @ApiModelProperty(name="finprodMarketIds",value="多个市场代码",example="A,B")
+    private String finprodMarketIds;
+
     public PageMode getPageMode() {
         return pageMode;
     }
@@ -194,5 +197,13 @@ public class EtrExchangeTradeEtrExchangeCommonRequest {
 
     public void setFinprodMarketId(String finprodMarketId) {
         this.finprodMarketId = finprodMarketId;
+    }
+
+    public String getFinprodMarketIds() {
+        return finprodMarketIds;
+    }
+
+    public void setFinprodMarketIds(String finprodMarketIds) {
+        this.finprodMarketIds = finprodMarketIds;
     }
 }

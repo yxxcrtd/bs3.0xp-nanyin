@@ -26,7 +26,6 @@ import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
-import com.joyintech.tams.cfets.bankuplink.bond.controller.CfetsIbuQuoteBondController;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealDbDto;
@@ -41,9 +40,14 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.trade.dto.PreTrdCommonDto;
+import com.joyintech.tams.invest.common.trade.service.PreTrdCommonBaseService;
+import com.joyintech.tams.invest.trade.pretrdbondtrade.dto.PreTrdBondInvestTrade002Dto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -146,6 +150,8 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
 
     @Autowired
     private MstWorkflowCommonServiceMapperImpl mstWorkflowCommonServiceMapperImpl;
+    @Autowired
+    private PreTrdCommonBaseService preTrdCommonBaseService;
     /**
      * 提交保存check 必填项
      * @param entity
@@ -361,6 +367,16 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,type);
             //登录业务流程
             insertWfl(cfetsBondDealDbDto);
+            if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                //插入旧头寸
+                //处理组合及指令头寸
+                PreTrdBondInvestTrade002Dto entityPre=prepareEntityPre(cfetsBondDealDbDto);
+                PreTrdCommonDto preTrdCommonDto = new PreTrdCommonDto();
+                preTrdCommonDto.setTrdProductDealPreList(entityPre.getTrdProductDealPreList());
+                preTrdCommonDto.setTrdProductDealAddPreList(entityPre.getTrdProductDealAddPreList());
+                preTrdCommonDto.setIsExistNew(DictCodeList.是否_是.getValue());
+                preTrdCommonBaseService.excutePosition(preTrdCommonDto,false);
+            }
             try{
                 //头寸
                 PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,DictCodeListExt3.系统动作_新建.getValue(),DictCodeListExt3.系统动作_新建.getValue(),type));
@@ -376,11 +392,26 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
     public void doUpdate(CfetsBondDealRegisterQuoteDto entity){
         Map<String,Object> map = new HashMap<>();
         if (!StringUtil.equals("revoke", entity.getOperatorType()) && !StringUtil.equals("delete", entity.getOperatorType())) {
+            if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                //插入旧头寸
+                //删除组合及指令头寸
+                preTrdCommonBaseService.deletePosition(entity.getWorkflowId());
+            }
             // 先删除流程中数据
             this.deleteBussFlowData(entity.getWorkflowId());
             CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,StringUtil.equals(entity.getOperatorType(),"revoke")?OperationType.REVOKE:OperationType.NEW);
             //登录业务流程
             insertWfl(cfetsBondDealDbDto);
+            if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                //插入旧头寸
+                //处理组合及指令头寸
+                PreTrdBondInvestTrade002Dto entityPre=prepareEntityPre(cfetsBondDealDbDto);
+                PreTrdCommonDto preTrdCommonDto = new PreTrdCommonDto();
+                preTrdCommonDto.setTrdProductDealPreList(entityPre.getTrdProductDealPreList());
+                preTrdCommonDto.setTrdProductDealAddPreList(entityPre.getTrdProductDealAddPreList());
+                preTrdCommonDto.setIsExistNew(DictCodeList.是否_是.getValue());
+                preTrdCommonBaseService.excutePosition(preTrdCommonDto,false);
+            }
             ProcessMark newEntity;
             //头寸
             SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
@@ -424,6 +455,16 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         //头寸
         try{
             if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+                if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                   //插入旧头寸
+                   //处理组合及指令头寸
+                   PreTrdBondInvestTrade002Dto entityPre=prepareEntityPre(cfetsBondDealDbDto);
+                   PreTrdCommonDto preTrdCommonDto = new PreTrdCommonDto();
+                   preTrdCommonDto.setTrdProductDealPreList(entityPre.getTrdProductDealPreList());
+                   preTrdCommonDto.setTrdProductDealAddPreList(entityPre.getTrdProductDealAddPreList());
+                   preTrdCommonDto.setIsExistNew(DictCodeList.是否_是.getValue());
+                   preTrdCommonBaseService.excutePosition(preTrdCommonDto,true);
+               }
                 //PositionHttpRequest.sendRevoke(cfetsBondDealDbDto.getRegFinProductDealTotal().getpTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
                 String busiType = StringUtil.EMPTY;
                 String ps = cfetsBondDealDbDto.getRegFinProductDealTotal().getPs();
@@ -489,6 +530,10 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
     public void doBack(CfetsBondDealRegisterQuoteDto entity) {
         //退回冲销头寸
         //PositionHttpRequest.sendRevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+        if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+            //插入旧头寸
+            AllTradeCommonUtil.deletePosition(null, entity.getTotleTradeId());
+        }
     }
 
     @Override
@@ -514,7 +559,96 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             throw new BusinessException("MSG:头寸处理异常!");
         }
         //PositionHttpRequest.sendRevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+        if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+            //插入旧头寸
+            preTrdCommonBaseService.deletePosition(workflowId);
+        }
         deleteBussFlowData(workflowId);
+    }
+
+    private void insert(CfetsBondDealDbDto entity,OperationType operationType){
+        RegFinProductDealTotal regFinProductDealTotal = entity.getRegFinProductDealTotal();
+        String totleTradeId = regFinProductDealTotal.getTotleTradeId();
+        if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+            regFinProductDealTotal.setTotleTradeId(StringUtil.join(totleTradeId,"R"));
+            regFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+            regFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
+            regFinProductDealTotal.setpTradeId(totleTradeId);
+            if(StringUtil.isNotEmpty(entity.getRemark())){
+                regFinProductDealTotal.setRemark(entity.getRemark());
+            }
+        }else{
+            regFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+            regFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
+        }
+        regFinProductDealTotalMapper.insert(regFinProductDealTotal);
+        if(Objects.nonNull(entity.getRegFinProductDealTotalAdd())) {
+            entity.getRegFinProductDealTotalAdd().setTotleTradeId(regFinProductDealTotal.getTotleTradeId());
+            regFinProductDealTotalAddMapper.insert(entity.getRegFinProductDealTotalAdd());
+        }
+        List<RegTradeFeeTotal> regTradeFeeTotals = entity.getRegTradeFeeTotals();
+        if(CollectionUtils.isNotEmpty(regTradeFeeTotals)){
+            regTradeFeeTotals.forEach(item ->{
+                item.setTradeId(regFinProductDealTotal.getTotleTradeId());
+                regTradeFeeTotalMapper.insert(item);
+            });
+        }
+        List<RegFinProductDeal> regFinProductDeals = entity.getRegFinProductDeals();
+        if(CollectionUtils.isNotEmpty(regFinProductDeals)){
+            regFinProductDeals.forEach(item ->{
+                if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+                    String tradeId = item.getTradeId();
+                    item.setTradeId(StringUtil.join(tradeId,"R"));
+                    item.setTotleTradeId(StringUtil.join(totleTradeId,"R"));
+                    item.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+                    item.setIsCancel(DictCodeList.是否_否.getValue());
+                    item.setpTradeId(tradeId);
+                }else{
+                    item.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+                    item.setIsCancel(DictCodeList.是否_否.getValue());
+                }
+                regFinProductDealMapper.insert(item);
+            });
+        }
+        List<RegFinProductDealAdd> regFinProductDealAdds = entity.getRegFinProductDealAdds();
+        if(CollectionUtils.isNotEmpty(regFinProductDealAdds)){
+            regFinProductDealAdds.forEach(item ->{
+                if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+                    item.setTradeId(StringUtil.join(item.getTradeId(),"R"));
+                }
+                regFinProductDealAddMapper.insert(item);
+            });
+        }
+        List<RegTradeFee> regTradeFees = entity.getRegTradeFees();
+        if(CollectionUtils.isNotEmpty(regTradeFees)){
+            regTradeFees.forEach(item ->{
+                if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+                    item.setTradeId(StringUtil.join(item.getTradeId(),"R"));
+                }
+                regTradeFeeMapper.insert(item);
+            });
+        }
+        //更新原登记数据状态
+        if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+            //汇总
+            /*RegFinProductDealTotal regFinProduct = new RegFinProductDealTotal();
+            regFinProduct.setTotleTradeId(totleTradeId);
+            regFinProduct.setRemark(regFinProductDealTotal.getRemark());
+            regFinProduct.setIsCancel("Y");
+            regFinProductDealTotalMapper.updateByPrimaryKeySelective(regFinProduct);*/
+
+            //明细
+            /*RegFinProductDeal regFinProductDeal = new RegFinProductDeal();
+            regFinProductDeal.setTotleTradeId(totleTradeId);
+            regFinProductDeal.setRemark(regFinProductDealTotal.getRemark());
+            regFinProductDeal.setIsCancel("Y");
+            regFinProductDealMapper.updateByPrimaryKeySelective(regFinProductDeal);*/
+
+            //汇总
+            cfetsIbuQuoteBondMapper.updateRegFinProductDealTotal(totleTradeId,regFinProductDealTotal.getRemark());
+            //明细
+            cfetsIbuQuoteBondMapper.updateRegFinProductDeal(totleTradeId,regFinProductDealTotal.getRemark());
+        }
     }
 
     /**
@@ -674,91 +808,6 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             result.setRegTradeFees(regTradeFees);
         }
         return result;
-    }
-
-    private void insert(CfetsBondDealDbDto entity,OperationType operationType){
-        RegFinProductDealTotal regFinProductDealTotal = entity.getRegFinProductDealTotal();
-        String totleTradeId = regFinProductDealTotal.getTotleTradeId();
-        if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
-            regFinProductDealTotal.setTotleTradeId(StringUtil.join(totleTradeId,"R"));
-            regFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
-            regFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
-            regFinProductDealTotal.setpTradeId(totleTradeId);
-            if(StringUtil.isNotEmpty(entity.getRemark())){
-                regFinProductDealTotal.setRemark(entity.getRemark());
-            }
-        }else{
-            regFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
-            regFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
-        }
-        regFinProductDealTotalMapper.insert(regFinProductDealTotal);
-        if(Objects.nonNull(entity.getRegFinProductDealTotalAdd())) {
-            entity.getRegFinProductDealTotalAdd().setTotleTradeId(regFinProductDealTotal.getTotleTradeId());
-            regFinProductDealTotalAddMapper.insert(entity.getRegFinProductDealTotalAdd());
-        }
-        List<RegTradeFeeTotal> regTradeFeeTotals = entity.getRegTradeFeeTotals();
-        if(CollectionUtils.isNotEmpty(regTradeFeeTotals)){
-            regTradeFeeTotals.forEach(item ->{
-                item.setTradeId(regFinProductDealTotal.getTotleTradeId());
-                regTradeFeeTotalMapper.insert(item);
-            });
-        }
-        List<RegFinProductDeal> regFinProductDeals = entity.getRegFinProductDeals();
-        if(CollectionUtils.isNotEmpty(regFinProductDeals)){
-            regFinProductDeals.forEach(item ->{
-                if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
-                    String tradeId = item.getTradeId();
-                    item.setTradeId(StringUtil.join(tradeId,"R"));
-                    item.setTotleTradeId(StringUtil.join(totleTradeId,"R"));
-                    item.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
-                    item.setIsCancel(DictCodeList.是否_否.getValue());
-                    item.setpTradeId(tradeId);
-                }else{
-                    item.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
-                    item.setIsCancel(DictCodeList.是否_否.getValue());
-                }
-                regFinProductDealMapper.insert(item);
-            });
-        }
-        List<RegFinProductDealAdd> regFinProductDealAdds = entity.getRegFinProductDealAdds();
-        if(CollectionUtils.isNotEmpty(regFinProductDealAdds)){
-            regFinProductDealAdds.forEach(item ->{
-                if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
-                    item.setTradeId(StringUtil.join(item.getTradeId(),"R"));
-                }
-                regFinProductDealAddMapper.insert(item);
-            });
-        }
-        List<RegTradeFee> regTradeFees = entity.getRegTradeFees();
-        if(CollectionUtils.isNotEmpty(regTradeFees)){
-            regTradeFees.forEach(item ->{
-                if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
-                    item.setTradeId(StringUtil.join(item.getTradeId(),"R"));
-                }
-                regTradeFeeMapper.insert(item);
-            });
-        }
-        //更新原登记数据状态
-        if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
-            //汇总
-            /*RegFinProductDealTotal regFinProduct = new RegFinProductDealTotal();
-            regFinProduct.setTotleTradeId(totleTradeId);
-            regFinProduct.setRemark(regFinProductDealTotal.getRemark());
-            regFinProduct.setIsCancel("Y");
-            regFinProductDealTotalMapper.updateByPrimaryKeySelective(regFinProduct);*/
-
-            //明细
-            /*RegFinProductDeal regFinProductDeal = new RegFinProductDeal();
-            regFinProductDeal.setTotleTradeId(totleTradeId);
-            regFinProductDeal.setRemark(regFinProductDealTotal.getRemark());
-            regFinProductDeal.setIsCancel("Y");
-            regFinProductDealMapper.updateByPrimaryKeySelective(regFinProductDeal);*/
-
-            //汇总
-            cfetsIbuQuoteBondMapper.updateRegFinProductDealTotal(totleTradeId,regFinProductDealTotal.getRemark());
-            //明细
-            cfetsIbuQuoteBondMapper.updateRegFinProductDeal(totleTradeId,regFinProductDealTotal.getRemark());
-        }
     }
     /**
      * 插入业务流程表
@@ -952,5 +1001,36 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             e.printStackTrace(); Message message = PositionUtil.ajaxErrorReturn(e);
             throw new BusinessException("MSG:"+message.getMessage());
         }
+    }
+
+    /**
+     * 预录入,插入旧头寸重新组装
+     * @param input
+     */
+    public PreTrdBondInvestTrade002Dto prepareEntityPre(CfetsBondDealDbDto cfetsBondDealDbDto) {
+        PreTrdBondInvestTrade002Dto entityPre=new PreTrdBondInvestTrade002Dto();
+        //List<金融产品交易（预录入）dto>
+        List<TrdProductDealPre> trdProductDealPreList = new ArrayList<>();
+        entityPre.setTrdProductDealPreList(trdProductDealPreList);
+        //List<金融产品交易（预录入）附属表dto>
+        List<TrdProductDealAddPre> trdProductDealAddPreList = new ArrayList<>();
+        entityPre.setTrdProductDealAddPreList(trdProductDealAddPreList);
+        if(!StringUtil.isEmptyList(cfetsBondDealDbDto.getRegFinProductDeals())){
+            for(RegFinProductDeal item:cfetsBondDealDbDto.getRegFinProductDeals()){
+                TrdProductDealPre trdProductDealPre=new TrdProductDealPre();
+                BeanUtil.copyPropertiesIgnoreNull(trdProductDealPre,item);
+                trdProductDealPre.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
+                trdProductDealPre.setTradePlat(DictCodeListExt1.交易场所_银行间.getValue());
+                trdProductDealPre.setBusiType(DictCodeListExt1.共通业务类型_债券交易预录入.getValue());
+                trdProductDealPre.setFinprodType(DictCodeListExt1.金融产品类型_债券.getValue());
+                trdProductDealPre.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+                trdProductDealPreList.add(trdProductDealPre);
+                TrdProductDealAddPre trdProductDealAddPre=new TrdProductDealAddPre();
+                BeanUtil.copyPropertiesIgnoreNull(trdProductDealAddPre,item);
+                trdProductDealAddPre.setGenType(DictCodeListExt1.生成方式_画面录入.getValue());
+                trdProductDealAddPreList.add(trdProductDealAddPre);
+            }
+        }
+        return entityPre;
     }
 }

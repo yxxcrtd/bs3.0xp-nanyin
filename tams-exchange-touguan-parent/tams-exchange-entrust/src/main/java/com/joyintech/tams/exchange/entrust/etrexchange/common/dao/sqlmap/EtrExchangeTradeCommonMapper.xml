@@ -42,7 +42,8 @@
         ,T2.COUNTER_CON_NO
         ,T1.ENTRUST_TYPE
         ,fpt.TYPE_8 paAssetType
-        ,case when T1.STOCK_ID IS NOT NULL THEN T1.STOCK_ID
+        ,case when T1.ENTRUST_TYPE in ('09','12','13','14','16') then T7.FINPROD_MARKET_ID
+            when T1.STOCK_ID IS NOT NULL THEN T1.STOCK_ID
         ELSE T7.FINPROD_MARKET_ID END finprodMarketId
         /*,T7.FINPROD_MARKET_ID finprodMarketId*/
         ,T1.COUNTER_ID
@@ -162,7 +163,8 @@
         ,T2.COUNTER_CON_NO
         ,T1.ENTRUST_TYPE
         ,fpt.TYPE_8  paAssetType
-        ,case when T1.STOCK_ID IS NOT NULL THEN T1.STOCK_ID
+        ,case when T1.ENTRUST_TYPE in ('09','12','13','14','16') then T7.FINPROD_MARKET_ID
+        when T1.STOCK_ID IS NOT NULL THEN T1.STOCK_ID
         ELSE T7.FINPROD_MARKET_ID END finprodMarketId
         /*,T7.FINPROD_MARKET_ID finprodMarketId*/
         ,T1.COUNTER_ID
@@ -238,6 +240,12 @@
         <if test="secId != null and secId !=''">
             AND T1.FINPROD_MARKET_ID = #{secId,jdbcType=VARCHAR}
         </if>
+        <if test="finprodMarketIds != null and finprodMarketIds.size() > 0">
+            AND T1.FINPROD_MARKET_ID in
+            <foreach item="item" index="index" collection="finprodMarketIds" open="(" separator="," close=")">
+                #{item, jdbcType=VARCHAR}
+            </foreach>
+        </if>
         <if test="finprodType2 != null and finprodType2 !=''">
             AND T1.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
         </if>
@@ -269,6 +277,7 @@
             SSAI.SEC_ACCT_NAME AS secAcctName,
             TEMP.FINPROD_ID    AS finprodId,
             FP.FINPROD_MARKET_ID AS finprodMarketId,
+            FP.FINPROD_ABBR as finprodName,
             CASE WHEN instr(FP.FINPROD_MARKET_ID,'.') > 0 THEN SUBSTR(FP.FINPROD_MARKET_ID,1,instr(FP.FINPROD_MARKET_ID,'.',-1,1)-1)
                 ELSE FP.FINPROD_MARKET_ID
             END             AS secId,
@@ -297,7 +306,8 @@
             FP.FINPROD_TYPE2                          AS finprodType2,
             FP.TRADE_MARKET                           AS tradeMarket,
             SSAI.TRD_ACCT_ID                          AS acctNo,
-            TEMP.invAim invAim
+            TEMP.invAim invAim,
+            c1.acctName as dealCurAcctName
         FROM
             (
             SELECT
@@ -535,6 +545,9 @@
             STL_SEC_ACCT_INFO SSAI
         ON
             TEMP.SEC_ACCT_ID = SSAI.SEC_ACCT_ID
+        left join (select distinct ACCT_NO acctNo1, BUSI_ACCT_NO busiAcctNo1, CCY ccy, ACCT_NAME acctName
+        from STL_CAPACCT_INFO) c1
+        on SSAI.TRD_ACCT_ID = c1.acctNo1
         WHERE
             FP.TRADE_MARKET IN (#{TRADE_PLACE_03}, #{TRADE_PLACE_04})
         <if test="portfolioIdList != null and portfolioIdList.size()>0">
@@ -559,6 +572,12 @@
         </if>
         <if test="finprodMarketId != null and finprodMarketId !=''">
             AND FP.FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR}
+        </if>
+        <if test="finprodMarketIds != null and finprodMarketIds.size() > 0">
+            AND FP.FINPROD_MARKET_ID in
+            <foreach item="item" index="index" collection="finprodMarketIds" open="(" separator="," close=")">
+                #{item, jdbcType=VARCHAR}
+            </foreach>
         </if>
 
         ) M
@@ -972,7 +991,8 @@
 			and t.finprod_id = #{finprodId}
 		</if>
 		AND t.VDATE <![CDATA[<=]]> #{date}
-        AND t.MDATE <![CDATA[>=]]> #{date} 
+        AND t.MDATE <![CDATA[>=]]> #{date}
+        order by t.VDATE desc
 	</select>
 	
 	<!-- 自定义二级类型查询 -->
@@ -1414,6 +1434,21 @@
             ETR_ENTRUST			T1
                 INNER JOIN    ETR_ENTRUST_ADD T2 ON T2.ENTRUST_ID = T1.ENTRUST_ID
                 INNER JOIN    ETR_ENTRUST_DETAIL T3 ON T3.ENTRUST_ID = T1.ENTRUST_ID
+                LEFT JOIN PTL_PORTFOLIO T4 ON T4.PORTFOLIO_ID = T3.PORTFOLIO_ID
+        where
+            T1.ENTRUST_ID=#{entrustId}
+        union all
+        select
+            T3.ENTRUST_ID
+             ,T4.PORTFOLIO_ID
+             ,T4.PORTFOLIO_NAME
+             ,T2.DEAL_CUR_ACCT as acctNo
+             ,T3.ENTRUST_AMT
+             ,T3.ENTRUST_NUM
+        FROM
+            WFL_ETR_ENTRUST			T1
+                INNER JOIN    WFL_ETR_ENTRUST_ADD T2 ON T2.ENTRUST_ID = T1.ENTRUST_ID
+                INNER JOIN    WFL_ETR_ENTRUST_DETAIL T3 ON T3.ENTRUST_ID = T1.ENTRUST_ID
                 LEFT JOIN PTL_PORTFOLIO T4 ON T4.PORTFOLIO_ID = T3.PORTFOLIO_ID
         where
             T1.ENTRUST_ID=#{entrustId}

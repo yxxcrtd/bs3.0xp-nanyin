@@ -796,6 +796,7 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                 	baseTradeProductDealDto.setBussRepoSec(finProductTradeDto.getBussRepoSec());
                 }
                 baseTradeProductDealDto.setAssetType2(finProductTradeDto.getAssetType2());
+                baseTradeProductDealDto.setIsExistNew(finProductTradeDto.getIsExistNew());
                 baseEtrCashPositionCommService.executeEtrCashPosition(baseTradeProductDealDto, 持仓类型, needNegative,finProductTradeDto.getIeFlag(),finProductTradeDto.getIsOverdueDeal());
 
 //                if (!DictCodeListExt1.交易流程状态_撤销.getValue().equals(finProductTradeDto.getWorkflowStatus()) && AllTradeCommonUtil.自动生成反向交易(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(),
@@ -830,6 +831,11 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
         PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
         ptlPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlows);
         ptlPositionHoldDto.setPtlCashPositionFlows(ptlCashPositionFlows);
+        // 数据是否已入新头寸
+        if(StringUtil.isNotEmpty(finProductTradeDto.getIsExistNew())) {
+            ptlPositionHoldDto.getPtlCashPositionFlows().forEach(item->item.setIsExistNew(finProductTradeDto.getIsExistNew()));
+            ptlPositionHoldDto.getPtlSecPositionFlows().forEach(item->item.setIsExistNew(finProductTradeDto.getIsExistNew()));
+        }
         //不是逾期交易，更新组合持仓流水
         if(!(StringUtil.isNotEmpty(finProductTradeDto.getIsOverdueDeal())&&StringUtil.equals(DictCodeList.是否_是.getValue(), finProductTradeDto.getIsOverdueDeal()))){
         	if (ptlPositionHoldDto.getPtlSecPositionFlows() != null && !ptlPositionHoldDto.getPtlSecPositionFlows().isEmpty()) {

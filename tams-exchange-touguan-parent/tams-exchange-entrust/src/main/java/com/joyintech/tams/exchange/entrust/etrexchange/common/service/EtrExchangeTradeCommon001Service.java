@@ -2569,6 +2569,14 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		if (br.hasErrors()) {
 			return new AjaxResult(br);
 		}
+		Boolean isNonTradingTime = isNonTradingTime(dto);
+		AjaxResult webResult = new AjaxResult();
+		List<ValidMessage> errorList = new ArrayList<>();
+		if (isNonTradingTime) {
+			errorList.add(new ValidMessage(this.getMessage("ETR_ERROR_0056")));
+			webResult.setErrorList(errorList);
+			return webResult;
+		}
 		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_非交易业务指令平台.getValue())) {
 			// add  start
 			if (org.apache.commons.lang.StringUtils.equals(dto.getPs(), DictCodeListExt2.交易方向_配股.getValue())) {
@@ -5337,6 +5345,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		etrExchangeTrade001Dto.setTargetType(dto.getTargetType());
 		etrExchangeTrade001Dto.setMdate(dto.getEntrustDate());
 		etrExchangeTrade001Dto.setVdate(dto.getEntrustDate());
+		etrExchangeTrade001Dto.setStockId(dto.getStockId());
 		return etrExchangeTrade001Dto;
 	}
 
@@ -5627,18 +5636,22 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		if ((dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue()) || dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue())) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
 			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_大宗债券质押式回购指令.getValue());
 			businessType = DictCodeListExt3.共通业务类型_大宗债券质押式回购指令.getValue();
+			return businessType;
 		}
 		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
 			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_大宗股票指令.getValue());
 			businessType = DictCodeListExt3.共通业务类型_大宗股票指令.getValue();
+			return businessType;
 		}
 		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
 			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_大宗基金指令.getValue());
 			businessType = DictCodeListExt3.共通业务类型_大宗基金指令.getValue();
+			return businessType;
 		}
 		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
 			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_大宗债券指令.getValue());
 			businessType = DictCodeListExt3.共通业务类型_大宗债券指令.getValue();
+			return businessType;
 		}
 		// add start
 		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) /*&& dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())*/) {

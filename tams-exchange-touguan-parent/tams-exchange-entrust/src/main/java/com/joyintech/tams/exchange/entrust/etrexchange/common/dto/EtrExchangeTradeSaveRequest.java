@@ -37,7 +37,7 @@ import java.util.List;
  * @see EtrExchangeTradeSaveRequest
  * @since 1.0
  */
-@PageId("EtrExchangeTradeSaveRequest")
+@PageId("EtrExchangeTradeCommon004")
 @ValidLogic(targetClass = EtrExchangeTradeJj001Validator.class , groups = {ValidateGroupEdit.class,
     ValidateGroupDelete.class})
 @ApiModel(value="指令下单表单",description="指令下单表单")
@@ -241,10 +241,21 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
      * 申报类型
      */
     private String declaTypeStr;
-    
+    /**
+     * 风险预占是否来自场内
+     */
+    private String fromEtrExchange;
 
 
+    private BigDecimal disRate;
 
+    public BigDecimal getDisRate() {
+        return disRate;
+    }
+
+    public void setDisRate(BigDecimal disRate) {
+        this.disRate = disRate;
+    }
 
     /**
      * 取得 委托代码
@@ -680,5 +691,13 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
 
     public void setAssetType2(String assetType2) {
         this.assetType2 = assetType2;
+    }
+
+    public String getFromEtrExchange() {
+        return fromEtrExchange;
+    }
+
+    public void setFromEtrExchange(String fromEtrExchange) {
+        this.fromEtrExchange = fromEtrExchange;
     }
 }

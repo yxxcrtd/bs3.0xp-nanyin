@@ -72,7 +72,6 @@
                 <foreach collection="acctType" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
                 )
             </if>
-            and (is_exist_new is null or  is_exist_new!='Y')
         </if>
         <!-- add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳 -->
         <if test="chlFinprodId != null">
@@ -96,7 +95,6 @@
                 <foreach collection="acctType" open=" and sfpa.ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
                 )
             </if>
-            and (pcp.is_exist_new is null or  pcp.is_exist_new!='Y')
         </if>
         <!-- add by jiangpeng on 20210510 end YHZGCPB20210115001 通道增值税缴纳 -->
     </select>
@@ -231,6 +229,9 @@
             </if>
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isExistNew != null" >
+                is_Exist_New = #{isExistNew,jdbcType=VARCHAR},
             </if>
         </set>
         where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}

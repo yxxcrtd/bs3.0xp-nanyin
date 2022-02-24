@@ -22,18 +22,23 @@ import com.joyintech.tams.cfets.trdquery.service.CfetsTrdBondInvestTrade002Servi
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.trade.impl.BaseTradeProductDealCommServiceImpl;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonService;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
+import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.trade.pretrdbondtrade.dto.PreTrdBondInvestTrade002Dto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -104,6 +109,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
 
     @Autowired
     private CfetsEtrIbRepoAutoRKService cfetsEtrIbRepoAutoRKService;
+    @Autowired(required = false)
+    private BaseTradeProductDealCommServiceImpl baseTradeProductDealCommServiceImpl;
     /**
      * 手工交收交收check
      * @param cfetsRequest
@@ -649,6 +656,11 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                         ||StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收修改.getValue())){
 
                     if(StringUtil.equals(entity.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
+                        if (StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())&&
+                                StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                            //插入旧头寸
+                            insertOldPosition(cfetsManualSettleInsertDto,entity.getButtonType());
+                        }
                         //对债券数据发送头寸
                         sendPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
                     }else{
@@ -873,5 +885,37 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
         PositionHttpRequest.batchClose(req);
     }
-
+    /**
+     * 交收确认时,重新组装插入旧头寸
+     * @param input
+     */
+    public void insertOldPosition(CfetsManualSettleInsertDto cfetsManualSettleRequest,String buttonType) {
+        //设置登记时的成交编号
+        List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
+        for(CfetsManualSettleDealInfo item:listTemp){
+            FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
+            finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
+            //finProductTradeDto.setTotalFaceValue(item.getTotalFaceValue());// 劵面总额
+            finProductTradeDto.setNeedSum(true);
+            BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
+            //baseTradeProductDealDto.setBondFirstSign(entity.getBondFirstSign());
+            //设置预录入的成交编号
+               /* if(StringUtil.isNotBlank(entity.getPreTradeId())){
+                    baseTradeProductDealDto.setPreTradeId(entity.getPreTradeId());
+                }*/
+            TrdProductDeal trdProductDeal=new TrdProductDeal();
+            BeanUtil.copyPropertiesIgnoreNull(trdProductDeal,item);
+            if(StringUtil.isNotBlank(trdProductDeal.getfTradeId())){
+                baseTradeProductDealDto.setfTradeId(trdProductDeal.getfTradeId());
+            }
+            baseTradeProductDealDto.setTrdProductDeal(trdProductDeal);
+            TrdProductDealAdd trdProductDealAdd=new TrdProductDealAdd();
+            BeanUtil.copyPropertiesIgnoreNull(trdProductDealAdd,item);
+            baseTradeProductDealDto.setTrdProductDealAdd(trdProductDealAdd);
+            baseTradeProductDealDto.setEntrustId(item.getEntrustId());
+            finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
+            finProductTradeDto.setIsExistNew(DictCodeList.是否_是.getValue());
+            baseTradeProductDealCommServiceImpl.insertPosition(finProductTradeDto);
+        }
+    }
 }

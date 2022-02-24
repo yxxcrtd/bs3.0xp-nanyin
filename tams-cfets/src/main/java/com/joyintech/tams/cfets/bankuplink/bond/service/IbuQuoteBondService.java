@@ -31,10 +31,12 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
+import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -121,6 +123,8 @@ public class IbuQuoteBondService extends BaseService {
     @Autowired
     private CfetsBondDealQuotedPrice003Service cfetsBondDealQuotedPrice003Service;
 
+    @Autowired(required = false)
+    private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
     /**
      * 风险试算check
      * @param entity
@@ -1018,6 +1022,12 @@ public class IbuQuoteBondService extends BaseService {
             }
             // ZGZGST-2330:委托关闭判断是否有完成额度，分情况处理 fuyongsheng 20210919 edit end
             // add by zhangrui1 批量委托关闭 end
+            if (StringUtil.equals(com.joyintech.tams.constant.DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                //插入旧头寸
+                dtolist.forEach(item ->{
+                    baseEtrCashPositionCommService.entrustCloseExecute(item.getEntrustId(), com.joyintech.tams.constant.DictCodeList.是否_是.getValue());
+                });
+            }
 
             //发送头寸，批量关闭
             cfetsEtrIbBondinfoService.closeDelegatePositionMethod(dtolist, com.joyintech.tams.constant.DictCodeList.平安资产类型_债券.getValue());

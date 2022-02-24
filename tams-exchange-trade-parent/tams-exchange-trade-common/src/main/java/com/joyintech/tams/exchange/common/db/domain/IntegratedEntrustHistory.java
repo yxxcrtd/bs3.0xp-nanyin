@@ -140,6 +140,9 @@ public class IntegratedEntrustHistory implements Serializable {
     private String finprodType2;
     private String invManagerId;
     private String ps;
+    private String busiTypeTg;
+    private String extend1;
+    private String extend2;
 
     @Id
     public String getId() {
@@ -676,5 +679,29 @@ public class IntegratedEntrustHistory implements Serializable {
 
     public void setPs(String ps) {
         this.ps = ps;
+    }
+
+    public String getBusiTypeTg() {
+        return busiTypeTg;
+    }
+
+    public void setBusiTypeTg(String busiTypeTg) {
+        this.busiTypeTg = busiTypeTg;
+    }
+
+    public String getExtend1() {
+        return extend1;
+    }
+
+    public void setExtend1(String extend1) {
+        this.extend1 = extend1;
+    }
+
+    public String getExtend2() {
+        return extend2;
+    }
+
+    public void setExtend2(String extend2) {
+        this.extend2 = extend2;
     }
 }

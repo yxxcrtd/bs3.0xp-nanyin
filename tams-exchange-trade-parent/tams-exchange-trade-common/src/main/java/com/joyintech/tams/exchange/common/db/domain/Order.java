@@ -233,6 +233,12 @@ public class Order implements Serializable, Cloneable, OrderInterface, KeyMethod
     private String finprodType2;
     @ApiModelProperty(name = "invManagerId", value = "投资经理", hidden = true)
     private String invManagerId;
+    @ApiModelProperty(name = "busiTypeTg", value = "投管业务类型")
+    private String busiTypeTg;
+    @ApiModelProperty(name = "extend1", value = "扩展信息1")
+    private String extend1;
+    @ApiModelProperty(name = "extend2", value = "扩展信息2")
+    private String extend2;
 
     public Order() {
         this.orderPrice = new BigDecimal("0.00");
@@ -645,6 +651,30 @@ public class Order implements Serializable, Cloneable, OrderInterface, KeyMethod
 
     public void setInvManagerId(String invManagerId) {
         this.invManagerId = invManagerId;
+    }
+
+    public String getBusiTypeTg() {
+        return busiTypeTg;
+    }
+
+    public void setBusiTypeTg(String busiTypeTg) {
+        this.busiTypeTg = busiTypeTg;
+    }
+
+    public String getExtend1() {
+        return extend1;
+    }
+
+    public void setExtend1(String extend1) {
+        this.extend1 = extend1;
+    }
+
+    public String getExtend2() {
+        return extend2;
+    }
+
+    public void setExtend2(String extend2) {
+        this.extend2 = extend2;
     }
 
     public static Order getTemplateOrder() {

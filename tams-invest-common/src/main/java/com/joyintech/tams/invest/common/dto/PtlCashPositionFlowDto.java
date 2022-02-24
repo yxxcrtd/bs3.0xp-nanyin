@@ -32,6 +32,11 @@ public class PtlCashPositionFlowDto extends PtlCashPositionFlow {
      * 清算速度
      */
     private Integer dateType;
+    /**
+     *数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
+
 
     public String getSplitType() {
 		return splitType;
@@ -114,5 +119,13 @@ public class PtlCashPositionFlowDto extends PtlCashPositionFlow {
 
     public void setDateType(Integer dateType) {
         this.dateType = dateType;
+    }
+
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
     }
 }

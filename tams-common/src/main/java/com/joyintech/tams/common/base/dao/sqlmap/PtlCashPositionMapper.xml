@@ -52,12 +52,13 @@
         insert into PTL_CASH_POSITION (PORTFOLIO_ID, ACCT_ID, HODING_TYPE, 
             CDATE, CCY, AMOUNT, 
             CHL_FINPROD_ID, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME,is_Exist_New)
             )
         values (#{portfolioId,jdbcType=VARCHAR}, #{acctId,jdbcType=VARCHAR}, #{hodingType,jdbcType=VARCHAR}, 
             #{cdate,jdbcType=DATE}, #{ccy,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, 
             #{chlFinprodId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
-            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+            #{isExistNew,jdbcType=VARCHAR}
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PtlCashPosition" >
