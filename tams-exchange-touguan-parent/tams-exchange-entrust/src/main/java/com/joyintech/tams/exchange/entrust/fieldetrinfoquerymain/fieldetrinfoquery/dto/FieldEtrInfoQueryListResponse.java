@@ -351,4 +351,12 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
     public void setTrdAcctId(String trdAcctId) {
         this.trdAcctId = trdAcctId;
     }
+
+    /**
+     * 取得 币种
+     * @return 币种
+     */
+    public String getCcyStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
+    }
 }

@@ -40,8 +40,6 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.bouncycastle.asn1.misc.MiscObjectIdentifiers.entrust;
-
 @Component
 public class InvestmentManagement extends BaseService {
     private static final Logger logger = LoggerFactory.getLogger(InvestmentManagement.class);
@@ -169,12 +167,13 @@ public class InvestmentManagement extends BaseService {
 
     /**
      * 指令列表导出内容查询
+     *
      * @param request
      * @return
      */
     public List<InstructionExportVo> queryExportPage(InstructionQueryRequest request) {
         Map<String, Object> pageParam = JsonUtils.getObjectFromJson(JsonUtils.getJsonFromObject(request), Map.class);
-        InstructionPage<Instruction, InstructionPledge,InstructionDetail> page = queryInstructionsFromCache(pageParam);
+        InstructionPage<Instruction, InstructionPledge, InstructionDetail> page = queryInstructionsFromCache(pageParam);
         List<Instruction> instructionList = page.getEtr_entrust_list();
         return convertFieldValue(instructionList);
     }
@@ -220,10 +219,10 @@ public class InvestmentManagement extends BaseService {
      *
      * @return
      */
-    public InstructionPage<Instruction, InstructionPledge,InstructionDetail> queryInstructionsFromCache(Map<String, Object> pageParam) {
+    public InstructionPage<Instruction, InstructionPledge, InstructionDetail> queryInstructionsFromCache(Map<String, Object> pageParam) {
         // 更新系统参数
         updateSysParam(pageParam);
-        InstructionPage<Instruction, InstructionPledge,InstructionDetail> bean = new InstructionPage<>();
+        InstructionPage<Instruction, InstructionPledge, InstructionDetail> bean = new InstructionPage<>();
         List<InstructionPledge> pledgeList = new ArrayList<>();
         List<InstructionDetail> detailList = new ArrayList<>();
         List<Instruction> instructionUserList = new ArrayList<>();
@@ -293,12 +292,12 @@ public class InvestmentManagement extends BaseService {
      *
      * @return
      */
-    public InstructionPage<Instruction, InstructionPledge,InstructionDetail> queryInstructionsAll() {
+    public InstructionPage<Instruction, InstructionPledge, InstructionDetail> queryInstructionsAll() {
         if (!Strings.isNullOrEmpty(ServiceApplication.INSTRUCTION_SERVICE)) {
             Map<String, Object> pageParam = new HashMap<>();
             pageParam.put("AMOUNT", 0);
             pageParam.put("positionStr", "");
-            InstructionPage<Instruction, InstructionPledge,InstructionDetail> bean = null;
+            InstructionPage<Instruction, InstructionPledge, InstructionDetail> bean = null;
             if (isSingle) {
                 bean = simpleRestTemplate.postForObject(ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.queryInstructions, pageParam, InstructionPage.class);
             } else {
@@ -645,6 +644,12 @@ public class InvestmentManagement extends BaseService {
         }
         if (!Strings.isNullOrEmpty(instructionStatus) && InstructionStatus.CLOSE.value.equals(instructionStatus)) {
             instruction.setEntrustStatus(InstructionStatus.CLOSE.value);
+        } else if (!Strings.isNullOrEmpty(instructionStatus) && InstructionStatus.RETURN.value.equals(instructionStatus)) {
+            if (InstructionStatus.WAIT_RECEIVE.value.equals(instruction.getEntrustStatus())) {
+                instruction.setEntrustStatus(InstructionStatus.RETURN.value);
+            } else {
+                return new ResultBean(ErrorCode.INSTRUCTIONS_RETURN_FORBID);
+            }
         } else {
             // 撤回时，如果有在途委托返回失败
             List<Entrust> entrusts = entrustService.queryEntrustByInstructionId(instructionId);
@@ -682,7 +687,7 @@ public class InvestmentManagement extends BaseService {
 
     public ResultBean flushInstructionFromInvest() {
         try {
-            InstructionPage<Instruction, InstructionPledge,InstructionDetail> instructionPages = queryInstructionsAll();
+            InstructionPage<Instruction, InstructionPledge, InstructionDetail> instructionPages = queryInstructionsAll();
             return appointInstruction(instructionPages);
         } catch (Exception e) {
             return new ResultBean(ErrorCode.FLUSH_INSTRUCTION_FAILED);
@@ -834,7 +839,7 @@ public class InvestmentManagement extends BaseService {
         }
     }
 
-    public ResultBean appointInstruction(InstructionPage<Instruction, InstructionPledge,InstructionDetail> instructionPage) throws Exception {
+    public ResultBean appointInstruction(InstructionPage<Instruction, InstructionPledge, InstructionDetail> instructionPage) throws Exception {
         try {
             List<Instruction> instructionEtrEntrustList = instructionPage.getEtr_entrust_list();
             List<InstructionPledge> pledgeList = instructionPage.getEtr_pledge_list();
@@ -844,8 +849,8 @@ public class InvestmentManagement extends BaseService {
             if (Objects.nonNull(pledgeList))
                 pledgeList.forEach(instructionPledge -> instructionPledgeIdSet.add(instructionPledge.getEntrustId()));
             if (Objects.nonNull(detailList))
-            	detailList.forEach(instructionDetail -> instructionDetailIdSet.add(instructionDetail.getEntrustId()));
-            messageConsumerService.processInstructions(instructionEtrEntrustList, instructionPledgeIdSet,instructionDetailIdSet);
+                detailList.forEach(instructionDetail -> instructionDetailIdSet.add(instructionDetail.getEntrustId()));
+            messageConsumerService.processInstructions(instructionEtrEntrustList, instructionPledgeIdSet, instructionDetailIdSet);
             messageConsumerService.processInstructionPledges(pledgeList, instructionPledgeIdSet);
             messageConsumerService.processInstructionDetail(detailList, instructionDetailIdSet);
             logger.info("appointInstruction {}", JsonUtils.getJsonFromObject(instructionPage));

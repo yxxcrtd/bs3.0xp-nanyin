@@ -680,7 +680,10 @@ public class IbuQuoteBondCalService extends BaseService {
             if(null!=calRespone.getFpriceAmt()&&null!=calRespone.getCpriceAmt()){
                 calRespone.setIntAmt(ArithmeticUtil.subtract(calRespone.getFpriceAmt(),calRespone.getCpriceAmt()));
             }
-            //
+            if(StringUtil.isNotEmpty(secInfoModelDto.getAssetType11())){
+                //资产四级分类
+                calRespone.setAssetType11(secInfoModelDto.getAssetType11());
+            }
             // 每百元金额
             calRespone.setParValue(secCalRequestQuoteService.getCurSecAmt(dto.getSettleDate(), dto.getFinprodId()));
             // 本金额

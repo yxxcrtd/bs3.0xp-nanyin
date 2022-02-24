@@ -394,6 +394,15 @@ public class TradeMsgProcessor {
                 messageSenderService.pushProgressToMQ(instruction);
                 logger.info("frozen instruction EntrustAmt {} FrozenQuantity {} EntrustLeftAmt {}", instruction.getEntrustAmt(), instruction.getFrozenQuantity(), instruction.getEntrustLeftAmt());
             }
+        } else if (!Strings.isNullOrEmpty(ServiceApplication.INSTRUCTION_SERVICE) && EntrustUtils.isIntentionEntrust(orderInterface.getEntrustProp())) {
+            if (instruction.getEntrustNum() > 0) {
+                instruction.setFrozenQuantity(BigDecimal.valueOf(instruction.getEntrustNum()));
+            }
+            if (instruction.getEntrustAmt().doubleValue() > 0) {
+                instruction.setFrozenQuantity(instruction.getEntrustAmt());
+            }
+
+            messageSenderService.pushProgressToMQ(instruction);
         }
         return true;
     }

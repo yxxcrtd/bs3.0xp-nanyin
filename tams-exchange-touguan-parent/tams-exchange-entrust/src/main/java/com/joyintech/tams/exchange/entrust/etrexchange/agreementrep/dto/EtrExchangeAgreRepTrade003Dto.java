@@ -153,6 +153,21 @@ public class EtrExchangeAgreRepTrade003Dto extends EtrEntrust{
      * 质押券单位
      */
     private String pledgeUnit;
+
+    /**
+     * 业务类型
+     */
+    private String busiTypeTg;
+    /**
+     * 业务类型
+     */
+    private String busiTypeTgStr;
+
+    /**
+     * 投资经理
+     */
+    private String invManagerName;
+
     /**
      * 获取 implementPercent
      * @return implementPercent.
@@ -578,5 +593,25 @@ public class EtrExchangeAgreRepTrade003Dto extends EtrEntrust{
 
     public String getPledgeUnitStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.交易单位,getPledgeUnit());
+    }
+
+    public String getBusiTypeTg() {
+        return busiTypeTg;
+    }
+
+    public void setBusiTypeTg(String busiTypeTg) {
+        this.busiTypeTg = busiTypeTg;
+    }
+
+    public String getBusiTypeTgStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.投管业务类型, this.getBusiTypeTg());
+    }
+
+    public String getInvManagerName() {
+        return invManagerName;
+    }
+
+    public void setInvManagerName(String invManagerName) {
+        this.invManagerName = invManagerName;
     }
 }

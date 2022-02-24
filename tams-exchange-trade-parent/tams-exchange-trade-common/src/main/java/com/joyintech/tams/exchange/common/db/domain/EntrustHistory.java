@@ -2,6 +2,7 @@ package com.joyintech.tams.exchange.common.db.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
+import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
@@ -112,6 +113,8 @@ public class EntrustHistory implements Serializable {
     private String busiTypeTg;
     private String extend1;
     private String extend2;
+
+    private String tradeDate;
 
     @Id
     public String getId() {
@@ -552,5 +555,13 @@ public class EntrustHistory implements Serializable {
 
     public void setExtend2(String extend2) {
         this.extend2 = extend2;
+    }
+
+    public String getTradeDate() {
+        return TradeUtils.formatDate(tradingDay);
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
     }
 }

@@ -1,5 +1,6 @@
 package com.joyintech.tams.exchange.common.utils;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.exchange.common.constant.EntrustBs;
 import com.joyintech.tams.exchange.common.constant.EntrustProp;
 import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
@@ -10,12 +11,18 @@ import com.joyintech.tams.exchange.common.db.domain.OrderInterface;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
+import java.util.Date;
 import java.util.Objects;
 
 public class TradeUtils {
-
+    
     private TradeUtils() {
         throw new IllegalStateException("Utility class");
+    }
+
+    public static String formatDate(String dateStr) {
+        Date date = DateUtil.parse(dateStr);
+        return DateUtil.format(date, "yyyy-MM-dd");
     }
 
     public static BigDecimal getBigDecimal(Double d, int scale) {

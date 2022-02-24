@@ -25,6 +25,7 @@ import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
@@ -38,6 +39,7 @@ import com.joyintech.service.bankuplink.repo.service.CfetsRepoDealQuotedPrice001
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
@@ -358,6 +360,10 @@ public class IbuComponentReceiveService extends BaseService{
             // 对手方对话报价新增(我方作为回复方)，需要制定交易员推送
             cfetsQuotedCommonService.publishMQCommonHandle(quoteResultDto, true);
             //头寸处理
+            if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                quoteResultDto.setIsExistNew(DictCodeList.是否_是.getValue());
+                updateBondDialoguePosition(quoteResultDto);
+            }
             updateBondDialoguePositionRule(quoteResultDto);
             // 成交后风险处理
             ibuComponentRiskService.excuteRiskHandle(quoteResultDto);
@@ -555,6 +561,10 @@ public class IbuComponentReceiveService extends BaseService{
             // 7、MQ发布消息前台订阅通过ws控制表格刷新
             cfetsQuotedCommonService.publishMQCommonHandle(quoteResultDto, true);
             // 8、头寸处理
+            if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                quoteResultDto.setIsExistNew(DictCodeList.是否_是.getValue());
+                updateBondRequestPosition(quoteResultDto);
+            }
             updateBondRequestPositionRule(quoteResultDto);
             // 成交后风险处理
             ibuComponentRiskService.excuteRiskHandle(quoteResultDto);
@@ -745,6 +755,9 @@ public class IbuComponentReceiveService extends BaseService{
 				//券面总额【单位：万】
 				dto.setAvaNum(ibuQuoteBondDto.getShareAmt().multiply(new BigDecimal(100)).divide(new BigDecimal(10000)));
 				dto.setPs(ibuQuoteBondDto.getPs());
+                if(StringUtil.isNotEmpty(quoteResultDto.getIsExistNew())){
+                    dto.setIsExistNew(quoteResultDto.getIsExistNew());
+                }
 				cfetsBondDealQuotedPriceService.doInsetOrUpdateForPtlPositionHold(dto);
 				return true;
 			} else if (StringUtil.equals(ibuQuoteBondDto.getTradeStatus(),
@@ -819,6 +832,9 @@ public class IbuComponentReceiveService extends BaseService{
                 //券面总额【单位：万】
                 dto.setAvaNum(ibuQuoteBondDto.getShareAmt().multiply(new BigDecimal(100)).divide(new BigDecimal(10000)));
 				dto.setPs(ibuQuoteBondDto.getPs());
+				if(StringUtil.isNotEmpty(quoteResultDto.getIsExistNew())){
+                    dto.setIsExistNew(quoteResultDto.getIsExistNew());
+                }
 				cfetsBondDealQuotedPriceService.doInsetOrUpdateForPtlPositionHold(dto);
 				return true;
 			} else if (StringUtil.equals(ibuQuoteBondDto.getTradeStatus(),

@@ -746,6 +746,9 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	public Message<List<SelectOptionDto>> selectCounterTrader(@RequestBody  SelectOptionRequestDto dto){
 		try {
 			Map<String, Object> pageParam = RequestUtil.getPageParam();
+			if(!Objects.isNull(dto.getCounterId())) {
+				pageParam.put("counterId", dto.getCounterId());
+			}
 			List<SelectOptionDto> selectOptionDtos = etrExchangeTrade001CommonService.selectCounterTrader(pageParam);
 			return new Message<List<SelectOptionDto>>().success().setData(selectOptionDtos);
 		} catch (Exception e) {
@@ -1009,7 +1012,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 				dto.setMdate(dto.getEntrustDate());
 				dto.setAcctNo(item.getAcctNo());
 				dto.setSecAcctId(item.getSecAcctId());
-				dto.setStockId(item.getStockId());
+				dto.setStockId(dto.getStockId());
 				dto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
 				dto.setCreateUser(LoginUserUtil.getUserName());// 用户名
 				dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门

@@ -10,6 +10,7 @@ import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt1;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
 import com.joyintech.tams.exchange.common.utils.EntrustUtils;
+import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -142,6 +143,8 @@ public class EntrustQueryBean implements Serializable {
     private String extend1;
     @ApiModelProperty(name = "extend2", value = "扩展信息2")
     private String extend2;
+
+    private String tradeDate;
 
     /**
      * ////////////////////////////查询无用字段
@@ -935,5 +938,13 @@ public class EntrustQueryBean implements Serializable {
 
     public void setExtend2(String extend2) {
         this.extend2 = extend2;
+    }
+
+    public String getTradeDate() {
+        return TradeUtils.formatDate(tradingDay);
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
     }
 }

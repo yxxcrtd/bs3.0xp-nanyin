@@ -157,6 +157,8 @@ public enum ErrorCode {
 
     INSTRUCTION_PLEDGE_NUMBER_ERROR(4050, "抵押券数量错误"),
 
+    INSTRUCTIONS_RETURN_FORBID(4051, "当前指令不可退回"),
+
     INSTRUCTIONS_ERROR_CODE_END(5000, "instruction error code end"),
     /**
      * 6001 —— 7000账号相关错误号
