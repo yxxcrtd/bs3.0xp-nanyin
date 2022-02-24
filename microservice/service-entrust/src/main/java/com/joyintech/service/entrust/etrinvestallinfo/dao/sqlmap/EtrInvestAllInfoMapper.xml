@@ -104,7 +104,6 @@
 		<!-- add by wanshiwei 2021-09-22 指令创建来源 start -->
 		,T4.ENTRUST_CREATE_SOURCE AS entrustCreateSource
 		<!-- add by wanshiwei 2021-09-22 指令创建来源 end -->
-		FROM ETR_ENTRUST T1 
 		,'' nextUser
 		,T1.ENTRUST_CLASS
 		FROM ETR_ENTRUST T1
