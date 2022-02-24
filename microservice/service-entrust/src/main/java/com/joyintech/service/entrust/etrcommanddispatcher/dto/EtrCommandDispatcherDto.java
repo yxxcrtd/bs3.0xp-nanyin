@@ -399,6 +399,10 @@ public class EtrCommandDispatcherDto extends BaseEntity{
      * 1-第三方
      */
     private String pledgeeType;
+    /**
+     * 指令类型
+     */
+    private String entrustClass;
 
     /**
      *业务模式
@@ -1199,5 +1203,13 @@ public class EtrCommandDispatcherDto extends BaseEntity{
 
     public void setEntrustBussType(String entrustBussType) {
         this.entrustBussType = entrustBussType;
+    }
+
+    public String getEntrustClass() {
+        return entrustClass;
+    }
+
+    public void setEntrustClass(String entrustClass) {
+        this.entrustClass = entrustClass;
     }
 }
