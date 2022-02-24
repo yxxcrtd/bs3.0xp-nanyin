@@ -289,6 +289,31 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
 		}
     	
     }
+    /**
+     * 质押库：下拉框
+     *
+     * @param param 画面参数
+     * @return 质押库：下拉框
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping({"getPledgeStockId"})
+    @ApiOperation(value = "质押库：下拉框", notes = "质押库：下拉框")
+    public List<SelectOptionDto> getPledgeStockId(@RequestParam Map<String, String> param ) {
+        try {
+            CfetsSearchPledgeStockRequest params = new CfetsSearchPledgeStockRequest();
+            params.setPortfolioId(param.get("portfolioId"));
+            params.setInitValue(param.get("initValue"));
+            params.setSearch(param.get("search"));
+            cfetsEtrIbRepoAutoRKService.createComRule(SecurityUtil.getLoginUser().getUserName());
+            List<SelectOptionDto> page = cfetsEtrIbRepoinfoService.getPledgeStockIdByPortfolioId(params);
+            return page;
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return null;
+        }
+
+    }
     
     /**
      * 出库操作
@@ -472,6 +497,19 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
         String msg = null;
         if(StringUtil.isNotEmpty(map.get("repoTerm"))){
             msg = cfetsEtrIbRepoinfoService.getTermType((Integer) map.get("repoTerm"));
+        }
+        AjaxResult m =new AjaxResult();
+        m.setData(msg);
+        return new Message<AjaxResult>().success().setData(m);
+    }
+
+    @ResponseBody
+    @ApiOperation(value = "计算期限品种", notes = "计算期限品种")
+    @PostMapping("getTermTypeByRepoTerm")
+    public Message<AjaxResult> getTermType(@RequestParam("repoTerm") String repoTerm) throws Exception {
+        String msg = null;
+        if(StringUtil.isNotEmpty(repoTerm)){
+            msg = cfetsEtrIbRepoinfoService.getTermType(Integer.valueOf(repoTerm));
         }
         AjaxResult m =new AjaxResult();
         m.setData(msg);
