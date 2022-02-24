@@ -508,4 +508,8 @@ public interface BussinessConstant {
      * 场内交易指令是否开启多组合指令
      */
     String IS_NEED_EXCHANGE_MULTI_PTL = "IS_NEED_EXCHANGE_MULTI_PTL";
+    /**
+     * 是否处理旧头寸标识(Y:是，N:否)
+     */
+    String IS_HANDLE_OLDPOS_FLAG = "IS_HANDLE_OLDPOS_FLAG";
 }

@@ -48,6 +48,7 @@ import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteD
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CounterInfoDto;
 import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonService;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.WorkflowContext;
@@ -853,6 +854,11 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
         this.handOurAndLendinShareAmt(entity);
         entity.setWorkflowId(entity.getWorkflowId());
         insertWflBondRequestQuote(entity);
+        if (StringUtil.equals(com.joyintech.tams.constant.DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+            //插入旧头寸
+            entity.setIsExistNew(DictCodeList.是否_是.getValue());
+            doInsetOrUpdateForPtlPositionHold(entity);
+        }
         String systemAct = handSystemAct(entity);
         try {
             sendPosition(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct);
@@ -870,6 +876,11 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
             this.handOurAndLendinShareAmt(entity);
             // 重新insert
         	insertWflBondRequestQuote(entity);
+            if (StringUtil.equals(com.joyintech.tams.constant.DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                //插入旧头寸
+                entity.setIsExistNew(DictCodeList.是否_是.getValue());
+                doInsetOrUpdateForPtlPositionHold(entity);
+            }
             try{
                 SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
                 String systemAct = handSystemAct(entity);
@@ -906,6 +917,11 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
      */
     @Override
 	public void doBack(CfetsBondDealRequestQuoteDto entity){
+        if (StringUtil.equals(com.joyintech.tams.constant.DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+            //插入旧头寸
+            //回退释放头寸
+            doDeletePtlPositionHold(entity.getWorkflowId());
+        }
 		//回退释放头寸
     	//doDeletePtlPositionHold(entity.getWorkflowId());
         String systemAct = handSystemAct(entity);
@@ -918,6 +934,11 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
     @Override
     public void doDelete(String workflowId) {
     	//doDeletePtlPositionHold(workflowId);
+        if (StringUtil.equals(com.joyintech.tams.constant.DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+            //插入旧头寸
+            //回退释放头寸
+            doDeletePtlPositionHold(workflowId);
+        }
         doDeleteWflBondDialogueQuote(workflowId);
     }
     

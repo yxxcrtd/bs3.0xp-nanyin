@@ -165,6 +165,10 @@ public class CfetsBondDealDialogueQuoteDto extends CfetsBondDealEntrustOrderDto 
     private BigDecimal lendinShareAmt;
 
     private BigDecimal ourShareAmt;
+    /**
+     *数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
 
     public BigDecimal getLendinShareAmt() {
         return lendinShareAmt;
@@ -596,5 +600,13 @@ public class CfetsBondDealDialogueQuoteDto extends CfetsBondDealEntrustOrderDto 
 
     public void setDistribution(String distribution) {
         this.distribution = distribution;
+    }
+
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
     }
 }

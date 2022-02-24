@@ -302,8 +302,6 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 //发送头寸
                 //sendPositionMethod(entity,entity.getSubmitFlag());
                 sendPositionMethod(entity,StringUtil.equals(entity.getSystemAct(),DictCodeListExt3.系统动作_新建.getValue())?true:false);
-                //向旧表插入头寸
-
 
             }
         }
@@ -322,7 +320,18 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             WFlowCommonService.deleteFlow(entity.getWorkflowId());
             for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
                 dto.setWorkflowId(entity.getWorkflowId());
+                BaseEtrInvestInfoDto base=initBaseEtrInvestInfoDto(dto);
                 WFlowCommonService.insertFlow(initBaseEtrInvestInfoDto(dto));
+                if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                    //插入旧头寸
+                    if(baseEtrCashPositionCommService != null){
+                        EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
+                        entrustCommonDto.setEtrEntrust(base.getEtrEntrust());
+                        entrustCommonDto.setEtrEntrustAdd(base.getEtrEntrustAdd());
+                        entrustCommonDto.setIsExistNew(DictCodeList.是否_是.getValue());
+                        baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+                    }
+                }
             }
             //发送头寸
             entity.setSoftSkipMode("Y");
@@ -334,6 +343,13 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
     public void doBack(CfetsEtribBondInfo003Dto entity) {
         if (CollectionUtils.isNotEmpty(entity.getEtrInvestBondInfoDtos()))  {
             for (CfetsEtribBondInfo003Dto dto: entity.getEtrInvestBondInfoDtos()) {
+                if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                    //插入旧头寸
+                    if (baseEtrCashPositionCommService != null) {
+                        // 持仓关闭
+                        baseEtrCashPositionCommService.entrustCloseExecute(dto.getEntrustId(),DictCodeList.是否_是.getValue());
+                    }
+                }
                 Map<String, Object> param = new HashMap<>();
                 param.put("entrustId", dto.getEntrustId());
                 doDeleteEtrFlowMethod(param);
@@ -1526,12 +1542,22 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
      * @param operateType
      * @param dto
      */
-    public static void doInsertFlowMethod(String operateType, BaseEtrInvestInfoDto dto){
+    public  void doInsertFlowMethod(String operateType, BaseEtrInvestInfoDto dto){
         if ("submit".equals(operateType)) {
             if(StringUtil.isEmpty(dto.getWorkFlowId())){
                 throw new RuntimeException("WorkFlowId初始化不能为空!");
             }
             WFlowCommonService.insertFlow(dto);
+            if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                //插入旧头寸
+                if(baseEtrCashPositionCommService != null){
+                    EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
+                    entrustCommonDto.setEtrEntrust(dto.getEtrEntrust());
+                    entrustCommonDto.setEtrEntrustAdd(dto.getEtrEntrustAdd());
+                    entrustCommonDto.setIsExistNew(DictCodeList.是否_是.getValue());
+                    baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+                }
+            }
         }
     }
     public String qryPortfolioSecAcctId(Map<String, Object> param) {

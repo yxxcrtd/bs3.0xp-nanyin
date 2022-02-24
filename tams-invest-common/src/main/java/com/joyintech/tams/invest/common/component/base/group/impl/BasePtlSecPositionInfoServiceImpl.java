@@ -321,6 +321,7 @@ public class BasePtlSecPositionInfoServiceImpl implements BasePtlSecPositionInfo
         position.setWorkflowId(positionFlowDto.getWorkflowId());
         position.setCreateUser(positionFlowDto.getCreateUser());
         position.setCreateDept(positionFlowDto.getCreateDept());
+        position.setIsExistNew(positionFlowDto.getIsExistNew());
         return position;
     }
 

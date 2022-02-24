@@ -181,6 +181,10 @@ public class BaseTradeProductDealDto {
      * 除权日
      */
     private Date exRightsDate;
+    /**
+     *数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
 
     public Date getExRightsDate() {
         return exRightsDate;
@@ -649,5 +653,13 @@ public class BaseTradeProductDealDto {
      */
     public void setIsSLDeal(String isSLDeal) {
         this.isSLDeal = isSLDeal;
+    }
+
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
     }
 }

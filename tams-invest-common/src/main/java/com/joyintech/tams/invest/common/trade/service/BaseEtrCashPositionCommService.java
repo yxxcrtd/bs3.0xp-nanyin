@@ -47,6 +47,12 @@ public interface BaseEtrCashPositionCommService {
      */
     CommonResult entrustCloseExecute(String entrustId);
     /**
+     * 委托关闭执行共通,主要是向旧表插入头寸
+     * @param entrustId 委托编号 isExistNew 是否已经向新表插入数据，Y：已入
+     * @return 执行结果
+     */
+    CommonResult entrustCloseExecute(String entrustId,String isExistNew);
+    /**
      * 标准券管理出入库共通
      * @param list 出入库质押券列表
      * @return 执行结果
