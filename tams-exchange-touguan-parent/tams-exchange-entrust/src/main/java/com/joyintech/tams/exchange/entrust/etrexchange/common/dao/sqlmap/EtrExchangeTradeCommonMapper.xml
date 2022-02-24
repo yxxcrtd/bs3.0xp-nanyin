@@ -225,6 +225,10 @@
             AND  T1.FINPROD_ID =#{finprodMarketId}
         </if>
         ) T1
+        left join SYS_DATADICT_LIST sdl1 on T1.entrustStatus=sdl1.ITEM_CODE and sdl1.DICT_CODE='ENTRUST_STATUS'
+        left join SYS_DATADICT_LIST sdl2 on T1.PS=sdl2.ITEM_CODE and sdl2.DICT_CODE='PS'
+        left join SYS_DATADICT_LIST sdl3 on T1.tradeMarket=sdl3.ITEM_CODE and sdl3.DICT_CODE='TRADE_PLACE'
+        left join SYS_DATADICT_LIST sdl4 on T1.priceModel=sdl4.ITEM_CODE and sdl4.DICT_CODE='PRICE_MODEL'
         where 1=1
         <if test="tradePlat != null and tradePlat != ''">
             AND T1.TRADE_PLAT = #{tradePlat}
@@ -581,6 +585,8 @@
         </if>
 
         ) M
+        left join SYS_DATADICT_LIST sdl1 on M.tradeMarket=sdl1.ITEM_CODE and sdl1.DICT_CODE='TRADE_PLACE'
+        left join SYS_DATADICT_LIST sdl2 on M.invAim=sdl2.ITEM_CODE and sdl2.DICT_CODE='INV_AIM'
         where
         1=1
         <include refid="etrExchangeBundAnd"/>
@@ -1525,16 +1531,16 @@
     <sql id="etrExchangeQueryAnd">
         <if test="search != null and search != ''">
             and (
-            entrustId|| '|' ||entrustStatus|| '|' ||portfolioId|| '|' ||portfolioName|| '|' ||finprodId|| '|' ||
-            finprodAbbr|| '|' ||assetType|| '|' ||ps|| '|' || priceModel
+            T1.entrustId|| '|' ||sdl1.ITEM_VALUE|| '|' ||sdl2.ITEM_VALUE|| '|' ||sdl3.ITEM_VALUE|| '|' ||T1.portfolioId|| '|' ||T1.portfolioName|| '|' ||T1.finprodId|| '|' ||
+            T1.finprodAbbr|| '|' ||T1.assetType|| '|' || sdl4.ITEM_VALUE|| '|' || T1.dealCurAcctName|| '|' || T1.finprodMarketId
             like '%' || #{search} || '%'
             )
             <if test="search_isNumberFlag != null and search_isNumberFlag == true">
-                or (implementPercent = #{search})
-                or (dealPercent = #{search})
-                or (price = #{search})
-                or (entrustAmt = #{search})
-                or (entrustNum = #{search})
+                or (T1.implementPercent = #{search})
+                or (T1.dealPercent = #{search})
+                or (T1.price = #{search})
+                or (T1.entrustAmt = #{search})
+                or (T1.entrustNum = #{search})
             </if>
         </if>
     </sql>
@@ -1542,16 +1548,18 @@
     <sql id="etrExchangeBundAnd">
         <if test="search != null and search != ''">
             and (
-            portfolioName|| '|' ||secName|| '|' ||acctNo|| '|' ||finprodType2|| '|' ||
-            portfolioId|| '|' ||finprodMarketId
+            M.portfolioName|| '|' ||M.secName|| '|' ||M.acctNo|| '|' ||M.finprodType2|| '|' ||
+            M.portfolioId|| '|' ||M.finprodMarketId|| '|' ||sdl1.ITEM_VALUE|| '|' ||sdl2.ITEM_VALUE
+            || '|' ||M.dealCurAcctName|| '|' ||M.finprodName
             like '%' || #{search} || '%'
             )
             <if test="search_isNumberFlag != null and search_isNumberFlag == true">
-                or (positionsNum = #{search})
-                or (sellNum = #{search})
-                or (positionsAmt = #{search})
-                or (price = #{search})
-                or (floatingPL = #{search})
+                or (M.positionsNum = #{search})
+                or (M.sellNum = #{search})
+                or (M.positionsAmt = #{search})
+                or (M.price = #{search})
+                or (M.floating = #{search})
+                or (M.floatingPL = #{search})
             </if>
         </if>
     </sql>

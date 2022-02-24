@@ -754,7 +754,8 @@
         <if test="finprodId != null and finprodId !=''">
             AND TEMP.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         </if>
-        )
+        ) a
+        left join SYS_DATADICT_LIST sdl1 on a.tradeMarket=sdl1.ITEM_CODE and sdl1.DICT_CODE='TRADE_PLACE'
         where rank = 1
         <!-- 关键字模糊查询 -->
         <include refid="etrExchangeQueryAnd1"/>
@@ -763,12 +764,12 @@
     <sql id="etrExchangeQueryAnd1">
         <if test="search != null and search != ''">
             and (
-            portfolioName|| '|' ||acctNo|| '|' ||finprodMarketId|| '|' ||finprodName
+            a.portfolioName|| '|' ||a.acctNo|| '|' ||a.finprodMarketId|| '|' ||a.finprodName|| '|' ||sdl1.ITEM_VALUE
             like '%' || #{search} || '%'
             )
             <if test="search_isNumberFlag != null and search_isNumberFlag == true">
-                or (secNum = #{search})
-                or (canRepoNum = #{search})
+                or (a.secNum = #{search})
+                or (a.canRepoNum = #{search})
             </if>
         </if>
     </sql>
