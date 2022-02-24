@@ -620,6 +620,10 @@ public class TradeHelper {
         order.setInvManagerId(instruction.getInvManagerId());
         order.setPs(instruction.getPs());
         order.setBusiTypeTg(instruction.getBusiTypeTg());
+        //债转股借用extend1保存转股数量
+        if ("EX004".equals(instruction.getBusiTypeTg())) {
+            order.setExtend1(instruction.getConNum().toString());
+        }
 
         //1.公平下单
         if (fairOrderHelper.createFairOrder(order)) {
