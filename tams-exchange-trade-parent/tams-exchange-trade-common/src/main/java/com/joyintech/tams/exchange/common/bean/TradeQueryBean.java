@@ -8,6 +8,7 @@ import com.joyintech.tams.exchange.common.constant.joyin.DictCodeList;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt1;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
+import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -186,6 +187,8 @@ public class TradeQueryBean implements Serializable {
 
     @ApiModelProperty(value = "成交ID", hidden = true)
     private String tradeId;
+
+    private String tradeDate;
 
     public TradeQueryBean() {
         this.tradedBalance = new BigDecimal("0.00");
@@ -645,5 +648,13 @@ public class TradeQueryBean implements Serializable {
 
     public void setExtend2(String extend2) {
         this.extend2 = extend2;
+    }
+
+    public String getTradeDate() {
+        return TradeUtils.formatDate(tradingDay);
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
     }
 }

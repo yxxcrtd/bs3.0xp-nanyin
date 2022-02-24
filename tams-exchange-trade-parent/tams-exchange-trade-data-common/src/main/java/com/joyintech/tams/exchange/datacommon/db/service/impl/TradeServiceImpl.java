@@ -89,6 +89,7 @@ public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements
                 tradeQueryBean.setTradePlat(entrust.getTradePlat());
                 tradeQueryBean.setFinprodType2(entrust.getFinprodType2());
                 tradeQueryBean.setEntrustBs(entrust.getEntrustBs());
+                tradeQueryBean.setStockName(entrust.getStockName());
             }
 
             tradeQueryBeans.add(tradeQueryBean);
