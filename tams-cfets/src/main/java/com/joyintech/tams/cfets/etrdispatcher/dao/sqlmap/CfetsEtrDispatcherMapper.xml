@@ -7,6 +7,9 @@
     SELECT * FROM (SELECT T.* FROM(
     SELECT
     #{effectFlag} effectFlag,
+    ETR_ENTRUST_ADD.ASSET_TYPE1  assetType1,
+    ETR_ENTRUST_ADD.ASSET_TYPE_10  assetType10,
+    ETR_ENTRUST_ADD.ASSET_TYPE_11  assetType11,
     ETR_ENTRUST.ENTRUST_STATUS entrustStatus,
     decode(ETR_ENTRUST.ENTRUST_STATUS,'09',1,'02',2,'03',3,'04',4,'06',5,'05',6,'07',7) entrustStatusOrder,
     ETR_ENTRUST.ENTRUST_TYPE entrustType,
@@ -16,7 +19,10 @@
     ETR_ENTRUST.PORTFOLIO_ID portfolioId,
     PTL_PORTFOLIO.PORTFOLIO_NAME portfolioName,
     ETR_ENTRUST_ADD.ASSET_TYPE finprodType2,
-    CASE WHEN ETR_ENTRUST_ADD.ASSET_TYPE ='F07' AND ETR_ENTRUST.PS IN ('03', '04','T56','T93','T94','T95','T96') THEN ETR_ENTRUST_ADD.TERM_TYPE else(case when FIN_PRODUCT.FINPROD_MARKET_ID is not null
+    CASE
+    WHEN ETR_ENTRUST_ADD.ASSET_TYPE IN ('F07', 'F08') AND ETR_ENTRUST.PS IN ('03', '04', 'T56', 'T93', 'T94', 'T95', 'T96', 'T01')
+    THEN ETR_ENTRUST_ADD.TERM_TYPE
+    else(case when FIN_PRODUCT.FINPROD_MARKET_ID is not null
     then FIN_PRODUCT.FINPROD_MARKET_ID
     else ETR_ENTRUST_ADD.ASSET_TYPE_10 end) end finprodMarketId,
     CASE WHEN ETR_ENTRUST_ADD.ASSET_TYPE ='F07' AND ETR_ENTRUST.PS IN('03','04') THEN ETR_ENTRUST.STOCK_ID ELSE FIN_PRODUCT.FINPROD_ID END finprodId,
@@ -246,6 +252,9 @@
     union all
     SELECT
     #{effectFlag} effectFlag,
+    ETR_ENTRUST_ADD.ASSET_TYPE1  assetType1,
+    ETR_ENTRUST_ADD.ASSET_TYPE_10  assetType10,
+    ETR_ENTRUST_ADD.ASSET_TYPE_11  assetType11,
     ETR_ENTRUST.ENTRUST_STATUS entrustStatus,
     decode(ETR_ENTRUST.ENTRUST_STATUS,'09',1,'02',2,'03',3,'04',4,'06',5,'05',6,'07',7) entrustStatusOrder,
     ETR_ENTRUST.ENTRUST_TYPE entrustType,
@@ -579,10 +588,141 @@
         delete from AUTO_DISPENSE_RIGHT
     </delete>
 
+    <select id="getInvInfo"  resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherInvResponse">
+        SELECT
+            ee.INV_MANAGER_ID invManagerId,
+            su.REAL_NAME invManagerName,
+            B.realName trader,
+            ee.COUNTER_ID counterId,
+            mcp.COUNTER_NAME counterName,
+            ee.COUNTER_TRADER counterTrader,
+            mcct.TRADER_NAME counterTraderName,
+            ee.CONTACT_INFO contactInfo
+        FROM
+            ETR_ENTRUST ee
+                LEFT JOIN (
+                SELECT
+                    listagg ( TRADER, ',' ) within GROUP ( ORDER BY TRADER ) TRADER,
+			listagg ( REAL_NAME, ',' ) within GROUP ( ORDER BY TRADER ) realName,
+                    ENTRUST_ID AS ENTRUST_ID
+                FROM
+                    ETR_DISTRIBUTE
+                    LEFT JOIN SYS_USER ON ETR_DISTRIBUTE.TRADER = SYS_USER.USER_NAME
+                GROUP BY
+                    ENTRUST_ID
+            ) B ON B.ENTRUST_ID = ee.ENTRUST_ID
+                LEFT JOIN SYS_USER su ON su.USER_NAME  = ee.INV_MANAGER_ID
+                LEFT JOIN MST_COUNTER_PARTY mcp ON mcp.COUNTER_ID = ee.COUNTER_ID
+                LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON mcct.TRADER_ID  = ee.COUNTER_TRADER
+        WHERE
+            ee.ENTRUST_ID = #{entrustId}
+    </select>
+
+    <select id="getEtrDispatcherOtc"
+            resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherInfoOtcResponse">
+        SELECT
+            to_char(ete.entrust_date,'yyyy-MM-dd') entrustDate,
+            CASE
+                WHEN eted.ASSET_TYPE IN ( 'F16' ) THEN
+                    ( SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = 'IRS_TYPE' AND ITEM_CODE = eted.BUSI_PS )
+                WHEN eted.ASSET_TYPE IN ( 'F08', 'F10', 'F12', 'F16' ) THEN
+                    ( SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = 'BACK_LEND_DIRECTION' AND ITEM_CODE = eted.BUSI_PS )
+                ELSE ( SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = 'PS' AND ITEM_CODE = ete.PS )
+                END AS otherPs,
+            mci2.CALENDAR_NAME calendarName,
+            eted.ASSET_TYPE1 assetType1,
+            eted.ASSET_TYPE_10 assetType10,
+            eted.ASSET_TYPE_11  assetType11,
+            ete.PRICE price,
+            ssai.sec_acct_name secAcctId,
+            fpa.TRM_FUND_TYPE trmFundType,
+            fpa.TRM_FUND_ABBR trmFundAbbr,
+            to_char( eted.VDATE, 'yyyy-MM-dd' ) vDate,
+            to_char( eted.MDATE , 'yyyy-MM-dd' ) mDate,
+            ete.portfolio_id portfolioId,
+            pp.portfolio_name portfolioName,
+            fp.finprod_market_id finprodMarketId,
+            fp.finprod_abbr finprodAbbr,
+            ete.trade_market tradeMarket,
+            ete.ps ps,
+            ete.ccy ccy,
+            ete.remark remark,
+            ete.entrust_num shareNum,
+            ete.entrust_amt shareAmt,
+            eted.term_type termType,
+            ete.PRICE * 100 rate
+        FROM ETR_ENTRUST ete
+                 INNER JOIN ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
+                 LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
+                 LEFT JOIN FIN_PRODUCT fp ON ete.finprod_id = fp.finprod_id
+                 LEFT JOIN PTL_SEC_STOCK pss ON pss.pledge_stock_id = eted.pledge_stock_id AND ete.portfolio_id = pss.portfolio_id
+                 LEFT JOIN MST_CALENDAR_INFO mci2 ON mci2.CALENDAR_ID  = ete.CALENDAR_ID
+                 LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
+                 LEFT JOIN FIN_PRODUCT_ADD fpa ON ete.finprod_id = fpa.finprod_id
+        WHERE ete.entrust_id = #{entrustId}
+
+        union
+
+        SELECT
+            to_char(ete.entrust_date,'yyyy-MM-dd') entrustDate,
+            CASE
+                WHEN eted.ASSET_TYPE IN ( 'F16' ) THEN
+                    ( SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = 'IRS_TYPE' AND ITEM_CODE = eted.BUSI_PS )
+                WHEN eted.ASSET_TYPE IN ( 'F08', 'F10', 'F12', 'F16' ) THEN
+                    ( SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = 'BACK_LEND_DIRECTION' AND ITEM_CODE = eted.BUSI_PS )
+                ELSE ( SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = 'PS' AND ITEM_CODE = ete.PS )
+                END AS otherPs,
+            mci2.CALENDAR_NAME calendarName,
+            eted.ASSET_TYPE1 assetType1,
+            eted.ASSET_TYPE_10 assetType10,
+            eted.ASSET_TYPE_11  assetType11,
+            ete.PRICE price,
+            ssai.sec_acct_name secAcctId,
+            fpa.TRM_FUND_TYPE trmFundType,
+            fpa.TRM_FUND_ABBR trmFundAbbr,
+            to_char( eted.VDATE, 'yyyy-MM-dd' ) vDate,
+            to_char( eted.MDATE , 'yyyy-MM-dd' ) mDate,
+            ete.portfolio_id portfolioId,
+            pp.portfolio_name portfolioName,
+            fp.finprod_market_id finprodMarketId,
+            fp.finprod_abbr finprodAbbr,
+            ete.trade_market tradeMarket,
+            ete.ps ps,
+            ete.ccy ccy,
+            ete.remark remark,
+            ete.entrust_num shareNum,
+            ete.entrust_amt shareAmt,
+            eted.term_type termType,
+            ete.PRICE * 100 rate
+        FROM WFL_ETR_ENTRUST ete
+                 INNER JOIN WFL_ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
+                 LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
+                 LEFT JOIN FIN_PRODUCT fp ON ete.finprod_id = fp.finprod_id
+                 LEFT JOIN PTL_SEC_STOCK pss ON pss.pledge_stock_id = eted.pledge_stock_id AND ete.portfolio_id = pss.portfolio_id
+                 LEFT JOIN MST_CALENDAR_INFO mci2 ON mci2.CALENDAR_ID  = ete.CALENDAR_ID
+                 LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
+                 LEFT JOIN FIN_PRODUCT_ADD fpa ON ete.finprod_id = fpa.finprod_id
+        WHERE ete.entrust_id = #{entrustId}
+    </select>
+
     <select id="getEtrDispatcherInfo"
             resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherInfoResponse">
         SELECT
             to_char(ete.entrust_date,'yyyy-MM-dd') entrustDate,
+            CASE
+                WHEN eted.ASSET_TYPE IN ( 'F16' ) THEN
+                    ( SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = 'IRS_TYPE' AND ITEM_CODE = eted.BUSI_PS )
+                WHEN eted.ASSET_TYPE IN ( 'F08', 'F10', 'F12', 'F16' ) THEN
+                    ( SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = 'BACK_LEND_DIRECTION' AND ITEM_CODE = eted.BUSI_PS )
+                ELSE ( SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = 'PS' AND ITEM_CODE = ete.PS )
+                END AS otherPs,
+            T4.TARGET_FINPROD_ID targetFinprodId,
+            NVL ( T5.FINPROD_ABBR, T5.FINPROD_NAME ) targetFinprodName,
+            mci2.CALENDAR_NAME calendarName,
+            to_char( eted.VDATE, 'yyyy-MM-dd' ) vDate,
+            to_char( eted.MDATE , 'yyyy-MM-dd' ) mDate,
+            eted.MIN_AMT minAmt,
+            eted.ASSET_TYPE1 paBussType,
             ete.portfolio_id portfolioId,
             pp.portfolio_name portfolioName,
             ete.inv_aim busiModel,
@@ -594,7 +734,7 @@
             ete.price_model priceModel,
             ssai.sec_acct_name secAcctId,
             ete.ccy ccy,
-            ete.entrust_num/100 shareNum,
+            (ete.entrust_num/100)/10000 shareNum,
             eted.our_ent_num/100 entrustOwnNum,
             eted.lendin_ent_num integrateSecAmount,
             ete.price unitPrice,
@@ -623,12 +763,29 @@
         LEFT JOIN PTL_SEC_STOCK pss ON pss.pledge_stock_id = eted.pledge_stock_id AND ete.portfolio_id = pss.portfolio_id
         LEFT JOIN MST_CUSTOMER_INFO mci ON mci.CUSTOMER_ID = eted.main_consignee AND mci.IS_SALER = #{YESORNO_YES, jdbcType = VARCHAR}
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
+        LEFT JOIN ETR_TARGET T4 ON ete.ENTRUST_ID = T4.ENTRUST_ID
+        LEFT JOIN FIN_PRODUCT T5 ON T4.TARGET_FINPROD_ID = T5.FINPROD_ID
+        LEFT JOIN MST_CALENDAR_INFO mci2 ON mci2.CALENDAR_ID  = ete.CALENDAR_ID
         WHERE ete.entrust_id = #{entrustId}
 
-        union all
+        union
 
         SELECT
         to_char(ete.entrust_date,'yyyy-MM-dd') entrustDate,
+        CASE
+            WHEN eted.ASSET_TYPE IN ( 'F16' ) THEN
+                ( SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = 'IRS_TYPE' AND ITEM_CODE = eted.BUSI_PS )
+            WHEN eted.ASSET_TYPE IN ( 'F08', 'F10', 'F12', 'F16' ) THEN
+                ( SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = 'BACK_LEND_DIRECTION' AND ITEM_CODE = eted.BUSI_PS )
+            ELSE ( SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = 'PS' AND ITEM_CODE = ete.PS )
+            END AS otherPs,
+        T4.TARGET_FINPROD_ID targetFinprodId,
+        NVL ( T5.FINPROD_ABBR, T5.FINPROD_NAME ) targetFinprodName,
+        mci2.CALENDAR_NAME calendarName,
+        to_char( eted.VDATE, 'yyyy-MM-dd' ) vDate,
+        to_char( eted.MDATE , 'yyyy-MM-dd' ) mDate,
+        eted.MIN_AMT minAmt,
+        eted.ASSET_TYPE1 paBussType,
         ete.portfolio_id portfolioId,
         pp.portfolio_name portfolioName,
         ete.inv_aim busiModel,
@@ -640,7 +797,7 @@
         ete.price_model priceModel,
         ssai.sec_acct_name secAcctId,
         ete.ccy ccy,
-        ete.entrust_num/100 shareNum,
+        (ete.entrust_num/100)/10000 shareNum,
         eted.our_ent_num/100 entrustOwnNum,
         eted.lendin_ent_num integrateSecAmount,
         ete.price unitPrice,
@@ -669,6 +826,9 @@
         LEFT JOIN PTL_SEC_STOCK pss ON pss.pledge_stock_id = eted.pledge_stock_id AND ete.portfolio_id = pss.portfolio_id
         LEFT JOIN MST_CUSTOMER_INFO mci ON mci.CUSTOMER_ID = eted.main_consignee AND mci.IS_SALER = #{YESORNO_YES, jdbcType = VARCHAR}
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
+        LEFT JOIN ETR_TARGET T4 ON ete.ENTRUST_ID = T4.ENTRUST_ID
+        LEFT JOIN FIN_PRODUCT T5 ON T4.TARGET_FINPROD_ID = T5.FINPROD_ID
+        LEFT JOIN MST_CALENDAR_INFO mci2 ON mci2.CALENDAR_ID  = ete.CALENDAR_ID
         WHERE ete.entrust_id = #{entrustId}
     </select>
 

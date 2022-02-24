@@ -5620,7 +5620,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			// add  start
 			if (StringUtils.equals(dto.getPs(), DictCodeListExt2.交易方向_配股.getValue())) {
 				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_配股指令.getValue());
-				businessType = DictCodeListExt3.共通业务类型_股票竞价指令.getValue();
+				businessType = DictCodeListExt3.共通业务类型_配股指令.getValue();
 			} else if (StringUtils.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())) {
 				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_新股申购指令.getValue());
 				businessType = DictCodeListExt3.共通业务类型_新股申购指令.getValue();

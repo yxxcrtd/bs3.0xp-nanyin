@@ -146,4 +146,18 @@ public interface CfetsEtrDispatcherMapper {
     CfetsEtrDispatcherTradeListResponse getEtrBidInfo(@Param("entrustId") String entrustId);
 
     CfetsEtrDispatcherAutoRequest findAutoDetail(@Param("sysDate")String sysDate);
+
+    /**
+     * 获取委托投资人员信息
+     * @param pageParam
+     * @return
+     */
+    CfetsEtrDispatcherInvResponse getInvInfo(Map<String, Object> pageParam);
+
+    /**
+     * 获取指令明细基本信息 场外
+     * @param pageParam
+     * @return
+     */
+    CfetsEtrDispatcherInfoOtcResponse getEtrDispatcherOtc(Map<String, Object> pageParam);
 }

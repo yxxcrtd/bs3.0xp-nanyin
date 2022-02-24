@@ -782,29 +782,29 @@
         left join PTL_SEC_STOCK t on t.PLEDGE_STOCK_ID = ess.PLEDGE_STOCK_ID
         <where>
         	<if test="initValue != null and initValue !='' ">
-                ess.pledge_stock_id = #{initValue, jdbcType=VARCHAR}
+                and ess.pledge_stock_id = #{initValue, jdbcType=VARCHAR}
         	</if>
             <if test="userId != null and userId !='' ">
-                ess.CREATE_USER = #{userId, jdbcType=VARCHAR}
+                and ess.CREATE_USER = #{userId, jdbcType=VARCHAR}
             </if>
-        	<if test="initValue == null or initValue =='' ">
-	        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
-	             t.PORTFOLIO_ID in
-	            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
-	                #{item}
-	            </foreach>
-        	</if>
-        	<if test="search !=null and search !='' ">
-        		AND
-					(
-                    ess.pledge_stock_id LIKE CONCAT('%', CONCAT(#{search}, '%'))
-					OR
-                    ess.pledge_stock_name LIKE CONCAT('%', CONCAT(#{search}, '%'))
-					)
-        	</if>
-        	<if test="portfolioId !=null and portfolioId !='' ">
-        		or t.PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}
-        	</if>
+                <if test="initValue == null or initValue =='' ">
+                <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+                     and t.PORTFOLIO_ID in
+                    <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="search !=null and search !='' ">
+                    AND
+                        (
+                        ess.pledge_stock_id LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                        OR
+                        ess.pledge_stock_name LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                        )
+                </if>
+                <if test="portfolioId !=null and portfolioId !='' ">
+                    or t.PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}
+                </if>
         	</if>
         </where>
     </select>
