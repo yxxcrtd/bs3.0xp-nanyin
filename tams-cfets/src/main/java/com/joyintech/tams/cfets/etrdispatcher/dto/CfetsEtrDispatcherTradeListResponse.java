@@ -96,6 +96,15 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
     @ApiModelProperty(name="calculateField",value="计算方式",example="计算方式供前台判断使用")
     private String calculateField;
 
+    @ApiModelProperty(name = "assetType1", value = "资产二级分类", example = "字符串1")
+    private String assetType1;
+
+    @ApiModelProperty(name = "assetType10", value = "资产三级分类", example = "字符串1")
+    private String assetType10;
+
+    @ApiModelProperty(name = "assetType11", value = "资产四级分类", example = "字符串1")
+    private String assetType11;
+
     /**
      * 获取 otherEntrustStatus
      * @return otherEntrustStatus.
@@ -324,5 +333,29 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
 
     public void setCalculateField(String calculateField) {
         this.calculateField = calculateField;
+    }
+
+    public String getAssetType1() {
+        return assetType1;
+    }
+
+    public void setAssetType1(String assetType1) {
+        this.assetType1 = assetType1;
+    }
+
+    public String getAssetType10() {
+        return assetType10;
+    }
+
+    public void setAssetType10(String assetType10) {
+        this.assetType10 = assetType10;
+    }
+
+    public String getAssetType11() {
+        return assetType11;
+    }
+
+    public void setAssetType11(String assetType11) {
+        this.assetType11 = assetType11;
     }
 }

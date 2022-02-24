@@ -22,6 +22,9 @@ import java.util.List;
 @ApiModel(value="指令明细返回数据",description="指令明细数据")
 public class CfetsEtrDispatcherInfoResponse extends CfetsEtrDispatcherBaseInfo{
 
+    @ApiModelProperty(name="otherPs",value="交易方向",example="字符串1")
+    private String otherPs;
+
     //债券一级投标 start
     @ApiModelProperty(name="mainConsignee",value="主承销商",example="字符串1")
     private String mainConsignee;
@@ -145,6 +148,45 @@ public class CfetsEtrDispatcherInfoResponse extends CfetsEtrDispatcherBaseInfo{
     @ApiModelProperty(name="dueDate",value="到期日",example="[2017-01-01 - 2017-02-01]")
     private String dueDate;
     //利率互换 end
+
+    //债券借贷 start
+    @ApiModelProperty(name="targetFinprodId",value="标的债券代码",example="字符串1")
+    private String targetFinprodId;
+
+    @ApiModelProperty(name="targetFinprodName",value="标的债券名称",example="字符串1")
+    private String targetFinprodName;
+
+    @ApiModelProperty(name="calendarId",value="交易日历",example="字符串1")
+    private String calendarId;
+
+    @ApiModelProperty(name="calendarName",value="交易日历名称",example="字符串1")
+    private String calendarName;
+
+    //债券借贷 end
+
+    //买断式回购 start
+    @ApiModelProperty(name="chlId",value="通道代码",example="字符串1")
+    private String chlId;
+
+    @ApiModelProperty(name="chlIdName",value="通道名称",example="字符串1")
+    private String chlIdName;
+
+    //买断式回购 end
+
+    //拆借 start
+    @ApiModelProperty(name="paBussType",value="拆借类型",example="字符串1")
+    private String paBussType;
+
+    @ApiModelProperty(name="vDate",value="起息日",example="2021-01-01")
+    private String vDate;
+
+    @ApiModelProperty(name="mDate",value="到期日",example="2021-01-01")
+    private String mDate;
+
+    @ApiModelProperty(name="minAmt",value="最低成交金额",example="10000.00")
+    private BigDecimal minAmt;
+
+    //拆借 end
 
     @ApiModelProperty(name="isRight",value="是否含权",example="A1")
     private String isRight;
@@ -391,7 +433,14 @@ public class CfetsEtrDispatcherInfoResponse extends CfetsEtrDispatcherBaseInfo{
     }
 
     public String getOtherPs() {
+        if (otherPs != null) {
+            return otherPs;
+        }
         return SysDataUtil.getNameFromDataDict(DictCode.交易方向, super.getPs());
+    }
+
+    public void setOtherPs(String otherPs) {
+        this.otherPs = otherPs;
     }
 
     public String getEtrBidDate() {
@@ -472,5 +521,93 @@ public class CfetsEtrDispatcherInfoResponse extends CfetsEtrDispatcherBaseInfo{
 
     public void setPledgeRatio(BigDecimal pledgeRatio) {
         this.pledgeRatio = pledgeRatio;
+    }
+
+    public void setOtherSettleSpeed(String otherSettleSpeed) {
+        this.otherSettleSpeed = otherSettleSpeed;
+    }
+
+    public void setOtherPriceModel(String otherPriceModel) {
+        this.otherPriceModel = otherPriceModel;
+    }
+
+    public String getTargetFinprodId() {
+        return targetFinprodId;
+    }
+
+    public void setTargetFinprodId(String targetFinprodId) {
+        this.targetFinprodId = targetFinprodId;
+    }
+
+    public String getTargetFinprodName() {
+        return targetFinprodName;
+    }
+
+    public void setTargetFinprodName(String targetFinprodName) {
+        this.targetFinprodName = targetFinprodName;
+    }
+
+    public String getCalendarId() {
+        return calendarId;
+    }
+
+    public void setCalendarId(String calendarId) {
+        this.calendarId = calendarId;
+    }
+
+    public String getCalendarName() {
+        return calendarName;
+    }
+
+    public void setCalendarName(String calendarName) {
+        this.calendarName = calendarName;
+    }
+
+    public String getChlId() {
+        return chlId;
+    }
+
+    public void setChlId(String chlId) {
+        this.chlId = chlId;
+    }
+
+    public String getChlIdName() {
+        return chlIdName;
+    }
+
+    public void setChlIdName(String chlIdName) {
+        this.chlIdName = chlIdName;
+    }
+
+    public String getvDate() {
+        return vDate;
+    }
+
+    public void setvDate(String vDate) {
+        this.vDate = vDate;
+    }
+
+    public String getmDate() {
+        return mDate;
+    }
+
+    public void setmDate(String mDate) {
+        this.mDate = mDate;
+    }
+
+    public BigDecimal getMinAmt() {
+        return minAmt;
+    }
+
+    public void setMinAmt(BigDecimal minAmt) {
+        this.minAmt = minAmt;
+    }
+
+    public String getPaBussType() {
+        return SysDataUtil.getNameFromDataDict(DictCode.拆借类型, paBussType);
+    }
+
+    public void setPaBussType(String paBussType) {
+        this.paBussType = paBussType;
     }
 }

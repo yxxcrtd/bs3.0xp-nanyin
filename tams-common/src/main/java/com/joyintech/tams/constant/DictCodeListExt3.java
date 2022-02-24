@@ -1697,6 +1697,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     头寸业务类型_买断式回购首期(DictCode.头寸业务类型,"10","买断式回购首期"),
     头寸业务类型_质押式回购到期(DictCode.头寸业务类型,"06","质押式回购到期"),
     头寸业务类型_债券借贷首期(DictCode.头寸业务类型,"12","债券借贷首期"),
+    头寸业务类型_拆借首期(DictCode.头寸业务类型,"18","拆借首期"),
     /**
      * 头寸业务动作
      */
