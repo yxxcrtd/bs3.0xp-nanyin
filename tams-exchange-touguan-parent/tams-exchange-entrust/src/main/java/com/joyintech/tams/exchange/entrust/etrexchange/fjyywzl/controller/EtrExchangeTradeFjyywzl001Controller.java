@@ -7,6 +7,7 @@ import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.constant.DictCode;
@@ -63,6 +64,7 @@ public class EtrExchangeTradeFjyywzl001Controller extends BaseController {
     public Message<Page<EtrExchangeTradeFjyywzlZqzyDto>> findZqzyPositionsPage(@RequestBody EtrExchangeTradeZqzyRequest request){
         try {
             Map<String, Object> map = BeanUtil.object2Map(request);
+            map.put("search_isNumberFlag", BaseMap.isNumeric(request.getSearch()));
             Page<EtrExchangeTradeFjyywzlZqzyDto> list = etrExchangeTradeFjyywzl001Service.findZqzyPositionsPage(map);
             return new Message<Page<EtrExchangeTradeFjyywzlZqzyDto>>().success().setData(list);
         }catch (Exception e) {

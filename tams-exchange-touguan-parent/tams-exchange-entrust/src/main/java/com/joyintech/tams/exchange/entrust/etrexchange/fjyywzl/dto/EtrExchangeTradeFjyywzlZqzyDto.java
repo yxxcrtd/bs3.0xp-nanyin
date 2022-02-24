@@ -91,7 +91,7 @@ public class EtrExchangeTradeFjyywzlZqzyDto extends BaseEntity {
     /**
      * 资产名称
      */
-    private String finpordName;
+    private String finprodName;
 
     /**
      * 金融产品类型（投管分类）
@@ -265,22 +265,12 @@ public class EtrExchangeTradeFjyywzlZqzyDto extends BaseEntity {
         this.finprodId = finprodId;
     }
 
-    /**
-     * 获取 finpordName
-     * 
-     * @return finpordName.
-     */
-    public String getFinpordName() {
-        return finpordName;
+    public String getFinprodName() {
+        return finprodName;
     }
 
-    /**
-     * 设置 finpordName
-     * 
-     * @param finpordName finpordName
-     */
-    public void setFinpordName(String finpordName) {
-        this.finpordName = finpordName;
+    public void setFinprodName(String finprodName) {
+        this.finprodName = finprodName;
     }
 
     /**

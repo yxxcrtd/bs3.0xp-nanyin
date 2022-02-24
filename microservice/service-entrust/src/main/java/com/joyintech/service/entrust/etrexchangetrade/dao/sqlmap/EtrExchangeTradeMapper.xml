@@ -528,6 +528,7 @@
         SSAI.SEC_ACCT_NAME AS secAcctName,
         TEMP.FINPROD_ID AS finprodId,
         FP.FINPROD_MARKET_ID AS finprodMarketId,
+        FP.FINPROD_ABBR as finprodName,
         CASE WHEN instr(FP.FINPROD_MARKET_ID,'.') > 0 THEN
         SUBSTR(FP.FINPROD_MARKET_ID,1,instr(FP.FINPROD_MARKET_ID,'.',-1,1)-1)
         ELSE FP.FINPROD_MARKET_ID
@@ -755,7 +756,22 @@
         </if>
         )
         where rank = 1
+        <!-- 关键字模糊查询 -->
+        <include refid="etrExchangeQueryAnd1"/>
     </select>
+
+    <sql id="etrExchangeQueryAnd1">
+        <if test="search != null and search != ''">
+            and (
+            portfolioName|| '|' ||acctNo|| '|' ||finprodMarketId|| '|' ||finprodName
+            like '%' || #{search} || '%'
+            )
+            <if test="search_isNumberFlag != null and search_isNumberFlag == true">
+                or (secNum = #{search})
+                or (canRepoNum = #{search})
+            </if>
+        </if>
+    </sql>
     <!-- 证券账户代码下拉框查询-->
     <select id="getSecAcctId" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT DISTINCT
