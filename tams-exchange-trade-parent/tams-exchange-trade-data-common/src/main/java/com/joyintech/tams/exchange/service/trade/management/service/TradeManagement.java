@@ -168,6 +168,7 @@ public class TradeManagement {
         String userId = request.getUserId();
         String entrustId = request.getEntrustId();
         Integer historyType = request.getHistoryType();
+        request.getPageMode().setPageSize(99999);
         //组合权限查询
         List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
