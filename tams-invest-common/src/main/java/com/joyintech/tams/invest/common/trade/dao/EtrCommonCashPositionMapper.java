@@ -407,4 +407,20 @@ public interface EtrCommonCashPositionMapper {
      * @since 1.0
      */
     BigDecimal queryEtrAvailableCashNew(PtlCashPositionFlowDto dto);
+    /**
+     *
+     * 查询指令可用现金
+     * <功能详细描述>
+     * @param portfolioId
+     * @param acctId
+     * @param chlFinprodId
+     * @param hodingType
+     * @param cdate
+     * @param ccy
+     * @param acctTypes
+     * @return
+     * @see
+     * @since 1.0
+     */
+    BigDecimal selectCommandAvailableCashFlowSum(PtlCashPositionFlowDto dto);
 }
