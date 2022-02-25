@@ -348,12 +348,4 @@ public class EtrBaseDto extends BaseEntity {
     public void setTargetType(String targetType) {
         this.targetType = targetType;
     }
-
-    public Date getTransmitTime() {
-        return transmitTime;
-    }
-
-    public void setTransmitTime(Date transmitTime) {
-        this.transmitTime = transmitTime;
-    }
 }
