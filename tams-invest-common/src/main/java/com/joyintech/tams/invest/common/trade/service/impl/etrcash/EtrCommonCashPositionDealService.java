@@ -578,9 +578,11 @@ public class EtrCommonCashPositionDealService extends BaseService {
      * @return
      */
     public static String select资金账户(String secManageAcctId, String ccy) {
-        List<StlCapacctInfo> stlCapacctInfos = etrCommonCashPositionMapper.selectDealCapacctInfoList(secManageAcctId, ccy);
-        if (stlCapacctInfos != null && !stlCapacctInfos.isEmpty()) {
-            return stlCapacctInfos.get(0).getAcctNo();
+        if (StringUtil.isNotEmpty(secManageAcctId)) {
+            List<StlCapacctInfo> stlCapacctInfos = etrCommonCashPositionMapper.selectDealCapacctInfoList(secManageAcctId, ccy);
+            if (stlCapacctInfos != null && !stlCapacctInfos.isEmpty()) {
+                return stlCapacctInfos.get(0).getAcctNo();
+            }
         }
         logger.error("该证券托管户（" + secManageAcctId + "）没有这个币种（" + ccy + "）的资金账户");
         return null;
