@@ -1,6 +1,7 @@
 package com.joyintech.tams.exchange.common.bean;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.constant.Market;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCode;
@@ -189,6 +190,7 @@ public class TradeQueryBean implements Serializable {
     private String tradeId;
 
     private String tradeDate;
+    private String dealTime;
 
     public TradeQueryBean() {
         this.tradedBalance = new BigDecimal("0.00");
@@ -656,5 +658,14 @@ public class TradeQueryBean implements Serializable {
 
     public void setTradeDate(String tradeDate) {
         this.tradeDate = tradeDate;
+    }
+
+
+    public String getDealTime() {
+        return DateUtil.format(createTime,"HH:mm:ss");
+    }
+
+    public void setDealTime(String dealTime) {
+        this.dealTime = dealTime;
     }
 }
