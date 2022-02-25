@@ -166,7 +166,6 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         resultMap.put("deliveryType", deliveryType);
         resultMap.put("workFlowId", entity.getWorkflowId());
         resultMap.put("cdate", DateUtil.format(entity.getVdate()));
-        resultMap.put("ccy", entity.getCcy());
         resultMap.put("finprodId", entity.getFinprodId());
         resultMap.put("bTotalTradeId", null);
         if (CollectionUtils.isNotEmpty(entity.getPortfolioList())) {
@@ -712,7 +711,11 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         // 日期
         resultMap.put("cdate", DateUtil.format(entity.getVdate()));
         // 币种
-        resultMap.put("ccy", entity.getCcy());
+        if(StringUtil.isNotEmpty(entity.getCcy())) {
+        	resultMap.put("ccy", entity.getCcy());
+        }else {
+        	resultMap.put("ccy", DictCodeList.币种_人民币_CNY.getValue());
+        }
         // 前次交易编号
         resultMap.put("bTotalTradeId", null);
     }

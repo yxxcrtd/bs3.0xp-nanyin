@@ -40,32 +40,32 @@ public final class PositionConstant {
     /**
      * 场内现券
      */
-    public static final String INTERF_TYPE_BOND002 = "BOND002";
+    public static final String INTERF_TYPE_BOND002 = "Bond002";
 
     /**
      * 场内可转债
      */
-    public static final String INTERF_TYPE_BOND003 = "BOND003";
+    public static final String INTERF_TYPE_BOND003 = "Bond003";
 
     /**
-     * 基金
+     * 基金--LOF基金
      */
-    public static final String INTERF_TYPE_FUND001 = "FUND001";
+    public static final String INTERF_TYPE_FUND001 = "Fund001";
 
     /**
-     * 竞价回购
+     * 质押式双边回购--竞价回购
      */
     public static final String INTERF_TYPE_REPO001 = "REPO001";
 
     /**
-     * 协议回购
+     * 质押式协议回购--协议回购
      */
     public static final String INTERF_TYPE_REPO002 = "REPO002";
 
     /**
-     * 竞价回购
+     * 股票（A股）
      */
-    public static final String INTERF_TYPE_STOCK001 = "STOCK001";
+    public static final String INTERF_TYPE_STOCK001 = "Stock001";
 
 
 }
