@@ -1,22 +1,8 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.position.service;
 
-import static com.joyintech.tams.constant.DictCodeList.是否_否;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -26,6 +12,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeOperateRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
@@ -34,6 +21,15 @@ import com.joyintech.tams.exchange.entrust.etrexchange.position.constant.Positio
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdMoreConvrateDto;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.*;
+
+import static com.joyintech.tams.constant.DictCodeList.是否_否;
+import static com.joyintech.tams.constant.DictCodeListExt3.*;
 
 @Service
 public class PositionRequestServiceEtrExchangeTradeSaveRequest {
@@ -99,7 +95,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      *
      * @param entity
      */
-    public void sendRevoke(EtrExchangeTradeSaveRequest entity) {
+    public void sendRevoke(EtrExchangeTradeOperateRequest entity) {
         PositionHttpRequest.dorevoke(entity.getEntrustId(), PositionConstant.POSITION_TYPE_TRD, this.getBusiType(entity.getPs()), entity.getPs());
     }
 
@@ -108,20 +104,15 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      *
      * @param entity
      */
-    public void sendBatchClose(EtrExchangeTradeSaveRequest entity) {
+    public void sendClose(EtrExchangeTradeOperateRequest entity) {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());
         resultMap.put("totalTradeId", entity.getWorkflowId());
         resultMap.put("modelType", PositionConstant.POSITION_TYPE_ETR);
         resultMap.put("busiType", this.getBusiType(entity.getPs()));
         resultMap.put("ps", entity.getPs());
-        if (StringUtil.equals(entity.getOptType(), "new")) {
-            resultMap.put("decisionAct", DictCodeListExt3.系统动作_新建.getValue());
-            resultMap.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
-        } else if (StringUtil.equals(entity.getOptType(), "modify")) {
-            resultMap.put("decisionAct", DictCodeListExt3.系统动作_修改.getValue());
-            resultMap.put("systemAct", DictCodeListExt3.系统动作_修改.getValue());
-        }
+        resultMap.put("decisionAct", DictCodeListExt3.系统动作_关闭.getValue());
+        resultMap.put("systemAct", DictCodeListExt3.系统动作_关闭.getValue());
         resultMap.put("closeId", entity.getEntrustId());
         PositionHttpRequest.batchClose(resultMap);
     }
@@ -190,12 +181,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 pltMap.put("ordSecAmount", null);
                 pltMap.put("cashAcctId", etrExchangeTradePortfolioRequest.getAcctNo());
                 pltMap.put("secAcctId", etrExchangeTradePortfolioRequest.getSecAcctId());
-                String bondTradedUnit = CacheUtil.getSysParam("bond_traded_unit");
-                if("01".equals(bondTradedUnit)) {
-                	pltMap.put("secAmount", ArithmeticUtil.multiply(entity.getEntrustNum(), new BigDecimal(100)));
-                }else if("02".equals(bondTradedUnit)) {
-                	pltMap.put("secAmount", ArithmeticUtil.multiply(entity.getEntrustNum(), new BigDecimal(1000)));
-                }
+                pltMap.put("secAmount", getSecAmountByBondUnit(entity.getEntrustNum()));
                 pltMap.put("cashAmount", etrExchangeTradePortfolioRequest.getFprice());
                 pltMap.put("invAim", etrExchangeTradePortfolioRequest.getInvAim());
                 pltMap.put("integrateSecAmount", null);
@@ -204,6 +190,26 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             }
             resultMap.put("ptlList", ptlList);
         }
+    }
+
+    /**
+     * 根据指令单位是张还是手来处理交易金额
+     * 债券使用
+     *
+     * @param entrustNum 委托数量
+     */
+    private BigDecimal getSecAmountByBondUnit(BigDecimal entrustNum) {
+        BigDecimal secAmount = BigDecimal.ZERO;
+        if (Objects.isNull(entrustNum)) {
+            return secAmount;
+        }
+        String bondTradedUnit = CacheUtil.getSysParam("bond_traded_unit");
+        if (交易单位_张.getValue().equals(bondTradedUnit)) {
+            secAmount = entrustNum.multiply(BigDecimal.valueOf(100L));
+        } else if (交易单位_份.getValue().equals(bondTradedUnit)) {
+            secAmount = entrustNum.multiply(BigDecimal.valueOf(1000L));
+        }
+        return secAmount;
     }
 
     /**
@@ -297,9 +303,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             List<Map<String, Object>> bondSecList = new ArrayList<>(4);
             for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
                 bean = new PositionRequestBaseBean(item);
-                //TODO "IF 指令.单位 = 张 THEN 指令.指令数量*100
-                //IF 指令.单位 = 手 THEN 指令.指令数量*10*100"
-                bean.setSecAmount(entity.getEntrustNum());
+                bean.setSecAmount(getSecAmountByBondUnit(item.getEntrustNum()));
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 //融入券券面总额
@@ -315,9 +319,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 List<Map<String, Object>> applyBondSecList = new ArrayList<>(4);
                 for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
                     bean = new PositionRequestBaseBean(item);
-                    //TODO "IF 指令.单位 = 张 THEN 指令.指令数量*100
-                    //IF 指令.单位 = 手 THEN 指令.指令数量*10*100"
-                    bean.setSecAmount(entity.getEntrustNum());
+                    bean.setSecAmount(getSecAmountByBondUnit(item.getEntrustNum()));
                     Map<String, Object> map = BeanUtil.object2Map(bean);
                     applyBondSecList.add(map);
                 }
@@ -365,9 +367,9 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             List<Map<String, Object>> ptlList = new ArrayList<>(4);
             for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
                 bean = new PositionRequestBaseBean(item);
-                //TODO "IF 指令.指令单位 = 手 THEN 指令.指令数量*10000
+                // "IF 指令.指令单位 = 手 THEN 指令.指令数量*10000
                 //IF 指令.指令单位 = 份 THEN 指令.指令数量"
-                bean.setSecAmount(entity.getEntrustNum());
+                bean.setSecAmount(getSecAmountByBondUnit(entity.getEntrustNum()));
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 ptlList.add(map);
             }
