@@ -183,6 +183,9 @@
                 A.PORTFOLIO_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
                 )
             </if>
+            <if test="initValue != null and initValue != ''">
+                AND A.PORTFOLIO_ID = #{initValue}
+            </if>
         </where>
     </select>
     <!-- 投资经理联想框 -->
