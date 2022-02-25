@@ -95,6 +95,10 @@ public class EtrBaseDto extends BaseEntity {
      * 原更新时间
      */
     private Date oldUpdateTime;
+    /**
+     * 指令下达时间
+     */
+    private Date transmitTime;
 
     public EtrBaseDto() {
         // nothing
@@ -343,5 +347,13 @@ public class EtrBaseDto extends BaseEntity {
      */
     public void setTargetType(String targetType) {
         this.targetType = targetType;
+    }
+
+    public Date getTransmitTime() {
+        return transmitTime;
+    }
+
+    public void setTransmitTime(Date transmitTime) {
+        this.transmitTime = transmitTime;
     }
 }

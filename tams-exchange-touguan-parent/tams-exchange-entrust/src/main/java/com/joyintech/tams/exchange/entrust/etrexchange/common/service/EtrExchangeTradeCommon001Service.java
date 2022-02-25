@@ -1895,6 +1895,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		setUser(paraDto);
 		componentService.updateSettings(paraDto);
 		//关闭委托
+		etrBaseDto.setTransmitTime(new Date());
 		componentService.entrustRevoke(etrBaseDto);
 		//处理指令持仓和头寸(仅有未被接收的指令才可以撤会,所以一般只可能存在下指令时生成的持仓和流水)
 		if (baseEtrCashPositionCommService != null && (DictCodeList.委托状态_待接收.getValue().equals(entity.getEntrustStatus())
