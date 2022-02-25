@@ -42,7 +42,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      *
      * @param entity
      */
-    public void sendEtrExchangeTradeSaveRequest(EtrExchangeTradeSaveRequest entity,String decisionAct,String systemAct) {
+    public void sendEtrExchangeTradeSaveRequest(EtrExchangeTradeSaveRequest entity, String decisionAct, String systemAct) {
         Map<String, Object> resultMap = new HashMap<>();
 //		if (StringUtil.equals(entity.getOptType(), "new")) {
 //		    resultMap.put("decisionAct", DictCodeListExt3.系统动作_新建.getValue());
@@ -51,8 +51,8 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
 //		    resultMap.put("decisionAct", DictCodeListExt3.系统动作_修改.getValue());
 //		    resultMap.put("systemAct", DictCodeListExt3.系统动作_修改.getValue());
 //		}
-		resultMap.put("decisionAct", decisionAct);
-		resultMap.put("systemAct", systemAct);
+        resultMap.put("decisionAct", decisionAct);
+        resultMap.put("systemAct", systemAct);
         this.setCommonField(entity, resultMap);//设置公共字段，个性化的需要在具体接口中覆盖
         String type6 = commonPositionEngineService.getType6(entity.getFinprodId());
         String finprodType = entity.getFinprodType2();
@@ -68,6 +68,8 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             this.fund001(entity, resultMap);
         } else if (PositionConstant.INTERF_TYPE_REPO001.equals(interType)) {
             this.repo001(entity, resultMap);
+        } else if (PositionConstant.INTERF_TYPE_REPO002.equals(interType)) {
+            this.repo002(entity, resultMap);
         } else if (PositionConstant.INTERF_TYPE_STOCK001.equals(interType)) {
             this.stock001(entity, resultMap);
         } else {
@@ -78,56 +80,59 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
 
     /**
      * doDelete时使用---作废指令-共通接口
+     *
      * @param entity
      */
     public void sendDelete(EtrExchangeTradeSaveRequest entity) {
         PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(), PositionConstant.POSITION_TYPE_ETR, this.getBusiType(entity.getPs()), entity.getPs());
     }
-    
+
     /**
-     *  撤销时使用---撤销指令-共通接口
+     * 撤销时使用---撤销指令-共通接口
+     *
      * @param entity
      */
     public void sendRevoke(EtrExchangeTradeSaveRequest entity) {
         PositionHttpRequest.dorevoke(entity.getEntrustId(), PositionConstant.POSITION_TYPE_TRD, this.getBusiType(entity.getPs()), entity.getPs());
     }
-    
+
     /**
      * 批量关闭时使用---批量关闭-共通接口
+     *
      * @param entity
      */
     public void sendBatchClose(EtrExchangeTradeSaveRequest entity) {
-    	Map<String, Object> resultMap = new HashMap<>();
-    	resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());
-    	resultMap.put("totalTradeId", entity.getWorkflowId());
-    	resultMap.put("modelType", PositionConstant.POSITION_TYPE_ETR);
-    	resultMap.put("busiType", this.getBusiType(entity.getPs()));
-    	resultMap.put("ps", entity.getPs());
-    	if (StringUtil.equals(entity.getOptType(), "new")) {
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());
+        resultMap.put("totalTradeId", entity.getWorkflowId());
+        resultMap.put("modelType", PositionConstant.POSITION_TYPE_ETR);
+        resultMap.put("busiType", this.getBusiType(entity.getPs()));
+        resultMap.put("ps", entity.getPs());
+        if (StringUtil.equals(entity.getOptType(), "new")) {
             resultMap.put("decisionAct", DictCodeListExt3.系统动作_新建.getValue());
             resultMap.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
         } else if (StringUtil.equals(entity.getOptType(), "modify")) {
             resultMap.put("decisionAct", DictCodeListExt3.系统动作_修改.getValue());
             resultMap.put("systemAct", DictCodeListExt3.系统动作_修改.getValue());
         }
-    	resultMap.put("closeId", entity.getEntrustId());
-    	PositionHttpRequest.batchClose(resultMap);
+        resultMap.put("closeId", entity.getEntrustId());
+        PositionHttpRequest.batchClose(resultMap);
     }
-    
+
     private String getBusiType(String ps) {
-    	String busiType = "";
+        String busiType = "";
         if (BussinessDictCodeList.交易方向_行权回售.getValue().equals(ps)) {
-        	busiType = DictCodeListExt3.头寸业务类型_债券行权交易.getValue();
+            busiType = DictCodeListExt3.头寸业务类型_债券行权交易.getValue();
         } else if (BussinessDictCodeList.交易方向_买入.getValue().equals(ps) || BussinessDictCodeList.交易方向_卖出.getValue().equals(ps)) {
-        	busiType = DictCodeListExt3.头寸业务类型_现券交易.getValue();
+            busiType = DictCodeListExt3.头寸业务类型_现券交易.getValue();
         } else if (DictCodeListExt3.交易方向_配债.getValue().equals(ps)) {
-        	busiType = DictCodeListExt3.头寸业务类型_配债.getValue();
+            busiType = DictCodeListExt3.头寸业务类型_配债.getValue();
         } else if (DictCodeListExt3.交易方向_债转股.getValue().equals(ps)) {
-        	busiType = DictCodeListExt3.头寸业务类型_债转股.getValue();
+            busiType = DictCodeListExt3.头寸业务类型_债转股.getValue();
         } else if (DictCodeList.交易方向_上市流通.getValue().equals(ps)) {
-        	busiType = DictCodeListExt3.头寸业务类型_上市流通.getValue();
+            busiType = DictCodeListExt3.头寸业务类型_上市流通.getValue();
         }
-    	return busiType;
+        return busiType;
     }
 
     /**
@@ -438,6 +443,140 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                     ptlSecList.add(map);
                 }
                 resultMap.put("ptlSecList", ptlSecList);
+            }
+        }
+    }
+
+    /**
+     * 质押式协议回购-指令    repo002
+     *
+     * @param entity
+     * @param resultMap
+     */
+    private void repo002(EtrExchangeTradeSaveRequest entity, Map<String, Object> resultMap) {
+        resultMap.put("interfaceType", PositionConstant.INTERF_TYPE_REPO002);
+        // 业务动作
+        resultMap.put("busiAct", DictCodeListExt3.业务动作_投资指令.getValue());
+
+        String ps = entity.getPs();
+        if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps) || DictCodeListExt3.交易方向_首期.getValue().equals(ps)) {
+            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_协议回购首期.getValue());
+        } else if (DictCodeListExt3.交易方向_中途换券.getValue().equals(ps)) {
+            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_协议回购中途换券.getValue());
+        } else if (DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)) {
+            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_协议回购提前购回.getValue());
+        } else if (DictCodeListExt3.交易方向_到期购回.getValue().equals(ps)) {
+            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_协议回购到期购回.getValue());
+        } else if (DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)) {
+            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_协议回购到期续作.getValue());
+        } else if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
+            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_协议回购解除质押.getValue());
+        }
+
+        /**
+         * 交易方向 TODO
+         *
+         * "IF 指令.回购类型 = 正回购 THEN 数据字典.交易方向.正回购
+         * IF 指令.回购类型 = 逆回购 THEN 数据字典.交易方向.逆回购"
+         */
+        resultMap.put("ps", DictCodeListExt3.交易方向_正回购.getValue());
+
+        // 清算速度
+        resultMap.put("settleSpeed", null);
+
+        // 结算方式
+        resultMap.put("deliveryType", null);
+
+        // 交易平台
+        resultMap.put("tradePlace", null);
+
+        if (CollectionUtils.isNotEmpty(entity.getPortfolioList())) {
+            PositionRequestBaseBean bean;
+
+            // 首期组合现金数据集
+            if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)
+                    || DictCodeListExt3.交易方向_首期.getValue().equals(ps)
+                    || DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)
+                    || (DictCodeListExt3.交易方向_到期购回.getValue().equals(ps))) {
+                List<Map<String, Object>> list = new ArrayList<>(4);
+                for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
+                    bean = new PositionRequestBaseBean(item);
+                    bean.setSecAmount(null);
+
+                    Map<String, Object> map = BeanUtil.object2Map(bean);
+                    list.add(map);
+                }
+                resultMap.put("ptlCashList", list);
+            }
+
+            // 轧差组合现金数据集
+            if (DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)) {
+                List<Map<String, Object>> list = new ArrayList<>(4);
+                for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
+                    bean = new PositionRequestBaseBean(item);
+                    bean.setSecAmount(null);
+                    // 交易金额 TODO
+                    // "IF 回购类型 = 正回购 THEN 指令.到期续作金额 - 指令.首期的到期结算金额
+                    // IF 回购类型 = 逆回购  and 成交编号找不到对应的首期 THEN 指令.到期续作金额
+                    // IF 回购类型 = 逆回购  and 成交编号找到对应的首期 THEN  指令.到期续作金额 - 指令.首期的到期结算金额"
+                    if (DictCodeListExt3.交易方向_正回购.getValue().equals(resultMap.get("ps"))) {
+                        bean.setCashAmount(null);
+                    } else if (DictCodeListExt3.交易方向_逆回购.getValue().equals(resultMap.get("ps"))) {
+                        // 成交编号
+
+                    }
+
+                    Map<String, Object> map = BeanUtil.object2Map(bean);
+                    //融入券券面总额
+                    map.put("integrateSecAmount", null);
+                    //本方券券面总额 指令对应组合.指令数量*100
+                    map.put("ownSecAmount", null);
+
+                    list.add(map);
+                }
+                resultMap.put("ptlOffsetCashList", list);
+            }
+
+            // 质押券数据集	ptlSecList
+            if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
+                List<Map<String, Object>> list = new ArrayList<>(4);
+                for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
+                    bean = new PositionRequestBaseBean(item);
+                    // 债券代码 指令.质押券的金融产品代码 TODO
+                    bean.setFinprodId(null);
+                    // 券面总额 指令.质押券数量*100
+                    bean.setSecAmount(null);
+
+                    Map<String, Object> map = BeanUtil.object2Map(bean);
+                    //融入券券面总额
+                    map.put("integrateSecAmount", null);
+                    //本方券券面总额 指令.质押券数量*100
+                    map.put("ownSecAmount", bean.getSecAmount());
+
+                    list.add(map);
+                }
+                resultMap.put("ptlSecList", list);
+            }
+
+            // 解除质押券数据集	ptlRelieveSecList
+            if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps) || DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)) {
+                List<Map<String, Object>> list = new ArrayList<>(4);
+                for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
+                    bean = new PositionRequestBaseBean(item);
+                    // 债券代码 指令.质押券的金融产品代码 TODO
+                    bean.setFinprodId(null);
+                    // 券面总额 指令.质押券数量*100
+                    bean.setSecAmount(null);
+
+                    Map<String, Object> map = BeanUtil.object2Map(bean);
+                    //融入券券面总额
+                    map.put("integrateSecAmount", null);
+                    //本方券券面总额 指令.质押券数量*100
+                    map.put("ownSecAmount", bean.getSecAmount());
+
+                    list.add(map);
+                }
+                resultMap.put("ptlRelieveSecList", list);
             }
         }
     }

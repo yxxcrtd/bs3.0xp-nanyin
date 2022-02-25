@@ -58,6 +58,11 @@ public final class PositionConstant {
     public static final String INTERF_TYPE_REPO001 = "REPO001";
 
     /**
+     * 协议回购
+     */
+    public static final String INTERF_TYPE_REPO002 = "REPO002";
+
+    /**
      * 竞价回购
      */
     public static final String INTERF_TYPE_STOCK001 = "STOCK001";
