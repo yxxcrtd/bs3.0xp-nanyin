@@ -535,11 +535,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				EtrComponentFactory.getComponentService(EtrBondRepoBiddingDto.class).entrustEdit(etrBondRepoBiddingDto);
 			}
 		}
-		// 自动分发数据入库 add by yufei 20200808 start
-		if(!StringUtil.isEmptyList(entity.getEtrDistributeList())){
-			baseEtrInvestInfoService.distributeDelegate(entity.getEtrDistributeList());
-		}
-		// 自动分发数据入库 add by yufei 20200808 end
 		// add by tanxuan on 20200514 指令分发推送信息到交易系统
 		if (DictCodeList.是否_是.getValue().equals(isPushMsg)) {
 			Map<String, Object> param = new HashMap<>();
@@ -571,6 +566,11 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				}
 			}
 		}
+		// 自动分发数据入库 add by yufei 20200808 start
+		if(!StringUtil.isEmptyList(entity.getEtrDistributeList())){
+			baseEtrInvestInfoService.distributeDelegate(entity.getEtrDistributeList());
+		}
+		// 自动分发数据入库 add by yufei 20200808 end
 		if(!StringUtil.isEmptyList(baseEtrInvestInfoDto.getEtrEntrustDetailList())) {
 			etrEntrustDetailMapper.deleteByEntrustId(baseEtrInvestInfoDto.getEtrEntrustDetailList().get(0).getEntrustId());
 			for (EtrEntrustDetail etrEntrustDetail:baseEtrInvestInfoDto.getEtrEntrustDetailList()) {
