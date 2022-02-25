@@ -20,6 +20,7 @@ import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
 import com.joyintech.tams.cfets.etrdispatcher.service.CfetsEtrDispatcherService;
+import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtrIbBondinfoService;
 import com.joyintech.tams.common.base.dao.*;
@@ -125,6 +126,8 @@ public class IbuQuoteBondService extends BaseService {
 
     @Autowired(required = false)
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
+    @Autowired
+    private CfetsEtrIbBondinfoMapper cfetsetrIbBondinfoMapper;
     /**
      * 风险试算check
      * @param entity
@@ -322,13 +325,20 @@ public class IbuQuoteBondService extends BaseService {
                 cfetsBondDealQuoteCommonDto.setUnitFprice(cfetsBondDealQuoteCommonDto.getPrice());
                 cfetsBondDealQuoteCommonDto.setCpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(cfetsBondDealQuoteCommonDto.getPrice(),cfetsBondDealQuoteCommonDto.getShareAmt()),new BigDecimal(100),2));
                 cfetsBondDealQuoteCommonDto.setFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(cfetsBondDealQuoteCommonDto.getUnitFprice(),cfetsBondDealQuoteCommonDto.getShareAmt()),new BigDecimal(100),2));
-            }else{
+            }/*else{
                 if(null!=finExercisePlan){
                     cfetsBondDealQuoteCommonDto.setExercisePlan(true);
                 }else{
                     cfetsBondDealQuoteCommonDto.setExercisePlan(false);
                 }
-            }
+            }*/
+
+            //判断未来是否有行权计划
+            Map<String, Object> paramExer =new HashMap<>();
+            paramExer.put("platDate",DateUtil.platDateFromCache());
+            paramExer.put("finprodId",cfetsBondDealQuoteCommonDto.getFinprodId());
+            Boolean flag=cfetsetrIbBondinfoMapper.queryAssetIsRight(paramExer);
+            cfetsBondDealQuoteCommonDto.setExercisePlan(flag);
 
             //登记本方交易员应默认当前登录用户姓名
             cfetsBondDealQuoteCommonDto.setQuoteMySideTrader(cfetsBondDealQuoteCommonDto.getMySideTrader());

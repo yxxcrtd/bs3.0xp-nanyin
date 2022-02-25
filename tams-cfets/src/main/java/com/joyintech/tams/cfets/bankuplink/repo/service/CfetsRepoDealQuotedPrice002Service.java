@@ -37,8 +37,11 @@ import com.joyintech.system.base.dao.SysWflBusinessListMapper;
 import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.exception.PositionException;
+import com.joyintech.tams.business.common.pojo.BaseMap;
+import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepo003Mapper;
 import com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepoMapper;
@@ -737,7 +740,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             errorList.add(new ValidMessage("请输入对手方"));
         }
         if (StringUtil.isNotEmpty(entity.getMySide())
-                &&StringUtil.isNotEmpty(entity.getMySideTrader())) {
+                && StringUtil.isNotEmpty(entity.getMySideTrader())) {
             String userId = joyinbusinessCommonService.findUserByMySideTrader(entity.getMySideTrader(), entity.getMySide());
             if (!StringUtil.isNotEmpty(userId)) {
                 errorList.add(new ValidMessage("选择的本方交易员未与系统用户关联，请先去【用户管理】关联"));
@@ -989,14 +992,13 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         insertWflRepoDealQuote(entity);
         // 发头寸
         String systemAct = this.handSystemAct(entity);
-        try {
-            sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct);
-        }catch (PositionException e){
-
+        this.sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct, null);
+        if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+            com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto dto
+                    = this.investDto2ServiceDto(entity);
+            dto.setIsExistNew(DictCodeList.是否_是.getValue());
+            oldCfetsRepoDealQuotedPrice001Service.doInsetOrUpdateForPtlPositionHold(dto);
         }
-//        if (StringUtil.isNotEmpty(type)) {
-//            throw new RuntimeException("cs by jp");
-//        }
     }
 
     /**
@@ -1009,16 +1011,32 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 && !StringUtil.equals("delete", entity.getOperatorType())) {
             // 重新insert
             insertWflRepoDealQuote(entity);
-            // 发头寸
-            if (StringUtil.isNotEmpty(entity.getWorkflowId())) {
-                SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
-                String systemAct = DictCodeListExt3.系统动作_新建.getValue();
-                if (StringUtil.equals(sysWflBusinessList.getProcessState(), DictCodeList.流程状态_已退回.getValue())) {
-                    systemAct = DictCodeListExt3.系统动作_修改.getValue();
-                    sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct);
-                } else {
-                    sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct);
+            String confirmOk = RequestUtil.getParam("confirmOk");
+            try {
+                // 发头寸
+                if (StringUtil.isNotEmpty(entity.getWorkflowId())) {
+                    SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
+                    String systemAct = DictCodeListExt3.系统动作_新建.getValue();
+                    if (StringUtil.equals(sysWflBusinessList.getProcessState(), DictCodeList.流程状态_已退回.getValue())) {
+                        systemAct = DictCodeListExt3.系统动作_修改.getValue();
+                        sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct, confirmOk);
+                    } else {
+                        sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct, confirmOk);
+                    }
                 }
+            } catch (PositionException e) {
+                Message message = PositionUtil.ajaxErrorReturn(e);
+                BaseMap bm = (BaseMap) message.getData();
+                String code = (String) bm.get("code");
+                String messageStr = JsonUtils.json2Object((String) bm.get("message").toString(), String.class);
+                if (StringUtil.isEmpty(confirmOk)
+                        && StringUtil.equals(PositionHttpRequest.CODE_BUSI_RK, code)) {
+                    WorkFlowUtil.showMessage(messageStr, MessageType.确认消息);
+                }
+                if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_YK, code)) {
+                    WorkFlowUtil.showMessage(messageStr, MessageType.错误消息);
+                }
+                throw new PositionException(messageStr);
             }
             ProcessMark newEntity;
             try {
@@ -1248,7 +1266,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         IbuQuoteCrepDto ibuQuoteCrepDto = inputbean.getIbuQuoteCrepDto();
         Long version = ibuQuoteCrepDto.getVersion();
         Long bVersion = ibuQuoteCrepDto.getbVersion();
-        inputbean.setVersion(version,bVersion);
+        inputbean.setVersion(version, bVersion);
 
         // 对话报价查询
         boolean flag = StringUtil.equals(exeTypeIBU, com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行操作类型_本方回复成交.getValue())
@@ -2057,7 +2075,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
      * @author jiangpeng
      * @date 2021/12/28 20:49
      */
-    private void sendPositionMethod(CfetsRepoDealQuotedPrice001Dto entity, String flowStatus, String decisionAct, String systemAct) {
+    private void sendPositionMethod(CfetsRepoDealQuotedPrice001Dto entity, String flowStatus, String decisionAct, String systemAct, String confirmOk) {
         List<CfetsEtrIbRepoPosPortfolioCashRequest> ptlCashList = new ArrayList<>();
         List<CfetsEtrIbRepoPosPortfolioSecRequest> ptlSecList = new ArrayList<>();
 
@@ -2110,8 +2128,10 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         req.setWorkFlowId(entity.getWorkflowId());
         req.setRepoPledgeModel(CacheUtil.getSysParam("repo_pledge_model"));
         String balanceCheck = DictCodeList.是否_是.getValue();
-        if (StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(), "Y")) {
-            balanceCheck = "N";
+        if ((StringUtil.isNotEmpty(entity.getSoftSkipMode())
+                && StringUtil.equals(entity.getSoftSkipMode(), DictCodeList.是否_是.getValue()))
+                || StringUtil.isNotEmpty(confirmOk)) {
+            balanceCheck = DictCodeList.是否_否.getValue();
         }
         req.setBalanceCheck(balanceCheck);
         req.setBusiType(DictCodeListExt3.头寸业务类型_质押式回购首期.getValue());

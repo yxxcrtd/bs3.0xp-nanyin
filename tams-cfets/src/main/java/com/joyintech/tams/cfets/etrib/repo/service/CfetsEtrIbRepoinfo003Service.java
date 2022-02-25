@@ -415,15 +415,15 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
      */
     @Override
     public void doInsert(CfetsEtribRepoInfo003Dto entity, OperationType operateType) {
-    	if ("submit".equals(entity.getOperateType())) {
-    		if (CollectionUtils.isNotEmpty(entity.getEtrInvestRepoInfoDtos())) {
+        if ("submit".equals(entity.getOperateType())) {
+            if (CollectionUtils.isNotEmpty(entity.getEtrInvestRepoInfoDtos())) {
                 for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
-                    WFlowCommonService.insertEtrEntrustRe(dto.getEntrustId(),entity.getTotalEtrustId());
+                    WFlowCommonService.insertEtrEntrustRe(dto.getEntrustId(), entity.getTotalEtrustId());
                     dto.setWorkflowId(entity.getWorkflowId());
                     doInsertFlow(dto);
                 }
                 //发送头寸
-                sendPositionMethod(entity,StringUtil.equals(entity.getSystemAct(),DictCodeListExt3.系统动作_新建.getValue())?true:false);
+                sendPositionMethod(entity, StringUtil.equals(entity.getSystemAct(), DictCodeListExt3.系统动作_新建.getValue()) ? true : false, null);
             }
             List<EntrustCommonDto> entrustCommonDtos = this.getEtrExecuteEntity(entity);
             for (EntrustCommonDto entrustCommonDto : entrustCommonDtos) {
@@ -444,6 +444,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         if("save".equals(entity.getOperateType())){
             return;
         }
+        String confirmOk = RequestUtil.getParam("confirmOk");
         if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
             boolean isSubmit = true;
            /* for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
@@ -455,22 +456,37 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                     isSubmit = false;
                 }
             }*/
-            SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
-            if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
-                isSubmit = false;
+            try {
+                SysWflBusinessList sysBus = sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
+                if (null != sysBus && StringUtil.equals(sysBus.getProcessState(), DictCodeList.流程状态_已退回.getValue())) {
+                    isSubmit = false;
+                }
+                WFlowCommonService.deleteFlow(entity.getWorkflowId());
+                for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
+                    dto.setWorkflowId(entity.getWorkflowId());
+                    doInsertFlow(dto);
+                }
+                //发送头寸
+                sendPositionMethod(entity, isSubmit, confirmOk);
+                olePositionDeal(entity);
+            } catch (PositionException e) {
+                Message message = PositionUtil.ajaxErrorReturn(e);
+                BaseMap bm = (BaseMap) message.getData();
+                String code = (String) bm.get("code");
+                String messageStr = JsonUtils.json2Object((String) bm.get("message").toString(), String.class);
+                if (StringUtil.isEmpty(confirmOk)
+                        && StringUtil.equals(PositionHttpRequest.CODE_BUSI_RK, code)) {
+                    WorkFlowUtil.showMessage(messageStr, MessageType.确认消息);
+                }
+                if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_YK, code)) {
+                    WorkFlowUtil.showMessage(messageStr, MessageType.错误消息);
+                }
+                throw new PositionException(messageStr);
             }
-            WFlowCommonService.deleteFlow(entity.getWorkflowId());
-            for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
-                dto.setWorkflowId(entity.getWorkflowId());
-                doInsertFlow(dto);
-            }
-            //发送头寸
-            entity.setSoftSkipMode("Y");
-            sendPositionMethod(entity,isSubmit);
         }
     }
-     
-    private  void sendPositionMethod(CfetsEtribRepoInfo003Dto entity,boolean isSubmit){
+
+    private  void sendPositionMethod(CfetsEtribRepoInfo003Dto entity,boolean isSubmit,String confirmOk){
         List<CfetsEtrIbRepoPosPortfolioCashRequest> ptlCashList=new ArrayList<>();
         List<CfetsEtrIbRepoPosPortfolioSecRequest> ptlSecList=new ArrayList<>();
         for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
@@ -518,8 +534,10 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
         req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
         String balanceCheck="Y";
-        if(StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(),"Y")){
-            balanceCheck="N";
+        if ((StringUtil.isNotEmpty(entity.getSoftSkipMode())
+                && StringUtil.equals(entity.getSoftSkipMode(), DictCodeList.是否_是.getValue()))
+                || StringUtil.isNotEmpty(confirmOk)) {
+            balanceCheck = DictCodeList.是否_否.getValue();
         }
         req.setRepoPledgeModel(CacheUtil.getSysParam("repo_pledge_model"));
         req.setBalanceCheck(balanceCheck);
@@ -693,6 +711,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                             //组合代码相同
                             PledgeBondInfoDto pledgeBondInfoDto =new PledgeBondInfoDto();
                             BeanUtil.copyPropertiesIgnoreNull(pledgeBondInfoDto, cfetsPledgeBondInfoDto);
+                            pledgeBondInfoDto.setBondCode(cfetsPledgeBondInfoDto.getFinprodMarketId());
                             pledgeBondInfoDto.setPledgeRatio(cfetsPledgeBondInfoDto.getScale());
                             pledgeBondInfoDto.setPledgeRatio(cfetsPledgeBondInfoDto.getScale());
                             pledgeBondList.add(pledgeBondInfoDto);
