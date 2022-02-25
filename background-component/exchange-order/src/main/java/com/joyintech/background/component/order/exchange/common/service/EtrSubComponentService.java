@@ -24,6 +24,8 @@ import com.joyintech.background.component.order.exchange.database.dao.EntrustCom
 import com.joyintech.background.component.order.exchange.database.entity.EntrustAddComponent;
 import com.joyintech.background.component.order.exchange.database.entity.EntrustComponent;
 
+import java.util.Date;
+
 /**
  * 子组件
  * 
@@ -97,6 +99,9 @@ public abstract class EtrSubComponentService<V extends EtrBaseDto> implements Et
         // 登录指令表
         etrMapper.insertSelective(etrEntity);
         // 登录指令附属表
+        if (etrAddEntity!= null&&etrAddEntity.getTransmitTime()==null) {
+            etrAddEntity.setTransmitTime(new Date());
+        }
         etrAddMapper.insertSelective(etrAddEntity);
         // 个别登录
         doInsert(dto);

@@ -292,7 +292,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      *
      * @return 联想文本框
      */
-    @ApiOperation(value = "获取到期结算日", notes = "获取到期结算日")
+    @ApiOperation(value = "获取面值", notes = "获取面值")
     @ResponseBody
     @PostMapping("/getFaceValue")
     public Message<String> getFaceValue(@RequestBody  Map<String, Object> pageParam) {

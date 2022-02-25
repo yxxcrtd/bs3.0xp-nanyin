@@ -52,6 +52,7 @@ import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.position.dto.PostionParameter;
 import com.joyintech.tams.invest.common.position.service.CommonPositionService;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
@@ -139,6 +140,9 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 
     @Autowired
     private CommonPositionService commonPositionService;
+
+    @Autowired
+    private TrdCommonBaseService trdCommonBaseService;
 
     public static final String ENTRUST_RECORD_MODIFY = "modify";
     
@@ -2075,6 +2079,11 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
      * @return
      */
     public EtrExchangeAgreRepTrade001Dto preEntity(EtrExchangeAgreRepTrade001Dto dto) {
+        // 单位面值
+        if (dto.getPledgeFaceValue() == null && StringUtil.isNotBlank(dto.getFinprodId())) {
+            dto.setPledgeFaceValue(trdCommonBaseService.getFaceValue(dto.getFinprodId(), iPlatformDate.getSysDate()));
+        }
+
         if(!StringUtil.isNotEmpty(dto.getEntrustBussType())) {
             if(DictCodeListExt3.交易方向_提前购回.getValue().equals(dto.getPs())){
                 dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_协议回购提前购回指令.getValue());

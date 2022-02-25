@@ -34,6 +34,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade001Dto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.MinPirceDto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdOthCodeInfoDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -977,6 +978,22 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			String msg ="";
 			String businessType = etrExchangeTrade001CommonService.setEntrustBussType(dto);
 			dto.setBusinessTypeName(SysDataUtil.getNameFromDataDict(DictCode.共通业务类型, businessType));
+			if (StringUtil.equals("save", dto.getOperateType())) {  //保存没有check和任何限制
+				//业务编号生成规则参数
+				ProcessParameter<EtrExchangeTradeSaveRequest> processParameter = new ProcessParameter<EtrExchangeTradeSaveRequest>();
+				WorkFlowParameter<EtrExchangeTradeSaveRequest> params = etrExchangeTrade001CommonService.getWorkFlowParameter(dto);
+				params.setPageId(dto.getPageId());
+				params.setElementId(dto.getElementId());
+				params.setBusinessType(businessType);
+				params.setBusinessCode(dto.getEntrustId());
+				String entrustIdName=StringUtils.isNotEmpty(dto.getEntrustId())?dto.getEntrustId():"";
+				params.setComment(entity -> getMessage("EtrExchangeTrade003.entrustId") + "(" + entrustIdName + ")"
+						+ "-" + "业务类型"+ "(" + entity.getBusinessTypeName() + ")-"
+						+ "平台日" + "(" + DateUtil.format(iPlatformDate.getSysDate()) + ")");
+				processParameter.setWorkFlowParameter(params);
+				msg = etrExchangeTrade001CommonService.start(processParameter, dto);
+				return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
+			}
 			Map<String,List<EtrExchangeTradePortfolioRequest>> groupMap= dto.getPortfolioList().stream().collect(
 					Collectors.groupingBy(item->item.getAcctNo()));			//如果分组Map，key的数量>1,说明是多组合指令，key的数量=1,则为系列户指令
 			if(groupMap.keySet().size() == 1 && dto.getPortfolioList().size()>1) {

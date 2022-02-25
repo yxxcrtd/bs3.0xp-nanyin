@@ -25,6 +25,13 @@ public class CfetsSearchInfoRequest {
     @ApiModelProperty(name="dateType",value="时间类型",example="历史：01")
     private String dateType;
 
+    @ApiModelProperty(name="initValue",value="初始化值",example="历史：01")
+    private String initValue;
+
+    private Integer page = 1;
+
+    private Integer length = 20;
+
 
     public String getSearch() {
         return search;
@@ -80,5 +87,29 @@ public class CfetsSearchInfoRequest {
 
     public void setDateType(String dateType) {
         this.dateType = dateType;
+    }
+
+    public String getInitValue() {
+        return initValue;
+    }
+
+    public void setInitValue(String initValue) {
+        this.initValue = initValue;
+    }
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getLength() {
+        return length;
+    }
+
+    public void setLength(Integer length) {
+        this.length = length;
     }
 }

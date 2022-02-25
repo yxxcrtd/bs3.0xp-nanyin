@@ -35,8 +35,8 @@ import java.util.List;
 @ApiModel(value="质押式协议回购指令查询请求参数",description="质押式协议回购指令查询请求参数")
 public class EtrExchangeAgreRepTrade003RequestDto{
 
-//    @ApiModelProperty(name="entrustStatus",value="指令状态")
-//    private String entrustStatus;
+    @ApiModelProperty(name="entrustStatus",value="指令状态")
+    private String entrustStatus;
 
     @ApiModelProperty(name="pageMode",value="分页对象",example="{pageSize: 10,pageNo: 1, sort: 'name', direction: 'asc'}")
     private PageMode pageMode;
@@ -124,13 +124,13 @@ public class EtrExchangeAgreRepTrade003RequestDto{
         this.manager = manager;
     }
 
-    //    public String getEntrustStatus() {
-//        return entrustStatus;
-//    }
-//
-//    public void setEntrustStatus(String entrustStatus) {
-//        this.entrustStatus = entrustStatus;
-//    }
+    public String getEntrustStatus() {
+        return entrustStatus;
+    }
+
+    public void setEntrustStatus(String entrustStatus) {
+        this.entrustStatus = entrustStatus;
+    }
 
     public String getEntrustId() {
         return entrustId;
