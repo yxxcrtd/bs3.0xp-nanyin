@@ -483,6 +483,7 @@ public class EntrustManagement extends BaseService {
     public Message<PageInfo<EntrustQueryBean>> queryAllEntrustForPage(PageEntrustInfoRequest request) {
         String userId = request.getUserId();
         String portfolioId = request.getPortfolioId();
+        request.getPageMode().setPageSize(99999);
         //组合权限查询
         List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {

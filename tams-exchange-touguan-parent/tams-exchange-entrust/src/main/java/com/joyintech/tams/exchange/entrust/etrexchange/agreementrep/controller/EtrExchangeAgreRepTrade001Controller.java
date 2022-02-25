@@ -454,6 +454,10 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
     @PostMapping("check")
     public Message<AjaxResult> check(@RequestBody @Validated() EtrExchangeAgreRepTrade001Dto dto,
                             BindingResult result) throws Exception{
+        if (!StringUtil.equals("submit", dto.getOperateType())) {
+            return new Message<AjaxResult>().success().setData(commonCheck(result, dto.getOperateType()));
+        }
+
         if (result != null && result.hasErrors()) {
             return new Message<AjaxResult>().success().setData(new AjaxResult(result));
         }
