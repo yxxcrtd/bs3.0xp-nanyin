@@ -766,7 +766,7 @@
             #{item.createUser,jdbcType=VARCHAR},
             NOW(),
             #{item.updateUser,jdbcType=VARCHAR},
-            sysdatte,
+            sysdate,
             #{item.deptCode,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR},
             #{item.dataSource,jdbcType=VARCHAR},
             #{item.privatefundFlag,jdbcType=VARCHAR},
@@ -973,7 +973,7 @@
             #{item.createUser,jdbcType=VARCHAR},
             NOW(),
             #{item.updateUser,jdbcType=VARCHAR},
-            sysdatte,
+            NOW(),
             #{item.deptCode,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR},
             #{item.dataSource,jdbcType=VARCHAR},
             #{item.privatefundFlag,jdbcType=VARCHAR},
@@ -2013,7 +2013,16 @@
             and DATE_FORMAT(status_date,'%Y-%m-%d') = #{cdate,jdbcType=VARCHAR}
         </if>
     </select>
-    
+    <select id="selectAssetCodeByAssetTypePtl" resultType="java.lang.String">
+        select PORTFOLIO_ID
+        from PTL_PORTFOLIO
+        where  PORTFOLIO_TYPE = '02'
+        union all
+        select FINPROD_MARKET_ID
+        from FIN_PRODUCT
+        where FINPROD_TYPE = 'F26'
+        AND FINPROD_TYPE2 = 'F28'
+    </select>
   
     <select id="selectAssetCodeBySysdate" parameterType="java.util.Map" resultType="java.lang.String">
         select ASSET_CODE
@@ -2501,7 +2510,7 @@
         SELECT
         TEMP.GRADERESULT as GRADERESULT,
         TEMP.OCODE AS OCODE,
-        rank() over (partition by TEMP.OCODE order by rownum) rk
+        rank() over (partition by TEMP.OCODE order by rk) rk
         FROM(
         <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper.searchProductRatingSql"/>
         )
@@ -7343,12 +7352,18 @@
         detail.REP_SECTYPE CHB_SECTYPE,
         detail.REP_ISSUE_MODE ISSUE_MODE,
         null PARTY_GRADE,
-        <!--         decode(ifnull(assetother.REP_INSTIT_SIZE,detail.REP_PARTY_TYPE1),'99','01',ifnull(assetother.REP_INSTIT_SIZE,detail.REP_PARTY_TYPE1))  INSTIT_SIZE, -->
-        case when detail.rep_party_type1='01' and assetother.rep_instit_size='01' then '01'
-        when detail.rep_party_type1='01' and assetother.rep_instit_size='02' then '03'
-        when detail.rep_party_type1='01' and assetother.rep_instit_size='03' then '04'
-        when detail.rep_party_type1='02' then '02'
-        when detail.rep_party_type1='99' then '99'
+        <!--         decode(NVL(assetother.REP_INSTIT_SIZE,detail.REP_PARTY_TYPE1),'99','01',NVL(assetother.REP_INSTIT_SIZE,detail.REP_PARTY_TYPE1))  INSTIT_SIZE, -->
+        <!-- case when detail.rep_party_type1='01' and assetother.rep_instit_size='01' then '01'
+         when detail.rep_party_type1='01' and assetother.rep_instit_size='02' then '03'
+         when detail.rep_party_type1='01' and assetother.rep_instit_size='03' then '04'
+         when detail.rep_party_type1='02' then '02'
+         when detail.rep_party_type1='99' then '99'
+         end as instit_size,-->
+        case when addq.party_type1='01' then '01'
+        when addq.party_type1='02' then '03'
+        when addq.party_type1='03' then '04'
+        when addq.party_type1='04' then '02'
+        when addq.party_type1='05' then '99'
         end as instit_size,
         detail.REP_PARTY_TYPE1 PARTY_TYPE1,
         detail.REP_PARTY_TYPE3 PARTY_TYPE3,
@@ -7512,13 +7527,15 @@
         on info.ISSUER=customerinfo.CUSTOMER_ID
         left join REP_ASSET_OTHER ASSETOTHER
         on ASSETOTHER.REP_FINPROD_ID=info.FINPROD_ID
+        left join FIN_PRODUCT_ADD fpd
+        on detail.SEC_ID = fpd.appear_market_id
         <!--获取主体评级 -->
         left join(
         select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
         SELECT
         TEMP.GRADERESULT as GRADERESULT,
         TEMP.OCODE AS OCODE,
-        rank() over (partition by TEMP.OCODE order by rownum) rk
+        rank() over (partition by TEMP.OCODE order by rk) rk
         FROM(
         <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper.searchProductRatingSql"/>
         )
@@ -7531,6 +7548,7 @@
         WHERE 1 =1
         and ifnull(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         and ASSET.IS_REP_TARGET = 'Y'
+        and fpd.finprod_id is null
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( ifnull(asset.UPDATE_TIME,asset.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or ifnull(info.UPDATE_TIME,info.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
@@ -8360,7 +8378,18 @@
         null CHB_SECTYPE,
         null ISSUE_MODE,
         null PARTY_GRADE,
-        null INSTIT_SIZE,
+        <!-- case when detail.rep_party_type1='01' and assetother.rep_instit_size='01' then '01'
+ when detail.rep_party_type1='01' and assetother.rep_instit_size='02' then '03'
+ when detail.rep_party_type1='01' and assetother.rep_instit_size='03' then '04'
+ when detail.rep_party_type1='02' then '02'
+ when detail.rep_party_type1='99' then '99'
+ end as INSTIT_SIZE,-->
+        case when addq.party_type1='01' then '01'
+        when addq.party_type1='02' then '03'
+        when addq.party_type1='03' then '04'
+        when addq.party_type1='04' then '02'
+        when addq.party_type1='05' then '99'
+        end as instit_size,
         null PARTY_TYPE1,
         null PARTY_TYPE3,
         null PARTY_TYPE2,
@@ -8528,8 +8557,11 @@
         left join REP_ASSET_OTHER ASSETOTHER
         on ASSETOTHER.REP_FINPROD_ID=info.FINPROD_ID
         WHERE 1 =1
+        left join FIN_PRODUCT_ADD fpd
+        on detail.rep_shares_id = fpd.appear_market_id
         and ifnull(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         and ASSET.IS_REP_TARGET = 'Y'
+        and fpd.finprod_id is null
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( ifnull(asset.UPDATE_TIME,asset.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or ifnull(info.UPDATE_TIME,info.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
@@ -11312,6 +11344,7 @@
         WHERE 1 = 1
         and fp.branch = 0
         and fp.finprod_type2 in ('F02', 'F03', 'F04', 'F05')
+        and (fp.data_source is null or fp.data_source!='01')
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( ifnull(fp.UPDATE_TIME,fp.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or ifnull(info.UPDATE_TIME,info.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
@@ -11962,7 +11995,22 @@
 				#{item.financialComissue,jdbcType=VARCHAR} FINANCIAL_COMISSUE,
 				#{item.bankSecCapital,jdbcType=VARCHAR} BANK_SEC_CAPITAL,
 				#{item.bankSecPrefer,jdbcType=VARCHAR}  BANK_SEC_PREFER,
-				#{item.bankSecPerpetual,jdbcType=VARCHAR} BANK_SEC_PERPETUAL
+                #{item.bankSecPerpetual,jdbcType=VARCHAR} BANK_SEC_PERPETUAL,
+                #{item.bankSecKzzq,jdbcType=VARCHAR} BANK_SEC_KZZQ,
+                #{item.bankSecZxzq,jdbcType=VARCHAR} BANK_SEC_ZXZQ,
+                #{item.isunlisted,jdbcType=VARCHAR} ISUNLISTED,
+                #{item.isBzhpj,jdbcType=VARCHAR} IS_BZHPJ,
+                <!-- add by zhangliang G06升级字段新增  start -->
+                #{item.chbIssuerId,jdbcType=VARCHAR} CHB_ISSUER_ID,
+                #{item.chbManagerId,jdbcType=VARCHAR} CHB_MANAGER_ID,
+                #{item.chbFinancierId,jdbcType=VARCHAR} CHB_FINANCIER_ID,
+                #{item.perpetualFlag,jdbcType=VARCHAR} PERPETUAL_FLAG,
+                #{item.optionFlag,jdbcType=VARCHAR} OPTION_FLAG,
+                #{item.isBjszq,jdbcType=VARCHAR} IS_BJSZQ,
+                #{item.isPerpetual,jdbcType=VARCHAR} IS_PERPETUAL,
+                #{item.isFbzb,jdbcType=VARCHAR} IS_FBZB
+                <!-- add by zhangliang G06升级字段新增  end -->
+                ,#{item.privateFlag,jdbcType=VARCHAR} PRIVATE_FLAG
                 from dual
             </foreach>
         ) TEMP
@@ -12103,7 +12151,7 @@
             CII.GOVERN_INVEST_FUND = TEMP.GOVERN_INVEST_FUND,
             CII.FUND_ENPE_NAME = TEMP.FUND_ENPE_NAME,
             CII.TRUSTEE = TEMP.TRUSTEE,
-            CII.STATUS = (case TEMP.STATUS when 'E' then 'M' else 'D' end),
+            CII.STATUS = (case TEMP.STATUS when 'N' then 'M' when 'E' then 'M' else 'D' end),
             CII.CREATE_USER = TEMP.CREATE_USER,
             /*CII.CREATE_TIME = TEMP.CREATE_TIME,*/
             CII.UPDATE_USER = TEMP.UPDATE_USER,
@@ -12171,7 +12219,22 @@
             CII.FINANCIAL_COMISSUE=TEMP.FINANCIAL_COMISSUE,
             CII.BANK_SEC_CAPITAL=TEMP.BANK_SEC_CAPITAL,
             CII.BANK_SEC_PREFER=TEMP.BANK_SEC_PREFER,
-            CII.BANK_SEC_PERPETUAL=TEMP.BANK_SEC_PERPETUAL
+            CII.BANK_SEC_PERPETUAL=TEMP.BANK_SEC_PERPETUAL,
+            CII.BANK_SEC_KZZQ=TEMP.BANK_SEC_KZZQ,
+            CII.BANK_SEC_ZXZQ=TEMP.BANK_SEC_ZXZQ,
+            CII.ISUNLISTED=TEMP.ISUNLISTED,
+            CII.IS_BZHPJ=TEMP.IS_BZHPJ,
+        <!-- add by zhangliang G06升级字段新增  start -->
+            CII.CHB_ISSUER_ID	=	TEMP.CHB_ISSUER_ID,
+            CII.CHB_MANAGER_ID	=	TEMP.CHB_MANAGER_ID,
+            CII.CHB_FINANCIER_ID	=	TEMP.CHB_FINANCIER_ID,
+            CII.PERPETUAL_FLAG	=	TEMP.PERPETUAL_FLAG,
+            CII.OPTION_FLAG	=	TEMP.OPTION_FLAG,
+            CII.IS_BJSZQ	=	TEMP.IS_BJSZQ,
+            CII.IS_PERPETUAL	=	TEMP.IS_PERPETUAL,
+            CII.IS_FBZB	=	TEMP.IS_FBZB
+        <!-- add by zhangliang G06升级字段新增  end -->
+            ,CII.PRIVATE_FLAG	=	TEMP.PRIVATE_FLAG
         <!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN 
         INSERT (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
@@ -12264,7 +12327,23 @@
         FINANCIAL_COMISSUE,
         BANK_SEC_CAPITAL,
         BANK_SEC_PREFER,
-        BANK_SEC_PERPETUAL)  
+        BANK_SEC_PERPETUAL,
+        BANK_SEC_KZZQ,
+        BANK_SEC_ZXZQ,
+        ISUNLISTED,
+        IS_BZHPJ,
+        <!-- add by zhangliang G06升级字段新增  start -->
+        CHB_ISSUER_ID,
+        CHB_MANAGER_ID,
+        CHB_FINANCIER_ID,
+        PERPETUAL_FLAG,
+        OPTION_FLAG,
+        IS_BJSZQ,
+        IS_PERPETUAL,
+        IS_FBZB
+        <!-- add by zhangliang G06升级字段新增  end -->
+        ,PRIVATE_FLAG
+        )
         values(
             TEMP.ASSET_UUID,
             TEMP.ASSET_CODE,
@@ -12466,7 +12545,22 @@
             TEMP.FINANCIAL_COMISSUE,
             TEMP.BANK_SEC_CAPITAL,
             TEMP.BANK_SEC_PREFER,
-            TEMP.BANK_SEC_PERPETUAL
+            TEMP.BANK_SEC_PERPETUAL,
+            TEMP.BANK_SEC_KZZQ,
+            TEMP.BANK_SEC_ZXZQ,
+            TEMP.ISUNLISTED,
+            TEMP.IS_BZHPJ,
+            <!-- add by zhangliang G06升级字段新增  start -->
+            TEMP.CHB_ISSUER_ID,
+            TEMP.CHB_MANAGER_ID,
+            TEMP.CHB_FINANCIER_ID,
+            TEMP.PERPETUAL_FLAG,
+            TEMP.OPTION_FLAG,
+            TEMP.IS_BJSZQ,
+            TEMP.IS_PERPETUAL,
+            TEMP.IS_FBZB
+            <!-- add by zhangliang G06升级字段新增  end -->
+            ,TEMP.PRIVATE_FLAG
         )
     </insert>
     
@@ -13235,7 +13329,21 @@
 				#{item.financialComissue,jdbcType=VARCHAR} FINANCIAL_COMISSUE,
 				#{item.bankSecCapital,jdbcType=VARCHAR} BANK_SEC_CAPITAL,
 				#{item.bankSecPerpetual,jdbcType=VARCHAR} BANK_SEC_PERPETUAL,
-				#{item.bankSecPrefer,jdbcType=VARCHAR} BANK_SEC_PREFER 
+				#{item.bankSecPrefer,jdbcType=VARCHAR} BANK_SEC_PREFER,
+            <!-- G06升级 add by qufangxu at 2021-02-03 -->
+                #{item.bankSecKzzq,jdbcType=VARCHAR} BANK_SEC_KZZQ,
+                #{item.bankSecZxzq,jdbcType=VARCHAR} BANK_SEC_ZXZQ,
+                #{item.isunlisted,jdbcType=VARCHAR} ISUNLISTED,
+                #{item.isBzhpj,jdbcType=VARCHAR} IS_BZHPJ,
+                #{item.chbIssuerId,jdbcType=VARCHAR} chb_ISSUER_ID,
+                #{item.chbManagerId,jdbcType=VARCHAR} chb_MANAGER_ID,
+                #{item.chbFinancierId,jdbcType=VARCHAR} chb_FINANCIER_ID,
+                #{item.perpetualFlag,jdbcType=VARCHAR} PERPETUAL_FLAG,
+                #{item.optionFlag,jdbcType=VARCHAR} OPTION_FLAG,
+                #{item.isBjszq,jdbcType=VARCHAR} IS_BJSZQ,
+                #{item.isPerpetual,jdbcType=VARCHAR} IS_PERPETUAL,
+                #{item.isFbzb,jdbcType=VARCHAR} IS_FBZB
+            <!-- G06升级 add by qufangxu at 2021-02-03 -->
             
             from dual
         </foreach>
@@ -13446,7 +13554,20 @@
             CII.BANK_SEC_CAPITAL=TEMP.BANK_SEC_CAPITAL,
             CII.BANK_SEC_PREFER=TEMP.BANK_SEC_PREFER,
             CII.BANK_SEC_PERPETUAL=TEMP.BANK_SEC_PERPETUAL
-            
+        <!-- G06升级 add by qufangxu at 2021-02-03 -->
+            CII.BANK_SEC_KZZQ=TEMP.BANK_SEC_KZZQ,
+            CII.BANK_SEC_ZXZQ=TEMP.BANK_SEC_ZXZQ,
+            CII.ISUNLISTED=TEMP.ISUNLISTED,
+            CII.IS_BZHPJ=TEMP.IS_BZHPJ,
+            CII.CHB_ISSUER_ID=TEMP.CHB_ISSUER_ID,
+            CII.CHB_MANAGER_ID=TEMP.CHB_MANAGER_ID,
+            CII.CHB_FINANCIER_ID=TEMP.CHB_FINANCIER_ID,
+            CII.PERPETUAL_FLAG=TEMP.PERPETUAL_FLAG,
+            CII.OPTION_FLAG=TEMP.OPTION_FLAG,
+            CII.IS_BJSZQ=TEMP.IS_BJSZQ,
+            CII.IS_PERPETUAL=TEMP.IS_PERPETUAL,
+            CII.IS_FBZB=TEMP.IS_FBZB
+        <!-- G06升级 add by qufangxu at 2021-02-03 -->
         <!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN
         INSERT (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
@@ -13539,7 +13660,22 @@
         FINANCIAL_COMISSUE,
         BANK_SEC_CAPITAL,
         BANK_SEC_PREFER,
-        BANK_SEC_PERPETUAL)
+        BANK_SEC_PERPETUAL,
+        <!-- G06升级 add by qufangxu at 2021-02-03 -->
+        BANK_SEC_KZZQ,
+        BANK_SEC_ZXZQ,
+        ISUNLISTED,
+        IS_BZHPJ,
+        CHB_ISSUER_ID,
+        CHB_MANAGER_ID,
+        CHB_FINANCIER_ID,
+        PERPETUAL_FLAG,
+        OPTION_FLAG,
+        IS_BJSZQ,
+        IS_PERPETUAL,
+        IS_FBZB
+        <!-- G06升级 add by qufangxu at 2021-02-03 -->
+        )
         values(
         TEMP.ASSET_UUID,
         TEMP.ASSET_CODE,
@@ -13742,7 +13878,22 @@
             TEMP.FINANCIAL_COMISSUE,
             TEMP.BANK_SEC_CAPITAL,
             TEMP.BANK_SEC_PREFER,
-            TEMP.BANK_SEC_PERPETUAL
+            TEMP.BANK_SEC_PERPETUAL,
+        <!-- G06升级 add by qufangxu at 2021-02-03 -->
+            TEMP.BANK_SEC_KZZQ,
+            TEMP.BANK_SEC_ZXZQ,
+            TEMP.ISUNLISTED,
+            TEMP.IS_BZHPJ,
+            TEMP.CHB_ISSUER_ID,
+            TEMP.CHB_MANAGER_ID,
+            TEMP.CHB_FINANCIER_ID,
+            TEMP.PERPETUAL_FLAG,
+            TEMP.OPTION_FLAG,
+            TEMP.IS_BJSZQ,
+            TEMP.IS_PERPETUAL,
+            TEMP.IS_FBZB
+        <!-- G06升级 add by qufangxu at 2021-02-03 -->
+        )
         )
     </insert>
 
@@ -14479,11 +14630,31 @@
         else  '' end) ORG_ASSET_TYPE2,/*原资产二级分类*/
         null ORG_ASSET_TYPE3,/*原资产三级分类*/
         addq.city buy_place/*发行人/融资人所属地区*/
+
+        NULL  BANK_SEC_CAPITAL,
+        NULL BANK_SEC_PERPETUAL,
+        NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        (case info.IS_SUS when 'Y' then '01' when 'N' then '02' else info.IS_SUS end) PERPETUAL_FLAG,
+        (case info.IS_RIGHT when 'Y' then '01' when 'N' then '02' else info.IS_RIGHT end) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB,
+        DETAIL.REP_FINANCIAL_COMISSUE FINANCIAL_COMISSUE
+
         FROM REP_ASSET_MNG_PLAN DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
         left join fin_product info
         on info.FINPROD_ID=detail.REP_FINPROD_ID
+        left join FIN_PRODUCT_TYPE infotp
+        on info.FINPROD_ID = infotp.FINPROD_ID
         left join MST_CUSTOMER_INFO_ADD addq
         on info.FINANCIER=addq.CUSTOMER_ID
         left join mst_customer_info customerinfo
@@ -14500,7 +14671,7 @@
         <![CDATA[OR ifnull(CUSTOMERINFO.UPDATE_TIME,CUSTOMERINFO.CREATE_TIME) > #{INTERFDATE,jdbcType=TIMESTAMP}]]>
         <![CDATA[or ifnull(addq.UPDATE_TIME,addq.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
     </select>
-    
+
      <select id="selectChlAssetByInterfdateBatchPsbc" parameterType="map" 
         resultMap="PsbcBaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
         SELECT null ASSET_UUID,
@@ -14723,4 +14894,64 @@
         <![CDATA[OR ifnull(CUSTOMERINFO.UPDATE_TIME,CUSTOMERINFO.CREATE_TIME) > #{INTERFDATE,jdbcType=TIMESTAMP}]]>
         <![CDATA[or ifnull(addq.UPDATE_TIME,addq.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
     </select>
+    <delete id="deleteAllChbSecRepayInfoData">
+      truncate table CHB_SEC_REPAY_INFO
+    </delete>
+
+    <insert id="insertChbSecRepayInfoData" parameterType="com.joyintech.tams.common.base.entity.ChbSecRepayInfo" >
+        insert into CHB_SEC_REPAY_INFO(SEC_ID,REPAY_DT,SEC_NM,REPAY_RATE,REPAY_NET,TRADE_MARKET,
+        REPAY_CYCLE_DAY, REPAY_MODE)
+        SELECT T1.FINPROD_MARKET_ID SEC_ID,
+        T3.VDATE REPAY_DT,
+        T1.FINPROD_ABBR SEC_NM,
+        T3.PRIN_AMT REPAY_RATE,
+        100 - (SELECT SUM(PRIN_AMT)
+        FROM FIN_CASH_PLAN
+        WHERE CASH_ID = T3.CASH_ID
+        AND VDATE &lt;= T3.VDATE) AS REPAY_NET,
+        T1.TRADE_MARKET,
+        T3.MDATE REPAY_CYCLE_DAY,
+        1 AS REPAY_MODE
+        FROM FIN_PRODUCT T1, FIN_CASH_INFO T2, FIN_CASH_PLAN T3
+        WHERE T1.FINPROD_TYPE2 = 'F01' <!--债券-->
+        AND T3.CASH_TYPE IN ('02', '03') <!--中间还本、到期还本-->
+        AND T1.FINPROD_ID = T2.FINPROD_ID
+        AND T2.CASH_ID = T3.CASH_ID
+    </insert>
+
+    <update id="updateRepAssetStatus" parameterType="com.joyintech.tams.common.base.entity.RepAssetDept">
+        UPDATE REP_ASSET_DEPT
+        SET IS_REP_TARGET = 'Y' ,
+        UPDATE_TIME = #{updateTime}
+        WHERE(
+        REP_FINPROD_ID IN (
+        SELECT
+        T1.REP_FINPROD_ID
+        FROM
+        REP_ASSET_DEPT T1
+        INNER JOIN ( SELECT DISTINCT T3.FINPROD_ID FROM TRD_PRODUCT_DEAL T3 ) T2 ON T1.REP_FINPROD_ID = T2.FINPROD_ID
+        AND T2.FINPROD_ID IS NOT NULL
+        )
+        <!-- 增加母子资管计划更新   dzh 19/4/22-->
+        or REP_FINPROD_ID IN
+        (SELECT distinct T1.P_FINPROD_ID
+        FROM FIN_PRODUCT T1
+        INNER JOIN (SELECT DISTINCT T3.FINPROD_ID
+        FROM TRD_PRODUCT_DEAL T3) T2
+        ON (T1.FINPROD_ID = T2.FINPROD_ID
+        AND T2.FINPROD_ID IS NOT NULL)
+        where     T1.P_FINPROD_ID is not null
+        )
+        <!--dzh end -->
+        <!-- 估值表导入资产 lizhi 2019/05/06 start-->
+        or REP_FINPROD_ID IN
+        (
+        SELECT distinct T1.FINPROD_ID
+        FROM RSK_VALTBL_ASSET_SUB T1
+        where t1.FINPROD_ID is not null
+        )
+        )
+        and (IS_REP_TARGET is null or IS_REP_TARGET != 'Y')
+        <!-- 估值表导入资产 lizhi 2019/05/06 end-->
+    </update>
 </mapper>
