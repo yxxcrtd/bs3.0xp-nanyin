@@ -87,7 +87,8 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      * @param entity
      */
     public void sendDelete(EtrExchangeTradeSaveRequest entity) {
-        PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(), PositionConstant.POSITION_TYPE_ETR, this.getBusiType(entity.getPs()), entity.getPs());
+    	String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), entity.getAssetType2());
+        PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(), PositionConstant.POSITION_TYPE_ETR, busiType, entity.getPs());
     }
 
     /**
@@ -96,7 +97,8 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      * @param entity
      */
     public void sendRevoke(EtrExchangeTradeOperateRequest entity) {
-        PositionHttpRequest.dorevoke(entity.getEntrustId(), PositionConstant.POSITION_TYPE_TRD, this.getBusiType(entity.getPs()), entity.getPs());
+    	String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), null);
+        PositionHttpRequest.dorevoke(entity.getEntrustId(), PositionConstant.POSITION_TYPE_TRD, busiType, entity.getPs());
     }
 
     /**
@@ -105,32 +107,17 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      * @param entity
      */
     public void sendClose(EtrExchangeTradeOperateRequest entity) {
+    	String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), null);
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());
         resultMap.put("totalTradeId", entity.getWorkflowId());
         resultMap.put("modelType", PositionConstant.POSITION_TYPE_ETR);
-        resultMap.put("busiType", this.getBusiType(entity.getPs()));
+        resultMap.put("busiType", busiType);
         resultMap.put("ps", entity.getPs());
         resultMap.put("decisionAct", DictCodeListExt3.系统动作_关闭.getValue());
         resultMap.put("systemAct", DictCodeListExt3.系统动作_关闭.getValue());
         resultMap.put("closeId", entity.getEntrustId());
         PositionHttpRequest.batchClose(resultMap);
-    }
-
-    private String getBusiType(String ps) {
-        String busiType = "";
-        if (BussinessDictCodeList.交易方向_行权回售.getValue().equals(ps)) {
-            busiType = DictCodeListExt3.头寸业务类型_债券行权交易.getValue();
-        } else if (BussinessDictCodeList.交易方向_买入.getValue().equals(ps) || BussinessDictCodeList.交易方向_卖出.getValue().equals(ps)) {
-            busiType = DictCodeListExt3.头寸业务类型_现券交易.getValue();
-        } else if (DictCodeListExt3.交易方向_配债.getValue().equals(ps)) {
-            busiType = DictCodeListExt3.头寸业务类型_配债.getValue();
-        } else if (DictCodeListExt3.交易方向_债转股.getValue().equals(ps)) {
-            busiType = DictCodeListExt3.头寸业务类型_债转股.getValue();
-        } else if (DictCodeList.交易方向_上市流通.getValue().equals(ps)) {
-            busiType = DictCodeListExt3.头寸业务类型_上市流通.getValue();
-        }
-        return busiType;
     }
 
     /**
@@ -141,11 +128,6 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      */
     private void bond002(EtrExchangeTradeSaveRequest entity, Map<String, Object> resultMap) {
         resultMap.put("interfaceType", PositionConstant.INTERF_TYPE_BOND002);
-        if (StringUtil.equals(entity.getPs(), BussinessDictCodeList.交易方向_行权回售.getValue())) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_债券行权交易.getValue());
-        } else {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_现券交易.getValue());
-        }
         resultMap.put("busiAct", DictCodeListExt3.业务动作_投资指令.getValue());
         resultMap.put("ps", entity.getPs());
 
@@ -222,27 +204,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         // 业务动作
         resultMap.put("busiAct", DictCodeListExt3.业务动作_投资指令.getValue());
 
-        /**
-         * 业务类型	见数据字典：头寸业务类型
-         *
-         * "IF 指令.交易方向 = 数据字典.交易方向.回售 THEN 数据字典. BUSI_TYPE_POSITION.债券行权交易
-         * IF 指令.交易方向 = 数据字典.交易方向.买入、卖出 THEN  数据字典. BUSI_TYPE_POSITION.现券交易
-         * IF 指令.交易方向 = 数据字典.交易方向.配债THEN  数据字典. BUSI_TYPE_POSITION.配债
-         * IF 指令.交易方向 = 数据字典.交易方向.债转股 THEN  数据字典. BUSI_TYPE_POSITION.债转股
-         * IF 指令.交易方向 = 数据字典.交易方向.上市流通 THEN  数据字典. BUSI_TYPE_POSITION.上市流通"
-         */
         String ps = entity.getPs();
-        if (BussinessDictCodeList.交易方向_行权回售.getValue().equals(ps)) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_债券行权交易.getValue());
-        } else if (BussinessDictCodeList.交易方向_买入.getValue().equals(ps) || BussinessDictCodeList.交易方向_卖出.getValue().equals(ps)) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_现券交易.getValue());
-        } else if (DictCodeListExt3.交易方向_配债.getValue().equals(ps)) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_配债.getValue());
-        } else if (DictCodeListExt3.交易方向_债转股.getValue().equals(ps)) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_债转股.getValue());
-        } else if (DictCodeList.交易方向_上市流通.getValue().equals(ps)) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_上市流通.getValue());
-        }
 
         resultMap.put("settleSpeed", parseSettleSpreed(resultMap));
 
@@ -338,16 +300,6 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         // 业务动作
         resultMap.put("busiAct", DictCodeListExt3.业务动作_投资指令.getValue());
 
-        /**
-         * 业务类型	见数据字典：头寸业务类型
-         *
-         * IF 指令.交易方向 = 数据字典.交易方向.买入、卖出 THEN  数据字典. BUSI_TYPE_POSITION.基金交易
-         */
-        String ps = entity.getPs();
-        if (BussinessDictCodeList.交易方向_买入.getValue().equals(ps) || BussinessDictCodeList.交易方向_卖出.getValue().equals(ps)) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_基金交易.getValue());
-        }
-
         resultMap.put("settleSpeed", null);
 
         // 结算方式
@@ -390,21 +342,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         // 业务动作
         resultMap.put("busiAct", DictCodeListExt3.业务动作_投资指令.getValue());
 
-        /**
-         * 业务类型	见数据字典：头寸业务类型
-         *
-         * "IF 指令.交易方向 = 数据字典.交易方向.质押券入库 THEN 数据字典. BUSI_TYPE_POSITION.通用回购债券入库
-         * IF 指令.交易方向 = 数据字典.交易方向.质押券入库 THEN 数据字典. BUSI_TYPE_POSITION.通用回购债券出库
-         * IF 指令.交易方向 = 数据字典.交易方向.首期 THEN  数据字典. BUSI_TYPE_POSITION.通用回购首期"
-         */
         String ps = entity.getPs();
-        if (DictCodeListExt3.交易方向_质押券入库.getValue().equals(ps)) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_通用回购债券入库.getValue());
-        } else if (DictCodeListExt3.交易方向_质押券出库.getValue().equals(ps)) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_通用回购债券出库.getValue());
-        } else if (DictCodeListExt3.交易方向_首期.getValue().equals(ps)) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_通用回购首期.getValue());
-        }
 
         resultMap.put("settleSpeed", null);
 
@@ -472,19 +410,6 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         resultMap.put("busiAct", DictCodeListExt3.业务动作_投资指令.getValue());
 
         String ps = entity.getPs();
-        if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps) || DictCodeListExt3.交易方向_首期.getValue().equals(ps)) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_协议回购首期.getValue());
-        } else if (DictCodeListExt3.交易方向_中途换券.getValue().equals(ps)) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_协议回购中途换券.getValue());
-        } else if (DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_协议回购提前购回.getValue());
-        } else if (DictCodeListExt3.交易方向_到期购回.getValue().equals(ps)) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_协议回购到期购回.getValue());
-        } else if (DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_协议回购到期续作.getValue());
-        } else if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_协议回购解除质押.getValue());
-        }
 
         /**
          * 交易方向 TODO
@@ -605,21 +530,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         // 业务动作
         resultMap.put("busiAct", DictCodeListExt3.业务动作_投资指令.getValue());
 
-        /**
-         * 业务类型	见数据字典：头寸业务类型
-         *
-         * "IF 指令.交易方向 = 数据字典.交易方向.买入、卖出 THEN 数据字典. BUSI_TYPE_POSITION.股票交易
-         * IF 指令.交易方向 = 数据字典.交易方向.配股 THEN 数据字典. BUSI_TYPE_POSITION.配股
-         * IF 指令.交易方向 = 数据字典.交易方向.申购 THEN 数据字典. BUSI_TYPE_POSITION.网上申购"
-         */
         String ps = entity.getPs();
-        if (BussinessDictCodeList.交易方向_买入.getValue().equals(ps) || BussinessDictCodeList.交易方向_卖出.getValue().equals(ps)) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_股票交易.getValue());
-        } else if (DictCodeListExt2.交易方向_配股.getValue().equals(ps)) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_配股.getValue());
-        } else if (DictCodeList.交易方向_申购.getValue().equals(ps)) {
-            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_网上申购.getValue());
-        }
 
         // 清算速度
         resultMap.put("settleSpeed", null);
@@ -695,6 +606,10 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         resultMap.put("balanceCheck", balanceCheck);
         resultMap.put("flowStatus", DictCodeListExt3.流程节点_流程提交.getValue());
         resultMap.put("modelType", DictCodeListExt1.子系统代码_委托.getValue());
+        
+        //设置头寸业务类型
+        String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), entity.getAssetType2());
+        resultMap.put("busiType", busiType);
 
         // 结算方式	见数据字典：结算方式
         // 调用【共通:结算方式判断】 返回.结算方式
