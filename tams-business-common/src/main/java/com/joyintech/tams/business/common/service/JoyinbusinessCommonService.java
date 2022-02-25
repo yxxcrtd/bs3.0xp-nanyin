@@ -86,6 +86,7 @@ public class JoyinbusinessCommonService extends BaseService {
         param.put("TRADE_PLACE_01",DictCodeListExt1.交易场所_银行间.getValue());
         param.put("TRADE_PLACE_02",DictCodeListExt1.交易场所_商业银行柜台.getValue());
         param.put("platDate",DateUtil.platDateFromCache());
+        param.put("initValue",dto.getInitValue());
         if(StringUtil.isNotEmpty(dto.getDealType()) && StringUtil.equals(dto.getDealType(),"01")){
             //需要查询债券资产和回购期限
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getfinprodIdOfBondAndRepo(param));
@@ -107,6 +108,7 @@ public class JoyinbusinessCommonService extends BaseService {
         Map<String, Object> param =new HashMap<>();
         param.put("search",dto.getSearch());
         param.put("platDate",DateUtil.platDateFromCache());
+        param.put("initValue",dto.getInitValue());
         if(StringUtil.isNotEmpty(dto.getPs()) && StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_赎回.getValue())){
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.selectPortfolioIdList(param));
         }

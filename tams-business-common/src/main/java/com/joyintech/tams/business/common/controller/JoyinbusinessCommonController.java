@@ -10,6 +10,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.user.service.UserService;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
+import com.joyintech.tams.business.common.dto.PageMode;
 import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
 import com.joyintech.tams.business.common.entity.JoyinDataDictEntity;
 import com.joyintech.tams.business.common.pojo.Message;
@@ -98,6 +99,22 @@ public class JoyinbusinessCommonController extends BaseController {
 		}
 	}
 
+	@ResponseBody
+	@RequestMapping("/getfinprodIdForSelect")
+	@ApiOperation(value = "债券简称列表查询", notes = "债券简称列表查询")
+	public Page<SelectOptionDto> getfinprodIdForSelect(CfetsSearchInfoRequest item) {
+		try {
+			PageMode page = new PageMode();
+			page.setPageNo(item.getPage());
+			page.setPageSize(item.getLength());
+			item.setPageMode(page);
+			return joyinbusinessCommonService.getfinprodIdForAdd(item);
+		} catch (Exception e) {
+			logger.error("查询债券简称列表异常", e);
+			return null;
+		}
+	}
+
 	@PostMapping("/selectPortfolioIdList")
 	@ApiOperation(value = "组合列表查询", notes = "组合列表查询")
 	@ResponseBody
@@ -108,6 +125,22 @@ public class JoyinbusinessCommonController extends BaseController {
 		} catch (Exception e) {
 			logger.error("查询组合列表异常", e);
 			return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
+		}
+	}
+
+	@RequestMapping("/selectPortfolioIdForSelect")
+	@ApiOperation(value = "组合列表查询", notes = "组合列表查询")
+	@ResponseBody
+	public Page<SelectOptionDto> selectPortfolioIdForSelect(CfetsSearchInfoRequest item) {
+		try {
+			PageMode page = new PageMode();
+			page.setPageNo(item.getPage());
+			page.setPageSize(item.getLength());
+			item.setPageMode(page);
+			return joyinbusinessCommonService.selectPortfolioIdList(item);
+		} catch (Exception e) {
+			logger.error("查询组合列表异常", e);
+			return null;
 		}
 	}
 
