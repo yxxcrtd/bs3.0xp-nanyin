@@ -926,7 +926,8 @@ public class IbuComponentReceiveService extends BaseService{
                                     BeanUtil.copyPropertiesIgnoreNull(cfetsRepoDealQuotedPrice003Dto, item);
                                     cfetsRepoDealQuotedPrice003Dto.setBondCode(item.getBondCode());
                                     cfetsRepoDealQuotedPrice003Dto.setPledgeNumber(ArithmeticUtil.multiply(item.getPledgeNumber(),new BigDecimal(100)));
-                                    cfetsRepoDealQuotedPrice003Dto.setPledgePrin(item.getPledgeNumber());
+                                    cfetsRepoDealQuotedPrice003Dto.setPledgePrin(ArithmeticUtil.multiply(item.getPledgeNumber(),new BigDecimal(100)));
+                                    cfetsRepoDealQuotedPrice003Dto.setFinprodId(item.getPledgeFinprodId());
                                     pledgeBondList.add(cfetsRepoDealQuotedPrice003Dto);
                                 });
                             }
