@@ -706,8 +706,12 @@ public class IbuComponentReceiveService extends BaseService{
             // 7、MQ发布消息前台订阅通过ws控制表格刷新
             // 对手方对话报价新增(我方作为回复方)，需要制定交易员推送
             cfetsQuotedCommonService.publishMQCommonHandle(quoteResultDto, true);
-            // 8、头寸处理
-//            updateRepoDialoguePosition(quoteResultDto);
+            // 8、旧头寸处理
+            if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                quoteResultDto.setIsExistNew(DictCodeList.是否_是.getValue());
+                quoteResultDto.getRepoDialogueQuote().setIsDzh(DictCodeList.是否_是.getValue());
+                this.updateRepoDialoguePosition(quoteResultDto);
+            }
             // 成交后风险处理
             ibuComponentRiskService.excuteRiskHandle(quoteResultDto);
         }
@@ -909,6 +913,8 @@ public class IbuComponentReceiveService extends BaseService{
 					dto.setTradeStatus(dto.getTradeStatus());
 					dto.setPs(dto.getPs());
                     dto.setIsMq("Y"); //mq推送标识
+                    dto.setIsDzh(quoteResultDto.getRepoDialogueQuote().getIsDzh());
+                    dto.setIsExistNew(quoteResultDto.getIsExistNew());
 					if (null != ibuQuoteCrepPledgeDtoList && ibuQuoteCrepPledgeDtoList.size() > 0) {
                         List<CfetsRepoDealQuotedPrice003Dto> pledgeBondList = new ArrayList<CfetsRepoDealQuotedPrice003Dto>();
 					    if(StringUtil.equals(quoteResultDto.getRepoDialogueQuote().getIsDzh(),"Y")){
@@ -920,6 +926,7 @@ public class IbuComponentReceiveService extends BaseService{
                                     BeanUtil.copyPropertiesIgnoreNull(cfetsRepoDealQuotedPrice003Dto, item);
                                     cfetsRepoDealQuotedPrice003Dto.setBondCode(item.getBondCode());
                                     cfetsRepoDealQuotedPrice003Dto.setPledgeNumber(ArithmeticUtil.multiply(item.getPledgeNumber(),new BigDecimal(100)));
+                                    cfetsRepoDealQuotedPrice003Dto.setPledgePrin(item.getPledgeNumber());
                                     pledgeBondList.add(cfetsRepoDealQuotedPrice003Dto);
                                 });
                             }
