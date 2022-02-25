@@ -1,9 +1,24 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.position.service;
 
+import static com.joyintech.tams.constant.DictCodeList.是否_否;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
@@ -19,14 +34,6 @@ import com.joyintech.tams.exchange.entrust.etrexchange.position.constant.Positio
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdMoreConvrateDto;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.*;
-
-import static com.joyintech.tams.constant.DictCodeList.是否_否;
 
 @Service
 public class PositionRequestServiceEtrExchangeTradeSaveRequest {
@@ -97,7 +104,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
     }
 
     /**
-     * 批量关闭时使用---批量关闭-共通接口
+     * 关闭时使用---关闭-共通接口
      *
      * @param entity
      */
@@ -183,7 +190,12 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 pltMap.put("ordSecAmount", null);
                 pltMap.put("cashAcctId", etrExchangeTradePortfolioRequest.getAcctNo());
                 pltMap.put("secAcctId", etrExchangeTradePortfolioRequest.getSecAcctId());
-                pltMap.put("secAmount", null);//TODO 根据指令单位是张还是手来处理
+                String bondTradedUnit = CacheUtil.getSysParam("bond_traded_unit");
+                if("01".equals(bondTradedUnit)) {
+                	pltMap.put("secAmount", ArithmeticUtil.multiply(entity.getEntrustNum(), new BigDecimal(100)));
+                }else if("02".equals(bondTradedUnit)) {
+                	pltMap.put("secAmount", ArithmeticUtil.multiply(entity.getEntrustNum(), new BigDecimal(1000)));
+                }
                 pltMap.put("cashAmount", etrExchangeTradePortfolioRequest.getFprice());
                 pltMap.put("invAim", etrExchangeTradePortfolioRequest.getInvAim());
                 pltMap.put("integrateSecAmount", null);
