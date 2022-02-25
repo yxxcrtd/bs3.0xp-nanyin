@@ -95,10 +95,6 @@ public class EtrBaseDto extends BaseEntity {
      * 原更新时间
      */
     private Date oldUpdateTime;
-    /**
-     * 指令下达时间
-     */
-    private Date transmitTime;
 
     public EtrBaseDto() {
         // nothing
