@@ -28,6 +28,7 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.security.User;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
 import com.joyintech.service.bankuplink.ibu.dto.RepoQuoteInfoDto;
 import com.joyintech.service.bankuplink.ibu.service.IbuComponentCommonService;
 import com.joyintech.service.bankuplink.repo.dao.CfetsRepoDealQuotedPrice001Mapper;
@@ -63,11 +64,15 @@ import com.joyintech.tams.invest.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001
 import com.joyintech.tams.invest.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto;
 import com.joyintech.tams.invest.bankuplink.repo.service.CfetsRepoDealQuotedPrice003Service;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.cstp.service.CstpCommonService;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.PtlPositionHoldDto;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
@@ -77,10 +82,10 @@ import com.joyintech.tams.invest.common.dto.cstp.IbuQuoteEntCrepPledgeCommonDto;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
+import com.joyintech.tams.invest.common.util.QuotaPageModelUtil;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
-import com.joyintech.workflow.engine.constant.ProcessState;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -177,6 +182,24 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
 
     @Autowired
     private JoyinbusinessCommonService joyinbusinessCommonService;
+
+    /**
+     * 组合可用现金和实际现金查询更新
+     */
+    @Autowired(required = false)
+    private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
+
+    /**
+     * 组合可用持仓和实际持仓查询更新
+     */
+    @Autowired(required = false)
+    private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
+
+    @Autowired
+    private CfetsRepoDealQuotedPrice001Service oldCfetsRepoDealQuotedPrice001Service;
+
+    @Autowired
+    private CfetsBondDealQuotedPriceService cfetsBondDealQuotedPriceService;
 
     @Autowired
     IbuQuoteMapper ibuQuoteMapper;
@@ -989,7 +1012,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         if ("save".equals(entity.getOperateType()) || StringUtil.equals(entity.getOperateType(), "revoke")) {
             return;
         }
-        insertWflRepoDealQuote(entity);
+        this.insertWflRepoDealQuote(entity);
         // 发头寸
         String systemAct = this.handSystemAct(entity);
         this.sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct, null);
@@ -1000,6 +1023,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             oldCfetsRepoDealQuotedPrice001Service.doInsetOrUpdateForPtlPositionHold(dto);
         }
     }
+
 
     /**
      * 更新操作
@@ -1037,6 +1061,12 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                     WorkFlowUtil.showMessage(messageStr, MessageType.错误消息);
                 }
                 throw new PositionException(messageStr);
+            }
+            if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+                com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto dto
+                        = this.investDto2ServiceDto(entity);
+                dto.setIsExistNew(DictCodeList.是否_是.getValue());
+                oldCfetsRepoDealQuotedPrice001Service.doInsetOrUpdateForPtlPositionHold(dto);
             }
             ProcessMark newEntity;
             try {
@@ -1078,12 +1108,23 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
      */
     @Override
     public void doBack(CfetsRepoDealQuotedPrice001Dto entity) {
-        //退回操作重新占用该条报价单之前的
-        if (StringUtil.isNotEmpty(entity.getQuoteId())) {
-            CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = new CfetsRepoDealQuotedPrice001Dto();
-            cfetsRepoDealQuotedPrice001Dto.setQuoteId(entity.getQuoteId());
-            cfetsRepoDealQuotedPrice001Dto.setIsDzh(entity.getIsDzh());
-            cfetsRepoDealQuotedPrice001Dto.setIsKtg(entity.getIsKtg());
+        if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+            //回退释放头寸
+            Map<String, Object> param = new HashMap<>();
+            param.put("workflowId", entity.getWorkflowId());
+            param.put("pageWflType", "REPO");
+            cfetsBondDealQuotedPriceService.doDeletePtlPositionHold(param);
+            //退回操作重新占用该条报价单之前的
+            if (StringUtil.isNotEmpty(entity.getQuoteId())) {
+                CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = new CfetsRepoDealQuotedPrice001Dto();
+                cfetsRepoDealQuotedPrice001Dto.setQuoteId(entity.getQuoteId());
+                cfetsRepoDealQuotedPrice001Dto.setIsDzh(DictCodeList.是否_是.getValue());
+                cfetsRepoDealQuotedPrice001Dto.setIsKtg(DictCodeList.是否_否.getValue());
+                com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto dto
+                        = this.investDto2ServiceDto(cfetsRepoDealQuotedPrice001Dto);
+                dto.setIsExistNew(DictCodeList.是否_是.getValue());
+                oldCfetsRepoDealQuotedPrice001Service.doInsetOrUpdateForPtlPositionHold(dto);
+            }
         }
     }
 
@@ -1397,7 +1438,10 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         ibuComponentCommonService.restoreDayOff(param);
         com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto =
                 JSON.parseObject(JSON.toJSONString(param), com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto.class);
-//        doInsetOrUpdateForPtlPositionHold(cfetsRepoDealQuotedPrice001Dto);
+        if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+            cfetsRepoDealQuotedPrice001Dto.setIsExistNew(DictCodeList.是否_是.getValue());
+            oldCfetsRepoDealQuotedPrice001Service.doInsetOrUpdateForPtlPositionHold(cfetsRepoDealQuotedPrice001Dto);
+        }
         return true;
     }
 
@@ -1414,6 +1458,10 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         param.put("userName", LoginUserUtil.getUserName());
         param.put("deptCode", LoginUserUtil.getDeptCode());
         ibuComponentCommonService.deleteDayOff(param);
+        if (StringUtil.isNotEmpty(request.getQuoteId())
+                && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+            cfetsRepoDealQuotedPrice001Service.doDeletePtlPositionHoldByQuoteId(request.getQuoteId());
+        }
         return true;
     }
 

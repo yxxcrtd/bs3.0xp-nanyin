@@ -54,7 +54,11 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.trade.dto.PreTrdCommonDto;
+import com.joyintech.tams.invest.common.trade.service.PreTrdCommonBaseService;
 import com.joyintech.tams.invest.trade.lend.dto.FinTradeProductDto;
+import com.joyintech.tams.invest.trade.pretrdrepotrade.dto.PreTrdRepoTrade002Dto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -170,6 +174,9 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
 
     @Autowired
     private MstWorkflowCommonServiceMapperImpl mstWorkflowCommonServiceMapperImpl;
+
+    @Autowired
+    private PreTrdCommonBaseService preTrdCommonBaseService;
     /**
      * 利率保留位数
      */
@@ -574,6 +581,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             insertWfl(cfetsRepoDealDbDto);
             //头寸
             sendPositionMethod(entity, cfetsRepoDealDbDto, true, RequestUtil.getParam("confirmOk"));
+            oldPositionDeal(cfetsRepoDealDbDto, false);
         }
 //        if (StringUtil.isNotEmpty(type)) {
 //            throw new RuntimeException("cs by jp");
@@ -619,6 +627,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 }
                 throw new PositionException(messageStr);
             }
+            oldPositionDeal(cfetsRepoDealDbDto, false);
             try {
                 newEntity = WorkFlowUtil.getBusinessObjectFromRequest(CfetsBondDealRegisterQuoteDto.class, true);
                 // 工作流ID
@@ -647,6 +656,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         //头寸
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
             PositionHttpRequest.dorevoke(entity.getTotleTradeId(), DictCodeListExt1.子系统代码_交易.getValue(), DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), entity.getPs());
+            oldPositionDeal(cfetsRepoDealDbDto, true);
         }
         //处理指令执行进度
         this.insertEtrFinishStatus(cfetsRepoDealDbDto, operationType);
@@ -666,6 +676,14 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
 //        if(StringUtil.isNotEmpty(workflowId)){
 //            throw new RuntimeException("jp");
 //        }
+    }
+
+    @Override
+    public void doBack(CfetsRepoDealRegisterQuoteDto entity) {
+        if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+            //插入旧头寸
+            AllTradeCommonUtil.deletePosition(null, entity.getTotleTradeId());
+        }
     }
 
     /**
@@ -1821,6 +1839,52 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      */
     public ProcessMark getBusinessInfoByPageIdAndPk(WflValidInputParameter wflValidInputParameter) {
         return cfetsIbuQuoteRepoMapper.getBusinessInfoByPageIdAndPk(wflValidInputParameter);
+    }
+
+    /**
+     * 处理就头寸
+     *
+     * @param cfetsRepoDealDbDto
+     * @param navigate           是否撤销
+     * @author jiangpeng
+     * @date 2022/2/24 11:17
+     */
+    private void oldPositionDeal(CfetsRepoDealDbDto cfetsRepoDealDbDto, boolean navigate) {
+        if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+            //处理组合及指令头寸
+            PreTrdRepoTrade002Dto input = this.prepareEntityPre(cfetsRepoDealDbDto);
+            PreTrdCommonDto preTrdCommonDto = new PreTrdCommonDto();
+            preTrdCommonDto.setTrdProductDealPreList(input.getTrdProductDealPreList());
+            preTrdCommonDto.setTrdProductDealAddPreList(input.getTrdProductDealAddPreList());
+            preTrdCommonDto.setIsExistNew(DictCodeList.是否_是.getValue());
+            preTrdCommonBaseService.excutePosition(preTrdCommonDto, navigate);
+        }
+    }
+
+    /**
+     * 预录入,插入旧头寸重新组装
+     *
+     * @param input
+     * @return com.joyintech.tams.invest.trade.pretrdrepotrade.dto.PreTrdRepoTrade002Dto
+     * @author jiangpeng
+     * @date 2022/2/24 11:25
+     */
+    public PreTrdRepoTrade002Dto prepareEntityPre(CfetsRepoDealDbDto input) {
+        List<TrdProductDealPre> trdProductDealPres = new ArrayList<>();
+        List<TrdProductDealAddPre> trdProductDealAddPres = new ArrayList<>();
+        PreTrdRepoTrade002Dto resultDto = new PreTrdRepoTrade002Dto();
+        for (RegFinProductDeal deal : input.getRegFinProductDeals()) {
+            TrdProductDealPre trdProductDealPre = new TrdProductDealPre();
+            TrdProductDealAddPre trdProductDealAddPre = new TrdProductDealAddPre();
+            BeanUtil.copyPropertiesIgnoreNull(trdProductDealPre, deal);
+            BeanUtil.copyPropertiesIgnoreNull(trdProductDealAddPre, deal);
+            trdProductDealPre.setSettleDate(deal.getTradeDate());
+            trdProductDealPres.add(trdProductDealPre);
+            trdProductDealAddPres.add(trdProductDealAddPre);
+        }
+        resultDto.setTrdProductDealPreList(trdProductDealPres);
+        resultDto.setTrdProductDealAddPreList(trdProductDealAddPres);
+        return resultDto;
     }
 
 }

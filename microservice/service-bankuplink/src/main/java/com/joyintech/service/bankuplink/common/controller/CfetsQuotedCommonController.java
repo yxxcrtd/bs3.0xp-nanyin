@@ -27,6 +27,7 @@ import com.joyintech.service.bankuplink.ibu.service.IbuComponentReceiveService;
 import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto;
 import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.system.base.entity.SysUserAdd;
+import com.joyintech.tams.disclosure.common.framework.thread.JoyinThreadPoolExecutor;
 import com.joyintech.tams.invest.common.service.DateCalCommonService;
 
 import org.slf4j.LoggerFactory;
@@ -75,9 +76,9 @@ public class CfetsQuotedCommonController {
     @Autowired
     private DateCalCommonService dateCalCommonService;
     //创建公共的线程池
-//    private final ExecutorService service = new JoyinThreadPoolExecutor(10);
+    private final ExecutorService service = new JoyinThreadPoolExecutor(10);
     // todo
-    private final ExecutorService service = null;
+//    private final ExecutorService service = null;
 
     /**
      * 委托放弃处理

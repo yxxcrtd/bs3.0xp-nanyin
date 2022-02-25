@@ -970,8 +970,14 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
 		}
 		ptlPositionHoldDto.setPtlCashPositionFlows(ptlCashPositionFlows);
 		ptlPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlows);
-		ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(vSettleDate));
-		ptlPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(platDate));
+        ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> {
+            etrCashPositionFlowDto.setCdate(vSettleDate);
+            etrCashPositionFlowDto.setIsExistNew(dto.getIsExistNew());
+        });
+        ptlPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> {
+            etrSecPositionFlowDto.setCdate(platDate);
+            etrSecPositionFlowDto.setIsExistNew(dto.getIsExistNew());
+        });
 
 		// 插入持仓流水
         //撤回不删除流水  登录一比反向流水  add by zhangnian 202010115

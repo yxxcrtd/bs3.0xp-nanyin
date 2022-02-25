@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.cfets.etrib.repo.service;
 
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.security.SecurityUtil;
@@ -57,6 +58,7 @@ import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommSer
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -425,17 +427,16 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                 //发送头寸
                 sendPositionMethod(entity, StringUtil.equals(entity.getSystemAct(), DictCodeListExt3.系统动作_新建.getValue()) ? true : false, null);
             }
-            List<EntrustCommonDto> entrustCommonDtos = this.getEtrExecuteEntity(entity);
-            for (EntrustCommonDto entrustCommonDto : entrustCommonDtos) {
-                baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
-            }
+            olePositionDeal(entity);
         }
     }
 
     @Override
     public void doBack(CfetsEtribRepoInfo003Dto entity) {
-        for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
-            AllTradeCommonUtil.deletePosition(null, dto.getEntrustId());
+        if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+            for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
+                AllTradeCommonUtil.deletePosition(null, dto.getEntrustId());
+            }
         }
     }
 
@@ -617,7 +618,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             throw new RuntimeException(e);
         }
     }
-	
+
 	private List<EtrPledge> getEtrPledgeListByBussRepoSecDto(BussRepoSecDto bussRepoSec,String bizCode){
 	   	 if(StringUtil.isNotEmpty(bussRepoSec)){
 	   		 List<EtrPledge> etrPledgeList = new ArrayList<>();
@@ -818,6 +819,23 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             }
         }
         return entrustCommonDtos;
+    }
+
+    /**
+     * 旧头寸调用
+     *
+     * @param entity
+     * @author jiangpeng
+     * @date 2022/2/24 9:46
+     */
+    private void olePositionDeal(CfetsEtribRepoInfo003Dto entity) {
+        if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+
+            List<EntrustCommonDto> entrustCommonDtos = this.getEtrExecuteEntity(entity);
+            for (EntrustCommonDto entrustCommonDto : entrustCommonDtos) {
+                baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+            }
+        }
     }
 
 }
