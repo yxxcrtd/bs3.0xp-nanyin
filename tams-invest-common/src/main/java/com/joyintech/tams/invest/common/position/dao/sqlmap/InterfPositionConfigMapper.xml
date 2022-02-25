@@ -17,7 +17,7 @@
     </resultMap>
     
 	<select id="searchInterfPositionConfig" resultMap="InterfPositionConfigResult" parameterType="com.joyintech.tams.invest.common.position.dto.InterfPositionConfigDto">
-		select POSITION_TYPE,TRADE_PLAT,FINPROD_TYPE,PS,BUSI_ACT,ENTITY,INTERF_TYPE from POSITION_INTERF_CONFIG 
+		select POSITION_TYPE,TRADE_PLAT,FINPROD_TYPE,PS,BUSI_ACT,ENTITY,INTERF_TYPE from INTERF_POSITION_CONFIG 
 	</select>
 	
 </mapper>
