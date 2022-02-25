@@ -13,9 +13,6 @@
             <if test="updateTime != null">
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="transmitTime != null" >
-                TRANSMIT_TIME= #{transmitTime,jdbcType=TIMESTAMP},
-            </if>
         </set>
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
         <if test="oldUpdateTime != null">
