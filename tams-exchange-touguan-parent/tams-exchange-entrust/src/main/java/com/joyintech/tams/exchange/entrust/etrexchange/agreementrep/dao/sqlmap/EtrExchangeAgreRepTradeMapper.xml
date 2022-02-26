@@ -483,6 +483,10 @@
         ) TEMP WHERE 1=1
         <!-- 关键字模糊查询 -->
         <include refid="etrExchangePositionsAnd"/>
+        <!--前端传入排序字段-->
+        <if test="pageMode.sort != null and pageMode.sort != '' and pageMode.direction != null and pageMode.direction != ''">
+            order by ${pageMode.sort}  ${pageMode.direction}
+        </if>
     </select>
     <sql id="etrExchangePositionsAnd">
         <if test="search != null and search != ''">
@@ -622,6 +626,10 @@
         WHERE 1=1
         <!-- 关键字模糊查询 -->
         <include refid="etrExchangeOnWayRepAnd"/>
+        <!--前端传入排序字段-->
+        <if test="pageMode.sort != null and pageMode.sort != '' and pageMode.direction != null and pageMode.direction != ''">
+            order by ${pageMode.sort}  ${pageMode.direction}
+        </if>
     </select>
     <sql id="etrExchangeOnWayRepAnd">
         <if test="search != null and search != ''">
@@ -899,7 +907,13 @@
         ) T1 WHERE 1=1
         <!-- 关键字模糊查询 -->
         <include refid="etrExchangeEntrustAnd"/>
-        ORDER BY T1.CREATE_TIME DESC
+        <!--前端传入排序字段-->
+        <if test="pageMode.sort != null and pageMode.sort != '' and pageMode.direction != null and pageMode.direction != ''">
+            order by ${pageMode.sort}  ${pageMode.direction}
+        </if>
+        <if test="pageMode.sort == null or pageMode.sort == '' or pageMode.direction == null or pageMode.direction == ''">
+            ORDER BY T1.CREATE_TIME DESC
+        </if>
 
     </select>
     <sql id="etrExchangeEntrustAnd">

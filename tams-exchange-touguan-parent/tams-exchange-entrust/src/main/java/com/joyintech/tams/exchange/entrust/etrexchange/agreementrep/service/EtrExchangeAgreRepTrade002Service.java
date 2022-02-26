@@ -134,6 +134,9 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         if (StringUtil.isNotEmpty(request.getTradeMarket())) {
             pageParam.put("tradeMarket",request.getTradeMarket());
         }
+        if (request.getPageMode() != null) {
+            pageParam.put("pageMode", request.getPageMode());
+        }
 
         pageParam.put("portfolioName", request.getPortfolioName());
         pageParam.put("finprodName", request.getFinprodName());
@@ -198,6 +201,7 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         pageParam.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
         pageParam.put("UNIT_01", DictCodeListExt3.交易单位_张.getValue());
         pageParam.put("UNIT_04", DictCodeListExt3.交易单位_手.getValue());
+        pageParam.put("pageMode", request.getPageMode());
 
         Page<EtrExchangeOnWayRep002Dto> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeAgreRepTradeMapper.findOnWayRepPage(pageParam));
 
@@ -521,13 +525,14 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
 
             list.add(dto);
         });
+
         page.setRoot(list);
         return page;
     }
 
     public Page<EtrExchangeAgreRepTrade003Dto> selectEtrEntrust(EtrExchangeAgreRepTrade003RequestDto request){
         Map<String,Object> param = new HashMap<>();
-//        param.put("entrustStatus", request.getEntrustStatus());
+        param.put("entrustStatus", request.getEntrustStatus());
         param.put("search",request.getKeywords());
         param.put("entrustId", request.getEntrustId());
         param.put("sysDate",iPlatformDate.getSysDateStr());
@@ -548,7 +553,7 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         param.put("manager", request.getManager());
         param.put("startDate", request.getStartDate());
         param.put("endDate", request.getEndDate());
-        param.put("entrustStatus", request.getEntrustStatus());
+        param.put("pageMode", request.getPageMode());
         Page<EtrExchangeAgreRepTrade003Dto> page =  super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeAgreRepTradeMapper.selectEtrEntrust(param));
 
         List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
