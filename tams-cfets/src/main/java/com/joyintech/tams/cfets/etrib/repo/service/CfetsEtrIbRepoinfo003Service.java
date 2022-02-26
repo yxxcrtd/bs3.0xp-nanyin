@@ -66,6 +66,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -135,6 +136,18 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
     private EtrEntrustBackupMapper etrEntrustBackupMapper;
     @Autowired
     private MstWorkflowCommonServiceMapperImpl mstWorkflowCommonServiceMapperImpl;
+
+
+    /**
+     * 设置流程业务说明
+     */
+    @Override
+    public String generateTitle(CfetsEtribRepoInfo003Dto entity, OperationType type) {
+        DecimalFormat df4 = new DecimalFormat("#,##0.00");
+        return  "(指令日期"+ ":" + DateUtil.format(entity.getEntrustDate())+")-"+
+                "(回购期限" + ":" + entity.getRepoTerm()  + "天)-"+
+                "指令金额"+ ":" + df4.format(entity.getEntrustAmt())+"元";
+    }
 
 
     /**

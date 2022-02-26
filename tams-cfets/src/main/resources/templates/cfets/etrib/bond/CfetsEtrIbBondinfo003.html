@@ -60,6 +60,7 @@
             <input type="hidden" id="exerYield" name="exerYield" th:value="${entity?.exerYield}">
             <input type="hidden" id="unitFprice" name="unitFprice" th:value="${entity?.unitFprice}">
             <input type="hidden" id="unitInt" name="unitInt" th:value="${entity?.unitInt}">
+            <input type="hidden" id="finprodAbbr" name="finprodAbbr" th:value="${entity?.finprodAbbr}">
 
 
             <input type="text" id="entrustId" name="entrustId" disabled="disabled" style="display:none;"
@@ -80,12 +81,13 @@
                                     <label class="layui-form-label form-lable" style="width: 105px;"
                                            data-th-text="#{CfetsEtribBondInfo003.finprodName}">资产简称</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select type="text" id="finprodName" name="finprodAbbr"
+                                        <select type="text" id="finprodName" name="finprodName"
                                                 class="layui-input form-input input-select" allowClear="true"
                                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                                 required="required"
-                                                data-th-data-url="@{/common/joyinbusinessCommon/getfinprodIdForSelect}"
-                                                data-th-initvalue="${entity?.finprodMarketId}" >
+                                                data-th-data-url="@{/common/joyinbusinessCommon/getfinprodIdForSelect(ps=${entity.ps})}"
+                                                data-th-initvalue="${entity?.finprodMarketId}"
+                                                >
                                         </select>
                                     </div>
                                 </div>

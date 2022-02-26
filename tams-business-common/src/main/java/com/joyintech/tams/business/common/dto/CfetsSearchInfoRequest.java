@@ -28,6 +28,9 @@ public class CfetsSearchInfoRequest {
     @ApiModelProperty(name="initValue",value="初始化值",example="历史：01")
     private String initValue;
 
+    @ApiModelProperty(name="finProductId",value="产品代码",example="历史：01")
+    private String finprodId;
+
     private Integer page = 1;
 
     private Integer length = 20;
@@ -111,5 +114,13 @@ public class CfetsSearchInfoRequest {
 
     public void setLength(Integer length) {
         this.length = length;
+    }
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
     }
 }

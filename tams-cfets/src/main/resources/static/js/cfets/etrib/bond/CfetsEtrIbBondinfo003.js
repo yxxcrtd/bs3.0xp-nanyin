@@ -9,10 +9,8 @@
     var cluflag;
     var businessId;
     var fprice;
-    var riskResultResponse;
-
-    var businessModelReulst="";
-    var entityBussCombDistritList;
+    var prodIdFlag = 0;
+    var ps = query("#ps").val();
 
 
     CfetsEtrIbBondinfo003 = {
@@ -27,14 +25,7 @@
         businessId: businessId
     }
 
-    /**
-     * 风险试算时不需要进行风险试算的校验
-     */
-    var isNeedRiskcal = function (){
-        //质押券入库和出库不需要走风险试算
-        ps = query("#ps").val();
-        return true;
-    }
+
 
     /**
      * 获取风险试算参数
@@ -71,7 +62,17 @@
                 showField: 'text',
                 multiple: false,
                 searchable: true,
-                url: JoyinUtil.getRealPath('common/joyinbusinessCommon/selectPortfolioIdForSelect')
+                url: JoyinUtil.getRealPath('cfets/etrib/cfetsEtrIbBondinfo/selectPortfolioIdForSelect'),
+                postData:function () {
+                    var param = {finprodId:$("#finprodIdhid").val()};
+                    if((ps == 'T02' || ps == 'T03') && prodIdFlag == 1) {
+                        param.initValue = null;
+                    }
+                    if(ps == 'T02' || ps == 'T03') {
+                        param.ps = $("#ps").val();
+                    }
+                    return param;
+                }
             }
         }
         , {/*业务模式*/
@@ -79,7 +80,7 @@
               width: 180,
               title: 'CfetsEtribBondInfo003.businessModel',
               sortable: false,
-              edit: true,
+              edit: ps == 'T03'? false : true,
               editOption:{type:'select', formatoption:true, showField: 'text',result: BUSINESS_MODEL}
        }
         , {
@@ -98,7 +99,7 @@
             width: 180,
             title: 'CfetsEtribBondInfo003.entrustOwnNum',
             sortable: false,
-            visible:SHORT_SELLING_SUPPORTED == '02'?true:false,
+            visible:SHORT_SELLING_SUPPORTED == '02'?(ps !='T03'?true:false):false,
             type: 'number',
             digit: 2
         }
@@ -107,7 +108,7 @@
             width: 180,
             title: 'CfetsEtribBondInfo003.entrustIntegratCasheNum',
             sortable: false,
-            visible:SHORT_SELLING_SUPPORTED == '02'?true:false,
+            visible:SHORT_SELLING_SUPPORTED == '02'?(ps !='T03'?true:false):false,
             type: 'number',
             edit: true,
             digit: 2
@@ -197,6 +198,7 @@
         height: 290,
         editCell: function (value, data, field, cell, column) {
             if (field == 'portfolioId') {
+                debugger
                 var arr = [];
                 var param = {}
                 arr.push(value);
@@ -237,6 +239,7 @@
                     }else {
                         data.ownProAvailableSec1 = result.data[6].amount;;
                     }
+                    data.entrustIntegrateNum = 0;
                     table.renderRow(data.LAY_TABLE_INDEX, data);
                 });
             }
@@ -362,6 +365,9 @@
     init();
 
     var calData = function (calflag) {
+        if(ps == 'T03') {
+            return;
+        }
         if(!calflag){
             calflag =  query("input[name=calculateField]:checked").val();
         }
@@ -375,7 +381,6 @@
                 // 只有指令开始日=指令结束日时才联动
                 return;
             }
-            var ps = query("#ps").val();
             if (!ps) {
                 return;
             }
@@ -401,7 +406,7 @@
             object.finprodId = query("#finprodIdhid").val();
             object.tradeMarketMode = SHARES_TRADE_MARKET_02;
             object.matureYield = $("#matureYield").val();
-            object.ps = query("#ps").val();
+            object.ps = ps;
             object.priceModel = $("#priceModel").val();
             object.settleSpeed = $("#settleSpeed").val();
             object.tradeMarket = $("#tradeMarket").val();
@@ -435,6 +440,10 @@
                         query("#priceShow").val(JoyinMath.doDiv(data.price,1,4));
                         query("#unitFpriceShow").val(JoyinMath.doDiv(data.unitFprice,1,4));
                         query("#unitFprice").val(data.unitFprice);
+                        if(calflag == 'price') {
+                            query("#matureYieldShow").val(JoyinMath.doMul(data.matureYield,100,4));
+                            query("#matureYield").val(data.matureYield);
+                        }
                         calAmountData();
                     } else {
                         fprice = "";
@@ -514,7 +523,7 @@
         object.vdate=object.etrDate;
         object.mdate=object.etrDate;
         object.entrustDate = object.vdate > object.finvdate.split(' ')[0] ?
-            object.vdate: object.finvdate.split(' ')[0];
+        object.vdate: object.finvdate.split(' ')[0];
         //提交获取计算方式单选框的值
         object.calculateField = query("input[name=calculateField]:checked").val();
         if(query('#exerYield').val()){
@@ -578,6 +587,7 @@
         param = JSON.parse(JSON.stringify(object));
        // param.entrustNum = object.tradeAmt;
         param.finprodId = finprodId;
+        param.finprodAbbr = query("#finprodAbbr").val();
         param.tradeMarket = tradeMarket;
         param.invManagerId = query('#invManagerId').val();
         param.ps = ps;
@@ -597,6 +607,22 @@
         return res;
     }
 
+    function paramCheck() {
+        if(!query("#finprodName").val() ||  !query("#priceModel").val() || !query("#tradeAmt").val()) {
+            Joyin.error("有*必填项未填写,请填写完整")
+            return false;
+        }
+        if(!query("#priceShow") && !query("#matureYieldShow") && !query("#exerYieldShow") ) {
+            Joyin.error("有*必填项未填写,请填写完整")
+            return false;
+        }
+        if(!entity_RiskTrialRetList) {
+            Joyin.error("请先完成风险试算")
+            return false;
+        }
+        return true;
+    }
+
     function saveOrSubmit(operateType) {
         var res = getSubmitParam(operateType)
             if(res.objects.length>0){
@@ -610,7 +636,9 @@
 
     // 绑定提交按钮
     $('#CfetsEtrIbBondinfo003_btn_submit').click(function () {
-        saveOrSubmit('submit');
+        if(paramCheck()) {
+            saveOrSubmit('submit');
+        }
     });
 
     // 绑定保存按钮
@@ -624,8 +652,11 @@
         Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/doRiskcal', param, function (data) {
             $("#riskTrialSpan").html("&nbsp;&nbsp;" + data.data.data.riskTrialSpan);
             entity_RiskTrialRetList = data.data.data.riskcalReturnList;
+            $.each(entity_RiskTrialRetList,function (index,item) {
+                item.conclusion = data.data.data.riskTrialSpan;
+            })
             tableRisk.clear();
-            tableRisk.addRow(data.data.data.riskcalReturnList);
+            tableRisk.addRow(entity_RiskTrialRetList);
         });
     });
 
@@ -640,6 +671,7 @@
             query("#isRight").val(data.object.isRight);
             query("#calendarId").val(data.object.calendarId);
             query("#tradeMarket").val(data.object.tradeMarket);
+            query("#finprodAbbr").val(data.text);
             if("Y" == data.object.isRight) {
                 //query("#exerYieldShow").attr("disabled", false);
                 $("input[name='calculateField'][value='exerYield']").attr('disabled',false);
@@ -657,9 +689,26 @@
                    query("#calculateField_exerYield").attr("disabled", true);
                    layui.form.render('radio');*/
             }
+            prodIdFlag = 1;
         }
         calAmountData();
-    })
+        if(ps == 'T02' || ps == 'T03') {
+           table.reload();
+           var allRow = table.getAllRows();
+           $.each(allRow,function (index,item) {
+               item.portfolioId = null;
+               item.proAvailableCash = 0;
+               item.proAvailableCash1 = 0;
+               item.secAcctAvailableCash = 0;
+               item.porAvailableSec = 0;
+               item.entrustIntegrateSecNum = 0;
+               item.ownPorAvailableSec = 0;
+               item.ownProAvailableSec1 = 0;
+               table.renderRow(item.LAY_TABLE_INDEX, item);
+           })
+        }
+
+        })
     query("#tradeAmt").blur(function () {
         query("#tradeAmt").val(JoyinMath.doDiv(query("#tradeAmt").val(),1,2));
         query("#entrustOwnNum").val(JoyinMath.doDiv(query("#tradeAmt").val(),1,2));
@@ -704,9 +753,20 @@
         calData('exerYield');
     })
     query('#priceShow').blur(function () {
-        query('#price').val(query('#priceShow').val());
-        calData('price');
+        if(ps != 'T03') {
+            query('#price').val(query('#priceShow').val());
+            calData('price');
+        }
     })
 
+    if(ps == 'T03') {//回售时特殊处理
+        query("#calculateField_price").attr("th:title","行权净价");
+        query("#settleSpeed").attr("disabled",true);
+        query("#entrustIntegrateNum").attr("disabled",true);
+        query("#calculateField_matureYield").attr("disabled", true);
+        query("#calculateField_exerYield").attr("disabled", true);
+        query("#priceModel").attr("disabled", true);
+        layui.form.render('radio');
+    }
 
 }());
