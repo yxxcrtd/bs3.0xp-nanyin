@@ -96,6 +96,7 @@
         on T2.DEAL_CUR_ACCT = c1.acctNo1 and nvl(T1.CCY, 'CNY') = c1.ccy
         where T1.TRADE_MARKET in ('03','04')
         AND T2.ASSET_TYPE NOT IN ('F17')
+        AND T1.CREATE_USER=#{userId}
         <if test="sysDate !=null and !sysDate.equals('')">
             AND T1.ENTRUST_DATE = to_date(#{sysDate},'yyyy-MM-dd')
         </if>
@@ -204,6 +205,7 @@
         on T2.DEAL_CUR_ACCT = c1.acctNo1 and nvl(T1.CCY, 'CNY') = c1.ccy
         where T1.TRADE_MARKET in ('03','04')
         AND T2.ASSET_TYPE NOT IN ('F17')
+        AND T1.CREATE_USER=#{userId}
         <if test="sysDate !=null and !sysDate.equals('')">
             AND T1.ENTRUST_DATE = to_date(#{sysDate},'yyyy-MM-dd')
         </if>
