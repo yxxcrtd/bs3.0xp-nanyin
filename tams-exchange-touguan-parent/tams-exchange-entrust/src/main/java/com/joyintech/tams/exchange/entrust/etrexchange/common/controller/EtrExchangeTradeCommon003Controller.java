@@ -113,7 +113,7 @@ public class EtrExchangeTradeCommon003Controller extends BaseController{
                         &&!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已撤回.getValue())){
                     errList.add(new ValidMessage(item.getEntrustStatusString()+"的指令不允许关闭!"));
                 }else if(StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已接收.getValue())
-                        && BigDecimal.ZERO.compareTo(item.getDealPercent())<0){
+                        &&item.getDealPercent()!=null && BigDecimal.ZERO.compareTo(item.getDealPercent())<0){
                     errList.add(new ValidMessage(item.getEntrustStatusString()+"成交进度大于0的指令不允许关闭!"));
                 }
             }

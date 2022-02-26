@@ -598,6 +598,10 @@
         where
         1=1
         <include refid="etrExchangeBundAnd"/>
+        <!--前端传入排序字段-->
+        <if test="sort != null and sort != '' and direction != null and direction != ''">
+            order by ${sort}  ${direction}
+        </if>
     </select>
     <!-- 场内交易债券质押持仓查询 -->
     <select id="findZqzyPositionsPage" parameterType="Map"
