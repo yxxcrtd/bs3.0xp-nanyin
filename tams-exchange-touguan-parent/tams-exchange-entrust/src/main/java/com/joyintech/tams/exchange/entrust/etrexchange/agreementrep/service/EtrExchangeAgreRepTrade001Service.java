@@ -165,12 +165,16 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
         List<SelectOptionDto> resultList = new ArrayList<>();
         if (object instanceof List<?>){
             List<Map<String,Object>> mapList = (List<Map<String,Object>>)object;
+            Map<String, String> counterTraderIdMap = new HashMap<>();
             mapList.forEach(item ->{
-                SelectOptionDto dto = new SelectOptionDto();
-                dto.setId(item.get("counterTraderId").toString());
-                dto.setText(item.get("counterTraderId").toString());
-                dto.setObject(item);
-                resultList.add(dto);
+                if (!counterTraderIdMap.containsKey(item.get("counterTraderId").toString())) {
+                    SelectOptionDto dto = new SelectOptionDto();
+                    dto.setId(item.get("counterTraderId").toString());
+                    dto.setText(item.get("counterTraderId").toString());
+                    dto.setObject(item);
+                    resultList.add(dto);
+                    counterTraderIdMap.put(dto.getId(), dto.getId());
+                }
             });
         }
         return resultList;
