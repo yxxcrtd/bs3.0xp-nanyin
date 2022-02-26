@@ -1,13 +1,16 @@
 package com.joyintech.tams.cfets.etrdispatcher.dto;
 
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsPledgeBondInfoDto;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -38,6 +41,9 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
 
     @ApiModelProperty(name="tradeDate",value="成交日期",example="2021-01-01")
     private String tradeDate;
+
+    @ApiModelProperty(name="purCfmDate",value="确认日期",example="2021-01-01")
+    private String purCfmDate;
 
     @ApiModelProperty(name="settleSpeed",value="清算速度code",example="T+0")
     private String settleSpeed;
@@ -93,7 +99,7 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
     @ApiModelProperty(name="repoTerm",value="回购期限(天)",example="5")
     private String repoTerm;
 
-    @ApiModelProperty(name="vpayDate",value="到期结算日",example="2021-01-01")
+    @ApiModelProperty(name="vpayDate",value="首次结算日",example="2021-01-01")
     private String vpayDate;
 
     @ApiModelProperty(name="mpayDate",value="到期结算日",example="2021-01-01")
@@ -108,14 +114,23 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
     @ApiModelProperty(name="tradeAmt",value="交易金额（元）",example="10000")
     private BigDecimal tradeAmt;
 
+    @ApiModelProperty(name="shareAmt",value="交易份额",example="10000")
+    private BigDecimal shareAmt;
+
     @ApiModelProperty(name="mIntAmt",value="回购利息",example="1.1")
     private BigDecimal mIntAmt;
+
+    @ApiModelProperty(name="vTradeAmt",value="首次结算金额",example="10001")
+    private BigDecimal vTradeAmt;
 
     @ApiModelProperty(name="mTradeAmt",value="到期结算金额",example="10001")
     private BigDecimal mTradeAmt;
 
-    @ApiModelProperty(name="fCleanPrice",value="首次净价",example="99")
-    private BigDecimal fCleanPrice;
+    @ApiModelProperty(name="fCprice",value="首次净价",example="99")
+    private BigDecimal fCprice;
+
+    @ApiModelProperty(name="fYield",value="首次收益率%",example="1.1")
+    private BigDecimal fYield;
 
     @ApiModelProperty(name="mCprice",value="到期净价",example="99")
     private BigDecimal mCprice;
@@ -131,6 +146,51 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
 
     @ApiModelProperty(name="detailList",value="质押券明细",example="100")
     private List<CfetsPledgeBondInfoDto> detailList;
+
+    @ApiModelProperty(name="chlId",value="通道代码",example="字符串1")
+    private String chlId;
+
+    @ApiModelProperty(name="chlIdName",value="通道名称",example="字符串1")
+    private String chlIdName;
+
+    @ApiModelProperty(name="orgName",value="机构名称",example="字符串1")
+    private String orgName;
+
+    @ApiModelProperty(name="pledgeFinprodId",value="标的资产代码",example="字符串1")
+    private String pledgeFinprodId;
+
+    @ApiModelProperty(name="pledgeFinprodName",value="标的资产名称",example="字符串1")
+    private String pledgeFinprodName;
+
+    @ApiModelProperty(name="tradeMarket",value="交易场所",example="字符串1")
+    private String tradeMarket;
+
+    @ApiModelProperty(name="paBussType",value="拆借类型",example="字符串1")
+    private String paBussType;
+
+    @ApiModelProperty(name = "assetType1", value = "资产二级分类", example = "字符串1")
+    private String assetType1;
+
+    @ApiModelProperty(name = "assetType10", value = "资产三级分类", example = "字符串1")
+    private String assetType10;
+
+    @ApiModelProperty(name = "assetType11", value = "资产四级分类", example = "字符串1")
+    private String assetType11;
+
+    @ApiModelProperty(name = "finprodType2", value = "资产类型", example = "字符串1")
+    private String finprodType2;
+
+    @ApiModelProperty(name="prinAmt",value="本金金额",example="10000")
+    private BigDecimal prinAmt;
+
+    @ApiModelProperty(name="actPayAmt",value="实付金额",example="10000")
+    private BigDecimal actPayAmt;
+
+    @ApiModelProperty(name = "recommender", value = "资产推荐方", example = "字符串1")
+    private String recommender;
+
+    @ApiModelProperty(name = "recommenderName", value = "资产推荐方名称", example = "字符串1")
+    private String recommenderName;
 
     public String getEffectFlag() {
         return effectFlag;
@@ -380,14 +440,6 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
         this.mTradeAmt = mTradeAmt;
     }
 
-    public BigDecimal getfCleanPrice() {
-        return fCleanPrice;
-    }
-
-    public void setfCleanPrice(BigDecimal fCleanPrice) {
-        this.fCleanPrice = fCleanPrice;
-    }
-
     public BigDecimal getmCprice() {
         return mCprice;
     }
@@ -424,6 +476,10 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
         return SysDataUtil.getNameFromDataDict(DictCode.交易方向, super.getPs());
     }
 
+    public BigDecimal getShareNumWanYuan() {
+        return ArithmeticUtil.divide(this.shareNum, new BigDecimal(10000), 6, RoundingMode.HALF_UP);
+    }
+
     public String getOtherSettleSpeed() {
         return SysDataUtil.getNameFromDataDict(DictCode.清算速度, this.getSettleSpeed());
     }
@@ -443,4 +499,187 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
     public void setPledgeStockName(String pledgeStockName) {
         this.pledgeStockName = pledgeStockName;
     }
+
+    public BigDecimal getvTradeAmt() {
+        return vTradeAmt;
+    }
+
+    public void setvTradeAmt(BigDecimal vTradeAmt) {
+        this.vTradeAmt = vTradeAmt;
+    }
+
+    public BigDecimal getfCprice() {
+        return fCprice;
+    }
+
+    public void setfCprice(BigDecimal fCprice) {
+        this.fCprice = fCprice;
+    }
+
+    public BigDecimal getfYield() {
+        return fYield;
+    }
+
+    public void setfYield(BigDecimal fYield) {
+        this.fYield = fYield;
+    }
+
+    public String getChlId() {
+        return chlId;
+    }
+
+    public void setChlId(String chlId) {
+        this.chlId = chlId;
+    }
+
+    public String getChlIdName() {
+        return chlIdName;
+    }
+
+    public void setChlIdName(String chlIdName) {
+        this.chlIdName = chlIdName;
+    }
+
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
+    }
+
+    public String getPledgeFinprodId() {
+        return pledgeFinprodId;
+    }
+
+    public void setPledgeFinprodId(String pledgeFinprodId) {
+        this.pledgeFinprodId = pledgeFinprodId;
+    }
+
+    public String getPledgeFinprodName() {
+        return pledgeFinprodName;
+    }
+
+    public void setPledgeFinprodName(String pledgeFinprodName) {
+        this.pledgeFinprodName = pledgeFinprodName;
+    }
+
+    public String getPaBussType() {
+        return SysDataUtil.getNameFromDataDict(DictCode.拆借类型, paBussType);
+    }
+
+    public void setPaBussType(String paBussType) {
+        this.paBussType = paBussType;
+    }
+
+    public String getAssetType1() {
+        return SysDataUtil.getNameFromDataDict(DictCode.行内资产二级分类, assetType1);
+    }
+
+    public void setAssetType1(String assetType1) {
+        this.assetType1 = assetType1;
+    }
+
+    public String getAssetType10() {
+        return SysDataUtil.getNameFromDataDict(DictCode.行内资产三级分类, assetType10);
+    }
+
+    public void setAssetType10(String assetType10) {
+        this.assetType10 = assetType10;
+    }
+
+    public String getAssetType11() {
+        return SysDataUtil.getNameFromDataDict(DictCode.行内资产四级分类, assetType11);
+    }
+
+    public void setAssetType11(String assetType11) {
+        this.assetType11 = assetType11;
+    }
+
+    @Override
+    public String getTradeMarket() {
+        return tradeMarket;
+    }
+
+    @Override
+    public void setTradeMarket(String tradeMarket) {
+        this.tradeMarket = tradeMarket;
+    }
+
+    /**
+     * 获取 otherTradeMarket
+     * @return otherTradeMarket.
+     */
+    public String getOtherTradeMarket() {
+        return SysDataUtil.getNameFromDataDict(DictCode.交易场所, tradeMarket);
+    }
+
+    public String getPurCfmDate() {
+        return purCfmDate;
+    }
+
+    public void setPurCfmDate(String purCfmDate) {
+        this.purCfmDate = purCfmDate;
+    }
+
+    public BigDecimal getShareAmt() {
+        return shareAmt;
+    }
+
+    public void setShareAmt(BigDecimal shareAmt) {
+        this.shareAmt = shareAmt;
+    }
+
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
+    }
+
+    /**
+     * 获取资产类型 otherFinprodType2
+     *
+     * @return otherFinprodType2 资产类型对应name
+     */
+    public String getOtherFinprodType2() {
+        if (StringUtil.equals(finprodType2, BussinessDictCodeList.金融产品类型_投管用_一级投标债券.getValue())) {
+            return SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, BussinessDictCodeList.平安资产类型_一级投标债券.getValue());
+        }
+        return SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, finprodType2);
+    }
+
+    public BigDecimal getPrinAmt() {
+        return prinAmt;
+    }
+
+    public void setPrinAmt(BigDecimal prinAmt) {
+        this.prinAmt = prinAmt;
+    }
+
+    public BigDecimal getActPayAmt() {
+        return actPayAmt;
+    }
+
+    public void setActPayAmt(BigDecimal actPayAmt) {
+        this.actPayAmt = actPayAmt;
+    }
+
+    public String getRecommender() {
+        return recommender;
+    }
+
+    public void setRecommender(String recommender) {
+        this.recommender = recommender;
+    }
+
+    public String getRecommenderName() {
+        return recommenderName;
+    }
+
+    public void setRecommenderName(String recommenderName) {
+        this.recommenderName = recommenderName;
+    }
+
 }

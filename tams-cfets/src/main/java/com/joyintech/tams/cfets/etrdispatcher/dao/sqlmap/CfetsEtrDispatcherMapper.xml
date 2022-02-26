@@ -840,6 +840,22 @@
 
     <sql id="etrDispatcherDealListInfo">
         #{busiTypePosition} busiTypePosition,
+        tpda.entrust_id entrustId,
+        FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID pledgeFinprodId,
+        NVL( fp2.FINPROD_ABBR, fp2.FINPROD_NAME ) chlIdName,
+        tpd.trade_market tradeMarket,
+        tpd.UNIT_CPRICE fCprice,
+        tpd.YIELD * 100 fYield,
+        tpd.FPRICE_AMT vTradeAmt,
+        FTP.M_UNIT_CPRICE mCprice,
+        FTP.M_YIELD * 100 mYield,
+        FTP.M_TRADE_AMT mSettleAmt,
+        fpt.TYPE_6 paBussType,
+        fpt.TYPE_9 assetType1,
+        fpt.TYPE_10 assetType10,
+        fpt.TYPE_11 assetType11,
+        tpd.share_amt  shareAmt,
+        to_char( tpda.PUR_CFM_DATE , 'yyyy-MM-dd' ) purCfmDate,
         tpd.totle_trade_id totleTradeId,
         tpd.trade_id tradeId,
         tpda.portfolio_id portfolioId,
@@ -900,6 +916,7 @@
         tpd.SPLIT_TRADE_ID ELSE tpd.TRADE_ID END) = FTP.FINPROD_ID
         left join FIN_DEAL_PLEDGE on (CASE WHEN tpd.IS_OUT_TRADE = 'N' AND tpd.SPLIT_TRADE_ID IS NOT NULL THEN
         tpd.SPLIT_TRADE_ID ELSE tpd.TRADE_ID END) = FIN_DEAL_PLEDGE.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT fp2 ON fp2.FINPROD_ID  = tpd.CHL_ID
         WHERE tpda.entrust_id = #{entrustId}
 
         union all
@@ -922,6 +939,7 @@
         tpd.SPLIT_TRADE_ID ELSE tpd.TRADE_ID END) = FTP.FINPROD_ID
         left join FIN_DEAL_PLEDGE on (CASE WHEN tpd.IS_OUT_TRADE = 'N' AND tpd.SPLIT_TRADE_ID IS NOT NULL THEN
         tpd.SPLIT_TRADE_ID ELSE tpd.TRADE_ID END) = FIN_DEAL_PLEDGE.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT fp2 ON fp2.FINPROD_ID  = tpd.CHL_ID
         WHERE tpda.entrust_id = #{entrustId}
     </select>
 

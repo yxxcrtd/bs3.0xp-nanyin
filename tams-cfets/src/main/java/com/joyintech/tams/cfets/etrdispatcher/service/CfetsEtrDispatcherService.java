@@ -1219,6 +1219,8 @@ public class CfetsEtrDispatcherService extends BaseService{
                 }
             } else {
 
+                //dto.setFinprodType2("F04"); //存款
+                dto.setFinprodType2("F02"); //场外基金
                 if (StringUtil.isNotEmpty(dto.getFinprodType2())) {
                     spcdCode = dto.getFinprodType2();
                     infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
