@@ -169,6 +169,16 @@ public class EtrExchangeAgreRepTrade003Dto extends EtrEntrust{
     private String invManagerName;
 
     /**
+     * 本方交易员
+     */
+    private String homeTrader;
+
+    /**
+     * 补充协议
+     */
+    private String addCla;
+
+    /**
      * 获取 implementPercent
      * @return implementPercent.
      */
@@ -613,5 +623,21 @@ public class EtrExchangeAgreRepTrade003Dto extends EtrEntrust{
 
     public void setInvManagerName(String invManagerName) {
         this.invManagerName = invManagerName;
+    }
+
+    public String getHomeTrader() {
+        return homeTrader;
+    }
+
+    public void setHomeTrader(String homeTrader) {
+        this.homeTrader = homeTrader;
+    }
+
+    public String getAddCla() {
+        return addCla;
+    }
+
+    public void setAddCla(String addCla) {
+        this.addCla = addCla;
     }
 }
