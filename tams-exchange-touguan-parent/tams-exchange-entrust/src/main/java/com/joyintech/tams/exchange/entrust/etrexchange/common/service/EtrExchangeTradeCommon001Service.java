@@ -4882,6 +4882,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	public List<FinProductQuto> getFinProductQutoInfo(Map<String,Object> map){
 //        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getFinProductQutoInfo", map,
 //                FinProductQuto.class);
+		map.put("cDate",DateUtil.getSysDate());
 		return etrExchangeTradeCommonMapper.getFinProductQutoInfo(map);
 	}
 

@@ -22,6 +22,7 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
+import com.joyintech.tams.common.base.entity.FinProductQuto;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
@@ -1507,6 +1508,29 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			return new Message<List<MinPirceDto>>().success().setData(minPirceList);
 		}catch (Exception e){
 			return new Message<List<MinPirceDto>>().fail().setData(null);
+		}
+	}
+
+	/**
+	 *
+	 * @Description //获得权益额度
+	 * @Param [map]
+	 * @return java.util.List<com.joyintech.tams.common.base.entity.FinProductQuto>
+	 * @version 1.0
+	 * @see
+	 **/
+	@PostMapping("getFinProductQutoInfo")
+	public Message<FinProductQuto> getFinProductQutoInfo(@RequestBody FinProductQutoRequest request){
+		try{
+			Map<String,Object> param= JsonUtils.object2Map(request);
+			List<FinProductQuto> finProductQutoList = etrExchangeTrade001CommonService.getFinProductQutoInfo(param);
+			if(!CollectionUtils.isEmpty(finProductQutoList)){
+				return new Message<FinProductQuto>().success().setData(finProductQutoList.get(0));
+			}else{
+				return new Message<FinProductQuto>().success().setData(null);
+			}
+		}catch (Exception e){
+			return new Message<FinProductQuto>().fail().setData(null);
 		}
 	}
 }

@@ -19,25 +19,6 @@ public class EtrExchangeTradeCommonRequest {
      */
     @ApiModelProperty(name="portfolioId",value="组合代码")
     private String portfolioId;
-
-    /**
-     * 市场代码
-     */
-    @ApiModelProperty(name="tradeMarket",value="资产代码")
-    private String tradeMarket;
-
-    /**
-     * 资产代码
-     */
-    @ApiModelProperty(name="finprodType2",value="资产类型")
-    private String finprodType2;
-
-    /**
-     * 资产代码
-     */
-    @ApiModelProperty(name="ps",value="委托方向")
-    private String ps;
-
     /**
      * 证券账户
      */
@@ -45,10 +26,11 @@ public class EtrExchangeTradeCommonRequest {
     private String secAcctId;
 
     /**
-     * 交易时间
+     * 业务类型
      */
-    @ApiModelProperty(name="cDate",value="交易日期")
-    private String cDate;
+    @ApiModelProperty(name="othType",value="业务类型")
+    private String othType;
+
 
     public String getFinprodId() {
         return finprodId;
@@ -74,35 +56,11 @@ public class EtrExchangeTradeCommonRequest {
         this.secAcctId = secAcctId;
     }
 
-    public String getcDate() {
-        return cDate;
+    public String getOthType() {
+        return othType;
     }
 
-    public void setcDate(String cDate) {
-        this.cDate = cDate;
-    }
-
-    public String getTradeMarket() {
-        return tradeMarket;
-    }
-
-    public void setTradeMarket(String tradeMarket) {
-        this.tradeMarket = tradeMarket;
-    }
-
-    public String getFinprodType2() {
-        return finprodType2;
-    }
-
-    public void setFinprodType2(String finprodType2) {
-        this.finprodType2 = finprodType2;
-    }
-
-    public String getPs() {
-        return ps;
-    }
-
-    public void setPs(String ps) {
-        this.ps = ps;
+    public void setOthType(String othType) {
+        this.othType = othType;
     }
 }
