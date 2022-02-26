@@ -16,6 +16,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.joyintech.tams.report.interf.cnbond.dto.InvestorsHoldInfo001InterfDto;
 import com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto;
 import com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto;
 
@@ -45,7 +46,7 @@ public interface EquityInfoDistinctMapper {
      * @param list
      * @return
      */
-    List<EquityInfo001Dto> queryEquityInfoList(List<String> keys);
+    List<EquityInfo001Dto> queryEquityInfoList(@Param("newKeyList")List<EquityInfo001Dto> newKeyList);
     
     
     EquityInfoRegist001Dto queryEquityInfoByIndentifymarkAndBankCode(EquityInfoRegist001Dto qmodel);
