@@ -22,6 +22,7 @@ import com.joyintech.tams.cfets.trdquery.service.CfetsTrdBondInvestTrade002Servi
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.trade.BussRepoSecService;
 import com.joyintech.tams.component.business.trade.impl.BaseTradeProductDealCommServiceImpl;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -666,6 +667,11 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                     }else{
                        //对回购数据进行处理
                         sendRepoPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
+                        if ((StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
+                                || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())) &&
+                                StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+                            this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType());
+                        }
                     }
                 }
                 // 质押券库自动入库
@@ -915,6 +921,56 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             baseTradeProductDealDto.setEntrustId(item.getEntrustId());
             finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
             finProductTradeDto.setIsExistNew(DictCodeList.是否_是.getValue());
+            baseTradeProductDealCommServiceImpl.insertPosition(finProductTradeDto);
+        }
+    }
+
+    /**
+     * 交收确认时,重新组装质押式回购插入旧头寸
+     * @author jiangpeng
+     * @date 2022/2/25 11:19
+     * @param cfetsManualSettleRequest
+     * @param buttonType
+     */
+    public void insertOldRepoPosition(CfetsManualSettleInsertDto cfetsManualSettleRequest,String buttonType) {
+        //设置登记时的成交编号
+        List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
+        for (CfetsManualSettleDealInfo item : listTemp) {
+            FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
+            if (StringUtil.equals(buttonType, DictCodeListExt3.交收操作类型_回溯.getValue())) {
+                finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_撤销.getValue());
+            } else {
+                finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
+            }
+            TrdProductDeal trdProductDeal = new TrdProductDeal();
+            BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, item);
+            BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
+//            //设置预录入的成交编号
+//            if(StringUtil.isNotBlank(entity.getPreTradeId())){
+//                baseTradeProductDealDto.setPreTradeId(entity.getPreTradeId());
+//            }
+//            if(StringUtil.isNotBlank(entity.getfTradeId())){
+//                baseTradeProductDealDto.setfTradeId(entity.getfTradeId());
+//            }
+            // 金融产品交易
+            baseTradeProductDealDto.setTrdProductDeal(trdProductDeal);
+            // 金融产品附属
+            TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
+            BeanUtil.copyPropertiesIgnoreNull(trdProductDealAdd, item);
+            baseTradeProductDealDto.setTrdProductDealAdd(trdProductDealAdd);
+
+            baseTradeProductDealDto.setEntrustId(item.getEntrustId());
+
+//            finProductTradeDto.setAssetType2(entity.getRepoType());//银行间不用考虑
+            finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
+
+            List<PledgeBondInfoDto> pledgeBondList = cfetsManualSettleMapper.getPledgeListByTradeId(item.getFinprodId());
+            BussRepoSecDto bussRepoSecDto = new BussRepoSecDto();
+            bussRepoSecDto.setPledgeBondList(pledgeBondList);
+            finProductTradeDto.setBussRepoSec(bussRepoSecDto);
+            finProductTradeDto.setIsExistNew(DictCodeList.是否_是.getValue());
+            // 调用业务组件.【金融产品交易共通.交易产品接口】, insert
+            // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[实际]的组合持仓流水及现金流水
             baseTradeProductDealCommServiceImpl.insertPosition(finProductTradeDto);
         }
     }

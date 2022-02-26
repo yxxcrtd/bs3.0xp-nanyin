@@ -78,6 +78,19 @@
                             <div class="layui-form-item">
                                 <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
                                     <label class="layui-form-label form-lable" style="width: 105px;"
+                                           data-th-text="#{CfetsEtribBondInfo003.finprodName}">资产简称</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <select type="text" id="finprodName" name="finprodAbbr"
+                                                class="layui-input form-input input-select" allowClear="true"
+                                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                                required="required"
+                                                data-th-data-url="@{/common/joyinbusinessCommon/getfinprodIdForSelect}"
+                                                data-th-initvalue="${entity?.finprodMarketId}" >
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
+                                    <label class="layui-form-label form-lable" style="width: 105px;"
                                            data-th-text="#{CfetsEtribBondInfo003.finprodMarketId}">资产代码</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="finprodMarketId" name="finprodMarketId"
@@ -86,19 +99,6 @@
                                                required="required"
                                                data-th-value="${entity?.finprodMarketId}" disabled="disabled">
                                         </input>
-                                    </div>
-                                </div>
-                                <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
-                                    <label class="layui-form-label form-lable" style="width: 105px;"
-                                           data-th-text="#{CfetsEtribBondInfo003.finprodName}">资产简称</label>
-                                    <div class="layui-input-inline input-inline">
-                                        <select type="text" id="finprodName" name="finprodName"
-                                                class="layui-input form-input input-select" allowClear="true"
-                                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                                required="required"
-                                                data-th-data-url="@{/invest/entrust/etribbondinfo/EtrIbBondinfo002/getfinprodIdForAdd}"
-                                                data-th-initvalue="${entity?.finprodMarketId}" disabled="disabled">
-                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
@@ -120,7 +120,7 @@
                                                 class="layui-input form-input input-select"
                                                 data-th-data-result='${ACCOUNT_SPEED}'
                                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                                formatoption="true" data-th-initvalue="${entity?.settleSpeed}" disabled="disabled">
+                                                formatoption="true" data-th-initvalue="${entity?.settleSpeed}" >
                                         </select>
                                     </div>
                                 </div>
@@ -134,7 +134,7 @@
                                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                                 th:placeholder="#{SysCommon.placeholder}"
                                                 data-th-data-result='${PRICE_MODEL}'
-                                                allowClear="true" th:initValue="${entity?.priceModel}" disabled="disabled"></select>
+                                                allowClear="true" th:initValue="${entity?.priceModel}" ></select>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
@@ -148,52 +148,13 @@
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
-                                    <label class="layui-form-label form-lable" style="width: 105px;">
-                                        <input type="radio" id="calculateField_price" name="calculateField" value="price" th:title="#{CfetsEtribBondInfo003.price}" />
-                                    </label>
-                                    <div class="layui-input-inline input-inline">
-                                        <input type="text" id="priceShow" name="priceShow" placeholder="请输入内容"
-                                               data-pattern="" data-fixtype="2" data-textrange='4' required
-                                               class="layui-input form-input text-number"
-                                               data-th-value="${entity?.price}" disabled>
-                                        <label class="label-deviation-degree" id="deviationDegree"></label>
-                                        <span class="input-right-show">元</span>
-                                    </div>
-                                </div>
-                                <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
-                                    <label class="layui-form-label form-lable" style="width: 105px;">
-                                        <input type="radio" id="calculateField_matureYield" name="calculateField" value="matureYield" th:title="#{CfetsEtribBondInfo003.matureYield}" />
-                                    </label>
-                                    <div class="layui-input-inline input-inline">
-                                        <input type="text" id="matureYieldShow" name="matureYieldShow" placeholder="请输入内容"
-                                               data-pattern="" data-fixtype="2" data-textrange="4"
-                                               class="layui-input form-input text-number"
-                                               data-th-value="${entity?.matureYield}" disabled>
-                                        <span class="input-right-show">%</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="layui-form-item">
-                                <div class="form-inline-wrap" style=" width: 25%; padding:0px;" id="exerYieldDiv">
-                                    <label class="layui-form-label form-lable" style="width: 105px;">
-                                        <input type="radio" id="calculateField_exerYield" name="calculateField" value="exerYield" th:title="#{CfetsEtribBondInfo003.exerYield}" />
-                                    </label>
-                                    <div class="layui-input-inline input-inline">
-                                        <input type="text" id="exerYieldShow" name="exerYieldShow" placeholder="请输入内容"
-                                               data-pattern="" data-fixtype="2" data-textrange="4"
-                                               class="layui-input form-input text-number" disabled
-                                               data-th-value="${entity?.exerYield}" >
-                                        <span class="input-right-show">%</span>
-                                    </div>
-                                </div>
-                                <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
                                     <label class="layui-form-label form-lable" style="width: 105px;"
                                            data-th-text="#{CfetsEtribBondInfo003.tradeAmt}">劵面总额（万元）</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="tradeAmt" name="tradeAmt" placeholder="请输入内容"
                                                data-pattern="" data-fixtype="2" data-textrange='2'
                                                class="layui-input form-input text-number"
-                                               data-th-value="${entity?.tradeAmt}" disabled>
+                                               data-th-value="${entity?.tradeAmt}" >
                                         <span class="input-right-show">万元</span>
                                     </div>
                                 </div>
@@ -215,10 +176,51 @@
                                         <input type="text" id="entrustIntegrateNum" name="entrustIntegrateNum" placeholder="请输入内容"
                                                data-pattern="" data-fixtype="2" data-textrange='2'
                                                class="layui-input form-input text-number"
-                                               data-th-value="${entity?.entrustIntegrateNum}" disabled>
+                                               data-th-value="${entity?.entrustIntegrateNum}" >
                                         <span class="input-right-show">万元</span>
                                     </div>
                                 </div>
+                                <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
+                                    <label class="layui-form-label form-lable" style="width: 105px;">
+                                        <!--净价-->
+                                        <input type="radio" id="calculateField_price" name="calculateField" value="price" th:title="净价" />
+                                    </label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input type="text" id="priceShow" name="priceShow" placeholder="请输入内容"
+                                               data-pattern="" data-fixtype="2" data-textrange='4' required
+                                               class="layui-input form-input text-number"
+                                               data-th-value="${entity?.price}" disabled>
+                                        <label class="label-deviation-degree" id="deviationDegree"></label>
+                                        <span class="input-right-show">元</span>
+                                    </div>
+                                </div>
+                                <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
+                                    <label class="layui-form-label form-lable" style="width: 105px;">
+                                        <input type="radio" id="calculateField_matureYield" name="calculateField" value="matureYield" th:title="到期收益率" />
+                                    </label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input type="text" id="matureYieldShow" name="matureYieldShow" placeholder="请输入内容"
+                                               data-pattern="" data-fixtype="2" data-textrange="4"
+                                               class="layui-input form-input text-number"
+                                               data-th-value="${entity?.matureYield}" disabled>
+                                        <span class="input-right-show">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="form-inline-wrap" style=" width: 25%; padding:0px;" id="exerYieldDiv">
+                                    <label class="layui-form-label form-lable" style="width: 105px;">
+                                        <input type="radio" id="calculateField_exerYield" name="calculateField" value="exerYield" disabled th:title="行权收益率" />
+                                    </label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input type="text" id="exerYieldShow" name="exerYieldShow" placeholder="请输入内容"
+                                               data-pattern="" data-fixtype="2" data-textrange="4"
+                                               class="layui-input form-input text-number" disabled
+                                               data-th-value="${entity?.exerYield}" >
+                                        <span class="input-right-show">%</span>
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="layui-form-item">
                                 <div class="form-inline-wrap" style=" width: 100%; padding:0px;">
@@ -292,7 +294,7 @@
                                 <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
                                     <label class="layui-form-label form-lable" style="width: 105px;">结算金额</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" id="unitFpriceAmt" name="unitInt" placeholder="请输入内容"
+                                        <input type="text" id="unitFpriceAmt" name="unitFpriceAmt" placeholder="请输入内容"
                                                data-pattern="" data-fixtype="2" data-textrange='2'
                                                class="layui-input form-input text-number" disabled="disabled"
                                                data-th-value="${entity?.unitFpriceAmt}">
@@ -370,22 +372,10 @@
                             <i class="iconfont icon-arrow-down pro-down-icon"></i>
                         </h3>
                         <div class="pro-module-item">
-                          <!--  <div class="layui-form-item">
-                                <div class="form-inline-wrap" style=" width: 100%; padding:0px;">
-                                    <label class="layui-form-label form-label-wrap"
-                                           data-th-text="#{CfetsEtribBondInfo003.remark}" style="width: 105px;">备注</label>
-                                    <div class="layui-input-inline" style="width: 80%; margin: 0px; margin-left: auto;">
-                                          <textarea id="remark" name="remark" th:value="${entity?.remark}"
-                                              data-th-text="${entity?.remark}" class="layui-textarea"
-                                              placeholder="请输入内容"
-                                              data-th-placeholder="#{SysCommon.placeholder}" disabled></textarea>
-                                    </div>
-                                </div>
-                            </div>-->
                             <div class="riskclu" id="CfetsEtribBondinfo003_DIV2"><span id="riskTrialSpan"></span></div>
                             <div id="riskTrialRet">
                                 <table class="layui-table" id="riskTrialRetTable"
-                                       name="riskTrialRetList"></table>
+                                       name="riskTrialRetDto"></table>
                             </div>
                         </div>
                     </div>
@@ -393,8 +383,9 @@
 
                 <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin: 50px;">
                     <div class="text-center">
-                       <!-- <a id="CfetsEtrIbBondinfo003_btn_save" class="layui-btn layui-btn-sm btn-save" style="display: none;"
-                           data-th-text="#{SysCommon.save}">保存</a>-->
+                        <a id="CfetsEtrIbBondinfo003_btn_riskcal" class="layui-btn layui-btn-sm" >风险试算</a>
+                        <a id="CfetsEtrIbBondinfo003_btn_save" class="layui-btn layui-btn-sm btn-save" style="display: none;"
+                           data-th-text="#{SysCommon.save}">保存</a>
                         <a id="CfetsEtrIbBondinfo003_btn_submit" class="layui-btn layui-btn-sm  btn-submit"
                            style="display: none;"
                            data-th-text="#{SysCommon.submit}">提交</a>

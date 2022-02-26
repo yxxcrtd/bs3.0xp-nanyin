@@ -2,6 +2,7 @@ package com.joyintech.tams.exchange.common.db.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
 import com.joyintech.tams.exchange.common.utils.TradeUtils;
@@ -269,6 +270,7 @@ public class Entrust extends BaseEntity implements Serializable, EntrustInterfac
     private String extend2;
 
     private String tradeDate;
+    private String createDateTime;
 
     public boolean isNoCancelEntrust() {
         return noCancelEntrust;
@@ -743,6 +745,14 @@ public class Entrust extends BaseEntity implements Serializable, EntrustInterfac
 
     public void setTradeDate(String tradeDate) {
         this.tradeDate = tradeDate;
+    }
+
+    public String getCreateDateTime() {
+        return DateUtil.formatDateTime(createTime);
+    }
+
+    public void setCreateDateTime(String createDateTime) {
+        this.createDateTime = createDateTime;
     }
 
     public static Entrust getTemplateEntrust() {

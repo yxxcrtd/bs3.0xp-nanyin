@@ -311,6 +311,9 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
 
     @Override
     public void doUpdate(CfetsEtribBondInfo003Dto entity) {
+        if("save".equals(entity.getOperateType())){
+            return;
+        }
         if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
             boolean isSubmit = true;
             SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());

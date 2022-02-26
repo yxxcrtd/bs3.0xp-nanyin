@@ -673,7 +673,7 @@
         etr_entrust_add.BUSI_PS busiPs,/**委托方向**/
         etr_entrust_add.Term_Days term,/** 回购期限 **/
         etr_entrust.entrust_amt entrustAmt, /** 回购金额 **/
-        etr_entrust.Price price, /** 回购利率 **/
+        etr_entrust.Price * 100 price, /** 回购利率 **/
         etr_entrust_add.vpay_date fristSettleDate,/** 首期结算日 **/
         etr_entrust_add.mpay_date expireSettleDate,/** 到期结算日 **/
         etr_entrust_add.Cap_Days occupyDays,/** 占款天数 **/
@@ -683,12 +683,7 @@
         fin_product.Finprod_Market_Id finprodMarketId, /** 质押代码 **/
         fin_product.finprod_abbr finprodAbbr, /** 质押券名称 **/
         etr_pledge.Pledge_Ratio * 100 conRatio, /** 折算率 **/
-        case
-        when etr_entrust.trade_market = #{TRADE_PLACE_03} then
-        etr_pledge.PLEDGE_NUMBER/10
-        else
-        etr_pledge.PLEDGE_NUMBER
-        end as repSecNum, /** 质押数量  **/
+        etr_pledge.PLEDGE_NUMBER repSecNum, /** 质押数量  **/
         case
         when etr_entrust.trade_market = #{TRADE_PLACE_03} then
         #{UNIT_04}
@@ -806,7 +801,7 @@
             wfl_etr_entrust_add.BUSI_PS busiPs,/**委托方向**/
             wfl_etr_entrust_add.Term_Days term,/** 回购期限 **/
             wfl_etr_entrust.entrust_amt entrustAmt, /** 回购金额 **/
-            wfl_etr_entrust.Price price, /** 回购利率 **/
+            wfl_etr_entrust.Price * 100 price, /** 回购利率 **/
             wfl_etr_entrust_add.vpay_date fristSettleDate,/** 首期结算日 **/
             wfl_etr_entrust_add.mpay_date expireSettleDate,/** 到期结算日 **/
             wfl_etr_entrust_add.Cap_Days occupyDays,/** 占款天数 **/
@@ -816,12 +811,7 @@
             fin_product.Finprod_Market_Id finprodMarketId, /** 质押代码 **/
             fin_product.finprod_abbr finprodAbbr, /** 质押券名称 **/
             wfl_etr_pledge.Pledge_Ratio * 100 conRatio, /** 折算率 **/
-            case
-            when wfl_etr_entrust.trade_market = #{TRADE_PLACE_03} then
-            wfl_etr_pledge.PLEDGE_NUMBER/10
-            else
-            wfl_etr_pledge.PLEDGE_NUMBER
-            end as repSecNum, /** 质押数量  **/
+            wfl_etr_pledge.PLEDGE_NUMBER repSecNum, /** 质押数量  **/
             case
             when wfl_etr_entrust.trade_market = #{TRADE_PLACE_03} then
             #{UNIT_04}

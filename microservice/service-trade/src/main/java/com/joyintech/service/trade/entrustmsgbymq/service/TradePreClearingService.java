@@ -206,6 +206,16 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
     private IPlatformDate iPlatformDate;
     @Autowired
     private EtrEntrustDetailMapper  etrEntrustDetailMapper;
+
+    // add by etliu 20220225 start
+    // 质押券入出库没有生成入出库流水问题修复
+    /**
+     * 金融产品表
+     */
+    @Autowired
+    private FinProductMapper finProductMapper;
+    // add by etliu 20220225 end
+
     /**
      * 成交数据预清算
      *
@@ -419,18 +429,27 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         // 标准券入出库的成交数据有两笔，一笔是质押券的，一笔是标准券的，需要把标准券的那条过滤掉
         // 根据指令编号查投资指令，
         EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(infContractDetailfile.getEntrustId());
-        // 查询申报信息
-        Map<String, Object> map = new HashMap<>();
-        map.put("finprodId", etrEntrust.getFinprodId());
-        map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_质押代码.getValue());
-        FinProductOthCode finProductOthCode = entrustMsgbyMQMapper.selectFinProductOthCode(map);
-        String othCode = "";
-        if (finProductOthCode != null) {
-            othCode = finProductOthCode.getOthCode();
+        // modify by etliu 20220225 start
+        // 质押券入出库没有生成入出库流水问题修复
+//        // 查询申报信息
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("finprodId", etrEntrust.getFinprodId());
+//        map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_质押代码.getValue());
+//        FinProductOthCode finProductOthCode = entrustMsgbyMQMapper.selectFinProductOthCode(map);
+//        String othCode = "";
+//        if (finProductOthCode != null) {
+//            othCode = finProductOthCode.getOthCode();
+//        }
+//        if (etrEntrust != null && !StringUtil.equals(othCode, StringUtil.substringBefore(infContractDetailfile.getFinprodMarketId(), "."))) {
+//            return;
+//        }
+        if (etrEntrust != null) {
+            FinProduct finProduct = finProductMapper.selectByPrimaryKey(etrEntrust.getFinprodId());
+            if (!StringUtil.equals(finProduct.getFinprodMarketId(), infContractDetailfile.getFinprodMarketId())) {
+                return;
+            }
         }
-        if (etrEntrust != null && !StringUtil.equals(othCode, StringUtil.substringBefore(infContractDetailfile.getFinprodMarketId(), "."))) {
-            return;
-        }
+        // modify by etliu 20220225 end
         // add by etliu 20210825 end
 
         //标准券入出库DTO封装

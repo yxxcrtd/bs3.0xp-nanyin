@@ -160,4 +160,21 @@ public interface CfetsEtrDispatcherMapper {
      * @return
      */
     CfetsEtrDispatcherInfoOtcResponse getEtrDispatcherOtc(Map<String, Object> pageParam);
+
+    /**
+     * 查询业务类型
+     */
+    String getBusiTypePosition(@Param("entrustId") String entrustId);
+
+    /**
+     * 指令信息明细查询
+     *
+     * @param pageParam
+     * @return Page<FieldEtrDispatcherInfoResponse>
+     * @throws Exception Exception
+     * @see
+     * @since 1.0
+     */
+    CfetsEtrDispatcherInfoExcResponse getEtrDispatcherExcInfo(Map<String, Object> pageParam);
+
 }

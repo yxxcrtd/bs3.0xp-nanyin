@@ -709,7 +709,8 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         }
         /**************************************************************组合分配********************************************/
         /*************************************************************质押券信息*******************************************/
-        if (CollectionUtils.isEmpty(entity.getRepoEntrustPledgeDtos())) {
+        if (CollectionUtils.isEmpty(entity.getRepoEntrustPledgeDtos())
+                && StringUtil.equals(ps, DictCodeListExt3.交易方向_逆回购.getValue())) {
             errorList.add(new ValidMessage("质押券不可为空"));
         }
         if (!CollectionUtils.isEmpty(entity.getRepoEntrustPledgeDtos())) {

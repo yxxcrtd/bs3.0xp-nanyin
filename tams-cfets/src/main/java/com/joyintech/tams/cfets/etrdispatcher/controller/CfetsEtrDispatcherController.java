@@ -400,6 +400,9 @@ public class CfetsEtrDispatcherController extends BaseController {
                                                        @RequestBody CommonSearchInfoRequest dto) {
         try{
             Map<String,Object> resultData = cfetsEtrDispatcherService.getReadonlyFormEtrInfo(pageCode,dtCode,spcdCode,dto);
+            if (StringUtil.isNotEmpty(resultData)){
+                resultData = cfetsEtrDispatcherService.getReadonlyFormEtrInfoExc(pageCode,dtCode,spcdCode,dto);
+            }
             return new Message<Map<String,Object>>().success().setData(resultData);
         } catch (Exception e) {
             logger.error("查询指令信息明细分页数据异常", e);

@@ -1,6 +1,7 @@
 package com.joyintech.tams.exchange.common.bean;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.constant.EntrustStatus;
 import com.joyintech.tams.exchange.common.constant.Market;
@@ -145,6 +146,7 @@ public class EntrustQueryBean implements Serializable {
     private String extend2;
 
     private String tradeDate;
+    private String createDateTime;
 
     /**
      * ////////////////////////////查询无用字段
@@ -946,5 +948,13 @@ public class EntrustQueryBean implements Serializable {
 
     public void setTradeDate(String tradeDate) {
         this.tradeDate = tradeDate;
+    }
+
+    public String getCreateDateTime() {
+        return DateUtil.format(createTime, "HH:mm:ss");
+    }
+
+    public void setCreateDateTime(String createDateTime) {
+        this.createDateTime = createDateTime;
     }
 }

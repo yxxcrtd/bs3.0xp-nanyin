@@ -394,6 +394,16 @@ public class MstSecuritiesAccountService extends BaseService<MstSecuritiesAccoun
             map.put("tradePlat", DictCodeList.交易平台_竞价撮合平台.getValue());
             map.remove("SHARES_TRADE_PLATFORM_02");
         }
+        Map pageMode = (Map) map.get("pageMode");
+        if(pageMode != null) { // 设置导出条数
+            if(pageMode.get("pageNo")!=null){
+                page=Integer.parseInt(pageMode.get("pageNo").toString());
+            }
+            if(pageMode.get("pageSize")!=null){
+                length=Integer.parseInt(pageMode.get("pageSize").toString());
+            }
+
+        }
         return super.queryForPageForSelectReturn(page, length, () -> mstSecuritiesAccountMapper.getFinprodMarketInfoNewUi(map));
 
     }

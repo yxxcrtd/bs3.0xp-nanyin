@@ -581,7 +581,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             insertWfl(cfetsRepoDealDbDto);
             //头寸
             sendPositionMethod(entity, cfetsRepoDealDbDto, true, RequestUtil.getParam("confirmOk"));
-            oldPositionDeal(cfetsRepoDealDbDto, false);
+            this.oldPositionDeal(cfetsRepoDealDbDto, false);
         }
 //        if (StringUtil.isNotEmpty(type)) {
 //            throw new RuntimeException("cs by jp");
@@ -627,7 +627,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 }
                 throw new PositionException(messageStr);
             }
-            oldPositionDeal(cfetsRepoDealDbDto, false);
+            this.oldPositionDeal(cfetsRepoDealDbDto, false);
             try {
                 newEntity = WorkFlowUtil.getBusinessObjectFromRequest(CfetsBondDealRegisterQuoteDto.class, true);
                 // 工作流ID
@@ -656,7 +656,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         //头寸
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
             PositionHttpRequest.dorevoke(entity.getTotleTradeId(), DictCodeListExt1.子系统代码_交易.getValue(), DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), entity.getPs());
-            oldPositionDeal(cfetsRepoDealDbDto, true);
+            this.oldPositionDeal(cfetsRepoDealDbDto, true);
         }
         //处理指令执行进度
         this.insertEtrFinishStatus(cfetsRepoDealDbDto, operationType);
@@ -1842,7 +1842,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
     }
 
     /**
-     * 处理就头寸
+     * 处理旧头寸
      *
      * @param cfetsRepoDealDbDto
      * @param navigate           是否撤销
