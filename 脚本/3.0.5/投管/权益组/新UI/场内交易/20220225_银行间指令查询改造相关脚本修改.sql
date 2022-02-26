@@ -35,3 +35,6 @@ UPDATE CFG_READONLY_FORM_SHOW SET COLNAME = '对手席位' WHERE PAGECODE = 'Fie
 -- 修改指令金额、指令数量 小数位两位
 UPDATE CFG_READONLY_FORM_SHOW SET EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"2"}' WHERE PAGECODE = 'FieldEtrDispatcher' AND DTCODE = 'FieldEtrDispatcherInfo' AND SPCDCODE = 'F01EX002' AND COLCODE = 'entrustNum' AND COLNAME = '指令数量' ;
 UPDATE CFG_READONLY_FORM_SHOW SET EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"2"}' WHERE PAGECODE = 'FieldEtrDispatcher' AND DTCODE = 'FieldEtrDispatcherInfo' AND SPCDCODE = 'F01EX002' AND COLCODE = 'entrustAmt' AND COLNAME = '指令金额' ;
+
+-- 协议现券指令缺少资金账户
+INSERT INTO CFG_DATATABLE_SHOW (PAGECODE,DTCODE,SPCDCODE,COLCODE,COLNAME,DICTCODE,SEQNO,DISPLAYED,FROZEN,SORT,MAXLEN,EXTENDCFG,EFFERANGE,RANGEID,STATUS,REMARK1,REMARK2,REMARK3,ISKEY) VALUES ('EtrExchangeAgreeBond002', 'ETRINFOS', '999999', 'secAcctName', '资金账户', NULL, '17', '1', '0', '1', '100', '{"colAlign": "left","supportSearch":"模糊"}', '1', 'admin', '1', '0', NULL, NULL, '0');
