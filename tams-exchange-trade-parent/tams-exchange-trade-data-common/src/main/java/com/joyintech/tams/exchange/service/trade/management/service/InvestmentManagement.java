@@ -364,12 +364,18 @@ public class InvestmentManagement extends BaseService {
                                     traderSet.clear();
                                     traderSet.add(entrustOpeBean.getTrader());
                                 }
+								instructionService.asyncUpdate(instruction);
                             } else {
                                 instruction.setEntrustStatus(InstructionStatus.WAIT_RECEIVE.value);
+								List<String> traderSet = JsonUtils.getObjectListFromJson(instruction.getTradersInfo(), String.class);
+                                for(String s:traderSet) {
+                                	Instruction i = instruction.cloneInstruction();
+                                    i.setTradeId(s);
+                                    instructionService.asyncUpdate(i);
+                                }
                             }
                             entrustOpeBean.setErrorCode(ErrorCode.SUCCESS.value);
                             entrustOpeBean.setErrorMsg(ErrorCode.SUCCESS.errorMsg);
-                            instructionService.asyncUpdate(instruction);
                         } else {//失败
                             entrustOpeBean.setErrorCode(ErrorCode.INSTRUCTION_ACCEPT_OR_REFUSE_ERROR.value);
                             entrustOpeBean.setErrorMsg(ErrorCode.INSTRUCTION_ACCEPT_OR_REFUSE_ERROR.errorMsg);
