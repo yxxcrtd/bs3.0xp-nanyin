@@ -38,3 +38,12 @@ UPDATE CFG_READONLY_FORM_SHOW SET EXTENDCFG = '{"colAlign": "left","dataType":"a
 
 -- 协议现券指令缺少资金账户
 INSERT INTO CFG_DATATABLE_SHOW (PAGECODE,DTCODE,SPCDCODE,COLCODE,COLNAME,DICTCODE,SEQNO,DISPLAYED,FROZEN,SORT,MAXLEN,EXTENDCFG,EFFERANGE,RANGEID,STATUS,REMARK1,REMARK2,REMARK3,ISKEY) VALUES ('EtrExchangeAgreeBond002', 'ETRINFOS', '999999', 'secAcctName', '资金账户', NULL, '17', '1', '0', '1', '100', '{"colAlign": "left","supportSearch":"模糊"}', '1', 'admin', '1', '0', NULL, NULL, '0');
+
+
+-- 指令查询 首期修改
+-- 券面金额 - >	券面总额
+UPDATE CFG_READONLY_FORM_SHOW SET COLNAME= '券面总额' WHERE PAGECODE= 'FieldEtrDispatcher' AND DTCODE= 'FieldEtrDispatcherInfo' AND SPCDCODE= 'EX010' AND COLCODE= 'pledStrdPrinAmt' AND COLNAME= '券面金额' ;
+-- 到期结算金额 -> 到期结算额
+UPDATE CFG_READONLY_FORM_SHOW SET COLNAME= '到期结算额' WHERE PAGECODE= 'FieldEtrDispatcher' AND DTCODE= 'FieldEtrDispatcherInfo' AND SPCDCODE= 'EX010' AND COLCODE= 'mTradeAmt' AND COLNAME= '到期结算金额' ;
+-- 添加补充协议
+INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE,DTCODE,SPCDCODE,COLCODE,COLNAME,DICTCODE,SEQNO,EXTENDCFG,STATUS,REMARK1,REMARK2,REMARK3) VALUES ('FieldEtrDispatcher', 'FieldEtrDispatcherInfo', 'EX010', 'addCla', '补充协议', NULL, '25', '{"colAlign": "left"}', '1', '0', NULL, NULL);

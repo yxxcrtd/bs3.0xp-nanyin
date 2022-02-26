@@ -509,7 +509,8 @@
             <!-- ete.INV_MANAGER_ID invManagerId, -->
             su.REAL_NAME invManagerId,
             eted.TARGET_TYPE targetType, 
-            ete.COUNTER_ID counterId,
+            <!-- ete.COUNTER_ID counterId,-->
+            mcp.COUNTER_NAME counterId,
             eted.COUNTER_SEAT counterSeat,
             eted.COUNTER_CON_NO counterConNo,
             eted.TRADER trader,
@@ -555,6 +556,7 @@
         LEFT JOIN etr_pledge oee ON oete.entrust_id = oee.entrust_id   
         LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID
         LEFT JOIN SYS_USER su on ete.INV_MANAGER_ID = su.USER_NAME
+        left join MST_COUNTER_PARTY mcp on ete.COUNTER_ID = mcp.COUNTER_ID
         WHERE ete.entrust_id = #{entrustId}
 
         union all
@@ -605,8 +607,9 @@
         eted.ASSET_TYPE assetType,
         <!-- ete.INV_MANAGER_ID invManagerId, -->
         su.REAL_NAME invManagerId,
-        eted.TARGET_TYPE targetType, 
-        ete.COUNTER_ID counterId,
+        eted.TARGET_TYPE targetType,
+        <!-- ete.COUNTER_ID counterId,-->
+        mcp.COUNTER_NAME counterId,
         eted.COUNTER_SEAT counterSeat,
         eted.COUNTER_CON_NO counterConNo,
         eted.TRADER trader,
@@ -652,6 +655,7 @@
         LEFT JOIN etr_pledge oee ON oete.entrust_id = oee.entrust_id   
         LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID
         LEFT JOIN SYS_USER su on ete.INV_MANAGER_ID = su.USER_NAME
+        left join MST_COUNTER_PARTY mcp on ete.COUNTER_ID = mcp.COUNTER_ID
         WHERE ete.entrust_id = #{entrustId}
     </select>
 

@@ -80,7 +80,7 @@
                 AND T1.TRADE_ID= #{busiCode,jdbcType=VARCHAR}
             </otherwise>
         </choose>
-        order by NVL(T2.END_TIME_, T2.CLAIM_TIME_) desc
+        order by NVL(T2.END_TIME_, T2.CLAIM_TIME_) asc
     </select>
 
     <select id="queryTotalEntrustIdList" resultType="java.lang.String">
