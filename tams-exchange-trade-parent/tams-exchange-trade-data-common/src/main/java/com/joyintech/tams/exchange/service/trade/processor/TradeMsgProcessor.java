@@ -396,13 +396,28 @@ public class TradeMsgProcessor {
             }
         } else if (!Strings.isNullOrEmpty(ServiceApplication.INSTRUCTION_SERVICE) && EntrustUtils.isIntentionEntrust(orderInterface.getEntrustProp())) {
             if (instruction.getEntrustNum() > 0) {
-                instruction.setFrozenQuantity(BigDecimal.valueOf(instruction.getEntrustNum()));
+                if (instruction.getEntrustNum() < instruction.getEntrustLeftAmt().longValue() + instruction.getFrozenQuantity().longValue() + entrustVolume) {
+                    orderInterface.setErrorCode(ErrorCode.INSTRUCTIONS_NUMBER_ERROR.value);
+                    orderInterface.setErrorMsg(ErrorCode.INSTRUCTIONS_NUMBER_ERROR.errorMsg);
+                    return false;
+                }
+                instruction.setFrozenQuantity(BigDecimal.valueOf(instruction.getFrozenQuantity().longValue() + entrustVolume));
+                messageSenderService.pushProgressToMQ(instruction);
+                logger.info("frozen instruction EntrustNum {} FrozenQuantity {} EntrustLeftAmt {}", instruction.getEntrustNum(), instruction.getFrozenQuantity(), instruction.getEntrustLeftAmt());
+                return true;
             }
             if (instruction.getEntrustAmt().doubleValue() > 0) {
-                instruction.setFrozenQuantity(instruction.getEntrustAmt());
+                // 金额指令全部以净价处理， 需要重新计算指令金额冻结
+                BigDecimal instructionBalance = bondHelper.calculateBalanceForInstruction(orderInterface.getEntrustProp(), orderInterface.getAssetType(), orderInterface.getEntrustPrice(), orderInterface.getEntrustVolume(), entrustBalance);
+                if (TradeUtils.lessThan(instruction.getEntrustAmt(), TradeUtils.add(instruction.getEntrustLeftAmt(), instruction.getFrozenQuantity(), instructionBalance, 2))) {
+                    orderInterface.setErrorCode(ErrorCode.INSTRUCTIONS_BALANCE_ERROR.value);
+                    orderInterface.setErrorMsg(ErrorCode.INSTRUCTIONS_BALANCE_ERROR.errorMsg);
+                    return false;
+                }
+                instruction.setFrozenQuantity(TradeUtils.add(instruction.getFrozenQuantity(), instructionBalance, 2));
+                messageSenderService.pushProgressToMQ(instruction);
+                logger.info("frozen instruction EntrustAmt {} FrozenQuantity {} EntrustLeftAmt {}", instruction.getEntrustAmt(), instruction.getFrozenQuantity(), instruction.getEntrustLeftAmt());
             }
-
-            messageSenderService.pushProgressToMQ(instruction);
         }
         return true;
     }
