@@ -1,6 +1,7 @@
 package com.joyintech.tams.exchange.common.db.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
 import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import io.swagger.annotations.ApiModel;
@@ -153,6 +154,7 @@ public class TradeHistory implements Serializable {
     private String extend2;
 
     private String tradeDate;
+    private String dealTime;
 
     @Id
     public String getId() {
@@ -537,5 +539,14 @@ public class TradeHistory implements Serializable {
 
     public void setTradeDate(String tradeDate) {
         this.tradeDate = tradeDate;
+    }
+
+
+    public String getDealTime() {
+        return DateUtil.format(createTime,"HH:mm:ss");
+    }
+
+    public void setDealTime(String dealTime) {
+        this.dealTime = dealTime;
     }
 }

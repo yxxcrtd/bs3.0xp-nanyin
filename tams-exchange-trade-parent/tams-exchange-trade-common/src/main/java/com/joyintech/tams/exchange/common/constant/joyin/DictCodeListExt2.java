@@ -1819,7 +1819,7 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
 	交易方向_还本(DictCode.交易方向,"T08","还本"),
 	交易方向_买入(DictCode.交易方向,"T01","买入"),
 	交易方向_卖出(DictCode.交易方向,"T02","卖出"),
-	交易方向_行权_回售(DictCode.交易方向,"T03","行权-回售"),
+	交易方向_行权_回售(DictCode.交易方向,"T03","回售"),
 	交易方向_申购(DictCode.交易方向,"T04","申购"),
 	交易方向_申购确认(DictCode.交易方向,"T05","申购确认"),
 	交易方向_赎回(DictCode.交易方向,"T06","赎回"),

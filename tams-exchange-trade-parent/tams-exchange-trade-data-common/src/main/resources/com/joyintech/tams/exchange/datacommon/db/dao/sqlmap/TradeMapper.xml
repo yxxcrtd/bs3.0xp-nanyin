@@ -230,6 +230,7 @@
     </sql>
     <sql id="queryCondition2">
         <where>
+            a.TRADE_TYPE = 0
             <if test="entrustId != null and entrustId != ''">
                 AND a.ENTRUST_ID = #{entrustId}
             </if>

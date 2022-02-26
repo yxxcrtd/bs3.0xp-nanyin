@@ -317,7 +317,7 @@
             END AS floatingPL, -->
             FP.FINPROD_TYPE2                          AS finprodType2,
             FP.TRADE_MARKET                           AS tradeMarket,
-            SSAI.TRD_ACCT_ID                          AS acctNo,
+            SSAI.SEC_ACCT_NAME                          AS acctNo,
             TEMP.invAim invAim,
             c1.acctName as dealCurAcctName
         FROM
