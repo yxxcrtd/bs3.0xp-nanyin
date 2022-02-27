@@ -1176,7 +1176,8 @@ public class CfetsEtrDispatcherService extends BaseService{
                 totalInfo = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
                 infoForm.addAll(totalInfo);
             } else if (StringUtil.equals(DictCodeListExt3.头寸业务类型_债券借贷首期.getValue(), dto.getBusiTypePosition())) {
-                String repoPledgeModel = CacheUtil.getSysParam("repo_pledge_model");
+                //String repoPledgeModel = CacheUtil.getSysParam("repo_pledge_model");
+                String repoPledgeModel = "02";
                 spcdCode = spcdCode.concat(",").concat(repoPledgeModel);
                 infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
                 invInfoFrom = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode.concat(",P"));
@@ -1203,7 +1204,7 @@ public class CfetsEtrDispatcherService extends BaseService{
             } else {
 
                 //dto.setFinprodType2("F04"); //存款
-                dto.setFinprodType2("F02"); //场外基金
+                //dto.setFinprodType2("F02"); //场外基金
                 if (StringUtil.isNotEmpty(dto.getFinprodType2())) {
                     spcdCode = dto.getFinprodType2();
                     infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
@@ -1212,18 +1213,14 @@ public class CfetsEtrDispatcherService extends BaseService{
 
                     //资产四级类型
                     if (StringUtil.isNotEmpty(dto.getAssetType11())) {
-                        spcdCode = spcdCode.concat(",").concat(dto.getAssetType11());
-                        List<CfgReadonlyFormShow> infoForm1 = new ArrayList<>();
-                        infoForm1 = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
+                        List<CfgReadonlyFormShow> infoForm1 = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode.concat(",").concat(dto.getAssetType11()));
                         infoForm.addAll(infoForm1);
                     }
 
                     //交易方向
                     if (StringUtil.isNotEmpty(dto.getPs())) {
-                        spcdCode = spcdCode.concat(",").concat(dto.getPs());
-                        List<CfgReadonlyFormShow> infoForm2 = new ArrayList<>();
-                        infoForm2 = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
-                        infoForm.addAll(infoForm2);
+                        List<CfgReadonlyFormShow> infoForm1  = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode.concat(",").concat(dto.getPs()));
+                        infoForm.addAll(infoForm1);
                     }
 
                 }

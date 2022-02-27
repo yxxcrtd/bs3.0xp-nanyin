@@ -10,7 +10,7 @@ VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '12,02', 'portfolioName',
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3)
 VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '12,02', 'targetFinprodName', '标的债券', NULL, 4, '{"colAlign": "left"}', 1, 0, NULL, NULL);
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3)
-VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '12,02', 'shareNum', '券面总额', NULL, 5, '{"colAlign": "left","dataType":"amount","precision":"2","unit":"wanYuan"}', 1, 0, NULL, NULL);
+VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '12,02', 'shareNumWanYuan', '券面总额', NULL, 5, '{"colAlign": "left","dataType":"amount","precision":"2","unit":"wanYuan"}', 1, 0, NULL, NULL);
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3)
 VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '12,02', 'secAcctId', '证券账户', NULL, 6, '{"colAlign": "left"}', 1, 0, NULL, NULL);
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3)
@@ -90,7 +90,7 @@ VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '10', 'otherTradeMarket',
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3)
 VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '10', 'otherPs', '交易方向', NULL, 7, '{"colAlign": "left"}', 1, 0, NULL, NULL);
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3)
-VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '10', 'shareNum', '券面总额', NULL, 8, '{"colAlign": "left","dataType":"amount","precision":"2","unit":"wanYuan"}', 1, 0, NULL, NULL);
+VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '10', 'shareNumWanYuan', '券面总额', NULL, 8, '{"colAlign": "left","dataType":"amount","precision":"2","unit":"wanYuan"}', 1, 0, NULL, NULL);
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3)
 VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '10', 'rate', '回购利率', NULL, 9, '{"colAlign": "left","unit":"%","dataType":"amount","precision":"4"}', 1, 0, NULL, NULL);
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3)
@@ -166,7 +166,7 @@ VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '18', 'vDate', '起息日
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3)
 VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '18', 'mDate', '到期日', NULL, 11, '{"colAlign": "left"}', 1, 0, NULL, NULL);
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3)
-VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '18', 'termType', '期限', NULL, 12, '{"colAlign": "left","unit":"day"}', 1, 0, NULL, NULL);
+VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '18', 'termDays', '期限', NULL, 12, '{"colAlign": "left","unit":"day"}', 1, 0, NULL, NULL);
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3)
 VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '18', 'minAmt', '最低成交金额', NULL, 13, '{"colAlign": "left","dataType":"amount","precision":"2","unit":"yuan"}', 1, 0, NULL, NULL);
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3)
@@ -227,7 +227,7 @@ VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', 'F05', 'vDate', '起息�
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3)
 VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', 'F05,143', 'mDate', '到期日', NULL, 11, '{"colAlign": "left"}', 1, 0, NULL, NULL);
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3)
-VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', 'F05,143', 'termType', '期限', NULL, 12, '{"colAlign": "left","unit":"day"}', 1, 0, NULL, NULL);
+VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', 'F05,143', 'termDays', '期限', NULL, 12, '{"colAlign": "left","unit":"day"}', 1, 0, NULL, NULL);
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3)
 VALUES('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', 'F05', 'otherTradeMarket', '交易场所', NULL, 13, '{"colAlign": "left"}', 1, 0, NULL, NULL);
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3)

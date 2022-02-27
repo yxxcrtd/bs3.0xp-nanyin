@@ -29,8 +29,11 @@ public class CfetsEtrDispatcherInfoOtcResponse extends CfetsEtrDispatcherBaseInf
     @ApiModelProperty(name="mDate",value="到期日",example="2021-01-01")
     private String mDate;
 
-    @ApiModelProperty(name="termType",value="期限",example="1Y/1M")
+    @ApiModelProperty(name="termType",value="期限品种",example="1Y/1M")
     private String termType;
+
+    @ApiModelProperty(name="termDays",value="期限(天)",example="7")
+    private String termDays;
 
     @ApiModelProperty(name = "isAgreementEnd", value = "终止协议", example = "字符串1")
     private String isAgreementEnd;
@@ -247,5 +250,13 @@ public class CfetsEtrDispatcherInfoOtcResponse extends CfetsEtrDispatcherBaseInf
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getTermDays() {
+        return termDays;
+    }
+
+    public void setTermDays(String termDays) {
+        this.termDays = termDays;
     }
 }

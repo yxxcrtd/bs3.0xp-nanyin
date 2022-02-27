@@ -60,7 +60,7 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
     @ApiModelProperty(name="settleSpeed",value="清算速度",example="字符串1")
     private String settleSpeed;
 
-    @ApiModelProperty(name="settleSpeed",value="期限（天）",example="30")
+    @ApiModelProperty(name="termDays",value="期限（天）",example="30")
     private String termDays;
 
     @ApiModelProperty(name="effectFlag",value="有效状态code",example="01")

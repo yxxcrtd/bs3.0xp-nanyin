@@ -1,5 +1,6 @@
 package com.joyintech.tams.cfets.etrdispatcher.dto;
 
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrustBidPrice;
 import com.joyintech.tams.constant.DictCode;
@@ -8,6 +9,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 
@@ -142,8 +144,11 @@ public class CfetsEtrDispatcherInfoResponse extends CfetsEtrDispatcherBaseInfo{
     @ApiModelProperty(name="dealMode",value="挂钩利率",example="个人定期(整存整取)一年")
     private String dealMode;
 
-    @ApiModelProperty(name="termType",value="期限",example="1Y/1M")
+    @ApiModelProperty(name="termType",value="期限品种",example="1Y/1M")
     private String termType;
+
+    @ApiModelProperty(name="termDays",value="期限(天)",example="7")
+    private String termDays;
 
     @ApiModelProperty(name="dueDate",value="到期日",example="[2017-01-01 - 2017-02-01]")
     private String dueDate;
@@ -302,6 +307,10 @@ public class CfetsEtrDispatcherInfoResponse extends CfetsEtrDispatcherBaseInfo{
 
     public void setShareNum(BigDecimal shareNum) {
         this.shareNum = shareNum;
+    }
+
+    public BigDecimal getShareNumWanYuan() {
+        return ArithmeticUtil.divide(shareNum, new BigDecimal(10000), 6, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getEntrustOwnNum() {
@@ -609,5 +618,13 @@ public class CfetsEtrDispatcherInfoResponse extends CfetsEtrDispatcherBaseInfo{
 
     public void setPaBussType(String paBussType) {
         this.paBussType = paBussType;
+    }
+
+    public String getTermDays() {
+        return termDays;
+    }
+
+    public void setTermDays(String termDays) {
+        this.termDays = termDays;
     }
 }

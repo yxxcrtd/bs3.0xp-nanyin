@@ -178,7 +178,7 @@
         LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON ETR_ENTRUST_ADD.ASSET_TYPE = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
         LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm1 ON  ( ETR_ENTRUST.FINPROD_TYPE2 = btm1.INPUT_VALUE_2 OR  btm1.INPUT_VALUE_2 IS NULL)
                                                AND ( ETR_ENTRUST.Ps = btm1.INPUT_VALUE_3 OR  btm1.INPUT_VALUE_3 IS NULL)
-                                               AND ( ETR_ENTRUST.TRADE_PLAT = btm1.INPUT_VALUE_1 OR  btm1.INPUT_VALUE_1 IS NULL
+                                               AND ( ETR_ENTRUST.TRADE_PLAT = btm1.INPUT_VALUE_1 OR  btm1.INPUT_VALUE_1 IS NULL)
         LEFT JOIN (SELECT ENTRUST_ID, SUM(NVL(FINISH_AMT,0)) FINISH_AMT FROM ETR_FINISH_STATUS GROUP BY ENTRUST_ID) T10 ON ETR_ENTRUST.ENTRUST_ID = T10.ENTRUST_ID
         left join (select ENTRUST_ID,sum(nvl(FINISH_AMT,0)) as FINISH_AMT from ETR_FINISH_STATUS where ENTRUST_ID != TRADE_ID group by ENTRUST_ID) ETR_FINISH_STATUS_A
         on ETR_FINISH_STATUS_A.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
@@ -610,11 +610,12 @@
         SELECT
             ee.INV_MANAGER_ID invManagerId,
             su.REAL_NAME invManagerName,
+            sd.DEPT_NAME belongsDept,
             B.realName trader,
             ee.COUNTER_ID counterId,
             mcp.COUNTER_NAME counterName,
             ee.COUNTER_TRADER counterTrader,
-            mcct.TRADER_NAME counterTraderName,
+            NVL(mcct.TRADER_NAME, ee.COUNTER_TRADER)  counterTraderName,
             ee.CONTACT_INFO contactInfo
         FROM
             ETR_ENTRUST ee
@@ -632,6 +633,7 @@
                 LEFT JOIN SYS_USER su ON su.USER_NAME  = ee.INV_MANAGER_ID
                 LEFT JOIN MST_COUNTER_PARTY mcp ON mcp.COUNTER_ID = ee.COUNTER_ID
                 LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON mcct.TRADER_ID  = ee.COUNTER_TRADER
+                LEFT JOIN SYS_DEPARTMENT sd ON sd.DEPT_CODE  = su.DEPT_CODE
         WHERE
             ee.ENTRUST_ID = #{entrustId}
     </select>
@@ -665,9 +667,23 @@
             ete.ps ps,
             ete.ccy ccy,
             ete.remark remark,
-            ete.entrust_num shareNum,
+            ete.ENTRUST_NUM  shareNum,
             ete.entrust_amt shareAmt,
             eted.term_type termType,
+            decode(
+                    eted.ASSET_TYPE,
+                    'F01',
+                    '',
+                    'F07',
+                    eted.TERM_DAYS,
+                    'F10',
+                    eted.TERM_DAYS,
+                    'F12',
+                    eted.TERM_DAYS,
+                    'F16',
+                    eted.TERM_DAYS,
+                    eted.TERM_DAYS
+                ) termDays,
             ete.PRICE * 100 rate
         FROM ETR_ENTRUST ete
                  INNER JOIN ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
@@ -708,9 +724,23 @@
             ete.ps ps,
             ete.ccy ccy,
             ete.remark remark,
-            ete.entrust_num shareNum,
+            ete.ENTRUST_NUM  shareNum,
             ete.entrust_amt shareAmt,
             eted.term_type termType,
+            decode(
+                    eted.ASSET_TYPE,
+                    'F01',
+                    '',
+                    'F07',
+                    eted.TERM_DAYS,
+                    'F10',
+                    eted.TERM_DAYS,
+                    'F12',
+                    eted.TERM_DAYS,
+                    'F16',
+                    eted.TERM_DAYS,
+                    eted.TERM_DAYS
+                ) termDays,
             ete.PRICE * 100 rate
         FROM WFL_ETR_ENTRUST ete
                  INNER JOIN WFL_ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
@@ -752,7 +782,13 @@
             ete.price_model priceModel,
             ssai.sec_acct_name secAcctId,
             ete.ccy ccy,
-            (ete.entrust_num/100)/10000 shareNum,
+            decode(
+                    eted.ASSET_TYPE,
+                    'F01',
+                    NVL( ete.ENTRUST_NUM * 100, 0 ),
+                    'F10',
+                    NVL( ete.ENTRUST_NUM * 100, 0 ),
+                    NVL( ete.ENTRUST_AMT, ete.ENTRUST_NUM )) shareNum,
             eted.our_ent_num/100 entrustOwnNum,
             eted.lendin_ent_num integrateSecAmount,
             ete.price unitPrice,
@@ -768,6 +804,20 @@
             ete.entrust_amt entrustAmt,
             eted.deal_mode dealMode,
             eted.term_type termType,
+            decode(
+                    eted.ASSET_TYPE,
+                    'F01',
+                    '',
+                    'F07',
+                    eted.TERM_DAYS,
+                    'F10',
+                    eted.TERM_DAYS,
+                    'F12',
+                    eted.TERM_DAYS,
+                    'F16',
+                    eted.TERM_DAYS,
+                    eted.TERM_DAYS
+                ) termDays,
             to_char(eted.MDATE,'yyyy-MM-dd') || ' - ' || to_char(eted.MDATE2,'yyyy-MM-dd') as dueDate,
             eted.TERM_DAYS repoTerm,
             eted.FIRST_UNIT_CPRICE || ' - ' || eted.FIRST_UNIT_CPRICE2 firstprice,
@@ -815,7 +865,13 @@
         ete.price_model priceModel,
         ssai.sec_acct_name secAcctId,
         ete.ccy ccy,
-        (ete.entrust_num/100)/10000 shareNum,
+        decode(
+                eted.ASSET_TYPE,
+                'F01',
+                NVL( ete.ENTRUST_NUM * 100, 0 ),
+                'F10',
+                NVL( ete.ENTRUST_NUM * 100, 0 ),
+                NVL( ete.ENTRUST_AMT, ete.ENTRUST_NUM )) shareNum,
         eted.our_ent_num/100 entrustOwnNum,
         eted.lendin_ent_num integrateSecAmount,
         ete.price unitPrice,
@@ -831,6 +887,20 @@
         ete.entrust_amt entrustAmt,
         eted.deal_mode dealMode,
         eted.term_type termType,
+        decode(
+                eted.ASSET_TYPE,
+                'F01',
+                '',
+                'F07',
+                eted.TERM_DAYS,
+                'F10',
+                eted.TERM_DAYS,
+                'F12',
+                eted.TERM_DAYS,
+                'F16',
+                eted.TERM_DAYS,
+                eted.TERM_DAYS
+            ) termDays,
         to_char(eted.MDATE,'yyyy-MM-dd') || ' - ' || to_char(eted.MDATE2,'yyyy-MM-dd') as dueDate,
         eted.TERM_DAYS repoTerm,
         eted.FIRST_UNIT_CPRICE || ' - ' || eted.FIRST_UNIT_CPRICE2 firstprice,
