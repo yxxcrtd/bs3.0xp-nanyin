@@ -104,6 +104,9 @@ public class JoyinbusinessCommonController extends BaseController {
 	@ApiOperation(value = "债券简称列表查询", notes = "债券简称列表查询")
 	public Page<SelectOptionDto> getfinprodIdForSelect(CfetsSearchInfoRequest item) {
 		try {
+			if(!"T03".equals(item.getPs())) {
+				item.setPs(null);
+			}
 			PageMode page = new PageMode();
 			page.setPageNo(item.getPage());
 			page.setPageSize(item.getLength());
@@ -137,6 +140,7 @@ public class JoyinbusinessCommonController extends BaseController {
 			page.setPageNo(item.getPage());
 			page.setPageSize(item.getLength());
 			item.setPageMode(page);
+
 			return joyinbusinessCommonService.selectPortfolioIdList(item);
 		} catch (Exception e) {
 			logger.error("查询组合列表异常", e);

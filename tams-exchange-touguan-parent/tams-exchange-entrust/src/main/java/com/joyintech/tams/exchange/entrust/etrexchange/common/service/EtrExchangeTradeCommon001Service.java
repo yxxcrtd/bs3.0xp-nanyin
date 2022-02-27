@@ -4304,9 +4304,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			// 画面上乘以100后展示
 			BigDecimal converseRatios= ArithmeticUtil.multiply(new BigDecimal(converseRatio), BigDecimal.valueOf(100));
 			converseRatio=converseRatios.toString();
-		}else{
+		}/*else{
 			converseRatio="100";
-		}
+		}*/
 		return converseRatio;
 	}
 	/**
@@ -4882,6 +4882,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	public List<FinProductQuto> getFinProductQutoInfo(Map<String,Object> map){
 //        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getFinProductQutoInfo", map,
 //                FinProductQuto.class);
+		map.put("cDate",DateUtil.getSysDate());
 		return etrExchangeTradeCommonMapper.getFinProductQutoInfo(map);
 	}
 

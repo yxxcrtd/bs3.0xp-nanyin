@@ -60,6 +60,7 @@
             <input type="hidden" id="exerYield" name="exerYield" th:value="${entity?.exerYield}">
             <input type="hidden" id="unitFprice" name="unitFprice" th:value="${entity?.unitFprice}">
             <input type="hidden" id="unitInt" name="unitInt" th:value="${entity?.unitInt}">
+            <input type="hidden" id="finprodAbbr" name="finprodAbbr" th:value="${entity?.finprodAbbr}">
 
 
             <input type="text" id="entrustId" name="entrustId" disabled="disabled" style="display:none;"
@@ -80,12 +81,13 @@
                                     <label class="layui-form-label form-lable" style="width: 105px;"
                                            data-th-text="#{CfetsEtribBondInfo003.finprodName}">资产简称</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select type="text" id="finprodName" name="finprodAbbr"
+                                        <select type="text" id="finprodName" name="finprodName"
                                                 class="layui-input form-input input-select" allowClear="true"
                                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                                 required="required"
-                                                data-th-data-url="@{/common/joyinbusinessCommon/getfinprodIdForSelect}"
-                                                data-th-initvalue="${entity?.finprodMarketId}" >
+                                                data-th-data-url="@{/common/joyinbusinessCommon/getfinprodIdForSelect(ps=${entity.ps})}"
+                                                data-th-initvalue="${entity?.finprodMarketId}"
+                                                >
                                         </select>
                                     </div>
                                 </div>
@@ -112,20 +114,6 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-inline-wrap" style=" width: 25%;  padding:0px;">
-                                    <label class="layui-form-label form-lable" style="width: 105px;"
-                                           data-th-text="#{CfetsEtribBondInfo003.settleSpeed}">清算速度</label>
-                                    <div class="layui-input-inline input-inline">
-                                        <select  type="text" id="settleSpeed" name="settleSpeed" allowClear="true"
-                                                class="layui-input form-input input-select"
-                                                data-th-data-result='${ACCOUNT_SPEED}'
-                                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                                formatoption="true" data-th-initvalue="${entity?.settleSpeed}" >
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="layui-form-item" >
                                 <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
                                     <label class="layui-form-label form-label-wrap" style="width: 105px;"
                                            th:text="#{CfetsEtribBondInfo003.priceModel}">价格模式</label>
@@ -135,6 +123,21 @@
                                                 th:placeholder="#{SysCommon.placeholder}"
                                                 data-th-data-result='${PRICE_MODEL}'
                                                 allowClear="true" th:initValue="${entity?.priceModel}" ></select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="layui-form-item" >
+                                <div class="form-inline-wrap" style=" width: 25%;  padding:0px;" id="settleSpeedDiv">
+                                    <label class="layui-form-label form-lable" style="width: 105px;"
+                                           data-th-text="#{CfetsEtribBondInfo003.settleSpeed}">清算速度</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <select  type="text" id="settleSpeed" name="settleSpeed" allowClear="true"
+                                                 class="layui-input form-input input-select"
+                                                 data-th-data-result='${ACCOUNT_SPEED}'
+                                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                                 formatoption="true" data-th-initvalue="${entity?.settleSpeed}" >
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
@@ -158,7 +161,7 @@
                                         <span class="input-right-show">万元</span>
                                     </div>
                                 </div>
-                                <div class="form-inline-wrap selling" style=" width: 25%; padding:0px;">
+                                <div class="form-inline-wrap selling" style=" width: 25%; padding:0px;" id="entrustOwnNumDiv">
                                     <label class="layui-form-label form-lable" style="width: 105px;"
                                            data-th-text="#{CfetsEtribBondInfo003.entrustOwnAmt}">本方券券面总额</label>
                                     <div class="layui-input-inline input-inline">
@@ -169,7 +172,7 @@
                                         <span class="input-right-show">万元</span>
                                     </div>
                                 </div>
-                                <div class="form-inline-wrap selling" style=" width: 25%; padding:0px;">
+                                <div class="form-inline-wrap selling" style=" width: 25%; padding:0px;" id="entrustIntegrateNumDiv">
                                     <label class="layui-form-label form-lable" style="width: 105px;"
                                            data-th-text="#{CfetsEtribBondInfo003.entrustIntegrateAmt}">融入/卖空购回券面总额</label>
                                     <div class="layui-input-inline input-inline">
@@ -194,7 +197,7 @@
                                         <span class="input-right-show">元</span>
                                     </div>
                                 </div>
-                                <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
+                                <div class="form-inline-wrap" style=" width: 25%; padding:0px;" id="matureYieldDiv">
                                     <label class="layui-form-label form-lable" style="width: 105px;">
                                         <input type="radio" id="calculateField_matureYield" name="calculateField" value="matureYield" th:title="到期收益率" />
                                     </label>

@@ -10,14 +10,18 @@
 
 package com.joyintech.tams.cfets.etrib.bond.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.trade.investtrade.commanddispatcher.service.TrdCommandDispatcher001Service;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
+import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
+import com.joyintech.tams.business.common.dto.PageMode;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
@@ -48,6 +52,7 @@ import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -480,6 +485,49 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             return new Message<List<CfetsBussCombDistribtBaseDto>>().fail().setMessage("查询异常");
         }
      }
+
+    @RequestMapping("/selectPortfolioIdForSelect")
+    @ApiOperation(value = "组合列表查询", notes = "组合列表查询")
+    @ResponseBody
+    public Page<SelectOptionDto> selectPortfolioIdForSelect(CfetsSearchInfoRequest item) {
+        try {
+            if(StringUtil.isEmpty(item.getPs())) {
+                PageMode page = new PageMode();
+                page.setPageNo(item.getPage());
+                page.setPageSize(item.getLength());
+                item.setPageMode(page);
+                return joyinbusinessCommonService.selectPortfolioIdList(item);
+            }else {
+                List<CfetsBussCombDistribtBaseDto> list = cfetsEtrIbBondinfoService.queryCfetsBussCombDisList(item.getFinprodId());
+                List<SelectOptionDto> selectList = new ArrayList<>();
+                if(CollectionUtils.isNotEmpty(list)) {
+                    for(CfetsBussCombDistribtBaseDto e : list) {
+                        if(StringUtil.isNotEmpty(item.getInitValue()) && e.getPortfolioId().equals(item.getInitValue())) {
+                            SelectOptionDto dto = new SelectOptionDto();
+                            dto.setText(e.getPortfolioName());
+                            dto.setId(e.getPortfolioId());
+                            dto.setObject(e);
+                            selectList.add(dto);
+                            break;
+                        }
+                        if(StringUtil.isEmpty(item.getInitValue())) {
+                            SelectOptionDto dto = new SelectOptionDto();
+                            dto.setText(e.getPortfolioName());
+                            dto.setId(e.getPortfolioId());
+                            dto.setObject(e);
+                            selectList.add(dto);
+                        }
+                    }
+                }
+                return new Page(selectList);
+            }
+        } catch (Exception e) {
+            logger.error("查询组合列表异常", e);
+            return null;
+        }
+    }
+
+
     @ApiOperation(value = "查询资产是否行权债", notes = "查询资产是否行权债")
     @PostMapping("/queryAssetIsRight/{secId:.+}")
     @ResponseBody

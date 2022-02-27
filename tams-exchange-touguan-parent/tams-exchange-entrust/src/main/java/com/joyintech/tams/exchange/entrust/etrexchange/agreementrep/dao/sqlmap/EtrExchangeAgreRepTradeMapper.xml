@@ -483,6 +483,10 @@
         ) TEMP WHERE 1=1
         <!-- 关键字模糊查询 -->
         <include refid="etrExchangePositionsAnd"/>
+        <!--前端传入排序字段-->
+        <if test="pageMode.sort != null and pageMode.sort != '' and pageMode.direction != null and pageMode.direction != ''">
+            order by ${pageMode.sort}  ${pageMode.direction}
+        </if>
     </select>
     <sql id="etrExchangePositionsAnd">
         <if test="search != null and search != ''">
@@ -622,6 +626,10 @@
         WHERE 1=1
         <!-- 关键字模糊查询 -->
         <include refid="etrExchangeOnWayRepAnd"/>
+        <!--前端传入排序字段-->
+        <if test="pageMode.sort != null and pageMode.sort != '' and pageMode.direction != null and pageMode.direction != ''">
+            order by ${pageMode.sort}  ${pageMode.direction}
+        </if>
     </select>
     <sql id="etrExchangeOnWayRepAnd">
         <if test="search != null and search != ''">
@@ -706,7 +714,9 @@
         SDL3.ITEM_VALUE tradePlatString,
         SDL4.ITEM_VALUE psStr,
         btm.OUTPUT_VALUE_1 busiTypeTg,
-        SYS_USER.REAL_NAME invManagerName
+        SYS_USER.REAL_NAME invManagerName,
+        etr_entrust_add.TRADER as homeTrader,
+        etr_entrust.REMARK as addCla
         from etr_entrust                            /** 委托指令 **/
         inner JOIN etr_entrust_add                  /** 委托指令附属 **/
         ON    etr_entrust.entrust_id = etr_entrust_add.entrust_id
@@ -834,7 +844,9 @@
             SDL3.ITEM_VALUE tradePlatString,
             SDL4.ITEM_VALUE psStr,
             btm.OUTPUT_VALUE_1 busiTypeTg,
-            SYS_USER.REAL_NAME invManagerName
+            SYS_USER.REAL_NAME invManagerName,
+            wfl_etr_entrust_add.TRADER as homeTrader,
+            wfl_etr_entrust.REMARK as addCla
             from wfl_etr_entrust
             inner JOIN wfl_etr_entrust_add
             ON    wfl_etr_entrust.entrust_id = wfl_etr_entrust_add.entrust_id
@@ -895,7 +907,13 @@
         ) T1 WHERE 1=1
         <!-- 关键字模糊查询 -->
         <include refid="etrExchangeEntrustAnd"/>
-        ORDER BY T1.CREATE_TIME DESC
+        <!--前端传入排序字段-->
+        <if test="pageMode.sort != null and pageMode.sort != '' and pageMode.direction != null and pageMode.direction != ''">
+            order by ${pageMode.sort}  ${pageMode.direction}
+        </if>
+        <if test="pageMode.sort == null or pageMode.sort == '' or pageMode.direction == null or pageMode.direction == ''">
+            ORDER BY T1.CREATE_TIME DESC
+        </if>
 
     </select>
     <sql id="etrExchangeEntrustAnd">

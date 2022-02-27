@@ -96,6 +96,7 @@
         on T2.DEAL_CUR_ACCT = c1.acctNo1 and nvl(T1.CCY, 'CNY') = c1.ccy
         where T1.TRADE_MARKET in ('03','04')
         AND T2.ASSET_TYPE NOT IN ('F17')
+        AND T1.CREATE_USER=#{userId}
         <if test="sysDate !=null and !sysDate.equals('')">
             AND T1.ENTRUST_DATE = to_date(#{sysDate},'yyyy-MM-dd')
         </if>
@@ -121,12 +122,6 @@
         </if>
         <if test="finprodMarketId != null and !finprodMarketId.equals('')">
             AND T1.FINPROD_ID =#{finprodMarketId}
-        </if>
-        <if test="finprodMarketIds != null and finprodMarketIds.size() > 0">
-            AND T7.FINPROD_MARKET_ID in
-            <foreach item="item" index="index" collection="finprodMarketIds" open="(" separator="," close=")">
-                #{item, jdbcType=VARCHAR}
-            </foreach>
         </if>
         <if test="entrustTypeList != null and entrustTypeList.size()>0">
             <foreach collection="entrustTypeList" open="AND T1.ENTRUST_TYPE in(" close=")" separator="," item="item">
@@ -204,6 +199,7 @@
         on T2.DEAL_CUR_ACCT = c1.acctNo1 and nvl(T1.CCY, 'CNY') = c1.ccy
         where T1.TRADE_MARKET in ('03','04')
         AND T2.ASSET_TYPE NOT IN ('F17')
+        AND T1.CREATE_USER=#{userId}
         <if test="sysDate !=null and !sysDate.equals('')">
             AND T1.ENTRUST_DATE = to_date(#{sysDate},'yyyy-MM-dd')
         </if>
@@ -251,7 +247,7 @@
             AND T1.FINPROD_MARKET_ID = #{secId,jdbcType=VARCHAR}
         </if>
         <if test="finprodMarketIds != null and finprodMarketIds.size() > 0">
-            AND T1.FINPROD_MARKET_ID in
+            AND T1.FINPRODMARKETID in
             <foreach item="item" index="index" collection="finprodMarketIds" open="(" separator="," close=")">
                 #{item, jdbcType=VARCHAR}
             </foreach>
@@ -315,7 +311,7 @@
             END AS floatingPL, -->
             FP.FINPROD_TYPE2                          AS finprodType2,
             FP.TRADE_MARKET                           AS tradeMarket,
-            SSAI.TRD_ACCT_ID                          AS acctNo,
+            SSAI.SEC_ACCT_NAME                          AS acctNo,
             TEMP.invAim invAim,
             c1.acctName as dealCurAcctName
         FROM
@@ -596,6 +592,10 @@
         where
         1=1
         <include refid="etrExchangeBundAnd"/>
+        <!--前端传入排序字段-->
+        <if test="sort != null and sort != '' and direction != null and direction != ''">
+            order by ${sort}  ${direction}
+        </if>
     </select>
     <!-- 场内交易债券质押持仓查询 -->
     <select id="findZqzyPositionsPage" parameterType="Map"
@@ -1538,7 +1538,7 @@
         <if test="search != null and search != ''">
             and (
             T1.entrustId|| '|' ||sdl1.ITEM_VALUE|| '|' ||sdl2.ITEM_VALUE|| '|' ||sdl3.ITEM_VALUE|| '|' ||T1.portfolioId|| '|' ||T1.portfolioName|| '|' ||T1.finprodId|| '|' ||
-            T1.finprodAbbr|| '|' ||T1.assetType|| '|' || sdl4.ITEM_VALUE|| '|' || T1.dealCurAcctName|| '|' || T1.finprodMarketId
+            T1.finprodAbbr|| '|' ||T1.assetType|| '|' || sdl4.ITEM_VALUE|| '|' || T1.dealCurAcctName|| '|' || T1.finprodMarketId|| '|' || T1.SEC_ACCT_NAME
             like '%' || #{search} || '%'
             )
             <if test="search_isNumberFlag != null and search_isNumberFlag == true">

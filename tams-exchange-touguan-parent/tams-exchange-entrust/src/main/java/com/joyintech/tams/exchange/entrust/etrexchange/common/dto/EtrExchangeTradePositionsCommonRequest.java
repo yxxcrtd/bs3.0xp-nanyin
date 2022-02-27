@@ -61,6 +61,15 @@ public class EtrExchangeTradePositionsCommonRequest {
     @ApiModelProperty(name="finprodMarketIds",value="多个市场代码",example="A,B")
     private String finprodMarketIds;
 
+    @ApiModelProperty(name="从pageMode获取",value="从pageMode获取")
+    public String getSort() {
+        return pageMode.getSort();
+    }
+    @ApiModelProperty(name="从pageMode获取",value="从pageMode获取")
+    public String getDirection() {
+        return pageMode.getDirection();
+    }
+
     public String getFinprodMarketId() {
         return finprodMarketId;
     }
