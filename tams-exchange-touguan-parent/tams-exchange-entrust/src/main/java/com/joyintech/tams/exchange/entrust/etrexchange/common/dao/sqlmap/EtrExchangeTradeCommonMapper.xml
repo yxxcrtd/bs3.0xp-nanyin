@@ -1542,8 +1542,8 @@
             like '%' || #{search} || '%'
             )
             <if test="search_isNumberFlag != null and search_isNumberFlag == true">
-                or (T1.implementPercent = #{search})
-                or (T1.dealPercent = #{search})
+                or (T1.implementPercent*100 = #{search})
+                or (T1.dealPercent*100 = #{search})
                 or (T1.price = #{search})
                 or (T1.entrustAmt = #{search})
                 or (T1.entrustNum = #{search})
@@ -1564,8 +1564,8 @@
                 or (M.sellNum = #{search})
                 or (M.positionsAmt = #{search})
                 or (M.price = #{search})
-                or (M.floating = #{search})
-                or (M.floatingPL = #{search})
+                OR (M.PRICE*M.ptlPositionsNum-M.positionsAmt =#{search})
+                OR ((M.PRICE*M.ptlPositionsNum-M.positionsAmt)/(M.PRICE*M.ptlPositionsNum) =#{search})
             </if>
         </if>
     </sql>

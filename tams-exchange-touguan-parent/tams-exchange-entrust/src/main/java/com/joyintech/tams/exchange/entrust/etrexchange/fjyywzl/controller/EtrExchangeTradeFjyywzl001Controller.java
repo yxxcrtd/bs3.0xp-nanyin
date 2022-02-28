@@ -63,9 +63,7 @@ public class EtrExchangeTradeFjyywzl001Controller extends BaseController {
     @PostMapping("/findZqzyPositionsPage")
     public Message<Page<EtrExchangeTradeFjyywzlZqzyDto>> findZqzyPositionsPage(@RequestBody EtrExchangeTradeZqzyRequest request){
         try {
-            Map<String, Object> map = BeanUtil.object2Map(request);
-            map.put("search_isNumberFlag", BaseMap.isNumeric(request.getSearch()));
-            Page<EtrExchangeTradeFjyywzlZqzyDto> list = etrExchangeTradeFjyywzl001Service.findZqzyPositionsPage(map);
+            Page<EtrExchangeTradeFjyywzlZqzyDto> list = etrExchangeTradeFjyywzl001Service.findZqzyPositionsPage(request);
             return new Message<Page<EtrExchangeTradeFjyywzlZqzyDto>>().success().setData(list);
         }catch (Exception e) {
             logger.error("查询债券质押数据异常",e);
@@ -109,8 +107,7 @@ public class EtrExchangeTradeFjyywzl001Controller extends BaseController {
         // 导出
         ExcelUitl.doExport(requestDto, response, "债券质押列表", () -> {
             EtrExchangeTradeZqzyRequest dto = requestDto.getDto(EtrExchangeTradeZqzyRequest.class);
-            Map<String, Object> map = BeanUtil.object2Map(dto);
-            List dataList = etrExchangeTradeFjyywzl001Service.findZqzyPositionsPage(map).getRoot();
+            List dataList = etrExchangeTradeFjyywzl001Service.findZqzyPositionsPage(dto).getRoot();
             return dataList;
         });
     }
