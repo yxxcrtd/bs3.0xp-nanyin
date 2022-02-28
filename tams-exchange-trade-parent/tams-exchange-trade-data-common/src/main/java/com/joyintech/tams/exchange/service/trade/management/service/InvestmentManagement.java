@@ -7,6 +7,7 @@ import com.google.common.base.Strings;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.bean.instrument.MinPriceAndMinTrdUnitLimitBean;
 import com.joyintech.tams.exchange.common.bean.investment.BusinessDepartmentBean;
@@ -204,6 +205,9 @@ public class InvestmentManagement extends BaseService {
             }
             if (Objects.nonNull(DictCodeListExt1.from(DictCode.金融产品类型_投管用, newInstruction.getFinprodType2()))) {
                 newInstruction.setFinprodType2(DictCodeListExt1.from(DictCode.金融产品类型_投管用, newInstruction.getFinprodType2()).getCodeName());
+            }
+            if (Objects.nonNull(DictCodeListExt1.from(DictCode.投管业务类型, newInstruction.getBusiTypeTg()))) {
+                newInstruction.setBusiTypeTg(DictCodeListExt1.from(DictCode.投管业务类型, newInstruction.getBusiTypeTg()).getCodeName());
             }
             newInstruction.setProgress(newInstruction.getProgress());
             newInstruction.setDealProgress(newInstruction.getDealProgress());
