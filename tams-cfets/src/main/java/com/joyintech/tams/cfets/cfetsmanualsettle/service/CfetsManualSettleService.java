@@ -657,7 +657,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                         ||StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收修改.getValue())){
 
                     if(StringUtil.equals(entity.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
-                        if (StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())&&
+                        if ((StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
+                                || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue()))&&
                                 StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
                             //插入旧头寸
                             insertOldPosition(cfetsManualSettleInsertDto,entity.getButtonType());
@@ -900,7 +901,11 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
         for(CfetsManualSettleDealInfo item:listTemp){
             FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
-            finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
+            if (StringUtil.equals(buttonType, DictCodeListExt3.交收操作类型_回溯.getValue())) {
+                finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_撤销.getValue());
+            } else {
+                finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
+            }
             //finProductTradeDto.setTotalFaceValue(item.getTotalFaceValue());// 劵面总额
             finProductTradeDto.setNeedSum(true);
             BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
