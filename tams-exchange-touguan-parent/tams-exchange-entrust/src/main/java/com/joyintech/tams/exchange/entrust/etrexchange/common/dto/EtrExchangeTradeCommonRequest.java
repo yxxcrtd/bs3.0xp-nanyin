@@ -31,6 +31,27 @@ public class EtrExchangeTradeCommonRequest {
     @ApiModelProperty(name="othType",value="业务类型")
     private String othType;
 
+    @ApiModelProperty(name="finprodType2",value="金融产品类型")
+    private String finprodType2;
+
+    @ApiModelProperty(name="ps",value="交易方向")
+    private String ps;
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
+    }
+
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
+    }
 
     public String getFinprodId() {
         return finprodId;
