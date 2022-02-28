@@ -25,12 +25,12 @@ public class InterfPositionConfigDto extends BaseEntity{
     /**
      * 交易平台
      */
-    private String TradePlat;
+    private String tradePlat;
     
     /**
      * 业务品种
      */
-    private String FinprodType;
+    private String finprodType;
     
     /**
      * 交易方向
@@ -60,20 +60,21 @@ public class InterfPositionConfigDto extends BaseEntity{
 		this.positionType = positionType;
 	}
 
+
 	public String getTradePlat() {
-		return TradePlat;
+		return tradePlat;
 	}
 
 	public void setTradePlat(String tradePlat) {
-		TradePlat = tradePlat;
+		this.tradePlat = tradePlat;
 	}
 
 	public String getFinprodType() {
-		return FinprodType;
+		return finprodType;
 	}
 
 	public void setFinprodType(String finprodType) {
-		FinprodType = finprodType;
+		this.finprodType = finprodType;
 	}
 
 	public String getPs() {

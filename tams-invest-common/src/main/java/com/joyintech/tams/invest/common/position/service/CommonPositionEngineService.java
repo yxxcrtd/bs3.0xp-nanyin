@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.common.position.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -83,13 +84,22 @@ public class CommonPositionEngineService {
 	 * @param entity
 	 * @return
 	 */
-	public String getPositionInterType(String positionType,String TradePlat,String FinprodType,String ps,String busiAct,String entity) {
-		String key = positionType+TradePlat+FinprodType+ps+busiAct+entity;
-		if(CONFIG_MAP.get(key)==null) {
-			List<InterfPositionConfigDto> list = this.searchInterfPositionConfig();
-			for(InterfPositionConfigDto dto:list) {
-				String k = dto.getPositionType()+dto.getTradePlat()+dto.getFinprodType()+dto.getPs()+dto.getBusiAct()+dto.getEntity();
-				CONFIG_MAP.put(k, dto);
+	public String getPositionInterType(String positionType,String tradePlat,String finprodType,String ps,String busiAct,String entity) {
+		String key = positionType+tradePlat+finprodType+ps+busiAct+entity;
+		InterfPositionConfigDto interfPositionConfigDto = CONFIG_MAP.get(key);
+		if(interfPositionConfigDto==null || cacheInvalid(interfPositionConfigDto.getUpdateTime())) {
+			InterfPositionConfigDto where = new InterfPositionConfigDto();
+			where.setPositionType(positionType);
+			where.setTradePlat(tradePlat);
+			where.setFinprodType(finprodType);
+			where.setPs(ps);
+			where.setBusiAct(busiAct);
+			where.setEntity(entity);
+			List<InterfPositionConfigDto> list = interfPositionConfigMapper.searchInterfPositionConfigByWhere(where);
+			if(null!=list && list.size()>0) {
+				InterfPositionConfigDto dto = list.get(0);
+				dto.setUpdateTime(new Date());
+				CONFIG_MAP.put(key, dto);
 			}
 		}
 		InterfPositionConfigDto configDto = CONFIG_MAP.get(key);
@@ -157,6 +167,24 @@ public class CommonPositionEngineService {
 	        }
 		}
 		return busiType;
+	}
+	
+	/**
+	 * 判断缓存是否过期
+	 * @param date
+	 * @return
+	 */
+	private boolean cacheInvalid(Date date) {
+		if(date==null) {
+			return true;
+		}
+		Date cacheTime = new Date(date.getTime() + 60*1000);//TODO生产环境时间调长，或者从系统变量中取值
+		Date nowTime = new Date();
+		if(nowTime.after(cacheTime)) {
+			return true;
+		}else {
+			return false;
+		}
 	}
 
 }

@@ -3,8 +3,8 @@
 <mapper namespace="com.joyintech.tams.invest.common.position.dao.InterfPositionConfigMapper">
 	<resultMap id="InterfPositionConfigResult" type="com.joyintech.tams.invest.common.position.dto.InterfPositionConfigDto" >
         <result column="POSITION_TYPE" property="positionType" jdbcType="VARCHAR" />
-        <result column="TRADE_PLAT" property="TradePlat" jdbcType="VARCHAR" />
-        <result column="FINPROD_TYPE" property="FinprodType" jdbcType="VARCHAR" />
+        <result column="TRADE_PLAT" property="tradePlat" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
         <result column="PS" property="ps" jdbcType="VARCHAR" />
         <result column="BUSI_ACT" property="busiAct" jdbcType="VARCHAR" />
         <result column="ENTITY" property="entity" jdbcType="VARCHAR" />
@@ -18,6 +18,19 @@
     
 	<select id="searchInterfPositionConfig" resultMap="InterfPositionConfigResult" parameterType="com.joyintech.tams.invest.common.position.dto.InterfPositionConfigDto">
 		select POSITION_TYPE,TRADE_PLAT,FINPROD_TYPE,PS,BUSI_ACT,ENTITY,INTERF_TYPE from INTERF_POSITION_CONFIG 
+	</select>
+	
+	<!-- 查询满足条件的接口头寸配置 -->
+	<select id="searchInterfPositionConfigByWhere" resultMap="InterfServiceConfigResult" parameterType="com.joyintech.tams.invest.interf.trade.common.dto.InterfServiceConfigDto">
+		select POSITION_TYPE,TRADE_PLAT,FINPROD_TYPE,PS,BUSI_ACT,ENTITY,INTERF_TYPE from INTERF_POSITION_CONFIG 
+			<where>
+				<if test="positionType != null  and positionType != ''"> and POSITION_TYPE=#{positionType,jdbcType=VARCHAR} </if>
+				<if test="tradePlat != null  and tradePlat != ''"> and TRADE_PLAT=#{tradePlat,jdbcType=VARCHAR} </if>
+				<if test="finprodType != null  and finprodType != ''"> and FINPROD_TYPE=#{finprodType,jdbcType=VARCHAR} </if>
+				<if test="ps != null  and ps != ''"> and PS=#{ps,jdbcType=VARCHAR} </if>
+				<if test="busiAct != null  and busiAct != ''"> and BUSI_ACT=#{busiAct,jdbcType=VARCHAR} </if>
+				<if test="entity != null  and entity != ''"> and ENTITY=#{entity,jdbcType=VARCHAR} </if>
+			</where>
 	</select>
 	
 </mapper>

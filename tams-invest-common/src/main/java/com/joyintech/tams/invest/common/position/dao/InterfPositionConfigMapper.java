@@ -24,5 +24,6 @@ public interface InterfPositionConfigMapper {
      * @return
      */
 	List<InterfPositionConfigDto> searchInterfPositionConfig();
+	List<InterfPositionConfigDto> searchInterfPositionConfigByWhere(InterfPositionConfigDto where);
     
 }
