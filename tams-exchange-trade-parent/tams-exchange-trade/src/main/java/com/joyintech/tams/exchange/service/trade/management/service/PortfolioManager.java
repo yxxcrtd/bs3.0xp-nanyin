@@ -309,7 +309,7 @@ public class PortfolioManager extends BaseService {
         // 获取多组合
         List<InstructionDetail> instructionDetails = instructionDetailService.queryInstructionDetailsByInstructionId(instructionId);
 
-        if (Objects.isNull(instructionDetails) || instructionDetails.size() == 0) {
+        if (instructionDetails.isEmpty()) {
             // 单组合时处理
             InstructionDetail instructionDetail = new InstructionDetail();
             instructionDetail.setEntrustId(instruction.getEntrustId());
@@ -469,7 +469,7 @@ public class PortfolioManager extends BaseService {
         if (isVolume && DictCodeListExt3.交易方向_债转股.getValue().equals(instruction.getPs())) {
             long bondPaperValue = 100L;
             for (PortfolioCalculateResponse response : list) {
-                response.setConNum(response.getInstructionLeftNum() * bondPaperValue / response.getEntrustPrice().longValue());
+                response.setConNum(BigDecimal.valueOf(response.getInstructionLeftNum() * bondPaperValue).divide(response.getEntrustPrice(), 0, RoundingMode.UP).longValue());
             }
         }
 
