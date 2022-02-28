@@ -19,6 +19,7 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+import io.swagger.annotations.ApiModel;
 
 import java.math.BigDecimal;
 
@@ -30,7 +31,7 @@ import java.math.BigDecimal;
  * @see EtrExchangeTradeFjyywzlZqzyDto
  * @since 1.0
  */
-@PageId("EtrExchangeTrade002")
+@ApiModel(value="债券质押列表查询返回参数",description="债券质押列表查询返回参数")
 public class EtrExchangeTradeFjyywzlZqzyDto extends BaseEntity {
 
     /**

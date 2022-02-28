@@ -21,7 +21,6 @@ import com.joyintech.tams.exchange.common.bean.investment.PtlAuthInfo;
 import com.joyintech.tams.exchange.common.bean.investment.TradeTimeBean;
 import com.joyintech.tams.exchange.common.bean.request.DeviationDegreeRequest;
 import com.joyintech.tams.exchange.common.bean.request.EtrDispatcherInfoRequest;
-import com.joyintech.tams.exchange.common.bean.response.EtrDispatcherInfoResponse;
 import com.joyintech.tams.exchange.common.bean.response.ExchangeContextResponse;
 import com.joyintech.tams.exchange.common.cache.TradeTimeService;
 import com.joyintech.tams.exchange.common.cache.config.DataServiceConfig;
@@ -185,6 +184,7 @@ public class CommonManagement extends BaseService {
         response.setFairModeWithUnacceptInstruction(CacheUtil.getSysParam(ExchangeConstant.FAIR_MODE_WITH_UNACCEPT_INSTRUCTION_IN_PARA));
         response.setFairModeEntrustPriceBestThanInstruction(CacheUtil.getSysParam(ExchangeConstant.FAIR_MODE_ENTRUST_PRICE_BEST_THAN_INSTRUCTION_IN_PARA));
         response.setTradeTimeSwitch(CacheUtil.getSysParam(ExchangeConstant.ETR_TRADE_TIME_SWITCH));
+        response.setBondTradedUnit(CacheUtil.getSysParam(ExchangeConstant.BOND_TRADED_UNIT));
 
         return response;
     }
@@ -436,10 +436,10 @@ public class CommonManagement extends BaseService {
         return null;
     }
 
-    public Message<Map<String,Object>> getEtrDispatcherInfo(EtrDispatcherInfoRequest request) {
+    public Message<Map<String, Object>> getEtrDispatcherInfo(EtrDispatcherInfoRequest request) {
         try {
             String url = ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.getEtrDispatcherInfo + request.getBusiTypePosition();
-            Message<Map<String,Object>> response = null;
+            Message<Map<String, Object>> response = null;
             if (isSingle) {
                 response = simpleRestTemplate.postForObject(url, request, Message.class);
             } else {

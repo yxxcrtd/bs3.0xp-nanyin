@@ -74,6 +74,19 @@ public class PortfolioManager extends BaseService {
     @Autowired
     private QuoteTickService quoteTickService;
 
+    public static void main(String[] args) {
+
+        BigDecimal detailNum = BigDecimal.valueOf(10L);
+        BigDecimal instructionNum = BigDecimal.valueOf(90L);
+        BigDecimal totalEntrustNum = BigDecimal.valueOf(90L);
+        BigDecimal disRate = detailNum.divide(instructionNum, 8, RoundingMode.HALF_UP);
+        System.out.println(disRate);
+
+        BigDecimal entrustNum = totalEntrustNum.multiply(detailNum).divide(instructionNum, 8, RoundingMode.HALF_UP);
+        System.out.println(entrustNum);
+
+    }
+
     /**
      * 查询组合信息
      */
@@ -309,7 +322,7 @@ public class PortfolioManager extends BaseService {
         // 获取多组合
         List<InstructionDetail> instructionDetails = instructionDetailService.queryInstructionDetailsByInstructionId(instructionId);
 
-        if (Objects.isNull(instructionDetails) || instructionDetails.size() == 0) {
+        if (instructionDetails.isEmpty()) {
             // 单组合时处理
             InstructionDetail instructionDetail = new InstructionDetail();
             instructionDetail.setEntrustId(instruction.getEntrustId());
@@ -422,11 +435,13 @@ public class PortfolioManager extends BaseService {
             calculateResponse.setAcctNo(instruction.getAcctName());
 
             // - 计算组合委托额度
-            disRate = detail.getDisRate();
+            disRate = isVolume ? (detail.getEntrustNum().divide(BigDecimal.valueOf(instruction.getEntrustNum()), 8, RoundingMode.HALF_UP)) : (detail.getEntrustAmt().divide(instruction.getEntrustAmt(), 8, RoundingMode.HALF_UP));
             // 数量
             if (TradeUtils.bigThanZero(orderVolume) && TradeUtils.bigThanZero(disRate)) {
                 // 根据比例计算委托数量
-                entrustVolume = NumberUtil.mul(orderVolume, disRate);
+                entrustVolume = isVolume ?
+                        ((orderVolume.multiply(detail.getEntrustNum())).divide(BigDecimal.valueOf(instruction.getEntrustNum()), 8, RoundingMode.HALF_UP)) :
+                        ((orderVolume.multiply(instruction.getEntrustPrice()).multiply(detail.getEntrustAmt())).divide(instruction.getEntrustAmt(), 8, RoundingMode.HALF_UP));
                 if (TradeUtils.lessThan(entrustVolume, minStep)) {
                     // 小于最小交易单位时的处理，置为0
                     entrustVolume = BigDecimal.ZERO;
@@ -469,7 +484,7 @@ public class PortfolioManager extends BaseService {
         if (isVolume && DictCodeListExt3.交易方向_债转股.getValue().equals(instruction.getPs())) {
             long bondPaperValue = 100L;
             for (PortfolioCalculateResponse response : list) {
-                response.setConNum(response.getInstructionLeftNum() * bondPaperValue / response.getEntrustPrice().longValue());
+                response.setConNum(BigDecimal.valueOf(response.getInstructionLeftNum() * bondPaperValue).divide(response.getEntrustPrice(), 0, RoundingMode.UP).longValue());
             }
         }
 
@@ -771,7 +786,6 @@ public class PortfolioManager extends BaseService {
         return TradeUtils.formatLong(disRate.doubleValue() * volume.doubleValue(), -unit, RoundingMode.UP);
     }
 
-
     private List<Instruction> getFairInstructionList(List<PortfolioInstructionContextDto> fairList, PortfolioAllocationResponse result) {
 
         List<Instruction> list = new ArrayList<>();
@@ -860,3 +874,5 @@ public class PortfolioManager extends BaseService {
         }
     }
 }
+
+
