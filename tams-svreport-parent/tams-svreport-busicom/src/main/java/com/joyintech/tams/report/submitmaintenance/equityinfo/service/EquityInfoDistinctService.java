@@ -1610,13 +1610,13 @@ public class EquityInfoDistinctService {
 		logger.info("updateMergerIndentifyMarkByBatch批量处理开始：" + DateUtil.getCurrentDateTime());
 		int part = dataCount / maxDataCountOneTime; // 分批数
 		for (int i = 0; i < part; i++ ) {
-			chbEquHoldCheckDtoMapper.updateMergerIndentifyMarkByBatch(key);
+			chbEquHoldCheckDtoMapper.updateMergerIndentifyMarkByBatch(newDataList.subList(0, maxDataCountOneTime));
 			newDataList.subList(0, maxDataCountOneTime).clear();
 		}
 		// 最后剩下的数据
 		if (CollectionUtils.isNotEmpty(newDataList)) {
 			logger.info("最后一次批量处理开始：" + DateUtil.getCurrentDateTime());
-			chbEquHoldCheckDtoMapper.updateMergerIndentifyMarkByBatch(key);
+			chbEquHoldCheckDtoMapper.updateMergerIndentifyMarkByBatch(newDataList);
 			logger.info("最后一次批量处理结束：" + DateUtil.getCurrentDateTime());
 			
 		}
