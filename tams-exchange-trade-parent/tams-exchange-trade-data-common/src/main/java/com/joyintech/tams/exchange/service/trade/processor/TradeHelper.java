@@ -10,6 +10,8 @@ import com.joyintech.tams.exchange.common.bean.investment.RiskOccupyBean;
 import com.joyintech.tams.exchange.common.bean.terminal.RTGSStatusBean;
 import com.joyintech.tams.exchange.common.cache.QuoteTickService;
 import com.joyintech.tams.exchange.common.constant.*;
+import com.joyintech.tams.exchange.common.constant.instrument.SubStockType;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
 import com.joyintech.tams.exchange.common.constant.joyin.InvestmentAssetType1;
 import com.joyintech.tams.exchange.common.db.domain.*;
 import com.joyintech.tams.exchange.common.proto.QuoteProto;
@@ -585,6 +587,13 @@ public class TradeHelper {
         Instruction instruction = instructionService.findById(dto.getInstructionId());
         if (!checkInstruction(instruction, order)) {
             return order;
+        }
+
+        //科创板更新委托属性
+        if (Objects.nonNull(instrument)
+                && SubStockType.KCB.value.equals(instrument.getSubStockType())
+                && DictCodeListExt2.价格模式_收盘价固定价格.getValue().equals(instruction.getPriceMode())) {
+            order.setEntrustProp(NORMAL_AFTER_SET_PRICE.getValue());
         }
 
         String tradingDay = commonManagement.getTradingDay();
