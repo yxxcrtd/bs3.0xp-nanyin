@@ -384,6 +384,11 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
     @Size(max = 50)
     private String busiTypeTg;
 
+    @ApiModelProperty(required = false, name = "createTime", value = "创建时间")
+    private Date createTime;
+    @ApiModelProperty(required = false, name = "updateTime", value = "修改时间")
+    private Date updateTime;
+
     @Id
     public String getEntrustId() {
         return entrustId;
@@ -1055,6 +1060,22 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
 
     public void setBusiTypeTg(String busiTypeTg) {
         this.busiTypeTg = busiTypeTg;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     @Override

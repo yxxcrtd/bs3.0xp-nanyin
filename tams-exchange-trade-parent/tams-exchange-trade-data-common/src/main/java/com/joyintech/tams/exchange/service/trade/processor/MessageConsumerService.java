@@ -1,24 +1,10 @@
 package com.joyintech.tams.exchange.service.trade.processor;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.joyintech.framework.rabbitmq.entity.SimpleRabbitMessage;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.redis.core.base.PipeReadService;
 import com.joyintech.redis.core.data.RedisHash;
 import com.joyintech.tams.exchange.common.bean.investment.EntrustOpeBean;
@@ -36,6 +22,13 @@ import com.joyintech.tams.exchange.datacommon.db.service.InstructionPledgeServic
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
 import com.joyintech.tams.exchange.service.trade.management.service.CommonManagement;
 import com.joyintech.tams.exchange.service.trade.management.service.InvestmentManagement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.*;
 
 @Component
 public class MessageConsumerService {
@@ -46,7 +39,7 @@ public class MessageConsumerService {
 
     @Autowired
     private InstructionPledgeService instructionPledgeService;
-    
+
     @Autowired
     private InstructionDetailService instructionDetailService;
 
@@ -89,9 +82,9 @@ public class MessageConsumerService {
             if (Objects.nonNull(pledgeList))
                 pledgeList.forEach(instructionPledge -> instructionPledgeIdSet.add(instructionPledge.getEntrustId()));
             if (Objects.nonNull(detailList))
-            	detailList.forEach(instructionDetail -> instructionDetailIdSet.add(instructionDetail.getEntrustId()));
+                detailList.forEach(instructionDetail -> instructionDetailIdSet.add(instructionDetail.getEntrustId()));
             // 处理指令信息，并清除过期指令下的抵押券信息
-            processInstructions(instructionEtrEntrustList, instructionPledgeIdSet,instructionDetailIdSet);
+            processInstructions(instructionEtrEntrustList, instructionPledgeIdSet, instructionDetailIdSet);
             // 处理抵押券信息
             processInstructionPledges(pledgeList, instructionPledgeIdSet);
         } catch (Exception e) {
@@ -99,7 +92,7 @@ public class MessageConsumerService {
         }
     }
 
-    public void processInstructions(List<Instruction> instructionEtrEntrustList, Set<String> instructionPledgeIdSet,Set<String> instructionDetailIdSet) {
+    public void processInstructions(List<Instruction> instructionEtrEntrustList, Set<String> instructionPledgeIdSet, Set<String> instructionDetailIdSet) {
         List<Instruction> instructionList = new ArrayList<>();
         Set<String> removeInstructionIdSet = new HashSet<>();
         List<Instruction> removeInstructionList = new ArrayList<>();
@@ -109,17 +102,17 @@ public class MessageConsumerService {
         Map<String, Set<String>> instructionTraderMap = new HashMap<>();
         List<EntrustOpeBean> entrustList = new ArrayList<>();
         if (instructionEtrEntrustList.size() > 0) {
-        	//非交易业务指令，设置交易平台为 沪深竞价撮合平台
-        	instructionEtrEntrustList.forEach(instruction -> {
-        		String entrustBussType = instruction.getEntrustBussType();
-        		if(EntrustBussTypeEnum.BOND_REPURCHASE.value.equals(entrustBussType) 
-        				|| EntrustBussTypeEnum.ALLOTMENT_DEBT.value.equals(entrustBussType) 
-        				|| EntrustBussTypeEnum.CONVERTIBLE_BOND_SUBSCRIPTION.value.equals(entrustBussType) 
-        				|| EntrustBussTypeEnum.STANDARD_COUPONS_IN_AND_OUT.value.equals(entrustBussType) 
-        				|| EntrustBussTypeEnum.DEBT_TO_EQUITY.value.equals(entrustBussType) ) {
-        			instruction.setTradePlat(TradePlat.NORMAL.value);
-        		}
-        	});
+            //非交易业务指令，设置交易平台为 沪深竞价撮合平台
+            instructionEtrEntrustList.forEach(instruction -> {
+                String entrustBussType = instruction.getEntrustBussType();
+                if (EntrustBussTypeEnum.BOND_REPURCHASE.value.equals(entrustBussType)
+                        || EntrustBussTypeEnum.ALLOTMENT_DEBT.value.equals(entrustBussType)
+                        || EntrustBussTypeEnum.CONVERTIBLE_BOND_SUBSCRIPTION.value.equals(entrustBussType)
+                        || EntrustBussTypeEnum.STANDARD_COUPONS_IN_AND_OUT.value.equals(entrustBussType)
+                        || EntrustBussTypeEnum.DEBT_TO_EQUITY.value.equals(entrustBussType)) {
+                    instruction.setTradePlat(TradePlat.NORMAL.value);
+                }
+            });
             instructionEtrEntrustList.forEach(instruction -> {
                 // 为指令设置trader
                 Set<String> tradeSet = instructionTraderMap.getOrDefault(instruction.getEntrustId(), new HashSet<>());
@@ -139,6 +132,10 @@ public class MessageConsumerService {
                 Instruction instructionFormCache = instructionMapCache.get(instructionId);
                 Set<String> stringSet = instructionTraderMap.get(instructionId);
                 instruction.setTradersInfo(JsonUtils.getJsonFromObject(stringSet));
+                //创建时间、修改时间
+                Date now = DateUtil.now();
+                instruction.setCreateTime(now);
+                instruction.setUpdateTime(now);
                 // 过滤掉指令中平台日小于当前平台日和无tradeId的指令
                 Date investSystemDate = commonManagement.getPlatDate();
                 logger.debug("当前平台日: {}", investSystemDate.toString());
@@ -196,7 +193,7 @@ public class MessageConsumerService {
                         removeInstructionIdSet.add(instruction.getEntrustId());
                     List<InstructionDetail> instructionDetails = instructionDetailService.queryInstructionDetailsByInstructionId(instruction.getEntrustId());
                     if (Objects.nonNull(instructionDetails))
-                    	instructionDetailIdSet.add(instruction.getEntrustId());
+                        instructionDetailIdSet.add(instruction.getEntrustId());
                 }
             });
             if (removeInstructionList.size() > 0) {
@@ -227,7 +224,7 @@ public class MessageConsumerService {
             });
         }
     }
-    
+
     public void processInstructionDetail(List<InstructionDetail> detailList, Set<String> instructionIdSet) {
         if (Objects.nonNull(detailList)) {
             instructionDetailService.deleteInstructionDetailsByInstructionsIds(instructionIdSet);
