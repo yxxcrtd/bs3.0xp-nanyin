@@ -422,7 +422,7 @@ public class PortfolioManager extends BaseService {
             calculateResponse.setAcctNo(instruction.getAcctName());
 
             // - 计算组合委托额度
-            disRate = detail.getDisRate();
+            disRate = isVolume ? (detail.getEntrustNum().divide(BigDecimal.valueOf(instruction.getEntrustNum()), 8, RoundingMode.HALF_UP)):(detail.getEntrustAmt().divide(instruction.getEntrustAmt(), 8, RoundingMode.HALF_UP));
             // 数量
             if (TradeUtils.bigThanZero(orderVolume) && TradeUtils.bigThanZero(disRate)) {
                 // 根据比例计算委托数量
