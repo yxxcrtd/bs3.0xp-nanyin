@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.tams.svreport.interf.dis.prodbonusregister.dao.ProdBonusInterfMapper" >
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.prodbonusregister.dao.ProdBonusInterfMapper_mysql" >
     <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepProdBonusRegister" >
         <result column="ID" property="id" jdbcType="VARCHAR" />
         <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />

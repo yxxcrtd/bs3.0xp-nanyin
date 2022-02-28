@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.tams.svreport.interf.chb.mst.mstcustomerinfo.dao.MstCustomerInfoInterfMapper" >
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.mst.mstcustomerinfo.dao.MstCustomerInfoInterfMapper_mysql" >
     <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.chb.mst.mstcustomerinfo.dto.MstCustomerInfoInterfDto" >
         <id column="CUSTOMER_ID" property="customerId" jdbcType="VARCHAR" />
         <result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
