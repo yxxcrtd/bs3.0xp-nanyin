@@ -22,6 +22,7 @@ public class ExchangeConstant {
     public static final String FAIR_MODE_ENTRUST_PRICE_BEST_THAN_INSTRUCTION_IN_PARA = "TRD_FAIR_MODE_ENTRUST_PRICE_BEST_THAN_INSTRUCTION";
     public static final String FAIR_MODE_WITH_UNACCEPT_INSTRUCTION_IN_PARA = "TRD_FAIR_MODE_WITH_UNACCEPT_INSTRUCTION";
     public static final String ETR_TRADE_TIME_SWITCH = "etr_trade_time_switch";
+    public static final String BOND_TRADED_UNIT = "bond_traded_unit";
 
     public static final String HTTP_STATUS_CODE_OK = "200";
     public static final String HTTP_STATUS_CODE_INTERNAL_SERVER_ERROR = "500";
