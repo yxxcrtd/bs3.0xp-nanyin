@@ -5,18 +5,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.ChbEquSub;
 import com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto;
 import com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ChbEquHoldCheckDtoMapper {
     int insert(ChbEquHoldCheckDto record);
     
+    int insertByBatch(@Param("keyList") List<ChbEquHoldCheckDto> keyList);
     
-    /**
+     /**
      * @Description 分页查询
      * @param pageParam
      * @return List<ChbEquHoldCheckDto>
@@ -48,7 +49,9 @@ public interface ChbEquHoldCheckDtoMapper {
 	 */
 	int deleteChbEquHold(ChbEquHoldCheckDto record);
 	
-	void delCheckDataBatch(@Param("key")String key);
+	void delCheckDataBatch(@Param("key") List<EquityInfo001Dto> key);
+	
+	void updateMergerIndentifyMarkByBatch(@Param("keyList") List<ChbEquHoldCheckDto> keyList);
 	
 	void updateMergerIndentifyMark(@Param("key")String key,@Param("indentifyMark")String indentifyMark);
 	
