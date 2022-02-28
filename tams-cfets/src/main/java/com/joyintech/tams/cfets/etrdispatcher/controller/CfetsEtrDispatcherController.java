@@ -22,23 +22,39 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.dto.CommonSearchInfoRequest;
+import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
-import com.joyintech.tams.cfets.etrdispatcher.dto.*;
+import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherAutoRequest;
+import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherDealListInfoResponse;
+import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherDealRequest;
+import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherExeListInfoResponse;
+import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListRequest;
+import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListResponse;
+import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTraderAuthListRequest;
+import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTraderAuthListResponse;
+import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTraderListRequest;
 import com.joyintech.tams.cfets.etrdispatcher.service.CfetsEtrDispatcherService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.joyintech.tams.business.common.pojo.Message;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -400,7 +416,7 @@ public class CfetsEtrDispatcherController extends BaseController {
                                                        @RequestBody CommonSearchInfoRequest dto) {
         try{
             Map<String,Object> resultData = cfetsEtrDispatcherService.getReadonlyFormEtrInfo(pageCode,dtCode,spcdCode,dto);
-            if (StringUtil.isNotEmpty(resultData)){
+            if (resultData.isEmpty()){
                 resultData = cfetsEtrDispatcherService.getReadonlyFormEtrInfoExc(pageCode,dtCode,spcdCode,dto);
             }
             return new Message<Map<String,Object>>().success().setData(resultData);
