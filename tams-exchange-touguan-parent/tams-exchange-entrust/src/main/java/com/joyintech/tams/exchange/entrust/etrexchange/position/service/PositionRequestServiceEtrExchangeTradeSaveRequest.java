@@ -29,7 +29,8 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import static com.joyintech.tams.constant.DictCodeList.是否_否;
-import static com.joyintech.tams.constant.DictCodeListExt3.*;
+import static com.joyintech.tams.constant.DictCodeListExt3.交易单位_份;
+import static com.joyintech.tams.constant.DictCodeListExt3.交易单位_张;
 
 @Service
 public class PositionRequestServiceEtrExchangeTradeSaveRequest {
@@ -61,6 +62,10 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         String finprodType = entity.getFinprodType2();
         if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
             finprodType += "-" + type6;
+        }
+        if (DictCodeList.回购类型_质押式协议回购.getValue().equals(entity.getAssetType2())
+                || (DictCodeList.回购类型_质押式竞价回购.getValue().equals(entity.getAssetType2()))) {
+            finprodType += "-" + entity.getAssetType2();
         }
         String interType = commonPositionEngineService.getPositionInterType(PositionConstant.POSITION_TYPE_ETR, entity.getTradePlat(), finprodType, entity.getPs(), entity.getOptType(), entity.getClass().getName());
         if (PositionConstant.INTERF_TYPE_BOND002.equals(interType)) {
