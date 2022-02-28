@@ -22,7 +22,8 @@ public enum EntrustProp {
     BEST5_TO_CANCEL("最优五档即时成交剩余撤销", "U"),
     FILL("全额成交或撤单", "V"),
 
-    NORMAL_AFTER_SET_PRICE("盘后固定价格委托", "PFP"),
+    //盘后固定价格委托
+    NORMAL_AFTER_SET_PRICE("收盘价固定价格", "PFP"),
 
     ZYCRK("质押出入库", "f"),
     JJSHSH("基金申赎", "L"),

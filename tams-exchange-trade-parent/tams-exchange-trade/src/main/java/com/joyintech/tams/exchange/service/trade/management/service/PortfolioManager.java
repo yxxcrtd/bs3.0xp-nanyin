@@ -309,7 +309,7 @@ public class PortfolioManager extends BaseService {
         // 获取多组合
         List<InstructionDetail> instructionDetails = instructionDetailService.queryInstructionDetailsByInstructionId(instructionId);
 
-        if (Objects.isNull(instructionDetails) || instructionDetails.size() == 0) {
+        if (instructionDetails.isEmpty()) {
             // 单组合时处理
             InstructionDetail instructionDetail = new InstructionDetail();
             instructionDetail.setEntrustId(instruction.getEntrustId());
@@ -422,7 +422,7 @@ public class PortfolioManager extends BaseService {
             calculateResponse.setAcctNo(instruction.getAcctName());
 
             // - 计算组合委托额度
-            disRate = detail.getDisRate();
+            disRate = isVolume ? (detail.getEntrustNum().divide(BigDecimal.valueOf(instruction.getEntrustNum()), 8, RoundingMode.HALF_UP)):(detail.getEntrustAmt().divide(instruction.getEntrustAmt(), 8, RoundingMode.HALF_UP));
             // 数量
             if (TradeUtils.bigThanZero(orderVolume) && TradeUtils.bigThanZero(disRate)) {
                 // 根据比例计算委托数量
@@ -469,7 +469,7 @@ public class PortfolioManager extends BaseService {
         if (isVolume && DictCodeListExt3.交易方向_债转股.getValue().equals(instruction.getPs())) {
             long bondPaperValue = 100L;
             for (PortfolioCalculateResponse response : list) {
-                response.setConNum(response.getInstructionLeftNum() * bondPaperValue / response.getEntrustPrice().longValue());
+                response.setConNum(BigDecimal.valueOf(response.getInstructionLeftNum() * bondPaperValue).divide(response.getEntrustPrice(), 0, RoundingMode.UP).longValue());
             }
         }
 

@@ -55,7 +55,7 @@ public class MockConverter {
             item.setClosingPrice(integratedQuote.getEntrustPrice());
             item.setBuyAmount1(integratedQuote.getBuyRemainQuantity1());
             item.setSaleAmount1(integratedQuote.getSellRemainQuantity1());
-//            item.setWeightavgPrice(integratedQuote.getEntrustPrice());
+            item.setWeightavgPrice(integratedQuote.getWeightavgPrice());
             item.setBuyAmount2(integratedQuote.getBuyRemainQuantity2());
             item.setSaleAmount2(integratedQuote.getSellRemainQuantity2());
 
