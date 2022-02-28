@@ -169,7 +169,7 @@
             P.INDUSTRY4,
             nvl(mp.COUNTER_NAME, p.RIVAL_PARTY) rivalParty,
             P.PRIVATEPRD_FLAG privateprdFlag,
-            P.PRIVATEFUND_FLAG privatefundFlag,
+            DECODE(D2.propertycode,'AMT2_1_12',P.PRIVATEFUND_FLAG) privatefundFlag,
             P.MAIN_GRADE mainGrade,
             P.CREDIT_GRADE creditGrade,
             P.RATING,
