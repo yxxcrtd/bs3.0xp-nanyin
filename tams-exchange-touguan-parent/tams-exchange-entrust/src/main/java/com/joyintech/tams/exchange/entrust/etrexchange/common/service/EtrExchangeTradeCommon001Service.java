@@ -535,16 +535,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				EtrComponentFactory.getComponentService(EtrBondRepoBiddingDto.class).entrustEdit(etrBondRepoBiddingDto);
 			}
 		}
-		// add by tanxuan on 20200514 指令分发推送信息到交易系统
-		if (DictCodeList.是否_是.getValue().equals(isPushMsg)) {
-			Map<String, Object> param = new HashMap<>();
-			param.put("entrustId", dto.getEntrustId());
-			etrCommandDispatcherService.pushCommandMsg(param);
-		}
-		doDeleteFlow(dto.getWorkflowId());
-		//插入指令明细表
-		BaseEtrInvestInfoDto baseEtrInvestInfoDto = this.buildMultiEtrFlow(dto);
-        // 自动分发
+		// 自动分发
 		List<EtrDistribute> etrDistributeList = new ArrayList<>();
 		if (busiAutoEtrDispService != null) {
 			// 检测是否设置交易员
@@ -571,6 +562,16 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			baseEtrInvestInfoService.distributeDelegate(entity.getEtrDistributeList());
 		}
 		// 自动分发数据入库 add by yufei 20200808 end
+		// add by tanxuan on 20200514 指令分发推送信息到交易系统
+		if (DictCodeList.是否_是.getValue().equals(isPushMsg)) {
+			Map<String, Object> param = new HashMap<>();
+			param.put("entrustId", dto.getEntrustId());
+			etrCommandDispatcherService.pushCommandMsg(param);
+		}
+		doDeleteFlow(dto.getWorkflowId());
+		//插入指令明细表
+		BaseEtrInvestInfoDto baseEtrInvestInfoDto = this.buildMultiEtrFlow(dto);
+
 		if(!StringUtil.isEmptyList(baseEtrInvestInfoDto.getEtrEntrustDetailList())) {
 			etrEntrustDetailMapper.deleteByEntrustId(baseEtrInvestInfoDto.getEtrEntrustDetailList().get(0).getEntrustId());
 			for (EtrEntrustDetail etrEntrustDetail:baseEtrInvestInfoDto.getEtrEntrustDetailList()) {

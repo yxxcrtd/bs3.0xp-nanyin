@@ -221,11 +221,26 @@
                     }
                     data.entrustIntegrateNum = 0;
                     table.renderRow(data.LAY_TABLE_INDEX, data);
-                });
+                },false);
                 if(ps == 'T02' || ps == 'T03') {//获取数量和模式
                     Joyin.ajax(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/selectPortfolioIdForSelect?ps='+ps+'&finprodId='+$("#finprodIdhid").val(), param, function (result) {
                         if(result.root && result.root.length > 0) {
-                            data.busiModelStr = result.root[0].object.businessModel;
+                            if(result.root[0].object.businessModel && result.root[0].object.businessModel.indexOf(",") != -1) {
+                                data.portfolioId = null;
+                                data.busiModelStr = null;
+                                data.proAvailableCash = 0;
+                                data.proAvailableCash1 = 0;
+                                data.secAcctAvailableCash = 0;
+                                data.porAvailableSec = 0;
+                                data.entrustIntegrateSecNum = 0;
+                                data.ownPorAvailableSec = 0;
+                                data.ownProAvailableSec1 = 0;
+                                table.renderRow(data.LAY_TABLE_INDEX, data);
+                                Joyin.error("组合【"+result.root[0].text+"】存在多个业务模式，请先做资产重分类");
+                                return;
+                            }else {
+                                data.busiModelStr = result.root[0].object.businessModel;
+                            }
                             if(ps == 'T03') {
                                 data.entrustNum = result.root[0].object.entrustNum;
                             }
@@ -573,6 +588,20 @@
             Joyin.error("请先完成风险试算")
             return false;
         }
+        //组合也需要校验
+        var checkFlag = true;
+        var object = $.serializeToObject('#searchForm');
+        for (var index in object.bussCombDistribtList) {
+            var item = object.bussCombDistribtList[index];
+            if(!item.portfolioId || item.entrustNum || item.busiModelStr) {
+                checkFlag = false;
+            }
+        }
+        if (!checkFlag) {
+            Joyin.error("请填写完整组合信息")
+            return false;
+        }
+
         return true;
     }
 

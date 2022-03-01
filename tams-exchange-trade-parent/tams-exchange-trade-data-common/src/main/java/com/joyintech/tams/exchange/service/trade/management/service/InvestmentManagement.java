@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.bean.instrument.MinPriceAndMinTrdUnitLimitBean;
@@ -205,6 +206,9 @@ public class InvestmentManagement extends BaseService {
             if (Objects.nonNull(DictCodeListExt1.from(DictCode.金融产品类型_投管用, newInstruction.getFinprodType2()))) {
                 newInstruction.setFinprodType2(DictCodeListExt1.from(DictCode.金融产品类型_投管用, newInstruction.getFinprodType2()).getCodeName());
             }
+            if (Objects.nonNull(DictCodeListExt1.from(DictCode.投管业务类型, newInstruction.getBusiTypeTg()))) {
+                newInstruction.setBusiTypeTg(DictCodeListExt1.from(DictCode.投管业务类型, newInstruction.getBusiTypeTg()).getCodeName());
+            }
             newInstruction.setProgress(newInstruction.getProgress());
             newInstruction.setDealProgress(newInstruction.getDealProgress());
             newInstruction.setLeftVolume(newInstruction.getLeftVolume());
@@ -270,7 +274,10 @@ public class InvestmentManagement extends BaseService {
                     instructionUserList.addAll(instructionCloneList);
                 });
             }
-            bean.setEtr_entrust_list(instructionUserList);
+            //指令根据创建时间倒排序
+            bean.setEtr_entrust_list(instructionUserList.stream()
+                    .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
+                    .collect(Collectors.toList()));
             bean.setEtr_pledge_list(pledgeList);
             bean.setEtr_entrust_detail_list(detailList);
         } else {
@@ -279,7 +286,12 @@ public class InvestmentManagement extends BaseService {
             } else {
                 bean = restTemplate.postForObject(ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.queryInstructions, pageParam, InstructionPage.class);
             }
-            bean.setEtr_entrust_list(ListConvertUtils.convertList(bean.getEtr_entrust_list(), Instruction.class));
+
+            List<Instruction> instructions = ListConvertUtils.convertList(bean.getEtr_entrust_list(), Instruction.class);
+            //指令根据创建时间倒排序
+            bean.setEtr_entrust_list(instructions.stream()
+                    .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
+                    .collect(Collectors.toList()));
             bean.setEtr_pledge_list(ListConvertUtils.convertList(bean.getEtr_pledge_list(), InstructionPledge.class));
             bean.setEtr_entrust_detail_list(ListConvertUtils.convertList(bean.getEtr_entrust_detail_list(), InstructionDetail.class));
         }
@@ -364,12 +376,12 @@ public class InvestmentManagement extends BaseService {
                                     traderSet.clear();
                                     traderSet.add(entrustOpeBean.getTrader());
                                 }
-								instructionService.asyncUpdate(instruction);
+                                instructionService.asyncUpdate(instruction);
                             } else {
                                 instruction.setEntrustStatus(InstructionStatus.WAIT_RECEIVE.value);
-								List<String> traderSet = JsonUtils.getObjectListFromJson(instruction.getTradersInfo(), String.class);
-                                for(String s:traderSet) {
-                                	Instruction i = instruction.cloneInstruction();
+                                List<String> traderSet = JsonUtils.getObjectListFromJson(instruction.getTradersInfo(), String.class);
+                                for (String s : traderSet) {
+                                    Instruction i = instruction.cloneInstruction();
                                     i.setTradeId(s);
                                     instructionService.asyncUpdate(i);
                                 }
