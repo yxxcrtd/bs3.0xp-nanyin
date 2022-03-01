@@ -21,7 +21,7 @@
 	</select>
 	
 	<!-- 查询满足条件的接口头寸配置 -->
-	<select id="searchInterfPositionConfigByWhere" resultMap="InterfServiceConfigResult" parameterType="com.joyintech.tams.invest.interf.trade.common.dto.InterfServiceConfigDto">
+	<select id="searchInterfPositionConfigByWhere" resultMap="InterfPositionConfigResult" parameterType="com.joyintech.tams.invest.common.position.dto.InterfPositionConfigDto">
 		select POSITION_TYPE,TRADE_PLAT,FINPROD_TYPE,PS,BUSI_ACT,ENTITY,INTERF_TYPE from INTERF_POSITION_CONFIG 
 			<where>
 				<if test="positionType != null  and positionType != ''"> and POSITION_TYPE=#{positionType,jdbcType=VARCHAR} </if>

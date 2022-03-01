@@ -48,13 +48,6 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      */
     public void sendEtrExchangeTradeSaveRequest(EtrExchangeTradeSaveRequest entity, String decisionAct, String systemAct) {
         Map<String, Object> resultMap = new HashMap<>();
-//		if (StringUtil.equals(entity.getOptType(), "new")) {
-//		    resultMap.put("decisionAct", DictCodeListExt3.系统动作_新建.getValue());
-//		    resultMap.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
-//		} else if (StringUtil.equals(entity.getOptType(), "modify")) {
-//		    resultMap.put("decisionAct", DictCodeListExt3.系统动作_修改.getValue());
-//		    resultMap.put("systemAct", DictCodeListExt3.系统动作_修改.getValue());
-//		}
         resultMap.put("decisionAct", decisionAct);
         resultMap.put("systemAct", systemAct);
         this.setCommonField(entity, resultMap);//设置公共字段，个性化的需要在具体接口中覆盖
