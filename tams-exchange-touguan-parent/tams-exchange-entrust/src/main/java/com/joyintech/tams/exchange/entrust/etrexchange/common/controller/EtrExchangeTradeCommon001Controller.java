@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.base.entity.FinProductQuto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,21 +68,6 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.AvailableEtrSecPositionRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.CalcDeviationDegreeRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.CalcPriceAndYieldRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.CalcPriceAndYieldResponse;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeCommonRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeQuotationHqResponse;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.FinprodMarketInfoRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.MinNumStepRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PsOptionsRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PtlCashPositionFlowRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PtlSecAcctInfoRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SelectOptionRequestDto;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.StdsecConverseRatioRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -1495,6 +1482,48 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@RequestMapping(value = "queryLocalTime", method = RequestMethod.POST)
 	public Message<Date> queryLocalTime() {
 		return new Message<Date>(DateUtil.now());
+	}
+
+	/**
+	 * 获取1/最小价差的倍数
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/getMinPrice")
+	public Message<List<MinPirceDto>> getMinPrice(@RequestBody MinPriceRequest request) {
+		try{
+			Map<String,Object> param= JsonUtils.object2Map(request);
+			List<MinPirceDto> minPirceList = etrExchangeTrade001CommonService.getInterfSysMinPriceAll(param);
+			return new Message<List<MinPirceDto>>().success().setData(minPirceList);
+		}catch (Exception e){
+			return new Message<List<MinPirceDto>>().fail().setData(null);
+		}
+	}
+
+	/**
+	 *
+	 * @Description //获得权益额度
+	 * @Param [map]
+	 * @return java.util.List<com.joyintech.tams.common.base.entity.FinProductQuto>
+	 * @version 1.0
+	 * @see
+	 **/
+	@ApiOperation(value = "获得权益额度", notes = "获得权益额度")
+	@ResponseBody
+	@PostMapping("getFinProductQutoInfo")
+	public Message<FinProductQuto> getFinProductQutoInfo(@RequestBody FinProductQutoRequest request){
+		try{
+			Map<String,Object> param= JsonUtils.object2Map(request);
+			List<FinProductQuto> finProductQutoList = etrExchangeTrade001CommonService.getFinProductQutoInfo(param);
+			if(!CollectionUtils.isEmpty(finProductQutoList)){
+				return new Message<FinProductQuto>().success().setData(finProductQutoList.get(0));
+			}else{
+				return new Message<FinProductQuto>().success().setData(null);
+			}
+		}catch (Exception e){
+			return new Message<FinProductQuto>().fail().setData(null);
+		}
 	}
 }
 	

@@ -172,6 +172,7 @@
             <result column="TYPE_7" property="assetType2" jdbcType="VARCHAR" />
             <result column="IS_NET_SETT" property="isNetSett" jdbcType="VARCHAR" />
             <result column="FACE_VALUE" property="faceValue" jdbcType="VARCHAR" />
+            <result column="IS_NETPRICE" property="isNetprice" jdbcType="VARCHAR" />
         </association>
     </resultMap>
     <!-- 证券代码 -->
@@ -579,7 +580,8 @@ with ZYSHG as
         t.TYPE_6,
         t.TYPE_7,
         t.IS_NET_SETT,
-        t.FACE_VALUE
+        t.FACE_VALUE,
+        t.IS_NETPRICE
         from (
         <if test="tradePlat != null and tradePlat != '' and tradePlat.equals('02')">
             select t.oth_code  as finprod_market_id,
@@ -594,7 +596,8 @@ with ZYSHG as
             null AS TYPE_7,
             null AS IS_NET_SETT,
             v.mdate,
-            va.FACE_VALUE FACE_VALUE
+            va.FACE_VALUE FACE_VALUE,
+            va.IS_NETPRICE IS_NETPRICE
             from fin_product_oth_code t
             left join fin_product v
             on t.finprod_id = v.finprod_id
@@ -620,7 +623,8 @@ with ZYSHG as
         r.TYPE_7,
         b.IS_NET_SETT,
         a.mdate,
-        b.FACE_VALUE FACE_VALUE
+        b.FACE_VALUE FACE_VALUE,
+        b.IS_NETPRICE IS_NETPRICE
         from fin_product a
         left join fin_product_add b
         on b.FINPROD_ID = a.FINPROD_ID
@@ -683,7 +687,8 @@ with ZYSHG as
             null AS TYPE_7,
             null AS IS_NET_SETT,
             null AS mdate,
-            null AS FACE_VALUE
+            null AS FACE_VALUE,
+            null AS IS_NETPRICE
             from ZYSHG a
         </if>
         ) t
