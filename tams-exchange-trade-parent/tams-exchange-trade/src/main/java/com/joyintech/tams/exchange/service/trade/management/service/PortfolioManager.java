@@ -587,11 +587,6 @@ public class PortfolioManager extends BaseService {
         // 跌停价
         BigDecimal lowerLimitPrice = TradeUtils.getBigDecimal(tick.getLowerLimitPrice(), 4);
 
-        // 特殊处理 质押式回购交易，将委托价格设置为100
-        if (EntrustUtils.isPledgeRepurchase(instruction)) {
-            bean.setEntrustPrice(BigDecimal.valueOf(100L));
-        }
-
         // 构造返回列表
         List<PortfolioInstructionContextDto> resultList = new ArrayList<>();
         // 调整后的价格
@@ -749,11 +744,20 @@ public class PortfolioManager extends BaseService {
         // 计算总委托数量和总委托金额
         long sumEntrustVolume = getTotalEntrustVolume(resultList);
         result.setTotalEntrustVolume(sumEntrustVolume);
-        result.setTotalEntrustAmt(result.getPrice().multiply(BigDecimal.valueOf(sumEntrustVolume)));
+        // 特殊处理 质押式回购交易，将委托价格设置为100
+        if (EntrustUtils.isPledgeRepurchase(instruction)) {
+            result.setTotalEntrustAmt(BigDecimal.valueOf(100L).multiply(BigDecimal.valueOf(sumEntrustVolume)));
+        } else {
+            result.setTotalEntrustAmt(result.getPrice().multiply(BigDecimal.valueOf(sumEntrustVolume)));
+        }
         // 首次调用，特殊处理
         if (bean.getEntrustVolume() == 0L) {
             result.setTotalEntrustVolume(result.getTotalLeftVolume());
-            result.setTotalEntrustAmt(result.getPrice().multiply(BigDecimal.valueOf(result.getTotalLeftVolume())));
+            if (EntrustUtils.isPledgeRepurchase(instruction)) {
+                result.setTotalEntrustAmt(BigDecimal.valueOf(100L).multiply(BigDecimal.valueOf(result.getTotalLeftVolume())));
+            } else {
+                result.setTotalEntrustAmt(result.getPrice().multiply(BigDecimal.valueOf(result.getTotalLeftVolume())));
+            }
         }
         for (PortfolioInstructionContextDto context : resultList) {
             // 分配到指令的委托数量比例，借用转股价格字段
@@ -836,7 +840,13 @@ public class PortfolioManager extends BaseService {
             long totalExceptMaxVolume = singleList.stream().filter(item -> !item.getPortfolioId().equals(maxInstruction.getPortfolioId()))
                     .mapToLong(item -> item.getConNum().longValue()).sum();
             Long tailVolume = ins.getConNum().longValue() - totalExceptMaxVolume;
-            BigDecimal tailAmt = NumberUtil.mul(tailVolume, result.getPrice());
+            BigDecimal tailAmt = null;
+            // 特殊处理 质押式回购交易，将委托价格设置为100
+            if (EntrustUtils.isPledgeRepurchase(maxInstruction)) {
+                tailAmt = NumberUtil.mul(tailVolume, BigDecimal.valueOf(100L));
+            } else {
+                tailAmt = NumberUtil.mul(tailVolume, result.getPrice());
+            }
             log.debug("尾插处理，组合名称 = [{}], 组合编号 = [{}], 原委托数量 = [{}], 现委托数量 = [{}]，现委托金额 = [{}]",
                     maxInstruction.getPortfolioName(),
                     maxInstruction.getPortfolioId(),
@@ -862,7 +872,12 @@ public class PortfolioManager extends BaseService {
         // 借用termDays存放委托数量
         ins.setTermDays(ins.getConNum());
         // 借用minAmt存放委托金额
-        ins.setMinAmt(ArithmeticUtil.multiply(ins.getConNum(), result.getPrice()));
+        // 特殊处理 质押式回购交易，将委托价格设置为100
+        if (EntrustUtils.isPledgeRepurchase(result.getList().get(0))) {
+            ins.setMinAmt(ArithmeticUtil.multiply(ins.getConNum(), BigDecimal.valueOf(100L)));
+        } else {
+            ins.setMinAmt(ArithmeticUtil.multiply(ins.getConNum(), result.getPrice()));
+        }
         if (EntrustUtils.isVolume(ins)) {
             // 借用mIntAmt存放剩余总数量
             BigDecimal leftNum = BigDecimal.valueOf(ins.getEntrustNum() - ins.getEntrustLeftAmt().longValue() - ins.getFrozenQuantity().longValue());
