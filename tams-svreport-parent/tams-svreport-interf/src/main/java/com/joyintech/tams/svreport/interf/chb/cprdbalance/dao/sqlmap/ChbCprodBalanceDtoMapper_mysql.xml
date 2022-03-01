@@ -150,7 +150,7 @@
 		and ps.HODING_TYPE='03'
 		and FPA.DEAL_MODE in('10','12')
 	    and ifnull(ps.UPDATE_TIME,ps.CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}
-   )
+   )a
    
   </select>
   <select id="selectByPosdate" parameterType="java.util.Date" resultMap="BaseResultMap"
