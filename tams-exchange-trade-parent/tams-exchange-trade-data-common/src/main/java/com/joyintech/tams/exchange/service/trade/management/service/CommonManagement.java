@@ -184,8 +184,10 @@ public class CommonManagement extends BaseService {
         response.setFairModeWithUnacceptInstruction(CacheUtil.getSysParam(ExchangeConstant.FAIR_MODE_WITH_UNACCEPT_INSTRUCTION_IN_PARA));
         response.setFairModeEntrustPriceBestThanInstruction(CacheUtil.getSysParam(ExchangeConstant.FAIR_MODE_ENTRUST_PRICE_BEST_THAN_INSTRUCTION_IN_PARA));
         response.setTradeTimeSwitch(CacheUtil.getSysParam(ExchangeConstant.ETR_TRADE_TIME_SWITCH));
-        response.setBondTradedUnit(CacheUtil.getSysParam(ExchangeConstant.BOND_TRADED_UNIT));
-
+        // moddify by etliu 20220301 bond_traded_unit系统参数删除，默认张 start
+//        response.setBondTradedUnit(CacheUtil.getSysParam(ExchangeConstant.BOND_TRADED_UNIT));
+        response.setBondTradedUnit("01");
+        // moddify by etliu 20220301 end
         return response;
     }
 

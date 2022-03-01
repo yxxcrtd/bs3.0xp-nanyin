@@ -183,7 +183,10 @@ public class EtrExchangeTradeMulti001Controller extends BaseController{
         }
 
         //配置单位
-        model.addAttribute("bond_traded_unit", CacheUtil.getSysParam("bond_traded_unit") );
+        // moddify by etliu 20220301 bond_traded_unit系统参数删除，默认张 start
+//        model.addAttribute("bond_traded_unit", CacheUtil.getSysParam("bond_traded_unit") );
+        model.addAttribute("bond_traded_unit", BussinessConstant.BOND_TRADED_UNIT_DEFAULT);
+        // moddify by etliu 20220301 end
         //母页面的pageModel
         model.addAttribute("parentPageModel", getParam(GlobalConstant.DETAIL_PAGE_MODEL_KEY));
         //是否_是
