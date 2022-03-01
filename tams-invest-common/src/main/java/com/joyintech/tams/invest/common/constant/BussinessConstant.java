@@ -512,4 +512,11 @@ public interface BussinessConstant {
      * 是否处理旧头寸标识(Y:是，N:否)
      */
     String IS_HANDLE_OLDPOS_FLAG = "IS_HANDLE_OLDPOS_FLAG";
+
+    // moddify by etliu 20220301 bond_traded_unit系统参数删除，默认张 start
+    /**
+     * 债券交易数量单位，值域为01-张；02-手（bond_traded_unit），默认值01
+     */
+    String BOND_TRADED_UNIT_DEFAULT = "01";
+    // moddify by etliu 20220301 end
 }

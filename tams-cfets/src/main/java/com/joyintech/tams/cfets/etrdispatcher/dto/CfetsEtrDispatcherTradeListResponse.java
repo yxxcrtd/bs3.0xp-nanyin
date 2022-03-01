@@ -257,6 +257,10 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
     }
 
     public BigDecimal getDealProgress() {
+        if (dealProgress == null) {
+            return BigDecimal.ZERO;
+        }
+
         return dealProgress;
     }
 

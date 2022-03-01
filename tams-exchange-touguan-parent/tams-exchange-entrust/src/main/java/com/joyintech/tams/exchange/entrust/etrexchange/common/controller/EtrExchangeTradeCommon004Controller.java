@@ -116,8 +116,11 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
         model.addAttribute("iPlatformDate", DateUtil.format(platformDate));
 
         //配置单位 add by yeming 20210728 start
-        String bondTradedUnit = CacheUtil.getSysParam("bond_traded_unit");
-        model.addAttribute("bond_traded_unit", bondTradedUnit );
+        // moddify by etliu 20220301 bond_traded_unit系统参数删除，默认张 start
+//        String bondTradedUnit = CacheUtil.getSysParam("bond_traded_unit");
+//        model.addAttribute("bond_traded_unit", bondTradedUnit );
+        model.addAttribute("bond_traded_unit", BussinessConstant.BOND_TRADED_UNIT_DEFAULT);
+        // moddify by etliu 20220301 end
         //配置单位 add by yeming 20210728 end
 
         //流程id
@@ -424,8 +427,11 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
         initPageParams.put("iPlatformDate", DateUtil.format(platformDate));
 
         //配置单位 add by yeming 20210728 start
-        String bondTradedUnit = CacheUtil.getSysParam("bond_traded_unit");
-        initPageParams.put("bond_traded_unit", bondTradedUnit );
+        // moddify by etliu 20220301 bond_traded_unit系统参数删除，默认张 start
+//        String bondTradedUnit = CacheUtil.getSysParam("bond_traded_unit");
+//        initPageParams.put("bond_traded_unit", bondTradedUnit );
+        initPageParams.put("bond_traded_unit", BussinessConstant.BOND_TRADED_UNIT_DEFAULT);
+        // moddify by etliu 20220301 end
         //配置单位 add by yeming 20210728 end
 
         //流程id
