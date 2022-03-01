@@ -366,6 +366,11 @@ public class ChbPrdDeclareSubSetService {
 		    cnBondItem3.setValue(sub.getIssuePartyId());
 		    cnBondItemMap.put("IssuerIdentificationCode", cnBondItem3);
 		    }
+
+
+
+
+
 		    //产品审批人身份证号
 		    if(StringUtil.isNotEmpty(sub.getApproverId())){
 		    CnBondInterfItemDto cnBondItem4 = new CnBondInterfItemDto();
@@ -725,6 +730,17 @@ public class ChbPrdDeclareSubSetService {
 		    cnBondItem46.setValue(sub.getProdBrand());
 		    cnBondItemMap.put("ProductBrand", cnBondItem46);
 		    }
+
+			/***1217升级**/
+			//产品特殊属性
+			if(StringUtil.isNotEmpty(sub.getPrdSpecProperty())){
+				CnBondInterfItemDto cnBondItem3 = new CnBondInterfItemDto();
+				cnBondItem3.setValue(sub.getPrdSpecProperty());
+				cnBondItemMap.put("ProductSpecialProperty", cnBondItem3);
+			}
+
+			/***1217升级**/
+
 		    //产品期次
 		    if(sub.getProdStage() != null){
 		    CnBondInterfItemDto cnBondItem47 = new CnBondInterfItemDto();

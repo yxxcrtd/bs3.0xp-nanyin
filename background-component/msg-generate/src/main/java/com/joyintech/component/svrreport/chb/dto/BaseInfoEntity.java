@@ -93,6 +93,15 @@ public class BaseInfoEntity implements Feild {
     @XmlElement(name = "wemax:DepositBank")
     private CommonNodeEntity depositBank;
 
+    /***1217升级**/
+
+    /**
+     * 存款账号
+     */
+    @XmlElement(name = "wemax:DepositAccountNumber")
+    private CommonNodeEntity depositAccountNumber;
+    /***1217升级**/
+
     /**
      * 存款金额
      */
@@ -277,6 +286,16 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:NameForCreditAssetTradingsAndNonStandardDebtObligations")
     private CommonNodeEntity nameForCreditAssetTradingsAndNonStandardDebtObligations;
+
+
+    /***1217升级**/
+    /**
+     * 资产代码
+     */
+    @XmlElement(name = "wemax:CreditAssetTradingCode")
+    private CommonNodeEntity creditAssetTradingCode;
+    /***1217升级**/
+
 
     /**
      * 金额
@@ -673,6 +692,23 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:TypeForNonStandardDebtObligations")
     private CommonNodeEntity typeForNonStandardDebtObligations;
+
+
+    /***1217升级**/
+
+    /**
+     * 是否为标准化票据
+     */
+    @XmlElement(name = "wemax:StandardizedBillorNote")
+    private CommonNodeEntity standardizedBillorNote;
+
+    /**
+     * 票据代码
+     */
+    @XmlElement(name = "wemax:BillorNoteCode")
+    private CommonNodeEntity billorNoteCode;
+    /***1217升级**/
+
 
     /**
      * 数量
@@ -1076,6 +1112,22 @@ public class BaseInfoEntity implements Feild {
     @XmlElement(name = "wemax:AssetManagementPlanName")
     private CommonNodeEntity assetManagementPlanName;
 
+
+    /***1217升级**/
+
+    /**
+     * 是否为银行理财产品
+     */
+    @XmlElement(name = "wemax:WealthManagementProduct")
+    private CommonNodeEntity wealthManagementProduct;
+
+    /**
+     * 产品登记编码
+     */
+    @XmlElement(name = "wemax:ProductRegistrationCode")
+    private CommonNodeEntity productRegistrationCodeAsset;
+    /***1217升级**/
+
     /**
      * 是否由金融资产投资公司发行
      */
@@ -1297,6 +1349,16 @@ public class BaseInfoEntity implements Feild {
     @XmlElement(name = "wemax:RegistrationAgency")
     private CommonNodeEntity registrationAgency;
 
+
+    /***1217升级**/
+
+    /**
+     * 是否为固定收益类
+     */
+    @XmlElement(name = "wemax:FixedIncomeFund")
+    private CommonNodeEntity fixedIncomeFund;
+    /***1217升级**/
+
     /**
      * 是否属于政府投资基金
      */
@@ -1392,6 +1454,16 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:AnnualInterestRate")
     private CommonNodeEntity annualInterestRate;
+
+    /***1217升级**/
+
+    /**
+     * 是否为同业借款
+     */
+    @XmlElement(name = "wemax:InterbankCashBorrowing")
+    private CommonNodeEntity interbankCashBorrowing;
+    /***1217升级**/
+
 
     /**
      * 名称
@@ -1789,6 +1861,36 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:TransactionIdentificationCodeContractNumber")
     private CommonNodeEntity transactionIdentificationCodeContractNumber;
+
+
+    /***1217升级**/
+
+    /**
+     * 交易审批人身份证号
+     */
+    @XmlElement(name = "wemax:TransactionApproverIDNumber")
+    private CommonNodeEntity transactionApproverIDNumber;
+
+    /**
+     * 交易审批人姓名
+     */
+    @XmlElement(name = "wemax:TransactionApproverName")
+    private CommonNodeEntity transactionApproverName;
+
+    /**
+     * 交易员身份证号
+     */
+    @XmlElement(name = "wemax:TraderIDNumber")
+    private CommonNodeEntity traderIDNumber;
+
+    /**
+     * 交易员姓名
+     */
+    @XmlElement(name = "wemax:TraderName")
+    private CommonNodeEntity traderName;
+    /***1217升级**/
+
+
 
     /**
      * 交易日
@@ -2218,6 +2320,16 @@ public class BaseInfoEntity implements Feild {
     @XmlElement(name = "wemax:ProductBrand")
     private CommonNodeEntity productBrand;
 
+    /****1217升级**/
+    /**
+     * 产品特殊属性
+     */
+    @XmlElement(name = "wemax:ProductSpecialProperty")
+    private CommonNodeEntity productSpecialProperty;
+
+    /****1217升级**/
+
+
     /**
      * 产品期次
      */
@@ -2398,6 +2510,14 @@ public class BaseInfoEntity implements Feild {
     @XmlElement(name = "wemax:StructuredProductPleaseSelect")
     private CommonNodeEntity structuredProductPleaseSelect;
 
+    /***1217升级**/
+    /**
+     * 分级比例
+     */
+    @XmlElement(name = "wemax:RatioofPriority")
+    private CommonNodeEntity ratioofPriority;
+    /***1217升级**/
+
     /**
      * 业绩比较基准上限
      */
@@ -2468,18 +2588,6 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:BusinessTypeDuringOpeningPeriod")
     private CommonNodeEntity businessTypeDuringOpeningPeriod;
-
-    /**
-     * 资金托管账号
-     */
-    @XmlElement(name = "wemax:FundCustodyAccountNumber")
-    private CommonNodeEntity fundCustodyAccountNumber;
-
-    /**
-     * 资金托管账户
-     */
-    @XmlElement(name = "wemax:FundCustodyAccountName")
-    private CommonNodeEntity fundCustodyAccountName;
 
     /**
      * 开放期业务说明
@@ -2589,6 +2697,19 @@ public class BaseInfoEntity implements Feild {
     @XmlElement(name = "wemax:RealizedAnnualReturnToProduct")
     private CommonNodeEntity realizedAnnualReturnToProduct;
 
+
+    /**
+     * 资金托管账号
+     */
+    @XmlElement(name = "wemax:FundCustodyAccountNumber")
+    private CommonNodeEntity fundCustodyAccountNumber;
+
+    /**
+     * 资金托管账户
+     */
+    @XmlElement(name = "wemax:FundCustodyAccountName")
+    private CommonNodeEntity fundCustodyAccountName;
+
     /**
      * 个人投资者总数
      */
@@ -2684,6 +2805,14 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:AggregateNetValueCNY")
     private CommonNodeEntity aggregateNetValueCNY;
+
+    /***1217升级**/
+    /**
+     * 净值日期
+     */
+    @XmlElement(name = "wemax:NetValueDate")
+    private CommonNodeEntity netValueDate;
+    /***1217升级**/
 
     /**
      * 实现收益率
@@ -2960,6 +3089,9 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:NewProductPleaseSelect")
     private CommonNodeEntity newProductPleaseSelect;
+
+
+
 
     /**
      * 获取 methodOfAssetMeasurement
@@ -10782,5 +10914,125 @@ public class BaseInfoEntity implements Feild {
 
     public void setNewProductPleaseSelect(CommonNodeEntity newProductPleaseSelect) {
         this.newProductPleaseSelect = newProductPleaseSelect;
+    }
+
+    public CommonNodeEntity getDepositAccountNumber() {
+        return depositAccountNumber;
+    }
+
+    public void setDepositAccountNumber(CommonNodeEntity depositAccountNumber) {
+        this.depositAccountNumber = depositAccountNumber;
+    }
+
+    public CommonNodeEntity getCreditAssetTradingCode() {
+        return creditAssetTradingCode;
+    }
+
+    public void setCreditAssetTradingCode(CommonNodeEntity creditAssetTradingCode) {
+        this.creditAssetTradingCode = creditAssetTradingCode;
+    }
+
+    public CommonNodeEntity getStandardizedBillorNote() {
+        return standardizedBillorNote;
+    }
+
+    public void setStandardizedBillorNote(CommonNodeEntity standardizedBillorNote) {
+        this.standardizedBillorNote = standardizedBillorNote;
+    }
+
+    public CommonNodeEntity getBillorNoteCode() {
+        return billorNoteCode;
+    }
+
+    public void setBillorNoteCode(CommonNodeEntity billorNoteCode) {
+        this.billorNoteCode = billorNoteCode;
+    }
+
+    public CommonNodeEntity getWealthManagementProduct() {
+        return wealthManagementProduct;
+    }
+
+    public void setWealthManagementProduct(CommonNodeEntity wealthManagementProduct) {
+        this.wealthManagementProduct = wealthManagementProduct;
+    }
+
+    public CommonNodeEntity getFixedIncomeFund() {
+        return fixedIncomeFund;
+    }
+
+    public void setFixedIncomeFund(CommonNodeEntity fixedIncomeFund) {
+        this.fixedIncomeFund = fixedIncomeFund;
+    }
+
+    public CommonNodeEntity getInterbankCashBorrowing() {
+        return interbankCashBorrowing;
+    }
+
+    public void setInterbankCashBorrowing(CommonNodeEntity interbankCashBorrowing) {
+        this.interbankCashBorrowing = interbankCashBorrowing;
+    }
+
+    public CommonNodeEntity getTransactionApproverIDNumber() {
+        return transactionApproverIDNumber;
+    }
+
+    public void setTransactionApproverIDNumber(CommonNodeEntity transactionApproverIDNumber) {
+        this.transactionApproverIDNumber = transactionApproverIDNumber;
+    }
+
+    public CommonNodeEntity getTransactionApproverName() {
+        return transactionApproverName;
+    }
+
+    public void setTransactionApproverName(CommonNodeEntity transactionApproverName) {
+        this.transactionApproverName = transactionApproverName;
+    }
+
+    public CommonNodeEntity getTraderIDNumber() {
+        return traderIDNumber;
+    }
+
+    public void setTraderIDNumber(CommonNodeEntity traderIDNumber) {
+        this.traderIDNumber = traderIDNumber;
+    }
+
+    public CommonNodeEntity getTraderName() {
+        return traderName;
+    }
+
+    public void setTraderName(CommonNodeEntity traderName) {
+        this.traderName = traderName;
+    }
+
+    public CommonNodeEntity getProductSpecialProperty() {
+        return productSpecialProperty;
+    }
+
+    public void setProductSpecialProperty(CommonNodeEntity productSpecialProperty) {
+        this.productSpecialProperty = productSpecialProperty;
+    }
+
+    public CommonNodeEntity getRatioofPriority() {
+        return ratioofPriority;
+    }
+
+    public void setRatioofPriority(CommonNodeEntity ratioofPriority) {
+        this.ratioofPriority = ratioofPriority;
+    }
+
+    public CommonNodeEntity getNetValueDate() {
+        return netValueDate;
+    }
+
+    public void setNetValueDate(CommonNodeEntity netValueDate) {
+        this.netValueDate = netValueDate;
+    }
+
+    public CommonNodeEntity getProductRegistrationCodeAsset() {
+        return productRegistrationCodeAsset;
+    }
+
+    public void setProductRegistrationCodeAsset(CommonNodeEntity productRegistrationCodeAsset) {
+        this.productRegistrationCodeAsset = productRegistrationCodeAsset;
     }
 }

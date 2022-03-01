@@ -201,6 +201,20 @@ public class ChbPrdIssueSubSetService {
 	    cnBondItem9.setValue(sub.getIsConstracte());
 	    cnBondItemMap1.put("StructuredProductPleaseSelect", cnBondItem9);
 		}
+
+		/***1217升级**/
+
+		//分级比例
+		if(StringUtil.isNotEmpty(sub.getGradProportion())){
+			CnBondInterfItemDto cnBondItem3 = new CnBondInterfItemDto();
+			cnBondItem3.setValue(String.format("%.7f",sub.getGradProportion()));
+			cnBondItem3.setUnitRef(ChbConstant.PURE);
+			cnBondItem3.setDecimals("7");
+			cnBondItemMap1.put("RatioofPriority", cnBondItem3);
+		}
+
+		/***1217升级**/
+
 	    //业绩比较基准上限
 	    if(sub.getYieldHigh() != null){
 	    CnBondInterfItemDto cnBondItem10 = new CnBondInterfItemDto();
@@ -209,6 +223,10 @@ public class ChbPrdIssueSubSetService {
 	    cnBondItem10.setDecimals("7");
 	    cnBondItemMap1.put("UpperLimitOfPerformanceBenchmarkRate", cnBondItem10);
 	    }
+
+
+
+
 	    //业绩比较基准下限
 	    if(sub.getYieldLow() != null){
 	    CnBondInterfItemDto cnBondItem11 = new CnBondInterfItemDto();
