@@ -1405,6 +1405,7 @@ public class CfetsEtrDispatcherService extends BaseService{
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("YESORNO_YES", DictCodeList.是否_是.getValue());
         List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
+        pageParam.put("sysDateStr",platformDateImpl.getSysDateStr());
         if(StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1){
             return new CfetsEtrDispatcherInfoExcResponse();
         }else {
@@ -1436,6 +1437,11 @@ public class CfetsEtrDispatcherService extends BaseService{
                         }
                         fieldResponseDto.setPledgeBondList(pledgeList);
                         fieldResponseDto.setTotalPrinAmt(totalPrinAmt);
+                    }
+                } else if (StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.投管业务类型_质押券出入库.getValue())) {
+                    String ps = (String) pageParam.get("ps");
+                    if (DictCodeListExt3.交易方向_质押券入库.getValue().equals(ps) && StringUtil.isNotEmpty(fieldResponseDto.getPledgeRatio())) {
+                        fieldResponseDto.setPledgeStandardNumber(ArithmeticUtil.multiply(fieldResponseDto.getPledgeRatio(),fieldResponseDto.getEntrustNum()));
                     }
                 }else if(StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_现券交易.getValue())){
                     if(StringUtil.equals("01", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"))){

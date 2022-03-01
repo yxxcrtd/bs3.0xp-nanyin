@@ -53,7 +53,7 @@
     CASE WHEN ETR_ENTRUST_ADD.ASSET_TYPE = 'F08' THEN DECODE( ETR_ENTRUST_ADD.SETTLE_SPREED, 1, '01', 2, '02', 3, '03')
     ELSE DECODE( ETR_ENTRUST_ADD.SETTLE_SPREED, 0, '01', 1, '02', 2, '03') END AS settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS, ETR_ENTRUST_ADD.TERM_DAYS) termDays,
-    CASE  WHEN ETR_ENTRUST_ADD.ASSET_TYPE IN ('F05', 'F04', 'F03', 'F09', 'F06', 'F02')   THEN  round( '', 4 )
+    CASE  WHEN ETR_ENTRUST_ADD.ASSET_TYPE IN ('F05', 'F04', 'F03', 'F09', 'F06', 'F02')   THEN  round( 0, 4 )
     ELSE  nvl(round(decode(btm.busi_type,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,#{busiTypePosition05},ETR_ENTRUST.PRICE*100,''),4),ETR_ENTRUST.PRICE) END AS  etrPrice,
 
     case when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' AND ETR_ENTRUST.ENTRUST_NUM != 0
@@ -302,7 +302,7 @@
     CASE WHEN ETR_ENTRUST_ADD.ASSET_TYPE = 'F08' THEN DECODE( ETR_ENTRUST_ADD.SETTLE_SPREED, 1, '01', 2, '02', 3, '03')
     ELSE DECODE( ETR_ENTRUST_ADD.SETTLE_SPREED, 0, '01', 1, '02', 2, '03') END AS settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS, ETR_ENTRUST_ADD.TERM_DAYS) termDays,
-    CASE  WHEN ETR_ENTRUST_ADD.ASSET_TYPE IN ('F05', 'F04', 'F03', 'F09', 'F06', 'F02')   THEN  round( '', 4 )
+    CASE  WHEN ETR_ENTRUST_ADD.ASSET_TYPE IN ('F05', 'F04', 'F03', 'F09', 'F06', 'F02')   THEN  round( 0, 4 )
     ELSE  nvl(round(decode(btm.busi_type,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,#{busiTypePosition05},ETR_ENTRUST.PRICE*100,''),4),ETR_ENTRUST.PRICE) END AS  etrPrice,
     case when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' AND ETR_ENTRUST.ENTRUST_NUM != 0
     then trunc(nvl(NVL(T7.FINISH_AMT, 0)+ NVL(T5.ENT_FINISH_AMT*100, 0),0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100
@@ -1448,7 +1448,7 @@
         to_char(eted.MPAY_DATE,'yyyy-MM-dd') mpayDate,
         eted.M_INT_AMT mIntAmt,
         eted.M_TRADE_AMT mTradeAmt,
-        ee.Pledge_Ratio * 100 pledgeRatio, /** 折算率 **/
+        nvl(ee.Pledge_Ratio * 100,fscr.SCALE)  pledgeRatio, /** 折算率 **/
         ee.PLEDGE_NUMBER pledgeNumber,
         ee.PLEDGE_NUMBER * ee.Pledge_Face_Value pledStrdPrinAmt,
         eted.TRADE_ID tradeId,
@@ -1474,6 +1474,7 @@
         LEFT JOIN ETR_ENTRUST oete ON  oete.entrust_id = eted.TRADE_ID
         LEFT JOIN etr_pledge oee ON oete.entrust_id = oee.entrust_id
         LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID
+        LEFT JOIN FIN_STDSEC_CONVERSE_RADIO fscr ON ete.FINPROD_ID = fscr.FINPROD_ID AND fscr.VDATE = to_date(#{sysDateStr},'yyyy-mm-dd')
         WHERE ete.entrust_id = #{entrustId}
 
         union all
@@ -1543,7 +1544,7 @@
         to_char(eted.MPAY_DATE,'yyyy-MM-dd') mpayDate,
         eted.M_INT_AMT mIntAmt,
         eted.M_TRADE_AMT mTradeAmt,
-        ee.Pledge_Ratio * 100 pledgeRatio, /** 折算率 **/
+        nvl(ee.Pledge_Ratio * 100,fscr.SCALE) pledgeRatio, /** 折算率 **/
         ee.PLEDGE_NUMBER pledgeNumber,
         ee.PLEDGE_NUMBER * ee.Pledge_Face_Value pledStrdPrinAmt,
         eted.TRADE_ID tradeId,
@@ -1569,6 +1570,7 @@
         LEFT JOIN ETR_ENTRUST oete ON  oete.entrust_id = eted.TRADE_ID
         LEFT JOIN etr_pledge oee ON oete.entrust_id = oee.entrust_id
         LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID
+        LEFT JOIN FIN_STDSEC_CONVERSE_RADIO fscr ON ete.FINPROD_ID = fscr.FINPROD_ID AND fscr.VDATE = to_date(#{sysDateStr},'yyyy-mm-dd')
         WHERE ete.entrust_id = #{entrustId}
     </select>
 </mapper>
