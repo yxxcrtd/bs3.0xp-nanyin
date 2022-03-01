@@ -425,10 +425,8 @@ public class InvestorsHoldInfoDistinctService {
 		
 		 //取得参数中传入的，产品代码 -- 产品登记编码的对应关系表
 		 Map<String, String> prdRegistMap = paraDto.getPrdRegistMap();
-		 
 		 //查询出 导入记录中属于三合一数据 && 并且中债反馈状态 ！= 03：中债通过的数据
-		 List<ChbInvestholdInfoCheckDto> checkDtoList= this.selectAllNeedCheckDtoList(list);
-		 
+		 List<ChbInvestholdInfoCheckDto> checkDtoList= this.selectAllNeedCheckDtoList(list);		 
 		//对取得的三合一数据列表进行处理，对相同三合一身份的持有信息，值保留一条数据		 		 
 		 List<ChbInvestholdInfoCheckDto> checkDtoListFormegerId = checkDtoList.stream().collect(
 				 Collectors.collectingAndThen(
@@ -437,7 +435,6 @@ public class InvestorsHoldInfoDistinctService {
 								 			x -> x.getRegistBankCode() + x.getProdid() + x.getCcy() + x.getHoldDate() + x.getMergerindentifymark()						 
 								 ))), ArrayList::new)
 				 );
-		 
 		 //取得是三合一数据 但是在check表中不存在任何渠道持有信息  但是 在INFO SUB表中存在记录 && 报送状态 = 01：未报送 的数据		 
 		 List<ChbInvestholdInfoCheckDto> dtoList = new ArrayList<ChbInvestholdInfoCheckDto>();	 		 
 		 dtoList= this.selectAllNeedDealDtoList(checkDtoListFormegerId);
@@ -493,7 +490,7 @@ public class InvestorsHoldInfoDistinctService {
 		 this.insertToChbInvestholdInfoAfterDeal(insertForInvestholdInfoTable);
 		 this.insertAfterDeal(insertForInvestHoldCheckTable);
 		 //更新所有合并前标识相关数据为未合并状态 暂不放开
-//		 this.updataOperateStatus(checkDtoListFormegerId);
+		 this.updataOperateStatus(checkDtoListFormegerId);
 		 return checkDtoList;
 	}
 	/*
