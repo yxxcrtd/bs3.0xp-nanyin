@@ -232,6 +232,8 @@ public class Trade implements Serializable, KeyMethodInterface<String> {
     private String tradeDate;
     private String dealTime;
 
+    private String entrustClass;
+
     public Trade() {
         this.tradedBalance = new BigDecimal("0.00");
         this.tradedPrice = new BigDecimal("0.00");
@@ -665,5 +667,13 @@ public class Trade implements Serializable, KeyMethodInterface<String> {
 
     public void setDealTime(String dealTime) {
         this.dealTime = dealTime;
+    }
+
+    public String getEntrustClass() {
+        return entrustClass;
+    }
+
+    public void setEntrustClass(String entrustClass) {
+        this.entrustClass = entrustClass;
     }
 }

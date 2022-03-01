@@ -226,6 +226,7 @@ public class TradeCallbackHelper {
         tradeRecord.setInvManagerId(instruction.getInvManagerId());
         tradeRecord.setPs(instruction.getPs());
         tradeRecord.setBusiTypeTg(instruction.getBusiTypeTg());
+        tradeRecord.setEntrustClass(instruction.getEntrustClass());
 
         //获取BusinessFlag
         if (IntegratedEntrustUtils.isIntegratedEntrust(tradeRecord.getEntrustProp())) {

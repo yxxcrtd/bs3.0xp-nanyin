@@ -99,6 +99,9 @@ public class TradeQueryBean implements Serializable {
     @ApiModelProperty(name = "extend2", value = "扩展信息2")
     private String extend2;
 
+    @ApiModelProperty(name = "entrustClass", value = "委托指令类别：01-单组合，02-多组合")
+    private String entrustClass;
+
     /**
      * ///////////////////////////////////查询无用字段
      */
@@ -667,5 +670,13 @@ public class TradeQueryBean implements Serializable {
 
     public void setDealTime(String dealTime) {
         this.dealTime = dealTime;
+    }
+
+    public String getEntrustClass() {
+        return entrustClass;
+    }
+
+    public void setEntrustClass(String entrustClass) {
+        this.entrustClass = entrustClass;
     }
 }
