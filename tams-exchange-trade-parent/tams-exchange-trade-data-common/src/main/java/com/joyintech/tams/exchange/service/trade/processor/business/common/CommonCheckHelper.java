@@ -60,6 +60,7 @@ public class CommonCheckHelper {
     private CommonManagement commonManagement;
 
     // modify by swwan TISHKS-263 闭市校验无效 20211216 start
+
     /**
      * 检查是否在交易时间段内
      * - 开启校验开关，交易时间段存在且当前时间不在交易时间段内，返回 true
@@ -327,6 +328,9 @@ public class CommonCheckHelper {
                 } else {
                     order.setOrderPrice(TradeUtils.getBigDecimal(tick.getUpperLimitPrice(), 4));
                 }
+            } else {
+                order.setErrorCode(ErrorCode.QUOTATION_NOT_EXIST.value);
+                order.setErrorMsg(ErrorCode.QUOTATION_NOT_EXIST.errorMsg);
             }
         }
     }
