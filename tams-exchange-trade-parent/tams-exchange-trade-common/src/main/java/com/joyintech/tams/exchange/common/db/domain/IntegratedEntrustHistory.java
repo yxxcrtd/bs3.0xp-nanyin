@@ -148,6 +148,7 @@ public class IntegratedEntrustHistory implements Serializable {
 
     private String tradeDate;
     private String createDateTime;
+    private String entrustClass;
 
     @Id
     public String getId() {
@@ -724,5 +725,13 @@ public class IntegratedEntrustHistory implements Serializable {
 
     public void setCreateDateTime(String createDateTime) {
         this.createDateTime = createDateTime;
+    }
+
+    public String getEntrustClass() {
+        return entrustClass;
+    }
+
+    public void setEntrustClass(String entrustClass) {
+        this.entrustClass = entrustClass;
     }
 }

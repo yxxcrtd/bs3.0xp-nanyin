@@ -108,6 +108,9 @@ public class OrderHistory implements Serializable {
     private String tradeDate;
     private String createDateTime;
 
+    private BigDecimal conNum;
+    private String entrustClass;
+
     @Id
     public String getId() {
         return id;
@@ -531,5 +534,21 @@ public class OrderHistory implements Serializable {
 
     public void setCreateDateTime(String createDateTime) {
         this.createDateTime = createDateTime;
+    }
+
+    public BigDecimal getConNum() {
+        return conNum;
+    }
+
+    public void setConNum(BigDecimal conNum) {
+        this.conNum = conNum;
+    }
+
+    public String getEntrustClass() {
+        return entrustClass;
+    }
+
+    public void setEntrustClass(String entrustClass) {
+        this.entrustClass = entrustClass;
     }
 }

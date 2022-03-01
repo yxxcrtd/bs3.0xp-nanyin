@@ -242,8 +242,15 @@ public class Order implements Serializable, Cloneable, OrderInterface, KeyMethod
     @ApiModelProperty(name = "extend2", value = "扩展信息2")
     private String extend2;
 
+    @ApiModelProperty(name = "tradeDate", value = "成交时间")
     private String tradeDate;
+    @ApiModelProperty(name = "createDateTime", value = "委托时间")
     private String createDateTime;
+
+    @ApiModelProperty(name = "conNum", value = "可转数量")
+    private BigDecimal conNum;
+    @ApiModelProperty(name = "entrustClass", value = "委托指令类别：01-单组合，02-多组合")
+    private String entrustClass;
 
     public Order() {
         this.orderPrice = new BigDecimal("0.00");
@@ -696,6 +703,22 @@ public class Order implements Serializable, Cloneable, OrderInterface, KeyMethod
 
     public void setCreateDateTime(String createDateTime) {
         this.createDateTime = createDateTime;
+    }
+
+    public BigDecimal getConNum() {
+        return conNum;
+    }
+
+    public void setConNum(BigDecimal conNum) {
+        this.conNum = conNum;
+    }
+
+    public String getEntrustClass() {
+        return entrustClass;
+    }
+
+    public void setEntrustClass(String entrustClass) {
+        this.entrustClass = entrustClass;
     }
 
     public static Order getTemplateOrder() {

@@ -871,7 +871,7 @@ public class InvestmentManagement extends BaseService {
             messageConsumerService.processInstructions(instructionEtrEntrustList, instructionPledgeIdSet, instructionDetailIdSet);
             messageConsumerService.processInstructionPledges(pledgeList, instructionPledgeIdSet);
             messageConsumerService.processInstructionDetail(detailList, instructionDetailIdSet);
-            logger.info("appointInstruction {}", JsonUtils.getJsonFromObject(instructionPage));
+            //logger.info("appointInstruction {}", JsonUtils.getJsonFromObject(instructionPage));
             return new ResultBean(ErrorCode.SUCCESS);
         } catch (Exception e) {
             logger.warn("appointInstruction error {}", e.getMessage(), e);

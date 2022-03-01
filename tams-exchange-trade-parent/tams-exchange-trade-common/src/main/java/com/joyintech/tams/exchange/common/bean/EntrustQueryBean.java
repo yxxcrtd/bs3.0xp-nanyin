@@ -147,6 +147,10 @@ public class EntrustQueryBean implements Serializable {
 
     private String tradeDate;
     private String createDateTime;
+    @ApiModelProperty(name = "conNum", value = "可转数量")
+    private BigDecimal conNum;
+    @ApiModelProperty(name = "entrustClass", value = "委托指令类别：01-单组合，02-多组合")
+    private String entrustClass;
 
     /**
      * ////////////////////////////查询无用字段
@@ -956,5 +960,21 @@ public class EntrustQueryBean implements Serializable {
 
     public void setCreateDateTime(String createDateTime) {
         this.createDateTime = createDateTime;
+    }
+
+    public BigDecimal getConNum() {
+        return conNum;
+    }
+
+    public void setConNum(BigDecimal conNum) {
+        this.conNum = conNum;
+    }
+
+    public String getEntrustClass() {
+        return entrustClass;
+    }
+
+    public void setEntrustClass(String entrustClass) {
+        this.entrustClass = entrustClass;
     }
 }

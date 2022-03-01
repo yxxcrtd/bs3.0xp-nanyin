@@ -117,6 +117,8 @@ public class EntrustHistory implements Serializable {
 
     private String tradeDate;
     private String createDateTime;
+    private BigDecimal conNum;
+    private String entrustClass;
 
     @Id
     public String getId() {

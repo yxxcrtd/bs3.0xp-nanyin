@@ -159,6 +159,8 @@ public enum ErrorCode {
 
     INSTRUCTIONS_RETURN_FORBID(4051, "当前指令不可退回"),
 
+    QUOTATION_NOT_EXIST(4052, "未获取到当前资产行情信息"),
+
     INSTRUCTIONS_ERROR_CODE_END(5000, "instruction error code end"),
     /**
      * 6001 —— 7000账号相关错误号

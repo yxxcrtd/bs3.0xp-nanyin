@@ -156,6 +156,8 @@ public class TradeHistory implements Serializable {
     private String tradeDate;
     private String dealTime;
 
+    private String entrustClass;
+
     @Id
     public String getId() {
         return id;
@@ -548,5 +550,13 @@ public class TradeHistory implements Serializable {
 
     public void setDealTime(String dealTime) {
         this.dealTime = dealTime;
+    }
+
+    public String getEntrustClass() {
+        return entrustClass;
+    }
+
+    public void setEntrustClass(String entrustClass) {
+        this.entrustClass = entrustClass;
     }
 }
