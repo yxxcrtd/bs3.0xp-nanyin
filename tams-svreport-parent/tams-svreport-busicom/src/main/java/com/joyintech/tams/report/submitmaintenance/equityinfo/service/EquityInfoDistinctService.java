@@ -83,7 +83,7 @@ public class EquityInfoDistinctService {
 	 * check表 单次更新条数（合并后识别标识）
 	 */
 	@Value("${application.reportUpdateCountForShenFen}")
-	public int reportUpdateCountForShenFen;
+	public String reportUpdateCountForShenFen;
 	
 	/**
 	 * 长sql最大一次插入或者更新条数 
@@ -380,8 +380,7 @@ public class EquityInfoDistinctService {
 		//对check表数据进行处理  插入check表信息
 		if(listForInsert != null && listForInsert.size() > 0) {
 			this.insertCheckByBatch(listForInsert);
-		}
-			
+		}	
 		
 		logger.info("数据比较入check表全删全插结束");
 		return mergerkeys;
@@ -1591,7 +1590,7 @@ public class EquityInfoDistinctService {
 		if (StringUtil.isEmptyList(key)) {
 			return;
 		}
-		int maxDataCountOneTime = reportUpdateCountForShenFen;
+		int maxDataCountOneTime = parsToInt(reportUpdateCountForShenFen,"1");
 		boolean isDB2DataBase = CommonUtil.isDB2DataBase();
 		if (isDB2DataBase) {
 			maxDataCountOneTime = 1;
