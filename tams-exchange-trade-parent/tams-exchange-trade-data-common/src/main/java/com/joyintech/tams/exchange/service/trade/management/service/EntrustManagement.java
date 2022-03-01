@@ -6,6 +6,7 @@ import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.StringUtil;
@@ -33,6 +34,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -100,7 +102,8 @@ public class EntrustManagement extends BaseService {
         if (!Strings.isNullOrEmpty(orderId)) {
             List<Entrust> entrustList = entrustService.queryEntrustByOrderId(orderId);
             entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId())).collect(Collectors.toList());
-            return new ResultBean(ErrorCode.SUCCESS, new OrderAndEntrustQryResult(new ArrayList<>(), entrustList));
+            List<Entrust> entrusts = fillEntrustPrice(entrustList);
+            return new ResultBean(ErrorCode.SUCCESS, new OrderAndEntrustQryResult(new ArrayList<>(), entrusts));
         }
         // 查询指令下的订单和委托
         if (!Strings.isNullOrEmpty(instructionId)) {
@@ -110,7 +113,8 @@ public class EntrustManagement extends BaseService {
             List<Order> orderListByInstructionId = orderService.queryOrderByInstructionId(instructionId);
             List<Order> orderListWithOutFair = orderListByInstructionId.stream().filter(order -> !BusinessFlag.FAIR.value.equals(order.getBusinessFlag()) && ptlAuthList.contains(order.getPortfolioId())).collect(Collectors.toList());
             setFutureOrderStockCode(orderListWithOutFair);
-            return new ResultBean(ErrorCode.SUCCESS, new OrderAndEntrustQryResult(orderListWithOutFair, entrustList));
+            List<Entrust> entrusts = fillEntrustPrice(entrustList);
+            return new ResultBean(ErrorCode.SUCCESS, new OrderAndEntrustQryResult(orderListWithOutFair, entrusts));
         }
         // 查询用户的委托
         List<Entrust> entrustList = entrustService.queryByUserId(userId);
@@ -124,7 +128,8 @@ public class EntrustManagement extends BaseService {
         }
         setFutureEntrustStockCode(entrustList);
         setFutureOrderStockCode(orderList);
-        return new ResultBean(ErrorCode.SUCCESS, new OrderAndEntrustQryResult(orderList, entrustList));
+        List<Entrust> entrusts = fillEntrustPrice(entrustList);
+        return new ResultBean(ErrorCode.SUCCESS, new OrderAndEntrustQryResult(orderList, entrusts));
     }
 
     private void setFutureOrderStockCode(List<Order> orderListWithOutFair) {
@@ -141,6 +146,19 @@ public class EntrustManagement extends BaseService {
                 entrust.setStockCode(StockCodeUtils.getStockCode(entrust.getStockCode()));
             }
         });
+    }
+
+    private List<Entrust> fillEntrustPrice(List<Entrust> entrustList) {
+        List<Entrust> entrusts = Lists.newArrayListWithCapacity(entrustList.size());
+        entrustList.forEach(o -> {
+            Entrust entrust = new Entrust();
+            BeanUtils.copyProperties(o, entrust);
+            if ("EX005".equals(entrust.getBusiTypeTg())) {
+                entrust.setEntrustPrice(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(100)));
+            }
+            entrusts.add(entrust);
+        });
+        return entrusts;
     }
 
     /**

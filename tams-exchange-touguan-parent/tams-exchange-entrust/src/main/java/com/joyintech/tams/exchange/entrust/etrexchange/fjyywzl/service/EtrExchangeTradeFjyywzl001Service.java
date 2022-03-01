@@ -9,6 +9,7 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.common.base.entity.FinProductConvertible;
@@ -19,16 +20,19 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PsOptionsRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
+import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dao.EtrExchangeTradeFjyywzl001Mapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeFjyywzlZqzyDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeZqzyRequest;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdOthCodeInfoDto;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,22 +48,60 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
     @Autowired
     private FinProductConvertibleMapper finProductConvertibleMapper;
 
+    @Autowired
+    private EtrExchangeTradeFjyywzl001Mapper etrExchangeTradeFjyywzl001Mapper;
+
+    @Autowired(required = false)
+    private IPlatformDate iPlatformDate;
+
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    public Page<EtrExchangeTradeFjyywzlZqzyDto> findZqzyPositionsPage(Map<String, Object> param) {
+    public Page<EtrExchangeTradeFjyywzlZqzyDto> findZqzyPositionsPage(EtrExchangeTradeZqzyRequest request) {
         try {
+            Map<String, Object> map = BeanUtil.object2Map(request);
+            map.put("search_isNumberFlag", BaseMap.isNumeric(request.getSearch()));
             String userId = SecurityUtil.getLoginUser().getUserName();
             if (StringUtils.isNotEmpty(userId)) {
                 logger.info("请求用户【{}】", "userId = " + userId);
-                param.put("userId", SecurityUtil.getLoginUser().getUserName());
-                return restTemplate.postForPage(
-                        ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/findZqzyPositionsPage", param,
-                        EtrExchangeTradeFjyywzlZqzyDto.class);
+                map.put("userId", SecurityUtil.getLoginUser().getUserName());
+                getZqzyPositionParam(map);
+                Page<EtrExchangeTradeFjyywzlZqzyDto> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(),
+                        () -> etrExchangeTradeFjyywzl001Mapper.findZqzyPositionsPage(map));
+                return result;
             }
         } catch (Exception ex) {
             logger.info(ex.getMessage());
         }
         return null;
+    }
+
+    private void getZqzyPositionParam(Map<String, Object> pageParam) {
+        pageParam.put("POSITION_TYPE_03", BussinessDictCodeList.持仓类型_实际.getValue());
+        pageParam.put("POSITION_TYPE_04", BussinessDictCodeList.持仓类型_质押.getValue());
+        pageParam.put("POSITION_TYPE_05", BussinessDictCodeList.持仓类型_融入.getValue());
+        pageParam.put("POSITION_TYPE_06", BussinessDictCodeList.持仓类型_融出.getValue());
+        pageParam.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        pageParam.put("FINPROD_TYPE_TG_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+        pageParam.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+        pageParam.put("PS_T01", BussinessDictCodeList.交易方向_买入.getValue());
+        pageParam.put("PS_T02", BussinessDictCodeList.交易方向_卖出.getValue());
+        pageParam.put("PS_T03", BussinessDictCodeList.交易方向_行权回售.getValue());
+        pageParam.put("PS_T05", BussinessDictCodeList.交易方向_申购确认.getValue());
+        pageParam.put("PS_T19", BussinessDictCodeList.交易方向_赎回确认.getValue());
+        pageParam.put("PS_T46", DictCodeListExt2.交易方向_配股.getValue());
+        pageParam.put("PS_T48", DictCodeListExt2.交易方向_新股中签.getValue());
+        pageParam.put("PS_T49", DictCodeListExt3.交易方向_债转股.getValue());
+        pageParam.put("PS_T97", DictCodeListExt3.交易方向_配债.getValue());
+        pageParam.put("PS_T04", DictCodeList.交易方向_申购.getValue());
+        pageParam.put("LIBRARY_DIRECTION_01", DictCodeListExt3.交易方向_质押券入库.getValue());
+        pageParam.put("TRADE_PLACE_03", BussinessDictCodeList.交易场所_深圳证券交易所.getValue());
+        pageParam.put("TRADE_PLACE_04", BussinessDictCodeList.交易场所_上海证券交易所.getValue());
+        pageParam.put("MORE_CONVRATE", 0.9);
+        if (StringUtil.isNotEmpty(pageParam.get("date"))) {
+            pageParam.put("date", DateUtil.parse((String) pageParam.get("date")));
+        } else {
+            pageParam.put("date", iPlatformDate.getSysDate());
+        }
     }
 
     /**
@@ -71,7 +113,7 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
      * @since 1.0
      */
     public Map<String, String> loadSecNum(Map<String, Object> pageParam) {
-        Map<String, String> map = (Map<String, String>)restTemplate.postForObject(
+        Map<String, String> map = (Map<String, String>) restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/loadSecNum",
                 pageParam, Map.class);
         return map;
@@ -80,21 +122,21 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
     /**
      * 获取交易方向
      *
-     * @param  request 画面参数 SelectDto selectDto
+     * @param request 画面参数 SelectDto selectDto
      * @return 偏离度
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> getPsSelectOptions(PsOptionsRequest request,SelectDto selectDto) {
-        Map<String,Object> param= JsonUtils.object2Map(request);
-        List<SelectOptionDto> selectOptionDtos=new ArrayList<>();
+    public List<SelectOptionDto> getPsSelectOptions(PsOptionsRequest request, SelectDto selectDto) {
+        Map<String, Object> param = JsonUtils.object2Map(request);
+        List<SelectOptionDto> selectOptionDtos = new ArrayList<>();
         Map<String, Object> map = new HashMap<String, Object>();
         Date sysDate = DateUtil.platDateFromCache();
         param.put("date", DateUtil.format(sysDate));
         List<TrdOthCodeInfoDto> list = etrExchangeTradeCommon001Service.getTrdOthCodeInfos(param);
         if (null != list && list.size() > 0) {
             for (TrdOthCodeInfoDto dto : list) {
-                SelectOptionDto selectOptionDto= new SelectOptionDto();
+                SelectOptionDto selectOptionDto = new SelectOptionDto();
                 if (!StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())
                         && !StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
                     // 只能选择申购，其他委托方向不可选
@@ -103,9 +145,9 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                         map.clear();
                         map.put(ps, dto.getDeclaredPrice());
                         selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-                            return StringUtil.equals(option.getId(),ps) ;
+                            return StringUtil.equals(option.getId(), ps);
                         }).collect(Collectors.toList());
-                        for (SelectOptionDto option : selectOptionDtos){
+                        for (SelectOptionDto option : selectOptionDtos) {
                             option.setObject(map.get(option.getId()));
                         }
                         return selectOptionDtos;
@@ -118,8 +160,8 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                     } else {
                         map.put(ps, dto.getDeclaredPrice());
                     }
-                }else{
-                    if (StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())){
+                } else {
+                    if (StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())) {
                         map.put(DictCodeListExt2.交易方向_配股.getValue(), dto.getDeclaredPrice());
                     }
                     if (StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
@@ -153,9 +195,9 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
             }
         }
         selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-                return map.containsKey(option.getId());
+            return map.containsKey(option.getId());
         }).collect(Collectors.toList());
-        for (SelectOptionDto option : selectOptionDtos){
+        for (SelectOptionDto option : selectOptionDtos) {
             option.setObject(map.get(option.getId()));
         }
         return selectOptionDtos;
@@ -163,31 +205,31 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
 
     /**
      * 申报类型-》交易方向的映射
+     *
      * @param othCodeType
      * @return
      */
     private String OthTypeMapToPs(String othCodeType) {
         if (org.apache.commons.lang.StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getValue())) {
             return DictCodeList.交易方向_申购.getValue();
-        }else if(org.apache.commons.lang.StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_回售代码.getValue())){
+        } else if (org.apache.commons.lang.StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_回售代码.getValue())) {
             return DictCodeList.交易方向_行权_回售.getValue();
-        }else if(org.apache.commons.lang.StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_可转债转股代码.getValue())){
+        } else if (org.apache.commons.lang.StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_可转债转股代码.getValue())) {
             return DictCodeListExt1.交易方向_债转股.getValue();
-        }else if(org.apache.commons.lang.StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_质押代码.getValue())){
+        } else if (org.apache.commons.lang.StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_质押代码.getValue())) {
             return DictCodeListExt3.交易方向_质押券入库.getValue();
         }
         return null;
     }
 
     /**
-     *
+     * @return 行权回售数据
      * @Description //查询行权回售数据
      * @Param [map]
-     * @return 行权回售数据
      * @version 1.0
      * @see
      **/
-    public List<FinExercisePlan> selectFinExercisePlanData(String finprodId, Date paramDate){
+    public List<FinExercisePlan> selectFinExercisePlanData(String finprodId, Date paramDate) {
         Map<String, Object> map = new HashMap<>();
         map.put("finprodId", finprodId);
         map.put("sysDate", paramDate);
@@ -197,6 +239,7 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
 
     /**
      * 查询转股信息
+     *
      * @param finprodId finprodId
      * @param paramDate paramDate
      * @return 转股信息

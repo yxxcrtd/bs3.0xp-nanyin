@@ -7,6 +7,8 @@
         SELECT
           'Y' isAutoReceive,/** 是否自动接收 **/
 		  A.Entrust_Id entrustId,/*委托代码*/
+		  A.CREATE_TIME createTime,/*创建时间*/
+		  A.UPDATE_TIME updateTime,/*修改时间*/
 		  A.PORTFOLIO_ID portfolioId,/*组合代码*/
 		  B.PORTFOLIO_NAME PORTFOLIONAME,/**组合名称*/
 		  A.FINPROD_ID FINPRODID,/**金融产品代码*/

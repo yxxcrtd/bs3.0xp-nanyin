@@ -21,6 +21,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.common.dto.CfetsQuotedTradeCommonDto;
+import com.joyintech.service.bankuplink.common.framework.thread.JoyinThreadPoolExecutor;
 import com.joyintech.service.bankuplink.common.service.CfetsQuotedCommonService;
 import com.joyintech.service.bankuplink.common.service.CfetsQuotedTradeCommonService;
 import com.joyintech.service.bankuplink.ibu.service.IbuComponentReceiveService;
@@ -75,9 +76,7 @@ public class CfetsQuotedCommonController {
     @Autowired
     private DateCalCommonService dateCalCommonService;
     //创建公共的线程池
-//    private final ExecutorService service = new JoyinThreadPoolExecutor(10);
-    // todo
-    private final ExecutorService service = null;
+    private final ExecutorService service = new JoyinThreadPoolExecutor(10);
 
     /**
      * 委托放弃处理

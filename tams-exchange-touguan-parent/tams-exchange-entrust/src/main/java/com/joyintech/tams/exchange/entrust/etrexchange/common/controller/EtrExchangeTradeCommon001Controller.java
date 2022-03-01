@@ -1519,6 +1519,8 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	 * @version 1.0
 	 * @see
 	 **/
+	@ApiOperation(value = "获得权益额度", notes = "获得权益额度")
+	@ResponseBody
 	@PostMapping("getFinProductQutoInfo")
 	public Message<FinProductQuto> getFinProductQutoInfo(@RequestBody FinProductQutoRequest request){
 		try{
