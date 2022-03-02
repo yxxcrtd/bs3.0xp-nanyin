@@ -1,8 +1,9 @@
 package com.joyintech.tams.exchange.service.trade.position.bean;
 
 
+import com.joyintech.tams.exchange.common.db.domain.Instruction;
+
 import java.math.BigDecimal;
-import java.util.Objects;
 
 /**
  * @author swwan
@@ -21,17 +22,6 @@ public class PositionRequestBaseBean {
     private String finprodId;
 
     /**
-     * 证券管理账户
-     */
-    private String secAcctId;
-
-    /**
-     * 资金账号
-     */
-    private String cashAcctId;
-
-
-    /**
      * 业务编号
      */
     private String tradeId;
@@ -40,6 +30,16 @@ public class PositionRequestBaseBean {
      * 指令编号
      */
     private String etrId;
+
+    /**
+     * 证券管理账户
+     */
+    private String secAcctId;
+
+    /**
+     * 资金账号
+     */
+    private String cashAcctId;
 
     /**
      * 交易数量
@@ -53,6 +53,17 @@ public class PositionRequestBaseBean {
 
 
     public PositionRequestBaseBean() {
+    }
+
+    public PositionRequestBaseBean(Instruction instruction) {
+        this.portfolioId = instruction.getPortfolioId();
+        this.finprodId = instruction.getFinprodId();
+        this.tradeId = instruction.getEntrustId();
+        this.etrId = null;
+        this.cashAcctId = instruction.getAcctNo();
+        this.secAcctId = instruction.getSecAcctId();
+        this.cashAmount = null;
+        this.secAmount = null;
     }
 
     public String getPortfolioId() {

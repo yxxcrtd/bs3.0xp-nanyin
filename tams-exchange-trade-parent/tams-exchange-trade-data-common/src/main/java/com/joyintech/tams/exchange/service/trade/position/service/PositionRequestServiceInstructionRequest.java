@@ -1,22 +1,5 @@
 package com.joyintech.tams.exchange.service.trade.position.service;
 
-import static com.joyintech.tams.constant.DictCodeList.是否_否;
-import static com.joyintech.tams.constant.DictCodeListExt3.交易单位_份;
-import static com.joyintech.tams.constant.DictCodeListExt3.交易单位_张;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
@@ -25,17 +8,29 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
+import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.constant.IDPrefix;
 import com.joyintech.tams.exchange.common.constant.joyin.BussinessDictCodeList;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeList;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt1;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
-import com.joyintech.tams.exchange.common.db.domain.InstructionDetail;
-import com.joyintech.tams.exchange.datacommon.db.service.InstructionDetailService;
+import com.joyintech.tams.exchange.common.request.PositionInstructionRequest;
+import com.joyintech.tams.exchange.common.response.PortfolioCalculateResponse;
 import com.joyintech.tams.exchange.service.trade.management.service.PortfolioManager;
 import com.joyintech.tams.exchange.service.trade.position.bean.PositionRequestBaseBean;
 import com.joyintech.tams.exchange.service.trade.position.constant.PositionConstant;
 import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.*;
+
+import static com.joyintech.tams.constant.DictCodeList.是否_否;
+import static com.joyintech.tams.constant.DictCodeListExt3.交易单位_份;
+import static com.joyintech.tams.constant.DictCodeListExt3.交易单位_张;
 
 @Service
 public class PositionRequestServiceInstructionRequest {
@@ -44,10 +39,6 @@ public class PositionRequestServiceInstructionRequest {
     @Autowired
     private CommonPositionEngineService commonPositionEngineService;
     @Autowired
-    private Instruction instruction;
-    @Autowired
-    private InstructionDetailService instructionDetailService;
-    @Autowired
     private PortfolioManager portfolioManager;
 
     /**
@@ -55,7 +46,7 @@ public class PositionRequestServiceInstructionRequest {
      *
      * @param entity
      */
-    public void sendRequest(Instruction entity, String decisionAct, String systemAct) {
+    public void sendRequest(PositionInstructionRequest entity, String decisionAct, String systemAct) {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("decisionAct", decisionAct);
         resultMap.put("systemAct", systemAct);
@@ -530,7 +521,7 @@ public class PositionRequestServiceInstructionRequest {
      * @param entity
      * @param resultMap
      */
-    private void stock001(Instruction entity, Map<String, Object> resultMap) {
+    private void stock001(PositionInstructionRequest entity, Map<String, Object> resultMap) {
         resultMap.put("interfaceType", PositionConstant.INTERF_TYPE_STOCK001);
         // 业务动作
         resultMap.put("busiAct", DictCodeListExt3.业务动作_交易登记.getValue());
@@ -552,38 +543,53 @@ public class PositionRequestServiceInstructionRequest {
         }
 
         // 调用组合计算接口，获取分配信息
+        OrderPlaceBean orderPlaceBean = new OrderPlaceBean();
+        orderPlaceBean.setEntrustPrice(entity.getEntrustPrice());
+        orderPlaceBean.setEntrustVolume(entity.getEntrustNum());
+        orderPlaceBean.setInstructionId(entity.getEntrustId());
 
-        List<InstructionDetail> instructionDetails = instructionDetailService.queryInstructionDetailsByInstructionId(entity.getEntrustId());
-//        if (CollectionUtils.isNotEmpty(instructionDetails)) {
-//            PositionRequestBaseBean bean;
-//
-//            // 组合数据集
-//            List<Map<String, Object>> ptlList = new ArrayList<>(4);
-//            for (InstructionDetail item : instructionDetails) {
-//                Instruction detailInstruction = this.instruction.cloneInstruction();
-//                BeanUtil.copyProperties();
-//                bean = new PositionRequestBaseBean(item);
-//                bean.setSecAmount(null);
-//
-//                Map<String, Object> map = BeanUtil.object2Map(bean);
-//                ptlList.add(map);
-//            }
-//            resultMap.put("ptlList", ptlList);
-//
-//            // 组合配股/新股申购数据集	ptlRoList
-//            if (DictCodeListExt2.交易方向_配股.getValue().equals(ps) || DictCodeList.交易方向_申购.getValue().equals(ps)) {
-//                List<Map<String, Object>> ptlRoList = new ArrayList<>(4);
-//                for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
-//                    bean = new PositionRequestBaseBean(item);
-//                    // 配股/申购代码
-//                    bean.setFinprodId(item.getStockId());
-//
-//                    Map<String, Object> map = BeanUtil.object2Map(bean);
-//                    ptlRoList.add(map);
-//                }
-//                resultMap.put("ptlRoList", ptlRoList);
-//            }
-//        }
+        // 调用组合计算接口，得出各组合分配到的数量金额
+        ResultBean resultBean = portfolioManager.queryPortfolioCalculate(orderPlaceBean);
+        if (resultBean.getErrorCode() == 0) {
+            List<PortfolioCalculateResponse> calculates = (List<PortfolioCalculateResponse>) resultBean.getData();
+
+            if (CollectionUtils.isNotEmpty(calculates)) {
+                PositionRequestBaseBean bean;
+
+                // 组合数据集
+                List<Map<String, Object>> ptlList = new ArrayList<>(4);
+                for (PortfolioCalculateResponse item : calculates) {
+                    bean = new PositionRequestBaseBean(entity);
+                    bean.setCashAmount(item.getEntrustAmt());
+                    bean.setSecAmount(BigDecimal.valueOf(item.getEntrustNum()));
+
+                    Map<String, Object> map = BeanUtil.object2Map(bean);
+                    // 下单委托编号
+                    map.put("ordEntrustId", entity.getEntrustNo());
+                    ptlList.add(map);
+                }
+                resultMap.put("ptlList", ptlList);
+
+                // 组合配股/新股申购数据集	ptlRoList
+                if (DictCodeListExt2.交易方向_配股.getValue().equals(ps) || DictCodeList.交易方向_申购.getValue().equals(ps)) {
+                    List<Map<String, Object>> ptlRoList = new ArrayList<>(4);
+                    for (PortfolioCalculateResponse item : calculates) {
+                        bean = new PositionRequestBaseBean(entity);
+                        // 配股/申购代码
+                        bean.setFinprodId(entity.getConShareId());
+                        bean.setCashAmount(item.getEntrustAmt());
+                        bean.setSecAmount(BigDecimal.valueOf(item.getEntrustNum()));
+
+                        Map<String, Object> map = BeanUtil.object2Map(bean);
+                        // 下单委托编号
+                        map.put("ordEntrustId", entity.getEntrustNo());
+                        ptlRoList.add(map);
+                    }
+                    resultMap.put("ptlRoList", ptlRoList);
+                }
+            }
+        }
+
     }
 
     /**
