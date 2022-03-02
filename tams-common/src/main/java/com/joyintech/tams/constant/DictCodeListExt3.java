@@ -1686,6 +1686,10 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     系统动作_关闭(DictCode.系统动作,"05","关闭"),
     系统动作_成交(DictCode.系统动作,"06","成交"),
     系统动作_完成(DictCode.系统动作,"07","完成"),
+    系统动作_作废(DictCode.系统动作,"08","作废"),
+    系统动作_回滚(DictCode.系统动作,"09","回滚"),
+    系统动作_撤销(DictCode.系统动作,"10","撤销"),
+    系统动作_检查(DictCode.系统动作,"11","检查"),
     /**
      * 头寸业务类型
      */
@@ -1738,6 +1742,8 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     业务动作_指令日终关闭(DictCode.业务动作,"13","指令日终关闭"),
     业务动作_指令手动关闭(DictCode.业务动作,"14","指令手动关闭"),
     业务动作_指令自动完成(DictCode.业务动作,"15","指令自动完成"),
+    业务动作_交易下单(DictCode.业务动作,"16","交易下单"),
+    业务动作_撤委托(DictCode.业务动作,"18","撤委托"),
     业务动作_待交收(DictCode.业务动作,"22","待交收"),
 
 

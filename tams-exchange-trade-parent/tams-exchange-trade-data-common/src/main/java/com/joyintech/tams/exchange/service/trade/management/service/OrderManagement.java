@@ -14,6 +14,7 @@ import com.google.common.base.Strings;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.PositionUtil;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.common.bean.AlgorithmPlaceBean;
 import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
@@ -88,7 +89,7 @@ public class OrderManagement extends BaseService {
         	instructionClone.setEntrustAmt(orderPlaceBean.getEntrustPrice().multiply(BigDecimal.valueOf(orderPlaceBean.getEntrustVolume())));
         	instructionClone.setEntrustNum(orderPlaceBean.getEntrustVolume());
         	instructionClone.setEntrustPrice(orderPlaceBean.getEntrustPrice());
-        	positionRequestServiceInstructionRequest.sendRequest(instructionClone,"new","new");
+        	positionRequestServiceInstructionRequest.sendRequest(instructionClone,DictCodeListExt3.系统动作_新建.getValue(),DictCodeListExt3.系统动作_新建.getValue());
         }catch (Exception e) {
             logger.warn("场内交易下单头寸检测异常",e);
             Message message = PositionUtil.ajaxErrorReturn(e);
@@ -129,7 +130,7 @@ public class OrderManagement extends BaseService {
         	instructionClone.setEntrustAmt(integratedEntrust.getEntrustPrice().multiply(BigDecimal.valueOf(integratedEntrust.getEntrustVolume())));
         	instructionClone.setEntrustNum(integratedEntrust.getEntrustVolume());
         	instructionClone.setEntrustPrice(integratedEntrust.getEntrustPrice());
-        	positionRequestServiceInstructionRequest.sendRequest(instructionClone,"new","new");
+        	positionRequestServiceInstructionRequest.sendRequest(instructionClone,DictCodeListExt3.系统动作_新建.getValue(),DictCodeListExt3.系统动作_新建.getValue());
         }catch (Exception e) {
             logger.warn("场内交易大宗下单头寸检测异常",e);
             Message message = PositionUtil.ajaxErrorReturn(e);

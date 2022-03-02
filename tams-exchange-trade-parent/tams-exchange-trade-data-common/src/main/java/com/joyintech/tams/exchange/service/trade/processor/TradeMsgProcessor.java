@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.service.trade.processor;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.google.common.base.Strings;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.common.bean.TerminalId;
 import com.joyintech.tams.exchange.common.bean.TrdExchangeEntrustDto;
 import com.joyintech.tams.exchange.common.bean.TrdExchangeIntegratedEntrustDto;
@@ -728,18 +729,19 @@ public class TradeMsgProcessor {
         	instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume())));
         	instructionClone.setEntrustNum(entrust.getEntrustVolume());
         	instructionClone.setEntrustPrice(entrust.getEntrustPrice());
-        	positionRequestServiceInstructionRequest.sendRequest(instructionClone,"new","new");
+        	positionRequestServiceInstructionRequest.sendRequest(instructionClone,DictCodeListExt3.系统动作_新建.getValue(),DictCodeListExt3.系统动作_新建.getValue());
         }
       //下单生成委托，调用头寸引擎---end
       //撤销委托，调用头寸引擎---start
         if (entrust.getEntrustStatus() == EntrustStatus.CANCELED.value) {
         	Instruction instruction = instructionService.findById(entrust.getInstructionId());
         	PositionInstructionRequest instructionClone = (PositionInstructionRequest)instruction.cloneInstruction();
+        	instructionClone.setSoftSkipMode("Y");
         	instructionClone.setEntrustNo(entrust.getOrigEntrustId());
         	instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume())));
         	instructionClone.setEntrustNum(entrust.getEntrustVolume());
         	instructionClone.setEntrustPrice(entrust.getEntrustPrice());
-        	positionRequestServiceInstructionRequest.sendRequest(instructionClone,"new","new");
+        	positionRequestServiceInstructionRequest.sendRequest(instructionClone,DictCodeListExt3.系统动作_新建.getValue(),DictCodeListExt3.系统动作_新建.getValue());
         }
       //撤销委托，调用头寸引擎---end
     }
