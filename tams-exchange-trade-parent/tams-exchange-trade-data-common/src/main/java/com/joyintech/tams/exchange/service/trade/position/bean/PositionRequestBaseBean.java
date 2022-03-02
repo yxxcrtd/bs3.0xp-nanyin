@@ -1,7 +1,7 @@
 package com.joyintech.tams.exchange.service.trade.position.bean;
 
 
-import com.joyintech.tams.exchange.common.db.domain.Instruction;
+import com.joyintech.tams.exchange.common.request.PositionInstructionRequest;
 
 import java.math.BigDecimal;
 
@@ -55,11 +55,11 @@ public class PositionRequestBaseBean {
     public PositionRequestBaseBean() {
     }
 
-    public PositionRequestBaseBean(Instruction instruction) {
+    public PositionRequestBaseBean(PositionInstructionRequest instruction) {
         this.portfolioId = instruction.getPortfolioId();
         this.finprodId = instruction.getFinprodId();
         this.tradeId = instruction.getEntrustId();
-        this.etrId = null;
+        this.etrId = instruction.getEntrustNo();
         this.cashAcctId = instruction.getAcctNo();
         this.secAcctId = instruction.getSecAcctId();
         this.cashAmount = null;

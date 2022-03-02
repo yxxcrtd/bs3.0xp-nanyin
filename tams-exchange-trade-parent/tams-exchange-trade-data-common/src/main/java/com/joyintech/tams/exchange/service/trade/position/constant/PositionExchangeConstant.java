@@ -112,6 +112,19 @@ public class PositionExchangeConstant {
      * 下单委托编号
      */
     public static final String ORD_ENTRUST_ID = "ordEntrustId";
+    /**
+     * 标准券代码
+     */
+    public static final String STANDARD_SEC_ID ="standardSecId";
+    /**
+     * 标准券总额
+     */
+    public static final String STANDARD_SEC_AMOUNT = "standardSecAmount";
+
+    /**
+     * 汇总交易编号
+     */
+    public static final String TOTAL_TRADE_ID = "totalTradeId";
 
     /**
      * 前次交易编号

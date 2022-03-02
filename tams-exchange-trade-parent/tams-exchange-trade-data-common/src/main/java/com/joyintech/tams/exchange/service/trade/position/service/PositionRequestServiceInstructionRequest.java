@@ -1,5 +1,6 @@
 package com.joyintech.tams.exchange.service.trade.position.service;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.BeanUtil;
@@ -28,10 +29,11 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.*;
 
-import static com.joyintech.tams.exchange.service.trade.position.constant.PositionExchangeConstant.*;
+import static com.joyintech.tams.constant.DictCodeList.交易平台_竞价撮合平台;
 import static com.joyintech.tams.constant.DictCodeList.是否_否;
 import static com.joyintech.tams.constant.DictCodeListExt3.交易单位_份;
 import static com.joyintech.tams.constant.DictCodeListExt3.交易单位_张;
+import static com.joyintech.tams.exchange.service.trade.position.constant.PositionExchangeConstant.*;
 
 @Service
 public class PositionRequestServiceInstructionRequest {
@@ -296,14 +298,8 @@ public class PositionRequestServiceInstructionRequest {
         resultMap.put("interfaceType", PositionExchangeConstant.INTERF_TYPE_FUND001);
         // 业务动作
         resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_交易登记.getValue());
-        // 交易方向
-        String ps = entity.getPs();
         // 清算速度
         resultMap.put(SETTLE_SPEED, null);
-        // 交易场所
-        resultMap.put(TRADE_PLACE, entity.getTradePlat());
-        // 交易平台
-        handleSharesTradePlatform(entity, resultMap);
         // 当日回转
         resultMap.put(SAME_DAY_TURN, 是否_否);
         // ETF申赎方式
@@ -369,65 +365,70 @@ public class PositionRequestServiceInstructionRequest {
      * @param entity
      * @param resultMap
      */
-    private void repo001(Instruction entity, Map<String, Object> resultMap) {
+    private void repo001(PositionInstructionRequest entity, Map<String, Object> resultMap) {
         resultMap.put("interfaceType", PositionExchangeConstant.INTERF_TYPE_REPO001);
         // 业务动作
         resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_交易登记.getValue());
 
-        String ps = entity.getPs();
-
         resultMap.put(SETTLE_SPEED, null);
+        resultMap.put(SHARES_TRADE_PLATFORM, null);
+        // TODO 汇总交易编号 uuid和header一样
+        resultMap.put(TOTAL_TRADE_ID, null);
 
-        // 结算方式
-        resultMap.put(DELIVERY_TYPE, null);
+        // 调用组合计算接口，获取分配信息
+        List<PortfolioCalculateResponse> calculates = getCalculateList(entity);
 
-        // 交易平台
-        resultMap.put(TRADE_PLACE, null);
+        if (CollectionUtils.isNotEmpty(calculates)) {
+            PositionRequestBaseBean bean;
 
-//        if (CollectionUtils.isNotEmpty(entity.getPortfolioList())) {
-//            PositionRequestBaseBean bean;
-//
-//            // 组合数据集
-//            List<Map<String, Object>> ptlList = new ArrayList<>(4);
-//            for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
-//                bean = new PositionRequestBaseBean(item);
-//                bean.setSecAmount(null);
-//
-//                Map<String, Object> map = BeanUtil.object2Map(bean);
-//                // 标准券代码
-//                map.put("standardSecId", STANDAR_SEC_ID);
-//                // 标准券总额  指令.准券总额
-//                map.put("standardSecAmount", entity.getStandardBondVolume());
-//                // 再折算率	reConversionRate "调用【再折算率查询】参数：资金账户 = 指令资金账户
-//                Map<String, Object> param = Maps.newHashMap();
-//                param.put("acctNo", entity.getAcctNo());
+            // 组合数据集
+            List<Map<String, Object>> ptlList = new ArrayList<>(4);
+            for (PortfolioCalculateResponse item : calculates) {
+                bean = new PositionRequestBaseBean(entity);
+                bean.setFinprodId(null);
+                bean.setTradeId(entity.getEntrustNo());
+                bean.setEtrId(null);
+                bean.setCashAmount(item.getEntrustAmt());
+                bean.setSecAmount(BigDecimal.valueOf(item.getEntrustNum()));
+
+                Map<String, Object> map = BeanUtil.object2Map(bean);
+                // 下单委托编号
+                map.put(ORD_ENTRUST_ID, entity.getEntrustNo());
+                // 标准券代码
+                map.put(STANDAR_SEC_ID, STANDAR_SEC_ID);
+                // 标准券总额 标准券数量*折算率
+                map.put(STANDARD_SEC_AMOUNT, entity.getEntrustAmt());
+                // 再折算率	reConversionRate "调用【再折算率查询】参数：资金账户 = 指令资金账户 TODO
+                ImmutableMap<String, Object> param = ImmutableMap.of("acctNo", entity.getAcctNo());
 //                TrdMoreConvrateDto moreConvrate = instruction.getMoreConvrate(param);
 //                if (Objects.nonNull(moreConvrate)) {
 //                    map.put("reConversionRate", moreConvrate.getMoreConvrate());
 //                }
-//                ptlList.add(map);
-//            }
-//            resultMap.put(PTL_LIST, ptlList);
-//
-//            // 质押券数据集	ptlSecList
-//            if (DictCodeListExt3.交易方向_质押券入库.getValue().equals(ps) || DictCodeListExt3.交易方向_质押券出库.getValue().equals(ps)) {
-//                List<Map<String, Object>> ptlSecList = new ArrayList<>(4);
-//                for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
-//                    bean = new PositionRequestBaseBean(item);
-//                    // 券面总额 指令.指令数量*100
-//                    bean.setSecAmount(bean.getSecAmount().multiply(BigDecimal.valueOf(100)));
-//
-//                    Map<String, Object> map = BeanUtil.object2Map(bean);
-//                    //融入券券面总额
-//                    map.put("integrateSecAmount", null);
-//                    //本方券券面总额 指令对应组合.指令数量*100
-//                    map.put("ownSecAmount", null);
-//
-//                    ptlSecList.add(map);
-//                }
-//                resultMap.put("ptlSecList", ptlSecList);
-//            }
-//        }
+                ptlList.add(map);
+            }
+
+            String ps = entity.getPs();
+            // 质押券数据集	ptlSecList
+            if (DictCodeListExt3.交易方向_质押券入库.getValue().equals(ps) || DictCodeListExt3.交易方向_质押券出库.getValue().equals(ps)) {
+                List<Map<String, Object>> list = new ArrayList<>(4);
+                for (PortfolioCalculateResponse item : calculates) {
+                    bean = new PositionRequestBaseBean(entity);
+                    bean.setTradeId(entity.getEntrustNo());
+                    bean.setEtrId(null);
+                    // 券面总额 指令.指令数量*100
+                    bean.setSecAmount(bean.getSecAmount().multiply(BigDecimal.valueOf(100)));
+
+                    Map<String, Object> map = BeanUtil.object2Map(bean);
+                    //融入券券面总额
+                    map.put("integrateSecAmount", null);
+                    //本方券券面总额 指令对应组合.指令数量*100
+                    map.put("ownSecAmount", bean.getSecAmount());
+
+                    list.add(map);
+                }
+                resultMap.put("ptlSecList", list);
+            }
+        }
     }
 
     /**
@@ -565,10 +566,6 @@ public class PositionRequestServiceInstructionRequest {
         String ps = entity.getPs();
         // 清算速度
         resultMap.put(SETTLE_SPEED, null);
-        // 交易场所
-        resultMap.put(TRADE_PLACE, entity.getTradePlat());
-        // 交易平台
-        this.handleSharesTradePlatform(entity, resultMap);
 
         // 调用组合计算接口，获取分配信息
         List<PortfolioCalculateResponse> calculates = getCalculateList(entity);
@@ -655,26 +652,30 @@ public class PositionRequestServiceInstructionRequest {
         resultMap.put(BUSI_TYPE, busiType);
 
         // 结算方式	见数据字典：结算方式
-        // 调用【共通:结算方式判断】 返回.结算方式
-        String deliveryType = commonPositionEngineService.getDeliveryType(entity.getFinprodId());
-        resultMap.put(DELIVERY_TYPE, deliveryType);
+//        // 调用【共通:结算方式判断】 返回.结算方式
+//        String deliveryType = commonPositionEngineService.getDeliveryType(entity.getFinprodId());
+        resultMap.put(DELIVERY_TYPE, null);
         // 交易方向
-        resultMap.put("ps", entity.getPs());
+        resultMap.put(PS, entity.getPs());
         // 交易场所	见数据字典：交易场所
         resultMap.put(TRADE_PLACE, entity.getTradeMarket());
         // 交易平台	见数据字典：交易平台
-        resultMap.put("sharesTradePlatform", entity.getTradePlat());
+        if (StringUtil.isEmpty(entity.getTradePlat())) {
+            resultMap.put(SHARES_TRADE_PLATFORM, 交易平台_竞价撮合平台);
+        } else {
+            resultMap.put(SHARES_TRADE_PLATFORM, entity.getTradePlat());
+        }
         // 流程编号	指令的工作流ID
-        resultMap.put("workFlowId", null);
+        resultMap.put(WORK_FLOW_ID, null);
         // 日期
         resultMap.put("cdate", DateUtil.format(entity.getVdate()));
         // 币种
         if (StringUtil.isNotEmpty(entity.getCcy())) {
-            resultMap.put("ccy", entity.getCcy());
+            resultMap.put(CCY, entity.getCcy());
         } else {
-            resultMap.put("ccy", DictCodeList.币种_人民币_CNY.getValue());
+            resultMap.put(CCY, DictCodeList.币种_人民币_CNY.getValue());
         }
         // 前次交易编号
-        resultMap.put("bTotalTradeId", null);
+        resultMap.put(B_TOTAL_TRADE_ID, null);
     }
 }
