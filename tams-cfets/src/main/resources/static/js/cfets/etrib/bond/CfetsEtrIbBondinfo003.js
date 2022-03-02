@@ -584,7 +584,7 @@
             Joyin.error("有*必填项未填写,请填写完整")
             return false;
         }
-        if (!entity_RiskTrialRetList || riskFlag == 0) {
+        if (!entity_RiskTrialRetList || riskFlag !== 0) {
             Joyin.error("请先完成风险试算")
             return false;
         }
@@ -593,7 +593,7 @@
         var object = $.serializeToObject('#searchForm');
         for (var index in object.bussCombDistribtList) {
             var item = object.bussCombDistribtList[index];
-            if(!item.portfolioId || item.entrustNum || item.busiModelStr) {
+            if(!item.portfolioId || !item.entrustNum || !item.busiModelStr) {
                 checkFlag = false;
             }
         }
@@ -704,15 +704,15 @@
     query("input[name=calculateField]").click(function () {
         calflag = query("input[name=calculateField]:checked").val();
         query("#" + calflag + "Show").attr("disabled", false);
-        if ('price' == calflag) {
+        if ('price' === calflag) {
             query("#matureYieldShow").attr("disabled", true);
             query("#exerYieldShow").attr("disabled", true);
         }
-        if ('matureYield' == calflag) {
+        if ('matureYield' === calflag) {
             query("#exerYieldShow").attr("disabled", true);
             query("#priceShow").attr("disabled", true);
         }
-        if ('exerYield' == calflag) {
+        if ('exerYield' === calflag) {
             query("#matureYieldShow").attr("disabled", true);
             query("#priceShow").attr("disabled", true);
         }

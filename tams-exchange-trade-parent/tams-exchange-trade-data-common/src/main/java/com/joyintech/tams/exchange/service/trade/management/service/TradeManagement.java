@@ -2,6 +2,7 @@ package com.joyintech.tams.exchange.service.trade.management.service;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.joyintech.tams.exchange.common.bean.HistoryTrade;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.TradeQueryBean;
@@ -19,9 +20,11 @@ import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.datacommon.db.service.TradeHistoryService;
 import com.joyintech.tams.exchange.datacommon.db.service.TradeService;
 import com.joyintech.tams.exchange.service.trade.processor.others.TerminalHelper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -123,7 +126,21 @@ public class TradeManagement {
         List<Trade> list = tradeService.queryTradeByInstructionId(instructionId);
         list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
         setFutureStockCode(list);
-        return ResultBean.success(list);
+        List<Trade> trades = fillTradePrice(list);
+        return ResultBean.success(trades);
+    }
+
+    private List<Trade> fillTradePrice(List<Trade> tradeList) {
+        List<Trade> entrusts = Lists.newArrayListWithCapacity(tradeList.size());
+        tradeList.forEach(o -> {
+            Trade trade = new Trade();
+            BeanUtils.copyProperties(o, trade);
+            if ("EX005".equals(trade.getBusiTypeTg())) {
+                trade.setTradedPrice(trade.getTradedPrice().multiply(BigDecimal.valueOf(100)));
+            }
+            entrusts.add(trade);
+        });
+        return entrusts;
     }
 
     /**

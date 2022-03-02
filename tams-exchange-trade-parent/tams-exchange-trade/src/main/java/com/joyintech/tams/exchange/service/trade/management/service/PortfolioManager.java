@@ -441,7 +441,7 @@ public class PortfolioManager extends BaseService {
                 // 根据比例计算委托数量
                 entrustVolume = isVolume ?
                         ((orderVolume.multiply(detail.getEntrustNum())).divide(BigDecimal.valueOf(instruction.getEntrustNum()), 8, RoundingMode.HALF_UP)) :
-                        ((orderVolume.multiply(instruction.getEntrustPrice()).multiply(detail.getEntrustAmt())).divide(instruction.getEntrustAmt(), 8, RoundingMode.HALF_UP));
+                        ((orderVolume.multiply(detail.getEntrustAmt())).divide(instruction.getEntrustAmt(), 8, RoundingMode.HALF_UP));
                 if (TradeUtils.lessThan(entrustVolume, minStep)) {
                     // 小于最小交易单位时的处理，置为0
                     entrustVolume = BigDecimal.ZERO;

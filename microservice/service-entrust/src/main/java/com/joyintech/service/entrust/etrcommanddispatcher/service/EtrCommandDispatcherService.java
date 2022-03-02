@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +61,14 @@ public class EtrCommandDispatcherService extends BaseService<EtrCommandDispatche
         			etrCommandDispatcherDto.setIsAutoReceive(DictCodeListExt1.是否_是.getValue());
         		}
         	}
+	    	if(selectList != null && selectList.size() > 0) {
+				for (EtrCommandDispatcherDto etrCommandDispatcherDto : selectList) {
+					if (!StringUtil.isNotEmpty(etrCommandDispatcherDto.getBusiTypeTg())
+							&& StringUtil.equals(etrCommandDispatcherDto.getPS(), DictCodeListExt3.交易方向_债转股.getValue())) {
+						etrCommandDispatcherDto.setBusiTypeTg(DictCodeListExt3.投管业务类型_债转股.getValue());
+					}
+				}
+			}
     		dto.setEtr_entrust_list(selectList);
     		dto.setEtr_pledge_list(this.selectPledgeList(selectList));
     		if(selectList!=null && !selectList.isEmpty()) {

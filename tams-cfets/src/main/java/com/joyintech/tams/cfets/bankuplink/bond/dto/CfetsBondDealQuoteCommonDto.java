@@ -16,6 +16,8 @@ import java.util.List;
 @ApiModel(value="债券报价实体(输入输出共用)",description="债券报价实体(输入输出共用)")
 public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEntity {
 
+    private String totleTradeId;
+
     @ApiModelProperty(name="quoteId",value="报价编号")
     private String quoteId;
 
@@ -208,6 +210,8 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     @ApiModelProperty(name="tradeStatus",value="报价状态")
     private String tradeStatus;
+
+
 
     public String getQuoteId() {
         return quoteId;
@@ -720,5 +724,15 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
     public void setTradeStatus(String tradeStatus) {
         this.tradeStatus = tradeStatus;
     }
+
+    public String getTotleTradeId() {
+        return totleTradeId;
+    }
+
+    public void setTotleTradeId(String totleTradeId) {
+        this.totleTradeId = totleTradeId;
+    }
+
+
 }
 

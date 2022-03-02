@@ -322,6 +322,9 @@
                 AND	(MST_CFETS_CUSTOMER_INFO.PARTY_ID like concat('%',concat(#{search},'%'))
                 or MST_CFETS_CUSTOMER_INFO.PARTY_ABBR like concat('%',concat(#{search},'%')))
             </if>
+            <if test="initValue != null and initValue !=''">
+                AND	MST_CFETS_CUSTOMER_INFO.PARTY_ID =#{initValue}
+            </if>
         </where>
     </select>
     <select id="queryCstpPartyList" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -370,6 +373,9 @@
                 AND	(mst.counter_id like concat('%',concat(#{search},'%'))
                 or mst.counter_name like concat('%',concat(#{search},'%')))
             </if>
+            <if test="initValue != null and initValue !=''">
+                AND	mst.counter_id =#{initValue}
+            </if>
             <if test="searchList != null and searchList.size() > 0">
                 AND mst.party_id in
                 <foreach collection="searchList" item="item" open="(" close=")" separator=",">
@@ -399,6 +405,9 @@
         <if test="search != null and !search.equals('')">
             AND	(MST_CFETS_CUSTOMER_TRADER.TRADER_ID like concat('%',concat(#{search},'%'))
             or MST_CFETS_CUSTOMER_TRADER.TRADER_NAME like concat('%',concat(#{search},'%')))
+        </if>
+        <if test="initValue != null and initValue !=''">
+            AND	MST_CFETS_CUSTOMER_TRADER.TRADER_ID = #{initValue}
         </if>
     </select>
 
