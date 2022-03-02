@@ -261,6 +261,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			// 检测是否设置交易员
 			if (!busiAutoEtrDispService.checkHaveTrader(etrDistributeList)) {
 				// 跳出自动分发
+				etrEntrust.setEntrustType(etrSinglePortfolioDto.getEntrustType());
 				entity.setEtrDistributeList(etrDistributeList);
 				isPushMsg = DictCodeList.是否_是.getValue();
 			} else {
