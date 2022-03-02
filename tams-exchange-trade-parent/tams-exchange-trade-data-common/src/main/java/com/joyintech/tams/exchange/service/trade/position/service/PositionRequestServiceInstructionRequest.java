@@ -53,8 +53,9 @@ public class PositionRequestServiceInstructionRequest {
      *
      * @param entity
      */
-    public void sendRequest(PositionInstructionRequest entity, String decisionAct, String systemAct) {
+    public void sendRequest(PositionInstructionRequest entity, String busiAct, String decisionAct, String systemAct) {
         Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("busiAct", busiAct);
         resultMap.put("decisionAct", decisionAct);
         resultMap.put("systemAct", systemAct);
         this.setCommonField(entity, resultMap);//设置公共字段，个性化的需要在具体接口中覆盖

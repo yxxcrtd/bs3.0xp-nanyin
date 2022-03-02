@@ -729,7 +729,7 @@ public class TradeMsgProcessor {
         	instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume())));
         	instructionClone.setEntrustNum(entrust.getEntrustVolume());
         	instructionClone.setEntrustPrice(entrust.getEntrustPrice());
-        	positionRequestServiceInstructionRequest.sendRequest(instructionClone,DictCodeListExt3.系统动作_新建.getValue(),DictCodeListExt3.系统动作_新建.getValue());
+        	positionRequestServiceInstructionRequest.sendRequest(instructionClone,DictCodeListExt3.业务动作_交易下单.getValue(),DictCodeListExt3.系统动作_新建.getValue(),DictCodeListExt3.系统动作_新建.getValue());
         }
       //下单生成委托，调用头寸引擎---end
       //撤销委托，调用头寸引擎---start
@@ -741,7 +741,7 @@ public class TradeMsgProcessor {
         	instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume())));
         	instructionClone.setEntrustNum(entrust.getEntrustVolume());
         	instructionClone.setEntrustPrice(entrust.getEntrustPrice());
-        	positionRequestServiceInstructionRequest.sendRequest(instructionClone,DictCodeListExt3.系统动作_新建.getValue(),DictCodeListExt3.系统动作_新建.getValue());
+        	positionRequestServiceInstructionRequest.sendRequest(instructionClone,DictCodeListExt3.业务动作_撤委托.getValue(),DictCodeListExt3.系统动作_新建.getValue(),DictCodeListExt3.系统动作_新建.getValue());
         }
       //撤销委托，调用头寸引擎---end
     }
