@@ -322,8 +322,19 @@ public class IntegratedEntrust extends BaseEntity implements Serializable, Entru
     private String invManagerId;
     @ApiModelProperty(name = "ps", value = "交易方向", hidden = true)
     private String ps;
+    
+    @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
+    private String softSkipMode;
 
-    public boolean isNoCancelEntrust() {
+    public String getSoftSkipMode() {
+		return softSkipMode;
+	}
+
+	public void setSoftSkipMode(String softSkipMode) {
+		this.softSkipMode = softSkipMode;
+	}
+
+	public boolean isNoCancelEntrust() {
         return noCancelEntrust;
     }
 
