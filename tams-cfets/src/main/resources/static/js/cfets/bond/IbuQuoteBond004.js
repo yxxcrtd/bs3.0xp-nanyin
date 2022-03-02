@@ -473,6 +473,11 @@
         el("#CfetsBondDealQuotedPrice004_settleType").attr('disabled', true);
         let calculateField = $("[name=calculateField]:checked").val();
         if (calculateField === '01') {
+            if(ps === 'T01') {
+                $("input[name='calculateField'][value='03']").attr('disabled', true);
+                $("input[name='calculateField'][value='02']").attr('disabled', true);
+                layui.form.render('radio');
+            }
             el("#CfetsBondDealQuotedPrice004_unitCprice").attr('disabled', false);
             el("#CfetsBondDealQuotedPrice004_matureYield").attr('disabled', true);
             el("#CfetsBondDealQuotedPrice004_exerYield").attr('disabled', true);
@@ -509,12 +514,12 @@
                     el("#CfetsBondDealQuotedPrice004_matureYield").attr("disabled", true);
                     el("#CfetsBondDealQuotedPrice004_exerYield").attr("disabled", true);
                 }
-                if (calculateField === calcTypeYield) {
+                if (calculateField === calcTypeYield && ps !== 'T01') {
                     el("#CfetsBondDealQuotedPrice004_unitCprice").attr("disabled", true);
                     el("#CfetsBondDealQuotedPrice004_matureYield").attr("disabled", false);
                     el("#CfetsBondDealQuotedPrice004_exerYield").attr("disabled", true);
                 }
-                if (calculateField === calcTypeExecYield) {
+                if (calculateField === calcTypeExecYield && ps !== 'T01') {
                     el("#CfetsBondDealQuotedPrice004_unitCprice").attr("disabled", true);
                     el("#CfetsBondDealQuotedPrice004_matureYield").attr("disabled", true);
                     el("#CfetsBondDealQuotedPrice004_exerYield").attr("disabled", false);
