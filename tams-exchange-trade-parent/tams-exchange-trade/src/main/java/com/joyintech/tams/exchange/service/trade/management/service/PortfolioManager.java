@@ -33,7 +33,7 @@ import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionDetailService;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
 import com.joyintech.tams.exchange.datacommon.db.service.InstrumentService;
-import com.joyintech.tams.exchange.util.EntrustPropUtils;
+import com.joyintech.tams.exchange.common.utils.EntrustPropUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
