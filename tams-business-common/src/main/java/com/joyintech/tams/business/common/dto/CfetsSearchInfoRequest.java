@@ -31,6 +31,8 @@ public class CfetsSearchInfoRequest {
     @ApiModelProperty(name="finProductId",value="产品代码",example="历史：01")
     private String finprodId;
 
+    private String counterId;
+
     private Integer page = 1;
 
     private Integer length = 20;
@@ -122,5 +124,13 @@ public class CfetsSearchInfoRequest {
 
     public void setFinprodId(String finprodId) {
         this.finprodId = finprodId;
+    }
+
+    public String getCounterId() {
+        return counterId;
+    }
+
+    public void setCounterId(String counterId) {
+        this.counterId = counterId;
     }
 }

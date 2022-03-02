@@ -144,6 +144,7 @@ public class JoyinbusinessCommonService extends BaseService {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("search", dto.getSearch());
         param.put("sysDate",iPlatformDate.getSysDate());
+        param.put("initValue",dto.getInitValue());
         if(StringUtil.isNotEmpty(dto.getDateType()) && StringUtil.equals(dto.getDateType(),"01")){
             //查询历史数据，不需要当日日期
             param.remove("sysDate");

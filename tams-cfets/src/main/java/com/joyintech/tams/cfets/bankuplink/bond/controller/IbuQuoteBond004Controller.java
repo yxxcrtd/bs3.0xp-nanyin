@@ -25,6 +25,7 @@ import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsQuotedCommonService;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -87,8 +88,8 @@ public class IbuQuoteBond004Controller extends BaseController {
 
     @Override
     public String init(Model model) {
-        this.setSelectOptionToModel(model, BussinessDictCode.交易方向, BussinessDictCode.清算速度,
-            BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种);
+        this.setSelectOptionToModel(model, BussinessDictCode.交易方向, BussinessDictCode.清算速度, DictCode.分配方式,
+            BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种,DictCode.业务模式,DictCode.价格模式);
         model.addAttribute("ACCOUNT_SPEED_0", BussinessDictCodeList.清算速度_T加0.getValue());
         model.addAttribute("ACCOUNT_SPEED_1", BussinessDictCodeList.清算速度_T加1.getValue());
         model.addAttribute("ACCOUNT_SPEED_2", BussinessDictCodeList.清算速度_T加2.getValue());
@@ -136,6 +137,7 @@ public class IbuQuoteBond004Controller extends BaseController {
         model.addAttribute("distribution",cfetsBondDealQuoteCommonDto.getDistribution());
         //卖空模式
         model.addAttribute("sellPara",CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
+        model.addAttribute("tradeDate", cfetsBondDealQuoteCommonDto.getTradeDate() !=null?cfetsBondDealQuoteCommonDto.getTradeDate().getTime():null);
         model.addAttribute(GlobalConstant.ENTITY, cfetsBondDealQuoteCommonDto);
         return super.init(model);
     }

@@ -32,6 +32,7 @@ import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealDbDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealRegisterQuoteDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
+import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtribRepoInfo003Dto;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.core.impl.dao.MstWorkflowCommonServiceMapperImpl;
@@ -62,6 +63,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -152,6 +154,18 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
     private MstWorkflowCommonServiceMapperImpl mstWorkflowCommonServiceMapperImpl;
     @Autowired
     private PreTrdCommonBaseService preTrdCommonBaseService;
+
+    /**
+     * 设置流程业务说明
+     */
+    @Override
+    public String generateTitle(CfetsBondDealRegisterQuoteDto entity, OperationType type) {
+        DecimalFormat  df = new DecimalFormat("###,###.00");
+        return  "登记日期(" + DateUtil.format(entity.getTradeDate())+")-"+
+                "资产简称(" + entity.getFinprodAbbr()  + ")-"+
+                "对手方("+  entity.getCounterName() +")-" +
+                "券面总额("+ df.format(ArithmeticUtil.divide(entity.getShareAmt(),new BigDecimal(10000),2))+"万元)";
+    }
     /**
      * 提交保存check 必填项
      * @param entity
@@ -393,6 +407,9 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
     
 	@Override
     public void doUpdate(CfetsBondDealRegisterQuoteDto entity){
+        if ("save".equals(entity.getOperatorType())) {
+            return;
+        }
         Map<String,Object> map = new HashMap<>();
         if (!StringUtil.equals("revoke", entity.getOperatorType()) && !StringUtil.equals("delete", entity.getOperatorType())) {
             if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){

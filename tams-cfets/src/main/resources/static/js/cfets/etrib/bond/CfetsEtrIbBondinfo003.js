@@ -704,15 +704,15 @@
     query("input[name=calculateField]").click(function () {
         calflag = query("input[name=calculateField]:checked").val();
         query("#" + calflag + "Show").attr("disabled", false);
-        if ('price' == calflag) {
+        if ('price' === calflag) {
             query("#matureYieldShow").attr("disabled", true);
             query("#exerYieldShow").attr("disabled", true);
         }
-        if ('matureYield' == calflag) {
+        if ('matureYield' === calflag) {
             query("#exerYieldShow").attr("disabled", true);
             query("#priceShow").attr("disabled", true);
         }
-        if ('exerYield' == calflag) {
+        if ('exerYield' === calflag) {
             query("#matureYieldShow").attr("disabled", true);
             query("#priceShow").attr("disabled", true);
         }
