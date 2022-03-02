@@ -216,7 +216,22 @@ public class EntrustCancelProcessor {
                     }
                 }
             }
+            //非大宗意向申报
             if (!EntrustUtils.isIntentionEntrust(entrust.getEntrustProp())) {
+                if (instruction.getEntrustNum() > 0) {
+                    instruction.setFrozenQuantity(BigDecimal.valueOf(instruction.getFrozenQuantity().longValue() - unFrozenVolume));
+                } else if (instruction.getEntrustAmt().doubleValue() > 0) {
+                    if (instruction.getFrozenQuantity().doubleValue() > 0) {
+                        // 金额指令全部以净价处理， 需要重新计算指令金额冻结
+                        unFrozenBalance = bondHelper.calculateBalanceForInstruction(entrust.getEntrustProp(), entrust.getAssetType(), entrust.getEntrustPrice(), unFrozenVolume, unFrozenBalance);
+                        instruction.setFrozenQuantity(TradeUtils.subtract(instruction.getFrozenQuantity(), (unFrozenBalanceInstructionTrade == null && !isFromTrade) ? unFrozenBalance : unFrozenBalanceInstructionTrade, 2));
+                    } else {
+                        instruction.setFrozenQuantity(BigDecimal.valueOf(0.00));
+                    }
+                }
+            }
+            //大宗意向申报
+            else if (EntrustUtils.isIntentionEntrust(entrust.getEntrustProp())) {
                 if (instruction.getEntrustNum() > 0) {
                     instruction.setFrozenQuantity(BigDecimal.valueOf(instruction.getFrozenQuantity().longValue() - unFrozenVolume));
                 } else if (instruction.getEntrustAmt().doubleValue() > 0) {
