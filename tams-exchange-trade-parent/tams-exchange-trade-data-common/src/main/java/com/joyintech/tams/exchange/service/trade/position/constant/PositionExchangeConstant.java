@@ -101,6 +101,10 @@ public class PositionExchangeConstant {
     public static final String PTL_LIST = "ptlList";
 
     /**
+     * 投资目的
+     */
+    public static final String INV_AIM = "invAim";
+    /**
      * 流程编号
      */
     public static final String WORK_FLOW_ID = "workFlowId";
@@ -115,7 +119,7 @@ public class PositionExchangeConstant {
     /**
      * 标准券代码
      */
-    public static final String STANDARD_SEC_ID ="standardSecId";
+    public static final String STANDARD_SEC_ID = "standardSecId";
     /**
      * 标准券总额
      */
@@ -135,5 +139,14 @@ public class PositionExchangeConstant {
      * ETF申赎方式
      */
     public static final String ETFREDEMPTION_METHOD = "ETFRedemptionMethod";
+    /**
+     * 融入券券面总额
+     */
+    public static final String INTEGRATE_SEC_AMOUNT = "integrateSecAmount";
+    /**
+     * 本方券券面总额
+     */
+    public static final String OWN_SEC_AMOUNT = "ownSecAmount";
+
 
 }

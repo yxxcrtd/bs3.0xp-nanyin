@@ -130,10 +130,9 @@ public class PositionRequestServiceInstructionRequest {
      * @param entity
      * @param resultMap
      */
-    private void bond002(Instruction entity, Map<String, Object> resultMap) {
+    private void bond002(PositionInstructionRequest entity, Map<String, Object> resultMap) {
         resultMap.put("interfaceType", PositionExchangeConstant.INTERF_TYPE_BOND002);
         resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_交易下单.getValue());
-        resultMap.put(PS, entity.getPs());
 
         String deliveryType = commonPositionEngineService.getDeliveryType(entity.getFinprodId());
         String settleSpreed = StringUtil.EMPTY;
@@ -146,35 +145,37 @@ public class PositionRequestServiceInstructionRequest {
         }
         resultMap.put(SETTLE_SPEED, settleSpreed);
         resultMap.put("bidResult", 是否_否.getValue());
-        resultMap.put("purchModle", null);
-        resultMap.put(TRADE_PLACE, entity.getTradeMarket());
-        resultMap.put("sharesTradePlatform", entity.getTradePlat());
+        resultMap.put(PURCH_MODLE, null);
         resultMap.put(DELIVERY_TYPE, deliveryType);
-        resultMap.put("workFlowId", null);
-        resultMap.put("cdate", DateUtil.format(entity.getVdate()));
         resultMap.put("finprodId", entity.getFinprodId());
-        resultMap.put("bTotalTradeId", null);
-//        if (CollectionUtils.isNotEmpty(entity.getPortfolioList())) {
-//            List<Map<String, Object>> ptlList = new ArrayList<>();
-//            for (EtrExchangeTradePortfolioRequest etrExchangeTradePortfolioRequest : entity.getPortfolioList()) {
-//                Map<String, Object> pltMap = new HashMap<>();
-//                pltMap.put("portfolioId", etrExchangeTradePortfolioRequest.getPortfolioId());
-//                pltMap.put("tradeId", null);
-//                pltMap.put("etrId", entity.getEntrustId());
-//                pltMap.put("etrSecAmount", null);
-//                pltMap.put("ordId", null);
-//                pltMap.put("ordSecAmount", null);
-//                pltMap.put("cashAcctId", etrExchangeTradePortfolioRequest.getAcctNo());
-//                pltMap.put("secAcctId", etrExchangeTradePortfolioRequest.getSecAcctId());
-//                pltMap.put("secAmount", getSecAmountByBondUnit(entity.getEntrustNum()));
-//                pltMap.put("cashAmount", etrExchangeTradePortfolioRequest.getFprice());
-//                pltMap.put("invAim", etrExchangeTradePortfolioRequest.getInvAim());
-//                pltMap.put("integrateSecAmount", null);
-//                pltMap.put("ownSecAmount", null);
-//                ptlList.add(pltMap);
-//            }
-//            resultMap.put(PTL_LIST, ptlList);
-//        }
+        resultMap.put(B_TOTAL_TRADE_ID, null);
+
+        List<PortfolioCalculateResponse> calculates = getCalculateList(entity);
+
+        if (CollectionUtils.isNotEmpty(calculates)) {
+            PositionRequestBaseBean bean;
+            // 组合数据集
+            List<Map<String, Object>> ptlList = new ArrayList<>(4);
+            for (PortfolioCalculateResponse item : calculates) {
+                bean = new PositionRequestBaseBean(entity);
+                bean.setTradeId(entity.getEntrustNo());
+                bean.setEtrId(entity.getEntrustId());
+                bean.setCashAmount(item.getEntrustAmt());
+                bean.setSecAmount(getSecAmountByBondUnit(BigDecimal.valueOf(item.getEntrustNum())));
+
+                Map<String, Object> map = BeanUtil.object2Map(bean);
+                // 下单委托编号
+                map.put(ORD_ENTRUST_ID, entity.getEntrustNo());
+                map.put(INV_AIM, entity.getInvAim());
+                map.put(INTEGRATE_SEC_AMOUNT, null);
+                map.put(OWN_SEC_AMOUNT, bean.getSecAmount());
+                ptlList.add(map);
+            }
+            resultMap.put(PTL_LIST, ptlList);
+
+            // 组合附属数据集 空
+            resultMap.put("ptlSubList", Lists.newArrayList());
+        }
     }
 
     /**
