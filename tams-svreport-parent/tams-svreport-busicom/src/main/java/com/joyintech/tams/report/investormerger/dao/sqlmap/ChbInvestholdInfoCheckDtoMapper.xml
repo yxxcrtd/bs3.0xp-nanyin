@@ -1016,7 +1016,7 @@
 		WHERE (REGIST_BANK_CODE,INDENTIFY_MARK,HOLD_DATE,PRODID)IN (
 			SELECT
 		 	 	ck.REGIST_BANK_CODE registBankCode,
-             	ck.MERGER_INDENTIFY_MARK indentifyMark,
+             	ck.INDENTIFY_MARK indentifyMark,
              	ck.HOLD_DATE holdDate,
              	ck.PRODID prodid
       		FROM CHB_INVESTHOLD_INFO_CHECK ck
@@ -1029,7 +1029,7 @@
   	where (REGIST_BANK_CODE,INDENTIFY_MARK,HOLD_DATE,PRODID) in 
   	(SELECT 	
   		CK.REGIST_BANK_CODE registBankCode,
-		CK.MERGER_INDENTIFY_MARK indentifyMark,
+		CK.INDENTIFY_MARK indentifyMark,
 		CK.HOLD_DATE holdDate,
 		CK.PRODID prodid
 		FROM CHB_INVESTHOLD_INFO_CHECK ck
@@ -1441,6 +1441,9 @@
 	        sub.AMOUNT,
 	        sub.QTY,
 	        sub.CNY_AMT,
+	        sub.PRD_REGIST_CODE, sub.REMARK, sub.WORKFLOW_ID,
+			sub.ORG_CODE, sub.DEPT_CODE, sub.UPDATE_USER,
+			sub.UPDATE_TIME, sub.CREATE_USER, sub.CREATE_TIME,sub.CREATE_DEPT,
 	        C.MERGER_INDENTIFY_MARK,
 	        '99' AS OPERATE_STATUS,
 	        C.STATUS
