@@ -933,7 +933,7 @@ public class TradeHelper {
         Entrust entrust = convertOrderToEntrust(order, batchInfo, workflow);
         entrust.setParentOrderId(order.getId());
         Instruction instructionBean = instructionService.findById(order.getInstructionId());
-        if (batchInfo.getEntrustTimes() > batchInfo.getCompleteTimes()) {
+        if (batchInfo.getEntrustTimes() > batchInfo.getCompleteTimes() && entrust.getEntrustVolume() > 0) {
             delayController.put(batchInfo);
             order.setOrderStatus(OrderStatus.PROGRESSING.value);
         } else { // 判断委托是否已经下完
@@ -941,7 +941,9 @@ public class TradeHelper {
             ReviewManagement.removeReviewMap(orderId);
         }
         orderService.asyncUpdate(order);
-        handleEntrust(entrust, instructionBean, Constants.PROCESS_TYPE_ENTRUST);
+        if (entrust.getEntrustVolume() > 0) {
+            handleEntrust(entrust, instructionBean, Constants.PROCESS_TYPE_ENTRUST);
+        }
     }
 
     public IntegratedEntrust handleIntegratedEntrustWithReview(TrdExchangeDto dto) {

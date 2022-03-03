@@ -50,7 +50,7 @@
     }
 
     var cols = [
-
+        {field:'operation', width:20, title: 'SysCommon.operation', sortable:false, type: 'action', buttons: ['delt']},
         {
             /* 组合代码 */
             field: 'portfolioId',
@@ -136,7 +136,7 @@
         }
     ]
     var table = $("#etrInvestRepoInfoDtos").joyintable({
-        data: entity_BussCombDistribtList || [],
+        data: entity_BussCombDistribtList || [{}],
         cols: cols,
         page: false,
         addbtn: true,
@@ -144,25 +144,47 @@
         searchOnInit: true,
         checkbox: false,
         height: 190,
-        addclick: function (row) {
-
-        }, beforeEditCell: function (preVal, field, rowData) {
+        done:function(){
+            this.bind('click', '.delt', function(data, index) {
+                var allRow = table.getAllRows();
+                if(allRow.length > 1) {
+                    table.deleteRow(index);
+                }else {
+                    Joyin.error("至少要保留一个组合");
+                }
+            });
+        },
+         beforeEditCell: function (preVal, field, rowData) {
             return true;
         }, editCell: function (value, data, field, cell, column) {
             if (field == 'entrustAmt') {
                 $("#entrustAmt").val(value);
             }
             if (field == 'portfolioId') {
+                var allRow = table.getAllRows();
+                var exist = 0;
+                $.each(allRow,function (index,item) {
+                    if(value == item.portfolioId) {
+                        exist = exist + 1;
+                    }
+                })
+                if(exist > 1) {
+                    Joyin.error(value+"组合已经存在,不可以重复选择");
+                    data.portfolioId = null;
+                    table.renderRow(data.LAY_TABLE_INDEX, data);
+                    return;
+                }
                 var arr = [];
                 var param = {}
                 arr.push(value);
                 param.portfolioIdList = arr;
                 Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/queryPositionInfo', param, function (result) {
-                    console.log('queryPositionInfo',result);
-                    data.availableCashT = result.data[0].amount;
-                    data.availableCashT1 = result.data[1].amount;
-                    data.accountCash = result.data[2].amount;
-                    table.renderRow(data.LAY_TABLE_INDEX, data);
+                    if(result.data) {
+                        data.availableCashT = result.data[0].amount;
+                        data.availableCashT1 = result.data[1].amount;
+                        data.accountCash = result.data[2].amount;
+                        table.renderRow(data.LAY_TABLE_INDEX, data);
+                    }
 
                 });
                 // table.renderRow(data.LAY_TABLE_INDEX, data);
@@ -174,9 +196,10 @@
                         param.pledgeStockId = data.zyqk;
                     }
                     Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbRepoinfo/getPledgeable', param, function (result) {
-                        console.log('getPledgeable',result);
-                        data.avaPledgePrin = result.data;
-                        table.renderRow(data.LAY_TABLE_INDEX, data);
+                        if(result.data) {
+                            data.avaPledgePrin = result.data;
+                            table.renderRow(data.LAY_TABLE_INDEX, data);
+                        }
                     });
                 }
             }
@@ -185,8 +208,10 @@
                 param.portfolioId = data.portfolioId;
                 param.pledgeStockId = value;
                 Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbRepoinfo/getPledgeable', param, function (result) {
-                    data.avaPledgePrin = result.data;
-                    table.renderRow(data.LAY_TABLE_INDEX, data);
+                    if(result.data) {
+                        data.avaPledgePrin = result.data;
+                        table.renderRow(data.LAY_TABLE_INDEX, data);
+                    }
                 });
             }
             return true;
@@ -504,7 +529,9 @@
         var repoTerm = $("#repoTerm").val();
         if (!repoTerm) return;
         Joyin.ajax(basePath + 'cfets/etrib/cfetsEtrIbRepoinfo/getTermTypeByRepoTerm?repoTerm=' + repoTerm, {}, function (data) {
-            $("#termType").textSelect('setValue', data.data.data);
+            if(data.data) {
+                $("#termType").textSelect('setValue', data.data.data);
+            }
         });
     })
 

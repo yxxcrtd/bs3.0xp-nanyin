@@ -126,6 +126,19 @@ public class MockTradeClient implements ITradeRequest {
             onEntrust(entrust);
             return;
         }
+
+        //质押券出入库
+        if ("EX005".equals(entrust.getBusiTypeTg())) {
+            Trade trade = getTrade(entrust, Calendar.getInstance(), TradeType.NORMAL.value);
+            trade.setTradedPrice(entrust.getEntrustPrice());
+            trade.setTradedVolume(entrust.getEntrustVolume());
+            trade.setTradedBalance(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume())));
+            onEntrust(entrust);
+            tradeArray.add(trade);
+            onTrade(trade);
+            return;
+        }
+
         int tradeVolume;
         if (entrust.getEntrustVolume() % 300 == 0) {//全部成交 数量是300的倍数全部成交
             entrust.setEntrustStatus(EntrustStatus.SUCCEEDED.value);

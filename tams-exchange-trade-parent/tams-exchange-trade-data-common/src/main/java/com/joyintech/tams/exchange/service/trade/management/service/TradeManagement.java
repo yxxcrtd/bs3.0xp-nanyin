@@ -136,6 +136,7 @@ public class TradeManagement {
             Trade trade = new Trade();
             BeanUtils.copyProperties(o, trade);
             if ("EX005".equals(trade.getBusiTypeTg())) {
+                trade.setBondVolume(trade.getTradedPrice().multiply(BigDecimal.valueOf(trade.getTradedVolume())).longValue());
                 trade.setTradedPrice(trade.getTradedPrice().multiply(BigDecimal.valueOf(100)));
             }
             entrusts.add(trade);
