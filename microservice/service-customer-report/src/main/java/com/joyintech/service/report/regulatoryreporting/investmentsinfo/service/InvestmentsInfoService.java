@@ -237,8 +237,8 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_2.put("t2_last54_amt", "ASSETAMT1_5_10");
 		tablePorpertyMap_2.put("t2_cur55_amt", "ASSETAMT1_5_16_a");
 		tablePorpertyMap_2.put("t2_last55_amt", "ASSETAMT1_5_16_a");
-		tablePorpertyMap_2.put("t2_cur57_amtfq", "ASSETAMT1_5_16+ASSETAMT1_5_7");
-		tablePorpertyMap_2.put("t2_last57_amtfq", "ASSETAMT1_5_16+ASSETAMT1_5_7");
+		tablePorpertyMap_2.put("t2_cur57_amtfq", "ASSETAMT1_5_16-AMT1_5_16_a+ASSETAMT1_5_7");
+		tablePorpertyMap_2.put("t2_last57_amtfq", "ASSETAMT1_5_16-AMT1_5_16_a+ASSETAMT1_5_7");
 		tablePorpertyMap_2.put("t2_cur58_amt", "ASSETAMT1_6_5");
 		tablePorpertyMap_2.put("t2_last58_amt", "ASSETAMT1_6_5");
 		tablePorpertyMap_2.put("t2_cur59_amt", "ASSETAMT1_6_1");
@@ -588,6 +588,10 @@ public class InvestmentsInfoService {
 		investmentBusinessDetailsDtoList.addAll(queryTable1And2And6Info(pageParam));
 		//investmentBusinessDetailsDtoList.addAll(getInvestmentBusinessDetails(pageParam));
 		investmentBusinessDetailsDtoList.addAll(queryTable2And3Info(pageParam));
+		//表5和新附表
+		investmentBusinessDetailsDtoList.addAll(queryTable5And8And6Info(pageParam));
+
+
 		investmentBusinessDetailsDtoList.addAll(queryTable3OtherInfo(pageParam));
 		investmentBusinessDetailsDtoList.addAll(queryTable4Info(pageParam));
 		investmentBusinessDetailsDtoList.addAll(queryTable7Info(pageParam));
@@ -758,10 +762,18 @@ public class InvestmentsInfoService {
         resultMap.put("t1_cur17_amt", resultMap.get("t1_cur12_amt")
                 .add(resultMap.get("t1_cur13_amt"))
                 .add(resultMap.get("t1_cur14_amt")));
+
 		//表一F17合计赋值
         resultMap.put("t1_last17_amt", resultMap.get("t1_last12_amt")
                 .add(resultMap.get("t1_last13_amt"))
                 .add(resultMap.get("t1_last14_amt")));
+
+		//附表新增计算逻辑
+		resultMap.put("t8_cur01_amt", resultMap.get("t1_cur13_amt")
+				.add(resultMap.get("t1_cur14_amt")));
+		resultMap.put("t8_last01_amt", resultMap.get("t1_last13_amt")
+				.add(resultMap.get("t1_last14_amt")));
+
 		// 值相同单元格赋值
 		for (String key : sameValueMap.keySet()) {
 			resultMap.put(key, resultMap.get(sameValueMap.get(key)));
@@ -862,8 +874,6 @@ public class InvestmentsInfoService {
 		//  表二C59数据
 		resultMap.put("t2_last62_amt", lastOverallInfoDtoYx==null?BigDecimal.ZERO:lastOverallInfoDtoYx.getBalance());
 
-
-
 		// 表二其余单元格赋值
 		for (String key : tablePorpertyMap_2.keySet()) {
 			String[] valueList = tablePorpertyMap_2.get(key).split("\\+");
@@ -889,8 +899,48 @@ public class InvestmentsInfoService {
 				}
 		    }
 
+			//新增减法操作
+			if(tablePorpertyMap_2.get(key).contains("-")){
+				String[] valueDList = tablePorpertyMap_2.get(key).split("\\-");
+				int lengthD = valueDList.length;
+				// 本季末数额
+				if (key.contains("cur")) {
+					for (int i = 0; i < length; i ++) {
+						money = money.subtract(queryMoney(currMap, valueDList[i]));
+					}
+					// 上季末数额
+				} else if (key.contains("last")) {
+					for (int i = 0; i < length; i ++) {
+						money = money.subtract(queryMoney(lastMap, valueDList[i]));
+					}
+				} else if (key.contains("_zq")) {
+					for (int i = 0; i < length; i ++) {
+						money = money.subtract(queryMoney(currMap, valueDList[i]));
+					}
+				}else if (key.contains("_lzq")) {
+					for (int i = 0; i < length; i ++) {
+						money = money.subtract(queryMoney(lastMap, valueDList[i]));
+					}
+				}
+			}
+
 			resultMap.put(key, money);
 		}
+
+
+		// 附表  7.评级在AA+（不含）以下的非金融企业债
+		resultMap.put("t8_cur02_amt", resultMap.get("t2_cur37_amt").add(resultMap.get("t2_cur38_amt")).add(resultMap.get("t2_cur39_amt")));
+		// 附表  7.评级在AA+（不含）以下的非金融企业债
+		resultMap.put("t8_last02_amt", resultMap.get("t2_last37_amt").add(resultMap.get("t2_last38_amt")).add(resultMap.get("t2_last39_amt")));
+
+		// 附表  9.底层资产无法一一对应的非标债权资产投资余额
+		resultMap.put("t8_cur03_amt", resultMap.get("t2_cur41_amt").add(resultMap.get("t2_cur42_amt")).add(resultMap.get("t2_cur46_amt"))
+				.add(resultMap.get("t2_cur48_amt")).add(resultMap.get("t2_cur51_amt")));
+		// 附表  9.底层资产无法一一对应的非标债权资产投资余额
+		resultMap.put("t8_last03_amt", resultMap.get("t2_last41_amt").add(resultMap.get("t2_last42_amt")).add(resultMap.get("t2_last46_amt"))
+				.add(resultMap.get("t2_last48_amt")).add(resultMap.get("t2_last51_amt")));
+
+
 		//针对表二B57和C57数据
 		resultMap.put("t2_cur57_amt", ArithmeticUtil.subtract(resultMap.get("t2_cur57_amtfq"), resultMap.get("t2_cur55_amt")));
 		resultMap.put("t2_last57_amt", ArithmeticUtil.subtract(resultMap.get("t2_last57_amtfq"), resultMap.get("t2_last55_amt")));
@@ -1083,6 +1133,40 @@ public class InvestmentsInfoService {
 		}
 		return map;
 	}
+
+
+	/**
+	 * @Description 查询表五数据并组装为Map
+	 * @Author      高健
+	 * @Date        2019年8月7日 下午3:41:08
+	 * @param @param pageParam
+	 * @param @return 参数
+	 * @return Map<Object,Object> 返回类型
+	 * @throws
+	 */
+	private List<Map<String,Object>> createTable5Data(Map<String, Object> pageParam) {
+		// 导出年份
+		String exportYear = (String) pageParam.get("exportYear");
+		// 导出季度
+		String exportQuarter = (String) pageParam.get("exportQuarter");
+		// 本季末期数
+		String termId = exportYear + exportQuarter;
+		Map<String, Object> paraMap = new HashMap<String, Object>();
+		if(MultilevelDataAuthorityUtil.isEnabled()) {
+			//联社模式,查询登录人的机构
+			String org =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+			paraMap.put("org",org);
+		}
+		// 本季末参数
+		paraMap.put("termId", termId);
+		// 上季末参数
+		String lastTermId = getLastQuarter(termId);
+		paraMap.put("lastTermId", lastTermId);
+		List<Map<String,Object>> overallInfoList = overallInfoMapper.createTable5Data(paraMap);
+		return overallInfoList;
+	}
+
+
 	/**
 	 * 查询表二数据
 	 * @param pageParam
@@ -2376,6 +2460,57 @@ public class InvestmentsInfoService {
 			}
 			InvestmentBusinessDetailsList.add(investmentBusinessDetailsDto);
 		}
+		return InvestmentBusinessDetailsList;
+	}
+
+	/**
+	 * @Description 组装表5数据到实体类
+	 * @Author
+	 * @Date        2019年8月8日 上午11:53:42
+	 * @param @param pageParam
+	 * @param @return 参数
+	 * @return List<InvestmentBusinessDetailsDto> 返回类型
+	 * @throws
+	 */
+	private List<InvestmentBusinessDetailsDto> queryTable5And8And6Info(Map<String, Object> pageParam) {
+		List<Map<String,Object>> ListMap = createTable5Data(pageParam);
+
+		List<InvestmentBusinessDetailsDto> InvestmentBusinessDetailsList = new ArrayList<InvestmentBusinessDetailsDto>();
+		for (Map<String,Object> map: ListMap) {
+			InvestmentBusinessDetailsDto investmentBusinessDetailsDto = new InvestmentBusinessDetailsDto();
+			investmentBusinessDetailsDto.setPropertycode(map.get("VALCODE").toString());
+			//表五计算用 投资余额 -穿透前
+			investmentBusinessDetailsDto.setValueA((BigDecimal) map.get("VALUEA"));
+			//表五计算用 投资余额 -穿透后
+			investmentBusinessDetailsDto.setValueB((BigDecimal) map.get("VALUEB"));
+			//表五计算用 投资余额 -上季 -穿透前
+			investmentBusinessDetailsDto.setValueALast((BigDecimal) map.get("VALUEALAST"));
+			//表五计算用 投资余额 -上季 -穿透后
+			investmentBusinessDetailsDto.setValueBLast((BigDecimal) map.get("VALUEBLAST"));
+			//表五计算用 平均杠杆率 -穿透前
+			investmentBusinessDetailsDto.setAvgRate1((BigDecimal) map.get("AVGRATE1"));
+			//表五计算用 平均杠杆率 -穿透后
+			investmentBusinessDetailsDto.setAvgRate2((BigDecimal) map.get("AVGRATE2"));
+			//表五计算用 平均杠杆率 -穿透前 - 上季
+			investmentBusinessDetailsDto.setAvgRate1Last((BigDecimal) map.get("AVGRATE1LAST"));
+			//表五计算用 平均杠杆率 -穿透后 - 上季
+			investmentBusinessDetailsDto.setAvgRate2Last((BigDecimal) map.get("AVGRATE2LAST"));
+			//表五计算用 杠杆倍数最高值 -本机
+			investmentBusinessDetailsDto.setHeaverTimes1((BigDecimal) map.get("HEAVERTIMES1"));
+			//表五计算用 杠杆倍数最高值 -上季
+			investmentBusinessDetailsDto.setHeaverTimes2((BigDecimal) map.get("HEAVERTIMES2"));
+			//表五计算用 信贷资产支持证券
+			investmentBusinessDetailsDto.setValueB01((BigDecimal) map.get("VALUEB01"));
+			//表五计算用 信贷资产支持证券 - 上季
+			investmentBusinessDetailsDto.setValueBlast01((BigDecimal) map.get("VALUEBLAST01"));
+			//表五计算用 资产支持专项计划
+			investmentBusinessDetailsDto.setValueB02((BigDecimal) map.get("VALUEB02"));
+			//表五计算用 资产支持专项计划 - 上季
+			investmentBusinessDetailsDto.setValueBlast02((BigDecimal) map.get("VALUEBLAST02"));
+
+			InvestmentBusinessDetailsList.add(investmentBusinessDetailsDto);
+		}
+
 		return InvestmentBusinessDetailsList;
 	}
 	/**
