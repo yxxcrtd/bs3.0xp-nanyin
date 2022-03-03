@@ -96,11 +96,11 @@
 			<if test="registBankCode!= null and registBankCode != ''">
 				and ciis.REGIST_BANK_CODE like concat(concat('%',#{registBankCode,jdbcType=VARCHAR}),'%')
 			</if>
-			<if test="prdCodeList != null and prdCodeList.size()>0">
-				<foreach collection="prdCodeList" item="item" open="and ciis.ACCOUNT in(" separator="," close=")">
-					#{item,jdbcType=VARCHAR}
-				</foreach>
-			</if>
+<!--			<if test="prdCodeList != null and prdCodeList.size()>0">-->
+<!--				<foreach collection="prdCodeList" item="item" open="and ciis.ACCOUNT in(" separator="," close=")">-->
+<!--					#{item,jdbcType=VARCHAR}-->
+<!--				</foreach>-->
+<!--			</if>-->
 			<if test="prdRegistCodeList != null and prdRegistCodeList.size()>0">
 				<foreach collection="prdRegistCodeList" item="item" open="and ciis.REG_CODE in(" separator="," close=")">
 					#{item,jdbcType=VARCHAR}
@@ -183,11 +183,11 @@
 			<if test="registBankCode!= null and registBankCode != ''">
 				and ciis.REGIST_BANK_CODE like concat(concat('%',#{registBankCode,jdbcType=VARCHAR}),'%')
 			</if>
-			<if test="prdCodeList != null and prdCodeList.size()>0">
-				<foreach collection="prdCodeList" item="item" open="and ciis.ACCOUNT in(" separator="," close=")">
-					#{item,jdbcType=VARCHAR}
-				</foreach>
-			</if>
+<!--			<if test="prdCodeList != null and prdCodeList.size()>0">-->
+<!--				<foreach collection="prdCodeList" item="item" open="and ciis.ACCOUNT in(" separator="," close=")">-->
+<!--					#{item,jdbcType=VARCHAR}-->
+<!--				</foreach>-->
+<!--			</if>-->
 			<if test="prdRegistCodeList != null and prdRegistCodeList.size()>0">
 				<foreach collection="prdRegistCodeList" item="item" open="and ciis.REG_CODE in(" separator="," close=")">
 					#{item,jdbcType=VARCHAR}
