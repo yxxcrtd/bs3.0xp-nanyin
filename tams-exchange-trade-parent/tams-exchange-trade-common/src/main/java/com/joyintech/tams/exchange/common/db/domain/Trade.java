@@ -646,7 +646,7 @@ public class Trade implements Serializable, KeyMethodInterface<String> {
     }
 
     public long getBondVolume() {
-        return tradedPrice.multiply(BigDecimal.valueOf(tradedVolume)).longValue();
+        return bondVolume;
     }
 
     public void setBondVolume(long bondVolume) {
