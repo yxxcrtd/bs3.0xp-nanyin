@@ -22,9 +22,45 @@
   <form class="layui-form" id="searchForm">
     <div class="layui-form-item">
       <div class="layui-inline layui-col-md4">
+        <label class="layui-form-label form-lable">投资者名称</label>
+        <div class="layui-input-inline input-inline">
+          <input id="holderName" name="holderName" type="text" class="layui-input form-input input-lenovoselect" data-rules="maxlength:200" placeholder="请输入关键词" data-th-placeholder="#{SysCommon.placeholder}">
+        </div>
+      </div>
+      <div class="layui-inline layui-col-md4">
         <label class="layui-form-label form-lable">报送截止日</label>
         <div class="layui-input-inline input-inline">
           <input id="submitDeadLine" type="text"  name="timeControl"  class="layui-input form-input timeControl input-dateRangeSelect" placeholder="请选择日期区间" />
+        </div>
+      </div>
+      <div class="layui-inline layui-col-md4">
+        <label class="layui-form-label form-lable">报送日期</label>
+        <div class="layui-input-inline input-inline">
+          <input id="submitDate" type="text"  name="timeControl"  class="layui-input form-input timeControl input-dateRangeSelect" placeholder="请选择日期区间" />
+        </div>
+      </div>
+<!--      <div class="layui-inline layui-col-md4">-->
+<!--        <label class="layui-form-label form-lable">报送状态</label>-->
+<!--        <div class="layui-input-inline input-inline">-->
+<!--          <select id="submitStatus" name="submitStatus" class="layui-input form-input input-select" data-th-data-result='${SUBMIT_STATUS}' data-th-initvalue="${submitStatus}" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">-->
+<!--          </select>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      -->
+<!--       <div class="layui-inline layui-col-md4">-->
+<!--        <label class="layui-form-label form-lable">数据状态</label>-->
+<!--        <div class="layui-input-inline input-inline">-->
+<!--          <select id="status" class="input-select" data-th-data-result='${SUBMITTED_STATUS}' placeholder="请选择"  data-th-initvalue="${status}"  data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">-->
+<!--          </select>-->
+<!--        </div>-->
+<!--      </div>-->
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline layui-col-md4">
+        <label class="layui-form-label form-lable">数据状态</label>
+        <div class="layui-input-inline input-inline">
+          <select id="status" class="input-select" data-th-data-result='${SUBMITTED_STATUS}' placeholder="请选择"  data-th-initvalue="${status}"  data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">
+          </select>
         </div>
       </div>
       <div class="layui-inline layui-col-md4">
@@ -34,28 +70,18 @@
           </select>
         </div>
       </div>
-      
-       <div class="layui-inline layui-col-md4">
-        <label class="layui-form-label form-lable">数据状态</label>
-        <div class="layui-input-inline input-inline">
-          <select id="status" class="input-select" data-th-data-result='${SUBMITTED_STATUS}' placeholder="请选择"  data-th-initvalue="${status}"  data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">
-          </select>
-        </div>
-      </div>
-    </div>
-    <div class="layui-form-item">
-      <div class="layui-inline layui-col-md4">
-        <label class="layui-form-label form-lable">数据日期</label>
-        <div class="layui-input-inline input-inline">
-          <input id="updateTime" type="text"  name="timeControl"  class="layui-input form-input timeControl input-dateRangeSelect" placeholder="请选择日期区间" />
-        </div>
-      </div>
-      <div class="layui-inline layui-col-md4">
-        <label class="layui-form-label form-lable">报送日期</label>
-        <div class="layui-input-inline input-inline">
-          <input id="submitDate" type="text"  name="timeControl"  class="layui-input form-input timeControl input-dateRangeSelect" placeholder="请选择日期区间" />
-        </div>
-      </div>
+<!--      <div class="layui-inline layui-col-md4">-->
+<!--        <label class="layui-form-label form-lable">数据日期</label>-->
+<!--        <div class="layui-input-inline input-inline">-->
+<!--          <input id="updateTime" type="text"  name="timeControl"  class="layui-input form-input timeControl input-dateRangeSelect" placeholder="请选择日期区间" />-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="layui-inline layui-col-md4">-->
+<!--        <label class="layui-form-label form-lable">报送日期</label>-->
+<!--        <div class="layui-input-inline input-inline">-->
+<!--          <input id="submitDate" type="text"  name="timeControl"  class="layui-input form-input timeControl input-dateRangeSelect" placeholder="请选择日期区间" />-->
+<!--        </div>-->
+<!--      </div>-->
       <div class="layui-inline layui-col-md4">
         <label class="layui-form-label form-lable">反馈状态</label>
         <div class="layui-input-inline input-inline">
@@ -67,11 +93,17 @@
     </div>
     <div class="layui-form-item">
       <div class="layui-inline layui-col-md4">
-        <label class="layui-form-label form-lable">投资者名称</label>
+        <label class="layui-form-label form-lable">数据日期</label>
         <div class="layui-input-inline input-inline">
-          <input id="holderName" name="holderName" type="text" class="layui-input form-input input-lenovoselect" data-rules="maxlength:200" placeholder="请输入关键词" data-th-placeholder="#{SysCommon.placeholder}">
+          <input id="updateTime" type="text"  name="timeControl"  class="layui-input form-input timeControl input-dateRangeSelect" placeholder="请选择日期区间" />
         </div>
       </div>
+<!--      <div class="layui-inline layui-col-md4">-->
+<!--        <label class="layui-form-label form-lable">投资者名称</label>-->
+<!--        <div class="layui-input-inline input-inline">-->
+<!--          <input id="holderName" name="holderName" type="text" class="layui-input form-input input-lenovoselect" data-rules="maxlength:200" placeholder="请输入关键词" data-th-placeholder="#{SysCommon.placeholder}">-->
+<!--        </div>-->
+<!--      </div>-->
       <div class="layui-inline layui-col-md4">
         <label class="layui-form-label form-lable">识别标识</label>
         <div class="layui-input-inline input-inline">
@@ -86,6 +118,12 @@
       </div>
     </div>
     <div class="layui-form-item">
+      <div class="layui-inline layui-col-md4">
+        <label class="layui-form-label form-lable">投资者类别</label>
+        <div class="layui-input-inline input-inline">
+          <select id="holderType" name="holderType" class="input-select" allowClear="true" multiple="multiple" data-th-data-result='${HOLDER_TYPE}' data-th-formatoption="false" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"></select>
+        </div>
+      </div>
     <div class="layui-inline layui-col-md4">
         <label class="layui-form-label form-lable">个人证件类别</label>
         <div class="layui-input-inline input-inline">
@@ -100,19 +138,18 @@
           </select>
         </div>
       </div>
+<!--      <div class="layui-inline layui-col-md4">-->
+<!--        <label class="layui-form-label form-lable">证件号码</label>-->
+<!--        <div class="layui-input-inline input-inline">-->
+<!--          <input id="identifyNumber" name="identifyNumber" type="text" class="layui-input form-input input-lenovoselect" maxlength="18" data-rules="code;maxlength:18" placeholder="请输入关键词" data-th-placeholder="#{SysCommon.placeholder}">-->
+<!--        </div>-->
+<!--      </div>-->
+      </div>
+    <div class="layui-form-item">
       <div class="layui-inline layui-col-md4">
         <label class="layui-form-label form-lable">证件号码</label>
         <div class="layui-input-inline input-inline">
           <input id="identifyNumber" name="identifyNumber" type="text" class="layui-input form-input input-lenovoselect" maxlength="18" data-rules="code;maxlength:18" placeholder="请输入关键词" data-th-placeholder="#{SysCommon.placeholder}">
-        </div>
-      </div>
-      </div>
-    <div class="layui-form-item">
-      <div class="layui-inline layui-col-md4">
-        <label class="layui-form-label form-lable">机构代码</label>
-        <div class="layui-input-inline input-inline">
-          <select id="orgCode" class="input-select" data-th-data-url="@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getInstitutionCode}" initvalue='${MY_AGENCY_CODE}' name="orgType"  placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">
-          </select>
         </div>
       </div>
       <div class="layui-inline layui-col-md4">
@@ -122,11 +159,24 @@
         </div>
       </div>
       <div class="layui-inline layui-col-md4">
-            <label class="layui-form-label form-lable">投资者类别</label>
-            <div class="layui-input-inline input-inline">
-              <select id="holderType" name="holderType" class="input-select" allowClear="true" multiple="multiple" data-th-data-result='${HOLDER_TYPE}' data-th-formatoption="false" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"></select>
-            </div>
+        <label class="layui-form-label form-lable">机构代码</label>
+        <div class="layui-input-inline input-inline">
+          <select id="orgCode" class="input-select" data-th-data-url="@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getInstitutionCode}" initvalue='${MY_AGENCY_CODE}' name="orgType"  placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">
+          </select>
+        </div>
       </div>
+<!--      <div class="layui-inline layui-col-md4">-->
+<!--        <label class="layui-form-label form-lable">登记银行代码</label>-->
+<!--        <div class="layui-input-inline input-inline">-->
+<!--          <input id="bankCode" name="bankCode" type="text" class="layui-input form-input input-lenovoselect" maxlength="6" data-rules="code;" placeholder="请输入关键词" data-th-placeholder="#{SysCommon.placeholder}">-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="layui-inline layui-col-md4">-->
+<!--            <label class="layui-form-label form-lable">投资者类别</label>-->
+<!--            <div class="layui-input-inline input-inline">-->
+<!--              <select id="holderType" name="holderType" class="input-select" allowClear="true" multiple="multiple" data-th-data-result='${HOLDER_TYPE}' data-th-formatoption="false" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"></select>-->
+<!--            </div>-->
+<!--      </div>-->
     </div>
   </form>
   </div>

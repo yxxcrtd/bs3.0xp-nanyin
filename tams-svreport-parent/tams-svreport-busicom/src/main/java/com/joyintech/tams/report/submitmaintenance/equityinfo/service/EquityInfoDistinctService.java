@@ -13,7 +13,6 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -36,7 +35,6 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
@@ -83,7 +81,7 @@ public class EquityInfoDistinctService {
 	 * check表 单次更新条数（合并后识别标识）
 	 */
 	@Value("${application.reportUpdateCountForShenFen}")
-	public int reportUpdateCountForShenFen;
+	public String reportUpdateCountForShenFen;
 	
 	/**
 	 * 长sql最大一次插入或者更新条数 
@@ -119,7 +117,7 @@ public class EquityInfoDistinctService {
 		//只有当系统参数为01：使用修复批的情况下，才取以前保存在库中的check表数据
 		if("01".equals(updateFlg)) {
 			//取得本次导入txt记录，对应的CHECK表记录
-			List<ChbEquHoldCheckDto> allList = chbEquHoldCheckDtoMapper.selectChekForRepair(keys);
+			List<ChbEquHoldCheckDto> allList = this.selectChekForRepairByList(keys);
 
 			checkMap = allList.stream().collect(JoyinCollectors.groupingBy(
 					x -> getKey(x)));	
@@ -188,6 +186,7 @@ public class EquityInfoDistinctService {
 							 ChbEquHoldCheckDto checkModel = transformModelToCheck(model);
 							 //修复批启用的情况下，如果接入的txt对应的信息为空，则用之前check表的内容替换
 							 if("01".equals(updateFlg)) {
+								 if(checkMap.containsKey(yibaosongkey) &&  checkMap.get(yibaosongkey) != null) { 
 								for(ChbEquHoldCheckDto hdlDto : checkMap.get(yibaosongkey)) {
 									if(indentifyMark.equals(hdlDto.getIndentifyMark())) {
 										//设置 账号开户所在地
@@ -201,6 +200,7 @@ public class EquityInfoDistinctService {
 										
 									}
 								} 
+								 }
 							 }
 							 checkModel.setMergerindentifymark(yibaosongModel.getIndentifyMark());
 							 checkModel.setOperatestatus(DictCodeListExt2.处理状态_中债_已合并.getValue());
@@ -380,8 +380,7 @@ public class EquityInfoDistinctService {
 		//对check表数据进行处理  插入check表信息
 		if(listForInsert != null && listForInsert.size() > 0) {
 			this.insertCheckByBatch(listForInsert);
-		}
-			
+		}	
 		
 		logger.info("数据比较入check表全删全插结束");
 		return mergerkeys;
@@ -1591,7 +1590,7 @@ public class EquityInfoDistinctService {
 		if (StringUtil.isEmptyList(key)) {
 			return;
 		}
-		int maxDataCountOneTime = reportUpdateCountForShenFen;
+		int maxDataCountOneTime = parsToInt(reportUpdateCountForShenFen,"1");
 		boolean isDB2DataBase = CommonUtil.isDB2DataBase();
 		if (isDB2DataBase) {
 			maxDataCountOneTime = 1;
@@ -1623,5 +1622,47 @@ public class EquityInfoDistinctService {
 		logger.info("updateMergerIndentifyMarkByBatch批量处理结束：" + DateUtil.getCurrentDateTime());
 	}
 	
+	/**
+	 * 
+	 *分批执行查询 放置IN 超长
+	 * @param selectChekForRepairByList 数据
+	 * @see   
+	 * @since 1.0
+	 */
+	private List<ChbEquHoldCheckDto> selectChekForRepairByList(List<String> key) {
+		List<ChbEquHoldCheckDto> returnList = new ArrayList<ChbEquHoldCheckDto>();
+		
+		if (StringUtil.isEmptyList(key)) {
+			return null;
+		}
+		int maxDataCountOneTime = 1000;
+		
+		int dataCount = key.size();
+		if (dataCount < maxDataCountOneTime) {			
+			return chbEquHoldCheckDtoMapper.selectChekForRepair(key);			 
+		}
+		List<String> newDataList = new ArrayList<String>();
+		newDataList.addAll(key);
+
+		// 分批处理
+		int part = dataCount / maxDataCountOneTime; // 分批数
+		for (int i = 0; i < part; i++ ) {
+			List<ChbEquHoldCheckDto> hdlList = new ArrayList<ChbEquHoldCheckDto>();
+			hdlList = chbEquHoldCheckDtoMapper.selectChekForRepair(newDataList.subList(0, maxDataCountOneTime));
+			if(CollectionUtils.isNotEmpty(hdlList)) {
+				returnList.addAll(hdlList);
+			}
+			newDataList.subList(0, maxDataCountOneTime).clear();
+		}
+		// 最后剩下的数据
+		if (CollectionUtils.isNotEmpty(newDataList)) {	
+			List<ChbEquHoldCheckDto> hdlList1 = new ArrayList<ChbEquHoldCheckDto>();
+			hdlList1 = chbEquHoldCheckDtoMapper.selectChekForRepair(newDataList);
+			if(CollectionUtils.isNotEmpty(hdlList1)) {
+				returnList.addAll(hdlList1);	
+			}
+		}
+		return returnList;		
+	}
 	
 }
