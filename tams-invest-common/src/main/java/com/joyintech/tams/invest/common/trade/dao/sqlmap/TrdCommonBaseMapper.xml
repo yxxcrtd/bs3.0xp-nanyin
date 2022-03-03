@@ -1267,4 +1267,34 @@
             and tpd.F_TRADE_ID = #{firstFTradeId,jdbcType=VARCHAR}
     </select>
     <!--modify by etliu 20220116 end-->
+
+    <select id="selectEtrEntrustDetailByEntrustId" resultType="com.joyintech.tams.common.base.entity.EtrEntrustDetail">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.EtrEntrustDetailMapper.Base_Column_List" />
+        from ETR_ENTRUST_DETAIL
+        WHERE ENTRUST_ID =#{entrustId}
+    </select>
+
+    <select id="selectFTradeId" resultType="java.lang.String">
+        select
+            F_TRADE_ID
+        from TRD_PRODUCT_TEMP_DEAL
+        WHERE TRADE_ID =#{tradeId}
+    </select>
+
+    <select id="selectOrderInfo" resultType="com.joyintech.tams.invest.common.trade.dto.OrderInfoDto">
+        select
+            ID,
+            INSTRUCTION_ID,
+            ENTRUST_VOLUME
+        from T_ENTRUST
+        where ID = #{dealNo}
+        UNION
+        select
+            ID,
+            INSTRUCTION_ID,
+            ENTRUST_VOLUME
+        from T_INTEGRATED_ENTRUST
+        where ID = #{dealNo}
+    </select>
 </mapper>

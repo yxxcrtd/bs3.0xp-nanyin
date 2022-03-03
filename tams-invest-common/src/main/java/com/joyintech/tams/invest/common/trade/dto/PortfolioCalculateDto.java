@@ -1,4 +1,4 @@
-package com.joyintech.service.entrust.etrexchangetrade.dto;
+package com.joyintech.tams.invest.common.trade.dto;
 
 import java.math.BigDecimal;
 
@@ -27,7 +27,7 @@ public class PortfolioCalculateDto {
     private BigDecimal ordSecAmount;
 
     /**
-     * 全面总额
+     * 券面总额
      */
     private BigDecimal secAmount;
 
@@ -40,6 +40,11 @@ public class PortfolioCalculateDto {
      * 本方券全面总额
      */
     private BigDecimal ownSecAmount;
+
+    /**
+     * 融入券全面总额
+     */
+    private BigDecimal integrateSecAmount;
 
     public String getPortfolioId() {
         return portfolioId;
@@ -87,5 +92,13 @@ public class PortfolioCalculateDto {
 
     public void setOwnSecAmount(BigDecimal ownSecAmount) {
         this.ownSecAmount = ownSecAmount;
+    }
+
+    public BigDecimal getIntegrateSecAmount() {
+        return integrateSecAmount;
+    }
+
+    public void setIntegrateSecAmount(BigDecimal integrateSecAmount) {
+        this.integrateSecAmount = integrateSecAmount;
     }
 }

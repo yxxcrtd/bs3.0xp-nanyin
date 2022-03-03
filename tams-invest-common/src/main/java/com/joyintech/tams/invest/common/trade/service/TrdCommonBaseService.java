@@ -21,6 +21,7 @@ import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.*;
@@ -31,7 +32,8 @@ import com.joyintech.tams.invest.common.dto.mock.trade.MockTrdProductDealDto;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTotalTradeInfoDto;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTrade;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
-import com.joyintech.tams.invest.common.dto.valuationusemerge.calc.*;
+import com.joyintech.tams.invest.common.trade.dto.OrderInfoDto;
+import com.joyintech.tams.invest.common.trade.dto.PortfolioCalculateDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.TrdCommonBaseMapper;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
@@ -130,6 +132,9 @@ public class TrdCommonBaseService extends BaseService {
      */
     @Autowired
     private TrdFinProductBarterTotalMapper trdFinProductBarterTotalMapper;
+
+    @Autowired
+    private EtrEntrustMapper etrEntrustMapper;
     /**
      * 查询产品登记编码
      *
@@ -1228,4 +1233,62 @@ public class TrdCommonBaseService extends BaseService {
         return trdCommonBaseMapper.selectHgsqFinprodId(paramMap);
     }
     // add by etliu 20220116 end
+
+
+    /**
+     * 查询组合计算分配信息
+     * @param paraMap
+     * @return
+     */
+    public List<PortfolioCalculateDto> queryPortfolioCalculate (Map<String,Object> paraMap) {
+        List<PortfolioCalculateDto> portfolioDtos = new ArrayList<>();
+        String entrustId = "";
+        // 成交编号
+        String dealNo = (String) paraMap.get("dealNo");
+        // 委托编号
+        String orderId = (String) paraMap.get("orderId");
+        if(!StringUtil.isEmpty(dealNo)){
+            // 查询关联交易编号
+            String fTradeId = trdCommonBaseMapper.selectFTradeId(dealNo);
+            // 查询下单对应的委托编号信息
+            InfContractDetailfile infContractDetailfile = trdCommonBaseMapper.selectInfContractDetailfile(fTradeId);
+            // 根据委托编号查询下单信息
+            OrderInfoDto orderInfoDto = trdCommonBaseMapper.selectOrderInfo(infContractDetailfile.getOrderId());
+            // 查询指令信息
+            EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(orderInfoDto.getInstructionId());
+            if(etrEntrust == null){
+                return new ArrayList<>();
+            }
+            if(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue().equals(etrEntrust.getEntrustClass())){ // 多组合指令
+                List<EtrEntrustDetail> etrEntrustDetails = trdCommonBaseMapper.selectEtrEntrustDetailByEntrustId(entrustId);
+                if(org.springframework.util.CollectionUtils.isEmpty(etrEntrustDetails)){
+                    return new ArrayList<>();
+                }
+                for(EtrEntrustDetail etrEntrustDetail : etrEntrustDetails){
+                    PortfolioCalculateDto portfolioDto = new PortfolioCalculateDto();
+
+                    // 指令券面总额
+                    portfolioDto.setEtrSecAmount(ArithmeticUtil.multiply(etrEntrust.getEntrustNum(), new BigDecimal(100)));
+
+
+                    portfolioDtos.add(portfolioDto);
+                }
+            }else{ // 单组合指令
+                PortfolioCalculateDto portfolioDto = new PortfolioCalculateDto();
+                portfolioDto.setPortfolioId(etrEntrust.getPortfolioId());
+                // 指令券面总额
+                portfolioDto.setEtrSecAmount(ArithmeticUtil.multiply(etrEntrust.getEntrustNum(), new BigDecimal(100)));
+                // 下单券面总额
+                portfolioDto.setOrdSecAmount(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume(), new BigDecimal(100)));
+                // 券面总额
+                portfolioDto.setSecAmount(infContractDetailfile.getShareAmt());
+                // 本方券面总额
+                portfolioDto.setOwnSecAmount(infContractDetailfile.getShareAmt());
+                // 交易金额
+                portfolioDto.setCashAmount(infContractDetailfile.getTradeAmt());
+                portfolioDtos.add(portfolioDto);
+            }
+        }
+        return portfolioDtos;
+    }
 }
