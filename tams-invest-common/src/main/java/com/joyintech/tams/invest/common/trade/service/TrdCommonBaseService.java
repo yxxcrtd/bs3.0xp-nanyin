@@ -43,6 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 /**
@@ -1245,49 +1246,71 @@ public class TrdCommonBaseService extends BaseService {
         String entrustId = "";
         // 成交编号
         String dealNo = (String) paraMap.get("dealNo");
-        // 委托编号
-        String orderId = (String) paraMap.get("orderId");
+        // 关联交易编号
+        String fTradeId = (String) paraMap.get("fTradeId");
         if(!StringUtil.isEmpty(dealNo)){
             // 查询关联交易编号
-            String fTradeId = trdCommonBaseMapper.selectFTradeId(dealNo);
-            // 查询下单对应的委托编号信息
-            InfContractDetailfile infContractDetailfile = trdCommonBaseMapper.selectInfContractDetailfile(fTradeId);
-            // 根据委托编号查询下单信息
-            OrderInfoDto orderInfoDto = trdCommonBaseMapper.selectOrderInfo(infContractDetailfile.getOrderId());
-            // 查询指令信息
-            EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(orderInfoDto.getInstructionId());
-            if(etrEntrust == null){
+            fTradeId = trdCommonBaseMapper.selectFTradeId(dealNo);
+        }
+        if(StringUtil.isEmpty(fTradeId)){
+            return portfolioDtos;
+        }
+        // 查询下单对应的委托编号信息
+        InfContractDetailfile infContractDetailfile = trdCommonBaseMapper.selectInfContractDetailfile(fTradeId);
+        // 根据委托编号查询下单信息
+        OrderInfoDto orderInfoDto = trdCommonBaseMapper.selectOrderInfo(infContractDetailfile.getOrderId());
+        // 查询指令信息
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(orderInfoDto.getInstructionId());
+        if(etrEntrust == null){
+            return new ArrayList<>();
+        }
+        if(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue().equals(etrEntrust.getEntrustClass())){ // 多组合指令
+            List<EtrEntrustDetail> etrEntrustDetails = trdCommonBaseMapper.selectEtrEntrustDetailByEntrustId(entrustId);
+            if(org.springframework.util.CollectionUtils.isEmpty(etrEntrustDetails)){
                 return new ArrayList<>();
             }
-            if(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue().equals(etrEntrust.getEntrustClass())){ // 多组合指令
-                List<EtrEntrustDetail> etrEntrustDetails = trdCommonBaseMapper.selectEtrEntrustDetailByEntrustId(entrustId);
-                if(org.springframework.util.CollectionUtils.isEmpty(etrEntrustDetails)){
-                    return new ArrayList<>();
-                }
-                for(EtrEntrustDetail etrEntrustDetail : etrEntrustDetails){
-                    PortfolioCalculateDto portfolioDto = new PortfolioCalculateDto();
-
-                    // 指令券面总额
-                    portfolioDto.setEtrSecAmount(ArithmeticUtil.multiply(etrEntrust.getEntrustNum(), new BigDecimal(100)));
-
-
-                    portfolioDtos.add(portfolioDto);
-                }
-            }else{ // 单组合指令
+            for(EtrEntrustDetail etrEntrustDetail : etrEntrustDetails){
                 PortfolioCalculateDto portfolioDto = new PortfolioCalculateDto();
-                portfolioDto.setPortfolioId(etrEntrust.getPortfolioId());
-                // 指令券面总额
-                portfolioDto.setEtrSecAmount(ArithmeticUtil.multiply(etrEntrust.getEntrustNum(), new BigDecimal(100)));
-                // 下单券面总额
-                portfolioDto.setOrdSecAmount(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume(), new BigDecimal(100)));
+                // 下单编号
+                portfolioDto.setOrderId(infContractDetailfile.getOrderId());
+                if(DictCodeListExt3.目标类型_数量.getValue().equals(etrEntrustDetail.getTargetType())){
+                    // 指令券面总额
+                    portfolioDto.setEtrSecAmount(ArithmeticUtil.multiply(etrEntrustDetail.getEntrustNum(), new BigDecimal(100)));
+                }else{
+                    // 指令券面总额
+                    portfolioDto.setEtrSecAmount(etrEntrustDetail.getEntrustAmt());
+                }
                 // 券面总额
-                portfolioDto.setSecAmount(infContractDetailfile.getShareAmt());
+                portfolioDto.setSecAmount(ArithmeticUtil.divide(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(),
+                        etrEntrustDetail.getEntrustNum()), etrEntrust.getEntrustNum(), 8, RoundingMode.HALF_UP));
                 // 本方券面总额
-                portfolioDto.setOwnSecAmount(infContractDetailfile.getShareAmt());
+                portfolioDto.setOwnSecAmount(portfolioDto.getSecAmount());
                 // 交易金额
-                portfolioDto.setCashAmount(infContractDetailfile.getTradeAmt());
+                portfolioDto.setCashAmount(ArithmeticUtil.divide(ArithmeticUtil.multiply(infContractDetailfile.getTradeAmt(),
+                        etrEntrustDetail.getEntrustNum()), etrEntrust.getEntrustNum(), 8, RoundingMode.HALF_UP));
+                // 下单券面总额
+                portfolioDto.setOrdSecAmount(ArithmeticUtil.divide(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume(),
+                        new BigDecimal(100), etrEntrustDetail.getEntrustNum()), etrEntrust.getEntrustNum(),
+                        8, RoundingMode.HALF_UP));
                 portfolioDtos.add(portfolioDto);
             }
+        }else{ // 单组合指令
+            PortfolioCalculateDto portfolioDto = new PortfolioCalculateDto();
+            // 组合代码
+            portfolioDto.setPortfolioId(etrEntrust.getPortfolioId());
+            // 下单编号
+            portfolioDto.setOrderId(infContractDetailfile.getOrderId());
+            // 指令券面总额
+            portfolioDto.setEtrSecAmount(ArithmeticUtil.multiply(etrEntrust.getEntrustNum(), new BigDecimal(100)));
+            // 下单券面总额
+            portfolioDto.setOrdSecAmount(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume(), new BigDecimal(100)));
+            // 券面总额
+            portfolioDto.setSecAmount(infContractDetailfile.getShareAmt());
+            // 本方券面总额
+            portfolioDto.setOwnSecAmount(infContractDetailfile.getShareAmt());
+            // 交易金额
+            portfolioDto.setCashAmount(infContractDetailfile.getTradeAmt());
+            portfolioDtos.add(portfolioDto);
         }
         return portfolioDtos;
     }

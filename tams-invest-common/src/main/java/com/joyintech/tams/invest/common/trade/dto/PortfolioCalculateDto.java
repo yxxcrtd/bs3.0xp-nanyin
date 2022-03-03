@@ -17,6 +17,11 @@ public class PortfolioCalculateDto {
     private String portfolioId;
 
     /**
+     * 下单编号
+     */
+    private String orderId;
+
+    /**
      * 指令券面总额
      */
     private BigDecimal etrSecAmount;
@@ -100,5 +105,13 @@ public class PortfolioCalculateDto {
 
     public void setIntegrateSecAmount(BigDecimal integrateSecAmount) {
         this.integrateSecAmount = integrateSecAmount;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 }

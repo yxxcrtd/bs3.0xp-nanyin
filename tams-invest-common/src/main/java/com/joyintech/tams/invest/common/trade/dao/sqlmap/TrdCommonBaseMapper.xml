@@ -1268,6 +1268,13 @@
     </select>
     <!--modify by etliu 20220116 end-->
 
+    <select id="selectInfContractDetailfile" resultType="com.joyintech.tams.common.base.entity.InfContractDetailfile">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.InfContractDetailfileMapper.Base_Column_List" />
+        from INF_CONTRACT_DETAILFILE
+        where DEAL_NO = #{dealNo}
+    </select>
+
     <select id="selectEtrEntrustDetailByEntrustId" resultType="com.joyintech.tams.common.base.entity.EtrEntrustDetail">
         select
         <include refid="com.joyintech.tams.common.base.dao.EtrEntrustDetailMapper.Base_Column_List" />
