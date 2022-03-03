@@ -23,6 +23,7 @@ import com.joyintech.tams.common.base.entity.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 
 import com.joyintech.background.component.common.pack.common.security.User;
@@ -2468,6 +2469,40 @@ public class EtrExchangeTradeService extends BaseService{
     public String selectMultiSecAcctId(Map<String,Object> paraMap) {
         return etrExchangeTradeMapper.selectMultiSecAcctId(paraMap);
     }
+
+    /**
+     * 查询组合计算分配信息
+     * @param paraMap
+     * @return
+     */
+    public List<PortfolioCalculateDto> queryPortfolioCalculate (Map<String,Object> paraMap) {
+        String entrustId = "";
+        // 成交编号
+        String dealNo = "";
+        // 委托编号
+        String orderId = "";
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
+        if(etrEntrust == null){
+            return new ArrayList<>();
+        }
+        List<PortfolioCalculateDto> portfolioDtos = new ArrayList<>();
+        if(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue().equals(etrEntrust.getEntrustClass())){ // 多组合指令
+            List<EtrEntrustDetail> etrEntrustDetails = etrExchangeTradeMapper.selectEtrEntrustDetailByEntrustId(entrustId);
+            if(CollectionUtils.isEmpty(etrEntrustDetails)){
+                return new ArrayList<>();
+            }
+            for(EtrEntrustDetail etrEntrustDetail : etrEntrustDetails){
+                PortfolioCalculateDto portfolioDto = new PortfolioCalculateDto();
+                portfolioDtos.add(portfolioDto);
+            }
+        }else{ // 单组合指令
+            PortfolioCalculateDto portfolioDto = new PortfolioCalculateDto();
+            portfolioDto.setPortfolioId(etrEntrust.getPortfolioId());
+            portfolioDtos.add(portfolioDto);
+        }
+        return portfolioDtos;
+    }
+
     /**
      * 查询多组合详情
      * @param map

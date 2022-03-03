@@ -620,4 +620,15 @@ public class EtrExchangeTradeController {
     public void selectMultDetail(@RequestBody Map<String,Object> map){
         etrExchangeTradeService.selectMultDetail(map);
     }
+
+    /**
+     * 查询组合分配计算结果
+     * @param pageParam
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/queryPortfolioCalculate")
+    public List<PortfolioCalculateDto> queryPortfolioCalculate(@RequestBody Map<String, Object> pageParam)  throws Exception {
+        return etrExchangeTradeService.queryPortfolioCalculate(pageParam);
+    }
 }

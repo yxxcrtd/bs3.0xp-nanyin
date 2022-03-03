@@ -353,4 +353,11 @@ public interface EtrExchangeTradeMapper {
 	 */
 	public String selectMultiSecAcctId(Map<String,Object> paraMap);
 	EtrExchangeTradeMulti001Dto selectMultDetail(Map<String,Object> map);
+
+	/**
+	 * 查询指令详情信息
+	 * @param entrustId
+	 * @return
+	 */
+	List<EtrEntrustDetail> selectEtrEntrustDetailByEntrustId(String entrustId);
 }
