@@ -931,8 +931,6 @@
         tpd.UNIT_CPRICE fCprice,
         tpd.YIELD * 100 fYield,
         tpd.FPRICE_AMT vTradeAmt,
-        FTP.M_UNIT_CPRICE mCprice,
-        FTP.M_YIELD * 100 mYield,
         FTP.M_TRADE_AMT mSettleAmt,
         fpt.TYPE_6 paBussType,
         fpt.TYPE_9 assetType1,
