@@ -243,6 +243,18 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
     @ApiModelProperty(name="acctNo",value="资金账户")
     private String acctNo;
 
+    @ApiModelProperty(name="finishAmt",value="已完成额度(元)")
+    private String finishAmt;
+
+    @ApiModelProperty(name="avaNum",value="剩余指令额度(元)")
+    private String avaNum;
+
+    @ApiModelProperty(name="finishDealAmt",value="已成交额度(元)")
+    private String finishDealAmt;
+
+    @ApiModelProperty(name="avaDealAmt",value="剩余成交额度(元)")
+    private String avaDealAmt;
+
     public String getFinprodId() {
         return finprodId;
     }
@@ -687,5 +699,37 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
 
     public void setAcctNo(String acctNo) {
         this.acctNo = acctNo;
+    }
+
+    public String getFinishAmt() {
+        return finishAmt;
+    }
+
+    public void setFinishAmt(String finishAmt) {
+        this.finishAmt = finishAmt;
+    }
+
+    public String getAvaNum() {
+        return avaNum;
+    }
+
+    public void setAvaNum(String avaNum) {
+        this.avaNum = avaNum;
+    }
+
+    public String getFinishDealAmt() {
+        return finishDealAmt;
+    }
+
+    public void setFinishDealAmt(String finishDealAmt) {
+        this.finishDealAmt = finishDealAmt;
+    }
+
+    public String getAvaDealAmt() {
+        return avaDealAmt;
+    }
+
+    public void setAvaDealAmt(String avaDealAmt) {
+        this.avaDealAmt = avaDealAmt;
     }
 }

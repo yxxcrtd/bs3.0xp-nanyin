@@ -16,6 +16,7 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -177,6 +178,50 @@ public class EtrExchangeAgreRepTrade003Dto extends EtrEntrust{
      * 补充协议
      */
     private String addCla;
+
+    @ApiModelProperty(name="finishAmt",value="已完成额度(元)")
+    private String finishAmt;
+
+    @ApiModelProperty(name="avaNum",value="剩余指令额度(元)")
+    private String avaNum;
+
+    @ApiModelProperty(name="finishDealAmt",value="已成交额度(元)")
+    private String finishDealAmt;
+
+    @ApiModelProperty(name="avaDealAmt",value="剩余成交额度(元)")
+    private String avaDealAmt;
+
+    public String getFinishAmt() {
+        return finishAmt;
+    }
+
+    public void setFinishAmt(String finishAmt) {
+        this.finishAmt = finishAmt;
+    }
+
+    public String getAvaNum() {
+        return avaNum;
+    }
+
+    public void setAvaNum(String avaNum) {
+        this.avaNum = avaNum;
+    }
+
+    public String getFinishDealAmt() {
+        return finishDealAmt;
+    }
+
+    public void setFinishDealAmt(String finishDealAmt) {
+        this.finishDealAmt = finishDealAmt;
+    }
+
+    public String getAvaDealAmt() {
+        return avaDealAmt;
+    }
+
+    public void setAvaDealAmt(String avaDealAmt) {
+        this.avaDealAmt = avaDealAmt;
+    }
 
     /**
      * 获取 implementPercent
