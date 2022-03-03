@@ -188,6 +188,7 @@ public class EquityInfoDistinctService {
 							 ChbEquHoldCheckDto checkModel = transformModelToCheck(model);
 							 //修复批启用的情况下，如果接入的txt对应的信息为空，则用之前check表的内容替换
 							 if("01".equals(updateFlg)) {
+								 if(checkMap.containsKey(yibaosongkey) &&  checkMap.get(yibaosongkey) != null) { 
 								for(ChbEquHoldCheckDto hdlDto : checkMap.get(yibaosongkey)) {
 									if(indentifyMark.equals(hdlDto.getIndentifyMark())) {
 										//设置 账号开户所在地
@@ -201,6 +202,7 @@ public class EquityInfoDistinctService {
 										
 									}
 								} 
+								 }
 							 }
 							 checkModel.setMergerindentifymark(yibaosongModel.getIndentifyMark());
 							 checkModel.setOperatestatus(DictCodeListExt2.处理状态_中债_已合并.getValue());
