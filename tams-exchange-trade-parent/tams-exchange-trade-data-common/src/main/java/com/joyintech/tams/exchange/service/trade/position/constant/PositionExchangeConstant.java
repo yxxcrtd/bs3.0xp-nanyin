@@ -96,9 +96,23 @@ public class PositionExchangeConstant {
      */
     public static final String CCY = "ccy";
     /**
-     * 组合数据级
+     * 组合数据集
      */
     public static final String PTL_LIST = "ptlList";
+    /**
+     * 组合现金数据集
+     */
+    public static final String PTL_CASH_LIST = "ptlCashList";
+
+    /**
+     * 股票持仓数据集
+     */
+    public static final String SHARES_SEC_LIST = "sharesSecList";
+
+    /**
+     * 配债申购数据集
+     */
+    public static final String APPLY_BOND_SEC_LIST = "applyBondSecList";
 
     /**
      * 投资目的
