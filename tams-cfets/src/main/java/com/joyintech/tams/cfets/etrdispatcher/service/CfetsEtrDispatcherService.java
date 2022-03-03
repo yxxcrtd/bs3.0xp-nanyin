@@ -1203,26 +1203,38 @@ public class CfetsEtrDispatcherService extends BaseService{
                 }
             } else {
 
-                //dto.setFinprodType2("F04"); //存款
-                //dto.setFinprodType2("F02"); //场外基金
                 if (StringUtil.isNotEmpty(dto.getFinprodType2())) {
-                    spcdCode = dto.getFinprodType2();
-                    infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
-                    invInfoFrom = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode.concat(",P"));
-                    fileTable = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode.concat(",F"), null, null);
+                    if (StringUtil.equals(DictCodeListExt3.中债_上游资产一级分类_存款类资产.getValue(),dto.getFinprodType2())) {
+                        spcdCode = dto.getFinprodType2();
+                        infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
+                        invInfoFrom = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode.concat(",P"));
+                        fileTable = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode.concat(",F"), null, null);
 
-                    //资产四级类型
-                    if (StringUtil.isNotEmpty(dto.getAssetType11())) {
-                        List<CfgReadonlyFormShow> infoForm1 = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode.concat(",").concat(dto.getAssetType11()));
-                        infoForm.addAll(infoForm1);
+                        if (StringUtil.isNotEmpty(dto.getAssetType11()) && !StringUtil.equals("143", dto.getAssetType11())) {
+                            spcdCode = spcdCode.concat(",").concat("S01");
+                            List<CfgReadonlyFormShow> infoForm1 = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
+                            infoForm.addAll(infoForm1);
+                        }
+
+                        //资产四级类型& 交易方向
+                        if (StringUtil.isNotEmpty(dto.getAssetType11()) && StringUtil.isNotEmpty(dto.getPs())) {
+                            spcdCode = spcdCode.concat(",").concat(dto.getAssetType11()).concat(",").concat(dto.getPs());
+                            List<CfgReadonlyFormShow> infoForm2 = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
+                            infoForm.addAll(infoForm2);
+                        }
+
+                    } else {
+                        spcdCode = dto.getFinprodType2();
+                        infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
+                        invInfoFrom = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode.concat(",P"));
+                        fileTable = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode.concat(",F"), null, null);
+
+                        //交易方向
+                        if (StringUtil.isNotEmpty(dto.getPs())) {
+                            List<CfgReadonlyFormShow> infoForm1 = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode.concat(",").concat(dto.getPs()));
+                            infoForm.addAll(infoForm1);
+                        }
                     }
-
-                    //交易方向
-                    if (StringUtil.isNotEmpty(dto.getPs())) {
-                        List<CfgReadonlyFormShow> infoForm1  = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode.concat(",").concat(dto.getPs()));
-                        infoForm.addAll(infoForm1);
-                    }
-
                 }
             }
         }
