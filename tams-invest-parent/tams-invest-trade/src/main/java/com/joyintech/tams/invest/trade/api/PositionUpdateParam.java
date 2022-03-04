@@ -27,6 +27,11 @@ public class PositionUpdateParam {
      */
     private String busiType;
 
+    /**
+     * 是否走工作流（结算下行过来的数据没有流程中的记录）
+     */
+    private String isNotWorkflow;
+
     public String getStatus() {
         return status;
     }
@@ -82,4 +87,12 @@ public class PositionUpdateParam {
 	public void setAssetType2(String assetType2) {
 		this.assetType2 = assetType2;
 	}
+
+    public String getIsNotWorkflow() {
+        return isNotWorkflow;
+    }
+
+    public void setIsNotWorkflow(String isNotWorkflow) {
+        this.isNotWorkflow = isNotWorkflow;
+    }
 }

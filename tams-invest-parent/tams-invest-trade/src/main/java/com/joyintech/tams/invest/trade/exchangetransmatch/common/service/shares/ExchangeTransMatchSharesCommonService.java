@@ -55,6 +55,8 @@ public class ExchangeTransMatchSharesCommonService extends BaseService {
                 exchangeTransMatchBaseTradeDto.setTrdTradeFeeDetailList(this.genTrdTradeFeeDetailList(dealDto,entrustDtoTmp,exchangeTransMatchBaseTradeDto.getTrdProductDeal()));
                 //生成划款指令
                 exchangeTransMatchBaseTradeDto.setStlPayOrdersList(this.generateStlPayOrdersList(dealDto,entrustDtoTmp,exchangeTransMatchBaseTradeDto.getTrdProductDeal()));
+                //生成金融产品交易扩展
+                exchangeTransMatchBaseTradeDto.setPaTrdProductDeal(this.genPaTrdProductDeal(dealDto, entrustDto, exchangeTransMatchBaseTradeDto.getTrdProductDeal()));
                 exchangeTransMatchBaseTradeDtoList.add(exchangeTransMatchBaseTradeDto);
             }
         }
@@ -70,6 +72,8 @@ public class ExchangeTransMatchSharesCommonService extends BaseService {
             exchangeTransMatchBaseTradeDto.setTrdTradeFeeDetailList(this.genTrdTradeFeeDetailList(dealDto,entrustDto,exchangeTransMatchBaseTradeDto.getTrdProductDeal()));
             //生成划款指令
             exchangeTransMatchBaseTradeDto.setStlPayOrdersList(this.generateStlPayOrdersList(dealDto,entrustDto,exchangeTransMatchBaseTradeDto.getTrdProductDeal()));
+            //生成金融产品交易扩展
+            exchangeTransMatchBaseTradeDto.setPaTrdProductDeal(this.genPaTrdProductDeal(dealDto, entrustDto, exchangeTransMatchBaseTradeDto.getTrdProductDeal()));
             exchangeTransMatchBaseTradeDtoList.add(exchangeTransMatchBaseTradeDto);
         }
 
@@ -121,7 +125,9 @@ public class ExchangeTransMatchSharesCommonService extends BaseService {
         dealTotal.setFinprodType2(entrustDto.getFinprodType2());
         // 分支序号
         dealTotal.setBranch(0L);
-        // 交易日
+        // 交易方向
+        dealTotal.setPs(entrustDto.getPs());
+        // 交易日期
         dealTotal.setTradeDate(dealDto.getTradeDate());
         // 起息日
         dealTotal.setVdate(null);
@@ -183,6 +189,18 @@ public class ExchangeTransMatchSharesCommonService extends BaseService {
         dealTotal.setRepoTerm(null);
         // 期限品种
         dealTotal.setTermType(null);
+        // GNS-878:配股生成产品交易表的交易日期应该是清算日期 modify by fuyongsheng 20220217 start
+        if(DictCodeListExt2.交易方向_配股.getValue().equals(dealDto.getPs())){
+            dealTotal.setTradeDate(dealDto.getSettleDate());
+            // GNS-862:配股时价格 modify by fuyongsheng 20220218 start
+            dealTotal.setUnitCprice(entrustDto.getPrice());
+            dealTotal.setCpriceAmt(ArithmeticUtil.multiply(entrustDto.getMarchQty(),dealTotal.getUnitCprice()));
+            dealTotal.setUnitFprice(entrustDto.getPrice());
+            dealTotal.setFpriceAmt(ArithmeticUtil.multiply(entrustDto.getMarchQty(),dealTotal.getUnitFprice()));
+            dealTotal.setTradeAmt(ArithmeticUtil.subtract(dealTotal.getFpriceAmt(),entrustDto.getMarchFeeAmtPay()));
+            // GNS-862:配股时价格 modify by fuyongsheng 20220218 end
+        }
+        // GNS-878:配股生成产品交易表的交易日期应该是清算日期 modify by fuyongsheng 20220217 end
         return dealTotal;
     }
 
@@ -400,5 +418,29 @@ public class ExchangeTransMatchSharesCommonService extends BaseService {
         stlPayOrdersList.add(stlPayOsrdersDto);
 
         return stlPayOrdersList;
+    }
+
+    /**
+     * 金融产品交易附属表
+     */
+    private PaTrdProductDeal genPaTrdProductDeal(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdProductDeal trdProductDeal) {
+        PaTrdProductDeal paTrdProductDeal = new PaTrdProductDeal();
+        BeanUtil.copyPropertiesIgnoreNull(paTrdProductDeal, trdProductDeal);
+        paTrdProductDeal.setPaBussType(DictCodeListExt2.平安业务类型_股票交易.getValue());
+        return paTrdProductDeal;
+    }
+
+    /**
+     * 生成汇总附属交易
+     * @param dealDto
+     * @param entrustDto
+     * @return
+     */
+    public TrdDealTotalAdd generateDealTotalAdd(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto,TrdFinProductDealTotal trdFinProductDealTotal ) {
+        TrdDealTotalAdd trdDealTotalAdd =  new TrdDealTotalAdd();
+        BeanUtil.copyPropertiesIgnoreNull(trdDealTotalAdd, trdFinProductDealTotal);
+        trdDealTotalAdd.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
+        trdDealTotalAdd.setEntrustId(entrustDto.getEntrustId());
+        return  trdDealTotalAdd;
     }
 }

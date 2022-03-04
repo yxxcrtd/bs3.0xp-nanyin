@@ -384,4 +384,9 @@ public interface EtrCommonCashPositionMapper {
     BigDecimal selectZhiLingChiCang(@Param("entrustId")String entrustId,@Param("finprodId")String finprodId);
 
     BigDecimal selectJiaoYiChiCang(@Param("entrustId")String entrustId, @Param("finprodId")String finprodId);
+
+    // modify by etliu 20220226 start
+    // 广农商二阶段 GNS-947:【广农商场内清算】场内债券存续交易生成的时候，指令现金流水处理有误
+    int selectEtrCashPositionFlowCount(Map<String, Object> map);
+    // modify by etliu 20220226 end
 }

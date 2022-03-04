@@ -162,6 +162,10 @@ public interface StlDataGatherMapper {
      */
     List<SettleTransDataDto> selectFundSettleTransData(Map<String, Object> paraMap);
 
+    List<SettleTransDataDto> selectFundSettleTransData1(SettleTransDataDto dto);
+
+    List<SettleTransDataDto> selectFundSettleTransData2(SettleTransDataDto dto);
+
     List<String> selectCqTotleTradeId(Map<String, Object> map);
 
     List<String> selectCqtradeId(String id);

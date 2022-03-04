@@ -79,13 +79,22 @@ public class EtrSharesCashPositionDealService extends EtrCashPositionBaseService
                     // 交割日期增加交易数量
                     etrSecPositionFlowDto.setAmount(交易数量);
                     // 添加持仓流水到目标dto
-                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                    // GNS-862:配股不增加指令持仓 modify by fuyongsheng 20220218 start
+                    // etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                    if(!DictCodeListExt2.交易方向_配股.getValue().equals(ps)){
+                        etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                    }
+                    // GNS-862:配股不增加指令持仓 modify by fuyongsheng 20220218 end
                 }
                 else {// 有委托
                       // 交割日期增加交易数量
                     etrSecPositionFlowDto.setAmount(交易数量);
-                    // 添加持仓流水到目标dto
-                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                    // GNS-862:配股不增加指令持仓 modify by fuyongsheng 20220218 start
+                    // etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                    if(!DictCodeListExt2.交易方向_配股.getValue().equals(ps)){
+                        etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                    }
+                    // GNS-862:配股不增加指令持仓 modify by fuyongsheng 20220218 end
                     // 委托dto
                     EntrustCommonDto entrustCommonDto = EtrCommonCashPositionDealService.findEntrust(entrustId);
                     EtrEntrust etrEntrust = entrustCommonDto.getEtrEntrust();
@@ -174,6 +183,10 @@ public class EtrSharesCashPositionDealService extends EtrCashPositionBaseService
         // 现金分红
         else if (DictCodeList.交易方向_现金分红.getValue().equals(ps)) {
             if (stlPayOrdersDtos != null && !stlPayOrdersDtos.isEmpty()) {
+                boolean 处理预增 =  true;
+                if (finProductTradeDto.isNotWorkflow()){
+                    处理预增 = false;
+                }
                 // 交易生效
                 if (DictCodeList.持仓类型_实际.equals(持仓类型)) {
                     // etrCashPositionFlowDto.setAmount(每股派息.multiply(交易数量));
@@ -185,12 +198,17 @@ public class EtrSharesCashPositionDealService extends EtrCashPositionBaseService
                     BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto1, etrCashPositionFlowDto);
                     etrCashPositionFlowDto1.setSeqno(getSeqNo());
                     // etrCashPositionFlowDto1.setAmount(每股派息.multiply(交易数量));
-                    预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto1, acctId);
+                    预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto1, acctId, 处理预增);
                 }
             }
         }
         // 送转
         else if (DictCodeList.交易方向_红利再投.getValue().equals(ps)) {
+            // GNS-932:上交所红利再投 指令持仓不变 modify by fuyongsheng 20220225 start
+            if(DictCodeListExt1.交易场所_上海证券交易所.getValue().equals(deal.getTradeMarket())){
+                return;
+            }
+            // GNS-932:上交所红利再投 指令持仓不变 modify by fuyongsheng 20220225 end
             // 交易生效
             if (DictCodeList.持仓类型_实际.equals(持仓类型)) {
                 // 派息日增加每股送转*持仓数量
@@ -282,18 +300,20 @@ public class EtrSharesCashPositionDealService extends EtrCashPositionBaseService
     }
 
     private static void 预增现金处理(EtrPositionHoldDto etrPositionHoldDto, List<StlPayOrdersDto> stlPayOrdersDtos,
-                               EtrCashPositionFlowDto etrCashPositionFlowDto, String acctId) {
+                               EtrCashPositionFlowDto etrCashPositionFlowDto, String acctId, boolean 处理预增) {
         stlPayOrdersDtos.forEach(stlPayOrdersDto -> {
-            // 预增现金 资金到账日增加到账金额
-            EtrCashPositionFlowDto etrCashPositionFlowDto2 = new EtrCashPositionFlowDto();
-            BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto2, etrCashPositionFlowDto);
-            etrCashPositionFlowDto2.setAmount(stlPayOrdersDto.getSettleAmt());
-            etrCashPositionFlowDto2.setAcctId(stlPayOrdersDto.getMyAcctNo());
-            etrCashPositionFlowDto2.setCdate(stlPayOrdersDto.getSettleDate());
-            etrCashPositionFlowDto2.setHodingType(DictCodeListExt1.持仓类型_委托指令预增.getValue());
-            etrCashPositionFlowDto2.setSeqno(getSeqNo());
-            etrCashPositionFlowDto2.setOrderId(stlPayOrdersDto.getOrderId());
-            etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto2);
+            if(处理预增){
+                // 预增现金 资金到账日增加到账金额
+                EtrCashPositionFlowDto etrCashPositionFlowDto2 = new EtrCashPositionFlowDto();
+                BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto2, etrCashPositionFlowDto);
+                etrCashPositionFlowDto2.setAmount(stlPayOrdersDto.getSettleAmt());
+                etrCashPositionFlowDto2.setAcctId(stlPayOrdersDto.getMyAcctNo());
+                etrCashPositionFlowDto2.setCdate(stlPayOrdersDto.getSettleDate());
+                etrCashPositionFlowDto2.setHodingType(DictCodeListExt1.持仓类型_委托指令预增.getValue());
+                etrCashPositionFlowDto2.setSeqno(getSeqNo());
+                etrCashPositionFlowDto2.setOrderId(stlPayOrdersDto.getOrderId());
+                etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto2);
+            }
         });
     }
 

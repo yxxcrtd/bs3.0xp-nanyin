@@ -124,7 +124,7 @@ public class StlDownDataDealWriter extends BaseWriter<NeedToWriteEntity> {
 			// 成交数据与投管交易关系
 //			SettleTransTgMapping settleTransTgMapping = dataDealWriteBaseDto.getSettleTransTgMapping();
 
-			if(null != settleTransData) {
+			if(null != settleTransData && StringUtil.isNotEmpty(settleTransData.getTradeId())) {
 				try {
 					settleTransDataMapper.insertSelective(settleTransData);
 				} catch (Exception e) {

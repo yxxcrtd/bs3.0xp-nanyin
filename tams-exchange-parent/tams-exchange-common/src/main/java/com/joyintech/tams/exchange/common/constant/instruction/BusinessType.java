@@ -28,8 +28,13 @@ public enum BusinessType {
 
     SZ_SELL_PROTOCOL_BACK_BEGIN("深交所协议正回购初始交易", "17"),
     SZ_SELL_PROTOCOL_BACK_TERMINATE("深交所协议正回购提前购回", "18"),
-    SZ_SELL_PROTOCOL_BACK_RENEWAL("深交所协议正回购到期续作", "19"),
-    SZ_SELL_PROTOCOL_BACK_BUYBACK("深交所协议正回购到期购回", "20"),
+    // modify by etliu 20220226 start
+    // 广农商二阶段 GNS-953：【广农商场内清算】深交所协议回购 正/逆回购首期，手工交收-日终清结算后，头寸更新有误
+//    SZ_SELL_PROTOCOL_BACK_RENEWAL("深交所协议正回购到期续作", "19"),
+//    SZ_SELL_PROTOCOL_BACK_BUYBACK("深交所协议正回购到期购回", "20"),
+    SZ_SELL_PROTOCOL_BACK_BUYBACK("深交所协议正回购到期购回", "19"),
+    SZ_SELL_PROTOCOL_BACK_RENEWAL("深交所协议正回购到期续作", "20"),
+    // modify by etliu 20220226 end
 
     SZ_ANTI_PROTOCOL_BACK_BEGIN("深交所协议逆回购初始交易", "21"),
     SZ_ANTI_PROTOCOL_BACK_TERMINATE("深交所协议逆回购提前购回", "22"),

@@ -432,7 +432,15 @@ public class CommonPositionService {
 	 */
 	public boolean revokeEtrCashPositionFlow(Map<String,Object> param){
 		//已完成额度
-		BigDecimal finishAmt = commonPtlPositionMapper.getEtrFinishAmt(param);
+		// modify by etliu 20220227 start
+		// 广农商二阶段 GNS-953:【广农商场内清算】深交所协议回购 正/逆回购首期，手工交收-日终清结算后，头寸更新有误
+		// 协议回购未进行手工交收，应查FINISH_AMT字段
+		BigDecimal finishAmt = commonPtlPositionMapper.getDayEndEtrFinishAmt(param);
+
+		if (finishAmt == null || finishAmt.compareTo(BigDecimal.ZERO) <= 0) {
+			finishAmt = commonPtlPositionMapper.getEtrFinishAmt(param);
+		}
+		// modify by etliu 20220227 end
 		// 委托
 		EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(String.valueOf(param.get("entrustId")));
 		// 委托附属表

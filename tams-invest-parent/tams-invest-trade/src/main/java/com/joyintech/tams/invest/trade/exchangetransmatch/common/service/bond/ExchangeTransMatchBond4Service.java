@@ -36,9 +36,9 @@ public class ExchangeTransMatchBond4Service extends ExchangeTransMatchBondCommon
         // 业务类型
         trdFinProductDealTotal.setBusiType(DictCodeList.共通业务类型_债券类资产交易.getValue());
         trdFinProductDealTotal.setTgBusiType(DictCodeListExt3.平安业务类型_债转股.getValue());
-        // 债转股的零股折算现金赋值 add by fuyongsheng 20220116 start
-        trdFinProductDealTotal.setTradeAmt(dealDto.getFpriceAmt());
-        // 债转股的零股折算现金赋值 add by fuyongsheng 20220116 end
+//        // 债转股的零股折算现金赋值 add by fuyongsheng 20220116 start
+//        trdFinProductDealTotal.setTradeAmt(dealDto.getFpriceAmt());
+//        // 债转股的零股折算现金赋值 add by fuyongsheng 20220116 end
     }
 
     @Override

@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -60,6 +61,9 @@ public class TradeRestApi {
     @Autowired
     private ValuationInterfService valuationInterfService;
 
+    private static final List<String> 正回购_逆回购 = Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),
+            DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+
     @PostMapping("execute")
     @Transactional
     @DTXTransaction
@@ -78,6 +82,9 @@ public class TradeRestApi {
                 FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
                 finProductTradeDto.setWorkflowStatus(workflowStatus);
                 finProductTradeDto.setNeedSum(true);
+                // GNS-949:增加是否工作流数据标识 modify by fuyongsheng 20220227 start
+                finProductTradeDto.setNotWorkflow("true".equals(param.getIsNotWorkflow()));
+                // GNS-949:增加是否工作流数据标识 modify by fuyongsheng 20220227 end
                 if (StringUtil.isNotEmpty(assetType2)) {
                 	finProductTradeDto.setAssetType2(assetType2);
                 }
@@ -89,6 +96,33 @@ public class TradeRestApi {
                 }
                 if (CollectionUtils.isNotEmpty(tradeIdList) && CollectionUtils.isEmpty(baseTradeProductDealDtos)) {
                     baseTradeProductDealDtos = baseTradeProductDealService.select(tradeIdList);
+                    // add by etliu 20220219 start
+                    if (!CollectionUtils.isEmpty(baseTradeProductDealDtos)) {
+                        for (BaseTradeProductDealDto tempDto : baseTradeProductDealDtos) {
+                            if (tempDto.getTrdProductDeal() != null && StringUtil.equals(DictCodeList.交易方向_收息到账.getValue(), tempDto.getTrdProductDeal().getPs())) {
+                                if(正回购_逆回购.contains(tempDto.getTrdProductDeal().getFinprodType2())){
+                                    tempDto.getTrdProductDeal().setPs(DictCodeList.交易方向_到期.getValue());
+                                }else{
+                                    tempDto.getTrdProductDeal().setPs(DictCodeList.交易方向_收息.getValue());
+                                }
+                            }
+                            else if (tempDto.getTrdProductDeal() != null && StringUtil.equals(DictCodeList.交易方向_还本到账.getValue(), tempDto.getTrdProductDeal().getPs())) {
+                                if(正回购_逆回购.contains(tempDto.getTrdProductDeal().getFinprodType2())){
+                                    tempDto.getTrdProductDeal().setPs(DictCodeList.交易方向_到期.getValue());
+                                }else{
+                                    tempDto.getTrdProductDeal().setPs(DictCodeList.交易方向_还本.getValue());
+                                }
+                            }
+                            else if (tempDto.getTrdProductDeal() != null && StringUtil.equals(DictCodeList.交易方向_赎回到账.getValue(), tempDto.getTrdProductDeal().getPs())) {
+                                tempDto.getTrdProductDeal().setPs(DictCodeList.交易方向_赎回.getValue());
+                            }
+                            if (tempDto.getTrdFinProductDealTotal() != null
+                                    && StringUtil.equals(DictCodeList.交易方向_到期.getValue(), tempDto.getTrdFinProductDealTotal().getPs())) {
+                                tempDto.getTrdProductDeal().setPs(DictCodeList.交易方向_到期.getValue());
+                            }
+                        }
+                    }
+                    // add by etliu 20220219 end
                 }
                 
                 finProductTradeDto.setBaseTradeProductDealDtos(baseTradeProductDealDtos);

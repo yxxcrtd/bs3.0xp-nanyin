@@ -71,8 +71,11 @@ public interface BaseTradeProductDealMapper {
      * @see
      * @since 1.0
      */
-    List<BaseTradeProductDealDto> selectByTotalTradeId(@Param("tradeId") String tradeId);
-
+    // modify by etliu 20220227 start
+    // 广农商二阶段 GNS-890：【广农商场内清算】场内债券存续期交易重复跑批时，未对原交易数据进行撤销操作
+//    List<BaseTradeProductDealDto> selectByTotalTradeId(@Param("tradeId") String tradeId);
+    List<BaseTradeProductDealDto> selectByTotalTradeId(@Param("tradeId") String tradeId, @Param("needPsCondition") String needPsCondition);
+    // modify by etliu 20220227 end
     /**
      *
      * 金融产品交易查询
@@ -137,4 +140,26 @@ public interface BaseTradeProductDealMapper {
      * @return 划款指令
      */
     List<StlPayOrdersDto> selectStlPayOrders(Map<String, Object> map);
+
+    // add by etliu 20220219 start
+    /**
+     * 查询划款指令
+     * @param map Map<String, Object>
+     * @return 划款指令
+     */
+    List<StlPayOrdersDto> selectStlPayOrdersList(Map<String, Object> map);
+    // add by etliu 20220219 end
+
+    List<StlPayOrdersDto> selectStlPayOrdersList1(Map<String, Object> map);
+
+    /**
+     *
+     * 金融产品汇总交易查询
+     * <功能详细描述>
+     * @param tradeId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<BaseTradeProductDealDto> selectByTotalTradeIdTRD14(@Param("tradeId") String tradeId);
 }

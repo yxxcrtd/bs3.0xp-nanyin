@@ -1,13 +1,17 @@
 package com.joyintech.tams.settle.batch.datagather.reader;
 
-import com.joyintech.background.component.common.pack.common.util.BeanUtil;
-import com.joyintech.background.component.common.pack.common.util.DateUtil;
-import com.joyintech.background.component.common.pack.common.util.StringUtil;
+
 import com.joyintech.batch.batchbase.baseclass.BaseReader;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.StlSecReconConfigMapper;
-import com.joyintech.tams.constant.*;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.DictCodeListStl;
 import com.joyintech.tams.settle.batch.datadeal.service.StlDownDataDealService;
 import com.joyintech.tams.settle.batch.datagather.dao.StlDataGatherMapper;
 import com.joyintech.tams.settle.batch.datagather.dto.InvestTradeReaderDto;
@@ -48,17 +52,6 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
             searchParam.put("dealDate", execInfo.getExecuteDate());
             setSearchParam(searchParam);
             List<SettleTransDataDto> settleTransDataDtos = stlDataGatherMapper.selectSettleTransData(searchParam);
-            // GZYHTZJY-717:回购无法自动匹配:交易方向需特殊处理 fuyongsheng 20211206 add start
-            settleTransDataDtos.forEach(settleTransDataDto -> {
-                if(!DictCodeList.回购类型_质押式协议回购.getValue().equals(settleTransDataDto.getRepoType())){
-                    if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(settleTransDataDto.getFinprodType2())){
-                        settleTransDataDto.setPs(DictCodeListExt3.交易方向_正回购.getValue());
-                    }else if(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(settleTransDataDto.getFinprodType2())){
-                        settleTransDataDto.setPs( DictCodeListExt3.交易方向_逆回购.getValue());
-                    }
-                }
-            });
-            // GZYHTZJY-717:回购无法自动匹配:交易方向需特殊处理 fuyongsheng 20211206 add end
             Map<String, List<SettleTransDataDto>> tempMap = settleTransDataDtos.stream().collect(JoyinCollectors.groupingBy(SettleTransDataDto::getOrderId));
             return tempMap.values().stream().map(InvestTradeReaderDto::new).collect(Collectors.toList());
         }else{
@@ -69,8 +62,8 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
             //R325 债券存续期
             // ZGZGST-4212:使用自定义字段类型区分回购存续期和债券存续期 fuyongsheng 20211214 modify start
             //  if(searchParam.containsKey("busiType")&&StringUtil.equals(searchParam.get("busiType"),"R3S5")){
-            if(searchParam.containsKey("readerType")&&StringUtil.equals(searchParam.get("readerType"),"BondDuration")){
-            // ZGZGST-4212:使用自定义字段类型区分回购存续期和债券存续期 fuyongsheng 20211214 modify end
+            if(searchParam.containsKey("readerType")&& StringUtil.equals(searchParam.get("readerType"),"BondDuration")){
+                // ZGZGST-4212:使用自定义字段类型区分回购存续期和债券存续期 fuyongsheng 20211214 modify end
                 searchParam.put("dealDate", execInfo.getExecuteDate());
                 if (searchParam.containsKey("finprodOthCodeType")&&StringUtil.equals(searchParam.get("finprodOthCodeType"),DictCodeListExt3.金融产品其他代码类型_上市流通.getValue())) {
                     searchParam.put("OTH_TYPE_15", DictCodeListExt3.金融产品其他代码类型_上市流通.getValue());
@@ -96,7 +89,7 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
                             settleTransDataResult.addAll(settleTransDataSingle);
                         }
                         settleTransDataDtos.stream().filter(item -> !(StringUtil.equals(item.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
-                                        || (StringUtil.equals(item.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue()) && StringUtil.equals(item.getPs(), DictCodeList.交易方向_行权_赎回.getValue())))).collect(Collectors.toList())
+                                || (StringUtil.equals(item.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue()) && StringUtil.equals(item.getPs(), DictCodeList.交易方向_行权_赎回.getValue())))).collect(Collectors.toList())
                                 .stream().collect(Collectors.groupingBy(SettleTransDataDto::getBusiKey, Collectors.toList())).forEach(settleTransDataNeedTotalMap::put);
                         for (Map.Entry<String, List<SettleTransDataDto>> parammap : settleTransDataNeedTotalMap.entrySet()) {
                             SettleTransDataDto settleTransDataDto = new SettleTransDataDto();
@@ -117,6 +110,12 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
                                     if (DateUtil.compareDate(settleTransDataDtoInit.getMdate(), settleTransDataDtoInit.getMdate2()) != 0) {
                                         settleTransDataDto.setPs(DictCodeList.交易方向_还本.getValue());
                                     }
+                                    // modify by etliu 20220227 start
+                                    // 广农商二阶段 GNS-901:【广农商场内清算】场内债券存续期-涉及到还本的交易，“利息明细信息”中未登录还本金额
+                                    if (settleTransDataDto.getPrinAmt() == null || settleTransDataDto.getPrinAmt().compareTo(BigDecimal.ZERO) <= 0) {
+                                        settleTransDataDto.setPrinAmt(value.get(1).getPrinAmt());
+                                    }
+                                    // modify by etliu 20220227 end
                                 } else {
                                     settleTransDataDto.setPs(DictCodeList.交易方向_收息.getValue());
                                 }
@@ -145,7 +144,7 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
             // ZGZGST-4212:使用自定义字段类型区分回购存续期和债券存续期 fuyongsheng 20211214 modify start
             // if(searchParam.containsKey("busiType")&&StringUtil.equals(searchParam.get("busiType"),"R3S14")){
             if(searchParam.containsKey("readerType")&&StringUtil.equals(searchParam.get("readerType"),"RepoDuration")){
-            // ZGZGST-4212:使用自定义字段类型区分回购存续期和债券存续期 fuyongsheng 20211214 modify end
+                // ZGZGST-4212:使用自定义字段类型区分回购存续期和债券存续期 fuyongsheng 20211214 modify end
                 searchParam.put("dealDate", execInfo.getExecuteDate());
                 // 资产类型
                 searchParam.put("finprodTypes", Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()));

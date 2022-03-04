@@ -1,5 +1,6 @@
 package com.joyintech.tams.settle.batch.datadeal.dao;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -114,6 +115,20 @@ public interface StlDownDataDealMapper {
      * @return List<String>
      */
     List<String> getFinproductIdByApprovalNo(@Param("othCodeType") String othCodeType, @Param("othCode") String othCode);
+
+    /**
+     * 根据资产申报代码检索股票代码
+     * @return List<String>
+     */
+    String getLastFinproductIdByApprovalNo(@Param("othCode") String othCode);
+
+    /**
+     * 根据资产代码查询申报价格
+     * @param othCodeType
+     * @param finprodId
+     * @return
+     */
+    BigDecimal getPriceByFinproductId(@Param("othCodeType") String othCodeType, @Param("finprodId") String finprodId);
 
     // 删除交易所品种额度（其他业务类型List）
     int deleteFinProdQuotByOthBussType(@Param("dealDate") Date dealDate, @Param("portfolioIdList") List<String> portfolioIdList, 

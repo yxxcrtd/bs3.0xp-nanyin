@@ -1,6 +1,7 @@
 package com.joyintech.tams.settle.batch.datadeal.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +35,8 @@ import java.util.Map;
 @Service
 public class StlDataDealSzdTzxxProcessService {
 
+    @Autowired
+    private StlDataDealProcessCommonService stlDataDealProcessCommonService;
 
     /**
      * 生成上中登TZXX数据清算批处理step2 processor的结果Dto
@@ -47,16 +51,31 @@ public class StlDataDealSzdTzxxProcessService {
             List<MstFundBonusNotice> mstFundBonusNoticeArrayList = new ArrayList<MstFundBonusNotice>();
             for (SzdTzxx szdTzxx : stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getSzdTzxxList()) {
                 MstFundBonusNotice mstFundBonusNotice = new MstFundBonusNotice();
-                mstFundBonusNotice.setFundId(szdTzxx.getZqzh()+".SH");
+                // GNS-871: 修改字段赋值 modify by fuyongsheng 20220216 start
+                // mstFundBonusNotice.setFundId(szdTzxx.getZqzh()+".SH");
+                mstFundBonusNotice.setFundId(szdTzxx.getZqdm()+".SH");
                 mstFundBonusNotice.setRegDate(szdTzxx.getRq1());
-                mstFundBonusNotice.setDelDate(DateUtil.addDay(szdTzxx.getRq1(),1));
-                mstFundBonusNotice.setDevidentDate(DateUtil.addDay(szdTzxx.getRq1(),2));
-                mstFundBonusNotice.setUnitBonusUnitValue(szdTzxx.getJe2());
-                mstFundBonusNoticeArrayList.add(mstFundBonusNotice);
+                // mstFundBonusNotice.setDelDate(DateUtil.addDay(szdTzxx.getRq1(),1));
+                // mstFundBonusNotice.setDevidentDate(DateUtil.addDay(szdTzxx.getRq1(),2));
+                mstFundBonusNotice.setDelDate(nextWorkDay(szdTzxx.getRq1())); // +1工作日
+                mstFundBonusNotice.setDevidentDate(nextWorkDay(nextWorkDay(szdTzxx.getRq1()))); // +2工作日
+                // mstFundBonusNotice.setUnitBonusUnitValue(szdTzxx.getJe2());
+                mstFundBonusNotice.setUnitBonusUnitValue(new BigDecimal(szdTzxx.getJg2()));
+                // GNS-871: 修改字段赋值 modify by fuyongsheng 20220216 end
             }
             stlDownDataDealWriteDto.setMstFundBonusNoticeList(mstFundBonusNoticeArrayList);
         }
 
         return stlDownDataDealWriteDto;
+    }
+
+    /**
+     * 取下一个工作日
+     * @param parseDate
+     * @return
+     */
+    private Date nextWorkDay(Date parseDate) {
+        String calendarId = CacheUtil.getSysParam(StlDataDealProcessConstant.STL_DOWNDATA_DEAL_SHJYS_CALID);
+        return stlDataDealProcessCommonService.getNextWorkDay(parseDate, calendarId);
     }
 }

@@ -243,13 +243,22 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                     if(StringUtil.equals(settleTransDataDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                             && (StringUtil.equals(settleTransDataDto.getPs(), BussinessDictCodeList.交易方向_买入.getValue())
                             || StringUtil.equals(settleTransDataDto.getPs(), BussinessDictCodeList.交易方向_卖出.getValue())
-                            ||StringUtil.equals(settleTransDataDto.getPs(), BussinessDictCodeList.交易方向_行权回售.getValue()))){
-                        unitCprice = ArithmeticUtil.divide(totalCpriceAmt, totalShareAmt, 8);
-                        dealTotal.setUnitCprice(unitCprice);
-                        unitInt=settleTransDataDto.getUnitInt();
-                        dealTotal.setUnitInt(unitInt);
-                        dealTotal.setUnitFprice(ArithmeticUtil.doAdd(unitCprice,unitInt));
-                        dealTotal.setCpriceAmt(totalCpriceAmt);
+                            ||StringUtil.equals(settleTransDataDto.getPs(), BussinessDictCodeList.交易方向_行权回售.getValue())
+                            // GNS-879:配债UNIT_CPRIE,CPRICE_AMT未登录 modify by fuyongsheng 20220217 start
+                            ||StringUtil.equals(settleTransDataDto.getPs(), DictCodeListExt3.交易方向_配债.getValue())
+                            // GNS-879:配债UNIT_CPRIE,CPRICE_AMT未登录 modify by fuyongsheng 20220217 end
+                    )){
+                        if(StringUtil.equals(settleTransDataDto.getPs(), DictCodeListExt3.交易方向_配债.getValue())){
+                            dealTotal.setFpriceAmt(totalFpriceamt);
+                            dealTotal.setUnitFprice(settleTransDataDto.getUnitFprice());
+                        } else{
+                            unitCprice = ArithmeticUtil.divide(totalCpriceAmt, totalShareAmt, 8);
+                            dealTotal.setCpriceAmt(totalCpriceAmt);
+                            dealTotal.setUnitCprice(unitCprice);
+                            unitInt=settleTransDataDto.getUnitInt();
+                            dealTotal.setUnitInt(unitInt);
+                            dealTotal.setUnitFprice(ArithmeticUtil.doAdd(unitCprice,unitInt));
+                        }
                         prinAmt=totalCpriceAmt;
                     }else  if(StringUtil.equals(settleTransDataDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                             && (StringUtil.equals(settleTransDataDto.getPs(), BussinessDictCodeList.交易方向_申购.getValue())
@@ -988,8 +997,11 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                             dealTotal.setIsPurchTypeYx(item.getIsPurchTypeYx());
                         }
                         if(StringUtil.equals(item.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_股票.getValue())){
-                            // 全价总额
-                            dealTotal.setFpriceAmt(item.getFpriceAmt());
+                            // modify by etliu 20220228 start
+                            // 广农商二阶段 GNS-920:【广农商场内清算】广农商场内债转股清算交易生成后，对应的持仓流水更新有误 上交所的零股现金未登录
+//                            // 全价总额
+//                            dealTotal.setFpriceAmt(item.getFpriceAmt());
+                            // modify by etliu 20220228 end
                             //印花税
                             dealTotal.setStampFee(item.getStampFee());
                             //经手费
@@ -1006,18 +1018,35 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                             dealTotal.setCommissionAmt(item.getCommissionAmt());
                             //佣金是否随交易支付
                             dealTotal.setIsPayWithTrade(item.getIsPayWithTrade());
+
+                            // modify by etliu 20220228 start
+                            // 广农商二阶段 GNS-920:【广农商场内清算】广农商场内债转股清算交易生成后，对应的持仓流水更新有误 上交所的零股现金未登录
                             // 交易金额
-                            dealTotal.setTradeAmt(item.getTradeAmt());
-                            if(StringUtil.equals(item.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())
-                                    && item.getShareAmt().compareTo(BigDecimal.ZERO) == 0){
-                                dealTotal.setUnitCprice(item.getUnitCprice());
-                                if(dealTotal.getTradeAmt().compareTo(BigDecimal.ZERO) == 0){
+//                            dealTotal.setTradeAmt(item.getTradeAmt());
+//                            if(StringUtil.equals(item.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())
+//                                    && item.getShareAmt().compareTo(BigDecimal.ZERO) == 0){
+//                                dealTotal.setUnitCprice(item.getUnitCprice());
+//                                if(dealTotal.getTradeAmt().compareTo(BigDecimal.ZERO) == 0){
+//                                    dealTotal.setTradeAmt(item.getTradeAmt());
+//                                }
+//                            }
+//                            if(StringUtil.equals(item.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+//                                dealTotal.setUnitCprice(item.getUnitCprice());
+//                            }
+                            if (StringUtil.equals(item.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+                                if (item.getShareAmt().compareTo(BigDecimal.ZERO) == 0) {
+                                    dealTotal.setUnitCprice(item.getUnitCprice());
                                     dealTotal.setTradeAmt(item.getTradeAmt());
+                                    dealTotal.setFpriceAmt(item.getFpriceAmt());
                                 }
                             }
-                            if(StringUtil.equals(item.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+                            else {
                                 dealTotal.setUnitCprice(item.getUnitCprice());
+                                dealTotal.setTradeAmt(item.getTradeAmt());
+                                dealTotal.setFpriceAmt(item.getFpriceAmt());
                             }
+                            // modify by etliu 20220228 end
+
                             dealTotal.setUnitFprice(dealTotal.getUnitCprice());
                         }
                     }

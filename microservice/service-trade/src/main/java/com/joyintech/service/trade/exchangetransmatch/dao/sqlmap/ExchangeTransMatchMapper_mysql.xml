@@ -75,7 +75,10 @@
         A1.CON_AMT conAmt,
         A1.R_FINPROD_ID rFinMarketId,
         E1.FINPROD_ID  rFinprodId,
-        A.F_CJBH fCjbh
+        A.F_CJBH fCjbh,
+        <!--GNS-878:增加busitype,手动成交匹配需要 modify by fuyongsheng 20220217 start-->
+        A.BUSI_TYPE
+        <!--GNS-878:增加busitype,手动成交匹配需要 modify by fuyongsheng 20220217 end-->
         from SETTLE_TRANS_DATA_TOTAL A
         LEFT JOIN SETTLE_TRANS_DATA_TOTAL_STATUS B
         ON A.SEQ_ID = B.SEQ_NO
@@ -294,6 +297,11 @@
                 AND ifnull(A1.ENTRUST_AMT,0)-ifnull(S.MARCH_AMT_EN,0) >= #{remainNum}
             </if>
         </if>
+        <!--GNS-847:竞价回购增加期限品种查询条件 modify by fuyongsheng 20220215 start-->
+        <if test="termType !=null and termType!='' and repoType!=null and repoType!='' and repoType == 'H02'.toString()">
+            AND A1.FINPROD_ID = #{termType}
+        </if>
+        <!--GNS-847:竞价回购增加期限品种查询条件 modify by fuyongsheng 20220215 end-->
     </select>
 
     <select id="findDealList" resultType="com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch002Dto">

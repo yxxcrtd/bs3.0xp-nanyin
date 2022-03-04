@@ -21,6 +21,7 @@ import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.Fund.Ex
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.*;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo.*;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.shares.ExchangeTransMatchShares1Service;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import org.apache.commons.collections4.CollectionUtils;
@@ -71,6 +72,9 @@ public class ExchangeTransMatchCommonService extends BaseService {
      */
     @Autowired
     private BaseTradeProductDealCommService baseTradeProductDealCommService;
+
+    @Autowired
+    private ExchangeTransMatchBondCommonService exchangeTransMatchBondCommonService;
 
     @Autowired
     private ExchangeTransMatchBond1Service exchangeTransMatchBond1Service;
@@ -159,6 +163,15 @@ public class ExchangeTransMatchCommonService extends BaseService {
      */
     @Value("${application.micorservice.contextPath.single:false}")
     private boolean isSingle;
+
+    // modify by etliu 20220222 start
+    // 广农商二阶段 GNS-931:【广农商场内清算】上/深交所 基金存续期重复跑批，生成数据有误
+    /**
+     * IPlatformDate
+     */
+    @Autowired(required = false)
+    private IPlatformDate iPlatformDate;
+    // modify by etliu 20220222 end
 
     /**
      * 交易完成后，调用共通修改SETTLE_TRANS_TG_MAPPING，SETTLE_TRANS_DATA_TOTAL_STATUS
@@ -373,7 +386,15 @@ public class ExchangeTransMatchCommonService extends BaseService {
 
             //登录:汇总成交数据匹配结果表（SETTLE_TRANS_DATA_TOTAL_MATCH）
             SettleTransDataTotalMatch settleTransDataTotalMatch = this.genSettleTransDataTotalMatch(dto,commonEntrustDto);
-            settleTransDataTotalMatchMapper.insertSelective(settleTransDataTotalMatch);
+            // modify by etliu 20220220 start
+            // GNS-928:【广农商场内清算】深交所竞价首期解析SJSMX1文件；重复跑批时，结算下行交易汇总批处理报错
+            try {
+                settleTransDataTotalMatchMapper.insertSelective(settleTransDataTotalMatch);
+            } catch (Exception e) {
+                settleTransDataTotalMatchMapper.deleteByPrimaryKey(settleTransDataTotalMatch);
+                settleTransDataTotalMatchMapper.insertSelective(settleTransDataTotalMatch);
+            }
+            // modify by etliu 20220220 end
 
             //质押式协议回购需要处理 汇总成交质押品匹配结果表
             if((StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
@@ -381,7 +402,12 @@ public class ExchangeTransMatchCommonService extends BaseService {
                     && StringUtil.equals(dto.getSettleTransDataTotalAdd().getRepoType(),DictCodeList.回购类型_质押式协议回购.getValue())){
                 List<SettleDataTotalPledgeMatch> settleDataTotalPledgeMatchList = this.genSettleDataTotalPledgeMatch(dto,commonEntrustDto);
                 for (SettleDataTotalPledgeMatch settleDataTotalPledgeMatch:settleDataTotalPledgeMatchList) {
-                    settleDataTotalPledgeMatchMapper.insertSelective(settleDataTotalPledgeMatch);
+                    try {
+                        settleDataTotalPledgeMatchMapper.insertSelective(settleDataTotalPledgeMatch);
+                    } catch (Exception e) {
+                        settleDataTotalPledgeMatchMapper.deleteByPrimaryKey(settleDataTotalPledgeMatch);
+                        settleDataTotalPledgeMatchMapper.insertSelective(settleDataTotalPledgeMatch);
+                    }
                 }
             }
 
@@ -389,7 +415,12 @@ public class ExchangeTransMatchCommonService extends BaseService {
             List<SettleTransTgMapping> settleTransTgMappingList = this.genSettleTransTgMapping(dto,tradeId);
             if(!StringUtil.isEmptyList(settleTransTgMappingList)) {
                 for(SettleTransTgMapping settleTransTgMapping:settleTransTgMappingList) {
-                    settleTransTgMappingMapper.insertSelective(settleTransTgMapping);
+                    try {
+                        settleTransTgMappingMapper.insertSelective(settleTransTgMapping);
+                    } catch (Exception e) {
+                        settleTransTgMappingMapper.deleteByPrimaryKey(settleTransTgMapping);
+                        settleTransTgMappingMapper.insertSelective(settleTransTgMapping);
+                    }
                 }
             }
 
@@ -416,6 +447,9 @@ public class ExchangeTransMatchCommonService extends BaseService {
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
         finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
         finProductTradeDto.setNeedSum(true);
+        //GNS-949:增加是否工作流数据标识 modify by fuyongsheng 20220227 start
+        finProductTradeDto.setNotWorkflow(true);
+        //GNS-949:增加是否工作流数据标识 modify by fuyongsheng 20220227 end
         List<BaseTradeProductDealDto> baseTradeProductDealDtos = new ArrayList<>();
         List<ExchangeTransMatchBaseTradeDto> exchangeTransMatchBaseTradeDtos = new ArrayList<>();
         finProductTradeDto.setBaseTradeProductDealDtos(baseTradeProductDealDtos);
@@ -692,6 +726,11 @@ public class ExchangeTransMatchCommonService extends BaseService {
             exchangeTransMatchRepoCommonService.handlePositionOfXyhg(dto, commonEntrustDto, exchangeTransMatchBaseTradeDtos,
                     finPledgeDisplaceDetailHuanChu, firstFinDealPledgeTempList, finPledgeDisplaceResultTempList);
         }
+        else if(StringUtil.equals(commonEntrustDto.getPs(), DictCodeListExt3.交易方向_质押券入库.getValue())
+                || StringUtil.equals(commonEntrustDto.getPs(), DictCodeListExt3.交易方向_质押券出库.getValue())){
+            // 处理质押券出入库头寸
+            exchangeTransMatchBondCommonService.handlePositionOfZyQ(finProductTradeDto);
+        }
         else {
             //处理头寸和指令完成度
             baseTradeProductDealCommService.execute(finProductTradeDto);
@@ -848,11 +887,20 @@ public class ExchangeTransMatchCommonService extends BaseService {
         }
         List<SettleTransData> settleTransDataList = exchangeTransMatchCommonMapper.getSettleTransDataList(map);
         if(!StringUtil.isEmptyList(settleTransDataList)) {
+            // modify by etliu 20220222 start
+            // 广农商二阶段 GNS-931:【广农商场内清算】上/深交所 基金存续期重复跑批，生成数据有误
+            Date platDate = iPlatformDate.getSysDate();
+            // modify by etliu 20220222 end
+
             for(SettleTransData settleTransData:settleTransDataList) {
                 SettleTransTgMapping settleTransTgMapping = new SettleTransTgMapping();
                 settleTransTgMapping.setTradeId(settleTransData.getTradeId());
                 settleTransTgMapping.setTradeIdTg(tradeId);
-                settleTransTgMapping.setDealDate(dealDto.getDealDate());
+                // modify by etliu 20220222 start
+                // 广农商二阶段 GNS-931:【广农商场内清算】上/深交所 基金存续期重复跑批，生成数据有误
+//                settleTransTgMapping.setDealDate(dealDto.getDealDate());
+                settleTransTgMapping.setDealDate(platDate);
+                // modify by etliu 20220222 end
                 settleTransTgMapping.setTgDataStatus(DictCodeListStl.投管交易数据状态_处理结束.getValue());
                 list.add(settleTransTgMapping);
             }
@@ -1087,7 +1135,11 @@ public class ExchangeTransMatchCommonService extends BaseService {
                 key.setTradeIdTg(revokeDto.getTradeIdTg());
                 settleTransTgMappingMapper.deleteByPrimaryKey(key);
                 //汇总成交数据匹配结果表（SETTLE_TRANS_DATA_TOTAL_MATCH）：数据删除
-                settleTransDataTotalMatchMapper.deleteByPrimaryKey(dto);
+                // settleTransDataTotalMatchMapper.deleteByPrimaryKey(dto);
+                Map<String,String> matchDeleteMap = new HashMap<>();
+                matchDeleteMap.put("totalSeqId",dto.getSeqNo());
+                matchDeleteMap.put("entrunstId",dto.getEntrunstTradeId());
+                exchangeTransMatchCommonMapper.deleteSettleTransDataTotalMatch(matchDeleteMap);
 
                 Map<String,Object> deleteMap = new HashMap<>();
                 deleteMap.put("seqNo",dto.getSeqNo());
@@ -1158,6 +1210,13 @@ public class ExchangeTransMatchCommonService extends BaseService {
                         //已匹配金额
                         commonEntrustDto.setMarchAmt(ArithmeticUtil.multiply(marchQty,commonEntrustDto.getPrice()));
                     }
+                    // modify by etliu 20220227 start
+                    // 广农商二阶段 GNS-920:【广农商场内清算】广农商场内债转股清算交易生成后，对应的持仓流水更新有误
+                    if (StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())) {
+                        //已匹配金额（债转股只考虑成交数据和指令一对一的场景）
+                        commonEntrustDto.setMarchAmt(dto.getFpriceAmt());
+                    }
+                    // modify by etliu 20220227 end
                     else {
                         //已匹配金额
                         commonEntrustDto.setMarchAmt(ArithmeticUtil.multiply(marchQty,dto.getUnitFprice()));
@@ -1216,6 +1275,11 @@ public class ExchangeTransMatchCommonService extends BaseService {
                     && BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(dto.getRemainNum(),ArithmeticUtil.divide(commonEntrustDto.getRemainEntrustAmt(),dto.getUnitCprice(),4))) < 0)){
                 matchStatus = DictCodeListExt3.下行交易匹配状态_部分匹配.getValue();
             }
+            // modify by etliu 20220228 start
+            // 广农商二阶段 GNS-834:【广农商场内清算】上交所基金买入卖出，手动匹配生成的交易，随交易支付费用值没登
+            commonEntrustDto.setMarchFeeAmtPay(ArithmeticUtil.multiply(ArithmeticUtil.divide(commonEntrustDto.getMarchQty(),dto.getRemainNum(),4),dto.getTotalFeeAmtPay()));
+            commonEntrustDto.setMarchFeeAmtUnPay(ArithmeticUtil.multiply(ArithmeticUtil.divide(commonEntrustDto.getMarchQty(),dto.getRemainNum(),4),dto.getTotalUnFeeAmtPay()));
+            // modify by etliu 20220228 end
         }
         //多条指令匹配时
         else {
@@ -1275,8 +1339,15 @@ public class ExchangeTransMatchCommonService extends BaseService {
                         commonEntrustDto.setMarchQtyEn(ArithmeticUtil.divide(commonEntrustDto.getRemainEntrustAmt(),commonEntrustDto.getPrice(),4));
                         commonEntrustDto.setMarchAmtEn(commonEntrustDto.getRemainEntrustAmt());
                     }
+
+                    // modify by etliu 20220228 start
+                    // 广农商二阶段 GNS-834:【广农商场内清算】上交所基金买入卖出，手动匹配生成的交易，随交易支付费用值没登
+                    commonEntrustDto.setMarchFeeAmtPay(ArithmeticUtil.multiply(ArithmeticUtil.divide(commonEntrustDto.getMarchQty(),dto.getRemainNum(),4),dto.getTotalFeeAmtPay()));
+                    commonEntrustDto.setMarchFeeAmtUnPay(ArithmeticUtil.multiply(ArithmeticUtil.divide(commonEntrustDto.getMarchQty(),dto.getRemainNum(),4),dto.getTotalUnFeeAmtPay()));
+                    // modify by etliu 20220228 end
                 }
-                matchStatus = DictCodeListExt3.下行交易匹配状态_匹配完成.getValue();
+//                matchStatus = DictCodeListExt3.下行交易匹配状态_匹配完成.getValue();
+                matchStatus = DictCodeListExt3.下行交易匹配状态_部分匹配.getValue();
             }
             else {
                 //临时存储

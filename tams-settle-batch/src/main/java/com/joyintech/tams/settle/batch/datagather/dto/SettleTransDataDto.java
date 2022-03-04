@@ -72,6 +72,11 @@ public class SettleTransDataDto extends SettleTransData {
     private Date regDate;
 
     /**
+     * 除权除息日
+     */
+    private Date exDevidentDate;
+
+    /**
      * 前置交易编号
      */
     private String bTradeId;
@@ -85,6 +90,18 @@ public class SettleTransDataDto extends SettleTransData {
      * 申购交易份额
      */
     private BigDecimal shareAmtSg;
+
+    //是否货币基金
+    private String isHuobi;
+
+    public String getIsHuobi() {
+        return isHuobi;
+    }
+
+    public void setIsHuobi(String isHuobi) {
+        this.isHuobi = isHuobi;
+    }
+
 
     public BigDecimal getShareAmtSg() {
         return shareAmtSg;
@@ -260,5 +277,13 @@ public class SettleTransDataDto extends SettleTransData {
 
     public void setTradeTotalId(String tradeTotalId) {
         this.tradeTotalId = tradeTotalId;
+    }
+
+    public Date getExDevidentDate() {
+        return exDevidentDate;
+    }
+
+    public void setExDevidentDate(Date exDevidentDate) {
+        this.exDevidentDate = exDevidentDate;
     }
 }

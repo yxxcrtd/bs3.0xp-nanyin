@@ -15,24 +15,40 @@
             T1.TRADE_MARKET tradeMarket,
             T1.TRADE_PLAT tradePlat,
             T1.FINPROD_ID finprodId,
+            CASE WHEN etr.FINPROD_TYPE2 = 'F01' THEN T2.FINPROD_MARKET_ID ELSE NULL END finprodMarketId,
+            CASE WHEN etr.FINPROD_TYPE2 = 'F01' THEN T2.FINPROD_ABBR ELSE NULL END finprodName,
+            CASE WHEN etr.FINPROD_TYPE2 = 'F01' THEN T1.SETTLE_NUM ELSE NULL END settleNum,
+            CASE WHEN etr.FINPROD_TYPE2 = 'F01' THEN T1.SETTLE_AMT ELSE NULL END settleAmt,
+            etr.FINPROD_TYPE2,
+            <!--T2.FINPROD_NAME finprodName ,-->
+            <!--T2.FINPROD_ABBR finprodName ,
+            T2.FINPROD_MARKET_ID finprodMarketId ,
             T1.SETTLE_NUM settleNum,
-            T1.SETTLE_AMT settleAmt,
-            T1.PRIN prin,
+            T1.SETTLE_AMT settleAmt,-->
+            CASE WHEN etr.FINPROD_TYPE2 != 'F01' THEN T1.PRIN ELSE NULL END prin,
+            CASE WHEN etr.FINPROD_TYPE2 != 'F01' THEN T1.M_TRADE_AMT ELSE NULL END mTradeAmt,
+            CASE WHEN etr.FINPROD_TYPE2 != 'F01' THEN T1.PLEDGE_NUMBER ELSE NULL END pledgeNumber,
+            CASE WHEN etr.FINPROD_TYPE2 != 'F01' THEN T1.PLEDGE_ID ELSE NULL END pledgeId,
+            CASE WHEN etr.FINPROD_TYPE2 != 'F01' THEN T1.B_PLEDGE_ID ELSE NULL END bPledgeId,
+            CASE WHEN etr.FINPROD_TYPE2 != 'F01' THEN F1.FINPROD_ABBR ELSE NULL END pledgeName,
+            CASE WHEN etr.FINPROD_TYPE2 != 'F01' THEN F1.FINPROD_MARKET_ID ELSE NULL END pledgeIdAbbr,
+            CASE WHEN etr.FINPROD_TYPE2 != 'F01' THEN F2.FINPROD_MARKET_ID ELSE NULL END bPledgeIdAbbr,
+            <!--T1.PRIN prin,
             T1.M_TRADE_AMT mTradeAmt,
             T1.PLEDGE_NUMBER pledgeNumber,
             T1.PLEDGE_ID pledgeId,
             T1.B_PLEDGE_ID bPledgeId,
-            F1.FINPROD_NAME pledgeName,
+            F1.FINPROD_ABBR pledgeName,
+            F1.FINPROD_MARKET_ID pledgeIdAbbr ,-->
             T1.BUSI_TYPE busiType,
             T1.COUNTER_ID counterId,
             T1.ENTRUST_NO entrustNo,
-            T2.FINPROD_NAME finprodName ,
-            T2.FINPROD_MARKET_ID finprodMarketId ,
             T3.PORTFOLIO_NAME portfolioName,
             T4.COUNTER_NAME counterName,
         T1.DEAL_NO dealNo,
         decode( T1.SETTLE_STATUS,'01',1,'02',3,'03',2,'04',4) sort
         FROM TRD_MANUAL_SETTLE_INFO T1
+        LEFT JOIN  ETR_ENTRUST etr ON T1.ENTRUST_NO = etr.ENTRUST_ID
         LEFT JOIN  FIN_PRODUCT  T2 ON T1.FINPROD_ID = T2.FINPROD_ID
         LEFT JOIN PTL_PORTFOLIO T3 ON T1.PORTFOLIO_ID = T3.PORTFOLIO_ID
         Left join MST_COUNTER_PARTY T4 ON T4.COUNTER_ID = T1.COUNTER_ID
@@ -40,6 +56,7 @@
         LEFT JOIN  STL_CAPACCT_INFO  sci ON T1.ACCT_NO = sci.ACCT_NO
         LEFT JOIN  STL_SEC_ACCT_INFO ssai ON T1.SEC_ACCT_ID = ssai.SEC_ACCT_ID
         LEFT JOIN  FIN_PRODUCT  F1 ON T1.PLEDGE_ID = F1.FINPROD_ID
+        LEFT JOIN  FIN_PRODUCT  F2 ON T1.B_PLEDGE_ID = F2.FINPROD_ID
         <where>
             <if test="userName != null and userName != ''">
                 AND T1.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userName})
@@ -95,25 +112,30 @@
         T4.M_TRADE_AMT mTradeAmt,
         T4.PLEDGE_NUMBER pledgeNumber,
         T4.PLEDGE_ID pledgeId,
+        F1.FINPROD_MARKET_ID pledgeIdAbbr,
         T4.B_PLEDGE_ID bPledgeId,
-        F1.FINPROD_NAME pledgeName,
+        F2.FINPROD_MARKET_ID bPledgeIdAbbr,
+        F1.FINPROD_ABBR pledgeName,
         T1.OPER_TYPE OPER_TYPE,
         T1.CREATE_USER CREATE_USER,
         T1.CREATE_DEPT CREATE_DEPT,
         T1.CREATE_TIME CREATE_TIME,
         T1.UPDATE_USER UPDATE_USER,
         T1.UPDATE_TIME UPDATE_TIME,
-        T2.FINPROD_NAME ,
+        T2.FINPROD_ABBR FINPROD_NAME,
         T2.FINPROD_MARKET_ID,
+        etr.FINPROD_TYPE2,
         <!--concat(concat(T3.BUSI_ACCT_NO,':'),T3.ACCT_NAME) operator-->
         T5.REAL_NAME operator
         FROM
         TRD_MANUAL_SETTLE_FLOW T1
         LEFT JOIN  FIN_PRODUCT  T2 ON T1.FINPROD_ID = T2.FINPROD_ID
         LEFT JOIN TRD_MANUAL_SETTLE_INFO T4 on T1.SETTLE_SEQ_NO = T4.SETTLE_SEQ_NO
+        LEFT JOIN  ETR_ENTRUST etr ON T4.ENTRUST_NO = etr.ENTRUST_ID
         LEFT JOIN  STL_CAPACCT_INFO  T3 ON T4.ACCT_NO = T3.ACCT_NO
         LEFT JOIN SYS_USER T5 ON T1.UPDATE_USER = T5.USER_NAME
      LEFT JOIN  FIN_PRODUCT  F1 ON T4.PLEDGE_ID = F1.FINPROD_ID
+        LEFT JOIN  FIN_PRODUCT F2 ON T4.B_PLEDGE_ID = F2.FINPROD_ID
         where T1.SETTLE_SEQ_NO = #{settleSeqNo}
         order by T1.SETTLE_TIME DESC
     </select>
@@ -177,11 +199,10 @@
         SELECT * FROM ETR_SEC_POSITION_FLOW WHERE TRADE_ID = #{tradeId}
     </select>
     <select id="findPageExport" resultType="com.joyintech.service.trade.manualsettle.dto.ManualSettleDto">
-        SELECT
+        select rownum,a.* from (SELECT
         T5.SEQ_NO SEQ_NO,
         T5.SETTLE_TIME SETTLE_TIME,
         T5.OPER_TYPE OPER_TYPE,
-        concat(concat(sci.BUSI_ACCT_NO,':'),sci.ACCT_NAME) operator,
         T1.SETTLE_SEQ_NO SETTLE_SEQ_NO,
         T1.SETTLE_STATUS settleStatus,
         T1.ORDER_ID orderId,
@@ -194,30 +215,37 @@
         T1.TRADE_MARKET tradeMarket,
         T1.TRADE_PLAT tradePlat,
         T1.FINPROD_ID finprodId,
-        T1.SETTLE_NUM settleNum,
-        T1.SETTLE_AMT settleAmt,
         T1.PRIN prin,
-        T1.M_TRADE_AMT mTradeAmt,
+        CASE WHEN etr.FINPROD_TYPE2 != 'F01' THEN T1.M_TRADE_AMT ELSE NULL END mTradeAmt,
         T1.PLEDGE_NUMBER pledgeNumber,
-        T1.PLEDGE_ID pledgeId,
-        T1.B_PLEDGE_ID bPledgeId,
-        F1.FINPROD_NAME pledgeName,
+        CASE WHEN etr.FINPROD_TYPE2 != 'F01' THEN T1.PLEDGE_ID ELSE NULL END pledgeId,
+        CASE WHEN etr.FINPROD_TYPE2 != 'F01' THEN T1.B_PLEDGE_ID ELSE NULL END bPledgeId,
+        CASE WHEN etr.FINPROD_TYPE2 != 'F01' THEN F1.FINPROD_ABBR ELSE NULL END pledgeName,
+        CASE WHEN etr.FINPROD_TYPE2 != 'F01' THEN F1.FINPROD_MARKET_ID ELSE NULL END pledgeIdAbbr,
+        CASE WHEN etr.FINPROD_TYPE2 != 'F01' THEN F2.FINPROD_MARKET_ID ELSE NULL END bPledgeIdAbbr,
         T1.BUSI_TYPE busiType,
         T1.COUNTER_ID counterId,
         T1.ENTRUST_NO entrustNo,
-        T2.FINPROD_NAME finprodName ,
-        T2.FINPROD_MARKET_ID finprodMarketId ,
+        CASE WHEN etr.FINPROD_TYPE2 = 'F01' THEN T2.FINPROD_MARKET_ID ELSE NULL END finprodMarketId,
+        CASE WHEN etr.FINPROD_TYPE2 = 'F01' THEN T2.FINPROD_ABBR ELSE NULL END finprodName,
+        CASE WHEN etr.FINPROD_TYPE2 = 'F01' THEN T1.SETTLE_NUM ELSE NULL END settleNum,
+        CASE WHEN etr.FINPROD_TYPE2 = 'F01' THEN T1.SETTLE_AMT ELSE NULL END settleAmt,
         T3.PORTFOLIO_NAME portfolioName,
         T4.COUNTER_NAME counterName,
+        T1.DEAL_NO dealNo,
+        T6.REAL_NAME operator,
         decode( T1.SETTLE_STATUS,'01',1,'02',3,'03',2,'04',4) sort
         FROM TRD_MANUAL_SETTLE_INFO T1
+        LEFT JOIN  ETR_ENTRUST etr ON T1.ENTRUST_NO = etr.ENTRUST_ID
         LEFT JOIN  FIN_PRODUCT  T2 ON T1.FINPROD_ID = T2.FINPROD_ID
         LEFT JOIN PTL_PORTFOLIO T3 ON T1.PORTFOLIO_ID = T3.PORTFOLIO_ID
         Left join MST_COUNTER_PARTY T4 ON T4.COUNTER_ID = T1.COUNTER_ID
         LEFT JOIN  STL_CAPACCT_INFO  sci ON T1.ACCT_NO = sci.ACCT_NO
         LEFT JOIN  STL_SEC_ACCT_INFO ssai ON T1.SEC_ACCT_ID = ssai.SEC_ACCT_ID
         LEFT JOIN  FIN_PRODUCT  F1 ON T1.PLEDGE_ID = F1.FINPROD_ID
+        LEFT JOIN  FIN_PRODUCT  F2 ON T1.B_PLEDGE_ID = F2.FINPROD_ID
         left join TRD_MANUAL_SETTLE_FLOW T5 on T5.SETTLE_SEQ_NO = T1.SETTLE_SEQ_NO
+        LEFT JOIN SYS_USER T6 ON T5.UPDATE_USER = T6.USER_NAME
         <where>
             <if test="userName != null and userName != ''">
                 AND T1.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userName})
@@ -259,7 +287,7 @@
                 and T1.SETTLE_DATE &lt;= to_date(#{settleDateEnd}, 'yyyy-MM-dd')
             </if>
         </where>
-        order by sort,T1.SETTLE_SEQ_NO,T1.UPDATE_TIME desc
+        order by sort,T1.SETTLE_SEQ_NO,T1.UPDATE_TIME desc)a
     </select>
 
     <select id="selectInfContractDetailfile" resultType="com.joyintech.tams.common.base.entity.InfContractDetailfile">

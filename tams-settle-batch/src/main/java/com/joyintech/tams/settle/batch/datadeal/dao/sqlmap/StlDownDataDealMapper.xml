@@ -37,8 +37,8 @@
 	<select id="selectNeedRevokeSettleTransDataTotals" resultType="com.joyintech.tams.common.base.entity.SettleTransDataTotalMatch">
 		SELECT
 			stdt.SEQ_ID SEQ_NO,
-			IFNULL(tpda.ENTRUST_ID,tdta.ENTRUST_ID) ENTRUNST_TRADE_ID,
-			'0' MATCH_CLASS
+			NVL(tpda.ENTRUST_ID,tdta.ENTRUST_ID) ENTRUNST_TRADE_ID
+			<!--'0' MATCH_CLASS-->
 		FROM
 			SETTLE_TRANS_DATA T1
 		LEFT JOIN
@@ -54,6 +54,7 @@
 			TRD_DEAL_TOTAL_ADD tdta ON sttm.TRADE_ID_TG = tdta.TOTLE_TRADE_ID
 		WHERE
 			(tpda.ENTRUST_ID IS NOT NULL OR tdta.ENTRUST_ID IS NOT NULL)
+			AND stdt.SEQ_ID IS NOT NULL
 			AND T1.DEAL_DATE = #{dealDate,jdbcType=DATE} and (T2.CHECK_RESULT IS NULL OR T2.CHECK_RESULT in ('0', '2'))
 			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
 				AND
@@ -67,6 +68,41 @@
 					#{secType,jdbcType=VARCHAR}
 				</foreach>
 			</if>
+		<!--GNS-902:配股配债 applyTradeId可能为空 modify by fuyongsheng 20220226 start-->
+		UNION
+		SELECT
+		stdt.SEQ_ID SEQ_NO,
+		NVL(tpda.ENTRUST_ID,tdta.ENTRUST_ID) ENTRUNST_TRADE_ID
+		FROM
+		SETTLE_TRANS_DATA T1
+		LEFT JOIN
+		SETTLE_TRANS_DATA_STATUS T2 ON T2.TRADE_ID = T1.TRADE_ID
+		LEFT JOIN
+		SETTLE_TRANS_DATA_TOTAL stdt ON T1.DEAL_DATE = stdt.DEAL_DATE AND T1.SEAT_NUMBER = stdt.SEAT_NUMBER
+		LEFT JOIN
+		SETTLE_TRANS_TG_MAPPING sttm ON T1.TRADE_ID = sttm.TRADE_ID
+		LEFT JOIN
+		TRD_PRODUCT_DEAL_ADD tpda ON sttm.TRADE_ID_TG = tpda.TRADE_ID
+		LEFT JOIN
+		TRD_DEAL_TOTAL_ADD tdta ON sttm.TRADE_ID_TG = tdta.TOTLE_TRADE_ID
+		WHERE
+		(tpda.ENTRUST_ID IS NOT NULL OR tdta.ENTRUST_ID IS NOT NULL)
+		AND stdt.SEQ_ID IS NOT NULL
+		AND T1.PS IN ('T46','T97')
+		AND T1.DEAL_DATE = #{dealDate,jdbcType=DATE} and (T2.CHECK_RESULT IS NULL OR T2.CHECK_RESULT in ('0', '2'))
+		<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+			AND
+			<foreach collection="portfolioIdList" item="portfolioId" open="T1.PORTFOLIO_ID IN (" close=")" separator=",">
+				#{portfolioId,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="secTypeList != null and secTypeList.size() > 0">
+			AND
+			<foreach collection="secTypeList" item="secType" open="T1.SEC_TYPE IN (" close=")" separator=",">
+				#{secType,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<!--GNS-902:配股配债 applyTradeId可能为空 modify by fuyongsheng 20220226 end-->
 	</select>
 
     <delete id="deleteSettleTransTgMapping">
@@ -536,6 +572,35 @@
         	OTH_TYPE = #{othCodeType,jdbcType=VARCHAR}
         	AND OTH_CODE = #{othCode,jdbcType=VARCHAR}
     </select>
+
+	<select id="getLastFinproductIdByApprovalNo" parameterType="java.util.Map"
+			resultType="java.lang.String">
+		SELECT
+			*
+		FROM
+			(
+				SELECT
+					FINPROD_ID
+				FROM
+					FIN_PRODUCT_OTH_CODE
+				WHERE
+					OTH_CODE = #{othCode,jdbcType=VARCHAR}
+				ORDER BY declared_start_date desc
+			)
+		where ROWNUM = 1
+	</select>
+
+	<select id="getPriceByFinproductId" parameterType="java.util.Map"
+			resultType="java.math.BigDecimal">
+		SELECT
+			DECLARED_PRICE
+		FROM
+			FIN_PRODUCT_OTH_CODE
+		WHERE
+			OTH_TYPE = #{othCodeType,jdbcType=VARCHAR}
+		  AND FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+		  AND ROWNUM = 1
+	</select>
 
 	<select id="getFinproductByFinProdMarketId" resultType="com.joyintech.tams.common.base.entity.FinProduct">
 		SELECT

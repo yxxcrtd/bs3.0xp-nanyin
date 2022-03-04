@@ -36,7 +36,7 @@ public class ShareBonusReg extends ShareBonusRegKey {
     /**
      * 每股派息
      */
-    private BigDecimal preDevidengCash;
+    private BigDecimal perDevidentCash;
 
 
     public String getSecAcctId() {
@@ -79,11 +79,11 @@ public class ShareBonusReg extends ShareBonusRegKey {
         this.perDevidentAmt = perDevidentAmt;
     }
 
-    public BigDecimal getPreDevidengCash() {
-        return preDevidengCash;
+    public BigDecimal getPerDevidentCash() {
+        return perDevidentCash;
     }
 
-    public void setPreDevidengCash(BigDecimal preDevidengCash) {
-        this.preDevidengCash = preDevidengCash;
+    public void setPerDevidentCash(BigDecimal perDevidentCash) {
+        this.perDevidentCash = perDevidentCash;
     }
 }

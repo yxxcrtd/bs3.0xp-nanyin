@@ -412,13 +412,13 @@ WHERE
                 '220147',
                 '220134',
                 '220133',
-                '债券回购初始融入'
-                '债券回购初始融出'
-                '债券回购提前收取'
-                '债券回购提前返回'
-                '债券回购续做收取'
-                '债券回购续做返回'
-                '债券回购购回收取'
+                '债券回购初始融入',
+                '债券回购初始融出',
+                '债券回购提前收取',
+                '债券回购提前返回',
+                '债券回购续做收取',
+                '债券回购续做返回',
+                '债券回购购回收取',
                 '债券回购购回返回'
            )
     )
@@ -567,7 +567,7 @@ WHERE
                 T6.JYLB = T1.JYLB
                 AND T6.YWBS = T1.YWBS
                 AND ZYBS IS NULL
-                AND T1.YWBS = '4023' AND T1.CJSL <![CDATA[<]]> 0)
+                AND T1.YWBS = '4023' AND T1.CJSL <![CDATA[<]]> 0
         )
         <if test="collect != null and collect.size()>0">
             and T4.CUSTOMER_ID IN
@@ -696,13 +696,13 @@ WHERE
                 '220147',
                 '220134',
                 '220133',
-                '债券回购初始融入'
-                '债券回购初始融出'
-                '债券回购提前收取'
-                '债券回购提前返回'
-                '债券回购续做收取'
-                '债券回购续做返回'
-                '债券回购购回收取'
+                '债券回购初始融入',
+                '债券回购初始融出',
+                '债券回购提前收取',
+                '债券回购提前返回',
+                '债券回购续做收取',
+                '债券回购续做返回',
+                '债券回购购回收取',
                 '债券回购购回返回'
             )
         )
@@ -853,16 +853,11 @@ WHERE
             CCY,
             TRADE_MARKET,
             PS,
-            NULL TRADE_ID,
             SEC_ACCT_ID,
-            NULL SETTLEMEN_TYPE,
-            NUll PRICE,
-            NULL UNIT,
-            NULL FULL_PRICE,
-            NULL HGDQR,
             MARKET_ID,
             FINPROD_ID,
             FINPROD_TYPE,
+            'H01' REPO_TYPE,
             SUM(TRADE_NUM) TRADE_NUM,
             SUM(TRADE_AMT) TRADE_AMT,
             SUM(INT_AMT) INT_AMT,
@@ -1071,134 +1066,163 @@ WHERE
             <!--到期续作对账单有两笔,一笔到期,一笔新开,两个price不一致-->
             <!--PRICE-->
         UNION ALL
-        <!--金证直接按照明细接入-->
-        SELECT
-            T4.CUSTOMER_ID,
-            WTBH INSTRUCTION_ID,
-            T2.ACCT_NO ACCOUT,
-            XWDM SEAT_NUMBER,
-            TO_DATE(T1.JYRQ,'yyyyMMdd') TRADE_DATE,
-            CASE
-                WHEN T1.BZ = '0' THEN 'CNY'
-                WHEN T1.BZ = '人民币' THEN 'CNY'
-                WHEN T1.BZ = '1' THEN 'HKD'
-                WHEN T1.BZ = '港币' THEN 'HKD'
-                WHEN T1.BZ = '2' THEN 'USD'
-                WHEN T1.BZ = '美元' THEN 'USD'
-            END CCY,
-            T5.TRADE_PLACE TRADE_MARKET,
-            CASE
-                WHEN ZYDM = '220131' then '03'
-                WHEN ZYDM = '债券回购初始融入' then '03'
-                WHEN ZYDM = '220132 '  then '04'
-                WHEN ZYDM = '债券回购初始融出 '  then '04'
-                WHEN ZYDM = '220143'  then 'T54'
-                WHEN ZYDM = '债券回购提前返回'  then 'T54'
-                WHEN ZYDM = '220144'  then 'T54'
-                WHEN ZYDM = '债券回购提前收取'  then 'T54'
-                WHEN ZYDM = '220147' then 'T95'
-                WHEN ZYDM = '债券回购续做返回' then 'T95'
-                WHEN ZYDM = '220148' then 'T95'
-                WHEN ZYDM = '债券回购续做收取' then 'T95'
-                WHEN ZYDM = '220133' then 'T07'
-                WHEN ZYDM = '债券回购购回返回' then 'T07'
-                WHEN ZYDM = '220134' then  'T07'
-                WHEN ZYDM = '债券回购购回收取' then  'T07'
-                ELSE NULL
-            END PS,
-            LSH TRADE_ID,
-            T5.SEC_ACCT_ID SEC_ACCT_ID,
-            JSFS SETTLEMEN_TYPE,
-            CJJJ PRICE,
-            DWYJLX UNIT,
-            CJQJ FULL_PRICE,
-            CASE
-                WHEN HGDQR IS NOT NULL THEN TO_DATE(HGDQR, 'yyyyMMdd')
-                ELSE NULL
-            END HGDQR,
-            CASE
-                WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
-                ELSE T3.FINPROD_MARKET_ID
-            END MARKET_ID,
-            CASE
-                WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
-                ELSE T3.FINPROD_ID
-            END FINPROD_ID,
-            CASE
-                WHEN ZYDM = '220131'  then  'F02'
-                WHEN ZYDM = '债券回购初始融入'  then  'F02'
-                WHEN ZYDM = '220132'  then 'F03'
-                WHEN ZYDM = '债券回购初始融出'  then 'F03'
-                WHEN ZYDM = '220143'  then  'F02'
-                WHEN ZYDM = '债券回购提前返回'  then  'F02'
-                WHEN ZYDM = '220144 '  then 'F03'
-                WHEN ZYDM = '债券回购提前收取 '  then 'F03'
-                WHEN ZYDM = '220147'  then  'F02'
-                WHEN ZYDM = '债券回购续做返回'  then  'F02'
-                WHEN ZYDM = '220148'  then 'F03'
-                WHEN ZYDM = '债券回购续做收取'  then 'F03'
-                WHEN ZYDM = '220133'  then  'F02'
-                WHEN ZYDM = '债券回购购回返回'  then  'F02'
-                WHEN ZYDM = '220134'  then 'F03'
-                WHEN ZYDM = '债券回购购回收取'  then 'F03'
-                ELSE NULL
-            END FINPROD_TYPE,
+            <!--金证直接按委托编号汇总接入-->
+            SELECT
+            CUSTOMER_ID,
+            INSTRUCTION_ID,
+            ACCOUT,
+            SEAT_NUMBER,
+            TRADE_DATE,
+            CCY,
+            TRADE_MARKET,
+            PS,
+            SEC_ACCT_ID,
+            MARKET_ID,
+            FINPROD_ID,
+            FINPROD_TYPE,
             'H01' REPO_TYPE,
-            CJSL TRADE_NUM,
-            QJCJJE TRADE_AMT,
-            YJLXZE INT_AMT,
-            SJSF HAPPEN_AMT,
-            HGDQJE HGDQJE,
-            YHS STAMP_FEE,
-            JSF JSF_AMT,
-            GHF GHF_AMT,
-            ZGF ZGF_AMT,
-            QSF SETTLE_FEE,
-            JYGF TRADE_FEE,
-            JYJ COMMISSION_AMT,
-            QTF OTHER_FEEAMT,
-            FYHJ TOTAL_TEEAMT
+            SUM(TRADE_NUM) TRADE_NUM,
+            SUM(TRADE_AMT) TRADE_AMT,
+            SUM(INT_AMT) INT_AMT,
+            SUM(HAPPEN_AMT) HAPPEN_AMT,
+            SUM(HGDQJE) HGDQJE,
+            SUM(STAMP_FEE) STAMP_FEE,
+            SUM(JSF_AMT) JSF_AMT ,
+            SUM(GHF_AMT) GHF_AMT,
+            SUM(ZGF_AMT) ZGF_AMT,
+            SUM(SETTLE_FEE) SETTLE_FEE,
+            SUM(TRADE_FEE) TRADE_FEE,
+            SUM(COMMISSION_AMT) COMMISSION_AMT,
+            SUM(OTHER_FEEAMT) OTHER_FEEAMT,
+            SUM(TOTAL_TEEAMT) TOTAL_TEEAMT
         FROM
+        (
+            SELECT
+                T4.CUSTOMER_ID,
+                WTBH INSTRUCTION_ID,
+                T2.ACCT_NO ACCOUT,
+                XWDM SEAT_NUMBER,
+                TO_DATE(T1.JYRQ,'yyyyMMdd') TRADE_DATE,
+                CASE
+                    WHEN T1.BZ = '0' THEN 'CNY'
+                    WHEN T1.BZ = '人民币' THEN 'CNY'
+                    WHEN T1.BZ = '1' THEN 'HKD'
+                    WHEN T1.BZ = '港币' THEN 'HKD'
+                    WHEN T1.BZ = '2' THEN 'USD'
+                    WHEN T1.BZ = '美元' THEN 'USD'
+                END CCY,
+                T5.TRADE_PLACE TRADE_MARKET,
+                CASE
+                    WHEN to_char(ZYDM) = '220131' then '03'
+                    WHEN to_char(ZYDM) = '债券回购初始融入' then '03'
+                    WHEN to_char(ZYDM) = '220132 '  then '04'
+                    WHEN to_char(ZYDM) = '债券回购初始融出 '  then '04'
+                    WHEN to_char(ZYDM) = '220143'  then 'T54'
+                    WHEN to_char(ZYDM) = '债券回购提前返回'  then 'T54'
+                    WHEN to_char(ZYDM) = '220144'  then 'T54'
+                    WHEN to_char(ZYDM) = '债券回购提前收取'  then 'T54'
+                    WHEN to_char(ZYDM) = '220147' then 'T95'
+                    WHEN to_char(ZYDM) = '债券回购续做返回' then 'T95'
+                    WHEN to_char(ZYDM) = '220148' then 'T95'
+                    WHEN to_char(ZYDM) = '债券回购续做收取' then 'T95'
+                    WHEN to_char(ZYDM) = '220133' then 'T07'
+                    WHEN to_char(ZYDM) = '债券回购购回返回' then 'T07'
+                    WHEN to_char(ZYDM) = '220134' then  'T07'
+                    WHEN to_char(ZYDM) = '债券回购购回收取' then  'T07'
+                ELSE NULL
+                END PS,
+                LSH TRADE_ID,
+                T5.SEC_ACCT_ID SEC_ACCT_ID,
+                JSFS SETTLEMEN_TYPE,
+                CJJJ PRICE,
+                DWYJLX UNIT,
+                CJQJ FULL_PRICE,
+                CASE
+                    WHEN HGDQR IS NOT NULL THEN TO_DATE(HGDQR, 'yyyyMMdd')
+                    ELSE NULL
+                END HGDQR,
+                CASE
+                    WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
+                    ELSE T3.FINPROD_MARKET_ID
+                END MARKET_ID,
+                CASE
+                    WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
+                    ELSE T3.FINPROD_ID
+                END FINPROD_ID,
+                CASE
+                    WHEN to_char(ZYDM) = '220131'  then  'F02'
+                    WHEN to_char(ZYDM) = '债券回购初始融入'  then  'F02'
+                    WHEN to_char(ZYDM) = '220132'  then 'F03'
+                    WHEN to_char(ZYDM) = '债券回购初始融出'  then 'F03'
+                    WHEN to_char(ZYDM) = '220143'  then  'F02'
+                    WHEN to_char(ZYDM) = '债券回购提前返回'  then  'F02'
+                    WHEN to_char(ZYDM) = '220144 '  then 'F03'
+                    WHEN to_char(ZYDM) = '债券回购提前收取 '  then 'F03'
+                    WHEN to_char(ZYDM) = '220147'  then  'F02'
+                    WHEN to_char(ZYDM) = '债券回购续做返回'  then  'F02'
+                    WHEN to_char(ZYDM) = '220148'  then 'F03'
+                    WHEN to_char(ZYDM) = '债券回购续做收取'  then 'F03'
+                    WHEN to_char(ZYDM) = '220133'  then  'F02'
+                    WHEN to_char(ZYDM) = '债券回购购回返回'  then  'F02'
+                    WHEN to_char(ZYDM) = '220134'  then 'F03'
+                    WHEN to_char(ZYDM) = '债券回购购回收取'  then 'F03'
+                    ELSE NULL
+                END FINPROD_TYPE,
+                CJSL TRADE_NUM,
+                QJCJJE TRADE_AMT,
+                YJLXZE INT_AMT,
+                SJSF HAPPEN_AMT,
+                HGDQJE HGDQJE,
+                YHS STAMP_FEE,
+                JSF JSF_AMT,
+                GHF GHF_AMT,
+                ZGF ZGF_AMT,
+                QSF SETTLE_FEE,
+                JYGF TRADE_FEE,
+                JYJ COMMISSION_AMT,
+                QTF OTHER_FEEAMT,
+                FYHJ TOTAL_TEEAMT
+            FROM
             INTERF_ZX_ZJGFLS T1
-        LEFT JOIN
+            LEFT JOIN
             STL_SEC_ACCT_INFO T5  ON T5. BOND_ID = T1.ZQZH
-        LEFT JOIN
+            LEFT JOIN
             STL_CAPACCT_INFO T2 ON T5.TRD_ACCT_ID = T2.ACCT_NO AND T5.TRD_ACCT_CCY= T2.CCY
-        INNER JOIN
+            INNER JOIN
             MST_SALE_DEPARTMENT	a ON T2.OWN_DEPT = a.SALE_DEPID AND ((T5.TRADE_PLACE = '03' and a.SH_SEATNO = T1.XWDM) OR (T5.TRADE_PLACE = '04' and a.SZ_SEATNO = T1.XWDM))
-        LEFT JOIN
+            LEFT JOIN
             STL_CAPACCT_INFO T7 ON T7.BUSI_ACCT_NO = T1.ZJZH
-        LEFT JOIN
+            LEFT JOIN
             FIN_PRODUCT T3 ON T3.FINPROD_MARKET_ID = T1.ZQDM ||DECODE(T5.TRADE_PLACE,'03','.SH','04','.SZ' )
-        LEFT JOIN
+            LEFT JOIN
             MST_SEAT T4 ON T4.SEAT_ID  = T1.XWDM
-        WHERE
+            WHERE
             T1.JYSC IN ('0','1','上海','深圳')
             AND EXISTS (
                 SELECT
-                    1
+                1
                 FROM
-                    STL_SEC_RECON_CONFIG T6
+                STL_SEC_RECON_CONFIG T6
                 WHERE
-                    T6.ZYBS = T1.ZYDM
-                    AND T1.ZYDM IS NOT NULL
-                    AND T1.ZYDM IN (
-                    '220131',
-                    '220132',
-                    '220144',
-                    '220143',
-                    '220148',
-                    '220147',
-                    '220134',
-                    '220133',
-                    '债券回购初始融入',
-                    '债券回购初始融出',
-                    '债券回购提前返回',
-                    '债券回购提前收取',
-                    '债券回购续做返回',
-                    '债券回购续做收取',
-                    '债券回购购回返回',
-                    '债券回购购回收取')
+                T6.ZYBS = T1.ZYDM
+                AND T1.ZYDM IS NOT NULL
+                AND to_char(T1.ZYDM) IN (
+                '220131',
+                '220132',
+                '220144',
+                '220143',
+                '220148',
+                '220147',
+                '220134',
+                '220133',
+                '债券回购初始融入',
+                '债券回购初始融出',
+                '债券回购提前返回',
+                '债券回购提前收取',
+                '债券回购续做返回',
+                '债券回购续做收取',
+                '债券回购购回返回',
+                '债券回购购回收取')
             )
             <if test="collect != null and collect.size()>0">
                 AND  T4.CUSTOMER_ID IN
@@ -1215,6 +1239,20 @@ WHERE
             <if test="execDate != null">
                 AND T1.JYRQ = #{execDate,jdbcType=VARCHAR}
             </if>
+            )temp
+        GROUP BY
+            CUSTOMER_ID,
+            INSTRUCTION_ID,
+            ACCOUT,
+            SEAT_NUMBER,
+            TRADE_DATE,
+            CCY,
+            TRADE_MARKET,
+            PS,
+            MARKET_ID,
+            FINPROD_ID,
+            FINPROD_TYPE,
+            SEC_ACCT_ID
     </select>
 
     <!--协议回购明细维度对账单-->

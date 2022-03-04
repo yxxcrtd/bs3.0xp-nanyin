@@ -3153,7 +3153,9 @@
             $("#price_" + currentTab).val(quotaPrice).trigger('blur').trigger('change');
         }
         else {
-            $("#entrustPrice_" + currentTab).val(quotaPrice).trigger('blur').trigger('change');
+            if($("#priceModel_" + currentTab).val()!='PRM03') {
+                $("#entrustPrice_" + currentTab).val(quotaPrice).trigger('blur').trigger('change');
+            }
         }
     }
 

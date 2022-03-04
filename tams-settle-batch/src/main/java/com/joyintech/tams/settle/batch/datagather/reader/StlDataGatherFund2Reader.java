@@ -10,28 +10,19 @@
 
 package com.joyintech.tams.settle.batch.datagather.reader;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.SettleBatchPara;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.settle.batch.datagather.dto.InvestTradeReaderDto;
+import com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto;
+import com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.SettleBatchPara;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListStl;
-import com.joyintech.tams.settle.batch.datagather.dto.InvestTradeReaderDto;
-import com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto;
-import com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 基金分红处理
@@ -71,24 +62,41 @@ public class StlDataGatherFund2Reader extends StlDataGatherReader {
         List<InvestTradeReaderDto> res = new ArrayList<InvestTradeReaderDto>();
         
         InvestTradeReaderDto investTradeReaderDto = new InvestTradeReaderDto();
-        
-        // 除权公告数据
+        investTradeReaderDto.setSettleTransDataList(new ArrayList<>());
+        // 除权公告数据（仅针对非货基的现金分红）
         List<SettleDelDealDetailDto> settleTransDataDelDtos = stlDataGatherMapper.selectFundDelSettleTransData(searchParam);
         if (settleTransDataDelDtos != null && settleTransDataDelDtos.size() > 0) {
 	        investTradeReaderDto.setSettleTransDataDelDtoList(settleTransDataDelDtos);
         }
-
         List<SettleTransDataDto> tempSettleTransDataDtos = stlDataGatherMapper.selectFundSettleTransData(searchParam);
         if(CollectionUtils.isNotEmpty(tempSettleTransDataDtos)) {
-            investTradeReaderDto.setSettleTransDataList(tempSettleTransDataDtos);
-
-            res.add(investTradeReaderDto);
+            for (SettleTransDataDto dto : tempSettleTransDataDtos) {
+                // GNS-872:参数传入sql中不能为空 modify by fuyongsheng 20220218 start
+                dto.setUnitCprice(StringUtil.isNotEmpty(dto.getUnitCprice())? dto.getUnitCprice() : new BigDecimal(0));
+                dto.setPrinAmt(StringUtil.isNotEmpty(dto.getPrinAmt())? dto.getPrinAmt() : new BigDecimal(0));
+                dto.setIntAmt(StringUtil.isNotEmpty(dto.getIntAmt())? dto.getIntAmt() : new BigDecimal(0));
+                dto.setFpriceAmt(StringUtil.isNotEmpty(dto.getFpriceAmt())? dto.getFpriceAmt() : new BigDecimal(0));
+                dto.setFragmentaryFunds(StringUtil.isNotEmpty(dto.getFragmentaryFunds())? dto.getFragmentaryFunds() : new BigDecimal(0));
+                dto.setTradeAmt(StringUtil.isNotEmpty(dto.getTradeAmt())? dto.getTradeAmt() : new BigDecimal(0));
+                // GNS-872:参数传入sql中不能为空 modify by fuyongsheng 20220218 end
+                if("Y".equals(dto.getIsHuobi())){
+                    investTradeReaderDto.getSettleTransDataList().addAll(stlDataGatherMapper.selectFundSettleTransData1(dto));
+                }else {
+                    investTradeReaderDto.getSettleTransDataList().addAll(stlDataGatherMapper.selectFundSettleTransData2(dto));
+                }
+            }
         }
+        res.add(investTradeReaderDto);
         return res;
     }
 
     @Override
     protected void setSearchParam(Map<String, Object> searchParam) {
+        // 业务类型
+    	List<String> busiTypeList = new ArrayList<String>();
+    	busiTypeList.add(DictCodeList.业务类型_货币基金交易_货基_类货基资产交易.getValue());
+    	busiTypeList.add(DictCodeList.业务类型_非货币基金交易_非货基_非类货基资产交易.getValue());
+        searchParam.put("busiTypeList", busiTypeList);
         // 交易方向列表
         searchParam.put("psList", Arrays.asList(DictCodeList.交易方向_现金分红.getValue(), DictCodeList.交易方向_红利再投.getValue()));
     }

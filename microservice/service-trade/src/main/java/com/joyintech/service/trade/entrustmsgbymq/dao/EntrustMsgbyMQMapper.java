@@ -84,8 +84,17 @@ public interface EntrustMsgbyMQMapper {
      * @since 1.0
      */
     EtrEntrust queryEtrEntrust(@Param("entrustId") String entrustId);
-    
-    
+
+    /**
+     * 根据委托代码查询委托信息
+     *
+     * @param entrustId 委托代码
+     * @return EtrEntrust
+     * @see
+     * @since 1.0
+     */
+    EtrEntrustAdd queryEtrEntrustAdd(@Param("entrustId") String entrustId);
+
     /**
      * 根据委托代码查询目标类型
      * 

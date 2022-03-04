@@ -245,6 +245,10 @@ public class ExchangeTransMatchRepo1Service extends ExchangeTransMatchRepoCommon
 		trdProductDeal.setUnitCprice(null);
 		// 交易本金
 		trdProductDeal.setPrinAmt(entrustDto.getMarchQty());
+		// GNS-847: 登录交易份额 modify by fuyongsheng 20220215 start
+		// 交易份额
+		trdProductDeal.setShareAmt(entrustDto.getMarchQty());
+		// GNS-847: 登录交易份额 modify by fuyongsheng 20220215 end
 		// 利息总额
 		trdProductDeal.setIntAmt(dealDto.getIntAmt());
 		// 全价总额

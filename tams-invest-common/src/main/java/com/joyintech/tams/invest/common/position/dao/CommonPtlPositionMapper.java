@@ -22,6 +22,11 @@ public interface CommonPtlPositionMapper {
 
 	BigDecimal getEtrFinishAmt(Map<String, Object> params);
 
+	// modify by etliu 20220227 start
+	// 广农商二阶段 GNS-953:【广农商场内清算】深交所协议回购 正/逆回购首期，手工交收-日终清结算后，头寸更新有误
+	BigDecimal getDayEndEtrFinishAmt(Map<String, Object> params);
+	// modify by etliu 20220227 end
+
 	List<EtrCashPositionFlow> selectEtrCashPositionFlowByEntrustId(Map<String, Object> properties);
 
 	List<EtrSecPositionFlow> selectEtrSecPositionFlowByEntrustId(Map<String, Object> properties);

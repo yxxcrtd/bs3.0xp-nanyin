@@ -1,10 +1,7 @@
 package com.joyintech.service.trade.manualsettle.dto;
 
 import com.joyintech.framework.export.paginator.domain.ITableRow;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.TrdManualSettleInfo;
-import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.util.Date;
@@ -39,15 +36,41 @@ public class ManualSettleDto extends TrdManualSettleInfo implements ITableRow, P
     private String finprodMarketId;
 
     /**
+     * 质押券市场代码（质押式回购）
+     */
+    private String pledgeIdAbbr;
+
+    /**
+     * 原质押券市场代码（质押式回购）
+     */
+    private String bPledgeIdAbbr;
+
+    /**
      * 金融产品全称
      */
     private String finprodName;
+
+    /**
+     * 金融产品类型
+     */
+    private String finprodType2;
+
     /**
      * 组合名称
      */
     private String portfolioName;
 
     private String counterName;
+
+    private String rownum;
+
+    public String getRownum() {
+        return rownum;
+    }
+
+    public void setRownum(String rownum) {
+        this.rownum = rownum;
+    }
 
     /**
      * 选择数据
@@ -168,6 +191,30 @@ public class ManualSettleDto extends TrdManualSettleInfo implements ITableRow, P
 
     public void setSeqNo(String seqNo) {
         this.seqNo = seqNo;
+    }
+
+    public String getPledgeIdAbbr() {
+        return pledgeIdAbbr;
+    }
+
+    public void setPledgeIdAbbr(String pledgeIdAbbr) {
+        this.pledgeIdAbbr = pledgeIdAbbr;
+    }
+
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
+    }
+
+    public String getbPledgeIdAbbr() {
+        return bPledgeIdAbbr;
+    }
+
+    public void setbPledgeIdAbbr(String bPledgeIdAbbr) {
+        this.bPledgeIdAbbr = bPledgeIdAbbr;
     }
 }
 

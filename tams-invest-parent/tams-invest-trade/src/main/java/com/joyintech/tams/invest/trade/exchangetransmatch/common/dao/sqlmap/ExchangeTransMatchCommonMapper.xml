@@ -96,13 +96,31 @@
            AND A.DEAL_DATE = B.DEAL_DATE
            AND A.SEAT_NUMBER = B.SEAT_NUMBER
            AND A.PS = B.PS
-           AND A.FINPROD_TYPE2 = A.FINPROD_TYPE2
+           AND A.FINPROD_TYPE2 = B.FINPROD_TYPE2
         <where>
             B.SEQ_ID = #{seqId,jdbcType=VARCHAR}
             <if test="tradeIdRaw != null and tradeIdRaw !=''">
                 AND A.CJBH = #{tradeIdRaw,jdbcType=VARCHAR}
             </if>
         </where>
+        <!--GNS-902:配股配债APPLY_TRADE_ID可能为空 modify by fuyongsheng 20220226 start-->
+        UNION
+        select
+        A.*
+        from SETTLE_TRANS_DATA A
+        INNER JOIN SETTLE_TRANS_DATA_TOTAL B
+        ON A.DEAL_DATE = B.DEAL_DATE
+        AND A.SEAT_NUMBER = B.SEAT_NUMBER
+        AND A.PS = B.PS
+        AND A.FINPROD_TYPE2 = B.FINPROD_TYPE2
+        <where>
+            B.SEQ_ID = #{seqId,jdbcType=VARCHAR}
+            AND A.PS IN ('T46','T97')
+            <if test="tradeIdRaw != null and tradeIdRaw !=''">
+                AND A.CJBH = #{tradeIdRaw,jdbcType=VARCHAR}
+            </if>
+        </where>
+        <!--GNS-902:配股配债APPLY_TRADE_ID可能为空 modify by fuyongsheng 20220226 end-->
     </select>
 
     <delete id="deleteSettleTransDataTotalMatch" parameterType="java.lang.String" >
@@ -177,10 +195,12 @@
                 A.TG_DATA_STATUS = #{tgDataStatus}
                AND D.SEQ_NO = #{seqNo}
                AND D.ENTRUNST_TRADE_ID = #{entrunstId}
-               AND D.MATCH_CLASS = #{matchClass}
+                <if test="matchClass != null and matchClass !=''">
+                    AND D.MATCH_CLASS = #{matchClass}
+                </if>
             union  all
             select
-            'Y'   isTotalDeal,
+            'N'   isTotalDeal,
             E.FINPROD_TYPE2 finprodType2,
             E.TRADE_ID tradeIdTgDetail,
             C.PS ps,
@@ -198,7 +218,7 @@
             INNER JOIN SETTLE_TRANS_DATA_TOTAL_MATCH D
                 ON C.SEQ_ID = D.SEQ_NO
             INNER JOIN TRD_PRODUCT_DEAL E
-                ON  E.TOTLE_TRADE_ID = A.TRADE_ID_TG
+                ON  E.TRADE_ID = A.TRADE_ID_TG
             INNER JOIN TRD_PRODUCT_DEAL_ADD F
                 ON E.TRADE_ID = F.TRADE_ID
                 AND F.ENTRUST_ID = D.ENTRUNST_TRADE_ID
@@ -206,7 +226,67 @@
                 A.TG_DATA_STATUS = #{tgDataStatus}
                 AND D.SEQ_NO = #{seqNo}
                 AND D.ENTRUNST_TRADE_ID = #{entrunstId}
+                <if test="matchClass != null and matchClass !=''">
+                    AND D.MATCH_CLASS = #{matchClass}
+                </if>
+            <!--GNS-902、GNS-914:配股配债 APPLY_TRADE_ID可能为空,特殊处理 modify by fuyongsheng 20220226 start-->
+            union
+            select
+            'Y'   isTotalDeal,
+            E.FINPROD_TYPE2 finprodType2,
+            E.TRADE_ID tradeIdTgDetail,
+            C.PS ps,
+            C.SEQ_ID seqTotalId,
+            F.PORTFOLIO_ID portfolioId,
+            A.*
+            from SETTLE_TRANS_TG_MAPPING A
+            INNER JOIN SETTLE_TRANS_DATA B
+            ON A.TRADE_ID = B.TRADE_ID
+            INNER JOIN SETTLE_TRANS_DATA_TOTAL C
+            ON B.DEAL_DATE = C.DEAL_DATE
+            AND B.SEAT_NUMBER = C.SEAT_NUMBER
+            INNER JOIN SETTLE_TRANS_DATA_TOTAL_MATCH D
+            ON C.SEQ_ID = D.SEQ_NO
+            INNER JOIN TRD_PRODUCT_DEAL E
+            ON  E.TOTLE_TRADE_ID = A.TRADE_ID_TG
+            INNER JOIN TRD_PRODUCT_DEAL_ADD F
+            ON E.TRADE_ID = F.TRADE_ID
+            AND F.ENTRUST_ID = D.ENTRUNST_TRADE_ID
+            WHERE
+            A.TG_DATA_STATUS = #{tgDataStatus}
+            AND D.SEQ_NO = #{seqNo}
+            AND D.ENTRUNST_TRADE_ID = #{entrunstId}
+            AND D.MATCH_CLASS = #{matchClass}
+            UNION
+            select
+            'Y'   isTotalDeal,
+            E.FINPROD_TYPE2 finprodType2,
+            E.TRADE_ID tradeIdTgDetail,
+            C.PS ps,
+            C.SEQ_ID seqTotalId,
+            F.PORTFOLIO_ID portfolioId,
+            A.*
+            from SETTLE_TRANS_TG_MAPPING A
+            INNER JOIN SETTLE_TRANS_DATA B
+            ON A.TRADE_ID = B.TRADE_ID
+            INNER JOIN SETTLE_TRANS_DATA_TOTAL C
+            ON B.DEAL_DATE = C.DEAL_DATE
+            AND B.SEAT_NUMBER = C.SEAT_NUMBER
+            INNER JOIN SETTLE_TRANS_DATA_TOTAL_MATCH D
+            ON C.SEQ_ID = D.SEQ_NO
+            INNER JOIN TRD_PRODUCT_DEAL E
+            ON  E.TOTLE_TRADE_ID = A.TRADE_ID_TG
+            INNER JOIN TRD_PRODUCT_DEAL_ADD F
+            ON E.TRADE_ID = F.TRADE_ID
+            AND F.ENTRUST_ID = D.ENTRUNST_TRADE_ID
+            WHERE
+            A.TG_DATA_STATUS = #{tgDataStatus}
+            AND D.SEQ_NO = #{seqNo}
+            AND D.ENTRUNST_TRADE_ID = #{entrunstId}
+            <if test="matchClass != null and matchClass !=''">
                 AND D.MATCH_CLASS = #{matchClass}
+            </if>
+        <!--GNS-902、GNS-914:配股配债 APPLY_TRADE_ID可能为空,特殊处理 modify by fuyongsheng 20220226 end-->
     </select>
 
     <select id="getEntrustDetailList" resultType="com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDetailDto">

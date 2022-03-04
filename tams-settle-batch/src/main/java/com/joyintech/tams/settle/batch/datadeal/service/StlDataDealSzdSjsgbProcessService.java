@@ -45,12 +45,19 @@ public class StlDataDealSzdSjsgbProcessService {
         Map<String, FundInfoDto> fundInfoDtoMap = settleCommonService.getAllFundInfoDto();
         StlDownDataDealWriteDto stlDownDataDealWriteDto = new StlDownDataDealWriteDto();
         if (stlDownDataDealOperatorDto != null && stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto() != null &&
-                stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getSzdTzxxList() != null &&
-                stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getSzdTzxxList().size() > 0) {
-            
+                // GNS-872:判断对象错误 modify by fuyongsheng 20220215 start
+                // stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getSzdTzxxList() != null &&
+                // stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getSzdTzxxList().size() > 0) {
+                stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getSzdSjsgbList() != null &&
+                stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getSzdSjsgbList().size() > 0) {
+            // GNS-872:判断对象错误 modify by fuyongsheng 20220215 end
+
             List<MstFundBonusNotice> mstFundBonusNoticeArrayList = new ArrayList<MstFundBonusNotice>();
             for (SzdSjsgb szdSjsgb : stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getSzdSjsgbList()) {
-                if (StringUtil.equals(szdSjsgb.getGblb(), DictCodeListStl.广播类别_权益分派方案)){
+                // GNS-872:修改判断对象 modify by fuyongsheng 20220215 start
+                // if (StringUtil.equals(szdSjsgb.getGblb(), DictCodeListStl.广播类别_权益分派方案)){
+                if (StringUtil.equals(szdSjsgb.getGblb(), DictCodeListStl.广播类别_权益分派方案.getValue())){
+                    // GNS-872:修改判断对象 modify by fuyongsheng 20220215 end
                     String finprodId = DictCodeListExt1.金融产品类型_投管用_基金.getValue() + GlobalConstant.UNDER_LINE + szdSjsgb.getGbdm1() + ".SZ";
                     FundInfoDto fundInfoDto = fundInfoDtoMap.get(finprodId);
                     if(null == fundInfoDto) {
@@ -58,7 +65,10 @@ public class StlDataDealSzdSjsgbProcessService {
                     }
                     MstFundBonusNotice mstFundBonusNotice = new MstFundBonusNotice();
                     //基金代码
-                    mstFundBonusNotice.setFundId(szdSjsgb.getGbdm1()+".SH");
+                    // GNS-872:交易场所错误 modify by fuyongsheng 20220215 start
+                    // mstFundBonusNotice.setFundId(szdSjsgb.getGbdm1()+".SH");
+                    mstFundBonusNotice.setFundId(szdSjsgb.getGbdm1()+".SZ");
+                    // GNS-872:交易场所错误 modify by fuyongsheng 20220215 end
                     //权益登记日
                     mstFundBonusNotice.setRegDate(szdSjsgb.getGbrq1());
                     //除权日

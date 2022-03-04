@@ -4,6 +4,7 @@ import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.EtrCashPosition;
 import com.joyintech.tams.common.base.entity.EtrSecPosition;
@@ -13,6 +14,11 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.settle.batch.datadeal.constant.StlDataDealProcessConstant;
 import com.joyintech.tams.settle.batch.datadeal.service.StlDataDealProcessCommonService;
 import com.joyintech.tams.settle.batch.dealrevoke.dao.InvestDealRevokeMapper;
@@ -57,6 +63,9 @@ public class InvestDealRevokeService {
     @Autowired
     private StlDataDealProcessCommonService stlDataDealProcessCommonService;
 
+    @Autowired
+    private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
+
 
     private Map<String, Object> createCommonParam(Date tradeDate, List<String> portfolioIdList) {
         Map<String, Object> param = new HashMap<>();
@@ -82,19 +91,28 @@ public class InvestDealRevokeService {
         busiTypeList.add(DictCodeListExt2.共通业务类型_可转债申购交易.getValue());
         // GZYHTZJY-1142: 对债券债转股交易进行撤销 fuyongsheng add start
         busiTypeList.add(DictCodeListExt2.共通业务类型_可转债转股交易.getValue());
+        param.put("busiTypeList", busiTypeList);
         // GZYHTZJY-1142: 对债券债转股交易进行撤销 fuyongsheng add end
         param.put("busiTypeList", busiTypeList);
         //增加协议回购中途换券撤销、竞价回购的入库、出库
         param.put("tradeMarketList",Arrays.asList(DictCodeListExt1.交易场所_上海证券交易所.getValue(),DictCodeListExt1.交易场所_深圳证券交易所.getValue()));
         param.put("psList", Arrays.asList(/*DictCodeList.交易方向_买入.getValue()
-                ,*/DictCodeList.交易方向_卖出.getValue(),DictCodeList.交易方向_行权_回售.getValue(),/*DictCodeList.交易方向_申购确认.getValue()
-                ,DictCodeList.交易方向_申购.getValue(),*/DictCodeListExt3.交易方向_债转股.getValue(),DictCodeListExt3.交易方向_配债.getValue()
+                ,*/DictCodeList.交易方向_卖出.getValue(),DictCodeList.交易方向_行权_回售.getValue(),DictCodeList.交易方向_申购确认.getValue()
+                ,DictCodeList.交易方向_申购.getValue(),DictCodeListExt3.交易方向_债转股.getValue(),DictCodeListExt3.交易方向_配债.getValue()
                 // ZGZGST-4219: 对债券存续期交易进行撤销 fuyongsheng add start
                 ,DictCodeList.交易方向_收息到账.getValue(),DictCodeList.交易方向_还本到账.getValue()
                 // ZGZGST-4219: 对债券存续期交易进行撤销 fuyongsheng add end
                 // GZYHTZJY-1142: 对债券债转股交易进行撤销 fuyongsheng add start
                 ,DictCodeListExt3.交易方向_债转股.getValue()
                 // GZYHTZJY-1142: 对债券债转股交易进行撤销 fuyongsheng add end
+                // GNS-929:增加质押券出入库方向 modify by fuyongsheng 20220224 start
+                ,DictCodeListExt3.交易方向_质押券入库.getValue()
+                ,DictCodeListExt3.交易方向_质押券出库.getValue()
+                // GNS-929:增加质押券出入库方向 modify by fuyongsheng 20220224 end
+                // modify by etliu 20220228 start
+                // 广农商二阶段 GNS-976:【广农商场内清算】场内债券存续期-行权赎回交易重复跑批时未对原交易数据进行撤销，并处理相关头寸
+                ,DictCodeList.交易方向_行权_赎回.getValue()
+                // modify by etliu 20220228 end
         ));
         param.put("isBond", DictCodeList.是否_是.getValue());
         param.put("PS_01", DictCodeList.交易方向_买入.getValue());
@@ -106,17 +124,22 @@ public class InvestDealRevokeService {
 
         param.put("psList",  Arrays.asList(DictCodeList.交易方向_上市流通.getValue()));
         param.put("busiType", DictCodeList.共通业务类型_债券类资产交易.getValue());
-        String calendarId = CacheUtil.getSysParam(StlDataDealProcessConstant.STL_DOWNDATA_DEAL_SHJYS_CALID);
-        Date shNextTradeDate = stlDataDealProcessCommonService.getNextWorkDay(tradeDate,calendarId);
-        param.put("dealDate", shNextTradeDate);
-        param.put("dealDateStr", DateUtil.format(shNextTradeDate));
+        // GNS-957:上市流通日期取当天 modify by fuyongsheng 20220224 start
+        // String calendarId = CacheUtil.getSysParam(StlDataDealProcessConstant.STL_DOWNDATA_DEAL_SHJYS_CALID);
+        // Date shNextTradeDate = stlDataDealProcessCommonService.getNextWorkDay(tradeDate,calendarId);
+        // param.put("dealDate", shNextTradeDate);
+        // param.put("dealDateStr", DateUtil.format(shNextTradeDate));
+        param.put("dealDate", tradeDate);
+        param.put("dealDateStr", DateUtil.format(tradeDate));
         param.put("tradeMarketList",Arrays.asList(DictCodeListExt1.交易场所_上海证券交易所.getValue()));
         // 上交所上市流通
         List<String> shltTotalTradeIdTg03Ms = investDealRevokeMapper.selectSsltTotalTradeIdTgM(param);
-        calendarId = CacheUtil.getSysParam(StlDataDealProcessConstant.STL_DOWNDATA_DEAL_SZJYS_CALID);
-        Date szNextTradeDate = stlDataDealProcessCommonService.getNextWorkDay(tradeDate,calendarId);
-        param.put("dealDate", szNextTradeDate);
-        param.put("dealDateStr", DateUtil.format(szNextTradeDate));
+        //        calendarId = CacheUtil.getSysParam(StlDataDealProcessConstant.STL_DOWNDATA_DEAL_SZJYS_CALID);
+//        Date szNextTradeDate = stlDataDealProcessCommonService.getNextWorkDay(tradeDate,calendarId);
+//        param.put("dealDate", szNextTradeDate);
+//        param.put("dealDateStr", DateUtil.format(szNextTradeDate));
+        param.put("dealDate", tradeDate);
+        param.put("dealDateStr", DateUtil.format(tradeDate));
         param.put("tradeMarketList",Arrays.asList(DictCodeListExt1.交易场所_深圳证券交易所.getValue()));
         // 深交所上市流通
         List<String> shltTotalTradeIdTg04Ms = investDealRevokeMapper.selectSsltTotalTradeIdTgM(param);
@@ -151,12 +174,11 @@ public class InvestDealRevokeService {
 //        param.put("busiType", DictCodeList.共通业务类型_质押式回购存续期.getValue());
         param.put("psDurList", Arrays.asList(DictCodeList.交易方向_到期续做.getValue(), DictCodeList.交易方向_到期.getValue()
                 , DictCodeListExt3.交易方向_投资端_提前终止.getValue(),DictCodeListExt3.交易方向_中途换券.getValue()
-                ,DictCodeList.交易方向_收息到账.getValue(),DictCodeList.交易方向_还本到账.getValue()
-        ));
+                ,DictCodeList.交易方向_收息到账.getValue(),DictCodeList.交易方向_还本到账.getValue()));
         param.put("tgBusiTypeList",Arrays.asList(DictCodeListExt3.平安业务类型_债券质押式逆回购.getValue(),DictCodeListExt3.平安业务类型_债券质押式正回购.getValue()
-                ,DictCodeListExt1.平安业务类型_正回购到期.getValue(),DictCodeListExt1.平安业务类型_逆回购到期.getValue()
-        ));
+                ,DictCodeListExt1.平安业务类型_正回购到期.getValue(),DictCodeListExt1.平安业务类型_逆回购到期.getValue()));
         param.put("isRepoFund",DictCodeList.是否_是.getValue());
+        param.put("tradeMarketList",Arrays.asList(DictCodeListExt1.交易场所_上海证券交易所.getValue(),DictCodeListExt1.交易场所_深圳证券交易所.getValue()));
         return investDealRevokeMapper.selectTotalTradeIdTgM(param);
     }
 
@@ -170,11 +192,11 @@ public class InvestDealRevokeService {
         Map<String, Object> param = createCommonParam(tradeDate, portfolioIdList);
         param.put("finprodType2List", Arrays.asList(DictCodeListExt1.金融产品类型_投管用_股票.getValue()));
         param.put("tradeMarketList",Arrays.asList(DictCodeListExt1.交易场所_上海证券交易所.getValue(),DictCodeListExt1.交易场所_深圳证券交易所.getValue()));
-         //AND A.交易方向 IN (交易方向_买入，交易方向_卖出，交易方向_申购，交易方向_申购确认，交易方向_上市流通）
+        //AND A.交易方向 IN (交易方向_买入，交易方向_卖出，交易方向_申购，交易方向_申购确认，交易方向_上市流通）
         param.put("psSharsList",Arrays.asList(DictCodeList.交易方向_买入.getValue(),DictCodeList.交易方向_卖出.getValue(),DictCodeList.交易方向_申购.getValue(),
-                DictCodeList.交易方向_申购确认.getValue()));
+                DictCodeList.交易方向_申购确认.getValue(), DictCodeListExt2.交易方向_配股.getValue()));
         param.put("psSharsTwoList",Arrays.asList(DictCodeList.交易方向_买入.getValue(),DictCodeList.交易方向_卖出.getValue(),DictCodeList.交易方向_申购.getValue(),
-                DictCodeList.交易方向_申购确认.getValue()));
+                DictCodeList.交易方向_申购确认.getValue(), DictCodeListExt2.交易方向_配股.getValue()));
         return investDealRevokeMapper.selectTradeIdTgM(param);
     }
 
@@ -195,17 +217,23 @@ public class InvestDealRevokeService {
 
         param.put("psList",  Arrays.asList(DictCodeList.交易方向_上市流通.getValue()));
         param.put("busiType", DictCodeListExt2.共通业务类型_股票投资交易.getValue());
-        String calendarId = CacheUtil.getSysParam(StlDataDealProcessConstant.STL_DOWNDATA_DEAL_SHJYS_CALID);
-        Date shNextTradeDate = stlDataDealProcessCommonService.getNextWorkDay(tradeDate,calendarId);
-        param.put("dealDate", shNextTradeDate);
-        param.put("dealDateStr", DateUtil.format(shNextTradeDate));
+        // GNS-957:上市流通日期取当天 modify by fuyongsheng 20220224 start
+//        String calendarId = CacheUtil.getSysParam(StlDataDealProcessConstant.STL_DOWNDATA_DEAL_SHJYS_CALID);
+//        Date shNextTradeDate = stlDataDealProcessCommonService.getNextWorkDay(tradeDate,calendarId);
+//        param.put("dealDate", shNextTradeDate);
+//        param.put("dealDateStr", DateUtil.format(shNextTradeDate));
+        param.put("dealDate", tradeDate);
+        param.put("dealDateStr", DateUtil.format(tradeDate));
         param.put("tradeMarketList",Arrays.asList(DictCodeListExt1.交易场所_上海证券交易所.getValue()));
         // 上交所上市流通
         List<String> shltTotalTradeIdTg03Ms = investDealRevokeMapper.selectSsltTotalTradeIdTgM(param);
-        calendarId = CacheUtil.getSysParam(StlDataDealProcessConstant.STL_DOWNDATA_DEAL_SZJYS_CALID);
-        Date szNextTradeDate = stlDataDealProcessCommonService.getNextWorkDay(tradeDate,calendarId);
-        param.put("dealDate", szNextTradeDate);
-        param.put("dealDateStr", DateUtil.format(szNextTradeDate));
+        //        calendarId = CacheUtil.getSysParam(StlDataDealProcessConstant.STL_DOWNDATA_DEAL_SZJYS_CALID);
+//        Date szNextTradeDate = stlDataDealProcessCommonService.getNextWorkDay(tradeDate,calendarId);
+//        param.put("dealDate", szNextTradeDate);
+//        param.put("dealDateStr", DateUtil.format(szNextTradeDate));
+        param.put("dealDate", tradeDate);
+        param.put("dealDateStr", DateUtil.format(tradeDate));
+        // GNS-957:上市流通日期取当天 modify by fuyongsheng 20220224 end
         param.put("tradeMarketList",Arrays.asList(DictCodeListExt1.交易场所_深圳证券交易所.getValue()));
         // 深交所上市流通
         List<String> shltTotalTradeIdTg04Ms = investDealRevokeMapper.selectSsltTotalTradeIdTgM(param);
@@ -276,6 +304,14 @@ public class InvestDealRevokeService {
         investDealRevokeMapper.deletePtlSecPositionFlow(param);
         investDealRevokeMapper.deleteEtrCashPositionFlow(param);
         investDealRevokeMapper.deleteEtrSecPositionFlow(param);
+
+        if(!CollectionUtils.isEmpty(orderIds)){
+            //删除标准券入出库表
+            investDealRevokeMapper.deleteTrdStasecFlow(param);
+            //删除标准券入出库明细表
+            investDealRevokeMapper.deleteTrdStasecFlowDetail(param);
+        }
+
         // add 日间指令流水删除 20210817 start
         investDealRevokeMapper.deleteEtrCashPositionFlowByTradeId(param);
         // add end
@@ -451,10 +487,10 @@ public class InvestDealRevokeService {
                          }else if ("PSVALUE".equalsIgnoreCase(i.getKey())) {
                             psvalue = i.getValue();
                          }
-                         if (totalkey != null) {
-                             map.put(totalkey, psvalue);
-                         }
                        }
+                      if (totalkey != null) {
+                          map.put(totalkey, psvalue);
+                      }
                    }else if( StringUtil.equals(param.get("isTotal"),"02")){
                        String tradekey = null;
                        String psvalue = null;
@@ -464,10 +500,10 @@ public class InvestDealRevokeService {
                          }else if ("PSVALUE".equalsIgnoreCase(i.getKey())) {
                               psvalue = i.getValue();
                           }
-                           if (tradekey != null) {
-                               map.put(tradekey, psvalue);
-                           }
                         }
+                      if (tradekey != null) {
+                          map.put(tradekey, psvalue);
+                      }
                     }
                  }
             });
@@ -494,4 +530,69 @@ public class InvestDealRevokeService {
     public void deletePtlCashPositionFlow(List<String> totalTradeIds){
         investDealRevokeMapper.deletePtlCashPositionFlowByTradeIds(totalTradeIds);
     }
+
+    public List<PtlSecPositionFlowDto> getPtlSecPositionFlowsByTradeIds(List<String> tradeIds){
+        return investDealRevokeMapper.getPtlSecPositionFlowsByTradeIds(tradeIds);
+    }
+
+    public List<EtrSecPositionFlowDto> getEtrSecPositionFlowsByTradeIds(List<String> tradeIds){
+        return investDealRevokeMapper.getEtrSecPositionFlowsByTradeIds(tradeIds);
+    }
+
+    public void deleteZyTrdStasecFlows(List<String> tradeIds){
+        if(CollectionUtils.isEmpty(tradeIds)){
+            return;
+        }
+        investDealRevokeMapper.deleteZyTrdStasecFlows(tradeIds);
+    };
+
+    public void deleteZyTrdStasecFlowDetails(List<String> tradeIds){
+        if(CollectionUtils.isEmpty(tradeIds)){
+            return;
+        }
+        investDealRevokeMapper.deleteZyTrdStasecFlowDetails(tradeIds);
+    };
+
+
+    /**
+     * tradeIds
+     * @param tradeIds
+     */
+    public void executeSecPositionFlow(List<String> tradeIds){
+        // 组合持仓
+        List<PtlSecPositionFlowDto> ptlSecPositionFlows = this.getPtlSecPositionFlowsByTradeIds(tradeIds);
+        for(PtlSecPositionFlowDto ptlSecPositionFlow : ptlSecPositionFlows){
+            ptlSecPositionFlow.setSeqno(IDGenerator.generate());
+            ptlSecPositionFlow.setAmount(ptlSecPositionFlow.getAmount().negate());
+            ptlSecPositionFlow.setTradeId(ptlSecPositionFlow.getTradeId() + "R");
+            basePtlSecPositionInfoService.inertSecPositionFlow(ptlSecPositionFlow);
+        }
+        // 指令持仓
+        List<EtrSecPositionFlowDto> etrSecPositionFlows = this.getEtrSecPositionFlowsByTradeIds(tradeIds);
+        for(EtrSecPositionFlowDto etrSecPositionFlow : etrSecPositionFlows){
+            etrSecPositionFlow.setSeqno(IDGenerator.generate());
+            etrSecPositionFlow.setAmount(etrSecPositionFlow.getAmount().negate());
+            etrSecPositionFlow.setTradeId(etrSecPositionFlow.getTradeId() + "R");
+        }
+        EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+        etrPositionHoldDto.setPtlSecPositionFlows(etrSecPositionFlows);
+        etrPositionHoldDto.setDealEtr(true);
+        EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+    }
+
+    // modify by etliu 20220227 start
+    // 广农商二阶段 GNS-963:【广农商场内清算】协议回购上交所存续期（解除质押、到期购回、到期续做、提前购回）指令提交后，指令持仓更新不对
+    /**
+     * 删除日间生成的回购交易类金融产品数据
+     * @param dealDate
+     */
+    public void deleteDayFinTradeProductData(Date dealDate) {
+        Map<String, Object> paraMap = new HashMap<>();
+        paraMap.put("dealDate", dealDate);
+        investDealRevokeMapper.deleteDayFinTradeProduct(paraMap);
+        investDealRevokeMapper.deleteDayFinTradeProductAdd(paraMap);
+        investDealRevokeMapper.deleteDayFinProductType(paraMap);
+        investDealRevokeMapper.deleteDayFinDealPledge(paraMap);
+    }
+    // modify by etliu 20220227 end
 }

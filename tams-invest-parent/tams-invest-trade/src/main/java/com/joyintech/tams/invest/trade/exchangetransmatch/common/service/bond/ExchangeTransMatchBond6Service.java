@@ -111,6 +111,10 @@ public class ExchangeTransMatchBond6Service extends ExchangeTransMatchBondCommon
 
         trdProductDeal.setRemark("数据清算自动处理");
 
+        // GNS-922: modify by fuyongsheng 20220220 start
+        trdProductDeal.setCcy(dealDto.getCcy());
+        // GNS-922: modify by fuyongsheng 20220220 end
+
         return trdProductDeal;
     }
 

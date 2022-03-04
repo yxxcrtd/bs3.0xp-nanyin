@@ -87,7 +87,10 @@
         LEFT JOIN
             FIN_PRODUCT_TYPE fpt ON ssr.FINPROD_ID = fpt.FINPROD_ID
         LEFT JOIN
-            T_INSTRUMENT ins ON ssr.FINPROD_ID = ins.STOCK_CODE
+            T_INSTRUMENT ins ON ssr.FINPROD_ID = ins.STOCK_CODE AND
+                CASE WHEN ssr.TRADE_MARKET = #{TRADE_MARKET_03} THEN 'SH'
+                WHEN ssr.TRADE_MARKET = #{TRADE_MARKET_04} THEN 'SZ'
+                END = ins.STOCK_CODE
         WHERE
             1=1
             <if test="accountList != null and accountList.size() > 0">
@@ -1048,7 +1051,7 @@
         ) table2
     </select>
     <select id="selectPage1" resultType="com.joyintech.service.basicdata.dayendaccount.dto.DayEndAccountDto">
-        SELECT #{parentId} parentInfo,
+        SELECT distinct #{parentId} parentInfo,
                null childInfo,
                p1.PORTFOLIO_ID   portfolioId,
                p3.PORTFOLIO_NAME portfolioName,

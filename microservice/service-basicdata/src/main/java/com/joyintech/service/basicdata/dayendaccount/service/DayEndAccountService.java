@@ -123,6 +123,7 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
         pageParam.put("BUSI_SCENE_CALSS_0902RB01", DictCodeListStl.业务场景分类明细_债券协议逆回购_首期_买入.getValue());
         pageParam.put("BUSI_SCENE_CALSS_0902RB04", DictCodeListStl.业务场景分类明细_债券协议逆回购_到期续作.getValue());
         pageParam.put("TRADE_MARKET_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        pageParam.put("TRADE_MARKET_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
         Page<DayEndAccountDto> result = super.queryForPage(page, length, () -> dayEndAccountMapper.findAccountInfo(pageParam));
         for(DayEndAccountDto dto:result.getRoot()){
             if(StringUtil.isNotEmpty(dto.getFinprodId())){
@@ -610,6 +611,11 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
                 dealDetailList.add(dealDetail);
             }
         }
+        // GNS-847:资产类型优先取明细数据的 modify by fuyongsheng 20220215 start
+        if(CollectionUtils.isNotEmpty(reconDealInfoList) && CollectionUtils.isNotEmpty(dealDetailList)){
+            reconDealInfoList.forEach(deal->deal.setFinprodType(dealDetailList.get(0).getFinprodType2()));
+        }
+        // GNS-847:资产类型优先取明细数据的 modify by fuyongsheng 20220215 e
         dto.setReconDealInfoList(reconDealInfoList);
         dto.setDealDetailList(dealDetailList);
         return dto;
@@ -723,7 +729,11 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
         if(StringUtil.isNotEmpty(param.get("parentId")) && !StringUtil.equals(param.get("parentId"),"root")) {
             String param1 = (String) param.get("parentId");
             String[] s = param1.split(",");
-            if(!"null".equals(s[0]))return new Page<>();
+            if(!"null".equals(s[0])){
+                Page page1 = new Page();
+                page1.setRoot(new ArrayList());
+                return page1;
+            }
 
             if("1".equals(s[1])){
                 param.put("busiAcctNo",s[2]);
