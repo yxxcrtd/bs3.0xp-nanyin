@@ -12,7 +12,7 @@
     }
 
     function getBussCombDistribtTableParams() {
-        var ebcd = entity_BussCombDistribtList || [];
+        var ebcd = entity_BussCombDistribtList || [{}];
         if (ebcd.length > 0) {
             for (var index in ebcd) {
                 ebcd[index].entrustNum = ebcd[index].entrustNum / 10000;
@@ -24,6 +24,7 @@
     }
 
     var colsCombDistribt = [
+        {field:'operation', width:20, title: 'SysCommon.operation', sortable:false, type: 'action', buttons: ['delt']},
         {
             /* 组合代码 */
             field: 'portfolioId',
@@ -171,56 +172,84 @@
         searchOnInit: true,
         checkbox: false,
         height: 290,
+        addbtn: true,
+        done:function(){
+            this.bind('click', '.delt', function(data, index) {
+                var allRow = table.getAllRows();
+                if(allRow.length > 1) {
+                    table.deleteRow(index);
+                }else {
+                    Joyin.error("至少要保留一个组合");
+                }
+            });
+        },
         beforeEditCell: function(preVal, field, rowData) {
-            if(field == 'busiModelStr') {
+            if(field === 'busiModelStr') {
                 if(ps == 'T03' || ps == 'T02') return false;
             }
             return true;
         },
         editCell: function (value, data, field, cell, column) {
             if (field == 'portfolioId') {
+                var allRow = table.getAllRows();
+                var exist = 0;
+                $.each(allRow,function (index,item) {
+                    if(value == item.portfolioId) {
+                        exist = exist + 1;
+                    }
+                })
+                if(exist > 1) {
+                    Joyin.error(value+"组合已经存在,不可以重复选择");
+                    data.portfolioId = null;
+                    table.renderRow(data.LAY_TABLE_INDEX, data);
+                    return;
+                }
                 var arr = [];
                 var param = {}
                 arr.push(value);
                 param.portfolioIdList = arr;
                 Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/queryPositionInfo', param, function (result) {
-                    if (result.data[0].amount && "--" == result.data[0].amount) {
-                        data.proAvailableCash = 0;
-                    } else {
-                        data.proAvailableCash = result.data[0].amount;
+                    if(result.data) {
+                        if (result.data[0].amount && "--" == result.data[0].amount) {
+                            data.proAvailableCash = 0;
+                        } else {
+                            data.proAvailableCash = result.data[0].amount;
+                        }
+                        if (result.data[1].amount && "--" == result.data[1].amount) {
+                            data.proAvailableCash1 = 0;
+                        } else {
+                            data.proAvailableCash1 = result.data[1].amount;
+                        }
+                        if (result.data[2].amount && "--" == result.data[2].amount) {
+                            data.secAcctAvailableCash = 0;
+                        } else {
+                            data.secAcctAvailableCash = result.data[2].amount;
+                        }
+                        if (result.data[3].amount && "--" == result.data[3].amount) {
+                            data.porAvailableSec = 0;
+                        } else {
+                            data.porAvailableSec = result.data[3].amount;
+                        }
+                        if (result.data[4].amount && "--" == result.data[4].amount) {
+                            data.entrustIntegrateSecNum = 0;
+                        } else {
+                            data.entrustIntegrateSecNum = result.data[4].amount;
+                        }
+                        if(result.data.length > 6) {
+                            if (result.data[5].amount && "--" == result.data[5].amount) {
+                                data.ownPorAvailableSec = 0;
+                            } else {
+                                data.ownPorAvailableSec = result.data[5].amount;
+                            }
+                            if (result.data[6].amount && "--" == result.data[6].amount) {
+                                data.ownProAvailableSec1 = 0;
+                            } else {
+                                data.ownProAvailableSec1 = result.data[6].amount;
+                            }
+                        }
+                        data.entrustIntegrateNum = 0;
+                        table.renderRow(data.LAY_TABLE_INDEX, data);
                     }
-                    if (result.data[1].amount && "--" == result.data[1].amount) {
-                        data.proAvailableCash1 = 0;
-                    } else {
-                        data.proAvailableCash1 = result.data[1].amount;
-                    }
-                    if (result.data[2].amount && "--" == result.data[2].amount) {
-                        data.secAcctAvailableCash = 0;
-                    } else {
-                        data.secAcctAvailableCash = result.data[2].amount;
-                    }
-                    if (result.data[3].amount && "--" == result.data[3].amount) {
-                        data.porAvailableSec = 0;
-                    } else {
-                        data.porAvailableSec = result.data[3].amount;
-                    }
-                    if (result.data[4].amount && "--" == result.data[4].amount) {
-                        data.entrustIntegrateSecNum = 0;
-                    } else {
-                        data.entrustIntegrateSecNum = result.data[4].amount;
-                    }
-                    if (result.data[5].amount && "--" == result.data[5].amount) {
-                        data.ownPorAvailableSec = 0;
-                    } else {
-                        data.ownPorAvailableSec = result.data[5].amount;
-                    }
-                    if (result.data[6].amount && "--" == result.data[6].amount) {
-                        data.ownProAvailableSec1 = 0;
-                    } else {
-                        data.ownProAvailableSec1 = result.data[6].amount;
-                    }
-                    data.entrustIntegrateNum = 0;
-                    table.renderRow(data.LAY_TABLE_INDEX, data);
                 },false);
                 if(ps == 'T02' || ps == 'T03') {//获取数量和模式
                     Joyin.ajax(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/selectPortfolioIdForSelect?ps='+ps+'&finprodId='+$("#finprodIdhid").val(), param, function (result) {
@@ -311,6 +340,7 @@
             title: 'BaseRiskMathComm.kriTrend',
             sortable: false
         }
+
         , {
             field: 'kriStatusCn', title: 'BaseRiskMathComm.currStatus', sortable: false,
             render: function (data, type, row, meta) {
@@ -376,6 +406,8 @@
             calflag = query("input[name=calculateField]:checked").val();
         }
         var object = {};
+        var param = $.serializeToObject('#searchForm');
+        object.bussCombDistribtList = param.bussCombDistribtList;
         object.calflag = calflag;
         object.finvdate = query("#finvdate").val();
         object.finmdate = query("#finmdate").val();
