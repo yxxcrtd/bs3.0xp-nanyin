@@ -1047,6 +1047,8 @@ public class InvestorsHoldInfoDistinctService {
 	 * @since 1.0
 	 */
 	private void deleteAfterDeal(List<ChbInvestholdInfoCheckDto> deleteList) {
+
+		logger.info("deleteBymodelAfterDeal处理开始：" + DateUtil.getCurrentDateTime());
 		if (StringUtil.isEmptyList(deleteList)) {
 			return;
 		}
@@ -1056,10 +1058,8 @@ public class InvestorsHoldInfoDistinctService {
 			maxDataCountOneTime = 1;
 		}
 		int dataCount = deleteList.size();
-		if (dataCount <= maxDataCountOneTime) {
-			logger.info("deleteBymodelAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
+		if (dataCount <= maxDataCountOneTime) {			
 			chbInvestholdInfoCheckDtoMapper.deleteBymodelAfterDeal(deleteList);
-			logger.info("deleteBymodelAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
 			return;
 		}
 		List<ChbInvestholdInfoCheckDto> newDataList = new ArrayList<ChbInvestholdInfoCheckDto>();
@@ -1068,17 +1068,14 @@ public class InvestorsHoldInfoDistinctService {
 		// 分批处理
 		int part = dataCount / maxDataCountOneTime; // 分批数
 		for (int i = 0; i < part; i++ ) {
-			logger.info("deleteBymodelAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
 			chbInvestholdInfoCheckDtoMapper.deleteBymodelAfterDeal(newDataList.subList(0, maxDataCountOneTime));;
-			logger.info("deleteBymodelAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
 			newDataList.subList(0, maxDataCountOneTime).clear();
 		}
 		// 最后剩下的数据
 		if (CollectionUtils.isNotEmpty(newDataList)) {
-			logger.info("deleteBymodelAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
 			chbInvestholdInfoCheckDtoMapper.deleteBymodelAfterDeal(newDataList);
-			logger.info("deleteBymodelAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
 		}
+		logger.info("deleteBymodelAfterDeal处理结束：" + DateUtil.getCurrentDateTime());
 	}
 
 	/**
@@ -1089,6 +1086,8 @@ public class InvestorsHoldInfoDistinctService {
 	 * @since 1.0
 	 */
 	private void insertToChbInvestholdInfoAfterDeal(List<ChbInvestholdInfoCheckDto> insertToChbInvestholdInfoList) {
+
+		logger.info("insertToChbInvestholdInfoAfterDeal处理开始：" + DateUtil.getCurrentDateTime());
 		if (StringUtil.isEmptyList(insertToChbInvestholdInfoList)) {
 			return;
 		}
@@ -1099,9 +1098,7 @@ public class InvestorsHoldInfoDistinctService {
 		}
 		int dataCount = insertToChbInvestholdInfoList.size();
 		if (dataCount <= maxDataCountOneTime) {
-			logger.info("insertToChbInvestholdInfoAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
 			chbInvestholdInfoCheckDtoMapper.insertToChbInvestholdInfoAfterDeal(insertToChbInvestholdInfoList);
-			logger.info("insertToChbInvestholdInfoAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
 			return;
 		}
 		List<ChbInvestholdInfoCheckDto> newDataList = new ArrayList<ChbInvestholdInfoCheckDto>();
@@ -1110,17 +1107,15 @@ public class InvestorsHoldInfoDistinctService {
 		// 分批处理
 		int part = dataCount / maxDataCountOneTime; // 分批数
 		for (int i = 0; i < part; i++ ) {
-			logger.info("insertToChbInvestholdInfoAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
-			chbInvestholdInfoCheckDtoMapper.insertToChbInvestholdInfoAfterDeal(newDataList.subList(0, maxDataCountOneTime));;
-			logger.info("insertToChbInvestholdInfoAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
+			chbInvestholdInfoCheckDtoMapper.insertToChbInvestholdInfoAfterDeal(newDataList.subList(0, maxDataCountOneTime));
 			newDataList.subList(0, maxDataCountOneTime).clear();
 		}
 		// 最后剩下的数据
 		if (CollectionUtils.isNotEmpty(newDataList)) {
-			logger.info("insertToChbInvestholdInfoAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
 			chbInvestholdInfoCheckDtoMapper.insertToChbInvestholdInfoAfterDeal(newDataList);
-			logger.info("insertToChbInvestholdInfoAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
 		}
+
+		logger.info("insertToChbInvestholdInfoAfterDeal处理结束：" + DateUtil.getCurrentDateTime());
 	}
 
 	/**
@@ -1131,6 +1126,7 @@ public class InvestorsHoldInfoDistinctService {
 	 * @since 1.0
 	 */
 	private void insertAfterDeal(List<ChbInvestholdInfoCheckDto> insert) {
+		logger.info("insertAfterDeal处理开始：" + DateUtil.getCurrentDateTime());
 		if (StringUtil.isEmptyList(insert)) {
 			return;
 		}
@@ -1141,9 +1137,8 @@ public class InvestorsHoldInfoDistinctService {
 		}
 		int dataCount = insert.size();
 		if (dataCount <= maxDataCountOneTime) {
-			logger.info("insertAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
+			
 			chbInvestholdInfoCheckDtoMapper.insertAfterDeal(insert);
-			logger.info("insertAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
 			return;
 		}
 		List<ChbInvestholdInfoCheckDto> newDataList = new ArrayList<ChbInvestholdInfoCheckDto>();
@@ -1152,17 +1147,14 @@ public class InvestorsHoldInfoDistinctService {
 		// 分批处理
 		int part = dataCount / maxDataCountOneTime; // 分批数
 		for (int i = 0; i < part; i++ ) {
-			logger.info("insertAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
-			chbInvestholdInfoCheckDtoMapper.insertAfterDeal(newDataList.subList(0, maxDataCountOneTime));;
-			logger.info("insertAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
+			chbInvestholdInfoCheckDtoMapper.insertAfterDeal(newDataList.subList(0, maxDataCountOneTime));
 			newDataList.subList(0, maxDataCountOneTime).clear();
 		}
 		// 最后剩下的数据
 		if (CollectionUtils.isNotEmpty(newDataList)) {
-			logger.info("insertAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
 			chbInvestholdInfoCheckDtoMapper.insertAfterDeal(newDataList);
-			logger.info("insertAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
 		}
+		logger.info("insertAfterDeal处理结束：" + DateUtil.getCurrentDateTime());
 	}
 
 	/**
@@ -1173,6 +1165,7 @@ public class InvestorsHoldInfoDistinctService {
 	 * @since 1.0
 	 */
 	private void updataOperateStatus(List<ChbInvestholdInfoCheckDto> dtoAfterDealList) {
+		logger.info("insertAfterDeal处理开始：" + DateUtil.getCurrentDateTime());
 		if (StringUtil.isEmptyList(dtoAfterDealList)) {
 			return;
 		}
@@ -1182,10 +1175,8 @@ public class InvestorsHoldInfoDistinctService {
 			maxDataCountOneTime = 1;
 		}
 		int dataCount = dtoAfterDealList.size();
-		if (dataCount <= maxDataCountOneTime) {
-			logger.info("insertAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
+		if (dataCount <= maxDataCountOneTime) {			
 			chbInvestholdInfoCheckDtoMapper.updataOperateStatus(dtoAfterDealList);
-			logger.info("insertAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
 			return;
 		}
 		List<ChbInvestholdInfoCheckDto> newDataList = new ArrayList<ChbInvestholdInfoCheckDto>();
@@ -1194,16 +1185,13 @@ public class InvestorsHoldInfoDistinctService {
 		// 分批处理
 		int part = dataCount / maxDataCountOneTime; // 分批数
 		for (int i = 0; i < part; i++ ) {
-			logger.info("insertAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
-			chbInvestholdInfoCheckDtoMapper.updataOperateStatus(newDataList.subList(0, maxDataCountOneTime));;
-			logger.info("insertAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
+			chbInvestholdInfoCheckDtoMapper.updataOperateStatus(newDataList.subList(0, maxDataCountOneTime));
 			newDataList.subList(0, maxDataCountOneTime).clear();
 		}
 		// 最后剩下的数据
 		if (CollectionUtils.isNotEmpty(newDataList)) {
-			logger.info("insertAfterDeal单次处理开始：" + DateUtil.getCurrentDateTime());
-			chbInvestholdInfoCheckDtoMapper.updataOperateStatus(newDataList);
-			logger.info("insertAfterDeal单次处理结束：" + DateUtil.getCurrentDateTime());
+			chbInvestholdInfoCheckDtoMapper.updataOperateStatus(newDataList);			
 		}
+		logger.info("insertAfterDeal处理结束：" + DateUtil.getCurrentDateTime());
 	}
 }
