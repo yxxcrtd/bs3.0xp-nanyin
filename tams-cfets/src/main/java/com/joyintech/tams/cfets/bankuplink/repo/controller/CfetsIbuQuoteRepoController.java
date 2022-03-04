@@ -7,7 +7,6 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.BaseMap;
@@ -15,18 +14,7 @@ import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelTplUitl;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDayPriceDto;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDayRegDto;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealQuoteCommonDto;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealQuoteRequest;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoAutoAllocationRequest;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoCalRequest;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustDto;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustPledgeDto;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustRequest;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoPledgeRequest;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoPtlAllocationAddRequest;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoRiskCalRequest;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.*;
 import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoDealQuotedPrice002Service;
 import com.joyintech.tams.cfets.bankuplink.repo.service.IbuQuoteRepoService;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
@@ -35,7 +23,6 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
-import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -49,21 +36,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -395,7 +372,18 @@ public class CfetsIbuQuoteRepoController extends BaseController {
                 return new Message<Map<String, Object>>().success().setData(new HashMap<>());
             }
             Map<String, Object> result = new HashMap<>();
-            result.put("root", ibuQuoteRepoService.listDealTransactionDetails(entrustId));
+            Map<String, Object> param = new HashMap<>();
+            param.put("entrustId",entrustId);
+            // 排序处理
+            if(StringUtil.isNotEmpty(dto.getPageMode())){
+                if(StringUtil.isNotEmpty(dto.getPageMode().getDirection())){
+                    param.put("direction", dto.getPageMode().getDirection());
+                }
+                if(StringUtil.isNotEmpty(dto.getPageMode().getSort())){
+                    param.put("sort", dto.getPageMode().getSort());
+                }
+            }
+            result.put("root", ibuQuoteRepoService.listDealTransactionDetails(param));
             return new Message<Map<String, Object>>().success().setData(result);
         } catch (Exception e) {
             logger.error("查询交易执行明细信息异常", e);

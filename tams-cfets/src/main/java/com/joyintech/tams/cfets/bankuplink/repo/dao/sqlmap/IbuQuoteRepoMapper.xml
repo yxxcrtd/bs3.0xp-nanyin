@@ -1611,6 +1611,9 @@
                            where sur.USER_ID = #{loginUserId}
                            and sr.ROLE_POS = #{rolePos03})
        </if>
+        <if test="sort != null and sort != '' and direction != null and direction != ''">
+            order by ${sort} ${direction}
+        </if>
     </select>
 
     <sql id="listRegFinPledge_sql">
@@ -2137,6 +2140,7 @@
 
     <!--当日登记-->
     <select id="listDayReg" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDayRegDto">
+        select * from (
         select
             TT.validStatus,
             TT.quoteType,
@@ -2241,6 +2245,10 @@
                 or TT.statisticalTimes||'' =#{search}
                 )
             </if>
+        )
+        <if test="sort != null and sort != '' and direction != null and direction != ''">
+            order by ${sort} ${direction}
+        </if>
     </select>
 
     <!--当日登记本币交易导出 ORA-00600 错-->
@@ -2676,5 +2684,31 @@
         </where>
         <!-- 根据创建时间排序 （降序）-->
         order by pm.update_time desc
+    </select>
+
+
+    <select id="getEntrustId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        ENTRUST_ID id,
+        ENTRUST_ID text,
+        PORTFOLIO_ID object /*add by songyawei*/
+        FROM ETR_ENTRUST
+        <where>
+            <if test="param != null and param != ''">
+                ENTRUST_ID LIKE CONCAT('%', CONCAT(#{param}, '%'))
+            </if>
+            <if test="ENTRUST_STATUS_LIST != null and ENTRUST_STATUS_LIST.size() > 0">
+                AND ENTRUST_STATUS IN
+                <foreach collection="ENTRUST_STATUS_LIST" open="(" close=")" item="item" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="finProdType != null and finProdType.size() > 0">
+                AND FINPROD_TYPE2 IN
+                <foreach collection="finProdType" open="(" close=")" item="item1" separator=",">
+                    #{item1}
+                </foreach>
+            </if>
+        </where>
     </select>
 </mapper>
