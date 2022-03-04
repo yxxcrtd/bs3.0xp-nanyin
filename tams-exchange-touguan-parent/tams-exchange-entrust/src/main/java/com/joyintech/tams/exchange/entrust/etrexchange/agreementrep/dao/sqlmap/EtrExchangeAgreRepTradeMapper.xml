@@ -480,6 +480,17 @@
         <if test="finprodName != null and finprodName !=''">
             AND TEMP.FINPROD_ID = #{finprodName,jdbcType=VARCHAR}
         </if>
+        <if test="portfolioIdList != null and portfolioIdList.size()>0">
+            <foreach collection="portfolioIdList" open="AND TEMP.PORTFOLIO_ID IN (" item="portfolioId" separator="," close=")">
+                #{portfolioId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="finprodMarketIds != null and finprodMarketIds.size() > 0">
+            AND FP.FINPROD_MARKET_ID in
+            <foreach item="item" index="index" collection="finprodMarketIds" open="(" separator="," close=")">
+                #{item, jdbcType=VARCHAR}
+            </foreach>
+        </if>
         ) TEMP WHERE 1=1
         <!-- 关键字模糊查询 -->
         <include refid="etrExchangePositionsAnd"/>

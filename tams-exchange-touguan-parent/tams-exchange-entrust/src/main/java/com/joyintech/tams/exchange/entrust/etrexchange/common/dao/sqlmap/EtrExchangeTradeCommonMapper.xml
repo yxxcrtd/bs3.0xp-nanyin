@@ -14,7 +14,7 @@
         CASE
 
         WHEN T2.TARGET_TYPE = '01' THEN
-        ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 0 ), 4 ) ELSE ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
+        ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 1 ), 4 ) ELSE ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
         END AS dealPercent,
         CASE
         WHEN T2.TARGET_TYPE = '01' THEN
@@ -159,7 +159,7 @@
         END AS implementPercent,
         CASE
         WHEN T2.TARGET_TYPE = '01' THEN
-        ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 0 ), 4 ) ELSE ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
+        ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 1 ), 4 ) ELSE ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
         END AS dealPercent,
         CASE
         WHEN T2.TARGET_TYPE = '01' THEN
