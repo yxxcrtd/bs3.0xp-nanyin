@@ -363,31 +363,37 @@ public class CfetsIbuQuoteRepoController extends BaseController {
     @ApiOperation(value = "查询交易执行明细信息", notes = "查询交易执行明细信息")
     @PostMapping("/listDealTransactionDetails")
     @ResponseBody
-    public Message<Map<String, Object>> listDealTransactionDetails(@RequestBody RepoEntrustRequest dto) {
+    public Message<Page<RepoDealTransactionDetailsDto>> listDealTransactionDetails(@RequestBody RepoEntrustRequest dto) {
         try {
             String entrustId;
             if (StringUtil.isNotEmpty(dto) && CollectionUtils.isNotEmpty(dto.getEntrustIdList())) {
                 entrustId = dto.getEntrustIdList().get(0);
             } else {
-                return new Message<Map<String, Object>>().success().setData(new HashMap<>());
+                return new Message<Page<RepoDealTransactionDetailsDto>>().success().setData(new Page<>());
             }
             Map<String, Object> result = new HashMap<>();
             Map<String, Object> param = new HashMap<>();
-            param.put("entrustId",entrustId);
+            param.put("entrustId", entrustId);
             // 排序处理
-            if(StringUtil.isNotEmpty(dto.getPageMode())){
-                if(StringUtil.isNotEmpty(dto.getPageMode().getDirection())){
+            if (StringUtil.isNotEmpty(dto.getPageMode())) {
+                if (StringUtil.isNotEmpty(dto.getPageMode().getDirection())) {
                     param.put("direction", dto.getPageMode().getDirection());
                 }
-                if(StringUtil.isNotEmpty(dto.getPageMode().getSort())){
+                if (StringUtil.isNotEmpty(dto.getPageMode().getSort())) {
                     param.put("sort", dto.getPageMode().getSort());
                 }
+                if (StringUtil.isNotEmpty(dto.getPageMode().getPageNo())) {
+                    param.put("pageNo", dto.getPageMode().getPageNo());
+                }
+                if (StringUtil.isNotEmpty(dto.getPageMode().getPageSize())) {
+                    param.put("pageSize", dto.getPageMode().getPageSize());
+                }
             }
-            result.put("root", ibuQuoteRepoService.listDealTransactionDetails(param));
-            return new Message<Map<String, Object>>().success().setData(result);
+            Page<RepoDealTransactionDetailsDto> page = ibuQuoteRepoService.listDealTransactionDetails(param);
+            return new Message<Page<RepoDealTransactionDetailsDto>>().success().setData(page);
         } catch (Exception e) {
             logger.error("查询交易执行明细信息异常", e);
-            return new Message<Map<String, Object>>().fail().setMessage("查询交易执行明细信息异常");
+            return new Message<Page<RepoDealTransactionDetailsDto>>().fail().setMessage("查询交易执行明细信息异常");
         }
     }
 
@@ -757,13 +763,13 @@ public class CfetsIbuQuoteRepoController extends BaseController {
     @ApiOperation(value = "当日报价", notes = "当日报价")
     @PostMapping("/listDayPrice")
     @ResponseBody
-    public Message<List<CfetsRepoDayPriceDto>> pageDayPrice(@RequestBody RepoEntrustRequest dto) {
+    public Message<com.joyintech.background.component.common.pack.common.grid.Page<CfetsRepoDayPriceDto>> pageDayPrice(@RequestBody RepoEntrustRequest dto) {
         try {
-            List<CfetsRepoDayPriceDto> result = cfetsRepoDealQuotedPrice002Service.listDayPrice(dto);
-            return new Message<List<CfetsRepoDayPriceDto>>().success().setData(result);
+            com.joyintech.background.component.common.pack.common.grid.Page<CfetsRepoDayPriceDto> result = cfetsRepoDealQuotedPrice002Service.listDayPricePage(dto);
+            return new Message<com.joyintech.background.component.common.pack.common.grid.Page<CfetsRepoDayPriceDto>>().success().setData(result);
         } catch (Exception e) {
             logger.error("查询当日报价数据异常", e);
-            return new Message<List<CfetsRepoDayPriceDto>>().fail().setMessage("查询当日报价数据异常");
+            return new Message<com.joyintech.background.component.common.pack.common.grid.Page<CfetsRepoDayPriceDto>>().fail().setMessage("查询当日报价数据异常");
         }
     }
 

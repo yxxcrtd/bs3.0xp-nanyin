@@ -71,8 +71,6 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.cstp.service.CstpCommonService;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
-import com.joyintech.tams.invest.common.dto.PtlPositionHoldDto;
-import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
@@ -82,7 +80,6 @@ import com.joyintech.tams.invest.common.dto.cstp.IbuQuoteEntCrepPledgeCommonDto;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
-import com.joyintech.tams.invest.common.util.QuotaPageModelUtil;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -2301,6 +2298,45 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
     }
 
     /**
+     * 查询当日报价
+     *
+     * @param dto
+     * @return java.util.List<com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDayPriceDto>
+     * @author jiangpeng
+     * @date 2021/12/28 11:36
+     */
+    public com.joyintech.background.component.common.pack.common.grid.Page<CfetsRepoDayPriceDto> listDayPricePage(RepoEntrustRequest dto) {
+        List<CfetsRepoDayPriceDto> result = new ArrayList<>();
+        com.joyintech.background.component.common.pack.common.grid.Page<RepoQuoteInfoDto> page = this.getDayOfferTablePage(this.repoEntrustRequest2Map(dto));
+        List<RepoQuoteInfoDto> dayOfferTableList = page.getRoot();
+        if (CollectionUtils.isNotEmpty(dayOfferTableList)) {
+            dayOfferTableList.forEach(item -> {
+                CfetsRepoDayPriceDto cfetsRepoDayPriceDto = new CfetsRepoDayPriceDto();
+                BeanUtil.copyPropertiesIgnoreNull(cfetsRepoDayPriceDto, item);
+//                cfetsRepoDayPriceDto.setOuPartyName(item.getPartyAbbr());
+                cfetsRepoDayPriceDto.setCpPartyName(item.getCpPartyName());//对手方机构名
+                cfetsRepoDayPriceDto.setTradeAmt(item.getFpriceAmt());//交易金额
+                cfetsRepoDayPriceDto.setvSettleDate(DateUtil.format(item.getvSettleDate()));//首次结算日
+                cfetsRepoDayPriceDto.setmSettleDate(DateUtil.format(item.getmSettleDate()));//到期结算日
+                cfetsRepoDayPriceDto.setExecid(item.getfTradeId());
+                cfetsRepoDayPriceDto.setRepoTerm(item.getTerm());//回购期限
+                if (StringUtil.equals(item.getSendStatus(), BussinessDictCodeList.银行间上行发送状态_失败.getValue())) {
+                    String errorMsg = this.selectErrlog(item.getQuoteId());
+                    cfetsRepoDayPriceDto.setErrorMsg(errorMsg);
+                }
+                result.add(cfetsRepoDayPriceDto);
+            });
+        }
+
+        // 查询条件转换
+        com.joyintech.background.component.common.pack.common.grid.Page<CfetsRepoDayPriceDto> repoQuoteExtDtoPage
+                = new com.joyintech.background.component.common.pack.common.grid.Page<>();
+        BeanUtil.copyPropertiesIgnoreNull(repoQuoteExtDtoPage, page);
+        repoQuoteExtDtoPage.setRoot(result);
+        return repoQuoteExtDtoPage;
+    }
+
+    /**
      * 前台查询条件转化为后台MAP
      *
      * @param dto
@@ -2351,6 +2387,12 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             if(StringUtil.isNotEmpty(dto.getPageMode().getSort())){
                 stringObjectMap.put("sort", dto.getPageMode().getSort());
             }
+            if (StringUtil.isNotEmpty(dto.getPageMode().getPageNo())) {
+                stringObjectMap.put("pageNo", dto.getPageMode().getPageNo());
+            }
+            if (StringUtil.isNotEmpty(dto.getPageMode().getPageSize())) {
+                stringObjectMap.put("pageSize", dto.getPageMode().getPageSize());
+            }
         }
         return stringObjectMap;
     }
@@ -2379,16 +2421,39 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         paramUser.put("rolePos", "03");
         boolean traDirector = commonBusinessService.isTraDirector(paramUser);
         param.put("isAdmin", user.isAdmin() || traDirector);
-        //add by zznn 20210730 end
         // 待回复报价是否所有交易员可见（01：不允许，02：允许）
         param.put("unAnswerFlag", CacheUtil.getSysParam("ibuFlag_allTraderCanShowUnAnswerQuote"));
-//        String keywords = "";
-//        if (param.containsKey("keywords")) {
-//            keywords = (String) param.get("keywords");
-//            param.remove("keywords");
-//        }
         result = cfetsRepoDealQuotedPrice001Service.getDayOfferTableList(param);
         return result;
+    }
+
+    /**
+     * 获取当日报价数据列表
+     *
+     * @param param
+     * @return java.util.List<com.joyintech.service.bankuplink.ibu.dto.RepoQuoteInfoDto>
+     * @author jiangpeng
+     * @date 2021/12/28 11:37
+     */
+    public com.joyintech.background.component.common.pack.common.grid.Page<RepoQuoteInfoDto> getDayOfferTablePage(Map<String, Object> param) {
+        List<RepoQuoteInfoDto> result = new ArrayList<>();
+        User user = SecurityUtil.getLoginUser();
+        if (user == null) {
+            return new com.joyintech.background.component.common.pack.common.grid.Page<>();
+        }
+        param.put("loginUserId", LoginUserUtil.getUserName());
+        param.put("loginTraderId", LoginUserUtil.getUserName());
+        //add by zznn 20210730 start
+        //岗位信息 框架没有封装  单独处理
+        //交易主管(交易处长03)、超级管理员能够查询出所有的报价信息
+        Map<String, Object> paramUser = new HashMap<>();
+        paramUser.put("userId", LoginUserUtil.getUserName());
+        paramUser.put("rolePos", "03");
+        boolean traDirector = commonBusinessService.isTraDirector(paramUser);
+        param.put("isAdmin", user.isAdmin() || traDirector);
+        // 待回复报价是否所有交易员可见（01：不允许，02：允许）
+        param.put("unAnswerFlag", CacheUtil.getSysParam("ibuFlag_allTraderCanShowUnAnswerQuote"));
+        return cfetsRepoDealQuotedPrice001Service.getRepoDayOfferTablePage(param);
     }
 
     /**
@@ -2706,5 +2771,13 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto result
                 = JsonUtils.json2Object(JsonUtils.object2Json(dto), com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto.class);
         return result;
+    }
+
+    @Override
+    public String generateTitle(CfetsRepoDealQuotedPrice001Dto dto, OperationType type) {
+        String str = "对话报价编号" + "(" + dto.getQuoteId() + ")-"
+                + "业务类型" + "(" + DictCodeListExt3.报价系统区分类型_质押式回购对话报价.getCodeName() + ")-" + "平台日" + "("
+                + DateUtil.format(iPlatformDate.getSysDate()) + ")";
+        return str;
     }
 }
