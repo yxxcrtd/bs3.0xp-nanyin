@@ -687,4 +687,12 @@
                  inner join MST_CFETS_CUSTOMER_TRADER mcct on mcct.TRADER_ID = sua.IBU_TRADER
         where mcct.TRADER_ID = #{mySideTrader} and mcct.PARTY_ID = #{mySide}
     </select>
+
+    <select id="findAllModuleIds" parameterType="java.lang.String" resultType="java.lang.String">
+        select distinct decode(B.ELEMENT_ID, 'null', B.PAGE_ID, '', B.PAGE_ID, B.ELEMENT_ID)
+        from SYS_ROLE_MODULE B,
+             SYS_USER A
+        where A.ADMIN_FLAG = '01'
+          and A.USER_NAME = #{userName, jdbcType=VARCHAR}
+    </select>
 </mapper>

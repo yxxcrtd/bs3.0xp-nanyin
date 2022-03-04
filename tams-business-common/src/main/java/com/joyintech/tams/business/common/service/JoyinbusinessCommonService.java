@@ -419,4 +419,8 @@ public class JoyinbusinessCommonService extends BaseService {
     public String findUserByMySideTrader(String mySideTrader, String mySide) {
         return joyinbusinessCommonMapper.findUserByMySideTrader(mySideTrader, mySide);
     }
+
+    public List<String> findAllModuleIds(String userName) {
+        return joyinbusinessCommonMapper.findAllModuleIds(userName);
+    }
 }
