@@ -37,7 +37,9 @@ import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTra
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.FinProductOthCodeDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PsOptionsRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon002Service;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.*;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -49,6 +51,8 @@ import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -85,6 +89,9 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 
 	@Autowired
 	private EtrExchangeTradeCommon002Service etrExchangeTradeCommon002Service;
+
+	@Autowired
+	private EtrExchangeTradeCommon001Service etrExchangeTradeCommon001Service;
 
 	@Autowired
 	private JoyinbusinessCommonMapper joyinbusinessCommonMapper;
@@ -788,5 +795,45 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 			}
 		});
 		joyinbusinessCommonMapper.mergeCfetsOprHis(result);
+	}
+
+
+	/**
+	 * 判断是否交易时间段
+	 *
+	 * @param dto
+	 * @return true 不是交易时段，不可交易 false 可以交易
+	 */
+	public String isNonTradingTime(EtrExchangeTradeSaveRequest dto) {
+		if (CacheUtil.getSysParam(BussinessConstant.ETR_TRADE_TIME_SWITCH).equals(DictCodeListExt1.是否_是.getValue())) {
+			if (StringUtil.isNotEmpty(dto.getTradeMarket()) && StringUtil.isNotEmpty(dto.getFinprodType2())) {
+				TrdTimeConfigDto trdTimeConfigDto = etrExchangeTradeCommon001Service.getTrdTimeConfig(dto.getTradePlat(), dto.getTradeMarket(),
+						dto.getFinprodType2(), dto.getDeclaType());
+				if (null != trdTimeConfigDto && null != trdTimeConfigDto.getNoonCloseTime()) {
+					Date date = new Date();
+					SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					if (null != trdTimeConfigDto.getNoonOpenTime()){
+						try {
+							Date noonOpenTime = sdf.parse(sd.format(date) + " " + trdTimeConfigDto.getNoonOpenTime().trim());
+							if (noonOpenTime.after(new Date())) {
+								return "01";
+							}
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+					}
+					try {
+						Date noonCloseTime = sdf.parse(sd.format(date) + " " + trdTimeConfigDto.getNoonCloseTime().trim());
+						if (noonCloseTime.before(new Date())) {
+							return "02";
+						}
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		return null;
 	}
 }

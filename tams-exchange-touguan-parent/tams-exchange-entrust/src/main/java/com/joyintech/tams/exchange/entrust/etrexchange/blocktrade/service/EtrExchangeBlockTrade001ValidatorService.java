@@ -50,7 +50,10 @@ public class EtrExchangeBlockTrade001ValidatorService implements EtrCommonValida
 
 	@Autowired
 	EtrExchangeTradeCommon001Service etrExchangeTrade001Service;
-	
+
+	@Autowired
+	EtrExchangeBlockTrade001Service etrExchangeBlockTrade001Service;
+
 	 /**
      * 委托指令Mapper
      */
@@ -67,8 +70,12 @@ public class EtrExchangeBlockTrade001ValidatorService implements EtrCommonValida
 		List<ValidMessage> errorList = new ArrayList<>();
 		EtrExchangeTradeSaveRequest dto = (EtrExchangeTradeSaveRequest) value;
 		if (dto.getOperateType().equals("save") || dto.getOperateType().equals("submit")) {
-			Boolean isNonTradingTime = etrExchangeTrade001Service.isNonTradingTime(dto);
-			if (isNonTradingTime) {
+			String isNonTradingTime = etrExchangeBlockTrade001Service.isNonTradingTime(dto);
+			if (StringUtil.isNotEmpty(isNonTradingTime) && StringUtil.equals(isNonTradingTime,"01")) {
+				errorList.add(new ValidMessage(this.getMessage("ETR_ERROR_00561")));
+				return errorList;
+			}
+			if (StringUtil.isNotEmpty(isNonTradingTime) && StringUtil.equals(isNonTradingTime,"02")) {
 				errorList.add(new ValidMessage(this.getMessage("ETR_ERROR_0056")));
 				return errorList;
 			}
