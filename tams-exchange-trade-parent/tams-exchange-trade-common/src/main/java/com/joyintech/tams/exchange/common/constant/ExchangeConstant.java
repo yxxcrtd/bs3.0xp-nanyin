@@ -33,4 +33,10 @@ public class ExchangeConstant {
     public static final int RECOVER_MEMORY2DB = 1;
     public static final int RECOVER_MEMORY2DB_WITH_DELETE = 2;
 
+    //交易端指令列表自动刷新时间(单位毫秒)
+    public static final String TRD_INSTRUCTION_REFRESH_TIME = "trd_instruction_refresh_time";
+    //交易端行情列表自动刷新时间(单位毫秒)
+    public static final String TRD_QUOTE_REFRESH_TIME = "trd_quote_refresh_time";
+    //交易端委托列表自动刷新时间(单位毫秒)
+    public static final String TRD_ENTRUST_REFRESH_TIME = "trd_entrust_refresh_time";
 }
