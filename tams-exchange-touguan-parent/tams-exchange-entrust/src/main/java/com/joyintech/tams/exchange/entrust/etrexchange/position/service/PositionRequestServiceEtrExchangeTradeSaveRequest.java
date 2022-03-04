@@ -56,10 +56,6 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
             finprodType += "-" + type6;
         }
-        if (DictCodeList.回购类型_质押式协议回购.getValue().equals(entity.getAssetType2())
-                || (DictCodeList.回购类型_质押式竞价回购.getValue().equals(entity.getAssetType2()))) {
-            finprodType += "-" + entity.getAssetType2();
-        }
         String interType = commonPositionEngineService.getPositionInterType(PositionConstant.POSITION_TYPE_ETR, entity.getTradePlat(), finprodType, entity.getPs(), entity.getOptType(), entity.getClass().getName());
         if (PositionConstant.INTERF_TYPE_BOND002.equals(interType)) {
             this.bond002(entity, resultMap);
@@ -69,8 +65,6 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             this.fund001(entity, resultMap);
         } else if (PositionConstant.INTERF_TYPE_REPO001.equals(interType)) {
             this.repo001(entity, resultMap);
-        } else if (PositionConstant.INTERF_TYPE_REPO002.equals(interType)) {
-            this.repo002(entity, resultMap);
         } else if (PositionConstant.INTERF_TYPE_STOCK001.equals(interType)) {
             this.stock001(entity, resultMap);
         } else {
@@ -392,127 +386,6 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                     ptlSecList.add(map);
                 }
                 resultMap.put("ptlSecList", ptlSecList);
-            }
-        }
-    }
-
-    /**
-     * 质押式协议回购-指令    repo002
-     *
-     * @param entity
-     * @param resultMap
-     */
-    private void repo002(EtrExchangeTradeSaveRequest entity, Map<String, Object> resultMap) {
-        resultMap.put("interfaceType", PositionConstant.INTERF_TYPE_REPO002);
-        // 业务动作
-        resultMap.put("busiAct", DictCodeListExt3.业务动作_投资指令.getValue());
-
-        String ps = entity.getPs();
-
-        /**
-         * 交易方向 TODO
-         *
-         * "IF 指令.回购类型 = 正回购 THEN 数据字典.交易方向.正回购
-         * IF 指令.回购类型 = 逆回购 THEN 数据字典.交易方向.逆回购"
-         */
-        resultMap.put("ps", DictCodeListExt3.交易方向_正回购.getValue());
-
-        // 清算速度
-        resultMap.put("settleSpeed", null);
-
-        // 结算方式
-        resultMap.put("deliveryType", null);
-
-        // 交易平台
-        resultMap.put("tradePlace", null);
-
-        if (CollectionUtils.isNotEmpty(entity.getPortfolioList())) {
-            PositionRequestBaseBean bean;
-
-            // 首期组合现金数据集
-            if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)
-                    || DictCodeListExt3.交易方向_首期.getValue().equals(ps)
-                    || DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)
-                    || (DictCodeListExt3.交易方向_到期购回.getValue().equals(ps))) {
-                List<Map<String, Object>> list = new ArrayList<>(4);
-                for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
-                    bean = new PositionRequestBaseBean(item);
-                    bean.setSecAmount(null);
-
-                    Map<String, Object> map = BeanUtil.object2Map(bean);
-                    list.add(map);
-                }
-                resultMap.put("ptlCashList", list);
-            }
-
-            // 轧差组合现金数据集
-            if (DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)) {
-                List<Map<String, Object>> list = new ArrayList<>(4);
-                for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
-                    bean = new PositionRequestBaseBean(item);
-                    bean.setSecAmount(null);
-                    // 交易金额 TODO
-                    // "IF 回购类型 = 正回购 THEN 指令.到期续作金额 - 指令.首期的到期结算金额
-                    // IF 回购类型 = 逆回购  and 成交编号找不到对应的首期 THEN 指令.到期续作金额
-                    // IF 回购类型 = 逆回购  and 成交编号找到对应的首期 THEN  指令.到期续作金额 - 指令.首期的到期结算金额"
-                    if (DictCodeListExt3.交易方向_正回购.getValue().equals(resultMap.get("ps"))) {
-                        bean.setCashAmount(null);
-                    } else if (DictCodeListExt3.交易方向_逆回购.getValue().equals(resultMap.get("ps"))) {
-                        // 成交编号
-
-                    }
-
-                    Map<String, Object> map = BeanUtil.object2Map(bean);
-                    //融入券券面总额
-                    map.put("integrateSecAmount", null);
-                    //本方券券面总额 指令对应组合.指令数量*100
-                    map.put("ownSecAmount", null);
-
-                    list.add(map);
-                }
-                resultMap.put("ptlOffsetCashList", list);
-            }
-
-            // 质押券数据集	ptlSecList
-            if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
-                List<Map<String, Object>> list = new ArrayList<>(4);
-                for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
-                    bean = new PositionRequestBaseBean(item);
-                    // 债券代码 指令.质押券的金融产品代码 TODO
-                    bean.setFinprodId(null);
-                    // 券面总额 指令.质押券数量*100
-                    bean.setSecAmount(null);
-
-                    Map<String, Object> map = BeanUtil.object2Map(bean);
-                    //融入券券面总额
-                    map.put("integrateSecAmount", null);
-                    //本方券券面总额 指令.质押券数量*100
-                    map.put("ownSecAmount", bean.getSecAmount());
-
-                    list.add(map);
-                }
-                resultMap.put("ptlSecList", list);
-            }
-
-            // 解除质押券数据集	ptlRelieveSecList
-            if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps) || DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)) {
-                List<Map<String, Object>> list = new ArrayList<>(4);
-                for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
-                    bean = new PositionRequestBaseBean(item);
-                    // 债券代码 指令.质押券的金融产品代码 TODO
-                    bean.setFinprodId(null);
-                    // 券面总额 指令.质押券数量*100
-                    bean.setSecAmount(null);
-
-                    Map<String, Object> map = BeanUtil.object2Map(bean);
-                    //融入券券面总额
-                    map.put("integrateSecAmount", null);
-                    //本方券券面总额 指令.质押券数量*100
-                    map.put("ownSecAmount", bean.getSecAmount());
-
-                    list.add(map);
-                }
-                resultMap.put("ptlRelieveSecList", list);
             }
         }
     }

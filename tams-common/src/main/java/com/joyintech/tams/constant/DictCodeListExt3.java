@@ -1744,6 +1744,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     业务动作_指令自动完成(DictCode.业务动作,"15","指令自动完成"),
     业务动作_交易下单(DictCode.业务动作,"16","交易下单"),
     业务动作_撤委托(DictCode.业务动作,"18","撤委托"),
+    业务动作_交收回溯(DictCode.业务动作,"20","交收回溯"),
     业务动作_待交收(DictCode.业务动作,"22","待交收"),
     业务动作_成交匹配(DictCode.业务动作,"19","成交匹配"),
 
