@@ -329,7 +329,9 @@
         AND espr.CDATE = to_date(#{sysDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
         AND espr.DATE_TYPE =0 AND ( ppc.S_HOLDINGTYPE =#{S_002} or espr.HODING_TYPE=#{A_012})
         ) TEMP
+        <if test="userId!=null and userId!=''">
         LEFT JOIN PTL_PORTFOLIO_AUTHORITY ON TEMP.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+        </if>
         WHERE 1 = 1
         AND TEMP.VDATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
         AND TEMP.PORTFOLIO_ID NOT IN
