@@ -201,4 +201,6 @@ public interface JoyinbusinessCommonMapper {
     SecInfoModelDto getSecInfoModel(Map<String, Object> param);
 
     String findUserByMySideTrader(@Param("mySideTrader") String mySideTrader,@Param("mySide") String mySide);
+
+    List<String> findAllModuleIds(@Param("userName") String userName);
 }
