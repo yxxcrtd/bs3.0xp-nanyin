@@ -1265,12 +1265,266 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @param cfetsDto
      * @return
      */
+    public CfetsEtribBondInfo003Dto packageEquityForSubmit(CfetsEtribBondInfo003Dto dto) {
+        FinProduct fp = null;
+        if(StringUtil.isNotEmpty(dto.getFinprodId())) {
+            fp = cfetsetrIbBondinfoMapper.findAssetInfo(dto.getFinprodId());
+        }
+        if(StringUtil.isNotEmpty(fp)){
+            dto.setTradeMarket(fp.getTradeMarket());
+            dto.setCalendarId(fp.getCalendarId());
+            dto.setCcy(fp.getCcy());
+            Date entrustDate=DateUtil.compareDate(dto.getEtrDate(),fp.getVdate())>0?dto.getEtrDate():fp.getVdate();
+            dto.setEntrustDate(entrustDate);
+            dto.setFinvdate(fp.getVdate());
+            dto.setFinmdate(fp.getMdate());
+            dto.setFinprodAbbr(fp.getFinprodAbbr());
+        }
+        dto.setInvManagerId(SecurityUtil.getLoginUser().getUserName());
+        dto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
+        dto.setElementId(dto.getElementId());
+        List<CfetsBussCombDistribtDto> bussCombDistribtList = dto.getBussCombDistribtList();
+        List<CfetsEtribBondInfo003Dto> etrInvestBondInfoDtosList=new ArrayList<>();
+        //本方券券面总额
+        BigDecimal bfqtrkyccSAmt=BigDecimal.ZERO;
+        //融入券卖空待购回持仓
+        BigDecimal rrqmkdghSAmt=BigDecimal.ZERO;
+        for(CfetsBussCombDistribtDto item:bussCombDistribtList){
+            CfetsEtribBondInfo003Dto dd=new CfetsEtribBondInfo003Dto();
+            BeanUtil.copyPropertiesIgnoreNull(dd,dto);
+            dd.setPortfolioId(item.getPortfolioId());
+            dd.setTradeAmt(item.getEntrustNum());
+            dd.setEntrustNum(item.getEntrustNum());
+            dd.setInvAim(item.getBusinessModel());
+            dd.setBusinessModel(item.getBusinessModel());
+            dd.setEntrustOwnNum(item.getEntrustOwnNum());
+            dd.setEntrustIntegrateNum(item.getEntrustIntegrateNum());
+            dd.setElementId(item.getElementId());
+            //根据卖空模式对本方券和融入券/卖空购回券面总额进行赋值
+            String shortSellingSupported=CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
+            if(StringUtil.equals(shortSellingSupported,"01")){
+                //只有券面总额
+                //查询系统融入券待购回持仓和本方券T日可用持仓
+                BaseMap bm = BaseMap.newMap()
+                        .put("S_003", DictCodeListExt3.资产类型_融入券卖空待购回持仓.getValue())
+                        .put("A_004", DictCodeListExt3.资产类型_债券本方券可用持仓.getValue())
+                        .put("portfolioId", item.getPortfolioId())
+                        .put("cdate", dto.getEtrDate())
+                        .put("finprodId", dto.getFinprodId());
+                // 查询头寸信息
+                Map map = cfetsetrIbBondinfoMapper.queryPositionByEtrInfo(bm);
+                //本方券T日可用持仓
+                BigDecimal bfqtrkyccAmt=BigDecimal.ZERO;
+                if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("BFQTRKYCC"))){
+                    bfqtrkyccAmt=new BigDecimal(map.get("BFQTRKYCC").toString());
+                }
+                //融入券卖空待购回持仓
+                BigDecimal rrqmkdghAmt=BigDecimal.ZERO;
+                if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("RRQMKDGH"))){
+                    rrqmkdghAmt=new BigDecimal(map.get("RRQMKDGH").toString());
+                }
+                if(StringUtil.equals(dto.getPs(),DictCodeList.交易方向_买入.getValue())){
+                    BigDecimal integrateSecAmount=rrqmkdghAmt;
+                    if(integrateSecAmount.compareTo(item.getEntrustNum())>0){
+                        dd.setEntrustIntegrateNum(item.getEntrustNum());
+                        dd.setEntrustOwnNum(BigDecimal.ZERO);
+                    }else{
+                        dd.setEntrustIntegrateNum(integrateSecAmount);
+                        dd.setEntrustOwnNum(ArithmeticUtil.subtract(item.getEntrustNum(),integrateSecAmount));
+                    }
+                }else if(StringUtil.equals(dto.getPs(),DictCodeList.交易方向_卖出.getValue())){
+                    //查询系统本方券可用持仓
+                    BigDecimal ownSecAmount=bfqtrkyccAmt;
+                    if(ownSecAmount.compareTo(item.getEntrustNum())>0){
+                        dd.setEntrustOwnNum(item.getEntrustNum());
+                        dd.setEntrustIntegrateNum(BigDecimal.ZERO);
+                    }else{
+                        dd.setEntrustOwnNum(ownSecAmount);
+                        dd.setEntrustIntegrateNum(ArithmeticUtil.subtract(item.getEntrustNum(),ownSecAmount));
+                    }
+                }else if(StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_回售.getValue())){
+                    dd.setEntrustOwnNum(item.getEntrustNum());
+                    dd.setEntrustIntegrateNum(BigDecimal.ZERO);
+                }
+                bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
+                rrqmkdghSAmt=ArithmeticUtil.doAdd(rrqmkdghSAmt,dd.getEntrustIntegrateNum());
+            }else if(StringUtil.equals(shortSellingSupported,"02")){
+                if(StringUtil.equals(dto.getPs(),DictCodeList.交易方向_买入.getValue())
+                        || StringUtil.equals(dto.getPs(),DictCodeList.交易方向_卖出.getValue())){
+                    dd.setEntrustOwnNum(item.getEntrustOwnNum()==null?BigDecimal.ZERO:item.getEntrustOwnNum());
+                    dd.setEntrustIntegrateNum(item.getEntrustIntegrateNum()==null?BigDecimal.ZERO:item.getEntrustIntegrateNum());
+                    bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
+                    rrqmkdghSAmt=ArithmeticUtil.doAdd(rrqmkdghSAmt,dd.getEntrustIntegrateNum());
+                }
+                if(StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_回售.getValue())){
+                    dd.setEntrustOwnNum(item.getEntrustNum());
+                    dd.setEntrustIntegrateNum(BigDecimal.ZERO);
+                    bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
+                    rrqmkdghSAmt=BigDecimal.ZERO;
+                }
+
+            }else if(StringUtil.equals(shortSellingSupported,"03")){
+                dd.setEntrustOwnNum(item.getEntrustNum());
+                dd.setEntrustIntegrateNum(BigDecimal.ZERO);
+                bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
+                rrqmkdghSAmt=BigDecimal.ZERO;
+            }
+            //根据组合id查询组合信息
+            PtlPortfolio pp=cfetsetrIbBondinfoMapper.findPtlInfo(item.getPortfolioId());
+            if(null!=pp){
+                item.setPortfolioName(pp.getPortfolioName());
+            }
+            //针对组合分配中的数据查询头寸信息
+            item.setEntrustOwnNum(dd.getEntrustOwnNum());
+            item.setEntrustIntegrateNum(dd.getEntrustIntegrateNum());
+            //查询系统融入券待购回持仓和本方券T日可用持仓
+
+            // 从原投管系统取
+            BigDecimal cashT = BigDecimal.ZERO; // 指令t日可用
+            BigDecimal cashT1 = BigDecimal.ZERO; // 指令t1日可用
+            BigDecimal realCash = BigDecimal.ZERO; // 账户现金
+            BaseMap paramMap = BaseMap.newMap()
+                    .put("finprodId", dto.getFinprodId())
+                    .put("portfolioId", item.getPortfolioId())
+                    .put("ccy", fp.getCcy())
+                    .put("vdate", dto.getEtrDate())
+                    .put("calId", "03") // 银行间
+                    ;
+            Map<String, Object> mapRst = etrCommonService.getProAvailableCash(paramMap);
+            if (mapRst != null){ // 指令t日可用，指令t1日可用
+                cashT = ArithmeticUtil.doAdd(cashT, BaseMap.newMap(mapRst).getBigDecimal("cashT"));
+                cashT1 = ArithmeticUtil.doAdd(cashT1, BaseMap.newMap(mapRst).getBigDecimal("cashT1"));
+            }
+            PtlCashPositionFlowDto positionQueryDto = new PtlCashPositionFlowDto();
+            positionQueryDto.setPortfolioId(item.getPortfolioId());
+            positionQueryDto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+            positionQueryDto.setCdate(iPlatformDate.getSysDate());
+            // 实际现金（账户现金）
+            realCash = ArithmeticUtil.doAdd(realCash, basePtlCashPositionInfoService.queryUsableCashPosition(positionQueryDto));
+            List<String> portfolioIdList=new ArrayList<>();
+            portfolioIdList.add(item.getPortfolioId());
+
+            BaseMap bm = BaseMap.newMap()
+                    .put("S_001", DictCodeListExt3.资产类型_指令汇总可用持仓.getValue())
+                    .put("S_003", DictCodeListExt3.资产类型_融入券卖空待购回持仓.getValue())
+                    .put("S_004", DictCodeListExt3.资产类型_汇总可用现金.getValue())
+                    .put("A_004", DictCodeListExt3.资产类型_债券本方券可用持仓.getValue())
+                    .put("A_005", DictCodeListExt3.资产类型_债券融入券可用持仓.getValue())
+                    .put("C_01", DictCodeListExt3.资产类型_现金账户持仓.getValue())
+                    .put("portfolioIdList", portfolioIdList)
+                    .put("cdate", DateUtil.format(dto.getEtrDate(),"yyyy-MM-dd"))
+                    .put("finprodId", dto.getFinprodId())
+                    .put("acctId", null);
+            // 查询头寸信息
+            Map map = cfetsetrIbBondinfoMapper.queryPositionInfo(bm);
+           /* if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("T0KYXJ"))){
+                cashT=ArithmeticUtil.doAdd(new BigDecimal(map.get("T0KYXJ").toString()), cashT);
+            }*/
+            item.setProAvailableCash(cashT);
+            /*if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("T1KYXJ"))){
+                cashT1=ArithmeticUtil.doAdd(new BigDecimal(map.get("T1KYXJ").toString()), cashT1);
+            }*/
+            item.setProAvailableCash1(cashT1);
+            if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("ZHXJ"))){
+                realCash=ArithmeticUtil.doAdd(new BigDecimal(map.get("ZHXJ").toString()), realCash);
+            }
+            item.setSecAcctAvailableCash(realCash);
+            //融入券卖空购回持仓
+            BigDecimal rrqmkghccAmt=BigDecimal.ZERO;
+            if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("RRQMKDGHCC"))){
+                rrqmkghccAmt=new BigDecimal(map.get("RRQMKDGHCC").toString());
+            }
+            item.setEntrustIntegrateSecNum(rrqmkghccAmt);
+            //本方券T日可用持仓
+            BigDecimal bfqtrkyccAmt=BigDecimal.ZERO;
+            if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("BFQTRKYCC"))){
+                bfqtrkyccAmt=new BigDecimal(map.get("BFQTRKYCC").toString());
+            }
+            item.setOwnPorAvailableSec(bfqtrkyccAmt);
+            //本方券T+1日可用持仓
+            BigDecimal bfqt1rkyccAmt=BigDecimal.ZERO;
+            if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("BFQT1RKYCC"))){
+                bfqt1rkyccAmt=new BigDecimal(map.get("BFQT1RKYCC").toString());
+            }
+            item.setOwnProAvailableSec1(bfqt1rkyccAmt);
+            //资产T日可用持仓
+            BigDecimal zctrkyccAmt=BigDecimal.ZERO;
+            if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("ZCTRKYCC"))){
+                zctrkyccAmt=new BigDecimal(map.get("ZCTRKYCC").toString());
+            }
+            item.setPorAvailableSec(zctrkyccAmt);
+
+            //资产T+1日可用持仓
+            BigDecimal zct1rkyccAmt=BigDecimal.ZERO;
+            if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("ZCT1RKYCC"))){
+                zct1rkyccAmt=new BigDecimal(map.get("ZCT1RKYCC").toString());
+            }
+            item.setPorAvailableSec1(zct1rkyccAmt);
+            //针对退回指令，查询指令下达时间
+            if(StringUtil.isNotEmpty(dto.getEntrustId())){
+                //根据指令id查询出该资产是退回指令，且该指令的下达时间
+                CfetsEtribBondInfo003Dto transmitTimeDto=cfetsetrIbBondinfoMapper.selectTransmitTimeByInfo(dto.getEntrustId());
+                if(null!=transmitTimeDto && StringUtil.isNotEmpty(transmitTimeDto.getTransmitTime())){
+                    dd.setTransmitTime(transmitTimeDto.getTransmitTime());
+                    dto.setTransmitTime(transmitTimeDto.getTransmitTime());
+                }
+                dd.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+                dto.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+            }else{
+                dd.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+                dto.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+            }
+            etrInvestBondInfoDtosList.add(dd);
+        }
+        dto.setEntrustOwnNum(bfqtrkyccSAmt);
+        dto.setEntrustIntegrateNum(rrqmkdghSAmt);
+        //查询新建金额数据计算
+        CfetsEtrCalcAmountRequest calcAmtReq=new CfetsEtrCalcAmountRequest();
+        calcAmtReq.setShareNum(dto.getEntrustNum());
+        calcAmtReq.setEntrustIntegrateNum(dto.getEntrustIntegrateNum());
+        calcAmtReq.setEntrustOwnNum(dto.getEntrustOwnNum());
+        calcAmtReq.setPrice(dto.getPrice());
+        calcAmtReq.setUnitFprice(dto.getUnitFprice());
+        CfetsEtrCalcAmountResponse calcAmtRes=cfetsetribBondInfo003Service.calAmountData(calcAmtReq);
+        dto.setPriceAmt(calcAmtRes.getPriceAmt());
+        dto.setUnitInt(calcAmtRes.getUnitInt());
+        dto.setUnitIntAmt(calcAmtRes.getUnitIntAmt());
+        dto.setUnitFpriceAmt(calcAmtRes.getUnitFpriceAmt());
+        dto.setEntrustOwnInt(calcAmtRes.getEntrustOwnInt());
+        dto.setEntrustIntegrateInt(calcAmtRes.getEntrustIntegrateInt());
+        dto.setEntrustOwnUnitFpriceAmt(calcAmtRes.getEntrustOwnUnitFpriceAmt());
+        dto.setEntrustIntegrateUnitFpriceAmt(calcAmtRes.getEntrustIntegrateUnitFpriceAmt());
+        //风险
+    /*    CfetsEtribdoRiskcalResponse riskDto=cfetsDto.getCfetsEtribdoRiskcalReturn();
+
+        List<RiskTrialRetDto> riskTrialRetDto=new ArrayList<>();
+        if(!StringUtil.isEmptyList(dto.getRiskTrialRetDto())){
+            for(CfetsEtribdoRiskcalResponse it:riskDto.getRiskcalReturnList()){
+                RiskTrialRetDto t=new RiskTrialRetDto();
+                BeanUtil.copyPropertiesIgnoreNull(t,it);
+                t.setConclusion(riskDto.getRiskTrialSpan());
+                riskTrialRetDto.add(t);
+            }
+        }
+        dto.setRiskTrialRetDto(riskTrialRetDto);*/
+        dto.setEtrInvestBondInfoDtos(etrInvestBondInfoDtosList);
+        return dto;
+    }
+
+    /**
+     * 保存提交时，后台数据转换
+     * @param cfetsDto
+     * @return
+     */
     public CfetsEtribBondInfo003Dto packageEquity(CfetsEtribSaveRequest cfetsDto) {
-        FinProduct fp=cfetsetrIbBondinfoMapper.findAssetInfo(cfetsDto.getFinprodId());
+        FinProduct fp = null;
+        if(StringUtil.isNotEmpty(cfetsDto.getFinprodId())) {
+            fp = cfetsetrIbBondinfoMapper.findAssetInfo(cfetsDto.getFinprodId());
+        }
         CfetsEtribBondInfo003Dto dto=new CfetsEtribBondInfo003Dto();
         BeanUtil.copyPropertiesIgnoreNull(dto,cfetsDto);
-        dto.setTradeMarket(fp.getTradeMarket());
         if(StringUtil.isNotEmpty(fp)){
+            dto.setTradeMarket(fp.getTradeMarket());
             dto.setCalendarId(fp.getCalendarId());
             dto.setCcy(fp.getCcy());
             Date entrustDate=DateUtil.compareDate(cfetsDto.getEtrDate(),fp.getVdate())>0?cfetsDto.getEtrDate():fp.getVdate();
@@ -1285,7 +1539,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         dto.setMdate(cfetsDto.getEtrDate());
         dto.setSettleSpeed(cfetsDto.getSettleSpeed());
         dto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
-        dto.setElementId(dto.getBussCombDistribtList().get(0).getElementId());
+        dto.setElementId(cfetsDto.getElementId());
         List<CfetsBussCombDistribtDto> bussCombDistribtList =dto.getBussCombDistribtList();
         List<CfetsEtribBondInfo003Dto> etrInvestBondInfoDtosList=new ArrayList<>();
         //本方券券面总额

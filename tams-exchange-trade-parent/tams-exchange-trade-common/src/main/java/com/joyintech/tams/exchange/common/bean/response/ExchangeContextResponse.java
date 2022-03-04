@@ -42,6 +42,15 @@ public class ExchangeContextResponse {
     @ApiModelProperty(value = "债券交易数量单位，值域为01-张；02-手")
     private String bondTradedUnit;
 
+    @ApiModelProperty(value = "交易端指令列表自动刷新时间(单位毫秒)")
+    private String trdInstructionRefreshTime;
+
+    @ApiModelProperty(value = "交易端行情列表自动刷新时间(单位毫秒)")
+    private String trdQuoteRefreshTime;
+
+    @ApiModelProperty(value = "交易端委托列表自动刷新时间(单位毫秒)")
+    private String trdEntrustRefreshTime;
+
 
     public String getUserId() {
         return userId;
@@ -121,5 +130,29 @@ public class ExchangeContextResponse {
 
     public void setBondTradedUnit(String bondTradedUnit) {
         this.bondTradedUnit = bondTradedUnit;
+    }
+
+    public String getTrdInstructionRefreshTime() {
+        return trdInstructionRefreshTime;
+    }
+
+    public void setTrdInstructionRefreshTime(String trdInstructionRefreshTime) {
+        this.trdInstructionRefreshTime = trdInstructionRefreshTime;
+    }
+
+    public String getTrdQuoteRefreshTime() {
+        return trdQuoteRefreshTime;
+    }
+
+    public void setTrdQuoteRefreshTime(String trdQuoteRefreshTime) {
+        this.trdQuoteRefreshTime = trdQuoteRefreshTime;
+    }
+
+    public String getTrdEntrustRefreshTime() {
+        return trdEntrustRefreshTime;
+    }
+
+    public void setTrdEntrustRefreshTime(String trdEntrustRefreshTime) {
+        this.trdEntrustRefreshTime = trdEntrustRefreshTime;
     }
 }

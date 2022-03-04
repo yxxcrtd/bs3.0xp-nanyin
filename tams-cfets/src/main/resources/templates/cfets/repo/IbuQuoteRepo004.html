@@ -60,12 +60,15 @@
                             <div class="layui-form-item">
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label">报价方式</label>
-                                    <div class="layui-input-block">
-                                        <input type="radio"
+                                    <div class="layui-input-block" >
+                                        <input type="radio" value="01" name="quoteStyle_radio"
+                                               lay-filter="quoteStyleFilter" disabled
                                                th:checked="'01' eq ${entity?.quoteStyle}" title="对话报价">
-                                        <input type="radio"
+                                        <input type="radio" value="02" name="quoteStyle_radio"
+                                               lay-filter="quoteStyleFilter" disabled
                                                th:checked="'02' eq ${entity?.quoteStyle}" title="请求报价">
-                                        <input type="radio"
+                                        <input type="radio" value="05" name="quoteStyle_radio"
+                                               lay-filter="quoteStyleFilter" disabled
                                                th:checked="'05' eq ${entity?.quoteStyle}" title="X-Repo">
                                     </div>
                                 </div>
@@ -73,7 +76,7 @@
                                     <label class="layui-form-label form-label-wrap"
                                            th:text="#{IbuQuoteRepo004.ps}">交易方向</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select required type="text" id="ps" name="ps"
+                                        <select required type="text" id="ps" name="ps" disabled
                                                 class="layui-input form-input input-select"
                                                 placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
                                                 th:data-result='${PS}' allowClear="true" formatoption="true"
@@ -86,7 +89,7 @@
                                     <label class="layui-form-label form-label-wrap"
                                            th:text="#{IbuQuoteRepo004.my}">本方</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select required type="text" id="mySide" name="mySide"
+                                        <select required type="text" id="mySide" name="mySide" disabled
                                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                                 th:placeholder="#{SysCommon.placeholder}"
                                                 th:data-url="@{/common/joyinbusinessCommon/queryMySideOrCount}"
@@ -97,7 +100,7 @@
                                     <label class="layui-form-label form-label-wrap"
                                            th:text="#{IbuQuoteRepo004.myTradeId}">本方交易员</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select required type="text" id="mySideTrader" name="mySideTrader"
+                                        <select required type="text" id="mySideTrader" name="mySideTrader" disabled
                                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                                 th:placeholder="#{SysCommon.placeholder}"
                                                 th:data-url="@{/common/joyinbusinessCommon/queryMySideTraderOrCountTrader?dealType=01}"
@@ -117,7 +120,7 @@
                                                 allowClear="true" th:initValue="${entity?.counterId}"></select>
                                     </div>
                                     <div class="layui-input-inline input-inline" id="counterIdCCP_div">
-                                        <select required type="text" id="counterIdCCP"
+                                        <select required type="text" id="counterIdCCP" disabled
                                                 class="layui-input form-input input-select"
                                                 placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
                                                 th:data-result='${REGIST_ORG}' allowClear="true" formatoption="true"
@@ -145,7 +148,7 @@
                                     <label class="layui-form-label form-label-wrap">回购方式</label>
                                     <div class="layui-input-inline input-inline">
                                         <select required type="text" id="repoMethod" name="repoMethod"
-                                                class="layui-input form-input input-select"
+                                                class="layui-input form-input input-select" disabled
                                                 placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
                                                 th:data-result='${REPO_METHOD}' allowClear="true" formatoption="true"
                                                 th:initValue="${entity?.repoMethod}"></select>
@@ -156,7 +159,7 @@
                                            data-th-text="#{IbuQuoteRepo004.settleSpeed}">清算速度</label>
                                     <div class="layui-input-inline input-inline buss-inline-wrap">
                                         <select required type="text" id="IbuQuoteRepo004_settleSpreed"
-                                                name="settleSpreedCode"
+                                                name="settleSpreedCode" disabled
                                                 class="layui-input form-input input-select"
                                                 placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
                                                 th:data-result='${ACCOUNT_SPEED}' allowClear="true" formatoption="true"
@@ -166,8 +169,8 @@
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">币种</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select required disabled type="text" name="ccy"
-                                                class="layui-input form-input input-select"
+                                        <select required type="text" name="ccy"
+                                                class="layui-input form-input input-select" disabled
                                                 placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
                                                 th:data-result='${CCY}' allowClear="true" formatoption="true"
                                                 th:initValue="${entity?.ccy}"></select>
@@ -178,7 +181,7 @@
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">回购期限</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input required type="text" name="repoTerm" id="repoTerm"
+                                        <input required type="text" name="repoTerm" id="repoTerm" disabled
                                                class="layui-input form-input" placeholder="请输入内容"
                                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.repoTerm}">
                                         <span class="input-right-show">天</span>
@@ -196,8 +199,8 @@
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">结算币种</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select required disabled type="text" name="settCcy"
-                                                class="layui-input form-input input-select"
+                                        <select required type="text" name="settCcy"
+                                                class="layui-input form-input input-select" disabled
                                                 placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
                                                 th:data-result='${CCY}' allowClear="true" formatoption="true"
                                                 th:initValue="${entity?.settCcy}"></select>
@@ -210,7 +213,7 @@
                                     <div class="layui-input-inline input-inline">
                                         <input required type="text" name="tradeAmt" id="tradeAmt"
                                                class="layui-input form-input text-number" placeholder="请输入内容"
-                                               data-fixtype="2" data-textrange="2"
+                                               data-fixtype="2" data-textrange="2" disabled
                                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.tradeAmt}">
                                         <span class="input-right-show">元</span>
                                     </div>
@@ -219,7 +222,7 @@
                                     <label class="layui-form-label form-label-wrap">券面总额合计</label>
                                     <div class="layui-input-inline input-inline buss-inline-wrap">
                                         <input required type="text" name="shareAmtStr" id="shareAmtStr"
-                                               class="layui-input form-input" placeholder="请输入内容"
+                                               class="layui-input form-input" placeholder="请输入内容" disabled
                                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.shareAmtStr}">
                                         <span class="input-right-show">万元</span>
                                     </div>
@@ -229,7 +232,7 @@
                                     <div class="layui-input-inline input-inline">
                                         <input required type="text" name="convertAmt" id="convertAmt"
                                                class="layui-input form-input text-number" placeholder="请输入内容"
-                                               data-fixtype="2" data-textrange="2"
+                                               data-fixtype="2" data-textrange="2" disabled
                                                th:placeholder="#{SysCommon.placeholder}"
                                                th:value="${entity?.convertAmt}">
                                         <span class="input-right-show">元</span>
@@ -240,8 +243,8 @@
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">首次结算方式</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select required disabled type="text" name="deliverytype"
-                                                class="layui-input form-input input-select"
+                                        <select required type="text" name="deliverytype"
+                                                class="layui-input form-input input-select" disabled
                                                 placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
                                                 th:data-result='${SETT_MODE}' allowClear="true" formatoption="true"
                                                 th:initValue="*{entity?.deliverytype}"></select>
@@ -250,8 +253,8 @@
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">到期结算方式</label>
                                     <div class="layui-input-inline input-inline buss-inline-wrap">
-                                        <select required disabled type="text" name="mDeliveryType"
-                                                class="layui-input form-input input-select"
+                                        <select required type="text" name="mDeliveryType"
+                                                class="layui-input form-input input-select" disabled
                                                 placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
                                                 th:data-result='${SETT_MODE}' allowClear="true" formatoption="true"
                                                 th:initValue="*{entity?.mDeliveryType}"></select>
@@ -260,8 +263,8 @@
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">清算类型</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select required disabled type="text" name="settleType"
-                                                class="layui-input form-input input-select"
+                                        <select required type="text" name="settleType"
+                                                class="layui-input form-input input-select" disabled
                                                 placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
                                                 th:data-result='${CLEAR_TYPE}' allowClear="true" formatoption="true"
                                                 th:initValue="*{entity?.settleType}"></select>
@@ -325,7 +328,7 @@
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap">首次结算日</label>
                                 <div class="layui-input-inline input-inline">
-                                    <input disabled type="text" name="settlementStartDate"
+                                    <input type="text" name="settlementStartDate" disabled
                                            class="layui-input form-input input-dateSelect" placeholder="请输入内容"
                                            th:placeholder="#{SysCommon.placeholder}"
                                            th:value="${#dates.format(entity?.settlementStartDate,'yyyy-MM-dd')}">
@@ -334,7 +337,7 @@
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap">到期结算日</label>
                                 <div class="layui-input-inline input-inline">
-                                    <input disabled type="text" name="settlementEndDate"
+                                    <input type="text" name="settlementEndDate" disabled
                                            class="layui-input form-input input-dateSelect" placeholder="请输入内容"
                                            th:placeholder="#{SysCommon.placeholder}"
                                            th:value="${#dates.format(entity?.settlementEndDate,'yyyy-MM-dd')}">
@@ -343,7 +346,7 @@
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap">回购利息(元)</label>
                                 <div class="layui-input-inline input-inline">
-                                    <input required type="text" name="mIntAmt" id="mIntAmt"
+                                    <input required type="text" name="mIntAmt" id="mIntAmt" disabled
                                            class="layui-input form-input text-number" placeholder="请输入内容"
                                            data-fixtype="2" data-textrange="2"
                                            th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.mIntAmt}">
@@ -355,7 +358,7 @@
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap">到期结算金额(元)</label>
                                 <div class="layui-input-inline input-inline">
-                                    <input required type="text" name="mtradeAmt" id="mtradeAmt"
+                                    <input required type="text" name="mtradeAmt" id="mtradeAmt" disabled
                                            class="layui-input form-input text-number" placeholder="请输入内容"
                                            data-fixtype="2" data-textrange="2"
                                            th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.mtradeAmt}">
@@ -365,7 +368,7 @@
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap">实际占款天数(天)</label>
                                 <div class="layui-input-inline input-inline">
-                                    <input required type="text" name="actCapDays" id="actCapDays"
+                                    <input required type="text" name="actCapDays" id="actCapDays" disabled
                                            class="layui-input form-input" placeholder="请输入内容"
                                            th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.actCapDays}">
                                     <span class="input-right-show">天</span>
@@ -374,7 +377,7 @@
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap">期限品种</label>
                                 <div class="layui-input-inline input-inline buss-inline-wrap">
-                                    <input required type="text" name="termType" id="termType"
+                                    <input required type="text" name="termType" id="termType" disabled
                                            class="layui-input form-input" placeholder="请输入内容"
                                            th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.termType}">
                                 </div>
@@ -389,7 +392,7 @@
                         <span class="title-des">组合分配</span>
                         <i class="iconfont icon-arrow-down pro-down-icon"></i>
                     </h3>
-                    <div class="pro-module-item">
+                    <div class="pro-module-item pro-item-wrap">
                         <div>
                             <table class="layui-table" id="bussCombDistribtTable"></table>
                         </div>
@@ -411,6 +414,7 @@
             </div>
         </form>
         <div class="row text-center" style="margin: 20px 0;">
+            <a th:id="IbuQuoteRepo004_btn_save" class="layui-btn layui-btn-sm btn-save" data-th-text="#{SysCommon.save}">保存</a>
             <a id="IbuQuoteRepo004_btn_submit" class="layui-btn layui-btn-sm btn-submit" data-th-text="#{SysCommon.submit}">提交</a>
             <a id="IbuQuoteRepo004_btn_cancel" class="layui-btn layui-btn-sm btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a>
         </div>

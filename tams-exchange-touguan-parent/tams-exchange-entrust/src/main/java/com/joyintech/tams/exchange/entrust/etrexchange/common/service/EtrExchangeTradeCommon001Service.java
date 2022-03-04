@@ -75,6 +75,7 @@ import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.*;
@@ -194,6 +195,12 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
 	@Autowired
 	private EtrEntrustDetailMapper etrEntrustDetailMapper;
+
+	// modify by etliu 20220303 start
+	// 质押式回购出入库计算时，原公式：标准券数量=质押数量*标准折算率，改成：标准券数量=质押数量*标准折算率*面值/100  ---需求张琼
+	@Autowired
+	private TrdCommonBaseService trdCommonBaseService;
+	// modify by etliu 20220303 end
 
 	/**
 	 * {@inheritDoc}
@@ -2298,6 +2305,14 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			if(StringUtils.equals(DictCodeListExt3.交易方向_质押券入库.getValue(), ps) ||
 					StringUtils.equals(DictCodeListExt3.交易方向_质押券出库.getValue(), ps)){
 				if(null != entrustAmt){//entrustAmt 代表标准券数量
+					// modify by etliu 20220303 start
+					// 质押式回购出入库计算时，原公式：标准券数量=质押数量*标准折算率，改成：标准券数量=质押数量*标准折算率*面值/100  ---需求张琼
+					BigDecimal 百元券面 = trdCommonBaseService.getFaceValue(finprodId, DateUtil.platDateFromCache());
+					if (百元券面 == null) {
+						百元券面 = BigDecimal.valueOf(100);
+					}
+					entrustAmt = entrustAmt.multiply(百元券面).divide(BigDecimal.valueOf(100));
+					// modify by etliu 20220303 end
 					entrustAmt = new BigDecimal(entrustAmt.intValue());
 				}
 			}

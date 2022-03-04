@@ -46,6 +46,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
 @PageId("CfetsEtrIbBondinfo003")
@@ -95,8 +96,13 @@ public class CfetsEtribBondInfo003Controller extends BaseController {
         boolean todoList = false;
         // 代办中过来
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
-            entity = cfetsetribBondInfo003Service.getBussinessEntityByWorkflowId(
-                    workflowId);
+            entity = cfetsetribBondInfo003Service.getBussinessEntityByWorkflowId(workflowId);
+            if(Objects.isNull(entity.getTradeAmt())) {
+                entity.setTradeAmt(BigDecimal.ZERO);
+            }
+            if(Objects.isNull(entity.getEntrustOwnNum())) {
+                entity.setEntrustOwnNum(BigDecimal.ZERO);
+            }
             entity.setMatureYield(ArithmeticUtil.multiply(entity.getMatureYield(),new BigDecimal(100)));
             entity.setExerYield(ArithmeticUtil.multiply(entity.getExerYield(),new BigDecimal(100)));
             model.addAttribute(GlobalConstant.ENTITY, entity);

@@ -133,7 +133,7 @@ public class TrdAvailableCashQueryService {
             //查询新表可用现金
             PtlCashPositionFlowDto dtoNew = new PtlCashPositionFlowDto();
             dtoNew.setHodingType(DictCodeListExt3.资产类型_汇总可用现金.getValue());
-            dtoNew.setCdate(dto.getCdate());
+            dtoNew.setCdate(tradeDate);
             dtoNew.setPortfolioId((String)param.get("portfolioId"));
             dtoNew.setCcy((String)param.get("ccy"));
             dtoNew.setDateType(0);
