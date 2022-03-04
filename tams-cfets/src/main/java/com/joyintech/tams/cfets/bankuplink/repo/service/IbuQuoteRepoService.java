@@ -837,10 +837,8 @@ public class IbuQuoteRepoService extends BaseService {
      * @author jiangpeng
      * @date 2021/12/20 14:31
      */
-    public List<RepoDealTransactionDetailsDto> listDealTransactionDetails(String entrustId) {
-        Map<String, Object> param = new HashMap<>();
+    public List<RepoDealTransactionDetailsDto> listDealTransactionDetails(Map<String, Object> param) {
         String loginUserId = LoginUserUtil.getUserName();
-        param.put("entrustId", entrustId);
         param.put("rolePos03", DictCodeListExt2.角色岗位_交易处长.getValue());
         if ("admin".equals(loginUserId)) {
 //            loginUserId = "jp";//TODO 测试写死登录用户 提交代码时修改
@@ -901,6 +899,15 @@ public class IbuQuoteRepoService extends BaseService {
         Map<String, Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("platDate", iPlatformDate.getSysDateStr());
         pageParam.put("OPR_TYPE_09", DictCodeListExt3.操作类型_导出.getValue());
+        // 排序处理
+        if(StringUtil.isNotEmpty(dto.getPageMode())){
+            if(StringUtil.isNotEmpty(dto.getPageMode().getDirection())){
+                pageParam.put("direction", dto.getPageMode().getDirection());
+            }
+            if(StringUtil.isNotEmpty(dto.getPageMode().getSort())){
+                pageParam.put("sort", dto.getPageMode().getSort());
+            }
+        }
         setParam(pageParam, 1);
         pageParam.put("CONFIRM_STATUS_0", com.joyintech.tams.constant.DictCodeList.确认状态_未确认.getValue());
         int pageNo = dto.getPageMode() == null ? 1 : dto.getPageMode().getPageNo();

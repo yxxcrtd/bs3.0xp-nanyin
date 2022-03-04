@@ -784,6 +784,7 @@
 	
 	<select id="selectRepoQuoteList" parameterType="com.joyintech.background.component.uplink.interbank.business.dto.RepoQuoteSearchDto" 
                 resultMap="RepoQuoteExtResultMap">
+		select * from (
 		select
 			a.QUOTE_ID           I_Q_C_QUOTE_ID,
 		    a.QUOTE_TYPE         I_Q_C_QUOTE_TYPE,
@@ -1192,11 +1193,16 @@ SELECT T.QUOTE_ID,
 	    </where>
 	    order by decode(a.TRADE_STATUS, '09', 1, '06', 3, '08', 4, '07', 5, 2) asc, a.UPDATE_TIME desc
         <!-- order by decode(a.TRADE_STATUS, '06', 96, '08', 97, '13', 98,  '07', 99, to_number(a.TRADE_STATUS)) asc, a.UPDATE_TIME desc -->
+		)
+		<if test="sort != null and sort != '' and direction != null and direction != ''">
+			order by ${sort} ${direction}
+		</if>
     </select>
 
 	<!--add by chenjiaxing 质押式回购改造 start-->
 	<select id="selectRepoQuoteList2" parameterType="com.joyintech.background.component.uplink.interbank.business.dto.RepoQuoteSearchDto"
 			resultMap="RepoQuoteExtResultMap">
+		select * from (
 		select
 		a.QUOTE_ID           I_Q_C_QUOTE_ID,
 		a.QUOTE_TYPE         I_Q_C_QUOTE_TYPE,
@@ -1619,6 +1625,10 @@ SELECT T.QUOTE_ID,
 		</where>
 		order by decode(a.TRADE_STATUS, '06', 2, '08', 3, '13', 4, '07', 5, 1) asc, a.UPDATE_TIME desc
 		<!-- order by decode(a.TRADE_STATUS, '06', 96, '08', 97, '13', 98,  '07', 99, to_number(a.TRADE_STATUS)) asc, a.UPDATE_TIME desc -->
+		)
+		<if test="sort != null and sort != '' and direction != null and direction != ''">
+			order by ${sort} ${direction}
+		</if>
 	</select>
 	<!--add by chenjiaxing 质押式回购改造 end-->
 
