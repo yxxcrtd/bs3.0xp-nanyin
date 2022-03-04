@@ -200,70 +200,75 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @PostMapping("save")
     public Message<AjaxResult> save(@RequestBody CfetsEtribSaveRequest cfetsDto, BindingResult br)
             throws Exception {
-        CfetsEtribBondInfo003Dto allDto=cfetsEtrIbBondinfoService.packageEquity(cfetsDto);
-        // ----------add by zhangrui1 20200715 预占功能 start----------
-        List<CfetsEtribBondInfo003Dto> dataList = new ArrayList<>();
-        // ----------add by zhangrui1 20200715 预占功能 end----------
-        for(CfetsEtribBondInfo003Dto dto: allDto.getEtrInvestBondInfoDtos()) {
-            if(!StringUtil.isNotEmpty(dto.getEntrustId())){
-                BussinessCodeParameter param = new BussinessCodeParameter();
-                param.setCommonBusinessType(DictCodeList.共通业务类型_债券投资委托);
-                String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param): IDGenerator.generate();
-                dto.setEntrustId(code);
+        try {
+            CfetsEtribBondInfo003Dto allDto = cfetsEtrIbBondinfoService.packageEquity(cfetsDto);
+            // ----------add by zhangrui1 20200715 预占功能 start----------
+            List<CfetsEtribBondInfo003Dto> dataList = new ArrayList<>();
+            // ----------add by zhangrui1 20200715 预占功能 end----------
+            for (CfetsEtribBondInfo003Dto dto : allDto.getEtrInvestBondInfoDtos()) {
+                if (!StringUtil.isNotEmpty(dto.getEntrustId())) {
+                    BussinessCodeParameter param = new BussinessCodeParameter();
+                    param.setCommonBusinessType(DictCodeList.共通业务类型_债券投资委托);
+                    String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
+                    dto.setEntrustId(code);
+                }
+                //默认证券账户
+                if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("portfolioId", dto.getPortfolioId());
+                    map.put("finprodId", dto.getFinprodId());
+                    String secAcctId = cfetsEtrIbBondinfo002Service.qryPortfolioSecAcctId(map);
+                    if (com.joyintech.framework.util.StringUtil.isNotEmpty(secAcctId)) {
+                        dto.setSecAcctId(secAcctId); // 证券账户
+                    }
+                }
+                // ----------add by zhangrui1 20200715 预占功能 start----------
+                if (StringUtil.isNotEmpty(dto.getEntrustId())) {
+                    dataList.add(dto);
+                }
+                // ----------add by zhangrui1 20200715 预占功能 end----------
             }
-            //默认证券账户
-            if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
-                Map<String, Object> map = new HashMap<String, Object>();
-                map.put("portfolioId", dto.getPortfolioId());
-                map.put("finprodId", dto.getFinprodId());
-                String secAcctId = cfetsEtrIbBondinfo002Service.qryPortfolioSecAcctId(map);
-                if (com.joyintech.framework.util.StringUtil.isNotEmpty(secAcctId)) {
-                    dto.setSecAcctId(secAcctId); // 证券账户
+            if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
+                AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(
+                        dataList, DictCodeList.平安资产类型_债券.getValue(),
+                        BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
+                        true, null);
+                if (StringUtil.isNotEmpty(ar)) {
+                    return new Message<AjaxResult>().success().setData(ar);
                 }
             }
-            // ----------add by zhangrui1 20200715 预占功能 start----------
-            if (StringUtil.isNotEmpty(dto.getEntrustId())) {
-                dataList.add(dto);
+            EntrustRdsCommonAop.riskListToChildren(allDto.getRiskTrialRetDto(), allDto.getEtrInvestBondInfoDtos(),
+                    (dto, list) -> dto.setRiskTrialRetDto(list));
+
+            // 临时主键
+            BussinessCodeParameter param = new BussinessCodeParameter();
+            param.setCommonBusinessType(DictCodeList.共通业务类型_债券投资委托);
+            String generatedId = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
+            allDto.setTotalEtrustId(generatedId);
+            for (int i = 0; i < allDto.getBussCombDistribtList().size(); i++) {
+                allDto.getBussCombDistribtList().get(i).setEntrustId(allDto.getEtrInvestBondInfoDtos().get(i).getEntrustId());
             }
-            // ----------add by zhangrui1 20200715 预占功能 end----------
-        }
-        if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
-            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(
-                    dataList, DictCodeList.平安资产类型_债券.getValue(),
-                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
-                    true, null);
-            if (StringUtil.isNotEmpty(ar)) {
-                return new Message<AjaxResult>().success().setData(ar);
+            ProcessParameter<CfetsEtribBondInfo003Dto> processParameter = new ProcessParameter<>();
+            WorkFlowParameter<CfetsEtribBondInfo003Dto> params = new WorkFlowParameter<>();
+
+            params.setPageId("CfetsEtrIbBondinfo003");
+            params.setElementId(cfetsDto.getElementId());
+            params.setBusinessCode(CfetsEtribBondInfo003Dto::getTotalEtrustId);
+            params.setBusinessType(DictCodeListExt3.共通业务类型_本币业务指令_债券.getValue());
+            processParameter.setOperationType(OperationType.NEW);
+            processParameter.setWorkFlowParameter(params);
+
+            String msg = null;
+            try {
+                msg = cfetsEtrIbBondinfo003Service.start(processParameter, allDto);
+                AjaxResult m = new AjaxResult(msg);
+                return new Message<AjaxResult>().success().setData(m);
+            } catch (Exception e) {
+                logger.error("保存银行间多组合指令新建失败", e);
+                return PositionUtil.ajaxErrorReturn(e);
             }
-        }
-       EntrustRdsCommonAop.riskListToChildren(allDto.getRiskTrialRetDto(), allDto.getEtrInvestBondInfoDtos(),
-                (dto, list) -> dto.setRiskTrialRetDto(list));
-
-        // 临时主键
-        BussinessCodeParameter param = new BussinessCodeParameter();
-        param.setCommonBusinessType(DictCodeList.共通业务类型_债券投资委托);
-        String generatedId = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param): IDGenerator.generate();
-        allDto.setTotalEtrustId(generatedId);
-        for (int i = 0; i < allDto.getBussCombDistribtList().size(); i++) {
-            allDto.getBussCombDistribtList().get(i).setEntrustId(allDto.getEtrInvestBondInfoDtos().get(i).getEntrustId());
-        }
-        ProcessParameter<CfetsEtribBondInfo003Dto> processParameter = new ProcessParameter<>();
-        WorkFlowParameter<CfetsEtribBondInfo003Dto> params = new WorkFlowParameter<>();
-
-        params.setPageId("CfetsEtrIbBondinfo003");
-        params.setElementId(allDto.getEtrInvestBondInfoDtos().get(0).getElementId());
-        params.setBusinessCode(CfetsEtribBondInfo003Dto::getTotalEtrustId);
-        params.setBusinessType(DictCodeListExt3.共通业务类型_本币业务指令_债券.getValue());
-        processParameter.setOperationType(OperationType.NEW);
-        processParameter.setWorkFlowParameter(params);
-
-        String msg = null;
-        try {
-            msg = cfetsEtrIbBondinfo003Service.start(processParameter, allDto);
-            AjaxResult m =new AjaxResult(msg);
-            return new Message<AjaxResult>().success().setData(m);
         }catch (Exception e) {
-            logger.error("保存银行间多组合指令新建失败",e);
+            e.printStackTrace();
             return PositionUtil.ajaxErrorReturn(e);
         }
     }

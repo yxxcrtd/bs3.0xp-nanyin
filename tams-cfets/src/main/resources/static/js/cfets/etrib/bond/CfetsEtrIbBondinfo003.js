@@ -52,7 +52,7 @@
             }
         }
         , {/*业务模式*/
-            field: 'busiModelStr',
+            field: 'businessModel',
             width: 180,
             title: 'CfetsEtribBondInfo003.businessModel',
             sortable: false,
@@ -184,7 +184,7 @@
             });
         },
         beforeEditCell: function(preVal, field, rowData) {
-            if(field === 'busiModelStr') {
+            if(field === 'businessModel') {
                 if(ps == 'T03' || ps == 'T02') return false;
             }
             return true;
@@ -256,7 +256,7 @@
                         if(result.root && result.root.length > 0) {
                             if(result.root[0].object.businessModel && result.root[0].object.businessModel.indexOf(",") != -1) {
                                 data.portfolioId = null;
-                                data.busiModelStr = null;
+                                data.businessModel = null;
                                 data.proAvailableCash = 0;
                                 data.proAvailableCash1 = 0;
                                 data.secAcctAvailableCash = 0;
@@ -268,7 +268,7 @@
                                 Joyin.error("组合【"+result.root[0].text+"】存在多个业务模式，请先做资产重分类");
                                 return;
                             }else {
-                                data.busiModelStr = result.root[0].object.businessModel;
+                                data.businessModel = result.root[0].object.businessModel;
                             }
                             if(ps == 'T03') {
                                 data.entrustNum = result.root[0].object.entrustNum;
@@ -389,6 +389,8 @@
         var restEntrustIntegrateNum = query("#entrustIntegrateNum").val() == null ? 0 : query("#entrustIntegrateNum").val();
         query("#entrustIntegrateNum").val(JoyinMath.doDiv(restEntrustIntegrateNum, 10000, 2)).trigger("change");
         businessId = query('#businessId').val();
+        //query("#matureYieldShow").val(JoyinMath.doMul(query("#matureYieldShow").val(),100,4));
+        //query("#exerYieldShow").val(JoyinMath.doMul(query("#exerYieldShow").val(),100,4));
         var riskLists = entity_RiskTrialRetList || [];
         if (riskLists.length > 0) {
             $("#riskTrialSpan").html("&nbsp;&nbsp;" + riskLists[0].conclusion);
@@ -421,6 +423,12 @@
         object.etrDate = $("#etrDate").val();
         object.price = $("#price").val();
         object.unitFprice = $("#unitFprice").val();
+        if (query('#exerYield').val()) {
+            object.exerYield = query('#exerYield').val() / 100;
+        }
+        if (query('#matureYield').val()) {
+            object.matureYield = query('#matureYield').val() / 100;
+        }
         if (object.bussCombDistribtList != null) {
             if (object.bussCombDistribtList.length > 0) {
                 var entrustNum = 0.0;
@@ -466,16 +474,19 @@
         }
         var tradeAmt = query("#tradeAmt").val();
         var entrustIntegrateNum = query("#entrustIntegrateNum").val();
-        if (entrustIntegrateNum >= tradeAmt) {
+        if (entrustIntegrateNum > tradeAmt) {
             Joyin.error("融入/卖空购回券面总额不能大于券面总额")
         }
         if (tradeAmt && entrustIntegrateNum) {
             query("#entrustOwnNum").val(JoyinMath.doMinus(tradeAmt, entrustIntegrateNum, 2));
         }
+        if(!query("#tradeAmt").val() || !query("#entrustOwnNum").val()) {
+            return;
+        }
         var param = {};
-        param.shareNum = query("#tradeAmt").val();
-        param.entrustOwnNum = query("#entrustOwnNum").val();
-        param.entrustIntegrateNum = query("#entrustIntegrateNum").val();
+        param.shareNum = JoyinMath.doMul(query("#tradeAmt").val(),10000);
+        param.entrustOwnNum = JoyinMath.doMul(query("#entrustOwnNum").val(),10000);
+        param.entrustIntegrateNum = JoyinMath.doMul(query("#entrustIntegrateNum").val(),10000);
         param.price = query("#priceShow").val();
         param.unitFprice = query("#unitFprice").val();
         Joyin.ajaxJson(basePath + 'cfets/etrib/CfetsEtrIbBondinfo003/calAmountData', param, function (result) {
@@ -527,10 +538,10 @@
         //提交获取计算方式单选框的值
         object.calculateField = query("input[name=calculateField]:checked").val();
         if (query('#exerYield').val()) {
-            object.exerYield = query('#exerYield').val() / 100;
+            object.exerYield = query('#exerYield').val() / 1;
         }
         if (query('#matureYield').val()) {
-            object.matureYield = query('#matureYield').val() / 100;
+            object.matureYield = query('#matureYield').val() / 1;
         }
         if (query('#tradeAmt').val()) {
             object.tradeAmt = query('#tradeAmt').val() * 10000;
@@ -580,10 +591,6 @@
             temp.elementId = 'CfetsEtribBondInfo003_btn_submit';
             objects.push(temp);
         }
-        if (tradeAmt && tradeAmt !== parseFloat(object.tradeAmt)) {
-            JoyinUtil.showMessage("各组合分配的券面总额汇总不等于总的券面总额!", "error")
-            return null;
-        }
         param = JSON.parse(JSON.stringify(object));
         // param.entrustNum = object.tradeAmt;
         param.finprodId = finprodId;
@@ -608,7 +615,7 @@
     }
 
     function paramCheck() {
-        if (!query("#finprodName").val() || !query("#priceModel").val() || !query("#tradeAmt").val()) {
+        /*if (!query("#finprodName").val() || !query("#priceModel").val() || !query("#tradeAmt").val()) {
             Joyin.error("有*必填项未填写,请填写完整")
             return false;
         }
@@ -616,7 +623,7 @@
             Joyin.error("有*必填项未填写,请填写完整")
             return false;
         }
-        if (!entity_RiskTrialRetList || riskFlag !== 0) {
+        if (riskFlag !== 0) {
             Joyin.error("请先完成风险试算")
             return false;
         }
@@ -625,15 +632,27 @@
         var object = $.serializeToObject('#searchForm');
         for (var index in object.bussCombDistribtList) {
             var item = object.bussCombDistribtList[index];
-            if(!item.portfolioId || !item.entrustNum || !item.busiModelStr) {
+            if(!item.portfolioId || !item.entrustNum || !item.businessModel) {
                 checkFlag = false;
             }
         }
         if (!checkFlag) {
             Joyin.error("请填写完整组合信息")
             return false;
+        }*/
+        var obj = getSubmitParam("submit");
+        var errorMsg = "";
+        Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/checkSaveError', obj.param, function (result) {
+            if(result.data && result.data.errorList && result.data.errorList.length > 0) {
+                $.each(result.data.errorList,function (index,item) {
+                    errorMsg = errorMsg + item.message + "<br\>";
+                })
+            }
+        },false)
+        if(errorMsg && errorMsg.length > 0) {
+            Joyin.error(errorMsg);
+            return false;
         }
-
         return true;
     }
 
@@ -664,11 +683,16 @@
         var object = $.serializeToObject('#searchForm');
         var param = JSON.parse(JSON.stringify(object))
         Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/doRiskcal', param, function (data) {
-            $("#riskTrialSpan").html("&nbsp;&nbsp;" + data.data.data.riskTrialSpan);
+            console.log(data);
+            if(data.data.data.riskTrialSpan) {
+                $("#riskTrialSpan").html("&nbsp;&nbsp;" + data.data.data.riskTrialSpan);
+            }
             entity_RiskTrialRetList = data.data.data.riskcalReturnList;
-            $.each(entity_RiskTrialRetList, function (index, item) {
-                item.conclusion = data.data.data.riskTrialSpan;
-            })
+            if(entity_RiskTrialRetList) {
+                $.each(entity_RiskTrialRetList, function (index, item) {
+                    item.conclusion = data.data.data.riskTrialSpan;
+                })
+            }
             tableRisk.clear();
             tableRisk.addRow(entity_RiskTrialRetList);
             setRiskFlag(0);

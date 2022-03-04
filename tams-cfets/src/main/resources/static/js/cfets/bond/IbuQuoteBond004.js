@@ -10,6 +10,21 @@
     }
 
     /**
+     * 处理表格数据
+     */
+    var getRegData = function () {
+        var result = [];
+        if(entity && entity.length > 0) {
+            $.each(entity,function (index,item) {
+                if(item.portfolioId) {
+                    result.push(item);
+                }
+            })
+        }
+        return result;
+    }
+
+    /**
      * 登记组合分配列表
      * @type {*[]}
      */
@@ -189,7 +204,7 @@
 
     ];
     var table = $("#cfetsQuoTedCommonTable").joyintable({
-        data: entity == null ? [] : entity,
+        data: getRegData(),
         searchOnInit: true,
         loadonce: true,
         page: false,
@@ -227,10 +242,8 @@
         }
     });
 
-    /**
-     * 保存
-     */
-    var saveOrSubmitAction = function (operatorType) {
+
+    var getSubmitParam = function (operatorType) {
         var object = $.serializeToObject('#submitForm', true);
         object.operatorType = operatorType;
         object.isDzh = 'Y';
@@ -258,6 +271,14 @@
         if($("input:radio[name=calculateField]:checked").val()) {
             object.calculateField = $("input:radio[name=calculateField]:checked").val();
         }
+        return object;
+    }
+
+    /**
+     * 保存
+     */
+    var saveOrSubmitAction = function (operatorType) {
+        var object = getSubmitParam(operatorType);
         Joyin.confirm("是否确认提交?",
             function () {
                 //保存 走流程
@@ -317,9 +338,33 @@
                 Joyin.error("组合分配中券面总额汇总不得高于基本信息中券面总额");
                 return;
             }
+        }else {
+            b = true;
         }
         if(b) {
             Joyin.error("组合分配信息,请填写完整")
+            return false;
+        }
+        var obj = getSubmitParam("submit");
+        //风险校验
+        var riskFlag = false;
+        Joyin.ajaxJson(basePath + 'cfets/bankuplink/bond/IbuQuoteBond/doRiskcal', obj, function (result) {
+            riskFlag = true;
+        },false)
+        if(!riskFlag) {
+            return false;
+        }
+        var obj = getSubmitParam("submit");
+        var errorMsg = "";
+        Joyin.ajaxJson(basePath + 'cfets/bond/IbuQuoteBond004/check', obj, function (result) {
+           if(result.data && result.data.errorList && result.data.errorList.length > 0) {
+               $.each(result.data.errorList,function (index,item) {
+                   errorMsg = errorMsg + item.message + "<br\>";
+               })
+           }
+        },false)
+        if(errorMsg && errorMsg.length > 0) {
+            Joyin.error(errorMsg);
             return false;
         }
         return true;
