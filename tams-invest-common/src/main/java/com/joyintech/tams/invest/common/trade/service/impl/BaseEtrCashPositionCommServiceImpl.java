@@ -26,6 +26,8 @@ import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.*;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -40,6 +42,11 @@ import java.util.Map;
  */
 @Service // TODO 这里不要放开影响正常业务运行
 public class BaseEtrCashPositionCommServiceImpl extends BaseService implements BaseEtrCashPositionCommService {
+
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 共通Service
@@ -584,7 +591,7 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
             //协议是回购处理头寸  走配置化头寸共通
             for(EtrCashPositionFlowDto flowDto:etrPositionHoldDto.getPtlCashPositionFlows()){
                 if(StringUtil.isEmpty(flowDto.getAcctId())){
-                    System.out.println("AccId IS NULL");
+                    logger.error("entrustId="+etrEntrust.getEntrustId()+" , AccId IS NULL");
                 }
             }
             // 数据是否已入新头寸
@@ -593,7 +600,7 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
                 etrPositionHoldDto.getPtlSecPositionFlows().forEach(item->item.setIsExistNew(entrustCommonDto.getIsExistNew()));
             }
 
-            if(!StringUtil.equals(etrEntrustAdd.getAssetType1(), DictCodeList.回购类型_质押式协议回购.getValue())){
+            if(etrEntrustAdd != null && !StringUtil.equals(etrEntrustAdd.getAssetType1(), DictCodeList.回购类型_质押式协议回购.getValue())){
                 etrPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(platformDateImpl.getSysDate()));
                 etrPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(platformDateImpl.getSysDate()));
                 EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
