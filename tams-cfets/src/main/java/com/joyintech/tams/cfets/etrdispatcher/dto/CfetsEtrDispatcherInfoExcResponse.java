@@ -61,6 +61,9 @@ public class CfetsEtrDispatcherInfoExcResponse extends CfetsEtrDispatcherExcInfo
     @ApiModelProperty(name="secAcctId",value="证券账户",example="XXX证券账户")
     private String secAcctId;
 
+    @ApiModelProperty(name="trdAcctId",value="资金账户",example="XXX证券账户")
+    private String trdAcctId;
+
     @ApiModelProperty(name="shareNum",value="券面总额",example="1000000")
     private BigDecimal shareNum;
 
@@ -565,5 +568,13 @@ public class CfetsEtrDispatcherInfoExcResponse extends CfetsEtrDispatcherExcInfo
 
     public String getOtherTargetType() {
         return SysDataUtil.getNameFromDataDict(DictCode.目标类型, super.getTargetType());
+    }
+
+    public String getTrdAcctId() {
+        return trdAcctId;
+    }
+
+    public void setTrdAcctId(String trdAcctId) {
+        this.trdAcctId = trdAcctId;
     }
 }
