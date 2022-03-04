@@ -290,7 +290,9 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         pageParam.put("year",year);
         pageParam.put("sort",cfetsEtrRepoZLCXPositionRequest.getPageMode().getSort());
         pageParam.put("direction",cfetsEtrRepoZLCXPositionRequest.getPageMode().getDirection());
-        Page<CfetsEtrRepoZLCXPositionResponse> result = super.queryForPage(cfetsEtrRepoZLCXPositionRequest.getPageMode().getPageNo(), cfetsEtrRepoZLCXPositionRequest.getPageMode().getPageSize(), () -> cfetsEtrIbRepoinfoMapper.findZlglPositionPage(pageParam));
+        Page<CfetsEtrRepoZLCXPositionResponse> result =
+                super.queryForPage(cfetsEtrRepoZLCXPositionRequest.getPageMode().getPageNo(),
+                        cfetsEtrRepoZLCXPositionRequest.getPageMode().getPageSize(), () -> cfetsEtrIbRepoinfoMapper.findZlglPositionPage(pageParam));
         for (CfetsEtrRepoZLCXPositionResponse dto : result.getRoot()) {
             String pendingPeriodStr = joyinbusinessCommonService.calPendingPeriod(dto.getFinprodId());
             String period = pendingPeriodStr.substring(0, pendingPeriodStr.length() - 1);
