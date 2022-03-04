@@ -199,6 +199,10 @@
         cols: colsReg,
         editCell: function (value, data, field, cell, column) {
             if ('shareAmt' === field) {//修改时同步修改
+                if(value > data.avaNum) {
+                    Joyin.error("券面总额不得高于指令剩余额度")
+                    return;
+                }
                 el("#shareAmt").val(JoyinMath.doDiv(value,1,2));
                 calcAmt();
                 autoAllocation();
@@ -246,6 +250,7 @@
                 obj.ourEntNum = JoyinMath.doMul(obj.ourEntNum, 10000);
                 obj.lendinEntNum = JoyinMath.doMul(obj.lendinEntNum, 10000);
             });
+
         }
         object.ptlAllocatios = object.cfetsBondDealDialogueQuoteDtoList;
         object.cfetsBondDealDialogueQuoteDtoList = null;
@@ -292,24 +297,25 @@
                     return false;
                 }
             }
-            if (object.cfetsBondDealDialogueQuoteDtoList) {
-                $.each(object.cfetsBondDealDialogueQuoteDtoList, function (index, obj) {
-                    if(!obj.shareAmt) {
-                        b = true;
-                    }
-                });
-            }
+
         }else {
             if(!el("#settFeeAmt").val()) {
                 Joyin.error("结算服务费不能为空")
                 return false;
             }
-            if (object.cfetsBondDealDialogueQuoteDtoList) {
-                $.each(object.cfetsBondDealDialogueQuoteDtoList, function (index, obj) {
-                    if(!obj.settFeeAmt) {
-                        b = true;
-                    }
-                });
+        }
+        if (object.cfetsBondDealDialogueQuoteDtoList) {
+            let sumShareAmt = 0;
+            $.each(object.cfetsBondDealDialogueQuoteDtoList, function (index, obj) {
+                if(!obj.shareAmt) {
+                    b = true;
+                }else {
+                    sumShareAmt = JoyinMath.doAdd(sumShareAmt,obj.shareAmt);
+                }
+            });
+            if(sumShareAmt > object.shareAmt) {
+                Joyin.error("组合分配中券面总额汇总不得高于基本信息中券面总额");
+                return;
             }
         }
         if(b) {
@@ -346,9 +352,9 @@
         if(el("#CfetsBondDealQuotedPrice004_matureYield").val()) {
             param.matureYield = el("#CfetsBondDealQuotedPrice004_matureYield").val() / 100;
         }
-       /* if(el("#CfetsBondDealQuotedPrice004_exerYield").val()) {
+        if(calcField === calcTypeExecYield && el("#CfetsBondDealQuotedPrice004_exerYield").val()) {
             param.exerYield = el("#CfetsBondDealQuotedPrice004_exerYield").val() / 100;
-        }*/
+        }
         param.ps = object.ps;
         param.secManageAcctId = object.secManageAcctId;
         Joyin.ajaxJson(basePath + 'cfets/bankuplink/bond/IbuQuoteBond/calculation', param, function (result) {
@@ -381,6 +387,12 @@
                 el("#CfetsBondDealQuotedPrice004_hidden_parValue").val(data.parValue);
                 el("#CfetsBondDealQuotedPrice004_hidden_parValueAmt").val(data.parValueAmt);
                 el("#deviationDegree").html(data.deviationDegree);//偏离度
+                if(data.assetType11 === '127' || data.assetType11 === '128') {//信贷资产支持证券、资产支持票据时显示每百元本金额、本金额
+                    el("#CfetsBondDealQuotedPrice004_div_abs1").show();
+                    el("#CfetsBondDealQuotedPrice004_div_abs2").show();
+                    el("#CfetsBondDealQuotedPrice004_parValue").val(data.parValue);
+                    el("#CfetsBondDealQuotedPrice004_parValueAmt").val(data.parValueAmt);
+                }
             }
         })
     };
@@ -415,10 +427,10 @@
         param.settleDate = object.settleDate;
         param.price = object.price;
         param.fpriceAmt = object.fpriceAmt;
-        if(el("#CfetsBondDealQuotedPrice004_matureYield").val()) {
+        if(calcField === calcTypeYield && el("#CfetsBondDealQuotedPrice004_matureYield").val()) {
             param.matureYield = el("#CfetsBondDealQuotedPrice004_matureYield").val() / 100;
         }
-        if(el("#CfetsBondDealQuotedPrice004_exerYield").val()) {
+        if(calcField === calcTypeExecYield && el("#CfetsBondDealQuotedPrice004_exerYield").val()) {
             param.exerYield = el("#CfetsBondDealQuotedPrice004_exerYield").val() / 100;
         }
         param.ps = object.ps;
@@ -570,8 +582,8 @@
                 var allRow = table.getAllRows();
                 var b = false;
                 $.each(allRow, function (index, item) {
-                    if(v && item.matureYield && v > item.matureYield) {
-                        Joyin.error("到期收益率不能大于指令的到期收益率");
+                    if(v && item.matureYield && v < item.matureYield) {
+                        Joyin.error("到期收益率不能小于指令的到期收益率");
                         b = true;
                         el("#CfetsBondDealQuotedPrice004_matureYield").val(0)
                     }

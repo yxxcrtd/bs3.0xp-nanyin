@@ -1871,7 +1871,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     金融产品其他代码类型_上市流通(DictCode.金融产品其他代码类型,"15","上市流通"),
     平安业务类型_债券上市流通(DictCode.平安业务类型,"150","债券上市流通"),
 
-    共通业务类型_质押券出入库交易(DictCode.共通业务类型,"TRD90","质押券出入库交易"),
+    共通业务类型_质押券出入库交易(DictCode.共通业务类型,"TRD92","质押券出入库交易"),
 
     平安业务类型_质押券出入库(DictCode.平安业务类型,"160","质押券出入库"),
 

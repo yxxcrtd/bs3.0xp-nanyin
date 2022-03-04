@@ -560,8 +560,15 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         if (StringUtil.isNotEmpty(ps) && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))
                 && (StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue()) || StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue()))
         ){
+          /*  //插入旧头寸
+            List<RegFinProductDeal> wflRegLists=cfetsIbuQuoteBondMapper.listWflRegFinProductDeal(entity.getTotleTradeId());
+            if(!StringUtil.isEmptyList(wflRegLists)){
+                wflRegLists.forEach(item -> {
+                    AllTradeCommonUtil.deletePosition(null, item.getTradeId());
+                });
+            }*/
             //插入旧头寸
-            AllTradeCommonUtil.deletePosition(null, entity.getTotleTradeId());
+            preTrdCommonBaseService.deletePosition(entity.getWorkflowId());
         }
     }
 

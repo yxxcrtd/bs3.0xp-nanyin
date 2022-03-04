@@ -15,10 +15,7 @@ import com.joyintech.tams.exchange.common.bean.investment.CapitalAccountBean;
 import com.joyintech.tams.exchange.common.bean.investment.EntrustOpeBean;
 import com.joyintech.tams.exchange.common.bean.investment.EntrustReBackBean;
 import com.joyintech.tams.exchange.common.constant.*;
-import com.joyintech.tams.exchange.common.constant.joyin.DictCode;
-import com.joyintech.tams.exchange.common.constant.joyin.DictCodeList;
-import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt1;
-import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
+import com.joyintech.tams.exchange.common.constant.joyin.*;
 import com.joyintech.tams.exchange.common.db.domain.*;
 import com.joyintech.tams.exchange.common.microservice.ServiceApplication;
 import com.joyintech.tams.exchange.common.microservice.TradeServiceURL;
@@ -206,8 +203,8 @@ public class InvestmentManagement extends BaseService {
             if (Objects.nonNull(DictCodeListExt1.from(DictCode.金融产品类型_投管用, newInstruction.getFinprodType2()))) {
                 newInstruction.setFinprodType2(DictCodeListExt1.from(DictCode.金融产品类型_投管用, newInstruction.getFinprodType2()).getCodeName());
             }
-            if (Objects.nonNull(DictCodeListExt1.from(DictCode.投管业务类型, newInstruction.getBusiTypeTg()))) {
-                newInstruction.setBusiTypeTg(DictCodeListExt1.from(DictCode.投管业务类型, newInstruction.getBusiTypeTg()).getCodeName());
+            if (Objects.nonNull(DictCodeListExt3.from(DictCode.投管业务类型, newInstruction.getBusiTypeTg()))) {
+                newInstruction.setBusiTypeTg(DictCodeListExt3.from(DictCode.投管业务类型, newInstruction.getBusiTypeTg()).getCodeName());
             }
             newInstruction.setProgress(newInstruction.getProgress());
             newInstruction.setDealProgress(newInstruction.getDealProgress());
@@ -871,7 +868,7 @@ public class InvestmentManagement extends BaseService {
             messageConsumerService.processInstructions(instructionEtrEntrustList, instructionPledgeIdSet, instructionDetailIdSet);
             messageConsumerService.processInstructionPledges(pledgeList, instructionPledgeIdSet);
             messageConsumerService.processInstructionDetail(detailList, instructionDetailIdSet);
-            //logger.info("appointInstruction {}", JsonUtils.getJsonFromObject(instructionPage));
+            logger.info("appointInstruction {}", JsonUtils.getJsonFromObject(instructionPage));
             return new ResultBean(ErrorCode.SUCCESS);
         } catch (Exception e) {
             logger.warn("appointInstruction error {}", e.getMessage(), e);

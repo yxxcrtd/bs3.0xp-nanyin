@@ -83,6 +83,8 @@ public class TokenJob {
     private QuoteTickService quoteTickService;
 
     private boolean isOutOfService = true;// 是否需要掉线服务
+    
+    private static ServiceNode snode;
 
     @PostConstruct
     public void processUrl() {
@@ -102,6 +104,7 @@ public class TokenJob {
                 return;
             }
             ServiceNode thisNode = commonManagement.queryServiceNode(node).get(0);
+            snode = thisNode;
             if (Objects.isNull(thisNode)) {
                 logger.info("can not found the ServiceNode by yml node, please check the node !!!!");
                 return;
@@ -127,7 +130,12 @@ public class TokenJob {
                     if (serviceNodeLive.size() == 0) {
                         logger.info("cover cache from redis...");
                         Map<String, RedisCacheServiceImpl> redisCacheServiceMap = SpringContextUtils.getApplicationContext().getBeansOfType(RedisCacheServiceImpl.class);
-                        redisCacheServiceMap.values().forEach(service -> service.coverCache(dataServiceConfig.isUseRedis()));
+//                        redisCacheServiceMap.values().forEach(service -> service.coverCache(dataServiceConfig.isUseRedis()));
+                        for(RedisCacheServiceImpl ser:redisCacheServiceMap.values()) {
+                        	System.out.println("######:"+ser.getClass().getName());
+                        	if(!"com.joyintech.tams.exchange.datacommon.db.service.impl.InstructionDetailServiceImpl".equals(ser.getClass().getName()))
+                        	ser.coverCache(dataServiceConfig.isUseRedis());
+                        }
                         logger.info("cover cache from redis success!");
                         serviceNode.setLastLiveTime(System.currentTimeMillis());
                         serviceNode.setMasterNode(MasterNodeStatus.MASTER);
@@ -176,6 +184,7 @@ public class TokenJob {
             }
             //可能权重高的节点还没有切换为master，先刷新自己的时间，防止被权重低的节点插队
             thisNode.setLastLiveTime(currentTime);
+            isMaster = false;
             thisNode.setMasterNode(MasterNodeStatus.SLAVER);
             changeYitiHuaServiceAddress();
             serviceNodeService.updateServiceNode(thisNode);
@@ -247,5 +256,19 @@ public class TokenJob {
                 logger.warn("未检测到可用行情终端信息，请确认是否启动行情终端 quoteServiceName [{}]", quoteServiceNodeConfig.getServiceNodeName());
             }
         }
+    }
+    
+    public static String getMasterUrl() {
+    	return ServiceApplication.EXCHANGE_SERVICE_NAME;
+    }
+    
+    public static boolean isMaster() {
+    	return isMaster;
+    }
+    
+    public static String getNodeAddress() {
+//    	ServiceNode thisNode = commonManagement.queryServiceNode(node).get(0);
+//    	return thisNode.getNodeAddress();
+    	return snode.getNodeAddress();
     }
 }
