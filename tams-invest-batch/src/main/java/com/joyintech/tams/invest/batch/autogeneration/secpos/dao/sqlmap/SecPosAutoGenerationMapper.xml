@@ -1255,7 +1255,10 @@
          cast (sysdate as timestamp) create_time,
          'system' update_user,
          cast (sysdate as timestamp) update_time
-    from (select temp.portfolio_id,
+    from (
+        <!--// modify by etliu 20220303 start -->
+        <!--// 质押式回购出入库计算时，原公式：标准券数量=质押数量*标准折算率，改成：标准券数量=质押数量*标准折算率*面值/100  需求张琼-->
+        <!--select temp.portfolio_id,
                  temp.sec_acct_id,
                  detail.branch,
                  sum((case when temp.ps = 'T68' then detail.amt else -1 * detail.amt end) * nvl(fscr.scale, 1)) as amount
@@ -1272,11 +1275,19 @@
 	            )
 	        </if>
            group by temp.portfolio_id, temp.sec_acct_id, detail.branch
-          union all
+          union all-->
+            <!--// modify by etliu 20220303 end -->
           select temp.portfolio_id,
                  temp.sec_acct_id,
                  detail.branch,
-                 sum((case when temp.ps = 'T68' then detail.amt else -1 * detail.amt end) * nvl(fscr.scale, 1)) as amount
+        <!--// modify by etliu 20220303 start -->
+        <!--// 质押式回购出入库计算时，原公式：标准券数量=质押数量*标准折算率，改成：标准券数量=质押数量*标准折算率*面值/100  需求张琼-->
+            <!--sum((case when temp.ps = 'T68' then detail.amt else -1 * detail.amt end) * nvl(fscr.scale, 1)) as amount-->
+        sum((case when temp.ps = 'T68' then detail.amt else -1 * detail.amt end) * nvl(fscr.scale, 1)
+            * nvl((select 100 - NVL(SUM(NVL(t1.PRIN_AMT, 0)), 0) FROM FIN_CASH_PLAN t1 where t1.FINPROD_ID = detail.finprod_id and t1.MDATE &lt;= date #{batchDate,jdbcType=DATE}), 100)
+            / 100
+            ) as amount
+        <!--// modify by etliu 20220303 end -->
             from trd_stasec_flow temp
            inner join trd_stasec_flow_detail detail
               on temp.seqno = detail.seqno
