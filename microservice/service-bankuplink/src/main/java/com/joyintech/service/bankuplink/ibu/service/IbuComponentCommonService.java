@@ -2098,6 +2098,13 @@ public class IbuComponentCommonService extends BaseService {
             }
         }
         //add by chenjiaxing 20210816 end
+        // 排序
+        if (StringUtil.isNotEmpty(param.get("sort"))) {
+            inputBean.setSort(param.get("sort").toString());
+        }
+        if (StringUtil.isNotEmpty(param.get("direction"))) {
+            inputBean.setDirection(param.get("direction").toString());
+        }
 
         // 登录用户ID Modified by JIAOXUJIN on 2020-06-03
         inputBean.setLoginUserId(MapUtils.getString(param, "loginUserId"));

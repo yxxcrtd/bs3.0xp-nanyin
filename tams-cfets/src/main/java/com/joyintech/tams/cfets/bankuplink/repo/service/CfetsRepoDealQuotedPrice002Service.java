@@ -1031,6 +1031,9 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
      */
     @Override
     public void doUpdate(CfetsRepoDealQuotedPrice001Dto entity) {
+        if (StringUtil.equals("save", entity.getOperatorType())){
+            return;
+        }
         Map<String, Object> map = new HashMap<>();
         if (!StringUtil.equals("revoke", entity.getOperatorType())
                 && !StringUtil.equals("delete", entity.getOperatorType())) {
@@ -1052,16 +1055,20 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             } catch (PositionException e) {
                 Message message = PositionUtil.ajaxErrorReturn(e);
                 BaseMap bm = (BaseMap) message.getData();
-                String code = (String) bm.get("code");
-                String messageStr = JsonUtils.json2Object((String) bm.get("message").toString(), String.class);
-                if (StringUtil.isEmpty(confirmOk)
-                        && StringUtil.equals(PositionHttpRequest.CODE_BUSI_RK, code)) {
-                    WorkFlowUtil.showMessage(messageStr, MessageType.确认消息);
+                if(StringUtil.isNotEmpty(bm)) {
+                    String code = (String) bm.get("code");
+                    String messageStr = JsonUtils.json2Object((String) bm.get("message").toString(), String.class);
+                    if (StringUtil.isEmpty(confirmOk)
+                            && StringUtil.equals(PositionHttpRequest.CODE_BUSI_RK, code)) {
+                        WorkFlowUtil.showMessage(messageStr, MessageType.确认消息);
+                    }
+                    if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_YK, code)) {
+                        WorkFlowUtil.showMessage(messageStr, MessageType.错误消息);
+                    }
+                    throw new PositionException(messageStr);
+                }else {
+                    WorkFlowUtil.showMessage(message.getMessage(), MessageType.错误消息);
                 }
-                if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_YK, code)) {
-                    WorkFlowUtil.showMessage(messageStr, MessageType.错误消息);
-                }
-                throw new PositionException(messageStr);
             }
             if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
                 com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto dto
@@ -2336,6 +2343,15 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         stringObjectMap.put("keywords", dto.getSearch());//关键字
         stringObjectMap.put("psList", dto.getPsList());
         stringObjectMap.put("cfetsQuoteId", dto.getCfetsQuoteId());
+        // 排序处理
+        if(StringUtil.isNotEmpty(dto.getPageMode())){
+            if(StringUtil.isNotEmpty(dto.getPageMode().getDirection())){
+                stringObjectMap.put("direction", dto.getPageMode().getDirection());
+            }
+            if(StringUtil.isNotEmpty(dto.getPageMode().getSort())){
+                stringObjectMap.put("sort", dto.getPageMode().getSort());
+            }
+        }
         return stringObjectMap;
     }
 

@@ -137,6 +137,24 @@ public class IbuQuoteRepo003Controller extends BaseController {
         }
     }
 
+    /**
+     * 代办页面提交校验
+     *
+     * @param cfetsRepoDealQuoteCommonDto
+     * @return com.joyintech.framework.ajax.AjaxResult
+     * @author jiangpeng
+     * @date 2022/3/4 14:03
+     */
+    @PostMapping("/checkByHome")
+    @ResponseBody
+    public AjaxResult checkByHome(@RequestBody CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto) {
+
+        CfetsRepoDealQuoteCommonDto cfetsRepoDealQuoteCommonDto = cfetsRepoDealQuotedPrice002Service.back2PageDto(cfetsRepoDealQuotedPrice001Dto);
+        //check必填项
+        AjaxResult ajaxResult = cfetsRepoDealQuotedPrice002Service.checkSave(cfetsRepoDealQuoteCommonDto);
+        return ajaxResult;
+    }
+
     @ApiOperation(value = "报价成交提交检查", notes = "报价成交提交检查")
     @PostMapping("/checkRepoDeal")
     @ResponseBody

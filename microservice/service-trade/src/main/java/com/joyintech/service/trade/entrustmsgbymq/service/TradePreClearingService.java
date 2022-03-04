@@ -500,6 +500,15 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             converseRadio = BigDecimal.ONE;
         }
 
+        // modify by etliu 20220303 start
+        // 质押式回购出入库计算时，原公式：标准券数量=质押数量*标准折算率，改成：标准券数量=质押数量*标准折算率*面值/100  ---需求张琼
+        BigDecimal 百元券面 = trdCommonBaseService.getFaceValue(infContractDetailfile.getFinprodId(), infContractDetailfile.getTradeDate());
+        if (百元券面 == null) {
+            百元券面 = BigDecimal.valueOf(100);
+        }
+        BigDecimal hundred = BigDecimal.valueOf(100);
+        // modify by etliu 20220303 end
+
         //更新持仓头寸
         if(DictCodeListExt3.交易方向_质押券入库.getValue().equals(trdTempStasecFlow.getPs())) {
             //1.指令持仓流水（标准券）：正流水
@@ -516,7 +525,12 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             etrSecPositionFlowDtoUnit.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());// 持仓类型
             etrSecPositionFlowDtoUnit.setCdate(infContractDetailfile.getTradeDate());// 日期
             etrSecPositionFlowDtoUnit.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
-            etrSecPositionFlowDtoUnit.setAmount(infContractDetailfile.getShareAmt().multiply(converseRadio));// 交易数量 * 当日折算率
+            // modify by etliu 20220303 start
+            // 质押式回购出入库计算时，原公式：标准券数量=质押数量*标准折算率，改成：标准券数量=质押数量*标准折算率*面值/100  ---需求张琼
+//            etrSecPositionFlowDtoUnit.setAmount(infContractDetailfile.getShareAmt().multiply(converseRadio));// 交易数量 * 当日折算率
+            etrSecPositionFlowDtoUnit.setAmount(infContractDetailfile.getShareAmt().multiply(converseRadio)
+                    .multiply(百元券面).divide(hundred));// 交易数量 * 当日折算率
+            // modify by etliu 20220303 end
             etrSecPositionFlowDtoUnit.setpFinprodId(null);// 母金融产品代码
             etrSecPositionFlowDtoUnit.setTradeId(seqno);// 指令编号
 
@@ -557,7 +571,12 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             ptlSecPositionFlowDtoUnit2.setHodingType(DictCodeList.持仓类型_实际.getValue());// 持仓类型
             ptlSecPositionFlowDtoUnit2.setCdate(infContractDetailfile.getTradeDate());// 日期
             ptlSecPositionFlowDtoUnit2.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
-            ptlSecPositionFlowDtoUnit2.setAmount(infContractDetailfile.getShareAmt().multiply(converseRadio));// 交易数量 * 当日折算率
+            // modify by etliu 20220303 start
+            // 质押式回购出入库计算时，原公式：标准券数量=质押数量*标准折算率，改成：标准券数量=质押数量*标准折算率*面值/100  ---需求张琼
+//            ptlSecPositionFlowDtoUnit2.setAmount(infContractDetailfile.getShareAmt().multiply(converseRadio));// 交易数量 * 当日折算率
+            ptlSecPositionFlowDtoUnit2.setAmount(infContractDetailfile.getShareAmt().multiply(converseRadio)
+                    .multiply(百元券面).divide(hundred));// 交易数量 * 当日折算率
+            // modify by etliu 20220303 end
             ptlSecPositionFlowDtoUnit2.setpFinprodId(null);// 母金融产品代码
             ptlSecPositionFlowDtoUnit2.setTradeId(seqno);// 指令编号
 
@@ -624,7 +643,12 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             ptlSecPositionFlowDtoUnit2.setHodingType(DictCodeList.持仓类型_实际.getValue());// 持仓类型
             ptlSecPositionFlowDtoUnit2.setCdate(infContractDetailfile.getTradeDate());// 日期
             ptlSecPositionFlowDtoUnit2.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
-            ptlSecPositionFlowDtoUnit2.setAmount(infContractDetailfile.getShareAmt().multiply(converseRadio).multiply(new BigDecimal(-1)));// 数量
+            // modify by etliu 20220303 start
+            // 质押式回购出入库计算时，原公式：标准券数量=质押数量*标准折算率，改成：标准券数量=质押数量*标准折算率*面值/100  ---需求张琼
+//            ptlSecPositionFlowDtoUnit2.setAmount(infContractDetailfile.getShareAmt().multiply(converseRadio).multiply(new BigDecimal(-1)));// 数量
+            ptlSecPositionFlowDtoUnit2.setAmount(infContractDetailfile.getShareAmt().multiply(converseRadio)
+                    .multiply(百元券面).divide(hundred).multiply(new BigDecimal(-1)));// 数量
+            // modify by etliu 20220303 end
             ptlSecPositionFlowDtoUnit2.setpFinprodId(null);// 母金融产品代码
             ptlSecPositionFlowDtoUnit2.setTradeId(seqno);// 指令编号
 
