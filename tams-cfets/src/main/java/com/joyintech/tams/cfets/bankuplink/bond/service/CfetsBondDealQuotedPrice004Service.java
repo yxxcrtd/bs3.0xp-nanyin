@@ -162,8 +162,8 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
     public String generateTitle(CfetsBondDealRegisterQuoteDto entity, OperationType type) {
         DecimalFormat  df = new DecimalFormat("###,###.00");
         return  "登记日期(" + DateUtil.format(entity.getTradeDate())+")-"+
-                "资产简称(" + entity.getFinprodAbbr()  + ")-"+
-                "对手方("+  entity.getCounterName() +")-" +
+                "资产简称(" + (entity.getFinprodAbbr() == null ? "": entity.getFinprodAbbr())  + ")-"+
+                "对手方("+  (entity.getCounterName() == null ? "" : entity.getCounterName()) +")-" +
                 "券面总额("+ df.format(ArithmeticUtil.divide(entity.getShareAmt(),new BigDecimal(10000),2))+"万元)";
     }
     /**

@@ -349,6 +349,12 @@ public class JoyinbusinessCommonController extends BaseController {
     public Message<List<String>> getPermissionsByUserId() {
         try {
             String userId = SecurityUtil.getLoginUser().getUserName();
+            if(StringUtils.isNotEmpty(userId)){
+                List<String> list = joyinbusinessCommonService.findAllModuleIds(userId);
+                if(!CollectionUtils.isEmpty(list)) {
+                    return new Message<List<String>>().success().setData(list);
+                }
+            }
             if (StringUtils.isNotEmpty(userId)) {
                 List<String> list = userService.getPermissions(userId);
                 return new Message<List<String>>().success().setData(list);

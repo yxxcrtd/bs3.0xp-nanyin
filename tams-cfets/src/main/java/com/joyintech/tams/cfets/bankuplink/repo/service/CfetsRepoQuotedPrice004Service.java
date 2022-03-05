@@ -17,11 +17,13 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.base.dao.SysWflBusinessListMapper;
 import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
 import com.joyintech.tams.business.common.exception.PositionException;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
@@ -70,6 +72,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -1887,4 +1890,34 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         return resultDto;
     }
 
+
+    @Override
+    public String generateTitle(CfetsRepoDealRegisterQuoteDto dto,OperationType type) {
+        String counterTrader = null;
+        if (StringUtil.isNotEmpty(dto.getCounterTrader())
+                && StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"), "01")) {
+            CfetsSearchInfoRequest item = new CfetsSearchInfoRequest();
+            item.setDealType("02");
+            item.setPartyId(dto.getCounterId());
+            item.setSearch(dto.getCounterTrader());
+            List<SelectOptionDto> list = joyinbusinessCommonService.queryMySideTraderOrCountTrader(item);
+            if (CollectionUtils.isNotEmpty(list)) {
+                counterTrader = "-对手方交易员:" + list.get(0).getText() + "-";
+            }
+        }
+        if (StringUtil.isNotEmpty(dto.getCounterTrader())
+                && StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"), "02")) {
+            counterTrader = "-对手方交易员:" + dto.getCounterTrader() + "-";
+        }
+        String str = "交易日期:" + DateUtil.format(iPlatformDate.getSysDate());
+        if (StringUtil.isNotEmpty(dto.getRepoTerm())) {
+            str += "-回购期限:" + dto.getRepoTerm() + "天";
+        }
+        str += StringUtil.isEmpty(counterTrader) ? "-" : counterTrader;
+        if (StringUtil.isNotEmpty(dto.getTradeAmt())) {
+            DecimalFormat df = new DecimalFormat("#,##0.00");
+            str += "交易金额:" + df.format(com.joyintech.framework.util.ArithmeticUtil.round(dto.getTradeAmt(), 2, RoundingMode.HALF_UP)) + "元";
+        }
+        return str;
+    }
 }

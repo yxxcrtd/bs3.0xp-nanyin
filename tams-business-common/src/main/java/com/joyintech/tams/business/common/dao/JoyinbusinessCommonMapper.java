@@ -202,6 +202,8 @@ public interface JoyinbusinessCommonMapper {
 
     String findUserByMySideTrader(@Param("mySideTrader") String mySideTrader,@Param("mySide") String mySide);
 
+    List<String> findAllModuleIds(@Param("userName") String userName);
+
     /**
      *
      * 获取新建界面的资产代码联想下拉框框

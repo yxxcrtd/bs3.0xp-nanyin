@@ -20,6 +20,7 @@ import com.joyintech.background.component.order.exchange.common.service.impl.Etr
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -130,6 +131,11 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         }
         if (StringUtil.isNotEmpty(request.getFinprodMarketId())) {
             pageParam.put("finprodMarketId",request.getFinprodMarketId());
+        }
+        if(StringUtil.isNotEmpty(request.getFinprodMarketIds())){
+            pageParam.put("finprodMarketIds",StringUtil.splitToList(GlobalConstant.COMMA, request.getFinprodMarketIds()));
+        }else{
+            pageParam.put("finprodMarketIds", null);
         }
         if (StringUtil.isNotEmpty(request.getTradeMarket())) {
             pageParam.put("tradeMarket",request.getTradeMarket());

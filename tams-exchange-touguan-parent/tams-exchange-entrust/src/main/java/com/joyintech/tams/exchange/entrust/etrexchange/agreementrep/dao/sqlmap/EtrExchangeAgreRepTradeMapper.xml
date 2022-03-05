@@ -480,6 +480,17 @@
         <if test="finprodName != null and finprodName !=''">
             AND TEMP.FINPROD_ID = #{finprodName,jdbcType=VARCHAR}
         </if>
+        <if test="portfolioIdList != null and portfolioIdList.size()>0">
+            <foreach collection="portfolioIdList" open="AND TEMP.PORTFOLIO_ID IN (" item="portfolioId" separator="," close=")">
+                #{portfolioId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="finprodMarketIds != null and finprodMarketIds.size() > 0">
+            AND FP.FINPROD_MARKET_ID in
+            <foreach item="item" index="index" collection="finprodMarketIds" open="(" separator="," close=")">
+                #{item, jdbcType=VARCHAR}
+            </foreach>
+        </if>
         ) TEMP WHERE 1=1
         <!-- 关键字模糊查询 -->
         <include refid="etrExchangePositionsAnd"/>
@@ -648,7 +659,7 @@
         select
         etr_entrust.entrust_id entrustId, /** 指令编号 **/
         etr_entrust.entrust_status entrustStatus, /** 指令状态 **/
-        nvl(case
+        <!--nvl(case
         WHEN etr_entrust.PS IN ('T93', 'T94') AND NULLIF(0, etr_pledge.PLEDGE_NUMBER) IS NOT NULL
         THEN
         CASE
@@ -669,7 +680,31 @@
         then
         case when ROUND((etr_finish_status.Ent_Finish_Amt/etr_entrust.ENTRUST_AMT),4)>=1 then 1
         else ROUND((etr_finish_status.Ent_Finish_Amt/etr_entrust.ENTRUST_AMT),4) end
-        END,0) dealPercent, /** 执行进度 **/
+        END,0) dealPercent, --> /** 执行进度 **/
+        CASE
+        WHEN etr_entrust_add.TARGET_TYPE = '01' THEN
+        ROUND( nvl( etr_finish_status.ORDER_FINISH_AMT, 0 ) / nvl( etr_entrust.ENTRUST_NUM, 1 ), 4 ) ELSE ROUND( nvl( etr_finish_status.ORDER_FINISH_AMT, 0 ) / nvl( etr_entrust.ENTRUST_AMT, 1 ), 4 )
+        END AS implementPercent,
+        CASE
+        WHEN etr_entrust_add.TARGET_TYPE = '01' THEN
+        ROUND( nvl( etr_finish_status.ENT_FINISH_AMT, 0 ) / nvl( etr_entrust.ENTRUST_NUM, 1 ), 4 ) ELSE ROUND( nvl( etr_finish_status.ENT_FINISH_AMT, 0 ) / nvl( etr_entrust.ENTRUST_AMT, 1 ), 4 )
+        END AS dealPercent,
+        CASE
+        WHEN etr_entrust_add.TARGET_TYPE = '01' THEN
+        ROUND( nvl( etr_finish_status.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( etr_finish_status.ORDER_FINISH_AMT, 0 ), 4 )
+        END AS finishAmt,
+        CASE
+        WHEN etr_entrust_add.TARGET_TYPE = '01' THEN
+        ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( etr_finish_status.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( etr_finish_status.ORDER_FINISH_AMT, 0 ), 4 )
+        END AS avaNum,
+        CASE
+        WHEN etr_entrust_add.TARGET_TYPE = '01' THEN
+        ROUND( nvl( etr_finish_status.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( etr_finish_status.ENT_FINISH_AMT, 0 ), 4 )
+        END AS finishDealAmt,
+        CASE
+        WHEN etr_entrust_add.TARGET_TYPE = '01' THEN
+        ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( etr_finish_status.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( etr_finish_status.ENT_FINISH_AMT, 0 ), 4 )
+        END AS avaDealAmt,
 
         PTL_PORTFOLIO.Portfolio_Id portfolioId, /** 组合代码 **/
         PTL_PORTFOLIO.Portfolio_Name portfolioName, /** 组合名称 **/
@@ -778,29 +813,30 @@
             select
             wfl_etr_entrust.entrust_id entrustId, /** 指令编号 **/
             '08' entrustStatus, /** 指令状态 **/
-            nvl(case
-            WHEN wfl_etr_entrust.PS IN ('T93', 'T94') AND NULLIF(0, wfl_etr_pledge.PLEDGE_NUMBER) IS NOT NULL
-            THEN
             CASE
-            WHEN ROUND((etr_finish_status.ORDER_FINISH_AMT/ wfl_etr_pledge.PLEDGE_NUMBER),4) >=1 THEN 1
-            ELSE ROUND((etr_finish_status.ORDER_FINISH_AMT/ wfl_etr_pledge.PLEDGE_NUMBER),4)
-            END
-            when NULLIF(0, wfl_etr_entrust.ENTRUST_AMT) is not null
-            then ROUND((etr_finish_status.ORDER_FINISH_AMT/wfl_etr_entrust.ENTRUST_AMT),4)
-            END,0) implementPercent, /** 执行进度 **/
-            nvl(case
-            WHEN wfl_etr_entrust.PS IN ('T93', 'T94') AND NULLIF(0, wfl_etr_pledge.PLEDGE_NUMBER) IS NOT NULL
-            THEN
+            WHEN wfl_etr_entrust_add.TARGET_TYPE = '01' THEN
+            ROUND( nvl( etr_finish_status.ORDER_FINISH_AMT, 0 ) / nvl( wfl_etr_entrust.ENTRUST_NUM, 1 ), 4 ) ELSE ROUND( nvl( etr_finish_status.ORDER_FINISH_AMT, 0 ) / nvl( wfl_etr_entrust.ENTRUST_AMT, 1 ), 4 )
+            END AS implementPercent,
             CASE
-            WHEN ROUND((etr_finish_status.Ent_Finish_Amt/ wfl_etr_pledge.PLEDGE_NUMBER),4) >=1 THEN 1
-            ELSE ROUND((etr_finish_status.Ent_Finish_Amt/ wfl_etr_pledge.PLEDGE_NUMBER),4)
-            END
-            when NULLIF(0, wfl_etr_entrust.ENTRUST_AMT) is not null
-            then
-            case when ROUND((etr_finish_status.Ent_Finish_Amt/wfl_etr_entrust.ENTRUST_AMT),4)>=1 then 1
-            else ROUND((etr_finish_status.Ent_Finish_Amt/wfl_etr_entrust.ENTRUST_AMT),4) end
-            END,0) dealPercent, /** 执行进度 **/
-
+            WHEN wfl_etr_entrust_add.TARGET_TYPE = '01' THEN
+            ROUND( nvl( etr_finish_status.ENT_FINISH_AMT, 0 ) / nvl( wfl_etr_entrust.ENTRUST_NUM, 1 ), 4 ) ELSE ROUND( nvl( etr_finish_status.ENT_FINISH_AMT, 0 ) / nvl( wfl_etr_entrust.ENTRUST_AMT, 1 ), 4 )
+            END AS dealPercent,
+            CASE
+            WHEN wfl_etr_entrust_add.TARGET_TYPE = '01' THEN
+            ROUND( nvl( etr_finish_status.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( etr_finish_status.ORDER_FINISH_AMT, 0 ), 4 )
+            END AS finishAmt,
+            CASE
+            WHEN wfl_etr_entrust_add.TARGET_TYPE = '01' THEN
+            ROUND( nvl( wfl_etr_entrust.ENTRUST_NUM, 0 ) - nvl( etr_finish_status.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( wfl_etr_entrust.ENTRUST_NUM, 0 ) - nvl( etr_finish_status.ORDER_FINISH_AMT, 0 ), 4 )
+            END AS avaNum,
+            CASE
+            WHEN wfl_etr_entrust_add.TARGET_TYPE = '01' THEN
+            ROUND( nvl( etr_finish_status.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( etr_finish_status.ENT_FINISH_AMT, 0 ), 4 )
+            END AS finishDealAmt,
+            CASE
+            WHEN wfl_etr_entrust_add.TARGET_TYPE = '01' THEN
+            ROUND( nvl( wfl_etr_entrust.ENTRUST_NUM, 0 ) - nvl( etr_finish_status.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( wfl_etr_entrust.ENTRUST_NUM, 0 ) - nvl( etr_finish_status.ENT_FINISH_AMT, 0 ), 4 )
+            END AS avaDealAmt,
             PTL_PORTFOLIO.Portfolio_Id portfolioId, /** 组合代码 **/
             PTL_PORTFOLIO.Portfolio_Name portfolioName, /** 组合名称 **/
             SCI.ACCT_NAME dealCurAcct, /** 资金账户 **/

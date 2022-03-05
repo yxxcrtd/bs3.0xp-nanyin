@@ -1467,7 +1467,9 @@ public class CfetsEtrDispatcherService extends BaseService{
                         fieldResponseDto.setEntrustOwnNum(BigDecimal.ZERO);
                         fieldResponseDto.setIntegrateSecAmount(BigDecimal.ZERO);
                     }
-
+                }else if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),dto.getFinprodType2())
+                        && StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.投管业务类型_竞价交易.getValue())){
+                        fieldResponseDto.setUnitPrice(ArithmeticUtil.multiply(fieldResponseDto.getUnitPrice(),BigDecimal.valueOf(100)));
                 }
             }
             return fieldResponseDto;

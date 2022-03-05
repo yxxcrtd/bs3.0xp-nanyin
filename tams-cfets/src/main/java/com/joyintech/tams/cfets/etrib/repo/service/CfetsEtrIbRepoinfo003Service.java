@@ -10,8 +10,10 @@
 
 package com.joyintech.tams.cfets.etrib.repo.service;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
@@ -47,6 +49,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
@@ -55,6 +58,7 @@ import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -109,7 +113,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
     @Autowired(required=false)
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
 
-    @Autowired
+    @Autowired(required=false)
     private EtrCommandDispatcherService etrCommandDispatcherService;
 
     @Autowired(required=false)
@@ -127,7 +131,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
     @Autowired(required = false)
     private CfetsEtrIbBondinfoMapper cfetsEtrIbBondinfoMapper;
 
-    @Autowired
+    @Autowired(required=false)
     private SysWflBusinessListMapper sysWflBusinessListMapper;
     /**
      * 指令废弃表
@@ -136,6 +140,8 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
     private EtrEntrustBackupMapper etrEntrustBackupMapper;
     @Autowired
     private MstWorkflowCommonServiceMapperImpl mstWorkflowCommonServiceMapperImpl;
+    @Autowired
+    private CfetsEtrIbRepoinfo003Service cfetsEtrIbRepoinfo003Service;
 
 
     /**
@@ -143,10 +149,13 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
      */
     @Override
     public String generateTitle(CfetsEtribRepoInfo003Dto entity, OperationType type) {
+        if(Objects.isNull(entity.getEntrustAmt())) {
+            entity.setEntrustAmt(BigDecimal.ZERO);
+        }
         DecimalFormat df4 = new DecimalFormat("#,##0.00");
         return  "(指令日期"+ ":" + DateUtil.format(entity.getEntrustDate())+")-"+
-                "(回购期限" + ":" + entity.getRepoTerm()  + "天)-"+
-                "指令金额"+ ":" + df4.format(entity.getEntrustAmt())+"元";
+                "(回购期限" + ":" + (entity.getRepoTerm() == null? "" : entity.getRepoTerm()) + "天)-"+
+                "指令金额"+ ":" + df4.format(entity.getEntrustAmt()) + "元";
     }
 
 
@@ -157,7 +166,6 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
      */
     @Override
     public void doComplete(CfetsEtribRepoInfo003Dto entity, OperationType type) {
-
         entity.setOperateType(type.toString());
         if (StringUtil.equals(entity.getSettleSpreed(),
                 DictCodeList.清算速度_T_0.getValue())) {
@@ -475,6 +483,28 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                 if (null != sysBus && StringUtil.equals(sysBus.getProcessState(), DictCodeList.流程状态_已退回.getValue())) {
                     isSubmit = false;
                 }
+                if("submit".equals(entity.getOperateType()) && isSubmit) {
+                    List<CfetsEtribRepoInfo003Dto> dataList = new ArrayList<>();
+                    cfetsEtrIbRepoinfo003Service.packageEquity(entity,dataList);
+                    try {
+                        AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(dataList, DictCodeList.平安资产类型_质押式回购.getValue(), BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),true, entity.getEtrInvestPersonInfo());
+                        if (StringUtil.isNotEmpty(ar)) {
+                            throw new BusinessException(ar.getMessage());
+                        }
+                    }catch (Exception e) {
+                        throw new BusinessException(e.getMessage());
+                    }
+                    EntrustRdsCommonAop.riskListToChildren(entity.getRiskTrialRetDto(), entity.getEtrInvestRepoInfoDtos(),(dto, list) -> dto.setRiskTrialRetDto(list));
+
+                    if(!StringUtil.isNotEmpty(entity.getEntrustId())) {
+                        BussinessCodeParameter param = new BussinessCodeParameter();
+                        param.setCommonBusinessType(DictCodeList.共通业务类型_回购投资委托);
+                        String generatedId = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
+                        entity.setTotalEtrustId(generatedId);
+                    }else{
+                        entity.setTotalEtrustId(entity.getEntrustId());
+                    }
+                }
                 WFlowCommonService.deleteFlow(entity.getWorkflowId());
                 for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
                     dto.setWorkflowId(entity.getWorkflowId());
@@ -658,9 +688,11 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
 	}
 
     public CfetsEtribRepoInfo003Dto packageEquity(CfetsEtribRepoInfo003Dto RepoInfoDto,List<CfetsEtribRepoInfo003Dto> dataList) {
-        RepoInfoDto.setPrice(RepoInfoDto.getPrice().multiply(new BigDecimal(100)));//前端提交已经修改过此值  改回来
+        if(Objects.nonNull(RepoInfoDto.getPrice())) {
+            RepoInfoDto.setPrice(RepoInfoDto.getPrice().multiply(new BigDecimal(100)));//前端提交已经修改过此值  改回来
+        }
         //风险
-        CfetsEtribdoRiskcalResponse riskDto=RepoInfoDto.getCfetsEtribdoRiskcalResponse();
+        CfetsEtribdoRiskcalResponse riskDto = RepoInfoDto.getCfetsEtribdoRiskcalResponse();
         List<RiskTrialRetDto> riskTrialRetDto=new ArrayList<>();
         if(StringUtil.isNotEmpty(riskDto) && !StringUtil.isEmptyList(riskDto.getRiskcalReturnList())){
             for(CfetsEtribdoRiskcalResponse it:riskDto.getRiskcalReturnList()){
@@ -745,7 +777,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
      * 组装持仓入库数据
      * @author jiangpeng
      * @date 2022/2/21 10:50
-     * @param dto
+     * @param entity
      * @return com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto
      */
     private List<EntrustCommonDto> getEtrExecuteEntity(CfetsEtribRepoInfo003Dto entity) {

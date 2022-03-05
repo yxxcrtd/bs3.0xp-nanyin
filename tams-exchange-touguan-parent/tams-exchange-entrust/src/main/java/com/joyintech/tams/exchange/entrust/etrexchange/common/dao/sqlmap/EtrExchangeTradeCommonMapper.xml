@@ -6,12 +6,33 @@
     <select id="selectEtrExchange" resultType="com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeEtrExchangeCommonResponse">
         select * from (SELECT
         T1.ENTRUST_ID entrustId
-        ,T1.ENTRUST_STATUS entrustStatus
-        ,case when T2.TARGET_TYPE = '01' then ROUND(T4.ORDER_FINISH_AMT/T1.ENTRUST_NUM,4)
-        else ROUND(T4.ORDER_FINISH_AMT/T1.ENTRUST_AMT,4) end as implementPercent
-        ,case when T2.TARGET_TYPE = '01' then ROUND(T4.ENT_FINISH_AMT/T1.ENTRUST_NUM,4)
-        else ROUND(T4.ENT_FINISH_AMT/T1.ENTRUST_AMT,4) end as dealPercent
-        ,case when T1.ENTRUST_CLASS = '01' then T5.PORTFOLIO_ID
+        ,T1.ENTRUST_STATUS entrustStatus,
+        CASE
+        WHEN T2.TARGET_TYPE = '01' THEN
+        ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 1 ), 4 ) ELSE ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
+        END AS implementPercent,
+        CASE
+
+        WHEN T2.TARGET_TYPE = '01' THEN
+        ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 1 ), 4 ) ELSE ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
+        END AS dealPercent,
+        CASE
+        WHEN T2.TARGET_TYPE = '01' THEN
+        ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ), 4 )
+        END AS finishAmt,
+        CASE
+        WHEN T2.TARGET_TYPE = '01' THEN
+        ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ORDER_FINISH_AMT, 0 ), 4 )
+        END AS avaNum,
+        CASE
+        WHEN T2.TARGET_TYPE = '01' THEN
+        ROUND( nvl( T4.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T4.ENT_FINISH_AMT, 0 ), 4 )
+        END AS finishDealAmt,
+        CASE
+        WHEN T2.TARGET_TYPE = '01' THEN
+        ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ENT_FINISH_AMT, 0 ), 4 )
+        END AS avaDealAmt,
+        case when T1.ENTRUST_CLASS = '01' then T5.PORTFOLIO_ID
         else '' end as portfolioId
         ,case when T1.ENTRUST_CLASS = '01' then T5.PORTFOLIO_NAME
         else '' end as portfolioName
@@ -131,11 +152,31 @@
         union all
         SELECT
         T1.ENTRUST_ID entrustId
-        ,T1.ENTRUST_STATUS entrustStatus
-        ,case when T2.TARGET_TYPE = '01' then ROUND(T4.ORDER_FINISH_AMT/T1.ENTRUST_NUM,4)
-        else ROUND(T4.ORDER_FINISH_AMT/T1.ENTRUST_AMT,4) end as implementPercent
-        ,case when T2.TARGET_TYPE = '01' then ROUND(T4.ENT_FINISH_AMT/T1.ENTRUST_NUM,4)
-        else ROUND(T4.ENT_FINISH_AMT/T1.ENTRUST_AMT,4) end as dealPercent
+        ,T1.ENTRUST_STATUS entrustStatus,
+        CASE
+        WHEN T2.TARGET_TYPE = '01' THEN
+        ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 1 ), 4 ) ELSE ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
+        END AS implementPercent,
+        CASE
+        WHEN T2.TARGET_TYPE = '01' THEN
+        ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 1 ), 4 ) ELSE ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
+        END AS dealPercent,
+        CASE
+        WHEN T2.TARGET_TYPE = '01' THEN
+        ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ), 4 )
+        END AS finishAmt,
+        CASE
+        WHEN T2.TARGET_TYPE = '01' THEN
+        ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ORDER_FINISH_AMT, 0 ), 4 )
+        END AS avaNum,
+        CASE
+        WHEN T2.TARGET_TYPE = '01' THEN
+        ROUND( nvl( T4.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T4.ENT_FINISH_AMT, 0 ), 4 )
+        END AS finishDealAmt,
+        CASE
+        WHEN T2.TARGET_TYPE = '01' THEN
+        ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ENT_FINISH_AMT, 0 ), 4 )
+        END AS avaDealAmt
         ,T5.PORTFOLIO_ID portfolioId
         ,T5.PORTFOLIO_NAME  portfolioName
         ,T1.FINPROD_ID finprodId

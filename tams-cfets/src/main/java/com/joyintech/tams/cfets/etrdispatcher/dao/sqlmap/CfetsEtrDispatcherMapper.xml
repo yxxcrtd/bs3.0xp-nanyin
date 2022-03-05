@@ -1396,7 +1396,7 @@
         pp.portfolio_name portfolioName,
         ete.inv_aim busiModel,
         fp.finprod_market_id finprodMarketId,
-        fp.finprod_abbr finprodAbbr,
+        nvl(fp.finprod_abbr,ete.finprod_id) finprodAbbr,
         ete.trade_market tradeMarket,
         ete.ps ps,
         DECODE(eted.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
@@ -1481,9 +1481,10 @@
         LEFT JOIN ETR_ENTRUST oete ON  oete.entrust_id = eted.TRADE_ID
         LEFT JOIN etr_pledge oee ON oete.entrust_id = oee.entrust_id
         LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID
-        LEFT JOIN FIN_STDSEC_CONVERSE_RADIO fscr ON ete.FINPROD_ID = fscr.FINPROD_ID AND fscr.VDATE = to_date(#{sysDateStr},'yyyy-mm-dd')
+        LEFT JOIN FIN_STDSEC_CONVERSE_RADIO fscr ON ete.FINPROD_ID = fscr.FINPROD_ID
         WHERE ete.entrust_id = #{entrustId}
-
+          AND ( fscr.VDATE  = ( select max(VDATE) from FIN_STDSEC_CONVERSE_RADIO fscr1
+          where fscr1.FINPROD_ID= fscr.FINPROD_ID and fscr1.BRANCH = fscr.BRANCH and fscr1.VDATE &lt;= to_date(#{sysDateStr},'yyyy-mm-dd'))  OR fscr.VDATE IS NULL )
         union all
 
         SELECT
@@ -1493,7 +1494,7 @@
         pp.portfolio_name portfolioName,
         ete.inv_aim busiModel,
         fp.finprod_market_id finprodMarketId,
-        fp.finprod_abbr finprodAbbr,
+        nvl(fp.finprod_abbr,ete.finprod_id) finprodAbbr,
         ete.trade_market tradeMarket,
         ete.ps ps,
         DECODE(eted.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
@@ -1578,7 +1579,9 @@
         LEFT JOIN ETR_ENTRUST oete ON  oete.entrust_id = eted.TRADE_ID
         LEFT JOIN etr_pledge oee ON oete.entrust_id = oee.entrust_id
         LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID
-        LEFT JOIN FIN_STDSEC_CONVERSE_RADIO fscr ON ete.FINPROD_ID = fscr.FINPROD_ID AND fscr.VDATE = to_date(#{sysDateStr},'yyyy-mm-dd')
+        LEFT JOIN FIN_STDSEC_CONVERSE_RADIO fscr ON ete.FINPROD_ID = fscr.FINPROD_ID
         WHERE ete.entrust_id = #{entrustId}
+          AND (fscr.VDATE  = ( select max(VDATE) from FIN_STDSEC_CONVERSE_RADIO fscr1
+        where fscr1.FINPROD_ID= fscr.FINPROD_ID and fscr1.BRANCH = fscr.BRANCH and fscr1.VDATE &lt;= to_date(#{sysDateStr},'yyyy-mm-dd')) OR fscr.VDATE IS NULL )
     </select>
 </mapper>

@@ -837,14 +837,22 @@ public class IbuQuoteRepoService extends BaseService {
      * @author jiangpeng
      * @date 2021/12/20 14:31
      */
-    public List<RepoDealTransactionDetailsDto> listDealTransactionDetails(Map<String, Object> param) {
+    public Page<RepoDealTransactionDetailsDto> listDealTransactionDetails(Map<String, Object> param) {
         String loginUserId = LoginUserUtil.getUserName();
         param.put("rolePos03", DictCodeListExt2.角色岗位_交易处长.getValue());
         if ("admin".equals(loginUserId)) {
 //            loginUserId = "jp";//TODO 测试写死登录用户 提交代码时修改
         }
         param.put("loginUserId", loginUserId);
-        return cfetsIbuQuoteRepoMapper.listDealTransactionDetails(param);
+        int pageNo = 1;
+        int pageSize = 10;
+        if (param.get("pageNo") != null) {
+            pageNo = (int) param.get("pageNo");
+        }
+        if (param.get("pageSize") != null) {
+            pageSize = (int) param.get("pageSize");
+        }
+        return super.queryForPage(pageNo, pageSize, () -> cfetsIbuQuoteRepoMapper.listDealTransactionDetails(param));
     }
 
     /**

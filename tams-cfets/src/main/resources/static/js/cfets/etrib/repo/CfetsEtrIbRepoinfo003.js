@@ -158,7 +158,12 @@
             return true;
         }, editCell: function (value, data, field, cell, column) {
             if (field == 'entrustAmt') {
-                $("#entrustAmt").val(value);
+                var amt = 0;
+                var allRow = table.getAllRows();
+                $.each(allRow,function (index,item) {
+                    amt = JoyinMath.doAdd(amt,item.entrustAmt,2);
+                })
+                $("#entrustAmt").val(amt);
             }
             if (field == 'portfolioId') {
                 var allRow = table.getAllRows();
@@ -476,13 +481,26 @@
     }
 
     function paramCheck() {
-        var object = $.serializeToObject('#searchForm');
+     /*   var object = $.serializeToObject('#searchForm');
         if (!object.entrustAmt || !object.settleSpreed || !object.priceModel || !object.price || !object.repoTerm || !object.termType || !object.counterId) {
             Joyin.error("有*必填项未填写,请填写完整")
             return false;
         }
         if(!riskResultResponse) {
             Joyin.error("请先完成风险试算")
+            return false;
+        }*/
+        var obj = getSubmitParam("submit");
+        var errorMsg = "";
+        Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbRepoinfo/checkSaveError', obj.param, function (result) {
+            if(result.data && result.data.errorList && result.data.errorList.length > 0) {
+                $.each(result.data.errorList,function (index,item) {
+                    errorMsg = errorMsg + item.message + "<br\>";
+                })
+            }
+        },false)
+        if(errorMsg && errorMsg.length > 0) {
+            Joyin.error(errorMsg);
             return false;
         }
         return true;
@@ -516,14 +534,18 @@
         var object = $.serializeToObject('#searchForm');
         var param = JSON.parse(JSON.stringify(object))
         Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbRepoinfo/doRiskcal', param, function (data) {
-            $("#riskTrialSpan").html("&nbsp;&nbsp;" + data.data.data.riskTrialSpan);
-            riskResultResponse = data.data.data;
-            entity_RiskTrialRetList = data.data.data.riskcalReturnList;
-            tableRisk.clear();
-            tableRisk.addRow(data.data.data.riskcalReturnList);
+            if(data.data.data) {
+                $("#riskTrialSpan").html("&nbsp;&nbsp;" + data.data.data.riskTrialSpan);
+                riskResultResponse = data.data.data;
+                entity_RiskTrialRetList = data.data.data.riskcalReturnList;
+                tableRisk.clear();
+                tableRisk.addRow(data.data.data.riskcalReturnList);
+            }
         });
     });
-    $("#riskTrialSpan").html("&nbsp;&nbsp;" + entity_riskTrialSpan);
+    if(entity_riskTrialSpan) {
+        $("#riskTrialSpan").html("&nbsp;&nbsp;" + entity_riskTrialSpan);
+    }
     //cfets/etrib/cfetsEtrIbRepoinfo/getTermType
     $("#repoTerm").blur(function () {
         var repoTerm = $("#repoTerm").val();
