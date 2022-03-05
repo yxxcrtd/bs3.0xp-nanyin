@@ -192,27 +192,52 @@
         TSF.SEC_ACCT_ID,
         TSFD.FINPROD_ID,
         TSFD.BRANCH,
-        SUM(CASE WHEN TSF.PS = #{LIBRARY_DIRECTION_01} THEN NVL(TSFD.AMT, 0) ELSE -1 * NVL(TSFD.AMT, 0) END) AMT
+        <!--// modify by etliu 20220303 start -->
+        <!--SUM(CASE WHEN TSF.PS = #{LIBRARY_DIRECTION_01} THEN NVL(TSFD.AMT, 0) ELSE -1 * NVL(TSFD.AMT, 0) END) AMT-->
+        SUM(CASE WHEN TSF.PS = #{LIBRARY_DIRECTION_01} THEN NVL(TSFD.AMT, 0) ELSE -1 * NVL(TSFD.AMT, 0)
+            * NVL(mzData.mzValue, 100) / 100
+            END) AMT
+        <!--// modify by etliu 20220303 end -->
         FROM
         (
         SELECT PORTFOLIO_ID, SEC_ACCT_ID, PS, SEQNO
         FROM TRD_STASEC_FLOW
         WHERE CDATE <![CDATA[<=]]> #{date}
-        UNION ALL
+        <!--// modify by etliu 20220303 start -->
+        <!--// 质押式回购出入库计算时，原公式：标准券数量=质押数量*标准折算率，改成：标准券数量=质押数量*标准折算率*面值/100  需求张琼-->
+        <!--UNION ALL
         SELECT PORTFOLIO_ID, SEC_ACCT_ID, PS, SEQNO
         FROM TRD_TEMP_STASEC_FLOW
-        WHERE CDATE <![CDATA[<=]]> #{date}
+        WHERE CDATE <![CDATA[<=]]> #{date} -->
+        <!--// modify by etliu 20220303 end -->
         ) TSF
         INNER JOIN
         (
         SELECT SEQNO, FINPROD_ID, BRANCH, AMT
         FROM TRD_STASEC_FLOW_DETAIL
-        UNION ALL
+        <!--// modify by etliu 20220303 start -->
+        <!--UNION ALL
         SELECT SEQNO, FINPROD_ID, BRANCH, AMT
-        FROM TRD_TEMP_STASEC_FLOW_DETAIL
+        FROM TRD_TEMP_STASEC_FLOW_DETAIL-->
+        <!--// modify by etliu 20220303 end -->
         ) TSFD
         ON
         TSFD.SEQNO = TSF.SEQNO
+        <!--// modify by etliu 20220303 start -->
+        left join (
+            SELECT
+                t1.FINPROD_ID,
+                t1.BRANCH,
+                100 - NVL(SUM(NVL(t1.PRIN_AMT, 0)), 0) as mzValue
+            from FIN_CASH_PLAN t1
+            WHERE
+                t1.FINPROD_TYPE2 = 'F01'
+                and t1.CASH_TYPE in ('02', '03')
+                and t1.MDATE &lt;= #{batchDate,jdbcType=DATE}
+            group by t1.FINPROD_ID, t1.BRANCH
+        ) mzData
+        on TSFD.FINPROD_ID = mzData.FINPROD_ID and TSFD.BRANCH = mzData.BRANCH
+        <!--// modify by etliu 20220303 end -->
         GROUP BY
         TSF.PORTFOLIO_ID,
         TSF.SEC_ACCT_ID,
