@@ -201,4 +201,15 @@ public interface JoyinbusinessCommonMapper {
     SecInfoModelDto getSecInfoModel(Map<String, Object> param);
 
     String findUserByMySideTrader(@Param("mySideTrader") String mySideTrader,@Param("mySide") String mySide);
+
+    /**
+     *
+     * 获取新建界面的资产代码联想下拉框框
+     * <功能详细描述>
+     * @param param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> getfinprodIdForAll(Map<String, Object> param);
 }

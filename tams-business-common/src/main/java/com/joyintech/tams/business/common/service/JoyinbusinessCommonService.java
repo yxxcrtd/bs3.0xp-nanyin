@@ -87,9 +87,14 @@ public class JoyinbusinessCommonService extends BaseService {
         param.put("TRADE_PLACE_02",DictCodeListExt1.交易场所_商业银行柜台.getValue());
         param.put("platDate",DateUtil.platDateFromCache());
         param.put("initValue",dto.getInitValue());
-        if(StringUtil.isNotEmpty(dto.getDealType()) && StringUtil.equals(dto.getDealType(),"01")){
+        if (StringUtil.isNotEmpty(dto.getDealType()) && StringUtil.equals(dto.getDealType(), "01")) {
             //需要查询债券资产和回购期限
-            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getfinprodIdOfBondAndRepo(param));
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> joyinbusinessCommonMapper.getfinprodIdOfBondAndRepo(param));
+        }
+        if (StringUtil.isNotEmpty(dto.getDealType()) && StringUtil.equals(dto.getDealType(), "99")) {
+            param.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_OTC场外.getValue());
+            //需要查询债券资产、回购期限、项目类资产、公募基金、计划类净值型、计划类利率型、计划类货币型、存款
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> joyinbusinessCommonMapper.getfinprodIdForAll(param));
         }
         if(StringUtil.isNotEmpty(dto.getPs()) && (StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_回售.getValue())
                                                    ||StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_赎回.getValue()))){
