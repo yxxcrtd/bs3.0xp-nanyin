@@ -513,7 +513,7 @@
         left join SYS_DATADICT_LIST sdl2 on sdl2.DICT_CODE='PINAN_ASSET_TYPE' and t.finprodType2=sdl2.ITEM_CODE
         left join SYS_DATADICT_LIST sdl3 on sdl3.DICT_CODE='BUSI_TYPE_POSITION' and t.busiTypePosition=sdl3.ITEM_CODE
         left join SYS_DATADICT_LIST sdl4 on sdl4.DICT_CODE='PS' and t.PS=sdl4.ITEM_CODE
-        left join SYS_DATADICT_LIST sdl5 on sdl5.DICT_CODE='TRADE_MARKET' and t.tradeMarket=sdl5.ITEM_CODE
+        left join SYS_DATADICT_LIST sdl5 on sdl5.DICT_CODE='TRADE_PLACE' and t.tradeMarket=sdl5.ITEM_CODE
         left join SYS_DATADICT_LIST sdl6 on sdl6.DICT_CODE='ACCOUNT_SPEED' and t.settleSpeed=sdl6.ITEM_CODE
         left join SYS_DATADICT_LIST sdl7 on sdl7.DICT_CODE='CCY' and t.ccy=sdl7.ITEM_CODE
         <!-- 关键字模糊查询 -->
