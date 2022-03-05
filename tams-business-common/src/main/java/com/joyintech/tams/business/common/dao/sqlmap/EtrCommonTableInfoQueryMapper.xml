@@ -35,6 +35,11 @@
         LEFT JOIN ptl_portfolio pp ON rit.portfolio_id = pp.portfolio_id
         LEFT JOIN fin_product fp ON rit.asset_code = fp.finprod_id
         WHERE rit.trade_id = #{entrustId}
+        <if test="NOT_NULL_FLAG != null and NOT_NULL_FLAG!='' ">
+            AND rit.conclusion is null
+            AND fp.finprod_id is not null
+        </if>
+
         <!-- AND rit.conclusion is null
          AND fp.finprod_id is not null 注释掉这个过滤条件否则质押式回购的风险试算信息无法查出,add by gaowenlong at 20220110-->
     </select>
