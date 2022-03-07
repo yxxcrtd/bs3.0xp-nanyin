@@ -553,11 +553,11 @@ public class PositionRequestServiceInstructionRequest {
 //        if (StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(), "Y")) {
 //            balanceCheck = "N";
 //        }
-        resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());
+        resultMap.put("userId", entity.getTradeId());
         resultMap.put("totalTradeId", entity.getEntrustId());
         resultMap.put("balanceCheck", balanceCheck);
-        resultMap.put("flowStatus", DictCodeListExt3.流程节点_流程提交.getValue());
-        resultMap.put("modelType", DictCodeListExt1.子系统代码_委托.getValue());
+        resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
+        resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
 
         //设置头寸业务类型
         String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), entity.getAssetType());
