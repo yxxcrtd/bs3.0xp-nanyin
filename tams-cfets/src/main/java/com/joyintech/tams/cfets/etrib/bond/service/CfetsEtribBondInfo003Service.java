@@ -331,9 +331,9 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 isSubmit = false;
             }
             if("submit".equals(entity.getOperateType()) && isSubmit) {
-                CfetsEtribBondInfo003Dto allDto = cfetsEtrIbBondinfoService.packageEquityForSubmit(entity);
+                cfetsEtrIbBondinfoService.packageEquityForSubmit(entity);
                 List<CfetsEtribBondInfo003Dto> dataList = new ArrayList<>();
-                for (CfetsEtribBondInfo003Dto dto : allDto.getEtrInvestBondInfoDtos()) {
+                for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
                     if (!StringUtil.isNotEmpty(dto.getEntrustId())) {
                         BussinessCodeParameter param = new BussinessCodeParameter();
                         param.setCommonBusinessType(DictCodeList.共通业务类型_债券投资委托);
@@ -362,7 +362,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 }catch (Exception e) {
                     throw new BusinessException(e.getMessage());
                 }
-                EntrustRdsCommonAop.riskListToChildren(allDto.getRiskTrialRetDto(), allDto.getEtrInvestBondInfoDtos(),(dto, list) -> dto.setRiskTrialRetDto(list));
+                EntrustRdsCommonAop.riskListToChildren(entity.getRiskTrialRetDto(), entity.getEtrInvestBondInfoDtos(),(dto, list) -> dto.setRiskTrialRetDto(list));
             }
 
             WFlowCommonService.deleteFlow(entity.getWorkflowId());
@@ -1192,15 +1192,17 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         CfetsEtribBondInfo003Dto entity = getBussinessEntityByWorkflowId(workflowId);
         if (CollectionUtils.isNotEmpty(entity.getEtrInvestBondInfoDtos()))  {
             for (CfetsEtribBondInfo003Dto dto: entity.getEtrInvestBondInfoDtos()) {
-                Map<String,Object> param = new HashMap<>();
-                param.put("entrustId",dto.getEntrustId());
-                doDeleteEtrFlowMethod(param);
-                //从废弃表中获取，转移到指令表
-                etrEntrustBackupMapper.insertEtrFromQuery(dto.getEntrustId());
-                etrEntrustBackupMapper.insertEtrAddFromQuery(dto.getEntrustId());
-                // 删除废弃表
-                etrEntrustBackupMapper.deleteByPrimaryKey(dto.getEntrustId());
-                etrEntrustBackupMapper.deleteAddByPrimaryKey(dto.getEntrustId());
+                if(StringUtil.isNotEmpty(dto.getEntrustId())) {
+                    Map<String, Object> param = new HashMap<>();
+                    param.put("entrustId", dto.getEntrustId());
+                    doDeleteEtrFlowMethod(param);
+                    //从废弃表中获取，转移到指令表
+                    etrEntrustBackupMapper.insertEtrFromQuery(dto.getEntrustId());
+                    etrEntrustBackupMapper.insertEtrAddFromQuery(dto.getEntrustId());
+                    // 删除废弃表
+                    etrEntrustBackupMapper.deleteByPrimaryKey(dto.getEntrustId());
+                    etrEntrustBackupMapper.deleteAddByPrimaryKey(dto.getEntrustId());
+                }
 
             }
         }

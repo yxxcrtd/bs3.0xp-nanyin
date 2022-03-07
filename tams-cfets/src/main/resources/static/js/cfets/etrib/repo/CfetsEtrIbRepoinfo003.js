@@ -481,7 +481,7 @@
     }
 
     function paramCheck() {
-     /*   var object = $.serializeToObject('#searchForm');
+        var object = $.serializeToObject('#searchForm');
         if (!object.entrustAmt || !object.settleSpreed || !object.priceModel || !object.price || !object.repoTerm || !object.termType || !object.counterId) {
             Joyin.error("有*必填项未填写,请填写完整")
             return false;
@@ -489,7 +489,7 @@
         if(!riskResultResponse) {
             Joyin.error("请先完成风险试算")
             return false;
-        }*/
+        }
         var obj = getSubmitParam("submit");
         var errorMsg = "";
         Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbRepoinfo/checkSaveError', obj.param, function (result) {
