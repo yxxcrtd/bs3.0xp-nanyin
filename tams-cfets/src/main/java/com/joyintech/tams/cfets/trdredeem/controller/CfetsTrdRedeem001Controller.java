@@ -176,13 +176,22 @@ public class CfetsTrdRedeem001Controller extends BaseController {
         return new Message<AjaxResult>().success().setData(ajaxResult);
     }
 
+    /**
+     * 待办事项页面,保存校验
+     * @param CfetsTrdRedeemDealCommonDto
+     * @return
+     */
+    @PostMapping("/checkByHome")
+    @ResponseBody
+    public AjaxResult checkByHome(@RequestBody CfetsTrdRedeemDealCommonDto cfetsTrdRedeemDealCommonDto){
+        //check必填项
+        return cfetsTrdRedeem001Service.checkNotEmpty(cfetsTrdRedeemDealCommonDto);
+    }
+
     @ApiOperation(value = "登记提交(保存)", notes = "登记提交(保存)")
     @ResponseBody
     @PostMapping("save")
 	public Message<AjaxResult> save(@RequestBody CfetsTrdRedeemDealCommonDto dto, BindingResult br) throws Exception{
-        if (br.hasErrors()) {
-            return new Message<AjaxResult>().success().setData(new AjaxResult(br));
-		}
         CfetsTrdRedeemDealRegisterQuoteDto cfetsTrdRedeemDealRegisterQuoteDto = new CfetsTrdRedeemDealRegisterQuoteDto();
         //前台实体转成后台dto
         BeanUtil.copyPropertiesIgnoreNull(cfetsTrdRedeemDealRegisterQuoteDto, dto);
