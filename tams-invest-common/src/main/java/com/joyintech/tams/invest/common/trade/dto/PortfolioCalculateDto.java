@@ -61,6 +61,11 @@ public class PortfolioCalculateDto {
      */
     private String secAcctId;
 
+    /**
+     * 标准券总额
+     */
+    private BigDecimal standardSecAmount;
+
     public String getPortfolioId() {
         return portfolioId;
     }
@@ -139,5 +144,13 @@ public class PortfolioCalculateDto {
 
     public void setSecAcctId(String secAcctId) {
         this.secAcctId = secAcctId;
+    }
+
+    public BigDecimal getStandardSecAmount() {
+        return standardSecAmount;
+    }
+
+    public void setStandardSecAmount(BigDecimal standardSecAmount) {
+        this.standardSecAmount = standardSecAmount;
     }
 }
