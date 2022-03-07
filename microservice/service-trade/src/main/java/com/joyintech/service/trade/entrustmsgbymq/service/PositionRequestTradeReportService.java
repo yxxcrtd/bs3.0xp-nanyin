@@ -63,11 +63,12 @@ public class PositionRequestTradeReportService {
         Map<String, Object> resultMap = new HashMap<>();
         String tradePlat = detailFile.getTradePlat();
         String finprodType = trdTempDto.getFinprodType2();
+        String ps = trdTempDto.getPs();
         String type6 = commonPositionEngineService.getType6(detailFile.getFinprodId());
         if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
             finprodType += "-" + type6;
         }
-        String interType = commonPositionEngineService.getPositionInterType("TRD", tradePlat, finprodType, DictCodeListExt3.共通业务类型_手工交收.getValue(), "", trdTempDto.getClass().getName());
+        String interType = commonPositionEngineService.getPositionInterType(POSITION_TYPE_TRD, tradePlat, finprodType, ps, DictCodeListExt3.业务动作_成交回报.getValue(), trdTempDto.getClass().getName());
         if (INTERF_TYPE_BOND002.equals(interType)) {
             this.bond002(trdTempDto, resultMap);
         } else if (INTERF_TYPE_BOND003.equals(interType)) {
