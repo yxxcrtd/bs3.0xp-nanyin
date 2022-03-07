@@ -208,7 +208,8 @@ public class TradeCallbackHelper {
             market = StockCodeUtils.getMarket(entrust.getStockCode());
         }
         tradeRecord.setStockCode(StockCodeUtils.formatStockCode(tradeRecord.getStockCode(), market));
-        logger.info("=====================processEntrustTrade，StockCode：{}", tradeRecord.getStockCode());
+        logger.info("=====================processEntrustTrade，InstructionId：{},StockCode：{}",
+                entrust.getInstructionId(), tradeRecord.getStockCode());
         if (Strings.isNullOrEmpty(tradeRecord.getStockName())) {
             tradeRecord.setStockName(entrust.getStockName());
         }
