@@ -1,7 +1,6 @@
 package com.joyintech.tams.exchange.service.trade.processor.business.common;
 
 import com.google.common.base.Strings;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.constant.*;
 import com.joyintech.tams.exchange.common.db.domain.*;
 import com.joyintech.tams.exchange.common.utils.*;
@@ -205,10 +204,11 @@ public class TradeCallbackHelper {
         tradeRecord.setTradingDay(entrust.getTradingDay());
         //质押入库的三条成交合约代码可能不一致，需要保留
         String market = entrust.getMarket();
-        if (StringUtil.isEmpty(market)) {
+        if (Strings.isNullOrEmpty(market)) {
             market = StockCodeUtils.getMarket(entrust.getStockCode());
         }
         tradeRecord.setStockCode(StockCodeUtils.formatStockCode(tradeRecord.getStockCode(), market));
+        logger.info("=====================processEntrustTrade，StockCode：{}", tradeRecord.getStockCode());
         if (Strings.isNullOrEmpty(tradeRecord.getStockName())) {
             tradeRecord.setStockName(entrust.getStockName());
         }
