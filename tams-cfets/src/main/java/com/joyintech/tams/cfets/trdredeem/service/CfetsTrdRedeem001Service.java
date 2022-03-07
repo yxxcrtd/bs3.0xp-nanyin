@@ -230,6 +230,9 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
 
 	@Override
     public void doUpdate(CfetsTrdRedeemDealRegisterQuoteDto entity){
+        if ("save".equals(entity.getOperatorType())) {
+            return;
+        }
         Map<String,Object> map = new HashMap<>();
         if (!StringUtil.equals("revoke", entity.getOperatorType()) && !StringUtil.equals("delete", entity.getOperatorType())) {
             // 先删除流程中数据

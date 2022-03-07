@@ -31,6 +31,7 @@ import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealRegisterQuoteDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
 import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoDealQuotedPrice002Service;
 import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoQuotedPrice004Service;
@@ -63,6 +64,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.*;
 
 
@@ -131,6 +133,17 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
     private SysWflBusinessListMapper sysWflBusinessListMapper;
     @Autowired
     private CfetsRepoQuotedPrice004Service cfetsRepoQuotedPrice004Service;
+    /**
+     * 设置流程业务说明
+     */
+    @Override
+    public String generateTitle(CfetsBondDealRequestQuoteDto entity, OperationType type) {
+        DecimalFormat df = new DecimalFormat("###,###.00");
+        return  "报价日期(" + DateUtil.format(entity.getSettleDate())+")-"+
+                "资产简称(" + entity.getFinprodAbbr()  + ")-"+
+                "报价操作("+  entity.getQuoteOperatorType() +")-" +
+                "券面总额("+ df.format(entity.getAvaNum())+"万元)";
+    }
 
     public AjaxResult checkNotEmpty(CfetsBondDealQuoteCommonDto entity) {
         AjaxResult ajaxResult = new AjaxResult();
@@ -871,6 +884,9 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
     
 	@Override
     public void doUpdate(CfetsBondDealRequestQuoteDto entity){
+        if ("save".equals(entity.getOperatorType())) {
+            return;
+        }
         Map<String,Object> map = new HashMap<>();
         if (!StringUtil.equals("revoke", entity.getOperatorType()) && !StringUtil.equals("delete", entity.getOperatorType())) {
             this.handOurAndLendinShareAmt(entity);
