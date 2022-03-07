@@ -51,6 +51,16 @@ public class PortfolioCalculateDto {
      */
     private BigDecimal integrateSecAmount;
 
+    /**
+     * 资金账号
+     */
+    private String cashAcctId;
+
+    /**
+     * 证券管理账号
+     */
+    private String secAcctId;
+
     public String getPortfolioId() {
         return portfolioId;
     }
@@ -113,5 +123,21 @@ public class PortfolioCalculateDto {
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
+    }
+
+    public String getCashAcctId() {
+        return cashAcctId;
+    }
+
+    public void setCashAcctId(String cashAcctId) {
+        this.cashAcctId = cashAcctId;
+    }
+
+    public String getSecAcctId() {
+        return secAcctId;
+    }
+
+    public void setSecAcctId(String secAcctId) {
+        this.secAcctId = secAcctId;
     }
 }
