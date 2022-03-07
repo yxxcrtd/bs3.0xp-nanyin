@@ -245,8 +245,8 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             if (DictCodeList.平安资产类型_基金.getValue().equals(type8)) {
                 logger.info("【成交数据预清算-基金开始】tradePreClearing entrustId: {}, seqno: {}",
                     infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
-                
-                fundTradePreClearingService.trdFund(infContractDetailfile);
+                trdTempDto = new TrdTempDto();
+                fundTradePreClearingService.trdFund(trdTempDto, infContractDetailfile);
                 
                 logger.info("【成交数据预清算-基金结束】tradePreClearing entrustId: {}, seqno: {}",
                     infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
