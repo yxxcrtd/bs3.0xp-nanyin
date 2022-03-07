@@ -58,8 +58,8 @@ public class PositionRequestBaseBean {
     public PositionRequestBaseBean(PositionInstructionRequest instruction) {
         this.portfolioId = instruction.getPortfolioId();
         this.finprodId = instruction.getFinprodId();
-        this.tradeId = instruction.getEntrustId();
-        this.etrId = instruction.getEntrustNo();
+        this.tradeId = instruction.getEntrustNo();
+        this.etrId = instruction.getEntrustId();
         this.cashAcctId = instruction.getAcctNo();
         this.secAcctId = instruction.getSecAcctId();
         this.cashAmount = null;

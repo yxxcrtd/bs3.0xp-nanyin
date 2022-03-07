@@ -8,17 +8,19 @@
  * 系统名称：理财资管管理系统V2.0
  */
 
-package com.joyintech.tams.exchange.service.trade.position.constant;
+package com.joyintech.tams.invest.common.position.constant;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
  *
  * @author yflv
  * @version 1.0 2022年2月16日
- * @see PositionExchangeConstant
+ * @see PositionCommonConstant
  * @since 1.0
  */
-public class PositionExchangeConstant {
+public class PositionCommonConstant {
+    
+    public static final String INTERFACE_TYPE = "interfaceType";
 
     /**
      * 指令头寸类型
@@ -65,8 +67,14 @@ public class PositionExchangeConstant {
      */
     public static final String BUSI_ACT = "busiAct";
     /**
-     * 交易方向
+     * 金融产品代码
      */
+    public static final String FINPROD_ID = "finprodId";
+
+    public static final String BID_RESULT = "bidResult";
+    /**
+     * 交易方向
+     */;
     public static final String PS = "ps";
     /**
      * 清算速度
@@ -105,6 +113,16 @@ public class PositionExchangeConstant {
     public static final String PTL_CASH_LIST = "ptlCashList";
 
     /**
+     * 组合持仓数据集
+     */
+    public static final String PTL_SEC_LIST = "ptlSecList";
+
+    /**
+     * 组合配股/新股申购数据集
+     */
+    public static final String PTL_RO_LIST = "ptlRoList";
+
+    /**
      * 股票持仓数据集
      */
     public static final String SHARES_SEC_LIST = "sharesSecList";
@@ -138,6 +156,10 @@ public class PositionExchangeConstant {
      * 标准券总额
      */
     public static final String STANDARD_SEC_AMOUNT = "standardSecAmount";
+    /**
+     * 系统标准券代码标识
+     */
+    public static final String STANDAR_SEC_ID = "XN_PRODID999";
 
     /**
      * 汇总交易编号
