@@ -952,7 +952,7 @@
         pp.portfolio_name portfolioName,
         fp.finprod_market_id finprodMarketId,
         fp.finprod_abbr finprodAbbr,
-        tpdt.ps ps,
+        nvl(tpd.PS, tpdt.ps) ps,
         ssai.sec_acct_name secAcctId,
         to_char(tpd.trade_date,'yyyy-MM-dd') tradeDate,
         DECODE(tpd.settle_speed,0,'01',1,'02','2','03') settleSpeed,
@@ -1000,12 +1000,9 @@
         LEFT JOIN TRD_TRADE_FEE_DETAIL ttft ON tpd.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
         LEFT JOIN TRD_TRADE_FEE_DETAIL ttft1 ON tpd.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpd.sec_manage_acct_id = ssai.SEC_ACCT_ID
-        LEFT JOIN FIN_PRODUCT_TYPE fpt
-        ON (case when tpd.IS_OUT_TRADE='N' and tpd.R_TRADE_ID is not null then tpd.R_TRADE_ID else tpd.TRADE_ID end) = fpt.FINPROD_ID
-        left join FIN_TRADE_PRODUCT FTP on (CASE WHEN tpd.IS_OUT_TRADE = 'N' AND tpd.SPLIT_TRADE_ID IS NOT NULL THEN
-        tpd.SPLIT_TRADE_ID ELSE tpd.TRADE_ID END) = FTP.FINPROD_ID
-        left join FIN_DEAL_PLEDGE on (CASE WHEN tpd.IS_OUT_TRADE = 'N' AND tpd.SPLIT_TRADE_ID IS NOT NULL THEN
-        tpd.SPLIT_TRADE_ID ELSE tpd.TRADE_ID END) = FIN_DEAL_PLEDGE.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT_TYPE fpt ON tpd.FINPROD_ID  = fpt.FINPROD_ID
+        left join FIN_TRADE_PRODUCT FTP on tpd.FINPROD_ID = FTP.FINPROD_ID
+        left join FIN_DEAL_PLEDGE on tpd.FINPROD_ID = FIN_DEAL_PLEDGE.FINPROD_ID
         LEFT JOIN FIN_PRODUCT fp2 ON fp2.FINPROD_ID  = tpd.CHL_ID
         WHERE tpda.entrust_id = #{entrustId}
 
@@ -1023,12 +1020,9 @@
         LEFT JOIN TRD_TRADE_FEE_DETAIL ttft ON tpd.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
         LEFT JOIN TRD_TRADE_FEE_DETAIL ttft1 ON tpd.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpd.sec_manage_acct_id = ssai.SEC_ACCT_ID
-        LEFT JOIN FIN_PRODUCT_TYPE fpt
-        ON (case when tpd.IS_OUT_TRADE='N' and tpd.R_TRADE_ID is not null then tpd.R_TRADE_ID else tpd.TRADE_ID end) = fpt.FINPROD_ID
-        left join FIN_TRADE_PRODUCT FTP on (CASE WHEN tpd.IS_OUT_TRADE = 'N' AND tpd.SPLIT_TRADE_ID IS NOT NULL THEN
-        tpd.SPLIT_TRADE_ID ELSE tpd.TRADE_ID END) = FTP.FINPROD_ID
-        left join FIN_DEAL_PLEDGE on (CASE WHEN tpd.IS_OUT_TRADE = 'N' AND tpd.SPLIT_TRADE_ID IS NOT NULL THEN
-        tpd.SPLIT_TRADE_ID ELSE tpd.TRADE_ID END) = FIN_DEAL_PLEDGE.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT_TYPE fpt  ON tpd.FINPROD_ID = fpt.FINPROD_ID
+        left join FIN_TRADE_PRODUCT FTP on tpd.FINPROD_ID = FTP.FINPROD_ID
+        left join FIN_DEAL_PLEDGE on tpd.FINPROD_ID = FIN_DEAL_PLEDGE.FINPROD_ID
         LEFT JOIN FIN_PRODUCT fp2 ON fp2.FINPROD_ID  = tpd.CHL_ID
         WHERE tpda.entrust_id = #{entrustId}
     </select>
