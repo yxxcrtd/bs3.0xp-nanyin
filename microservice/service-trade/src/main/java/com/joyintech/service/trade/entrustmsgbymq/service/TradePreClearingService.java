@@ -206,6 +206,9 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
     private IPlatformDate iPlatformDate;
     @Autowired
     private EtrEntrustDetailMapper  etrEntrustDetailMapper;
+
+    @Autowired
+    private PositionRequestTradeReportService positionRequestTradeReportService;
     /**
      * 成交数据预清算
      *
@@ -219,6 +222,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
     public void tradePreClearing(InfContractDetailfile infContractDetailfile)
             throws Exception {
         logger.info("【成交数据预清算开始】tradePreClearing entrustId: {}, seqno: {}", infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
+        TrdTempDto trdTempDto = null;
         if(DictCodeListExt3.交易方向_质押券入库.getValue().equals(infContractDetailfile.getPs())
                 || DictCodeListExt3.交易方向_质押券出库.getValue().equals(infContractDetailfile.getPs())) {
             //标准券入出库成交数据接入：
@@ -247,7 +251,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
                 logger.info("【成交数据预清算-基金结束】tradePreClearing entrustId: {}, seqno: {}",
                     infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
             } else {
-                TrdTempDto trdTempDto = null;
+                // TrdTempDto trdTempDto = null;
                 if (DictCodeList.回购拆借方向_正回购.getValue().equals(infContractDetailfile.getPs())
                         || DictCodeList.回购拆借方向_逆回购.getValue().equals(infContractDetailfile.getPs())) {
                     logger.info("【成交数据预清算dto拼装-回购开始】tradePreClearing entrustId: {}, seqno: {}",
@@ -342,6 +346,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
                 }
             }
         }
+        positionRequestTradeReportService.sendTradeReportPositionRequest(trdTempDto, infContractDetailfile);
         logger.info("【成交数据预清算结束】tradePreClearing entrustId: {}, seqno: {}", infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
     }
 

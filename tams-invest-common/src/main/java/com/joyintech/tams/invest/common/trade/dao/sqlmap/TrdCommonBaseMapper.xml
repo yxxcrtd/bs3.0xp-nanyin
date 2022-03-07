@@ -1293,6 +1293,8 @@
         select
             ID,
             INSTRUCTION_ID,
+            ACCOUNT_ID,
+            SEC_ACCT_ID,
             ENTRUST_VOLUME
         from T_ENTRUST
         where ID = #{dealNo}
@@ -1300,6 +1302,8 @@
         select
             ID,
             INSTRUCTION_ID,
+            ACCOUNT_ID,
+            SEC_ACCT_ID,
             ENTRUST_VOLUME
         from T_INTEGRATED_ENTRUST
         where ID = #{dealNo}

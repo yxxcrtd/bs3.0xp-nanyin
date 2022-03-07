@@ -21,6 +21,16 @@ public class OrderInfoDto {
     private String instructionId;
 
     /**
+     * 资金账户
+     */
+    private String accountId;
+
+    /**
+     * 证券账户
+     */
+    private String secAcctId;
+
+    /**
      * 下单券面总额
      */
     private BigDecimal entrustVolume;
@@ -47,5 +57,21 @@ public class OrderInfoDto {
 
     public void setEntrustVolume(BigDecimal entrustVolume) {
         this.entrustVolume = entrustVolume;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getSecAcctId() {
+        return secAcctId;
+    }
+
+    public void setSecAcctId(String secAcctId) {
+        this.secAcctId = secAcctId;
     }
 }
