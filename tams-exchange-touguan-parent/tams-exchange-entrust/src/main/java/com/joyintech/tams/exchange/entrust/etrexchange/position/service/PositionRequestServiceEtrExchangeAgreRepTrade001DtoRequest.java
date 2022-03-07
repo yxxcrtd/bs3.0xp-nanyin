@@ -49,7 +49,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest {
      *
      * @param entity
      */
-    public void sendDelete(EtrExchangeTradeSaveRequest entity) {
+    public void sendDelete(EtrExchangeAgreRepTrade001Dto entity) {
         String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), entity.getAssetType2());
         PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(), PositionConstant.POSITION_TYPE_ETR, busiType, entity.getPs());
     }
