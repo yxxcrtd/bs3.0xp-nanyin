@@ -424,10 +424,10 @@
         object.price = $("#price").val();
         object.unitFprice = $("#unitFprice").val();
         if (query('#exerYield').val()) {
-            object.exerYield = query('#exerYield').val() / 100;
+            object.exerYield = query('#exerYieldShow').val() / 100;
         }
         if (query('#matureYield').val()) {
-            object.matureYield = query('#matureYield').val() / 100;
+            object.matureYield = query('#matureYieldShow').val() / 100;
         }
         if (object.bussCombDistribtList != null) {
             if (object.bussCombDistribtList.length > 0) {
@@ -538,10 +538,10 @@
         //提交获取计算方式单选框的值
         object.calculateField = query("input[name=calculateField]:checked").val();
         if (query('#exerYield').val()) {
-            object.exerYield = query('#exerYield').val() / 1;
+            object.exerYield = query('#exerYieldShow').val() / 100;
         }
         if (query('#matureYield').val()) {
-            object.matureYield = query('#matureYield').val() / 1;
+            object.matureYield = query('#matureYieldShow').val() / 100;
         }
         if (query('#tradeAmt').val()) {
             object.tradeAmt = query('#tradeAmt').val() * 10000;
@@ -615,7 +615,7 @@
     }
 
     function paramCheck() {
-        /*if (!query("#finprodName").val() || !query("#priceModel").val() || !query("#tradeAmt").val()) {
+        if (!query("#finprodName").val() || !query("#priceModel").val() || !query("#tradeAmt").val()) {
             Joyin.error("有*必填项未填写,请填写完整")
             return false;
         }
@@ -639,10 +639,12 @@
         if (!checkFlag) {
             Joyin.error("请填写完整组合信息")
             return false;
-        }*/
+        }
         var obj = getSubmitParam("submit");
         var errorMsg = "";
+        debugger;
         Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/checkSaveError', obj.param, function (result) {
+            console.log(result);
             if(result.data && result.data.errorList && result.data.errorList.length > 0) {
                 $.each(result.data.errorList,function (index,item) {
                     errorMsg = errorMsg + item.message + "<br\>";

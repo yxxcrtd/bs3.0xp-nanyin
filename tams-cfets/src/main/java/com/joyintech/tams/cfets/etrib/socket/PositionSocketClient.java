@@ -1,5 +1,6 @@
 package com.joyintech.tams.cfets.etrib.socket;
 
+import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.util.PositionUtil;
@@ -80,6 +81,25 @@ public class PositionSocketClient {
                         List<String> list = JsonUtils.json2Object(message, List.class);
 
                         logger.info(MessageFormat.format("收到webSocket消息: {0}", message));
+
+                        if (list.size() == 2) {
+                            String tableName = list.get(0);
+                            String jsonStr = list.get(1);
+                            if ("ETR_CASH_POSITION_FLOW".equals(tableName)){
+                                List arr = JSON.parseObject(jsonStr, List.class);
+                                webSocketService.insertOrUpdateForFlows(arr, "ETR_CASH_POSITION_FLOW_RULE");
+                            }else if ("ETR_SEC_POSITION_FLOW".equals(tableName)){
+                                List arr = JSON.parseObject(jsonStr, List.class);
+                                webSocketService.insertOrUpdateForFlows(arr, "ETR_SEC_POSITION_FLOW_RULE");
+                            }else if ("PTL_CASH_POSITION_FLOW".equals(tableName)){
+                                List arr = JSON.parseObject(jsonStr, List.class);
+                                webSocketService.insertOrUpdateForFlows(arr, "PTL_CASH_POSITION_FLOW_RULE");
+                            }else if ("PTL_SEC_POSITION_FLOW".equals(tableName)){
+                                List arr = JSON.parseObject(jsonStr, List.class);
+                                webSocketService.insertOrUpdateForFlows(arr, "PTL_SEC_POSITION_FLOW_RULE");
+                            }
+                            return ;
+                        }
                         
                         if (list != null && !list.isEmpty()){
                             // 转换成map

@@ -15,6 +15,7 @@ import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
 import com.joyintech.tams.business.common.entity.JoyinDataDictEntity;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
+import com.joyintech.tams.constant.DictCodeList;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -105,9 +106,15 @@ public class JoyinbusinessCommonController extends BaseController {
     @ApiOperation(value = "债券简称列表查询", notes = "债券简称列表查询")
     public Page<SelectOptionDto> getfinprodIdForSelect(CfetsSearchInfoRequest item) {
         try {
-            if (!"T03".equals(item.getPs())) {
+            if(!StringUtil.equals(item.getPs(), DictCodeList.交易方向_行权_赎回.getValue())
+                    && !StringUtil.equals(item.getPs(),DictCodeList.交易方向_行权_回售.getValue())
+
+            ){
                 item.setPs(null);
             }
+           /* if (!"T03".equals(item.getPs())) {
+                item.setPs(null);
+            }*/
             PageMode page = new PageMode();
             page.setPageNo(item.getPage());
             page.setPageSize(item.getLength());
