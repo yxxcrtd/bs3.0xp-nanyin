@@ -55,6 +55,10 @@ public class PositionCommonConstant {
      */
     public static final String INTERF_TYPE_REPO002 = "REPO002";
     /**
+     * 质押式通用回购
+     */
+    public static final String INTERF_TYPE_REPO003 = "REPO003";
+    /**
      * 股票（A股）
      */
     public static final String INTERF_TYPE_STOCK001 = "Stock001";
