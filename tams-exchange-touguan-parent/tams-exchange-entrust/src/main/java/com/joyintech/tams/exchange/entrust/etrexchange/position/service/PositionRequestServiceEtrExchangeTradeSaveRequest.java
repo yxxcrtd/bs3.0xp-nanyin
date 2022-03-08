@@ -17,6 +17,7 @@ import static com.joyintech.tams.invest.common.position.constant.PositionCommonC
 import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_BOND003;
 import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_FUND001;
 import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_REPO001;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_REPO003;
 import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_STOCK001;
 import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INV_AIM;
 import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.ORD_ENTRUST_ID;
@@ -102,12 +103,13 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             this.bond003(entity, resultMap);
         } else if (INTERF_TYPE_FUND001.equals(interType)) {
             this.fund001(entity, resultMap);
-        } else if (INTERF_TYPE_REPO001.equals(interType)) {
-            this.repo001(entity, resultMap);
+        } else if (INTERF_TYPE_REPO003.equals(interType)) {
+            this.repo003(entity, resultMap);
         } else if (INTERF_TYPE_STOCK001.equals(interType)) {
             this.stock001(entity, resultMap);
         } else {
             //TODO 根据条件判断调用其他接口
+        	return ;
         }
         PositionHttpRequest.send(resultMap);
     }
@@ -315,12 +317,12 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
     }
 
     /**
-     * 质押式通用回购-指令    repo001
+     * 质押式通用回购-指令    repo003
      *
      * @param entity
      * @param resultMap
      */
-    private void repo001(EtrExchangeTradeSaveRequest entity, Map<String, Object> resultMap) {
+    private void repo003(EtrExchangeTradeSaveRequest entity, Map<String, Object> resultMap) {
         resultMap.put(INTERFACE_TYPE, INTERF_TYPE_REPO001);
         resultMap.put(BUSI_ACT, 业务动作_投资指令.getValue());
         resultMap.put(SETTLE_SPEED, null);

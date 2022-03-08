@@ -123,6 +123,8 @@ public class PositionRequestServiceInstructionRequest {
             this.repo002(entity, resultMap);
         } else if (INTERF_TYPE_STOCK001.equals(interType)) {
             this.stock001(entity, resultMap);
+        }else {
+        	return ;
         }
         PositionHttpRequest.send(resultMap);
     }
