@@ -68,6 +68,8 @@ public class InvestmentBusinessDetailsDto {
 	private String industryType;
 	//机构名称
 	private String orgName;
+	//所属银保监局
+	private String cbrcCode;
 	//数据时点
 	private String reportDate;
 
@@ -103,6 +105,14 @@ public class InvestmentBusinessDetailsDto {
 	//表五计算用 资产支持专项计划 - 上季
 	private BigDecimal valueBlast02;
 
+
+	public String getCbrcCode() {
+		return cbrcCode;
+	}
+
+	public void setCbrcCode(String cbrcCode) {
+		this.cbrcCode = cbrcCode;
+	}
 
 	public BigDecimal getValueA() {
 		return valueA;

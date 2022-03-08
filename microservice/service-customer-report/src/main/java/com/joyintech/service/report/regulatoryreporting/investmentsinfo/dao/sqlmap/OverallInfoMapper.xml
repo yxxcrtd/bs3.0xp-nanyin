@@ -273,7 +273,7 @@
 
 
 	<select id="createTable5Data" resultType="java.util.Map">
-		SELECT VALCODE,
+		SELECT A.VALCODE,
 			sum(nvl(ASSETVALUE_A,0)) valueA,
 			sum(nvl(ASSETVALUE_B,0)) valueB,
 			sum(nvl(VALUEA_LAST,0)) valueALast,
@@ -324,7 +324,7 @@
 			</if>
 			)
 		) A
-		GROUP BY VALCODE
+		GROUP BY A.VALCODE
 	</select>
 
 

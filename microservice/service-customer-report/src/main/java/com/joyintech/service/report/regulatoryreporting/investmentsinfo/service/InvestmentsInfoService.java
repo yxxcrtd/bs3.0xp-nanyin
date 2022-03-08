@@ -14,15 +14,9 @@ package com.joyintech.service.report.regulatoryreporting.investmentsinfo.service
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-
-import java.util.Map;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -237,8 +231,11 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_2.put("t2_last54_amt", "ASSETAMT1_5_10");
 		tablePorpertyMap_2.put("t2_cur55_amt", "ASSETAMT1_5_16_a");
 		tablePorpertyMap_2.put("t2_last55_amt", "ASSETAMT1_5_16_a");
+		// 同G06-II 1.5.16 其他非标准化债权类投资穿透后期末余额-1.5.16.a 场内股票质押回购穿透后余额+1.5.7 委托债权穿透后余额  add by leipeng
 		tablePorpertyMap_2.put("t2_cur57_amtfq", "ASSETAMT1_5_16-AMT1_5_16_a+ASSETAMT1_5_7");
 		tablePorpertyMap_2.put("t2_last57_amtfq", "ASSETAMT1_5_16-AMT1_5_16_a+ASSETAMT1_5_7");
+		// 同G06-II 1.5.16 其他非标准化债权类投资穿透后期末余额-1.5.16.a 场内股票质押回购穿透后余额+1.5.7 委托债权穿透后余额  add by leipeng
+
 		tablePorpertyMap_2.put("t2_cur58_amt", "ASSETAMT1_6_5");
 		tablePorpertyMap_2.put("t2_last58_amt", "ASSETAMT1_6_5");
 		tablePorpertyMap_2.put("t2_cur59_amt", "ASSETAMT1_6_1");
@@ -588,9 +585,9 @@ public class InvestmentsInfoService {
 		investmentBusinessDetailsDtoList.addAll(queryTable1And2And6Info(pageParam));
 		//investmentBusinessDetailsDtoList.addAll(getInvestmentBusinessDetails(pageParam));
 		investmentBusinessDetailsDtoList.addAll(queryTable2And3Info(pageParam));
-		//表5和新附表
+		//新增表5和新附表相关计算方法 add by leipeng 20220304
 		investmentBusinessDetailsDtoList.addAll(queryTable5And8And6Info(pageParam));
-
+		//新增表5和新附表相关计算方法 add by leipeng 20220304
 
 		investmentBusinessDetailsDtoList.addAll(queryTable3OtherInfo(pageParam));
 		investmentBusinessDetailsDtoList.addAll(queryTable4Info(pageParam));
@@ -768,11 +765,12 @@ public class InvestmentsInfoService {
                 .add(resultMap.get("t1_last13_amt"))
                 .add(resultMap.get("t1_last14_amt")));
 
-		//附表新增计算逻辑
+		//附表新增计算逻辑 add by leipeng 20220304
 		resultMap.put("t8_cur01_amt", resultMap.get("t1_cur13_amt")
 				.add(resultMap.get("t1_cur14_amt")));
 		resultMap.put("t8_last01_amt", resultMap.get("t1_last13_amt")
 				.add(resultMap.get("t1_last14_amt")));
+		//附表新增计算逻辑 add by leipeng 20220304
 
 		// 值相同单元格赋值
 		for (String key : sameValueMap.keySet()) {
@@ -899,7 +897,7 @@ public class InvestmentsInfoService {
 				}
 		    }
 
-			//新增减法操作
+			//新增减法操作  add by leipeng 20220304
 			if(tablePorpertyMap_2.get(key).contains("-")){
 				String[] valueDList = tablePorpertyMap_2.get(key).split("\\-");
 				int lengthD = valueDList.length;
@@ -923,22 +921,23 @@ public class InvestmentsInfoService {
 					}
 				}
 			}
+			//新增减法操作  add by leipeng 20220304
 
 			resultMap.put(key, money);
 		}
 
 
-		// 附表  7.评级在AA+（不含）以下的非金融企业债
+		// 附表  7.评级在AA+（不含）以下的非金融企业债 add by leipeng 20220304
 		resultMap.put("t8_cur02_amt", resultMap.get("t2_cur37_amt").add(resultMap.get("t2_cur38_amt")).add(resultMap.get("t2_cur39_amt")));
-		// 附表  7.评级在AA+（不含）以下的非金融企业债
 		resultMap.put("t8_last02_amt", resultMap.get("t2_last37_amt").add(resultMap.get("t2_last38_amt")).add(resultMap.get("t2_last39_amt")));
+		// 附表  7.评级在AA+（不含）以下的非金融企业债add by leipeng 20220304
 
-		// 附表  9.底层资产无法一一对应的非标债权资产投资余额
+		// 附表  9.底层资产无法一一对应的非标债权资产投资余额 add by leipeng 20220304
 		resultMap.put("t8_cur03_amt", resultMap.get("t2_cur41_amt").add(resultMap.get("t2_cur42_amt")).add(resultMap.get("t2_cur46_amt"))
 				.add(resultMap.get("t2_cur48_amt")).add(resultMap.get("t2_cur51_amt")));
-		// 附表  9.底层资产无法一一对应的非标债权资产投资余额
 		resultMap.put("t8_last03_amt", resultMap.get("t2_last41_amt").add(resultMap.get("t2_last42_amt")).add(resultMap.get("t2_last46_amt"))
 				.add(resultMap.get("t2_last48_amt")).add(resultMap.get("t2_last51_amt")));
+		// 附表  9.底层资产无法一一对应的非标债权资产投资余额 add by leipeng 20220304
 
 
 		//针对表二B57和C57数据
@@ -1138,7 +1137,7 @@ public class InvestmentsInfoService {
 	/**
 	 * @Description 查询表五数据并组装为Map
 	 * @Author      高健
-	 * @Date        2019年8月7日 下午3:41:08
+	 * @Date         add by leipeng 20220304
 	 * @param @param pageParam
 	 * @param @return 参数
 	 * @return Map<Object,Object> 返回类型
@@ -2466,7 +2465,7 @@ public class InvestmentsInfoService {
 	/**
 	 * @Description 组装表5数据到实体类
 	 * @Author
-	 * @Date        2019年8月8日 上午11:53:42
+	 * @Date        add by leipeng 20220304
 	 * @param @param pageParam
 	 * @param @return 参数
 	 * @return List<InvestmentBusinessDetailsDto> 返回类型
@@ -2475,10 +2474,17 @@ public class InvestmentsInfoService {
 	private List<InvestmentBusinessDetailsDto> queryTable5And8And6Info(Map<String, Object> pageParam) {
 		List<Map<String,Object>> ListMap = createTable5Data(pageParam);
 
+		//为了保证页面正常展示.所有数据key都列出来
+		String keyCodes = "01_01_F01|01_02_F01|01_03_F01|01_99_F01|01_01_F06|01_02_F06|01_03_F06|01_99_F06|02_01_F01|02_02_F01|02_03_F01|02_99_F01|02_01_F06|02_02_F06|02_03_F06|02_99_F06|99_01_F01|99_02_F01|99_03_F01|99_99_F01|99_01_F06|99_02_F06|99_03_F06|99_99_F06";
+		Set<String> codeSet = new HashSet<>(Arrays.asList(keyCodes.split("\\|")));
+
 		List<InvestmentBusinessDetailsDto> InvestmentBusinessDetailsList = new ArrayList<InvestmentBusinessDetailsDto>();
+		//遍历查询出来的月报数据信息
 		for (Map<String,Object> map: ListMap) {
 			InvestmentBusinessDetailsDto investmentBusinessDetailsDto = new InvestmentBusinessDetailsDto();
 			investmentBusinessDetailsDto.setPropertycode(map.get("VALCODE").toString());
+			//如果查到了数据就将set集合中的删除掉
+			codeSet.remove(map.get("VALCODE").toString());
 			//表五计算用 投资余额 -穿透前
 			investmentBusinessDetailsDto.setValueA((BigDecimal) map.get("VALUEA"));
 			//表五计算用 投资余额 -穿透后
@@ -2510,6 +2516,17 @@ public class InvestmentsInfoService {
 
 			InvestmentBusinessDetailsList.add(investmentBusinessDetailsDto);
 		}
+		//将没有数据的分类进行初始化
+		for (String code : codeSet){
+			InvestmentBusinessDetailsDto investmentBusinessDetailsDto = new InvestmentBusinessDetailsDto();
+			investmentBusinessDetailsDto.setPropertycode(code);
+			InvestmentBusinessDetailsList.add(investmentBusinessDetailsDto);
+
+		}
+		//附表银保监局	城商行 字段
+
+		InvestmentBusinessDetailsDto detailsDto = investmentBusinessDetailsMapper.queryOrgName();
+		InvestmentBusinessDetailsList.add(detailsDto);
 
 		return InvestmentBusinessDetailsList;
 	}
@@ -2792,6 +2809,13 @@ public class InvestmentsInfoService {
 		paraMap.put("lastStartDate", lastDate);
 		paraMap.put("endDate",endDate);
 		paraMap.put("modetype", "40");
+
+		paraMap.put("INDUSTRY1", CacheUtil.getSysParam("SEC_END_DAYS_SWITCH").split(";")[0]);
+		paraMap.put("INDUSTRY2", CacheUtil.getSysParam("SEC_END_DAYS_SWITCH").split(";")[1]);
+		paraMap.put("INDUSTRY3", CacheUtil.getSysParam("SEC_END_DAYS_SWITCH").split(";")[2]);
+		paraMap.put("INDUSTRY4", CacheUtil.getSysParam("SEC_END_DAYS_SWITCH").split(";")[3]);
+
+
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDto40= investmentBusinessDetailsMapper.queryBottomInfoAmountByModeType(paraMap);
 		paraMap.put("modetype", "41");
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDto41= investmentBusinessDetailsMapper.queryBottomInfoAmountByModeType(paraMap);
