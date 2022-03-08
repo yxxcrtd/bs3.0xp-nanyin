@@ -404,9 +404,10 @@ public class TradeAgentTerminal extends Agent implements TradeAgent, IAgentMsgHa
         if (!Strings.isNullOrEmpty(entrustId)) {
             TradeMsgReceiver msgReceiver = msgReceiverManager.getTradeReceiverByEntrustId(entrustId);
             if (Objects.nonNull(msgReceiver)) {
+                logger.info("处理成交回报信息：{} - {}", tradeRecord.getAccountId(), tradeRecord.getBrokerEntrustId());
                 msgReceiver.handleRtnTradeRecord(tradeRecord);
             } else {
-                logger.warn("tradeRecord  not found receiver: {}", JsonUtils.getJsonFromObject(tradeRecord));
+                logger.warn("tradeRecord not found receiver: {}", JsonUtils.getJsonFromObject(tradeRecord));
             }
         } else {
             logger.info("tradeRecord return before entrust {} - {}", tradeRecord.getAccountId(), tradeRecord.getBrokerEntrustId());

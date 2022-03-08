@@ -120,6 +120,7 @@ public abstract class Agent {
             }
             //如果是需要同步处理的消息
             if (syncRequestInfo.containsKey(message.getReqId())) {
+                logger.info("同步消息:{} - {} - {} ", message.getFc(), message.getReqId(), message.getBody());
                 ProtocolMessage req = syncRequestInfo.remove(message.getReqId());
                 response.put(message.getReqId(), message);
                 synchronized (req) {
@@ -127,10 +128,13 @@ public abstract class Agent {
                 }
             } else {
                 Object response = getResponseObjectFromMessage(message);
+                if (message.getFc() != FunctionCode.HEARTBEAT.value && message.getFc() != FunctionCode.ACK.value) {
+                    logger.info("异步消息:{} - {} - {} ", message.getFc(), message.getReqId(), JsonUtils.getJsonFromObject(response));
+                }
                 handleAsyncMessage(message.getReqId(), message.getFc(), response);
             }
         } catch (Exception e) {
-            logger.warn("handle message exception:{}", e);
+            logger.warn("handle message exception:", e);
         }
     }
 

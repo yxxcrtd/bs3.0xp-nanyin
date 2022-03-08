@@ -189,7 +189,8 @@ public class TradeCallbackHelper {
     }
 
     public void processEntrustTrade(EntrustInterface entrust, Trade tradeRecord, Date now, Instruction instruction) {
-        logger.info("处理普通成交或者废单成交 TradeType {} -- entrust {}", tradeRecord.getTradeType(), entrust.getId());
+        logger.info("处理普通成交或者废单成交，TradeType：{}，entrust：{}，BrokerEntrustId：{}，BrokerTradeId：{}",
+                tradeRecord.getTradeType(), entrust.getId(), tradeRecord.getBrokerEntrustId(), tradeRecord.getBrokerTradeId());
         entrust.setUpdateTime(now);
         if (tradeRecord.getTradeType() == TradeType.CANCEL_INVALID.value) {
             logger.info("processCancelByCancelTrade cancel invalid trade");
@@ -208,8 +209,8 @@ public class TradeCallbackHelper {
             market = StockCodeUtils.getMarket(entrust.getStockCode());
         }
         tradeRecord.setStockCode(StockCodeUtils.formatStockCode(tradeRecord.getStockCode(), market));
-        logger.info("=====================processEntrustTrade，InstructionId：{},StockCode：{}",
-                entrust.getInstructionId(), tradeRecord.getStockCode());
+        logger.info("===========processEntrustTrade，InstructionId：{}，BrokerEntrustId：{}，BrokerTradeId：{}，StockCode：{}",
+                entrust.getInstructionId(), tradeRecord.getBrokerEntrustId(), tradeRecord.getBrokerTradeId(), tradeRecord.getStockCode());
         if (Strings.isNullOrEmpty(tradeRecord.getStockName())) {
             tradeRecord.setStockName(entrust.getStockName());
         }
