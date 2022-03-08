@@ -36,6 +36,8 @@ import com.joyintech.tams.exchange.service.trade.processor.TradeHelper;
 import com.joyintech.tams.exchange.service.trade.processor.algorithm.AlgorithmHelper;
 import com.joyintech.tams.exchange.service.trade.processor.business.common.CommonCheckHelper;
 
+import cn.hutool.core.bean.BeanUtil;
+
 @Component
 public class OrderManagement extends BaseService {
     private static final Logger logger = LoggerFactory.getLogger(OrderManagement.class);
@@ -84,7 +86,9 @@ public class OrderManagement extends BaseService {
         //头寸引擎余额检查---start
         try {
         	Instruction instruction = instructionService.findById(orderPlaceBean.getInstructionId());
-        	PositionInstructionRequest instructionClone = (PositionInstructionRequest)instruction.cloneInstruction();
+//        	PositionInstructionRequest instructionClone = (PositionInstructionRequest)instruction.cloneInstruction();
+        	PositionInstructionRequest instructionClone = new PositionInstructionRequest();
+        	BeanUtil.copyProperties(instruction, instructionClone);
         	instructionClone.setSoftSkipMode(orderPlaceBean.getSoftSkipMode());
         	instructionClone.setEntrustAmt(orderPlaceBean.getEntrustPrice().multiply(BigDecimal.valueOf(orderPlaceBean.getEntrustVolume())));
         	instructionClone.setEntrustNum(orderPlaceBean.getEntrustVolume());
@@ -125,7 +129,9 @@ public class OrderManagement extends BaseService {
         //头寸引擎余额检查---start
         try {
         	Instruction instruction = instructionService.findById(integratedEntrust.getInstructionId());
-        	PositionInstructionRequest instructionClone = (PositionInstructionRequest)instruction.cloneInstruction();
+//        	PositionInstructionRequest instructionClone = (PositionInstructionRequest)instruction.cloneInstruction();
+        	PositionInstructionRequest instructionClone = new PositionInstructionRequest();
+        	BeanUtil.copyProperties(instruction, instructionClone);
         	instructionClone.setSoftSkipMode(integratedEntrust.getSoftSkipMode());
         	instructionClone.setEntrustAmt(integratedEntrust.getEntrustPrice().multiply(BigDecimal.valueOf(integratedEntrust.getEntrustVolume())));
         	instructionClone.setEntrustNum(integratedEntrust.getEntrustVolume());

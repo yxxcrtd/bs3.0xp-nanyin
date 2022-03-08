@@ -720,7 +720,9 @@ public class TradeMsgProcessor {
     private void processPosition(EntrustInterface entrust) {
     	
     	Instruction instruction = instructionService.findById(entrust.getInstructionId());
-    	PositionInstructionRequest instructionClone = (PositionInstructionRequest)instruction.cloneInstruction();
+//    	PositionInstructionRequest instructionClone = (PositionInstructionRequest)instruction.cloneInstruction();
+    	PositionInstructionRequest instructionClone = new PositionInstructionRequest();
+    	BeanUtil.copyProperties(instruction, instructionClone);
     	instructionClone.setSoftSkipMode("Y");
     	instructionClone.setEntrustNo(entrust.getOrigEntrustId());
     	instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume())));
