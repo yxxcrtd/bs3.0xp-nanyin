@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.common.trade.service;
 
+import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
@@ -38,6 +39,8 @@ import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.TrdCommonBaseMapper;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,6 +59,7 @@ import java.util.*;
  */
 @Service
 public class TrdCommonBaseService extends BaseService {
+    private static final Logger logger = LoggerFactory.getLogger(TrdCommonBaseService.class);
 
     /**
      * TrdCommonBaseMapper
@@ -1242,6 +1246,7 @@ public class TrdCommonBaseService extends BaseService {
      * @return
      */
     public List<PortfolioCalculateDto> queryPortfolioCalculate (Map<String,Object> paraMap) {
+        logger.debug("【查询组合计算分配信息】paraMap: {}", JSON.toJSONString(paraMap));
         List<PortfolioCalculateDto> portfolioDtos = new ArrayList<>();
         String entrustId = "";
         // 成交编号
@@ -1259,6 +1264,9 @@ public class TrdCommonBaseService extends BaseService {
         InfContractDetailfile infContractDetailfile = trdCommonBaseMapper.selectInfContractDetailfile(fTradeId);
         // 根据委托编号查询下单信息
         OrderInfoDto orderInfoDto = trdCommonBaseMapper.selectOrderInfo(infContractDetailfile.getOrderId());
+        if(null == orderInfoDto){
+            return new ArrayList<>();
+        }
         // 查询指令信息
         EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(orderInfoDto.getInstructionId());
         if(etrEntrust == null){
@@ -1271,6 +1279,12 @@ public class TrdCommonBaseService extends BaseService {
             }
             for(EtrEntrustDetail etrEntrustDetail : etrEntrustDetails){
                 PortfolioCalculateDto portfolioDto = new PortfolioCalculateDto();
+                // 组合代码
+                portfolioDto.setPortfolioId(etrEntrustDetail.getPortfolioId());
+                // 资金账户
+                portfolioDto.setCashAcctId(orderInfoDto.getAccountId());
+                // 证券账户
+                portfolioDto.setSecAcctId(orderInfoDto.getSecAcctId());
                 // 下单编号
                 portfolioDto.setOrderId(infContractDetailfile.getOrderId());
                 if(DictCodeListExt3.目标类型_数量.getValue().equals(etrEntrustDetail.getTargetType())){
@@ -1298,6 +1312,10 @@ public class TrdCommonBaseService extends BaseService {
             PortfolioCalculateDto portfolioDto = new PortfolioCalculateDto();
             // 组合代码
             portfolioDto.setPortfolioId(etrEntrust.getPortfolioId());
+            // 资金账户
+            portfolioDto.setCashAcctId(orderInfoDto.getAccountId());
+            // 证券账户
+            portfolioDto.setSecAcctId(orderInfoDto.getSecAcctId());
             // 下单编号
             portfolioDto.setOrderId(infContractDetailfile.getOrderId());
             // 指令券面总额
