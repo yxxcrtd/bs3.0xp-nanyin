@@ -46,6 +46,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
@@ -53,7 +54,9 @@ import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangePosiInfoRequestDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.FinProductOthCodeDto;
@@ -63,9 +66,12 @@ import com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.asset.util.AssetCommonUtil;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
@@ -77,11 +83,13 @@ import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.*;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -100,6 +108,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -195,12 +204,19 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
 	@Autowired
 	private EtrEntrustDetailMapper etrEntrustDetailMapper;
+	/**
+	 * 业务编号组件
+	 */
+	@Autowired
+	private BaseGetBusinessId bussGetBussinessIdService;
 
 	// modify by etliu 20220303 start
 	// 质押式回购出入库计算时，原公式：标准券数量=质押数量*标准折算率，改成：标准券数量=质押数量*标准折算率*面值/100  ---需求张琼
 	@Autowired
 	private TrdCommonBaseService trdCommonBaseService;
 	// modify by etliu 20220303 end
+	@Autowired
+	private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
 
 	/**
 	 * {@inheritDoc}
@@ -5877,5 +5893,89 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	public List<EtrExchangeTradeSaveRequest> selectWflEtrPortfolioList(EtrExchangeTradeSaveRequest dto){
 		return etrExchangeTradeCommonMapper.selectWflEntrustDetail(dto);
 	}
+    //来自代办提交封装对象
+	public EtrExchangeTradeSaveRequest buildDtoFromTodoSubmit(EtrExchangeTradeSaveRequest dto) {
+		String businessType = setEntrustBussType(dto);
+		dto.setBusinessTypeName(SysDataUtil.getNameFromDataDict(DictCode.共通业务类型, businessType));
+		Map<String,List<EtrExchangeTradePortfolioRequest>> groupMap= dto.getPortfolioList().stream().collect(
+				Collectors.groupingBy(item->item.getAcctNo()));			//如果分组Map，key的数量>1,说明是多组合指令，key的数量=1,则为系列户指令
+		if(groupMap.keySet().size() == 1 && dto.getPortfolioList().size()>1) {
+			EtrExchangeTradePortfolioRequest item=dto.getPortfolioList().get(0);
+			//业务编号生成规则参数
+			if (!StringUtil.isNotEmpty(dto.getEntrustId())) {
+				BussinessCodeParameter param = genBussinessCodeParameter(dto);
+				String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
+				dto.setEntrustId(code);
+			}
+			BigDecimal totalEntrustAmt = null;
+			if(dto.getPortfolioList().get(0).getEntrustAmt()!=null){
+				totalEntrustAmt = dto.getPortfolioList().stream().map(EtrExchangeTradePortfolioRequest::getEntrustAmt).reduce(BigDecimal::add).get();
+			}
+			BigDecimal totalEntrustNum = dto.getPortfolioList().stream().map(EtrExchangeTradePortfolioRequest::getEntrustNum).reduce(BigDecimal::add).get();
+			//算比例
+			BigDecimal tempSumDisRate=BigDecimal.ZERO;
+			for(int i=0;i<dto.getPortfolioList().size();i++){
+				EtrExchangeTradePortfolioRequest tempItem=dto.getPortfolioList().get(i);
+				BigDecimal disRate=BigDecimal.ZERO;
+				if(i<dto.getPortfolioList().size()-1) {
+					disRate=ArithmeticUtil.divide(tempItem.getEntrustNum(),totalEntrustNum,2);
+					tempSumDisRate=tempSumDisRate.add(disRate);
+				}else {
+					disRate=ArithmeticUtil.subtract(new BigDecimal("1"),tempSumDisRate);
+				}
+				tempItem.setDisRate(disRate);
+			}
+			dto.setEntrustAmt(totalEntrustAmt);
+			dto.setEntrustNum(totalEntrustNum);
+			dto.setIsMulti(DictCodeList.是否_是.getValue());
+			dto.setVdate(dto.getEntrustDate());
+			dto.setMdate(dto.getEntrustDate());
+			dto.setAcctNo(item.getAcctNo());
+			dto.setSecAcctId(item.getSecAcctId());
+			dto.setStockId(dto.getStockId());
+			dto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
+			dto.setCreateUser(LoginUserUtil.getUserName());// 用户名
+			dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
+			dto.setCreateTime(new Date());// 创建时间
+			dto.setPortfolioId(item.getPortfolioId()); //让指令分发能查出来
+		}
+		//多组合指令
+		else {
+			EtrExchangeTradeSaveRequest etrExchangeTrade001Dto=null;
+			for(EtrExchangeTradePortfolioRequest item:dto.getPortfolioList()) {
+				etrExchangeTrade001Dto = genEtrExchangeTradeSaveRequest(dto,item);
+				if (dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue())) {
+					etrExchangeTrade001Dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+				} else if (dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue())) {
+					etrExchangeTrade001Dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+				}
+				if (!StringUtil.isNotEmpty(etrExchangeTrade001Dto.getEntrustId())) {
+					BussinessCodeParameter param = genBussinessCodeParameter(dto);
+					String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
+					etrExchangeTrade001Dto.setEntrustId(code);
+				}
+				etrExchangeTrade001Dto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
+				etrExchangeTrade001Dto.setCreateUser(LoginUserUtil.getUserName());// 用户名
+				etrExchangeTrade001Dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
+				etrExchangeTrade001Dto.setCreateTime(new Date());// 创建时间
+				etrExchangeTrade001Dto.setBusinessTypeName(businessType);//此处存的是类型
+				etrExchangeTrade001Dto.setOptType(ENTRUST_RECORD_NEW);
+				etrExchangeTrade001Dto.setIsMulti(DictCodeList.是否_否.getValue());
+				etrExchangeTrade001Dto.setFromEtrExchange("Y");
+				etrExchangeTrade001Dto.setDisRate(item.getDisRate());
+				List<EtrExchangeTradePortfolioRequest> portfolioList=new ArrayList<>();
+				EtrExchangeTradePortfolioRequest portfolioRequest=new EtrExchangeTradePortfolioRequest();
+				BeanUtil.copyPropertiesIgnoreNull(portfolioRequest,etrExchangeTrade001Dto);
+				portfolioList.add(portfolioRequest);
+				etrExchangeTrade001Dto.setPortfolioList(portfolioList);
+			}
+			dto=etrExchangeTrade001Dto;
+		}
+		return dto;
+	}
+
+
+
+
 
 }

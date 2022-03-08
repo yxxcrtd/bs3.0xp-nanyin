@@ -332,4 +332,5 @@ public interface EtrExchangeTradeCommonMapper {
 
 	List<EtrExchangeTradeSaveRequest>	selectWflEntrustDetail(EtrExchangeTradeSaveRequest dto);
 
+
 }
