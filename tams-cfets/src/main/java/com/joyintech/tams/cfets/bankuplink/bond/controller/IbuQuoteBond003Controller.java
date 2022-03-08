@@ -122,7 +122,7 @@ public class IbuQuoteBond003Controller extends BaseController {
             cfetsBondDealRequestQuoteDto = cfetsBondDealQuotedPrice003Service.getBussinessEntityByWorkflowId(getParam(GlobalConstant.WORKFLOW_ID));
 //            cfetsBondDealRequestQuoteDto.setAvaNum(cfetsBondDealRequestQuoteDto.getAvaNum().multiply(new BigDecimal(10000)));
             if ((null == cfetsBondDealRequestQuoteDto.getCounterInfoList()|| org.springframework.util.CollectionUtils.isEmpty(cfetsBondDealRequestQuoteDto.getCounterInfoList()))
-                    && cfetsBondDealRequestQuoteDto.getCounterIdList().size() > 0) {
+                    && null!=cfetsBondDealRequestQuoteDto.getCounterIdList() && cfetsBondDealRequestQuoteDto.getCounterIdList().size() > 0) {
                 List<CounterInfoDto> counterInfoList = new ArrayList<CounterInfoDto>();
                 for (String counterId : cfetsBondDealRequestQuoteDto.getCounterIdList()) {
                     CounterInfoDto counterInfoDto = new CounterInfoDto();
@@ -717,7 +717,8 @@ public class IbuQuoteBond003Controller extends BaseController {
         ProcessParameter<CfetsBondDealRequestQuoteDto> processParameter = new ProcessParameter<CfetsBondDealRequestQuoteDto>();
         WorkFlowParameter<CfetsBondDealRequestQuoteDto> params = cfetsBondDealQuotedPrice003Service.getWorkFlowParameter(cfetsBondDealRequestQuoteDto);
         params.setPageId("IbuQuoteBond003");
-        params.setElementId(cfetsBondDealRequestQuoteDto.getElementId());
+        //params.setElementId(cfetsBondDealRequestQuoteDto.getElementId());
+        params.setElementId("IbuQuoteBond003_btn_submit");
         params.setBusinessType(DictCodeListExt3.共通业务类型_本币业务交易_请求.getValue());
         params.setBusinessCode(cfetsBondDealRequestQuoteDto.getQuoteId());
         cfetsBondDealRequestQuoteDto.setQuoteType(DictCodeListExt3.报价系统区分类型_现券请求报价.getValue());
