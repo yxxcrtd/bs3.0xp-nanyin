@@ -160,6 +160,8 @@
         }
         , {
             field: 'entrustId',
+            title: '指令Id',
+            width: 200,
             visible: false
         }
     ]
@@ -251,6 +253,7 @@
                         table.renderRow(data.LAY_TABLE_INDEX, data);
                     }
                 },false);
+
                 if(ps == 'T02' || ps == 'T03') {//获取数量和模式
                     Joyin.ajax(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/selectPortfolioIdForSelect?ps='+ps+'&finprodId='+$("#finprodIdhid").val(), param, function (result) {
                         if(result.root && result.root.length > 0) {
@@ -582,6 +585,11 @@
                 item.entrustIntegrateNum = item.entrustIntegrateNum * 10000;
                 temp.entrustIntegrateNum = item.entrustIntegrateNum;
             }
+            if(!item.entrustId) {
+                Joyin.ajaxSync(basePath + 'cfets/etrib/CfetsEtrIbBondinfo003/getEntrustId',{},function (result) {
+                    item.entrustId = result.data;
+                })
+            }
             finprodId = temp.finprodId;
             tradeMarket = temp.tradeMarket;
             temp.entrustId = item.entrustId;
@@ -591,6 +599,7 @@
             temp.elementId = 'CfetsEtribBondInfo003_btn_submit';
             objects.push(temp);
         }
+        debugger;
         param = JSON.parse(JSON.stringify(object));
         // param.entrustNum = object.tradeAmt;
         param.finprodId = finprodId;
@@ -601,6 +610,16 @@
         param.ccy = query('#ccy').val();
         param.etrInvestBondInfoDtos = objects;
         param.bussCombDistribtList = object.bussCombDistribtList;
+        var buss = [];
+        /*$.each(param.bussCombDistribtList,function (index,item) {
+            if(!item.entrustId) {
+                Joyin.ajaxSync(basePath + 'cfets/etrib/CfetsEtrIbBondinfo003/getEntrustId',{},function (result) {
+                    item.entrustId = result.data;
+                })
+            }
+            buss.push(item);
+        })
+        param.bussCombDistribtList = buss;*/
         param.operateType = operateType;
         param.pageModel = pageModel;
         param.riskTrialRetDto = entity_RiskTrialRetList;

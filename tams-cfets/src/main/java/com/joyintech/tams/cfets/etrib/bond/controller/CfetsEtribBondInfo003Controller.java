@@ -28,6 +28,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.entrust.etribbondinfo.service.EtrIbBondinfo002Service;
 import com.joyintech.tams.invest.entrust.etribbondinfo.validator.EtribBondInfo003Validator;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -150,6 +151,19 @@ public class CfetsEtribBondInfo003Controller extends BaseController {
         model.addAttribute("SHORT_SELLING_SUPPORTED", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
 
         return super.init(model);
+    }
+
+    /**
+     * 获取组合分配的相关值
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("/getEntrustId")
+    public Message<String> getEntrustId() {
+        BussinessCodeParameter param = new BussinessCodeParameter();
+        param.setCommonBusinessType(DictCodeList.共通业务类型_债券投资委托);
+        String code = bussGetBussinessIdService != null? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
+        return new Message<String>().success().setData(code);
     }
 
     /**
