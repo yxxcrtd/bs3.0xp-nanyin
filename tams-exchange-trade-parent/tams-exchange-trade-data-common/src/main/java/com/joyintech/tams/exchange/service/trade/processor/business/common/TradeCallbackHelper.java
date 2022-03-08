@@ -205,12 +205,12 @@ public class TradeCallbackHelper {
         tradeRecord.setTradingDay(entrust.getTradingDay());
         //质押入库的三条成交合约代码可能不一致，需要保留
         String market = entrust.getMarket();
-        if (Strings.isNullOrEmpty(market)) {
+        if(Strings.isNullOrEmpty(market)){
             market = StockCodeUtils.getMarket(entrust.getStockCode());
         }
         tradeRecord.setStockCode(StockCodeUtils.formatStockCode(tradeRecord.getStockCode(), market));
-        logger.info("===========processEntrustTrade，InstructionId：{}，BrokerEntrustId：{}，BrokerTradeId：{}，StockCode：{}",
-                entrust.getInstructionId(), tradeRecord.getBrokerEntrustId(), tradeRecord.getBrokerTradeId(), tradeRecord.getStockCode());
+        logger.info("=======InstructionId：{}，BrokerEntrustId：{}，BrokerTradeId：{}，Market：{}，StockCode：{}",
+                entrust.getInstructionId(), tradeRecord.getBrokerEntrustId(), tradeRecord.getBrokerTradeId(), market, tradeRecord.getStockCode());
         if (Strings.isNullOrEmpty(tradeRecord.getStockName())) {
             tradeRecord.setStockName(entrust.getStockName());
         }
