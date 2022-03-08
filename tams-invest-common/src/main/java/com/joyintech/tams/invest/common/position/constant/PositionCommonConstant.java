@@ -31,6 +31,14 @@ public class PositionCommonConstant {
      */
     public static final String POSITION_TYPE_TRD = "TRD";
     /**
+     * 交易端画面
+     */
+    public static final String POSITION_TRD_PAGE = "TRD_PAGE";
+    /**
+     * 指令端画面
+     */
+    public static final String POSITION_ETR_PAGE = "ETR_PAGE";
+    /**
      * 银行间现券
      */
     public static final String INTERF_TYPE_BOND001 = "Bond001";

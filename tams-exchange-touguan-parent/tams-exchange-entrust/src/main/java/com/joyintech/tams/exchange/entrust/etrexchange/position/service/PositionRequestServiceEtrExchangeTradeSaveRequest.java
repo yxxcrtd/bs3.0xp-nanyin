@@ -1,8 +1,58 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.position.service;
 
+import static com.joyintech.tams.constant.DictCodeList.交易方向_申购;
+import static com.joyintech.tams.constant.DictCodeList.是否_否;
+import static com.joyintech.tams.constant.DictCodeListExt2.申购方式_网上申购;
+import static com.joyintech.tams.constant.DictCodeListExt3.业务动作_投资指令;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.BID_RESULT;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.BUSI_ACT;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.B_TOTAL_TRADE_ID;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.CCY;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.DELIVERY_TYPE;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.ETFREDEMPTION_METHOD;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.FINPROD_ID;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTEGRATE_SEC_AMOUNT;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERFACE_TYPE;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_BOND002;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_BOND003;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_FUND001;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_REPO001;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_STOCK001;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INV_AIM;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.ORD_ENTRUST_ID;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.OWN_SEC_AMOUNT;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.POSITION_ETR_PAGE;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.POSITION_TYPE_ETR;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.POSITION_TYPE_TRD;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.PS;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.PTL_CASH_LIST;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.PTL_LIST;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.PTL_RO_LIST;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.PTL_SEC_LIST;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.PURCH_MODLE;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.SAME_DAY_TURN;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.SETTLE_SPEED;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.SHARES_SEC_LIST;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.SHARES_TRADE_PLATFORM;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.STANDARD_SEC_AMOUNT;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.STANDARD_SEC_ID;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.TRADE_PLACE;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.WORK_FLOW_ID;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -20,19 +70,6 @@ import com.joyintech.tams.exchange.entrust.etrexchange.position.bean.PositionReq
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdMoreConvrateDto;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.*;
-
-import static com.joyintech.tams.constant.DictCodeList.交易方向_申购;
-import static com.joyintech.tams.constant.DictCodeList.是否_否;
-import static com.joyintech.tams.constant.DictCodeListExt2.申购方式_网上申购;
-import static com.joyintech.tams.constant.DictCodeListExt3.业务动作_投资指令;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.*;
 
 @Service
 public class PositionRequestServiceEtrExchangeTradeSaveRequest {
@@ -58,7 +95,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
             finprodType += "-" + type6;
         }
-        String interType = commonPositionEngineService.getPositionInterType(POSITION_TYPE_ETR, entity.getTradePlat(), finprodType, entity.getPs(), entity.getOptType(), entity.getClass().getName());
+        String interType = commonPositionEngineService.getPositionInterType(POSITION_TYPE_ETR, POSITION_ETR_PAGE, finprodType, entity.getPs(), entity.getOptType(), entity.getClass().getName());
         if (INTERF_TYPE_BOND002.equals(interType)) {
             this.bond002(entity, resultMap);
         } else if (INTERF_TYPE_BOND003.equals(interType)) {
