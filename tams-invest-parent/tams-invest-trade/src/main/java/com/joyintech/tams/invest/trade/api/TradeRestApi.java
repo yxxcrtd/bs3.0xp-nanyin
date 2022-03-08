@@ -125,8 +125,9 @@ public class TradeRestApi {
                 
                 result = baseTradeProductDealCommService.execute(finProductTradeDto);
 
-                // 调用新头寸 add by fuyongsheng 20220308 start
-                if(CollectionUtils.isNotEmpty(finProductTradeDto.getBaseTradeProductDealDtos())){
+                // 撤销批处理调用新头寸 add by fuyongsheng 20220308 start
+                if(DictCodeListExt1.交易流程状态_撤销.getValue().equals(finProductTradeDto.getWorkflowStatus())
+                        && CollectionUtils.isNotEmpty(finProductTradeDto.getBaseTradeProductDealDtos())){
                     for (BaseTradeProductDealDto entity:finProductTradeDto.getBaseTradeProductDealDtos()) {
                         TrdProductDeal deal = entity.getTrdProductDeal();
                         // 资产二级类型
@@ -137,7 +138,7 @@ public class TradeRestApi {
                         PositionHttpRequest.dorevoke(deal.getTradeId(), PositionConstant.POSITION_TYPE_TRD, busiType, deal.getPs());
                     }
                 }
-                // 调用新头寸 add by fuyongsheng 20220308 end
+                // 撤销批处理调用新头寸 add by fuyongsheng 20220308 end
 
                 // 结算数据下行都是单产品单组合，不会有母组合的，该逻辑去掉                
 //                for (BaseTradeProductDealDto baseTradeProductDealDto : baseTradeProductDealDtos) {

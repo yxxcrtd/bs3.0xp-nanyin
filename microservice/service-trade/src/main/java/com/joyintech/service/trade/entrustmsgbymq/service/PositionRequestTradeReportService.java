@@ -43,31 +43,30 @@ public class PositionRequestTradeReportService {
     @Autowired
     private EtrEntrustAddMapper etrEntrustAddMapper;
 
-    @Autowired
-    private FinTradeProductMapper finTradeProductMapper;
-
     @Autowired(required = false)
     @Qualifier("simpleRestTemplate")
     protected JoyinRestTemplate simpleRestTemplate;
 
     public static final String STANDAR_SEC_ID = "XN_PRODID999";
 
+    public static final String TRADE_PLAT = "TRD_TRADE_REPORT";
+
     /**
      * 发送成交回报头寸请求
      * @param trdTempDto
-     * @param detailFile
      */
     public void sendTradeReportPositionRequest(TrdTempDto trdTempDto) {
         logger.debug("【发送成交回报头寸请求】trdTempDto: {}", JSON.toJSONString(trdTempDto));
         Map<String, Object> resultMap = new HashMap<>();
-        String tradePlat = trdTempDto.getTradePlat();
         String finprodType = trdTempDto.getFinprodType2();
         String ps = trdTempDto.getPs();
         String type6 = commonPositionEngineService.getType6(trdTempDto.getFinprodId());
         if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
             finprodType += "-" + type6;
         }
-        String interType = commonPositionEngineService.getPositionInterType(POSITION_TYPE_TRD, tradePlat, finprodType, ps, DictCodeListExt3.业务动作_成交回报.getValue(), trdTempDto.getClass().getName());
+        logger.debug("【成交回报查询头寸接口参数】finprodType:{},ps:{}", finprodType, ps);
+        String interType = commonPositionEngineService.getPositionInterType(POSITION_TYPE_TRD, TRADE_PLAT, finprodType, ps, DictCodeListExt3.业务动作_成交回报.getValue(), trdTempDto.getClass().getName());
+        logger.debug("【成交回报查询头寸接口结果】interType:{}", interType);
         if (INTERF_TYPE_BOND002.equals(interType)) {
             this.bond002(trdTempDto, resultMap);
         } else if (INTERF_TYPE_BOND003.equals(interType)) {
