@@ -187,7 +187,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             if(null!=ajax){
                 return new Message<AjaxResult>().success().setData(ajax);
             }else{
-                return new Message<AjaxResult>().success().setMessage("校验通过");
+                return new Message<AjaxResult>().success();
             }
         }catch (Exception e) {
             logger.error("多组合指令新建保存/提交校验异常",e);
