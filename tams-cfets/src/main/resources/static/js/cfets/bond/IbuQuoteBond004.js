@@ -351,9 +351,9 @@
         Joyin.ajaxJson(basePath + 'cfets/bankuplink/bond/IbuQuoteBond/doRiskcal', obj, function (result) {
             riskFlag = true;
         },false)
-        if(!riskFlag) {
+      /*  if(!riskFlag) {
             return false;
-        }
+        }*/
         var obj = getSubmitParam("submit");
         var errorMsg = "";
         Joyin.ajaxJson(basePath + 'cfets/bond/IbuQuoteBond004/check', obj, function (result) {

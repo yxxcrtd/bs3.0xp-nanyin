@@ -657,6 +657,7 @@
                 })
             }
         },false)
+        debugger;
         if(errorMsg && errorMsg.length > 0) {
             Joyin.error(errorMsg);
             return false;
