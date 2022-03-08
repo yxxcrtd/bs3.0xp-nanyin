@@ -920,7 +920,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
             // 撤销清算匹配数据
             revokeSettleMatchData(exchangeTransMatchCommonRevokeDtoList, dto);
             // 头寸撤销
-            positionRequestService.sendRevoke(exchangeTransMatchCommonRevokeDtoList);
+//            positionRequestService.sendRevoke(exchangeTransMatchCommonRevokeDtoList);
         }
 
         logger.debug("取消成交匹配---结束");
