@@ -518,12 +518,20 @@ public class StlDataGatherService {
         // 组合持仓流水
         if (CollectionUtils.isNotEmpty(ptlSecPositionFlowList)){
             for (PtlSecPositionFlow ptlSecPositionFlow : ptlSecPositionFlowList){
+                // modify by etliu 20220308 start
+                // 场内的头寸处理，全部已经对接了头寸引擎，需要标记下
+                ptlSecPositionFlow.setIsExistNew(DictCodeList.是否_是.getValue());
+                // modify by etliu 20220308 end
                 ptlSecPositionFlowMapper.insert(ptlSecPositionFlow);
             }
         }
         // 指令持仓流水
         if (CollectionUtils.isNotEmpty(etrSecPositionFlowList)){
             for (EtrSecPositionFlow etrSecPositionFlow : etrSecPositionFlowList){
+                // modify by etliu 20220308 start
+                // 场内的头寸处理，全部已经对接了头寸引擎，需要标记下
+                etrSecPositionFlow.setIsExistNew(DictCodeList.是否_是.getValue());
+                // modify by etliu 20220308 end
                 etrSecPositionFlowMapper.insert(etrSecPositionFlow);
             }
         }

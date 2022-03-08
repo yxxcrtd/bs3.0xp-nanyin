@@ -503,6 +503,11 @@ public class CommonPositionService {
 	 * @param etrCashPositionFlow
 	 */
 	public void insertEtrCashPositionFlow (EtrCashPositionFlow etrCashPositionFlow){
+		// modify by etliu 20220308 start
+		// 场内的头寸处理，全部已经对接了头寸引擎，需要标记下
+		etrCashPositionFlow.setIsExistNew(DictCodeList.是否_是.getValue());
+		// modify by etliu 20220308 end
+
 		etrCashPositionFlowMapper.insertSelective(etrCashPositionFlow);
 		if(getSysDate().compareTo(etrCashPositionFlow.getCdate()) != 0){//非T+0流水不需要更新余额
 			return;
@@ -524,6 +529,11 @@ public class CommonPositionService {
 	 * @param etrSecPositionFlow
 	 */
 	public void insertEtrSecPositionFlow (EtrSecPositionFlow etrSecPositionFlow){
+		// modify by etliu 20220308 start
+		// 场内的头寸处理，全部已经对接了头寸引擎，需要标记下
+		etrSecPositionFlow.setIsExistNew(DictCodeList.是否_是.getValue());
+		// modify by etliu 20220308 end
+
 		etrSecPositionFlowMapper.insertSelective(etrSecPositionFlow);
 		if(getSysDate().compareTo(etrSecPositionFlow.getCdate()) != 0){//非T+0流水不需要更新余额
 			return;
@@ -544,6 +554,11 @@ public class CommonPositionService {
 	 * @param ptlCashPositionFlow
 	 */
 	public void insertPtlCashPositionFlow (PtlCashPositionFlow ptlCashPositionFlow){
+		// modify by etliu 20220308 start
+		// 场内的头寸处理，全部已经对接了头寸引擎，需要标记下
+		ptlCashPositionFlow.setIsExistNew(DictCodeList.是否_是.getValue());
+		// modify by etliu 20220308 end
+
 		ptlCashPositionFlowMapper.insertSelective(ptlCashPositionFlow);
 		if(getSysDate().compareTo(ptlCashPositionFlow.getCdate()) != 0){//非T+0流水不需要更新余额
 			return;
@@ -565,6 +580,11 @@ public class CommonPositionService {
 	 * @param ptlSecPositionFlow
 	 */
 	public void insertPtlSecPositionFlow (PtlSecPositionFlow ptlSecPositionFlow){
+		// modify by etliu 20220308 start
+		// 场内的头寸处理，全部已经对接了头寸引擎，需要标记下
+		ptlSecPositionFlow.setIsExistNew(DictCodeList.是否_是.getValue());
+		// modify by etliu 20220308 end
+
 		ptlSecPositionFlowMapper.insertSelective(ptlSecPositionFlow);
 		if(getSysDate().compareTo(ptlSecPositionFlow.getCdate()) != 0){//非T+0流水不需要更新余额
 			return;

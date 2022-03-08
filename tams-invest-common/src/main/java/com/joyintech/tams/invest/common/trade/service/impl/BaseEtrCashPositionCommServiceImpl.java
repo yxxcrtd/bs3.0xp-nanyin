@@ -71,6 +71,15 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
     @Override
     public CommonResult executeEtrCashPosition(BaseTradeProductDealDto finProductTradeDto, DictCodeList 持仓类型,
                                                boolean needNegative,String ieFlag,String isOverdueDeal) {
+        // modify by etliu 20220308 start
+        // 场内的头寸处理，全部已经对接了头寸引擎，需要标记下
+        if (finProductTradeDto.getTrdProductDeal() != null
+                && (StringUtil.equals(DictCodeListExt1.交易场所_上海证券交易所.getValue(), finProductTradeDto.getTrdProductDeal().getTradeMarket())
+                || StringUtil.equals(DictCodeListExt1.交易场所_深圳证券交易所.getValue(), finProductTradeDto.getTrdProductDeal().getTradeMarket()))) {
+            finProductTradeDto.setIsExistNew(DictCodeList.是否_是.getValue());
+        }
+        // modify by etliu 20220308 end
+
         // 资产类型
         String finprodType = finProductTradeDto.getTrdProductDeal().getFinprodType2();
         // 处理结果

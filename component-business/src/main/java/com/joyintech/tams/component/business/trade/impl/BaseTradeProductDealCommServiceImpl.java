@@ -692,6 +692,16 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
      */
     @Override
     public Boolean insertPosition(FinProductTradeDto finProductTradeDto) {
+        // modify by etliu 20220308 start
+        // 场内的头寸处理，全部已经对接了头寸引擎，需要标记下
+        if (!StringUtil.isEmptyList(finProductTradeDto.getBaseTradeProductDealDtos())
+            && finProductTradeDto.getBaseTradeProductDealDtos().get(0).getTrdProductDeal() != null
+            && (StringUtil.equals(DictCodeListExt1.交易场所_上海证券交易所.getValue(), finProductTradeDto.getBaseTradeProductDealDtos().get(0).getTrdProductDeal().getTradeMarket())
+                || StringUtil.equals(DictCodeListExt1.交易场所_深圳证券交易所.getValue(), finProductTradeDto.getBaseTradeProductDealDtos().get(0).getTrdProductDeal().getTradeMarket()))) {
+            finProductTradeDto.setIsExistNew(DictCodeList.是否_是.getValue());
+        }
+        // modify by etliu 20220308 end
+
         DictCodeList 持仓类型 = null;
         boolean needNegative = false;
         if (DictCodeListExt1.交易流程状态_撤销.getValue().equals(finProductTradeDto.getWorkflowStatus())) {

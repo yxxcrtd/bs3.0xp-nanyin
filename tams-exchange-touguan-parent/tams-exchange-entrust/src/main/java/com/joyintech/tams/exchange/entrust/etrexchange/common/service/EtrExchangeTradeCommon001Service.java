@@ -4875,8 +4875,21 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlows);
 		etrPositionHoldDto.setPtlSecPositionFlows(etrSecPositionFlows);
 		etrPositionHoldDto.setDealEtr(true);
-		etrPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(DateUtil.platDateFromCache()));
-		etrPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(DateUtil.platDateFromCache()));
+
+		// modify by etliu 20220308 start
+		// 场内的头寸处理，全部已经对接了头寸引擎，需要标记下
+//		etrPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(DateUtil.platDateFromCache()));
+//		etrPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(DateUtil.platDateFromCache()));
+		etrPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> {
+				etrCashPositionFlowDto.setCdate(DateUtil.platDateFromCache());
+				etrCashPositionFlowDto.setIsExistNew(DictCodeList.是否_是.getValue());
+		});
+		etrPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> {
+			etrSecPositionFlowDto.setCdate(DateUtil.platDateFromCache());
+			etrSecPositionFlowDto.setIsExistNew(DictCodeList.是否_是.getValue());
+		});
+		// modify by etliu 20220308 end
+
 		EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
 	}
 
