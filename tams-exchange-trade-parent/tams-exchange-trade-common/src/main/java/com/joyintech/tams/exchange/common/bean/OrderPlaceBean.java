@@ -58,8 +58,19 @@ public class OrderPlaceBean implements Serializable {
 
     @ApiModelProperty(required = false, name = "hedgeFlag", value = "套期保值标志", example = "1")
     private String hedgeFlag;
+    
+    @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
+    private String softSkipMode;
 
-    public String getInstructionId() {
+    public String getSoftSkipMode() {
+		return softSkipMode;
+	}
+
+	public void setSoftSkipMode(String softSkipMode) {
+		this.softSkipMode = softSkipMode;
+	}
+
+	public String getInstructionId() {
         return instructionId;
     }
 

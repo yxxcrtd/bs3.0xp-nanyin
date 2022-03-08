@@ -23,6 +23,7 @@ import com.joyintech.tams.common.base.entity.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 
 import com.joyintech.background.component.common.pack.common.security.User;
@@ -2468,9 +2469,10 @@ public class EtrExchangeTradeService extends BaseService{
     public String selectMultiSecAcctId(Map<String,Object> paraMap) {
         return etrExchangeTradeMapper.selectMultiSecAcctId(paraMap);
     }
+
     /**
      * 查询多组合详情
-     * @param map
+     * @param param
      * @return
      */
     public EtrExchangeTradeMulti001Dto selectMultDetail(Map<String, Object> param){

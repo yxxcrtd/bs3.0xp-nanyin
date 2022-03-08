@@ -11,6 +11,7 @@ import com.joyintech.tams.invest.entrust.etragrereptrade.validator.EtrAgreRepTra
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -109,6 +110,8 @@ public class EtrExchangeAgreRepTrade001Dto extends BaseEntity implements Process
 	 */
 	@JsonSerialize(using= BigDecimalSerializer.class)
 	private BigDecimal accAvailablePos;
+	@ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
+	private String softSkipMode;
 	public String getTradeId() {
 		return tradeId;
 	}
@@ -500,5 +503,13 @@ public class EtrExchangeAgreRepTrade001Dto extends BaseEntity implements Process
 
 	public void setPledgeUnit(String pledgeUnit) {
 		this.pledgeUnit = pledgeUnit;
+	}
+
+	public String getSoftSkipMode() {
+		return softSkipMode;
+	}
+
+	public void setSoftSkipMode(String softSkipMode) {
+		this.softSkipMode = softSkipMode;
 	}
 }

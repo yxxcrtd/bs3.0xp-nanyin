@@ -4,7 +4,9 @@ import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.common.base.entity.StlPayOrders;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -16,9 +18,13 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.TrdCommDto;
+import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
+import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonRevokeDto;
 import com.joyintech.tams.invest.common.valuationinterf.ValuationInterfService;
+import com.joyintech.tams.invest.trade.exchangetransmatch.position.constant.PositionConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,6 +66,12 @@ public class TradeRestApi {
     @Autowired
     private ValuationInterfService valuationInterfService;
 
+    @Autowired
+    private CommonPositionEngineService commonPositionEngineService;
+
+    @Autowired
+    private BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
+
     @PostMapping("execute")
     @Transactional
     @DTXTransaction
@@ -69,7 +81,7 @@ public class TradeRestApi {
             List<String> tradeIdList = param.getTradeIdList();
             List<String> totalTradeIdList = param.getTotalTradeIdList();
             String workflowStatus = param.getStatus();
-            String busiType = param.getBusiType();
+            // String busiType = param.getBusiType();
             String assetType2 = param.getAssetType2();
             
             if (StringUtil.isNotEmpty(workflowStatus)
@@ -112,7 +124,22 @@ public class TradeRestApi {
                 }
                 
                 result = baseTradeProductDealCommService.execute(finProductTradeDto);
-                
+
+                // 撤销批处理调用新头寸 add by fuyongsheng 20220308 start
+                if(DictCodeListExt1.交易流程状态_撤销.getValue().equals(finProductTradeDto.getWorkflowStatus())
+                        && CollectionUtils.isNotEmpty(finProductTradeDto.getBaseTradeProductDealDtos())){
+                    for (BaseTradeProductDealDto entity:finProductTradeDto.getBaseTradeProductDealDtos()) {
+                        TrdProductDeal deal = entity.getTrdProductDeal();
+                        // 资产二级类型
+                        assetType2 = StringUtil.isNotEmpty(finProductTradeDto.getAssetType2()) ?
+                                finProductTradeDto.getAssetType2() : baseAssetCashPositionCommMapper.selectFundType(deal.getFinprodId());
+                        String busiType = commonPositionEngineService.getPositionBusiType(deal.getFinprodType2(),
+                                deal.getPs(), assetType2);
+                        PositionHttpRequest.dorevoke(deal.getTradeId(), PositionConstant.POSITION_TYPE_TRD, busiType, deal.getPs());
+                    }
+                }
+                // 撤销批处理调用新头寸 add by fuyongsheng 20220308 end
+
                 // 结算数据下行都是单产品单组合，不会有母组合的，该逻辑去掉                
 //                for (BaseTradeProductDealDto baseTradeProductDealDto : baseTradeProductDealDtos) {
 //                    String portfolioId = baseTradeProductDealDto.getTrdProductDealAdd().getPortfolioId();

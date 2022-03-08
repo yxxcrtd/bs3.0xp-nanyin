@@ -332,5 +332,14 @@ public interface EtrExchangeTradeCommonMapper {
 
 	List<EtrExchangeTradeSaveRequest>	selectWflEntrustDetail(EtrExchangeTradeSaveRequest dto);
 
+	/**
+	 * 头寸信息
+	 *
+	 * @param RequestDto 条件
+	 * @return java.util.Map
+	 * @author jiangpeng
+	 * @date 2021/12/4 15:39
+	 */
+	Map queryPositionInfo(Map RequestDto);
 
 }

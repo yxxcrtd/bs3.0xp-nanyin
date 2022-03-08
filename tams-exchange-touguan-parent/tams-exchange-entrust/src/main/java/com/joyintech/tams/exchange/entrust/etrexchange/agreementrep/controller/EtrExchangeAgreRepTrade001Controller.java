@@ -16,6 +16,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.business.common.dto.PageMode;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.common.base.entity.EtrDistribute;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
@@ -680,8 +681,16 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
         dto.setCreateUser(LoginUserUtil.getUserName());// 用户名
         dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
         dto.setCreateTime(new Date());// 创建时间
-        String msg = etrExchangeAgreRepTrade001Service.start(processParameter, dto);
-        return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
+//        String msg = etrExchangeAgreRepTrade001Service.start(processParameter, dto);
+//        return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
+        try {
+        	String msg = etrExchangeAgreRepTrade001Service.start(processParameter, dto);
+            AjaxResult m =new AjaxResult(msg);
+            return new Message<AjaxResult>().success().setData(m);
+        }catch (Exception e) {
+            logger.error("场内交易指令新建失败",e);
+            return PositionUtil.ajaxErrorReturn(e);
+        }
     }
 
 

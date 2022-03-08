@@ -2,8 +2,8 @@ server:
   port: 8889
 agent:
   servers: 127.0.0.1:9190
-  name: terminal_ufx
-  type: ufx #mock #ufx #KDGateway #ufx #kcbp
+  name: kcbp
+  type: kcbp #mock #ufx #KDGateway #ufx #kcbp
   query:
     interval: 1000
     count: 2
@@ -50,7 +50,7 @@ netty:
 
 # kcbp config
 kcbp:
-  active: false
+  active: true
   keep:
     fixRate: 30000 #kcbp终端维持连接频率
   # 上报本机信息
@@ -71,7 +71,7 @@ kcbp:
 
 # ufx config
 ufx:
-  active: true
+  active: false
   path: tams-exchange-terminal/ufxconfig/t2sdk_hundsun-config.xml
   opStation:
     #终端名称
@@ -93,7 +93,7 @@ KDGateway:
     mark: JOYIN;V0.0.0.1@V1.0
 
 jsd:
-  active: true
+  active: false
   connectTimeout: 10000
 
 ctp:
@@ -147,16 +147,16 @@ log:
 spring:
   profiles: joyin-210
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.180:1521/orcl
-    username: hgcs01
-    password: hgcs01
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: BS303INIT_EXCHANGE0106
+    password: BS303INIT_EXCHANGE0106
     maxTotal: 50
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.180:1521/orcl
-    username: hgcs01
-    password: hgcs01
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: BS303INIT_EXCHANGE0106
+    password: BS303INIT_EXCHANGE0106
     maxTotal: 50
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
 eureka:

@@ -1,14 +1,14 @@
 package com.joyintech.tams.constant;
 
+import com.joyintech.framework.base.BaseDictCodeList;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.StringUtil;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.joyintech.framework.base.BaseDictCodeList;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.StringUtil;
 
 /**
  * 数据字典明细枚举
@@ -1686,6 +1686,10 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     系统动作_关闭(DictCode.系统动作,"05","关闭"),
     系统动作_成交(DictCode.系统动作,"06","成交"),
     系统动作_完成(DictCode.系统动作,"07","完成"),
+    系统动作_作废(DictCode.系统动作,"08","作废"),
+    系统动作_回滚(DictCode.系统动作,"09","回滚"),
+    系统动作_撤销(DictCode.系统动作,"10","撤销"),
+    系统动作_检查(DictCode.系统动作,"11","检查"),
     /**
      * 头寸业务类型
      */
@@ -1697,7 +1701,30 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     头寸业务类型_买断式回购首期(DictCode.头寸业务类型,"10","买断式回购首期"),
     头寸业务类型_质押式回购到期(DictCode.头寸业务类型,"06","质押式回购到期"),
     头寸业务类型_债券借贷首期(DictCode.头寸业务类型,"12","债券借贷首期"),
-    头寸业务类型_拆借首期(DictCode.头寸业务类型,"18","拆借首期"),
+	头寸业务类型_拆借首期(DictCode.头寸业务类型,"18","拆借首期"),
+    头寸业务类型_协议回购首期(DictCode.头寸业务类型, "09", "协议回购首期"),
+    头寸业务类型_协议回购中途换券(DictCode.头寸业务类型, "10", "协议回购中途换券"),
+    头寸业务类型_协议回购提前购回(DictCode.头寸业务类型, "11", "协议回购提前购回"),
+    头寸业务类型_协议回购到期购回(DictCode.头寸业务类型, "12", "协议回购到期购回"),
+    头寸业务类型_协议回购到期续作(DictCode.头寸业务类型, "13", "协议回购到期续作"),
+    头寸业务类型_协议回购解除质押(DictCode.头寸业务类型, "14", "协议回购解除质押"),
+    头寸业务类型_网下申购(DictCode.头寸业务类型, "15", "网下申购"),
+    头寸业务类型_网上申购(DictCode.头寸业务类型, "16", "网上申购"),
+    头寸业务类型_配债(DictCode.头寸业务类型, "17", "配债"),
+    头寸业务类型_债转股(DictCode.头寸业务类型, "18", "债转股"),
+    头寸业务类型_通用回购债券入库(DictCode.头寸业务类型, "19", "通用回购债券入库"),
+    头寸业务类型_通用回购债券出库(DictCode.头寸业务类型, "20", "通用回购债券出库"),
+    头寸业务类型_通用回购首期(DictCode.头寸业务类型, "21", "通用回购首期"),
+    头寸业务类型_通用回购到期(DictCode.头寸业务类型, "22", "通用回购到期"),
+    头寸业务类型_上市流通(DictCode.头寸业务类型, "23", "上市流通"),
+    头寸业务类型_限售解禁(DictCode.头寸业务类型, "24", "限售解禁"),
+    头寸业务类型_股票交易(DictCode.头寸业务类型, "25", "股票交易"),
+    头寸业务类型_配股(DictCode.头寸业务类型, "26", "配股"),
+    头寸业务类型_股票分红(DictCode.头寸业务类型, "27", "股票分红"),
+    头寸业务类型_股票送股(DictCode.头寸业务类型, "28", "股票送股"),
+    头寸业务类型_红股上市(DictCode.头寸业务类型, "29", "红股上市"),
+    头寸业务类型_基金交易(DictCode.头寸业务类型, "30", "基金交易"),
+    头寸业务类型_基金存续期(DictCode.头寸业务类型, "31", "基金存续期"),
     /**
      * 头寸业务动作
      */
@@ -1716,8 +1743,12 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     业务动作_指令日终关闭(DictCode.业务动作,"13","指令日终关闭"),
     业务动作_指令手动关闭(DictCode.业务动作,"14","指令手动关闭"),
     业务动作_指令自动完成(DictCode.业务动作,"15","指令自动完成"),
+    业务动作_交易下单(DictCode.业务动作,"16","交易下单"),
+    业务动作_成交回报(DictCode.业务动作,"17","成交回报"),
+    业务动作_撤委托(DictCode.业务动作,"18","撤委托"),
+    业务动作_交收回溯(DictCode.业务动作,"20","交收回溯"),
     业务动作_待交收(DictCode.业务动作,"22","待交收"),
-
+    业务动作_成交匹配(DictCode.业务动作,"19","成交匹配"),
 
 
     资产类型_现金账户持仓(DictCode.头寸资产类型, "C_01", "现金账户持仓"),
@@ -1883,6 +1914,9 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     
     产品数据来源_母行代销TA(DictCode.产品数据来源, "01", "母行代销TA"),
 	产品数据来源_三方分销TA(DictCode.产品数据来源, "02", "三方分销TA"),
+	结算方式_头寸引擎_净额结算(DictCode.结算方式_头寸引擎, "01", "净额结算"),
+	结算方式_头寸引擎_RTGS(DictCode.结算方式_头寸引擎, "02", "RTGS"),
+	结算方式_头寸引擎_逐笔全额结算(DictCode.结算方式_头寸引擎, "03", "逐笔全额结算"),
     ;
     /**
      * 对应于数据字典code
