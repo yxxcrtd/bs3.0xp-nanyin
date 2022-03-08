@@ -1,9 +1,6 @@
 package com.joyintech.tams.settle.batch.dealrevoke.dao;
 
-import com.joyintech.tams.common.base.entity.EtrCashPosition;
-import com.joyintech.tams.common.base.entity.EtrSecPosition;
-import com.joyintech.tams.common.base.entity.PtlCashPosition;
-import com.joyintech.tams.common.base.entity.PtlSecPosition;
+import com.joyintech.tams.common.base.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -161,4 +158,13 @@ public interface InvestDealRevokeMapper {
     void deletePtlCashPositionFlowByTradeIds(@Param("tradeIds") List<String> tradeIds);
 
     List<String> searchTradeIdsByTotalTradeIds(@Param("totalTradeIds") List<String> totalTradeIds);
+
+    // add by fuyongsheng 20220308 start
+    /**
+     * 查询日间成交交易
+     * @param param
+     * @return
+     */
+    List<TrdProductTempDeal> getTrdProductTempDeals(Map<String, Object> param);
+    // add by fuyongsheng 20220308 end
 }

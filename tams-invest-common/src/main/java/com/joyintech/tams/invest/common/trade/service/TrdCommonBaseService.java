@@ -1287,25 +1287,24 @@ public class TrdCommonBaseService extends BaseService {
                 portfolioDto.setSecAcctId(orderInfoDto.getSecAcctId());
                 // 下单编号
                 portfolioDto.setOrderId(infContractDetailfile.getOrderId());
+                BigDecimal ratio = new BigDecimal(1);
                 if(DictCodeListExt3.目标类型_数量.getValue().equals(etrEntrustDetail.getTargetType())){
                     // 指令券面总额
                     portfolioDto.setEtrSecAmount(ArithmeticUtil.multiply(etrEntrustDetail.getEntrustNum(), new BigDecimal(100)));
+                    ratio = ArithmeticUtil.divide(etrEntrustDetail.getEntrustNum(), etrEntrust.getEntrustNum(), 8, RoundingMode.HALF_UP);
                 }else{
                     // 指令券面总额
                     portfolioDto.setEtrSecAmount(etrEntrustDetail.getEntrustAmt());
+                    ratio = ArithmeticUtil.divide(etrEntrustDetail.getEntrustAmt(), etrEntrust.getEntrustAmt(), 8, RoundingMode.HALF_UP);
                 }
                 // 券面总额
-                portfolioDto.setSecAmount(ArithmeticUtil.divide(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(),
-                        etrEntrustDetail.getEntrustNum()), etrEntrust.getEntrustNum(), 8, RoundingMode.HALF_UP));
+                portfolioDto.setSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), ratio));
                 // 本方券面总额
                 portfolioDto.setOwnSecAmount(portfolioDto.getSecAmount());
                 // 交易金额
-                portfolioDto.setCashAmount(ArithmeticUtil.divide(ArithmeticUtil.multiply(infContractDetailfile.getTradeAmt(),
-                        etrEntrustDetail.getEntrustNum()), etrEntrust.getEntrustNum(), 8, RoundingMode.HALF_UP));
+                portfolioDto.setCashAmount(ArithmeticUtil.multiply(infContractDetailfile.getTradeAmt(), ratio));
                 // 下单券面总额
-                portfolioDto.setOrdSecAmount(ArithmeticUtil.divide(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume(),
-                        new BigDecimal(100), etrEntrustDetail.getEntrustNum()), etrEntrust.getEntrustNum(),
-                        8, RoundingMode.HALF_UP));
+                portfolioDto.setOrdSecAmount(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume(), new BigDecimal(100), ratio));
                 portfolioDtos.add(portfolioDto);
             }
         }else{ // 单组合指令

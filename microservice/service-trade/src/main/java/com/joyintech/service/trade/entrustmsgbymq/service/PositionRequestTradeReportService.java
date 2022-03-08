@@ -57,14 +57,13 @@ public class PositionRequestTradeReportService {
      * @param trdTempDto
      * @param detailFile
      */
-    public void sendTradeReportPositionRequest(TrdTempDto trdTempDto, InfContractDetailfile detailFile) {
-        logger.debug("【发送成交回报头寸请求】trdTempDto: {}, infContractDetailfile: {}", JSON.toJSONString(trdTempDto),
-                JSON.toJSONString(detailFile));
+    public void sendTradeReportPositionRequest(TrdTempDto trdTempDto) {
+        logger.debug("【发送成交回报头寸请求】trdTempDto: {}", JSON.toJSONString(trdTempDto));
         Map<String, Object> resultMap = new HashMap<>();
-        String tradePlat = detailFile.getTradePlat();
+        String tradePlat = trdTempDto.getTradePlat();
         String finprodType = trdTempDto.getFinprodType2();
         String ps = trdTempDto.getPs();
-        String type6 = commonPositionEngineService.getType6(detailFile.getFinprodId());
+        String type6 = commonPositionEngineService.getType6(trdTempDto.getFinprodId());
         if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
             finprodType += "-" + type6;
         }
@@ -246,16 +245,19 @@ public class PositionRequestTradeReportService {
             }
             ptlList.add(plt);
 
-            Map<String, Object> ptlSec = new HashMap<>();
-            ptlSec.put("portfolioId", dto.getPortfolioId());
-            ptlSec.put("finprodId", entity.getFinprodId());
-            ptlSec.put("secAcctId", dto.getSecAcctId());
-            ptlSec.put("tradeId", entity.getTradeId());
-            ptlSec.put("etrId", entity.getOrderId());
-            ptlSec.put("integrateSecAmount", dto.getIntegrateSecAmount());
-            ptlSec.put("ownSecAmount", dto.getOwnSecAmount());
-            ptlSec.put("secAmount", dto.getSecAmount());
-            ptlSecList.add(ptlSec);
+            if(DictCodeListExt3.交易方向_质押券入库.getValue().equals(entity.getPs())
+                    || DictCodeListExt3.交易方向_质押券出库.getValue().equals(entity.getPs())){
+                Map<String, Object> ptlSec = new HashMap<>();
+                ptlSec.put("portfolioId", dto.getPortfolioId());
+                ptlSec.put("finprodId", entity.getFinprodId());
+                ptlSec.put("secAcctId", dto.getSecAcctId());
+                ptlSec.put("tradeId", entity.getTradeId());
+                ptlSec.put("etrId", entity.getOrderId());
+                ptlSec.put("integrateSecAmount", dto.getIntegrateSecAmount());
+                ptlSec.put("ownSecAmount", dto.getOwnSecAmount());
+                ptlSec.put("secAmount", dto.getSecAmount());
+                ptlSecList.add(ptlSec);
+            }
         }
         resultMap.put("ptlList", ptlList);
         resultMap.put("ptlSecList", ptlSecList);

@@ -781,4 +781,45 @@ FROM TRD_PRODUCT_DEAL A
             </foreach>
         </if>
     </select>
+
+    <!--add by fuyongsheng 20220308 start-->
+    <select id="getTrdProductTempDeals" resultType="com.joyintech.tams.common.base.entity.TrdProductTempDeal" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.TrdProductTempDealMapper.Base_Column_List" />
+        FROM
+        TRD_PRODUCT_TEMP_DEAL A,
+        TRD_PRODUCT_TEMP_DEAL_ADD B,
+        STL_PAY_TEMP_ORDERS C
+        WHERE
+        A.TRADE_ID = B.TRADE_ID AND A.TRADE_DATE = #{dealDate,jdbcType=DATE} AND A.TRADE_ID = C.TRADE_ID
+        <if test="finprodType2List != null and finprodType2List.size() > 0">
+            <foreach collection="finprodType2List" item="finprodType2" open="AND A.FINPROD_TYPE2 IN (" close=")" separator=",">
+                #{finprodType2,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+            <foreach collection="portfolioIdList" item="portfolioId" open="AND B.PORTFOLIO_ID IN (" close=")" separator=",">
+                #{portfolioId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        UNION
+        SELECT
+        <include refid="com.joyintech.tams.common.base.dao.TrdProductTempDealMapper.Base_Column_List" />
+        FROM
+        TRD_PRODUCT_TEMP_DEAL A,
+        TRD_PRODUCT_TEMP_DEAL_ADD B
+        WHERE
+        A.TRADE_ID = B.TRADE_ID AND A.TRADE_DATE = #{dealDate,jdbcType=DATE}
+        <if test="finprodType2List != null and finprodType2List.size() > 0">
+            <foreach collection="finprodType2List" item="finprodType2" open="AND A.FINPROD_TYPE2 IN (" close=")" separator=",">
+                #{finprodType2,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+            <foreach collection="portfolioIdList" item="portfolioId" open="AND B.PORTFOLIO_ID IN (" close=")" separator=",">
+                #{portfolioId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+    <!--add by fuyongsheng 20220308 end-->
 </mapper>

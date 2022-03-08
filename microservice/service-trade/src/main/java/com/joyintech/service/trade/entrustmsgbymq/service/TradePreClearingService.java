@@ -228,8 +228,8 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             //标准券入出库成交数据接入：
             logger.info("【成交数据预清算-标准券入出库开始】tradePreClearing entrustId: {}, seqno: {}",
                 infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
-            
-            trdStaSec(infContractDetailfile);
+            trdTempDto = new TrdTempDto();
+            trdStaSec(trdTempDto, infContractDetailfile);
             
             logger.info("【成交数据预清算-标准券入出库结束】tradePreClearing entrustId: {}, seqno: {}",
                 infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
@@ -346,7 +346,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
                 }
             }
         }
-        positionRequestTradeReportService.sendTradeReportPositionRequest(trdTempDto, infContractDetailfile);
+        positionRequestTradeReportService.sendTradeReportPositionRequest(trdTempDto);
         logger.info("【成交数据预清算结束】tradePreClearing entrustId: {}, seqno: {}", infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
     }
 
@@ -419,7 +419,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
      * 标准券入出库成交数据接入
      * @param infContractDetailfile
      */
-    public void trdStaSec(InfContractDetailfile infContractDetailfile) {
+    public void trdStaSec(TrdTempDto trdTempDto, InfContractDetailfile infContractDetailfile) {
         // add by etliu 20210825 start
         // 标准券入出库的成交数据有两笔，一笔是质押券的，一笔是标准券的，需要把标准券的那条过滤掉
         // 根据指令编号查投资指令，
@@ -631,6 +631,17 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         status.setFinishAmt(trdTempStasecFlowDetail.getAmt());
         baseEtrInvestInfoDtos.add(status);
         baseEtrInvestInfoService.completeDelegate(baseEtrInvestInfoDtos);
+
+        // 调用新头寸接口 add by fuyongsheng 20220308 start
+        BeanUtil.copyPropertiesIgnoreNull(trdTempDto, infContractDetailfile);
+        // 关联系统交易编号
+        trdTempDto.setfTradeId(infContractDetailfile.getDealNo());
+        trdTempDto.setTradeId(trdTempStasecFlow.getSeqno());
+        // 金融产品类型 = 债券
+        trdTempDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        // 交割日
+        trdTempDto.setSettleDate(infContractDetailfile.getTradeDate());
+        // 调用新头寸接口 add by fuyongsheng 20220308 end
     }
 
 
