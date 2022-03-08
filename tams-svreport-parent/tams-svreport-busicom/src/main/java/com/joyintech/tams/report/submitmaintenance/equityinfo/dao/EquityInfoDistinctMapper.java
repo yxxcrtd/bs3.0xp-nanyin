@@ -46,8 +46,8 @@ public interface EquityInfoDistinctMapper {
      * @param list
      * @return
      */
-    List<EquityInfo001Dto> queryEquityInfoList(@Param("newKeyList")List<EquityInfo001Dto> newKeyList);
     
+    List<EquityInfo001Dto> queryEquityInfoList(List<String> keys);
     
     EquityInfoRegist001Dto queryEquityInfoByIndentifymarkAndBankCode(EquityInfoRegist001Dto qmodel);
     

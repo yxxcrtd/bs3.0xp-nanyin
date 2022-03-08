@@ -314,9 +314,17 @@
 				HOLDER_CLASSIFY holderClassify
 	   		FROM CHB_EQU_HOLD HOLD
 			 <where>
-				 <foreach collection="newKeyList" item="item" open="(HOLD.REGIST_BANK_CODE, HOLD.IDENTIFY_NUMBER, NVL(HOLD.HOLDER_NAME,'null'), NVL(HOLD.PERSONAL_IDENTIFY_TYPE,'null'), NVL(HOLD.INSTITUTION_IDENTIFY_TYPE,'null'), NVL(HOLD.OTHER_IDENTIFY_NAME,'null')) in(" separator="," close=")">
-					(#{item.bankCode,jdbcType=VARCHAR}, #{item.identifyNumber,jdbcType=VARCHAR}, #{item.holderName,jdbcType=VARCHAR}, #{item.personalIdentifyType,jdbcType=VARCHAR}, #{item.institutionIdentifyType,jdbcType=VARCHAR}, #{item.otherIdentifyName,jdbcType=VARCHAR})
-				 </foreach>				     
+			     <if test="keys !=null and keys.size()==1">
+			        AND REGIST_BANK_CODE
+			            ||'_'||IDENTIFY_NUMBER
+			            ||'_'||HOLDER_NAME
+			            ||'_'||PERSONAL_IDENTIFY_TYPE
+			            ||'_'||INSTITUTION_IDENTIFY_TYPE
+			            ||'_'||OTHER_IDENTIFY_NAME IN
+			        <foreach collection="keys" item="key" open="(" separator=","  close=")">
+			            #{key,jdbcType=VARCHAR}
+			        </foreach>
+			    </if> 
 			 	AND STATUS !='D'
 			 	/*未报送*/
 		        AND NOT EXISTS( SELECT 1 FROM CHB_EQU_SUB T
@@ -375,11 +383,17 @@
 							AND T2.SUBMIT_FEEDBACK_STATUS = '03'
 							WHERE (HOLDCHECK.MERGER_INDENTIFY_MARK = SUB.INDENTIFY_MARK
 							OR HOLDCHECK.MERGER_INDENTIFY_MARK    = SUB.ORG_INDENTIFY_MARK))
-			<if test="newKeyList !=null  and newKeyList.size()>0" >							
-				<foreach collection="newKeyList" item="item" open="AND (HOLDCHECK.REGIST_BANK_CODE, HOLDCHECK.IDENTIFY_NUMBER, NVL(HOLDCHECK.HOLDER_NAME,'null'), NVL(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,'null'), NVL(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,'null'), NVL(HOLDCHECK.OTHER_IDENTIFY_NAME,'null')) in(" separator="," close=")">
-					(#{item.bankCode,jdbcType=VARCHAR}, #{item.identifyNumber,jdbcType=VARCHAR}, #{item.holderName,jdbcType=VARCHAR}, #{item.personalIdentifyType,jdbcType=VARCHAR}, #{item.institutionIdentifyType,jdbcType=VARCHAR}, #{item.otherIdentifyName,jdbcType=VARCHAR})
-				 </foreach>		
-			</if>
+		       <if test="keys !=null and keys.size()==1">
+		        AND HOLDCHECK.REGIST_BANK_CODE
+		            ||'_'||HOLDCHECK.IDENTIFY_NUMBER
+		            ||'_'||HOLDCHECK.HOLDER_NAME
+		            ||'_'||HOLDCHECK.PERSONAL_IDENTIFY_TYPE
+		            ||'_'||HOLDCHECK.INSTITUTION_IDENTIFY_TYPE
+		            ||'_'||HOLDCHECK.OTHER_IDENTIFY_NAME IN
+		        <foreach collection="keys" item="key" open="(" separator=","  close=")">
+		            #{key,jdbcType=VARCHAR}
+		        </foreach>
+			 </if> 
 	</select>
 	
 	<select id="queryRepeatEquityInfoUnSubmit" resultMap="BaseResultMap">

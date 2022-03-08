@@ -758,64 +758,34 @@ public class EquityInfoDistinctService {
 	@SuppressWarnings("rawtypes")
 	private List<EquityInfo001Dto> getEquInfoList(List<String> keys,int type){
 		List<EquityInfo001Dto> resultList = new ArrayList<EquityInfo001Dto>();
-		//对五要素主键进行重组
-		List<EquityInfo001Dto> keyList = tranStringToDtoForKey(keys);		
-		
+//		int maxDataCountOneTime =(null == reportSelectOrDeleteCountForShenFen ? 100:Integer.parseInt(reportSelectOrDeleteCountForShenFen));
+//		int dataCount=0;
+//		if(keys != null){
+//			dataCount = keys.size();
+//        }
+//        if (dataCount <= maxDataCountOneTime) {
 		if(0 == type){
-			List<Callable<Boolean>> tasks = new ArrayList<>();
 			List<EquityInfo001Dto>	resultListAll=new  ArrayList<EquityInfo001Dto>();
 			logger.info("查询库中未报送数据及check表数据SQL流式查询开始");
-			if (null != keyList) {
-			    ExecutorService service = new JoyinThreadPoolExecutor(10);
-			    int start = 0;
-			    int end = 0;
-			    int size = keyList.size();
-			    int max = (int) Math.ceil((double) size / 100);
-			    // 信号量
-			    CountDownLatch countDown = new CountDownLatch(max);
-	
-			    for (int i = 0; i < max; i++) {
-					start = end;
-					end = Math.min(size, 100 * (i + 1));
-					List<EquityInfo001Dto> subList = keyList.subList(start, end);
-	
-					// 提交任务
-					tasks.add(new Callable<Boolean>() {
-	
+//	       		 if(null!=keys&&keys.size()==1){
+//	       			 resultListAll.addAll(equityInfoDistinctMapper.queryEquityInfoList(keys));
+//	       		 }else{
+			Map<String,Object> params = new HashMap<String, Object>();
+			params.put("keys", keys);
+			template.select("com.joyintech.tams.report.submitmaintenance.equityinfo.dao.EquityInfoDistinctMapper.queryEquityInfoList",params,
+					new ResultHandler() {
 						@Override
-						public Boolean call() throws Exception {
-							resultListAll.addAll(equityInfoDistinctMapper.queryEquityInfoList(subList));
-						countDown.countDown();// 个数-1
-						return true;
+						public void handleResult(ResultContext resultContext) {
+							EquityInfo001Dto pos = (EquityInfo001Dto) resultContext.getResultObject();
+							resultListAll.add(pos);
 						}
 					});
-			    }
-			    // 添加线程等待转换线执行
-			    try {
-				service.invokeAll(tasks);
-				countDown.await();
-				service.shutdown();
-			    } catch (InterruptedException e) {
-				e.printStackTrace();
-			    }
-			}	
+//        		 }
 			logger.info("查询库中未报送数据及check表数据SQL流式查询结束");
-
+//        		List<EquityInfo001Dto>	resultListAll = equityInfoDistinctMapper.queryEquityInfoList(keys);
 			if(resultListAll==null||resultListAll.isEmpty()){
 				return resultList;
 			}
-			int i = 0;
-			resultListAll.removeAll(Collections.singleton(null));
-			for(EquityInfo001Dto hdlDto : resultListAll ) {				
-				if(hdlDto == null) {
-					logger.info("※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※：  " + i);
-				}
-				i = i ++;
-			}
-//			
-//			List<EquityInfo001Dto>	resultListAll = resultListAllSelect.stream().filter(item -> {
-//				return StringUtil.equals(StringUtil.trim(dataObj), item.getItemCode());
-//			}).collect(Collectors.toList());
 			logger.info("resultListAll数据转换成Map开始");
 			Map<String, List<EquityInfo001Dto>> allListMap=resultListAll.stream().collect(
 					JoyinCollectors.groupingBy(
@@ -827,10 +797,13 @@ public class EquityInfoDistinctService {
 			logger.info("resultListAll数据转换成Map结束");
 			// 释放集合，防止内存溢出开始 2021-08-26 by caozhenming
 			resultListAll.clear();
-//			resultListAllSelect.clear();
 			// 释放集合，防止内存溢出结束 2021-08-26 by caozhenming
 			logger.info("循环keys取存在于kes中的未报送数据开始");
 			for(String key:keys){
+//        			String key= single.getBankCode()==null?"":single.getBankCode()+GlobalConstant.UNDER_LINE +single.getIdentifyNumber()==null?"":single.getIdentifyNumber()
+//        			+GlobalConstant.UNDER_LINE+single.getHolderName()==null?"":single.getHolderName()+GlobalConstant.UNDER_LINE
+//        			+single.getPersonalIdentifyType()==null?"":single.getPersonalIdentifyType()+GlobalConstant.UNDER_LINE+single.getInstitutionIdentifyType()==null?"":single.getInstitutionIdentifyType()
+//        			+GlobalConstant.UNDER_LINE+single.getOtherIdentifyName()==null?"":single.getOtherIdentifyName();
 				if(allListMap.containsKey(key)){
 					resultList.addAll(allListMap.get(key));
 				}
@@ -840,8 +813,32 @@ public class EquityInfoDistinctService {
 			resultList = equityInfoDistinctMapper.queryRepeatEquityInfoUnSubmit(keys);
 		}
 		return resultList;
+//        }
+//
+//        List<String> newDataList = new ArrayList<String>();
+//        newDataList.addAll(keys);
+//
+//        // 分批处理
+//        int part = dataCount / maxDataCountOneTime; // 分批数
+//        for (int i = 0; i < part; i++ ) {
+//        	if(0 == type){
+//        		resultList.addAll(equityInfoDistinctMapper.queryEquityInfoList(newDataList.subList(0, maxDataCountOneTime)));
+//        	}else{
+//        		resultList.addAll(equityInfoDistinctMapper.queryRepeatEquityInfoUnSubmit(newDataList.subList(0, maxDataCountOneTime)));
+//        	}
+//        	newDataList.subList(0, maxDataCountOneTime).clear();
+//        }
+//        // 最后剩下的数据
+//        if (CollectionUtils.isNotEmpty(newDataList)) {
+//        	if(0 == type){
+//        		resultList.addAll(equityInfoDistinctMapper.queryEquityInfoList(newDataList));
+//        	}else{
+//        		resultList.addAll(equityInfoDistinctMapper.queryRepeatEquityInfoUnSubmit(newDataList));
+//        	}
+//        }
+//        return resultList;
 	}
-
+	
 	/**
 	 * 维护表删除
 	 * @param equityList
