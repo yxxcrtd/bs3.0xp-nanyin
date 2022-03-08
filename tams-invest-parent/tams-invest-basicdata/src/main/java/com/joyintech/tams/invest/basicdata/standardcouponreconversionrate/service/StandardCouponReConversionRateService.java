@@ -180,10 +180,10 @@ public class StandardCouponReConversionRateService extends CommonExportService<S
         param.put("userName", CommonUtil.getUserName());
         param.put("orgCode", CommonUtil.getOrgCode());
         param.put("deptCode", CommonUtil.getDeptCode());
-        restTemplate.postForList(
-                ServiceApplication.BASICDATA_SERVICE_NAME + "/MstBondQuotationInfo/importData",
-                param,
-                ExcelValidDto.class);
+//        restTemplate.postForList(
+//                ServiceApplication.BASICDATA_SERVICE_NAME + "/MstBondQuotationInfo/importData",
+//                param,
+//                ExcelValidDto.class);
         return restTemplate.postForList(
                 ServiceApplication.BASICDATA_SERVICE_NAME + "/StandardCouponReConversionRate/importData",
                 param,
