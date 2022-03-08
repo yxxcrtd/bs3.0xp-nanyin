@@ -21,7 +21,7 @@ import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.Fund.Ex
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.*;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo.*;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.shares.ExchangeTransMatchShares1Service;
-import com.joyintech.tools.collectors.JoyinCollectors;
+import com.joyintech.tams.invest.trade.exchangetransmatch.position.service.PositionRequestServiceFinProductTradeService;
 import com.joyintech.workflow.engine.constant.OperationType;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -145,6 +145,11 @@ public class ExchangeTransMatchCommonService extends BaseService {
     @Autowired
     private FinDealPledgeMapper finDealPledgeMapper;
 
+    @Autowired
+    private PositionRequestServiceFinProductTradeService positionRequestService;
+
+    public static final String ENTRUST_RECORD_NEW = "new";
+
     // modify by etliu 20220110 start
     // GZYHTZJY-1032: 协议回购的头寸处理，需要走PTL_POSITION_FLOW_CFG配置
     @Autowired
@@ -159,6 +164,8 @@ public class ExchangeTransMatchCommonService extends BaseService {
      */
     @Value("${application.micorservice.contextPath.single:false}")
     private boolean isSingle;
+
+
 
     /**
      * 交易完成后，调用共通修改SETTLE_TRANS_TG_MAPPING，SETTLE_TRANS_DATA_TOTAL_STATUS
@@ -697,7 +704,15 @@ public class ExchangeTransMatchCommonService extends BaseService {
             baseTradeProductDealCommService.execute(finProductTradeDto);
         }
         // modify by etliu 20220110 end
-
+        //增加调用头寸引擎代码start
+        String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
+        String systemAct = DictCodeListExt3.系统动作_新建.getValue();
+        //        if (StringUtil.equals(exchangeTransMatchCommonDto.getOptType(), ENTRUST_RECORD_MODIFY)) {
+        //            systemAct = DictCodeListExt3.系统动作_修改.getValue();
+        //        }
+//        item.setOptType(ENTRUST_RECORD_NEW);
+        positionRequestService.sendFinProductTradeDto(finProductTradeDto,decisionAct,systemAct);
+        //增加调用头寸引擎代码end
         logger.debug("处理业务交易表---结束,交易编号:"+tradeId);
         return tradeId;
     }
@@ -904,7 +919,10 @@ public class ExchangeTransMatchCommonService extends BaseService {
             revokeFinPledge(exchangeTransMatchCommonRevokeDtoList, dto);
             // 撤销清算匹配数据
             revokeSettleMatchData(exchangeTransMatchCommonRevokeDtoList, dto);
+            // 头寸撤销
+            positionRequestService.sendRevoke(exchangeTransMatchCommonRevokeDtoList);
         }
+
         logger.debug("取消成交匹配---结束");
     }
 
