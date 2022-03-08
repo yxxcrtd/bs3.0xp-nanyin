@@ -533,6 +533,8 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
      */
     public List<SelectOptionDto> getPledgeStockId(CfetsSearchPledgeStockRequest cfetsSearchPledgeStockRequest) {
         Map<String,Object> param = BeanUtil.object2Map(cfetsSearchPledgeStockRequest);
+        String userId = SecurityUtil.getLoginUser().getUserName();
+        param.put("userId", userId);
         return  cfetsEtrIbRepoinfoMapper.getPledgeStockId(param);
     }
 

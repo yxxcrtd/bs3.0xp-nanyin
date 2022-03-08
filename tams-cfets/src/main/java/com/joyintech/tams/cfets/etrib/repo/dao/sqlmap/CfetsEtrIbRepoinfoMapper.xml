@@ -816,6 +816,11 @@
         t.pledge_stock_id id,
         t.pledge_stock_name text
         from ETR_SEC_STOCK t
+        <where>
+            <if test="userId != null and userId != ''">
+                CREATE_USER = #{userId}
+            </if>
+        </where>
         ORDER BY CREATE_TIME DESC
     </select>
     <!-- 查询登录用户是否满足指定的角色岗位 -->
