@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.common.base.entity.FinProductQuto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import org.apache.commons.lang.StringUtils;
@@ -1524,6 +1525,14 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		}catch (Exception e){
 			return new Message<FinProductQuto>().fail().setData(null);
 		}
+	}
+
+	@ApiOperation(value = "头寸信息查询", notes = "头寸信息查询")
+	@PostMapping("/queryPositionInfo")
+	@ResponseBody
+	public Message<List<BaseMap>> queryPositionInfo(@RequestBody EtrExchangePosiInfoRequestDto requestDto) {
+		List<BaseMap> m = etrExchangeTrade001CommonService.queryPositionInfo(requestDto);
+		return new Message<List<BaseMap>>().success().setData(m);
 	}
 }
 	
