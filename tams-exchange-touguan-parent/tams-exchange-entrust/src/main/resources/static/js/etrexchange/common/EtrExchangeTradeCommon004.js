@@ -9,6 +9,7 @@
     //初始化标志
     var  initFlag = false;
     var  availableNum = "";
+    var riskFlag = 1;
     // 默认画面为“净价交易平台”
     // var currentTab = currentTab;
     //试算结果
@@ -30,6 +31,10 @@
     var zeroPrice = '0.00';
     //指令真实价格
     var factPrice = zeroPrice;
+
+    function query(ele) {
+        return $("#EtrExchangeTradeCommon004_bodydiv " + ele);
+    }
     /**
      * 返回表单数据
      * @returns
@@ -50,7 +55,7 @@
         object.tradeMarket = $("#tradeMarket_" + currentTab).val();
         object.entrustId = $("#entrustId_" + currentTab).val();
         object.entrustStatus = $("#entrustStatus_" + currentTab).val();
-        object.availableNum = parent.EtrExchangeTradeJjHq.getJJMktPrice("#availableNum_jj").replace(/,/g, "");
+        //object.availableNum = parent.EtrExchangeTradeJjHq.getJJMktPrice("#availableNum_jj").replace(/,/g, "");
         object.tradePlat = currentTab;
         if(currentTab == 'jj'){//竞价
             object.tradePlat = SHARES_TRADE_PLATFORM_02;
@@ -76,7 +81,7 @@
             }
         }
         //设置涨跌停参数
-        parent.EtrExchangeTradeJjHq.setLimitUpAndDown(object);
+        //parent.EtrExchangeTradeJjHq.setLimitUpAndDown(object);
         object.pageModel = pageModel;
         object.optType = optType;
 
@@ -89,6 +94,9 @@
         object.entrustNumLabel = $('#entrustNum_label_jj').text().replace("*","");
         object.entrustAmtLabel = $('#entrustAmt_label_jj').text().replace("*","");
         object.toShareAvailableNumLabel = $('#toShareAvailableNum_label_jj').text().replace("*","");
+        if(dateTable) {
+            object.portfolioList = dateTable.getAllRows();
+        }
         return object;
     }
 
@@ -237,111 +245,111 @@
      */
         //add by chenjiaxing 持仓页面点击未带出净价 start
     var setEntrust001PageItems001 = function(param) {
-        setPageItemsFlag = true;
-        if(param) {
-            if(param.entrustType) {
-                linkTradePlat(param.entrustType, false);
-            }
-            if(param.entrustId) {
-                $("#entrustId_" + currentTab).val(param.entrustId).trigger('change');
-            }
-            if(param.entrustStatus) {
-                $("#entrustStatus_" + currentTab).val(param.entrustStatus).trigger('change');
-            }
-            if(param.portfolioId) {
-                $("#portfolioId_" + currentTab).textSelect('setValue', param.portfolioId);
-            }
-            if(param.acctNo) {
-                $("#acctNo_" + currentTab).textSelect('setValue', param.acctNo);
-            }
-            if(param.secId) {
-                $("#secId_" + currentTab).textSelect('setValue', param.secId);
-            }
-            /*if(param.finprodType2) {
-                $("#finprodType2_" + currentTab).val(param.finprodType2).trigger('change');
-            }*/
-            if(param.ps) {
-                $("#ps_" + currentTab).textSelect('setValue', param.ps);
-            }
-            if(param.tradeMarket) {
-                $("#tradeMarket_" + currentTab).val(param.tradeMarket).trigger('change');
-            }
-            if(param.dataSource) {
-                $("#dataSource_" + currentTab).val(param.dataSource).trigger('change');
-            }
-            if(param.priceModel) {
-                $("#priceModel_" + currentTab).val(param.priceModel).trigger('change',true);
-            }
-            if(param.declaType) {
-                $("#declaType_" + currentTab).val(param.declaType).trigger('change',true);
-            }
-            if(param.calMode) {
-                $("input[name=calculateField_" + currentTab + "][value='"+ param.calMode +"']").attr("checked",true);
-                layui.form.render(); //更新
-                calculateFieldChange();
-            }
-            // 需要根据金融产品类型设置不同的价格
-            if(param.price) {
-                if($("#finprodType2_" + currentTab).val() == FINPROD_TYPE_TG_F01 && isStandardPs(param.ps)) {
-                     $("#price_" + currentTab).val(param.price).trigger('blur').trigger('change');
+            setPageItemsFlag = true;
+            if(param) {
+                if(param.entrustType) {
+                    linkTradePlat(param.entrustType, false);
                 }
-                else {
-                    $("#entrustPrice_" + currentTab).val(param.price).trigger('blur').trigger('change');
+                if(param.entrustId) {
+                    $("#entrustId_" + currentTab).val(param.entrustId).trigger('change');
                 }
-            }
-            if(param.calMode && param.calMode == SEC_CALC_MODE_02 && param.fprice) {
-                $("#fprice_" + currentTab).val(param.fprice).trigger('blur').trigger('change');
-            }
-            if(param.calMode && param.calMode == SEC_CALC_MODE_03 && param.yield) {
-                $("#yield_" + currentTab).val(param.yield).trigger('blur').trigger('change');
-            }
-            if(param.entrustPrice) {
-                if($("#finprodType2_" + currentTab).val() == FINPROD_TYPE_TG_F01 && isStandardPs(param.ps)) {
-                    $("#price_" + currentTab).val(param.entrustPrice).trigger('blur').trigger('change');
+                if(param.entrustStatus) {
+                    $("#entrustStatus_" + currentTab).val(param.entrustStatus).trigger('change');
                 }
-                else {
-                    $("#entrustPrice_" + currentTab).val(param.entrustPrice).trigger('blur').trigger('change');
+                if(param.portfolioId) {
+                    $("#portfolioId_" + currentTab).textSelect('setValue', param.portfolioId);
                 }
-            }
+                if(param.acctNo) {
+                    $("#acctNo_" + currentTab).textSelect('setValue', param.acctNo);
+                }
+                if(param.secId) {
+                    $("#secId_" + currentTab).textSelect('setValue', param.secId);
+                }
+                /*if(param.finprodType2) {
+                    $("#finprodType2_" + currentTab).val(param.finprodType2).trigger('change');
+                }*/
+                if(param.ps) {
+                    $("#ps_" + currentTab).textSelect('setValue', param.ps);
+                }
+                if(param.tradeMarket) {
+                    $("#tradeMarket_" + currentTab).val(param.tradeMarket).trigger('change');
+                }
+                if(param.dataSource) {
+                    $("#dataSource_" + currentTab).val(param.dataSource).trigger('change');
+                }
+                if(param.priceModel) {
+                    $("#priceModel_" + currentTab).val(param.priceModel).trigger('change',true);
+                }
+                if(param.declaType) {
+                    $("#declaType_" + currentTab).val(param.declaType).trigger('change',true);
+                }
+                if(param.calMode) {
+                    $("input[name=calculateField_" + currentTab + "][value='"+ param.calMode +"']").attr("checked",true);
+                    layui.form.render(); //更新
+                    calculateFieldChange();
+                }
+                // 需要根据金融产品类型设置不同的价格
+                if(param.price) {
+                    if($("#finprodType2_" + currentTab).val() == FINPROD_TYPE_TG_F01 && isStandardPs(param.ps)) {
+                        $("#price_" + currentTab).val(param.price).trigger('blur').trigger('change');
+                    }
+                    else {
+                        $("#entrustPrice_" + currentTab).val(param.price).trigger('blur').trigger('change');
+                    }
+                }
+                if(param.calMode && param.calMode == SEC_CALC_MODE_02 && param.fprice) {
+                    $("#fprice_" + currentTab).val(param.fprice).trigger('blur').trigger('change');
+                }
+                if(param.calMode && param.calMode == SEC_CALC_MODE_03 && param.yield) {
+                    $("#yield_" + currentTab).val(param.yield).trigger('blur').trigger('change');
+                }
+                if(param.entrustPrice) {
+                    if($("#finprodType2_" + currentTab).val() == FINPROD_TYPE_TG_F01 && isStandardPs(param.ps)) {
+                        $("#price_" + currentTab).val(param.entrustPrice).trigger('blur').trigger('change');
+                    }
+                    else {
+                        $("#entrustPrice_" + currentTab).val(param.entrustPrice).trigger('blur').trigger('change');
+                    }
+                }
 
-            if(param.entrustAmt) {
-                $("#entrustAmt_" + currentTab).val(param.entrustAmt).trigger('blur').trigger('change');
-            }
+                if(param.entrustAmt) {
+                    $("#entrustAmt_" + currentTab).val(param.entrustAmt).trigger('blur').trigger('change');
+                }
 
-            //打开开关
-            setPageItemsFlag = false;
-            if(param.targetType) {
-                $("#targetType_" + currentTab).val(param.targetType).trigger('change');
-            }
+                //打开开关
+                setPageItemsFlag = false;
+                if(param.targetType) {
+                    $("#targetType_" + currentTab).val(param.targetType).trigger('change');
+                }
 
-            if(param.entrustNum) {
-                $("#entrustNum_" + currentTab).val(param.entrustNum).trigger('blur').trigger('change');
+                if(param.entrustNum) {
+                    $("#entrustNum_" + currentTab).val(param.entrustNum).trigger('blur').trigger('change');
+                }
+                if(param.invAim) {
+                    $("#invAim_" + currentTab).val(param.invAim).trigger('change');
+                }
+                if(param.counterId) {
+                    $("#counterId_" + currentTab).textSelect('setValue', param.counterId);
+                }
+                if(param.seatId) {
+                    $("#seatId_" + currentTab).val(param.seatId).trigger('change');
+                }
+                if(param.agreeOnId) {
+                    $("#agreeOnId_" + currentTab).val(param.agreeOnId).trigger('change');
+                }
+                if(param.counterOrg) {
+                    $("#counterOrg_" + currentTab).val(param.counterOrg).trigger('change');
+                }
+                if(param.counterTrader) {
+                    $("#counterTrader_" + currentTab).val(param.counterTrader).trigger('change');
+                }
+                if(param.trader) {
+                    $("#trader_" + currentTab).val(param.trader).trigger('change');
+                }
             }
-            if(param.invAim) {
-                $("#invAim_" + currentTab).val(param.invAim).trigger('change');
-            }
-            if(param.counterId) {
-                $("#counterId_" + currentTab).textSelect('setValue', param.counterId);
-            }
-            if(param.seatId) {
-                $("#seatId_" + currentTab).val(param.seatId).trigger('change');
-            }
-            if(param.agreeOnId) {
-                $("#agreeOnId_" + currentTab).val(param.agreeOnId).trigger('change');
-            }
-            if(param.counterOrg) {
-                $("#counterOrg_" + currentTab).val(param.counterOrg).trigger('change');
-            }
-            if(param.counterTrader) {
-                $("#counterTrader_" + currentTab).val(param.counterTrader).trigger('change');
-            }
-            if(param.trader) {
-                $("#trader_" + currentTab).val(param.trader).trigger('change');
-            }
+            //计算价格和收益率
+            calcPriceAndYield();
         }
-        //计算价格和收益率
-        calcPriceAndYield();
-    }
     //add by chenjiaxing 持仓页面点击未带出净价 end
     /**
      * 根据传入的数据，设置画面元素
@@ -719,24 +727,91 @@
      */
     var getMktPrice = function() {
         if (currentTab == "jj") {
+            var secId=$("#secId_" + currentTab).val();
+            var secName=$("#secName_" + currentTab).val();
             var finprodType2 = $("#finprodType2_" + currentTab).val();
+            var jJHQXX=queryJJHQXX(secId,secName,finprodType2);
+
             var ps = $("#ps_" + currentTab).val();
             if (finprodType2 == FINPROD_TYPE_TG_F06 || finprodType2 == FINPROD_TYPE_TG_F10) {
                 if (ps == PS_T01) {
-                    return parent.EtrExchangeTradeJjHq.getJJMktPrice("#limitUp_jj");
+                    //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#limitUp_jj");
+                    return jJHQXX.highest;
                 } else if (ps == PS_T02) {
-                    return parent.EtrExchangeTradeJjHq.getJJMktPrice("#limitDown_jj");
+                    //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#limitDown_jj");
+                    return jJHQXX.lowest;
                 }else {
-                    return parent.EtrExchangeTradeJjHq.getJJMktPrice("#latestPrice_jj");
+                    //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#latestPrice_jj");
+                    return jJHQXX.latest;
                 }
             } else {
-                return parent.EtrExchangeTradeJjHq.getJJMktPrice("#latestPrice_jj");
+                //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#latestPrice_jj");
+                return jJHQXX.latest;
             }
         } else if (currentTab == "gd") {
             return $("#price_gd").get(0).value;
         }
         return '';
     };
+    /**根据市场代码，查询行情信息，展示出来*/
+    var queryJJHQXX = function(secId,secName,finprodType) {
+        var jJHQXX={};
+        $.ajax({
+            /**临时用这个地址，后面调整！！！！**/
+            //url: "http://192.168.90.105:8080/tams/joyin/quote/tick?stock_code="+secId,
+            url: basePath + "joyin/quote/tick?stock_code="+secId,
+            async: false,
+            type: "GET",
+            dataType:"json",
+            success: function(info) {
+                var result = info.data;
+                if (result != null && result != '') {
+                    var xtradeTickData = new Object();
+                    xtradeTickData.stockCode = secId;
+                    xtradeTickData.stockName = secName;
+                    xtradeTickData.finprodType = finprodType;
+                    //    this.stockName = stock_name;
+                    //   this.updateTime = tick[0] * 1000;
+                    xtradeTickData.open = result.openPrice;
+                    xtradeTickData.highest = result.highPrice;
+                    xtradeTickData.lowest = result.lowPrice;
+                    xtradeTickData.latest = result.lastPrice;
+                    xtradeTickData.preclose = result.preClosePrice;
+                    xtradeTickData.tradeVolume = result.volume || 0;
+                    xtradeTickData.tradeAmount = result.tradeBalance || 0;
+                    xtradeTickData.ceiling = result.upperLimitPrice;
+                    xtradeTickData.floor = result.lowerLimitPrice;
+                    xtradeTickData.change = xtradeTickData.latest - xtradeTickData.preclose;
+                    xtradeTickData.changePercent = xtradeTickData.change / (xtradeTickData.preclose > 0 ? xtradeTickData.preclose : 1);
+
+                    /**
+                     * 卖出数量，顺序，1档 ~ 10档
+                     */
+                    xtradeTickData.sellVolumes = result.askVolume instanceof Array ? result.askVolume : [];
+
+                    /**
+                     * 卖出报价，顺序，1档 ~ 10档
+                     */
+                    xtradeTickData.sells = result.askPrice instanceof Array ? result.askPrice : [];
+
+                    /**
+                     * 买入数量，顺序，10档 ~ 1档
+                     */
+                    xtradeTickData.buyVolumes = result.bidVolume instanceof Array ? result.bidVolume: [];
+
+                    /**
+                     * 买入报价，顺序，10档 ~ 1档
+                     */
+                    xtradeTickData.buys = result.bidPrice instanceof Array ? result.bidPrice : [];
+                    jJHQXX=xtradeTickData;
+                }
+                else {
+                }
+            }
+        });
+        return jJHQXX;
+
+    }
     /**
      * 组合代码变更时，联动其他字段
      * 组合代码变更时会联动资金账户，此处会自动调用资金账户的联动事件。
@@ -744,7 +819,6 @@
     var portfolioIdChange = function(init) {
         linkAcctNo(init);
         linkZqzyPos(init);
-        linkFindCashAmountInfo();
     };
 
     /**
@@ -1111,12 +1185,14 @@
      */
     var entrustNumChange = function() {
         calcEntrustNumAndAmt();
+        linkTableEntrustNumAmt();
     };
     /**
      * 委托金额更时联动计算委托数量
      */
     var entrustAmtChange = function() {
         calcEntrustNumAndAmt();
+        linkTableEntrustNumAmt();
     };
     /**
      * 委托方向变更时，需要联动计算收益率等
@@ -1141,7 +1217,7 @@
             ||(currentTab == 'dz' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_ZYSHG)
             ||(currentTab == 'gd' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_ZYSHG)){
             $("#invAim_div_" + currentTab).hide();
-            linkFindSecAmountInfo();
+            //linkFindSecAmountInfo();
         }else {
             //质押券出入库不展示投资目的
             var ps = $("#ps_" + currentTab).val();
@@ -1151,7 +1227,7 @@
             else {
                 $("#invAim_div_" + currentTab).show();
             }
-            linkFindSecAmountInfo();
+           // linkFindSecAmountInfo();
         }
     };
     /**
@@ -1287,9 +1363,10 @@
      */
     var linkAcctNo = function(init) {
         var portfolioId = $("#portfolioId_" + currentTab).val();
+        var ps = $("#ps" + currentTab).val();
 //        var tradeMarket = $("#tradeMarket_" + currentTab).val();
         var param = {portfolioId:portfolioId/*, tradeMarket:tradeMarket*/};
-        if(portfolioId) {
+        if(portfolioId&&ps&&(ps==PS_T04||ps==PS_T46||ps==PS_T97)) {
             var list = getAcctNoSelectList(portfolioId, null);
             var acctNo = '';
             if(list && list.length > 0) {
@@ -1443,7 +1520,7 @@
             else if(finprodType2 && finprodType2 == FINPROD_TYPE_TG_F01) {
                 setExtPs();
             }
-            // 画面.金融产品类型（投管）为空或者为质押式回购
+                // 画面.金融产品类型（投管）为空或者为质押式回购
             //add by chenjiaxing 更改金融产品为空时的枚举值 start
             else if(!finprodType2) {
                 $("#ps_" + currentTab).updateChosenArr({
@@ -1536,91 +1613,61 @@
         }
     }
 
-    /**
-     * 联动展示托管户可用现金、证券户可用现金、T1可用现金
-     */
-    var linkFindCashAmountInfo = function() {
-        var portfolioId = $("#portfolioId_" + currentTab).val(); // 组合名称
-        var acctNo = $("#acctNo_" + currentTab).val(); // 资金账户
-        var secAcctId = $("#secId_" + currentTab).val(); // 资产名称
-        var finprodId = $("#finprodId_" + currentTab).val(); // 资产代码
-        var ps = $("#ps_" + currentTab).val(); // 委托方向
-        var vdate = $("#vdate_" + currentTab).val(); // 开始时间
-
-        var param = {
-            "portfolioId":portfolioId,
-            "vdate":vdate,
-            "acctNo":acctNo
-        };
-        if (portfolioId != null && portfolioId != '') {
-            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/findCashAmountInfo', param, function (result) {
-                if (result) {
-                    document.getElementById('tgAcctCash_' + currentTab).innerHTML  = JoyinUtil.formatNumber(result.tgAcctCash, 2, 10000, 2) + '万元';
-                    document.getElementById('secAcctCash_' + currentTab).innerHTML  = JoyinUtil.formatNumber(result.secAcctCash, 2, 10000, 2) + '万元';
-                    document.getElementById('t1Cash_' + currentTab).innerHTML  = JoyinUtil.formatNumber(result.t1Cash, 2, 10000, 2) + '万元';
-                    // $("#tgAcctCash" + currentTab).html(JoyinUtil.formatNumber(result.tgAcctCash, 2, 10000, 2) + '万元');
-                    // $("#secAcctCash" + currentTab).html(JoyinUtil.formatNumber(result.secAcctCash, 2, 10000, 2) + '万元');
-                    // $("#t1Cash" + currentTab).html(JoyinUtil.formatNumber(result.t1Cash, 2, 10000, 2) + '万元');
-                }
-            }, false);
-        }
-
-    };
 
     /**
      * 联动展示 持仓数量、可卖数量、成本价
      */
-    var linkFindSecAmountInfo = function() {
-        var portfolioId = $("#portfolioId_" + currentTab).val(); // 组合名称
-        var acctNo = $("#acctNo_" + currentTab).val(); // 资金账户
-        var acctTradeMarket = $("#acctTradeMarket_" + currentTab).val(); // 资金账户
-        var secAcctId = $("#secId_" + currentTab).val(); // 资产名称
-        var finprodId = $("#finprodId_" + currentTab).val(); // 资产代码
-        var ps = $("#ps_" + currentTab).val(); // 委托方向
-        var vdate = $("#vdate_" + currentTab).val(); // 开始时间
-
-        var param = {
-            "portfolioId":portfolioId,
-            "vdate":vdate,
-            "acctNo":acctNo,
-            "secAcctId":secAcctId,
-            "finprodId":finprodId,
-            "ps":ps
-        };
-        if (portfolioId != null && portfolioId != '') {
-            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/findSecAmountInfo', param, function (result) {
-                if (result) {
-                    //add by chenjiaxing 大宗交易指令、固收平台指令创建面板，选择的资产为基金时，“持仓数量、可卖数量、可买数量”单位显示“份” 20210826 start
-                    var finprodType2 = $("#finprodType2_" + currentTab).val();
-                    if(finprodType2 == FINPROD_TYPE_TG_F06){
-                        document.getElementById('positionAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.positionAmount, 2, 10000, 2)+'万份';
-                        document.getElementById('canSellAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canSellAmount, 2, 10000, 2)+'万份';
-                        document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
-                    }
-                    else if(finprodType2 == FINPROD_TYPE_TG_F10){
-                        document.getElementById('positionAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.positionAmount, 2, 1, 2)+'股';
-                        document.getElementById('canSellAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canSellAmount, 2, 1, 2)+'股';
-                        document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
-                    }
-                    else{
-                        //配债配股,质押券出入库不显示持仓数量，可卖数量，成本价
-                        if(ps == PS_T46 || ps == PS_T97 || ps == PS_T68 || ps ==PS_T69 || ps ==PS_03 || ps ==PS_04) {
-                            document.getElementById('positionAmount_' + currentTab).innerHTML = "";
-                            document.getElementById('canSellAmount_' + currentTab).innerHTML = "";
-                            document.getElementById('costPrice_' + currentTab).innerHTML = "";
-                        }
-                        else {
-                            document.getElementById('positionAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.positionAmount, 2, 10000, 2)+'万元';
-                            document.getElementById('canSellAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canSellAmount, 2, 10000, 2)+'万元';
-                            document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
-                        }
-                    }
-                    //add by chenjiaxing 大宗交易指令、固收平台指令创建面板，选择的资产为基金时，“持仓数量、可卖数量、可买数量”单位显示“份” 20210826 end
-                }
-            }, false);
-        }
-
-    };
+    // var linkFindSecAmountInfo = function() {
+    //     var portfolioId = $("#portfolioId_" + currentTab).val(); // 组合名称
+    //     var acctNo = $("#acctNo_" + currentTab).val(); // 资金账户
+    //     var acctTradeMarket = $("#acctTradeMarket_" + currentTab).val(); // 资金账户
+    //     var secAcctId = $("#secId_" + currentTab).val(); // 资产名称
+    //     var finprodId = $("#finprodId_" + currentTab).val(); // 资产代码
+    //     var ps = $("#ps_" + currentTab).val(); // 委托方向
+    //     var vdate = $("#vdate_" + currentTab).val(); // 开始时间
+    //
+    //     var param = {
+    //         "portfolioId":portfolioId,
+    //         "vdate":vdate,
+    //         "acctNo":acctNo,
+    //         "secAcctId":secAcctId,
+    //         "finprodId":finprodId,
+    //         "ps":ps
+    //     };
+    //     if (portfolioId != null && portfolioId != '') {
+    //         Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/findSecAmountInfo', param, function (result) {
+    //             if (result) {
+    //                 //add by chenjiaxing 大宗交易指令、固收平台指令创建面板，选择的资产为基金时，“持仓数量、可卖数量、可买数量”单位显示“份” 20210826 start
+    //                 var finprodType2 = $("#finprodType2_" + currentTab).val();
+    //                 if(finprodType2 == FINPROD_TYPE_TG_F06){
+    //                     document.getElementById('positionAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.positionAmount, 2, 10000, 2)+'万份';
+    //                     document.getElementById('canSellAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canSellAmount, 2, 10000, 2)+'万份';
+    //                     document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
+    //                 }
+    //                 else if(finprodType2 == FINPROD_TYPE_TG_F10){
+    //                     document.getElementById('positionAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.positionAmount, 2, 1, 2)+'股';
+    //                     document.getElementById('canSellAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canSellAmount, 2, 1, 2)+'股';
+    //                     document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
+    //                 }
+    //                 else{
+    //                     //配债配股,质押券出入库不显示持仓数量，可卖数量，成本价
+    //                     if(ps == PS_T46 || ps == PS_T97 || ps == PS_T68 || ps ==PS_T69 || ps ==PS_03 || ps ==PS_04) {
+    //                         document.getElementById('positionAmount_' + currentTab).innerHTML = "";
+    //                         document.getElementById('canSellAmount_' + currentTab).innerHTML = "";
+    //                         document.getElementById('costPrice_' + currentTab).innerHTML = "";
+    //                     }
+    //                     else {
+    //                         document.getElementById('positionAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.positionAmount, 2, 10000, 2)+'万元';
+    //                         document.getElementById('canSellAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canSellAmount, 2, 10000, 2)+'万元';
+    //                         document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
+    //                     }
+    //                 }
+    //                 //add by chenjiaxing 大宗交易指令、固收平台指令创建面板，选择的资产为基金时，“持仓数量、可卖数量、可买数量”单位显示“份” 20210826 end
+    //             }
+    //         }, false);
+    //     }
+    //
+    // };
 
     var linkInvAim = function(){
         var finprodId = $("#finprodId_" + currentTab).val();
@@ -1650,50 +1697,50 @@
     /**
      * 联动展示可买数量
      */
-    var calCanBuyAmount = function() {
-        document.getElementById('canBuyAmount_' + currentTab).innerHTML = '0.00万元';
-        var portfolioId = $("#portfolioId_" + currentTab).val(); // 组合名称
-        var acctNo = $("#acctNo_" + currentTab).val(); // 资金账户
-        var secAcctId = $("#secId_" + currentTab).val(); // 资产名称
-        var finprodId = $("#finprodId_" + currentTab).val(); // 资产代码
-        var ps = $("#ps_" + currentTab).val(); // 委托方向
-        var vdate = $("#vdate_" + currentTab).val(); // 开始时间
-        var price = $("#price_" + currentTab).val(); // 竞价
-        if (portfolioId != null && portfolioId != '') {
-            var param = {
-                portfolioId : portfolioId,
-                acctNo : acctNo,
-                acctId : acctNo,
-                ccy : 'CNY',
-                secAcctId : secAcctId,
-                finprodId : finprodId,
-                ps : ps,
-                vdate : vdate,
-                price:price
-            };
-            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/calCanBuyAmount', param, function (result) {
-                if (result) {
-                    //add by chenjiaxing 大宗交易指令、固收平台指令创建面板，选择的资产为基金时，“持仓数量、可卖数量、可买数量”单位显示“份” 20210826 start
-                    var finprodType2 = $("#finprodType2_" + currentTab).val();
-                    if(finprodType2 == FINPROD_TYPE_TG_F06){
-                        document.getElementById('canBuyAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canBuyAmount, 2, 10000, 2)+'万份';
-                    }
-                    else if(finprodType2 == FINPROD_TYPE_TG_F10){
-                        document.getElementById('canBuyAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canBuyAmount, 2, 1, 2)+'股';
-                    }
-                    else{
-                        if(ps == PS_T46 || ps == PS_T97 || ps == PS_T68 || ps == PS_T69) {
-                            document.getElementById('canBuyAmount_' + currentTab).innerHTML ='0.00万元'
-                        }else {
-                            document.getElementById('canBuyAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canBuyAmount, 2, 10000, 2)+'万元';
-                        }
-
-                    }
-                    //add by chenjiaxing 大宗交易指令、固收平台指令创建面板，选择的资产为基金时，“持仓数量、可卖数量、可买数量”单位显示“份” 20210826 end
-                }
-            }, false);
-        }
-    }
+    // var calCanBuyAmount = function() {
+    //     document.getElementById('canBuyAmount_' + currentTab).innerHTML = '0.00万元';
+    //     var portfolioId = $("#portfolioId_" + currentTab).val(); // 组合名称
+    //     var acctNo = $("#acctNo_" + currentTab).val(); // 资金账户
+    //     var secAcctId = $("#secId_" + currentTab).val(); // 资产名称
+    //     var finprodId = $("#finprodId_" + currentTab).val(); // 资产代码
+    //     var ps = $("#ps_" + currentTab).val(); // 委托方向
+    //     var vdate = $("#vdate_" + currentTab).val(); // 开始时间
+    //     var price = $("#price_" + currentTab).val(); // 竞价
+    //     if (portfolioId != null && portfolioId != '') {
+    //         var param = {
+    //             portfolioId : portfolioId,
+    //             acctNo : acctNo,
+    //             acctId : acctNo,
+    //             ccy : 'CNY',
+    //             secAcctId : secAcctId,
+    //             finprodId : finprodId,
+    //             ps : ps,
+    //             vdate : vdate,
+    //             price:price
+    //         };
+    //         Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/calCanBuyAmount', param, function (result) {
+    //             if (result) {
+    //                 //add by chenjiaxing 大宗交易指令、固收平台指令创建面板，选择的资产为基金时，“持仓数量、可卖数量、可买数量”单位显示“份” 20210826 start
+    //                 var finprodType2 = $("#finprodType2_" + currentTab).val();
+    //                 if(finprodType2 == FINPROD_TYPE_TG_F06){
+    //                     document.getElementById('canBuyAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canBuyAmount, 2, 10000, 2)+'万份';
+    //                 }
+    //                 else if(finprodType2 == FINPROD_TYPE_TG_F10){
+    //                     document.getElementById('canBuyAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canBuyAmount, 2, 1, 2)+'股';
+    //                 }
+    //                 else{
+    //                     if(ps == PS_T46 || ps == PS_T97 || ps == PS_T68 || ps == PS_T69) {
+    //                         document.getElementById('canBuyAmount_' + currentTab).innerHTML ='0.00万元'
+    //                     }else {
+    //                         document.getElementById('canBuyAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canBuyAmount, 2, 10000, 2)+'万元';
+    //                     }
+    //
+    //                 }
+    //                 //add by chenjiaxing 大宗交易指令、固收平台指令创建面板，选择的资产为基金时，“持仓数量、可卖数量、可买数量”单位显示“份” 20210826 end
+    //             }
+    //         }, false);
+    //     }
+    // }
 
     //add by chenjiaixng 20210907 债券净价交易添加偏离度展示 start
     /**
@@ -1713,10 +1760,10 @@
             // TISHKS-137:计算偏离度 fuyongsheng 20211109 edit end
             paramObj.unitCprice = price;
             Joyin.ajax(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade003/calcDeviationDegree'), paramObj, function (data) {
-                $("#deviationDegree").text(data);
+                //$("#deviationDegree").text(data);
             });
         } else {
-            $("#deviationDegree").text("");
+            //$("#deviationDegree").text("");
         }
     }
     //add by chenjiaixng 20210907 债券净价交易添加偏离度展示 end
@@ -1796,7 +1843,7 @@
             }
             else {
                 if(parent.EtrExchangeTradeJjHq) {
-                   // parent.EtrExchangeTradeJjHq.setCashOrNum('cash');
+                    // parent.EtrExchangeTradeJjHq.setCashOrNum('cash');
                 }
             }
         }
@@ -2165,7 +2212,7 @@
         else if(finprodType2 == FINPROD_TYPE_TG_F01) {
             if(currentTab == 'dz' && tradeMarket == TRADE_PLACE_03) {
 //                $("#entrustNumUnit_" + currentTab).text("手");
-                 //债券交易数量单位 edit by yeming 20210729 start
+                //债券交易数量单位 edit by yeming 20210729 start
                 if(bond_traded_unit == '02'){
                     $("#entrustNumUnit_" + currentTab).text("手");
                 }else{
@@ -2245,10 +2292,10 @@
         };
         //竞价平台股票、债券、基金，卖出可能会存在零股，增加可用持仓参数；
         if(currentTab == 'jj' && ps == PS_T02 && (finprodType2 == FINPROD_TYPE_TG_F10 || finprodType2 == FINPROD_TYPE_TG_F01 || finprodType2 == FINPROD_TYPE_TG_F06)){
-            var availableNum = parent.EtrExchangeTradeJjHq.getJJMktPrice("#availableNum_jj").replace(/,/g, "");
-            if(availableNum && availableNum > 0){
-                $.extend(param,{availableNum: availableNum});
-            }
+            // var availableNum = parent.EtrExchangeTradeJjHq.getJJMktPrice("#availableNum_jj").replace(/,/g, "");
+            // if(availableNum && availableNum > 0){
+            //     $.extend(param,{availableNum: availableNum});
+            // }
         }
         if(priceModel == PRICE_MODEL_PRM03 && isStandardPs(ps)){
             if(targetType) {
@@ -2938,7 +2985,7 @@
                         }
                         if (!useInterfQuoteFlag) {
                             console.log(etrExchange_HqArea_refresh_period + 's定时刷新竞价行情数据');
-                            parent.EtrExchangeTradeJjHq.queryJJHQXX(secId, finprodName, finprodType);
+                            //parent.EtrExchangeTradeJjHq.queryJJHQXX(secId, finprodName, finprodType);
                         }
                     }
                 }
@@ -3056,15 +3103,19 @@
 
         //初始化时，是否隐藏左上角内容
     var initPage = function(){
-             //$("#businessModelDiv_jj").hide();
-             $("#businessModelDiv_gd").hide();
-             $("#businessModelDiv_dz").hide();
+            $("#businessModelDiv_jj").hide();
+            $("#businessModelDiv_gd").hide();
+            $("#businessModelDiv_dz").hide();
             var finprodType2 = $("#finprodType2_" + currentTab).val();
             var ps = $("#ps_" + currentTab).val();
+            //组合隐藏
+            //分配组合展示
+            if(ps==PS_T04||ps==PS_T46||ps==PS_T97){
+                $("#portfolioId_div"+ currentTab).show();
+                $("#acctNo_div"+ currentTab).show();
+                $("#dateTableDiv").hide();
+            }
 
-             if(finprodType2==FINPROD_TYPE_TG_F10&&(ps==PS_T04||ps==PS_T46)){
-                 $("#dateTableDiv").hide();
-             }
 
             initFlag = true;
             hideLeftTopPanel();
@@ -3092,6 +3143,11 @@
                 initFlag = false;
             }, 3000 );
             setCurrentTab(currentTab);
+            var riskLists = entity_RiskTrialRetList || [];
+            if (riskLists.length > 0) {
+                $("#riskTrialSpan").html("&nbsp;&nbsp;" + riskLists[0].conclusion);
+                setRiskFlag(0);
+            }
         }
     var addMinPriceStep = function(type,num,input) {
         var $secIdObj = $("#secIdObjRelative_" + currentTab).val();
@@ -3176,44 +3232,7 @@
         getScale:getScale,
         formatPrice:formatPrice
     }
-    var dateTable = $("#dateTable").joyintable({
-        ajax: {
-            url: '/etrexchange/common/etrExchangeTrade001/selectEtrPortfolioDetail',//请求路径
-            type: 'POST',//请求类型
-            data: function() {
-                var object={};
-                object.entrustId=$("#entrustId_" + currentTab).val();
-                return object;//获取请求参数
-            }//ajax请求数据
-        },
-        searchOnInit:true,
-        loadonce:true,
-        page:false,
-        cols:[
-            {field:'portfolioId', title: 'EtrExchangeTrade002.portfolioId', sortField:'portfolioId',width : 200,
-                editOption:{
-                    type: 'select', multiple: false, searchable: true, showField: 'id',
-                    url: JoyinUtil.getRealPath("/business/common/CommonSelect/selectPortfolioId?act=true"),
-                    postData:function () {
-                        return getSearchParams();
-                    }
-                }
-            },
-            {field:'portfolioName',title: 'EtrExchangeTrade002.portfolioName', sortField:'portfolioName',width : 200},
-            {field:'acctNo', title: 'EtrExchangeTrade001.acctNo', width : 200,sortable:false,edit:true,
-                editOption: {
-                    type: 'select', multiple: false, searchable: true, showField: 'id',
-                    url: JoyinUtil.getRealPath("/invest/entrust/etrexchangetrade/EtrExchangeTrade001/getPtlSecAcctInfo"),
-                }
-            },
-            {field:'entrustNum', title: 'EtrExchangeTrade001.entrustNum', sortField:'entrustNum',width : 200,type:'number'},
-            {field:'entrustAmt', title: 'EtrExchangeTrade001.entrustAmt', sortField:'entrustAmt',width : 200,type:'number'},
-            {field:'availableCash', title: '可用现金', sortField:'availableCash',width : 200,type:'number'},
-            {field:'availablePositions', title: '可用持仓', sortField:'availablePositions',width : 200,type:'number'},
-        ],
-        done: function (table, allData) {
-        }
-    });
+
     /**
      * 查看资产详情事件
      */
@@ -3239,7 +3258,10 @@
                 isQuickInput:true,
                 finprodId:finprodId
             };
-            parent.EtrExchangeTradeMain.dialogSelf.dialog(url,param);
+            Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+                basePath + url,
+                "98%", "98%",
+                param);
         } else if (FINPROD_TYPE_TG_ZYSHG == finprodType2){
             Joyin.error("质押式回购不支持查看资产详情")
         } else {
@@ -3247,11 +3269,362 @@
         }
     };
 
+    function getBussCombDistribtTableParams() {
+        var ebcd = entity_BussCombDistribtList || [];
+        return ebcd;
+    }
+
+    var dateTable = $("#dateTable").joyintable({
+        data: getBussCombDistribtTableParams(),
+        searchOnInit:true,
+        loadonce:true,
+        page:false,
+        cols:[
+            {field:'portfolioId', title: 'EtrExchangeTrade002.portfolioId', sortField:'portfolioId',width : 200,edit : true,
+                editOption:{
+                    type: 'select', multiple: false, searchable: true, showField: 'id',
+                    url: JoyinUtil.getRealPath("/business/common/CommonSelect/selectPortfolioId"),
+                    postData:function () {
+                        return {};
+                    }
+                }
+            },
+            {field:'acctNo', title: 'EtrExchangeTrade001.acctNo', width : 200,sortable:false,edit : true,
+                editOption: {
+                    type: 'select', multiple: false, searchable: true, showField: 'id',
+                    url: JoyinUtil.getRealPath("/etrexchange/common/EtrExchangeTradeCommon004/getPtlSecAcctInfo"),
+                    postData:function () {
+                        return {portfolioId:curPortfolioId,tradeMarket: $("#tradeMarket_"+currentTab).val()};
+                    }
+                }
+            },
+            {field:'entrustNum', title: 'EtrExchangeTrade001.entrustNum', sortField:'entrustNum',width : 200,type:'number',edit : true},
+            {field:'entrustAmt', title: 'EtrExchangeTrade001.entrustAmt', sortField:'entrustAmt',width : 200,type:'number',edit : true},
+            {field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['delt']}
+        ],
+        beforeEditCell:function (preVal, field, rowData){
+            var ps =  $("#ps_" + currentTab).val();
+            if(field == "acctNo") {
+                curPortfolioId = rowData.portfolioId;
+                return true;
+            }else if (field == "portfolioId") {
+                return true;
+            }
+            else if (field == "entrustNum") {
+                return true;
+            }
+
+        },
+        editCell : function(value, data, field, cell, column){
+            if (field == "portfolioId") {
+                var param = {};
+                param.portfolioId = data.portfolioId;
+                param.tradeMarket = $("#tradeMarket_"+currentTab).val();
+                Joyin.ajaxJson(basePath + '/etrexchange/common/EtrExchangeTradeCommon004/getPtlSecAcctInfoJson', param, function(result) {
+                    if(result.length==1) { //只有一条，自动选上
+                        dateTable.renderRow(data.LAY_TABLE_INDEX, {"acctNo":result[0].id});
+                    }else{
+                        dateTable.renderRow(data.LAY_TABLE_INDEX, {"acctNo":null});
+                    }
+                });
+
+            }
+            else if(field == "acctNo") {
+                if(data.acctNo && $("#tradeMarket_"+currentTab).val()) {
+                    var param = {};
+                    param.portfolioId = data.portfolioId;
+                    param.acctNo = data.acctNo;
+                    param.tradeMarket = $("#tradeMarket_"+currentTab).val();
+                    Joyin.ajaxJson(basePath + '/etrexchange/common/EtrExchangeTradeCommon004/getPtlSecAcctInfoJson', param, function(result) {
+                        if(result) {
+                            dateTable.renderRow(data.LAY_TABLE_INDEX, {"secAcctId":result.data});
+                        }
+                    });
+                    countAddTable();
+                }
+                curPortfolioId = "";
+            }else if(filed='entrustNum'){
+            }
+        },
+        done: function (table, allData) {
+            if(dateTable.getAllRows()) {
+                var array = dateTable.getAllRows();
+                if(array.length>0) {
+                    if(array[0].ps == PS_T68 || array[0].ps == PS_T69) {
+                        $("#entrustAmout_total_label").text("标准券数量");
+                    }
+                    else {
+                        $("#entrustAmout_total_label").text("指令金额");
+                    }
+                    if(array[0].finprodMarketId) {
+                        $("#finprodId_total").text(array[0].finprodMarketId);
+                        $("#finprodName_total").text(array[0].finprodName);
+
+                        var entrustNumTotal = 0;
+                        var entrustAmoutTotal = 0;
+                        for(var i=0;i<array.length;i++) {
+                            entrustNumTotal = parseFloat(entrustNumTotal) + parseFloat(isNumber(array[i].entrustNum)?array[i].entrustNum:0);
+                            entrustAmoutTotal = parseFloat(entrustAmoutTotal) + parseFloat(isNumber(array[i].entrustAmt)?array[i].entrustAmt:0);
+                        }
+                        $("#entrustNum_total").text(entrustNumTotal);
+                        $("#entrustAmout_total").text(entrustAmoutTotal);
+                    }
+                    else {
+                        $("#finprodId_total").text("--");
+                        $("#finprodName_total").text("--");
+                        $("#entrustNum_total").text("--");
+                        $("#entrustAmout_total").text("--");
+                    }
+
+                }
+                else {
+                    $("#finprodId_total").text("--");
+                    $("#finprodName_total").text("--");
+                    $("#entrustNum_total").text("--");
+                    $("#entrustAmout_total").text("--");
+                }
+
+            }
+        }
+    });
+    //新增行
+    function countAddTable() {
+        var entrustNum= $("#entrustNum_"+currentTab).val();
+        var entrustAmt= $("#entrustAmt_"+currentTab).val();
+        var array = dateTable.getAllRows();
+        var len=array.length;
+        if (entrustNum%len==0) {
+            for(var i=0;i<array.length;i++) {
+                array[i].entrustNum=entrustNum/len;
+                array[i].entrustAmt=entrustAmt/len;
+            }
+        } else { //除不尽
+            var entrustNumData = 0
+            var entrustAmtData = 0
+            for(var i=0;i<array.length;i++) {
+                array[i].entrustNum=entrustNum?Math.floor(entrustNum/len):array[i].entrustNum;
+                array[i].entrustAmt=entrustAmt?Math.floor(entrustAmt/len):array[i].entrustAmt;
+            }
+            for(var i=0;i<array.length-1;i++) {
+                entrustNumData+=array[i].entrustNum!=0?Number(array[i].entrustNum).toFixed(0):0;
+                entrustAmtData+=array[i].entrustAmt!=0?Number(array[i].entrustAmt).toFixed(2):0;
+            }
+            array[len-1].entrustNum=entrustNum-entrustNumData;
+            array[len-1].entrustAmt=entrustAmt-entrustAmtData;
+        }
+        for(var i=0;i<array.length;i++) {
+            dateTable.renderRow(i,array[i])
+        };
+    }
+    //
+    function linkTableEntrustNumAmt() {
+        var entrustNum= $("#entrustNum_"+currentTab).val();
+        var entrustAmt= $("#entrustAmt_"+currentTab).val();
+        var array = dateTable.getAllRows();
+        var len=array.length;
+        for(var i=0;i<array.length;i++) {
+            if(array[i].acctNo){
+                array[i].entrustNum=entrustNum/len;
+                array[i].entrustAmt=entrustAmt/len;
+            }
+        }
+        for(var i=0;i<array.length;i++) {
+            dateTable.renderRow(i,array[i])
+        };
+    }
+
+    /**
+     * 绑定删除事件
+     */
+    dateTable.bind('click', '.delt', function(data, index) {
+        dateTable.removeRow(data);
+    });
+
+    var colsRiskTrialRet = [
+        {
+            /* 指标名称*/
+            field: 'kriName',
+            width: 100,
+            title: 'BaseRiskMathComm.indName',
+            sortable: false
+        }
+        , {/*指标类型*/
+            field: 'kriTypeCn',
+            width: 50,
+            title: 'BaseRiskMathComm.indType',
+            sortable: false
+        }
+        , {
+            /*组合名称*/
+            field: 'portfolioName',
+            width: 150,
+            title: 'BaseRiskMathComm.portfolioName',
+            sortable: false
+        }
+        , {
+            /*预警阈值*/
+            field: 'warningLine',
+            width: 150,
+            title: 'BaseRiskMathComm.wthreshold',
+            sortable: false
+        }
+        , {
+            /*审批线*/
+            field: 'approveLine',
+            width: 150,
+            title: 'BaseRiskMathComm.approveold',
+            sortable: false
+        }
+        , {
+            /*当前实际值*/
+            field: 'kriValue',
+            width: 200,
+            title: 'BaseRiskMathComm.currValue',
+            sortable: false
+        }
+        , {
+            /*原值*/
+            field: 'oldValue',
+            width: 200,
+            title: 'BaseRiskMathComm.preValue',
+            sortable: false
+        }
+        , {
+            /*趋势*/
+            field: 'kriTrend',
+            width: 200,
+            title: 'BaseRiskMathComm.kriTrend',
+            sortable: false
+        }
+        , {
+            field: 'kriStatusCn', title: 'BaseRiskMathComm.currStatus', sortable: false,
+            render: function (data, type, row, meta) {
+                if (row.kriStatus == 0) {
+                    return "<span>正常</span>";
+                }
+                if (row.kriStatus == 1) {
+                    return "<span style='color:orange'>预警</span>";
+                }
+                if (row.kriStatus == 2) {
+                    return "<span style='color:#F7580D'>审批</span>";
+                }
+                if (row.kriStatus == 3) {
+                    return "<span style='color:#F71A0D'>违规</span>";
+                }
+                if (row.kriStatus == 4) {
+                    return "<span style='color:#951F1F'>异常</span>";
+                }
+                return row.kriStatus;
+            }
+        }
+    ]
+
+    var tableRisk = query("#riskTrialRetTable").joyintable({
+        data: entity_RiskTrialRetList || [],
+        cols: colsRiskTrialRet,
+        page: true,
+        addToLast: true,
+        searchOnInit: true,
+        checkbox: false,
+        height: 290
+    });
+    function setRiskFlag(flag) {
+        riskFlag = flag;
+    }
+    function paramCheck() {
+        if (!entity_RiskTrialRetList || riskFlag !== 0) {
+            Joyin.error("请先完成风险试算")
+            return false;
+        }
+        var checkFlag = true;
+        var object = getSearchParams();
+        //组合也需要校验
+        var ps =  $("#ps_" + currentTab).val();
+        if (!(ps==PS_T04||ps==PS_T46||ps==PS_T97)) { //单组合 新股申购、配股、配债、可转债信用申购
+           if(object.portfolioList.length==0) {
+               Joyin.error("请分配组合")
+               return false;
+           }
+            for (var index in object.portfolioList) {
+                var item = object.portfolioList[index];
+                if(!item.portfolioId || !item.acctNo ) {
+                    checkFlag = false;
+                }
+            }
+            if (!checkFlag) {
+                Joyin.error("请填写完整组合信息")
+                return false;
+            }
+            //组合是否是系列户
+            var acctNoTemp=object.portfolioList[0].acctNo;
+            for (var index in object.portfolioList) {
+                var item = object.portfolioList[index];
+                if(item.acctNo!=acctNoTemp ) {
+                    checkFlag = false;
+                    break;
+                }
+            }
+            if (!checkFlag) {
+                Joyin.error("系列户才能下指令")
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 指令提交或者保存
+     */
+
+    function saveOrSubmit(operateType) {
+        var s;
+        var object = getSearchParams();
+        var riskdata = {};
+
+        object.operateType = operateType;
+        object.pageModel = pageModel;
+
+        //riskdata = getriskdata(object);
+        // if(BaseRiskMathComm && isNeedRiskcal()) {
+        //     s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+        //     if(!s && s != ''){
+        //         return;
+        //     }
+        //     if (window.BaseRiskMathComm.isCalcConditionChanged(riskdata)){
+        //         return;
+        //     }
+        // }
+        //TODO 风险和授信
+        if (object.operateType === 'save') {
+            Joyin.confirm("请确认是否要保存",function() {
+                WorkFlow.doSaveList(basePath+'/etrexchange/common/EtrExchangeTradeCommon004/save',object,"EtrExchangeTrade004_btn_save",null,function() {
+                    JoyinUtil.disableButton("EtrExchangeTradeCommon004_btn_save", false);
+                })
+            });
+        }else{
+            Joyin.ajaxJson(basePath + '/etrexchange/common/EtrExchangeTradeCommon004/checkSaveError',object,
+                function(result) {
+                    Joyin.confirm(result.data,function() {
+                        Joyin.ajaxJson(basePath + '/etrexchange/common/EtrExchangeTradeCommon004/buildDtoFromTodoSubmit', object,
+                            function(res) {
+                                WorkFlow.doSubmitList(basePath+'/etrexchange/common/EtrExchangeTradeCommon004/save',res,"EtrExchangeTrade004_btn_submit",null,function() {
+                                    JoyinUtil.disableButton("EtrExchangeTradeCommon004_btn_submit", false);
+                                })
+                            });
+                    });
+                });
+
+
+        }
+    }
+
+
+
 
     $(function() {
 
 
-      //按tab键定位按钮事件
+        //按tab键定位按钮事件
         var inp=$(".input-control").val();
         $(document).bind('keydown', function (e) {
             var e = window.event ? window.event : e;
@@ -3340,8 +3713,8 @@
 
         initPage();
         if(calculateField){
-        	$("input[name=calculateField_" + currentTab + "][value='"+ calculateField +"']").attr("checked",true);
-        	layui.form.render(); //更新
+            $("input[name=calculateField_" + currentTab + "][value='"+ calculateField +"']").attr("checked",true);
+            layui.form.render(); //更新
         }
 
         // 绑定各种字段的change事件
@@ -3353,7 +3726,7 @@
         // 证券代码
         $("#secId_jj,#secId_dz,#secId_gd").change(function() {
             secIdChange();
-            linkFindSecAmountInfo();
+            //linkFindSecAmountInfo();
             linkInvAim();
             var secId = $("#secId_" + currentTab).val();
             var param = {};
@@ -3414,10 +3787,10 @@
         $("#finprodType2_jj,#finprodType2_dz,#finprodType2_gd").change(function() {
             finprodType2Change();
             //add by chenjiaxing 债券竞价交易添加偏离度 20210907 start
-            if($("#finprodType2_" + currentTab).val() == FINPROD_TYPE_TG_F01 && currentTab == 'jj'){
-                document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
-                    '0.0000%' +"</span>";
-            }
+            // if($("#finprodType2_" + currentTab).val() == FINPROD_TYPE_TG_F01 && currentTab == 'jj'){
+            //     document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
+            //         '0.0000%' +"</span>";
+            // }
             //add by chenjiaxing 债券竞价交易添加偏离度 20210907 end
         });
         // 资金账户
@@ -3426,7 +3799,7 @@
                 return;
             }
             acctNoChange(false);
-            linkFindSecAmountInfo();
+            //linkFindSecAmountInfo();
         });
         // 证券账户
         $("#secAcctId_jj,#secAcctId_dz,#secAcctId_gd").change(function() {
@@ -3478,9 +3851,9 @@
                 return;
             }
             calcPriceAndYield();
-            calCanBuyAmount();
+            //();
             if(currentTab == 'jj' && $("#price_jj").val()){
-                calDeviationDegree();
+                //calDeviationDegree();
             }
         });
         // 委托方向变更时
@@ -3530,7 +3903,7 @@
             $("#trader_gd").attr({maxlength:"6"});
         });
 
-        dsRefreshHq();
+        //dsRefreshHq();
 
         $('#EtrExchangeTrade001JJ_btn_search').click(function() {
             searchDetail();
@@ -3540,6 +3913,41 @@
         });
         $('#EtrExchangeTrade001GD_btn_search').click(function() {
             searchDetail();
+        });
+        // 绑定提交按钮
+        $('#EtrExchangeTradeCommon004_btn_submit').click(function() {
+            if(paramCheck()) {
+                saveOrSubmit('submit');
+            }
+        });
+
+        // 绑定保存按钮
+        $('#EtrExchangeTradeCommon004_btn_save').click(function() {
+            saveOrSubmit('save');
+        });
+
+        // 绑定取消按钮
+        $('#EtrExchangeTradeCommon004_btn_reset').click(function() {
+            doReset();
+        });
+        //绑定风险是算
+        $('#EtrExchangeTradeCommon004_btn_riskcal').click(function () {
+            var object = getSearchParams();
+            var param = JSON.parse(JSON.stringify(object))
+            Joyin.ajaxJson(basePath + '/etrexchange/common/etrExchangeTradeCommonRiskcal/doRiskcal', param, function (data) {
+                $("#riskTrialSpan").html("&nbsp;&nbsp;" + data.data.data.riskTrialSpan);
+                entity_RiskTrialRetList = data.data.data.riskcalReturnList;
+                $.each(entity_RiskTrialRetList, function (index, item) {
+                    item.conclusion = data.data.data.riskTrialSpan;
+                })
+                tableRisk.clear();
+                tableRisk.addRow(entity_RiskTrialRetList);
+                setRiskFlag(0);
+            });
+        });
+        $("#etrExchangeTradeMulti001_btn_add").click(function () {
+            var temp = {};
+            dateTable.addRow(temp);
         });
     });
 }());

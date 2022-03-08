@@ -1670,4 +1670,5 @@
         where
             T1.ENTRUST_ID=#{entrustId}
     </select>
+
 </mapper>
