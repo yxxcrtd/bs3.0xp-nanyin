@@ -191,11 +191,11 @@ public class SvrMonthCollectInterf extends BaseService{
 		//汇总  总、净销售金额
 		List<ChbMonthCollect> listAmountTotal = svrMonthCollectInterfMapper.selectAmountTotal(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
 		//获取正常的三合一与非三合一数据
-		List<ChbMonthCollect> notChangeEquHoldList = svrMonthCollectInterfMapper.selectHolderNumExcheck1(DateUtil.format(batchDateEnd));
+		List<ChbMonthCollect> notChangeEquHoldList = svrMonthCollectInterfMapper.selectNotChangeEquHold(DateUtil.format(batchDateEnd));
 		//获取所有三合一数据 包含持有为非三合一但身份已变成三合一的数据
-		List<ChbMonthCollect> ThreeInOneList = svrMonthCollectInterfMapper.selectHolderNumExcheck2(DateUtil.format(batchDateEnd));
+		List<ChbMonthCollect> ThreeInOneList = svrMonthCollectInterfMapper.selectThreeInOneList(DateUtil.format(batchDateEnd));
 		//获取当月持有check表中的关联主键
-		List<ChbMonthCollect> ChangeEquHoldList = svrMonthCollectInterfMapper.selectHolderNumExcheck3(DateUtil.format(batchDateEnd));
+		List<ChbMonthCollect> ChangeEquHoldList = svrMonthCollectInterfMapper.selectHolderNumFromCheck(DateUtil.format(batchDateEnd));
 		Map<String,ChbMonthCollect> ChangeEquHoldListMap = new HashMap<>();
 		for(ChbMonthCollect ChangeEquHold : ChangeEquHoldList){
             String key = ChangeEquHold.getPrdRegistCode() + ChangeEquHold.getIndentifyMark()+ChangeEquHold.getCcy()+ChangeEquHold.getHoldDate();

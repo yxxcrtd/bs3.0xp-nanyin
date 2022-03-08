@@ -60,7 +60,7 @@
 		GROUP BY prdRegistCode,institutionCode,areaCode,holderType,ccy
 	</select>
 
-	<select id="selectHolderNumExcheck1" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
+	<select id="selectNotChangeEquHold" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select prdRegistCode,institutionCode,areaCode,holderType,indentifyMark,ccy,amount,qty,cnyAmt
 		FROM
 		(
@@ -101,7 +101,7 @@
 		A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
 	</select>
 
-	<select id="selectHolderNumExcheck2" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
+	<select id="selectThreeInOneList" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select
 		prdRegistCode,institutionCode,areaCode,holderType,indentifyMark,ccy,amount,qty,cnyAmt,holdDate
 		FROM
@@ -133,7 +133,7 @@
 		STATUS != '03'
 	</select>
 
-	<select id="selectHolderNumExcheck3" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
+	<select id="selectHolderNumFromCheck" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select
 		PRD_REGIST_CODE prdRegistCode,
 		MERGER_INDENTIFY_MARK indentifyMark,

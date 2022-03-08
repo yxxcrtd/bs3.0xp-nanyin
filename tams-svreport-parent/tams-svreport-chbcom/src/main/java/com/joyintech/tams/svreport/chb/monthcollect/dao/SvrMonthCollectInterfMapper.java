@@ -22,11 +22,11 @@ public interface SvrMonthCollectInterfMapper {
     //三合一判断后 根据持有数据，生成持有，投资者数量信息
 	List<ChbMonthCollect> selectHolderNumExcheck(@Param("notChangeEquHoldList")List<ChbMonthCollect> notChangeEquHoldList);
 	//获取正常的三合一与非三合一数据
-	List<ChbMonthCollect> selectHolderNumExcheck1(@Param("batchDateEnd")String batchDateEnd);
+	List<ChbMonthCollect> selectNotChangeEquHold(@Param("batchDateEnd")String batchDateEnd);
 	//获取所有三合一数据 包含持有为非三合一但身份已变成三合一的数据
-	List<ChbMonthCollect> selectHolderNumExcheck2(@Param("batchDateEnd")String batchDateEnd);
+	List<ChbMonthCollect> selectThreeInOneList(@Param("batchDateEnd")String batchDateEnd);
 	//获取持有为非三合一但身份已变成三合一的数据
-	List<ChbMonthCollect> selectHolderNumExcheck3(@Param("batchDateEnd")String batchDateEnd);
+	List<ChbMonthCollect> selectHolderNumFromCheck(@Param("batchDateEnd")String batchDateEnd);
     //查询需要删除的reportuuid
 	List<String> selectReportuuid (@Param("termid")String termid);
     //删除report明细表
