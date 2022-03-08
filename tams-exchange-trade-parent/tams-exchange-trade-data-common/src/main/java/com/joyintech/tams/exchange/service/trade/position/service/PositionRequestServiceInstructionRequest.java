@@ -51,7 +51,7 @@ public class PositionRequestServiceInstructionRequest {
      */
     public void sendRequest(PositionInstructionRequest entity, String busiAct, String decisionAct, String systemAct) {
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("busiAct", busiAct);
+        resultMap.put(BUSI_ACT, busiAct);
         resultMap.put("decisionAct", decisionAct);
         resultMap.put("systemAct", systemAct);
         this.setCommonField(entity, resultMap);//设置公共字段，个性化的需要在具体接口中覆盖
@@ -89,8 +89,6 @@ public class PositionRequestServiceInstructionRequest {
      */
     private void bond002(PositionInstructionRequest entity, Map<String, Object> resultMap) {
         resultMap.put(INTERFACE_TYPE, INTERF_TYPE_BOND002);
-        resultMap.put(BUSI_ACT, 业务动作_交易下单.getValue());
-
         resultMap.put(DELIVERY_TYPE, parseDeliveryType(entity));
         resultMap.put(SETTLE_SPEED, parseSettleSpreed(resultMap));
         resultMap.put(BID_RESULT, 是否_否.getValue());
@@ -130,9 +128,6 @@ public class PositionRequestServiceInstructionRequest {
      */
     private void bond003(PositionInstructionRequest entity, Map<String, Object> resultMap) {
         resultMap.put(INTERFACE_TYPE, INTERF_TYPE_BOND003);
-        // 业务动作
-        resultMap.put(BUSI_ACT, 业务动作_交易下单.getValue());
-
         resultMap.put(DELIVERY_TYPE, parseDeliveryType(entity));
         resultMap.put(SETTLE_SPEED, parseSettleSpreed(resultMap));
         resultMap.put(PURCH_MODLE, null);
@@ -214,8 +209,6 @@ public class PositionRequestServiceInstructionRequest {
      */
     private void fund001(PositionInstructionRequest entity, Map<String, Object> resultMap) {
         resultMap.put(INTERFACE_TYPE, INTERF_TYPE_FUND001);
-        // 业务动作
-        resultMap.put(BUSI_ACT, 业务动作_交易下单.getValue());
         // 清算速度
         resultMap.put(SETTLE_SPEED, null);
         // 结算方式
@@ -259,9 +252,6 @@ public class PositionRequestServiceInstructionRequest {
      */
     private void repo001(PositionInstructionRequest entity, Map<String, Object> resultMap) {
         resultMap.put(INTERFACE_TYPE, INTERF_TYPE_REPO001);
-        // 业务动作
-        resultMap.put(BUSI_ACT, 业务动作_交易下单.getValue());
-
         resultMap.put(SETTLE_SPEED, null);
         resultMap.put(SHARES_TRADE_PLATFORM, null);
         resultMap.put(DELIVERY_TYPE, null);
@@ -337,9 +327,6 @@ public class PositionRequestServiceInstructionRequest {
      */
     private void repo002(PositionInstructionRequest entity, Map<String, Object> resultMap) {
         resultMap.put(INTERFACE_TYPE, INTERF_TYPE_REPO002);
-        // 业务动作
-        resultMap.put(BUSI_ACT, 业务动作_交易下单.getValue());
-
         resultMap.put(SETTLE_SPEED, null);
         resultMap.put(SHARES_TRADE_PLATFORM, null);
         resultMap.put(DELIVERY_TYPE, null);
@@ -456,8 +443,6 @@ public class PositionRequestServiceInstructionRequest {
      */
     private void stock001(PositionInstructionRequest entity, Map<String, Object> resultMap) {
         resultMap.put(INTERFACE_TYPE, INTERF_TYPE_STOCK001);
-        // 业务动作
-        resultMap.put(BUSI_ACT, 业务动作_交易下单.getValue());
         // 清算速度
         resultMap.put(SETTLE_SPEED, null);
 
