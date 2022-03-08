@@ -348,9 +348,20 @@
         var obj = getSubmitParam("submit");
         //风险校验
         var riskFlag = false;
-        Joyin.ajaxJson(basePath + 'cfets/bankuplink/bond/IbuQuoteBond/doRiskcal', obj, function (result) {
-            riskFlag = true;
-        },false)
+        $.ajax({
+            type: "POST",
+            url: basePath + 'cfets/bankuplink/bond/IbuQuoteBond/doRiskcal',
+            dataType: "json",
+            contentType: "application/json",
+            async: false,
+            data: JSON.stringify(obj),
+            success: function (result) {
+                console.log(result);//只记录不影响提交
+                if(result.code === '200') {
+                    riskFlag = true;
+                }
+            }
+        });
       /*  if(!riskFlag) {
             return false;
         }*/
@@ -408,7 +419,7 @@
                 el("#CfetsBondDealQuotedPrice004_unitCprice").val(JoyinMath.doDiv(data.price, 1, 4));
                 el("#CfetsBondDealQuotedPrice004_unitCprice2").val(JoyinMath.doDiv(data.price, 1, 4));
                 el("#CfetsBondDealQuotedPrice004_matureYield").val(JoyinMath.doMul(JoyinMath.doDiv(data.matureYield, 1, 6), 100, 4));
-                if(calcField === calcTypeExecYield) {
+                if(data.exerYield) {
                     el("#CfetsBondDealQuotedPrice004_exerYield").val(JoyinMath.doMul(JoyinMath.doDiv(data.exerYield, 1, 6), 100, 4));
                 }
                 el("#CfetsBondDealQuotedPrice004_cpriceAmt").val(JoyinMath.doDiv(data.cpriceAmt, 1, 2));
@@ -416,11 +427,14 @@
                 el("#CfetsBondDealQuotedPrice004_unitFprice").val(JoyinMath.doDiv(data.unitFprice, 1, 4));
                 el("#CfetsBondDealQuotedPrice004_intAmt").val(JoyinMath.doDiv(data.intAmt, 1, 2));
                 el("#CfetsBondDealQuotedPrice004_fpriceAmt").val(JoyinMath.doDiv(data.fpriceAmt, 1, 2));
+                el("#dealFeeAmt").val(JoyinMath.doDiv(data.dealFeeAmt, 1, 2));
+                el("#settFeeAmt").val(JoyinMath.doDiv(data.settFeeAmt, 1, 2));
+
                 //hidden
                 el("#CfetsBondDealQuotedPrice004_hidden_price").val(data.price);
                 el("#CfetsBondDealQuotedPrice004_hidden_unitCprice2").val(data.price);
                 el("#CfetsBondDealQuotedPrice004_hidden_matureYield").val(data.matureYield * 100);
-                if(calcField === calcTypeExecYield) {
+                if(data.exerYield) {
                     el("#CfetsBondDealQuotedPrice004_hidden_exerYield").val(data.exerYield * 100);
                 }
                 el("#CfetsBondDealQuotedPrice004_hidden_cpriceAmt").val(data.cpriceAmt);
@@ -500,7 +514,16 @@
         Joyin.ajaxJson(basePath + 'cfets/bankuplink/bond/IbuQuoteBond/autoAllocation', param, function (result) {
             if (result.data) {
                 table.clear();
-                table.addRow(result.data);
+                if(result.data) {
+                    $.each(result.data, function (index, obj) {
+                        obj.shareAmt = JoyinMath.doDiv(obj.shareAmt, 10000,2);
+                        obj.avaNum = JoyinMath.doDiv(obj.avaNum, 10000,2);
+                        obj.avaNumOld = JoyinMath.doDiv(obj.avaNumOld, 10000,2);
+                        obj.ourEntNum = JoyinMath.doDiv(obj.ourEntNum, 10000,2);
+                        obj.lendinEntNum = JoyinMath.doDiv(obj.lendinEntNum, 10000,2);
+                    });
+                    table.addRow(result.data);
+                }
             }
         })
     };

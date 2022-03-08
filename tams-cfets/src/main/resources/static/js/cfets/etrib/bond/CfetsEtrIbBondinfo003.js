@@ -571,7 +571,6 @@
         var param = {};
 
         var tradeAmt = Number(0)
-        debugger;
         for (var index in object.bussCombDistribtList) {
             var item = object.bussCombDistribtList[index];
             var temp = JSON.parse(JSON.stringify(object));
@@ -623,7 +622,7 @@
     }
 
     function paramCheck() {
-        /*if (!query("#finprodName").val() || !query("#priceModel").val() || !query("#tradeAmt").val()) {
+        if (!query("#finprodName").val() || !query("#priceModel").val() || !query("#tradeAmt").val()) {
             Joyin.error("有*必填项未填写,请填写完整")
             return false;
         }
@@ -647,17 +646,36 @@
         if (!checkFlag) {
             Joyin.error("请填写完整组合信息")
             return false;
-        }*/
+        }
         var obj = getSubmitParam("submit");
         var errorMsg = "";
-        Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/checkSaveError', obj.param, function (result) {
+        $.ajax({
+            type: "POST",
+            url: basePath + 'cfets/etrib/cfetsEtrIbBondinfo/checkSaveError',
+            dataType: "json",
+            contentType: "application/json",
+            async: false,
+            data: JSON.stringify(obj.param),
+            success: function (result) {
+                console.log(result);
+                if(result.code === '200') {
+                    if(result.data && result.data.errorList && result.data.errorList.length > 0) {
+                        $.each(result.data.errorList,function (index,item) {
+                            errorMsg = errorMsg + item.message + "<br\>";
+                        })
+                    }
+                }else {
+                    errorMsg = result.message;
+                }
+            }
+        });
+        /*Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/checkSaveError', obj.param, function (result) {
             if(result.data && result.data.errorList && result.data.errorList.length > 0) {
                 $.each(result.data.errorList,function (index,item) {
                     errorMsg = errorMsg + item.message + "<br\>";
                 })
             }
-        },false)
-        debugger;
+        },false)*/
         if(errorMsg && errorMsg.length > 0) {
             Joyin.error(errorMsg);
             return false;

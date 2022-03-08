@@ -60,7 +60,7 @@
             <input type="hidden" id="CfetsBondDealQuotedPrice004_hidden_intAmt" name="intAmt" th:value="${entity?.intAmt}" />
             <input type="hidden" id="CfetsBondDealQuotedPrice004_hidden_fpriceAmt" name="fpriceAmt" th:value="${entity?.fpriceAmt}" />
             <input type="hidden" id="CfetsBondDealQuotedPrice004_hidden_totleTradeId" name="totleTradeId" th:value="${entity?.totleTradeId}" />
-            <input type="hidden" id="CfetsBondDealQuotedPrice004_hidden_tradeDate" name="tradeDate" th:value="${tradeDate}" />
+            <input type="hidden" id="CfetsBondDealQuotedPrice004_hidden_tradeDate" name="tradeDate" th:value="${#dates.format(entity?.tradeDate,'yyyy-MM-dd')}" />
 
 
             <div class="pro-module-wrapper pro-module-base" th:title="#{CfetsBondDealQuotedPrice003.baseinfo}">
