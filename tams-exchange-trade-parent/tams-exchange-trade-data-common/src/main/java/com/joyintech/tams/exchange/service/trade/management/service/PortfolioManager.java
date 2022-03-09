@@ -413,7 +413,9 @@ public class PortfolioManager extends BaseService {
             calculateResponse.setInstructionLeftNum(isVolume ? instruction.getEntrustNum() - instruction.getEntrustLeftAmt().longValue() - instruction.getFrozenQuantity().longValue() : 0L);
             calculateResponse.setInstructionTotalAmt(instruction.getEntrustAmt());
             calculateResponse.setInstructionTotalNum(instruction.getEntrustNum());
-            calculateResponse.setFullPrice(bean.getFullPrice().toString());
+            if (Objects.nonNull(bean.getFullPrice())) {
+                calculateResponse.setFullPrice(bean.getFullPrice().toString());
+            }
             calculateResponse.setPriceMode(instruction.getPriceMode());
             calculateResponse.setAcctNo(instruction.getAcctName());
 
