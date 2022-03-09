@@ -41,9 +41,7 @@ import static com.joyintech.tams.invest.common.position.constant.PositionCommonC
 @Service
 public class PositionRequestTradeRestService {
     private static final Logger logger = LoggerFactory.getLogger(PositionRequestTradeRestService.class);
-
-    public static final String STANDAR_SEC_ID = "XN_PRODID999";
-
+ 
     @Autowired
     private CommonPositionEngineService commonPositionEngineService;
 
