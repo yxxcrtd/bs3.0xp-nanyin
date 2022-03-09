@@ -28,20 +28,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import static com.joyintech.tams.constant.DictCodeList.是否_否;
 import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.*;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_STOCK001;
 
 @Service
 public class PositionRequestTradeRestService {
     private static final Logger logger = LoggerFactory.getLogger(PositionRequestTradeRestService.class);
- 
+
     @Autowired
     private CommonPositionEngineService commonPositionEngineService;
 
@@ -77,8 +74,8 @@ public class PositionRequestTradeRestService {
 
                 }else if(null != dealTotal && DictCodeList.共通业务类型_质押式回购存续期.getValue().equals(dealTotal.getBusiType())){
 
-                }else {
-                    this.sendFinProductTradeDto(entity);
+                }else if(null != dealTotal){
+                    this.sendPositionHttpRequest(entity);
                 }
             }
             PositionHttpRequest.send(resultMap);
@@ -107,7 +104,7 @@ public class PositionRequestTradeRestService {
      * BaseTradeProductDealDto请求对象使用
      * @param entity
      */
-    public void sendFinProductTradeDto(BaseTradeProductDealDto entity) {
+    public void sendPositionHttpRequest(BaseTradeProductDealDto entity) {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("decisionAct", DictCodeListExt3.系统动作_新建.getValue());
         resultMap.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
@@ -160,10 +157,7 @@ public class PositionRequestTradeRestService {
                     bean.setSecAcctId(item.getSecAcctId());
                     bean.setSecAmount(item.getSecAmount());
                     bean.setCashAmount(item.getCashAmount());
-                    // "IF 指令.指令单位 = 手 THEN 指令.指令数量*10000
-                    //IF 指令.指令单位 = 份 THEN 指令.指令数量"
                     Map<String, Object> map = BeanUtil.object2Map(bean);
-                    // 下单委托编号	ordEntrustId
                     map.put(ORD_ENTRUST_ID,null);
                     // 指令份额	etrSecAmount
                     map.put("etrSecAmount",item.getEtrSecAmount());
@@ -223,10 +217,8 @@ public class PositionRequestTradeRestService {
                     bean.setFinprodId(dealEntity.getFinprodId());
                     bean.setTradeId(dealEntity.getTradeId());
                     bean.setEtrId(entity.getEntrustId());
-//                    bean.setSecAcctId(dealEntity.getSecManageAcctId());
                     bean.setSecAcctId(item.getSecAcctId());
                     bean.setSecAmount(dealEntity.getPrinAmt());
-//                    bean.setCashAcctId(getCashAcctId(dealEntity.getSecManageAcctId()));
                     bean.setCashAcctId(item.getCashAcctId());
                     bean.setCashAmount(item.getCashAmount());
                     Map<String, Object> map = BeanUtil.object2Map(bean);
@@ -247,10 +239,8 @@ public class PositionRequestTradeRestService {
                         bean.setFinprodId(dealEntity.getFinprodId());
                         bean.setTradeId(dealEntity.getTradeId());
                         bean.setEtrId(entity.getEntrustId());
-//                        bean.setSecAcctId(dealEntity.getSecManageAcctId());
                         bean.setSecAcctId(item.getSecAcctId());
                         bean.setSecAmount(item.getSecAmount());
-//                        bean.setCashAcctId(getCashAcctId(dealEntity.getSecManageAcctId()));
                         bean.setCashAcctId(item.getCashAcctId());
                         // 配股/申购代码
                         bean.setFinprodId(getStockId(dealEntity.getEntrustId()));
@@ -295,11 +285,7 @@ public class PositionRequestTradeRestService {
         //设置头寸业务类型
         String busiType = commonPositionEngineService.getPositionBusiType(entity.getTrdProductDeal().getFinprodType2(), entity.getTrdProductDeal().getPs(), entity.getAssetType2());
         resultMap.put("busiType", busiType);
-
         // 结算方式	见数据字典：结算方式
-        // 调用【共通:结算方式判断】 返回.结算方式
-//        String deliveryType = commonPositionEngineService.getDeliveryType(entity.getTrdProductDeal().getFinprodId());
-//        resultMap.put("deliveryType", deliveryType);
         // 交易方向
         resultMap.put(PS, entity.getTrdProductDeal().getPs());
         // 交易场所	见数据字典：交易场所
