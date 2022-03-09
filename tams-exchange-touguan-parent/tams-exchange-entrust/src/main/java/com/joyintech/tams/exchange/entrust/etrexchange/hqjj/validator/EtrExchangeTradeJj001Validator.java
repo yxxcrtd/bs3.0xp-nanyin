@@ -21,15 +21,12 @@ import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.WflEtrEntrust;
 import com.joyintech.tams.constant.*;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeCommon001Dto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.entrust.common.validator.EtrCommonValidator;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade001Dto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.MinTrdUnitLimitDto;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.SubEqutityDto;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.service.EtrExchangeTrade001Service;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SubEqutityDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -73,16 +70,19 @@ public class EtrExchangeTradeJj001Validator implements EtrCommonValidator {
 		// TODO Auto-generated method stub
 		EtrExchangeTradeSaveRequest dto = (EtrExchangeTradeSaveRequest) value;
 		if(dto.getOperateType().equals("save")) {
-			if (!StringUtil.isNotEmpty(dto.getStockId())&&!StringUtil.isNotEmpty(dto.getFinprodId())) {
-				errorList.add(new ValidMessage("stockId", "资产名称不可为空！"));
-			}
+//			if (!StringUtil.isNotEmpty(dto.getStockId())&&!StringUtil.isNotEmpty(dto.getFinprodId())) {
+//				errorList.add(new ValidMessage("stockId", "资产名称不可为空！"));
+//			}
 		}else if (dto.getOperateType().equals("submit")) {
 			Boolean isNonTradingTime = etrExchangeTrade001Service.isNonTradingTime(dto);
 			if (isNonTradingTime) {
 				errorList.add(new ValidMessage(this.getMessage("ETR_ERROR_0056")));
 				return errorList;
 			}
-			if (!StringUtil.isNotEmpty(dto.getPortfolioId())) {
+			if (!StringUtil.isNotEmpty(dto.getPortfolioId())&&
+					(StringUtil.equals(DictCodeList.交易方向_申购.getValue(),dto.getPs())
+							||StringUtil.equals(DictCodeListExt2.交易方向_配股.getValue(),dto.getPs())
+							||StringUtil.equals(DictCodeListExt3.交易方向_配债.getValue(),dto.getPs()))) {
 				errorList.add(new ValidMessage("portfolioId", this.getMessage("ETR_ERROR_0015")));
 			}
 			if(StringUtil.equals(CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL"),"02")){
@@ -116,7 +116,10 @@ public class EtrExchangeTradeJj001Validator implements EtrCommonValidator {
 				errorList.add(new ValidMessage("targetType", this.getMessage("ETR_ERROR_0022")));
 			}
 			//资金账户不为空、证券账户为空才check 账户不匹配
-			if (StringUtil.isNotEmpty(dto.getAcctNo()) && !StringUtil.isNotEmpty(dto.getSecAcctId())) {
+			if (StringUtil.isNotEmpty(dto.getAcctNo()) && !StringUtil.isNotEmpty(dto.getSecAcctId())&&
+					(StringUtil.equals(DictCodeList.交易方向_申购.getValue(),dto.getPs())
+							||StringUtil.equals(DictCodeListExt2.交易方向_配股.getValue(),dto.getPs())
+							||StringUtil.equals(DictCodeListExt3.交易方向_配债.getValue(),dto.getPs()))) {
 				errorList.add(new ValidMessage("secAcctId", this.getMessage("ETR_ERROR_0023")));
 			}
 			if (null == dto.getEntrustNum() || dto.getEntrustNum().compareTo(BigDecimal.ZERO) == 0) {
@@ -329,7 +332,7 @@ public class EtrExchangeTradeJj001Validator implements EtrCommonValidator {
 			//配债
 			if (DictCodeListExt3.交易方向_配债.getValue().equals(dto.getPs())) {
 				Map<String, Object> param = new HashMap<String, Object>();
-				param.put("tradePlat", dto.getTradePlat());//交易平台
+				param.put("tradePlat", "");//dto.getTradePlat());//交易平台
 				param.put("secId", dto.getStockId());//证券代码
 				param.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_配债代码.getValue());
 				Page<SelectOptionDto> page = etrExchangeTrade001Service.getFinprodMarketInfo(param);
@@ -449,7 +452,7 @@ public class EtrExchangeTradeJj001Validator implements EtrCommonValidator {
 					equtity = entrusts.get(0).getEntrustNum();
 				}
 				if (etrExchangeTrade001Service.getFinProductQutoInfo(param).size()>0&&dto.getEntrustNum().add(equtity).compareTo(entrustNum)>0) {
-					errorList.add(new ValidMessage("entrustNum", getMessage("ETR_ERROR_0060",DictCodeListExt3.交易方向_配债.getValue())));
+					//errorList.add(new ValidMessage("entrustNum", getMessage("ETR_ERROR_0060",DictCodeListExt3.交易方向_配债.getValue())));
 				}
 			}
 			

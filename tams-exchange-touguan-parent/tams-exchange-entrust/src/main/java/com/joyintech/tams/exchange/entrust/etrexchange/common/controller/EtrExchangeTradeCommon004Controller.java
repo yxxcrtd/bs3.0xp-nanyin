@@ -144,7 +144,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
                     workflowId);
             //add by chenjiaxing 流程中不显示资产名称 start
             String[] secIds = StringUtil.split(entity.getFinprodId(),"_");
-            if(secIds.length == 2 && (StringUtil.isEmpty(entity.getStockId())||entity.getStockId().contains("_"))){
+            if(secIds.length == 2 && (StringUtil.isEmpty(entity.getStockId()))){
                 entity.setStockId(secIds[1]);
             }
 
@@ -749,9 +749,19 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
     @ApiOperation(value = "保存提交check", notes = "保存提交check")
     @PostMapping("checkSaveError")
     @ResponseBody
-    public AjaxResult checkSaveError(@RequestBody  @Validated({ ValidateGroupEdit.class })  EtrExchangeTradeSaveRequest dto, BindingResult br)
+    public AjaxResult checkSaveError(@RequestBody  @Validated({ ValidateGroupEdit.class })  EtrExchangeTradeSaveRequest dto, BindingResult result)
             throws Exception {
         AjaxResult ajax=new AjaxResult();
+       if(StringUtil.equals(dto.getPs(),DictCodeList.交易方向_申购.getValue())
+               ||StringUtil.equals(dto.getPs(),DictCodeListExt2.交易方向_配股.getValue())
+               ||StringUtil.equals(dto.getPs(),DictCodeListExt3.交易方向_配债.getValue())
+       ){
+           dto.setVdate(dto.getEntrustDate());
+           dto.setMdate(dto.getEntrustDate());
+           ajax = check(dto, result);
+           return ajax;
+       }
+
             List<EtrExchangeTradePortfolioRequest> portfolioList=dto.getPortfolioList();
             if(!CollectionUtils.isEmpty(portfolioList)) {
                 for (int i = 0; i < portfolioList.size(); i++) {
@@ -774,7 +784,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
                             dto.setStockId(secAcctId);
                         }
                     }
-                    ajax = check(dto, br);
+                    ajax = check(dto, result);
                     if (null != ajax) {
                         break;
                     }
@@ -792,10 +802,13 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
      * @see
      * @since 1.0
      */
-    public AjaxResult check(@RequestBody @Validated EtrExchangeTradeSaveRequest dto, BindingResult br)
+    public AjaxResult check(EtrExchangeTradeSaveRequest dto, BindingResult result)
             throws Exception {
-        AjaxResult ajax= etrExchangeTrade001CommonService.check(dto, br);
-        return ajax;
+        AjaxResult ajax= etrExchangeTrade001CommonService.check(dto, result);
+        if(ajax!=null){
+            return ajax;
+        }
+        return commonCheck(result, dto.getOperateType());
     }
 
     /**
@@ -984,6 +997,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
     public EtrExchangeTradeSaveRequest buildDtoFromTodoSubmit(@RequestBody EtrExchangeTradeSaveRequest dto) {
           return  etrExchangeTrade001CommonService.buildDtoFromTodoSubmit(dto);
     }
+
 
 
 

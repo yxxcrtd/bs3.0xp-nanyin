@@ -1198,6 +1198,7 @@
      * 委托方向变更时，需要联动计算收益率等
      */
     var psChange = function(init) {
+        linkPortfolio();
         linkDeclaType();
         controlEntrustPrice();
         calcPriceAndYield(init);
@@ -1305,7 +1306,20 @@
     var getAcctNoSelectList = function(portfolioId, acctNo) {
         var result = null;
         var param = {portfolioId:portfolioId, acctNo:acctNo};
-        Joyin.ajaxSync(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/getPtlSecAcctInfo', param, function(list) {
+        Joyin.ajaxSync(basePath + 'etrexchange/common/EtrExchangeTradeCommon004/getPtlSecAcctInfo', param, function(list) {
+            result = list;
+        });
+        return result;
+    };
+    /**
+     * 根据参数获取资金账户下拉框的值
+     * portfolioId:组合代码
+     * acctNo:资金账户
+     */
+    var getAcctNoSelectList = function(portfolioId, acctNo,tradeMarket) {
+        var result = null;
+        var param = {portfolioId:portfolioId, acctNo:acctNo,tradeMarket:tradeMarket};
+        Joyin.ajaxSync(basePath + 'etrexchange/common/EtrExchangeTradeCommon004/getPtlSecAcctInfo', param, function(list) {
             result = list;
         });
         return result;
@@ -1366,11 +1380,10 @@
      */
     var linkAcctNo = function(init) {
         var portfolioId = $("#portfolioId_" + currentTab).val();
-        var ps = $("#ps" + currentTab).val();
-//        var tradeMarket = $("#tradeMarket_" + currentTab).val();
+       var tradeMarket = $("#tradeMarket_" + currentTab).val();
         var param = {portfolioId:portfolioId/*, tradeMarket:tradeMarket*/};
-        if(portfolioId&&ps&&(ps==PS_T04||ps==PS_T46||ps==PS_T97)) {
-            var list = getAcctNoSelectList(portfolioId, null);
+        if(portfolioId) {
+            var list = getAcctNoSelectList(portfolioId, null,tradeMarket);
             var acctNo = '';
             if(list && list.length > 0) {
                 var acctNo = list[0].id;
@@ -1406,7 +1419,7 @@
         var tradeMarket = $("#tradeMarket_" + currentTab).val();
         var acctNo = $("#acctNo_" + currentTab).val();
         if(tradeMarket && acctNo) {
-            var list = getAcctNoSelectList(portfolioId, acctNo);
+            var list = getAcctNoSelectList(portfolioId, acctNo,tradeMarket);
             // modify by swwan GZYHTZJY-81 指令下单使用的证券账户不是绑定的那个 2021-10-28 end
             if(list && list.length > 0 && list[0].object) {
                 var object = list[0].object;
@@ -1425,6 +1438,7 @@
         else {
             $("#secAcctId_" + currentTab).val('').trigger('change');
         }
+
     }
     /**
      * 联动委托方向
@@ -1543,6 +1557,22 @@
         else {
             $("#ps_" + currentTab).trigger('change');
         }
+    };
+    /**
+     * 联动组合分配
+     */
+    var linkPortfolio = function() {
+        var ps = $("#ps_" + currentTab).val();
+        if(ps==PS_T04||ps==PS_T46||ps==PS_T97){
+            $("#portfolioId_div"+ currentTab).show();
+            $("#acctNo_div"+ currentTab).show();
+            $("#dateTableDiv").hide();
+        }else{
+            $("#portfolioId_div"+ currentTab).hide();
+            $("#acctNo_div"+ currentTab).hide();
+            $("#dateTableDiv").show();
+        }
+
     };
 
     var formatMoney = function (s, n)
@@ -3114,8 +3144,8 @@
             //组合隐藏
             //分配组合展示
             if(ps==PS_T04||ps==PS_T46||ps==PS_T97){
-                $("#portfolioId_div"+ currentTab).show();
-                $("#acctNo_div"+ currentTab).show();
+                $("#portfolioId_div_"+currentTab).show();
+                $("#acctNo_div_"+currentTab).show();
                 $("#dateTableDiv").hide();
             }
 
@@ -3130,7 +3160,7 @@
                 acctNoChange(true);
                 secIdChange();
                 tradeMarketChange();
-                finprodType2Change();
+                // secId();
                 secAcctIdChange();
                 targetTypeChange(true);
                 entrustNumChange();

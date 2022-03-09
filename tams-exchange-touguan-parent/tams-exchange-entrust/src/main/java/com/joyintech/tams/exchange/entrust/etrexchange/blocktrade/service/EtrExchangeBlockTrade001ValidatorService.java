@@ -21,14 +21,13 @@ import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.WflEtrEntrust;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SubEqutityDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.entrust.common.validator.EtrCommonValidator;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.MinTrdUnitLimitDto;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.SubEqutityDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

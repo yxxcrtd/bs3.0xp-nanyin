@@ -1336,7 +1336,7 @@
         </where>
     </select>
 
-    <select id="getsubEqutity" resultType="com.joyintech.service.entrust.etrexchangetrade.dto.SubEqutityDto">
+    <select id="getsubEqutity" resultType="com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SubEqutityDto">
         select TEMP.PORTFOLIO_ID portfolioId,
                TEMP.SEC_ACCT_ID secAcctId,
                TEMP.FINPROD_ID finprodId,

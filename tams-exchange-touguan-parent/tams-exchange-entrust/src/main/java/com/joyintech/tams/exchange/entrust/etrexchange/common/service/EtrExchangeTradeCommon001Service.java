@@ -60,6 +60,7 @@ import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExcha
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.FinProductOthCodeDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SubEqutityDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationResponse;
 import com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry;
@@ -6138,13 +6139,13 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				.put("field", "usableSec")
 				.put("name", "可用数量（股）")
 				.put("type", "cc")
-				.put("amount",bm.get(usableSec)));
+				.put("amount",bm.get(usableSec)==null?0:bm.get(usableSec)));
 		/*持仓数量*/
 		resp.add(BaseMap.newMap()
 				.put("field", "usableSec")
 				.put("name", "可用数量（股）")
 				.put("type", "cc")
-				.put("amount", bm.get(usableSec)));
+				.put("amount", bm.get(usableSec)==null?0:bm.get(usableSec)));
 
 		return resp;
 	}

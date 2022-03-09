@@ -23,6 +23,9 @@ public class EtrExchangePosiInfoRequestDto {
     @ApiModelProperty(name="acctId",value="账户",example="xxx")
     private String acctId;
 
+    @ApiModelProperty(name="acctIdList",value="账户代码集合",example="[字符串1,字符串2,...]")
+    private List<String> acctIdList;
+
     public String getAcctId() {
         return acctId;
     }
@@ -55,4 +58,11 @@ public class EtrExchangePosiInfoRequestDto {
         this.finprodId = finprodId;
     }
 
+    public List<String> getAcctIdList() {
+        return acctIdList;
+    }
+
+    public void setAcctIdList(List<String> acctIdList) {
+        this.acctIdList = acctIdList;
+    }
 }
