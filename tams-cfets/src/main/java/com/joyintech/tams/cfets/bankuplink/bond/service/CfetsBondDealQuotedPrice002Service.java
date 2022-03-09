@@ -49,6 +49,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
+import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.SecInfoModelDto;
 import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -68,6 +69,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -123,6 +125,22 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
     private SysWflBusinessListMapper sysWflBusinessListMapper;
     @Autowired
     private CfetsRepoQuotedPrice004Service cfetsRepoQuotedPrice004Service;
+    /**
+     * 设置流程业务说明
+     */
+    @Override
+    public String generateTitle(CfetsBondDealDialogueQuoteDto entity, OperationType type) {
+        DecimalFormat df = new DecimalFormat("###,###.00");
+        String avaNumStr="--";
+        if(StringUtil.isNotEmpty(entity.getAvaNum())){
+            avaNumStr=df.format(entity.getAvaNum());
+        }
+        return  "报价日期(" + DateUtil.format(entity.getSettleDate())+")-"+
+                "资产简称(" + entity.getFinprodAbbr()  + ")-"+
+                "对手方("+entity.getCounterName()+")-"+
+                "报价操作("+  entity.getQuoteOperatorType() +")-" +
+                "券面总额("+ avaNumStr +"万元)";
+    }
 
     public AjaxResult checkNotEmpty(CfetsBondDealQuoteCommonDto entity) {
         AjaxResult ajaxResult = new AjaxResult();

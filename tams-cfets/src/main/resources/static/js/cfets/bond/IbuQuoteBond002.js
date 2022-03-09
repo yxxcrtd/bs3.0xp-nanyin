@@ -887,7 +887,9 @@
          * 提交按钮按下处理
          */
         $('#IbuQuoteBond002_btn_submit').click(function(){
-            saveOrSubmitAction('submit');
+             if(paramCheck()) {
+                saveOrSubmitAction('submit');
+             }
         });
 
         /**
@@ -921,6 +923,19 @@
             autoAllocation();
         })
     });
+    /**
+     * 参数校验
+     */
+    var paramCheck = function () {
+        if(!$('#CfetsBondDealQuotedPrice004_avaNum').val()||!$('#CfetsBondDealQuotedPrice004_mySideTrader').val()
+             ||!$('#CfetsBondDealQuotedPrice004_counterId').val() ||!$('#CfetsBondDealQuotedPrice004_counterTrader').val()
+              ||!$('#CfetsBondDealQuotedPrice004_unitCprice').val() ||!$('#CfetsBondDealQuotedPrice004_matureYield').val()
+        ){
+            Joyin.error("有*必填项未填写,请填写完整")
+            return false;
+        }
+        return true;
+    }
 
     /**
      * 计算金额相关
@@ -995,6 +1010,10 @@
      * 对手方
      */
     var counterIdChangeAction = function(){
+        var data =  $('#CfetsBondDealQuotedPrice004_counterId').select2('data')[0];
+        if(data) {
+            $('#counterName').val(data.text).trigger('change').trigger('blur');
+        }
         $('#CfetsBondDealQuotedPrice004_counterTrader').val('').trigger('change');
     }
     window.CfetsBondDealQuotedPrice004 = {

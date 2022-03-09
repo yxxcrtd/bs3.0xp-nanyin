@@ -46,7 +46,10 @@
             <input type="hidden" name="workflowId" th:value="${entity?.workflowId}" />
             <input type="hidden" name="secManageAcctId" th:value="${entity?.secManageAcctId}" />
             <input type="hidden" name="ccy"  th:value="${entity?.ccy}" />
+            <input type="hidden" name="quoteOperatorType" th:value="${entity?.quoteOperatorType}" />
             <input type="hidden" name="settleSpreedCode" th:value="${entity?.settleSpreedCode}" />
+            <input type="hidden" id="finprodAbbr" name="finprodAbbr" th:value="${entity?.finprodAbbr}" />
+            <input type="hidden" id="counterName" name="counterName" th:value="${entity?.counterName}" />
             <div class="pro-module-wrapper pro-module-base" th:title="#{CfetsBondDealQuotedPrice004.baseinfo}">
                 <div class="pro-module-wrap">
                     <div class="pro-module">
@@ -295,7 +298,7 @@
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap">结算服务费</label>
                                 <div class="layui-input-inline input-inline">
-                                    <input type="text" required id="settFeeAmt" name="settFeeAmt"
+                                    <input type="text"  id="settFeeAmt" name="settFeeAmt"
                                            class="layui-input form-input text-number" placeholder="请输入内容"
                                            data-fixtype="2" data-textrange="2"
                                            th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.settFeeAmt}">
