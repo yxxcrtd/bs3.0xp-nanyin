@@ -1784,6 +1784,10 @@ public class InvestmentsInfoService {
 				prodMap.put(single.getTermType(), single);
 			}
 		}
+
+
+
+
 		//资金运用
 		Map<String,InvestmentBusinessDetailsDto> assetMap=new HashMap<String,InvestmentBusinessDetailsDto>();
 
@@ -2082,8 +2086,84 @@ public class InvestmentsInfoService {
 				allList.add(dto);
 			}
 		}
+		//收益率合并计算
+		doSumAvgYeild(allList);
+
 		return allList;
 
+	}
+
+	/**
+	 * 数据计算修改.合计项目直接使用固定公式
+	 * ∑（本季末余额*年初至本季末累计年化收益率）/本季末余额合计
+	 * @param dtoList
+	 */
+	private void doSumAvgYeild(List<InvestmentBusinessDetailsDto> dtoList){
+		//拆分所有的
+		BigDecimal amt1 = BigDecimal.ZERO;
+		BigDecimal amt1Last = BigDecimal.ZERO;
+		BigDecimal amt2 = BigDecimal.ZERO;
+		BigDecimal amt2Last = BigDecimal.ZERO;
+		BigDecimal amt3 = BigDecimal.ZERO;
+		BigDecimal amt3Last = BigDecimal.ZERO;
+
+		for(InvestmentBusinessDetailsDto dto : dtoList){
+			if(!dto.getPropertycode().endsWith("_10")){
+				if(dto.getPropertycode().startsWith("t4_amt1")){
+					amt1 = amt1.add(IsNotZeroBigDecimal(dto,"01")?dto.getSessionendBalance().multiply(dto.getSessionendYield()):BigDecimal.ZERO);
+					amt1Last = amt1Last.add(IsNotZeroBigDecimal(dto,"02")?dto.getLastSessionendBalance().multiply(dto.getLastSessionendYield()):BigDecimal.ZERO);
+				}else if(dto.getPropertycode().startsWith("t4_amt2")){
+					amt2 = amt2.add(IsNotZeroBigDecimal(dto,"01")?dto.getSessionendBalance().multiply(dto.getSessionendYield()):BigDecimal.ZERO);
+					amt2Last = amt2Last.add(IsNotZeroBigDecimal(dto,"02")?dto.getLastSessionendBalance().multiply(dto.getLastSessionendYield()):BigDecimal.ZERO);
+				}else if(dto.getPropertycode().startsWith("t4_amt3")){
+					amt3 = amt3.add(IsNotZeroBigDecimal(dto,"01")?dto.getSessionendBalance().multiply(dto.getSessionendYield()):BigDecimal.ZERO);
+					amt3Last = amt3Last.add(IsNotZeroBigDecimal(dto,"02")?dto.getLastSessionendBalance().multiply(dto.getLastSessionendYield()):BigDecimal.ZERO);
+				}
+			}
+		}
+		/***汇总项目重新计算*/
+		for(InvestmentBusinessDetailsDto dto : dtoList){
+			if(dto.getPropertycode().endsWith("_10")){
+				if(dto.getPropertycode().startsWith("t4_amt1")){
+					dto.setSessionendYield(null!=dto.getSessionendBalance()&&dto.getSessionendBalance().compareTo(BigDecimal.ZERO)!=0?
+							amt1.divide(dto.getSessionendBalance(),4,BigDecimal.ROUND_HALF_UP):BigDecimal.ZERO);
+					dto.setLastSessionendYield(null!=dto.getLastSessionendBalance()&&dto.getLastSessionendBalance().compareTo(BigDecimal.ZERO)!=0?
+							amt1Last.divide(dto.getLastSessionendBalance(),4,BigDecimal.ROUND_HALF_UP):BigDecimal.ZERO);
+				}else if(dto.getPropertycode().startsWith("t4_amt2")){
+					dto.setSessionendYield(null!=dto.getSessionendBalance()&&dto.getSessionendBalance().compareTo(BigDecimal.ZERO)!=0?
+							amt2.divide(dto.getSessionendBalance(),4,BigDecimal.ROUND_HALF_UP):BigDecimal.ZERO);
+					dto.setLastSessionendYield(null!=dto.getLastSessionendBalance()&&dto.getLastSessionendBalance().compareTo(BigDecimal.ZERO)!=0?
+							amt2Last.divide(dto.getLastSessionendBalance(),4,BigDecimal.ROUND_HALF_UP):BigDecimal.ZERO);
+				}else if(dto.getPropertycode().startsWith("t4_amt3")){
+					dto.setSessionendYield(null!=dto.getSessionendBalance()&&dto.getSessionendBalance().compareTo(BigDecimal.ZERO)!=0?
+							amt3.divide(dto.getSessionendBalance(),4,BigDecimal.ROUND_HALF_UP):BigDecimal.ZERO);
+					dto.setLastSessionendYield(null!=dto.getLastSessionendBalance()&&dto.getLastSessionendBalance().compareTo(BigDecimal.ZERO)!=0?
+							amt3Last.divide(dto.getLastSessionendBalance(),4,BigDecimal.ROUND_HALF_UP):BigDecimal.ZERO);
+				}
+			}
+		}
+
+	}
+
+
+	/**
+	 * 判断是否为空或者为0
+	 * @return
+	 */
+	public static boolean IsNotZeroBigDecimal(InvestmentBusinessDetailsDto dto,String code){
+		boolean flag = false;
+			if("01".equals(code)){
+				if(null!=dto.getSessionendBalance()&&dto.getSessionendBalance().compareTo(BigDecimal.ZERO)!=0
+						&&null!=dto.getSessionendYield()&&dto.getSessionendYield().compareTo(BigDecimal.ZERO)!=0){
+					flag = true;
+				}
+			}else if("02".equals(code)){
+				if(null!=dto.getLastSessionendBalance()&&dto.getLastSessionendBalance().compareTo(BigDecimal.ZERO)!=0
+						&&null!=dto.getLastSessionendYield()&&dto.getLastSessionendYield().compareTo(BigDecimal.ZERO)!=0){
+					flag = true;
+				}
+			}
+		return flag;
 	}
 	/**
 	 * 组装表7-1数据到实体类
