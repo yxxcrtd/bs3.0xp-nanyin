@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.service.trade.management.service;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.exchange.common.bean.HistoryTrade;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.TradeQueryBean;
@@ -124,7 +125,9 @@ public class TradeManagement {
         }
 
         List<Trade> list = tradeService.queryTradeByInstructionId(instructionId);
-        list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+        list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId()))
+                .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
+                .collect(Collectors.toList());
         setFutureStockCode(list);
         List<Trade> trades = fillTradePrice(list);
         return ResultBean.success(trades);

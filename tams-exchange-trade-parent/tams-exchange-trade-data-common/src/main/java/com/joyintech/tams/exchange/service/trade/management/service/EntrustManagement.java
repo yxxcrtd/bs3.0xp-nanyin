@@ -9,6 +9,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.constant.*;
@@ -101,17 +102,23 @@ public class EntrustManagement extends BaseService {
         // 查询具体订单下的委托
         if (!Strings.isNullOrEmpty(orderId)) {
             List<Entrust> entrustList = entrustService.queryEntrustByOrderId(orderId);
-            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId())).collect(Collectors.toList());
+            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId()))
+                    .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
+                    .collect(Collectors.toList());
             List<Entrust> entrusts = fillEntrustPrice(entrustList);
             return new ResultBean(ErrorCode.SUCCESS, new OrderAndEntrustQryResult(new ArrayList<>(), entrusts));
         }
         // 查询指令下的订单和委托
         if (!Strings.isNullOrEmpty(instructionId)) {
             List<Entrust> entrustList = entrustService.queryEntrustByInstructionId(instructionId);
-            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId())).collect(Collectors.toList());
+            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId()))
+                    .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
+                    .collect(Collectors.toList());
             setFutureEntrustStockCode(entrustList);
             List<Order> orderListByInstructionId = orderService.queryOrderByInstructionId(instructionId);
-            List<Order> orderListWithOutFair = orderListByInstructionId.stream().filter(order -> !BusinessFlag.FAIR.value.equals(order.getBusinessFlag()) && ptlAuthList.contains(order.getPortfolioId())).collect(Collectors.toList());
+            List<Order> orderListWithOutFair = orderListByInstructionId.stream().filter(order -> !BusinessFlag.FAIR.value.equals(order.getBusinessFlag()) && ptlAuthList.contains(order.getPortfolioId()))
+                    .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
+                    .collect(Collectors.toList());
             setFutureOrderStockCode(orderListWithOutFair);
             List<Entrust> entrusts = fillEntrustPrice(entrustList);
             return new ResultBean(ErrorCode.SUCCESS, new OrderAndEntrustQryResult(orderListWithOutFair, entrusts));
@@ -120,11 +127,19 @@ public class EntrustManagement extends BaseService {
         List<Entrust> entrustList = entrustService.queryByUserId(userId);
         List<Order> orderList = orderService.queryOrder(userId);
         if (!Strings.isNullOrEmpty(accountId)) {
-            entrustList = entrustList.stream().filter(entrust -> accountId.equals(entrust.getAccountId()) && !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId())).collect(Collectors.toList());
-            orderList = orderList.stream().filter(order -> !BusinessFlag.FAIR.value.equals(order.getBusinessFlag()) && accountId.equals(order.getAccountId()) && ptlAuthList.contains(order.getPortfolioId())).collect(Collectors.toList());
+            entrustList = entrustList.stream().filter(entrust -> accountId.equals(entrust.getAccountId()) && !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId()))
+                    .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
+                    .collect(Collectors.toList());
+            orderList = orderList.stream().filter(order -> !BusinessFlag.FAIR.value.equals(order.getBusinessFlag()) && accountId.equals(order.getAccountId()) && ptlAuthList.contains(order.getPortfolioId()))
+                    .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
+                    .collect(Collectors.toList());
         } else {
-            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId())).collect(Collectors.toList());
-            orderList = orderList.stream().filter(order -> !BusinessFlag.FAIR.value.equals(order.getBusinessFlag()) && ptlAuthList.contains(order.getPortfolioId())).collect(Collectors.toList());
+            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId()))
+                    .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
+                    .collect(Collectors.toList());
+            orderList = orderList.stream().filter(order -> !BusinessFlag.FAIR.value.equals(order.getBusinessFlag()) && ptlAuthList.contains(order.getPortfolioId()))
+                    .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
+                    .collect(Collectors.toList());
         }
         setFutureEntrustStockCode(entrustList);
         setFutureOrderStockCode(orderList);
@@ -172,19 +187,27 @@ public class EntrustManagement extends BaseService {
         }
         if (!Strings.isNullOrEmpty(orderId)) {
             List<IntegratedEntrust> entrustList = integratedEntrustService.queryIntegratedEntrustByOrderId(orderId);
-            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId())).collect(Collectors.toList());
+            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId()))
+                    .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
+                    .collect(Collectors.toList());
             return new ResultBean(ErrorCode.SUCCESS, entrustList);
         }
         if (!Strings.isNullOrEmpty(instructionId)) {
             List<IntegratedEntrust> entrustList = integratedEntrustService.queryIntegratedEntrustByInstructionId(instructionId);
-            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId())).collect(Collectors.toList());
+            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId()))
+                    .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
+                    .collect(Collectors.toList());
             return new ResultBean(ErrorCode.SUCCESS, entrustList);
         }
         List<IntegratedEntrust> entrustList = integratedEntrustService.queryByUserId(userId);
         if (!Strings.isNullOrEmpty(accountId)) {
-            entrustList = entrustList.stream().filter(entrust -> accountId == entrust.getAccountId() && !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId())).collect(Collectors.toList());
+            entrustList = entrustList.stream().filter(entrust -> accountId == entrust.getAccountId() && !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId()))
+                    .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
+                    .collect(Collectors.toList());
         } else {
-            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId())).collect(Collectors.toList());
+            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId()))
+                    .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
+                    .collect(Collectors.toList());
         }
         return new ResultBean(ErrorCode.SUCCESS, entrustList);
     }
