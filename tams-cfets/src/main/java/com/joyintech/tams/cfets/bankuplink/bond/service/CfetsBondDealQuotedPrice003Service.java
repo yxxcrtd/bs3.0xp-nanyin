@@ -12,6 +12,7 @@ package com.joyintech.tams.cfets.bankuplink.bond.service;
 
 import com.joyintech.background.component.uplink.interbank.business.service.IbuMainService;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -25,6 +26,7 @@ import com.joyintech.system.base.dao.SysWflBusinessListMapper;
 import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.exception.PositionException;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
@@ -878,7 +880,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
         }
         String systemAct = handSystemAct(entity);
         try {
-            sendPosition(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct);
+            sendPosition(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct,null);
             //doInsetOrUpdateForPtlPositionHold(entity);
         }catch(PositionException e){
             e.printStackTrace(); Message message = PositionUtil.ajaxErrorReturn(e);
@@ -901,17 +903,28 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
                 entity.setIsExistNew(DictCodeList.是否_是.getValue());
                 doInsetOrUpdateForPtlPositionHold(entity);
             }
+            String confirmOk = RequestUtil.getParam("confirmOk");
             try{
                 SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
                 String systemAct = handSystemAct(entity);
                 if(StringUtil.equals(sysWflBusinessList.getProcessState(), ProcessState.BACK.toString())){
-                    sendPosition(entity,DictCodeListExt3.流程节点_流程提交.getValue(),DictCodeListExt3.系统动作_修改.getValue(),systemAct);
+                    sendPosition(entity,DictCodeListExt3.流程节点_流程提交.getValue(),DictCodeListExt3.系统动作_修改.getValue(),systemAct,confirmOk);
                 }else{
-                    sendPosition(entity,DictCodeListExt3.流程节点_流程提交.getValue(),systemAct,systemAct);
+                    sendPosition(entity,DictCodeListExt3.流程节点_流程提交.getValue(),systemAct,systemAct,confirmOk);
                 }
             }catch(PositionException e){
                 e.printStackTrace(); Message message = PositionUtil.ajaxErrorReturn(e);
-                throw new BusinessException("MSG:"+message.getMessage());
+                BaseMap bm = (BaseMap) message.getData();
+                String code = (String) bm.get("code");
+                String messageStr = JsonUtils.json2Object((String) bm.get("message").toString(), String.class);
+                if (StringUtil.isEmpty(confirmOk)
+                        && StringUtil.equals(PositionHttpRequest.CODE_BUSI_RK, code)) {
+                    WorkFlowUtil.showMessage(messageStr, MessageType.确认消息);
+                }
+                if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_YK, code)) {
+                    WorkFlowUtil.showMessage(messageStr, MessageType.错误消息);
+                }
+                throw new PositionException(messageStr);
             }
             //doInsetOrUpdateForPtlPositionHold(entity);
             ProcessMark newEntity;
@@ -945,7 +958,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
 		//回退释放头寸
     	//doDeletePtlPositionHold(entity.getWorkflowId());
         String systemAct = handSystemAct(entity);
-        sendPosition(entity,DictCodeListExt3.流程节点_流程退回.getValue(),systemAct,systemAct);
+        sendPosition(entity,DictCodeListExt3.流程节点_流程退回.getValue(),systemAct,systemAct,null);
     }
     
     /**
@@ -1151,8 +1164,8 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
         return systemAct;
     }
 
-    public void sendPosition(CfetsBondDealRequestQuoteDto entity,String flowStatus,String decisionAct,String systemAct){
-        Map<String, Object> stringObjectMap = preparePosition(entity, flowStatus,decisionAct,systemAct);
+    public void sendPosition(CfetsBondDealRequestQuoteDto entity,String flowStatus,String decisionAct,String systemAct,String confirmOk){
+        Map<String, Object> stringObjectMap = preparePosition(entity, flowStatus,decisionAct,systemAct,confirmOk);
         if(StringUtil.equals(flowStatus,DictCodeListExt3.流程节点_流程提交.getValue())||StringUtil.equals(flowStatus,DictCodeListExt3.流程节点_流程退回.getValue())){
             if(StringUtil.equals(systemAct,DictCodeListExt3.系统动作_新建.getValue())||StringUtil.equals(systemAct,DictCodeListExt3.系统动作_修改.getValue())||StringUtil.equals(systemAct,DictCodeListExt3.系统动作_成交.getValue())){
                 PositionHttpRequest.send(stringObjectMap);
@@ -1176,8 +1189,8 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
      * @param flowStatus
      * @return
      */
-    public Map<String,Object> preparePosition(CfetsBondDealRequestQuoteDto dto,String flowStatus,String decisionAct,String systemAct){
+    public Map<String,Object> preparePosition(CfetsBondDealRequestQuoteDto dto,String flowStatus,String decisionAct,String systemAct,String confirmOk){
         com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto entity = JsonUtils.json2Object(JsonUtils.object2Json(dto),com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto.class);
-        return cfetsQuotedCommonServiceMicro.prepareRequestPosition(entity,flowStatus,decisionAct,systemAct);
+        return cfetsQuotedCommonServiceMicro.prepareRequestPosition(entity,flowStatus,decisionAct,systemAct,confirmOk);
     }
 }

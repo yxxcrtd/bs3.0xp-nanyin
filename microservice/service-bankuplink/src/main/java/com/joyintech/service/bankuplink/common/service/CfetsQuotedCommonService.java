@@ -1371,7 +1371,7 @@ public class CfetsQuotedCommonService extends BaseService {
      * @param flowStatus
      * @return
      */
-    public Map<String,Object> prepareRequestPosition(CfetsBondDealRequestQuoteDto entity, String flowStatus, String decisionAct, String systemAct){
+    public Map<String,Object> prepareRequestPosition(CfetsBondDealRequestQuoteDto entity, String flowStatus, String decisionAct, String systemAct,String confirmOk){
         final Date settleDate =iPlatformDate.getSysDate();
         Map<String,Object> result = new HashMap<>();
         String ps = entity.getPs();
@@ -1380,7 +1380,11 @@ public class CfetsQuotedCommonService extends BaseService {
         result.put("totalTradeId",entity.getQuoteId());
         result.put("flowStatus",flowStatus);
         result.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
-        result.put("balanceCheck","Y");
+        String balanceCheck = com.joyintech.tams.constant.DictCodeList.是否_是.getValue();
+        if (StringUtil.isNotEmpty(confirmOk)) {
+            balanceCheck = com.joyintech.tams.constant.DictCodeList.是否_否.getValue();
+        }
+        result.put("balanceCheck",balanceCheck);
         if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){
             result.put("busiType",DictCodeListExt3.头寸业务类型_债券行权交易.getValue());
         }else{
