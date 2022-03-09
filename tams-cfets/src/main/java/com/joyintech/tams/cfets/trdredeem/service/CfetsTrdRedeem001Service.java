@@ -171,6 +171,9 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
                 }
             }*/
         }
+        if(!StringUtil.isNotEmpty(entity.getRedeemRate())){
+            errorList.add(new ValidMessage("赎回比例不可为空。"));
+        }
         //判断赎回比例是否大于0小于100
         if(StringUtil.isNotEmpty(entity.getRedeemRate())
                 && (entity.getRedeemRate().compareTo(BigDecimal.ZERO)<=0 || entity.getRedeemRate().compareTo(BigDecimal.ONE)>0)){
